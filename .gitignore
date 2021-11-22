@@ -1,2 +1,4 @@
 build/
 lean_packages/
+Mathbin/       # This is provided via a release artifact, and should not be committed in this repository.
+mathlib3-synport.tar.gz*
