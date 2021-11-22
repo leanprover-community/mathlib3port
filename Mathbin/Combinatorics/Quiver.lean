@@ -1,6 +1,6 @@
-import Mathbin.Data.Equiv.Basic
-import Mathbin.Order.WellFounded
-import Mathbin.Data.Nat.Basic
+import Mathbin.Data.Equiv.Basic 
+import Mathbin.Order.WellFounded 
+import Mathbin.Data.Nat.Basic 
 import Mathbin.Data.Opposite
 
 /-!
@@ -35,7 +35,7 @@ For graphs with no repeated edges, one can use `quiver.{0} V`, which ensures
 Because `category` will later extend this class, we call the field `hom`.
 Except when constructing instances, you should rarely see this, and use the `⟶` notation instead.
 -/
-class Quiver(V : Type u) where
+class Quiver(V : Type u) where 
   Hom : V → V → Sort v
 
 infixr:10 " ⟶ " => Quiver.Hom
@@ -44,8 +44,8 @@ infixr:10 " ⟶ " => Quiver.Hom
 A morphism of quivers. As we will later have categorical functors extend this structure,
 we call it a `prefunctor`.
 -/
-structure Prefunctor(V : Type u₁)[Quiver.{v₁} V](W : Type u₂)[Quiver.{v₂} W] where
-  obj{} : V → W
+structure Prefunctor(V : Type u₁)[Quiver.{v₁} V](W : Type u₂)[Quiver.{v₂} W] where 
+  obj{} : V → W 
   map : ∀ {X Y : V}, (X ⟶ Y) → (obj X ⟶ obj Y)
 
 namespace Prefunctor
@@ -53,9 +53,9 @@ namespace Prefunctor
 /--
 The identity morphism between quivers.
 -/
--- @[simps]
+@[simps]
 def id (V : Type _) [Quiver V] : Prefunctor V V :=
-  { obj := λ v => v, map := λ f => f }
+  { obj := id, map := fun X Y f => f }
 
 instance  (V : Type _) [Quiver V] : Inhabited (Prefunctor V V) :=
   ⟨id V⟩
@@ -142,9 +142,9 @@ instance symmetrify_quiver (V : Type u) [Quiver V] : Quiver (symmetrify V) :=
 
 /-- `total V` is the type of _all_ arrows of `V`. -/
 @[ext, nolint has_inhabited_instance]
-structure Total(V : Type u)[Quiver.{v} V] : Sort max (u + 1) v where
-  left : V
-  right : V
+structure Total(V : Type u)[Quiver.{v} V] : Sort max (u + 1) v where 
+  left : V 
+  right : V 
   Hom : left ⟶ right
 
 /-- A wide subquiver `H` of `G.symmetrify` determines a wide subquiver of `G`, containing an
@@ -157,10 +157,10 @@ def wide_subquiver_equiv_set_total {V} [Quiver V] : WideSubquiver V ≃ Set (Tot
   { toFun := fun H => { e | e.hom ∈ H e.left e.right }, invFun := fun S a b => { e | total.mk a b e ∈ S },
     left_inv := fun H => rfl,
     right_inv :=
-      by
-        intro S
-        ext
-        cases x
+      by 
+        intro S 
+        ext 
+        cases x 
         rfl }
 
 /-- `G.path a b` is the type of paths from `a` to `b` through the arrows of `G`. -/
@@ -206,14 +206,14 @@ theorem comp_nil {a b : V} (p : path a b) : p.comp path.nil = p :=
 theorem nil_comp {a : V} : ∀ {b} p : path a b, path.nil.comp p = p
 | a, path.nil => rfl
 | b, path.cons p e =>
-  by
+  by 
     rw [comp_cons, nil_comp]
 
 @[simp]
 theorem comp_assoc {a b c : V} : ∀ {d} p : path a b q : path b c r : path c d, (p.comp q).comp r = p.comp (q.comp r)
 | c, p, q, path.nil => rfl
 | d, p, q, path.cons r e =>
-  by
+  by 
     rw [comp_cons, comp_cons, comp_cons, comp_assoc]
 
 end Path
@@ -245,8 +245,8 @@ theorem map_path_comp {a b : V} (p : path a b) :
   ∀ {c : V} q : path b c, F.map_path (p.comp q) = (F.map_path p).comp (F.map_path q)
 | _, path.nil => rfl
 | _, path.cons p e =>
-  by
-    dsimp
+  by 
+    dsimp 
     rw [map_path_comp]
 
 end Prefunctor
@@ -255,8 +255,8 @@ namespace Quiver
 
 /-- A quiver is an arborescence when there is a unique path from the default vertex
     to every other vertex. -/
-class arborescence(V : Type u)[Quiver.{v} V] : Type max u v where
-  root : V
+class arborescence(V : Type u)[Quiver.{v} V] : Type max u v where 
+  root : V 
   uniquePath : ∀ b : V, Unique (path root b)
 
 /-- The root of an arborescence. -/
@@ -286,7 +286,7 @@ noncomputable def arborescence_mk {V : Type u} [Quiver V] (r : V) (height : V �
     uniquePath :=
       fun b =>
         ⟨Classical.inhabitedOfNonempty
-            (by
+            (by 
               rcases show ∃ n, height b < n from ⟨_, lt_add_one _⟩ with ⟨n, hn⟩
               induction' n with n ih generalizing b
               ·
@@ -297,18 +297,18 @@ noncomputable def arborescence_mk {V : Type u} [Quiver V] (r : V) (height : V �
               ·
                 rcases ih a (lt_of_lt_of_leₓ (height_lt e) (nat.lt_succ_iff.mp hn)) with ⟨p⟩
                 exact ⟨p.cons e⟩),
-          by
+          by 
             have height_le : ∀ {a b}, path a b → height a ≤ height b
             ·
-              intro a b p
-              induction' p with b c p e ih
-              rfl
+              intro a b p 
+              induction' p with b c p e ih 
+              rfl 
               exact le_of_ltₓ (lt_of_le_of_ltₓ ih (height_lt e))
             suffices  : ∀ p q : path r b, p = q
             ·
-              intro p
-              apply this
-            intro p q
+              intro p 
+              apply this 
+            intro p q 
             induction' p with a c p e ih <;> cases' q with b _ q f
             ·
               rfl
@@ -321,7 +321,7 @@ noncomputable def arborescence_mk {V : Type u} [Quiver V] (r : V) (height : V �
               rw [ih]⟩ }
 
 /-- `rooted_connected r` means that there is a path from `r` to any other vertex. -/
-class rooted_connected{V : Type u}[Quiver V](r : V) : Prop where
+class rooted_connected{V : Type u}[Quiver V](r : V) : Prop where 
   nonempty_path : ∀ b : V, Nonempty (path r b)
 
 attribute [instance] rooted_connected.nonempty_path
@@ -344,16 +344,16 @@ def geodesic_subtree : WideSubquiver V :=
 
 noncomputable instance geodesic_arborescence : arborescence (geodesic_subtree r) :=
   arborescence_mk r (fun a => (shortest_path r a).length)
-    (by
+    (by 
       rintro a b ⟨e, p, h⟩
       rw [h, path.length_cons, Nat.lt_succ_iff]
       apply shortest_path_spec)
-    (by
+    (by 
       rintro a b c ⟨e, p, h⟩ ⟨f, q, j⟩
-      cases h.symm.trans j
+      cases h.symm.trans j 
       split  <;> rfl)
-    (by
-      intro b
+    (by 
+      intro b 
       have  : ∃ p, shortest_path r b = p := ⟨_, rfl⟩
       rcases this with ⟨p, hp⟩
       cases' p with a _ p e
@@ -368,7 +368,7 @@ variable(V : Type u)[Quiver.{v + 1} V]
 
 /-- A quiver `has_reverse` if we can reverse an arrow `p` from `a` to `b` to get an arrow
     `p.reverse` from `b` to `a`.-/
-class has_reverse where
+class has_reverse where 
   reverse' : ∀ {a b : V}, (a ⟶ b) → (b ⟶ a)
 
 instance  : has_reverse (symmetrify V) :=

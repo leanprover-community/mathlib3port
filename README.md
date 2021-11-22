@@ -4,8 +4,8 @@ Please expect *many* errors at this stage.
 
 Although the `Mathbin` directory is committed in the repository,
 at this stage you should not attempt to make any changes on the master branch.
-If you delete the `Mathbib` directory, and `mathlib3-synport.tar.gz`,
-then running `lake build` will download a new copy of the output from `mathport`.
+If you delete the `Mathbin` directory,
+then running `lake build` will download a new copy from the `mathport` release page.
 
 It's fine, however, to make branches containing "by-hand" edits,
 if you want to be able to link to diffs when reporting issues in `mathport`.

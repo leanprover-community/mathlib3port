@@ -1,4 +1,4 @@
-import Mathbin.Combinatorics.Quiver
+import Mathbin.Combinatorics.Quiver 
 import Mathbin.Tactic.Basic
 
 /-!
@@ -70,8 +70,8 @@ namespace CategoryTheory
 
 /-- A preliminary structure on the way to defining a category,
 containing the data, but none of the axioms. -/
-class category_struct(obj : Type u) extends Quiver.{v + 1} obj : Type max u (v + 1) where
-  id : ∀ X : obj, Hom X X
+class category_struct(obj : Type u) extends Quiver.{v + 1} obj : Type max u (v + 1) where 
+  id : ∀ X : obj, hom X X 
   comp : ∀ {X Y Z : obj}, (X ⟶ Y) → (Y ⟶ Z) → (X ⟶ Z)
 
 notation "𝟙" => category_struct.id
@@ -85,10 +85,16 @@ specified explicitly, as `category.{v} C`. (See also `large_category` and `small
 
 See https://stacks.math.columbia.edu/tag/0014.
 -/
-class category(obj : Type u) extends category_struct.{v} obj : Type max u (v + 1) where
-  id_comp' : ∀ {X Y : obj} (f : Hom X Y), 𝟙 X ≫ f = f
-  comp_id' : ∀ {X Y : obj} (f : Hom X Y), f ≫ 𝟙 Y = f
-  assoc' : ∀ {W X Y Z : obj} (f : Hom W X) (g : Hom X Y) (h : Hom Y Z), (f ≫ g) ≫ h = f ≫ g ≫ h
+class category(obj : Type u) extends category_struct.{v} obj : Type max u (v + 1) where 
+  id_comp' : ∀ {X Y : obj} f : hom X Y, 𝟙 X ≫ f = f :=  by 
+  runTac 
+    obviously 
+  comp_id' : ∀ {X Y : obj} f : hom X Y, f ≫ 𝟙 Y = f :=  by 
+  runTac 
+    obviously 
+  assoc' : ∀ {W X Y Z : obj} f : hom W X g : hom X Y h : hom Y Z, (f ≫ g) ≫ h = f ≫ g ≫ h :=  by 
+  runTac 
+    obviously
 
 restate_axiom category.id_comp'
 
@@ -114,7 +120,7 @@ A `small_category` has objects and morphisms in the same universe level.
 abbrev small_category (C : Type u) : Type (u + 1) :=
   category.{u} C
 
-section
+section 
 
 variable{C : Type u}[category.{v} C]{X Y Z : C}
 
@@ -123,12 +129,12 @@ initialize_simps_projections category (to_category_struct_to_quiver_hom → Hom,
 
 /-- postcompose an equation between morphisms by another morphism -/
 theorem eq_whisker {f g : X ⟶ Y} (w : f = g) (h : Y ⟶ Z) : f ≫ h = g ≫ h :=
-  by
+  by 
     rw [w]
 
 /-- precompose an equation between morphisms by another morphism -/
 theorem whisker_eq (f : X ⟶ Y) {g h : Y ⟶ Z} (w : g = h) : f ≫ g = f ≫ h :=
-  by
+  by 
     rw [w]
 
 infixr:80 " =≫ " => eq_whisker
@@ -136,12 +142,12 @@ infixr:80 " =≫ " => eq_whisker
 infixr:80 " ≫= " => whisker_eq
 
 theorem eq_of_comp_left_eq {f g : X ⟶ Y} (w : ∀ {Z : C} h : Y ⟶ Z, f ≫ h = g ≫ h) : f = g :=
-  by
+  by 
     convert w (𝟙 Y)
     tidy
 
 theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} h : X ⟶ Y, h ≫ f = h ≫ g) : f = g :=
-  by
+  by 
     convert w (𝟙 Y)
     tidy
 
@@ -149,34 +155,34 @@ theorem eq_of_comp_left_eq' (f g : X ⟶ Y) (w : (fun {Z : C} h : Y ⟶ Z => f �
   f = g :=
   eq_of_comp_left_eq
     fun Z h =>
-      by
+      by 
         convert congr_funₓ (congr_funₓ w Z) h
 
 theorem eq_of_comp_right_eq' (f g : Y ⟶ Z) (w : (fun {X : C} h : X ⟶ Y => h ≫ f) = fun {X : C} h : X ⟶ Y => h ≫ g) :
   f = g :=
   eq_of_comp_right_eq
     fun X h =>
-      by
+      by 
         convert congr_funₓ (congr_funₓ w X) h
 
 theorem id_of_comp_left_id (f : X ⟶ X) (w : ∀ {Y : C} g : X ⟶ Y, f ≫ g = g) : f = 𝟙 X :=
-  by
+  by 
     convert w (𝟙 X)
     tidy
 
 theorem id_of_comp_right_id (f : X ⟶ X) (w : ∀ {Y : C} g : Y ⟶ X, g ≫ f = g) : f = 𝟙 X :=
-  by
+  by 
     convert w (𝟙 X)
     tidy
 
 theorem comp_dite {P : Prop} [Decidable P] {X Y Z : C} (f : X ⟶ Y) (g : P → (Y ⟶ Z)) (g' : ¬P → (Y ⟶ Z)) :
   (f ≫ if h : P then g h else g' h) = if h : P then f ≫ g h else f ≫ g' h :=
-  by
+  by 
     splitIfs <;> rfl
 
 theorem dite_comp {P : Prop} [Decidable P] {X Y Z : C} (f : P → (X ⟶ Y)) (f' : ¬P → (X ⟶ Y)) (g : Y ⟶ Z) :
   (if h : P then f h else f' h) ≫ g = if h : P then f h ≫ g else f' h ≫ g :=
-  by
+  by 
     splitIfs <;> rfl
 
 /--
@@ -185,7 +191,7 @@ A morphism `f` is an epimorphism if it can be "cancelled" when precomposed:
 
 See https://stacks.math.columbia.edu/tag/003B.
 -/
-class epi(f : X ⟶ Y) : Prop where
+class epi(f : X ⟶ Y) : Prop where 
   left_cancellation : ∀ {Z : C} g h : Y ⟶ Z w : f ≫ g = f ≫ h, g = h
 
 /--
@@ -194,87 +200,87 @@ A morphism `f` is a monomorphism if it can be "cancelled" when postcomposed:
 
 See https://stacks.math.columbia.edu/tag/003B.
 -/
-class mono(f : X ⟶ Y) : Prop where
+class mono(f : X ⟶ Y) : Prop where 
   right_cancellation : ∀ {Z : C} g h : Z ⟶ X w : g ≫ f = h ≫ f, g = h
 
 instance  (X : C) : epi (𝟙 X) :=
   ⟨fun Z g h w =>
-      by
+      by 
         simpa using w⟩
 
 instance  (X : C) : mono (𝟙 X) :=
   ⟨fun Z g h w =>
-      by
+      by 
         simpa using w⟩
 
 theorem cancel_epi (f : X ⟶ Y) [epi f] {g h : Y ⟶ Z} : f ≫ g = f ≫ h ↔ g = h :=
   ⟨fun p => epi.left_cancellation g h p,
-    by
-      intro a
+    by 
+      intro a 
       subst a⟩
 
 theorem cancel_mono (f : X ⟶ Y) [mono f] {g h : Z ⟶ X} : g ≫ f = h ≫ f ↔ g = h :=
   ⟨fun p => mono.right_cancellation g h p,
-    by
-      intro a
+    by 
+      intro a 
       subst a⟩
 
 theorem cancel_epi_id (f : X ⟶ Y) [epi f] {h : Y ⟶ Y} : f ≫ h = f ↔ h = 𝟙 Y :=
-  by
-    convert cancel_epi f
-    simp
+  by 
+    convert cancel_epi f 
+    simp 
 
 theorem cancel_mono_id (f : X ⟶ Y) [mono f] {g : X ⟶ X} : g ≫ f = f ↔ g = 𝟙 X :=
-  by
-    convert cancel_mono f
-    simp
+  by 
+    convert cancel_mono f 
+    simp 
 
 theorem epi_comp {X Y Z : C} (f : X ⟶ Y) [epi f] (g : Y ⟶ Z) [epi g] : epi (f ≫ g) :=
-  by
-    split
-    intro Z a b w
+  by 
+    split 
+    intro Z a b w 
     apply (cancel_epi g).1
     apply (cancel_epi f).1
     simpa using w
 
 theorem mono_comp {X Y Z : C} (f : X ⟶ Y) [mono f] (g : Y ⟶ Z) [mono g] : mono (f ≫ g) :=
-  by
-    split
-    intro Z a b w
+  by 
+    split 
+    intro Z a b w 
     apply (cancel_mono f).1
     apply (cancel_mono g).1
     simpa using w
 
 theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [mono (f ≫ g)] : mono f :=
-  by
-    split
-    intro Z a b w
-    replace w := congr_argₓ (fun k => k ≫ g) w
-    dsimp  at w
-    rw [category.assoc, category.assoc] at w
+  by 
+    split 
+    intro Z a b w 
+    replace w := congr_argₓ (fun k => k ≫ g) w 
+    dsimp  at w 
+    rw [category.assoc, category.assoc] at w 
     exact (cancel_mono _).1 w
 
 theorem mono_of_mono_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [mono h] (w : f ≫ g = h) : mono f :=
-  by
-    substI h
+  by 
+    substI h 
     exact mono_of_mono f g
 
 theorem epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [epi (f ≫ g)] : epi g :=
-  by
-    split
-    intro Z a b w
-    replace w := congr_argₓ (fun k => f ≫ k) w
-    dsimp  at w
-    rw [←category.assoc, ←category.assoc] at w
+  by 
+    split 
+    intro Z a b w 
+    replace w := congr_argₓ (fun k => f ≫ k) w 
+    dsimp  at w 
+    rw [←category.assoc, ←category.assoc] at w 
     exact (cancel_epi _).1 w
 
 theorem epi_of_epi_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [epi h] (w : f ≫ g = h) : epi g :=
-  by
+  by 
     substI h <;> exact epi_of_epi f g
 
-end
+end 
 
-section
+section 
 
 variable(C : Type u)
 
@@ -286,10 +292,10 @@ instance ulift_category : category.{v} (Ulift.{u'} C) :=
   { Hom := fun X Y => X.down ⟶ Y.down, id := fun X => 𝟙 X.down, comp := fun _ _ _ f g => f ≫ g }
 
 example  (D : Type u) [small_category D] : large_category (Ulift.{u + 1} D) :=
-  by
+  by 
     infer_instance
 
-end
+end 
 
 end CategoryTheory
 
