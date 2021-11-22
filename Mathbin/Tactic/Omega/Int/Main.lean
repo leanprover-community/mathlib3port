@@ -1,0 +1,210 @@
+import Mathbin.Tactic.Omega.ProveUnsats 
+import Mathbin.Tactic.Omega.Int.Dnf
+
+open Tactic
+
+namespace Omega
+
+namespace Int
+
+open_locale Omega.Int
+
+run_cmd 
+  mk_simp_attr `sugar
+
+attribute [sugar] Ne not_leₓ not_ltₓ Int.lt_iff_add_one_le or_falseₓ false_orₓ and_trueₓ true_andₓ Ge Gt mul_addₓ
+  add_mulₓ one_mulₓ mul_oneₓ mul_commₓ sub_eq_add_neg imp_iff_not_or iff_iff_not_or_and_or_not
+
+unsafe def desugar :=
+  sorry
+
+theorem univ_close_of_unsat_clausify (m : Nat) (p : preform) : clauses.unsat (dnf (¬* p)) → univ_close p (fun x => 0) m
+| h1 =>
+  by 
+    apply univ_close_of_valid 
+    apply valid_of_unsat_not 
+    apply unsat_of_clauses_unsat 
+    exact h1
+
+/-- Given a (p : preform), return the expr of a (t : univ_close m p) -/
+unsafe def prove_univ_close (m : Nat) (p : preform) : tactic expr :=
+  do 
+    let x ← prove_unsats (dnf (¬* p))
+    return (quote univ_close_of_unsat_clausify (%%quote m) (%%quote p) (%%x))
+
+/-- Reification to imtermediate shadow syntax that retains exprs -/
+unsafe def to_exprterm : expr → tactic exprterm
+| quote -%%x =>
+  (do 
+      let z ← eval_expr' Int x 
+      return (exprterm.cst (-z : Int))) <|>
+    return$ exprterm.exp (-1 : Int) x
+| quote (%%mx)*%%zx =>
+  do 
+    let z ← eval_expr' Int zx 
+    return (exprterm.exp z mx)
+| quote (%%t1x)+%%t2x =>
+  do 
+    let t1 ← to_exprterm t1x 
+    let t2 ← to_exprterm t2x 
+    return (exprterm.add t1 t2)
+| x =>
+  (do 
+      let z ← eval_expr' Int x 
+      return (exprterm.cst z)) <|>
+    return$ exprterm.exp 1 x
+
+/-- Reification to imtermediate shadow syntax that retains exprs -/
+unsafe def to_exprform : expr → tactic exprform
+| quote (%%tx1) = %%tx2 =>
+  do 
+    let t1 ← to_exprterm tx1 
+    let t2 ← to_exprterm tx2 
+    return (exprform.eq t1 t2)
+| quote (%%tx1) ≤ %%tx2 =>
+  do 
+    let t1 ← to_exprterm tx1 
+    let t2 ← to_exprterm tx2 
+    return (exprform.le t1 t2)
+| quote ¬%%px =>
+  do 
+    let p ← to_exprform px 
+    return (exprform.not p)
+| quote (%%px) ∨ %%qx =>
+  do 
+    let p ← to_exprform px 
+    let q ← to_exprform qx 
+    return (exprform.or p q)
+| quote (%%px) ∧ %%qx =>
+  do 
+    let p ← to_exprform px 
+    let q ← to_exprform qx 
+    return (exprform.and p q)
+| quote _ → %%px => to_exprform px
+| x => trace "Cannot reify expr : " >> trace x >> failed
+
+/-- List of all unreified exprs -/
+unsafe def exprterm.exprs : exprterm → List expr
+| exprterm.cst _ => []
+| exprterm.exp _ x => [x]
+| exprterm.add t s => List.unionₓ t.exprs s.exprs
+
+/-- List of all unreified exprs -/
+unsafe def exprform.exprs : exprform → List expr
+| exprform.eq t s => List.unionₓ t.exprs s.exprs
+| exprform.le t s => List.unionₓ t.exprs s.exprs
+| exprform.not p => p.exprs
+| exprform.or p q => List.unionₓ p.exprs q.exprs
+| exprform.and p q => List.unionₓ p.exprs q.exprs
+
+/-- Reification to an intermediate shadow syntax which eliminates exprs,
+    but still includes non-canonical terms -/
+unsafe def exprterm.to_preterm (xs : List expr) : exprterm → tactic preterm
+| exprterm.cst k => return (&k)
+| exprterm.exp k x =>
+  let m := xs.index_of x 
+  if m < xs.length then return (k ** m) else failed
+| exprterm.add xa xb =>
+  do 
+    let a ← xa.to_preterm 
+    let b ← xb.to_preterm 
+    return (a+*b)
+
+/-- Reification to an intermediate shadow syntax which eliminates exprs,
+    but still includes non-canonical terms -/
+unsafe def exprform.to_preform (xs : List expr) : exprform → tactic preform
+| exprform.eq xa xb =>
+  do 
+    let a ← xa.to_preterm xs 
+    let b ← xb.to_preterm xs 
+    return (a =* b)
+| exprform.le xa xb =>
+  do 
+    let a ← xa.to_preterm xs 
+    let b ← xb.to_preterm xs 
+    return (a ≤* b)
+| exprform.not xp =>
+  do 
+    let p ← xp.to_preform 
+    return (¬* p)
+| exprform.or xp xq =>
+  do 
+    let p ← xp.to_preform 
+    let q ← xq.to_preform 
+    return (p ∨* q)
+| exprform.and xp xq =>
+  do 
+    let p ← xp.to_preform 
+    let q ← xq.to_preform 
+    return (p ∧* q)
+
+/-- Reification to an intermediate shadow syntax which eliminates exprs,
+    but still includes non-canonical terms. -/
+unsafe def to_preform (x : expr) : tactic (preform × Nat) :=
+  do 
+    let xf ← to_exprform x 
+    let xs := xf.exprs 
+    let f ← xf.to_preform xs 
+    return (f, xs.length)
+
+/-- Return expr of proof of current LIA goal -/
+unsafe def prove : tactic expr :=
+  do 
+    let (p, m) ← target >>= to_preform 
+    trace_if_enabled `omega p 
+    prove_univ_close m p
+
+/-- Succeed iff argument is the expr of ℤ -/
+unsafe def eq_int (x : expr) : tactic Unit :=
+  if x = quote Int then skip else failed
+
+/-- Check whether argument is expr of a well-formed formula of LIA-/
+unsafe def wff : expr → tactic Unit
+| quote ¬%%px => wff px
+| quote (%%px) ∨ %%qx => wff px >> wff qx
+| quote (%%px) ∧ %%qx => wff px >> wff qx
+| quote (%%px) ↔ %%qx => wff px >> wff qx
+| quote %%expr.pi _ _ px qx =>
+  Monadₓ.cond (if expr.has_var px then return tt else is_prop px) (wff px >> wff qx) (eq_int px >> wff qx)
+| quote @LT.lt (%%dx) (%%h) _ _ => eq_int dx
+| quote @LE.le (%%dx) (%%h) _ _ => eq_int dx
+| quote @Eq (%%dx) _ _ => eq_int dx
+| quote @Ge (%%dx) (%%h) _ _ => eq_int dx
+| quote @Gt (%%dx) (%%h) _ _ => eq_int dx
+| quote @Ne (%%dx) _ _ => eq_int dx
+| quote True => skip
+| quote False => skip
+| _ => failed
+
+/-- Succeed iff argument is expr of term whose type is wff -/
+unsafe def wfx (x : expr) : tactic Unit :=
+  infer_type x >>= wff
+
+/-- Intro all universal quantifiers over ℤ -/
+unsafe def intro_ints_core : tactic Unit :=
+  do 
+    let x ← target 
+    match x with 
+      | expr.pi _ _ (quote Int) _ => intro_fresh >> intro_ints_core
+      | _ => skip
+
+unsafe def intro_ints : tactic Unit :=
+  do 
+    let expr.pi _ _ (quote Int) _ ← target 
+    intro_ints_core
+
+/-- If the goal has universal quantifiers over integers, introduce all of them.
+Otherwise, revert all hypotheses that are formulas of linear integer arithmetic. -/
+unsafe def preprocess : tactic Unit :=
+  intro_ints <|> revert_cond_all wfx >> desugar
+
+end Int
+
+end Omega
+
+open Omega.Int
+
+/-- The core omega tactic for integers. -/
+unsafe def omega_int (is_manual : Bool) : tactic Unit :=
+  (desugar; if is_manual then skip else preprocess); prove >>= apply >> skip
+

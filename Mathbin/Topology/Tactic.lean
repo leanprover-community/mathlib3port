@@ -1,0 +1,108 @@
+import Mathbin.Tactic.AutoCases 
+import Mathbin.Tactic.Tidy 
+import Mathbin.Tactic.WithLocalReducibility 
+import Mathbin.Tactic.ShowTerm 
+import Mathbin.Topology.Basic
+
+/-!
+# Tactics for topology
+
+Currently we have one domain-specific tactic for topology: `continuity`.
+
+-/
+
+
+/-!
+### `continuity` tactic
+
+Automatically solve goals of the form `continuous f`.
+
+Mark lemmas with `@[continuity]` to add them to the set of lemmas
+used by `continuity`.
+-/
+
+
+/-- User attribute used to mark tactics used by `continuity`. -/
+@[user_attribute]
+unsafe def continuity : user_attribute :=
+  { Name := `continuity, descr := "lemmas usable to prove continuity" }
+
+attribute [continuity] continuous_id continuous_const
+
+@[continuity]
+theorem continuous_id' {α : Type _} [TopologicalSpace α] : Continuous fun a : α => a :=
+  continuous_id
+
+namespace Tactic
+
+/--
+Tactic to apply `continuous.comp` when appropriate.
+
+Applying `continuous.comp` is not always a good idea, so we have some
+extra logic here to try to avoid bad cases.
+
+* If the function we're trying to prove continuous is actually
+  constant, and that constant is a function application `f z`, then
+  continuous.comp would produce new goals `continuous f`, `continuous
+  (λ _, z)`, which is silly. We avoid this by failing if we could
+  apply continuous_const.
+
+* continuous.comp will always succeed on `continuous (λ x, f x)` and
+  produce new goals `continuous (λ x, x)`, `continuous f`. We detect
+  this by failing if a new goal can be closed by applying
+  continuous_id.
+-/
+unsafe def apply_continuous.comp : tactic Unit :=
+  sorry
+
+/-- List of tactics used by `continuity` internally. -/
+unsafe def continuity_tactics (md : transparency := reducible) : List (tactic Stringₓ) :=
+  [intros1 >>= fun ns => pure ("intros " ++ " ".intercalate (ns.map fun e => e.to_string)),
+    apply_rules [pquote continuity] 50 { md } >> pure "apply_rules continuity",
+    apply_continuous.comp >> pure "refine continuous.comp _ _"]
+
+namespace Interactive
+
+setup_tactic_parser
+
+/--
+Solve goals of the form `continuous f`. `continuity?` reports back the proof term it found.
+-/
+unsafe def continuity (bang : parse$ optionalₓ (tk "!")) (trace : parse$ optionalₓ (tk "?")) (cfg : tidy.cfg := {  }) :
+  tactic Unit :=
+  let md := if bang.is_some then semireducible else reducible 
+  let continuity_core := tactic.tidy { cfg with tactics := continuity_tactics md }
+  let trace_fn := if trace.is_some then show_term else id 
+  trace_fn continuity_core
+
+/-- Version of `continuity` for use with auto_param. -/
+unsafe def continuity' : tactic Unit :=
+  continuity none none {  }
+
+/--
+`continuity` solves goals of the form `continuous f` by applying lemmas tagged with the
+`continuity` user attribute.
+
+```
+example {X Y : Type*} [topological_space X] [topological_space Y]
+  (f₁ f₂ : X → Y) (hf₁ : continuous f₁) (hf₂ : continuous f₂)
+  (g : Y → ℝ) (hg : continuous g) : continuous (λ x, (max (g (f₁ x)) (g (f₂ x))) + 1) :=
+by continuity
+```
+will discharge the goal, generating a proof term like
+`((continuous.comp hg hf₁).max (continuous.comp hg hf₂)).add continuous_const`
+
+You can also use `continuity!`, which applies lemmas with `{ md := semireducible }`.
+The default behaviour is more conservative, and only unfolds `reducible` definitions
+when attempting to match lemmas with the goal.
+
+`continuity?` reports back the proof term it found.
+-/
+add_tactic_doc
+  { Name := "continuity / continuity'", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.continuity, `tactic.interactive.continuity'], tags := ["lemma application"] }
+
+end Interactive
+
+end Tactic
+

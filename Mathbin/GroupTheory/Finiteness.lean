@@ -1,0 +1,221 @@
+import Mathbin.Data.Set.Finite 
+import Mathbin.GroupTheory.Submonoid.Operations 
+import Mathbin.GroupTheory.Subgroup.Basic
+
+/-!
+# Finitely generated monoids and groups
+
+We define finitely generated monoids and groups. See also `submodule.fg` and `module.finite` for
+finitely-generated modules.
+
+## Main definition
+
+* `submonoid.fg S`, `add_submonoid.fg S` : A submonoid `S` is finitely generated.
+* `monoid.fg M`, `add_monoid.fg M` : A typeclass indicating a type `M` is finitely generated as a
+monoid.
+* `subgroup.fg S`, `add_subgroup.fg S` : A subgroup `S` is finitely generated.
+* `group.fg M`, `add_group.fg M` : A typeclass indicating a type `M` is finitely generated as a
+group.
+
+-/
+
+
+/-! ### Monoids and submonoids -/
+
+
+open_locale Pointwise
+
+variable{M N : Type _}[Monoidₓ M][AddMonoidₓ N]
+
+section Submonoid
+
+/-- A submonoid of `M` is finitely generated if it is the closure of a finite subset of `M`. -/
+@[toAdditive]
+def Submonoid.Fg (P : Submonoid M) : Prop :=
+  ∃ S : Finset M, Submonoid.closure («expr↑ » S) = P
+
+/-- An additive submonoid of `N` is finitely generated if it is the closure of a finite subset of
+`M`. -/
+add_decl_doc AddSubmonoid.Fg
+
+/-- An equivalent expression of `submonoid.fg` in terms of `set.finite` instead of `finset`. -/
+@[toAdditive "An equivalent expression of `add_submonoid.fg` in terms of `set.finite` instead of\n`finset`."]
+theorem Submonoid.fg_iff (P : Submonoid M) : Submonoid.Fg P ↔ ∃ S : Set M, Submonoid.closure S = P ∧ S.finite :=
+  ⟨fun ⟨S, hS⟩ => ⟨S, hS, Finset.finite_to_set S⟩,
+    fun ⟨S, hS, hf⟩ =>
+      ⟨Set.Finite.toFinset hf,
+        by 
+          simp [hS]⟩⟩
+
+theorem Submonoid.fg_iff_add_fg (P : Submonoid M) : P.fg ↔ P.to_add_submonoid.fg :=
+  ⟨fun h =>
+      let ⟨S, hS, hf⟩ := (Submonoid.fg_iff _).1 h
+      (AddSubmonoid.fg_iff _).mpr
+        ⟨Additive.toMul ⁻¹' S,
+          by 
+            simp [←Submonoid.to_add_submonoid_closure, hS],
+          hf⟩,
+    fun h =>
+      let ⟨T, hT, hf⟩ := (AddSubmonoid.fg_iff _).1 h
+      (Submonoid.fg_iff _).mpr
+        ⟨Multiplicative.ofAdd ⁻¹' T,
+          by 
+            simp [←AddSubmonoid.to_submonoid'_closure, hT],
+          hf⟩⟩
+
+theorem AddSubmonoid.fg_iff_mul_fg (P : AddSubmonoid N) : P.fg ↔ P.to_submonoid.fg :=
+  by 
+    convert (Submonoid.fg_iff_add_fg P.to_submonoid).symm 
+    exact SetLike.ext' rfl
+
+end Submonoid
+
+section Monoidₓ
+
+variable(M N)
+
+/-- A monoid is finitely generated if it is finitely generated as a submonoid of itself. -/
+class Monoidₓ.Fg : Prop where 
+  out : (⊤ : Submonoid M).Fg
+
+/-- An additive monoid is finitely generated if it is finitely generated as an additive submonoid of
+itself. -/
+class AddMonoidₓ.Fg : Prop where 
+  out : (⊤ : AddSubmonoid N).Fg
+
+attribute [toAdditive] Monoidₓ.Fg
+
+variable{M N}
+
+theorem Monoidₓ.fg_def : Monoidₓ.Fg M ↔ (⊤ : Submonoid M).Fg :=
+  ⟨fun h => h.1, fun h => ⟨h⟩⟩
+
+theorem AddMonoidₓ.fg_def : AddMonoidₓ.Fg N ↔ (⊤ : AddSubmonoid N).Fg :=
+  ⟨fun h => h.1, fun h => ⟨h⟩⟩
+
+/-- An equivalent expression of `monoid.fg` in terms of `set.finite` instead of `finset`. -/
+@[toAdditive "An equivalent expression of `add_monoid.fg` in terms of `set.finite` instead of\n`finset`."]
+theorem Monoidₓ.fg_iff : Monoidₓ.Fg M ↔ ∃ S : Set M, Submonoid.closure S = (⊤ : Submonoid M) ∧ S.finite :=
+  ⟨fun h => (Submonoid.fg_iff ⊤).1 h.out, fun h => ⟨(Submonoid.fg_iff ⊤).2 h⟩⟩
+
+theorem Monoidₓ.fg_iff_add_fg : Monoidₓ.Fg M ↔ AddMonoidₓ.Fg (Additive M) :=
+  ⟨fun h => ⟨(Submonoid.fg_iff_add_fg ⊤).1 h.out⟩, fun h => ⟨(Submonoid.fg_iff_add_fg ⊤).2 h.out⟩⟩
+
+theorem AddMonoidₓ.fg_iff_mul_fg : AddMonoidₓ.Fg N ↔ Monoidₓ.Fg (Multiplicative N) :=
+  ⟨fun h => ⟨(AddSubmonoid.fg_iff_mul_fg ⊤).1 h.out⟩, fun h => ⟨(AddSubmonoid.fg_iff_mul_fg ⊤).2 h.out⟩⟩
+
+instance AddMonoidₓ.fg_of_monoid_fg [Monoidₓ.Fg M] : AddMonoidₓ.Fg (Additive M) :=
+  Monoidₓ.fg_iff_add_fg.1 ‹_›
+
+instance Monoidₓ.fg_of_add_monoid_fg [AddMonoidₓ.Fg N] : Monoidₓ.Fg (Multiplicative N) :=
+  AddMonoidₓ.fg_iff_mul_fg.1 ‹_›
+
+end Monoidₓ
+
+/-! ### Groups and subgroups -/
+
+
+variable{G H : Type _}[Groupₓ G][AddGroupₓ H]
+
+section Subgroup
+
+/-- A subgroup of `G` is finitely generated if it is the closure of a finite subset of `G`. -/
+@[toAdditive]
+def Subgroup.Fg (P : Subgroup G) : Prop :=
+  ∃ S : Finset G, Subgroup.closure («expr↑ » S) = P
+
+/-- An additive subgroup of `H` is finitely generated if it is the closure of a finite subset of
+`H`. -/
+add_decl_doc AddSubgroup.Fg
+
+/-- An equivalent expression of `subgroup.fg` in terms of `set.finite` instead of `finset`. -/
+@[toAdditive "An equivalent expression of `add_subgroup.fg` in terms of `set.finite` instead of\n`finset`."]
+theorem Subgroup.fg_iff (P : Subgroup G) : Subgroup.Fg P ↔ ∃ S : Set G, Subgroup.closure S = P ∧ S.finite :=
+  ⟨fun ⟨S, hS⟩ => ⟨S, hS, Finset.finite_to_set S⟩,
+    fun ⟨S, hS, hf⟩ =>
+      ⟨Set.Finite.toFinset hf,
+        by 
+          simp [hS]⟩⟩
+
+/-- A subgroup is finitely generated if and only if it is finitely generated as a submonoid. -/
+@[toAdditive AddSubgroup.FgIffAddSubmonoid.fg
+      "An additive subgroup is finitely generated if\nand only if it is finitely generated as an additive submonoid."]
+theorem Subgroup.fg_iff_submonoid_fg (P : Subgroup G) : P.fg ↔ P.to_submonoid.fg :=
+  by 
+    split 
+    ·
+      rintro ⟨S, rfl⟩
+      rw [Submonoid.fg_iff]
+      refine' ⟨S ∪ S⁻¹, _, S.finite_to_set.union S.finite_to_set.inv⟩
+      exact (Subgroup.closure_to_submonoid _).symm
+    ·
+      rintro ⟨S, hS⟩
+      refine' ⟨S, le_antisymmₓ _ _⟩
+      ·
+        rw [Subgroup.closure_le, ←Subgroup.coe_to_submonoid, ←hS]
+        exact Submonoid.subset_closure
+      ·
+        rw [←Subgroup.to_submonoid_le, ←hS, Submonoid.closure_le]
+        exact Subgroup.subset_closure
+
+theorem Subgroup.fg_iff_add_fg (P : Subgroup G) : P.fg ↔ P.to_add_subgroup.fg :=
+  by 
+    rw [Subgroup.fg_iff_submonoid_fg, AddSubgroup.FgIffAddSubmonoid.fg]
+    exact (Subgroup.toSubmonoid P).fg_iff_add_fg
+
+theorem AddSubgroup.fg_iff_mul_fg (P : AddSubgroup H) : P.fg ↔ P.to_subgroup.fg :=
+  by 
+    rw [AddSubgroup.FgIffAddSubmonoid.fg, Subgroup.fg_iff_submonoid_fg]
+    exact AddSubmonoid.fg_iff_mul_fg (AddSubgroup.toAddSubmonoid P)
+
+end Subgroup
+
+section Groupₓ
+
+variable(G H)
+
+/-- A group is finitely generated if it is finitely generated as a submonoid of itself. -/
+class Groupₓ.Fg : Prop where 
+  out : (⊤ : Subgroup G).Fg
+
+/-- An additive group is finitely generated if it is finitely generated as an additive submonoid of
+itself. -/
+class AddGroupₓ.Fg : Prop where 
+  out : (⊤ : AddSubgroup H).Fg
+
+attribute [toAdditive] Groupₓ.Fg
+
+variable{G H}
+
+theorem Groupₓ.fg_def : Groupₓ.Fg G ↔ (⊤ : Subgroup G).Fg :=
+  ⟨fun h => h.1, fun h => ⟨h⟩⟩
+
+theorem AddGroupₓ.fg_def : AddGroupₓ.Fg H ↔ (⊤ : AddSubgroup H).Fg :=
+  ⟨fun h => h.1, fun h => ⟨h⟩⟩
+
+/-- An equivalent expression of `group.fg` in terms of `set.finite` instead of `finset`. -/
+@[toAdditive "An equivalent expression of `add_group.fg` in terms of `set.finite` instead of\n`finset`."]
+theorem Groupₓ.fg_iff : Groupₓ.Fg G ↔ ∃ S : Set G, Subgroup.closure S = (⊤ : Subgroup G) ∧ S.finite :=
+  ⟨fun h => (Subgroup.fg_iff ⊤).1 h.out, fun h => ⟨(Subgroup.fg_iff ⊤).2 h⟩⟩
+
+/-- A group is finitely generated if and only if it is finitely generated as a monoid. -/
+@[toAdditive AddGroupₓ.FgIffAddMonoid.fg
+      "An additive group is finitely generated if and only\nif it is finitely generated as an additive monoid."]
+theorem Groupₓ.FgIffMonoid.fg : Groupₓ.Fg G ↔ Monoidₓ.Fg G :=
+  ⟨fun h => Monoidₓ.fg_def.2$ (Subgroup.fg_iff_submonoid_fg ⊤).1 (Groupₓ.fg_def.1 h),
+    fun h => Groupₓ.fg_def.2$ (Subgroup.fg_iff_submonoid_fg ⊤).2 (Monoidₓ.fg_def.1 h)⟩
+
+theorem GroupFg.iff_add_fg : Groupₓ.Fg G ↔ AddGroupₓ.Fg (Additive G) :=
+  ⟨fun h => ⟨(Subgroup.fg_iff_add_fg ⊤).1 h.out⟩, fun h => ⟨(Subgroup.fg_iff_add_fg ⊤).2 h.out⟩⟩
+
+theorem AddGroupₓ.fg_iff_mul_fg : AddGroupₓ.Fg H ↔ Groupₓ.Fg (Multiplicative H) :=
+  ⟨fun h => ⟨(AddSubgroup.fg_iff_mul_fg ⊤).1 h.out⟩, fun h => ⟨(AddSubgroup.fg_iff_mul_fg ⊤).2 h.out⟩⟩
+
+instance AddGroupₓ.fg_of_group_fg [Groupₓ.Fg G] : AddGroupₓ.Fg (Additive G) :=
+  GroupFg.iff_add_fg.1 ‹_›
+
+instance Groupₓ.fg_of_mul_group_fg [AddGroupₓ.Fg H] : Groupₓ.Fg (Multiplicative H) :=
+  AddGroupₓ.fg_iff_mul_fg.1 ‹_›
+
+end Groupₓ
+

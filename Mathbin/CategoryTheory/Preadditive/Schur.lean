@@ -1,0 +1,190 @@
+import Mathbin.Algebra.Group.Ext 
+import Mathbin.CategoryTheory.Simple 
+import Mathbin.CategoryTheory.Linear.Default 
+import Mathbin.CategoryTheory.Endomorphism 
+import Mathbin.FieldTheory.IsAlgClosed.Basic
+
+/-!
+# Schur's lemma
+We first prove the part of Schur's Lemma that holds in any preadditive category with kernels,
+that any nonzero morphism between simple objects
+is an isomorphism.
+
+Second, we prove Schur's lemma for `𝕜`-linear categories with finite dimensional hom spaces,
+over an algebraically closed field `𝕜`:
+the hom space `X ⟶ Y` between simple objects `X` and `Y` is at most one dimensional,
+and is 1-dimensional iff `X` and `Y` are isomorphic.
+
+## Future work
+It might be nice to provide a `division_ring` instance on `End X` when `X` is simple.
+This is an easy consequence of the results here,
+but may take some care setting up usable instances.
+-/
+
+
+namespace CategoryTheory
+
+open CategoryTheory.Limits
+
+universe v u
+
+variable{C : Type u}[category.{v} C]
+
+variable[preadditive C]
+
+/--
+The part of **Schur's lemma** that holds in any preadditive category with kernels:
+that a nonzero morphism between simple objects is an isomorphism.
+-/
+theorem is_iso_of_hom_simple [has_kernels C] {X Y : C} [simple X] [simple Y] {f : X ⟶ Y} (w : f ≠ 0) : is_iso f :=
+  by 
+    haveI  : mono f := preadditive.mono_of_kernel_zero (kernel_zero_of_nonzero_from_simple w)
+    exact is_iso_of_mono_of_nonzero w
+
+/--
+As a corollary of Schur's lemma for preadditive categories,
+any morphism between simple objects is (exclusively) either an isomorphism or zero.
+-/
+theorem is_iso_iff_nonzero [has_kernels C] {X Y : C} [simple.{v} X] [simple.{v} Y] (f : X ⟶ Y) : is_iso.{v} f ↔ f ≠ 0 :=
+  ⟨fun I =>
+      by 
+        introI h 
+        apply id_nonzero X 
+        simp only [←is_iso.hom_inv_id f, h, zero_comp],
+    fun w => is_iso_of_hom_simple w⟩
+
+open FiniteDimensional
+
+variable(𝕜 : Type _)[Field 𝕜]
+
+/--
+Part of **Schur's lemma** for `𝕜`-linear categories:
+the hom space between two non-isomorphic simple objects is 0-dimensional.
+-/
+theorem finrank_hom_simple_simple_eq_zero_of_not_iso [has_kernels C] [linear 𝕜 C] {X Y : C} [simple.{v} X]
+  [simple.{v} Y] (h : (X ≅ Y) → False) : finrank 𝕜 (X ⟶ Y) = 0 :=
+  by 
+    haveI  :=
+      subsingleton_of_forall_eq (0 : X ⟶ Y)
+        fun f =>
+          by 
+            have p := not_congr (is_iso_iff_nonzero f)
+            simp only [not_not, Ne.def] at p 
+            refine'
+              p.mp
+                fun _ =>
+                  by 
+                    exactI h (as_iso f)
+    exact finrank_zero_of_subsingleton
+
+variable[IsAlgClosed 𝕜][linear 𝕜 C]
+
+attribute [local ext] Module DistribMulAction MulAction HasScalar
+
+/--
+An auxiliary lemma for Schur's lemma.
+
+If `X ⟶ X` is finite dimensional, and every nonzero endomorphism is invertible,
+then `X ⟶ X` is 1-dimensional.
+-/
+theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ X, is_iso f ↔ f ≠ 0)
+  [I : FiniteDimensional 𝕜 (X ⟶ X)] : finrank 𝕜 (X ⟶ X) = 1 :=
+  by 
+    have id_nonzero :=
+      (is_iso_iff_nonzero (𝟙 X)).mp
+        (by 
+          infer_instance)
+    apply finrank_eq_one (𝟙 X)
+    ·
+      exact id_nonzero
+    ·
+      intro f 
+      haveI  : Nontrivial (End X) := nontrivial_of_ne _ _ id_nonzero 
+      obtain ⟨c, nu⟩ :=
+        @exists_spectrum_of_is_alg_closed_of_finite_dimensional 𝕜 _ _ (End X) _ _ _
+          (by 
+            convert I 
+            ext 
+            rfl 
+            ext 
+            rfl)
+          (End.of f)
+      use c 
+      rw [is_unit_iff_is_iso, is_iso_iff_nonzero, Ne.def, not_not, sub_eq_zero, Algebra.algebra_map_eq_smul_one] at nu 
+      exact nu.symm
+
+variable[has_kernels C]
+
+/--
+**Schur's lemma** for endomorphisms in `𝕜`-linear categories.
+-/
+theorem finrank_endomorphism_simple_eq_one (X : C) [simple.{v} X] [I : FiniteDimensional 𝕜 (X ⟶ X)] :
+  finrank 𝕜 (X ⟶ X) = 1 :=
+  finrank_endomorphism_eq_one 𝕜 is_iso_iff_nonzero
+
+theorem endomorphism_simple_eq_smul_id {X : C} [simple.{v} X] [I : FiniteDimensional 𝕜 (X ⟶ X)] (f : X ⟶ X) :
+  ∃ c : 𝕜, c • 𝟙 X = f :=
+  (finrank_eq_one_iff_of_nonzero' (𝟙 X) (id_nonzero X)).mp (finrank_endomorphism_simple_eq_one 𝕜 X) f
+
+/--
+**Schur's lemma** for `𝕜`-linear categories:
+if hom spaces are finite dimensional, then the hom space between simples is at most 1-dimensional.
+
+See `finrank_hom_simple_simple_eq_one_iff` and `finrank_hom_simple_simple_eq_zero_iff` below
+for the refinements when we know whether or not the simples are isomorphic.
+-/
+theorem finrank_hom_simple_simple_le_one (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [simple.{v} X]
+  [simple.{v} Y] : finrank 𝕜 (X ⟶ Y) ≤ 1 :=
+  by 
+    cases' subsingleton_or_nontrivial (X ⟶ Y) with h
+    ·
+      resetI 
+      convert zero_le_one 
+      exact finrank_zero_of_subsingleton
+    ·
+      obtain ⟨f, nz⟩ := (nontrivial_iff_exists_ne 0).mp h 
+      haveI fi := (is_iso_iff_nonzero f).mpr nz 
+      apply finrank_le_one f 
+      intro g 
+      obtain ⟨c, w⟩ := endomorphism_simple_eq_smul_id 𝕜 (g ≫ inv f)
+      exact
+        ⟨c,
+          by 
+            simpa using w =≫ f⟩
+
+theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [simple.{v} X]
+  [simple.{v} Y] : finrank 𝕜 (X ⟶ Y) = 1 ↔ Nonempty (X ≅ Y) :=
+  by 
+    fsplit
+    ·
+      intro h 
+      rw [finrank_eq_one_iff'] at h 
+      obtain ⟨f, nz, -⟩ := h 
+      rw [←is_iso_iff_nonzero] at nz 
+      exactI ⟨as_iso f⟩
+    ·
+      rintro ⟨f⟩
+      have le_one := finrank_hom_simple_simple_le_one 𝕜 X Y 
+      have zero_lt : 0 < finrank 𝕜 (X ⟶ Y) :=
+        finrank_pos_iff_exists_ne_zero.mpr ⟨f.hom, (is_iso_iff_nonzero f.hom).mp inferInstance⟩
+      linarith
+
+theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [simple.{v} X]
+  [simple.{v} Y] : finrank 𝕜 (X ⟶ Y) = 0 ↔ IsEmpty (X ≅ Y) :=
+  by 
+    rw [←not_nonempty_iff, ←not_congr (finrank_hom_simple_simple_eq_one_iff 𝕜 X Y)]
+    refine'
+      ⟨fun h =>
+          by 
+            rw [h]
+            simp ,
+        fun h => _⟩
+    have  := finrank_hom_simple_simple_le_one 𝕜 X Y 
+    intervalCases finrank 𝕜 (X ⟶ Y) with h'
+    ·
+      exact h'
+    ·
+      exact False.elim (h h')
+
+end CategoryTheory
+

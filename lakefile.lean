@@ -35,6 +35,7 @@ def fetchOleans (dir : FilePath) : OpaqueTarget := { info := (), task := fetch }
 
 def fetchLeans (dir : FilePath) : OpaqueTarget := { info := (), task := fetch } where
   fetch := async do
+    -- IO.FS.removeDirAll (srcDir / "Mathbin")
     IO.FS.createDirAll srcDir
     let oldTrace := Hash.ofString (← Git.headRevision dir)
     buildFileUnlessUpToDate (srcDir / leanTarName) oldTrace do

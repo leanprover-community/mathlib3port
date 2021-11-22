@@ -1,0 +1,52 @@
+import Mathbin.Data.Finset.Lattice
+
+/-!
+# Relations holding pairwise on finite sets
+
+In this file we prove a few results about the interaction of `set.pairwise_disjoint` and `finset`.
+-/
+
+
+open Finset
+
+variable{α ι ι' : Type _}
+
+theorem Finset.pairwise_disjoint_range_singleton [DecidableEq α] :
+  (Set.Range (singleton : α → Finset α)).PairwiseDisjoint id :=
+  by 
+    rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ h 
+    exact disjoint_singleton.2 (ne_of_apply_ne _ h)
+
+namespace Set
+
+theorem pairwise_disjoint.elim_finset [DecidableEq α] {s : Set ι} {f : ι → Finset α} (hs : s.pairwise_disjoint f)
+  {i j : ι} (hi : i ∈ s) (hj : j ∈ s) (a : α) (hai : a ∈ f i) (haj : a ∈ f j) : i = j :=
+  hs.elim hi hj (Finset.not_disjoint_iff.2 ⟨a, hai, haj⟩)
+
+theorem pairwise_disjoint.image_finset_of_le [DecidableEq ι] [SemilatticeInfBot α] {s : Finset ι} {f : ι → α}
+  (hs : (s : Set ι).PairwiseDisjoint f) {g : ι → ι} (hf : ∀ a, f (g a) ≤ f a) :
+  (s.image g : Set ι).PairwiseDisjoint f :=
+  by 
+    rw [coe_image]
+    exact hs.image_of_le hf
+
+variable[DistribLatticeBot α]
+
+/-- Bind operation for `set.pairwise_disjoint`. In a complete lattice, you can use
+`set.pairwise_disjoint.bUnion`. -/
+theorem pairwise_disjoint.bUnion_finset {s : Set ι'} {g : ι' → Finset ι} {f : ι → α}
+  (hs : s.pairwise_disjoint fun i' : ι' => (g i').sup f) (hg : ∀ i _ : i ∈ s, (g i : Set ι).PairwiseDisjoint f) :
+  (⋃(i : _)(_ : i ∈ s), «expr↑ » (g i)).PairwiseDisjoint f :=
+  by 
+    rintro a ha b hb hab 
+    simpRw [Set.mem_Union]  at ha hb 
+    obtain ⟨c, hc, ha⟩ := ha 
+    obtain ⟨d, hd, hb⟩ := hb 
+    obtain hcd | hcd := eq_or_ne (g c) (g d)
+    ·
+      exact hg d hd a (hcd ▸ ha) b hb hab
+    ·
+      exact (hs _ hc _ hd (ne_of_apply_ne _ hcd)).mono (Finset.le_sup ha) (Finset.le_sup hb)
+
+end Set
+

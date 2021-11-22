@@ -1,0 +1,117 @@
+import Mathbin.MeasureTheory.Measure.MeasureSpace
+
+/-!
+# Measure preserving maps
+
+We say that `f : α → β` is a measure preserving map w.r.t. measures `μ : measure α` and
+`ν : measure β` if `f` is measurable and `map f μ = ν`. In this file we define the predicate
+`measure_theory.measure_preserving` and prove its basic properties.
+
+We use the term "measure preserving" because in many applications `α = β` and `μ = ν`.
+
+## References
+
+Partially based on
+[this](https://www.isa-afp.org/browser_info/current/AFP/Ergodic_Theory/Measure_Preserving_Transformations.html)
+Isabelle formalization.
+
+## Tags
+
+measure preserving map, measure
+-/
+
+
+variable{α β γ δ : Type _}[MeasurableSpace α][MeasurableSpace β][MeasurableSpace γ][MeasurableSpace δ]
+
+namespace MeasureTheory
+
+open Measureₓ Function Set
+
+variable{μa : Measureₓ α}{μb : Measureₓ β}{μc : Measureₓ γ}{μd : Measureₓ δ}
+
+/-- `f` is a measure preserving map w.r.t. measures `μa` and `μb` if `f` is measurable
+and `map f μa = μb`. -/
+@[protectProj]
+structure
+  measure_preserving(f : α → β)(μa : Measureₓ α :=  by 
+    runTac 
+      volume_tac)(μb : Measureₓ β :=  by 
+    runTac 
+      volume_tac) :
+  Prop where 
+  Measurable : Measurable f 
+  map_eq : map f μa = μb
+
+namespace MeasurePreserving
+
+protected theorem id (μ : Measureₓ α) : measure_preserving id μ μ :=
+  ⟨measurable_id, map_id⟩
+
+theorem symm {e : α ≃ᵐ β} {μa : Measureₓ α} {μb : Measureₓ β} (h : measure_preserving e μa μb) :
+  measure_preserving e.symm μb μa :=
+  ⟨e.symm.measurable,
+    by 
+      rw [←h.map_eq, map_map e.symm.measurable e.measurable, e.symm_comp_self, map_id]⟩
+
+protected theorem quasi_measure_preserving {f : α → β} (hf : measure_preserving f μa μb) :
+  quasi_measure_preserving f μa μb :=
+  ⟨hf.1, hf.2.AbsolutelyContinuous⟩
+
+theorem comp {g : β → γ} {f : α → β} (hg : measure_preserving g μb μc) (hf : measure_preserving f μa μb) :
+  measure_preserving (g ∘ f) μa μc :=
+  ⟨hg.1.comp hf.1,
+    by 
+      rw [←map_map hg.1 hf.1, hf.2, hg.2]⟩
+
+protected theorem sigma_finite {f : α → β} (hf : measure_preserving f μa μb) [sigma_finite μb] : sigma_finite μa :=
+  sigma_finite.of_map μa hf.1
+    (by 
+      rwa [hf.map_eq])
+
+theorem measure_preimage {f : α → β} (hf : measure_preserving f μa μb) {s : Set β} (hs : MeasurableSet s) :
+  μa (f ⁻¹' s) = μb s :=
+  by 
+    rw [←hf.map_eq, map_apply hf.1 hs]
+
+protected theorem iterate {f : α → α} (hf : measure_preserving f μa μa) : ∀ n, measure_preserving (f^[n]) μa μa
+| 0 => measure_preserving.id μa
+| n+1 => (iterate n).comp hf
+
+variable{μ : Measureₓ α}{f : α → α}{s : Set α}
+
+/-- If `μ univ < n * μ s` and `f` is a map preserving measure `μ`,
+then for some `x ∈ s` and `0 < m < n`, `f^[m] x ∈ s`. -/
+theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : measure_preserving f μ μ) (hs : MeasurableSet s) {n : ℕ}
+  (hvol : μ (univ : Set α) < n*μ s) : ∃ (x : _)(_ : x ∈ s)(m : _)(_ : m ∈ Ioo 0 n), (f^[m]) x ∈ s :=
+  by 
+    have A : ∀ m, MeasurableSet (f^[m] ⁻¹' s) := fun m => (hf.iterate m).Measurable hs 
+    have B : ∀ m, μ (f^[m] ⁻¹' s) = μ s 
+    exact fun m => (hf.iterate m).measure_preimage hs 
+    have  : μ (univ : Set α) < (Finset.range n).Sum fun m => μ (f^[m] ⁻¹' s)
+    ·
+      simpa only [B, nsmul_eq_mul, Finset.sum_const, Finset.card_range]
+    rcases exists_nonempty_inter_of_measure_univ_lt_sum_measure μ (fun m hm => A m) this with
+      ⟨i, hi, j, hj, hij, x, hxi, hxj⟩
+    wlog (discharger := tactic.skip) hlt : i < j := hij.lt_or_lt using i j, j i
+    ·
+      simp only [Set.mem_preimage, Finset.mem_range] at hi hj hxi hxj 
+      refine' ⟨(f^[i]) x, hxi, j - i, ⟨tsub_pos_of_lt hlt, lt_of_le_of_ltₓ (j.sub_le i) hj⟩, _⟩
+      rwa [←iterate_add_apply, tsub_add_cancel_of_le hlt.le]
+    ·
+      exact fun hi hj hij hxi hxj => this hj hi hij.symm hxj hxi
+
+/-- A self-map preserving a finite measure is conservative: if `μ s ≠ 0`, then at least one point
+`x ∈ s` comes back to `s` under iterations of `f`. Actually, a.e. point of `s` comes back to `s`
+infinitely many times, see `measure_theory.measure_preserving.conservative` and theorems about
+`measure_theory.conservative`. -/
+theorem exists_mem_image_mem [is_finite_measure μ] (hf : measure_preserving f μ μ) (hs : MeasurableSet s)
+  (hs' : μ s ≠ 0) : ∃ (x : _)(_ : x ∈ s)(m : _)(_ : m ≠ 0), (f^[m]) x ∈ s :=
+  by 
+    rcases Ennreal.exists_nat_mul_gt hs' (measure_ne_top μ (univ : Set α)) with ⟨N, hN⟩
+    rcases hf.exists_mem_image_mem_of_volume_lt_mul_volume hs hN with ⟨x, hx, m, hm, hmx⟩
+    exact ⟨x, hx, m, hm.1.ne', hmx⟩
+
+end MeasurePreserving
+
+end MeasureTheory
+

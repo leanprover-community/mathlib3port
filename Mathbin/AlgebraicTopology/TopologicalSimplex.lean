@@ -1,0 +1,106 @@
+import Mathbin.AlgebraicTopology.SimplexCategory 
+import Mathbin.Topology.Category.Top.Default 
+import Mathbin.Topology.Instances.Nnreal
+
+/-!
+# Topological simplices
+
+We define the natural functor from `simplex_category` to `Top` sending `[n]` to the
+topological `n`-simplex.
+This is used to define `Top.to_sSet` in `algebraic_topology.simpliciaL_set`.
+-/
+
+
+noncomputable theory
+
+namespace SimplexCategory
+
+open_locale Simplicial Nnreal BigOperators Classical
+
+attribute [local instance] CategoryTheory.ConcreteCategory.hasCoeToSort CategoryTheory.ConcreteCategory.hasCoeToFun
+
+/-- The topological simplex associated to `x : simplex_category`.
+  This is the object part of the functor `simplex_category.to_Top`. -/
+def to_Top_obj (x : SimplexCategory) :=
+  { f : x →  ℝ≥0  | (∑i, f i) = 1 }
+
+instance  (x : SimplexCategory) : CoeFun x.to_Top_obj fun _ => x →  ℝ≥0  :=
+  ⟨fun f => (f : x →  ℝ≥0 )⟩
+
+@[ext]
+theorem to_Top_obj.ext {x : SimplexCategory} (f g : x.to_Top_obj) : (f : x →  ℝ≥0 ) = g → f = g :=
+  Subtype.ext
+
+/-- A morphism in `simplex_category` induces a map on the associated topological spaces. -/
+def to_Top_map {x y : SimplexCategory} (f : x ⟶ y) : x.to_Top_obj → y.to_Top_obj :=
+  fun g =>
+    ⟨fun i => ∑j in Finset.univ.filter fun k => f k = i, g j,
+      by 
+        dsimp [to_Top_obj]
+        simp only [Finset.filter_congr_decidable, Finset.sum_congr]
+        rw [←Finset.sum_bUnion]
+        convert g.2
+        ·
+          rw [Finset.eq_univ_iff_forall]
+          intro i 
+          rw [Finset.mem_bUnion]
+          exact
+            ⟨f i,
+              by 
+                simp ,
+              by 
+                simp ⟩
+        ·
+          intro i hi j hj h e he 
+          apply h 
+          simp only [true_andₓ, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter, Finset.mem_inter] at he 
+          rw [←he.1, ←he.2]⟩
+
+@[simp]
+theorem coe_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) (g : x.to_Top_obj) (i : y) :
+  to_Top_map f g i = ∑j in Finset.univ.filter fun k => f k = i, g j :=
+  rfl
+
+@[continuity]
+theorem continuous_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) : Continuous (to_Top_map f) :=
+  continuous_subtype_mk _$
+    continuous_pi$
+      fun i => continuous_finset_sum _$ fun j hj => Continuous.comp (continuous_apply _) continuous_subtype_val
+
+/-- The functor associating the topological `n`-simplex to `[n] : simplex_category`. -/
+@[simps]
+def to_Top : SimplexCategory ⥤ Top :=
+  { obj := fun x => Top.of x.to_Top_obj, map := fun x y f => ⟨to_Top_map f⟩,
+    map_id' :=
+      by 
+        intro x 
+        ext f i : 3
+        change (finset.univ.filter fun k => k = i).Sum _ = _ 
+        simp [Finset.sum_filter],
+    map_comp' :=
+      by 
+        intro x y z f g 
+        ext h i : 3
+        dsimp 
+        erw [←Finset.sum_bUnion]
+        apply Finset.sum_congr
+        ·
+          exact
+            Finset.ext
+              fun j =>
+                ⟨fun hj =>
+                    by 
+                      simpa using hj,
+                  fun hj =>
+                    by 
+                      simpa using hj⟩
+        ·
+          tauto
+        ·
+          intro j hj k hk h e he 
+          apply h 
+          simp only [true_andₓ, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter, Finset.mem_inter] at he 
+          rw [←he.1, ←he.2] }
+
+end SimplexCategory
+

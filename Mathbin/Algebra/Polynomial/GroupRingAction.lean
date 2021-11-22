@@ -1,0 +1,147 @@
+import Mathbin.Data.Polynomial.Monic 
+import Mathbin.Data.Polynomial.AlgebraMap 
+import Mathbin.Algebra.GroupRingAction 
+import Mathbin.Algebra.GroupActionHom
+
+/-!
+# Group action on rings applied to polynomials
+
+This file contains instances and definitions relating `mul_semiring_action` to `polynomial`.
+-/
+
+
+variable(M : Type _)[Monoidₓ M]
+
+namespace Polynomial
+
+variable(R : Type _)[Semiringₓ R]
+
+variable{M}
+
+theorem smul_eq_map [MulSemiringAction M R] (m : M) : (· • ·) m = map (MulSemiringAction.toRingHom M R m) :=
+  by 
+    suffices  :
+      DistribMulAction.toAddMonoidHom (Polynomial R) m =
+        (map_ring_hom (MulSemiringAction.toRingHom M R m)).toAddMonoidHom
+    ·
+      ext1 r 
+      exact AddMonoidHom.congr_fun this r 
+    ext n r : 2
+    change m • monomial n r = map (MulSemiringAction.toRingHom M R m) (monomial n r)
+    simpa only [Polynomial.map_monomial, Polynomial.smul_monomial]
+
+variable(M)
+
+noncomputable instance  [MulSemiringAction M R] : MulSemiringAction M (Polynomial R) :=
+  { Polynomial.distribMulAction with smul := · • ·,
+    smul_one := fun m => (smul_eq_map R m).symm ▸ map_one (MulSemiringAction.toRingHom M R m),
+    smul_mul := fun m p q => (smul_eq_map R m).symm ▸ map_mul (MulSemiringAction.toRingHom M R m) }
+
+variable{M R}
+
+variable[MulSemiringAction M R]
+
+@[simp]
+theorem smul_X (m : M) : (m • X : Polynomial R) = X :=
+  (smul_eq_map R m).symm ▸ map_X _
+
+variable(S : Type _)[CommSemiringₓ S][MulSemiringAction M S]
+
+theorem smul_eval_smul (m : M) (f : Polynomial S) (x : S) : (m • f).eval (m • x) = m • f.eval x :=
+  Polynomial.induction_on f
+    (fun r =>
+      by 
+        rw [smul_C, eval_C, eval_C])
+    (fun f g ihf ihg =>
+      by 
+        rw [smul_add, eval_add, ihf, ihg, eval_add, smul_add])
+    fun n r ih =>
+      by 
+        rw [smul_mul', smul_pow', smul_C, smul_X, eval_mul, eval_C, eval_pow, eval_X, eval_mul, eval_C, eval_pow,
+          eval_X, smul_mul', smul_pow']
+
+variable(G : Type _)[Groupₓ G]
+
+theorem eval_smul' [MulSemiringAction G S] (g : G) (f : Polynomial S) (x : S) : f.eval (g • x) = g • (g⁻¹ • f).eval x :=
+  by 
+    rw [←smul_eval_smul, smul_inv_smul]
+
+theorem smul_eval [MulSemiringAction G S] (g : G) (f : Polynomial S) (x : S) : (g • f).eval x = g • f.eval (g⁻¹ • x) :=
+  by 
+    rw [←smul_eval_smul, smul_inv_smul]
+
+end Polynomial
+
+section CommRingₓ
+
+variable(G : Type _)[Groupₓ G][Fintype G]
+
+variable(R : Type _)[CommRingₓ R][MulSemiringAction G R]
+
+open MulAction
+
+open_locale Classical
+
+/-- the product of `(X - g • x)` over distinct `g • x`. -/
+noncomputable def prodXSubSmul (x : R) : Polynomial R :=
+  (Finset.univ : Finset (QuotientGroup.Quotient$ MulAction.stabilizer G x)).Prod$
+    fun g => Polynomial.x - Polynomial.c (of_quotient_stabilizer G x g)
+
+theorem prodXSubSmul.monic (x : R) : (prodXSubSmul G R x).Monic :=
+  Polynomial.monic_prod_of_monic _ _$ fun g _ => Polynomial.monic_X_sub_C _
+
+theorem prodXSubSmul.eval (x : R) : (prodXSubSmul G R x).eval x = 0 :=
+  (MonoidHom.map_prod ((Polynomial.aeval x).toRingHom.toMonoidHom : Polynomial R →* R) _ _).trans$
+    Finset.prod_eq_zero (Finset.mem_univ$ QuotientGroup.mk 1)$
+      by 
+        simp 
+
+theorem prodXSubSmul.smul (x : R) (g : G) : g • prodXSubSmul G R x = prodXSubSmul G R x :=
+  Finset.smul_prod.trans$
+    Fintype.prod_bijective _ (MulAction.bijective g) _ _
+      fun g' =>
+        by 
+          rw [of_quotient_stabilizer_smul, smul_sub, Polynomial.smul_X, Polynomial.smul_C]
+
+theorem prodXSubSmul.coeff (x : R) (g : G) (n : ℕ) : g • (prodXSubSmul G R x).coeff n = (prodXSubSmul G R x).coeff n :=
+  by 
+    rw [←Polynomial.coeff_smul, prodXSubSmul.smul]
+
+end CommRingₓ
+
+namespace MulSemiringActionHom
+
+variable{M}
+
+variable{P : Type _}[CommSemiringₓ P][MulSemiringAction M P]
+
+variable{Q : Type _}[CommSemiringₓ Q][MulSemiringAction M Q]
+
+open Polynomial
+
+/-- An equivariant map induces an equivariant map on polynomials. -/
+protected noncomputable def Polynomial (g : P →+*[M] Q) : Polynomial P →+*[M] Polynomial Q :=
+  { toFun := map g,
+    map_smul' :=
+      fun m p =>
+        Polynomial.induction_on p
+          (fun b =>
+            by 
+              rw [smul_C, map_C, coe_fn_coe, g.map_smul, map_C, coe_fn_coe, smul_C])
+          (fun p q ihp ihq =>
+            by 
+              rw [smul_add, Polynomial.map_add, ihp, ihq, Polynomial.map_add, smul_add])
+          fun n b ih =>
+            by 
+              rw [smul_mul', smul_C, smul_pow', smul_X, Polynomial.map_mul, map_C, Polynomial.map_pow, map_X,
+                coe_fn_coe, g.map_smul, Polynomial.map_mul, map_C, Polynomial.map_pow, map_X, smul_mul', smul_C,
+                smul_pow', smul_X, coe_fn_coe],
+    map_zero' := Polynomial.map_zero g, map_add' := fun p q => Polynomial.map_add g, map_one' := Polynomial.map_one g,
+    map_mul' := fun p q => Polynomial.map_mul g }
+
+@[simp]
+theorem coe_polynomial (g : P →+*[M] Q) : (g.polynomial : Polynomial P → Polynomial Q) = map g :=
+  rfl
+
+end MulSemiringActionHom
+

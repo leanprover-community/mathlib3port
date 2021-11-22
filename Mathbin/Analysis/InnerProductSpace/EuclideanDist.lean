@@ -1,0 +1,116 @@
+import Mathbin.Analysis.InnerProductSpace.Calculus 
+import Mathbin.Analysis.InnerProductSpace.PiL2
+
+/-!
+# Euclidean distance on a finite dimensional space
+
+When we define a smooth bump function on a normed space, it is useful to have a smooth distance on
+the space. Since the default distance is not guaranteed to be smooth, we define `to_euclidean` to be
+an equivalence between a finite dimensional normed space and the standard Euclidean space of the
+same dimension. Then we define `euclidean.dist x y = dist (to_euclidean x) (to_euclidean y)` and
+provide some definitions (`euclidean.ball`, `euclidean.closed_ball`) and simple lemmas about this
+distance. This way we hide the usage of `to_euclidean` behind an API.
+-/
+
+
+open_locale TopologicalSpace
+
+open Set
+
+variable{E : Type _}[NormedGroup E][NormedSpace ℝ E][FiniteDimensional ℝ E]
+
+noncomputable theory
+
+/-- If `E` is a finite dimensional space over `ℝ`, then `to_euclidean` is a continuous `ℝ`-linear
+equivalence between `E` and the Euclidean space of the same dimension. -/
+def toEuclidean : E ≃L[ℝ] EuclideanSpace ℝ (Finₓ$ FiniteDimensional.finrank ℝ E) :=
+  ContinuousLinearEquiv.ofFinrankEq finrank_euclidean_space_fin.symm
+
+namespace Euclidean
+
+/-- If `x` and `y` are two points in a finite dimensional space over `ℝ`, then `euclidean.dist x y`
+is the distance between these points in the metric defined by some inner product space structure on
+`E`. -/
+def dist (x y : E) : ℝ :=
+  dist (toEuclidean x) (toEuclidean y)
+
+/-- Closed ball w.r.t. the euclidean distance. -/
+def closed_ball (x : E) (r : ℝ) : Set E :=
+  { y | dist y x ≤ r }
+
+/-- Open ball w.r.t. the euclidean distance. -/
+def ball (x : E) (r : ℝ) : Set E :=
+  { y | dist y x < r }
+
+theorem ball_eq_preimage (x : E) (r : ℝ) : ball x r = toEuclidean ⁻¹' Metric.Ball (toEuclidean x) r :=
+  rfl
+
+theorem closed_ball_eq_preimage (x : E) (r : ℝ) :
+  closed_ball x r = toEuclidean ⁻¹' Metric.ClosedBall (toEuclidean x) r :=
+  rfl
+
+theorem ball_subset_closed_ball {x : E} {r : ℝ} : ball x r ⊆ closed_ball x r :=
+  fun y hy : _ < _ => le_of_ltₓ hy
+
+theorem is_open_ball {x : E} {r : ℝ} : IsOpen (ball x r) :=
+  Metric.is_open_ball.Preimage toEuclidean.Continuous
+
+theorem mem_ball_self {x : E} {r : ℝ} (hr : 0 < r) : x ∈ ball x r :=
+  Metric.mem_ball_self hr
+
+theorem closed_ball_eq_image (x : E) (r : ℝ) :
+  closed_ball x r = toEuclidean.symm '' Metric.ClosedBall (toEuclidean x) r :=
+  by 
+    rw [to_euclidean.image_symm_eq_preimage, closed_ball_eq_preimage]
+
+theorem is_compact_closed_ball {x : E} {r : ℝ} : IsCompact (closed_ball x r) :=
+  by 
+    rw [closed_ball_eq_image]
+    exact (ProperSpace.is_compact_closed_ball _ _).Image to_euclidean.symm.continuous
+
+theorem is_closed_closed_ball {x : E} {r : ℝ} : IsClosed (closed_ball x r) :=
+  is_compact_closed_ball.IsClosed
+
+theorem closure_ball (x : E) {r : ℝ} (h : 0 < r) : Closure (ball x r) = closed_ball x r :=
+  by 
+    rw [ball_eq_preimage, ←to_euclidean.preimage_closure, closure_ball (toEuclidean x) h, closed_ball_eq_preimage]
+
+theorem exists_pos_lt_subset_ball {R : ℝ} {s : Set E} {x : E} (hR : 0 < R) (hs : IsClosed s) (h : s ⊆ ball x R) :
+  ∃ (r : _)(_ : r ∈ Ioo 0 R), s ⊆ ball x r :=
+  by 
+    rw [ball_eq_preimage, ←image_subset_iff] at h 
+    rcases exists_pos_lt_subset_ball hR (to_euclidean.is_closed_image.2 hs) h with ⟨r, hr, hsr⟩
+    exact ⟨r, hr, image_subset_iff.1 hsr⟩
+
+theorem nhds_basis_closed_ball {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (closed_ball x) :=
+  by 
+    rw [to_euclidean.to_homeomorph.nhds_eq_comap]
+    exact metric.nhds_basis_closed_ball.comap _
+
+theorem closed_ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : closed_ball x r ∈ 𝓝 x :=
+  nhds_basis_closed_ball.mem_of_mem hr
+
+theorem nhds_basis_ball {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (ball x) :=
+  by 
+    rw [to_euclidean.to_homeomorph.nhds_eq_comap]
+    exact metric.nhds_basis_ball.comap _
+
+theorem ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : ball x r ∈ 𝓝 x :=
+  nhds_basis_ball.mem_of_mem hr
+
+end Euclidean
+
+variable{F : Type _}[NormedGroup F][NormedSpace ℝ F]{f g : F → E}{n : WithTop ℕ}
+
+-- error in Analysis.InnerProductSpace.EuclideanDist: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+theorem times_cont_diff.euclidean_dist
+(hf : times_cont_diff exprℝ() n f)
+(hg : times_cont_diff exprℝ() n g)
+(h : ∀ x, «expr ≠ »(f x, g x)) : times_cont_diff exprℝ() n (λ x, euclidean.dist (f x) (g x)) :=
+begin
+  simp [] [] ["only"] ["[", expr euclidean.dist, "]"] [] [],
+  apply [expr @times_cont_diff.dist exprℝ()],
+  exacts ["[", expr (@to_euclidean E _ _ _).times_cont_diff.comp hf, ",", expr (@to_euclidean E _ _ _).times_cont_diff.comp hg, ",", expr λ
+   x, to_euclidean.injective.ne (h x), "]"]
+end
+

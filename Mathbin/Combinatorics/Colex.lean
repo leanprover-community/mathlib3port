@@ -1,0 +1,451 @@
+import Mathbin.Data.Finset.Default 
+import Mathbin.Data.Fintype.Basic 
+import Mathbin.Algebra.GeomSum
+
+/-!
+# Colex
+
+We define the colex ordering for finite sets, and give a couple of important
+lemmas and properties relating to it.
+
+The colex ordering likes to avoid large values - it can be thought of on
+`finset ℕ` as the "binary" ordering. That is, order A based on
+`∑_{i ∈ A} 2^i`.
+It's defined here in a slightly more general way, requiring only `has_lt α` in
+the definition of colex on `finset α`. In the context of the Kruskal-Katona
+theorem, we are interested in particular on how colex behaves for sets of a
+fixed size. If the size is 3, colex on ℕ starts
+123, 124, 134, 234, 125, 135, 235, 145, 245, 345, ...
+
+## Main statements
+* `colex.hom_lt_iff`: strictly monotone functions preserve colex
+* Colex order properties - linearity, decidability and so on.
+* `forall_lt_of_colex_lt_of_forall_lt`: if A < B in colex, and everything
+  in B is < t, then everything in A is < t. This confirms the idea that
+  an enumeration under colex will exhaust all sets using elements < t before
+  allowing t to be included.
+* `sum_two_pow_le_iff_lt`: colex for α = ℕ is the same as binary
+  (this also proves binary expansions are unique)
+
+## Notation
+We define `<` and `≤` to denote colex ordering, useful in particular when
+multiple orderings are available in context.
+
+## Tags
+colex, colexicographic, binary
+
+## References
+* https://github.com/b-mehta/maths-notes/blob/master/iii/mich/combinatorics.pdf
+
+-/
+
+
+variable{α : Type _}
+
+open Finset
+
+open_locale BigOperators
+
+-- error in Combinatorics.Colex: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+/--
+We define this type synonym to refer to the colexicographic ordering on finsets
+rather than the natural subset ordering.
+-/ @[derive #[expr inhabited]] def finset.colex (α) :=
+finset α
+
+/--
+A convenience constructor to turn a `finset α` into a `finset.colex α`, useful in order to
+use the colex ordering rather than the subset ordering.
+-/
+def Finset.toColex {α} (s : Finset α) : Finset.Colex α :=
+  s
+
+@[simp]
+theorem Colex.eq_iff (A B : Finset α) : A.to_colex = B.to_colex ↔ A = B :=
+  Iff.rfl
+
+/--
+`A` is less than `B` in the colex ordering if the largest thing that's not in both sets is in B.
+In other words, max (A Δ B) ∈ B (if the maximum exists).
+-/
+instance  [LT α] : LT (Finset.Colex α) :=
+  ⟨fun A B : Finset α => ∃ k : α, (∀ {x}, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A ∧ k ∈ B⟩
+
+/-- We can define (≤) in the obvious way. -/
+instance  [LT α] : LE (Finset.Colex α) :=
+  ⟨fun A B => A < B ∨ A = B⟩
+
+theorem Colex.lt_def [LT α] (A B : Finset α) :
+  A.to_colex < B.to_colex ↔ ∃ k, (∀ {x}, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A ∧ k ∈ B :=
+  Iff.rfl
+
+theorem Colex.le_def [LT α] (A B : Finset α) : A.to_colex ≤ B.to_colex ↔ A.to_colex < B.to_colex ∨ A = B :=
+  Iff.rfl
+
+/-- If everything in `A` is less than `k`, we can bound the sum of powers. -/
+theorem Nat.sum_two_pow_lt {k : ℕ} {A : Finset ℕ} (h₁ : ∀ {x}, x ∈ A → x < k) : A.sum (pow 2) < 2 ^ k :=
+  by 
+    apply lt_of_le_of_ltₓ (sum_le_sum_of_subset fun t => mem_range.2 ∘ h₁)
+    have z := geom_sum_mul_add 1 k 
+    rw [geomSum, mul_oneₓ, one_add_one_eq_two] at z 
+    rw [←z]
+    apply Nat.lt_succ_selfₓ
+
+namespace Colex
+
+/-- Strictly monotone functions preserve the colex ordering. -/
+theorem hom_lt_iff {β : Type _} [LinearOrderₓ α] [DecidableEq β] [Preorderₓ β] {f : α → β} (h₁ : StrictMono f)
+  (A B : Finset α) : (A.image f).toColex < (B.image f).toColex ↔ A.to_colex < B.to_colex :=
+  by 
+    simp only [Colex.lt_def, not_exists, mem_image, exists_prop, not_and]
+    split 
+    ·
+      rintro ⟨k, z, q, k', _, rfl⟩
+      exact
+        ⟨k',
+          fun x hx =>
+            by 
+              simpa [h₁.injective.eq_iff] using z (h₁ hx),
+          fun t => q _ t rfl, ‹k' ∈ B›⟩
+    rintro ⟨k, z, ka, _⟩
+    refine' ⟨f k, fun x hx => _, _, k, ‹k ∈ B›, rfl⟩
+    ·
+      split 
+      any_goals 
+        rintro ⟨x', hx', rfl⟩
+        refine' ⟨x', _, rfl⟩
+        first |
+          rwa [←z _]|
+          rwa [z _]
+        rwa [StrictMono.lt_iff_lt h₁] at hx
+    ·
+      simp only [h₁.injective, Function.Injective.eq_iff]
+      exact fun x hx => ne_of_mem_of_not_mem hx ka
+
+/-- A special case of `colex.hom_lt_iff` which is sometimes useful. -/
+@[simp]
+theorem hom_fin_lt_iff {n : ℕ} (A B : Finset (Finₓ n)) :
+  (A.image fun i : Finₓ n => (i : ℕ)).toColex < (B.image fun i : Finₓ n => (i : ℕ)).toColex ↔ A.to_colex < B.to_colex :=
+  Colex.hom_lt_iff (fun x y k => k) _ _
+
+instance  [LT α] : IsIrrefl (Finset.Colex α) (· < ·) :=
+  ⟨fun A h => Exists.elim h fun _ ⟨_, a, b⟩ => a b⟩
+
+@[trans]
+theorem lt_transₓ [LinearOrderₓ α] {a b c : Finset.Colex α} : a < b → b < c → a < c :=
+  by 
+    rintro ⟨k₁, k₁z, notinA, inB⟩ ⟨k₂, k₂z, notinB, inC⟩
+    cases lt_or_gt_of_neₓ (ne_of_mem_of_not_mem inB notinB)
+    ·
+      refine'
+        ⟨k₂, _,
+          by 
+            rwa [k₁z h],
+          inC⟩
+      intro x hx 
+      rw [←k₂z hx]
+      apply k₁z (trans h hx)
+    ·
+      refine'
+        ⟨k₁, _, notinA,
+          by 
+            rwa [←k₂z h]⟩
+      intro x hx 
+      rw [k₁z hx]
+      apply k₂z (trans h hx)
+
+@[trans]
+theorem le_transₓ [LinearOrderₓ α] (a b c : Finset.Colex α) : a ≤ b → b ≤ c → a ≤ c :=
+  fun AB BC => AB.elim (fun k => BC.elim (fun t => Or.inl (lt_transₓ k t)) fun t => t ▸ AB) fun k => k.symm ▸ BC
+
+instance  [LinearOrderₓ α] : IsTrans (Finset.Colex α) (· < ·) :=
+  ⟨fun _ _ _ => Colex.lt_trans⟩
+
+-- error in Combinatorics.Colex: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+theorem lt_trichotomy
+[linear_order α]
+(A B : finset.colex α) : «expr ∨ »(«expr < »(A, B), «expr ∨ »(«expr = »(A, B), «expr < »(B, A))) :=
+begin
+  by_cases [expr h₁, ":", expr «expr = »(A, B)],
+  { tauto [] },
+  rcases [expr exists_max_image «expr ∪ »(«expr \ »(A, B), «expr \ »(B, A)) id _, "with", "⟨", ident k, ",", ident hk, ",", ident z, "⟩"],
+  { simp [] [] ["only"] ["[", expr mem_union, ",", expr mem_sdiff, "]"] [] ["at", ident hk],
+    cases [expr hk] [],
+    { right,
+      right,
+      refine [expr ⟨k, λ t th, _, hk.2, hk.1⟩],
+      specialize [expr z t],
+      by_contra [ident h₂],
+      simp [] [] ["only"] ["[", expr mem_union, ",", expr mem_sdiff, ",", expr id.def, "]"] [] ["at", ident z],
+      rw ["[", expr not_iff, ",", expr iff_iff_and_or_not_and_not, ",", expr not_not, ",", expr and_comm, "]"] ["at", ident h₂],
+      apply [expr not_le_of_lt th (z h₂)] },
+    { left,
+      refine [expr ⟨k, λ t th, _, hk.2, hk.1⟩],
+      specialize [expr z t],
+      by_contra [ident h₃],
+      simp [] [] ["only"] ["[", expr mem_union, ",", expr mem_sdiff, ",", expr id.def, "]"] [] ["at", ident z],
+      rw ["[", expr not_iff, ",", expr iff_iff_and_or_not_and_not, ",", expr not_not, ",", expr and_comm, ",", expr or_comm, "]"] ["at", ident h₃],
+      apply [expr not_le_of_lt th (z h₃)] } },
+  rw [expr nonempty_iff_ne_empty] [],
+  intro [ident a],
+  simp [] [] ["only"] ["[", expr union_eq_empty_iff, ",", expr sdiff_eq_empty_iff_subset, "]"] [] ["at", ident a],
+  apply [expr h₁ (subset.antisymm a.1 a.2)]
+end
+
+instance  [LinearOrderₓ α] : IsTrichotomous (Finset.Colex α) (· < ·) :=
+  ⟨lt_trichotomyₓ⟩
+
+instance decidable_lt [LinearOrderₓ α] : ∀ {A B : Finset.Colex α}, Decidable (A < B) :=
+  show ∀ A B : Finset α, Decidable (A.to_colex < B.to_colex) from
+    fun A B =>
+      decidableOfIff' (∃ (k : _)(_ : k ∈ B), (∀ x _ : x ∈ A ∪ B, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A)
+        (by 
+          rw [Colex.lt_def]
+          apply exists_congr 
+          simp only [mem_union, exists_prop, or_imp_distrib, and_comm (_ ∈ B), and_assoc]
+          intro k 
+          refine' and_congr_left' (forall_congrₓ _)
+          tauto)
+
+instance  [LinearOrderₓ α] : LinearOrderₓ (Finset.Colex α) :=
+  { Finset.Colex.hasLt, Finset.Colex.hasLe with le_refl := fun A => Or.inr rfl, le_trans := le_transₓ,
+    le_antisymm := fun A B AB BA => AB.elim (fun k => BA.elim (fun t => (asymm k t).elim) fun t => t.symm) id,
+    le_total := fun A B => (lt_trichotomyₓ A B).elim3 (Or.inl ∘ Or.inl) (Or.inl ∘ Or.inr) (Or.inr ∘ Or.inl),
+    decidableLe :=
+      fun A B =>
+        by 
+          infer_instance,
+    decidableLt :=
+      fun A B =>
+        by 
+          infer_instance,
+    DecidableEq :=
+      fun A B =>
+        by 
+          infer_instance,
+    lt_iff_le_not_le :=
+      fun A B =>
+        by 
+          split 
+          ·
+            intro t 
+            refine' ⟨Or.inl t, _⟩
+            rintro (i | rfl)
+            ·
+              apply asymm_of _ t i
+            ·
+              apply irrefl _ t 
+          rintro ⟨h₁ | rfl, h₂⟩
+          ·
+            apply h₁ 
+          apply h₂.elim (Or.inr rfl) }
+
+/-- The instances set up let us infer that `colex.lt` is a strict total order. -/
+example  [LinearOrderₓ α] : IsStrictTotalOrder (Finset.Colex α) (· < ·) :=
+  inferInstance
+
+/-- Strictly monotone functions preserve the colex ordering. -/
+theorem hom_le_iff {β : Type _} [LinearOrderₓ α] [LinearOrderₓ β] {f : α → β} (h₁ : StrictMono f) (A B : Finset α) :
+  (A.image f).toColex ≤ (B.image f).toColex ↔ A.to_colex ≤ B.to_colex :=
+  by 
+    rw [le_iff_le_iff_lt_iff_lt, hom_lt_iff h₁]
+
+/-- A special case of `colex_hom` which is sometimes useful. -/
+@[simp]
+theorem hom_fin_le_iff {n : ℕ} (A B : Finset (Finₓ n)) :
+  (A.image fun i : Finₓ n => (i : ℕ)).toColex ≤ (B.image fun i : Finₓ n => (i : ℕ)).toColex ↔ A.to_colex ≤ B.to_colex :=
+  Colex.hom_le_iff (fun x y k => k) _ _
+
+/--
+If `A` is before `B` in colex, and everything in `B` is small, then everything in `A` is small.
+-/
+theorem forall_lt_of_colex_lt_of_forall_lt [LinearOrderₓ α] {A B : Finset α} (t : α) (h₁ : A.to_colex < B.to_colex)
+  (h₂ : ∀ x _ : x ∈ B, x < t) : ∀ x _ : x ∈ A, x < t :=
+  by 
+    rw [Colex.lt_def] at h₁ 
+    rcases h₁ with ⟨k, z, _, _⟩
+    intro x hx 
+    apply lt_of_not_geₓ 
+    intro a 
+    refine' not_lt_of_geₓ a (h₂ x _)
+    rwa [←z]
+    apply lt_of_lt_of_leₓ (h₂ k ‹_›) a
+
+/-- `s.to_colex < {r}.to_colex` iff all elements of `s` are less than `r`. -/
+theorem lt_singleton_iff_mem_lt [LinearOrderₓ α] {r : α} {s : Finset α} :
+  s.to_colex < ({r} : Finset α).toColex ↔ ∀ x _ : x ∈ s, x < r :=
+  by 
+    simp only [lt_def, mem_singleton, ←and_assoc, exists_eq_right]
+    split 
+    ·
+      intro t x hx 
+      rw [←not_leₓ]
+      intro h 
+      rcases lt_or_eq_of_leₓ h with (h₁ | rfl)
+      ·
+        exact ne_of_irrefl h₁ ((t.1 h₁).1 hx).symm
+      ·
+        exact t.2 hx
+    ·
+      exact
+        fun h =>
+          ⟨fun z hz => ⟨fun i => (asymm hz (h _ i)).elim, fun i => (hz.ne' i).elim⟩,
+            by 
+              simpa using h r⟩
+
+/-- If {r} is less than or equal to s in the colexicographical sense,
+  then s contains an element greater than or equal to r. -/
+theorem mem_le_of_singleton_le [LinearOrderₓ α] {r : α} {s : Finset α} :
+  ({r} : Finset α).toColex ≤ s.to_colex ↔ ∃ (x : _)(_ : x ∈ s), r ≤ x :=
+  by 
+    rw [←not_ltₓ]
+    simp [lt_singleton_iff_mem_lt]
+
+/-- Colex is an extension of the base ordering on α. -/
+theorem singleton_lt_iff_lt [LinearOrderₓ α] {r s : α} : ({r} : Finset α).toColex < ({s} : Finset α).toColex ↔ r < s :=
+  by 
+    simp [lt_singleton_iff_mem_lt]
+
+/-- Colex is an extension of the base ordering on α. -/
+theorem singleton_le_iff_le [LinearOrderₓ α] {r s : α} : ({r} : Finset α).toColex ≤ ({s} : Finset α).toColex ↔ r ≤ s :=
+  by 
+    rw [le_iff_le_iff_lt_iff_lt, singleton_lt_iff_lt]
+
+/-- Colex doesn't care if you remove the other set -/
+@[simp]
+theorem sdiff_lt_sdiff_iff_lt [LT α] [DecidableEq α] (A B : Finset α) :
+  (A \ B).toColex < (B \ A).toColex ↔ A.to_colex < B.to_colex :=
+  by 
+    rw [Colex.lt_def, Colex.lt_def]
+    apply exists_congr 
+    intro k 
+    simp only [mem_sdiff, not_and, not_not]
+    split 
+    ·
+      rintro ⟨z, kAB, kB, kA⟩
+      refine' ⟨_, kA, kB⟩
+      ·
+        intro x hx 
+        specialize z hx 
+        tauto
+    ·
+      rintro ⟨z, kA, kB⟩
+      refine' ⟨_, fun _ => kB, kB, kA⟩
+      intro x hx 
+      rw [z hx]
+
+/-- Colex doesn't care if you remove the other set -/
+@[simp]
+theorem sdiff_le_sdiff_iff_le [LinearOrderₓ α] (A B : Finset α) :
+  (A \ B).toColex ≤ (B \ A).toColex ↔ A.to_colex ≤ B.to_colex :=
+  by 
+    rw [le_iff_le_iff_lt_iff_lt, sdiff_lt_sdiff_iff_lt]
+
+theorem empty_to_colex_lt [LinearOrderₓ α] {A : Finset α} (hA : A.nonempty) : (∅ : Finset α).toColex < A.to_colex :=
+  by 
+    rw [Colex.lt_def]
+    refine'
+      ⟨max' _ hA, _,
+        by 
+          simp ,
+        max'_mem _ _⟩
+    simp only [false_iffₓ, not_mem_empty]
+    intro x hx t 
+    apply not_le_of_lt hx (le_max' _ _ t)
+
+/-- If `A ⊂ B`, then `A` is less than `B` in the colex order. Note the converse does not hold, as
+`⊆` is not a linear order. -/
+theorem colex_lt_of_ssubset [LinearOrderₓ α] {A B : Finset α} (h : A ⊂ B) : A.to_colex < B.to_colex :=
+  by 
+    rw [←sdiff_lt_sdiff_iff_lt, sdiff_eq_empty_iff_subset.2 h.1]
+    exact
+      empty_to_colex_lt
+        (by 
+          simpa [Finset.Nonempty] using exists_of_ssubset h)
+
+@[simp]
+theorem empty_to_colex_le [LinearOrderₓ α] {A : Finset α} : (∅ : Finset α).toColex ≤ A.to_colex :=
+  by 
+    rcases A.eq_empty_or_nonempty with (rfl | hA)
+    ·
+      simp 
+    ·
+      apply (empty_to_colex_lt hA).le
+
+/-- If `A ⊆ B`, then `A ≤ B` in the colex order. Note the converse does not hold, as `⊆` is not a
+linear order. -/
+theorem colex_le_of_subset [LinearOrderₓ α] {A B : Finset α} (h : A ⊆ B) : A.to_colex ≤ B.to_colex :=
+  by 
+    rw [←sdiff_le_sdiff_iff_le, sdiff_eq_empty_iff_subset.2 h]
+    apply empty_to_colex_le
+
+/-- The function from finsets to finsets with the colex order is a relation homomorphism. -/
+@[simps]
+def to_colex_rel_hom [LinearOrderₓ α] :
+  (· ⊆ · : Finset α → Finset α → Prop) →r (· ≤ · : Finset.Colex α → Finset.Colex α → Prop) :=
+  { toFun := Finset.toColex, map_rel' := fun A B => colex_le_of_subset }
+
+instance  [LinearOrderₓ α] : OrderBot (Finset.Colex α) :=
+  { bot := (∅ : Finset α).toColex, bot_le := fun x => empty_to_colex_le }
+
+instance  [LinearOrderₓ α] [Fintype α] : OrderTop (Finset.Colex α) :=
+  { top := Finset.univ.toColex, le_top := fun x => colex_le_of_subset (subset_univ _) }
+
+instance  [LinearOrderₓ α] : SemilatticeInfBot (Finset.Colex α) :=
+  { finset.colex.order_bot,
+    (by 
+      infer_instance :
+    SemilatticeInf (Finset.Colex α)) with
+     }
+
+instance  [LinearOrderₓ α] : SemilatticeSupBot (Finset.Colex α) :=
+  { finset.colex.order_bot,
+    (by 
+      infer_instance :
+    SemilatticeSup (Finset.Colex α)) with
+     }
+
+instance  [LinearOrderₓ α] [Fintype α] : BoundedLattice (Finset.Colex α) :=
+  { (by 
+      infer_instance :
+    OrderTop (Finset.Colex α)),
+    (by 
+      infer_instance :
+    SemilatticeSup (Finset.Colex α)),
+    (by 
+      infer_instance :
+    SemilatticeInfBot (Finset.Colex α)) with
+     }
+
+/-- For subsets of ℕ, we can show that colex is equivalent to binary. -/
+theorem sum_two_pow_lt_iff_lt (A B : Finset ℕ) : ((∑i in A, 2 ^ i) < ∑i in B, 2 ^ i) ↔ A.to_colex < B.to_colex :=
+  by 
+    have z : ∀ A B : Finset ℕ, A.to_colex < B.to_colex → (∑i in A, 2 ^ i) < ∑i in B, 2 ^ i
+    ·
+      intro A B 
+      rw [←sdiff_lt_sdiff_iff_lt, Colex.lt_def]
+      rintro ⟨k, z, kA, kB⟩
+      rw [←sdiff_union_inter A B]
+      convRHS => rw [←sdiff_union_inter B A]
+      rw [sum_union (disjoint_sdiff_inter _ _), sum_union (disjoint_sdiff_inter _ _), inter_comm, add_lt_add_iff_right]
+      apply lt_of_lt_of_leₓ (@Nat.sum_two_pow_lt k (A \ B) _)
+      ·
+        apply single_le_sum (fun _ _ => Nat.zero_leₓ _) kB 
+      intro x hx 
+      apply lt_of_le_of_neₓ (le_of_not_ltₓ fun kx => _)
+      ·
+        apply ne_of_mem_of_not_mem hx kA 
+      have  := (z kx).1 hx 
+      rw [mem_sdiff] at this hx 
+      exact hx.2 this.1
+    refine' ⟨fun h => (lt_trichotomyₓ A B).resolve_right fun h₁ => h₁.elim _ (not_lt_of_gtₓ h ∘ z _ _), z A B⟩
+    rintro rfl 
+    apply irrefl _ h
+
+/-- For subsets of ℕ, we can show that colex is equivalent to binary. -/
+theorem sum_two_pow_le_iff_lt (A B : Finset ℕ) : ((∑i in A, 2 ^ i) ≤ ∑i in B, 2 ^ i) ↔ A.to_colex ≤ B.to_colex :=
+  by 
+    rw [le_iff_le_iff_lt_iff_lt, sum_two_pow_lt_iff_lt]
+
+end Colex
+
