@@ -1,4 +1,5 @@
 build/
 lean_packages/
-Mathbin/       # This is provided via a release artifact, and should not be committed in this repository.
+# `lake build` downloads the latest synported sources: they should not be stored in this repository
+Mathbin/
 mathlib3-synport.tar.gz*
