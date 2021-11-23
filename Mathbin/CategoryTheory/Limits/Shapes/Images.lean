@@ -103,7 +103,7 @@ theorem ext {F F' : mono_factorisation f} (hI : F.I = F'.I) (hm : F.m = eq_to_ho
     ·
       assumption
     ·
-      resetI 
+      skip 
       apply (cancel_mono F_m).1
       rw [F_fac', hm, F'_fac']
 
@@ -360,36 +360,31 @@ theorem image_mono_iso_source_hom_self [mono f] : (image_mono_iso_source f).Hom 
     conv  => toLHS congr skip rw [←image_mono_iso_source_inv_ι f]
     rw [←category.assoc, iso.hom_inv_id, category.id_comp]
 
-@[ext]
-theorem image.ext {W : C} {g h : image f ⟶ W} [has_limit (parallel_pair g h)]
-  (w : factor_thru_image f ≫ g = factor_thru_image f ≫ h) : g = h :=
-  by 
-    let q := equalizer.ι g h 
-    let e' := equalizer.lift _ w 
-    let F' : mono_factorisation f :=
-      { i := equalizer g h, m := q ≫ image.ι f,
-        m_mono :=
-          by 
-            apply mono_comp,
-        e := e' }
-    let v := image.lift F' 
-    have t₀ : v ≫ q ≫ image.ι f = image.ι f := image.lift_fac F' 
-    have t : v ≫ q = 𝟙 (image f) :=
-      (cancel_mono_id (image.ι f)).1
-        (by 
-          convert t₀ using 1
-          rw [category.assoc])
-    calc g = 𝟙 (image f) ≫ g :=
-      by 
-        rw [category.id_comp]_ = v ≫ q ≫ g :=
-      by 
-        rw [←t, category.assoc]_ = v ≫ q ≫ h :=
-      by 
-        rw [equalizer.condition g h]_ = 𝟙 (image f) ≫ h :=
-      by 
-        rw [←category.assoc, t]_ = h :=
-      by 
-        rw [category.id_comp]
+-- error in CategoryTheory.Limits.Shapes.Images: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[ext #[]]
+theorem image.ext
+{W : C}
+{g h : «expr ⟶ »(image f, W)}
+[has_limit (parallel_pair g h)]
+(w : «expr = »(«expr ≫ »(factor_thru_image f, g), «expr ≫ »(factor_thru_image f, h))) : «expr = »(g, h) :=
+begin
+  let [ident q] [] [":=", expr equalizer.ι g h],
+  let [ident e'] [] [":=", expr equalizer.lift _ w],
+  let [ident F'] [":", expr mono_factorisation f] [":=", expr { I := equalizer g h,
+     m := «expr ≫ »(q, image.ι f),
+     m_mono := by apply [expr mono_comp],
+     e := e' }],
+  let [ident v] [] [":=", expr image.lift F'],
+  have [ident t₀] [":", expr «expr = »(«expr ≫ »(v, «expr ≫ »(q, image.ι f)), image.ι f)] [":=", expr image.lift_fac F'],
+  have [ident t] [":", expr «expr = »(«expr ≫ »(v, q), «expr𝟙»() (image f))] [":=", expr (cancel_mono_id (image.ι f)).1 (by { convert [] [expr t₀] ["using", 1],
+      rw [expr category.assoc] [] })],
+  calc
+    «expr = »(g, «expr ≫ »(«expr𝟙»() (image f), g)) : by rw ["[", expr category.id_comp, "]"] []
+    «expr = »(..., «expr ≫ »(v, «expr ≫ »(q, g))) : by rw ["[", "<-", expr t, ",", expr category.assoc, "]"] []
+    «expr = »(..., «expr ≫ »(v, «expr ≫ »(q, h))) : by rw ["[", expr equalizer.condition g h, "]"] []
+    «expr = »(..., «expr ≫ »(«expr𝟙»() (image f), h)) : by rw ["[", "<-", expr category.assoc, ",", expr t, "]"] []
+    «expr = »(..., h) : by rw ["[", expr category.id_comp, "]"] []
+end
 
 instance  [∀ {Z : C} g h : image f ⟶ Z, has_limit (parallel_pair g h)] : epi (factor_thru_image f) :=
   ⟨fun Z g h w => image.ext f w⟩
@@ -397,7 +392,7 @@ instance  [∀ {Z : C} g h : image f ⟶ Z, has_limit (parallel_pair g h)] : epi
 theorem epi_image_of_epi {X Y : C} (f : X ⟶ Y) [has_image f] [E : epi f] : epi (image.ι f) :=
   by 
     rw [←image.fac f] at E 
-    resetI 
+    skip 
     exact epi_of_epi (factor_thru_image f) (image.ι f)
 
 theorem epi_of_epi_image {X Y : C} (f : X ⟶ Y) [has_image f] [epi (image.ι f)] [epi (factor_thru_image f)] : epi f :=
@@ -838,7 +833,7 @@ instance (priority := 100)has_strong_epi_images_of_has_pullbacks_of_has_equalize
                         { i := pullback h y, m := pullback.snd ≫ image.ι f,
                           m_mono :=
                             by 
-                              exactI mono_comp _ _,
+                              exact mono_comp _ _,
                           e := pullback.lift _ _ w } ≫
                       pullback.fst } } }
 

@@ -24,7 +24,7 @@ def BoundedLattice.copy (c : BoundedLattice α) (le : α → α → Prop) (eq_le
     all_goals 
       abstract 
         substVars 
-        casesI c 
+        cases' c 
         assumption
 
 /-- A function to create a provable equal copy of a distributive lattice
@@ -37,7 +37,7 @@ def DistribLattice.copy (c : DistribLattice α) (le : α → α → Prop) (eq_le
     all_goals 
       abstract 
         substVars 
-        casesI c 
+        cases' c 
         assumption
 
 /-- A function to create a provable equal copy of a complete lattice
@@ -55,7 +55,7 @@ def CompleteLattice.copy (c : CompleteLattice α) (le : α → α → Prop) (eq_
     all_goals 
       abstract 
         substVars 
-        casesI c 
+        cases' c 
         assumption
 
 /-- A function to create a provable equal copy of a complete distributive lattice
@@ -74,7 +74,7 @@ def CompleteDistribLattice.copy (c : CompleteDistribLattice α) (le : α → α 
     all_goals 
       abstract 
         substVars 
-        casesI c 
+        cases' c 
         assumption
 
 /-- A function to create a provable equal copy of a conditionally complete lattice
@@ -90,6 +90,6 @@ def ConditionallyCompleteLattice.copy (c : ConditionallyCompleteLattice α) (le 
     all_goals 
       abstract 
         substVars 
-        casesI c 
+        cases' c 
         assumption
 

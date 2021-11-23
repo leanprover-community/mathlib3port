@@ -167,21 +167,24 @@ theorem is_iso_inv_app (α : F ⟶ G) [is_iso α] X : (inv α).app X = inv (α.a
     rw [←nat_trans.comp_app]
     simp 
 
+-- error in CategoryTheory.NaturalIsomorphism: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Construct a natural isomorphism between functors by giving object level isomorphisms,
 and checking naturality only in the forward direction.
 -/
-def of_components (app : ∀ X : C, F.obj X ≅ G.obj X)
-  (naturality : ∀ {X Y : C} f : X ⟶ Y, F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f) : F ≅ G :=
-  { Hom := { app := fun X => (app X).Hom },
-    inv :=
-      { app := fun X => (app X).inv,
-        naturality' :=
-          fun X Y f =>
-            by 
-              have h := congr_argₓ (fun f => (app X).inv ≫ f ≫ (app Y).inv) (naturality f).symm 
-              simp only [iso.inv_hom_id_assoc, iso.hom_inv_id, assoc, comp_id, cancel_mono] at h 
-              exact h } }
+def of_components
+(app : ∀ X : C, «expr ≅ »(F.obj X, G.obj X))
+(naturality : ∀
+ {X Y : C}
+ (f : «expr ⟶ »(X, Y)), «expr = »(«expr ≫ »(F.map f, (app Y).hom), «expr ≫ »((app X).hom, G.map f))) : «expr ≅ »(F, G) :=
+{ hom := { app := λ X, (app X).hom },
+  inv := { app := λ X, (app X).inv,
+    naturality' := λ X Y f, begin
+      have [ident h] [] [":=", expr congr_arg (λ
+        f, «expr ≫ »((app X).inv, «expr ≫ »(f, (app Y).inv))) (naturality f).symm],
+      simp [] [] ["only"] ["[", expr iso.inv_hom_id_assoc, ",", expr iso.hom_inv_id, ",", expr assoc, ",", expr comp_id, ",", expr cancel_mono, "]"] [] ["at", ident h],
+      exact [expr h]
+    end } }
 
 @[simp]
 theorem of_components.app (app' : ∀ X : C, F.obj X ≅ G.obj X) naturality X :

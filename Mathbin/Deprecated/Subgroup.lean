@@ -53,7 +53,7 @@ theorem Additive.is_add_subgroup_iff {s : Set G} : @IsAddSubgroup (Additive G) _
       rintro ⟨⟨h₁, h₂⟩, h₃⟩ <;> exact @IsSubgroup.mk G _ _ ⟨h₁, @h₂⟩ @h₃,
     fun h =>
       by 
-        exactI Additive.is_add_subgroup h⟩
+        exact Additive.is_add_subgroup h⟩
 
 theorem Multiplicative.is_subgroup {s : Set A} (hs : IsAddSubgroup s) : @IsSubgroup (Multiplicative A) _ s :=
   @IsSubgroup.mk (Multiplicative A) _ _ (Multiplicative.is_submonoid hs.to_is_add_submonoid) hs.neg_mem
@@ -63,7 +63,7 @@ theorem Multiplicative.is_subgroup_iff {s : Set A} : @IsSubgroup (Multiplicative
       rintro ⟨⟨h₁, h₂⟩, h₃⟩ <;> exact @IsAddSubgroup.mk A _ _ ⟨h₁, @h₂⟩ @h₃,
     fun h =>
       by 
-        exactI Multiplicative.is_subgroup h⟩
+        exact Multiplicative.is_subgroup h⟩
 
 @[toAdditive of_add_neg]
 theorem IsSubgroup.of_div (s : Set G) (one_mem : (1 : G) ∈ s) (div_mem : ∀ {a b : G}, a ∈ s → b ∈ s → (a*b⁻¹) ∈ s) :
@@ -171,7 +171,7 @@ theorem Additive.is_normal_add_subgroup_iff [Groupₓ G] {s : Set G} :
       rintro ⟨h₁, h₂⟩ <;> exact @IsNormalSubgroup.mk G _ _ (Additive.is_add_subgroup_iff.1 h₁) @h₂,
     fun h =>
       by 
-        exactI Additive.is_normal_add_subgroup h⟩
+        exact Additive.is_normal_add_subgroup h⟩
 
 theorem Multiplicative.is_normal_subgroup [AddGroupₓ A] {s : Set A} (hs : IsNormalAddSubgroup s) :
   @IsNormalSubgroup (Multiplicative A) _ s :=
@@ -184,7 +184,7 @@ theorem Multiplicative.is_normal_subgroup_iff [AddGroupₓ A] {s : Set A} :
       rintro ⟨h₁, h₂⟩ <;> exact @IsNormalAddSubgroup.mk A _ _ (Multiplicative.is_subgroup_iff.1 h₁) @h₂,
     fun h =>
       by 
-        exactI Multiplicative.is_normal_subgroup h⟩
+        exact Multiplicative.is_normal_subgroup h⟩
 
 namespace IsSubgroup
 
@@ -209,7 +209,7 @@ def trivialₓ (G : Type _) [Groupₓ G] : Set G :=
 theorem mem_trivial {g : G} : g ∈ trivialₓ G ↔ g = 1 :=
   mem_singleton_iff
 
--- error in Deprecated.Subgroup: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Deprecated.Subgroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]] theorem trivial_normal : is_normal_subgroup (trivial G) :=
 by refine [expr { .. }]; simp [] [] [] ["[", expr trivial, "]"] [] [] { contextual := tt }
 
@@ -269,7 +269,7 @@ theorem center_normal : IsNormalSubgroup (center G) :=
 @[toAdditive add_normalizer
       "The underlying set of the normalizer of a subset `S : set A` of an\n  additive group `A`. That is, the elements `a : A` such that `a + S - a = S`."]
 def normalizer (s : Set G) : Set G :=
-  { g : G | ∀ n, n ∈ s ↔ ((g*n)*g⁻¹) ∈ s }
+  { g:G | ∀ n, n ∈ s ↔ ((g*n)*g⁻¹) ∈ s }
 
 @[toAdditive]
 theorem normalizer_is_subgroup (s : Set G) : IsSubgroup (normalizer s) :=
@@ -378,12 +378,12 @@ theorem range_subgroup {f : G → H} (hf : IsGroupHom f) : IsSubgroup (Set.Range
 
 attribute [local simp] one_mem inv_mem mul_mem IsNormalSubgroup.normal
 
--- error in Deprecated.Subgroup: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Deprecated.Subgroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]]
 theorem preimage {f : G → H} (hf : is_group_hom f) {s : set H} (hs : is_subgroup s) : is_subgroup «expr ⁻¹' »(f, s) :=
 by { refine [expr { .. }]; simp [] [] [] ["[", expr hs.one_mem, ",", expr hs.mul_mem, ",", expr hs.inv_mem, ",", expr hf.map_mul, ",", expr hf.map_one, ",", expr hf.map_inv, ",", expr @inv_mem H _ s, "]"] [] [] { contextual := tt } }
 
--- error in Deprecated.Subgroup: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Deprecated.Subgroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]]
 theorem preimage_normal
 {f : G → H}
@@ -399,17 +399,21 @@ theorem preimage_normal
 theorem is_normal_subgroup_ker {f : G → H} (hf : IsGroupHom f) : IsNormalSubgroup (ker f) :=
   hf.preimage_normal trivial_normal
 
-@[toAdditive]
-theorem injective_of_trivial_ker {f : G → H} (hf : IsGroupHom f) (h : ker f = trivialₓ G) : Function.Injective f :=
-  by 
-    intro a₁ a₂ hfa 
-    simp [ext_iff, ker, IsSubgroup.Trivial] at h 
-    have ha : (a₁*a₂⁻¹) = 1
-    ·
-      rw [←h] <;> exact hf.inv_ker_one hfa 
-    rw [eq_inv_of_mul_eq_one ha, inv_invₓ a₂]
+-- error in Deprecated.Subgroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem injective_of_trivial_ker
+{f : G → H}
+(hf : is_group_hom f)
+(h : «expr = »(ker f, trivial G)) : function.injective f :=
+begin
+  intros [ident a₁, ident a₂, ident hfa],
+  simp [] [] [] ["[", expr ext_iff, ",", expr ker, ",", expr is_subgroup.trivial, "]"] [] ["at", ident h],
+  have [ident ha] [":", expr «expr = »(«expr * »(a₁, «expr ⁻¹»(a₂)), 1)] [],
+  by rw ["<-", expr h] []; exact [expr hf.inv_ker_one hfa],
+  rw ["[", expr eq_inv_of_mul_eq_one ha, ",", expr inv_inv a₂, "]"] []
+end
 
--- error in Deprecated.Subgroup: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Deprecated.Subgroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]]
 theorem trivial_ker_of_injective
 {f : G → H}
@@ -528,7 +532,7 @@ theorem exists_list_of_mem_closure {s : Set G} {a : G} (h : a ∈ closure s) :
         by 
           rw [List.prod_append, HL2, HL4]⟩
 
--- error in Deprecated.Subgroup: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Deprecated.Subgroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 @[to_additive #[]]
 theorem image_closure
 [group H]
@@ -612,12 +616,17 @@ namespace Groupₓ
 
 variable{s : Set G}[Groupₓ G]
 
-theorem conjugates_of_subset {t : Set G} (ht : IsNormalSubgroup t) {a : G} (h : a ∈ t) : ConjugatesOf a ⊆ t :=
-  fun x hc =>
-    by 
-      obtain ⟨c, w⟩ := is_conj_iff.1 hc 
-      have H := IsNormalSubgroup.normal ht a h c 
-      rwa [←w]
+-- error in Deprecated.Subgroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem conjugates_of_subset
+{t : set G}
+(ht : is_normal_subgroup t)
+{a : G}
+(h : «expr ∈ »(a, t)) : «expr ⊆ »(conjugates_of a, t) :=
+λ x hc, begin
+  obtain ["⟨", ident c, ",", ident w, "⟩", ":=", expr is_conj_iff.1 hc],
+  have [ident H] [] [":=", expr is_normal_subgroup.normal ht a h c],
+  rwa ["<-", expr w] []
+end
 
 theorem conjugates_of_set_subset' {s t : Set G} (ht : IsNormalSubgroup t) (h : s ⊆ t) : conjugates_of_set s ⊆ t :=
   Set.bUnion_subset fun x H => conjugates_of_subset ht (h H)

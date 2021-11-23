@@ -1,4 +1,5 @@
 import Mathbin.Algebra.BigOperators.Intervals 
+import Mathbin.Algebra.GeomSum 
 import Mathbin.Data.Nat.Bitwise 
 import Mathbin.Data.Nat.Log 
 import Mathbin.Data.Nat.Parity 
@@ -111,34 +112,35 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.prime) :
     _ = (∑i in Ico 1 b, (n+1) / (p^i) : ℕ) := congr_argₓ coeₓ$ Finset.sum_congr rfl$ fun _ _ => (succ_div _ _).symm
     
 
+-- error in Data.Nat.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The multiplicity of `p` in `(p * (n + 1))!` is one more than the sum
   of the multiplicities of `p` in `(p * n)!` and `n + 1`. -/
-theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.prime) :
-  multiplicity p (p*n+1)! = (multiplicity p (p*n)!+multiplicity p (n+1))+1 :=
-  by 
-    have hp' := prime_iff.mp hp 
-    have h0 : 2 ≤ p := hp.two_le 
-    have h1 : 1 ≤ (p*n)+1 := Nat.le_add_leftₓ _ _ 
-    have h2 : ((p*n)+1) ≤ p*n+1
-    linarith 
-    have h3 : ((p*n)+1) ≤ (p*n+1)+1
-    linarith 
-    have hm : multiplicity p (p*n)! ≠ ⊤
-    ·
-      rw [Ne.def, eq_top_iff_not_finite, not_not, finite_nat_iff]
-      exact ⟨hp.ne_one, factorial_pos _⟩
-    revert hm 
-    have h4 : ∀ m _ : m ∈ Ico ((p*n)+1) (p*n+1), multiplicity p m = 0
-    ·
-      intro m hm 
-      apply multiplicity_eq_zero_of_not_dvd 
-      rw [←exists_lt_and_lt_iff_not_dvd _ (pos_iff_ne_zero.mpr hp.ne_zero)]
-      rw [mem_Ico] at hm 
-      exact ⟨n, lt_of_succ_le hm.1, hm.2⟩
-    simpRw [←prod_Ico_id_eq_factorial, multiplicity.Finset.prod hp', ←sum_Ico_consecutive _ h1 h3, add_assocₓ]
-    intro h 
-    rw [Enat.add_left_cancel_iff h, sum_Ico_succ_top h2, multiplicity.mul hp', hp.multiplicity_self, sum_congr rfl h4,
-      sum_const_zero, zero_addₓ, add_commₓ (1 : Enat)]
+theorem multiplicity_factorial_mul_succ
+{n p : exprℕ()}
+(hp : p.prime) : «expr = »(multiplicity p «expr !»(«expr * »(p, «expr + »(n, 1))), «expr + »(«expr + »(multiplicity p «expr !»(«expr * »(p, n)), multiplicity p «expr + »(n, 1)), 1)) :=
+begin
+  have [ident hp'] [] [":=", expr prime_iff.mp hp],
+  have [ident h0] [":", expr «expr ≤ »(2, p)] [":=", expr hp.two_le],
+  have [ident h1] [":", expr «expr ≤ »(1, «expr + »(«expr * »(p, n), 1))] [":=", expr nat.le_add_left _ _],
+  have [ident h2] [":", expr «expr ≤ »(«expr + »(«expr * »(p, n), 1), «expr * »(p, «expr + »(n, 1)))] [],
+  linarith [] [] [],
+  have [ident h3] [":", expr «expr ≤ »(«expr + »(«expr * »(p, n), 1), «expr + »(«expr * »(p, «expr + »(n, 1)), 1))] [],
+  linarith [] [] [],
+  have [ident hm] [":", expr «expr ≠ »(multiplicity p «expr !»(«expr * »(p, n)), «expr⊤»())] [],
+  { rw ["[", expr ne.def, ",", expr eq_top_iff_not_finite, ",", expr not_not, ",", expr finite_nat_iff, "]"] [],
+    exact [expr ⟨hp.ne_one, factorial_pos _⟩] },
+  revert [ident hm],
+  have [ident h4] [":", expr ∀
+   m «expr ∈ » Ico «expr + »(«expr * »(p, n), 1) «expr * »(p, «expr + »(n, 1)), «expr = »(multiplicity p m, 0)] [],
+  { intros [ident m, ident hm],
+    apply [expr multiplicity_eq_zero_of_not_dvd],
+    rw ["[", "<-", expr exists_lt_and_lt_iff_not_dvd _ (pos_iff_ne_zero.mpr hp.ne_zero), "]"] [],
+    rw ["[", expr mem_Ico, "]"] ["at", ident hm],
+    exact [expr ⟨n, lt_of_succ_le hm.1, hm.2⟩] },
+  simp_rw ["[", "<-", expr prod_Ico_id_eq_factorial, ",", expr multiplicity.finset.prod hp', ",", "<-", expr sum_Ico_consecutive _ h1 h3, ",", expr add_assoc, "]"] [],
+  intro [ident h],
+  rw ["[", expr enat.add_left_cancel_iff h, ",", expr sum_Ico_succ_top h2, ",", expr multiplicity.mul hp', ",", expr hp.multiplicity_self, ",", expr sum_congr rfl h4, ",", expr sum_const_zero, ",", expr zero_add, ",", expr add_comm (1 : enat), "]"] []
+end
 
 /-- The multiplicity of `p` in `(p * n)!` is `n` more than that of `n!`. -/
 theorem multiplicity_factorial_mul {n p : ℕ} (hp : p.prime) : multiplicity p (p*n)! = multiplicity p n !+n :=
@@ -200,7 +202,7 @@ theorem multiplicity_choose {p n k b : ℕ} (hp : p.prime) (hkn : k ≤ n) (hnb 
             exact finite_nat_iff.2 ⟨ne_of_gtₓ hp.one_lt, mul_pos (factorial_pos k) (factorial_pos (n - k))⟩)).1
     h₁
 
--- error in Data.Nat.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Nat.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A lower bound on the multiplicity of `p` in `choose n k`. -/
 theorem multiplicity_le_multiplicity_choose_add
 {p : exprℕ()}
@@ -222,7 +224,7 @@ if hkn : «expr < »(n, k) then by simp [] [] [] ["[", expr choose_eq_zero_of_lt
         i, «expr ∣ »(«expr ^ »(p, i), k))).card)) : card_union_le _ _
 end
 
--- error in Data.Nat.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Nat.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem multiplicity_choose_prime_pow
 {p n k : exprℕ()}
 (hp : p.prime)
@@ -239,35 +241,32 @@ le_antisymm (have hdisj : disjoint ((Ico 1 n.succ).filter (λ
 
 end Prime
 
-theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} h : n ≠ 0, multiplicity 2 n ! < n :=
-  by 
-    have h2 := prime_iff.mp prime_two 
-    refine' binary_rec _ _
-    ·
-      contradiction
-    ·
-      intro b n ih h 
-      byCases' hn : n = 0
-      ·
-        subst hn 
-        simp  at h 
-        simp [h, one_right h2.not_unit, Enat.zero_lt_one]
-      have  : multiplicity 2 (2*n)! < (2*n : ℕ)
-      ·
-        rw [prime_two.multiplicity_factorial_mul]
-        refine' (Enat.add_lt_add_right (ih hn) (Enat.coe_ne_top _)).trans_le _ 
-        rw [two_mul]
-        normCast 
-      cases b
-      ·
-        simpa [bit0_eq_two_mul n]
-      ·
-        suffices  : (multiplicity 2 ((2*n)+1)+multiplicity 2 (2*n)!) < «expr↑ » (2*n)+1
-        ·
-          simpa [succ_eq_add_one, multiplicity.mul, h2, prime_two, Nat.bit1_eq_succ_bit0, bit0_eq_two_mul n]
-        rw [multiplicity_eq_zero_of_not_dvd (two_not_dvd_two_mul_add_one n), zero_addₓ]
-        refine' this.trans _ 
-        exactModCast lt_succ_self _
+-- error in Data.Nat.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem multiplicity_two_factorial_lt : ∀
+{n : exprℕ()}
+(h : «expr ≠ »(n, 0)), «expr < »(multiplicity 2 «expr !»(n), n) :=
+begin
+  have [ident h2] [] [":=", expr prime_iff.mp prime_two],
+  refine [expr binary_rec _ _],
+  { contradiction },
+  { intros [ident b, ident n, ident ih, ident h],
+    by_cases [expr hn, ":", expr «expr = »(n, 0)],
+    { subst [expr hn],
+      simp [] [] [] [] [] ["at", ident h],
+      simp [] [] [] ["[", expr h, ",", expr one_right h2.not_unit, ",", expr enat.zero_lt_one, "]"] [] [] },
+    have [] [":", expr «expr < »(multiplicity 2 «expr !»(«expr * »(2, n)), («expr * »(2, n) : exprℕ()))] [],
+    { rw ["[", expr prime_two.multiplicity_factorial_mul, "]"] [],
+      refine [expr (enat.add_lt_add_right (ih hn) (enat.coe_ne_top _)).trans_le _],
+      rw ["[", expr two_mul, "]"] [],
+      norm_cast [] },
+    cases [expr b] [],
+    { simpa [] [] [] ["[", expr bit0_eq_two_mul n, "]"] [] [] },
+    { suffices [] [":", expr «expr < »(«expr + »(multiplicity 2 «expr + »(«expr * »(2, n), 1), multiplicity 2 «expr !»(«expr * »(2, n))), «expr + »(«expr↑ »(«expr * »(2, n)), 1))],
+      { simpa [] [] [] ["[", expr succ_eq_add_one, ",", expr multiplicity.mul, ",", expr h2, ",", expr prime_two, ",", expr nat.bit1_eq_succ_bit0, ",", expr bit0_eq_two_mul n, "]"] [] [] },
+      rw ["[", expr multiplicity_eq_zero_of_not_dvd (two_not_dvd_two_mul_add_one n), ",", expr zero_add, "]"] [],
+      refine [expr this.trans _],
+      exact_mod_cast [expr lt_succ_self _] } }
+end
 
 end Nat
 

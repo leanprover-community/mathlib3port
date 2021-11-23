@@ -31,7 +31,7 @@ variable{p q : Submodule R M}
 
 namespace Submodule
 
--- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The set `{0}` is the bottom element of the lattice of submodules. -/ instance : has_bot (submodule R M) :=
 ⟨{ carrier := {0}, smul_mem' := by simp [] [] [] [] [] [] { contextual := tt }, ..(«expr⊥»() : add_submonoid M) }⟩
 
@@ -63,7 +63,7 @@ end
 instance unique_bot : Unique (⊥ : Submodule R M) :=
   ⟨inferInstance, fun x => Subtype.ext$ (mem_bot R).1 x.mem⟩
 
--- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance : order_bot (submodule R M) :=
 { bot := «expr⊥»(), bot_le := λ p x, by simp [] [] [] [] [] [] { contextual := tt } }
 
@@ -79,10 +79,12 @@ protected theorem bot_ext (x y : (⊥ : Submodule R M)) : x = y :=
     rw [(Submodule.eq_bot_iff _).mp rfl x xm]
     rw [(Submodule.eq_bot_iff _).mp rfl y ym]
 
-protected theorem ne_bot_iff (p : Submodule R M) : p ≠ ⊥ ↔ ∃ (x : _)(_ : x ∈ p), x ≠ (0 : M) :=
-  by 
-    haveI  := Classical.propDecidable 
-    simpRw [Ne.def, p.eq_bot_iff, not_forall]
+-- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem ne_bot_iff
+(p : submodule R M) : «expr ↔ »(«expr ≠ »(p, «expr⊥»()), «expr∃ , »((x «expr ∈ » p), «expr ≠ »(x, (0 : M)))) :=
+by { haveI [] [] [":=", expr classical.prop_decidable],
+  simp_rw ["[", expr ne.def, ",", expr p.eq_bot_iff, ",", expr not_forall, "]"] [] }
 
 theorem nonzero_mem_of_bot_lt {p : Submodule R M} (bot_lt : ⊥ < p) : ∃ a : p, a ≠ 0 :=
   let ⟨b, hb₁, hb₂⟩ := p.ne_bot_iff.mp bot_lt.ne'
@@ -178,7 +180,7 @@ def top_equiv_self : (⊤ : Submodule R M) ≃ₗ[R] M :=
         intro x 
         rfl }
 
--- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance : has_Inf (submodule R M) :=
 ⟨λ
  S, { carrier := «expr⋂ , »((s «expr ∈ » S), (s : set M)),
@@ -192,7 +194,7 @@ private theorem Inf_le' {S : Set (Submodule R M)} {p} : p ∈ S → Inf S ≤ p 
 private theorem le_Inf' {S : Set (Submodule R M)} {p} : (∀ q _ : q ∈ S, p ≤ q) → p ≤ Inf S :=
   Set.subset_bInter
 
--- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance : has_inf (submodule R M) :=
 ⟨λ
  p
@@ -221,17 +223,19 @@ theorem mem_inf {p q : Submodule R M} {x : M} : x ∈ p⊓q ↔ x ∈ p ∧ x �
 theorem Inf_coe (P : Set (Submodule R M)) : («expr↑ » (Inf P) : Set M) = ⋂(p : _)(_ : p ∈ P), «expr↑ » p :=
   rfl
 
+-- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem finset_inf_coe {ι} (s : Finset ι) (p : ι → Submodule R M) :
-  («expr↑ » (s.inf p) : Set M) = ⋂(i : _)(_ : i ∈ s), «expr↑ » (p i) :=
-  by 
-    letI this := Classical.decEq ι 
-    refine' s.induction_on _ fun i s hi ih => _
-    ·
-      simp 
-    ·
-      rw [Finset.inf_insert, inf_coe, ih]
-      simp 
+theorem finset_inf_coe
+{ι}
+(s : finset ι)
+(p : ι → submodule R M) : «expr = »((«expr↑ »(s.inf p) : set M), «expr⋂ , »((i «expr ∈ » s), «expr↑ »(p i))) :=
+begin
+  letI [] [] [":=", expr classical.dec_eq ι],
+  refine [expr s.induction_on _ (λ i s hi ih, _)],
+  { simp [] [] [] [] [] [] },
+  { rw ["[", expr finset.inf_insert, ",", expr inf_coe, ",", expr ih, "]"] [],
+    simp [] [] [] [] [] [] }
+end
 
 @[simp]
 theorem infi_coe {ι} (p : ι → Submodule R M) : («expr↑ » (⨅i, p i) : Set M) = ⋂i, «expr↑ » (p i) :=

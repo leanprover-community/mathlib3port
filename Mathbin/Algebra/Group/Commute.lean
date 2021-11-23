@@ -160,23 +160,22 @@ theorem units_of_coe : Commute (u₁ : M) u₂ → Commute u₁ u₂ :=
 theorem units_coe_iff : Commute (u₁ : M) u₂ ↔ Commute u₁ u₂ :=
   SemiconjBy.units_coe_iff
 
-@[toAdditive]
-theorem is_unit_mul_iff (h : Commute a b) : IsUnit (a*b) ↔ IsUnit a ∧ IsUnit b :=
-  by 
-    refine' ⟨_, fun H => H.1.mul H.2⟩
-    rintro ⟨u, hu⟩
-    have  : ((b*«expr↑ » (u⁻¹))*a) = 1
-    ·
-      have  : Commute a u := hu.symm ▸ (Commute.refl _).mul_right h 
-      rw [←this.units_inv_right.right_comm, ←h.eq, ←hu, u.mul_inv]
-    split 
-    ·
-      refine' ⟨⟨a, b*«expr↑ » (u⁻¹), _, this⟩, rfl⟩
-      rw [←mul_assocₓ, ←hu, u.mul_inv]
-    ·
-      rw [mul_assocₓ] at this 
-      refine' ⟨⟨b, «expr↑ » (u⁻¹)*a, this, _⟩, rfl⟩
-      rw [mul_assocₓ, ←hu, u.inv_mul]
+-- error in Algebra.Group.Commute: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem is_unit_mul_iff (h : commute a b) : «expr ↔ »(is_unit «expr * »(a, b), «expr ∧ »(is_unit a, is_unit b)) :=
+begin
+  refine [expr ⟨_, λ H, H.1.mul H.2⟩],
+  rintro ["⟨", ident u, ",", ident hu, "⟩"],
+  have [] [":", expr «expr = »(«expr * »(«expr * »(b, «expr↑ »(«expr ⁻¹»(u))), a), 1)] [],
+  { have [] [":", expr commute a u] [":=", expr «expr ▸ »(hu.symm, (commute.refl _).mul_right h)],
+    rw ["[", "<-", expr this.units_inv_right.right_comm, ",", "<-", expr h.eq, ",", "<-", expr hu, ",", expr u.mul_inv, "]"] [] },
+  split,
+  { refine [expr ⟨⟨a, «expr * »(b, «expr↑ »(«expr ⁻¹»(u))), _, this⟩, rfl⟩],
+    rw ["[", "<-", expr mul_assoc, ",", "<-", expr hu, ",", expr u.mul_inv, "]"] [] },
+  { rw [expr mul_assoc] ["at", ident this],
+    refine [expr ⟨⟨b, «expr * »(«expr↑ »(«expr ⁻¹»(u)), a), this, _⟩, rfl⟩],
+    rw ["[", expr mul_assoc, ",", "<-", expr hu, ",", expr u.inv_mul, "]"] [] }
+end
 
 @[simp, toAdditive]
 theorem _root_.is_unit_mul_self_iff : IsUnit (a*a) ↔ IsUnit a :=

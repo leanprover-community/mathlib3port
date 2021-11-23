@@ -90,7 +90,7 @@ instance  : reflects_isomorphisms (forget₂ TopCommRing.{u} Top.{u}) :=
   { reflects :=
       fun X Y f _ =>
         by 
-          resetI 
+          skip 
           let i_Top := as_iso ((forget₂ TopCommRing Top).map f)
           let e_Ring : X ≃+* Y := { f.1, ((forget Top).mapIso i_Top).toEquiv with  }
           exact

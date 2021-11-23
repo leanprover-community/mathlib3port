@@ -47,15 +47,25 @@ end Ringₓ
 
 namespace LieRing
 
--- error in Algebra.Lie.OfAssociative: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- An associative ring gives rise to a Lie ring by taking the bracket to be the ring commutator. -/
-@[priority 100]
-instance of_associative_ring : lie_ring A :=
-{ add_lie := by simp [] [] ["only"] ["[", expr ring.lie_def, ",", expr right_distrib, ",", expr left_distrib, ",", expr sub_eq_add_neg, ",", expr add_comm, ",", expr add_left_comm, ",", expr forall_const, ",", expr eq_self_iff_true, ",", expr neg_add_rev, "]"] [] [],
-  lie_add := by simp [] [] ["only"] ["[", expr ring.lie_def, ",", expr right_distrib, ",", expr left_distrib, ",", expr sub_eq_add_neg, ",", expr add_comm, ",", expr add_left_comm, ",", expr forall_const, ",", expr eq_self_iff_true, ",", expr neg_add_rev, "]"] [] [],
-  lie_self := by simp [] [] ["only"] ["[", expr ring.lie_def, ",", expr forall_const, ",", expr sub_self, "]"] [] [],
-  leibniz_lie := λ x y z, by { repeat { rw [expr ring.lie_def] [] },
-    noncomm_ring } }
+instance (priority := 100)of_associative_ring : LieRing A :=
+  { add_lie :=
+      by 
+        simp only [Ringₓ.lie_def, right_distrib, left_distrib, sub_eq_add_neg, add_commₓ, add_left_commₓ, forall_const,
+          eq_self_iff_true, neg_add_rev],
+    lie_add :=
+      by 
+        simp only [Ringₓ.lie_def, right_distrib, left_distrib, sub_eq_add_neg, add_commₓ, add_left_commₓ, forall_const,
+          eq_self_iff_true, neg_add_rev],
+    lie_self :=
+      by 
+        simp only [Ringₓ.lie_def, forall_const, sub_self],
+    leibniz_lie :=
+      fun x y z =>
+        by 
+          repeat' 
+            rw [Ringₓ.lie_def]
+          noncommRing }
 
 theorem of_associative_ring_bracket (x y : A) : ⁅x,y⁆ = (x*y) - y*x :=
   rfl
@@ -184,20 +194,23 @@ theorem LieSubalgebra.ad_comp_incl_eq (K : LieSubalgebra R L) (x : K) :
 
 end AdjointAction
 
+-- error in Algebra.Lie.OfAssociative: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A subalgebra of an associative algebra is a Lie subalgebra of the associated Lie algebra. -/
-def lieSubalgebraOfSubalgebra (R : Type u) [CommRingₓ R] (A : Type v) [Ringₓ A] [Algebra R A] (A' : Subalgebra R A) :
-  LieSubalgebra R A :=
-  { A'.to_submodule with
-    lie_mem' :=
-      fun x y hx hy =>
-        by 
-          change ⁅x,y⁆ ∈ A' 
-          change x ∈ A' at hx 
-          change y ∈ A' at hy 
-          rw [LieRing.of_associative_ring_bracket]
-          have hxy := A'.mul_mem hx hy 
-          have hyx := A'.mul_mem hy hx 
-          exact Submodule.sub_mem A'.to_submodule hxy hyx }
+def lie_subalgebra_of_subalgebra
+(R : Type u)
+[comm_ring R]
+(A : Type v)
+[ring A]
+[algebra R A]
+(A' : subalgebra R A) : lie_subalgebra R A :=
+{ lie_mem' := λ x y hx hy, by { change [expr «expr ∈ »(«expr⁅ , ⁆»(x, y), A')] [] [],
+    change [expr «expr ∈ »(x, A')] [] ["at", ident hx],
+    change [expr «expr ∈ »(y, A')] [] ["at", ident hy],
+    rw [expr lie_ring.of_associative_ring_bracket] [],
+    have [ident hxy] [] [":=", expr A'.mul_mem hx hy],
+    have [ident hyx] [] [":=", expr A'.mul_mem hy hx],
+    exact [expr submodule.sub_mem A'.to_submodule hxy hyx] },
+  ..A'.to_submodule }
 
 namespace LinearEquiv
 

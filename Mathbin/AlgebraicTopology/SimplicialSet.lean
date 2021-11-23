@@ -1,8 +1,9 @@
 import Mathbin.AlgebraicTopology.SimplicialObject 
-import Mathbin.CategoryTheory.Yoneda 
-import Mathbin.CategoryTheory.Limits.Types 
+import Mathbin.AlgebraicTopology.TopologicalSimplex 
 import Mathbin.CategoryTheory.Limits.Presheaf 
-import Mathbin.AlgebraicTopology.TopologicalSimplex
+import Mathbin.CategoryTheory.Limits.Types 
+import Mathbin.CategoryTheory.Yoneda 
+import Mathbin.Topology.Category.Top.Limits
 
 /-!
 A simplicial set is just a simplicial object in `Type`,
@@ -31,7 +32,7 @@ open CategoryTheory
 
 open_locale Simplicial
 
--- error in AlgebraicTopology.SimplicialSet: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in AlgebraicTopology.SimplicialSet: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 /-- The category of simplicial sets.
 This is the category of contravariant functors from
 `simplex_category` to `Type u`. -/
@@ -115,7 +116,7 @@ noncomputable def S1 : SSet :=
 
 end Examples
 
--- error in AlgebraicTopology.SimplicialSet: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in AlgebraicTopology.SimplicialSet: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 /-- Truncated simplicial sets. -/
 @[derive #["[", expr large_category, ",", expr limits.has_limits, ",", expr limits.has_colimits, "]"]]
 def truncated (n : exprℕ()) :=

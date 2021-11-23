@@ -48,7 +48,7 @@ theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ^# 
 theorem cardinal_mk_le_max_omega_of_fintype [∀ a, Fintype (β a)] : # (WType β) ≤ max (# α) ω :=
   (is_empty_or_nonempty α).elim
       (by 
-        introI h 
+        intro h 
         rw [Cardinal.mk_eq_zero (WType β)]
         exact zero_le _)$
     fun hn =>

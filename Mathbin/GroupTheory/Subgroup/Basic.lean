@@ -2,6 +2,7 @@ import Mathbin.GroupTheory.Submonoid.Pointwise
 import Mathbin.GroupTheory.Submonoid.Membership 
 import Mathbin.GroupTheory.Submonoid.Center 
 import Mathbin.Algebra.Group.Conj 
+import Mathbin.Algebra.Module.Basic 
 import Mathbin.Order.Atoms
 
 /-!
@@ -514,16 +515,12 @@ theorem coe_eq_univ {H : Subgroup G} : (H : Set G) = Set.Univ ↔ H = ⊤ :=
       (by 
         rfl)).symm
 
-@[toAdditive]
-theorem coe_eq_singleton {H : Subgroup G} : (∃ g : G, (H : Set G) = {g}) ↔ H = ⊥ :=
-  ⟨fun ⟨g, hg⟩ =>
-      by 
-        haveI  : Subsingleton (H : Set G) :=
-          by 
-            rw [hg]
-            infer_instance 
-        exact H.eq_bot_of_subsingleton,
-    fun h => ⟨1, SetLike.ext'_iff.mp h⟩⟩
+-- error in GroupTheory.Subgroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem coe_eq_singleton
+{H : subgroup G} : «expr ↔ »(«expr∃ , »((g : G), «expr = »((H : set G), {g})), «expr = »(H, «expr⊥»())) :=
+⟨λ ⟨g, hg⟩, by { haveI [] [":", expr subsingleton (H : set G)] [":=", expr by { rw [expr hg] [], apply_instance }],
+   exact [expr H.eq_bot_of_subsingleton] }, λ h, ⟨1, set_like.ext'_iff.mp h⟩⟩
 
 @[toAdditive]
 instance fintype_bot : Fintype (⊥ : Subgroup G) :=
@@ -536,13 +533,17 @@ instance fintype_bot : Fintype (⊥ : Subgroup G) :=
 theorem card_bot {_ : Fintype («expr↥ » (⊥ : Subgroup G))} : Fintype.card (⊥ : Subgroup G) = 1 :=
   Fintype.card_eq_one_iff.2 ⟨⟨(1 : G), Set.mem_singleton 1⟩, fun ⟨y, hy⟩ => Subtype.eq$ Subgroup.mem_bot.1 hy⟩
 
-@[toAdditive]
-theorem eq_top_of_card_eq [Fintype H] [Fintype G] (h : Fintype.card H = Fintype.card G) : H = ⊤ :=
-  by 
-    haveI  : Fintype (H : Set G) := ‹Fintype H›
-    rw [SetLike.ext'_iff, coe_top, ←Finset.coe_univ, ←(H : Set G).coe_to_finset, Finset.coe_inj,
-      ←Finset.card_eq_iff_eq_univ, ←h, Set.to_finset_card]
-    congr
+-- error in GroupTheory.Subgroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem eq_top_of_card_eq
+[fintype H]
+[fintype G]
+(h : «expr = »(fintype.card H, fintype.card G)) : «expr = »(H, «expr⊤»()) :=
+begin
+  haveI [] [":", expr fintype (H : set G)] [":=", expr «expr‹ ›»(fintype H)],
+  rw ["[", expr set_like.ext'_iff, ",", expr coe_top, ",", "<-", expr finset.coe_univ, ",", "<-", expr (H : set G).coe_to_finset, ",", expr finset.coe_inj, ",", "<-", expr finset.card_eq_iff_eq_univ, ",", "<-", expr h, ",", expr set.to_finset_card, "]"] [],
+  congr
+end
 
 @[toAdditive]
 theorem eq_top_of_le_card [Fintype H] [Fintype G] (h : Fintype.card G ≤ Fintype.card H) : H = ⊤ :=
@@ -552,7 +553,7 @@ theorem eq_top_of_le_card [Fintype H] [Fintype G] (h : Fintype.card G ≤ Fintyp
 theorem eq_bot_of_card_le [Fintype H] (h : Fintype.card H ≤ 1) : H = ⊥ :=
   let _ := Fintype.card_le_one_iff_subsingleton.mp h 
   by 
-    exactI eq_bot_of_subsingleton H
+    exact eq_bot_of_subsingleton H
 
 @[toAdditive]
 theorem eq_bot_of_card_eq [Fintype H] (h : Fintype.card H = 1) : H = ⊥ :=
@@ -676,13 +677,13 @@ theorem mem_Sup_of_mem {S : Set (Subgroup G)} {s : Subgroup G} (hs : s ∈ S) : 
 theorem subsingleton_iff : Subsingleton (Subgroup G) ↔ Subsingleton G :=
   ⟨fun h =>
       by 
-        exactI
+        exact
           ⟨fun x y =>
               have  : ∀ i : G, i = 1 := fun i => mem_bot.mp$ Subsingleton.elimₓ (⊤ : Subgroup G) ⊥ ▸ mem_top i
               (this x).trans (this y).symm⟩,
     fun h =>
       by 
-        exactI
+        exact
           ⟨fun x y =>
               Subgroup.ext$
                 fun i =>
@@ -911,12 +912,17 @@ theorem coe_supr_of_directed {ι} [Nonempty ι] {S : ι → Subgroup G} (hS : Di
       by 
         simp [mem_supr_of_directed hS]
 
-@[toAdditive]
-theorem mem_Sup_of_directed_on {K : Set (Subgroup G)} (Kne : K.nonempty) (hK : DirectedOn (· ≤ ·) K) {x : G} :
-  x ∈ Sup K ↔ ∃ (s : _)(_ : s ∈ K), x ∈ s :=
-  by 
-    haveI  : Nonempty K := Kne.to_subtype 
-    simp only [Sup_eq_supr', mem_supr_of_directed hK.directed_coe, SetCoe.exists, Subtype.coe_mk]
+-- error in GroupTheory.Subgroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem mem_Sup_of_directed_on
+{K : set (subgroup G)}
+(Kne : K.nonempty)
+(hK : directed_on ((«expr ≤ »)) K)
+{x : G} : «expr ↔ »(«expr ∈ »(x, Sup K), «expr∃ , »((s «expr ∈ » K), «expr ∈ »(x, s))) :=
+begin
+  haveI [] [":", expr nonempty K] [":=", expr Kne.to_subtype],
+  simp [] [] ["only"] ["[", expr Sup_eq_supr', ",", expr mem_supr_of_directed hK.directed_coe, ",", expr set_coe.exists, ",", expr subtype.coe_mk, "]"] [] []
+end
 
 variable{N : Type _}[Groupₓ N]{P : Type _}[Groupₓ P]
 
@@ -1318,7 +1324,7 @@ variable{G}(H)
 /-- The `normalizer` of `H` is the largest subgroup of `G` inside which `H` is normal. -/
 @[toAdditive "The `normalizer` of `H` is the largest subgroup of `G` inside which `H` is normal."]
 def normalizer : Subgroup G :=
-  { Carrier := { g : G | ∀ n, n ∈ H ↔ ((g*n)*g⁻¹) ∈ H },
+  { Carrier := { g:G | ∀ n, n ∈ H ↔ ((g*n)*g⁻¹) ∈ H },
     one_mem' :=
       by 
         simp ,
@@ -1336,7 +1342,7 @@ def normalizer : Subgroup G :=
 /-- The `set_normalizer` of `S` is the subgroup of `G` whose elements satisfy `g*S*g⁻¹=S` -/
 @[toAdditive "The `set_normalizer` of `S` is the subgroup of `G` whose elements satisfy\n`g+S-g=S`."]
 def set_normalizer (S : Set G) : Subgroup G :=
-  { Carrier := { g : G | ∀ n, n ∈ S ↔ ((g*n)*g⁻¹) ∈ S },
+  { Carrier := { g:G | ∀ n, n ∈ S ↔ ((g*n)*g⁻¹) ∈ S },
     one_mem' :=
       by 
         simp ,
@@ -1351,22 +1357,24 @@ def set_normalizer (S : Set G) : Subgroup G :=
           rw [ha ((a⁻¹*n)*a⁻¹⁻¹)]
           simp [mul_assocₓ] }
 
-theorem mem_normalizer_fintype {S : Set G} [Fintype S] {x : G} (h : ∀ n, n ∈ S → ((x*n)*x⁻¹) ∈ S) :
-  x ∈ Subgroup.setNormalizer S :=
-  by 
-    haveI  := Classical.propDecidable <;>
-      haveI  := Set.fintypeImage S fun n => (x*n)*x⁻¹ <;>
-        exact
-          fun n =>
-            ⟨h n,
-              fun h₁ =>
-                have heq : (fun n => (x*n)*x⁻¹) '' S = S :=
-                  Set.eq_of_subset_of_card_le (fun n ⟨y, hy⟩ => hy.2 ▸ h y hy.1)
-                    (by 
-                      rw [Set.card_image_of_injective S conj_injective])
-                have  : ((x*n)*x⁻¹) ∈ (fun n => (x*n)*x⁻¹) '' S := HEq.symm ▸ h₁ 
-                let ⟨y, hy⟩ := this 
-                conj_injective hy.2 ▸ hy.1⟩
+-- error in GroupTheory.Subgroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_normalizer_fintype
+{S : set G}
+[fintype S]
+{x : G}
+(h : ∀
+ n, «expr ∈ »(n, S) → «expr ∈ »(«expr * »(«expr * »(x, n), «expr ⁻¹»(x)), S)) : «expr ∈ »(x, subgroup.set_normalizer S) :=
+by haveI [] [] [":=", expr classical.prop_decidable]; haveI [] [] [":=", expr set.fintype_image S (λ
+  n, «expr * »(«expr * »(x, n), «expr ⁻¹»(x)))]; exact [expr λ
+ n, ⟨h n, λ
+  h₁, have heq : «expr = »(«expr '' »(λ
+    n, «expr * »(«expr * »(x, n), «expr ⁻¹»(x)), S), S) := set.eq_of_subset_of_card_le (λ
+   (n)
+   ⟨y, hy⟩, «expr ▸ »(hy.2, h y hy.1)) (by rw [expr set.card_image_of_injective S conj_injective] []),
+  have «expr ∈ »(«expr * »(«expr * »(x, n), «expr ⁻¹»(x)), «expr '' »(λ
+    n, «expr * »(«expr * »(x, n), «expr ⁻¹»(x)), S)) := «expr ▸ »(heq.symm, h₁),
+  let ⟨y, hy⟩ := this in
+  «expr ▸ »(conj_injective hy.2, hy.1)⟩]
 
 variable{H}
 
@@ -1560,7 +1568,7 @@ theorem normal_closure_eq_infi : normal_closure s = ⨅(N : Subgroup G)(_ : norm
         le_infi
           fun hN =>
             by 
-              exactI le_infi normal_closure_le_normal)
+              exact le_infi normal_closure_le_normal)
     (infi_le_of_le (normal_closure s)
       (infi_le_of_le
         (by 
@@ -1587,7 +1595,7 @@ theorem normal_closure_closure_eq_normal_closure {s : Set G} :
 /-- The normal core of a subgroup `H` is the largest normal subgroup of `G` contained in `H`,
 as shown by `subgroup.normal_core_eq_supr`. -/
 def normal_core (H : Subgroup G) : Subgroup G :=
-  { Carrier := { a : G | ∀ b : G, ((b*a)*b⁻¹) ∈ H },
+  { Carrier := { a:G | ∀ b : G, ((b*a)*b⁻¹) ∈ H },
     one_mem' :=
       fun a =>
         by 
@@ -1621,7 +1629,7 @@ theorem normal_core_eq_supr (H : Subgroup G) : H.normal_core = ⨆(N : Subgroup 
           fun hN =>
             supr_le
               (by 
-                exactI normal_le_normal_core.mpr))
+                exact normal_le_normal_core.mpr))
 
 @[simp]
 theorem normal_core_eq_self (H : Subgroup G) [H.normal] : H.normal_core = H :=
@@ -2195,7 +2203,7 @@ end MonoidHom
 
 variable{N : Type _}[Groupₓ N]
 
--- error in GroupTheory.Subgroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in GroupTheory.Subgroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]]
 theorem subgroup.normal.comap {H : subgroup N} (hH : H.normal) (f : «expr →* »(G, N)) : (H.comap f).normal :=
 ⟨λ _, by simp [] [] [] ["[", expr subgroup.mem_comap, ",", expr hH.conj_mem, "]"] [] [] { contextual := tt }⟩
@@ -2626,12 +2634,19 @@ theorem subgroup_of_sup (A A' B : Subgroup G) (hA : A ≤ B) (hA' : A' ≤ B) :
       simp only [subgroup_of, map_comap_eq, map_sup, subtype_range]
       rw [inf_of_le_right (sup_le hA hA'), inf_of_le_right hA', inf_of_le_right hA]
 
-@[toAdditive]
-theorem subgroup_normal.mem_comm {H K : Subgroup G} (hK : H ≤ K) [hN : (H.subgroup_of K).Normal] {a b : G} (hb : b ∈ K)
-  (h : (a*b) ∈ H) : (b*a) ∈ H :=
-  by 
-    have  := (normal_subgroup_of_iff hK).mp hN (a*b) b h hb 
-    rwa [mul_assocₓ, mul_assocₓ, mul_right_invₓ, mul_oneₓ] at this
+-- error in GroupTheory.Subgroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem subgroup_normal.mem_comm
+{H K : subgroup G}
+(hK : «expr ≤ »(H, K))
+[hN : (H.subgroup_of K).normal]
+{a b : G}
+(hb : «expr ∈ »(b, K))
+(h : «expr ∈ »(«expr * »(a, b), H)) : «expr ∈ »(«expr * »(b, a), H) :=
+begin
+  have [] [] [":=", expr (normal_subgroup_of_iff hK).mp hN «expr * »(a, b) b h hb],
+  rwa ["[", expr mul_assoc, ",", expr mul_assoc, ",", expr mul_right_inv, ",", expr mul_one, "]"] ["at", ident this]
+end
 
 end SubgroupNormal
 
@@ -2641,31 +2656,34 @@ namespace IsConj
 
 open Subgroup
 
-theorem normal_closure_eq_top_of {N : Subgroup G} [hn : N.normal] {g g' : G} {hg : g ∈ N} {hg' : g' ∈ N}
-  (hc : IsConj g g') (ht : normal_closure ({⟨g, hg⟩} : Set N) = ⊤) : normal_closure ({⟨g', hg'⟩} : Set N) = ⊤ :=
-  by 
-    obtain ⟨c, rfl⟩ := is_conj_iff.1 hc 
-    have h : ∀ x : N, (MulAut.conj c) x ∈ N
-    ·
-      rintro ⟨x, hx⟩
-      exact hn.conj_mem _ hx c 
-    have hs : Function.Surjective (((MulAut.conj c).toMonoidHom.restrict N).codRestrict _ h)
-    ·
-      rintro ⟨x, hx⟩
-      refine' ⟨⟨(c⁻¹*x)*c, _⟩, _⟩
-      ·
-        have h := hn.conj_mem _ hx (c⁻¹)
-        rwa [inv_invₓ] at h 
-      simp only [MonoidHom.cod_restrict_apply, MulEquiv.coe_to_monoid_hom, MulAut.conj_apply, coe_mk,
-        MonoidHom.restrict_apply, Subtype.mk_eq_mk, ←mul_assocₓ, mul_inv_selfₓ, one_mulₓ]
-      rw [mul_assocₓ, mul_inv_selfₓ, mul_oneₓ]
-    have ht' := map_mono (eq_top_iff.1 ht)
-    rw [←MonoidHom.range_eq_map, MonoidHom.range_top_of_surjective _ hs] at ht' 
-    refine' eq_top_iff.2 (le_transₓ ht' (map_le_iff_le_comap.2 (normal_closure_le_normal _)))
-    rw [Set.singleton_subset_iff, SetLike.mem_coe]
-    simp only [MonoidHom.cod_restrict_apply, MulEquiv.coe_to_monoid_hom, MulAut.conj_apply, coe_mk,
-      MonoidHom.restrict_apply, mem_comap]
-    exact subset_normal_closure (Set.mem_singleton _)
+-- error in GroupTheory.Subgroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem normal_closure_eq_top_of
+{N : subgroup G}
+[hn : N.normal]
+{g g' : G}
+{hg : «expr ∈ »(g, N)}
+{hg' : «expr ∈ »(g', N)}
+(hc : is_conj g g')
+(ht : «expr = »(normal_closure ({⟨g, hg⟩} : set N), «expr⊤»())) : «expr = »(normal_closure ({⟨g', hg'⟩} : set N), «expr⊤»()) :=
+begin
+  obtain ["⟨", ident c, ",", ident rfl, "⟩", ":=", expr is_conj_iff.1 hc],
+  have [ident h] [":", expr ∀ x : N, «expr ∈ »(mul_aut.conj c x, N)] [],
+  { rintro ["⟨", ident x, ",", ident hx, "⟩"],
+    exact [expr hn.conj_mem _ hx c] },
+  have [ident hs] [":", expr function.surjective (((mul_aut.conj c).to_monoid_hom.restrict N).cod_restrict _ h)] [],
+  { rintro ["⟨", ident x, ",", ident hx, "⟩"],
+    refine [expr ⟨⟨«expr * »(«expr * »(«expr ⁻¹»(c), x), c), _⟩, _⟩],
+    { have [ident h] [] [":=", expr hn.conj_mem _ hx «expr ⁻¹»(c)],
+      rwa ["[", expr inv_inv, "]"] ["at", ident h] },
+    simp [] [] ["only"] ["[", expr monoid_hom.cod_restrict_apply, ",", expr mul_equiv.coe_to_monoid_hom, ",", expr mul_aut.conj_apply, ",", expr coe_mk, ",", expr monoid_hom.restrict_apply, ",", expr subtype.mk_eq_mk, ",", "<-", expr mul_assoc, ",", expr mul_inv_self, ",", expr one_mul, "]"] [] [],
+    rw ["[", expr mul_assoc, ",", expr mul_inv_self, ",", expr mul_one, "]"] [] },
+  have [ident ht'] [] [":=", expr map_mono (eq_top_iff.1 ht)],
+  rw ["[", "<-", expr monoid_hom.range_eq_map, ",", expr monoid_hom.range_top_of_surjective _ hs, "]"] ["at", ident ht'],
+  refine [expr eq_top_iff.2 (le_trans ht' (map_le_iff_le_comap.2 (normal_closure_le_normal _)))],
+  rw ["[", expr set.singleton_subset_iff, ",", expr set_like.mem_coe, "]"] [],
+  simp [] [] ["only"] ["[", expr monoid_hom.cod_restrict_apply, ",", expr mul_equiv.coe_to_monoid_hom, ",", expr mul_aut.conj_apply, ",", expr coe_mk, ",", expr monoid_hom.restrict_apply, ",", expr mem_comap, "]"] [] [],
+  exact [expr subset_normal_closure (set.mem_singleton _)]
+end
 
 end IsConj
 

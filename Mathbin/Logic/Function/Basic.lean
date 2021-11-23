@@ -45,22 +45,28 @@ theorem comp_const {f : β → γ} {b : β} : f ∘ const α b = const α (f b) 
 theorem id_def : @id α = fun x => x :=
   rfl
 
-theorem hfunext {α α' : Sort u} {β : α → Sort v} {β' : α' → Sort v} {f : ∀ a, β a} {f' : ∀ a, β' a} (hα : α = α')
-  (h : ∀ a a', HEq a a' → HEq (f a) (f' a')) : HEq f f' :=
-  by 
-    subst hα 
-    have  : ∀ a, HEq (f a) (f' a)
-    ·
-      intro a 
-      exact h a a (HEq.refl a)
-    have  : β = β'
-    ·
-      funext a 
-      exact type_eq_of_heqₓ (this a)
-    subst this 
-    apply heq_of_eq 
-    funext a 
-    exact eq_of_heq (this a)
+-- error in Logic.Function.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem hfunext
+{α α' : Sort u}
+{β : α → Sort v}
+{β' : α' → Sort v}
+{f : ∀ a, β a}
+{f' : ∀ a, β' a}
+(hα : «expr = »(α, α'))
+(h : ∀ a a', «expr == »(a, a') → «expr == »(f a, f' a')) : «expr == »(f, f') :=
+begin
+  subst [expr hα],
+  have [] [":", expr ∀ a, «expr == »(f a, f' a)] [],
+  { intro [ident a],
+    exact [expr h a a (heq.refl a)] },
+  have [] [":", expr «expr = »(β, β')] [],
+  { funext [ident a],
+    exact [expr type_eq_of_heq (this a)] },
+  subst [expr this],
+  apply [expr heq_of_eq],
+  funext [ident a],
+  exact [expr eq_of_heq (this a)]
+end
 
 theorem funext_iff {β : α → Sort _} {f₁ f₂ : ∀ x : α, β x} : f₁ = f₂ ↔ ∀ a, f₁ a = f₂ a :=
   Iff.intro (fun h a => h ▸ rfl) funext
@@ -473,7 +479,7 @@ theorem update_injective (f : ∀ a, β a) (a' : α) : injective (update f a') :
 theorem update_noteq {a a' : α} (h : a ≠ a') (v : β a') (f : ∀ a, β a) : update f a' v a = f a :=
   dif_neg h
 
--- error in Logic.Function.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Logic.Function.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem forall_update_iff
 (f : ∀ a, β a)
 {a : α}
@@ -595,13 +601,15 @@ theorem extend_apply' (g : α → γ) (e' : β → γ) (b : β) (hb : ¬∃ a, f
   by 
     simp [Function.extend_defₓ, hb]
 
-theorem extend_injective (hf : injective f) (e' : β → γ) : injective fun g => extend f g e' :=
-  by 
-    intro g₁ g₂ hg 
-    refine' funext fun x => _ 
-    have H := congr_funₓ hg (f x)
-    simp only [hf, extend_apply] at H 
-    exact H
+-- error in Logic.Function.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem extend_injective (hf : injective f) (e' : β → γ) : injective (λ g, extend f g e') :=
+begin
+  intros [ident g₁, ident g₂, ident hg],
+  refine [expr funext (λ x, _)],
+  have [ident H] [] [":=", expr congr_fun hg (f x)],
+  simp [] [] ["only"] ["[", expr hf, ",", expr extend_apply, "]"] [] ["at", ident H],
+  exact [expr H]
+end
 
 @[simp]
 theorem extend_comp (hf : injective f) (g : α → γ) (e' : β → γ) : extend f g e' ∘ f = g :=
@@ -658,7 +666,7 @@ class has_uncurry(α : Type _)(β : outParam (Type _))(γ : outParam (Type _)) w
 for bundled maps.-/
 add_decl_doc has_uncurry.uncurry
 
--- error in Logic.Function.Basic: ././Mathport/Syntax/Translate/Basic.lean:264:9: unsupported: advanced prec syntax
+-- error in Logic.Function.Basic: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 notation `↿`:max x:max := has_uncurry.uncurry x
 
 instance has_uncurry_base : has_uncurry (α → β) α β :=

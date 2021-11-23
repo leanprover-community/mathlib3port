@@ -181,40 +181,49 @@ theorem tendsto_compact_open_iff_forall {ι : Type _} {l : Filter ι} (F : ι �
     rw [compact_open_eq_Inf_induced]
     simp [nhds_infi, nhds_induced, Filter.tendsto_comap_iff]
 
+-- error in Topology.CompactOpen: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A family `F` of functions in `C(α, β)` converges in the compact-open topology, if and only if
 it converges in the compact-open topology on each compact subset of `α`. -/
-theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space α] [T2Space β] {ι : Type _}
-  {l : Filter ι} [Filter.NeBot l] (F : ι → C(α, β)) :
-  (∃ f, Filter.Tendsto F l (𝓝 f)) ↔
-    ∀ s : Set α hs : IsCompact s, ∃ f, Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 f) :=
-  by 
-    split 
-    ·
-      rintro ⟨f, hf⟩ s hs 
-      exact ⟨f.restrict s, tendsto_compact_open_restrict hf s⟩
-    ·
-      intro h 
-      choose f hf using h 
-      have h :
-        ∀ s₁ hs₁ : IsCompact s₁ s₂ hs₂ : IsCompact s₂ x : α hxs₁ : x ∈ s₁ hxs₂ : x ∈ s₂,
-          f s₁ hs₁ ⟨x, hxs₁⟩ = f s₂ hs₂ ⟨x, hxs₂⟩
-      ·
-        rintro s₁ hs₁ s₂ hs₂ x hxs₁ hxs₂ 
-        haveI  := is_compact_iff_compact_space.mp hs₁ 
-        haveI  := is_compact_iff_compact_space.mp hs₂ 
-        have h₁ := (continuous_ev₁ (⟨x, hxs₁⟩ : s₁)).ContinuousAt.Tendsto.comp (hf s₁ hs₁)
-        have h₂ := (continuous_ev₁ (⟨x, hxs₂⟩ : s₂)).ContinuousAt.Tendsto.comp (hf s₂ hs₂)
-        exact tendsto_nhds_unique h₁ h₂ 
-      have hs : ∀ x : α, ∃ (s : _)(hs : IsCompact s), s ∈ 𝓝 x
-      ·
-        intro x 
-        obtain ⟨s, hs, hs'⟩ := exists_compact_mem_nhds x 
-        exact ⟨s, hs, hs'⟩
-      refine' ⟨lift_cover' _ _ h hs, _⟩
-      rw [tendsto_compact_open_iff_forall]
-      intro s hs 
-      rw [lift_cover_restrict']
-      exact hf s hs
+theorem exists_tendsto_compact_open_iff_forall
+[locally_compact_space α]
+[t2_space α]
+[t2_space β]
+{ι : Type*}
+{l : filter ι}
+[filter.ne_bot l]
+(F : ι → «exprC( , )»(α, β)) : «expr ↔ »(«expr∃ , »((f), filter.tendsto F l (expr𝓝() f)), ∀
+ (s : set α)
+ (hs : is_compact s), «expr∃ , »((f), filter.tendsto (λ i, (F i).restrict s) l (expr𝓝() f))) :=
+begin
+  split,
+  { rintros ["⟨", ident f, ",", ident hf, "⟩", ident s, ident hs],
+    exact [expr ⟨f.restrict s, tendsto_compact_open_restrict hf s⟩] },
+  { intros [ident h],
+    choose [] [ident f] [ident hf] ["using", expr h],
+    have [ident h] [":", expr ∀
+     (s₁)
+     (hs₁ : is_compact s₁)
+     (s₂)
+     (hs₂ : is_compact s₂)
+     (x : α)
+     (hxs₁ : «expr ∈ »(x, s₁))
+     (hxs₂ : «expr ∈ »(x, s₂)), «expr = »(f s₁ hs₁ ⟨x, hxs₁⟩, f s₂ hs₂ ⟨x, hxs₂⟩)] [],
+    { rintros [ident s₁, ident hs₁, ident s₂, ident hs₂, ident x, ident hxs₁, ident hxs₂],
+      haveI [] [] [":=", expr is_compact_iff_compact_space.mp hs₁],
+      haveI [] [] [":=", expr is_compact_iff_compact_space.mp hs₂],
+      have [ident h₁] [] [":=", expr (continuous_ev₁ (⟨x, hxs₁⟩ : s₁)).continuous_at.tendsto.comp (hf s₁ hs₁)],
+      have [ident h₂] [] [":=", expr (continuous_ev₁ (⟨x, hxs₂⟩ : s₂)).continuous_at.tendsto.comp (hf s₂ hs₂)],
+      exact [expr tendsto_nhds_unique h₁ h₂] },
+    have [ident hs] [":", expr ∀ x : α, «expr∃ , »((s) (hs : is_compact s), «expr ∈ »(s, expr𝓝() x))] [],
+    { intros [ident x],
+      obtain ["⟨", ident s, ",", ident hs, ",", ident hs', "⟩", ":=", expr exists_compact_mem_nhds x],
+      exact [expr ⟨s, hs, hs'⟩] },
+    refine [expr ⟨lift_cover' _ _ h hs, _⟩],
+    rw [expr tendsto_compact_open_iff_forall] [],
+    intros [ident s, ident hs],
+    rw [expr lift_cover_restrict'] [],
+    exact [expr hf s hs] }
+end
 
 end InfInduced
 

@@ -20,9 +20,9 @@ unsafe def copy_attribute' (attr_name : Name) (src : Name) (tgt : Name) (p : Opt
                 let user_attr_const ← get_user_attribute_name attr_name >>= mk_const 
                 let tac ←
                   eval_pexpr (tactic Unit)
-                      (pquote
-                        user_attribute.get_param_untyped (%%user_attr_const) (%%src) >>=
-                          fun x => user_attribute.set_untyped (%%user_attr_const) (%%tgt) x (%%p) (%%prio))
+                      (pquote.1
+                        (user_attribute.get_param_untyped (%%ₓuser_attr_const) (%%ₓsrc) >>=
+                          fun x => user_attribute.set_untyped (%%ₓuser_attr_const) (%%ₓtgt) x (%%ₓp) (%%ₓprio)))
                 tac
             else fail msg
 

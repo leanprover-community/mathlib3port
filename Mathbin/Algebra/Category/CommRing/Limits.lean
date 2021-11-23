@@ -84,7 +84,7 @@ instance has_limits : has_limits SemiRing :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
+          exact { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
 
 /--
 An auxiliary declaration to speed up typechecking.
@@ -101,7 +101,7 @@ instance forget₂_AddCommMon_preserves_limits : preserves_limits (forget₂ Sem
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesLimit :=
                 fun F =>
                   preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
@@ -121,7 +121,7 @@ instance forget₂_Mon_preserves_limits : preserves_limits (forget₂ SemiRing M
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesLimit :=
                 fun F =>
                   preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
@@ -134,7 +134,7 @@ instance forget_preserves_limits : preserves_limits (forget SemiRing) :=
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesLimit :=
                 fun F =>
                   preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
@@ -200,7 +200,7 @@ instance has_limits : has_limits CommSemiRing.{u} :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { HasLimit := fun F => has_limit_of_created F (forget₂ CommSemiRing SemiRing.{u}) } }
+          exact { HasLimit := fun F => has_limit_of_created F (forget₂ CommSemiRing SemiRing.{u}) } }
 
 /--
 The forgetful functor from rings to semirings preserves all limits.
@@ -221,7 +221,7 @@ instance forget_preserves_limits : preserves_limits (forget CommSemiRing) :=
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesLimit :=
                 fun F => limits.comp_preserves_limit (forget₂ CommSemiRing SemiRing) (forget SemiRing) } }
 
@@ -291,7 +291,7 @@ instance has_limits : has_limits Ringₓₓ :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { HasLimit := fun F => has_limit_of_created F (forget₂ Ringₓₓ SemiRing) } }
+          exact { HasLimit := fun F => has_limit_of_created F (forget₂ Ringₓₓ SemiRing) } }
 
 /--
 The forgetful functor from rings to semirings preserves all limits.
@@ -319,7 +319,7 @@ instance forget₂_AddCommGroup_preserves_limits : preserves_limits (forget₂ R
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesLimit :=
                 fun F =>
                   preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
@@ -333,8 +333,7 @@ instance forget_preserves_limits : preserves_limits (forget Ringₓₓ) :=
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
-            { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ Ringₓₓ SemiRing) (forget SemiRing) } }
+          exact { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ Ringₓₓ SemiRing) (forget SemiRing) } }
 
 end Ringₓₓ
 
@@ -396,7 +395,7 @@ instance has_limits : has_limits CommRingₓₓ.{u} :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { HasLimit := fun F => has_limit_of_created F (forget₂ CommRingₓₓ Ringₓₓ.{u}) } }
+          exact { HasLimit := fun F => has_limit_of_created F (forget₂ CommRingₓₓ Ringₓₓ.{u}) } }
 
 /--
 The forgetful functor from commutative rings to rings preserves all limits.
@@ -427,7 +426,7 @@ instance forget₂_CommSemiRing_preserves_limits : preserves_limits (forget₂ C
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesLimit :=
                 fun F =>
                   preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
@@ -441,8 +440,7 @@ instance forget_preserves_limits : preserves_limits (forget CommRingₓₓ) :=
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
-            { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ CommRingₓₓ Ringₓₓ) (forget Ringₓₓ) } }
+          exact { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ CommRingₓₓ Ringₓₓ) (forget Ringₓₓ) } }
 
 end CommRingₓₓ
 

@@ -1,5 +1,5 @@
 import Mathbin.AlgebraicTopology.SimplexCategory 
-import Mathbin.Topology.Category.Top.Default 
+import Mathbin.Topology.Category.Top.Basic 
 import Mathbin.Topology.Instances.Nnreal
 
 /-!
@@ -22,7 +22,7 @@ attribute [local instance] CategoryTheory.ConcreteCategory.hasCoeToSort Category
 /-- The topological simplex associated to `x : simplex_category`.
   This is the object part of the functor `simplex_category.to_Top`. -/
 def to_Top_obj (x : SimplexCategory) :=
-  { f : x →  ℝ≥0  | (∑i, f i) = 1 }
+  { f:x →  ℝ≥0  | (∑i, f i) = 1 }
 
 instance  (x : SimplexCategory) : CoeFun x.to_Top_obj fun _ => x →  ℝ≥0  :=
   ⟨fun f => (f : x →  ℝ≥0 )⟩

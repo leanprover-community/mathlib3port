@@ -73,7 +73,7 @@ instance of_fixed_field (G : Type _) [Groupₓ G] [Fintype G] [MulSemiringAction
   IsGalois (FixedPoints.subfield G E) E :=
   ⟨⟩
 
--- error in FieldTheory.Galois: ././Mathport/Syntax/Translate/Basic.lean:340:40: in letI: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in FieldTheory.Galois: ././Mathport/Syntax/Translate/Basic.lean:341:40: in letI: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem intermediate_field.adjoin_simple.card_aut_eq_finrank
 [finite_dimensional F E]
 {α : E}
@@ -87,7 +87,7 @@ begin
   exact [expr fintype.card_congr (alg_equiv_equiv_alg_hom F «expr ⟮ , ⟯»(F, [α]))]
 end
 
--- error in FieldTheory.Galois: ././Mathport/Syntax/Translate/Basic.lean:340:40: in let: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in FieldTheory.Galois: ././Mathport/Syntax/Translate/Basic.lean:341:40: in let: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem card_aut_eq_finrank
 [finite_dimensional F E]
 [is_galois F E] : «expr = »(fintype.card «expr ≃ₐ[ ] »(E, F, E), finrank F E) :=
@@ -144,10 +144,10 @@ theorem is_galois_iff_is_galois_bot : IsGalois (⊥ : IntermediateField F E) E �
   by 
     split 
     ·
-      introI h 
+      intro h 
       exact IsGalois.tower_top_of_is_galois (⊥ : IntermediateField F E) F E
     ·
-      introI h 
+      intro h 
       infer_instance
 
 theorem IsGalois.of_alg_equiv [h : IsGalois F E] (f : E ≃ₐ[F] E') : IsGalois F E' :=
@@ -156,10 +156,10 @@ theorem IsGalois.of_alg_equiv [h : IsGalois F E] (f : E ≃ₐ[F] E') : IsGalois
 theorem AlgEquiv.transfer_galois (f : E ≃ₐ[F] E') : IsGalois F E ↔ IsGalois F E' :=
   ⟨fun h =>
       by 
-        exactI IsGalois.of_alg_equiv f,
+        exact IsGalois.of_alg_equiv f,
     fun h =>
       by 
-        exactI IsGalois.of_alg_equiv f.symm⟩
+        exact IsGalois.of_alg_equiv f.symm⟩
 
 theorem is_galois_iff_is_galois_top : IsGalois F (⊤ : IntermediateField F E) ↔ IsGalois F E :=
   IntermediateField.topEquiv.transfer_galois
@@ -235,21 +235,17 @@ def fixing_subgroup_equiv : fixing_subgroup K ≃* E ≃ₐ[K] E :=
           ext 
           rfl }
 
-theorem fixing_subgroup_fixed_field [FiniteDimensional F E] : fixing_subgroup (fixed_field H) = H :=
-  by 
-    have H_le : H ≤ fixing_subgroup (fixed_field H) := (le_iff_le _ _).mp (le_reflₓ _)
-    suffices  : Fintype.card H = Fintype.card (fixing_subgroup (fixed_field H))
-    ·
-      exact
-        SetLike.coe_injective
-          (Set.eq_of_inclusion_surjective
-              ((Fintype.bijective_iff_injective_and_card (Set.inclusion H_le)).mpr
-                  ⟨Set.inclusion_injective H_le, this⟩).2).symm
-            
-    apply Fintype.card_congr 
-    refine' (FixedPoints.toAlgHomEquiv H E).trans _ 
-    refine' (algEquivEquivAlgHom (fixed_field H) E).symm.trans _ 
-    exact (fixing_subgroup_equiv (fixed_field H)).toEquiv.symm
+-- error in FieldTheory.Galois: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fixing_subgroup_fixed_field [finite_dimensional F E] : «expr = »(fixing_subgroup (fixed_field H), H) :=
+begin
+  have [ident H_le] [":", expr «expr ≤ »(H, fixing_subgroup (fixed_field H))] [":=", expr (le_iff_le _ _).mp (le_refl _)],
+  suffices [] [":", expr «expr = »(fintype.card H, fintype.card (fixing_subgroup (fixed_field H)))],
+  { exact [expr set_like.coe_injective (set.eq_of_inclusion_surjective ((fintype.bijective_iff_injective_and_card (set.inclusion H_le)).mpr ⟨set.inclusion_injective H_le, this⟩).2).symm] },
+  apply [expr fintype.card_congr],
+  refine [expr (fixed_points.to_alg_hom_equiv H E).trans _],
+  refine [expr (alg_equiv_equiv_alg_hom (fixed_field H) E).symm.trans _],
+  exact [expr (fixing_subgroup_equiv (fixed_field H)).to_equiv.symm]
+end
 
 instance fixed_field.algebra : Algebra K (fixed_field (fixing_subgroup K)) :=
   { smul :=
@@ -272,17 +268,17 @@ end IntermediateField
 
 namespace IsGalois
 
-theorem fixed_field_fixing_subgroup [FiniteDimensional F E] [h : IsGalois F E] :
-  IntermediateField.fixedField (IntermediateField.fixingSubgroup K) = K :=
-  by 
-    have K_le : K ≤ IntermediateField.fixedField (IntermediateField.fixingSubgroup K) :=
-      (IntermediateField.le_iff_le _ _).mpr (le_reflₓ _)
-    suffices  : finrank K E = finrank (IntermediateField.fixedField (IntermediateField.fixingSubgroup K)) E
-    ·
-      exact (IntermediateField.eq_of_le_of_finrank_eq' K_le this).symm 
-    rw [IntermediateField.finrank_fixed_field_eq_card,
-      Fintype.card_congr (IntermediateField.fixingSubgroupEquiv K).toEquiv]
-    exact (card_aut_eq_finrank K E).symm
+-- error in FieldTheory.Galois: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fixed_field_fixing_subgroup
+[finite_dimensional F E]
+[h : is_galois F E] : «expr = »(intermediate_field.fixed_field (intermediate_field.fixing_subgroup K), K) :=
+begin
+  have [ident K_le] [":", expr «expr ≤ »(K, intermediate_field.fixed_field (intermediate_field.fixing_subgroup K))] [":=", expr (intermediate_field.le_iff_le _ _).mpr (le_refl _)],
+  suffices [] [":", expr «expr = »(finrank K E, finrank (intermediate_field.fixed_field (intermediate_field.fixing_subgroup K)) E)],
+  { exact [expr (intermediate_field.eq_of_le_of_finrank_eq' K_le this).symm] },
+  rw ["[", expr intermediate_field.finrank_fixed_field_eq_card, ",", expr fintype.card_congr (intermediate_field.fixing_subgroup_equiv K).to_equiv, "]"] [],
+  exact [expr (card_aut_eq_finrank K E).symm]
+end
 
 theorem card_fixing_subgroup_eq_finrank [FiniteDimensional F E] [IsGalois F E] :
   Fintype.card (IntermediateField.fixingSubgroup K) = finrank K E :=
@@ -349,24 +345,25 @@ theorem of_fixed_field_eq_bot [FiniteDimensional F E]
     rw [←is_galois_iff_is_galois_bot, ←h]
     exact IsGalois.of_fixed_field E (⊤ : Subgroup (E ≃ₐ[F] E))
 
-theorem of_card_aut_eq_finrank [FiniteDimensional F E] (h : Fintype.card (E ≃ₐ[F] E) = finrank F E) : IsGalois F E :=
-  by 
-    apply of_fixed_field_eq_bot 
-    have p : 0 < finrank (IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E))) E := finrank_pos 
-    rw [←IntermediateField.finrank_eq_one_iff, ←mul_left_inj' (ne_of_ltₓ p).symm, finrank_mul_finrank, ←h, one_mulₓ,
-      IntermediateField.finrank_fixed_field_eq_card]
-    apply Fintype.card_congr 
-    exact
-      { toFun := fun g => ⟨g, Subgroup.mem_top g⟩, invFun := coeₓ, left_inv := fun g => rfl,
-        right_inv :=
-          fun _ =>
-            by 
-              ext 
-              rfl }
+-- error in FieldTheory.Galois: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_card_aut_eq_finrank
+[finite_dimensional F E]
+(h : «expr = »(fintype.card «expr ≃ₐ[ ] »(E, F, E), finrank F E)) : is_galois F E :=
+begin
+  apply [expr of_fixed_field_eq_bot],
+  have [ident p] [":", expr «expr < »(0, finrank (intermediate_field.fixed_field («expr⊤»() : subgroup «expr ≃ₐ[ ] »(E, F, E))) E)] [":=", expr finrank_pos],
+  rw ["[", "<-", expr intermediate_field.finrank_eq_one_iff, ",", "<-", expr mul_left_inj' (ne_of_lt p).symm, ",", expr finrank_mul_finrank, ",", "<-", expr h, ",", expr one_mul, ",", expr intermediate_field.finrank_fixed_field_eq_card, "]"] [],
+  apply [expr fintype.card_congr],
+  exact [expr { to_fun := λ g, ⟨g, subgroup.mem_top g⟩,
+     inv_fun := coe,
+     left_inv := λ g, rfl,
+     right_inv := λ _, by { ext [] [] [],
+       refl } }]
+end
 
 variable{F}{E}{p : Polynomial F}
 
--- error in FieldTheory.Galois: ././Mathport/Syntax/Translate/Basic.lean:340:40: in let: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in FieldTheory.Galois: ././Mathport/Syntax/Translate/Basic.lean:341:40: in let: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem of_separable_splitting_field_aux
 [hFE : finite_dimensional F E]
 [sp : p.is_splitting_field F E]
@@ -399,7 +396,7 @@ begin
     exact [expr sp.splits] }
 end
 
--- error in FieldTheory.Galois: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exact: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in FieldTheory.Galois: ././Mathport/Syntax/Translate/Basic.lean:341:40: in exact: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem of_separable_splitting_field [sp : p.is_splitting_field F E] (hp : p.separable) : is_galois F E :=
 begin
   haveI [ident hFE] [":", expr finite_dimensional F E] [":=", expr polynomial.is_splitting_field.finite_dimensional E p],
@@ -440,11 +437,11 @@ theorem tfae [FiniteDimensional F E] :
       exact fun h => OrderIso.map_bot (@intermediate_field_equiv_subgroup F _ E _ _ _ h).symm 
     tfaeHave 1 → 3
     ·
-      introI 
+      intro 
       exact card_aut_eq_finrank F E 
     tfaeHave 1 → 4
     ·
-      introI 
+      intro 
       exact is_separable_splitting_field F E 
     tfaeHave 2 → 1
     ·
@@ -455,7 +452,7 @@ theorem tfae [FiniteDimensional F E] :
     tfaeHave 4 → 1
     ·
       rintro ⟨h, hp1, _⟩
-      exactI of_separable_splitting_field hp1 
+      exact of_separable_splitting_field hp1 
     tfaeFinish
 
 end IsGalois

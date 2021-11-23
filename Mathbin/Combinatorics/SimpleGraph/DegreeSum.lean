@@ -43,7 +43,7 @@ universe u
 
 variable{V : Type u}(G : SimpleGraph V)
 
--- error in Combinatorics.SimpleGraph.DegreeSum: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Combinatorics.SimpleGraph.DegreeSum: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- A dart is a directed edge, consisting of an ordered pair of adjacent vertices. -/
 @[ext #[], derive #[expr decidable_eq]]
 structure dart := (fst snd : V) (is_adj : G.adj fst snd)
@@ -133,24 +133,25 @@ theorem dart_fst_fiber [DecidableEq V] (v : V) :
       rintro ⟨e, he, rfl⟩
       rfl
 
-theorem dart_fst_fiber_card_eq_degree [DecidableEq V] (v : V) :
-  (univ.filter fun d : G.dart => d.fst = v).card = G.degree v :=
-  by 
-    have hh := card_image_of_injective univ (G.dart_of_neighbor_set_injective v)
-    rw [Finset.card_univ, card_neighbor_set_eq_degree] at hh 
-    rwa [dart_fst_fiber]
+-- error in Combinatorics.SimpleGraph.DegreeSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dart_fst_fiber_card_eq_degree
+[decidable_eq V]
+(v : V) : «expr = »((univ.filter (λ d : G.dart, «expr = »(d.fst, v))).card, G.degree v) :=
+begin
+  have [ident hh] [] [":=", expr card_image_of_injective univ (G.dart_of_neighbor_set_injective v)],
+  rw ["[", expr finset.card_univ, ",", expr card_neighbor_set_eq_degree, "]"] ["at", ident hh],
+  rwa [expr dart_fst_fiber] []
+end
 
-theorem dart_card_eq_sum_degrees : Fintype.card G.dart = ∑v, G.degree v :=
-  by 
-    haveI h : DecidableEq V
-    ·
-      classical 
-      infer_instance 
-    simp only [←card_univ, ←dart_fst_fiber_card_eq_degree]
-    exact
-      card_eq_sum_card_fiberwise
-        (by 
-          simp )
+-- error in Combinatorics.SimpleGraph.DegreeSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dart_card_eq_sum_degrees : «expr = »(fintype.card G.dart, «expr∑ , »((v), G.degree v)) :=
+begin
+  haveI [ident h] [":", expr decidable_eq V] [],
+  { classical,
+    apply_instance },
+  simp [] [] ["only"] ["[", "<-", expr card_univ, ",", "<-", expr dart_fst_fiber_card_eq_degree, "]"] [] [],
+  exact [expr card_eq_sum_card_fiberwise (by simp [] [] [] [] [] [])]
+end
 
 variable{G}[DecidableEq V]
 
@@ -193,74 +194,78 @@ theorem sum_degrees_eq_twice_card_edges : (∑v, G.degree v) = 2*G.edge_finset.c
 
 end DegreeSum
 
+-- error in Combinatorics.SimpleGraph.DegreeSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The handshaking lemma.  See also `simple_graph.sum_degrees_eq_twice_card_edges`. -/
-theorem even_card_odd_degree_vertices [Fintype V] [DecidableRel G.adj] :
-  Even (univ.filter fun v => Odd (G.degree v)).card :=
-  by 
-    classical 
-    have h := congr_argₓ (fun n => «expr↑ » n : ℕ → Zmod 2) G.sum_degrees_eq_twice_card_edges 
-    simp only [Zmod.nat_cast_self, zero_mul, Nat.cast_mul] at h 
-    rw [Nat.cast_sum, ←sum_filter_ne_zero] at h 
-    rw [@sum_congr _ _ _ _ (fun v => (G.degree v : Zmod 2)) (fun v => (1 : Zmod 2)) _ rfl] at h
-    ·
-      simp only [filter_congr_decidable, mul_oneₓ, nsmul_eq_mul, sum_const, Ne.def] at h 
-      rw [←Zmod.eq_zero_iff_even]
-      convert h 
-      ext v 
-      rw [←Zmod.ne_zero_iff_odd]
-      congr
-    ·
-      intro v 
-      simp only [true_andₓ, mem_filter, mem_univ, Ne.def]
-      rw [Zmod.eq_zero_iff_even, Zmod.eq_one_iff_odd, Nat.odd_iff_not_even, imp_self]
-      trivial
+theorem even_card_odd_degree_vertices
+[fintype V]
+[decidable_rel G.adj] : even (univ.filter (λ v, odd (G.degree v))).card :=
+begin
+  classical,
+  have [ident h] [] [":=", expr congr_arg (λ n, «expr↑ »(n) : exprℕ() → zmod 2) G.sum_degrees_eq_twice_card_edges],
+  simp [] [] ["only"] ["[", expr zmod.nat_cast_self, ",", expr zero_mul, ",", expr nat.cast_mul, "]"] [] ["at", ident h],
+  rw ["[", expr nat.cast_sum, ",", "<-", expr sum_filter_ne_zero, "]"] ["at", ident h],
+  rw [expr @sum_congr _ _ _ _ (λ v, (G.degree v : zmod 2)) (λ v, (1 : zmod 2)) _ rfl] ["at", ident h],
+  { simp [] [] ["only"] ["[", expr filter_congr_decidable, ",", expr mul_one, ",", expr nsmul_eq_mul, ",", expr sum_const, ",", expr ne.def, "]"] [] ["at", ident h],
+    rw ["<-", expr zmod.eq_zero_iff_even] [],
+    convert [] [expr h] [],
+    ext [] [ident v] [],
+    rw ["<-", expr zmod.ne_zero_iff_odd] [],
+    congr' [] [] },
+  { intros [ident v],
+    simp [] [] ["only"] ["[", expr true_and, ",", expr mem_filter, ",", expr mem_univ, ",", expr ne.def, "]"] [] [],
+    rw ["[", expr zmod.eq_zero_iff_even, ",", expr zmod.eq_one_iff_odd, ",", expr nat.odd_iff_not_even, ",", expr imp_self, "]"] [],
+    trivial }
+end
 
-theorem odd_card_odd_degree_vertices_ne [Fintype V] [DecidableEq V] [DecidableRel G.adj] (v : V)
-  (h : Odd (G.degree v)) : Odd (univ.filter fun w => w ≠ v ∧ Odd (G.degree w)).card :=
-  by 
-    rcases G.even_card_odd_degree_vertices with ⟨k, hg⟩
-    have hk : 0 < k
-    ·
-      have hh : (filter (fun v : V => Odd (G.degree v)) univ).Nonempty
-      ·
-        use v 
-        simp only [true_andₓ, mem_filter, mem_univ]
-        use h 
-      rwa [←card_pos, hg, zero_lt_mul_left] at hh 
-      exact zero_lt_two 
-    have hc : (fun w : V => w ≠ v ∧ Odd (G.degree w)) = fun w : V => Odd (G.degree w) ∧ w ≠ v
-    ·
-      ext w 
-      rw [and_comm]
-    simp only [hc, filter_congr_decidable]
-    rw [←filter_filter, filter_ne', card_erase_of_mem]
-    ·
-      use k - 1
-      rw [Nat.pred_eq_succ_iff, hg, mul_tsub, tsub_add_eq_add_tsub, eq_comm, tsub_eq_iff_eq_add_of_le]
-      ·
-        ring
-      ·
-        exact add_le_add_right (zero_le _) 2
-      ·
-        exact Nat.mul_le_mul_leftₓ _ hk
-    ·
-      simpa only [true_andₓ, mem_filter, mem_univ]
+-- error in Combinatorics.SimpleGraph.DegreeSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem odd_card_odd_degree_vertices_ne
+[fintype V]
+[decidable_eq V]
+[decidable_rel G.adj]
+(v : V)
+(h : odd (G.degree v)) : odd (univ.filter (λ w, «expr ∧ »(«expr ≠ »(w, v), odd (G.degree w)))).card :=
+begin
+  rcases [expr G.even_card_odd_degree_vertices, "with", "⟨", ident k, ",", ident hg, "⟩"],
+  have [ident hk] [":", expr «expr < »(0, k)] [],
+  { have [ident hh] [":", expr (filter (λ v : V, odd (G.degree v)) univ).nonempty] [],
+    { use [expr v],
+      simp [] [] ["only"] ["[", expr true_and, ",", expr mem_filter, ",", expr mem_univ, "]"] [] [],
+      use [expr h] },
+    rwa ["[", "<-", expr card_pos, ",", expr hg, ",", expr zero_lt_mul_left, "]"] ["at", ident hh],
+    exact [expr zero_lt_two] },
+  have [ident hc] [":", expr «expr = »(λ
+    w : V, «expr ∧ »(«expr ≠ »(w, v), odd (G.degree w)), λ w : V, «expr ∧ »(odd (G.degree w), «expr ≠ »(w, v)))] [],
+  { ext [] [ident w] [],
+    rw [expr and_comm] [] },
+  simp [] [] ["only"] ["[", expr hc, ",", expr filter_congr_decidable, "]"] [] [],
+  rw ["[", "<-", expr filter_filter, ",", expr filter_ne', ",", expr card_erase_of_mem, "]"] [],
+  { use [expr «expr - »(k, 1)],
+    rw ["[", expr nat.pred_eq_succ_iff, ",", expr hg, ",", expr mul_tsub, ",", expr tsub_add_eq_add_tsub, ",", expr eq_comm, ",", expr tsub_eq_iff_eq_add_of_le, "]"] [],
+    { ring [] },
+    { exact [expr add_le_add_right (zero_le _) 2] },
+    { exact [expr nat.mul_le_mul_left _ hk] } },
+  { simpa [] [] ["only"] ["[", expr true_and, ",", expr mem_filter, ",", expr mem_univ, "]"] [] [] }
+end
 
-theorem exists_ne_odd_degree_of_exists_odd_degree [Fintype V] [DecidableRel G.adj] (v : V) (h : Odd (G.degree v)) :
-  ∃ w : V, w ≠ v ∧ Odd (G.degree w) :=
-  by 
-    haveI  : DecidableEq V
-    ·
-      classical 
-      infer_instance 
-    rcases G.odd_card_odd_degree_vertices_ne v h with ⟨k, hg⟩
-    have hg' : (filter (fun w : V => w ≠ v ∧ Odd (G.degree w)) univ).card > 0
-    ·
-      rw [hg]
-      apply Nat.succ_posₓ 
-    rcases card_pos.mp hg' with ⟨w, hw⟩
-    simp only [true_andₓ, mem_filter, mem_univ, Ne.def] at hw 
-    exact ⟨w, hw⟩
+-- error in Combinatorics.SimpleGraph.DegreeSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_ne_odd_degree_of_exists_odd_degree
+[fintype V]
+[decidable_rel G.adj]
+(v : V)
+(h : odd (G.degree v)) : «expr∃ , »((w : V), «expr ∧ »(«expr ≠ »(w, v), odd (G.degree w))) :=
+begin
+  haveI [] [":", expr decidable_eq V] [],
+  { classical,
+    apply_instance },
+  rcases [expr G.odd_card_odd_degree_vertices_ne v h, "with", "⟨", ident k, ",", ident hg, "⟩"],
+  have [ident hg'] [":", expr «expr > »((filter (λ
+      w : V, «expr ∧ »(«expr ≠ »(w, v), odd (G.degree w))) univ).card, 0)] [],
+  { rw [expr hg] [],
+    apply [expr nat.succ_pos] },
+  rcases [expr card_pos.mp hg', "with", "⟨", ident w, ",", ident hw, "⟩"],
+  simp [] [] ["only"] ["[", expr true_and, ",", expr mem_filter, ",", expr mem_univ, ",", expr ne.def, "]"] [] ["at", ident hw],
+  exact [expr ⟨w, hw⟩]
+end
 
 end SimpleGraph
 

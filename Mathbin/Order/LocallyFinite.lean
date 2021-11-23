@@ -548,29 +548,25 @@ noncomputable def Fintype.toLocallyFiniteOrder [Fintype α] : LocallyFiniteOrder
         by 
           rw [Set.Finite.mem_to_finset, Set.mem_Ioo] }
 
-instance  : Subsingleton (LocallyFiniteOrder α) :=
-  Subsingleton.intro
-    fun h₀ h₁ =>
-      by 
-        cases h₀ 
-        cases h₁ 
-        have hIcc : h₀_finset_Icc = h₁_finset_Icc
-        ·
-          ext a b x 
-          rw [h₀_finset_mem_Icc, h₁_finset_mem_Icc]
-        have hIco : h₀_finset_Ico = h₁_finset_Ico
-        ·
-          ext a b x 
-          rw [h₀_finset_mem_Ico, h₁_finset_mem_Ico]
-        have hIoc : h₀_finset_Ioc = h₁_finset_Ioc
-        ·
-          ext a b x 
-          rw [h₀_finset_mem_Ioc, h₁_finset_mem_Ioc]
-        have hIoo : h₀_finset_Ioo = h₁_finset_Ioo
-        ·
-          ext a b x 
-          rw [h₀_finset_mem_Ioo, h₁_finset_mem_Ioo]
-        simpRw [hIcc, hIco, hIoc, hIoo]
+-- error in Order.LocallyFinite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance : subsingleton (locally_finite_order α) :=
+subsingleton.intro (λ h₀ h₁, begin
+   cases [expr h₀] [],
+   cases [expr h₁] [],
+   have [ident hIcc] [":", expr «expr = »(h₀_finset_Icc, h₁_finset_Icc)] [],
+   { ext [] [ident a, ident b, ident x] [],
+     rw ["[", expr h₀_finset_mem_Icc, ",", expr h₁_finset_mem_Icc, "]"] [] },
+   have [ident hIco] [":", expr «expr = »(h₀_finset_Ico, h₁_finset_Ico)] [],
+   { ext [] [ident a, ident b, ident x] [],
+     rw ["[", expr h₀_finset_mem_Ico, ",", expr h₁_finset_mem_Ico, "]"] [] },
+   have [ident hIoc] [":", expr «expr = »(h₀_finset_Ioc, h₁_finset_Ioc)] [],
+   { ext [] [ident a, ident b, ident x] [],
+     rw ["[", expr h₀_finset_mem_Ioc, ",", expr h₁_finset_mem_Ioc, "]"] [] },
+   have [ident hIoo] [":", expr «expr = »(h₀_finset_Ioo, h₁_finset_Ioo)] [],
+   { ext [] [ident a, ident b, ident x] [],
+     rw ["[", expr h₀_finset_mem_Ioo, ",", expr h₁_finset_mem_Ioo, "]"] [] },
+   simp_rw ["[", expr hIcc, ",", expr hIco, ",", expr hIoc, ",", expr hIoo, "]"] []
+ end)
 
 variable[Preorderₓ β][LocallyFiniteOrder β]
 

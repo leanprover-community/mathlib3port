@@ -17,7 +17,7 @@ unsafe def select_domain (t s : tactic (Option Bool)) : tactic (Option Bool) :=
       | _, _ => failed
 
 unsafe def type_domain (x : expr) : tactic (Option Bool) :=
-  if x = quote Int then return (some tt) else if x = quote Nat then return (some ff) else failed
+  if x = quote.1 Int then return (some tt) else if x = quote.1 Nat then return (some ff) else failed
 
 /-- Detects domain of a formula from its expr.
 * Returns none, if domain can be either ℤ or ℕ
@@ -25,21 +25,21 @@ unsafe def type_domain (x : expr) : tactic (Option Bool) :=
 * Returns some ff, if domain is exclusively ℕ
 * Fails, if domain is neither ℤ nor ℕ -/
 unsafe def form_domain : expr → tactic (Option Bool)
-| quote ¬%%px => form_domain px
-| quote (%%px) ∨ %%qx => select_domain (form_domain px) (form_domain qx)
-| quote (%%px) ∧ %%qx => select_domain (form_domain px) (form_domain qx)
-| quote (%%px) ↔ %%qx => select_domain (form_domain px) (form_domain qx)
-| quote %%expr.pi _ _ px qx =>
+| quote.1 ¬%%ₓpx => form_domain px
+| quote.1 ((%%ₓpx) ∨ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
+| quote.1 ((%%ₓpx) ∧ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
+| quote.1 ((%%ₓpx) ↔ %%ₓqx) => select_domain (form_domain px) (form_domain qx)
+| quote.1 (%%ₓexpr.pi _ _ px qx) =>
   Monadₓ.cond (if expr.has_var px then return tt else is_prop px) (select_domain (form_domain px) (form_domain qx))
     (select_domain (type_domain px) (form_domain qx))
-| quote @LT.lt (%%dx) (%%h) _ _ => type_domain dx
-| quote @LE.le (%%dx) (%%h) _ _ => type_domain dx
-| quote @Eq (%%dx) _ _ => type_domain dx
-| quote @Ge (%%dx) (%%h) _ _ => type_domain dx
-| quote @Gt (%%dx) (%%h) _ _ => type_domain dx
-| quote @Ne (%%dx) _ _ => type_domain dx
-| quote True => return none
-| quote False => return none
+| quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
+| quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => type_domain dx
+| quote.1 (@Eq (%%ₓdx) _ _) => type_domain dx
+| quote.1 (@Ge (%%ₓdx) (%%ₓh) _ _) => type_domain dx
+| quote.1 (@Gt (%%ₓdx) (%%ₓh) _ _) => type_domain dx
+| quote.1 (@Ne (%%ₓdx) _ _) => type_domain dx
+| quote.1 True => return none
+| quote.1 False => return none
 | x => failed
 
 unsafe def goal_domain_aux (x : expr) : tactic Bool :=

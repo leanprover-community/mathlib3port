@@ -420,6 +420,10 @@ theorem norm_sq_of_real (r : ℝ) : norm_sq r = r*r :=
 theorem norm_sq_mk (x y : ℝ) : norm_sq ⟨x, y⟩ = (x*x)+y*y :=
   rfl
 
+theorem norm_sq_add_mul_I (x y : ℝ) : norm_sq (x+y*I) = (x ^ 2)+y ^ 2 :=
+  by 
+    rw [←mk_eq_add_mul_I, norm_sq_mk, sq, sq]
+
 theorem norm_sq_eq_conj_mul_self {z : ℂ} : (norm_sq z : ℂ) = conj z*z :=
   by 
     ext <;> simp [norm_sq, mul_commₓ]
@@ -703,6 +707,19 @@ theorem abs_of_nat (n : ℕ) : Complex.abs n = n :=
 theorem mul_self_abs (z : ℂ) : (abs z*abs z) = norm_sq z :=
   Real.mul_self_sqrt (norm_sq_nonneg _)
 
+theorem sq_abs (z : ℂ) : abs z ^ 2 = norm_sq z :=
+  Real.sq_sqrt (norm_sq_nonneg _)
+
+@[simp]
+theorem sq_abs_sub_sq_re (z : ℂ) : abs z ^ 2 - z.re ^ 2 = z.im ^ 2 :=
+  by 
+    rw [sq_abs, norm_sq_apply, ←sq, ←sq, add_sub_cancel']
+
+@[simp]
+theorem sq_abs_sub_sq_im (z : ℂ) : abs z ^ 2 - z.im ^ 2 = z.re ^ 2 :=
+  by 
+    rw [←sq_abs_sub_sq_re, sub_sub_cancel]
+
 @[simp]
 theorem abs_zero : abs 0 = 0 :=
   by 
@@ -964,17 +981,18 @@ theorem is_cau_seq_abs {f : ℕ → ℂ} (hf : IsCauSeq abs f) : IsCauSeq abs' (
 noncomputable def lim_aux (f : CauSeq ℂ abs) : ℂ :=
   ⟨CauSeq.lim (cau_seq_re f), CauSeq.lim (cau_seq_im f)⟩
 
-theorem equiv_lim_aux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (lim_aux f) :=
-  fun ε ε0 =>
-    (exists_forall_ge_and (CauSeq.equiv_lim ⟨_, is_cau_seq_re f⟩ _ (half_pos ε0))
-          (CauSeq.equiv_lim ⟨_, is_cau_seq_im f⟩ _ (half_pos ε0))).imp$
-      fun i H j ij =>
-        by 
-          cases' H _ ij with H₁ H₂ 
-          apply lt_of_le_of_ltₓ (abs_le_abs_re_add_abs_im _)
-          dsimp [lim_aux]  at *
-          have  := add_lt_add H₁ H₂ 
-          rwa [add_halves] at this
+-- error in Data.Complex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem equiv_lim_aux (f : cau_seq exprℂ() abs) : «expr ≈ »(f, cau_seq.const abs (lim_aux f)) :=
+λ
+ε
+ε0, «expr $ »((exists_forall_ge_and (cau_seq.equiv_lim ⟨_, is_cau_seq_re f⟩ _ (half_pos ε0)) (cau_seq.equiv_lim ⟨_, is_cau_seq_im f⟩ _ (half_pos ε0))).imp, λ
+ i H j ij, begin
+   cases [expr H _ ij] ["with", ident H₁, ident H₂],
+   apply [expr lt_of_le_of_lt (abs_le_abs_re_add_abs_im _)],
+   dsimp [] ["[", expr lim_aux, "]"] [] ["at", "*"],
+   have [] [] [":=", expr add_lt_add H₁ H₂],
+   rwa [expr add_halves] ["at", ident this]
+ end)
 
 noncomputable instance  : CauSeq.IsComplete ℂ abs :=
   ⟨fun f => ⟨lim_aux f, equiv_lim_aux f⟩⟩

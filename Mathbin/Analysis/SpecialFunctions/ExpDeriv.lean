@@ -21,17 +21,17 @@ open_locale Classical TopologicalSpace
 
 namespace Complex
 
+-- error in Analysis.SpecialFunctions.ExpDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The complex exponential is everywhere differentiable, with the derivative `exp x`. -/
-theorem has_deriv_at_exp (x : ℂ) : HasDerivAt exp (exp x) x :=
-  by 
-    rw [has_deriv_at_iff_is_o_nhds_zero]
-    have  : (1 : ℕ) < 2 :=
-      by 
-        normNum 
-    refine' (is_O.of_bound ∥exp x∥ _).trans_is_o (is_o_pow_id this)
-    filterUpwards [Metric.ball_mem_nhds (0 : ℂ) zero_lt_one]
-    simp only [Metric.mem_ball, dist_zero_right, NormedField.norm_pow]
-    exact fun z hz => exp_bound_sq x z hz.le
+theorem has_deriv_at_exp (x : exprℂ()) : has_deriv_at exp (exp x) x :=
+begin
+  rw [expr has_deriv_at_iff_is_o_nhds_zero] [],
+  have [] [":", expr «expr < »((1 : exprℕ()), 2)] [":=", expr by norm_num [] []],
+  refine [expr (is_O.of_bound «expr∥ ∥»(exp x) _).trans_is_o (is_o_pow_id this)],
+  filter_upwards ["[", expr metric.ball_mem_nhds (0 : exprℂ()) zero_lt_one, "]"] [],
+  simp [] [] ["only"] ["[", expr metric.mem_ball, ",", expr dist_zero_right, ",", expr normed_field.norm_pow, "]"] [] [],
+  exact [expr λ z hz, exp_bound_sq x z hz.le]
+end
 
 theorem differentiable_exp : Differentiable ℂ exp :=
   fun x => (has_deriv_at_exp x).DifferentiableAt

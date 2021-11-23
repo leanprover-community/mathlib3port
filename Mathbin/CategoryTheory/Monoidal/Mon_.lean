@@ -141,7 +141,7 @@ instance  : reflects_isomorphisms (forget C) :=
   { reflects :=
       fun X Y f e =>
         by 
-          exactI
+          exact
             ⟨⟨{ Hom := inv f.hom,
                   mul_hom' :=
                     by 

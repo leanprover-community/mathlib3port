@@ -1,9 +1,10 @@
-import Mathbin.Tactic.RingExp 
-import Mathbin.Tactic.IntervalCases 
 import Mathbin.Data.Nat.Parity 
+import Mathbin.Data.Pnat.Interval 
 import Mathbin.Data.Zmod.Basic 
 import Mathbin.GroupTheory.OrderOfElement 
-import Mathbin.RingTheory.Fintype
+import Mathbin.RingTheory.Fintype 
+import Mathbin.Tactic.IntervalCases 
+import Mathbin.Tactic.RingExp
 
 /-!
 # The Lucas-Lehmer test for Mersenne primes.
@@ -125,10 +126,14 @@ theorem s_zmod_eq_s (p' : ℕ) (i : ℕ) : s_zmod (p'+2) i = (s i : Zmod ((2 ^ p
     ·
       pushCast [s, s_zmod, ih]
 
-theorem int.coe_nat_pow_pred (b p : ℕ) (w : 0 < b) : ((b ^ p - 1 : ℕ) : ℤ) = (b ^ p - 1 : ℤ) :=
-  by 
-    have  : 1 ≤ b ^ p := Nat.one_le_pow p b w 
-    pushCast [this]
+-- error in NumberTheory.LucasLehmer: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem int.coe_nat_pow_pred
+(b p : exprℕ())
+(w : «expr < »(0, b)) : «expr = »(((«expr - »(«expr ^ »(b, p), 1) : exprℕ()) : exprℤ()), («expr - »(«expr ^ »(b, p), 1) : exprℤ())) :=
+begin
+  have [] [":", expr «expr ≤ »(1, «expr ^ »(b, p))] [":=", expr nat.one_le_pow p b w],
+  push_cast ["[", expr this, "]"] []
+end
 
 theorem int.coe_nat_two_pow_pred (p : ℕ) : ((2 ^ p - 1 : ℕ) : ℤ) = (2 ^ p - 1 : ℤ) :=
   int.coe_nat_pow_pred 2 p
@@ -161,7 +166,7 @@ theorem residue_eq_zero_iff_s_mod_eq_zero (p : ℕ) (w : 1 < p) : lucas_lehmer_r
       rw [h]
       simp 
 
--- error in NumberTheory.LucasLehmer: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_pred
+-- error in NumberTheory.LucasLehmer: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_pred
 /--
 A Mersenne number `2^p-1` is prime if and only if
 the Lucas-Lehmer residue `s p (p-2) % (2^p - 1)` is zero.
@@ -176,7 +181,7 @@ def q (p : ℕ) : ℕ+ :=
 theorem fact_pnat_pos (q : ℕ+) : Fact (0 < (q : ℕ)) :=
   ⟨q.2⟩
 
--- error in NumberTheory.LucasLehmer: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler add_comm_group
+-- error in NumberTheory.LucasLehmer: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler add_comm_group
 /-- We construct the ring `X q` as ℤ/qℤ + √3 ℤ/qℤ. -/
 @[derive #["[", expr add_comm_group, ",", expr decidable_eq, ",", expr fintype, ",", expr inhabited, "]"]]
 def X (q : «exprℕ+»()) : Type :=
@@ -352,12 +357,14 @@ theorem X_card : Fintype.card (X q) = q ^ 2 :=
     rw [Fintype.card_prod, Zmod.card q]
     ring
 
+-- error in NumberTheory.LucasLehmer: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- There are strictly fewer than `q^2` units, since `0` is not a unit. -/
-theorem units_card (w : 1 < q) : Fintype.card (Units (X q)) < q ^ 2 :=
-  by 
-    haveI  : Fact (1 < (q : ℕ)) := ⟨w⟩
-    convert card_units_lt (X q)
-    rw [X_card]
+theorem units_card (w : «expr < »(1, q)) : «expr < »(fintype.card (units (X q)), «expr ^ »(q, 2)) :=
+begin
+  haveI [] [":", expr fact «expr < »(1, (q : exprℕ()))] [":=", expr ⟨w⟩],
+  convert [] [expr card_units_lt (X q)] [],
+  rw [expr X_card] []
+end
 
 /-- We define `ω = 2 + √3`. -/
 def ω : X q :=
@@ -408,49 +415,56 @@ Here and below, we introduce `p' = p - 2`, in order to avoid using subtraction i
 -/
 
 
--- error in NumberTheory.LucasLehmer: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If `1 < p`, then `q p`, the smallest prime factor of `mersenne p`, is more than 2. -/
-theorem two_lt_q (p' : exprℕ()) : «expr < »(2, q «expr + »(p', 2)) :=
-begin
-  by_contradiction [ident H],
-  simp [] [] [] [] [] ["at", ident H],
-  interval_cases [expr q «expr + »(p', 2)] [] []; clear [ident H],
-  { dsimp [] ["[", expr q, "]"] [] ["at", ident h],
-    injection [expr h] ["with", ident h'],
-    clear [ident h],
-    simp [] [] [] ["[", expr mersenne, "]"] [] ["at", ident h'],
-    exact [expr lt_irrefl 2 (calc
-        «expr ≤ »(2, «expr + »(p', 2)) : nat.le_add_left _ _
-        «expr < »(..., «expr ^ »(2, «expr + »(p', 2))) : nat.lt_two_pow _
-        «expr = »(..., 2) : nat.pred_inj (nat.one_le_two_pow _) exprdec_trivial() h')] },
-  { dsimp [] ["[", expr q, "]"] [] ["at", ident h],
-    injection [expr h] ["with", ident h'],
-    clear [ident h],
-    rw ["[", expr mersenne, ",", expr pnat.one_coe, ",", expr nat.min_fac_eq_two_iff, ",", expr pow_succ, "]"] ["at", ident h'],
-    exact [expr nat.two_not_dvd_two_mul_sub_one (nat.one_le_two_pow _) h'] }
-end
-
-theorem ω_pow_formula (p' : ℕ) (h : lucas_lehmer_residue (p'+2) = 0) :
-  ∃ k : ℤ, ((ω : X (q (p'+2))) ^ 2 ^ p'+1) = ((k*mersenne (p'+2))*(ω : X (q (p'+2))) ^ 2 ^ p') - 1 :=
+theorem two_lt_q (p' : ℕ) : 2 < q (p'+2) :=
   by 
-    dsimp [lucas_lehmer_residue]  at h 
-    rw [s_zmod_eq_s p'] at h 
-    simp [Zmod.int_coe_zmod_eq_zero_iff_dvd] at h 
-    cases' h with k h 
-    use k 
-    replace h := congr_argₓ (fun n : ℤ => (n : X (q (p'+2)))) h 
-    dsimp  at h 
-    rw [closed_form] at h 
-    replace h := congr_argₓ (fun x => (ω ^ 2 ^ p')*x) h 
-    dsimp  at h 
-    have t : ((2 ^ p')+2 ^ p') = 2 ^ p'+1 :=
-      by 
-        ringExp 
-    rw [mul_addₓ, ←pow_addₓ ω, t, ←mul_powₓ ω ωb (2 ^ p'), ω_mul_ωb, one_pow] at h 
-    rw [mul_commₓ, coe_mul] at h 
-    rw [mul_commₓ _ (k : X (q (p'+2)))] at h 
-    replace h := eq_sub_of_add_eq h 
-    exactModCast h
+    byContra H 
+    simp  at H 
+    intervalCases q (p'+2) <;> clear H
+    ·
+      dsimp [q]  at h 
+      injection h with h' 
+      clear h 
+      simp [mersenne] at h' 
+      exact
+        lt_irreflₓ 2
+          (calc 2 ≤ p'+2 := Nat.le_add_leftₓ _ _ 
+            _ < 2 ^ p'+2 := Nat.lt_two_pow _ 
+            _ = 2 :=
+            Nat.pred_injₓ (Nat.one_le_two_pow _)
+              (by 
+                decide)
+              h'
+            )
+    ·
+      dsimp [q]  at h 
+      injection h with h' 
+      clear h 
+      rw [mersenne, Pnat.one_coe, Nat.min_fac_eq_two_iff, pow_succₓ] at h' 
+      exact Nat.two_not_dvd_two_mul_sub_one (Nat.one_le_two_pow _) h'
+
+-- error in NumberTheory.LucasLehmer: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ω_pow_formula
+(p' : exprℕ())
+(h : «expr = »(lucas_lehmer_residue «expr + »(p', 2), 0)) : «expr∃ , »((k : exprℤ()), «expr = »(«expr ^ »((ω : X (q «expr + »(p', 2))), «expr ^ »(2, «expr + »(p', 1))), «expr - »(«expr * »(«expr * »(k, mersenne «expr + »(p', 2)), «expr ^ »((ω : X (q «expr + »(p', 2))), «expr ^ »(2, p'))), 1))) :=
+begin
+  dsimp [] ["[", expr lucas_lehmer_residue, "]"] [] ["at", ident h],
+  rw [expr s_zmod_eq_s p'] ["at", ident h],
+  simp [] [] [] ["[", expr zmod.int_coe_zmod_eq_zero_iff_dvd, "]"] [] ["at", ident h],
+  cases [expr h] ["with", ident k, ident h],
+  use [expr k],
+  replace [ident h] [] [":=", expr congr_arg (λ n : exprℤ(), (n : X (q «expr + »(p', 2)))) h],
+  dsimp [] [] [] ["at", ident h],
+  rw [expr closed_form] ["at", ident h],
+  replace [ident h] [] [":=", expr congr_arg (λ x, «expr * »(«expr ^ »(ω, «expr ^ »(2, p')), x)) h],
+  dsimp [] [] [] ["at", ident h],
+  have [ident t] [":", expr «expr = »(«expr + »(«expr ^ »(2, p'), «expr ^ »(2, p')), «expr ^ »(2, «expr + »(p', 1)))] [":=", expr by ring_exp [] []],
+  rw ["[", expr mul_add, ",", "<-", expr pow_add ω, ",", expr t, ",", "<-", expr mul_pow ω ωb «expr ^ »(2, p'), ",", expr ω_mul_ωb, ",", expr one_pow, "]"] ["at", ident h],
+  rw ["[", expr mul_comm, ",", expr coe_mul, "]"] ["at", ident h],
+  rw ["[", expr mul_comm _ (k : X (q «expr + »(p', 2))), "]"] ["at", ident h],
+  replace [ident h] [] [":=", expr eq_sub_of_add_eq h],
+  exact_mod_cast [expr h]
+end
 
 /-- `q` is the minimum factor of `mersenne p`, so `M p = 0` in `X q`. -/
 theorem mersenne_coe_X (p : ℕ) : (mersenne p : X (q p)) = 0 :=
@@ -490,25 +504,26 @@ def ω_unit (p : ℕ) : Units (X (q p)) :=
 theorem ω_unit_coe (p : ℕ) : (ω_unit p : X (q p)) = ω :=
   rfl
 
+-- error in NumberTheory.LucasLehmer: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The order of `ω` in the unit group is exactly `2^p`. -/
-theorem order_ω (p' : ℕ) (h : lucas_lehmer_residue (p'+2) = 0) : orderOf (ω_unit (p'+2)) = 2 ^ p'+2 :=
-  by 
-    apply Nat.eq_prime_pow_of_dvd_least_prime_pow
-    ·
-      normNum
-    ·
-      intro o 
-      have ω_pow := order_of_dvd_iff_pow_eq_one.1 o 
-      replace ω_pow := congr_argₓ (Units.coeHom (X (q (p'+2))) : Units (X (q (p'+2))) → X (q (p'+2))) ω_pow 
-      simp  at ω_pow 
-      have h : (1 : Zmod (q (p'+2))) = -1 := congr_argₓ Prod.fst (ω_pow.symm.trans (ω_pow_eq_neg_one p' h))
-      haveI  : Fact (2 < (q (p'+2) : ℕ)) := ⟨two_lt_q _⟩
-      apply Zmod.neg_one_ne_one h.symm
-    ·
-      apply order_of_dvd_iff_pow_eq_one.2
-      apply Units.ext 
-      pushCast 
-      exact ω_pow_eq_one p' h
+theorem order_ω
+(p' : exprℕ())
+(h : «expr = »(lucas_lehmer_residue «expr + »(p', 2), 0)) : «expr = »(order_of (ω_unit «expr + »(p', 2)), «expr ^ »(2, «expr + »(p', 2))) :=
+begin
+  apply [expr nat.eq_prime_pow_of_dvd_least_prime_pow],
+  { norm_num [] [] },
+  { intro [ident o],
+    have [ident ω_pow] [] [":=", expr order_of_dvd_iff_pow_eq_one.1 o],
+    replace [ident ω_pow] [] [":=", expr congr_arg (units.coe_hom (X (q «expr + »(p', 2))) : units (X (q «expr + »(p', 2))) → X (q «expr + »(p', 2))) ω_pow],
+    simp [] [] [] [] [] ["at", ident ω_pow],
+    have [ident h] [":", expr «expr = »((1 : zmod (q «expr + »(p', 2))), «expr- »(1))] [":=", expr congr_arg prod.fst (ω_pow.symm.trans (ω_pow_eq_neg_one p' h))],
+    haveI [] [":", expr fact «expr < »(2, (q «expr + »(p', 2) : exprℕ()))] [":=", expr ⟨two_lt_q _⟩],
+    apply [expr zmod.neg_one_ne_one h.symm] },
+  { apply [expr order_of_dvd_iff_pow_eq_one.2],
+    apply [expr units.ext],
+    push_cast [] [],
+    exact [expr ω_pow_eq_one p' h] }
+end
 
 theorem order_ineq (p' : ℕ) (h : lucas_lehmer_residue (p'+2) = 0) : (2 ^ p'+2) < (q (p'+2) : ℕ) ^ 2 :=
   calc (2 ^ p'+2) = orderOf (ω_unit (p'+2)) := (order_ω p' h).symm 
@@ -522,19 +537,21 @@ export LucasLehmer(LucasLehmerTest lucasLehmerResidue)
 
 open LucasLehmer
 
-theorem lucas_lehmer_sufficiency (p : ℕ) (w : 1 < p) : lucas_lehmer_test p → (mersenne p).Prime :=
-  by 
-    let p' := p - 2
-    have z : p = p'+2 := (tsub_eq_iff_eq_add_of_le w.nat_succ_le).mp rfl 
-    have w : 1 < p'+2 := Nat.lt_of_sub_eq_succₓ rfl 
-    contrapose 
-    intro a t 
-    rw [z] at a 
-    rw [z] at t 
-    have h₁ := order_ineq p' t 
-    have h₂ := Nat.min_fac_sq_le_self (mersenne_pos (Nat.lt_of_succ_ltₓ w)) a 
-    have h := lt_of_lt_of_leₓ h₁ h₂ 
-    exact not_lt_of_geₓ (Nat.sub_leₓ _ _) h
+-- error in NumberTheory.LucasLehmer: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lucas_lehmer_sufficiency (p : exprℕ()) (w : «expr < »(1, p)) : lucas_lehmer_test p → (mersenne p).prime :=
+begin
+  let [ident p'] [] [":=", expr «expr - »(p, 2)],
+  have [ident z] [":", expr «expr = »(p, «expr + »(p', 2))] [":=", expr (tsub_eq_iff_eq_add_of_le w.nat_succ_le).mp rfl],
+  have [ident w] [":", expr «expr < »(1, «expr + »(p', 2))] [":=", expr nat.lt_of_sub_eq_succ rfl],
+  contrapose [] [],
+  intros [ident a, ident t],
+  rw [expr z] ["at", ident a],
+  rw [expr z] ["at", ident t],
+  have [ident h₁] [] [":=", expr order_ineq p' t],
+  have [ident h₂] [] [":=", expr nat.min_fac_sq_le_self (mersenne_pos (nat.lt_of_succ_lt w)) a],
+  have [ident h] [] [":=", expr lt_of_lt_of_le h₁ h₂],
+  exact [expr not_lt_of_ge (nat.sub_le _ _) h]
+end
 
 example  : (mersenne 5).Prime :=
   lucas_lehmer_sufficiency 5
@@ -565,27 +582,27 @@ attempt to do the calculation using `norm_num` to certify each step.
 -/
 unsafe def run_test : tactic Unit :=
   do 
-    let quote lucas_lehmer_test (%%p) ← target 
+    let quote.1 (lucas_lehmer_test (%%ₓp)) ← target 
     sorry 
     sorry 
     let p ← eval_expr ℕ p 
     let M : ℤ := 2 ^ p - 1
-    let t ← to_expr (pquote (2 ^ %%p) - 1 = %%M)
+    let t ← to_expr (pquote.1 ((2 ^ %%ₓp) - 1 = %%ₓM))
     let v ←
       to_expr
-          (pquote
+          (pquote.1
             (by 
               normNum :
-            (2 ^ %%p) - 1 = %%M))
+            (2 ^ %%ₓp) - 1 = %%ₓM))
     let w ← assertv `w t v 
     sorry 
-    let t ← to_expr (pquote s_mod (%%p) 0 = 4)
+    let t ← to_expr (pquote.1 (s_mod (%%ₓp) 0 = 4))
     let v ←
       to_expr
-          (pquote
+          (pquote.1
             (by 
               normNum [LucasLehmer.sMod] :
-            s_mod (%%p) 0 = 4))
+            s_mod (%%ₓp) 0 = 4))
     let h ← assertv `h t v 
     iterate_exactly (p - 2) sorry 
     let h ← get_local `h 

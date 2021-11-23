@@ -1,5 +1,6 @@
 import Mathbin.MeasureTheory.Integral.Lebesgue 
-import Mathbin.MeasureTheory.Measure.Regular
+import Mathbin.MeasureTheory.Measure.Regular 
+import Mathbin.MeasureTheory.Group.MeasurableEquiv
 
 /-!
 # Measures on Groups
@@ -113,15 +114,12 @@ protected def inv [HasInv G] (μ : Measureₓ G) : Measureₓ G :=
 variable[Groupₓ G][TopologicalSpace G][TopologicalGroup G][BorelSpace G]
 
 @[toAdditive]
-theorem inv_apply (μ : Measureₓ G) {s : Set G} (hs : MeasurableSet s) : μ.inv s = μ (s⁻¹) :=
-  measure.map_apply measurable_inv hs
+theorem inv_apply (μ : Measureₓ G) (s : Set G) : μ.inv s = μ (s⁻¹) :=
+  (MeasurableEquiv.inv G).map_apply s
 
 @[simp, toAdditive]
 protected theorem inv_invₓ (μ : Measureₓ G) : μ.inv.inv = μ :=
-  by 
-    ext1 s hs 
-    rw [μ.inv.inv_apply hs, μ.inv_apply, Set.inv_inv]
-    exact measurable_inv hs
+  (MeasurableEquiv.inv G).map_symm_map
 
 variable{μ : Measureₓ G}
 
@@ -140,18 +138,18 @@ theorem regular_inv_iff [T2Space G] : μ.inv.regular ↔ μ.regular :=
   by 
     split 
     ·
-      introI h 
+      intro h 
       rw [←μ.inv_inv]
       exact measure.regular.inv
     ·
-      introI h 
+      intro h 
       exact measure.regular.inv
 
 @[toAdditive]
 theorem is_mul_left_invariant.inv (h : is_mul_left_invariant μ) : is_mul_right_invariant μ.inv :=
   by 
     intro g A hA 
-    rw [μ.inv_apply (measurable_mul_const g hA), μ.inv_apply hA]
+    rw [μ.inv_apply, μ.inv_apply]
     convert h (g⁻¹) (measurable_inv hA) using 2
     simp only [←preimage_comp, ←inv_preimage]
     apply preimage_congr 
@@ -162,7 +160,7 @@ theorem is_mul_left_invariant.inv (h : is_mul_left_invariant μ) : is_mul_right_
 theorem is_mul_right_invariant.inv (h : is_mul_right_invariant μ) : is_mul_left_invariant μ.inv :=
   by 
     intro g A hA 
-    rw [μ.inv_apply (measurable_const_mul g hA), μ.inv_apply hA]
+    rw [μ.inv_apply, μ.inv_apply]
     convert h (g⁻¹) (measurable_inv hA) using 2
     simp only [←preimage_comp, ←inv_preimage]
     apply preimage_congr 
@@ -271,34 +269,38 @@ theorem is_mul_left_invariant.measure_lt_top_of_is_compact' (hμ : is_mul_left_i
   hμ.measure_lt_top_of_is_compact (Interior U) is_open_interior hU
     ((measure_mono interior_subset).trans_lt (lt_top_iff_ne_top.2 h)).Ne hK
 
+-- error in MeasureTheory.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For nonzero regular left invariant measures, the integral of a continuous nonnegative function
   `f` is 0 iff `f` is 0. -/
-@[toAdditive]
-theorem lintegral_eq_zero_of_is_mul_left_invariant [regular μ] (h2μ : is_mul_left_invariant μ) (h3μ : μ ≠ 0)
-  {f : G → ℝ≥0∞} (hf : Continuous f) : (∫⁻x, f x ∂μ) = 0 ↔ f = 0 :=
-  by 
-    split 
-    swap
-    ·
-      rintro rfl 
-      simpRw [Pi.zero_apply, lintegral_zero]
-    intro h 
-    contrapose h 
-    simpRw [funext_iff, not_forall, Pi.zero_apply]  at h 
-    cases' h with x hx 
-    obtain ⟨r, h1r, h2r⟩ : ∃ r : ℝ≥0∞, 0 < r ∧ r < f x := exists_between (pos_iff_ne_zero.mpr hx)
-    have h3r := hf.is_open_preimage (Ioi r) is_open_Ioi 
-    let s := Ioi r 
-    rw [←Ne.def, ←pos_iff_ne_zero]
-    have  : 0 < r*μ (f ⁻¹' Ioi r)
-    ·
-      have  : (f ⁻¹' Ioi r).Nonempty 
-      exact ⟨x, h2r⟩
-      simpa [h1r.ne', h2μ.measure_pos_iff_nonempty h3μ h3r, h1r]
-    refine' this.trans_le _ 
-    rw [←set_lintegral_const, ←lintegral_indicator _ h3r.measurable_set]
-    apply lintegral_mono 
-    refine' indicator_le fun y => le_of_ltₓ
+@[to_additive #[]]
+theorem lintegral_eq_zero_of_is_mul_left_invariant
+[regular μ]
+(h2μ : is_mul_left_invariant μ)
+(h3μ : «expr ≠ »(μ, 0))
+{f : G → «exprℝ≥0∞»()}
+(hf : continuous f) : «expr ↔ »(«expr = »(«expr∫⁻ , ∂ »((x), f x, μ), 0), «expr = »(f, 0)) :=
+begin
+  split,
+  swap,
+  { rintro [ident rfl],
+    simp_rw ["[", expr pi.zero_apply, ",", expr lintegral_zero, "]"] [] },
+  intro [ident h],
+  contrapose [] [ident h],
+  simp_rw ["[", expr funext_iff, ",", expr not_forall, ",", expr pi.zero_apply, "]"] ["at", ident h],
+  cases [expr h] ["with", ident x, ident hx],
+  obtain ["⟨", ident r, ",", ident h1r, ",", ident h2r, "⟩", ":", expr «expr∃ , »((r : «exprℝ≥0∞»()), «expr ∧ »(«expr < »(0, r), «expr < »(r, f x))), ":=", expr exists_between (pos_iff_ne_zero.mpr hx)],
+  have [ident h3r] [] [":=", expr hf.is_open_preimage (Ioi r) is_open_Ioi],
+  let [ident s] [] [":=", expr Ioi r],
+  rw ["[", "<-", expr ne.def, ",", "<-", expr pos_iff_ne_zero, "]"] [],
+  have [] [":", expr «expr < »(0, «expr * »(r, μ «expr ⁻¹' »(f, Ioi r)))] [],
+  { have [] [":", expr «expr ⁻¹' »(f, Ioi r).nonempty] [],
+    from [expr ⟨x, h2r⟩],
+    simpa [] [] [] ["[", expr h1r.ne', ",", expr h2μ.measure_pos_iff_nonempty h3μ h3r, ",", expr h1r, "]"] [] [] },
+  refine [expr this.trans_le _],
+  rw ["[", "<-", expr set_lintegral_const, ",", "<-", expr lintegral_indicator _ h3r.measurable_set, "]"] [],
+  apply [expr lintegral_mono],
+  refine [expr indicator_le (λ y, le_of_lt)]
+end
 
 end Groupₓ
 
@@ -310,31 +312,37 @@ variable[Groupₓ G][HasContinuousMul G]
 
 open Measureₓ
 
+-- error in MeasureTheory.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Translating a function by left-multiplication does not change its `lintegral` with respect to
 a left-invariant measure. -/
-@[toAdditive]
-theorem lintegral_mul_left_eq_self (hμ : is_mul_left_invariant μ) (f : G → ℝ≥0∞) (g : G) :
-  (∫⁻x, f (g*x) ∂μ) = ∫⁻x, f x ∂μ :=
-  by 
-    have  : measure.map (Mul.mul g) μ = μ
-    ·
-      rw [←map_mul_left_eq_self] at hμ 
-      exact hμ g 
-    convert (lintegral_map_equiv f (Homeomorph.mulLeft g).toMeasurableEquiv).symm 
-    simp [this]
+@[to_additive #[]]
+theorem lintegral_mul_left_eq_self
+(hμ : is_mul_left_invariant μ)
+(f : G → «exprℝ≥0∞»())
+(g : G) : «expr = »(«expr∫⁻ , ∂ »((x), f «expr * »(g, x), μ), «expr∫⁻ , ∂ »((x), f x, μ)) :=
+begin
+  have [] [":", expr «expr = »(measure.map (has_mul.mul g) μ, μ)] [],
+  { rw ["<-", expr map_mul_left_eq_self] ["at", ident hμ],
+    exact [expr hμ g] },
+  convert [] [expr (lintegral_map_equiv f (homeomorph.mul_left g).to_measurable_equiv).symm] [],
+  simp [] [] [] ["[", expr this, "]"] [] []
+end
 
+-- error in MeasureTheory.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Translating a function by right-multiplication does not change its `lintegral` with respect to
 a right-invariant measure. -/
-@[toAdditive]
-theorem lintegral_mul_right_eq_self (hμ : is_mul_right_invariant μ) (f : G → ℝ≥0∞) (g : G) :
-  (∫⁻x, f (x*g) ∂μ) = ∫⁻x, f x ∂μ :=
-  by 
-    have  : measure.map (Homeomorph.mulRight g) μ = μ
-    ·
-      rw [←map_mul_right_eq_self] at hμ 
-      exact hμ g 
-    convert (lintegral_map_equiv f (Homeomorph.mulRight g).toMeasurableEquiv).symm 
-    simp [this]
+@[to_additive #[]]
+theorem lintegral_mul_right_eq_self
+(hμ : is_mul_right_invariant μ)
+(f : G → «exprℝ≥0∞»())
+(g : G) : «expr = »(«expr∫⁻ , ∂ »((x), f «expr * »(x, g), μ), «expr∫⁻ , ∂ »((x), f x, μ)) :=
+begin
+  have [] [":", expr «expr = »(measure.map (homeomorph.mul_right g) μ, μ)] [],
+  { rw ["<-", expr map_mul_right_eq_self] ["at", ident hμ],
+    exact [expr hμ g] },
+  convert [] [expr (lintegral_map_equiv f (homeomorph.mul_right g).to_measurable_equiv).symm] [],
+  simp [] [] [] ["[", expr this, "]"] [] []
+end
 
 end Integration
 
@@ -418,37 +426,48 @@ theorem is_haar_measure_of_is_compact_nonempty_interior [TopologicalGroup G] [Bo
   { left_invariant := hμ, compact_lt_top := fun L hL => hμ.measure_lt_top_of_is_compact' _ h'K h' hL,
     open_pos := fun U hU => hμ.measure_pos_of_is_open K hK h hU }
 
+-- error in MeasureTheory.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The image of a Haar measure under a group homomorphism which is also a homeomorphism is again
 a Haar measure. -/
-@[toAdditive]
-theorem is_haar_measure_map [BorelSpace G] [TopologicalGroup G] {H : Type _} [Groupₓ H] [TopologicalSpace H]
-  [MeasurableSpace H] [BorelSpace H] [T2Space H] [TopologicalGroup H] (f : G ≃* H) (hf : Continuous f)
-  (hfsymm : Continuous f.symm) : is_haar_measure (measure.map f μ) :=
-  { left_invariant :=
-      by 
-        rw [←map_mul_left_eq_self]
-        intro h 
-        rw [map_map (continuous_mul_left h).Measurable hf.measurable]
-        convRHS => rw [←map_mul_left_eq_self.2 (is_mul_left_invariant_haar μ) (f.symm h)]
-        rw [map_map hf.measurable (continuous_mul_left _).Measurable]
-        congr 2 
-        ext y 
-        simp only [MulEquiv.apply_symm_apply, comp_app, MulEquiv.map_mul],
-    compact_lt_top :=
-      by 
-        intro K hK 
-        rw [map_apply hf.measurable hK.measurable_set]
-        have  : f.symm '' K = f ⁻¹' K := Equiv.image_eq_preimage _ _ 
-        rw [←this]
-        exact IsCompact.haar_lt_top _ (hK.image hfsymm),
-    open_pos :=
-      by 
-        intro U hU h'U 
-        rw [map_apply hf.measurable hU.measurable_set]
-        refine' (hU.preimage hf).haar_pos _ _ 
-        have  : f.symm '' U = f ⁻¹' U := Equiv.image_eq_preimage _ _ 
-        rw [←this]
-        simp [h'U] }
+@[to_additive #[]]
+theorem is_haar_measure_map
+[borel_space G]
+[topological_group G]
+{H : Type*}
+[group H]
+[topological_space H]
+[measurable_space H]
+[borel_space H]
+[t2_space H]
+[topological_group H]
+(f : «expr ≃* »(G, H))
+(hf : continuous f)
+(hfsymm : continuous f.symm) : is_haar_measure (measure.map f μ) :=
+{ left_invariant := begin
+    rw ["<-", expr map_mul_left_eq_self] [],
+    assume [binders (h)],
+    rw [expr map_map (continuous_mul_left h).measurable hf.measurable] [],
+    conv_rhs [] [] { rw ["<-", expr map_mul_left_eq_self.2 (is_mul_left_invariant_haar μ) (f.symm h)] },
+    rw [expr map_map hf.measurable (continuous_mul_left _).measurable] [],
+    congr' [2] [],
+    ext [] [ident y] [],
+    simp [] [] ["only"] ["[", expr mul_equiv.apply_symm_apply, ",", expr comp_app, ",", expr mul_equiv.map_mul, "]"] [] []
+  end,
+  compact_lt_top := begin
+    assume [binders (K hK)],
+    rw [expr map_apply hf.measurable hK.measurable_set] [],
+    have [] [":", expr «expr = »(«expr '' »(f.symm, K), «expr ⁻¹' »(f, K))] [":=", expr equiv.image_eq_preimage _ _],
+    rw ["<-", expr this] [],
+    exact [expr is_compact.haar_lt_top _ (hK.image hfsymm)]
+  end,
+  open_pos := begin
+    assume [binders (U hU h'U)],
+    rw [expr map_apply hf.measurable hU.measurable_set] [],
+    refine [expr (hU.preimage hf).haar_pos _ _],
+    have [] [":", expr «expr = »(«expr '' »(f.symm, U), «expr ⁻¹' »(f, U))] [":=", expr equiv.image_eq_preimage _ _],
+    rw ["<-", expr this] [],
+    simp [] [] [] ["[", expr h'U, "]"] [] []
+  end }
 
 /-- A Haar measure on a sigma-compact space is sigma-finite. -/
 @[toAdditive]
@@ -462,53 +481,56 @@ open_locale TopologicalSpace
 
 open Filter
 
+-- error in MeasureTheory.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the neutral element of a group is not isolated, then a Haar measure on this group has
 no atom.
 
 This applies in particular to show that an additive Haar measure on a nontrivial
 finite-dimensional real vector space has no atom. -/
-@[toAdditive]
-instance (priority := 100)is_haar_measure.has_no_atoms {G : Type _} [Groupₓ G] [MeasurableSpace G] [TopologicalSpace G]
-  [T1Space G] [TopologicalGroup G] [LocallyCompactSpace G] [BorelSpace G] [(𝓝[«expr ᶜ» {(1 : G)}] (1 : G)).ne_bot]
-  (μ : Measureₓ G) [μ.is_haar_measure] : has_no_atoms μ :=
-  by 
-    suffices H : μ {(1 : G)} ≤ 0
-    ·
-      ·
-        constructor 
-        simp [le_bot_iff.1 H]
-    obtain ⟨K, K_compact, K_int⟩ : ∃ K : Set G, IsCompact K ∧ (1 : G) ∈ Interior K
-    ·
-      rcases exists_compact_subset is_open_univ (mem_univ (1 : G)) with ⟨K, hK⟩
-      exact ⟨K, hK.1, hK.2.1⟩
-    have K_inf : Set.Infinite K := infinite_of_mem_nhds (1 : G) (mem_interior_iff_mem_nhds.1 K_int)
-    have μKlt : μ K ≠ ∞ := (K_compact.haar_lt_top μ).Ne 
-    have I : ∀ n : ℕ, μ {(1 : G)} ≤ μ K / n
-    ·
-      intro n 
-      obtain ⟨t, tK, tn⟩ : ∃ t : Finset G, «expr↑ » t ⊆ K ∧ t.card = n := K_inf.exists_subset_card_eq n 
-      have A : μ t ≤ μ K := measure_mono tK 
-      have B : μ t = n*μ {(1 : G)}
-      ·
-        rw [←bUnion_of_singleton («expr↑ » t)]
-        change μ (⋃(x : _)(_ : x ∈ t), {x}) = n*μ {1}
-        rw [@measure_bUnion_finset G G _ μ t fun i => {i}]
-        ·
-          simp only [tn, Finset.sum_const, nsmul_eq_mul, haar_singleton]
-        ·
-          intro x hx y hy xy 
-          simp only [on_fun, xy.symm, mem_singleton_iff, not_false_iff, disjoint_singleton_right]
-        ·
-          intro b hb 
-          exact measurable_set_singleton b 
-      rw [B] at A 
-      rwa [Ennreal.le_div_iff_mul_le _ (Or.inr μKlt), mul_commₓ]
-      right 
-      apply ne_of_gtₓ (haar_pos_of_nonempty_interior μ ⟨_, K_int⟩)
-    have J : tendsto (fun n : ℕ => μ K / n) at_top (𝓝 (μ K / ∞)) :=
-      Ennreal.Tendsto.const_div Ennreal.tendsto_nat_nhds_top (Or.inr μKlt)
-    simp only [Ennreal.div_top] at J 
-    exact ge_of_tendsto' J I
+@[priority 100, to_additive #[]]
+instance is_haar_measure.has_no_atoms
+{G : Type*}
+[group G]
+[measurable_space G]
+[topological_space G]
+[t1_space G]
+[topological_group G]
+[locally_compact_space G]
+[borel_space G]
+[«expr𝓝[ ] »(«expr ᶜ»({(1 : G)}), (1 : G)).ne_bot]
+(μ : measure G)
+[μ.is_haar_measure] : has_no_atoms μ :=
+begin
+  suffices [ident H] [":", expr «expr ≤ »(μ {(1 : G)}, 0)],
+  by { constructor,
+    simp [] [] [] ["[", expr le_bot_iff.1 H, "]"] [] [] },
+  obtain ["⟨", ident K, ",", ident K_compact, ",", ident K_int, "⟩", ":", expr «expr∃ , »((K : set G), «expr ∧ »(is_compact K, «expr ∈ »((1 : G), interior K)))],
+  { rcases [expr exists_compact_subset is_open_univ (mem_univ (1 : G)), "with", "⟨", ident K, ",", ident hK, "⟩"],
+    exact [expr ⟨K, hK.1, hK.2.1⟩] },
+  have [ident K_inf] [":", expr set.infinite K] [":=", expr infinite_of_mem_nhds (1 : G) (mem_interior_iff_mem_nhds.1 K_int)],
+  have [ident μKlt] [":", expr «expr ≠ »(μ K, «expr∞»())] [":=", expr (K_compact.haar_lt_top μ).ne],
+  have [ident I] [":", expr ∀ n : exprℕ(), «expr ≤ »(μ {(1 : G)}, «expr / »(μ K, n))] [],
+  { assume [binders (n)],
+    obtain ["⟨", ident t, ",", ident tK, ",", ident tn, "⟩", ":", expr «expr∃ , »((t : finset G), «expr ∧ »(«expr ⊆ »(«expr↑ »(t), K), «expr = »(t.card, n))), ":=", expr K_inf.exists_subset_card_eq n],
+    have [ident A] [":", expr «expr ≤ »(μ t, μ K)] [":=", expr measure_mono tK],
+    have [ident B] [":", expr «expr = »(μ t, «expr * »(n, μ {(1 : G)}))] [],
+    { rw ["<-", expr bUnion_of_singleton «expr↑ »(t)] [],
+      change [expr «expr = »(μ «expr⋃ , »((x «expr ∈ » t), {x}), «expr * »(n, μ {1}))] [] [],
+      rw [expr @measure_bUnion_finset G G _ μ t (λ i, {i})] [],
+      { simp [] [] ["only"] ["[", expr tn, ",", expr finset.sum_const, ",", expr nsmul_eq_mul, ",", expr haar_singleton, "]"] [] [] },
+      { assume [binders (x hx y hy xy)],
+        simp [] [] ["only"] ["[", expr on_fun, ",", expr xy.symm, ",", expr mem_singleton_iff, ",", expr not_false_iff, ",", expr disjoint_singleton_right, "]"] [] [] },
+      { assume [binders (b hb)],
+        exact [expr measurable_set_singleton b] } },
+    rw [expr B] ["at", ident A],
+    rwa ["[", expr ennreal.le_div_iff_mul_le _ (or.inr μKlt), ",", expr mul_comm, "]"] [],
+    right,
+    apply [expr ne_of_gt (haar_pos_of_nonempty_interior μ ⟨_, K_int⟩)] },
+  have [ident J] [":", expr tendsto (λ
+    n : exprℕ(), «expr / »(μ K, n)) at_top (expr𝓝() «expr / »(μ K, «expr∞»()))] [":=", expr ennreal.tendsto.const_div ennreal.tendsto_nat_nhds_top (or.inr μKlt)],
+  simp [] [] ["only"] ["[", expr ennreal.div_top, "]"] [] ["at", ident J],
+  exact [expr ge_of_tendsto' J I]
+end
 
 example  {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [Nontrivial E] [FiniteDimensional ℝ E] [MeasurableSpace E]
   [BorelSpace E] (μ : Measureₓ E) [is_add_haar_measure μ] : has_no_atoms μ :=

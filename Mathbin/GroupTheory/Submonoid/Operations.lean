@@ -1,7 +1,8 @@
 import Mathbin.GroupTheory.Submonoid.Basic 
 import Mathbin.Data.Equiv.MulAdd 
 import Mathbin.Algebra.Group.Prod 
-import Mathbin.Algebra.Group.InjSurj
+import Mathbin.Algebra.Group.InjSurj 
+import Mathbin.GroupTheory.GroupAction.Defs
 
 /-!
 # Operations on `submonoid`s
@@ -786,7 +787,7 @@ theorem range_subtype (s : Submonoid M) : s.subtype.mrange = s :=
 theorem eq_top_iff' : S = ⊤ ↔ ∀ x : M, x ∈ S :=
   eq_top_iff.trans ⟨fun h m => h$ mem_top m, fun h m _ => h m⟩
 
--- error in GroupTheory.Submonoid.Operations: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in GroupTheory.Submonoid.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]]
 theorem eq_bot_iff_forall : «expr ↔ »(«expr = »(S, «expr⊥»()), ∀ x «expr ∈ » S, «expr = »(x, (1 : M))) :=
 «expr $ »(set_like.ext_iff.trans, by simp [] [] [] ["[", expr iff_def, ",", expr S.one_mem, "]"] [] [] { contextual := tt })

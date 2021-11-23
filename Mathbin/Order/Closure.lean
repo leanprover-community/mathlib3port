@@ -1,6 +1,7 @@
+import Mathbin.Data.Set.Lattice 
 import Mathbin.Data.SetLike.Basic 
-import Mathbin.Order.PreorderHom 
 import Mathbin.Order.GaloisConnection 
+import Mathbin.Order.PreorderHom 
 import Mathbin.Tactic.Monotonicity.Default
 
 /-!
@@ -179,7 +180,7 @@ theorem eq_mk₃_closed (c : ClosureOperator α) :
 
 /-- The property `p` fed into the `mk₃` constructor implies being closed. -/
 theorem mem_mk₃_closed {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
-  {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} {x : α} (hx : p x) : x ∈ (mk₃ f p hf hfp hmin).closed :=
+  {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} {x : α} (hx : p x) : x ∈ (mk₃ f p hf hfp hmin).Closed :=
   (hmin (le_reflₓ _) hx).antisymm (hf _)
 
 end PartialOrderₓ

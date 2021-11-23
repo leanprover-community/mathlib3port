@@ -15,7 +15,7 @@ open Set Classical
 
 open_locale Classical
 
--- error in Order.Extension: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Order.Extension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Any partial order can be extended to a linear order.
 -/

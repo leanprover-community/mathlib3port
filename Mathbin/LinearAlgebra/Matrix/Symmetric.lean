@@ -97,18 +97,25 @@ theorem is_symm.minor {A : Matrix n n α} (h : A.is_symm) (f : m → n) : (A.min
 theorem is_symm_diagonal [DecidableEq n] [HasZero α] (v : n → α) : (diagonal v).IsSymm :=
   diagonal_transpose _
 
+-- error in LinearAlgebra.Matrix.Symmetric: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A block matrix `A.from_blocks B C D` is symmetric,
     if `A` and `D` are symmetric and `Bᵀ = C`. -/
-theorem is_symm.from_blocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α} {D : Matrix n n α} (hA : A.is_symm)
-  (hBC : (B)ᵀ = C) (hD : D.is_symm) : (A.from_blocks B C D).IsSymm :=
-  by 
-    have hCB : (C)ᵀ = B
-    ·
-      rw [←hBC]
-      simp 
-    unfold Matrix.IsSymm 
-    rw [from_blocks_transpose]
-    congr <;> assumption
+theorem is_symm.from_blocks
+{A : matrix m m α}
+{B : matrix m n α}
+{C : matrix n m α}
+{D : matrix n n α}
+(hA : A.is_symm)
+(hBC : «expr = »(«expr ᵀ»(B), C))
+(hD : D.is_symm) : (A.from_blocks B C D).is_symm :=
+begin
+  have [ident hCB] [":", expr «expr = »(«expr ᵀ»(C), B)] [],
+  { rw ["<-", expr hBC] [],
+    simp [] [] [] [] [] [] },
+  unfold [ident matrix.is_symm] [],
+  rw [expr from_blocks_transpose] [],
+  congr; assumption
+end
 
 /-- This is the `iff` version of `matrix.is_symm.from_blocks`. -/
 theorem is_symm_from_blocks_iff {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α} {D : Matrix n n α} :

@@ -1,7 +1,6 @@
-import Mathbin.Topology.ContinuousOn 
 import Mathbin.Algebra.IndicatorFunction 
 import Mathbin.Topology.Algebra.Group 
-import Mathbin.Topology.Algebra.Ordered.LiminfLimsup 
+import Mathbin.Topology.ContinuousOn 
 import Mathbin.Topology.Instances.Ennreal
 
 /-!
@@ -170,7 +169,7 @@ section
 
 variable[HasZero β]
 
--- error in Topology.Semicontinuous: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Semicontinuous: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_open.lower_semicontinuous_indicator
 (hs : is_open s)
 (hy : «expr ≤ »(0, y)) : lower_semicontinuous (indicator s (λ x, y)) :=
@@ -195,7 +194,7 @@ theorem IsOpen.lower_semicontinuous_within_at_indicator (hs : IsOpen s) (hy : 0 
   LowerSemicontinuousWithinAt (indicator s fun x => y) t x :=
   (hs.lower_semicontinuous_indicator hy).LowerSemicontinuousWithinAt t x
 
--- error in Topology.Semicontinuous: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Semicontinuous: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_closed.lower_semicontinuous_indicator
 (hs : is_closed s)
 (hy : «expr ≤ »(y, 0)) : lower_semicontinuous (indicator s (λ x, y)) :=
@@ -317,88 +316,79 @@ section
 
 variable{ι : Type _}{γ : Type _}[LinearOrderedAddCommMonoid γ][TopologicalSpace γ][OrderTopology γ]
 
+-- error in Topology.Semicontinuous: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The sum of two lower semicontinuous functions is lower semicontinuous. Formulated with an
 explicit continuity assumption on addition, for application to `ereal`. The unprimed version of
 the lemma uses `[has_continuous_add]`. -/
-theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontinuousWithinAt f s x)
-  (hg : LowerSemicontinuousWithinAt g s x) (hcont : ContinuousAt (fun p : γ × γ => p.1+p.2) (f x, g x)) :
-  LowerSemicontinuousWithinAt (fun z => f z+g z) s x :=
-  by 
-    intro y hy 
-    obtain ⟨u, v, u_open, xu, v_open, xv, h⟩ :
-      ∃ u v : Set γ, IsOpen u ∧ f x ∈ u ∧ IsOpen v ∧ g x ∈ v ∧ u.prod v ⊆ { p : γ × γ | y < p.fst+p.snd } :=
-      mem_nhds_prod_iff'.1 (hcont (is_open_Ioi.mem_nhds hy))
-    byCases' hx₁ : ∃ l, l < f x
-    ·
-      obtain ⟨z₁, z₁lt, h₁⟩ : ∃ (z₁ : _)(_ : z₁ < f x), Ioc z₁ (f x) ⊆ u :=
-        exists_Ioc_subset_of_mem_nhds (u_open.mem_nhds xu) hx₁ 
-      byCases' hx₂ : ∃ l, l < g x
-      ·
-        obtain ⟨z₂, z₂lt, h₂⟩ : ∃ (z₂ : _)(_ : z₂ < g x), Ioc z₂ (g x) ⊆ v :=
-          exists_Ioc_subset_of_mem_nhds (v_open.mem_nhds xv) hx₂ 
-        filterUpwards [hf z₁ z₁lt, hg z₂ z₂lt]
-        intro z h₁z h₂z 
-        have A1 : min (f z) (f x) ∈ u
-        ·
-          byCases' H : f z ≤ f x
-          ·
-            simp [H]
-            exact h₁ ⟨h₁z, H⟩
-          ·
-            simp [le_of_not_leₓ H]
-            exact h₁ ⟨z₁lt, le_reflₓ _⟩
-        have A2 : min (g z) (g x) ∈ v
-        ·
-          byCases' H : g z ≤ g x
-          ·
-            simp [H]
-            exact h₂ ⟨h₂z, H⟩
-          ·
-            simp [le_of_not_leₓ H]
-            exact h₂ ⟨z₂lt, le_reflₓ _⟩
-        have  : (min (f z) (f x), min (g z) (g x)) ∈ u.prod v := ⟨A1, A2⟩
-        calc y < min (f z) (f x)+min (g z) (g x) := h this _ ≤ f z+g z :=
-          add_le_add (min_le_leftₓ _ _) (min_le_leftₓ _ _)
-      ·
-        simp only [not_exists, not_ltₓ] at hx₂ 
-        filterUpwards [hf z₁ z₁lt]
-        intro z h₁z 
-        have A1 : min (f z) (f x) ∈ u
-        ·
-          byCases' H : f z ≤ f x
-          ·
-            simp [H]
-            exact h₁ ⟨h₁z, H⟩
-          ·
-            simp [le_of_not_leₓ H]
-            exact h₁ ⟨z₁lt, le_reflₓ _⟩
-        have  : (min (f z) (f x), g x) ∈ u.prod v := ⟨A1, xv⟩
-        calc y < min (f z) (f x)+g x := h this _ ≤ f z+g z := add_le_add (min_le_leftₓ _ _) (hx₂ (g z))
-    ·
-      simp only [not_exists, not_ltₓ] at hx₁ 
-      byCases' hx₂ : ∃ l, l < g x
-      ·
-        obtain ⟨z₂, z₂lt, h₂⟩ : ∃ (z₂ : _)(_ : z₂ < g x), Ioc z₂ (g x) ⊆ v :=
-          exists_Ioc_subset_of_mem_nhds (v_open.mem_nhds xv) hx₂ 
-        filterUpwards [hg z₂ z₂lt]
-        intro z h₂z 
-        have A2 : min (g z) (g x) ∈ v
-        ·
-          byCases' H : g z ≤ g x
-          ·
-            simp [H]
-            exact h₂ ⟨h₂z, H⟩
-          ·
-            simp [le_of_not_leₓ H]
-            exact h₂ ⟨z₂lt, le_reflₓ _⟩
-        have  : (f x, min (g z) (g x)) ∈ u.prod v := ⟨xu, A2⟩
-        calc y < f x+min (g z) (g x) := h this _ ≤ f z+g z := add_le_add (hx₁ (f z)) (min_le_leftₓ _ _)
-      ·
-        simp only [not_exists, not_ltₓ] at hx₁ hx₂ 
-        apply Filter.eventually_of_forall 
-        intro z 
-        have  : (f x, g x) ∈ u.prod v := ⟨xu, xv⟩
-        calc y < f x+g x := h this _ ≤ f z+g z := add_le_add (hx₁ (f z)) (hx₂ (g z))
+theorem lower_semicontinuous_within_at.add'
+{f g : α → γ}
+(hf : lower_semicontinuous_within_at f s x)
+(hg : lower_semicontinuous_within_at g s x)
+(hcont : continuous_at (λ
+  p : «expr × »(γ, γ), «expr + »(p.1, p.2)) (f x, g x)) : lower_semicontinuous_within_at (λ
+ z, «expr + »(f z, g z)) s x :=
+begin
+  assume [binders (y hy)],
+  obtain ["⟨", ident u, ",", ident v, ",", ident u_open, ",", ident xu, ",", ident v_open, ",", ident xv, ",", ident h, "⟩", ":", expr «expr∃ , »((u
+     v : set γ), «expr ∧ »(is_open u, «expr ∧ »(«expr ∈ »(f x, u), «expr ∧ »(is_open v, «expr ∧ »(«expr ∈ »(g x, v), «expr ⊆ »(u.prod v, {p : «expr × »(γ, γ) | «expr < »(y, «expr + »(p.fst, p.snd))})))))), ":=", expr mem_nhds_prod_iff'.1 (hcont (is_open_Ioi.mem_nhds hy))],
+  by_cases [expr hx₁, ":", expr «expr∃ , »((l), «expr < »(l, f x))],
+  { obtain ["⟨", ident z₁, ",", ident z₁lt, ",", ident h₁, "⟩", ":", expr «expr∃ , »((z₁ «expr < » f x), «expr ⊆ »(Ioc z₁ (f x), u)), ":=", expr exists_Ioc_subset_of_mem_nhds (u_open.mem_nhds xu) hx₁],
+    by_cases [expr hx₂, ":", expr «expr∃ , »((l), «expr < »(l, g x))],
+    { obtain ["⟨", ident z₂, ",", ident z₂lt, ",", ident h₂, "⟩", ":", expr «expr∃ , »((z₂ «expr < » g x), «expr ⊆ »(Ioc z₂ (g x), v)), ":=", expr exists_Ioc_subset_of_mem_nhds (v_open.mem_nhds xv) hx₂],
+      filter_upwards ["[", expr hf z₁ z₁lt, ",", expr hg z₂ z₂lt, "]"] [],
+      assume [binders (z h₁z h₂z)],
+      have [ident A1] [":", expr «expr ∈ »(min (f z) (f x), u)] [],
+      { by_cases [expr H, ":", expr «expr ≤ »(f z, f x)],
+        { simp [] [] [] ["[", expr H, "]"] [] [],
+          exact [expr h₁ ⟨h₁z, H⟩] },
+        { simp [] [] [] ["[", expr le_of_not_le H, "]"] [] [],
+          exact [expr h₁ ⟨z₁lt, le_refl _⟩] } },
+      have [ident A2] [":", expr «expr ∈ »(min (g z) (g x), v)] [],
+      { by_cases [expr H, ":", expr «expr ≤ »(g z, g x)],
+        { simp [] [] [] ["[", expr H, "]"] [] [],
+          exact [expr h₂ ⟨h₂z, H⟩] },
+        { simp [] [] [] ["[", expr le_of_not_le H, "]"] [] [],
+          exact [expr h₂ ⟨z₂lt, le_refl _⟩] } },
+      have [] [":", expr «expr ∈ »((min (f z) (f x), min (g z) (g x)), u.prod v)] [":=", expr ⟨A1, A2⟩],
+      calc
+        «expr < »(y, «expr + »(min (f z) (f x), min (g z) (g x))) : h this
+        «expr ≤ »(..., «expr + »(f z, g z)) : add_le_add (min_le_left _ _) (min_le_left _ _) },
+    { simp [] [] ["only"] ["[", expr not_exists, ",", expr not_lt, "]"] [] ["at", ident hx₂],
+      filter_upwards ["[", expr hf z₁ z₁lt, "]"] [],
+      assume [binders (z h₁z)],
+      have [ident A1] [":", expr «expr ∈ »(min (f z) (f x), u)] [],
+      { by_cases [expr H, ":", expr «expr ≤ »(f z, f x)],
+        { simp [] [] [] ["[", expr H, "]"] [] [],
+          exact [expr h₁ ⟨h₁z, H⟩] },
+        { simp [] [] [] ["[", expr le_of_not_le H, "]"] [] [],
+          exact [expr h₁ ⟨z₁lt, le_refl _⟩] } },
+      have [] [":", expr «expr ∈ »((min (f z) (f x), g x), u.prod v)] [":=", expr ⟨A1, xv⟩],
+      calc
+        «expr < »(y, «expr + »(min (f z) (f x), g x)) : h this
+        «expr ≤ »(..., «expr + »(f z, g z)) : add_le_add (min_le_left _ _) (hx₂ (g z)) } },
+  { simp [] [] ["only"] ["[", expr not_exists, ",", expr not_lt, "]"] [] ["at", ident hx₁],
+    by_cases [expr hx₂, ":", expr «expr∃ , »((l), «expr < »(l, g x))],
+    { obtain ["⟨", ident z₂, ",", ident z₂lt, ",", ident h₂, "⟩", ":", expr «expr∃ , »((z₂ «expr < » g x), «expr ⊆ »(Ioc z₂ (g x), v)), ":=", expr exists_Ioc_subset_of_mem_nhds (v_open.mem_nhds xv) hx₂],
+      filter_upwards ["[", expr hg z₂ z₂lt, "]"] [],
+      assume [binders (z h₂z)],
+      have [ident A2] [":", expr «expr ∈ »(min (g z) (g x), v)] [],
+      { by_cases [expr H, ":", expr «expr ≤ »(g z, g x)],
+        { simp [] [] [] ["[", expr H, "]"] [] [],
+          exact [expr h₂ ⟨h₂z, H⟩] },
+        { simp [] [] [] ["[", expr le_of_not_le H, "]"] [] [],
+          exact [expr h₂ ⟨z₂lt, le_refl _⟩] } },
+      have [] [":", expr «expr ∈ »((f x, min (g z) (g x)), u.prod v)] [":=", expr ⟨xu, A2⟩],
+      calc
+        «expr < »(y, «expr + »(f x, min (g z) (g x))) : h this
+        «expr ≤ »(..., «expr + »(f z, g z)) : add_le_add (hx₁ (f z)) (min_le_left _ _) },
+    { simp [] [] ["only"] ["[", expr not_exists, ",", expr not_lt, "]"] [] ["at", ident hx₁, ident hx₂],
+      apply [expr filter.eventually_of_forall],
+      assume [binders (z)],
+      have [] [":", expr «expr ∈ »((f x, g x), u.prod v)] [":=", expr ⟨xu, xv⟩],
+      calc
+        «expr < »(y, «expr + »(f x, g x)) : h this
+        «expr ≤ »(..., «expr + »(f z, g z)) : add_le_add (hx₁ (f z)) (hx₂ (g z)) } }
+end
 
 /-- The sum of two lower semicontinuous functions is lower semicontinuous. Formulated with an
 explicit continuity assumption on addition, for application to `ereal`. The unprimed version of
@@ -870,47 +860,41 @@ section
 
 variable{γ : Type _}[LinearOrderₓ γ][TopologicalSpace γ][OrderTopology γ]
 
-theorem continuous_within_at_iff_lower_upper_semicontinuous_within_at {f : α → γ} :
-  ContinuousWithinAt f s x ↔ LowerSemicontinuousWithinAt f s x ∧ UpperSemicontinuousWithinAt f s x :=
-  by 
-    refine' ⟨fun h => ⟨h.lower_semicontinuous_within_at, h.upper_semicontinuous_within_at⟩, _⟩
-    rintro ⟨h₁, h₂⟩
-    intro v hv 
-    simp only [Filter.mem_map]
-    byCases' Hl : ∃ l, l < f x
-    ·
-      rcases exists_Ioc_subset_of_mem_nhds hv Hl with ⟨l, lfx, hl⟩
-      byCases' Hu : ∃ u, f x < u
-      ·
-        rcases exists_Ico_subset_of_mem_nhds hv Hu with ⟨u, fxu, hu⟩
-        filterUpwards [h₁ l lfx, h₂ u fxu]
-        intro a lfa fau 
-        cases' le_or_gtₓ (f a) (f x) with h h
-        ·
-          exact hl ⟨lfa, h⟩
-        ·
-          exact hu ⟨le_of_ltₓ h, fau⟩
-      ·
-        simp only [not_exists, not_ltₓ] at Hu 
-        filterUpwards [h₁ l lfx]
-        intro a lfa 
-        exact hl ⟨lfa, Hu (f a)⟩
-    ·
-      simp only [not_exists, not_ltₓ] at Hl 
-      byCases' Hu : ∃ u, f x < u
-      ·
-        rcases exists_Ico_subset_of_mem_nhds hv Hu with ⟨u, fxu, hu⟩
-        filterUpwards [h₂ u fxu]
-        intro a lfa 
-        apply hu 
-        exact ⟨Hl (f a), lfa⟩
-      ·
-        simp only [not_exists, not_ltₓ] at Hu 
-        apply Filter.eventually_of_forall 
-        intro a 
-        have  : f a = f x := le_antisymmₓ (Hu _) (Hl _)
-        rw [this]
-        exact mem_of_mem_nhds hv
+-- error in Topology.Semicontinuous: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_within_at_iff_lower_upper_semicontinuous_within_at
+{f : α → γ} : «expr ↔ »(continuous_within_at f s x, «expr ∧ »(lower_semicontinuous_within_at f s x, upper_semicontinuous_within_at f s x)) :=
+begin
+  refine [expr ⟨λ h, ⟨h.lower_semicontinuous_within_at, h.upper_semicontinuous_within_at⟩, _⟩],
+  rintros ["⟨", ident h₁, ",", ident h₂, "⟩"],
+  assume [binders (v hv)],
+  simp [] [] ["only"] ["[", expr filter.mem_map, "]"] [] [],
+  by_cases [expr Hl, ":", expr «expr∃ , »((l), «expr < »(l, f x))],
+  { rcases [expr exists_Ioc_subset_of_mem_nhds hv Hl, "with", "⟨", ident l, ",", ident lfx, ",", ident hl, "⟩"],
+    by_cases [expr Hu, ":", expr «expr∃ , »((u), «expr < »(f x, u))],
+    { rcases [expr exists_Ico_subset_of_mem_nhds hv Hu, "with", "⟨", ident u, ",", ident fxu, ",", ident hu, "⟩"],
+      filter_upwards ["[", expr h₁ l lfx, ",", expr h₂ u fxu, "]"] [],
+      assume [binders (a lfa fau)],
+      cases [expr le_or_gt (f a) (f x)] ["with", ident h, ident h],
+      { exact [expr hl ⟨lfa, h⟩] },
+      { exact [expr hu ⟨le_of_lt h, fau⟩] } },
+    { simp [] [] ["only"] ["[", expr not_exists, ",", expr not_lt, "]"] [] ["at", ident Hu],
+      filter_upwards ["[", expr h₁ l lfx, "]"] [],
+      assume [binders (a lfa)],
+      exact [expr hl ⟨lfa, Hu (f a)⟩] } },
+  { simp [] [] ["only"] ["[", expr not_exists, ",", expr not_lt, "]"] [] ["at", ident Hl],
+    by_cases [expr Hu, ":", expr «expr∃ , »((u), «expr < »(f x, u))],
+    { rcases [expr exists_Ico_subset_of_mem_nhds hv Hu, "with", "⟨", ident u, ",", ident fxu, ",", ident hu, "⟩"],
+      filter_upwards ["[", expr h₂ u fxu, "]"] [],
+      assume [binders (a lfa)],
+      apply [expr hu],
+      exact [expr ⟨Hl (f a), lfa⟩] },
+    { simp [] [] ["only"] ["[", expr not_exists, ",", expr not_lt, "]"] [] ["at", ident Hu],
+      apply [expr filter.eventually_of_forall],
+      assume [binders (a)],
+      have [] [":", expr «expr = »(f a, f x)] [":=", expr le_antisymm (Hu _) (Hl _)],
+      rw [expr this] [],
+      exact [expr mem_of_mem_nhds hv] } }
+end
 
 theorem continuous_at_iff_lower_upper_semicontinuous_at {f : α → γ} :
   ContinuousAt f x ↔ LowerSemicontinuousAt f x ∧ UpperSemicontinuousAt f x :=

@@ -48,53 +48,47 @@ theorem embedding_of_subset_dist_le (a b : α) : dist (embedding_of_subset x a) 
     convert abs_dist_sub_le a b (x n) using 2
     ring
 
+-- error in Topology.MetricSpace.Kuratowski: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- When the reference set is dense, the embedding map is an isometry on its image. -/
-theorem embedding_of_subset_isometry (H : DenseRange x) : Isometry (embedding_of_subset x) :=
-  by 
-    refine' isometry_emetric_iff_metric.2 fun a b => _ 
-    refine' (embedding_of_subset_dist_le x a b).antisymm (le_of_forall_pos_le_add fun e epos => _)
-    rcases Metric.mem_closure_range_iff.1 (H a) (e / 2) (half_pos epos) with ⟨n, hn⟩
-    have C : dist b (x n) - dist a (x n) = embedding_of_subset x b n - embedding_of_subset x a n :=
-      by 
-        simp only [embedding_of_subset_coe, sub_sub_sub_cancel_right]
-    have  :=
-      calc dist a b ≤ dist a (x n)+dist (x n) b := dist_triangle _ _ _ 
-        _ = (2*dist a (x n))+dist b (x n) - dist a (x n) :=
-        by 
-          simp [dist_comm]
-          ring 
-        _ ≤ (2*dist a (x n))+|dist b (x n) - dist a (x n)| :=
-        by 
-          applyRules [add_le_add_left, le_abs_self]
-        _ ≤ (2*e / 2)+|embedding_of_subset x b n - embedding_of_subset x a n| :=
-        by 
-          rw [C]
-          applyRules [add_le_add, mul_le_mul_of_nonneg_left, hn.le, le_reflₓ]
-          normNum 
-        _ ≤ (2*e / 2)+dist (embedding_of_subset x b) (embedding_of_subset x a) :=
-        by 
-          simp [←Real.dist_eq, dist_coe_le_dist]
-        _ = dist (embedding_of_subset x b) (embedding_of_subset x a)+e :=
-        by 
-          ring 
-        
-    simpa [dist_comm] using this
+theorem embedding_of_subset_isometry (H : dense_range x) : isometry (embedding_of_subset x) :=
+begin
+  refine [expr isometry_emetric_iff_metric.2 (λ a b, _)],
+  refine [expr (embedding_of_subset_dist_le x a b).antisymm (le_of_forall_pos_le_add (λ e epos, _))],
+  rcases [expr metric.mem_closure_range_iff.1 (H a) «expr / »(e, 2) (half_pos epos), "with", "⟨", ident n, ",", ident hn, "⟩"],
+  have [ident C] [":", expr «expr = »(«expr - »(dist b (x n), dist a (x n)), «expr - »(embedding_of_subset x b n, embedding_of_subset x a n))] [":=", expr by { simp [] [] ["only"] ["[", expr embedding_of_subset_coe, ",", expr sub_sub_sub_cancel_right, "]"] [] [] }],
+  have [] [] [":=", expr calc
+     «expr ≤ »(dist a b, «expr + »(dist a (x n), dist (x n) b)) : dist_triangle _ _ _
+     «expr = »(..., «expr + »(«expr * »(2, dist a (x n)), «expr - »(dist b (x n), dist a (x n)))) : by { simp [] [] [] ["[", expr dist_comm, "]"] [] [],
+       ring [] }
+     «expr ≤ »(..., «expr + »(«expr * »(2, dist a (x n)), «expr| |»(«expr - »(dist b (x n), dist a (x n))))) : by apply_rules ["[", expr add_le_add_left, ",", expr le_abs_self, "]"]
+     «expr ≤ »(..., «expr + »(«expr * »(2, «expr / »(e, 2)), «expr| |»(«expr - »(embedding_of_subset x b n, embedding_of_subset x a n)))) : begin
+       rw [expr C] [],
+       apply_rules ["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_left, ",", expr hn.le, ",", expr le_refl, "]"],
+       norm_num [] []
+     end
+     «expr ≤ »(..., «expr + »(«expr * »(2, «expr / »(e, 2)), dist (embedding_of_subset x b) (embedding_of_subset x a))) : by simp [] [] [] ["[", "<-", expr real.dist_eq, ",", expr dist_coe_le_dist, "]"] [] []
+     «expr = »(..., «expr + »(dist (embedding_of_subset x b) (embedding_of_subset x a), e)) : by ring []],
+  simpa [] [] [] ["[", expr dist_comm, "]"] [] ["using", expr this]
+end
 
+-- error in Topology.MetricSpace.Kuratowski: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Every separable metric space embeds isometrically in `ℓ_infty_ℝ`. -/
-theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [separable_space α] : ∃ f : α → ℓInftyℝ, Isometry f :=
-  by 
-    cases' (univ : Set α).eq_empty_or_nonempty with h h
-    ·
-      use fun _ => 0
-      intro x 
-      exact absurd h (nonempty.ne_empty ⟨x, mem_univ x⟩)
-    ·
-      rcases h with ⟨basepoint⟩
-      haveI  : Inhabited α := ⟨basepoint⟩
-      have  : ∃ s : Set α, countable s ∧ Dense s := exists_countable_dense α 
-      rcases this with ⟨S, ⟨S_countable, S_dense⟩⟩
-      rcases countable_iff_exists_surjective.1 S_countable with ⟨x, x_range⟩
-      exact ⟨embedding_of_subset x, embedding_of_subset_isometry x (S_dense.mono x_range)⟩
+theorem exists_isometric_embedding
+(α : Type u)
+[metric_space α]
+[separable_space α] : «expr∃ , »((f : α → ℓ_infty_ℝ), isometry f) :=
+begin
+  cases [expr (univ : set α).eq_empty_or_nonempty] ["with", ident h, ident h],
+  { use [expr λ _, 0],
+    assume [binders (x)],
+    exact [expr absurd h (nonempty.ne_empty ⟨x, mem_univ x⟩)] },
+  { rcases [expr h, "with", "⟨", ident basepoint, "⟩"],
+    haveI [] [":", expr inhabited α] [":=", expr ⟨basepoint⟩],
+    have [] [":", expr «expr∃ , »((s : set α), «expr ∧ »(countable s, dense s))] [":=", expr exists_countable_dense α],
+    rcases [expr this, "with", "⟨", ident S, ",", "⟨", ident S_countable, ",", ident S_dense, "⟩", "⟩"],
+    rcases [expr countable_iff_exists_surjective.1 S_countable, "with", "⟨", ident x, ",", ident x_range, "⟩"],
+    exact [expr ⟨embedding_of_subset x, embedding_of_subset_isometry x (S_dense.mono x_range)⟩] }
+end
 
 end kuratowskiEmbedding
 

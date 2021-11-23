@@ -1,8 +1,7 @@
-import Mathbin.Algebra.IterateHom 
-import Mathbin.Data.Equiv.RingAut 
 import Mathbin.Algebra.Module.Basic 
 import Mathbin.LinearAlgebra.Basic 
-import Mathbin.Tactic.Abel
+import Mathbin.Tactic.Abel 
+import Mathbin.Data.Equiv.RingAut
 
 /-!
 # Algebras over commutative semirings
@@ -122,38 +121,35 @@ which we set to priority 0 shortly. See `smul_def` below for the public version.
 private theorem smul_def'' (r : R) (x : A) : r • x = algebraMap R A r*x :=
   Algebra.smul_def' r x
 
+-- error in Algebra.Algebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 To prove two algebra structures on a fixed `[comm_semiring R] [semiring A]` agree,
 it suffices to check the `algebra_map`s agree.
 -/
-@[ext]
-theorem algebra_ext {R : Type _} [CommSemiringₓ R] {A : Type _} [Semiringₓ A] (P Q : Algebra R A)
-  (w :
-    ∀ r : R,
-      by 
-          haveI  := P 
-          exact algebraMap R A r =
-        by 
-          haveI  := Q 
-          exact algebraMap R A r) :
-  P = Q :=
-  by 
-    unfreezingI 
-      rcases P with ⟨⟨P⟩⟩
-      rcases Q with ⟨⟨Q⟩⟩
-    congr
-    ·
-      funext r a 
-      replace w := congr_argₓ (fun s => s*a) (w r)
-      simp only [←smul_def''] at w 
-      apply w
-    ·
-      ext r 
-      exact w r
-    ·
-      apply proof_irrel_heq
-    ·
-      apply proof_irrel_heq
+@[ext #[]]
+theorem algebra_ext
+{R : Type*}
+[comm_semiring R]
+{A : Type*}
+[semiring A]
+(P Q : algebra R A)
+(w : ∀
+ r : R, «expr = »(by { haveI [] [] [":=", expr P],
+    exact [expr algebra_map R A r] }, by { haveI [] [] [":=", expr Q],
+    exact [expr algebra_map R A r] })) : «expr = »(P, Q) :=
+begin
+  unfreezingI { rcases [expr P, "with", "⟨", "⟨", ident P, "⟩", "⟩"],
+    rcases [expr Q, "with", "⟨", "⟨", ident Q, "⟩", "⟩"] },
+  congr,
+  { funext [ident r, ident a],
+    replace [ident w] [] [":=", expr congr_arg (λ s, «expr * »(s, a)) (w r)],
+    simp [] [] ["only"] ["[", "<-", expr smul_def'', "]"] [] ["at", ident w],
+    apply [expr w] },
+  { ext [] [ident r] [],
+    exact [expr w r] },
+  { apply [expr proof_irrel_heq] },
+  { apply [expr proof_irrel_heq] }
+end
 
 instance (priority := 200)to_module : Module R A :=
   { one_smul :=
@@ -441,12 +437,12 @@ end Field
 
 end NoZeroSmulDivisors
 
-namespace Opposite
+namespace MulOpposite
 
 variable{R A : Type _}[CommSemiringₓ R][Semiringₓ A][Algebra R A]
 
-instance  : Algebra R («expr ᵒᵖ» A) :=
-  { Opposite.hasScalar A R with toRingHom := (algebraMap R A).toOpposite$ fun x y => Algebra.commutes _ _,
+instance  : Algebra R («expr ᵐᵒᵖ» A) :=
+  { MulOpposite.hasScalar A R with toRingHom := (algebraMap R A).toOpposite$ fun x y => Algebra.commutes _ _,
     smul_def' :=
       fun c x =>
         unop_injective$
@@ -455,16 +451,16 @@ instance  : Algebra R («expr ᵒᵖ» A) :=
             simp only [op_mul, Algebra.smul_def, Algebra.commutes, op_unop],
     commutes' :=
       fun r =>
-        Opposite.rec$
+        MulOpposite.rec$
           fun x =>
             by 
               dsimp <;> simp only [←op_mul, Algebra.commutes] }
 
 @[simp]
-theorem algebra_map_apply (c : R) : algebraMap R («expr ᵒᵖ» A) c = op (algebraMap R A c) :=
+theorem algebra_map_apply (c : R) : algebraMap R («expr ᵐᵒᵖ» A) c = op (algebraMap R A c) :=
   rfl
 
-end Opposite
+end MulOpposite
 
 namespace Module
 
@@ -682,7 +678,7 @@ def comp (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) : A →ₐ[R] C :=
           rw [←φ₁.commutes, ←φ₂.commutes] <;> rfl }
 
 @[simp]
-theorem coe_comp (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) : «expr⇑ » (φ₁.comp φ₂) = (φ₁ ∘ φ₂) :=
+theorem coe_comp (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) : «expr⇑ » (φ₁.comp φ₂) = φ₁ ∘ φ₂ :=
   rfl
 
 theorem comp_apply (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) (p : A) : φ₁.comp φ₂ p = φ₁ (φ₂ p) :=
@@ -866,17 +862,16 @@ variable(e : A₁ ≃ₐ[R] A₂)
 instance  : CoeFun (A₁ ≃ₐ[R] A₂) fun _ => A₁ → A₂ :=
   ⟨AlgEquiv.toFun⟩
 
-@[ext]
-theorem ext {f g : A₁ ≃ₐ[R] A₂} (h : ∀ a, f a = g a) : f = g :=
-  by 
-    have h₁ : f.to_equiv = g.to_equiv := Equiv.ext h 
-    cases f 
-    cases g 
-    congr
-    ·
-      exact funext h
-    ·
-      exact congr_argₓ Equiv.invFun h₁
+-- error in Algebra.Algebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[ext #[]] theorem ext {f g : «expr ≃ₐ[ ] »(A₁, R, A₂)} (h : ∀ a, «expr = »(f a, g a)) : «expr = »(f, g) :=
+begin
+  have [ident h₁] [":", expr «expr = »(f.to_equiv, g.to_equiv)] [":=", expr equiv.ext h],
+  cases [expr f] [],
+  cases [expr g] [],
+  congr,
+  { exact [expr funext h] },
+  { exact [expr congr_arg equiv.inv_fun h₁] }
+end
 
 protected theorem congr_argₓ {f : A₁ ≃ₐ[R] A₂} : ∀ {x x' : A₁}, x = x' → f x = f x'
 | _, _, rfl => rfl
@@ -1070,7 +1065,7 @@ theorem symm_trans_apply (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A�
   rfl
 
 @[simp]
-theorem coeTransₓ (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) : «expr⇑ » (e₁.trans e₂) = (e₂ ∘ e₁) :=
+theorem coeTransₓ (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) : «expr⇑ » (e₁.trans e₂) = e₂ ∘ e₁ :=
   rfl
 
 theorem trans_apply (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) (x : A₁) : (e₁.trans e₂) x = e₂ (e₁ x) :=

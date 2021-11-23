@@ -102,15 +102,11 @@ end Euclidean
 
 variable{F : Type _}[NormedGroup F][NormedSpace ℝ F]{f g : F → E}{n : WithTop ℕ}
 
--- error in Analysis.InnerProductSpace.EuclideanDist: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem times_cont_diff.euclidean_dist
-(hf : times_cont_diff exprℝ() n f)
-(hg : times_cont_diff exprℝ() n g)
-(h : ∀ x, «expr ≠ »(f x, g x)) : times_cont_diff exprℝ() n (λ x, euclidean.dist (f x) (g x)) :=
-begin
-  simp [] [] ["only"] ["[", expr euclidean.dist, "]"] [] [],
-  apply [expr @times_cont_diff.dist exprℝ()],
-  exacts ["[", expr (@to_euclidean E _ _ _).times_cont_diff.comp hf, ",", expr (@to_euclidean E _ _ _).times_cont_diff.comp hg, ",", expr λ
-   x, to_euclidean.injective.ne (h x), "]"]
-end
+theorem TimesContDiff.euclidean_dist (hf : TimesContDiff ℝ n f) (hg : TimesContDiff ℝ n g) (h : ∀ x, f x ≠ g x) :
+  TimesContDiff ℝ n fun x => Euclidean.dist (f x) (g x) :=
+  by 
+    simp only [Euclidean.dist]
+    apply @TimesContDiff.dist ℝ 
+    exacts[(@toEuclidean E _ _ _).TimesContDiff.comp hf, (@toEuclidean E _ _ _).TimesContDiff.comp hg,
+      fun x => to_euclidean.injective.ne (h x)]
 

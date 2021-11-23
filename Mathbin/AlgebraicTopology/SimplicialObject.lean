@@ -1,9 +1,7 @@
 import Mathbin.AlgebraicTopology.SimplexCategory 
-import Mathbin.CategoryTheory.Category.Ulift 
+import Mathbin.CategoryTheory.Arrow 
 import Mathbin.CategoryTheory.Limits.FunctorCategory 
-import Mathbin.CategoryTheory.Opposites 
-import Mathbin.CategoryTheory.Adjunction.Limits 
-import Mathbin.CategoryTheory.Arrow
+import Mathbin.CategoryTheory.Opposites
 
 /-!
 # Simplicial objects in a category.
@@ -29,7 +27,7 @@ namespace CategoryTheory
 
 variable(C : Type u)[category.{v} C]
 
--- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- The category of simplicial objects valued in a category `C`.
 This is the category of contravariant functors from `simplex_category` to `C`. -/
 @[derive #[expr category], nolint #[ident has_inhabited_instance]]
@@ -131,7 +129,7 @@ variable(C)
 def whiskering (D : Type _) [category.{v} D] : (C ⥤ D) ⥤ simplicial_object C ⥤ simplicial_object D :=
   whiskering_right _ _ _
 
--- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- Truncated simplicial objects. -/
 @[derive #[expr category], nolint #[ident has_inhabited_instance]]
 def truncated (n : exprℕ()) :=
@@ -184,7 +182,7 @@ variable(C)
 abbrev const : C ⥤ simplicial_object C :=
   CategoryTheory.Functor.const _
 
--- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- The category of augmented simplicial objects, defined as a comma category. -/
 @[derive #[expr category], nolint #[ident has_inhabited_instance]]
 def augmented :=
@@ -207,7 +205,7 @@ def point : augmented C ⥤ C :=
 /-- The functor from augmented objects to arrows. -/
 @[simps]
 def to_arrow : augmented C ⥤ arrow C :=
-  { obj := fun X => { left := drop.obj X _[0], right := point.obj X, hom := X.hom.app _ },
+  { obj := fun X => { left := drop.obj X _[0], right := point.obj X, Hom := X.hom.app _ },
     map :=
       fun X Y η =>
         { left := (drop.map η).app _, right := point.map η,
@@ -226,7 +224,7 @@ def whiskering_obj (D : Type _) [category.{v} D] (F : C ⥤ D) : augmented C ⥤
   { obj :=
       fun X =>
         { left := ((whiskering _ _).obj F).obj (drop.obj X), right := F.obj (point.obj X),
-          hom := whisker_right X.hom F ≫ (functor.const_comp _ _ _).hom },
+          Hom := whisker_right X.hom F ≫ (functor.const_comp _ _ _).Hom },
     map :=
       fun X Y η =>
         { left := whisker_right η.left _, right := F.map η.right,
@@ -253,7 +251,7 @@ open_locale Simplicial
 def augment (X : simplicial_object C) (X₀ : C) (f : X _[0] ⟶ X₀)
   (w : ∀ i : SimplexCategory g₁ g₂ : [0] ⟶ i, X.map g₁.op ≫ f = X.map g₂.op ≫ f) : simplicial_object.augmented C :=
   { left := X, right := X₀,
-    hom :=
+    Hom :=
       { app := fun i => X.map (SimplexCategory.const i.unop 0).op ≫ f,
         naturality' :=
           by 
@@ -264,14 +262,14 @@ def augment (X : simplicial_object C) (X₀ : C) (f : X _[0] ⟶ X₀)
 
 @[simp]
 theorem augment_hom_zero (X : simplicial_object C) (X₀ : C) (f : X _[0] ⟶ X₀) w :
-  (X.augment X₀ f w).hom.app (op [0]) = f :=
+  (X.augment X₀ f w).Hom.app (op [0]) = f :=
   by 
     dsimp 
     erw [SimplexCategory.hom_zero_zero ([0].const 0), X.map_id, category.id_comp]
 
 end SimplicialObject
 
--- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- Cosimplicial objects. -/
 @[derive #[expr category], nolint #[ident has_inhabited_instance]]
 def cosimplicial_object :=
@@ -373,7 +371,7 @@ variable(C)
 def whiskering (D : Type _) [category.{v} D] : (C ⥤ D) ⥤ cosimplicial_object C ⥤ cosimplicial_object D :=
   whiskering_right _ _ _
 
--- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- Truncated cosimplicial objects. -/
 @[derive #[expr category], nolint #[ident has_inhabited_instance]]
 def truncated (n : exprℕ()) :=
@@ -426,7 +424,7 @@ variable(C)
 abbrev const : C ⥤ cosimplicial_object C :=
   CategoryTheory.Functor.const _
 
--- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- Augmented cosimplicial objects. -/
 @[derive #[expr category], nolint #[ident has_inhabited_instance]]
 def augmented :=
@@ -449,7 +447,7 @@ def point : augmented C ⥤ C :=
 /-- The functor from augmented objects to arrows. -/
 @[simps]
 def to_arrow : augmented C ⥤ arrow C :=
-  { obj := fun X => { left := point.obj X, right := drop.obj X _[0], hom := X.hom.app _ },
+  { obj := fun X => { left := point.obj X, right := drop.obj X _[0], Hom := X.hom.app _ },
     map :=
       fun X Y η =>
         { left := point.map η, right := (drop.map η).app _,
@@ -468,7 +466,7 @@ def whiskering_obj (D : Type _) [category.{v} D] (F : C ⥤ D) : augmented C ⥤
   { obj :=
       fun X =>
         { left := F.obj (point.obj X), right := ((whiskering _ _).obj F).obj (drop.obj X),
-          hom := (functor.const_comp _ _ _).inv ≫ whisker_right X.hom F },
+          Hom := (functor.const_comp _ _ _).inv ≫ whisker_right X.hom F },
     map :=
       fun X Y η =>
         { left := F.map η.left, right := whisker_right η.right _,
@@ -495,7 +493,7 @@ open_locale Simplicial
 def augment (X : cosimplicial_object C) (X₀ : C) (f : X₀ ⟶ X.obj [0])
   (w : ∀ i : SimplexCategory g₁ g₂ : [0] ⟶ i, f ≫ X.map g₁ = f ≫ X.map g₂) : cosimplicial_object.augmented C :=
   { left := X₀, right := X,
-    hom :=
+    Hom :=
       { app := fun i => f ≫ X.map (SimplexCategory.const i 0),
         naturality' :=
           by 
@@ -505,7 +503,7 @@ def augment (X : cosimplicial_object C) (X₀ : C) (f : X₀ ⟶ X.obj [0])
 
 @[simp]
 theorem augment_hom_zero (X : cosimplicial_object C) (X₀ : C) (f : X₀ ⟶ X.obj [0]) w :
-  (X.augment X₀ f w).hom.app [0] = f :=
+  (X.augment X₀ f w).Hom.app [0] = f :=
   by 
     dsimp 
     rw [SimplexCategory.hom_zero_zero ([0].const 0), X.map_id, category.comp_id]
@@ -524,14 +522,14 @@ category from an augmented simplicial object. -/
 @[simps]
 def simplicial_object.augmented.right_op (X : simplicial_object.augmented C) :
   cosimplicial_object.augmented («expr ᵒᵖ» C) :=
-  { left := Opposite.op X.right, right := X.left.right_op, hom := X.hom.right_op }
+  { left := Opposite.op X.right, right := X.left.right_op, Hom := X.hom.right_op }
 
 /-- Construct an augmented simplicial object from an augmented cosimplicial
 object in the opposite category. -/
 @[simps]
 def cosimplicial_object.augmented.left_op (X : cosimplicial_object.augmented («expr ᵒᵖ» C)) :
   simplicial_object.augmented C :=
-  { left := X.right.left_op, right := X.left.unop, hom := X.hom.left_op }
+  { left := X.right.left_op, right := X.left.unop, Hom := X.hom.left_op }
 
 /-- Converting an augmented simplicial object to an augmented cosimplicial
 object and back is isomorphic to the given object. -/

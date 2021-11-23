@@ -1,8 +1,8 @@
-import Mathbin.Algebra.Group.Pi 
 import Mathbin.Algebra.Category.Mon.Basic 
-import Mathbin.GroupTheory.Submonoid.Default 
+import Mathbin.Algebra.Group.Pi 
+import Mathbin.CategoryTheory.Limits.Creates 
 import Mathbin.CategoryTheory.Limits.Types 
-import Mathbin.CategoryTheory.Limits.Creates
+import Mathbin.GroupTheory.Submonoid.Operations
 
 /-!
 # The category of (commutative) (additive) monoids has all limits
@@ -89,7 +89,7 @@ instance has_limits : has_limits Mon :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
+          exact { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
 
 /--
 The forgetful functor from monoids to types preserves all limits. (That is, the underlying
@@ -100,7 +100,7 @@ instance forget_preserves_limits : preserves_limits (forget Mon) :=
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesLimit :=
                 fun F =>
                   preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
@@ -165,7 +165,7 @@ instance has_limits : has_limits CommMon :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { HasLimit := fun F => has_limit_of_created F (forget₂ CommMon Mon) } }
+          exact { HasLimit := fun F => has_limit_of_created F (forget₂ CommMon Mon) } }
 
 /--
 The forgetful functor from commutative monoids to monoids preserves all limits.
@@ -190,7 +190,7 @@ instance forget_preserves_limits : preserves_limits (forget CommMon) :=
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ CommMon Mon) (forget Mon) } }
+          exact { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ CommMon Mon) (forget Mon) } }
 
 end CommMon
 

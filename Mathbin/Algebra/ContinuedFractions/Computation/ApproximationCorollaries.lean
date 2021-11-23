@@ -1,5 +1,6 @@
 import Mathbin.Algebra.ContinuedFractions.Computation.Approximations 
 import Mathbin.Algebra.ContinuedFractions.ConvergentsEquiv 
+import Mathbin.Algebra.Order.Archimedean 
 import Mathbin.Topology.Algebra.Ordered.Basic
 
 /-!
@@ -71,7 +72,7 @@ variable[Archimedean K]
 
 open Nat
 
--- error in Algebra.ContinuedFractions.Computation.ApproximationCorollaries: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Algebra.ContinuedFractions.Computation.ApproximationCorollaries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem of_convergence_epsilon : ∀
 ε «expr > » (0 : K), «expr∃ , »((N : exprℕ()), ∀
  n «expr ≥ » N, «expr < »(«expr| |»(«expr - »(v, (of v).convergents n)), ε)) :=

@@ -1,3 +1,4 @@
+import Mathbin.Logic.Function.Basic 
 import Mathbin.Tactic.Core
 
 /-!
@@ -51,7 +52,7 @@ unsafe def choose1 (nondep : Bool) (h : expr) (data : Name) (spec : Name) : tact
     let (ctxt, t) ← whnf t >>= open_pis 
     let t ← whnf t transparency.all 
     match t with 
-      | quote @Exists (%%α) (%%p) =>
+      | quote.1 (@Exists (%%ₓα) (%%ₓp)) =>
         do 
           let α_t ← infer_type α 
           let expr.sort u ← whnf α_t transparency.all 
@@ -88,7 +89,7 @@ unsafe def choose1 (nondep : Bool) (h : expr) (data : Name) (spec : Name) : tact
           intro1 
           let e ← intro1 
           pure (e, ne_fail)
-      | quote (%%p) ∧ %%q =>
+      | quote.1 ((%%ₓp) ∧ %%ₓq) =>
         do 
           mk_app `` And.elim_left [h.mk_app ctxt] >>= lambdas ctxt >>= note data none 
           let hq ← mk_app `` And.elim_right [h.mk_app ctxt] >>= lambdas ctxt >>= note spec none 
@@ -178,7 +179,7 @@ unsafe def choose (nondep : parse (tk "!")?) (first : parse ident) (names : pars
         | none => get_local `this
         | some e => tactic.i_to_expr_strict e 
     tactic.choose nondep.is_some tgt (first :: names)
-    try (interactive.simp none none tt [simp_arg_type.expr (pquote exists_prop)] [] (loc.ns$ some <$> names))
+    try (interactive.simp none none tt [simp_arg_type.expr (pquote.1 exists_prop)] [] (loc.ns$ some <$> names))
     try (tactic.clear tgt)
 
 add_tactic_doc

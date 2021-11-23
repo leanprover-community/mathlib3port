@@ -1,3 +1,4 @@
+import Mathbin.Data.Bool 
 import Mathbin.Tactic.Core
 
 /-!

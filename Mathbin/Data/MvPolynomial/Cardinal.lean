@@ -70,19 +70,18 @@ private theorem to_mv_polynomial_surjective : Function.Surjective (@to_mv_polyno
           by 
             simp [to_mv_polynomial]⟩
 
-private theorem cardinal_mv_polynomial_fun_le : # (mv_polynomial_fun σ R) ≤ max (max (# R) (# σ)) ω :=
-  calc # (mv_polynomial_fun σ R) = (# R+# σ)+# (Ulift Bool) :=
-    by 
-      dsimp [mv_polynomial_fun] <;> simp only [←add_def, add_assocₓ, Cardinal.mk_ulift]
-    _ ≤ max (max (# R+# σ) (# (Ulift Bool))) ω := add_le_max _ _ 
-    _ ≤ max (max (max (max (# R) (# σ)) ω) (# (Ulift Bool))) ω :=
-    max_le_max (max_le_max (add_le_max _ _) (le_reflₓ _)) (le_reflₓ _)
-    _ ≤ _ :=
-    by 
-      have  : # (Ulift.{u} Bool) ≤ ω 
-      exact le_of_ltₓ (lt_omega_iff_fintype.2 ⟨inferInstance⟩)
-      simp only [max_commₓ omega.{u}, max_assocₓ, max_left_commₓ omega.{u}, max_selfₓ, max_eq_leftₓ this]
-    
+-- error in Data.MvPolynomial.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem cardinal_mv_polynomial_fun_le : «expr ≤ »(«expr#»() (mv_polynomial_fun σ R), max (max («expr#»() R) («expr#»() σ)) exprω()) :=
+calc
+  «expr = »(«expr#»() (mv_polynomial_fun σ R), «expr + »(«expr + »(«expr#»() R, «expr#»() σ), «expr#»() (ulift bool))) : by dsimp [] ["[", expr mv_polynomial_fun, "]"] [] []; simp [] [] ["only"] ["[", "<-", expr add_def, ",", expr add_assoc, ",", expr cardinal.mk_ulift, "]"] [] []
+  «expr ≤ »(..., max (max «expr + »(«expr#»() R, «expr#»() σ) («expr#»() (ulift bool))) exprω()) : add_le_max _ _
+  «expr ≤ »(..., max (max (max (max («expr#»() R) («expr#»() σ)) exprω()) («expr#»() (ulift bool))) exprω()) : max_le_max (max_le_max (add_le_max _ _) (le_refl _)) (le_refl _)
+  «expr ≤ »(..., _) : begin
+    have [] [":", expr «expr ≤ »(«expr#»() (ulift.{u} bool), exprω())] [],
+    from [expr le_of_lt (lt_omega_iff_fintype.2 ⟨infer_instance⟩)],
+    simp [] [] ["only"] ["[", expr max_comm omega.{u}, ",", expr max_assoc, ",", expr max_left_comm omega.{u}, ",", expr max_self, ",", expr max_eq_left this, "]"] [] []
+  end
 
 namespace MvPolynomial
 

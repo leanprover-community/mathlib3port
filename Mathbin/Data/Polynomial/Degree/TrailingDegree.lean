@@ -307,22 +307,24 @@ theorem nat_trailing_degree_le_nat_degree (p : Polynomial R) : p.nat_trailing_de
     ·
       exact le_nat_degree_of_ne_zero (mt trailing_coeff_eq_zero.mp hp)
 
-theorem nat_trailing_degree_mul_X_pow {p : Polynomial R} (hp : p ≠ 0) (n : ℕ) :
-  (p*X ^ n).natTrailingDegree = p.nat_trailing_degree+n :=
-  by 
-    apply le_antisymmₓ
-    ·
-      refine' nat_trailing_degree_le_of_ne_zero fun h => mt trailing_coeff_eq_zero.mp hp _ 
-      rwa [trailing_coeff, ←coeff_mul_X_pow]
-    ·
-      rw [nat_trailing_degree_eq_support_min' fun h => hp (mul_X_pow_eq_zero h), Finset.le_min'_iff]
-      intro y hy 
-      have key : n ≤ y
-      ·
-        rw [mem_support_iff, coeff_mul_X_pow'] at hy 
-        exact by_contra fun h => hy (if_neg h)
-      rw [mem_support_iff, coeff_mul_X_pow', if_pos key] at hy 
-      exact (le_tsub_iff_right key).mp (nat_trailing_degree_le_of_ne_zero hy)
+-- error in Data.Polynomial.Degree.TrailingDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nat_trailing_degree_mul_X_pow
+{p : polynomial R}
+(hp : «expr ≠ »(p, 0))
+(n : exprℕ()) : «expr = »(«expr * »(p, «expr ^ »(X, n)).nat_trailing_degree, «expr + »(p.nat_trailing_degree, n)) :=
+begin
+  apply [expr le_antisymm],
+  { refine [expr nat_trailing_degree_le_of_ne_zero (λ h, mt trailing_coeff_eq_zero.mp hp _)],
+    rwa ["[", expr trailing_coeff, ",", "<-", expr coeff_mul_X_pow, "]"] [] },
+  { rw ["[", expr nat_trailing_degree_eq_support_min' (λ
+      h, hp (mul_X_pow_eq_zero h)), ",", expr finset.le_min'_iff, "]"] [],
+    intros [ident y, ident hy],
+    have [ident key] [":", expr «expr ≤ »(n, y)] [],
+    { rw ["[", expr mem_support_iff, ",", expr coeff_mul_X_pow', "]"] ["at", ident hy],
+      exact [expr by_contra (λ h, hy (if_neg h))] },
+    rw ["[", expr mem_support_iff, ",", expr coeff_mul_X_pow', ",", expr if_pos key, "]"] ["at", ident hy],
+    exact [expr (le_tsub_iff_right key).mp (nat_trailing_degree_le_of_ne_zero hy)] }
+end
 
 end Semiringₓ
 

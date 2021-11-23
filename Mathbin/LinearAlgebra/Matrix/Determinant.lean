@@ -45,7 +45,7 @@ variable{m n : Type _}[DecidableEq n][Fintype n][DecidableEq m][Fintype m]
 
 variable{R : Type v}[CommRingₓ R]
 
--- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:264:9: unsupported: advanced prec syntax
+-- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 local notation `ε` σ:max := ((sign σ : exprℤ()) : R)
 
 /-- `det` is an `alternating_map` in the rows of the matrix. -/
@@ -96,10 +96,12 @@ theorem det_is_empty [IsEmpty n] {A : Matrix n n R} : det A = 1 :=
   by 
     simp [det_apply]
 
-theorem det_eq_one_of_card_eq_zero {A : Matrix n n R} (h : Fintype.card n = 0) : det A = 1 :=
-  by 
-    haveI  : IsEmpty n := fintype.card_eq_zero_iff.mp h 
-    exact det_is_empty
+-- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem det_eq_one_of_card_eq_zero {A : matrix n n R} (h : «expr = »(fintype.card n, 0)) : «expr = »(det A, 1) :=
+begin
+  haveI [] [":", expr is_empty n] [":=", expr fintype.card_eq_zero_iff.mp h],
+  exact [expr det_is_empty]
+end
 
 /-- If `n` has only one element, the determinant of an `n` by `n` matrix is just that element.
 Although `unique` implies `decidable_eq` and `fintype`, the instances might
@@ -115,10 +117,15 @@ theorem det_eq_elem_of_subsingleton [Subsingleton n] (A : Matrix n n R) (k : n) 
     convert det_unique _ 
     exact uniqueOfSubsingleton k
 
-theorem det_eq_elem_of_card_eq_one {A : Matrix n n R} (h : Fintype.card n = 1) (k : n) : det A = A k k :=
-  by 
-    haveI  : Subsingleton n := fintype.card_le_one_iff_subsingleton.mp h.le 
-    exact det_eq_elem_of_subsingleton _ _
+-- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem det_eq_elem_of_card_eq_one
+{A : matrix n n R}
+(h : «expr = »(fintype.card n, 1))
+(k : n) : «expr = »(det A, A k k) :=
+begin
+  haveI [] [":", expr subsingleton n] [":=", expr fintype.card_le_one_iff_subsingleton.mp h.le],
+  exact [expr det_eq_elem_of_subsingleton _ _]
+end
 
 theorem det_mul_aux {M N : Matrix n n R} {p : n → n} (H : ¬bijective p) :
   (∑σ : perm n, «exprε » σ*∏x, M (σ x) (p x)*N (p x) x) = 0 :=
@@ -432,45 +439,44 @@ theorem det_update_column_add_smul_self (A : Matrix n n R) {i j : n} (hij : i �
     rw [←det_transpose, ←update_row_transpose, ←det_transpose A]
     exact det_update_row_add_smul_self (A)ᵀ hij c
 
-theorem det_eq_of_forall_row_eq_smul_add_const_aux {A B : Matrix n n R} {s : Finset n} :
-  ∀ c : n → R hs : ∀ i, i ∉ s → c i = 0 k : n hk : k ∉ s A_eq : ∀ i j, A i j = B i j+c i*B k j, det A = det B :=
-  by 
-    revert B 
-    refine' s.induction_on _ _
-    ·
-      intro A c hs k hk A_eq 
-      have  : ∀ i, c i = 0
-      ·
-        intro i 
-        specialize hs i 
-        contrapose! hs 
-        simp [hs]
-      congr 
-      ext i j 
-      rw [A_eq, this, zero_mul, add_zeroₓ]
-    ·
-      intro i s hi ih B c hs k hk A_eq 
-      have hAi : A i = B i+c i • B k := funext (A_eq i)
-      rw [@ih (update_row B i (A i)) (Function.update c i 0), hAi, det_update_row_add_smul_self]
-      ·
-        exact mt (fun h => show k ∈ insert i s from h ▸ Finset.mem_insert_self _ _) hk
-      ·
-        intro i' hi' 
-        rw [Function.update_apply]
-        splitIfs with hi'i
-        ·
-          rfl
-        ·
-          exact hs i' fun h => hi' ((finset.mem_insert.mp h).resolve_left hi'i)
-      ·
-        exact fun h => hk (Finset.mem_insert_of_mem h)
-      ·
-        intro i' j' 
-        rw [update_row_apply, Function.update_apply]
-        splitIfs with hi'i
-        ·
-          simp [hi'i]
-        rw [A_eq, update_row_ne fun h : k = i => hk$ h ▸ Finset.mem_insert_self k s]
+-- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem det_eq_of_forall_row_eq_smul_add_const_aux
+{A B : matrix n n R}
+{s : finset n} : ∀
+(c : n → R)
+(hs : ∀ i, «expr ∉ »(i, s) → «expr = »(c i, 0))
+(k : n)
+(hk : «expr ∉ »(k, s))
+(A_eq : ∀ i j, «expr = »(A i j, «expr + »(B i j, «expr * »(c i, B k j)))), «expr = »(det A, det B) :=
+begin
+  revert [ident B],
+  refine [expr s.induction_on _ _],
+  { intros [ident A, ident c, ident hs, ident k, ident hk, ident A_eq],
+    have [] [":", expr ∀ i, «expr = »(c i, 0)] [],
+    { intros [ident i],
+      specialize [expr hs i],
+      contrapose ["!"] [ident hs],
+      simp [] [] [] ["[", expr hs, "]"] [] [] },
+    congr,
+    ext [] [ident i, ident j] [],
+    rw ["[", expr A_eq, ",", expr this, ",", expr zero_mul, ",", expr add_zero, "]"] [] },
+  { intros [ident i, ident s, ident hi, ident ih, ident B, ident c, ident hs, ident k, ident hk, ident A_eq],
+    have [ident hAi] [":", expr «expr = »(A i, «expr + »(B i, «expr • »(c i, B k)))] [":=", expr funext (A_eq i)],
+    rw ["[", expr @ih (update_row B i (A i)) (function.update c i 0), ",", expr hAi, ",", expr det_update_row_add_smul_self, "]"] [],
+    { exact [expr mt (λ h, show «expr ∈ »(k, insert i s), from «expr ▸ »(h, finset.mem_insert_self _ _)) hk] },
+    { intros [ident i', ident hi'],
+      rw [expr function.update_apply] [],
+      split_ifs [] ["with", ident hi'i],
+      { refl },
+      { exact [expr hs i' (λ h, hi' ((finset.mem_insert.mp h).resolve_left hi'i))] } },
+    { exact [expr λ h, hk (finset.mem_insert_of_mem h)] },
+    { intros [ident i', ident j'],
+      rw ["[", expr update_row_apply, ",", expr function.update_apply, "]"] [],
+      split_ifs [] ["with", ident hi'i],
+      { simp [] [] [] ["[", expr hi'i, "]"] [] [] },
+      rw ["[", expr A_eq, ",", expr update_row_ne (λ
+        h : «expr = »(k, i), «expr $ »(hk, «expr ▸ »(h, finset.mem_insert_self k s))), "]"] [] } }
+end
 
 /-- If you add multiples of row `B k` to other rows, the determinant doesn't change. -/
 theorem det_eq_of_forall_row_eq_smul_add_const {A B : Matrix n n R} (c : n → R) (k : n) (hk : c k = 0)
@@ -481,49 +487,50 @@ theorem det_eq_of_forall_row_eq_smul_add_const {A B : Matrix n n R} (c : n → R
         fun hi => Finset.mem_erase.mpr ⟨mt (fun h : i = k => show c i = 0 from h.symm ▸ hk) hi, Finset.mem_univ i⟩)
     k (Finset.not_mem_erase k Finset.univ) A_eq
 
-theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Finₓ (n+1)) :
-  ∀ c : Finₓ n → R hc : ∀ i : Finₓ n, k < i.succ → c i = 0 {M N : Matrix (Finₓ n.succ) (Finₓ n.succ) R} h0 :
-    ∀ j, M 0 j = N 0 j hsucc : ∀ i : Finₓ n j, M i.succ j = N i.succ j+c i*M i.cast_succ j, det M = det N :=
-  by 
-    refine' Finₓ.induction _ (fun k ih => _) k <;> intro c hc M N h0 hsucc
-    ·
-      congr 
-      ext i j 
-      refine' Finₓ.cases (h0 j) (fun i => _) i 
-      rw [hsucc, hc i (Finₓ.succ_pos _), zero_mul, add_zeroₓ]
-    set M' := update_row M k.succ (N k.succ) with hM' 
-    have hM : M = update_row M' k.succ (M' k.succ+c k • M k.cast_succ)
-    ·
-      ext i j 
-      byCases' hi : i = k.succ
-      ·
-        simp [hi, hM', hsucc, update_row_self]
-      rw [update_row_ne hi, hM', update_row_ne hi]
-    have k_ne_succ : k.cast_succ ≠ k.succ := (Finₓ.cast_succ_lt_succ k).Ne 
-    have M_k : M k.cast_succ = M' k.cast_succ := (update_row_ne k_ne_succ).symm 
-    rw [hM, M_k, det_update_row_add_smul_self M' k_ne_succ.symm, ih (Function.update c k 0)]
-    ·
-      intro i hi 
-      rw [Finₓ.lt_iff_coe_lt_coe, Finₓ.coe_cast_succ, Finₓ.coe_succ, Nat.lt_succ_iff] at hi 
-      rw [Function.update_apply]
-      splitIfs with hik
-      ·
-        rfl 
-      exact hc _ (fin.succ_lt_succ_iff.mpr (lt_of_le_of_neₓ hi (Ne.symm hik)))
-    ·
-      rwa [hM', update_row_ne (Finₓ.succ_ne_zero _).symm]
-    intro i j 
-    rw [Function.update_apply]
-    splitIfs with hik
-    ·
-      rw [zero_mul, add_zeroₓ, hM', hik, update_row_self]
-    rw [hM', update_row_ne ((Finₓ.succ_injective _).Ne hik), hsucc]
-    byCases' hik2 : k < i
-    ·
-      simp [hc i (fin.succ_lt_succ_iff.mpr hik2)]
-    rw [update_row_ne]
-    apply ne_of_ltₓ 
-    rwa [Finₓ.lt_iff_coe_lt_coe, Finₓ.coe_cast_succ, Finₓ.coe_succ, Nat.lt_succ_iff, ←not_ltₓ]
+-- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem det_eq_of_forall_row_eq_smul_add_pred_aux
+{n : exprℕ()}
+(k : fin «expr + »(n, 1)) : ∀
+(c : fin n → R)
+(hc : ∀ i : fin n, «expr < »(k, i.succ) → «expr = »(c i, 0))
+{M N : matrix (fin n.succ) (fin n.succ) R}
+(h0 : ∀ j, «expr = »(M 0 j, N 0 j))
+(hsucc : ∀
+ (i : fin n)
+ (j), «expr = »(M i.succ j, «expr + »(N i.succ j, «expr * »(c i, M i.cast_succ j)))), «expr = »(det M, det N) :=
+begin
+  refine [expr fin.induction _ (λ k ih, _) k]; intros [ident c, ident hc, ident M, ident N, ident h0, ident hsucc],
+  { congr,
+    ext [] [ident i, ident j] [],
+    refine [expr fin.cases (h0 j) (λ i, _) i],
+    rw ["[", expr hsucc, ",", expr hc i (fin.succ_pos _), ",", expr zero_mul, ",", expr add_zero, "]"] [] },
+  set [] [ident M'] [] [":="] [expr update_row M k.succ (N k.succ)] ["with", ident hM'],
+  have [ident hM] [":", expr «expr = »(M, update_row M' k.succ «expr + »(M' k.succ, «expr • »(c k, M k.cast_succ)))] [],
+  { ext [] [ident i, ident j] [],
+    by_cases [expr hi, ":", expr «expr = »(i, k.succ)],
+    { simp [] [] [] ["[", expr hi, ",", expr hM', ",", expr hsucc, ",", expr update_row_self, "]"] [] [] },
+    rw ["[", expr update_row_ne hi, ",", expr hM', ",", expr update_row_ne hi, "]"] [] },
+  have [ident k_ne_succ] [":", expr «expr ≠ »(k.cast_succ, k.succ)] [":=", expr (fin.cast_succ_lt_succ k).ne],
+  have [ident M_k] [":", expr «expr = »(M k.cast_succ, M' k.cast_succ)] [":=", expr (update_row_ne k_ne_succ).symm],
+  rw ["[", expr hM, ",", expr M_k, ",", expr det_update_row_add_smul_self M' k_ne_succ.symm, ",", expr ih (function.update c k 0), "]"] [],
+  { intros [ident i, ident hi],
+    rw ["[", expr fin.lt_iff_coe_lt_coe, ",", expr fin.coe_cast_succ, ",", expr fin.coe_succ, ",", expr nat.lt_succ_iff, "]"] ["at", ident hi],
+    rw [expr function.update_apply] [],
+    split_ifs [] ["with", ident hik],
+    { refl },
+    exact [expr hc _ (fin.succ_lt_succ_iff.mpr (lt_of_le_of_ne hi (ne.symm hik)))] },
+  { rwa ["[", expr hM', ",", expr update_row_ne (fin.succ_ne_zero _).symm, "]"] [] },
+  intros [ident i, ident j],
+  rw [expr function.update_apply] [],
+  split_ifs [] ["with", ident hik],
+  { rw ["[", expr zero_mul, ",", expr add_zero, ",", expr hM', ",", expr hik, ",", expr update_row_self, "]"] [] },
+  rw ["[", expr hM', ",", expr update_row_ne ((fin.succ_injective _).ne hik), ",", expr hsucc, "]"] [],
+  by_cases [expr hik2, ":", expr «expr < »(k, i)],
+  { simp [] [] [] ["[", expr hc i (fin.succ_lt_succ_iff.mpr hik2), "]"] [] [] },
+  rw [expr update_row_ne] [],
+  apply [expr ne_of_lt],
+  rwa ["[", expr fin.lt_iff_coe_lt_coe, ",", expr fin.coe_cast_succ, ",", expr fin.coe_succ, ",", expr nat.lt_succ_iff, ",", "<-", expr not_lt, "]"] []
+end
 
 /-- If you add multiples of previous rows to the next row, the determinant doesn't change. -/
 theorem det_eq_of_forall_row_eq_smul_add_pred {n : ℕ} {A B : Matrix (Finₓ (n+1)) (Finₓ (n+1)) R} (c : Finₓ n → R)
@@ -542,91 +549,77 @@ theorem det_eq_of_forall_col_eq_smul_add_pred {n : ℕ} {A B : Matrix (Finₓ (n
 
 end DetEq
 
+-- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem det_block_diagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → Matrix n n R) :
-  (block_diagonal M).det = ∏k, (M k).det :=
-  by 
-    simpRw [det_apply']
-    rw [Finset.prod_sum]
-    simpRw [Finset.mem_univ, Finset.prod_attach_univ, Finset.univ_pi_univ]
-    let preserving_snd : Finset (Equiv.Perm (n × o)) := finset.univ.filter fun σ => ∀ x, (σ x).snd = x.snd 
-    have mem_preserving_snd : ∀ {σ : Equiv.Perm (n × o)}, σ ∈ preserving_snd ↔ ∀ x, (σ x).snd = x.snd :=
-      fun σ => finset.mem_filter.trans ⟨fun h => h.2, fun h => ⟨Finset.mem_univ _, h⟩⟩
-    rw [←Finset.sum_subset (Finset.subset_univ preserving_snd) _]
-    rw
-      [(Finset.sum_bij
-          (fun σ : ∀ k : o, k ∈ Finset.univ → Equiv.Perm n _ => prod_congr_left fun k => σ k (Finset.mem_univ k)) _ _ _
-          _).symm]
-    ·
-      intro σ _ 
-      rw [mem_preserving_snd]
-      rintro ⟨k, x⟩
-      simp only [prod_congr_left_apply]
-    ·
-      intro σ _ 
-      rw [Finset.prod_mul_distrib, ←Finset.univ_product_univ, Finset.prod_product_right]
-      simp only [sign_prod_congr_left, Units.coe_prod, Int.cast_prod, block_diagonal_apply_eq, prod_congr_left_apply]
-    ·
-      intro σ σ' _ _ eq 
-      ext x hx k 
-      simp only  at eq 
-      have  :
-        ∀ k x,
-          prod_congr_left (fun k => σ k (Finset.mem_univ _)) (k, x) =
-            prod_congr_left (fun k => σ' k (Finset.mem_univ _)) (k, x) :=
-        fun k x =>
-          by 
-            rw [Eq]
-      simp only [prod_congr_left_apply, Prod.mk.inj_iffₓ] at this 
-      exact (this k x).1
-    ·
-      intro σ hσ 
-      rw [mem_preserving_snd] at hσ 
-      have hσ' : ∀ x, ((σ⁻¹) x).snd = x.snd
-      ·
-        intro x 
-        convRHS => rw [←perm.apply_inv_self σ x, hσ]
-      have mk_apply_eq : ∀ k x, ((σ (x, k)).fst, k) = σ (x, k)
-      ·
-        intro k x 
-        ext
-        ·
-          simp only 
-        ·
-          simp only [hσ]
-      have mk_inv_apply_eq : ∀ k x, (((σ⁻¹) (x, k)).fst, k) = (σ⁻¹) (x, k)
-      ·
-        intro k x 
-        convLHS => rw [←perm.apply_inv_self σ (x, k)]
-        ext
-        ·
-          simp only [apply_inv_self]
-        ·
-          simp only [hσ']
-      refine' ⟨fun k _ => ⟨fun x => (σ (x, k)).fst, fun x => ((σ⁻¹) (x, k)).fst, _, _⟩, _, _⟩
-      ·
-        intro x 
-        simp only [mk_apply_eq, inv_apply_self]
-      ·
-        intro x 
-        simp only [mk_inv_apply_eq, apply_inv_self]
-      ·
-        apply Finset.mem_univ
-      ·
-        ext ⟨k, x⟩
-        ·
-          simp only [coe_fn_mk, prod_congr_left_apply]
-        ·
-          simp only [prod_congr_left_apply, hσ]
-    ·
-      intro σ _ hσ 
-      rw [mem_preserving_snd] at hσ 
-      obtain ⟨⟨k, x⟩, hkx⟩ := not_forall.mp hσ 
-      rw [Finset.prod_eq_zero (Finset.mem_univ (k, x)), mul_zero]
-      rw [←@Prod.mk.eta _ _ (σ (k, x)), block_diagonal_apply_ne]
-      exact hkx
+theorem det_block_diagonal
+{o : Type*}
+[fintype o]
+[decidable_eq o]
+(M : o → matrix n n R) : «expr = »((block_diagonal M).det, «expr∏ , »((k), (M k).det)) :=
+begin
+  simp_rw ["[", expr det_apply', "]"] [],
+  rw [expr finset.prod_sum] [],
+  simp_rw ["[", expr finset.mem_univ, ",", expr finset.prod_attach_univ, ",", expr finset.univ_pi_univ, "]"] [],
+  let [ident preserving_snd] [":", expr finset (equiv.perm «expr × »(n, o))] [":=", expr finset.univ.filter (λ
+    σ, ∀ x, «expr = »((σ x).snd, x.snd))],
+  have [ident mem_preserving_snd] [":", expr ∀
+   {σ : equiv.perm «expr × »(n, o)}, «expr ↔ »(«expr ∈ »(σ, preserving_snd), ∀
+    x, «expr = »((σ x).snd, x.snd))] [":=", expr λ σ, finset.mem_filter.trans ⟨λ h, h.2, λ h, ⟨finset.mem_univ _, h⟩⟩],
+  rw ["<-", expr finset.sum_subset (finset.subset_univ preserving_snd) _] [],
+  rw [expr (finset.sum_bij (λ
+     (σ : ∀ k : o, «expr ∈ »(k, finset.univ) → equiv.perm n)
+     (_), prod_congr_left (λ k, σ k (finset.mem_univ k))) _ _ _ _).symm] [],
+  { intros [ident σ, "_"],
+    rw [expr mem_preserving_snd] [],
+    rintros ["⟨", ident k, ",", ident x, "⟩"],
+    simp [] [] ["only"] ["[", expr prod_congr_left_apply, "]"] [] [] },
+  { intros [ident σ, "_"],
+    rw ["[", expr finset.prod_mul_distrib, ",", "<-", expr finset.univ_product_univ, ",", expr finset.prod_product_right, "]"] [],
+    simp [] [] ["only"] ["[", expr sign_prod_congr_left, ",", expr units.coe_prod, ",", expr int.cast_prod, ",", expr block_diagonal_apply_eq, ",", expr prod_congr_left_apply, "]"] [] [] },
+  { intros [ident σ, ident σ', "_", "_", ident eq],
+    ext [] [ident x, ident hx, ident k] [],
+    simp [] [] ["only"] [] [] ["at", ident eq],
+    have [] [":", expr ∀
+     k
+     x, «expr = »(prod_congr_left (λ
+       k, σ k (finset.mem_univ _)) (k, x), prod_congr_left (λ
+       k, σ' k (finset.mem_univ _)) (k, x))] [":=", expr λ k x, by rw [expr eq] []],
+    simp [] [] ["only"] ["[", expr prod_congr_left_apply, ",", expr prod.mk.inj_iff, "]"] [] ["at", ident this],
+    exact [expr (this k x).1] },
+  { intros [ident σ, ident hσ],
+    rw [expr mem_preserving_snd] ["at", ident hσ],
+    have [ident hσ'] [":", expr ∀ x, «expr = »((«expr ⁻¹»(σ) x).snd, x.snd)] [],
+    { intro [ident x],
+      conv_rhs [] [] { rw ["[", "<-", expr perm.apply_inv_self σ x, ",", expr hσ, "]"] } },
+    have [ident mk_apply_eq] [":", expr ∀ k x, «expr = »(((σ (x, k)).fst, k), σ (x, k))] [],
+    { intros [ident k, ident x],
+      ext [] [] [],
+      { simp [] [] ["only"] [] [] [] },
+      { simp [] [] ["only"] ["[", expr hσ, "]"] [] [] } },
+    have [ident mk_inv_apply_eq] [":", expr ∀ k x, «expr = »(((«expr ⁻¹»(σ) (x, k)).fst, k), «expr ⁻¹»(σ) (x, k))] [],
+    { intros [ident k, ident x],
+      conv_lhs [] [] { rw ["<-", expr perm.apply_inv_self σ (x, k)] },
+      ext [] [] [],
+      { simp [] [] ["only"] ["[", expr apply_inv_self, "]"] [] [] },
+      { simp [] [] ["only"] ["[", expr hσ', "]"] [] [] } },
+    refine [expr ⟨λ k _, ⟨λ x, (σ (x, k)).fst, λ x, («expr ⁻¹»(σ) (x, k)).fst, _, _⟩, _, _⟩],
+    { intro [ident x],
+      simp [] [] ["only"] ["[", expr mk_apply_eq, ",", expr inv_apply_self, "]"] [] [] },
+    { intro [ident x],
+      simp [] [] ["only"] ["[", expr mk_inv_apply_eq, ",", expr apply_inv_self, "]"] [] [] },
+    { apply [expr finset.mem_univ] },
+    { ext [] ["⟨", ident k, ",", ident x, "⟩"] [],
+      { simp [] [] ["only"] ["[", expr coe_fn_mk, ",", expr prod_congr_left_apply, "]"] [] [] },
+      { simp [] [] ["only"] ["[", expr prod_congr_left_apply, ",", expr hσ, "]"] [] [] } } },
+  { intros [ident σ, "_", ident hσ],
+    rw [expr mem_preserving_snd] ["at", ident hσ],
+    obtain ["⟨", "⟨", ident k, ",", ident x, "⟩", ",", ident hkx, "⟩", ":=", expr not_forall.mp hσ],
+    rw ["[", expr finset.prod_eq_zero (finset.mem_univ (k, x)), ",", expr mul_zero, "]"] [],
+    rw ["[", "<-", expr @prod.mk.eta _ _ (σ (k, x)), ",", expr block_diagonal_apply_ne, "]"] [],
+    exact [expr hkx] }
+end
 
--- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The determinant of a 2x2 block matrix with the lower-left block equal to zero is the product of
 the determinants of the diagonal blocks. For the generalization to any number of blocks, see
 `matrix.upper_block_triangular_det`. -/
@@ -693,34 +686,25 @@ begin
       refl } }
 end
 
+-- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along column 0. -/
-theorem det_succ_column_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) :
-  det A = ∑i : Finₓ n.succ, ((-1^(i : ℕ))*A i 0)*det (A.minor i.succ_above Finₓ.succ) :=
-  by 
-    rw [Matrix.det_apply, Finset.univ_perm_fin_succ, ←Finset.univ_product_univ]
-    simp only [Finset.sum_map, Equiv.to_embedding_apply, Finset.sum_product, Matrix.minor]
-    refine' Finset.sum_congr rfl fun i _ => Finₓ.cases _ (fun i => _) i
-    ·
-      simp only [Finₓ.prod_univ_succ, Matrix.det_apply, Finset.mul_sum, Equiv.Perm.decompose_fin_symm_apply_zero,
-        Finₓ.coe_zero, one_mulₓ, Equiv.Perm.decomposeFin.symm_sign, Equiv.swap_self, if_true, id.def, eq_self_iff_true,
-        Equiv.Perm.decompose_fin_symm_apply_succ, Finₓ.succ_above_zero, Equiv.coe_refl, pow_zeroₓ, mul_smul_comm]
-    have  : ((-1 : R)^(i : ℕ)) = i.cycle_range.sign
-    ·
-      simp [Finₓ.sign_cycle_range]
-    rw [Finₓ.coe_succ, pow_succₓ, this, mul_assocₓ, mul_assocₓ, mul_left_commₓ («expr↑ » (Equiv.Perm.sign _)),
-      ←det_permute, Matrix.det_apply, Finset.mul_sum, Finset.mul_sum]
-    refine' Finset.sum_congr rfl fun σ _ => _ 
-    rw [Equiv.Perm.decomposeFin.symm_sign, if_neg (Finₓ.succ_ne_zero i)]
-    calc
-      (((-1)*σ.sign : ℤ) • ∏i', A (equiv.perm.decompose_fin.symm (Finₓ.succ i, σ) i') i') =
-        ((-1)*σ.sign : ℤ) • A (Finₓ.succ i) 0*∏i', A ((Finₓ.succ i).succAbove (Finₓ.cycleRange i (σ i'))) i'.succ :=
-      by 
-        simp only [Finₓ.prod_univ_succ, Finₓ.succ_above_cycle_range, Equiv.Perm.decompose_fin_symm_apply_zero,
-          Equiv.Perm.decompose_fin_symm_apply_succ]_ =
-        (-1)*A (Finₓ.succ i) 0*(σ.sign : ℤ) • ∏i', A ((Finₓ.succ i).succAbove (Finₓ.cycleRange i (σ i'))) i'.succ :=
-      by 
-        simp only [mul_assocₓ, mul_commₓ, neg_mul_eq_neg_mul_symm, one_mulₓ, zsmul_eq_mul, neg_inj, neg_smul,
-          Finₓ.succ_above_cycle_range]
+theorem det_succ_column_zero
+{n : exprℕ()}
+(A : matrix (fin n.succ) (fin n.succ) R) : «expr = »(det A, «expr∑ , »((i : fin n.succ), «expr * »(«expr * »(«expr ^ »(«expr- »(1), (i : exprℕ())), A i 0), det (A.minor i.succ_above fin.succ)))) :=
+begin
+  rw ["[", expr matrix.det_apply, ",", expr finset.univ_perm_fin_succ, ",", "<-", expr finset.univ_product_univ, "]"] [],
+  simp [] [] ["only"] ["[", expr finset.sum_map, ",", expr equiv.to_embedding_apply, ",", expr finset.sum_product, ",", expr matrix.minor, "]"] [] [],
+  refine [expr finset.sum_congr rfl (λ i _, fin.cases _ (λ i, _) i)],
+  { simp [] [] ["only"] ["[", expr fin.prod_univ_succ, ",", expr matrix.det_apply, ",", expr finset.mul_sum, ",", expr equiv.perm.decompose_fin_symm_apply_zero, ",", expr fin.coe_zero, ",", expr one_mul, ",", expr equiv.perm.decompose_fin.symm_sign, ",", expr equiv.swap_self, ",", expr if_true, ",", expr id.def, ",", expr eq_self_iff_true, ",", expr equiv.perm.decompose_fin_symm_apply_succ, ",", expr fin.succ_above_zero, ",", expr equiv.coe_refl, ",", expr pow_zero, ",", expr mul_smul_comm, "]"] [] [] },
+  have [] [":", expr «expr = »(«expr ^ »((«expr- »(1) : R), (i : exprℕ())), i.cycle_range.sign)] [],
+  { simp [] [] [] ["[", expr fin.sign_cycle_range, "]"] [] [] },
+  rw ["[", expr fin.coe_succ, ",", expr pow_succ, ",", expr this, ",", expr mul_assoc, ",", expr mul_assoc, ",", expr mul_left_comm «expr↑ »(equiv.perm.sign _), ",", "<-", expr det_permute, ",", expr matrix.det_apply, ",", expr finset.mul_sum, ",", expr finset.mul_sum, "]"] [],
+  refine [expr finset.sum_congr rfl (λ σ _, _)],
+  rw ["[", expr equiv.perm.decompose_fin.symm_sign, ",", expr if_neg (fin.succ_ne_zero i), "]"] [],
+  calc
+    «expr = »(«expr • »((«expr * »(«expr- »(1), σ.sign) : exprℤ()), «expr∏ , »((i'), A (equiv.perm.decompose_fin.symm (fin.succ i, σ) i') i')), «expr • »((«expr * »(«expr- »(1), σ.sign) : exprℤ()), «expr * »(A (fin.succ i) 0, «expr∏ , »((i'), A ((fin.succ i).succ_above (fin.cycle_range i (σ i'))) i'.succ)))) : by simp [] [] ["only"] ["[", expr fin.prod_univ_succ, ",", expr fin.succ_above_cycle_range, ",", expr equiv.perm.decompose_fin_symm_apply_zero, ",", expr equiv.perm.decompose_fin_symm_apply_succ, "]"] [] []
+    «expr = »(..., «expr * »(«expr- »(1), «expr * »(A (fin.succ i) 0, «expr • »((σ.sign : exprℤ()), «expr∏ , »((i'), A ((fin.succ i).succ_above (fin.cycle_range i (σ i'))) i'.succ))))) : by simp [] [] ["only"] ["[", expr mul_assoc, ",", expr mul_comm, ",", expr neg_mul_eq_neg_mul_symm, ",", expr one_mul, ",", expr zsmul_eq_mul, ",", expr neg_inj, ",", expr neg_smul, ",", expr fin.succ_above_cycle_range, "]"] [] []
+end
 
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along row 0. -/
 theorem det_succ_row_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) :
@@ -731,29 +715,28 @@ theorem det_succ_row_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) 
     rw [←det_transpose]
     simp only [transpose_apply, transpose_minor, transpose_transpose]
 
+-- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along row `i`. -/
-theorem det_succ_row {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) (i : Finₓ n.succ) :
-  det A = ∑j : Finₓ n.succ, ((-1^(i+j : ℕ))*A i j)*det (A.minor i.succ_above j.succ_above) :=
-  by 
-    simpRw [pow_addₓ, mul_assocₓ, ←mul_sum]
-    have  : det A = (((-1 : R)^(i : ℕ))*i.cycle_range⁻¹.sign)*det A
-    ·
-      calc det A = «expr↑ » (((-1 : Units ℤ)^(i : ℕ))*(-1 : Units ℤ)^(i : ℕ) : Units ℤ)*det A :=
-        by 
-          simp _ = (((-1 : R)^(i : ℕ))*i.cycle_range⁻¹.sign)*det A :=
-        by 
-          simp [-Int.units_mul_self]
-    rw [this, mul_assocₓ]
-    congr 
-    rw [←det_permute, det_succ_row_zero]
-    refine' Finset.sum_congr rfl fun j _ => _ 
-    rw [mul_assocₓ, Matrix.minor, Matrix.minor]
-    congr
-    ·
-      rw [Equiv.Perm.inv_def, Finₓ.cycle_range_symm_zero]
-    ·
-      ext i' j' 
-      rw [Equiv.Perm.inv_def, Finₓ.cycle_range_symm_succ]
+theorem det_succ_row
+{n : exprℕ()}
+(A : matrix (fin n.succ) (fin n.succ) R)
+(i : fin n.succ) : «expr = »(det A, «expr∑ , »((j : fin n.succ), «expr * »(«expr * »(«expr ^ »(«expr- »(1), («expr + »(i, j) : exprℕ())), A i j), det (A.minor i.succ_above j.succ_above)))) :=
+begin
+  simp_rw ["[", expr pow_add, ",", expr mul_assoc, ",", "<-", expr mul_sum, "]"] [],
+  have [] [":", expr «expr = »(det A, «expr * »(«expr * »(«expr ^ »((«expr- »(1) : R), (i : exprℕ())), «expr ⁻¹»(i.cycle_range).sign), det A))] [],
+  { calc
+      «expr = »(det A, «expr * »(«expr↑ »((«expr * »(«expr ^ »((«expr- »(1) : units exprℤ()), (i : exprℕ())), «expr ^ »((«expr- »(1) : units exprℤ()), (i : exprℕ()))) : units exprℤ())), det A)) : by simp [] [] [] [] [] []
+      «expr = »(..., «expr * »(«expr * »(«expr ^ »((«expr- »(1) : R), (i : exprℕ())), «expr ⁻¹»(i.cycle_range).sign), det A)) : by simp [] [] [] ["[", "-", ident int.units_mul_self, "]"] [] [] },
+  rw ["[", expr this, ",", expr mul_assoc, "]"] [],
+  congr,
+  rw ["[", "<-", expr det_permute, ",", expr det_succ_row_zero, "]"] [],
+  refine [expr finset.sum_congr rfl (λ j _, _)],
+  rw ["[", expr mul_assoc, ",", expr matrix.minor, ",", expr matrix.minor, "]"] [],
+  congr,
+  { rw ["[", expr equiv.perm.inv_def, ",", expr fin.cycle_range_symm_zero, "]"] [] },
+  { ext [] [ident i', ident j'] [],
+    rw ["[", expr equiv.perm.inv_def, ",", expr fin.cycle_range_symm_succ, "]"] [] }
+end
 
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along column `j`. -/
 theorem det_succ_column {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) (j : Finₓ n.succ) :

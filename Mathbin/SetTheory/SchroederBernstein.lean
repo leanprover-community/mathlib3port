@@ -34,58 +34,54 @@ section antisymm
 
 variable{α : Type u}{β : Type v}
 
+-- error in SetTheory.SchroederBernstein: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **The Schröder-Bernstein Theorem**:
 Given injections `α → β` and `β → α`, we can get a bijection `α → β`. -/
-theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injective f) (hg : Function.Injective g) :
-  ∃ h : α → β, bijective h :=
-  by 
-    casesI is_empty_or_nonempty β with hβ hβ
-    ·
-      haveI  : IsEmpty α 
-      exact Function.is_empty f 
-      exact ⟨_, ((Equiv.equivEmpty α).trans (Equiv.equivEmpty β).symm).Bijective⟩
-    set F : Set α →ₘ Set α :=
-      { toFun := fun s => «expr ᶜ» (g '' «expr ᶜ» (f '' s)),
-        monotone' := fun s t hst => compl_subset_compl.mpr$ image_subset _$ compl_subset_compl.mpr$ image_subset _ hst }
-    set s : Set α := F.lfp 
-    have hs : «expr ᶜ» (g '' «expr ᶜ» (f '' s)) = s 
-    exact F.map_lfp 
-    have hns : g '' «expr ᶜ» (f '' s) = «expr ᶜ» s 
-    exact
-      compl_injective
-        (by 
-          simp [hs])
-    set g' := inv_fun g 
-    have g'g : left_inverse g' g 
-    exact left_inverse_inv_fun hg 
-    have hg'ns : g' '' «expr ᶜ» s = «expr ᶜ» (f '' s)
-    ·
-      rw [←hns, g'g.image_image]
-    set h : α → β := s.piecewise f g' 
-    have  : surjective h
-    ·
-      rw [←range_iff_surjective, range_piecewise, hg'ns, union_compl_self]
-    have  : injective h
-    ·
-      refine' (injective_piecewise_iff _).2 ⟨hf.inj_on _, _, _⟩
-      ·
-        intro x hx y hy hxy 
-        obtain ⟨x', hx', rfl⟩ : x ∈ g '' «expr ᶜ» (f '' s)
-        ·
-          rwa [hns]
-        obtain ⟨y', hy', rfl⟩ : y ∈ g '' «expr ᶜ» (f '' s)
-        ·
-          rwa [hns]
-        rw [g'g _, g'g _] at hxy 
-        rw [hxy]
-      ·
-        intro x hx y hy hxy 
-        obtain ⟨y', hy', rfl⟩ : y ∈ g '' «expr ᶜ» (f '' s)
-        ·
-          rwa [hns]
-        rw [g'g _] at hxy 
-        exact hy' ⟨x, hx, hxy⟩
-    exact ⟨h, ‹injective h›, ‹surjective h›⟩
+theorem schroeder_bernstein
+{f : α → β}
+{g : β → α}
+(hf : function.injective f)
+(hg : function.injective g) : «expr∃ , »((h : α → β), bijective h) :=
+begin
+  casesI [expr is_empty_or_nonempty β] ["with", ident hβ, ident hβ],
+  { haveI [] [":", expr is_empty α] [],
+    from [expr function.is_empty f],
+    exact [expr ⟨_, ((equiv.equiv_empty α).trans (equiv.equiv_empty β).symm).bijective⟩] },
+  set [] [ident F] [":", expr «expr →ₘ »(set α, set α)] [":="] [expr { to_fun := λ
+     s, «expr ᶜ»(«expr '' »(g, «expr ᶜ»(«expr '' »(f, s)))),
+     monotone' := λ
+     s
+     t
+     hst, «expr $ »(compl_subset_compl.mpr, «expr $ »(image_subset _, «expr $ »(compl_subset_compl.mpr, image_subset _ hst))) }] [],
+  set [] [ident s] [":", expr set α] [":="] [expr F.lfp] [],
+  have [ident hs] [":", expr «expr = »(«expr ᶜ»(«expr '' »(g, «expr ᶜ»(«expr '' »(f, s)))), s)] [],
+  from [expr F.map_lfp],
+  have [ident hns] [":", expr «expr = »(«expr '' »(g, «expr ᶜ»(«expr '' »(f, s))), «expr ᶜ»(s))] [],
+  from [expr compl_injective (by simp [] [] [] ["[", expr hs, "]"] [] [])],
+  set [] [ident g'] [] [":="] [expr inv_fun g] [],
+  have [ident g'g] [":", expr left_inverse g' g] [],
+  from [expr left_inverse_inv_fun hg],
+  have [ident hg'ns] [":", expr «expr = »(«expr '' »(g', «expr ᶜ»(s)), «expr ᶜ»(«expr '' »(f, s)))] [],
+  by rw ["[", "<-", expr hns, ",", expr g'g.image_image, "]"] [],
+  set [] [ident h] [":", expr α → β] [":="] [expr s.piecewise f g'] [],
+  have [] [":", expr surjective h] [],
+  by rw ["[", "<-", expr range_iff_surjective, ",", expr range_piecewise, ",", expr hg'ns, ",", expr union_compl_self, "]"] [],
+  have [] [":", expr injective h] [],
+  { refine [expr (injective_piecewise_iff _).2 ⟨hf.inj_on _, _, _⟩],
+    { intros [ident x, ident hx, ident y, ident hy, ident hxy],
+      obtain ["⟨", ident x', ",", ident hx', ",", ident rfl, "⟩", ":", expr «expr ∈ »(x, «expr '' »(g, «expr ᶜ»(«expr '' »(f, s))))],
+      by rwa [expr hns] [],
+      obtain ["⟨", ident y', ",", ident hy', ",", ident rfl, "⟩", ":", expr «expr ∈ »(y, «expr '' »(g, «expr ᶜ»(«expr '' »(f, s))))],
+      by rwa [expr hns] [],
+      rw ["[", expr g'g _, ",", expr g'g _, "]"] ["at", ident hxy],
+      rw [expr hxy] [] },
+    { intros [ident x, ident hx, ident y, ident hy, ident hxy],
+      obtain ["⟨", ident y', ",", ident hy', ",", ident rfl, "⟩", ":", expr «expr ∈ »(y, «expr '' »(g, «expr ᶜ»(«expr '' »(f, s))))],
+      by rwa [expr hns] [],
+      rw ["[", expr g'g _, "]"] ["at", ident hxy],
+      exact [expr hy' ⟨x, hx, hxy⟩] } },
+  exact [expr ⟨h, «expr‹ ›»(injective h), «expr‹ ›»(surjective h)⟩]
+end
 
 /-- **The Schröder-Bernstein Theorem**: Given embeddings `α ↪ β` and `β ↪ α`, there exists an
 equivalence `α ≃ β`. -/
@@ -102,7 +98,7 @@ parameter {ι : Type u}{β : ι → Type v}
 
 @[reducible]
 private def sets :=
-  { s : Set (∀ i, β i) | ∀ x _ : x ∈ s y _ : y ∈ s i, (x : ∀ i, β i) i = y i → x = y }
+  { s:Set (∀ i, β i) | ∀ x _ : x ∈ s y _ : y ∈ s i, (x : ∀ i, β i) i = y i → x = y }
 
 /-- The cardinals are well-ordered. We express it here by the fact that in any set of cardinals
 there is an element that injects into the others. See `cardinal.linear_order` for (one of) the

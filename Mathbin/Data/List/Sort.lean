@@ -1,5 +1,4 @@
-import Mathbin.Data.List.Perm 
-import Mathbin.Data.List.Chain
+import Mathbin.Data.List.Perm
 
 /-!
 # Sorting algorithms on lists
@@ -53,34 +52,31 @@ theorem sorted_cons {a : α} {l : List α} : sorted r (a :: l) ↔ (∀ b _ : b 
 protected theorem sorted.nodup {r : α → α → Prop} [IsIrrefl α r] {l : List α} (h : sorted r l) : nodup l :=
   h.nodup
 
-theorem eq_of_perm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (p : l₁ ~ l₂) (s₁ : sorted r l₁) (s₂ : sorted r l₂) :
-  l₁ = l₂ :=
-  by 
-    induction' s₁ with a l₁ h₁ s₁ IH generalizing l₂
-    ·
-      exact p.nil_eq
-    ·
-      have  : a ∈ l₂ := p.subset (mem_cons_self _ _)
-      rcases mem_split this with ⟨u₂, v₂, rfl⟩
-      have p' := (perm_cons a).1 (p.trans perm_middle)
-      have  :=
-        IH p'
-          (pairwise_of_sublist
-            (by 
-              simp )
-            s₂)
-      subst l₁ 
-      change a :: u₂ ++ v₂ = u₂ ++ ([a] ++ v₂)
-      rw [←append_assoc]
-      congr 
-      have  : ∀ x : α h : x ∈ u₂, x = a :=
-        fun x m =>
-          antisymm ((pairwise_append.1 s₂).2.2 _ m a (mem_cons_self _ _))
-            (h₁ _
-              (by 
-                simp [m]))
-      rw [(@eq_repeat _ a (length u₂+1) (a :: u₂)).2, (@eq_repeat _ a (length u₂+1) (u₂ ++ [a])).2] <;>
-        split  <;> simp [iff_true_intro this, or_comm]
+-- error in Data.List.Sort: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_of_perm_of_sorted
+[is_antisymm α r]
+{l₁ l₂ : list α}
+(p : «expr ~ »(l₁, l₂))
+(s₁ : sorted r l₁)
+(s₂ : sorted r l₂) : «expr = »(l₁, l₂) :=
+begin
+  induction [expr s₁] [] ["with", ident a, ident l₁, ident h₁, ident s₁, ident IH] ["generalizing", ident l₂],
+  { exact [expr p.nil_eq] },
+  { have [] [":", expr «expr ∈ »(a, l₂)] [":=", expr p.subset (mem_cons_self _ _)],
+    rcases [expr mem_split this, "with", "⟨", ident u₂, ",", ident v₂, ",", ident rfl, "⟩"],
+    have [ident p'] [] [":=", expr (perm_cons a).1 (p.trans perm_middle)],
+    have [] [] [":=", expr IH p' (pairwise_of_sublist (by simp [] [] [] [] [] []) s₂)],
+    subst [expr l₁],
+    change [expr «expr = »(«expr ++ »(«expr :: »(a, u₂), v₂), «expr ++ »(u₂, «expr ++ »(«expr[ , ]»([a]), v₂)))] [] [],
+    rw ["<-", expr append_assoc] [],
+    congr,
+    have [] [":", expr ∀
+     (x : α)
+     (h : «expr ∈ »(x, u₂)), «expr = »(x, a)] [":=", expr λ
+     x
+     m, antisymm ((pairwise_append.1 s₂).2.2 _ m a (mem_cons_self _ _)) (h₁ _ (by simp [] [] [] ["[", expr m, "]"] [] []))],
+    rw ["[", expr (@eq_repeat _ a «expr + »(length u₂, 1) «expr :: »(a, u₂)).2, ",", expr (@eq_repeat _ a «expr + »(length u₂, 1) «expr ++ »(u₂, «expr[ , ]»([a]))).2, "]"] []; split; simp [] [] [] ["[", expr iff_true_intro this, ",", expr or_comm, "]"] [] [] }
+end
 
 @[simp]
 theorem sorted_singleton (a : α) : sorted r [a] :=
@@ -185,15 +181,15 @@ theorem perm_insertion_sort : ∀ l : List α, insertion_sort r l ~ l
 
 variable{r}
 
--- error in Data.List.Sort: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If `l` is already `list.sorted` with respect to `r`, then `insertion_sort` does not change
-it. -/ theorem sorted.insertion_sort_eq : ∀ {l : list α} (h : sorted r l), «expr = »(insertion_sort r l, l)
-| «expr[ , ]»([]), _ := rfl
-| «expr[ , ]»([a]), _ := rfl
-| «expr :: »(a, «expr :: »(b, l)), h := begin
-  rw ["[", expr insertion_sort, ",", expr sorted.insertion_sort_eq, ",", expr ordered_insert, ",", expr if_pos, "]"] [],
-  exacts ["[", expr rel_of_sorted_cons h _ (or.inl rfl), ",", expr h.tail, "]"]
-end
+it. -/
+theorem sorted.insertion_sort_eq : ∀ {l : List α} h : sorted r l, insertion_sort r l = l
+| [], _ => rfl
+| [a], _ => rfl
+| a :: b :: l, h =>
+  by 
+    rw [insertion_sort, sorted.insertion_sort_eq, ordered_insert, if_pos]
+    exacts[rel_of_sorted_cons h _ (Or.inl rfl), h.tail]
 
 section TotalAndTransitive
 
@@ -359,52 +355,31 @@ section TotalAndTransitive
 
 variable{r}[IsTotal α r][IsTrans α r]
 
-theorem sorted.merge : ∀ {l l' : List α}, sorted r l → sorted r l' → sorted r (merge r l l')
-| [], [], h₁, h₂ =>
-  by 
-    simp [merge]
-| [], b :: l', h₁, h₂ =>
-  by 
-    simpa [merge] using h₂
-| a :: l, [], h₁, h₂ =>
-  by 
-    simpa [merge] using h₁
-| a :: l, b :: l', h₁, h₂ =>
-  by 
-    byCases' a ≼ b
-    ·
-      suffices  : ∀ b' : α _ : b' ∈ merge r l (b :: l'), r a b'
-      ·
-        simpa [merge, h, (sorted_of_sorted_cons h₁).merge h₂]
-      intro b' bm 
-      rcases
-        show b' = b ∨ b' ∈ l ∨ b' ∈ l' by 
-          simpa [Or.left_comm] using (perm_merge _ _ _).Subset bm with
-        (be | bl | bl')
-      ·
-        subst b' 
-        assumption
-      ·
-        exact rel_of_sorted_cons h₁ _ bl
-      ·
-        exact trans h (rel_of_sorted_cons h₂ _ bl')
-    ·
-      suffices  : ∀ b' : α _ : b' ∈ merge r (a :: l) l', r b b'
-      ·
-        simpa [merge, h, h₁.merge (sorted_of_sorted_cons h₂)]
-      intro b' bm 
-      have ba : b ≼ a := (total_of r _ _).resolve_left h 
-      rcases
-        show b' = a ∨ b' ∈ l ∨ b' ∈ l' by 
-          simpa using (perm_merge _ _ _).Subset bm with
-        (be | bl | bl')
-      ·
-        subst b' 
-        assumption
-      ·
-        exact trans ba (rel_of_sorted_cons h₁ _ bl)
-      ·
-        exact rel_of_sorted_cons h₂ _ bl'
+-- error in Data.List.Sort: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sorted.merge : ∀ {l l' : list α}, sorted r l → sorted r l' → sorted r (merge r l l')
+| «expr[ , ]»([]), «expr[ , ]»([]), h₁, h₂ := by simp [] [] [] ["[", expr merge, "]"] [] []
+| «expr[ , ]»([]), «expr :: »(b, l'), h₁, h₂ := by simpa [] [] [] ["[", expr merge, "]"] [] ["using", expr h₂]
+| «expr :: »(a, l), «expr[ , ]»([]), h₁, h₂ := by simpa [] [] [] ["[", expr merge, "]"] [] ["using", expr h₁]
+| «expr :: »(a, l), «expr :: »(b, l'), h₁, h₂ := begin
+  by_cases [expr «expr ≼ »(a, b)],
+  { suffices [] [":", expr ∀ (b' : α) (_ : «expr ∈ »(b', merge r l «expr :: »(b, l'))), r a b'],
+    { simpa [] [] [] ["[", expr merge, ",", expr h, ",", expr (sorted_of_sorted_cons h₁).merge h₂, "]"] [] [] },
+    intros [ident b', ident bm],
+    rcases [expr show «expr ∨ »(«expr = »(b', b), «expr ∨ »(«expr ∈ »(b', l), «expr ∈ »(b', l'))), by simpa [] [] [] ["[", expr or.left_comm, "]"] [] ["using", expr (perm_merge _ _ _).subset bm], "with", ident be, "|", ident bl, "|", ident bl'],
+    { subst [expr b'],
+      assumption },
+    { exact [expr rel_of_sorted_cons h₁ _ bl] },
+    { exact [expr trans h (rel_of_sorted_cons h₂ _ bl')] } },
+  { suffices [] [":", expr ∀ (b' : α) (_ : «expr ∈ »(b', merge r «expr :: »(a, l) l')), r b b'],
+    { simpa [] [] [] ["[", expr merge, ",", expr h, ",", expr h₁.merge (sorted_of_sorted_cons h₂), "]"] [] [] },
+    intros [ident b', ident bm],
+    have [ident ba] [":", expr «expr ≼ »(b, a)] [":=", expr (total_of r _ _).resolve_left h],
+    rcases [expr show «expr ∨ »(«expr = »(b', a), «expr ∨ »(«expr ∈ »(b', l), «expr ∈ »(b', l'))), by simpa [] [] [] [] [] ["using", expr (perm_merge _ _ _).subset bm], "with", ident be, "|", ident bl, "|", ident bl'],
+    { subst [expr b'],
+      assumption },
+    { exact [expr trans ba (rel_of_sorted_cons h₁ _ bl)] },
+    { exact [expr rel_of_sorted_cons h₂ _ bl'] } }
+end
 
 variable(r)
 

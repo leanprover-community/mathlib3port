@@ -1,5 +1,5 @@
-import Mathbin.Algebra.GroupRingAction 
-import Mathbin.GroupTheory.GroupAction.Default
+import Mathbin.GroupTheory.GroupAction.Basic 
+import Mathbin.Algebra.GroupRingAction
 
 /-!
 # Equivariant homomorphisms

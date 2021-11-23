@@ -1,9 +1,8 @@
-import Mathbin.Algebra.IndicatorFunction 
-import Mathbin.Data.Equiv.Encodable.Lattice 
-import Mathbin.Data.Set.Countable 
+import Mathbin.Order.SymmDiff 
 import Mathbin.Order.Disjointed 
-import Mathbin.Order.Filter.Basic 
-import Mathbin.Order.SymmDiff
+import Mathbin.Order.ConditionallyCompleteLattice 
+import Mathbin.Data.Equiv.Encodable.Lattice 
+import Mathbin.Data.Set.Countable
 
 /-!
 # Measurable spaces and measurable functions
@@ -101,15 +100,17 @@ theorem MeasurableSet.Union [Encodable β] ⦃f : β → Set α⦄ (h : ∀ b, M
     rw [←Encodable.Union_decode₂]
     exact ‹MeasurableSpace α›.measurable_set_Union _ (MeasurableSet.bUnion_decode₂ h)
 
-theorem MeasurableSet.bUnion {f : β → Set α} {s : Set β} (hs : countable s) (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) :
-  MeasurableSet (⋃(b : _)(_ : b ∈ s), f b) :=
-  by 
-    rw [bUnion_eq_Union]
-    haveI  := hs.to_encodable 
-    exact
-      MeasurableSet.Union
-        (by 
-          simpa using h)
+-- error in MeasureTheory.MeasurableSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measurable_set.bUnion
+{f : β → set α}
+{s : set β}
+(hs : countable s)
+(h : ∀ b «expr ∈ » s, measurable_set (f b)) : measurable_set «expr⋃ , »((b «expr ∈ » s), f b) :=
+begin
+  rw [expr bUnion_eq_Union] [],
+  haveI [] [] [":=", expr hs.to_encodable],
+  exact [expr measurable_set.Union (by simpa [] [] [] [] [] ["using", expr h])]
+end
 
 theorem Set.Finite.measurable_set_bUnion {f : β → Set α} {s : Set β} (hs : finite s)
   (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃(b : _)(_ : b ∈ s), f b) :=
@@ -208,22 +209,19 @@ theorem MeasurableSet.ite {t s₁ s₂ : Set α} (ht : MeasurableSet t) (h₁ : 
   MeasurableSet (t.ite s₁ s₂) :=
   (h₁.inter ht).union (h₂.diff ht)
 
--- error in MeasureTheory.MeasurableSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 @[simp]
-theorem measurable_set.cond
-{s₁ s₂ : set α}
-(h₁ : measurable_set s₁)
-(h₂ : measurable_set s₂)
-{i : bool} : measurable_set (cond i s₁ s₂) :=
-by { cases [expr i] [],
-  exacts ["[", expr h₂, ",", expr h₁, "]"] }
+theorem MeasurableSet.cond {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h₂ : MeasurableSet s₂) {i : Bool} :
+  MeasurableSet (cond i s₁ s₂) :=
+  by 
+    cases i 
+    exacts[h₂, h₁]
 
 @[simp]
 theorem MeasurableSet.disjointed {f : ℕ → Set α} (h : ∀ i, MeasurableSet (f i)) n : MeasurableSet (disjointed f n) :=
   disjointedRecₓ (fun t i ht => MeasurableSet.diff ht$ h _) (h n)
 
 @[simp]
-theorem MeasurableSet.const (p : Prop) : MeasurableSet { a : α | p } :=
+theorem MeasurableSet.const (p : Prop) : MeasurableSet { a:α | p } :=
   by 
     byCases' p <;> simp [h, MeasurableSet.empty] <;> apply MeasurableSet.univ
 
@@ -245,8 +243,8 @@ theorem MeasurableSpace.ext :
 theorem MeasurableSpace.ext_iff {m₁ m₂ : MeasurableSpace α} :
   m₁ = m₂ ↔ ∀ s : Set α, m₁.measurable_set' s ↔ m₂.measurable_set' s :=
   ⟨by 
-      unfreezingI 
-        rintro rfl 
+      (
+        rintro rfl)
       intro s 
       rfl,
     MeasurableSpace.ext⟩
@@ -328,7 +326,7 @@ theorem generate_from_le_iff {s : Set (Set α)} (m : MeasurableSpace α) :
   Iff.intro (fun h u hu => h _$ measurable_set_generate_from hu) fun h => generate_from_le h
 
 @[simp]
-theorem generate_from_measurable_set [MeasurableSpace α] : generate_from { s : Set α | MeasurableSet s } = ‹_› :=
+theorem generate_from_measurable_set [MeasurableSpace α] : generate_from { s:Set α | MeasurableSet s } = ‹_› :=
   le_antisymmₓ (generate_from_le$ fun _ => id)$ fun s => measurable_set_generate_from
 
 /-- If `g` is a collection of subsets of `α` such that the `σ`-algebra generated from `g` contains
@@ -359,7 +357,7 @@ instance  : CompleteLattice (MeasurableSpace α) :=
 instance  : Inhabited (MeasurableSpace α) :=
   ⟨⊤⟩
 
--- error in MeasureTheory.MeasurableSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.MeasurableSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem measurable_set_bot_iff
 {s : set α} : «expr ↔ »(@measurable_set α «expr⊥»() s, «expr ∨ »(«expr = »(s, «expr∅»()), «expr = »(s, univ))) :=
 let b : measurable_space α := { measurable_set' := λ s, «expr ∨ »(«expr = »(s, «expr∅»()), «expr = »(s, univ)),
@@ -404,13 +402,13 @@ theorem measurable_set_sup {m₁ m₂ : MeasurableSpace α} {s : Set α} :
   Iff.refl _
 
 theorem measurable_set_Sup {ms : Set (MeasurableSpace α)} {s : Set α} :
-  @MeasurableSet _ (Sup ms) s ↔ generate_measurable { s : Set α | ∃ (m : _)(_ : m ∈ ms), @MeasurableSet _ m s } s :=
+  @MeasurableSet _ (Sup ms) s ↔ generate_measurable { s:Set α | ∃ (m : _)(_ : m ∈ ms), @MeasurableSet _ m s } s :=
   by 
     change @measurable_set' _ (generate_from$ ⋃₀_) _ ↔ _ 
     simp [generate_from, ←set_of_exists]
 
 theorem measurable_set_supr {ι} {m : ι → MeasurableSpace α} {s : Set α} :
-  @MeasurableSet _ (supr m) s ↔ generate_measurable { s : Set α | ∃ i, @MeasurableSet _ (m i) s } s :=
+  @MeasurableSet _ (supr m) s ↔ generate_measurable { s:Set α | ∃ i, @MeasurableSet _ (m i) s } s :=
   by 
     simp only [supr, measurable_set_Sup, exists_range_iff]
 

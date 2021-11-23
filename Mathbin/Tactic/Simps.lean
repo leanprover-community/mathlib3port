@@ -1,6 +1,5 @@
-import Mathbin.Algebra.Group.ToAdditive 
 import Mathbin.Tactic.Protected 
-import Mathbin.Data.Sum
+import Mathbin.Algebra.Group.ToAdditive
 
 /-!
 # simps attribute
@@ -40,7 +39,7 @@ initialize
 initialize 
   registerTraceClass.1 `simps.debug
 
--- error in Tactic.Simps: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Simps: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /--
 Projection data for a single projection of a structure, consisting of the following fields:
 - the name used in the generated `simp` lemmas
@@ -355,7 +354,8 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
                               return (raw_expr, raw_expr_lambda.lambdas args)
                           else
                             do 
-                              let e_inst_type ← to_expr (((const class_nm []).app (pexpr.of_expr e_str)).app (pquote _))
+                              let e_inst_type ←
+                                to_expr (((const class_nm []).app (pexpr.of_expr e_str)).app (pquote.1 _))
                               let e_inst ← try_for 1000 (mk_instance e_inst_type)
                               let raw_expr ← mk_mapp proj_nm [e_str, none, e_inst]
                               return (raw_expr, raw_expr.lambdas args)
@@ -513,7 +513,7 @@ add_tactic_doc
   { Name := "initialize_simps_projections", category := DocCategory.cmd,
     declNames := [`initialize_simps_projections_cmd], tags := ["simplification"] }
 
--- error in Tactic.Simps: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Simps: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /--
   Configuration options for the `@[simps]` attribute.
   * `attrs` specifies the list of attributes given to the generated lemmas. Default: ``[`simp]``.

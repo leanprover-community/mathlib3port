@@ -115,14 +115,20 @@ theorem comap_uniformity_of_spaced_out {α} {f : α → β} {s : Set (β × β)}
     rintro ⟨x, y⟩
     simpa [not_imp_not] using hf x y
 
+-- error in Topology.UniformSpace.UniformEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a map `f : α → β` sends any two distinct points to point that are **not** related by a fixed
 `s ∈ 𝓤 β`, then `f` is a uniform embedding with respect to the discrete uniformity on `α`. -/
-theorem uniform_embedding_of_spaced_out {α} {f : α → β} {s : Set (β × β)} (hs : s ∈ 𝓤 β)
-  (hf : Pairwise fun x y => (f x, f y) ∉ s) : @UniformEmbedding α β ⊥ ‹_› f :=
-  by 
-    letI this : UniformSpace α := ⊥
-    haveI  : SeparatedSpace α := separated_iff_t2.2 inferInstance 
-    exact UniformInducing.uniform_embedding ⟨comap_uniformity_of_spaced_out hs hf⟩
+theorem uniform_embedding_of_spaced_out
+{α}
+{f : α → β}
+{s : set «expr × »(β, β)}
+(hs : «expr ∈ »(s, expr𝓤() β))
+(hf : pairwise (λ x y, «expr ∉ »((f x, f y), s))) : @uniform_embedding α β «expr⊥»() «expr‹ ›»(_) f :=
+begin
+  letI [] [":", expr uniform_space α] [":=", expr «expr⊥»()],
+  haveI [] [":", expr separated_space α] [":=", expr separated_iff_t2.2 infer_instance],
+  exact [expr uniform_inducing.uniform_embedding ⟨comap_uniformity_of_spaced_out hs hf⟩]
+end
 
 theorem UniformInducing.uniform_continuous {f : α → β} (hf : UniformInducing f) : UniformContinuous f :=
   by 
@@ -157,13 +163,22 @@ theorem UniformEmbedding.embedding {f : α → β} (h : UniformEmbedding f) : Em
 theorem UniformEmbedding.dense_embedding {f : α → β} (h : UniformEmbedding f) (hd : DenseRange f) : DenseEmbedding f :=
   { dense := hd, inj := h.inj, induced := h.embedding.induced }
 
-theorem closed_embedding_of_spaced_out {α} [TopologicalSpace α] [DiscreteTopology α] [SeparatedSpace β] {f : α → β}
-  {s : Set (β × β)} (hs : s ∈ 𝓤 β) (hf : Pairwise fun x y => (f x, f y) ∉ s) : ClosedEmbedding f :=
-  by 
-    unfreezingI 
-      rcases DiscreteTopology.eq_bot α with rfl 
-    letI this : UniformSpace α := ⊥
-    exact { (uniform_embedding_of_spaced_out hs hf).Embedding with closed_range := is_closed_range_of_spaced_out hs hf }
+-- error in Topology.UniformSpace.UniformEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem closed_embedding_of_spaced_out
+{α}
+[topological_space α]
+[discrete_topology α]
+[separated_space β]
+{f : α → β}
+{s : set «expr × »(β, β)}
+(hs : «expr ∈ »(s, expr𝓤() β))
+(hf : pairwise (λ x y, «expr ∉ »((f x, f y), s))) : closed_embedding f :=
+begin
+  unfreezingI { rcases [expr discrete_topology.eq_bot α, "with", ident rfl] },
+  letI [] [":", expr uniform_space α] [":=", expr «expr⊥»()],
+  exact [expr { closed_range := is_closed_range_of_spaced_out hs hf,
+     ..(uniform_embedding_of_spaced_out hs hf).embedding }]
+end
 
 theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α → β} (b : β) (he₁ : UniformInducing e)
   (he₂ : DenseInducing e) (hs : s ∈ 𝓤 α) : ∃ a, Closure (e '' { a' | (a, a') ∈ s }) ∈ 𝓝 b :=
@@ -175,14 +190,13 @@ theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α 
   have  : preimage e { b' | (b, b') ∈ t₂ } ∈ comap e (𝓝 b) := preimage_mem_comap$ mem_nhds_left b ht₂u 
   let ⟨a, (ha : (b, e a) ∈ t₂)⟩ := (he₂.comap_nhds_ne_bot _).nonempty_of_mem this 
   have  :
-    ∀ b' s' : Set (β × β),
-      (b, b') ∈ t → s' ∈ 𝓤 β → ({ y : β | (b', y) ∈ s' } ∩ e '' { a' : α | (a, a') ∈ s }).Nonempty :=
+    ∀ b' s' : Set (β × β), (b, b') ∈ t → s' ∈ 𝓤 β → ({ y:β | (b', y) ∈ s' } ∩ e '' { a':α | (a, a') ∈ s }).Nonempty :=
     fun b' s' hb' hs' =>
       have  : preimage e { b'' | (b', b'') ∈ s' ∩ t } ∈ comap e (𝓝 b') :=
         preimage_mem_comap$ mem_nhds_left b'$ inter_mem hs' htu 
       let ⟨a₂, ha₂s', ha₂t⟩ := (he₂.comap_nhds_ne_bot _).nonempty_of_mem this 
       have  : (e a, e a₂) ∈ t₁ := ht₂c$ prod_mk_mem_comp_rel (ht₂s ha)$ htc$ prod_mk_mem_comp_rel hb' ha₂t 
-      have  : e a₂ ∈ { b'' : β | (b', b'') ∈ s' } ∩ e '' { a' | (a, a') ∈ s } :=
+      have  : e a₂ ∈ { b'':β | (b', b'') ∈ s' } ∩ e '' { a' | (a, a') ∈ s } :=
         ⟨ha₂s', mem_image_of_mem _$ ht₁ (a, a₂) this⟩
       ⟨_, this⟩
   have  : ∀ b', (b, b') ∈ t → ne_bot (𝓝 b'⊓𝓟 (e '' { a' | (a, a') ∈ s })) :=
@@ -225,22 +239,26 @@ theorem IsComplete.complete_space_coe {s : Set α} (hs : IsComplete s) : Complet
       by 
         simp [hs]
 
+-- error in Topology.UniformSpace.UniformEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A set is complete iff its image under a uniform inducing map is complete. -/
-theorem is_complete_image_iff {m : α → β} {s : Set α} (hm : UniformInducing m) : IsComplete (m '' s) ↔ IsComplete s :=
-  by 
-    refine' ⟨is_complete_of_complete_image hm, fun c => _⟩
-    haveI  : CompleteSpace s := c.complete_space_coe 
-    set m' : s → β := m ∘ coeₓ 
-    suffices  : IsComplete (range m')
-    ·
-      rwa [range_comp, Subtype.range_coe] at this 
-    have hm' : UniformInducing m' := hm.comp uniform_embedding_subtype_coe.to_uniform_inducing 
-    intro f hf hfm 
-    rw [Filter.le_principal_iff] at hfm 
-    have cf' : Cauchy (comap m' f) := hf.comap' hm'.comap_uniformity.le (ne_bot.comap_of_range_mem hf.1 hfm)
-    rcases CompleteSpace.complete cf' with ⟨x, hx⟩
-    rw [hm'.inducing.nhds_eq_comap, comap_le_comap_iff hfm] at hx 
-    use m' x, mem_range_self _, hx
+theorem is_complete_image_iff
+{m : α → β}
+{s : set α}
+(hm : uniform_inducing m) : «expr ↔ »(is_complete «expr '' »(m, s), is_complete s) :=
+begin
+  refine [expr ⟨is_complete_of_complete_image hm, λ c, _⟩],
+  haveI [] [":", expr complete_space s] [":=", expr c.complete_space_coe],
+  set [] [ident m'] [":", expr s → β] [":="] [expr «expr ∘ »(m, coe)] [],
+  suffices [] [":", expr is_complete (range m')],
+  by rwa ["[", expr range_comp, ",", expr subtype.range_coe, "]"] ["at", ident this],
+  have [ident hm'] [":", expr uniform_inducing m'] [":=", expr hm.comp uniform_embedding_subtype_coe.to_uniform_inducing],
+  intros [ident f, ident hf, ident hfm],
+  rw [expr filter.le_principal_iff] ["at", ident hfm],
+  have [ident cf'] [":", expr cauchy (comap m' f)] [":=", expr hf.comap' hm'.comap_uniformity.le (ne_bot.comap_of_range_mem hf.1 hfm)],
+  rcases [expr complete_space.complete cf', "with", "⟨", ident x, ",", ident hx, "⟩"],
+  rw ["[", expr hm'.inducing.nhds_eq_comap, ",", expr comap_le_comap_iff hfm, "]"] ["at", ident hx],
+  use ["[", expr m' x, ",", expr mem_range_self _, ",", expr hx, "]"]
+end
 
 theorem complete_space_iff_is_complete_range {f : α → β} (hf : UniformInducing f) :
   CompleteSpace α ↔ IsComplete (range f) :=
@@ -268,7 +286,7 @@ theorem complete_space_extension {m : β → α} (hm : UniformInducing m) (dense
   (h : ∀ f : Filter β, Cauchy f → ∃ x : α, map m f ≤ 𝓝 x) : CompleteSpace α :=
   ⟨fun f : Filter α =>
       fun hf : Cauchy f =>
-        let p : Set (α × α) → Set α → Set α := fun s t => { y : α | ∃ x : α, x ∈ t ∧ (x, y) ∈ s }
+        let p : Set (α × α) → Set α → Set α := fun s t => { y:α | ∃ x : α, x ∈ t ∧ (x, y) ∈ s }
         let g := (𝓤 α).lift fun s => f.lift' (p s)
         have mp₀ : Monotone p := fun a b h t s ⟨x, xs, xa⟩ => ⟨x, xs, h xa⟩
         have mp₁ : ∀ {s}, Monotone (p s) := fun s a b h x ⟨y, ya, yxs⟩ => ⟨y, h ya, yxs⟩
@@ -320,24 +338,23 @@ theorem complete_space_extension {m : β → α} (hm : UniformInducing m) (dense
             _ ≤ 𝓝 x := le_nhds_of_cauchy_adhp ‹Cauchy g› this
             ⟩⟩
 
-theorem totally_bounded_preimage {f : α → β} {s : Set β} (hf : UniformEmbedding f) (hs : TotallyBounded s) :
-  TotallyBounded (f ⁻¹' s) :=
-  fun t ht =>
-    by 
-      rw [←hf.comap_uniformity] at ht 
-      rcases mem_comap.2 ht with ⟨t', ht', ts⟩
-      rcases totally_bounded_iff_subset.1 (totally_bounded_subset (image_preimage_subset f s) hs) _ ht' with
-        ⟨c, cs, hfc, hct⟩
-      refine' ⟨f ⁻¹' c, hfc.preimage (hf.inj.inj_on _), fun x h => _⟩
-      have  := hct (mem_image_of_mem f h)
-      simp  at this⊢
-      rcases this with ⟨z, zc, zt⟩
-      rcases cs zc with ⟨y, yc, rfl⟩
-      exact
-        ⟨y, zc,
-          ts
-            (by 
-              exact zt)⟩
+-- error in Topology.UniformSpace.UniformEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem totally_bounded_preimage
+{f : α → β}
+{s : set β}
+(hf : uniform_embedding f)
+(hs : totally_bounded s) : totally_bounded «expr ⁻¹' »(f, s) :=
+λ t ht, begin
+  rw ["<-", expr hf.comap_uniformity] ["at", ident ht],
+  rcases [expr mem_comap.2 ht, "with", "⟨", ident t', ",", ident ht', ",", ident ts, "⟩"],
+  rcases [expr totally_bounded_iff_subset.1 (totally_bounded_subset (image_preimage_subset f s) hs) _ ht', "with", "⟨", ident c, ",", ident cs, ",", ident hfc, ",", ident hct, "⟩"],
+  refine [expr ⟨«expr ⁻¹' »(f, c), hfc.preimage (hf.inj.inj_on _), λ x h, _⟩],
+  have [] [] [":=", expr hct (mem_image_of_mem f h)],
+  simp [] [] [] [] [] ["at", ident this, "⊢"],
+  rcases [expr this, "with", "⟨", ident z, ",", ident zc, ",", ident zt, "⟩"],
+  rcases [expr cs zc, "with", "⟨", ident y, ",", ident yc, ",", ident rfl, "⟩"],
+  exact [expr ⟨y, zc, ts (by exact [expr zt])⟩]
+end
 
 end 
 

@@ -94,34 +94,31 @@ theorem nearest_pt_ind_succ (e : ℕ → α) (N : ℕ) (x : α) :
     congr 
     simp 
 
--- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem nearest_pt_ind_le (e : exprℕ() → α) (N : exprℕ()) (x : α) : «expr ≤ »(nearest_pt_ind e N x, N) :=
-begin
-  induction [expr N] [] ["with", ident N, ident ihN] [],
-  { simp [] [] [] [] [] [] },
-  simp [] [] ["only"] ["[", expr nearest_pt_ind_succ, "]"] [] [],
-  split_ifs [] [],
-  exacts ["[", expr le_rfl, ",", expr ihN.trans N.le_succ, "]"]
-end
+theorem nearest_pt_ind_le (e : ℕ → α) (N : ℕ) (x : α) : nearest_pt_ind e N x ≤ N :=
+  by 
+    induction' N with N ihN
+    ·
+      simp 
+    simp only [nearest_pt_ind_succ]
+    splitIfs 
+    exacts[le_rfl, ihN.trans N.le_succ]
 
--- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem edist_nearest_pt_le
-(e : exprℕ() → α)
-(x : α)
-{k N : exprℕ()}
-(hk : «expr ≤ »(k, N)) : «expr ≤ »(edist (nearest_pt e N x) x, edist (e k) x) :=
-begin
-  induction [expr N] [] ["with", ident N, ident ihN] ["generalizing", ident k],
-  { simp [] [] [] ["[", expr nonpos_iff_eq_zero.1 hk, ",", expr le_refl, "]"] [] [] },
-  { simp [] [] ["only"] ["[", expr nearest_pt, ",", expr nearest_pt_ind_succ, ",", expr map_apply, "]"] [] [],
-    split_ifs [] [],
-    { rcases [expr hk.eq_or_lt, "with", ident rfl, "|", ident hk],
-      exacts ["[", expr le_rfl, ",", expr (h k (nat.lt_succ_iff.1 hk)).le, "]"] },
-    { push_neg ["at", ident h],
-      rcases [expr h, "with", "⟨", ident l, ",", ident hlN, ",", ident hxl, "⟩"],
-      rcases [expr hk.eq_or_lt, "with", ident rfl, "|", ident hk],
-      exacts ["[", expr (ihN hlN).trans hxl, ",", expr ihN (nat.lt_succ_iff.1 hk), "]"] } }
-end
+theorem edist_nearest_pt_le (e : ℕ → α) (x : α) {k N : ℕ} (hk : k ≤ N) : edist (nearest_pt e N x) x ≤ edist (e k) x :=
+  by 
+    induction' N with N ihN generalizing k
+    ·
+      simp [nonpos_iff_eq_zero.1 hk, le_reflₓ]
+    ·
+      simp only [nearest_pt, nearest_pt_ind_succ, map_apply]
+      splitIfs
+      ·
+        rcases hk.eq_or_lt with (rfl | hk)
+        exacts[le_rfl, (h k (Nat.lt_succ_iff.1 hk)).le]
+      ·
+        pushNeg  at h 
+        rcases h with ⟨l, hlN, hxl⟩
+        rcases hk.eq_or_lt with (rfl | hk)
+        exacts[(ihN hlN).trans hxl, ihN (Nat.lt_succ_iff.1 hk)]
 
 theorem tendsto_nearest_pt {e : ℕ → α} {x : α} (hx : x ∈ Closure (range e)) :
   tendsto (fun N => nearest_pt e N x) at_top (𝓝 x) :=
@@ -133,20 +130,27 @@ theorem tendsto_nearest_pt {e : ℕ → α} {x : α} (hx : x ∈ Closure (range 
 
 variable[MeasurableSpace β]{f : β → α}
 
+-- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Approximate a measurable function by a sequence of simple functions `F n` such that
 `F n x ∈ s`. -/
-noncomputable def approx_on (f : β → α) (hf : Measurable f) (s : Set α) (y₀ : α) (h₀ : y₀ ∈ s) [separable_space s]
-  (n : ℕ) : β →ₛ α :=
-  by 
-    haveI  : Nonempty s := ⟨⟨y₀, h₀⟩⟩ <;>
-      exact comp (nearest_pt (fun k => Nat.casesOn k y₀ (coeₓ ∘ dense_seq s) : ℕ → α) n) f hf
+noncomputable
+def approx_on
+(f : β → α)
+(hf : measurable f)
+(s : set α)
+(y₀ : α)
+(h₀ : «expr ∈ »(y₀, s))
+[separable_space s]
+(n : exprℕ()) : «expr →ₛ »(β, α) :=
+by haveI [] [":", expr nonempty s] [":=", expr ⟨⟨y₀, h₀⟩⟩]; exact [expr comp (nearest_pt (λ
+  k, nat.cases_on k y₀ «expr ∘ »(coe, dense_seq s) : exprℕ() → α) n) f hf]
 
 @[simp]
 theorem approx_on_zero {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [separable_space s] (x : β) :
   approx_on f hf s y₀ h₀ 0 x = y₀ :=
   rfl
 
--- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem approx_on_mem
 {f : β → α}
 (hf : measurable f)
@@ -170,15 +174,24 @@ theorem approx_on_comp {γ : Type _} [MeasurableSpace γ] {f : β → α} (hf : 
   approx_on (f ∘ g) (hf.comp hg) s y₀ h₀ n = (approx_on f hf s y₀ h₀ n).comp g hg :=
   rfl
 
-theorem tendsto_approx_on {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [separable_space s] {x : β}
-  (hx : f x ∈ Closure s) : tendsto (fun n => approx_on f hf s y₀ h₀ n x) at_top (𝓝$ f x) :=
-  by 
-    haveI  : Nonempty s := ⟨⟨y₀, h₀⟩⟩
-    rw [←@Subtype.range_coe _ s, ←image_univ, ←(dense_range_dense_seq s).closure_eq] at hx 
-    simp only [approx_on, coe_comp]
-    refine' tendsto_nearest_pt (closure_minimal _ is_closed_closure hx)
-    simp only [Nat.range_cases_on, closure_union, range_comp coeₓ]
-    exact subset.trans (image_closure_subset_closure_image continuous_subtype_coe) (subset_union_right _ _)
+-- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_approx_on
+{f : β → α}
+(hf : measurable f)
+{s : set α}
+{y₀ : α}
+(h₀ : «expr ∈ »(y₀, s))
+[separable_space s]
+{x : β}
+(hx : «expr ∈ »(f x, closure s)) : tendsto (λ n, approx_on f hf s y₀ h₀ n x) at_top «expr $ »(expr𝓝(), f x) :=
+begin
+  haveI [] [":", expr nonempty s] [":=", expr ⟨⟨y₀, h₀⟩⟩],
+  rw ["[", "<-", expr @subtype.range_coe _ s, ",", "<-", expr image_univ, ",", "<-", expr (dense_range_dense_seq s).closure_eq, "]"] ["at", ident hx],
+  simp [] [] ["only"] ["[", expr approx_on, ",", expr coe_comp, "]"] [] [],
+  refine [expr tendsto_nearest_pt (closure_minimal _ is_closed_closure hx)],
+  simp [] [] ["only"] ["[", expr nat.range_cases_on, ",", expr closure_union, ",", expr range_comp coe, "]"] [] [],
+  exact [expr subset.trans (image_closure_subset_closure_image continuous_subtype_coe) (subset_union_right _ _)]
+end
 
 theorem edist_approx_on_mono {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [separable_space s]
   (x : β) {m n : ℕ} (h : m ≤ n) : edist (approx_on f hf s y₀ h₀ n x) (f x) ≤ edist (approx_on f hf s y₀ h₀ m x) (f x) :=
@@ -208,15 +221,25 @@ variable[MeasurableSpace β]
 
 variable[MeasurableSpace E][NormedGroup E]{q : ℝ}{p : ℝ≥0∞}
 
-theorem nnnorm_approx_on_le [OpensMeasurableSpace E] {f : β → E} (hf : Measurable f) {s : Set E} {y₀ : E} (h₀ : y₀ ∈ s)
-  [separable_space s] (x : β) (n : ℕ) : ∥approx_on f hf s y₀ h₀ n x - f x∥₊ ≤ ∥f x - y₀∥₊ :=
-  by 
-    have  := edist_approx_on_le hf h₀ x n 
-    rw [edist_comm y₀] at this 
-    simp only [edist_nndist, nndist_eq_nnnorm] at this 
-    exactModCast this
+-- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nnnorm_approx_on_le
+[opens_measurable_space E]
+{f : β → E}
+(hf : measurable f)
+{s : set E}
+{y₀ : E}
+(h₀ : «expr ∈ »(y₀, s))
+[separable_space s]
+(x : β)
+(n : exprℕ()) : «expr ≤ »(«expr∥ ∥₊»(«expr - »(approx_on f hf s y₀ h₀ n x, f x)), «expr∥ ∥₊»(«expr - »(f x, y₀))) :=
+begin
+  have [] [] [":=", expr edist_approx_on_le hf h₀ x n],
+  rw [expr edist_comm y₀] ["at", ident this],
+  simp [] [] ["only"] ["[", expr edist_nndist, ",", expr nndist_eq_nnnorm, "]"] [] ["at", ident this],
+  exact_mod_cast [expr this]
+end
 
--- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem norm_approx_on_y₀_le
 [opens_measurable_space E]
 {f : β → E}
@@ -233,81 +256,113 @@ begin
   exact_mod_cast [expr this]
 end
 
-theorem norm_approx_on_zero_le [OpensMeasurableSpace E] {f : β → E} (hf : Measurable f) {s : Set E} (h₀ : (0 : E) ∈ s)
-  [separable_space s] (x : β) (n : ℕ) : ∥approx_on f hf s 0 h₀ n x∥ ≤ ∥f x∥+∥f x∥ :=
-  by 
-    have  := edist_approx_on_y0_le hf h₀ x n 
-    simp [edist_comm (0 : E), edist_eq_coe_nnnorm] at this 
-    exactModCast this
+-- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem norm_approx_on_zero_le
+[opens_measurable_space E]
+{f : β → E}
+(hf : measurable f)
+{s : set E}
+(h₀ : «expr ∈ »((0 : E), s))
+[separable_space s]
+(x : β)
+(n : exprℕ()) : «expr ≤ »(«expr∥ ∥»(approx_on f hf s 0 h₀ n x), «expr + »(«expr∥ ∥»(f x), «expr∥ ∥»(f x))) :=
+begin
+  have [] [] [":=", expr edist_approx_on_y0_le hf h₀ x n],
+  simp [] [] [] ["[", expr edist_comm (0 : E), ",", expr edist_eq_coe_nnnorm, "]"] [] ["at", ident this],
+  exact_mod_cast [expr this]
+end
 
-theorem tendsto_approx_on_Lp_snorm [OpensMeasurableSpace E] {f : β → E} (hf : Measurable f) {s : Set E} {y₀ : E}
-  (h₀ : y₀ ∈ s) [separable_space s] (hp_ne_top : p ≠ ∞) {μ : Measureₓ β} (hμ : ∀ᵐx ∂μ, f x ∈ Closure s)
-  (hi : snorm (fun x => f x - y₀) p μ < ∞) : tendsto (fun n => snorm (approx_on f hf s y₀ h₀ n - f) p μ) at_top (𝓝 0) :=
-  by 
-    byCases' hp_zero : p = 0
-    ·
-      simpa only [hp_zero, snorm_exponent_zero] using tendsto_const_nhds 
-    have hp : 0 < p.to_real := to_real_pos_iff.mpr ⟨bot_lt_iff_ne_bot.mpr hp_zero, hp_ne_top⟩
-    suffices  : tendsto (fun n => ∫⁻x, ∥approx_on f hf s y₀ h₀ n x - f x∥₊^p.to_real ∂μ) at_top (𝓝 0)
-    ·
-      simp only [snorm_eq_lintegral_rpow_nnnorm hp_zero hp_ne_top]
-      convert continuous_rpow_const.continuous_at.tendsto.comp this <;> simp [_root_.inv_pos.mpr hp]
-    have hF_meas : ∀ n, Measurable fun x => (∥approx_on f hf s y₀ h₀ n x - f x∥₊ : ℝ≥0∞)^p.to_real
-    ·
-      simpa only [←edist_eq_coe_nnnorm_sub] using
-        fun n =>
-          (approx_on f hf s y₀ h₀ n).measurable_bind (fun y x => edist y (f x)^p.to_real)
-            fun y => (measurable_edist_right.comp hf).pow_const p.to_real 
-    have h_bound :
-      ∀ n, (fun x => (∥approx_on f hf s y₀ h₀ n x - f x∥₊ : ℝ≥0∞)^p.to_real) ≤ᵐ[μ] fun x => ∥f x - y₀∥₊^p.to_real
-    ·
-      exact
-        fun n => eventually_of_forall fun x => rpow_le_rpow (coe_mono (nnnorm_approx_on_le hf h₀ x n)) to_real_nonneg 
-    have h_fin : (∫⁻a : β, ∥f a - y₀∥₊^p.to_real ∂μ) ≠ ⊤
-    exact (lintegral_rpow_nnnorm_lt_top_of_snorm_lt_top hp_zero hp_ne_top hi).Ne 
-    have h_lim : ∀ᵐa : β ∂μ, tendsto (fun n => (∥approx_on f hf s y₀ h₀ n a - f a∥₊ : ℝ≥0∞)^p.to_real) at_top (𝓝 0)
-    ·
-      filterUpwards [hμ]
-      intro a ha 
-      have  : tendsto (fun n => (approx_on f hf s y₀ h₀ n) a - f a) at_top (𝓝 (f a - f a))
-      ·
-        exact (tendsto_approx_on hf h₀ ha).sub tendsto_const_nhds 
-      convert continuous_rpow_const.continuous_at.tendsto.comp (tendsto_coe.mpr this.nnnorm)
-      simp [zero_rpow_of_pos hp]
-    simpa using tendsto_lintegral_of_dominated_convergence _ hF_meas h_bound h_fin h_lim
+-- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_approx_on_Lp_snorm
+[opens_measurable_space E]
+{f : β → E}
+(hf : measurable f)
+{s : set E}
+{y₀ : E}
+(h₀ : «expr ∈ »(y₀, s))
+[separable_space s]
+(hp_ne_top : «expr ≠ »(p, «expr∞»()))
+{μ : measure β}
+(hμ : «expr∀ᵐ ∂ , »((x), μ, «expr ∈ »(f x, closure s)))
+(hi : «expr < »(snorm (λ
+   x, «expr - »(f x, y₀)) p μ, «expr∞»())) : tendsto (λ
+ n, snorm «expr - »(approx_on f hf s y₀ h₀ n, f) p μ) at_top (expr𝓝() 0) :=
+begin
+  by_cases [expr hp_zero, ":", expr «expr = »(p, 0)],
+  { simpa [] [] ["only"] ["[", expr hp_zero, ",", expr snorm_exponent_zero, "]"] [] ["using", expr tendsto_const_nhds] },
+  have [ident hp] [":", expr «expr < »(0, p.to_real)] [":=", expr to_real_pos_iff.mpr ⟨bot_lt_iff_ne_bot.mpr hp_zero, hp_ne_top⟩],
+  suffices [] [":", expr tendsto (λ
+    n, «expr∫⁻ , ∂ »((x), «expr ^ »(«expr∥ ∥₊»(«expr - »(approx_on f hf s y₀ h₀ n x, f x)), p.to_real), μ)) at_top (expr𝓝() 0)],
+  { simp [] [] ["only"] ["[", expr snorm_eq_lintegral_rpow_nnnorm hp_zero hp_ne_top, "]"] [] [],
+    convert [] [expr continuous_rpow_const.continuous_at.tendsto.comp this] []; simp [] [] [] ["[", expr _root_.inv_pos.mpr hp, "]"] [] [] },
+  have [ident hF_meas] [":", expr ∀
+   n, measurable (λ
+    x, «expr ^ »((«expr∥ ∥₊»(«expr - »(approx_on f hf s y₀ h₀ n x, f x)) : «exprℝ≥0∞»()), p.to_real))] [],
+  { simpa [] [] ["only"] ["[", "<-", expr edist_eq_coe_nnnorm_sub, "]"] [] ["using", expr λ
+     n, (approx_on f hf s y₀ h₀ n).measurable_bind (λ
+      y x, «expr ^ »(edist y (f x), p.to_real)) (λ y, (measurable_edist_right.comp hf).pow_const p.to_real)] },
+  have [ident h_bound] [":", expr ∀
+   n, «expr ≤ᵐ[ ] »(λ
+    x, «expr ^ »((«expr∥ ∥₊»(«expr - »(approx_on f hf s y₀ h₀ n x, f x)) : «exprℝ≥0∞»()), p.to_real), μ, λ
+    x, «expr ^ »(«expr∥ ∥₊»(«expr - »(f x, y₀)), p.to_real))] [],
+  { exact [expr λ
+     n, eventually_of_forall (λ x, rpow_le_rpow (coe_mono (nnnorm_approx_on_le hf h₀ x n)) to_real_nonneg)] },
+  have [ident h_fin] [":", expr «expr ≠ »(«expr∫⁻ , ∂ »((a : β), «expr ^ »(«expr∥ ∥₊»(«expr - »(f a, y₀)), p.to_real), μ), «expr⊤»())] [],
+  from [expr (lintegral_rpow_nnnorm_lt_top_of_snorm_lt_top hp_zero hp_ne_top hi).ne],
+  have [ident h_lim] [":", expr «expr∀ᵐ ∂ , »((a : β), μ, tendsto (λ
+     n, «expr ^ »((«expr∥ ∥₊»(«expr - »(approx_on f hf s y₀ h₀ n a, f a)) : «exprℝ≥0∞»()), p.to_real)) at_top (expr𝓝() 0))] [],
+  { filter_upwards ["[", expr hμ, "]"] [],
+    intros [ident a, ident ha],
+    have [] [":", expr tendsto (λ
+      n, «expr - »(approx_on f hf s y₀ h₀ n a, f a)) at_top (expr𝓝() «expr - »(f a, f a))] [],
+    { exact [expr (tendsto_approx_on hf h₀ ha).sub tendsto_const_nhds] },
+    convert [] [expr continuous_rpow_const.continuous_at.tendsto.comp (tendsto_coe.mpr this.nnnorm)] [],
+    simp [] [] [] ["[", expr zero_rpow_of_pos hp, "]"] [] [] },
+  simpa [] [] [] [] [] ["using", expr tendsto_lintegral_of_dominated_convergence _ hF_meas h_bound h_fin h_lim]
+end
 
-theorem mem_ℒp_approx_on [BorelSpace E] {f : β → E} {μ : Measureₓ β} (fmeas : Measurable f) (hf : mem_ℒp f p μ)
-  {s : Set E} {y₀ : E} (h₀ : y₀ ∈ s) [separable_space s] (hi₀ : mem_ℒp (fun x => y₀) p μ) (n : ℕ) :
-  mem_ℒp (approx_on f fmeas s y₀ h₀ n) p μ :=
-  by 
-    refine' ⟨(approx_on f fmeas s y₀ h₀ n).AeMeasurable, _⟩
-    suffices  : snorm (fun x => approx_on f fmeas s y₀ h₀ n x - y₀) p μ < ⊤
-    ·
-      have  : mem_ℒp (fun x => approx_on f fmeas s y₀ h₀ n x - y₀) p μ :=
-        ⟨(approx_on f fmeas s y₀ h₀ n - const β y₀).AeMeasurable, this⟩
-      convert snorm_add_lt_top this hi₀ 
-      ext x 
-      simp 
-    have hf' : mem_ℒp (fun x => ∥f x - y₀∥) p μ
-    ·
-      have h_meas : Measurable fun x => ∥f x - y₀∥
-      ·
-        simp only [←dist_eq_norm]
-        exact (continuous_id.dist continuous_const).Measurable.comp fmeas 
-      refine' ⟨h_meas.ae_measurable, _⟩
-      rw [snorm_norm]
-      convert snorm_add_lt_top hf hi₀.neg 
-      ext x 
-      simp [sub_eq_add_neg]
-    have  : ∀ᵐx ∂μ, ∥approx_on f fmeas s y₀ h₀ n x - y₀∥ ≤ ∥∥f x - y₀∥+∥f x - y₀∥∥
-    ·
-      refine' eventually_of_forall _ 
-      intro x 
-      convert norm_approx_on_y₀_le fmeas h₀ x n 
-      rw [Real.norm_eq_abs, abs_of_nonneg]
-      exact add_nonneg (norm_nonneg _) (norm_nonneg _)
-    calc snorm (fun x => approx_on f fmeas s y₀ h₀ n x - y₀) p μ ≤ snorm (fun x => ∥f x - y₀∥+∥f x - y₀∥) p μ :=
-      snorm_mono_ae this _ < ⊤ := snorm_add_lt_top hf' hf'
+-- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_ℒp_approx_on
+[borel_space E]
+{f : β → E}
+{μ : measure β}
+(fmeas : measurable f)
+(hf : mem_ℒp f p μ)
+{s : set E}
+{y₀ : E}
+(h₀ : «expr ∈ »(y₀, s))
+[separable_space s]
+(hi₀ : mem_ℒp (λ x, y₀) p μ)
+(n : exprℕ()) : mem_ℒp (approx_on f fmeas s y₀ h₀ n) p μ :=
+begin
+  refine [expr ⟨(approx_on f fmeas s y₀ h₀ n).ae_measurable, _⟩],
+  suffices [] [":", expr «expr < »(snorm (λ x, «expr - »(approx_on f fmeas s y₀ h₀ n x, y₀)) p μ, «expr⊤»())],
+  { have [] [":", expr mem_ℒp (λ
+      x, «expr - »(approx_on f fmeas s y₀ h₀ n x, y₀)) p μ] [":=", expr ⟨«expr - »(approx_on f fmeas s y₀ h₀ n, const β y₀).ae_measurable, this⟩],
+    convert [] [expr snorm_add_lt_top this hi₀] [],
+    ext [] [ident x] [],
+    simp [] [] [] [] [] [] },
+  have [ident hf'] [":", expr mem_ℒp (λ x, «expr∥ ∥»(«expr - »(f x, y₀))) p μ] [],
+  { have [ident h_meas] [":", expr measurable (λ x, «expr∥ ∥»(«expr - »(f x, y₀)))] [],
+    { simp [] [] ["only"] ["[", "<-", expr dist_eq_norm, "]"] [] [],
+      exact [expr (continuous_id.dist continuous_const).measurable.comp fmeas] },
+    refine [expr ⟨h_meas.ae_measurable, _⟩],
+    rw [expr snorm_norm] [],
+    convert [] [expr snorm_add_lt_top hf hi₀.neg] [],
+    ext [] [ident x] [],
+    simp [] [] [] ["[", expr sub_eq_add_neg, "]"] [] [] },
+  have [] [":", expr «expr∀ᵐ ∂ , »((x), μ, «expr ≤ »(«expr∥ ∥»(«expr - »(approx_on f fmeas s y₀ h₀ n x, y₀)), «expr∥ ∥»(«expr + »(«expr∥ ∥»(«expr - »(f x, y₀)), «expr∥ ∥»(«expr - »(f x, y₀))))))] [],
+  { refine [expr eventually_of_forall _],
+    intros [ident x],
+    convert [] [expr norm_approx_on_y₀_le fmeas h₀ x n] [],
+    rw ["[", expr real.norm_eq_abs, ",", expr abs_of_nonneg, "]"] [],
+    exact [expr add_nonneg (norm_nonneg _) (norm_nonneg _)] },
+  calc
+    «expr ≤ »(snorm (λ
+      x, «expr - »(approx_on f fmeas s y₀ h₀ n x, y₀)) p μ, snorm (λ
+      x, «expr + »(«expr∥ ∥»(«expr - »(f x, y₀)), «expr∥ ∥»(«expr - »(f x, y₀)))) p μ) : snorm_mono_ae this
+    «expr < »(..., «expr⊤»()) : snorm_add_lt_top hf' hf'
+end
 
 theorem tendsto_approx_on_univ_Lp_snorm [OpensMeasurableSpace E] [second_countable_topology E] {f : β → E}
   (hp_ne_top : p ≠ ∞) {μ : Measureₓ β} (fmeas : Measurable f) (hf : snorm f p μ < ∞) :
@@ -408,44 +463,38 @@ protected theorem snorm'_eq {p : ℝ} (f : α →ₛ F) (μ : Measureₓ α) :
   by 
     rw [snorm', h_map, lintegral_eq_lintegral, map_lintegral]
 
-theorem measure_preimage_lt_top_of_mem_ℒp (hp_pos : 0 < p) (hp_ne_top : p ≠ ∞) (f : α →ₛ E) (hf : mem_ℒp f p μ) (y : E)
-  (hy_ne : y ≠ 0) : μ (f ⁻¹' {y}) < ∞ :=
-  by 
-    have hp_pos_real : 0 < p.to_real 
-    exact ennreal.to_real_pos_iff.mpr ⟨hp_pos, hp_ne_top⟩
-    have hf_snorm := mem_ℒp.snorm_lt_top hf 
-    rw [snorm_eq_snorm' hp_pos.ne.symm hp_ne_top, f.snorm'_eq,
-      ←@Ennreal.lt_rpow_one_div_iff _ _ (1 / p.to_real)
-        (by 
-          simp [hp_pos_real]),
-      @Ennreal.top_rpow_of_pos (1 / (1 / p.to_real))
-        (by 
-          simp [hp_pos_real]),
-      Ennreal.sum_lt_top_iff] at hf_snorm 
-    byCases' hyf : y ∈ f.range 
-    swap
-    ·
-      suffices h_empty : f ⁻¹' {y} = ∅
-      ·
-        ·
-          rw [h_empty, measure_empty]
-          exact Ennreal.coe_lt_top 
-      ext1 x 
-      rw [Set.mem_preimage, Set.mem_singleton_iff, mem_empty_eq, iff_falseₓ]
-      refine' fun hxy => hyf _ 
-      rw [mem_range, Set.mem_range]
-      exact ⟨x, hxy⟩
-    specialize hf_snorm y hyf 
-    rw [Ennreal.mul_lt_top_iff] at hf_snorm 
-    cases hf_snorm
-    ·
-      exact hf_snorm.2
-    cases hf_snorm
-    ·
-      refine' absurd _ hy_ne 
-      simpa [hp_pos_real] using hf_snorm
-    ·
-      simp [hf_snorm]
+-- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measure_preimage_lt_top_of_mem_ℒp
+(hp_pos : «expr < »(0, p))
+(hp_ne_top : «expr ≠ »(p, «expr∞»()))
+(f : «expr →ₛ »(α, E))
+(hf : mem_ℒp f p μ)
+(y : E)
+(hy_ne : «expr ≠ »(y, 0)) : «expr < »(μ «expr ⁻¹' »(f, {y}), «expr∞»()) :=
+begin
+  have [ident hp_pos_real] [":", expr «expr < »(0, p.to_real)] [],
+  from [expr ennreal.to_real_pos_iff.mpr ⟨hp_pos, hp_ne_top⟩],
+  have [ident hf_snorm] [] [":=", expr mem_ℒp.snorm_lt_top hf],
+  rw ["[", expr snorm_eq_snorm' hp_pos.ne.symm hp_ne_top, ",", expr f.snorm'_eq, ",", "<-", expr @ennreal.lt_rpow_one_div_iff _ _ «expr / »(1, p.to_real) (by simp [] [] [] ["[", expr hp_pos_real, "]"] [] []), ",", expr @ennreal.top_rpow_of_pos «expr / »(1, «expr / »(1, p.to_real)) (by simp [] [] [] ["[", expr hp_pos_real, "]"] [] []), ",", expr ennreal.sum_lt_top_iff, "]"] ["at", ident hf_snorm],
+  by_cases [expr hyf, ":", expr «expr ∈ »(y, f.range)],
+  swap,
+  { suffices [ident h_empty] [":", expr «expr = »(«expr ⁻¹' »(f, {y}), «expr∅»())],
+    by { rw ["[", expr h_empty, ",", expr measure_empty, "]"] [],
+      exact [expr ennreal.coe_lt_top] },
+    ext1 [] [ident x],
+    rw ["[", expr set.mem_preimage, ",", expr set.mem_singleton_iff, ",", expr mem_empty_eq, ",", expr iff_false, "]"] [],
+    refine [expr λ hxy, hyf _],
+    rw ["[", expr mem_range, ",", expr set.mem_range, "]"] [],
+    exact [expr ⟨x, hxy⟩] },
+  specialize [expr hf_snorm y hyf],
+  rw [expr ennreal.mul_lt_top_iff] ["at", ident hf_snorm],
+  cases [expr hf_snorm] [],
+  { exact [expr hf_snorm.2] },
+  cases [expr hf_snorm] [],
+  { refine [expr absurd _ hy_ne],
+    simpa [] [] [] ["[", expr hp_pos_real, "]"] [] ["using", expr hf_snorm] },
+  { simp [] [] [] ["[", expr hf_snorm, "]"] [] [] }
+end
 
 theorem mem_ℒp_of_finite_measure_preimage (p : ℝ≥0∞) {f : α →ₛ E} (hf : ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞) :
   mem_ℒp f p μ :=
@@ -521,12 +570,19 @@ theorem measure_support_lt_top_of_mem_ℒp (f : α →ₛ E) (hf : mem_ℒp f p 
 theorem measure_support_lt_top_of_integrable (f : α →ₛ E) (hf : integrable f μ) : μ (support f) < ∞ :=
   f.measure_support_lt_top (integrable_iff.mp hf)
 
-theorem measure_lt_top_of_mem_ℒp_indicator (hp_pos : 0 < p) (hp_ne_top : p ≠ ∞) {c : E} (hc : c ≠ 0) {s : Set α}
-  (hs : MeasurableSet s) (hcs : mem_ℒp ((const α c).piecewise s hs (const α 0)) p μ) : μ s < ⊤ :=
-  by 
-    have  : Function.Support (const α c) = Set.Univ := Function.support_const hc 
-    simpa only [mem_ℒp_iff_fin_meas_supp hp_pos hp_ne_top, fin_meas_supp_iff_support, support_indicator, Set.inter_univ,
-      this] using hcs
+-- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measure_lt_top_of_mem_ℒp_indicator
+(hp_pos : «expr < »(0, p))
+(hp_ne_top : «expr ≠ »(p, «expr∞»()))
+{c : E}
+(hc : «expr ≠ »(c, 0))
+{s : set α}
+(hs : measurable_set s)
+(hcs : mem_ℒp ((const α c).piecewise s hs (const α 0)) p μ) : «expr < »(μ s, «expr⊤»()) :=
+begin
+  have [] [":", expr «expr = »(function.support (const α c), set.univ)] [":=", expr function.support_const hc],
+  simpa [] [] ["only"] ["[", expr mem_ℒp_iff_fin_meas_supp hp_pos hp_ne_top, ",", expr fin_meas_supp_iff_support, ",", expr support_indicator, ",", expr set.inter_univ, ",", expr this, "]"] [] ["using", expr hcs]
+end
 
 end SimpleFuncProperties
 
@@ -551,7 +607,7 @@ variable(E)
 /-- `Lp.simple_func` is a subspace of Lp consisting of equivalence classes of an integrable simple
     function. -/
 def simple_func : AddSubgroup (Lp E p μ) :=
-  { Carrier := { f : Lp E p μ | ∃ s : α →ₛ E, (ae_eq_fun.mk s s.ae_measurable : α →ₘ[μ] E) = f }, zero_mem' := ⟨0, rfl⟩,
+  { Carrier := { f:Lp E p μ | ∃ s : α →ₛ E, (ae_eq_fun.mk s s.ae_measurable : α →ₘ[μ] E) = f }, zero_mem' := ⟨0, rfl⟩,
     add_mem' :=
       fun f g ⟨s, hs⟩ ⟨t, ht⟩ =>
         ⟨s+t,
@@ -746,42 +802,36 @@ theorem add_to_simple_func (f g : Lp.simple_func E p μ) :
       intro h 
       rw [h]
 
--- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem neg_to_simple_func
-(f : Lp.simple_func E p μ) : «expr =ᵐ[ ] »(to_simple_func «expr- »(f), μ, «expr- »(to_simple_func f)) :=
-begin
-  filter_upwards ["[", expr to_simple_func_eq_to_fun «expr- »(f), ",", expr to_simple_func_eq_to_fun f, ",", expr Lp.coe_fn_neg (f : Lp E p μ), "]"] [],
-  assume [binders (a)],
-  simp [] [] ["only"] ["[", expr pi.neg_apply, ",", expr add_subgroup.coe_neg, ",", "<-", expr coe_coe, "]"] [] [],
-  repeat { assume [binders (h)],
-    rw [expr h] [] }
-end
+theorem neg_to_simple_func (f : Lp.simple_func E p μ) : to_simple_func (-f) =ᵐ[μ] -to_simple_func f :=
+  by 
+    filterUpwards [to_simple_func_eq_to_fun (-f), to_simple_func_eq_to_fun f, Lp.coe_fn_neg (f : Lp E p μ)]
+    intro a 
+    simp only [Pi.neg_apply, AddSubgroup.coe_neg, ←coe_coe]
+    repeat' 
+      intro h 
+      rw [h]
 
--- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem sub_to_simple_func
-(f
- g : Lp.simple_func E p μ) : «expr =ᵐ[ ] »(to_simple_func «expr - »(f, g), μ, «expr - »(to_simple_func f, to_simple_func g)) :=
-begin
-  filter_upwards ["[", expr to_simple_func_eq_to_fun «expr - »(f, g), ",", expr to_simple_func_eq_to_fun f, ",", expr to_simple_func_eq_to_fun g, ",", expr Lp.coe_fn_sub (f : Lp E p μ) g, "]"] [],
-  assume [binders (a)],
-  simp [] [] ["only"] ["[", expr add_subgroup.coe_sub, ",", expr pi.sub_apply, ",", "<-", expr coe_coe, "]"] [] [],
-  repeat { assume [binders (h)],
-    rw [expr h] [] }
-end
+theorem sub_to_simple_func (f g : Lp.simple_func E p μ) :
+  to_simple_func (f - g) =ᵐ[μ] to_simple_func f - to_simple_func g :=
+  by 
+    filterUpwards [to_simple_func_eq_to_fun (f - g), to_simple_func_eq_to_fun f, to_simple_func_eq_to_fun g,
+      Lp.coe_fn_sub (f : Lp E p μ) g]
+    intro a 
+    simp only [AddSubgroup.coe_sub, Pi.sub_apply, ←coe_coe]
+    repeat' 
+      intro h 
+      rw [h]
 
 variable[NormedField 𝕜][NormedSpace 𝕜 E][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
 
--- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem smul_to_simple_func
-(k : 𝕜)
-(f : Lp.simple_func E p μ) : «expr =ᵐ[ ] »(to_simple_func «expr • »(k, f), μ, «expr • »(k, to_simple_func f)) :=
-begin
-  filter_upwards ["[", expr to_simple_func_eq_to_fun «expr • »(k, f), ",", expr to_simple_func_eq_to_fun f, ",", expr Lp.coe_fn_smul k (f : Lp E p μ), "]"] [],
-  assume [binders (a)],
-  simp [] [] ["only"] ["[", expr pi.smul_apply, ",", expr coe_smul, ",", "<-", expr coe_coe, "]"] [] [],
-  repeat { assume [binders (h)],
-    rw [expr h] [] }
-end
+theorem smul_to_simple_func (k : 𝕜) (f : Lp.simple_func E p μ) : to_simple_func (k • f) =ᵐ[μ] k • to_simple_func f :=
+  by 
+    filterUpwards [to_simple_func_eq_to_fun (k • f), to_simple_func_eq_to_fun f, Lp.coe_fn_smul k (f : Lp E p μ)]
+    intro a 
+    simp only [Pi.smul_apply, coe_smul, ←coe_coe]
+    repeat' 
+      intro h 
+      rw [h]
 
 theorem norm_to_simple_func [Fact (1 ≤ p)] (f : Lp.simple_func E p μ) :
   ∥f∥ = Ennreal.toReal (snorm (to_simple_func f) p μ) :=
@@ -865,20 +915,21 @@ protected theorem UniformEmbedding : UniformEmbedding (coeₓ : Lp.simple_func E
 protected theorem UniformInducing : UniformInducing (coeₓ : Lp.simple_func E p μ → Lp E p μ) :=
   simple_func.uniform_embedding.to_uniform_inducing
 
-protected theorem DenseEmbedding (hp_ne_top : p ≠ ∞) : DenseEmbedding (coeₓ : Lp.simple_func E p μ → Lp E p μ) :=
-  by 
-    apply simple_func.uniform_embedding.dense_embedding 
-    intro f 
-    rw [mem_closure_iff_seq_limit]
-    have hfi' : mem_ℒp f p μ := Lp.mem_ℒp f 
-    refine'
-      ⟨fun n =>
-          «expr↑ »
-            (to_Lp (simple_func.approx_on f (Lp.measurable f) univ 0 trivialₓ n)
-              (simple_func.mem_ℒp_approx_on_univ (Lp.measurable f) hfi' n)),
-        fun n => mem_range_self _, _⟩
-    convert simple_func.tendsto_approx_on_univ_Lp hp_ne_top (Lp.measurable f) hfi' 
-    rw [to_Lp_coe_fn f (Lp.mem_ℒp f)]
+-- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem dense_embedding
+(hp_ne_top : «expr ≠ »(p, «expr∞»())) : dense_embedding (coe : Lp.simple_func E p μ → Lp E p μ) :=
+begin
+  apply [expr simple_func.uniform_embedding.dense_embedding],
+  assume [binders (f)],
+  rw [expr mem_closure_iff_seq_limit] [],
+  have [ident hfi'] [":", expr mem_ℒp f p μ] [":=", expr Lp.mem_ℒp f],
+  refine [expr ⟨λ
+    n, «expr↑ »(to_Lp (simple_func.approx_on f (Lp.measurable f) univ 0 trivial n) (simple_func.mem_ℒp_approx_on_univ (Lp.measurable f) hfi' n)), λ
+    n, mem_range_self _, _⟩],
+  convert [] [expr simple_func.tendsto_approx_on_univ_Lp hp_ne_top (Lp.measurable f) hfi'] [],
+  rw [expr to_Lp_coe_fn f (Lp.mem_ℒp f)] []
+end
 
 protected theorem DenseInducing (hp_ne_top : p ≠ ∞) : DenseInducing (coeₓ : Lp.simple_func E p μ → Lp E p μ) :=
   (simple_func.dense_embedding hp_ne_top).to_dense_inducing
@@ -921,7 +972,7 @@ theorem Lp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : Lp E p �
       ∀ hf : mem_ℒp f p μ,
         ∀ hg : mem_ℒp g p μ,
           Disjoint (support f) (support g) → P (hf.to_Lp f) → P (hg.to_Lp g) → P (hf.to_Lp f+hg.to_Lp g))
-  (h_closed : IsClosed { f : Lp E p μ | P f }) : ∀ f : Lp E p μ, P f :=
+  (h_closed : IsClosed { f:Lp E p μ | P f }) : ∀ f : Lp E p μ, P f :=
   by 
     refine' fun f => (Lp.simple_func.dense_range hp_ne_top).induction_on f h_closed _ 
     refine' Lp.simple_func.induction (lt_of_lt_of_leₓ Ennreal.zero_lt_one _i.elim) hp_ne_top _ _
@@ -930,6 +981,7 @@ theorem Lp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : Lp E p �
     ·
       exact fun f g hf hg => h_add hf hg
 
+-- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- To prove something for an arbitrary `mem_ℒp` function in a second countable
 Borel normed group, it suffices to show that
 * the property holds for (multiples of) characteristic functions;
@@ -943,41 +995,36 @@ a simple function with a multiple of a characteristic function and that the inte
 of their images is a subset of `{0}`).
 -/
 @[elab_as_eliminator]
-theorem mem_ℒp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : (α → E) → Prop)
-  (h_ind : ∀ c : E ⦃s⦄, MeasurableSet s → μ s < ∞ → P (s.indicator fun _ => c))
-  (h_add : ∀ ⦃f g : α → E⦄, Disjoint (support f) (support g) → mem_ℒp f p μ → mem_ℒp g p μ → P f → P g → P (f+g))
-  (h_closed : IsClosed { f : Lp E p μ | P f }) (h_ae : ∀ ⦃f g⦄, f =ᵐ[μ] g → mem_ℒp f p μ → P f → P g) :
-  ∀ ⦃f : α → E⦄ hf : mem_ℒp f p μ, P f :=
-  by 
-    have  : ∀ f : simple_func α E, mem_ℒp f p μ → P f
-    ·
-      refine' simple_func.induction _ _
-      ·
-        intro c s hs h 
-        byCases' hc : c = 0
-        ·
-          subst hc 
-          convert
-            h_ind 0 MeasurableSet.empty
-              (by 
-                simp ) using
-            1 
-          ext 
-          simp [const]
-        have hp_pos : 0 < p := lt_of_lt_of_leₓ Ennreal.zero_lt_one _i.elim 
-        exact h_ind c hs (simple_func.measure_lt_top_of_mem_ℒp_indicator hp_pos hp_ne_top hc hs h)
-      ·
-        intro f g hfg hf hg int_fg 
-        rw [simple_func.coe_add, mem_ℒp_add_of_disjoint hfg f.measurable g.measurable] at int_fg 
-        refine' h_add hfg int_fg.1 int_fg.2 (hf int_fg.1) (hg int_fg.2)
-    have  : ∀ f : Lp.simple_func E p μ, P f
-    ·
-      intro f 
-      exact
-        h_ae (Lp.simple_func.to_simple_func_eq_to_fun f) (Lp.simple_func.mem_ℒp f)
-          (this (Lp.simple_func.to_simple_func f) (Lp.simple_func.mem_ℒp f))
-    have  : ∀ f : Lp E p μ, P f := fun f => (Lp.simple_func.dense_range hp_ne_top).induction_on f h_closed this 
-    exact fun f hf => h_ae hf.coe_fn_to_Lp (Lp.mem_ℒp _) (this (hf.to_Lp f))
+theorem mem_ℒp.induction
+[_i : fact «expr ≤ »(1, p)]
+(hp_ne_top : «expr ≠ »(p, «expr∞»()))
+(P : (α → E) → exprProp())
+(h_ind : ∀ (c : E) {{s}}, measurable_set s → «expr < »(μ s, «expr∞»()) → P (s.indicator (λ _, c)))
+(h_add : ∀
+ {{f g : α → E}}, disjoint (support f) (support g) → mem_ℒp f p μ → mem_ℒp g p μ → P f → P g → P «expr + »(f, g))
+(h_closed : is_closed {f : Lp E p μ | P f})
+(h_ae : ∀ {{f g}}, «expr =ᵐ[ ] »(f, μ, g) → mem_ℒp f p μ → P f → P g) : ∀ {{f : α → E}} (hf : mem_ℒp f p μ), P f :=
+begin
+  have [] [":", expr ∀ f : simple_func α E, mem_ℒp f p μ → P f] [],
+  { refine [expr simple_func.induction _ _],
+    { intros [ident c, ident s, ident hs, ident h],
+      by_cases [expr hc, ":", expr «expr = »(c, 0)],
+      { subst [expr hc],
+        convert [] [expr h_ind 0 measurable_set.empty (by simp [] [] [] [] [] [])] ["using", 1],
+        ext [] [] [],
+        simp [] [] [] ["[", expr const, "]"] [] [] },
+      have [ident hp_pos] [":", expr «expr < »(0, p)] [":=", expr lt_of_lt_of_le ennreal.zero_lt_one _i.elim],
+      exact [expr h_ind c hs (simple_func.measure_lt_top_of_mem_ℒp_indicator hp_pos hp_ne_top hc hs h)] },
+    { intros [ident f, ident g, ident hfg, ident hf, ident hg, ident int_fg],
+      rw ["[", expr simple_func.coe_add, ",", expr mem_ℒp_add_of_disjoint hfg f.measurable g.measurable, "]"] ["at", ident int_fg],
+      refine [expr h_add hfg int_fg.1 int_fg.2 (hf int_fg.1) (hg int_fg.2)] } },
+  have [] [":", expr ∀ f : Lp.simple_func E p μ, P f] [],
+  { intro [ident f],
+    exact [expr h_ae (Lp.simple_func.to_simple_func_eq_to_fun f) (Lp.simple_func.mem_ℒp f) (this (Lp.simple_func.to_simple_func f) (Lp.simple_func.mem_ℒp f))] },
+  have [] [":", expr ∀
+   f : Lp E p μ, P f] [":=", expr λ f, (Lp.simple_func.dense_range hp_ne_top).induction_on f h_closed this],
+  exact [expr λ f hf, h_ae hf.coe_fn_to_Lp (Lp.mem_ℒp _) (this (hf.to_Lp f))]
+end
 
 section Integrable
 
@@ -1010,7 +1057,7 @@ of their images is a subset of `{0}`).
 theorem integrable.induction (P : (α → E) → Prop)
   (h_ind : ∀ c : E ⦃s⦄, MeasurableSet s → μ s < ∞ → P (s.indicator fun _ => c))
   (h_add : ∀ ⦃f g : α → E⦄, Disjoint (support f) (support g) → integrable f μ → integrable g μ → P f → P g → P (f+g))
-  (h_closed : IsClosed { f : α →₁[μ] E | P f }) (h_ae : ∀ ⦃f g⦄, f =ᵐ[μ] g → integrable f μ → P f → P g) :
+  (h_closed : IsClosed { f:α →₁[μ] E | P f }) (h_ae : ∀ ⦃f g⦄, f =ᵐ[μ] g → integrable f μ → P f → P g) :
   ∀ ⦃f : α → E⦄ hf : integrable f μ, P f :=
   by 
     simp only [←mem_ℒp_one_iff_integrable] at *

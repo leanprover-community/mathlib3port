@@ -37,7 +37,7 @@ variable{R : Type _}[CommRingₓ R](abv : R → 𝕜)[IsAbsoluteValue abv]
 
 /-- The uniformity coming from an absolute value. -/
 def uniform_space_core : UniformSpace.Core R :=
-  { uniformity := ⨅(ε : _)(_ : ε > 0), 𝓟 { p : R × R | abv (p.2 - p.1) < ε },
+  { uniformity := ⨅(ε : _)(_ : ε > 0), 𝓟 { p:R × R | abv (p.2 - p.1) < ε },
     refl :=
       le_infi$
         fun ε =>
@@ -83,7 +83,7 @@ def uniform_space_core : UniformSpace.Core R :=
 def UniformSpace : UniformSpace R :=
   UniformSpace.ofCore (uniform_space_core abv)
 
--- error in Topology.UniformSpace.AbsoluteValue: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.UniformSpace.AbsoluteValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mem_uniformity
 {s : set «expr × »(R, R)} : «expr ↔ »(«expr ∈ »(s, (uniform_space_core abv).uniformity), «expr∃ , »((ε «expr > » 0), ∀
   {a b : R}, «expr < »(abv «expr - »(b, a), ε) → «expr ∈ »((a, b), s))) :=

@@ -1,4 +1,5 @@
 import Mathbin.AlgebraicGeometry.RingedSpace 
+import Mathbin.AlgebraicGeometry.Stalks 
 import Mathbin.Data.Equiv.TransferInstance
 
 /-!
@@ -163,7 +164,7 @@ instance  : reflects_isomorphisms forget_to_SheafedSpace :=
       fun X Y f i =>
         { out :=
             by 
-              exactI
+              exact
                 ⟨hom_of_SheafedSpace_hom_of_is_iso (CategoryTheory.inv (forget_to_SheafedSpace.map f)),
                   hom_ext _ _ (is_iso.hom_inv_id _), hom_ext _ _ (is_iso.inv_hom_id _)⟩ } }
 

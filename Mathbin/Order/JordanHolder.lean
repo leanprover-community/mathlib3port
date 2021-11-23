@@ -92,13 +92,20 @@ theorem is_maximal_inf_right_of_is_maximal_sup {x y : X} (hxz : is_maximal x (x�
     rw [sup_comm] at hxz hyz 
     exact is_maximal_inf_left_of_is_maximal_sup hyz hxz
 
-theorem is_maximal_of_eq_inf (x b : X) {a y : X} (ha : x⊓y = a) (hxy : x ≠ y) (hxb : is_maximal x b)
-  (hyb : is_maximal y b) : is_maximal a y :=
-  by 
-    have hb : x⊔y = b 
-    exact sup_eq_of_is_maximal hxb hyb hxy 
-    substs a b 
-    exact is_maximal_inf_right_of_is_maximal_sup hxb hyb
+-- error in Order.JordanHolder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_maximal_of_eq_inf
+(x b : X)
+{a y : X}
+(ha : «expr = »(«expr ⊓ »(x, y), a))
+(hxy : «expr ≠ »(x, y))
+(hxb : is_maximal x b)
+(hyb : is_maximal y b) : is_maximal a y :=
+begin
+  have [ident hb] [":", expr «expr = »(«expr ⊔ »(x, y), b)] [],
+  from [expr sup_eq_of_is_maximal hxb hyb hxy],
+  substs [ident a, ident b],
+  exact [expr is_maximal_inf_right_of_is_maximal_sup hxb hyb]
+end
 
 theorem second_iso_of_eq {x y a b : X} (hm : is_maximal x a) (ha : x⊔y = a) (hb : x⊓y = b) : iso (x, a) (b, y) :=
   by 
@@ -342,17 +349,18 @@ theorem forall_mem_eq_of_length_eq_zero {s : CompositionSeries X} (hs : s.length
   x = y :=
   by_contradiction fun hxy => pos_iff_ne_zero.1 (length_pos_of_mem_ne hx hy hxy) hs
 
+-- error in Order.JordanHolder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Remove the largest element from a `composition_series`. If the series `s`
 has length zero, then `s.erase_top = s` -/
-@[simps]
-def erase_top (s : CompositionSeries X) : CompositionSeries X :=
-  { length := s.length - 1, series := fun i => s ⟨i, lt_of_lt_of_leₓ i.2 (Nat.succ_le_succₓ tsub_le_self)⟩,
-    step' :=
-      fun i =>
-        by 
-          have  := s.step ⟨i, lt_of_lt_of_leₓ i.2 tsub_le_self⟩
-          cases i 
-          exact this }
+@[simps #[]]
+def erase_top (s : composition_series X) : composition_series X :=
+{ length := «expr - »(s.length, 1),
+  series := λ i, s ⟨i, lt_of_lt_of_le i.2 (nat.succ_le_succ tsub_le_self)⟩,
+  step' := λ i, begin
+    have [] [] [":=", expr s.step ⟨i, lt_of_lt_of_le i.2 tsub_le_self⟩],
+    cases [expr i] [],
+    exact [expr this]
+  end }
 
 theorem top_erase_top (s : CompositionSeries X) :
   s.erase_top.top = s ⟨s.length - 1, lt_of_le_of_ltₓ tsub_le_self (Nat.lt_succ_selfₓ _)⟩ :=
@@ -370,35 +378,38 @@ theorem erase_top_top_le (s : CompositionSeries X) : s.erase_top.top ≤ s.top :
 theorem bot_erase_top (s : CompositionSeries X) : s.erase_top.bot = s.bot :=
   rfl
 
-theorem mem_erase_top_of_ne_of_mem {s : CompositionSeries X} {x : X} (hx : x ≠ s.top) (hxs : x ∈ s) : x ∈ s.erase_top :=
-  by 
-    ·
-      rcases hxs with ⟨i, rfl⟩
-      have hi : (i : ℕ) < (s.length - 1).succ
-      ·
-        convRHS => rw [←Nat.succ_subₓ (length_pos_of_mem_ne ⟨i, rfl⟩ s.top_mem hx), Nat.succ_sub_one]
-        exact
-          lt_of_le_of_neₓ (Nat.le_of_lt_succₓ i.2)
-            (by 
-              simpa [top, s.inj, Finₓ.ext_iff] using hx)
-      refine' ⟨i.cast_succ, _⟩
-      simp [Finₓ.ext_iff, Nat.mod_eq_of_ltₓ hi]
+-- error in Order.JordanHolder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_erase_top_of_ne_of_mem
+{s : composition_series X}
+{x : X}
+(hx : «expr ≠ »(x, s.top))
+(hxs : «expr ∈ »(x, s)) : «expr ∈ »(x, s.erase_top) :=
+begin
+  { rcases [expr hxs, "with", "⟨", ident i, ",", ident rfl, "⟩"],
+    have [ident hi] [":", expr «expr < »((i : exprℕ()), «expr - »(s.length, 1).succ)] [],
+    { conv_rhs [] [] { rw ["[", "<-", expr nat.succ_sub (length_pos_of_mem_ne ⟨i, rfl⟩ s.top_mem hx), ",", expr nat.succ_sub_one, "]"] },
+      exact [expr lt_of_le_of_ne (nat.le_of_lt_succ i.2) (by simpa [] [] [] ["[", expr top, ",", expr s.inj, ",", expr fin.ext_iff, "]"] [] ["using", expr hx])] },
+    refine [expr ⟨i.cast_succ, _⟩],
+    simp [] [] [] ["[", expr fin.ext_iff, ",", expr nat.mod_eq_of_lt hi, "]"] [] [] }
+end
 
-theorem mem_erase_top {s : CompositionSeries X} {x : X} (h : 0 < s.length) : x ∈ s.erase_top ↔ x ≠ s.top ∧ x ∈ s :=
-  by 
-    simp only [mem_def]
-    dsimp only [erase_top, coe_fn_mk]
-    split 
-    ·
-      rintro ⟨i, rfl⟩
-      have hi : (i : ℕ) < s.length
-      ·
-        convRHS => rw [←Nat.succ_sub_one s.length, Nat.succ_subₓ h]
-        exact i.2
-      simp [top, Finₓ.ext_iff, ne_of_ltₓ hi]
-    ·
-      intro h 
-      exact mem_erase_top_of_ne_of_mem h.1 h.2
+-- error in Order.JordanHolder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_erase_top
+{s : composition_series X}
+{x : X}
+(h : «expr < »(0, s.length)) : «expr ↔ »(«expr ∈ »(x, s.erase_top), «expr ∧ »(«expr ≠ »(x, s.top), «expr ∈ »(x, s))) :=
+begin
+  simp [] [] ["only"] ["[", expr mem_def, "]"] [] [],
+  dsimp ["only"] ["[", expr erase_top, ",", expr coe_fn_mk, "]"] [] [],
+  split,
+  { rintros ["⟨", ident i, ",", ident rfl, "⟩"],
+    have [ident hi] [":", expr «expr < »((i : exprℕ()), s.length)] [],
+    { conv_rhs [] [] { rw ["[", "<-", expr nat.succ_sub_one s.length, ",", expr nat.succ_sub h, "]"] },
+      exact [expr i.2] },
+    simp [] [] [] ["[", expr top, ",", expr fin.ext_iff, ",", expr ne_of_lt hi, "]"] [] [] },
+  { intro [ident h],
+    exact [expr mem_erase_top_of_ne_of_mem h.1 h.2] }
+end
 
 theorem lt_top_of_mem_erase_top {s : CompositionSeries X} {x : X} (h : 0 < s.length) (hx : x ∈ s.erase_top) :
   x < s.top :=
@@ -418,30 +429,23 @@ theorem append_cast_add_aux {s₁ s₂ : CompositionSeries X} (i : Finₓ s₁.l
     cases i 
     simp [Finₓ.append]
 
-theorem append_succ_cast_add_aux {s₁ s₂ : CompositionSeries X} (i : Finₓ s₁.length) (h : s₁ (Finₓ.last _) = s₂ 0) :
-  Finₓ.append (Nat.add_succ _ _).symm (s₁ ∘ Finₓ.castSucc) s₂ (Finₓ.castAdd s₂.length i).succ = s₁ i.succ :=
-  by 
-    cases' i with i hi 
-    simp only [Finₓ.append, hi, Finₓ.succ_mk, Function.comp_app, Finₓ.cast_succ_mk, Finₓ.coe_mk, Finₓ.cast_add_mk]
-    splitIfs
-    ·
-      rfl
-    ·
-      have  : (i+1) = s₁.length 
-      exact le_antisymmₓ hi (le_of_not_gtₓ h_1)
-      calc
-        s₂
-            ⟨(i+1) - s₁.length,
-              by 
-                simp [this]⟩ =
-          s₂ 0 :=
-        congr_argₓ s₂
-          (by 
-            simp [Finₓ.ext_iff, this])_ = s₁ (Finₓ.last _) :=
-        h.symm _ = _ :=
-        congr_argₓ s₁
-          (by 
-            simp [Finₓ.ext_iff, this])
+-- error in Order.JordanHolder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem append_succ_cast_add_aux
+{s₁ s₂ : composition_series X}
+(i : fin s₁.length)
+(h : «expr = »(s₁ (fin.last _), s₂ 0)) : «expr = »(fin.append (nat.add_succ _ _).symm «expr ∘ »(s₁, fin.cast_succ) s₂ (fin.cast_add s₂.length i).succ, s₁ i.succ) :=
+begin
+  cases [expr i] ["with", ident i, ident hi],
+  simp [] [] ["only"] ["[", expr fin.append, ",", expr hi, ",", expr fin.succ_mk, ",", expr function.comp_app, ",", expr fin.cast_succ_mk, ",", expr fin.coe_mk, ",", expr fin.cast_add_mk, "]"] [] [],
+  split_ifs [] [],
+  { refl },
+  { have [] [":", expr «expr = »(«expr + »(i, 1), s₁.length)] [],
+    from [expr le_antisymm hi (le_of_not_gt h_1)],
+    calc
+      «expr = »(s₂ ⟨«expr - »(«expr + »(i, 1), s₁.length), by simp [] [] [] ["[", expr this, "]"] [] []⟩, s₂ 0) : congr_arg s₂ (by simp [] [] [] ["[", expr fin.ext_iff, ",", expr this, "]"] [] [])
+      «expr = »(..., s₁ (fin.last _)) : h.symm
+      «expr = »(..., _) : congr_arg s₁ (by simp [] [] [] ["[", expr fin.ext_iff, ",", expr this, "]"] [] []) }
+end
 
 theorem append_nat_add_aux {s₁ s₂ : CompositionSeries X} (i : Finₓ s₂.length) :
   Finₓ.append (Nat.add_succ _ _).symm (s₁ ∘ Finₓ.castSucc) s₂ (Finₓ.natAdd s₁.length i).cast_succ = s₂ i.cast_succ :=
@@ -672,18 +676,19 @@ theorem snoc_snoc_swap {s : CompositionSeries X} {x₁ x₂ y₁ y₂ : X} {hsat
 
 end Equivalent
 
-theorem length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero {s₁ s₂ : CompositionSeries X}
-  (hb : s₁.bot = s₂.bot) (ht : s₁.top = s₂.top) (hs₁ : s₁.length = 0) : s₂.length = 0 :=
-  by 
-    have  : s₁.bot = s₁.top 
-    exact
-      congr_argₓ s₁
-        (Finₓ.ext
-          (by 
-            simp [hs₁]))
-    have  : Finₓ.last s₂.length = (0 : Finₓ s₂.length.succ)
-    exact s₂.injective (hb.symm.trans (this.trans ht)).symm 
-    simpa [Finₓ.ext_iff]
+-- error in Order.JordanHolder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem length_eq_zero_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero
+{s₁ s₂ : composition_series X}
+(hb : «expr = »(s₁.bot, s₂.bot))
+(ht : «expr = »(s₁.top, s₂.top))
+(hs₁ : «expr = »(s₁.length, 0)) : «expr = »(s₂.length, 0) :=
+begin
+  have [] [":", expr «expr = »(s₁.bot, s₁.top)] [],
+  from [expr congr_arg s₁ (fin.ext (by simp [] [] [] ["[", expr hs₁, "]"] [] []))],
+  have [] [":", expr «expr = »(fin.last s₂.length, (0 : fin s₂.length.succ))] [],
+  from [expr s₂.injective (hb.symm.trans (this.trans ht)).symm],
+  simpa [] [] [] ["[", expr fin.ext_iff, "]"] [] []
+end
 
 theorem length_pos_of_bot_eq_bot_of_top_eq_top_of_length_pos {s₁ s₂ : CompositionSeries X} (hb : s₁.bot = s₂.bot)
   (ht : s₁.top = s₂.top) : 0 < s₁.length → 0 < s₂.length :=
@@ -706,103 +711,60 @@ theorem eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero {s₁ s₂ : Compositio
     ext 
     simp 
 
+-- error in Order.JordanHolder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a `composition_series`, `s`, and an element `x`
 such that `x` is maximal inside `s.top` there is a series, `t`,
 such that `t.top = x`, `t.bot = s.bot`
 and `snoc t s.top _` is equivalent to `s`. -/
-theorem exists_top_eq_snoc_equivalant (s : CompositionSeries X) (x : X) (hm : is_maximal x s.top) (hb : s.bot ≤ x) :
-  ∃ t : CompositionSeries X,
-    t.bot = s.bot ∧ (t.length+1) = s.length ∧ ∃ htx : t.top = x, equivalent s (snoc t s.top (htx.symm ▸ hm)) :=
-  by 
-    induction' hn : s.length with n ih generalizing s x
-    ·
-      exact
-        (ne_of_gtₓ (lt_of_le_of_ltₓ hb (lt_of_is_maximal hm))
-            (forall_mem_eq_of_length_eq_zero hn s.top_mem s.bot_mem)).elim
-    ·
-      have h0s : 0 < s.length 
-      exact hn.symm ▸ Nat.succ_posₓ _ 
-      byCases' hetx : s.erase_top.top = x
-      ·
-        use s.erase_top 
-        simp [←hetx, hn]
-      ·
-        have imxs : is_maximal (x⊓s.erase_top.top) s.erase_top.top 
-        exact is_maximal_of_eq_inf x s.top rfl (Ne.symm hetx) hm (is_maximal_erase_top_top h0s)
-        have  :=
-          ih _ _ imxs
-            (le_inf
-              (by 
-                simpa)
-              (le_top_of_mem s.erase_top.bot_mem))
-            (by 
-              simp [hn])
-        rcases this with ⟨t, htb, htl, htt, hteqv⟩
-        have hmtx : is_maximal t.top x 
-        exact
-          is_maximal_of_eq_inf s.erase_top.top s.top
-            (by 
-              rw [inf_comm, htt])
-            hetx (is_maximal_erase_top_top h0s) hm 
-        use snoc t x hmtx 
-        refine'
-          ⟨by 
-              simp [htb],
-            by 
-              simp [htl],
-            by 
-              simp ,
-            _⟩
-        have  :
-          s.equivalent
-            ((snoc t s.erase_top.top (htt.symm ▸ imxs)).snoc s.top
-              (by 
-                simpa using is_maximal_erase_top_top h0s))
-        ·
-          convLHS => rw [eq_snoc_erase_top h0s]
-          exact
-            equivalent.snoc hteqv
-              (by 
-                simpa using (is_maximal_erase_top_top h0s).iso_refl)
-        refine' this.trans _ 
-        refine' equivalent.snoc_snoc_swap _ _
-        ·
-          exact
-            iso_symm
-              (second_iso_of_eq hm (sup_eq_of_is_maximal hm (is_maximal_erase_top_top h0s) (Ne.symm hetx)) htt.symm)
-        ·
-          exact
-            second_iso_of_eq (is_maximal_erase_top_top h0s)
-              (sup_eq_of_is_maximal (is_maximal_erase_top_top h0s) hm hetx)
-              (by 
-                rw [inf_comm, htt])
+theorem exists_top_eq_snoc_equivalant
+(s : composition_series X)
+(x : X)
+(hm : is_maximal x s.top)
+(hb : «expr ≤ »(s.bot, x)) : «expr∃ , »((t : composition_series X), «expr ∧ »(«expr = »(t.bot, s.bot), «expr ∧ »(«expr = »(«expr + »(t.length, 1), s.length), «expr∃ , »((htx : «expr = »(t.top, x)), equivalent s (snoc t s.top «expr ▸ »(htx.symm, hm)))))) :=
+begin
+  induction [expr hn, ":", expr s.length] [] ["with", ident n, ident ih] ["generalizing", ident s, ident x],
+  { exact [expr (ne_of_gt (lt_of_le_of_lt hb (lt_of_is_maximal hm)) (forall_mem_eq_of_length_eq_zero hn s.top_mem s.bot_mem)).elim] },
+  { have [ident h0s] [":", expr «expr < »(0, s.length)] [],
+    from [expr «expr ▸ »(hn.symm, nat.succ_pos _)],
+    by_cases [expr hetx, ":", expr «expr = »(s.erase_top.top, x)],
+    { use [expr s.erase_top],
+      simp [] [] [] ["[", "<-", expr hetx, ",", expr hn, "]"] [] [] },
+    { have [ident imxs] [":", expr is_maximal «expr ⊓ »(x, s.erase_top.top) s.erase_top.top] [],
+      from [expr is_maximal_of_eq_inf x s.top rfl (ne.symm hetx) hm (is_maximal_erase_top_top h0s)],
+      have [] [] [":=", expr ih _ _ imxs (le_inf (by simpa [] [] [] [] [] []) (le_top_of_mem s.erase_top.bot_mem)) (by simp [] [] [] ["[", expr hn, "]"] [] [])],
+      rcases [expr this, "with", "⟨", ident t, ",", ident htb, ",", ident htl, ",", ident htt, ",", ident hteqv, "⟩"],
+      have [ident hmtx] [":", expr is_maximal t.top x] [],
+      from [expr is_maximal_of_eq_inf s.erase_top.top s.top (by rw ["[", expr inf_comm, ",", expr htt, "]"] []) hetx (is_maximal_erase_top_top h0s) hm],
+      use [expr snoc t x hmtx],
+      refine [expr ⟨by simp [] [] [] ["[", expr htb, "]"] [] [], by simp [] [] [] ["[", expr htl, "]"] [] [], by simp [] [] [] [] [] [], _⟩],
+      have [] [":", expr s.equivalent ((snoc t s.erase_top.top «expr ▸ »(htt.symm, imxs)).snoc s.top (by simpa [] [] [] [] [] ["using", expr is_maximal_erase_top_top h0s]))] [],
+      { conv_lhs [] [] { rw [expr eq_snoc_erase_top h0s] },
+        exact [expr equivalent.snoc hteqv (by simpa [] [] [] [] [] ["using", expr (is_maximal_erase_top_top h0s).iso_refl])] },
+      refine [expr this.trans _],
+      refine [expr equivalent.snoc_snoc_swap _ _],
+      { exact [expr iso_symm (second_iso_of_eq hm (sup_eq_of_is_maximal hm (is_maximal_erase_top_top h0s) (ne.symm hetx)) htt.symm)] },
+      { exact [expr second_iso_of_eq (is_maximal_erase_top_top h0s) (sup_eq_of_is_maximal (is_maximal_erase_top_top h0s) hm hetx) (by rw ["[", expr inf_comm, ",", expr htt, "]"] [])] } } }
+end
 
+-- error in Order.JordanHolder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The **Jordan-Hölder** theorem, stated for any `jordan_holder_lattice`.
 If two composition series start and finish at the same place, they are equivalent. -/
-theorem jordan_holder (s₁ s₂ : CompositionSeries X) (hb : s₁.bot = s₂.bot) (ht : s₁.top = s₂.top) : equivalent s₁ s₂ :=
-  by 
-    induction' hle : s₁.length with n ih generalizing s₁ s₂
-    ·
-      rw [eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero hb ht hle]
-    ·
-      have h0s₂ : 0 < s₂.length 
-      exact length_pos_of_bot_eq_bot_of_top_eq_top_of_length_pos hb ht (hle.symm ▸ Nat.succ_posₓ _)
-      rcases
-        exists_top_eq_snoc_equivalant s₁ s₂.erase_top.top (ht.symm ▸ is_maximal_erase_top_top h0s₂)
-          (hb.symm ▸ s₂.bot_erase_top ▸ bot_le_of_mem (top_mem _)) with
-        ⟨t, htb, htl, htt, hteq⟩
-      have  :=
-        ih t s₂.erase_top
-          (by 
-            simp [htb, ←hb])
-          htt (Nat.succ_inj'.1 (htl.trans hle))
-      refine' hteq.trans _ 
-      convRHS => rw [eq_snoc_erase_top h0s₂]
-      simp only [ht]
-      exact
-        equivalent.snoc this
-          (by 
-            simp [htt, (is_maximal_erase_top_top h0s₂).iso_refl])
+theorem jordan_holder
+(s₁ s₂ : composition_series X)
+(hb : «expr = »(s₁.bot, s₂.bot))
+(ht : «expr = »(s₁.top, s₂.top)) : equivalent s₁ s₂ :=
+begin
+  induction [expr hle, ":", expr s₁.length] [] ["with", ident n, ident ih] ["generalizing", ident s₁, ident s₂],
+  { rw ["[", expr eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero hb ht hle, "]"] [] },
+  { have [ident h0s₂] [":", expr «expr < »(0, s₂.length)] [],
+    from [expr length_pos_of_bot_eq_bot_of_top_eq_top_of_length_pos hb ht «expr ▸ »(hle.symm, nat.succ_pos _)],
+    rcases [expr exists_top_eq_snoc_equivalant s₁ s₂.erase_top.top «expr ▸ »(ht.symm, is_maximal_erase_top_top h0s₂) «expr ▸ »(hb.symm, «expr ▸ »(s₂.bot_erase_top, bot_le_of_mem (top_mem _))), "with", "⟨", ident t, ",", ident htb, ",", ident htl, ",", ident htt, ",", ident hteq, "⟩"],
+    have [] [] [":=", expr ih t s₂.erase_top (by simp [] [] [] ["[", expr htb, ",", "<-", expr hb, "]"] [] []) htt (nat.succ_inj'.1 (htl.trans hle))],
+    refine [expr hteq.trans _],
+    conv_rhs [] [] { rw ["[", expr eq_snoc_erase_top h0s₂, "]"] },
+    simp [] [] ["only"] ["[", expr ht, "]"] [] [],
+    exact [expr equivalent.snoc this (by simp [] [] [] ["[", expr htt, ",", expr (is_maximal_erase_top_top h0s₂).iso_refl, "]"] [] [])] }
+end
 
 end CompositionSeries
 

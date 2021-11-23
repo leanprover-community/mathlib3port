@@ -40,7 +40,7 @@ variable(R : Type _)(M : Type _)
 
 variable[CommSemiringₓ R][AddCommMonoidₓ M][Module R M]
 
--- error in LinearAlgebra.Dual: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler add_comm_monoid
+-- error in LinearAlgebra.Dual: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler add_comm_monoid
 /-- The dual space of an R-module M is the R-module of linear maps `M → R`. -/
 @[derive #["[", expr add_comm_monoid, ",", expr module R, "]"]]
 def dual :=
@@ -272,22 +272,34 @@ theorem eval_equiv_to_linear_map {ι : Type _} [Fintype ι] (b : Basis ι R M) :
 
 end CommRingₓ
 
+-- error in LinearAlgebra.Dual: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `simp` normal form version of `total_dual_basis` -/
 @[simp]
-theorem total_coord [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Fintype ι] (b : Basis ι R M) (f : ι →₀ R) (i : ι) :
-  Finsupp.total ι (dual R M) R b.coord f (b i) = f i :=
-  by 
-    haveI  := Classical.decEq ι 
-    rw [←coe_dual_basis, total_dual_basis]
+theorem total_coord
+[comm_ring R]
+[add_comm_group M]
+[module R M]
+[fintype ι]
+(b : basis ι R M)
+(f : «expr →₀ »(ι, R))
+(i : ι) : «expr = »(finsupp.total ι (dual R M) R b.coord f (b i), f i) :=
+by { haveI [] [] [":=", expr classical.dec_eq ι],
+  rw ["[", "<-", expr coe_dual_basis, ",", expr total_dual_basis, "]"] [] }
 
-theorem dual_dim_eq [Field K] [AddCommGroupₓ V] [Module K V] [Fintype ι] (b : Basis ι K V) :
-  Cardinal.lift (Module.rank K V) = Module.rank K (dual K V) :=
-  by 
-    classical 
-    have  := LinearEquiv.lift_dim_eq b.to_dual_equiv 
-    simp only [Cardinal.lift_umax] at this 
-    rw [this, ←Cardinal.lift_umax]
-    apply Cardinal.lift_id
+-- error in LinearAlgebra.Dual: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dual_dim_eq
+[field K]
+[add_comm_group V]
+[module K V]
+[fintype ι]
+(b : basis ι K V) : «expr = »(cardinal.lift (module.rank K V), module.rank K (dual K V)) :=
+begin
+  classical,
+  have [] [] [":=", expr linear_equiv.lift_dim_eq b.to_dual_equiv],
+  simp [] [] ["only"] ["[", expr cardinal.lift_umax, "]"] [] ["at", ident this],
+  rw ["[", expr this, ",", "<-", expr cardinal.lift_umax, "]"] [],
+  apply [expr cardinal.lift_id]
+end
 
 end Basis
 
@@ -307,10 +319,12 @@ theorem eval_ker : (eval K V).ker = ⊥ :=
 theorem dual_dim_eq [FiniteDimensional K V] : Cardinal.lift (Module.rank K V) = Module.rank K (dual K V) :=
   (Basis.ofVectorSpace K V).dual_dim_eq
 
-theorem erange_coe [FiniteDimensional K V] : (eval K V).range = ⊤ :=
-  by 
-    letI this : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance 
-    exact (Basis.ofVectorSpace K V).eval_range
+-- error in LinearAlgebra.Dual: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem erange_coe [finite_dimensional K V] : «expr = »((eval K V).range, «expr⊤»()) :=
+begin
+  letI [] [":", expr is_noetherian K V] [":=", expr is_noetherian.iff_fg.2 infer_instance],
+  exact [expr (basis.of_vector_space K V).eval_range]
+end
 
 variable(K V)
 
@@ -353,18 +367,15 @@ variable[CommRingₓ R][AddCommGroupₓ M][Module R M]
 
 variable{e : ι → M}{ε : ι → dual R M}
 
+-- error in LinearAlgebra.Dual: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The coefficients of `v` on the basis `e` -/
-def coeffs [DecidableEq ι] (h : DualPair e ε) (m : M) : ι →₀ R :=
-  { toFun := fun i => ε i m,
-    support :=
-      by 
-        haveI  := h.finite m 
-        exact { i : ι | ε i m ≠ 0 }.toFinset,
-    mem_support_to_fun :=
-      by 
-        intro i 
-        rw [Set.mem_to_finset]
-        exact Iff.rfl }
+def coeffs [decidable_eq ι] (h : dual_pair e ε) (m : M) : «expr →₀ »(ι, R) :=
+{ to_fun := λ i, ε i m,
+  support := by { haveI [] [] [":=", expr h.finite m],
+    exact [expr {i : ι | «expr ≠ »(ε i m, 0)}.to_finset] },
+  mem_support_to_fun := by { intro [ident i],
+    rw [expr set.mem_to_finset] [],
+    exact [expr iff.rfl] } }
 
 @[simp]
 theorem coeffs_apply [DecidableEq ι] (h : DualPair e ε) (m : M) (i : ι) : h.coeffs m i = ε i m :=
@@ -719,25 +730,31 @@ open FiniteDimensional
 
 variable[FiniteDimensional K V₂]
 
+-- error in LinearAlgebra.Dual: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem finrank_range_dual_map_eq_finrank_range (f : V₁ →ₗ[K] V₂) : finrank K f.dual_map.range = finrank K f.range :=
-  by 
-    have  := Submodule.finrank_quotient_add_finrank f.range 
-    rw [(Subspace.quotEquivAnnihilator f.range).finrank_eq, ←ker_dual_map_eq_dual_annihilator_range] at this 
-    convRHS at this => rw [←Subspace.dual_finrank_eq]
-    refine' add_left_injective (finrank K f.dual_map.ker) _ 
-    change (_+_) = _+_ 
-    rw [finrank_range_add_finrank_ker f.dual_map, add_commₓ, this]
+theorem finrank_range_dual_map_eq_finrank_range
+(f : «expr →ₗ[ ] »(V₁, K, V₂)) : «expr = »(finrank K f.dual_map.range, finrank K f.range) :=
+begin
+  have [] [] [":=", expr submodule.finrank_quotient_add_finrank f.range],
+  rw ["[", expr (subspace.quot_equiv_annihilator f.range).finrank_eq, ",", "<-", expr ker_dual_map_eq_dual_annihilator_range, "]"] ["at", ident this],
+  conv_rhs ["at", ident this] [] { rw ["<-", expr subspace.dual_finrank_eq] },
+  refine [expr add_left_injective (finrank K f.dual_map.ker) _],
+  change [expr «expr = »(«expr + »(_, _), «expr + »(_, _))] [] [],
+  rw ["[", expr finrank_range_add_finrank_ker f.dual_map, ",", expr add_comm, ",", expr this, "]"] []
+end
 
-theorem range_dual_map_eq_dual_annihilator_ker [FiniteDimensional K V₁] (f : V₁ →ₗ[K] V₂) :
-  f.dual_map.range = f.ker.dual_annihilator :=
-  by 
-    refine' eq_of_le_of_finrank_eq f.range_dual_map_le_dual_annihilator_ker _ 
-    have  := Submodule.finrank_quotient_add_finrank f.ker 
-    rw [(Subspace.quotEquivAnnihilator f.ker).finrank_eq] at this 
-    refine' add_left_injective (finrank K f.ker) _ 
-    simpRw [this, finrank_range_dual_map_eq_finrank_range]
-    exact finrank_range_add_finrank_ker f
+-- error in LinearAlgebra.Dual: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem range_dual_map_eq_dual_annihilator_ker
+[finite_dimensional K V₁]
+(f : «expr →ₗ[ ] »(V₁, K, V₂)) : «expr = »(f.dual_map.range, f.ker.dual_annihilator) :=
+begin
+  refine [expr eq_of_le_of_finrank_eq f.range_dual_map_le_dual_annihilator_ker _],
+  have [] [] [":=", expr submodule.finrank_quotient_add_finrank f.ker],
+  rw [expr (subspace.quot_equiv_annihilator f.ker).finrank_eq] ["at", ident this],
+  refine [expr add_left_injective (finrank K f.ker) _],
+  simp_rw ["[", expr this, ",", expr finrank_range_dual_map_eq_finrank_range, "]"] [],
+  exact [expr finrank_range_add_finrank_ker f]
+end
 
 end FiniteDimensional
 

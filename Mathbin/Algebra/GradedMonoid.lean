@@ -1,8 +1,7 @@
-import Mathbin.Algebra.Group.InjSurj 
-import Mathbin.Algebra.GroupPower.Basic 
+import Mathbin.GroupTheory.GroupAction.Defs 
 import Mathbin.Data.SetLike.Basic 
 import Mathbin.Data.Sigma.Basic 
-import Mathbin.GroupTheory.GroupAction.Defs
+import Mathbin.Algebra.Group.InjSurj
 
 /-!
 # Additively-graded multiplicative structures
@@ -258,11 +257,13 @@ variable[AddMonoidₓ ι][gmonoid A]
 def mk_zero_monoid_hom : A 0 →* GradedMonoid A :=
   { toFun := mk 0, map_one' := rfl, map_mul' := mk_zero_smul }
 
+-- error in Algebra.GradedMonoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Each grade `A i` derives a `A 0`-action structure from `gmonoid A`. -/
-instance grade_zero.mul_action {i} : MulAction (A 0) (A i) :=
-  by 
-    letI this := MulAction.compHom (GradedMonoid A) (mk_zero_monoid_hom A)
-    exact Function.Injective.mulAction (mk i) sigma_mk_injective mk_zero_smul
+instance grade_zero.mul_action {i} : mul_action (A 0) (A i) :=
+begin
+  letI [] [] [":=", expr mul_action.comp_hom (graded_monoid A) (mk_zero_monoid_hom A)],
+  exact [expr function.injective.mul_action (mk i) sigma_mk_injective mk_zero_smul]
+end
 
 end MulAction
 

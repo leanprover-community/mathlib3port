@@ -50,25 +50,28 @@ namespace Set
 def well_founded_on (s : Set α) (r : α → α → Prop) : Prop :=
   WellFounded fun a : s b : s => r a b
 
-theorem well_founded_on_iff {s : Set α} {r : α → α → Prop} :
-  s.well_founded_on r ↔ WellFounded fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s :=
-  by 
-    have f : RelEmbedding (fun a : s b : s => r a b) fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s :=
-      ⟨⟨coeₓ, Subtype.coe_injective⟩,
-        fun a b =>
-          by 
-            simp ⟩
-    refine' ⟨fun h => _, f.well_founded⟩
-    rw [WellFounded.well_founded_iff_has_min]
-    intro t ht 
-    byCases' hst : (s ∩ t).Nonempty
-    ·
-      rw [←Subtype.preimage_coe_nonempty] at hst 
-      rcases WellFounded.well_founded_iff_has_min.1 h (coeₓ ⁻¹' t) hst with ⟨⟨m, ms⟩, mt, hm⟩
-      exact ⟨m, mt, fun x xt ⟨xm, xs, ms⟩ => hm ⟨x, xs⟩ xt xm⟩
-    ·
-      rcases ht with ⟨m, mt⟩
-      exact ⟨m, mt, fun x xt ⟨xm, xs, ms⟩ => hst ⟨m, ⟨ms, mt⟩⟩⟩
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem well_founded_on_iff
+{s : set α}
+{r : α → α → exprProp()} : «expr ↔ »(s.well_founded_on r, well_founded (λ
+  a b : α, «expr ∧ »(r a b, «expr ∧ »(«expr ∈ »(a, s), «expr ∈ »(b, s))))) :=
+begin
+  have [ident f] [":", expr rel_embedding (λ
+    (a : s)
+    (b : s), r a b) (λ
+    a
+    b : α, «expr ∧ »(r a b, «expr ∧ »(«expr ∈ »(a, s), «expr ∈ »(b, s))))] [":=", expr ⟨⟨coe, subtype.coe_injective⟩, λ
+    a b, by simp [] [] [] [] [] []⟩],
+  refine [expr ⟨λ h, _, f.well_founded⟩],
+  rw [expr well_founded.well_founded_iff_has_min] [],
+  intros [ident t, ident ht],
+  by_cases [expr hst, ":", expr «expr ∩ »(s, t).nonempty],
+  { rw ["<-", expr subtype.preimage_coe_nonempty] ["at", ident hst],
+    rcases [expr well_founded.well_founded_iff_has_min.1 h «expr ⁻¹' »(coe, t) hst, "with", "⟨", "⟨", ident m, ",", ident ms, "⟩", ",", ident mt, ",", ident hm, "⟩"],
+    exact [expr ⟨m, mt, λ (x xt) ⟨xm, xs, ms⟩, hm ⟨x, xs⟩ xt xm⟩] },
+  { rcases [expr ht, "with", "⟨", ident m, ",", ident mt, "⟩"],
+    exact [expr ⟨m, mt, λ (x xt) ⟨xm, xs, ms⟩, hst ⟨m, ⟨ms, mt⟩⟩⟩] }
+end
 
 theorem well_founded_on.induction {s : Set α} {r : α → α → Prop} (hs : s.well_founded_on r) {x : α} (hx : x ∈ s)
   {P : α → Prop} (hP : ∀ y _ : y ∈ s, (∀ z _ : z ∈ s, r z y → P z) → P y) : P x :=
@@ -84,27 +87,27 @@ instance is_strict_order.subset {s : Set α} {r : α → α → Prop} [IsStrictO
   { to_is_irrefl := ⟨fun a con => irrefl_of r a con.1⟩,
     to_is_trans := ⟨fun a b c ab bc => ⟨trans_of r ab.1 bc.1, ab.2.1, bc.2.2⟩⟩ }
 
-theorem well_founded_on_iff_no_descending_seq {s : Set α} {r : α → α → Prop} [IsStrictOrder α r] :
-  s.well_founded_on r ↔ ∀ f : (· > · : ℕ → ℕ → Prop) ↪r r, ¬range f ⊆ s :=
-  by 
-    rw [well_founded_on_iff, RelEmbedding.well_founded_iff_no_descending_seq]
-    refine'
-      ⟨fun h f con =>
-          by 
-            refine' h.elim' ⟨⟨f, f.injective⟩, fun a b => _⟩
-            simp only [con (mem_range_self a), con (mem_range_self b), and_trueₓ, gt_iff_lt,
-              Function.Embedding.coe_fn_mk, f.map_rel_iff],
-        fun h => ⟨fun con => _⟩⟩
-    rcases con with ⟨f, hf⟩
-    have hfs' : ∀ n : ℕ, f n ∈ s := fun n => (hf.2 n.lt_succ_self).2.2
-    refine' h ⟨f, fun a b => _⟩ fun n hn => _
-    ·
-      rw [←hf]
-      exact ⟨fun h => ⟨h, hfs' _, hfs' _⟩, fun h => h.1⟩
-    ·
-      rcases Set.mem_range.1 hn with ⟨m, hm⟩
-      rw [←hm]
-      apply hfs'
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem well_founded_on_iff_no_descending_seq
+{s : set α}
+{r : α → α → exprProp()}
+[is_strict_order α r] : «expr ↔ »(s.well_founded_on r, ∀
+ f : «expr ↪r »(((«expr > ») : exprℕ() → exprℕ() → exprProp()), r), «expr¬ »(«expr ⊆ »(range f, s))) :=
+begin
+  rw ["[", expr well_founded_on_iff, ",", expr rel_embedding.well_founded_iff_no_descending_seq, "]"] [],
+  refine [expr ⟨λ h f con, begin
+      refine [expr h.elim' ⟨⟨f, f.injective⟩, λ a b, _⟩],
+      simp [] [] ["only"] ["[", expr con (mem_range_self a), ",", expr con (mem_range_self b), ",", expr and_true, ",", expr gt_iff_lt, ",", expr function.embedding.coe_fn_mk, ",", expr f.map_rel_iff, "]"] [] []
+    end, λ h, ⟨λ con, _⟩⟩],
+  rcases [expr con, "with", "⟨", ident f, ",", ident hf, "⟩"],
+  have [ident hfs'] [":", expr ∀ n : exprℕ(), «expr ∈ »(f n, s)] [":=", expr λ n, (hf.2 n.lt_succ_self).2.2],
+  refine [expr h ⟨f, λ a b, _⟩ (λ n hn, _)],
+  { rw ["<-", expr hf] [],
+    exact [expr ⟨λ h, ⟨h, hfs' _, hfs' _⟩, λ h, h.1⟩] },
+  { rcases [expr set.mem_range.1 hn, "with", "⟨", ident m, ",", ident hm, "⟩"],
+    rw ["<-", expr hm] [],
+    apply [expr hfs'] }
+end
 
 section LT
 
@@ -132,44 +135,47 @@ section PartialOrderₓ
 
 variable[PartialOrderₓ α]{s t : Set α}{a : α}
 
-theorem is_wf_iff_no_descending_seq : is_wf s ↔ ∀ f : OrderDual ℕ ↪o α, ¬range f ⊆ s :=
-  by 
-    haveI  : IsStrictOrder α fun a b : α => a < b ∧ a ∈ s ∧ b ∈ s :=
-      { to_is_irrefl := ⟨fun x con => lt_irreflₓ x con.1⟩,
-        to_is_trans := ⟨fun a b c ab bc => ⟨lt_transₓ ab.1 bc.1, ab.2.1, bc.2.2⟩⟩ }
-    rw [is_wf, well_founded_on_iff_no_descending_seq]
-    exact ⟨fun h f => h f.lt_embedding, fun h f => h (OrderEmbedding.ofStrictMono f fun _ _ => f.map_rel_iff.2)⟩
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_wf_iff_no_descending_seq : «expr ↔ »(is_wf s, ∀
+ f : «expr ↪o »(order_dual exprℕ(), α), «expr¬ »(«expr ⊆ »(range f, s))) :=
+begin
+  haveI [] [":", expr is_strict_order α (λ
+    a
+    b : α, «expr ∧ »(«expr < »(a, b), «expr ∧ »(«expr ∈ »(a, s), «expr ∈ »(b, s))))] [":=", expr { to_is_irrefl := ⟨λ
+      x con, lt_irrefl x con.1⟩,
+     to_is_trans := ⟨λ a b c ab bc, ⟨lt_trans ab.1 bc.1, ab.2.1, bc.2.2⟩⟩ }],
+  rw ["[", expr is_wf, ",", expr well_founded_on_iff_no_descending_seq, "]"] [],
+  exact [expr ⟨λ h f, h f.lt_embedding, λ h f, h (order_embedding.of_strict_mono f (λ _ _, f.map_rel_iff.2))⟩]
+end
 
-theorem is_wf.union (hs : is_wf s) (ht : is_wf t) : is_wf (s ∪ t) :=
-  by 
-    classical 
-    rw [is_wf_iff_no_descending_seq] at *
-    rintro f fst 
-    have h : Infinite (f ⁻¹' s) ∨ Infinite (f ⁻¹' t)
-    ·
-      have h : Infinite (univ : Set ℕ) := infinite_univ 
-      have hpre : f ⁻¹' (s ∪ t) = Set.Univ
-      ·
-        rw [←image_univ, image_subset_iff, univ_subset_iff] at fst 
-        exact fst 
-      rw [preimage_union] at hpre 
-      rw [←hpre] at h 
-      rw [Infinite, Infinite]
-      rw [Infinite] at h 
-      contrapose! h 
-      exact finite.union h.1 h.2
-    rw [←infinite_coe_iff, ←infinite_coe_iff] at h 
-    cases' h with inf inf <;> haveI  := inf
-    ·
-      apply hs ((Nat.orderEmbeddingOfSet (f ⁻¹' s)).dual.trans f)
-      change range (Function.comp f (Nat.orderEmbeddingOfSet (f ⁻¹' s))) ⊆ s 
-      rw [range_comp, image_subset_iff]
-      simp 
-    ·
-      apply ht ((Nat.orderEmbeddingOfSet (f ⁻¹' t)).dual.trans f)
-      change range (Function.comp f (Nat.orderEmbeddingOfSet (f ⁻¹' t))) ⊆ t 
-      rw [range_comp, image_subset_iff]
-      simp 
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_wf.union (hs : is_wf s) (ht : is_wf t) : is_wf «expr ∪ »(s, t) :=
+begin
+  classical,
+  rw ["[", expr is_wf_iff_no_descending_seq, "]"] ["at", "*"],
+  rintros [ident f, ident fst],
+  have [ident h] [":", expr «expr ∨ »(infinite «expr ⁻¹' »(f, s), infinite «expr ⁻¹' »(f, t))] [],
+  { have [ident h] [":", expr infinite (univ : set exprℕ())] [":=", expr infinite_univ],
+    have [ident hpre] [":", expr «expr = »(«expr ⁻¹' »(f, «expr ∪ »(s, t)), set.univ)] [],
+    { rw ["[", "<-", expr image_univ, ",", expr image_subset_iff, ",", expr univ_subset_iff, "]"] ["at", ident fst],
+      exact [expr fst] },
+    rw [expr preimage_union] ["at", ident hpre],
+    rw ["<-", expr hpre] ["at", ident h],
+    rw ["[", expr infinite, ",", expr infinite, "]"] [],
+    rw [expr infinite] ["at", ident h],
+    contrapose ["!"] [ident h],
+    exact [expr finite.union h.1 h.2] },
+  rw ["[", "<-", expr infinite_coe_iff, ",", "<-", expr infinite_coe_iff, "]"] ["at", ident h],
+  cases [expr h] ["with", ident inf, ident inf]; haveI [] [] [":=", expr inf],
+  { apply [expr hs ((nat.order_embedding_of_set «expr ⁻¹' »(f, s)).dual.trans f)],
+    change [expr «expr ⊆ »(range (function.comp f (nat.order_embedding_of_set «expr ⁻¹' »(f, s))), s)] [] [],
+    rw ["[", expr range_comp, ",", expr image_subset_iff, "]"] [],
+    simp [] [] [] [] [] [] },
+  { apply [expr ht ((nat.order_embedding_of_set «expr ⁻¹' »(f, t)).dual.trans f)],
+    change [expr «expr ⊆ »(range (function.comp f (nat.order_embedding_of_set «expr ⁻¹' »(f, t))), t)] [] [],
+    rw ["[", expr range_comp, ",", expr image_subset_iff, "]"] [],
+    simp [] [] [] [] [] [] }
+end
 
 end PartialOrderₓ
 
@@ -191,20 +197,26 @@ theorem partially_well_ordered_on.mono {s t : Set α} {r : α → α → Prop} (
   (hsub : s ⊆ t) : s.partially_well_ordered_on r :=
   fun f hf => ht f (Set.Subset.trans hf hsub)
 
-theorem partially_well_ordered_on.image_of_monotone_on {s : Set α} {r : α → α → Prop} {β : Type _} {r' : β → β → Prop}
-  (hs : s.partially_well_ordered_on r) {f : α → β} (hf : ∀ a1 a2 : α, a1 ∈ s → a2 ∈ s → r a1 a2 → r' (f a1) (f a2)) :
-  (f '' s).PartiallyWellOrderedOn r' :=
-  fun g hg =>
-    by 
-      have h := fun n : ℕ => (mem_image _ _ _).1 (hg (mem_range_self n))
-      obtain ⟨m, n, hlt, hmn⟩ := hs (fun n => Classical.some (h n)) _
-      ·
-        refine' ⟨m, n, hlt, _⟩
-        rw [←(Classical.some_spec (h m)).2, ←(Classical.some_spec (h n)).2]
-        exact hf _ _ (Classical.some_spec (h m)).1 (Classical.some_spec (h n)).1 hmn
-      ·
-        rintro _ ⟨n, rfl⟩
-        exact (Classical.some_spec (h n)).1
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem partially_well_ordered_on.image_of_monotone_on
+{s : set α}
+{r : α → α → exprProp()}
+{β : Type*}
+{r' : β → β → exprProp()}
+(hs : s.partially_well_ordered_on r)
+{f : α → β}
+(hf : ∀
+ a1
+ a2 : α, «expr ∈ »(a1, s) → «expr ∈ »(a2, s) → r a1 a2 → r' (f a1) (f a2)) : «expr '' »(f, s).partially_well_ordered_on r' :=
+λ g hg, begin
+  have [ident h] [] [":=", expr λ n : exprℕ(), (mem_image _ _ _).1 (hg (mem_range_self n))],
+  obtain ["⟨", ident m, ",", ident n, ",", ident hlt, ",", ident hmn, "⟩", ":=", expr hs (λ n, classical.some (h n)) _],
+  { refine [expr ⟨m, n, hlt, _⟩],
+    rw ["[", "<-", expr (classical.some_spec (h m)).2, ",", "<-", expr (classical.some_spec (h n)).2, "]"] [],
+    exact [expr hf _ _ (classical.some_spec (h m)).1 (classical.some_spec (h n)).1 hmn] },
+  { rintros ["_", "⟨", ident n, ",", ident rfl, "⟩"],
+    exact [expr (classical.some_spec (h n)).1] }
+end
 
 section PartialOrderₓ
 
@@ -223,7 +235,7 @@ theorem partially_well_ordered_on.exists_monotone_subseq [IsRefl α r] [IsTrans 
         rw [HEq]
         apply refl_of r
     ·
-      exFalso 
+      exfalso 
       obtain ⟨m, n, hlt, hle⟩ := h (f ∘ g) (subset.trans (range_comp_subset_range _ _) hf)
       exact h2 m n hlt hle
 
@@ -238,16 +250,20 @@ theorem partially_well_ordered_on_iff_exists_monotone_subseq [IsRefl α r] [IsTr
       obtain ⟨g, gmon⟩ := h f hf 
       refine' ⟨g 0, g 1, g.lt_iff_lt.2 zero_lt_one, gmon _ _ zero_le_one⟩
 
-theorem partially_well_ordered_on.well_founded_on [IsPartialOrder α r] (h : s.partially_well_ordered_on r) :
-  s.well_founded_on fun a b => r a b ∧ a ≠ b :=
-  by 
-    haveI  : IsStrictOrder α fun a b => r a b ∧ a ≠ b :=
-      { to_is_irrefl := ⟨fun a con => con.2 rfl⟩,
-        to_is_trans := ⟨fun a b c ab bc => ⟨trans ab.1 bc.1, fun ac => ab.2 (antisymm ab.1 (ac.symm ▸ bc.1))⟩⟩ }
-    rw [well_founded_on_iff_no_descending_seq]
-    intro f con 
-    obtain ⟨m, n, hlt, hle⟩ := h f con 
-    exact (f.map_rel_iff.2 hlt).2 (antisymm hle (f.map_rel_iff.2 hlt).1).symm
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem partially_well_ordered_on.well_founded_on
+[is_partial_order α r]
+(h : s.partially_well_ordered_on r) : s.well_founded_on (λ a b, «expr ∧ »(r a b, «expr ≠ »(a, b))) :=
+begin
+  haveI [] [":", expr is_strict_order α (λ
+    a
+    b, «expr ∧ »(r a b, «expr ≠ »(a, b)))] [":=", expr { to_is_irrefl := ⟨λ a con, con.2 rfl⟩,
+     to_is_trans := ⟨λ a b c ab bc, ⟨trans ab.1 bc.1, λ ac, ab.2 (antisymm ab.1 «expr ▸ »(ac.symm, bc.1))⟩⟩ }],
+  rw [expr well_founded_on_iff_no_descending_seq] [],
+  intros [ident f, ident con],
+  obtain ["⟨", ident m, ",", ident n, ",", ident hlt, ",", ident hle, "⟩", ":=", expr h f con],
+  exact [expr (f.map_rel_iff.2 hlt).2 (antisymm hle (f.map_rel_iff.2 hlt).1).symm]
+end
 
 variable[PartialOrderₓ α]
 
@@ -291,55 +307,52 @@ theorem is_pwo.image_of_monotone {β : Type _} [PartialOrderₓ β] (hs : s.is_p
   is_pwo (f '' s) :=
   hs.image_of_monotone_on fun _ _ _ _ ab => hf ab
 
-theorem is_pwo.union (hs : is_pwo s) (ht : is_pwo t) : is_pwo (s ∪ t) :=
-  by 
-    classical 
-    rw [is_pwo_iff_exists_monotone_subseq] at *
-    rintro f fst 
-    have h : Infinite (f ⁻¹' s) ∨ Infinite (f ⁻¹' t)
-    ·
-      have h : Infinite (univ : Set ℕ) := infinite_univ 
-      have hpre : f ⁻¹' (s ∪ t) = Set.Univ
-      ·
-        rw [←image_univ, image_subset_iff, univ_subset_iff] at fst 
-        exact fst 
-      rw [preimage_union] at hpre 
-      rw [←hpre] at h 
-      rw [Infinite, Infinite]
-      rw [Infinite] at h 
-      contrapose! h 
-      exact finite.union h.1 h.2
-    rw [←infinite_coe_iff, ←infinite_coe_iff] at h 
-    cases' h with inf inf <;> haveI  := inf
-    ·
-      obtain ⟨g, hg⟩ := hs (f ∘ Nat.orderEmbeddingOfSet (f ⁻¹' s)) _
-      ·
-        rw [Function.comp.assoc, ←RelEmbedding.coe_trans] at hg 
-        exact ⟨_, hg⟩
-      rw [range_comp, image_subset_iff]
-      simp 
-    ·
-      obtain ⟨g, hg⟩ := ht (f ∘ Nat.orderEmbeddingOfSet (f ⁻¹' t)) _
-      ·
-        rw [Function.comp.assoc, ←RelEmbedding.coe_trans] at hg 
-        exact ⟨_, hg⟩
-      rw [range_comp, image_subset_iff]
-      simp 
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_pwo.union (hs : is_pwo s) (ht : is_pwo t) : is_pwo «expr ∪ »(s, t) :=
+begin
+  classical,
+  rw ["[", expr is_pwo_iff_exists_monotone_subseq, "]"] ["at", "*"],
+  rintros [ident f, ident fst],
+  have [ident h] [":", expr «expr ∨ »(infinite «expr ⁻¹' »(f, s), infinite «expr ⁻¹' »(f, t))] [],
+  { have [ident h] [":", expr infinite (univ : set exprℕ())] [":=", expr infinite_univ],
+    have [ident hpre] [":", expr «expr = »(«expr ⁻¹' »(f, «expr ∪ »(s, t)), set.univ)] [],
+    { rw ["[", "<-", expr image_univ, ",", expr image_subset_iff, ",", expr univ_subset_iff, "]"] ["at", ident fst],
+      exact [expr fst] },
+    rw [expr preimage_union] ["at", ident hpre],
+    rw ["<-", expr hpre] ["at", ident h],
+    rw ["[", expr infinite, ",", expr infinite, "]"] [],
+    rw [expr infinite] ["at", ident h],
+    contrapose ["!"] [ident h],
+    exact [expr finite.union h.1 h.2] },
+  rw ["[", "<-", expr infinite_coe_iff, ",", "<-", expr infinite_coe_iff, "]"] ["at", ident h],
+  cases [expr h] ["with", ident inf, ident inf]; haveI [] [] [":=", expr inf],
+  { obtain ["⟨", ident g, ",", ident hg, "⟩", ":=", expr hs «expr ∘ »(f, nat.order_embedding_of_set «expr ⁻¹' »(f, s)) _],
+    { rw ["[", expr function.comp.assoc, ",", "<-", expr rel_embedding.coe_trans, "]"] ["at", ident hg],
+      exact [expr ⟨_, hg⟩] },
+    rw ["[", expr range_comp, ",", expr image_subset_iff, "]"] [],
+    simp [] [] [] [] [] [] },
+  { obtain ["⟨", ident g, ",", ident hg, "⟩", ":=", expr ht «expr ∘ »(f, nat.order_embedding_of_set «expr ⁻¹' »(f, t)) _],
+    { rw ["[", expr function.comp.assoc, ",", "<-", expr rel_embedding.coe_trans, "]"] ["at", ident hg],
+      exact [expr ⟨_, hg⟩] },
+    rw ["[", expr range_comp, ",", expr image_subset_iff, "]"] [],
+    simp [] [] [] [] [] [] }
+end
 
 end PartialOrderₓ
 
-theorem is_wf.is_pwo [LinearOrderₓ α] {s : Set α} (hs : s.is_wf) : s.is_pwo :=
-  fun f hf =>
-    by 
-      rw [is_wf, well_founded_on_iff] at hs 
-      have hrange : (range f).Nonempty := ⟨f 0, mem_range_self 0⟩
-      let a := hs.min (range f) hrange 
-      obtain ⟨m, hm⟩ := hs.min_mem (range f) hrange 
-      refine' ⟨m, m.succ, m.lt_succ_self, le_of_not_ltₓ fun con => _⟩
-      rw [hm] at con 
-      apply hs.not_lt_min (range f) hrange (mem_range_self m.succ) ⟨con, hf (mem_range_self m.succ), hf _⟩
-      rw [←hm]
-      apply mem_range_self
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_wf.is_pwo [linear_order α] {s : set α} (hs : s.is_wf) : s.is_pwo :=
+λ f hf, begin
+  rw ["[", expr is_wf, ",", expr well_founded_on_iff, "]"] ["at", ident hs],
+  have [ident hrange] [":", expr (range f).nonempty] [":=", expr ⟨f 0, mem_range_self 0⟩],
+  let [ident a] [] [":=", expr hs.min (range f) hrange],
+  obtain ["⟨", ident m, ",", ident hm, "⟩", ":=", expr hs.min_mem (range f) hrange],
+  refine [expr ⟨m, m.succ, m.lt_succ_self, le_of_not_lt (λ con, _)⟩],
+  rw [expr hm] ["at", ident con],
+  apply [expr hs.not_lt_min (range f) hrange (mem_range_self m.succ) ⟨con, hf (mem_range_self m.succ), hf _⟩],
+  rw ["<-", expr hm] [],
+  apply [expr mem_range_self]
+end
 
 theorem is_wf_iff_is_pwo [LinearOrderₓ α] {s : Set α} : s.is_wf ↔ s.is_pwo :=
   ⟨is_wf.is_pwo, is_pwo.is_wf⟩
@@ -535,65 +548,62 @@ theorem iff_forall_not_is_bad_seq (r : α → α → Prop) (s : Set α) :
 def is_min_bad_seq (r : α → α → Prop) (rk : α → ℕ) (s : Set α) (n : ℕ) (f : ℕ → α) : Prop :=
   ∀ g : ℕ → α, (∀ m : ℕ, m < n → f m = g m) → rk (g n) < rk (f n) → ¬is_bad_seq r s g
 
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a bad sequence `f`, this constructs a bad sequence that agrees with `f` on the first `n`
   terms and is minimal at `n`.
 -/
-noncomputable def min_bad_seq_of_bad_seq (r : α → α → Prop) (rk : α → ℕ) (s : Set α) (n : ℕ) (f : ℕ → α)
-  (hf : is_bad_seq r s f) :
-  { g : ℕ → α // (∀ m : ℕ, m < n → f m = g m) ∧ is_bad_seq r s g ∧ is_min_bad_seq r rk s n g } :=
-  by 
-    classical 
-    have h : ∃ (k : ℕ)(g : ℕ → α), (∀ m, m < n → f m = g m) ∧ is_bad_seq r s g ∧ rk (g n) = k :=
-      ⟨_, f, fun _ _ => rfl, hf, rfl⟩
-    obtain ⟨h1, h2, h3⟩ := Classical.some_spec (Nat.find_specₓ h)
-    refine'
-      ⟨Classical.some (Nat.find_specₓ h), h1,
-        by 
-          convert h2,
-        fun g hg1 hg2 con => _⟩
-    refine'
-      Nat.find_minₓ h _
-        ⟨g, fun m mn => (h1 m mn).trans (hg1 m mn),
-          by 
-            convert con,
-          rfl⟩
-    rwa [←h3]
+noncomputable
+def min_bad_seq_of_bad_seq
+(r : α → α → exprProp())
+(rk : α → exprℕ())
+(s : set α)
+(n : exprℕ())
+(f : exprℕ() → α)
+(hf : is_bad_seq r s f) : {g : exprℕ() → α // «expr ∧ »(∀
+ m : exprℕ(), «expr < »(m, n) → «expr = »(f m, g m), «expr ∧ »(is_bad_seq r s g, is_min_bad_seq r rk s n g))} :=
+begin
+  classical,
+  have [ident h] [":", expr «expr∃ , »((k : exprℕ())
+    (g : exprℕ() → α), «expr ∧ »(∀
+     m, «expr < »(m, n) → «expr = »(f m, g m), «expr ∧ »(is_bad_seq r s g, «expr = »(rk (g n), k))))] [":=", expr ⟨_, f, λ
+    _ _, rfl, hf, rfl⟩],
+  obtain ["⟨", ident h1, ",", ident h2, ",", ident h3, "⟩", ":=", expr classical.some_spec (nat.find_spec h)],
+  refine [expr ⟨classical.some (nat.find_spec h), h1, by convert [] [expr h2] [], λ g hg1 hg2 con, _⟩],
+  refine [expr nat.find_min h _ ⟨g, λ m mn, (h1 m mn).trans (hg1 m mn), by convert [] [expr con] [], rfl⟩],
+  rwa ["<-", expr h3] []
+end
 
-theorem exists_min_bad_of_exists_bad (r : α → α → Prop) (rk : α → ℕ) (s : Set α) :
-  (∃ f, is_bad_seq r s f) → ∃ f, is_bad_seq r s f ∧ ∀ n, is_min_bad_seq r rk s n f :=
-  by 
-    rintro ⟨f0, hf0 : is_bad_seq r s f0⟩
-    let fs : ∀ n : ℕ, { f : ℕ → α // is_bad_seq r s f ∧ is_min_bad_seq r rk s n f }
-    ·
-      refine' Nat.rec _ _
-      ·
-        exact ⟨(min_bad_seq_of_bad_seq r rk s 0 f0 hf0).1, (min_bad_seq_of_bad_seq r rk s 0 f0 hf0).2.2⟩
-      ·
-        exact
-          fun n fn =>
-            ⟨(min_bad_seq_of_bad_seq r rk s (n+1) fn.1 fn.2.1).1, (min_bad_seq_of_bad_seq r rk s (n+1) fn.1 fn.2.1).2.2⟩
-    have h : ∀ m n, m ≤ n → (fs m).1 m = (fs n).1 m
-    ·
-      intro m n mn 
-      obtain ⟨k, rfl⟩ := exists_add_of_le mn 
-      clear mn 
-      induction' k with k ih
-      ·
-        rfl 
-      rw [ih,
-        (min_bad_seq_of_bad_seq r rk s (m+k).succ (fs (m+k)).1 (fs (m+k)).2.1).2.1 m
-          (Nat.lt_succ_iff.2 (Nat.add_le_add_leftₓ k.zero_le m))]
-      rfl 
-    refine'
-      ⟨fun n => (fs n).1 n, ⟨Set.range_subset_iff.2 fun n => (fs n).2.1.1 (mem_range_self n), fun m n mn => _⟩,
-        fun n g hg1 hg2 => _⟩
-    ·
-      dsimp 
-      rw [←Subtype.val_eq_coe, h m n (le_of_ltₓ mn)]
-      convert (fs n).2.1.2 m n mn
-    ·
-      convert (fs n).2.2 g (fun m mn => Eq.trans _ (hg1 m mn)) (lt_of_lt_of_leₓ hg2 (le_reflₓ _))
-      rw [←h m n (le_of_ltₓ mn)]
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_min_bad_of_exists_bad
+(r : α → α → exprProp())
+(rk : α → exprℕ())
+(s : set α) : «expr∃ , »((f), is_bad_seq r s f) → «expr∃ , »((f), «expr ∧ »(is_bad_seq r s f, ∀
+  n, is_min_bad_seq r rk s n f)) :=
+begin
+  rintro ["⟨", ident f0, ",", "(", ident hf0, ":", expr is_bad_seq r s f0, ")", "⟩"],
+  let [ident fs] [":", expr ∀
+   n : exprℕ(), {f : exprℕ() → α // «expr ∧ »(is_bad_seq r s f, is_min_bad_seq r rk s n f)}] [],
+  { refine [expr nat.rec _ _],
+    { exact [expr ⟨(min_bad_seq_of_bad_seq r rk s 0 f0 hf0).1, (min_bad_seq_of_bad_seq r rk s 0 f0 hf0).2.2⟩] },
+    { exact [expr λ
+       n
+       fn, ⟨(min_bad_seq_of_bad_seq r rk s «expr + »(n, 1) fn.1 fn.2.1).1, (min_bad_seq_of_bad_seq r rk s «expr + »(n, 1) fn.1 fn.2.1).2.2⟩] } },
+  have [ident h] [":", expr ∀ m n, «expr ≤ »(m, n) → «expr = »((fs m).1 m, (fs n).1 m)] [],
+  { intros [ident m, ident n, ident mn],
+    obtain ["⟨", ident k, ",", ident rfl, "⟩", ":=", expr exists_add_of_le mn],
+    clear [ident mn],
+    induction [expr k] [] ["with", ident k, ident ih] [],
+    { refl },
+    rw ["[", expr ih, ",", expr (min_bad_seq_of_bad_seq r rk s «expr + »(m, k).succ (fs «expr + »(m, k)).1 (fs «expr + »(m, k)).2.1).2.1 m (nat.lt_succ_iff.2 (nat.add_le_add_left k.zero_le m)), "]"] [],
+    refl },
+  refine [expr ⟨λ
+    n, (fs n).1 n, ⟨set.range_subset_iff.2 (λ n, (fs n).2.1.1 (mem_range_self n)), λ m n mn, _⟩, λ n g hg1 hg2, _⟩],
+  { dsimp [] [] [] [],
+    rw ["[", "<-", expr subtype.val_eq_coe, ",", expr h m n (le_of_lt mn), "]"] [],
+    convert [] [expr (fs n).2.1.2 m n mn] [] },
+  { convert [] [expr (fs n).2.2 g (λ m mn, eq.trans _ (hg1 m mn)) (lt_of_lt_of_le hg2 (le_refl _))] [],
+    rw ["<-", expr h m n (le_of_lt mn)] [] }
+end
 
 theorem iff_not_exists_is_min_bad_seq {r : α → α → Prop} (rk : α → ℕ) {s : Set α} :
   s.partially_well_ordered_on r ↔ ¬∃ f, is_bad_seq r s f ∧ ∀ n, is_min_bad_seq r rk s n f :=
@@ -605,106 +615,103 @@ theorem iff_not_exists_is_min_bad_seq {r : α → α → Prop} (rk : α → ℕ)
     rintro ⟨f, hf1, hf2⟩
     exact ⟨f, hf1⟩
 
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Higman's Lemma, which states that for any reflexive, transitive relation `r` which is
   partially well-ordered on a set `s`, the relation `list.sublist_forall₂ r` is partially
   well-ordered on the set of lists of elements of `s`. That relation is defined so that
   `list.sublist_forall₂ r l₁ l₂` whenever `l₁` related pointwise by `r` to a sublist of `l₂`.  -/
-theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [IsRefl α r] [IsTrans α r] {s : Set α}
-  (h : s.partially_well_ordered_on r) :
-  { l : List α | ∀ x, x ∈ l → x ∈ s }.PartiallyWellOrderedOn (List.SublistForall₂ r) :=
-  by 
-    rcases s.eq_empty_or_nonempty with (rfl | ⟨as, has⟩)
-    ·
-      apply partially_well_ordered_on.mono (Finset.partially_well_ordered_on {List.nil})
-      ·
-        intro l hl 
-        rw [Finset.mem_coe, Finset.mem_singleton, List.eq_nil_iff_forall_not_memₓ]
-        exact hl 
-      infer_instance 
-    haveI  : Inhabited α := ⟨as⟩
-    rw [iff_not_exists_is_min_bad_seq List.length]
-    rintro ⟨f, hf1, hf2⟩
-    have hnil : ∀ n, f n ≠ List.nil := fun n con => hf1.2 n n.succ n.lt_succ_self (con.symm ▸ List.SublistForall₂.nil)
-    obtain ⟨g, hg⟩ := h.exists_monotone_subseq (List.headₓ ∘ f) _ 
-    swap
-    ·
-      simp only [Set.range_subset_iff, Function.comp_apply]
-      exact fun n => hf1.1 (Set.mem_range_self n) _ (List.head_mem_self (hnil n))
-    have hf' :=
-      hf2 (g 0) (fun n => if n < g 0 then f n else List.tail (f (g (n - g 0)))) (fun m hm => (if_pos hm).symm) _ 
-    swap
-    ·
-      simp only [if_neg (lt_irreflₓ (g 0)), tsub_self]
-      rw [List.length_tail, ←Nat.pred_eq_sub_one]
-      exact Nat.pred_ltₓ fun con => hnil _ (List.length_eq_zero.1 con)
-    rw [is_bad_seq] at hf' 
-    pushNeg  at hf' 
-    obtain ⟨m, n, mn, hmn⟩ := hf' _ 
-    swap
-    ·
-      rw [Set.range_subset_iff]
-      rintro n x hx 
-      splitIfs  at hx with hn hn
-      ·
-        exact hf1.1 (Set.mem_range_self _) _ hx
-      ·
-        refine' hf1.1 (Set.mem_range_self _) _ (List.tail_subset _ hx)
-    byCases' hn : n < g 0
-    ·
-      apply hf1.2 m n mn 
-      rwa [if_pos hn, if_pos (mn.trans hn)] at hmn
-    ·
-      obtain ⟨n', rfl⟩ := le_iff_exists_add.1 (not_ltₓ.1 hn)
-      rw [if_neg hn, add_commₓ (g 0) n', add_tsub_cancel_right] at hmn 
-      splitIfs  at hmn with hm hm
-      ·
-        apply hf1.2 m (g n') (lt_of_lt_of_leₓ hm (g.monotone n'.zero_le))
-        exact trans hmn (List.tail_sublist_forall₂_self _)
-      ·
-        rw [←tsub_lt_iff_left (le_of_not_ltₓ hm)] at mn 
-        apply hf1.2 _ _ (g.lt_iff_lt.2 mn)
-        rw [←List.cons_head_tail (hnil (g (m - g 0))), ←List.cons_head_tail (hnil (g n'))]
-        exact List.SublistForall₂.cons (hg _ _ (le_of_ltₓ mn)) hmn
+theorem partially_well_ordered_on_sublist_forall₂
+(r : α → α → exprProp())
+[is_refl α r]
+[is_trans α r]
+{s : set α}
+(h : s.partially_well_ordered_on r) : {l : list α | ∀
+x, «expr ∈ »(x, l) → «expr ∈ »(x, s)}.partially_well_ordered_on (list.sublist_forall₂ r) :=
+begin
+  rcases [expr s.eq_empty_or_nonempty, "with", ident rfl, "|", "⟨", ident as, ",", ident has, "⟩"],
+  { apply [expr partially_well_ordered_on.mono (finset.partially_well_ordered_on {list.nil})],
+    { intros [ident l, ident hl],
+      rw ["[", expr finset.mem_coe, ",", expr finset.mem_singleton, ",", expr list.eq_nil_iff_forall_not_mem, "]"] [],
+      exact [expr hl] },
+    apply_instance },
+  haveI [] [":", expr inhabited α] [":=", expr ⟨as⟩],
+  rw ["[", expr iff_not_exists_is_min_bad_seq list.length, "]"] [],
+  rintro ["⟨", ident f, ",", ident hf1, ",", ident hf2, "⟩"],
+  have [ident hnil] [":", expr ∀
+   n, «expr ≠ »(f n, list.nil)] [":=", expr λ
+   n con, hf1.2 n n.succ n.lt_succ_self «expr ▸ »(con.symm, list.sublist_forall₂.nil)],
+  obtain ["⟨", ident g, ",", ident hg, "⟩", ":=", expr h.exists_monotone_subseq «expr ∘ »(list.head, f) _],
+  swap,
+  { simp [] [] ["only"] ["[", expr set.range_subset_iff, ",", expr function.comp_apply, "]"] [] [],
+    exact [expr λ n, hf1.1 (set.mem_range_self n) _ (list.head_mem_self (hnil n))] },
+  have [ident hf'] [] [":=", expr hf2 (g 0) (λ
+    n, if «expr < »(n, g 0) then f n else list.tail (f (g «expr - »(n, g 0)))) (λ m hm, (if_pos hm).symm) _],
+  swap,
+  { simp [] [] ["only"] ["[", expr if_neg (lt_irrefl (g 0)), ",", expr tsub_self, "]"] [] [],
+    rw ["[", expr list.length_tail, ",", "<-", expr nat.pred_eq_sub_one, "]"] [],
+    exact [expr nat.pred_lt (λ con, hnil _ (list.length_eq_zero.1 con))] },
+  rw ["[", expr is_bad_seq, "]"] ["at", ident hf'],
+  push_neg ["at", ident hf'],
+  obtain ["⟨", ident m, ",", ident n, ",", ident mn, ",", ident hmn, "⟩", ":=", expr hf' _],
+  swap,
+  { rw [expr set.range_subset_iff] [],
+    rintro [ident n, ident x, ident hx],
+    split_ifs ["at", ident hx] ["with", ident hn, ident hn],
+    { exact [expr hf1.1 (set.mem_range_self _) _ hx] },
+    { refine [expr hf1.1 (set.mem_range_self _) _ (list.tail_subset _ hx)] } },
+  by_cases [expr hn, ":", expr «expr < »(n, g 0)],
+  { apply [expr hf1.2 m n mn],
+    rwa ["[", expr if_pos hn, ",", expr if_pos (mn.trans hn), "]"] ["at", ident hmn] },
+  { obtain ["⟨", ident n', ",", ident rfl, "⟩", ":=", expr le_iff_exists_add.1 (not_lt.1 hn)],
+    rw ["[", expr if_neg hn, ",", expr add_comm (g 0) n', ",", expr add_tsub_cancel_right, "]"] ["at", ident hmn],
+    split_ifs ["at", ident hmn] ["with", ident hm, ident hm],
+    { apply [expr hf1.2 m (g n') (lt_of_lt_of_le hm (g.monotone n'.zero_le))],
+      exact [expr trans hmn (list.tail_sublist_forall₂_self _)] },
+    { rw ["[", "<-", expr tsub_lt_iff_left (le_of_not_lt hm), "]"] ["at", ident mn],
+      apply [expr hf1.2 _ _ (g.lt_iff_lt.2 mn)],
+      rw ["[", "<-", expr list.cons_head_tail (hnil (g «expr - »(m, g 0))), ",", "<-", expr list.cons_head_tail (hnil (g n')), "]"] [],
+      exact [expr list.sublist_forall₂.cons (hg _ _ (le_of_lt mn)) hmn] } }
+end
 
 end PartiallyWellOrderedOn
 
 namespace IsPwo
 
-@[toAdditive]
-theorem submonoid_closure [OrderedCancelCommMonoid α] {s : Set α} (hpos : ∀ x : α, x ∈ s → 1 ≤ x) (h : s.is_pwo) :
-  is_pwo (Submonoid.closure s : Set α) :=
-  by 
-    have hl : (Submonoid.closure s : Set α) ⊆ List.prod '' { l : List α | ∀ x, x ∈ l → x ∈ s }
-    ·
-      intro x hx 
-      rw [SetLike.mem_coe] at hx 
-      refine'
-        Submonoid.closure_induction hx (fun x hx => ⟨_, fun y hy => _, List.prod_singleton⟩)
-          ⟨_, fun y hy => (List.not_mem_nil _ hy).elim, List.prod_nil⟩ _
-      ·
-        rwa [List.mem_singleton.1 hy]
-      rintro _ _ ⟨l, hl, rfl⟩ ⟨l', hl', rfl⟩
-      refine' ⟨_, fun y hy => _, List.prod_append⟩
-      cases' List.mem_appendₓ.1 hy with hy hy
-      ·
-        exact hl _ hy
-      ·
-        exact hl' _ hy 
-    apply ((h.partially_well_ordered_on_sublist_forall₂ (· ≤ ·)).image_of_monotone_on _).mono hl 
-    intro l1 l2 hl1 hl2 h12 
-    obtain ⟨l, hll1, hll2⟩ := List.sublist_forall₂_iff.1 h12 
-    refine' le_transₓ (List.rel_prod (le_reflₓ 1) (fun a b ab c d cd => mul_le_mul' ab cd) hll1) _ 
-    obtain ⟨l', hl'⟩ := hll2.exists_perm_append 
-    rw [hl'.prod_eq, List.prod_append, ←mul_oneₓ l.prod, mul_assocₓ, one_mulₓ]
-    apply mul_le_mul_left' 
-    have hl's := fun x hx => hl2 x (List.Subset.trans (l.subset_append_right _) hl'.symm.subset hx)
-    clear hl' 
-    induction' l' with x1 x2 x3 x4 x5
-    ·
-      rfl 
-    rw [List.prod_cons, ←one_mulₓ (1 : α)]
-    exact
-      mul_le_mul' (hpos x1 (hl's x1 (List.mem_cons_selfₓ x1 x2))) (x3 fun x hx => hl's x (List.mem_cons_of_memₓ _ hx))
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem submonoid_closure
+[ordered_cancel_comm_monoid α]
+{s : set α}
+(hpos : ∀ x : α, «expr ∈ »(x, s) → «expr ≤ »(1, x))
+(h : s.is_pwo) : is_pwo (submonoid.closure s : set α) :=
+begin
+  have [ident hl] [":", expr «expr ⊆ »((submonoid.closure s : set α), «expr '' »(list.prod, {l : list α | ∀
+     x, «expr ∈ »(x, l) → «expr ∈ »(x, s)}))] [],
+  { intros [ident x, ident hx],
+    rw [expr set_like.mem_coe] ["at", ident hx],
+    refine [expr submonoid.closure_induction hx (λ
+      x hx, ⟨_, λ y hy, _, list.prod_singleton⟩) ⟨_, λ y hy, (list.not_mem_nil _ hy).elim, list.prod_nil⟩ _],
+    { rwa [expr list.mem_singleton.1 hy] [] },
+    rintros ["_", "_", "⟨", ident l, ",", ident hl, ",", ident rfl, "⟩", "⟨", ident l', ",", ident hl', ",", ident rfl, "⟩"],
+    refine [expr ⟨_, λ y hy, _, list.prod_append⟩],
+    cases [expr list.mem_append.1 hy] ["with", ident hy, ident hy],
+    { exact [expr hl _ hy] },
+    { exact [expr hl' _ hy] } },
+  apply [expr ((h.partially_well_ordered_on_sublist_forall₂ ((«expr ≤ »))).image_of_monotone_on _).mono hl],
+  intros [ident l1, ident l2, ident hl1, ident hl2, ident h12],
+  obtain ["⟨", ident l, ",", ident hll1, ",", ident hll2, "⟩", ":=", expr list.sublist_forall₂_iff.1 h12],
+  refine [expr le_trans (list.rel_prod (le_refl 1) (λ a b ab c d cd, mul_le_mul' ab cd) hll1) _],
+  obtain ["⟨", ident l', ",", ident hl', "⟩", ":=", expr hll2.exists_perm_append],
+  rw ["[", expr hl'.prod_eq, ",", expr list.prod_append, ",", "<-", expr mul_one l.prod, ",", expr mul_assoc, ",", expr one_mul, "]"] [],
+  apply [expr mul_le_mul_left'],
+  have [ident hl's] [] [":=", expr λ x hx, hl2 x (list.subset.trans (l.subset_append_right _) hl'.symm.subset hx)],
+  clear [ident hl'],
+  induction [expr l'] [] ["with", ident x1, ident x2, ident x3, ident x4, ident x5] [],
+  { refl },
+  rw ["[", expr list.prod_cons, ",", "<-", expr one_mul (1 : α), "]"] [],
+  exact [expr mul_le_mul' (hpos x1 (hl's x1 (list.mem_cons_self x1 x2))) (x3 (λ
+     x hx, hl's x (list.mem_cons_of_mem _ hx)))]
+end
 
 end IsPwo
 
@@ -726,19 +733,20 @@ section CancelCommMonoid
 
 variable[CancelCommMonoid α]{s t : Set α}{a : α}
 
-@[toAdditive]
-theorem fst_eq_fst_iff_snd_eq_snd {x y : mul_antidiagonal s t a} :
-  (x : α × α).fst = (y : α × α).fst ↔ (x : α × α).snd = (y : α × α).snd :=
-  ⟨fun h =>
-      by 
-        have hx := x.2.1
-        rw [Subtype.val_eq_coe, h] at hx 
-        apply mul_left_cancelₓ (hx.trans y.2.1.symm),
-    fun h =>
-      by 
-        have hx := x.2.1
-        rw [Subtype.val_eq_coe, h] at hx 
-        apply mul_right_cancelₓ (hx.trans y.2.1.symm)⟩
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem fst_eq_fst_iff_snd_eq_snd
+{x
+ y : mul_antidiagonal s t a} : «expr ↔ »(«expr = »((x : «expr × »(α, α)).fst, (y : «expr × »(α, α)).fst), «expr = »((x : «expr × »(α, α)).snd, (y : «expr × »(α, α)).snd)) :=
+⟨λ h, begin
+   have [ident hx] [] [":=", expr x.2.1],
+   rw ["[", expr subtype.val_eq_coe, ",", expr h, "]"] ["at", ident hx],
+   apply [expr mul_left_cancel (hx.trans y.2.1.symm)]
+ end, λ h, begin
+   have [ident hx] [] [":=", expr x.2.1],
+   rw ["[", expr subtype.val_eq_coe, ",", expr h, "]"] ["at", ident hx],
+   apply [expr mul_right_cancel (hx.trans y.2.1.symm)]
+ end⟩
 
 @[toAdditive]
 theorem eq_of_fst_eq_fst {x y : mul_antidiagonal s t a} (h : (x : α × α).fst = (y : α × α).fst) : x = y :=
@@ -762,14 +770,14 @@ theorem eq_of_fst_le_fst_of_snd_le_snd {x y : mul_antidiagonal s t a} (h1 : (x :
     cases' eq_or_lt_of_le h1 with heq hlt
     ·
       exact HEq 
-    exFalso 
+    exfalso 
     exact
       ne_of_ltₓ (mul_lt_mul_of_lt_of_le hlt h2)
         ((mem_mul_antidiagonal.1 x.2).1.trans (mem_mul_antidiagonal.1 y.2).1.symm)
 
 variable{s}{t}
 
--- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]] theorem finite_of_is_pwo (hs : s.is_pwo) (ht : t.is_pwo) (a) : (mul_antidiagonal s t a).finite :=
 begin
   by_contra [ident h],
@@ -846,14 +854,14 @@ theorem mul_antidiagonal_mono_right (hut : u ⊆ t) : Finset.mulAntidiagonal hs 
       exact ⟨hx.1, hx.2.1, hut hx.2.2⟩
 
 @[toAdditive]
-theorem support_mul_antidiagonal_subset_mul : { a : α | (mul_antidiagonal hs ht a).Nonempty } ⊆ s*t :=
+theorem support_mul_antidiagonal_subset_mul : { a:α | (mul_antidiagonal hs ht a).Nonempty } ⊆ s*t :=
   fun x ⟨⟨a1, a2⟩, ha⟩ =>
     by 
       obtain ⟨hmul, h1, h2⟩ := mem_mul_antidiagonal.1 ha 
       exact ⟨a1, a2, h1, h2, hmul⟩
 
 @[toAdditive]
-theorem is_pwo_support_mul_antidiagonal : { a : α | (mul_antidiagonal hs ht a).Nonempty }.IsPwo :=
+theorem is_pwo_support_mul_antidiagonal : { a:α | (mul_antidiagonal hs ht a).Nonempty }.IsPwo :=
   (hs.mul ht).mono support_mul_antidiagonal_subset_mul
 
 @[toAdditive]

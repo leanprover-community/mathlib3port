@@ -1,6 +1,7 @@
-import Mathbin.Topology.Category.Top.Basic 
+import Mathbin.Topology.Opens 
+import Mathbin.CategoryTheory.Category.Preorder 
 import Mathbin.CategoryTheory.EqToHom 
-import Mathbin.CategoryTheory.Category.Preorder
+import Mathbin.Topology.Category.Top.Basic
 
 /-!
 # The category of open sets in a topological space.
@@ -54,31 +55,31 @@ We now construct as morphisms various inclusions of open sets.
 The inclusion `U ⊓ V ⟶ U` as a morphism in the category of open sets.
 -/
 def inf_le_left (U V : opens X) : U⊓V ⟶ U :=
-  inf_le_left.Hom
+  inf_le_left.hom
 
 /--
 The inclusion `U ⊓ V ⟶ V` as a morphism in the category of open sets.
 -/
 def inf_le_right (U V : opens X) : U⊓V ⟶ V :=
-  inf_le_right.Hom
+  inf_le_right.hom
 
 /--
 The inclusion `U i ⟶ supr U` as a morphism in the category of open sets.
 -/
 def le_supr {ι : Type _} (U : ι → opens X) (i : ι) : U i ⟶ supr U :=
-  (le_supr U i).Hom
+  (le_supr U i).hom
 
 /--
 The inclusion `⊥ ⟶ U` as a morphism in the category of open sets.
 -/
 def bot_le (U : opens X) : ⊥ ⟶ U :=
-  bot_le.Hom
+  bot_le.hom
 
 /--
 The inclusion `U ⟶ ⊤` as a morphism in the category of open sets.
 -/
 def le_top (U : opens X) : U ⟶ ⊤ :=
-  le_top.Hom
+  le_top.hom
 
 theorem inf_le_left_apply (U V : opens X) x : (inf_le_left U V) x = ⟨x.1, (@_root_.inf_le_left _ _ U V : _ ≤ _) x.2⟩ :=
   rfl
@@ -121,7 +122,7 @@ theorem OpenEmbedding {X : Top.{u}} (U : opens X) : OpenEmbedding (inclusion U) 
 The inclusion of the top open subset (i.e. the whole space) is an isomorphism.
 -/
 def inclusion_top_iso (X : Top.{u}) : (to_Top X).obj ⊤ ≅ X :=
-  { Hom := inclusion ⊤, inv := ⟨fun x => ⟨x, trivialₓ⟩, continuous_def.2$ fun U ⟨S, hS, hSU⟩ => hSU ▸ hS⟩ }
+  { hom := inclusion ⊤, inv := ⟨fun x => ⟨x, trivialₓ⟩, continuous_def.2$ fun U ⟨S, hS, hSU⟩ => hSU ▸ hS⟩ }
 
 /-- `opens.map f` gives the functor from open sets in Y to open set in X,
     given by taking preimages under f. -/
@@ -195,7 +196,7 @@ is naturally isomorphic to the identity functor.
 -/
 @[simps]
 def map_id : map (𝟙 X) ≅ 𝟭 (opens X) :=
-  { Hom := { app := fun U => eq_to_hom (map_id_obj U) }, inv := { app := fun U => eq_to_hom (map_id_obj U).symm } }
+  { hom := { app := fun U => eq_to_hom (map_id_obj U) }, inv := { app := fun U => eq_to_hom (map_id_obj U).symm } }
 
 theorem map_id_eq : map (𝟙 X) = 𝟭 (opens X) :=
   by 
@@ -213,7 +214,7 @@ of taking preimages under `g`, then preimages under `f`.
 -/
 @[simps]
 def map_comp (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map g ⋙ map f :=
-  { Hom := { app := fun U => eq_to_hom (map_comp_obj f g U) },
+  { hom := { app := fun U => eq_to_hom (map_comp_obj f g U) },
     inv := { app := fun U => eq_to_hom (map_comp_obj f g U).symm } }
 
 theorem map_comp_eq (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) = map g ⋙ map f :=
@@ -244,7 +245,7 @@ theorem map_iso_refl (f : X ⟶ Y) h : map_iso f f h = iso.refl (map _) :=
 
 @[simp]
 theorem map_iso_hom_app (f g : X ⟶ Y) (h : f = g) (U : opens Y) :
-  (map_iso f g h).Hom.app U = eq_to_hom (congr_funₓ (congr_argₓ functor.obj (congr_argₓ map h)) U) :=
+  (map_iso f g h).hom.app U = eq_to_hom (congr_funₓ (congr_argₓ functor.obj (congr_argₓ map h)) U) :=
   rfl
 
 @[simp]

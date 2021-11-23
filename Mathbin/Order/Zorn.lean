@@ -172,59 +172,56 @@ theorem chain_closure_closure : ⋃₀chain_closure ∈ chain_closure :=
 
 variable{c c₁ c₂ c₃ : Set α}
 
-private theorem chain_closure_succ_total_aux (hc₁ : c₁ ∈ chain_closure) (hc₂ : c₂ ∈ chain_closure)
-  (h : ∀ {c₃}, c₃ ∈ chain_closure → c₃ ⊆ c₂ → c₂ = c₃ ∨ succ_chain c₃ ⊆ c₂) : c₁ ⊆ c₂ ∨ succ_chain c₂ ⊆ c₁ :=
-  by 
-    induction hc₁ 
-    case succ c₃ hc₃ ih => 
-      cases' ih with ih ih
-      ·
-        have h := h hc₃ ih 
-        cases' h with h h
-        ·
-          exact Or.inr (h ▸ subset.refl _)
-        ·
-          exact Or.inl h
-      ·
-        exact Or.inr (subset.trans ih succ_increasing)
-    case union s hs ih => 
-      refine' or_iff_not_imp_right.2$ fun hn => sUnion_subset$ fun a ha => _ 
-      apply (ih a ha).resolve_right 
-      apply mt (fun h => _) hn 
-      exact subset.trans h (subset_sUnion_of_mem ha)
+-- error in Order.Zorn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem chain_closure_succ_total_aux
+(hc₁ : «expr ∈ »(c₁, chain_closure))
+(hc₂ : «expr ∈ »(c₂, chain_closure))
+(h : ∀
+ {c₃}, «expr ∈ »(c₃, chain_closure) → «expr ⊆ »(c₃, c₂) → «expr ∨ »(«expr = »(c₂, c₃), «expr ⊆ »(succ_chain c₃, c₂))) : «expr ∨ »(«expr ⊆ »(c₁, c₂), «expr ⊆ »(succ_chain c₂, c₁)) :=
+begin
+  induction [expr hc₁] [] [] [],
+  case [ident succ, ":", ident c₃, ident hc₃, ident ih] { cases [expr ih] ["with", ident ih, ident ih],
+    { have [ident h] [] [":=", expr h hc₃ ih],
+      cases [expr h] ["with", ident h, ident h],
+      { exact [expr or.inr «expr ▸ »(h, subset.refl _)] },
+      { exact [expr or.inl h] } },
+    { exact [expr or.inr (subset.trans ih succ_increasing)] } },
+  case [ident union, ":", ident s, ident hs, ident ih] { refine [expr «expr $ »(or_iff_not_imp_right.2, λ
+      hn, «expr $ »(sUnion_subset, λ a ha, _))],
+    apply [expr (ih a ha).resolve_right],
+    apply [expr mt (λ h, _) hn],
+    exact [expr subset.trans h (subset_sUnion_of_mem ha)] }
+end
 
-private theorem chain_closure_succ_total (hc₁ : c₁ ∈ chain_closure) (hc₂ : c₂ ∈ chain_closure) (h : c₁ ⊆ c₂) :
-  c₂ = c₁ ∨ succ_chain c₁ ⊆ c₂ :=
-  by 
-    induction hc₂ generalizing c₁ hc₁ h 
-    case succ c₂ hc₂ ih => 
-      have h₁ : c₁ ⊆ c₂ ∨ @succ_chain α r c₂ ⊆ c₁ := chain_closure_succ_total_aux hc₁ hc₂$ fun c₁ => ih 
-      cases' h₁ with h₁ h₁
-      ·
-        have h₂ := ih hc₁ h₁ 
-        cases' h₂ with h₂ h₂
-        ·
-          exact Or.inr$ h₂ ▸ subset.refl _
-        ·
-          exact Or.inr$ subset.trans h₂ succ_increasing
-      ·
-        exact Or.inl$ subset.antisymm h₁ h 
-    case union s hs ih => 
-      apply Or.imp_left fun h' => subset.antisymm h' h 
-      apply Classical.by_contradiction 
-      simp [not_or_distrib, sUnion_subset_iff, not_forall]
-      intro c₃ hc₃ h₁ h₂ 
-      have h := chain_closure_succ_total_aux hc₁ (hs c₃ hc₃) fun c₄ => ih _ hc₃ 
-      cases' h with h h
-      ·
-        have h' := ih c₃ hc₃ hc₁ h 
-        cases' h' with h' h'
-        ·
-          exact h₁$ h' ▸ subset.refl _
-        ·
-          exact h₂$ subset.trans h'$ subset_sUnion_of_mem hc₃
-      ·
-        exact h₁$ subset.trans succ_increasing h
+-- error in Order.Zorn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem chain_closure_succ_total
+(hc₁ : «expr ∈ »(c₁, chain_closure))
+(hc₂ : «expr ∈ »(c₂, chain_closure))
+(h : «expr ⊆ »(c₁, c₂)) : «expr ∨ »(«expr = »(c₂, c₁), «expr ⊆ »(succ_chain c₁, c₂)) :=
+begin
+  induction [expr hc₂] [] [] ["generalizing", ident c₁, ident hc₁, ident h],
+  case [ident succ, ":", ident c₂, ident hc₂, ident ih] { have [ident h₁] [":", expr «expr ∨ »(«expr ⊆ »(c₁, c₂), «expr ⊆ »(@succ_chain α r c₂, c₁))] [":=", expr «expr $ »(chain_closure_succ_total_aux hc₁ hc₂, λ
+      c₁, ih)],
+    cases [expr h₁] ["with", ident h₁, ident h₁],
+    { have [ident h₂] [] [":=", expr ih hc₁ h₁],
+      cases [expr h₂] ["with", ident h₂, ident h₂],
+      { exact [expr «expr $ »(or.inr, «expr ▸ »(h₂, subset.refl _))] },
+      { exact [expr «expr $ »(or.inr, subset.trans h₂ succ_increasing)] } },
+    { exact [expr «expr $ »(or.inl, subset.antisymm h₁ h)] } },
+  case [ident union, ":", ident s, ident hs, ident ih] { apply [expr or.imp_left (λ h', subset.antisymm h' h)],
+    apply [expr classical.by_contradiction],
+    simp [] [] [] ["[", expr not_or_distrib, ",", expr sUnion_subset_iff, ",", expr not_forall, "]"] [] [],
+    intros [ident c₃, ident hc₃, ident h₁, ident h₂],
+    have [ident h] [] [":=", expr chain_closure_succ_total_aux hc₁ (hs c₃ hc₃) (λ c₄, ih _ hc₃)],
+    cases [expr h] ["with", ident h, ident h],
+    { have [ident h'] [] [":=", expr ih c₃ hc₃ hc₁ h],
+      cases [expr h'] ["with", ident h', ident h'],
+      { exact [expr «expr $ »(h₁, «expr ▸ »(h', subset.refl _))] },
+      { exact [expr «expr $ »(h₂, «expr $ »(subset.trans h', subset_sUnion_of_mem hc₃))] } },
+    { exact [expr «expr $ »(h₁, subset.trans succ_increasing h)] } }
+end
 
 theorem chain_closure_total (hc₁ : c₁ ∈ chain_closure) (hc₂ : c₂ ∈ chain_closure) : c₁ ⊆ c₂ ∨ c₂ ⊆ c₁ :=
   Or.imp_rightₓ succ_increasing.trans$
@@ -243,22 +240,26 @@ theorem chain_closure_succ_fixpoint_iff (hc : c ∈ chain_closure) : succ_chain 
   ⟨fun h => (subset_sUnion_of_mem hc).antisymm (chain_closure_succ_fixpoint chain_closure_closure hc h),
     fun h =>
       subset.antisymm
-        (calc succ_chain c ⊆ ⋃₀{ c : Set α | c ∈ chain_closure } := subset_sUnion_of_mem$ chain_closure.succ hc 
+        (calc succ_chain c ⊆ ⋃₀{ c:Set α | c ∈ chain_closure } := subset_sUnion_of_mem$ chain_closure.succ hc 
           _ = c := h.symm
           )
         succ_increasing⟩
 
-theorem chain_chain_closure (hc : c ∈ chain_closure) : chain c :=
-  by 
-    induction hc 
-    case succ c hc h => 
-      exact chain_succ h 
-    case union s hs h => 
-      have h : ∀ c _ : c ∈ s, Zorn.Chain c := h 
-      exact
-        fun c₁ ⟨t₁, ht₁, (hc₁ : c₁ ∈ t₁)⟩ c₂ ⟨t₂, ht₂, (hc₂ : c₂ ∈ t₂)⟩ hneq =>
-          have  : t₁ ⊆ t₂ ∨ t₂ ⊆ t₁ := chain_closure_total (hs _ ht₁) (hs _ ht₂)
-          Or.elim this (fun ht => h t₂ ht₂ c₁ (ht hc₁) c₂ hc₂ hneq) fun ht => h t₁ ht₁ c₁ hc₁ c₂ (ht hc₂) hneq
+-- error in Order.Zorn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem chain_chain_closure (hc : «expr ∈ »(c, chain_closure)) : chain c :=
+begin
+  induction [expr hc] [] [] [],
+  case [ident succ, ":", ident c, ident hc, ident h] { exact [expr chain_succ h] },
+  case [ident union, ":", ident s, ident hs, ident h] { have [ident h] [":", expr ∀
+     c «expr ∈ » s, zorn.chain c] [":=", expr h],
+    exact [expr λ
+     (c₁)
+     ⟨t₁, ht₁, (hc₁ : «expr ∈ »(c₁, t₁))⟩
+     (c₂)
+     ⟨t₂, ht₂, (hc₂ : «expr ∈ »(c₂, t₂))⟩
+     (hneq), have «expr ∨ »(«expr ⊆ »(t₁, t₂), «expr ⊆ »(t₂, t₁)), from chain_closure_total (hs _ ht₁) (hs _ ht₂),
+     or.elim this (λ ht, h t₂ ht₂ c₁ (ht hc₁) c₂ hc₂ hneq) (λ ht, h t₁ ht₁ c₁ hc₁ c₂ (ht hc₂) hneq)] }
+end
 
 /-- An explicit maximal chain. `max_chain` is taken to be the union of all sets in `chain_closure`.
 -/

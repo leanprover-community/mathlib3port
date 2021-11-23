@@ -1,5 +1,5 @@
 import Mathbin.Algebra.CharP.Basic 
-import Mathbin.Algebra.RingQuot
+import Mathbin.RingTheory.Ideal.Quotient
 
 /-!
 # Characteristic of quotients rings

@@ -97,23 +97,23 @@ theorem continuous_inf_edist : Continuous fun x => inf_edist x s :=
     by 
       simp only [one_mulₓ, inf_edist_le_inf_edist_add_edist, forall_2_true_iff]
 
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The edist to a set and to its closure coincide -/
-theorem inf_edist_closure : inf_edist x (Closure s) = inf_edist x s :=
-  by 
-    refine' le_antisymmₓ (inf_edist_le_inf_edist_of_subset subset_closure) _ 
-    refine' Ennreal.le_of_forall_pos_le_add fun ε εpos h => _ 
-    have ε0 : 0 < (ε / 2 : ℝ≥0∞) :=
-      by 
-        simpa [pos_iff_ne_zero] using εpos 
-    have  : inf_edist x (Closure s) < inf_edist x (Closure s)+ε / 2 
-    exact Ennreal.lt_add_right h.ne ε0.ne' 
-    rcases exists_edist_lt_of_inf_edist_lt this with ⟨y, ycs, hy⟩
-    rcases Emetric.mem_closure_iff.1 ycs (ε / 2) ε0 with ⟨z, zs, dyz⟩
-    calc inf_edist x s ≤ edist x z := inf_edist_le_edist_of_mem zs _ ≤ edist x y+edist y z :=
-      edist_triangle _ _ _ _ ≤ (inf_edist x (Closure s)+ε / 2)+ε / 2 :=
-      add_le_add (le_of_ltₓ hy) (le_of_ltₓ dyz)_ = inf_edist x (Closure s)+«expr↑ » ε :=
-      by 
-        rw [add_assocₓ, Ennreal.add_halves]
+theorem inf_edist_closure : «expr = »(inf_edist x (closure s), inf_edist x s) :=
+begin
+  refine [expr le_antisymm (inf_edist_le_inf_edist_of_subset subset_closure) _],
+  refine [expr ennreal.le_of_forall_pos_le_add (λ ε εpos h, _)],
+  have [ident ε0] [":", expr «expr < »(0, («expr / »(ε, 2) : «exprℝ≥0∞»()))] [":=", expr by simpa [] [] [] ["[", expr pos_iff_ne_zero, "]"] [] ["using", expr εpos]],
+  have [] [":", expr «expr < »(inf_edist x (closure s), «expr + »(inf_edist x (closure s), «expr / »(ε, 2)))] [],
+  from [expr ennreal.lt_add_right h.ne ε0.ne'],
+  rcases [expr exists_edist_lt_of_inf_edist_lt this, "with", "⟨", ident y, ",", ident ycs, ",", ident hy, "⟩"],
+  rcases [expr emetric.mem_closure_iff.1 ycs «expr / »(ε, 2) ε0, "with", "⟨", ident z, ",", ident zs, ",", ident dyz, "⟩"],
+  calc
+    «expr ≤ »(inf_edist x s, edist x z) : inf_edist_le_edist_of_mem zs
+    «expr ≤ »(..., «expr + »(edist x y, edist y z)) : edist_triangle _ _ _
+    «expr ≤ »(..., «expr + »(«expr + »(inf_edist x (closure s), «expr / »(ε, 2)), «expr / »(ε, 2))) : add_le_add (le_of_lt hy) (le_of_lt dyz)
+    «expr = »(..., «expr + »(inf_edist x (closure s), «expr↑ »(ε))) : by rw ["[", expr add_assoc, ",", expr ennreal.add_halves, "]"] []
+end
 
 /-- A point belongs to the closure of `s` iff its infimum edistance to this set vanishes -/
 theorem mem_closure_iff_inf_edist_zero : x ∈ Closure s ↔ inf_edist x s = 0 :=
@@ -148,7 +148,7 @@ theorem inf_edist_image (hΦ : Isometry Φ) : inf_edist (Φ x) (Φ '' t) = inf_e
   by 
     simp only [inf_edist, infi_image, hΦ.edist_eq]
 
--- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem _root_.is_open.exists_Union_is_closed
 {U : set α}
 (hU : is_open U) : «expr∃ , »((F : exprℕ() → set α), «expr ∧ »(∀
@@ -254,25 +254,22 @@ theorem exists_edist_lt_of_Hausdorff_edist_lt {r : ℝ≥0∞} (h : x ∈ s) (H 
       _ < r := H
       
 
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The distance from `x` to `s` or `t` is controlled in terms of the Hausdorff distance
 between `s` and `t` -/
-theorem inf_edist_le_inf_edist_add_Hausdorff_edist : inf_edist x t ≤ inf_edist x s+Hausdorff_edist s t :=
-  Ennreal.le_of_forall_pos_le_add$
-    fun ε εpos h =>
-      by 
-        have ε0 : (ε / 2 : ℝ≥0∞) ≠ 0 :=
-          by 
-            simpa [pos_iff_ne_zero] using εpos 
-        have  : inf_edist x s < inf_edist x s+ε / 2 := Ennreal.lt_add_right (Ennreal.add_lt_top.1 h).1.Ne ε0 
-        rcases exists_edist_lt_of_inf_edist_lt this with ⟨y, ys, dxy⟩
-        have  : Hausdorff_edist s t < Hausdorff_edist s t+ε / 2 :=
-          Ennreal.lt_add_right (Ennreal.add_lt_top.1 h).2.Ne ε0 
-        rcases exists_edist_lt_of_Hausdorff_edist_lt ys this with ⟨z, zt, dyz⟩
-        calc inf_edist x t ≤ edist x z := inf_edist_le_edist_of_mem zt _ ≤ edist x y+edist y z :=
-          edist_triangle _ _ _ _ ≤ (inf_edist x s+ε / 2)+Hausdorff_edist s t+ε / 2 :=
-          add_le_add dxy.le dyz.le _ = (inf_edist x s+Hausdorff_edist s t)+ε :=
-          by 
-            simp [Ennreal.add_halves, add_commₓ, add_left_commₓ]
+theorem inf_edist_le_inf_edist_add_Hausdorff_edist : «expr ≤ »(inf_edist x t, «expr + »(inf_edist x s, Hausdorff_edist s t)) :=
+«expr $ »(ennreal.le_of_forall_pos_le_add, λ ε εpos h, begin
+   have [ident ε0] [":", expr «expr ≠ »((«expr / »(ε, 2) : «exprℝ≥0∞»()), 0)] [":=", expr by simpa [] [] [] ["[", expr pos_iff_ne_zero, "]"] [] ["using", expr εpos]],
+   have [] [":", expr «expr < »(inf_edist x s, «expr + »(inf_edist x s, «expr / »(ε, 2)))] [":=", expr ennreal.lt_add_right (ennreal.add_lt_top.1 h).1.ne ε0],
+   rcases [expr exists_edist_lt_of_inf_edist_lt this, "with", "⟨", ident y, ",", ident ys, ",", ident dxy, "⟩"],
+   have [] [":", expr «expr < »(Hausdorff_edist s t, «expr + »(Hausdorff_edist s t, «expr / »(ε, 2)))] [":=", expr ennreal.lt_add_right (ennreal.add_lt_top.1 h).2.ne ε0],
+   rcases [expr exists_edist_lt_of_Hausdorff_edist_lt ys this, "with", "⟨", ident z, ",", ident zt, ",", ident dyz, "⟩"],
+   calc
+     «expr ≤ »(inf_edist x t, edist x z) : inf_edist_le_edist_of_mem zt
+     «expr ≤ »(..., «expr + »(edist x y, edist y z)) : edist_triangle _ _ _
+     «expr ≤ »(..., «expr + »(«expr + »(inf_edist x s, «expr / »(ε, 2)), «expr + »(Hausdorff_edist s t, «expr / »(ε, 2)))) : add_le_add dxy.le dyz.le
+     «expr = »(..., «expr + »(«expr + »(inf_edist x s, Hausdorff_edist s t), ε)) : by simp [] [] [] ["[", expr ennreal.add_halves, ",", expr add_comm, ",", expr add_left_comm, "]"] [] []
+ end)
 
 /-- The Hausdorff edistance is invariant under eisometries -/
 theorem Hausdorff_edist_image (h : Isometry Φ) : Hausdorff_edist (Φ '' s) (Φ '' t) = Hausdorff_edist s t :=
@@ -363,12 +360,14 @@ theorem Hausdorff_edist_zero_iff_eq_of_closed (hs : IsClosed s) (ht : IsClosed t
   by 
     rw [Hausdorff_edist_zero_iff_closure_eq_closure, hs.closure_eq, ht.closure_eq]
 
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Haudorff edistance to the empty set is infinite -/
-theorem Hausdorff_edist_empty (ne : s.nonempty) : Hausdorff_edist s ∅ = ∞ :=
-  by 
-    rcases Ne with ⟨x, xs⟩
-    have  : inf_edist x ∅ ≤ Hausdorff_edist s ∅ := inf_edist_le_Hausdorff_edist_of_mem xs 
-    simpa using this
+theorem Hausdorff_edist_empty (ne : s.nonempty) : «expr = »(Hausdorff_edist s «expr∅»(), «expr∞»()) :=
+begin
+  rcases [expr ne, "with", "⟨", ident x, ",", ident xs, "⟩"],
+  have [] [":", expr «expr ≤ »(inf_edist x «expr∅»(), Hausdorff_edist s «expr∅»())] [":=", expr inf_edist_le_Hausdorff_edist_of_mem xs],
+  simpa [] [] [] [] [] ["using", expr this]
+end
 
 /-- If a set is at finite Hausdorff edistance of a nonempty set, it is nonempty -/
 theorem nonempty_of_Hausdorff_edist_ne_top (hs : s.nonempty) (fin : Hausdorff_edist s t ≠ ⊤) : t.nonempty :=
@@ -450,25 +449,32 @@ theorem inf_dist_le_dist_of_mem (h : y ∈ s) : inf_dist x s ≤ dist x y :=
     rw [dist_edist, inf_dist, Ennreal.to_real_le_to_real (inf_edist_ne_top ⟨_, h⟩) (edist_ne_top _ _)]
     exact inf_edist_le_edist_of_mem h
 
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The minimal distance is monotonous with respect to inclusion -/
-theorem inf_dist_le_inf_dist_of_subset (h : s ⊆ t) (hs : s.nonempty) : inf_dist x t ≤ inf_dist x s :=
-  by 
-    have ht : t.nonempty := hs.mono h 
-    rw [inf_dist, inf_dist, Ennreal.to_real_le_to_real (inf_edist_ne_top ht) (inf_edist_ne_top hs)]
-    exact inf_edist_le_inf_edist_of_subset h
+theorem inf_dist_le_inf_dist_of_subset
+(h : «expr ⊆ »(s, t))
+(hs : s.nonempty) : «expr ≤ »(inf_dist x t, inf_dist x s) :=
+begin
+  have [ident ht] [":", expr t.nonempty] [":=", expr hs.mono h],
+  rw ["[", expr inf_dist, ",", expr inf_dist, ",", expr ennreal.to_real_le_to_real (inf_edist_ne_top ht) (inf_edist_ne_top hs), "]"] [],
+  exact [expr inf_edist_le_inf_edist_of_subset h]
+end
 
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the minimal distance to a set is `<r`, there exists a point in this set at distance `<r` -/
-theorem exists_dist_lt_of_inf_dist_lt {r : Real} (h : inf_dist x s < r) (hs : s.nonempty) :
-  ∃ (y : _)(_ : y ∈ s), dist x y < r :=
-  by 
-    have rpos : 0 < r := lt_of_le_of_ltₓ inf_dist_nonneg h 
-    have  : inf_edist x s < Ennreal.ofReal r
-    ·
-      rwa [inf_dist, ←Ennreal.to_real_of_real (le_of_ltₓ rpos), Ennreal.to_real_lt_to_real (inf_edist_ne_top hs)] at h 
-      simp 
-    rcases exists_edist_lt_of_inf_edist_lt this with ⟨y, ys, hy⟩
-    rw [edist_dist, Ennreal.of_real_lt_of_real_iff rpos] at hy 
-    exact ⟨y, ys, hy⟩
+theorem exists_dist_lt_of_inf_dist_lt
+{r : real}
+(h : «expr < »(inf_dist x s, r))
+(hs : s.nonempty) : «expr∃ , »((y «expr ∈ » s), «expr < »(dist x y, r)) :=
+begin
+  have [ident rpos] [":", expr «expr < »(0, r)] [":=", expr lt_of_le_of_lt inf_dist_nonneg h],
+  have [] [":", expr «expr < »(inf_edist x s, ennreal.of_real r)] [],
+  { rwa ["[", expr inf_dist, ",", "<-", expr ennreal.to_real_of_real (le_of_lt rpos), ",", expr ennreal.to_real_lt_to_real (inf_edist_ne_top hs), "]"] ["at", ident h],
+    simp [] [] [] [] [] [] },
+  rcases [expr exists_edist_lt_of_inf_edist_lt this, "with", "⟨", ident y, ",", ident ys, ",", ident hy, "⟩"],
+  rw ["[", expr edist_dist, ",", expr ennreal.of_real_lt_of_real_iff rpos, "]"] ["at", ident hy],
+  exact [expr ⟨y, ys, hy⟩]
+end
 
 /-- The minimal distance from `x` to `s` is bounded by the distance from `y` to `s`, modulo
 the distance between `x` and `y` -/
@@ -523,11 +529,15 @@ theorem mem_closure_iff_inf_dist_zero (h : s.nonempty) : x ∈ Closure s ↔ inf
   by 
     simp [mem_closure_iff_inf_edist_zero, inf_dist, Ennreal.to_real_eq_zero_iff, inf_edist_ne_top h]
 
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a closed set `s`, a point belongs to `s` iff its infimum distance to this set vanishes -/
-theorem _root_.is_closed.mem_iff_inf_dist_zero (h : IsClosed s) (hs : s.nonempty) : x ∈ s ↔ inf_dist x s = 0 :=
-  by 
-    have  := @mem_closure_iff_inf_dist_zero _ _ s x hs 
-    rwa [h.closure_eq] at this
+theorem _root_.is_closed.mem_iff_inf_dist_zero
+(h : is_closed s)
+(hs : s.nonempty) : «expr ↔ »(«expr ∈ »(x, s), «expr = »(inf_dist x s, 0)) :=
+begin
+  have [] [] [":=", expr @mem_closure_iff_inf_dist_zero _ _ s x hs],
+  rwa [expr h.closure_eq] ["at", ident this]
+end
 
 /-- Given a closed set `s`, a point belongs to `s` iff its infimum distance to this set vanishes -/
 theorem _root_.is_closed.not_mem_iff_inf_dist_pos (h : IsClosed s) (hs : s.nonempty) : x ∉ s ↔ 0 < inf_dist x s :=
@@ -578,31 +588,33 @@ theorem Hausdorff_dist_nonneg : 0 ≤ Hausdorff_dist s t :=
   by 
     simp [Hausdorff_dist]
 
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If two sets are nonempty and bounded in a metric space, they are at finite Hausdorff
 edistance. -/
-theorem Hausdorff_edist_ne_top_of_nonempty_of_bounded (hs : s.nonempty) (ht : t.nonempty) (bs : Bounded s)
-  (bt : Bounded t) : Hausdorff_edist s t ≠ ⊤ :=
-  by 
-    rcases hs with ⟨cs, hcs⟩
-    rcases ht with ⟨ct, hct⟩
-    rcases(bounded_iff_subset_ball ct).1 bs with ⟨rs, hrs⟩
-    rcases(bounded_iff_subset_ball cs).1 bt with ⟨rt, hrt⟩
-    have  : Hausdorff_edist s t ≤ Ennreal.ofReal (max rs rt)
-    ·
-      apply Hausdorff_edist_le_of_mem_edist
-      ·
-        intro x xs 
-        exists ct, hct 
-        have  : dist x ct ≤ max rs rt := le_transₓ (hrs xs) (le_max_leftₓ _ _)
-        rwa [edist_dist, Ennreal.of_real_le_of_real_iff]
-        exact le_transₓ dist_nonneg this
-      ·
-        intro x xt 
-        exists cs, hcs 
-        have  : dist x cs ≤ max rs rt := le_transₓ (hrt xt) (le_max_rightₓ _ _)
-        rwa [edist_dist, Ennreal.of_real_le_of_real_iff]
-        exact le_transₓ dist_nonneg this 
-    exact ne_top_of_le_ne_top Ennreal.of_real_ne_top this
+theorem Hausdorff_edist_ne_top_of_nonempty_of_bounded
+(hs : s.nonempty)
+(ht : t.nonempty)
+(bs : bounded s)
+(bt : bounded t) : «expr ≠ »(Hausdorff_edist s t, «expr⊤»()) :=
+begin
+  rcases [expr hs, "with", "⟨", ident cs, ",", ident hcs, "⟩"],
+  rcases [expr ht, "with", "⟨", ident ct, ",", ident hct, "⟩"],
+  rcases [expr (bounded_iff_subset_ball ct).1 bs, "with", "⟨", ident rs, ",", ident hrs, "⟩"],
+  rcases [expr (bounded_iff_subset_ball cs).1 bt, "with", "⟨", ident rt, ",", ident hrt, "⟩"],
+  have [] [":", expr «expr ≤ »(Hausdorff_edist s t, ennreal.of_real (max rs rt))] [],
+  { apply [expr Hausdorff_edist_le_of_mem_edist],
+    { assume [binders (x xs)],
+      existsi ["[", expr ct, ",", expr hct, "]"],
+      have [] [":", expr «expr ≤ »(dist x ct, max rs rt)] [":=", expr le_trans (hrs xs) (le_max_left _ _)],
+      rwa ["[", expr edist_dist, ",", expr ennreal.of_real_le_of_real_iff, "]"] [],
+      exact [expr le_trans dist_nonneg this] },
+    { assume [binders (x xt)],
+      existsi ["[", expr cs, ",", expr hcs, "]"],
+      have [] [":", expr «expr ≤ »(dist x cs, max rs rt)] [":=", expr le_trans (hrt xt) (le_max_right _ _)],
+      rwa ["[", expr edist_dist, ",", expr ennreal.of_real_le_of_real_iff, "]"] [],
+      exact [expr le_trans dist_nonneg this] } },
+  exact [expr ne_top_of_le_ne_top ennreal.of_real_ne_top this]
+end
 
 /-- The Hausdorff distance between a set and itself is zero -/
 @[simp]
@@ -633,34 +645,31 @@ theorem Hausdorff_dist_empty' : Hausdorff_dist ∅ s = 0 :=
   by 
     simp [Hausdorff_dist_comm]
 
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Bounding the Hausdorff distance by bounding the distance of any point
 in each set to the other set -/
-theorem Hausdorff_dist_le_of_inf_dist {r : ℝ} (hr : 0 ≤ r) (H1 : ∀ x _ : x ∈ s, inf_dist x t ≤ r)
-  (H2 : ∀ x _ : x ∈ t, inf_dist x s ≤ r) : Hausdorff_dist s t ≤ r :=
-  by 
-    byCases' h1 : Hausdorff_edist s t = ⊤
-    ·
-      rwa [Hausdorff_dist, h1, Ennreal.top_to_real]
-    cases' s.eq_empty_or_nonempty with hs hs
-    ·
-      rwa [hs, Hausdorff_dist_empty']
-    cases' t.eq_empty_or_nonempty with ht ht
-    ·
-      rwa [ht, Hausdorff_dist_empty]
-    have  : Hausdorff_edist s t ≤ Ennreal.ofReal r
-    ·
-      apply Hausdorff_edist_le_of_inf_edist _ _
-      ·
-        intro x hx 
-        have I := H1 x hx 
-        rwa [inf_dist, ←Ennreal.to_real_of_real hr,
-          Ennreal.to_real_le_to_real (inf_edist_ne_top ht) Ennreal.of_real_ne_top] at I
-      ·
-        intro x hx 
-        have I := H2 x hx 
-        rwa [inf_dist, ←Ennreal.to_real_of_real hr,
-          Ennreal.to_real_le_to_real (inf_edist_ne_top hs) Ennreal.of_real_ne_top] at I 
-    rwa [Hausdorff_dist, ←Ennreal.to_real_of_real hr, Ennreal.to_real_le_to_real h1 Ennreal.of_real_ne_top]
+theorem Hausdorff_dist_le_of_inf_dist
+{r : exprℝ()}
+(hr : «expr ≤ »(0, r))
+(H1 : ∀ x «expr ∈ » s, «expr ≤ »(inf_dist x t, r))
+(H2 : ∀ x «expr ∈ » t, «expr ≤ »(inf_dist x s, r)) : «expr ≤ »(Hausdorff_dist s t, r) :=
+begin
+  by_cases [expr h1, ":", expr «expr = »(Hausdorff_edist s t, «expr⊤»())],
+  by rwa ["[", expr Hausdorff_dist, ",", expr h1, ",", expr ennreal.top_to_real, "]"] [],
+  cases [expr s.eq_empty_or_nonempty] ["with", ident hs, ident hs],
+  by rwa ["[", expr hs, ",", expr Hausdorff_dist_empty', "]"] [],
+  cases [expr t.eq_empty_or_nonempty] ["with", ident ht, ident ht],
+  by rwa ["[", expr ht, ",", expr Hausdorff_dist_empty, "]"] [],
+  have [] [":", expr «expr ≤ »(Hausdorff_edist s t, ennreal.of_real r)] [],
+  { apply [expr Hausdorff_edist_le_of_inf_edist _ _],
+    { assume [binders (x hx)],
+      have [ident I] [] [":=", expr H1 x hx],
+      rwa ["[", expr inf_dist, ",", "<-", expr ennreal.to_real_of_real hr, ",", expr ennreal.to_real_le_to_real (inf_edist_ne_top ht) ennreal.of_real_ne_top, "]"] ["at", ident I] },
+    { assume [binders (x hx)],
+      have [ident I] [] [":=", expr H2 x hx],
+      rwa ["[", expr inf_dist, ",", "<-", expr ennreal.to_real_of_real hr, ",", expr ennreal.to_real_le_to_real (inf_edist_ne_top hs) ennreal.of_real_ne_top, "]"] ["at", ident I] } },
+  rwa ["[", expr Hausdorff_dist, ",", "<-", expr ennreal.to_real_of_real hr, ",", expr ennreal.to_real_le_to_real h1 ennreal.of_real_ne_top, "]"] []
+end
 
 /-- Bounding the Hausdorff distance by exhibiting, for any point in each set,
 another point in the other set at controlled distance -/
@@ -693,27 +702,33 @@ theorem Hausdorff_dist_le_diam (hs : s.nonempty) (bs : Bounded s) (ht : t.nonemp
         fun z hz =>
           ⟨x, xs, dist_le_diam_of_mem (bounded_union.2 ⟨bs, bt⟩) (subset_union_right _ _ hz) (subset_union_left _ _ xs)⟩
 
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The distance to a set is controlled by the Hausdorff distance -/
-theorem inf_dist_le_Hausdorff_dist_of_mem (hx : x ∈ s) (fin : Hausdorff_edist s t ≠ ⊤) :
-  inf_dist x t ≤ Hausdorff_dist s t :=
-  by 
-    have ht : t.nonempty := nonempty_of_Hausdorff_edist_ne_top ⟨x, hx⟩ Finₓ 
-    rw [Hausdorff_dist, inf_dist, Ennreal.to_real_le_to_real (inf_edist_ne_top ht) Finₓ]
-    exact inf_edist_le_Hausdorff_edist_of_mem hx
+theorem inf_dist_le_Hausdorff_dist_of_mem
+(hx : «expr ∈ »(x, s))
+(fin : «expr ≠ »(Hausdorff_edist s t, «expr⊤»())) : «expr ≤ »(inf_dist x t, Hausdorff_dist s t) :=
+begin
+  have [ident ht] [":", expr t.nonempty] [":=", expr nonempty_of_Hausdorff_edist_ne_top ⟨x, hx⟩ fin],
+  rw ["[", expr Hausdorff_dist, ",", expr inf_dist, ",", expr ennreal.to_real_le_to_real (inf_edist_ne_top ht) fin, "]"] [],
+  exact [expr inf_edist_le_Hausdorff_edist_of_mem hx]
+end
 
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the Hausdorff distance is `<r`, then any point in one of the sets is at distance
 `<r` of a point in the other set -/
-theorem exists_dist_lt_of_Hausdorff_dist_lt {r : ℝ} (h : x ∈ s) (H : Hausdorff_dist s t < r)
-  (fin : Hausdorff_edist s t ≠ ⊤) : ∃ (y : _)(_ : y ∈ t), dist x y < r :=
-  by 
-    have r0 : 0 < r := lt_of_le_of_ltₓ Hausdorff_dist_nonneg H 
-    have  : Hausdorff_edist s t < Ennreal.ofReal r
-    ·
-      rwa [Hausdorff_dist, ←Ennreal.to_real_of_real (le_of_ltₓ r0),
-        Ennreal.to_real_lt_to_real Finₓ Ennreal.of_real_ne_top] at H 
-    rcases exists_edist_lt_of_Hausdorff_edist_lt h this with ⟨y, hy, yr⟩
-    rw [edist_dist, Ennreal.of_real_lt_of_real_iff r0] at yr 
-    exact ⟨y, hy, yr⟩
+theorem exists_dist_lt_of_Hausdorff_dist_lt
+{r : exprℝ()}
+(h : «expr ∈ »(x, s))
+(H : «expr < »(Hausdorff_dist s t, r))
+(fin : «expr ≠ »(Hausdorff_edist s t, «expr⊤»())) : «expr∃ , »((y «expr ∈ » t), «expr < »(dist x y, r)) :=
+begin
+  have [ident r0] [":", expr «expr < »(0, r)] [":=", expr lt_of_le_of_lt Hausdorff_dist_nonneg H],
+  have [] [":", expr «expr < »(Hausdorff_edist s t, ennreal.of_real r)] [],
+  by rwa ["[", expr Hausdorff_dist, ",", "<-", expr ennreal.to_real_of_real (le_of_lt r0), ",", expr ennreal.to_real_lt_to_real fin ennreal.of_real_ne_top, "]"] ["at", ident H],
+  rcases [expr exists_edist_lt_of_Hausdorff_edist_lt h this, "with", "⟨", ident y, ",", ident hy, ",", ident yr, "⟩"],
+  rw ["[", expr edist_dist, ",", expr ennreal.of_real_lt_of_real_iff r0, "]"] ["at", ident yr],
+  exact [expr ⟨y, hy, yr⟩]
+end
 
 /-- If the Hausdorff distance is `<r`, then any point in one of the sets is at distance
 `<r` of a point in the other set -/
@@ -744,40 +759,33 @@ theorem Hausdorff_dist_image (h : Isometry Φ) : Hausdorff_dist (Φ '' s) (Φ ''
   by 
     simp [Hausdorff_dist, Hausdorff_edist_image h]
 
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Hausdorff distance satisfies the triangular inequality -/
-theorem Hausdorff_dist_triangle (fin : Hausdorff_edist s t ≠ ⊤) :
-  Hausdorff_dist s u ≤ Hausdorff_dist s t+Hausdorff_dist t u :=
-  by 
-    byCases' Hausdorff_edist s u = ⊤
-    ·
-      calc Hausdorff_dist s u = 0+0 :=
-        by 
-          simp [Hausdorff_dist, h]_ ≤ Hausdorff_dist s t+Hausdorff_dist t u :=
-        add_le_add Hausdorff_dist_nonneg Hausdorff_dist_nonneg
-    ·
-      have Dtu : Hausdorff_edist t u < ⊤ :=
-        calc Hausdorff_edist t u ≤ Hausdorff_edist t s+Hausdorff_edist s u := Hausdorff_edist_triangle 
-          _ = Hausdorff_edist s t+Hausdorff_edist s u :=
-          by 
-            simp [Hausdorff_edist_comm]
-          _ < ⊤ :=
-          by 
-            simp [lt_top_iff_ne_top]
-          
-      rw [Hausdorff_dist, Hausdorff_dist, Hausdorff_dist, ←Ennreal.to_real_add Finₓ Dtu.ne,
-        Ennreal.to_real_le_to_real h]
-      ·
-        exact Hausdorff_edist_triangle
-      ·
-        simp [Ennreal.add_eq_top, lt_top_iff_ne_top.1 Dtu, Finₓ]
+theorem Hausdorff_dist_triangle
+(fin : «expr ≠ »(Hausdorff_edist s t, «expr⊤»())) : «expr ≤ »(Hausdorff_dist s u, «expr + »(Hausdorff_dist s t, Hausdorff_dist t u)) :=
+begin
+  by_cases [expr «expr = »(Hausdorff_edist s u, «expr⊤»())],
+  { calc
+      «expr = »(Hausdorff_dist s u, «expr + »(0, 0)) : by simp [] [] [] ["[", expr Hausdorff_dist, ",", expr h, "]"] [] []
+      «expr ≤ »(..., «expr + »(Hausdorff_dist s t, Hausdorff_dist t u)) : add_le_add Hausdorff_dist_nonneg Hausdorff_dist_nonneg },
+  { have [ident Dtu] [":", expr «expr < »(Hausdorff_edist t u, «expr⊤»())] [":=", expr calc
+       «expr ≤ »(Hausdorff_edist t u, «expr + »(Hausdorff_edist t s, Hausdorff_edist s u)) : Hausdorff_edist_triangle
+       «expr = »(..., «expr + »(Hausdorff_edist s t, Hausdorff_edist s u)) : by simp [] [] [] ["[", expr Hausdorff_edist_comm, "]"] [] []
+       «expr < »(..., «expr⊤»()) : by simp [] [] [] ["[", expr lt_top_iff_ne_top, ",", "*", "]"] [] []],
+    rw ["[", expr Hausdorff_dist, ",", expr Hausdorff_dist, ",", expr Hausdorff_dist, ",", "<-", expr ennreal.to_real_add fin Dtu.ne, ",", expr ennreal.to_real_le_to_real h, "]"] [],
+    { exact [expr Hausdorff_edist_triangle] },
+    { simp [] [] [] ["[", expr ennreal.add_eq_top, ",", expr lt_top_iff_ne_top.1 Dtu, ",", expr fin, "]"] [] [] } }
+end
 
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Hausdorff distance satisfies the triangular inequality -/
-theorem Hausdorff_dist_triangle' (fin : Hausdorff_edist t u ≠ ⊤) :
-  Hausdorff_dist s u ≤ Hausdorff_dist s t+Hausdorff_dist t u :=
-  by 
-    rw [Hausdorff_edist_comm] at fin 
-    have I : Hausdorff_dist u s ≤ Hausdorff_dist u t+Hausdorff_dist t s := Hausdorff_dist_triangle Finₓ 
-    simpa [add_commₓ, Hausdorff_dist_comm] using I
+theorem Hausdorff_dist_triangle'
+(fin : «expr ≠ »(Hausdorff_edist t u, «expr⊤»())) : «expr ≤ »(Hausdorff_dist s u, «expr + »(Hausdorff_dist s t, Hausdorff_dist t u)) :=
+begin
+  rw [expr Hausdorff_edist_comm] ["at", ident fin],
+  have [ident I] [":", expr «expr ≤ »(Hausdorff_dist u s, «expr + »(Hausdorff_dist u t, Hausdorff_dist t s))] [":=", expr Hausdorff_dist_triangle fin],
+  simpa [] [] [] ["[", expr add_comm, ",", expr Hausdorff_dist_comm, "]"] [] ["using", expr I]
+end
 
 /-- The Hausdorff distance between a set and its closure vanish -/
 @[simp]
@@ -826,7 +834,7 @@ open Emetric
 /-- The (open) `δ`-thickening `thickening δ E` of a subset `E` in a pseudo emetric space consists
 of those points that are at distance less than `δ` from some point of `E`. -/
 def thickening (δ : ℝ) (E : Set α) : Set α :=
-  { x : α | inf_edist x E < Ennreal.ofReal δ }
+  { x:α | inf_edist x E < Ennreal.ofReal δ }
 
 /-- The (open) thickening equals the preimage of an open interval under `inf_edist`. -/
 theorem thickening_eq_preimage_inf_edist (δ : ℝ) (E : Set α) :
@@ -855,27 +863,30 @@ theorem thickening_subset_of_subset (δ : ℝ) {E₁ E₂ : Set α} (h : E₁ �
 
 variable{X : Type u}[MetricSpace X]
 
+-- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A point in a metric space belongs to the (open) `δ`-thickening of a subset `E` if and only if
 it is at distance less than `δ` from some point of `E`. -/
-theorem mem_thickening_iff {δ : ℝ} (E : Set X) (x : X) : x ∈ thickening δ E ↔ ∃ (z : _)(_ : z ∈ E), dist x z < δ :=
-  by 
-    unfold thickening 
-    simp only [exists_prop, mem_set_of_eq]
-    split 
-    ·
-      intro h 
-      rcases exists_edist_lt_of_inf_edist_lt h with ⟨z, ⟨hzE, hxz⟩⟩
-      refine' ⟨z, hzE, _⟩
-      rw [dist_edist]
-      apply (@Ennreal.of_real_lt_of_real_iff_of_nonneg (edist x z).toReal δ Ennreal.to_real_nonneg).mp 
-      rwa [Ennreal.of_real_to_real (edist_lt_top x z).Ne]
-    ·
-      intro h 
-      rcases h with ⟨z, ⟨hzE, hxz⟩⟩
-      rw [dist_edist] at hxz 
-      apply lt_of_le_of_ltₓ (@inf_edist_le_edist_of_mem _ _ x _ _ hzE) _ 
-      have key := (@Ennreal.of_real_lt_of_real_iff_of_nonneg (edist x z).toReal δ Ennreal.to_real_nonneg).mpr hxz 
-      rwa [Ennreal.of_real_to_real (edist_lt_top x z).Ne] at key
+theorem mem_thickening_iff
+{δ : exprℝ()}
+(E : set X)
+(x : X) : «expr ↔ »(«expr ∈ »(x, thickening δ E), «expr∃ , »((z «expr ∈ » E), «expr < »(dist x z, δ))) :=
+begin
+  unfold [ident thickening] [],
+  simp [] [] ["only"] ["[", expr exists_prop, ",", expr mem_set_of_eq, "]"] [] [],
+  split,
+  { intros [ident h],
+    rcases [expr exists_edist_lt_of_inf_edist_lt h, "with", "⟨", ident z, ",", "⟨", ident hzE, ",", ident hxz, "⟩", "⟩"],
+    refine [expr ⟨z, hzE, _⟩],
+    rw [expr dist_edist] [],
+    apply [expr (@ennreal.of_real_lt_of_real_iff_of_nonneg (edist x z).to_real δ ennreal.to_real_nonneg).mp],
+    rwa [expr ennreal.of_real_to_real (edist_lt_top x z).ne] [] },
+  { intros [ident h],
+    rcases [expr h, "with", "⟨", ident z, ",", "⟨", ident hzE, ",", ident hxz, "⟩", "⟩"],
+    rw [expr dist_edist] ["at", ident hxz],
+    apply [expr lt_of_le_of_lt (@inf_edist_le_edist_of_mem _ _ x _ _ hzE) _],
+    have [ident key] [] [":=", expr (@ennreal.of_real_lt_of_real_iff_of_nonneg (edist x z).to_real δ ennreal.to_real_nonneg).mpr hxz],
+    rwa [expr ennreal.of_real_to_real (edist_lt_top x z).ne] ["at", ident key] }
+end
 
 /-- The (open) `δ`-thickening `thickening δ E` of a subset `E` in a metric space equals the
 union of balls of radius `δ` centered at points of `E`. -/

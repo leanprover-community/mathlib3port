@@ -1,4 +1,3 @@
-import Mathbin.Data.Matrix.Notation 
 import Mathbin.LinearAlgebra.Matrix.Trace
 
 /-!

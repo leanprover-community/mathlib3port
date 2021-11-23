@@ -68,7 +68,7 @@ protected theorem id (μ : Measureₓ α) : conservative id μ :=
         let ⟨x, hx⟩ := nonempty_of_measure_ne_zero h0
         ⟨x, hx, 1, one_ne_zero, hx⟩ }
 
--- error in Dynamics.Ergodic.Conservative: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Dynamics.Ergodic.Conservative: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a conservative map and `s` is a measurable set of nonzero measure, then
 for infinitely many values of `m` a positive measure of points `x ∈ s` returns back to `s`
 after `m` iterations of `f`. -/
@@ -109,7 +109,7 @@ theorem exists_gt_measure_inter_ne_zero (hf : conservative f μ) (hs : Measurabl
   let ⟨m, hm, hmN⟩ := ((hf.frequently_measure_inter_ne_zero hs h0).and_eventually (eventually_gt_at_top N)).exists
   ⟨m, hmN, hm⟩
 
--- error in Dynamics.Ergodic.Conservative: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Dynamics.Ergodic.Conservative: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Poincaré recurrence theorem: given a conservative map `f` and a measurable set `s`, the set
 of points `x ∈ s` such that `x` does not return to `s` after `≥ n` iterations has measure zero. -/
 theorem measure_mem_forall_ge_image_not_mem_eq_zero
@@ -163,41 +163,49 @@ theorem frequently_ae_mem_and_frequently_image_mem (hf : conservative f μ) (hs 
   ((frequently_ae_mem_iff.2 h0).and_eventually (hf.ae_mem_imp_frequently_image_mem hs)).mono$
     fun x hx => ⟨hx.1, hx.2 hx.1⟩
 
+-- error in Dynamics.Ergodic.Conservative: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Poincaré recurrence theorem. Let `f : α → α` be a conservative dynamical system on a topological
 space with second countable topology and measurable open sets. Then almost every point `x : α`
 is recurrent: it visits every neighborhood `s ∈ 𝓝 x` infinitely many times. -/
-theorem ae_frequently_mem_of_mem_nhds [TopologicalSpace α] [second_countable_topology α] [OpensMeasurableSpace α]
-  {f : α → α} {μ : Measureₓ α} (h : conservative f μ) : ∀ᵐx ∂μ, ∀ s _ : s ∈ 𝓝 x, ∃ᶠn in at_top, (f^[n]) x ∈ s :=
-  by 
-    have  : ∀ s _ : s ∈ countable_basis α, ∀ᵐx ∂μ, x ∈ s → ∃ᶠn in at_top, (f^[n]) x ∈ s 
-    exact fun s hs => h.ae_mem_imp_frequently_image_mem (is_open_of_mem_countable_basis hs).MeasurableSet 
-    refine' ((ae_ball_iff$ countable_countable_basis α).2 this).mono fun x hx s hs => _ 
-    rcases(is_basis_countable_basis α).mem_nhds_iff.1 hs with ⟨o, hoS, hxo, hos⟩
-    exact (hx o hoS hxo).mono fun n hn => hos hn
+theorem ae_frequently_mem_of_mem_nhds
+[topological_space α]
+[second_countable_topology α]
+[opens_measurable_space α]
+{f : α → α}
+{μ : measure α}
+(h : conservative f μ) : «expr∀ᵐ ∂ , »((x), μ, ∀
+ s «expr ∈ » expr𝓝() x, «expr∃ᶠ in , »((n), at_top, «expr ∈ »(«expr ^[ ]»(f, n) x, s))) :=
+begin
+  have [] [":", expr ∀
+   s «expr ∈ » countable_basis α, «expr∀ᵐ ∂ , »((x), μ, «expr ∈ »(x, s) → «expr∃ᶠ in , »((n), at_top, «expr ∈ »(«expr ^[ ]»(f, n) x, s)))] [],
+  from [expr λ s hs, h.ae_mem_imp_frequently_image_mem (is_open_of_mem_countable_basis hs).measurable_set],
+  refine [expr («expr $ »(ae_ball_iff, countable_countable_basis α).2 this).mono (λ x hx s hs, _)],
+  rcases [expr (is_basis_countable_basis α).mem_nhds_iff.1 hs, "with", "⟨", ident o, ",", ident hoS, ",", ident hxo, ",", ident hos, "⟩"],
+  exact [expr (hx o hoS hxo).mono (λ n hn, hos hn)]
+end
 
+-- error in Dynamics.Ergodic.Conservative: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Iteration of a conservative system is a conservative system. -/
-protected theorem iterate (hf : conservative f μ) (n : ℕ) : conservative (f^[n]) μ :=
-  by 
-    cases n
-    ·
-      exact conservative.id μ 
-    refine' ⟨hf.1.iterate _, fun s hs hs0 => _⟩
-    rcases(hf.frequently_ae_mem_and_frequently_image_mem hs hs0).exists with ⟨x, hxs, hx⟩
-    rw [Nat.frequently_at_top_iff_infinite] at hx 
-    rcases Nat.exists_lt_modeq_of_infinite hx n.succ_pos with ⟨k, hk, l, hl, hkl, hn⟩
-    set m := (l - k) / n+1
-    have  : ((n+1)*m) = l - k
-    ·
-      apply Nat.mul_div_cancel'ₓ 
-      exact (Nat.modeq_iff_dvd' hkl.le).1 hn 
-    refine' ⟨(f^[k]) x, hk, m, _, _⟩
-    ·
-      intro hm 
-      rw [hm, mul_zero, eq_comm, tsub_eq_zero_iff_le] at this 
-      exact this.not_lt hkl
-    ·
-      rwa [←iterate_mul, this, ←iterate_add_apply, tsub_add_cancel_of_le]
-      exact hkl.le
+protected
+theorem iterate (hf : conservative f μ) (n : exprℕ()) : conservative «expr ^[ ]»(f, n) μ :=
+begin
+  cases [expr n] [],
+  { exact [expr conservative.id μ] },
+  refine [expr ⟨hf.1.iterate _, λ s hs hs0, _⟩],
+  rcases [expr (hf.frequently_ae_mem_and_frequently_image_mem hs hs0).exists, "with", "⟨", ident x, ",", ident hxs, ",", ident hx, "⟩"],
+  rw [expr nat.frequently_at_top_iff_infinite] ["at", ident hx],
+  rcases [expr nat.exists_lt_modeq_of_infinite hx n.succ_pos, "with", "⟨", ident k, ",", ident hk, ",", ident l, ",", ident hl, ",", ident hkl, ",", ident hn, "⟩"],
+  set [] [ident m] [] [":="] [expr «expr / »(«expr - »(l, k), «expr + »(n, 1))] [],
+  have [] [":", expr «expr = »(«expr * »(«expr + »(n, 1), m), «expr - »(l, k))] [],
+  { apply [expr nat.mul_div_cancel'],
+    exact [expr (nat.modeq_iff_dvd' hkl.le).1 hn] },
+  refine [expr ⟨«expr ^[ ]»(f, k) x, hk, m, _, _⟩],
+  { intro [ident hm],
+    rw ["[", expr hm, ",", expr mul_zero, ",", expr eq_comm, ",", expr tsub_eq_zero_iff_le, "]"] ["at", ident this],
+    exact [expr this.not_lt hkl] },
+  { rwa ["[", "<-", expr iterate_mul, ",", expr this, ",", "<-", expr iterate_add_apply, ",", expr tsub_add_cancel_of_le, "]"] [],
+    exact [expr hkl.le] }
+end
 
 end Conservative
 

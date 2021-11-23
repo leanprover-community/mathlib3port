@@ -122,7 +122,7 @@ theorem limits_from_equalizers_and_products [has_products C] [has_equalizers C] 
         { HasLimit :=
             fun F =>
               by 
-                exactI has_limit_of_equalizer_and_product F } }
+                exact has_limit_of_equalizer_and_product F } }
 
 /--
 Any category with finite products and equalizers has all finite limits.
@@ -135,7 +135,7 @@ theorem finite_limits_from_equalizers_and_finite_products [has_finite_products C
       { HasLimit :=
           fun F =>
             by 
-              exactI has_limit_of_equalizer_and_product F }⟩
+              exact has_limit_of_equalizer_and_product F }⟩
 
 variable{D : Type u₂}[category.{v} D]
 
@@ -217,7 +217,7 @@ def preserves_limits_of_preserves_equalizers_and_products [has_equalizers C] [ha
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI preserves_limit_of_preserves_equalizers_and_product G }
+          exact preserves_limit_of_preserves_equalizers_and_product G }
 
 /-!
 We now dualize the above constructions, resorting to copy-paste.
@@ -317,7 +317,7 @@ theorem colimits_from_coequalizers_and_coproducts [has_coproducts C] [has_coequa
         { HasColimit :=
             fun F =>
               by 
-                exactI has_colimit_of_coequalizer_and_coproduct F } }
+                exact has_colimit_of_coequalizer_and_coproduct F } }
 
 /--
 Any category with finite coproducts and coequalizers has all finite colimits.
@@ -330,7 +330,7 @@ theorem finite_colimits_from_coequalizers_and_finite_coproducts [has_finite_copr
       { HasColimit :=
           fun F =>
             by 
-              exactI has_colimit_of_coequalizer_and_coproduct F }⟩
+              exact has_colimit_of_coequalizer_and_coproduct F }⟩
 
 noncomputable theory
 
@@ -411,7 +411,7 @@ def preserves_colimits_of_preserves_coequalizers_and_coproducts [has_coequalizer
   { PreservesColimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI preserves_colimit_of_preserves_coequalizers_and_coproduct G }
+          exact preserves_colimit_of_preserves_coequalizers_and_coproduct G }
 
 end CategoryTheory.Limits
 

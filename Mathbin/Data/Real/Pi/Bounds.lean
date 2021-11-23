@@ -16,21 +16,22 @@ open_locale Real
 
 namespace Real
 
-theorem pi_gt_sqrt_two_add_series (n : ℕ) : ((2^n+1)*sqrt (2 - sqrt_two_add_series 0 n)) < π :=
-  by 
-    have  : ((sqrt (2 - sqrt_two_add_series 0 n) / 2)*2^n+2) < π
-    ·
-      rw [←lt_div_iff, ←sin_pi_over_two_pow_succ]
-      apply sin_lt 
-      apply div_pos pi_pos 
-      all_goals 
-        apply pow_pos 
-        normNum 
-    apply lt_of_le_of_ltₓ (le_of_eqₓ _) this 
-    rw [pow_succₓ _ (n+1), ←mul_assocₓ, div_mul_cancel, mul_commₓ]
-    normNum
+-- error in Data.Real.Pi.Bounds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pi_gt_sqrt_two_add_series
+(n : exprℕ()) : «expr < »(«expr * »(«expr ^ »(2, «expr + »(n, 1)), sqrt «expr - »(2, sqrt_two_add_series 0 n)), exprπ()) :=
+begin
+  have [] [":", expr «expr < »(«expr * »(«expr / »(sqrt «expr - »(2, sqrt_two_add_series 0 n), 2), «expr ^ »(2, «expr + »(n, 2))), exprπ())] [],
+  { rw ["[", "<-", expr lt_div_iff, ",", "<-", expr sin_pi_over_two_pow_succ, "]"] [],
+    apply [expr sin_lt],
+    apply [expr div_pos pi_pos],
+    all_goals { apply [expr pow_pos],
+      norm_num [] [] } },
+  apply [expr lt_of_le_of_lt (le_of_eq _) this],
+  rw ["[", expr pow_succ _ «expr + »(n, 1), ",", "<-", expr mul_assoc, ",", expr div_mul_cancel, ",", expr mul_comm, "]"] [],
+  norm_num [] []
+end
 
--- error in Data.Real.Pi.Bounds: ././Mathport/Syntax/Translate/Basic.lean:340:40: in all_goals: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Real.Pi.Bounds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem pi_lt_sqrt_two_add_series
 (n : exprℕ()) : «expr < »(exprπ(), «expr + »(«expr * »(«expr ^ »(2, «expr + »(n, 1)), sqrt «expr - »(2, sqrt_two_add_series 0 n)), «expr / »(1, «expr ^ »(4, n)))) :=
 begin
@@ -100,17 +101,24 @@ theorem pi_lower_bound_start (n : ℕ) {a} (h : sqrt_two_add_series ((0 : ℕ) /
       show (0 : ℝ) = (0 : ℕ) / (1 : ℕ)by 
         rw [Nat.cast_zero, zero_div]]
 
-theorem sqrt_two_add_series_step_up (c d : ℕ) {a b n : ℕ} {z : ℝ} (hz : sqrt_two_add_series (c / d) n ≤ z) (hb : 0 < b)
-  (hd : 0 < d) (h : (((2*b)+a)*d^2) ≤ (c^2)*b) : sqrt_two_add_series (a / b) (n+1) ≤ z :=
-  by 
-    refine' le_transₓ _ hz 
-    rw [sqrt_two_add_series_succ]
-    apply sqrt_two_add_series_monotone_left 
-    have hb' : 0 < (b : ℝ) := Nat.cast_pos.2 hb 
-    have hd' : 0 < (d : ℝ) := Nat.cast_pos.2 hd 
-    rw [sqrt_le_left (div_nonneg c.cast_nonneg d.cast_nonneg), div_pow, add_div_eq_mul_add_div _ _ (ne_of_gtₓ hb'),
-      div_le_div_iff hb' (pow_pos hd' _)]
-    exactModCast h
+-- error in Data.Real.Pi.Bounds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sqrt_two_add_series_step_up
+(c d : exprℕ())
+{a b n : exprℕ()}
+{z : exprℝ()}
+(hz : «expr ≤ »(sqrt_two_add_series «expr / »(c, d) n, z))
+(hb : «expr < »(0, b))
+(hd : «expr < »(0, d))
+(h : «expr ≤ »(«expr * »(«expr + »(«expr * »(2, b), a), «expr ^ »(d, 2)), «expr * »(«expr ^ »(c, 2), b))) : «expr ≤ »(sqrt_two_add_series «expr / »(a, b) «expr + »(n, 1), z) :=
+begin
+  refine [expr le_trans _ hz],
+  rw [expr sqrt_two_add_series_succ] [],
+  apply [expr sqrt_two_add_series_monotone_left],
+  have [ident hb'] [":", expr «expr < »(0, (b : exprℝ()))] [":=", expr nat.cast_pos.2 hb],
+  have [ident hd'] [":", expr «expr < »(0, (d : exprℝ()))] [":=", expr nat.cast_pos.2 hd],
+  rw ["[", expr sqrt_le_left (div_nonneg c.cast_nonneg d.cast_nonneg), ",", expr div_pow, ",", expr add_div_eq_mul_add_div _ _ (ne_of_gt hb'), ",", expr div_le_div_iff hb' (pow_pos hd' _), "]"] [],
+  exact_mod_cast [expr h]
+end
 
 /-- Create a proof of `a < π` for a fixed rational number `a`, given a witness, which is a
 sequence of rational numbers `sqrt 2 < r 1 < r 2 < ... < r n < 2` satisfying the property that
@@ -118,13 +126,13 @@ sequence of rational numbers `sqrt 2 < r 1 < r 2 < ... < r n < 2` satisfying the
 unsafe def pi_lower_bound (l : List ℚ) : tactic Unit :=
   do 
     let n := l.length 
-    tactic.apply (quote @pi_lower_bound_start (%%reflect n))
+    tactic.apply (quote.1 (@pi_lower_bound_start (%%ₓreflect n)))
     l.mmap'
         fun r =>
           do 
             let a := r.num.to_nat 
             let b := r.denom
-            () <$ tactic.apply (quote @sqrt_two_add_series_step_up (%%reflect a) (%%reflect b));
+            () <$ tactic.apply (quote.1 (@sqrt_two_add_series_step_up (%%ₓreflect a) (%%ₓreflect b)));
                 [tactic.skip, sorry, sorry, sorry]
     sorry 
     sorry
@@ -144,17 +152,25 @@ theorem pi_upper_bound_start (n : ℕ) {a}
     ·
       exact pow_pos zero_lt_two _
 
-theorem sqrt_two_add_series_step_down (a b : ℕ) {c d n : ℕ} {z : ℝ} (hz : z ≤ sqrt_two_add_series (a / b) n)
-  (hb : 0 < b) (hd : 0 < d) (h : ((a^2)*d) ≤ ((2*d)+c)*b^2) : z ≤ sqrt_two_add_series (c / d) (n+1) :=
-  by 
-    apply le_transₓ hz 
-    rw [sqrt_two_add_series_succ]
-    apply sqrt_two_add_series_monotone_left 
-    apply le_sqrt_of_sq_le 
-    have hb' : 0 < (b : ℝ) := Nat.cast_pos.2 hb 
-    have hd' : 0 < (d : ℝ) := Nat.cast_pos.2 hd 
-    rw [div_pow, add_div_eq_mul_add_div _ _ (ne_of_gtₓ hd'), div_le_div_iff (pow_pos hb' _) hd']
-    exactModCast h
+-- error in Data.Real.Pi.Bounds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sqrt_two_add_series_step_down
+(a b : exprℕ())
+{c d n : exprℕ()}
+{z : exprℝ()}
+(hz : «expr ≤ »(z, sqrt_two_add_series «expr / »(a, b) n))
+(hb : «expr < »(0, b))
+(hd : «expr < »(0, d))
+(h : «expr ≤ »(«expr * »(«expr ^ »(a, 2), d), «expr * »(«expr + »(«expr * »(2, d), c), «expr ^ »(b, 2)))) : «expr ≤ »(z, sqrt_two_add_series «expr / »(c, d) «expr + »(n, 1)) :=
+begin
+  apply [expr le_trans hz],
+  rw [expr sqrt_two_add_series_succ] [],
+  apply [expr sqrt_two_add_series_monotone_left],
+  apply [expr le_sqrt_of_sq_le],
+  have [ident hb'] [":", expr «expr < »(0, (b : exprℝ()))] [":=", expr nat.cast_pos.2 hb],
+  have [ident hd'] [":", expr «expr < »(0, (d : exprℝ()))] [":=", expr nat.cast_pos.2 hd],
+  rw ["[", expr div_pow, ",", expr add_div_eq_mul_add_div _ _ (ne_of_gt hd'), ",", expr div_le_div_iff (pow_pos hb' _) hd', "]"] [],
+  exact_mod_cast [expr h]
+end
 
 /-- Create a proof of `π < a` for a fixed rational number `a`, given a witness, which is a
 sequence of rational numbers `sqrt 2 < r 1 < r 2 < ... < r n < 2` satisfying the property that
@@ -162,13 +178,13 @@ sequence of rational numbers `sqrt 2 < r 1 < r 2 < ... < r n < 2` satisfying the
 unsafe def pi_upper_bound (l : List ℚ) : tactic Unit :=
   do 
     let n := l.length
-    () <$ tactic.apply (quote @pi_upper_bound_start (%%reflect n)); [pure (), sorry]
+    () <$ tactic.apply (quote.1 (@pi_upper_bound_start (%%ₓreflect n))); [pure (), sorry]
     l.mmap'
         fun r =>
           do 
             let a := r.num.to_nat 
             let b := r.denom
-            () <$ tactic.apply (quote @sqrt_two_add_series_step_down (%%reflect a) (%%reflect b));
+            () <$ tactic.apply (quote.1 (@sqrt_two_add_series_step_down (%%ₓreflect a) (%%ₓreflect b)));
                 [pure (), sorry, sorry, sorry]
     sorry 
     sorry

@@ -81,22 +81,23 @@ namespace DFA
 def to_NFA (M : DFA α σ') : NFA α σ' :=
   { step := fun s a => {M.step s a}, start := {M.start}, accept := M.accept }
 
+-- error in Computability.NFA: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : List α) :
-  M.to_NFA.eval_from {start} s = {M.eval_from start s} :=
-  by 
-    change List.foldlₓ M.to_NFA.step_set {start} s = {List.foldlₓ M.step start s}
-    induction' s with a s ih generalizing start
-    ·
-      tauto
-    ·
-      rw [List.foldlₓ, List.foldlₓ]
-      have h : M.to_NFA.step_set {start} a = {M.step start a}
-      ·
-        rw [NFA.StepSet]
-        finish 
-      rw [h]
-      tauto
+theorem to_NFA_eval_from_match
+(M : DFA α σ)
+(start : σ)
+(s : list α) : «expr = »(M.to_NFA.eval_from {start} s, {M.eval_from start s}) :=
+begin
+  change [expr «expr = »(list.foldl M.to_NFA.step_set {start} s, {list.foldl M.step start s})] [] [],
+  induction [expr s] [] ["with", ident a, ident s, ident ih] ["generalizing", ident start],
+  { tauto [] },
+  { rw ["[", expr list.foldl, ",", expr list.foldl, "]"] [],
+    have [ident h] [":", expr «expr = »(M.to_NFA.step_set {start} a, {M.step start a})] [],
+    { rw [expr NFA.step_set] [],
+      finish [] [] },
+    rw [expr h] [],
+    tauto [] }
+end
 
 @[simp]
 theorem to_NFA_correct (M : DFA α σ) : M.to_NFA.accepts = M.accepts :=

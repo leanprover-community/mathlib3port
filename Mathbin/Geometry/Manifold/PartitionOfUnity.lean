@@ -1,7 +1,8 @@
-import Mathbin.Topology.Paracompact 
-import Mathbin.Topology.ShrinkingLemma 
+import Mathbin.Geometry.Manifold.Algebra.Structures 
 import Mathbin.Geometry.Manifold.BumpFunction 
-import Mathbin.Topology.PartitionOfUnity
+import Mathbin.Topology.Paracompact 
+import Mathbin.Topology.PartitionOfUnity 
+import Mathbin.Topology.ShrinkingLemma
 
 /-!
 # Smooth partition of unity
@@ -236,31 +237,35 @@ theorem is_subordinate.support_subset {fs : SmoothBumpCovering ι I M s} {U : M 
 
 variable(I)
 
+-- error in Geometry.Manifold.PartitionOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Let `M` be a smooth manifold with corners modelled on a finite dimensional real vector space.
 Suppose also that `M` is a Hausdorff `σ`-compact topological space. Let `s` be a closed set
 in `M` and `U : M → set M` be a collection of sets such that `U x ∈ 𝓝 x` for every `x ∈ s`.
 Then there exists a smooth bump covering of `s` that is subordinate to `U`. -/
-theorem exists_is_subordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s) (hU : ∀ x _ : x ∈ s, U x ∈ 𝓝 x) :
-  ∃ (ι : Type uM)(f : SmoothBumpCovering ι I M s), f.is_subordinate U :=
-  by 
-    haveI  : LocallyCompactSpace H := I.locally_compact 
-    haveI  : LocallyCompactSpace M := ChartedSpace.locally_compact H 
-    haveI  : NormalSpace M := normal_of_paracompact_t2 
-    have hB := fun x hx => SmoothBumpFunction.nhds_basis_support I (hU x hx)
-    rcases refinement_of_locally_compact_sigma_compact_of_nhds_basis_set hs hB with ⟨ι, c, f, hf, hsub', hfin⟩
-    choose hcs hfU using hf 
-    rcases
-      exists_subset_Union_closed_subset hs (fun i => (f i).open_support) (fun x hx => hfin.point_finite x) hsub' with
-      ⟨V, hsV, hVc, hVf⟩
-    choose r hrR hr using fun i => (f i).exists_r_pos_lt_subset_ball (hVc i) (hVf i)
-    refine' ⟨ι, ⟨c, fun i => (f i).updateR (r i) (hrR i), hcs, _, fun x hx => _⟩, fun i => _⟩
-    ·
-      simpa only [SmoothBumpFunction.support_update_r]
-    ·
-      refine' (mem_Union.1$ hsV hx).imp fun i hi => _ 
-      exact ((f i).updateR _ _).eventually_eq_one_of_dist_lt ((f i).support_subset_source$ hVf _ hi) (hr i hi).2
-    ·
-      simpa only [coe_mk, SmoothBumpFunction.support_update_r] using hfU i
+theorem exists_is_subordinate
+[t2_space M]
+[sigma_compact_space M]
+(hs : is_closed s)
+(hU : ∀
+ x «expr ∈ » s, «expr ∈ »(U x, expr𝓝() x)) : «expr∃ , »((ι : Type uM)
+ (f : smooth_bump_covering ι I M s), f.is_subordinate U) :=
+begin
+  haveI [] [":", expr locally_compact_space H] [":=", expr I.locally_compact],
+  haveI [] [":", expr locally_compact_space M] [":=", expr charted_space.locally_compact H],
+  haveI [] [":", expr normal_space M] [":=", expr normal_of_paracompact_t2],
+  have [ident hB] [] [":=", expr λ x hx, smooth_bump_function.nhds_basis_support I (hU x hx)],
+  rcases [expr refinement_of_locally_compact_sigma_compact_of_nhds_basis_set hs hB, "with", "⟨", ident ι, ",", ident c, ",", ident f, ",", ident hf, ",", ident hsub', ",", ident hfin, "⟩"],
+  choose [] [ident hcs] [ident hfU] ["using", expr hf],
+  rcases [expr exists_subset_Union_closed_subset hs (λ
+    i, (f i).open_support) (λ
+    x hx, hfin.point_finite x) hsub', "with", "⟨", ident V, ",", ident hsV, ",", ident hVc, ",", ident hVf, "⟩"],
+  choose [] [ident r] [ident hrR, ident hr] ["using", expr λ i, (f i).exists_r_pos_lt_subset_ball (hVc i) (hVf i)],
+  refine [expr ⟨ι, ⟨c, λ i, (f i).update_r (r i) (hrR i), hcs, _, λ x hx, _⟩, λ i, _⟩],
+  { simpa [] [] ["only"] ["[", expr smooth_bump_function.support_update_r, "]"] [] [] },
+  { refine [expr «expr $ »(mem_Union.1, hsV hx).imp (λ i hi, _)],
+    exact [expr ((f i).update_r _ _).eventually_eq_one_of_dist_lt «expr $ »((f i).support_subset_source, hVf _ hi) (hr i hi).2] },
+  { simpa [] [] ["only"] ["[", expr coe_mk, ",", expr smooth_bump_function.support_update_r, "]"] [] ["using", expr hfU i] }
+end
 
 variable{I M}
 
@@ -358,23 +363,29 @@ end SmoothBumpCovering
 
 variable(I)
 
+-- error in Geometry.Manifold.PartitionOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given two disjoint closed sets in a Hausdorff σ-compact finite dimensional manifold, there
 exists an infinitely smooth function that is equal to `0` on one of them and is equal to one on the
 other. -/
-theorem exists_smooth_zero_one_of_closed [T2Space M] [SigmaCompactSpace M] {s t : Set M} (hs : IsClosed s)
-  (ht : IsClosed t) (hd : Disjoint s t) :
-  ∃ f : C^∞⟮I, M; 𝓘(ℝ), ℝ⟯, eq_on f 0 s ∧ eq_on f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 :=
-  by 
-    have  : ∀ x _ : x ∈ t, «expr ᶜ» s ∈ 𝓝 x 
-    exact fun x hx => hs.is_open_compl.mem_nhds (disjoint_right.1 hd hx)
-    rcases SmoothBumpCovering.exists_is_subordinate I ht this with ⟨ι, f, hf⟩
-    set g := f.to_smooth_partition_of_unity 
-    refine' ⟨⟨_, g.smooth_sum⟩, fun x hx => _, fun x => g.sum_eq_one, fun x => ⟨g.sum_nonneg x, g.sum_le_one x⟩⟩
-    suffices  : ∀ i, g i x = 0
-    ·
-      simp only [this, TimesContMdiffMap.coe_fn_mk, finsum_zero, Pi.zero_apply]
-    refine' fun i => f.to_smooth_partition_of_unity_zero_of_zero _ 
-    exact nmem_support.1 (subset_compl_comm.1 (hf.support_subset i) hx)
+theorem exists_smooth_zero_one_of_closed
+[t2_space M]
+[sigma_compact_space M]
+{s t : set M}
+(hs : is_closed s)
+(ht : is_closed t)
+(hd : disjoint s t) : «expr∃ , »((f : «exprC^ ⟮ , ; , ⟯»(«expr∞»(), I, M, «expr𝓘( )»(exprℝ()), exprℝ())), «expr ∧ »(eq_on f 0 s, «expr ∧ »(eq_on f 1 t, ∀
+   x, «expr ∈ »(f x, Icc (0 : exprℝ()) 1)))) :=
+begin
+  have [] [":", expr ∀ x «expr ∈ » t, «expr ∈ »(«expr ᶜ»(s), expr𝓝() x)] [],
+  from [expr λ x hx, hs.is_open_compl.mem_nhds (disjoint_right.1 hd hx)],
+  rcases [expr smooth_bump_covering.exists_is_subordinate I ht this, "with", "⟨", ident ι, ",", ident f, ",", ident hf, "⟩"],
+  set [] [ident g] [] [":="] [expr f.to_smooth_partition_of_unity] [],
+  refine [expr ⟨⟨_, g.smooth_sum⟩, λ x hx, _, λ x, g.sum_eq_one, λ x, ⟨g.sum_nonneg x, g.sum_le_one x⟩⟩],
+  suffices [] [":", expr ∀ i, «expr = »(g i x, 0)],
+  by simp [] [] ["only"] ["[", expr this, ",", expr times_cont_mdiff_map.coe_fn_mk, ",", expr finsum_zero, ",", expr pi.zero_apply, "]"] [] [],
+  refine [expr λ i, f.to_smooth_partition_of_unity_zero_of_zero _],
+  exact [expr nmem_support.1 (subset_compl_comm.1 (hf.support_subset i) hx)]
+end
 
 variable{I}
 
@@ -397,21 +408,25 @@ instance  [Inhabited ι] (s : Set M) : Inhabited (SmoothPartitionOfUnity ι I M 
 
 variable[T2Space M][SigmaCompactSpace M]
 
+-- error in Geometry.Manifold.PartitionOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `X` is a paracompact normal topological space and `U` is an open covering of a closed set
 `s`, then there exists a `bump_covering ι X s` that is subordinate to `U`. -/
-theorem exists_is_subordinate {s : Set M} (hs : IsClosed s) (U : ι → Set M) (ho : ∀ i, IsOpen (U i))
-  (hU : s ⊆ ⋃i, U i) : ∃ f : SmoothPartitionOfUnity ι I M s, f.is_subordinate U :=
-  by 
-    haveI  : LocallyCompactSpace H := I.locally_compact 
-    haveI  : LocallyCompactSpace M := ChartedSpace.locally_compact H 
-    haveI  : NormalSpace M := normal_of_paracompact_t2 
-    rcases BumpCovering.exists_is_subordinate_of_prop (Smooth I 𝓘(ℝ)) _ hs U ho hU with ⟨f, hf, hfU⟩
-    ·
-      exact ⟨f.to_smooth_partition_of_unity hf, hfU.to_smooth_partition_of_unity hf⟩
-    ·
-      intro s t hs ht hd 
-      rcases exists_smooth_zero_one_of_closed I hs ht hd with ⟨f, hf⟩
-      exact ⟨f, f.smooth, hf⟩
+theorem exists_is_subordinate
+{s : set M}
+(hs : is_closed s)
+(U : ι → set M)
+(ho : ∀ i, is_open (U i))
+(hU : «expr ⊆ »(s, «expr⋃ , »((i), U i))) : «expr∃ , »((f : smooth_partition_of_unity ι I M s), f.is_subordinate U) :=
+begin
+  haveI [] [":", expr locally_compact_space H] [":=", expr I.locally_compact],
+  haveI [] [":", expr locally_compact_space M] [":=", expr charted_space.locally_compact H],
+  haveI [] [":", expr normal_space M] [":=", expr normal_of_paracompact_t2],
+  rcases [expr bump_covering.exists_is_subordinate_of_prop (smooth I «expr𝓘( )»(exprℝ())) _ hs U ho hU, "with", "⟨", ident f, ",", ident hf, ",", ident hfU, "⟩"],
+  { exact [expr ⟨f.to_smooth_partition_of_unity hf, hfU.to_smooth_partition_of_unity hf⟩] },
+  { intros [ident s, ident t, ident hs, ident ht, ident hd],
+    rcases [expr exists_smooth_zero_one_of_closed I hs ht hd, "with", "⟨", ident f, ",", ident hf, "⟩"],
+    exact [expr ⟨f, f.smooth, hf⟩] }
+end
 
 end SmoothPartitionOfUnity
 

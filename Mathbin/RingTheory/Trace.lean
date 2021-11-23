@@ -81,14 +81,16 @@ theorem trace_eq_matrix_trace [DecidableEq ι] (b : Basis ι R S) (s : S) :
   by 
     rw [trace_apply, LinearMap.trace_eq_matrix_trace _ b, to_matrix_lmul_eq]
 
+-- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `x` is in the base field `K`, then the trace is `[L : K] * x`. -/
-theorem trace_algebra_map_of_basis (x : R) : trace R S (algebraMap R S x) = Fintype.card ι • x :=
-  by 
-    haveI  := Classical.decEq ι 
-    rw [trace_apply, LinearMap.trace_eq_matrix_trace R b, trace_diag]
-    convert Finset.sum_const _ 
-    ext i 
-    simp 
+theorem trace_algebra_map_of_basis (x : R) : «expr = »(trace R S (algebra_map R S x), «expr • »(fintype.card ι, x)) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq ι],
+  rw ["[", expr trace_apply, ",", expr linear_map.trace_eq_matrix_trace R b, ",", expr trace_diag, "]"] [],
+  convert [] [expr finset.sum_const _] [],
+  ext [] [ident i] [],
+  simp [] [] [] [] [] []
+end
 
 omit b
 
@@ -105,16 +107,24 @@ theorem trace_algebra_map (x : K) : trace K L (algebraMap K L x) = finrank K L �
     ·
       simp [trace_eq_zero_of_not_exists_basis K H, finrank_eq_zero_of_not_exists_basis_finset H]
 
-theorem trace_trace_of_basis [Algebra S T] [IsScalarTower R S T] {ι κ : Type _} [Fintype ι] [Fintype κ]
-  (b : Basis ι R S) (c : Basis κ S T) (x : T) : trace R S (trace S T x) = trace R T x :=
-  by 
-    haveI  := Classical.decEq ι 
-    haveI  := Classical.decEq κ 
-    rw [trace_eq_matrix_trace (b.smul c), trace_eq_matrix_trace b, trace_eq_matrix_trace c, Matrix.trace_apply,
-      Matrix.trace_apply, Matrix.trace_apply, ←Finset.univ_product_univ, Finset.sum_product]
-    refine' Finset.sum_congr rfl fun i _ => _ 
-    simp only [AlgHom.map_sum, smul_left_mul_matrix, Finset.sum_apply,
-      Finset.sum_apply i _ fun y => left_mul_matrix b (left_mul_matrix c x y y)]
+-- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem trace_trace_of_basis
+[algebra S T]
+[is_scalar_tower R S T]
+{ι κ : Type*}
+[fintype ι]
+[fintype κ]
+(b : basis ι R S)
+(c : basis κ S T)
+(x : T) : «expr = »(trace R S (trace S T x), trace R T x) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq ι],
+  haveI [] [] [":=", expr classical.dec_eq κ],
+  rw ["[", expr trace_eq_matrix_trace (b.smul c), ",", expr trace_eq_matrix_trace b, ",", expr trace_eq_matrix_trace c, ",", expr matrix.trace_apply, ",", expr matrix.trace_apply, ",", expr matrix.trace_apply, ",", "<-", expr finset.univ_product_univ, ",", expr finset.sum_product, "]"] [],
+  refine [expr finset.sum_congr rfl (λ i _, _)],
+  simp [] [] ["only"] ["[", expr alg_hom.map_sum, ",", expr smul_left_mul_matrix, ",", expr finset.sum_apply, ",", expr finset.sum_apply i _ (λ
+    y, left_mul_matrix b (left_mul_matrix c x y y)), "]"] [] []
+end
 
 theorem trace_comp_trace_of_basis [Algebra S T] [IsScalarTower R S T] {ι κ : Type _} [Fintype ι] [Fintype κ]
   (b : Basis ι R S) (c : Basis κ S T) : (trace R S).comp ((trace S T).restrictScalars R) = trace R T :=
@@ -174,37 +184,34 @@ variable{F : Type _}[Field F]
 
 variable[Algebra K S][Algebra K F]
 
-theorem PowerBasis.trace_gen_eq_sum_roots [Nontrivial S] (pb : PowerBasis K S)
-  (hf : (minpoly K pb.gen).Splits (algebraMap K F)) :
-  algebraMap K F (trace K S pb.gen) = ((minpoly K pb.gen).map (algebraMap K F)).roots.Sum :=
-  by 
-    have d_pos : 0 < pb.dim := PowerBasis.dim_pos pb 
-    have d_pos' : 0 < (minpoly K pb.gen).natDegree
-    ·
-      simpa 
-    haveI  : Nonempty (Finₓ pb.dim) := ⟨⟨0, d_pos⟩⟩
-    rw [trace_eq_matrix_trace pb.basis, trace_eq_neg_charpoly_coeff, charpoly_left_mul_matrix, RingHom.map_neg,
-      ←pb.nat_degree_minpoly, Fintype.card_fin, ←next_coeff_of_pos_nat_degree _ d_pos',
-      ←next_coeff_map (algebraMap K F).Injective]
-    convLHS => rw [eq_prod_roots_of_splits hf]
-    rw [monic.next_coeff_mul, next_coeff_C_eq_zero, zero_addₓ, monic.next_coeff_multiset_prod]
-    simpRw [next_coeff_X_sub_C, Multiset.sum_map_neg, neg_negₓ]
-    ·
-      intros 
-      apply monic_X_sub_C
-    ·
-      convert monic_one 
-      simp [(minpoly.monic pb.is_integral_gen).leadingCoeff]
-    ·
-      apply monic_multiset_prod_of_monic 
-      intros 
-      apply monic_X_sub_C
+-- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem power_basis.trace_gen_eq_sum_roots
+[nontrivial S]
+(pb : power_basis K S)
+(hf : (minpoly K pb.gen).splits (algebra_map K F)) : «expr = »(algebra_map K F (trace K S pb.gen), ((minpoly K pb.gen).map (algebra_map K F)).roots.sum) :=
+begin
+  have [ident d_pos] [":", expr «expr < »(0, pb.dim)] [":=", expr power_basis.dim_pos pb],
+  have [ident d_pos'] [":", expr «expr < »(0, (minpoly K pb.gen).nat_degree)] [],
+  { simpa [] [] [] [] [] [] },
+  haveI [] [":", expr nonempty (fin pb.dim)] [":=", expr ⟨⟨0, d_pos⟩⟩],
+  rw ["[", expr trace_eq_matrix_trace pb.basis, ",", expr trace_eq_neg_charpoly_coeff, ",", expr charpoly_left_mul_matrix, ",", expr ring_hom.map_neg, ",", "<-", expr pb.nat_degree_minpoly, ",", expr fintype.card_fin, ",", "<-", expr next_coeff_of_pos_nat_degree _ d_pos', ",", "<-", expr next_coeff_map (algebra_map K F).injective, "]"] [],
+  conv_lhs [] [] { rw [expr eq_prod_roots_of_splits hf] },
+  rw ["[", expr monic.next_coeff_mul, ",", expr next_coeff_C_eq_zero, ",", expr zero_add, ",", expr monic.next_coeff_multiset_prod, "]"] [],
+  simp_rw ["[", expr next_coeff_X_sub_C, ",", expr multiset.sum_map_neg, ",", expr neg_neg, "]"] [],
+  { intros [],
+    apply [expr monic_X_sub_C] },
+  { convert [] [expr monic_one] [],
+    simp [] [] [] ["[", expr (minpoly.monic pb.is_integral_gen).leading_coeff, "]"] [] [] },
+  { apply [expr monic_multiset_prod_of_monic],
+    intros [],
+    apply [expr monic_X_sub_C] }
+end
 
 namespace IntermediateField.AdjoinSimple
 
 open IntermediateField
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:340:40: in refine: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:341:40: in refine: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem trace_gen_eq_zero
 {x : L}
 (hx : «expr¬ »(is_integral K x)) : «expr = »(algebra.trace K «expr ⟮ , ⟯»(K, [x]) (adjoin_simple.gen K x), 0) :=
@@ -217,7 +224,7 @@ begin
   { exact [expr subset_adjoin K _ (set.mem_singleton x)] }
 end
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:340:40: in have: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:341:40: in have: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem trace_gen_eq_sum_roots
 (x : L)
 (hf : (minpoly K x).splits (algebra_map K F)) : «expr = »(algebra_map K F (trace K «expr ⟮ , ⟯»(K, [x]) (adjoin_simple.gen K x)), ((minpoly K x).map (algebra_map K F)).roots.sum) :=
@@ -240,7 +247,7 @@ open IntermediateField
 
 variable(K)
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:340:40: in rw: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:341:40: in rw: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem trace_eq_trace_adjoin
 [finite_dimensional K L]
 (x : L) : «expr = »(algebra.trace K L x, «expr • »(finrank «expr ⟮ , ⟯»(K, [x]) L, trace K «expr ⟮ , ⟯»(K, [x]) (adjoin_simple.gen K x))) :=
@@ -252,7 +259,7 @@ end
 
 variable{K}
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem trace_eq_sum_roots
 [finite_dimensional K L]
 {x : L}
@@ -267,22 +274,23 @@ variable[Algebra R L][Algebra L F][Algebra R F][IsScalarTower R L F]
 
 open Polynomial
 
-theorem Algebra.is_integral_trace [FiniteDimensional L F] {x : F} (hx : _root_.is_integral R x) :
-  _root_.is_integral R (Algebra.trace L F x) :=
-  by 
-    have hx' : _root_.is_integral L x := is_integral_of_is_scalar_tower _ hx 
-    rw [←is_integral_algebra_map_iff (algebraMap L (AlgebraicClosure F)).Injective, trace_eq_sum_roots]
-    ·
-      refine' (IsIntegral.multiset_sum _).nsmul _ 
-      intro y hy 
-      rw [mem_roots_map (minpoly.ne_zero hx')] at hy 
-      use minpoly R x, minpoly.monic hx 
-      rw [←aeval_def] at hy⊢
-      exact minpoly.aeval_of_is_scalar_tower R x y hy
-    ·
-      apply IsAlgClosed.splits_codomain
-    ·
-      infer_instance
+-- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem algebra.is_integral_trace
+[finite_dimensional L F]
+{x : F}
+(hx : _root_.is_integral R x) : _root_.is_integral R (algebra.trace L F x) :=
+begin
+  have [ident hx'] [":", expr _root_.is_integral L x] [":=", expr is_integral_of_is_scalar_tower _ hx],
+  rw ["[", "<-", expr is_integral_algebra_map_iff (algebra_map L (algebraic_closure F)).injective, ",", expr trace_eq_sum_roots, "]"] [],
+  { refine [expr (is_integral.multiset_sum _).nsmul _],
+    intros [ident y, ident hy],
+    rw [expr mem_roots_map (minpoly.ne_zero hx')] ["at", ident hy],
+    use ["[", expr minpoly R x, ",", expr minpoly.monic hx, "]"],
+    rw ["<-", expr aeval_def] ["at", "⊢", ident hy],
+    exact [expr minpoly.aeval_of_is_scalar_tower R x y hy] },
+  { apply [expr is_alg_closed.splits_codomain] },
+  { apply_instance }
+end
 
 section EqSumEmbeddings
 
@@ -292,44 +300,47 @@ open Algebra IntermediateField
 
 variable(F)(E : Type _)[Field E][Algebra K E]
 
-theorem trace_eq_sum_embeddings_gen (pb : PowerBasis K L) (hE : (minpoly K pb.gen).Splits (algebraMap K E))
-  (hfx : (minpoly K pb.gen).Separable) :
-  algebraMap K E (Algebra.trace K L pb.gen) = (@Finset.univ (PowerBasis.AlgHom.fintype pb)).Sum fun σ => σ pb.gen :=
-  by 
-    letI this := Classical.decEq E 
-    rw [pb.trace_gen_eq_sum_roots hE, Fintype.sum_equiv pb.lift_equiv', Finset.sum_mem_multiset,
-      Finset.sum_eq_multiset_sum, Multiset.to_finset_val,
-      multiset.erase_dup_eq_self.mpr (nodup_roots ((separable_map _).mpr hfx)), Multiset.map_id]
-    ·
-      intro x 
-      rfl
-    ·
-      intro σ 
-      rw [PowerBasis.lift_equiv'_apply_coe, id.def]
+-- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem trace_eq_sum_embeddings_gen
+(pb : power_basis K L)
+(hE : (minpoly K pb.gen).splits (algebra_map K E))
+(hfx : (minpoly K pb.gen).separable) : «expr = »(algebra_map K E (algebra.trace K L pb.gen), (@@finset.univ (power_basis.alg_hom.fintype pb)).sum (λ
+  σ, σ pb.gen)) :=
+begin
+  letI [] [] [":=", expr classical.dec_eq E],
+  rw ["[", expr pb.trace_gen_eq_sum_roots hE, ",", expr fintype.sum_equiv pb.lift_equiv', ",", expr finset.sum_mem_multiset, ",", expr finset.sum_eq_multiset_sum, ",", expr multiset.to_finset_val, ",", expr multiset.erase_dup_eq_self.mpr (nodup_roots ((separable_map _).mpr hfx)), ",", expr multiset.map_id, "]"] [],
+  { intro [ident x],
+    refl },
+  { intro [ident σ],
+    rw ["[", expr power_basis.lift_equiv'_apply_coe, ",", expr id.def, "]"] [] }
+end
 
 variable[IsAlgClosed E]
 
-theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [IsSeparable K F] (pb : PowerBasis K L) :
-  (∑σ : F →ₐ[K] E, σ (algebraMap L F pb.gen)) =
-    finrank L F • (@Finset.univ (PowerBasis.AlgHom.fintype pb)).Sum fun σ : L →ₐ[K] E => σ pb.gen :=
-  by 
-    haveI  : FiniteDimensional L F := FiniteDimensional.right K L F 
-    haveI  : IsSeparable L F := is_separable_tower_top_of_is_separable K L F 
-    letI this : Fintype (L →ₐ[K] E) := PowerBasis.AlgHom.fintype pb 
-    letI this : ∀ f : L →ₐ[K] E, Fintype (@AlgHom L F E _ _ _ _ f.to_ring_hom.to_algebra) := _ 
-    rw [Fintype.sum_equiv algHomEquivSigma (fun σ : F →ₐ[K] E => _) fun σ => σ.1 pb.gen, ←Finset.univ_sigma_univ,
-      Finset.sum_sigma, ←Finset.sum_nsmul]
-    refine' Finset.sum_congr rfl fun σ _ => _
-    ·
-      letI this : Algebra L E := σ.to_ring_hom.to_algebra 
-      simp only [Finset.sum_const, Finset.card_univ]
-      rw [AlgHom.card L F E]
-    ·
-      intro σ 
-      simp only [algHomEquivSigma, Equiv.coe_fn_mk, AlgHom.restrictDomain, AlgHom.comp_apply,
-        IsScalarTower.coe_to_alg_hom']
+-- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sum_embeddings_eq_finrank_mul
+[finite_dimensional K F]
+[is_separable K F]
+(pb : power_basis K L) : «expr = »(«expr∑ , »((σ : «expr →ₐ[ ] »(F, K, E)), σ (algebra_map L F pb.gen)), «expr • »(finrank L F, (@@finset.univ (power_basis.alg_hom.fintype pb)).sum (λ
+   σ : «expr →ₐ[ ] »(L, K, E), σ pb.gen))) :=
+begin
+  haveI [] [":", expr finite_dimensional L F] [":=", expr finite_dimensional.right K L F],
+  haveI [] [":", expr is_separable L F] [":=", expr is_separable_tower_top_of_is_separable K L F],
+  letI [] [":", expr fintype «expr →ₐ[ ] »(L, K, E)] [":=", expr power_basis.alg_hom.fintype pb],
+  letI [] [":", expr ∀
+   f : «expr →ₐ[ ] »(L, K, E), fintype (@@alg_hom L F E _ _ _ _ f.to_ring_hom.to_algebra)] [":=", expr _],
+  rw ["[", expr fintype.sum_equiv alg_hom_equiv_sigma (λ
+    σ : «expr →ₐ[ ] »(F, K, E), _) (λ
+    σ, σ.1 pb.gen), ",", "<-", expr finset.univ_sigma_univ, ",", expr finset.sum_sigma, ",", "<-", expr finset.sum_nsmul, "]"] [],
+  refine [expr finset.sum_congr rfl (λ σ _, _)],
+  { letI [] [":", expr algebra L E] [":=", expr σ.to_ring_hom.to_algebra],
+    simp [] [] ["only"] ["[", expr finset.sum_const, ",", expr finset.card_univ, "]"] [] [],
+    rw [expr alg_hom.card L F E] [] },
+  { intros [ident σ],
+    simp [] [] ["only"] ["[", expr alg_hom_equiv_sigma, ",", expr equiv.coe_fn_mk, ",", expr alg_hom.restrict_domain, ",", expr alg_hom.comp_apply, ",", expr is_scalar_tower.coe_to_alg_hom', "]"] [] [] }
+end
 
--- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:340:40: in haveI: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:341:40: in haveI: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem trace_eq_sum_embeddings
 [finite_dimensional K L]
 [is_separable K L]
@@ -350,57 +361,49 @@ open Algebra
 
 variable(pb : PowerBasis K L)
 
-theorem det_trace_form_ne_zero' [IsSeparable K L] : det (BilinForm.toMatrix pb.basis (trace_form K L)) ≠ 0 :=
-  by 
-    suffices  : algebraMap K (AlgebraicClosure L) (det (BilinForm.toMatrix pb.basis (trace_form K L))) ≠ 0
-    ·
-      refine' mt (fun ht => _) this 
-      rw [ht, RingHom.map_zero]
-    haveI  : FiniteDimensional K L := pb.finite_dimensional 
-    let e : (L →ₐ[K] AlgebraicClosure L) ≃ Finₓ pb.dim := Fintype.equivFinOfCardEq _ 
-    let M : Matrix (Finₓ pb.dim) (Finₓ pb.dim) (AlgebraicClosure L) := vandermonde fun i => e.symm i pb.gen 
-    calc
-      algebraMap K (AlgebraicClosure _) (BilinForm.toMatrix pb.basis (trace_form K L)).det =
-        det ((algebraMap K _).mapMatrix$ BilinForm.toMatrix pb.basis (trace_form K L)) :=
-      RingHom.map_det _ _ _ = det ((M)ᵀ ⬝ M) := _ _ = det M*det M :=
-      by 
-        rw [det_mul, det_transpose]_ ≠ 0 :=
-      mt mul_self_eq_zero.mp _
-    ·
-      refine' congr_argₓ det _ 
-      ext i j 
-      rw [vandermonde_transpose_mul_vandermonde, RingHom.map_matrix_apply, Matrix.map_apply, BilinForm.to_matrix_apply,
-        pb.basis_eq_pow, pb.basis_eq_pow, trace_form_apply, ←pow_addₓ, trace_eq_sum_embeddings (AlgebraicClosure L),
-        Fintype.sum_equiv e]
-      intro σ 
-      rw [e.symm_apply_apply, σ.map_pow]
-    ·
-      simp only [det_vandermonde, Finset.prod_eq_zero_iff, not_exists, sub_eq_zero]
-      intro i _ j hij h 
-      exact (finset.mem_filter.mp hij).2.ne' (e.symm.injective$ pb.alg_hom_ext h)
-    ·
-      rw [AlgHom.card, pb.finrank]
+-- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem det_trace_form_ne_zero'
+[is_separable K L] : «expr ≠ »(det (bilin_form.to_matrix pb.basis (trace_form K L)), 0) :=
+begin
+  suffices [] [":", expr «expr ≠ »(algebra_map K (algebraic_closure L) (det (bilin_form.to_matrix pb.basis (trace_form K L))), 0)],
+  { refine [expr mt (λ ht, _) this],
+    rw ["[", expr ht, ",", expr ring_hom.map_zero, "]"] [] },
+  haveI [] [":", expr finite_dimensional K L] [":=", expr pb.finite_dimensional],
+  let [ident e] [":", expr «expr ≃ »(«expr →ₐ[ ] »(L, K, algebraic_closure L), fin pb.dim)] [":=", expr fintype.equiv_fin_of_card_eq _],
+  let [ident M] [":", expr matrix (fin pb.dim) (fin pb.dim) (algebraic_closure L)] [":=", expr vandermonde (λ
+    i, e.symm i pb.gen)],
+  calc
+    «expr = »(algebra_map K (algebraic_closure _) (bilin_form.to_matrix pb.basis (trace_form K L)).det, det «expr $ »((algebra_map K _).map_matrix, bilin_form.to_matrix pb.basis (trace_form K L))) : ring_hom.map_det _ _
+    «expr = »(..., det «expr ⬝ »(«expr ᵀ»(M), M)) : _
+    «expr = »(..., «expr * »(det M, det M)) : by rw ["[", expr det_mul, ",", expr det_transpose, "]"] []
+    «expr ≠ »(..., 0) : mt mul_self_eq_zero.mp _,
+  { refine [expr congr_arg det _],
+    ext [] [ident i, ident j] [],
+    rw ["[", expr vandermonde_transpose_mul_vandermonde, ",", expr ring_hom.map_matrix_apply, ",", expr matrix.map_apply, ",", expr bilin_form.to_matrix_apply, ",", expr pb.basis_eq_pow, ",", expr pb.basis_eq_pow, ",", expr trace_form_apply, ",", "<-", expr pow_add, ",", expr trace_eq_sum_embeddings (algebraic_closure L), ",", expr fintype.sum_equiv e, "]"] [],
+    intros [ident σ],
+    rw ["[", expr e.symm_apply_apply, ",", expr σ.map_pow, "]"] [] },
+  { simp [] [] ["only"] ["[", expr det_vandermonde, ",", expr finset.prod_eq_zero_iff, ",", expr not_exists, ",", expr sub_eq_zero, "]"] [] [],
+    intros [ident i, "_", ident j, ident hij, ident h],
+    exact [expr (finset.mem_filter.mp hij).2.ne' «expr $ »(e.symm.injective, pb.alg_hom_ext h)] },
+  { rw ["[", expr alg_hom.card, ",", expr pb.finrank, "]"] [] }
+end
 
-theorem det_trace_form_ne_zero [IsSeparable K L] [DecidableEq ι] (b : Basis ι K L) :
-  det (BilinForm.toMatrix b (trace_form K L)) ≠ 0 :=
-  by 
-    haveI  : FiniteDimensional K L := FiniteDimensional.of_fintype_basis b 
-    let pb : PowerBasis K L := Field.powerBasisOfFiniteOfSeparable _ _ 
-    rw [←BilinForm.to_matrix_mul_basis_to_matrix pb.basis b, ←det_comm' (pb.basis.to_matrix_mul_to_matrix_flip b) _,
-      ←Matrix.mul_assoc, det_mul]
-    swap
-    ·
-      apply Basis.to_matrix_mul_to_matrix_flip 
-    refine'
-      mul_ne_zero (is_unit_of_mul_eq_one _ ((b.to_matrix pb.basis)ᵀ ⬝ b.to_matrix pb.basis).det _).ne_zero
-        (det_trace_form_ne_zero' pb)
-    calc
-      ((pb.basis.to_matrix b ⬝ (pb.basis.to_matrix b)ᵀ).det*((b.to_matrix pb.basis)ᵀ ⬝ b.to_matrix pb.basis).det) =
-        (pb.basis.to_matrix b ⬝ (b.to_matrix pb.basis ⬝ pb.basis.to_matrix b)ᵀ ⬝ b.to_matrix pb.basis).det :=
-      by 
-        simp only [←det_mul, Matrix.mul_assoc, Matrix.transpose_mul]_ = 1 :=
-      by 
-        simp only [Basis.to_matrix_mul_to_matrix_flip, Matrix.transpose_one, Matrix.mul_one, Matrix.det_one]
+-- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem det_trace_form_ne_zero
+[is_separable K L]
+[decidable_eq ι]
+(b : basis ι K L) : «expr ≠ »(det (bilin_form.to_matrix b (trace_form K L)), 0) :=
+begin
+  haveI [] [":", expr finite_dimensional K L] [":=", expr finite_dimensional.of_fintype_basis b],
+  let [ident pb] [":", expr power_basis K L] [":=", expr field.power_basis_of_finite_of_separable _ _],
+  rw ["[", "<-", expr bilin_form.to_matrix_mul_basis_to_matrix pb.basis b, ",", "<-", expr det_comm' (pb.basis.to_matrix_mul_to_matrix_flip b) _, ",", "<-", expr matrix.mul_assoc, ",", expr det_mul, "]"] [],
+  swap,
+  { apply [expr basis.to_matrix_mul_to_matrix_flip] },
+  refine [expr mul_ne_zero (is_unit_of_mul_eq_one _ «expr ⬝ »(«expr ᵀ»(b.to_matrix pb.basis), b.to_matrix pb.basis).det _).ne_zero (det_trace_form_ne_zero' pb)],
+  calc
+    «expr = »(«expr * »(«expr ⬝ »(pb.basis.to_matrix b, «expr ᵀ»(pb.basis.to_matrix b)).det, «expr ⬝ »(«expr ᵀ»(b.to_matrix pb.basis), b.to_matrix pb.basis).det), «expr ⬝ »(«expr ⬝ »(pb.basis.to_matrix b, «expr ᵀ»(«expr ⬝ »(b.to_matrix pb.basis, pb.basis.to_matrix b))), b.to_matrix pb.basis).det) : by simp [] [] ["only"] ["[", "<-", expr det_mul, ",", expr matrix.mul_assoc, ",", expr matrix.transpose_mul, "]"] [] []
+    «expr = »(..., 1) : by simp [] [] ["only"] ["[", expr basis.to_matrix_mul_to_matrix_flip, ",", expr matrix.transpose_one, ",", expr matrix.mul_one, ",", expr matrix.det_one, "]"] [] []
+end
 
 variable(K L)
 

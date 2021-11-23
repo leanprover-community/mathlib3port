@@ -39,7 +39,7 @@ namespace Finset
 
 variable{M : Type _}[OrderedAddCommMonoid M]{f : ℕ → M}
 
--- error in Analysis.PSeries: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.PSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem le_sum_condensed'
 (hf : ∀ {{m n}}, «expr < »(0, m) → «expr ≤ »(m, n) → «expr ≤ »(f n, f m))
 (n : exprℕ()) : «expr ≤ »(«expr∑ in , »((k), Ico 1 «expr ^ »(2, n), f k), «expr∑ in , »((k), range n, «expr • »(«expr ^ »(2, k), f «expr ^ »(2, k)))) :=
@@ -63,7 +63,7 @@ theorem le_sum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m)
     convert add_le_add_left (le_sum_condensed' hf n) (f 0)
     rw [←sum_range_add_sum_Ico _ n.one_le_two_pow, sum_range_succ, sum_range_zero, zero_addₓ]
 
--- error in Analysis.PSeries: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.PSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem sum_condensed_le'
 (hf : ∀ {{m n}}, «expr < »(1, m) → «expr ≤ »(m, n) → «expr ≤ »(f n, f m))
 (n : exprℕ()) : «expr ≤ »(«expr∑ in , »((k), range n, «expr • »(«expr ^ »(2, k), f «expr ^ »(2, «expr + »(k, 1)))), «expr∑ in , »((k), Ico 2 «expr + »(«expr ^ »(2, n), 1), f k)) :=
@@ -151,40 +151,32 @@ and only if `∑ n, 2 ^ n / ((2 ^ n) ^ p)` converges, and the latter series is a
 common ratio `2 ^ {1 - p}`. -/
 
 
+-- error in Analysis.PSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Test for convergence of the `p`-series: the real-valued series `∑' n : ℕ, (n ^ p)⁻¹` converges
 if and only if `1 < p`. -/
 @[simp]
-theorem Real.summable_nat_rpow_inv {p : ℝ} : Summable (fun n => (n^p)⁻¹ : ℕ → ℝ) ↔ 1 < p :=
-  by 
-    cases' le_or_ltₓ 0 p with hp hp
-    ·
-      rw [←summable_condensed_iff_of_nonneg]
-      ·
-        simpRw [Nat.cast_pow, Nat.cast_two, ←rpow_nat_cast, ←rpow_mul zero_lt_two.le, mul_commₓ _ p,
-          rpow_mul zero_lt_two.le, rpow_nat_cast, ←inv_pow₀, ←mul_powₓ, summable_geometric_iff_norm_lt_1]
-        nthRw 0[←rpow_one 2]
-        rw [←division_def, ←rpow_sub zero_lt_two, norm_eq_abs, abs_of_pos (rpow_pos_of_pos zero_lt_two _),
-          rpow_lt_one_iff zero_lt_two.le]
-        normNum
-      ·
-        intro n 
-        exact inv_nonneg.2 (rpow_nonneg_of_nonneg n.cast_nonneg _)
-      ·
-        intro m n hm hmn 
-        exact
-          inv_le_inv_of_le (rpow_pos_of_pos (Nat.cast_pos.2 hm) _) (rpow_le_rpow m.cast_nonneg (Nat.cast_le.2 hmn) hp)
-    ·
-      suffices  : ¬Summable (fun n => (n^p)⁻¹ : ℕ → ℝ)
-      ·
-        have  : ¬1 < p := fun hp₁ => hp.not_le (zero_le_one.trans hp₁.le)
-        simpa [this, -one_div]
-      ·
-        intro h 
-        obtain ⟨k : ℕ, hk₁ : ((k^p)⁻¹ : ℝ) < 1, hk₀ : k ≠ 0⟩ :=
-          ((h.tendsto_cofinite_zero.eventually (gt_mem_nhds zero_lt_one)).And (eventually_cofinite_ne 0)).exists 
-        apply hk₀ 
-        rw [←pos_iff_ne_zero, ←@Nat.cast_pos ℝ] at hk₀ 
-        simpa [inv_lt_one_iff_of_pos (rpow_pos_of_pos hk₀ _), one_lt_rpow_iff_of_pos hk₀, hp, hp.not_lt, hk₀] using hk₁
+theorem real.summable_nat_rpow_inv
+{p : exprℝ()} : «expr ↔ »(summable (λ n, «expr ⁻¹»(«expr ^ »(n, p)) : exprℕ() → exprℝ()), «expr < »(1, p)) :=
+begin
+  cases [expr le_or_lt 0 p] ["with", ident hp, ident hp],
+  { rw ["<-", expr summable_condensed_iff_of_nonneg] [],
+    { simp_rw ["[", expr nat.cast_pow, ",", expr nat.cast_two, ",", "<-", expr rpow_nat_cast, ",", "<-", expr rpow_mul zero_lt_two.le, ",", expr mul_comm _ p, ",", expr rpow_mul zero_lt_two.le, ",", expr rpow_nat_cast, ",", "<-", expr inv_pow₀, ",", "<-", expr mul_pow, ",", expr summable_geometric_iff_norm_lt_1, "]"] [],
+      nth_rewrite [0] ["[", "<-", expr rpow_one 2, "]"] [],
+      rw ["[", "<-", expr division_def, ",", "<-", expr rpow_sub zero_lt_two, ",", expr norm_eq_abs, ",", expr abs_of_pos (rpow_pos_of_pos zero_lt_two _), ",", expr rpow_lt_one_iff zero_lt_two.le, "]"] [],
+      norm_num [] [] },
+    { intro [ident n],
+      exact [expr inv_nonneg.2 (rpow_nonneg_of_nonneg n.cast_nonneg _)] },
+    { intros [ident m, ident n, ident hm, ident hmn],
+      exact [expr inv_le_inv_of_le (rpow_pos_of_pos (nat.cast_pos.2 hm) _) (rpow_le_rpow m.cast_nonneg (nat.cast_le.2 hmn) hp)] } },
+  { suffices [] [":", expr «expr¬ »(summable (λ n, «expr ⁻¹»(«expr ^ »(n, p)) : exprℕ() → exprℝ()))],
+    { have [] [":", expr «expr¬ »(«expr < »(1, p))] [":=", expr λ hp₁, hp.not_le (zero_le_one.trans hp₁.le)],
+      simpa [] [] [] ["[", expr this, ",", "-", ident one_div, "]"] [] [] },
+    { intro [ident h],
+      obtain ["⟨", ident k, ":", expr exprℕ(), ",", ident hk₁, ":", expr «expr < »((«expr ⁻¹»(«expr ^ »(k, p)) : exprℝ()), 1), ",", ident hk₀, ":", expr «expr ≠ »(k, 0), "⟩", ":=", expr ((h.tendsto_cofinite_zero.eventually (gt_mem_nhds zero_lt_one)).and (eventually_cofinite_ne 0)).exists],
+      apply [expr hk₀],
+      rw ["[", "<-", expr pos_iff_ne_zero, ",", "<-", expr @nat.cast_pos exprℝ(), "]"] ["at", ident hk₀],
+      simpa [] [] [] ["[", expr inv_lt_one_iff_of_pos (rpow_pos_of_pos hk₀ _), ",", expr one_lt_rpow_iff_of_pos hk₀, ",", expr hp, ",", expr hp.not_lt, ",", expr hk₀, "]"] [] ["using", expr hk₁] } }
+end
 
 @[simp]
 theorem Real.summable_nat_rpow {p : ℝ} : Summable (fun n => n^p : ℕ → ℝ) ↔ p < -1 :=

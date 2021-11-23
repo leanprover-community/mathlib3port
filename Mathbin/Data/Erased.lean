@@ -42,13 +42,14 @@ def out_type (a : Erased (Sort u)) : Sort u :=
 theorem out_proof {p : Prop} (a : Erased p) : p :=
   out a
 
-@[simp]
-theorem out_mk {α} (a : α) : (mk a).out = a :=
-  by 
-    let h 
-    show Classical.some h = a 
-    have  := Classical.some_spec h 
-    exact cast (congr_funₓ this a).symm rfl
+-- error in Data.Erased: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem out_mk {α} (a : α) : «expr = »((mk a).out, a) :=
+begin
+  let [ident h] [] [],
+  show [expr «expr = »(classical.some h, a)],
+  have [] [] [":=", expr classical.some_spec h],
+  exact [expr cast (congr_fun this a).symm rfl]
+end
 
 @[simp]
 theorem mk_out {α} : ∀ a : Erased α, mk (out a) = a

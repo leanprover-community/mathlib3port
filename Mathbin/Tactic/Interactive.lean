@@ -206,7 +206,7 @@ unsafe def generalize_hyp (h : parse (ident)?) (_ : parse$ tk ":") (p : parse ge
     let g ←
       if ¬l.include_goal then
           do 
-            refine (pquote generalize_a_aux _)
+            refine (pquote.1 (generalize_a_aux _))
             some <$> (Prod.mk <$> tactic.intro x' <*> tactic.intro h')
         else pure none 
     let n ← l.get_locals >>= tactic.revert_lst 
@@ -253,7 +253,7 @@ order to retain the type.
 unsafe def clean (q : parse texpr) : tactic Unit :=
   do 
     let tgt : expr ← target 
-    let e ← i_to_expr_strict (pquote (%%q : %%tgt))
+    let e ← i_to_expr_strict (pquote.1 (%%ₓq : %%ₓtgt))
     tactic.exact$ e.clean
 
 unsafe def source_fields (missing : List Name) (e : pexpr) : tactic (List (Name × pexpr)) :=
@@ -533,13 +533,14 @@ unsafe def return_cast (f : Option expr) (t : Option (expr × expr)) (es : List 
 
 unsafe def list_cast_of_aux (x : expr) (t : Option (expr × expr)) (es : List (expr × expr × expr)) :
   expr → tactic (Option (expr × expr) × List (expr × expr × expr))
-| e@(quote cast (%%eq_h) (%%x')) => return_cast none t es e x x' eq_h
-| e@(quote Eq.mp (%%eq_h) (%%x')) => return_cast none t es e x x' eq_h
-| e@(quote Eq.mpr (%%eq_h) (%%x')) => mk_eq_symm eq_h >>= return_cast none t es e x x'
-| e@(quote @Eq.subst (%%α) (%%p) (%%a) (%%b) (%%eq_h) (%%x')) => return_cast p t es e x x' eq_h
-| e@(quote @Eq.substr (%%α) (%%p) (%%a) (%%b) (%%eq_h) (%%x')) => mk_eq_symm eq_h >>= return_cast p t es e x x'
-| e@(quote @Eq.ndrec (%%α) (%%a) (%%f) (%%x') _ (%%eq_h)) => return_cast f t es e x x' eq_h
-| e@(quote @Eq.recOnₓ (%%α) (%%a) (%%f) (%%b) (%%eq_h) (%%x')) => return_cast f t es e x x' eq_h
+| e@(quote.1 (cast (%%ₓeq_h) (%%ₓx'))) => return_cast none t es e x x' eq_h
+| e@(quote.1 (Eq.mp (%%ₓeq_h) (%%ₓx'))) => return_cast none t es e x x' eq_h
+| e@(quote.1 (Eq.mpr (%%ₓeq_h) (%%ₓx'))) => mk_eq_symm eq_h >>= return_cast none t es e x x'
+| e@(quote.1 (@Eq.subst (%%ₓα) (%%ₓp) (%%ₓa) (%%ₓb) (%%ₓeq_h) (%%ₓx'))) => return_cast p t es e x x' eq_h
+| e@(quote.1 (@Eq.substr (%%ₓα) (%%ₓp) (%%ₓa) (%%ₓb) (%%ₓeq_h) (%%ₓx'))) =>
+  mk_eq_symm eq_h >>= return_cast p t es e x x'
+| e@(quote.1 (@Eq.ndrec (%%ₓα) (%%ₓa) (%%ₓf) (%%ₓx') _ (%%ₓeq_h))) => return_cast f t es e x x' eq_h
+| e@(quote.1 (@Eq.recOnₓ (%%ₓα) (%%ₓa) (%%ₓf) (%%ₓb) (%%ₓeq_h) (%%ₓx'))) => return_cast f t es e x x' eq_h
 | e => return (t, es)
 
 unsafe def list_cast_of (x tgt : expr) : tactic (List (expr × expr × expr)) :=
@@ -592,8 +593,8 @@ unsafe def h_generalize (rev : parse (tk "!")?) (h : parse (ident_)?) (_ : parse
             tactic.clear h' 
     when h.is_some
         do 
-          (to_expr (pquote heq_of_eq_rec_leftₓ (%%eq_h) (%%asm)) <|>
-                  to_expr (pquote heq_of_cast_eq (%%eq_h) (%%asm))) >>=
+          (to_expr (pquote.1 (heq_of_eq_rec_leftₓ (%%ₓeq_h) (%%ₓasm))) <|>
+                  to_expr (pquote.1 (heq_of_cast_eq (%%ₓeq_h) (%%ₓasm)))) >>=
                 note h' none >>
               pure ()
     tactic.clear asm 
@@ -679,8 +680,8 @@ unsafe def use (l : parse pexpr_list_or_texpr) : tactic Unit :=
       try
         (triv <|>
           do 
-            let quote Exists (%%p) ← target 
-            to_expr (pquote exists_prop.mpr) >>= tactic.apply >> skip))
+            let quote.1 (Exists (%%ₓp)) ← target 
+            to_expr (pquote.1 exists_prop.mpr) >>= tactic.apply >> skip))
 
 add_tactic_doc
   { Name := "use", category := DocCategory.tactic, declNames := [`tactic.interactive.use, `tactic.interactive.existsi],
@@ -787,10 +788,10 @@ unsafe def Set (h_simp : parse (tk "!")?) (a : parse ident) (tp : parse (tk ":" 
   (pv : parse texpr) (rev_name : parse opt_dir_with) :=
   do 
     let tp ← i_to_expr$ tp.get_or_else pexpr.mk_placeholder 
-    let pv ← to_expr (pquote (%%pv : %%tp))
+    let pv ← to_expr (pquote.1 (%%ₓpv : %%ₓtp))
     let tp ← instantiate_mvars tp 
     definev a tp pv 
-    when h_simp.is_none$ change' (pquote %%pv) (some (expr.const a []))$ Interactive.Loc.wildcard 
+    when h_simp.is_none$ change' (pquote.1 (%%ₓpv)) (some (expr.const a []))$ Interactive.Loc.wildcard 
     match rev_name with 
       | some (flip, id) =>
         do 
@@ -1065,11 +1066,11 @@ unsafe def generalize' (h : parse (ident)?) (_ : parse$ tk ":") (p : parse gener
       let tgt' ←
         (do 
               let ⟨tgt', _⟩ ← solve_aux tgt (tactic.generalize e x >> target)
-              to_expr (pquote ∀ x, (%%e) = x → %%tgt'.binding_body.lift_vars 0 1)) <|>
-            to_expr (pquote ∀ x, (%%e) = x → %%tgt)
+              to_expr (pquote.1 (∀ x, (%%ₓe) = x → %%ₓtgt'.binding_body.lift_vars 0 1))) <|>
+            to_expr (pquote.1 (∀ x, (%%ₓe) = x → %%ₓtgt))
       let t ← assert h tgt' 
       swap 
-      exact (pquote (%%t) (%%e) rfl)
+      exact (pquote.1 ((%%ₓt) (%%ₓe) rfl))
       intro x 
       intro h
 

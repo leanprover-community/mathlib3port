@@ -1,5 +1,4 @@
-import Mathbin.Data.Real.Nnreal 
-import Mathbin.Data.Set.Intervals.Default
+import Mathbin.Data.Real.Nnreal
 
 /-!
 # Extended non-negative reals
@@ -71,7 +70,7 @@ open_locale Classical BigOperators Nnreal
 
 variable{α : Type _}{β : Type _}
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_zero
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_zero
 /-- The extended nonnegative real numbers. This is usually denoted [0, ∞],
   and is relevant as the codomain of a measure. -/
 @[derive #["[", expr has_zero, ",", expr add_comm_monoid, ",", expr canonically_ordered_comm_semiring, ",",
@@ -234,7 +233,7 @@ theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ a _ : a ≠ ∞, p a) ↔
 theorem exists_ne_top {p : ℝ≥0∞ → Prop} : (∃ (a : _)(_ : a ≠ ∞), p a) ↔ ∃ r :  ℝ≥0 , p r :=
   Option.bex_ne_none
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem to_nnreal_eq_zero_iff
 (x : «exprℝ≥0∞»()) : «expr ↔ »(«expr = »(x.to_nnreal, 0), «expr ∨ »(«expr = »(x, 0), «expr = »(x, «expr∞»()))) :=
 ⟨begin
@@ -669,11 +668,13 @@ theorem coe_le_iff : «expr↑ » r ≤ a ↔ ∀ p :  ℝ≥0 , a = p → r ≤
 theorem lt_iff_exists_coe : a < b ↔ ∃ p :  ℝ≥0 , a = p ∧ «expr↑ » p < b :=
   WithTop.lt_iff_exists_coe
 
-theorem to_real_le_coe_of_le_coe {a : ℝ≥0∞} {b :  ℝ≥0 } (h : a ≤ b) : a.to_real ≤ b :=
-  show «expr↑ » a.to_nnreal ≤ «expr↑ » b by 
-    have  : «expr↑ » a.to_nnreal = a := Ennreal.coe_to_nnreal (lt_of_le_of_ltₓ h coe_lt_top).Ne 
-    rw [←this] at h 
-    exactModCast h
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem to_real_le_coe_of_le_coe {a : «exprℝ≥0∞»()} {b : «exprℝ≥0»()} (h : «expr ≤ »(a, b)) : «expr ≤ »(a.to_real, b) :=
+show «expr ≤ »(«expr↑ »(a.to_nnreal), «expr↑ »(b)), begin
+  have [] [":", expr «expr = »(«expr↑ »(a.to_nnreal), a)] [":=", expr ennreal.coe_to_nnreal (lt_of_le_of_lt h coe_lt_top).ne],
+  rw ["<-", expr this] ["at", ident h],
+  exact_mod_cast [expr h]
+end
 
 @[simp, normCast]
 theorem coe_finset_sup {s : Finset α} {f : α →  ℝ≥0 } : «expr↑ » (s.sup f) = s.sup fun x => (f x : ℝ≥0∞) :=
@@ -780,28 +781,26 @@ theorem lt_iff_exists_real_btwn : a < b ↔ ∃ r : ℝ, 0 ≤ r ∧ a < Ennreal
 theorem lt_iff_exists_nnreal_btwn : a < b ↔ ∃ r :  ℝ≥0 , a < r ∧ (r : ℝ≥0∞) < b :=
   WithTop.lt_iff_exists_coe_btwn
 
-theorem lt_iff_exists_add_pos_lt : a < b ↔ ∃ r :  ℝ≥0 , 0 < r ∧ (a+r) < b :=
-  by 
-    refine' ⟨fun hab => _, fun ⟨r, rpos, hr⟩ => lt_of_le_of_ltₓ le_self_add hr⟩
-    cases a
-    ·
-      simpa using hab 
-    rcases lt_iff_exists_real_btwn.1 hab with ⟨c, c_nonneg, ac, cb⟩
-    let d :  ℝ≥0  := ⟨c, c_nonneg⟩
-    have ad : a < d
-    ·
-      rw [of_real_eq_coe_nnreal c_nonneg] at ac 
-      exact coe_lt_coe.1 ac 
-    refine' ⟨d - a, tsub_pos_iff_lt.2 ad, _⟩
-    rw [some_eq_coe, ←coe_add]
-    convert cb 
-    have  : Real.toNnreal c = d
-    ·
-      ·
-        rw [←Nnreal.coe_eq, Real.coe_to_nnreal _ c_nonneg]
-        rfl 
-    rw [add_commₓ, this]
-    exact tsub_add_cancel_of_le ad.le
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lt_iff_exists_add_pos_lt : «expr ↔ »(«expr < »(a, b), «expr∃ , »((r : «exprℝ≥0»()), «expr ∧ »(«expr < »(0, r), «expr < »(«expr + »(a, r), b)))) :=
+begin
+  refine [expr ⟨λ hab, _, λ ⟨r, rpos, hr⟩, lt_of_le_of_lt le_self_add hr⟩],
+  cases [expr a] [],
+  { simpa [] [] [] [] [] ["using", expr hab] },
+  rcases [expr lt_iff_exists_real_btwn.1 hab, "with", "⟨", ident c, ",", ident c_nonneg, ",", ident ac, ",", ident cb, "⟩"],
+  let [ident d] [":", expr «exprℝ≥0»()] [":=", expr ⟨c, c_nonneg⟩],
+  have [ident ad] [":", expr «expr < »(a, d)] [],
+  { rw [expr of_real_eq_coe_nnreal c_nonneg] ["at", ident ac],
+    exact [expr coe_lt_coe.1 ac] },
+  refine [expr ⟨«expr - »(d, a), tsub_pos_iff_lt.2 ad, _⟩],
+  rw ["[", expr some_eq_coe, ",", "<-", expr coe_add, "]"] [],
+  convert [] [expr cb] [],
+  have [] [":", expr «expr = »(real.to_nnreal c, d)] [],
+  by { rw ["[", "<-", expr nnreal.coe_eq, ",", expr real.coe_to_nnreal _ c_nonneg, "]"] [],
+    refl },
+  rw ["[", expr add_comm, ",", expr this, "]"] [],
+  exact [expr tsub_add_cancel_of_le ad.le]
+end
 
 theorem coe_nat_lt_coe {n : ℕ} : (n : ℝ≥0∞) < r ↔ «expr↑ » n < r :=
   Ennreal.coe_nat n ▸ coe_lt_coe
@@ -881,7 +880,7 @@ theorem coe_Inf {s : Set ℝ≥0 } : s.nonempty → («expr↑ » (Inf s) : ℝ�
 theorem top_mem_upper_bounds {s : Set ℝ≥0∞} : ∞ ∈ UpperBounds s :=
   fun x hx => le_top
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem coe_mem_upper_bounds
 {s : set «exprℝ≥0»()} : «expr ↔ »(«expr ∈ »(«expr↑ »(r), upper_bounds «expr '' »((coe : «exprℝ≥0»() → «exprℝ≥0∞»()), s)), «expr ∈ »(r, upper_bounds s)) :=
 by simp [] [] [] ["[", expr upper_bounds, ",", expr ball_image_iff, ",", "-", ident mem_image, ",", "*", "]"] [] [] { contextual := tt }
@@ -941,7 +940,7 @@ theorem max_mul : (max a b*c) = max (a*c) (b*c) :=
 theorem mul_max : (a*max b c) = max (a*b) (a*c) :=
   mul_left_mono.map_max
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mul_eq_mul_left : «expr ≠ »(a, 0) → «expr ≠ »(a, «expr∞»()) → «expr ↔ »(«expr = »(«expr * »(a, b), «expr * »(a, c)), «expr = »(b, c)) :=
 begin
   cases [expr a] []; cases [expr b] []; cases [expr c] []; simp [] [] [] ["[", expr none_eq_top, ",", expr some_eq_coe, ",", expr mul_top, ",", expr top_mul, ",", "-", ident coe_mul, ",", expr coe_mul.symm, ",", expr nnreal.mul_eq_mul_left, "]"] [] [] { contextual := tt }
@@ -950,7 +949,7 @@ end
 theorem mul_eq_mul_right : c ≠ 0 → c ≠ ∞ → (((a*c) = b*c) ↔ a = b) :=
   mul_commₓ c a ▸ mul_commₓ c b ▸ mul_eq_mul_left
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mul_le_mul_left : «expr ≠ »(a, 0) → «expr ≠ »(a, «expr∞»()) → «expr ↔ »(«expr ≤ »(«expr * »(a, b), «expr * »(a, c)), «expr ≤ »(b, c)) :=
 begin
   cases [expr a] []; cases [expr b] []; cases [expr c] []; simp [] [] [] ["[", expr none_eq_top, ",", expr some_eq_coe, ",", expr mul_top, ",", expr top_mul, ",", "-", ident coe_mul, ",", expr coe_mul.symm, "]"] [] [] { contextual := tt },
@@ -1248,7 +1247,7 @@ instance  : DivInvMonoidₓ ℝ≥0∞ :=
 
 @[simp]
 theorem inv_zero : (0 : ℝ≥0∞)⁻¹ = ∞ :=
-  show Inf { b : ℝ≥0∞ | 1 ≤ 0*b } = ∞by 
+  show Inf { b:ℝ≥0∞ | 1 ≤ 0*b } = ∞by 
     simp  <;> rfl
 
 @[simp]
@@ -1452,41 +1451,36 @@ theorem div_eq_top : a / b = ∞ ↔ a ≠ 0 ∧ b = 0 ∨ a = ∞ ∧ b ≠ ∞
   by 
     simp [div_eq_mul_inv, Ennreal.mul_eq_top]
 
-theorem le_div_iff_mul_le (h0 : b ≠ 0 ∨ c ≠ 0) (ht : b ≠ ∞ ∨ c ≠ ∞) : a ≤ c / b ↔ (a*b) ≤ c :=
-  by 
-    cases b
-    ·
-      simp  at ht 
-      split 
-      ·
-        intro ha 
-        simp  at ha 
-        simp [ha]
-      ·
-        contrapose 
-        intro ha 
-        simp  at ha 
-        have  : (a*∞) = ∞
-        ·
-          simp [Ennreal.mul_eq_top, ha]
-        simp [this, ht]
-    byCases' hb : b ≠ 0
-    ·
-      have  : (b : ℝ≥0∞) ≠ 0
-      ·
-        simp [hb]
-      rw [←Ennreal.mul_le_mul_left this coe_ne_top]
-      suffices  : ((«expr↑ » b*a) ≤ («expr↑ » b*«expr↑ » (b⁻¹))*c) ↔ (a*«expr↑ » b) ≤ c
-      ·
-        simpa [some_eq_coe, div_eq_mul_inv, hb, mul_left_commₓ, mul_commₓ, mul_assocₓ]
-      rw [←coe_mul, mul_inv_cancel hb, coe_one, one_mulₓ, mul_commₓ]
-    ·
-      simp  at hb 
-      simp [hb] at h0 
-      have  : c / 0 = ∞
-      ·
-        simp [div_eq_top, h0]
-      simp [hb, this]
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem le_div_iff_mul_le
+(h0 : «expr ∨ »(«expr ≠ »(b, 0), «expr ≠ »(c, 0)))
+(ht : «expr ∨ »(«expr ≠ »(b, «expr∞»()), «expr ≠ »(c, «expr∞»()))) : «expr ↔ »(«expr ≤ »(a, «expr / »(c, b)), «expr ≤ »(«expr * »(a, b), c)) :=
+begin
+  cases [expr b] [],
+  { simp [] [] [] [] [] ["at", ident ht],
+    split,
+    { assume [binders (ha)],
+      simp [] [] [] [] [] ["at", ident ha],
+      simp [] [] [] ["[", expr ha, "]"] [] [] },
+    { contrapose [] [],
+      assume [binders (ha)],
+      simp [] [] [] [] [] ["at", ident ha],
+      have [] [":", expr «expr = »(«expr * »(a, «expr∞»()), «expr∞»())] [],
+      by simp [] [] [] ["[", expr ennreal.mul_eq_top, ",", expr ha, "]"] [] [],
+      simp [] [] [] ["[", expr this, ",", expr ht, "]"] [] [] } },
+  by_cases [expr hb, ":", expr «expr ≠ »(b, 0)],
+  { have [] [":", expr «expr ≠ »((b : «exprℝ≥0∞»()), 0)] [],
+    by simp [] [] [] ["[", expr hb, "]"] [] [],
+    rw ["[", "<-", expr ennreal.mul_le_mul_left this coe_ne_top, "]"] [],
+    suffices [] [":", expr «expr ↔ »(«expr ≤ »(«expr * »(«expr↑ »(b), a), «expr * »(«expr * »(«expr↑ »(b), «expr↑ »(«expr ⁻¹»(b))), c)), «expr ≤ »(«expr * »(a, «expr↑ »(b)), c))],
+    { simpa [] [] [] ["[", expr some_eq_coe, ",", expr div_eq_mul_inv, ",", expr hb, ",", expr mul_left_comm, ",", expr mul_comm, ",", expr mul_assoc, "]"] [] [] },
+    rw ["[", "<-", expr coe_mul, ",", expr mul_inv_cancel hb, ",", expr coe_one, ",", expr one_mul, ",", expr mul_comm, "]"] [] },
+  { simp [] [] [] [] [] ["at", ident hb],
+    simp [] [] [] ["[", expr hb, "]"] [] ["at", ident h0],
+    have [] [":", expr «expr = »(«expr / »(c, 0), «expr∞»())] [],
+    by simp [] [] [] ["[", expr div_eq_top, ",", expr h0, "]"] [] [],
+    simp [] [] [] ["[", expr hb, ",", expr this, "]"] [] [] }
+end
 
 theorem div_le_iff_le_mul (hb0 : b ≠ 0 ∨ c ≠ ∞) (hbt : b ≠ ∞ ∨ c ≠ 0) : a / b ≤ c ↔ a ≤ c*b :=
   by 
@@ -1498,18 +1492,17 @@ theorem div_le_iff_le_mul (hb0 : b ≠ 0 ∨ c ≠ ∞) (hbt : b ≠ ∞ ∨ c �
 theorem lt_div_iff_mul_lt (hb0 : b ≠ 0 ∨ c ≠ ∞) (hbt : b ≠ ∞ ∨ c ≠ 0) : c < a / b ↔ (c*b) < a :=
   lt_iff_lt_of_le_iff_le (div_le_iff_le_mul hb0 hbt)
 
-theorem div_le_of_le_mul (h : a ≤ b*c) : a / c ≤ b :=
-  by 
-    byCases' h0 : c = 0
-    ·
-      have  : a = 0
-      ·
-        simpa [h0] using h 
-      simp 
-    byCases' hinf : c = ∞
-    ·
-      simp [hinf]
-    exact (div_le_iff_le_mul (Or.inl h0) (Or.inl hinf)).2 h
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem div_le_of_le_mul (h : «expr ≤ »(a, «expr * »(b, c))) : «expr ≤ »(«expr / »(a, c), b) :=
+begin
+  by_cases [expr h0, ":", expr «expr = »(c, 0)],
+  { have [] [":", expr «expr = »(a, 0)] [],
+    by simpa [] [] [] ["[", expr h0, "]"] [] ["using", expr h],
+    simp [] [] [] ["[", "*", "]"] [] [] },
+  by_cases [expr hinf, ":", expr «expr = »(c, «expr∞»())],
+  by simp [] [] [] ["[", expr hinf, "]"] [] [],
+  exact [expr (div_le_iff_le_mul (or.inl h0) (or.inl hinf)).2 h]
+end
 
 theorem div_le_of_le_mul' (h : a ≤ b*c) : a / b ≤ c :=
   div_le_of_le_mul$ mul_commₓ b c ▸ h
@@ -1540,7 +1533,7 @@ theorem mul_lt_of_lt_div (h : a < b / c) : (a*c) < b :=
 theorem mul_lt_of_lt_div' (h : a < b / c) : (c*a) < b :=
   mul_commₓ a c ▸ mul_lt_of_lt_div h
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem inv_le_iff_le_mul : («expr = »(b, «expr∞»()) → «expr ≠ »(a, 0)) → («expr = »(a, «expr∞»()) → «expr ≠ »(b, 0)) → «expr ↔ »(«expr ≤ »(«expr ⁻¹»(a), b), «expr ≤ »(1, «expr * »(a, b))) :=
 begin
   cases [expr a] []; cases [expr b] []; simp [] [] [] ["[", expr none_eq_top, ",", expr some_eq_coe, ",", expr mul_top, ",", expr top_mul, "]"] [] [] { contextual := tt },
@@ -1568,16 +1561,15 @@ theorem mul_inv_cancel (h0 : a ≠ 0) (ht : a ≠ ∞) : (a*a⁻¹) = 1 :=
 theorem inv_mul_cancel (h0 : a ≠ 0) (ht : a ≠ ∞) : (a⁻¹*a) = 1 :=
   mul_commₓ a (a⁻¹) ▸ mul_inv_cancel h0 ht
 
-theorem eq_inv_of_mul_eq_one (h : (a*b) = 1) : a = b⁻¹ :=
-  by 
-    rcases eq_or_ne b ∞ with (rfl | hb)
-    ·
-      have  : False
-      ·
-        simpa [left_ne_zero_of_mul_eq_one h] using h 
-      exact this.elim
-    ·
-      rw [←mul_oneₓ a, ←mul_inv_cancel (right_ne_zero_of_mul_eq_one h) hb, ←mul_assocₓ, h, one_mulₓ]
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_inv_of_mul_eq_one (h : «expr = »(«expr * »(a, b), 1)) : «expr = »(a, «expr ⁻¹»(b)) :=
+begin
+  rcases [expr eq_or_ne b «expr∞»(), "with", ident rfl, "|", ident hb],
+  { have [] [":", expr false] [],
+    by simpa [] [] [] ["[", expr left_ne_zero_of_mul_eq_one h, "]"] [] ["using", expr h],
+    exact [expr this.elim] },
+  { rw ["[", "<-", expr mul_one a, ",", "<-", expr mul_inv_cancel (right_ne_zero_of_mul_eq_one h) hb, ",", "<-", expr mul_assoc, ",", expr h, ",", expr one_mul, "]"] [] }
+end
 
 theorem mul_le_iff_le_inv {a b r : ℝ≥0∞} (hr₀ : r ≠ 0) (hr₁ : r ≠ ∞) : (r*a) ≤ b ↔ a ≤ r⁻¹*b :=
   by 
@@ -1648,16 +1640,21 @@ theorem half_pos {a : ℝ≥0∞} (h : a ≠ 0) : 0 < a / 2 :=
 theorem one_half_lt_one : (2⁻¹ : ℝ≥0∞) < 1 :=
   inv_lt_one.2$ one_lt_two
 
-theorem half_lt_self {a : ℝ≥0∞} (hz : a ≠ 0) (ht : a ≠ ∞) : a / 2 < a :=
-  by 
-    lift a to  ℝ≥0  using ht 
-    have h : (2 : ℝ≥0∞) = ((2 :  ℝ≥0 ) : ℝ≥0∞)
-    exact rfl 
-    have h' : (2 :  ℝ≥0 ) ≠ 0 
-    exact _root_.two_ne_zero' 
-    rw [h, ←coe_div h', coe_lt_coe]
-    normCast  at hz 
-    exact Nnreal.half_lt_self hz
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem half_lt_self
+{a : «exprℝ≥0∞»()}
+(hz : «expr ≠ »(a, 0))
+(ht : «expr ≠ »(a, «expr∞»())) : «expr < »(«expr / »(a, 2), a) :=
+begin
+  lift [expr a] ["to", expr «exprℝ≥0»()] ["using", expr ht] [],
+  have [ident h] [":", expr «expr = »((2 : «exprℝ≥0∞»()), ((2 : «exprℝ≥0»()) : «exprℝ≥0∞»()))] [],
+  from [expr rfl],
+  have [ident h'] [":", expr «expr ≠ »((2 : «exprℝ≥0»()), 0)] [],
+  from [expr _root_.two_ne_zero'],
+  rw ["[", expr h, ",", "<-", expr coe_div h', ",", expr coe_lt_coe, "]"] [],
+  norm_cast ["at", ident hz],
+  exact [expr nnreal.half_lt_self hz]
+end
 
 theorem half_le_self : a / 2 ≤ a :=
   le_add_self.trans_eq (add_halves _)
@@ -1682,26 +1679,33 @@ theorem exists_inv_nat_lt {a : ℝ≥0∞} (h : a ≠ 0) : ∃ n : ℕ, (n : ℝ
     by 
       simp only [inv_lt_inv, Ennreal.exists_nat_gt (inv_ne_top.2 h)]
 
-theorem exists_nat_pos_mul_gt (ha : a ≠ 0) (hb : b ≠ ∞) : ∃ (n : _)(_ : n > 0), b < (n : ℕ)*a :=
-  by 
-    have  : b / a ≠ ∞
-    exact mul_ne_top hb (inv_ne_top.2 ha)
-    refine' (Ennreal.exists_nat_gt this).imp fun n hn => _ 
-    have  : 0 < (n : ℝ≥0∞)
-    exact (zero_le _).trans_lt hn 
-    refine' ⟨coe_nat_lt_coe_nat.1 this, _⟩
-    rwa [←Ennreal.div_lt_iff (Or.inl ha) (Or.inr hb)]
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_nat_pos_mul_gt
+(ha : «expr ≠ »(a, 0))
+(hb : «expr ≠ »(b, «expr∞»())) : «expr∃ , »((n «expr > » 0), «expr < »(b, «expr * »((n : exprℕ()), a))) :=
+begin
+  have [] [":", expr «expr ≠ »(«expr / »(b, a), «expr∞»())] [],
+  from [expr mul_ne_top hb (inv_ne_top.2 ha)],
+  refine [expr (ennreal.exists_nat_gt this).imp (λ n hn, _)],
+  have [] [":", expr «expr < »(0, (n : «exprℝ≥0∞»()))] [],
+  from [expr (zero_le _).trans_lt hn],
+  refine [expr ⟨coe_nat_lt_coe_nat.1 this, _⟩],
+  rwa ["[", "<-", expr ennreal.div_lt_iff (or.inl ha) (or.inr hb), "]"] []
+end
 
 theorem exists_nat_mul_gt (ha : a ≠ 0) (hb : b ≠ ∞) : ∃ n : ℕ, b < n*a :=
   (exists_nat_pos_mul_gt ha hb).imp$ fun n => Exists.snd
 
-theorem exists_nat_pos_inv_mul_lt (ha : a ≠ ∞) (hb : b ≠ 0) : ∃ (n : _)(_ : n > 0), (((n : ℕ) : ℝ≥0∞)⁻¹*a) < b :=
-  by 
-    rcases exists_nat_pos_mul_gt hb ha with ⟨n, npos, hn⟩
-    have  : (n : ℝ≥0∞) ≠ 0 := Nat.cast_ne_zero.2 npos.lt.ne' 
-    use n, npos 
-    rwa [←one_mulₓ b, ←inv_mul_cancel this coe_nat_ne_top, mul_assocₓ,
-      mul_lt_mul_left (inv_ne_zero.2 coe_nat_ne_top) (inv_ne_top.2 this)]
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_nat_pos_inv_mul_lt
+(ha : «expr ≠ »(a, «expr∞»()))
+(hb : «expr ≠ »(b, 0)) : «expr∃ , »((n «expr > » 0), «expr < »(«expr * »(«expr ⁻¹»(((n : exprℕ()) : «exprℝ≥0∞»())), a), b)) :=
+begin
+  rcases [expr exists_nat_pos_mul_gt hb ha, "with", "⟨", ident n, ",", ident npos, ",", ident hn, "⟩"],
+  have [] [":", expr «expr ≠ »((n : «exprℝ≥0∞»()), 0)] [":=", expr nat.cast_ne_zero.2 npos.lt.ne'],
+  use ["[", expr n, ",", expr npos, "]"],
+  rwa ["[", "<-", expr one_mul b, ",", "<-", expr inv_mul_cancel this coe_nat_ne_top, ",", expr mul_assoc, ",", expr mul_lt_mul_left (inv_ne_zero.2 coe_nat_ne_top) (inv_ne_top.2 this), "]"] []
+end
 
 theorem exists_nnreal_pos_mul_lt (ha : a ≠ ∞) (hb : b ≠ 0) : ∃ (n : _)(_ : n > 0), («expr↑ » (n :  ℝ≥0 )*a) < b :=
   by 
@@ -1717,15 +1721,17 @@ theorem exists_inv_two_pow_lt (ha : a ≠ 0) : ∃ n : ℕ, 2⁻¹ ^ n < a :=
     normCast 
     exact n.lt_two_pow
 
-@[simp, normCast]
-theorem coe_zpow (hr : r ≠ 0) (n : ℤ) : («expr↑ » (r ^ n) : ℝ≥0∞) = r ^ n :=
-  by 
-    cases n
-    ·
-      simp only [Int.of_nat_eq_coe, coe_pow, zpow_coe_nat]
-    ·
-      have  : r ^ n.succ ≠ 0 := pow_ne_zero (n+1) hr 
-      simp only [zpow_neg_succ_of_nat, coe_inv this, coe_pow]
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp, norm_cast #[]]
+theorem coe_zpow
+(hr : «expr ≠ »(r, 0))
+(n : exprℤ()) : «expr = »((«expr↑ »(«expr ^ »(r, n)) : «exprℝ≥0∞»()), «expr ^ »(r, n)) :=
+begin
+  cases [expr n] [],
+  { simp [] [] ["only"] ["[", expr int.of_nat_eq_coe, ",", expr coe_pow, ",", expr zpow_coe_nat, "]"] [] [] },
+  { have [] [":", expr «expr ≠ »(«expr ^ »(r, n.succ), 0)] [":=", expr pow_ne_zero «expr + »(n, 1) hr],
+    simp [] [] ["only"] ["[", expr zpow_neg_succ_of_nat, ",", expr coe_inv this, ",", expr coe_pow, "]"] [] [] }
+end
 
 theorem zpow_pos (ha : a ≠ 0) (h'a : a ≠ ∞) (n : ℤ) : 0 < a ^ n :=
   by 
@@ -1743,41 +1749,45 @@ theorem zpow_lt_top (ha : a ≠ 0) (h'a : a ≠ ∞) (n : ℤ) : a ^ n < ∞ :=
     ·
       simp only [Ennreal.pow_pos ha.bot_lt (n+1), zpow_neg_succ_of_nat, inv_lt_top]
 
-theorem exists_mem_Ico_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (hy : 1 < y) (h'y : y ≠ ⊤) :
-  ∃ n : ℤ, x ∈ Ico (y ^ n) (y ^ n+1) :=
-  by 
-    lift x to  ℝ≥0  using h'x 
-    lift y to  ℝ≥0  using h'y 
-    have A : y ≠ 0
-    ·
-      simpa only [Ne.def, coe_eq_zero] using (ennreal.zero_lt_one.trans hy).ne' 
-    obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, y ^ n ≤ x ∧ x < y ^ n+1
-    ·
-      refine' Nnreal.exists_mem_Ico_zpow _ (one_lt_coe_iff.1 hy)
-      simpa only [Ne.def, coe_eq_zero] using hx 
-    refine' ⟨n, _, _⟩
-    ·
-      rwa [←Ennreal.coe_zpow A, Ennreal.coe_le_coe]
-    ·
-      rwa [←Ennreal.coe_zpow A, Ennreal.coe_lt_coe]
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_mem_Ico_zpow
+{x y : «exprℝ≥0∞»()}
+(hx : «expr ≠ »(x, 0))
+(h'x : «expr ≠ »(x, «expr∞»()))
+(hy : «expr < »(1, y))
+(h'y : «expr ≠ »(y, «expr⊤»())) : «expr∃ , »((n : exprℤ()), «expr ∈ »(x, Ico «expr ^ »(y, n) «expr ^ »(y, «expr + »(n, 1)))) :=
+begin
+  lift [expr x] ["to", expr «exprℝ≥0»()] ["using", expr h'x] [],
+  lift [expr y] ["to", expr «exprℝ≥0»()] ["using", expr h'y] [],
+  have [ident A] [":", expr «expr ≠ »(y, 0)] [],
+  by simpa [] [] ["only"] ["[", expr ne.def, ",", expr coe_eq_zero, "]"] [] ["using", expr (ennreal.zero_lt_one.trans hy).ne'],
+  obtain ["⟨", ident n, ",", ident hn, ",", ident h'n, "⟩", ":", expr «expr∃ , »((n : exprℤ()), «expr ∧ »(«expr ≤ »(«expr ^ »(y, n), x), «expr < »(x, «expr ^ »(y, «expr + »(n, 1)))))],
+  { refine [expr nnreal.exists_mem_Ico_zpow _ (one_lt_coe_iff.1 hy)],
+    simpa [] [] ["only"] ["[", expr ne.def, ",", expr coe_eq_zero, "]"] [] ["using", expr hx] },
+  refine [expr ⟨n, _, _⟩],
+  { rwa ["[", "<-", expr ennreal.coe_zpow A, ",", expr ennreal.coe_le_coe, "]"] [] },
+  { rwa ["[", "<-", expr ennreal.coe_zpow A, ",", expr ennreal.coe_lt_coe, "]"] [] }
+end
 
-theorem exists_mem_Ioc_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (hy : 1 < y) (h'y : y ≠ ⊤) :
-  ∃ n : ℤ, x ∈ Ioc (y ^ n) (y ^ n+1) :=
-  by 
-    lift x to  ℝ≥0  using h'x 
-    lift y to  ℝ≥0  using h'y 
-    have A : y ≠ 0
-    ·
-      simpa only [Ne.def, coe_eq_zero] using (ennreal.zero_lt_one.trans hy).ne' 
-    obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, y ^ n < x ∧ x ≤ y ^ n+1
-    ·
-      refine' Nnreal.exists_mem_Ioc_zpow _ (one_lt_coe_iff.1 hy)
-      simpa only [Ne.def, coe_eq_zero] using hx 
-    refine' ⟨n, _, _⟩
-    ·
-      rwa [←Ennreal.coe_zpow A, Ennreal.coe_lt_coe]
-    ·
-      rwa [←Ennreal.coe_zpow A, Ennreal.coe_le_coe]
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_mem_Ioc_zpow
+{x y : «exprℝ≥0∞»()}
+(hx : «expr ≠ »(x, 0))
+(h'x : «expr ≠ »(x, «expr∞»()))
+(hy : «expr < »(1, y))
+(h'y : «expr ≠ »(y, «expr⊤»())) : «expr∃ , »((n : exprℤ()), «expr ∈ »(x, Ioc «expr ^ »(y, n) «expr ^ »(y, «expr + »(n, 1)))) :=
+begin
+  lift [expr x] ["to", expr «exprℝ≥0»()] ["using", expr h'x] [],
+  lift [expr y] ["to", expr «exprℝ≥0»()] ["using", expr h'y] [],
+  have [ident A] [":", expr «expr ≠ »(y, 0)] [],
+  by simpa [] [] ["only"] ["[", expr ne.def, ",", expr coe_eq_zero, "]"] [] ["using", expr (ennreal.zero_lt_one.trans hy).ne'],
+  obtain ["⟨", ident n, ",", ident hn, ",", ident h'n, "⟩", ":", expr «expr∃ , »((n : exprℤ()), «expr ∧ »(«expr < »(«expr ^ »(y, n), x), «expr ≤ »(x, «expr ^ »(y, «expr + »(n, 1)))))],
+  { refine [expr nnreal.exists_mem_Ioc_zpow _ (one_lt_coe_iff.1 hy)],
+    simpa [] [] ["only"] ["[", expr ne.def, ",", expr coe_eq_zero, "]"] [] ["using", expr hx] },
+  refine [expr ⟨n, _, _⟩],
+  { rwa ["[", "<-", expr ennreal.coe_zpow A, ",", expr ennreal.coe_lt_coe, "]"] [] },
+  { rwa ["[", "<-", expr ennreal.coe_zpow A, ",", expr ennreal.coe_le_coe, "]"] [] }
+end
 
 theorem Ioo_zero_top_eq_Union_Ico_zpow {y : ℝ≥0∞} (hy : 1 < y) (h'y : y ≠ ⊤) :
   Ioo (0 : ℝ≥0∞) (∞ : ℝ≥0∞) = ⋃n : ℤ, Ico (y ^ n) (y ^ n+1) :=
@@ -1798,7 +1808,7 @@ theorem Ioo_zero_top_eq_Union_Ico_zpow {y : ℝ≥0∞} (hy : 1 < y) (h'y : y �
         apply lt_transₓ h'n _ 
         exact Ennreal.zpow_lt_top (ennreal.zero_lt_one.trans hy).ne' h'y _
 
--- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem zpow_le_of_le
 {x : «exprℝ≥0∞»()}
 (hx : «expr ≤ »(1, x))

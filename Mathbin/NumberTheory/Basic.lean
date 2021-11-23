@@ -19,22 +19,26 @@ section
 
 open Ideal Ideal.Quotient
 
-theorem dvd_sub_pow_of_dvd_sub {R : Type _} [CommRingₓ R] {p : ℕ} {a b : R} (h : (p : R) ∣ a - b) (k : ℕ) :
-  (p ^ k+1 : R) ∣ a ^ p ^ k - b ^ p ^ k :=
-  by 
-    induction' k with k ih
-    ·
-      rwa [pow_oneₓ, pow_zeroₓ, pow_oneₓ, pow_oneₓ]
-    rw [pow_succ'ₓ p k, pow_mulₓ, pow_mulₓ, ←geom_sum₂_mul, pow_succₓ]
-    refine' mul_dvd_mul _ ih 
-    let I : Ideal R := span {p}
-    let f : R →+* Ideal.Quotient I := mk I 
-    have hp : (p : Ideal.Quotient I) = 0
-    ·
-      rw [←f.map_nat_cast, eq_zero_iff_mem, mem_span_singleton]
-    rw [←mem_span_singleton, ←Ideal.Quotient.eq] at h 
-    rw [←mem_span_singleton, ←eq_zero_iff_mem, RingHom.map_geom_sum₂, RingHom.map_pow, RingHom.map_pow, h,
-      geom_sum₂_self, hp, zero_mul]
+-- error in NumberTheory.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dvd_sub_pow_of_dvd_sub
+{R : Type*}
+[comm_ring R]
+{p : exprℕ()}
+{a b : R}
+(h : «expr ∣ »((p : R), «expr - »(a, b)))
+(k : exprℕ()) : «expr ∣ »((«expr ^ »(p, «expr + »(k, 1)) : R), «expr - »(«expr ^ »(a, «expr ^ »(p, k)), «expr ^ »(b, «expr ^ »(p, k)))) :=
+begin
+  induction [expr k] [] ["with", ident k, ident ih] [],
+  { rwa ["[", expr pow_one, ",", expr pow_zero, ",", expr pow_one, ",", expr pow_one, "]"] [] },
+  rw ["[", expr pow_succ' p k, ",", expr pow_mul, ",", expr pow_mul, ",", "<-", expr geom_sum₂_mul, ",", expr pow_succ, "]"] [],
+  refine [expr mul_dvd_mul _ ih],
+  let [ident I] [":", expr ideal R] [":=", expr span {p}],
+  let [ident f] [":", expr «expr →+* »(R, ideal.quotient I)] [":=", expr mk I],
+  have [ident hp] [":", expr «expr = »((p : ideal.quotient I), 0)] [],
+  { rw ["[", "<-", expr f.map_nat_cast, ",", expr eq_zero_iff_mem, ",", expr mem_span_singleton, "]"] [] },
+  rw ["[", "<-", expr mem_span_singleton, ",", "<-", expr ideal.quotient.eq, "]"] ["at", ident h],
+  rw ["[", "<-", expr mem_span_singleton, ",", "<-", expr eq_zero_iff_mem, ",", expr ring_hom.map_geom_sum₂, ",", expr ring_hom.map_pow, ",", expr ring_hom.map_pow, ",", expr h, ",", expr geom_sum₂_self, ",", expr hp, ",", expr zero_mul, "]"] []
+end
 
 end 
 

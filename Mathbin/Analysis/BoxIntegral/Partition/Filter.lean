@@ -1,5 +1,5 @@
 import Mathbin.Analysis.BoxIntegral.Partition.SubboxInduction 
-import Mathbin.Analysis.BoxIntegral.Partition.Additive
+import Mathbin.Analysis.BoxIntegral.Partition.Split
 
 /-!
 # Filters used in box-based integrals
@@ -346,7 +346,7 @@ protected theorem mem_base_set.union_compl_to_subordinate (hπ₁ : l.mem_base_s
         by 
           simp ⟩⟩
 
--- error in Analysis.BoxIntegral.Partition.Filter: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.BoxIntegral.Partition.Filter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 protected
 theorem mem_base_set.filter
 (hπ : l.mem_base_set I c r π)
@@ -482,14 +482,18 @@ theorem exists_mem_base_set_le_Union_eq (l : integration_params) (π₀ : prepar
     refine' ⟨π, ⟨hr, fun _ => hH, fun _ => hd.trans_le hc₁, fun hD => ⟨π₀.compl, _, hc₂⟩⟩, ⟨hle, hU⟩⟩
     exact prepartition.compl_congr hU ▸ π.to_prepartition.Union_compl
 
-theorem exists_mem_base_set_is_partition (l : integration_params) (I : box ι) (hc : I.distortion ≤ c)
-  (r : (ι → ℝ) → Ioi (0 : ℝ)) : ∃ π, l.mem_base_set I c r π ∧ π.is_partition :=
-  by 
-    rw [←prepartition.distortion_top] at hc 
-    have hc' : (⊤ : prepartition I).Compl.distortion ≤ c
-    ·
-      simp 
-    simpa [is_partition_iff_Union_eq] using l.exists_mem_base_set_le_Union_eq ⊤ hc hc' r
+-- error in Analysis.BoxIntegral.Partition.Filter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_mem_base_set_is_partition
+(l : integration_params)
+(I : box ι)
+(hc : «expr ≤ »(I.distortion, c))
+(r : (ι → exprℝ()) → Ioi (0 : exprℝ())) : «expr∃ , »((π), «expr ∧ »(l.mem_base_set I c r π, π.is_partition)) :=
+begin
+  rw ["<-", expr prepartition.distortion_top] ["at", ident hc],
+  have [ident hc'] [":", expr «expr ≤ »((«expr⊤»() : prepartition I).compl.distortion, c)] [],
+  by simp [] [] [] [] [] [],
+  simpa [] [] [] ["[", expr is_partition_iff_Union_eq, "]"] [] ["using", expr l.exists_mem_base_set_le_Union_eq «expr⊤»() hc hc' r]
+end
 
 theorem to_filter_distortion_Union_ne_bot (l : integration_params) (I : box ι) (π₀ : prepartition I)
   (hc₁ : π₀.distortion ≤ c) (hc₂ : π₀.compl.distortion ≤ c) : (l.to_filter_distortion_Union I c π₀).ne_bot :=

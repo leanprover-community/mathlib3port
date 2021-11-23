@@ -30,20 +30,20 @@ theorem univ_close_of_unsat_clausify (m : Nat) (p : preform) : clauses.unsat (dn
 unsafe def prove_univ_close (m : Nat) (p : preform) : tactic expr :=
   do 
     let x ← prove_unsats (dnf (¬* p))
-    return (quote univ_close_of_unsat_clausify (%%quote m) (%%quote p) (%%x))
+    return (quote.1 (univ_close_of_unsat_clausify (%%ₓquote.1 m) (%%ₓquote.1 p) (%%ₓx)))
 
 /-- Reification to imtermediate shadow syntax that retains exprs -/
 unsafe def to_exprterm : expr → tactic exprterm
-| quote -%%x =>
+| quote.1 (-%%ₓx) =>
   (do 
       let z ← eval_expr' Int x 
       return (exprterm.cst (-z : Int))) <|>
     return$ exprterm.exp (-1 : Int) x
-| quote (%%mx)*%%zx =>
+| quote.1 ((%%ₓmx)*%%ₓzx) =>
   do 
     let z ← eval_expr' Int zx 
     return (exprterm.exp z mx)
-| quote (%%t1x)+%%t2x =>
+| quote.1 ((%%ₓt1x)+%%ₓt2x) =>
   do 
     let t1 ← to_exprterm t1x 
     let t2 ← to_exprterm t2x 
@@ -56,31 +56,31 @@ unsafe def to_exprterm : expr → tactic exprterm
 
 /-- Reification to imtermediate shadow syntax that retains exprs -/
 unsafe def to_exprform : expr → tactic exprform
-| quote (%%tx1) = %%tx2 =>
+| quote.1 ((%%ₓtx1) = %%ₓtx2) =>
   do 
     let t1 ← to_exprterm tx1 
     let t2 ← to_exprterm tx2 
     return (exprform.eq t1 t2)
-| quote (%%tx1) ≤ %%tx2 =>
+| quote.1 ((%%ₓtx1) ≤ %%ₓtx2) =>
   do 
     let t1 ← to_exprterm tx1 
     let t2 ← to_exprterm tx2 
     return (exprform.le t1 t2)
-| quote ¬%%px =>
+| quote.1 ¬%%ₓpx =>
   do 
     let p ← to_exprform px 
     return (exprform.not p)
-| quote (%%px) ∨ %%qx =>
+| quote.1 ((%%ₓpx) ∨ %%ₓqx) =>
   do 
     let p ← to_exprform px 
     let q ← to_exprform qx 
     return (exprform.or p q)
-| quote (%%px) ∧ %%qx =>
+| quote.1 ((%%ₓpx) ∧ %%ₓqx) =>
   do 
     let p ← to_exprform px 
     let q ← to_exprform qx 
     return (exprform.and p q)
-| quote _ → %%px => to_exprform px
+| quote.1 (_ → %%ₓpx) => to_exprform px
 | x => trace "Cannot reify expr : " >> trace x >> failed
 
 /-- List of all unreified exprs -/
@@ -156,24 +156,24 @@ unsafe def prove : tactic expr :=
 
 /-- Succeed iff argument is the expr of ℤ -/
 unsafe def eq_int (x : expr) : tactic Unit :=
-  if x = quote Int then skip else failed
+  if x = quote.1 Int then skip else failed
 
 /-- Check whether argument is expr of a well-formed formula of LIA-/
 unsafe def wff : expr → tactic Unit
-| quote ¬%%px => wff px
-| quote (%%px) ∨ %%qx => wff px >> wff qx
-| quote (%%px) ∧ %%qx => wff px >> wff qx
-| quote (%%px) ↔ %%qx => wff px >> wff qx
-| quote %%expr.pi _ _ px qx =>
+| quote.1 ¬%%ₓpx => wff px
+| quote.1 ((%%ₓpx) ∨ %%ₓqx) => wff px >> wff qx
+| quote.1 ((%%ₓpx) ∧ %%ₓqx) => wff px >> wff qx
+| quote.1 ((%%ₓpx) ↔ %%ₓqx) => wff px >> wff qx
+| quote.1 (%%ₓexpr.pi _ _ px qx) =>
   Monadₓ.cond (if expr.has_var px then return tt else is_prop px) (wff px >> wff qx) (eq_int px >> wff qx)
-| quote @LT.lt (%%dx) (%%h) _ _ => eq_int dx
-| quote @LE.le (%%dx) (%%h) _ _ => eq_int dx
-| quote @Eq (%%dx) _ _ => eq_int dx
-| quote @Ge (%%dx) (%%h) _ _ => eq_int dx
-| quote @Gt (%%dx) (%%h) _ _ => eq_int dx
-| quote @Ne (%%dx) _ _ => eq_int dx
-| quote True => skip
-| quote False => skip
+| quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => eq_int dx
+| quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => eq_int dx
+| quote.1 (@Eq (%%ₓdx) _ _) => eq_int dx
+| quote.1 (@Ge (%%ₓdx) (%%ₓh) _ _) => eq_int dx
+| quote.1 (@Gt (%%ₓdx) (%%ₓh) _ _) => eq_int dx
+| quote.1 (@Ne (%%ₓdx) _ _) => eq_int dx
+| quote.1 True => skip
+| quote.1 False => skip
 | _ => failed
 
 /-- Succeed iff argument is expr of term whose type is wff -/
@@ -185,12 +185,12 @@ unsafe def intro_ints_core : tactic Unit :=
   do 
     let x ← target 
     match x with 
-      | expr.pi _ _ (quote Int) _ => intro_fresh >> intro_ints_core
+      | expr.pi _ _ (quote.1 Int) _ => intro_fresh >> intro_ints_core
       | _ => skip
 
 unsafe def intro_ints : tactic Unit :=
   do 
-    let expr.pi _ _ (quote Int) _ ← target 
+    let expr.pi _ _ (quote.1 Int) _ ← target 
     intro_ints_core
 
 /-- If the goal has universal quantifiers over integers, introduce all of them.

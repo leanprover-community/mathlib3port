@@ -1,5 +1,5 @@
 import Mathbin.Algebra.Algebra.Basic 
-import Mathbin.Algebra.Order.Module
+import Mathbin.Algebra.Order.Smul
 
 /-!
 # Ordered algebras

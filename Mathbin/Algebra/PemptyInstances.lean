@@ -1,4 +1,5 @@
-import Mathbin.Algebra.Module.Basic
+import Mathbin.Algebra.Group.Defs 
+import Mathbin.Algebra.Group.ToAdditive
 
 /-!
 # Instances on pempty

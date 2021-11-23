@@ -137,7 +137,7 @@ so they are defined in a later section.
 -/
 
 
--- error in Tactic.RingExp: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.RingExp: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /--
 Coefficients in the expression are stored in a wrapper structure,
 allowing for easier modification of the data structures.
@@ -145,7 +145,7 @@ The modifications might be caching of the result of `expr.of_rat`,
 or using a different meta representation of numerals.
 -/ @[derive #[expr decidable_eq], derive #[expr inhabited]] structure coeff : Type := (value : exprℚ())
 
--- error in Tactic.RingExp: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.RingExp: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- The values in `ex_type` are used as parameters to `ex` to control the expression's structure. -/
 @[derive #[expr decidable_eq], derive #[expr inhabited]]
 inductive ex_type : Type
@@ -386,7 +386,7 @@ unsafe structure context where
   info_e : eval_info 
   transp : transparency
 
--- error in Tactic.RingExp: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler monad
+-- error in Tactic.RingExp: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monad
 /--
 The `ring_exp_m` monad is used instead of `tactic` to store the context.
 -/ @[derive #["[", expr monad, ",", expr alternative, "]"]] meta def ring_exp_m (α : Type) : Type :=
@@ -1534,17 +1534,17 @@ This is the main driver of the `ring_exp` tactic,
 calling out to `add`, `mul`, `pow`, etc. to parse the `expr`.
 -/
 unsafe def eval : expr → ring_exp_m (ex Sum)
-| e@(quote (%%ps)+%%qs) =>
+| e@(quote.1 ((%%ₓps)+%%ₓqs)) =>
   do 
     let ps' ← eval ps 
     let qs' ← eval qs 
     add ps' qs'
-| ps_o@(quote Nat.succ (%%p_o)) =>
+| ps_o@(quote.1 (Nat.succ (%%ₓp_o))) =>
   do 
-    let ps' ← eval (quote (%%p_o)+1)
+    let ps' ← eval (quote.1 ((%%ₓp_o)+1))
     let pf ← lift$ mk_app `` Nat.succ_eq_add_one [p_o]
     rewrite ps_o ps' pf
-| e@(quote (%%ps) - %%qs) =>
+| e@(quote.1 ((%%ₓps) - %%ₓqs)) =>
   (do 
       let ctx ← get_context 
       let ri ←
@@ -1558,20 +1558,20 @@ unsafe def eval : expr → ring_exp_m (ex Sum)
       let pf ← mk_app_class `` sub_pf ri [ps, qs, psqs.pretty, psqs_pf]
       pure (psqs.set_info e pf)) <|>
     eval_base e
-| e@(quote -%%ps) =>
+| e@(quote.1 (-%%ₓps)) =>
   do 
     let ps' ← eval ps 
     negate ps' <|> eval_base e
-| e@(quote (%%ps)*%%qs) =>
+| e@(quote.1 ((%%ₓps)*%%ₓqs)) =>
   do 
     let ps' ← eval ps 
     let qs' ← eval qs 
     mul ps' qs'
-| e@(quote HasInv.inv (%%ps)) =>
+| e@(quote.1 (HasInv.inv (%%ₓps))) =>
   do 
     let ps' ← eval ps 
     inverse ps' <|> eval_base e
-| e@(quote (%%ps) / %%qs) =>
+| e@(quote.1 ((%%ₓps) / %%ₓqs)) =>
   do 
     let ctx ← get_context 
     let dri ←
@@ -1587,7 +1587,7 @@ unsafe def eval : expr → ring_exp_m (ex Sum)
           let pf ← mk_app_class `` div_pf dri [ps, qs, psqs.pretty, psqs_pf]
           pure (psqs.set_info e pf)) <|>
         eval_base e
-| e@(quote @Pow.pow _ _ (%%hp_instance) (%%ps) (%%qs)) =>
+| e@(quote.1 (@Pow.pow _ _ (%%ₓhp_instance) (%%ₓps) (%%ₓqs))) =>
   do 
     let ps' ← eval ps 
     let qs' ← in_exponent$ eval qs 
@@ -1596,7 +1596,7 @@ unsafe def eval : expr → ring_exp_m (ex Sum)
     (do 
           let has_pow_pf ←
             match hp_instance with 
-              | quote Monoidₓ.hasPow => lift$ mk_eq_refl e
+              | quote.1 Monoidₓ.hasPow => lift$ mk_eq_refl e
               | _ => lift$ fail "has_pow instance must be nat.has_pow or monoid.has_pow"
           let pf ← lift$ mk_eq_trans has_pow_pf psqs_pf 
           pure$ psqs.set_info e pf) <|>
@@ -1682,14 +1682,14 @@ to determine equality of atoms.
 -/
 unsafe def ring_exp_eq (red : parse (tk "!")?) : tactic Unit :=
   do 
-    let quote Eq (%%ps) (%%qs) ← target >>= whnf 
+    let quote.1 (Eq (%%ₓps) (%%ₓqs)) ← target >>= whnf 
     let transp := if red.is_some then semireducible else reducible 
     let ((ps', ps_pf), (qs', qs_pf)) ← run_ring_exp transp ps$ (Prod.mk <$> eval_with_proof ps)<*>eval_with_proof qs 
     if ps'.eq qs' then
         do 
           let qs_pf_inv ← mk_eq_symm qs_pf 
           let pf ← mk_eq_trans ps_pf qs_pf_inv 
-          tactic.interactive.exact (pquote %%pf)
+          tactic.interactive.exact (pquote.1 (%%ₓpf))
       else fail "ring_exp failed to prove equality"
 
 /--

@@ -1,5 +1,4 @@
-import Mathbin.Logic.Embedding 
-import Mathbin.Data.Set.Lattice
+import Mathbin.Logic.Embedding
 
 /-!
 # Equivalences on embeddings
@@ -13,63 +12,39 @@ open Function.Embedding
 
 namespace Equiv
 
+-- error in Data.Equiv.Embedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Embeddings from a sum type are equivalent to two separate embeddings with disjoint ranges. -/
-def sum_embedding_equiv_prod_embedding_disjoint {α β γ : Type _} :
-  (Sum α β ↪ γ) ≃ { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.Range f.1) (Set.Range f.2) } :=
-  { toFun :=
-      fun f =>
-        ⟨(inl.trans f, inr.trans f),
-          by 
-            rintro _ ⟨⟨a, h⟩, ⟨b, rfl⟩⟩
-            simp only [trans_apply, inl_apply, inr_apply] at h 
-            have  : Sum.inl a = Sum.inr b := f.injective h 
-            simp only  at this 
-            assumption⟩,
-    invFun :=
-      fun ⟨⟨f, g⟩, disj⟩ =>
-        ⟨fun x =>
-            match x with 
-            | Sum.inl a => f a
-            | Sum.inr b => g b,
-          by 
-            rintro (a₁ | b₁) (a₂ | b₂) f_eq <;> simp only [Equiv.coe_fn_symm_mk, Sum.elim_inl, Sum.elim_inr] at f_eq
-            ·
-              rw [f.injective f_eq]
-            ·
-              simp only  at f_eq 
-              exFalso 
-              exact
-                disj
-                  ⟨⟨a₁,
-                      by 
-                        simp ⟩,
-                    ⟨b₂,
-                      by 
-                        simp [f_eq]⟩⟩
-            ·
-              simp only  at f_eq 
-              exFalso 
-              exact
-                disj
-                  ⟨⟨a₂,
-                      by 
-                        simp ⟩,
-                    ⟨b₁,
-                      by 
-                        simp [f_eq]⟩⟩
-            ·
-              rw [g.injective f_eq]⟩,
-    left_inv :=
-      fun f =>
-        by 
-          dsimp only 
-          ext 
-          cases x <;> simp ,
-    right_inv :=
-      fun ⟨⟨f, g⟩, _⟩ =>
-        by 
-          simp only [Prod.mk.inj_iffₓ]
-          split  <;> ext <;> simp  }
+def sum_embedding_equiv_prod_embedding_disjoint
+{α
+ β
+ γ : Type*} : «expr ≃ »(«expr ↪ »(«expr ⊕ »(α, β), γ), {f : «expr × »(«expr ↪ »(α, γ), «expr ↪ »(β, γ)) // disjoint (set.range f.1) (set.range f.2)}) :=
+{ to_fun := λ
+  f, ⟨(inl.trans f, inr.trans f), begin
+     rintros ["_", "⟨", "⟨", ident a, ",", ident h, "⟩", ",", "⟨", ident b, ",", ident rfl, "⟩", "⟩"],
+     simp [] [] ["only"] ["[", expr trans_apply, ",", expr inl_apply, ",", expr inr_apply, "]"] [] ["at", ident h],
+     have [] [":", expr «expr = »(sum.inl a, sum.inr b)] [":=", expr f.injective h],
+     simp [] [] ["only"] [] [] ["at", ident this],
+     assumption
+   end⟩,
+  inv_fun := λ ⟨⟨f, g⟩, disj⟩, ⟨λ x, match x with
+   | sum.inl a := f a
+   | sum.inr b := g b
+   end, begin
+     rintros ["(", ident a₁, "|", ident b₁, ")", "(", ident a₂, "|", ident b₂, ")", ident f_eq]; simp [] [] ["only"] ["[", expr equiv.coe_fn_symm_mk, ",", expr sum.elim_inl, ",", expr sum.elim_inr, "]"] [] ["at", ident f_eq],
+     { rw [expr f.injective f_eq] [] },
+     { simp ["!"] [] ["only"] [] [] ["at", ident f_eq],
+       exfalso,
+       exact [expr disj ⟨⟨a₁, by simp [] [] [] [] [] []⟩, ⟨b₂, by simp [] [] [] ["[", expr f_eq, "]"] [] []⟩⟩] },
+     { simp ["!"] [] ["only"] [] [] ["at", ident f_eq],
+       exfalso,
+       exact [expr disj ⟨⟨a₂, by simp [] [] [] [] [] []⟩, ⟨b₁, by simp [] [] [] ["[", expr f_eq, "]"] [] []⟩⟩] },
+     { rw [expr g.injective f_eq] [] }
+   end⟩,
+  left_inv := λ f, by { dsimp ["only"] [] [] [],
+    ext [] [] [],
+    cases [expr x] []; simp ["!"] [] [] [] [] [] },
+  right_inv := λ ⟨⟨f, g⟩, _⟩, by { simp [] [] ["only"] ["[", expr prod.mk.inj_iff, "]"] [] [],
+    split; ext [] [] []; simp ["!"] [] [] [] [] [] } }
 
 /-- Embeddings whose range lies within a set are equivalent to embeddings to that set.
 This is `function.embedding.cod_restrict` as an equiv. -/

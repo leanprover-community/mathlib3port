@@ -1,6 +1,5 @@
 import Mathbin.Analysis.NormedSpace.AddTorsor 
-import Mathbin.Analysis.NormedSpace.LinearIsometry 
-import Mathbin.LinearAlgebra.AffineSpace.AffineSubspace
+import Mathbin.Analysis.NormedSpace.LinearIsometry
 
 /-!
 # Affine isometries
@@ -732,31 +731,28 @@ end AffineIsometryEquiv
 
 include V V₂
 
+-- error in Analysis.NormedSpace.AffineIsometry: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is an affine map, then its linear part is continuous iff `f` is continuous. -/
-theorem AffineMap.continuous_linear_iff {f : P →ᵃ[𝕜] P₂} : Continuous f.linear ↔ Continuous f :=
-  by 
-    inhabit P 
-    have  :
-      (f.linear : V → V₂) =
-        ((AffineIsometryEquiv.vaddConst 𝕜$ f$ default P).toHomeomorph.symm ∘
-          f ∘ (AffineIsometryEquiv.vaddConst 𝕜$ default P).toHomeomorph)
-    ·
-      ext v 
-      simp 
-    rw [this]
-    simp only [Homeomorph.comp_continuous_iff, Homeomorph.comp_continuous_iff']
+theorem affine_map.continuous_linear_iff {f : «expr →ᵃ[ ] »(P, 𝕜, P₂)} : «expr ↔ »(continuous f.linear, continuous f) :=
+begin
+  inhabit [expr P] [],
+  have [] [":", expr «expr = »((f.linear : V → V₂), «expr ∘ »(«expr $ »(affine_isometry_equiv.vadd_const 𝕜, «expr $ »(f, default P)).to_homeomorph.symm, «expr ∘ »(f, «expr $ »(affine_isometry_equiv.vadd_const 𝕜, default P).to_homeomorph)))] [],
+  { ext [] [ident v] [],
+    simp [] [] [] [] [] [] },
+  rw [expr this] [],
+  simp [] [] ["only"] ["[", expr homeomorph.comp_continuous_iff, ",", expr homeomorph.comp_continuous_iff', "]"] [] []
+end
 
+-- error in Analysis.NormedSpace.AffineIsometry: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is an affine map, then its linear part is an open map iff `f` is an open map. -/
-theorem AffineMap.is_open_map_linear_iff {f : P →ᵃ[𝕜] P₂} : IsOpenMap f.linear ↔ IsOpenMap f :=
-  by 
-    inhabit P 
-    have  :
-      (f.linear : V → V₂) =
-        ((AffineIsometryEquiv.vaddConst 𝕜$ f$ default P).toHomeomorph.symm ∘
-          f ∘ (AffineIsometryEquiv.vaddConst 𝕜$ default P).toHomeomorph)
-    ·
-      ext v 
-      simp 
-    rw [this]
-    simp only [Homeomorph.comp_is_open_map_iff, Homeomorph.comp_is_open_map_iff']
+theorem affine_map.is_open_map_linear_iff
+{f : «expr →ᵃ[ ] »(P, 𝕜, P₂)} : «expr ↔ »(is_open_map f.linear, is_open_map f) :=
+begin
+  inhabit [expr P] [],
+  have [] [":", expr «expr = »((f.linear : V → V₂), «expr ∘ »(«expr $ »(affine_isometry_equiv.vadd_const 𝕜, «expr $ »(f, default P)).to_homeomorph.symm, «expr ∘ »(f, «expr $ »(affine_isometry_equiv.vadd_const 𝕜, default P).to_homeomorph)))] [],
+  { ext [] [ident v] [],
+    simp [] [] [] [] [] [] },
+  rw [expr this] [],
+  simp [] [] ["only"] ["[", expr homeomorph.comp_is_open_map_iff, ",", expr homeomorph.comp_is_open_map_iff', "]"] [] []
+end
 

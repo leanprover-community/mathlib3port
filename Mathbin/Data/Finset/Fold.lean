@@ -90,17 +90,20 @@ theorem fold_insert_idem [DecidableEq α] [hi : IsIdempotent β op] : (insert a 
     ·
       apply fold_insert h
 
-theorem fold_image_idem [DecidableEq α] {g : γ → α} {s : Finset γ} [hi : IsIdempotent β op] :
-  (image g s).fold op b f = s.fold op b (f ∘ g) :=
-  by 
-    induction' s using Finset.cons_induction with x xs hx ih
-    ·
-      rw [fold_empty, image_empty, fold_empty]
-    ·
-      haveI  := Classical.decEq γ 
-      rw [fold_cons, cons_eq_insert, image_insert, fold_insert_idem, ih]
+-- error in Data.Finset.Fold: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fold_image_idem
+[decidable_eq α]
+{g : γ → α}
+{s : finset γ}
+[hi : is_idempotent β op] : «expr = »((image g s).fold op b f, s.fold op b «expr ∘ »(f, g)) :=
+begin
+  induction [expr s] ["using", ident finset.cons_induction] ["with", ident x, ident xs, ident hx, ident ih] [],
+  { rw ["[", expr fold_empty, ",", expr image_empty, ",", expr fold_empty, "]"] [] },
+  { haveI [] [] [":=", expr classical.dec_eq γ],
+    rw ["[", expr fold_cons, ",", expr cons_eq_insert, ",", expr image_insert, ",", expr fold_insert_idem, ",", expr ih, "]"] [] }
+end
 
--- error in Data.Finset.Fold: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Data.Finset.Fold: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem fold_op_rel_iff_and
 {r : β → β → exprProp()}
 (hr : ∀ {x y z}, «expr ↔ »(r x (op y z), «expr ∧ »(r x y, r x z)))

@@ -1,5 +1,6 @@
 import Mathbin.Topology.Sheaves.SheafOfFunctions 
 import Mathbin.Topology.Sheaves.Stalks 
+import Mathbin.Topology.LocalHomeomorph 
 import Mathbin.Topology.Sheaves.SheafCondition.UniqueGluing
 
 /-!
@@ -170,32 +171,29 @@ def Subtype : subpresheaf_to_Types P ⟶ presheaf_to_Types X T :=
 
 open Top.Presheaf
 
+-- error in Topology.Sheaves.LocalPredicate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The functions satisfying a local predicate satisfy the sheaf condition.
--/
-theorem is_sheaf (P : local_predicate T) : (subpresheaf_to_Types P.to_prelocal_predicate).IsSheaf :=
-  presheaf.is_sheaf_of_is_sheaf_unique_gluing_types _$
-    fun ι U sf sf_comp =>
-      by 
-        let sf' : ∀ i : ι, (presheaf_to_Types X T).obj (op (U i)) := fun i => (sf i).val 
-        have sf'_comp : (presheaf_to_Types X T).IsCompatible U sf' := fun i j => congr_argₓ Subtype.val (sf_comp i j)
-        obtain ⟨gl, gl_spec, gl_uniq⟩ := (sheaf_to_Types X T).exists_unique_gluing U sf' sf'_comp 
-        refine' ⟨⟨gl, _⟩, _, _⟩
-        ·
-          apply P.locality 
-          rintro ⟨x, mem⟩
-          choose i hi using opens.mem_supr.mp mem 
-          use U i, hi, opens.le_supr U i 
-          convert (sf i).property 
-          exact gl_spec i
-        ·
-          intro i 
-          ext1 
-          exact gl_spec i
-        ·
-          intro gl' hgl' 
-          ext1 
-          exact gl_uniq gl'.1 fun i => congr_argₓ Subtype.val (hgl' i)
+-/ theorem is_sheaf (P : local_predicate T) : (subpresheaf_to_Types P.to_prelocal_predicate).is_sheaf :=
+«expr $ »(presheaf.is_sheaf_of_is_sheaf_unique_gluing_types _, λ ι U sf sf_comp, begin
+   let [ident sf'] [":", expr ∀ i : ι, (presheaf_to_Types X T).obj (op (U i))] [":=", expr λ i, (sf i).val],
+   have [ident sf'_comp] [":", expr (presheaf_to_Types X T).is_compatible U sf'] [":=", expr λ
+    i j, congr_arg subtype.val (sf_comp i j)],
+   obtain ["⟨", ident gl, ",", ident gl_spec, ",", ident gl_uniq, "⟩", ":=", expr (sheaf_to_Types X T).exists_unique_gluing U sf' sf'_comp],
+   refine [expr ⟨⟨gl, _⟩, _, _⟩],
+   { apply [expr P.locality],
+     rintros ["⟨", ident x, ",", ident mem, "⟩"],
+     choose [] [ident i] [ident hi] ["using", expr opens.mem_supr.mp mem],
+     use ["[", expr U i, ",", expr hi, ",", expr opens.le_supr U i, "]"],
+     convert [] [expr (sf i).property] [],
+     exact [expr gl_spec i] },
+   { intro [ident i],
+     ext1 [] [],
+     exact [expr gl_spec i] },
+   { intros [ident gl', ident hgl'],
+     ext1 [] [],
+     exact [expr gl_uniq gl'.1 (λ i, congr_arg subtype.val (hgl' i))] }
+ end)
 
 end SubpresheafToTypes
 

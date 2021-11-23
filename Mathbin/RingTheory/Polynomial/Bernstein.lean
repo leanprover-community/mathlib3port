@@ -1,9 +1,9 @@
 import Mathbin.Data.Polynomial.Derivative 
-import Mathbin.Data.Polynomial.AlgebraMap 
-import Mathbin.Data.MvPolynomial.Pderiv 
 import Mathbin.Data.Nat.Choose.Sum 
-import Mathbin.LinearAlgebra.Basis 
-import Mathbin.RingTheory.Polynomial.Pochhammer
+import Mathbin.RingTheory.Polynomial.Pochhammer 
+import Mathbin.Data.Polynomial.AlgebraMap 
+import Mathbin.LinearAlgebra.LinearIndependent 
+import Mathbin.Data.MvPolynomial.Pderiv
 
 /-!
 # Bernstein polynomials
@@ -173,34 +173,28 @@ theorem iterate_derivative_succ_at_0_eq_zero (n ν : ℕ) :
 
 open Polynomial
 
+-- error in RingTheory.Polynomial.Bernstein: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem iterate_derivative_at_0 (n ν : ℕ) :
-  ((Polynomial.derivative^[ν]) (bernsteinPolynomial R n ν)).eval 0 = (pochhammer R ν).eval (n - (ν - 1) : ℕ) :=
-  by 
-    byCases' h : ν ≤ n
-    ·
-      induction' ν with ν ih generalizing n h
-      ·
-        simp [eval_at_0]
-      ·
-        have h' : ν ≤ n - 1 := le_tsub_of_add_le_right h 
-        simp only [derivative_succ, ih (n - 1) h', iterate_derivative_succ_at_0_eq_zero, Nat.succ_sub_succ_eq_sub,
-          tsub_zero, sub_zero, iterate_derivative_sub, iterate_derivative_cast_nat_mul, eval_one, eval_mul, eval_add,
-          eval_sub, eval_X, eval_comp, eval_nat_cast, Function.comp_app, Function.iterate_succ, pochhammer_succ_left]
-        obtain rfl | h'' := ν.eq_zero_or_pos
-        ·
-          simp 
-        ·
-          have  : n - 1 - (ν - 1) = n - ν
-          ·
-            rw [←Nat.succ_le_iff] at h'' 
-            rw [←tsub_add_eq_tsub_tsub, add_commₓ, tsub_add_cancel_of_le h'']
-          rw [this, pochhammer_eval_succ]
-          rwModCast [tsub_add_cancel_of_le (h'.trans n.pred_le)]
-    ·
-      simp only [not_leₓ] at h 
-      rw [tsub_eq_zero_iff_le.mpr (Nat.le_pred_of_lt h), eq_zero_of_lt R h]
-      simp [pos_iff_ne_zero.mp (pos_of_gt h)]
+theorem iterate_derivative_at_0
+(n
+ ν : exprℕ()) : «expr = »((«expr ^[ ]»(polynomial.derivative, ν) (bernstein_polynomial R n ν)).eval 0, (pochhammer R ν).eval («expr - »(n, «expr - »(ν, 1)) : exprℕ())) :=
+begin
+  by_cases [expr h, ":", expr «expr ≤ »(ν, n)],
+  { induction [expr ν] [] ["with", ident ν, ident ih] ["generalizing", ident n, ident h],
+    { simp [] [] [] ["[", expr eval_at_0, "]"] [] [] },
+    { have [ident h'] [":", expr «expr ≤ »(ν, «expr - »(n, 1))] [":=", expr le_tsub_of_add_le_right h],
+      simp [] [] ["only"] ["[", expr derivative_succ, ",", expr ih «expr - »(n, 1) h', ",", expr iterate_derivative_succ_at_0_eq_zero, ",", expr nat.succ_sub_succ_eq_sub, ",", expr tsub_zero, ",", expr sub_zero, ",", expr iterate_derivative_sub, ",", expr iterate_derivative_cast_nat_mul, ",", expr eval_one, ",", expr eval_mul, ",", expr eval_add, ",", expr eval_sub, ",", expr eval_X, ",", expr eval_comp, ",", expr eval_nat_cast, ",", expr function.comp_app, ",", expr function.iterate_succ, ",", expr pochhammer_succ_left, "]"] [] [],
+      obtain [ident rfl, "|", ident h'', ":=", expr ν.eq_zero_or_pos],
+      { simp [] [] [] [] [] [] },
+      { have [] [":", expr «expr = »(«expr - »(«expr - »(n, 1), «expr - »(ν, 1)), «expr - »(n, ν))] [],
+        { rw ["<-", expr nat.succ_le_iff] ["at", ident h''],
+          rw ["[", "<-", expr tsub_add_eq_tsub_tsub, ",", expr add_comm, ",", expr tsub_add_cancel_of_le h'', "]"] [] },
+        rw ["[", expr this, ",", expr pochhammer_eval_succ, "]"] [],
+        rw_mod_cast [expr tsub_add_cancel_of_le (h'.trans n.pred_le)] [] } } },
+  { simp [] [] ["only"] ["[", expr not_le, "]"] [] ["at", ident h],
+    rw ["[", expr tsub_eq_zero_iff_le.mpr (nat.le_pred_of_lt h), ",", expr eq_zero_of_lt R h, "]"] [],
+    simp [] [] [] ["[", expr pos_iff_ne_zero.mp (pos_of_gt h), "]"] [] [] }
+end
 
 theorem iterate_derivative_at_0_ne_zero [CharZero R] (n ν : ℕ) (h : ν ≤ n) :
   ((Polynomial.derivative^[ν]) (bernsteinPolynomial R n ν)).eval 0 ≠ 0 :=
@@ -313,130 +307,113 @@ open Polynomial
 
 open MvPolynomial
 
-theorem sum_smul (n : ℕ) : ((Finset.range (n+1)).Sum fun ν => ν • bernsteinPolynomial R n ν) = n • X :=
-  by 
-    let x : MvPolynomial Bool R := MvPolynomial.x tt 
-    let y : MvPolynomial Bool R := MvPolynomial.x ff 
-    have pderiv_tt_x : pderiv tt x = 1
-    ·
-      simp [x]
-    have pderiv_tt_y : pderiv tt y = 0
-    ·
-      simp [pderiv_X, y]
-    let e : Bool → Polynomial R := fun i => cond i X (1 - X)
-    have h : ((x+y)^n) = ((x+y)^n) := rfl 
-    applyFun pderiv tt  at h 
-    applyFun aeval e  at h 
-    applyFun fun p => p*X  at h 
-    have w :
-      ∀ k : ℕ,
-        ((((«expr↑ » k*Polynomial.x^k - 1)*1 - Polynomial.x^n - k)*«expr↑ » (n.choose k))*Polynomial.x) =
-          k • bernsteinPolynomial R n k
-    ·
-      rintro (_ | k)
-      ·
-        simp 
-      ·
-        dsimp [bernsteinPolynomial]
-        simp only [←nat_cast_mul, Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zeroₓ, pow_succₓ]
-        pushCast 
-        ring 
-    conv  at h =>
-      toLHS
-        rw [add_pow, (pderiv tt).map_sum, (MvPolynomial.aeval e).map_sum,
-        Finset.sum_mul]applyCongr skip simp [pderiv_mul, pderiv_tt_x, pderiv_tt_y, e, w]
-    conv  at h => toRHS rw [pderiv_pow, (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y]simp [e]
-    simpa using h
+-- error in RingTheory.Polynomial.Bernstein: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sum_smul
+(n : exprℕ()) : «expr = »((finset.range «expr + »(n, 1)).sum (λ
+  ν, «expr • »(ν, bernstein_polynomial R n ν)), «expr • »(n, X)) :=
+begin
+  let [ident x] [":", expr mv_polynomial bool R] [":=", expr mv_polynomial.X tt],
+  let [ident y] [":", expr mv_polynomial bool R] [":=", expr mv_polynomial.X ff],
+  have [ident pderiv_tt_x] [":", expr «expr = »(pderiv tt x, 1)] [],
+  { simp [] [] [] ["[", expr x, "]"] [] [] },
+  have [ident pderiv_tt_y] [":", expr «expr = »(pderiv tt y, 0)] [],
+  { simp [] [] [] ["[", expr pderiv_X, ",", expr y, "]"] [] [] },
+  let [ident e] [":", expr bool → polynomial R] [":=", expr λ i, cond i X «expr - »(1, X)],
+  have [ident h] [":", expr «expr = »(«expr ^ »(«expr + »(x, y), n), «expr ^ »(«expr + »(x, y), n))] [":=", expr rfl],
+  apply_fun [expr pderiv tt] ["at", ident h] [],
+  apply_fun [expr aeval e] ["at", ident h] [],
+  apply_fun [expr λ p, «expr * »(p, X)] ["at", ident h] [],
+  have [ident w] [":", expr ∀
+   k : exprℕ(), «expr = »(«expr * »(«expr * »(«expr * »(«expr * »(«expr↑ »(k), «expr ^ »(polynomial.X, «expr - »(k, 1))), «expr ^ »(«expr - »(1, polynomial.X), «expr - »(n, k))), «expr↑ »(n.choose k)), polynomial.X), «expr • »(k, bernstein_polynomial R n k))] [],
+  { rintro ["(", "_", "|", ident k, ")"],
+    { simp [] [] [] [] [] [] },
+    { dsimp [] ["[", expr bernstein_polynomial, "]"] [] [],
+      simp [] [] ["only"] ["[", "<-", expr nat_cast_mul, ",", expr nat.succ_eq_add_one, ",", expr nat.add_succ_sub_one, ",", expr add_zero, ",", expr pow_succ, "]"] [] [],
+      push_cast [] [],
+      ring [] } },
+  conv ["at", ident h] [] { to_lhs,
+    rw ["[", expr add_pow, ",", expr (pderiv tt).map_sum, ",", expr (mv_polynomial.aeval e).map_sum, ",", expr finset.sum_mul, "]"],
+    apply_congr [],
+    skip,
+    simp [] ["[", expr pderiv_mul, ",", expr pderiv_tt_x, ",", expr pderiv_tt_y, ",", expr e, ",", expr w, "]"] [] },
+  conv ["at", ident h] [] { to_rhs,
+    rw ["[", expr pderiv_pow, ",", expr (pderiv tt).map_add, ",", expr pderiv_tt_x, ",", expr pderiv_tt_y, "]"],
+    simp [] ["[", expr e, "]"] [] },
+  simpa [] [] [] [] [] ["using", expr h]
+end
 
-theorem sum_mul_smul (n : ℕ) :
-  ((Finset.range (n+1)).Sum fun ν => (ν*ν - 1) • bernsteinPolynomial R n ν) = (n*n - 1) • (X^2) :=
-  by 
-    let x : MvPolynomial Bool R := MvPolynomial.x tt 
-    let y : MvPolynomial Bool R := MvPolynomial.x ff 
-    have pderiv_tt_x : pderiv tt x = 1
-    ·
-      simp [x]
-    have pderiv_tt_y : pderiv tt y = 0
-    ·
-      simp [pderiv_X, y]
-    let e : Bool → Polynomial R := fun i => cond i X (1 - X)
-    have h : ((x+y)^n) = ((x+y)^n) := rfl 
-    applyFun pderiv tt  at h 
-    applyFun pderiv tt  at h 
-    applyFun aeval e  at h 
-    applyFun fun p => p*X^2  at h 
-    have w :
-      ∀ k : ℕ,
-        ((((«expr↑ »
-                    k*«expr↑ »
-                      (k - 1)*Polynomial.x^k - 1 - 1)*1 - Polynomial.x^n - k)*«expr↑ » (n.choose k))*Polynomial.x^2) =
-          (k*k - 1) • bernsteinPolynomial R n k
-    ·
-      rintro (_ | k)
-      ·
-        simp 
-      ·
-        rcases k with (_ | k)
-        ·
-          simp 
-        ·
-          dsimp [bernsteinPolynomial]
-          simp only [←nat_cast_mul, Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zeroₓ, pow_succₓ]
-          pushCast 
-          ring 
-    conv  at h =>
-      toLHS
-        rw [add_pow, (pderiv tt).map_sum, (pderiv tt).map_sum, (MvPolynomial.aeval e).map_sum,
-        Finset.sum_mul]applyCongr skip simp [pderiv_mul, pderiv_tt_x, pderiv_tt_y, e, w]
-    conv  at h =>
-      toRHS
-        simp only [pderiv_one, pderiv_mul, pderiv_pow, pderiv_nat_cast, (pderiv tt).map_add, pderiv_tt_x,
-        pderiv_tt_y]simp [e, smul_smul]
-    simpa using h
+-- error in RingTheory.Polynomial.Bernstein: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sum_mul_smul
+(n : exprℕ()) : «expr = »((finset.range «expr + »(n, 1)).sum (λ
+  ν, «expr • »(«expr * »(ν, «expr - »(ν, 1)), bernstein_polynomial R n ν)), «expr • »(«expr * »(n, «expr - »(n, 1)), «expr ^ »(X, 2))) :=
+begin
+  let [ident x] [":", expr mv_polynomial bool R] [":=", expr mv_polynomial.X tt],
+  let [ident y] [":", expr mv_polynomial bool R] [":=", expr mv_polynomial.X ff],
+  have [ident pderiv_tt_x] [":", expr «expr = »(pderiv tt x, 1)] [],
+  { simp [] [] [] ["[", expr x, "]"] [] [] },
+  have [ident pderiv_tt_y] [":", expr «expr = »(pderiv tt y, 0)] [],
+  { simp [] [] [] ["[", expr pderiv_X, ",", expr y, "]"] [] [] },
+  let [ident e] [":", expr bool → polynomial R] [":=", expr λ i, cond i X «expr - »(1, X)],
+  have [ident h] [":", expr «expr = »(«expr ^ »(«expr + »(x, y), n), «expr ^ »(«expr + »(x, y), n))] [":=", expr rfl],
+  apply_fun [expr pderiv tt] ["at", ident h] [],
+  apply_fun [expr pderiv tt] ["at", ident h] [],
+  apply_fun [expr aeval e] ["at", ident h] [],
+  apply_fun [expr λ p, «expr * »(p, «expr ^ »(X, 2))] ["at", ident h] [],
+  have [ident w] [":", expr ∀
+   k : exprℕ(), «expr = »(«expr * »(«expr * »(«expr * »(«expr * »(«expr↑ »(k), «expr * »(«expr↑ »(«expr - »(k, 1)), «expr ^ »(polynomial.X, «expr - »(«expr - »(k, 1), 1)))), «expr ^ »(«expr - »(1, polynomial.X), «expr - »(n, k))), «expr↑ »(n.choose k)), «expr ^ »(polynomial.X, 2)), «expr • »(«expr * »(k, «expr - »(k, 1)), bernstein_polynomial R n k))] [],
+  { rintro ["(", "_", "|", ident k, ")"],
+    { simp [] [] [] [] [] [] },
+    { rcases [expr k, "with", "(", "_", "|", ident k, ")"],
+      { simp [] [] [] [] [] [] },
+      { dsimp [] ["[", expr bernstein_polynomial, "]"] [] [],
+        simp [] [] ["only"] ["[", "<-", expr nat_cast_mul, ",", expr nat.succ_eq_add_one, ",", expr nat.add_succ_sub_one, ",", expr add_zero, ",", expr pow_succ, "]"] [] [],
+        push_cast [] [],
+        ring [] } } },
+  conv ["at", ident h] [] { to_lhs,
+    rw ["[", expr add_pow, ",", expr (pderiv tt).map_sum, ",", expr (pderiv tt).map_sum, ",", expr (mv_polynomial.aeval e).map_sum, ",", expr finset.sum_mul, "]"],
+    apply_congr [],
+    skip,
+    simp [] ["[", expr pderiv_mul, ",", expr pderiv_tt_x, ",", expr pderiv_tt_y, ",", expr e, ",", expr w, "]"] [] },
+  conv ["at", ident h] [] { to_rhs,
+    simp ["only"] ["[", expr pderiv_one, ",", expr pderiv_mul, ",", expr pderiv_pow, ",", expr pderiv_nat_cast, ",", expr (pderiv tt).map_add, ",", expr pderiv_tt_x, ",", expr pderiv_tt_y, "]"] [],
+    simp [] ["[", expr e, ",", expr smul_smul, "]"] [] },
+  simpa [] [] [] [] [] ["using", expr h]
+end
 
+-- error in RingTheory.Polynomial.Bernstein: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A certain linear combination of the previous three identities,
 which we'll want later.
 -/
-theorem variance (n : ℕ) :
-  ((Finset.range (n+1)).Sum fun ν => (n • Polynomial.x - ν^2)*bernsteinPolynomial R n ν) =
-    (n • Polynomial.x)*1 - Polynomial.x :=
-  by 
-    have p :
-      ((((Finset.range (n+1)).Sum
-              fun ν =>
-                (ν*ν - 1) •
-                  bernsteinPolynomial R n
-                    ν)+(1 -
-                (2*n) •
-                  Polynomial.x)*(Finset.range (n+1)).Sum
-                fun ν =>
-                  ν •
-                    bernsteinPolynomial R n
-                      ν)+((n^2) • (X^2))*(Finset.range (n+1)).Sum fun ν => bernsteinPolynomial R n ν) =
-        _ :=
-      rfl 
-    conv  at p =>
-      toLHS
-        rw [Finset.mul_sum, Finset.mul_sum, ←Finset.sum_add_distrib,
-        ←Finset.sum_add_distrib]simp only [←nat_cast_mul]simp only [←mul_assocₓ]simp only [←add_mulₓ]
-    conv  at p => toRHS rw [Sum, sum_smul, sum_mul_smul, ←nat_cast_mul]
-    calc _ = _ := Finset.sum_congr rfl fun k m => _ _ = _ := p _ = _ := _
-    ·
-      congr 1
-      simp' only [←nat_cast_mul] with push_cast 
-      cases k <;>
-        ·
-          simp 
-          ring
-    ·
-      simp' only [←nat_cast_mul] with push_cast 
-      cases n
-      ·
-        simp 
-      ·
-        simp 
-        ring
+theorem variance
+(n : exprℕ()) : «expr = »((finset.range «expr + »(n, 1)).sum (λ
+  ν, «expr * »(«expr ^ »(«expr - »(«expr • »(n, polynomial.X), ν), 2), bernstein_polynomial R n ν)), «expr * »(«expr • »(n, polynomial.X), «expr - »(1, polynomial.X))) :=
+begin
+  have [ident p] [":", expr «expr = »(«expr + »(«expr + »((finset.range «expr + »(n, 1)).sum (λ
+       ν, «expr • »(«expr * »(ν, «expr - »(ν, 1)), bernstein_polynomial R n ν)), «expr * »(«expr - »(1, «expr • »(«expr * »(2, n), polynomial.X)), (finset.range «expr + »(n, 1)).sum (λ
+        ν, «expr • »(ν, bernstein_polynomial R n ν)))), «expr * »(«expr • »(«expr ^ »(n, 2), «expr ^ »(X, 2)), (finset.range «expr + »(n, 1)).sum (λ
+       ν, bernstein_polynomial R n ν))), _)] [":=", expr rfl],
+  conv ["at", ident p] [] { to_lhs,
+    rw ["[", expr finset.mul_sum, ",", expr finset.mul_sum, ",", "<-", expr finset.sum_add_distrib, ",", "<-", expr finset.sum_add_distrib, "]"],
+    simp ["only"] ["[", "<-", expr nat_cast_mul, "]"] [],
+    simp ["only"] ["[", "<-", expr mul_assoc, "]"] [],
+    simp ["only"] ["[", "<-", expr add_mul, "]"] [] },
+  conv ["at", ident p] [] { to_rhs,
+    rw ["[", expr sum, ",", expr sum_smul, ",", expr sum_mul_smul, ",", "<-", expr nat_cast_mul, "]"] },
+  calc
+    «expr = »(_, _) : finset.sum_congr rfl (λ k m, _)
+    «expr = »(..., _) : p
+    «expr = »(..., _) : _,
+  { congr' [1] [],
+    simp [] [] ["only"] ["[", "<-", expr nat_cast_mul, "]"] ["with", ident push_cast] [],
+    cases [expr k] []; { simp [] [] [] [] [] [],
+      ring [] } },
+  { simp [] [] ["only"] ["[", "<-", expr nat_cast_mul, "]"] ["with", ident push_cast] [],
+    cases [expr n] [],
+    { simp [] [] [] [] [] [] },
+    { simp [] [] [] [] [] [],
+      ring [] } }
+end
 
 end bernsteinPolynomial
 

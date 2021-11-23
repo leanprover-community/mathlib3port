@@ -33,26 +33,26 @@ theorem nondegenerate.exists_not_ortho_of_ne_zero {M : Matrix m m R} (hM : nonde
 
 variable[CommRingₓ A][IsDomain A]
 
+-- error in LinearAlgebra.Matrix.Nondegenerate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `M` has a nonzero determinant, then `M` as a bilinear form on `n → A` is nondegenerate.
 
 See also `bilin_form.nondegenerate_of_det_ne_zero'` and `bilin_form.nondegenerate_of_det_ne_zero`.
 -/
-theorem nondegenerate_of_det_ne_zero [DecidableEq m] {M : Matrix m m A} (hM : M.det ≠ 0) : nondegenerate M :=
-  by 
-    intro v hv 
-    ext i 
-    specialize hv (M.cramer (Pi.single i 1))
-    refine' (mul_eq_zero.mp _).resolve_right hM 
-    convert hv 
-    simp only [mul_vec_cramer M (Pi.single i 1), dot_product, Pi.smul_apply, smul_eq_mul]
-    rw [Finset.sum_eq_single i, Pi.single_eq_same, mul_oneₓ]
-    ·
-      intro j _ hj 
-      simp [hj]
-    ·
-      intros 
-      have  := Finset.mem_univ i 
-      contradiction
+theorem nondegenerate_of_det_ne_zero [decidable_eq m] {M : matrix m m A} (hM : «expr ≠ »(M.det, 0)) : nondegenerate M :=
+begin
+  intros [ident v, ident hv],
+  ext [] [ident i] [],
+  specialize [expr hv (M.cramer (pi.single i 1))],
+  refine [expr (mul_eq_zero.mp _).resolve_right hM],
+  convert [] [expr hv] [],
+  simp [] [] ["only"] ["[", expr mul_vec_cramer M (pi.single i 1), ",", expr dot_product, ",", expr pi.smul_apply, ",", expr smul_eq_mul, "]"] [] [],
+  rw ["[", expr finset.sum_eq_single i, ",", expr pi.single_eq_same, ",", expr mul_one, "]"] [],
+  { intros [ident j, "_", ident hj],
+    simp [] [] [] ["[", expr hj, "]"] [] [] },
+  { intros [],
+    have [] [] [":=", expr finset.mem_univ i],
+    contradiction }
+end
 
 theorem eq_zero_of_vec_mul_eq_zero [DecidableEq m] {M : Matrix m m A} (hM : M.det ≠ 0) {v : m → A}
   (hv : M.vec_mul v = 0) : v = 0 :=

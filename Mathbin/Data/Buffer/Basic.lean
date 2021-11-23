@@ -11,17 +11,15 @@ variable{α : Type _}{xs : List α}
 instance  : Inhabited (Buffer α) :=
   ⟨nil⟩
 
-@[ext]
-theorem ext : ∀ {b₁ b₂ : Buffer α}, to_list b₁ = to_list b₂ → b₁ = b₂
-| ⟨n₁, a₁⟩, ⟨n₂, a₂⟩, h =>
-  by 
-    simp [to_list, to_array] at h 
-    have e : n₁ = n₂ :=
-      by 
-        rw [←Arrayₓ.to_list_length a₁, ←Arrayₓ.to_list_length a₂, h]
-    subst e 
-    have h : HEq a₁ a₂.to_list.to_array := h ▸ a₁.to_list_to_array.symm 
-    rw [eq_of_heq (h.trans a₂.to_list_to_array)]
+-- error in Data.Buffer.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[ext #[]] theorem ext : ∀ {b₁ b₂ : buffer α}, «expr = »(to_list b₁, to_list b₂) → «expr = »(b₁, b₂)
+| ⟨n₁, a₁⟩, ⟨n₂, a₂⟩, h := begin
+  simp [] [] [] ["[", expr to_list, ",", expr to_array, "]"] [] ["at", ident h],
+  have [ident e] [":", expr «expr = »(n₁, n₂)] [":=", expr by rw ["[", "<-", expr array.to_list_length a₁, ",", "<-", expr array.to_list_length a₂, ",", expr h, "]"] []],
+  subst [expr e],
+  have [ident h] [":", expr «expr == »(a₁, a₂.to_list.to_array)] [":=", expr «expr ▸ »(h, a₁.to_list_to_array.symm)],
+  rw [expr eq_of_heq (h.trans a₂.to_list_to_array)] []
+end
 
 theorem ext_iff {b₁ b₂ : Buffer α} : b₁ = b₂ ↔ to_list b₁ = to_list b₂ :=
   ⟨fun h => h ▸ rfl, ext⟩
@@ -116,16 +114,15 @@ theorem size_append_list (b : Buffer α) (l : List α) : (b.append_list l).size 
     ·
       simp [append_list, hl, add_commₓ, add_assocₓ]
 
-@[simp]
-theorem size_to_buffer (l : List α) : l.to_buffer.size = l.length :=
-  by 
-    induction' l with hd tl hl
-    ·
-      simpa
-    ·
-      rw [to_buffer_cons]
-      have  : [hd].toBuffer.size = 1 := rfl 
-      simp [add_commₓ, this]
+-- error in Data.Buffer.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem size_to_buffer (l : list α) : «expr = »(l.to_buffer.size, l.length) :=
+begin
+  induction [expr l] [] ["with", ident hd, ident tl, ident hl] [],
+  { simpa [] [] [] [] [] [] },
+  { rw ["[", expr to_buffer_cons, "]"] [],
+    have [] [":", expr «expr = »(«expr[ , ]»([hd]).to_buffer.size, 1)] [":=", expr rfl],
+    simp [] [] [] ["[", expr add_comm, ",", expr this, "]"] [] [] }
+end
 
 @[simp]
 theorem length_to_list (b : Buffer α) : b.to_list.length = b.size :=
@@ -158,22 +155,22 @@ theorem read_push_back_right (b : Buffer α) (a : α) :
     cases b 
     convert Arrayₓ.read_push_back_right
 
-theorem read_append_list_left' (b : Buffer α) (l : List α) {i : ℕ} (h : i < (b.append_list l).size) (h' : i < b.size) :
-  (b.append_list l).read ⟨i, h⟩ = b.read ⟨i, h'⟩ :=
-  by 
-    induction' l with hd tl hl generalizing b
-    ·
-      rfl
-    ·
-      have hb : i < ((b.push_back hd).appendList tl).size :=
-        by 
-          convert h using 1
-      have hb' : i < (b.push_back hd).size :=
-        by 
-          convert Nat.lt_succ_of_ltₓ h' 
-          simp 
-      have  : (append_list b (hd :: tl)).read ⟨i, h⟩ = read ((push_back b hd).appendList tl) ⟨i, hb⟩ := rfl 
-      simp [this, hl _ hb hb', read_push_back_left _ _ h']
+-- error in Data.Buffer.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem read_append_list_left'
+(b : buffer α)
+(l : list α)
+{i : exprℕ()}
+(h : «expr < »(i, (b.append_list l).size))
+(h' : «expr < »(i, b.size)) : «expr = »((b.append_list l).read ⟨i, h⟩, b.read ⟨i, h'⟩) :=
+begin
+  induction [expr l] [] ["with", ident hd, ident tl, ident hl] ["generalizing", ident b],
+  { refl },
+  { have [ident hb] [":", expr «expr < »(i, ((b.push_back hd).append_list tl).size)] [":=", expr by convert [] [expr h] ["using", 1]],
+    have [ident hb'] [":", expr «expr < »(i, (b.push_back hd).size)] [":=", expr by { convert [] [expr nat.lt_succ_of_lt h'] [],
+       simp [] [] [] [] [] [] }],
+    have [] [":", expr «expr = »((append_list b «expr :: »(hd, tl)).read ⟨i, h⟩, read ((push_back b hd).append_list tl) ⟨i, hb⟩)] [":=", expr rfl],
+    simp [] [] [] ["[", expr this, ",", expr hl _ hb hb', ",", expr read_push_back_left _ _ h', "]"] [] [] }
+end
 
 theorem read_append_list_left (b : Buffer α) (l : List α) {i : ℕ} (h : i < b.size) :
   (b.append_list l).read
@@ -183,49 +180,44 @@ theorem read_append_list_left (b : Buffer α) (l : List α) {i : ℕ} (h : i < b
     b.read ⟨i, h⟩ :=
   read_append_list_left' b l _ h
 
+-- error in Data.Buffer.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem read_append_list_right (b : Buffer α) (l : List α) {i : ℕ} (h : i < l.length) :
-  (b.append_list l).read
-      ⟨b.size+i,
-        by 
-          simp [h]⟩ =
-    l.nth_le i h :=
-  by 
-    induction' l with hd tl hl generalizing b i
-    ·
-      exact absurd i.zero_le (not_le_of_lt h)
-    ·
-      convertTo ((b.push_back hd).appendList tl).read _ = _ 
-      cases i
-      ·
-        convert read_append_list_left _ _ _ <;> simp 
-      ·
-        rw [List.length, Nat.succ_lt_succ_iff] at h 
-        have  : (b.size+i.succ) = (b.push_back hd).size+i
-        ·
-          simp [add_commₓ, add_left_commₓ, Nat.succ_eq_add_one]
-        convert hl (b.push_back hd) h using 1
-        simpa [Nat.add_succ, Nat.succ_add]
+theorem read_append_list_right
+(b : buffer α)
+(l : list α)
+{i : exprℕ()}
+(h : «expr < »(i, l.length)) : «expr = »((b.append_list l).read ⟨«expr + »(b.size, i), by simp [] [] [] ["[", expr h, "]"] [] []⟩, l.nth_le i h) :=
+begin
+  induction [expr l] [] ["with", ident hd, ident tl, ident hl] ["generalizing", ident b, ident i],
+  { exact [expr absurd i.zero_le (not_le_of_lt h)] },
+  { convert_to [expr «expr = »(((b.push_back hd).append_list tl).read _, _)] [],
+    cases [expr i] [],
+    { convert [] [expr read_append_list_left _ _ _] []; simp [] [] [] [] [] [] },
+    { rw ["[", expr list.length, ",", expr nat.succ_lt_succ_iff, "]"] ["at", ident h],
+      have [] [":", expr «expr = »(«expr + »(b.size, i.succ), «expr + »((b.push_back hd).size, i))] [],
+      { simp [] [] [] ["[", expr add_comm, ",", expr add_left_comm, ",", expr nat.succ_eq_add_one, "]"] [] [] },
+      convert [] [expr hl (b.push_back hd) h] ["using", 1],
+      simpa [] [] [] ["[", expr nat.add_succ, ",", expr nat.succ_add, "]"] [] [] } }
+end
 
-theorem read_to_buffer' (l : List α) {i : ℕ} (h : i < l.to_buffer.size) (h' : i < l.length) :
-  l.to_buffer.read ⟨i, h⟩ = l.nth_le i h' :=
-  by 
-    cases' l with hd tl
-    ·
-      simpa using h'
-    ·
-      have hi : i < ([hd].toBuffer.appendList tl).size :=
-        by 
-          simpa [add_commₓ] using h 
-      convertTo ([hd].toBuffer.appendList tl).read ⟨i, hi⟩ = _ 
-      cases i
-      ·
-        convert read_append_list_left _ _ _ 
-        simp 
-      ·
-        rw [List.nthLe]
-        convert read_append_list_right _ _ _ 
-        simp [Nat.succ_eq_add_one, add_commₓ]
+-- error in Data.Buffer.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem read_to_buffer'
+(l : list α)
+{i : exprℕ()}
+(h : «expr < »(i, l.to_buffer.size))
+(h' : «expr < »(i, l.length)) : «expr = »(l.to_buffer.read ⟨i, h⟩, l.nth_le i h') :=
+begin
+  cases [expr l] ["with", ident hd, ident tl],
+  { simpa [] [] [] [] [] ["using", expr h'] },
+  { have [ident hi] [":", expr «expr < »(i, («expr[ , ]»([hd]).to_buffer.append_list tl).size)] [":=", expr by simpa [] [] [] ["[", expr add_comm, "]"] [] ["using", expr h]],
+    convert_to [expr «expr = »((«expr[ , ]»([hd]).to_buffer.append_list tl).read ⟨i, hi⟩, _)] [],
+    cases [expr i] [],
+    { convert [] [expr read_append_list_left _ _ _] [],
+      simp [] [] [] [] [] [] },
+    { rw [expr list.nth_le] [],
+      convert [] [expr read_append_list_right _ _ _] [],
+      simp [] [] [] ["[", expr nat.succ_eq_add_one, ",", expr add_comm, "]"] [] [] } }
+end
 
 @[simp]
 theorem read_to_buffer (l : List α) i :
@@ -241,17 +233,13 @@ theorem read_to_buffer (l : List α) i :
     ·
       simpa using i.property
 
-theorem nth_le_to_list' (b : Buffer α) {i : ℕ} h h' : b.to_list.nth_le i h = b.read ⟨i, h'⟩ :=
-  by 
-    have  :
-      b.to_list.to_buffer.read
-          ⟨i,
-            by 
-              simpa using h'⟩ =
-        b.read ⟨i, h'⟩
-    ·
-      congr 1 <;> simp [Finₓ.heq_ext_iff]
-    simp [←this]
+-- error in Data.Buffer.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nth_le_to_list' (b : buffer α) {i : exprℕ()} (h h') : «expr = »(b.to_list.nth_le i h, b.read ⟨i, h'⟩) :=
+begin
+  have [] [":", expr «expr = »(b.to_list.to_buffer.read ⟨i, by simpa [] [] [] [] [] ["using", expr h']⟩, b.read ⟨i, h'⟩)] [],
+  { congr' [1] []; simp [] [] [] ["[", expr fin.heq_ext_iff, "]"] [] [] },
+  simp [] [] [] ["[", "<-", expr this, "]"] [] []
+end
 
 theorem nth_le_to_list (b : Buffer α) {i : ℕ} h :
   b.to_list.nth_le i h =

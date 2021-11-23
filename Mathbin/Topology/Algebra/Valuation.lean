@@ -95,7 +95,7 @@ theorem mem_nhds_zero {s : Set R} : s ∈ 𝓝 (0 : R) ↔ ∃ γ : Units (Γ₀
   by 
     simp [Valued.mem_nhds, sub_zero]
 
-theorem loc_const {x : R} (h : v x ≠ 0) : { y : R | v y = v x } ∈ 𝓝 x :=
+theorem loc_const {x : R} (h : v x ≠ 0) : { y:R | v y = v x } ∈ 𝓝 x :=
   by 
     rw [Valued.mem_nhds]
     rcases units.exists_iff_ne_zero.mpr h with ⟨γ, hx⟩

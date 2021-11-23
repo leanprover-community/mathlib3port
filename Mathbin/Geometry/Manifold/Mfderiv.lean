@@ -315,10 +315,12 @@ theorem UniqueMdiffWithinAt.inter (hs : UniqueMdiffWithinAt I s x) (ht : t ∈ �
     rw [UniqueMdiffWithinAt, ext_chart_preimage_inter_eq]
     exact UniqueDiffWithinAt.inter hs (ext_chart_preimage_mem_nhds I x ht)
 
-theorem IsOpen.unique_mdiff_within_at (xs : x ∈ s) (hs : IsOpen s) : UniqueMdiffWithinAt I s x :=
-  by 
-    have  := UniqueMdiffWithinAt.inter (unique_mdiff_within_at_univ I) (IsOpen.mem_nhds hs xs)
-    rwa [univ_inter] at this
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_open.unique_mdiff_within_at (xs : «expr ∈ »(x, s)) (hs : is_open s) : unique_mdiff_within_at I s x :=
+begin
+  have [] [] [":=", expr unique_mdiff_within_at.inter (unique_mdiff_within_at_univ I) (is_open.mem_nhds hs xs)],
+  rwa [expr univ_inter] ["at", ident this]
+end
 
 theorem UniqueMdiffOn.inter (hs : UniqueMdiffOn I s) (ht : IsOpen t) : UniqueMdiffOn I (s ∩ t) :=
   fun x hx => UniqueMdiffWithinAt.inter (hs _ hx.1) (IsOpen.mem_nhds ht hx.2)
@@ -504,13 +506,15 @@ theorem MdifferentiableAt.mdifferentiable_within_at (h : MdifferentiableAt I I' 
   MdifferentiableWithinAt I I' f s x :=
   MdifferentiableWithinAt.mono (subset_univ _) (mdifferentiable_within_at_univ.2 h)
 
-theorem MdifferentiableWithinAt.mdifferentiable_at (h : MdifferentiableWithinAt I I' f s x) (hs : s ∈ 𝓝 x) :
-  MdifferentiableAt I I' f x :=
-  by 
-    have  : s = univ ∩ s
-    ·
-      rw [univ_inter]
-    rwa [this, mdifferentiable_within_at_inter hs, mdifferentiable_within_at_univ] at h
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mdifferentiable_within_at.mdifferentiable_at
+(h : mdifferentiable_within_at I I' f s x)
+(hs : «expr ∈ »(s, expr𝓝() x)) : mdifferentiable_at I I' f x :=
+begin
+  have [] [":", expr «expr = »(s, «expr ∩ »(univ, s))] [],
+  by rw [expr univ_inter] [],
+  rwa ["[", expr this, ",", expr mdifferentiable_within_at_inter hs, ",", expr mdifferentiable_within_at_univ, "]"] ["at", ident h]
+end
 
 theorem MdifferentiableOn.mono (h : MdifferentiableOn I I' f t) (st : s ⊆ t) : MdifferentiableOn I I' f s :=
   fun x hx => (h x (st hx)).mono st
@@ -612,19 +616,19 @@ omit Is I's
 /-! ### Congruence lemmas for derivatives on manifolds -/
 
 
-theorem HasMfderivWithinAt.congr_of_eventually_eq (h : HasMfderivWithinAt I I' f s x f') (h₁ : f₁ =ᶠ[𝓝[s] x] f)
-  (hx : f₁ x = f x) : HasMfderivWithinAt I I' f₁ s x f' :=
-  by 
-    refine' ⟨ContinuousWithinAt.congr_of_eventually_eq h.1 h₁ hx, _⟩
-    apply HasFderivWithinAt.congr_of_eventually_eq h.2
-    ·
-      have  :
-        (extChartAt I x).symm ⁻¹' { y | f₁ y = f y } ∈ 𝓝[(extChartAt I x).symm ⁻¹' s ∩ range I] (extChartAt I x) x :=
-        ext_chart_preimage_mem_nhds_within I x h₁ 
-      apply Filter.mem_of_superset this fun y => _ 
-      simp' (config := { contextual := Bool.true.0 }) only [hx] with mfld_simps
-    ·
-      simp' only [hx] with mfld_simps
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_mfderiv_within_at.congr_of_eventually_eq
+(h : has_mfderiv_within_at I I' f s x f')
+(h₁ : «expr =ᶠ[ ] »(f₁, «expr𝓝[ ] »(s, x), f))
+(hx : «expr = »(f₁ x, f x)) : has_mfderiv_within_at I I' f₁ s x f' :=
+begin
+  refine [expr ⟨continuous_within_at.congr_of_eventually_eq h.1 h₁ hx, _⟩],
+  apply [expr has_fderiv_within_at.congr_of_eventually_eq h.2],
+  { have [] [":", expr «expr ∈ »(«expr ⁻¹' »((ext_chart_at I x).symm, {y | «expr = »(f₁ y, f y)}), «expr𝓝[ ] »(«expr ∩ »(«expr ⁻¹' »((ext_chart_at I x).symm, s), range I), ext_chart_at I x x))] [":=", expr ext_chart_preimage_mem_nhds_within I x h₁],
+    apply [expr filter.mem_of_superset this (λ y, _)],
+    simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [] { contextual := tt } },
+  { simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [] }
+end
 
 theorem HasMfderivWithinAt.congr_mono (h : HasMfderivWithinAt I I' f s x f') (ht : ∀ x _ : x ∈ t, f₁ x = f x)
   (hx : f₁ x = f x) (h₁ : t ⊆ s) : HasMfderivWithinAt I I' f₁ t x f' :=
@@ -704,12 +708,15 @@ theorem tangent_map_within_congr (h : ∀ x _ : x ∈ s, f x = f₁ x) (p : Tang
     congr 1 
     exact mfderiv_within_congr hs h (h _ hp)
 
-theorem Filter.EventuallyEq.mfderiv_eq (hL : f₁ =ᶠ[𝓝 x] f) : mfderiv I I' f₁ x = (mfderiv I I' f x : _) :=
-  by 
-    have A : f₁ x = f x := (mem_of_mem_nhds hL : _)
-    rw [←mfderiv_within_univ, ←mfderiv_within_univ]
-    rw [←nhds_within_univ] at hL 
-    exact hL.mfderiv_within_eq (unique_mdiff_within_at_univ I) A
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem filter.eventually_eq.mfderiv_eq
+(hL : «expr =ᶠ[ ] »(f₁, expr𝓝() x, f)) : «expr = »(mfderiv I I' f₁ x, (mfderiv I I' f x : _)) :=
+begin
+  have [ident A] [":", expr «expr = »(f₁ x, f x)] [":=", expr (mem_of_mem_nhds hL : _)],
+  rw ["[", "<-", expr mfderiv_within_univ, ",", "<-", expr mfderiv_within_univ, "]"] [],
+  rw ["<-", expr nhds_within_univ] ["at", ident hL],
+  exact [expr hL.mfderiv_within_eq (unique_mdiff_within_at_univ I) A]
+end
 
 /-! ### Composition lemmas -/
 
@@ -730,31 +737,28 @@ variable(x)
 
 include Is I's I''s
 
-theorem HasMfderivWithinAt.comp (hg : HasMfderivWithinAt I' I'' g u (f x) g') (hf : HasMfderivWithinAt I I' f s x f')
-  (hst : s ⊆ f ⁻¹' u) : HasMfderivWithinAt I I'' (g ∘ f) s x (g'.comp f') :=
-  by 
-    refine' ⟨ContinuousWithinAt.comp hg.1 hf.1 hst, _⟩
-    have A :
-      HasFderivWithinAt (writtenInExtChartAt I' I'' (f x) g ∘ writtenInExtChartAt I I' x f)
-        (ContinuousLinearMap.comp g' f' : E →L[𝕜] E'') ((extChartAt I x).symm ⁻¹' s ∩ range I) ((extChartAt I x) x)
-    ·
-      have  :
-        (extChartAt I x).symm ⁻¹' (f ⁻¹' (extChartAt I' (f x)).Source) ∈
-          𝓝[(extChartAt I x).symm ⁻¹' s ∩ range I] (extChartAt I x) x :=
-        ext_chart_preimage_mem_nhds_within I x (hf.1.preimage_mem_nhds_within (ext_chart_at_source_mem_nhds _ _))
-      unfold HasMfderivWithinAt  at *
-      rw [←has_fderiv_within_at_inter' this, ←ext_chart_preimage_inter_eq] at hf⊢
-      have  : writtenInExtChartAt I I' x f ((extChartAt I x) x) = (extChartAt I' (f x)) (f x)
-      ·
-        simp' only with mfld_simps 
-      rw [←this] at hg 
-      apply HasFderivWithinAt.comp ((extChartAt I x) x) hg.2 hf.2 _ 
-      intro y hy 
-      simp' only with mfld_simps  at hy 
-      have  : f (((chart_at H x).symm : H → M) (I.symm y)) ∈ u := hst hy.1.1
-      simp' only [hy, this] with mfld_simps 
-    apply A.congr_of_eventually_eq (written_in_ext_chart_comp hf.1)
-    simp' only with mfld_simps
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_mfderiv_within_at.comp
+(hg : has_mfderiv_within_at I' I'' g u (f x) g')
+(hf : has_mfderiv_within_at I I' f s x f')
+(hst : «expr ⊆ »(s, «expr ⁻¹' »(f, u))) : has_mfderiv_within_at I I'' «expr ∘ »(g, f) s x (g'.comp f') :=
+begin
+  refine [expr ⟨continuous_within_at.comp hg.1 hf.1 hst, _⟩],
+  have [ident A] [":", expr has_fderiv_within_at «expr ∘ »(written_in_ext_chart_at I' I'' (f x) g, written_in_ext_chart_at I I' x f) (continuous_linear_map.comp g' f' : «expr →L[ ] »(E, 𝕜, E'')) «expr ∩ »(«expr ⁻¹' »((ext_chart_at I x).symm, s), range I) (ext_chart_at I x x)] [],
+  { have [] [":", expr «expr ∈ »(«expr ⁻¹' »((ext_chart_at I x).symm, «expr ⁻¹' »(f, (ext_chart_at I' (f x)).source)), «expr𝓝[ ] »(«expr ∩ »(«expr ⁻¹' »((ext_chart_at I x).symm, s), range I), ext_chart_at I x x))] [":=", expr ext_chart_preimage_mem_nhds_within I x (hf.1.preimage_mem_nhds_within (ext_chart_at_source_mem_nhds _ _))],
+    unfold [ident has_mfderiv_within_at] ["at", "*"],
+    rw ["[", "<-", expr has_fderiv_within_at_inter' this, ",", "<-", expr ext_chart_preimage_inter_eq, "]"] ["at", ident hf, "⊢"],
+    have [] [":", expr «expr = »(written_in_ext_chart_at I I' x f (ext_chart_at I x x), ext_chart_at I' (f x) (f x))] [],
+    by simp [] [] ["only"] [] ["with", ident mfld_simps] [],
+    rw ["<-", expr this] ["at", ident hg],
+    apply [expr has_fderiv_within_at.comp (ext_chart_at I x x) hg.2 hf.2 _],
+    assume [binders (y hy)],
+    simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident hy],
+    have [] [":", expr «expr ∈ »(f (((chart_at H x).symm : H → M) (I.symm y)), u)] [":=", expr hst hy.1.1],
+    simp [] [] ["only"] ["[", expr hy, ",", expr this, "]"] ["with", ident mfld_simps] [] },
+  apply [expr A.congr_of_eventually_eq (written_in_ext_chart_comp hf.1)],
+  simp [] [] ["only"] [] ["with", ident mfld_simps] []
+end
 
 /-- The chain rule. -/
 theorem HasMfderivAt.comp (hg : HasMfderivAt I' I'' g (f x) g') (hf : HasMfderivAt I I' f x f') :
@@ -769,14 +773,18 @@ theorem HasMfderivAt.comp_has_mfderiv_within_at (hg : HasMfderivAt I' I'' g (f x
     rw [←has_mfderiv_within_at_univ] at *
     exact HasMfderivWithinAt.comp x (hg.mono (subset_univ _)) hf subset_preimage_univ
 
-theorem MdifferentiableWithinAt.comp (hg : MdifferentiableWithinAt I' I'' g u (f x))
-  (hf : MdifferentiableWithinAt I I' f s x) (h : s ⊆ f ⁻¹' u) : MdifferentiableWithinAt I I'' (g ∘ f) s x :=
-  by 
-    rcases hf.2 with ⟨f', hf'⟩
-    have F : HasMfderivWithinAt I I' f s x f' := ⟨hf.1, hf'⟩
-    rcases hg.2 with ⟨g', hg'⟩
-    have G : HasMfderivWithinAt I' I'' g u (f x) g' := ⟨hg.1, hg'⟩
-    exact (HasMfderivWithinAt.comp x G F h).MdifferentiableWithinAt
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mdifferentiable_within_at.comp
+(hg : mdifferentiable_within_at I' I'' g u (f x))
+(hf : mdifferentiable_within_at I I' f s x)
+(h : «expr ⊆ »(s, «expr ⁻¹' »(f, u))) : mdifferentiable_within_at I I'' «expr ∘ »(g, f) s x :=
+begin
+  rcases [expr hf.2, "with", "⟨", ident f', ",", ident hf', "⟩"],
+  have [ident F] [":", expr has_mfderiv_within_at I I' f s x f'] [":=", expr ⟨hf.1, hf'⟩],
+  rcases [expr hg.2, "with", "⟨", ident g', ",", ident hg', "⟩"],
+  have [ident G] [":", expr has_mfderiv_within_at I' I'' g u (f x) g'] [":=", expr ⟨hg.1, hg'⟩],
+  exact [expr (has_mfderiv_within_at.comp x G F h).mdifferentiable_within_at]
+end
 
 theorem MdifferentiableAt.comp (hg : MdifferentiableAt I' I'' g (f x)) (hf : MdifferentiableAt I I' f x) :
   MdifferentiableAt I I'' (g ∘ f) x :=
@@ -1028,15 +1036,17 @@ section id
 /-! #### Identity -/
 
 
-theorem has_mfderiv_at_id (x : M) : HasMfderivAt I I (@_root_.id M) x (ContinuousLinearMap.id 𝕜 (TangentSpace I x)) :=
-  by 
-    refine' ⟨continuous_id.continuous_at, _⟩
-    have  : ∀ᶠy in 𝓝[range I] (extChartAt I x) x, (extChartAt I x ∘ (extChartAt I x).symm) y = id y
-    ·
-      apply Filter.mem_of_superset (ext_chart_at_target_mem_nhds_within I x)
-      mfldSetTac 
-    apply HasFderivWithinAt.congr_of_eventually_eq (has_fderiv_within_at_id _ _) this 
-    simp' only with mfld_simps
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_mfderiv_at_id
+(x : M) : has_mfderiv_at I I (@_root_.id M) x (continuous_linear_map.id 𝕜 (tangent_space I x)) :=
+begin
+  refine [expr ⟨continuous_id.continuous_at, _⟩],
+  have [] [":", expr «expr∀ᶠ in , »((y), «expr𝓝[ ] »(range I, ext_chart_at I x x), «expr = »(«expr ∘ »(ext_chart_at I x, (ext_chart_at I x).symm) y, id y))] [],
+  { apply [expr filter.mem_of_superset (ext_chart_at_target_mem_nhds_within I x)],
+    mfld_set_tac },
+  apply [expr has_fderiv_within_at.congr_of_eventually_eq (has_fderiv_within_at_id _ _) this],
+  simp [] [] ["only"] [] ["with", ident mfld_simps] []
+end
 
 theorem has_mfderiv_within_at_id (s : Set M) (x : M) :
   HasMfderivWithinAt I I (@_root_.id M) s x (ContinuousLinearMap.id 𝕜 (TangentSpace I x)) :=
@@ -1159,48 +1169,44 @@ section Charts
 
 variable{e : LocalHomeomorph M H}
 
-theorem mdifferentiable_at_atlas (h : e ∈ atlas H M) {x : M} (hx : x ∈ e.source) : MdifferentiableAt I I e x :=
-  by 
-    refine' ⟨(e.continuous_on x hx).ContinuousAt (IsOpen.mem_nhds e.open_source hx), _⟩
-    have mem : I ((chart_at H x : M → H) x) ∈ I.symm ⁻¹' ((chart_at H x).symm ≫ₕ e).Source ∩ range I
-    ·
-      simp' only [hx] with mfld_simps 
-    have  : (chart_at H x).symm.trans e ∈ timesContDiffGroupoid ∞ I := HasGroupoid.compatible _ (chart_mem_atlas H x) h 
-    have A :
-      TimesContDiffOn 𝕜 ∞ (I ∘ (chart_at H x).symm.trans e ∘ I.symm)
-        (I.symm ⁻¹' ((chart_at H x).symm.trans e).Source ∩ range I) :=
-      this.1
-    have B := A.differentiable_on le_top (I ((chart_at H x : M → H) x)) mem 
-    simp' only with mfld_simps  at B 
-    rw [inter_comm, differentiable_within_at_inter] at B
-    ·
-      simpa only with mfld_simps
-    ·
-      apply IsOpen.mem_nhds ((LocalHomeomorph.open_source _).Preimage I.continuous_symm) mem.1
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mdifferentiable_at_atlas
+(h : «expr ∈ »(e, atlas H M))
+{x : M}
+(hx : «expr ∈ »(x, e.source)) : mdifferentiable_at I I e x :=
+begin
+  refine [expr ⟨(e.continuous_on x hx).continuous_at (is_open.mem_nhds e.open_source hx), _⟩],
+  have [ident mem] [":", expr «expr ∈ »(I ((chart_at H x : M → H) x), «expr ∩ »(«expr ⁻¹' »(I.symm, «expr ≫ₕ »((chart_at H x).symm, e).source), range I))] [],
+  by simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [],
+  have [] [":", expr «expr ∈ »((chart_at H x).symm.trans e, times_cont_diff_groupoid «expr∞»() I)] [":=", expr has_groupoid.compatible _ (chart_mem_atlas H x) h],
+  have [ident A] [":", expr times_cont_diff_on 𝕜 «expr∞»() «expr ∘ »(I, «expr ∘ »((chart_at H x).symm.trans e, I.symm)) «expr ∩ »(«expr ⁻¹' »(I.symm, ((chart_at H x).symm.trans e).source), range I)] [":=", expr this.1],
+  have [ident B] [] [":=", expr A.differentiable_on le_top (I ((chart_at H x : M → H) x)) mem],
+  simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident B],
+  rw ["[", expr inter_comm, ",", expr differentiable_within_at_inter, "]"] ["at", ident B],
+  { simpa [] [] ["only"] [] ["with", ident mfld_simps] [] },
+  { apply [expr is_open.mem_nhds ((local_homeomorph.open_source _).preimage I.continuous_symm) mem.1] }
+end
 
 theorem mdifferentiable_on_atlas (h : e ∈ atlas H M) : MdifferentiableOn I I e e.source :=
   fun x hx => (mdifferentiable_at_atlas I h hx).MdifferentiableWithinAt
 
-theorem mdifferentiable_at_atlas_symm (h : e ∈ atlas H M) {x : H} (hx : x ∈ e.target) :
-  MdifferentiableAt I I e.symm x :=
-  by 
-    refine' ⟨(e.continuous_on_symm x hx).ContinuousAt (IsOpen.mem_nhds e.open_target hx), _⟩
-    have mem : I x ∈ I.symm ⁻¹' (e.symm ≫ₕ chart_at H (e.symm x)).Source ∩ range I
-    ·
-      simp' only [hx] with mfld_simps 
-    have  : e.symm.trans (chart_at H (e.symm x)) ∈ timesContDiffGroupoid ∞ I :=
-      HasGroupoid.compatible _ h (chart_mem_atlas H _)
-    have A :
-      TimesContDiffOn 𝕜 ∞ (I ∘ e.symm.trans (chart_at H (e.symm x)) ∘ I.symm)
-        (I.symm ⁻¹' (e.symm.trans (chart_at H (e.symm x))).Source ∩ range I) :=
-      this.1
-    have B := A.differentiable_on le_top (I x) mem 
-    simp' only with mfld_simps  at B 
-    rw [inter_comm, differentiable_within_at_inter] at B
-    ·
-      simpa only with mfld_simps
-    ·
-      apply IsOpen.mem_nhds ((LocalHomeomorph.open_source _).Preimage I.continuous_symm) mem.1
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mdifferentiable_at_atlas_symm
+(h : «expr ∈ »(e, atlas H M))
+{x : H}
+(hx : «expr ∈ »(x, e.target)) : mdifferentiable_at I I e.symm x :=
+begin
+  refine [expr ⟨(e.continuous_on_symm x hx).continuous_at (is_open.mem_nhds e.open_target hx), _⟩],
+  have [ident mem] [":", expr «expr ∈ »(I x, «expr ∩ »(«expr ⁻¹' »(I.symm, «expr ≫ₕ »(e.symm, chart_at H (e.symm x)).source), range I))] [],
+  by simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [],
+  have [] [":", expr «expr ∈ »(e.symm.trans (chart_at H (e.symm x)), times_cont_diff_groupoid «expr∞»() I)] [":=", expr has_groupoid.compatible _ h (chart_mem_atlas H _)],
+  have [ident A] [":", expr times_cont_diff_on 𝕜 «expr∞»() «expr ∘ »(I, «expr ∘ »(e.symm.trans (chart_at H (e.symm x)), I.symm)) «expr ∩ »(«expr ⁻¹' »(I.symm, (e.symm.trans (chart_at H (e.symm x))).source), range I)] [":=", expr this.1],
+  have [ident B] [] [":=", expr A.differentiable_on le_top (I x) mem],
+  simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident B],
+  rw ["[", expr inter_comm, ",", expr differentiable_within_at_inter, "]"] ["at", ident B],
+  { simpa [] [] ["only"] [] ["with", ident mfld_simps] [] },
+  { apply [expr is_open.mem_nhds ((local_homeomorph.open_source _).preimage I.continuous_symm) mem.1] }
+end
 
 theorem mdifferentiable_on_atlas_symm (h : e ∈ atlas H M) : MdifferentiableOn I I e.symm e.target :=
   fun x hx => (mdifferentiable_at_atlas_symm I h hx).MdifferentiableWithinAt
@@ -1304,43 +1310,44 @@ theorem mdifferentiable_at_symm {x : M'} (hx : x ∈ e.target) : Mdifferentiable
 
 variable[SmoothManifoldWithCorners I M][SmoothManifoldWithCorners I' M'][SmoothManifoldWithCorners I'' M'']
 
-theorem symm_comp_deriv {x : M} (hx : x ∈ e.source) :
-  (mfderiv I' I e.symm (e x)).comp (mfderiv I I' e x) = ContinuousLinearMap.id 𝕜 (TangentSpace I x) :=
-  by 
-    have  : mfderiv I I (e.symm ∘ e) x = (mfderiv I' I e.symm (e x)).comp (mfderiv I I' e x) :=
-      mfderiv_comp x (he.mdifferentiable_at_symm (e.map_source hx)) (he.mdifferentiable_at hx)
-    rw [←this]
-    have  : mfderiv I I (_root_.id : M → M) x = ContinuousLinearMap.id _ _ := mfderiv_id I 
-    rw [←this]
-    apply Filter.EventuallyEq.mfderiv_eq 
-    have  : e.source ∈ 𝓝 x := IsOpen.mem_nhds e.open_source hx 
-    exact
-      Filter.mem_of_superset this
-        (by 
-          mfldSetTac)
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem symm_comp_deriv
+{x : M}
+(hx : «expr ∈ »(x, e.source)) : «expr = »((mfderiv I' I e.symm (e x)).comp (mfderiv I I' e x), continuous_linear_map.id 𝕜 (tangent_space I x)) :=
+begin
+  have [] [":", expr «expr = »(mfderiv I I «expr ∘ »(e.symm, e) x, (mfderiv I' I e.symm (e x)).comp (mfderiv I I' e x))] [":=", expr mfderiv_comp x (he.mdifferentiable_at_symm (e.map_source hx)) (he.mdifferentiable_at hx)],
+  rw ["<-", expr this] [],
+  have [] [":", expr «expr = »(mfderiv I I (_root_.id : M → M) x, continuous_linear_map.id _ _)] [":=", expr mfderiv_id I],
+  rw ["<-", expr this] [],
+  apply [expr filter.eventually_eq.mfderiv_eq],
+  have [] [":", expr «expr ∈ »(e.source, expr𝓝() x)] [":=", expr is_open.mem_nhds e.open_source hx],
+  exact [expr filter.mem_of_superset this (by mfld_set_tac)]
+end
 
 theorem comp_symm_deriv {x : M'} (hx : x ∈ e.target) :
   (mfderiv I I' e (e.symm x)).comp (mfderiv I' I e.symm x) = ContinuousLinearMap.id 𝕜 (TangentSpace I' x) :=
   he.symm.symm_comp_deriv hx
 
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The derivative of a differentiable local homeomorphism, as a continuous linear equivalence
 between the tangent spaces at `x` and `e x`. -/
-protected def mfderiv {x : M} (hx : x ∈ e.source) : TangentSpace I x ≃L[𝕜] TangentSpace I' (e x) :=
-  { mfderiv I I' e x with invFun := mfderiv I' I e.symm (e x), continuous_to_fun := (mfderiv I I' e x).cont,
-    continuous_inv_fun := (mfderiv I' I e.symm (e x)).cont,
-    left_inv :=
-      fun y =>
-        by 
-          have  : (ContinuousLinearMap.id _ _ : TangentSpace I x →L[𝕜] TangentSpace I x) y = y := rfl 
-          convRHS => rw [←this, ←he.symm_comp_deriv hx]
-          rfl,
-    right_inv :=
-      fun y =>
-        by 
-          have  : (ContinuousLinearMap.id 𝕜 _ : TangentSpace I' (e x) →L[𝕜] TangentSpace I' (e x)) y = y := rfl 
-          convRHS => rw [←this, ←he.comp_symm_deriv (e.map_source hx)]
-          rw [e.left_inv hx]
-          rfl }
+protected
+def mfderiv {x : M} (hx : «expr ∈ »(x, e.source)) : «expr ≃L[ ] »(tangent_space I x, 𝕜, tangent_space I' (e x)) :=
+{ inv_fun := mfderiv I' I e.symm (e x),
+  continuous_to_fun := (mfderiv I I' e x).cont,
+  continuous_inv_fun := (mfderiv I' I e.symm (e x)).cont,
+  left_inv := λ y, begin
+    have [] [":", expr «expr = »((continuous_linear_map.id _ _ : «expr →L[ ] »(tangent_space I x, 𝕜, tangent_space I x)) y, y)] [":=", expr rfl],
+    conv_rhs [] [] { rw ["[", "<-", expr this, ",", "<-", expr he.symm_comp_deriv hx, "]"] },
+    refl
+  end,
+  right_inv := λ y, begin
+    have [] [":", expr «expr = »((continuous_linear_map.id 𝕜 _ : «expr →L[ ] »(tangent_space I' (e x), 𝕜, tangent_space I' (e x))) y, y)] [":=", expr rfl],
+    conv_rhs [] [] { rw ["[", "<-", expr this, ",", "<-", expr he.comp_symm_deriv (e.map_source hx), "]"] },
+    rw [expr e.left_inv hx] [],
+    refl
+  end,
+  ..mfderiv I I' e x }
 
 theorem mfderiv_bijective {x : M} (hx : x ∈ e.source) : Function.Bijective (mfderiv I I' e x) :=
   (he.mfderiv hx).Bijective
@@ -1441,158 +1448,140 @@ variable{𝕜 :
       _}[TopologicalSpace
       H']{I' : ModelWithCorners 𝕜 E' H'}{M' : Type _}[TopologicalSpace M'][ChartedSpace H' M']{s : Set M}
 
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a set has the unique differential property, then its image under a local
 diffeomorphism also has the unique differential property. -/
-theorem UniqueMdiffOn.unique_mdiff_on_preimage [SmoothManifoldWithCorners I' M'] (hs : UniqueMdiffOn I s)
-  {e : LocalHomeomorph M M'} (he : e.mdifferentiable I I') : UniqueMdiffOn I' (e.target ∩ e.symm ⁻¹' s) :=
-  by 
-    intro x hx 
-    let z := e.symm x 
-    have z_source : z ∈ e.source
-    ·
-      simp' only [hx.1] with mfld_simps 
-    have zx : e z = x
-    ·
-      simp' only [z, hx.1] with mfld_simps 
-    let F := extChartAt I z 
-    have B : UniqueDiffWithinAt 𝕜 (F.symm ⁻¹' (s ∩ (e.source ∩ e ⁻¹' (extChartAt I' x).Source)) ∩ F.target) (F z)
-    ·
-      have  : UniqueMdiffWithinAt I s z := hs _ hx.2
-      have S : e.source ∩ e ⁻¹' (extChartAt I' x).Source ∈ 𝓝 z
-      ·
-        apply IsOpen.mem_nhds 
-        apply e.continuous_on.preimage_open_of_open e.open_source (ext_chart_at_open_source I' x)
-        simp' only [z_source, zx] with mfld_simps 
-      have  := this.inter S 
-      rw [unique_mdiff_within_at_iff] at this 
-      exact this 
-    let G := F.symm ≫ e.to_local_equiv ≫ extChartAt I' x 
-    have Diff : ((chart_at H z).symm ≫ₕ e ≫ₕ chart_at H' x).Mdifferentiable I I'
-    ·
-      have A := mdifferentiable_of_mem_atlas I (chart_mem_atlas H z)
-      have B := mdifferentiable_of_mem_atlas I' (chart_mem_atlas H' x)
-      exact A.symm.trans (he.trans B)
-    have Mmem : (chart_at H z : M → H) z ∈ ((chart_at H z).symm ≫ₕ e ≫ₕ chart_at H' x).Source
-    ·
-      simp' only [z_source, zx] with mfld_simps 
-    have A : DifferentiableWithinAt 𝕜 G (range I) (F z)
-    ·
-      refine' (Diff.mdifferentiable_at Mmem).2.congr (fun p hp => _) _ <;> simp' only [G, F] with mfld_simps 
-    let G' := fderivWithin 𝕜 G (range I) (F z)
-    have D₁ : HasFderivWithinAt G G' (range I) (F z) := A.has_fderiv_within_at 
-    have D₂ : HasFderivWithinAt G G' (F.symm ⁻¹' (s ∩ (e.source ∩ e ⁻¹' (extChartAt I' x).Source)) ∩ F.target) (F z) :=
-      D₁.mono
-        (by 
-          mfldSetTac)
-    have C : DenseRange (G' : E → E')
-    ·
-      have  : G' = mfderiv I I' ((chart_at H z).symm ≫ₕ e ≫ₕ chart_at H' x) ((chart_at H z : M → H) z)
-      ·
-        ·
-          rw [(Diff.mdifferentiable_at Mmem).mfderiv]
-          rfl 
-      rw [this]
-      exact (Diff.mfderiv_surjective Mmem).DenseRange 
-    have key :
-      UniqueDiffWithinAt 𝕜 (G '' (F.symm ⁻¹' (s ∩ (e.source ∩ e ⁻¹' (extChartAt I' x).Source)) ∩ F.target)) (G (F z)) :=
-      D₂.unique_diff_within_at B C 
-    have  : G (F z) = (extChartAt I' x) x
-    ·
-      ·
-        dsimp [G, F]
-        simp' only [hx.1] with mfld_simps 
-    rw [this] at key 
-    apply key.mono 
-    show
-      G '' (F.symm ⁻¹' (s ∩ (e.source ∩ e ⁻¹' (extChartAt I' x).Source)) ∩ F.target) ⊆
-        (extChartAt I' x).symm ⁻¹' e.target ∩ (extChartAt I' x).symm ⁻¹' (e.symm ⁻¹' s) ∩ range I' 
-    rw [image_subset_iff]
-    mfldSetTac
+theorem unique_mdiff_on.unique_mdiff_on_preimage
+[smooth_manifold_with_corners I' M']
+(hs : unique_mdiff_on I s)
+{e : local_homeomorph M M'}
+(he : e.mdifferentiable I I') : unique_mdiff_on I' «expr ∩ »(e.target, «expr ⁻¹' »(e.symm, s)) :=
+begin
+  assume [binders (x hx)],
+  let [ident z] [] [":=", expr e.symm x],
+  have [ident z_source] [":", expr «expr ∈ »(z, e.source)] [],
+  by simp [] [] ["only"] ["[", expr hx.1, "]"] ["with", ident mfld_simps] [],
+  have [ident zx] [":", expr «expr = »(e z, x)] [],
+  by simp [] [] ["only"] ["[", expr z, ",", expr hx.1, "]"] ["with", ident mfld_simps] [],
+  let [ident F] [] [":=", expr ext_chart_at I z],
+  have [ident B] [":", expr unique_diff_within_at 𝕜 «expr ∩ »(«expr ⁻¹' »(F.symm, «expr ∩ »(s, «expr ∩ »(e.source, «expr ⁻¹' »(e, (ext_chart_at I' x).source)))), F.target) (F z)] [],
+  { have [] [":", expr unique_mdiff_within_at I s z] [":=", expr hs _ hx.2],
+    have [ident S] [":", expr «expr ∈ »(«expr ∩ »(e.source, «expr ⁻¹' »(e, (ext_chart_at I' x).source)), expr𝓝() z)] [],
+    { apply [expr is_open.mem_nhds],
+      apply [expr e.continuous_on.preimage_open_of_open e.open_source (ext_chart_at_open_source I' x)],
+      simp [] [] ["only"] ["[", expr z_source, ",", expr zx, "]"] ["with", ident mfld_simps] [] },
+    have [] [] [":=", expr this.inter S],
+    rw ["[", expr unique_mdiff_within_at_iff, "]"] ["at", ident this],
+    exact [expr this] },
+  let [ident G] [] [":=", expr «expr ≫ »(F.symm, «expr ≫ »(e.to_local_equiv, ext_chart_at I' x))],
+  have [ident Diff] [":", expr «expr ≫ₕ »((chart_at H z).symm, «expr ≫ₕ »(e, chart_at H' x)).mdifferentiable I I'] [],
+  { have [ident A] [] [":=", expr mdifferentiable_of_mem_atlas I (chart_mem_atlas H z)],
+    have [ident B] [] [":=", expr mdifferentiable_of_mem_atlas I' (chart_mem_atlas H' x)],
+    exact [expr A.symm.trans (he.trans B)] },
+  have [ident Mmem] [":", expr «expr ∈ »((chart_at H z : M → H) z, «expr ≫ₕ »((chart_at H z).symm, «expr ≫ₕ »(e, chart_at H' x)).source)] [],
+  by simp [] [] ["only"] ["[", expr z_source, ",", expr zx, "]"] ["with", ident mfld_simps] [],
+  have [ident A] [":", expr differentiable_within_at 𝕜 G (range I) (F z)] [],
+  { refine [expr (Diff.mdifferentiable_at Mmem).2.congr (λ
+      p hp, _) _]; simp [] [] ["only"] ["[", expr G, ",", expr F, "]"] ["with", ident mfld_simps] [] },
+  let [ident G'] [] [":=", expr fderiv_within 𝕜 G (range I) (F z)],
+  have [ident D₁] [":", expr has_fderiv_within_at G G' (range I) (F z)] [":=", expr A.has_fderiv_within_at],
+  have [ident D₂] [":", expr has_fderiv_within_at G G' «expr ∩ »(«expr ⁻¹' »(F.symm, «expr ∩ »(s, «expr ∩ »(e.source, «expr ⁻¹' »(e, (ext_chart_at I' x).source)))), F.target) (F z)] [":=", expr D₁.mono (by mfld_set_tac)],
+  have [ident C] [":", expr dense_range (G' : E → E')] [],
+  { have [] [":", expr «expr = »(G', mfderiv I I' «expr ≫ₕ »((chart_at H z).symm, «expr ≫ₕ »(e, chart_at H' x)) ((chart_at H z : M → H) z))] [],
+    by { rw [expr (Diff.mdifferentiable_at Mmem).mfderiv] [],
+      refl },
+    rw [expr this] [],
+    exact [expr (Diff.mfderiv_surjective Mmem).dense_range] },
+  have [ident key] [":", expr unique_diff_within_at 𝕜 «expr '' »(G, «expr ∩ »(«expr ⁻¹' »(F.symm, «expr ∩ »(s, «expr ∩ »(e.source, «expr ⁻¹' »(e, (ext_chart_at I' x).source)))), F.target)) (G (F z))] [":=", expr D₂.unique_diff_within_at B C],
+  have [] [":", expr «expr = »(G (F z), ext_chart_at I' x x)] [],
+  by { dsimp [] ["[", expr G, ",", expr F, "]"] [] [],
+    simp [] [] ["only"] ["[", expr hx.1, "]"] ["with", ident mfld_simps] [] },
+  rw [expr this] ["at", ident key],
+  apply [expr key.mono],
+  show [expr «expr ⊆ »(«expr '' »(G, «expr ∩ »(«expr ⁻¹' »(F.symm, «expr ∩ »(s, «expr ∩ »(e.source, «expr ⁻¹' »(e, (ext_chart_at I' x).source)))), F.target)), «expr ∩ »(«expr ∩ »(«expr ⁻¹' »((ext_chart_at I' x).symm, e.target), «expr ⁻¹' »((ext_chart_at I' x).symm, «expr ⁻¹' »(e.symm, s))), range I'))],
+  rw [expr image_subset_iff] [],
+  mfld_set_tac
+end
 
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a set in a manifold has the unique derivative property, then its pullback by any extended
 chart, in the vector space, also has the unique derivative property. -/
-theorem UniqueMdiffOn.unique_diff_on_target_inter (hs : UniqueMdiffOn I s) (x : M) :
-  UniqueDiffOn 𝕜 ((extChartAt I x).Target ∩ (extChartAt I x).symm ⁻¹' s) :=
-  by 
-    intro z hz 
-    simp' only with mfld_simps  at hz 
-    have  : (chart_at H x).Mdifferentiable I I := mdifferentiable_chart _ _ 
-    have T := (hs.unique_mdiff_on_preimage this) (I.symm z)
-    simp' only [hz.left.left, hz.left.right, hz.right, UniqueMdiffWithinAt] with mfld_simps  at T⊢
-    convert T using 1
-    rw [@preimage_comp _ _ _ _ (chart_at H x).symm]
-    mfldSetTac
+theorem unique_mdiff_on.unique_diff_on_target_inter
+(hs : unique_mdiff_on I s)
+(x : M) : unique_diff_on 𝕜 «expr ∩ »((ext_chart_at I x).target, «expr ⁻¹' »((ext_chart_at I x).symm, s)) :=
+begin
+  assume [binders (z hz)],
+  simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident hz],
+  have [] [":", expr (chart_at H x).mdifferentiable I I] [":=", expr mdifferentiable_chart _ _],
+  have [ident T] [] [":=", expr hs.unique_mdiff_on_preimage this (I.symm z)],
+  simp [] [] ["only"] ["[", expr hz.left.left, ",", expr hz.left.right, ",", expr hz.right, ",", expr unique_mdiff_within_at, "]"] ["with", ident mfld_simps] ["at", "⊢", ident T],
+  convert [] [expr T] ["using", 1],
+  rw [expr @preimage_comp _ _ _ _ (chart_at H x).symm] [],
+  mfld_set_tac
+end
 
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- When considering functions between manifolds, this statement shows up often. It entails
 the unique differential of the pullback in extended charts of the set where the function can
 be read in the charts. -/
-theorem UniqueMdiffOn.unique_diff_on_inter_preimage (hs : UniqueMdiffOn I s) (x : M) (y : M') {f : M → M'}
-  (hf : ContinuousOn f s) :
-  UniqueDiffOn 𝕜 ((extChartAt I x).Target ∩ (extChartAt I x).symm ⁻¹' (s ∩ f ⁻¹' (extChartAt I' y).Source)) :=
-  by 
-    have  : UniqueMdiffOn I (s ∩ f ⁻¹' (extChartAt I' y).Source)
-    ·
-      intro z hz 
-      apply (hs z hz.1).inter' 
-      apply (hf z hz.1).preimage_mem_nhds_within 
-      exact IsOpen.mem_nhds (ext_chart_at_open_source I' y) hz.2 
-    exact this.unique_diff_on_target_inter _
+theorem unique_mdiff_on.unique_diff_on_inter_preimage
+(hs : unique_mdiff_on I s)
+(x : M)
+(y : M')
+{f : M → M'}
+(hf : continuous_on f s) : unique_diff_on 𝕜 «expr ∩ »((ext_chart_at I x).target, «expr ⁻¹' »((ext_chart_at I x).symm, «expr ∩ »(s, «expr ⁻¹' »(f, (ext_chart_at I' y).source)))) :=
+begin
+  have [] [":", expr unique_mdiff_on I «expr ∩ »(s, «expr ⁻¹' »(f, (ext_chart_at I' y).source))] [],
+  { assume [binders (z hz)],
+    apply [expr (hs z hz.1).inter'],
+    apply [expr (hf z hz.1).preimage_mem_nhds_within],
+    exact [expr is_open.mem_nhds (ext_chart_at_open_source I' y) hz.2] },
+  exact [expr this.unique_diff_on_target_inter _]
+end
 
 variable{F : Type _}[NormedGroup F][NormedSpace 𝕜 F](Z : BasicSmoothBundleCore I M F)
 
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a smooth fiber bundle constructed from core, the preimage under the projection of a set with
 unique differential in the basis also has unique differential. -/
-theorem UniqueMdiffOn.smooth_bundle_preimage (hs : UniqueMdiffOn I s) :
-  UniqueMdiffOn (I.prod 𝓘(𝕜, F)) (Z.to_topological_fiber_bundle_core.proj ⁻¹' s) :=
-  by 
-    intro p hp 
-    replace hp : p.fst ∈ s
-    ·
-      simpa only with mfld_simps using hp 
-    let e₀ := chart_at H p.1
-    let e := chart_at (ModelProd H F) p 
-    suffices h : UniqueMdiffOn (I.prod 𝓘(𝕜, F)) (e.target ∩ e.symm ⁻¹' (Z.to_topological_fiber_bundle_core.proj ⁻¹' s))
-    ·
-      have A :
-        UniqueMdiffOn (I.prod 𝓘(𝕜, F))
-          (e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (Z.to_topological_fiber_bundle_core.proj ⁻¹' s)))
-      ·
-        apply h.unique_mdiff_on_preimage 
-        exact (mdifferentiable_of_mem_atlas _ (chart_mem_atlas _ _)).symm 
-        infer_instance 
-      have  :
-        p ∈ e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (Z.to_topological_fiber_bundle_core.proj ⁻¹' s))
-      ·
-        simp' only [e, hp] with mfld_simps 
-      apply (A _ this).mono 
-      intro q hq 
-      simp' only [e, LocalHomeomorph.left_inv _ hq.1] with mfld_simps  at hq 
-      simp' only [hq] with mfld_simps 
-    have  :
-      (fun p : E × F => (I.symm p.1, p.snd)) ⁻¹' e.target ∩
-            (fun p : E × F => (I.symm p.1, p.snd)) ⁻¹' (e.symm ⁻¹' (Sigma.fst ⁻¹' s)) ∩
-          (range I).Prod univ =
-        Set.Prod (I.symm ⁻¹' (e₀.target ∩ e₀.symm ⁻¹' s) ∩ range I) univ
-    ·
-      mfldSetTac 
-    intro q hq 
-    replace hq : q.1 ∈ (chart_at H p.1).Target ∧ ((chart_at H p.1).symm : H → M) q.1 ∈ s
-    ·
-      simpa only with mfld_simps using hq 
-    simp' only [UniqueMdiffWithinAt, ModelWithCorners.prod, preimage_inter, this] with mfld_simps 
-    apply UniqueDiffOn.prod _ unique_diff_on_univ
-    ·
-      simp' only [hq] with mfld_simps
-    ·
-      intro x hx 
-      have A : UniqueMdiffOn I (e₀.target ∩ e₀.symm ⁻¹' s)
-      ·
-        apply hs.unique_mdiff_on_preimage 
-        exact mdifferentiable_of_mem_atlas _ (chart_mem_atlas _ _)
-        infer_instance 
-      simp' only [UniqueMdiffOn, UniqueMdiffWithinAt, preimage_inter] with mfld_simps  at A 
-      have B := A (I.symm x) hx.1.1 hx.1.2
-      rwa [←preimage_inter, ModelWithCorners.right_inv _ hx.2] at B
+theorem unique_mdiff_on.smooth_bundle_preimage
+(hs : unique_mdiff_on I s) : unique_mdiff_on (I.prod «expr𝓘( , )»(𝕜, F)) «expr ⁻¹' »(Z.to_topological_fiber_bundle_core.proj, s) :=
+begin
+  assume [binders (p hp)],
+  replace [ident hp] [":", expr «expr ∈ »(p.fst, s)] [],
+  by simpa [] [] ["only"] [] ["with", ident mfld_simps] ["using", expr hp],
+  let [ident e₀] [] [":=", expr chart_at H p.1],
+  let [ident e] [] [":=", expr chart_at (model_prod H F) p],
+  suffices [ident h] [":", expr unique_mdiff_on (I.prod «expr𝓘( , )»(𝕜, F)) «expr ∩ »(e.target, «expr ⁻¹' »(e.symm, «expr ⁻¹' »(Z.to_topological_fiber_bundle_core.proj, s)))],
+  { have [ident A] [":", expr unique_mdiff_on (I.prod «expr𝓘( , )»(𝕜, F)) «expr ∩ »(e.symm.target, «expr ⁻¹' »(e.symm.symm, «expr ∩ »(e.target, «expr ⁻¹' »(e.symm, «expr ⁻¹' »(Z.to_topological_fiber_bundle_core.proj, s)))))] [],
+    { apply [expr h.unique_mdiff_on_preimage],
+      exact [expr (mdifferentiable_of_mem_atlas _ (chart_mem_atlas _ _)).symm],
+      apply_instance },
+    have [] [":", expr «expr ∈ »(p, «expr ∩ »(e.symm.target, «expr ⁻¹' »(e.symm.symm, «expr ∩ »(e.target, «expr ⁻¹' »(e.symm, «expr ⁻¹' »(Z.to_topological_fiber_bundle_core.proj, s))))))] [],
+    by simp [] [] ["only"] ["[", expr e, ",", expr hp, "]"] ["with", ident mfld_simps] [],
+    apply [expr (A _ this).mono],
+    assume [binders (q hq)],
+    simp [] [] ["only"] ["[", expr e, ",", expr local_homeomorph.left_inv _ hq.1, "]"] ["with", ident mfld_simps] ["at", ident hq],
+    simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [] },
+  have [] [":", expr «expr = »(«expr ∩ »(«expr ∩ »(«expr ⁻¹' »(λ
+       p : «expr × »(E, F), (I.symm p.1, p.snd), e.target), «expr ⁻¹' »(λ
+       p : «expr × »(E, F), (I.symm p.1, p.snd), «expr ⁻¹' »(e.symm, «expr ⁻¹' »(sigma.fst, s)))), (range I).prod univ), set.prod «expr ∩ »(«expr ⁻¹' »(I.symm, «expr ∩ »(e₀.target, «expr ⁻¹' »(e₀.symm, s))), range I) univ)] [],
+  by mfld_set_tac,
+  assume [binders (q hq)],
+  replace [ident hq] [":", expr «expr ∧ »(«expr ∈ »(q.1, (chart_at H p.1).target), «expr ∈ »(((chart_at H p.1).symm : H → M) q.1, s))] [],
+  by simpa [] [] ["only"] [] ["with", ident mfld_simps] ["using", expr hq],
+  simp [] [] ["only"] ["[", expr unique_mdiff_within_at, ",", expr model_with_corners.prod, ",", expr preimage_inter, ",", expr this, "]"] ["with", ident mfld_simps] [],
+  apply [expr unique_diff_on.prod _ unique_diff_on_univ],
+  { simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [] },
+  { assume [binders (x hx)],
+    have [ident A] [":", expr unique_mdiff_on I «expr ∩ »(e₀.target, «expr ⁻¹' »(e₀.symm, s))] [],
+    { apply [expr hs.unique_mdiff_on_preimage],
+      exact [expr mdifferentiable_of_mem_atlas _ (chart_mem_atlas _ _)],
+      apply_instance },
+    simp [] [] ["only"] ["[", expr unique_mdiff_on, ",", expr unique_mdiff_within_at, ",", expr preimage_inter, "]"] ["with", ident mfld_simps] ["at", ident A],
+    have [ident B] [] [":=", expr A (I.symm x) hx.1.1 hx.1.2],
+    rwa ["[", "<-", expr preimage_inter, ",", expr model_with_corners.right_inv _ hx.2, "]"] ["at", ident B] }
+end
 
 theorem UniqueMdiffOn.tangent_bundle_proj_preimage (hs : UniqueMdiffOn I s) :
   UniqueMdiffOn I.tangent (TangentBundle.proj I M ⁻¹' s) :=

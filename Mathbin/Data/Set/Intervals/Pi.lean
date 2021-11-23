@@ -75,25 +75,37 @@ variable[DecidableEq ι]
 
 open function(update)
 
-theorem pi_univ_Ioc_update_left {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} (hm : x i₀ ≤ m) :
-  (pi univ fun i => Ioc (update x i₀ m i) (y i)) = { z | m < z i₀ } ∩ pi univ fun i => Ioc (x i) (y i) :=
-  by 
-    have  : Ioc m (y i₀) = Ioi m ∩ Ioc (x i₀) (y i₀)
-    ·
-      rw [←Ioi_inter_Iic, ←Ioi_inter_Iic, ←inter_assoc, inter_eq_self_of_subset_left (Ioi_subset_Ioi hm)]
-    simpRw [univ_pi_update i₀ _ _ fun i z => Ioc z (y i), ←pi_inter_compl ({i₀} : Set ι), singleton_pi', ←inter_assoc,
-      this]
-    rfl
+-- error in Data.Set.Intervals.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pi_univ_Ioc_update_left
+{x y : ∀ i, α i}
+{i₀ : ι}
+{m : α i₀}
+(hm : «expr ≤ »(x i₀, m)) : «expr = »(pi univ (λ
+  i, Ioc (update x i₀ m i) (y i)), «expr ∩ »({z | «expr < »(m, z i₀)}, pi univ (λ i, Ioc (x i) (y i)))) :=
+begin
+  have [] [":", expr «expr = »(Ioc m (y i₀), «expr ∩ »(Ioi m, Ioc (x i₀) (y i₀)))] [],
+  by rw ["[", "<-", expr Ioi_inter_Iic, ",", "<-", expr Ioi_inter_Iic, ",", "<-", expr inter_assoc, ",", expr inter_eq_self_of_subset_left (Ioi_subset_Ioi hm), "]"] [],
+  simp_rw ["[", expr univ_pi_update i₀ _ _ (λ
+    i
+    z, Ioc z (y i)), ",", "<-", expr pi_inter_compl ({i₀} : set ι), ",", expr singleton_pi', ",", "<-", expr inter_assoc, ",", expr this, "]"] [],
+  refl
+end
 
-theorem pi_univ_Ioc_update_right {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} (hm : m ≤ y i₀) :
-  (pi univ fun i => Ioc (x i) (update y i₀ m i)) = { z | z i₀ ≤ m } ∩ pi univ fun i => Ioc (x i) (y i) :=
-  by 
-    have  : Ioc (x i₀) m = Iic m ∩ Ioc (x i₀) (y i₀)
-    ·
-      rw [←Ioi_inter_Iic, ←Ioi_inter_Iic, inter_left_comm, inter_eq_self_of_subset_left (Iic_subset_Iic.2 hm)]
-    simpRw [univ_pi_update i₀ y m fun i z => Ioc (x i) z, ←pi_inter_compl ({i₀} : Set ι), singleton_pi', ←inter_assoc,
-      this]
-    rfl
+-- error in Data.Set.Intervals.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pi_univ_Ioc_update_right
+{x y : ∀ i, α i}
+{i₀ : ι}
+{m : α i₀}
+(hm : «expr ≤ »(m, y i₀)) : «expr = »(pi univ (λ
+  i, Ioc (x i) (update y i₀ m i)), «expr ∩ »({z | «expr ≤ »(z i₀, m)}, pi univ (λ i, Ioc (x i) (y i)))) :=
+begin
+  have [] [":", expr «expr = »(Ioc (x i₀) m, «expr ∩ »(Iic m, Ioc (x i₀) (y i₀)))] [],
+  by rw ["[", "<-", expr Ioi_inter_Iic, ",", "<-", expr Ioi_inter_Iic, ",", expr inter_left_comm, ",", expr inter_eq_self_of_subset_left (Iic_subset_Iic.2 hm), "]"] [],
+  simp_rw ["[", expr univ_pi_update i₀ y m (λ
+    i
+    z, Ioc (x i) z), ",", "<-", expr pi_inter_compl ({i₀} : set ι), ",", expr singleton_pi', ",", "<-", expr inter_assoc, ",", expr this, "]"] [],
+  refl
+end
 
 theorem disjoint_pi_univ_Ioc_update_left_right {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} :
   Disjoint (pi univ fun i => Ioc (x i) (update y i₀ m i)) (pi univ fun i => Ioc (update x i₀ m i) (y i)) :=

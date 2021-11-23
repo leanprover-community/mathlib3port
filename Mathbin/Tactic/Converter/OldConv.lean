@@ -19,7 +19,7 @@ unsafe def change (new_p : pexpr) : old_conv Unit :=
   fun r e =>
     do 
       let e_type ← infer_type e 
-      let new_e ← to_expr (pquote (%%new_p : %%e_type))
+      let new_e ← to_expr (pquote.1 (%%ₓnew_p : %%ₓe_type))
       unify e new_e 
       return ⟨(), new_e, none⟩
 

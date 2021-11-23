@@ -62,7 +62,7 @@ unsafe def trace_norm_cast {α} [has_to_tactic_format α] (msg : Stringₓ) (a :
 mk_simp_attribute push_cast :=
   "The `push_cast` simp attribute uses `norm_cast` lemmas\nto move casts toward the leaf nodes of the expression."
 
--- error in Tactic.NormCast: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.NormCast: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /--
 `label` is a type used to classify `norm_cast` lemmas.
 * elim lemma:   LHS has 0 head coes and ≥ 1 internal coe
@@ -103,17 +103,17 @@ open Label
 
 /-- Count how many coercions are at the top of the expression. -/
 unsafe def count_head_coes : expr → ℕ
-| quote coeₓ (%%e) => count_head_coes e+1
-| quote coeSortₓ (%%e) => count_head_coes e+1
-| quote coeFn (%%e) => count_head_coes e+1
+| quote.1 (coeₓ (%%ₓe)) => count_head_coes e+1
+| quote.1 (coeSortₓ (%%ₓe)) => count_head_coes e+1
+| quote.1 (coeFn (%%ₓe)) => count_head_coes e+1
 | _ => 0
 
 /-- Count how many coercions are inside the expression, including the top ones. -/
 unsafe def count_coes : expr → tactic ℕ
-| quote coeₓ (%%e) => (·+1) <$> count_coes e
-| quote coeSortₓ (%%e) => (·+1) <$> count_coes e
-| quote coeFn (%%e) => (·+1) <$> count_coes e
-| app (quote coeFn (%%e)) x => (·+·) <$> count_coes x <*> (·+1) <$> count_coes e
+| quote.1 (coeₓ (%%ₓe)) => (·+1) <$> count_coes e
+| quote.1 (coeSortₓ (%%ₓe)) => (·+1) <$> count_coes e
+| quote.1 (coeFn (%%ₓe)) => (·+1) <$> count_coes e
+| app (quote.1 (coeFn (%%ₓe))) x => (·+·) <$> count_coes x <*> (·+1) <$> count_coes e
 | expr.lam n bi t e =>
   do 
     let l ← mk_local' n bi t 
@@ -137,8 +137,8 @@ unsafe def classify_type (ty : expr) : tactic label :=
     let (_, ty) ← open_pis ty 
     let (lhs, rhs) ←
       match ty with 
-        | quote (%%lhs) = %%rhs => pure (lhs, rhs)
-        | quote (%%lhs) ↔ %%rhs => pure (lhs, rhs)
+        | quote.1 ((%%ₓlhs) = %%ₓrhs) => pure (lhs, rhs)
+        | quote.1 ((%%ₓlhs) ↔ %%ₓrhs) => pure (lhs, rhs)
         | _ => fail "norm_cast: lemma must be = or ↔"
     let lhs_coes ← count_coes lhs 
     when (lhs_coes = 0)$ fail "norm_cast: badly shaped lemma, lhs must contain at least one coe"
@@ -209,10 +209,10 @@ unsafe def get_label_param (attr : norm_cast_attr_ty) (decl : Name) : tactic (Op
   do 
     let p ← attr.get_param_untyped decl 
     match p with 
-      | quote none => pure none
-      | quote some label.elim => pure label.elim
-      | quote some label.move => pure label.move
-      | quote some label.squash => pure label.squash
+      | quote.1 none => pure none
+      | quote.1 (some label.elim) => pure label.elim
+      | quote.1 (some label.move) => pure label.move
+      | quote.1 (some label.squash) => pure label.squash
       | _ => fail p
 
 /--
@@ -333,7 +333,7 @@ unsafe def prove_eq_using (s : simp_lemmas) (a b : expr) : tactic expr :=
   do 
     let (a', a_a', _) ← simplify s [] a { failIfUnchanged := ff }
     let (b', b_b', _) ← simplify s [] b { failIfUnchanged := ff }
-    on_exception (trace_norm_cast "failed: " (to_expr (pquote (%%a') = %%b') >>= pp))$ is_def_eq a' b' reducible 
+    on_exception (trace_norm_cast "failed: " (to_expr (pquote.1 ((%%ₓa') = %%ₓb')) >>= pp))$ is_def_eq a' b' reducible 
     let b'_b ← mk_eq_symm b_b' 
     mk_eq_trans a_a' b'_b
 
@@ -341,7 +341,7 @@ unsafe def prove_eq_using (s : simp_lemmas) (a b : expr) : tactic expr :=
 unsafe def prove_eq_using_down (a b : expr) : tactic expr :=
   do 
     let cache ← norm_cast_attr.get_cache 
-    trace_norm_cast "proving: " (to_expr (pquote (%%a) = %%b) >>= pp)
+    trace_norm_cast "proving: " (to_expr (pquote.1 ((%%ₓa) = %%ₓb)) >>= pp)
     prove_eq_using cache.down a b
 
 /--
@@ -354,13 +354,13 @@ when (↑(↑(x : α) : β) : γ) = (↑(x : α) : γ) can be proven with a squa
 unsafe def splitting_procedure : expr → tactic (expr × expr)
 | app (app op x) y =>
   (do 
-      let quote @coeₓ (%%α) (%%δ) (%%coe1) (%%xx) ← return x 
-      let quote @coeₓ (%%β) (%%γ) (%%coe2) (%%yy) ← return y 
+      let quote.1 (@coeₓ (%%ₓα) (%%ₓδ) (%%ₓcoe1) (%%ₓxx)) ← return x 
+      let quote.1 (@coeₓ (%%ₓβ) (%%ₓγ) (%%ₓcoe2) (%%ₓyy)) ← return y 
       success_if_fail$ is_def_eq α β 
       is_def_eq δ γ
       (do 
             let coe3 ← mk_app `has_lift_t [α, β] >>= mk_instance_fast 
-            let new_x ← to_expr (pquote @coeₓ (%%β) (%%δ) (%%coe2) (@coeₓ (%%α) (%%β) (%%coe3) (%%xx)))
+            let new_x ← to_expr (pquote.1 (@coeₓ (%%ₓβ) (%%ₓδ) (%%ₓcoe2) (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe3) (%%ₓxx))))
             let new_e := app (app op new_x) y 
             let eq_x ← prove_eq_using_down x new_x 
             let pr ← mk_congr_arg op eq_x 
@@ -368,43 +368,43 @@ unsafe def splitting_procedure : expr → tactic (expr × expr)
             return (new_e, pr)) <|>
           do 
             let coe3 ← mk_app `has_lift_t [β, α] >>= mk_instance_fast 
-            let new_y ← to_expr (pquote @coeₓ (%%α) (%%δ) (%%coe1) (@coeₓ (%%β) (%%α) (%%coe3) (%%yy)))
+            let new_y ← to_expr (pquote.1 (@coeₓ (%%ₓα) (%%ₓδ) (%%ₓcoe1) (@coeₓ (%%ₓβ) (%%ₓα) (%%ₓcoe3) (%%ₓyy))))
             let new_e := app (app op x) new_y 
             let eq_y ← prove_eq_using_down y new_y 
             let pr ← mk_congr_arg (app op x) eq_y 
             return (new_e, pr)) <|>
     (do 
-        let quote @coeₓ (%%α) (%%β) (%%coe1) (%%xx) ← return x 
-        let quote @HasOne.one (%%β) (%%h1) ← return y 
-        let h2 ← to_expr (pquote HasOne (%%α)) >>= mk_instance_fast 
-        let new_y ← to_expr (pquote @coeₓ (%%α) (%%β) (%%coe1) (@HasOne.one (%%α) (%%h2)))
+        let quote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (%%ₓxx)) ← return x 
+        let quote.1 (@HasOne.one (%%ₓβ) (%%ₓh1)) ← return y 
+        let h2 ← to_expr (pquote.1 (HasOne (%%ₓα))) >>= mk_instance_fast 
+        let new_y ← to_expr (pquote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (@HasOne.one (%%ₓα) (%%ₓh2))))
         let eq_y ← prove_eq_using_down y new_y 
         let new_e := app (app op x) new_y 
         let pr ← mk_congr_arg (app op x) eq_y 
         return (new_e, pr)) <|>
       (do 
-          let quote @coeₓ (%%α) (%%β) (%%coe1) (%%xx) ← return x 
-          let quote @HasZero.zero (%%β) (%%h1) ← return y 
-          let h2 ← to_expr (pquote HasZero (%%α)) >>= mk_instance_fast 
-          let new_y ← to_expr (pquote @coeₓ (%%α) (%%β) (%%coe1) (@HasZero.zero (%%α) (%%h2)))
+          let quote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (%%ₓxx)) ← return x 
+          let quote.1 (@HasZero.zero (%%ₓβ) (%%ₓh1)) ← return y 
+          let h2 ← to_expr (pquote.1 (HasZero (%%ₓα))) >>= mk_instance_fast 
+          let new_y ← to_expr (pquote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (@HasZero.zero (%%ₓα) (%%ₓh2))))
           let eq_y ← prove_eq_using_down y new_y 
           let new_e := app (app op x) new_y 
           let pr ← mk_congr_arg (app op x) eq_y 
           return (new_e, pr)) <|>
         (do 
-            let quote @HasOne.one (%%β) (%%h1) ← return x 
-            let quote @coeₓ (%%α) (%%β) (%%coe1) (%%xx) ← return y 
-            let h1 ← to_expr (pquote HasOne (%%α)) >>= mk_instance_fast 
-            let new_x ← to_expr (pquote @coeₓ (%%α) (%%β) (%%coe1) (@HasOne.one (%%α) (%%h1)))
+            let quote.1 (@HasOne.one (%%ₓβ) (%%ₓh1)) ← return x 
+            let quote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (%%ₓxx)) ← return y 
+            let h1 ← to_expr (pquote.1 (HasOne (%%ₓα))) >>= mk_instance_fast 
+            let new_x ← to_expr (pquote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (@HasOne.one (%%ₓα) (%%ₓh1))))
             let eq_x ← prove_eq_using_down x new_x 
             let new_e := app (app op new_x) y 
             let pr ← mk_congr_arg (lam `x BinderInfo.default β (app (app op (var 0)) y)) eq_x 
             return (new_e, pr)) <|>
           do 
-            let quote @HasZero.zero (%%β) (%%h1) ← return x 
-            let quote @coeₓ (%%α) (%%β) (%%coe1) (%%xx) ← return y 
-            let h1 ← to_expr (pquote HasZero (%%α)) >>= mk_instance_fast 
-            let new_x ← to_expr (pquote @coeₓ (%%α) (%%β) (%%coe1) (@HasZero.zero (%%α) (%%h1)))
+            let quote.1 (@HasZero.zero (%%ₓβ) (%%ₓh1)) ← return x 
+            let quote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (%%ₓxx)) ← return y 
+            let h1 ← to_expr (pquote.1 (HasZero (%%ₓα))) >>= mk_instance_fast 
+            let new_x ← to_expr (pquote.1 (@coeₓ (%%ₓα) (%%ₓβ) (%%ₓcoe1) (@HasZero.zero (%%ₓα) (%%ₓh1))))
             let eq_x ← prove_eq_using_down x new_x 
             let new_e := app (app op new_x) y 
             let pr ← mk_congr_arg (lam `x BinderInfo.default β (app (app op (var 0)) y)) eq_x 
@@ -450,11 +450,11 @@ Returns a pair of the new expression and proof that they are equal.
 unsafe def numeral_to_coe (e : expr) : tactic (expr × expr) :=
   do 
     let α ← infer_type e 
-    success_if_fail$ is_def_eq α (quote ℕ)
+    success_if_fail$ is_def_eq α (quote.1 ℕ)
     let n ← e.to_nat 
-    let h1 ← mk_app `has_lift_t [quote ℕ, α] >>= mk_instance_fast 
+    let h1 ← mk_app `has_lift_t [quote.1 ℕ, α] >>= mk_instance_fast 
     let new_e : expr := reflect n 
-    let new_e ← to_expr (pquote @coeₓ ℕ (%%α) (%%h1) (%%new_e))
+    let new_e ← to_expr (pquote.1 (@coeₓ ℕ (%%ₓα) (%%ₓh1) (%%ₓnew_e)))
     let pr ← prove_eq_using_down e new_e 
     return (new_e, pr)
 
@@ -464,7 +464,7 @@ Returns a pair of the new expression and proof that they are equal.
 -/
 unsafe def coe_to_numeral (e : expr) : tactic (expr × expr) :=
   do 
-    let quote @coeₓ ℕ (%%α) (%%h1) (%%e') ← return e 
+    let quote.1 (@coeₓ ℕ (%%ₓα) (%%ₓh1) (%%ₓe')) ← return e 
     let n ← e'.to_nat 
     is_def_eq (reflect n) e' reducible 
     let e := e.app_fn (reflect n)
@@ -612,7 +612,7 @@ unsafe def exact_mod_cast (e : parse texpr) : tactic Unit :=
       i_to_expr e <|>
           do 
             let ty ← target 
-            let e ← i_to_expr_strict (pquote (%%e : %%ty))
+            let e ← i_to_expr_strict (pquote.1 (%%ₓe : %%ₓty))
             let pty ← pp ty 
             let ptgt ← pp e 
             fail

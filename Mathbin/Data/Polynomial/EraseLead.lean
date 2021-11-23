@@ -1,5 +1,4 @@
-import Mathbin.Data.Polynomial.Degree.TrailingDegree 
-import Mathbin.Data.Polynomial.Inductions
+import Mathbin.Data.Polynomial.Degree.Definitions
 
 /-!
 # Erase the leading term of a univariate polynomial

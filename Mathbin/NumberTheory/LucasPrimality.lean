@@ -1,8 +1,8 @@
-import Mathbin.Data.Zmod.Basic 
 import Mathbin.Data.Fintype.Basic 
-import Mathbin.FieldTheory.Finite.Basic 
 import Mathbin.GroupTheory.OrderOfElement 
-import Mathbin.Tactic.Zify
+import Mathbin.Tactic.Zify 
+import Mathbin.Data.Nat.Totient 
+import Mathbin.Data.Zmod.Basic
 
 /-!
 # The Lucas test for primes.
@@ -29,35 +29,37 @@ to `1`.
 -/
 
 
+-- error in NumberTheory.LucasPrimality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `a^(p-1) = 1 mod p`, but `a^((p-1)/q) ≠ 1 mod p` for all prime factors `q` of `p-1`, then `p`
 is prime. This is true because `a` has order `p-1` in the multiplicative group mod `p`, so this
 group must itself have order `p-1`, which only happens when `p` is prime.
 -/
-theorem lucas_primality (p : ℕ) (a : Zmod p) (ha : (a^p - 1) = 1)
-  (hd : ∀ q : ℕ, q.prime → q ∣ p - 1 → (a^(p - 1) / q) ≠ 1) : p.prime :=
-  by 
-    have h0 : p ≠ 0
-    ·
-      rintro ⟨⟩
-      exact hd 2 Nat.prime_two (dvd_zero _) (pow_zeroₓ _)
-    have h1 : p ≠ 1
-    ·
-      rintro ⟨⟩
-      exact hd 2 Nat.prime_two (dvd_zero _) (pow_zeroₓ _)
-    have hp1 : 1 < p := lt_of_le_of_neₓ h0.bot_lt h1.symm 
-    have order_of_a : orderOf a = p - 1
-    ·
-      apply order_of_eq_of_pow_and_pow_div_prime _ ha hd 
-      exact tsub_pos_of_lt hp1 
-    haveI fhp0 : Fact (0 < p) := ⟨h0.bot_lt⟩
-    rw [Nat.prime_iff_card_units]
-    refine' le_antisymmₓ (Nat.card_units_zmod_lt_sub_one hp1) _ 
-    have hp' : ((p - 2)+1) = p - 1 := tsub_add_eq_add_tsub hp1 
-    let a' : Units (Zmod p) :=
-      Units.mkOfMulEqOne a (a^p - 2)
-        (by 
-          rw [←pow_succₓ, hp', ha])
-    calc p - 1 = orderOf a := order_of_a.symm _ = orderOf a' :=
-      order_of_injective (Units.coeHom (Zmod p)) Units.ext a' _ ≤ Fintype.card (Units (Zmod p)) := order_of_le_card_univ
+theorem lucas_primality
+(p : exprℕ())
+(a : zmod p)
+(ha : «expr = »(«expr ^ »(a, «expr - »(p, 1)), 1))
+(hd : ∀
+ q : exprℕ(), q.prime → «expr ∣ »(q, «expr - »(p, 1)) → «expr ≠ »(«expr ^ »(a, «expr / »(«expr - »(p, 1), q)), 1)) : p.prime :=
+begin
+  have [ident h0] [":", expr «expr ≠ »(p, 0)] [],
+  { rintro ["⟨", "⟩"],
+    exact [expr hd 2 nat.prime_two (dvd_zero _) (pow_zero _)] },
+  have [ident h1] [":", expr «expr ≠ »(p, 1)] [],
+  { rintro ["⟨", "⟩"],
+    exact [expr hd 2 nat.prime_two (dvd_zero _) (pow_zero _)] },
+  have [ident hp1] [":", expr «expr < »(1, p)] [":=", expr lt_of_le_of_ne h0.bot_lt h1.symm],
+  have [ident order_of_a] [":", expr «expr = »(order_of a, «expr - »(p, 1))] [],
+  { apply [expr order_of_eq_of_pow_and_pow_div_prime _ ha hd],
+    exact [expr tsub_pos_of_lt hp1] },
+  haveI [ident fhp0] [":", expr fact «expr < »(0, p)] [":=", expr ⟨h0.bot_lt⟩],
+  rw [expr nat.prime_iff_card_units] [],
+  refine [expr le_antisymm (nat.card_units_zmod_lt_sub_one hp1) _],
+  have [ident hp'] [":", expr «expr = »(«expr + »(«expr - »(p, 2), 1), «expr - »(p, 1))] [":=", expr tsub_add_eq_add_tsub hp1],
+  let [ident a'] [":", expr units (zmod p)] [":=", expr units.mk_of_mul_eq_one a «expr ^ »(a, «expr - »(p, 2)) (by rw ["[", "<-", expr pow_succ, ",", expr hp', ",", expr ha, "]"] [])],
+  calc
+    «expr = »(«expr - »(p, 1), order_of a) : order_of_a.symm
+    «expr = »(..., order_of a') : order_of_injective (units.coe_hom (zmod p)) units.ext a'
+    «expr ≤ »(..., fintype.card (units (zmod p))) : order_of_le_card_univ
+end
 

@@ -39,11 +39,11 @@ theorem Nat.prime_iff {p : ℕ} : p.prime ↔ Prime p :=
       ·
         cases p
         ·
-          exFalso 
+          exfalso 
           apply h.ne_zero rfl 
         cases p
         ·
-          exFalso 
+          exfalso 
           apply h.ne_one rfl 
         exact (add_le_add_right (zero_le p) 2 : _)
       ·
@@ -56,7 +56,7 @@ theorem Nat.prime_iff {p : ℕ} : p.prime ↔ Prime p :=
           left 
           cases n
           ·
-            exFalso 
+            exfalso 
             rw [hn, mul_zero] at h 
             apply h.ne_zero rfl 
           apply Nat.eq_of_mul_eq_mul_rightₓ (Nat.succ_posₓ _)
@@ -72,11 +72,11 @@ theorem Nat.irreducible_iff_prime {p : ℕ} : Irreducible p ↔ Prime p :=
     ·
       cases p
       ·
-        exFalso 
+        exfalso 
         apply h.ne_zero rfl 
       cases p
       ·
-        exFalso 
+        exfalso 
         apply h.not_unit is_unit_one 
       exact (add_le_add_right (zero_le p) 2 : _)
     ·
@@ -98,7 +98,7 @@ instance  : WfDvdMonoid ℕ :=
       intro a b h 
       cases a
       ·
-        exFalso 
+        exfalso 
         revert h 
         simp [DvdNotUnit]
       cases b
@@ -233,41 +233,43 @@ theorem exists_unit_of_abs (a : ℤ) : ∃ (u : ℤ)(h : IsUnit u), (Int.natAbs 
 theorem gcd_eq_nat_abs {a b : ℤ} : Int.gcdₓ a b = Nat.gcdₓ a.nat_abs b.nat_abs :=
   rfl
 
--- error in RingTheory.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem gcd_eq_one_iff_coprime {a b : exprℤ()} : «expr ↔ »(«expr = »(int.gcd a b, 1), is_coprime a b) :=
-begin
-  split,
-  { intro [ident hg],
-    obtain ["⟨", ident ua, ",", ident hua, ",", ident ha, "⟩", ":=", expr exists_unit_of_abs a],
-    obtain ["⟨", ident ub, ",", ident hub, ",", ident hb, "⟩", ":=", expr exists_unit_of_abs b],
-    use ["[", expr «expr * »(nat.gcd_a (int.nat_abs a) (int.nat_abs b), ua), ",", expr «expr * »(nat.gcd_b (int.nat_abs a) (int.nat_abs b), ub), "]"],
-    rw ["[", expr mul_assoc, ",", "<-", expr ha, ",", expr mul_assoc, ",", "<-", expr hb, ",", expr mul_comm, ",", expr mul_comm _ (int.nat_abs b : exprℤ()), ",", "<-", expr nat.gcd_eq_gcd_ab, ",", "<-", expr gcd_eq_nat_abs, ",", expr hg, ",", expr int.coe_nat_one, "]"] [] },
-  { rintro ["⟨", ident r, ",", ident s, ",", ident h, "⟩"],
-    by_contradiction [ident hg],
-    obtain ["⟨", ident p, ",", "⟨", ident hp, ",", ident ha, ",", ident hb, "⟩", "⟩", ":=", expr nat.prime.not_coprime_iff_dvd.mp hg],
-    apply [expr nat.prime.not_dvd_one hp],
-    rw ["[", "<-", expr coe_nat_dvd, ",", expr int.coe_nat_one, ",", "<-", expr h, "]"] [],
-    exact [expr dvd_add ((coe_nat_dvd_left.mpr ha).mul_left _) ((coe_nat_dvd_left.mpr hb).mul_left _)] }
-end
+theorem gcd_eq_one_iff_coprime {a b : ℤ} : Int.gcdₓ a b = 1 ↔ IsCoprime a b :=
+  by 
+    split 
+    ·
+      intro hg 
+      obtain ⟨ua, hua, ha⟩ := exists_unit_of_abs a 
+      obtain ⟨ub, hub, hb⟩ := exists_unit_of_abs b 
+      use Nat.gcdA (Int.natAbs a) (Int.natAbs b)*ua, Nat.gcdB (Int.natAbs a) (Int.natAbs b)*ub 
+      rw [mul_assocₓ, ←ha, mul_assocₓ, ←hb, mul_commₓ, mul_commₓ _ (Int.natAbs b : ℤ), ←Nat.gcd_eq_gcd_ab,
+        ←gcd_eq_nat_abs, hg, Int.coe_nat_one]
+    ·
+      rintro ⟨r, s, h⟩
+      byContra hg 
+      obtain ⟨p, ⟨hp, ha, hb⟩⟩ := nat.prime.not_coprime_iff_dvd.mp hg 
+      apply Nat.Prime.not_dvd_one hp 
+      rw [←coe_nat_dvd, Int.coe_nat_one, ←h]
+      exact dvd_add ((coe_nat_dvd_left.mpr ha).mul_left _) ((coe_nat_dvd_left.mpr hb).mul_left _)
 
 theorem coprime_iff_nat_coprime {a b : ℤ} : IsCoprime a b ↔ Nat.Coprime a.nat_abs b.nat_abs :=
   by 
     rw [←gcd_eq_one_iff_coprime, Nat.coprime_iff_gcd_eq_oneₓ, gcd_eq_nat_abs]
 
-theorem sq_of_gcd_eq_one {a b c : ℤ} (h : Int.gcdₓ a b = 1) (heq : (a*b) = (c^2)) :
-  ∃ a0 : ℤ, a = (a0^2) ∨ a = -(a0^2) :=
-  by 
-    have h' : IsUnit (GcdMonoid.gcd a b)
-    ·
-      rw [←coe_gcd, h, Int.coe_nat_one]
-      exact is_unit_one 
-    obtain ⟨d, ⟨u, hu⟩⟩ := exists_associated_pow_of_mul_eq_pow h' HEq 
-    use d 
-    rw [←hu]
-    cases' Int.units_eq_one_or u with hu' hu' <;>
-      ·
-        rw [hu']
-        simp 
+-- error in RingTheory.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sq_of_gcd_eq_one
+{a b c : exprℤ()}
+(h : «expr = »(int.gcd a b, 1))
+(heq : «expr = »(«expr * »(a, b), «expr ^ »(c, 2))) : «expr∃ , »((a0 : exprℤ()), «expr ∨ »(«expr = »(a, «expr ^ »(a0, 2)), «expr = »(a, «expr- »(«expr ^ »(a0, 2))))) :=
+begin
+  have [ident h'] [":", expr is_unit (gcd_monoid.gcd a b)] [],
+  { rw ["[", "<-", expr coe_gcd, ",", expr h, ",", expr int.coe_nat_one, "]"] [],
+    exact [expr is_unit_one] },
+  obtain ["⟨", ident d, ",", "⟨", ident u, ",", ident hu, "⟩", "⟩", ":=", expr exists_associated_pow_of_mul_eq_pow h' heq],
+  use [expr d],
+  rw ["<-", expr hu] [],
+  cases [expr int.units_eq_one_or u] ["with", ident hu', ident hu']; { rw [expr hu'] [],
+    simp [] [] [] [] [] [] }
+end
 
 theorem sq_of_coprime {a b c : ℤ} (h : IsCoprime a b) (heq : (a*b) = (c^2)) : ∃ a0 : ℤ, a = (a0^2) ∨ a = -(a0^2) :=
   sq_of_gcd_eq_one (gcd_eq_one_iff_coprime.mpr h) HEq
@@ -284,34 +286,25 @@ theorem nat_abs_euclidean_domain_gcd (a b : ℤ) : Int.natAbs (EuclideanDomain.g
 
 end Int
 
-theorem irreducible_iff_nat_prime : ∀ a : ℕ, Irreducible a ↔ Nat.Prime a
-| 0 =>
-  by 
-    simp [Nat.not_prime_zero]
-| 1 =>
-  by 
-    simp [Nat.Prime, one_lt_two]
-| n+2 =>
-  have h₁ : ¬(n+2) = 1 :=
-    by 
-      decide 
-  by 
-    simp [h₁, Nat.Prime, irreducible_iff, · ≥ ·, Nat.le_add_leftₓ 2 n, · ∣ ·]
-    refine' forall_congrₓ fun a => forall_congrₓ$ fun b => forall_congrₓ$ fun hab => _ 
-    byCases' a = 1 <;> simp [h]
-    split 
-    ·
-      intro hb 
-      simpa [hb] using hab.symm
-    ·
-      intro ha 
-      subst ha 
-      have  : (n+2) > 0 
-      exact
-        by 
-          decide 
-      refine' Nat.eq_of_mul_eq_mul_leftₓ this _ 
-      rw [←hab, mul_oneₓ]
+-- error in RingTheory.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem irreducible_iff_nat_prime : ∀ a : exprℕ(), «expr ↔ »(irreducible a, nat.prime a)
+| 0 := by simp [] [] [] ["[", expr nat.not_prime_zero, "]"] [] []
+| 1 := by simp [] [] [] ["[", expr nat.prime, ",", expr one_lt_two, "]"] [] []
+| «expr + »(n, 2) := have h₁ : «expr¬ »(«expr = »(«expr + »(n, 2), 1)), from exprdec_trivial(),
+begin
+  simp [] [] [] ["[", expr h₁, ",", expr nat.prime, ",", expr irreducible_iff, ",", expr («expr ≥ »), ",", expr nat.le_add_left 2 n, ",", expr («expr ∣ »), "]"] [] [],
+  refine [expr forall_congr (assume a, «expr $ »(forall_congr, assume b, «expr $ »(forall_congr, assume hab, _)))],
+  by_cases [expr «expr = »(a, 1)]; simp [] [] [] ["[", expr h, "]"] [] [],
+  split,
+  { assume [binders (hb)],
+    simpa [] [] [] ["[", expr hb, "]"] [] ["using", expr hab.symm] },
+  { assume [binders (ha)],
+    subst [expr ha],
+    have [] [":", expr «expr > »(«expr + »(n, 2), 0)] [],
+    from [expr exprdec_trivial()],
+    refine [expr nat.eq_of_mul_eq_mul_left this _],
+    rw ["[", "<-", expr hab, ",", expr mul_one, "]"] [] }
+end
 
 theorem Nat.prime_iff_prime_int {p : ℕ} : p.prime ↔ _root_.prime (p : ℤ) :=
   ⟨fun hp =>

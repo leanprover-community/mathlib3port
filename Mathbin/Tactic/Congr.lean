@@ -43,7 +43,7 @@ unsafe def congr_core' : tactic Unit :=
 unsafe def convert_to_core (r : pexpr) : tactic Unit :=
   do 
     let tgt ← target 
-    let h ← to_expr (pquote (_ : (%%tgt) = %%r))
+    let h ← to_expr (pquote.1 (_ : (%%ₓtgt) = %%ₓr))
     rewrite_target h 
     swap
 
@@ -182,10 +182,11 @@ unsafe def convert (sym : parse (with_desc "←" (tk "<-")?)) (r : parse texpr) 
   do 
     let tgt ← target 
     let u ← infer_type tgt 
-    let r ← i_to_expr (pquote (%%r : (_ : %%u)))
+    let r ← i_to_expr (pquote.1 (%%ₓr : (_ : %%ₓu)))
     let src ← infer_type r 
     let src ← simp_lemmas.mk.dsimplify [] src { failIfUnchanged := ff }
-    let v ← to_expr (if sym.is_some then pquote (%%src) = %%tgt else pquote (%%tgt) = %%src) tt ff >>= mk_meta_var
+    let v ←
+      to_expr (if sym.is_some then pquote.1 ((%%ₓsrc) = %%ₓtgt) else pquote.1 ((%%ₓtgt) = %%ₓsrc)) tt ff >>= mk_meta_var
     (if sym.is_some then mk_eq_mp v r else mk_eq_mpr v r) >>= tactic.exact 
     let gs ← get_goals 
     set_goals [v]

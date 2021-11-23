@@ -32,7 +32,7 @@ attribute [local semireducible] reflected
 /-- Temporarily change the `has_reflect` instance for `name`. -/
 @[local instance]
 unsafe def hacky_name_reflect : has_reflect Name :=
-  fun n => quote (id (%%expr.const n []) : Name)
+  fun n => quote.1 (id (%%ₓexpr.const n []) : Name)
 
 /-- An auxiliary attribute used to store the names of the additive versions of declarations
 that have been processed by `to_additive`. -/
@@ -181,11 +181,11 @@ in the `quotient_add_group` namespaces.
 unsafe def map_namespace (src tgt : Name) : exprcommand :=
   do 
     let n := src.mk_string "_to_additive"
-    let decl := declaration.thm n [] (quote Unit) (pure (reflect ()))
+    let decl := declaration.thm n [] (quote.1 Unit) (pure (reflect ()))
     add_decl decl 
     aux_attr n tgt tt
 
--- error in Algebra.Group.ToAdditive: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Algebra.Group.ToAdditive: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- `value_type` is the type of the arguments that can be provided to `to_additive`.
 `to_additive.parser` parses the provided arguments:
 * `replace_all`: replace all multiplicative declarations, do not use the heuristic.

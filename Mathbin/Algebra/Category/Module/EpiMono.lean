@@ -1,6 +1,6 @@
 import Mathbin.LinearAlgebra.Quotient 
-import Mathbin.Algebra.Category.Module.Adjunctions 
-import Mathbin.CategoryTheory.EpiMono
+import Mathbin.CategoryTheory.EpiMono 
+import Mathbin.Algebra.Category.Module.Basic
 
 /-!
 # Monomorphisms in `Module R`
@@ -31,7 +31,7 @@ theorem range_eq_top_of_epi [epi f] : f.range = ⊤ :=
 theorem mono_iff_ker_eq_bot : mono f ↔ f.ker = ⊥ :=
   ⟨fun hf =>
       by 
-        exactI ker_eq_bot_of_mono _,
+        exact ker_eq_bot_of_mono _,
     fun hf => concrete_category.mono_of_injective _$ LinearMap.ker_eq_bot.1 hf⟩
 
 theorem mono_iff_injective : mono f ↔ Function.Injective f :=
@@ -41,7 +41,7 @@ theorem mono_iff_injective : mono f ↔ Function.Injective f :=
 theorem epi_iff_range_eq_top : epi f ↔ f.range = ⊤ :=
   ⟨fun hf =>
       by 
-        exactI range_eq_top_of_epi _,
+        exact range_eq_top_of_epi _,
     fun hf => concrete_category.epi_of_surjective _$ LinearMap.range_eq_top.1 hf⟩
 
 theorem epi_iff_surjective : epi f ↔ Function.Surjective f :=

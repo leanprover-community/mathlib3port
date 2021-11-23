@@ -31,103 +31,95 @@ variable{𝕜 : Type _}[IsROrC 𝕜]{F : Type _}[SemiNormedGroup F][SemiNormedSp
 
 local notation "abs𝕜" => @IsROrC.abs 𝕜 _
 
+-- error in Analysis.NormedSpace.Extend: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Extend `fr : F →ₗ[ℝ] ℝ` to `F →ₗ[𝕜] 𝕜` in a way that will also be continuous and have its norm
 bounded by `∥fr∥` if `fr` is continuous. -/
-noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →ₗ[ℝ] ℝ) : F →ₗ[𝕜] 𝕜 :=
-  by 
-    let fc : F → 𝕜 := fun x => (fr x : 𝕜) - (I : 𝕜)*fr ((I : 𝕜) • x)
-    have add : ∀ x y : F, fc (x+y) = fc x+fc y
-    ·
-      intro x y 
-      simp only [fc]
-      unfoldCoes 
-      simp only [smul_add, RingHom.map_add, RingHom.to_fun_eq_coe, LinearMap.to_fun_eq_coe, LinearMap.map_add]
-      rw [mul_addₓ]
-      abel 
-    have A : ∀ c : ℝ x : F, (fr ((c : 𝕜) • x) : 𝕜) = (c : 𝕜)*(fr x : 𝕜)
-    ·
-      intro c x 
-      rw [←of_real_mul]
-      congr 1
-      rw [IsROrC.of_real_alg, smul_assoc, fr.map_smul, Algebra.id.smul_eq_mul, one_smul]
-    have smul_ℝ : ∀ c : ℝ x : F, fc ((c : 𝕜) • x) = (c : 𝕜)*fc x
-    ·
-      intro c x 
-      simp only [fc, A]
-      rw [A c x]
-      rw [smul_smul, mul_commₓ I (c : 𝕜), ←smul_smul, A, mul_sub]
-      ring 
-    have smul_I : ∀ x : F, fc ((I : 𝕜) • x) = (I : 𝕜)*fc x
-    ·
-      intro x 
-      simp only [fc]
-      cases' @I_mul_I_ax 𝕜 _ with h h
-      ·
-        simp [h]
-      rw [mul_sub, ←mul_assocₓ, smul_smul, h]
-      simp only [neg_mul_eq_neg_mul_symm, LinearMap.map_neg, one_mulₓ, one_smul, mul_neg_eq_neg_mul_symm, of_real_neg,
-        neg_smul, sub_neg_eq_add, add_commₓ]
-    have smul_𝕜 : ∀ c : 𝕜 x : F, fc (c • x) = c • fc x
-    ·
-      intro c x 
-      rw [←re_add_im c, add_smul, add_smul, add, smul_ℝ, ←smul_smul, smul_ℝ, smul_I, ←mul_assocₓ]
-      rfl 
-    exact { toFun := fc, map_add' := add, map_smul' := smul_𝕜 }
+noncomputable
+def linear_map.extend_to_𝕜'
+[module exprℝ() F]
+[is_scalar_tower exprℝ() 𝕜 F]
+(fr : «expr →ₗ[ ] »(F, exprℝ(), exprℝ())) : «expr →ₗ[ ] »(F, 𝕜, 𝕜) :=
+begin
+  let [ident fc] [":", expr F → 𝕜] [":=", expr λ
+   x, «expr - »((fr x : 𝕜), «expr * »((I : 𝕜), fr «expr • »((I : 𝕜), x)))],
+  have [ident add] [":", expr ∀ x y : F, «expr = »(fc «expr + »(x, y), «expr + »(fc x, fc y))] [],
+  { assume [binders (x y)],
+    simp [] [] ["only"] ["[", expr fc, "]"] [] [],
+    unfold_coes [],
+    simp [] [] ["only"] ["[", expr smul_add, ",", expr ring_hom.map_add, ",", expr ring_hom.to_fun_eq_coe, ",", expr linear_map.to_fun_eq_coe, ",", expr linear_map.map_add, "]"] [] [],
+    rw [expr mul_add] [],
+    abel [] [] [] },
+  have [ident A] [":", expr ∀
+   (c : exprℝ())
+   (x : F), «expr = »((fr «expr • »((c : 𝕜), x) : 𝕜), «expr * »((c : 𝕜), (fr x : 𝕜)))] [],
+  { assume [binders (c x)],
+    rw ["[", "<-", expr of_real_mul, "]"] [],
+    congr' [1] [],
+    rw ["[", expr is_R_or_C.of_real_alg, ",", expr smul_assoc, ",", expr fr.map_smul, ",", expr algebra.id.smul_eq_mul, ",", expr one_smul, "]"] [] },
+  have [ident smul_ℝ] [":", expr ∀
+   (c : exprℝ())
+   (x : F), «expr = »(fc «expr • »((c : 𝕜), x), «expr * »((c : 𝕜), fc x))] [],
+  { assume [binders (c x)],
+    simp [] [] ["only"] ["[", expr fc, ",", expr A, "]"] [] [],
+    rw [expr A c x] [],
+    rw ["[", expr smul_smul, ",", expr mul_comm I (c : 𝕜), ",", "<-", expr smul_smul, ",", expr A, ",", expr mul_sub, "]"] [],
+    ring [] },
+  have [ident smul_I] [":", expr ∀ x : F, «expr = »(fc «expr • »((I : 𝕜), x), «expr * »((I : 𝕜), fc x))] [],
+  { assume [binders (x)],
+    simp [] [] ["only"] ["[", expr fc, "]"] [] [],
+    cases [expr @I_mul_I_ax 𝕜 _] ["with", ident h, ident h],
+    { simp [] [] [] ["[", expr h, "]"] [] [] },
+    rw ["[", expr mul_sub, ",", "<-", expr mul_assoc, ",", expr smul_smul, ",", expr h, "]"] [],
+    simp [] [] ["only"] ["[", expr neg_mul_eq_neg_mul_symm, ",", expr linear_map.map_neg, ",", expr one_mul, ",", expr one_smul, ",", expr mul_neg_eq_neg_mul_symm, ",", expr of_real_neg, ",", expr neg_smul, ",", expr sub_neg_eq_add, ",", expr add_comm, "]"] [] [] },
+  have [ident smul_𝕜] [":", expr ∀ (c : 𝕜) (x : F), «expr = »(fc «expr • »(c, x), «expr • »(c, fc x))] [],
+  { assume [binders (c x)],
+    rw ["[", "<-", expr re_add_im c, ",", expr add_smul, ",", expr add_smul, ",", expr add, ",", expr smul_ℝ, ",", "<-", expr smul_smul, ",", expr smul_ℝ, ",", expr smul_I, ",", "<-", expr mul_assoc, "]"] [],
+    refl },
+  exact [expr { to_fun := fc, map_add' := add, map_smul' := smul_𝕜 }]
+end
 
 theorem LinearMap.extend_to_𝕜'_apply [Module ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →ₗ[ℝ] ℝ) (x : F) :
   fr.extend_to_𝕜' x = (fr x : 𝕜) - (I : 𝕜)*fr ((I : 𝕜) • x) :=
   rfl
 
+-- error in Analysis.NormedSpace.Extend: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The norm of the extension is bounded by `∥fr∥`. -/
-theorem norm_bound [SemiNormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) (x : F) :
-  ∥(fr.to_linear_map.extend_to_𝕜' x : 𝕜)∥ ≤ ∥fr∥*∥x∥ :=
-  by 
-    let lm : F →ₗ[𝕜] 𝕜 := fr.to_linear_map.extend_to_𝕜' 
-    classical 
-    byCases' h : lm x = 0
-    ·
-      rw [h, norm_zero]
-      apply mul_nonneg <;> exact norm_nonneg _ 
-    let fx := lm x⁻¹
-    let t := fx / (abs𝕜 fx : 𝕜)
-    have ht : abs𝕜 t = 1
-    ·
-      fieldSimp [abs_of_real, of_real_inv, IsROrC.abs_inv, IsROrC.abs_div, IsROrC.abs_abs, h]
-    have h1 : (fr (t • x) : 𝕜) = lm (t • x)
-    ·
-      apply ext
-      ·
-        simp only [lm, of_real_re, LinearMap.extend_to_𝕜'_apply, mul_re, I_re, of_real_im, zero_mul,
-          AddMonoidHom.map_sub, sub_zero, mul_zero]
-        rfl
-      ·
-        symm 
-        calc im (lm (t • x)) = im (t*lm x) :=
-          by 
-            rw [lm.map_smul, smul_eq_mul]_ = im ((lm x⁻¹ / abs𝕜 (lm x⁻¹))*lm x) :=
-          rfl _ = im (1 / (abs𝕜 (lm x⁻¹) : 𝕜)) :=
-          by 
-            rw [div_mul_eq_mul_div, inv_mul_cancel h]_ = 0 :=
-          by 
-            rw [←of_real_one, ←of_real_div, of_real_im]_ = im (fr (t • x) : 𝕜) :=
-          by 
-            rw [of_real_im]
-    calc ∥lm x∥ = abs𝕜 t*∥lm x∥ :=
-      by 
-        rw [ht, one_mulₓ]_ = ∥t*lm x∥ :=
-      by 
-        rw [←norm_eq_abs, NormedField.norm_mul]_ = ∥lm (t • x)∥ :=
-      by 
-        rw [←smul_eq_mul, lm.map_smul]_ = ∥(fr (t • x) : 𝕜)∥ :=
-      by 
-        rw [h1]_ = ∥fr (t • x)∥ :=
-      by 
-        rw [norm_eq_abs, abs_of_real, norm_eq_abs, abs_to_real]_ ≤ ∥fr∥*∥t • x∥ :=
-      ContinuousLinearMap.le_op_norm _ _ _ = ∥fr∥*∥t∥*∥x∥ :=
-      by 
-        rw [norm_smul]_ ≤ ∥fr∥*∥x∥ :=
-      by 
-        rw [norm_eq_abs, ht, one_mulₓ]
+theorem norm_bound
+[semi_normed_space exprℝ() F]
+[is_scalar_tower exprℝ() 𝕜 F]
+(fr : «expr →L[ ] »(F, exprℝ(), exprℝ()))
+(x : F) : «expr ≤ »(«expr∥ ∥»((fr.to_linear_map.extend_to_𝕜' x : 𝕜)), «expr * »(«expr∥ ∥»(fr), «expr∥ ∥»(x))) :=
+begin
+  let [ident lm] [":", expr «expr →ₗ[ ] »(F, 𝕜, 𝕜)] [":=", expr fr.to_linear_map.extend_to_𝕜'],
+  classical,
+  by_cases [expr h, ":", expr «expr = »(lm x, 0)],
+  { rw ["[", expr h, ",", expr norm_zero, "]"] [],
+    apply [expr mul_nonneg]; exact [expr norm_nonneg _] },
+  let [ident fx] [] [":=", expr «expr ⁻¹»(lm x)],
+  let [ident t] [] [":=", expr «expr / »(fx, (exprabs𝕜() fx : 𝕜))],
+  have [ident ht] [":", expr «expr = »(exprabs𝕜() t, 1)] [],
+  by field_simp [] ["[", expr abs_of_real, ",", expr of_real_inv, ",", expr is_R_or_C.abs_inv, ",", expr is_R_or_C.abs_div, ",", expr is_R_or_C.abs_abs, ",", expr h, "]"] [] [],
+  have [ident h1] [":", expr «expr = »((fr «expr • »(t, x) : 𝕜), lm «expr • »(t, x))] [],
+  { apply [expr ext],
+    { simp [] [] ["only"] ["[", expr lm, ",", expr of_real_re, ",", expr linear_map.extend_to_𝕜'_apply, ",", expr mul_re, ",", expr I_re, ",", expr of_real_im, ",", expr zero_mul, ",", expr add_monoid_hom.map_sub, ",", expr sub_zero, ",", expr mul_zero, "]"] [] [],
+      refl },
+    { symmetry,
+      calc
+        «expr = »(im (lm «expr • »(t, x)), im «expr * »(t, lm x)) : by rw ["[", expr lm.map_smul, ",", expr smul_eq_mul, "]"] []
+        «expr = »(..., im «expr * »(«expr / »(«expr ⁻¹»(lm x), exprabs𝕜() «expr ⁻¹»(lm x)), lm x)) : rfl
+        «expr = »(..., im «expr / »(1, (exprabs𝕜() «expr ⁻¹»(lm x) : 𝕜))) : by rw ["[", expr div_mul_eq_mul_div, ",", expr inv_mul_cancel h, "]"] []
+        «expr = »(..., 0) : by rw ["[", "<-", expr of_real_one, ",", "<-", expr of_real_div, ",", expr of_real_im, "]"] []
+        «expr = »(..., im (fr «expr • »(t, x) : 𝕜)) : by rw ["[", expr of_real_im, "]"] [] } },
+  calc
+    «expr = »(«expr∥ ∥»(lm x), «expr * »(exprabs𝕜() t, «expr∥ ∥»(lm x))) : by rw ["[", expr ht, ",", expr one_mul, "]"] []
+    «expr = »(..., «expr∥ ∥»(«expr * »(t, lm x))) : by rw ["[", "<-", expr norm_eq_abs, ",", expr normed_field.norm_mul, "]"] []
+    «expr = »(..., «expr∥ ∥»(lm «expr • »(t, x))) : by rw ["[", "<-", expr smul_eq_mul, ",", expr lm.map_smul, "]"] []
+    «expr = »(..., «expr∥ ∥»((fr «expr • »(t, x) : 𝕜))) : by rw [expr h1] []
+    «expr = »(..., «expr∥ ∥»(fr «expr • »(t, x))) : by rw ["[", expr norm_eq_abs, ",", expr abs_of_real, ",", expr norm_eq_abs, ",", expr abs_to_real, "]"] []
+    «expr ≤ »(..., «expr * »(«expr∥ ∥»(fr), «expr∥ ∥»(«expr • »(t, x)))) : continuous_linear_map.le_op_norm _ _
+    «expr = »(..., «expr * »(«expr∥ ∥»(fr), «expr * »(«expr∥ ∥»(t), «expr∥ ∥»(x)))) : by rw [expr norm_smul] []
+    «expr ≤ »(..., «expr * »(«expr∥ ∥»(fr), «expr∥ ∥»(x))) : by rw ["[", expr norm_eq_abs, ",", expr ht, ",", expr one_mul, "]"] []
+end
 
 /-- Extend `fr : F →L[ℝ] ℝ` to `F →L[𝕜] 𝕜`. -/
 noncomputable def ContinuousLinearMap.extendTo𝕜' [SemiNormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) :

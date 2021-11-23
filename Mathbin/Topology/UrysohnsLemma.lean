@@ -119,25 +119,25 @@ noncomputable def approx : ℕ → CU X → X → ℝ
 | 0, c, x => indicator («expr ᶜ» c.U) 1 x
 | n+1, c, x => midpoint ℝ (approx n c.left x) (approx n c.right x)
 
--- error in Topology.UrysohnsLemma: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem approx_of_mem_C (c : CU X) (n : exprℕ()) {x : X} (hx : «expr ∈ »(x, c.C)) : «expr = »(c.approx n x, 0) :=
-begin
-  induction [expr n] [] ["with", ident n, ident ihn] ["generalizing", ident c],
-  { exact [expr indicator_of_not_mem (λ hU, «expr $ »(hU, c.subset hx)) _] },
-  { simp [] [] ["only"] ["[", expr approx, "]"] [] [],
-    rw ["[", expr ihn, ",", expr ihn, ",", expr midpoint_self, "]"] [],
-    exacts ["[", expr c.subset_right_C hx, ",", expr hx, "]"] }
-end
+theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.C) : c.approx n x = 0 :=
+  by 
+    induction' n with n ihn generalizing c
+    ·
+      exact indicator_of_not_mem (fun hU => hU$ c.subset hx) _
+    ·
+      simp only [approx]
+      rw [ihn, ihn, midpoint_self]
+      exacts[c.subset_right_C hx, hx]
 
--- error in Topology.UrysohnsLemma: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem approx_of_nmem_U (c : CU X) (n : exprℕ()) {x : X} (hx : «expr ∉ »(x, c.U)) : «expr = »(c.approx n x, 1) :=
-begin
-  induction [expr n] [] ["with", ident n, ident ihn] ["generalizing", ident c],
-  { exact [expr indicator_of_mem hx _] },
-  { simp [] [] ["only"] ["[", expr approx, "]"] [] [],
-    rw ["[", expr ihn, ",", expr ihn, ",", expr midpoint_self, "]"] [],
-    exacts ["[", expr hx, ",", expr λ hU, «expr $ »(hx, c.left_U_subset hU), "]"] }
-end
+theorem approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.approx n x = 1 :=
+  by 
+    induction' n with n ihn generalizing c
+    ·
+      exact indicator_of_mem hx _
+    ·
+      simp only [approx]
+      rw [ihn, ihn, midpoint_self]
+      exacts[hx, fun hU => hx$ c.left_U_subset hU]
 
 theorem approx_nonneg (c : CU X) (n : ℕ) (x : X) : 0 ≤ c.approx n x :=
   by 
@@ -169,19 +169,17 @@ theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.C) (
     ·
       calc approx n₂ c₂ x ≤ 1 := approx_le_one _ _ _ _ = approx n₁ c₁ x := (approx_of_nmem_U _ _ hx).symm
 
--- error in Topology.UrysohnsLemma: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem approx_mem_Icc_right_left
-(c : CU X)
-(n : exprℕ())
-(x : X) : «expr ∈ »(c.approx n x, Icc (c.right.approx n x) (c.left.approx n x)) :=
-begin
-  induction [expr n] [] ["with", ident n, ident ihn] ["generalizing", ident c],
-  { exact [expr ⟨le_rfl, indicator_le_indicator_of_subset (compl_subset_compl.2 c.left_U_subset) (λ
-       _, zero_le_one) _⟩] },
-  { simp [] [] ["only"] ["[", expr approx, ",", expr mem_Icc, "]"] [] [],
-    refine [expr ⟨midpoint_le_midpoint _ (ihn _).1, midpoint_le_midpoint (ihn _).2 _⟩]; apply [expr approx_le_approx_of_U_sub_C],
-    exacts ["[", expr subset_closure, ",", expr subset_closure, "]"] }
-end
+theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
+  c.approx n x ∈ Icc (c.right.approx n x) (c.left.approx n x) :=
+  by 
+    induction' n with n ihn generalizing c
+    ·
+      exact ⟨le_rfl, indicator_le_indicator_of_subset (compl_subset_compl.2 c.left_U_subset) (fun _ => zero_le_one) _⟩
+    ·
+      simp only [approx, mem_Icc]
+      refine' ⟨midpoint_le_midpoint _ (ihn _).1, midpoint_le_midpoint (ihn _).2 _⟩ <;>
+        apply approx_le_approx_of_U_sub_C 
+      exacts[subset_closure, subset_closure]
 
 theorem approx_le_succ (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ c.approx (n+1) x :=
   by 

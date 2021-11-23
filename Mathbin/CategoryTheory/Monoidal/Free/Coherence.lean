@@ -1,4 +1,5 @@
 import Mathbin.CategoryTheory.Monoidal.Free.Basic 
+import Mathbin.CategoryTheory.Groupoid 
 import Mathbin.CategoryTheory.DiscreteCategory
 
 /-!

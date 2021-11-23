@@ -35,23 +35,22 @@ def val (v : Nat → Int) (as : List Int) : Int :=
 theorem val_nil : val v [] = 0 :=
   rfl
 
-theorem val_between_eq_of_le {as : List Int} {l : Nat} :
-  ∀ m, (as.length ≤ l+m) → val_between v as l m = val_between v as l (as.length - l)
-| 0, h1 =>
-  by 
-    rw [add_zeroₓ] at h1 
-    rw [tsub_eq_zero_iff_le.mpr h1]
-| m+1, h1 =>
-  by 
-    rw [le_iff_eq_or_lt] at h1 
-    cases h1
-    ·
-      rw [h1, add_commₓ l, add_tsub_cancel_right]
-    have h2 : List.length as ≤ l+m
-    ·
-      rw [←Nat.lt_succ_iff]
-      apply h1 
-    simpa [get_eq_default_of_le _ h2, zero_mul, add_zeroₓ, val_between] using val_between_eq_of_le _ h2
+-- error in Tactic.Omega.Coeffs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem val_between_eq_of_le
+{as : list int}
+{l : nat} : ∀
+m, «expr ≤ »(as.length, «expr + »(l, m)) → «expr = »(val_between v as l m, val_between v as l «expr - »(as.length, l))
+| 0, h1 := by { rw [expr add_zero] ["at", ident h1],
+  rw [expr tsub_eq_zero_iff_le.mpr h1] [] }
+| «expr + »(m, 1), h1 := begin
+  rw [expr le_iff_eq_or_lt] ["at", ident h1],
+  cases [expr h1] [],
+  { rw ["[", expr h1, ",", expr add_comm l, ",", expr add_tsub_cancel_right, "]"] [] },
+  have [ident h2] [":", expr «expr ≤ »(list.length as, «expr + »(l, m))] [],
+  { rw ["<-", expr nat.lt_succ_iff] [],
+    apply [expr h1] },
+  simpa [] [] [] ["[", expr get_eq_default_of_le _ h2, ",", expr zero_mul, ",", expr add_zero, ",", expr val_between, "]"] [] ["using", expr val_between_eq_of_le _ h2]
+end
 
 theorem val_eq_of_le {as : List Int} {k : Nat} : as.length ≤ k → val v as = val_between v as 0 k :=
   by 
@@ -62,59 +61,58 @@ theorem val_eq_of_le {as : List Int} {k : Nat} : as.length ≤ k → val v as = 
     rw [zero_addₓ]
     exact h1
 
-theorem val_between_eq_val_between {v w : Nat → Int} {as bs : List Int} {l : Nat} :
-  ∀ {m},
-    (∀ x, l ≤ x → (x < l+m) → v x = w x) →
-      (∀ x, l ≤ x → (x < l+m) → get x as = get x bs) → val_between v as l m = val_between w bs l m
-| 0, h1, h2 => rfl
-| m+1, h1, h2 =>
-  by 
-    unfold val_between 
-    have h3 : (l+m) < l+m+1
-    ·
-      rw [←add_assocₓ]
-      apply lt_add_one 
-    apply fun_mono_2 
-    apply val_between_eq_val_between <;> intro x h4 h5
-    ·
-      apply h1 _ h4 (lt_transₓ h5 h3)
-    ·
-      apply h2 _ h4 (lt_transₓ h5 h3)
-    rw [h1 _ _ h3, h2 _ _ h3] <;> apply Nat.le_add_rightₓ
+-- error in Tactic.Omega.Coeffs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem val_between_eq_val_between
+{v w : nat → int}
+{as bs : list int}
+{l : nat} : ∀
+{m}, ∀
+x, «expr ≤ »(l, x) → «expr < »(x, «expr + »(l, m)) → «expr = »(v x, w x) → ∀
+x, «expr ≤ »(l, x) → «expr < »(x, «expr + »(l, m)) → «expr = »(get x as, get x bs) → «expr = »(val_between v as l m, val_between w bs l m)
+| 0, h1, h2 := rfl
+| «expr + »(m, 1), h1, h2 := begin
+  unfold [ident val_between] [],
+  have [ident h3] [":", expr «expr < »(«expr + »(l, m), «expr + »(l, «expr + »(m, 1)))] [],
+  { rw ["<-", expr add_assoc] [],
+    apply [expr lt_add_one] },
+  apply [expr fun_mono_2],
+  apply [expr val_between_eq_val_between]; intros [ident x, ident h4, ident h5],
+  { apply [expr h1 _ h4 (lt_trans h5 h3)] },
+  { apply [expr h2 _ h4 (lt_trans h5 h3)] },
+  rw ["[", expr h1 _ _ h3, ",", expr h2 _ _ h3, "]"] []; apply [expr nat.le_add_right]
+end
 
 open_locale List.Func
 
-theorem val_between_set {a : Int} {l n : Nat} : ∀ {m}, l ≤ n → (n < l+m) → val_between v ([] {n ↦ a}) l m = a*v n
-| 0, h1, h2 =>
-  by 
-    exFalso 
-    apply lt_irreflₓ l (lt_of_le_of_ltₓ h1 h2)
-| m+1, h1, h2 =>
-  by 
-    rw [←add_assocₓ, Nat.lt_succ_iff, le_iff_eq_or_lt] at h2 
-    cases h2 <;> unfold val_between
-    ·
-      have h3 : val_between v ([] {l+m ↦ a}) l m = 0
-      ·
-        apply @Eq.trans _ _ (val_between v [] l m)
-        ·
-          apply val_between_eq_val_between
-          ·
-            intros 
-            rfl
-          ·
-            intro x h4 h5 
-            rw [get_nil, get_set_eq_of_ne, get_nil]
-            apply ne_of_ltₓ h5 
-        apply val_between_nil 
-      rw [h2]
-      simp only [h3, zero_addₓ, List.Func.get_set]
-    ·
-      have h3 : (l+m) ≠ n
-      ·
-        apply ne_of_gtₓ h2 
-      rw [@val_between_set m h1 h2, get_set_eq_of_ne _ _ h3]
-      simp only [h3, get_nil, add_zeroₓ, zero_mul, Int.default_eq_zero]
+-- error in Tactic.Omega.Coeffs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem val_between_set
+{a : int}
+{l
+ n : nat} : ∀
+{m}, «expr ≤ »(l, n) → «expr < »(n, «expr + »(l, m)) → «expr = »(val_between v «expr { ↦ }»(«expr[ , ]»([]), n, a) l m, «expr * »(a, v n))
+| 0, h1, h2 := begin
+  exfalso,
+  apply [expr lt_irrefl l (lt_of_le_of_lt h1 h2)]
+end
+| «expr + »(m, 1), h1, h2 := begin
+  rw ["[", "<-", expr add_assoc, ",", expr nat.lt_succ_iff, ",", expr le_iff_eq_or_lt, "]"] ["at", ident h2],
+  cases [expr h2] []; unfold [ident val_between] [],
+  { have [ident h3] [":", expr «expr = »(val_between v «expr { ↦ }»(«expr[ , ]»([]), «expr + »(l, m), a) l m, 0)] [],
+    { apply [expr @eq.trans _ _ (val_between v «expr[ , ]»([]) l m)],
+      { apply [expr val_between_eq_val_between],
+        { intros [],
+          refl },
+        { intros [ident x, ident h4, ident h5],
+          rw ["[", expr get_nil, ",", expr get_set_eq_of_ne, ",", expr get_nil, "]"] [],
+          apply [expr ne_of_lt h5] } },
+      apply [expr val_between_nil] },
+    rw [expr h2] [],
+    simp [] [] ["only"] ["[", expr h3, ",", expr zero_add, ",", expr list.func.get_set, "]"] [] [] },
+  { have [ident h3] [":", expr «expr ≠ »(«expr + »(l, m), n)] [],
+    { apply [expr ne_of_gt h2] },
+    rw ["[", expr @val_between_set m h1 h2, ",", expr get_set_eq_of_ne _ _ h3, "]"] [],
+    simp [] [] ["only"] ["[", expr h3, ",", expr get_nil, ",", expr add_zero, ",", expr zero_mul, ",", expr int.default_eq_zero, "]"] [] [] }
+end
 
 @[simp]
 theorem val_set {m : Nat} {a : Int} : val v ([] {m ↦ a}) = a*v m :=
@@ -181,24 +179,35 @@ theorem val_sub {is js : List Int} : val v (sub is js) = val v is - val v js :=
 def val_except (k : Nat) (v : Nat → Int) as :=
   val_between v as 0 k+val_between v as (k+1) (as.length - k+1)
 
--- error in Tactic.Omega.Coeffs: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem val_except_eq_val_except
-{k : nat}
-{is js : list int}
-{v
- w : nat → int} : ∀
-x «expr ≠ » k, «expr = »(v x, w x) → ∀
-x «expr ≠ » k, «expr = »(get x is, get x js) → «expr = »(val_except k v is, val_except k w js) :=
-begin
-  intros [ident h1, ident h2],
-  unfold [ident val_except] [],
-  apply [expr fun_mono_2],
-  { apply [expr val_between_eq_val_between]; intros [ident x, ident h3, ident h4]; [{ apply [expr h1] }, { apply [expr h2] }]; apply [expr ne_of_lt]; rw [expr zero_add] ["at", ident h4]; apply [expr h4] },
-  { repeat { rw ["<-", expr val_between_eq_of_le «expr - »(max is.length js.length, «expr + »(k, 1))] [] },
-    { apply [expr val_between_eq_val_between]; intros [ident x, ident h3, ident h4]; [{ apply [expr h1] }, { apply [expr h2] }]; apply [expr ne.symm]; apply [expr ne_of_lt]; rw [expr nat.lt_iff_add_one_le] []; exact [expr h3] },
-    { refine [expr le_trans (le_max_right _ _) le_add_tsub] },
-    { refine [expr le_trans (le_max_left _ _) le_add_tsub] } }
-end
+theorem val_except_eq_val_except {k : Nat} {is js : List Int} {v w : Nat → Int} :
+  (∀ x _ : x ≠ k, v x = w x) → (∀ x _ : x ≠ k, get x is = get x js) → val_except k v is = val_except k w js :=
+  by 
+    intro h1 h2 
+    unfold val_except 
+    apply fun_mono_2
+    ·
+      apply val_between_eq_val_between <;>
+        intro x h3 h4 <;>
+            [·
+              apply h1,
+            ·
+              apply h2] <;>
+          apply ne_of_ltₓ <;> rw [zero_addₓ] at h4 <;> apply h4
+    ·
+      repeat' 
+        rw [←val_between_eq_of_le (max is.length js.length - k+1)]
+      ·
+        apply val_between_eq_val_between <;>
+          intro x h3 h4 <;>
+              [·
+                apply h1,
+              ·
+                apply h2] <;>
+            apply Ne.symm <;> apply ne_of_ltₓ <;> rw [Nat.lt_iff_add_one_le] <;> exact h3
+      ·
+        refine' le_transₓ (le_max_rightₓ _ _) le_add_tsub
+      ·
+        refine' le_transₓ (le_max_leftₓ _ _) le_add_tsub
 
 open_locale Omega
 
@@ -220,27 +229,27 @@ theorem val_between_add_val_between {as : List Int} {l m : Nat} :
     rw [←@val_between_add_val_between n]
     ring
 
-theorem val_except_add_eq (n : Nat) {as : List Int} : (val_except n v as+get n as*v n) = val v as :=
-  by 
-    unfold val_except 
-    unfold val 
-    cases' le_totalₓ (n+1) as.length with h1 h1
-    ·
-      have h4 := @val_between_add_val_between v as 0 (n+1) (as.length - n+1)
-      have h5 : ((n+1)+as.length - n+1) = as.length
-      ·
-        rw [add_commₓ, tsub_add_cancel_of_le h1]
-      rw [h5] at h4 
-      apply Eq.trans _ h4 
-      simp only [val_between, zero_addₓ]
-      ring 
-    have h2 : (List.length as - n+1) = 0
-    ·
-      exact tsub_eq_zero_iff_le.mpr h1 
-    have h3 : val_between v as 0 (List.length as) = val_between v as 0 (n+1)
-    ·
-      simpa only [val] using @val_eq_of_le v as (n+1) h1 
-    simp only [add_zeroₓ, val_between, zero_addₓ, h2, h3]
+-- error in Tactic.Omega.Coeffs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem val_except_add_eq
+(n : nat)
+{as : list int} : «expr = »(«expr + »(val_except n v as, «expr * »(get n as, v n)), val v as) :=
+begin
+  unfold [ident val_except] [],
+  unfold [ident val] [],
+  cases [expr le_total «expr + »(n, 1) as.length] ["with", ident h1, ident h1],
+  { have [ident h4] [] [":=", expr @val_between_add_val_between v as 0 «expr + »(n, 1) «expr - »(as.length, «expr + »(n, 1))],
+    have [ident h5] [":", expr «expr = »(«expr + »(«expr + »(n, 1), «expr - »(as.length, «expr + »(n, 1))), as.length)] [],
+    { rw ["[", expr add_comm, ",", expr tsub_add_cancel_of_le h1, "]"] [] },
+    rw [expr h5] ["at", ident h4],
+    apply [expr eq.trans _ h4],
+    simp [] [] ["only"] ["[", expr val_between, ",", expr zero_add, "]"] [] [],
+    ring [] },
+  have [ident h2] [":", expr «expr = »(«expr - »(list.length as, «expr + »(n, 1)), 0)] [],
+  { exact [expr tsub_eq_zero_iff_le.mpr h1] },
+  have [ident h3] [":", expr «expr = »(val_between v as 0 (list.length as), val_between v as 0 «expr + »(n, 1))] [],
+  { simpa [] [] ["only"] ["[", expr val, "]"] [] ["using", expr @val_eq_of_le v as «expr + »(n, 1) h1] },
+  simp [] [] ["only"] ["[", expr add_zero, ",", expr val_between, ",", expr zero_add, ",", expr h2, ",", expr h3, "]"] [] []
+end
 
 @[simp]
 theorem val_between_map_mul {i : Int} {as : List Int} {l : Nat} :
@@ -287,35 +296,33 @@ theorem dvd_val {as : List Int} {i : Int} : (∀ x _ : x ∈ as, i ∣ x) → i 
   by 
     apply dvd_val_between
 
--- error in Tactic.Omega.Coeffs: ././Mathport/Syntax/Translate/Basic.lean:340:40: in apply: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 @[simp]
-theorem val_between_map_div
-{as : list int}
-{i : int}
-{l : nat}
-(h1 : ∀
- x «expr ∈ » as, «expr ∣ »(i, x)) : ∀
-{m}, «expr = »(val_between v (list.map (λ x, «expr / »(x, i)) as) l m, «expr / »(val_between v as l m, i))
-| 0 := by simp [] [] ["only"] ["[", expr int.zero_div, ",", expr val_between, ",", expr list.map, "]"] [] []
-| «expr + »(m, 1) := begin
-  unfold [ident val_between] [],
-  rw ["[", expr @val_between_map_div m, ",", expr int.add_div_of_dvd_right, "]"] [],
-  apply [expr fun_mono_2 rfl],
-  { apply [expr calc
-       «expr = »(«expr * »(get «expr + »(l, m) (list.map (λ
-           x : exprℤ(), «expr / »(x, i)) as), v «expr + »(l, m)), «expr * »(«expr / »(get «expr + »(l, m) as, i), v «expr + »(l, m))) : begin
-         apply [expr fun_mono_2 _ rfl],
-         rw [expr get_map'] [],
-         apply [expr int.zero_div]
-       end
-       «expr = »(..., «expr / »(«expr * »(get «expr + »(l, m) as, v «expr + »(l, m)), i)) : begin
-         repeat { rw [expr mul_comm _ (v «expr + »(l, m))] [] },
-         rw [expr int.mul_div_assoc] [],
-         apply [expr forall_val_dvd_of_forall_mem_dvd h1]
-       end] },
-  apply [expr dvd_mul_of_dvd_left],
-  apply [expr forall_val_dvd_of_forall_mem_dvd h1]
-end
+theorem val_between_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀ x _ : x ∈ as, i ∣ x) :
+  ∀ {m}, val_between v (List.map (fun x => x / i) as) l m = val_between v as l m / i
+| 0 =>
+  by 
+    simp only [Int.zero_div, val_between, List.map]
+| m+1 =>
+  by 
+    unfold val_between 
+    rw [@val_between_map_div m, Int.add_div_of_dvd_right]
+    apply fun_mono_2 rfl
+    ·
+      apply
+        calc (get (l+m) (List.map (fun x : ℤ => x / i) as)*v (l+m)) = (get (l+m) as / i)*v (l+m) :=
+          by 
+            apply fun_mono_2 _ rfl 
+            rw [get_map']
+            apply Int.zero_div 
+          _ = (get (l+m) as*v (l+m)) / i :=
+          by 
+            repeat' 
+              rw [mul_commₓ _ (v (l+m))]
+            rw [Int.mul_div_assoc]
+            apply forall_val_dvd_of_forall_mem_dvd h1 
+          
+    apply dvd_mul_of_dvd_left 
+    apply forall_val_dvd_of_forall_mem_dvd h1
 
 @[simp]
 theorem val_map_div {as : List Int} {i : Int} :
@@ -324,12 +331,15 @@ theorem val_map_div {as : List Int} {i : Int} :
     intro h1 
     simpa only [val, List.length_map] using val_between_map_div h1
 
-theorem val_between_eq_zero {is : List Int} {l : Nat} : ∀ {m}, (∀ x : Int, x ∈ is → x = 0) → val_between v is l m = 0
-| 0, h1 => rfl
-| m+1, h1 =>
-  by 
-    have h2 := @forall_val_of_forall_mem _ _ is (fun x => x = 0) rfl h1 
-    simpa only [val_between, h2 (l+m), zero_mul, add_zeroₓ] using @val_between_eq_zero m h1
+-- error in Tactic.Omega.Coeffs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem val_between_eq_zero
+{is : list int}
+{l : nat} : ∀ {m}, ∀ x : int, «expr ∈ »(x, is) → «expr = »(x, 0) → «expr = »(val_between v is l m, 0)
+| 0, h1 := rfl
+| «expr + »(m, 1), h1 := begin
+  have [ident h2] [] [":=", expr @forall_val_of_forall_mem _ _ is (λ x, «expr = »(x, 0)) rfl h1],
+  simpa [] [] ["only"] ["[", expr val_between, ",", expr h2 «expr + »(l, m), ",", expr zero_mul, ",", expr add_zero, "]"] [] ["using", expr @val_between_eq_zero m h1]
+end
 
 theorem val_eq_zero {is : List Int} : (∀ x : Int, x ∈ is → x = 0) → val v is = 0 :=
   by 

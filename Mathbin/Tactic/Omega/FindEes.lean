@@ -6,7 +6,7 @@ open Tactic
 
 namespace Omega
 
--- error in Tactic.Omega.FindEes: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Tactic.Omega.FindEes: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- The state of equality elimination proof search. `eqs` is the list of
     equality constraints, and each `t ∈ eqs` represents the constraint `0 = t`.
     Similarly, `les` is the list of inequality constraints, and each `t ∈ eqs`

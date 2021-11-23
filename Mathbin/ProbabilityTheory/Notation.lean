@@ -1,5 +1,4 @@
-import Mathbin.MeasureTheory.Function.ConditionalExpectation 
-import Mathbin.MeasureTheory.Decomposition.RadonNikodym
+import Mathbin.MeasureTheory.Function.ConditionalExpectation
 
 /-! # Notations for probability theory
 

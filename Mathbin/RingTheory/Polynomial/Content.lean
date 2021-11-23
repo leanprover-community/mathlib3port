@@ -74,15 +74,15 @@ theorem content_dvd_coeff {p : Polynomial R} (n : ℕ) : p.content ∣ p.coeff n
     rw [h]
     apply dvd_zero
 
-@[simp]
-theorem content_C {r : R} : (C r).content = normalize r :=
-  by 
-    rw [content]
-    byCases' h0 : r = 0
-    ·
-      simp [h0]
-    have h : (C r).Support = {0} := support_monomial _ _ h0 
-    simp [h]
+-- error in RingTheory.Polynomial.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem content_C {r : R} : «expr = »((C r).content, normalize r) :=
+begin
+  rw [expr content] [],
+  by_cases [expr h0, ":", expr «expr = »(r, 0)],
+  { simp [] [] [] ["[", expr h0, "]"] [] [] },
+  have [ident h] [":", expr «expr = »((C r).support, {0})] [":=", expr support_monomial _ _ h0],
+  simp [] [] [] ["[", expr h, "]"] [] []
+end
 
 @[simp]
 theorem content_zero : content (0 : Polynomial R) = 0 :=
@@ -94,33 +94,31 @@ theorem content_one : content (1 : Polynomial R) = 1 :=
   by 
     rw [←C_1, content_C, normalize_one]
 
-theorem content_X_mul {p : Polynomial R} : content (X*p) = content p :=
-  by 
-    rw [content, content, Finset.gcd_def, Finset.gcd_def]
-    refine' congr rfl _ 
-    have h : (X*p).Support = p.support.map ⟨Nat.succ, Nat.succ_injective⟩
-    ·
-      ext a 
-      simp only [exists_prop, Finset.mem_map, Function.Embedding.coe_fn_mk, Ne.def, mem_support_iff]
-      cases a
-      ·
-        simp [coeff_X_mul_zero, Nat.succ_ne_zero]
-      rw [mul_commₓ, coeff_mul_X]
-      split 
-      ·
-        intro h 
-        use a 
-        simp [h]
-      ·
-        rintro ⟨b, ⟨h1, h2⟩⟩
-        rw [←Nat.succ_injective h2]
-        apply h1 
-    rw [h]
-    simp only [Finset.map_val, Function.comp_app, Function.Embedding.coe_fn_mk, Multiset.map_map]
-    refine' congr (congr rfl _) rfl 
-    ext a 
-    rw [mul_commₓ]
-    simp [coeff_mul_X]
+-- error in RingTheory.Polynomial.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem content_X_mul {p : polynomial R} : «expr = »(content «expr * »(X, p), content p) :=
+begin
+  rw ["[", expr content, ",", expr content, ",", expr finset.gcd_def, ",", expr finset.gcd_def, "]"] [],
+  refine [expr congr rfl _],
+  have [ident h] [":", expr «expr = »(«expr * »(X, p).support, p.support.map ⟨nat.succ, nat.succ_injective⟩)] [],
+  { ext [] [ident a] [],
+    simp [] [] ["only"] ["[", expr exists_prop, ",", expr finset.mem_map, ",", expr function.embedding.coe_fn_mk, ",", expr ne.def, ",", expr mem_support_iff, "]"] [] [],
+    cases [expr a] [],
+    { simp [] [] [] ["[", expr coeff_X_mul_zero, ",", expr nat.succ_ne_zero, "]"] [] [] },
+    rw ["[", expr mul_comm, ",", expr coeff_mul_X, "]"] [],
+    split,
+    { intro [ident h],
+      use [expr a],
+      simp [] [] [] ["[", expr h, "]"] [] [] },
+    { rintros ["⟨", ident b, ",", "⟨", ident h1, ",", ident h2, "⟩", "⟩"],
+      rw ["<-", expr nat.succ_injective h2] [],
+      apply [expr h1] } },
+  rw [expr h] [],
+  simp [] [] ["only"] ["[", expr finset.map_val, ",", expr function.comp_app, ",", expr function.embedding.coe_fn_mk, ",", expr multiset.map_map, "]"] [] [],
+  refine [expr congr (congr rfl _) rfl],
+  ext [] [ident a] [],
+  rw [expr mul_comm] [],
+  simp [] [] [] ["[", expr coeff_mul_X, "]"] [] []
+end
 
 @[simp]
 theorem content_X_pow {k : ℕ} : content ((X : Polynomial R) ^ k) = 1 :=
@@ -408,7 +406,7 @@ theorem is_primitive.dvd_prim_part_iff_dvd {p q : Polynomial R} (hp : p.is_primi
     apply Dvd.intro _ 
     rw [prim_part_mul hq, hp.prim_part_eq]
 
--- error in RingTheory.Polynomial.Content: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in RingTheory.Polynomial.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_primitive_lcm_of_is_primitive
 {p q : polynomial R}
 (hp : p.is_primitive)
@@ -485,13 +483,14 @@ instance (priority := 100)NormalizedGcdMonoid : NormalizedGcdMonoid (Polynomial 
           IsUnit.mul_left_dvd _ _ _ (is_unit_prim_part_C (lcm p.content q.content)), ←hr s.prim_part]
         tauto
 
-theorem degree_gcd_le_left {p : Polynomial R} (hp : p ≠ 0) q : (gcd p q).degree ≤ p.degree :=
-  by 
-    byCases' hq : q = 0
-    ·
-      simp [hq]
-    have  := nat_degree_le_iff_degree_le.mp (nat_degree_le_of_dvd (gcd_dvd_left p q) hp)
-    rwa [degree_eq_nat_degree hp]
+-- error in RingTheory.Polynomial.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem degree_gcd_le_left {p : polynomial R} (hp : «expr ≠ »(p, 0)) (q) : «expr ≤ »((gcd p q).degree, p.degree) :=
+begin
+  by_cases [expr hq, ":", expr «expr = »(q, 0)],
+  { simp [] [] [] ["[", expr hq, "]"] [] [] },
+  have [] [] [":=", expr nat_degree_le_iff_degree_le.mp (nat_degree_le_of_dvd (gcd_dvd_left p q) hp)],
+  rwa [expr degree_eq_nat_degree hp] []
+end
 
 theorem degree_gcd_le_right p {q : Polynomial R} (hq : q ≠ 0) : (gcd p q).degree ≤ q.degree :=
   by 

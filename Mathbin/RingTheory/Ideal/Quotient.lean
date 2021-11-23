@@ -48,19 +48,26 @@ variable{I}{x y : R}
 instance  (I : Ideal R) : HasOne I.quotient :=
   ⟨Submodule.Quotient.mk 1⟩
 
-instance  (I : Ideal R) : Mul I.quotient :=
-  ⟨fun a b =>
-      (Quotientₓ.liftOn₂' a b fun a b => Submodule.Quotient.mk (a*b))$
-        fun a₁ a₂ b₁ b₂ h₁ h₂ =>
-          Quot.sound$
-            by 
-              have F := I.add_mem (I.mul_mem_left a₂ h₁) (I.mul_mem_right b₁ h₂)
-              have  : ((a₁*a₂) - b₁*b₂) = (a₂*a₁ - b₁)+(a₂ - b₂)*b₁
-              ·
-                rw [mul_sub, sub_mul, sub_add_sub_cancel, mul_commₓ, mul_commₓ b₁]
-              rw [←this] at F 
-              change _ ∈ _ 
-              convert F⟩
+-- error in RingTheory.Ideal.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance (I : ideal R) : has_mul I.quotient :=
+⟨λ
+ a
+ b, «expr $ »(quotient.lift_on₂' a b (λ
+   a
+   b, submodule.quotient.mk «expr * »(a, b)), λ
+  a₁
+  a₂
+  b₁
+  b₂
+  h₁
+  h₂, «expr $ »(quot.sound, begin
+     have [ident F] [] [":=", expr I.add_mem (I.mul_mem_left a₂ h₁) (I.mul_mem_right b₁ h₂)],
+     have [] [":", expr «expr = »(«expr - »(«expr * »(a₁, a₂), «expr * »(b₁, b₂)), «expr + »(«expr * »(a₂, «expr - »(a₁, b₁)), «expr * »(«expr - »(a₂, b₂), b₁)))] [],
+     { rw ["[", expr mul_sub, ",", expr sub_mul, ",", expr sub_add_sub_cancel, ",", expr mul_comm, ",", expr mul_comm b₁, "]"] [] },
+     rw ["<-", expr this] ["at", ident F],
+     change [expr «expr ∈ »(_, _)] [] [],
+     convert [] [expr F] []
+   end))⟩
 
 instance  (I : Ideal R) : CommRingₓ I.quotient :=
   { Submodule.Quotient.addCommGroup I with mul := ·*·, one := 1,
@@ -141,7 +148,7 @@ theorem is_domain_iff_prime (I : Ideal R) : IsDomain I.quotient ↔ I.is_prime :
             exact h1 h⟩,
     fun h =>
       by 
-        resetI 
+        skip 
         infer_instance⟩
 
 theorem exists_inv {I : Ideal R} [hI : I.is_maximal] : ∀ {a : I.quotient}, a ≠ 0 → ∃ b : I.quotient, (a*b) = 1 :=
@@ -335,79 +342,81 @@ section ChineseRemainder
 
 variable{ι : Type v}
 
-theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
-  (hf : ∀ i _ : i ∈ s, ∀ j _ : j ∈ s, i ≠ j → f i⊔f j = ⊤) (i : ι) (his : i ∈ s) :
-  ∃ r : R, r - 1 ∈ f i ∧ ∀ j _ : j ∈ s, j ≠ i → r ∈ f j :=
-  by 
-    have  : ∀ j _ : j ∈ s, j ≠ i → ∃ r : R, ∃ H : r - 1 ∈ f i, r ∈ f j
-    ·
-      intro j hjs hji 
-      specialize hf i his j hjs hji.symm 
-      rw [eq_top_iff_one, Submodule.mem_sup] at hf 
-      rcases hf with ⟨r, hri, s, hsj, hrs⟩
-      refine' ⟨1 - r, _, _⟩
-      ·
-        rw [sub_right_comm, sub_self, zero_sub]
-        exact (f i).neg_mem hri
-      ·
-        rw [←hrs, add_sub_cancel']
-        exact hsj 
-    classical 
-    have  : ∃ g : ι → R, (∀ j, g j - 1 ∈ f i) ∧ ∀ j _ : j ∈ s, j ≠ i → g j ∈ f j
-    ·
-      choose g hg1 hg2 
-      refine' ⟨fun j => if H : j ∈ s ∧ j ≠ i then g j H.1 H.2 else 1, fun j => _, fun j => _⟩
-      ·
-        splitIfs with h
-        ·
-          apply hg1 
-        rw [sub_self]
-        exact (f i).zero_mem
-      ·
-        intro hjs hji 
-        rw [dif_pos]
-        ·
-          apply hg2 
-        exact ⟨hjs, hji⟩
-    rcases this with ⟨g, hgi, hgj⟩
-    use ∏x in s.erase i, g x 
-    split 
-    ·
-      rw [←Quotientₓ.eq, RingHom.map_one, RingHom.map_prod]
-      apply Finset.prod_eq_one 
-      intros 
-      rw [←RingHom.map_one, Quotientₓ.eq]
-      apply hgi 
-    intro j hjs hji 
-    rw [←quotient.eq_zero_iff_mem, RingHom.map_prod]
-    refine' Finset.prod_eq_zero (Finset.mem_erase_of_ne_of_mem hji hjs) _ 
-    rw [quotient.eq_zero_iff_mem]
-    exact hgj j hjs hji
+-- error in RingTheory.Ideal.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_sub_one_mem_and_mem
+(s : finset ι)
+{f : ι → ideal R}
+(hf : ∀ i «expr ∈ » s, ∀ j «expr ∈ » s, «expr ≠ »(i, j) → «expr = »(«expr ⊔ »(f i, f j), «expr⊤»()))
+(i : ι)
+(his : «expr ∈ »(i, s)) : «expr∃ , »((r : R), «expr ∧ »(«expr ∈ »(«expr - »(r, 1), f i), ∀
+  j «expr ∈ » s, «expr ≠ »(j, i) → «expr ∈ »(r, f j))) :=
+begin
+  have [] [":", expr ∀
+   j «expr ∈ » s, «expr ≠ »(j, i) → «expr∃ , »((r : R), «expr∃ , »((H : «expr ∈ »(«expr - »(r, 1), f i)), «expr ∈ »(r, f j)))] [],
+  { intros [ident j, ident hjs, ident hji],
+    specialize [expr hf i his j hjs hji.symm],
+    rw ["[", expr eq_top_iff_one, ",", expr submodule.mem_sup, "]"] ["at", ident hf],
+    rcases [expr hf, "with", "⟨", ident r, ",", ident hri, ",", ident s, ",", ident hsj, ",", ident hrs, "⟩"],
+    refine [expr ⟨«expr - »(1, r), _, _⟩],
+    { rw ["[", expr sub_right_comm, ",", expr sub_self, ",", expr zero_sub, "]"] [],
+      exact [expr (f i).neg_mem hri] },
+    { rw ["[", "<-", expr hrs, ",", expr add_sub_cancel', "]"] [],
+      exact [expr hsj] } },
+  classical,
+  have [] [":", expr «expr∃ , »((g : ι → R), «expr ∧ »(∀
+     j, «expr ∈ »(«expr - »(g j, 1), f i), ∀ j «expr ∈ » s, «expr ≠ »(j, i) → «expr ∈ »(g j, f j)))] [],
+  { choose [] [ident g] [ident hg1, ident hg2] [],
+    refine [expr ⟨λ j, if H : «expr ∧ »(«expr ∈ »(j, s), «expr ≠ »(j, i)) then g j H.1 H.2 else 1, λ j, _, λ j, _⟩],
+    { split_ifs [] ["with", ident h],
+      { apply [expr hg1] },
+      rw [expr sub_self] [],
+      exact [expr (f i).zero_mem] },
+    { intros [ident hjs, ident hji],
+      rw [expr dif_pos] [],
+      { apply [expr hg2] },
+      exact [expr ⟨hjs, hji⟩] } },
+  rcases [expr this, "with", "⟨", ident g, ",", ident hgi, ",", ident hgj, "⟩"],
+  use [expr «expr∏ in , »((x), s.erase i, g x)],
+  split,
+  { rw ["[", "<-", expr quotient.eq, ",", expr ring_hom.map_one, ",", expr ring_hom.map_prod, "]"] [],
+    apply [expr finset.prod_eq_one],
+    intros [],
+    rw ["[", "<-", expr ring_hom.map_one, ",", expr quotient.eq, "]"] [],
+    apply [expr hgi] },
+  intros [ident j, ident hjs, ident hji],
+  rw ["[", "<-", expr quotient.eq_zero_iff_mem, ",", expr ring_hom.map_prod, "]"] [],
+  refine [expr finset.prod_eq_zero (finset.mem_erase_of_ne_of_mem hji hjs) _],
+  rw [expr quotient.eq_zero_iff_mem] [],
+  exact [expr hgj j hjs hji]
+end
 
-theorem exists_sub_mem [Fintype ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j → f i⊔f j = ⊤) (g : ι → R) :
-  ∃ r : R, ∀ i, r - g i ∈ f i :=
-  by 
-    have  : ∃ φ : ι → R, (∀ i, φ i - 1 ∈ f i) ∧ ∀ i j, i ≠ j → φ i ∈ f j
-    ·
-      have  := exists_sub_one_mem_and_mem (Finset.univ : Finset ι) fun i _ j _ hij => hf i j hij 
-      choose φ hφ 
-      exists fun i => φ i (Finset.mem_univ i)
-      exact ⟨fun i => (hφ i _).1, fun i j hij => (hφ i _).2 j (Finset.mem_univ j) hij.symm⟩
-    rcases this with ⟨φ, hφ1, hφ2⟩
-    use ∑i, g i*φ i 
-    intro i 
-    rw [←Quotientₓ.eq, RingHom.map_sum]
-    refine' Eq.trans (Finset.sum_eq_single i _ _) _
-    ·
-      intro j _ hji 
-      rw [quotient.eq_zero_iff_mem]
-      exact (f i).mul_mem_left _ (hφ2 j i hji)
-    ·
-      intro hi 
-      exact (hi$ Finset.mem_univ i).elim 
-    specialize hφ1 i 
-    rw [←Quotientₓ.eq, RingHom.map_one] at hφ1 
-    rw [RingHom.map_mul, hφ1, mul_oneₓ]
+-- error in RingTheory.Ideal.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_sub_mem
+[fintype ι]
+{f : ι → ideal R}
+(hf : ∀ i j, «expr ≠ »(i, j) → «expr = »(«expr ⊔ »(f i, f j), «expr⊤»()))
+(g : ι → R) : «expr∃ , »((r : R), ∀ i, «expr ∈ »(«expr - »(r, g i), f i)) :=
+begin
+  have [] [":", expr «expr∃ , »((φ : ι → R), «expr ∧ »(∀
+     i, «expr ∈ »(«expr - »(φ i, 1), f i), ∀ i j, «expr ≠ »(i, j) → «expr ∈ »(φ i, f j)))] [],
+  { have [] [] [":=", expr exists_sub_one_mem_and_mem (finset.univ : finset ι) (λ i _ j _ hij, hf i j hij)],
+    choose [] [ident φ] [ident hφ] [],
+    existsi [expr λ i, φ i (finset.mem_univ i)],
+    exact [expr ⟨λ i, (hφ i _).1, λ i j hij, (hφ i _).2 j (finset.mem_univ j) hij.symm⟩] },
+  rcases [expr this, "with", "⟨", ident φ, ",", ident hφ1, ",", ident hφ2, "⟩"],
+  use [expr «expr∑ , »((i), «expr * »(g i, φ i))],
+  intros [ident i],
+  rw ["[", "<-", expr quotient.eq, ",", expr ring_hom.map_sum, "]"] [],
+  refine [expr eq.trans (finset.sum_eq_single i _ _) _],
+  { intros [ident j, "_", ident hji],
+    rw [expr quotient.eq_zero_iff_mem] [],
+    exact [expr (f i).mul_mem_left _ (hφ2 j i hji)] },
+  { intros [ident hi],
+    exact [expr «expr $ »(hi, finset.mem_univ i).elim] },
+  specialize [expr hφ1 i],
+  rw ["[", "<-", expr quotient.eq, ",", expr ring_hom.map_one, "]"] ["at", ident hφ1],
+  rw ["[", expr ring_hom.map_mul, ",", expr hφ1, ",", expr mul_one, "]"] []
+end
 
 /-- The homomorphism from `R/(⋂ i, f i)` to `∏ i, (R / f i)` featured in the Chinese
   Remainder Theorem. It is bijective if the ideals `f i` are comaximal. -/

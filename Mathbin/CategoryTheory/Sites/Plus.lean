@@ -250,41 +250,39 @@ theorem plus_map_to_plus : J.plus_map (J.to_plus P) = J.to_plus (J.plus_obj P) :
       erw [P.map_id, category.comp_id]
       rfl
 
+-- error in CategoryTheory.Sites.Plus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_iso_to_plus_of_is_sheaf (hP : presheaf.is_sheaf J P) : is_iso (J.to_plus P) :=
-  by 
-    rw [presheaf.is_sheaf_iff_multiequalizer] at hP 
-    resetI 
-    suffices  : ∀ X, is_iso ((J.to_plus P).app X)
-    ·
-      resetI 
-      apply nat_iso.is_iso_of_is_iso_app 
-    intro X 
-    dsimp 
-    suffices  : is_iso (colimit.ι (J.diagram P X.unop) (op ⊤))
-    ·
-      resetI 
-      apply is_iso.comp_is_iso 
-    suffices  : ∀ S T : «expr ᵒᵖ» (J.cover X.unop) f : S ⟶ T, is_iso ((J.diagram P X.unop).map f)
-    ·
-      resetI 
-      apply is_iso_ι_of_is_initial (initial_op_of_terminal is_terminal_top)
-    intro S T e 
-    have  : S.unop.to_multiequalizer P ≫ (J.diagram P X.unop).map e = T.unop.to_multiequalizer P
-    ·
-      ·
-        ext 
-        dsimp 
-        simpa 
-    have  : (J.diagram P X.unop).map e = inv (S.unop.to_multiequalizer P) ≫ T.unop.to_multiequalizer P
-    ·
-      simp [←this]
-    rw [this]
-    infer_instance
+begin
+  rw [expr presheaf.is_sheaf_iff_multiequalizer] ["at", ident hP],
+  resetI,
+  suffices [] [":", expr ∀ X, is_iso ((J.to_plus P).app X)],
+  { resetI,
+    apply [expr nat_iso.is_iso_of_is_iso_app] },
+  intros [ident X],
+  dsimp [] [] [] [],
+  suffices [] [":", expr is_iso (colimit.ι (J.diagram P X.unop) (op «expr⊤»()))],
+  { resetI,
+    apply [expr is_iso.comp_is_iso] },
+  suffices [] [":", expr ∀
+   (S T : «expr ᵒᵖ»(J.cover X.unop))
+   (f : «expr ⟶ »(S, T)), is_iso ((J.diagram P X.unop).map f)],
+  { resetI,
+    apply [expr is_iso_ι_of_is_initial (initial_op_of_terminal is_terminal_top)] },
+  intros [ident S, ident T, ident e],
+  have [] [":", expr «expr = »(«expr ≫ »(S.unop.to_multiequalizer P, (J.diagram P X.unop).map e), T.unop.to_multiequalizer P)] [],
+  by { ext [] [] [],
+    dsimp [] [] [] [],
+    simpa [] [] [] [] [] [] },
+  have [] [":", expr «expr = »((J.diagram P X.unop).map e, «expr ≫ »(inv (S.unop.to_multiequalizer P), T.unop.to_multiequalizer P))] [],
+  by simp [] [] [] ["[", "<-", expr this, "]"] [] [],
+  rw [expr this] [],
+  apply_instance
+end
 
+-- error in CategoryTheory.Sites.Plus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The natural isomorphism between `P` and `P⁺` when `P` is a sheaf. -/
-def iso_to_plus (hP : presheaf.is_sheaf J P) : P ≅ J.plus_obj P :=
-  by 
-    letI this := is_iso_to_plus_of_is_sheaf J P hP <;> exact as_iso (J.to_plus P)
+def iso_to_plus (hP : presheaf.is_sheaf J P) : «expr ≅ »(P, J.plus_obj P) :=
+by letI [] [] [":=", expr is_iso_to_plus_of_is_sheaf J P hP]; exact [expr as_iso (J.to_plus P)]
 
 /-- Lift a morphism `P ⟶ Q` to `P⁺ ⟶ Q` when `Q` is a sheaf. -/
 def plus_lift {P Q : «expr ᵒᵖ» C ⥤ D} (η : P ⟶ Q) (hQ : presheaf.is_sheaf J Q) : J.plus_obj P ⟶ Q :=
@@ -315,16 +313,20 @@ theorem plus_lift_unique {P Q : «expr ᵒᵖ» C ⥤ D} (η : P ⟶ Q) (hQ : pr
     dsimp only [plus_functor, to_plus_nat_trans]
     rw [J.plus_map_to_plus P]
 
-theorem plus_hom_ext {P Q : «expr ᵒᵖ» C ⥤ D} (η γ : J.plus_obj P ⟶ Q) (hQ : presheaf.is_sheaf J Q)
-  (h : J.to_plus P ≫ η = J.to_plus P ≫ γ) : η = γ :=
-  by 
-    have  : γ = J.plus_lift (J.to_plus P ≫ γ) hQ
-    ·
-      apply plus_lift_unique 
-      rfl 
-    rw [this]
-    apply plus_lift_unique 
-    exact h
+-- error in CategoryTheory.Sites.Plus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem plus_hom_ext
+{P Q : «expr ⥤ »(«expr ᵒᵖ»(C), D)}
+(η γ : «expr ⟶ »(J.plus_obj P, Q))
+(hQ : presheaf.is_sheaf J Q)
+(h : «expr = »(«expr ≫ »(J.to_plus P, η), «expr ≫ »(J.to_plus P, γ))) : «expr = »(η, γ) :=
+begin
+  have [] [":", expr «expr = »(γ, J.plus_lift «expr ≫ »(J.to_plus P, γ) hQ)] [],
+  { apply [expr plus_lift_unique],
+    refl },
+  rw [expr this] [],
+  apply [expr plus_lift_unique],
+  exact [expr h]
+end
 
 end CategoryTheory.GrothendieckTopology
 

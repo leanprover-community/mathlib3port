@@ -74,17 +74,20 @@ def Num (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
 def denom (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
   (g 1 0*z)+g 1 1
 
-theorem linear_ne_zero (cd : Finₓ 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (((cd 0 : ℂ)*z)+cd 1) ≠ 0 :=
-  by 
-    contrapose! h 
-    have  : cd 0 = 0
-    ·
-      applyFun Complex.im  at h 
-      simpa only [z.im_ne_zero, Complex.add_im, add_zeroₓ, coe_im, zero_mul, or_falseₓ, Complex.of_real_im,
-        Complex.zero_im, Complex.mul_im, mul_eq_zero] using h 
-    simp only [this, zero_mul, Complex.of_real_zero, zero_addₓ, Complex.of_real_eq_zero] at h 
-    ext i 
-    finCases i <;> assumption
+-- error in Analysis.Complex.UpperHalfPlane: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem linear_ne_zero
+(cd : fin 2 → exprℝ())
+(z : exprℍ())
+(h : «expr ≠ »(cd, 0)) : «expr ≠ »(«expr + »(«expr * »((cd 0 : exprℂ()), z), cd 1), 0) :=
+begin
+  contrapose ["!"] [ident h],
+  have [] [":", expr «expr = »(cd 0, 0)] [],
+  { apply_fun [expr complex.im] ["at", ident h] [],
+    simpa [] [] ["only"] ["[", expr z.im_ne_zero, ",", expr complex.add_im, ",", expr add_zero, ",", expr coe_im, ",", expr zero_mul, ",", expr or_false, ",", expr complex.of_real_im, ",", expr complex.zero_im, ",", expr complex.mul_im, ",", expr mul_eq_zero, "]"] [] ["using", expr h] },
+  simp [] [] ["only"] ["[", expr this, ",", expr zero_mul, ",", expr complex.of_real_zero, ",", expr zero_add, ",", expr complex.of_real_eq_zero, "]"] [] ["at", ident h],
+  ext [] [ident i] [],
+  fin_cases [ident i] []; assumption
+end
 
 theorem denom_ne_zero (g : SL(2,ℝ)) (z : ℍ) : denom g z ≠ 0 :=
   linear_ne_zero (g 1) z (g.row_ne_zero 1)
@@ -99,20 +102,21 @@ theorem norm_sq_denom_ne_zero (g : SL(2,ℝ)) (z : ℍ) : Complex.normSq (denom 
 def smul_aux' (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
   Num g z / denom g z
 
-theorem smul_aux'_im (g : SL(2,ℝ)) (z : ℍ) : (smul_aux' g z).im = z.im / (denom g z).normSq :=
-  by 
-    rw [smul_aux', Complex.div_im]
-    set NsqBot := (denom g z).normSq 
-    have  : NsqBot ≠ 0
-    ·
-      simp only [denom_ne_zero g z, MonoidWithZeroHom.map_eq_zero, Ne.def, not_false_iff]
-    fieldSimp [smul_aux']
-    convert congr_argₓ (fun x => (x*z.im)*NsqBot^2) g.det_coe using 1
-    ·
-      rw [det_fin_two («expr↑ » g)]
-      ring
-    ·
-      ring
+-- error in Analysis.Complex.UpperHalfPlane: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem smul_aux'_im
+(g : «exprSL( , )»(2, exprℝ()))
+(z : exprℍ()) : «expr = »((smul_aux' g z).im, «expr / »(z.im, (denom g z).norm_sq)) :=
+begin
+  rw ["[", expr smul_aux', ",", expr complex.div_im, "]"] [],
+  set [] [ident NsqBot] [] [":="] [expr (denom g z).norm_sq] [],
+  have [] [":", expr «expr ≠ »(NsqBot, 0)] [],
+  { simp [] [] ["only"] ["[", expr denom_ne_zero g z, ",", expr monoid_with_zero_hom.map_eq_zero, ",", expr ne.def, ",", expr not_false_iff, "]"] [] [] },
+  field_simp [] ["[", expr smul_aux', "]"] [] [],
+  convert [] [expr congr_arg (λ x, «expr * »(«expr * »(x, z.im), «expr ^ »(NsqBot, 2))) g.det_coe] ["using", 1],
+  { rw [expr det_fin_two «expr↑ »(g)] [],
+    ring [] },
+  { ring [] }
+end
 
 /-- Fractional linear transformation -/
 def smul_aux (g : SL(2,ℝ)) (z : ℍ) : ℍ :=

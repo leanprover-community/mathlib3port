@@ -86,7 +86,7 @@ theorem insert_of_symmetric (hs : IsAntichain r s) (hr : Symmetric r) (h : ∀ �
 
 /-- Turns a set into an antichain by keeping only the "maximal" elements. -/
 protected def mk (r : α → α → Prop) (s : Set α) : Set α :=
-  { a ∈ s | ∀ ⦃b⦄, b ∈ s → r a b → a = b }
+  { a∈s | ∀ ⦃b⦄, b ∈ s → r a b → a = b }
 
 theorem mk_is_antichain (r : α → α → Prop) (s : Set α) : IsAntichain r (IsAntichain.Mk r s) :=
   fun a ha b hb hab h => hab$ ha.2 hb.1 h

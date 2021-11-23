@@ -206,12 +206,16 @@ theorem exists_measurable_superset_iff_measure_eq_zero : (∃ t, s ⊆ t ∧ Mea
 theorem measure_Union_le [Encodable β] (s : β → Set α) : μ (⋃i, s i) ≤ ∑'i, μ (s i) :=
   μ.to_outer_measure.Union _
 
-theorem measure_bUnion_le {s : Set β} (hs : countable s) (f : β → Set α) :
-  μ (⋃(b : _)(_ : b ∈ s), f b) ≤ ∑'p : s, μ (f p) :=
-  by 
-    haveI  := hs.to_encodable 
-    rw [bUnion_eq_Union]
-    apply measure_Union_le
+-- error in MeasureTheory.Measure.MeasureSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measure_bUnion_le
+{s : set β}
+(hs : countable s)
+(f : β → set α) : «expr ≤ »(μ «expr⋃ , »((b «expr ∈ » s), f b), «expr∑' , »((p : s), μ (f p))) :=
+begin
+  haveI [] [] [":=", expr hs.to_encodable],
+  rw ["[", expr bUnion_eq_Union, "]"] [],
+  apply [expr measure_Union_le]
+end
 
 theorem measure_bUnion_finset_le (s : Finset β) (f : β → Set α) : μ (⋃(b : _)(_ : b ∈ s), f b) ≤ ∑p in s, μ (f p) :=
   by 
@@ -239,12 +243,14 @@ theorem measure_Union_null [Encodable β] {s : β → Set α} : (∀ i, μ (s i)
 theorem measure_Union_null_iff [Encodable ι] {s : ι → Set α} : μ (⋃i, s i) = 0 ↔ ∀ i, μ (s i) = 0 :=
   ⟨fun h i => measure_mono_null (subset_Union _ _) h, measure_Union_null⟩
 
-theorem measure_bUnion_null_iff {s : Set ι} (hs : countable s) {t : ι → Set α} :
-  μ (⋃(i : _)(_ : i ∈ s), t i) = 0 ↔ ∀ i _ : i ∈ s, μ (t i) = 0 :=
-  by 
-    haveI  := hs.to_encodable 
-    rw [bUnion_eq_Union, measure_Union_null_iff, SetCoe.forall]
-    rfl
+-- error in MeasureTheory.Measure.MeasureSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measure_bUnion_null_iff
+{s : set ι}
+(hs : countable s)
+{t : ι → set α} : «expr ↔ »(«expr = »(μ «expr⋃ , »((i «expr ∈ » s), t i), 0), ∀ i «expr ∈ » s, «expr = »(μ (t i), 0)) :=
+by { haveI [] [] [":=", expr hs.to_encodable],
+  rw ["[", expr bUnion_eq_Union, ",", expr measure_Union_null_iff, ",", expr set_coe.forall, "]"] [],
+  refl }
 
 theorem measure_union_le (s₁ s₂ : Set α) : μ (s₁ ∪ s₂) ≤ μ s₁+μ s₂ :=
   μ.to_outer_measure.union _ _
@@ -270,17 +276,13 @@ theorem measure_union_lt_top_iff : μ (s ∪ t) < ∞ ↔ μ s < ∞ ∧ μ t < 
 theorem measure_union_ne_top (hs : μ s ≠ ∞) (ht : μ t ≠ ∞) : μ (s ∪ t) ≠ ∞ :=
   ((measure_union_le s t).trans_lt (lt_top_iff_ne_top.mpr (Ennreal.add_ne_top.mpr ⟨hs, ht⟩))).Ne
 
--- error in MeasureTheory.Measure.MeasureSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem exists_measure_pos_of_not_measure_Union_null
-[encodable β]
-{s : β → set α}
-(hs : «expr ≠ »(μ «expr⋃ , »((n), s n), 0)) : «expr∃ , »((n), «expr < »(0, μ (s n))) :=
-begin
-  by_contra [],
-  push_neg ["at", ident h],
-  simp_rw [expr nonpos_iff_eq_zero] ["at", ident h],
-  exact [expr hs (measure_Union_null h)]
-end
+theorem exists_measure_pos_of_not_measure_Union_null [Encodable β] {s : β → Set α} (hs : μ (⋃n, s n) ≠ 0) :
+  ∃ n, 0 < μ (s n) :=
+  by 
+    byContra 
+    pushNeg  at h 
+    simpRw [nonpos_iff_eq_zero]  at h 
+    exact hs (measure_Union_null h)
 
 theorem measure_inter_lt_top_of_left_ne_top (hs_finite : μ s ≠ ∞) : μ (s ∩ t) < ∞ :=
   (measure_mono (Set.inter_subset_left s t)).trans_lt hs_finite.lt_top
@@ -339,12 +341,14 @@ theorem measure_zero_iff_ae_nmem {s : Set α} : μ s = 0 ↔ ∀ᵐa ∂μ, a �
 theorem ae_of_all {p : α → Prop} (μ : Measureₓ α) : (∀ a, p a) → ∀ᵐa ∂μ, p a :=
   eventually_of_forall
 
-instance  : CountableInterFilter μ.ae :=
-  ⟨by 
-      intro S hSc hS 
-      simp only [mem_ae_iff, compl_sInter, sUnion_image, bUnion_eq_Union] at hS⊢
-      haveI  := hSc.to_encodable 
-      exact measure_Union_null (Subtype.forall.2 hS)⟩
+-- error in MeasureTheory.Measure.MeasureSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance : countable_Inter_filter μ.ae :=
+⟨begin
+   intros [ident S, ident hSc, ident hS],
+   simp [] [] ["only"] ["[", expr mem_ae_iff, ",", expr compl_sInter, ",", expr sUnion_image, ",", expr bUnion_eq_Union, "]"] [] ["at", ident hS, "⊢"],
+   haveI [] [] [":=", expr hSc.to_encodable],
+   exact [expr measure_Union_null (subtype.forall.2 hS)]
+ end⟩
 
 theorem ae_imp_iff {p : α → Prop} {q : Prop} : (∀ᵐx ∂μ, q → p x) ↔ q → ∀ᵐx ∂μ, p x :=
   Filter.eventually_imp_distrib_left
@@ -434,32 +438,28 @@ we also have `t =ᵐ[μ] s`, see `null_measurable_set.to_measurable_ae_eq`. -/
 def to_measurable (μ : Measureₓ α) (s : Set α) : Set α :=
   if h : ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s then h.some else (exists_measurable_superset μ s).some
 
--- error in MeasureTheory.Measure.MeasureSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem subset_to_measurable (μ : measure α) (s : set α) : «expr ⊆ »(s, to_measurable μ s) :=
-begin
-  rw [expr to_measurable] [],
-  split_ifs [] ["with", ident hs],
-  exacts ["[", expr hs.some_spec.fst, ",", expr (exists_measurable_superset μ s).some_spec.1, "]"]
-end
+theorem subset_to_measurable (μ : Measureₓ α) (s : Set α) : s ⊆ to_measurable μ s :=
+  by 
+    rw [to_measurable]
+    splitIfs with hs 
+    exacts[hs.some_spec.fst, (exists_measurable_superset μ s).some_spec.1]
 
 theorem ae_le_to_measurable : s ≤ᵐ[μ] to_measurable μ s :=
   (subset_to_measurable _ _).EventuallyLe
 
--- error in MeasureTheory.Measure.MeasureSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-@[simp] theorem measurable_set_to_measurable (μ : measure α) (s : set α) : measurable_set (to_measurable μ s) :=
-begin
-  rw [expr to_measurable] [],
-  split_ifs [] ["with", ident hs],
-  exacts ["[", expr hs.some_spec.snd.1, ",", expr (exists_measurable_superset μ s).some_spec.2.1, "]"]
-end
+@[simp]
+theorem measurable_set_to_measurable (μ : Measureₓ α) (s : Set α) : MeasurableSet (to_measurable μ s) :=
+  by 
+    rw [to_measurable]
+    splitIfs with hs 
+    exacts[hs.some_spec.snd.1, (exists_measurable_superset μ s).some_spec.2.1]
 
--- error in MeasureTheory.Measure.MeasureSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-@[simp] theorem measure_to_measurable (s : set α) : «expr = »(μ (to_measurable μ s), μ s) :=
-begin
-  rw [expr to_measurable] [],
-  split_ifs [] ["with", ident hs],
-  exacts ["[", expr measure_congr hs.some_spec.snd.2, ",", expr (exists_measurable_superset μ s).some_spec.2.2, "]"]
-end
+@[simp]
+theorem measure_to_measurable (s : Set α) : μ (to_measurable μ s) = μ s :=
+  by 
+    rw [to_measurable]
+    splitIfs with hs 
+    exacts[measure_congr hs.some_spec.snd.2, (exists_measurable_superset μ s).some_spec.2.2]
 
 /-- A measure space is a measurable space equipped with a
   measure, referred to as `volume`. -/

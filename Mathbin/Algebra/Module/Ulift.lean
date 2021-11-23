@@ -1,5 +1,5 @@
-import Mathbin.LinearAlgebra.Basic 
-import Mathbin.Algebra.Ring.Ulift
+import Mathbin.Algebra.Ring.Ulift 
+import Mathbin.Data.Equiv.Module
 
 /-!
 # `ulift` instances for module and multiplicative actions

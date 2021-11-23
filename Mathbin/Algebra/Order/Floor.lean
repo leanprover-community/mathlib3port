@@ -309,24 +309,23 @@ end LinearOrderedRing
 
 end Nat
 
+-- error in Algebra.Order.Floor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- There exists at most one `floor_semiring` structure on a linear ordered semiring. -/
-theorem subsingleton_floor_semiring {α} [LinearOrderedSemiring α] : Subsingleton (FloorSemiring α) :=
-  by 
-    refine' ⟨fun H₁ H₂ => _⟩
-    have  : H₁.ceil = H₂.ceil 
-    exact funext fun a => H₁.gc_ceil.l_unique H₂.gc_ceil$ fun n => rfl 
-    have  : H₁.floor = H₂.floor
-    ·
-      ext a 
-      cases lt_or_leₓ a 0
-      ·
-        rw [H₁.floor_of_neg, H₂.floor_of_neg] <;> exact h
-      ·
-        refine' eq_of_forall_le_iff fun n => _ 
-        rw [H₁.gc_floor, H₂.gc_floor] <;> exact h 
-    cases H₁ 
-    cases H₂ 
-    congr <;> assumption
+theorem subsingleton_floor_semiring {α} [linear_ordered_semiring α] : subsingleton (floor_semiring α) :=
+begin
+  refine [expr ⟨λ H₁ H₂, _⟩],
+  have [] [":", expr «expr = »(H₁.ceil, H₂.ceil)] [],
+  from [expr funext (λ a, «expr $ »(H₁.gc_ceil.l_unique H₂.gc_ceil, λ n, rfl))],
+  have [] [":", expr «expr = »(H₁.floor, H₂.floor)] [],
+  { ext [] [ident a] [],
+    cases [expr lt_or_le a 0] [],
+    { rw ["[", expr H₁.floor_of_neg, ",", expr H₂.floor_of_neg, "]"] []; exact [expr h] },
+    { refine [expr eq_of_forall_le_iff (λ n, _)],
+      rw ["[", expr H₁.gc_floor, ",", expr H₂.gc_floor, "]"] []; exact [expr h] } },
+  cases [expr H₁] [],
+  cases [expr H₂] [],
+  congr; assumption
+end
 
 /-! ### Floor rings -/
 
@@ -494,20 +493,21 @@ theorem floor_sub_int (a : α) (z : ℤ) : ⌊a - z⌋ = ⌊a⌋ - z :=
 theorem floor_sub_nat (a : α) (n : ℕ) : ⌊a - n⌋ = ⌊a⌋ - n :=
   floor_sub_int a n
 
-theorem abs_sub_lt_one_of_floor_eq_floor {α : Type _} [LinearOrderedCommRing α] [FloorRing α] {a b : α}
-  (h : ⌊a⌋ = ⌊b⌋) : |a - b| < 1 :=
-  by 
-    have  : a < ⌊a⌋+1 := lt_floor_add_one a 
-    have  : b < ⌊b⌋+1 := lt_floor_add_one b 
-    have  : (⌊a⌋ : α) = ⌊b⌋ := Int.cast_inj.2 h 
-    have  : (⌊a⌋ : α) ≤ a := floor_le a 
-    have  : (⌊b⌋ : α) ≤ b := floor_le b 
-    exact
-      abs_sub_lt_iff.2
-        ⟨by 
-            linarith,
-          by 
-            linarith⟩
+-- error in Algebra.Order.Floor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem abs_sub_lt_one_of_floor_eq_floor
+{α : Type*}
+[linear_ordered_comm_ring α]
+[floor_ring α]
+{a b : α}
+(h : «expr = »(«expr⌊ ⌋»(a), «expr⌊ ⌋»(b))) : «expr < »(«expr| |»(«expr - »(a, b)), 1) :=
+begin
+  have [] [":", expr «expr < »(a, «expr + »(«expr⌊ ⌋»(a), 1))] [":=", expr lt_floor_add_one a],
+  have [] [":", expr «expr < »(b, «expr + »(«expr⌊ ⌋»(b), 1))] [":=", expr lt_floor_add_one b],
+  have [] [":", expr «expr = »((«expr⌊ ⌋»(a) : α), «expr⌊ ⌋»(b))] [":=", expr int.cast_inj.2 h],
+  have [] [":", expr «expr ≤ »((«expr⌊ ⌋»(a) : α), a)] [":=", expr floor_le a],
+  have [] [":", expr «expr ≤ »((«expr⌊ ⌋»(b) : α), b)] [":=", expr floor_le b],
+  exact [expr abs_sub_lt_iff.2 ⟨by linarith [] [] [], by linarith [] [] []⟩]
+end
 
 theorem floor_eq_iff : ⌊a⌋ = z ↔ «expr↑ » z ≤ a ∧ a < z+1 :=
   by 
@@ -846,13 +846,17 @@ theorem preimage_Iic : (coeₓ : ℤ → α) ⁻¹' Set.Iic a = Set.Iic ⌊a⌋ 
 
 end Int
 
+-- error in Algebra.Order.Floor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- There exists at most one `floor_ring` structure on a given linear ordered ring. -/
-theorem subsingleton_floor_ring {α} [LinearOrderedRing α] : Subsingleton (FloorRing α) :=
-  by 
-    refine' ⟨fun H₁ H₂ => _⟩
-    have  : H₁.floor = H₂.floor := funext fun a => H₁.gc_coe_floor.u_unique H₂.gc_coe_floor$ fun _ => rfl 
-    have  : H₁.ceil = H₂.ceil := funext fun a => H₁.gc_ceil_coe.l_unique H₂.gc_ceil_coe$ fun _ => rfl 
-    cases H₁ 
-    cases H₂ 
-    congr <;> assumption
+theorem subsingleton_floor_ring {α} [linear_ordered_ring α] : subsingleton (floor_ring α) :=
+begin
+  refine [expr ⟨λ H₁ H₂, _⟩],
+  have [] [":", expr «expr = »(H₁.floor, H₂.floor)] [":=", expr funext (λ
+    a, «expr $ »(H₁.gc_coe_floor.u_unique H₂.gc_coe_floor, λ _, rfl))],
+  have [] [":", expr «expr = »(H₁.ceil, H₂.ceil)] [":=", expr funext (λ
+    a, «expr $ »(H₁.gc_ceil_coe.l_unique H₂.gc_ceil_coe, λ _, rfl))],
+  cases [expr H₁] [],
+  cases [expr H₂] [],
+  congr; assumption
+end
 

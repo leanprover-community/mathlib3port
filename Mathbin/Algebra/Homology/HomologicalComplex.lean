@@ -256,33 +256,41 @@ open_locale Classical
 
 noncomputable theory
 
+-- error in Algebra.Homology.HomologicalComplex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `C.d i j` and `C.d i j'` are both allowed, then we must have `j = j'`,
 and so the differentials only differ by an `eq_to_hom`.
 -/
 @[simp]
-theorem d_comp_eq_to_hom {i j j' : ι} (rij : c.rel i j) (rij' : c.rel i j') :
-  C.d i j' ≫ eq_to_hom (congr_argₓ C.X (c.next_eq rij' rij)) = C.d i j :=
-  by 
-    have P : ∀ h : j' = j, C.d i j' ≫ eq_to_hom (congr_argₓ C.X h) = C.d i j
-    ·
-      rintro rfl 
-      simp 
-    apply P
+theorem d_comp_eq_to_hom
+{i j j' : ι}
+(rij : c.rel i j)
+(rij' : c.rel i j') : «expr = »(«expr ≫ »(C.d i j', eq_to_hom (congr_arg C.X (c.next_eq rij' rij))), C.d i j) :=
+begin
+  have [ident P] [":", expr ∀
+   h : «expr = »(j', j), «expr = »(«expr ≫ »(C.d i j', eq_to_hom (congr_arg C.X h)), C.d i j)] [],
+  { rintro [ident rfl],
+    simp [] [] [] [] [] [] },
+  apply [expr P]
+end
 
+-- error in Algebra.Homology.HomologicalComplex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `C.d i j` and `C.d i' j` are both allowed, then we must have `i = i'`,
 and so the differentials only differ by an `eq_to_hom`.
 -/
 @[simp]
-theorem eq_to_hom_comp_d {i i' j : ι} (rij : c.rel i j) (rij' : c.rel i' j) :
-  eq_to_hom (congr_argₓ C.X (c.prev_eq rij rij')) ≫ C.d i' j = C.d i j :=
-  by 
-    have P : ∀ h : i = i', eq_to_hom (congr_argₓ C.X h) ≫ C.d i' j = C.d i j
-    ·
-      rintro rfl 
-      simp 
-    apply P
+theorem eq_to_hom_comp_d
+{i i' j : ι}
+(rij : c.rel i j)
+(rij' : c.rel i' j) : «expr = »(«expr ≫ »(eq_to_hom (congr_arg C.X (c.prev_eq rij rij')), C.d i' j), C.d i j) :=
+begin
+  have [ident P] [":", expr ∀
+   h : «expr = »(i, i'), «expr = »(«expr ≫ »(eq_to_hom (congr_arg C.X h), C.d i' j), C.d i j)] [],
+  { rintro [ident rfl],
+    simp [] [] [] [] [] [] },
+  apply [expr P]
+end
 
 theorem kernel_eq_kernel [has_kernels V] {i j j' : ι} (r : c.rel i j) (r' : c.rel i j') :
   kernel_subobject (C.d i j) = kernel_subobject (C.d i j') :=

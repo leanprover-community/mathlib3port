@@ -1,3 +1,4 @@
+import Mathbin.Meta.RbMap 
 import Mathbin.Tactic.Core
 
 /-!
@@ -61,7 +62,7 @@ unsafe def localized_cmd (_ : parse$ tk "localized") : parser Unit :=
     let dummy_decl_name :=
       mkNumName `_localized_decl ((Stringₓ.hash (cmd ++ nm.to_string)+env.fingerprint) % unsignedSz)
     add_decl
-        (declaration.defn dummy_decl_name [] (quote Name × Stringₓ) (reflect (⟨nm, cmd⟩ : Name × Stringₓ))
+        (declaration.defn dummy_decl_name [] (quote.1 (Name × Stringₓ)) (reflect (⟨nm, cmd⟩ : Name × Stringₓ))
           (ReducibilityHints.regular 1 tt) ff)
     localized_attr dummy_decl_name Unit.star tt
 

@@ -44,7 +44,7 @@ unsafe def inhabited_instance : derive_handler :=
 
 end Tactic
 
--- error in Tactic.DeriveInhabited: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Tactic.DeriveInhabited: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 attribute [derive #[expr inhabited]]
 vm_decl_kind
 vm_obj_kind

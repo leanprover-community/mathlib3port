@@ -264,13 +264,13 @@ section IsAtomistic
 variable[IsAtomistic α]
 
 @[simp]
-theorem Sup_atoms_le_eq (b : α) : Sup { a : α | IsAtom a ∧ a ≤ b } = b :=
+theorem Sup_atoms_le_eq (b : α) : Sup { a:α | IsAtom a ∧ a ≤ b } = b :=
   by 
     rcases eq_Sup_atoms b with ⟨s, rfl, hs⟩
     exact le_antisymmₓ (Sup_le fun _ => And.right) (Sup_le_Sup fun a ha => ⟨hs a ha, le_Sup ha⟩)
 
 @[simp]
-theorem Sup_atoms_eq_top : Sup { a : α | IsAtom a } = ⊤ :=
+theorem Sup_atoms_eq_top : Sup { a:α | IsAtom a } = ⊤ :=
   by 
     refine' Eq.trans (congr rfl (Set.ext fun x => _)) (Sup_atoms_le_eq ⊤)
     exact (and_iff_left le_top).symm
@@ -311,18 +311,16 @@ class IsSimpleLattice(α : Type _)[BoundedLattice α] extends Nontrivial α : Pr
 
 export IsSimpleLattice(eq_bot_or_eq_top)
 
-theorem is_simple_lattice_iff_is_simple_lattice_order_dual [BoundedLattice α] :
-  IsSimpleLattice α ↔ IsSimpleLattice (OrderDual α) :=
-  by 
-    split  <;> intro i <;> haveI  := i
-    ·
-      exact
-        { exists_pair_ne := @exists_pair_ne α _,
-          eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.ofDual a) : _ ∨ _) }
-    ·
-      exact
-        { exists_pair_ne := @exists_pair_ne (OrderDual α) _,
-          eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.toDual a)) }
+-- error in Order.Atoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_simple_lattice_iff_is_simple_lattice_order_dual
+[bounded_lattice α] : «expr ↔ »(is_simple_lattice α, is_simple_lattice (order_dual α)) :=
+begin
+  split; intro [ident i]; haveI [] [] [":=", expr i],
+  { exact [expr { exists_pair_ne := @exists_pair_ne α _,
+       eq_bot_or_eq_top := λ a, or.symm (eq_bot_or_eq_top (order_dual.of_dual a) : «expr ∨ »(_, _)) }] },
+  { exact [expr { exists_pair_ne := @exists_pair_ne (order_dual α) _,
+       eq_bot_or_eq_top := λ a, or.symm (eq_bot_or_eq_top (order_dual.to_dual a)) }] }
+end
 
 section IsSimpleLattice
 

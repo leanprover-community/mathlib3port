@@ -383,7 +383,7 @@ theorem comap_eq_lift' {f : Filter β} {m : α → β} : comap m f = f.lift' (pr
 
 theorem lift'_infi_powerset {f : ι → Filter α} : (infi f).lift' powerset = ⨅i, (f i).lift' powerset :=
   by 
-    casesI is_empty_or_nonempty ι
+    cases' is_empty_or_nonempty ι
     ·
       rw [infi_of_empty f, infi_of_empty, lift'_top, powerset_univ, principal_univ]
     ·

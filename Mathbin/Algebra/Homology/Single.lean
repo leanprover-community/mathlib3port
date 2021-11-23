@@ -96,17 +96,15 @@ theorem single_map_f_self (j : ι) {A B : V} (f : A ⟶ B) :
     simp 
     rfl
 
-instance  (j : ι) : faithful (single V c j) :=
-  { map_injective' :=
-      fun X Y f g w =>
-        by 
-          have  := congr_hom w j 
-          dsimp  at this 
-          simp only [dif_pos] at this 
-          rw [←is_iso.inv_comp_eq, inv_eq_to_hom, eq_to_hom_trans_assoc, eq_to_hom_refl, category.id_comp,
-            ←is_iso.comp_inv_eq, category.assoc, inv_eq_to_hom, eq_to_hom_trans, eq_to_hom_refl, category.comp_id] at
-            this 
-          exact this }
+-- error in Algebra.Homology.Single: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance (j : ι) : faithful (single V c j) :=
+{ map_injective' := λ X Y f g w, begin
+    have [] [] [":=", expr congr_hom w j],
+    dsimp [] [] [] ["at", ident this],
+    simp [] [] ["only"] ["[", expr dif_pos, "]"] [] ["at", ident this],
+    rw ["[", "<-", expr is_iso.inv_comp_eq, ",", expr inv_eq_to_hom, ",", expr eq_to_hom_trans_assoc, ",", expr eq_to_hom_refl, ",", expr category.id_comp, ",", "<-", expr is_iso.comp_inv_eq, ",", expr category.assoc, ",", expr inv_eq_to_hom, ",", expr eq_to_hom_trans, ",", expr eq_to_hom_refl, ",", expr category.comp_id, "]"] ["at", ident this],
+    exact [expr this]
+  end }
 
 instance  (j : ι) : full (single V c j) :=
   { Preimage :=

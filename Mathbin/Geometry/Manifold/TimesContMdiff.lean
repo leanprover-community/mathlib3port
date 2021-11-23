@@ -118,69 +118,58 @@ functions between manifolds. -/
 def TimesContDiffWithinAtProp (n : WithTop ℕ) f s x : Prop :=
   TimesContDiffWithinAt 𝕜 n (I' ∘ f ∘ I.symm) (range I ∩ I.symm ⁻¹' s) (I x)
 
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Being `Cⁿ` in the model space is a local property, invariant under smooth maps. Therefore,
 it will lift nicely to manifolds. -/
-theorem times_cont_diff_within_at_local_invariant_prop (n : WithTop ℕ) :
-  (timesContDiffGroupoid ∞ I).LocalInvariantProp (timesContDiffGroupoid ∞ I') (TimesContDiffWithinAtProp I I' n) :=
-  { is_local :=
-      by 
-        intro s x u f u_open xu 
-        have  : range I ∩ I.symm ⁻¹' (s ∩ u) = range I ∩ I.symm ⁻¹' s ∩ I.symm ⁻¹' u
-        ·
-          simp only [inter_assoc, preimage_inter]
-        rw [TimesContDiffWithinAtProp, TimesContDiffWithinAtProp, this]
-        symm 
-        apply times_cont_diff_within_at_inter 
-        have  : u ∈ 𝓝 (I.symm (I x))
-        ·
-          ·
-            rw [ModelWithCorners.left_inv]
-            exact IsOpen.mem_nhds u_open xu 
-        apply ContinuousAt.preimage_mem_nhds I.continuous_symm.continuous_at this,
-    right_invariance :=
-      by 
-        intro s x f e he hx h 
-        rw [TimesContDiffWithinAtProp] at h⊢
-        have  : I x = (I ∘ e.symm ∘ I.symm) (I (e x))
-        ·
-          simp' only [hx] with mfld_simps 
-        rw [this] at h 
-        have  : I (e x) ∈ I.symm ⁻¹' e.target ∩ range («expr⇑ » I)
-        ·
-          simp' only [hx] with mfld_simps 
-        have  := ((mem_groupoid_of_pregroupoid.2 he).2.TimesContDiffWithinAt this).of_le le_top 
-        convert h.comp' _ this using 1
-        ·
-          ext y 
-          simp' only with mfld_simps
-        ·
-          mfldSetTac,
-    congr :=
-      by 
-        intro s x f g h hx hf 
-        apply hf.congr
-        ·
-          intro y hy 
-          simp' only with mfld_simps  at hy 
-          simp' only [h, hy] with mfld_simps
-        ·
-          simp' only [hx] with mfld_simps,
-    left_invariance :=
-      by 
-        intro s x f e' he' hs hx h 
-        rw [TimesContDiffWithinAtProp] at h⊢
-        have A : (I' ∘ f ∘ I.symm) (I x) ∈ I'.symm ⁻¹' e'.source ∩ range I'
-        ·
-          simp' only [hx] with mfld_simps 
-        have  := ((mem_groupoid_of_pregroupoid.2 he').1.TimesContDiffWithinAt A).of_le le_top 
-        convert this.comp _ h _
-        ·
-          ext y 
-          simp' only with mfld_simps
-        ·
-          intro y hy 
-          simp' only with mfld_simps  at hy 
-          simpa only [hy] with mfld_simps using hs hy.2 }
+theorem times_cont_diff_within_at_local_invariant_prop
+(n : with_top exprℕ()) : (times_cont_diff_groupoid «expr∞»() I).local_invariant_prop (times_cont_diff_groupoid «expr∞»() I') (times_cont_diff_within_at_prop I I' n) :=
+{ is_local := begin
+    assume [binders (s x u f u_open xu)],
+    have [] [":", expr «expr = »(«expr ∩ »(range I, «expr ⁻¹' »(I.symm, «expr ∩ »(s, u))), «expr ∩ »(«expr ∩ »(range I, «expr ⁻¹' »(I.symm, s)), «expr ⁻¹' »(I.symm, u)))] [],
+    by simp [] [] ["only"] ["[", expr inter_assoc, ",", expr preimage_inter, "]"] [] [],
+    rw ["[", expr times_cont_diff_within_at_prop, ",", expr times_cont_diff_within_at_prop, ",", expr this, "]"] [],
+    symmetry,
+    apply [expr times_cont_diff_within_at_inter],
+    have [] [":", expr «expr ∈ »(u, expr𝓝() (I.symm (I x)))] [],
+    by { rw ["[", expr model_with_corners.left_inv, "]"] [],
+      exact [expr is_open.mem_nhds u_open xu] },
+    apply [expr continuous_at.preimage_mem_nhds I.continuous_symm.continuous_at this]
+  end,
+  right_invariance := begin
+    assume [binders (s x f e he hx h)],
+    rw [expr times_cont_diff_within_at_prop] ["at", ident h, "⊢"],
+    have [] [":", expr «expr = »(I x, «expr ∘ »(I, «expr ∘ »(e.symm, I.symm)) (I (e x)))] [],
+    by simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [],
+    rw [expr this] ["at", ident h],
+    have [] [":", expr «expr ∈ »(I (e x), «expr ∩ »(«expr ⁻¹' »(I.symm, e.target), range «expr⇑ »(I)))] [],
+    by simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [],
+    have [] [] [":=", expr ((mem_groupoid_of_pregroupoid.2 he).2.times_cont_diff_within_at this).of_le le_top],
+    convert [] [expr h.comp' _ this] ["using", 1],
+    { ext [] [ident y] [],
+      simp [] [] ["only"] [] ["with", ident mfld_simps] [] },
+    { mfld_set_tac }
+  end,
+  congr := begin
+    assume [binders (s x f g h hx hf)],
+    apply [expr hf.congr],
+    { assume [binders (y hy)],
+      simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident hy],
+      simp [] [] ["only"] ["[", expr h, ",", expr hy, "]"] ["with", ident mfld_simps] [] },
+    { simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [] }
+  end,
+  left_invariance := begin
+    assume [binders (s x f e' he' hs hx h)],
+    rw [expr times_cont_diff_within_at_prop] ["at", ident h, "⊢"],
+    have [ident A] [":", expr «expr ∈ »(«expr ∘ »(I', «expr ∘ »(f, I.symm)) (I x), «expr ∩ »(«expr ⁻¹' »(I'.symm, e'.source), range I'))] [],
+    by simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [],
+    have [] [] [":=", expr ((mem_groupoid_of_pregroupoid.2 he').1.times_cont_diff_within_at A).of_le le_top],
+    convert [] [expr this.comp _ h _] [],
+    { ext [] [ident y] [],
+      simp [] [] ["only"] [] ["with", ident mfld_simps] [] },
+    { assume [binders (y hy)],
+      simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident hy],
+      simpa [] [] ["only"] ["[", expr hy, "]"] ["with", ident mfld_simps] ["using", expr hs hy.2] }
+  end }
 
 theorem times_cont_diff_within_at_local_invariant_prop_mono (n : WithTop ℕ) ⦃s x t⦄ ⦃f : H → H'⦄ (hts : t ⊆ s)
   (h : TimesContDiffWithinAtProp I I' n f s x) : TimesContDiffWithinAtProp I I' n f t x :=
@@ -189,16 +178,16 @@ theorem times_cont_diff_within_at_local_invariant_prop_mono (n : WithTop ℕ) �
     simp' only with mfld_simps  at hy 
     simp' only [hy, hts _] with mfld_simps
 
-theorem times_cont_diff_within_at_local_invariant_prop_id (x : H) : TimesContDiffWithinAtProp I I ∞ id univ x :=
-  by 
-    simp [TimesContDiffWithinAtProp]
-    have  : TimesContDiffWithinAt 𝕜 ∞ id (range I) (I x) :=
-      times_cont_diff_id.times_cont_diff_at.times_cont_diff_within_at 
-    apply this.congr fun y hy => _
-    ·
-      simp' only with mfld_simps
-    ·
-      simp' only [ModelWithCorners.right_inv I hy] with mfld_simps
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem times_cont_diff_within_at_local_invariant_prop_id
+(x : H) : times_cont_diff_within_at_prop I I «expr∞»() id univ x :=
+begin
+  simp [] [] [] ["[", expr times_cont_diff_within_at_prop, "]"] [] [],
+  have [] [":", expr times_cont_diff_within_at 𝕜 «expr∞»() id (range I) (I x)] [":=", expr times_cont_diff_id.times_cont_diff_at.times_cont_diff_within_at],
+  apply [expr this.congr (λ y hy, _)],
+  { simp [] [] ["only"] [] ["with", ident mfld_simps] [] },
+  { simp [] [] ["only"] ["[", expr model_with_corners.right_inv I hy, "]"] ["with", ident mfld_simps] [] }
+end
 
 /-- A function is `n` times continuously differentiable within a set at a point in a manifold if
 it is continuous and it is `n` times continuously differentiable in this set around this point, when
@@ -335,27 +324,21 @@ theorem times_cont_mdiff_within_at_iff'' :
       nhds_within_inter_of_mem]
     exact hc (ext_chart_at_source_mem_nhds _ _)
 
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- One can reformulate smoothness within a set at a point as continuity within this set at this
 point, and smoothness in the corresponding extended chart in the target. -/
-theorem times_cont_mdiff_within_at_iff_target :
-  TimesContMdiffWithinAt I I' n f s x ↔
-    ContinuousWithinAt f s x ∧
-      TimesContMdiffWithinAt I 𝓘(𝕜, E') n (extChartAt I' (f x) ∘ f) (s ∩ f ⁻¹' (extChartAt I' (f x)).Source) x :=
-  by 
-    rw [TimesContMdiffWithinAt, TimesContMdiffWithinAt, lift_prop_within_at, lift_prop_within_at, ←and_assoc]
-    have cont :
-      ContinuousWithinAt f s x ∧
-          ContinuousWithinAt ((I' ∘ chart_at H' (f x)) ∘ f) (s ∩ f ⁻¹' (chart_at H' (f x)).toLocalEquiv.Source) x ↔
-        ContinuousWithinAt f s x
-    ·
-      refine' ⟨fun h => h.1, fun h => ⟨h, _⟩⟩
-      have h₁ : ContinuousWithinAt _ univ ((chart_at H' (f x)) (f x))
-      ·
-        exact (ModelWithCorners.continuous I').ContinuousWithinAt 
-      have h₂ := (chart_at H' (f x)).continuous_to_fun.ContinuousWithinAt (mem_chart_source _ _)
-      convert (h₁.comp' h₂).comp' h 
-      simp 
-    simp [cont, TimesContDiffWithinAtProp]
+theorem times_cont_mdiff_within_at_iff_target : «expr ↔ »(times_cont_mdiff_within_at I I' n f s x, «expr ∧ »(continuous_within_at f s x, times_cont_mdiff_within_at I «expr𝓘( , )»(𝕜, E') n «expr ∘ »(ext_chart_at I' (f x), f) «expr ∩ »(s, «expr ⁻¹' »(f, (ext_chart_at I' (f x)).source)) x)) :=
+begin
+  rw ["[", expr times_cont_mdiff_within_at, ",", expr times_cont_mdiff_within_at, ",", expr lift_prop_within_at, ",", expr lift_prop_within_at, ",", "<-", expr and_assoc, "]"] [],
+  have [ident cont] [":", expr «expr ↔ »(«expr ∧ »(continuous_within_at f s x, continuous_within_at «expr ∘ »(«expr ∘ »(I', chart_at H' (f x)), f) «expr ∩ »(s, «expr ⁻¹' »(f, (chart_at H' (f x)).to_local_equiv.source)) x), continuous_within_at f s x)] [],
+  { refine [expr ⟨λ h, h.1, λ h, ⟨h, _⟩⟩],
+    have [ident h₁] [":", expr continuous_within_at _ univ (chart_at H' (f x) (f x))] [],
+    { exact [expr (model_with_corners.continuous I').continuous_within_at] },
+    have [ident h₂] [] [":=", expr (chart_at H' (f x)).continuous_to_fun.continuous_within_at (mem_chart_source _ _)],
+    convert [] [expr (h₁.comp' h₂).comp' h] [],
+    simp [] [] [] [] [] [] },
+  simp [] [] [] ["[", expr cont, ",", expr times_cont_diff_within_at_prop, "]"] [] []
+end
 
 theorem smooth_within_at_iff :
   SmoothWithinAt I I' f s x ↔
@@ -412,70 +395,52 @@ theorem times_cont_mdiff_at_ext_chart_at' {x' : M} (h : x' ∈ (chart_at H x).So
 
 include I's
 
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- One can reformulate smoothness on a set as continuity on this set, and smoothness in any
 extended chart. -/
-theorem times_cont_mdiff_on_iff :
-  TimesContMdiffOn I I' n f s ↔
-    ContinuousOn f s ∧
-      ∀ x : M y : M',
-        TimesContDiffOn 𝕜 n (extChartAt I' y ∘ f ∘ (extChartAt I x).symm)
-          ((extChartAt I x).Target ∩ (extChartAt I x).symm ⁻¹' (s ∩ f ⁻¹' (extChartAt I' y).Source)) :=
-  by 
-    split 
-    ·
-      intro h 
-      refine' ⟨fun x hx => (h x hx).1, fun x y z hz => _⟩
-      simp' only with mfld_simps  at hz 
-      let w := (extChartAt I x).symm z 
-      have  : w ∈ s
-      ·
-        simp' only [w, hz] with mfld_simps 
-      specialize h w this 
-      have w1 : w ∈ (chart_at H x).Source
-      ·
-        simp' only [w, hz] with mfld_simps 
-      have w2 : f w ∈ (chart_at H' y).Source
-      ·
-        simp' only [w, hz] with mfld_simps 
-      convert
-        (((times_cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_indep_chart
-                (StructureGroupoid.chart_mem_maximal_atlas _ x) w1 (StructureGroupoid.chart_mem_maximal_atlas _ y) w2).1
-            h).2 using
-        1
-      ·
-        mfldSetTac
-      ·
-        simp' only [w, hz] with mfld_simps
-    ·
-      rintro ⟨hcont, hdiff⟩ x hx 
-      refine' ⟨hcont x hx, _⟩
-      have Z :=
-        hdiff x (f x) (extChartAt I x x)
-          (by 
-            simp' only [hx] with mfld_simps)
-      dsimp [TimesContDiffWithinAtProp]
-      convert Z using 1
-      mfldSetTac
+theorem times_cont_mdiff_on_iff : «expr ↔ »(times_cont_mdiff_on I I' n f s, «expr ∧ »(continuous_on f s, ∀
+  (x : M)
+  (y : M'), times_cont_diff_on 𝕜 n «expr ∘ »(ext_chart_at I' y, «expr ∘ »(f, (ext_chart_at I x).symm)) «expr ∩ »((ext_chart_at I x).target, «expr ⁻¹' »((ext_chart_at I x).symm, «expr ∩ »(s, «expr ⁻¹' »(f, (ext_chart_at I' y).source)))))) :=
+begin
+  split,
+  { assume [binders (h)],
+    refine [expr ⟨λ x hx, (h x hx).1, λ x y z hz, _⟩],
+    simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident hz],
+    let [ident w] [] [":=", expr (ext_chart_at I x).symm z],
+    have [] [":", expr «expr ∈ »(w, s)] [],
+    by simp [] [] ["only"] ["[", expr w, ",", expr hz, "]"] ["with", ident mfld_simps] [],
+    specialize [expr h w this],
+    have [ident w1] [":", expr «expr ∈ »(w, (chart_at H x).source)] [],
+    by simp [] [] ["only"] ["[", expr w, ",", expr hz, "]"] ["with", ident mfld_simps] [],
+    have [ident w2] [":", expr «expr ∈ »(f w, (chart_at H' y).source)] [],
+    by simp [] [] ["only"] ["[", expr w, ",", expr hz, "]"] ["with", ident mfld_simps] [],
+    convert [] [expr (((times_cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_indep_chart (structure_groupoid.chart_mem_maximal_atlas _ x) w1 (structure_groupoid.chart_mem_maximal_atlas _ y) w2).1 h).2] ["using", 1],
+    { mfld_set_tac },
+    { simp [] [] ["only"] ["[", expr w, ",", expr hz, "]"] ["with", ident mfld_simps] [] } },
+  { rintros ["⟨", ident hcont, ",", ident hdiff, "⟩", ident x, ident hx],
+    refine [expr ⟨hcont x hx, _⟩],
+    have [ident Z] [] [":=", expr hdiff x (f x) (ext_chart_at I x x) (by simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [])],
+    dsimp [] ["[", expr times_cont_diff_within_at_prop, "]"] [] [],
+    convert [] [expr Z] ["using", 1],
+    mfld_set_tac }
+end
 
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- One can reformulate smoothness on a set as continuity on this set, and smoothness in any
 extended chart in the target. -/
-theorem times_cont_mdiff_on_iff_target :
-  TimesContMdiffOn I I' n f s ↔
-    ContinuousOn f s ∧
-      ∀ y : M', TimesContMdiffOn I 𝓘(𝕜, E') n (extChartAt I' y ∘ f) (s ∩ f ⁻¹' (extChartAt I' y).Source) :=
-  by 
-    inhabit E' 
-    simp only [times_cont_mdiff_on_iff, ModelWithCorners.source_eq, chart_at_self_eq, LocalHomeomorph.refl_local_equiv,
-      LocalEquiv.refl_trans, extChartAt.equations._eqn_1, Set.preimage_univ, Set.inter_univ, And.congr_right_iff]
-    intro h 
-    split 
-    ·
-      refine' fun h' y => ⟨_, fun x _ => h' x y⟩
-      have h'' : ContinuousOn _ univ := (ModelWithCorners.continuous I').ContinuousOn 
-      convert (h''.comp' (chart_at H' y).continuous_to_fun).comp' h 
-      simp 
-    ·
-      exact fun h' x y => (h' y).2 x (default E')
+theorem times_cont_mdiff_on_iff_target : «expr ↔ »(times_cont_mdiff_on I I' n f s, «expr ∧ »(continuous_on f s, ∀
+  y : M', times_cont_mdiff_on I «expr𝓘( , )»(𝕜, E') n «expr ∘ »(ext_chart_at I' y, f) «expr ∩ »(s, «expr ⁻¹' »(f, (ext_chart_at I' y).source)))) :=
+begin
+  inhabit [expr E'] [],
+  simp [] [] ["only"] ["[", expr times_cont_mdiff_on_iff, ",", expr model_with_corners.source_eq, ",", expr chart_at_self_eq, ",", expr local_homeomorph.refl_local_equiv, ",", expr local_equiv.refl_trans, ",", expr ext_chart_at.equations._eqn_1, ",", expr set.preimage_univ, ",", expr set.inter_univ, ",", expr and.congr_right_iff, "]"] [] [],
+  intros [ident h],
+  split,
+  { refine [expr λ h' y, ⟨_, λ x _, h' x y⟩],
+    have [ident h''] [":", expr continuous_on _ univ] [":=", expr (model_with_corners.continuous I').continuous_on],
+    convert [] [expr (h''.comp' (chart_at H' y).continuous_to_fun).comp' h] [],
+    simp [] [] [] [] [] [] },
+  { exact [expr λ h' x y, (h' y).2 x (default E')] }
+end
 
 theorem smooth_on_iff :
   SmoothOn I I' f s ↔
@@ -681,102 +646,73 @@ theorem times_cont_mdiff_on_ext_chart_at : TimesContMdiffOn I 𝓘(𝕜, E) n (e
 
 include I's
 
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A function is `C^n` within a set at a point, for `n : ℕ`, if and only if it is `C^n` on
 a neighborhood of this point. -/
-theorem times_cont_mdiff_within_at_iff_times_cont_mdiff_on_nhds {n : ℕ} :
-  TimesContMdiffWithinAt I I' n f s x ↔ ∃ (u : _)(_ : u ∈ 𝓝[insert x s] x), TimesContMdiffOn I I' n f u :=
-  by 
-    split 
-    ·
-      intro h 
-      obtain ⟨o, o_open, xo, ho, h'o⟩ :
-        ∃ o : Set M, IsOpen o ∧ x ∈ o ∧ o ⊆ (chart_at H x).Source ∧ o ∩ s ⊆ f ⁻¹' (chart_at H' (f x)).Source
-      ·
-        have  : (chart_at H' (f x)).Source ∈ 𝓝 (f x) :=
-          IsOpen.mem_nhds (LocalHomeomorph.open_source _) (mem_chart_source H' (f x))
-        rcases mem_nhds_within.1 (h.1.preimage_mem_nhds_within this) with ⟨u, u_open, xu, hu⟩
-        refine' ⟨u ∩ (chart_at H x).Source, _, ⟨xu, mem_chart_source _ _⟩, _, _⟩
-        ·
-          exact IsOpen.inter u_open (LocalHomeomorph.open_source _)
-        ·
-          intro y hy 
-          exact hy.2
-        ·
-          intro y hy 
-          exact hu ⟨hy.1.1, hy.2⟩
-      have h' : TimesContMdiffWithinAt I I' n f (s ∩ o) x := h.mono (inter_subset_left _ _)
-      simp only [TimesContMdiffWithinAt, lift_prop_within_at, TimesContDiffWithinAtProp] at h' 
-      rcases h.2.TimesContDiffOn (le_reflₓ _) with ⟨u, u_nhds, u_subset, hu⟩
-      let v := insert x s ∩ o ∩ extChartAt I x ⁻¹' u 
-      have v_incl : v ⊆ (chart_at H x).Source := fun y hy => ho hy.1.2
-      have v_incl' : ∀ y _ : y ∈ v, f y ∈ (chart_at H' (f x)).Source
-      ·
-        intro y hy 
-        rcases hy.1.1 with (rfl | h')
-        ·
-          simp' only with mfld_simps
-        ·
-          apply h'o ⟨hy.1.2, h'⟩
-      refine' ⟨v, _, _⟩
-      show v ∈ 𝓝[insert x s] x
-      ·
-        rw [nhds_within_restrict _ xo o_open]
-        refine' Filter.inter_mem self_mem_nhds_within _ 
-        suffices  : u ∈ 𝓝[extChartAt I x '' (insert x s ∩ o)] extChartAt I x x 
-        exact (ext_chart_at_continuous_at I x).ContinuousWithinAt.preimage_mem_nhds_within' this 
-        apply nhds_within_mono _ _ u_nhds 
-        rw [image_subset_iff]
-        intro y hy 
-        rcases hy.1 with (rfl | h')
-        ·
-          simp' only [mem_insert_iff] with mfld_simps
-        ·
-          simp' only [mem_insert_iff, ho hy.2, h', h'o ⟨hy.2, h'⟩] with mfld_simps 
-      show TimesContMdiffOn I I' n f v
-      ·
-        intro y hy 
-        apply
-          ((times_cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_indep_chart
-              (StructureGroupoid.chart_mem_maximal_atlas _ x) (v_incl hy)
-              (StructureGroupoid.chart_mem_maximal_atlas _ (f x)) (v_incl' y hy)).2
-        split 
-        ·
-          apply
-            (((ext_chart_at_continuous_on_symm I' (f x) _ _).comp' (hu _ hy.2).ContinuousWithinAt).comp'
-                (ext_chart_at_continuous_on I x _ _)).congr_mono
-          ·
-            intro z hz 
-            simp' only [v_incl hz, v_incl' z hz] with mfld_simps
-          ·
-            intro z hz 
-            simp' only [v_incl hz, v_incl' z hz] with mfld_simps 
-            exact hz.2
-          ·
-            simp' only [v_incl hy, v_incl' y hy] with mfld_simps
-          ·
-            simp' only [v_incl hy, v_incl' y hy] with mfld_simps
-          ·
-            simp' only [v_incl hy] with mfld_simps
-        ·
-          apply hu.mono
-          ·
-            intro z hz 
-            simp' only [v] with mfld_simps  at hz 
-            have  : I ((chart_at H x) ((chart_at H x).symm (I.symm z))) ∈ u
-            ·
-              simp only [hz]
-            simpa only [hz] with mfld_simps using this
-          ·
-            have exty : I (chart_at H x y) ∈ u := hy.2
-            simp' only [v_incl hy, v_incl' y hy, exty, hy.1.1, hy.1.2] with mfld_simps
-    ·
-      rintro ⟨u, u_nhds, hu⟩
-      have  : TimesContMdiffWithinAt I I' («expr↑ » n) f (insert x s ∩ u) x
-      ·
-        have  : x ∈ insert x s := mem_insert x s 
-        exact hu.mono (inter_subset_right _ _) _ ⟨this, mem_of_mem_nhds_within this u_nhds⟩
-      rw [times_cont_mdiff_within_at_inter' u_nhds] at this 
-      exact this.mono (subset_insert x s)
+theorem times_cont_mdiff_within_at_iff_times_cont_mdiff_on_nhds
+{n : exprℕ()} : «expr ↔ »(times_cont_mdiff_within_at I I' n f s x, «expr∃ , »((u «expr ∈ » «expr𝓝[ ] »(insert x s, x)), times_cont_mdiff_on I I' n f u)) :=
+begin
+  split,
+  { assume [binders (h)],
+    obtain ["⟨", ident o, ",", ident o_open, ",", ident xo, ",", ident ho, ",", ident h'o, "⟩", ":", expr «expr∃ , »((o : set M), «expr ∧ »(is_open o, «expr ∧ »(«expr ∈ »(x, o), «expr ∧ »(«expr ⊆ »(o, (chart_at H x).source), «expr ⊆ »(«expr ∩ »(o, s), «expr ⁻¹' »(f, (chart_at H' (f x)).source))))))],
+    { have [] [":", expr «expr ∈ »((chart_at H' (f x)).source, expr𝓝() (f x))] [":=", expr is_open.mem_nhds (local_homeomorph.open_source _) (mem_chart_source H' (f x))],
+      rcases [expr mem_nhds_within.1 (h.1.preimage_mem_nhds_within this), "with", "⟨", ident u, ",", ident u_open, ",", ident xu, ",", ident hu, "⟩"],
+      refine [expr ⟨«expr ∩ »(u, (chart_at H x).source), _, ⟨xu, mem_chart_source _ _⟩, _, _⟩],
+      { exact [expr is_open.inter u_open (local_homeomorph.open_source _)] },
+      { assume [binders (y hy)],
+        exact [expr hy.2] },
+      { assume [binders (y hy)],
+        exact [expr hu ⟨hy.1.1, hy.2⟩] } },
+    have [ident h'] [":", expr times_cont_mdiff_within_at I I' n f «expr ∩ »(s, o) x] [":=", expr h.mono (inter_subset_left _ _)],
+    simp [] [] ["only"] ["[", expr times_cont_mdiff_within_at, ",", expr lift_prop_within_at, ",", expr times_cont_diff_within_at_prop, "]"] [] ["at", ident h'],
+    rcases [expr h.2.times_cont_diff_on (le_refl _), "with", "⟨", ident u, ",", ident u_nhds, ",", ident u_subset, ",", ident hu, "⟩"],
+    let [ident v] [] [":=", expr «expr ∩ »(«expr ∩ »(insert x s, o), «expr ⁻¹' »(ext_chart_at I x, u))],
+    have [ident v_incl] [":", expr «expr ⊆ »(v, (chart_at H x).source)] [":=", expr λ y hy, ho hy.1.2],
+    have [ident v_incl'] [":", expr ∀ y «expr ∈ » v, «expr ∈ »(f y, (chart_at H' (f x)).source)] [],
+    { assume [binders (y hy)],
+      rcases [expr hy.1.1, "with", ident rfl, "|", ident h'],
+      { simp [] [] ["only"] [] ["with", ident mfld_simps] [] },
+      { apply [expr h'o ⟨hy.1.2, h'⟩] } },
+    refine [expr ⟨v, _, _⟩],
+    show [expr «expr ∈ »(v, «expr𝓝[ ] »(insert x s, x))],
+    { rw [expr nhds_within_restrict _ xo o_open] [],
+      refine [expr filter.inter_mem self_mem_nhds_within _],
+      suffices [] [":", expr «expr ∈ »(u, «expr𝓝[ ] »(«expr '' »(ext_chart_at I x, «expr ∩ »(insert x s, o)), ext_chart_at I x x))],
+      from [expr (ext_chart_at_continuous_at I x).continuous_within_at.preimage_mem_nhds_within' this],
+      apply [expr nhds_within_mono _ _ u_nhds],
+      rw [expr image_subset_iff] [],
+      assume [binders (y hy)],
+      rcases [expr hy.1, "with", ident rfl, "|", ident h'],
+      { simp [] [] ["only"] ["[", expr mem_insert_iff, "]"] ["with", ident mfld_simps] [] },
+      { simp [] [] ["only"] ["[", expr mem_insert_iff, ",", expr ho hy.2, ",", expr h', ",", expr h'o ⟨hy.2, h'⟩, "]"] ["with", ident mfld_simps] [] } },
+    show [expr times_cont_mdiff_on I I' n f v],
+    { assume [binders (y hy)],
+      apply [expr ((times_cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_indep_chart (structure_groupoid.chart_mem_maximal_atlas _ x) (v_incl hy) (structure_groupoid.chart_mem_maximal_atlas _ (f x)) (v_incl' y hy)).2],
+      split,
+      { apply [expr (((ext_chart_at_continuous_on_symm I' (f x) _ _).comp' (hu _ hy.2).continuous_within_at).comp' (ext_chart_at_continuous_on I x _ _)).congr_mono],
+        { assume [binders (z hz)],
+          simp [] [] ["only"] ["[", expr v_incl hz, ",", expr v_incl' z hz, "]"] ["with", ident mfld_simps] [] },
+        { assume [binders (z hz)],
+          simp [] [] ["only"] ["[", expr v_incl hz, ",", expr v_incl' z hz, "]"] ["with", ident mfld_simps] [],
+          exact [expr hz.2] },
+        { simp [] [] ["only"] ["[", expr v_incl hy, ",", expr v_incl' y hy, "]"] ["with", ident mfld_simps] [] },
+        { simp [] [] ["only"] ["[", expr v_incl hy, ",", expr v_incl' y hy, "]"] ["with", ident mfld_simps] [] },
+        { simp [] [] ["only"] ["[", expr v_incl hy, "]"] ["with", ident mfld_simps] [] } },
+      { apply [expr hu.mono],
+        { assume [binders (z hz)],
+          simp [] [] ["only"] ["[", expr v, "]"] ["with", ident mfld_simps] ["at", ident hz],
+          have [] [":", expr «expr ∈ »(I (chart_at H x ((chart_at H x).symm (I.symm z))), u)] [],
+          by simp [] [] ["only"] ["[", expr hz, "]"] [] [],
+          simpa [] [] ["only"] ["[", expr hz, "]"] ["with", ident mfld_simps] ["using", expr this] },
+        { have [ident exty] [":", expr «expr ∈ »(I (chart_at H x y), u)] [":=", expr hy.2],
+          simp [] [] ["only"] ["[", expr v_incl hy, ",", expr v_incl' y hy, ",", expr exty, ",", expr hy.1.1, ",", expr hy.1.2, "]"] ["with", ident mfld_simps] [] } } } },
+  { rintros ["⟨", ident u, ",", ident u_nhds, ",", ident hu, "⟩"],
+    have [] [":", expr times_cont_mdiff_within_at I I' «expr↑ »(n) f «expr ∩ »(insert x s, u) x] [],
+    { have [] [":", expr «expr ∈ »(x, insert x s)] [":=", expr mem_insert x s],
+      exact [expr hu.mono (inter_subset_right _ _) _ ⟨this, mem_of_mem_nhds_within this u_nhds⟩] },
+    rw [expr times_cont_mdiff_within_at_inter' u_nhds] ["at", ident this],
+    exact [expr this.mono (subset_insert x s)] }
+end
 
 /-- A function is `C^n` at a point, for `n : ℕ`, if and only if it is `C^n` on
 a neighborhood of this point. -/
@@ -848,44 +784,39 @@ variable{E'' :
       _}[TopologicalSpace
       H'']{I'' : ModelWithCorners 𝕜 E'' H''}{M'' : Type _}[TopologicalSpace M''][ChartedSpace H'' M'']
 
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The composition of `C^n` functions within domains at points is `C^n`. -/
-theorem TimesContMdiffWithinAt.comp {t : Set M'} {g : M' → M''} (x : M) (hg : TimesContMdiffWithinAt I' I'' n g t (f x))
-  (hf : TimesContMdiffWithinAt I I' n f s x) (st : maps_to f s t) : TimesContMdiffWithinAt I I'' n (g ∘ f) s x :=
-  by 
-    rw [times_cont_mdiff_within_at_iff''] at hg hf⊢
-    refine' ⟨hg.1.comp hf.1 st, _⟩
-    set e := extChartAt I x 
-    set e' := extChartAt I' (f x)
-    set e'' := extChartAt I'' (g (f x))
-    have  : e' (f x) = (writtenInExtChartAt I I' x f) (e x)
-    ·
-      simp' only [e, e'] with mfld_simps 
-    rw [this] at hg 
-    have A :
-      ∀ᶠy in 𝓝[e.symm ⁻¹' s ∩ range I] e x,
-        y ∈ e.target ∧ f (e.symm y) ∈ t ∧ f (e.symm y) ∈ e'.source ∧ g (f (e.symm y)) ∈ e''.source
-    ·
-      simp only [←ext_chart_at_map_nhds_within, eventually_map]
-      filterUpwards [hf.1.Tendsto (ext_chart_at_source_mem_nhds I' (f x)),
-        (hg.1.comp hf.1 st).Tendsto (ext_chart_at_source_mem_nhds I'' (g (f x))),
-        inter_mem_nhds_within s (ext_chart_at_source_mem_nhds I x)]
-      rintro x' (hfx' : f x' ∈ _) (hgfx' : g (f x') ∈ _) ⟨hx's, hx'⟩
-      simp only [e.map_source hx', true_andₓ, e.left_inv hx', st hx's]
-    refine'
-      ((hg.2.comp _ (hf.2.mono (inter_subset_right _ _)) (inter_subset_left _ _)).mono_of_mem
-            (inter_mem _ self_mem_nhds_within)).congr_of_eventually_eq
-        _ _
-    ·
-      filterUpwards [A]
-      rintro x' ⟨hx', ht, hfx', hgfx'⟩
-      simp only [mem_preimage, writtenInExtChartAt, · ∘ ·, mem_inter_eq, e'.left_inv, true_andₓ]
-      exact mem_range_self _
-    ·
-      filterUpwards [A]
-      rintro x' ⟨hx', ht, hfx', hgfx'⟩
-      simp only [· ∘ ·, writtenInExtChartAt, e'.left_inv]
-    ·
-      simp only [writtenInExtChartAt, · ∘ ·, mem_ext_chart_source, e.left_inv, e'.left_inv]
+theorem times_cont_mdiff_within_at.comp
+{t : set M'}
+{g : M' → M''}
+(x : M)
+(hg : times_cont_mdiff_within_at I' I'' n g t (f x))
+(hf : times_cont_mdiff_within_at I I' n f s x)
+(st : maps_to f s t) : times_cont_mdiff_within_at I I'' n «expr ∘ »(g, f) s x :=
+begin
+  rw [expr times_cont_mdiff_within_at_iff''] ["at", ident hg, ident hf, "⊢"],
+  refine [expr ⟨hg.1.comp hf.1 st, _⟩],
+  set [] [ident e] [] [":="] [expr ext_chart_at I x] [],
+  set [] [ident e'] [] [":="] [expr ext_chart_at I' (f x)] [],
+  set [] [ident e''] [] [":="] [expr ext_chart_at I'' (g (f x))] [],
+  have [] [":", expr «expr = »(e' (f x), written_in_ext_chart_at I I' x f (e x))] [],
+  by simp [] [] ["only"] ["[", expr e, ",", expr e', "]"] ["with", ident mfld_simps] [],
+  rw [expr this] ["at", ident hg],
+  have [ident A] [":", expr «expr∀ᶠ in , »((y), «expr𝓝[ ] »(«expr ∩ »(«expr ⁻¹' »(e.symm, s), range I), e x), «expr ∧ »(«expr ∈ »(y, e.target), «expr ∧ »(«expr ∈ »(f (e.symm y), t), «expr ∧ »(«expr ∈ »(f (e.symm y), e'.source), «expr ∈ »(g (f (e.symm y)), e''.source)))))] [],
+  { simp [] [] ["only"] ["[", "<-", expr ext_chart_at_map_nhds_within, ",", expr eventually_map, "]"] [] [],
+    filter_upwards ["[", expr hf.1.tendsto (ext_chart_at_source_mem_nhds I' (f x)), ",", expr (hg.1.comp hf.1 st).tendsto (ext_chart_at_source_mem_nhds I'' (g (f x))), ",", expr inter_mem_nhds_within s (ext_chart_at_source_mem_nhds I x), "]"] [],
+    rintros [ident x', "(", ident hfx', ":", expr «expr ∈ »(f x', _), ")", "(", ident hgfx', ":", expr «expr ∈ »(g (f x'), _), ")", "⟨", ident hx's, ",", ident hx', "⟩"],
+    simp [] [] ["only"] ["[", expr e.map_source hx', ",", expr true_and, ",", expr e.left_inv hx', ",", expr st hx's, ",", "*", "]"] [] [] },
+  refine [expr ((hg.2.comp _ (hf.2.mono (inter_subset_right _ _)) (inter_subset_left _ _)).mono_of_mem (inter_mem _ self_mem_nhds_within)).congr_of_eventually_eq _ _],
+  { filter_upwards ["[", expr A, "]"] [],
+    rintro [ident x', "⟨", ident hx', ",", ident ht, ",", ident hfx', ",", ident hgfx', "⟩"],
+    simp [] [] ["only"] ["[", "*", ",", expr mem_preimage, ",", expr written_in_ext_chart_at, ",", expr («expr ∘ »), ",", expr mem_inter_eq, ",", expr e'.left_inv, ",", expr true_and, "]"] [] [],
+    exact [expr mem_range_self _] },
+  { filter_upwards ["[", expr A, "]"] [],
+    rintro [ident x', "⟨", ident hx', ",", ident ht, ",", ident hfx', ",", ident hgfx', "⟩"],
+    simp [] [] ["only"] ["[", "*", ",", expr («expr ∘ »), ",", expr written_in_ext_chart_at, ",", expr e'.left_inv, "]"] [] [] },
+  { simp [] [] ["only"] ["[", expr written_in_ext_chart_at, ",", expr («expr ∘ »), ",", expr mem_ext_chart_source, ",", expr e.left_inv, ",", expr e'.left_inv, "]"] [] [] }
+end
 
 /-- The composition of `C^n` functions on domains is `C^n`. -/
 theorem TimesContMdiffOn.comp {t : Set M'} {g : M' → M''} (hg : TimesContMdiffOn I' I'' n g t)
@@ -1125,368 +1056,277 @@ end Module
 
 section tangentMap
 
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function is `C^n` with `1 ≤ n` on a domain with unique derivatives, then its bundled
 derivative is continuous. In this auxiliary lemma, we prove this fact when the source and target
 space are model spaces in models with corners. The general fact is proved in
 `times_cont_mdiff_on.continuous_on_tangent_map_within`-/
-theorem TimesContMdiffOn.continuous_on_tangent_map_within_aux {f : H → H'} {s : Set H}
-  (hf : TimesContMdiffOn I I' n f s) (hn : 1 ≤ n) (hs : UniqueMdiffOn I s) :
-  ContinuousOn (tangentMapWithin I I' f s) (TangentBundle.proj I H ⁻¹' s) :=
-  by 
-    suffices h :
-      ContinuousOn
-        (fun p : H × E =>
-          (f p.fst,
-          (fderivWithin 𝕜 (writtenInExtChartAt I I' p.fst f) (I.symm ⁻¹' s ∩ range I) ((extChartAt I p.fst) p.fst) :
-            E →L[𝕜] E')
-            p.snd))
-        (Prod.fst ⁻¹' s)
-    ·
-      have A := (tangentBundleModelSpaceHomeomorph H I).Continuous 
-      rw [continuous_iff_continuous_on_univ] at A 
-      have B := ((tangentBundleModelSpaceHomeomorph H' I').symm.Continuous.comp_continuous_on h).comp' A 
-      have  :
-        univ ∩ «expr⇑ » (tangentBundleModelSpaceHomeomorph H I) ⁻¹' (Prod.fst ⁻¹' s) = TangentBundle.proj I H ⁻¹' s
-      ·
-        ·
-          ext ⟨x, v⟩
-          simp' only with mfld_simps 
-      rw [this] at B 
-      apply B.congr 
-      rintro ⟨x, v⟩ hx 
-      dsimp [tangentMapWithin]
-      ext
-      ·
-        rfl 
-      simp' only with mfld_simps 
-      apply congr_funₓ 
-      apply congr_argₓ 
-      rw [MdifferentiableWithinAt.mfderiv_within (hf.mdifferentiable_on hn x hx)]
-      rfl 
-    suffices h :
-      ContinuousOn
-        (fun p : H × E => (fderivWithin 𝕜 (I' ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ range I) (I p.fst) : E →L[𝕜] E') p.snd)
-        (Prod.fst ⁻¹' s)
-    ·
-      dsimp [writtenInExtChartAt, extChartAt]
-      apply ContinuousOn.prod (ContinuousOn.comp hf.continuous_on continuous_fst.continuous_on (subset.refl _))
-      apply h.congr 
-      intro p hp 
-      rfl 
-    suffices h : ContinuousOn (fderivWithin 𝕜 (I' ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ range I)) (I '' s)
-    ·
-      have C := ContinuousOn.comp h I.continuous_to_fun.continuous_on (subset.refl _)
-      have A : Continuous fun q : (E →L[𝕜] E') × E => q.1 q.2 := is_bounded_bilinear_map_apply.continuous 
-      have B :
-        ContinuousOn (fun p : H × E => (fderivWithin 𝕜 (I' ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ range I) (I p.1), p.2))
-          (Prod.fst ⁻¹' s)
-      ·
-        apply ContinuousOn.prod _ continuous_snd.continuous_on 
-        refine' (ContinuousOn.comp C continuous_fst.continuous_on _ : _)
-        exact preimage_mono (subset_preimage_image _ _)
-      exact A.comp_continuous_on B 
-    rw [times_cont_mdiff_on_iff] at hf 
-    let x : H := I.symm (0 : E)
-    let y : H' := I'.symm (0 : E')
-    have A := hf.2 x y 
-    simp' only [I.image_eq, inter_comm] with mfld_simps  at A⊢
-    apply A.continuous_on_fderiv_within _ hn 
-    convert hs.unique_diff_on_target_inter x using 1
-    simp' only [inter_comm] with mfld_simps
+theorem times_cont_mdiff_on.continuous_on_tangent_map_within_aux
+{f : H → H'}
+{s : set H}
+(hf : times_cont_mdiff_on I I' n f s)
+(hn : «expr ≤ »(1, n))
+(hs : unique_mdiff_on I s) : continuous_on (tangent_map_within I I' f s) «expr ⁻¹' »(tangent_bundle.proj I H, s) :=
+begin
+  suffices [ident h] [":", expr continuous_on (λ
+    p : «expr × »(H, E), (f p.fst, (fderiv_within 𝕜 (written_in_ext_chart_at I I' p.fst f) «expr ∩ »(«expr ⁻¹' »(I.symm, s), range I) (ext_chart_at I p.fst p.fst) : «expr →L[ ] »(E, 𝕜, E')) p.snd)) «expr ⁻¹' »(prod.fst, s)],
+  { have [ident A] [] [":=", expr (tangent_bundle_model_space_homeomorph H I).continuous],
+    rw [expr continuous_iff_continuous_on_univ] ["at", ident A],
+    have [ident B] [] [":=", expr ((tangent_bundle_model_space_homeomorph H' I').symm.continuous.comp_continuous_on h).comp' A],
+    have [] [":", expr «expr = »(«expr ∩ »(univ, «expr ⁻¹' »(«expr⇑ »(tangent_bundle_model_space_homeomorph H I), «expr ⁻¹' »(prod.fst, s))), «expr ⁻¹' »(tangent_bundle.proj I H, s))] [],
+    by { ext [] ["⟨", ident x, ",", ident v, "⟩"] [],
+      simp [] [] ["only"] [] ["with", ident mfld_simps] [] },
+    rw [expr this] ["at", ident B],
+    apply [expr B.congr],
+    rintros ["⟨", ident x, ",", ident v, "⟩", ident hx],
+    dsimp [] ["[", expr tangent_map_within, "]"] [] [],
+    ext [] [] [],
+    { refl },
+    simp [] [] ["only"] [] ["with", ident mfld_simps] [],
+    apply [expr congr_fun],
+    apply [expr congr_arg],
+    rw [expr mdifferentiable_within_at.mfderiv_within (hf.mdifferentiable_on hn x hx)] [],
+    refl },
+  suffices [ident h] [":", expr continuous_on (λ
+    p : «expr × »(H, E), (fderiv_within 𝕜 «expr ∘ »(I', «expr ∘ »(f, I.symm)) «expr ∩ »(«expr ⁻¹' »(I.symm, s), range I) (I p.fst) : «expr →L[ ] »(E, 𝕜, E')) p.snd) «expr ⁻¹' »(prod.fst, s)],
+  { dsimp [] ["[", expr written_in_ext_chart_at, ",", expr ext_chart_at, "]"] [] [],
+    apply [expr continuous_on.prod (continuous_on.comp hf.continuous_on continuous_fst.continuous_on (subset.refl _))],
+    apply [expr h.congr],
+    assume [binders (p hp)],
+    refl },
+  suffices [ident h] [":", expr continuous_on (fderiv_within 𝕜 «expr ∘ »(I', «expr ∘ »(f, I.symm)) «expr ∩ »(«expr ⁻¹' »(I.symm, s), range I)) «expr '' »(I, s)],
+  { have [ident C] [] [":=", expr continuous_on.comp h I.continuous_to_fun.continuous_on (subset.refl _)],
+    have [ident A] [":", expr continuous (λ
+      q : «expr × »(«expr →L[ ] »(E, 𝕜, E'), E), q.1 q.2)] [":=", expr is_bounded_bilinear_map_apply.continuous],
+    have [ident B] [":", expr continuous_on (λ
+      p : «expr × »(H, E), (fderiv_within 𝕜 «expr ∘ »(I', «expr ∘ »(f, I.symm)) «expr ∩ »(«expr ⁻¹' »(I.symm, s), range I) (I p.1), p.2)) «expr ⁻¹' »(prod.fst, s)] [],
+    { apply [expr continuous_on.prod _ continuous_snd.continuous_on],
+      refine [expr (continuous_on.comp C continuous_fst.continuous_on _ : _)],
+      exact [expr preimage_mono (subset_preimage_image _ _)] },
+    exact [expr A.comp_continuous_on B] },
+  rw [expr times_cont_mdiff_on_iff] ["at", ident hf],
+  let [ident x] [":", expr H] [":=", expr I.symm (0 : E)],
+  let [ident y] [":", expr H'] [":=", expr I'.symm (0 : E')],
+  have [ident A] [] [":=", expr hf.2 x y],
+  simp [] [] ["only"] ["[", expr I.image_eq, ",", expr inter_comm, "]"] ["with", ident mfld_simps] ["at", ident A, "⊢"],
+  apply [expr A.continuous_on_fderiv_within _ hn],
+  convert [] [expr hs.unique_diff_on_target_inter x] ["using", 1],
+  simp [] [] ["only"] ["[", expr inter_comm, "]"] ["with", ident mfld_simps] []
+end
 
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function is `C^n` on a domain with unique derivatives, then its bundled derivative is
 `C^m` when `m+1 ≤ n`. In this auxiliary lemma, we prove this fact when the source and target space
 are model spaces in models with corners. The general fact is proved in
 `times_cont_mdiff_on.times_cont_mdiff_on_tangent_map_within` -/
-theorem TimesContMdiffOn.times_cont_mdiff_on_tangent_map_within_aux {f : H → H'} {s : Set H}
-  (hf : TimesContMdiffOn I I' n f s) (hmn : (m+1) ≤ n) (hs : UniqueMdiffOn I s) :
-  TimesContMdiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) (TangentBundle.proj I H ⁻¹' s) :=
-  by 
-    have m_le_n : m ≤ n
-    ·
-      apply le_transₓ _ hmn 
-      have  : (m+0) ≤ m+1 := add_le_add_left (zero_le _) _ 
-      simpa only [add_zeroₓ] using this 
-    have one_le_n : 1 ≤ n
-    ·
-      apply le_transₓ _ hmn 
-      change (0+1) ≤ m+1 
-      exact add_le_add_right (zero_le _) _ 
-    have U' : UniqueDiffOn 𝕜 (range I ∩ I.symm ⁻¹' s)
-    ·
-      intro y hy 
-      simpa only [UniqueMdiffOn, UniqueMdiffWithinAt, hy.1, inter_comm] with mfld_simps using hs (I.symm y) hy.2
-    have U : UniqueDiffOn 𝕜 (Set.Prod (range I ∩ I.symm ⁻¹' s) (univ : Set E)) := U'.prod unique_diff_on_univ 
-    rw [times_cont_mdiff_on_iff]
-    refine' ⟨hf.continuous_on_tangent_map_within_aux one_le_n hs, fun p q => _⟩
-    have A :
-      (range I).Prod univ ∩
-          ((Equiv.sigmaEquivProd H E).symm ∘ fun p : E × E => (I.symm p.fst, p.snd)) ⁻¹'
-            (TangentBundle.proj I H ⁻¹' s) =
-        Set.Prod (range I ∩ I.symm ⁻¹' s) univ
-    ·
-      ·
-        ext ⟨x, v⟩
-        simp' only with mfld_simps 
-    suffices h :
-      TimesContDiffOn 𝕜 m
-        (((fun p : H' × E' => (I' p.fst, p.snd)) ∘ Equiv.sigmaEquivProd H' E') ∘
-          tangentMapWithin I I' f s ∘ (Equiv.sigmaEquivProd H E).symm ∘ fun p : E × E => (I.symm p.fst, p.snd))
-        ((range («expr⇑ » I) ∩ «expr⇑ » I.symm ⁻¹' s).Prod univ)
-    ·
-      simpa [A] using h 
-    change
-      TimesContDiffOn 𝕜 m
-        (fun p : E × E => ((I' (f (I.symm p.fst)), (mfderivWithin I I' f s (I.symm p.fst) : E → E') p.snd) : E' × E'))
-        (Set.Prod (range I ∩ I.symm ⁻¹' s) univ)
-    have hf' := times_cont_mdiff_on_iff.1 hf 
-    have A : TimesContDiffOn 𝕜 m (I' ∘ f ∘ I.symm) (range I ∩ I.symm ⁻¹' s) :=
-      by 
-        simpa only with mfld_simps using (hf'.2 (I.symm 0) (I'.symm 0)).of_le m_le_n 
-    have B : TimesContDiffOn 𝕜 m ((I' ∘ f ∘ I.symm) ∘ Prod.fst) (Set.Prod (range I ∩ I.symm ⁻¹' s) (univ : Set E)) :=
-      A.comp times_cont_diff_fst.times_cont_diff_on (prod_subset_preimage_fst _ _)
-    suffices C :
-      TimesContDiffOn 𝕜 m (fun p : E × E => (fderivWithin 𝕜 (I' ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ range I) p.1 : _) p.2)
-        (Set.Prod (range I ∩ I.symm ⁻¹' s) univ)
-    ·
-      apply TimesContDiffOn.prod B _ 
-      apply C.congr fun p hp => _ 
-      simp' only with mfld_simps  at hp 
-      simp' only [mfderivWithin, hf.mdifferentiable_on one_le_n _ hp.2, hp.1, dif_pos] with mfld_simps 
-    have D :
-      TimesContDiffOn 𝕜 m (fun x => fderivWithin 𝕜 (I' ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ range I) x)
-        (range I ∩ I.symm ⁻¹' s)
-    ·
-      have  : TimesContDiffOn 𝕜 n (I' ∘ f ∘ I.symm) (range I ∩ I.symm ⁻¹' s) :=
-        by 
-          simpa only with mfld_simps using hf'.2 (I.symm 0) (I'.symm 0)
-      simpa only [inter_comm] using this.fderiv_within U' hmn 
-    have  := D.comp times_cont_diff_fst.times_cont_diff_on (prod_subset_preimage_fst _ _)
-    have  := TimesContDiffOn.prod this times_cont_diff_snd.times_cont_diff_on 
-    exact is_bounded_bilinear_map_apply.times_cont_diff.comp_times_cont_diff_on this
+theorem times_cont_mdiff_on.times_cont_mdiff_on_tangent_map_within_aux
+{f : H → H'}
+{s : set H}
+(hf : times_cont_mdiff_on I I' n f s)
+(hmn : «expr ≤ »(«expr + »(m, 1), n))
+(hs : unique_mdiff_on I s) : times_cont_mdiff_on I.tangent I'.tangent m (tangent_map_within I I' f s) «expr ⁻¹' »(tangent_bundle.proj I H, s) :=
+begin
+  have [ident m_le_n] [":", expr «expr ≤ »(m, n)] [],
+  { apply [expr le_trans _ hmn],
+    have [] [":", expr «expr ≤ »(«expr + »(m, 0), «expr + »(m, 1))] [":=", expr add_le_add_left (zero_le _) _],
+    simpa [] [] ["only"] ["[", expr add_zero, "]"] [] ["using", expr this] },
+  have [ident one_le_n] [":", expr «expr ≤ »(1, n)] [],
+  { apply [expr le_trans _ hmn],
+    change [expr «expr ≤ »(«expr + »(0, 1), «expr + »(m, 1))] [] [],
+    exact [expr add_le_add_right (zero_le _) _] },
+  have [ident U'] [":", expr unique_diff_on 𝕜 «expr ∩ »(range I, «expr ⁻¹' »(I.symm, s))] [],
+  { assume [binders (y hy)],
+    simpa [] [] ["only"] ["[", expr unique_mdiff_on, ",", expr unique_mdiff_within_at, ",", expr hy.1, ",", expr inter_comm, "]"] ["with", ident mfld_simps] ["using", expr hs (I.symm y) hy.2] },
+  have [ident U] [":", expr unique_diff_on 𝕜 (set.prod «expr ∩ »(range I, «expr ⁻¹' »(I.symm, s)) (univ : set E))] [":=", expr U'.prod unique_diff_on_univ],
+  rw [expr times_cont_mdiff_on_iff] [],
+  refine [expr ⟨hf.continuous_on_tangent_map_within_aux one_le_n hs, λ p q, _⟩],
+  have [ident A] [":", expr «expr = »(«expr ∩ »((range I).prod univ, «expr ⁻¹' »(«expr ∘ »((equiv.sigma_equiv_prod H E).symm, λ
+       p : «expr × »(E, E), (I.symm p.fst, p.snd)), «expr ⁻¹' »(tangent_bundle.proj I H, s))), set.prod «expr ∩ »(range I, «expr ⁻¹' »(I.symm, s)) univ)] [],
+  by { ext [] ["⟨", ident x, ",", ident v, "⟩"] [],
+    simp [] [] ["only"] [] ["with", ident mfld_simps] [] },
+  suffices [ident h] [":", expr times_cont_diff_on 𝕜 m «expr ∘ »(«expr ∘ »(λ
+     p : «expr × »(H', E'), (I' p.fst, p.snd), equiv.sigma_equiv_prod H' E'), «expr ∘ »(tangent_map_within I I' f s, «expr ∘ »((equiv.sigma_equiv_prod H E).symm, λ
+      p : «expr × »(E, E), (I.symm p.fst, p.snd)))) («expr ∩ »(range «expr⇑ »(I), «expr ⁻¹' »(«expr⇑ »(I.symm), s)).prod univ)],
+  by simpa [] [] [] ["[", expr A, "]"] [] ["using", expr h],
+  change [expr times_cont_diff_on 𝕜 m (λ
+    p : «expr × »(E, E), ((I' (f (I.symm p.fst)), (mfderiv_within I I' f s (I.symm p.fst) : E → E') p.snd) : «expr × »(E', E'))) (set.prod «expr ∩ »(range I, «expr ⁻¹' »(I.symm, s)) univ)] [] [],
+  have [ident hf'] [] [":=", expr times_cont_mdiff_on_iff.1 hf],
+  have [ident A] [":", expr times_cont_diff_on 𝕜 m «expr ∘ »(I', «expr ∘ »(f, I.symm)) «expr ∩ »(range I, «expr ⁻¹' »(I.symm, s))] [":=", expr by simpa [] [] ["only"] [] ["with", ident mfld_simps] ["using", expr (hf'.2 (I.symm 0) (I'.symm 0)).of_le m_le_n]],
+  have [ident B] [":", expr times_cont_diff_on 𝕜 m «expr ∘ »(«expr ∘ »(I', «expr ∘ »(f, I.symm)), prod.fst) (set.prod «expr ∩ »(range I, «expr ⁻¹' »(I.symm, s)) (univ : set E))] [":=", expr A.comp times_cont_diff_fst.times_cont_diff_on (prod_subset_preimage_fst _ _)],
+  suffices [ident C] [":", expr times_cont_diff_on 𝕜 m (λ
+    p : «expr × »(E, E), (fderiv_within 𝕜 «expr ∘ »(I', «expr ∘ »(f, I.symm)) «expr ∩ »(«expr ⁻¹' »(I.symm, s), range I) p.1 : _) p.2) (set.prod «expr ∩ »(range I, «expr ⁻¹' »(I.symm, s)) univ)],
+  { apply [expr times_cont_diff_on.prod B _],
+    apply [expr C.congr (λ p hp, _)],
+    simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident hp],
+    simp [] [] ["only"] ["[", expr mfderiv_within, ",", expr hf.mdifferentiable_on one_le_n _ hp.2, ",", expr hp.1, ",", expr dif_pos, "]"] ["with", ident mfld_simps] [] },
+  have [ident D] [":", expr times_cont_diff_on 𝕜 m (λ
+    x, fderiv_within 𝕜 «expr ∘ »(I', «expr ∘ »(f, I.symm)) «expr ∩ »(«expr ⁻¹' »(I.symm, s), range I) x) «expr ∩ »(range I, «expr ⁻¹' »(I.symm, s))] [],
+  { have [] [":", expr times_cont_diff_on 𝕜 n «expr ∘ »(I', «expr ∘ »(f, I.symm)) «expr ∩ »(range I, «expr ⁻¹' »(I.symm, s))] [":=", expr by simpa [] [] ["only"] [] ["with", ident mfld_simps] ["using", expr hf'.2 (I.symm 0) (I'.symm 0)]],
+    simpa [] [] ["only"] ["[", expr inter_comm, "]"] [] ["using", expr this.fderiv_within U' hmn] },
+  have [] [] [":=", expr D.comp times_cont_diff_fst.times_cont_diff_on (prod_subset_preimage_fst _ _)],
+  have [] [] [":=", expr times_cont_diff_on.prod this times_cont_diff_snd.times_cont_diff_on],
+  exact [expr is_bounded_bilinear_map_apply.times_cont_diff.comp_times_cont_diff_on this]
+end
 
 include Is I's
 
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function is `C^n` on a domain with unique derivatives, then its bundled derivative
 is `C^m` when `m+1 ≤ n`. -/
-theorem TimesContMdiffOn.times_cont_mdiff_on_tangent_map_within (hf : TimesContMdiffOn I I' n f s) (hmn : (m+1) ≤ n)
-  (hs : UniqueMdiffOn I s) :
-  TimesContMdiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) (TangentBundle.proj I M ⁻¹' s) :=
-  by 
-    have m_le_n : m ≤ n
-    ·
-      apply le_transₓ _ hmn 
-      have  : (m+0) ≤ m+1 := add_le_add_left (zero_le _) _ 
-      simpa only [add_zeroₓ]
-    have one_le_n : 1 ≤ n
-    ·
-      apply le_transₓ _ hmn 
-      change (0+1) ≤ m+1 
-      exact add_le_add_right (zero_le _) _ 
-    refine' times_cont_mdiff_on_of_locally_times_cont_mdiff_on fun p hp => _ 
-    have hf' := times_cont_mdiff_on_iff.1 hf 
-    simp [TangentBundle.proj] at hp 
-    let l := chart_at H p.1
-    set Dl := chart_at (ModelProd H E) p with hDl 
-    let r := chart_at H' (f p.1)
-    let Dr := chart_at (ModelProd H' E') (tangentMapWithin I I' f s p)
-    let il := chart_at (ModelProd H E) (tangentMap I I l p)
-    let ir := chart_at (ModelProd H' E') (tangentMap I I' (r ∘ f) p)
-    let s' := f ⁻¹' r.source ∩ s ∩ l.source 
-    let s'_lift := TangentBundle.proj I M ⁻¹' s' 
-    let s'l := l.target ∩ l.symm ⁻¹' s' 
-    let s'l_lift := TangentBundle.proj I H ⁻¹' s'l 
-    rcases continuous_on_iff'.1 hf'.1 r.source r.open_source with ⟨o, o_open, ho⟩
-    suffices h : TimesContMdiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) s'_lift
-    ·
-      refine' ⟨TangentBundle.proj I M ⁻¹' (o ∩ l.source), _, _, _⟩
-      show IsOpen (TangentBundle.proj I M ⁻¹' (o ∩ l.source))
-      exact (IsOpen.inter o_open l.open_source).Preimage (tangent_bundle_proj_continuous _ _)
-      show p ∈ TangentBundle.proj I M ⁻¹' (o ∩ l.source)
-      ·
-        simp [TangentBundle.proj]
-        have  : p.1 ∈ f ⁻¹' r.source ∩ s
-        ·
-          simp [hp]
-        rw [ho] at this 
-        exact this.1
-      ·
-        have  : TangentBundle.proj I M ⁻¹' s ∩ TangentBundle.proj I M ⁻¹' (o ∩ l.source) = s'_lift
-        ·
-          dsimp only [s'_lift, s']
-          rw [ho]
-          mfldSetTac 
-        rw [this]
-        exact h 
-    have U' : UniqueMdiffOn I s'
-    ·
-      apply UniqueMdiffOn.inter _ l.open_source 
-      rw [ho, inter_comm]
-      exact hs.inter o_open 
-    have U'l : UniqueMdiffOn I s'l := U'.unique_mdiff_on_preimage (mdifferentiable_chart _ _)
-    have diff_f : TimesContMdiffOn I I' n f s' :=
-      hf.mono
-        (by 
-          mfldSetTac)
-    have diff_r : TimesContMdiffOn I' I' n r r.source := times_cont_mdiff_on_chart 
-    have diff_rf : TimesContMdiffOn I I' n (r ∘ f) s'
-    ·
-      apply TimesContMdiffOn.comp diff_r diff_f fun x hx => _ 
-      simp' only [s'] with mfld_simps  at hx 
-      simp' only [hx] with mfld_simps 
-    have diff_l : TimesContMdiffOn I I n l.symm s'l
-    ·
-      have A : TimesContMdiffOn I I n l.symm l.target := times_cont_mdiff_on_chart_symm 
-      exact
-        A.mono
-          (by 
-            mfldSetTac)
-    have diff_rfl : TimesContMdiffOn I I' n (r ∘ f ∘ l.symm) s'l
-    ·
-      apply TimesContMdiffOn.comp diff_rf diff_l 
-      mfldSetTac 
-    have diff_rfl_lift :
-      TimesContMdiffOn I.tangent I'.tangent m (tangentMapWithin I I' (r ∘ f ∘ l.symm) s'l) s'l_lift :=
-      diff_rfl.times_cont_mdiff_on_tangent_map_within_aux hmn U'l 
-    have diff_irrfl_lift :
-      TimesContMdiffOn I.tangent I'.tangent m (ir ∘ tangentMapWithin I I' (r ∘ f ∘ l.symm) s'l) s'l_lift
-    ·
-      have A : TimesContMdiffOn I'.tangent I'.tangent m ir ir.source := times_cont_mdiff_on_chart 
-      exact
-        TimesContMdiffOn.comp A diff_rfl_lift
-          fun p hp =>
-            by 
-              simp' only [ir] with mfld_simps 
-    have diff_Drirrfl_lift :
-      TimesContMdiffOn I.tangent I'.tangent m (Dr.symm ∘ ir ∘ tangentMapWithin I I' (r ∘ f ∘ l.symm) s'l) s'l_lift
-    ·
-      have A : TimesContMdiffOn I'.tangent I'.tangent m Dr.symm Dr.target := times_cont_mdiff_on_chart_symm 
-      apply TimesContMdiffOn.comp A diff_irrfl_lift fun p hp => _ 
-      simp' only [s'l_lift, TangentBundle.proj] with mfld_simps  at hp 
-      simp' only [ir, @LocalEquiv.refl_coe (ModelProd H' E'), hp] with mfld_simps 
-    have diff_DrirrflilDl :
-      TimesContMdiffOn I.tangent I'.tangent m
-        (Dr.symm ∘ (ir ∘ tangentMapWithin I I' (r ∘ f ∘ l.symm) s'l) ∘ il.symm ∘ Dl) s'_lift
-    ·
-      have A : TimesContMdiffOn I.tangent I.tangent m Dl Dl.source := times_cont_mdiff_on_chart 
-      have A' : TimesContMdiffOn I.tangent I.tangent m Dl s'_lift
-      ·
-        apply A.mono fun p hp => _ 
-        simp' only [s'_lift, TangentBundle.proj] with mfld_simps  at hp 
-        simp' only [Dl, hp] with mfld_simps 
-      have B : TimesContMdiffOn I.tangent I.tangent m il.symm il.target := times_cont_mdiff_on_chart_symm 
-      have C : TimesContMdiffOn I.tangent I.tangent m (il.symm ∘ Dl) s'_lift :=
-        TimesContMdiffOn.comp B A'
-          fun p hp =>
-            by 
-              simp' only [il] with mfld_simps 
-      apply TimesContMdiffOn.comp diff_Drirrfl_lift C fun p hp => _ 
-      simp' only [s'_lift, TangentBundle.proj] with mfld_simps  at hp 
-      simp' only [il, s'l_lift, hp, TangentBundle.proj] with mfld_simps 
-    have eq_comp :
-      ∀ q _ : q ∈ s'_lift,
-        tangentMapWithin I I' f s q = (Dr.symm ∘ ir ∘ tangentMapWithin I I' (r ∘ f ∘ l.symm) s'l ∘ il.symm ∘ Dl) q
-    ·
-      intro q hq 
-      simp' only [s'_lift, TangentBundle.proj] with mfld_simps  at hq 
-      have U'q : UniqueMdiffWithinAt I s' q.1
-      ·
-        ·
-          apply U' 
-          simp' only [hq, s'] with mfld_simps 
-      have U'lq : UniqueMdiffWithinAt I s'l (Dl q).1
-      ·
-        ·
-          apply U'l 
-          simp' only [hq, s'l] with mfld_simps 
-      have A :
-        tangentMapWithin I I' ((r ∘ f) ∘ l.symm) s'l (il.symm (Dl q)) =
-          tangentMapWithin I I' (r ∘ f) s' (tangentMapWithin I I l.symm s'l (il.symm (Dl q)))
-      ·
-        refine' tangent_map_within_comp_at (il.symm (Dl q)) _ _ (fun p hp => _) U'lq
-        ·
-          apply diff_rf.mdifferentiable_on one_le_n 
-          simp' only [hq] with mfld_simps
-        ·
-          apply diff_l.mdifferentiable_on one_le_n 
-          simp' only [s'l, hq] with mfld_simps
-        ·
-          simp' only with mfld_simps  at hp 
-          simp' only [hp] with mfld_simps 
-      have B : tangentMapWithin I I l.symm s'l (il.symm (Dl q)) = q
-      ·
-        have  : tangentMapWithin I I l.symm s'l (il.symm (Dl q)) = tangentMap I I l.symm (il.symm (Dl q))
-        ·
-          refine' tangent_map_within_eq_tangent_map U'lq _ 
-          refine' mdifferentiable_at_atlas_symm _ (chart_mem_atlas _ _) _ 
-          simp' only [hq] with mfld_simps 
-        rw [this, tangent_map_chart_symm, hDl]
-        ·
-          simp' only [hq] with mfld_simps 
-          have  : q ∈ (chart_at (ModelProd H E) p).Source
-          ·
-            simp' only [hq] with mfld_simps 
-          exact (chart_at (ModelProd H E) p).left_inv this
-        ·
-          simp' only [hq] with mfld_simps 
-      have C : tangentMapWithin I I' (r ∘ f) s' q = tangentMapWithin I' I' r r.source (tangentMapWithin I I' f s' q)
-      ·
-        refine' tangent_map_within_comp_at q _ _ (fun r hr => _) U'q
-        ·
-          apply diff_r.mdifferentiable_on one_le_n 
-          simp' only [hq] with mfld_simps
-        ·
-          apply diff_f.mdifferentiable_on one_le_n 
-          simp' only [hq] with mfld_simps
-        ·
-          simp' only [s'] with mfld_simps  at hr 
-          simp' only [hr] with mfld_simps 
-      have D :
-        Dr.symm (ir (tangentMapWithin I' I' r r.source (tangentMapWithin I I' f s' q))) = tangentMapWithin I I' f s' q
-      ·
-        have A :
-          tangentMapWithin I' I' r r.source (tangentMapWithin I I' f s' q) =
-            tangentMap I' I' r (tangentMapWithin I I' f s' q)
-        ·
-          apply tangent_map_within_eq_tangent_map
-          ·
-            apply IsOpen.unique_mdiff_within_at _ r.open_source 
-            simp [hq]
-          ·
-            refine' mdifferentiable_at_atlas _ (chart_mem_atlas _ _) _ 
-            simp' only [hq] with mfld_simps 
-        have  : f p.1 = (tangentMapWithin I I' f s p).1 := rfl 
-        rw [A]
-        dsimp [r, Dr]
-        rw [this, tangent_map_chart]
-        ·
-          simp' only [hq] with mfld_simps 
-          have  : tangentMapWithin I I' f s' q ∈ (chart_at (ModelProd H' E') (tangentMapWithin I I' f s p)).Source
-          ·
-            simp' only [hq] with mfld_simps 
-          exact (chart_at (ModelProd H' E') (tangentMapWithin I I' f s p)).left_inv this
-        ·
-          simp' only [hq] with mfld_simps 
-      have E : tangentMapWithin I I' f s' q = tangentMapWithin I I' f s q
-      ·
-        refine'
-          tangent_map_within_subset
-            (by 
-              mfldSetTac)
-            U'q _ 
-        apply hf.mdifferentiable_on one_le_n 
-        simp' only [hq] with mfld_simps 
-      simp only [· ∘ ·, A, B, C, D, E.symm]
-    exact diff_DrirrflilDl.congr eq_comp
+theorem times_cont_mdiff_on.times_cont_mdiff_on_tangent_map_within
+(hf : times_cont_mdiff_on I I' n f s)
+(hmn : «expr ≤ »(«expr + »(m, 1), n))
+(hs : unique_mdiff_on I s) : times_cont_mdiff_on I.tangent I'.tangent m (tangent_map_within I I' f s) «expr ⁻¹' »(tangent_bundle.proj I M, s) :=
+begin
+  have [ident m_le_n] [":", expr «expr ≤ »(m, n)] [],
+  { apply [expr le_trans _ hmn],
+    have [] [":", expr «expr ≤ »(«expr + »(m, 0), «expr + »(m, 1))] [":=", expr add_le_add_left (zero_le _) _],
+    simpa [] [] ["only"] ["[", expr add_zero, "]"] [] [] },
+  have [ident one_le_n] [":", expr «expr ≤ »(1, n)] [],
+  { apply [expr le_trans _ hmn],
+    change [expr «expr ≤ »(«expr + »(0, 1), «expr + »(m, 1))] [] [],
+    exact [expr add_le_add_right (zero_le _) _] },
+  refine [expr times_cont_mdiff_on_of_locally_times_cont_mdiff_on (λ p hp, _)],
+  have [ident hf'] [] [":=", expr times_cont_mdiff_on_iff.1 hf],
+  simp [] [] [] ["[", expr tangent_bundle.proj, "]"] [] ["at", ident hp],
+  let [ident l] [] [":=", expr chart_at H p.1],
+  set [] [ident Dl] [] [":="] [expr chart_at (model_prod H E) p] ["with", ident hDl],
+  let [ident r] [] [":=", expr chart_at H' (f p.1)],
+  let [ident Dr] [] [":=", expr chart_at (model_prod H' E') (tangent_map_within I I' f s p)],
+  let [ident il] [] [":=", expr chart_at (model_prod H E) (tangent_map I I l p)],
+  let [ident ir] [] [":=", expr chart_at (model_prod H' E') (tangent_map I I' «expr ∘ »(r, f) p)],
+  let [ident s'] [] [":=", expr «expr ∩ »(«expr ∩ »(«expr ⁻¹' »(f, r.source), s), l.source)],
+  let [ident s'_lift] [] [":=", expr «expr ⁻¹' »(tangent_bundle.proj I M, s')],
+  let [ident s'l] [] [":=", expr «expr ∩ »(l.target, «expr ⁻¹' »(l.symm, s'))],
+  let [ident s'l_lift] [] [":=", expr «expr ⁻¹' »(tangent_bundle.proj I H, s'l)],
+  rcases [expr continuous_on_iff'.1 hf'.1 r.source r.open_source, "with", "⟨", ident o, ",", ident o_open, ",", ident ho, "⟩"],
+  suffices [ident h] [":", expr times_cont_mdiff_on I.tangent I'.tangent m (tangent_map_within I I' f s) s'_lift],
+  { refine [expr ⟨«expr ⁻¹' »(tangent_bundle.proj I M, «expr ∩ »(o, l.source)), _, _, _⟩],
+    show [expr is_open «expr ⁻¹' »(tangent_bundle.proj I M, «expr ∩ »(o, l.source))],
+    from [expr (is_open.inter o_open l.open_source).preimage (tangent_bundle_proj_continuous _ _)],
+    show [expr «expr ∈ »(p, «expr ⁻¹' »(tangent_bundle.proj I M, «expr ∩ »(o, l.source)))],
+    { simp [] [] [] ["[", expr tangent_bundle.proj, "]"] [] ["at", "⊢"],
+      have [] [":", expr «expr ∈ »(p.1, «expr ∩ »(«expr ⁻¹' »(f, r.source), s))] [],
+      by simp [] [] [] ["[", expr hp, "]"] [] [],
+      rw [expr ho] ["at", ident this],
+      exact [expr this.1] },
+    { have [] [":", expr «expr = »(«expr ∩ »(«expr ⁻¹' »(tangent_bundle.proj I M, s), «expr ⁻¹' »(tangent_bundle.proj I M, «expr ∩ »(o, l.source))), s'_lift)] [],
+      { dsimp ["only"] ["[", expr s'_lift, ",", expr s', "]"] [] [],
+        rw ["[", expr ho, "]"] [],
+        mfld_set_tac },
+      rw [expr this] [],
+      exact [expr h] } },
+  have [ident U'] [":", expr unique_mdiff_on I s'] [],
+  { apply [expr unique_mdiff_on.inter _ l.open_source],
+    rw ["[", expr ho, ",", expr inter_comm, "]"] [],
+    exact [expr hs.inter o_open] },
+  have [ident U'l] [":", expr unique_mdiff_on I s'l] [":=", expr U'.unique_mdiff_on_preimage (mdifferentiable_chart _ _)],
+  have [ident diff_f] [":", expr times_cont_mdiff_on I I' n f s'] [":=", expr hf.mono (by mfld_set_tac)],
+  have [ident diff_r] [":", expr times_cont_mdiff_on I' I' n r r.source] [":=", expr times_cont_mdiff_on_chart],
+  have [ident diff_rf] [":", expr times_cont_mdiff_on I I' n «expr ∘ »(r, f) s'] [],
+  { apply [expr times_cont_mdiff_on.comp diff_r diff_f (λ x hx, _)],
+    simp [] [] ["only"] ["[", expr s', "]"] ["with", ident mfld_simps] ["at", ident hx],
+    simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [] },
+  have [ident diff_l] [":", expr times_cont_mdiff_on I I n l.symm s'l] [],
+  { have [ident A] [":", expr times_cont_mdiff_on I I n l.symm l.target] [":=", expr times_cont_mdiff_on_chart_symm],
+    exact [expr A.mono (by mfld_set_tac)] },
+  have [ident diff_rfl] [":", expr times_cont_mdiff_on I I' n «expr ∘ »(r, «expr ∘ »(f, l.symm)) s'l] [],
+  { apply [expr times_cont_mdiff_on.comp diff_rf diff_l],
+    mfld_set_tac },
+  have [ident diff_rfl_lift] [":", expr times_cont_mdiff_on I.tangent I'.tangent m (tangent_map_within I I' «expr ∘ »(r, «expr ∘ »(f, l.symm)) s'l) s'l_lift] [":=", expr diff_rfl.times_cont_mdiff_on_tangent_map_within_aux hmn U'l],
+  have [ident diff_irrfl_lift] [":", expr times_cont_mdiff_on I.tangent I'.tangent m «expr ∘ »(ir, tangent_map_within I I' «expr ∘ »(r, «expr ∘ »(f, l.symm)) s'l) s'l_lift] [],
+  { have [ident A] [":", expr times_cont_mdiff_on I'.tangent I'.tangent m ir ir.source] [":=", expr times_cont_mdiff_on_chart],
+    exact [expr times_cont_mdiff_on.comp A diff_rfl_lift (λ
+      p hp, by simp [] [] ["only"] ["[", expr ir, "]"] ["with", ident mfld_simps] [])] },
+  have [ident diff_Drirrfl_lift] [":", expr times_cont_mdiff_on I.tangent I'.tangent m «expr ∘ »(Dr.symm, «expr ∘ »(ir, tangent_map_within I I' «expr ∘ »(r, «expr ∘ »(f, l.symm)) s'l)) s'l_lift] [],
+  { have [ident A] [":", expr times_cont_mdiff_on I'.tangent I'.tangent m Dr.symm Dr.target] [":=", expr times_cont_mdiff_on_chart_symm],
+    apply [expr times_cont_mdiff_on.comp A diff_irrfl_lift (λ p hp, _)],
+    simp [] [] ["only"] ["[", expr s'l_lift, ",", expr tangent_bundle.proj, "]"] ["with", ident mfld_simps] ["at", ident hp],
+    simp [] [] ["only"] ["[", expr ir, ",", expr @local_equiv.refl_coe (model_prod H' E'), ",", expr hp, "]"] ["with", ident mfld_simps] [] },
+  have [ident diff_DrirrflilDl] [":", expr times_cont_mdiff_on I.tangent I'.tangent m «expr ∘ »(Dr.symm, «expr ∘ »(«expr ∘ »(ir, tangent_map_within I I' «expr ∘ »(r, «expr ∘ »(f, l.symm)) s'l), «expr ∘ »(il.symm, Dl))) s'_lift] [],
+  { have [ident A] [":", expr times_cont_mdiff_on I.tangent I.tangent m Dl Dl.source] [":=", expr times_cont_mdiff_on_chart],
+    have [ident A'] [":", expr times_cont_mdiff_on I.tangent I.tangent m Dl s'_lift] [],
+    { apply [expr A.mono (λ p hp, _)],
+      simp [] [] ["only"] ["[", expr s'_lift, ",", expr tangent_bundle.proj, "]"] ["with", ident mfld_simps] ["at", ident hp],
+      simp [] [] ["only"] ["[", expr Dl, ",", expr hp, "]"] ["with", ident mfld_simps] [] },
+    have [ident B] [":", expr times_cont_mdiff_on I.tangent I.tangent m il.symm il.target] [":=", expr times_cont_mdiff_on_chart_symm],
+    have [ident C] [":", expr times_cont_mdiff_on I.tangent I.tangent m «expr ∘ »(il.symm, Dl) s'_lift] [":=", expr times_cont_mdiff_on.comp B A' (λ
+      p hp, by simp [] [] ["only"] ["[", expr il, "]"] ["with", ident mfld_simps] [])],
+    apply [expr times_cont_mdiff_on.comp diff_Drirrfl_lift C (λ p hp, _)],
+    simp [] [] ["only"] ["[", expr s'_lift, ",", expr tangent_bundle.proj, "]"] ["with", ident mfld_simps] ["at", ident hp],
+    simp [] [] ["only"] ["[", expr il, ",", expr s'l_lift, ",", expr hp, ",", expr tangent_bundle.proj, "]"] ["with", ident mfld_simps] [] },
+  have [ident eq_comp] [":", expr ∀
+   q «expr ∈ » s'_lift, «expr = »(tangent_map_within I I' f s q, «expr ∘ »(Dr.symm, «expr ∘ »(ir, «expr ∘ »(tangent_map_within I I' «expr ∘ »(r, «expr ∘ »(f, l.symm)) s'l, «expr ∘ »(il.symm, Dl)))) q)] [],
+  { assume [binders (q hq)],
+    simp [] [] ["only"] ["[", expr s'_lift, ",", expr tangent_bundle.proj, "]"] ["with", ident mfld_simps] ["at", ident hq],
+    have [ident U'q] [":", expr unique_mdiff_within_at I s' q.1] [],
+    by { apply [expr U'],
+      simp [] [] ["only"] ["[", expr hq, ",", expr s', "]"] ["with", ident mfld_simps] [] },
+    have [ident U'lq] [":", expr unique_mdiff_within_at I s'l (Dl q).1] [],
+    by { apply [expr U'l],
+      simp [] [] ["only"] ["[", expr hq, ",", expr s'l, "]"] ["with", ident mfld_simps] [] },
+    have [ident A] [":", expr «expr = »(tangent_map_within I I' «expr ∘ »(«expr ∘ »(r, f), l.symm) s'l (il.symm (Dl q)), tangent_map_within I I' «expr ∘ »(r, f) s' (tangent_map_within I I l.symm s'l (il.symm (Dl q))))] [],
+    { refine [expr tangent_map_within_comp_at (il.symm (Dl q)) _ _ (λ p hp, _) U'lq],
+      { apply [expr diff_rf.mdifferentiable_on one_le_n],
+        simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [] },
+      { apply [expr diff_l.mdifferentiable_on one_le_n],
+        simp [] [] ["only"] ["[", expr s'l, ",", expr hq, "]"] ["with", ident mfld_simps] [] },
+      { simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident hp],
+        simp [] [] ["only"] ["[", expr hp, "]"] ["with", ident mfld_simps] [] } },
+    have [ident B] [":", expr «expr = »(tangent_map_within I I l.symm s'l (il.symm (Dl q)), q)] [],
+    { have [] [":", expr «expr = »(tangent_map_within I I l.symm s'l (il.symm (Dl q)), tangent_map I I l.symm (il.symm (Dl q)))] [],
+      { refine [expr tangent_map_within_eq_tangent_map U'lq _],
+        refine [expr mdifferentiable_at_atlas_symm _ (chart_mem_atlas _ _) _],
+        simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [] },
+      rw ["[", expr this, ",", expr tangent_map_chart_symm, ",", expr hDl, "]"] [],
+      { simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [],
+        have [] [":", expr «expr ∈ »(q, (chart_at (model_prod H E) p).source)] [],
+        by simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [],
+        exact [expr (chart_at (model_prod H E) p).left_inv this] },
+      { simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [] } },
+    have [ident C] [":", expr «expr = »(tangent_map_within I I' «expr ∘ »(r, f) s' q, tangent_map_within I' I' r r.source (tangent_map_within I I' f s' q))] [],
+    { refine [expr tangent_map_within_comp_at q _ _ (λ r hr, _) U'q],
+      { apply [expr diff_r.mdifferentiable_on one_le_n],
+        simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [] },
+      { apply [expr diff_f.mdifferentiable_on one_le_n],
+        simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [] },
+      { simp [] [] ["only"] ["[", expr s', "]"] ["with", ident mfld_simps] ["at", ident hr],
+        simp [] [] ["only"] ["[", expr hr, "]"] ["with", ident mfld_simps] [] } },
+    have [ident D] [":", expr «expr = »(Dr.symm (ir (tangent_map_within I' I' r r.source (tangent_map_within I I' f s' q))), tangent_map_within I I' f s' q)] [],
+    { have [ident A] [":", expr «expr = »(tangent_map_within I' I' r r.source (tangent_map_within I I' f s' q), tangent_map I' I' r (tangent_map_within I I' f s' q))] [],
+      { apply [expr tangent_map_within_eq_tangent_map],
+        { apply [expr is_open.unique_mdiff_within_at _ r.open_source],
+          simp [] [] [] ["[", expr hq, "]"] [] [] },
+        { refine [expr mdifferentiable_at_atlas _ (chart_mem_atlas _ _) _],
+          simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [] } },
+      have [] [":", expr «expr = »(f p.1, (tangent_map_within I I' f s p).1)] [":=", expr rfl],
+      rw ["[", expr A, "]"] [],
+      dsimp [] ["[", expr r, ",", expr Dr, "]"] [] [],
+      rw ["[", expr this, ",", expr tangent_map_chart, "]"] [],
+      { simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [],
+        have [] [":", expr «expr ∈ »(tangent_map_within I I' f s' q, (chart_at (model_prod H' E') (tangent_map_within I I' f s p)).source)] [],
+        by simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [],
+        exact [expr (chart_at (model_prod H' E') (tangent_map_within I I' f s p)).left_inv this] },
+      { simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [] } },
+    have [ident E] [":", expr «expr = »(tangent_map_within I I' f s' q, tangent_map_within I I' f s q)] [],
+    { refine [expr tangent_map_within_subset (by mfld_set_tac) U'q _],
+      apply [expr hf.mdifferentiable_on one_le_n],
+      simp [] [] ["only"] ["[", expr hq, "]"] ["with", ident mfld_simps] [] },
+    simp [] [] ["only"] ["[", expr («expr ∘ »), ",", expr A, ",", expr B, ",", expr C, ",", expr D, ",", expr E.symm, "]"] [] [] },
+  exact [expr diff_DrirrflilDl.congr eq_comp]
+end
 
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function is `C^n` on a domain with unique derivatives, with `1 ≤ n`, then its bundled
 derivative is continuous there. -/
-theorem TimesContMdiffOn.continuous_on_tangent_map_within (hf : TimesContMdiffOn I I' n f s) (hmn : 1 ≤ n)
-  (hs : UniqueMdiffOn I s) : ContinuousOn (tangentMapWithin I I' f s) (TangentBundle.proj I M ⁻¹' s) :=
-  by 
-    have  : TimesContMdiffOn I.tangent I'.tangent 0 (tangentMapWithin I I' f s) (TangentBundle.proj I M ⁻¹' s) :=
-      hf.times_cont_mdiff_on_tangent_map_within hmn hs 
-    exact this.continuous_on
+theorem times_cont_mdiff_on.continuous_on_tangent_map_within
+(hf : times_cont_mdiff_on I I' n f s)
+(hmn : «expr ≤ »(1, n))
+(hs : unique_mdiff_on I s) : continuous_on (tangent_map_within I I' f s) «expr ⁻¹' »(tangent_bundle.proj I M, s) :=
+begin
+  have [] [":", expr times_cont_mdiff_on I.tangent I'.tangent 0 (tangent_map_within I I' f s) «expr ⁻¹' »(tangent_bundle.proj I M, s)] [":=", expr hf.times_cont_mdiff_on_tangent_map_within hmn hs],
+  exact [expr this.continuous_on]
+end
 
 /-- If a function is `C^n`, then its bundled derivative is `C^m` when `m+1 ≤ n`. -/
 theorem TimesContMdiff.times_cont_mdiff_tangent_map (hf : TimesContMdiff I I' n f) (hmn : (m+1) ≤ n) :
@@ -1557,35 +1397,38 @@ theorem smooth_within_at_proj {s : Set Z.to_topological_fiber_bundle_core.total_
   SmoothWithinAt (I.prod 𝓘(𝕜, E')) I Z.to_topological_fiber_bundle_core.proj s p :=
   Z.times_cont_mdiff_within_at_proj
 
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If an element of `E'` is invariant under all coordinate changes, then one can define a
 corresponding section of the fiber bundle, which is smooth. This applies in particular to the
 zero section of a vector bundle. Another example (not yet defined) would be the identity
 section of the endomorphism bundle of a vector bundle. -/
-theorem smooth_const_section (v : E')
-  (h : ∀ i j : atlas H M, ∀ x _ : x ∈ i.1.Source ∩ j.1.Source, Z.coord_change i j (i.1 x) v = v) :
-  Smooth I (I.prod 𝓘(𝕜, E')) (show M → Z.to_topological_fiber_bundle_core.total_space from fun x => ⟨x, v⟩) :=
-  by 
-    intro x 
-    rw [TimesContMdiffAt, times_cont_mdiff_within_at_iff]
-    split 
-    ·
-      apply Continuous.continuous_within_at 
-      apply TopologicalFiberBundleCore.continuous_const_section 
-      intro i j y hy 
-      exact h _ _ _ hy
-    ·
-      have  : TimesContDiff 𝕜 ⊤ fun y : E => (y, v) := times_cont_diff_id.prod times_cont_diff_const 
-      apply this.times_cont_diff_within_at.congr
-      ·
-        intro y hy 
-        simp' only with mfld_simps  at hy 
-        simp' only [chart, hy, chart_at, Prod.mk.inj_iffₓ, to_topological_fiber_bundle_core] with mfld_simps 
-        apply h 
-        simp' only [hy] with mfld_simps
-      ·
-        simp' only [chart, chart_at, Prod.mk.inj_iffₓ, to_topological_fiber_bundle_core] with mfld_simps 
-        apply h 
-        simp' only with mfld_simps
+theorem smooth_const_section
+(v : E')
+(h : ∀
+ i
+ j : atlas H M, ∀
+ x «expr ∈ » «expr ∩ »(i.1.source, j.1.source), «expr = »(Z.coord_change i j (i.1 x) v, v)) : smooth I (I.prod «expr𝓘( , )»(𝕜, E')) (show M → Z.to_topological_fiber_bundle_core.total_space, from λ
+ x, ⟨x, v⟩) :=
+begin
+  assume [binders (x)],
+  rw ["[", expr times_cont_mdiff_at, ",", expr times_cont_mdiff_within_at_iff, "]"] [],
+  split,
+  { apply [expr continuous.continuous_within_at],
+    apply [expr topological_fiber_bundle_core.continuous_const_section],
+    assume [binders (i j y hy)],
+    exact [expr h _ _ _ hy] },
+  { have [] [":", expr times_cont_diff 𝕜 «expr⊤»() (λ
+      y : E, (y, v))] [":=", expr times_cont_diff_id.prod times_cont_diff_const],
+    apply [expr this.times_cont_diff_within_at.congr],
+    { assume [binders (y hy)],
+      simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident hy],
+      simp [] [] ["only"] ["[", expr chart, ",", expr hy, ",", expr chart_at, ",", expr prod.mk.inj_iff, ",", expr to_topological_fiber_bundle_core, "]"] ["with", ident mfld_simps] [],
+      apply [expr h],
+      simp [] [] ["only"] ["[", expr hy, "]"] ["with", ident mfld_simps] [] },
+    { simp [] [] ["only"] ["[", expr chart, ",", expr chart_at, ",", expr prod.mk.inj_iff, ",", expr to_topological_fiber_bundle_core, "]"] ["with", ident mfld_simps] [],
+      apply [expr h],
+      simp [] [] ["only"] [] ["with", ident mfld_simps] [] } }
+end
 
 end BasicSmoothBundleCore
 
@@ -1636,6 +1479,7 @@ theorem smooth_zero_section : Smooth I I.tangent (zero_section I M) :=
     intro i j x hx 
     simp' only [tangentBundleCore, ContinuousLinearMap.map_zero] with mfld_simps
 
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The derivative of the zero section of the tangent bundle maps `⟨x, v⟩` to `⟨⟨x, 0⟩, ⟨v, 0⟩⟩`.
 
 Note that, as currently framed, this is a statement in coordinates, thus reliant on the choice
@@ -1650,45 +1494,35 @@ coordinates on the tangent bundle in our definitions. So this statement is not a
 may seem.
 
 TODO define splittings of vector bundles; state this result invariantly. -/
-theorem tangent_map_tangent_bundle_pure (p : TangentBundle I M) :
-  tangentMap I I.tangent (TangentBundle.zeroSection I M) p = ⟨⟨p.1, 0⟩, ⟨p.2, 0⟩⟩ :=
-  by 
-    rcases p with ⟨x, v⟩
-    have N : I.symm ⁻¹' (chart_at H x).Target ∈ 𝓝 (I ((chart_at H x) x))
-    ·
-      apply IsOpen.mem_nhds 
-      apply (LocalHomeomorph.open_target _).Preimage I.continuous_inv_fun 
-      simp' only with mfld_simps 
-    have A : MdifferentiableAt I I.tangent (fun x : M => (⟨x, 0⟩ : TangentBundle I M)) x :=
-      tangent_bundle.smooth_zero_section.mdifferentiable_at 
-    have B : fderivWithin 𝕜 (fun x_1 : E => (x_1, (0 : E))) (Set.Range («expr⇑ » I)) (I ((chart_at H x) x)) v = (v, 0)
-    ·
-      rw [fderiv_within_eq_fderiv, DifferentiableAt.fderiv_prod]
-      ·
-        simp 
-      ·
-        exact differentiable_at_id'
-      ·
-        exact differentiable_at_const _
-      ·
-        exact ModelWithCorners.unique_diff_at_image I
-      ·
-        exact differentiable_at_id'.prod (differentiable_at_const _)
-    simp' only [TangentBundle.zeroSection, tangentMap, mfderiv, A, dif_pos, chart_at, BasicSmoothBundleCore.chart,
-      BasicSmoothBundleCore.toTopologicalFiberBundleCore, tangentBundleCore, Function.comp,
-      ContinuousLinearMap.map_zero] with mfld_simps 
-    rw [←fderiv_within_inter N (I.unique_diff (I ((chart_at H x) x)) (Set.mem_range_self _))] at B 
-    rw [←fderiv_within_inter N (I.unique_diff (I ((chart_at H x) x)) (Set.mem_range_self _)), ←B]
-    congr 1
-    apply fderiv_within_congr _ fun y hy => _
-    ·
-      simp' only with mfld_simps
-    ·
-      apply UniqueDiffWithinAt.inter (I.unique_diff _ _) N 
-      simp' only with mfld_simps
-    ·
-      simp' only with mfld_simps  at hy 
-      simp' only [hy] with mfld_simps
+theorem tangent_map_tangent_bundle_pure
+(p : tangent_bundle I M) : «expr = »(tangent_map I I.tangent (tangent_bundle.zero_section I M) p, ⟨⟨p.1, 0⟩, ⟨p.2, 0⟩⟩) :=
+begin
+  rcases [expr p, "with", "⟨", ident x, ",", ident v, "⟩"],
+  have [ident N] [":", expr «expr ∈ »(«expr ⁻¹' »(I.symm, (chart_at H x).target), expr𝓝() (I (chart_at H x x)))] [],
+  { apply [expr is_open.mem_nhds],
+    apply [expr (local_homeomorph.open_target _).preimage I.continuous_inv_fun],
+    simp [] [] ["only"] [] ["with", ident mfld_simps] [] },
+  have [ident A] [":", expr mdifferentiable_at I I.tangent (λ
+    x : M, (⟨x, 0⟩ : tangent_bundle I M)) x] [":=", expr tangent_bundle.smooth_zero_section.mdifferentiable_at],
+  have [ident B] [":", expr «expr = »(fderiv_within 𝕜 (λ
+     x_1 : E, (x_1, (0 : E))) (set.range «expr⇑ »(I)) (I (chart_at H x x)) v, (v, 0))] [],
+  { rw ["[", expr fderiv_within_eq_fderiv, ",", expr differentiable_at.fderiv_prod, "]"] [],
+    { simp [] [] [] [] [] [] },
+    { exact [expr differentiable_at_id'] },
+    { exact [expr differentiable_at_const _] },
+    { exact [expr model_with_corners.unique_diff_at_image I] },
+    { exact [expr differentiable_at_id'.prod (differentiable_at_const _)] } },
+  simp [] [] ["only"] ["[", expr tangent_bundle.zero_section, ",", expr tangent_map, ",", expr mfderiv, ",", expr A, ",", expr dif_pos, ",", expr chart_at, ",", expr basic_smooth_bundle_core.chart, ",", expr basic_smooth_bundle_core.to_topological_fiber_bundle_core, ",", expr tangent_bundle_core, ",", expr function.comp, ",", expr continuous_linear_map.map_zero, "]"] ["with", ident mfld_simps] [],
+  rw ["<-", expr fderiv_within_inter N (I.unique_diff (I (chart_at H x x)) (set.mem_range_self _))] ["at", ident B],
+  rw ["[", "<-", expr fderiv_within_inter N (I.unique_diff (I (chart_at H x x)) (set.mem_range_self _)), ",", "<-", expr B, "]"] [],
+  congr' [1] [],
+  apply [expr fderiv_within_congr _ (λ y hy, _)],
+  { simp [] [] ["only"] [] ["with", ident mfld_simps] [] },
+  { apply [expr unique_diff_within_at.inter (I.unique_diff _ _) N],
+    simp [] [] ["only"] [] ["with", ident mfld_simps] [] },
+  { simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident hy],
+    simp [] [] ["only"] ["[", expr hy, "]"] ["with", ident mfld_simps] [] }
+end
 
 end TangentBundle
 

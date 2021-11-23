@@ -1,5 +1,4 @@
-import Mathbin.Control.Traversable.Lemmas 
-import Mathbin.Data.List.Basic
+import Mathbin.Control.Traversable.Lemmas
 
 namespace Tactic.Interactive
 
@@ -112,12 +111,12 @@ unsafe def derive_map_equations (pre : Option Name) (n : Name) (vs : List expr) 
             let rec_call := args.filter_map$ fun ⟨b, e⟩ => guardₓ b >> pure e 
             let rec_call ← rec_call.mmap call_map 
             let rhs ← map_constructor c n f α β (vs ++ [β]) args rec_call 
-            Monadₓ.join$ (unify <$> infer_type lhs)<*>infer_type rhs 
+            Monadₓ.join$ unify <$> infer_type lhs <*> infer_type rhs 
             let eqn ← mk_app `` Eq [lhs, rhs]
             let ws := eqn.list_local_consts 
             let eqn ← pis ws.reverse eqn 
             let eqn ← instantiate_mvars eqn 
-            let (_, pr) ← solve_aux eqn (tactic.intros >> refine (pquote rfl))
+            let (_, pr) ← solve_aux eqn (tactic.intros >> refine (pquote.1 rfl))
             let eqn_n := (with_prefix pre n <.> "map" <.> "equations" <.> "_eqn").append_after i 
             let pr ← instantiate_mvars pr 
             add_decl$ declaration.thm eqn_n eqn.collect_univ_params eqn (pure pr)
@@ -128,11 +127,11 @@ unsafe def derive_map_equations (pre : Option Name) (n : Name) (vs : List expr) 
 unsafe def derive_functor (pre : Option Name) : tactic Unit :=
   do 
     let vs ← local_context 
-    let quote Functor (%%f) ← target 
+    let quote.1 (Functor (%%ₓf)) ← target 
     let env ← get_env 
     let n := f.get_app_fn.const_name 
     let d ← get_decl n 
-    refine (pquote { map := _, .. })
+    refine (pquote.1 { map := _, .. })
     let tgt ← target 
     extract_def (with_prefix pre n <.> "map") d.is_trusted$ mk_map n 
     when d.is_trusted$
@@ -142,7 +141,8 @@ unsafe def derive_functor (pre : Option Name) : tactic Unit :=
 
 /-- `seq_apply_constructor f [x,y,z]` synthesizes `f <*> x <*> y <*> z` -/
 private unsafe def seq_apply_constructor : expr → List (Sum expr expr) → tactic (List (tactic expr) × expr)
-| e, Sum.inr x :: xs => Prod.mapₓ (cons intro1) id <$> (to_expr (pquote (%%e)<*>%%x) >>= flip seq_apply_constructor xs)
+| e, Sum.inr x :: xs =>
+  Prod.mapₓ (cons intro1) id <$> (to_expr (pquote.1 ((%%ₓe) <*> %%ₓx)) >>= flip seq_apply_constructor xs)
 | e, Sum.inl x :: xs => Prod.mapₓ (cons$ pure x) id <$> seq_apply_constructor e xs
 | e, [] => return ([], e)
 
@@ -192,7 +192,7 @@ unsafe def traverse_constructor (c n : Name) (appl_inst f α β : expr) (args₀
           rec_call args₁ 
     let constr ← mk_const c 
     let v ← mk_mvar 
-    let constr' ← to_expr (pquote @pure _ (%%appl_inst).toHasPure _ (%%v))
+    let constr' ← to_expr (pquote.1 (@pure _ (%%ₓappl_inst).toHasPure _ (%%ₓv)))
     let (vars_intro, r) ← seq_apply_constructor constr' (args₀.map Sum.inl ++ args')
     let gs ← get_goals 
     set_goals [v]
@@ -255,12 +255,12 @@ unsafe def derive_traverse_equations (pre : Option Name) (n : Name) (vs : List e
             let rec_call := args.filter_map$ fun ⟨b, e⟩ => guardₓ b >> pure e 
             let rec_call ← rec_call.mmap call_traverse 
             let rhs ← traverse_constructor c n appl_inst f α β (vs ++ [β]) args rec_call 
-            Monadₓ.join$ (unify <$> infer_type lhs)<*>infer_type rhs 
+            Monadₓ.join$ unify <$> infer_type lhs <*> infer_type rhs 
             let eqn ← mk_app `` Eq [lhs, rhs]
             let ws := eqn.list_local_consts 
             let eqn ← pis ws.reverse eqn 
             let eqn ← instantiate_mvars eqn 
-            let (_, pr) ← solve_aux eqn (tactic.intros >> refine (pquote rfl))
+            let (_, pr) ← solve_aux eqn (tactic.intros >> refine (pquote.1 rfl))
             let eqn_n := (with_prefix pre n <.> "traverse" <.> "equations" <.> "_eqn").append_after i 
             let pr ← instantiate_mvars pr 
             add_decl$ declaration.thm eqn_n eqn.collect_univ_params eqn (pure pr)
@@ -271,7 +271,7 @@ unsafe def derive_traverse_equations (pre : Option Name) (n : Name) (vs : List e
 unsafe def derive_traverse (pre : Option Name) : tactic Unit :=
   do 
     let vs ← local_context 
-    let quote Traversable (%%f) ← target 
+    let quote.1 (Traversable (%%ₓf)) ← target 
     let env ← get_env 
     let n := f.get_app_fn.const_name 
     let d ← get_decl n 
@@ -331,8 +331,8 @@ unsafe def get_equations_of (n : Name) : tactic (List pexpr) :=
 
 unsafe def derive_lawful_functor (pre : Option Name) : tactic Unit :=
   do 
-    let quote @IsLawfulFunctor (%%f) (%%d) ← target 
-    refine (pquote { .. })
+    let quote.1 (@IsLawfulFunctor (%%ₓf) (%%ₓd)) ← target 
+    refine (pquote.1 { .. })
     let n := f.get_app_fn.const_name 
     let rules := fun r => [simp_arg_type.expr r, simp_arg_type.all_hyps]
     let goal := loc.ns [none]
@@ -341,13 +341,13 @@ unsafe def derive_lawful_functor (pre : Option Name) : tactic Unit :=
           let vs ← tactic.intros 
           try$ dunfold [`` Functor.map] (loc.ns [none])
           dunfold [with_prefix pre n <.> "map", `` id] (loc.ns [none])
-          () <$ tactic.induction vs.ilast; simp none none ff (rules (pquote Functor.map_id)) [] goal 
+          () <$ tactic.induction vs.ilast; simp none none ff (rules (pquote.1 Functor.map_id)) [] goal 
     focus1
         do 
           let vs ← tactic.intros 
           try$ dunfold [`` Functor.map] (loc.ns [none])
           dunfold [with_prefix pre n <.> "map", `` id] (loc.ns [none])
-          () <$ tactic.induction vs.ilast; simp none none ff (rules (pquote Functor.map_comp_map)) [] goal 
+          () <$ tactic.induction vs.ilast; simp none none ff (rules (pquote.1 Functor.map_comp_map)) [] goal 
     return ()
 
 unsafe def simp_functor (rs : List simp_arg_type := []) : tactic Unit :=
@@ -362,14 +362,14 @@ unsafe def traversable_law_starter (rs : List simp_arg_type) :=
 
 unsafe def derive_lawful_traversable (pre : Option Name) : tactic Unit :=
   do 
-    let quote @IsLawfulTraversable (%%f) (%%d) ← target 
+    let quote.1 (@IsLawfulTraversable (%%ₓf) (%%ₓd)) ← target 
     let n := f.get_app_fn.const_name 
     let eqns ← get_equations_of (with_prefix pre n <.> "traverse")
     let eqns' ← get_equations_of (with_prefix pre n <.> "map")
     let def_eqns := eqns.map simp_arg_type.expr ++ eqns'.map simp_arg_type.expr ++ [simp_arg_type.all_hyps]
-    let comp_def := [simp_arg_type.expr (pquote Function.comp)]
-    let tr_map := List.map simp_arg_type.expr [pquote Traversable.traverse_eq_map_id']
-    let natur := fun η : expr => [simp_arg_type.expr (pquote Traversable.naturality_pf (%%η))]
+    let comp_def := [simp_arg_type.expr (pquote.1 Function.comp)]
+    let tr_map := List.map simp_arg_type.expr [pquote.1 Traversable.traverse_eq_map_id']
+    let natur := fun η : expr => [simp_arg_type.expr (pquote.1 (Traversable.naturality_pf (%%ₓη)))]
     let goal := loc.ns [none]
     constructor;
           [traversable_law_starter def_eqns; refl,

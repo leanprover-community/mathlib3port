@@ -111,7 +111,7 @@ def cof (o : Ordinal.{u}) : Cardinal.{u} :=
   Quot.liftOn o
     (fun ⟨α, r, _⟩ =>
       by 
-        exactI StrictOrder.cof r)
+        exact StrictOrder.cof r)
     (by 
       rintro ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨⟨f, hf⟩⟩
       rw [←Cardinal.lift_inj]
@@ -133,103 +133,81 @@ theorem cof_type_le [IsWellOrder α r] (S : Set α) (h : ∀ a, ∃ (b : _)(_ : 
 theorem lt_cof_type [IsWellOrder α r] (S : Set α) (hl : # S < cof (type r)) : ∃ a, ∀ b _ : b ∈ S, r b a :=
   not_forall_not.1$ fun h => not_le_of_lt hl$ cof_type_le S fun a => not_ball.1 (h a)
 
-theorem cof_eq (r : α → α → Prop) [IsWellOrder α r] :
-  ∃ S : Set α, (∀ a, ∃ (b : _)(_ : b ∈ S), ¬r b a) ∧ # S = cof (type r) :=
-  by 
-    have  : ∃ i, cof (type r) = _
-    ·
-      dsimp [cof, Order.cof, type, Quotientₓ.mk, Quot.liftOn]
-      apply Cardinal.min_eq 
-    exact
-      let ⟨⟨S, hl⟩, e⟩ := this
-      ⟨S, hl, e.symm⟩
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cof_eq
+(r : α → α → exprProp())
+[is_well_order α r] : «expr∃ , »((S : set α), «expr ∧ »(∀
+  a, «expr∃ , »((b «expr ∈ » S), «expr¬ »(r b a)), «expr = »(«expr#»() S, cof (type r)))) :=
+begin
+  have [] [":", expr «expr∃ , »((i), «expr = »(cof (type r), _))] [],
+  { dsimp [] ["[", expr cof, ",", expr order.cof, ",", expr type, ",", expr quotient.mk, ",", expr quot.lift_on, "]"] [] [],
+    apply [expr cardinal.min_eq] },
+  exact [expr let ⟨⟨S, hl⟩, e⟩ := this in ⟨S, hl, e.symm⟩]
+end
 
-theorem ord_cof_eq (r : α → α → Prop) [IsWellOrder α r] :
-  ∃ S : Set α, (∀ a, ∃ (b : _)(_ : b ∈ S), ¬r b a) ∧ type (Subrel r S) = (cof (type r)).ord :=
-  let ⟨S, hS, e⟩ := cof_eq r 
-  let ⟨s, _, e'⟩ := Cardinal.ord_eq S 
-  let T : Set α := { a | ∃ aS : a ∈ S, ∀ b : S, s b ⟨_, aS⟩ → r b a }
-  by 
-    resetI 
-    suffices 
-    ·
-      refine' ⟨T, this, le_antisymmₓ _ (Cardinal.ord_le.2$ cof_type_le T this)⟩
-      rw [←e, e']
-      refine'
-        type_le'.2
-          ⟨RelEmbedding.ofMonotone
-              (fun a =>
-                ⟨a,
-                  let ⟨aS, _⟩ := a.2
-                  aS⟩)
-              fun a b h => _⟩
-      rcases a with ⟨a, aS, ha⟩
-      rcases b with ⟨b, bS, hb⟩
-      change s ⟨a, _⟩ ⟨b, _⟩
-      refine' ((trichotomous_of s _ _).resolve_left fun hn => _).resolve_left _
-      ·
-        exact asymm h (ha _ hn)
-      ·
-        intro e 
-        injection e with e 
-        subst b 
-        exact irrefl _ h
-    ·
-      intro a 
-      have  : { b : S | ¬r b a }.Nonempty :=
-        let ⟨b, bS, ba⟩ := hS a
-        ⟨⟨b, bS⟩, ba⟩
-      let b := IsWellOrder.wf.min _ this 
-      have ba : ¬r b a := IsWellOrder.wf.min_mem _ this 
-      refine' ⟨b, ⟨b.2, fun c => not_imp_not.1$ fun h => _⟩, ba⟩
-      rw
-        [show ∀ b : S, (⟨b, b.2⟩ : S) = b by 
-          intro b <;> cases b <;> rfl]
-      exact IsWellOrder.wf.not_lt_min _ this (IsOrderConnected.neg_trans h ba)
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ord_cof_eq
+(r : α → α → exprProp())
+[is_well_order α r] : «expr∃ , »((S : set α), «expr ∧ »(∀
+  a, «expr∃ , »((b «expr ∈ » S), «expr¬ »(r b a)), «expr = »(type (subrel r S), (cof (type r)).ord))) :=
+let ⟨S, hS, e⟩ := cof_eq r,
+    ⟨s, _, e'⟩ := cardinal.ord_eq S,
+    T : set α := {a | «expr∃ , »((aS : «expr ∈ »(a, S)), ∀ b : S, s b ⟨_, aS⟩ → r b a)} in
+begin
+  resetI,
+  suffices [] [],
+  { refine [expr ⟨T, this, le_antisymm _ «expr $ »(cardinal.ord_le.2, cof_type_le T this)⟩],
+    rw ["[", "<-", expr e, ",", expr e', "]"] [],
+    refine [expr type_le'.2 ⟨rel_embedding.of_monotone (λ a, ⟨a, let ⟨aS, _⟩ := a.2 in aS⟩) (λ a b h, _)⟩],
+    rcases [expr a, "with", "⟨", ident a, ",", ident aS, ",", ident ha, "⟩"],
+    rcases [expr b, "with", "⟨", ident b, ",", ident bS, ",", ident hb, "⟩"],
+    change [expr s ⟨a, _⟩ ⟨b, _⟩] [] [],
+    refine [expr ((trichotomous_of s _ _).resolve_left (λ hn, _)).resolve_left _],
+    { exact [expr asymm h (ha _ hn)] },
+    { intro [ident e],
+      injection [expr e] ["with", ident e],
+      subst [expr b],
+      exact [expr irrefl _ h] } },
+  { intro [ident a],
+    have [] [":", expr {b : S | «expr¬ »(r b a)}.nonempty] [":=", expr let ⟨b, bS, ba⟩ := hS a in ⟨⟨b, bS⟩, ba⟩],
+    let [ident b] [] [":=", expr is_well_order.wf.min _ this],
+    have [ident ba] [":", expr «expr¬ »(r b a)] [":=", expr is_well_order.wf.min_mem _ this],
+    refine [expr ⟨b, ⟨b.2, λ c, «expr $ »(not_imp_not.1, λ h, _)⟩, ba⟩],
+    rw ["[", expr show ∀ b : S, «expr = »((⟨b, b.2⟩ : S), b), by intro [ident b]; cases [expr b] []; refl, "]"] [],
+    exact [expr is_well_order.wf.not_lt_min _ this (is_order_connected.neg_trans h ba)] }
+end
 
-theorem lift_cof o : (cof o).lift = cof o.lift :=
-  induction_on o$
-    by 
-      introI α r _ 
-      cases' lift_type r with _ e 
-      rw [e]
-      apply le_antisymmₓ
-      ·
-        unfreezingI 
-          refine' le_cof_type.2 fun S H => _ 
-        have  : (# (Ulift.up ⁻¹' S)).lift ≤ # S :=
-          ⟨⟨fun ⟨⟨x, h⟩⟩ => ⟨⟨x⟩, h⟩,
-              fun ⟨⟨x, h₁⟩⟩ ⟨⟨y, h₂⟩⟩ e =>
-                by 
-                  simp  at e <;> congr <;> injection e⟩⟩
-        refine' le_transₓ (Cardinal.lift_le.2$ cof_type_le _ _) this 
-        exact
-          fun a =>
-            let ⟨⟨b⟩, bs, br⟩ := H ⟨a⟩
-            ⟨b, bs, br⟩
-      ·
-        rcases cof_eq r with ⟨S, H, e'⟩
-        have  : # (Ulift.down ⁻¹' S) ≤ (# S).lift :=
-          ⟨⟨fun ⟨⟨x⟩, h⟩ => ⟨⟨x, h⟩⟩,
-              fun ⟨⟨x⟩, h₁⟩ ⟨⟨y⟩, h₂⟩ e =>
-                by 
-                  simp  at e <;> congr <;> injections⟩⟩
-        rw [e'] at this 
-        unfreezingI 
-          refine' le_transₓ (cof_type_le _ _) this 
-        exact
-          fun ⟨a⟩ =>
-            let ⟨b, bs, br⟩ := H a
-            ⟨⟨b⟩, bs, br⟩
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lift_cof (o) : «expr = »((cof o).lift, cof o.lift) :=
+«expr $ »(induction_on o, begin
+   introsI [ident α, ident r, "_"],
+   cases [expr lift_type r] ["with", "_", ident e],
+   rw [expr e] [],
+   apply [expr le_antisymm],
+   { unfreezingI { refine [expr le_cof_type.2 (λ S H, _)] },
+     have [] [":", expr «expr ≤ »((«expr#»() «expr ⁻¹' »(ulift.up, S)).lift, «expr#»() S)] [":=", expr ⟨⟨λ
+        ⟨⟨x, h⟩⟩, ⟨⟨x⟩, h⟩, λ
+        ⟨⟨x, h₁⟩⟩
+        ⟨⟨y, h₂⟩⟩
+        (e), by simp [] [] [] [] [] ["at", ident e]; congr; injection [expr e] []⟩⟩],
+     refine [expr le_trans «expr $ »(cardinal.lift_le.2, cof_type_le _ _) this],
+     exact [expr λ a, let ⟨⟨b⟩, bs, br⟩ := H ⟨a⟩ in ⟨b, bs, br⟩] },
+   { rcases [expr cof_eq r, "with", "⟨", ident S, ",", ident H, ",", ident e', "⟩"],
+     have [] [":", expr «expr ≤ »(«expr#»() «expr ⁻¹' »(ulift.down, S), («expr#»() S).lift)] [":=", expr ⟨⟨λ
+        ⟨⟨x⟩, h⟩, ⟨⟨x, h⟩⟩, λ ⟨⟨x⟩, h₁⟩ ⟨⟨y⟩, h₂⟩ (e), by simp [] [] [] [] [] ["at", ident e]; congr; injections []⟩⟩],
+     rw [expr e'] ["at", ident this],
+     unfreezingI { refine [expr le_trans (cof_type_le _ _) this] },
+     exact [expr λ ⟨a⟩, let ⟨b, bs, br⟩ := H a in ⟨⟨b⟩, bs, br⟩] }
+ end)
 
-theorem cof_le_card o : cof o ≤ card o :=
-  induction_on o$
-    fun α r _ =>
-      by 
-        resetI 
-        have  : # (@Set.Univ α) = card (type r) := Quotientₓ.sound ⟨Equiv.Set.univ _⟩
-        rw [←this]
-        exact cof_type_le Set.Univ fun a => ⟨a, ⟨⟩, irrefl a⟩
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cof_le_card (o) : «expr ≤ »(cof o, card o) :=
+«expr $ »(induction_on o, λ α r _, begin
+   resetI,
+   have [] [":", expr «expr = »(«expr#»() (@set.univ α), card (type r))] [":=", expr quotient.sound ⟨equiv.set.univ _⟩],
+   rw ["<-", expr this] [],
+   exact [expr cof_type_le set.univ (λ a, ⟨a, ⟨⟩, irrefl a⟩)]
+ end)
 
 theorem cof_ord_le (c : Cardinal) : cof c.ord ≤ c :=
   by 
@@ -247,7 +225,7 @@ theorem cof_eq_zero {o} : cof o = 0 ↔ o = 0 :=
   ⟨induction_on o$
       fun α r _ z =>
         by 
-          exactI
+          exact
             let ⟨S, hl, e⟩ := cof_eq r 
             type_eq_zero_iff_is_empty.2$
               ⟨fun a =>
@@ -276,47 +254,31 @@ theorem cof_succ o : cof (succ o) = 1 :=
       rw [←Cardinal.succ_zero, Cardinal.succ_le]
       simpa [lt_iff_le_and_ne, Cardinal.zero_le] using fun h => succ_ne_zero o (cof_eq_zero.1 (Eq.symm h))
 
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem cof_eq_one_iff_is_succ {o} : cof.{u} o = 1 ↔ ∃ a, o = succ a :=
-  ⟨induction_on o$
-      fun α r _ z =>
-        by 
-          resetI 
-          rcases cof_eq r with ⟨S, hl, e⟩
-          rw [z] at e 
-          cases'
-            mk_ne_zero_iff.1
-              (by 
-                rw [e] <;> exact one_ne_zero) with
-            a 
-          refine'
-            ⟨typein r a,
-              Eq.symm$ Quotientₓ.sound ⟨RelIso.ofSurjective (RelEmbedding.ofMonotone _ fun x y => _) fun x => _⟩⟩
-          ·
-            apply Sum.rec <;> [exact Subtype.val, exact fun _ => a]
-          ·
-            rcases x with (x | ⟨⟨⟨⟩⟩⟩) <;> rcases y with (y | ⟨⟨⟨⟩⟩⟩) <;> simp [Subrel, Order.Preimage, EmptyRelation]
-            exact x.2
-          ·
-            suffices  : r x a ∨ ∃ b : PUnit, «expr↑ » a = x
-            ·
-              simpa 
-            rcases trichotomous_of r x a with (h | h | h)
-            ·
-              exact Or.inl h
-            ·
-              exact Or.inr ⟨PUnit.unit, h.symm⟩
-            ·
-              rcases hl x with ⟨a', aS, hn⟩
-              rw [(_ : «expr↑ » a = a')] at h
-              ·
-                exact absurd h hn 
-              refine' congr_argₓ Subtype.val (_ : a = ⟨a', aS⟩)
-              haveI  := le_one_iff_subsingleton.1 (le_of_eqₓ e)
-              apply Subsingleton.elimₓ,
-    fun ⟨a, e⟩ =>
-      by 
-        simp [e]⟩
+theorem cof_eq_one_iff_is_succ {o} : «expr ↔ »(«expr = »(cof.{u} o, 1), «expr∃ , »((a), «expr = »(o, succ a))) :=
+⟨«expr $ »(induction_on o, λ α r _ z, begin
+    resetI,
+    rcases [expr cof_eq r, "with", "⟨", ident S, ",", ident hl, ",", ident e, "⟩"],
+    rw [expr z] ["at", ident e],
+    cases [expr mk_ne_zero_iff.1 (by rw [expr e] []; exact [expr one_ne_zero])] ["with", ident a],
+    refine [expr ⟨typein r a, «expr $ »(eq.symm, quotient.sound ⟨rel_iso.of_surjective (rel_embedding.of_monotone _ (λ
+          x y, _)) (λ x, _)⟩)⟩],
+    { apply [expr sum.rec]; [exact [expr subtype.val], exact [expr λ _, a]] },
+    { rcases [expr x, "with", ident x, "|", "⟨", "⟨", "⟨", "⟩", "⟩", "⟩"]; rcases [expr y, "with", ident y, "|", "⟨", "⟨", "⟨", "⟩", "⟩", "⟩"]; simp [] [] [] ["[", expr subrel, ",", expr order.preimage, ",", expr empty_relation, "]"] [] [],
+      exact [expr x.2] },
+    { suffices [] [":", expr «expr ∨ »(r x a, «expr∃ , »((b : punit), «expr = »(«expr↑ »(a), x)))],
+      { simpa [] [] [] [] [] [] },
+      rcases [expr trichotomous_of r x a, "with", ident h, "|", ident h, "|", ident h],
+      { exact [expr or.inl h] },
+      { exact [expr or.inr ⟨punit.star, h.symm⟩] },
+      { rcases [expr hl x, "with", "⟨", ident a', ",", ident aS, ",", ident hn, "⟩"],
+        rw [expr (_ : «expr = »(«expr↑ »(a), a'))] ["at", ident h],
+        { exact [expr absurd h hn] },
+        refine [expr congr_arg subtype.val (_ : «expr = »(a, ⟨a', aS⟩))],
+        haveI [] [] [":=", expr le_one_iff_subsingleton.1 (le_of_eq e)],
+        apply [expr subsingleton.elim] } }
+  end), λ ⟨a, e⟩, by simp [] [] [] ["[", expr e, "]"] [] []⟩
 
 @[simp]
 theorem cof_add (a b : Ordinal) : b ≠ 0 → cof (a+b) = cof b :=
@@ -325,7 +287,7 @@ theorem cof_add (a b : Ordinal) : b ≠ 0 → cof (a+b) = cof b :=
       induction_on b$
         fun β s _ b0 =>
           by 
-            resetI 
+            skip 
             change cof (type _) = _ 
             refine' eq_of_forall_le_iff fun c => _ 
             rw [le_cof_type, le_cof_type]
@@ -384,7 +346,7 @@ theorem cof_cof (o : Ordinal) : cof (cof o).ord = cof o :=
     induction_on o$
       fun α r _ =>
         by 
-          exactI
+          exact
             let ⟨S, hS, e₁⟩ := ord_cof_eq r 
             let ⟨T, hT, e₂⟩ := cof_eq (Subrel r S)
             by 
@@ -403,28 +365,25 @@ theorem cof_cof (o : Ordinal) : cof (cof o).ord = cof o :=
                     by 
                       injection h with h <;> congr <;> injection h
 
-theorem omega_le_cof {o} : ω ≤ cof o ↔ is_limit o :=
-  by 
-    rcases zero_or_succ_or_limit o with (rfl | ⟨o, rfl⟩ | l)
-    ·
-      simp [not_zero_is_limit, Cardinal.omega_ne_zero]
-    ·
-      simp [not_succ_is_limit, Cardinal.one_lt_omega]
-    ·
-      simp [l]
-      refine' le_of_not_ltₓ fun h => _ 
-      cases' Cardinal.lt_omega.1 h with n e 
-      have  := cof_cof o 
-      rw [e, ord_nat] at this 
-      cases n
-      ·
-        simp  at e 
-        simpa [e, not_zero_is_limit] using l
-      ·
-        rw [←nat_cast_succ, cof_succ] at this 
-        rw [←this, cof_eq_one_iff_is_succ] at e 
-        rcases e with ⟨a, rfl⟩
-        exact not_succ_is_limit _ l
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem omega_le_cof {o} : «expr ↔ »(«expr ≤ »(exprω(), cof o), is_limit o) :=
+begin
+  rcases [expr zero_or_succ_or_limit o, "with", ident rfl, "|", "⟨", ident o, ",", ident rfl, "⟩", "|", ident l],
+  { simp [] [] [] ["[", expr not_zero_is_limit, ",", expr cardinal.omega_ne_zero, "]"] [] [] },
+  { simp [] [] [] ["[", expr not_succ_is_limit, ",", expr cardinal.one_lt_omega, "]"] [] [] },
+  { simp [] [] [] ["[", expr l, "]"] [] [],
+    refine [expr le_of_not_lt (λ h, _)],
+    cases [expr cardinal.lt_omega.1 h] ["with", ident n, ident e],
+    have [] [] [":=", expr cof_cof o],
+    rw ["[", expr e, ",", expr ord_nat, "]"] ["at", ident this],
+    cases [expr n] [],
+    { simp [] [] [] [] [] ["at", ident e],
+      simpa [] [] [] ["[", expr e, ",", expr not_zero_is_limit, "]"] [] ["using", expr l] },
+    { rw ["[", "<-", expr nat_cast_succ, ",", expr cof_succ, "]"] ["at", ident this],
+      rw ["[", "<-", expr this, ",", expr cof_eq_one_iff_is_succ, "]"] ["at", ident e],
+      rcases [expr e, "with", "⟨", ident a, ",", ident rfl, "⟩"],
+      exact [expr not_succ_is_limit _ l] } }
+end
 
 @[simp]
 theorem cof_omega : cof omega = ω :=
@@ -448,7 +407,7 @@ theorem cof_eq' (r : α → α → Prop) [IsWellOrder α r] (h : is_limit (type 
           ab⟩,
     e⟩
 
--- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem cof_sup_le_lift
 {ι}
 (f : ι → ordinal)
@@ -491,27 +450,25 @@ theorem cof_bsup_le {o : Ordinal} :
       by 
         simpa using cof_bsup_le_lift.{u, u} f H
 
-@[simp]
-theorem cof_univ : cof univ.{u, v} = Cardinal.univ :=
-  le_antisymmₓ (cof_le_card _)
-    (by 
-      refine' le_of_forall_lt fun c h => _ 
-      rcases lt_univ'.1 h with ⟨c, rfl⟩
-      rcases@cof_eq Ordinal.{u} (· < ·) _ with ⟨S, H, Se⟩
-      rw [univ, ←lift_cof, ←Cardinal.lift_lift, Cardinal.lift_lt, ←Se]
-      refine' lt_of_not_geₓ fun h => _ 
-      cases' Cardinal.lift_down h with a e 
-      refine' Quotientₓ.induction_on a (fun α e => _) e 
-      cases' Quotientₓ.exact e with f 
-      have f := equiv.ulift.symm.trans f 
-      let g := fun a => (f a).1
-      let o := succ (sup.{u, u} g)
-      rcases H o with ⟨b, h, l⟩
-      refine' l (lt_succ.2 _)
-      rw
-        [←show g (f.symm ⟨b, h⟩) = b by 
-          dsimp [g] <;> simp ]
-      apply le_sup)
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem cof_univ : «expr = »(cof univ.{u, v}, cardinal.univ) :=
+le_antisymm (cof_le_card _) (begin
+   refine [expr le_of_forall_lt (λ c h, _)],
+   rcases [expr lt_univ'.1 h, "with", "⟨", ident c, ",", ident rfl, "⟩"],
+   rcases [expr @cof_eq ordinal.{u} ((«expr < »)) _, "with", "⟨", ident S, ",", ident H, ",", ident Se, "⟩"],
+   rw ["[", expr univ, ",", "<-", expr lift_cof, ",", "<-", expr cardinal.lift_lift, ",", expr cardinal.lift_lt, ",", "<-", expr Se, "]"] [],
+   refine [expr lt_of_not_ge (λ h, _)],
+   cases [expr cardinal.lift_down h] ["with", ident a, ident e],
+   refine [expr quotient.induction_on a (λ α e, _) e],
+   cases [expr quotient.exact e] ["with", ident f],
+   have [ident f] [] [":=", expr equiv.ulift.symm.trans f],
+   let [ident g] [] [":=", expr λ a, (f a).1],
+   let [ident o] [] [":=", expr succ (sup.{u, u} g)],
+   rcases [expr H o, "with", "⟨", ident b, ",", ident h, ",", ident l, "⟩"],
+   refine [expr l (lt_succ.2 _)],
+   rw ["<-", expr show «expr = »(g (f.symm ⟨b, h⟩), b), by dsimp [] ["[", expr g, "]"] [] []; simp [] [] [] [] [] []] [],
+   apply [expr le_sup]
+ end)
 
 theorem sup_lt_ord {ι} (f : ι → Ordinal) {c : Ordinal} (H1 : # ι < c.cof) (H2 : ∀ i, f i < c) : sup.{u, u} f < c :=
   by 
@@ -532,7 +489,7 @@ theorem sup_lt {ι} (f : ι → Cardinal) {c : Cardinal} (H1 : # ι < c.ord.cof)
     rw [ord_lt_ord]
     apply H2
 
--- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the union of s is unbounded and s is smaller than the cofinality,
   then s has an unbounded member -/
 theorem unbounded_of_unbounded_sUnion
@@ -560,35 +517,47 @@ begin
   exact [expr cardinal.min_le _ (subtype.mk t this)]
 end
 
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the union of s is unbounded and s is smaller than the cofinality,
   then s has an unbounded member -/
-theorem unbounded_of_unbounded_Union {α β : Type u} (r : α → α → Prop) [wo : IsWellOrder α r] (s : β → Set α)
-  (h₁ : Unbounded r$ ⋃x, s x) (h₂ : # β < StrictOrder.cof r) : ∃ x : β, Unbounded r (s x) :=
-  by 
-    rw [←sUnion_range] at h₁ 
-    have  : # (range fun i : β => s i) < StrictOrder.cof r := lt_of_le_of_ltₓ mk_range_le h₂ 
-    rcases unbounded_of_unbounded_sUnion r h₁ this with ⟨_, ⟨x, rfl⟩, u⟩
-    exact ⟨x, u⟩
+theorem unbounded_of_unbounded_Union
+{α β : Type u}
+(r : α → α → exprProp())
+[wo : is_well_order α r]
+(s : β → set α)
+(h₁ : «expr $ »(unbounded r, «expr⋃ , »((x), s x)))
+(h₂ : «expr < »(«expr#»() β, strict_order.cof r)) : «expr∃ , »((x : β), unbounded r (s x)) :=
+begin
+  rw ["[", "<-", expr sUnion_range, "]"] ["at", ident h₁],
+  have [] [":", expr «expr < »(«expr#»() (range (λ
+      i : β, s i)), strict_order.cof r)] [":=", expr lt_of_le_of_lt mk_range_le h₂],
+  rcases [expr unbounded_of_unbounded_sUnion r h₁ this, "with", "⟨", "_", ",", "⟨", ident x, ",", ident rfl, "⟩", ",", ident u, "⟩"],
+  exact [expr ⟨x, u⟩]
+end
 
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The infinite pigeonhole principle -/
-theorem infinite_pigeonhole {β α : Type u} (f : β → α) (h₁ : ω ≤ # β) (h₂ : # α < (# β).ord.cof) :
-  ∃ a : α, # (f ⁻¹' {a}) = # β :=
-  by 
-    have  : ¬∀ a, # (f ⁻¹' {a}) < # β
-    ·
-      intro h 
-      apply not_lt_of_geₓ (ge_of_eq$ mk_univ)
-      rw [←@preimage_univ _ _ f, ←Union_of_singleton, preimage_Union]
-      apply lt_of_le_of_ltₓ mk_Union_le_sum_mk 
-      apply lt_of_le_of_ltₓ (sum_le_sup _)
-      apply mul_lt_of_lt h₁ (lt_of_lt_of_leₓ h₂$ cof_ord_le _)
-      exact sup_lt _ h₂ h 
-    rw [not_forall] at this 
-    cases' this with x h 
-    use x 
-    apply le_antisymmₓ _ (le_of_not_gtₓ h)
-    rw [le_mk_iff_exists_set]
-    exact ⟨_, rfl⟩
+theorem infinite_pigeonhole
+{β α : Type u}
+(f : β → α)
+(h₁ : «expr ≤ »(exprω(), «expr#»() β))
+(h₂ : «expr < »(«expr#»() α, («expr#»() β).ord.cof)) : «expr∃ , »((a : α), «expr = »(«expr#»() «expr ⁻¹' »(f, {a}), «expr#»() β)) :=
+begin
+  have [] [":", expr «expr¬ »(∀ a, «expr < »(«expr#»() «expr ⁻¹' »(f, {a}), «expr#»() β))] [],
+  { intro [ident h],
+    apply [expr not_lt_of_ge «expr $ »(ge_of_eq, mk_univ)],
+    rw ["[", "<-", expr @preimage_univ _ _ f, ",", "<-", expr Union_of_singleton, ",", expr preimage_Union, "]"] [],
+    apply [expr lt_of_le_of_lt mk_Union_le_sum_mk],
+    apply [expr lt_of_le_of_lt (sum_le_sup _)],
+    apply [expr mul_lt_of_lt h₁ «expr $ »(lt_of_lt_of_le h₂, cof_ord_le _)],
+    exact [expr sup_lt _ h₂ h] },
+  rw ["[", expr not_forall, "]"] ["at", ident this],
+  cases [expr this] ["with", ident x, ident h],
+  use [expr x],
+  apply [expr le_antisymm _ (le_of_not_gt h)],
+  rw ["[", expr le_mk_iff_exists_set, "]"] [],
+  exact [expr ⟨_, rfl⟩]
+end
 
 /-- pigeonhole principle for a cardinality below the cardinality of the domain -/
 theorem infinite_pigeonhole_card {β α : Type u} (f : β → α) (θ : Cardinal) (hθ : θ ≤ # β) (h₁ : ω ≤ θ)
@@ -659,35 +628,29 @@ theorem omega_is_regular : IsRegular ω :=
     by 
       simp ⟩
 
-theorem succ_is_regular {c : Cardinal.{u}} (h : ω ≤ c) : IsRegular (succ c) :=
-  ⟨le_transₓ h (le_of_ltₓ$ lt_succ_self _),
-    by 
-      refine' le_antisymmₓ (cof_ord_le _) (succ_le.2 _)
-      cases' Quotientₓ.exists_rep (succ c) with α αe 
-      simp  at αe 
-      rcases ord_eq α with ⟨r, wo, re⟩
-      resetI 
-      have  := ord_is_limit (le_transₓ h$ le_of_ltₓ$ lt_succ_self _)
-      rw [←αe, re] at this⊢
-      rcases cof_eq' r this with ⟨S, H, Se⟩
-      rw [←Se]
-      apply lt_imp_lt_of_le_imp_le fun h : # S ≤ c => mul_le_mul_right' h c 
-      rw [mul_eq_self h, ←succ_le, ←αe, ←sum_const']
-      refine' le_transₓ _ (sum_le_sum (fun x : S => card (typein r x)) _ _)
-      ·
-        simp only [←card_typein, ←mk_sigma]
-        refine' ⟨embedding.of_surjective _ _⟩
-        ·
-          exact fun x => x.2.1
-        ·
-          exact
-            fun a =>
-              let ⟨b, h, ab⟩ := H a
-              ⟨⟨⟨_, h⟩, _, ab⟩, rfl⟩
-      ·
-        intro i 
-        rw [←lt_succ, ←lt_ord, ←αe, re]
-        apply typein_lt_type⟩
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem succ_is_regular {c : cardinal.{u}} (h : «expr ≤ »(exprω(), c)) : is_regular (succ c) :=
+⟨le_trans h «expr $ »(le_of_lt, lt_succ_self _), begin
+   refine [expr le_antisymm (cof_ord_le _) (succ_le.2 _)],
+   cases [expr quotient.exists_rep (succ c)] ["with", ident α, ident αe],
+   simp [] [] [] [] [] ["at", ident αe],
+   rcases [expr ord_eq α, "with", "⟨", ident r, ",", ident wo, ",", ident re, "⟩"],
+   resetI,
+   have [] [] [":=", expr ord_is_limit «expr $ »(le_trans h, «expr $ »(le_of_lt, lt_succ_self _))],
+   rw ["[", "<-", expr αe, ",", expr re, "]"] ["at", ident this, "⊢"],
+   rcases [expr cof_eq' r this, "with", "⟨", ident S, ",", ident H, ",", ident Se, "⟩"],
+   rw ["[", "<-", expr Se, "]"] [],
+   apply [expr lt_imp_lt_of_le_imp_le (λ h : «expr ≤ »(«expr#»() S, c), mul_le_mul_right' h c)],
+   rw ["[", expr mul_eq_self h, ",", "<-", expr succ_le, ",", "<-", expr αe, ",", "<-", expr sum_const', "]"] [],
+   refine [expr le_trans _ (sum_le_sum (λ x : S, card (typein r x)) _ _)],
+   { simp [] [] ["only"] ["[", "<-", expr card_typein, ",", "<-", expr mk_sigma, "]"] [] [],
+     refine [expr ⟨embedding.of_surjective _ _⟩],
+     { exact [expr λ x, x.2.1] },
+     { exact [expr λ a, let ⟨b, h, ab⟩ := H a in ⟨⟨⟨_, h⟩, _, ab⟩, rfl⟩] } },
+   { intro [ident i],
+     rw ["[", "<-", expr lt_succ, ",", "<-", expr lt_ord, ",", "<-", expr αe, ",", expr re, "]"] [],
+     apply [expr typein_lt_type] }
+ end⟩
 
 /--
 A function whose codomain's cardinality is infinite but strictly smaller than its domain's
@@ -712,7 +675,7 @@ theorem exists_infinite_fiber {β α : Type _} (f : β → α) (w : # α < # β)
     cases' infinite_pigeonhole_card_lt f w w' with a ha 
     exact ⟨a, w'.trans ha.le⟩
 
--- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If an infinite type `β` can be expressed as a union of finite sets,
 then the cardinality of the collection of those finite sets
@@ -782,37 +745,35 @@ theorem univ_inaccessible : is_inaccessible univ.{u, v} :=
         rw [←lift_two_power.{u, max (u + 1) v}]
         apply lift_lt_univ'
 
-theorem lt_power_cof {c : Cardinal.{u}} : ω ≤ c → c < (c^cof c.ord) :=
-  Quotientₓ.induction_on c$
-    fun α h =>
-      by 
-        rcases ord_eq α with ⟨r, wo, re⟩
-        resetI 
-        have  := ord_is_limit h 
-        rw [mk_def, re] at this⊢
-        rcases cof_eq' r this with ⟨S, H, Se⟩
-        have  := sum_lt_prod (fun a : S => # { x // r x a }) (fun _ => # α) fun i => _
-        ·
-          simp only [Cardinal.prod_const, Cardinal.lift_id, ←Se, ←mk_sigma, power_def] at this⊢
-          refine' lt_of_le_of_ltₓ _ this 
-          refine' ⟨embedding.of_surjective _ _⟩
-          ·
-            exact fun x => x.2.1
-          ·
-            exact
-              fun a =>
-                let ⟨b, h, ab⟩ := H a
-                ⟨⟨⟨_, h⟩, _, ab⟩, rfl⟩
-        ·
-          have  := typein_lt_type r i 
-          rwa [←re, lt_ord] at this
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lt_power_cof {c : cardinal.{u}} : «expr ≤ »(exprω(), c) → «expr < »(c, «expr ^ »(c, cof c.ord)) :=
+«expr $ »(quotient.induction_on c, λ α h, begin
+   rcases [expr ord_eq α, "with", "⟨", ident r, ",", ident wo, ",", ident re, "⟩"],
+   resetI,
+   have [] [] [":=", expr ord_is_limit h],
+   rw ["[", expr mk_def, ",", expr re, "]"] ["at", ident this, "⊢"],
+   rcases [expr cof_eq' r this, "with", "⟨", ident S, ",", ident H, ",", ident Se, "⟩"],
+   have [] [] [":=", expr sum_lt_prod (λ a : S, «expr#»() {x // r x a}) (λ _, «expr#»() α) (λ i, _)],
+   { simp [] [] ["only"] ["[", expr cardinal.prod_const, ",", expr cardinal.lift_id, ",", "<-", expr Se, ",", "<-", expr mk_sigma, ",", expr power_def, "]"] [] ["at", ident this, "⊢"],
+     refine [expr lt_of_le_of_lt _ this],
+     refine [expr ⟨embedding.of_surjective _ _⟩],
+     { exact [expr λ x, x.2.1] },
+     { exact [expr λ a, let ⟨b, h, ab⟩ := H a in ⟨⟨⟨_, h⟩, _, ab⟩, rfl⟩] } },
+   { have [] [] [":=", expr typein_lt_type r i],
+     rwa ["[", "<-", expr re, ",", expr lt_ord, "]"] ["at", ident this] }
+ end)
 
-theorem lt_cof_power {a b : Cardinal} (ha : ω ≤ a) (b1 : 1 < b) : a < cof (b^a).ord :=
-  by 
-    have b0 : b ≠ 0 := ne_of_gtₓ (lt_transₓ zero_lt_one b1)
-    apply lt_imp_lt_of_le_imp_le (power_le_power_left$ power_ne_zero a b0)
-    rw [←power_mul, mul_eq_self ha]
-    exact lt_power_cof (le_transₓ ha$ le_of_ltₓ$ cantor' _ b1)
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lt_cof_power
+{a b : cardinal}
+(ha : «expr ≤ »(exprω(), a))
+(b1 : «expr < »(1, b)) : «expr < »(a, cof «expr ^ »(b, a).ord) :=
+begin
+  have [ident b0] [":", expr «expr ≠ »(b, 0)] [":=", expr ne_of_gt (lt_trans zero_lt_one b1)],
+  apply [expr lt_imp_lt_of_le_imp_le «expr $ »(power_le_power_left, power_ne_zero a b0)],
+  rw ["[", "<-", expr power_mul, ",", expr mul_eq_self ha, "]"] [],
+  exact [expr lt_power_cof «expr $ »(le_trans ha, «expr $ »(le_of_lt, cantor' _ b1))]
+end
 
 end Cardinal
 

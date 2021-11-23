@@ -51,7 +51,7 @@ theorem lcm_add (s₁ s₂ : Multiset α) : (s₁+s₂).lcm = GcdMonoid.lcm s₁
       simp [lcm])
     (fold_add _ _ _ _ _)
 
--- error in Algebra.GcdMonoid.Multiset: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.GcdMonoid.Multiset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lcm_dvd {s : multiset α} {a : α} : «expr ↔ »(«expr ∣ »(s.lcm, a), ∀ b «expr ∈ » s, «expr ∣ »(b, a)) :=
 multiset.induction_on s (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr or_imp_distrib, ",", expr forall_and_distrib, ",", expr lcm_dvd_iff, "]"] [] [] { contextual := tt })
 
@@ -132,7 +132,7 @@ theorem gcd_add (s₁ s₂ : Multiset α) : (s₁+s₂).gcd = GcdMonoid.gcd s₁
       simp [gcd])
     (fold_add _ _ _ _ _)
 
--- error in Algebra.GcdMonoid.Multiset: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.GcdMonoid.Multiset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem dvd_gcd {s : multiset α} {a : α} : «expr ↔ »(«expr ∣ »(a, s.gcd), ∀ b «expr ∈ » s, «expr ∣ »(a, b)) :=
 multiset.induction_on s (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr or_imp_distrib, ",", expr forall_and_distrib, ",", expr dvd_gcd_iff, "]"] [] [] { contextual := tt })
 

@@ -1,7 +1,8 @@
-import Mathbin.Algebra.IterateHom 
 import Mathbin.Data.Int.Modeq 
-import Mathbin.Data.Nat.Choose.Default 
-import Mathbin.GroupTheory.OrderOfElement
+import Mathbin.Algebra.IterateHom 
+import Mathbin.Data.Nat.Choose.Sum 
+import Mathbin.GroupTheory.OrderOfElement 
+import Mathbin.Data.Nat.Choose.Dvd
 
 /-!
 # Characteristic of semirings
@@ -51,39 +52,17 @@ instance CharP.of_char_zero [AddMonoidₓ R] [HasOne R] [CharZero R] : CharP R 0
       by 
         rw [zero_dvd_iff, ←Nat.cast_zero, Nat.cast_inj]⟩
 
-theorem CharP.exists [NonAssocSemiring R] : ∃ p, CharP R p :=
-  by 
-    letI this := Classical.decEq R <;>
-      exact
-        Classical.by_cases
-          (fun H : ∀ p : ℕ, (p : R) = 0 → p = 0 =>
-            ⟨0,
-              ⟨fun x =>
-                  by 
-                    rw [zero_dvd_iff] <;>
-                      exact
-                        ⟨H x,
-                          by 
-                            rintro rfl <;> rfl⟩⟩⟩)
-          fun H =>
-            ⟨Nat.findₓ (not_forall.1 H),
-              ⟨fun x =>
-                  ⟨fun H1 =>
-                      Nat.dvd_of_mod_eq_zeroₓ
-                        (by_contradiction$
-                          fun H2 =>
-                            Nat.find_minₓ (not_forall.1 H)
-                              (Nat.mod_ltₓ x$ Nat.pos_of_ne_zeroₓ$ not_of_not_imp$ Nat.find_specₓ (not_forall.1 H))
-                              (not_imp_of_and_not
-                                ⟨by 
-                                    rwa [←Nat.mod_add_divₓ x (Nat.findₓ (not_forall.1 H)), Nat.cast_add, Nat.cast_mul,
-                                      of_not_not (not_not_of_not_imp$ Nat.find_specₓ (not_forall.1 H)), zero_mul,
-                                      add_zeroₓ] at H1,
-                                  H2⟩)),
-                    fun H1 =>
-                      by 
-                        rw [←Nat.mul_div_cancel'ₓ H1, Nat.cast_mul,
-                          of_not_not (not_not_of_not_imp$ Nat.find_specₓ (not_forall.1 H)), zero_mul]⟩⟩⟩
+-- error in Algebra.CharP.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem char_p.exists [non_assoc_semiring R] : «expr∃ , »((p), char_p R p) :=
+by letI [] [] [":=", expr classical.dec_eq R]; exact [expr classical.by_cases (assume
+  H : ∀
+  p : exprℕ(), «expr = »((p : R), 0) → «expr = »(p, 0), ⟨0, ⟨λ
+    x, by rw ["[", expr zero_dvd_iff, "]"] []; exact [expr ⟨H x, by rintro [ident rfl]; refl⟩]⟩⟩) (λ
+  H, ⟨nat.find (not_forall.1 H), ⟨λ
+    x, ⟨λ
+     H1, nat.dvd_of_mod_eq_zero «expr $ »(by_contradiction, λ
+      H2, nat.find_min (not_forall.1 H) «expr $ »(nat.mod_lt x, «expr $ »(nat.pos_of_ne_zero, «expr $ »(not_of_not_imp, nat.find_spec (not_forall.1 H)))) (not_imp_of_and_not ⟨by rwa ["[", "<-", expr nat.mod_add_div x (nat.find (not_forall.1 H)), ",", expr nat.cast_add, ",", expr nat.cast_mul, ",", expr of_not_not «expr $ »(not_not_of_not_imp, nat.find_spec (not_forall.1 H)), ",", expr zero_mul, ",", expr add_zero, "]"] ["at", ident H1], H2⟩)), λ
+     H1, by rw ["[", "<-", expr nat.mul_div_cancel' H1, ",", expr nat.cast_mul, ",", expr of_not_not «expr $ »(not_not_of_not_imp, nat.find_spec (not_forall.1 H)), ",", expr zero_mul, "]"] []⟩⟩⟩)]
 
 theorem CharP.exists_unique [NonAssocSemiring R] : ∃!p, CharP R p :=
   let ⟨c, H⟩ := CharP.exists R
@@ -100,10 +79,9 @@ namespace ringChar
 
 variable[NonAssocSemiring R]
 
-theorem spec : ∀ x : ℕ, (x : R) = 0 ↔ ringChar R ∣ x :=
-  by 
-    letI this := (Classical.some_spec (CharP.exists_unique R)).1 <;>
-      unfold ringChar <;> exact CharP.cast_eq_zero_iff R (ringChar R)
+-- error in Algebra.CharP.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem spec : ∀ x : exprℕ(), «expr ↔ »(«expr = »((x : R), 0), «expr ∣ »(ring_char R, x)) :=
+by letI [] [] [":=", expr (classical.some_spec (char_p.exists_unique R)).1]; unfold [ident ring_char] []; exact [expr char_p.cast_eq_zero_iff R (ring_char R)]
 
 theorem Eq {p : ℕ} (C : CharP R p) : p = ringChar R :=
   (Classical.some_spec (CharP.exists_unique R)).2 p C
@@ -162,19 +140,13 @@ theorem add_pow_char_pow_of_commute [Semiringₓ R] {p : ℕ} [Fact p.prime] [Ch
     apply add_pow_char_of_commute 
     apply Commute.pow_pow h
 
--- error in Algebra.CharP.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem sub_pow_char_of_commute
-[ring R]
-{p : exprℕ()}
-[fact p.prime]
-[char_p R p]
-(x y : R)
-(h : commute x y) : «expr = »(«expr ^ »(«expr - »(x, y), p), «expr - »(«expr ^ »(x, p), «expr ^ »(y, p))) :=
-begin
-  rw ["[", expr eq_sub_iff_add_eq, ",", "<-", expr add_pow_char_of_commute _ _ _ (commute.sub_left h rfl), "]"] [],
-  simp [] [] [] [] [] [],
-  repeat { apply_instance }
-end
+theorem sub_pow_char_of_commute [Ringₓ R] {p : ℕ} [Fact p.prime] [CharP R p] (x y : R) (h : Commute x y) :
+  (x - y) ^ p = x ^ p - y ^ p :=
+  by 
+    rw [eq_sub_iff_add_eq, ←add_pow_char_of_commute _ _ _ (Commute.sub_left h rfl)]
+    simp 
+    repeat' 
+      infer_instance
 
 theorem sub_pow_char_pow_of_commute [Ringₓ R] {p : ℕ} [Fact p.prime] [CharP R p] {n : ℕ} (x y : R) (h : Commute x y) :
   (x - y) ^ p ^ n = x ^ p ^ n - y ^ p ^ n :=
@@ -204,26 +176,24 @@ theorem eq_iff_modeq_int [Ringₓ R] (p : ℕ) [CharP R p] (a b : ℤ) : (a : R)
   by 
     rw [eq_comm, ←sub_eq_zero, ←Int.cast_sub, CharP.int_cast_eq_zero_iff R p, Int.modeq_iff_dvd]
 
-theorem CharP.neg_one_ne_one [Ringₓ R] (p : ℕ) [CharP R p] [Fact (2 < p)] : (-1 : R) ≠ (1 : R) :=
-  by 
-    suffices  : (2 : R) ≠ 0
-    ·
-      symm 
-      rw [Ne.def, ←sub_eq_zero, sub_neg_eq_add]
-      exact this 
-    intro h 
-    rw
-      [show (2 : R) = (2 : ℕ)by 
-        normCast] at
-      h 
-    have  := (CharP.cast_eq_zero_iff R p 2).mp h 
-    have  :=
-      Nat.le_of_dvdₓ
-        (by 
-          decide)
-        this 
-    rw [fact_iff] at *
-    linarith
+-- error in Algebra.CharP.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem char_p.neg_one_ne_one
+[ring R]
+(p : exprℕ())
+[char_p R p]
+[fact «expr < »(2, p)] : «expr ≠ »((«expr- »(1) : R), (1 : R)) :=
+begin
+  suffices [] [":", expr «expr ≠ »((2 : R), 0)],
+  { symmetry,
+    rw ["[", expr ne.def, ",", "<-", expr sub_eq_zero, ",", expr sub_neg_eq_add, "]"] [],
+    exact [expr this] },
+  assume [binders (h)],
+  rw ["[", expr show «expr = »((2 : R), (2 : exprℕ())), by norm_cast [], "]"] ["at", ident h],
+  have [] [] [":=", expr (char_p.cast_eq_zero_iff R p 2).mp h],
+  have [] [] [":=", expr nat.le_of_dvd exprdec_trivial() this],
+  rw [expr fact_iff] ["at", "*"],
+  linarith [] [] []
+end
 
 theorem CharP.neg_one_pow_char [CommRingₓ R] (p : ℕ) [CharP R p] [Fact p.prime] : (-1 : R) ^ p = -1 :=
   by 
@@ -242,7 +212,7 @@ theorem RingHom.char_p_iff_char_p {K L : Type _} [DivisionRing K] [Semiringₓ L
   by 
     split  <;>
       ·
-        introI _c 
+        intro _c 
         constructor 
         intro n 
         rw [←@CharP.cast_eq_zero_iff _ _ _ p _c n, ←f.injective.eq_iff, f.map_nat_cast, f.map_zero]
@@ -473,42 +443,44 @@ section
 
 variable(R)[CommRingₓ R][Fintype R](n : ℕ)
 
-theorem char_p_of_ne_zero (hn : Fintype.card R = n) (hR : ∀ i _ : i < n, (i : R) = 0 → i = 0) : CharP R n :=
-  { cast_eq_zero_iff :=
-      by 
-        have H : (n : R) = 0
-        ·
-          ·
-            rw [←hn, CharP.cast_card_eq_zero]
-        intro k 
-        split 
-        ·
-          intro h 
-          rw [←Nat.mod_add_divₓ k n, Nat.cast_add, Nat.cast_mul, H, zero_mul, add_zeroₓ] at h 
-          rw [Nat.dvd_iff_mod_eq_zeroₓ]
-          apply hR _ (Nat.mod_ltₓ _ _) h 
-          rw [←hn, Fintype.card_pos_iff]
-          exact ⟨0⟩
-        ·
-          rintro ⟨k, rfl⟩
-          rw [Nat.cast_mul, H, zero_mul] }
+-- error in Algebra.CharP.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem char_p_of_ne_zero
+(hn : «expr = »(fintype.card R, n))
+(hR : ∀ i «expr < » n, «expr = »((i : R), 0) → «expr = »(i, 0)) : char_p R n :=
+{ cast_eq_zero_iff := begin
+    have [ident H] [":", expr «expr = »((n : R), 0)] [],
+    by { rw ["[", "<-", expr hn, ",", expr char_p.cast_card_eq_zero, "]"] [] },
+    intro [ident k],
+    split,
+    { intro [ident h],
+      rw ["[", "<-", expr nat.mod_add_div k n, ",", expr nat.cast_add, ",", expr nat.cast_mul, ",", expr H, ",", expr zero_mul, ",", expr add_zero, "]"] ["at", ident h],
+      rw [expr nat.dvd_iff_mod_eq_zero] [],
+      apply [expr hR _ (nat.mod_lt _ _) h],
+      rw ["[", "<-", expr hn, ",", expr fintype.card_pos_iff, "]"] [],
+      exact [expr ⟨0⟩] },
+    { rintro ["⟨", ident k, ",", ident rfl, "⟩"],
+      rw ["[", expr nat.cast_mul, ",", expr H, ",", expr zero_mul, "]"] [] }
+  end }
 
-theorem char_p_of_prime_pow_injective (p : ℕ) [hp : Fact p.prime] (n : ℕ) (hn : Fintype.card R = p ^ n)
-  (hR : ∀ i _ : i ≤ n, (p ^ i : R) = 0 → i = n) : CharP R (p ^ n) :=
-  by 
-    obtain ⟨c, hc⟩ := CharP.exists R 
-    resetI 
-    have hcpn : c ∣ p ^ n
-    ·
-      rw [←CharP.cast_eq_zero_iff R c, ←hn, CharP.cast_card_eq_zero]
-    obtain ⟨i, hi, hc⟩ : ∃ (i : _)(_ : i ≤ n), c = p ^ i
-    ·
-      rwa [Nat.dvd_prime_pow hp.1] at hcpn 
-    obtain rfl : i = n
-    ·
-      apply hR i hi 
-      rw [←Nat.cast_pow, ←hc, CharP.cast_eq_zero]
-    rwa [←hc]
+-- error in Algebra.CharP.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem char_p_of_prime_pow_injective
+(p : exprℕ())
+[hp : fact p.prime]
+(n : exprℕ())
+(hn : «expr = »(fintype.card R, «expr ^ »(p, n)))
+(hR : ∀ i «expr ≤ » n, «expr = »((«expr ^ »(p, i) : R), 0) → «expr = »(i, n)) : char_p R «expr ^ »(p, n) :=
+begin
+  obtain ["⟨", ident c, ",", ident hc, "⟩", ":=", expr char_p.exists R],
+  resetI,
+  have [ident hcpn] [":", expr «expr ∣ »(c, «expr ^ »(p, n))] [],
+  { rw ["[", "<-", expr char_p.cast_eq_zero_iff R c, ",", "<-", expr hn, ",", expr char_p.cast_card_eq_zero, "]"] [] },
+  obtain ["⟨", ident i, ",", ident hi, ",", ident hc, "⟩", ":", expr «expr∃ , »((i «expr ≤ » n), «expr = »(c, «expr ^ »(p, i)))],
+  by rwa [expr nat.dvd_prime_pow hp.1] ["at", ident hcpn],
+  obtain [ident rfl, ":", expr «expr = »(i, n)],
+  { apply [expr hR i hi],
+    rw ["[", "<-", expr nat.cast_pow, ",", "<-", expr hc, ",", expr char_p.cast_eq_zero, "]"] [] },
+  rwa ["<-", expr hc] []
+end
 
 end 
 

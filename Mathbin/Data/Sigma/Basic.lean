@@ -95,16 +95,20 @@ end Sigma
 theorem sigma_mk_injective {i : α} : Function.Injective (@Sigma.mk α β i)
 | _, _, rfl => rfl
 
-theorem Function.Injective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)} (h₁ : Function.Injective f₁)
-  (h₂ : ∀ a, Function.Injective (f₂ a)) : Function.Injective (Sigma.map f₁ f₂)
-| ⟨i, x⟩, ⟨j, y⟩, h =>
-  by 
-    have  : i = j 
-    exact h₁ (sigma.mk.inj_iff.mp h).1
-    subst j 
-    have  : x = y 
-    exact h₂ i (eq_of_heq (sigma.mk.inj_iff.mp h).2)
-    subst y
+-- error in Data.Sigma.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem function.injective.sigma_map
+{f₁ : α₁ → α₂}
+{f₂ : ∀ a, β₁ a → β₂ (f₁ a)}
+(h₁ : function.injective f₁)
+(h₂ : ∀ a, function.injective (f₂ a)) : function.injective (sigma.map f₁ f₂)
+| ⟨i, x⟩, ⟨j, y⟩, h := begin
+  have [] [":", expr «expr = »(i, j)] [],
+  from [expr h₁ (sigma.mk.inj_iff.mp h).1],
+  subst [expr j],
+  have [] [":", expr «expr = »(x, y)] [],
+  from [expr h₂ i (eq_of_heq (sigma.mk.inj_iff.mp h).2)],
+  subst [expr y]
+end
 
 theorem Function.Surjective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)} (h₁ : Function.Surjective f₁)
   (h₂ : ∀ a, Function.Surjective (f₂ a)) : Function.Surjective (Sigma.map f₁ f₂) :=

@@ -50,22 +50,18 @@ theorem prod_join {l : List (List α)} : l.join.prod = (l.map List.prod).Prod :=
   by 
     induction l <;> [rfl, simp only [List.join, map, prod_append, prod_cons]]
 
--- error in Data.List.BigOperators: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If zero is an element of a list `L`, then `list.prod L = 0`. If the domain is a nontrivial
 monoid with zero with no divisors, then this implication becomes an `iff`, see
 `list.prod_eq_zero_iff`. -/
-theorem prod_eq_zero
-{M₀ : Type*}
-[monoid_with_zero M₀]
-{L : list M₀}
-(h : «expr ∈ »((0 : M₀), L)) : «expr = »(L.prod, 0) :=
-begin
-  induction [expr L] [] ["with", ident a, ident L, ident ihL] [],
-  { exact [expr absurd h (not_mem_nil _)] },
-  { rw [expr prod_cons] [],
-    cases [expr (mem_cons_iff _ _ _).1 h] ["with", ident ha, ident hL],
-    exacts ["[", expr mul_eq_zero_of_left ha.symm _, ",", expr mul_eq_zero_of_right _ (ihL hL), "]"] }
-end
+theorem prod_eq_zero {M₀ : Type _} [MonoidWithZeroₓ M₀] {L : List M₀} (h : (0 : M₀) ∈ L) : L.prod = 0 :=
+  by 
+    induction' L with a L ihL
+    ·
+      exact absurd h (not_mem_nil _)
+    ·
+      rw [prod_cons]
+      cases' (mem_cons_iff _ _ _).1 h with ha hL 
+      exacts[mul_eq_zero_of_left ha.symm _, mul_eq_zero_of_right _ (ihL hL)]
 
 /-- Product of elements of a list `L` equals zero if and only if `0 ∈ L`. See also
 `list.prod_eq_zero` for an implication that needs weaker typeclass assumptions. -/
@@ -165,19 +161,17 @@ theorem prod_update_nth :
   by 
     simp [update_nth, (Nat.zero_leₓ _).not_lt]
 
-open Opposite
+open MulOpposite
 
-theorem _root_.opposite.op_list_prod : ∀ l : List α, op l.prod = (l.map op).reverse.Prod
+theorem _root_.mul_opposite.op_list_prod : ∀ l : List α, op l.prod = (l.map op).reverse.Prod
 | [] => rfl
 | x :: xs =>
   by 
-    rw [List.prod_cons, List.map_consₓ, List.reverse_cons', List.prod_concat, op_mul, _root_.opposite.op_list_prod]
+    rw [List.prod_cons, List.map_consₓ, List.reverse_cons', List.prod_concat, op_mul, _root_.mul_opposite.op_list_prod]
 
-theorem _root_.opposite.unop_list_prod : ∀ l : List («expr ᵒᵖ» α), l.prod.unop = (l.map unop).reverse.Prod
-| [] => rfl
-| x :: xs =>
+theorem _root_.mul_opposite.unop_list_prod (l : List («expr ᵐᵒᵖ» α)) : l.prod.unop = (l.map unop).reverse.Prod :=
   by 
-    rw [List.prod_cons, List.map_consₓ, List.reverse_cons', List.prod_concat, unop_mul, _root_.opposite.unop_list_prod]
+    rw [←op_inj, op_unop, MulOpposite.op_list_prod, map_reverse, map_map, reverse_reverse, op_comp_unop, map_id]
 
 end Monoidₓ
 
@@ -242,13 +236,18 @@ theorem prod_update_nth' (L : List α) (n : ℕ) (a : α) :
 
 end CommGroupₓ
 
-theorem eq_of_sum_take_eq [AddLeftCancelMonoid α] {L L' : List α} (h : L.length = L'.length)
-  (h' : ∀ i _ : i ≤ L.length, (L.take i).Sum = (L'.take i).Sum) : L = L' :=
-  by 
-    apply ext_le h fun i h₁ h₂ => _ 
-    have  : (L.take (i+1)).Sum = (L'.take (i+1)).Sum := h' _ (Nat.succ_le_of_ltₓ h₁)
-    rw [sum_take_succ L i h₁, sum_take_succ L' i h₂, h' i (le_of_ltₓ h₁)] at this 
-    exact add_left_cancelₓ this
+-- error in Data.List.BigOperators: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_of_sum_take_eq
+[add_left_cancel_monoid α]
+{L L' : list α}
+(h : «expr = »(L.length, L'.length))
+(h' : ∀ i «expr ≤ » L.length, «expr = »((L.take i).sum, (L'.take i).sum)) : «expr = »(L, L') :=
+begin
+  apply [expr ext_le h (λ i h₁ h₂, _)],
+  have [] [":", expr «expr = »((L.take «expr + »(i, 1)).sum, (L'.take «expr + »(i, 1)).sum)] [":=", expr h' _ (nat.succ_le_of_lt h₁)],
+  rw ["[", expr sum_take_succ L i h₁, ",", expr sum_take_succ L' i h₂, ",", expr h' i (le_of_lt h₁), "]"] ["at", ident this],
+  exact [expr add_left_cancel this]
+end
 
 theorem monotone_sum_take [CanonicallyOrderedAddMonoid α] (L : List α) : Monotone fun i => (L.take i).Sum :=
   by 
@@ -485,13 +484,13 @@ end Alternating
 theorem _root_.monoid_hom.map_list_prod [Monoidₓ α] [Monoidₓ β] (f : α →* β) (l : List α) : f l.prod = (l.map f).Prod :=
   (l.prod_hom f).symm
 
-open Opposite
+open MulOpposite
 
 /-- A morphism into the opposite monoid acts on the product by acting on the reversed elements -/
-theorem _root_.monoid_hom.unop_map_list_prod [Monoidₓ α] [Monoidₓ β] (f : α →* «expr ᵒᵖ» β) (l : List α) :
-  unop (f l.prod) = (l.map (unop ∘ f)).reverse.Prod :=
+theorem _root_.monoid_hom.unop_map_list_prod {α β : Type _} [Monoidₓ α] [Monoidₓ β] (f : α →* «expr ᵐᵒᵖ» β)
+  (l : List α) : unop (f l.prod) = (l.map (unop ∘ f)).reverse.Prod :=
   by 
-    rw [f.map_list_prod l, Opposite.unop_list_prod, List.map_mapₓ]
+    rw [f.map_list_prod l, unop_list_prod, List.map_mapₓ]
 
 @[toAdditive]
 theorem prod_map_hom [Monoidₓ β] [Monoidₓ γ] (L : List α) (f : α → β) (g : β →* γ) :

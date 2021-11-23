@@ -30,7 +30,7 @@ variable{F : Type u → Type u}[Applicativeₓ F][IsCommApplicative F]
 
 variable{α' β' : Type u}(f : α' → F β')
 
--- error in Data.Multiset.Functor: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Multiset.Functor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 def traverse : multiset α' → F (multiset β') :=
 quotient.lift «expr ∘ »(functor.map coe, traversable.traverse f) (begin
    introv [ident p],

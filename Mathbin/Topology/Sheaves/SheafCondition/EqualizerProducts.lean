@@ -1,9 +1,8 @@
-import Mathbin.Topology.Sheaves.Presheaf 
-import Mathbin.CategoryTheory.Limits.Punit 
-import Mathbin.CategoryTheory.Limits.Shapes.Products 
-import Mathbin.CategoryTheory.Limits.Shapes.Equalizers 
 import Mathbin.CategoryTheory.FullSubcategory 
-import Mathbin.Tactic.Elementwise
+import Mathbin.CategoryTheory.Limits.Shapes.Equalizers 
+import Mathbin.CategoryTheory.Limits.Shapes.Products 
+import Mathbin.Tactic.Elementwise 
+import Mathbin.Topology.Sheaves.Presheaf
 
 /-!
 # The sheaf condition in terms of an equalizer of products

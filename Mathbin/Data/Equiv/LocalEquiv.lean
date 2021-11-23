@@ -84,8 +84,8 @@ unsafe def mfld_set_tac : tactic Unit :=
   do 
     let goal ← tactic.target 
     match goal with 
-      | quote (%%e₁) = %%e₂ => sorry
-      | quote (%%e₁) ⊆ %%e₂ => sorry
+      | quote.1 ((%%ₓe₁) = %%ₓe₂) => sorry
+      | quote.1 ((%%ₓe₁) ⊆ %%ₓe₂) => sorry
       | _ => tactic.fail "goal should be an equality or an inclusion"
 
 end Tactic.Interactive
@@ -319,14 +319,19 @@ theorem inter_eq_of_inter_eq_of_eq_on {e' : LocalEquiv α β} (h : e.is_image s 
   by 
     rw [←h.image_eq, ←h'.image_eq, ←hs, Heq.image_eq]
 
-theorem symm_eq_on_of_inter_eq_of_eq_on {e' : LocalEquiv α β} (h : e.is_image s t) (hs : e.source ∩ s = e'.source ∩ s)
-  (Heq : eq_on e e' (e.source ∩ s)) : eq_on e.symm e'.symm (e.target ∩ t) :=
-  by 
-    rw [←h.image_eq]
-    rintro y ⟨x, hx, rfl⟩
-    have hx' := hx 
-    rw [hs] at hx' 
-    rw [e.left_inv hx.1, Heq hx, e'.left_inv hx'.1]
+-- error in Data.Equiv.LocalEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem symm_eq_on_of_inter_eq_of_eq_on
+{e' : local_equiv α β}
+(h : e.is_image s t)
+(hs : «expr = »(«expr ∩ »(e.source, s), «expr ∩ »(e'.source, s)))
+(Heq : eq_on e e' «expr ∩ »(e.source, s)) : eq_on e.symm e'.symm «expr ∩ »(e.target, t) :=
+begin
+  rw ["[", "<-", expr h.image_eq, "]"] [],
+  rintros [ident y, "⟨", ident x, ",", ident hx, ",", ident rfl, "⟩"],
+  have [ident hx'] [] [":=", expr hx],
+  rw [expr hs] ["at", ident hx'],
+  rw ["[", expr e.left_inv hx.1, ",", expr Heq hx, ",", expr e'.left_inv hx'.1, "]"] []
+end
 
 end IsImage
 
@@ -387,26 +392,28 @@ theorem symm_image_target_eq_source : e.symm '' e.target = e.source :=
 theorem target_subset_preimage_source : e.target ⊆ e.symm ⁻¹' e.source :=
   e.symm_maps_to
 
+-- error in Data.Equiv.LocalEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Two local equivs that have the same `source`, same `to_fun` and same `inv_fun`, coincide. -/
-@[ext]
-protected theorem ext {e e' : LocalEquiv α β} (h : ∀ x, e x = e' x) (hsymm : ∀ x, e.symm x = e'.symm x)
-  (hs : e.source = e'.source) : e = e' :=
-  by 
-    have A : (e : α → β) = e'
-    ·
-      ·
-        ext x 
-        exact h x 
-    have B : (e.symm : β → α) = e'.symm
-    ·
-      ·
-        ext x 
-        exact hsymm x 
-    have I : e '' e.source = e.target := e.image_source_eq_target 
-    have I' : e' '' e'.source = e'.target := e'.image_source_eq_target 
-    rw [A, hs, I'] at I 
-    cases e <;> cases e' 
-    simp_all 
+@[ext #[]]
+protected
+theorem ext
+{e e' : local_equiv α β}
+(h : ∀ x, «expr = »(e x, e' x))
+(hsymm : ∀ x, «expr = »(e.symm x, e'.symm x))
+(hs : «expr = »(e.source, e'.source)) : «expr = »(e, e') :=
+begin
+  have [ident A] [":", expr «expr = »((e : α → β), e')] [],
+  by { ext [] [ident x] [],
+    exact [expr h x] },
+  have [ident B] [":", expr «expr = »((e.symm : β → α), e'.symm)] [],
+  by { ext [] [ident x] [],
+    exact [expr hsymm x] },
+  have [ident I] [":", expr «expr = »(«expr '' »(e, e.source), e.target)] [":=", expr e.image_source_eq_target],
+  have [ident I'] [":", expr «expr = »(«expr '' »(e', e'.source), e'.target)] [":=", expr e'.image_source_eq_target],
+  rw ["[", expr A, ",", expr hs, ",", expr I', "]"] ["at", ident I],
+  cases [expr e] []; cases [expr e'] [],
+  simp [] [] [] ["*"] [] ["at", "*"]
+end
 
 /-- Restricting a local equivalence to e.source ∩ s -/
 protected def restr (s : Set α) : LocalEquiv α β :=
@@ -670,19 +677,16 @@ theorem eq_on_source.source_inter_preimage_eq {e e' : LocalEquiv α β} (he : e 
   by 
     rw [he.eq_on.inter_preimage_eq, he.source_eq]
 
+-- error in Data.Equiv.LocalEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Composition of a local equiv and its inverse is equivalent to the restriction of the identity
-to the source -/
-theorem trans_self_symm : e.trans e.symm ≈ LocalEquiv.ofSet e.source :=
-  by 
-    have A : (e.trans e.symm).Source = e.source
-    ·
-      mfldSetTac 
-    refine'
-      ⟨by 
-          simp [A],
-        fun x hx => _⟩
-    rw [A] at hx 
-    simp' only [hx] with mfld_simps
+to the source -/ theorem trans_self_symm : «expr ≈ »(e.trans e.symm, local_equiv.of_set e.source) :=
+begin
+  have [ident A] [":", expr «expr = »((e.trans e.symm).source, e.source)] [],
+  by mfld_set_tac,
+  refine [expr ⟨by simp [] [] [] ["[", expr A, "]"] [] [], λ x hx, _⟩],
+  rw [expr A] ["at", ident hx],
+  simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] []
+end
 
 /-- Composition of the inverse of a local equiv and this local equiv is equivalent to the
 restriction of the identity to the target -/

@@ -72,7 +72,7 @@ variable{E : Type u}[NormedGroup E][NormedSpace ℝ E]{f : E → ℝ}{a : E}{f' 
 is that we require `c n → ∞` instead of `∥c n∥ → ∞`. One can think about `pos_tangent_cone_at`
 as `tangent_cone_at nnreal` but we have no theory of normed semifields yet. -/
 def PosTangentConeAt (s : Set E) (x : E) : Set E :=
-  { y : E |
+  { y:E |
     ∃ (c : ℕ → ℝ)(d : ℕ → E),
       (∀ᶠn in at_top, (x+d n) ∈ s) ∧ tendsto c at_top at_top ∧ tendsto (fun n => c n • d n) at_top (𝓝 y) }
 
@@ -81,26 +81,24 @@ theorem pos_tangent_cone_at_mono : Monotone fun s => PosTangentConeAt s a :=
     rintro s t hst y ⟨c, d, hd, hc, hcd⟩
     exact ⟨c, d, mem_of_superset hd$ fun h hn => hst hn, hc, hcd⟩
 
--- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem mem_pos_tangent_cone_at_of_segment_subset
-{s : set E}
-{x y : E}
-(h : «expr ⊆ »(segment exprℝ() x y, s)) : «expr ∈ »(«expr - »(y, x), pos_tangent_cone_at s x) :=
-begin
-  let [ident c] [] [":=", expr λ n : exprℕ(), «expr ^ »((2 : exprℝ()), n)],
-  let [ident d] [] [":=", expr λ n : exprℕ(), «expr • »(«expr ⁻¹»(c n), «expr - »(y, x))],
-  refine [expr ⟨c, d, filter.univ_mem' (λ n, h _), tendsto_pow_at_top_at_top_of_one_lt one_lt_two, _⟩],
-  show [expr «expr ∈ »(«expr + »(x, d n), segment exprℝ() x y)],
-  { rw [expr segment_eq_image'] [],
-    refine [expr ⟨«expr ⁻¹»(c n), ⟨_, _⟩, rfl⟩],
-    exacts ["[", expr inv_nonneg.2 (pow_nonneg zero_le_two _), ",", expr inv_le_one (one_le_pow_of_one_le one_le_two _), "]"] },
-  show [expr tendsto (λ n, «expr • »(c n, d n)) at_top (expr𝓝() «expr - »(y, x))],
-  { convert [] [expr tendsto_const_nhds] [],
-    ext [] [ident n] [],
-    simp [] [] ["only"] ["[", expr d, ",", expr smul_smul, "]"] [] [],
-    rw ["[", expr mul_inv_cancel, ",", expr one_smul, "]"] [],
-    exact [expr pow_ne_zero _ two_ne_zero] }
-end
+theorem mem_pos_tangent_cone_at_of_segment_subset {s : Set E} {x y : E} (h : Segment ℝ x y ⊆ s) :
+  y - x ∈ PosTangentConeAt s x :=
+  by 
+    let c := fun n : ℕ => (2 : ℝ) ^ n 
+    let d := fun n : ℕ => c n⁻¹ • (y - x)
+    refine' ⟨c, d, Filter.univ_mem' fun n => h _, tendsto_pow_at_top_at_top_of_one_lt one_lt_two, _⟩
+    show (x+d n) ∈ Segment ℝ x y
+    ·
+      rw [segment_eq_image']
+      refine' ⟨c n⁻¹, ⟨_, _⟩, rfl⟩
+      exacts[inv_nonneg.2 (pow_nonneg zero_le_two _), inv_le_one (one_le_pow_of_one_le one_le_two _)]
+    show tendsto (fun n => c n • d n) at_top (𝓝 (y - x))
+    ·
+      convert tendsto_const_nhds 
+      ext n 
+      simp only [d, smul_smul]
+      rw [mul_inv_cancel, one_smul]
+      exact pow_ne_zero _ two_ne_zero
 
 theorem mem_pos_tangent_cone_at_of_segment_subset' {s : Set E} {x y : E} (h : Segment ℝ x (x+y) ⊆ s) :
   y ∈ PosTangentConeAt s x :=
@@ -110,30 +108,32 @@ theorem mem_pos_tangent_cone_at_of_segment_subset' {s : Set E} {x y : E} (h : Se
 theorem pos_tangent_cone_at_univ : PosTangentConeAt univ a = univ :=
   eq_univ_of_forall$ fun x => mem_pos_tangent_cone_at_of_segment_subset' (subset_univ _)
 
+-- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` has a local max on `s` at `a`, `f'` is the derivative of `f` at `a` within `s`, and
 `y` belongs to the positive tangent cone of `s` at `a`, then `f' y ≤ 0`. -/
-theorem IsLocalMaxOn.has_fderiv_within_at_nonpos {s : Set E} (h : IsLocalMaxOn f s a) (hf : HasFderivWithinAt f f' s a)
-  {y} (hy : y ∈ PosTangentConeAt s a) : f' y ≤ 0 :=
-  by 
-    rcases hy with ⟨c, d, hd, hc, hcd⟩
-    have hc' : tendsto (fun n => ∥c n∥) at_top at_top 
-    exact tendsto_at_top_mono (fun n => le_abs_self _) hc 
-    refine' le_of_tendsto (hf.lim at_top hd hc' hcd) _ 
-    replace hd : tendsto (fun n => a+d n) at_top (𝓝[s] a+0)
-    exact
-      tendsto_inf.2
-        ⟨tendsto_const_nhds.add (TangentConeAt.lim_zero _ hc' hcd),
-          by 
-            rwa [tendsto_principal]⟩
-    rw [add_zeroₓ] at hd 
-    replace h : ∀ᶠn in at_top, f (a+d n) ≤ f a 
-    exact mem_map.1 (hd h)
-    replace hc : ∀ᶠn in at_top, 0 ≤ c n 
-    exact mem_map.1 (hc (mem_at_top (0 : ℝ)))
-    filterUpwards [h, hc]
-    simp only [smul_eq_mul, mem_preimage, subset_def]
-    intro n hnf hn 
-    exact mul_nonpos_of_nonneg_of_nonpos hn (sub_nonpos.2 hnf)
+theorem is_local_max_on.has_fderiv_within_at_nonpos
+{s : set E}
+(h : is_local_max_on f s a)
+(hf : has_fderiv_within_at f f' s a)
+{y}
+(hy : «expr ∈ »(y, pos_tangent_cone_at s a)) : «expr ≤ »(f' y, 0) :=
+begin
+  rcases [expr hy, "with", "⟨", ident c, ",", ident d, ",", ident hd, ",", ident hc, ",", ident hcd, "⟩"],
+  have [ident hc'] [":", expr tendsto (λ n, «expr∥ ∥»(c n)) at_top at_top] [],
+  from [expr tendsto_at_top_mono (λ n, le_abs_self _) hc],
+  refine [expr le_of_tendsto (hf.lim at_top hd hc' hcd) _],
+  replace [ident hd] [":", expr tendsto (λ n, «expr + »(a, d n)) at_top «expr𝓝[ ] »(s, «expr + »(a, 0))] [],
+  from [expr tendsto_inf.2 ⟨tendsto_const_nhds.add (tangent_cone_at.lim_zero _ hc' hcd), by rwa [expr tendsto_principal] []⟩],
+  rw ["[", expr add_zero, "]"] ["at", ident hd],
+  replace [ident h] [":", expr «expr∀ᶠ in , »((n), at_top, «expr ≤ »(f «expr + »(a, d n), f a))] [],
+  from [expr mem_map.1 (hd h)],
+  replace [ident hc] [":", expr «expr∀ᶠ in , »((n), at_top, «expr ≤ »(0, c n))] [],
+  from [expr mem_map.1 (hc (mem_at_top (0 : exprℝ())))],
+  filter_upwards ["[", expr h, ",", expr hc, "]"] [],
+  simp [] [] ["only"] ["[", expr smul_eq_mul, ",", expr mem_preimage, ",", expr subset_def, "]"] [] [],
+  assume [binders (n hnf hn)],
+  exact [expr mul_nonpos_of_nonneg_of_nonpos hn (sub_nonpos.2 hnf)]
+end
 
 /-- If `f` has a local max on `s` at `a` and `y` belongs to the positive tangent cone
 of `s` at `a`, then `f' y ≤ 0`. -/
@@ -259,7 +259,7 @@ section Rolle
 
 variable(f f' : ℝ → ℝ){a b : ℝ}
 
--- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A continuous function on a closed interval with `f a = f b` takes either its maximum
 or its minimum value at a point in the interior of the interval. -/
 theorem exists_Ioo_extr_on_Icc
@@ -311,24 +311,27 @@ theorem exists_deriv_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI
 
 variable{f f'}{l : ℝ}
 
+-- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Rolle's Theorem**, a version for a function on an open interval: if `f` has derivative `f'`
 on `(a, b)` and has the same limit `l` at `𝓝[Ioi a] a` and `𝓝[Iio b] b`, then `f' c = 0`
 for some `c ∈ (a, b)`.  -/
-theorem exists_has_deriv_at_eq_zero' (hab : a < b) (hfa : tendsto f (𝓝[Ioi a] a) (𝓝 l))
-  (hfb : tendsto f (𝓝[Iio b] b) (𝓝 l)) (hff' : ∀ x _ : x ∈ Ioo a b, HasDerivAt f (f' x) x) :
-  ∃ (c : _)(_ : c ∈ Ioo a b), f' c = 0 :=
-  by 
-    have  : ContinuousOn f (Ioo a b) := fun x hx => (hff' x hx).ContinuousAt.ContinuousWithinAt 
-    have hcont := continuous_on_Icc_extend_from_Ioo hab this hfa hfb 
-    obtain ⟨c, hc, hcextr⟩ : ∃ (c : _)(_ : c ∈ Ioo a b), IsLocalExtr (extendFrom (Ioo a b) f) c
-    ·
-      apply exists_local_extr_Ioo _ hab hcont 
-      rw [eq_lim_at_right_extend_from_Ioo hab hfb]
-      exact eq_lim_at_left_extend_from_Ioo hab hfa 
-    use c, hc 
-    apply (hcextr.congr _).has_deriv_at_eq_zero (hff' c hc)
-    rw [eventually_eq_iff_exists_mem]
-    exact ⟨Ioo a b, Ioo_mem_nhds hc.1 hc.2, extend_from_extends this⟩
+theorem exists_has_deriv_at_eq_zero'
+(hab : «expr < »(a, b))
+(hfa : tendsto f «expr𝓝[ ] »(Ioi a, a) (expr𝓝() l))
+(hfb : tendsto f «expr𝓝[ ] »(Iio b, b) (expr𝓝() l))
+(hff' : ∀ x «expr ∈ » Ioo a b, has_deriv_at f (f' x) x) : «expr∃ , »((c «expr ∈ » Ioo a b), «expr = »(f' c, 0)) :=
+begin
+  have [] [":", expr continuous_on f (Ioo a b)] [":=", expr λ x hx, (hff' x hx).continuous_at.continuous_within_at],
+  have [ident hcont] [] [":=", expr continuous_on_Icc_extend_from_Ioo hab this hfa hfb],
+  obtain ["⟨", ident c, ",", ident hc, ",", ident hcextr, "⟩", ":", expr «expr∃ , »((c «expr ∈ » Ioo a b), is_local_extr (extend_from (Ioo a b) f) c)],
+  { apply [expr exists_local_extr_Ioo _ hab hcont],
+    rw [expr eq_lim_at_right_extend_from_Ioo hab hfb] [],
+    exact [expr eq_lim_at_left_extend_from_Ioo hab hfa] },
+  use ["[", expr c, ",", expr hc, "]"],
+  apply [expr (hcextr.congr _).has_deriv_at_eq_zero (hff' c hc)],
+  rw [expr eventually_eq_iff_exists_mem] [],
+  exact [expr ⟨Ioo a b, Ioo_mem_nhds hc.1 hc.2, extend_from_extends this⟩]
+end
 
 /-- **Rolle's Theorem**, a version for a function on an open interval: if `f` has the same limit
 `l` at `𝓝[Ioi a] a` and `𝓝[Iio b] b`, then `deriv f c = 0` for some `c ∈ (a, b)`. This version
@@ -352,28 +355,28 @@ end Rolle
 
 namespace Polynomial
 
-theorem card_root_set_le_derivative {F : Type _} [Field F] [Algebra F ℝ] (p : Polynomial F) :
-  Fintype.card (p.root_set ℝ) ≤ Fintype.card (p.derivative.root_set ℝ)+1 :=
-  by 
-    haveI  : CharZero F :=
-      (RingHom.char_zero_iff (algebraMap F ℝ).Injective).mpr
-        (by 
-          infer_instance)
-    byCases' hp : p = 0
-    ·
-      simpRw [hp, derivative_zero, root_set_zero, Set.empty_card', zero_le_one]
-    byCases' hp' : p.derivative = 0
-    ·
-      rw [eq_C_of_nat_degree_eq_zero (nat_degree_eq_zero_of_derivative_eq_zero hp')]
-      simpRw [root_set_C, Set.empty_card', zero_le]
-    simpRw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
-    refine' Finset.card_le_of_interleaved fun x y hx hy hxy => _ 
-    rw [←Finset.mem_coe, ←root_set_def, mem_root_set hp] at hx hy 
-    obtain ⟨z, hz1, hz2⟩ :=
-      exists_deriv_eq_zero (fun x : ℝ => aeval x p) hxy p.continuous_aeval.continuous_on (hx.trans hy.symm)
-    refine' ⟨z, _, hz1⟩
-    rw [←Finset.mem_coe, ←root_set_def, mem_root_set hp', ←hz2]
-    simpRw [aeval_def, ←eval_map, Polynomial.deriv, derivative_map]
+-- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem card_root_set_le_derivative
+{F : Type*}
+[field F]
+[algebra F exprℝ()]
+(p : polynomial F) : «expr ≤ »(fintype.card (p.root_set exprℝ()), «expr + »(fintype.card (p.derivative.root_set exprℝ()), 1)) :=
+begin
+  haveI [] [":", expr char_zero F] [":=", expr (ring_hom.char_zero_iff (algebra_map F exprℝ()).injective).mpr (by apply_instance)],
+  by_cases [expr hp, ":", expr «expr = »(p, 0)],
+  { simp_rw ["[", expr hp, ",", expr derivative_zero, ",", expr root_set_zero, ",", expr set.empty_card', ",", expr zero_le_one, "]"] [] },
+  by_cases [expr hp', ":", expr «expr = »(p.derivative, 0)],
+  { rw [expr eq_C_of_nat_degree_eq_zero (nat_degree_eq_zero_of_derivative_eq_zero hp')] [],
+    simp_rw ["[", expr root_set_C, ",", expr set.empty_card', ",", expr zero_le, "]"] [] },
+  simp_rw ["[", expr root_set_def, ",", expr finset.coe_sort_coe, ",", expr fintype.card_coe, "]"] [],
+  refine [expr finset.card_le_of_interleaved (λ x y hx hy hxy, _)],
+  rw ["[", "<-", expr finset.mem_coe, ",", "<-", expr root_set_def, ",", expr mem_root_set hp, "]"] ["at", ident hx, ident hy],
+  obtain ["⟨", ident z, ",", ident hz1, ",", ident hz2, "⟩", ":=", expr exists_deriv_eq_zero (λ
+    x : exprℝ(), aeval x p) hxy p.continuous_aeval.continuous_on (hx.trans hy.symm)],
+  refine [expr ⟨z, _, hz1⟩],
+  rw ["[", "<-", expr finset.mem_coe, ",", "<-", expr root_set_def, ",", expr mem_root_set hp', ",", "<-", expr hz2, "]"] [],
+  simp_rw ["[", expr aeval_def, ",", "<-", expr eval_map, ",", expr polynomial.deriv, ",", expr derivative_map, "]"] []
+end
 
 end Polynomial
 

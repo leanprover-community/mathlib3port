@@ -92,6 +92,7 @@ theorem subbox_induction_on {p : box ι → Prop} (I : box ι)
     rcases mem_split_center.1 h' with ⟨s, rfl⟩
     exact hs s
 
+-- error in Analysis.BoxIntegral.Partition.SubboxInduction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a box `I` in `ℝⁿ` and a function `r : ℝⁿ → (0, ∞)`, there exists a tagged partition `π` of
 `I` such that
 
@@ -101,42 +102,36 @@ theorem subbox_induction_on {p : box ι → Prop} (I : box ι)
 
 This lemma implies that the Henstock filter is nontrivial, hence the Henstock integral is
 well-defined. -/
-theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : box ι) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
-  ∃ π : tagged_prepartition I,
-    π.is_partition ∧
-      π.is_Henstock ∧
-        π.is_subordinate r ∧
-          (∀ J _ : J ∈ π, ∃ m : ℕ, ∀ i, (J : _).upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) ∧
-            π.distortion = I.distortion :=
-  by 
-    refine' subbox_induction_on I (fun J hle hJ => _) fun z hz => _
-    ·
-      choose! πi hP hHen hr Hn Hd using hJ 
-      choose! n hn using Hn 
-      have hP : ((split_center J).bUnionTagged πi).IsPartition 
-      exact (is_partition_split_center _).bUnionTagged hP 
-      have hsub :
-        ∀ J' _ : J' ∈ (split_center J).bUnionTagged πi,
-          ∃ n : ℕ, ∀ i, (J' : _).upper i - J'.lower i = (J.upper i - J.lower i) / 2 ^ n
-      ·
-        intro J' hJ' 
-        rcases(split_center J).mem_bUnion_tagged.1 hJ' with ⟨J₁, h₁, h₂⟩
-        refine' ⟨n J₁ J'+1, fun i => _⟩
-        simp only [hn J₁ h₁ J' h₂, upper_sub_lower_of_mem_split_center h₁, pow_succₓ, div_div_eq_div_mul]
-      refine' ⟨_, hP, is_Henstock_bUnion_tagged.2 hHen, is_subordinate_bUnion_tagged.2 hr, hsub, _⟩
-      refine' tagged_prepartition.distortion_of_const _ hP.nonempty_boxes fun J' h' => _ 
-      rcases hsub J' h' with ⟨n, hn⟩
-      exact box.distortion_eq_of_sub_eq_div hn
-    ·
-      refine' ⟨I.Icc ∩ closed_ball z (r z), inter_mem_nhds_within _ (closed_ball_mem_nhds _ (r z).coe_prop), _⟩
-      intro J Hle n Hmem HIcc Hsub 
-      rw [Set.subset_inter_iff] at HIcc 
-      refine'
-        ⟨single _ _ le_rfl _ Hmem, is_partition_single _, is_Henstock_single _, (is_subordinate_single _ _).2 HIcc.2, _,
-          distortion_single _ _⟩
-      simp only [tagged_prepartition.mem_single, forall_eq]
-      refine' ⟨0, fun i => _⟩
-      simp 
+theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic
+(I : box ι)
+(r : (ι → exprℝ()) → Ioi (0 : exprℝ())) : «expr∃ , »((π : tagged_prepartition I), «expr ∧ »(π.is_partition, «expr ∧ »(π.is_Henstock, «expr ∧ »(π.is_subordinate r, «expr ∧ »(∀
+     J «expr ∈ » π, «expr∃ , »((m : exprℕ()), ∀
+      i, «expr = »(«expr - »((J : _).upper i, J.lower i), «expr / »(«expr - »(I.upper i, I.lower i), «expr ^ »(2, m)))), «expr = »(π.distortion, I.distortion)))))) :=
+begin
+  refine [expr subbox_induction_on I (λ J hle hJ, _) (λ z hz, _)],
+  { choose ["!"] [ident πi] [ident hP, ident hHen, ident hr, ident Hn, ident Hd] ["using", expr hJ],
+    choose ["!"] [ident n] [ident hn] ["using", expr Hn],
+    have [ident hP] [":", expr ((split_center J).bUnion_tagged πi).is_partition] [],
+    from [expr (is_partition_split_center _).bUnion_tagged hP],
+    have [ident hsub] [":", expr ∀
+     J' «expr ∈ » (split_center J).bUnion_tagged πi, «expr∃ , »((n : exprℕ()), ∀
+      i, «expr = »(«expr - »((J' : _).upper i, J'.lower i), «expr / »(«expr - »(J.upper i, J.lower i), «expr ^ »(2, n))))] [],
+    { intros [ident J', ident hJ'],
+      rcases [expr (split_center J).mem_bUnion_tagged.1 hJ', "with", "⟨", ident J₁, ",", ident h₁, ",", ident h₂, "⟩"],
+      refine [expr ⟨«expr + »(n J₁ J', 1), λ i, _⟩],
+      simp [] [] ["only"] ["[", expr hn J₁ h₁ J' h₂, ",", expr upper_sub_lower_of_mem_split_center h₁, ",", expr pow_succ, ",", expr div_div_eq_div_mul, "]"] [] [] },
+    refine [expr ⟨_, hP, is_Henstock_bUnion_tagged.2 hHen, is_subordinate_bUnion_tagged.2 hr, hsub, _⟩],
+    refine [expr tagged_prepartition.distortion_of_const _ hP.nonempty_boxes (λ J' h', _)],
+    rcases [expr hsub J' h', "with", "⟨", ident n, ",", ident hn, "⟩"],
+    exact [expr box.distortion_eq_of_sub_eq_div hn] },
+  { refine [expr ⟨«expr ∩ »(I.Icc, closed_ball z (r z)), inter_mem_nhds_within _ (closed_ball_mem_nhds _ (r z).coe_prop), _⟩],
+    intros [ident J, ident Hle, ident n, ident Hmem, ident HIcc, ident Hsub],
+    rw [expr set.subset_inter_iff] ["at", ident HIcc],
+    refine [expr ⟨single _ _ le_rfl _ Hmem, is_partition_single _, is_Henstock_single _, (is_subordinate_single _ _).2 HIcc.2, _, distortion_single _ _⟩],
+    simp [] [] ["only"] ["[", expr tagged_prepartition.mem_single, ",", expr forall_eq, "]"] [] [],
+    refine [expr ⟨0, λ i, _⟩],
+    simp [] [] [] [] [] [] }
+end
 
 end Box
 
@@ -144,6 +139,7 @@ namespace Prepartition
 
 open TaggedPrepartition Finset Function
 
+-- error in Analysis.BoxIntegral.Partition.SubboxInduction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a box `I` in `ℝⁿ`, a function `r : ℝⁿ → (0, ∞)`, and a prepartition `π` of `I`, there
 exists a tagged prepartition `π'` of `I` such that
 
@@ -153,19 +149,19 @@ exists a tagged prepartition `π'` of `I` such that
 * `π'` covers exactly the same part of `I` as `π`;
 * the distortion of `π'` is equal to the distortion of `π`.
 -/
-theorem exists_tagged_le_is_Henstock_is_subordinate_Union_eq {I : box ι} (r : (ι → ℝ) → Ioi (0 : ℝ))
-  (π : prepartition I) :
-  ∃ π' : tagged_prepartition I,
-    π'.to_prepartition ≤ π ∧ π'.is_Henstock ∧ π'.is_subordinate r ∧ π'.distortion = π.distortion ∧ π'.Union = π.Union :=
-  by 
-    have  := fun J => box.exists_tagged_partition_is_Henstock_is_subordinate_homothetic J r 
-    choose! πi πip πiH πir hsub πid 
-    clear hsub 
-    refine'
-      ⟨π.bUnion_tagged πi, bUnion_le _ _, is_Henstock_bUnion_tagged.2 fun J _ => πiH J,
-        is_subordinate_bUnion_tagged.2 fun J _ => πir J, _, π.Union_bUnion_partition fun J _ => πip J⟩
-    rw [distortion_bUnion_tagged]
-    exact sup_congr rfl fun J _ => πid J
+theorem exists_tagged_le_is_Henstock_is_subordinate_Union_eq
+{I : box ι}
+(r : (ι → exprℝ()) → Ioi (0 : exprℝ()))
+(π : prepartition I) : «expr∃ , »((π' : tagged_prepartition I), «expr ∧ »(«expr ≤ »(π'.to_prepartition, π), «expr ∧ »(π'.is_Henstock, «expr ∧ »(π'.is_subordinate r, «expr ∧ »(«expr = »(π'.distortion, π.distortion), «expr = »(π'.Union, π.Union)))))) :=
+begin
+  have [] [] [":=", expr λ J, box.exists_tagged_partition_is_Henstock_is_subordinate_homothetic J r],
+  choose ["!"] [ident πi] [ident πip, ident πiH, ident πir, ident hsub, ident πid] [],
+  clear [ident hsub],
+  refine [expr ⟨π.bUnion_tagged πi, bUnion_le _ _, is_Henstock_bUnion_tagged.2 (λ
+     J _, πiH J), is_subordinate_bUnion_tagged.2 (λ J _, πir J), _, π.Union_bUnion_partition (λ J _, πip J)⟩],
+  rw ["[", expr distortion_bUnion_tagged, "]"] [],
+  exact [expr sup_congr rfl (λ J _, πid J)]
+end
 
 /-- Given a prepartition `π` of a box `I` and a function `r : ℝⁿ → (0, ∞)`, `π.to_subordinate r`
 is a tagged partition `π'` such that

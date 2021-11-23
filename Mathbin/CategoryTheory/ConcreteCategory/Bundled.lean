@@ -1,4 +1,4 @@
-import Mathbin.CategoryTheory.Category.Basic
+import Mathbin.Tactic.PiInstances
 
 /-!
 # Bundled types

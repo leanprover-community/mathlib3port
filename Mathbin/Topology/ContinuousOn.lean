@@ -51,7 +51,7 @@ theorem eventually_nhds_within_nhds_within {a : α} {s : Set α} {p : α → Pro
     simp only [eventually_nhds_within_iff] at h⊢
     exact h.mono fun x hx hxs => (hx hxs).self_of_nhds hxs
 
-theorem nhds_within_eq (a : α) (s : Set α) : 𝓝[s] a = ⨅(t : _)(_ : t ∈ { t : Set α | a ∈ t ∧ IsOpen t }), 𝓟 (t ∩ s) :=
+theorem nhds_within_eq (a : α) (s : Set α) : 𝓝[s] a = ⨅(t : _)(_ : t ∈ { t:Set α | a ∈ t ∧ IsOpen t }), 𝓟 (t ∩ s) :=
   ((nhds_basis_opens a).inf_principal s).eq_binfi
 
 theorem nhds_within_univ (a : α) : 𝓝[Set.Univ] a = 𝓝 a :=
@@ -82,20 +82,25 @@ theorem nhds_of_nhds_within_of_nhds {s t : Set α} {a : α} (h1 : s ∈ 𝓝 a) 
     rcases mem_nhds_within_iff_exists_mem_nhds_inter.mp h2 with ⟨_, Hw, hw⟩
     exact (nhds a).sets_of_superset ((nhds a).inter_sets Hw h1) hw
 
-theorem preimage_nhds_within_coinduced' {π : α → β} {s : Set β} {t : Set α} {a : α} (h : a ∈ t) (ht : IsOpen t)
-  (hs : s ∈ @nhds β (TopologicalSpace.coinduced (fun x : t => π x) Subtype.topologicalSpace) (π a)) :
-  π ⁻¹' s ∈ 𝓝[t] a :=
-  by 
-    letI this := TopologicalSpace.coinduced (fun x : t => π x) Subtype.topologicalSpace 
-    rcases mem_nhds_iff.mp hs with ⟨V, hVs, V_op, mem_V⟩
-    refine'
-      mem_nhds_within_iff_exists_mem_nhds_inter.mpr
-        ⟨π ⁻¹' V, mem_nhds_iff.mpr ⟨t ∩ π ⁻¹' V, inter_subset_right t (π ⁻¹' V), _, mem_sep h mem_V⟩,
-          subset.trans (inter_subset_left _ _) (preimage_mono hVs)⟩
-    obtain ⟨u, hu1, hu2⟩ := is_open_induced_iff.mp (is_open_coinduced.1 V_op)
-    rw [preimage_comp] at hu2 
-    rw [Set.inter_comm, ←subtype.preimage_coe_eq_preimage_coe_iff.mp hu2]
-    exact hu1.inter ht
+-- error in Topology.ContinuousOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem preimage_nhds_within_coinduced'
+{π : α → β}
+{s : set β}
+{t : set α}
+{a : α}
+(h : «expr ∈ »(a, t))
+(ht : is_open t)
+(hs : «expr ∈ »(s, @nhds β (topological_space.coinduced (λ
+    x : t, π x) subtype.topological_space) (π a))) : «expr ∈ »(«expr ⁻¹' »(π, s), «expr𝓝[ ] »(t, a)) :=
+begin
+  letI [] [] [":=", expr topological_space.coinduced (λ x : t, π x) subtype.topological_space],
+  rcases [expr mem_nhds_iff.mp hs, "with", "⟨", ident V, ",", ident hVs, ",", ident V_op, ",", ident mem_V, "⟩"],
+  refine [expr mem_nhds_within_iff_exists_mem_nhds_inter.mpr ⟨«expr ⁻¹' »(π, V), mem_nhds_iff.mpr ⟨«expr ∩ »(t, «expr ⁻¹' »(π, V)), inter_subset_right t «expr ⁻¹' »(π, V), _, mem_sep h mem_V⟩, subset.trans (inter_subset_left _ _) (preimage_mono hVs)⟩],
+  obtain ["⟨", ident u, ",", ident hu1, ",", ident hu2, "⟩", ":=", expr is_open_induced_iff.mp (is_open_coinduced.1 V_op)],
+  rw ["[", expr preimage_comp, "]"] ["at", ident hu2],
+  rw ["[", expr set.inter_comm, ",", "<-", expr subtype.preimage_coe_eq_preimage_coe_iff.mp hu2, "]"] [],
+  exact [expr hu1.inter ht]
+end
 
 theorem mem_nhds_within_of_mem_nhds {s t : Set α} {a : α} (h : s ∈ 𝓝 a) : s ∈ 𝓝[t] a :=
   mem_inf_of_left h
@@ -133,12 +138,17 @@ theorem nhds_within_restrict' {a : α} (s : Set α) {t : Set α} (h : t ∈ 𝓝
 theorem nhds_within_restrict {a : α} (s : Set α) {t : Set α} (h₀ : a ∈ t) (h₁ : IsOpen t) : 𝓝[s] a = 𝓝[s ∩ t] a :=
   nhds_within_restrict' s (IsOpen.mem_nhds h₁ h₀)
 
-theorem nhds_within_le_of_mem {a : α} {s t : Set α} (h : s ∈ 𝓝[t] a) : 𝓝[t] a ≤ 𝓝[s] a :=
-  by 
-    rcases mem_nhds_within.1 h with ⟨u, u_open, au, uts⟩
-    have  : 𝓝[t] a = 𝓝[t ∩ u] a := nhds_within_restrict _ au u_open 
-    rw [this, inter_comm]
-    exact nhds_within_mono _ uts
+-- error in Topology.ContinuousOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nhds_within_le_of_mem
+{a : α}
+{s t : set α}
+(h : «expr ∈ »(s, «expr𝓝[ ] »(t, a))) : «expr ≤ »(«expr𝓝[ ] »(t, a), «expr𝓝[ ] »(s, a)) :=
+begin
+  rcases [expr mem_nhds_within.1 h, "with", "⟨", ident u, ",", ident u_open, ",", ident au, ",", ident uts, "⟩"],
+  have [] [":", expr «expr = »(«expr𝓝[ ] »(t, a), «expr𝓝[ ] »(«expr ∩ »(t, u), a))] [":=", expr nhds_within_restrict _ au u_open],
+  rw ["[", expr this, ",", expr inter_comm, "]"] [],
+  exact [expr nhds_within_mono _ uts]
+end
 
 theorem nhds_within_le_nhds {a : α} {s : Set α} : 𝓝[s] a ≤ 𝓝 a :=
   by 
@@ -244,36 +254,38 @@ theorem nhds_within_pi_univ_eq {ι : Type _} {α : ι → Type _} [Fintype ι] [
   by 
     simpa [nhdsWithin] using nhds_within_pi_eq finite_univ s x
 
-theorem nhds_within_pi_univ_eq_bot {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {s : ∀ i, Set (α i)}
-  {x : ∀ i, α i} : 𝓝[pi univ s] x = ⊥ ↔ ∃ i, 𝓝[s i] x i = ⊥ :=
-  by 
-    classical 
-    split 
-    ·
-      haveI  : ∀ i, Inhabited (α i) := fun i => ⟨x i⟩
-      simp only [nhdsWithin, nhds_pi, inf_principal_eq_bot, mem_infi', mem_comap]
-      rintro ⟨I, hIf, V, hV, -, hVs, -⟩
-      choose! t htx htV using hV 
-      contrapose! hVs 
-      change ∀ i, ∃ᶠy in 𝓝 (x i), y ∈ s i at hVs 
-      have  : ∀ i, (s i ∩ t i).Nonempty 
-      exact fun i => ((hVs i).and_eventually (htx i)).exists 
-      choose y hys hyt 
-      choose z hzs using fun i => (hVs i).exists 
-      suffices  : I.piecewise y z ∈ (⋂(i : _)(_ : i ∈ I), V i) ∩ pi univ s
-      ·
-        intro H 
-        simpa [←H]
-      refine' ⟨mem_bInter$ fun i hi => htV i _, fun i hi' => _⟩
-      ·
-        simp only [mem_preimage, piecewise_eq_of_mem _ _ _ hi, hyt i]
-      ·
-        byCases' hi : i ∈ I <;> simp 
-    ·
-      rintro ⟨i, eq⟩
-      rw [←@map_eq_bot_iff _ _ _ fun x : ∀ i, α i => x i]
-      refine' eq_bot_mono _ Eq 
-      exact ((continuous_apply i).Tendsto x).inf (tendsto_principal_principal.2$ fun y hy => hy i trivialₓ)
+-- error in Topology.ContinuousOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nhds_within_pi_univ_eq_bot
+{ι : Type*}
+{α : ι → Type*}
+[∀ i, topological_space (α i)]
+{s : ∀ i, set (α i)}
+{x : ∀
+ i, α i} : «expr ↔ »(«expr = »(«expr𝓝[ ] »(pi univ s, x), «expr⊥»()), «expr∃ , »((i), «expr = »(«expr𝓝[ ] »(s i, x i), «expr⊥»()))) :=
+begin
+  classical,
+  split,
+  { haveI [] [":", expr ∀ i, inhabited (α i)] [":=", expr λ i, ⟨x i⟩],
+    simp [] [] ["only"] ["[", expr nhds_within, ",", expr nhds_pi, ",", expr inf_principal_eq_bot, ",", expr mem_infi', ",", expr mem_comap, "]"] [] [],
+    rintro ["⟨", ident I, ",", ident hIf, ",", ident V, ",", ident hV, ",", "-", ",", ident hVs, ",", "-", "⟩"],
+    choose ["!"] [ident t] [ident htx, ident htV] ["using", expr hV],
+    contrapose ["!"] [ident hVs],
+    change [expr ∀ i, «expr∃ᶠ in , »((y), expr𝓝() (x i), «expr ∈ »(y, s i))] [] ["at", ident hVs],
+    have [] [":", expr ∀ i, «expr ∩ »(s i, t i).nonempty] [],
+    from [expr λ i, ((hVs i).and_eventually (htx i)).exists],
+    choose [] [ident y] [ident hys, ident hyt] [],
+    choose [] [ident z] [ident hzs] ["using", expr λ i, (hVs i).exists],
+    suffices [] [":", expr «expr ∈ »(I.piecewise y z, «expr ∩ »(«expr⋂ , »((i «expr ∈ » I), V i), pi univ s))],
+    { intro [ident H],
+      simpa [] [] [] ["[", "<-", expr H, "]"] [] [] },
+    refine [expr ⟨«expr $ »(mem_bInter, λ i hi, htV i _), λ i hi', _⟩],
+    { simp [] [] ["only"] ["[", expr mem_preimage, ",", expr piecewise_eq_of_mem _ _ _ hi, ",", expr hyt i, "]"] [] [] },
+    { by_cases [expr hi, ":", expr «expr ∈ »(i, I)]; simp [] [] [] ["*"] [] [] } },
+  { rintro ["⟨", ident i, ",", ident eq, "⟩"],
+    rw ["[", "<-", expr @map_eq_bot_iff _ _ _ (λ x : ∀ i, α i, x i), "]"] [],
+    refine [expr eq_bot_mono _ eq],
+    exact [expr ((continuous_apply i).tendsto x).inf «expr $ »(tendsto_principal_principal.2, λ y hy, hy i trivial)] }
+end
 
 theorem nhds_within_pi_eq_bot {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι}
   {s : ∀ i, Set (α i)} {x : ∀ i, α i} : 𝓝[pi I s] x = ⊥ ↔ ∃ (i : _)(_ : i ∈ I), 𝓝[s i] x i = ⊥ :=
@@ -300,7 +312,7 @@ theorem Filter.Tendsto.if_nhds_within {f g : α → β} {p : α → Prop} [Decid
   h₀.piecewise_nhds_within h₁
 
 theorem map_nhds_within (f : α → β) (a : α) (s : Set α) :
-  map f (𝓝[s] a) = ⨅(t : _)(_ : t ∈ { t : Set α | a ∈ t ∧ IsOpen t }), 𝓟 (f '' (t ∩ s)) :=
+  map f (𝓝[s] a) = ⨅(t : _)(_ : t ∈ { t:Set α | a ∈ t ∧ IsOpen t }), 𝓟 (f '' (t ∩ s)) :=
   ((nhds_within_basis_open a s).map f).eq_binfi
 
 theorem tendsto_nhds_within_mono_left {f : α → β} {a : α} {s t : Set α} {l : Filter β} (hst : s ⊆ t)
@@ -561,11 +573,14 @@ theorem ContinuousWithinAt.union {f : α → β} {s t : Set α} {x : α} (hs : C
   (ht : ContinuousWithinAt f t x) : ContinuousWithinAt f (s ∪ t) x :=
   continuous_within_at_union.2 ⟨hs, ht⟩
 
-theorem ContinuousWithinAt.mem_closure_image {f : α → β} {s : Set α} {x : α} (h : ContinuousWithinAt f s x)
-  (hx : x ∈ Closure s) : f x ∈ Closure (f '' s) :=
-  by 
-    haveI  := mem_closure_iff_nhds_within_ne_bot.1 hx <;>
-      exact mem_closure_of_tendsto h$ mem_of_superset self_mem_nhds_within (subset_preimage_image f s)
+-- error in Topology.ContinuousOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_within_at.mem_closure_image
+{f : α → β}
+{s : set α}
+{x : α}
+(h : continuous_within_at f s x)
+(hx : «expr ∈ »(x, closure s)) : «expr ∈ »(f x, closure «expr '' »(f, s)) :=
+by haveI [] [] [":=", expr mem_closure_iff_nhds_within_ne_bot.1 hx]; exact [expr «expr $ »(mem_closure_of_tendsto h, mem_of_superset self_mem_nhds_within (subset_preimage_image f s))]
 
 theorem ContinuousWithinAt.mem_closure {f : α → β} {s : Set α} {x : α} {A : Set β} (h : ContinuousWithinAt f s x)
   (hx : x ∈ Closure s) (hA : s ⊆ f ⁻¹' A) : f x ∈ Closure A :=
@@ -638,15 +653,21 @@ theorem IsOpenMap.continuous_on_range_of_left_inverse {f : α → β} (hf : IsOp
     rw [←image_univ]
     exact (hf.restrict is_open_univ).continuous_on_image_of_left_inv_on fun x _ => hleft x
 
-theorem ContinuousOn.congr_mono {f g : α → β} {s s₁ : Set α} (h : ContinuousOn f s) (h' : eq_on g f s₁) (h₁ : s₁ ⊆ s) :
-  ContinuousOn g s₁ :=
-  by 
-    intro x hx 
-    unfold ContinuousWithinAt 
-    have A := (h x (h₁ hx)).mono h₁ 
-    unfold ContinuousWithinAt  at A 
-    rw [←h' hx] at A 
-    exact A.congr' h'.eventually_eq_nhds_within.symm
+-- error in Topology.ContinuousOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_on.congr_mono
+{f g : α → β}
+{s s₁ : set α}
+(h : continuous_on f s)
+(h' : eq_on g f s₁)
+(h₁ : «expr ⊆ »(s₁, s)) : continuous_on g s₁ :=
+begin
+  assume [binders (x hx)],
+  unfold [ident continuous_within_at] [],
+  have [ident A] [] [":=", expr (h x (h₁ hx)).mono h₁],
+  unfold [ident continuous_within_at] ["at", ident A],
+  rw ["<-", expr h' hx] ["at", ident A],
+  exact [expr A.congr' h'.eventually_eq_nhds_within.symm]
+end
 
 theorem ContinuousOn.congr {f g : α → β} {s : Set α} (h : ContinuousOn f s) (h' : eq_on g f s) : ContinuousOn g s :=
   h.congr_mono h' (subset.refl _)
@@ -658,13 +679,18 @@ theorem ContinuousAt.continuous_within_at {f : α → β} {s : Set α} {x : α} 
   ContinuousWithinAt f s x :=
   ContinuousWithinAt.mono ((continuous_within_at_univ f x).2 h) (subset_univ _)
 
-theorem ContinuousWithinAt.continuous_at {f : α → β} {s : Set α} {x : α} (h : ContinuousWithinAt f s x) (hs : s ∈ 𝓝 x) :
-  ContinuousAt f x :=
-  by 
-    have  : s = univ ∩ s
-    ·
-      rw [univ_inter]
-    rwa [this, continuous_within_at_inter hs, continuous_within_at_univ] at h
+-- error in Topology.ContinuousOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_within_at.continuous_at
+{f : α → β}
+{s : set α}
+{x : α}
+(h : continuous_within_at f s x)
+(hs : «expr ∈ »(s, expr𝓝() x)) : continuous_at f x :=
+begin
+  have [] [":", expr «expr = »(s, «expr ∩ »(univ, s))] [],
+  by rw [expr univ_inter] [],
+  rwa ["[", expr this, ",", expr continuous_within_at_inter hs, ",", expr continuous_within_at_univ, "]"] ["at", ident h]
+end
 
 theorem ContinuousOn.continuous_at {f : α → β} {s : Set α} {x : α} (h : ContinuousOn f s) (hx : s ∈ 𝓝 x) :
   ContinuousAt f x :=
@@ -720,18 +746,24 @@ theorem ContinuousWithinAt.preimage_mem_nhds_within {f : α → β} {x : α} {s 
   (h : ContinuousWithinAt f s x) (ht : t ∈ 𝓝 (f x)) : f ⁻¹' t ∈ 𝓝[s] x :=
   h ht
 
-theorem Set.LeftInvOn.map_nhds_within_eq {f : α → β} {g : β → α} {x : β} {s : Set β} (h : left_inv_on f g s)
-  (hx : f (g x) = x) (hf : ContinuousWithinAt f (g '' s) (g x)) (hg : ContinuousWithinAt g s x) :
-  map g (𝓝[s] x) = 𝓝[g '' s] g x :=
-  by 
-    apply le_antisymmₓ
-    ·
-      exact hg.tendsto_nhds_within (maps_to_image _ _)
-    ·
-      have A : (g ∘ f) =ᶠ[𝓝[g '' s] g x] id 
-      exact h.right_inv_on_image.eq_on.eventually_eq_of_mem self_mem_nhds_within 
-      refine' le_map_of_right_inverse A _ 
-      simpa only [hx] using hf.tendsto_nhds_within (h.maps_to (surj_on_image _ _))
+-- error in Topology.ContinuousOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem set.left_inv_on.map_nhds_within_eq
+{f : α → β}
+{g : β → α}
+{x : β}
+{s : set β}
+(h : left_inv_on f g s)
+(hx : «expr = »(f (g x), x))
+(hf : continuous_within_at f «expr '' »(g, s) (g x))
+(hg : continuous_within_at g s x) : «expr = »(map g «expr𝓝[ ] »(s, x), «expr𝓝[ ] »(«expr '' »(g, s), g x)) :=
+begin
+  apply [expr le_antisymm],
+  { exact [expr hg.tendsto_nhds_within (maps_to_image _ _)] },
+  { have [ident A] [":", expr «expr =ᶠ[ ] »(«expr ∘ »(g, f), «expr𝓝[ ] »(«expr '' »(g, s), g x), id)] [],
+    from [expr h.right_inv_on_image.eq_on.eventually_eq_of_mem self_mem_nhds_within],
+    refine [expr le_map_of_right_inverse A _],
+    simpa [] [] ["only"] ["[", expr hx, "]"] [] ["using", expr hf.tendsto_nhds_within (h.maps_to (surj_on_image _ _))] }
+end
 
 theorem Function.LeftInverse.map_nhds_eq {f : α → β} {g : β → α} {x : β} (h : Function.LeftInverse f g)
   (hf : ContinuousWithinAt f (range g) (g x)) (hg : ContinuousAt g x) : map g (𝓝 x) = 𝓝[range g] g x :=
@@ -817,41 +849,47 @@ theorem ContinuousOn.preimage_interior_subset_interior_preimage {f : α → β} 
       rw [interior_inter, hs.interior_eq]
     
 
-theorem continuous_on_of_locally_continuous_on {f : α → β} {s : Set α}
-  (h : ∀ x _ : x ∈ s, ∃ t, IsOpen t ∧ x ∈ t ∧ ContinuousOn f (s ∩ t)) : ContinuousOn f s :=
-  by 
-    intro x xs 
-    rcases h x xs with ⟨t, open_t, xt, ct⟩
-    have  := ct x ⟨xs, xt⟩
-    rwa [ContinuousWithinAt, ←nhds_within_restrict _ xt open_t] at this
+-- error in Topology.ContinuousOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_on_of_locally_continuous_on
+{f : α → β}
+{s : set α}
+(h : ∀
+ x «expr ∈ » s, «expr∃ , »((t), «expr ∧ »(is_open t, «expr ∧ »(«expr ∈ »(x, t), continuous_on f «expr ∩ »(s, t))))) : continuous_on f s :=
+begin
+  assume [binders (x xs)],
+  rcases [expr h x xs, "with", "⟨", ident t, ",", ident open_t, ",", ident xt, ",", ident ct, "⟩"],
+  have [] [] [":=", expr ct x ⟨xs, xt⟩],
+  rwa ["[", expr continuous_within_at, ",", "<-", expr nhds_within_restrict _ xt open_t, "]"] ["at", ident this]
+end
 
-theorem continuous_on_open_of_generate_from {β : Type _} {s : Set α} {T : Set (Set β)} {f : α → β} (hs : IsOpen s)
-  (h : ∀ t _ : t ∈ T, IsOpen (s ∩ f ⁻¹' t)) : @ContinuousOn α β _ (TopologicalSpace.generateFrom T) f s :=
-  by 
-    rw [continuous_on_open_iff]
-    intro t ht 
-    induction' ht with u hu u v Tu Tv hu hv U hU hU'
-    ·
-      exact h u hu
-    ·
-      simp only [preimage_univ, inter_univ]
-      exact hs
-    ·
-      have  : s ∩ f ⁻¹' (u ∩ v) = s ∩ f ⁻¹' u ∩ (s ∩ f ⁻¹' v)
-      ·
-        ·
-          ext x 
-          simp 
-          split 
-          finish 
-          finish 
-      rw [this]
-      exact IsOpen.inter hu hv
-    ·
-      rw [preimage_sUnion, inter_bUnion]
-      exact is_open_bUnion hU'
-    ·
-      exact hs
+-- error in Topology.ContinuousOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_on_open_of_generate_from
+{β : Type*}
+{s : set α}
+{T : set (set β)}
+{f : α → β}
+(hs : is_open s)
+(h : ∀
+ t «expr ∈ » T, is_open «expr ∩ »(s, «expr ⁻¹' »(f, t))) : @continuous_on α β _ (topological_space.generate_from T) f s :=
+begin
+  rw [expr continuous_on_open_iff] [],
+  assume [binders (t ht)],
+  induction [expr ht] [] ["with", ident u, ident hu, ident u, ident v, ident Tu, ident Tv, ident hu, ident hv, ident U, ident hU, ident hU'] [],
+  { exact [expr h u hu] },
+  { simp [] [] ["only"] ["[", expr preimage_univ, ",", expr inter_univ, "]"] [] [],
+    exact [expr hs] },
+  { have [] [":", expr «expr = »(«expr ∩ »(s, «expr ⁻¹' »(f, «expr ∩ »(u, v))), «expr ∩ »(«expr ∩ »(s, «expr ⁻¹' »(f, u)), «expr ∩ »(s, «expr ⁻¹' »(f, v))))] [],
+    by { ext [] [ident x] [],
+      simp [] [] [] [] [] [],
+      split,
+      finish [] [],
+      finish [] [] },
+    rw [expr this] [],
+    exact [expr is_open.inter hu hv] },
+  { rw ["[", expr preimage_sUnion, ",", expr inter_bUnion, "]"] [],
+    exact [expr is_open_bUnion hU'] },
+  { exact [expr hs] }
+end
 
 theorem ContinuousWithinAt.prod {f : α → β} {g : α → γ} {s : Set α} {x : α} (hf : ContinuousWithinAt f s x)
   (hg : ContinuousWithinAt g s x) : ContinuousWithinAt (fun x => (f x, g x)) s x :=
@@ -896,39 +934,35 @@ theorem continuous_within_at_of_not_mem_closure {f : α → β} {s : Set α} {x 
     rw [ContinuousWithinAt, hx]
     exact tendsto_bot
 
-theorem ContinuousOn.piecewise' {s t : Set α} {f g : α → β} [∀ a, Decidable (a ∈ t)]
-  (hpf : ∀ a _ : a ∈ s ∩ Frontier t, tendsto f (𝓝[s ∩ t] a) (𝓝 (piecewise t f g a)))
-  (hpg : ∀ a _ : a ∈ s ∩ Frontier t, tendsto g (𝓝[s ∩ «expr ᶜ» t] a) (𝓝 (piecewise t f g a)))
-  (hf : ContinuousOn f$ s ∩ t) (hg : ContinuousOn g$ s ∩ «expr ᶜ» t) : ContinuousOn (piecewise t f g) s :=
-  by 
-    intro x hx 
-    byCases' hx' : x ∈ Frontier t
-    ·
-      exact (hpf x ⟨hx, hx'⟩).piecewise_nhds_within (hpg x ⟨hx, hx'⟩)
-    ·
-      rw [←inter_univ s, ←union_compl_self t, inter_union_distrib_left] at hx⊢
-      cases hx
-      ·
-        apply ContinuousWithinAt.union
-        ·
-          exact (hf x hx).congr (fun y hy => piecewise_eq_of_mem _ _ _ hy.2) (piecewise_eq_of_mem _ _ _ hx.2)
-        ·
-          have  : x ∉ Closure («expr ᶜ» t)
-          exact
-            fun h =>
-              hx'
-                ⟨subset_closure hx.2,
-                  by 
-                    rwa [closure_compl] at h⟩
-          exact continuous_within_at_of_not_mem_closure fun h => this (closure_inter_subset_inter_closure _ _ h).2
-      ·
-        apply ContinuousWithinAt.union
-        ·
-          have  : x ∉ Closure t 
-          exact fun h => hx' ⟨h, fun h' : x ∈ Interior t => hx.2 (interior_subset h')⟩
-          exact continuous_within_at_of_not_mem_closure fun h => this (closure_inter_subset_inter_closure _ _ h).2
-        ·
-          exact (hg x hx).congr (fun y hy => piecewise_eq_of_not_mem _ _ _ hy.2) (piecewise_eq_of_not_mem _ _ _ hx.2)
+-- error in Topology.ContinuousOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_on.piecewise'
+{s t : set α}
+{f g : α → β}
+[∀ a, decidable «expr ∈ »(a, t)]
+(hpf : ∀ a «expr ∈ » «expr ∩ »(s, frontier t), tendsto f «expr𝓝[ ] »(«expr ∩ »(s, t), a) (expr𝓝() (piecewise t f g a)))
+(hpg : ∀
+ a «expr ∈ » «expr ∩ »(s, frontier t), tendsto g «expr𝓝[ ] »(«expr ∩ »(s, «expr ᶜ»(t)), a) (expr𝓝() (piecewise t f g a)))
+(hf : «expr $ »(continuous_on f, «expr ∩ »(s, t)))
+(hg : «expr $ »(continuous_on g, «expr ∩ »(s, «expr ᶜ»(t)))) : continuous_on (piecewise t f g) s :=
+begin
+  intros [ident x, ident hx],
+  by_cases [expr hx', ":", expr «expr ∈ »(x, frontier t)],
+  { exact [expr (hpf x ⟨hx, hx'⟩).piecewise_nhds_within (hpg x ⟨hx, hx'⟩)] },
+  { rw ["[", "<-", expr inter_univ s, ",", "<-", expr union_compl_self t, ",", expr inter_union_distrib_left, "]"] ["at", ident hx, "⊢"],
+    cases [expr hx] [],
+    { apply [expr continuous_within_at.union],
+      { exact [expr (hf x hx).congr (λ y hy, piecewise_eq_of_mem _ _ _ hy.2) (piecewise_eq_of_mem _ _ _ hx.2)] },
+      { have [] [":", expr «expr ∉ »(x, closure «expr ᶜ»(t))] [],
+        from [expr λ h, hx' ⟨subset_closure hx.2, by rwa [expr closure_compl] ["at", ident h]⟩],
+        exact [expr continuous_within_at_of_not_mem_closure (λ
+          h, this (closure_inter_subset_inter_closure _ _ h).2)] } },
+    { apply [expr continuous_within_at.union],
+      { have [] [":", expr «expr ∉ »(x, closure t)] [],
+        from [expr λ h, hx' ⟨h, λ h' : «expr ∈ »(x, interior t), hx.2 (interior_subset h')⟩],
+        exact [expr continuous_within_at_of_not_mem_closure (λ h, this (closure_inter_subset_inter_closure _ _ h).2)] },
+      { exact [expr (hg x hx).congr (λ
+          y hy, piecewise_eq_of_not_mem _ _ _ hy.2) (piecewise_eq_of_not_mem _ _ _ hx.2)] } } }
+end
 
 theorem ContinuousOn.if' {s : Set α} {p : α → Prop} {f g : α → β} [∀ a, Decidable (p a)]
   (hpf : ∀ a _ : a ∈ s ∩ Frontier { a | p a }, tendsto f (𝓝[s ∩ { a | p a }] a) (𝓝$ if p a then f a else g a))

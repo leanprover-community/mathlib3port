@@ -166,58 +166,47 @@ open_locale UnitInterval
 
 open ContinuousMap
 
+-- error in Topology.ContinuousFunction.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The preimage of polynomials on `[0,1]` under the pullback map by `x ↦ (b-a) * x + a`
 is the polynomials on `[a,b]`. -/
-theorem polynomialFunctions.comap'_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h : a < b) :
-  (polynomialFunctions I).comap' (comp_right_alg_hom ℝ (iccHomeoI a b h).symm.toContinuousMap) =
-    polynomialFunctions (Set.Icc a b) :=
-  by 
-    ext f 
-    fsplit
-    ·
-      rintro ⟨p, ⟨-, w⟩⟩
-      rw [ContinuousMap.ext_iff] at w 
-      dsimp  at w 
-      let q := p.comp (((b - a)⁻¹ • Polynomial.x)+Polynomial.c ((-a)*(b - a)⁻¹))
-      refine' ⟨q, ⟨_, _⟩⟩
-      ·
-        simp 
-      ·
-        ext x 
-        simp only [neg_mul_eq_neg_mul_symm, RingHom.map_neg, RingHom.map_mul, AlgHom.coe_to_ring_hom, Polynomial.eval_X,
-          Polynomial.eval_neg, Polynomial.eval_C, Polynomial.eval_smul, Polynomial.eval_mul, Polynomial.eval_add,
-          Polynomial.coe_aeval_eq_eval, Polynomial.eval_comp, Polynomial.to_continuous_map_on_alg_hom_apply,
-          Polynomial.to_continuous_map_on_to_fun, Polynomial.to_continuous_map_to_fun]
-        convert w ⟨_, _⟩ <;> clear w
-        ·
-          change x = (iccHomeoI a b h).symm ⟨_+_, _⟩
-          ext 
-          simp only [Icc_homeo_I_symm_apply_coe, Subtype.coe_mk]
-          replace h : b - a ≠ 0 := sub_ne_zero_of_ne h.ne.symm 
-          simp only [mul_addₓ]
-          fieldSimp 
-          ring
-        ·
-          change (_+_) ∈ I 
-          rw [mul_commₓ ((b - a)⁻¹), ←neg_mul_eq_neg_mul_symm, ←add_mulₓ, ←sub_eq_add_neg]
-          have w₁ : 0 < (b - a)⁻¹ := inv_pos.mpr (sub_pos.mpr h)
-          have w₂ : 0 ≤ (x : ℝ) - a := sub_nonneg.mpr x.2.1
-          have w₃ : (x : ℝ) - a ≤ b - a := sub_le_sub_right x.2.2 a 
-          fsplit
-          ·
-            exact mul_nonneg w₂ (le_of_ltₓ w₁)
-          ·
-            rw [←div_eq_mul_inv, div_le_one (sub_pos.mpr h)]
-            exact w₃
-    ·
-      rintro ⟨p, ⟨-, rfl⟩⟩
-      let q := p.comp (((b - a) • Polynomial.x)+Polynomial.c a)
-      refine' ⟨q, ⟨_, _⟩⟩
-      ·
-        simp 
-      ·
-        ext x 
-        simp [mul_commₓ]
+theorem polynomial_functions.comap'_comp_right_alg_hom_Icc_homeo_I
+(a b : exprℝ())
+(h : «expr < »(a, b)) : «expr = »((polynomial_functions exprI()).comap' (comp_right_alg_hom exprℝ() (Icc_homeo_I a b h).symm.to_continuous_map), polynomial_functions (set.Icc a b)) :=
+begin
+  ext [] [ident f] [],
+  fsplit,
+  { rintro ["⟨", ident p, ",", "⟨", "-", ",", ident w, "⟩", "⟩"],
+    rw [expr continuous_map.ext_iff] ["at", ident w],
+    dsimp [] [] [] ["at", ident w],
+    let [ident q] [] [":=", expr p.comp «expr + »(«expr • »(«expr ⁻¹»(«expr - »(b, a)), polynomial.X), polynomial.C «expr * »(«expr- »(a), «expr ⁻¹»(«expr - »(b, a))))],
+    refine [expr ⟨q, ⟨_, _⟩⟩],
+    { simp [] [] [] [] [] [] },
+    { ext [] [ident x] [],
+      simp [] [] ["only"] ["[", expr neg_mul_eq_neg_mul_symm, ",", expr ring_hom.map_neg, ",", expr ring_hom.map_mul, ",", expr alg_hom.coe_to_ring_hom, ",", expr polynomial.eval_X, ",", expr polynomial.eval_neg, ",", expr polynomial.eval_C, ",", expr polynomial.eval_smul, ",", expr polynomial.eval_mul, ",", expr polynomial.eval_add, ",", expr polynomial.coe_aeval_eq_eval, ",", expr polynomial.eval_comp, ",", expr polynomial.to_continuous_map_on_alg_hom_apply, ",", expr polynomial.to_continuous_map_on_to_fun, ",", expr polynomial.to_continuous_map_to_fun, "]"] [] [],
+      convert [] [expr w ⟨_, _⟩] []; clear [ident w],
+      { change [expr «expr = »(x, (Icc_homeo_I a b h).symm ⟨«expr + »(_, _), _⟩)] [] [],
+        ext [] [] [],
+        simp [] [] ["only"] ["[", expr Icc_homeo_I_symm_apply_coe, ",", expr subtype.coe_mk, "]"] [] [],
+        replace [ident h] [":", expr «expr ≠ »(«expr - »(b, a), 0)] [":=", expr sub_ne_zero_of_ne h.ne.symm],
+        simp [] [] ["only"] ["[", expr mul_add, "]"] [] [],
+        field_simp [] [] [] [],
+        ring [] },
+      { change [expr «expr ∈ »(«expr + »(_, _), exprI())] [] [],
+        rw ["[", expr mul_comm «expr ⁻¹»(«expr - »(b, a)), ",", "<-", expr neg_mul_eq_neg_mul_symm, ",", "<-", expr add_mul, ",", "<-", expr sub_eq_add_neg, "]"] [],
+        have [ident w₁] [":", expr «expr < »(0, «expr ⁻¹»(«expr - »(b, a)))] [":=", expr inv_pos.mpr (sub_pos.mpr h)],
+        have [ident w₂] [":", expr «expr ≤ »(0, «expr - »((x : exprℝ()), a))] [":=", expr sub_nonneg.mpr x.2.1],
+        have [ident w₃] [":", expr «expr ≤ »(«expr - »((x : exprℝ()), a), «expr - »(b, a))] [":=", expr sub_le_sub_right x.2.2 a],
+        fsplit,
+        { exact [expr mul_nonneg w₂ (le_of_lt w₁)] },
+        { rw ["[", "<-", expr div_eq_mul_inv, ",", expr div_le_one (sub_pos.mpr h), "]"] [],
+          exact [expr w₃] } } } },
+  { rintro ["⟨", ident p, ",", "⟨", "-", ",", ident rfl, "⟩", "⟩"],
+    let [ident q] [] [":=", expr p.comp «expr + »(«expr • »(«expr - »(b, a), polynomial.X), polynomial.C a)],
+    refine [expr ⟨q, ⟨_, _⟩⟩],
+    { simp [] [] [] [] [] [] },
+    { ext [] [ident x] [],
+      simp [] [] [] ["[", expr mul_comm, "]"] [] [] } }
+end
 
 end 
 

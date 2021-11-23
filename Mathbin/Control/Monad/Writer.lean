@@ -1,5 +1,5 @@
-import Mathbin.Control.Monad.Basic 
-import Mathbin.Algebra.Group.Basic
+import Mathbin.Algebra.Group.Defs 
+import Mathbin.Data.Equiv.Basic
 
 universe u v w u₀ u₁ v₀ v₁
 

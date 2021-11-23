@@ -349,10 +349,10 @@ protected theorem CompleteSpace [CompleteSpace β] (e : α ≃ᵢ β) : Complete
       by 
         rwa [Set.image_univ, Isometric.range_eq_univ, ←complete_space_iff_is_complete_univ]
 
--- error in Topology.MetricSpace.Isometry: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem complete_space_iff (e : «expr ≃ᵢ »(α, β)) : «expr ↔ »(complete_space α, complete_space β) :=
-by { split; introI [ident H],
-  exacts ["[", expr e.symm.complete_space, ",", expr e.complete_space, "]"] }
+theorem complete_space_iff (e : α ≃ᵢ β) : CompleteSpace α ↔ CompleteSpace β :=
+  by 
+    split  <;> intro H 
+    exacts[e.symm.complete_space, e.complete_space]
 
 end PseudoEmetricSpace
 

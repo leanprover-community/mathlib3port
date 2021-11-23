@@ -1,6 +1,4 @@
-import Mathbin.Data.MvPolynomial.Default 
 import Mathbin.LinearAlgebra.Dimension 
-import Mathbin.LinearAlgebra.DirectSum.Finsupp 
 import Mathbin.LinearAlgebra.FiniteDimensional 
 import Mathbin.LinearAlgebra.StdBasis
 
@@ -37,31 +35,31 @@ variable{R : Type _}{M : Type _}{ι : Type _}
 
 variable[Ringₓ R][AddCommGroupₓ M][Module R M]
 
-theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M} (hf : ∀ i, LinearIndependent R (f i)) :
-  LinearIndependent R fun ix : Σi, φ i => single ix.1 (f ix.1 ix.2) :=
-  by 
-    apply @linear_independent_Union_finite R _ _ _ _ ι φ fun i x => single i (f i x)
-    ·
-      intro i 
-      have h_disjoint : Disjoint (span R (range (f i))) (ker (lsingle i))
-      ·
-        rw [ker_lsingle]
-        exact disjoint_bot_right 
-      apply (hf i).map h_disjoint
-    ·
-      intro i t ht hit 
-      refine' (disjoint_lsingle_lsingle {i} t (disjoint_singleton_left.2 hit)).mono _ _
-      ·
-        rw [span_le]
-        simp only [supr_singleton]
-        rw [range_coe]
-        apply range_comp_subset_range
-      ·
-        refine' supr_le_supr fun i => supr_le_supr _ 
-        intro hi 
-        rw [span_le]
-        rw [range_coe]
-        apply range_comp_subset_range
+-- error in LinearAlgebra.FinsuppVectorSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem linear_independent_single
+{φ : ι → Type*}
+{f : ∀ ι, φ ι → M}
+(hf : ∀
+ i, linear_independent R (f i)) : linear_independent R (λ ix : «exprΣ , »((i), φ i), single ix.1 (f ix.1 ix.2)) :=
+begin
+  apply [expr @linear_independent_Union_finite R _ _ _ _ ι φ (λ i x, single i (f i x))],
+  { assume [binders (i)],
+    have [ident h_disjoint] [":", expr disjoint (span R (range (f i))) (ker (lsingle i))] [],
+    { rw [expr ker_lsingle] [],
+      exact [expr disjoint_bot_right] },
+    apply [expr (hf i).map h_disjoint] },
+  { intros [ident i, ident t, ident ht, ident hit],
+    refine [expr (disjoint_lsingle_lsingle {i} t (disjoint_singleton_left.2 hit)).mono _ _],
+    { rw [expr span_le] [],
+      simp [] [] ["only"] ["[", expr supr_singleton, "]"] [] [],
+      rw [expr range_coe] [],
+      apply [expr range_comp_subset_range] },
+    { refine [expr supr_le_supr (λ i, supr_le_supr _)],
+      intros [ident hi],
+      rw [expr span_le] [],
+      rw [expr range_coe] [],
+      apply [expr range_comp_subset_range] } }
+end
 
 open LinearMap Submodule
 
@@ -71,7 +69,7 @@ protected def Basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
     { toFun :=
         fun g =>
           { toFun := fun ix => (b ix.1).repr (g ix.1) ix.2,
-            Support := g.support.sigma fun i => ((b i).repr (g i)).Support,
+            support := g.support.sigma fun i => ((b i).repr (g i)).support,
             mem_support_to_fun :=
               fun ix =>
                 by 
@@ -81,7 +79,7 @@ protected def Basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
       invFun :=
         fun g =>
           { toFun := fun i => (b i).repr.symm (g.comap_domain _ (Set.inj_on_of_injective sigma_mk_injective _)),
-            Support := g.support.image Sigma.fst,
+            support := g.support.image Sigma.fst,
             mem_support_to_fun :=
               fun i =>
                 by 
@@ -173,17 +171,19 @@ variable[AddCommGroupₓ V'][Module K V']
 
 open Module
 
-theorem equiv_of_dim_eq_lift_dim (h : Cardinal.lift.{w} (Module.rank K V) = Cardinal.lift.{v} (Module.rank K V')) :
-  Nonempty (V ≃ₗ[K] V') :=
-  by 
-    haveI  := Classical.decEq V 
-    haveI  := Classical.decEq V' 
-    let m := Basis.ofVectorSpace K V 
-    let m' := Basis.ofVectorSpace K V' 
-    rw [←Cardinal.lift_inj.1 m.mk_eq_dim, ←Cardinal.lift_inj.1 m'.mk_eq_dim] at h 
-    rcases Quotientₓ.exact h with ⟨e⟩
-    let e := (equiv.ulift.symm.trans e).trans Equiv.ulift 
-    exact ⟨m.repr ≪≫ₗ Finsupp.domLcongr e ≪≫ₗ m'.repr.symm⟩
+-- error in LinearAlgebra.FinsuppVectorSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem equiv_of_dim_eq_lift_dim
+(h : «expr = »(cardinal.lift.{w} (module.rank K V), cardinal.lift.{v} (module.rank K V'))) : nonempty «expr ≃ₗ[ ] »(V, K, V') :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq V],
+  haveI [] [] [":=", expr classical.dec_eq V'],
+  let [ident m] [] [":=", expr basis.of_vector_space K V],
+  let [ident m'] [] [":=", expr basis.of_vector_space K V'],
+  rw ["[", "<-", expr cardinal.lift_inj.1 m.mk_eq_dim, ",", "<-", expr cardinal.lift_inj.1 m'.mk_eq_dim, "]"] ["at", ident h],
+  rcases [expr quotient.exact h, "with", "⟨", ident e, "⟩"],
+  let [ident e] [] [":=", expr (equiv.ulift.symm.trans e).trans equiv.ulift],
+  exact [expr ⟨«expr ≪≫ₗ »(«expr ≪≫ₗ »(m.repr, finsupp.dom_lcongr e), m'.repr.symm)⟩]
+end
 
 /-- Two `K`-vector spaces are equivalent if their dimension is the same. -/
 def equivOfDimEqDim (h : Module.rank K V₁ = Module.rank K V₂) : V₁ ≃ₗ[K] V₂ :=
@@ -191,16 +191,17 @@ def equivOfDimEqDim (h : Module.rank K V₁ = Module.rank K V₂) : V₁ ≃ₗ[
     classical 
     exact Classical.choice (equiv_of_dim_eq_lift_dim (Cardinal.lift_inj.2 h))
 
+-- error in LinearAlgebra.FinsuppVectorSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An `n`-dimensional `K`-vector space is equivalent to `fin n → K`. -/
-def finDimVectorspaceEquiv (n : ℕ) (hn : Module.rank K V = n) : V ≃ₗ[K] Finₓ n → K :=
-  by 
-    have  : Cardinal.lift.{u} (n : Cardinal.{v}) = Cardinal.lift.{v} (n : Cardinal.{u})
-    ·
-      simp 
-    have hn := Cardinal.lift_inj.{v, u}.2 hn 
-    rw [this] at hn 
-    rw [←@dim_fin_fun K _ n] at hn 
-    exact Classical.choice (equiv_of_dim_eq_lift_dim hn)
+def fin_dim_vectorspace_equiv (n : exprℕ()) (hn : «expr = »(module.rank K V, n)) : «expr ≃ₗ[ ] »(V, K, fin n → K) :=
+begin
+  have [] [":", expr «expr = »(cardinal.lift.{u} (n : cardinal.{v}), cardinal.lift.{v} (n : cardinal.{u}))] [],
+  by simp [] [] [] [] [] [],
+  have [ident hn] [] [":=", expr cardinal.lift_inj.{v, u}.2 hn],
+  rw [expr this] ["at", ident hn],
+  rw ["<-", expr @dim_fin_fun K _ n] ["at", ident hn],
+  exact [expr classical.choice (equiv_of_dim_eq_lift_dim hn)]
+end
 
 end Module
 
@@ -219,11 +220,15 @@ theorem cardinal_mk_eq_cardinal_mk_field_pow_dim [FiniteDimensional K V] : # V =
       by 
         rw [←Cardinal.lift_inj.1 hs.mk_eq_dim, Cardinal.power_def]
 
-theorem cardinal_lt_omega_of_finite_dimensional [Fintype K] [FiniteDimensional K V] : # V < ω :=
-  by 
-    letI this : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance 
-    rw [cardinal_mk_eq_cardinal_mk_field_pow_dim K V]
-    exact Cardinal.power_lt_omega (Cardinal.lt_omega_iff_fintype.2 ⟨inferInstance⟩) (IsNoetherian.dim_lt_omega K V)
+-- error in LinearAlgebra.FinsuppVectorSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cardinal_lt_omega_of_finite_dimensional
+[fintype K]
+[finite_dimensional K V] : «expr < »(«expr#»() V, exprω()) :=
+begin
+  letI [] [":", expr is_noetherian K V] [":=", expr is_noetherian.iff_fg.2 infer_instance],
+  rw [expr cardinal_mk_eq_cardinal_mk_field_pow_dim K V] [],
+  exact [expr cardinal.power_lt_omega (cardinal.lt_omega_iff_fintype.2 ⟨infer_instance⟩) (is_noetherian.dim_lt_omega K V)]
+end
 
 end Module
 

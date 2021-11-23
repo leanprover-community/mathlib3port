@@ -1,6 +1,5 @@
-import Mathbin.Data.Polynomial.Monic 
-import Mathbin.Data.Polynomial.RingDivision 
-import Mathbin.Tactic.Linarith.Default
+import Mathbin.Algebra.Order.WithZero 
+import Mathbin.Data.Polynomial.Monic
 
 /-!
 # Lemmas for the interaction between polynomials and `∑` and `∏`.
@@ -81,34 +80,34 @@ theorem nat_degree_list_prod_le (l : List (Polynomial α)) : nat_degree l.prod �
     ·
       simpa using nat_degree_mul_le.trans (add_le_add_left IH _)
 
-theorem coeff_list_prod_of_nat_degree_le (l : List (Polynomial α)) (n : ℕ) (hl : ∀ p _ : p ∈ l, nat_degree p ≤ n) :
-  coeff (List.prod l) (l.length*n) = (l.map fun p => coeff p n).Prod :=
-  by 
-    induction' l with hd tl IH
-    ·
-      simp 
-    ·
-      have hl' : ∀ p _ : p ∈ tl, nat_degree p ≤ n := fun p hp => hl p (List.mem_cons_of_memₓ _ hp)
-      simp only [List.prod_cons, List.map, List.length]
-      rw [add_mulₓ, one_mulₓ, add_commₓ, ←IH hl', mul_commₓ tl.length]
-      have h : nat_degree tl.prod ≤ n*tl.length
-      ·
-        refine' (nat_degree_list_prod_le _).trans _ 
-        rw [←tl.length_map nat_degree, mul_commₓ]
-        refine' List.sum_le_of_forall_le _ _ _ 
-        simpa using hl' 
-      have hdn : nat_degree hd ≤ n := hl _ (List.mem_cons_selfₓ _ _)
-      rcases hdn.eq_or_lt with (rfl | hdn')
-      ·
-        cases' h.eq_or_lt with h' h'
-        ·
-          rw [←h', coeff_mul_degree_add_degree, leading_coeff, leading_coeff]
-        ·
-          rw [coeff_eq_zero_of_nat_degree_lt, coeff_eq_zero_of_nat_degree_lt h', mul_zero]
-          exact nat_degree_mul_le.trans_lt (add_lt_add_left h' _)
-      ·
-        rw [coeff_eq_zero_of_nat_degree_lt hdn', coeff_eq_zero_of_nat_degree_lt, zero_mul]
-        exact nat_degree_mul_le.trans_lt (add_lt_add_of_lt_of_le hdn' h)
+-- error in Algebra.Polynomial.BigOperators: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem coeff_list_prod_of_nat_degree_le
+(l : list (polynomial α))
+(n : exprℕ())
+(hl : ∀
+ p «expr ∈ » l, «expr ≤ »(nat_degree p, n)) : «expr = »(coeff (list.prod l) «expr * »(l.length, n), (l.map (λ
+   p, coeff p n)).prod) :=
+begin
+  induction [expr l] [] ["with", ident hd, ident tl, ident IH] [],
+  { simp [] [] [] [] [] [] },
+  { have [ident hl'] [":", expr ∀
+     p «expr ∈ » tl, «expr ≤ »(nat_degree p, n)] [":=", expr λ p hp, hl p (list.mem_cons_of_mem _ hp)],
+    simp [] [] ["only"] ["[", expr list.prod_cons, ",", expr list.map, ",", expr list.length, "]"] [] [],
+    rw ["[", expr add_mul, ",", expr one_mul, ",", expr add_comm, ",", "<-", expr IH hl', ",", expr mul_comm tl.length, "]"] [],
+    have [ident h] [":", expr «expr ≤ »(nat_degree tl.prod, «expr * »(n, tl.length))] [],
+    { refine [expr (nat_degree_list_prod_le _).trans _],
+      rw ["[", "<-", expr tl.length_map nat_degree, ",", expr mul_comm, "]"] [],
+      refine [expr list.sum_le_of_forall_le _ _ _],
+      simpa [] [] [] [] [] ["using", expr hl'] },
+    have [ident hdn] [":", expr «expr ≤ »(nat_degree hd, n)] [":=", expr hl _ (list.mem_cons_self _ _)],
+    rcases [expr hdn.eq_or_lt, "with", ident rfl, "|", ident hdn'],
+    { cases [expr h.eq_or_lt] ["with", ident h', ident h'],
+      { rw ["[", "<-", expr h', ",", expr coeff_mul_degree_add_degree, ",", expr leading_coeff, ",", expr leading_coeff, "]"] [] },
+      { rw ["[", expr coeff_eq_zero_of_nat_degree_lt, ",", expr coeff_eq_zero_of_nat_degree_lt h', ",", expr mul_zero, "]"] [],
+        exact [expr nat_degree_mul_le.trans_lt (add_lt_add_left h' _)] } },
+    { rw ["[", expr coeff_eq_zero_of_nat_degree_lt hdn', ",", expr coeff_eq_zero_of_nat_degree_lt, ",", expr zero_mul, "]"] [],
+      exact [expr nat_degree_mul_le.trans_lt (add_lt_add_of_lt_of_le hdn' h)] } }
+end
 
 end Semiringₓ
 

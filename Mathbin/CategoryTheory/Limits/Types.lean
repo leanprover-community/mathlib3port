@@ -39,7 +39,7 @@ instance  : has_limits (Type u) :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
+          exact { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
 
 /--
 The equivalence between a limiting cone of `F` in `Type u` and the "concrete" definition as the
@@ -164,7 +164,7 @@ instance  : has_colimits (Type u) :=
   { HasColimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { HasColimit :=
                 fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } } }
 
@@ -220,19 +220,25 @@ theorem colimit_eq {F : J ⥤ Type u} {j j' : J} {x : F.obj j} {x' : F.obj j'} (
     apply Quot.eq.1
     simpa using congr_argₓ (colimit_equiv_quot F) w
 
-theorem jointly_surjective (F : J ⥤ Type u) {t : cocone F} (h : is_colimit t) (x : t.X) : ∃ j y, t.ι.app j y = x :=
-  by 
-    suffices  : (fun x : t.X => Ulift.up (∃ j y, t.ι.app j y = x)) = fun _ => Ulift.up True
-    ·
-      have  := congr_funₓ this x 
-      have H := congr_argₓ Ulift.down this 
-      dsimp  at H 
-      rwa [eq_trueₓ] at H 
-    refine' h.hom_ext _ 
-    intro j 
-    ext y 
-    erw [iff_trueₓ]
-    exact ⟨j, y, rfl⟩
+-- error in CategoryTheory.Limits.Types: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem jointly_surjective
+(F : «expr ⥤ »(J, Type u))
+{t : cocone F}
+(h : is_colimit t)
+(x : t.X) : «expr∃ , »((j y), «expr = »(t.ι.app j y, x)) :=
+begin
+  suffices [] [":", expr «expr = »(λ
+    x : t.X, ulift.up «expr∃ , »((j y), «expr = »(t.ι.app j y, x)), λ _, ulift.up true)],
+  { have [] [] [":=", expr congr_fun this x],
+    have [ident H] [] [":=", expr congr_arg ulift.down this],
+    dsimp [] [] [] ["at", ident H],
+    rwa [expr eq_true] ["at", ident H] },
+  refine [expr h.hom_ext _],
+  intro [ident j],
+  ext [] [ident y] [],
+  erw [expr iff_true] [],
+  exact [expr ⟨j, y, rfl⟩]
+end
 
 /-- A variant of `jointly_surjective` for `x : colimit F`. -/
 theorem jointly_surjective' {F : J ⥤ Type u} (x : colimit F) : ∃ j y, colimit.ι F j y = x :=
@@ -409,19 +415,18 @@ instance  : has_images (Type u) :=
       by 
         infer_instance }
 
-instance  : has_image_maps (Type u) :=
-  { HasImageMap :=
-      fun f g st =>
-        has_image_map.transport st (mono_factorisation f.hom) (is_image g.hom)
-          (fun x =>
-            ⟨st.right x.1,
-              ⟨st.left (Classical.some x.2),
-                by 
-                  have p := st.w 
-                  replace p := congr_funₓ p (Classical.some x.2)
-                  simp only [functor.id_map, types_comp_apply, Subtype.val_eq_coe] at p 
-                  erw [p, Classical.some_spec x.2]⟩⟩)
-          rfl }
+-- error in CategoryTheory.Limits.Types: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance : has_image_maps (Type u) :=
+{ has_image_map := λ
+  f
+  g
+  st, has_image_map.transport st (mono_factorisation f.hom) (is_image g.hom) (λ
+   x, ⟨st.right x.1, ⟨st.left (classical.some x.2), begin
+       have [ident p] [] [":=", expr st.w],
+       replace [ident p] [] [":=", expr congr_fun p (classical.some x.2)],
+       simp [] [] ["only"] ["[", expr functor.id_map, ",", expr types_comp_apply, ",", expr subtype.val_eq_coe, "]"] [] ["at", ident p],
+       erw ["[", expr p, ",", expr classical.some_spec x.2, "]"] []
+     end⟩⟩) rfl }
 
 end CategoryTheory.Limits.Types
 

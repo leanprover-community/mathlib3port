@@ -14,8 +14,8 @@ unsafe def find_if_cond : expr → Option expr
         do 
           let c ←
             match e with 
-              | quote @ite _ (%%c) (%%_) _ _ => some c
-              | quote @dite _ (%%c) (%%_) _ _ => some c
+              | quote.1 (@ite _ (%%ₓc) (%%ₓ_) _ _) => some c
+              | quote.1 (@dite _ (%%ₓc) (%%ₓ_) _ _) => some c
               | _ => none 
           guardₓ ¬c.has_var 
           find_if_cond c <|> return c
@@ -62,7 +62,7 @@ private unsafe def value_known (c : expr) : tactic Bool :=
   do 
     let lctx ← local_context 
     let lctx ← lctx.mmap infer_type 
-    return$ c ∈ lctx ∨ (quote ¬%%c) ∈ lctx
+    return$ c ∈ lctx ∨ (quote.1 ¬%%ₓc) ∈ lctx
 
 private unsafe def split_ifs_core (at_ : loc) (names : ref (List Name)) : List expr → tactic Unit
 | done =>
@@ -70,7 +70,7 @@ private unsafe def split_ifs_core (at_ : loc) (names : ref (List Name)) : List e
     let some cond ← find_if_cond_at at_ | fail "no if-then-else expressions to split"
     let cond :=
       match cond with 
-      | quote ¬%%p => p
+      | quote.1 ¬%%ₓp => p
       | p => p 
     if cond ∈ done then skip else
         do 

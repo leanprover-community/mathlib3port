@@ -1,6 +1,6 @@
-import Mathbin.Data.List.Rotate 
-import Mathbin.Data.Finset.Sort 
-import Mathbin.Data.Fintype.List
+import Mathbin.Data.Multiset.Sort 
+import Mathbin.Data.Fintype.List 
+import Mathbin.Data.List.Rotate
 
 /-!
 # Cycles of a list
@@ -274,118 +274,92 @@ theorem prev_mem : l.prev x h ∈ l :=
         ·
           exact mem_cons_of_mem _ (hl _ _)
 
-theorem next_nth_le (l : List α) (h : nodup l) (n : ℕ) (hn : n < l.length) :
-  next l (l.nth_le n hn) (nth_le_mem _ _ _) = l.nth_le ((n+1) % l.length) (Nat.mod_ltₓ _ (n.zero_le.trans_lt hn)) :=
-  by 
-    cases' l with x l
-    ·
-      simpa using hn 
-    induction' l with y l hl generalizing x n
-    ·
-      simp 
-    ·
-      cases n
-      ·
-        simp 
-      ·
-        have hn' : n.succ ≤ l.length.succ
-        ·
-          refine' Nat.succ_le_of_ltₓ _ 
-          simpa [Nat.succ_lt_succ_iff] using hn 
-        have hx' : (x :: y :: l).nthLe n.succ hn ≠ x
-        ·
-          intro H 
-          suffices  : n.succ = 0
-          ·
-            simpa 
-          rw [nodup_iff_nth_le_inj] at h 
-          refine' h _ _ hn Nat.succ_pos' _ 
-          simpa using H 
-        rcases hn'.eq_or_lt with (hn'' | hn'')
-        ·
-          rw [next_last_cons]
-          ·
-            simp [hn'']
-          ·
-            exact hx'
-          ·
-            simp [last_eq_nth_le, hn'']
-          ·
-            exact nodup_of_nodup_cons h
-        ·
-          have  : n < l.length :=
-            by 
-              simpa [Nat.succ_lt_succ_iff] using hn'' 
-          rw [next_ne_head_ne_last _ _ _ _ hx']
-          ·
-            simp [Nat.mod_eq_of_ltₓ (Nat.succ_lt_succₓ (Nat.succ_lt_succₓ this)), hl _ _ (nodup_of_nodup_cons h),
-              Nat.mod_eq_of_ltₓ (Nat.succ_lt_succₓ this)]
-          ·
-            rw [last_eq_nth_le]
-            intro H 
-            suffices  : n.succ = l.length.succ
-            ·
-              exact absurd hn'' this.ge.not_lt 
-            rw [nodup_iff_nth_le_inj] at h 
-            refine' h _ _ hn _ _
-            ·
-              simp 
-            ·
-              simpa using H
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem next_nth_le
+(l : list α)
+(h : nodup l)
+(n : exprℕ())
+(hn : «expr < »(n, l.length)) : «expr = »(next l (l.nth_le n hn) (nth_le_mem _ _ _), l.nth_le «expr % »(«expr + »(n, 1), l.length) (nat.mod_lt _ (n.zero_le.trans_lt hn))) :=
+begin
+  cases [expr l] ["with", ident x, ident l],
+  { simpa [] [] [] [] [] ["using", expr hn] },
+  induction [expr l] [] ["with", ident y, ident l, ident hl] ["generalizing", ident x, ident n],
+  { simp [] [] [] [] [] [] },
+  { cases [expr n] [],
+    { simp [] [] [] [] [] [] },
+    { have [ident hn'] [":", expr «expr ≤ »(n.succ, l.length.succ)] [],
+      { refine [expr nat.succ_le_of_lt _],
+        simpa [] [] [] ["[", expr nat.succ_lt_succ_iff, "]"] [] ["using", expr hn] },
+      have [ident hx'] [":", expr «expr ≠ »([«expr :: »/«expr :: »/«expr :: »](x, [«expr :: »/«expr :: »/«expr :: »](y, l)).nth_le n.succ hn, x)] [],
+      { intro [ident H],
+        suffices [] [":", expr «expr = »(n.succ, 0)],
+        { simpa [] [] [] [] [] [] },
+        rw [expr nodup_iff_nth_le_inj] ["at", ident h],
+        refine [expr h _ _ hn nat.succ_pos' _],
+        simpa [] [] [] [] [] ["using", expr H] },
+      rcases [expr hn'.eq_or_lt, "with", ident hn'', "|", ident hn''],
+      { rw ["[", expr next_last_cons, "]"] [],
+        { simp [] [] [] ["[", expr hn'', "]"] [] [] },
+        { exact [expr hx'] },
+        { simp [] [] [] ["[", expr last_eq_nth_le, ",", expr hn'', "]"] [] [] },
+        { exact [expr nodup_of_nodup_cons h] } },
+      { have [] [":", expr «expr < »(n, l.length)] [":=", expr by simpa [] [] [] ["[", expr nat.succ_lt_succ_iff, "]"] [] ["using", expr hn'']],
+        rw ["[", expr next_ne_head_ne_last _ _ _ _ hx', "]"] [],
+        { simp [] [] [] ["[", expr nat.mod_eq_of_lt (nat.succ_lt_succ (nat.succ_lt_succ this)), ",", expr hl _ _ (nodup_of_nodup_cons h), ",", expr nat.mod_eq_of_lt (nat.succ_lt_succ this), "]"] [] [] },
+        { rw [expr last_eq_nth_le] [],
+          intro [ident H],
+          suffices [] [":", expr «expr = »(n.succ, l.length.succ)],
+          { exact [expr absurd hn'' this.ge.not_lt] },
+          rw [expr nodup_iff_nth_le_inj] ["at", ident h],
+          refine [expr h _ _ hn _ _],
+          { simp [] [] [] [] [] [] },
+          { simpa [] [] [] [] [] ["using", expr H] } } } } }
+end
 
-theorem prev_nth_le (l : List α) (h : nodup l) (n : ℕ) (hn : n < l.length) :
-  prev l (l.nth_le n hn) (nth_le_mem _ _ _) =
-    l.nth_le ((n+l.length - 1) % l.length) (Nat.mod_ltₓ _ (n.zero_le.trans_lt hn)) :=
-  by 
-    cases' l with x l
-    ·
-      simpa using hn 
-    induction' l with y l hl generalizing n x
-    ·
-      simp 
-    ·
-      rcases n with (_ | _ | n)
-      ·
-        simpa [last_eq_nth_le, Nat.mod_eq_of_ltₓ (Nat.succ_lt_succₓ l.length.lt_succ_self)]
-      ·
-        simp only [mem_cons_iff, nodup_cons] at h 
-        pushNeg  at h 
-        simp [add_commₓ, prev_cons_cons_of_ne, h.left.left.symm]
-      ·
-        rw [prev_ne_cons_cons]
-        ·
-          convert hl _ _ (nodup_of_nodup_cons h) _ using 1
-          have  : ∀ k hk, (y :: l).nthLe k hk = (x :: y :: l).nthLe (k+1) (Nat.succ_lt_succₓ hk)
-          ·
-            intros 
-            simpa 
-          rw [this]
-          congr 
-          simp only [Nat.add_succ_sub_one, add_zeroₓ, length]
-          simp only [length, Nat.succ_lt_succ_iff] at hn 
-          set k := l.length 
-          rw [Nat.succ_add, ←Nat.add_succ, Nat.add_mod_rightₓ, Nat.succ_add, ←Nat.add_succ _ k, Nat.add_mod_rightₓ,
-            Nat.mod_eq_of_ltₓ, Nat.mod_eq_of_ltₓ]
-          ·
-            exact Nat.lt_succ_of_ltₓ hn
-          ·
-            exact Nat.succ_lt_succₓ (Nat.lt_succ_of_ltₓ hn)
-        ·
-          intro H 
-          suffices  : n.succ.succ = 0
-          ·
-            simpa 
-          rw [nodup_iff_nth_le_inj] at h 
-          refine' h _ _ hn Nat.succ_pos' _ 
-          simpa using H
-        ·
-          intro H 
-          suffices  : n.succ.succ = 1
-          ·
-            simpa 
-          rw [nodup_iff_nth_le_inj] at h 
-          refine' h _ _ hn (Nat.succ_lt_succₓ Nat.succ_pos') _ 
-          simpa using H
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prev_nth_le
+(l : list α)
+(h : nodup l)
+(n : exprℕ())
+(hn : «expr < »(n, l.length)) : «expr = »(prev l (l.nth_le n hn) (nth_le_mem _ _ _), l.nth_le «expr % »(«expr + »(n, «expr - »(l.length, 1)), l.length) (nat.mod_lt _ (n.zero_le.trans_lt hn))) :=
+begin
+  cases [expr l] ["with", ident x, ident l],
+  { simpa [] [] [] [] [] ["using", expr hn] },
+  induction [expr l] [] ["with", ident y, ident l, ident hl] ["generalizing", ident n, ident x],
+  { simp [] [] [] [] [] [] },
+  { rcases [expr n, "with", "_", "|", "_", "|", ident n],
+    { simpa [] [] [] ["[", expr last_eq_nth_le, ",", expr nat.mod_eq_of_lt (nat.succ_lt_succ l.length.lt_succ_self), "]"] [] [] },
+    { simp [] [] ["only"] ["[", expr mem_cons_iff, ",", expr nodup_cons, "]"] [] ["at", ident h],
+      push_neg ["at", ident h],
+      simp [] [] [] ["[", expr add_comm, ",", expr prev_cons_cons_of_ne, ",", expr h.left.left.symm, "]"] [] [] },
+    { rw ["[", expr prev_ne_cons_cons, "]"] [],
+      { convert [] [expr hl _ _ (nodup_of_nodup_cons h) _] ["using", 1],
+        have [] [":", expr ∀
+         k
+         hk, «expr = »([«expr :: »/«expr :: »/«expr :: »](y, l).nth_le k hk, [«expr :: »/«expr :: »/«expr :: »](x, [«expr :: »/«expr :: »/«expr :: »](y, l)).nth_le «expr + »(k, 1) (nat.succ_lt_succ hk))] [],
+        { intros [],
+          simpa [] [] [] [] [] [] },
+        rw ["[", expr this, "]"] [],
+        congr,
+        simp [] [] ["only"] ["[", expr nat.add_succ_sub_one, ",", expr add_zero, ",", expr length, "]"] [] [],
+        simp [] [] ["only"] ["[", expr length, ",", expr nat.succ_lt_succ_iff, "]"] [] ["at", ident hn],
+        set [] [ident k] [] [":="] [expr l.length] [],
+        rw ["[", expr nat.succ_add, ",", "<-", expr nat.add_succ, ",", expr nat.add_mod_right, ",", expr nat.succ_add, ",", "<-", expr nat.add_succ _ k, ",", expr nat.add_mod_right, ",", expr nat.mod_eq_of_lt, ",", expr nat.mod_eq_of_lt, "]"] [],
+        { exact [expr nat.lt_succ_of_lt hn] },
+        { exact [expr nat.succ_lt_succ (nat.lt_succ_of_lt hn)] } },
+      { intro [ident H],
+        suffices [] [":", expr «expr = »(n.succ.succ, 0)],
+        { simpa [] [] [] [] [] [] },
+        rw [expr nodup_iff_nth_le_inj] ["at", ident h],
+        refine [expr h _ _ hn nat.succ_pos' _],
+        simpa [] [] [] [] [] ["using", expr H] },
+      { intro [ident H],
+        suffices [] [":", expr «expr = »(n.succ.succ, 1)],
+        { simpa [] [] [] [] [] [] },
+        rw [expr nodup_iff_nth_le_inj] ["at", ident h],
+        refine [expr h _ _ hn (nat.succ_lt_succ nat.succ_pos') _],
+        simpa [] [] [] [] [] ["using", expr H] } } }
+end
 
 theorem pmap_next_eq_rotate_one (h : nodup l) : (l.pmap l.next fun _ h => h) = l.rotate 1 :=
   by 
@@ -405,59 +379,55 @@ theorem pmap_prev_eq_rotate_length_sub_one (h : nodup l) : (l.pmap l.prev fun _ 
       intro n hn hn' 
       rw [nth_le_rotate, nth_le_pmap, prev_nth_le _ h]
 
-theorem prev_next (l : List α) (h : nodup l) (x : α) (hx : x ∈ l) : prev l (next l x hx) (next_mem _ _ _) = x :=
-  by 
-    obtain ⟨n, hn, rfl⟩ := nth_le_of_mem hx 
-    simp only [next_nth_le, prev_nth_le, h, Nat.mod_add_modₓ]
-    cases' l with hd tl
-    ·
-      simp 
-    ·
-      have  : n < 1+tl.length :=
-        by 
-          simpa [add_commₓ] using hn 
-      simp [add_left_commₓ, add_commₓ, add_assocₓ, Nat.mod_eq_of_ltₓ this]
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prev_next
+(l : list α)
+(h : nodup l)
+(x : α)
+(hx : «expr ∈ »(x, l)) : «expr = »(prev l (next l x hx) (next_mem _ _ _), x) :=
+begin
+  obtain ["⟨", ident n, ",", ident hn, ",", ident rfl, "⟩", ":=", expr nth_le_of_mem hx],
+  simp [] [] ["only"] ["[", expr next_nth_le, ",", expr prev_nth_le, ",", expr h, ",", expr nat.mod_add_mod, "]"] [] [],
+  cases [expr l] ["with", ident hd, ident tl],
+  { simp [] [] [] [] [] [] },
+  { have [] [":", expr «expr < »(n, «expr + »(1, tl.length))] [":=", expr by simpa [] [] [] ["[", expr add_comm, "]"] [] ["using", expr hn]],
+    simp [] [] [] ["[", expr add_left_comm, ",", expr add_comm, ",", expr add_assoc, ",", expr nat.mod_eq_of_lt this, "]"] [] [] }
+end
 
-theorem next_prev (l : List α) (h : nodup l) (x : α) (hx : x ∈ l) : next l (prev l x hx) (prev_mem _ _ _) = x :=
-  by 
-    obtain ⟨n, hn, rfl⟩ := nth_le_of_mem hx 
-    simp only [next_nth_le, prev_nth_le, h, Nat.mod_add_modₓ]
-    cases' l with hd tl
-    ·
-      simp 
-    ·
-      have  : n < 1+tl.length :=
-        by 
-          simpa [add_commₓ] using hn 
-      simp [add_left_commₓ, add_commₓ, add_assocₓ, Nat.mod_eq_of_ltₓ this]
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem next_prev
+(l : list α)
+(h : nodup l)
+(x : α)
+(hx : «expr ∈ »(x, l)) : «expr = »(next l (prev l x hx) (prev_mem _ _ _), x) :=
+begin
+  obtain ["⟨", ident n, ",", ident hn, ",", ident rfl, "⟩", ":=", expr nth_le_of_mem hx],
+  simp [] [] ["only"] ["[", expr next_nth_le, ",", expr prev_nth_le, ",", expr h, ",", expr nat.mod_add_mod, "]"] [] [],
+  cases [expr l] ["with", ident hd, ident tl],
+  { simp [] [] [] [] [] [] },
+  { have [] [":", expr «expr < »(n, «expr + »(1, tl.length))] [":=", expr by simpa [] [] [] ["[", expr add_comm, "]"] [] ["using", expr hn]],
+    simp [] [] [] ["[", expr add_left_comm, ",", expr add_comm, ",", expr add_assoc, ",", expr nat.mod_eq_of_lt this, "]"] [] [] }
+end
 
-theorem prev_reverse_eq_next (l : List α) (h : nodup l) (x : α) (hx : x ∈ l) :
-  prev l.reverse x (mem_reverse.mpr hx) = next l x hx :=
-  by 
-    obtain ⟨k, hk, rfl⟩ := nth_le_of_mem hx 
-    have lpos : 0 < l.length := k.zero_le.trans_lt hk 
-    have key : l.length - 1 - k < l.length := (Nat.sub_leₓ _ _).trans_lt (tsub_lt_self lpos Nat.succ_pos')
-    rw
-      [←nth_le_pmap l.next (fun _ h => h)
-        (by 
-          simpa using hk)]
-    simpRw
-      [←nth_le_reverse l k
-        (key.trans_le
-          (by 
-            simp )),
-      pmap_next_eq_rotate_one _ h]
-    rw [←nth_le_pmap l.reverse.prev fun _ h => h]
-    ·
-      simpRw [pmap_prev_eq_rotate_length_sub_one _ (nodup_reverse.mpr h), rotate_reverse, length_reverse,
-        Nat.mod_eq_of_ltₓ (tsub_lt_self lpos Nat.succ_pos'), tsub_tsub_cancel_of_le (Nat.succ_le_of_ltₓ lpos)]
-      rw [←nth_le_reverse]
-      ·
-        simp [tsub_tsub_cancel_of_le (Nat.le_pred_of_lt hk)]
-      ·
-        simpa using (Nat.sub_leₓ _ _).trans_lt (tsub_lt_self lpos Nat.succ_pos')
-    ·
-      simpa using (Nat.sub_leₓ _ _).trans_lt (tsub_lt_self lpos Nat.succ_pos')
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prev_reverse_eq_next
+(l : list α)
+(h : nodup l)
+(x : α)
+(hx : «expr ∈ »(x, l)) : «expr = »(prev l.reverse x (mem_reverse.mpr hx), next l x hx) :=
+begin
+  obtain ["⟨", ident k, ",", ident hk, ",", ident rfl, "⟩", ":=", expr nth_le_of_mem hx],
+  have [ident lpos] [":", expr «expr < »(0, l.length)] [":=", expr k.zero_le.trans_lt hk],
+  have [ident key] [":", expr «expr < »(«expr - »(«expr - »(l.length, 1), k), l.length)] [":=", expr (nat.sub_le _ _).trans_lt (tsub_lt_self lpos nat.succ_pos')],
+  rw ["<-", expr nth_le_pmap l.next (λ _ h, h) (by simpa [] [] [] [] [] ["using", expr hk])] [],
+  simp_rw ["[", "<-", expr nth_le_reverse l k (key.trans_le (by simp [] [] [] [] [] [])), ",", expr pmap_next_eq_rotate_one _ h, "]"] [],
+  rw ["<-", expr nth_le_pmap l.reverse.prev (λ _ h, h)] [],
+  { simp_rw ["[", expr pmap_prev_eq_rotate_length_sub_one _ (nodup_reverse.mpr h), ",", expr rotate_reverse, ",", expr length_reverse, ",", expr nat.mod_eq_of_lt (tsub_lt_self lpos nat.succ_pos'), ",", expr tsub_tsub_cancel_of_le (nat.succ_le_of_lt lpos), "]"] [],
+    rw ["<-", expr nth_le_reverse] [],
+    { simp [] [] [] ["[", expr tsub_tsub_cancel_of_le (nat.le_pred_of_lt hk), "]"] [] [] },
+    { simpa [] [] [] [] [] ["using", expr (nat.sub_le _ _).trans_lt (tsub_lt_self lpos nat.succ_pos')] } },
+  { simpa [] [] [] [] [] ["using", expr (nat.sub_le _ _).trans_lt (tsub_lt_self lpos nat.succ_pos')] }
+end
 
 theorem next_reverse_eq_prev (l : List α) (h : nodup l) (x : α) (hx : x ∈ l) :
   next l.reverse x (mem_reverse.mpr hx) = prev l x hx :=
@@ -645,17 +615,15 @@ theorem nodup_coe_iff {l : List α} : nodup (l : Cycle α) ↔ l.nodup :=
 theorem nodup_reverse_iff {s : Cycle α} : s.reverse.nodup ↔ s.nodup :=
   Quot.induction_on s fun _ => nodup_reverse
 
-theorem subsingleton.nodup {s : Cycle α} (h : Subsingleton s) : nodup s :=
-  by 
-    induction' s using Quot.induction_on with l 
-    cases' l with hd tl
-    ·
-      simp 
-    ·
-      have  : tl = [] :=
-        by 
-          simpa [Subsingleton, length_eq_zero] using h 
-      simp [this]
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem subsingleton.nodup {s : cycle α} (h : subsingleton s) : nodup s :=
+begin
+  induction [expr s] ["using", ident quot.induction_on] ["with", ident l] [],
+  cases [expr l] ["with", ident hd, ident tl],
+  { simp [] [] [] [] [] [] },
+  { have [] [":", expr «expr = »(tl, «expr[ , ]»([]))] [":=", expr by simpa [] [] [] ["[", expr subsingleton, ",", expr length_eq_zero, "]"] [] ["using", expr h]],
+    simp [] [] [] ["[", expr this, "]"] [] [] }
+end
 
 theorem nodup.nontrivial_iff {s : Cycle α} (h : nodup s) : Nontrivial s ↔ ¬Subsingleton s :=
   by 

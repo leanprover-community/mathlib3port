@@ -79,7 +79,7 @@ theorem small_of_injective {α : Type _} {β : Type _} [Small.{w} β] (f : α �
 
 instance (priority := 100)small_subsingleton (α : Type v) [Subsingleton α] : Small.{w} α :=
   by 
-    rcases is_empty_or_nonempty α with ⟨⟩ <;> resetI
+    rcases is_empty_or_nonempty α with ⟨⟩ <;> skip
     ·
       rw [small_congr (Equiv.equivPempty α)]
       apply small_self

@@ -2,7 +2,7 @@ import Mathbin.Tactic.Omega.Coeffs
 
 namespace Omega
 
--- error in Tactic.Omega.Term: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Tactic.Omega.Term: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- Shadow syntax of normalized terms. The first element
     represents the constant term and the list represents
     the coefficients. -/ @[derive #[expr inhabited]] def term : Type :=

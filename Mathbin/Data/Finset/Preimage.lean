@@ -116,19 +116,20 @@ theorem sigma_image_fst_preimage_mk {β : α → Type _} [DecidableEq α] (s : F
 
 end Preimage
 
-@[toAdditive]
-theorem prod_preimage' [CommMonoidₓ β] (f : α → γ) [DecidablePred$ fun x => x ∈ Set.Range f] (s : Finset γ)
-  (hf : Set.InjOn f (f ⁻¹' «expr↑ » s)) (g : γ → β) :
-  (∏x in s.preimage f hf, g (f x)) = ∏x in s.filter fun x => x ∈ Set.Range f, g x :=
-  by 
-    haveI  := Classical.decEq γ <;>
-      calc (∏x in preimage s f hf, g (f x)) = ∏x in image f (preimage s f hf), g x :=
-        Eq.symm$
-          prod_image$
-            by 
-              simpa only [mem_preimage, inj_on] using hf _ = ∏x in s.filter fun x => x ∈ Set.Range f, g x :=
-        by 
-          rw [image_preimage]
+-- error in Data.Finset.Preimage: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_preimage'
+[comm_monoid β]
+(f : α → γ)
+[«expr $ »(decidable_pred, λ x, «expr ∈ »(x, set.range f))]
+(s : finset γ)
+(hf : set.inj_on f «expr ⁻¹' »(f, «expr↑ »(s)))
+(g : γ → β) : «expr = »(«expr∏ in , »((x), s.preimage f hf, g (f x)), «expr∏ in , »((x), s.filter (λ
+   x, «expr ∈ »(x, set.range f)), g x)) :=
+by haveI [] [] [":=", expr classical.dec_eq γ]; calc
+  «expr = »(«expr∏ in , »((x), preimage s f hf, g (f x)), «expr∏ in , »((x), image f (preimage s f hf), g x)) : «expr $ »(eq.symm, «expr $ »(prod_image, by simpa [] [] ["only"] ["[", expr mem_preimage, ",", expr inj_on, "]"] [] ["using", expr hf]))
+  «expr = »(..., «expr∏ in , »((x), s.filter (λ
+     x, «expr ∈ »(x, set.range f)), g x)) : by rw ["[", expr image_preimage, "]"] []
 
 @[toAdditive]
 theorem prod_preimage [CommMonoidₓ β] (f : α → γ) (s : Finset γ) (hf : Set.InjOn f (f ⁻¹' «expr↑ » s)) (g : γ → β)

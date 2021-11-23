@@ -1,5 +1,6 @@
-import Mathbin.SetTheory.Surreal.Basic 
-import Mathbin.RingTheory.Localization
+import Mathbin.Algebra.Algebra.Basic 
+import Mathbin.GroupTheory.MonoidLocalization 
+import Mathbin.SetTheory.Surreal.Basic
 
 /-!
 # Dyadic numbers
@@ -158,15 +159,15 @@ theorem double_pow_half_succ_eq_pow_half (n : ℕ) : 2 • pow_half n.succ = pow
     apply Quotientₓ.sound 
     exact Pgame.add_pow_half_succ_self_eq_pow_half
 
-theorem nsmul_pow_two_pow_half (n : ℕ) : (2^n) • pow_half n = 1 :=
+theorem nsmul_pow_two_pow_half (n : ℕ) : 2 ^ n • pow_half n = 1 :=
   by 
     induction' n with n hn
     ·
       simp only [nsmul_one, pow_half_zero, Nat.cast_one, pow_zeroₓ]
     ·
-      rw [←hn, ←double_pow_half_succ_eq_pow_half n, smul_smul (2^n) 2 (pow_half n.succ), mul_commₓ, pow_succₓ]
+      rw [←hn, ←double_pow_half_succ_eq_pow_half n, smul_smul (2 ^ n) 2 (pow_half n.succ), mul_commₓ, pow_succₓ]
 
-theorem nsmul_pow_two_pow_half' (n k : ℕ) : (2^n) • pow_half (n+k) = pow_half k :=
+theorem nsmul_pow_two_pow_half' (n k : ℕ) : 2 ^ n • pow_half (n+k) = pow_half k :=
   by 
     induction' k with k hk
     ·
@@ -176,51 +177,51 @@ theorem nsmul_pow_two_pow_half' (n k : ℕ) : (2^n) • pow_half (n+k) = pow_hal
       rw [←double_pow_half_succ_eq_pow_half (n+k), ←double_pow_half_succ_eq_pow_half k, smul_algebra_smul_comm] at hk 
       rwa [←zsmul_eq_zsmul_iff' two_ne_zero]
 
-theorem zsmul_pow_two_pow_half (m : ℤ) (n k : ℕ) : (m*2^n) • pow_half (n+k) = m • pow_half k :=
+theorem zsmul_pow_two_pow_half (m : ℤ) (n k : ℕ) : (m*2 ^ n) • pow_half (n+k) = m • pow_half k :=
   by 
     rw [mul_zsmul]
     congr 
     normCast 
     exact nsmul_pow_two_pow_half' n k
 
-theorem dyadic_aux {m₁ m₂ : ℤ} {y₁ y₂ : ℕ} (h₂ : (m₁*2^y₁) = m₂*2^y₂) : m₁ • pow_half y₂ = m₂ • pow_half y₁ :=
-  by 
-    revert m₁ m₂ 
-    wlog h : y₁ ≤ y₂ 
-    intro m₁ m₂ h₂ 
-    obtain ⟨c, rfl⟩ := le_iff_exists_add.mp h 
-    rw [add_commₓ, pow_addₓ, ←mul_assocₓ, mul_eq_mul_right_iff] at h₂ 
-    cases h₂
-    ·
-      rw [h₂, add_commₓ, zsmul_pow_two_pow_half m₂ c y₁]
-    ·
-      have  := Nat.one_le_pow y₁ 2 Nat.succ_pos' 
-      linarith
+-- error in SetTheory.Surreal.Dyadic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dyadic_aux
+{m₁ m₂ : exprℤ()}
+{y₁ y₂ : exprℕ()}
+(h₂ : «expr = »(«expr * »(m₁, «expr ^ »(2, y₁)), «expr * »(m₂, «expr ^ »(2, y₂)))) : «expr = »(«expr • »(m₁, pow_half y₂), «expr • »(m₂, pow_half y₁)) :=
+begin
+  revert [ident m₁, ident m₂],
+  wlog [ident h] [":", expr «expr ≤ »(y₁, y₂)] [] [],
+  intros [ident m₁, ident m₂, ident h₂],
+  obtain ["⟨", ident c, ",", ident rfl, "⟩", ":=", expr le_iff_exists_add.mp h],
+  rw ["[", expr add_comm, ",", expr pow_add, ",", "<-", expr mul_assoc, ",", expr mul_eq_mul_right_iff, "]"] ["at", ident h₂],
+  cases [expr h₂] [],
+  { rw ["[", expr h₂, ",", expr add_comm, ",", expr zsmul_pow_two_pow_half m₂ c y₁, "]"] [] },
+  { have [] [] [":=", expr nat.one_le_pow y₁ 2 nat.succ_pos'],
+    linarith [] [] [] }
+end
 
+-- error in SetTheory.Surreal.Dyadic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The map `dyadic_map` sends ⟦⟨m, 2^n⟩⟧ to m • half ^ n. -/
-def dyadic_map (x : Localization (Submonoid.powers (2 : ℤ))) : Surreal :=
-  (Localization.liftOn x fun x y => x • pow_half (Submonoid.log y))$
-    by 
-      intro m₁ m₂ n₁ n₂ h₁ 
-      obtain ⟨⟨n₃, y₃, hn₃⟩, h₂⟩ := localization.r_iff_exists.mp h₁ 
-      simp only [Subtype.coe_mk, mul_eq_mul_right_iff] at h₂ 
-      cases h₂
-      ·
-        simp only 
-        obtain ⟨a₁, ha₁⟩ := n₁.prop 
-        obtain ⟨a₂, ha₂⟩ := n₂.prop 
-        have hn₁ : n₁ = Submonoid.pow 2 a₁ := Subtype.ext ha₁.symm 
-        have hn₂ : n₂ = Submonoid.pow 2 a₂ := Subtype.ext ha₂.symm 
-        have h₂ : 1 < (2 : ℤ).natAbs 
-        exact
-          by 
-            decide 
-        rw [hn₁, hn₂, Submonoid.log_pow_int_eq_self h₂, Submonoid.log_pow_int_eq_self h₂]
-        apply dyadic_aux 
-        rwa [ha₁, ha₂]
-      ·
-        have  := Nat.one_le_pow y₃ 2 Nat.succ_pos' 
-        linarith
+def dyadic_map (x : localization (submonoid.powers (2 : exprℤ()))) : surreal :=
+«expr $ »(localization.lift_on x (λ x y, «expr • »(x, pow_half (submonoid.log y))), begin
+   intros [ident m₁, ident m₂, ident n₁, ident n₂, ident h₁],
+   obtain ["⟨", "⟨", ident n₃, ",", ident y₃, ",", ident hn₃, "⟩", ",", ident h₂, "⟩", ":=", expr localization.r_iff_exists.mp h₁],
+   simp [] [] ["only"] ["[", expr subtype.coe_mk, ",", expr mul_eq_mul_right_iff, "]"] [] ["at", ident h₂],
+   cases [expr h₂] [],
+   { simp [] [] ["only"] [] [] [],
+     obtain ["⟨", ident a₁, ",", ident ha₁, "⟩", ":=", expr n₁.prop],
+     obtain ["⟨", ident a₂, ",", ident ha₂, "⟩", ":=", expr n₂.prop],
+     have [ident hn₁] [":", expr «expr = »(n₁, submonoid.pow 2 a₁)] [":=", expr subtype.ext ha₁.symm],
+     have [ident hn₂] [":", expr «expr = »(n₂, submonoid.pow 2 a₂)] [":=", expr subtype.ext ha₂.symm],
+     have [ident h₂] [":", expr «expr < »(1, (2 : exprℤ()).nat_abs)] [],
+     from [expr exprdec_trivial()],
+     rw ["[", expr hn₁, ",", expr hn₂, ",", expr submonoid.log_pow_int_eq_self h₂, ",", expr submonoid.log_pow_int_eq_self h₂, "]"] [],
+     apply [expr dyadic_aux],
+     rwa ["[", expr ha₁, ",", expr ha₂, "]"] [] },
+   { have [] [] [":=", expr nat.one_le_pow y₃ 2 nat.succ_pos'],
+     linarith [] [] [] }
+ end)
 
 /-- We define dyadic surreals as the range of the map `dyadic_map`. -/
 def dyadic : Set Surreal :=

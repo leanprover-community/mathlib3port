@@ -43,6 +43,7 @@ variable{X Y : C}{S : sieve X}{R : presieve X}
 
 variable(J J₂ : grothendieck_topology C)
 
+-- error in CategoryTheory.Sites.Canonical: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 To show `P` is a sheaf for the binding of `U` with `B`, it suffices to show that `P` is a sheaf for
 `U`, that `P` is a sheaf for each sieve in `B`, and that it is separated for any pullback of any
@@ -52,59 +53,66 @@ This is mostly an auxiliary lemma to show `is_sheaf_for_trans`.
 Adapted from [Elephant], Lemma C2.1.7(i) with suggestions as mentioned in
 https://math.stackexchange.com/a/358709/
 -/
-theorem is_sheaf_for_bind (P : «expr ᵒᵖ» C ⥤ Type v) (U : sieve X) (B : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄, U f → sieve Y)
-  (hU : presieve.is_sheaf_for P U) (hB : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : U f, presieve.is_sheaf_for P (B hf))
-  (hB' : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ h : U f ⦃Z⦄ g : Z ⟶ Y, presieve.is_separated_for P ((B h).pullback g)) :
-  presieve.is_sheaf_for P (sieve.bind U B) :=
-  by 
-    intro s hs 
-    let y : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : U f, presieve.family_of_elements P (B hf) :=
-      fun Y f hf Z g hg => s _ (presieve.bind_comp _ _ hg)
-    have hy : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : U f, (y hf).Compatible
-    ·
-      intro Y f H Y₁ Y₂ Z g₁ g₂ f₁ f₂ hf₁ hf₂ comm 
-      apply hs 
-      apply reassoc_of comm 
-    let t : presieve.family_of_elements P U := fun Y f hf => (hB hf).amalgamate (y hf) (hy hf)
-    have ht : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : U f, (y hf).IsAmalgamation (t f hf) := fun Y f hf => (hB hf).IsAmalgamation _ 
-    have hT : t.compatible
-    ·
-      rw [presieve.compatible_iff_sieve_compatible]
-      intro Z W f h hf 
-      apply (hB (U.downward_closed hf h)).IsSeparatedFor.ext 
-      intro Y l hl 
-      apply (hB' hf (l ≫ h)).ext 
-      intro M m hm 
-      have  : bind U B (m ≫ l ≫ h ≫ f)
-      ·
-        have  : bind U B _ := presieve.bind_comp f hf hm 
-        simpa using this 
-      trans s (m ≫ l ≫ h ≫ f) this
-      ·
-        have  := ht (U.downward_closed hf h) _ ((B _).downward_closed hl m)
-        rw [op_comp, functor_to_types.map_comp_apply] at this 
-        rw [this]
-        change s _ _ = s _ _ 
-        simp 
-      ·
-        have  : s _ _ = _ := (ht hf _ hm).symm 
-        simp only [assoc] at this 
-        rw [this]
-        simp 
-    refine' ⟨hU.amalgamate t hT, _, _⟩
-    ·
-      rintro Z _ ⟨Y, f, g, hg, hf, rfl⟩
-      rw [op_comp, functor_to_types.map_comp_apply, presieve.is_sheaf_for.valid_glue _ _ _ hg]
-      apply ht hg _ hf
-    ·
-      intro y hy 
-      apply hU.is_separated_for.ext 
-      intro Y f hf 
-      apply (hB hf).IsSeparatedFor.ext 
-      intro Z g hg 
-      rw [←functor_to_types.map_comp_apply, ←op_comp, hy _ (presieve.bind_comp _ _ hg), hU.valid_glue _ _ hf,
-        ht hf _ hg]
+theorem is_sheaf_for_bind
+(P : «expr ⥤ »(«expr ᵒᵖ»(C), Type v))
+(U : sieve X)
+(B : ∀ {{Y}} {{f : «expr ⟶ »(Y, X)}}, U f → sieve Y)
+(hU : presieve.is_sheaf_for P U)
+(hB : ∀ {{Y}} {{f : «expr ⟶ »(Y, X)}} (hf : U f), presieve.is_sheaf_for P (B hf))
+(hB' : ∀
+ {{Y}}
+ {{f : «expr ⟶ »(Y, X)}}
+ (h : U f)
+ {{Z}}
+ (g : «expr ⟶ »(Z, Y)), presieve.is_separated_for P ((B h).pullback g)) : presieve.is_sheaf_for P (sieve.bind U B) :=
+begin
+  intros [ident s, ident hs],
+  let [ident y] [":", expr ∀
+   {{Y}}
+   {{f : «expr ⟶ »(Y, X)}}
+   (hf : U f), presieve.family_of_elements P (B hf)] [":=", expr λ Y f hf Z g hg, s _ (presieve.bind_comp _ _ hg)],
+  have [ident hy] [":", expr ∀ {{Y}} {{f : «expr ⟶ »(Y, X)}} (hf : U f), (y hf).compatible] [],
+  { intros [ident Y, ident f, ident H, ident Y₁, ident Y₂, ident Z, ident g₁, ident g₂, ident f₁, ident f₂, ident hf₁, ident hf₂, ident comm],
+    apply [expr hs],
+    apply [expr reassoc_of comm] },
+  let [ident t] [":", expr presieve.family_of_elements P U] [":=", expr λ Y f hf, (hB hf).amalgamate (y hf) (hy hf)],
+  have [ident ht] [":", expr ∀
+   {{Y}}
+   {{f : «expr ⟶ »(Y, X)}}
+   (hf : U f), (y hf).is_amalgamation (t f hf)] [":=", expr λ Y f hf, (hB hf).is_amalgamation _],
+  have [ident hT] [":", expr t.compatible] [],
+  { rw [expr presieve.compatible_iff_sieve_compatible] [],
+    intros [ident Z, ident W, ident f, ident h, ident hf],
+    apply [expr (hB (U.downward_closed hf h)).is_separated_for.ext],
+    intros [ident Y, ident l, ident hl],
+    apply [expr (hB' hf «expr ≫ »(l, h)).ext],
+    intros [ident M, ident m, ident hm],
+    have [] [":", expr bind U B «expr ≫ »(m, «expr ≫ »(l, «expr ≫ »(h, f)))] [],
+    { have [] [":", expr bind U B _] [":=", expr presieve.bind_comp f hf hm],
+      simpa [] [] [] [] [] ["using", expr this] },
+    transitivity [expr s «expr ≫ »(m, «expr ≫ »(l, «expr ≫ »(h, f))) this],
+    { have [] [] [":=", expr ht (U.downward_closed hf h) _ ((B _).downward_closed hl m)],
+      rw ["[", expr op_comp, ",", expr functor_to_types.map_comp_apply, "]"] ["at", ident this],
+      rw [expr this] [],
+      change [expr «expr = »(s _ _, s _ _)] [] [],
+      simp [] [] [] [] [] [] },
+    { have [] [":", expr «expr = »(s _ _, _)] [":=", expr (ht hf _ hm).symm],
+      simp [] [] ["only"] ["[", expr assoc, "]"] [] ["at", ident this],
+      rw [expr this] [],
+      simp [] [] [] [] [] [] } },
+  refine [expr ⟨hU.amalgamate t hT, _, _⟩],
+  { rintro [ident Z, "_", "⟨", ident Y, ",", ident f, ",", ident g, ",", ident hg, ",", ident hf, ",", ident rfl, "⟩"],
+    rw ["[", expr op_comp, ",", expr functor_to_types.map_comp_apply, ",", expr presieve.is_sheaf_for.valid_glue _ _ _ hg, "]"] [],
+    apply [expr ht hg _ hf] },
+  { intros [ident y, ident hy],
+    apply [expr hU.is_separated_for.ext],
+    intros [ident Y, ident f, ident hf],
+    apply [expr (hB hf).is_separated_for.ext],
+    intros [ident Z, ident g, ident hg],
+    rw ["[", "<-", expr functor_to_types.map_comp_apply, ",", "<-", expr op_comp, ",", expr hy _ (presieve.bind_comp _ _ hg), ",", expr hU.valid_glue _ _ hf, ",", expr ht hf _ hg, "]"] [] }
+end
 
+-- error in CategoryTheory.Sites.Canonical: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given two sieves `R` and `S`, to show that `P` is a sheaf for `S`, we can show:
 * `P` is a sheaf for `R`
@@ -115,69 +123,65 @@ This is mostly an auxiliary lemma to construct `finest_topology`.
 Adapted from [Elephant], Lemma C2.1.7(ii) with suggestions as mentioned in
 https://math.stackexchange.com/a/358709
 -/
-theorem is_sheaf_for_trans (P : «expr ᵒᵖ» C ⥤ Type v) (R S : sieve X) (hR : presieve.is_sheaf_for P R)
-  (hR' : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : S f, presieve.is_separated_for P (R.pullback f))
-  (hS : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : R f, presieve.is_sheaf_for P (S.pullback f)) : presieve.is_sheaf_for P S :=
-  by 
-    have  : (bind R fun Y f hf => S.pullback f : presieve X) ≤ S
-    ·
-      rintro Z f ⟨W, f, g, hg, hf : S _, rfl⟩
-      apply hf 
-    apply presieve.is_sheaf_for_subsieve_aux P this 
-    apply is_sheaf_for_bind _ _ _ hR hS
-    ·
-      intro Y f hf Z g 
-      dsimp 
-      rw [←pullback_comp]
-      apply (hS (R.downward_closed hf _)).IsSeparatedFor
-    ·
-      intro Y f hf 
-      have  : sieve.pullback f (bind R fun T k : T ⟶ X hf : R k => pullback k S) = R.pullback f
-      ·
-        ext Z g 
-        split 
-        ·
-          rintro ⟨W, k, l, hl, _, comm⟩
-          rw [pullback_apply, ←comm]
-          simp [hl]
-        ·
-          intro a 
-          refine' ⟨Z, 𝟙 Z, _, a, _⟩
-          simp [hf]
-      rw [this]
-      apply hR' hf
+theorem is_sheaf_for_trans
+(P : «expr ⥤ »(«expr ᵒᵖ»(C), Type v))
+(R S : sieve X)
+(hR : presieve.is_sheaf_for P R)
+(hR' : ∀ {{Y}} {{f : «expr ⟶ »(Y, X)}} (hf : S f), presieve.is_separated_for P (R.pullback f))
+(hS : ∀ {{Y}} {{f : «expr ⟶ »(Y, X)}} (hf : R f), presieve.is_sheaf_for P (S.pullback f)) : presieve.is_sheaf_for P S :=
+begin
+  have [] [":", expr «expr ≤ »((bind R (λ Y f hf, S.pullback f) : presieve X), S)] [],
+  { rintros [ident Z, ident f, "⟨", ident W, ",", ident f, ",", ident g, ",", ident hg, ",", "(", ident hf, ":", expr S _, ")", ",", ident rfl, "⟩"],
+    apply [expr hf] },
+  apply [expr presieve.is_sheaf_for_subsieve_aux P this],
+  apply [expr is_sheaf_for_bind _ _ _ hR hS],
+  { intros [ident Y, ident f, ident hf, ident Z, ident g],
+    dsimp [] [] [] [],
+    rw ["<-", expr pullback_comp] [],
+    apply [expr (hS (R.downward_closed hf _)).is_separated_for] },
+  { intros [ident Y, ident f, ident hf],
+    have [] [":", expr «expr = »(sieve.pullback f (bind R (λ
+        (T)
+        (k : «expr ⟶ »(T, X))
+        (hf : R k), pullback k S)), R.pullback f)] [],
+    { ext [] [ident Z, ident g] [],
+      split,
+      { rintro ["⟨", ident W, ",", ident k, ",", ident l, ",", ident hl, ",", "_", ",", ident comm, "⟩"],
+        rw ["[", expr pullback_apply, ",", "<-", expr comm, "]"] [],
+        simp [] [] [] ["[", expr hl, "]"] [] [] },
+      { intro [ident a],
+        refine [expr ⟨Z, «expr𝟙»() Z, _, a, _⟩],
+        simp [] [] [] ["[", expr hf, "]"] [] [] } },
+    rw [expr this] [],
+    apply [expr hR' hf] }
+end
 
+-- error in CategoryTheory.Sites.Canonical: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Construct the finest (largest) Grothendieck topology for which the given presheaf is a sheaf.
 
 This is a special case of https://stacks.math.columbia.edu/tag/00Z9, but following a different
 proof (see the comments there).
--/
-def finest_topology_single (P : «expr ᵒᵖ» C ⥤ Type v) : grothendieck_topology C :=
-  { Sieves := fun X S => ∀ Y f : Y ⟶ X, presieve.is_sheaf_for P (S.pullback f),
-    top_mem' :=
-      fun X Y f =>
-        by 
-          rw [sieve.pullback_top]
-          exact presieve.is_sheaf_for_top_sieve P,
-    pullback_stable' :=
-      fun X Y S f hS Z g =>
-        by 
-          rw [←pullback_comp]
-          apply hS,
-    transitive' :=
-      fun X S hS R hR Z g =>
-        by 
-          refine' is_sheaf_for_trans P (pullback g S) _ (hS Z g) _ _
-          ·
-            intro Y f hf 
-            rw [←pullback_comp]
-            apply (hS _ _).IsSeparatedFor
-          ·
-            intro Y f hf 
-            have  := hR hf _ (𝟙 _)
-            rw [pullback_id, pullback_comp] at this 
-            apply this }
+-/ def finest_topology_single (P : «expr ⥤ »(«expr ᵒᵖ»(C), Type v)) : grothendieck_topology C :=
+{ sieves := λ X S, ∀ (Y) (f : «expr ⟶ »(Y, X)), presieve.is_sheaf_for P (S.pullback f),
+  top_mem' := λ X Y f, begin
+    rw [expr sieve.pullback_top] [],
+    exact [expr presieve.is_sheaf_for_top_sieve P]
+  end,
+  pullback_stable' := λ X Y S f hS Z g, begin
+    rw ["<-", expr pullback_comp] [],
+    apply [expr hS]
+  end,
+  transitive' := λ X S hS R hR Z g, begin
+    refine [expr is_sheaf_for_trans P (pullback g S) _ (hS Z g) _ _],
+    { intros [ident Y, ident f, ident hf],
+      rw ["<-", expr pullback_comp] [],
+      apply [expr (hS _ _).is_separated_for] },
+    { intros [ident Y, ident f, ident hf],
+      have [] [] [":=", expr hR hf _ («expr𝟙»() _)],
+      rw ["[", expr pullback_id, ",", expr pullback_comp, "]"] ["at", ident this],
+      apply [expr this] }
+  end }
 
 /--
 Construct the finest (largest) Grothendieck topology for which all the given presheaves are sheaves.

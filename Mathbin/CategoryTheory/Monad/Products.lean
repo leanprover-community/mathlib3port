@@ -1,8 +1,6 @@
 import Mathbin.CategoryTheory.Over 
-import Mathbin.CategoryTheory.Limits.Preserves.Basic 
-import Mathbin.CategoryTheory.Limits.Creates 
-import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts 
-import Mathbin.CategoryTheory.Monad.Algebra
+import Mathbin.CategoryTheory.Monad.Algebra 
+import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 
 /-!
 # Algebras for the coproduct monad

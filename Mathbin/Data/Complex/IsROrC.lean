@@ -336,7 +336,7 @@ variable(K)
 
 /-- Conjugation as a ring equivalence. This is used to convert the inner product into a
 sesquilinear product. -/
-abbrev conj_to_ring_equiv : K ≃+* «expr ᵒᵖ» K :=
+abbrev conj_to_ring_equiv : K ≃+* «expr ᵐᵒᵖ» K :=
   starRingEquiv
 
 variable{K}
@@ -454,11 +454,13 @@ theorem norm_sq_sub (z w : K) : norm_sq (z - w) = (norm_sq z+norm_sq w) - 2*re (
   by 
     simp [-mul_re, norm_sq_add, add_commₓ, add_left_commₓ, sub_eq_add_neg]
 
-theorem sqrt_norm_sq_eq_norm {z : K} : Real.sqrt (norm_sq z) = ∥z∥ :=
-  by 
-    have h₂ : ∥z∥ = Real.sqrt (∥z∥^2) := (Real.sqrt_sq (norm_nonneg z)).symm 
-    rw [h₂]
-    exact congr_argₓ Real.sqrt (norm_sq_eq_def' z)
+-- error in Data.Complex.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sqrt_norm_sq_eq_norm {z : K} : «expr = »(real.sqrt (norm_sq z), «expr∥ ∥»(z)) :=
+begin
+  have [ident h₂] [":", expr «expr = »(«expr∥ ∥»(z), real.sqrt «expr ^ »(«expr∥ ∥»(z), 2))] [":=", expr (real.sqrt_sq (norm_nonneg z)).symm],
+  rw ["[", expr h₂, "]"] [],
+  exact [expr congr_arg real.sqrt (norm_sq_eq_def' z)]
+end
 
 /-! ### Inversion -/
 
@@ -518,10 +520,10 @@ theorem div_re_of_real {z : K} {r : ℝ} : re (z / r) = re z / r :=
 theorem of_real_zpow (r : ℝ) (n : ℤ) : ((r^n : ℝ) : K) = (r^n) :=
   (@IsROrC.coeHom K _).map_zpow r n
 
-theorem I_mul_I_of_nonzero : (I : K) ≠ 0 → ((I : K)*I) = -1 :=
-  by 
-    have  := I_mul_I_ax 
-    tauto
+-- error in Data.Complex.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem I_mul_I_of_nonzero : «expr ≠ »((I : K), 0) → «expr = »(«expr * »((I : K), I), «expr- »(1)) :=
+by { have [] [] [":=", expr I_mul_I_ax],
+  tauto [] }
 
 @[simp]
 theorem div_I (z : K) : z / I = -z*I :=
@@ -608,10 +610,12 @@ theorem char_zero_R_or_C : CharZero K :=
       by 
         rwa [←of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h
 
-theorem re_eq_add_conj (z : K) : «expr↑ » (re z) = (z+conj z) / 2 :=
-  by 
-    haveI  : CharZero K := char_zero_R_or_C 
-    rw [add_conj, mul_div_cancel_left (re z : K) two_ne_zero']
+-- error in Data.Complex.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem re_eq_add_conj (z : K) : «expr = »(«expr↑ »(re z), «expr / »(«expr + »(z, exprconj() z), 2)) :=
+begin
+  haveI [] [":", expr char_zero K] [":=", expr char_zero_R_or_C],
+  rw ["[", expr add_conj, ",", expr mul_div_cancel_left (re z : K) two_ne_zero', "]"] []
+end
 
 theorem im_eq_conj_sub (z : K) : «expr↑ » (im z) = (I*conj z - z) / 2 :=
   by 
@@ -727,13 +731,14 @@ theorem re_le_abs (z : K) : re z ≤ abs z :=
 theorem im_le_abs (z : K) : im z ≤ abs z :=
   (abs_le.1 (abs_im_le_abs _)).2
 
-theorem im_eq_zero_of_le {a : K} (h : abs a ≤ re a) : im a = 0 :=
-  by 
-    rw [←zero_eq_mul_self]
-    have  : (re a*re a) = (re a*re a)+im a*im a
-    ·
-      convert IsROrC.mul_self_abs a <;> linarith [re_le_abs a]
-    linarith
+-- error in Data.Complex.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem im_eq_zero_of_le {a : K} (h : «expr ≤ »(abs a, re a)) : «expr = »(im a, 0) :=
+begin
+  rw ["<-", expr zero_eq_mul_self] [],
+  have [] [":", expr «expr = »(«expr * »(re a, re a), «expr + »(«expr * »(re a, re a), «expr * »(im a, im a)))] [],
+  { convert [] [expr is_R_or_C.mul_self_abs a] []; linarith [] [] ["[", expr re_le_abs a, "]"] },
+  linarith [] [] []
+end
 
 theorem re_eq_self_of_le {a : K} (h : abs a ≤ re a) : (re a : K) = a :=
   by 
@@ -907,16 +912,17 @@ instance is_R_or_C_to_real : FiniteDimensional ℝ K :=
           use im a 
         simp [re_add_im a, Algebra.smul_def, algebra_map_eq_of_real]⟩⟩
 
+-- error in Data.Complex.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Over an `is_R_or_C` field, we can register the properness of finite-dimensional normed spaces as
 an instance. -/
-@[nolint dangerous_instance]
-instance (priority := 900)proper_is_R_or_C {E : Type _} [NormedGroup E] [NormedSpace K E] [FiniteDimensional K E] :
-  ProperSpace E :=
-  by 
-    letI this : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ K E 
-    letI this : IsScalarTower ℝ K E := RestrictScalars.is_scalar_tower _ _ _ 
-    letI this : FiniteDimensional ℝ E := FiniteDimensional.trans ℝ K E 
-    infer_instance
+@[priority 900, nolint #[ident dangerous_instance]]
+instance proper_is_R_or_C {E : Type*} [normed_group E] [normed_space K E] [finite_dimensional K E] : proper_space E :=
+begin
+  letI [] [":", expr normed_space exprℝ() E] [":=", expr restrict_scalars.normed_space exprℝ() K E],
+  letI [] [":", expr is_scalar_tower exprℝ() K E] [":=", expr restrict_scalars.is_scalar_tower _ _ _],
+  letI [] [":", expr finite_dimensional exprℝ() E] [":=", expr finite_dimensional.trans exprℝ() K E],
+  apply_instance
+end
 
 end FiniteDimensional
 
@@ -1183,18 +1189,19 @@ variable{E : Type _}[NormedGroup E][NormedSpace K E]
 
 open IsROrC
 
+-- error in Data.Complex.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to unit length. -/
 @[simp]
-theorem norm_smul_inv_norm {x : E} (hx : x ≠ 0) : ∥(∥x∥⁻¹ : K) • x∥ = 1 :=
-  by 
-    have h : ∥(∥x∥ : K)∥ = ∥x∥
-    ·
-      rw [norm_eq_abs]
-      exact abs_of_nonneg (norm_nonneg _)
-    have  : ∥x∥ ≠ 0 :=
-      by 
-        simp [hx]
-    fieldSimp [norm_smul, h]
+theorem norm_smul_inv_norm
+{x : E}
+(hx : «expr ≠ »(x, 0)) : «expr = »(«expr∥ ∥»(«expr • »((«expr ⁻¹»(«expr∥ ∥»(x)) : K), x)), 1) :=
+begin
+  have [ident h] [":", expr «expr = »(«expr∥ ∥»((«expr∥ ∥»(x) : K)), «expr∥ ∥»(x))] [],
+  { rw [expr norm_eq_abs] [],
+    exact [expr abs_of_nonneg (norm_nonneg _)] },
+  have [] [":", expr «expr ≠ »(«expr∥ ∥»(x), 0)] [":=", expr by simp [] [] [] ["[", expr hx, "]"] [] []],
+  field_simp [] ["[", expr norm_smul, ",", expr h, "]"] [] []
+end
 
 end Normalization
 

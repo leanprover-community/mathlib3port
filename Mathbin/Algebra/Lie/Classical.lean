@@ -1,9 +1,9 @@
 import Mathbin.Algebra.Invertible 
-import Mathbin.Algebra.Lie.SkewAdjoint 
+import Mathbin.Data.Matrix.Basis 
+import Mathbin.Data.Matrix.Dmatrix 
 import Mathbin.Algebra.Lie.Abelian 
 import Mathbin.LinearAlgebra.Matrix.Trace 
-import Mathbin.LinearAlgebra.Matrix.Transvection 
-import Mathbin.Data.Matrix.Basis
+import Mathbin.Algebra.Lie.SkewAdjoint
 
 /-!
 # Classical Lie algebras
@@ -108,18 +108,21 @@ theorem Eb_val (h : j ≠ i) : (Eb R i j h).val = Matrix.stdBasisMatrix i j 1 :=
 
 end ElementaryBasis
 
-theorem sl_non_abelian [Fintype n] [Nontrivial R] (h : 1 < Fintype.card n) : ¬IsLieAbelian («expr↥ » (sl n R)) :=
-  by 
-    rcases Fintype.exists_pair_of_one_lt_card h with ⟨j, i, hij⟩
-    let A := Eb R i j hij 
-    let B := Eb R j i hij.symm 
-    intro c 
-    have c' : A.val ⬝ B.val = B.val ⬝ A.val
-    ·
-      ·
-        rw [←sub_eq_zero, ←sl_bracket, c.trivial]
-        rfl 
-    simpa [std_basis_matrix, Matrix.mul_apply, hij] using congr_funₓ (congr_funₓ c' i) i
+-- error in Algebra.Lie.Classical: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sl_non_abelian
+[fintype n]
+[nontrivial R]
+(h : «expr < »(1, fintype.card n)) : «expr¬ »(is_lie_abelian «expr↥ »(sl n R)) :=
+begin
+  rcases [expr fintype.exists_pair_of_one_lt_card h, "with", "⟨", ident j, ",", ident i, ",", ident hij, "⟩"],
+  let [ident A] [] [":=", expr Eb R i j hij],
+  let [ident B] [] [":=", expr Eb R j i hij.symm],
+  intros [ident c],
+  have [ident c'] [":", expr «expr = »(«expr ⬝ »(A.val, B.val), «expr ⬝ »(B.val, A.val))] [],
+  by { rw ["[", "<-", expr sub_eq_zero, ",", "<-", expr sl_bracket, ",", expr c.trivial, "]"] [],
+    refl },
+  simpa [] [] [] ["[", expr std_basis_matrix, ",", expr matrix.mul_apply, ",", expr hij, "]"] [] ["using", expr congr_fun (congr_fun c' i) i]
+end
 
 end SpecialLinear
 
@@ -248,21 +251,24 @@ theorem S_as_blocks : S l R = Matrix.fromBlocks 1 0 0 (-1) :=
     rw [←Matrix.diagonal_one, Matrix.diagonal_neg, Matrix.from_blocks_diagonal]
     rfl
 
-theorem JD_transform [Fintype l] : (PD l R)ᵀ ⬝ JD l R ⬝ PD l R = (2 : R) • S l R :=
-  by 
-    have h : (PD l R)ᵀ ⬝ JD l R = Matrix.fromBlocks 1 1 1 (-1) :=
-      by 
-        simp [PD, JD, Matrix.from_blocks_transpose, Matrix.from_blocks_multiply]
-    erw [h, S_as_blocks, Matrix.from_blocks_multiply, Matrix.from_blocks_smul]
-    congr <;> simp [two_smul]
+-- error in Algebra.Lie.Classical: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem JD_transform
+[fintype l] : «expr = »(«expr ⬝ »(«expr ⬝ »(«expr ᵀ»(PD l R), JD l R), PD l R), «expr • »((2 : R), S l R)) :=
+begin
+  have [ident h] [":", expr «expr = »(«expr ⬝ »(«expr ᵀ»(PD l R), JD l R), matrix.from_blocks 1 1 1 «expr- »(1))] [":=", expr by { simp [] [] [] ["[", expr PD, ",", expr JD, ",", expr matrix.from_blocks_transpose, ",", expr matrix.from_blocks_multiply, "]"] [] [] }],
+  erw ["[", expr h, ",", expr S_as_blocks, ",", expr matrix.from_blocks_multiply, ",", expr matrix.from_blocks_smul, "]"] [],
+  congr; simp [] [] [] ["[", expr two_smul, "]"] [] []
+end
 
-theorem PD_inv [Fintype l] [Invertible (2 : R)] : (PD l R*⅟ (2 : R) • (PD l R)ᵀ) = 1 :=
-  by 
-    have h : ((⅟ (2 : R) • (1 : Matrix l l R))+⅟ (2 : R) • 1) = 1 :=
-      by 
-        rw [←smul_add, ←two_smul R _, smul_smul, inv_of_mul_self, one_smul]
-    erw [Matrix.from_blocks_transpose, Matrix.from_blocks_smul, Matrix.mul_eq_mul, Matrix.from_blocks_multiply]
-    simp [h]
+-- error in Algebra.Lie.Classical: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem PD_inv
+[fintype l]
+[invertible (2 : R)] : «expr = »(«expr * »(PD l R, «expr • »(«expr⅟»() (2 : R), «expr ᵀ»(PD l R))), 1) :=
+begin
+  have [ident h] [":", expr «expr = »(«expr + »(«expr • »(«expr⅟»() (2 : R), (1 : matrix l l R)), «expr • »(«expr⅟»() (2 : R), 1)), 1)] [":=", expr by rw ["[", "<-", expr smul_add, ",", "<-", expr two_smul R _, ",", expr smul_smul, ",", expr inv_of_mul_self, ",", expr one_smul, "]"] []],
+  erw ["[", expr matrix.from_blocks_transpose, ",", expr matrix.from_blocks_smul, ",", expr matrix.mul_eq_mul, ",", expr matrix.from_blocks_multiply, "]"] [],
+  simp [] [] [] ["[", expr h, "]"] [] []
+end
 
 instance invertible_PD [Fintype l] [Invertible (2 : R)] : Invertible (PD l R) :=
   invertible_of_right_inverse _ _ (PD_inv l R)

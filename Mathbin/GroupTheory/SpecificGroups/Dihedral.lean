@@ -13,7 +13,7 @@ represents the rotations of the `n`-gon by `2πi/n`, and `sr i` represents the r
 -/
 
 
--- error in GroupTheory.SpecificGroups.Dihedral: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in GroupTheory.SpecificGroups.Dihedral: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /--
 For `n ≠ 0`, `dihedral_group n` represents the symmetry group of the regular `n`-gon.
 `r i` represents the rotations of the `n`-gon by `2πi/n`, and `sr i` represents the reflections of
@@ -172,7 +172,7 @@ theorem order_of_sr (i : Zmod n) : orderOf (sr i) = 2 :=
     rw [sq, sr_mul_self]
     decide
 
--- error in GroupTheory.SpecificGroups.Dihedral: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in GroupTheory.SpecificGroups.Dihedral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `0 < n`, then `r 1` has order `n`.
 -/ @[simp] theorem order_of_r_one : «expr = »(order_of (r 1 : dihedral_group n), n) :=

@@ -57,7 +57,7 @@ def IsPiSystem {α} (C : Set (Set α)) : Prop :=
 
 namespace MeasurableSpace
 
-theorem is_pi_system_measurable_set {α : Type _} [MeasurableSpace α] : IsPiSystem { s : Set α | MeasurableSet s } :=
+theorem is_pi_system_measurable_set {α : Type _} [MeasurableSpace α] : IsPiSystem { s:Set α | MeasurableSet s } :=
   fun s t hs ht _ => hs.inter ht
 
 end MeasurableSpace
@@ -232,44 +232,43 @@ theorem mem_generate_pi_system_Union_elim {α β} {g : β → Set (Set α)} (h_p
         rw [Finset.mem_union] at h_b 
         apply False.elim (h_b.elim hbs hbt)
 
-theorem mem_generate_pi_system_Union_elim' {α β} {g : β → Set (Set α)} {s : Set β}
-  (h_pi : ∀ b _ : b ∈ s, IsPiSystem (g b)) (t : Set α) (h_t : t ∈ GeneratePiSystem (⋃(b : _)(_ : b ∈ s), g b)) :
-  ∃ (T : Finset β)(f : β → Set α), «expr↑ » T ⊆ s ∧ (t = ⋂(b : _)(_ : b ∈ T), f b) ∧ ∀ b _ : b ∈ T, f b ∈ g b :=
-  by 
-    have  : t ∈ GeneratePiSystem (⋃b : Subtype s, (g ∘ Subtype.val) b)
-    ·
-      suffices h1 : (⋃b : Subtype s, (g ∘ Subtype.val) b) = ⋃(b : _)(H : b ∈ s), g b
-      ·
-        rwa [h1]
-      ext x 
-      simp only [exists_prop, Set.mem_Union, Function.comp_app, Subtype.exists, Subtype.coe_mk]
-      rfl 
-    rcases@mem_generate_pi_system_Union_elim α (Subtype s) (g ∘ Subtype.val) (fun b => h_pi b.val b.property) t
-        this with
-      ⟨T, ⟨f, ⟨rfl, h_t'⟩⟩⟩
-    refine'
-      ⟨T.image Subtype.val, Function.extendₓ Subtype.val f fun b : β => (∅ : Set α),
-        by 
-          simp ,
-        _, _⟩
-    ·
-      ext a 
-      split  <;>
-        ·
-          simp only [Set.mem_Inter, Subtype.forall, Finset.set_bInter_finset_image]
-          intro h1 b h_b h_b_in_T 
-          have h2 := h1 b h_b h_b_in_T 
-          revert h2 
-          rw [Function.extend_applyₓ Subtype.val_injective]
-          apply id
-    ·
-      intro b h_b 
-      simpRw [Finset.mem_image, exists_prop, Subtype.exists, exists_and_distrib_right, exists_eq_right]  at h_b 
-      cases h_b 
-      have h_b_alt : b = (Subtype.mk b h_b_w).val := rfl 
-      rw [h_b_alt, Function.extend_applyₓ Subtype.val_injective]
-      apply h_t' 
-      apply h_b_h
+-- error in MeasureTheory.PiSystem: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_generate_pi_system_Union_elim'
+{α β}
+{g : β → set (set α)}
+{s : set β}
+(h_pi : ∀ b «expr ∈ » s, is_pi_system (g b))
+(t : set α)
+(h_t : «expr ∈ »(t, generate_pi_system «expr⋃ , »((b «expr ∈ » s), g b))) : «expr∃ , »((T : finset β)
+ (f : β → set α), «expr ∧ »(«expr ⊆ »(«expr↑ »(T), s), «expr ∧ »(«expr = »(t, «expr⋂ , »((b «expr ∈ » T), f b)), ∀
+   b «expr ∈ » T, «expr ∈ »(f b, g b)))) :=
+begin
+  have [] [":", expr «expr ∈ »(t, generate_pi_system «expr⋃ , »((b : subtype s), «expr ∘ »(g, subtype.val) b))] [],
+  { suffices [ident h1] [":", expr «expr = »(«expr⋃ , »((b : subtype s), «expr ∘ »(g, subtype.val) b), «expr⋃ , »((b)
+       (H : «expr ∈ »(b, s)), g b))],
+    by rwa [expr h1] [],
+    ext [] [ident x] [],
+    simp [] [] ["only"] ["[", expr exists_prop, ",", expr set.mem_Union, ",", expr function.comp_app, ",", expr subtype.exists, ",", expr subtype.coe_mk, "]"] [] [],
+    refl },
+  rcases [expr @mem_generate_pi_system_Union_elim α (subtype s) «expr ∘ »(g, subtype.val) (λ
+    b, h_pi b.val b.property) t this, "with", "⟨", ident T, ",", "⟨", ident f, ",", "⟨", ident rfl, ",", ident h_t', "⟩", "⟩", "⟩"],
+  refine [expr ⟨T.image subtype.val, function.extend subtype.val f (λ
+     b : β, («expr∅»() : set α)), by simp [] [] [] [] [] [], _, _⟩],
+  { ext [] [ident a] [],
+    split; { simp [] [] ["only"] ["[", expr set.mem_Inter, ",", expr subtype.forall, ",", expr finset.set_bInter_finset_image, "]"] [] [],
+      intros [ident h1, ident b, ident h_b, ident h_b_in_T],
+      have [ident h2] [] [":=", expr h1 b h_b h_b_in_T],
+      revert [ident h2],
+      rw [expr function.extend_apply subtype.val_injective] [],
+      apply [expr id] } },
+  { intros [ident b, ident h_b],
+    simp_rw ["[", expr finset.mem_image, ",", expr exists_prop, ",", expr subtype.exists, ",", expr exists_and_distrib_right, ",", expr exists_eq_right, "]"] ["at", ident h_b],
+    cases [expr h_b] [],
+    have [ident h_b_alt] [":", expr «expr = »(b, (subtype.mk b h_b_w).val)] [":=", expr rfl],
+    rw ["[", expr h_b_alt, ",", expr function.extend_apply subtype.val_injective, "]"] [],
+    apply [expr h_t'],
+    apply [expr h_b_h] }
+end
 
 namespace MeasurableSpace
 

@@ -76,15 +76,19 @@ variable[CompleteSpace E](p q : Subspace 𝕜 E)
 
 open continuous_linear_map(subtype_val)
 
+-- error in Analysis.NormedSpace.Complemented: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `q` is a closed complement of a closed subspace `p`, then `p × q` is continuously
 isomorphic to `E`. -/
-def prod_equiv_of_closed_compl (h : IsCompl p q) (hp : IsClosed (p : Set E)) (hq : IsClosed (q : Set E)) :
-  (p × q) ≃L[𝕜] E :=
-  by 
-    haveI  := hp.complete_space_coe 
-    haveI  := hq.complete_space_coe 
-    refine' (p.prod_equiv_of_is_compl q h).toContinuousLinearEquivOfContinuous _ 
-    exact ((subtype_val p).coprod (subtype_val q)).Continuous
+def prod_equiv_of_closed_compl
+(h : is_compl p q)
+(hp : is_closed (p : set E))
+(hq : is_closed (q : set E)) : «expr ≃L[ ] »(«expr × »(p, q), 𝕜, E) :=
+begin
+  haveI [] [] [":=", expr hp.complete_space_coe],
+  haveI [] [] [":=", expr hq.complete_space_coe],
+  refine [expr (p.prod_equiv_of_is_compl q h).to_continuous_linear_equiv_of_continuous _],
+  exact [expr ((subtype_val p).coprod (subtype_val q)).continuous]
+end
 
 /-- Projection to a closed submodule along a closed complement. -/
 def linear_proj_of_closed_compl (h : IsCompl p q) (hp : IsClosed (p : Set E)) (hq : IsClosed (q : Set E)) : E →L[𝕜] p :=
@@ -121,12 +125,16 @@ theorem closed_complemented_iff_has_closed_compl :
   ⟨fun h => ⟨h.is_closed, h.has_closed_complement⟩,
     fun ⟨hp, ⟨q, hq, hpq⟩⟩ => closed_complemented_of_closed_compl hpq hp hq⟩
 
-theorem closed_complemented_of_quotient_finite_dimensional [CompleteSpace 𝕜] [FiniteDimensional 𝕜 p.quotient]
-  (hp : IsClosed (p : Set E)) : p.closed_complemented :=
-  by 
-    obtain ⟨q, hq⟩ : ∃ q, IsCompl p q := p.exists_is_compl 
-    haveI  : FiniteDimensional 𝕜 q := (p.quotient_equiv_of_is_compl q hq).FiniteDimensional 
-    exact closed_complemented_of_closed_compl hq hp q.closed_of_finite_dimensional
+-- error in Analysis.NormedSpace.Complemented: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem closed_complemented_of_quotient_finite_dimensional
+[complete_space 𝕜]
+[finite_dimensional 𝕜 p.quotient]
+(hp : is_closed (p : set E)) : p.closed_complemented :=
+begin
+  obtain ["⟨", ident q, ",", ident hq, "⟩", ":", expr «expr∃ , »((q), is_compl p q), ":=", expr p.exists_is_compl],
+  haveI [] [":", expr finite_dimensional 𝕜 q] [":=", expr (p.quotient_equiv_of_is_compl q hq).finite_dimensional],
+  exact [expr closed_complemented_of_closed_compl hq hp q.closed_of_finite_dimensional]
+end
 
 end Subspace
 

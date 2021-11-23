@@ -198,7 +198,7 @@ theorem mono_iff_injective {X Y : Type u} (f : X ⟶ Y) : mono f ↔ Function.In
     split 
     ·
       intro H x x' h 
-      resetI 
+      skip 
       rw [←hom_of_element_eq_iff] at h⊢
       exact (cancel_mono f).mp h
     ·
@@ -221,7 +221,7 @@ theorem epi_iff_surjective {X Y : Type u} (f : X ⟶ Y) : epi f ↔ Function.Sur
       let h : Y ⟶ Ulift Prop := fun y => ⟨∃ x, f x = y⟩
       suffices  : f ≫ g = f ≫ h
       ·
-        resetI 
+        skip 
         rw [cancel_epi] at this 
         intro y 
         replace this := congr_funₓ this y 
@@ -326,7 +326,7 @@ theorem is_iso_iff_bijective {X Y : Type u} (f : X ⟶ Y) : is_iso f ↔ Functio
   Iff.intro
     (fun i =>
       (by 
-            exactI as_iso f :
+            exact as_iso f :
           X ≅ Y).toEquiv.Bijective)
     fun b => is_iso.of_iso (Equiv.ofBijective f b).toIso
 

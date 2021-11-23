@@ -101,50 +101,58 @@ linear equiv maps Haar measure to Haar measure.
 -/
 
 
-theorem map_linear_map_add_haar_pi_eq_smul_add_haar {ι : Type _} [Fintype ι] {f : (ι → ℝ) →ₗ[ℝ] ι → ℝ} (hf : f.det ≠ 0)
-  (μ : Measureₓ (ι → ℝ)) [is_add_haar_measure μ] : measure.map f μ = Ennreal.ofReal (abs (f.det⁻¹)) • μ :=
-  by 
-    have  := add_haar_measure_unique (is_add_left_invariant_add_haar μ) (pi_Icc01 ι)
-    convLHS => rw [this]
-    convRHS => rw [this]
-    simp [add_haar_measure_eq_volume_pi, Real.map_linear_map_volume_pi_eq_smul_volume_pi hf, smul_smul, mul_commₓ]
+-- error in MeasureTheory.Measure.HaarLebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_linear_map_add_haar_pi_eq_smul_add_haar
+{ι : Type*}
+[fintype ι]
+{f : «expr →ₗ[ ] »(ι → exprℝ(), exprℝ(), ι → exprℝ())}
+(hf : «expr ≠ »(f.det, 0))
+(μ : measure (ι → exprℝ()))
+[is_add_haar_measure μ] : «expr = »(measure.map f μ, «expr • »(ennreal.of_real (abs «expr ⁻¹»(f.det)), μ)) :=
+begin
+  have [] [] [":=", expr add_haar_measure_unique (is_add_left_invariant_add_haar μ) (pi_Icc01 ι)],
+  conv_lhs [] [] { rw [expr this] },
+  conv_rhs [] [] { rw [expr this] },
+  simp [] [] [] ["[", expr add_haar_measure_eq_volume_pi, ",", expr real.map_linear_map_volume_pi_eq_smul_volume_pi hf, ",", expr smul_smul, ",", expr mul_comm, "]"] [] []
+end
 
-theorem map_linear_map_add_haar_eq_smul_add_haar {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E]
-  [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measureₓ E) [is_add_haar_measure μ] {f : E →ₗ[ℝ] E} (hf : f.det ≠ 0) :
-  measure.map f μ = Ennreal.ofReal (abs (f.det⁻¹)) • μ :=
-  by 
-    let ι := Finₓ (finrank ℝ E)
-    haveI  : FiniteDimensional ℝ (ι → ℝ) :=
-      by 
-        infer_instance 
-    have  : finrank ℝ E = finrank ℝ (ι → ℝ)
-    ·
-      simp 
-    have e : E ≃ₗ[ℝ] ι → ℝ := linear_equiv.of_finrank_eq E (ι → ℝ) this 
-    obtain ⟨g, hg⟩ : ∃ g, g = (e : E →ₗ[ℝ] ι → ℝ).comp (f.comp (e.symm : (ι → ℝ) →ₗ[ℝ] E)) := ⟨_, rfl⟩
-    have gdet : g.det = f.det
-    ·
-      ·
-        rw [hg]
-        exact LinearMap.det_conj f e 
-    rw [←gdet] at hf⊢
-    have fg : f = (e.symm : (ι → ℝ) →ₗ[ℝ] E).comp (g.comp (e : E →ₗ[ℝ] ι → ℝ))
-    ·
-      ext x 
-      simp only [LinearEquiv.coe_coe, Function.comp_app, LinearMap.coe_comp, LinearEquiv.symm_apply_apply, hg]
-    simp only [fg, LinearEquiv.coe_coe, LinearMap.coe_comp]
-    have Ce : Continuous e := (e : E →ₗ[ℝ] ι → ℝ).continuous_of_finite_dimensional 
-    have Cg : Continuous g := LinearMap.continuous_of_finite_dimensional g 
-    have Cesymm : Continuous e.symm := (e.symm : (ι → ℝ) →ₗ[ℝ] E).continuous_of_finite_dimensional 
-    rw [←map_map Cesymm.measurable (Cg.comp Ce).Measurable, ←map_map Cg.measurable Ce.measurable]
-    haveI  : is_add_haar_measure (map e μ) := is_add_haar_measure_map μ e.to_add_equiv Ce Cesymm 
-    have ecomp : (e.symm ∘ e) = id
-    ·
-      ·
-        ext x 
-        simp only [id.def, Function.comp_app, LinearEquiv.symm_apply_apply]
-    rw [map_linear_map_add_haar_pi_eq_smul_add_haar hf (map e μ), LinearMap.map_smul,
-      map_map Cesymm.measurable Ce.measurable, ecomp, measure.map_id]
+-- error in MeasureTheory.Measure.HaarLebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_linear_map_add_haar_eq_smul_add_haar
+{E : Type*}
+[normed_group E]
+[normed_space exprℝ() E]
+[measurable_space E]
+[borel_space E]
+[finite_dimensional exprℝ() E]
+(μ : measure E)
+[is_add_haar_measure μ]
+{f : «expr →ₗ[ ] »(E, exprℝ(), E)}
+(hf : «expr ≠ »(f.det, 0)) : «expr = »(measure.map f μ, «expr • »(ennreal.of_real (abs «expr ⁻¹»(f.det)), μ)) :=
+begin
+  let [ident ι] [] [":=", expr fin (finrank exprℝ() E)],
+  haveI [] [":", expr finite_dimensional exprℝ() (ι → exprℝ())] [":=", expr by apply_instance],
+  have [] [":", expr «expr = »(finrank exprℝ() E, finrank exprℝ() (ι → exprℝ()))] [],
+  by simp [] [] [] [] [] [],
+  have [ident e] [":", expr «expr ≃ₗ[ ] »(E, exprℝ(), ι → exprℝ())] [":=", expr linear_equiv.of_finrank_eq E (ι → exprℝ()) this],
+  obtain ["⟨", ident g, ",", ident hg, "⟩", ":", expr «expr∃ , »((g), «expr = »(g, (e : «expr →ₗ[ ] »(E, exprℝ(), ι → exprℝ())).comp (f.comp (e.symm : «expr →ₗ[ ] »(ι → exprℝ(), exprℝ(), E))))), ":=", expr ⟨_, rfl⟩],
+  have [ident gdet] [":", expr «expr = »(g.det, f.det)] [],
+  by { rw ["[", expr hg, "]"] [],
+    exact [expr linear_map.det_conj f e] },
+  rw ["<-", expr gdet] ["at", ident hf, "⊢"],
+  have [ident fg] [":", expr «expr = »(f, (e.symm : «expr →ₗ[ ] »(ι → exprℝ(), exprℝ(), E)).comp (g.comp (e : «expr →ₗ[ ] »(E, exprℝ(), ι → exprℝ()))))] [],
+  { ext [] [ident x] [],
+    simp [] [] ["only"] ["[", expr linear_equiv.coe_coe, ",", expr function.comp_app, ",", expr linear_map.coe_comp, ",", expr linear_equiv.symm_apply_apply, ",", expr hg, "]"] [] [] },
+  simp [] [] ["only"] ["[", expr fg, ",", expr linear_equiv.coe_coe, ",", expr linear_map.coe_comp, "]"] [] [],
+  have [ident Ce] [":", expr continuous e] [":=", expr (e : «expr →ₗ[ ] »(E, exprℝ(), ι → exprℝ())).continuous_of_finite_dimensional],
+  have [ident Cg] [":", expr continuous g] [":=", expr linear_map.continuous_of_finite_dimensional g],
+  have [ident Cesymm] [":", expr continuous e.symm] [":=", expr (e.symm : «expr →ₗ[ ] »(ι → exprℝ(), exprℝ(), E)).continuous_of_finite_dimensional],
+  rw ["[", "<-", expr map_map Cesymm.measurable (Cg.comp Ce).measurable, ",", "<-", expr map_map Cg.measurable Ce.measurable, "]"] [],
+  haveI [] [":", expr is_add_haar_measure (map e μ)] [":=", expr is_add_haar_measure_map μ e.to_add_equiv Ce Cesymm],
+  have [ident ecomp] [":", expr «expr = »(«expr ∘ »(e.symm, e), id)] [],
+  by { ext [] [ident x] [],
+    simp [] [] ["only"] ["[", expr id.def, ",", expr function.comp_app, ",", expr linear_equiv.symm_apply_apply, "]"] [] [] },
+  rw ["[", expr map_linear_map_add_haar_pi_eq_smul_add_haar hf (map e μ), ",", expr linear_map.map_smul, ",", expr map_map Cesymm.measurable Ce.measurable, ",", expr ecomp, ",", expr measure.map_id, "]"] []
+end
 
 @[simp]
 theorem haar_preimage_linear_map {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E]
@@ -168,17 +176,19 @@ variable{E :
       _}[NormedGroup
       E][MeasurableSpace E][NormedSpace ℝ E][FiniteDimensional ℝ E][BorelSpace E](μ : Measureₓ E)[is_add_haar_measure μ]
 
-theorem map_add_haar_smul {r : ℝ} (hr : r ≠ 0) :
-  measure.map ((· • ·) r) μ = Ennreal.ofReal (abs ((r^finrank ℝ E)⁻¹)) • μ :=
-  by 
-    let f : E →ₗ[ℝ] E := r • 1
-    change measure.map f μ = _ 
-    have hf : f.det ≠ 0
-    ·
-      simp only [mul_oneₓ, LinearMap.det_smul, Ne.def, MonoidHom.map_one]
-      intro h 
-      exact hr (pow_eq_zero h)
-    simp only [map_linear_map_add_haar_eq_smul_add_haar μ hf, mul_oneₓ, LinearMap.det_smul, MonoidHom.map_one]
+-- error in MeasureTheory.Measure.HaarLebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_add_haar_smul
+{r : exprℝ()}
+(hr : «expr ≠ »(r, 0)) : «expr = »(measure.map (((«expr • »)) r) μ, «expr • »(ennreal.of_real (abs «expr ⁻¹»(«expr ^ »(r, finrank exprℝ() E))), μ)) :=
+begin
+  let [ident f] [":", expr «expr →ₗ[ ] »(E, exprℝ(), E)] [":=", expr «expr • »(r, 1)],
+  change [expr «expr = »(measure.map f μ, _)] [] [],
+  have [ident hf] [":", expr «expr ≠ »(f.det, 0)] [],
+  { simp [] [] ["only"] ["[", expr mul_one, ",", expr linear_map.det_smul, ",", expr ne.def, ",", expr monoid_hom.map_one, "]"] [] [],
+    assume [binders (h)],
+    exact [expr hr (pow_eq_zero h)] },
+  simp [] [] ["only"] ["[", expr map_linear_map_add_haar_eq_smul_add_haar μ hf, ",", expr mul_one, ",", expr linear_map.det_smul, ",", expr monoid_hom.map_one, "]"] [] []
+end
 
 theorem add_haar_preimage_smul {r : ℝ} (hr : r ≠ 0) (s : Set E) :
   μ ((· • ·) r ⁻¹' s) = Ennreal.ofReal (abs ((r^finrank ℝ E)⁻¹))*μ s :=
@@ -190,24 +200,23 @@ theorem add_haar_preimage_smul {r : ℝ} (hr : r ≠ 0) (s : Set E) :
       rfl
     
 
+-- error in MeasureTheory.Measure.HaarLebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Rescaling a set by a factor `r` multiplies its measure by `abs (r ^ dim)`. -/
-theorem add_haar_smul (r : ℝ) (s : Set E) : μ (r • s) = Ennreal.ofReal (abs (r^finrank ℝ E))*μ s :=
-  by 
-    rcases ne_or_eq r 0 with (h | rfl)
-    ·
-      rw [←preimage_smul_inv₀ h, add_haar_preimage_smul μ (inv_ne_zero h), inv_pow₀, inv_inv₀]
-    rcases eq_empty_or_nonempty s with (rfl | hs)
-    ·
-      simp only [measure_empty, mul_zero, smul_set_empty]
-    rw [zero_smul_set hs, ←singleton_zero]
-    byCases' h : finrank ℝ E = 0
-    ·
-      haveI  : Subsingleton E := finrank_zero_iff.1 h 
-      simp only [h, one_mulₓ, Ennreal.of_real_one, abs_one, Subsingleton.eq_univ_of_nonempty hs, pow_zeroₓ,
-        Subsingleton.eq_univ_of_nonempty (singleton_nonempty (0 : E))]
-    ·
-      haveI  : Nontrivial E := nontrivial_of_finrank_pos (bot_lt_iff_ne_bot.2 h)
-      simp only [h, zero_mul, Ennreal.of_real_zero, abs_zero, Ne.def, not_false_iff, zero_pow', measure_singleton]
+theorem add_haar_smul
+(r : exprℝ())
+(s : set E) : «expr = »(μ «expr • »(r, s), «expr * »(ennreal.of_real (abs «expr ^ »(r, finrank exprℝ() E)), μ s)) :=
+begin
+  rcases [expr ne_or_eq r 0, "with", ident h, "|", ident rfl],
+  { rw ["[", "<-", expr preimage_smul_inv₀ h, ",", expr add_haar_preimage_smul μ (inv_ne_zero h), ",", expr inv_pow₀, ",", expr inv_inv₀, "]"] [] },
+  rcases [expr eq_empty_or_nonempty s, "with", ident rfl, "|", ident hs],
+  { simp [] [] ["only"] ["[", expr measure_empty, ",", expr mul_zero, ",", expr smul_set_empty, "]"] [] [] },
+  rw ["[", expr zero_smul_set hs, ",", "<-", expr singleton_zero, "]"] [],
+  by_cases [expr h, ":", expr «expr = »(finrank exprℝ() E, 0)],
+  { haveI [] [":", expr subsingleton E] [":=", expr finrank_zero_iff.1 h],
+    simp [] [] ["only"] ["[", expr h, ",", expr one_mul, ",", expr ennreal.of_real_one, ",", expr abs_one, ",", expr subsingleton.eq_univ_of_nonempty hs, ",", expr pow_zero, ",", expr subsingleton.eq_univ_of_nonempty (singleton_nonempty (0 : E)), "]"] [] [] },
+  { haveI [] [":", expr nontrivial E] [":=", expr nontrivial_of_finrank_pos (bot_lt_iff_ne_bot.2 h)],
+    simp [] [] ["only"] ["[", expr h, ",", expr zero_mul, ",", expr ennreal.of_real_zero, ",", expr abs_zero, ",", expr ne.def, ",", expr not_false_iff, ",", expr zero_pow', ",", expr measure_singleton, "]"] [] [] }
+end
 
 /-! We don't need to state `map_add_haar_neg` here, because it has already been proved for
 general Haar measures on general commutative groups. -/
@@ -216,21 +225,37 @@ general Haar measures on general commutative groups. -/
 /-! ### Measure of balls -/
 
 
-theorem add_haar_ball_center {E : Type _} [NormedGroup E] [MeasurableSpace E] [BorelSpace E] (μ : Measureₓ E)
-  [is_add_haar_measure μ] (x : E) (r : ℝ) : μ (ball x r) = μ (ball (0 : E) r) :=
-  by 
-    have  : ball (0 : E) r = (·+·) x ⁻¹' ball x r
-    ·
-      simp [preimage_add_ball]
-    rw [this, add_haar_preimage_add]
+-- error in MeasureTheory.Measure.HaarLebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem add_haar_ball_center
+{E : Type*}
+[normed_group E]
+[measurable_space E]
+[borel_space E]
+(μ : measure E)
+[is_add_haar_measure μ]
+(x : E)
+(r : exprℝ()) : «expr = »(μ (ball x r), μ (ball (0 : E) r)) :=
+begin
+  have [] [":", expr «expr = »(ball (0 : E) r, «expr ⁻¹' »(((«expr + »)) x, ball x r))] [],
+  by simp [] [] [] ["[", expr preimage_add_ball, "]"] [] [],
+  rw ["[", expr this, ",", expr add_haar_preimage_add, "]"] []
+end
 
-theorem add_haar_closed_ball_center {E : Type _} [NormedGroup E] [MeasurableSpace E] [BorelSpace E] (μ : Measureₓ E)
-  [is_add_haar_measure μ] (x : E) (r : ℝ) : μ (closed_ball x r) = μ (closed_ball (0 : E) r) :=
-  by 
-    have  : closed_ball (0 : E) r = (·+·) x ⁻¹' closed_ball x r
-    ·
-      simp [preimage_add_closed_ball]
-    rw [this, add_haar_preimage_add]
+-- error in MeasureTheory.Measure.HaarLebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem add_haar_closed_ball_center
+{E : Type*}
+[normed_group E]
+[measurable_space E]
+[borel_space E]
+(μ : measure E)
+[is_add_haar_measure μ]
+(x : E)
+(r : exprℝ()) : «expr = »(μ (closed_ball x r), μ (closed_ball (0 : E) r)) :=
+begin
+  have [] [":", expr «expr = »(closed_ball (0 : E) r, «expr ⁻¹' »(((«expr + »)) x, closed_ball x r))] [],
+  by simp [] [] [] ["[", expr preimage_add_closed_ball, "]"] [] [],
+  rw ["[", expr this, ",", expr add_haar_preimage_add, "]"] []
+end
 
 theorem add_haar_closed_ball_lt_top {E : Type _} [NormedGroup E] [ProperSpace E] [MeasurableSpace E] (μ : Measureₓ E)
   [is_add_haar_measure μ] (x : E) (r : ℝ) : μ (closed_ball x r) < ∞ :=
@@ -248,13 +273,16 @@ theorem add_haar_closed_ball_pos {E : Type _} [NormedGroup E] [MeasurableSpace E
   [is_add_haar_measure μ] (x : E) {r : ℝ} (hr : 0 < r) : 0 < μ (closed_ball x r) :=
   lt_of_lt_of_leₓ (add_haar_ball_pos μ x hr) (measure_mono ball_subset_closed_ball)
 
-theorem add_haar_ball_of_pos (x : E) {r : ℝ} (hr : 0 < r) :
-  μ (ball x r) = Ennreal.ofReal (r^finrank ℝ E)*μ (ball 0 1) :=
-  by 
-    have  : ball (0 : E) r = r • ball 0 1
-    ·
-      simp [smul_ball hr.ne' (0 : E) 1, Real.norm_eq_abs, abs_of_nonneg hr.le]
-    simp [this, add_haar_smul, abs_of_nonneg hr.le, add_haar_ball_center]
+-- error in MeasureTheory.Measure.HaarLebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem add_haar_ball_of_pos
+(x : E)
+{r : exprℝ()}
+(hr : «expr < »(0, r)) : «expr = »(μ (ball x r), «expr * »(ennreal.of_real «expr ^ »(r, finrank exprℝ() E), μ (ball 0 1))) :=
+begin
+  have [] [":", expr «expr = »(ball (0 : E) r, «expr • »(r, ball 0 1))] [],
+  by simp [] [] [] ["[", expr smul_ball hr.ne' (0 : E) 1, ",", expr real.norm_eq_abs, ",", expr abs_of_nonneg hr.le, "]"] [] [],
+  simp [] [] [] ["[", expr this, ",", expr add_haar_smul, ",", expr abs_of_nonneg hr.le, ",", expr add_haar_ball_center, "]"] [] []
+end
 
 theorem add_haar_ball [Nontrivial E] (x : E) {r : ℝ} (hr : 0 ≤ r) :
   μ (ball x r) = Ennreal.ofReal (r^finrank ℝ E)*μ (ball 0 1) :=
@@ -265,43 +293,35 @@ theorem add_haar_ball [Nontrivial E] (x : E) {r : ℝ} (hr : 0 ≤ r) :
     ·
       exact add_haar_ball_of_pos μ x h
 
+-- error in MeasureTheory.Measure.HaarLebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The measure of a closed ball can be expressed in terms of the measure of the closed unit ball.
 Use instead `add_haar_closed_ball`, which uses the measure of the open unit ball as a standard
 form. -/
-theorem add_haar_closed_ball' (x : E) {r : ℝ} (hr : 0 ≤ r) :
-  μ (closed_ball x r) = Ennreal.ofReal (r^finrank ℝ E)*μ (closed_ball 0 1) :=
-  by 
-    have  : closed_ball (0 : E) r = r • closed_ball 0 1
-    ·
-      simp [smul_closed_ball r (0 : E) zero_le_one, Real.norm_eq_abs, abs_of_nonneg hr]
-    simp [this, add_haar_smul, abs_of_nonneg hr, add_haar_closed_ball_center]
+theorem add_haar_closed_ball'
+(x : E)
+{r : exprℝ()}
+(hr : «expr ≤ »(0, r)) : «expr = »(μ (closed_ball x r), «expr * »(ennreal.of_real «expr ^ »(r, finrank exprℝ() E), μ (closed_ball 0 1))) :=
+begin
+  have [] [":", expr «expr = »(closed_ball (0 : E) r, «expr • »(r, closed_ball 0 1))] [],
+  by simp [] [] [] ["[", expr smul_closed_ball r (0 : E) zero_le_one, ",", expr real.norm_eq_abs, ",", expr abs_of_nonneg hr, "]"] [] [],
+  simp [] [] [] ["[", expr this, ",", expr add_haar_smul, ",", expr abs_of_nonneg hr, ",", expr add_haar_closed_ball_center, "]"] [] []
+end
 
-theorem add_haar_closed_unit_ball_eq_add_haar_unit_ball : μ (closed_ball (0 : E) 1) = μ (ball 0 1) :=
-  by 
-    apply le_antisymmₓ _ (measure_mono ball_subset_closed_ball)
-    have A :
-      tendsto (fun r : ℝ => Ennreal.ofReal (r^finrank ℝ E)*μ (closed_ball (0 : E) 1)) (𝓝[Iio 1] 1)
-        (𝓝 (Ennreal.ofReal (1^finrank ℝ E)*μ (closed_ball (0 : E) 1)))
-    ·
-      refine'
-        Ennreal.Tendsto.mul _
-          (by 
-            simp )
-          tendsto_const_nhds
-          (by 
-            simp )
-      exact Ennreal.tendsto_of_real ((tendsto_id' nhds_within_le_nhds).pow _)
-    simp only [one_pow, one_mulₓ, Ennreal.of_real_one] at A 
-    refine' le_of_tendsto A _ 
-    refine'
-      mem_nhds_within_Iio_iff_exists_Ioo_subset.2
-        ⟨(0 : ℝ),
-          by 
-            simp ,
-          fun r hr => _⟩
-    dsimp 
-    rw [←add_haar_closed_ball' μ (0 : E) hr.1.le]
-    exact measure_mono (closed_ball_subset_ball hr.2)
+-- error in MeasureTheory.Measure.HaarLebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem add_haar_closed_unit_ball_eq_add_haar_unit_ball : «expr = »(μ (closed_ball (0 : E) 1), μ (ball 0 1)) :=
+begin
+  apply [expr le_antisymm _ (measure_mono ball_subset_closed_ball)],
+  have [ident A] [":", expr tendsto (λ
+    r : exprℝ(), «expr * »(ennreal.of_real «expr ^ »(r, finrank exprℝ() E), μ (closed_ball (0 : E) 1))) «expr𝓝[ ] »(Iio 1, 1) (expr𝓝() «expr * »(ennreal.of_real «expr ^ »(1, finrank exprℝ() E), μ (closed_ball (0 : E) 1)))] [],
+  { refine [expr ennreal.tendsto.mul _ (by simp [] [] [] [] [] []) tendsto_const_nhds (by simp [] [] [] [] [] [])],
+    exact [expr ennreal.tendsto_of_real ((tendsto_id' nhds_within_le_nhds).pow _)] },
+  simp [] [] ["only"] ["[", expr one_pow, ",", expr one_mul, ",", expr ennreal.of_real_one, "]"] [] ["at", ident A],
+  refine [expr le_of_tendsto A _],
+  refine [expr mem_nhds_within_Iio_iff_exists_Ioo_subset.2 ⟨(0 : exprℝ()), by simp [] [] [] [] [] [], λ r hr, _⟩],
+  dsimp [] [] [] [],
+  rw ["<-", expr add_haar_closed_ball' μ (0 : E) hr.1.le] [],
+  exact [expr measure_mono (closed_ball_subset_ball hr.2)]
+end
 
 theorem add_haar_closed_ball (x : E) {r : ℝ} (hr : 0 ≤ r) :
   μ (closed_ball x r) = Ennreal.ofReal (r^finrank ℝ E)*μ (ball 0 1) :=

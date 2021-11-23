@@ -1,6 +1,9 @@
-import Mathbin.Tactic.SimpResult 
+import Mathbin.Data.Equiv.Basic 
 import Mathbin.Tactic.Clear 
-import Mathbin.Control.EquivFunctor.Instances
+import Mathbin.Tactic.SimpResult 
+import Mathbin.Tactic.Apply 
+import Mathbin.Control.EquivFunctor.Instances 
+import Mathbin.Data.Equiv.Functor
 
 /-!
 # The `equiv_rw` tactic transports goals or hypotheses along equivalences.
@@ -119,8 +122,8 @@ unsafe def equiv_rw_type (eqv : expr) (ty : expr) (cfg : equiv_rw_cfg) : tactic 
           let eqv_pp ← pp eqv 
           let eqv_ty_pp ← infer_type eqv >>= pp 
           trace f! "Attempting to rewrite the type `{ty_pp }` using `{eqv_pp } : {eqv_ty_pp }`."
-    let quote _ ≃ _ ← infer_type eqv | fail f! "{eqv } must be an `equiv`"
-    let equiv_ty ← to_expr (pquote (%%ty) ≃ _)
+    let quote.1 (_ ≃ _) ← infer_type eqv | fail f! "{eqv } must be an `equiv`"
+    let equiv_ty ← to_expr (pquote.1 ((%%ₓty) ≃ _))
     let new_eqv ← Prod.snd <$> (solve_aux equiv_ty$ equiv_rw_type_core eqv cfg)
     let new_eqv ← instantiate_mvars new_eqv 
     kdepends_on new_eqv eqv >>= guardb <|>
@@ -145,11 +148,11 @@ unsafe def equiv_rw_hyp (x : Name) (e : expr) (cfg : equiv_rw_cfg := {  }) : tac
       let x' ← get_local x 
       let x_ty ← infer_type x' 
       let e ← equiv_rw_type e x_ty cfg 
-      let eq ← to_expr (pquote (%%x') = Equiv.symm (%%e) (Equiv.toFun (%%e) (%%x')))
-      let prf ← to_expr (pquote (Equiv.symm_apply_apply (%%e) (%%x')).symm)
+      let eq ← to_expr (pquote.1 ((%%ₓx') = Equiv.symm (%%ₓe) (Equiv.toFun (%%ₓe) (%%ₓx'))))
+      let prf ← to_expr (pquote.1 (Equiv.symm_apply_apply (%%ₓe) (%%ₓx')).symm)
       let h ← note_anon Eq prf 
       revert h 
-      let ex ← to_expr (pquote Equiv.toFun (%%e) (%%x'))
+      let ex ← to_expr (pquote.1 (Equiv.toFun (%%ₓe) (%%ₓx')))
       generalize ex
           (by 
             inferOptParam)
@@ -172,7 +175,7 @@ unsafe def equiv_rw_target (e : expr) (cfg : equiv_rw_cfg := {  }) : tactic Unit
   do 
     let t ← target 
     let e ← equiv_rw_type e t cfg 
-    let s ← to_expr (pquote Equiv.invFun (%%e))
+    let s ← to_expr (pquote.1 (Equiv.invFun (%%ₓe)))
     tactic.eapply s 
     skip
 
@@ -226,7 +229,7 @@ have e' : option α ≃ option β := by equiv_rw_type e
 -/
 unsafe def equiv_rw_type (e : parse texpr) (cfg : equiv_rw_cfg := {  }) : itactic :=
   do 
-    let quote (%%t) ≃ _ ← target | fail "`equiv_rw_type` solves goals of the form `t ≃ _`."
+    let quote.1 ((%%ₓt) ≃ _) ← target | fail "`equiv_rw_type` solves goals of the form `t ≃ _`."
     let e ← to_expr e 
     tactic.equiv_rw_type e t cfg >>= tactic.exact
 

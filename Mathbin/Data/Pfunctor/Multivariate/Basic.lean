@@ -1,6 +1,5 @@
 import Mathbin.Control.Functor.Multivariate 
-import Mathbin.Data.Pfunctor.Univariate.Default 
-import Mathbin.Data.Sigma.Default
+import Mathbin.Data.Pfunctor.Univariate.Basic
 
 /-!
 # Multivariate polynomial functors.
@@ -152,19 +151,18 @@ theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.obj �
     rw [xeq]
     rfl
 
--- error in Data.Pfunctor.Multivariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem liftp_iff'
-{α : typevec n}
-(p : ∀ {{i}}, α i → exprProp())
-(a : P.A)
-(f : «expr ⟹ »(P.B a, α)) : «expr ↔ »(@liftp.{u} _ P.obj _ α p ⟨a, f⟩, ∀ i x, p (f i x)) :=
-begin
-  simp [] [] ["only"] ["[", expr liftp_iff, ",", expr sigma.mk.inj_iff, "]"] [] []; split; intro [],
-  { casesm ["*"] ["[", expr Exists _, ",", expr «expr ∧ »(_, _), "]"],
-    subst_vars,
-    assumption },
-  repeat { constructor <|> assumption }
-end
+theorem liftp_iff' {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (f : P.B a ⟹ α) :
+  @liftp.{u} _ P.obj _ α p ⟨a, f⟩ ↔ ∀ i x, p (f i x) :=
+  by 
+    simp only [liftp_iff, Sigma.mk.inj_iff] <;> split  <;> intro 
+    ·
+      casesM* Exists _, _ ∧ _ 
+      substVars 
+      assumption 
+    repeat' 
+      first |
+        constructor|
+        assumption
 
 theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : P.obj α) :
   liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) :=

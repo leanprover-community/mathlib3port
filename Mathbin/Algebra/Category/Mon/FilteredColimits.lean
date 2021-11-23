@@ -262,7 +262,7 @@ instance forget_preserves_filtered_colimits : preserves_filtered_colimits (forge
   { PreservesFilteredColimits :=
       fun J _ _ =>
         by 
-          exactI
+          exact
             { PreservesColimit :=
                 fun F =>
                   preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
@@ -334,7 +334,7 @@ instance forget₂_Mon_preserves_filtered_colimits : preserves_filtered_colimits
   { PreservesFilteredColimits :=
       fun J _ _ =>
         by 
-          exactI
+          exact
             { PreservesColimit :=
                 fun F =>
                   preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)

@@ -30,98 +30,82 @@ namespace Zmod
 
 variable(p q : ℕ)[Fact p.prime][Fact q.prime]
 
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Euler's Criterion: A unit `x` of `zmod p` is a square if and only if `x ^ (p / 2) = 1`. -/
-theorem euler_criterion_units (x : Units (Zmod p)) : (∃ y : Units (Zmod p), (y^2) = x) ↔ (x^p / 2) = 1 :=
-  by 
-    cases' Nat.Prime.eq_two_or_odd (Fact.out p.prime) with hp2 hp_odd
-    ·
-      substI p 
-      refine' iff_of_true ⟨1, _⟩ _ <;> apply Subsingleton.elimₓ 
-    obtain ⟨g, hg⟩ := IsCyclic.exists_generator (Units (Zmod p))
-    obtain ⟨n, hn⟩ : x ∈ Submonoid.powers g
-    ·
-      rw [mem_powers_iff_mem_zpowers]
-      apply hg 
-    split 
-    ·
-      rintro ⟨y, rfl⟩
-      rw [←pow_mulₓ, two_mul_odd_div_two hp_odd, units_pow_card_sub_one_eq_one]
-    ·
-      subst x 
-      intro h 
-      have key : (2*p / 2) ∣ n*p / 2
-      ·
-        rw [←pow_mulₓ] at h 
-        rw [two_mul_odd_div_two hp_odd, ←card_units, ←order_of_eq_card_of_forall_mem_zpowers hg]
-        apply order_of_dvd_of_pow_eq_one h 
-      have  : 0 < p / 2 :=
-        Nat.div_pos (Fact.out (1 < p))
-          (by 
-            decide)
-      obtain ⟨m, rfl⟩ := dvd_of_mul_dvd_mul_right this key 
-      refine' ⟨g^m, _⟩
-      rw [mul_commₓ, pow_mulₓ]
+theorem euler_criterion_units
+(x : units (zmod p)) : «expr ↔ »(«expr∃ , »((y : units (zmod p)), «expr = »(«expr ^ »(y, 2), x)), «expr = »(«expr ^ »(x, «expr / »(p, 2)), 1)) :=
+begin
+  cases [expr nat.prime.eq_two_or_odd (fact.out p.prime)] ["with", ident hp2, ident hp_odd],
+  { substI [expr p],
+    refine [expr iff_of_true ⟨1, _⟩ _]; apply [expr subsingleton.elim] },
+  obtain ["⟨", ident g, ",", ident hg, "⟩", ":=", expr is_cyclic.exists_generator (units (zmod p))],
+  obtain ["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr ∈ »(x, submonoid.powers g)],
+  { rw [expr mem_powers_iff_mem_zpowers] [],
+    apply [expr hg] },
+  split,
+  { rintro ["⟨", ident y, ",", ident rfl, "⟩"],
+    rw ["[", "<-", expr pow_mul, ",", expr two_mul_odd_div_two hp_odd, ",", expr units_pow_card_sub_one_eq_one, "]"] [] },
+  { subst [expr x],
+    assume [binders (h)],
+    have [ident key] [":", expr «expr ∣ »(«expr * »(2, «expr / »(p, 2)), «expr * »(n, «expr / »(p, 2)))] [],
+    { rw ["[", "<-", expr pow_mul, "]"] ["at", ident h],
+      rw ["[", expr two_mul_odd_div_two hp_odd, ",", "<-", expr card_units, ",", "<-", expr order_of_eq_card_of_forall_mem_zpowers hg, "]"] [],
+      apply [expr order_of_dvd_of_pow_eq_one h] },
+    have [] [":", expr «expr < »(0, «expr / »(p, 2))] [":=", expr nat.div_pos (fact.out «expr < »(1, p)) exprdec_trivial()],
+    obtain ["⟨", ident m, ",", ident rfl, "⟩", ":=", expr dvd_of_mul_dvd_mul_right this key],
+    refine [expr ⟨«expr ^ »(g, m), _⟩],
+    rw ["[", expr mul_comm, ",", expr pow_mul, "]"] [] }
+end
 
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Euler's Criterion: a nonzero `a : zmod p` is a square if and only if `x ^ (p / 2) = 1`. -/
-theorem euler_criterion {a : Zmod p} (ha : a ≠ 0) : (∃ y : Zmod p, (y^2) = a) ↔ (a^p / 2) = 1 :=
-  by 
-    apply
-      (iff_congr _
-            (by 
-              simp [Units.ext_iff])).mp
-        (euler_criterion_units p (Units.mk0 a ha))
-    simp only [Units.ext_iff, sq, Units.coe_mk0, Units.coe_mul]
-    split 
-    ·
-      rintro ⟨y, hy⟩
-      exact ⟨y, hy⟩
-    ·
-      rintro ⟨y, rfl⟩
-      have hy : y ≠ 0
-      ·
-        rintro rfl 
-        simpa [zero_pow] using ha 
-      refine' ⟨Units.mk0 y hy, _⟩
-      simp 
+theorem euler_criterion
+{a : zmod p}
+(ha : «expr ≠ »(a, 0)) : «expr ↔ »(«expr∃ , »((y : zmod p), «expr = »(«expr ^ »(y, 2), a)), «expr = »(«expr ^ »(a, «expr / »(p, 2)), 1)) :=
+begin
+  apply [expr (iff_congr _ (by simp [] [] [] ["[", expr units.ext_iff, "]"] [] [])).mp (euler_criterion_units p (units.mk0 a ha))],
+  simp [] [] ["only"] ["[", expr units.ext_iff, ",", expr sq, ",", expr units.coe_mk0, ",", expr units.coe_mul, "]"] [] [],
+  split,
+  { rintro ["⟨", ident y, ",", ident hy, "⟩"],
+    exact [expr ⟨y, hy⟩] },
+  { rintro ["⟨", ident y, ",", ident rfl, "⟩"],
+    have [ident hy] [":", expr «expr ≠ »(y, 0)] [],
+    { rintro [ident rfl],
+      simpa [] [] [] ["[", expr zero_pow, "]"] [] ["using", expr ha] },
+    refine [expr ⟨units.mk0 y hy, _⟩],
+    simp [] [] [] [] [] [] }
+end
 
-theorem exists_sq_eq_neg_one_iff_mod_four_ne_three : (∃ y : Zmod p, (y^2) = -1) ↔ p % 4 ≠ 3 :=
-  by 
-    cases' Nat.Prime.eq_two_or_odd (Fact.out p.prime) with hp2 hp_odd
-    ·
-      substI p 
-      exact
-        by 
-          decide 
-    haveI  := Fact.mk hp_odd 
-    have neg_one_ne_zero : (-1 : Zmod p) ≠ 0 
-    exact mt neg_eq_zero.1 one_ne_zero 
-    rw [euler_criterion p neg_one_ne_zero, neg_one_pow_eq_pow_mod_two]
-    cases' mod_two_eq_zero_or_one (p / 2) with p_half_even p_half_odd
-    ·
-      rw [p_half_even, pow_zeroₓ, eq_self_iff_true, true_iffₓ]
-      contrapose! p_half_even with hp 
-      rw [←Nat.mod_mul_right_div_self, show (2*2) = 4 from rfl, hp]
-      exact
-        by 
-          decide
-    ·
-      rw [p_half_odd, pow_oneₓ, iff_false_intro (ne_neg_self p one_ne_zero).symm, false_iffₓ, not_not]
-      rw [←Nat.mod_mul_right_div_self, show (2*2) = 4 from rfl] at p_half_odd 
-      rw [←Nat.mod_mul_left_mod _ 2, show (2*2) = 4 from rfl] at hp_odd 
-      have hp : p % 4 < 4 
-      exact
-        Nat.mod_ltₓ _
-          (by 
-            decide)
-      revert hp hp_odd p_half_odd 
-      generalize p % 4 = k 
-      decide!
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_sq_eq_neg_one_iff_mod_four_ne_three : «expr ↔ »(«expr∃ , »((y : zmod p), «expr = »(«expr ^ »(y, 2), «expr- »(1))), «expr ≠ »(«expr % »(p, 4), 3)) :=
+begin
+  cases [expr nat.prime.eq_two_or_odd (fact.out p.prime)] ["with", ident hp2, ident hp_odd],
+  { substI [expr p],
+    exact [expr exprdec_trivial()] },
+  haveI [] [] [":=", expr fact.mk hp_odd],
+  have [ident neg_one_ne_zero] [":", expr «expr ≠ »((«expr- »(1) : zmod p), 0)] [],
+  from [expr mt neg_eq_zero.1 one_ne_zero],
+  rw ["[", expr euler_criterion p neg_one_ne_zero, ",", expr neg_one_pow_eq_pow_mod_two, "]"] [],
+  cases [expr mod_two_eq_zero_or_one «expr / »(p, 2)] ["with", ident p_half_even, ident p_half_odd],
+  { rw ["[", expr p_half_even, ",", expr pow_zero, ",", expr eq_self_iff_true, ",", expr true_iff, "]"] [],
+    contrapose ["!"] [ident p_half_even, "with", ident hp],
+    rw ["[", "<-", expr nat.mod_mul_right_div_self, ",", expr show «expr = »(«expr * »(2, 2), 4), from rfl, ",", expr hp, "]"] [],
+    exact [expr exprdec_trivial()] },
+  { rw ["[", expr p_half_odd, ",", expr pow_one, ",", expr iff_false_intro (ne_neg_self p one_ne_zero).symm, ",", expr false_iff, ",", expr not_not, "]"] [],
+    rw ["[", "<-", expr nat.mod_mul_right_div_self, ",", expr show «expr = »(«expr * »(2, 2), 4), from rfl, "]"] ["at", ident p_half_odd],
+    rw ["[", "<-", expr nat.mod_mul_left_mod _ 2, ",", expr show «expr = »(«expr * »(2, 2), 4), from rfl, "]"] ["at", ident hp_odd],
+    have [ident hp] [":", expr «expr < »(«expr % »(p, 4), 4)] [],
+    from [expr nat.mod_lt _ exprdec_trivial()],
+    revert [ident hp, ident hp_odd, ident p_half_odd],
+    generalize [] [":"] [expr «expr = »(«expr % »(p, 4), k)],
+    dec_trivial ["!"] }
+end
 
 theorem pow_div_two_eq_neg_one_or_one {a : Zmod p} (ha : a ≠ 0) : (a^p / 2) = 1 ∨ (a^p / 2) = -1 :=
   by 
     cases' Nat.Prime.eq_two_or_odd (Fact.out p.prime) with hp2 hp_odd
     ·
-      substI p 
+      subst p 
       revert a ha 
       exact
         by 
@@ -129,52 +113,40 @@ theorem pow_div_two_eq_neg_one_or_one {a : Zmod p} (ha : a ≠ 0) : (a^p / 2) = 
     rw [←mul_self_eq_one_iff, ←pow_addₓ, ←two_mul, two_mul_odd_div_two hp_odd]
     exact pow_card_sub_one_eq_one ha
 
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Wilson's Lemma**: the product of `1`, ..., `p-1` is `-1` modulo `p`. -/
 @[simp]
-theorem wilsons_lemma : ((p - 1)! : Zmod p) = -1 :=
-  by 
-    refine'
-      calc ((p - 1)! : Zmod p) = ∏x in Ico 1 (succ (p - 1)), x :=
-        by 
-          rw [←Finset.prod_Ico_id_eq_factorial, prod_nat_cast]
-        _ = ∏x : Units (Zmod p), x := _ 
-        _ = -1 :=
-        by 
-          simpRw [←Units.coe_hom_apply, ←(Units.coeHom (Zmod p)).map_prod, prod_univ_units_id_eq_neg_one,
-            Units.coe_hom_apply, Units.coe_neg, Units.coe_one]
-        
-    have hp : 0 < p := (Fact.out p.prime).Pos 
-    symm 
-    refine' prod_bij (fun a _ => (a : Zmod p).val) _ _ _ _
-    ·
-      intro a ha 
-      rw [mem_Ico, ←Nat.succ_subₓ hp, Nat.succ_sub_one]
-      split 
-      ·
-        apply Nat.pos_of_ne_zeroₓ 
-        rw [←@val_zero p]
-        intro h 
-        apply Units.ne_zero a (val_injective p h)
-      ·
-        exact val_lt _
-    ·
-      intro a ha 
-      simp only [cast_id, nat_cast_val]
-    ·
-      intro _ _ _ _ h 
-      rw [Units.ext_iff]
-      exact val_injective p h
-    ·
-      intro b hb 
-      rw [mem_Ico, Nat.succ_le_iff, ←succ_sub hp, succ_sub_one, pos_iff_ne_zero] at hb 
-      refine' ⟨Units.mk0 b _, Finset.mem_univ _, _⟩
-      ·
-        intro h 
-        apply hb.1
-        applyFun val  at h 
-        simpa only [val_cast_of_lt hb.right, val_zero] using h
-      ·
-        simp only [val_cast_of_lt hb.right, Units.coe_mk0]
+theorem wilsons_lemma : «expr = »((«expr !»(«expr - »(p, 1)) : zmod p), «expr- »(1)) :=
+begin
+  refine [expr calc
+     «expr = »((«expr !»(«expr - »(p, 1)) : zmod p), «expr∏ in , »((x), Ico 1 (succ «expr - »(p, 1)), x)) : by rw ["[", "<-", expr finset.prod_Ico_id_eq_factorial, ",", expr prod_nat_cast, "]"] []
+     «expr = »(..., «expr∏ , »((x : units (zmod p)), x)) : _
+     «expr = »(..., «expr- »(1)) : by simp_rw ["[", "<-", expr units.coe_hom_apply, ",", "<-", expr (units.coe_hom (zmod p)).map_prod, ",", expr prod_univ_units_id_eq_neg_one, ",", expr units.coe_hom_apply, ",", expr units.coe_neg, ",", expr units.coe_one, "]"] []],
+  have [ident hp] [":", expr «expr < »(0, p)] [":=", expr (fact.out p.prime).pos],
+  symmetry,
+  refine [expr prod_bij (λ a _, (a : zmod p).val) _ _ _ _],
+  { intros [ident a, ident ha],
+    rw ["[", expr mem_Ico, ",", "<-", expr nat.succ_sub hp, ",", expr nat.succ_sub_one, "]"] [],
+    split,
+    { apply [expr nat.pos_of_ne_zero],
+      rw ["<-", expr @val_zero p] [],
+      assume [binders (h)],
+      apply [expr units.ne_zero a (val_injective p h)] },
+    { exact [expr val_lt _] } },
+  { intros [ident a, ident ha],
+    simp [] [] ["only"] ["[", expr cast_id, ",", expr nat_cast_val, "]"] [] [] },
+  { intros ["_", "_", "_", "_", ident h],
+    rw [expr units.ext_iff] [],
+    exact [expr val_injective p h] },
+  { intros [ident b, ident hb],
+    rw ["[", expr mem_Ico, ",", expr nat.succ_le_iff, ",", "<-", expr succ_sub hp, ",", expr succ_sub_one, ",", expr pos_iff_ne_zero, "]"] ["at", ident hb],
+    refine [expr ⟨units.mk0 b _, finset.mem_univ _, _⟩],
+    { assume [binders (h)],
+      apply [expr hb.1],
+      apply_fun [expr val] ["at", ident h] [],
+      simpa [] [] ["only"] ["[", expr val_cast_of_lt hb.right, ",", expr val_zero, "]"] [] ["using", expr h] },
+    { simp [] [] ["only"] ["[", expr val_cast_of_lt hb.right, ",", expr units.coe_mk0, "]"] [] [] } }
+end
 
 @[simp]
 theorem prod_Ico_one_prime : (∏x in Ico 1 p, (x : Zmod p)) = -1 :=
@@ -184,7 +156,7 @@ theorem prod_Ico_one_prime : (∏x in Ico 1 p, (x : Zmod p)) = -1 :=
 
 end Zmod
 
--- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The image of the map sending a non zero natural number `x ≤ p / 2` to the absolute value
   of the element of interger in the interval `(-p/2, p/2]` congruent to `a * x` mod p is the set
   of non zero natural numbers `x` such that `x ≤ p / 2` -/
@@ -226,7 +198,7 @@ begin
     _ _, rfl) (inj_on_of_surj_on_of_card_le _ hmem hsurj (le_refl _)) hsurj]
 end
 
--- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 private
 theorem gauss_lemma_aux₁
 (p : exprℕ())
@@ -342,7 +314,7 @@ theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
             simp [lt_succ_iff, le_div_iff_mul_le _ _ hb0] <;> tauto
     
 
--- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The given sum is the number of integer points in the triangle formed by the diagonal of the
   rectangle `(0, p/2) × (0, q/2)`  -/
 private
@@ -365,7 +337,7 @@ if hp0 : «expr = »(p, 0) then by simp [] [] [] ["[", expr hp0, ",", expr finse
     ⟨b₁, b₂⟩
     (h), ⟨⟨b₁, b₂⟩, by revert [ident h]; simp [] [] ["only"] ["[", expr mem_filter, ",", expr eq_self_iff_true, ",", expr exists_prop_of_true, ",", expr mem_sigma, ",", expr and_self, ",", expr forall_true_iff, ",", expr mem_product, "]"] [] [] { contextual := tt }⟩)]
 
--- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Each of the sums in this lemma is the cardinality of the set integer points in each of the
   two triangles formed by the diagonal of the rectangle `(0, p/2) × (0, q/2)`. Adding them
   gives the number of points in the rectangle. -/
@@ -420,28 +392,27 @@ namespace Zmod
 def legendre_sym (a p : ℕ) : ℤ :=
   if (a : Zmod p) = 0 then 0 else if ((a : Zmod p)^p / 2) = 1 then 1 else -1
 
-theorem legendre_sym_eq_pow (a p : ℕ) [hp : Fact p.prime] : (legendre_sym a p : Zmod p) = (a^p / 2) :=
-  by 
-    rw [legendre_sym]
-    byCases' ha : (a : Zmod p) = 0
-    ·
-      simp only [if_pos, ha, zero_pow (Nat.div_pos hp.1.two_le (succ_pos 1)), Int.cast_zero]
-    cases' hp.1.eq_two_or_odd with hp2 hp_odd
-    ·
-      substI p 
-      generalize (a : Zmod 2) = b 
-      revert b 
-      decide
-    ·
-      haveI  := Fact.mk hp_odd 
-      rw [if_neg ha]
-      have  : (-1 : Zmod p) ≠ 1 
-      exact (ne_neg_self p one_ne_zero).symm 
-      cases' pow_div_two_eq_neg_one_or_one p ha with h h
-      ·
-        rw [if_pos h, h, Int.cast_one]
-      ·
-        rw [h, if_neg this, Int.cast_neg, Int.cast_one]
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem legendre_sym_eq_pow
+(a p : exprℕ())
+[hp : fact p.prime] : «expr = »((legendre_sym a p : zmod p), «expr ^ »(a, «expr / »(p, 2))) :=
+begin
+  rw [expr legendre_sym] [],
+  by_cases [expr ha, ":", expr «expr = »((a : zmod p), 0)],
+  { simp [] [] ["only"] ["[", expr if_pos, ",", expr ha, ",", expr zero_pow (nat.div_pos hp.1.two_le (succ_pos 1)), ",", expr int.cast_zero, "]"] [] [] },
+  cases [expr hp.1.eq_two_or_odd] ["with", ident hp2, ident hp_odd],
+  { substI [expr p],
+    generalize [] [":"] [expr «expr = »((a : zmod 2), b)],
+    revert [ident b],
+    dec_trivial [] },
+  { haveI [] [] [":=", expr fact.mk hp_odd],
+    rw [expr if_neg ha] [],
+    have [] [":", expr «expr ≠ »((«expr- »(1) : zmod p), 1)] [],
+    from [expr (ne_neg_self p one_ne_zero).symm],
+    cases [expr pow_div_two_eq_neg_one_or_one p ha] ["with", ident h, ident h],
+    { rw ["[", expr if_pos h, ",", expr h, ",", expr int.cast_one, "]"] [] },
+    { rw ["[", expr h, ",", expr if_neg this, ",", expr int.cast_neg, ",", expr int.cast_one, "]"] [] } }
+end
 
 theorem legendre_sym_eq_one_or_neg_one (a p : ℕ) (ha : (a : Zmod p) ≠ 0) :
   legendre_sym a p = -1 ∨ legendre_sym a p = 1 :=
@@ -560,77 +531,56 @@ theorem legendre_sym_two [hp1 : Fact (p % 2 = 1)] : legendre_sym 2 p = (-1^(p / 
     rw [show 4 = 2*2 from rfl, ←Nat.div_div_eq_div_mulₓ, hp22, Nat.cast_add, ←sub_eq_iff_eq_add', sub_eq_add_neg,
       neg_eq_self_mod_two, ←Nat.cast_add, ←card_disjoint_union hdisj, hunion, hcard]
 
-theorem exists_sq_eq_two_iff [hp1 : Fact (p % 2 = 1)] : (∃ a : Zmod p, (a^2) = 2) ↔ p % 8 = 1 ∨ p % 8 = 7 :=
-  have hp2 : ((2 : ℕ) : Zmod p) ≠ 0 :=
-    prime_ne_zero p 2
-      fun h =>
-        by 
-          simpa [h] using hp1.1
-  have hpm4 : p % 4 = p % 8 % 4 := (Nat.mod_mul_left_mod p 2 4).symm 
-  have hpm2 : p % 2 = p % 8 % 2 := (Nat.mod_mul_left_mod p 4 2).symm 
-  by 
-    rw
-      [show (2 : Zmod p) = (2 : ℕ)by 
-        simp ,
-      ←legendre_sym_eq_one_iff p hp2, legendre_sym_two p,
-      neg_one_pow_eq_one_iff_even
-        (show (-1 : ℤ) ≠ 1 from
-          by 
-            decide),
-      even_add, even_div, even_div]
-    have  :=
-      Nat.mod_ltₓ p
-        (show 0 < 8 from
-          by 
-            decide)
-    resetI 
-    rw [fact_iff] at hp1 
-    revert this hp1 
-    erw [hpm4, hpm2]
-    generalize hm : p % 8 = m 
-    unfreezingI 
-      clear! p 
-    decide!
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_sq_eq_two_iff
+[hp1 : fact «expr = »(«expr % »(p, 2), 1)] : «expr ↔ »(«expr∃ , »((a : zmod p), «expr = »(«expr ^ »(a, 2), 2)), «expr ∨ »(«expr = »(«expr % »(p, 8), 1), «expr = »(«expr % »(p, 8), 7))) :=
+have hp2 : «expr ≠ »(((2 : exprℕ()) : zmod p), 0), from prime_ne_zero p 2 (λ
+ h, by simpa [] [] [] ["[", expr h, "]"] [] ["using", expr hp1.1]),
+have hpm4 : «expr = »(«expr % »(p, 4), «expr % »(«expr % »(p, 8), 4)), from (nat.mod_mul_left_mod p 2 4).symm,
+have hpm2 : «expr = »(«expr % »(p, 2), «expr % »(«expr % »(p, 8), 2)), from (nat.mod_mul_left_mod p 4 2).symm,
+begin
+  rw ["[", expr show «expr = »((2 : zmod p), (2 : exprℕ())), by simp [] [] [] [] [] [], ",", "<-", expr legendre_sym_eq_one_iff p hp2, ",", expr legendre_sym_two p, ",", expr neg_one_pow_eq_one_iff_even (show «expr ≠ »((«expr- »(1) : exprℤ()), 1), from exprdec_trivial()), ",", expr even_add, ",", expr even_div, ",", expr even_div, "]"] [],
+  have [] [] [":=", expr nat.mod_lt p (show «expr < »(0, 8), from exprdec_trivial())],
+  resetI,
+  rw [expr fact_iff] ["at", ident hp1],
+  revert [ident this, ident hp1],
+  erw ["[", expr hpm4, ",", expr hpm2, "]"] [],
+  generalize [ident hm] [":"] [expr «expr = »(«expr % »(p, 8), m)],
+  unfreezingI { clear_dependent [ident p] },
+  dec_trivial ["!"]
+end
 
-theorem exists_sq_eq_prime_iff_of_mod_four_eq_one (hp1 : p % 4 = 1) [hq1 : Fact (q % 2 = 1)] :
-  (∃ a : Zmod p, (a^2) = q) ↔ ∃ b : Zmod q, (b^2) = p :=
-  if hpq : p = q then
-    by 
-      substI hpq
-  else
-    have h1 : ((p / 2)*q / 2) % 2 = 0 :=
-      (dvd_iff_mod_eq_zero _ _).1
-        (dvd_mul_of_dvd_left
-          ((dvd_iff_mod_eq_zero _ _).2$
-            by 
-              rw [←mod_mul_right_div_self, show (2*2) = 4 from rfl, hp1] <;> rfl)
-          _)
-    by 
-      haveI hp_odd : Fact (p % 2 = 1) := ⟨odd_of_mod_four_eq_one hp1⟩
-      have hpq0 : (p : Zmod q) ≠ 0 := prime_ne_zero q p (Ne.symm hpq)
-      have hqp0 : (q : Zmod p) ≠ 0 := prime_ne_zero p q hpq 
-      have  := quadratic_reciprocity p q hpq 
-      rw [neg_one_pow_eq_pow_mod_two, h1, legendre_sym, legendre_sym, if_neg hqp0, if_neg hpq0] at this 
-      rw [euler_criterion q hpq0, euler_criterion p hqp0]
-      splitIfs  at this <;> simp  <;> contradiction
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_sq_eq_prime_iff_of_mod_four_eq_one
+(hp1 : «expr = »(«expr % »(p, 4), 1))
+[hq1 : fact «expr = »(«expr % »(q, 2), 1)] : «expr ↔ »(«expr∃ , »((a : zmod p), «expr = »(«expr ^ »(a, 2), q)), «expr∃ , »((b : zmod q), «expr = »(«expr ^ »(b, 2), p))) :=
+if hpq : «expr = »(p, q) then by substI [expr hpq] else have h1 : «expr = »(«expr % »(«expr * »(«expr / »(p, 2), «expr / »(q, 2)), 2), 0), from (dvd_iff_mod_eq_zero _ _).1 (dvd_mul_of_dvd_left «expr $ »((dvd_iff_mod_eq_zero _ _).2, by rw ["[", "<-", expr mod_mul_right_div_self, ",", expr show «expr = »(«expr * »(2, 2), 4), from rfl, ",", expr hp1, "]"] []; refl) _),
+begin
+  haveI [ident hp_odd] [":", expr fact «expr = »(«expr % »(p, 2), 1)] [":=", expr ⟨odd_of_mod_four_eq_one hp1⟩],
+  have [ident hpq0] [":", expr «expr ≠ »((p : zmod q), 0)] [":=", expr prime_ne_zero q p (ne.symm hpq)],
+  have [ident hqp0] [":", expr «expr ≠ »((q : zmod p), 0)] [":=", expr prime_ne_zero p q hpq],
+  have [] [] [":=", expr quadratic_reciprocity p q hpq],
+  rw ["[", expr neg_one_pow_eq_pow_mod_two, ",", expr h1, ",", expr legendre_sym, ",", expr legendre_sym, ",", expr if_neg hqp0, ",", expr if_neg hpq0, "]"] ["at", ident this],
+  rw ["[", expr euler_criterion q hpq0, ",", expr euler_criterion p hqp0, "]"] [],
+  split_ifs ["at", ident this] []; simp [] [] [] ["*"] [] []; contradiction
+end
 
-theorem exists_sq_eq_prime_iff_of_mod_four_eq_three (hp3 : p % 4 = 3) (hq3 : q % 4 = 3) (hpq : p ≠ q) :
-  (∃ a : Zmod p, (a^2) = q) ↔ ¬∃ b : Zmod q, (b^2) = p :=
-  have h1 : ((p / 2)*q / 2) % 2 = 1 :=
-    Nat.odd_mul_odd
-      (by 
-        rw [←mod_mul_right_div_self, show (2*2) = 4 from rfl, hp3] <;> rfl)
-      (by 
-        rw [←mod_mul_right_div_self, show (2*2) = 4 from rfl, hq3] <;> rfl)
-  by 
-    haveI hp_odd : Fact (p % 2 = 1) := ⟨odd_of_mod_four_eq_three hp3⟩
-    haveI hq_odd : Fact (q % 2 = 1) := ⟨odd_of_mod_four_eq_three hq3⟩
-    have hpq0 : (p : Zmod q) ≠ 0 := prime_ne_zero q p (Ne.symm hpq)
-    have hqp0 : (q : Zmod p) ≠ 0 := prime_ne_zero p q hpq 
-    have  := quadratic_reciprocity p q hpq 
-    rw [neg_one_pow_eq_pow_mod_two, h1, legendre_sym, legendre_sym, if_neg hpq0, if_neg hqp0] at this 
-    rw [euler_criterion q hpq0, euler_criterion p hqp0]
-    splitIfs  at this <;> simp  <;> contradiction
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_sq_eq_prime_iff_of_mod_four_eq_three
+(hp3 : «expr = »(«expr % »(p, 4), 3))
+(hq3 : «expr = »(«expr % »(q, 4), 3))
+(hpq : «expr ≠ »(p, q)) : «expr ↔ »(«expr∃ , »((a : zmod p), «expr = »(«expr ^ »(a, 2), q)), «expr¬ »(«expr∃ , »((b : zmod q), «expr = »(«expr ^ »(b, 2), p)))) :=
+have h1 : «expr = »(«expr % »(«expr * »(«expr / »(p, 2), «expr / »(q, 2)), 2), 1), from nat.odd_mul_odd (by rw ["[", "<-", expr mod_mul_right_div_self, ",", expr show «expr = »(«expr * »(2, 2), 4), from rfl, ",", expr hp3, "]"] []; refl) (by rw ["[", "<-", expr mod_mul_right_div_self, ",", expr show «expr = »(«expr * »(2, 2), 4), from rfl, ",", expr hq3, "]"] []; refl),
+begin
+  haveI [ident hp_odd] [":", expr fact «expr = »(«expr % »(p, 2), 1)] [":=", expr ⟨odd_of_mod_four_eq_three hp3⟩],
+  haveI [ident hq_odd] [":", expr fact «expr = »(«expr % »(q, 2), 1)] [":=", expr ⟨odd_of_mod_four_eq_three hq3⟩],
+  have [ident hpq0] [":", expr «expr ≠ »((p : zmod q), 0)] [":=", expr prime_ne_zero q p (ne.symm hpq)],
+  have [ident hqp0] [":", expr «expr ≠ »((q : zmod p), 0)] [":=", expr prime_ne_zero p q hpq],
+  have [] [] [":=", expr quadratic_reciprocity p q hpq],
+  rw ["[", expr neg_one_pow_eq_pow_mod_two, ",", expr h1, ",", expr legendre_sym, ",", expr legendre_sym, ",", expr if_neg hpq0, ",", expr if_neg hqp0, "]"] ["at", ident this],
+  rw ["[", expr euler_criterion q hpq0, ",", expr euler_criterion p hqp0, "]"] [],
+  split_ifs ["at", ident this] []; simp [] [] [] ["*"] [] []; contradiction
+end
 
 end Zmod
 

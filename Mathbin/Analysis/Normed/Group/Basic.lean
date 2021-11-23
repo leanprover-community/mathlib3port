@@ -53,35 +53,39 @@ class NormedGroup(E : Type _) extends HasNorm E, AddCommGroupₓ E, MetricSpace 
 instance (priority := 100)NormedGroup.toSemiNormedGroup [h : NormedGroup E] : SemiNormedGroup E :=
   { h with  }
 
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct a seminormed group from a translation invariant pseudodistance. -/
-def SemiNormedGroup.ofAddDist [HasNorm E] [AddCommGroupₓ E] [PseudoMetricSpace E] (H1 : ∀ x : E, ∥x∥ = dist x 0)
-  (H2 : ∀ x y z : E, dist x y ≤ dist (x+z) (y+z)) : SemiNormedGroup E :=
-  { dist_eq :=
-      fun x y =>
-        by 
-          rw [H1]
-          apply le_antisymmₓ
-          ·
-            rw [sub_eq_add_neg, ←add_right_negₓ y]
-            apply H2
-          ·
-            have  := H2 (x - y) 0 y 
-            rwa [sub_add_cancel, zero_addₓ] at this }
+def semi_normed_group.of_add_dist
+[has_norm E]
+[add_comm_group E]
+[pseudo_metric_space E]
+(H1 : ∀ x : E, «expr = »(«expr∥ ∥»(x), dist x 0))
+(H2 : ∀ x y z : E, «expr ≤ »(dist x y, dist «expr + »(x, z) «expr + »(y, z))) : semi_normed_group E :=
+{ dist_eq := λ x y, begin
+    rw [expr H1] [],
+    apply [expr le_antisymm],
+    { rw ["[", expr sub_eq_add_neg, ",", "<-", expr add_right_neg y, "]"] [],
+      apply [expr H2] },
+    { have [] [] [":=", expr H2 «expr - »(x, y) 0 y],
+      rwa ["[", expr sub_add_cancel, ",", expr zero_add, "]"] ["at", ident this] }
+  end }
 
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct a seminormed group from a translation invariant pseudodistance -/
-def SemiNormedGroup.ofAddDist' [HasNorm E] [AddCommGroupₓ E] [PseudoMetricSpace E] (H1 : ∀ x : E, ∥x∥ = dist x 0)
-  (H2 : ∀ x y z : E, dist (x+z) (y+z) ≤ dist x y) : SemiNormedGroup E :=
-  { dist_eq :=
-      fun x y =>
-        by 
-          rw [H1]
-          apply le_antisymmₓ
-          ·
-            have  := H2 (x - y) 0 y 
-            rwa [sub_add_cancel, zero_addₓ] at this
-          ·
-            rw [sub_eq_add_neg, ←add_right_negₓ y]
-            apply H2 }
+def semi_normed_group.of_add_dist'
+[has_norm E]
+[add_comm_group E]
+[pseudo_metric_space E]
+(H1 : ∀ x : E, «expr = »(«expr∥ ∥»(x), dist x 0))
+(H2 : ∀ x y z : E, «expr ≤ »(dist «expr + »(x, z) «expr + »(y, z), dist x y)) : semi_normed_group E :=
+{ dist_eq := λ x y, begin
+    rw [expr H1] [],
+    apply [expr le_antisymm],
+    { have [] [] [":=", expr H2 «expr - »(x, y) 0 y],
+      rwa ["[", expr sub_add_cancel, ",", expr zero_add, "]"] ["at", ident this] },
+    { rw ["[", expr sub_eq_add_neg, ",", "<-", expr add_right_neg y, "]"] [],
+      apply [expr H2] }
+  end }
 
 /-- A seminormed group can be built from a seminorm that satisfies algebraic properties. This is
 formalised in this structure. -/
@@ -543,12 +547,18 @@ The analogous condition for a linear map of normed spaces is in `normed_space.op
 theorem AddMonoidHom.continuous_of_bound (f : E →+ F) (C : ℝ) (h : ∀ x, ∥f x∥ ≤ C*∥x∥) : Continuous f :=
   (f.lipschitz_of_bound C h).Continuous
 
-theorem IsCompact.exists_bound_of_continuous_on [TopologicalSpace α] {s : Set α} (hs : IsCompact s) {f : α → E}
-  (hf : ContinuousOn f s) : ∃ C, ∀ x _ : x ∈ s, ∥f x∥ ≤ C :=
-  by 
-    have  : Bounded (f '' s) := (hs.image_of_continuous_on hf).Bounded 
-    rcases bounded_iff_forall_norm_le.1 this with ⟨C, hC⟩
-    exact ⟨C, fun x hx => hC _ (Set.mem_image_of_mem _ hx)⟩
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_compact.exists_bound_of_continuous_on
+[topological_space α]
+{s : set α}
+(hs : is_compact s)
+{f : α → E}
+(hf : continuous_on f s) : «expr∃ , »((C), ∀ x «expr ∈ » s, «expr ≤ »(«expr∥ ∥»(f x), C)) :=
+begin
+  have [] [":", expr bounded «expr '' »(f, s)] [":=", expr (hs.image_of_continuous_on hf).bounded],
+  rcases [expr bounded_iff_forall_norm_le.1 this, "with", "⟨", ident C, ",", ident hC, "⟩"],
+  exact [expr ⟨C, λ x hx, hC _ (set.mem_image_of_mem _ hx)⟩]
+end
 
 theorem AddMonoidHom.isometry_iff_norm (f : E →+ F) : Isometry f ↔ ∀ x, ∥f x∥ = ∥x∥ :=
   by 
@@ -559,45 +569,48 @@ theorem AddMonoidHom.isometry_iff_norm (f : E →+ F) : Isometry f ↔ ∀ x, �
 theorem AddMonoidHom.isometry_of_norm (f : E →+ F) (hf : ∀ x, ∥f x∥ = ∥x∥) : Isometry f :=
   f.isometry_iff_norm.2 hf
 
-theorem controlled_sum_of_mem_closure {s : AddSubgroup E} {g : E} (hg : g ∈ Closure (s : Set E)) {b : ℕ → ℝ}
-  (b_pos : ∀ n, 0 < b n) :
-  ∃ v : ℕ → E,
-    tendsto (fun n => ∑i in range (n+1), v i) at_top (𝓝 g) ∧
-      (∀ n, v n ∈ s) ∧ ∥v 0 - g∥ < b 0 ∧ ∀ n _ : n > 0, ∥v n∥ < b n :=
-  by 
-    obtain ⟨u : ℕ → E, u_in : ∀ n, u n ∈ s, lim_u : tendsto u at_top (𝓝 g)⟩ := mem_closure_iff_seq_limit.mp hg 
-    obtain ⟨n₀, hn₀⟩ : ∃ n₀, ∀ n _ : n ≥ n₀, ∥u n - g∥ < b 0
-    ·
-      have  : { x | ∥x - g∥ < b 0 } ∈ 𝓝 g
-      ·
-        simpRw [←dist_eq_norm]
-        exact Metric.ball_mem_nhds _ (b_pos _)
-      exact filter.tendsto_at_top'.mp lim_u _ this 
-    set z : ℕ → E := fun n => u (n+n₀)
-    have lim_z : tendsto z at_top (𝓝 g) := lim_u.comp (tendsto_add_at_top_nat n₀)
-    have mem_𝓤 : ∀ n, { p : E × E | ∥p.1 - p.2∥ < b (n+1) } ∈ 𝓤 E :=
-      fun n =>
-        by 
-          simpa [←dist_eq_norm] using Metric.dist_mem_uniformity (b_pos$ n+1)
-    obtain ⟨φ : ℕ → ℕ, φ_extr : StrictMono φ, hφ : ∀ n, ∥z (φ$ n+1) - z (φ n)∥ < b (n+1)⟩ :=
-      lim_z.cauchy_seq.subseq_mem mem_𝓤 
-    set w : ℕ → E := z ∘ φ 
-    have hw : tendsto w at_top (𝓝 g)
-    exact lim_z.comp φ_extr.tendsto_at_top 
-    set v : ℕ → E := fun i => if i = 0 then w 0 else w i - w (i - 1)
-    refine' ⟨v, tendsto.congr (Finset.eq_sum_range_sub' w) hw, _, hn₀ _ (n₀.le_add_left _), _⟩
-    ·
-      rintro ⟨⟩
-      ·
-        change w 0 ∈ s 
-        apply u_in
-      ·
-        apply s.sub_mem <;> apply u_in
-    ·
-      intro l hl 
-      obtain ⟨k, rfl⟩ : ∃ k, l = k+1 
-      exact Nat.exists_eq_succ_of_ne_zero (ne_of_gtₓ hl)
-      apply hφ
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem controlled_sum_of_mem_closure
+{s : add_subgroup E}
+{g : E}
+(hg : «expr ∈ »(g, closure (s : set E)))
+{b : exprℕ() → exprℝ()}
+(b_pos : ∀
+ n, «expr < »(0, b n)) : «expr∃ , »((v : exprℕ() → E), «expr ∧ »(tendsto (λ
+   n, «expr∑ in , »((i), range «expr + »(n, 1), v i)) at_top (expr𝓝() g), «expr ∧ »(∀
+   n, «expr ∈ »(v n, s), «expr ∧ »(«expr < »(«expr∥ ∥»(«expr - »(v 0, g)), b 0), ∀
+    n «expr > » 0, «expr < »(«expr∥ ∥»(v n), b n))))) :=
+begin
+  obtain ["⟨", ident u, ":", expr exprℕ() → E, ",", ident u_in, ":", expr ∀
+   n, «expr ∈ »(u n, s), ",", ident lim_u, ":", expr tendsto u at_top (expr𝓝() g), "⟩", ":=", expr mem_closure_iff_seq_limit.mp hg],
+  obtain ["⟨", ident n₀, ",", ident hn₀, "⟩", ":", expr «expr∃ , »((n₀), ∀
+    n «expr ≥ » n₀, «expr < »(«expr∥ ∥»(«expr - »(u n, g)), b 0))],
+  { have [] [":", expr «expr ∈ »({x | «expr < »(«expr∥ ∥»(«expr - »(x, g)), b 0)}, expr𝓝() g)] [],
+    { simp_rw ["<-", expr dist_eq_norm] [],
+      exact [expr metric.ball_mem_nhds _ (b_pos _)] },
+    exact [expr filter.tendsto_at_top'.mp lim_u _ this] },
+  set [] [ident z] [":", expr exprℕ() → E] [":="] [expr λ n, u «expr + »(n, n₀)] [],
+  have [ident lim_z] [":", expr tendsto z at_top (expr𝓝() g)] [":=", expr lim_u.comp (tendsto_add_at_top_nat n₀)],
+  have [ident mem_𝓤] [":", expr ∀
+   n, «expr ∈ »({p : «expr × »(E, E) | «expr < »(«expr∥ ∥»(«expr - »(p.1, p.2)), b «expr + »(n, 1))}, expr𝓤() E)] [":=", expr λ
+   n, by simpa [] [] [] ["[", "<-", expr dist_eq_norm, "]"] [] ["using", expr metric.dist_mem_uniformity «expr $ »(b_pos, «expr + »(n, 1))]],
+  obtain ["⟨", ident φ, ":", expr exprℕ() → exprℕ(), ",", ident φ_extr, ":", expr strict_mono φ, ",", ident hφ, ":", expr ∀
+   n, «expr < »(«expr∥ ∥»(«expr - »(z «expr $ »(φ, «expr + »(n, 1)), z (φ n))), b «expr + »(n, 1)), "⟩", ":=", expr lim_z.cauchy_seq.subseq_mem mem_𝓤],
+  set [] [ident w] [":", expr exprℕ() → E] [":="] [expr «expr ∘ »(z, φ)] [],
+  have [ident hw] [":", expr tendsto w at_top (expr𝓝() g)] [],
+  from [expr lim_z.comp φ_extr.tendsto_at_top],
+  set [] [ident v] [":", expr exprℕ() → E] [":="] [expr λ
+   i, if «expr = »(i, 0) then w 0 else «expr - »(w i, w «expr - »(i, 1))] [],
+  refine [expr ⟨v, tendsto.congr (finset.eq_sum_range_sub' w) hw, _, hn₀ _ (n₀.le_add_left _), _⟩],
+  { rintro ["⟨", "⟩"],
+    { change [expr «expr ∈ »(w 0, s)] [] [],
+      apply [expr u_in] },
+    { apply [expr s.sub_mem]; apply [expr u_in] } },
+  { intros [ident l, ident hl],
+    obtain ["⟨", ident k, ",", ident rfl, "⟩", ":", expr «expr∃ , »((k), «expr = »(l, «expr + »(k, 1)))],
+    exact [expr nat.exists_eq_succ_of_ne_zero (ne_of_gt hl)],
+    apply [expr hφ] }
+end
 
 theorem controlled_sum_of_mem_closure_range {j : E →+ F} {h : F} (Hh : h ∈ (Closure$ (j.range : Set F))) {b : ℕ → ℝ}
   (b_pos : ∀ n, 0 < b n) :
@@ -710,17 +723,22 @@ namespace AntilipschitzWith
 
 variable[PseudoEmetricSpace α]{K Kf Kg :  ℝ≥0 }{f g : α → E}
 
-theorem add_lipschitz_with (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg g) (hK : Kg < Kf⁻¹) :
-  AntilipschitzWith ((Kf⁻¹ - Kg)⁻¹) fun x => f x+g x :=
-  by 
-    letI this : PseudoMetricSpace α := PseudoEmetricSpace.toPseudoMetricSpace hf.edist_ne_top 
-    refine' AntilipschitzWith.of_le_mul_dist fun x y => _ 
-    rw [Nnreal.coe_inv, ←div_eq_inv_mul]
-    rw [le_div_iff (Nnreal.coe_pos.2$ tsub_pos_iff_lt.2 hK)]
-    rw [mul_commₓ, Nnreal.coe_sub hK.le, sub_mul]
-    calc ((«expr↑ » (Kf⁻¹)*dist x y) - Kg*dist x y) ≤ dist (f x) (f y) - dist (g x) (g y) :=
-      sub_le_sub (hf.mul_le_dist x y) (hg.dist_le_mul x y)_ ≤ _ :=
-      le_transₓ (le_abs_self _) (abs_dist_sub_le_dist_add_add _ _ _ _)
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem add_lipschitz_with
+(hf : antilipschitz_with Kf f)
+(hg : lipschitz_with Kg g)
+(hK : «expr < »(Kg, «expr ⁻¹»(Kf))) : antilipschitz_with «expr ⁻¹»(«expr - »(«expr ⁻¹»(Kf), Kg)) (λ
+ x, «expr + »(f x, g x)) :=
+begin
+  letI [] [":", expr pseudo_metric_space α] [":=", expr pseudo_emetric_space.to_pseudo_metric_space hf.edist_ne_top],
+  refine [expr antilipschitz_with.of_le_mul_dist (λ x y, _)],
+  rw ["[", expr nnreal.coe_inv, ",", "<-", expr div_eq_inv_mul, "]"] [],
+  rw [expr le_div_iff «expr $ »(nnreal.coe_pos.2, tsub_pos_iff_lt.2 hK)] [],
+  rw ["[", expr mul_comm, ",", expr nnreal.coe_sub hK.le, ",", expr sub_mul, "]"] [],
+  calc
+    «expr ≤ »(«expr - »(«expr * »(«expr↑ »(«expr ⁻¹»(Kf)), dist x y), «expr * »(Kg, dist x y)), «expr - »(dist (f x) (f y), dist (g x) (g y))) : sub_le_sub (hf.mul_le_dist x y) (hg.dist_le_mul x y)
+    «expr ≤ »(..., _) : le_trans (le_abs_self _) (abs_dist_sub_le_dist_add_add _ _ _ _)
+end
 
 theorem add_sub_lipschitz_with (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg (g - f)) (hK : Kg < Kf⁻¹) :
   AntilipschitzWith ((Kf⁻¹ - Kg)⁻¹) g :=
@@ -784,11 +802,11 @@ noncomputable instance Prod.semiNormedGroup : SemiNormedGroup (E × F) :=
 theorem Prod.semi_norm_def (x : E × F) : ∥x∥ = max ∥x.1∥ ∥x.2∥ :=
   rfl
 
-theorem Prod.nnsemi_norm_def (x : E × F) : ∥x∥₊ = max ∥x.1∥₊ ∥x.2∥₊ :=
-  by 
-    have  := x.semi_norm_def 
-    simp only [←coe_nnnorm] at this 
-    exactModCast this
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prod.nnsemi_norm_def (x : «expr × »(E, F)) : «expr = »(«expr∥ ∥₊»(x), max «expr∥ ∥₊»(x.1) «expr∥ ∥₊»(x.2)) :=
+by { have [] [] [":=", expr x.semi_norm_def],
+  simp [] [] ["only"] ["[", "<-", expr coe_nnnorm, "]"] [] ["at", ident this],
+  exact_mod_cast [expr this] }
 
 theorem semi_norm_fst_le (x : E × F) : ∥x.1∥ ≤ ∥x∥ :=
   le_max_leftₓ _ _
@@ -945,14 +963,19 @@ theorem ContinuousOn.nnnorm (h : ContinuousOn f s) : ContinuousOn (fun x => ∥f
 
 end 
 
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `∥y∥→∞`, then we can assume `y≠x` for any fixed `x`. -/
-theorem eventually_ne_of_tendsto_norm_at_top {l : Filter α} {f : α → E} (h : tendsto (fun y => ∥f y∥) l at_top)
-  (x : E) : ∀ᶠy in l, f y ≠ x :=
-  by 
-    have  : ∀ᶠy in l, (1+∥x∥) ≤ ∥f y∥ := h (mem_at_top (1+∥x∥))
-    refine' this.mono fun y hy hxy => _ 
-    subst x 
-    exact not_le_of_lt zero_lt_one (add_le_iff_nonpos_left.1 hy)
+theorem eventually_ne_of_tendsto_norm_at_top
+{l : filter α}
+{f : α → E}
+(h : tendsto (λ y, «expr∥ ∥»(f y)) l at_top)
+(x : E) : «expr∀ᶠ in , »((y), l, «expr ≠ »(f y, x)) :=
+begin
+  have [] [":", expr «expr∀ᶠ in , »((y), l, «expr ≤ »(«expr + »(1, «expr∥ ∥»(x)), «expr∥ ∥»(f y)))] [":=", expr h (mem_at_top «expr + »(1, «expr∥ ∥»(x)))],
+  refine [expr this.mono (λ y hy hxy, _)],
+  subst [expr x],
+  exact [expr not_le_of_lt zero_lt_one (add_le_iff_nonpos_left.1 hy)]
+end
 
 instance (priority := 100)SemiNormedGroup.has_lipschitz_add : HasLipschitzAdd E :=
   { lipschitz_add := ⟨2, LipschitzWith.prod_fst.add LipschitzWith.prod_snd⟩ }
@@ -980,11 +1003,14 @@ theorem SemiNormedGroup.mem_closure_iff {s : Set E} {x : E} :
   by 
     simp [Metric.mem_closure_iff, dist_eq_norm]
 
-theorem norm_le_zero_iff' [SeparatedSpace E] {g : E} : ∥g∥ ≤ 0 ↔ g = 0 :=
-  by 
-    letI this : NormedGroup E := { ‹SemiNormedGroup E› with toMetricSpace := of_t2_pseudo_metric_space ‹_› }
-    rw [←dist_zero_right]
-    exact dist_le_zero
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem norm_le_zero_iff' [separated_space E] {g : E} : «expr ↔ »(«expr ≤ »(«expr∥ ∥»(g), 0), «expr = »(g, 0)) :=
+begin
+  letI [] [":", expr normed_group E] [":=", expr { to_metric_space := of_t2_pseudo_metric_space «expr‹ ›»(_),
+     ..«expr‹ ›»(semi_normed_group E) }],
+  rw ["[", "<-", expr dist_zero_right, "]"] [],
+  exact [expr dist_le_zero]
+end
 
 theorem norm_eq_zero_iff' [SeparatedSpace E] {g : E} : ∥g∥ = 0 ↔ g = 0 :=
   (norm_nonneg g).le_iff_eq.symm.trans norm_le_zero_iff'
@@ -993,41 +1019,50 @@ theorem norm_pos_iff' [SeparatedSpace E] {g : E} : 0 < ∥g∥ ↔ g ≠ 0 :=
   by 
     rw [←not_leₓ, norm_le_zero_iff']
 
-theorem cauchy_seq_sum_of_eventually_eq {u v : ℕ → E} {N : ℕ} (huv : ∀ n _ : n ≥ N, u n = v n)
-  (hv : CauchySeq fun n => ∑k in range (n+1), v k) : CauchySeq fun n => ∑k in range (n+1), u k :=
-  by 
-    let d : ℕ → E := fun n => ∑k in range (n+1), u k - v k 
-    rw
-      [show (fun n => ∑k in range (n+1), u k) = d+fun n => ∑k in range (n+1), v k by 
-        ext n 
-        simp [d]]
-    have  : ∀ n _ : n ≥ N, d n = d N
-    ·
-      intro n hn 
-      dsimp [d]
-      rw [eventually_constant_sum _ hn]
-      intro m hm 
-      simp [huv m hm]
-    exact (tendsto_at_top_of_eventually_const this).CauchySeq.add hv
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cauchy_seq_sum_of_eventually_eq
+{u v : exprℕ() → E}
+{N : exprℕ()}
+(huv : ∀ n «expr ≥ » N, «expr = »(u n, v n))
+(hv : cauchy_seq (λ
+  n, «expr∑ in , »((k), range «expr + »(n, 1), v k))) : cauchy_seq (λ
+ n, «expr∑ in , »((k), range «expr + »(n, 1), u k)) :=
+begin
+  let [ident d] [":", expr exprℕ() → E] [":=", expr λ
+   n, «expr∑ in , »((k), range «expr + »(n, 1), «expr - »(u k, v k))],
+  rw [expr show «expr = »(λ
+    n, «expr∑ in , »((k), range «expr + »(n, 1), u k), «expr + »(d, λ
+     n, «expr∑ in , »((k), range «expr + »(n, 1), v k))), by { ext [] [ident n] [],
+     simp [] [] [] ["[", expr d, "]"] [] [] }] [],
+  have [] [":", expr ∀ n «expr ≥ » N, «expr = »(d n, d N)] [],
+  { intros [ident n, ident hn],
+    dsimp [] ["[", expr d, "]"] [] [],
+    rw [expr eventually_constant_sum _ hn] [],
+    intros [ident m, ident hm],
+    simp [] [] [] ["[", expr huv m hm, "]"] [] [] },
+  exact [expr (tendsto_at_top_of_eventually_const this).cauchy_seq.add hv]
+end
 
 end SemiNormedGroup
 
 section NormedGroup
 
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct a normed group from a translation invariant distance -/
-def NormedGroup.ofAddDist [HasNorm E] [AddCommGroupₓ E] [MetricSpace E] (H1 : ∀ x : E, ∥x∥ = dist x 0)
-  (H2 : ∀ x y z : E, dist x y ≤ dist (x+z) (y+z)) : NormedGroup E :=
-  { dist_eq :=
-      fun x y =>
-        by 
-          rw [H1]
-          apply le_antisymmₓ
-          ·
-            rw [sub_eq_add_neg, ←add_right_negₓ y]
-            apply H2
-          ·
-            have  := H2 (x - y) 0 y 
-            rwa [sub_add_cancel, zero_addₓ] at this }
+def normed_group.of_add_dist
+[has_norm E]
+[add_comm_group E]
+[metric_space E]
+(H1 : ∀ x : E, «expr = »(«expr∥ ∥»(x), dist x 0))
+(H2 : ∀ x y z : E, «expr ≤ »(dist x y, dist «expr + »(x, z) «expr + »(y, z))) : normed_group E :=
+{ dist_eq := λ x y, begin
+    rw [expr H1] [],
+    apply [expr le_antisymm],
+    { rw ["[", expr sub_eq_add_neg, ",", "<-", expr add_right_neg y, "]"] [],
+      apply [expr H2] },
+    { have [] [] [":=", expr H2 «expr - »(x, y) 0 y],
+      rwa ["[", expr sub_add_cancel, ",", expr zero_add, "]"] ["at", ident this] }
+  end }
 
 /-- A normed group can be built from a norm that satisfies algebraic properties. This is
 formalised in this structure. -/
@@ -1107,11 +1142,11 @@ noncomputable instance Prod.normedGroup : NormedGroup (E × F) :=
 theorem Prod.norm_def (x : E × F) : ∥x∥ = max ∥x.1∥ ∥x.2∥ :=
   rfl
 
-theorem Prod.nnnorm_def (x : E × F) : ∥x∥₊ = max ∥x.1∥₊ ∥x.2∥₊ :=
-  by 
-    have  := x.norm_def 
-    simp only [←coe_nnnorm] at this 
-    exactModCast this
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prod.nnnorm_def (x : «expr × »(E, F)) : «expr = »(«expr∥ ∥₊»(x), max «expr∥ ∥₊»(x.1) «expr∥ ∥₊»(x.2)) :=
+by { have [] [] [":=", expr x.norm_def],
+  simp [] [] ["only"] ["[", "<-", expr coe_nnnorm, "]"] [] ["at", ident this],
+  exact_mod_cast [expr this] }
 
 theorem norm_fst_le (x : E × F) : ∥x.1∥ ≤ ∥x∥ :=
   le_max_leftₓ _ _

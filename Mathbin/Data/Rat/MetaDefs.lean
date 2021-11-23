@@ -36,28 +36,28 @@ unsafe def rat.mk_numeral (type has_zero has_one has_add has_neg has_div : expr)
   let nume := num.mk_numeral type HasZero HasOne Add Neg 
   if denom = 1 then nume else
     let dene := denom.mk_numeral type HasZero HasOne Add 
-    quote @Div.div.{0} (%%type) (%%Div) (%%nume) (%%dene)
+    quote.1 (@Div.div.{0} (%%ₓtype) (%%ₓDiv) (%%ₓnume) (%%ₓdene))
 
 /-- `rat.reflect q` represents the rational number `q` as a numeral expression of type `ℚ`. -/
 protected unsafe def rat.reflect : ℚ → expr :=
-  rat.mk_numeral (quote ℚ)
-    (quote
+  rat.mk_numeral (quote.1 ℚ)
+    (quote.1
       (by 
         infer_instance :
       HasZero ℚ))
-    (quote
+    (quote.1
       (by 
         infer_instance :
       HasOne ℚ))
-    (quote
+    (quote.1
       (by 
         infer_instance :
       Add ℚ))
-    (quote
+    (quote.1
       (by 
         infer_instance :
       Neg ℚ))
-    (quote
+    (quote.1
       (by 
         infer_instance :
       Div ℚ))
@@ -74,7 +74,7 @@ end
 /-- Evaluates an expression as a rational number,
 if that expression represents a numeral or the quotient of two numerals. -/
 protected unsafe def expr.to_nonneg_rat : expr → Option ℚ
-| quote (%%e₁) / %%e₂ =>
+| quote.1 ((%%ₓe₁) / %%ₓe₂) =>
   do 
     let m ← e₁.to_nat 
     let n ← e₂.to_nat 
@@ -88,7 +88,7 @@ protected unsafe def expr.to_nonneg_rat : expr → Option ℚ
 if that expression represents a numeral, the quotient of two numerals,
 the negation of a numeral, or the negation of the quotient of two numerals. -/
 protected unsafe def expr.to_rat : expr → Option ℚ
-| quote Neg.neg (%%e) =>
+| quote.1 (Neg.neg (%%ₓe)) =>
   do 
     let q ← e.to_nonneg_rat 
     some (-q)
@@ -97,16 +97,16 @@ protected unsafe def expr.to_rat : expr → Option ℚ
 /-- Evaluates an expression into a rational number, if that expression is built up from
   numerals, +, -, *, /, ⁻¹  -/
 protected unsafe def expr.eval_rat : expr → Option ℚ
-| quote HasZero.zero => some 0
-| quote HasOne.one => some 1
-| quote bit0 (%%q) => (·*·) 2 <$> q.eval_rat
-| quote bit1 (%%q) => (·+·) 1 <$> (·*·) 2 <$> q.eval_rat
-| quote (%%a)+%%b => (·+·) <$> a.eval_rat <*> b.eval_rat
-| quote (%%a) - %%b => Sub.sub <$> a.eval_rat <*> b.eval_rat
-| quote (%%a)*%%b => (·*·) <$> a.eval_rat <*> b.eval_rat
-| quote (%%a) / %%b => (· / ·) <$> a.eval_rat <*> b.eval_rat
-| quote -%%a => Neg.neg <$> a.eval_rat
-| quote (%%a)⁻¹ => HasInv.inv <$> a.eval_rat
+| quote.1 HasZero.zero => some 0
+| quote.1 HasOne.one => some 1
+| quote.1 (bit0 (%%ₓq)) => (·*·) 2 <$> q.eval_rat
+| quote.1 (bit1 (%%ₓq)) => (·+·) 1 <$> (·*·) 2 <$> q.eval_rat
+| quote.1 ((%%ₓa)+%%ₓb) => (·+·) <$> a.eval_rat <*> b.eval_rat
+| quote.1 ((%%ₓa) - %%ₓb) => Sub.sub <$> a.eval_rat <*> b.eval_rat
+| quote.1 ((%%ₓa)*%%ₓb) => (·*·) <$> a.eval_rat <*> b.eval_rat
+| quote.1 ((%%ₓa) / %%ₓb) => (· / ·) <$> a.eval_rat <*> b.eval_rat
+| quote.1 (-%%ₓa) => Neg.neg <$> a.eval_rat
+| quote.1 ((%%ₓa)⁻¹) => HasInv.inv <$> a.eval_rat
 | _ => none
 
 /-- `expr.of_rat α q` embeds `q` as a numeral expression inside the type `α`.

@@ -1,3 +1,4 @@
+import Mathbin.Data.Zmod.Basic 
 import Mathbin.GroupTheory.Index 
 import Mathbin.GroupTheory.GroupAction.ConjAct 
 import Mathbin.GroupTheory.Perm.CycleType 
@@ -48,20 +49,23 @@ theorem of_card [Fintype G] {n : ℕ} (hG : card G = (p^n)) : IsPGroup p G :=
 theorem of_bot : IsPGroup p (⊥ : Subgroup G) :=
   of_card (Subgroup.card_bot.trans (pow_zeroₓ p).symm)
 
-theorem iff_card [Fact p.prime] [Fintype G] : IsPGroup p G ↔ ∃ n : ℕ, card G = (p^n) :=
-  by 
-    have hG : 0 < card G := card_pos_iff.mpr HasOne.nonempty 
-    refine' ⟨fun h => _, fun ⟨n, hn⟩ => of_card hn⟩
-    suffices  : ∀ q _ : q ∈ Nat.factors (card G), q = p
-    ·
-      use (card G).factors.length 
-      rw [←List.prod_repeat, ←List.eq_repeat_of_mem this, Nat.prod_factors hG]
-    intro q hq 
-    obtain ⟨hq1, hq2⟩ := (Nat.mem_factors hG).mp hq 
-    haveI  : Fact q.prime := ⟨hq1⟩
-    obtain ⟨g, hg⟩ := Equiv.Perm.exists_prime_order_of_dvd_card q hq2 
-    obtain ⟨k, hk⟩ := (iff_order_of.mp h) g 
-    exact (hq1.pow_eq_iff.mp (hg.symm.trans hk).symm).1.symm
+-- error in GroupTheory.PGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem iff_card
+[fact p.prime]
+[fintype G] : «expr ↔ »(is_p_group p G, «expr∃ , »((n : exprℕ()), «expr = »(card G, «expr ^ »(p, n)))) :=
+begin
+  have [ident hG] [":", expr «expr < »(0, card G)] [":=", expr card_pos_iff.mpr has_one.nonempty],
+  refine [expr ⟨λ h, _, λ ⟨n, hn⟩, of_card hn⟩],
+  suffices [] [":", expr ∀ q «expr ∈ » nat.factors (card G), «expr = »(q, p)],
+  { use [expr (card G).factors.length],
+    rw ["[", "<-", expr list.prod_repeat, ",", "<-", expr list.eq_repeat_of_mem this, ",", expr nat.prod_factors hG, "]"] [] },
+  intros [ident q, ident hq],
+  obtain ["⟨", ident hq1, ",", ident hq2, "⟩", ":=", expr (nat.mem_factors hG).mp hq],
+  haveI [] [":", expr fact q.prime] [":=", expr ⟨hq1⟩],
+  obtain ["⟨", ident g, ",", ident hg, "⟩", ":=", expr equiv.perm.exists_prime_order_of_dvd_card q hq2],
+  obtain ["⟨", ident k, ",", ident hk, "⟩", ":=", expr iff_order_of.mp h g],
+  exact [expr (hq1.pow_eq_iff.mp (hg.symm.trans hk).symm).1.symm]
+end
 
 section GIsPGroup
 
@@ -102,54 +106,56 @@ theorem index (H : Subgroup G) [Fintype (QuotientGroup.Quotient H)] : ∃ n : �
 
 variable{α : Type _}[MulAction G α]
 
-theorem card_orbit (a : α) [Fintype (orbit G a)] : ∃ n : ℕ, card (orbit G a) = (p^n) :=
-  by 
-    let ϕ := orbit_equiv_quotient_stabilizer G a 
-    haveI  := Fintype.ofEquiv (orbit G a) ϕ 
-    rw [card_congr ϕ, ←Subgroup.index_eq_card]
-    exact hG.index (stabilizer G a)
+-- error in GroupTheory.PGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem card_orbit
+(a : α)
+[fintype (orbit G a)] : «expr∃ , »((n : exprℕ()), «expr = »(card (orbit G a), «expr ^ »(p, n))) :=
+begin
+  let [ident ϕ] [] [":=", expr orbit_equiv_quotient_stabilizer G a],
+  haveI [] [] [":=", expr fintype.of_equiv (orbit G a) ϕ],
+  rw ["[", expr card_congr ϕ, ",", "<-", expr subgroup.index_eq_card, "]"] [],
+  exact [expr hG.index (stabilizer G a)]
+end
 
 variable(α)[Fintype α][Fintype (fixed_points G α)]
 
+-- error in GroupTheory.PGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `G` is a `p`-group acting on a finite set `α`, then the number of fixed points
   of the action is congruent mod `p` to the cardinality of `α` -/
-theorem card_modeq_card_fixed_points : card α ≡ card (fixed_points G α) [MOD p] :=
-  by 
-    classical 
-    calc card α = card (Σy : Quotientₓ (orbit_rel G α), { x // Quotientₓ.mk' x = y }) :=
-      card_congr
-        (Equiv.sigmaPreimageEquiv (@Quotientₓ.mk' _ (orbit_rel G α))).symm
-          _ = ∑a : Quotientₓ (orbit_rel G α), card { x // Quotientₓ.mk' x = a } :=
-      card_sigma _ _ ≡ ∑a : fixed_points G α, 1 [MOD p] := _ _ = _ :=
-      by 
-        simp  <;> rfl 
-    rw [←Zmod.eq_iff_modeq_nat p, Nat.cast_sum, Nat.cast_sum]
-    have key : ∀ x, card { y // (Quotientₓ.mk' y : Quotientₓ (orbit_rel G α)) = Quotientₓ.mk' x } = card (orbit G x) :=
-      fun x =>
-        by 
-          simp only [Quotientₓ.eq'] <;> congr 
-    refine'
-      Eq.symm
-        (Finset.sum_bij_ne_zero (fun a _ _ => Quotientₓ.mk' a.1) (fun _ _ _ => Finset.mem_univ _)
-          (fun a₁ a₂ _ _ _ _ h => Subtype.eq ((mem_fixed_points' α).mp a₂.2 a₁.1 (Quotientₓ.exact' h)))
-          (fun b => Quotientₓ.induction_on' b fun b _ hb => _)
-          fun a ha _ =>
-            by 
-              rw [key, mem_fixed_points_iff_card_orbit_eq_one.mp a.2])
-    obtain ⟨k, hk⟩ := hG.card_orbit b 
-    have  : k = 0 :=
-      Nat.le_zero_iff.1
-        (Nat.le_of_lt_succₓ
-          (lt_of_not_geₓ
-            (mt (pow_dvd_pow p)
-              (by 
-                rwa [pow_oneₓ, ←hk, ←Nat.modeq_zero_iff_dvd, ←Zmod.eq_iff_modeq_nat, ←key]))))
-    exact
-      ⟨⟨b,
-          mem_fixed_points_iff_card_orbit_eq_one.2$
-            by 
-              rw [hk, this, pow_zeroₓ]⟩,
-        Finset.mem_univ _, ne_of_eq_of_ne Nat.cast_one one_ne_zero, rfl⟩
+theorem card_modeq_card_fixed_points : «expr ≡ [MOD ]»(card α, card (fixed_points G α), p) :=
+begin
+  classical,
+  calc
+    «expr = »(card α, card «exprΣ , »((y : quotient (orbit_rel G α)), {x // «expr = »(quotient.mk' x, y)})) : card_congr (equiv.sigma_preimage_equiv (@quotient.mk' _ (orbit_rel G α))).symm
+    «expr = »(..., «expr∑ , »((a : quotient (orbit_rel G α)), card {x // «expr = »(quotient.mk' x, a)})) : card_sigma _
+    «expr ≡ [MOD ]»(..., «expr∑ , »((a : fixed_points G α), 1), p) : _
+    «expr = »(..., _) : by simp [] [] [] [] [] []; refl,
+  rw ["[", "<-", expr zmod.eq_iff_modeq_nat p, ",", expr nat.cast_sum, ",", expr nat.cast_sum, "]"] [],
+  have [ident key] [":", expr ∀
+   x, «expr = »(card {y // «expr = »((quotient.mk' y : quotient (orbit_rel G α)), quotient.mk' x)}, card (orbit G x))] [":=", expr λ
+   x, by simp [] [] ["only"] ["[", expr quotient.eq', "]"] [] []; congr],
+  refine [expr eq.symm (finset.sum_bij_ne_zero (λ
+     a
+     _
+     _, quotient.mk' a.1) (λ
+     _
+     _
+     _, finset.mem_univ _) (λ
+     a₁
+     a₂
+     _
+     _
+     _
+     _
+     h, subtype.eq ((mem_fixed_points' α).mp a₂.2 a₁.1 (quotient.exact' h))) (λ
+     b, quotient.induction_on' b (λ
+      b
+      _
+      hb, _)) (λ a ha _, by { rw ["[", expr key, ",", expr mem_fixed_points_iff_card_orbit_eq_one.mp a.2, "]"] [] }))],
+  obtain ["⟨", ident k, ",", ident hk, "⟩", ":=", expr hG.card_orbit b],
+  have [] [":", expr «expr = »(k, 0)] [":=", expr nat.le_zero_iff.1 (nat.le_of_lt_succ (lt_of_not_ge (mt (pow_dvd_pow p) (by rwa ["[", expr pow_one, ",", "<-", expr hk, ",", "<-", expr nat.modeq_zero_iff_dvd, ",", "<-", expr zmod.eq_iff_modeq_nat, ",", "<-", expr key, "]"] []))))],
+  exact [expr ⟨⟨b, «expr $ »(mem_fixed_points_iff_card_orbit_eq_one.2, by rw ["[", expr hk, ",", expr this, ",", expr pow_zero, "]"] [])⟩, finset.mem_univ _, ne_of_eq_of_ne nat.cast_one one_ne_zero, rfl⟩]
+end
 
 /-- If a p-group acts on `α` and the cardinality of `α` is not a multiple
   of `p` then the action has a fixed point. -/
@@ -176,26 +182,28 @@ theorem exists_fixed_point_of_prime_dvd_card_of_fixed_point (hpα : p ∣ card �
         (by 
           simpRw [hab])⟩
 
-theorem center_nontrivial [Nontrivial G] [Fintype G] : Nontrivial (Subgroup.center G) :=
-  by 
-    classical 
-    have  := (hG.of_equiv ConjAct.toConjAct).exists_fixed_point_of_prime_dvd_card_of_fixed_point G 
-    rw [ConjAct.fixed_points_eq_center] at this 
-    obtain ⟨g, hg⟩ := this _ (Subgroup.center G).one_mem
-    ·
-      exact ⟨⟨1, ⟨g, hg.1⟩, mt subtype.ext_iff.mp hg.2⟩⟩
-    ·
-      obtain ⟨n, hn⟩ := is_p_group.iff_card.mp hG 
-      rw [hn]
-      apply dvd_pow_self 
-      rintro rfl 
-      exact Fintype.one_lt_card.ne' hn
+-- error in GroupTheory.PGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem center_nontrivial [nontrivial G] [fintype G] : nontrivial (subgroup.center G) :=
+begin
+  classical,
+  have [] [] [":=", expr (hG.of_equiv conj_act.to_conj_act).exists_fixed_point_of_prime_dvd_card_of_fixed_point G],
+  rw [expr conj_act.fixed_points_eq_center] ["at", ident this],
+  obtain ["⟨", ident g, ",", ident hg, "⟩", ":=", expr this _ (subgroup.center G).one_mem],
+  { exact [expr ⟨⟨1, ⟨g, hg.1⟩, mt subtype.ext_iff.mp hg.2⟩⟩] },
+  { obtain ["⟨", ident n, ",", ident hn, "⟩", ":=", expr is_p_group.iff_card.mp hG],
+    rw [expr hn] [],
+    apply [expr dvd_pow_self],
+    rintro [ident rfl],
+    exact [expr fintype.one_lt_card.ne' hn] }
+end
 
-theorem bot_lt_center [Nontrivial G] [Fintype G] : ⊥ < Subgroup.center G :=
-  by 
-    haveI  := center_nontrivial hG 
-    classical 
-    exact bot_lt_iff_ne_bot.mpr ((Subgroup.center G).one_lt_card_iff_ne_bot.mp Fintype.one_lt_card)
+-- error in GroupTheory.PGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem bot_lt_center [nontrivial G] [fintype G] : «expr < »(«expr⊥»(), subgroup.center G) :=
+begin
+  haveI [] [] [":=", expr center_nontrivial hG],
+  classical,
+  exact [expr bot_lt_iff_ne_bot.mpr ((subgroup.center G).one_lt_card_iff_ne_bot.mp fintype.one_lt_card)]
+end
 
 end GIsPGroup
 

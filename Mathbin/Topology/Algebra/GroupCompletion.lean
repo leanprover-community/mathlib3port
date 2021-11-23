@@ -72,25 +72,32 @@ theorem coe_sub (a b : α) : ((a - b : α) : completion α) = a - b :=
 theorem coe_add (a b : α) : ((a+b : α) : completion α) = a+b :=
   (map₂_coe_coe a b (·+·) uniform_continuous_add).symm
 
--- error in Topology.Algebra.GroupCompletion: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-instance : add_monoid (completion α) :=
-{ zero_add := assume
-  a, completion.induction_on a (is_closed_eq (continuous_map₂ continuous_const continuous_id) continuous_id) (assume
-   a, show «expr = »(«expr + »(0, (a : completion α)), a), by rw_mod_cast [expr zero_add] []),
-  add_zero := assume
-  a, completion.induction_on a (is_closed_eq (continuous_map₂ continuous_id continuous_const) continuous_id) (assume
-   a, show «expr = »(«expr + »((a : completion α), 0), a), by rw_mod_cast [expr add_zero] []),
-  add_assoc := assume
-  a
-  b
-  c, completion.induction_on₃ a b c (is_closed_eq (continuous_map₂ (continuous_map₂ continuous_fst (continuous_fst.comp continuous_snd)) (continuous_snd.comp continuous_snd)) (continuous_map₂ continuous_fst (continuous_map₂ (continuous_fst.comp continuous_snd) (continuous_snd.comp continuous_snd)))) (assume
-   a
-   b
-   c, show «expr = »(«expr + »(«expr + »((a : completion α), b), c), «expr + »(a, «expr + »(b, c))), by repeat { rw_mod_cast [expr add_assoc] [] }),
-  ..completion.has_zero,
-  ..completion.has_neg,
-  ..completion.has_add,
-  ..completion.has_sub }
+instance  : AddMonoidₓ (completion α) :=
+  { completion.has_zero, completion.has_neg, completion.has_add, completion.has_sub with
+    zero_add :=
+      fun a =>
+        completion.induction_on a (is_closed_eq (continuous_map₂ continuous_const continuous_id) continuous_id)
+          fun a =>
+            show (0+(a : completion α)) = a by 
+              rwModCast [zero_addₓ],
+    add_zero :=
+      fun a =>
+        completion.induction_on a (is_closed_eq (continuous_map₂ continuous_id continuous_const) continuous_id)
+          fun a =>
+            show ((a : completion α)+0) = a by 
+              rwModCast [add_zeroₓ],
+    add_assoc :=
+      fun a b c =>
+        completion.induction_on₃ a b c
+          (is_closed_eq
+            (continuous_map₂ (continuous_map₂ continuous_fst (continuous_fst.comp continuous_snd))
+              (continuous_snd.comp continuous_snd))
+            (continuous_map₂ continuous_fst
+              (continuous_map₂ (continuous_fst.comp continuous_snd) (continuous_snd.comp continuous_snd))))
+          fun a b c =>
+            show (((a : completion α)+b)+c) = a+b+c by 
+              repeat' 
+                rwModCast [add_assocₓ] }
 
 instance  : SubNegMonoidₓ (completion α) :=
   { completion.add_monoid, completion.has_neg, completion.has_sub with
@@ -196,18 +203,23 @@ theorem AddMonoidHom.completion_zero : (0 : α →+ β).Completion continuous_co
       intro a 
       simp [(0 : α →+ β).completion_coe continuous_const, coe_zero]
 
-theorem AddMonoidHom.completion_add {γ : Type _} [AddCommGroupₓ γ] [UniformSpace γ] [UniformAddGroup γ] (f g : α →+ γ)
-  (hf : Continuous f) (hg : Continuous g) : (f+g).Completion (hf.add hg) = f.completion hf+g.completion hg :=
-  by 
-    have hfg := hf.add hg 
-    ext x 
-    apply completion.induction_on x
-    ·
-      exact
-        is_closed_eq ((f+g).continuous_completion hfg) ((f.continuous_completion hf).add (g.continuous_completion hg))
-    ·
-      intro a 
-      simp [(f+g).completion_coe hfg, coe_add, f.completion_coe hf, g.completion_coe hg]
+-- error in Topology.Algebra.GroupCompletion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem add_monoid_hom.completion_add
+{γ : Type*}
+[add_comm_group γ]
+[uniform_space γ]
+[uniform_add_group γ]
+(f g : «expr →+ »(α, γ))
+(hf : continuous f)
+(hg : continuous g) : «expr = »(«expr + »(f, g).completion (hf.add hg), «expr + »(f.completion hf, g.completion hg)) :=
+begin
+  have [ident hfg] [] [":=", expr hf.add hg],
+  ext [] [ident x] [],
+  apply [expr completion.induction_on x],
+  { exact [expr is_closed_eq («expr + »(f, g).continuous_completion hfg) ((f.continuous_completion hf).add (g.continuous_completion hg))] },
+  { intro [ident a],
+    simp [] [] [] ["[", expr «expr + »(f, g).completion_coe hfg, ",", expr coe_add, ",", expr f.completion_coe hf, ",", expr g.completion_coe hg, "]"] [] [] }
+end
 
 end AddMonoidHom
 

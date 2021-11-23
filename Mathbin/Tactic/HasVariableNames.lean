@@ -49,7 +49,7 @@ typical_variable_names `(ℕ) = [`n, `m, `o]
 -/
 unsafe def typical_variable_names (t : expr) : tactic (List Name) :=
   (do 
-      let names ← to_expr (pquote HasVariableNames.names (%%t))
+      let names ← to_expr (pquote.1 (HasVariableNames.names (%%ₓt)))
       eval_expr (List Name) names) <|>
     throwError "typical_variable_names: unable to get typical variable names for type { ← t}"
 

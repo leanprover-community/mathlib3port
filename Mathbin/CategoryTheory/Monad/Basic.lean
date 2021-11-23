@@ -260,7 +260,7 @@ instance  : reflects_isomorphisms (monad_to_functor C) :=
   { reflects :=
       fun M N f i =>
         by 
-          resetI 
+          skip 
           convert is_iso.of_iso (monad_iso.mk (as_iso ((monad_to_functor C).map f)) f.app_η f.app_μ)
           ext <;> rfl }
 
@@ -285,7 +285,7 @@ instance  : reflects_isomorphisms (comonad_to_functor C) :=
   { reflects :=
       fun M N f i =>
         by 
-          resetI 
+          skip 
           convert is_iso.of_iso (comonad_iso.mk (as_iso ((comonad_to_functor C).map f)) f.app_ε f.app_δ)
           ext <;> rfl }
 

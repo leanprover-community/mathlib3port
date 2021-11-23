@@ -149,17 +149,19 @@ theorem coprime_coe {m n : ℕ+} : Nat.Coprime («expr↑ » m) («expr↑ » n)
     rw [←coe_inj]
     simp 
 
--- error in Data.Pnat.Prime: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem coprime.mul {k m n : «exprℕ+»()} : m.coprime k → n.coprime k → «expr * »(m, n).coprime k :=
-by { repeat { rw ["<-", expr coprime_coe] [] },
-  rw [expr mul_coe] [],
-  apply [expr nat.coprime.mul] }
+theorem coprime.mul {k m n : ℕ+} : m.coprime k → n.coprime k → (m*n).Coprime k :=
+  by 
+    repeat' 
+      rw [←coprime_coe]
+    rw [mul_coe]
+    apply Nat.Coprime.mul
 
--- error in Data.Pnat.Prime: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem coprime.mul_right {k m n : «exprℕ+»()} : k.coprime m → k.coprime n → k.coprime «expr * »(m, n) :=
-by { repeat { rw ["<-", expr coprime_coe] [] },
-  rw [expr mul_coe] [],
-  apply [expr nat.coprime.mul_right] }
+theorem coprime.mul_right {k m n : ℕ+} : k.coprime m → k.coprime n → k.coprime (m*n) :=
+  by 
+    repeat' 
+      rw [←coprime_coe]
+    rw [mul_coe]
+    apply Nat.Coprime.mul_right
 
 theorem gcd_comm {m n : ℕ+} : m.gcd n = n.gcd m :=
   by 
@@ -232,11 +234,12 @@ theorem one_coprime {n : ℕ+} : (1 : ℕ+).Coprime n :=
 theorem coprime_one {n : ℕ+} : n.coprime 1 :=
   coprime.symm one_coprime
 
--- error in Data.Pnat.Prime: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem coprime.coprime_dvd_left {m k n : «exprℕ+»()} : «expr ∣ »(m, k) → k.coprime n → m.coprime n :=
-by { rw [expr dvd_iff] [],
-  repeat { rw ["<-", expr coprime_coe] [] },
-  apply [expr nat.coprime.coprime_dvd_left] }
+theorem coprime.coprime_dvd_left {m k n : ℕ+} : m ∣ k → k.coprime n → m.coprime n :=
+  by 
+    rw [dvd_iff]
+    repeat' 
+      rw [←coprime_coe]
+    apply Nat.Coprime.coprime_dvd_left
 
 theorem coprime.factor_eq_gcd_left {a b m n : ℕ+} (cop : m.coprime n) (am : a ∣ m) (bn : b ∣ n) : a = (a*b).gcd m :=
   by 

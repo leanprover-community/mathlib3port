@@ -1,7 +1,8 @@
 import Mathbin.MeasureTheory.Measure.MutuallySingular 
 import Mathbin.MeasureTheory.Constructions.BorelSpace 
 import Mathbin.Algebra.IndicatorFunction 
-import Mathbin.Algebra.Support
+import Mathbin.Algebra.Support 
+import Mathbin.Dynamics.Ergodic.MeasurePreserving
 
 /-!
 # Lebesgue integral for `ℝ≥0∞`-valued functions
@@ -134,18 +135,21 @@ theorem range_const_subset α [MeasurableSpace α] (b : β) : (const α b).range
     by 
       simp 
 
-theorem measurable_set_cut (r : α → β → Prop) (f : α →ₛ β) (h : ∀ b, MeasurableSet { a | r a b }) :
-  MeasurableSet { a | r a (f a) } :=
-  by 
-    have  : { a | r a (f a) } = ⋃(b : _)(_ : b ∈ range f), { a | r a b } ∩ f ⁻¹' {b}
-    ·
-      ext a 
-      suffices  : r a (f a) ↔ ∃ i, r a (f i) ∧ f a = f i
-      ·
-        simpa 
-      exact ⟨fun h => ⟨a, ⟨h, rfl⟩⟩, fun ⟨a', ⟨h', e⟩⟩ => e.symm ▸ h'⟩
-    rw [this]
-    exact MeasurableSet.bUnion f.finite_range.countable fun b _ => MeasurableSet.inter (h b) (f.measurable_set_fiber _)
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measurable_set_cut
+(r : α → β → exprProp())
+(f : «expr →ₛ »(α, β))
+(h : ∀ b, measurable_set {a | r a b}) : measurable_set {a | r a (f a)} :=
+begin
+  have [] [":", expr «expr = »({a | r a (f a)}, «expr⋃ , »((b «expr ∈ » range f), «expr ∩ »({a | r a b}, «expr ⁻¹' »(f, {b}))))] [],
+  { ext [] [ident a] [],
+    suffices [] [":", expr «expr ↔ »(r a (f a), «expr∃ , »((i), «expr ∧ »(r a (f i), «expr = »(f a, f i))))],
+    by simpa [] [] [] [] [] [],
+    exact [expr ⟨λ h, ⟨a, ⟨h, rfl⟩⟩, λ ⟨a', ⟨h', e⟩⟩, «expr ▸ »(e.symm, h')⟩] },
+  rw [expr this] [],
+  exact [expr measurable_set.bUnion f.finite_range.countable (λ
+    b _, measurable_set.inter (h b) (f.measurable_set_fiber _))]
+end
 
 @[measurability]
 theorem measurable_set_preimage (f : α →ₛ β) s : MeasurableSet (f ⁻¹' s) :=
@@ -168,13 +172,11 @@ theorem sum_range_measure_preimage_singleton (f : α →ₛ β) (μ : Measureₓ
   by 
     rw [f.sum_measure_preimage_singleton, coe_range, preimage_range]
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If-then-else as a `simple_func`. -/
-def piecewise (s : Set α) (hs : MeasurableSet s) (f g : α →ₛ β) : α →ₛ β :=
-  ⟨s.piecewise f g,
-    fun x =>
-      by 
-        letI this : MeasurableSpace β := ⊤ <;> exact f.measurable.piecewise hs g.measurable trivialₓ,
-    (f.finite_range.union g.finite_range).Subset range_ite_subset⟩
+def piecewise (s : set α) (hs : measurable_set s) (f g : «expr →ₛ »(α, β)) : «expr →ₛ »(α, β) :=
+⟨s.piecewise f g, λ
+ x, by letI [] [":", expr measurable_space β] [":=", expr «expr⊤»()]; exact [expr f.measurable.piecewise hs g.measurable trivial], (f.finite_range.union g.finite_range).subset range_ite_subset⟩
 
 @[simp]
 theorem coe_piecewise {s : Set α} (hs : MeasurableSet s) (f g : α →ₛ β) :
@@ -208,38 +210,45 @@ theorem support_indicator [HasZero β] {s : Set α} (hs : MeasurableSet s) (f : 
   Function.Support (f.piecewise s hs (simple_func.const α 0)) = s ∩ Function.Support f :=
   Set.support_indicator
 
--- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem range_indicator
-{s : set α}
-(hs : measurable_set s)
-(hs_nonempty : s.nonempty)
-(hs_ne_univ : «expr ≠ »(s, univ))
-(x y : β) : «expr = »((piecewise s hs (const α x) (const α y)).range, {x, y}) :=
-begin
-  ext1 [] [ident z],
-  rw ["[", expr mem_range, ",", expr set.mem_range, ",", expr finset.mem_insert, ",", expr finset.mem_singleton, "]"] [],
-  simp_rw [expr piecewise_apply] [],
-  split; intro [ident h],
-  { obtain ["⟨", ident a, ",", ident haz, "⟩", ":=", expr h],
-    by_cases [expr has, ":", expr «expr ∈ »(a, s)],
-    { left,
-      simp [] [] ["only"] ["[", expr has, ",", expr function.const_apply, ",", expr if_true, ",", expr coe_const, "]"] [] ["at", ident haz],
-      exact [expr haz.symm] },
-    { right,
-      simp [] [] ["only"] ["[", expr has, ",", expr function.const_apply, ",", expr if_false, ",", expr coe_const, "]"] [] ["at", ident haz],
-      exact [expr haz.symm] } },
-  { cases [expr h] [],
-    { obtain ["⟨", ident a, ",", ident has, "⟩", ":", expr «expr∃ , »((a), «expr ∈ »(a, s))],
-      from [expr hs_nonempty],
-      exact [expr ⟨a, by simpa [] [] [] ["[", expr has, "]"] [] ["using", expr h.symm]⟩] },
-    { obtain ["⟨", ident a, ",", ident has, "⟩", ":", expr «expr∃ , »((a), «expr ∉ »(a, s))],
-      { by_contra [],
-        push_neg ["at", ident h],
-        refine [expr hs_ne_univ _],
-        ext1 [] [ident a],
-        simp [] [] [] ["[", expr h a, "]"] [] [] },
-      exact [expr ⟨a, by simpa [] [] [] ["[", expr has, "]"] [] ["using", expr h.symm]⟩] } }
-end
+theorem range_indicator {s : Set α} (hs : MeasurableSet s) (hs_nonempty : s.nonempty) (hs_ne_univ : s ≠ univ)
+  (x y : β) : (piecewise s hs (const α x) (const α y)).range = {x, y} :=
+  by 
+    ext1 z 
+    rw [mem_range, Set.mem_range, Finset.mem_insert, Finset.mem_singleton]
+    simpRw [piecewise_apply]
+    split  <;> intro h
+    ·
+      obtain ⟨a, haz⟩ := h 
+      byCases' has : a ∈ s
+      ·
+        left 
+        simp only [has, Function.const_applyₓ, if_true, coe_const] at haz 
+        exact haz.symm
+      ·
+        right 
+        simp only [has, Function.const_applyₓ, if_false, coe_const] at haz 
+        exact haz.symm
+    ·
+      cases h
+      ·
+        obtain ⟨a, has⟩ : ∃ a, a ∈ s 
+        exact hs_nonempty 
+        exact
+          ⟨a,
+            by 
+              simpa [has] using h.symm⟩
+      ·
+        obtain ⟨a, has⟩ : ∃ a, a ∉ s
+        ·
+          byContra 
+          pushNeg  at h 
+          refine' hs_ne_univ _ 
+          ext1 a 
+          simp [h a]
+        exact
+          ⟨a,
+            by 
+              simpa [has] using h.symm⟩
 
 theorem measurable_bind [MeasurableSpace γ] (f : α →ₛ β) (g : β → α → γ) (hg : ∀ b, Measurable (g b)) :
   Measurable fun a => g (f a) a :=
@@ -309,17 +318,22 @@ theorem range_comp_subset_range [MeasurableSpace β] (f : β →ₛ γ) {g : α 
     by 
       simp only [coe_range, coe_comp, Set.range_comp_subset_range]
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Extend a `simple_func` along a measurable embedding: `f₁.extend g hg f₂` is the function
 `F : β →ₛ γ` such that `F ∘ g = f₁` and `F y = f₂ y` whenever `y ∉ range g`. -/
-def extend [MeasurableSpace β] (f₁ : α →ₛ γ) (g : α → β) (hg : MeasurableEmbedding g) (f₂ : β →ₛ γ) : β →ₛ γ :=
-  { toFun := Function.extendₓ g f₁ f₂,
-    finite_range' :=
-      (f₁.finite_range.union$ f₂.finite_range.subset (image_subset_range _ _)).Subset (range_extend_subset _ _ _),
-    measurable_set_fiber' :=
-      by 
-        letI this : MeasurableSpace γ := ⊤
-        haveI  : MeasurableSingletonClass γ := ⟨fun _ => trivialₓ⟩
-        exact fun x => hg.measurable_extend f₁.measurable f₂.measurable (measurable_set_singleton _) }
+def extend
+[measurable_space β]
+(f₁ : «expr →ₛ »(α, γ))
+(g : α → β)
+(hg : measurable_embedding g)
+(f₂ : «expr →ₛ »(β, γ)) : «expr →ₛ »(β, γ) :=
+{ to_fun := function.extend g f₁ f₂,
+  finite_range' := «expr $ »(f₁.finite_range.union, f₂.finite_range.subset (image_subset_range _ _)).subset (range_extend_subset _ _ _),
+  measurable_set_fiber' := begin
+    letI [] [":", expr measurable_space γ] [":=", expr «expr⊤»()],
+    haveI [] [":", expr measurable_singleton_class γ] [":=", expr ⟨λ _, trivial⟩],
+    exact [expr λ x, hg.measurable_extend f₁.measurable f₂.measurable (measurable_set_singleton _)]
+  end }
 
 @[simp]
 theorem extend_apply [MeasurableSpace β] (f₁ : α →ₛ γ) {g : α → β} (hg : MeasurableEmbedding g) (f₂ : β →ₛ γ) (x : α) :
@@ -413,18 +427,16 @@ theorem range_zero [Nonempty α] [HasZero β] : (0 : α →ₛ β).range = {0} :
       by 
         simp [eq_comm]
 
--- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 @[simp]
-theorem range_eq_empty_of_is_empty {β} [hα : is_empty α] (f : «expr →ₛ »(α, β)) : «expr = »(f.range, «expr∅»()) :=
-begin
-  rw ["<-", expr finset.not_nonempty_iff_eq_empty] [],
-  by_contra [],
-  obtain ["⟨", ident y, ",", ident hy_mem, "⟩", ":=", expr h],
-  rw ["[", expr simple_func.mem_range, ",", expr set.mem_range, "]"] ["at", ident hy_mem],
-  obtain ["⟨", ident x, ",", ident hxy, "⟩", ":=", expr hy_mem],
-  rw [expr is_empty_iff] ["at", ident hα],
-  exact [expr hα x]
-end
+theorem range_eq_empty_of_is_empty {β} [hα : IsEmpty α] (f : α →ₛ β) : f.range = ∅ :=
+  by 
+    rw [←Finset.not_nonempty_iff_eq_empty]
+    byContra 
+    obtain ⟨y, hy_mem⟩ := h 
+    rw [simple_func.mem_range, Set.mem_range] at hy_mem 
+    obtain ⟨x, hxy⟩ := hy_mem 
+    rw [is_empty_iff] at hα 
+    exact hα x
 
 theorem eq_zero_of_mem_range_zero [HasZero β] : ∀ {y : β}, y ∈ (0 : α →ₛ β).range → y = 0 :=
   forall_range_iff.2$ fun x => rfl
@@ -635,7 +647,7 @@ variable[SemilatticeSupBot β][HasZero β]
 by simple functions is defined so that in case `β = ℝ≥0∞` it sends each `a` to the supremum
 of the set `{i k | k ≤ n ∧ i k ≤ f a}`, see `approx_apply` and `supr_approx_apply` for details. -/
 def approx (i : ℕ → β) (f : α → β) (n : ℕ) : α →ₛ β :=
-  (Finset.range n).sup fun k => restrict (const α (i k)) { a : α | i k ≤ f a }
+  (Finset.range n).sup fun k => restrict (const α (i k)) { a:α | i k ≤ f a }
 
 theorem approx_apply [TopologicalSpace β] [OrderClosedTopology β] [MeasurableSpace β] [OpensMeasurableSpace β]
   {i : ℕ → β} {f : α → β} {n : ℕ} (a : α) (hf : Measurable f) :
@@ -660,23 +672,34 @@ theorem approx_comp [TopologicalSpace β] [OrderClosedTopology β] [MeasurableSp
 
 end 
 
-theorem supr_approx_apply [TopologicalSpace β] [CompleteLattice β] [OrderClosedTopology β] [HasZero β]
-  [MeasurableSpace β] [OpensMeasurableSpace β] (i : ℕ → β) (f : α → β) (a : α) (hf : Measurable f)
-  (h_zero : (0 : β) = ⊥) : (⨆n, (approx i f n : α →ₛ β) a) = ⨆(k : _)(h : i k ≤ f a), i k :=
-  by 
-    refine' le_antisymmₓ (supr_le$ fun n => _) (supr_le$ fun k => supr_le$ fun hk => _)
-    ·
-      rw [approx_apply a hf, h_zero]
-      refine' Finset.sup_le fun k hk => _ 
-      splitIfs 
-      exact le_supr_of_le k (le_supr _ h)
-      exact bot_le
-    ·
-      refine' le_supr_of_le (k+1) _ 
-      rw [approx_apply a hf]
-      have  : k ∈ Finset.range (k+1) := Finset.mem_range.2 (Nat.lt_succ_selfₓ _)
-      refine' le_transₓ (le_of_eqₓ _) (Finset.le_sup this)
-      rw [if_pos hk]
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem supr_approx_apply
+[topological_space β]
+[complete_lattice β]
+[order_closed_topology β]
+[has_zero β]
+[measurable_space β]
+[opens_measurable_space β]
+(i : exprℕ() → β)
+(f : α → β)
+(a : α)
+(hf : measurable f)
+(h_zero : «expr = »((0 : β), «expr⊥»())) : «expr = »(«expr⨆ , »((n), (approx i f n : «expr →ₛ »(α, β)) a), «expr⨆ , »((k)
+  (h : «expr ≤ »(i k, f a)), i k)) :=
+begin
+  refine [expr le_antisymm «expr $ »(supr_le, assume
+    n, _) «expr $ »(supr_le, assume k, «expr $ »(supr_le, assume hk, _))],
+  { rw ["[", expr approx_apply a hf, ",", expr h_zero, "]"] [],
+    refine [expr finset.sup_le (assume k hk, _)],
+    split_ifs [] [],
+    exact [expr le_supr_of_le k (le_supr _ h)],
+    exact [expr bot_le] },
+  { refine [expr le_supr_of_le «expr + »(k, 1) _],
+    rw ["[", expr approx_apply a hf, "]"] [],
+    have [] [":", expr «expr ∈ »(k, finset.range «expr + »(k, 1))] [":=", expr finset.mem_range.2 (nat.lt_succ_self _)],
+    refine [expr le_trans (le_of_eq _) (finset.le_sup this)],
+    rw ["[", expr if_pos hk, "]"] [] }
+end
 
 end Approx
 
@@ -702,7 +725,7 @@ theorem eapprox_lt_top (f : α → ℝ≥0∞) (n : ℕ) (a : α) : eapprox f n 
     splitIfs
     ·
       simp only [coe_zero, coe_piecewise, piecewise_eq_indicator, coe_const]
-      calc { a : α | ennreal_rat_embed b ≤ f a }.indicator (fun x => ennreal_rat_embed b) a ≤ ennreal_rat_embed b :=
+      calc { a:α | ennreal_rat_embed b ≤ f a }.indicator (fun x => ennreal_rat_embed b) a ≤ ennreal_rat_embed b :=
         indicator_le_self _ _ a _ < ⊤ := Ennreal.coe_lt_top
     ·
       exact WithTop.zero_lt_top
@@ -711,19 +734,24 @@ theorem eapprox_lt_top (f : α → ℝ≥0∞) (n : ℕ) (a : α) : eapprox f n 
 theorem monotone_eapprox (f : α → ℝ≥0∞) : Monotone (eapprox f) :=
   monotone_approx _ f
 
-theorem supr_eapprox_apply (f : α → ℝ≥0∞) (hf : Measurable f) (a : α) : (⨆n, (eapprox f n : α →ₛ ℝ≥0∞) a) = f a :=
-  by 
-    rw [eapprox, supr_approx_apply ennreal_rat_embed f a hf rfl]
-    refine' le_antisymmₓ (supr_le$ fun i => supr_le$ fun hi => hi) (le_of_not_gtₓ _)
-    intro h 
-    rcases Ennreal.lt_iff_exists_rat_btwn.1 h with ⟨q, hq, lt_q, q_lt⟩
-    have  : (Real.toNnreal q : ℝ≥0∞) ≤ ⨆(k : ℕ)(h : ennreal_rat_embed k ≤ f a), ennreal_rat_embed k
-    ·
-      refine' le_supr_of_le (Encodable.encode q) _ 
-      rw [ennreal_rat_embed_encode q]
-      refine' le_supr_of_le (le_of_ltₓ q_lt) _ 
-      exact le_reflₓ _ 
-    exact lt_irreflₓ _ (lt_of_le_of_ltₓ this lt_q)
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem supr_eapprox_apply
+(f : α → «exprℝ≥0∞»())
+(hf : measurable f)
+(a : α) : «expr = »(«expr⨆ , »((n), (eapprox f n : «expr →ₛ »(α, «exprℝ≥0∞»())) a), f a) :=
+begin
+  rw ["[", expr eapprox, ",", expr supr_approx_apply ennreal_rat_embed f a hf rfl, "]"] [],
+  refine [expr le_antisymm «expr $ »(supr_le, assume i, «expr $ »(supr_le, assume hi, hi)) (le_of_not_gt _)],
+  assume [binders (h)],
+  rcases [expr ennreal.lt_iff_exists_rat_btwn.1 h, "with", "⟨", ident q, ",", ident hq, ",", ident lt_q, ",", ident q_lt, "⟩"],
+  have [] [":", expr «expr ≤ »((real.to_nnreal q : «exprℝ≥0∞»()), «expr⨆ , »((k : exprℕ())
+     (h : «expr ≤ »(ennreal_rat_embed k, f a)), ennreal_rat_embed k))] [],
+  { refine [expr le_supr_of_le (encodable.encode q) _],
+    rw ["[", expr ennreal_rat_embed_encode q, "]"] [],
+    refine [expr le_supr_of_le (le_of_lt q_lt) _],
+    exact [expr le_refl _] },
+  exact [expr lt_irrefl _ (lt_of_le_of_lt this lt_q)]
+end
 
 theorem eapprox_comp [MeasurableSpace γ] {f : γ → ℝ≥0∞} {g : α → γ} {n : ℕ} (hf : Measurable f) (hg : Measurable g) :
   (eapprox (f ∘ g) n : α → ℝ≥0∞) = ((eapprox f n : γ →ₛ ℝ≥0∞) ∘ g) :=
@@ -896,7 +924,7 @@ theorem restrict_lintegral_eq_lintegral_restrict (f : α →ₛ ℝ≥0∞) {s :
 theorem const_lintegral (c : ℝ≥0∞) : (const α c).lintegral μ = c*μ univ :=
   by 
     rw [lintegral]
-    casesI is_empty_or_nonempty α
+    cases' is_empty_or_nonempty α
     ·
       simp [μ.eq_zero_of_is_empty]
     ·
@@ -1074,6 +1102,7 @@ end FinMeasSupp
 
 end FinMeasSupp
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- To prove something for an arbitrary simple function, it suffices to show
 that the property holds for (multiples of) characteristic functions and is closed under
 addition (of functions with disjoint support).
@@ -1082,43 +1111,45 @@ It is possible to make the hypotheses in `h_add` a bit stronger, and such condit
 once we need them (for example it is only necessary to consider the case where `g` is a multiple
 of a characteristic function, and that this multiple doesn't appear in the image of `f`) -/
 @[elab_as_eliminator]
-protected theorem induction {α γ} [MeasurableSpace α] [AddMonoidₓ γ] {P : simple_func α γ → Prop}
-  (h_ind : ∀ c {s} hs : MeasurableSet s, P (simple_func.piecewise s hs (simple_func.const _ c) (simple_func.const _ 0)))
-  (h_add : ∀ ⦃f g : simple_func α γ⦄, Disjoint (support f) (support g) → P f → P g → P (f+g)) (f : simple_func α γ) :
-  P f :=
-  by 
-    generalize h : f.range \ {0} = s 
-    rw [←Finset.coe_inj, Finset.coe_sdiff, Finset.coe_singleton, simple_func.coe_range] at h 
-    revert s f h 
-    refine' Finset.induction _ _
-    ·
-      intro f hf 
-      rw [Finset.coe_empty, diff_eq_empty, range_subset_singleton] at hf 
-      convert h_ind 0 MeasurableSet.univ 
-      ext x 
-      simp [hf]
-    ·
-      intro x s hxs ih f hf 
-      have mx := f.measurable_set_preimage {x}
-      let g := simple_func.piecewise (f ⁻¹' {x}) mx 0 f 
-      have Pg : P g
-      ·
-        apply ih 
-        simp only [g, simple_func.coe_piecewise, range_piecewise]
-        rw [image_compl_preimage, union_diff_distrib, diff_diff_comm, hf, Finset.coe_insert,
-          insert_diff_self_of_not_mem, diff_eq_empty.mpr, Set.empty_union]
-        ·
-          rw [Set.image_subset_iff]
-          convert Set.subset_univ _ 
-          exact preimage_const_of_mem (mem_singleton _)
-        ·
-          rwa [Finset.mem_coe]
-      convert h_add _ Pg (h_ind x mx)
-      ·
-        ext1 y 
-        byCases' hy : y ∈ f ⁻¹' {x} <;> [simpa [hy], simp [hy]]
-      rintro y 
-      byCases' hy : y ∈ f ⁻¹' {x} <;> simp [hy]
+protected
+theorem induction
+{α γ}
+[measurable_space α]
+[add_monoid γ]
+{P : simple_func α γ → exprProp()}
+(h_ind : ∀
+ (c)
+ {s}
+ (hs : measurable_set s), P (simple_func.piecewise s hs (simple_func.const _ c) (simple_func.const _ 0)))
+(h_add : ∀ {{f g : simple_func α γ}}, disjoint (support f) (support g) → P f → P g → P «expr + »(f, g))
+(f : simple_func α γ) : P f :=
+begin
+  generalize' [ident h] [":"] [expr «expr = »(«expr \ »(f.range, {0}), s)],
+  rw ["[", "<-", expr finset.coe_inj, ",", expr finset.coe_sdiff, ",", expr finset.coe_singleton, ",", expr simple_func.coe_range, "]"] ["at", ident h],
+  revert [ident s, ident f, ident h],
+  refine [expr finset.induction _ _],
+  { intros [ident f, ident hf],
+    rw ["[", expr finset.coe_empty, ",", expr diff_eq_empty, ",", expr range_subset_singleton, "]"] ["at", ident hf],
+    convert [] [expr h_ind 0 measurable_set.univ] [],
+    ext [] [ident x] [],
+    simp [] [] [] ["[", expr hf, "]"] [] [] },
+  { intros [ident x, ident s, ident hxs, ident ih, ident f, ident hf],
+    have [ident mx] [] [":=", expr f.measurable_set_preimage {x}],
+    let [ident g] [] [":=", expr simple_func.piecewise «expr ⁻¹' »(f, {x}) mx 0 f],
+    have [ident Pg] [":", expr P g] [],
+    { apply [expr ih],
+      simp [] [] ["only"] ["[", expr g, ",", expr simple_func.coe_piecewise, ",", expr range_piecewise, "]"] [] [],
+      rw ["[", expr image_compl_preimage, ",", expr union_diff_distrib, ",", expr diff_diff_comm, ",", expr hf, ",", expr finset.coe_insert, ",", expr insert_diff_self_of_not_mem, ",", expr diff_eq_empty.mpr, ",", expr set.empty_union, "]"] [],
+      { rw ["[", expr set.image_subset_iff, "]"] [],
+        convert [] [expr set.subset_univ _] [],
+        exact [expr preimage_const_of_mem (mem_singleton _)] },
+      { rwa ["[", expr finset.mem_coe, "]"] [] } },
+    convert [] [expr h_add _ Pg (h_ind x mx)] [],
+    { ext1 [] [ident y],
+      by_cases [expr hy, ":", expr «expr ∈ »(y, «expr ⁻¹' »(f, {x}))]; [simpa [] [] [] ["[", expr hy, "]"] [] [], simp [] [] [] ["[", expr hy, "]"] [] []] },
+    rintro [ident y],
+    by_cases [expr hy, ":", expr «expr ∈ »(y, «expr ⁻¹' »(f, {x}))]; simp [] [] [] ["[", expr hy, "]"] [] [] }
+end
 
 end SimpleFunc
 
@@ -1194,54 +1225,61 @@ theorem set_lintegral_one s : (∫⁻a in s, 1 ∂μ) = μ s :=
   by 
     rw [set_lintegral_const, one_mulₓ]
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `∫⁻ a in s, f a ∂μ` is defined as the supremum of integrals of simple functions
 `φ : α →ₛ ℝ≥0∞` such that `φ ≤ f`. This lemma says that it suffices to take
 functions `φ : α →ₛ ℝ≥0`. -/
-theorem lintegral_eq_nnreal {m : MeasurableSpace α} (f : α → ℝ≥0∞) (μ : Measureₓ α) :
-  (∫⁻a, f a ∂μ) = ⨆(φ : α →ₛ  ℝ≥0 )(hf : ∀ x, «expr↑ » (φ x) ≤ f x), (φ.map (coeₓ :  ℝ≥0  → ℝ≥0∞)).lintegral μ :=
-  by 
-    refine' le_antisymmₓ (bsupr_le$ fun φ hφ => _) (supr_le_supr2$ fun φ => ⟨φ.map (coeₓ :  ℝ≥0  → ℝ≥0∞), le_reflₓ _⟩)
-    byCases' h : ∀ᵐa ∂μ, φ a ≠ ∞
-    ·
-      let ψ := φ.map Ennreal.toNnreal 
-      replace h : ψ.map (coeₓ :  ℝ≥0  → ℝ≥0∞) =ᵐ[μ] φ := h.mono fun a => Ennreal.coe_to_nnreal 
-      have  : ∀ x, «expr↑ » (ψ x) ≤ f x := fun x => le_transₓ Ennreal.coe_to_nnreal_le_self (hφ x)
-      exact le_supr_of_le (φ.map Ennreal.toNnreal) (le_supr_of_le this (ge_of_eq$ lintegral_congr h))
-    ·
-      have h_meas : μ (φ ⁻¹' {∞}) ≠ 0 
-      exact mt measure_zero_iff_ae_nmem.1 h 
-      refine' le_transₓ le_top (ge_of_eq$ (supr_eq_top _).2$ fun b hb => _)
-      obtain ⟨n, hn⟩ : ∃ n : ℕ, b < n*μ (φ ⁻¹' {∞})
-      exact exists_nat_mul_gt h_meas (ne_of_ltₓ hb)
-      use (const α (n :  ℝ≥0 )).restrict (φ ⁻¹' {∞})
-      simp only [lt_supr_iff, exists_prop, coe_restrict, φ.measurable_set_preimage, coe_const, Ennreal.coe_indicator,
-        map_coe_ennreal_restrict, map_const, Ennreal.coe_nat, restrict_const_lintegral]
-      refine' ⟨indicator_le fun x hx => le_transₓ _ (hφ _), hn⟩
-      simp only [mem_preimage, mem_singleton_iff] at hx 
-      simp only [hx, le_top]
+theorem lintegral_eq_nnreal
+{m : measurable_space α}
+(f : α → «exprℝ≥0∞»())
+(μ : measure α) : «expr = »(«expr∫⁻ , ∂ »((a), f a, μ), «expr⨆ , »((φ : «expr →ₛ »(α, «exprℝ≥0»()))
+  (hf : ∀ x, «expr ≤ »(«expr↑ »(φ x), f x)), (φ.map (coe : «exprℝ≥0»() → «exprℝ≥0∞»())).lintegral μ)) :=
+begin
+  refine [expr le_antisymm «expr $ »(bsupr_le, assume
+    φ hφ, _) «expr $ »(supr_le_supr2, λ φ, ⟨φ.map (coe : «exprℝ≥0»() → «exprℝ≥0∞»()), le_refl _⟩)],
+  by_cases [expr h, ":", expr «expr∀ᵐ ∂ , »((a), μ, «expr ≠ »(φ a, «expr∞»()))],
+  { let [ident ψ] [] [":=", expr φ.map ennreal.to_nnreal],
+    replace [ident h] [":", expr «expr =ᵐ[ ] »(ψ.map (coe : «exprℝ≥0»() → «exprℝ≥0∞»()), μ, φ)] [":=", expr h.mono (λ
+      a, ennreal.coe_to_nnreal)],
+    have [] [":", expr ∀
+     x, «expr ≤ »(«expr↑ »(ψ x), f x)] [":=", expr λ x, le_trans ennreal.coe_to_nnreal_le_self (hφ x)],
+    exact [expr le_supr_of_le (φ.map ennreal.to_nnreal) (le_supr_of_le this «expr $ »(ge_of_eq, lintegral_congr h))] },
+  { have [ident h_meas] [":", expr «expr ≠ »(μ «expr ⁻¹' »(φ, {«expr∞»()}), 0)] [],
+    from [expr mt measure_zero_iff_ae_nmem.1 h],
+    refine [expr le_trans le_top «expr $ »(ge_of_eq, «expr $ »((supr_eq_top _).2, λ b hb, _))],
+    obtain ["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr∃ , »((n : exprℕ()), «expr < »(b, «expr * »(n, μ «expr ⁻¹' »(φ, {«expr∞»()}))))],
+    from [expr exists_nat_mul_gt h_meas (ne_of_lt hb)],
+    use [expr (const α (n : «exprℝ≥0»())).restrict «expr ⁻¹' »(φ, {«expr∞»()})],
+    simp [] [] ["only"] ["[", expr lt_supr_iff, ",", expr exists_prop, ",", expr coe_restrict, ",", expr φ.measurable_set_preimage, ",", expr coe_const, ",", expr ennreal.coe_indicator, ",", expr map_coe_ennreal_restrict, ",", expr map_const, ",", expr ennreal.coe_nat, ",", expr restrict_const_lintegral, "]"] [] [],
+    refine [expr ⟨indicator_le (λ x hx, le_trans _ (hφ _)), hn⟩],
+    simp [] [] ["only"] ["[", expr mem_preimage, ",", expr mem_singleton_iff, "]"] [] ["at", ident hx],
+    simp [] [] ["only"] ["[", expr hx, ",", expr le_top, "]"] [] [] }
+end
 
-theorem exists_simple_func_forall_lintegral_sub_lt_of_pos {f : α → ℝ≥0∞} (h : (∫⁻x, f x ∂μ) ≠ ∞) {ε : ℝ≥0∞}
-  (hε : ε ≠ 0) :
-  ∃ φ : α →ₛ  ℝ≥0 ,
-    (∀ x, «expr↑ » (φ x) ≤ f x) ∧ ∀ ψ : α →ₛ  ℝ≥0 , (∀ x, «expr↑ » (ψ x) ≤ f x) → (map coeₓ (ψ - φ)).lintegral μ < ε :=
-  by 
-    rw [lintegral_eq_nnreal] at h 
-    have  := Ennreal.lt_add_right h hε 
-    erw [Ennreal.bsupr_add] at this <;> [skip,
-      exact
-        ⟨0,
-          fun x =>
-            by 
-              simp ⟩]
-    simpRw [lt_supr_iff, supr_lt_iff, supr_le_iff]  at this 
-    rcases this with ⟨φ, hle : ∀ x, «expr↑ » (φ x) ≤ f x, b, hbφ, hb⟩
-    refine' ⟨φ, hle, fun ψ hψ => _⟩
-    have  : (map coeₓ φ).lintegral μ ≠ ∞
-    exact ne_top_of_le_ne_top h (le_bsupr φ hle)
-    rw [←add_lt_add_iff_left this, ←add_lintegral, ←map_add @Ennreal.coe_add]
-    refine' (hb _ fun x => le_transₓ _ (max_leₓ (hle x) (hψ x))).trans_lt hbφ 
-    normCast 
-    simp only [add_apply, sub_apply, add_tsub_eq_max]
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_simple_func_forall_lintegral_sub_lt_of_pos
+{f : α → «exprℝ≥0∞»()}
+(h : «expr ≠ »(«expr∫⁻ , ∂ »((x), f x, μ), «expr∞»()))
+{ε : «exprℝ≥0∞»()}
+(hε : «expr ≠ »(ε, 0)) : «expr∃ , »((φ : «expr →ₛ »(α, «exprℝ≥0»())), «expr ∧ »(∀
+  x, «expr ≤ »(«expr↑ »(φ x), f x), ∀
+  ψ : «expr →ₛ »(α, «exprℝ≥0»()), ∀
+  x, «expr ≤ »(«expr↑ »(ψ x), f x) → «expr < »((map coe «expr - »(ψ, φ)).lintegral μ, ε))) :=
+begin
+  rw [expr lintegral_eq_nnreal] ["at", ident h],
+  have [] [] [":=", expr ennreal.lt_add_right h hε],
+  erw [expr ennreal.bsupr_add] ["at", ident this]; [skip, exact [expr ⟨0, λ x, by simp [] [] [] [] [] []⟩]],
+  simp_rw ["[", expr lt_supr_iff, ",", expr supr_lt_iff, ",", expr supr_le_iff, "]"] ["at", ident this],
+  rcases [expr this, "with", "⟨", ident φ, ",", ident hle, ":", expr ∀
+   x, «expr ≤ »(«expr↑ »(φ x), f x), ",", ident b, ",", ident hbφ, ",", ident hb, "⟩"],
+  refine [expr ⟨φ, hle, λ ψ hψ, _⟩],
+  have [] [":", expr «expr ≠ »((map coe φ).lintegral μ, «expr∞»())] [],
+  from [expr ne_top_of_le_ne_top h (le_bsupr φ hle)],
+  rw ["[", "<-", expr add_lt_add_iff_left this, ",", "<-", expr add_lintegral, ",", "<-", expr map_add @ennreal.coe_add, "]"] [],
+  refine [expr (hb _ (λ x, le_trans _ (max_le (hle x) (hψ x)))).trans_lt hbφ],
+  norm_cast [],
+  simp [] [] ["only"] ["[", expr add_apply, ",", expr sub_apply, ",", expr add_tsub_eq_max, "]"] [] []
+end
 
 theorem supr_lintegral_le {ι : Sort _} (f : ι → α → ℝ≥0∞) : (⨆i, ∫⁻a, f i a ∂μ) ≤ ∫⁻a, ⨆i, f i a ∂μ :=
   by 
@@ -1267,19 +1305,22 @@ theorem le_infi2_lintegral {ι : Sort _} {ι' : ι → Sort _} (f : ∀ i, ι' i
     ext1 a 
     simp only [infi_apply]
 
-theorem lintegral_mono_ae {f g : α → ℝ≥0∞} (h : ∀ᵐa ∂μ, f a ≤ g a) : (∫⁻a, f a ∂μ) ≤ ∫⁻a, g a ∂μ :=
-  by 
-    rcases exists_measurable_superset_of_null h with ⟨t, hts, ht, ht0⟩
-    have  : ∀ᵐx ∂μ, x ∉ t := measure_zero_iff_ae_nmem.1 ht0 
-    refine' supr_le$ fun s => supr_le$ fun hfs => le_supr_of_le (s.restrict («expr ᶜ» t))$ le_supr_of_le _ _
-    ·
-      intro a 
-      byCases' a ∈ t <;> simp [h, restrict_apply, ht.compl]
-      exact le_transₓ (hfs a) (by_contradiction$ fun hnfg => h (hts hnfg))
-    ·
-      refine' le_of_eqₓ (simple_func.lintegral_congr$ this.mono$ fun a hnt => _)
-      byCases' hat : a ∈ t <;> simp [hat, ht.compl]
-      exact (hnt hat).elim
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lintegral_mono_ae
+{f g : α → «exprℝ≥0∞»()}
+(h : «expr∀ᵐ ∂ , »((a), μ, «expr ≤ »(f a, g a))) : «expr ≤ »(«expr∫⁻ , ∂ »((a), f a, μ), «expr∫⁻ , ∂ »((a), g a, μ)) :=
+begin
+  rcases [expr exists_measurable_superset_of_null h, "with", "⟨", ident t, ",", ident hts, ",", ident ht, ",", ident ht0, "⟩"],
+  have [] [":", expr «expr∀ᵐ ∂ , »((x), μ, «expr ∉ »(x, t))] [":=", expr measure_zero_iff_ae_nmem.1 ht0],
+  refine [expr «expr $ »(supr_le, assume
+    s, «expr $ »(supr_le, assume hfs, «expr $ »(le_supr_of_le (s.restrict «expr ᶜ»(t)), le_supr_of_le _ _)))],
+  { assume [binders (a)],
+    by_cases [expr «expr ∈ »(a, t)]; simp [] [] [] ["[", expr h, ",", expr restrict_apply, ",", expr ht.compl, "]"] [] [],
+    exact [expr le_trans (hfs a) «expr $ »(by_contradiction, assume hnfg, h (hts hnfg))] },
+  { refine [expr le_of_eq «expr $ »(simple_func.lintegral_congr, «expr $ »(this.mono, λ a hnt, _))],
+    by_cases [expr hat, ":", expr «expr ∈ »(a, t)]; simp [] [] [] ["[", expr hat, ",", expr ht.compl, "]"] [] [],
+    exact [expr (hnt hat).elim] }
+end
 
 theorem set_lintegral_mono_ae {s : Set α} {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Measurable g)
   (hfg : ∀ᵐx ∂μ, x ∈ s → f x ≤ g x) : (∫⁻x in s, f x ∂μ) ≤ ∫⁻x in s, g x ∂μ :=
@@ -1307,7 +1348,7 @@ theorem set_lintegral_congr_fun {f g : α → ℝ≥0∞} {s : Set α} (hs : Mea
     rw [eventually_eq]
     rwa [ae_restrict_iff' hs]
 
--- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Monotone convergence theorem -- sometimes called Beppo-Levi convergence.
 
 See `lintegral_supr_directed` for a more general form. -/
@@ -1395,44 +1436,53 @@ begin
     end
 end
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Monotone convergence theorem -- sometimes called Beppo-Levi convergence. Version with
 ae_measurable functions. -/
-theorem lintegral_supr' {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, AeMeasurable (f n) μ) (h_mono : ∀ᵐx ∂μ, Monotone fun n => f n x) :
-  (∫⁻a, ⨆n, f n a ∂μ) = ⨆n, ∫⁻a, f n a ∂μ :=
-  by 
-    simpRw [←supr_apply]
-    let p : α → (ℕ → ℝ≥0∞) → Prop := fun x f' => Monotone f' 
-    have hp : ∀ᵐx ∂μ, p x fun i => f i x 
-    exact h_mono 
-    have h_ae_seq_mono : Monotone (aeSeq hf p)
-    ·
-      intro n m hnm x 
-      byCases' hx : x ∈ AeSeqSet hf p
-      ·
-        exact aeSeq.prop_of_mem_ae_seq_set hf hx hnm
-      ·
-        simp only [aeSeq, hx, if_false]
-        exact le_reflₓ _ 
-    rw [lintegral_congr_ae (aeSeq.supr hf hp).symm]
-    simpRw [supr_apply]
-    rw [@lintegral_supr _ _ μ _ (aeSeq.measurable hf p) h_ae_seq_mono]
-    congr 
-    exact funext fun n => lintegral_congr_ae (aeSeq.ae_seq_n_eq_fun_n_ae hf hp n)
+theorem lintegral_supr'
+{f : exprℕ() → α → «exprℝ≥0∞»()}
+(hf : ∀ n, ae_measurable (f n) μ)
+(h_mono : «expr∀ᵐ ∂ , »((x), μ, monotone (λ
+   n, f n x))) : «expr = »(«expr∫⁻ , ∂ »((a), «expr⨆ , »((n), f n a), μ), «expr⨆ , »((n), «expr∫⁻ , ∂ »((a), f n a, μ))) :=
+begin
+  simp_rw ["<-", expr supr_apply] [],
+  let [ident p] [":", expr α → (exprℕ() → «exprℝ≥0∞»()) → exprProp()] [":=", expr λ x f', monotone f'],
+  have [ident hp] [":", expr «expr∀ᵐ ∂ , »((x), μ, p x (λ i, f i x))] [],
+  from [expr h_mono],
+  have [ident h_ae_seq_mono] [":", expr monotone (ae_seq hf p)] [],
+  { intros [ident n, ident m, ident hnm, ident x],
+    by_cases [expr hx, ":", expr «expr ∈ »(x, ae_seq_set hf p)],
+    { exact [expr ae_seq.prop_of_mem_ae_seq_set hf hx hnm] },
+    { simp [] [] ["only"] ["[", expr ae_seq, ",", expr hx, ",", expr if_false, "]"] [] [],
+      exact [expr le_refl _] } },
+  rw [expr lintegral_congr_ae (ae_seq.supr hf hp).symm] [],
+  simp_rw [expr supr_apply] [],
+  rw [expr @lintegral_supr _ _ μ _ (ae_seq.measurable hf p) h_ae_seq_mono] [],
+  congr,
+  exact [expr funext (λ n, lintegral_congr_ae (ae_seq.ae_seq_n_eq_fun_n_ae hf hp n))]
+end
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Monotone convergence theorem expressed with limits -/
-theorem lintegral_tendsto_of_tendsto_of_monotone {f : ℕ → α → ℝ≥0∞} {F : α → ℝ≥0∞} (hf : ∀ n, AeMeasurable (f n) μ)
-  (h_mono : ∀ᵐx ∂μ, Monotone fun n => f n x) (h_tendsto : ∀ᵐx ∂μ, tendsto (fun n => f n x) at_top (𝓝$ F x)) :
-  tendsto (fun n => ∫⁻x, f n x ∂μ) at_top (𝓝$ ∫⁻x, F x ∂μ) :=
-  by 
-    have  : Monotone fun n => ∫⁻x, f n x ∂μ := fun i j hij => lintegral_mono_ae (h_mono.mono$ fun x hx => hx hij)
-    suffices key : (∫⁻x, F x ∂μ) = ⨆n, ∫⁻x, f n x ∂μ
-    ·
-      rw [key]
-      exact tendsto_at_top_supr this 
-    rw [←lintegral_supr' hf h_mono]
-    refine' lintegral_congr_ae _ 
-    filterUpwards [h_mono, h_tendsto]
-    exact fun x hx_mono hx_tendsto => tendsto_nhds_unique hx_tendsto (tendsto_at_top_supr hx_mono)
+theorem lintegral_tendsto_of_tendsto_of_monotone
+{f : exprℕ() → α → «exprℝ≥0∞»()}
+{F : α → «exprℝ≥0∞»()}
+(hf : ∀ n, ae_measurable (f n) μ)
+(h_mono : «expr∀ᵐ ∂ , »((x), μ, monotone (λ n, f n x)))
+(h_tendsto : «expr∀ᵐ ∂ , »((x), μ, tendsto (λ
+   n, f n x) at_top «expr $ »(expr𝓝(), F x))) : tendsto (λ
+ n, «expr∫⁻ , ∂ »((x), f n x, μ)) at_top «expr $ »(expr𝓝(), «expr∫⁻ , ∂ »((x), F x, μ)) :=
+begin
+  have [] [":", expr monotone (λ
+    n, «expr∫⁻ , ∂ »((x), f n x, μ))] [":=", expr λ i j hij, lintegral_mono_ae «expr $ »(h_mono.mono, λ x hx, hx hij)],
+  suffices [ident key] [":", expr «expr = »(«expr∫⁻ , ∂ »((x), F x, μ), «expr⨆ , »((n), «expr∫⁻ , ∂ »((x), f n x, μ)))],
+  { rw [expr key] [],
+    exact [expr tendsto_at_top_supr this] },
+  rw ["<-", expr lintegral_supr' hf h_mono] [],
+  refine [expr lintegral_congr_ae _],
+  filter_upwards ["[", expr h_mono, ",", expr h_tendsto, "]"] [],
+  exact [expr λ x hx_mono hx_tendsto, tendsto_nhds_unique hx_tendsto (tendsto_at_top_supr hx_mono)]
+end
 
 theorem lintegral_eq_supr_eapprox_lintegral {f : α → ℝ≥0∞} (hf : Measurable f) :
   (∫⁻a, f a ∂μ) = ⨆n, (eapprox f n).lintegral μ :=
@@ -1452,42 +1502,40 @@ theorem lintegral_eq_supr_eapprox_lintegral {f : α → ℝ≥0∞} (hf : Measur
       congr <;> ext n <;> rw [(eapprox f n).lintegral_eq_lintegral]
     
 
--- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If `f` has finite integral, then `∫⁻ x in s, f x ∂μ` is absolutely continuous in `s`: it tends
 to zero as `μ s` tends to zero. This lemma states states this fact in terms of `ε` and `δ`. -/
-theorem exists_pos_set_lintegral_lt_of_measure_lt
-{f : α → «exprℝ≥0∞»()}
-(h : «expr ≠ »(«expr∫⁻ , ∂ »((x), f x, μ), «expr∞»()))
-{ε : «exprℝ≥0∞»()}
-(hε : «expr ≠ »(ε, 0)) : «expr∃ , »((δ «expr > » 0), ∀
- s, «expr < »(μ s, δ) → «expr < »(«expr∫⁻ in , ∂ »((x), s, f x, μ), ε)) :=
-begin
-  rcases [expr exists_between hε.bot_lt, "with", "⟨", ident ε₂, ",", ident hε₂0, ":", expr «expr < »(0, ε₂), ",", ident hε₂ε, "⟩"],
-  rcases [expr exists_between hε₂0, "with", "⟨", ident ε₁, ",", ident hε₁0, ",", ident hε₁₂, "⟩"],
-  rcases [expr exists_simple_func_forall_lintegral_sub_lt_of_pos h hε₁0.ne', "with", "⟨", ident φ, ",", ident hle, ",", ident hφ, "⟩"],
-  rcases [expr φ.exists_forall_le, "with", "⟨", ident C, ",", ident hC, "⟩"],
-  use ["[", expr «expr / »(«expr - »(ε₂, ε₁), C), ",", expr ennreal.div_pos_iff.2 ⟨(tsub_pos_iff_lt.2 hε₁₂).ne', ennreal.coe_ne_top⟩, "]"],
-  refine [expr λ s hs, lt_of_le_of_lt _ hε₂ε],
-  simp [] [] ["only"] ["[", expr lintegral_eq_nnreal, ",", expr supr_le_iff, "]"] [] [],
-  intros [ident ψ, ident hψ],
-  calc
-    «expr ≤ »((map coe ψ).lintegral (μ.restrict s), «expr + »((map coe φ).lintegral (μ.restrict s), (map coe «expr - »(ψ, φ)).lintegral (μ.restrict s))) : begin
-      rw ["[", "<-", expr simple_func.add_lintegral, ",", "<-", expr simple_func.map_add @ennreal.coe_add, "]"] [],
-      refine [expr simple_func.lintegral_mono (λ x, _) le_rfl],
-      simp [] [] [] ["[", "-", ident ennreal.coe_add, ",", expr add_tsub_eq_max, ",", expr le_max_right, "]"] [] []
-    end
-    «expr ≤ »(..., «expr + »((map coe φ).lintegral (μ.restrict s), ε₁)) : begin
-      refine [expr add_le_add le_rfl (le_trans _ (hφ _ hψ).le)],
-      exact [expr simple_func.lintegral_mono le_rfl measure.restrict_le_self]
-    end
-    «expr ≤ »(..., «expr + »((simple_func.const α (C : «exprℝ≥0∞»())).lintegral (μ.restrict s), ε₁)) : by { mono ["*"] [] [] [],
-      exacts ["[", expr λ x, coe_le_coe.2 (hC x), ",", expr le_rfl, ",", expr le_rfl, "]"] }
-    «expr = »(..., «expr + »(«expr * »(C, μ s), ε₁)) : by simp [] [] [] ["[", "<-", expr simple_func.lintegral_eq_lintegral, "]"] [] []
-    «expr ≤ »(..., «expr + »(«expr * »(C, «expr / »(«expr - »(ε₂, ε₁), C)), ε₁)) : by { mono ["*"] [] [] [],
-      exacts ["[", expr le_rfl, ",", expr hs.le, ",", expr le_rfl, "]"] }
-    «expr ≤ »(..., «expr + »(«expr - »(ε₂, ε₁), ε₁)) : add_le_add mul_div_le le_rfl
-    «expr = »(..., ε₂) : tsub_add_cancel_of_le hε₁₂.le
-end
+theorem exists_pos_set_lintegral_lt_of_measure_lt {f : α → ℝ≥0∞} (h : (∫⁻x, f x ∂μ) ≠ ∞) {ε : ℝ≥0∞} (hε : ε ≠ 0) :
+  ∃ (δ : _)(_ : δ > 0), ∀ s, μ s < δ → (∫⁻x in s, f x ∂μ) < ε :=
+  by 
+    rcases exists_between hε.bot_lt with ⟨ε₂, hε₂0 : 0 < ε₂, hε₂ε⟩
+    rcases exists_between hε₂0 with ⟨ε₁, hε₁0, hε₁₂⟩
+    rcases exists_simple_func_forall_lintegral_sub_lt_of_pos h hε₁0.ne' with ⟨φ, hle, hφ⟩
+    rcases φ.exists_forall_le with ⟨C, hC⟩
+    use (ε₂ - ε₁) / C, Ennreal.div_pos_iff.2 ⟨(tsub_pos_iff_lt.2 hε₁₂).ne', Ennreal.coe_ne_top⟩
+    refine' fun s hs => lt_of_le_of_ltₓ _ hε₂ε 
+    simp only [lintegral_eq_nnreal, supr_le_iff]
+    intro ψ hψ 
+    calc
+      (map coeₓ ψ).lintegral (μ.restrict s) ≤
+        (map coeₓ φ).lintegral (μ.restrict s)+(map coeₓ (ψ - φ)).lintegral (μ.restrict s) :=
+      by 
+        rw [←simple_func.add_lintegral, ←simple_func.map_add @Ennreal.coe_add]
+        refine' simple_func.lintegral_mono (fun x => _) le_rfl 
+        simp [-Ennreal.coe_add, add_tsub_eq_max, le_max_rightₓ]_ ≤ (map coeₓ φ).lintegral (μ.restrict s)+ε₁ :=
+      by 
+        refine' add_le_add le_rfl (le_transₓ _ (hφ _ hψ).le)
+        exact
+          simple_func.lintegral_mono le_rfl
+            measure.restrict_le_self _ ≤ (simple_func.const α (C : ℝ≥0∞)).lintegral (μ.restrict s)+ε₁ :=
+      by 
+        mono*
+        exacts[fun x => coe_le_coe.2 (hC x), le_rfl, le_rfl]_ = (C*μ s)+ε₁ :=
+      by 
+        simp [←simple_func.lintegral_eq_lintegral]_ ≤ (C*(ε₂ - ε₁) / C)+ε₁ :=
+      by 
+        mono*
+        exacts[le_rfl, hs.le, le_rfl]_ ≤ (ε₂ - ε₁)+ε₁ :=
+      add_le_add mul_div_le le_rfl _ = ε₂ := tsub_add_cancel_of_le hε₁₂.le
 
 /-- If `f` has finite integral, then `∫⁻ x in s, f x ∂μ` is absolutely continuous in `s`: it tends
 to zero as `μ s` tends to zero. -/
@@ -1650,11 +1698,16 @@ theorem lintegral_const_mul (r : ℝ≥0∞) {f : α → ℝ≥0∞} (hf : Measu
       rw [←Ennreal.mul_supr, lintegral_eq_supr_eapprox_lintegral hf]
     
 
-theorem lintegral_const_mul'' (r : ℝ≥0∞) {f : α → ℝ≥0∞} (hf : AeMeasurable f μ) : (∫⁻a, r*f a ∂μ) = r*∫⁻a, f a ∂μ :=
-  by 
-    have A : (∫⁻a, f a ∂μ) = ∫⁻a, hf.mk f a ∂μ := lintegral_congr_ae hf.ae_eq_mk 
-    have B : (∫⁻a, r*f a ∂μ) = ∫⁻a, r*hf.mk f a ∂μ := lintegral_congr_ae (eventually_eq.fun_comp hf.ae_eq_mk _)
-    rw [A, B, lintegral_const_mul _ hf.measurable_mk]
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lintegral_const_mul''
+(r : «exprℝ≥0∞»())
+{f : α → «exprℝ≥0∞»()}
+(hf : ae_measurable f μ) : «expr = »(«expr∫⁻ , ∂ »((a), «expr * »(r, f a), μ), «expr * »(r, «expr∫⁻ , ∂ »((a), f a, μ))) :=
+begin
+  have [ident A] [":", expr «expr = »(«expr∫⁻ , ∂ »((a), f a, μ), «expr∫⁻ , ∂ »((a), hf.mk f a, μ))] [":=", expr lintegral_congr_ae hf.ae_eq_mk],
+  have [ident B] [":", expr «expr = »(«expr∫⁻ , ∂ »((a), «expr * »(r, f a), μ), «expr∫⁻ , ∂ »((a), «expr * »(r, hf.mk f a), μ))] [":=", expr lintegral_congr_ae (eventually_eq.fun_comp hf.ae_eq_mk _)],
+  rw ["[", expr A, ",", expr B, ",", expr lintegral_const_mul _ hf.measurable_mk, "]"] []
+end
 
 theorem lintegral_const_mul_le (r : ℝ≥0∞) (f : α → ℝ≥0∞) : (r*∫⁻a, f a ∂μ) ≤ ∫⁻a, r*f a ∂μ :=
   by 
@@ -1667,21 +1720,23 @@ theorem lintegral_const_mul_le (r : ℝ≥0∞) (f : α → ℝ≥0∞) : (r*∫
     refine' le_supr_of_le (const α r*s) (le_supr_of_le (fun x => _) (le_reflₓ _))
     exact mul_le_mul_left' (hs x) _
 
-theorem lintegral_const_mul' (r : ℝ≥0∞) (f : α → ℝ≥0∞) (hr : r ≠ ∞) : (∫⁻a, r*f a ∂μ) = r*∫⁻a, f a ∂μ :=
-  by 
-    byCases' h : r = 0
-    ·
-      simp [h]
-    apply le_antisymmₓ _ (lintegral_const_mul_le r f)
-    have rinv : (r*r⁻¹) = 1 := Ennreal.mul_inv_cancel h hr 
-    have rinv' : (r⁻¹*r) = 1
-    ·
-      ·
-        rw [mul_commₓ]
-        exact rinv 
-    have  := lintegral_const_mul_le (r⁻¹) fun x => r*f x 
-    simp [(mul_assocₓ _ _ _).symm, rinv'] at this 
-    simpa [(mul_assocₓ _ _ _).symm, rinv] using mul_le_mul_left' this r
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lintegral_const_mul'
+(r : «exprℝ≥0∞»())
+(f : α → «exprℝ≥0∞»())
+(hr : «expr ≠ »(r, «expr∞»())) : «expr = »(«expr∫⁻ , ∂ »((a), «expr * »(r, f a), μ), «expr * »(r, «expr∫⁻ , ∂ »((a), f a, μ))) :=
+begin
+  by_cases [expr h, ":", expr «expr = »(r, 0)],
+  { simp [] [] [] ["[", expr h, "]"] [] [] },
+  apply [expr le_antisymm _ (lintegral_const_mul_le r f)],
+  have [ident rinv] [":", expr «expr = »(«expr * »(r, «expr ⁻¹»(r)), 1)] [":=", expr ennreal.mul_inv_cancel h hr],
+  have [ident rinv'] [":", expr «expr = »(«expr * »(«expr ⁻¹»(r), r), 1)] [],
+  by { rw [expr mul_comm] [],
+    exact [expr rinv] },
+  have [] [] [":=", expr lintegral_const_mul_le «expr ⁻¹»(r) (λ x, «expr * »(r, f x))],
+  simp [] [] [] ["[", expr (mul_assoc _ _ _).symm, ",", expr rinv', "]"] [] ["at", ident this],
+  simpa [] [] [] ["[", expr (mul_assoc _ _ _).symm, ",", expr rinv, "]"] [] ["using", expr mul_le_mul_left' this r]
+end
 
 theorem lintegral_mul_const (r : ℝ≥0∞) {f : α → ℝ≥0∞} (hf : Measurable f) : (∫⁻a, f a*r ∂μ) = (∫⁻a, f a ∂μ)*r :=
   by 
@@ -1739,22 +1794,32 @@ theorem lintegral_indicator (f : α → ℝ≥0∞) {s : Set α} (hs : Measurabl
       refine' ⟨⟨φ.restrict s, fun x => _⟩, le_reflₓ _⟩
       simp [hφ x, hs, indicator_le_indicator]
 
-theorem set_lintegral_eq_const {f : α → ℝ≥0∞} (hf : Measurable f) (r : ℝ≥0∞) :
-  (∫⁻x in { x | f x = r }, f x ∂μ) = r*μ { x | f x = r } :=
-  by 
-    have  : ∀ᵐx ∂μ, x ∈ { x | f x = r } → f x = r := ae_of_all μ fun _ hx => hx 
-    erw [set_lintegral_congr_fun _ this, lintegral_const, measure.restrict_apply MeasurableSet.univ, Set.univ_inter]
-    exact hf (measurable_set_singleton r)
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem set_lintegral_eq_const
+{f : α → «exprℝ≥0∞»()}
+(hf : measurable f)
+(r : «exprℝ≥0∞»()) : «expr = »(«expr∫⁻ in , ∂ »((x), {x | «expr = »(f x, r)}, f x, μ), «expr * »(r, μ {x | «expr = »(f x, r)})) :=
+begin
+  have [] [":", expr «expr∀ᵐ ∂ , »((x), μ, «expr ∈ »(x, {x | «expr = »(f x, r)}) → «expr = »(f x, r))] [":=", expr ae_of_all μ (λ
+    _ hx, hx)],
+  erw ["[", expr set_lintegral_congr_fun _ this, ",", expr lintegral_const, ",", expr measure.restrict_apply measurable_set.univ, ",", expr set.univ_inter, "]"] [],
+  exact [expr hf (measurable_set_singleton r)]
+end
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Markov's inequality** also known as **Chebyshev's first inequality**. -/
-theorem mul_meas_ge_le_lintegral {f : α → ℝ≥0∞} (hf : Measurable f) (ε : ℝ≥0∞) : (ε*μ { x | ε ≤ f x }) ≤ ∫⁻a, f a ∂μ :=
-  by 
-    have  : MeasurableSet { a : α | ε ≤ f a }
-    exact hf measurable_set_Ici 
-    rw [←simple_func.restrict_const_lintegral _ this, ←simple_func.lintegral_eq_lintegral]
-    refine' lintegral_mono fun a => _ 
-    simp only [restrict_apply _ this]
-    exact indicator_apply_le id
+theorem mul_meas_ge_le_lintegral
+{f : α → «exprℝ≥0∞»()}
+(hf : measurable f)
+(ε : «exprℝ≥0∞»()) : «expr ≤ »(«expr * »(ε, μ {x | «expr ≤ »(ε, f x)}), «expr∫⁻ , ∂ »((a), f a, μ)) :=
+begin
+  have [] [":", expr measurable_set {a : α | «expr ≤ »(ε, f a)}] [],
+  from [expr hf measurable_set_Ici],
+  rw ["[", "<-", expr simple_func.restrict_const_lintegral _ this, ",", "<-", expr simple_func.lintegral_eq_lintegral, "]"] [],
+  refine [expr lintegral_mono (λ a, _)],
+  simp [] [] ["only"] ["[", expr restrict_apply _ this, "]"] [] [],
+  exact [expr indicator_apply_le id]
+end
 
 theorem lintegral_eq_top_of_measure_eq_top_pos {f : α → ℝ≥0∞} (hf : Measurable f) (hμf : 0 < μ { x | f x = ∞ }) :
   (∫⁻x, f x ∂μ) = ∞ :=
@@ -1772,7 +1837,7 @@ theorem meas_ge_le_lintegral_div {f : α → ℝ≥0∞} (hf : Measurable f) {ε
       rw [mul_commₓ]
       exact mul_meas_ge_le_lintegral hf ε
 
--- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
 theorem lintegral_eq_zero_iff
 {f : α → «exprℝ≥0∞»()}
@@ -1793,49 +1858,50 @@ begin
       «expr = »(..., 0) : lintegral_zero }
 end
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem lintegral_eq_zero_iff' {f : α → ℝ≥0∞} (hf : AeMeasurable f μ) : (∫⁻a, f a ∂μ) = 0 ↔ f =ᵐ[μ] 0 :=
-  by 
-    have  : (∫⁻a, f a ∂μ) = ∫⁻a, hf.mk f a ∂μ := lintegral_congr_ae hf.ae_eq_mk 
-    rw [this, lintegral_eq_zero_iff hf.measurable_mk]
-    exact ⟨fun H => hf.ae_eq_mk.trans H, fun H => hf.ae_eq_mk.symm.trans H⟩
+theorem lintegral_eq_zero_iff'
+{f : α → «exprℝ≥0∞»()}
+(hf : ae_measurable f μ) : «expr ↔ »(«expr = »(«expr∫⁻ , ∂ »((a), f a, μ), 0), «expr =ᵐ[ ] »(f, μ, 0)) :=
+begin
+  have [] [":", expr «expr = »(«expr∫⁻ , ∂ »((a), f a, μ), «expr∫⁻ , ∂ »((a), hf.mk f a, μ))] [":=", expr lintegral_congr_ae hf.ae_eq_mk],
+  rw ["[", expr this, ",", expr lintegral_eq_zero_iff hf.measurable_mk, "]"] [],
+  exact [expr ⟨λ H, hf.ae_eq_mk.trans H, λ H, hf.ae_eq_mk.symm.trans H⟩]
+end
 
 theorem lintegral_pos_iff_support {f : α → ℝ≥0∞} (hf : Measurable f) : (0 < ∫⁻a, f a ∂μ) ↔ 0 < μ (Function.Support f) :=
   by 
     simp [pos_iff_ne_zero, hf, Filter.EventuallyEq, ae_iff, Function.Support]
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Weaker version of the monotone convergence theorem-/
-theorem lintegral_supr_ae {f : ℕ → α → ℝ≥0∞} (hf : ∀ n, Measurable (f n)) (h_mono : ∀ n, ∀ᵐa ∂μ, f n a ≤ f n.succ a) :
-  (∫⁻a, ⨆n, f n a ∂μ) = ⨆n, ∫⁻a, f n a ∂μ :=
-  let ⟨s, hs⟩ := exists_measurable_superset_of_null (ae_iff.1 (ae_all_iff.2 h_mono))
-  let g := fun n a => if a ∈ s then 0 else f n a 
-  have g_eq_f : ∀ᵐa ∂μ, ∀ n, g n a = f n a := (measure_zero_iff_ae_nmem.1 hs.2.2).mono fun a ha n => if_neg ha 
-  calc (∫⁻a, ⨆n, f n a ∂μ) = ∫⁻a, ⨆n, g n a ∂μ :=
-    lintegral_congr_ae$
-      g_eq_f.mono$
-        fun a ha =>
-          by 
-            simp only [ha]
-    _ = ⨆n, ∫⁻a, g n a ∂μ :=
-    lintegral_supr (fun n => measurable_const.piecewise hs.2.1 (hf n))
-      (monotone_nat_of_le_succ$
-        fun n a =>
-          Classical.by_cases
-            (fun h : a ∈ s =>
-              by 
-                simp [g, if_pos h])
-            fun h : a ∉ s =>
-              by 
-                simp only [g, if_neg h]
-                have  := hs.1
-                rw [subset_def] at this 
-                have  := mt (this a) h 
-                simp only [not_not, mem_set_of_eq] at this 
-                exact this n)
-    _ = ⨆n, ∫⁻a, f n a ∂μ :=
-    by 
-      simp only [lintegral_congr_ae (g_eq_f.mono$ fun a ha => ha _)]
-    
+theorem lintegral_supr_ae
+{f : exprℕ() → α → «exprℝ≥0∞»()}
+(hf : ∀ n, measurable (f n))
+(h_mono : ∀
+ n, «expr∀ᵐ ∂ , »((a), μ, «expr ≤ »(f n a, f n.succ a))) : «expr = »(«expr∫⁻ , ∂ »((a), «expr⨆ , »((n), f n a), μ), «expr⨆ , »((n), «expr∫⁻ , ∂ »((a), f n a, μ))) :=
+let ⟨s, hs⟩ := exists_measurable_superset_of_null (ae_iff.1 (ae_all_iff.2 h_mono)) in
+let g := λ n a, if «expr ∈ »(a, s) then 0 else f n a in
+have g_eq_f : «expr∀ᵐ ∂ , »((a), μ, ∀
+ n, «expr = »(g n a, f n a)), from (measure_zero_iff_ae_nmem.1 hs.2.2).mono (assume a ha n, if_neg ha),
+calc
+  «expr = »(«expr∫⁻ , ∂ »((a), «expr⨆ , »((n), f n a), μ), «expr∫⁻ , ∂ »((a), «expr⨆ , »((n), g n a), μ)) : «expr $ »(lintegral_congr_ae, «expr $ »(g_eq_f.mono, λ
+    a ha, by simp [] [] ["only"] ["[", expr ha, "]"] [] []))
+  «expr = »(..., «expr⨆ , »((n), «expr∫⁻ , ∂ »((a), g n a, μ))) : lintegral_supr (assume
+   n, measurable_const.piecewise hs.2.1 (hf n)) «expr $ »(monotone_nat_of_le_succ, assume
+   n
+   a, classical.by_cases (assume
+    h : «expr ∈ »(a, s), by simp [] [] [] ["[", expr g, ",", expr if_pos h, "]"] [] []) (assume
+    h : «expr ∉ »(a, s), begin
+      simp [] [] ["only"] ["[", expr g, ",", expr if_neg h, "]"] [] [],
+      have [] [] [":=", expr hs.1],
+      rw [expr subset_def] ["at", ident this],
+      have [] [] [":=", expr mt (this a) h],
+      simp [] [] ["only"] ["[", expr not_not, ",", expr mem_set_of_eq, "]"] [] ["at", ident this],
+      exact [expr this n]
+    end))
+  «expr = »(..., «expr⨆ , »((n), «expr∫⁻ , ∂ »((a), f n a, μ))) : by simp [] [] ["only"] ["[", expr lintegral_congr_ae «expr $ »(g_eq_f.mono, λ
+    a ha, ha _), "]"] [] []
 
 theorem lintegral_sub {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Measurable g) (hg_fin : (∫⁻a, g a ∂μ) ≠ ∞)
   (h_le : g ≤ᵐ[μ] f) : (∫⁻a, f a - g a ∂μ) = (∫⁻a, f a ∂μ) - ∫⁻a, g a ∂μ :=
@@ -1855,7 +1921,7 @@ theorem lintegral_sub_le (f g : α → ℝ≥0∞) (hf : Measurable f) (hg : Mea
       rw [lintegral_sub hg hf hfi h]
       rfl'
 
--- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lintegral_strict_mono_of_ae_le_of_ae_lt_on
 {f g : α → «exprℝ≥0∞»()}
 (hf : measurable f)
@@ -1992,93 +2058,109 @@ theorem tendsto_lintegral_of_dominated_convergence {F : ℕ → α → ℝ≥0�
       _ = ∫⁻a, f a ∂μ := lintegral_congr_ae$ h_lim.mono$ fun a h => h.limsup_eq
       )
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Dominated convergence theorem for nonnegative functions which are just almost everywhere
 measurable. -/
-theorem tendsto_lintegral_of_dominated_convergence' {F : ℕ → α → ℝ≥0∞} {f : α → ℝ≥0∞} (bound : α → ℝ≥0∞)
-  (hF_meas : ∀ n, AeMeasurable (F n) μ) (h_bound : ∀ n, F n ≤ᵐ[μ] bound) (h_fin : (∫⁻a, bound a ∂μ) ≠ ∞)
-  (h_lim : ∀ᵐa ∂μ, tendsto (fun n => F n a) at_top (𝓝 (f a))) :
-  tendsto (fun n => ∫⁻a, F n a ∂μ) at_top (𝓝 (∫⁻a, f a ∂μ)) :=
-  by 
-    have  : ∀ n, (∫⁻a, F n a ∂μ) = ∫⁻a, (hF_meas n).mk (F n) a ∂μ := fun n => lintegral_congr_ae (hF_meas n).ae_eq_mk 
-    simpRw [this]
-    apply tendsto_lintegral_of_dominated_convergence bound (fun n => (hF_meas n).measurable_mk) _ h_fin
-    ·
-      have  : ∀ n, ∀ᵐa ∂μ, (hF_meas n).mk (F n) a = F n a := fun n => (hF_meas n).ae_eq_mk.symm 
-      have  : ∀ᵐa ∂μ, ∀ n, (hF_meas n).mk (F n) a = F n a := ae_all_iff.mpr this 
-      filterUpwards [this, h_lim]
-      intro a H H' 
-      simpRw [H]
-      exact H'
-    ·
-      intro n 
-      filterUpwards [h_bound n, (hF_meas n).ae_eq_mk]
-      intro a H H' 
-      rwa [H'] at H
+theorem tendsto_lintegral_of_dominated_convergence'
+{F : exprℕ() → α → «exprℝ≥0∞»()}
+{f : α → «exprℝ≥0∞»()}
+(bound : α → «exprℝ≥0∞»())
+(hF_meas : ∀ n, ae_measurable (F n) μ)
+(h_bound : ∀ n, «expr ≤ᵐ[ ] »(F n, μ, bound))
+(h_fin : «expr ≠ »(«expr∫⁻ , ∂ »((a), bound a, μ), «expr∞»()))
+(h_lim : «expr∀ᵐ ∂ , »((a), μ, tendsto (λ
+   n, F n a) at_top (expr𝓝() (f a)))) : tendsto (λ
+ n, «expr∫⁻ , ∂ »((a), F n a, μ)) at_top (expr𝓝() «expr∫⁻ , ∂ »((a), f a, μ)) :=
+begin
+  have [] [":", expr ∀
+   n, «expr = »(«expr∫⁻ , ∂ »((a), F n a, μ), «expr∫⁻ , ∂ »((a), (hF_meas n).mk (F n) a, μ))] [":=", expr λ
+   n, lintegral_congr_ae (hF_meas n).ae_eq_mk],
+  simp_rw [expr this] [],
+  apply [expr tendsto_lintegral_of_dominated_convergence bound (λ n, (hF_meas n).measurable_mk) _ h_fin],
+  { have [] [":", expr ∀
+     n, «expr∀ᵐ ∂ , »((a), μ, «expr = »((hF_meas n).mk (F n) a, F n a))] [":=", expr λ n, (hF_meas n).ae_eq_mk.symm],
+    have [] [":", expr «expr∀ᵐ ∂ , »((a), μ, ∀
+      n, «expr = »((hF_meas n).mk (F n) a, F n a))] [":=", expr ae_all_iff.mpr this],
+    filter_upwards ["[", expr this, ",", expr h_lim, "]"] [],
+    assume [binders (a H H')],
+    simp_rw [expr H] [],
+    exact [expr H'] },
+  { assume [binders (n)],
+    filter_upwards ["[", expr h_bound n, ",", expr (hF_meas n).ae_eq_mk, "]"] [],
+    assume [binders (a H H')],
+    rwa [expr H'] ["at", ident H] }
+end
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Dominated convergence theorem for filters with a countable basis -/
-theorem tendsto_lintegral_filter_of_dominated_convergence {ι} {l : Filter ι} [l.is_countably_generated]
-  {F : ι → α → ℝ≥0∞} {f : α → ℝ≥0∞} (bound : α → ℝ≥0∞) (hF_meas : ∀ᶠn in l, Measurable (F n))
-  (h_bound : ∀ᶠn in l, ∀ᵐa ∂μ, F n a ≤ bound a) (h_fin : (∫⁻a, bound a ∂μ) ≠ ∞)
-  (h_lim : ∀ᵐa ∂μ, tendsto (fun n => F n a) l (𝓝 (f a))) : tendsto (fun n => ∫⁻a, F n a ∂μ) l (𝓝$ ∫⁻a, f a ∂μ) :=
-  by 
-    rw [tendsto_iff_seq_tendsto]
-    intro x xl 
-    have hxl
-    ·
-      rw [tendsto_at_top'] at xl 
-      exact xl 
-    have h := inter_mem hF_meas h_bound 
-    replace h := hxl _ h 
-    rcases h with ⟨k, h⟩
-    rw [←tendsto_add_at_top_iff_nat k]
-    refine' tendsto_lintegral_of_dominated_convergence _ _ _ _ _
-    ·
-      exact bound
-    ·
-      intro 
-      refine' (h _ _).1 
-      exact Nat.le_add_leftₓ _ _
-    ·
-      intro 
-      refine' (h _ _).2 
-      exact Nat.le_add_leftₓ _ _
-    ·
-      assumption
-    ·
-      refine' h_lim.mono fun a h_lim => _ 
-      apply @tendsto.comp _ _ _ (fun n => x (n+k)) fun n => F n a
-      ·
-        assumption 
-      rw [tendsto_add_at_top_iff_nat]
-      assumption
+theorem tendsto_lintegral_filter_of_dominated_convergence
+{ι}
+{l : filter ι}
+[l.is_countably_generated]
+{F : ι → α → «exprℝ≥0∞»()}
+{f : α → «exprℝ≥0∞»()}
+(bound : α → «exprℝ≥0∞»())
+(hF_meas : «expr∀ᶠ in , »((n), l, measurable (F n)))
+(h_bound : «expr∀ᶠ in , »((n), l, «expr∀ᵐ ∂ , »((a), μ, «expr ≤ »(F n a, bound a))))
+(h_fin : «expr ≠ »(«expr∫⁻ , ∂ »((a), bound a, μ), «expr∞»()))
+(h_lim : «expr∀ᵐ ∂ , »((a), μ, tendsto (λ
+   n, F n a) l (expr𝓝() (f a)))) : tendsto (λ
+ n, «expr∫⁻ , ∂ »((a), F n a, μ)) l «expr $ »(expr𝓝(), «expr∫⁻ , ∂ »((a), f a, μ)) :=
+begin
+  rw [expr tendsto_iff_seq_tendsto] [],
+  intros [ident x, ident xl],
+  have [ident hxl] [] [],
+  { rw [expr tendsto_at_top'] ["at", ident xl],
+    exact [expr xl] },
+  have [ident h] [] [":=", expr inter_mem hF_meas h_bound],
+  replace [ident h] [] [":=", expr hxl _ h],
+  rcases [expr h, "with", "⟨", ident k, ",", ident h, "⟩"],
+  rw ["<-", expr tendsto_add_at_top_iff_nat k] [],
+  refine [expr tendsto_lintegral_of_dominated_convergence _ _ _ _ _],
+  { exact [expr bound] },
+  { intro [],
+    refine [expr (h _ _).1],
+    exact [expr nat.le_add_left _ _] },
+  { intro [],
+    refine [expr (h _ _).2],
+    exact [expr nat.le_add_left _ _] },
+  { assumption },
+  { refine [expr h_lim.mono (λ a h_lim, _)],
+    apply [expr @tendsto.comp _ _ _ (λ n, x «expr + »(n, k)) (λ n, F n a)],
+    { assumption },
+    rw [expr tendsto_add_at_top_iff_nat] [],
+    assumption }
+end
 
 section 
 
 open Encodable
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Monotone convergence for a suprema over a directed family and indexed by an encodable type -/
-theorem lintegral_supr_directed [Encodable β] {f : β → α → ℝ≥0∞} (hf : ∀ b, Measurable (f b))
-  (h_directed : Directed (· ≤ ·) f) : (∫⁻a, ⨆b, f b a ∂μ) = ⨆b, ∫⁻a, f b a ∂μ :=
-  by 
-    casesI is_empty_or_nonempty β
-    ·
-      simp [supr_of_empty]
-    inhabit β 
-    have  : ∀ a, (⨆b, f b a) = ⨆n, f (h_directed.sequence f n) a
-    ·
-      intro a 
-      refine' le_antisymmₓ (supr_le$ fun b => _) (supr_le$ fun n => le_supr (fun n => f n a) _)
-      exact le_supr_of_le (encode b+1) (h_directed.le_sequence b a)
-    calc (∫⁻a, ⨆b, f b a ∂μ) = ∫⁻a, ⨆n, f (h_directed.sequence f n) a ∂μ :=
-      by 
-        simp only [this]_ = ⨆n, ∫⁻a, f (h_directed.sequence f n) a ∂μ :=
-      lintegral_supr (fun n => hf _) h_directed.sequence_mono _ = ⨆b, ∫⁻a, f b a ∂μ :=
-      by 
-        refine' le_antisymmₓ (supr_le$ fun n => _) (supr_le$ fun b => _)
-        ·
-          exact le_supr (fun b => ∫⁻a, f b a ∂μ) _
-        ·
-          exact le_supr_of_le (encode b+1) (lintegral_mono$ h_directed.le_sequence b)
+theorem lintegral_supr_directed
+[encodable β]
+{f : β → α → «exprℝ≥0∞»()}
+(hf : ∀ b, measurable (f b))
+(h_directed : directed ((«expr ≤ »)) f) : «expr = »(«expr∫⁻ , ∂ »((a), «expr⨆ , »((b), f b a), μ), «expr⨆ , »((b), «expr∫⁻ , ∂ »((a), f b a, μ))) :=
+begin
+  casesI [expr is_empty_or_nonempty β] [],
+  { simp [] [] [] ["[", expr supr_of_empty, "]"] [] [] },
+  inhabit [expr β] [],
+  have [] [":", expr ∀ a, «expr = »(«expr⨆ , »((b), f b a), «expr⨆ , »((n), f (h_directed.sequence f n) a))] [],
+  { assume [binders (a)],
+    refine [expr le_antisymm «expr $ »(supr_le, assume b, _) «expr $ »(supr_le, assume n, le_supr (λ n, f n a) _)],
+    exact [expr le_supr_of_le «expr + »(encode b, 1) (h_directed.le_sequence b a)] },
+  calc
+    «expr = »(«expr∫⁻ , ∂ »((a), «expr⨆ , »((b), f b a), μ), «expr∫⁻ , ∂ »((a), «expr⨆ , »((n), f (h_directed.sequence f n) a), μ)) : by simp [] [] ["only"] ["[", expr this, "]"] [] []
+    «expr = »(..., «expr⨆ , »((n), «expr∫⁻ , ∂ »((a), f (h_directed.sequence f n) a, μ))) : lintegral_supr (assume
+     n, hf _) h_directed.sequence_mono
+    «expr = »(..., «expr⨆ , »((b), «expr∫⁻ , ∂ »((a), f b a, μ))) : begin
+      refine [expr le_antisymm «expr $ »(supr_le, assume n, _) «expr $ »(supr_le, assume b, _)],
+      { exact [expr le_supr (λ b, «expr∫⁻ , ∂ »((a), f b a, μ)) _] },
+      { exact [expr le_supr_of_le «expr + »(encode b, 1) «expr $ »(lintegral_mono, h_directed.le_sequence b)] }
+    end
+end
 
 end 
 
@@ -2154,28 +2236,59 @@ theorem set_lintegral_map [MeasurableSpace β] {f : β → ℝ≥0∞} {g : α �
   by 
     rw [restrict_map hg hs, lintegral_map hf hg]
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `g : α → β` is a measurable embedding and `f : β → ℝ≥0∞` is any function (not necessarily
 measurable), then `∫⁻ a, f a ∂(map g μ) = ∫⁻ a, f (g a) ∂μ`. Compare with `lintegral_map` wich
 applies to any measurable `g : α → β` but requires that `f` is measurable as well. -/
-theorem _root_.measurable_embedding.lintegral_map [MeasurableSpace β] {g : α → β} (hg : MeasurableEmbedding g)
-  (f : β → ℝ≥0∞) : (∫⁻a, f a ∂map g μ) = ∫⁻a, f (g a) ∂μ :=
-  by 
-    refine' le_antisymmₓ (bsupr_le$ fun f₀ hf₀ => _) (bsupr_le$ fun f₀ hf₀ => _)
-    ·
-      rw [simple_func.lintegral_map _ hg.measurable, lintegral]
-      have  : (f₀.comp g hg.measurable : α → ℝ≥0∞) ≤ (f ∘ g)
-      exact fun x => hf₀ (g x)
-      exact le_supr_of_le (comp f₀ g hg.measurable) (le_supr _ this)
-    ·
-      rw [←f₀.extend_comp_eq hg (const _ 0), ←simple_func.lintegral_map, ←simple_func.lintegral_eq_lintegral]
-      refine' lintegral_mono_ae (hg.ae_map_iff.2$ eventually_of_forall$ fun x => _)
-      exact (extend_apply _ _ _ _).trans_le (hf₀ _)
+theorem _root_.measurable_embedding.lintegral_map
+[measurable_space β]
+{g : α → β}
+(hg : measurable_embedding g)
+(f : β → «exprℝ≥0∞»()) : «expr = »(«expr∫⁻ , ∂ »((a), f a, map g μ), «expr∫⁻ , ∂ »((a), f (g a), μ)) :=
+begin
+  refine [expr le_antisymm «expr $ »(bsupr_le, λ f₀ hf₀, _) «expr $ »(bsupr_le, λ f₀ hf₀, _)],
+  { rw ["[", expr simple_func.lintegral_map _ hg.measurable, ",", expr lintegral, "]"] [],
+    have [] [":", expr «expr ≤ »((f₀.comp g hg.measurable : α → «exprℝ≥0∞»()), «expr ∘ »(f, g))] [],
+    from [expr λ x, hf₀ (g x)],
+    exact [expr le_supr_of_le (comp f₀ g hg.measurable) (le_supr _ this)] },
+  { rw ["[", "<-", expr f₀.extend_comp_eq hg (const _ 0), ",", "<-", expr simple_func.lintegral_map, ",", "<-", expr simple_func.lintegral_eq_lintegral, "]"] [],
+    refine [expr lintegral_mono_ae «expr $ »(hg.ae_map_iff.2, «expr $ »(eventually_of_forall, λ x, _))],
+    exact [expr (extend_apply _ _ _ _).trans_le (hf₀ _)] }
+end
 
 /-- The `lintegral` transforms appropriately under a measurable equivalence `g : α ≃ᵐ β`.
 (Compare `lintegral_map`, which applies to a wider class of functions `g : α → β`, but requires
 measurability of the function being integrated.) -/
 theorem lintegral_map_equiv [MeasurableSpace β] (f : β → ℝ≥0∞) (g : α ≃ᵐ β) : (∫⁻a, f a ∂map g μ) = ∫⁻a, f (g a) ∂μ :=
   g.measurable_embedding.lintegral_map f
+
+theorem measure_preserving.lintegral_comp {mb : MeasurableSpace β} {ν : Measureₓ β} {g : α → β}
+  (hg : measure_preserving g μ ν) {f : β → ℝ≥0∞} (hf : Measurable f) : (∫⁻a, f (g a) ∂μ) = ∫⁻b, f b ∂ν :=
+  by 
+    rw [←hg.map_eq, lintegral_map hf hg.measurable]
+
+theorem measure_preserving.lintegral_comp_emb {mb : MeasurableSpace β} {ν : Measureₓ β} {g : α → β}
+  (hg : measure_preserving g μ ν) (hge : MeasurableEmbedding g) (f : β → ℝ≥0∞) : (∫⁻a, f (g a) ∂μ) = ∫⁻b, f b ∂ν :=
+  by 
+    rw [←hg.map_eq, hge.lintegral_map]
+
+theorem measure_preserving.set_lintegral_comp_preimage {mb : MeasurableSpace β} {ν : Measureₓ β} {g : α → β}
+  (hg : measure_preserving g μ ν) {s : Set β} (hs : MeasurableSet s) {f : β → ℝ≥0∞} (hf : Measurable f) :
+  (∫⁻a in g ⁻¹' s, f (g a) ∂μ) = ∫⁻b in s, f b ∂ν :=
+  by 
+    rw [←hg.map_eq, set_lintegral_map hs hf hg.measurable]
+
+theorem measure_preserving.set_lintegral_comp_preimage_emb {mb : MeasurableSpace β} {ν : Measureₓ β} {g : α → β}
+  (hg : measure_preserving g μ ν) (hge : MeasurableEmbedding g) (f : β → ℝ≥0∞) (s : Set β) :
+  (∫⁻a in g ⁻¹' s, f (g a) ∂μ) = ∫⁻b in s, f b ∂ν :=
+  by 
+    rw [←hg.map_eq, hge.restrict_map, hge.lintegral_map]
+
+theorem measure_preserving.set_lintegral_comp_emb {mb : MeasurableSpace β} {ν : Measureₓ β} {g : α → β}
+  (hg : measure_preserving g μ ν) (hge : MeasurableEmbedding g) (f : β → ℝ≥0∞) (s : Set α) :
+  (∫⁻a in s, f (g a) ∂μ) = ∫⁻b in g '' s, f b ∂ν :=
+  by 
+    rw [←hg.set_lintegral_comp_preimage_emb hge, preimage_image_eq _ hge.injective]
 
 section DiracAndCount
 
@@ -2210,7 +2323,7 @@ theorem lintegral_count [MeasurableSingletonClass α] (f : α → ℝ≥0∞) : 
 
 end DiracAndCount
 
--- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem ae_lt_top
 {f : α → «exprℝ≥0∞»()}
 (hf : measurable f)
@@ -2227,17 +2340,16 @@ begin
   simp [] [] [] ["[", expr ennreal.top_mul, ",", expr preimage, ",", expr h, "]"] [] []
 end
 
-theorem ae_lt_top' {f : α → ℝ≥0∞} (hf : AeMeasurable f μ) (h2f : (∫⁻x, f x ∂μ) ≠ ∞) : ∀ᵐx ∂μ, f x < ∞ :=
-  by 
-    have h2f_meas : (∫⁻x, hf.mk f x ∂μ) ≠ ∞
-    ·
-      rwa [←lintegral_congr_ae hf.ae_eq_mk]
-    exact
-      (ae_lt_top hf.measurable_mk h2f_meas).mp
-        (hf.ae_eq_mk.mono
-          fun x hx h =>
-            by 
-              rwa [hx])
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ae_lt_top'
+{f : α → «exprℝ≥0∞»()}
+(hf : ae_measurable f μ)
+(h2f : «expr ≠ »(«expr∫⁻ , ∂ »((x), f x, μ), «expr∞»())) : «expr∀ᵐ ∂ , »((x), μ, «expr < »(f x, «expr∞»())) :=
+begin
+  have [ident h2f_meas] [":", expr «expr ≠ »(«expr∫⁻ , ∂ »((x), hf.mk f x, μ), «expr∞»())] [],
+  by rwa ["<-", expr lintegral_congr_ae hf.ae_eq_mk] [],
+  exact [expr (ae_lt_top hf.measurable_mk h2f_meas).mp (hf.ae_eq_mk.mono (λ x hx h, by rwa [expr hx] []))]
+end
 
 theorem set_lintegral_lt_top_of_bdd_above {s : Set α} (hs : μ s ≠ ∞) {f : α →  ℝ≥0 } (hf : Measurable f)
   (hbdd : BddAbove (f '' s)) : (∫⁻x in s, f x ∂μ) < ∞ :=
@@ -2330,18 +2442,21 @@ theorem with_density_indicator {s : Set α} (hs : MeasurableSet s) (f : α → �
     ext1 t ht 
     rw [with_density_apply _ ht, lintegral_indicator _ hs, restrict_comm hs ht, ←with_density_apply _ ht]
 
-theorem with_density_of_real_mutually_singular {f : α → ℝ} (hf : Measurable f) :
-  (μ.with_density fun x => Ennreal.ofReal$ f x) ⊥ₘ μ.with_density fun x => Ennreal.ofReal$ -f x :=
-  by 
-    set S : Set α := { x | f x < 0 } with hSdef 
-    have hS : MeasurableSet S := measurable_set_lt hf measurable_const 
-    refine' ⟨S, hS, _, _⟩
-    ·
-      rw [with_density_apply _ hS, lintegral_eq_zero_iff hf.ennreal_of_real, eventually_eq]
-      exact (ae_restrict_mem hS).mono fun x hx => Ennreal.of_real_eq_zero.2 (le_of_ltₓ hx)
-    ·
-      rw [with_density_apply _ hS.compl, lintegral_eq_zero_iff hf.neg.ennreal_of_real, eventually_eq]
-      exact (ae_restrict_mem hS.compl).mono fun x hx => Ennreal.of_real_eq_zero.2 (not_ltₓ.1$ mt neg_pos.1 hx)
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem with_density_of_real_mutually_singular
+{f : α → exprℝ()}
+(hf : measurable f) : «expr ⊥ₘ »(μ.with_density (λ
+  x, «expr $ »(ennreal.of_real, f x)), μ.with_density (λ x, «expr $ »(ennreal.of_real, «expr- »(f x)))) :=
+begin
+  set [] [ident S] [":", expr set α] [":="] [expr {x | «expr < »(f x, 0)}] ["with", ident hSdef],
+  have [ident hS] [":", expr measurable_set S] [":=", expr measurable_set_lt hf measurable_const],
+  refine [expr ⟨S, hS, _, _⟩],
+  { rw ["[", expr with_density_apply _ hS, ",", expr lintegral_eq_zero_iff hf.ennreal_of_real, ",", expr eventually_eq, "]"] [],
+    exact [expr (ae_restrict_mem hS).mono (λ x hx, ennreal.of_real_eq_zero.2 (le_of_lt hx))] },
+  { rw ["[", expr with_density_apply _ hS.compl, ",", expr lintegral_eq_zero_iff hf.neg.ennreal_of_real, ",", expr eventually_eq, "]"] [],
+    exact [expr (ae_restrict_mem hS.compl).mono (λ
+      x hx, ennreal.of_real_eq_zero.2 «expr $ »(not_lt.1, mt neg_pos.1 hx))] }
+end
 
 theorem restrict_with_density {s : Set α} (hs : MeasurableSet s) (f : α → ℝ≥0∞) :
   (μ.with_density f).restrict s = (μ.restrict s).withDensity f :=
@@ -2391,6 +2506,7 @@ variable{α : Type _}{m m0 : MeasurableSpace α}
 
 include m
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- This is Exercise 1.2.1 from [tao2010]. It allows you to express integration of a measurable
 function with respect to `(μ.with_density f)` as an integral with respect to `μ`, called the base
 measure. `μ` is often the Lebesgue measure, and in this circumstance `f` is the probability density
@@ -2400,20 +2516,22 @@ the exponential distribution, the Beta distribution, or the Cauchy distribution 
 of [wasserman2004]). Thus, this method shows how to one can calculate expectations, variances,
 and other moments as a function of the probability density function.
  -/
-theorem lintegral_with_density_eq_lintegral_mul (μ : Measureₓ α) {f : α → ℝ≥0∞} (h_mf : Measurable f) :
-  ∀ {g : α → ℝ≥0∞}, Measurable g → (∫⁻a, g a ∂μ.with_density f) = ∫⁻a, (f*g) a ∂μ :=
-  by 
-    apply Measurable.ennreal_induction
-    ·
-      intro c s h_ms 
-      simp [mul_commₓ _ c, ←indicator_mul_right]
-    ·
-      intro g h h_univ h_mea_g h_mea_h h_ind_g h_ind_h 
-      simp [mul_addₓ, Measurable.mul]
-    ·
-      intro g h_mea_g h_mono_g h_ind 
-      have  : Monotone fun n a => f a*g n a := fun m n hmn x => Ennreal.mul_le_mul le_rfl (h_mono_g hmn x)
-      simp [lintegral_supr, Ennreal.mul_supr, h_mf.mul (h_mea_g _)]
+theorem lintegral_with_density_eq_lintegral_mul
+(μ : measure α)
+{f : α → «exprℝ≥0∞»()}
+(h_mf : measurable f) : ∀
+{g : α → «exprℝ≥0∞»()}, measurable g → «expr = »(«expr∫⁻ , ∂ »((a), g a, μ.with_density f), «expr∫⁻ , ∂ »((a), «expr * »(f, g) a, μ)) :=
+begin
+  apply [expr measurable.ennreal_induction],
+  { intros [ident c, ident s, ident h_ms],
+    simp [] [] [] ["[", "*", ",", expr mul_comm _ c, ",", "<-", expr indicator_mul_right, "]"] [] [] },
+  { intros [ident g, ident h, ident h_univ, ident h_mea_g, ident h_mea_h, ident h_ind_g, ident h_ind_h],
+    simp [] [] [] ["[", expr mul_add, ",", "*", ",", expr measurable.mul, "]"] [] [] },
+  { intros [ident g, ident h_mea_g, ident h_mono_g, ident h_ind],
+    have [] [":", expr monotone (λ
+      n a, «expr * »(f a, g n a))] [":=", expr λ m n hmn x, ennreal.mul_le_mul le_rfl (h_mono_g hmn x)],
+    simp [] [] [] ["[", expr lintegral_supr, ",", expr ennreal.mul_supr, ",", expr h_mf.mul (h_mea_g _), ",", "*", "]"] [] [] }
+end
 
 theorem with_density_mul (μ : Measureₓ α) {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Measurable g) :
   μ.with_density (f*g) = (μ.with_density f).withDensity g :=
@@ -2426,45 +2544,54 @@ theorem set_lintegral_with_density_eq_set_lintegral_mul (μ : Measureₓ α) {f 
   by 
     rw [restrict_with_density hs, lintegral_with_density_eq_lintegral_mul _ hf hg]
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a sigma-finite measure space, there exists an integrable function which is
 positive everywhere (and with an arbitrarily small integral). -/
-theorem exists_pos_lintegral_lt_of_sigma_finite (μ : Measureₓ α) [sigma_finite μ] {ε : ℝ≥0∞} (ε0 : ε ≠ 0) :
-  ∃ g : α →  ℝ≥0 , (∀ x, 0 < g x) ∧ Measurable g ∧ (∫⁻x, g x ∂μ) < ε :=
-  by 
-    set s : ℕ → Set α := disjointed (spanning_sets μ)
-    have  : ∀ n, μ (s n) < ∞
-    exact fun n => (measure_mono$ disjointed_subset _ _).trans_lt (measure_spanning_sets_lt_top μ n)
-    obtain ⟨δ, δpos, δsum⟩ : ∃ δ : ℕ →  ℝ≥0 , (∀ i, 0 < δ i) ∧ (∑'i, μ (s i)*δ i) < ε 
-    exact Ennreal.exists_pos_tsum_mul_lt_of_encodable ε0 _ fun n => (this n).Ne 
-    set N : α → ℕ := spanning_sets_index μ 
-    have hN_meas : Measurable N := measurable_spanning_sets_index μ 
-    have hNs : ∀ n, N ⁻¹' {n} = s n := preimage_spanning_sets_index_singleton μ 
-    refine' ⟨δ ∘ N, fun x => δpos _, measurable_from_nat.comp hN_meas, _⟩
-    simpa [lintegral_comp measurable_from_nat.coe_nnreal_ennreal hN_meas, hNs, lintegral_encodable,
-      measurable_spanning_sets_index, mul_commₓ] using δsum
+theorem exists_pos_lintegral_lt_of_sigma_finite
+(μ : measure α)
+[sigma_finite μ]
+{ε : «exprℝ≥0∞»()}
+(ε0 : «expr ≠ »(ε, 0)) : «expr∃ , »((g : α → «exprℝ≥0»()), «expr ∧ »(∀
+  x, «expr < »(0, g x), «expr ∧ »(measurable g, «expr < »(«expr∫⁻ , ∂ »((x), g x, μ), ε)))) :=
+begin
+  set [] [ident s] [":", expr exprℕ() → set α] [":="] [expr disjointed (spanning_sets μ)] [],
+  have [] [":", expr ∀ n, «expr < »(μ (s n), «expr∞»())] [],
+  from [expr λ n, «expr $ »(measure_mono, disjointed_subset _ _).trans_lt (measure_spanning_sets_lt_top μ n)],
+  obtain ["⟨", ident δ, ",", ident δpos, ",", ident δsum, "⟩", ":", expr «expr∃ , »((δ : exprℕ() → «exprℝ≥0»()), «expr ∧ »(∀
+     i, «expr < »(0, δ i), «expr < »(«expr∑' , »((i), «expr * »(μ (s i), δ i)), ε)))],
+  from [expr ennreal.exists_pos_tsum_mul_lt_of_encodable ε0 _ (λ n, (this n).ne)],
+  set [] [ident N] [":", expr α → exprℕ()] [":="] [expr spanning_sets_index μ] [],
+  have [ident hN_meas] [":", expr measurable N] [":=", expr measurable_spanning_sets_index μ],
+  have [ident hNs] [":", expr ∀
+   n, «expr = »(«expr ⁻¹' »(N, {n}), s n)] [":=", expr preimage_spanning_sets_index_singleton μ],
+  refine [expr ⟨«expr ∘ »(δ, N), λ x, δpos _, measurable_from_nat.comp hN_meas, _⟩],
+  simpa [] [] [] ["[", expr lintegral_comp measurable_from_nat.coe_nnreal_ennreal hN_meas, ",", expr hNs, ",", expr lintegral_encodable, ",", expr measurable_spanning_sets_index, ",", expr mul_comm, "]"] [] ["using", expr δsum]
+end
 
-theorem lintegral_trim {μ : Measureₓ α} (hm : m ≤ m0) {f : α → ℝ≥0∞} (hf : @Measurable _ _ m _ f) :
-  (∫⁻a, f a ∂μ.trim hm) = ∫⁻a, f a ∂μ :=
-  by 
-    refine' @Measurable.ennreal_induction α m (fun f => (∫⁻a, f a ∂μ.trim hm) = ∫⁻a, f a ∂μ) _ _ _ f hf
-    ·
-      intro c s hs 
-      rw [lintegral_indicator _ hs, lintegral_indicator _ (hm s hs), set_lintegral_const, set_lintegral_const]
-      suffices h_trim_s : μ.trim hm s = μ s
-      ·
-        rw [h_trim_s]
-      exact trim_measurable_set_eq hm hs
-    ·
-      intro f g hfg hf hg hf_prop hg_prop 
-      have h_m := lintegral_add hf hg 
-      have h_m0 := lintegral_add (Measurable.mono hf hm le_rfl) (Measurable.mono hg hm le_rfl)
-      rwa [hf_prop, hg_prop, ←h_m0] at h_m
-    ·
-      intro f hf hf_mono hf_prop 
-      rw [lintegral_supr hf hf_mono]
-      rw [lintegral_supr (fun n => Measurable.mono (hf n) hm le_rfl) hf_mono]
-      congr 
-      exact funext fun n => hf_prop n
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lintegral_trim
+{μ : measure α}
+(hm : «expr ≤ »(m, m0))
+{f : α → «exprℝ≥0∞»()}
+(hf : @measurable _ _ m _ f) : «expr = »(«expr∫⁻ , ∂ »((a), f a, μ.trim hm), «expr∫⁻ , ∂ »((a), f a, μ)) :=
+begin
+  refine [expr @measurable.ennreal_induction α m (λ
+    f, «expr = »(«expr∫⁻ , ∂ »((a), f a, μ.trim hm), «expr∫⁻ , ∂ »((a), f a, μ))) _ _ _ f hf],
+  { intros [ident c, ident s, ident hs],
+    rw ["[", expr lintegral_indicator _ hs, ",", expr lintegral_indicator _ (hm s hs), ",", expr set_lintegral_const, ",", expr set_lintegral_const, "]"] [],
+    suffices [ident h_trim_s] [":", expr «expr = »(μ.trim hm s, μ s)],
+    by rw [expr h_trim_s] [],
+    exact [expr trim_measurable_set_eq hm hs] },
+  { intros [ident f, ident g, ident hfg, ident hf, ident hg, ident hf_prop, ident hg_prop],
+    have [ident h_m] [] [":=", expr lintegral_add hf hg],
+    have [ident h_m0] [] [":=", expr lintegral_add (measurable.mono hf hm le_rfl) (measurable.mono hg hm le_rfl)],
+    rwa ["[", expr hf_prop, ",", expr hg_prop, ",", "<-", expr h_m0, "]"] ["at", ident h_m] },
+  { intros [ident f, ident hf, ident hf_mono, ident hf_prop],
+    rw [expr lintegral_supr hf hf_mono] [],
+    rw [expr lintegral_supr (λ n, measurable.mono (hf n) hm le_rfl) hf_mono] [],
+    congr,
+    exact [expr funext (λ n, hf_prop n)] }
+end
 
 theorem lintegral_trim_ae {μ : Measureₓ α} (hm : m ≤ m0) {f : α → ℝ≥0∞} (hf : AeMeasurable f (μ.trim hm)) :
   (∫⁻a, f a ∂μ.trim hm) = ∫⁻a, f a ∂μ :=
@@ -2476,91 +2603,102 @@ section SigmaFinite
 
 variable{E : Type _}[NormedGroup E][MeasurableSpace E][OpensMeasurableSpace E]
 
-theorem univ_le_of_forall_fin_meas_le {μ : Measureₓ α} (hm : m ≤ m0) [@sigma_finite _ m (μ.trim hm)] (C : ℝ≥0∞)
-  {f : Set α → ℝ≥0∞} (hf : ∀ s, measurable_set[m] s → μ s ≠ ∞ → f s ≤ C)
-  (h_F_lim : ∀ S : ℕ → Set α, (∀ n, measurable_set[m] (S n)) → Monotone S → f (⋃n, S n) ≤ ⨆n, f (S n)) : f univ ≤ C :=
-  by 
-    let S := @spanning_sets _ m (μ.trim hm) _ 
-    have hS_mono : Monotone S 
-    exact @monotone_spanning_sets _ m (μ.trim hm) _ 
-    have hS_meas : ∀ n, measurable_set[m] (S n)
-    exact @measurable_spanning_sets _ m (μ.trim hm) _ 
-    rw [←@Union_spanning_sets _ m (μ.trim hm)]
-    refine' (h_F_lim S hS_meas hS_mono).trans _ 
-    refine' supr_le fun n => hf (S n) (hS_meas n) _ 
-    exact ((le_trim hm).trans_lt (@measure_spanning_sets_lt_top _ m (μ.trim hm) _ n)).Ne
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem univ_le_of_forall_fin_meas_le
+{μ : measure α}
+(hm : «expr ≤ »(m, m0))
+[@sigma_finite _ m (μ.trim hm)]
+(C : «exprℝ≥0∞»())
+{f : set α → «exprℝ≥0∞»()}
+(hf : ∀ s, «exprmeasurable_set[ ]»(m) s → «expr ≠ »(μ s, «expr∞»()) → «expr ≤ »(f s, C))
+(h_F_lim : ∀
+ S : exprℕ() → set α, ∀
+ n, «exprmeasurable_set[ ]»(m) (S n) → monotone S → «expr ≤ »(f «expr⋃ , »((n), S n), «expr⨆ , »((n), f (S n)))) : «expr ≤ »(f univ, C) :=
+begin
+  let [ident S] [] [":=", expr @spanning_sets _ m (μ.trim hm) _],
+  have [ident hS_mono] [":", expr monotone S] [],
+  from [expr @monotone_spanning_sets _ m (μ.trim hm) _],
+  have [ident hS_meas] [":", expr ∀ n, «exprmeasurable_set[ ]»(m) (S n)] [],
+  from [expr @measurable_spanning_sets _ m (μ.trim hm) _],
+  rw ["<-", expr @Union_spanning_sets _ m (μ.trim hm)] [],
+  refine [expr (h_F_lim S hS_meas hS_mono).trans _],
+  refine [expr supr_le (λ n, hf (S n) (hS_meas n) _)],
+  exact [expr ((le_trim hm).trans_lt (@measure_spanning_sets_lt_top _ m (μ.trim hm) _ n)).ne]
+end
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the Lebesgue integral of a function is bounded by some constant on all sets with finite
 measure in a sub-σ-algebra and the measure is σ-finite on that sub-σ-algebra, then the integral
 over the whole space is bounded by that same constant. Version for a measurable function.
 See `lintegral_le_of_forall_fin_meas_le'` for the more general `ae_measurable` version. -/
-theorem lintegral_le_of_forall_fin_meas_le_of_measurable {μ : Measureₓ α} (hm : m ≤ m0) [@sigma_finite _ m (μ.trim hm)]
-  (C : ℝ≥0∞) {f : α → ℝ≥0∞} (hf_meas : Measurable f)
-  (hf : ∀ s, measurable_set[m] s → μ s ≠ ∞ → (∫⁻x in s, f x ∂μ) ≤ C) : (∫⁻x, f x ∂μ) ≤ C :=
-  by 
-    have  : (∫⁻x in univ, f x ∂μ) = ∫⁻x, f x ∂μ
-    ·
-      simp only [measure.restrict_univ]
-    rw [←this]
-    refine' univ_le_of_forall_fin_meas_le hm C hf fun S hS_meas hS_mono => _ 
-    rw [←lintegral_indicator]
-    swap
-    ·
-      exact hm (⋃n, S n) (@MeasurableSet.Union _ _ m _ _ hS_meas)
-    have h_integral_indicator : (⨆n, ∫⁻x in S n, f x ∂μ) = ⨆n, ∫⁻x, (S n).indicator f x ∂μ
-    ·
-      congr 
-      ext1 n 
-      rw [lintegral_indicator _ (hm _ (hS_meas n))]
-    rw [h_integral_indicator, ←lintegral_supr]
-    ·
-      refine' le_of_eqₓ (lintegral_congr fun x => _)
-      simpRw [indicator_apply]
-      byCases' hx_mem : x ∈ Union S
-      ·
-        simp only [hx_mem, if_true]
-        obtain ⟨n, hxn⟩ := mem_Union.mp hx_mem 
-        refine' le_antisymmₓ (trans _ (le_supr _ n)) (supr_le fun i => _)
-        ·
-          simp only [hxn, le_reflₓ, if_true]
-        ·
-          byCases' hxi : x ∈ S i <;> simp [hxi]
-      ·
-        simp only [hx_mem, if_false]
-        rw [mem_Union] at hx_mem 
-        pushNeg  at hx_mem 
-        refine' le_antisymmₓ (zero_le _) (supr_le fun n => _)
-        simp only [hx_mem n, if_false, nonpos_iff_eq_zero]
-    ·
-      exact fun n => hf_meas.indicator (hm _ (hS_meas n))
-    ·
-      intro n₁ n₂ hn₁₂ a 
-      simpRw [indicator_apply]
-      splitIfs
-      ·
-        exact le_rfl
-      ·
-        exact absurd (mem_of_mem_of_subset h (hS_mono hn₁₂)) h_1
-      ·
-        exact zero_le _
-      ·
-        exact le_rfl
+theorem lintegral_le_of_forall_fin_meas_le_of_measurable
+{μ : measure α}
+(hm : «expr ≤ »(m, m0))
+[@sigma_finite _ m (μ.trim hm)]
+(C : «exprℝ≥0∞»())
+{f : α → «exprℝ≥0∞»()}
+(hf_meas : measurable f)
+(hf : ∀
+ s, «exprmeasurable_set[ ]»(m) s → «expr ≠ »(μ s, «expr∞»()) → «expr ≤ »(«expr∫⁻ in , ∂ »((x), s, f x, μ), C)) : «expr ≤ »(«expr∫⁻ , ∂ »((x), f x, μ), C) :=
+begin
+  have [] [":", expr «expr = »(«expr∫⁻ in , ∂ »((x), univ, f x, μ), «expr∫⁻ , ∂ »((x), f x, μ))] [],
+  by simp [] [] ["only"] ["[", expr measure.restrict_univ, "]"] [] [],
+  rw ["<-", expr this] [],
+  refine [expr univ_le_of_forall_fin_meas_le hm C hf (λ S hS_meas hS_mono, _)],
+  rw ["<-", expr lintegral_indicator] [],
+  swap,
+  { exact [expr hm «expr⋃ , »((n), S n) (@measurable_set.Union _ _ m _ _ hS_meas)] },
+  have [ident h_integral_indicator] [":", expr «expr = »(«expr⨆ , »((n), «expr∫⁻ in , ∂ »((x), S n, f x, μ)), «expr⨆ , »((n), «expr∫⁻ , ∂ »((x), (S n).indicator f x, μ)))] [],
+  { congr,
+    ext1 [] [ident n],
+    rw [expr lintegral_indicator _ (hm _ (hS_meas n))] [] },
+  rw ["[", expr h_integral_indicator, ",", "<-", expr lintegral_supr, "]"] [],
+  { refine [expr le_of_eq (lintegral_congr (λ x, _))],
+    simp_rw [expr indicator_apply] [],
+    by_cases [expr hx_mem, ":", expr «expr ∈ »(x, Union S)],
+    { simp [] [] ["only"] ["[", expr hx_mem, ",", expr if_true, "]"] [] [],
+      obtain ["⟨", ident n, ",", ident hxn, "⟩", ":=", expr mem_Union.mp hx_mem],
+      refine [expr le_antisymm (trans _ (le_supr _ n)) (supr_le (λ i, _))],
+      { simp [] [] ["only"] ["[", expr hxn, ",", expr le_refl, ",", expr if_true, "]"] [] [] },
+      { by_cases [expr hxi, ":", expr «expr ∈ »(x, S i)]; simp [] [] [] ["[", expr hxi, "]"] [] [] } },
+    { simp [] [] ["only"] ["[", expr hx_mem, ",", expr if_false, "]"] [] [],
+      rw [expr mem_Union] ["at", ident hx_mem],
+      push_neg ["at", ident hx_mem],
+      refine [expr le_antisymm (zero_le _) (supr_le (λ n, _))],
+      simp [] [] ["only"] ["[", expr hx_mem n, ",", expr if_false, ",", expr nonpos_iff_eq_zero, "]"] [] [] } },
+  { exact [expr λ n, hf_meas.indicator (hm _ (hS_meas n))] },
+  { intros [ident n₁, ident n₂, ident hn₁₂, ident a],
+    simp_rw [expr indicator_apply] [],
+    split_ifs [] [],
+    { exact [expr le_rfl] },
+    { exact [expr absurd (mem_of_mem_of_subset h (hS_mono hn₁₂)) h_1] },
+    { exact [expr zero_le _] },
+    { exact [expr le_rfl] } }
+end
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the Lebesgue integral of a function is bounded by some constant on all sets with finite
 measure in a sub-σ-algebra and the measure is σ-finite on that sub-σ-algebra, then the integral
 over the whole space is bounded by that same constant. -/
-theorem lintegral_le_of_forall_fin_meas_le' {μ : Measureₓ α} (hm : m ≤ m0) [@sigma_finite _ m (μ.trim hm)] (C : ℝ≥0∞)
-  {f : _ → ℝ≥0∞} (hf_meas : AeMeasurable f μ) (hf : ∀ s, measurable_set[m] s → μ s ≠ ∞ → (∫⁻x in s, f x ∂μ) ≤ C) :
-  (∫⁻x, f x ∂μ) ≤ C :=
-  by 
-    let f' := hf_meas.mk f 
-    have hf' : ∀ s, measurable_set[m] s → μ s ≠ ∞ → (∫⁻x in s, f' x ∂μ) ≤ C
-    ·
-      refine' fun s hs hμs => (le_of_eqₓ _).trans (hf s hs hμs)
-      refine' lintegral_congr_ae (ae_restrict_of_ae (hf_meas.ae_eq_mk.mono fun x hx => _))
-      rw [hx]
-    rw [lintegral_congr_ae hf_meas.ae_eq_mk]
-    exact lintegral_le_of_forall_fin_meas_le_of_measurable hm C hf_meas.measurable_mk hf'
+theorem lintegral_le_of_forall_fin_meas_le'
+{μ : measure α}
+(hm : «expr ≤ »(m, m0))
+[@sigma_finite _ m (μ.trim hm)]
+(C : «exprℝ≥0∞»())
+{f : _ → «exprℝ≥0∞»()}
+(hf_meas : ae_measurable f μ)
+(hf : ∀
+ s, «exprmeasurable_set[ ]»(m) s → «expr ≠ »(μ s, «expr∞»()) → «expr ≤ »(«expr∫⁻ in , ∂ »((x), s, f x, μ), C)) : «expr ≤ »(«expr∫⁻ , ∂ »((x), f x, μ), C) :=
+begin
+  let [ident f'] [] [":=", expr hf_meas.mk f],
+  have [ident hf'] [":", expr ∀
+   s, «exprmeasurable_set[ ]»(m) s → «expr ≠ »(μ s, «expr∞»()) → «expr ≤ »(«expr∫⁻ in , ∂ »((x), s, f' x, μ), C)] [],
+  { refine [expr λ s hs hμs, (le_of_eq _).trans (hf s hs hμs)],
+    refine [expr lintegral_congr_ae (ae_restrict_of_ae (hf_meas.ae_eq_mk.mono (λ x hx, _)))],
+    rw [expr hx] [] },
+  rw [expr lintegral_congr_ae hf_meas.ae_eq_mk] [],
+  exact [expr lintegral_le_of_forall_fin_meas_le_of_measurable hm C hf_meas.measurable_mk hf']
+end
 
 omit m
 
@@ -2575,23 +2713,25 @@ theorem lintegral_le_of_forall_fin_meas_le [MeasurableSpace α] {μ : Measureₓ
       rwa [trim_eq_self])
     C _ hf_meas hf
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A sigma-finite measure is absolutely continuous with respect to some finite measure. -/
-theorem exists_absolutely_continuous_is_finite_measure {m : MeasurableSpace α} (μ : Measureₓ α) [sigma_finite μ] :
-  ∃ ν : Measureₓ α, is_finite_measure ν ∧ μ ≪ ν :=
-  by 
-    obtain ⟨g, gpos, gmeas, hg⟩ :
-      ∃ g : α →  ℝ≥0 , (∀ x : α, 0 < g x) ∧ Measurable g ∧ (∫⁻x : α, «expr↑ » (g x) ∂μ) < 1 :=
-      exists_pos_lintegral_lt_of_sigma_finite μ Ennreal.zero_lt_one.ne' 
-    refine' ⟨μ.with_density fun x => g x, is_finite_measure_with_density hg.ne_top, _⟩
-    have  : μ = (μ.with_density fun x => g x).withDensity fun x => g x⁻¹
-    ·
-      have A : ((fun x : α => (g x : ℝ≥0∞))*fun x : α => «expr↑ » (g x)⁻¹) = 1
-      ·
-        ext1 x 
-        exact Ennreal.mul_inv_cancel (Ennreal.coe_ne_zero.2 (gpos x).ne') Ennreal.coe_ne_top 
-      rw [←with_density_mul _ gmeas.coe_nnreal_ennreal gmeas.coe_nnreal_ennreal.inv, A, with_density_one]
-    convLHS => rw [this]
-    exact with_density_absolutely_continuous _ _
+theorem exists_absolutely_continuous_is_finite_measure
+{m : measurable_space α}
+(μ : measure α)
+[sigma_finite μ] : «expr∃ , »((ν : measure α), «expr ∧ »(is_finite_measure ν, «expr ≪ »(μ, ν))) :=
+begin
+  obtain ["⟨", ident g, ",", ident gpos, ",", ident gmeas, ",", ident hg, "⟩", ":", expr «expr∃ , »((g : α → «exprℝ≥0»()), «expr ∧ »(∀
+     x : α, «expr < »(0, g x), «expr ∧ »(measurable g, «expr < »(«expr∫⁻ , ∂ »((x : α), «expr↑ »(g x), μ), 1)))), ":=", expr exists_pos_lintegral_lt_of_sigma_finite μ ennreal.zero_lt_one.ne'],
+  refine [expr ⟨μ.with_density (λ x, g x), is_finite_measure_with_density hg.ne_top, _⟩],
+  have [] [":", expr «expr = »(μ, (μ.with_density (λ x, g x)).with_density (λ x, «expr ⁻¹»(g x)))] [],
+  { have [ident A] [":", expr «expr = »(«expr * »(λ
+       x : α, (g x : «exprℝ≥0∞»()), λ x : α, «expr ⁻¹»(«expr↑ »(g x))), 1)] [],
+    { ext1 [] [ident x],
+      exact [expr ennreal.mul_inv_cancel (ennreal.coe_ne_zero.2 (gpos x).ne') ennreal.coe_ne_top] },
+    rw ["[", "<-", expr with_density_mul _ gmeas.coe_nnreal_ennreal gmeas.coe_nnreal_ennreal.inv, ",", expr A, ",", expr with_density_one, "]"] [] },
+  conv_lhs [] [] { rw [expr this] },
+  exact [expr with_density_absolutely_continuous _ _]
+end
 
 end SigmaFinite
 

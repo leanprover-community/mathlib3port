@@ -77,20 +77,26 @@ protected theorem separable_space [separable_space α] : separable_space β :=
 
 variable[TopologicalSpace δ]{f : γ → α}{g : γ → δ}{h : δ → β}
 
+-- error in Topology.DenseEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
  γ -f→ α
 g↓     ↓e
  δ -h→ β
 -/
-theorem tendsto_comap_nhds_nhds {d : δ} {a : α} (di : DenseInducing i) (H : tendsto h (𝓝 d) (𝓝 (i a)))
-  (comm : (h ∘ g) = (i ∘ f)) : tendsto f (comap g (𝓝 d)) (𝓝 a) :=
-  by 
-    have lim1 : map g (comap g (𝓝 d)) ≤ 𝓝 d := map_comap_le 
-    replace lim1 : map h (map g (comap g (𝓝 d))) ≤ map h (𝓝 d) := map_mono lim1 
-    rw [Filter.map_map, comm, ←Filter.map_map, map_le_iff_le_comap] at lim1 
-    have lim2 : comap i (map h (𝓝 d)) ≤ comap i (𝓝 (i a)) := comap_mono H 
-    rw [←di.nhds_eq_comap] at lim2 
-    exact le_transₓ lim1 lim2
+theorem tendsto_comap_nhds_nhds
+{d : δ}
+{a : α}
+(di : dense_inducing i)
+(H : tendsto h (expr𝓝() d) (expr𝓝() (i a)))
+(comm : «expr = »(«expr ∘ »(h, g), «expr ∘ »(i, f))) : tendsto f (comap g (expr𝓝() d)) (expr𝓝() a) :=
+begin
+  have [ident lim1] [":", expr «expr ≤ »(map g (comap g (expr𝓝() d)), expr𝓝() d)] [":=", expr map_comap_le],
+  replace [ident lim1] [":", expr «expr ≤ »(map h (map g (comap g (expr𝓝() d))), map h (expr𝓝() d))] [":=", expr map_mono lim1],
+  rw ["[", expr filter.map_map, ",", expr comm, ",", "<-", expr filter.map_map, ",", expr map_le_iff_le_comap, "]"] ["at", ident lim1],
+  have [ident lim2] [":", expr «expr ≤ »(comap i (map h (expr𝓝() d)), comap i (expr𝓝() (i a)))] [":=", expr comap_mono H],
+  rw ["<-", expr di.nhds_eq_comap] ["at", ident lim2],
+  exact [expr le_trans lim1 lim2]
+end
 
 protected theorem nhds_within_ne_bot (di : DenseInducing i) (b : β) : ne_bot (𝓝[range i] b) :=
   di.dense.nhds_within_ne_bot b
@@ -110,10 +116,14 @@ variable[TopologicalSpace γ]
 def extend (di : DenseInducing i) (f : α → γ) (b : β) : γ :=
   @limₓ _ ⟨f (di.dense.some b)⟩ (comap i (𝓝 b)) f
 
-theorem extend_eq_of_tendsto [T2Space γ] {b : β} {c : γ} {f : α → γ} (hf : tendsto f (comap i (𝓝 b)) (𝓝 c)) :
-  di.extend f b = c :=
-  by 
-    haveI  := di.comap_nhds_ne_bot <;> exact hf.lim_eq
+-- error in Topology.DenseEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem extend_eq_of_tendsto
+[t2_space γ]
+{b : β}
+{c : γ}
+{f : α → γ}
+(hf : tendsto f (comap i (expr𝓝() b)) (expr𝓝() c)) : «expr = »(di.extend f b, c) :=
+by haveI [] [] [":=", expr di.comap_nhds_ne_bot]; exact [expr hf.lim_eq]
 
 theorem extend_eq_at [T2Space γ] {f : α → γ} {a : α} (hf : ContinuousAt f a) : di.extend f (i a) = f a :=
   extend_eq_of_tendsto _$ di.nhds_eq_comap a ▸ hf
@@ -149,35 +159,37 @@ theorem extend_unique [T2Space γ] {f : α → γ} {g : β → γ} (di : DenseIn
   (hg : Continuous g) : di.extend f = g :=
   funext$ fun b => extend_unique_at di (eventually_of_forall hf) hg.continuous_at
 
-theorem continuous_at_extend [RegularSpace γ] {b : β} {f : α → γ} (di : DenseInducing i)
-  (hf : ∀ᶠx in 𝓝 b, ∃ c, tendsto f (comap i$ 𝓝 x) (𝓝 c)) : ContinuousAt (di.extend f) b :=
-  by 
-    set φ := di.extend f 
-    haveI  := di.comap_nhds_ne_bot 
-    suffices  : ∀ V' _ : V' ∈ 𝓝 (φ b), IsClosed V' → φ ⁻¹' V' ∈ 𝓝 b
-    ·
-      simpa [ContinuousAt, (closed_nhds_basis _).tendsto_right_iff]
-    intro V' V'_in V'_closed 
-    set V₁ := { x | tendsto f (comap i$ 𝓝 x) (𝓝$ φ x) }
-    have V₁_in : V₁ ∈ 𝓝 b
-    ·
-      filterUpwards [hf]
-      rintro x ⟨c, hc⟩
-      dsimp [V₁, φ]
-      rwa [di.extend_eq_of_tendsto hc]
-    obtain ⟨V₂, V₂_in, V₂_op, hV₂⟩ : ∃ (V₂ : _)(_ : V₂ ∈ 𝓝 b), IsOpen V₂ ∧ ∀ x _ : x ∈ i ⁻¹' V₂, f x ∈ V'
-    ·
-      simpa [and_assoc] using
-        ((nhds_basis_opens' b).comap i).tendsto_left_iff.mp (mem_of_mem_nhds V₁_in : b ∈ V₁) V' V'_in 
-    suffices  : ∀ x _ : x ∈ V₁ ∩ V₂, φ x ∈ V'
-    ·
-      filterUpwards [inter_mem V₁_in V₂_in]
-      exact this 
-    rintro x ⟨x_in₁, x_in₂⟩
-    have hV₂x : V₂ ∈ 𝓝 x := IsOpen.mem_nhds V₂_op x_in₂ 
-    apply V'_closed.mem_of_tendsto x_in₁ 
-    use V₂ 
-    tauto
+-- error in Topology.DenseEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_at_extend
+[regular_space γ]
+{b : β}
+{f : α → γ}
+(di : dense_inducing i)
+(hf : «expr∀ᶠ in , »((x), expr𝓝() b, «expr∃ , »((c), tendsto f «expr $ »(comap i, expr𝓝() x) (expr𝓝() c)))) : continuous_at (di.extend f) b :=
+begin
+  set [] [ident φ] [] [":="] [expr di.extend f] [],
+  haveI [] [] [":=", expr di.comap_nhds_ne_bot],
+  suffices [] [":", expr ∀ V' «expr ∈ » expr𝓝() (φ b), is_closed V' → «expr ∈ »(«expr ⁻¹' »(φ, V'), expr𝓝() b)],
+  by simpa [] [] [] ["[", expr continuous_at, ",", expr (closed_nhds_basis _).tendsto_right_iff, "]"] [] [],
+  intros [ident V', ident V'_in, ident V'_closed],
+  set [] [ident V₁] [] [":="] [expr {x | tendsto f «expr $ »(comap i, expr𝓝() x) «expr $ »(expr𝓝(), φ x)}] [],
+  have [ident V₁_in] [":", expr «expr ∈ »(V₁, expr𝓝() b)] [],
+  { filter_upwards ["[", expr hf, "]"] [],
+    rintros [ident x, "⟨", ident c, ",", ident hc, "⟩"],
+    dsimp [] ["[", expr V₁, ",", expr φ, "]"] [] [],
+    rwa [expr di.extend_eq_of_tendsto hc] [] },
+  obtain ["⟨", ident V₂, ",", ident V₂_in, ",", ident V₂_op, ",", ident hV₂, "⟩", ":", expr «expr∃ , »((V₂ «expr ∈ » expr𝓝() b), «expr ∧ »(is_open V₂, ∀
+     x «expr ∈ » «expr ⁻¹' »(i, V₂), «expr ∈ »(f x, V')))],
+  { simpa [] [] [] ["[", expr and_assoc, "]"] [] ["using", expr ((nhds_basis_opens' b).comap i).tendsto_left_iff.mp (mem_of_mem_nhds V₁_in : «expr ∈ »(b, V₁)) V' V'_in] },
+  suffices [] [":", expr ∀ x «expr ∈ » «expr ∩ »(V₁, V₂), «expr ∈ »(φ x, V')],
+  { filter_upwards ["[", expr inter_mem V₁_in V₂_in, "]"] [],
+    exact [expr this] },
+  rintros [ident x, "⟨", ident x_in₁, ",", ident x_in₂, "⟩"],
+  have [ident hV₂x] [":", expr «expr ∈ »(V₂, expr𝓝() x)] [":=", expr is_open.mem_nhds V₂_op x_in₂],
+  apply [expr V'_closed.mem_of_tendsto x_in₁],
+  use [expr V₂],
+  tauto []
+end
 
 theorem continuous_extend [RegularSpace γ] {f : α → γ} (di : DenseInducing i)
   (hf : ∀ b, ∃ c, tendsto f (comap i (𝓝 b)) (𝓝 c)) : Continuous (di.extend f) :=
@@ -268,12 +280,12 @@ theorem is_closed_property [TopologicalSpace β] {e : α → β} {p : β → Pro
   fun b => this trivialₓ
 
 theorem is_closed_property2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
-  (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
+  (hp : IsClosed { q:β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
   have  : ∀ q : β × β, p q.1 q.2 := is_closed_property (he.prod_map he) hp$ fun _ => h _ _ 
   fun b₁ b₂ => this ⟨b₁, b₂⟩
 
 theorem is_closed_property3 [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop} (he : DenseRange e)
-  (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 }) (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) :
+  (hp : IsClosed { q:β × β × β | p q.1 q.2.1 q.2.2 }) (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) :
   ∀ b₁ b₂ b₃, p b₁ b₂ b₃ :=
   have  : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 := is_closed_property (he.prod_map$ he.prod_map he) hp$ fun _ => h _ _ _ 
   fun b₁ b₂ b₃ => this ⟨b₁, b₂, b₃⟩
@@ -285,12 +297,12 @@ theorem DenseRange.induction_on [TopologicalSpace β] {e : α → β} (he : Dens
 
 @[elab_as_eliminator]
 theorem DenseRange.induction_on₂ [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
-  (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) (b₁ b₂ : β) : p b₁ b₂ :=
+  (hp : IsClosed { q:β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) (b₁ b₂ : β) : p b₁ b₂ :=
   is_closed_property2 he hp h _ _
 
 @[elab_as_eliminator]
 theorem DenseRange.induction_on₃ [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop} (he : DenseRange e)
-  (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 }) (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) (b₁ b₂ b₃ : β) :
+  (hp : IsClosed { q:β × β × β | p q.1 q.2.1 q.2.2 }) (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) (b₁ b₂ b₃ : β) :
   p b₁ b₂ b₃ :=
   is_closed_property3 he hp h _ _ _
 

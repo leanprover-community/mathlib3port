@@ -1,6 +1,6 @@
-import Mathbin.Analysis.NormedSpace.Basic 
-import Mathbin.Algebra.LatticeOrderedGroup 
-import Mathbin.Topology.Order.Lattice
+import Mathbin.Topology.Order.Lattice 
+import Mathbin.Analysis.Normed.Group.Basic 
+import Mathbin.Algebra.LatticeOrderedGroup
 
 /-!
 # Normed lattice ordered groups
@@ -107,46 +107,37 @@ theorem norm_abs_eq_norm {α : Type _} [NormedLatticeAddCommGroup α] (a : α) :
       apply NormedLatticeAddCommGroup.solid 
       rw [←LatticeOrderedCommGroup.abs_idempotent a]
 
+-- error in Analysis.NormedSpace.LatticeOrderedGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Let `α` be a normed lattice ordered group. Then the infimum is jointly continuous.
 -/
-instance (priority := 100)normed_lattice_add_comm_group_has_continuous_inf {α : Type _} [NormedLatticeAddCommGroup α] :
-  HasContinuousInf α :=
-  ⟨continuous_iff_continuous_at.2$
-      fun q =>
-        tendsto_iff_norm_tendsto_zero.2$
-          by 
-            have  : ∀ p : α × α, ∥p.1⊓p.2 - q.1⊓q.2∥ ≤ ∥p.1 - q.1∥+∥p.2 - q.2∥
-            ·
-              intros 
-              nthRwRHS 0[←norm_abs_eq_norm]
-              nthRwRHS 1[←norm_abs_eq_norm]
-              apply le_transₓ _ (norm_add_le |p.fst - q.fst| |p.snd - q.snd|)
-              apply NormedLatticeAddCommGroup.solid 
-              rw [LatticeOrderedCommGroup.abs_pos_eq (|p.fst - q.fst|+|p.snd - q.snd|)]
-              ·
-                calc |p.fst⊓p.snd - q.fst⊓q.snd| = |(p.fst⊓p.snd - q.fst⊓p.snd)+q.fst⊓p.snd - q.fst⊓q.snd| :=
-                  by 
-                    rw [sub_add_sub_cancel]_ ≤ |p.fst⊓p.snd - q.fst⊓p.snd|+|q.fst⊓p.snd - q.fst⊓q.snd| :=
-                  by 
-                    apply LatticeOrderedCommGroup.abs_triangle _ ≤ |p.fst - q.fst|+|p.snd - q.snd| :=
-                  by 
-                    apply add_le_add
-                    ·
-                      exact (sup_le_iff.elim_left (LatticeOrderedCommGroup.Birkhoff_inequalities _ _ _)).right
-                    ·
-                      rw [inf_comm]
-                      nthRw 1[inf_comm]
-                      exact (sup_le_iff.elim_left (LatticeOrderedCommGroup.Birkhoff_inequalities _ _ _)).right
-              ·
-                exact
-                  add_nonneg (LatticeOrderedCommGroup.abs_pos (p.fst - q.fst))
-                    (LatticeOrderedCommGroup.abs_pos (p.snd - q.snd))
-            refine' squeeze_zero (fun e => norm_nonneg _) this _ 
-            convert
-              ((continuous_fst.tendsto q).sub tendsto_const_nhds).norm.add
-                ((continuous_snd.tendsto q).sub tendsto_const_nhds).norm 
-            simp ⟩
+@[priority 100]
+instance normed_lattice_add_comm_group_has_continuous_inf
+{α : Type*}
+[normed_lattice_add_comm_group α] : has_continuous_inf α :=
+⟨«expr $ »(continuous_iff_continuous_at.2, λ
+  q, «expr $ »(tendsto_iff_norm_tendsto_zero.2, begin
+     have [] [":", expr ∀
+      p : «expr × »(α, α), «expr ≤ »(«expr∥ ∥»(«expr - »(«expr ⊓ »(p.1, p.2), «expr ⊓ »(q.1, q.2))), «expr + »(«expr∥ ∥»(«expr - »(p.1, q.1)), «expr∥ ∥»(«expr - »(p.2, q.2))))] [],
+     { intros [],
+       nth_rewrite_rhs [0] ["<-", expr norm_abs_eq_norm] [],
+       nth_rewrite_rhs [1] ["<-", expr norm_abs_eq_norm] [],
+       apply [expr le_trans _ (norm_add_le «expr| |»(«expr - »(p.fst, q.fst)) «expr| |»(«expr - »(p.snd, q.snd)))],
+       apply [expr normed_lattice_add_comm_group.solid],
+       rw [expr lattice_ordered_comm_group.abs_pos_eq «expr + »(«expr| |»(«expr - »(p.fst, q.fst)), «expr| |»(«expr - »(p.snd, q.snd)))] [],
+       { calc
+           «expr = »(«expr| |»(«expr - »(«expr ⊓ »(p.fst, p.snd), «expr ⊓ »(q.fst, q.snd))), «expr| |»(«expr + »(«expr - »(«expr ⊓ »(p.fst, p.snd), «expr ⊓ »(q.fst, p.snd)), «expr - »(«expr ⊓ »(q.fst, p.snd), «expr ⊓ »(q.fst, q.snd))))) : by { rw [expr sub_add_sub_cancel] [] }
+           «expr ≤ »(..., «expr + »(«expr| |»(«expr - »(«expr ⊓ »(p.fst, p.snd), «expr ⊓ »(q.fst, p.snd))), «expr| |»(«expr - »(«expr ⊓ »(q.fst, p.snd), «expr ⊓ »(q.fst, q.snd))))) : by { apply [expr lattice_ordered_comm_group.abs_triangle] }
+           «expr ≤ »(..., «expr + »(«expr| |»(«expr - »(p.fst, q.fst)), «expr| |»(«expr - »(p.snd, q.snd)))) : by { apply [expr add_le_add],
+             { exact [expr (sup_le_iff.elim_left (lattice_ordered_comm_group.Birkhoff_inequalities _ _ _)).right] },
+             { rw [expr inf_comm] [],
+               nth_rewrite [1] [expr inf_comm] [],
+               exact [expr (sup_le_iff.elim_left (lattice_ordered_comm_group.Birkhoff_inequalities _ _ _)).right] } } },
+       { exact [expr add_nonneg (lattice_ordered_comm_group.abs_pos «expr - »(p.fst, q.fst)) (lattice_ordered_comm_group.abs_pos «expr - »(p.snd, q.snd))] } },
+     refine [expr squeeze_zero (λ e, norm_nonneg _) this _],
+     convert [] [expr ((continuous_fst.tendsto q).sub tendsto_const_nhds).norm.add ((continuous_snd.tendsto q).sub tendsto_const_nhds).norm] [],
+     simp [] [] [] [] [] []
+   end))⟩
 
 /--
 Let `α` be a normed lattice ordered group. Then `α` is a topological lattice in the norm topology.

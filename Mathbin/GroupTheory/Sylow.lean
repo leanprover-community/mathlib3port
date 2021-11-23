@@ -70,7 +70,7 @@ end Sylow
   Every `p`-subgroup is contained in a Sylow `p`-subgroup. -/
 theorem IsPGroup.exists_le_sylow {P : Subgroup G} (hP : IsPGroup p P) : ∃ Q : Sylow p G, P ≤ Q :=
   Exists.elim
-    (Zorn.zorn_nonempty_partial_order₀ { Q : Subgroup G | IsPGroup p Q }
+    (Zorn.zorn_nonempty_partial_order₀ { Q:Subgroup G | IsPGroup p Q }
       (fun c hc1 hc2 Q hQ =>
         ⟨{ Carrier := ⋃R : c, R, one_mem' := ⟨Q, ⟨⟨Q, hQ⟩, rfl⟩, Q.one_mem⟩,
             inv_mem' := fun g ⟨_, ⟨R, rfl⟩, hg⟩ => ⟨R, ⟨R, rfl⟩, R.1.inv_mem hg⟩,
@@ -149,53 +149,43 @@ theorem IsPGroup.sylow_mem_fixed_points_iff {P : Subgroup G} (hP : IsPGroup p P)
   by 
     rw [P.sylow_mem_fixed_points_iff, ←inf_eq_left, hP.inf_normalizer_sylow, inf_eq_left]
 
+-- error in GroupTheory.Sylow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A generalization of **Sylow's second theorem**.
   If the number of Sylow `p`-subgroups is finite, then all Sylow `p`-subgroups are conjugate. -/
-instance  [hp : Fact p.prime] [Fintype (Sylow p G)] : is_pretransitive G (Sylow p G) :=
-  ⟨fun P Q =>
-      by 
-        classical 
-        have H :=
-          fun {R : Sylow p G} {S : orbit G P} =>
-            calc S ∈ fixed_points R (orbit G P) ↔ S.1 ∈ fixed_points R (Sylow p G) :=
-              forall_congrₓ fun a => Subtype.ext_iff 
-              _ ↔ R.1 ≤ S := R.2.sylow_mem_fixed_points_iff 
-              _ ↔ S.1.1 = R := ⟨fun h => R.3 S.1.2 h, ge_of_eq⟩
-              
-        suffices  : Set.Nonempty (fixed_points Q (orbit G P))
-        ·
-          exact Exists.elim this fun R hR => (congr_argₓ _ (Sylow.ext (H.mp hR))).mp R.2
-        apply Q.2.nonempty_fixed_point_of_prime_not_dvd_card 
-        refine' fun h => hp.out.not_dvd_one (nat.modeq_zero_iff_dvd.mp _)
-        calc 1 = card (fixed_points P (orbit G P)) := _ _ ≡ card (orbit G P) [MOD p] :=
-          (P.2.card_modeq_card_fixed_points (orbit G P)).symm _ ≡ 0 [MOD p] := nat.modeq_zero_iff_dvd.mpr h 
-        convert (Set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)).symm 
-        exact set.eq_singleton_iff_unique_mem.mpr ⟨H.mpr rfl, fun R h => Subtype.ext (Sylow.ext (H.mp h))⟩⟩
+instance [hp : fact p.prime] [fintype (sylow p G)] : is_pretransitive G (sylow p G) :=
+⟨λ P Q, by { classical,
+   have [ident H] [] [":=", expr λ {R : sylow p G} {S : orbit G P}, calc
+      «expr ↔ »(«expr ∈ »(S, fixed_points R (orbit G P)), «expr ∈ »(S.1, fixed_points R (sylow p G))) : forall_congr (λ
+       a, subtype.ext_iff)
+      «expr ↔ »(..., «expr ≤ »(R.1, S)) : R.2.sylow_mem_fixed_points_iff
+      «expr ↔ »(..., «expr = »(S.1.1, R)) : ⟨λ h, R.3 S.1.2 h, ge_of_eq⟩],
+   suffices [] [":", expr set.nonempty (fixed_points Q (orbit G P))],
+   { exact [expr exists.elim this (λ R hR, (congr_arg _ (sylow.ext (H.mp hR))).mp R.2)] },
+   apply [expr Q.2.nonempty_fixed_point_of_prime_not_dvd_card],
+   refine [expr λ h, hp.out.not_dvd_one (nat.modeq_zero_iff_dvd.mp _)],
+   calc
+     «expr = »(1, card (fixed_points P (orbit G P))) : _
+     «expr ≡ [MOD ]»(..., card (orbit G P), p) : (P.2.card_modeq_card_fixed_points (orbit G P)).symm
+     «expr ≡ [MOD ]»(..., 0, p) : nat.modeq_zero_iff_dvd.mpr h,
+   convert [] [expr (set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)).symm] [],
+   exact [expr set.eq_singleton_iff_unique_mem.mpr ⟨H.mpr rfl, λ R h, subtype.ext (sylow.ext (H.mp h))⟩] }⟩
 
 variable(p)(G)
 
+-- error in GroupTheory.Sylow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A generalization of **Sylow's third theorem**.
   If the number of Sylow `p`-subgroups is finite, then it is congruent to `1` modulo `p`. -/
-theorem card_sylow_modeq_one [Fact p.prime] [Fintype (Sylow p G)] : card (Sylow p G) ≡ 1 [MOD p] :=
-  by 
-    refine' sylow.nonempty.elim fun P : Sylow p G => _ 
-    have  :=
-      Set.ext
-        fun Q : Sylow p G =>
-          calc Q ∈ fixed_points P (Sylow p G) ↔ P.1 ≤ Q := P.2.sylow_mem_fixed_points_iff 
-            _ ↔ Q.1 = P.1 := ⟨P.3 Q.2, ge_of_eq⟩
-            _ ↔ Q ∈ {P} := sylow.ext_iff.symm.trans set.mem_singleton_iff.symm 
-            
-    haveI  : Fintype (fixed_points P.1 (Sylow p G)) :=
-      by 
-        convert Set.fintypeSingleton P 
-    have  : card (fixed_points P.1 (Sylow p G)) = 1 :=
-      by 
-        convert Set.card_singleton P 
-    exact
-      (P.2.card_modeq_card_fixed_points (Sylow p G)).trans
-        (by 
-          rw [this])
+theorem card_sylow_modeq_one [fact p.prime] [fintype (sylow p G)] : «expr ≡ [MOD ]»(card (sylow p G), 1, p) :=
+begin
+  refine [expr sylow.nonempty.elim (λ P : sylow p G, _)],
+  have [] [] [":=", expr set.ext (λ Q : sylow p G, calc
+      «expr ↔ »(«expr ∈ »(Q, fixed_points P (sylow p G)), «expr ≤ »(P.1, Q)) : P.2.sylow_mem_fixed_points_iff
+      «expr ↔ »(..., «expr = »(Q.1, P.1)) : ⟨P.3 Q.2, ge_of_eq⟩
+      «expr ↔ »(..., «expr ∈ »(Q, {P})) : sylow.ext_iff.symm.trans set.mem_singleton_iff.symm)],
+  haveI [] [":", expr fintype (fixed_points P.1 (sylow p G))] [":=", expr by convert [] [expr set.fintype_singleton P] []],
+  have [] [":", expr «expr = »(card (fixed_points P.1 (sylow p G)), 1)] [":=", expr by convert [] [expr set.card_singleton P] []],
+  exact [expr (P.2.card_modeq_card_fixed_points (sylow p G)).trans (by rw [expr this] [])]
+end
 
 variable{p}{G}
 
@@ -455,18 +445,31 @@ theorem pow_dvd_card_of_pow_dvd_card [Fintype G] {p n : ℕ} [Fact p.prime] (P :
     calc (p^n) = card Q := hQ.symm _ ∣ card R := card_dvd_of_le hR _ = card (g • R) :=
       card_congr (R.equiv_smul g).toEquiv
 
-theorem dvd_card_of_dvd_card [Fintype G] {p : ℕ} [Fact p.prime] (P : Sylow p G) (hdvd : p ∣ card G) : p ∣ card P :=
-  by 
-    rw [←pow_oneₓ p] at hdvd 
-    have key := P.pow_dvd_card_of_pow_dvd_card hdvd 
-    rwa [pow_oneₓ] at key
+-- error in GroupTheory.Sylow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dvd_card_of_dvd_card
+[fintype G]
+{p : exprℕ()}
+[fact p.prime]
+(P : sylow p G)
+(hdvd : «expr ∣ »(p, card G)) : «expr ∣ »(p, card P) :=
+begin
+  rw ["<-", expr pow_one p] ["at", ident hdvd],
+  have [ident key] [] [":=", expr P.pow_dvd_card_of_pow_dvd_card hdvd],
+  rwa [expr pow_one] ["at", ident key]
+end
 
-theorem ne_bot_of_dvd_card [Fintype G] {p : ℕ} [hp : Fact p.prime] (P : Sylow p G) (hdvd : p ∣ card G) :
-  (P : Subgroup G) ≠ ⊥ :=
-  by 
-    refine' fun h => hp.out.not_dvd_one _ 
-    have key : p ∣ card (P : Subgroup G) := P.dvd_card_of_dvd_card hdvd 
-    rwa [h, card_bot] at key
+-- error in GroupTheory.Sylow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ne_bot_of_dvd_card
+[fintype G]
+{p : exprℕ()}
+[hp : fact p.prime]
+(P : sylow p G)
+(hdvd : «expr ∣ »(p, card G)) : «expr ≠ »((P : subgroup G), «expr⊥»()) :=
+begin
+  refine [expr λ h, hp.out.not_dvd_one _],
+  have [ident key] [":", expr «expr ∣ »(p, card (P : subgroup G))] [":=", expr P.dvd_card_of_dvd_card hdvd],
+  rwa ["[", expr h, ",", expr card_bot, "]"] ["at", ident key]
+end
 
 end Sylow
 

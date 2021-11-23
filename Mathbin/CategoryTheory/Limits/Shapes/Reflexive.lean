@@ -1,4 +1,3 @@
-import Mathbin.CategoryTheory.Adjunction.Default 
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers 
 import Mathbin.CategoryTheory.Limits.Shapes.KernelPair
 
@@ -114,17 +113,31 @@ attribute [instance] has_reflexive_coequalizers.has_coeq
 
 attribute [instance] has_coreflexive_equalizers.has_eq
 
-theorem has_coequalizer_of_common_section [has_reflexive_coequalizers C] {A B : C} {f g : A ⟶ B} (r : B ⟶ A)
-  (rf : r ≫ f = 𝟙 _) (rg : r ≫ g = 𝟙 _) : has_coequalizer f g :=
-  by 
-    letI this := is_reflexive_pair.mk' r rf rg 
-    infer_instance
+-- error in CategoryTheory.Limits.Shapes.Reflexive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_coequalizer_of_common_section
+[has_reflexive_coequalizers C]
+{A B : C}
+{f g : «expr ⟶ »(A, B)}
+(r : «expr ⟶ »(B, A))
+(rf : «expr = »(«expr ≫ »(r, f), «expr𝟙»() _))
+(rg : «expr = »(«expr ≫ »(r, g), «expr𝟙»() _)) : has_coequalizer f g :=
+begin
+  letI [] [] [":=", expr is_reflexive_pair.mk' r rf rg],
+  apply_instance
+end
 
-theorem has_equalizer_of_common_retraction [has_coreflexive_equalizers C] {A B : C} {f g : A ⟶ B} (r : B ⟶ A)
-  (fr : f ≫ r = 𝟙 _) (gr : g ≫ r = 𝟙 _) : has_equalizer f g :=
-  by 
-    letI this := is_coreflexive_pair.mk' r fr gr 
-    infer_instance
+-- error in CategoryTheory.Limits.Shapes.Reflexive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_equalizer_of_common_retraction
+[has_coreflexive_equalizers C]
+{A B : C}
+{f g : «expr ⟶ »(A, B)}
+(r : «expr ⟶ »(B, A))
+(fr : «expr = »(«expr ≫ »(f, r), «expr𝟙»() _))
+(gr : «expr = »(«expr ≫ »(g, r), «expr𝟙»() _)) : has_equalizer f g :=
+begin
+  letI [] [] [":=", expr is_coreflexive_pair.mk' r fr gr],
+  apply_instance
+end
 
 /-- If `C` has coequalizers, then it has reflexive coequalizers. -/
 instance (priority := 100)has_reflexive_coequalizers_of_has_coequalizers [has_coequalizers C] :

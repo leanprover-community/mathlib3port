@@ -99,7 +99,7 @@ theorem integral_closure_eq_bot_iff : integralClosure R K = ⊥ ↔ IsIntegrally
     ·
       intro h x hx 
       rw [Algebra.mem_bot, Set.mem_range]
-      exactI is_integral_iff.mp hx
+      exact is_integral_iff.mp hx
 
 include iic
 
@@ -121,10 +121,13 @@ variable(K : Type _)[Field K][Algebra R K][IsFractionRing R K]
 
 variable{L : Type _}[Field L][Algebra K L][Algebra R L][IsScalarTower R K L]
 
-theorem is_integrally_closed_of_finite_extension [FiniteDimensional K L] : IsIntegrallyClosed (integralClosure R L) :=
-  by 
-    letI this : IsFractionRing (integralClosure R L) L := is_fraction_ring_of_finite_extension K L 
-    exact (integral_closure_eq_bot_iff L).mp integral_closure_idem
+-- error in RingTheory.IntegrallyClosed: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_integrally_closed_of_finite_extension
+[finite_dimensional K L] : is_integrally_closed (integral_closure R L) :=
+begin
+  letI [] [":", expr is_fraction_ring (integral_closure R L) L] [":=", expr is_fraction_ring_of_finite_extension K L],
+  exact [expr (integral_closure_eq_bot_iff L).mp integral_closure_idem]
+end
 
 end integralClosure
 

@@ -76,20 +76,23 @@ end Definitions
 /-! ## Strongly measurable functions -/
 
 
-theorem subsingleton.strongly_measurable {α β} [MeasurableSpace α] [TopologicalSpace β] [Subsingleton β] (f : α → β) :
-  strongly_measurable f :=
-  by 
-    let f_sf : α →ₛ β := ⟨f, fun x => _, Set.Subsingleton.finite Set.subsingleton_of_subsingleton⟩
-    ·
-      exact ⟨fun n => f_sf, fun x => tendsto_const_nhds⟩
-    ·
-      have h_univ : f ⁻¹' {x} = Set.Univ
-      ·
-        ·
-          ext1 y 
-          simp 
-      rw [h_univ]
-      exact MeasurableSet.univ
+-- error in MeasureTheory.Function.StronglyMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem subsingleton.strongly_measurable
+{α β}
+[measurable_space α]
+[topological_space β]
+[subsingleton β]
+(f : α → β) : strongly_measurable f :=
+begin
+  let [ident f_sf] [":", expr «expr →ₛ »(α, β)] [":=", expr ⟨f, λ
+    x, _, set.subsingleton.finite set.subsingleton_of_subsingleton⟩],
+  { exact [expr ⟨λ n, f_sf, λ x, tendsto_const_nhds⟩] },
+  { have [ident h_univ] [":", expr «expr = »(«expr ⁻¹' »(f, {x}), set.univ)] [],
+    by { ext1 [] [ident y],
+      simp [] [] [] [] [] [] },
+    rw [expr h_univ] [],
+    exact [expr measurable_set.univ] }
+end
 
 namespace StronglyMeasurable
 
@@ -104,65 +107,67 @@ protected theorem tendsto_approx [MeasurableSpace α] [TopologicalSpace β] (hf 
   ∀ x, tendsto (fun n => hf.approx n x) at_top (𝓝 (f x)) :=
   hf.some_spec
 
-theorem fin_strongly_measurable_of_set_sigma_finite [TopologicalSpace β] [HasZero β] {m : MeasurableSpace α}
-  {μ : Measureₓ α} (hf_meas : strongly_measurable f) {t : Set α} (ht : MeasurableSet t)
-  (hft_zero : ∀ x _ : x ∈ «expr ᶜ» t, f x = 0) (htμ : sigma_finite (μ.restrict t)) : fin_strongly_measurable f μ :=
-  by 
-    haveI  : sigma_finite (μ.restrict t) := htμ 
-    let S := spanning_sets (μ.restrict t)
-    have hS_meas : ∀ n, MeasurableSet (S n)
-    exact measurable_spanning_sets (μ.restrict t)
-    let f_approx := hf_meas.approx 
-    let fs := fun n => simple_func.restrict (f_approx n) (S n ∩ t)
-    have h_fs_t_compl : ∀ n, ∀ x _ : x ∉ t, fs n x = 0
-    ·
-      intro n x hxt 
-      rw [simple_func.restrict_apply _ ((hS_meas n).inter ht)]
-      refine' Set.indicator_of_not_mem _ _ 
-      simp [hxt]
-    refine' ⟨fs, _, fun x => _⟩
-    ·
-      simpRw [simple_func.support_eq]
-      refine' fun n => (measure_bUnion_finset_le _ _).trans_lt _ 
-      refine' ennreal.sum_lt_top_iff.mpr fun y hy => _ 
-      rw [simple_func.restrict_preimage_singleton _ ((hS_meas n).inter ht)]
-      swap
-      ·
-        rw [Finset.mem_filter] at hy 
-        exact hy.2
-      refine' (measure_mono (Set.inter_subset_left _ _)).trans_lt _ 
-      have h_lt_top := measure_spanning_sets_lt_top (μ.restrict t) n 
-      rwa [measure.restrict_apply' ht] at h_lt_top
-    ·
-      byCases' hxt : x ∈ t 
-      swap
-      ·
-        rw [funext fun n => h_fs_t_compl n x hxt, hft_zero x hxt]
-        exact tendsto_const_nhds 
-      have h : tendsto (fun n => (f_approx n) x) at_top (𝓝 (f x))
-      exact hf_meas.tendsto_approx x 
-      obtain ⟨n₁, hn₁⟩ : ∃ n, ∀ m, n ≤ m → fs m x = f_approx m x
-      ·
-        obtain ⟨n, hn⟩ : ∃ n, ∀ m, n ≤ m → x ∈ S m ∩ t
-        ·
-          suffices  : ∃ n, ∀ m, n ≤ m → x ∈ S m
-          ·
-            obtain ⟨n, hn⟩ := this 
-            exact ⟨n, fun m hnm => Set.mem_inter (hn m hnm) hxt⟩
-          suffices  : ∃ n, x ∈ S n
-          ·
-            rcases this with ⟨n, hn⟩
-            exact ⟨n, fun m hnm => monotone_spanning_sets (μ.restrict t) hnm hn⟩
-          rw [←Set.mem_Union, Union_spanning_sets (μ.restrict t)]
-          trivial 
-        refine' ⟨n, fun m hnm => _⟩
-        simpRw [fs, simple_func.restrict_apply _ ((hS_meas m).inter ht), Set.indicator_of_mem (hn m hnm)]
-      rw [tendsto_at_top'] at h⊢
-      intro s hs 
-      obtain ⟨n₂, hn₂⟩ := h s hs 
-      refine' ⟨max n₁ n₂, fun m hm => _⟩
-      rw [hn₁ m ((le_max_leftₓ _ _).trans hm.le)]
-      exact hn₂ m ((le_max_rightₓ _ _).trans hm.le)
+-- error in MeasureTheory.Function.StronglyMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fin_strongly_measurable_of_set_sigma_finite
+[topological_space β]
+[has_zero β]
+{m : measurable_space α}
+{μ : measure α}
+(hf_meas : strongly_measurable f)
+{t : set α}
+(ht : measurable_set t)
+(hft_zero : ∀ x «expr ∈ » «expr ᶜ»(t), «expr = »(f x, 0))
+(htμ : sigma_finite (μ.restrict t)) : fin_strongly_measurable f μ :=
+begin
+  haveI [] [":", expr sigma_finite (μ.restrict t)] [":=", expr htμ],
+  let [ident S] [] [":=", expr spanning_sets (μ.restrict t)],
+  have [ident hS_meas] [":", expr ∀ n, measurable_set (S n)] [],
+  from [expr measurable_spanning_sets (μ.restrict t)],
+  let [ident f_approx] [] [":=", expr hf_meas.approx],
+  let [ident fs] [] [":=", expr λ n, simple_func.restrict (f_approx n) «expr ∩ »(S n, t)],
+  have [ident h_fs_t_compl] [":", expr ∀ n, ∀ x «expr ∉ » t, «expr = »(fs n x, 0)] [],
+  { intros [ident n, ident x, ident hxt],
+    rw [expr simple_func.restrict_apply _ ((hS_meas n).inter ht)] [],
+    refine [expr set.indicator_of_not_mem _ _],
+    simp [] [] [] ["[", expr hxt, "]"] [] [] },
+  refine [expr ⟨fs, _, λ x, _⟩],
+  { simp_rw [expr simple_func.support_eq] [],
+    refine [expr λ n, (measure_bUnion_finset_le _ _).trans_lt _],
+    refine [expr ennreal.sum_lt_top_iff.mpr (λ y hy, _)],
+    rw [expr simple_func.restrict_preimage_singleton _ ((hS_meas n).inter ht)] [],
+    swap,
+    { rw [expr finset.mem_filter] ["at", ident hy],
+      exact [expr hy.2] },
+    refine [expr (measure_mono (set.inter_subset_left _ _)).trans_lt _],
+    have [ident h_lt_top] [] [":=", expr measure_spanning_sets_lt_top (μ.restrict t) n],
+    rwa [expr measure.restrict_apply' ht] ["at", ident h_lt_top] },
+  { by_cases [expr hxt, ":", expr «expr ∈ »(x, t)],
+    swap,
+    { rw ["[", expr funext (λ n, h_fs_t_compl n x hxt), ",", expr hft_zero x hxt, "]"] [],
+      exact [expr tendsto_const_nhds] },
+    have [ident h] [":", expr tendsto (λ n, f_approx n x) at_top (expr𝓝() (f x))] [],
+    from [expr hf_meas.tendsto_approx x],
+    obtain ["⟨", ident n₁, ",", ident hn₁, "⟩", ":", expr «expr∃ , »((n), ∀
+      m, «expr ≤ »(n, m) → «expr = »(fs m x, f_approx m x))],
+    { obtain ["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr∃ , »((n), ∀
+        m, «expr ≤ »(n, m) → «expr ∈ »(x, «expr ∩ »(S m, t)))],
+      { suffices [] [":", expr «expr∃ , »((n), ∀ m, «expr ≤ »(n, m) → «expr ∈ »(x, S m))],
+        { obtain ["⟨", ident n, ",", ident hn, "⟩", ":=", expr this],
+          exact [expr ⟨n, λ m hnm, set.mem_inter (hn m hnm) hxt⟩] },
+        suffices [] [":", expr «expr∃ , »((n), «expr ∈ »(x, S n))],
+        { rcases [expr this, "with", "⟨", ident n, ",", ident hn, "⟩"],
+          exact [expr ⟨n, λ m hnm, monotone_spanning_sets (μ.restrict t) hnm hn⟩] },
+        rw ["[", "<-", expr set.mem_Union, ",", expr Union_spanning_sets (μ.restrict t), "]"] [],
+        trivial },
+      refine [expr ⟨n, λ m hnm, _⟩],
+      simp_rw ["[", expr fs, ",", expr simple_func.restrict_apply _ ((hS_meas m).inter ht), ",", expr set.indicator_of_mem (hn m hnm), "]"] [] },
+    rw [expr tendsto_at_top'] ["at", ident h, "⊢"],
+    intros [ident s, ident hs],
+    obtain ["⟨", ident n₂, ",", ident hn₂, "⟩", ":=", expr h s hs],
+    refine [expr ⟨max n₁ n₂, λ m hm, _⟩],
+    rw [expr hn₁ m ((le_max_left _ _).trans hm.le)] [],
+    exact [expr hn₂ m ((le_max_right _ _).trans hm.le)] }
+end
 
 /-- If the measure is sigma-finite, all strongly measurable functions are
   `fin_strongly_measurable`. -/
@@ -206,7 +211,7 @@ variable{α β : Type _}[MeasurableSpace α][MeasurableSpace β]{f : α → β}
 theorem _root_.measurable.strongly_measurable [EmetricSpace β] [OpensMeasurableSpace β] [second_countable_topology β]
   (hf : Measurable f) : strongly_measurable f :=
   by 
-    rcases is_empty_or_nonempty β with ⟨⟩ <;> resetI
+    rcases is_empty_or_nonempty β with ⟨⟩ <;> skip
     ·
       exact subsingleton.strongly_measurable f
     ·
@@ -257,33 +262,32 @@ end sequence
 protected theorem strongly_measurable [TopologicalSpace β] (hf : fin_strongly_measurable f μ) : strongly_measurable f :=
   ⟨hf.approx, hf.tendsto_approx⟩
 
-theorem exists_set_sigma_finite [TopologicalSpace β] [T2Space β] (hf : fin_strongly_measurable f μ) :
-  ∃ t, MeasurableSet t ∧ (∀ x _ : x ∈ «expr ᶜ» t, f x = 0) ∧ sigma_finite (μ.restrict t) :=
-  by 
-    rcases hf with ⟨fs, hT_lt_top, h_approx⟩
-    let T := fun n => support (fs n)
-    have hT_meas : ∀ n, MeasurableSet (T n)
-    exact fun n => simple_func.measurable_set_support (fs n)
-    let t := ⋃n, T n 
-    refine' ⟨t, MeasurableSet.Union hT_meas, _, _⟩
-    ·
-      have h_fs_zero : ∀ n, ∀ x _ : x ∈ «expr ᶜ» t, fs n x = 0
-      ·
-        intro n x hxt 
-        rw [Set.mem_compl_iff, Set.mem_Union, not_exists] at hxt 
-        simpa using hxt n 
-      refine' fun x hxt => tendsto_nhds_unique (h_approx x) _ 
-      rw [funext fun n => h_fs_zero n x hxt]
-      exact tendsto_const_nhds
-    ·
-      refine' ⟨⟨⟨fun n => «expr ᶜ» t ∪ T n, fun n => trivialₓ, fun n => _, _⟩⟩⟩
-      ·
-        rw [measure.restrict_apply' (MeasurableSet.Union hT_meas), Set.union_inter_distrib_right,
-          Set.compl_inter_self t, Set.empty_union]
-        exact (measure_mono (Set.inter_subset_left _ _)).trans_lt (hT_lt_top n)
-      ·
-        rw [←Set.union_Union («expr ᶜ» t) T]
-        exact Set.compl_union_self _
+-- error in MeasureTheory.Function.StronglyMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_set_sigma_finite
+[topological_space β]
+[t2_space β]
+(hf : fin_strongly_measurable f μ) : «expr∃ , »((t), «expr ∧ »(measurable_set t, «expr ∧ »(∀
+   x «expr ∈ » «expr ᶜ»(t), «expr = »(f x, 0), sigma_finite (μ.restrict t)))) :=
+begin
+  rcases [expr hf, "with", "⟨", ident fs, ",", ident hT_lt_top, ",", ident h_approx, "⟩"],
+  let [ident T] [] [":=", expr λ n, support (fs n)],
+  have [ident hT_meas] [":", expr ∀ n, measurable_set (T n)] [],
+  from [expr λ n, simple_func.measurable_set_support (fs n)],
+  let [ident t] [] [":=", expr «expr⋃ , »((n), T n)],
+  refine [expr ⟨t, measurable_set.Union hT_meas, _, _⟩],
+  { have [ident h_fs_zero] [":", expr ∀ n, ∀ x «expr ∈ » «expr ᶜ»(t), «expr = »(fs n x, 0)] [],
+    { intros [ident n, ident x, ident hxt],
+      rw ["[", expr set.mem_compl_iff, ",", expr set.mem_Union, ",", expr not_exists, "]"] ["at", ident hxt],
+      simpa [] [] [] [] [] ["using", expr hxt n] },
+    refine [expr λ x hxt, tendsto_nhds_unique (h_approx x) _],
+    rw [expr funext (λ n, h_fs_zero n x hxt)] [],
+    exact [expr tendsto_const_nhds] },
+  { refine [expr ⟨⟨⟨λ n, «expr ∪ »(«expr ᶜ»(t), T n), λ n, trivial, λ n, _, _⟩⟩⟩],
+    { rw ["[", expr measure.restrict_apply' (measurable_set.Union hT_meas), ",", expr set.union_inter_distrib_right, ",", expr set.compl_inter_self t, ",", expr set.empty_union, "]"] [],
+      exact [expr (measure_mono (set.inter_subset_left _ _)).trans_lt (hT_lt_top n)] },
+    { rw ["<-", expr set.union_Union «expr ᶜ»(t) T] [],
+      exact [expr set.compl_union_self _] } }
+end
 
 /-- A finitely strongly measurable function is measurable. -/
 protected theorem Measurable [MetricSpace β] [MeasurableSpace β] [BorelSpace β] (hf : fin_strongly_measurable f μ) :
@@ -388,21 +392,20 @@ theorem ae_fin_strongly_measurable_iff_ae_measurable {m0 : MeasurableSpace α} (
   by 
     simpRw [ae_fin_strongly_measurable, AeMeasurable, fin_strongly_measurable_iff_measurable]
 
-theorem mem_ℒp.fin_strongly_measurable_of_measurable (hf : mem_ℒp f p μ) (hf_meas : Measurable f) (hp_ne_zero : p ≠ 0)
-  (hp_ne_top : p ≠ ∞) : fin_strongly_measurable f μ :=
-  by 
-    let fs := simple_func.approx_on f hf_meas Set.Univ 0 (Set.mem_univ _)
-    refine' ⟨fs, _, _⟩
-    ·
-      have h_fs_Lp : ∀ n, mem_ℒp (fs n) p μ 
-      exact simple_func.mem_ℒp_approx_on_univ hf_meas hf 
-      exact fun n => (fs n).measure_support_lt_top_of_mem_ℒp (h_fs_Lp n) hp_ne_zero hp_ne_top
-    ·
-      exact
-        fun x =>
-          simple_func.tendsto_approx_on hf_meas (Set.mem_univ 0)
-            (by 
-              simp )
+-- error in MeasureTheory.Function.StronglyMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_ℒp.fin_strongly_measurable_of_measurable
+(hf : mem_ℒp f p μ)
+(hf_meas : measurable f)
+(hp_ne_zero : «expr ≠ »(p, 0))
+(hp_ne_top : «expr ≠ »(p, «expr∞»())) : fin_strongly_measurable f μ :=
+begin
+  let [ident fs] [] [":=", expr simple_func.approx_on f hf_meas set.univ 0 (set.mem_univ _)],
+  refine [expr ⟨fs, _, _⟩],
+  { have [ident h_fs_Lp] [":", expr ∀ n, mem_ℒp (fs n) p μ] [],
+    from [expr simple_func.mem_ℒp_approx_on_univ hf_meas hf],
+    exact [expr λ n, (fs n).measure_support_lt_top_of_mem_ℒp (h_fs_Lp n) hp_ne_zero hp_ne_top] },
+  { exact [expr λ x, simple_func.tendsto_approx_on hf_meas (set.mem_univ 0) (by simp [] [] [] [] [] [])] }
+end
 
 theorem mem_ℒp.ae_fin_strongly_measurable (hf : mem_ℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
   ae_fin_strongly_measurable f μ :=

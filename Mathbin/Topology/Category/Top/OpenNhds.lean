@@ -1,5 +1,4 @@
-import Mathbin.Topology.Category.Top.Opens 
-import Mathbin.CategoryTheory.Filtered
+import Mathbin.Topology.Category.Top.Opens
 
 /-!
 # The category of open neighborhoods of a point
@@ -133,7 +132,7 @@ def inclusion_map_iso (x : X) : inclusion (f x) ⋙ opens.map f ≅ map f x ⋙ 
       tidy)
 
 @[simp]
-theorem inclusion_map_iso_hom (x : X) : (inclusion_map_iso f x).Hom = 𝟙 _ :=
+theorem inclusion_map_iso_hom (x : X) : (inclusion_map_iso f x).hom = 𝟙 _ :=
   rfl
 
 @[simp]

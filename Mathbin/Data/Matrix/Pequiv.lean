@@ -45,7 +45,7 @@ open_locale Matrix
 def to_matrix [DecidableEq n] [HasZero α] [HasOne α] (f : m ≃. n) : Matrix m n α
 | i, j => if j ∈ f i then 1 else 0
 
--- error in Data.Matrix.Pequiv: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Matrix.Pequiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mul_matrix_apply
 [fintype m]
 [decidable_eq m]

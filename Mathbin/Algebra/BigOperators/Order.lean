@@ -145,16 +145,20 @@ theorem prod_mono_set_of_one_le' (hf : ∀ x, 1 ≤ f x) : Monotone fun s => ∏
 theorem prod_le_univ_prod_of_one_le' [Fintype ι] {s : Finset ι} (w : ∀ x, 1 ≤ f x) : (∏x in s, f x) ≤ ∏x, f x :=
   prod_le_prod_of_subset_of_one_le' (subset_univ s) fun a _ _ => w a
 
-@[toAdditive sum_eq_zero_iff_of_nonneg]
-theorem prod_eq_one_iff_of_one_le' : (∀ i _ : i ∈ s, 1 ≤ f i) → ((∏i in s, f i) = 1 ↔ ∀ i _ : i ∈ s, f i = 1) :=
-  by 
-    classical 
-    apply Finset.induction_on s 
-    exact fun _ => ⟨fun _ _ => False.elim, fun _ => rfl⟩
-    intro a s ha ih H 
-    have  : ∀ i _ : i ∈ s, 1 ≤ f i 
-    exact fun _ => H _ ∘ mem_insert_of_mem 
-    rw [prod_insert ha, mul_eq_one_iff' (H _$ mem_insert_self _ _) (one_le_prod' this), forall_mem_insert, ih this]
+-- error in Algebra.BigOperators.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[ident sum_eq_zero_iff_of_nonneg]]
+theorem prod_eq_one_iff_of_one_le' : ∀
+i «expr ∈ » s, «expr ≤ »(1, f i) → «expr ↔ »(«expr = »(«expr∏ in , »((i), s, f i), 1), ∀
+ i «expr ∈ » s, «expr = »(f i, 1)) :=
+begin
+  classical,
+  apply [expr finset.induction_on s],
+  exact [expr λ _, ⟨λ _ _, false.elim, λ _, rfl⟩],
+  assume [binders (a s ha ih H)],
+  have [] [":", expr ∀ i «expr ∈ » s, «expr ≤ »(1, f i)] [],
+  from [expr λ _, «expr ∘ »(H _, mem_insert_of_mem)],
+  rw ["[", expr prod_insert ha, ",", expr mul_eq_one_iff' «expr $ »(H _, mem_insert_self _ _) (one_le_prod' this), ",", expr forall_mem_insert, ",", expr ih this, "]"] []
+end
 
 @[toAdditive sum_eq_zero_iff_of_nonneg]
 theorem prod_eq_one_iff_of_le_one' : (∀ i _ : i ∈ s, f i ≤ 1) → ((∏i in s, f i) = 1 ↔ ∀ i _ : i ∈ s, f i = 1) :=
@@ -396,7 +400,7 @@ theorem prod_le_one (h0 : ∀ i _ : i ∈ s, 0 ≤ f i) (h1 : ∀ i _ : i ∈ s,
     convert ← prod_le_prod h0 h1 
     exact Finset.prod_const_one
 
--- error in Algebra.BigOperators.Order: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.BigOperators.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `g, h ≤ f` and `g i + h i ≤ f i`, then the product of `f` over `s` is at least the
   sum of the products of `g` and `h`. This is the version for `ordered_comm_semiring`. -/
 theorem prod_add_prod_le
@@ -518,16 +522,20 @@ section AbsoluteValue
 
 variable{S : Type _}
 
-theorem AbsoluteValue.sum_le [Semiringₓ R] [OrderedSemiring S] (abv : AbsoluteValue R S) (s : Finset ι) (f : ι → R) :
-  abv (∑i in s, f i) ≤ ∑i in s, abv (f i) :=
-  by 
-    letI this := Classical.decEq ι 
-    refine' Finset.induction_on s _ fun i s hi ih => _
-    ·
-      simp 
-    ·
-      simp only [Finset.sum_insert hi]
-      exact (abv.add_le _ _).trans (add_le_add (le_reflₓ _) ih)
+-- error in Algebra.BigOperators.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem absolute_value.sum_le
+[semiring R]
+[ordered_semiring S]
+(abv : absolute_value R S)
+(s : finset ι)
+(f : ι → R) : «expr ≤ »(abv «expr∑ in , »((i), s, f i), «expr∑ in , »((i), s, abv (f i))) :=
+begin
+  letI [] [] [":=", expr classical.dec_eq ι],
+  refine [expr finset.induction_on s _ (λ i s hi ih, _)],
+  { simp [] [] [] [] [] [] },
+  { simp [] [] ["only"] ["[", expr finset.sum_insert hi, "]"] [] [],
+    exact [expr (abv.add_le _ _).trans (add_le_add (le_refl _) ih)] }
+end
 
 theorem IsAbsoluteValue.abv_sum [Semiringₓ R] [OrderedSemiring S] (abv : R → S) [IsAbsoluteValue abv] (f : ι → R)
   (s : Finset ι) : abv (∑i in s, f i) ≤ ∑i in s, abv (f i) :=

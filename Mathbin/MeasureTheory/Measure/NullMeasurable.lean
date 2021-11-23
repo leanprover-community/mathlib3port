@@ -195,7 +195,7 @@ protected theorem disjointed {f : ℕ → Set α} (h : ∀ i, null_measurable_se
   MeasurableSet.disjointed h n
 
 @[simp]
-protected theorem const (p : Prop) : null_measurable_set { a : α | p } μ :=
+protected theorem const (p : Prop) : null_measurable_set { a:α | p } μ :=
   MeasurableSet.const p
 
 instance  [MeasurableSingletonClass α] : MeasurableSingletonClass (null_measurable_space α μ) :=
@@ -205,18 +205,17 @@ protected theorem insert [MeasurableSingletonClass (null_measurable_space α μ)
   null_measurable_set (insert a s) μ :=
   hs.insert a
 
-theorem exists_measurable_superset_ae_eq (h : null_measurable_set s μ) :
-  ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
-  by 
-    rcases h with ⟨t, htm, hst⟩
-    refine' ⟨t ∪ to_measurable μ (s \ t), _, htm.union (measurable_set_to_measurable _ _), _⟩
-    ·
-      exact diff_subset_iff.1 (subset_to_measurable _ _)
-    ·
-      have  : to_measurable μ (s \ t) =ᵐ[μ] (∅ : Set α)
-      ·
-        simp [ae_le_set.1 hst.le]
-      simpa only [union_empty] using hst.symm.union this
+-- error in MeasureTheory.Measure.NullMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_measurable_superset_ae_eq
+(h : null_measurable_set s μ) : «expr∃ , »((t «expr ⊇ » s), «expr ∧ »(measurable_set t, «expr =ᵐ[ ] »(t, μ, s))) :=
+begin
+  rcases [expr h, "with", "⟨", ident t, ",", ident htm, ",", ident hst, "⟩"],
+  refine [expr ⟨«expr ∪ »(t, to_measurable μ «expr \ »(s, t)), _, htm.union (measurable_set_to_measurable _ _), _⟩],
+  { exact [expr diff_subset_iff.1 (subset_to_measurable _ _)] },
+  { have [] [":", expr «expr =ᵐ[ ] »(to_measurable μ «expr \ »(s, t), μ, («expr∅»() : set α))] [],
+    by simp [] [] [] ["[", expr ae_le_set.1 hst.le, "]"] [] [],
+    simpa [] [] ["only"] ["[", expr union_empty, "]"] [] ["using", expr hst.symm.union this] }
+end
 
 theorem to_measurable_ae_eq (h : null_measurable_set s μ) : to_measurable μ s =ᵐ[μ] s :=
   by 
@@ -246,25 +245,26 @@ theorem measure_Union {m0 : MeasurableSpace α} {μ : Measureₓ α} [Encodable 
     ·
       exact μ.m_Union
 
-theorem measure_Union₀ [Encodable ι] {f : ι → Set α} (hn : Pairwise (Disjoint on f))
-  (h : ∀ i, null_measurable_set (f i) μ) : μ (⋃i, f i) = ∑'i, μ (f i) :=
-  by 
-    refine' (measure_Union_le _).antisymm _ 
-    choose s hsf hsm hs_eq using fun i => (h i).exists_measurable_subset_ae_eq 
-    have hsd : Pairwise (Disjoint on s)
-    exact hn.mono fun i j h => h.mono (hsf i) (hsf j)
-    simp only [←measure_congr (hs_eq _), ←measure_Union hsd hsm]
-    exact measure_mono (Union_subset_Union hsf)
-
--- error in MeasureTheory.Measure.NullMeasurable: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem measure_union₀
-(hs : null_measurable_set s μ)
-(ht : null_measurable_set t μ)
-(hd : disjoint s t) : «expr = »(μ «expr ∪ »(s, t), «expr + »(μ s, μ t)) :=
+-- error in MeasureTheory.Measure.NullMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measure_Union₀
+[encodable ι]
+{f : ι → set α}
+(hn : pairwise «expr on »(disjoint, f))
+(h : ∀ i, null_measurable_set (f i) μ) : «expr = »(μ «expr⋃ , »((i), f i), «expr∑' , »((i), μ (f i))) :=
 begin
-  rw ["[", expr union_eq_Union, ",", expr measure_Union₀, ",", expr tsum_fintype, ",", expr fintype.sum_bool, ",", expr cond, ",", expr cond, "]"] [],
-  exacts ["[", expr pairwise_disjoint_on_bool.2 hd, ",", expr λ b, bool.cases_on b ht hs, "]"]
+  refine [expr (measure_Union_le _).antisymm _],
+  choose [] [ident s] [ident hsf, ident hsm, ident hs_eq] ["using", expr λ i, (h i).exists_measurable_subset_ae_eq],
+  have [ident hsd] [":", expr pairwise «expr on »(disjoint, s)] [],
+  from [expr hn.mono (λ i j h, h.mono (hsf i) (hsf j))],
+  simp [] [] ["only"] ["[", "<-", expr measure_congr (hs_eq _), ",", "<-", expr measure_Union hsd hsm, "]"] [] [],
+  exact [expr measure_mono (Union_subset_Union hsf)]
 end
+
+theorem measure_union₀ (hs : null_measurable_set s μ) (ht : null_measurable_set t μ) (hd : Disjoint s t) :
+  μ (s ∪ t) = μ s+μ t :=
+  by 
+    rw [union_eq_Union, measure_Union₀, tsum_fintype, Fintype.sum_bool, cond, cond]
+    exacts[pairwise_disjoint_on_bool.2 hd, fun b => Bool.casesOn b ht hs]
 
 section MeasurableSingletonClass
 

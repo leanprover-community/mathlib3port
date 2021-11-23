@@ -1,7 +1,10 @@
+import Mathbin.Algebra.IndicatorFunction 
+import Mathbin.Data.Equiv.Fin 
+import Mathbin.Data.Tprod 
+import Mathbin.GroupTheory.Coset 
 import Mathbin.MeasureTheory.MeasurableSpaceDef 
 import Mathbin.MeasureTheory.Tactic 
-import Mathbin.Data.Tprod 
-import Mathbin.Data.Equiv.Fin
+import Mathbin.Order.Filter.Lift
 
 /-!
 # Measurable spaces and measurable functions
@@ -229,7 +232,7 @@ theorem Measurable.piecewise {s : Set α} {_ : DecidablePred (· ∈ s)} {f g : 
 `measurable (ite (x=0) 0 1)` by
 `exact measurable.ite (measurable_set_singleton 0) measurable_const measurable_const`,
 but replacing `measurable.ite` by `measurable.piecewise` in that example proof does not work. -/
-theorem Measurable.ite {p : α → Prop} {_ : DecidablePred p} {f g : α → β} (hp : MeasurableSet { a : α | p a })
+theorem Measurable.ite {p : α → Prop} {_ : DecidablePred p} {f g : α → β} (hp : MeasurableSet { a:α | p a })
   (hf : Measurable f) (hg : Measurable g) : Measurable fun x => ite (p x) (f x) (g x) :=
   Measurable.piecewise hp hf hg
 
@@ -245,16 +248,16 @@ theorem measurable_one [HasOne α] : Measurable (1 : β → α) :=
 theorem measurable_of_empty [IsEmpty α] (f : α → β) : Measurable f :=
   Subsingleton.measurable
 
-theorem measurable_of_empty_codomain [IsEmpty β] (f : α → β) : Measurable f :=
-  by 
-    haveI  := Function.is_empty f 
-    exact measurable_of_empty f
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measurable_of_empty_codomain [is_empty β] (f : α → β) : measurable f :=
+by { haveI [] [] [":=", expr function.is_empty f],
+  exact [expr measurable_of_empty f] }
 
 /-- A version of `measurable_const` that assumes `f x = f y` for all `x, y`. This version works
 for functions between empty types. -/
 theorem measurable_const' {f : β → α} (hf : ∀ x y, f x = f y) : Measurable f :=
   by 
-    casesI is_empty_or_nonempty β
+    cases' is_empty_or_nonempty β
     ·
       exact measurable_of_empty f
     ·
@@ -268,7 +271,7 @@ theorem measurable_set_mul_support [HasOne β] [MeasurableSingletonClass β] {f 
 
 attribute [measurability] measurable_set_support
 
--- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function coincides with a measurable function outside of a countable set, it is
 measurable. -/
 theorem measurable.measurable_of_countable_ne
@@ -346,16 +349,16 @@ theorem measurable_find_greatest' {p : α → ℕ → Prop} {N}
   Measurable fun x => Nat.findGreatest (p x) N :=
   measurable_to_nat$ fun x => hN _ Nat.find_greatest_le
 
--- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem measurable_find_greatest
-{p : α → exprℕ() → exprProp()}
-{N}
-(hN : ∀ k «expr ≤ » N, measurable_set {x | p x k}) : measurable (λ x, nat.find_greatest (p x) N) :=
-begin
-  refine [expr measurable_find_greatest' (λ k hk, _)],
-  simp [] [] ["only"] ["[", expr nat.find_greatest_eq_iff, ",", expr set_of_and, ",", expr set_of_forall, ",", "<-", expr compl_set_of, "]"] [] [],
-  repeat { apply_rules ["[", expr measurable_set.inter, ",", expr measurable_set.const, ",", expr measurable_set.Inter, ",", expr measurable_set.Inter_Prop, ",", expr measurable_set.compl, ",", expr hN, "]"]; try { intros [] } }
-end
+theorem measurable_find_greatest {p : α → ℕ → Prop} {N} (hN : ∀ k _ : k ≤ N, MeasurableSet { x | p x k }) :
+  Measurable fun x => Nat.findGreatest (p x) N :=
+  by 
+    refine' measurable_find_greatest' fun k hk => _ 
+    simp only [Nat.find_greatest_eq_iff, set_of_and, set_of_forall, ←compl_set_of]
+    repeat' 
+      applyRules [MeasurableSet.inter, MeasurableSet.const, MeasurableSet.Inter, MeasurableSet.Inter_Prop,
+          MeasurableSet.compl, hN] <;>
+        try 
+          intros 
 
 theorem measurable_find {p : α → ℕ → Prop} (hp : ∀ x, ∃ N, p x N) (hm : ∀ k, MeasurableSet { x | p x k }) :
   Measurable fun x => Nat.findₓ (hp x) :=
@@ -462,20 +465,30 @@ theorem Measurable.dite [∀ x, Decidable (x ∈ s)] {f : s → β} (hf : Measur
     (by 
       simpa)
 
-instance  {α} {p : α → Prop} [MeasurableSpace α] [MeasurableSingletonClass α] : MeasurableSingletonClass (Subtype p) :=
-  { measurable_set_singleton :=
-      fun x =>
-        by 
-          have  : MeasurableSet {(x : α)} := measurable_set_singleton _ 
-          convert @measurable_subtype_coe α _ p _ this 
-          ext y 
-          simp [Subtype.ext_iff] }
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance
+{α}
+{p : α → exprProp()}
+[measurable_space α]
+[measurable_singleton_class α] : measurable_singleton_class (subtype p) :=
+{ measurable_set_singleton := λ x, begin
+    have [] [":", expr measurable_set {(x : α)}] [":=", expr measurable_set_singleton _],
+    convert [] [expr @measurable_subtype_coe α _ p _ this] [],
+    ext [] [ident y] [],
+    simp [] [] [] ["[", expr subtype.ext_iff, "]"] [] []
+  end }
 
-theorem measurable_of_measurable_on_compl_finite [MeasurableSingletonClass α] {f : α → β} (s : Set α) (hs : finite s)
-  (hf : Measurable (Set.restrict f («expr ᶜ» s))) : Measurable f :=
-  by 
-    letI this : Fintype s := finite.fintype hs 
-    exact measurable_of_restrict_of_restrict_compl hs.measurable_set (measurable_of_fintype _) hf
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measurable_of_measurable_on_compl_finite
+[measurable_singleton_class α]
+{f : α → β}
+(s : set α)
+(hs : finite s)
+(hf : measurable (set.restrict f «expr ᶜ»(s))) : measurable f :=
+begin
+  letI [] [":", expr fintype s] [":=", expr finite.fintype hs],
+  exact [expr measurable_of_restrict_of_restrict_compl hs.measurable_set (measurable_of_fintype _) hf]
+end
 
 theorem measurable_of_measurable_on_compl_singleton [MeasurableSingletonClass α] {f : α → β} (a : α)
   (hf : Measurable (Set.restrict f { x | x ≠ a })) : Measurable f :=
@@ -554,14 +567,19 @@ theorem MeasurableSet.prod {s : Set α} {t : Set β} (hs : MeasurableSet s) (ht 
   MeasurableSet (s.prod t) :=
   MeasurableSet.inter (measurable_fst hs) (measurable_snd ht)
 
-theorem measurable_set_prod_of_nonempty {s : Set α} {t : Set β} (h : (s.prod t).Nonempty) :
-  MeasurableSet (s.prod t) ↔ MeasurableSet s ∧ MeasurableSet t :=
-  by 
-    rcases h with ⟨⟨x, y⟩, hx, hy⟩
-    refine' ⟨fun hst => _, fun h => h.1.Prod h.2⟩
-    have  : MeasurableSet ((fun x => (x, y)) ⁻¹' s.prod t) := measurable_id.prod_mk measurable_const hst 
-    have  : MeasurableSet (Prod.mk x ⁻¹' s.prod t) := measurable_const.prod_mk measurable_id hst 
-    simp_all 
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measurable_set_prod_of_nonempty
+{s : set α}
+{t : set β}
+(h : (s.prod t).nonempty) : «expr ↔ »(measurable_set (s.prod t), «expr ∧ »(measurable_set s, measurable_set t)) :=
+begin
+  rcases [expr h, "with", "⟨", "⟨", ident x, ",", ident y, "⟩", ",", ident hx, ",", ident hy, "⟩"],
+  refine [expr ⟨λ hst, _, λ h, h.1.prod h.2⟩],
+  have [] [":", expr measurable_set «expr ⁻¹' »(λ
+    x, (x, y), s.prod t)] [":=", expr measurable_id.prod_mk measurable_const hst],
+  have [] [":", expr measurable_set «expr ⁻¹' »(prod.mk x, s.prod t)] [":=", expr measurable_const.prod_mk measurable_id hst],
+  simp [] [] [] ["*"] [] ["at", "*"]
+end
 
 theorem measurable_set_prod {s : Set α} {t : Set β} :
   MeasurableSet (s.prod t) ↔ MeasurableSet s ∧ MeasurableSet t ∨ s = ∅ ∨ t = ∅ :=
@@ -580,16 +598,20 @@ theorem measurable_set_swap_iff {s : Set (α × β)} : MeasurableSet (Prod.swap 
         rfl,
     fun hs => measurable_swap hs⟩
 
-theorem measurable_from_prod_encodable [Encodable β] [MeasurableSingletonClass β] {f : α × β → γ}
-  (hf : ∀ y, Measurable fun x => f (x, y)) : Measurable f :=
-  by 
-    intro s hs 
-    have  : f ⁻¹' s = ⋃y, ((fun x => f (x, y)) ⁻¹' s).Prod {y}
-    ·
-      ext1 ⟨x, y⟩
-      simp [and_assoc, And.left_comm]
-    rw [this]
-    exact MeasurableSet.Union fun y => (hf y hs).Prod (measurable_set_singleton y)
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measurable_from_prod_encodable
+[encodable β]
+[measurable_singleton_class β]
+{f : «expr × »(α, β) → γ}
+(hf : ∀ y, measurable (λ x, f (x, y))) : measurable f :=
+begin
+  intros [ident s, ident hs],
+  have [] [":", expr «expr = »(«expr ⁻¹' »(f, s), «expr⋃ , »((y), «expr ⁻¹' »(λ x, f (x, y), s).prod {y}))] [],
+  { ext1 [] ["⟨", ident x, ",", ident y, "⟩"],
+    simp [] [] [] ["[", expr and_assoc, ",", expr and.left_comm, "]"] [] [] },
+  rw [expr this] [],
+  exact [expr measurable_set.Union (λ y, (hf y hs).prod (measurable_set_singleton y))]
+end
 
 end Prod
 
@@ -669,20 +691,23 @@ section
 
 variable(π)
 
-@[measurability]
-theorem measurable_pi_equiv_pi_subtype_prod_symm (p : δ → Prop) [DecidablePred p] :
-  Measurable (Equiv.piEquivPiSubtypeProd p π).symm :=
-  by 
-    apply measurable_pi_iff.2 fun j => _ 
-    byCases' hj : p j
-    ·
-      simp only [hj, dif_pos, Equiv.pi_equiv_pi_subtype_prod_symm_apply]
-      have  : Measurable fun f : ∀ i : { x // p x }, π («expr↑ » i) => f ⟨j, hj⟩ := measurable_pi_apply ⟨j, hj⟩
-      exact Measurable.comp this measurable_fst
-    ·
-      simp only [hj, Equiv.pi_equiv_pi_subtype_prod_symm_apply, dif_neg, not_false_iff]
-      have  : Measurable fun f : ∀ i : { x // ¬p x }, π («expr↑ » i) => f ⟨j, hj⟩ := measurable_pi_apply ⟨j, hj⟩
-      exact Measurable.comp this measurable_snd
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[measurability #[]]
+theorem measurable_pi_equiv_pi_subtype_prod_symm
+(p : δ → exprProp())
+[decidable_pred p] : measurable (equiv.pi_equiv_pi_subtype_prod p π).symm :=
+begin
+  apply [expr measurable_pi_iff.2 (λ j, _)],
+  by_cases [expr hj, ":", expr p j],
+  { simp [] [] ["only"] ["[", expr hj, ",", expr dif_pos, ",", expr equiv.pi_equiv_pi_subtype_prod_symm_apply, "]"] [] [],
+    have [] [":", expr measurable (λ
+      f : ∀ i : {x // p x}, π «expr↑ »(i), f ⟨j, hj⟩)] [":=", expr measurable_pi_apply ⟨j, hj⟩],
+    exact [expr measurable.comp this measurable_fst] },
+  { simp [] [] ["only"] ["[", expr hj, ",", expr equiv.pi_equiv_pi_subtype_prod_symm_apply, ",", expr dif_neg, ",", expr not_false_iff, "]"] [] [],
+    have [] [":", expr measurable (λ
+      f : ∀ i : {x // «expr¬ »(p x)}, π «expr↑ »(i), f ⟨j, hj⟩)] [":=", expr measurable_pi_apply ⟨j, hj⟩],
+    exact [expr measurable.comp this measurable_snd] }
+end
 
 @[measurability]
 theorem measurable_pi_equiv_pi_subtype_prod (p : δ → Prop) [DecidablePred p] :
@@ -1052,13 +1077,13 @@ protected def cast {α β} [i₁ : MeasurableSpace α] [i₂ : MeasurableSpace �
   { toEquiv := Equiv.cast h,
     measurable_to_fun :=
       by 
-        substI h 
-        substI hi 
+        subst h 
+        subst hi 
         exact measurable_id,
     measurable_inv_fun :=
       by 
-        substI h 
-        substI hi 
+        subst h 
+        subst hi 
         exact measurable_id }
 
 protected theorem measurable_comp_iff {f : β → γ} (e : α ≃ᵐ β) : Measurable (f ∘ e) ↔ Measurable f :=
@@ -1336,32 +1361,36 @@ instance inf_is_measurably_generated (f g : Filter α) [is_measurably_generated 
     refine' ⟨s'f ∩ s'g, inter_mem_inf hs'f hs'g, hmf.inter hmg, _⟩
     exact inter_subset_inter hs'sf hs'sg
 
-theorem principal_is_measurably_generated_iff {s : Set α} : is_measurably_generated (𝓟 s) ↔ MeasurableSet s :=
-  by 
-    refine' ⟨_, fun hs => ⟨fun t ht => ⟨s, mem_principal_self s, hs, ht⟩⟩⟩
-    rintro ⟨hs⟩
-    rcases hs (mem_principal_self s) with ⟨t, ht, htm, hts⟩
-    have  : t = s := subset.antisymm hts ht 
-    rwa [←this]
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem principal_is_measurably_generated_iff
+{s : set α} : «expr ↔ »(is_measurably_generated (expr𝓟() s), measurable_set s) :=
+begin
+  refine [expr ⟨_, λ hs, ⟨λ t ht, ⟨s, mem_principal_self s, hs, ht⟩⟩⟩],
+  rintros ["⟨", ident hs, "⟩"],
+  rcases [expr hs (mem_principal_self s), "with", "⟨", ident t, ",", ident ht, ",", ident htm, ",", ident hts, "⟩"],
+  have [] [":", expr «expr = »(t, s)] [":=", expr subset.antisymm hts ht],
+  rwa ["<-", expr this] []
+end
 
 alias principal_is_measurably_generated_iff ↔ _ MeasurableSet.principal_is_measurably_generated
 
-instance infi_is_measurably_generated {f : ι → Filter α} [∀ i, is_measurably_generated (f i)] :
-  is_measurably_generated (⨅i, f i) :=
-  by 
-    refine' ⟨fun s hs => _⟩
-    rw [←equiv.plift.surjective.infi_comp, mem_infi] at hs 
-    rcases hs with ⟨t, ht, ⟨V, hVf, rfl⟩⟩
-    choose U hUf hU using fun i => is_measurably_generated.exists_measurable_subset (hVf i)
-    refine' ⟨⋂i : t, U i, _, _, _⟩
-    ·
-      rw [←equiv.plift.surjective.infi_comp, mem_infi]
-      refine' ⟨t, ht, U, hUf, rfl⟩
-    ·
-      haveI  := ht.countable.to_encodable 
-      refine' MeasurableSet.Inter fun i => (hU i).1
-    ·
-      exact Inter_subset_Inter fun i => (hU i).2
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance infi_is_measurably_generated
+{f : ι → filter α}
+[∀ i, is_measurably_generated (f i)] : is_measurably_generated «expr⨅ , »((i), f i) :=
+begin
+  refine [expr ⟨λ s hs, _⟩],
+  rw ["[", "<-", expr equiv.plift.surjective.infi_comp, ",", expr mem_infi, "]"] ["at", ident hs],
+  rcases [expr hs, "with", "⟨", ident t, ",", ident ht, ",", "⟨", ident V, ",", ident hVf, ",", ident rfl, "⟩", "⟩"],
+  choose [] [ident U] [ident hUf, ident hU] ["using", expr λ
+   i, is_measurably_generated.exists_measurable_subset (hVf i)],
+  refine [expr ⟨«expr⋂ , »((i : t), U i), _, _, _⟩],
+  { rw ["[", "<-", expr equiv.plift.surjective.infi_comp, ",", expr mem_infi, "]"] [],
+    refine [expr ⟨t, ht, U, hUf, rfl⟩] },
+  { haveI [] [] [":=", expr ht.countable.to_encodable],
+    refine [expr measurable_set.Inter (λ i, (hU i).1)] },
+  { exact [expr Inter_subset_Inter (λ i, (hU i).2)] }
+end
 
 end Filter
 
@@ -1372,8 +1401,7 @@ end Filter
 def IsCountablySpanning (C : Set (Set α)) : Prop :=
   ∃ s : ℕ → Set α, (∀ n, s n ∈ C) ∧ (⋃n, s n) = univ
 
-theorem is_countably_spanning_measurable_set [MeasurableSpace α] :
-  IsCountablySpanning { s : Set α | MeasurableSet s } :=
+theorem is_countably_spanning_measurable_set [MeasurableSpace α] : IsCountablySpanning { s:Set α | MeasurableSet s } :=
   ⟨fun _ => univ, fun _ => MeasurableSet.univ, Union_const _⟩
 
 namespace MeasurableSet

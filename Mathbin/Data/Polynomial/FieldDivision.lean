@@ -209,17 +209,14 @@ theorem mod_eq_self_iff (hq0 : q ≠ 0) : p % q = p ↔ degree p < degree q :=
         unfold div_mod_by_monic_aux 
         simp only [this, false_andₓ, if_false]⟩
 
-theorem div_eq_zero_iff (hq0 : q ≠ 0) : p / q = 0 ↔ degree p < degree q :=
-  ⟨fun h =>
-      by 
-        have  := EuclideanDomain.div_add_mod p q <;> rwa [h, mul_zero, zero_addₓ, mod_eq_self_iff hq0] at this,
-    fun h =>
-      have hlt : degree p < degree (q*C (leading_coeff q⁻¹)) :=
-        by 
-          rwa [degree_mul_leading_coeff_inv q hq0]
-      have hm : monic (q*C (leading_coeff q⁻¹)) := monic_mul_leading_coeff_inv hq0 
-      by 
-        rw [div_def, (div_by_monic_eq_zero_iff hm).2 hlt, mul_zero]⟩
+-- error in Data.Polynomial.FieldDivision: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem div_eq_zero_iff
+(hq0 : «expr ≠ »(q, 0)) : «expr ↔ »(«expr = »(«expr / »(p, q), 0), «expr < »(degree p, degree q)) :=
+⟨λ
+ h, by have [] [] [":=", expr euclidean_domain.div_add_mod p q]; rwa ["[", expr h, ",", expr mul_zero, ",", expr zero_add, ",", expr mod_eq_self_iff hq0, "]"] ["at", ident this], λ
+ h, have hlt : «expr < »(degree p, degree «expr * »(q, C «expr ⁻¹»(leading_coeff q))), by rwa [expr degree_mul_leading_coeff_inv q hq0] [],
+ have hm : monic «expr * »(q, C «expr ⁻¹»(leading_coeff q)) := monic_mul_leading_coeff_inv hq0,
+ by rw ["[", expr div_def, ",", expr (div_by_monic_eq_zero_iff hm).2 hlt, ",", expr mul_zero, "]"] []⟩
 
 theorem degree_add_div (hq0 : q ≠ 0) (hpq : degree q ≤ degree p) : (degree q+degree (p / q)) = degree p :=
   have  : degree (p % q) < degree (q*p / q) :=
@@ -511,26 +508,28 @@ theorem pairwise_coprime_X_sub {α : Type u} [Field α] {I : Type v} {s : I → 
         rw [neg_mul_eq_neg_mul_symm, ←sub_eq_add_neg, ←mul_sub, sub_sub_sub_cancel_left, ←Polynomial.C_sub,
           ←Polynomial.C_mul, inv_mul_cancel h, Polynomial.C_1]⟩
 
+-- error in Data.Polynomial.FieldDivision: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a polynomial over a field, and `a : K` satisfies `f' a ≠ 0`,
 then `f / (X - a)` is coprime with `X - a`.
 Note that we do not assume `f a = 0`, because `f / (X - a) = (f - f a) / (X - a)`. -/
-theorem is_coprime_of_is_root_of_eval_derivative_ne_zero {K : Type _} [Field K] (f : Polynomial K) (a : K)
-  (hf' : f.derivative.eval a ≠ 0) : IsCoprime (X - C a : Polynomial K) (f /ₘ (X - C a)) :=
-  by 
-    refine'
-      Or.resolve_left
-        (dvd_or_coprime (X - C a) (f /ₘ (X - C a)) (irreducible_of_degree_eq_one (Polynomial.degree_X_sub_C a))) _ 
-    contrapose! hf' with h 
-    have key : ((X - C a)*f /ₘ (X - C a)) = f - f %ₘ (X - C a)
-    ·
-      rw [eq_sub_iff_add_eq, ←eq_sub_iff_add_eq', mod_by_monic_eq_sub_mul_div]
-      exact monic_X_sub_C a 
-    replace key := congr_argₓ derivative key 
-    simp only [derivative_X, derivative_mul, one_mulₓ, sub_zero, derivative_sub, mod_by_monic_X_sub_C_eq_C_eval,
-      derivative_C] at key 
-    have  : X - C a ∣ derivative f := key ▸ dvd_add h (dvd_mul_right _ _)
-    rw [←dvd_iff_mod_by_monic_eq_zero (monic_X_sub_C _), mod_by_monic_X_sub_C_eq_C_eval] at this 
-    rw [←C_inj, this, C_0]
+theorem is_coprime_of_is_root_of_eval_derivative_ne_zero
+{K : Type*}
+[field K]
+(f : polynomial K)
+(a : K)
+(hf' : «expr ≠ »(f.derivative.eval a, 0)) : is_coprime («expr - »(X, C a) : polynomial K) «expr /ₘ »(f, «expr - »(X, C a)) :=
+begin
+  refine [expr or.resolve_left (dvd_or_coprime «expr - »(X, C a) «expr /ₘ »(f, «expr - »(X, C a)) (irreducible_of_degree_eq_one (polynomial.degree_X_sub_C a))) _],
+  contrapose ["!"] [ident hf', "with", ident h],
+  have [ident key] [":", expr «expr = »(«expr * »(«expr - »(X, C a), «expr /ₘ »(f, «expr - »(X, C a))), «expr - »(f, «expr %ₘ »(f, «expr - »(X, C a))))] [],
+  { rw ["[", expr eq_sub_iff_add_eq, ",", "<-", expr eq_sub_iff_add_eq', ",", expr mod_by_monic_eq_sub_mul_div, "]"] [],
+    exact [expr monic_X_sub_C a] },
+  replace [ident key] [] [":=", expr congr_arg derivative key],
+  simp [] [] ["only"] ["[", expr derivative_X, ",", expr derivative_mul, ",", expr one_mul, ",", expr sub_zero, ",", expr derivative_sub, ",", expr mod_by_monic_X_sub_C_eq_C_eval, ",", expr derivative_C, "]"] [] ["at", ident key],
+  have [] [":", expr «expr ∣ »(«expr - »(X, C a), derivative f)] [":=", expr «expr ▸ »(key, dvd_add h (dvd_mul_right _ _))],
+  rw ["[", "<-", expr dvd_iff_mod_by_monic_eq_zero (monic_X_sub_C _), ",", expr mod_by_monic_X_sub_C_eq_C_eval, "]"] ["at", ident this],
+  rw ["[", "<-", expr C_inj, ",", expr this, ",", expr C_0, "]"] []
+end
 
 theorem prod_multiset_root_eq_finset_root {p : Polynomial R} (hzero : p ≠ 0) :
   (Multiset.map (fun a : R => X - C a) p.roots).Prod =
@@ -538,51 +537,54 @@ theorem prod_multiset_root_eq_finset_root {p : Polynomial R} (hzero : p ≠ 0) :
   by 
     simp only [count_roots hzero, Finset.prod_multiset_map_count]
 
+-- error in Data.Polynomial.FieldDivision: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product `∏ (X - a)` for `a` inside the multiset `p.roots` divides `p`. -/
-theorem prod_multiset_X_sub_C_dvd (p : Polynomial R) : (Multiset.map (fun a : R => X - C a) p.roots).Prod ∣ p :=
-  by 
-    byCases' hp0 : p = 0
-    ·
-      simp only [hp0, roots_zero, is_unit_one, Multiset.prod_zero, Multiset.map_zero, IsUnit.dvd]
-    rw [prod_multiset_root_eq_finset_root hp0]
-    have hcoprime : Pairwise (IsCoprime on fun a : R => Polynomial.x - C (id a)) :=
-      pairwise_coprime_X_sub Function.injective_id 
-    have H : Pairwise (IsCoprime on fun a : R => (Polynomial.x - C (id a)) ^ root_multiplicity a p)
-    ·
-      intro a b hdiff 
-      exact (hcoprime a b hdiff).pow 
-    apply Finset.prod_dvd_of_coprime (H.set_pairwise («expr↑ » (Multiset.toFinset p.roots) : Set R))
-    intro a h 
-    rw [Multiset.mem_to_finset] at h 
-    exact pow_root_multiplicity_dvd p a
+theorem prod_multiset_X_sub_C_dvd
+(p : polynomial R) : «expr ∣ »((multiset.map (λ a : R, «expr - »(X, C a)) p.roots).prod, p) :=
+begin
+  by_cases [expr hp0, ":", expr «expr = »(p, 0)],
+  { simp [] [] ["only"] ["[", expr hp0, ",", expr roots_zero, ",", expr is_unit_one, ",", expr multiset.prod_zero, ",", expr multiset.map_zero, ",", expr is_unit.dvd, "]"] [] [] },
+  rw [expr prod_multiset_root_eq_finset_root hp0] [],
+  have [ident hcoprime] [":", expr pairwise «expr on »(is_coprime, λ
+    a : R, «expr - »(polynomial.X, C (id a)))] [":=", expr pairwise_coprime_X_sub function.injective_id],
+  have [ident H] [":", expr pairwise «expr on »(is_coprime, λ
+    a : R, «expr ^ »(«expr - »(polynomial.X, C (id a)), root_multiplicity a p))] [],
+  { intros [ident a, ident b, ident hdiff],
+    exact [expr (hcoprime a b hdiff).pow] },
+  apply [expr finset.prod_dvd_of_coprime (H.set_pairwise («expr↑ »(multiset.to_finset p.roots) : set R))],
+  intros [ident a, ident h],
+  rw [expr multiset.mem_to_finset] ["at", ident h],
+  exact [expr pow_root_multiplicity_dvd p a]
+end
 
-theorem roots_C_mul (p : Polynomial R) {a : R} (hzero : a ≠ 0) : (C a*p).roots = p.roots :=
-  by 
-    byCases' hpzero : p = 0
-    ·
-      simp only [hpzero, mul_zero]
-    rw [Multiset.ext]
-    intro b 
-    have prodzero : (C a*p) ≠ 0
-    ·
-      simp only [hpzero, or_falseₓ, Ne.def, mul_eq_zero, C_eq_zero, hzero, not_false_iff]
-    rw [count_roots hpzero, count_roots prodzero, root_multiplicity_mul prodzero]
-    have mulzero : root_multiplicity b (C a) = 0
-    ·
-      simp only [hzero, root_multiplicity_eq_zero, eval_C, is_root.def, not_false_iff]
-    simp only [mulzero, zero_addₓ]
+-- error in Data.Polynomial.FieldDivision: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem roots_C_mul
+(p : polynomial R)
+{a : R}
+(hzero : «expr ≠ »(a, 0)) : «expr = »(«expr * »(C a, p).roots, p.roots) :=
+begin
+  by_cases [expr hpzero, ":", expr «expr = »(p, 0)],
+  { simp [] [] ["only"] ["[", expr hpzero, ",", expr mul_zero, "]"] [] [] },
+  rw [expr multiset.ext] [],
+  intro [ident b],
+  have [ident prodzero] [":", expr «expr ≠ »(«expr * »(C a, p), 0)] [],
+  { simp [] [] ["only"] ["[", expr hpzero, ",", expr or_false, ",", expr ne.def, ",", expr mul_eq_zero, ",", expr C_eq_zero, ",", expr hzero, ",", expr not_false_iff, "]"] [] [] },
+  rw ["[", expr count_roots hpzero, ",", expr count_roots prodzero, ",", expr root_multiplicity_mul prodzero, "]"] [],
+  have [ident mulzero] [":", expr «expr = »(root_multiplicity b (C a), 0)] [],
+  { simp [] [] ["only"] ["[", expr hzero, ",", expr root_multiplicity_eq_zero, ",", expr eval_C, ",", expr is_root.def, ",", expr not_false_iff, "]"] [] [] },
+  simp [] [] ["only"] ["[", expr mulzero, ",", expr zero_add, "]"] [] []
+end
 
-theorem roots_normalize : (normalize p).roots = p.roots :=
-  by 
-    byCases' hzero : p = 0
-    ·
-      rw [hzero, normalize_zero]
-    ·
-      have hcoeff : p.leading_coeff ≠ 0
-      ·
-        intro h 
-        exact hzero (leading_coeff_eq_zero.1 h)
-      rw [normalize_apply, mul_commₓ, coe_norm_unit_of_ne_zero hzero, roots_C_mul _ (inv_ne_zero hcoeff)]
+-- error in Data.Polynomial.FieldDivision: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem roots_normalize : «expr = »((normalize p).roots, p.roots) :=
+begin
+  by_cases [expr hzero, ":", expr «expr = »(p, 0)],
+  { rw ["[", expr hzero, ",", expr normalize_zero, "]"] [] },
+  { have [ident hcoeff] [":", expr «expr ≠ »(p.leading_coeff, 0)] [],
+    { intro [ident h],
+      exact [expr hzero (leading_coeff_eq_zero.1 h)] },
+    rw ["[", expr normalize_apply, ",", expr mul_comm, ",", expr coe_norm_unit_of_ne_zero hzero, ",", expr roots_C_mul _ (inv_ne_zero hcoeff), "]"] [] }
+end
 
 end Field
 

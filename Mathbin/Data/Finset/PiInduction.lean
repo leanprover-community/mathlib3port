@@ -25,7 +25,7 @@ variable{ι : Type _}{α : ι → Type _}[Fintype ι][DecidableEq ι][∀ i, Dec
 
 namespace Finset
 
--- error in Data.Finset.PiInduction: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Finset.PiInduction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- General theorem for `finset.induction_on_pi`-style induction principles. -/
 theorem induction_on_pi_of_choice
 (r : ∀ i, α i → finset (α i) → exprProp())

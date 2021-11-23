@@ -146,7 +146,7 @@ library_note "function coercion"
 theorem coe_sort_coe_base {α β γ} [Coe α β] [CoeSort β γ] (x : α) : @coeSortₓ α _ _ x = @coeSortₓ β _ _ x :=
   rfl
 
--- error in Logic.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Logic.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- `pempty` is the universe-polymorphic analogue of `empty`. -/
 @[derive #[expr decidable_eq]]
 inductive pempty.{u} : Sort u
@@ -419,10 +419,10 @@ theorem not_imp_comm : ¬a → b ↔ ¬b → a :=
 theorem imp_not_self : a → ¬a ↔ ¬a :=
   ⟨fun h ha => h ha ha, fun h _ => h⟩
 
-theorem Decidable.not_imp_self [Decidable a] : ¬a → a ↔ a :=
-  by 
-    have  := @imp_not_self ¬a 
-    rwa [Decidable.not_not] at this
+-- error in Logic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem decidable.not_imp_self [decidable a] : «expr ↔ »(«expr¬ »(a) → a, a) :=
+by { have [] [] [":=", expr @imp_not_self «expr¬ »(a)],
+  rwa [expr decidable.not_not] ["at", ident this] }
 
 @[simp]
 theorem not_imp_self : ¬a → a ↔ a :=
@@ -1112,6 +1112,16 @@ theorem exists_eq {a' : α} : ∃ a, a = a' :=
 @[simp]
 theorem exists_eq' {a' : α} : ∃ a, a' = a :=
   ⟨_, rfl⟩
+
+@[simp]
+theorem exists_unique_eq {a' : α} : ∃!a, a = a' :=
+  by 
+    simp only [eq_comm, ExistsUnique, and_selfₓ, forall_eq', exists_eq']
+
+@[simp]
+theorem exists_unique_eq' {a' : α} : ∃!a, a' = a :=
+  by 
+    simp only [ExistsUnique, and_selfₓ, forall_eq', exists_eq']
 
 @[simp]
 theorem exists_eq_left {a' : α} : (∃ a, a = a' ∧ p a) ↔ p a' :=

@@ -64,7 +64,7 @@ functions to collect this information for a specific goal.
 -/
 
 
--- error in Tactic.Induction: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Induction: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /--
 Information about a constructor argument. E.g. given the declaration
 
@@ -117,7 +117,7 @@ unsafe def is_recursive (c : constructor_argument_info) :=
 
 end ConstructorArgumentInfo
 
--- error in Tactic.Induction: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Induction: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /--
 Information about a constructor. Contains:
 
@@ -152,7 +152,7 @@ the number of hypotheses we must name.
 unsafe def constructor_info.num_nameable_hypotheses (c : constructor_info) : ℕ :=
   c.num_non_param_args+c.num_rec_args
 
--- error in Tactic.Induction: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Induction: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /--
 Information about an inductive type. Contains:
 
@@ -483,7 +483,7 @@ unsafe def constructor_intros (generate_induction_hyps : Bool) (cinfo : construc
 unsafe def ih_name (arg_name : Name) : Name :=
   mkSimpleName ("ih_" ++ arg_name.to_string)
 
--- error in Tactic.Induction: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Induction: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /--
 Representation of a pattern in the `with n ...` syntax supported by
 `induction'` and `cases'`. A `with_pattern` can be:
@@ -609,7 +609,7 @@ us a more general induction hypothesis. We call this 'auto-generalisation'.
 -/
 
 
--- error in Tactic.Induction: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Induction: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /--
 A value of `generalization_mode` describes the behaviour of the
 auto-generalisation functionality:

@@ -90,9 +90,9 @@ instance Fintype : ∀ n : ℕ [Fact (0 < n)], Fintype (Zmod n)
 @[simp]
 theorem card (n : ℕ) [Fact (0 < n)] : Fintype.card (Zmod n) = n :=
   by 
-    casesI n
+    cases' n
     ·
-      exFalso 
+      exfalso 
       exact Nat.not_lt_zeroₓ 0 (Fact.out _)
     ·
       exact Fintype.card_fin (n+1)
@@ -124,9 +124,9 @@ def val : ∀ {n : ℕ}, Zmod n → ℕ
 
 theorem val_lt {n : ℕ} [Fact (0 < n)] (a : Zmod n) : a.val < n :=
   by 
-    casesI n
+    cases' n
     ·
-      exFalso 
+      exfalso 
       exact Nat.not_lt_zeroₓ 0 (Fact.out _)
     exact Finₓ.is_lt a
 
@@ -154,7 +154,7 @@ theorem val_mul' {m n : Zmod 0} : (m*n).val = m.val*n.val :=
 
 theorem val_nat_cast {n : ℕ} (a : ℕ) : (a : Zmod n).val = a % n :=
   by 
-    casesI n
+    cases' n
     ·
       rw [Nat.mod_zeroₓ, Int.nat_cast_eq_coe_nat]
       exact Int.nat_abs_of_nat a 
@@ -222,9 +222,9 @@ end
 see `zmod.nat_cast_val`. -/
 theorem nat_cast_zmod_val {n : ℕ} [Fact (0 < n)] (a : Zmod n) : (a.val : Zmod n) = a :=
   by 
-    casesI n
+    cases' n
     ·
-      exFalso 
+      exfalso 
       exact Nat.not_lt_zeroₓ 0 (Fact.out _)
     ·
       apply Finₓ.coe_coe_eq_self
@@ -264,17 +264,17 @@ variable(R)[Ringₓ R]
 
 /-- The coercions are respectively `nat.cast` and `zmod.cast`. -/
 @[simp]
-theorem nat_cast_comp_val [Fact (0 < n)] : ((coeₓ : ℕ → R) ∘ (val : Zmod n → ℕ)) = coeₓ :=
+theorem nat_cast_comp_val [Fact (0 < n)] : (coeₓ : ℕ → R) ∘ (val : Zmod n → ℕ) = coeₓ :=
   by 
-    casesI n
+    cases' n
     ·
-      exFalso 
+      exfalso 
       exact Nat.not_lt_zeroₓ 0 (Fact.out _)
     rfl
 
 /-- The coercions are respectively `int.cast`, `zmod.cast`, and `zmod.cast`. -/
 @[simp]
-theorem int_cast_comp_cast : ((coeₓ : ℤ → R) ∘ (coeₓ : Zmod n → ℤ)) = coeₓ :=
+theorem int_cast_comp_cast : (coeₓ : ℤ → R) ∘ (coeₓ : Zmod n → ℤ) = coeₓ :=
   by 
     cases n
     ·
@@ -316,14 +316,14 @@ variable{n}{m : ℕ}[CharP R m]
 @[simp]
 theorem cast_one (h : m ∣ n) : ((1 : Zmod n) : R) = 1 :=
   by 
-    casesI n
+    cases' n
     ·
       exact Int.cast_one 
     show ((1 % n+1 : ℕ) : R) = 1
     cases n
     ·
       rw [Nat.dvd_one] at h 
-      substI m 
+      subst m 
       apply Subsingleton.elimₓ 
     rw [Nat.mod_eq_of_ltₓ]
     ·
@@ -332,7 +332,7 @@ theorem cast_one (h : m ∣ n) : ((1 : Zmod n) : R) = 1 :=
 
 theorem cast_add (h : m ∣ n) (a b : Zmod n) : ((a+b : Zmod n) : R) = a+b :=
   by 
-    casesI n
+    cases' n
     ·
       apply Int.cast_add 
     simp only [coe_coe]
@@ -342,7 +342,7 @@ theorem cast_add (h : m ∣ n) (a b : Zmod n) : ((a+b : Zmod n) : R) = a+b :=
 
 theorem cast_mul (h : m ∣ n) (a b : Zmod n) : ((a*b : Zmod n) : R) = a*b :=
   by 
-    casesI n
+    cases' n
     ·
       apply Int.cast_mul 
     simp only [coe_coe]
@@ -428,16 +428,20 @@ theorem cast_hom_injective : Function.Injective (Zmod.castHom (dvd_refl n) R) :=
     rw [RingHom.map_int_cast, CharP.int_cast_eq_zero_iff R n, CharP.int_cast_eq_zero_iff (Zmod n) n]
     exact id
 
-theorem cast_hom_bijective [Fintype R] (h : Fintype.card R = n) : Function.Bijective (Zmod.castHom (dvd_refl n) R) :=
-  by 
-    haveI  : Fact (0 < n) :=
-      ⟨by 
-          rw [pos_iff_ne_zero]
-          intro hn 
-          rw [hn] at h 
-          exact (fintype.card_eq_zero_iff.mp h).elim' 0⟩
-    rw [Fintype.bijective_iff_injective_and_card, Zmod.card, h, eq_self_iff_true, and_trueₓ]
-    apply Zmod.cast_hom_injective
+-- error in Data.Zmod.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cast_hom_bijective
+[fintype R]
+(h : «expr = »(fintype.card R, n)) : function.bijective (zmod.cast_hom (dvd_refl n) R) :=
+begin
+  haveI [] [":", expr fact «expr < »(0, n)] [":=", expr ⟨begin
+      rw ["[", expr pos_iff_ne_zero, "]"] [],
+      intro [ident hn],
+      rw [expr hn] ["at", ident h],
+      exact [expr (fintype.card_eq_zero_iff.mp h).elim' 0]
+    end⟩],
+  rw ["[", expr fintype.bijective_iff_injective_and_card, ",", expr zmod.card, ",", expr h, ",", expr eq_self_iff_true, ",", expr and_true, "]"] [],
+  apply [expr zmod.cast_hom_injective]
+end
 
 /-- The unique ring isomorphism between `zmod n` and a ring `R`
 of characteristic `n` and cardinality `n`. -/
@@ -499,9 +503,9 @@ theorem nat_cast_to_nat (p : ℕ) : ∀ {z : ℤ} h : 0 ≤ z, (z.to_nat : Zmod 
 
 theorem val_injective (n : ℕ) [Fact (0 < n)] : Function.Injective (Zmod.val : Zmod n → ℕ) :=
   by 
-    casesI n
+    cases' n
     ·
-      exFalso 
+      exfalso 
       exact Nat.not_lt_zeroₓ 0 (Fact.out _)
     intro a b h 
     ext 
@@ -518,9 +522,9 @@ theorem val_one (n : ℕ) [Fact (1 < n)] : (1 : Zmod n).val = 1 :=
 
 theorem val_add {n : ℕ} [Fact (0 < n)] (a b : Zmod n) : (a+b).val = (a.val+b.val) % n :=
   by 
-    casesI n
+    cases' n
     ·
-      exFalso 
+      exfalso 
       exact Nat.not_lt_zeroₓ 0 (Fact.out _)
     ·
       apply Finₓ.val_add
@@ -614,34 +618,35 @@ def unit_of_coprime {n : ℕ} (x : ℕ) (h : Nat.Coprime x n) : Units (Zmod n) :
 theorem coe_unit_of_coprime {n : ℕ} (x : ℕ) (h : Nat.Coprime x n) : (unit_of_coprime x h : Zmod n) = x :=
   rfl
 
-theorem val_coe_unit_coprime {n : ℕ} (u : Units (Zmod n)) : Nat.Coprime (u : Zmod n).val n :=
-  by 
-    cases n
-    ·
-      rcases Int.units_eq_one_or u with (rfl | rfl) <;> simp 
-    apply Nat.coprime_of_mul_modeq_one ((u⁻¹ : Units (Zmod (n+1))) : Zmod (n+1)).val 
-    have  := Units.ext_iff.1 (mul_right_invₓ u)
-    rw [Units.coe_one] at this 
-    rw [←eq_iff_modeq_nat, Nat.cast_one, ←this]
-    clear this 
-    rw [←nat_cast_zmod_val ((u*u⁻¹ : Units (Zmod (n+1))) : Zmod (n+1))]
-    rw [Units.coe_mul, val_mul, nat_cast_mod]
+-- error in Data.Zmod.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem val_coe_unit_coprime {n : exprℕ()} (u : units (zmod n)) : nat.coprime (u : zmod n).val n :=
+begin
+  cases [expr n] [],
+  { rcases [expr int.units_eq_one_or u, "with", ident rfl, "|", ident rfl]; simp [] [] [] [] [] [] },
+  apply [expr nat.coprime_of_mul_modeq_one ((«expr ⁻¹»(u) : units (zmod «expr + »(n, 1))) : zmod «expr + »(n, 1)).val],
+  have [] [] [":=", expr units.ext_iff.1 (mul_right_inv u)],
+  rw ["[", expr units.coe_one, "]"] ["at", ident this],
+  rw ["[", "<-", expr eq_iff_modeq_nat, ",", expr nat.cast_one, ",", "<-", expr this, "]"] [],
+  clear [ident this],
+  rw ["[", "<-", expr nat_cast_zmod_val ((«expr * »(u, «expr ⁻¹»(u)) : units (zmod «expr + »(n, 1))) : zmod «expr + »(n, 1)), "]"] [],
+  rw ["[", expr units.coe_mul, ",", expr val_mul, ",", expr nat_cast_mod, "]"] []
+end
 
+-- error in Data.Zmod.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem inv_coe_unit {n : ℕ} (u : Units (Zmod n)) : (u : Zmod n)⁻¹ = (u⁻¹ : Units (Zmod n)) :=
-  by 
-    have  := congr_argₓ (coeₓ : ℕ → Zmod n) (val_coe_unit_coprime u)
-    rw [←mul_inv_eq_gcd, Nat.cast_one] at this 
-    let u' : Units (Zmod n) :=
-      ⟨u, (u : Zmod n)⁻¹, this,
-        by 
-          rwa [mul_commₓ]⟩
-    have h : u = u'
-    ·
-      apply Units.ext 
-      rfl 
-    rw [h]
-    rfl
+theorem inv_coe_unit
+{n : exprℕ()}
+(u : units (zmod n)) : «expr = »(«expr ⁻¹»((u : zmod n)), («expr ⁻¹»(u) : units (zmod n))) :=
+begin
+  have [] [] [":=", expr congr_arg (coe : exprℕ() → zmod n) (val_coe_unit_coprime u)],
+  rw ["[", "<-", expr mul_inv_eq_gcd, ",", expr nat.cast_one, "]"] ["at", ident this],
+  let [ident u'] [":", expr units (zmod n)] [":=", expr ⟨u, «expr ⁻¹»((u : zmod n)), this, by rwa [expr mul_comm] []⟩],
+  have [ident h] [":", expr «expr = »(u, u')] [],
+  { apply [expr units.ext],
+    refl },
+  rw [expr h] [],
+  refl
+end
 
 theorem mul_inv_of_unit {n : ℕ} (a : Zmod n) (h : IsUnit a) : (a*a⁻¹) = 1 :=
   by 
@@ -662,52 +667,41 @@ def units_equiv_coprime {n : ℕ} [Fact (0 < n)] : Units (Zmod n) ≃ { x : Zmod
         by 
           simp  }
 
+-- error in Data.Zmod.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The **Chinese remainder theorem**. For a pair of coprime natural numbers, `m` and `n`,
   the rings `zmod (m * n)` and `zmod m × zmod n` are isomorphic.
 
 See `ideal.quotient_inf_ring_equiv_pi_quotient` for the Chinese remainder theorem for ideals in any
 ring.
 -/
-def chinese_remainder {m n : ℕ} (h : m.coprime n) : Zmod (m*n) ≃+* Zmod m × Zmod n :=
-  let to_fun : Zmod (m*n) → Zmod m × Zmod n :=
-    Zmod.castHom
-      (show m.lcm n ∣ m*n by 
-        simp [Nat.lcm_dvd_iff])
-      (Zmod m × Zmod n)
-  let inv_fun : Zmod m × Zmod n → Zmod (m*n) :=
-    fun x =>
-      if (m*n) = 0 then if m = 1 then RingHom.snd _ _ x else RingHom.fst _ _ x else
-        Nat.chineseRemainder h x.1.val x.2.val 
-  have inv : Function.LeftInverse inv_fun to_fun ∧ Function.RightInverse inv_fun to_fun :=
-    if hmn0 : (m*n) = 0 then
-      by 
-        rcases h.eq_of_mul_eq_zero hmn0 with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;>
-          simp [inv_fun, to_fun, Function.LeftInverse, Function.RightInverse, RingHom.eq_int_cast, Prod.ext_iff]
-    else
-      by 
-        haveI  : Fact (0 < m*n) := ⟨Nat.pos_of_ne_zeroₓ hmn0⟩
-        haveI  : Fact (0 < m) := ⟨Nat.pos_of_ne_zeroₓ$ left_ne_zero_of_mul hmn0⟩
-        haveI  : Fact (0 < n) := ⟨Nat.pos_of_ne_zeroₓ$ right_ne_zero_of_mul hmn0⟩
-        have left_inv : Function.LeftInverse inv_fun to_fun
-        ·
-          intro x 
-          dsimp only [dvd_mul_left, dvd_mul_right, Zmod.cast_hom_apply, coe_coe, inv_fun, to_fun]
-          convRHS => rw [←Zmod.nat_cast_zmod_val x]
-          rw [if_neg hmn0, Zmod.eq_iff_modeq_nat, ←Nat.modeq_and_modeq_iff_modeq_mul h, Prod.fst_zmod_cast,
-            Prod.snd_zmod_cast]
-          refine'
-            ⟨(Nat.chineseRemainder h (x : Zmod m).val (x : Zmod n).val).2.left.trans _,
-              (Nat.chineseRemainder h (x : Zmod m).val (x : Zmod n).val).2.right.trans _⟩
-          ·
-            rw [←Zmod.eq_iff_modeq_nat, Zmod.nat_cast_zmod_val, Zmod.nat_cast_val]
-          ·
-            rw [←Zmod.eq_iff_modeq_nat, Zmod.nat_cast_zmod_val, Zmod.nat_cast_val]
-        exact
-          ⟨left_inv,
-            Fintype.right_inverse_of_left_inverse_of_card_le left_inv
-              (by 
-                simp )⟩
-  { toFun, invFun, map_mul' := RingHom.map_mul _, map_add' := RingHom.map_add _, left_inv := inv.1, right_inv := inv.2 }
+def chinese_remainder
+{m n : exprℕ()}
+(h : m.coprime n) : «expr ≃+* »(zmod «expr * »(m, n), «expr × »(zmod m, zmod n)) :=
+let to_fun : zmod «expr * »(m, n) → «expr × »(zmod m, zmod n) := zmod.cast_hom (show «expr ∣ »(m.lcm n, «expr * »(m, n)), by simp [] [] [] ["[", expr nat.lcm_dvd_iff, "]"] [] []) «expr × »(zmod m, zmod n) in
+let inv_fun : «expr × »(zmod m, zmod n) → zmod «expr * »(m, n) := λ
+    x, if «expr = »(«expr * »(m, n), 0) then if «expr = »(m, 1) then ring_hom.snd _ _ x else ring_hom.fst _ _ x else nat.chinese_remainder h x.1.val x.2.val in
+have inv : «expr ∧ »(function.left_inverse inv_fun to_fun, function.right_inverse inv_fun to_fun) := if hmn0 : «expr = »(«expr * »(m, n), 0) then begin
+  rcases [expr h.eq_of_mul_eq_zero hmn0, "with", "⟨", ident rfl, ",", ident rfl, "⟩", "|", "⟨", ident rfl, ",", ident rfl, "⟩"]; simp [] [] [] ["[", expr inv_fun, ",", expr to_fun, ",", expr function.left_inverse, ",", expr function.right_inverse, ",", expr ring_hom.eq_int_cast, ",", expr prod.ext_iff, "]"] [] []
+end else begin
+  haveI [] [":", expr fact «expr < »(0, «expr * »(m, n))] [":=", expr ⟨nat.pos_of_ne_zero hmn0⟩],
+  haveI [] [":", expr fact «expr < »(0, m)] [":=", expr ⟨«expr $ »(nat.pos_of_ne_zero, left_ne_zero_of_mul hmn0)⟩],
+  haveI [] [":", expr fact «expr < »(0, n)] [":=", expr ⟨«expr $ »(nat.pos_of_ne_zero, right_ne_zero_of_mul hmn0)⟩],
+  have [ident left_inv] [":", expr function.left_inverse inv_fun to_fun] [],
+  { intro [ident x],
+    dsimp ["only"] ["[", expr dvd_mul_left, ",", expr dvd_mul_right, ",", expr zmod.cast_hom_apply, ",", expr coe_coe, ",", expr inv_fun, ",", expr to_fun, "]"] [] [],
+    conv_rhs [] [] { rw ["<-", expr zmod.nat_cast_zmod_val x] },
+    rw ["[", expr if_neg hmn0, ",", expr zmod.eq_iff_modeq_nat, ",", "<-", expr nat.modeq_and_modeq_iff_modeq_mul h, ",", expr prod.fst_zmod_cast, ",", expr prod.snd_zmod_cast, "]"] [],
+    refine [expr ⟨(nat.chinese_remainder h (x : zmod m).val (x : zmod n).val).2.left.trans _, (nat.chinese_remainder h (x : zmod m).val (x : zmod n).val).2.right.trans _⟩],
+    { rw ["[", "<-", expr zmod.eq_iff_modeq_nat, ",", expr zmod.nat_cast_zmod_val, ",", expr zmod.nat_cast_val, "]"] [] },
+    { rw ["[", "<-", expr zmod.eq_iff_modeq_nat, ",", expr zmod.nat_cast_zmod_val, ",", expr zmod.nat_cast_val, "]"] [] } },
+  exact [expr ⟨left_inv, fintype.right_inverse_of_left_inverse_of_card_le left_inv (by simp [] [] [] [] [] [])⟩]
+end,
+{ to_fun := to_fun,
+  inv_fun := inv_fun,
+  map_mul' := ring_hom.map_mul _,
+  map_add' := ring_hom.map_add _,
+  left_inv := inv.1,
+  right_inv := inv.2 }
 
 instance subsingleton_units : Subsingleton (Units (Zmod 2)) :=
   ⟨fun x y =>
@@ -718,39 +712,29 @@ instance subsingleton_units : Subsingleton (Units (Zmod 2)) :=
         revert hx1 hx2 hy1 hy2 
         finCases x <;> finCases y <;> simp ⟩
 
-theorem le_div_two_iff_lt_neg (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {x : Zmod n} (hx0 : x ≠ 0) :
-  x.val ≤ (n / 2 : ℕ) ↔ (n / 2 : ℕ) < (-x).val :=
-  by 
-    haveI npos : Fact (0 < n) :=
-      ⟨by 
-          apply (Nat.eq_zero_or_posₓ n).resolve_left 
-          unfreezingI 
-            rintro rfl 
-          simpa [fact_iff] using hn⟩
-    have hn2 : (n : ℕ) / 2 < n :=
-      Nat.div_lt_of_lt_mul
-        ((lt_mul_iff_one_lt_left npos.1).2
-          (by 
-            decide))
-    have hn2' : (n : ℕ) - n / 2 = (n / 2)+1
-    ·
-      conv  => toLHS congr rw [←Nat.succ_sub_one n, Nat.succ_subₓ npos.1]
-      rw [←Nat.two_mul_odd_div_two hn.1, two_mul, ←Nat.succ_add, add_tsub_cancel_right]
-    have hxn : (n : ℕ) - x.val < n
-    ·
-      rw [tsub_lt_iff_tsub_lt x.val_le le_rfl, tsub_self]
-      rw [←Zmod.nat_cast_zmod_val x] at hx0 
-      exact
-        Nat.pos_of_ne_zeroₓ
-          fun h =>
-            by 
-              simpa [h] using hx0
-    ·
-      conv  =>
-        toRHS
-          rw [←Nat.succ_le_iff, Nat.succ_eq_add_one, ←hn2', ←zero_addₓ (-x), ←Zmod.nat_cast_self, ←sub_eq_add_neg,
-          ←Zmod.nat_cast_zmod_val x, ←Nat.cast_sub x.val_le, Zmod.val_nat_cast, Nat.mod_eq_of_ltₓ hxn,
-          tsub_le_tsub_iff_left x.val_le]
+-- error in Data.Zmod.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem le_div_two_iff_lt_neg
+(n : exprℕ())
+[hn : fact «expr = »(«expr % »((n : exprℕ()), 2), 1)]
+{x : zmod n}
+(hx0 : «expr ≠ »(x, 0)) : «expr ↔ »(«expr ≤ »(x.val, («expr / »(n, 2) : exprℕ())), «expr < »((«expr / »(n, 2) : exprℕ()), «expr- »(x).val)) :=
+begin
+  haveI [ident npos] [":", expr fact «expr < »(0, n)] [":=", expr ⟨by { apply [expr (nat.eq_zero_or_pos n).resolve_left],
+      unfreezingI { rintro [ident rfl] },
+      simpa [] [] [] ["[", expr fact_iff, "]"] [] ["using", expr hn] }⟩],
+  have [ident hn2] [":", expr «expr < »(«expr / »((n : exprℕ()), 2), n)] [":=", expr nat.div_lt_of_lt_mul ((lt_mul_iff_one_lt_left npos.1).2 exprdec_trivial())],
+  have [ident hn2'] [":", expr «expr = »(«expr - »((n : exprℕ()), «expr / »(n, 2)), «expr + »(«expr / »(n, 2), 1))] [],
+  { conv [] [] { to_lhs,
+      congr,
+      rw ["[", "<-", expr nat.succ_sub_one n, ",", expr nat.succ_sub npos.1, "]"] },
+    rw ["[", "<-", expr nat.two_mul_odd_div_two hn.1, ",", expr two_mul, ",", "<-", expr nat.succ_add, ",", expr add_tsub_cancel_right, "]"] [] },
+  have [ident hxn] [":", expr «expr < »(«expr - »((n : exprℕ()), x.val), n)] [],
+  { rw ["[", expr tsub_lt_iff_tsub_lt x.val_le le_rfl, ",", expr tsub_self, "]"] [],
+    rw ["<-", expr zmod.nat_cast_zmod_val x] ["at", ident hx0],
+    exact [expr nat.pos_of_ne_zero (λ h, by simpa [] [] [] ["[", expr h, "]"] [] ["using", expr hx0])] },
+  by conv [] [] { to_rhs,
+    rw ["[", "<-", expr nat.succ_le_iff, ",", expr nat.succ_eq_add_one, ",", "<-", expr hn2', ",", "<-", expr zero_add «expr- »(x), ",", "<-", expr zmod.nat_cast_self, ",", "<-", expr sub_eq_add_neg, ",", "<-", expr zmod.nat_cast_zmod_val x, ",", "<-", expr nat.cast_sub x.val_le, ",", expr zmod.val_nat_cast, ",", expr nat.mod_eq_of_lt hxn, ",", expr tsub_le_tsub_iff_left x.val_le, "]"] }
+end
 
 theorem ne_neg_self (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {a : Zmod n} (ha : a ≠ 0) : a ≠ -a :=
   fun h =>
@@ -822,9 +806,9 @@ theorem val_min_abs_def_zero (x : Zmod 0) : val_min_abs x = x :=
 theorem val_min_abs_def_pos {n : ℕ} [Fact (0 < n)] (x : Zmod n) :
   val_min_abs x = if x.val ≤ n / 2 then x.val else x.val - n :=
   by 
-    casesI n
+    cases' n
     ·
-      exFalso 
+      exfalso 
       exact Nat.not_lt_zeroₓ 0 (Fact.out (0 < 0))
     ·
       rfl
@@ -841,35 +825,32 @@ theorem coe_val_min_abs : ∀ {n : ℕ} x : Zmod n, (x.val_min_abs : Zmod n) = x
     ·
       rw [Int.cast_sub, Int.cast_coe_nat, nat_cast_zmod_val, Int.cast_coe_nat, nat_cast_self, sub_zero]
 
-theorem nat_abs_val_min_abs_le {n : ℕ} [Fact (0 < n)] (x : Zmod n) : x.val_min_abs.nat_abs ≤ n / 2 :=
-  by 
-    rw [Zmod.val_min_abs_def_pos]
-    splitIfs with h
-    ·
-      exact h 
-    have  : (x.val - n : ℤ) ≤ 0
-    ·
-      rw [sub_nonpos, Int.coe_nat_le]
-      exact x.val_le 
-    rw [←Int.coe_nat_le, Int.of_nat_nat_abs_of_nonpos this, neg_sub]
-    convLHS => congr rw [←Nat.mod_add_divₓ n 2, Int.coe_nat_add, Int.coe_nat_mul, Int.coe_nat_bit0, Int.coe_nat_one]
-    suffices  : ((n % 2 : ℕ)+n / 2 : ℤ) ≤ val x
-    ·
-      rw [←sub_nonneg] at this⊢
-      apply le_transₓ this (le_of_eqₓ _)
-      ringNF 
-      ring 
-    normCast 
-    calc (((n : ℕ) % 2)+n / 2) ≤ 1+n / 2 :=
-      Nat.add_le_add_rightₓ
-        (Nat.le_of_lt_succₓ
-          (Nat.mod_ltₓ _
-            (by 
-              decide)))
-        _ _ ≤ x.val :=
-      by 
-        rw [add_commₓ]
-        exact Nat.succ_le_of_ltₓ (lt_of_not_geₓ h)
+-- error in Data.Zmod.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nat_abs_val_min_abs_le
+{n : exprℕ()}
+[fact «expr < »(0, n)]
+(x : zmod n) : «expr ≤ »(x.val_min_abs.nat_abs, «expr / »(n, 2)) :=
+begin
+  rw [expr zmod.val_min_abs_def_pos] [],
+  split_ifs [] ["with", ident h],
+  { exact [expr h] },
+  have [] [":", expr «expr ≤ »((«expr - »(x.val, n) : exprℤ()), 0)] [],
+  { rw ["[", expr sub_nonpos, ",", expr int.coe_nat_le, "]"] [],
+    exact [expr x.val_le] },
+  rw ["[", "<-", expr int.coe_nat_le, ",", expr int.of_nat_nat_abs_of_nonpos this, ",", expr neg_sub, "]"] [],
+  conv_lhs [] [] { congr,
+    rw ["[", "<-", expr nat.mod_add_div n 2, ",", expr int.coe_nat_add, ",", expr int.coe_nat_mul, ",", expr int.coe_nat_bit0, ",", expr int.coe_nat_one, "]"] },
+  suffices [] [":", expr «expr ≤ »((«expr + »((«expr % »(n, 2) : exprℕ()), «expr / »(n, 2)) : exprℤ()), val x)],
+  { rw ["<-", expr sub_nonneg] ["at", ident this, "⊢"],
+    apply [expr le_trans this (le_of_eq _)],
+    ring_nf [] [] [],
+    ring [] },
+  norm_cast [],
+  calc
+    «expr ≤ »(«expr + »(«expr % »((n : exprℕ()), 2), «expr / »(n, 2)), «expr + »(1, «expr / »(n, 2))) : nat.add_le_add_right (nat.le_of_lt_succ (nat.mod_lt _ exprdec_trivial())) _
+    «expr ≤ »(..., x.val) : by { rw [expr add_comm] [],
+      exact [expr nat.succ_le_of_lt (lt_of_not_ge h)] }
+end
 
 @[simp]
 theorem val_min_abs_zero : ∀ n, (0 : Zmod n).valMinAbs = 0
@@ -902,21 +883,21 @@ theorem val_min_abs_eq_zero {n : ℕ} (x : Zmod n) : x.val_min_abs = 0 ↔ x = 0
       rintro rfl 
       rw [val_min_abs_zero]
 
-theorem nat_cast_nat_abs_val_min_abs {n : ℕ} [Fact (0 < n)] (a : Zmod n) :
-  (a.val_min_abs.nat_abs : Zmod n) = if a.val ≤ (n : ℕ) / 2 then a else -a :=
-  by 
-    have  : (a.val : ℤ) - n ≤ 0
-    ·
-      ·
-        erw [sub_nonpos, Int.coe_nat_le]
-        exact a.val_le 
-    rw [Zmod.val_min_abs_def_pos]
-    splitIfs
-    ·
-      rw [Int.nat_abs_of_nat, nat_cast_zmod_val]
-    ·
-      rw [←Int.cast_coe_nat, Int.of_nat_nat_abs_of_nonpos this, Int.cast_neg, Int.cast_sub]
-      rw [Int.cast_coe_nat, Int.cast_coe_nat, nat_cast_self, sub_zero, nat_cast_zmod_val]
+-- error in Data.Zmod.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nat_cast_nat_abs_val_min_abs
+{n : exprℕ()}
+[fact «expr < »(0, n)]
+(a : zmod n) : «expr = »((a.val_min_abs.nat_abs : zmod n), if «expr ≤ »(a.val, «expr / »((n : exprℕ()), 2)) then a else «expr- »(a)) :=
+begin
+  have [] [":", expr «expr ≤ »(«expr - »((a.val : exprℤ()), n), 0)] [],
+  by { erw ["[", expr sub_nonpos, ",", expr int.coe_nat_le, "]"] [],
+    exact [expr a.val_le] },
+  rw ["[", expr zmod.val_min_abs_def_pos, "]"] [],
+  split_ifs [] [],
+  { rw ["[", expr int.nat_abs_of_nat, ",", expr nat_cast_zmod_val, "]"] [] },
+  { rw ["[", "<-", expr int.cast_coe_nat, ",", expr int.of_nat_nat_abs_of_nonpos this, ",", expr int.cast_neg, ",", expr int.cast_sub, "]"] [],
+    rw ["[", expr int.cast_coe_nat, ",", expr int.cast_coe_nat, ",", expr nat_cast_self, ",", expr sub_zero, ",", expr nat_cast_zmod_val, "]"] [] }
+end
 
 @[simp]
 theorem nat_abs_val_min_abs_neg {n : ℕ} (a : Zmod n) : (-a).valMinAbs.natAbs = a.val_min_abs.nat_abs :=
@@ -994,11 +975,11 @@ instance  : Field (Zmod p) :=
 /-- `zmod p` is an integral domain when `p` is prime. -/
 instance  (p : ℕ) [hp : Fact p.prime] : IsDomain (Zmod p) :=
   by 
-    unfreezingI 
+    (
       cases p
       ·
-        exFalso 
-        rcases hp with ⟨⟨⟨⟩⟩⟩
+        exfalso 
+        rcases hp with ⟨⟨⟨⟩⟩⟩)
     exact @Field.is_domain (Zmod _) (Zmod.field _)
 
 end Zmod
@@ -1036,11 +1017,16 @@ theorem ring_hom_right_inverse [Ringₓ R] (f : R →+* Zmod n) : Function.Right
 theorem RingHomSurjective [Ringₓ R] (f : R →+* Zmod n) : Function.Surjective f :=
   (ring_hom_right_inverse f).Surjective
 
-theorem ring_hom_eq_of_ker_eq [CommRingₓ R] (f g : R →+* Zmod n) (h : f.ker = g.ker) : f = g :=
-  by 
-    have  := f.lift_of_right_inverse_comp _ (Zmod.ring_hom_right_inverse f) ⟨g, le_of_eqₓ h⟩
-    rw [Subtype.coe_mk] at this 
-    rw [←this, RingHom.ext_zmod (f.lift_of_right_inverse _ _ _) (RingHom.id _), RingHom.id_comp]
+-- error in Data.Zmod.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ring_hom_eq_of_ker_eq
+[comm_ring R]
+(f g : «expr →+* »(R, zmod n))
+(h : «expr = »(f.ker, g.ker)) : «expr = »(f, g) :=
+begin
+  have [] [] [":=", expr f.lift_of_right_inverse_comp _ (zmod.ring_hom_right_inverse f) ⟨g, le_of_eq h⟩],
+  rw [expr subtype.coe_mk] ["at", ident this],
+  rw ["[", "<-", expr this, ",", expr ring_hom.ext_zmod (f.lift_of_right_inverse _ _ _) (ring_hom.id _), ",", expr ring_hom.id_comp, "]"] []
+end
 
 section lift
 
@@ -1072,7 +1058,7 @@ theorem lift_cast_add_hom (x : ℤ) : lift n f (Int.castAddHom (Zmod n) x) = f x
   AddMonoidHom.lift_of_right_inverse_comp_apply _ _ _ _ _
 
 @[simp]
-theorem lift_comp_coe : (Zmod.lift n f ∘ coeₓ) = f :=
+theorem lift_comp_coe : Zmod.lift n f ∘ coeₓ = f :=
   funext$ lift_coe _ _
 
 @[simp]

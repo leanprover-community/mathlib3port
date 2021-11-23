@@ -1,4 +1,5 @@
-import Mathbin.Meta.Expr
+import Mathbin.Data.List.Defs 
+import Mathbin.Tactic.DeriveInhabited
 
 /-!
 # A lens for zooming into nested `expr` applications
@@ -31,7 +32,7 @@ unsafe inductive expr_lens
 
 namespace ExprLens
 
--- error in Meta.ExprLens: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Meta.ExprLens: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- Inductive type with two constructors `F` and `A`,
 that represent the function-part `f` and arg-part `a` of an application `f a`. They specify the
 directions in which an `expr_lens` should zoom into an `expr`.
@@ -79,7 +80,7 @@ unsafe def mk_congr_arg_using_dsimp (G W : expr) (u : List Name) : tactic expr :
     let s ← simp_lemmas.mk_default 
     let t ← infer_type G 
     let t' ← s.dsimplify u t { failIfUnchanged := ff }
-    to_expr (ppquote congr_argₓ (show %%t' from %%G) (%%W))
+    to_expr (ppquote.1 (congr_argₓ (show %%ₓt' from %%ₓG) (%%ₓW)))
 
 private unsafe def trace_congr_error (f : expr) (x_eq : expr) : tactic Unit :=
   do 

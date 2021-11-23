@@ -202,28 +202,31 @@ theorem sup_induction {p : α → Prop} (hb : p ⊥) (hp : ∀ a₁ a₂ : α, p
       ·
         exact ih fun b h => hs b (mem_cons.2 (Or.inr h))
 
-theorem sup_le_of_le_directed {α : Type _} [SemilatticeSupBot α] (s : Set α) (hs : s.nonempty)
-  (hdir : DirectedOn (· ≤ ·) s) (t : Finset α) :
-  (∀ x _ : x ∈ t, ∃ (y : _)(_ : y ∈ s), x ≤ y) → ∃ x, x ∈ s ∧ t.sup id ≤ x :=
-  by 
-    classical 
-    apply Finset.induction_on t
-    ·
-      simpa only [forall_prop_of_true, and_trueₓ, forall_prop_of_false, bot_le, not_false_iff, sup_empty,
-        forall_true_iff, not_mem_empty]
-    ·
-      intro a r har ih h 
-      have incs : «expr↑ » r ⊆ «expr↑ » (insert a r)
-      ·
-        ·
-          rw [Finset.coe_subset]
-          apply Finset.subset_insert 
-      obtain ⟨x, ⟨hxs, hsx_sup⟩⟩ := ih fun x hx => h x$ incs hx 
-      obtain ⟨y, hys, hay⟩ := h a (Finset.mem_insert_self a r)
-      obtain ⟨z, hzs, ⟨hxz, hyz⟩⟩ := hdir x hxs y hys 
-      use z, hzs 
-      rw [sup_insert, id.def, _root_.sup_le_iff]
-      exact ⟨le_transₓ hay hyz, le_transₓ hsx_sup hxz⟩
+-- error in Data.Finset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sup_le_of_le_directed
+{α : Type*}
+[semilattice_sup_bot α]
+(s : set α)
+(hs : s.nonempty)
+(hdir : directed_on ((«expr ≤ »)) s)
+(t : finset α) : ∀
+x «expr ∈ » t, «expr∃ , »((y «expr ∈ » s), «expr ≤ »(x, y)) → «expr∃ , »((x), «expr ∧ »(«expr ∈ »(x, s), «expr ≤ »(t.sup id, x))) :=
+begin
+  classical,
+  apply [expr finset.induction_on t],
+  { simpa [] [] ["only"] ["[", expr forall_prop_of_true, ",", expr and_true, ",", expr forall_prop_of_false, ",", expr bot_le, ",", expr not_false_iff, ",", expr sup_empty, ",", expr forall_true_iff, ",", expr not_mem_empty, "]"] [] [] },
+  { intros [ident a, ident r, ident har, ident ih, ident h],
+    have [ident incs] [":", expr «expr ⊆ »(«expr↑ »(r), «expr↑ »(insert a r))] [],
+    by { rw [expr finset.coe_subset] [],
+      apply [expr finset.subset_insert] },
+    obtain ["⟨", ident x, ",", "⟨", ident hxs, ",", ident hsx_sup, "⟩", "⟩", ":=", expr ih (λ
+      x hx, «expr $ »(h x, incs hx))],
+    obtain ["⟨", ident y, ",", ident hys, ",", ident hay, "⟩", ":=", expr h a (finset.mem_insert_self a r)],
+    obtain ["⟨", ident z, ",", ident hzs, ",", "⟨", ident hxz, ",", ident hyz, "⟩", "⟩", ":=", expr hdir x hxs y hys],
+    use ["[", expr z, ",", expr hzs, "]"],
+    rw ["[", expr sup_insert, ",", expr id.def, ",", expr _root_.sup_le_iff, "]"] [],
+    exact [expr ⟨le_trans hay hyz, le_trans hsx_sup hxz⟩] }
+end
 
 theorem sup_mem (s : Set α) (w₁ : ⊥ ∈ s) (w₂ : ∀ x y _ : x ∈ s _ : y ∈ s, x⊔y ∈ s) {ι : Type _} (t : Finset ι)
   (p : ι → α) (h : ∀ i _ : i ∈ t, p i ∈ s) : t.sup p ∈ s :=
@@ -549,7 +552,7 @@ theorem sup'_mem (s : Set α) (w : ∀ x y _ : x ∈ s _ : y ∈ s, x⊔y ∈ s)
   (p : ι → α) (h : ∀ i _ : i ∈ t, p i ∈ s) : t.sup' H p ∈ s :=
   sup'_induction H p w h
 
--- error in Data.Finset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Finset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[congr]
 theorem sup'_congr
 {t : finset β}
@@ -1000,6 +1003,7 @@ theorem min'_image [LinearOrderₓ β] {f : α → β} (hf : Monotone f) (s : Fi
     obtain ⟨x, hx, rfl⟩ := mem_image.mp hy 
     exact hf (min'_le _ _ hx)
 
+-- error in Data.Finset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Induction principle for `finset`s in a linearly ordered type: a predicate is true on all
 `s : finset α` provided that:
 
@@ -1007,18 +1011,21 @@ theorem min'_image [LinearOrderₓ β] {f : α → β} (hf : Monotone f) (s : Fi
 * for every `s : finset α` and an element `a` strictly greater than all elements of `s`, `p s`
   implies `p (insert a s)`. -/
 @[elab_as_eliminator]
-theorem induction_on_max [DecidableEq α] {p : Finset α → Prop} (s : Finset α) (h0 : p ∅)
-  (step : ∀ a s, (∀ x _ : x ∈ s, x < a) → p s → p (insert a s)) : p s :=
-  by 
-    induction' s using Finset.strongInductionOn with s ihs 
-    rcases s.eq_empty_or_nonempty with (rfl | hne)
-    ·
-      exact h0
-    ·
-      have H : s.max' hne ∈ s 
-      exact max'_mem s hne 
-      rw [←insert_erase H]
-      exact step _ _ (fun x => s.lt_max'_of_mem_erase_max' hne) (ihs _$ erase_ssubset H)
+theorem induction_on_max
+[decidable_eq α]
+{p : finset α → exprProp()}
+(s : finset α)
+(h0 : p «expr∅»())
+(step : ∀ a s, ∀ x «expr ∈ » s, «expr < »(x, a) → p s → p (insert a s)) : p s :=
+begin
+  induction [expr s] ["using", ident finset.strong_induction_on] ["with", ident s, ident ihs] [],
+  rcases [expr s.eq_empty_or_nonempty, "with", ident rfl, "|", ident hne],
+  { exact [expr h0] },
+  { have [ident H] [":", expr «expr ∈ »(s.max' hne, s)] [],
+    from [expr max'_mem s hne],
+    rw ["<-", expr insert_erase H] [],
+    exact [expr step _ _ (λ x, s.lt_max'_of_mem_erase_max' hne) «expr $ »(ihs _, erase_ssubset H)] }
+end
 
 /-- Induction principle for `finset`s in a linearly ordered type: a predicate is true on all
 `s : finset α` provided that:
@@ -1054,17 +1061,20 @@ end Finset
 
 namespace Multiset
 
-theorem count_sup [DecidableEq β] (s : Finset α) (f : α → Multiset β) (b : β) :
-  count b (s.sup f) = s.sup fun a => count b (f a) :=
-  by 
-    letI this := Classical.decEq α 
-    refine' s.induction _ _
-    ·
-      exact count_zero _
-    ·
-      intro i s his ih 
-      rw [Finset.sup_insert, sup_eq_union, count_union, Finset.sup_insert, ih]
-      rfl
+-- error in Data.Finset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem count_sup
+[decidable_eq β]
+(s : finset α)
+(f : α → multiset β)
+(b : β) : «expr = »(count b (s.sup f), s.sup (λ a, count b (f a))) :=
+begin
+  letI [] [] [":=", expr classical.dec_eq α],
+  refine [expr s.induction _ _],
+  { exact [expr count_zero _] },
+  { assume [binders (i s his ih)],
+    rw ["[", expr finset.sup_insert, ",", expr sup_eq_union, ",", expr count_union, ",", expr finset.sup_insert, ",", expr ih, "]"] [],
+    refl }
+end
 
 theorem mem_sup {α β} [DecidableEq β] {s : Finset α} {f : α → Multiset β} {x : β} :
   x ∈ s.sup f ↔ ∃ (v : _)(_ : v ∈ s), x ∈ f v :=

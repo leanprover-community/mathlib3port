@@ -71,28 +71,32 @@ theorem foldl_argmax₂_eq_none {f : α → β} {l : List α} {o : Option α} :
                   splitIfs <;>
                 simp 
 
-private theorem le_of_foldl_argmax₂ {f : α → β} {l} :
-  ∀ {a m : α} {o : Option α}, a ∈ l → m ∈ foldl (argmax₂ f) o l → f a ≤ f m :=
-  List.reverseRecOn l (fun _ _ _ h => absurd h$ not_mem_nil _)
-    (by 
-      intro tl _ ih _ _ _ h ho 
-      rw [foldl_append, foldl_cons, foldl_nil, argmax₂] at ho 
-      cases hf : foldl (argmax₂ f) o tl
-      ·
-        rw [hf] at ho 
-        rw [foldl_argmax₂_eq_none] at hf 
-        simp_all [hf.1, hf.2]
-      rw [hf, Option.mem_def] at ho 
-      dsimp only  at ho 
-      cases' mem_append.1 h with h h
-      ·
-        refine' le_transₓ (ih h hf) _ 
-        have  := @le_of_ltₓ _ _ (f val) (f m)
-        splitIfs  at ho <;> simp_all 
-      ·
-        splitIfs  at ho <;> simp_all )
+-- error in Data.List.MinMax: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem le_of_foldl_argmax₂
+{f : α → β}
+{l} : ∀ {a m : α} {o : option α}, «expr ∈ »(a, l) → «expr ∈ »(m, foldl (argmax₂ f) o l) → «expr ≤ »(f a, f m) :=
+list.reverse_rec_on l (λ
+ _
+ _
+ _
+ h, «expr $ »(absurd h, not_mem_nil _)) (begin
+   intros [ident tl, "_", ident ih, "_", "_", "_", ident h, ident ho],
+   rw ["[", expr foldl_append, ",", expr foldl_cons, ",", expr foldl_nil, ",", expr argmax₂, "]"] ["at", ident ho],
+   cases [expr hf, ":", expr foldl (argmax₂ f) o tl] [],
+   { rw ["[", expr hf, "]"] ["at", ident ho],
+     rw ["[", expr foldl_argmax₂_eq_none, "]"] ["at", ident hf],
+     simp [] [] [] ["[", expr hf.1, ",", expr hf.2, ",", "*", "]"] [] ["at", "*"] },
+   rw ["[", expr hf, ",", expr option.mem_def, "]"] ["at", ident ho],
+   dsimp ["only"] [] [] ["at", ident ho],
+   cases [expr mem_append.1 h] ["with", ident h, ident h],
+   { refine [expr le_trans (ih h hf) _],
+     have [] [] [":=", expr @le_of_lt _ _ (f val) (f m)],
+     split_ifs ["at", ident ho] []; simp [] [] [] ["*"] [] ["at", "*"] },
+   { split_ifs ["at", ident ho] []; simp [] [] [] ["*"] [] ["at", "*"] }
+ end)
 
--- error in Data.List.MinMax: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.List.MinMax: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 private
 theorem foldl_argmax₂_mem
 (f : α → β)
@@ -183,57 +187,51 @@ theorem argmin_cons (f : α → β) (a : α) (l : List α) :
   argmin f (a :: l) = Option.casesOn (argmin f l) (some a) fun c => if f a ≤ f c then some a else some c :=
   @argmax_cons _ (OrderDual β) _ _ _ _
 
-theorem index_of_argmax [DecidableEq α] {f : α → β} :
-  ∀ {l : List α} {m : α}, m ∈ argmax f l → ∀ {a}, a ∈ l → f m ≤ f a → l.index_of m ≤ l.index_of a
-| [], m, _, _, _, _ =>
-  by 
-    simp 
-| hd :: tl, m, hm, a, ha, ham =>
-  by 
-    simp only [index_of_cons, argmax_cons, Option.mem_def] at hm⊢
-    cases h : argmax f tl
-    ·
-      rw [h] at hm 
-      simp_all 
-    ·
-      rw [h] at hm 
-      dsimp only  at hm 
-      cases' ha with hahd hatl
-      ·
-        clear index_of_argmax 
-        subst hahd 
-        splitIfs  at hm
-        ·
-          subst hm
-        ·
-          subst hm 
-          contradiction
-      ·
-        have  := index_of_argmax h hatl 
-        clear index_of_argmax 
-        splitIfs  at * <;>
-          first |
-            rfl|
-            exact Nat.zero_leₓ _|
-            simp_all [Nat.succ_le_succ_iff, -not_leₓ]
+-- error in Data.List.MinMax: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem index_of_argmax
+[decidable_eq α]
+{f : α → β} : ∀
+{l : list α}
+{m : α}, «expr ∈ »(m, argmax f l) → ∀ {a}, «expr ∈ »(a, l) → «expr ≤ »(f m, f a) → «expr ≤ »(l.index_of m, l.index_of a)
+| «expr[ , ]»([]), m, _, _, _, _ := by simp [] [] [] [] [] []
+| «expr :: »(hd, tl), m, hm, a, ha, ham := begin
+  simp [] [] ["only"] ["[", expr index_of_cons, ",", expr argmax_cons, ",", expr option.mem_def, "]"] [] ["at", "⊢", ident hm],
+  cases [expr h, ":", expr argmax f tl] [],
+  { rw [expr h] ["at", ident hm],
+    simp [] [] [] ["*"] [] ["at", "*"] },
+  { rw [expr h] ["at", ident hm],
+    dsimp ["only"] [] [] ["at", ident hm],
+    cases [expr ha] ["with", ident hahd, ident hatl],
+    { clear [ident index_of_argmax],
+      subst [expr hahd],
+      split_ifs ["at", ident hm] [],
+      { subst [expr hm] },
+      { subst [expr hm],
+        contradiction } },
+    { have [] [] [":=", expr index_of_argmax h hatl],
+      clear [ident index_of_argmax],
+      split_ifs ["at", "*"] []; refl <|> exact [expr nat.zero_le _] <|> simp [] [] [] ["[", "*", ",", expr nat.succ_le_succ_iff, ",", "-", ident not_le, "]"] [] ["at", "*"] } }
+end
 
 theorem index_of_argmin [DecidableEq α] {f : α → β} :
   ∀ {l : List α} {m : α}, m ∈ argmin f l → ∀ {a}, a ∈ l → f a ≤ f m → l.index_of m ≤ l.index_of a :=
   @index_of_argmax _ (OrderDual β) _ _ _
 
-theorem mem_argmax_iff [DecidableEq α] {f : α → β} {m : α} {l : List α} :
-  m ∈ argmax f l ↔ m ∈ l ∧ (∀ a _ : a ∈ l, f a ≤ f m) ∧ ∀ a _ : a ∈ l, f m ≤ f a → l.index_of m ≤ l.index_of a :=
-  ⟨fun hm => ⟨argmax_mem hm, fun a ha => le_argmax_of_mem ha hm, fun _ => index_of_argmax hm⟩,
-    by 
-      rintro ⟨hml, ham, hma⟩
-      cases' harg : argmax f l with n
-      ·
-        simp_all 
-      ·
-        have  :=
-          le_antisymmₓ (hma n (argmax_mem harg) (le_argmax_of_mem hml harg))
-            (index_of_argmax harg hml (ham _ (argmax_mem harg)))
-        rw [(index_of_inj hml (argmax_mem harg)).1 this, Option.mem_def]⟩
+-- error in Data.List.MinMax: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_argmax_iff
+[decidable_eq α]
+{f : α → β}
+{m : α}
+{l : list α} : «expr ↔ »(«expr ∈ »(m, argmax f l), «expr ∧ »(«expr ∈ »(m, l), «expr ∧ »(∀
+   a «expr ∈ » l, «expr ≤ »(f a, f m), ∀
+   a «expr ∈ » l, «expr ≤ »(f m, f a) → «expr ≤ »(l.index_of m, l.index_of a)))) :=
+⟨λ hm, ⟨argmax_mem hm, λ a ha, le_argmax_of_mem ha hm, λ _, index_of_argmax hm⟩, begin
+   rintros ["⟨", ident hml, ",", ident ham, ",", ident hma, "⟩"],
+   cases [expr harg, ":", expr argmax f l] ["with", ident n],
+   { simp [] [] [] ["*"] [] ["at", "*"] },
+   { have [] [] [":=", expr le_antisymm (hma n (argmax_mem harg) (le_argmax_of_mem hml harg)) (index_of_argmax harg hml (ham _ (argmax_mem harg)))],
+     rw ["[", expr (index_of_inj hml (argmax_mem harg)).1 this, ",", expr option.mem_def, "]"] [] }
+ end⟩
 
 theorem argmax_eq_some_iff [DecidableEq α] {f : α → β} {m : α} {l : List α} :
   argmax f l = some m ↔ m ∈ l ∧ (∀ a _ : a ∈ l, f a ≤ f m) ∧ ∀ a _ : a ∈ l, f m ≤ f a → l.index_of m ≤ l.index_of a :=
@@ -329,7 +327,7 @@ theorem maximum_cons (a : α) (l : List α) : maximum (a :: l) = max a (maximum 
 theorem minimum_cons (a : α) (l : List α) : minimum (a :: l) = min a (minimum l) :=
   @maximum_cons (OrderDual α) _ _ _
 
--- error in Data.List.MinMax: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.List.MinMax: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem maximum_eq_coe_iff
 {m : α}
 {l : list α} : «expr ↔ »(«expr = »(maximum l, m), «expr ∧ »(«expr ∈ »(m, l), ∀ a «expr ∈ » l, «expr ≤ »(a, m))) :=
@@ -375,15 +373,18 @@ theorem minimum_eq_coe_foldr_min_of_ne_nil (l : List (OrderDual M)) (h : l ≠ [
 theorem maximum_nat_eq_coe_foldr_max_of_ne_nil (l : List ℕ) (h : l ≠ []) : l.maximum = (l.foldr max 0 : ℕ) :=
   maximum_eq_coe_foldr_max_of_ne_nil l h
 
-theorem max_le_of_forall_le (l : List M) (n : M) (h : ∀ x _ : x ∈ l, x ≤ n) : l.foldr max ⊥ ≤ n :=
-  by 
-    induction' l with y l IH
-    ·
-      simp 
-    ·
-      specialize IH fun x hx => h x (mem_cons_of_mem _ hx)
-      have hy : y ≤ n := h y (mem_cons_self _ _)
-      simpa [hy] using IH
+-- error in Data.List.MinMax: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem max_le_of_forall_le
+(l : list M)
+(n : M)
+(h : ∀ x «expr ∈ » l, «expr ≤ »(x, n)) : «expr ≤ »(l.foldr max «expr⊥»(), n) :=
+begin
+  induction [expr l] [] ["with", ident y, ident l, ident IH] [],
+  { simp [] [] [] [] [] [] },
+  { specialize [expr IH (λ x hx, h x (mem_cons_of_mem _ hx))],
+    have [ident hy] [":", expr «expr ≤ »(y, n)] [":=", expr h y (mem_cons_self _ _)],
+    simpa [] [] [] ["[", expr hy, "]"] [] ["using", expr IH] }
+end
 
 theorem le_min_of_le_forall (l : List (OrderDual M)) (n : OrderDual M) (h : ∀ x _ : x ∈ l, n ≤ x) : n ≤ l.foldr min ⊤ :=
   max_le_of_forall_le l n h

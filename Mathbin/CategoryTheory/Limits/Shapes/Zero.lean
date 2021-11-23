@@ -77,8 +77,8 @@ private theorem ext_aux (I J : has_zero_morphisms C)
   (w : ∀ X Y : C, (@has_zero_morphisms.has_zero _ _ I X Y).zero = (@has_zero_morphisms.has_zero _ _ J X Y).zero) :
   I = J :=
   by 
-    casesI I 
-    casesI J 
+    cases' I 
+    cases' J 
     congr
     ·
       ext X Y 
@@ -154,19 +154,18 @@ theorem zero_app (F G : C ⥤ D) (j : C) : (0 : F ⟶ G).app j = 0 :=
 
 variable[has_zero_morphisms C]
 
-theorem equivalence_preserves_zero_morphisms (F : C ≌ D) (X Y : C) :
-  F.functor.map (0 : X ⟶ Y) = (0 : F.functor.obj X ⟶ F.functor.obj Y) :=
-  by 
-    have t : F.functor.map (0 : X ⟶ Y) = F.functor.map (0 : X ⟶ Y) ≫ (0 : F.functor.obj Y ⟶ F.functor.obj Y)
-    ·
-      apply faithful.map_injective F.inverse 
-      rw [functor.map_comp, equivalence.inv_fun_map]
-      dsimp 
-      rw [zero_comp, comp_zero, zero_comp]
-    exact
-      t.trans
-        (by 
-          simp )
+-- error in CategoryTheory.Limits.Shapes.Zero: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem equivalence_preserves_zero_morphisms
+(F : «expr ≌ »(C, D))
+(X Y : C) : «expr = »(F.functor.map (0 : «expr ⟶ »(X, Y)), (0 : «expr ⟶ »(F.functor.obj X, F.functor.obj Y))) :=
+begin
+  have [ident t] [":", expr «expr = »(F.functor.map (0 : «expr ⟶ »(X, Y)), «expr ≫ »(F.functor.map (0 : «expr ⟶ »(X, Y)), (0 : «expr ⟶ »(F.functor.obj Y, F.functor.obj Y))))] [],
+  { apply [expr faithful.map_injective F.inverse],
+    rw ["[", expr functor.map_comp, ",", expr equivalence.inv_fun_map, "]"] [],
+    dsimp [] [] [] [],
+    rw ["[", expr zero_comp, ",", expr comp_zero, ",", expr zero_comp, "]"] [] },
+  exact [expr t.trans (by simp [] [] [] [] [] [])]
+end
 
 @[simp]
 theorem is_equivalence_preserves_zero_morphisms (F : C ⥤ D) [is_equivalence F] (X Y : C) : F.map (0 : X ⟶ Y) = 0 :=
@@ -321,24 +320,24 @@ theorem zero_of_to_zero {X : C} (f : X ⟶ 0) : f = 0 :=
   by 
     ext
 
-theorem zero_of_target_iso_zero {X Y : C} (f : X ⟶ Y) (i : Y ≅ 0) : f = 0 :=
-  by 
-    have h : f = f ≫ i.hom ≫ 𝟙 0 ≫ i.inv :=
-      by 
-        simp only [iso.hom_inv_id, id_comp, comp_id]
-    simpa using h
+-- error in CategoryTheory.Limits.Shapes.Zero: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem zero_of_target_iso_zero {X Y : C} (f : «expr ⟶ »(X, Y)) (i : «expr ≅ »(Y, 0)) : «expr = »(f, 0) :=
+begin
+  have [ident h] [":", expr «expr = »(f, «expr ≫ »(f, «expr ≫ »(i.hom, «expr ≫ »(«expr𝟙»() 0, i.inv))))] [":=", expr by simp [] [] ["only"] ["[", expr iso.hom_inv_id, ",", expr id_comp, ",", expr comp_id, "]"] [] []],
+  simpa [] [] [] [] [] ["using", expr h]
+end
 
 /-- An arrow starting at the zero object is zero -/
 theorem zero_of_from_zero {X : C} (f : 0 ⟶ X) : f = 0 :=
   by 
     ext
 
-theorem zero_of_source_iso_zero {X Y : C} (f : X ⟶ Y) (i : X ≅ 0) : f = 0 :=
-  by 
-    have h : f = i.hom ≫ 𝟙 0 ≫ i.inv ≫ f :=
-      by 
-        simp only [iso.hom_inv_id_assoc, id_comp, comp_id]
-    simpa using h
+-- error in CategoryTheory.Limits.Shapes.Zero: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem zero_of_source_iso_zero {X Y : C} (f : «expr ⟶ »(X, Y)) (i : «expr ≅ »(X, 0)) : «expr = »(f, 0) :=
+begin
+  have [ident h] [":", expr «expr = »(f, «expr ≫ »(i.hom, «expr ≫ »(«expr𝟙»() 0, «expr ≫ »(i.inv, f))))] [":=", expr by simp [] [] ["only"] ["[", expr iso.hom_inv_id_assoc, ",", expr id_comp, ",", expr comp_id, "]"] [] []],
+  simpa [] [] [] [] [] ["using", expr h]
+end
 
 theorem zero_of_source_iso_zero' {X Y : C} (f : X ⟶ Y) (i : is_isomorphic X 0) : f = 0 :=
   zero_of_source_iso_zero f (Nonempty.some i)
@@ -402,7 +401,7 @@ def iso_of_is_isomorphic_zero {X : C} (P : is_isomorphic X 0) : X ≅ 0 :=
   { Hom := 0, inv := 0,
     hom_inv_id' :=
       by 
-        casesI P 
+        cases' P 
         rw [←P.hom_inv_id]
         rw [←category.id_comp P.inv]
         simp ,
@@ -424,7 +423,7 @@ the identities on both `X` and `Y` are zero.
 def is_iso_zero_equiv (X Y : C) : is_iso (0 : X ⟶ Y) ≃ 𝟙 X = 0 ∧ 𝟙 Y = 0 :=
   { toFun :=
       by 
-        introI i 
+        intros i 
         rw [←is_iso.hom_inv_id (0 : X ⟶ Y)]
         rw [←is_iso.inv_hom_id (0 : X ⟶ Y)]
         simp ,

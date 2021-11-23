@@ -75,23 +75,27 @@ theorem cyclotomic'_one (R : Type _) [CommRingₓ R] [IsDomain R] : cyclotomic' 
   by 
     simp only [cyclotomic', Finset.prod_singleton, RingHom.map_one, IsPrimitiveRoot.primitive_roots_one]
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The second modified cyclotomic polyomial is `X + 1` if the characteristic of `R` is not `2`. -/
 @[simp]
-theorem cyclotomic'_two (R : Type _) [CommRingₓ R] [IsDomain R] (p : ℕ) [CharP R p] (hp : p ≠ 2) :
-  cyclotomic' 2 R = X+1 :=
-  by 
-    rw [cyclotomic']
-    have prim_root_two : primitiveRoots 2 R = {(-1 : R)}
-    ·
-      apply Finset.eq_singleton_iff_unique_mem.2
-      split 
-      ·
-        simp only [IsPrimitiveRoot.neg_one p hp, Nat.succ_pos', mem_primitive_roots]
-      ·
-        intro x hx 
-        rw [mem_primitive_roots zero_lt_two] at hx 
-        exact IsPrimitiveRoot.eq_neg_one_of_two_right hx 
-    simp only [prim_root_two, Finset.prod_singleton, RingHom.map_neg, RingHom.map_one, sub_neg_eq_add]
+theorem cyclotomic'_two
+(R : Type*)
+[comm_ring R]
+[is_domain R]
+(p : exprℕ())
+[char_p R p]
+(hp : «expr ≠ »(p, 2)) : «expr = »(cyclotomic' 2 R, «expr + »(X, 1)) :=
+begin
+  rw ["[", expr cyclotomic', "]"] [],
+  have [ident prim_root_two] [":", expr «expr = »(primitive_roots 2 R, {(«expr- »(1) : R)})] [],
+  { apply [expr finset.eq_singleton_iff_unique_mem.2],
+    split,
+    { simp [] [] ["only"] ["[", expr is_primitive_root.neg_one p hp, ",", expr nat.succ_pos', ",", expr mem_primitive_roots, "]"] [] [] },
+    { intros [ident x, ident hx],
+      rw ["[", expr mem_primitive_roots zero_lt_two, "]"] ["at", ident hx],
+      exact [expr is_primitive_root.eq_neg_one_of_two_right hx] } },
+  simp [] [] ["only"] ["[", expr prim_root_two, ",", expr finset.prod_singleton, ",", expr ring_hom.map_neg, ",", expr ring_hom.map_one, ",", expr sub_neg_eq_add, "]"] [] []
+end
 
 /-- `cyclotomic' n R` is monic. -/
 theorem cyclotomic'.monic (n : ℕ) (R : Type _) [CommRingₓ R] [IsDomain R] : (cyclotomic' n R).Monic :=
@@ -134,19 +138,24 @@ section Field
 
 variable{K : Type _}[Field K]
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If there is a primitive `n`th root of unity in `K`, then `X ^ n - 1 = ∏ (X - μ)`, where `μ`
 varies over the `n`-th roots of unity. -/
-theorem X_pow_sub_one_eq_prod {ζ : K} {n : ℕ} (hpos : 0 < n) (h : IsPrimitiveRoot ζ n) :
-  (X^n) - 1 = ∏ζ in nth_roots_finset n K, X - C ζ :=
-  by 
-    rw [nth_roots_finset, ←Multiset.to_finset_eq (IsPrimitiveRoot.nth_roots_nodup h)]
-    simp only [Finset.prod_mk, RingHom.map_one]
-    rw [nth_roots]
-    have hmonic : ((X^n) - C (1 : K)).Monic := monic_X_pow_sub_C (1 : K) (ne_of_ltₓ hpos).symm 
-    symm 
-    apply prod_multiset_X_sub_C_of_monic_of_roots_card_eq hmonic 
-    rw [@nat_degree_X_pow_sub_C K _ _ n 1, ←nth_roots]
-    exact IsPrimitiveRoot.card_nth_roots h
+theorem X_pow_sub_one_eq_prod
+{ζ : K}
+{n : exprℕ()}
+(hpos : «expr < »(0, n))
+(h : is_primitive_root ζ n) : «expr = »(«expr - »(«expr ^ »(X, n), 1), «expr∏ in , »((ζ), nth_roots_finset n K, «expr - »(X, C ζ))) :=
+begin
+  rw ["[", expr nth_roots_finset, ",", "<-", expr multiset.to_finset_eq (is_primitive_root.nth_roots_nodup h), "]"] [],
+  simp [] [] ["only"] ["[", expr finset.prod_mk, ",", expr ring_hom.map_one, "]"] [] [],
+  rw ["[", expr nth_roots, "]"] [],
+  have [ident hmonic] [":", expr «expr - »(«expr ^ »(X, n), C (1 : K)).monic] [":=", expr monic_X_pow_sub_C (1 : K) (ne_of_lt hpos).symm],
+  symmetry,
+  apply [expr prod_multiset_X_sub_C_of_monic_of_roots_card_eq hmonic],
+  rw ["[", expr @nat_degree_X_pow_sub_C K _ _ n 1, ",", "<-", expr nth_roots, "]"] [],
+  exact [expr is_primitive_root.card_nth_roots h]
+end
 
 /-- `cyclotomic' n K` splits. -/
 theorem cyclotomic'_splits (n : ℕ) : splits (RingHom.id K) (cyclotomic' n K) :=
@@ -163,95 +172,96 @@ theorem X_pow_sub_one_splits {ζ : K} {n : ℕ} (h : IsPrimitiveRoot ζ n) : spl
       simp only [hzero, RingHom.map_one, splits_zero, pow_zeroₓ, sub_self]
     rw [splits_iff_card_roots, ←nth_roots, IsPrimitiveRoot.card_nth_roots h, nat_degree_X_pow_sub_C]
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If there is a primitive `n`-th root of unity in `K`, then
 `∏ i in nat.divisors n, cyclotomic' i K = X ^ n - 1`. -/
-theorem prod_cyclotomic'_eq_X_pow_sub_one {ζ : K} {n : ℕ} (hpos : 0 < n) (h : IsPrimitiveRoot ζ n) :
-  (∏i in Nat.divisors n, cyclotomic' i K) = (X^n) - 1 :=
-  by 
-    rw [X_pow_sub_one_eq_prod hpos h]
-    have rwcyc : ∀ i _ : i ∈ Nat.divisors n, cyclotomic' i K = ∏μ in primitiveRoots i K, X - C μ
-    ·
-      intro i hi 
-      simp only [cyclotomic']
-    convLHS => applyCongr skip simp [rwcyc, H]
-    rw [←Finset.prod_bUnion]
-    ·
-      simp only [IsPrimitiveRoot.nth_roots_one_eq_bUnion_primitive_roots hpos h]
-    intro x hx y hy hdiff 
-    rw [Finset.mem_coe] at hx hy 
-    exact IsPrimitiveRoot.disjoint (Nat.pos_of_mem_divisors hx) (Nat.pos_of_mem_divisors hy) hdiff
+theorem prod_cyclotomic'_eq_X_pow_sub_one
+{ζ : K}
+{n : exprℕ()}
+(hpos : «expr < »(0, n))
+(h : is_primitive_root ζ n) : «expr = »(«expr∏ in , »((i), nat.divisors n, cyclotomic' i K), «expr - »(«expr ^ »(X, n), 1)) :=
+begin
+  rw ["[", expr X_pow_sub_one_eq_prod hpos h, "]"] [],
+  have [ident rwcyc] [":", expr ∀
+   i «expr ∈ » nat.divisors n, «expr = »(cyclotomic' i K, «expr∏ in , »((μ), primitive_roots i K, «expr - »(X, C μ)))] [],
+  { intros [ident i, ident hi],
+    simp [] [] ["only"] ["[", expr cyclotomic', "]"] [] [] },
+  conv_lhs [] [] { apply_congr [],
+    skip,
+    simp [] ["[", expr rwcyc, ",", expr H, "]"] [] },
+  rw ["<-", expr finset.prod_bUnion] [],
+  { simp [] [] ["only"] ["[", expr is_primitive_root.nth_roots_one_eq_bUnion_primitive_roots hpos h, "]"] [] [] },
+  intros [ident x, ident hx, ident y, ident hy, ident hdiff],
+  rw [expr finset.mem_coe] ["at", ident hx, ident hy],
+  exact [expr is_primitive_root.disjoint (nat.pos_of_mem_divisors hx) (nat.pos_of_mem_divisors hy) hdiff]
+end
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If there is a primitive `n`-th root of unity in `K`, then
 `cyclotomic' n K = (X ^ k - 1) /ₘ (∏ i in nat.proper_divisors k, cyclotomic' i K)`. -/
-theorem cyclotomic'_eq_X_pow_sub_one_div {ζ : K} {n : ℕ} (hpos : 0 < n) (h : IsPrimitiveRoot ζ n) :
-  cyclotomic' n K = ((X^n) - 1) /ₘ ∏i in Nat.properDivisors n, cyclotomic' i K :=
-  by 
-    rw [←prod_cyclotomic'_eq_X_pow_sub_one hpos h, Nat.divisors_eq_proper_divisors_insert_self_of_pos hpos,
-      Finset.prod_insert Nat.properDivisors.not_self_mem]
-    have prod_monic : (∏i in Nat.properDivisors n, cyclotomic' i K).Monic
-    ·
-      apply monic_prod_of_monic 
-      intro i hi 
-      exact cyclotomic'.monic i K 
-    rw [(div_mod_by_monic_unique (cyclotomic' n K) 0 prod_monic _).1]
-    simp only [degree_zero, zero_addₓ]
-    refine'
-      ⟨by 
-          rw [mul_commₓ],
-        _⟩
-    rw [bot_lt_iff_ne_bot]
-    intro h 
-    exact monic.ne_zero prod_monic (degree_eq_bot.1 h)
+theorem cyclotomic'_eq_X_pow_sub_one_div
+{ζ : K}
+{n : exprℕ()}
+(hpos : «expr < »(0, n))
+(h : is_primitive_root ζ n) : «expr = »(cyclotomic' n K, «expr /ₘ »(«expr - »(«expr ^ »(X, n), 1), «expr∏ in , »((i), nat.proper_divisors n, cyclotomic' i K))) :=
+begin
+  rw ["[", "<-", expr prod_cyclotomic'_eq_X_pow_sub_one hpos h, ",", expr nat.divisors_eq_proper_divisors_insert_self_of_pos hpos, ",", expr finset.prod_insert nat.proper_divisors.not_self_mem, "]"] [],
+  have [ident prod_monic] [":", expr «expr∏ in , »((i), nat.proper_divisors n, cyclotomic' i K).monic] [],
+  { apply [expr monic_prod_of_monic],
+    intros [ident i, ident hi],
+    exact [expr cyclotomic'.monic i K] },
+  rw [expr (div_mod_by_monic_unique (cyclotomic' n K) 0 prod_monic _).1] [],
+  simp [] [] ["only"] ["[", expr degree_zero, ",", expr zero_add, "]"] [] [],
+  refine [expr ⟨by rw [expr mul_comm] [], _⟩],
+  rw ["[", expr bot_lt_iff_ne_bot, "]"] [],
+  intro [ident h],
+  exact [expr monic.ne_zero prod_monic (degree_eq_bot.1 h)]
+end
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If there is a primitive `n`-th root of unity in `K`, then `cyclotomic' n K` comes from a
 monic polynomial with integer coefficients. -/
-theorem int_coeff_of_cyclotomic' {ζ : K} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
-  ∃ P : Polynomial ℤ, map (Int.castRingHom K) P = cyclotomic' n K ∧ P.degree = (cyclotomic' n K).degree ∧ P.monic :=
-  by 
-    refine' lifts_and_degree_eq_and_monic _ (cyclotomic'.monic n K)
-    induction' n using Nat.strong_induction_onₓ with k hk generalizing ζ h 
-    cases' Nat.eq_zero_or_posₓ k with hzero hpos
-    ·
-      use 1
-      simp only [hzero, cyclotomic'_zero, Set.mem_univ, Subsemiring.coe_top, eq_self_iff_true, coe_map_ring_hom,
-        map_one, and_selfₓ]
-    byCases' hone : k = 1
-    ·
-      use X - 1
-      simp only [hone, cyclotomic'_one K, Set.mem_univ, Pnat.one_coe, Subsemiring.coe_top, eq_self_iff_true, map_X,
-        coe_map_ring_hom, map_one, and_selfₓ, map_sub]
-    let B : Polynomial K := ∏i in Nat.properDivisors k, cyclotomic' i K 
-    have Bmo : B.monic
-    ·
-      apply monic_prod_of_monic 
-      intro i hi 
-      exact cyclotomic'.monic i K 
-    have Bint : B ∈ lifts (Int.castRingHom K)
-    ·
-      refine' Subsemiring.prod_mem (lifts (Int.castRingHom K)) _ 
-      intro x hx 
-      have xsmall := (Nat.mem_proper_divisors.1 hx).2
-      obtain ⟨d, hd⟩ := (Nat.mem_proper_divisors.1 hx).1
-      rw [mul_commₓ] at hd 
-      exact hk x xsmall (IsPrimitiveRoot.pow hpos h hd)
-    replace Bint := lifts_and_degree_eq_and_monic Bint Bmo 
-    obtain ⟨B₁, hB₁, hB₁deg, hB₁mo⟩ := Bint 
-    let Q₁ : Polynomial ℤ := ((X^k) - 1) /ₘ B₁ 
-    have huniq : (0+B*cyclotomic' k K) = (X^k) - 1 ∧ (0 : Polynomial K).degree < B.degree
-    ·
-      split 
-      ·
-        rw [zero_addₓ, mul_commₓ, ←prod_cyclotomic'_eq_X_pow_sub_one hpos h,
-          Nat.divisors_eq_proper_divisors_insert_self_of_pos hpos]
-        simp only [true_andₓ, Finset.prod_insert, not_ltₓ, Nat.mem_proper_divisors, dvd_refl]
-      rw [degree_zero, bot_lt_iff_ne_bot]
-      intro habs 
-      exact (monic.ne_zero Bmo) (degree_eq_bot.1 habs)
-    replace huniq := div_mod_by_monic_unique (cyclotomic' k K) (0 : Polynomial K) Bmo huniq 
-    simp only [lifts, RingHom.mem_srange]
-    use Q₁ 
-    rw [coe_map_ring_hom, map_div_by_monic (Int.castRingHom K) hB₁mo, hB₁, ←huniq.1]
-    simp 
+theorem int_coeff_of_cyclotomic'
+{ζ : K}
+{n : exprℕ()}
+(h : is_primitive_root ζ n) : «expr∃ , »((P : polynomial exprℤ()), «expr ∧ »(«expr = »(map (int.cast_ring_hom K) P, cyclotomic' n K), «expr ∧ »(«expr = »(P.degree, (cyclotomic' n K).degree), P.monic))) :=
+begin
+  refine [expr lifts_and_degree_eq_and_monic _ (cyclotomic'.monic n K)],
+  induction [expr n] ["using", ident nat.strong_induction_on] ["with", ident k, ident hk] ["generalizing", ident ζ, ident h],
+  cases [expr nat.eq_zero_or_pos k] ["with", ident hzero, ident hpos],
+  { use [expr 1],
+    simp [] [] ["only"] ["[", expr hzero, ",", expr cyclotomic'_zero, ",", expr set.mem_univ, ",", expr subsemiring.coe_top, ",", expr eq_self_iff_true, ",", expr coe_map_ring_hom, ",", expr map_one, ",", expr and_self, "]"] [] [] },
+  by_cases [expr hone, ":", expr «expr = »(k, 1)],
+  { use [expr «expr - »(X, 1)],
+    simp [] [] ["only"] ["[", expr hone, ",", expr cyclotomic'_one K, ",", expr set.mem_univ, ",", expr pnat.one_coe, ",", expr subsemiring.coe_top, ",", expr eq_self_iff_true, ",", expr map_X, ",", expr coe_map_ring_hom, ",", expr map_one, ",", expr and_self, ",", expr map_sub, "]"] [] [] },
+  let [ident B] [":", expr polynomial K] [":=", expr «expr∏ in , »((i), nat.proper_divisors k, cyclotomic' i K)],
+  have [ident Bmo] [":", expr B.monic] [],
+  { apply [expr monic_prod_of_monic],
+    intros [ident i, ident hi],
+    exact [expr cyclotomic'.monic i K] },
+  have [ident Bint] [":", expr «expr ∈ »(B, lifts (int.cast_ring_hom K))] [],
+  { refine [expr subsemiring.prod_mem (lifts (int.cast_ring_hom K)) _],
+    intros [ident x, ident hx],
+    have [ident xsmall] [] [":=", expr (nat.mem_proper_divisors.1 hx).2],
+    obtain ["⟨", ident d, ",", ident hd, "⟩", ":=", expr (nat.mem_proper_divisors.1 hx).1],
+    rw ["[", expr mul_comm, "]"] ["at", ident hd],
+    exact [expr hk x xsmall (is_primitive_root.pow hpos h hd)] },
+  replace [ident Bint] [] [":=", expr lifts_and_degree_eq_and_monic Bint Bmo],
+  obtain ["⟨", ident B₁, ",", ident hB₁, ",", ident hB₁deg, ",", ident hB₁mo, "⟩", ":=", expr Bint],
+  let [ident Q₁] [":", expr polynomial exprℤ()] [":=", expr «expr /ₘ »(«expr - »(«expr ^ »(X, k), 1), B₁)],
+  have [ident huniq] [":", expr «expr ∧ »(«expr = »(«expr + »(0, «expr * »(B, cyclotomic' k K)), «expr - »(«expr ^ »(X, k), 1)), «expr < »((0 : polynomial K).degree, B.degree))] [],
+  { split,
+    { rw ["[", expr zero_add, ",", expr mul_comm, ",", "<-", expr prod_cyclotomic'_eq_X_pow_sub_one hpos h, ",", expr nat.divisors_eq_proper_divisors_insert_self_of_pos hpos, "]"] [],
+      simp [] [] ["only"] ["[", expr true_and, ",", expr finset.prod_insert, ",", expr not_lt, ",", expr nat.mem_proper_divisors, ",", expr dvd_refl, "]"] [] [] },
+    rw ["[", expr degree_zero, ",", expr bot_lt_iff_ne_bot, "]"] [],
+    intro [ident habs],
+    exact [expr monic.ne_zero Bmo (degree_eq_bot.1 habs)] },
+  replace [ident huniq] [] [":=", expr div_mod_by_monic_unique (cyclotomic' k K) (0 : polynomial K) Bmo huniq],
+  simp [] [] ["only"] ["[", expr lifts, ",", expr ring_hom.mem_srange, "]"] [] [],
+  use [expr Q₁],
+  rw ["[", expr coe_map_ring_hom, ",", expr map_div_by_monic (int.cast_ring_hom K) hB₁mo, ",", expr hB₁, ",", "<-", expr huniq.1, "]"] [],
+  simp [] [] [] [] [] []
+end
 
 /-- If `K` is of characteristic `0` and there is a primitive `n`-th root of unity in `K`,
 then `cyclotomic n K` comes from a unique polynomial with integer coefficients. -/
@@ -320,27 +330,29 @@ theorem cyclotomic_zero (R : Type _) [Ringₓ R] : cyclotomic 0 R = 1 :=
   by 
     simp only [cyclotomic, dif_pos]
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The first cyclotomic polyomial is `X - 1`. -/
 @[simp]
-theorem cyclotomic_one (R : Type _) [Ringₓ R] : cyclotomic 1 R = X - 1 :=
-  by 
-    have hspec : map (Int.castRingHom ℂ) (X - 1) = cyclotomic' 1 ℂ
-    ·
-      simp only [cyclotomic'_one, Pnat.one_coe, map_X, map_one, map_sub]
-    symm 
-    rw [←map_cyclotomic_int, ←int_cyclotomic_unique hspec]
-    simp only [map_X, map_one, map_sub]
+theorem cyclotomic_one (R : Type*) [ring R] : «expr = »(cyclotomic 1 R, «expr - »(X, 1)) :=
+begin
+  have [ident hspec] [":", expr «expr = »(map (int.cast_ring_hom exprℂ()) «expr - »(X, 1), cyclotomic' 1 exprℂ())] [],
+  { simp [] [] ["only"] ["[", expr cyclotomic'_one, ",", expr pnat.one_coe, ",", expr map_X, ",", expr map_one, ",", expr map_sub, "]"] [] [] },
+  symmetry,
+  rw ["[", "<-", expr map_cyclotomic_int, ",", "<-", expr int_cyclotomic_unique hspec, "]"] [],
+  simp [] [] ["only"] ["[", expr map_X, ",", expr map_one, ",", expr map_sub, "]"] [] []
+end
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The second cyclotomic polyomial is `X + 1`. -/
 @[simp]
-theorem cyclotomic_two (R : Type _) [Ringₓ R] : cyclotomic 2 R = X+1 :=
-  by 
-    have hspec : map (Int.castRingHom ℂ) (X+1) = cyclotomic' 2 ℂ
-    ·
-      simp only [cyclotomic'_two ℂ 0 two_ne_zero.symm, map_add, map_X, map_one]
-    symm 
-    rw [←map_cyclotomic_int, ←int_cyclotomic_unique hspec]
-    simp only [map_add, map_X, map_one]
+theorem cyclotomic_two (R : Type*) [ring R] : «expr = »(cyclotomic 2 R, «expr + »(X, 1)) :=
+begin
+  have [ident hspec] [":", expr «expr = »(map (int.cast_ring_hom exprℂ()) «expr + »(X, 1), cyclotomic' 2 exprℂ())] [],
+  { simp [] [] ["only"] ["[", expr cyclotomic'_two exprℂ() 0 two_ne_zero.symm, ",", expr map_add, ",", expr map_X, ",", expr map_one, "]"] [] [] },
+  symmetry,
+  rw ["[", "<-", expr map_cyclotomic_int, ",", "<-", expr int_cyclotomic_unique hspec, "]"] [],
+  simp [] [] ["only"] ["[", expr map_add, ",", expr map_X, ",", expr map_one, "]"] [] []
+end
 
 /-- `cyclotomic n` is monic. -/
 theorem cyclotomic.monic (n : ℕ) (R : Type _) [Ringₓ R] : (cyclotomic n R).Monic :=
@@ -367,13 +379,18 @@ theorem degree_cyclotomic (n : ℕ) (R : Type _) [Ringₓ R] [Nontrivial R] : (c
     simp only [(int_cyclotomic_spec n).right.right, RingHom.eq_int_cast, monic.leading_coeff, Int.cast_one, Ne.def,
       not_false_iff, one_ne_zero]
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The natural degree of `cyclotomic n` is `totient n`. -/
-theorem nat_degree_cyclotomic (n : ℕ) (R : Type _) [Ringₓ R] [Nontrivial R] :
-  (cyclotomic n R).natDegree = Nat.totient n :=
-  by 
-    have hdeg := degree_cyclotomic n R 
-    rw [degree_eq_nat_degree (cyclotomic_ne_zero n R)] at hdeg 
-    exactModCast hdeg
+theorem nat_degree_cyclotomic
+(n : exprℕ())
+(R : Type*)
+[ring R]
+[nontrivial R] : «expr = »((cyclotomic n R).nat_degree, nat.totient n) :=
+begin
+  have [ident hdeg] [] [":=", expr degree_cyclotomic n R],
+  rw [expr degree_eq_nat_degree (cyclotomic_ne_zero n R)] ["at", ident hdeg],
+  exact_mod_cast [expr hdeg]
+end
 
 /-- The degree of `cyclotomic n R` is positive. -/
 theorem degree_cyclotomic_pos (n : ℕ) (R : Type _) (hpos : 0 < n) [Ringₓ R] [Nontrivial R] :
@@ -382,24 +399,28 @@ theorem degree_cyclotomic_pos (n : ℕ) (R : Type _) (hpos : 0 < n) [Ringₓ R] 
     rw [degree_cyclotomic n R]
     exactModCast Nat.totient_pos hpos
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `∏ i in nat.divisors n, cyclotomic i R = X ^ n - 1`. -/
-theorem prod_cyclotomic_eq_X_pow_sub_one {n : ℕ} (hpos : 0 < n) (R : Type _) [CommRingₓ R] :
-  (∏i in Nat.divisors n, cyclotomic i R) = (X^n) - 1 :=
-  by 
-    have integer : (∏i in Nat.divisors n, cyclotomic i ℤ) = (X^n) - 1
-    ·
-      apply map_injective (Int.castRingHom ℂ) Int.cast_injective 
-      rw [map_prod (Int.castRingHom ℂ) fun i => cyclotomic i ℤ]
-      simp only [int_cyclotomic_spec, map_pow, Nat.cast_id, map_X, map_one, map_sub]
-      exact prod_cyclotomic'_eq_X_pow_sub_one hpos (Complex.is_primitive_root_exp n (ne_of_ltₓ hpos).symm)
-    have coerc : (X^n) - 1 = map (Int.castRingHom R) ((X^n) - 1)
-    ·
-      simp only [map_pow, map_X, map_one, map_sub]
-    have h : ∀ i _ : i ∈ n.divisors, cyclotomic i R = map (Int.castRingHom R) (cyclotomic i ℤ)
-    ·
-      intro i hi 
-      exact (map_cyclotomic_int i R).symm 
-    rw [Finset.prod_congr (refl n.divisors) h, coerc, ←map_prod (Int.castRingHom R) fun i => cyclotomic i ℤ, integer]
+theorem prod_cyclotomic_eq_X_pow_sub_one
+{n : exprℕ()}
+(hpos : «expr < »(0, n))
+(R : Type*)
+[comm_ring R] : «expr = »(«expr∏ in , »((i), nat.divisors n, cyclotomic i R), «expr - »(«expr ^ »(X, n), 1)) :=
+begin
+  have [ident integer] [":", expr «expr = »(«expr∏ in , »((i), nat.divisors n, cyclotomic i exprℤ()), «expr - »(«expr ^ »(X, n), 1))] [],
+  { apply [expr map_injective (int.cast_ring_hom exprℂ()) int.cast_injective],
+    rw [expr map_prod (int.cast_ring_hom exprℂ()) (λ i, cyclotomic i exprℤ())] [],
+    simp [] [] ["only"] ["[", expr int_cyclotomic_spec, ",", expr map_pow, ",", expr nat.cast_id, ",", expr map_X, ",", expr map_one, ",", expr map_sub, "]"] [] [],
+    exact [expr prod_cyclotomic'_eq_X_pow_sub_one hpos (complex.is_primitive_root_exp n (ne_of_lt hpos).symm)] },
+  have [ident coerc] [":", expr «expr = »(«expr - »(«expr ^ »(X, n), 1), map (int.cast_ring_hom R) «expr - »(«expr ^ »(X, n), 1))] [],
+  { simp [] [] ["only"] ["[", expr map_pow, ",", expr map_X, ",", expr map_one, ",", expr map_sub, "]"] [] [] },
+  have [ident h] [":", expr ∀
+   i «expr ∈ » n.divisors, «expr = »(cyclotomic i R, map (int.cast_ring_hom R) (cyclotomic i exprℤ()))] [],
+  { intros [ident i, ident hi],
+    exact [expr (map_cyclotomic_int i R).symm] },
+  rw ["[", expr finset.prod_congr (refl n.divisors) h, ",", expr coerc, ",", "<-", expr map_prod (int.cast_ring_hom R) (λ
+    i, cyclotomic i exprℤ()), ",", expr integer, "]"] []
+end
 
 section ArithmeticFunction
 
@@ -407,48 +428,56 @@ open Nat.ArithmeticFunction
 
 open_locale ArithmeticFunction
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `cyclotomic n R` can be expressed as a product in a fraction field of `polynomial R`
   using Möbius inversion. -/
-theorem cyclotomic_eq_prod_X_pow_sub_one_pow_moebius {n : ℕ} (hpos : 0 < n) (R : Type _) [CommRingₓ R] [Nontrivial R]
-  {K : Type _} [Field K] [Algebra (Polynomial R) K] [IsFractionRing (Polynomial R) K] :
-  algebraMap _ K (cyclotomic n R) =
-    ∏i in n.divisors_antidiagonal, algebraMap (Polynomial R) K ((X^i.snd) - 1)^μ i.fst :=
-  by 
-    have h : ∀ n : ℕ, 0 < n → (∏i in Nat.divisors n, algebraMap _ K (cyclotomic i R)) = algebraMap _ _ ((X^n) - 1)
-    ·
-      intro n hn 
-      rw [←prod_cyclotomic_eq_X_pow_sub_one hn R, RingHom.map_prod]
-    rw [(prod_eq_iff_prod_pow_moebius_eq_of_nonzero (fun n hn => _) fun n hn => _).1 h n hpos] <;>
-      rw [Ne.def, IsFractionRing.to_map_eq_zero_iff]
-    ·
-      apply cyclotomic_ne_zero
-    ·
-      apply monic.ne_zero 
-      apply monic_X_pow_sub_C _ (ne_of_gtₓ hn)
+theorem cyclotomic_eq_prod_X_pow_sub_one_pow_moebius
+{n : exprℕ()}
+(hpos : «expr < »(0, n))
+(R : Type*)
+[comm_ring R]
+[nontrivial R]
+{K : Type*}
+[field K]
+[algebra (polynomial R) K]
+[is_fraction_ring (polynomial R) K] : «expr = »(algebra_map _ K (cyclotomic n R), «expr∏ in , »((i), n.divisors_antidiagonal, «expr ^ »(algebra_map (polynomial R) K «expr - »(«expr ^ »(X, i.snd), 1), exprμ() i.fst))) :=
+begin
+  have [ident h] [":", expr ∀
+   n : exprℕ(), «expr < »(0, n) → «expr = »(«expr∏ in , »((i), nat.divisors n, algebra_map _ K (cyclotomic i R)), algebra_map _ _ «expr - »(«expr ^ »(X, n), 1))] [],
+  { intros [ident n, ident hn],
+    rw ["[", "<-", expr prod_cyclotomic_eq_X_pow_sub_one hn R, ",", expr ring_hom.map_prod, "]"] [] },
+  rw [expr (prod_eq_iff_prod_pow_moebius_eq_of_nonzero (λ
+     n hn, _) (λ n hn, _)).1 h n hpos] []; rw ["[", expr ne.def, ",", expr is_fraction_ring.to_map_eq_zero_iff, "]"] [],
+  { apply [expr cyclotomic_ne_zero] },
+  { apply [expr monic.ne_zero],
+    apply [expr monic_X_pow_sub_C _ (ne_of_gt hn)] }
+end
 
 end ArithmeticFunction
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- We have
 `cyclotomic n R = (X ^ k - 1) /ₘ (∏ i in nat.proper_divisors k, cyclotomic i K)`. -/
-theorem cyclotomic_eq_X_pow_sub_one_div {R : Type _} [CommRingₓ R] {n : ℕ} (hpos : 0 < n) :
-  cyclotomic n R = ((X^n) - 1) /ₘ ∏i in Nat.properDivisors n, cyclotomic i R :=
-  by 
-    nontriviality R 
-    rw [←prod_cyclotomic_eq_X_pow_sub_one hpos, Nat.divisors_eq_proper_divisors_insert_self_of_pos hpos,
-      Finset.prod_insert Nat.properDivisors.not_self_mem]
-    have prod_monic : (∏i in Nat.properDivisors n, cyclotomic i R).Monic
-    ·
-      apply monic_prod_of_monic 
-      intro i hi 
-      exact cyclotomic.monic i R 
-    rw [(div_mod_by_monic_unique (cyclotomic n R) 0 prod_monic _).1]
-    simp only [degree_zero, zero_addₓ]
-    split 
-    ·
-      rw [mul_commₓ]
-    rw [bot_lt_iff_ne_bot]
-    intro h 
-    exact monic.ne_zero prod_monic (degree_eq_bot.1 h)
+theorem cyclotomic_eq_X_pow_sub_one_div
+{R : Type*}
+[comm_ring R]
+{n : exprℕ()}
+(hpos : «expr < »(0, n)) : «expr = »(cyclotomic n R, «expr /ₘ »(«expr - »(«expr ^ »(X, n), 1), «expr∏ in , »((i), nat.proper_divisors n, cyclotomic i R))) :=
+begin
+  nontriviality [expr R] [],
+  rw ["[", "<-", expr prod_cyclotomic_eq_X_pow_sub_one hpos, ",", expr nat.divisors_eq_proper_divisors_insert_self_of_pos hpos, ",", expr finset.prod_insert nat.proper_divisors.not_self_mem, "]"] [],
+  have [ident prod_monic] [":", expr «expr∏ in , »((i), nat.proper_divisors n, cyclotomic i R).monic] [],
+  { apply [expr monic_prod_of_monic],
+    intros [ident i, ident hi],
+    exact [expr cyclotomic.monic i R] },
+  rw [expr (div_mod_by_monic_unique (cyclotomic n R) 0 prod_monic _).1] [],
+  simp [] [] ["only"] ["[", expr degree_zero, ",", expr zero_add, "]"] [] [],
+  split,
+  { rw [expr mul_comm] [] },
+  rw ["[", expr bot_lt_iff_ne_bot, "]"] [],
+  intro [ident h],
+  exact [expr monic.ne_zero prod_monic (degree_eq_bot.1 h)]
+end
 
 /-- If `m` is a proper divisor of `n`, then `X ^ m - 1` divides
 `∏ i in nat.proper_divisors n, cyclotomic i R`. -/
@@ -468,25 +497,28 @@ theorem X_pow_sub_one_dvd_prod_cyclotomic (R : Type _) [CommRingₓ R] {n m : �
         by 
           rw [mul_commₓ]⟩
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If there is a primitive `n`-th root of unity in `K`, then
 `cyclotomic n K = ∏ μ in primitive_roots n R, (X - C μ)`. In particular,
 `cyclotomic n K = cyclotomic' n K` -/
-theorem cyclotomic_eq_prod_X_sub_primitive_roots {K : Type _} [Field K] {ζ : K} {n : ℕ} (hz : IsPrimitiveRoot ζ n) :
-  cyclotomic n K = ∏μ in primitiveRoots n K, X - C μ :=
-  by 
-    rw [←cyclotomic']
-    induction' n using Nat.strong_induction_onₓ with k hk generalizing ζ hz 
-    obtain hzero | hpos := k.eq_zero_or_pos
-    ·
-      simp only [hzero, cyclotomic'_zero, cyclotomic_zero]
-    have h : ∀ i _ : i ∈ k.proper_divisors, cyclotomic i K = cyclotomic' i K
-    ·
-      intro i hi 
-      obtain ⟨d, hd⟩ := (Nat.mem_proper_divisors.1 hi).1
-      rw [mul_commₓ] at hd 
-      exact hk i (Nat.mem_proper_divisors.1 hi).2 (IsPrimitiveRoot.pow hpos hz hd)
-    rw [@cyclotomic_eq_X_pow_sub_one_div _ _ _ hpos, cyclotomic'_eq_X_pow_sub_one_div hpos hz,
-      Finset.prod_congr (refl k.proper_divisors) h]
+theorem cyclotomic_eq_prod_X_sub_primitive_roots
+{K : Type*}
+[field K]
+{ζ : K}
+{n : exprℕ()}
+(hz : is_primitive_root ζ n) : «expr = »(cyclotomic n K, «expr∏ in , »((μ), primitive_roots n K, «expr - »(X, C μ))) :=
+begin
+  rw ["<-", expr cyclotomic'] [],
+  induction [expr n] ["using", ident nat.strong_induction_on] ["with", ident k, ident hk] ["generalizing", ident ζ, ident hz],
+  obtain [ident hzero, "|", ident hpos, ":=", expr k.eq_zero_or_pos],
+  { simp [] [] ["only"] ["[", expr hzero, ",", expr cyclotomic'_zero, ",", expr cyclotomic_zero, "]"] [] [] },
+  have [ident h] [":", expr ∀ i «expr ∈ » k.proper_divisors, «expr = »(cyclotomic i K, cyclotomic' i K)] [],
+  { intros [ident i, ident hi],
+    obtain ["⟨", ident d, ",", ident hd, "⟩", ":=", expr (nat.mem_proper_divisors.1 hi).1],
+    rw [expr mul_comm] ["at", ident hd],
+    exact [expr hk i (nat.mem_proper_divisors.1 hi).2 (is_primitive_root.pow hpos hz hd)] },
+  rw ["[", expr @cyclotomic_eq_X_pow_sub_one_div _ _ _ hpos, ",", expr cyclotomic'_eq_X_pow_sub_one_div hpos hz, ",", expr finset.prod_congr (refl k.proper_divisors) h, "]"] []
+end
 
 /-- Any `n`-th primitive root of unity is a root of `cyclotomic n ℤ`.-/
 theorem is_root_cyclotomic {n : ℕ} {K : Type _} [Field K] (hpos : 0 < n) {μ : K} (h : IsPrimitiveRoot μ n) :
@@ -496,29 +528,28 @@ theorem is_root_cyclotomic {n : ℕ} {K : Type _} [Field K] (hpos : 0 < n) {μ :
       ←Finset.mem_def]
     rwa [←mem_primitive_roots hpos] at h
 
-theorem eq_cyclotomic_iff {R : Type _} [CommRingₓ R] {n : ℕ} (hpos : 0 < n) (P : Polynomial R) :
-  P = cyclotomic n R ↔ (P*∏i in Nat.properDivisors n, Polynomial.cyclotomic i R) = (X^n) - 1 :=
-  by 
-    nontriviality R 
-    refine' ⟨fun hcycl => _, fun hP => _⟩
-    ·
-      rw [hcycl, ←Finset.prod_insert (@Nat.properDivisors.not_self_mem n),
-        ←Nat.divisors_eq_proper_divisors_insert_self_of_pos hpos]
-      exact prod_cyclotomic_eq_X_pow_sub_one hpos R
-    ·
-      have prod_monic : (∏i in Nat.properDivisors n, cyclotomic i R).Monic
-      ·
-        apply monic_prod_of_monic 
-        intro i hi 
-        exact cyclotomic.monic i R 
-      rw [@cyclotomic_eq_X_pow_sub_one_div R _ _ hpos, (div_mod_by_monic_unique P 0 prod_monic _).1]
-      refine'
-        ⟨by 
-            rwa [zero_addₓ, mul_commₓ],
-          _⟩
-      rw [degree_zero, bot_lt_iff_ne_bot]
-      intro h 
-      exact monic.ne_zero prod_monic (degree_eq_bot.1 h)
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_cyclotomic_iff
+{R : Type*}
+[comm_ring R]
+{n : exprℕ()}
+(hpos : «expr < »(0, n))
+(P : polynomial R) : «expr ↔ »(«expr = »(P, cyclotomic n R), «expr = »(«expr * »(P, «expr∏ in , »((i), nat.proper_divisors n, polynomial.cyclotomic i R)), «expr - »(«expr ^ »(X, n), 1))) :=
+begin
+  nontriviality [expr R] [],
+  refine [expr ⟨λ hcycl, _, λ hP, _⟩],
+  { rw ["[", expr hcycl, ",", "<-", expr finset.prod_insert (@nat.proper_divisors.not_self_mem n), ",", "<-", expr nat.divisors_eq_proper_divisors_insert_self_of_pos hpos, "]"] [],
+    exact [expr prod_cyclotomic_eq_X_pow_sub_one hpos R] },
+  { have [ident prod_monic] [":", expr «expr∏ in , »((i), nat.proper_divisors n, cyclotomic i R).monic] [],
+    { apply [expr monic_prod_of_monic],
+      intros [ident i, ident hi],
+      exact [expr cyclotomic.monic i R] },
+    rw ["[", expr @cyclotomic_eq_X_pow_sub_one_div R _ _ hpos, ",", expr (div_mod_by_monic_unique P 0 prod_monic _).1, "]"] [],
+    refine [expr ⟨by rwa ["[", expr zero_add, ",", expr mul_comm, "]"] [], _⟩],
+    rw ["[", expr degree_zero, ",", expr bot_lt_iff_ne_bot, "]"] [],
+    intro [ident h],
+    exact [expr monic.ne_zero prod_monic (degree_eq_bot.1 h)] }
+end
 
 /-- If `p` is prime, then `cyclotomic p R = geom_sum X p`. -/
 theorem cyclotomic_eq_geom_sum {R : Type _} [CommRingₓ R] {p : ℕ} (hp : Nat.Prime p) : cyclotomic p R = geomSum X p :=
@@ -526,63 +557,58 @@ theorem cyclotomic_eq_geom_sum {R : Type _} [CommRingₓ R] {p : ℕ} (hp : Nat.
     refine' ((eq_cyclotomic_iff hp.pos _).mpr _).symm 
     simp only [Nat.Prime.proper_divisors hp, geom_sum_mul, Finset.prod_singleton, cyclotomic_one]
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `p ^ k` is prime power, then `cyclotomic (p ^ (n + 1)) R = geom_sum (X ^ p ^ n) p`. -/
-theorem cyclotomic_prime_pow_eq_geom_sum {R : Type _} [CommRingₓ R] {p n : ℕ} (hp : Nat.Prime p) :
-  cyclotomic (p^n+1) R = geomSum (X^p^n) p :=
-  by 
-    have  :
-      ∀ m,
-        cyclotomic (p^m+1) R = geomSum (X^p^m) p ↔
-          (geomSum (X^p^m) p*∏x : ℕ in Finset.range (m+1), cyclotomic (p^x) R) = (X^p^m+1) - 1
-    ·
-      intro m 
-      have  := eq_cyclotomic_iff (pow_pos hp.pos (m+1)) _ 
-      rw [eq_comm] at this 
-      rw [this, Nat.prod_proper_divisors_prime_pow hp]
-    induction' n with n_n n_ih
-    ·
-      simp [cyclotomic_eq_geom_sum hp]
-    rw [((eq_cyclotomic_iff (pow_pos hp.pos (n_n.succ+1)) _).mpr _).symm]
-    rw [Nat.prod_proper_divisors_prime_pow hp, Finset.prod_range_succ, n_ih]
-    rw [this] at n_ih 
-    rw [mul_commₓ _ (geomSum _ _), n_ih, geom_sum_mul, sub_left_inj, ←pow_mulₓ, pow_addₓ, pow_oneₓ]
+theorem cyclotomic_prime_pow_eq_geom_sum
+{R : Type*}
+[comm_ring R]
+{p n : exprℕ()}
+(hp : nat.prime p) : «expr = »(cyclotomic «expr ^ »(p, «expr + »(n, 1)) R, geom_sum «expr ^ »(X, «expr ^ »(p, n)) p) :=
+begin
+  have [] [":", expr ∀
+   m, «expr ↔ »(«expr = »(cyclotomic «expr ^ »(p, «expr + »(m, 1)) R, geom_sum «expr ^ »(X, «expr ^ »(p, m)) p), «expr = »(«expr * »(geom_sum «expr ^ »(X, «expr ^ »(p, m)) p, «expr∏ in , »((x : exprℕ()), finset.range «expr + »(m, 1), cyclotomic «expr ^ »(p, x) R)), «expr - »(«expr ^ »(X, «expr ^ »(p, «expr + »(m, 1))), 1)))] [],
+  { intro [ident m],
+    have [] [] [":=", expr eq_cyclotomic_iff (pow_pos hp.pos «expr + »(m, 1)) _],
+    rw [expr eq_comm] ["at", ident this],
+    rw ["[", expr this, ",", expr nat.prod_proper_divisors_prime_pow hp, "]"] [] },
+  induction [expr n] [] ["with", ident n_n, ident n_ih] [],
+  { simp [] [] [] ["[", expr cyclotomic_eq_geom_sum hp, "]"] [] [] },
+  rw [expr ((eq_cyclotomic_iff (pow_pos hp.pos «expr + »(n_n.succ, 1)) _).mpr _).symm] [],
+  rw ["[", expr nat.prod_proper_divisors_prime_pow hp, ",", expr finset.prod_range_succ, ",", expr n_ih, "]"] [],
+  rw [expr this] ["at", ident n_ih],
+  rw ["[", expr mul_comm _ (geom_sum _ _), ",", expr n_ih, ",", expr geom_sum_mul, ",", expr sub_left_inj, ",", "<-", expr pow_mul, ",", expr pow_add, ",", expr pow_one, "]"] []
+end
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The constant term of `cyclotomic n R` is `1` if `2 ≤ n`. -/
-theorem cyclotomic_coeff_zero (R : Type _) [CommRingₓ R] {n : ℕ} (hn : 2 ≤ n) : (cyclotomic n R).coeff 0 = 1 :=
-  by 
-    induction' n using Nat.strong_induction_onₓ with n hi 
-    have hprod : (∏i in Nat.properDivisors n, (Polynomial.cyclotomic i R).coeff 0) = -1
-    ·
-      rw [←Finset.insert_erase (Nat.one_mem_proper_divisors_iff_one_lt.2 (lt_of_lt_of_leₓ one_lt_two hn)),
-        Finset.prod_insert (Finset.not_mem_erase 1 _), cyclotomic_one R]
-      have hleq : ∀ j _ : j ∈ n.proper_divisors.erase 1, 2 ≤ j
-      ·
-        intro j hj 
-        apply Nat.succ_le_of_ltₓ 
-        exact
-          (Ne.le_iff_lt (Finset.mem_erase.1 hj).1.symm).mp
-            (Nat.succ_le_of_ltₓ (Nat.pos_of_mem_proper_divisors (Finset.mem_erase.1 hj).2))
-      have hcongr : ∀ j _ : j ∈ n.proper_divisors.erase 1, (cyclotomic j R).coeff 0 = 1
-      ·
-        intro j hj 
-        exact hi j (Nat.mem_proper_divisors.1 (Finset.mem_erase.1 hj).2).2 (hleq j hj)
-      have hrw : (∏x : ℕ in n.proper_divisors.erase 1, (cyclotomic x R).coeff 0) = 1
-      ·
-        rw [Finset.prod_congr (refl (n.proper_divisors.erase 1)) hcongr]
-        simp only [Finset.prod_const_one]
-      simp only [hrw, mul_oneₓ, zero_sub, coeff_one_zero, coeff_X_zero, coeff_sub]
-    have heq : ((X^n) - 1).coeff 0 = -(cyclotomic n R).coeff 0
-    ·
-      rw [←prod_cyclotomic_eq_X_pow_sub_one (lt_of_lt_of_leₓ zero_lt_two hn),
-        Nat.divisors_eq_proper_divisors_insert_self_of_pos (lt_of_lt_of_leₓ zero_lt_two hn),
-        Finset.prod_insert Nat.properDivisors.not_self_mem, mul_coeff_zero, coeff_zero_prod, hprod,
-        mul_neg_eq_neg_mul_symm, mul_oneₓ]
-    have hzero : ((X^n) - 1).coeff 0 = (-1 : R)
-    ·
-      rw [coeff_zero_eq_eval_zero _]
-      simp only [zero_pow (lt_of_lt_of_leₓ zero_lt_two hn), eval_X, eval_one, zero_sub, eval_pow, eval_sub]
-    rw [hzero] at heq 
-    exact neg_inj.mp (Eq.symm HEq)
+theorem cyclotomic_coeff_zero
+(R : Type*)
+[comm_ring R]
+{n : exprℕ()}
+(hn : «expr ≤ »(2, n)) : «expr = »((cyclotomic n R).coeff 0, 1) :=
+begin
+  induction [expr n] ["using", ident nat.strong_induction_on] ["with", ident n, ident hi] [],
+  have [ident hprod] [":", expr «expr = »(«expr∏ in , »((i), nat.proper_divisors n, (polynomial.cyclotomic i R).coeff 0), «expr- »(1))] [],
+  { rw ["[", "<-", expr finset.insert_erase (nat.one_mem_proper_divisors_iff_one_lt.2 (lt_of_lt_of_le one_lt_two hn)), ",", expr finset.prod_insert (finset.not_mem_erase 1 _), ",", expr cyclotomic_one R, "]"] [],
+    have [ident hleq] [":", expr ∀ j «expr ∈ » n.proper_divisors.erase 1, «expr ≤ »(2, j)] [],
+    { intros [ident j, ident hj],
+      apply [expr nat.succ_le_of_lt],
+      exact [expr (ne.le_iff_lt (finset.mem_erase.1 hj).1.symm).mp (nat.succ_le_of_lt (nat.pos_of_mem_proper_divisors (finset.mem_erase.1 hj).2))] },
+    have [ident hcongr] [":", expr ∀ j «expr ∈ » n.proper_divisors.erase 1, «expr = »((cyclotomic j R).coeff 0, 1)] [],
+    { intros [ident j, ident hj],
+      exact [expr hi j (nat.mem_proper_divisors.1 (finset.mem_erase.1 hj).2).2 (hleq j hj)] },
+    have [ident hrw] [":", expr «expr = »(«expr∏ in , »((x : exprℕ()), n.proper_divisors.erase 1, (cyclotomic x R).coeff 0), 1)] [],
+    { rw [expr finset.prod_congr (refl (n.proper_divisors.erase 1)) hcongr] [],
+      simp [] [] ["only"] ["[", expr finset.prod_const_one, "]"] [] [] },
+    simp [] [] ["only"] ["[", expr hrw, ",", expr mul_one, ",", expr zero_sub, ",", expr coeff_one_zero, ",", expr coeff_X_zero, ",", expr coeff_sub, "]"] [] [] },
+  have [ident heq] [":", expr «expr = »(«expr - »(«expr ^ »(X, n), 1).coeff 0, «expr- »((cyclotomic n R).coeff 0))] [],
+  { rw ["[", "<-", expr prod_cyclotomic_eq_X_pow_sub_one (lt_of_lt_of_le zero_lt_two hn), ",", expr nat.divisors_eq_proper_divisors_insert_self_of_pos (lt_of_lt_of_le zero_lt_two hn), ",", expr finset.prod_insert nat.proper_divisors.not_self_mem, ",", expr mul_coeff_zero, ",", expr coeff_zero_prod, ",", expr hprod, ",", expr mul_neg_eq_neg_mul_symm, ",", expr mul_one, "]"] [] },
+  have [ident hzero] [":", expr «expr = »(«expr - »(«expr ^ »(X, n), 1).coeff 0, («expr- »(1) : R))] [],
+  { rw [expr coeff_zero_eq_eval_zero _] [],
+    simp [] [] ["only"] ["[", expr zero_pow (lt_of_lt_of_le zero_lt_two hn), ",", expr eval_X, ",", expr eval_one, ",", expr zero_sub, ",", expr eval_pow, ",", expr eval_sub, "]"] [] [] },
+  rw [expr hzero] ["at", ident heq],
+  exact [expr neg_inj.mp (eq.symm heq)]
+end
 
 /-- If `(a : ℕ)` is a root of `cyclotomic n (zmod p)`, where `p` is a prime, then `a` and `p` are
 coprime. -/
@@ -625,7 +651,7 @@ theorem order_of_root_cyclotomic_dvd {n : ℕ} (hpos : 0 < n) {p : ℕ} [Fact p.
     rw [←prod_cyclotomic_eq_X_pow_sub_one hpos (Zmod p), Nat.divisors_eq_proper_divisors_insert_self_of_pos hpos,
       Finset.prod_insert Nat.properDivisors.not_self_mem, eval_mul, hroot, zero_mul]
 
--- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `(a : ℕ)` is a root of `cyclotomic n (zmod p)`, where `p` is a prime that does not divide
 `n`, then the multiplicative order of `a` modulo `p` is exactly `n`. -/
 theorem order_of_root_cyclotomic_eq

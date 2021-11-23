@@ -33,7 +33,7 @@ universe u
 
 variable{α : Type u}
 
-open Finset Opposite
+open Finset MulOpposite
 
 open_locale BigOperators
 
@@ -69,11 +69,10 @@ theorem geom_sum₂_def [Semiringₓ α] (x y : α) (n : ℕ) : geomSum₂ x y n
 theorem geom_sum₂_zero [Semiringₓ α] (x y : α) : geomSum₂ x y 0 = 0 :=
   rfl
 
-@[simp]
-theorem geom_sum₂_one [Semiringₓ α] (x y : α) : geomSum₂ x y 1 = 1 :=
-  by 
-    have  : 1 - 1 - 0 = 0 := rfl 
-    rw [geom_sum₂_def, sum_range_one, this, pow_zeroₓ, pow_zeroₓ, mul_oneₓ]
+-- error in Algebra.GeomSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem geom_sum₂_one [semiring α] (x y : α) : «expr = »(geom_sum₂ x y 1, 1) :=
+by { have [] [":", expr «expr = »(«expr - »(«expr - »(1, 1), 0), 0)] [":=", expr rfl],
+  rw ["[", expr geom_sum₂_def, ",", expr sum_range_one, ",", expr this, ",", expr pow_zero, ",", expr pow_zero, ",", expr mul_one, "]"] [] }
 
 @[simp]
 theorem op_geom_sum₂ [Ringₓ α] (x y : α) (n : ℕ) : op (geomSum₂ x y n) = geomSum₂ (op y) (op x) n :=
@@ -93,35 +92,37 @@ theorem geom_sum₂_with_one [Semiringₓ α] (x : α) (n : ℕ) : geomSum₂ x 
       by 
         rw [one_pow, mul_oneₓ]
 
+-- error in Algebra.GeomSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- $x^n-y^n = (x-y) \sum x^ky^{n-1-k}$ reformulated without `-` signs. -/
-protected theorem Commute.geom_sum₂_mul_add [Semiringₓ α] {x y : α} (h : Commute x y) (n : ℕ) :
-  ((geomSum₂ (x+y) y n*x)+y ^ n) = (x+y) ^ n :=
-  by 
-    let f := fun m i : ℕ => ((x+y) ^ i)*y ^ (m - 1 - i)
-    change (((∑i in range n, (f n) i)*x)+y ^ n) = (x+y) ^ n 
-    induction' n with n ih
-    ·
-      rw [range_zero, sum_empty, zero_mul, zero_addₓ, pow_zeroₓ, pow_zeroₓ]
-    ·
-      have f_last : f (n+1) n = (x+y) ^ n :=
-        by 
-          dsimp [f]
-          rw [←tsub_add_eq_tsub_tsub, Nat.add_comm, tsub_self, pow_zeroₓ, mul_oneₓ]
-      have f_succ : ∀ i, i ∈ range n → f (n+1) i = y*f n i :=
-        fun i hi =>
-          by 
-            dsimp [f]
-            have  : Commute y ((x+y) ^ i) := (h.symm.add_right (Commute.refl y)).pow_right i 
-            rw [←mul_assocₓ, this.eq, mul_assocₓ, ←pow_succₓ y (n - 1 - i)]
-            congr 2
-            rw [add_tsub_cancel_right, ←tsub_add_eq_tsub_tsub, add_commₓ 1 i]
-            have  : ((i+1)+n - i+1) = n := add_tsub_cancel_of_le (mem_range.mp hi)
-            rw [add_commₓ (i+1)] at this 
-            rw [←this, add_tsub_cancel_right, add_commₓ i 1, ←add_assocₓ, add_tsub_cancel_right]
-      rw [pow_succₓ (x+y), add_mulₓ, sum_range_succ_comm, add_mulₓ, f_last, add_assocₓ]
-      rw [(((Commute.refl x).add_right h).pow_right n).Eq]
-      congr 1
-      rw [sum_congr rfl f_succ, ←mul_sum, pow_succₓ y, mul_assocₓ, ←mul_addₓ y, ih]
+protected
+theorem commute.geom_sum₂_mul_add
+[semiring α]
+{x y : α}
+(h : commute x y)
+(n : exprℕ()) : «expr = »(«expr + »(«expr * »(geom_sum₂ «expr + »(x, y) y n, x), «expr ^ »(y, n)), «expr ^ »(«expr + »(x, y), n)) :=
+begin
+  let [ident f] [] [":=", expr λ
+   m i : exprℕ(), «expr * »(«expr ^ »(«expr + »(x, y), i), «expr ^ »(y, «expr - »(«expr - »(m, 1), i)))],
+  change [expr «expr = »(«expr + »(«expr * »(«expr∑ in , »((i), range n, f n i), x), «expr ^ »(y, n)), «expr ^ »(«expr + »(x, y), n))] [] [],
+  induction [expr n] [] ["with", ident n, ident ih] [],
+  { rw ["[", expr range_zero, ",", expr sum_empty, ",", expr zero_mul, ",", expr zero_add, ",", expr pow_zero, ",", expr pow_zero, "]"] [] },
+  { have [ident f_last] [":", expr «expr = »(f «expr + »(n, 1) n, «expr ^ »(«expr + »(x, y), n))] [":=", expr by { dsimp [] ["[", expr f, "]"] [] [],
+       rw ["[", "<-", expr tsub_add_eq_tsub_tsub, ",", expr nat.add_comm, ",", expr tsub_self, ",", expr pow_zero, ",", expr mul_one, "]"] [] }],
+    have [ident f_succ] [":", expr ∀
+     i, «expr ∈ »(i, range n) → «expr = »(f «expr + »(n, 1) i, «expr * »(y, f n i))] [":=", expr λ
+     i hi, by { dsimp [] ["[", expr f, "]"] [] [],
+       have [] [":", expr commute y «expr ^ »(«expr + »(x, y), i)] [":=", expr (h.symm.add_right (commute.refl y)).pow_right i],
+       rw ["[", "<-", expr mul_assoc, ",", expr this.eq, ",", expr mul_assoc, ",", "<-", expr pow_succ y «expr - »(«expr - »(n, 1), i), "]"] [],
+       congr' [2] [],
+       rw ["[", expr add_tsub_cancel_right, ",", "<-", expr tsub_add_eq_tsub_tsub, ",", expr add_comm 1 i, "]"] [],
+       have [] [":", expr «expr = »(«expr + »(«expr + »(i, 1), «expr - »(n, «expr + »(i, 1))), n)] [":=", expr add_tsub_cancel_of_le (mem_range.mp hi)],
+       rw ["[", expr add_comm «expr + »(i, 1), "]"] ["at", ident this],
+       rw ["[", "<-", expr this, ",", expr add_tsub_cancel_right, ",", expr add_comm i 1, ",", "<-", expr add_assoc, ",", expr add_tsub_cancel_right, "]"] [] }],
+    rw ["[", expr pow_succ «expr + »(x, y), ",", expr add_mul, ",", expr sum_range_succ_comm, ",", expr add_mul, ",", expr f_last, ",", expr add_assoc, "]"] [],
+    rw [expr (((commute.refl x).add_right h).pow_right n).eq] [],
+    congr' [1] [],
+    rw ["[", expr sum_congr rfl f_succ, ",", "<-", expr mul_sum, ",", expr pow_succ y, ",", expr mul_assoc, ",", "<-", expr mul_add y, ",", expr ih, "]"] [] }
+end
 
 theorem geom_sum₂_self {α : Type _} [CommRingₓ α] (x : α) (n : ℕ) : geomSum₂ x x n = n*x ^ (n - 1) :=
   calc (∑i in Finset.range n, (x ^ i)*x ^ (n - 1 - i)) = ∑i in Finset.range n, x ^ i+n - 1 - i :=
@@ -139,23 +140,34 @@ theorem geom_sum₂_self {α : Type _} [CommRingₓ α] (x : α) (n : ℕ) : geo
 theorem geom_sum₂_mul_add [CommSemiringₓ α] (x y : α) (n : ℕ) : ((geomSum₂ (x+y) y n*x)+y ^ n) = (x+y) ^ n :=
   (Commute.all x y).geom_sum₂_mul_add n
 
-theorem geom_sum_mul_add [Semiringₓ α] (x : α) (n : ℕ) : ((geomSum (x+1) n*x)+1) = (x+1) ^ n :=
-  by 
-    have  := (Commute.one_right x).geom_sum₂_mul_add n 
-    rw [one_pow, geom_sum₂_with_one] at this 
-    exact this
+-- error in Algebra.GeomSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem geom_sum_mul_add
+[semiring α]
+(x : α)
+(n : exprℕ()) : «expr = »(«expr + »(«expr * »(geom_sum «expr + »(x, 1) n, x), 1), «expr ^ »(«expr + »(x, 1), n)) :=
+begin
+  have [] [] [":=", expr (commute.one_right x).geom_sum₂_mul_add n],
+  rw ["[", expr one_pow, ",", expr geom_sum₂_with_one, "]"] ["at", ident this],
+  exact [expr this]
+end
 
-protected theorem Commute.geom_sum₂_mul [Ringₓ α] {x y : α} (h : Commute x y) (n : ℕ) :
-  (geomSum₂ x y n*x - y) = x ^ n - y ^ n :=
-  by 
-    have  := (h.sub_left (Commute.refl y)).geom_sum₂_mul_add n 
-    rw [sub_add_cancel] at this 
-    rw [←this, add_sub_cancel]
+-- error in Algebra.GeomSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem commute.geom_sum₂_mul
+[ring α]
+{x y : α}
+(h : commute x y)
+(n : exprℕ()) : «expr = »(«expr * »(geom_sum₂ x y n, «expr - »(x, y)), «expr - »(«expr ^ »(x, n), «expr ^ »(y, n))) :=
+begin
+  have [] [] [":=", expr (h.sub_left (commute.refl y)).geom_sum₂_mul_add n],
+  rw ["[", expr sub_add_cancel, "]"] ["at", ident this],
+  rw ["[", "<-", expr this, ",", expr add_sub_cancel, "]"] []
+end
 
 theorem Commute.mul_neg_geom_sum₂ [Ringₓ α] {x y : α} (h : Commute x y) (n : ℕ) :
   ((y - x)*geomSum₂ x y n) = y ^ n - x ^ n :=
   by 
-    rw [←op_inj_iff]
+    apply op_injective 
     simp only [op_mul, op_sub, op_geom_sum₂, op_pow]
     exact (commute.op h.symm).geom_sum₂_mul n
 
@@ -167,27 +179,37 @@ theorem Commute.mul_geom_sum₂ [Ringₓ α] {x y : α} (h : Commute x y) (n : �
 theorem geom_sum₂_mul [CommRingₓ α] (x y : α) (n : ℕ) : (geomSum₂ x y n*x - y) = x ^ n - y ^ n :=
   (Commute.all x y).geom_sum₂_mul n
 
-theorem geom_sum_mul [Ringₓ α] (x : α) (n : ℕ) : (geomSum x n*x - 1) = x ^ n - 1 :=
-  by 
-    have  := (Commute.one_right x).geom_sum₂_mul n 
-    rw [one_pow, geom_sum₂_with_one] at this 
-    exact this
+-- error in Algebra.GeomSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem geom_sum_mul
+[ring α]
+(x : α)
+(n : exprℕ()) : «expr = »(«expr * »(geom_sum x n, «expr - »(x, 1)), «expr - »(«expr ^ »(x, n), 1)) :=
+begin
+  have [] [] [":=", expr (commute.one_right x).geom_sum₂_mul n],
+  rw ["[", expr one_pow, ",", expr geom_sum₂_with_one, "]"] ["at", ident this],
+  exact [expr this]
+end
 
 theorem mul_geom_sum [Ringₓ α] (x : α) (n : ℕ) : ((x - 1)*geomSum x n) = x ^ n - 1 :=
-  by 
-    rw [←op_inj_iff]
-    simpa using geom_sum_mul (op x) n
+  op_injective$
+    by 
+      simpa using geom_sum_mul (op x) n
 
-theorem geom_sum_mul_neg [Ringₓ α] (x : α) (n : ℕ) : (geomSum x n*1 - x) = 1 - x ^ n :=
-  by 
-    have  := congr_argₓ Neg.neg (geom_sum_mul x n)
-    rw [neg_sub, ←mul_neg_eq_neg_mul_symm, neg_sub] at this 
-    exact this
+-- error in Algebra.GeomSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem geom_sum_mul_neg
+[ring α]
+(x : α)
+(n : exprℕ()) : «expr = »(«expr * »(geom_sum x n, «expr - »(1, x)), «expr - »(1, «expr ^ »(x, n))) :=
+begin
+  have [] [] [":=", expr congr_arg has_neg.neg (geom_sum_mul x n)],
+  rw ["[", expr neg_sub, ",", "<-", expr mul_neg_eq_neg_mul_symm, ",", expr neg_sub, "]"] ["at", ident this],
+  exact [expr this]
+end
 
 theorem mul_neg_geom_sum [Ringₓ α] (x : α) (n : ℕ) : ((1 - x)*geomSum x n) = 1 - x ^ n :=
-  by 
-    rw [←op_inj_iff]
-    simpa using geom_sum_mul_neg (op x) n
+  op_injective$
+    by 
+      simpa using geom_sum_mul_neg (op x) n
 
 protected theorem Commute.geom_sum₂ [DivisionRing α] {x y : α} (h' : Commute x y) (h : x ≠ y) (n : ℕ) :
   geomSum₂ x y n = (x ^ n - y ^ n) / (x - y) :=
@@ -207,23 +229,28 @@ theorem geom_sum_eq [DivisionRing α] {x : α} (h : x ≠ 1) (n : ℕ) : geomSum
   by 
     rw [←geom_sum_mul, mul_div_cancel _ this]
 
-protected theorem Commute.mul_geom_sum₂_Ico [Ringₓ α] {x y : α} (h : Commute x y) {m n : ℕ} (hmn : m ≤ n) :
-  ((x - y)*∑i in Finset.ico m n, (x ^ i)*y ^ (n - 1 - i)) = x ^ n - (x ^ m)*y ^ (n - m) :=
-  by 
-    rw [sum_Ico_eq_sub _ hmn, ←geom_sum₂_def]
-    have  : (∑k in range m, (x ^ k)*y ^ (n - 1 - k)) = ∑k in range m, (x ^ k)*(y ^ (n - m))*y ^ (m - 1 - k)
-    ·
-      refine' sum_congr rfl fun j j_in => _ 
-      rw [←pow_addₓ]
-      congr 
-      rw [mem_range, Nat.lt_iff_add_one_le, add_commₓ] at j_in 
-      have h' : ((n - m)+m - 1+j) = n - 1+j := tsub_add_tsub_cancel hmn j_in 
-      rw [←tsub_add_eq_tsub_tsub m, h', ←tsub_add_eq_tsub_tsub]
-    rw [this]
-    simpRw [pow_mul_commₓ y (n - m) _]
-    simpRw [←mul_assocₓ]
-    rw [←sum_mul, ←geom_sum₂_def, mul_sub, h.mul_geom_sum₂, ←mul_assocₓ, h.mul_geom_sum₂, sub_mul, ←pow_addₓ,
-      add_tsub_cancel_of_le hmn, sub_sub_sub_cancel_right (x ^ n) ((x ^ m)*y ^ (n - m)) (y ^ n)]
+-- error in Algebra.GeomSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem commute.mul_geom_sum₂_Ico
+[ring α]
+{x y : α}
+(h : commute x y)
+{m n : exprℕ()}
+(hmn : «expr ≤ »(m, n)) : «expr = »(«expr * »(«expr - »(x, y), «expr∑ in , »((i), finset.Ico m n, «expr * »(«expr ^ »(x, i), «expr ^ »(y, «expr - »(«expr - »(n, 1), i))))), «expr - »(«expr ^ »(x, n), «expr * »(«expr ^ »(x, m), «expr ^ »(y, «expr - »(n, m))))) :=
+begin
+  rw ["[", expr sum_Ico_eq_sub _ hmn, ",", "<-", expr geom_sum₂_def, "]"] [],
+  have [] [":", expr «expr = »(«expr∑ in , »((k), range m, «expr * »(«expr ^ »(x, k), «expr ^ »(y, «expr - »(«expr - »(n, 1), k)))), «expr∑ in , »((k), range m, «expr * »(«expr ^ »(x, k), «expr * »(«expr ^ »(y, «expr - »(n, m)), «expr ^ »(y, «expr - »(«expr - »(m, 1), k))))))] [],
+  { refine [expr sum_congr rfl (λ j j_in, _)],
+    rw ["<-", expr pow_add] [],
+    congr,
+    rw ["[", expr mem_range, ",", expr nat.lt_iff_add_one_le, ",", expr add_comm, "]"] ["at", ident j_in],
+    have [ident h'] [":", expr «expr = »(«expr + »(«expr - »(n, m), «expr - »(m, «expr + »(1, j))), «expr - »(n, «expr + »(1, j)))] [":=", expr tsub_add_tsub_cancel hmn j_in],
+    rw ["[", "<-", expr tsub_add_eq_tsub_tsub m, ",", expr h', ",", "<-", expr tsub_add_eq_tsub_tsub, "]"] [] },
+  rw [expr this] [],
+  simp_rw [expr pow_mul_comm y «expr - »(n, m) _] [],
+  simp_rw ["<-", expr mul_assoc] [],
+  rw ["[", "<-", expr sum_mul, ",", "<-", expr geom_sum₂_def, ",", expr mul_sub, ",", expr h.mul_geom_sum₂, ",", "<-", expr mul_assoc, ",", expr h.mul_geom_sum₂, ",", expr sub_mul, ",", "<-", expr pow_add, ",", expr add_tsub_cancel_of_le hmn, ",", expr sub_sub_sub_cancel_right «expr ^ »(x, n) «expr * »(«expr ^ »(x, m), «expr ^ »(y, «expr - »(n, m))) «expr ^ »(y, n), "]"] []
+end
 
 protected theorem Commute.geom_sum₂_succ_eq {α : Type u} [Ringₓ α] {x y : α} (h : Commute x y) {n : ℕ} :
   geomSum₂ x y (n+1) = (x ^ n)+y*geomSum₂ x y n :=
@@ -249,17 +276,23 @@ theorem mul_geom_sum₂_Ico [CommRingₓ α] (x y : α) {m n : ℕ} (hmn : m ≤
   ((x - y)*∑i in Finset.ico m n, (x ^ i)*y ^ (n - 1 - i)) = x ^ n - (x ^ m)*y ^ (n - m) :=
   (Commute.all x y).mul_geom_sum₂_Ico hmn
 
-protected theorem Commute.geom_sum₂_Ico_mul [Ringₓ α] {x y : α} (h : Commute x y) {m n : ℕ} (hmn : m ≤ n) :
-  ((∑i in Finset.ico m n, (x ^ i)*y ^ (n - 1 - i))*x - y) = x ^ n - (y ^ (n - m))*x ^ m :=
-  by 
-    rw [←op_inj_iff]
-    simp only [op_sub, op_mul, op_pow, op_sum]
-    have  : (∑k in Ico m n, (op y ^ (n - 1 - k))*op x ^ k) = ∑k in Ico m n, (op x ^ k)*op y ^ (n - 1 - k)
-    ·
-      refine' sum_congr rfl fun k k_in => _ 
-      apply Commute.pow_pow (commute.op h.symm)
-    rw [this]
-    exact (commute.op h).mul_geom_sum₂_Ico hmn
+-- error in Algebra.GeomSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem commute.geom_sum₂_Ico_mul
+[ring α]
+{x y : α}
+(h : commute x y)
+{m n : exprℕ()}
+(hmn : «expr ≤ »(m, n)) : «expr = »(«expr * »(«expr∑ in , »((i), finset.Ico m n, «expr * »(«expr ^ »(x, i), «expr ^ »(y, «expr - »(«expr - »(n, 1), i)))), «expr - »(x, y)), «expr - »(«expr ^ »(x, n), «expr * »(«expr ^ »(y, «expr - »(n, m)), «expr ^ »(x, m)))) :=
+begin
+  apply [expr op_injective],
+  simp [] [] ["only"] ["[", expr op_sub, ",", expr op_mul, ",", expr op_pow, ",", expr op_sum, "]"] [] [],
+  have [] [":", expr «expr = »(«expr∑ in , »((k), Ico m n, «expr * »(«expr ^ »(op y, «expr - »(«expr - »(n, 1), k)), «expr ^ »(op x, k))), «expr∑ in , »((k), Ico m n, «expr * »(«expr ^ »(op x, k), «expr ^ »(op y, «expr - »(«expr - »(n, 1), k)))))] [],
+  { refine [expr sum_congr rfl (λ k k_in, _)],
+    apply [expr commute.pow_pow (commute.op h.symm)] },
+  rw [expr this] [],
+  exact [expr (commute.op h).mul_geom_sum₂_Ico hmn]
+end
 
 theorem geom_sum_Ico_mul [Ringₓ α] (x : α) {m n : ℕ} (hmn : m ≤ n) :
   ((∑i in Finset.ico m n, x ^ i)*x - 1) = x ^ n - x ^ m :=

@@ -276,7 +276,7 @@ unsafe def type_tooltip : Tc subexpr Empty :=
 
 end InteractiveExpression
 
--- error in Tactic.InteractiveExpr: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.InteractiveExpr: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /--
 Supported tactic state filters.
 -/ @[derive #[expr decidable_eq]] meta inductive filter_type
@@ -329,7 +329,7 @@ unsafe def show_type_component : Tc expr Empty :=
         let y_comp ← interactive_expression.mk interactive_expression.type_tooltip$ y 
         pure y_comp
 
--- error in Tactic.InteractiveExpr: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.InteractiveExpr: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- A group of local constants in the context that should be rendered as one line. -/
 @[derive #[expr decidable_eq]]
 meta

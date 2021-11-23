@@ -126,16 +126,23 @@ theorem degree_eq_one_of_irreducible [IsAlgClosed k] {p : Polynomial k} (h_nz : 
   p.degree = 1 :=
   degree_eq_one_of_irreducible_of_splits h_nz hp (IsAlgClosed.splits_codomain _)
 
-theorem algebra_map_surjective_of_is_integral {k K : Type _} [Field k] [Ringₓ K] [IsDomain K] [hk : IsAlgClosed k]
-  [Algebra k K] (hf : Algebra.IsIntegral k K) : Function.Surjective (algebraMap k K) :=
-  by 
-    refine' fun x => ⟨-(minpoly k x).coeff 0, _⟩
-    have hq : (minpoly k x).leadingCoeff = 1 := minpoly.monic (hf x)
-    have h : (minpoly k x).degree = 1 :=
-      degree_eq_one_of_irreducible k (minpoly.ne_zero (hf x)) (minpoly.irreducible (hf x))
-    have  : aeval x (minpoly k x) = 0 := minpoly.aeval k x 
-    rw [eq_X_add_C_of_degree_eq_one h, hq, C_1, one_mulₓ, aeval_add, aeval_X, aeval_C, add_eq_zero_iff_eq_neg] at this 
-    exact (RingHom.map_neg (algebraMap k K) ((minpoly k x).coeff 0)).symm ▸ this.symm
+-- error in FieldTheory.IsAlgClosed.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem algebra_map_surjective_of_is_integral
+{k K : Type*}
+[field k]
+[ring K]
+[is_domain K]
+[hk : is_alg_closed k]
+[algebra k K]
+(hf : algebra.is_integral k K) : function.surjective (algebra_map k K) :=
+begin
+  refine [expr λ x, ⟨«expr- »((minpoly k x).coeff 0), _⟩],
+  have [ident hq] [":", expr «expr = »((minpoly k x).leading_coeff, 1)] [":=", expr minpoly.monic (hf x)],
+  have [ident h] [":", expr «expr = »((minpoly k x).degree, 1)] [":=", expr degree_eq_one_of_irreducible k (minpoly.ne_zero (hf x)) (minpoly.irreducible (hf x))],
+  have [] [":", expr «expr = »(aeval x (minpoly k x), 0)] [":=", expr minpoly.aeval k x],
+  rw ["[", expr eq_X_add_C_of_degree_eq_one h, ",", expr hq, ",", expr C_1, ",", expr one_mul, ",", expr aeval_add, ",", expr aeval_X, ",", expr aeval_C, ",", expr add_eq_zero_iff_eq_neg, "]"] ["at", ident this],
+  exact [expr «expr ▸ »((ring_hom.map_neg (algebra_map k K) ((minpoly k x).coeff 0)).symm, this.symm)]
+end
 
 theorem algebra_map_surjective_of_is_integral' {k K : Type _} [Field k] [CommRingₓ K] [IsDomain K] [hk : IsAlgClosed k]
   (f : k →+* K) (hf : f.is_integral) : Function.Surjective f :=
@@ -156,28 +163,34 @@ theorem is_alg_closure_iff (K : Type v) [Field K] [Algebra k K] :
   IsAlgClosure k K ↔ IsAlgClosed K ∧ Algebra.IsAlgebraic k K :=
   ⟨fun h => ⟨h.1, h.2⟩, fun h => ⟨h.1, h.2⟩⟩
 
+-- error in FieldTheory.IsAlgClosed.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Every element `f` in a nontrivial finite-dimensional algebra `A`
 over an algebraically closed field `K`
 has non-empty spectrum:
 that is, there is some `c : K` so `f - c • 1` is not invertible.
 -/
-theorem exists_spectrum_of_is_alg_closed_of_finite_dimensional (𝕜 : Type _) [Field 𝕜] [IsAlgClosed 𝕜] {A : Type _}
-  [Nontrivial A] [Ringₓ A] [Algebra 𝕜 A] [I : FiniteDimensional 𝕜 A] (f : A) :
-  ∃ c : 𝕜, ¬IsUnit (f - algebraMap 𝕜 A c) :=
-  by 
-    obtain ⟨p, ⟨h_mon, h_eval_p⟩⟩ := is_integral_of_noetherian (IsNoetherian.iff_fg.2 I) f 
-    have nu : ¬IsUnit (aeval f p)
-    ·
-      rw [←aeval_def] at h_eval_p 
-      rw [h_eval_p]
-      simp 
-    rw [eq_prod_roots_of_monic_of_splits_id h_mon (IsAlgClosed.splits p), ←Multiset.prod_to_list,
-      AlgHom.map_list_prod] at nu 
-    replace nu := mt List.prod_is_unit nu 
-    simp only [not_forall, exists_prop, aeval_C, Multiset.mem_to_list, List.mem_mapₓ, aeval_X, exists_exists_and_eq_and,
-      Multiset.mem_map, AlgHom.map_sub] at nu 
-    exact ⟨nu.some, nu.some_spec.2⟩
+theorem exists_spectrum_of_is_alg_closed_of_finite_dimensional
+(𝕜 : Type*)
+[field 𝕜]
+[is_alg_closed 𝕜]
+{A : Type*}
+[nontrivial A]
+[ring A]
+[algebra 𝕜 A]
+[I : finite_dimensional 𝕜 A]
+(f : A) : «expr∃ , »((c : 𝕜), «expr¬ »(is_unit «expr - »(f, algebra_map 𝕜 A c))) :=
+begin
+  obtain ["⟨", ident p, ",", "⟨", ident h_mon, ",", ident h_eval_p, "⟩", "⟩", ":=", expr is_integral_of_noetherian (is_noetherian.iff_fg.2 I) f],
+  have [ident nu] [":", expr «expr¬ »(is_unit (aeval f p))] [],
+  { rw ["[", "<-", expr aeval_def, "]"] ["at", ident h_eval_p],
+    rw [expr h_eval_p] [],
+    simp [] [] [] [] [] [] },
+  rw ["[", expr eq_prod_roots_of_monic_of_splits_id h_mon (is_alg_closed.splits p), ",", "<-", expr multiset.prod_to_list, ",", expr alg_hom.map_list_prod, "]"] ["at", ident nu],
+  replace [ident nu] [] [":=", expr mt list.prod_is_unit nu],
+  simp [] [] ["only"] ["[", expr not_forall, ",", expr exists_prop, ",", expr aeval_C, ",", expr multiset.mem_to_list, ",", expr list.mem_map, ",", expr aeval_X, ",", expr exists_exists_and_eq_and, ",", expr multiset.mem_map, ",", expr alg_hom.map_sub, "]"] [] ["at", ident nu],
+  exact [expr ⟨nu.some, nu.some_spec.2⟩]
+end
 
 namespace lift
 
@@ -236,36 +249,30 @@ instance  : Preorderₓ (subfield_with_hom K L M hL) :=
 
 open Lattice
 
-theorem maximal_subfield_with_hom_chain_bounded (c : Set (subfield_with_hom K L M hL)) (hc : chain (· ≤ ·) c)
-  (hcn : c.nonempty) : ∃ ub : subfield_with_hom K L M hL, ∀ N, N ∈ c → N ≤ ub :=
-  let ub : subfield_with_hom K L M hL :=
-    by 
-      haveI  : Nonempty c := Set.Nonempty.to_subtype hcn <;>
-        exact
-          { Carrier := ⨆i : c, (i : subfield_with_hom K L M hL).Carrier,
-            emb :=
-              Subalgebra.suprLift (fun i : c => (i : subfield_with_hom K L M hL).Carrier)
-                (fun i j =>
-                  let ⟨k, hik, hjk⟩ := directed_on_iff_directed.1 hc.directed_on i j
-                  ⟨k, hik.fst, hjk.fst⟩)
-                (fun i => (i : subfield_with_hom K L M hL).emb)
-                (by 
-                  intro i j h 
-                  ext x 
-                  cases' hc.total i.prop j.prop with hij hji
-                  ·
-                    simp [←hij.snd x]
-                  ·
-                    erw [AlgHom.comp_apply, ←hji.snd (inclusion h x), inclusion_inclusion, inclusion_self,
-                      AlgHom.id_apply x])
-                _ rfl }
-  ⟨ub,
-    fun N hN =>
-      ⟨(le_supr (fun i : c => (i : subfield_with_hom K L M hL).Carrier) ⟨N, hN⟩ : _),
-        by 
-          intro x 
-          simp [ub]
-          rfl⟩⟩
+-- error in FieldTheory.IsAlgClosed.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem maximal_subfield_with_hom_chain_bounded
+(c : set (subfield_with_hom K L M hL))
+(hc : chain ((«expr ≤ »)) c)
+(hcn : c.nonempty) : «expr∃ , »((ub : subfield_with_hom K L M hL), ∀ N, «expr ∈ »(N, c) → «expr ≤ »(N, ub)) :=
+let ub : subfield_with_hom K L M hL := by haveI [] [":", expr nonempty c] [":=", expr set.nonempty.to_subtype hcn]; exact [expr { carrier := «expr⨆ , »((i : c), (i : subfield_with_hom K L M hL).carrier),
+       emb := subalgebra.supr_lift (λ
+        i : c, (i : subfield_with_hom K L M hL).carrier) (λ
+        i j, let ⟨k, hik, hjk⟩ := directed_on_iff_directed.1 hc.directed_on i j in
+        ⟨k, hik.fst, hjk.fst⟩) (λ
+        i, (i : subfield_with_hom K L M hL).emb) (begin
+          assume [binders (i j h)],
+          ext [] [ident x] [],
+          cases [expr hc.total i.prop j.prop] ["with", ident hij, ident hji],
+          { simp [] [] [] ["[", "<-", expr hij.snd x, "]"] [] [] },
+          { erw ["[", expr alg_hom.comp_apply, ",", "<-", expr hji.snd (inclusion h x), ",", expr inclusion_inclusion, ",", expr inclusion_self, ",", expr alg_hom.id_apply x, "]"] [] }
+        end) _ rfl }] in
+⟨ub, λ
+ N
+ hN, ⟨(le_supr (λ i : c, (i : subfield_with_hom K L M hL).carrier) ⟨N, hN⟩ : _), begin
+    intro [ident x],
+    simp [] [] [] ["[", expr ub, "]"] [] [],
+    refl
+  end⟩⟩
 
 variable(hL M)
 
@@ -280,36 +287,32 @@ theorem maximal_subfield_with_hom_is_maximal :
   ∀ N : subfield_with_hom K L M hL, maximal_subfield_with_hom M hL ≤ N → N ≤ maximal_subfield_with_hom M hL :=
   Classical.some_spec (exists_maximal_subfield_with_hom M hL)
 
-theorem maximal_subfield_with_hom_eq_top : (maximal_subfield_with_hom M hL).Carrier = ⊤ :=
-  by 
-    rw [eq_top_iff]
-    intro x _ 
-    let p := minpoly K x 
-    let N : Subalgebra K L := (maximal_subfield_with_hom M hL).Carrier 
-    letI this : Field N := IsField.toField _ (Subalgebra.is_field_of_algebraic N hL)
-    letI this : Algebra N M := (maximal_subfield_with_hom M hL).emb.toRingHom.toAlgebra 
-    cases'
-      IsAlgClosed.exists_aeval_eq_zero M (minpoly N x)
-        (ne_of_gtₓ
-          (minpoly.degree_pos ((is_algebraic_iff_is_integral _).1 (Algebra.is_algebraic_of_larger_base _ _ hL x)))) with
-      y hy 
-    let O : Subalgebra N L := Algebra.adjoin N {(x : L)}
-    let larger_emb :=
-      (AdjoinRoot.liftHom (minpoly N x) y hy).comp (AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly N x).toAlgHom 
-    have hNO : N ≤ O.restrict_scalars K
-    ·
-      intro z hz 
-      show algebraMap N L ⟨z, hz⟩ ∈ O 
-      exact O.algebra_map_mem _ 
-    let O' : subfield_with_hom K L M hL := { Carrier := O.restrict_scalars K, emb := larger_emb.restrict_scalars K }
-    have hO' : maximal_subfield_with_hom M hL ≤ O'
-    ·
-      refine' ⟨hNO, _⟩
-      intro z 
-      show O'.emb (algebraMap N O z) = algebraMap N M z 
-      simp only [O', restrict_scalars_apply, AlgHom.commutes]
-    refine' (maximal_subfield_with_hom_is_maximal M hL O' hO').fst _ 
-    exact Algebra.subset_adjoin (Set.mem_singleton x)
+-- error in FieldTheory.IsAlgClosed.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem maximal_subfield_with_hom_eq_top : «expr = »((maximal_subfield_with_hom M hL).carrier, «expr⊤»()) :=
+begin
+  rw ["[", expr eq_top_iff, "]"] [],
+  intros [ident x, "_"],
+  let [ident p] [] [":=", expr minpoly K x],
+  let [ident N] [":", expr subalgebra K L] [":=", expr (maximal_subfield_with_hom M hL).carrier],
+  letI [] [":", expr field N] [":=", expr is_field.to_field _ (subalgebra.is_field_of_algebraic N hL)],
+  letI [] [":", expr algebra N M] [":=", expr (maximal_subfield_with_hom M hL).emb.to_ring_hom.to_algebra],
+  cases [expr is_alg_closed.exists_aeval_eq_zero M (minpoly N x) (ne_of_gt (minpoly.degree_pos ((is_algebraic_iff_is_integral _).1 (algebra.is_algebraic_of_larger_base _ _ hL x))))] ["with", ident y, ident hy],
+  let [ident O] [":", expr subalgebra N L] [":=", expr algebra.adjoin N {(x : L)}],
+  let [ident larger_emb] [] [":=", expr (adjoin_root.lift_hom (minpoly N x) y hy).comp (alg_equiv.adjoin_singleton_equiv_adjoin_root_minpoly N x).to_alg_hom],
+  have [ident hNO] [":", expr «expr ≤ »(N, O.restrict_scalars K)] [],
+  { intros [ident z, ident hz],
+    show [expr «expr ∈ »(algebra_map N L ⟨z, hz⟩, O)],
+    exact [expr O.algebra_map_mem _] },
+  let [ident O'] [":", expr subfield_with_hom K L M hL] [":=", expr { carrier := O.restrict_scalars K,
+     emb := larger_emb.restrict_scalars K }],
+  have [ident hO'] [":", expr «expr ≤ »(maximal_subfield_with_hom M hL, O')] [],
+  { refine [expr ⟨hNO, _⟩],
+    intros [ident z],
+    show [expr «expr = »(O'.emb (algebra_map N O z), algebra_map N M z)],
+    simp [] [] ["only"] ["[", expr O', ",", expr restrict_scalars_apply, ",", expr alg_hom.commutes, "]"] [] [] },
+  refine [expr (maximal_subfield_with_hom_is_maximal M hL O' hO').fst _],
+  exact [expr algebra.subset_adjoin (set.mem_singleton x)]
+end
 
 end SubfieldWithHom
 
@@ -346,21 +349,15 @@ section
 
 variable[Algebra K L][IsAlgClosure K L]
 
-/-- A (random) isomorphism between two algebraic closures of `K`. -/
-noncomputable def Equiv : L ≃ₐ[K] M :=
-  let f : L →ₐ[K] M := IsAlgClosed.lift K L M IsAlgClosure.algebraic 
-  AlgEquiv.ofBijective f
-    ⟨RingHom.injective f.to_ring_hom,
-      by 
-        letI this : Algebra L M := RingHom.toAlgebra f 
-        letI this : IsScalarTower K L M :=
-          IsScalarTower.of_algebra_map_eq
-            (by 
-              simp [RingHom.algebra_map_to_algebra])
-        show Function.Surjective (algebraMap L M)
-        exact
-          IsAlgClosed.algebra_map_surjective_of_is_algebraic
-            (Algebra.is_algebraic_of_larger_base K L IsAlgClosure.algebraic)⟩
+-- error in FieldTheory.IsAlgClosed.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- A (random) isomorphism between two algebraic closures of `K`. -/ noncomputable def equiv : «expr ≃ₐ[ ] »(L, K, M) :=
+let f : «expr →ₐ[ ] »(L, K, M) := is_alg_closed.lift K L M is_alg_closure.algebraic in
+alg_equiv.of_bijective f ⟨ring_hom.injective f.to_ring_hom, begin
+   letI [] [":", expr algebra L M] [":=", expr ring_hom.to_algebra f],
+   letI [] [":", expr is_scalar_tower K L M] [":=", expr is_scalar_tower.of_algebra_map_eq (by simp [] [] [] ["[", expr ring_hom.algebra_map_to_algebra, "]"] [] [])],
+   show [expr function.surjective (algebra_map L M)],
+   exact [expr is_alg_closed.algebra_map_surjective_of_is_algebraic (algebra.is_algebraic_of_larger_base K L is_alg_closure.algebraic)]
+ end⟩
 
 end 
 
@@ -368,16 +365,14 @@ section EquivOfAlgebraic
 
 variable[Algebra K J][Algebra J L][IsAlgClosure J L][Algebra K L][IsScalarTower K J L]
 
+-- error in FieldTheory.IsAlgClosed.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An equiv between an algebraic closure of `K` and an algebraic closure of an algebraic
-  extension of `K` -/
-noncomputable def equiv_of_algebraic (hKJ : Algebra.IsAlgebraic K J) : L ≃ₐ[K] M :=
-  by 
-    letI this : IsAlgClosure K L :=
-      { alg_closed :=
-          by 
-            infer_instance,
-        algebraic := Algebra.is_algebraic_trans hKJ IsAlgClosure.algebraic }
-    exact IsAlgClosure.equiv _ _ _
+  extension of `K` -/ noncomputable def equiv_of_algebraic (hKJ : algebra.is_algebraic K J) : «expr ≃ₐ[ ] »(L, K, M) :=
+begin
+  letI [] [":", expr is_alg_closure K L] [":=", expr { alg_closed := by apply_instance,
+     algebraic := algebra.is_algebraic_trans hKJ is_alg_closure.algebraic }],
+  exact [expr is_alg_closure.equiv _ _ _]
+end
 
 end EquivOfAlgebraic
 
@@ -387,26 +382,27 @@ variable[Algebra J L][IsAlgClosure J L]
 
 variable{J K}
 
+-- error in FieldTheory.IsAlgClosed.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Used in the definition of `equiv_of_equiv` -/
-noncomputable def equiv_of_equiv_aux (hJK : J ≃+* K) :
-  { e : L ≃+* M // e.to_ring_hom.comp (algebraMap J L) = (algebraMap K M).comp hJK.to_ring_hom } :=
-  by 
-    letI this : Algebra K J := RingHom.toAlgebra hJK.symm.to_ring_hom 
-    have  : Algebra.IsAlgebraic K J 
-    exact
-      fun x =>
-        by 
-          rw [←RingEquiv.symm_apply_apply hJK x]
-          exact is_algebraic_algebra_map _ 
-    letI this : Algebra K L := RingHom.toAlgebra ((algebraMap J L).comp (algebraMap K J))
-    letI this : IsScalarTower K J L := IsScalarTower.of_algebra_map_eq fun _ => rfl 
-    refine' ⟨equiv_of_algebraic J K L M this, _⟩
-    ext 
-    simp only [RingEquiv.to_ring_hom_eq_coe, Function.comp_app, RingHom.coe_comp, AlgEquiv.coe_ring_equiv,
-      RingEquiv.coe_to_ring_hom]
-    convLHS => rw [←hJK.symm_apply_apply x]
-    show equiv_of_algebraic J K L M this (algebraMap K L (hJK x)) = _ 
-    rw [AlgEquiv.commutes]
+noncomputable
+def equiv_of_equiv_aux
+(hJK : «expr ≃+* »(J, K)) : {e : «expr ≃+* »(L, M) // «expr = »(e.to_ring_hom.comp (algebra_map J L), (algebra_map K M).comp hJK.to_ring_hom)} :=
+begin
+  letI [] [":", expr algebra K J] [":=", expr ring_hom.to_algebra hJK.symm.to_ring_hom],
+  have [] [":", expr algebra.is_algebraic K J] [],
+  from [expr λ x, begin
+     rw ["[", "<-", expr ring_equiv.symm_apply_apply hJK x, "]"] [],
+     exact [expr is_algebraic_algebra_map _]
+   end],
+  letI [] [":", expr algebra K L] [":=", expr ring_hom.to_algebra ((algebra_map J L).comp (algebra_map K J))],
+  letI [] [":", expr is_scalar_tower K J L] [":=", expr is_scalar_tower.of_algebra_map_eq (λ _, rfl)],
+  refine [expr ⟨equiv_of_algebraic J K L M this, _⟩],
+  ext [] [] [],
+  simp [] [] ["only"] ["[", expr ring_equiv.to_ring_hom_eq_coe, ",", expr function.comp_app, ",", expr ring_hom.coe_comp, ",", expr alg_equiv.coe_ring_equiv, ",", expr ring_equiv.coe_to_ring_hom, "]"] [] [],
+  conv_lhs [] [] { rw ["[", "<-", expr hJK.symm_apply_apply x, "]"] },
+  show [expr «expr = »(equiv_of_algebraic J K L M this (algebra_map K L (hJK x)), _)],
+  rw ["[", expr alg_equiv.commutes, "]"] []
+end
 
 /-- Algebraic closure of isomorphic fields are isomorphic -/
 noncomputable def equiv_of_equiv (hJK : J ≃+* K) : L ≃+* M :=

@@ -141,17 +141,27 @@ theorem normalize_fin_lt.reduce {n} {a : Finₓ n} {n' a' b k nk : ℕ} (hn : n 
 theorem normalize_fin.eq {n} {a b : Finₓ n} {c : ℕ} (ha : normalize_fin n a c) (hb : normalize_fin n b c) : a = b :=
   Finₓ.eq_of_veq$ ha.trans hb.symm
 
-theorem normalize_fin.lt {n} {a b : Finₓ n} {a' b' : ℕ} (ha : normalize_fin n a a') (hb : normalize_fin_lt n b b')
-  (h : a' < b') : a < b :=
-  by 
-    have ha' := normalize_fin_lt.mk rfl ha (h.trans hb.lt) <;> rwa [←hb.coe, ←ha'.coe] at h
+-- error in Tactic.NormFin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem normalize_fin.lt
+{n}
+{a b : fin n}
+{a' b' : exprℕ()}
+(ha : normalize_fin n a a')
+(hb : normalize_fin_lt n b b')
+(h : «expr < »(a', b')) : «expr < »(a, b) :=
+by have [ident ha'] [] [":=", expr normalize_fin_lt.mk rfl ha (h.trans hb.lt)]; rwa ["[", "<-", expr hb.coe, ",", "<-", expr ha'.coe, "]"] ["at", ident h]
 
-theorem normalize_fin.le {n} {a b : Finₓ n} {a' b' : ℕ} (ha : normalize_fin n a a') (hb : normalize_fin_lt n b b')
-  (h : a' ≤ b') : a ≤ b :=
-  by 
-    have ha' := normalize_fin_lt.mk rfl ha (h.trans_lt hb.lt) <;> rwa [←hb.coe, ←ha'.coe] at h
+-- error in Tactic.NormFin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem normalize_fin.le
+{n}
+{a b : fin n}
+{a' b' : exprℕ()}
+(ha : normalize_fin n a a')
+(hb : normalize_fin_lt n b b')
+(h : «expr ≤ »(a', b')) : «expr ≤ »(a, b) :=
+by have [ident ha'] [] [":=", expr normalize_fin_lt.mk rfl ha (h.trans_lt hb.lt)]; rwa ["[", "<-", expr hb.coe, ",", "<-", expr ha'.coe, "]"] ["at", ident h]
 
--- error in Tactic.NormFin: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler monad
+-- error in Tactic.NormFin: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monad
 /-- The monad for the `norm_fin` internal tactics. The state consists of an instance cache for `ℕ`,
 and a tuple `(nn, n', p)` where `p` is a proof of `n = n'` and `nn` is `n` evaluated to a natural
 number. (`n` itself is implicit.)  It is in an `option` because it is lazily initialized - for many
@@ -212,7 +222,7 @@ unsafe def eval_fin_m.eval_n (n : expr) : eval_fin_m (ℕ × expr × expr) :=
 @[inline]
 unsafe def eval_fin_m.run {α} (m : eval_fin_m α) : tactic α :=
   do 
-    let ic ← mk_instance_cache (quote ℕ)
+    let ic ← mk_instance_cache (quote.1 ℕ)
     let (a, _) ← StateTₓ.run m (ic, none)
     pure a
 
@@ -243,26 +253,26 @@ open MatchFinResult
 functions are written this way: for example `cast_le : n ≤ m → fin n ↪o fin m` is not actually a
 function but rather an order embedding with a coercion to a function. -/
 unsafe def match_fin_coe_fn (a : expr) : expr → Option match_fin_result
-| quote @Finₓ.castLe (%%n) (%%m) (%%h) => some (cast_le n m h a)
-| quote @Finₓ.cast (%%m) (%%n) (%%h) => some (cast n m h a)
-| quote @Finₓ.castAdd (%%n) (%%m) => some (cast_add n m a)
-| quote @Finₓ.castSucc (%%n) => some (cast_succ n a)
-| quote @Finₓ.addNat (%%n) (%%m) => some (add_nat n m a)
-| quote @Finₓ.natAdd (%%n) (%%m) => some (nat_add n m a)
+| quote.1 (@Finₓ.castLe (%%ₓn) (%%ₓm) (%%ₓh)) => some (cast_le n m h a)
+| quote.1 (@Finₓ.cast (%%ₓm) (%%ₓn) (%%ₓh)) => some (cast n m h a)
+| quote.1 (@Finₓ.castAdd (%%ₓn) (%%ₓm)) => some (cast_add n m a)
+| quote.1 (@Finₓ.castSucc (%%ₓn)) => some (cast_succ n a)
+| quote.1 (@Finₓ.addNat (%%ₓn) (%%ₓm)) => some (add_nat n m a)
+| quote.1 (@Finₓ.natAdd (%%ₓn) (%%ₓm)) => some (nat_add n m a)
 | _ => none
 
 /-- Match a fin expression to a `match_fin_result`, for easier pattern matching in the
 evaluator. -/
 unsafe def match_fin : expr → Option match_fin_result
-| quote @HasZero.zero _ (@Finₓ.hasZero (%%n)) => some (zero n)
-| quote @HasOne.one _ (@Finₓ.hasOne (%%n)) => some (one n)
-| quote @Add.add (Finₓ (%%n)) _ (%%a) (%%b) => some (add n a b)
-| quote @Mul.mul (Finₓ (%%n)) _ (%%a) (%%b) => some (mul n a b)
-| quote @_root_.bit0 (Finₓ (%%n)) _ (%%a) => some (bit0 n a)
-| quote @_root_.bit1 _ (@Finₓ.hasOne (%%n)) _ (%%a) => some (bit1 n a)
-| quote @Finₓ.succ (%%n) (%%a) => some (succ n a)
-| quote @Finₓ.castLt (%%n) (%%m) (%%a) (%%h) => some (cast_lt n m a h)
-| expr.app (quote @coeFn _ _ _ (%%f)) a => match_fin_coe_fn a f
+| quote.1 (@HasZero.zero _ (@Finₓ.hasZero (%%ₓn))) => some (zero n)
+| quote.1 (@HasOne.one _ (@Finₓ.hasOne (%%ₓn))) => some (one n)
+| quote.1 (@Add.add (Finₓ (%%ₓn)) _ (%%ₓa) (%%ₓb)) => some (add n a b)
+| quote.1 (@Mul.mul (Finₓ (%%ₓn)) _ (%%ₓa) (%%ₓb)) => some (mul n a b)
+| quote.1 (@_root_.bit0 (Finₓ (%%ₓn)) _ (%%ₓa)) => some (bit0 n a)
+| quote.1 (@_root_.bit1 _ (@Finₓ.hasOne (%%ₓn)) _ (%%ₓa)) => some (bit1 n a)
+| quote.1 (@Finₓ.succ (%%ₓn) (%%ₓa)) => some (succ n a)
+| quote.1 (@Finₓ.castLt (%%ₓn) (%%ₓm) (%%ₓa) (%%ₓh)) => some (cast_lt n m a h)
+| expr.app (quote.1 (@coeFn _ _ _ (%%ₓf))) a => match_fin_coe_fn a f
 | _ => none
 
 end 
@@ -281,7 +291,7 @@ unsafe def reduce_fin' : Bool → expr → expr → expr × expr → eval_fin_m 
         if lt then
           do 
             let p ← eval_fin_m.lift_ic fun ic => prove_lt_nat ic a' n' 
-            pure (a', (quote @normalize_fin_lt.mk).mk_app [n, a, a', n', pn, pa, p])
+            pure (a', (quote.1 @normalize_fin_lt.mk).mk_app [n, a, a', n', pn, pa, p])
         else pure (a', pa)
       else
         let nb := na % nn 
@@ -296,8 +306,9 @@ unsafe def reduce_fin' : Bool → expr → expr → expr × expr → eval_fin_m 
               if lt then
                   do 
                     let (ic, p) ← prove_lt_nat ic b n' 
-                    pure (ic, b, (quote @normalize_fin_lt.reduce).mk_app [n, a, n', a', b, k, nk, pn, pa, pe1, pe2, p])
-                else pure (ic, b, (quote @normalize_fin.reduce).mk_app [n, a, n', a', b, k, nk, pn, pa, pe1, pe2])
+                    pure
+                        (ic, b, (quote.1 @normalize_fin_lt.reduce).mk_app [n, a, n', a', b, k, nk, pn, pa, pe1, pe2, p])
+                else pure (ic, b, (quote.1 @normalize_fin.reduce).mk_app [n, a, n', a', b, k, nk, pn, pa, pe1, pe2])
 
 /-- `eval_fin_lt' eval_fin n a` expects that `a : fin n`, and produces `(b, p)` where
 `p : normalize_fin_lt n a b`. (It is mutually recursive with `eval_fin` which is why it takes the
@@ -311,50 +322,50 @@ unsafe def eval_fin_lt' (eval_fin : expr → eval_fin_m (expr × expr)) : expr �
         do 
           let (a', pa) ← (eval_fin_lt' n a).reset 
           let (b, pb) ← eval_fin_m.lift_ic fun ic => prove_succ' ic a' 
-          pure (b, (quote @normalize_fin_lt.succ).mk_app [n, a, a', b, pa, pb])
+          pure (b, (quote.1 @normalize_fin_lt.succ).mk_app [n, a, a', b, pa, pb])
       | match_fin_result.cast_lt _ m a h =>
         do 
           let (a', pa) ← (eval_fin_lt' m a).reset 
-          pure (a', (quote @normalize_fin_lt.cast_lt).mk_app [n, m, a, h, a', pa])
+          pure (a', (quote.1 @normalize_fin_lt.cast_lt).mk_app [n, m, a, h, a', pa])
       | match_fin_result.cast_le _ m nm a =>
         do 
           let (a', pa) ← (eval_fin_lt' m a).reset 
-          pure (a', (quote @normalize_fin_lt.cast_le).mk_app [n, m, nm, a, a', pa])
+          pure (a', (quote.1 @normalize_fin_lt.cast_le).mk_app [n, m, nm, a, a', pa])
       | match_fin_result.cast m _ nm a =>
         do 
           let (a', pa) ← (eval_fin_lt' m a).reset 
-          pure (a', (quote @normalize_fin_lt.cast).mk_app [n, m, nm, a, a', pa])
+          pure (a', (quote.1 @normalize_fin_lt.cast).mk_app [n, m, nm, a, a', pa])
       | match_fin_result.cast_add n m a =>
         do 
           let (a', pa) ← (eval_fin_lt' m a).reset 
-          pure (a', (quote @normalize_fin_lt.cast_add).mk_app [n, m, a, a', pa])
+          pure (a', (quote.1 @normalize_fin_lt.cast_add).mk_app [n, m, a, a', pa])
       | match_fin_result.cast_succ n a =>
         do 
           let (a', pa) ← (eval_fin_lt' n a).reset 
-          pure (a', (quote @normalize_fin_lt.cast_succ).mk_app [n, a, a', pa])
+          pure (a', (quote.1 @normalize_fin_lt.cast_succ).mk_app [n, a, a', pa])
       | match_fin_result.add_nat n m a =>
         do 
           let (a', pa) ← (eval_fin_lt' n a).reset 
           let (m', pm) ← or_refl_conv norm_num.derive m 
           let (b, pb) ← eval_fin_m.lift_ic fun ic => prove_add_nat' ic a' m' 
-          pure (b, (quote @normalize_fin_lt.add_nat).mk_app [n, m, m', pm, a, a', b, pa, pb])
+          pure (b, (quote.1 @normalize_fin_lt.add_nat).mk_app [n, m, m', pm, a, a', b, pa, pb])
       | match_fin_result.nat_add n m a =>
         do 
           let (a', pa) ← (eval_fin_lt' m a).reset 
           let (n', pn) ← or_refl_conv norm_num.derive n 
           let (b, pb) ← eval_fin_m.lift_ic fun ic => prove_add_nat' ic n' a' 
-          pure (b, (quote @normalize_fin_lt.nat_add).mk_app [n, m, n', pn, a, a', b, pa, pb])
+          pure (b, (quote.1 @normalize_fin_lt.nat_add).mk_app [n, m, n', pn, a, a', b, pa, pb])
       | _ =>
         do 
           let (_, n', pn) ← eval_fin_m.eval_n n 
           let (a', pa) ← eval_fin a >>= reduce_fin' tt n a 
           let p ← eval_fin_m.lift_ic fun ic => prove_lt_nat ic a' n' 
-          pure (a', (quote @normalize_fin_lt.mk).mk_app [n, a, a', n', pn, pa, p])
+          pure (a', (quote.1 @normalize_fin_lt.mk).mk_app [n, a, a', n', pn, pa, p])
 
 /-- Get `n` such that `a : fin n`. -/
 unsafe def get_fin_type (a : expr) : tactic expr :=
   do 
-    let quote Finₓ (%%n) ← infer_type a 
+    let quote.1 (Finₓ (%%ₓn)) ← infer_type a 
     pure n
 
 /-- Given `a : fin n`, `eval_fin a` returns `(b, p)` where `p : normalize_fin n a b`. This function
@@ -365,37 +376,37 @@ unsafe def eval_fin : expr → eval_fin_m (expr × expr)
   do 
     let m ← match_fin a 
     match m with 
-      | match_fin_result.zero n => pure (quote (0 : ℕ), (quote normalize_fin.zero).mk_app [n])
-      | match_fin_result.one n => pure (quote (1 : ℕ), (quote normalize_fin.one).mk_app [n])
+      | match_fin_result.zero n => pure (quote.1 (0 : ℕ), (quote.1 normalize_fin.zero).mk_app [n])
+      | match_fin_result.one n => pure (quote.1 (1 : ℕ), (quote.1 normalize_fin.one).mk_app [n])
       | match_fin_result.add n a b =>
         do 
           let (a', pa) ← eval_fin a 
           let (b', pb) ← eval_fin b 
           let (c, pc) ← eval_fin_m.lift_ic fun ic => prove_add_nat' ic a' b' 
-          pure (c, (quote @normalize_fin.add).mk_app [n, a, b, a', b', c, pa, pb, pc])
+          pure (c, (quote.1 @normalize_fin.add).mk_app [n, a, b, a', b', c, pa, pb, pc])
       | match_fin_result.mul n a b =>
         do 
           let (a', pa) ← eval_fin a 
           let (b', pb) ← eval_fin b 
           let (c, pc) ← eval_fin_m.lift_ic fun ic => prove_mul_nat ic a' b' 
-          pure (c, (quote @normalize_fin.mul).mk_app [n, a, b, a', b', c, pa, pb, pc])
+          pure (c, (quote.1 @normalize_fin.mul).mk_app [n, a, b, a', b', c, pa, pb, pc])
       | match_fin_result.bit0 n a =>
         do 
           let (a', pa) ← eval_fin a 
-          pure ((quote @bit0 ℕ _).mk_app [a'], (quote @normalize_fin.bit0).mk_app [n, a, a', pa])
+          pure ((quote.1 (@bit0 ℕ _)).mk_app [a'], (quote.1 @normalize_fin.bit0).mk_app [n, a, a', pa])
       | match_fin_result.bit1 n a =>
         do 
           let (a', pa) ← eval_fin a 
-          pure ((quote @bit1 ℕ _ _).mk_app [a'], (quote @normalize_fin.bit1).mk_app [n, a, a', pa])
+          pure ((quote.1 (@bit1 ℕ _ _)).mk_app [a'], (quote.1 @normalize_fin.bit1).mk_app [n, a, a', pa])
       | match_fin_result.cast m n nm a =>
         do 
           let (a', pa) ← (eval_fin a).reset 
-          pure (a', (quote @normalize_fin.cast).mk_app [n, m, nm, a, a', pa])
+          pure (a', (quote.1 @normalize_fin.cast).mk_app [n, m, nm, a, a', pa])
       | _ =>
         do 
           let n ← get_fin_type a 
           let (a', pa) ← eval_fin_lt' eval_fin n a 
-          pure (a', (quote @normalize_fin_lt.of).mk_app [n, a, a', pa])
+          pure (a', (quote.1 @normalize_fin_lt.of).mk_app [n, a, a', pa])
 
 /-- `eval_fin_lt n a` expects that `a : fin n`, and produces `(b, p)` where
 `p : normalize_fin_lt n a b`. -/
@@ -417,7 +428,7 @@ unsafe def prove_lt_fin' : expr → expr → expr → expr × expr → expr × e
     let (a', pa) ← reduce_fin' ff n a a' 
     let (b', pb) ← reduce_fin' tt n b b' 
     let p ← eval_fin_m.lift_ic fun ic => prove_lt_nat ic a' b' 
-    pure ((quote @normalize_fin.lt).mk_app [n, a, b, a', b', pa, pb, p])
+    pure ((quote.1 @normalize_fin.lt).mk_app [n, a, b, a', b', pa, pb, p])
 
 /-- If `a b : fin n` and `a'` and `b'` are as returned by `eval_fin`,
 then `prove_le_fin' n a b a' b'` proves `a ≤ b`. -/
@@ -427,7 +438,7 @@ unsafe def prove_le_fin' : expr → expr → expr → expr × expr → expr × e
     let (a', pa) ← reduce_fin' ff n a a' 
     let (b', pb) ← reduce_fin' tt n b b' 
     let p ← eval_fin_m.lift_ic fun ic => prove_le_nat ic a' b' 
-    pure ((quote @normalize_fin.le).mk_app [n, a, b, a', b', pa, pb, p])
+    pure ((quote.1 @normalize_fin.le).mk_app [n, a, b, a', b', pa, pb, p])
 
 /-- If `a b : fin n` and `a'` and `b'` are as returned by `eval_fin`,
 then `prove_eq_fin' n a b a' b'` proves `a = b`. -/
@@ -435,13 +446,13 @@ unsafe def prove_eq_fin' : expr → expr → expr → expr × expr → expr × e
 | n, a, b, (a', pa), (b', pb) =>
   if a' =ₐ b' then
     do 
-      pure ((quote @normalize_fin.eq).mk_app [n, a, b, a', pa, pb])
+      pure ((quote.1 @normalize_fin.eq).mk_app [n, a, b, a', pa, pb])
   else
     do 
       let (a', pa) ← reduce_fin' ff n a (a', pa)
       let (b', pb) ← reduce_fin' ff n b (b', pb)
       guardₓ (a' =ₐ b')
-      pure ((quote @normalize_fin.eq).mk_app [n, a, b, a', pa, pb])
+      pure ((quote.1 @normalize_fin.eq).mk_app [n, a, b, a', pa, pb])
 
 /-- Given a function with the type of `prove_eq_fin'`, evaluates it with the given `a` and `b`. -/
 unsafe def eval_prove_fin (f : expr → expr → expr → expr × expr → expr × expr → eval_fin_m expr) (a b : expr) :
@@ -474,19 +485,23 @@ unsafe def mk_fin_numeral (n m : expr) : expr → Option (expr × expr)
   match match_numeral a with 
   | zero =>
     some
-      (expr.app (quote @HasZero.zero (Finₓ (%%n))) (quote @Finₓ.hasZero (%%m)), expr.app (quote normalize_fin.zero) m)
+      (expr.app (quote.1 (@HasZero.zero (Finₓ (%%ₓn)))) (quote.1 (@Finₓ.hasZero (%%ₓm))),
+      expr.app (quote.1 normalize_fin.zero) m)
   | one =>
-    some (expr.app (quote @HasOne.one (Finₓ (%%n))) (quote @Finₓ.hasOne (%%m)), expr.app (quote normalize_fin.one) m)
+    some
+      (expr.app (quote.1 (@HasOne.one (Finₓ (%%ₓn)))) (quote.1 (@Finₓ.hasOne (%%ₓm))),
+      expr.app (quote.1 normalize_fin.one) m)
   | bit0 a =>
     do 
       let (a', p) ← mk_fin_numeral a 
-      some (quote (bit0 (%%a') : Finₓ (%%n)), (quote @normalize_fin.bit0).mk_app [n, a', a, p])
+      some (quote.1 (bit0 (%%ₓa') : Finₓ (%%ₓn)), (quote.1 @normalize_fin.bit0).mk_app [n, a', a, p])
   | bit1 a =>
     do 
       let (a', p) ← mk_fin_numeral a 
       some
-          ((quote @_root_.bit1 (Finₓ (%%n))).mk_app [quote @Finₓ.hasOne (%%m), quote @Finₓ.hasAdd (%%n), a'],
-          (quote @normalize_fin.bit1).mk_app [m, a', a, p])
+          ((quote.1 (@_root_.bit1 (Finₓ (%%ₓn)))).mk_app
+            [quote.1 (@Finₓ.hasOne (%%ₓm)), quote.1 (@Finₓ.hasAdd (%%ₓn)), a'],
+          (quote.1 @normalize_fin.bit1).mk_app [m, a', a, p])
   | _ => none
 
 end 
@@ -525,11 +540,11 @@ unsafe def prove_eq_ne_fin : expr → expr → tactic (expr × Bool × expr)
         if na < nb then
           do 
             let p ← prove_lt_fin' n a b a' b' 
-            pure (n, ff, (quote @ne_of_ltₓ (Finₓ (%%n)) _).mk_app [a, b, p])
+            pure (n, ff, (quote.1 (@ne_of_ltₓ (Finₓ (%%ₓn)) _)).mk_app [a, b, p])
         else
           do 
             let p ← prove_lt_fin' n b a b' a' 
-            pure (n, ff, (quote @ne_of_gtₓ (Finₓ (%%n)) _).mk_app [a, b, p])
+            pure (n, ff, (quote.1 (@ne_of_gtₓ (Finₓ (%%ₓn)) _)).mk_app [a, b, p])
 
 /-- A `norm_num` extension that evaluates equalities and inequalities on the type `fin n`.
 
@@ -539,24 +554,24 @@ example : (5 : fin 7) = fin.succ (fin.succ 3) := by norm_num
 -/
 @[normNum]
 unsafe def eval_ineq : expr → tactic (expr × expr)
-| quote (%%a) < %%b =>
+| quote.1 ((%%ₓa) < %%ₓb) =>
   do 
     let (n, lt, p) ← prove_lt_ge_fin a b 
-    if lt then true_intro p else false_intro ((quote @not_lt_of_geₓ (Finₓ (%%n)) _).mk_app [a, b, p])
-| quote (%%a) ≤ %%b =>
+    if lt then true_intro p else false_intro ((quote.1 (@not_lt_of_geₓ (Finₓ (%%ₓn)) _)).mk_app [a, b, p])
+| quote.1 ((%%ₓa) ≤ %%ₓb) =>
   do 
     let (n, lt, p) ← prove_lt_ge_fin b a 
-    if lt then false_intro ((quote @not_le_of_gtₓ (Finₓ (%%n)) _).mk_app [a, b, p]) else true_intro p
-| quote (%%a) = %%b =>
+    if lt then false_intro ((quote.1 (@not_le_of_gtₓ (Finₓ (%%ₓn)) _)).mk_app [a, b, p]) else true_intro p
+| quote.1 ((%%ₓa) = %%ₓb) =>
   do 
     let (n, Eq, p) ← prove_eq_ne_fin a b 
     if Eq then true_intro p else false_intro p
-| quote (%%a) > %%b => mk_app `` LT.lt [b, a] >>= eval_ineq
-| quote (%%a) ≥ %%b => mk_app `` LE.le [b, a] >>= eval_ineq
-| quote (%%a) ≠ %%b =>
+| quote.1 ((%%ₓa) > %%ₓb) => mk_app `` LT.lt [b, a] >>= eval_ineq
+| quote.1 ((%%ₓa) ≥ %%ₓb) => mk_app `` LE.le [b, a] >>= eval_ineq
+| quote.1 ((%%ₓa) ≠ %%ₓb) =>
   do 
     let (n, Eq, p) ← prove_eq_ne_fin a b 
-    if Eq then false_intro (quote not_not_intro (%%p : (%%a : Finₓ (%%n)) = %%b)) else true_intro p
+    if Eq then false_intro (quote.1 (not_not_intro (%%ₓp : (%%ₓa : Finₓ (%%ₓn)) = %%ₓb))) else true_intro p
 | _ => failed
 
 /-- Evaluates `e : fin n` to a natural number less than `n`. Returns `none` if it is not a natural
@@ -583,7 +598,7 @@ unsafe def eval_fin_num (a : expr) : tactic (expr × expr) :=
           let m' ← eval_fin_m.lift_ic fun ic => ic.of_nat nm 
           let n' ← eval_fin_m.lift_ic fun ic => ic.of_nat (nm+1)
           let (b, pb) ← mk_fin_numeral n' m' a' 
-          pure (b, (quote @normalize_fin.eq).mk_app [n, a, b, a', pa, pb])
+          pure (b, (quote.1 @normalize_fin.eq).mk_app [n, a, b, a', pa, pb])
 
 end NormFin
 

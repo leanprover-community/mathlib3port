@@ -27,21 +27,10 @@ theorem MeasurableSet.const_smul_of_ne_zero {G₀ α : Type _} [GroupWithZeroₓ
     rw [←preimage_smul_inv₀ ha]
     exact measurable_const_smul _ hs
 
--- error in MeasureTheory.Group.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem measurable_set.const_smul₀
-{G₀ α : Type*}
-[group_with_zero G₀]
-[has_zero α]
-[mul_action_with_zero G₀ α]
-[measurable_space G₀]
-[measurable_space α]
-[has_measurable_smul G₀ α]
-[measurable_singleton_class α]
-{s : set α}
-(hs : measurable_set s)
-(a : G₀) : measurable_set «expr • »(a, s) :=
-begin
-  rcases [expr eq_or_ne a 0, "with", "(", ident rfl, "|", ident ha, ")"],
-  exacts ["[", expr (subsingleton_zero_smul_set s).measurable_set, ",", expr hs.const_smul_of_ne_zero ha, "]"]
-end
+theorem MeasurableSet.const_smul₀ {G₀ α : Type _} [GroupWithZeroₓ G₀] [HasZero α] [MulActionWithZero G₀ α]
+  [MeasurableSpace G₀] [MeasurableSpace α] [HasMeasurableSmul G₀ α] [MeasurableSingletonClass α] {s : Set α}
+  (hs : MeasurableSet s) (a : G₀) : MeasurableSet (a • s) :=
+  by 
+    rcases eq_or_ne a 0 with (rfl | ha)
+    exacts[(subsingleton_zero_smul_set s).MeasurableSet, hs.const_smul_of_ne_zero ha]
 

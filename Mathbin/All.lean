@@ -4,6 +4,7 @@ import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Algebra.Algebra.Bilinear 
 import Mathbin.Algebra.Algebra.Operations 
 import Mathbin.Algebra.Algebra.RestrictScalars 
+import Mathbin.Algebra.Algebra.Spectrum 
 import Mathbin.Algebra.Algebra.Subalgebra 
 import Mathbin.Algebra.Algebra.Tower 
 import Mathbin.Algebra.Associated 
@@ -94,7 +95,8 @@ import Mathbin.Algebra.DirectSum.Module
 import Mathbin.Algebra.DirectSum.Ring 
 import Mathbin.Algebra.Divisibility 
 import Mathbin.Algebra.EuclideanDomain 
-import Mathbin.Algebra.Field 
+import Mathbin.Algebra.Field.Basic 
+import Mathbin.Algebra.Field.Opposite 
 import Mathbin.Algebra.FieldPower 
 import Mathbin.Algebra.Free 
 import Mathbin.Algebra.FreeAlgebra 
@@ -802,6 +804,7 @@ import Mathbin.Data.Fintype.List
 import Mathbin.Data.Fintype.Small 
 import Mathbin.Data.Fintype.Sort 
 import Mathbin.Data.Fp.Basic 
+import Mathbin.Data.FunLike 
 import Mathbin.Data.HashMap 
 import Mathbin.Data.Holor 
 import Mathbin.Data.Int.AbsoluteValue 
@@ -1170,6 +1173,7 @@ import Mathbin.GroupTheory.GroupAction.ConjAct
 import Mathbin.GroupTheory.GroupAction.Default 
 import Mathbin.GroupTheory.GroupAction.Defs 
 import Mathbin.GroupTheory.GroupAction.Group 
+import Mathbin.GroupTheory.GroupAction.Opposite 
 import Mathbin.GroupTheory.GroupAction.Prod 
 import Mathbin.GroupTheory.GroupAction.SubMulAction 
 import Mathbin.GroupTheory.GroupAction.Units 
@@ -1321,6 +1325,7 @@ import Mathbin.MeasureTheory.Constructions.Pi
 import Mathbin.MeasureTheory.Constructions.Prod 
 import Mathbin.MeasureTheory.Covering.Besicovitch 
 import Mathbin.MeasureTheory.Covering.BesicovitchVectorSpace 
+import Mathbin.MeasureTheory.Covering.Differentiation 
 import Mathbin.MeasureTheory.Covering.Vitali 
 import Mathbin.MeasureTheory.Covering.VitaliFamily 
 import Mathbin.MeasureTheory.Decomposition.Jordan 
@@ -1360,6 +1365,7 @@ import Mathbin.MeasureTheory.Integral.VitaliCaratheodory
 import Mathbin.MeasureTheory.MeasurableSpace 
 import Mathbin.MeasureTheory.MeasurableSpaceDef 
 import Mathbin.MeasureTheory.Measure.Complex 
+import Mathbin.MeasureTheory.Measure.ComplexLebesgue 
 import Mathbin.MeasureTheory.Measure.Content 
 import Mathbin.MeasureTheory.Measure.FiniteMeasureWeakConvergence 
 import Mathbin.MeasureTheory.Measure.GiryMonad 

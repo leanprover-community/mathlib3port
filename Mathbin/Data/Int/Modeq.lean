@@ -18,7 +18,7 @@ modeq, congruence, mod, MOD, modulo, integers
 
 namespace Int
 
--- error in Data.Int.Modeq: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable
+-- error in Data.Int.Modeq: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable
 /-- `a ≡ b [ZMOD n]` when `a % n = b % n`. -/ @[derive #[expr decidable]] def modeq (n a b : exprℤ()) :=
 «expr = »(«expr % »(a, n), «expr % »(b, n))
 

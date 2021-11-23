@@ -212,7 +212,7 @@ unsafe def mk_iff_of_inductive_prop (i : Name) (r : Name) : tactic Unit :=
     let type := decl.type 
     let univ_names := decl.univ_params 
     let univs := univ_names.map level.param 
-    let (g, quote Prop) ← open_pis type | fail "Inductive type is not a proposition"
+    let (g, quote.1 Prop) ← open_pis type | fail "Inductive type is not a proposition"
     let lhs := (const i univs).mk_app g 
     let shape_rhss ← constrs.mmap (constr_to_prop univs (g.take params) (g.drop params))
     let shape := shape_rhss.map Prod.fst 

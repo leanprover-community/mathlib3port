@@ -1,5 +1,6 @@
-import Mathbin.CategoryTheory.PathCategory 
-import Mathbin.CategoryTheory.Category.Cat
+import Mathbin.CategoryTheory.Adjunction.Basic 
+import Mathbin.CategoryTheory.Category.Cat 
+import Mathbin.CategoryTheory.PathCategory
 
 /-!
 # The category of quivers

@@ -23,5 +23,5 @@ instance equivFunctorFintype : EquivFunctor Fintype :=
   { map :=
       fun α β e s =>
         by 
-          exactI Fintype.ofBijective e e.bijective }
+          exact Fintype.ofBijective e e.bijective }
 

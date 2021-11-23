@@ -255,30 +255,28 @@ theorem repr_eq_iff' {b : Basis ι R M} {f : M ≃ₗ[R] ι →₀ R} : b.repr =
 theorem apply_eq_iff {b : Basis ι R M} {x : M} {i : ι} : b i = x ↔ b.repr x = Finsupp.single i 1 :=
   ⟨fun h => h ▸ b.repr_self i, fun h => b.repr.injective ((b.repr_self i).trans h.symm)⟩
 
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An unbundled version of `repr_eq_iff` -/
-theorem repr_apply_eq (f : M → ι → R) (hadd : ∀ x y, f (x+y) = f x+f y) (hsmul : ∀ c : R x : M, f (c • x) = c • f x)
-  (f_eq : ∀ i, f (b i) = Finsupp.single i 1) (x : M) (i : ι) : b.repr x i = f x i :=
-  by 
-    let f_i : M →ₗ[R] R :=
-      { toFun := fun x => f x i,
-        map_add' :=
-          fun _ _ =>
-            by 
-              rw [hadd, Pi.add_apply],
-        map_smul' :=
-          fun _ _ =>
-            by 
-              simp [hsmul, Pi.smul_apply] }
-    have  : Finsupp.lapply i ∘ₗ «expr↑ » b.repr = f_i
-    ·
-      refine' b.ext fun j => _ 
-      show b.repr (b j) i = f (b j) i 
-      rw [b.repr_self, f_eq]
-    calc b.repr x i = f_i x :=
-      by 
-        rw [←this]
-        rfl _ = f x i :=
-      rfl
+theorem repr_apply_eq
+(f : M → ι → R)
+(hadd : ∀ x y, «expr = »(f «expr + »(x, y), «expr + »(f x, f y)))
+(hsmul : ∀ (c : R) (x : M), «expr = »(f «expr • »(c, x), «expr • »(c, f x)))
+(f_eq : ∀ i, «expr = »(f (b i), finsupp.single i 1))
+(x : M)
+(i : ι) : «expr = »(b.repr x i, f x i) :=
+begin
+  let [ident f_i] [":", expr «expr →ₗ[ ] »(M, R, R)] [":=", expr { to_fun := λ x, f x i,
+     map_add' := λ _ _, by rw ["[", expr hadd, ",", expr pi.add_apply, "]"] [],
+     map_smul' := λ _ _, by { simp [] [] [] ["[", expr hsmul, ",", expr pi.smul_apply, "]"] [] [] } }],
+  have [] [":", expr «expr = »(«expr ∘ₗ »(finsupp.lapply i, «expr↑ »(b.repr)), f_i)] [],
+  { refine [expr b.ext (λ j, _)],
+    show [expr «expr = »(b.repr (b j) i, f (b j) i)],
+    rw ["[", expr b.repr_self, ",", expr f_eq, "]"] [] },
+  calc
+    «expr = »(b.repr x i, f_i x) : by { rw ["<-", expr this] [],
+      refl }
+    «expr = »(..., f x i) : rfl
+end
 
 /-- Two bases are equal if they assign the same coordinates. -/
 theorem eq_of_repr_eq_repr {b₁ b₂ : Basis ι R M} (h : ∀ x i, b₁.repr x i = b₂.repr x i) : b₁ = b₂ :=
@@ -328,24 +326,20 @@ include f h b
 
 attribute [local instance] HasScalar.comp.is_scalar_tower
 
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `R` and `R'` are isomorphic rings that act identically on a module `M`,
 then a basis for `M` as `R`-module is also a basis for `M` as `R'`-module.
 
 See also `basis.algebra_map_coeffs` for the case where `f` is equal to `algebra_map`.
--/
-@[simps (config := { simpRhs := tt })]
-def map_coeffs : Basis ι R' M :=
-  by 
-    letI this : Module R' R := Module.compHom R («expr↑ » f.symm : R' →+* R)
-    haveI  : IsScalarTower R' R M :=
-      { smul_assoc :=
-          fun x y z =>
-            by 
-              dsimp [· • ·]
-              rw [mul_smul, ←h, f.apply_symm_apply] }
-    exact
-      of_repr$
-        (b.repr.restrict_scalars R').trans$ Finsupp.mapRange.linearEquiv (Module.compHom.toLinearEquiv f.symm).symm
+-/ @[simps #[expr { simp_rhs := tt }]] def map_coeffs : basis ι R' M :=
+begin
+  letI [] [":", expr module R' R] [":=", expr module.comp_hom R («expr↑ »(f.symm) : «expr →+* »(R', R))],
+  haveI [] [":", expr is_scalar_tower R' R M] [":=", expr { smul_assoc := λ x y z, begin
+       dsimp [] ["[", expr («expr • »), "]"] [] [],
+       rw ["[", expr mul_smul, ",", "<-", expr h, ",", expr f.apply_symm_apply, "]"] []
+     end }],
+  exact [expr «expr $ »(of_repr, «expr $ »((b.repr.restrict_scalars R').trans, finsupp.map_range.linear_equiv (module.comp_hom.to_linear_equiv f.symm).symm))]
+end
 
 theorem map_coeffs_apply (i : ι) : b.map_coeffs f h i = b i :=
   apply_eq_iff.mpr$
@@ -373,11 +367,11 @@ theorem reindex_apply (i' : ι') : b.reindex e i' = b (e.symm i') :=
     rw [LinearEquiv.symm_trans_apply, Finsupp.dom_lcongr_symm, Finsupp.dom_lcongr_single]
 
 @[simp]
-theorem coe_reindex : (b.reindex e : ι' → M) = (b ∘ e.symm) :=
+theorem coe_reindex : (b.reindex e : ι' → M) = b ∘ e.symm :=
   funext (b.reindex_apply e)
 
 @[simp]
-theorem coe_reindex_repr : ((b.reindex e).repr x : ι' → R) = (b.repr x ∘ e.symm) :=
+theorem coe_reindex_repr : ((b.reindex e).repr x : ι' → R) = b.repr x ∘ e.symm :=
   funext$
     fun i' =>
       show (Finsupp.domLcongr e : _ ≃ₗ[R] _) (b.repr x) i' = _ by 
@@ -398,31 +392,26 @@ theorem range_reindex : Set.Range (b.reindex e) = Set.Range b :=
   by 
     rw [coe_reindex, range_reindex']
 
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `b.reindex_range` is a basis indexed by `range b`, the basis vectors themselves. -/
-def reindex_range : Basis (range b) R M :=
-  if h : Nontrivial R then
-    by 
-      letI this := h <;> exact b.reindex (Equiv.ofInjective b (Basis.injective b))
-  else
-    by 
-      letI this : Subsingleton R := not_nontrivial_iff_subsingleton.mp h <;>
-        exact Basis.of_repr (Module.subsingletonEquiv R M (range b))
+def reindex_range : basis (range b) R M :=
+if h : nontrivial R then by letI [] [] [":=", expr h]; exact [expr b.reindex (equiv.of_injective b (basis.injective b))] else by letI [] [":", expr subsingleton R] [":=", expr not_nontrivial_iff_subsingleton.mp h]; exact [expr basis.of_repr (module.subsingleton_equiv R M (range b))]
 
 theorem finsupp.single_apply_left {α β γ : Type _} [HasZero γ] {f : α → β} (hf : Function.Injective f) (x z : α)
   (y : γ) : Finsupp.single (f x) y (f z) = Finsupp.single x y z :=
   by 
     simp [Finsupp.single_apply, hf.eq_iff]
 
-theorem reindex_range_self (i : ι) (h := Set.mem_range_self i) : b.reindex_range ⟨b i, h⟩ = b i :=
-  by 
-    byCases' htr : Nontrivial R
-    ·
-      letI this := htr 
-      simp [htr, reindex_range, reindex_apply, Equiv.apply_of_injective_symm b b.injective, Subtype.coe_mk]
-    ·
-      letI this : Subsingleton R := not_nontrivial_iff_subsingleton.mp htr 
-      letI this := Module.subsingleton R M 
-      simp [reindex_range]
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem reindex_range_self (i : ι) (h := set.mem_range_self i) : «expr = »(b.reindex_range ⟨b i, h⟩, b i) :=
+begin
+  by_cases [expr htr, ":", expr nontrivial R],
+  { letI [] [] [":=", expr htr],
+    simp [] [] [] ["[", expr htr, ",", expr reindex_range, ",", expr reindex_apply, ",", expr equiv.apply_of_injective_symm b b.injective, ",", expr subtype.coe_mk, "]"] [] [] },
+  { letI [] [":", expr subsingleton R] [":=", expr not_nontrivial_iff_subsingleton.mp htr],
+    letI [] [] [":=", expr module.subsingleton R M],
+    simp [] [] [] ["[", expr reindex_range, "]"] [] [] }
+end
 
 theorem reindex_range_repr_self (i : ι) : b.reindex_range.repr (b i) = Finsupp.single ⟨b i, mem_range_self i⟩ 1 :=
   calc b.reindex_range.repr (b i) = b.reindex_range.repr (b.reindex_range ⟨b i, mem_range_self i⟩) :=
@@ -714,15 +703,17 @@ end Prod
 
 section NoZeroSmulDivisors
 
-protected theorem NoZeroSmulDivisors [NoZeroDivisors R] (b : Basis ι R M) : NoZeroSmulDivisors R M :=
-  ⟨fun c x hcx =>
-      or_iff_not_imp_right.mpr
-        fun hx =>
-          by 
-            rw [←b.total_repr x, ←LinearMap.map_smul] at hcx 
-            have  := linear_independent_iff.mp b.linear_independent (c • b.repr x) hcx 
-            rw [smul_eq_zero] at this 
-            exact this.resolve_right fun hr => hx (b.repr.map_eq_zero_iff.mp hr)⟩
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected theorem no_zero_smul_divisors [no_zero_divisors R] (b : basis ι R M) : no_zero_smul_divisors R M :=
+⟨λ
+ c
+ x
+ hcx, or_iff_not_imp_right.mpr (λ hx, begin
+    rw ["[", "<-", expr b.total_repr x, ",", "<-", expr linear_map.map_smul, "]"] ["at", ident hcx],
+    have [] [] [":=", expr linear_independent_iff.mp b.linear_independent «expr • »(c, b.repr x) hcx],
+    rw [expr smul_eq_zero] ["at", ident this],
+    exact [expr this.resolve_right (λ hr, hx (b.repr.map_eq_zero_iff.mp hr))]
+  end)⟩
 
 protected theorem smul_eq_zero [NoZeroDivisors R] (b : Basis ι R M) {c : R} {x : M} : c • x = 0 ↔ c = 0 ∨ x = 0 :=
   @smul_eq_zero _ _ _ _ _ b.no_zero_smul_divisors _ _
@@ -981,7 +972,7 @@ variable(b : Basis ι R M)
 
 namespace Basis
 
--- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Any basis is a maximal linear independent set.
 -/ theorem maximal [nontrivial R] (b : basis ι R M) : b.linear_independent.maximal :=
@@ -1059,43 +1050,52 @@ section Span
 
 variable(hli : LinearIndependent R v)
 
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A linear independent family of vectors is a basis for their span. -/
-protected noncomputable def span : Basis ι R (span R (range v)) :=
-  Basis.mk (linear_independent_span hli)$
-    by 
-      rw [eq_top_iff]
-      intro x _ 
-      have h₁ : (Subtype.val '' Set.Range fun i => Subtype.mk (v i) _) = range v
-      ·
-        rw [←Set.range_comp]
-      have h₂ : map (Submodule.subtype _) (span R (Set.Range fun i => Subtype.mk (v i) _)) = span R (range v)
-      ·
-        rw [←span_image, Submodule.subtype_eq_val, h₁]
-      have h₃ : (x : M) ∈ map (Submodule.subtype _) (span R (Set.Range fun i => Subtype.mk (v i) _))
-      ·
-        rw [h₂]
-        apply Subtype.mem x 
-      rcases mem_map.1 h₃ with ⟨y, hy₁, hy₂⟩
-      have h_x_eq_y : x = y
-      ·
-        rw [Subtype.ext_iff, ←hy₂]
-        simp 
-      rwa [h_x_eq_y]
+protected
+noncomputable
+def span : basis ι R (span R (range v)) :=
+«expr $ »(basis.mk (linear_independent_span hli), begin
+   rw [expr eq_top_iff] [],
+   intros [ident x, "_"],
+   have [ident h₁] [":", expr «expr = »(«expr '' »(subtype.val, set.range (λ i, subtype.mk (v i) _)), range v)] [],
+   { rw ["<-", expr set.range_comp] [] },
+   have [ident h₂] [":", expr «expr = »(map (submodule.subtype _) (span R (set.range (λ
+        i, subtype.mk (v i) _))), span R (range v))] [],
+   { rw ["[", "<-", expr span_image, ",", expr submodule.subtype_eq_val, ",", expr h₁, "]"] [] },
+   have [ident h₃] [":", expr «expr ∈ »((x : M), map (submodule.subtype _) (span R (set.range (λ
+        i, subtype.mk (v i) _))))] [],
+   { rw [expr h₂] [],
+     apply [expr subtype.mem x] },
+   rcases [expr mem_map.1 h₃, "with", "⟨", ident y, ",", ident hy₁, ",", ident hy₂, "⟩"],
+   have [ident h_x_eq_y] [":", expr «expr = »(x, y)] [],
+   { rw ["[", expr subtype.ext_iff, ",", "<-", expr hy₂, "]"] [],
+     simp [] [] [] [] [] [] },
+   rwa [expr h_x_eq_y] []
+ end)
 
 end Span
 
-theorem group_smul_span_eq_top {G : Type _} [Groupₓ G] [DistribMulAction G R] [DistribMulAction G M]
-  [IsScalarTower G R M] {v : ι → M} (hv : Submodule.span R (Set.Range v) = ⊤) {w : ι → G} :
-  Submodule.span R (Set.Range (w • v)) = ⊤ :=
-  by 
-    rw [eq_top_iff]
-    intro j hj 
-    rw [←hv] at hj 
-    rw [Submodule.mem_span] at hj⊢
-    refine' fun p hp => hj p fun u hu => _ 
-    obtain ⟨i, rfl⟩ := hu 
-    have  : (w i⁻¹ • 1 : R) • w i • v i ∈ p := p.smul_mem (w i⁻¹ • 1 : R) (hp ⟨i, rfl⟩)
-    rwa [smul_one_smul, inv_smul_smul] at this
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem group_smul_span_eq_top
+{G : Type*}
+[group G]
+[distrib_mul_action G R]
+[distrib_mul_action G M]
+[is_scalar_tower G R M]
+{v : ι → M}
+(hv : «expr = »(submodule.span R (set.range v), «expr⊤»()))
+{w : ι → G} : «expr = »(submodule.span R (set.range «expr • »(w, v)), «expr⊤»()) :=
+begin
+  rw [expr eq_top_iff] [],
+  intros [ident j, ident hj],
+  rw ["<-", expr hv] ["at", ident hj],
+  rw [expr submodule.mem_span] ["at", ident hj, "⊢"],
+  refine [expr λ p hp, hj p (λ u hu, _)],
+  obtain ["⟨", ident i, ",", ident rfl, "⟩", ":=", expr hu],
+  have [] [":", expr «expr ∈ »(«expr • »((«expr • »(«expr ⁻¹»(w i), 1) : R), «expr • »(w i, v i)), p)] [":=", expr p.smul_mem («expr • »(«expr ⁻¹»(w i), 1) : R) (hp ⟨i, rfl⟩)],
+  rwa ["[", expr smul_one_smul, ",", expr inv_smul_smul, "]"] ["at", ident this]
+end
 
 /-- Given a basis `v` and a map `w` such that for all `i`, `w i` are elements of a group,
 `group_smul` provides the basis corresponding to `w • v`. -/
@@ -1183,42 +1183,47 @@ variable[Ringₓ R][IsDomain R]
 
 variable[AddCommGroupₓ M][Module R M]{b : ι → M}
 
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `N` is a submodule with finite rank, do induction on adjoining a linear independent
 element to a submodule. -/
-def Submodule.inductionOnRankAux (b : Basis ι R M) (P : Submodule R M → Sort _)
-  (ih :
-    ∀ N : Submodule R M,
-      (∀ N' _ : N' ≤ N x _ : x ∈ N, (∀ c : R y _ : y ∈ N', ((c • x)+y) = (0 : M) → c = 0) → P N') → P N)
-  (n : ℕ) (N : Submodule R M)
-  (rank_le : ∀ {m : ℕ} v : Finₓ m → N, LinearIndependent R (coeₓ ∘ v : Finₓ m → M) → m ≤ n) : P N :=
-  by 
-    haveI  : DecidableEq M := Classical.decEq M 
-    have Pbot : P ⊥
-    ·
-      apply ih 
-      intro N N_le x x_mem x_ortho 
-      exFalso 
-      simpa using x_ortho 1 0 N.zero_mem 
-    induction' n with n rank_ih generalizing N
-    ·
-      suffices  : N = ⊥
-      ·
-        rwa [this]
-      apply eq_bot_of_rank_eq_zero b _ fun m v hv => nat.le_zero_iff.mp (rank_le v hv)
-    apply ih 
-    intro N' N'_le x x_mem x_ortho 
-    apply rank_ih 
-    intro m v hli 
-    refine' nat.succ_le_succ_iff.mp (rank_le (Finₓ.cons ⟨x, x_mem⟩ fun i => ⟨v i, N'_le (v i).2⟩) _)
-    convert hli.fin_cons' x _ _
-    ·
-      ext i 
-      refine' Finₓ.cases _ _ i <;> simp 
-    ·
-      intro c y hcy 
-      refine' x_ortho c y (submodule.span_le.mpr _ y.2) hcy 
-      rintro _ ⟨z, rfl⟩
-      exact (v z).2
+def submodule.induction_on_rank_aux
+(b : basis ι R M)
+(P : submodule R M → Sort*)
+(ih : ∀
+ N : submodule R M, ∀
+ (N' «expr ≤ » N)
+ (x «expr ∈ » N), ∀
+ (c : R)
+ (y «expr ∈ » N'), «expr = »(«expr + »(«expr • »(c, x), y), (0 : M)) → «expr = »(c, 0) → P N' → P N)
+(n : exprℕ())
+(N : submodule R M)
+(rank_le : ∀
+ {m : exprℕ()}
+ (v : fin m → N), linear_independent R («expr ∘ »(coe, v) : fin m → M) → «expr ≤ »(m, n)) : P N :=
+begin
+  haveI [] [":", expr decidable_eq M] [":=", expr classical.dec_eq M],
+  have [ident Pbot] [":", expr P «expr⊥»()] [],
+  { apply [expr ih],
+    intros [ident N, ident N_le, ident x, ident x_mem, ident x_ortho],
+    exfalso,
+    simpa [] [] [] [] [] ["using", expr x_ortho 1 0 N.zero_mem] },
+  induction [expr n] [] ["with", ident n, ident rank_ih] ["generalizing", ident N],
+  { suffices [] [":", expr «expr = »(N, «expr⊥»())],
+    { rwa [expr this] [] },
+    apply [expr eq_bot_of_rank_eq_zero b _ (λ m v hv, nat.le_zero_iff.mp (rank_le v hv))] },
+  apply [expr ih],
+  intros [ident N', ident N'_le, ident x, ident x_mem, ident x_ortho],
+  apply [expr rank_ih],
+  intros [ident m, ident v, ident hli],
+  refine [expr nat.succ_le_succ_iff.mp (rank_le (fin.cons ⟨x, x_mem⟩ (λ i, ⟨v i, N'_le (v i).2⟩)) _)],
+  convert [] [expr hli.fin_cons' x _ _] [],
+  { ext [] [ident i] [],
+    refine [expr fin.cases _ _ i]; simp [] [] [] [] [] [] },
+  { intros [ident c, ident y, ident hcy],
+    refine [expr x_ortho c y (submodule.span_le.mpr _ y.2) hcy],
+    rintros ["_", "⟨", ident z, ",", ident rfl, "⟩"],
+    exact [expr (v z).2] }
+end
 
 end Induction
 
@@ -1321,32 +1326,31 @@ variable[Field K][AddCommGroupₓ V][AddCommGroupₓ V'][Module K V][Module K V'
 
 variable{v : ι → V}{s t : Set V}{x y z : V}
 
-theorem LinearMap.exists_left_inverse_of_injective (f : V →ₗ[K] V') (hf_inj : f.ker = ⊥) :
-  ∃ g : V' →ₗ[K] V, g.comp f = LinearMap.id :=
-  by 
-    let B := Basis.OfVectorSpaceIndex K V 
-    let hB := Basis.ofVectorSpace K V 
-    have hB₀ : _ := hB.linear_independent.to_subtype_range 
-    have  : LinearIndependent K (fun x => x : f '' B → V')
-    ·
-      have h₁ : LinearIndependent K fun x : «expr↥ » («expr⇑ » f '' range (Basis.ofVectorSpace _ _)) => «expr↑ » x :=
-        @LinearIndependent.image_subtype _ _ _ _ _ _ _ _ _ f hB₀
-          (show Disjoint _ _ by 
-            simp [hf_inj])
-      rwa [Basis.range_of_vector_space K V] at h₁ 
-    let C := this.extend (subset_univ _)
-    have BC := this.subset_extend (subset_univ _)
-    let hC := Basis.extend this 
-    haveI  : Inhabited V := ⟨0⟩
-    refine' ⟨hC.constr K (C.restrict (inv_fun f)), hB.ext fun b => _⟩
-    rw [image_subset_iff] at BC 
-    have fb_eq : f b = hC ⟨f b, BC b.2⟩
-    ·
-      change f b = Basis.extend this _ 
-      rw [Basis.extend_apply_self, Subtype.coe_mk]
-    dsimp [hB]
-    rw [Basis.of_vector_space_apply_self, fb_eq, hC.constr_basis]
-    exact left_inverse_inv_fun (LinearMap.ker_eq_bot.1 hf_inj) _
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem linear_map.exists_left_inverse_of_injective
+(f : «expr →ₗ[ ] »(V, K, V'))
+(hf_inj : «expr = »(f.ker, «expr⊥»())) : «expr∃ , »((g : «expr →ₗ[ ] »(V', K, V)), «expr = »(g.comp f, linear_map.id)) :=
+begin
+  let [ident B] [] [":=", expr basis.of_vector_space_index K V],
+  let [ident hB] [] [":=", expr basis.of_vector_space K V],
+  have [ident hB₀] [":", expr _] [":=", expr hB.linear_independent.to_subtype_range],
+  have [] [":", expr linear_independent K (λ x, x : «expr '' »(f, B) → V')] [],
+  { have [ident h₁] [":", expr linear_independent K (λ
+      x : «expr↥ »(«expr '' »(«expr⇑ »(f), range (basis.of_vector_space _ _))), «expr↑ »(x))] [":=", expr @linear_independent.image_subtype _ _ _ _ _ _ _ _ _ f hB₀ (show disjoint _ _, by simp [] [] [] ["[", expr hf_inj, "]"] [] [])],
+    rwa ["[", expr basis.range_of_vector_space K V, "]"] ["at", ident h₁] },
+  let [ident C] [] [":=", expr this.extend (subset_univ _)],
+  have [ident BC] [] [":=", expr this.subset_extend (subset_univ _)],
+  let [ident hC] [] [":=", expr basis.extend this],
+  haveI [] [":", expr inhabited V] [":=", expr ⟨0⟩],
+  refine [expr ⟨hC.constr K (C.restrict (inv_fun f)), hB.ext (λ b, _)⟩],
+  rw [expr image_subset_iff] ["at", ident BC],
+  have [ident fb_eq] [":", expr «expr = »(f b, hC ⟨f b, BC b.2⟩)] [],
+  { change [expr «expr = »(f b, basis.extend this _)] [] [],
+    rw ["[", expr basis.extend_apply_self, ",", expr subtype.coe_mk, "]"] [] },
+  dsimp [] ["[", expr hB, "]"] [] [],
+  rw ["[", expr basis.of_vector_space_apply_self, ",", expr fb_eq, ",", expr hC.constr_basis, "]"] [],
+  exact [expr left_inverse_inv_fun (linear_map.ker_eq_bot.1 hf_inj) _]
+end
 
 theorem Submodule.exists_is_compl (p : Submodule K V) : ∃ q : Submodule K V, IsCompl p q :=
   let ⟨f, hf⟩ := p.subtype.exists_left_inverse_of_injective p.ker_subtype
@@ -1355,16 +1359,19 @@ theorem Submodule.exists_is_compl (p : Submodule K V) : ∃ q : Submodule K V, I
 instance Module.Submodule.is_complemented : IsComplemented (Submodule K V) :=
   ⟨Submodule.exists_is_compl⟩
 
-theorem LinearMap.exists_right_inverse_of_surjective (f : V →ₗ[K] V') (hf_surj : f.range = ⊤) :
-  ∃ g : V' →ₗ[K] V, f.comp g = LinearMap.id :=
-  by 
-    let C := Basis.OfVectorSpaceIndex K V' 
-    let hC := Basis.ofVectorSpace K V' 
-    haveI  : Inhabited V := ⟨0⟩
-    use hC.constr K (C.restrict (inv_fun f))
-    refine' hC.ext fun c => _ 
-    rw [LinearMap.comp_apply, hC.constr_basis]
-    simp [right_inverse_inv_fun (LinearMap.range_eq_top.1 hf_surj) c]
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem linear_map.exists_right_inverse_of_surjective
+(f : «expr →ₗ[ ] »(V, K, V'))
+(hf_surj : «expr = »(f.range, «expr⊤»())) : «expr∃ , »((g : «expr →ₗ[ ] »(V', K, V)), «expr = »(f.comp g, linear_map.id)) :=
+begin
+  let [ident C] [] [":=", expr basis.of_vector_space_index K V'],
+  let [ident hC] [] [":=", expr basis.of_vector_space K V'],
+  haveI [] [":", expr inhabited V] [":=", expr ⟨0⟩],
+  use [expr hC.constr K (C.restrict (inv_fun f))],
+  refine [expr hC.ext (λ c, _)],
+  rw ["[", expr linear_map.comp_apply, ",", expr hC.constr_basis, "]"] [],
+  simp [] [] [] ["[", expr right_inverse_inv_fun (linear_map.range_eq_top.1 hf_surj) c, "]"] [] []
+end
 
 /-- Any linear map `f : p →ₗ[K] V'` defined on a subspace `p` can be extended to the whole
 space. -/
@@ -1376,24 +1383,25 @@ theorem LinearMap.exists_extend {p : Submodule K V} (f : p →ₗ[K] V') : ∃ g
 
 open Submodule LinearMap
 
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `p < ⊤` is a subspace of a vector space `V`, then there exists a nonzero linear map
 `f : V →ₗ[K] K` such that `p ≤ ker f`. -/
-theorem Submodule.exists_le_ker_of_lt_top (p : Submodule K V) (hp : p < ⊤) :
-  ∃ (f : _)(_ : f ≠ (0 : V →ₗ[K] K)), p ≤ ker f :=
-  by 
-    rcases SetLike.exists_of_lt hp with ⟨v, -, hpv⟩
-    clear hp 
-    rcases(LinearPmap.supSpanSingleton ⟨p, 0⟩ v (1 : K) hpv).toFun.exists_extend with ⟨f, hf⟩
-    refine' ⟨f, _, _⟩
-    ·
-      rintro rfl 
-      rw [LinearMap.zero_comp] at hf 
-      have  := LinearPmap.sup_span_singleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv 0 p.zero_mem 1
-      simpa using (LinearMap.congr_fun hf _).trans this
-    ·
-      refine' fun x hx => mem_ker.2 _ 
-      have  := LinearPmap.sup_span_singleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv x hx 0
-      simpa using (LinearMap.congr_fun hf _).trans this
+theorem submodule.exists_le_ker_of_lt_top
+(p : submodule K V)
+(hp : «expr < »(p, «expr⊤»())) : «expr∃ , »((f «expr ≠ » (0 : «expr →ₗ[ ] »(V, K, K))), «expr ≤ »(p, ker f)) :=
+begin
+  rcases [expr set_like.exists_of_lt hp, "with", "⟨", ident v, ",", "-", ",", ident hpv, "⟩"],
+  clear [ident hp],
+  rcases [expr (linear_pmap.sup_span_singleton ⟨p, 0⟩ v (1 : K) hpv).to_fun.exists_extend, "with", "⟨", ident f, ",", ident hf, "⟩"],
+  refine [expr ⟨f, _, _⟩],
+  { rintro [ident rfl],
+    rw ["[", expr linear_map.zero_comp, "]"] ["at", ident hf],
+    have [] [] [":=", expr linear_pmap.sup_span_singleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv 0 p.zero_mem 1],
+    simpa [] [] [] [] [] ["using", expr (linear_map.congr_fun hf _).trans this] },
+  { refine [expr λ x hx, mem_ker.2 _],
+    have [] [] [":=", expr linear_pmap.sup_span_singleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv x hx 0],
+    simpa [] [] [] [] [] ["using", expr (linear_map.congr_fun hf _).trans this] }
+end
 
 theorem quotient_prod_linear_equiv (p : Submodule K V) : Nonempty ((p.quotient × p) ≃ₗ[K] V) :=
   let ⟨q, hq⟩ := p.exists_is_compl 

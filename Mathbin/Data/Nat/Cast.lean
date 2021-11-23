@@ -152,17 +152,22 @@ theorem cast_mul [NonAssocSemiring α] m : ∀ n, ((m*n : ℕ) : α) = m*n
     show (((m*n : ℕ) : α)+m) = m*n+1by 
       rw [cast_mul n, left_distrib, mul_oneₓ]
 
+-- error in Data.Nat.Cast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem cast_dvd {α : Type _} [Field α] {m n : ℕ} (n_dvd : n ∣ m) (n_nonzero : (n : α) ≠ 0) :
-  ((m / n : ℕ) : α) = m / n :=
-  by 
-    rcases n_dvd with ⟨k, rfl⟩
-    have  : n ≠ 0
-    ·
-      rintro rfl 
-      simpa using n_nonzero 
-    rw [Nat.mul_div_cancel_leftₓ _ (pos_iff_ne_zero.2 this)]
-    rw [Nat.cast_mul, mul_div_cancel_left _ n_nonzero]
+theorem cast_dvd
+{α : Type*}
+[field α]
+{m n : exprℕ()}
+(n_dvd : «expr ∣ »(n, m))
+(n_nonzero : «expr ≠ »((n : α), 0)) : «expr = »(((«expr / »(m, n) : exprℕ()) : α), «expr / »(m, n)) :=
+begin
+  rcases [expr n_dvd, "with", "⟨", ident k, ",", ident rfl, "⟩"],
+  have [] [":", expr «expr ≠ »(n, 0)] [],
+  { rintro [ident rfl],
+    simpa [] [] [] [] [] ["using", expr n_nonzero] },
+  rw [expr nat.mul_div_cancel_left _ (pos_iff_ne_zero.2 this)] [],
+  rw ["[", expr nat.cast_mul, ",", expr mul_div_cancel_left _ n_nonzero, "]"] []
+end
 
 /-- `coe : ℕ → α` as a `ring_hom` -/
 def cast_ring_hom (α : Type _) [NonAssocSemiring α] : ℕ →+* α :=
@@ -427,16 +432,20 @@ theorem one_le_iff_pos {n : WithTop ℕ} : 1 ≤ n ↔ 0 < n :=
       by 
         simpa only [zero_addₓ] using add_one_le_of_lt h⟩
 
+-- error in Data.Nat.Cast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[elab_as_eliminator]
-theorem nat_induction {P : WithTop ℕ → Prop} (a : WithTop ℕ) (h0 : P 0) (hsuc : ∀ n : ℕ, P n → P n.succ)
-  (htop : (∀ n : ℕ, P n) → P ⊤) : P a :=
-  by 
-    have A : ∀ n : ℕ, P n := fun n => Nat.recOn n h0 hsuc 
-    cases a
-    ·
-      exact htop A
-    ·
-      exact A a
+theorem nat_induction
+{P : with_top exprℕ() → exprProp()}
+(a : with_top exprℕ())
+(h0 : P 0)
+(hsuc : ∀ n : exprℕ(), P n → P n.succ)
+(htop : ∀ n : exprℕ(), P n → P «expr⊤»()) : P a :=
+begin
+  have [ident A] [":", expr ∀ n : exprℕ(), P n] [":=", expr λ n, nat.rec_on n h0 hsuc],
+  cases [expr a] [],
+  { exact [expr htop A] },
+  { exact [expr A a] }
+end
 
 end WithTop
 

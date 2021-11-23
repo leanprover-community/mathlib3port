@@ -1,5 +1,5 @@
-import Mathbin.Data.Rat.Default 
-import Mathbin.Data.Semiquot
+import Mathbin.Data.Semiquot 
+import Mathbin.Data.Rat.Floor
 
 /-!
 # Implementation of floating-point numbers (experimental).
@@ -12,7 +12,7 @@ def Int.shift2 (a b : ℕ) : ℤ → ℕ × ℕ
 
 namespace Fp
 
--- error in Data.Fp.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Data.Fp.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 @[derive #[expr inhabited]] inductive rmode
 | NE
 

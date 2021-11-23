@@ -1,5 +1,6 @@
 import Mathbin.RingTheory.Adjoin.Basic 
-import Mathbin.RingTheory.Polynomial.Basic
+import Mathbin.Data.MvPolynomial.Rename 
+import Mathbin.Data.Polynomial.AlgebraMap
 
 /-!
 # Adjoining elements to form subalgebras: relation to polynomials

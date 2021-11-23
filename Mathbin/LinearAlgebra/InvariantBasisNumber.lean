@@ -79,7 +79,7 @@ theorem le_of_fin_injective [StrongRankCondition R] {n m : ℕ} (f : (Finₓ n �
   injective f → n ≤ m :=
   StrongRankCondition.le_of_fin_injective f
 
--- error in LinearAlgebra.InvariantBasisNumber: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in LinearAlgebra.InvariantBasisNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A ring satisfies the strong rank condition if and only if, for all `n : ℕ`, any linear map
 `(fin (n + 1) → R) →ₗ[R] (fin n → R)` is not injective. -/
 theorem strong_rank_condition_iff_succ : «expr ↔ »(strong_rank_condition R, ∀
@@ -170,7 +170,7 @@ theorem card_eq_of_lequiv {α β : Type _} [Fintype α] [Fintype β] (f : (α �
     ((LinearEquiv.funCongrLeft R R (Fintype.equivFin α)).trans f ≪≫ₗ
       (LinearEquiv.funCongrLeft R R (Fintype.equivFin β)).symm)
 
--- error in LinearAlgebra.InvariantBasisNumber: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in LinearAlgebra.InvariantBasisNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem nontrivial_of_invariant_basis_number : nontrivial R :=
 begin
   by_contra [ident h],
@@ -187,7 +187,7 @@ section
 
 variable(R : Type u)[Ringₓ R][Nontrivial R][IsNoetherianRing R]
 
--- error in LinearAlgebra.InvariantBasisNumber: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in LinearAlgebra.InvariantBasisNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Any nontrivial noetherian ring satisfies the strong rank condition.
 
@@ -265,7 +265,7 @@ instance (priority := 100)invariant_basis_number_of_nontrivial_of_comm_ring {R :
   ⟨fun n m e =>
       let ⟨I, hI⟩ := Ideal.exists_maximal R 
       by 
-        exactI
+        exact
           eq_of_fin_equiv I.quotient ((Ideal.piQuotEquiv _ _).symm ≪≫ₗ (induced_equiv _ e ≪≫ₗ Ideal.piQuotEquiv _ _))⟩
 
 end 

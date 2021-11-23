@@ -207,19 +207,17 @@ theorem degree_one_le : degree (1 : Polynomial R) ≤ (0 : WithBot ℕ) :=
   by 
     rw [←C_1] <;> exact degree_C_le
 
-@[simp]
-theorem nat_degree_C (a : R) : nat_degree (C a) = 0 :=
-  by 
-    byCases' ha : a = 0
-    ·
-      have  : C a = 0
-      ·
-        rw [ha, C_0]
-      rw [nat_degree, degree_eq_bot.2 this]
-      rfl
-    ·
-      rw [nat_degree, degree_C ha]
-      rfl
+-- error in Data.Polynomial.Degree.Definitions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem nat_degree_C (a : R) : «expr = »(nat_degree (C a), 0) :=
+begin
+  by_cases [expr ha, ":", expr «expr = »(a, 0)],
+  { have [] [":", expr «expr = »(C a, 0)] [],
+    { rw ["[", expr ha, ",", expr C_0, "]"] [] },
+    rw ["[", expr nat_degree, ",", expr degree_eq_bot.2 this, "]"] [],
+    refl },
+  { rw ["[", expr nat_degree, ",", expr degree_C ha, "]"] [],
+    refl }
+end
 
 @[simp]
 theorem nat_degree_one : nat_degree (1 : Polynomial R) = 0 :=
@@ -303,17 +301,24 @@ theorem as_sum_support_C_mul_X_pow (p : Polynomial R) : p = ∑i in p.support, C
     by 
       simp only [C_mul_X_pow_eq_monomial]
 
+-- error in Data.Polynomial.Degree.Definitions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 We can reexpress a sum over `p.support` as a sum over `range n`,
 for any `n` satisfying `p.nat_degree < n`.
 -/
-theorem sum_over_range' [AddCommMonoidₓ S] (p : Polynomial R) {f : ℕ → R → S} (h : ∀ n, f n 0 = 0) (n : ℕ)
-  (w : p.nat_degree < n) : p.sum f = ∑a : ℕ in range n, f a (coeff p a) :=
-  by 
-    rcases p with ⟨⟩
-    have  := supp_subset_range w 
-    simp only [Polynomial.sum, support, coeff, nat_degree, degree] at this⊢
-    exact Finsupp.sum_of_support_subset _ this _ fun n hn => h n
+theorem sum_over_range'
+[add_comm_monoid S]
+(p : polynomial R)
+{f : exprℕ() → R → S}
+(h : ∀ n, «expr = »(f n 0, 0))
+(n : exprℕ())
+(w : «expr < »(p.nat_degree, n)) : «expr = »(p.sum f, «expr∑ in , »((a : exprℕ()), range n, f a (coeff p a))) :=
+begin
+  rcases [expr p],
+  have [] [] [":=", expr supp_subset_range w],
+  simp [] [] ["only"] ["[", expr polynomial.sum, ",", expr support, ",", expr coeff, ",", expr nat_degree, ",", expr degree, "]"] [] ["at", "⊢", ident this],
+  exact [expr finsupp.sum_of_support_subset _ this _ (λ n hn, h n)]
+end
 
 /--
 We can reexpress a sum over `p.support` as a sum over `range (p.nat_degree + 1)`.
@@ -512,13 +517,15 @@ theorem degree_lt_degree (h : nat_degree p < nat_degree q) : degree p < degree q
       rw [degree_eq_nat_degree hp, degree_eq_nat_degree$ ne_zero_of_nat_degree_gt h]
       exactModCast h
 
-theorem nat_degree_lt_nat_degree_iff (hp : p ≠ 0) : nat_degree p < nat_degree q ↔ degree p < degree q :=
-  ⟨degree_lt_degree,
-    by 
-      intro h 
-      have hq : q ≠ 0 := ne_zero_of_degree_gt h 
-      rw [degree_eq_nat_degree hp, degree_eq_nat_degree hq] at h 
-      exactModCast h⟩
+-- error in Data.Polynomial.Degree.Definitions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nat_degree_lt_nat_degree_iff
+(hp : «expr ≠ »(p, 0)) : «expr ↔ »(«expr < »(nat_degree p, nat_degree q), «expr < »(degree p, degree q)) :=
+⟨degree_lt_degree, begin
+   intro [ident h],
+   have [ident hq] [":", expr «expr ≠ »(q, 0)] [":=", expr ne_zero_of_degree_gt h],
+   rw ["[", expr degree_eq_nat_degree hp, ",", expr degree_eq_nat_degree hq, "]"] ["at", ident h],
+   exact_mod_cast [expr h]
+ end⟩
 
 theorem eq_C_of_degree_le_zero (h : degree p ≤ 0) : p = C (coeff p 0) :=
   by 
@@ -724,10 +731,10 @@ theorem monic.ne_zero_of_ne (h : (0 : R) ≠ 1) {p : Polynomial R} (hp : p.monic
     nontriviality R 
     exact hp.ne_zero
 
-theorem monic.ne_zero_of_polynomial_ne {r} (hp : monic p) (hne : q ≠ r) : p ≠ 0 :=
-  by 
-    haveI  := nontrivial.of_polynomial_ne hne 
-    exact hp.ne_zero
+-- error in Data.Polynomial.Degree.Definitions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem monic.ne_zero_of_polynomial_ne {r} (hp : monic p) (hne : «expr ≠ »(q, r)) : «expr ≠ »(p, 0) :=
+by { haveI [] [] [":=", expr nontrivial.of_polynomial_ne hne],
+  exact [expr hp.ne_zero] }
 
 theorem leading_coeff_add_of_degree_lt (h : degree p < degree q) : leading_coeff (p+q) = leading_coeff q :=
   have  : coeff p (nat_degree q) = 0 := coeff_nat_degree_eq_zero_of_degree_lt h 
@@ -743,37 +750,47 @@ theorem leading_coeff_add_of_degree_eq (h : degree p = degree q) (hlc : (leading
   by 
     simp only [leading_coeff, this, nat_degree_eq_of_degree_eq h, coeff_add]
 
--- error in Data.Polynomial.Degree.Definitions: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 @[simp]
-theorem coeff_mul_degree_add_degree
-(p
- q : polynomial R) : «expr = »(coeff «expr * »(p, q) «expr + »(nat_degree p, nat_degree q), «expr * »(leading_coeff p, leading_coeff q)) :=
-calc
-  «expr = »(coeff «expr * »(p, q) «expr + »(nat_degree p, nat_degree q), «expr∑ in , »((x), nat.antidiagonal «expr + »(nat_degree p, nat_degree q), «expr * »(coeff p x.1, coeff q x.2))) : coeff_mul _ _ _
-  «expr = »(..., «expr * »(coeff p (nat_degree p), coeff q (nat_degree q))) : begin
-    refine [expr finset.sum_eq_single (nat_degree p, nat_degree q) _ _],
-    { rintro ["⟨", ident i, ",", ident j, "⟩", ident h₁, ident h₂],
-      rw [expr nat.mem_antidiagonal] ["at", ident h₁],
-      by_cases [expr H, ":", expr «expr < »(nat_degree p, i)],
-      { rw ["[", expr coeff_eq_zero_of_degree_lt (lt_of_le_of_lt degree_le_nat_degree (with_bot.coe_lt_coe.2 H)), ",", expr zero_mul, "]"] [] },
-      { rw [expr not_lt_iff_eq_or_lt] ["at", ident H],
-        cases [expr H] [],
-        { subst [expr H],
-          rw [expr add_left_cancel_iff] ["at", ident h₁],
-          dsimp [] [] [] ["at", ident h₁],
-          subst [expr h₁],
-          exfalso,
-          exact [expr h₂ rfl] },
-        { suffices [] [":", expr «expr < »(nat_degree q, j)],
-          { rw ["[", expr coeff_eq_zero_of_degree_lt (lt_of_le_of_lt degree_le_nat_degree (with_bot.coe_lt_coe.2 this)), ",", expr mul_zero, "]"] [] },
-          { by_contra [ident H'],
-            rw [expr not_lt] ["at", ident H'],
-            exact [expr ne_of_lt (nat.lt_of_lt_of_le (nat.add_lt_add_right H j) (nat.add_le_add_left H' _)) h₁] } } } },
-    { intro [ident H],
-      exfalso,
-      apply [expr H],
-      rw [expr nat.mem_antidiagonal] [] }
-  end
+theorem coeff_mul_degree_add_degree (p q : Polynomial R) :
+  coeff (p*q) (nat_degree p+nat_degree q) = leading_coeff p*leading_coeff q :=
+  calc
+    coeff (p*q) (nat_degree p+nat_degree q) =
+      ∑x in nat.antidiagonal (nat_degree p+nat_degree q), coeff p x.1*coeff q x.2 :=
+    coeff_mul _ _ _ 
+    _ = coeff p (nat_degree p)*coeff q (nat_degree q) :=
+    by 
+      refine' Finset.sum_eq_single (nat_degree p, nat_degree q) _ _
+      ·
+        rintro ⟨i, j⟩ h₁ h₂ 
+        rw [nat.mem_antidiagonal] at h₁ 
+        byCases' H : nat_degree p < i
+        ·
+          rw [coeff_eq_zero_of_degree_lt (lt_of_le_of_ltₓ degree_le_nat_degree (WithBot.coe_lt_coe.2 H)), zero_mul]
+        ·
+          rw [not_lt_iff_eq_or_lt] at H 
+          cases H
+          ·
+            subst H 
+            rw [add_left_cancel_iffₓ] at h₁ 
+            dsimp  at h₁ 
+            subst h₁ 
+            exfalso 
+            exact h₂ rfl
+          ·
+            suffices  : nat_degree q < j
+            ·
+              rw [coeff_eq_zero_of_degree_lt (lt_of_le_of_ltₓ degree_le_nat_degree (WithBot.coe_lt_coe.2 this)),
+                mul_zero]
+            ·
+              byContra H' 
+              rw [not_ltₓ] at H' 
+              exact ne_of_ltₓ (Nat.lt_of_lt_of_leₓ (Nat.add_lt_add_rightₓ H j) (Nat.add_le_add_leftₓ H' _)) h₁
+      ·
+        intro H 
+        exfalso 
+        apply H 
+        rw [nat.mem_antidiagonal]
+    
 
 theorem degree_mul' (h : (leading_coeff p*leading_coeff q) ≠ 0) : degree (p*q) = degree p+degree q :=
   have hp : p ≠ 0 :=
@@ -976,17 +993,10 @@ theorem degree_smul_le (a : R) (p : Polynomial R) : degree (a • p) ≤ degree 
 theorem nat_degree_smul_le (a : R) (p : Polynomial R) : nat_degree (a • p) ≤ nat_degree p :=
   nat_degree_le_nat_degree (degree_smul_le a p)
 
-theorem degree_lt_degree_mul_X (hp : p ≠ 0) : p.degree < (p*X).degree :=
-  by 
-    haveI  := nontrivial.of_polynomial_ne hp <;>
-      exact
-        have  : (leading_coeff p*leading_coeff X) ≠ 0 :=
-          by 
-            simpa 
-        by 
-          erw [degree_mul' this, degree_eq_nat_degree hp, degree_X, ←WithBot.coe_one, ←WithBot.coe_add,
-              WithBot.coe_lt_coe] <;>
-            exact Nat.lt_succ_selfₓ _
+-- error in Data.Polynomial.Degree.Definitions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem degree_lt_degree_mul_X (hp : «expr ≠ »(p, 0)) : «expr < »(p.degree, «expr * »(p, X).degree) :=
+by haveI [] [] [":=", expr nontrivial.of_polynomial_ne hp]; exact [expr have «expr ≠ »(«expr * »(leading_coeff p, leading_coeff X), 0), by simpa [] [] [] [] [] [],
+ by erw ["[", expr degree_mul' this, ",", expr degree_eq_nat_degree hp, ",", expr degree_X, ",", "<-", expr with_bot.coe_one, ",", "<-", expr with_bot.coe_add, ",", expr with_bot.coe_lt_coe, "]"] []; exact [expr nat.lt_succ_self _]]
 
 theorem nat_degree_pos_iff_degree_pos : 0 < nat_degree p ↔ 0 < degree p :=
   lt_iff_lt_of_le_iff_le nat_degree_le_iff_degree_le
@@ -1072,16 +1082,25 @@ theorem nat_degree_X_sub_C_le {r : R} : (X - C r).natDegree ≤ 1 :=
   nat_degree_le_iff_degree_le.2$
     le_transₓ (degree_sub_le _ _)$ max_leₓ degree_X_le$ le_transₓ degree_C_le$ WithBot.coe_le_coe.2 zero_le_one
 
-theorem degree_sum_fin_lt {n : ℕ} (f : Finₓ n → R) : degree (∑i : Finₓ n, C (f i)*X ^ (i : ℕ)) < n :=
-  by 
-    haveI  : IsCommutative (WithBot ℕ) max := ⟨max_commₓ⟩
-    haveI  : IsAssociative (WithBot ℕ) max := ⟨max_assocₓ⟩
-    calc (∑i, C (f i)*X ^ (i : ℕ)).degree ≤ finset.univ.fold (·⊔·) ⊥ fun i => (C (f i)*X ^ (i : ℕ)).degree :=
-      degree_sum_le _ _ _ = finset.univ.fold max ⊥ fun i => (C (f i)*X ^ (i : ℕ)).degree := rfl _ < n :=
-      (Finset.fold_max_lt (n : WithBot ℕ)).mpr ⟨WithBot.bot_lt_coe _, _⟩
-    rintro ⟨i, hi⟩ -
-    calc (C (f ⟨i, hi⟩)*X ^ i).degree ≤ (C _).degree+(X ^ i).degree := degree_mul_le _ _ _ ≤ 0+i :=
-      add_le_add degree_C_le (degree_X_pow_le i)_ = i := zero_addₓ _ _ < n := with_bot.some_lt_some.mpr hi
+-- error in Data.Polynomial.Degree.Definitions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem degree_sum_fin_lt
+{n : exprℕ()}
+(f : fin n → R) : «expr < »(degree «expr∑ , »((i : fin n), «expr * »(C (f i), «expr ^ »(X, (i : exprℕ())))), n) :=
+begin
+  haveI [] [":", expr is_commutative (with_bot exprℕ()) max] [":=", expr ⟨max_comm⟩],
+  haveI [] [":", expr is_associative (with_bot exprℕ()) max] [":=", expr ⟨max_assoc⟩],
+  calc
+    «expr ≤ »(«expr∑ , »((i), «expr * »(C (f i), «expr ^ »(X, (i : exprℕ())))).degree, finset.univ.fold ((«expr ⊔ »)) «expr⊥»() (λ
+      i, «expr * »(C (f i), «expr ^ »(X, (i : exprℕ()))).degree)) : degree_sum_le _ _
+    «expr = »(..., finset.univ.fold max «expr⊥»() (λ i, «expr * »(C (f i), «expr ^ »(X, (i : exprℕ()))).degree)) : rfl
+    «expr < »(..., n) : (finset.fold_max_lt (n : with_bot exprℕ())).mpr ⟨with_bot.bot_lt_coe _, _⟩,
+  rintros ["⟨", ident i, ",", ident hi, "⟩", "-"],
+  calc
+    «expr ≤ »(«expr * »(C (f ⟨i, hi⟩), «expr ^ »(X, i)).degree, «expr + »((C _).degree, «expr ^ »(X, i).degree)) : degree_mul_le _ _
+    «expr ≤ »(..., «expr + »(0, i)) : add_le_add degree_C_le (degree_X_pow_le i)
+    «expr = »(..., i) : zero_add _
+    «expr < »(..., n) : with_bot.some_lt_some.mpr hi
+end
 
 theorem degree_sub_eq_left_of_degree_lt (h : degree q < degree p) : degree (p - q) = degree p :=
   by 

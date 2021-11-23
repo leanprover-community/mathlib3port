@@ -174,7 +174,7 @@ theorem is_open_Inter_prop {p : Prop} {s : p → Set α} (h : ∀ h : p, IsOpen 
   by 
     byCases' p <;> simp 
 
-theorem is_open_const {p : Prop} : IsOpen { a : α | p } :=
+theorem is_open_const {p : Prop} : IsOpen { a:α | p } :=
   by_cases
     (fun this : p =>
       by 
@@ -658,20 +658,18 @@ theorem is_closed_frontier {s : Set α} : IsClosed (Frontier s) :=
   by 
     rw [frontier_eq_closure_inter_closure] <;> exact IsClosed.inter is_closed_closure is_closed_closure
 
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The frontier of a closed set has no interior point. -/
-theorem interior_frontier {s : Set α} (h : IsClosed s) : Interior (Frontier s) = ∅ :=
-  by 
-    have A : Frontier s = s \ Interior s 
-    exact h.frontier_eq 
-    have B : Interior (Frontier s) ⊆ Interior s
-    ·
-      rw [A] <;> exact interior_mono (diff_subset _ _)
-    have C : Interior (Frontier s) ⊆ Frontier s := interior_subset 
-    have  : Interior (Frontier s) ⊆ Interior s ∩ (s \ Interior s) :=
-      subset_inter B
-        (by 
-          simpa [A] using C)
-    rwa [inter_diff_self, subset_empty_iff] at this
+theorem interior_frontier {s : set α} (h : is_closed s) : «expr = »(interior (frontier s), «expr∅»()) :=
+begin
+  have [ident A] [":", expr «expr = »(frontier s, «expr \ »(s, interior s))] [],
+  from [expr h.frontier_eq],
+  have [ident B] [":", expr «expr ⊆ »(interior (frontier s), interior s)] [],
+  by rw [expr A] []; exact [expr interior_mono (diff_subset _ _)],
+  have [ident C] [":", expr «expr ⊆ »(interior (frontier s), frontier s)] [":=", expr interior_subset],
+  have [] [":", expr «expr ⊆ »(interior (frontier s), «expr ∩ »(interior s, «expr \ »(s, interior s)))] [":=", expr subset_inter B (by simpa [] [] [] ["[", expr A, "]"] [] ["using", expr C])],
+  rwa ["[", expr inter_diff_self, ",", expr subset_empty_iff, "]"] ["at", ident this]
+end
 
 theorem closure_eq_interior_union_frontier (s : Set α) : Closure s = Interior s ∪ Frontier s :=
   (union_diff_cancel interior_subset_closure).symm
@@ -707,7 +705,7 @@ neighborhoods of `a` forms a filter, the neighborhood filter at `a`, is here def
 infimum over the principal filters of all open sets containing `a`. -/
 @[irreducible]
 def nhds (a : α) : Filter α :=
-  ⨅(s : _)(_ : s ∈ { s : Set α | a ∈ s ∧ IsOpen s }), 𝓟 s
+  ⨅(s : _)(_ : s ∈ { s:Set α | a ∈ s ∧ IsOpen s }), 𝓟 s
 
 localized [TopologicalSpace] notation "𝓝" => nhds
 
@@ -718,7 +716,7 @@ def nhdsWithin (a : α) (s : Set α) : Filter α :=
 
 localized [TopologicalSpace] notation "𝓝[" s "] " x:100 => nhdsWithin x s
 
-theorem nhds_def (a : α) : 𝓝 a = ⨅(s : _)(_ : s ∈ { s : Set α | a ∈ s ∧ IsOpen s }), 𝓟 s :=
+theorem nhds_def (a : α) : 𝓝 a = ⨅(s : _)(_ : s ∈ { s:Set α | a ∈ s ∧ IsOpen s }), 𝓟 s :=
   by 
     rw [nhds]
 
@@ -756,8 +754,7 @@ theorem eventually_nhds_iff {a : α} {p : α → Prop} :
     by 
       simp only [subset_def, exists_prop, mem_set_of_eq]
 
-theorem map_nhds {a : α} {f : α → β} :
-  map f (𝓝 a) = ⨅(s : _)(_ : s ∈ { s : Set α | a ∈ s ∧ IsOpen s }), 𝓟 (image f s) :=
+theorem map_nhds {a : α} {f : α → β} : map f (𝓝 a) = ⨅(s : _)(_ : s ∈ { s:Set α | a ∈ s ∧ IsOpen s }), 𝓟 (image f s) :=
   ((nhds_basis_opens a).map f).eq_binfi
 
 theorem mem_of_mem_nhds {a : α} {s : Set α} : s ∈ 𝓝 a → a ∈ s :=
@@ -792,22 +789,25 @@ theorem nhds_basis_opens' (a : α) : (𝓝 a).HasBasis (fun s : Set α => s ∈ 
       rintro ⟨a_in, s_op⟩
       exact ⟨IsOpen.mem_nhds s_op a_in, s_op⟩
 
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `U` is a neighborhood of each point of a set `s` then it is a neighborhood of `s`:
 it contains an open set containing `s`. -/
-theorem exists_open_set_nhds {s U : Set α} (h : ∀ x _ : x ∈ s, U ∈ 𝓝 x) : ∃ V : Set α, s ⊆ V ∧ IsOpen V ∧ V ⊆ U :=
-  by 
-    have  := fun x hx => (nhds_basis_opens x).mem_iff.1 (h x hx)
-    choose! Z hZ hZ' using this 
-    refine' ⟨⋃(x : _)(_ : x ∈ s), Z x, _, _, bUnion_subset hZ'⟩
-    ·
-      intro x hx 
-      simp only [mem_Union]
-      exact ⟨x, hx, (hZ x hx).1⟩
-    ·
-      apply is_open_Union 
-      intro x 
-      byCases' hx : x ∈ s <;> simp [hx]
-      exact (hZ x hx).2
+theorem exists_open_set_nhds
+{s U : set α}
+(h : ∀
+ x «expr ∈ » s, «expr ∈ »(U, expr𝓝() x)) : «expr∃ , »((V : set α), «expr ∧ »(«expr ⊆ »(s, V), «expr ∧ »(is_open V, «expr ⊆ »(V, U)))) :=
+begin
+  have [] [] [":=", expr λ x hx, (nhds_basis_opens x).mem_iff.1 (h x hx)],
+  choose ["!"] [ident Z] [ident hZ, ident hZ'] ["using", expr this],
+  refine [expr ⟨«expr⋃ , »((x «expr ∈ » s), Z x), _, _, bUnion_subset hZ'⟩],
+  { intros [ident x, ident hx],
+    simp [] [] ["only"] ["[", expr mem_Union, "]"] [] [],
+    exact [expr ⟨x, hx, (hZ x hx).1⟩] },
+  { apply [expr is_open_Union],
+    intros [ident x],
+    by_cases [expr hx, ":", expr «expr ∈ »(x, s)]; simp [] [] [] ["[", expr hx, "]"] [] [],
+    exact [expr (hZ x hx).2] }
+end
 
 /-- If `U` is a neighborhood of each point of a set `s` then it is a neighborhood of s:
 it contains an open set containing `s`. -/
@@ -977,16 +977,25 @@ theorem map_cluster_pt_iff {ι : Type _} (x : α) (F : Filter ι) (u : ι → α
     simpRw [MapClusterPt, ClusterPt, inf_ne_bot_iff_frequently_left, frequently_map]
     rfl
 
-theorem map_cluster_pt_of_comp {ι δ : Type _} {F : Filter ι} {φ : δ → ι} {p : Filter δ} {x : α} {u : ι → α} [ne_bot p]
-  (h : tendsto φ p F) (H : tendsto (u ∘ φ) p (𝓝 x)) : MapClusterPt x F u :=
-  by 
-    have  :=
-      calc map (u ∘ φ) p = map u (map φ p) := map_map 
-        _ ≤ map u F := map_mono h 
-        
-    have  : map (u ∘ φ) p ≤ 𝓝 x⊓map u F 
-    exact le_inf H this 
-    exact ne_bot_of_le this
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_cluster_pt_of_comp
+{ι δ : Type*}
+{F : filter ι}
+{φ : δ → ι}
+{p : filter δ}
+{x : α}
+{u : ι → α}
+[ne_bot p]
+(h : tendsto φ p F)
+(H : tendsto «expr ∘ »(u, φ) p (expr𝓝() x)) : map_cluster_pt x F u :=
+begin
+  have [] [] [":=", expr calc
+     «expr = »(map «expr ∘ »(u, φ) p, map u (map φ p)) : map_map
+     «expr ≤ »(..., map u F) : map_mono h],
+  have [] [":", expr «expr ≤ »(map «expr ∘ »(u, φ) p, «expr ⊓ »(expr𝓝() x, map u F))] [],
+  from [expr le_inf H this],
+  exact [expr ne_bot_of_le this]
+end
 
 /-!
 ### Interior, closure and frontier in terms of neighborhoods
@@ -1044,14 +1053,13 @@ theorem mem_closure_iff_frequently {s : Set α} {a : α} : a ∈ Closure s ↔ �
 
 alias mem_closure_iff_frequently ↔ _ Filter.Frequently.mem_closure
 
--- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- The set of cluster points of a filter is closed. In particular, the set of limit points
-of a sequence is closed. -/ theorem is_closed_set_of_cluster_pt {f : filter α} : is_closed {x | cluster_pt x f} :=
-begin
-  simp [] [] ["only"] ["[", expr cluster_pt, ",", expr inf_ne_bot_iff_frequently_left, ",", expr set_of_forall, ",", expr imp_iff_not_or, "]"] [] [],
-  refine [expr is_closed_Inter (λ p, is_closed.union _ _)]; apply [expr is_closed_compl_iff.2],
-  exacts ["[", expr is_open_set_of_eventually_nhds, ",", expr is_open_const, "]"]
-end
+of a sequence is closed. -/
+theorem is_closed_set_of_cluster_pt {f : Filter α} : IsClosed { x | ClusterPt x f } :=
+  by 
+    simp only [ClusterPt, inf_ne_bot_iff_frequently_left, set_of_forall, imp_iff_not_or]
+    refine' is_closed_Inter fun p => IsClosed.union _ _ <;> apply is_closed_compl_iff.2 
+    exacts[is_open_set_of_eventually_nhds, is_open_const]
 
 theorem mem_closure_iff_cluster_pt {s : Set α} {a : α} : a ∈ Closure s ↔ ClusterPt a (𝓟 s) :=
   mem_closure_iff_frequently.trans cluster_pt_principal_iff_frequently.symm
@@ -1066,9 +1074,9 @@ theorem mem_closure_iff_nhds_within_ne_bot {s : Set α} {x : α} : x ∈ Closure
 space. -/
 theorem dense_compl_singleton (x : α) [ne_bot (𝓝[«expr ᶜ» {x}] x)] : Dense («expr ᶜ» {x} : Set α) :=
   by 
-    intro y 
-    unfreezingI 
-      rcases eq_or_ne y x with (rfl | hne)
+    intro y
+    (
+      rcases eq_or_ne y x with (rfl | hne))
     ·
       rwa [mem_closure_iff_nhds_within_ne_bot]
     ·
@@ -1080,7 +1088,7 @@ space. -/
 theorem closure_compl_singleton (x : α) [ne_bot (𝓝[«expr ᶜ» {x}] x)] : Closure («expr ᶜ» {x}) = (univ : Set α) :=
   (dense_compl_singleton x).closure_eq
 
-/-- If `x` is not an isolated point of a topological space, then the interior of `{x}ᶜ` is empty. -/
+/-- If `x` is not an isolated point of a topological space, then the interior of `{x}` is empty. -/
 @[simp]
 theorem interior_singleton (x : α) [ne_bot (𝓝[«expr ᶜ» {x}] x)] : Interior {x} = (∅ : Set α) :=
   interior_eq_empty_iff_dense_compl.2 (dense_compl_singleton x)
@@ -1130,12 +1138,16 @@ theorem is_closed_iff_nhds {s : Set α} : IsClosed s ↔ ∀ x, (∀ U _ : U ∈
   by 
     simpRw [is_closed_iff_cluster_pt, ClusterPt, inf_principal_ne_bot_iff]
 
-theorem closure_inter_open {s t : Set α} (h : IsOpen s) : s ∩ Closure t ⊆ Closure (s ∩ t) :=
-  by 
-    rintro a ⟨hs, ht⟩
-    have  : s ∈ 𝓝 a := IsOpen.mem_nhds h hs 
-    rw [mem_closure_iff_nhds_ne_bot] at ht⊢
-    rwa [←inf_principal, ←inf_assoc, inf_eq_left.2 (le_principal_iff.2 this)]
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem closure_inter_open
+{s t : set α}
+(h : is_open s) : «expr ⊆ »(«expr ∩ »(s, closure t), closure «expr ∩ »(s, t)) :=
+begin
+  rintro [ident a, "⟨", ident hs, ",", ident ht, "⟩"],
+  have [] [":", expr «expr ∈ »(s, expr𝓝() a)] [":=", expr is_open.mem_nhds h hs],
+  rw [expr mem_closure_iff_nhds_ne_bot] ["at", ident ht, "⊢"],
+  rwa ["[", "<-", expr inf_principal, ",", "<-", expr inf_assoc, ",", expr inf_eq_left.2 (le_principal_iff.2 this), "]"] []
+end
 
 theorem closure_inter_open' {s t : Set α} (h : IsOpen t) : Closure s ∩ t ⊆ Closure (s ∩ t) :=
   by 
@@ -1204,22 +1216,28 @@ theorem mem_closure_of_tendsto {f : β → α} {b : Filter β} {a : α} {s : Set
   (h : ∀ᶠx in b, f x ∈ s) : a ∈ Closure s :=
   is_closed_closure.mem_of_tendsto hf$ h.mono (preimage_mono subset_closure)
 
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Suppose that `f` sends the complement to `s` to a single point `a`, and `l` is some filter.
 Then `f` tends to `a` along `l` restricted to `s` if and only if it tends to `a` along `l`. -/
-theorem tendsto_inf_principal_nhds_iff_of_forall_eq {f : β → α} {l : Filter β} {s : Set β} {a : α}
-  (h : ∀ x _ : x ∉ s, f x = a) : tendsto f (l⊓𝓟 s) (𝓝 a) ↔ tendsto f l (𝓝 a) :=
-  by 
-    rw [tendsto_iff_comap, tendsto_iff_comap]
-    replace h : 𝓟 («expr ᶜ» s) ≤ comap f (𝓝 a)
-    ·
-      rintro U ⟨t, ht, htU⟩ x hx 
-      have  : f x ∈ t 
-      exact (h x hx).symm ▸ mem_of_mem_nhds ht 
-      exact htU this 
-    refine' ⟨fun h' => _, le_transₓ inf_le_left⟩
-    have  := sup_le h' h 
-    rw [sup_inf_right, sup_principal, union_compl_self, principal_univ, inf_top_eq, sup_le_iff] at this 
-    exact this.1
+theorem tendsto_inf_principal_nhds_iff_of_forall_eq
+{f : β → α}
+{l : filter β}
+{s : set β}
+{a : α}
+(h : ∀
+ x «expr ∉ » s, «expr = »(f x, a)) : «expr ↔ »(tendsto f «expr ⊓ »(l, expr𝓟() s) (expr𝓝() a), tendsto f l (expr𝓝() a)) :=
+begin
+  rw ["[", expr tendsto_iff_comap, ",", expr tendsto_iff_comap, "]"] [],
+  replace [ident h] [":", expr «expr ≤ »(expr𝓟() «expr ᶜ»(s), comap f (expr𝓝() a))] [],
+  { rintros [ident U, "⟨", ident t, ",", ident ht, ",", ident htU, "⟩", ident x, ident hx],
+    have [] [":", expr «expr ∈ »(f x, t)] [],
+    from [expr «expr ▸ »((h x hx).symm, mem_of_mem_nhds ht)],
+    exact [expr htU this] },
+  refine [expr ⟨λ h', _, le_trans inf_le_left⟩],
+  have [] [] [":=", expr sup_le h' h],
+  rw ["[", expr sup_inf_right, ",", expr sup_principal, ",", expr union_compl_self, ",", expr principal_univ, ",", expr inf_top_eq, ",", expr sup_le_iff, "]"] ["at", ident this],
+  exact [expr this.1]
+end
 
 /-!
 ### Limits of filters in topological spaces
@@ -1304,19 +1322,24 @@ theorem LocallyFinite.closure {f : β → Set α} (hf : LocallyFinite f) : Local
     refine' ⟨Interior s, interior_mem_nhds.2 hsx, hsf.subset$ fun i hi => _⟩
     exact (hi.mono (closure_inter_open' is_open_interior)).of_closure.mono (inter_subset_inter_right _ interior_subset)
 
-theorem LocallyFinite.is_closed_Union {f : β → Set α} (h₁ : LocallyFinite f) (h₂ : ∀ i, IsClosed (f i)) :
-  IsClosed (⋃i, f i) :=
-  by 
-    simp only [←is_open_compl_iff, compl_Union, is_open_iff_mem_nhds, mem_Inter]
-    intro a ha 
-    replace ha : ∀ i, «expr ᶜ» (f i) ∈ 𝓝 a := fun i => (h₂ i).is_open_compl.mem_nhds (ha i)
-    rcases h₁ a with ⟨t, h_nhds, h_fin⟩
-    have  : (t ∩ ⋂(i : _)(_ : i ∈ { i | (f i ∩ t).Nonempty }), «expr ᶜ» (f i)) ∈ 𝓝 a 
-    exact inter_mem h_nhds ((bInter_mem h_fin).2 fun i _ => ha i)
-    filterUpwards [this]
-    simp only [mem_inter_eq, mem_Inter]
-    rintro b ⟨hbt, hn⟩ i hfb 
-    exact hn i ⟨b, hfb, hbt⟩ hfb
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem locally_finite.is_closed_Union
+{f : β → set α}
+(h₁ : locally_finite f)
+(h₂ : ∀ i, is_closed (f i)) : is_closed «expr⋃ , »((i), f i) :=
+begin
+  simp [] [] ["only"] ["[", "<-", expr is_open_compl_iff, ",", expr compl_Union, ",", expr is_open_iff_mem_nhds, ",", expr mem_Inter, "]"] [] [],
+  intros [ident a, ident ha],
+  replace [ident ha] [":", expr ∀
+   i, «expr ∈ »(«expr ᶜ»(f i), expr𝓝() a)] [":=", expr λ i, (h₂ i).is_open_compl.mem_nhds (ha i)],
+  rcases [expr h₁ a, "with", "⟨", ident t, ",", ident h_nhds, ",", ident h_fin, "⟩"],
+  have [] [":", expr «expr ∈ »(«expr ∩ »(t, «expr⋂ , »((i «expr ∈ » {i | «expr ∩ »(f i, t).nonempty}), «expr ᶜ»(f i))), expr𝓝() a)] [],
+  from [expr inter_mem h_nhds ((bInter_mem h_fin).2 (λ i _, ha i))],
+  filter_upwards ["[", expr this, "]"] [],
+  simp [] [] ["only"] ["[", expr mem_inter_eq, ",", expr mem_Inter, "]"] [] [],
+  rintros [ident b, "⟨", ident hbt, ",", ident hn, "⟩", ident i, ident hfb],
+  exact [expr hn i ⟨b, hfb, hbt⟩ hfb]
+end
 
 theorem LocallyFinite.closure_Union {f : β → Set α} (h : LocallyFinite f) : Closure (⋃i, f i) = ⋃i, Closure (f i) :=
   subset.antisymm
@@ -1451,17 +1474,23 @@ theorem continuous_iff_is_closed {f : α → β} : Continuous f ↔ ∀ s, IsClo
 theorem IsClosed.preimage {f : α → β} (hf : Continuous f) {s : Set β} (h : IsClosed s) : IsClosed (f ⁻¹' s) :=
   continuous_iff_is_closed.mp hf s h
 
-theorem mem_closure_image {f : α → β} {x : α} {s : Set α} (hf : ContinuousAt f x) (hx : x ∈ Closure s) :
-  f x ∈ Closure (f '' s) :=
-  by 
-    rw [mem_closure_iff_nhds_ne_bot] at hx⊢
-    rw [←bot_lt_iff_ne_bot]
-    haveI  : ne_bot _ := ⟨hx⟩
-    calc ⊥ < map f (𝓝 x⊓principal s) := bot_lt_iff_ne_bot.mpr ne_bot.ne' _ ≤ (map f$ 𝓝 x)⊓(map f$ principal s) :=
-      map_inf_le _ = (map f$ 𝓝 x)⊓(principal$ f '' s) :=
-      by 
-        rw [map_principal]_ ≤ 𝓝 (f x)⊓(principal$ f '' s) :=
-      inf_le_inf hf le_rfl
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_closure_image
+{f : α → β}
+{x : α}
+{s : set α}
+(hf : continuous_at f x)
+(hx : «expr ∈ »(x, closure s)) : «expr ∈ »(f x, closure «expr '' »(f, s)) :=
+begin
+  rw ["[", expr mem_closure_iff_nhds_ne_bot, "]"] ["at", ident hx, "⊢"],
+  rw ["<-", expr bot_lt_iff_ne_bot] [],
+  haveI [] [":", expr ne_bot _] [":=", expr ⟨hx⟩],
+  calc
+    «expr < »(«expr⊥»(), map f «expr ⊓ »(expr𝓝() x, principal s)) : bot_lt_iff_ne_bot.mpr ne_bot.ne'
+    «expr ≤ »(..., «expr ⊓ »(«expr $ »(map f, expr𝓝() x), «expr $ »(map f, principal s))) : map_inf_le
+    «expr = »(..., «expr ⊓ »(«expr $ »(map f, expr𝓝() x), «expr $ »(principal, «expr '' »(f, s)))) : by rw [expr map_principal] []
+    «expr ≤ »(..., «expr ⊓ »(expr𝓝() (f x), «expr $ »(principal, «expr '' »(f, s)))) : inf_le_inf hf le_rfl
+end
 
 theorem continuous_at_iff_ultrafilter {f : α → β} {x} :
   ContinuousAt f x ↔ ∀ g : Ultrafilter α, «expr↑ » g ≤ 𝓝 x → tendsto f g (𝓝 (f x)) :=
@@ -1493,31 +1522,34 @@ theorem open_dom_of_pcontinuous {f : α →. β} (h : Pcontinuous f) : IsOpen f.
   by 
     rw [←Pfun.preimage_univ] <;> exact h _ is_open_univ
 
-theorem pcontinuous_iff' {f : α →. β} : Pcontinuous f ↔ ∀ {x y} h : y ∈ f x, ptendsto' f (𝓝 x) (𝓝 y) :=
-  by 
-    split 
-    ·
-      intro h x y h' 
-      simp only [ptendsto'_def, mem_nhds_iff]
-      rintro s ⟨t, tsubs, opent, yt⟩
-      exact ⟨f.preimage t, Pfun.preimage_mono _ tsubs, h _ opent, ⟨y, yt, h'⟩⟩
-    intro hf s os 
-    rw [is_open_iff_nhds]
-    rintro x ⟨y, ys, fxy⟩ t 
-    rw [mem_principal]
-    intro (h : f.preimage s ⊆ t)
-    change t ∈ 𝓝 x 
-    apply mem_of_superset _ h 
-    have h' : ∀ s _ : s ∈ 𝓝 y, f.preimage s ∈ 𝓝 x
-    ·
-      intro s hs 
-      have  : ptendsto' f (𝓝 x) (𝓝 y) := hf fxy 
-      rw [ptendsto'_def] at this 
-      exact this s hs 
-    show f.preimage s ∈ 𝓝 x 
-    apply h' 
-    rw [mem_nhds_iff]
-    exact ⟨s, Set.Subset.refl _, os, ys⟩
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pcontinuous_iff'
+{f : «expr →. »(α, β)} : «expr ↔ »(pcontinuous f, ∀
+ {x y}
+ (h : «expr ∈ »(y, f x)), ptendsto' f (expr𝓝() x) (expr𝓝() y)) :=
+begin
+  split,
+  { intros [ident h, ident x, ident y, ident h'],
+    simp [] [] ["only"] ["[", expr ptendsto'_def, ",", expr mem_nhds_iff, "]"] [] [],
+    rintros [ident s, "⟨", ident t, ",", ident tsubs, ",", ident opent, ",", ident yt, "⟩"],
+    exact [expr ⟨f.preimage t, pfun.preimage_mono _ tsubs, h _ opent, ⟨y, yt, h'⟩⟩] },
+  intros [ident hf, ident s, ident os],
+  rw [expr is_open_iff_nhds] [],
+  rintros [ident x, "⟨", ident y, ",", ident ys, ",", ident fxy, "⟩", ident t],
+  rw ["[", expr mem_principal, "]"] [],
+  assume [binders (h : «expr ⊆ »(f.preimage s, t))],
+  change [expr «expr ∈ »(t, expr𝓝() x)] [] [],
+  apply [expr mem_of_superset _ h],
+  have [ident h'] [":", expr ∀ s «expr ∈ » expr𝓝() y, «expr ∈ »(f.preimage s, expr𝓝() x)] [],
+  { intros [ident s, ident hs],
+    have [] [":", expr ptendsto' f (expr𝓝() x) (expr𝓝() y)] [":=", expr hf fxy],
+    rw [expr ptendsto'_def] ["at", ident this],
+    exact [expr this s hs] },
+  show [expr «expr ∈ »(f.preimage s, expr𝓝() x)],
+  apply [expr h'],
+  rw [expr mem_nhds_iff] [],
+  exact [expr ⟨s, set.subset.refl _, os, ys⟩]
+end
 
 /-- If a continuous map `f` maps `s` to `t`, then it maps `closure s` to `closure t`. -/
 theorem Set.MapsTo.closure {s : Set α} {t : Set β} {f : α → β} (h : maps_to f s t) (hc : Continuous f) :

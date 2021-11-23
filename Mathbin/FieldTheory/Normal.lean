@@ -91,132 +91,96 @@ theorem Normal.tower_top_of_normal [h : Normal F E] : Normal K E :=
               ((Polynomial.splits_map_iff (algebraMap F K) (algebraMap K E)).mpr hhx)
               (minpoly.dvd_map_of_is_scalar_tower F K x)⟩
 
-theorem AlgHom.normal_bijective [h : Normal F E] (ϕ : E →ₐ[F] K) : Function.Bijective ϕ :=
-  ⟨ϕ.to_ring_hom.injective,
-    fun x =>
-      by 
-        letI this : Algebra E K := ϕ.to_ring_hom.to_algebra 
-        obtain ⟨h1, h2⟩ := h.out (algebraMap K E x)
-        cases'
-          minpoly.mem_range_of_degree_eq_one E x
-            (Or.resolve_left h2 (minpoly.ne_zero h1)
-              (minpoly.irreducible
-                (is_integral_of_is_scalar_tower x ((is_integral_algebra_map_iff (algebraMap K E).Injective).mp h1)))
-              (minpoly.dvd E x
-                ((algebraMap K E).Injective
-                  (by 
-                    rw [RingHom.map_zero, aeval_map, ←IsScalarTower.to_alg_hom_apply F K E, ←AlgHom.comp_apply,
-                      ←aeval_alg_hom]
-                    exact minpoly.aeval F (algebraMap K E x))))) with
-          y hy 
-        exact ⟨y, hy⟩⟩
+-- error in FieldTheory.Normal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem alg_hom.normal_bijective [h : normal F E] (ϕ : «expr →ₐ[ ] »(E, F, K)) : function.bijective ϕ :=
+⟨ϕ.to_ring_hom.injective, λ x, by { letI [] [":", expr algebra E K] [":=", expr ϕ.to_ring_hom.to_algebra],
+   obtain ["⟨", ident h1, ",", ident h2, "⟩", ":=", expr h.out (algebra_map K E x)],
+   cases [expr minpoly.mem_range_of_degree_eq_one E x (or.resolve_left h2 (minpoly.ne_zero h1) (minpoly.irreducible (is_integral_of_is_scalar_tower x ((is_integral_algebra_map_iff (algebra_map K E).injective).mp h1))) (minpoly.dvd E x ((algebra_map K E).injective (by { rw ["[", expr ring_hom.map_zero, ",", expr aeval_map, ",", "<-", expr is_scalar_tower.to_alg_hom_apply F K E, ",", "<-", expr alg_hom.comp_apply, ",", "<-", expr aeval_alg_hom, "]"] [],
+          exact [expr minpoly.aeval F (algebra_map K E x)] }))))] ["with", ident y, ident hy],
+   exact [expr ⟨y, hy⟩] }⟩
 
 variable{F}{E}{E' : Type _}[Field E'][Algebra F E']
 
-theorem Normal.of_alg_equiv [h : Normal F E] (f : E ≃ₐ[F] E') : Normal F E' :=
-  normal_iff.2$
-    fun x =>
-      by 
-        cases' h.out (f.symm x) with hx hhx 
-        have H := is_integral_alg_hom f.to_alg_hom hx 
-        rw [AlgEquiv.to_alg_hom_eq_coe, AlgEquiv.coe_alg_hom, AlgEquiv.apply_symm_apply] at H 
-        use H 
-        apply Polynomial.splits_of_splits_of_dvd (algebraMap F E') (minpoly.ne_zero hx)
-        ·
-          rw [←AlgHom.comp_algebra_map f.to_alg_hom]
-          exact Polynomial.splits_comp_of_splits (algebraMap F E) f.to_alg_hom.to_ring_hom hhx
-        ·
-          apply minpoly.dvd _ _ 
-          rw [←AddEquiv.map_eq_zero_iff f.symm.to_add_equiv]
-          exact
-            Eq.trans (Polynomial.aeval_alg_hom_apply f.symm.to_alg_hom x (minpoly F (f.symm x))).symm
-              (minpoly.aeval _ _)
+-- error in FieldTheory.Normal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem normal.of_alg_equiv [h : normal F E] (f : «expr ≃ₐ[ ] »(E, F, E')) : normal F E' :=
+«expr $ »(normal_iff.2, λ x, begin
+   cases [expr h.out (f.symm x)] ["with", ident hx, ident hhx],
+   have [ident H] [] [":=", expr is_integral_alg_hom f.to_alg_hom hx],
+   rw ["[", expr alg_equiv.to_alg_hom_eq_coe, ",", expr alg_equiv.coe_alg_hom, ",", expr alg_equiv.apply_symm_apply, "]"] ["at", ident H],
+   use [expr H],
+   apply [expr polynomial.splits_of_splits_of_dvd (algebra_map F E') (minpoly.ne_zero hx)],
+   { rw ["<-", expr alg_hom.comp_algebra_map f.to_alg_hom] [],
+     exact [expr polynomial.splits_comp_of_splits (algebra_map F E) f.to_alg_hom.to_ring_hom hhx] },
+   { apply [expr minpoly.dvd _ _],
+     rw ["<-", expr add_equiv.map_eq_zero_iff f.symm.to_add_equiv] [],
+     exact [expr eq.trans (polynomial.aeval_alg_hom_apply f.symm.to_alg_hom x (minpoly F (f.symm x))).symm (minpoly.aeval _ _)] }
+ end)
 
 theorem AlgEquiv.transfer_normal (f : E ≃ₐ[F] E') : Normal F E ↔ Normal F E' :=
   ⟨fun h =>
       by 
-        exactI Normal.of_alg_equiv f,
+        exact Normal.of_alg_equiv f,
     fun h =>
       by 
-        exactI Normal.of_alg_equiv f.symm⟩
+        exact Normal.of_alg_equiv f.symm⟩
 
-theorem Normal.of_is_splitting_field (p : Polynomial F) [hFEp : is_splitting_field F E p] : Normal F E :=
-  by 
-    byCases' hp : p = 0
-    ·
-      haveI  : is_splitting_field F F p
-      ·
-        rw [hp]
-        exact ⟨splits_zero _, Subsingleton.elimₓ _ _⟩
-      exactI
-        (AlgEquiv.transfer_normal ((is_splitting_field.alg_equiv F p).trans (is_splitting_field.alg_equiv E p).symm)).mp
-          (normal_self F)
-    refine' normal_iff.2 fun x => _ 
-    haveI hFE : FiniteDimensional F E := is_splitting_field.finite_dimensional E p 
-    have Hx : IsIntegral F x := is_integral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x 
-    refine' ⟨Hx, Or.inr _⟩
-    rintro q q_irred ⟨r, hr⟩
-    let D := AdjoinRoot q 
-    let pbED := AdjoinRoot.powerBasis q_irred.ne_zero 
-    haveI  : FiniteDimensional E D := PowerBasis.finite_dimensional pbED 
-    have finrankED : FiniteDimensional.finrank E D = q.nat_degree := PowerBasis.finrank pbED 
-    letI this : Algebra F D := RingHom.toAlgebra ((algebraMap E D).comp (algebraMap F E))
-    haveI  : IsScalarTower F E D := of_algebra_map_eq fun _ => rfl 
-    haveI  : FiniteDimensional F D := FiniteDimensional.trans F E D 
-    suffices  : Nonempty (D →ₐ[F] E)
-    ·
-      cases' this with ϕ 
-      rw [←WithBot.coe_one, degree_eq_iff_nat_degree_eq q_irred.ne_zero, ←finrankED]
-      have nat_lemma : ∀ a b c : ℕ, (a*b) = c → c ≤ a → 0 < c → b = 1
-      ·
-        intro a b c h1 h2 h3 
-        nlinarith 
-      exact
-        nat_lemma _ _ _ (FiniteDimensional.finrank_mul_finrank F E D)
-          (LinearMap.finrank_le_finrank_of_injective
-            (show Function.Injective ϕ.to_linear_map from ϕ.to_ring_hom.injective))
-          FiniteDimensional.finrank_pos 
-    let C := AdjoinRoot (minpoly F x)
-    have Hx_irred := minpoly.irreducible Hx 
-    letI this : Algebra C D :=
-      RingHom.toAlgebra
-        (AdjoinRoot.lift (algebraMap F D) (AdjoinRoot.root q)
-          (by 
-            rw [algebra_map_eq F E D, ←eval₂_map, hr, AdjoinRoot.algebra_map_eq, eval₂_mul, AdjoinRoot.eval₂_root,
-              zero_mul]))
-    letI this : Algebra C E := RingHom.toAlgebra (AdjoinRoot.lift (algebraMap F E) x (minpoly.aeval F x))
-    haveI  : IsScalarTower F C D := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm 
-    haveI  : IsScalarTower F C E := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm 
-    suffices  : Nonempty (D →ₐ[C] E)
-    ·
-      exact Nonempty.map (AlgHom.restrictScalars F) this 
-    let S : Set D := ((p.map (algebraMap F E)).roots.map (algebraMap E D)).toFinset 
-    suffices  : ⊤ ≤ IntermediateField.adjoin C S
-    ·
-      refine' IntermediateField.alg_hom_mk_adjoin_splits' (top_le_iff.mp this) fun y hy => _ 
-      rcases multiset.mem_map.mp (multiset.mem_to_finset.mp hy) with ⟨z, hz1, hz2⟩
-      have Hz : IsIntegral F z := is_integral_of_noetherian (IsNoetherian.iff_fg.2 hFE) z 
-      use show IsIntegral C y from is_integral_of_noetherian (IsNoetherian.iff_fg.2 (FiniteDimensional.right F C D)) y 
-      apply splits_of_splits_of_dvd (algebraMap C E) (map_ne_zero (minpoly.ne_zero Hz))
-      ·
-        rw [splits_map_iff, ←algebra_map_eq F C E]
-        exact
-          splits_of_splits_of_dvd _ hp hFEp.splits
-            (minpoly.dvd F z (Eq.trans (eval₂_eq_eval_map _) ((mem_roots (map_ne_zero hp)).mp hz1)))
-      ·
-        apply minpoly.dvd 
-        rw [←hz2, aeval_def, eval₂_map, ←algebra_map_eq F C D, algebra_map_eq F E D, ←hom_eval₂, ←aeval_def,
-          minpoly.aeval F z, RingHom.map_zero]
-    rw [←IntermediateField.to_subalgebra_le_to_subalgebra, IntermediateField.top_to_subalgebra]
-    apply ge_transₓ (IntermediateField.algebra_adjoin_le_adjoin C S)
-    suffices  : (Algebra.adjoin C S).restrictScalars F = (Algebra.adjoin E {AdjoinRoot.root q}).restrictScalars F
-    ·
-      rw [AdjoinRoot.adjoin_root_eq_top, Subalgebra.restrict_scalars_top, ←@Subalgebra.restrict_scalars_top F C] at this 
-      exact top_le_iff.mpr (Subalgebra.restrict_scalars_injective F this)
-    dsimp only [S]
-    rw [←Finset.image_to_finset, Finset.coe_image]
-    apply Eq.trans (Algebra.adjoin_res_eq_adjoin_res F E C D hFEp.adjoin_roots AdjoinRoot.adjoin_root_eq_top)
-    rw [Set.image_singleton, RingHom.algebra_map_to_algebra, AdjoinRoot.lift_root]
+-- error in FieldTheory.Normal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem normal.of_is_splitting_field (p : polynomial F) [hFEp : is_splitting_field F E p] : normal F E :=
+begin
+  by_cases [expr hp, ":", expr «expr = »(p, 0)],
+  { haveI [] [":", expr is_splitting_field F F p] [],
+    { rw [expr hp] [],
+      exact [expr ⟨splits_zero _, subsingleton.elim _ _⟩] },
+    exactI [expr (alg_equiv.transfer_normal ((is_splitting_field.alg_equiv F p).trans (is_splitting_field.alg_equiv E p).symm)).mp (normal_self F)] },
+  refine [expr normal_iff.2 (λ x, _)],
+  haveI [ident hFE] [":", expr finite_dimensional F E] [":=", expr is_splitting_field.finite_dimensional E p],
+  have [ident Hx] [":", expr is_integral F x] [":=", expr is_integral_of_noetherian (is_noetherian.iff_fg.2 hFE) x],
+  refine [expr ⟨Hx, or.inr _⟩],
+  rintros [ident q, ident q_irred, "⟨", ident r, ",", ident hr, "⟩"],
+  let [ident D] [] [":=", expr adjoin_root q],
+  let [ident pbED] [] [":=", expr adjoin_root.power_basis q_irred.ne_zero],
+  haveI [] [":", expr finite_dimensional E D] [":=", expr power_basis.finite_dimensional pbED],
+  have [ident finrankED] [":", expr «expr = »(finite_dimensional.finrank E D, q.nat_degree)] [":=", expr power_basis.finrank pbED],
+  letI [] [":", expr algebra F D] [":=", expr ring_hom.to_algebra ((algebra_map E D).comp (algebra_map F E))],
+  haveI [] [":", expr is_scalar_tower F E D] [":=", expr of_algebra_map_eq (λ _, rfl)],
+  haveI [] [":", expr finite_dimensional F D] [":=", expr finite_dimensional.trans F E D],
+  suffices [] [":", expr nonempty «expr →ₐ[ ] »(D, F, E)],
+  { cases [expr this] ["with", ident ϕ],
+    rw ["[", "<-", expr with_bot.coe_one, ",", expr degree_eq_iff_nat_degree_eq q_irred.ne_zero, ",", "<-", expr finrankED, "]"] [],
+    have [ident nat_lemma] [":", expr ∀
+     a b c : exprℕ(), «expr = »(«expr * »(a, b), c) → «expr ≤ »(c, a) → «expr < »(0, c) → «expr = »(b, 1)] [],
+    { intros [ident a, ident b, ident c, ident h1, ident h2, ident h3],
+      nlinarith [] [] [] },
+    exact [expr nat_lemma _ _ _ (finite_dimensional.finrank_mul_finrank F E D) (linear_map.finrank_le_finrank_of_injective (show function.injective ϕ.to_linear_map, from ϕ.to_ring_hom.injective)) finite_dimensional.finrank_pos] },
+  let [ident C] [] [":=", expr adjoin_root (minpoly F x)],
+  have [ident Hx_irred] [] [":=", expr minpoly.irreducible Hx],
+  letI [] [":", expr algebra C D] [":=", expr ring_hom.to_algebra (adjoin_root.lift (algebra_map F D) (adjoin_root.root q) (by rw ["[", expr algebra_map_eq F E D, ",", "<-", expr eval₂_map, ",", expr hr, ",", expr adjoin_root.algebra_map_eq, ",", expr eval₂_mul, ",", expr adjoin_root.eval₂_root, ",", expr zero_mul, "]"] []))],
+  letI [] [":", expr algebra C E] [":=", expr ring_hom.to_algebra (adjoin_root.lift (algebra_map F E) x (minpoly.aeval F x))],
+  haveI [] [":", expr is_scalar_tower F C D] [":=", expr of_algebra_map_eq (λ x, (adjoin_root.lift_of _).symm)],
+  haveI [] [":", expr is_scalar_tower F C E] [":=", expr of_algebra_map_eq (λ x, (adjoin_root.lift_of _).symm)],
+  suffices [] [":", expr nonempty «expr →ₐ[ ] »(D, C, E)],
+  { exact [expr nonempty.map (alg_hom.restrict_scalars F) this] },
+  let [ident S] [":", expr set D] [":=", expr ((p.map (algebra_map F E)).roots.map (algebra_map E D)).to_finset],
+  suffices [] [":", expr «expr ≤ »(«expr⊤»(), intermediate_field.adjoin C S)],
+  { refine [expr intermediate_field.alg_hom_mk_adjoin_splits' (top_le_iff.mp this) (λ y hy, _)],
+    rcases [expr multiset.mem_map.mp (multiset.mem_to_finset.mp hy), "with", "⟨", ident z, ",", ident hz1, ",", ident hz2, "⟩"],
+    have [ident Hz] [":", expr is_integral F z] [":=", expr is_integral_of_noetherian (is_noetherian.iff_fg.2 hFE) z],
+    use [expr show is_integral C y, from is_integral_of_noetherian (is_noetherian.iff_fg.2 (finite_dimensional.right F C D)) y],
+    apply [expr splits_of_splits_of_dvd (algebra_map C E) (map_ne_zero (minpoly.ne_zero Hz))],
+    { rw ["[", expr splits_map_iff, ",", "<-", expr algebra_map_eq F C E, "]"] [],
+      exact [expr splits_of_splits_of_dvd _ hp hFEp.splits (minpoly.dvd F z (eq.trans (eval₂_eq_eval_map _) ((mem_roots (map_ne_zero hp)).mp hz1)))] },
+    { apply [expr minpoly.dvd],
+      rw ["[", "<-", expr hz2, ",", expr aeval_def, ",", expr eval₂_map, ",", "<-", expr algebra_map_eq F C D, ",", expr algebra_map_eq F E D, ",", "<-", expr hom_eval₂, ",", "<-", expr aeval_def, ",", expr minpoly.aeval F z, ",", expr ring_hom.map_zero, "]"] [] } },
+  rw ["[", "<-", expr intermediate_field.to_subalgebra_le_to_subalgebra, ",", expr intermediate_field.top_to_subalgebra, "]"] [],
+  apply [expr ge_trans (intermediate_field.algebra_adjoin_le_adjoin C S)],
+  suffices [] [":", expr «expr = »((algebra.adjoin C S).restrict_scalars F, (algebra.adjoin E {adjoin_root.root q}).restrict_scalars F)],
+  { rw ["[", expr adjoin_root.adjoin_root_eq_top, ",", expr subalgebra.restrict_scalars_top, ",", "<-", expr @subalgebra.restrict_scalars_top F C, "]"] ["at", ident this],
+    exact [expr top_le_iff.mpr (subalgebra.restrict_scalars_injective F this)] },
+  dsimp ["only"] ["[", expr S, "]"] [] [],
+  rw ["[", "<-", expr finset.image_to_finset, ",", expr finset.coe_image, "]"] [],
+  apply [expr eq.trans (algebra.adjoin_res_eq_adjoin_res F E C D hFEp.adjoin_roots adjoin_root.adjoin_root_eq_top)],
+  rw ["[", expr set.image_singleton, ",", expr ring_hom.algebra_map_to_algebra, ",", expr adjoin_root.lift_root, "]"] []
+end
 
 instance  (p : Polynomial F) : Normal F p.splitting_field :=
   Normal.of_is_splitting_field p

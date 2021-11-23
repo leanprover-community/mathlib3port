@@ -1,4 +1,3 @@
-import Mathbin.Algebra.GroupPower.Default 
 import Mathbin.Data.List.Sort 
 import Mathbin.Data.Nat.Gcd 
 import Mathbin.Data.Nat.Sqrt 
@@ -104,15 +103,19 @@ theorem prime_def_le_sqrt {p : ℕ} : prime p ↔ 2 ≤ p ∧ ∀ m, 2 ≤ m →
                   refine' this km (lt_of_mul_lt_mul_right _ (zero_le m)) e 
                   rwa [one_mulₓ, ←e]⟩
 
-theorem prime_of_coprime (n : ℕ) (h1 : 1 < n) (h : ∀ m _ : m < n, m ≠ 0 → n.coprime m) : prime n :=
-  by 
-    refine' prime_def_lt.mpr ⟨h1, fun m mlt mdvd => _⟩
-    have hm : m ≠ 0
-    ·
-      rintro rfl 
-      rw [zero_dvd_iff] at mdvd 
-      exact mlt.ne' mdvd 
-    exact (h m mlt hm).symm.eq_one_of_dvd mdvd
+-- error in Data.Nat.Prime: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prime_of_coprime
+(n : exprℕ())
+(h1 : «expr < »(1, n))
+(h : ∀ m «expr < » n, «expr ≠ »(m, 0) → n.coprime m) : prime n :=
+begin
+  refine [expr prime_def_lt.mpr ⟨h1, λ m mlt mdvd, _⟩],
+  have [ident hm] [":", expr «expr ≠ »(m, 0)] [],
+  { rintro [ident rfl],
+    rw [expr zero_dvd_iff] ["at", ident mdvd],
+    exact [expr mlt.ne' mdvd] },
+  exact [expr (h m mlt hm).symm.eq_one_of_dvd mdvd]
+end
 
 section 
 
@@ -240,63 +243,53 @@ theorem min_fac_eq : ∀ n, min_fac n = if 2 ∣ n then 2 else min_fac_aux n 3
 private def min_fac_prop (n k : ℕ) :=
   2 ≤ k ∧ k ∣ n ∧ ∀ m, 2 ≤ m → m ∣ n → k ≤ m
 
-theorem min_fac_aux_has_prop {n : ℕ} (n2 : 2 ≤ n) (nd2 : ¬2 ∣ n) :
-  ∀ k i, (k = (2*i)+3) → (∀ m, 2 ≤ m → m ∣ n → k ≤ m) → min_fac_prop n (min_fac_aux n k)
-| k =>
-  fun i e a =>
-    by 
-      rw [min_fac_aux]
-      byCases' h : n < k*k <;> simp [h]
-      ·
-        have pp : prime n :=
-          prime_def_le_sqrt.2 ⟨n2, fun m m2 l d => not_lt_of_geₓ l$ lt_of_lt_of_leₓ (sqrt_lt.2 h) (a m m2 d)⟩
-        exact ⟨n2, dvd_rfl, fun m m2 d => le_of_eqₓ ((dvd_prime_two_le pp m2).1 d).symm⟩
-      have k2 : 2 ≤ k
-      ·
-        subst e 
-        exact
-          by 
-            decide 
-      byCases' dk : k ∣ n <;> simp [dk]
-      ·
-        exact ⟨k2, dk, a⟩
-      ·
-        refine'
-          have  := min_fac_lemma n k h 
-          min_fac_aux_has_prop (k+2) (i+1)
-            (by 
-              simp [e, left_distrib])
-            fun m m2 d => _ 
-        cases' Nat.eq_or_lt_of_leₓ (a m m2 d) with me ml
-        ·
-          subst me 
-          contradiction 
-        apply (Nat.eq_or_lt_of_leₓ ml).resolve_left 
-        intro me 
-        rw [←me, e] at d 
-        change (2*i+2) ∣ n at d 
-        have  := dvd_of_mul_right_dvd d 
-        contradiction
+-- error in Data.Nat.Prime: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem min_fac_aux_has_prop
+{n : exprℕ()}
+(n2 : «expr ≤ »(2, n))
+(nd2 : «expr¬ »(«expr ∣ »(2, n))) : ∀
+k
+i, «expr = »(k, «expr + »(«expr * »(2, i), 3)) → ∀
+m, «expr ≤ »(2, m) → «expr ∣ »(m, n) → «expr ≤ »(k, m) → min_fac_prop n (min_fac_aux n k)
+| k := λ i e a, begin
+  rw [expr min_fac_aux] [],
+  by_cases [expr h, ":", expr «expr < »(n, «expr * »(k, k))]; simp [] [] [] ["[", expr h, "]"] [] [],
+  { have [ident pp] [":", expr prime n] [":=", expr prime_def_le_sqrt.2 ⟨n2, λ
+      m m2 l d, «expr $ »(not_lt_of_ge l, lt_of_lt_of_le (sqrt_lt.2 h) (a m m2 d))⟩],
+    from [expr ⟨n2, dvd_rfl, λ m m2 d, le_of_eq ((dvd_prime_two_le pp m2).1 d).symm⟩] },
+  have [ident k2] [":", expr «expr ≤ »(2, k)] [],
+  { subst [expr e],
+    exact [expr exprdec_trivial()] },
+  by_cases [expr dk, ":", expr «expr ∣ »(k, n)]; simp [] [] [] ["[", expr dk, "]"] [] [],
+  { exact [expr ⟨k2, dk, a⟩] },
+  { refine [expr have _, from min_fac_lemma n k h,
+     min_fac_aux_has_prop «expr + »(k, 2) «expr + »(i, 1) (by simp [] [] [] ["[", expr e, ",", expr left_distrib, "]"] [] []) (λ
+      m m2 d, _)],
+    cases [expr nat.eq_or_lt_of_le (a m m2 d)] ["with", ident me, ident ml],
+    { subst [expr me],
+      contradiction },
+    apply [expr (nat.eq_or_lt_of_le ml).resolve_left],
+    intro [ident me],
+    rw ["[", "<-", expr me, ",", expr e, "]"] ["at", ident d],
+    change [expr «expr ∣ »(«expr * »(2, «expr + »(i, 2)), n)] [] ["at", ident d],
+    have [] [] [":=", expr dvd_of_mul_right_dvd d],
+    contradiction }
+end
 
-theorem min_fac_has_prop {n : ℕ} (n1 : n ≠ 1) : min_fac_prop n (min_fac n) :=
-  by 
-    byCases' n0 : n = 0
-    ·
-      simp [n0, min_fac_prop, Ge]
-    have n2 : 2 ≤ n
-    ·
-      revert n0 n1 
-      rcases n with (_ | _ | _) <;>
-        exact
-          by 
-            decide 
-    simp [min_fac_eq]
-    byCases' d2 : 2 ∣ n <;> simp [d2]
-    ·
-      exact ⟨le_reflₓ _, d2, fun k k2 d => k2⟩
-    ·
-      refine' min_fac_aux_has_prop n2 d2 3 0 rfl fun m m2 d => (Nat.eq_or_lt_of_leₓ m2).resolve_left (mt _ d2)
-      exact fun e => e.symm ▸ d
+-- error in Data.Nat.Prime: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem min_fac_has_prop {n : exprℕ()} (n1 : «expr ≠ »(n, 1)) : min_fac_prop n (min_fac n) :=
+begin
+  by_cases [expr n0, ":", expr «expr = »(n, 0)],
+  { simp [] [] [] ["[", expr n0, ",", expr min_fac_prop, ",", expr ge, "]"] [] [] },
+  have [ident n2] [":", expr «expr ≤ »(2, n)] [],
+  { revert [ident n0, ident n1],
+    rcases [expr n, "with", "_", "|", "_", "|", "_"]; exact [expr exprdec_trivial()] },
+  simp [] [] [] ["[", expr min_fac_eq, "]"] [] [],
+  by_cases [expr d2, ":", expr «expr ∣ »(2, n)]; simp [] [] [] ["[", expr d2, "]"] [] [],
+  { exact [expr ⟨le_refl _, d2, λ k k2 d, k2⟩] },
+  { refine [expr min_fac_aux_has_prop n2 d2 3 0 rfl (λ m m2 d, (nat.eq_or_lt_of_le m2).resolve_left (mt _ d2))],
+    exact [expr λ e, «expr ▸ »(e.symm, d)] }
+end
 
 theorem min_fac_dvd (n : ℕ) : min_fac n ∣ n :=
   if n1 : n = 1 then
@@ -412,7 +405,7 @@ theorem min_fac_sq_le_self {n : ℕ} (w : 0 < n) (h : ¬prime n) : min_fac n ^ 2
     _ ≤ n := div_mul_le_self n (min_fac n)
     
 
--- error in Data.Nat.Prime: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Nat.Prime: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp] theorem min_fac_eq_one_iff {n : exprℕ()} : «expr ↔ »(«expr = »(min_fac n, 1), «expr = »(n, 1)) :=
 begin
   split,
@@ -425,38 +418,31 @@ begin
     refl }
 end
 
-@[simp]
-theorem min_fac_eq_two_iff (n : ℕ) : min_fac n = 2 ↔ 2 ∣ n :=
-  by 
-    split 
-    ·
-      intro h 
-      convert min_fac_dvd _ 
-      rw [h]
-    ·
-      intro h 
-      have ub := min_fac_le_of_dvd (le_reflₓ 2) h 
-      have lb := min_fac_pos n 
-      cases' h : n.min_fac with m
-      ·
-        rw [h] at lb 
-        cases lb
-      ·
-        cases' m with m
-        ·
-          simp  at h 
-          subst h 
-          cases' h with n h 
-          cases n <;> cases h
-        ·
-          cases' m with m
-          ·
-            rfl
-          ·
-            rw [h] at ub 
-            cases' ub with _ ub 
-            cases' ub with _ ub 
-            cases ub
+-- error in Data.Nat.Prime: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem min_fac_eq_two_iff (n : exprℕ()) : «expr ↔ »(«expr = »(min_fac n, 2), «expr ∣ »(2, n)) :=
+begin
+  split,
+  { intro [ident h],
+    convert [] [expr min_fac_dvd _] [],
+    rw [expr h] [] },
+  { intro [ident h],
+    have [ident ub] [] [":=", expr min_fac_le_of_dvd (le_refl 2) h],
+    have [ident lb] [] [":=", expr min_fac_pos n],
+    cases [expr h, ":", expr n.min_fac] ["with", ident m],
+    { rw [expr h] ["at", ident lb],
+      cases [expr lb] [] },
+    { cases [expr m] ["with", ident m],
+      { simp [] [] [] [] [] ["at", ident h],
+        subst [expr h],
+        cases [expr h] ["with", ident n, ident h],
+        cases [expr n] []; cases [expr h] [] },
+      { cases [expr m] ["with", ident m],
+        { refl },
+        { rw [expr h] ["at", ident ub],
+          cases [expr ub] ["with", "_", ident ub],
+          cases [expr ub] ["with", "_", ident ub],
+          cases [expr ub] [] } } } }
+end
 
 end MinFac
 
@@ -498,7 +484,7 @@ theorem coprime_of_dvd {m n : ℕ} (H : ∀ k, prime k → k ∣ m → ¬k ∣ n
     cases' Nat.eq_zero_or_posₓ (gcd m n) with g0 g1
     ·
       rw [eq_zero_of_gcd_eq_zero_left g0, eq_zero_of_gcd_eq_zero_right g0] at H 
-      exFalso 
+      exfalso 
       exact H 2 prime_two (dvd_zero _) (dvd_zero _)
     apply Eq.symm 
     change 1 ≤ _ at g1 
@@ -590,17 +576,17 @@ theorem prod_factors : ∀ {n}, 0 < n → List.prod (factors n) = n
       by 
         rw [factors, List.prod_cons, prod_factors h₁, Nat.mul_div_cancel'ₓ (min_fac_dvd _)]
 
-theorem factors_prime {p : ℕ} (hp : Nat.Prime p) : p.factors = [p] :=
-  by 
-    have  : p = (p - 2)+2 := (tsub_eq_iff_eq_add_of_le hp.1).mp rfl 
-    rw [this, Nat.factors]
-    simp only [Eq.symm this]
-    have  : Nat.minFac p = p := (nat.prime_def_min_fac.mp hp).2
-    split 
-    ·
-      exact this
-    ·
-      simp only [this, Nat.factors, Nat.div_selfₓ (Nat.Prime.pos hp)]
+-- error in Data.Nat.Prime: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem factors_prime {p : exprℕ()} (hp : nat.prime p) : «expr = »(p.factors, «expr[ , ]»([p])) :=
+begin
+  have [] [":", expr «expr = »(p, «expr + »(«expr - »(p, 2), 2))] [":=", expr (tsub_eq_iff_eq_add_of_le hp.1).mp rfl],
+  rw ["[", expr this, ",", expr nat.factors, "]"] [],
+  simp [] [] ["only"] ["[", expr eq.symm this, "]"] [] [],
+  have [] [":", expr «expr = »(nat.min_fac p, p)] [":=", expr (nat.prime_def_min_fac.mp hp).2],
+  split,
+  { exact [expr this] },
+  { simp [] [] ["only"] ["[", expr this, ",", expr nat.factors, ",", expr nat.div_self (nat.prime.pos hp), "]"] [] [] }
+end
 
 theorem factors_chain : ∀ {n a}, (∀ p, prime p → p ∣ n → a ≤ p) → List.Chain (· ≤ ·) a (factors n)
 | 0 =>
@@ -748,7 +734,7 @@ theorem prime.pow_eq_iff {p a k : ℕ} (hp : p.prime) : a ^ k = p ↔ a = p ∧ 
     rintro rfl 
     rw [hp.eq_one_of_pow, eq_self_iff_true, and_trueₓ, pow_oneₓ]
 
--- error in Data.Nat.Prime: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Nat.Prime: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem prime.mul_eq_prime_sq_iff
 {x y p : exprℕ()}
 (hp : p.prime)
@@ -861,6 +847,14 @@ theorem mem_list_primes_of_dvd_prod {p : ℕ} (hp : prime p) :
 theorem mem_factors_iff_dvd {n p : ℕ} (hn : 0 < n) (hp : prime p) : p ∈ factors n ↔ p ∣ n :=
   ⟨fun h => prod_factors hn ▸ List.dvd_prod h,
     fun h => mem_list_primes_of_dvd_prod hp (@prime_of_mem_factors n) ((prod_factors hn).symm ▸ h)⟩
+
+theorem dvd_of_mem_factors {n p : ℕ} (h : p ∈ n.factors) : p ∣ n :=
+  by 
+    rcases n.eq_zero_or_pos with (rfl | hn)
+    ·
+      exact dvd_zero p
+    ·
+      rwa [←mem_factors_iff_dvd hn (prime_of_mem_factors h)]
 
 theorem mem_factors {n p} (hn : 0 < n) : p ∈ factors n ↔ prime p ∧ p ∣ n :=
   ⟨fun h => ⟨prime_of_mem_factors h, (mem_factors_iff_dvd hn$ prime_of_mem_factors h).mp h⟩,
@@ -1021,17 +1015,17 @@ theorem min_fac_ne_bit0 {n k : ℕ} : Nat.minFac (bit1 n) ≠ bit0 k :=
     rw [bit0_eq_two_mul]
     refine' fun e => absurd ((Nat.dvd_add_iff_right _).2 (dvd_trans ⟨_, e⟩ (Nat.min_fac_dvd _))) _ <;> simp 
 
-theorem min_fac_helper_0 (n : ℕ) (h : 0 < n) : min_fac_helper n 1 :=
-  by 
-    refine' ⟨zero_lt_one, lt_of_le_of_neₓ _ min_fac_ne_bit0.symm⟩
-    refine' @lt_of_le_of_neₓ ℕ _ _ _ (Nat.min_fac_pos _) _ 
-    intro e 
-    have  := Nat.min_fac_prime _
-    ·
-      rw [←e] at this 
-      exact Nat.not_prime_one this
-    ·
-      exact ne_of_gtₓ (Nat.bit1_lt h)
+-- error in Data.Nat.Prime: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem min_fac_helper_0 (n : exprℕ()) (h : «expr < »(0, n)) : min_fac_helper n 1 :=
+begin
+  refine [expr ⟨zero_lt_one, lt_of_le_of_ne _ min_fac_ne_bit0.symm⟩],
+  refine [expr @lt_of_le_of_ne exprℕ() _ _ _ (nat.min_fac_pos _) _],
+  intro [ident e],
+  have [] [] [":=", expr nat.min_fac_prime _],
+  { rw ["<-", expr e] ["at", ident this],
+    exact [expr nat.not_prime_one this] },
+  { exact [expr ne_of_gt (nat.bit1_lt h)] }
+end
 
 theorem min_fac_helper_1 {n k k' : ℕ} (e : (k+1) = k') (np : Nat.minFac (bit1 n) ≠ bit1 k) (h : min_fac_helper n k) :
   min_fac_helper n k' :=
@@ -1067,28 +1061,33 @@ theorem min_fac_helper_4 (n k : ℕ) (hd : bit1 n % bit1 k = 0) (h : min_fac_hel
   by 
     rw [←Nat.dvd_iff_mod_eq_zeroₓ] at hd <;> exact le_antisymmₓ (Nat.min_fac_le_of_dvd (Nat.bit1_lt h.1) hd) h.2
 
-theorem min_fac_helper_5 (n k k' : ℕ) (e : (bit1 k*bit1 k) = k') (hd : bit1 n < k') (h : min_fac_helper n k) :
-  Nat.minFac (bit1 n) = bit1 n :=
-  by 
-    refine' (Nat.prime_def_min_fac.1 (Nat.prime_def_le_sqrt.2 ⟨Nat.bit1_lt h.n_pos, _⟩)).2
-    rw [←e] at hd 
-    intro m m2 hm md 
-    have  := le_transₓ h.2 (le_transₓ (Nat.min_fac_le_of_dvd m2 md) hm)
-    rw [Nat.le_sqrt] at this 
-    exact not_le_of_lt hd this
+-- error in Data.Nat.Prime: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem min_fac_helper_5
+(n k k' : exprℕ())
+(e : «expr = »(«expr * »(bit1 k, bit1 k), k'))
+(hd : «expr < »(bit1 n, k'))
+(h : min_fac_helper n k) : «expr = »(nat.min_fac (bit1 n), bit1 n) :=
+begin
+  refine [expr (nat.prime_def_min_fac.1 (nat.prime_def_le_sqrt.2 ⟨nat.bit1_lt h.n_pos, _⟩)).2],
+  rw ["<-", expr e] ["at", ident hd],
+  intros [ident m, ident m2, ident hm, ident md],
+  have [] [] [":=", expr le_trans h.2 (le_trans (nat.min_fac_le_of_dvd m2 md) hm)],
+  rw [expr nat.le_sqrt] ["at", ident this],
+  exact [expr not_le_of_lt hd this]
+end
 
 /-- Given `e` a natural numeral and `d : nat` a factor of it, return `⊢ ¬ prime e`. -/
 unsafe def prove_non_prime (e : expr) (n d₁ : ℕ) : tactic expr :=
   do 
     let e₁ := reflect d₁ 
-    let c ← mk_instance_cache (quote Nat)
-    let (c, p₁) ← prove_lt_nat c (quote 1) e₁ 
+    let c ← mk_instance_cache (quote.1 Nat)
+    let (c, p₁) ← prove_lt_nat c (quote.1 1) e₁ 
     let d₂ := n / d₁ 
     let e₂ := reflect d₂ 
     let (c, e', p) ← prove_mul_nat c e₁ e₂ 
     guardₓ (e' =ₐ e)
-    let (c, p₂) ← prove_lt_nat c (quote 1) e₂ 
-    return$ (quote @Nat.not_prime_mul').mk_app [e₁, e₂, e, p, p₁, p₂]
+    let (c, p₂) ← prove_lt_nat c (quote.1 1) e₂ 
+    return$ (quote.1 @Nat.not_prime_mul').mk_app [e₁, e₂, e, p, p₁, p₂]
 
 /-- Given `a`,`a1 := bit1 a`, `n1` the value of `a1`, `b` and `p : min_fac_helper a b`,
   returns `(c, ⊢ min_fac a1 = c)`. -/
@@ -1098,12 +1097,12 @@ unsafe def prove_min_fac_aux (a a1 : expr) (n1 : ℕ) :
   do 
     let k ← b.to_nat 
     let k1 := bit1 k 
-    let b1 := (quote (bit1 : ℕ → ℕ)).mk_app [b]
+    let b1 := (quote.1 (bit1 : ℕ → ℕ)).mk_app [b]
     if n1 < k1*k1 then
         do 
           let (ic, e', p₁) ← prove_mul_nat ic b1 b1 
           let (ic, p₂) ← prove_lt_nat ic a1 e' 
-          return (ic, a1, (quote min_fac_helper_5).mk_app [a, b, e', p₁, p₂, p])
+          return (ic, a1, (quote.1 min_fac_helper_5).mk_app [a, b, e', p₁, p₂, p])
       else
         let d := k1.min_fac 
         if to_bool (d < k1) then
@@ -1112,32 +1111,32 @@ unsafe def prove_min_fac_aux (a a1 : expr) (n1 : ℕ) :
             let e' := reflect k' 
             let (ic, p₁) ← prove_succ ic b e' 
             let p₂ ← prove_non_prime b1 k1 d 
-            prove_min_fac_aux ic e'$ (quote min_fac_helper_2).mk_app [a, b, e', p₁, p₂, p]
+            prove_min_fac_aux ic e'$ (quote.1 min_fac_helper_2).mk_app [a, b, e', p₁, p₂, p]
         else
           do 
             let nc := n1 % k1 
             let (ic, c, pc) ← prove_div_mod ic a1 b1 tt 
-            if nc = 0 then return (ic, b1, (quote min_fac_helper_4).mk_app [a, b, pc, p]) else
+            if nc = 0 then return (ic, b1, (quote.1 min_fac_helper_4).mk_app [a, b, pc, p]) else
                 do 
                   let (ic, p₀) ← prove_pos ic c 
                   let k' := k+1
                   let e' := reflect k' 
                   let (ic, p₁) ← prove_succ ic b e' 
-                  prove_min_fac_aux ic e'$ (quote min_fac_helper_3).mk_app [a, b, e', c, p₁, pc, p₀, p]
+                  prove_min_fac_aux ic e'$ (quote.1 min_fac_helper_3).mk_app [a, b, e', c, p₁, pc, p₀, p]
 
 /-- Given `a` a natural numeral, returns `(b, ⊢ min_fac a = b)`. -/
 unsafe def prove_min_fac (ic : instance_cache) (e : expr) : tactic (instance_cache × expr × expr) :=
   match match_numeral e with 
-  | match_numeral_result.zero => return (ic, quote (2 : ℕ), quote Nat.min_fac_zero)
-  | match_numeral_result.one => return (ic, quote (1 : ℕ), quote Nat.min_fac_one)
-  | match_numeral_result.bit0 e => return (ic, quote 2, (quote min_fac_bit0).mk_app [e])
+  | match_numeral_result.zero => return (ic, quote.1 (2 : ℕ), quote.1 Nat.min_fac_zero)
+  | match_numeral_result.one => return (ic, quote.1 (1 : ℕ), quote.1 Nat.min_fac_one)
+  | match_numeral_result.bit0 e => return (ic, quote.1 2, (quote.1 min_fac_bit0).mk_app [e])
   | match_numeral_result.bit1 e =>
     do 
       let n ← e.to_nat 
-      let c ← mk_instance_cache (quote Nat)
+      let c ← mk_instance_cache (quote.1 Nat)
       let (c, p) ← prove_pos c e 
-      let a1 := (quote (bit1 : ℕ → ℕ)).mk_app [e]
-      prove_min_fac_aux e a1 (bit1 n) c (quote 1) ((quote min_fac_helper_0).mk_app [e, p])
+      let a1 := (quote.1 (bit1 : ℕ → ℕ)).mk_app [e]
+      prove_min_fac_aux e a1 (bit1 n) c (quote.1 1) ((quote.1 min_fac_helper_0).mk_app [e, p])
   | _ => failed
 
 /-- A partial proof of `factors`. Asserts that `l` is a sorted list of primes, lower bounded by a
@@ -1192,7 +1191,7 @@ unsafe def prove_factors_aux : instance_cache → expr → expr → ℕ → ℕ 
           do 
             let (c, _, p₁) ← prove_mul_nat c ea em 
             let (c, l, p₂) ← prove_factors_aux c em ea m a 
-            pure (c, quote ((%%ea) :: %%l : List ℕ), (quote factors_helper_same).mk_app [en, em, ea, l, p₁, p₂])
+            pure (c, quote.1 ((%%ₓea) :: %%ₓl : List ℕ), (quote.1 factors_helper_same).mk_app [en, em, ea, l, p₁, p₂])
         else
           do 
             let (c, eb) ← c.of_nat b 
@@ -1201,48 +1200,48 @@ unsafe def prove_factors_aux : instance_cache → expr → expr → ℕ → ℕ 
             let (c, _, p₃) ← prove_min_fac c eb 
             let (c, l, p₄) ← prove_factors_aux c em eb m b 
             pure
-                (c, quote ((%%eb) :: %%l : List ℕ),
-                (quote factors_helper_cons).mk_app [en, em, ea, eb, l, p₁, p₂, p₃, p₄])
+                (c, quote.1 ((%%ₓeb) :: %%ₓl : List ℕ),
+                (quote.1 factors_helper_cons).mk_app [en, em, ea, eb, l, p₁, p₂, p₃, p₄])
   else
-    if b = a then pure (c, quote ([%%ea] : List ℕ), (quote factors_helper_same_sn).mk_app [ea]) else
+    if b = a then pure (c, quote.1 ([%%ₓea] : List ℕ), (quote.1 factors_helper_same_sn).mk_app [ea]) else
       do 
         let (c, p₁) ← prove_lt_nat c ea en 
         let (c, _, p₂) ← prove_min_fac c en 
-        pure (c, quote ([%%en] : List ℕ), (quote factors_helper_sn).mk_app [en, ea, p₁, p₂])
+        pure (c, quote.1 ([%%ₓen] : List ℕ), (quote.1 factors_helper_sn).mk_app [en, ea, p₁, p₂])
 
 /-- Evaluates the `prime` and `min_fac` functions. -/
 @[normNum]
 unsafe def eval_prime : expr → tactic (expr × expr)
-| quote Nat.Prime (%%e) =>
+| quote.1 (Nat.Prime (%%ₓe)) =>
   do 
     let n ← e.to_nat 
     match n with 
-      | 0 => false_intro (quote Nat.not_prime_zero)
-      | 1 => false_intro (quote Nat.not_prime_one)
+      | 0 => false_intro (quote.1 Nat.not_prime_zero)
+      | 1 => false_intro (quote.1 Nat.not_prime_one)
       | _ =>
         let d₁ := n.min_fac 
         if d₁ < n then prove_non_prime e n d₁ >>= false_intro else
           do 
             let e₁ := reflect d₁ 
-            let c ← mk_instance_cache (quote ℕ)
-            let (c, p₁) ← prove_lt_nat c (quote 1) e₁ 
+            let c ← mk_instance_cache (quote.1 ℕ)
+            let (c, p₁) ← prove_lt_nat c (quote.1 1) e₁ 
             let (c, e₁, p) ← prove_min_fac c e 
-            true_intro$ (quote is_prime_helper).mk_app [e, p₁, p]
-| quote Nat.minFac (%%e) =>
+            true_intro$ (quote.1 is_prime_helper).mk_app [e, p₁, p]
+| quote.1 (Nat.minFac (%%ₓe)) =>
   do 
-    let ic ← mk_instance_cache (quote ℕ)
+    let ic ← mk_instance_cache (quote.1 ℕ)
     Prod.snd <$> prove_min_fac ic e
-| quote Nat.factors (%%e) =>
+| quote.1 (Nat.factors (%%ₓe)) =>
   do 
     let n ← e.to_nat 
     match n with 
-      | 0 => pure (quote @List.nil ℕ, quote Nat.factors_zero)
-      | 1 => pure (quote @List.nil ℕ, quote Nat.factors_one)
+      | 0 => pure (quote.1 (@List.nil ℕ), quote.1 Nat.factors_zero)
+      | 1 => pure (quote.1 (@List.nil ℕ), quote.1 Nat.factors_one)
       | _ =>
         do 
-          let c ← mk_instance_cache (quote ℕ)
-          let (c, l, p) ← prove_factors_aux c e (quote 2) n 2
-          pure (l, (quote factors_helper_end).mk_app [e, l, p])
+          let c ← mk_instance_cache (quote.1 ℕ)
+          let (c, l, p) ← prove_factors_aux c e (quote.1 2) n 2
+          pure (l, (quote.1 factors_helper_end).mk_app [e, l, p])
 | _ => failed
 
 end NormNum
@@ -1254,6 +1253,46 @@ namespace Nat
 theorem prime_three : prime 3 :=
   by 
     normNum
+
+end Nat
+
+namespace Nat
+
+/-- The only prime divisor of positive prime power `p^k` is `p` itself -/
+theorem prime_pow_prime_divisor {p k : ℕ} (hk : 0 < k) (hp : prime p) : (p ^ k).factors.toFinset = {p} :=
+  by 
+    rw [hp.factors_pow, List.to_finset_repeat_of_ne_zero hk.ne']
+
+theorem mem_factors_mul_of_pos {a b : ℕ} (ha : 0 < a) (hb : 0 < b) (p : ℕ) :
+  p ∈ (a*b).factors ↔ p ∈ a.factors ∨ p ∈ b.factors :=
+  by 
+    rw [mem_factors (mul_pos ha hb), mem_factors ha, mem_factors hb, ←and_or_distrib_left]
+    simpa only [And.congr_right_iff] using prime.dvd_mul
+
+/-- If `a`,`b` are positive the prime divisors of `(a * b)` are the union of those of `a` and `b` -/
+theorem factors_mul_of_pos {a b : ℕ} (ha : 0 < a) (hb : 0 < b) :
+  (a*b).factors.toFinset = a.factors.to_finset ∪ b.factors.to_finset :=
+  by 
+    ext p 
+    simp only [Finset.mem_union, List.mem_to_finset, mem_factors_mul_of_pos ha hb p]
+
+/-- The sets of factors of coprime `a` and `b` are disjoint -/
+theorem coprime_factors_disjoint {a b : ℕ} (hab : a.coprime b) : List.Disjoint a.factors b.factors :=
+  by 
+    intro q hqa hqb 
+    apply not_prime_one 
+    rw [←eq_one_of_dvd_coprimes hab (dvd_of_mem_factors hqa) (dvd_of_mem_factors hqb)]
+    exact prime_of_mem_factors hqa
+
+theorem factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) (p : ℕ) : p ∈ (a*b).factors ↔ p ∈ a.factors ∪ b.factors :=
+  by 
+    rcases a.eq_zero_or_pos with (rfl | ha)
+    ·
+      simp [(coprime_zero_left _).mp hab]
+    rcases b.eq_zero_or_pos with (rfl | hb)
+    ·
+      simp [(coprime_zero_right _).mp hab]
+    rw [mem_factors_mul_of_pos ha hb p, List.mem_union]
 
 end Nat
 

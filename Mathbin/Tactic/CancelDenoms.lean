@@ -102,29 +102,29 @@ be able to cancel all the numeric denominators in `e`. The returned `tree` descr
 distribute the value `n` over products inside `e`.
 -/
 unsafe def find_cancel_factor : expr → ℕ × Tree ℕ
-| quote (%%e1)+%%e2 =>
+| quote.1 ((%%ₓe1)+%%ₓe2) =>
   let (v1, t1) := find_cancel_factor e1 
   let (v2, t2) := find_cancel_factor e2 
   let lcm := v1.lcm v2
   (lcm, node lcm t1 t2)
-| quote (%%e1) - %%e2 =>
+| quote.1 ((%%ₓe1) - %%ₓe2) =>
   let (v1, t1) := find_cancel_factor e1 
   let (v2, t2) := find_cancel_factor e2 
   let lcm := v1.lcm v2
   (lcm, node lcm t1 t2)
-| quote (%%e1)*%%e2 =>
+| quote.1 ((%%ₓe1)*%%ₓe2) =>
   let (v1, t1) := find_cancel_factor e1 
   let (v2, t2) := find_cancel_factor e2 
   let pd := v1*v2
   (pd, node pd t1 t2)
-| quote (%%e1) / %%e2 =>
+| quote.1 ((%%ₓe1) / %%ₓe2) =>
   match e2.to_nonneg_rat with 
   | some q =>
     let (v1, t1) := find_cancel_factor e1 
     let n := v1.lcm q.num.nat_abs
     (n, node n t1 (node q.num.nat_abs Tree.nil Tree.nil))
   | none => (1, node 1 Tree.nil Tree.nil)
-| quote -%%e => find_cancel_factor e
+| quote.1 (-%%ₓe) => find_cancel_factor e
 | _ => (1, node 1 Tree.nil Tree.nil)
 
 /--
@@ -132,17 +132,17 @@ unsafe def find_cancel_factor : expr → ℕ × Tree ℕ
 canceled in `e'`, distributing `n` proportionally according to `tr`.
 -/
 unsafe def mk_prod_prf : ℕ → Tree ℕ → expr → tactic expr
-| v, node _ lhs rhs, quote (%%e1)+%%e2 =>
+| v, node _ lhs rhs, quote.1 ((%%ₓe1)+%%ₓe2) =>
   do 
     let v1 ← mk_prod_prf v lhs e1 
     let v2 ← mk_prod_prf v rhs e2 
     mk_app `` add_subst [v1, v2]
-| v, node _ lhs rhs, quote (%%e1) - %%e2 =>
+| v, node _ lhs rhs, quote.1 ((%%ₓe1) - %%ₓe2) =>
   do 
     let v1 ← mk_prod_prf v lhs e1 
     let v2 ← mk_prod_prf v rhs e2 
     mk_app `` sub_subst [v1, v2]
-| v, node n (lhs@(node ln _ _)) rhs, quote (%%e1)*%%e2 =>
+| v, node n (lhs@(node ln _ _)) rhs, quote.1 ((%%ₓe1)*%%ₓe2) =>
   do 
     let tp ← infer_type e1 
     let v1 ← mk_prod_prf ln lhs e1 
@@ -150,10 +150,10 @@ unsafe def mk_prod_prf : ℕ → Tree ℕ → expr → tactic expr
     let ln' ← tp.of_nat ln 
     let vln' ← tp.of_nat (v / ln)
     let v' ← tp.of_nat v 
-    let ntp ← to_expr (pquote ((%%ln')*%%vln') = %%v')
+    let ntp ← to_expr (pquote.1 (((%%ₓln')*%%ₓvln') = %%ₓv'))
     let (_, npf) ← solve_aux ntp sorry 
     mk_app `` mul_subst [v1, v2, npf]
-| v, node n lhs rhs@(node rn _ _), quote (%%e1) / %%e2 =>
+| v, node n lhs rhs@(node rn _ _), quote.1 ((%%ₓe1) / %%ₓe2) =>
   do 
     let tp ← infer_type e1 
     let v1 ← mk_prod_prf (v / rn) lhs e1 
@@ -161,12 +161,12 @@ unsafe def mk_prod_prf : ℕ → Tree ℕ → expr → tactic expr
     let vrn' ← tp.of_nat (v / rn)
     let n' ← tp.of_nat n 
     let v' ← tp.of_nat v 
-    let ntp ← to_expr (pquote ((%%rn') / %%e2) = 1)
+    let ntp ← to_expr (pquote.1 (((%%ₓrn') / %%ₓe2) = 1))
     let (_, npf) ← solve_aux ntp sorry 
-    let ntp2 ← to_expr (pquote ((%%vrn')*%%n') = %%v')
+    let ntp2 ← to_expr (pquote.1 (((%%ₓvrn')*%%ₓn') = %%ₓv'))
     let (_, npf2) ← solve_aux ntp2 sorry 
     mk_app `` div_subst [v1, npf, npf2]
-| v, t, quote -%%e =>
+| v, t, quote.1 (-%%ₓe) =>
   do 
     let v' ← mk_prod_prf v t e 
     mk_app `` neg_subst [v']
@@ -174,7 +174,7 @@ unsafe def mk_prod_prf : ℕ → Tree ℕ → expr → tactic expr
   do 
     let tp ← infer_type e 
     let v' ← tp.of_nat v 
-    let e' ← to_expr (pquote (%%v')*%%e)
+    let e' ← to_expr (pquote.1 ((%%ₓv')*%%ₓe))
     mk_app `eq.refl [e']
 
 /--
@@ -195,7 +195,7 @@ unsafe def derive_div (e : expr) : tactic (ℕ × expr) :=
     let (n, p) ← derive e 
     let tp ← infer_type e 
     let n' ← tp.of_nat n 
-    let tgt ← to_expr (pquote (%%n') ≠ 0)
+    let tgt ← to_expr (pquote.1 ((%%ₓn') ≠ 0))
     let (_, pn) ← solve_aux tgt sorry 
     infer_type p >>= trace 
     infer_type pn >>= trace 
@@ -206,11 +206,11 @@ unsafe def derive_div (e : expr) : tactic (ℕ × expr) :=
 `lhs`, `rhs`, and the `cancel_factors` lemma corresponding to `R`.
 -/
 unsafe def find_comp_lemma : expr → Option (expr × expr × Name)
-| quote (%%a) < %%b => (a, b, `` cancel_factors_lt)
-| quote (%%a) ≤ %%b => (a, b, `` cancel_factors_le)
-| quote (%%a) = %%b => (a, b, `` cancel_factors_eq)
-| quote (%%a) ≥ %%b => (b, a, `` cancel_factors_le)
-| quote (%%a) > %%b => (b, a, `` cancel_factors_lt)
+| quote.1 ((%%ₓa) < %%ₓb) => (a, b, `` cancel_factors_lt)
+| quote.1 ((%%ₓa) ≤ %%ₓb) => (a, b, `` cancel_factors_le)
+| quote.1 ((%%ₓa) = %%ₓb) => (a, b, `` cancel_factors_eq)
+| quote.1 ((%%ₓa) ≥ %%ₓb) => (b, a, `` cancel_factors_le)
+| quote.1 ((%%ₓa) > %%ₓb) => (b, a, `` cancel_factors_lt)
 | _ => none
 
 /--
@@ -229,9 +229,9 @@ unsafe def cancel_denominators_in_type (h : expr) : tactic (expr × expr) :=
     let al ← tp.of_nat al 
     let ar ← tp.of_nat ar 
     let gcd ← tp.of_nat gcd 
-    let al_pos ← to_expr (pquote 0 < %%al)
-    let ar_pos ← to_expr (pquote 0 < %%ar)
-    let gcd_pos ← to_expr (pquote 0 < %%gcd)
+    let al_pos ← to_expr (pquote.1 (0 < %%ₓal))
+    let ar_pos ← to_expr (pquote.1 (0 < %%ₓar))
+    let gcd_pos ← to_expr (pquote.1 (0 < %%ₓgcd))
     let (_, al_pos) ← solve_aux al_pos sorry 
     let (_, ar_pos) ← solve_aux ar_pos sorry 
     let (_, gcd_pos) ← solve_aux gcd_pos sorry 
@@ -273,7 +273,7 @@ unsafe def tactic.interactive.cancel_denoms (l : parse location) : tactic Unit :
     let locs ← l.get_locals 
     tactic.replace_at cancel_denominators_in_type locs l.include_goal >>= guardb <|>
         fail "failed to cancel any denominators"
-    tactic.interactive.norm_num [simp_arg_type.symm_expr (pquote mul_assocₓ)] l
+    tactic.interactive.norm_num [simp_arg_type.symm_expr (pquote.1 mul_assocₓ)] l
 
 add_tactic_doc
   { Name := "cancel_denoms", category := DocCategory.tactic, declNames := [`tactic.interactive.cancel_denoms],

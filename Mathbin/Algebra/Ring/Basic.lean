@@ -961,11 +961,9 @@ theorem dvd_sub (h₁ : a ∣ b) (h₂ : a ∣ c) : a ∣ b - c :=
     rw [sub_eq_add_neg]
     exact dvd_add h₁ (dvd_neg_of_dvd h₂)
 
-theorem dvd_add_iff_left (h : a ∣ c) : a ∣ b ↔ a ∣ b+c :=
-  ⟨fun h₂ => dvd_add h₂ h,
-    fun H =>
-      by 
-        have t := dvd_sub H h <;> rwa [add_sub_cancel] at t⟩
+-- error in Algebra.Ring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dvd_add_iff_left (h : «expr ∣ »(a, c)) : «expr ↔ »(«expr ∣ »(a, b), «expr ∣ »(a, «expr + »(b, c))) :=
+⟨λ h₂, dvd_add h₂ h, λ H, by have [ident t] [] [":=", expr dvd_sub H h]; rwa [expr add_sub_cancel] ["at", ident t]⟩
 
 theorem dvd_add_iff_right (h : a ∣ b) : a ∣ c ↔ a ∣ b+c :=
   by 
@@ -1054,24 +1052,21 @@ theorem mul_self_sub_one (a : α) : (a*a) - 1 = (a+1)*a - 1 :=
   by 
     rw [←mul_self_sub_mul_self, mul_oneₓ]
 
+-- error in Algebra.Ring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Vieta's formula for a quadratic equation, relating the coefficients of the polynomial with
   its roots. This particular version states that if we have a root `x` of a monic quadratic
   polynomial, then there is another root `y` such that `x + y` is negative the `a_1` coefficient
   and `x * y` is the `a_0` coefficient. -/
-theorem Vieta_formula_quadratic {b c x : α} (h : (((x*x) - b*x)+c) = 0) :
-  ∃ y : α, (((y*y) - b*y)+c) = 0 ∧ (x+y) = b ∧ (x*y) = c :=
-  by 
-    have  : c = -((x*x) - b*x) := (neg_eq_of_add_eq_zeroₓ h).symm 
-    have  : c = x*b - x
-    ·
-      subst this <;> simp [mul_sub, mul_commₓ]
-    refine'
-      ⟨b - x, _,
-        by 
-          simp ,
-        by 
-          rw [this]⟩
-    rw [this, sub_add, ←sub_mul, sub_self]
+theorem Vieta_formula_quadratic
+{b c x : α}
+(h : «expr = »(«expr + »(«expr - »(«expr * »(x, x), «expr * »(b, x)), c), 0)) : «expr∃ , »((y : α), «expr ∧ »(«expr = »(«expr + »(«expr - »(«expr * »(y, y), «expr * »(b, y)), c), 0), «expr ∧ »(«expr = »(«expr + »(x, y), b), «expr = »(«expr * »(x, y), c)))) :=
+begin
+  have [] [":", expr «expr = »(c, «expr- »(«expr - »(«expr * »(x, x), «expr * »(b, x))))] [":=", expr (neg_eq_of_add_eq_zero h).symm],
+  have [] [":", expr «expr = »(c, «expr * »(x, «expr - »(b, x)))] [],
+  by subst [expr this]; simp [] [] [] ["[", expr mul_sub, ",", expr mul_comm, "]"] [] [],
+  refine [expr ⟨«expr - »(b, x), _, by simp [] [] [] [] [] [], by rw [expr this] []⟩],
+  rw ["[", expr this, ",", expr sub_add, ",", "<-", expr sub_mul, ",", expr sub_self, "]"] []
+end
 
 theorem dvd_mul_sub_mul {k a b x y : α} (hab : k ∣ a - b) (hxy : k ∣ x - y) : k ∣ (a*x) - b*y :=
   by 
@@ -1170,22 +1165,27 @@ theorem Units.inv_eq_self_iff (u : Units α) : u⁻¹ = u ↔ u = 1 ∨ u = -1 :
     pushCast 
     exact mul_self_eq_one_iff
 
+-- error in Algebra.Ring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Makes a ring homomorphism from an additive group homomorphism from a commutative ring to an integral
 domain that commutes with self multiplication, assumes that two is nonzero and one is sent to one.
 -/
-def AddMonoidHom.mkRingHomOfMulSelfOfTwoNeZero [CommRingₓ β] (f : β →+ α) (h : ∀ x, f (x*x) = f x*f x)
-  (h_two : (2 : α) ≠ 0) (h_one : f 1 = 1) : β →+* α :=
-  { f with map_one' := h_one,
-    map_mul' :=
-      by 
-        intro x y 
-        have hxy := h (x+y)
-        rw [mul_addₓ, add_mulₓ, add_mulₓ, f.map_add, f.map_add, f.map_add, f.map_add, h x, h y, add_mulₓ, mul_addₓ,
-          mul_addₓ, ←sub_eq_zero, add_commₓ, ←sub_sub, ←sub_sub, ←sub_sub, mul_commₓ y x, mul_commₓ (f y) (f x)] at hxy 
-        simp only [add_assocₓ, add_sub_assoc, add_sub_cancel'_right] at hxy 
-        rw [sub_sub, ←two_mul, ←add_sub_assoc, ←two_mul, ←mul_sub, mul_eq_zero, sub_eq_zero, or_iff_not_imp_left] at hxy 
-        exact hxy h_two }
+def add_monoid_hom.mk_ring_hom_of_mul_self_of_two_ne_zero
+[comm_ring β]
+(f : «expr →+ »(β, α))
+(h : ∀ x, «expr = »(f «expr * »(x, x), «expr * »(f x, f x)))
+(h_two : «expr ≠ »((2 : α), 0))
+(h_one : «expr = »(f 1, 1)) : «expr →+* »(β, α) :=
+{ map_one' := h_one,
+  map_mul' := begin
+    intros [ident x, ident y],
+    have [ident hxy] [] [":=", expr h «expr + »(x, y)],
+    rw ["[", expr mul_add, ",", expr add_mul, ",", expr add_mul, ",", expr f.map_add, ",", expr f.map_add, ",", expr f.map_add, ",", expr f.map_add, ",", expr h x, ",", expr h y, ",", expr add_mul, ",", expr mul_add, ",", expr mul_add, ",", "<-", expr sub_eq_zero, ",", expr add_comm, ",", "<-", expr sub_sub, ",", "<-", expr sub_sub, ",", "<-", expr sub_sub, ",", expr mul_comm y x, ",", expr mul_comm (f y) (f x), "]"] ["at", ident hxy],
+    simp [] [] ["only"] ["[", expr add_assoc, ",", expr add_sub_assoc, ",", expr add_sub_cancel'_right, "]"] [] ["at", ident hxy],
+    rw ["[", expr sub_sub, ",", "<-", expr two_mul, ",", "<-", expr add_sub_assoc, ",", "<-", expr two_mul, ",", "<-", expr mul_sub, ",", expr mul_eq_zero, ",", expr sub_eq_zero, ",", expr or_iff_not_imp_left, "]"] ["at", ident hxy],
+    exact [expr hxy h_two]
+  end,
+  ..f }
 
 @[simp]
 theorem AddMonoidHom.coe_fn_mk_ring_hom_of_mul_self_of_two_ne_zero [CommRingₓ β] (f : β →+ α) h h_two h_one :

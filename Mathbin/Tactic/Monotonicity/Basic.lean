@@ -8,10 +8,10 @@ open Lean Lean.Parser Interactive
 
 open Interactive.Types
 
--- error in Tactic.Monotonicity.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Tactic.Monotonicity.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 @[derive #[expr inhabited]] structure mono_cfg := (unify := ff)
 
--- error in Tactic.Monotonicity.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.Monotonicity.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 @[derive #["[", expr decidable_eq, ",", expr has_reflect, ",", expr inhabited, "]"]] inductive mono_selection : Type
 | left : mono_selection
 | right : mono_selection
@@ -51,7 +51,7 @@ def last_two {α : Type _} (l : List α) : Option (α × α) :=
   | _ => none
 
 unsafe def match_imp : expr → tactic (expr × expr)
-| quote (%%e₀) → %%e₁ =>
+| quote.1 ((%%ₓe₀) → %%ₓe₁) =>
   do 
     guardₓ ¬e₁.has_var 
     return (e₀, e₁)
@@ -160,7 +160,7 @@ unsafe def filter_instances (e : mono_selection) (ns : List Name) : tactic (List
     fun n =>
       do 
         let d ← user_attribute.get_param_untyped monotonicity.attr n 
-        let (_, d) ← to_expr (pquote id (%%d)) >>= eval_expr (Option mono_key × mono_selection)
+        let (_, d) ← to_expr (pquote.1 (id (%%ₓd))) >>= eval_expr (Option mono_key × mono_selection)
         return (e = d : Bool)
 
 unsafe def get_monotonicity_lemmas (k : expr) (e : mono_selection) : tactic (List Name) :=

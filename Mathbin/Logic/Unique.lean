@@ -127,6 +127,7 @@ instance subsingleton_unique : Subsingleton (Unique α) :=
 
 /-- Construct `unique` from `inhabited` and `subsingleton`. Making this an instance would create
 a loop in the class inheritance graph. -/
+@[reducible]
 def mk' (α : Sort u) [h₁ : Inhabited α] [Subsingleton α] : Unique α :=
   { h₁ with uniq := fun x => Subsingleton.elimₓ _ _ }
 

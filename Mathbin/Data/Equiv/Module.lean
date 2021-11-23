@@ -506,13 +506,15 @@ end LinearEquiv
 
 namespace Module
 
+-- error in Data.Equiv.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `g : R ≃+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
-@[simps]
-def comp_hom.to_linear_equiv {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R ≃+* S) :
-  by 
-    haveI  := comp_hom S («expr↑ » g : R →+* S) <;> exact R ≃ₗ[R] S :=
-  by 
-    exact { g with toFun := (g : R → S), invFun := (g.symm : S → R), map_smul' := g.map_mul }
+@[simps #[]]
+def comp_hom.to_linear_equiv
+{R S : Type*}
+[semiring R]
+[semiring S]
+(g : «expr ≃+* »(R, S)) : by haveI [] [] [":=", expr comp_hom S («expr↑ »(g) : «expr →+* »(R, S))]; exact [expr «expr ≃ₗ[ ] »(R, R, S)] :=
+by exact [expr { to_fun := (g : R → S), inv_fun := (g.symm : S → R), map_smul' := g.map_mul, ..g }]
 
 end Module
 

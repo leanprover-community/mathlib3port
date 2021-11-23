@@ -36,7 +36,7 @@ open Equiv Equiv.Perm Subgroup Fintype
 
 variable(α : Type _)[Fintype α][DecidableEq α]
 
--- error in GroupTheory.SpecificGroups.Alternating: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler fintype
+-- error in GroupTheory.SpecificGroups.Alternating: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler fintype
 /-- The alternating group on a finite type, realized as a subgroup of `equiv.perm`.
   For $A_n$, use `alternating_group (fin n)`. -/ @[derive #[expr fintype]] def alternating_group : subgroup (perm α) :=
 sign.ker
@@ -84,36 +84,33 @@ open Equiv.Perm
 instance normal : (alternatingGroup α).Normal :=
   sign.normal_ker
 
-theorem is_conj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : perm α) (τ : perm α))
-  (hσ : ((σ : perm α).support.card+2) ≤ Fintype.card α) : IsConj σ τ :=
-  by 
-    obtain ⟨σ, hσ⟩ := σ 
-    obtain ⟨τ, hτ⟩ := τ 
-    obtain ⟨π, hπ⟩ := is_conj_iff.1 hc 
-    rw [Subtype.coe_mk, Subtype.coe_mk] at hπ 
-    cases' Int.units_eq_one_or (sign π) with h h
-    ·
-      rw [is_conj_iff]
-      refine' ⟨⟨π, mem_alternating_group.mp h⟩, Subtype.val_injective _⟩
-      simpa only [Subtype.val_eq_coe, Subgroup.coe_mul, coe_inv, coe_mk] using hπ
-    ·
-      have h2 : 2 ≤ («expr ᶜ» σ.support).card
-      ·
-        rw [Finset.card_compl, le_tsub_iff_left σ.support.card_le_univ]
-        exact hσ 
-      obtain ⟨a, ha, b, hb, ab⟩ := Finset.one_lt_card.1 h2 
-      refine' is_conj_iff.2 ⟨⟨π*swap a b, _⟩, Subtype.val_injective _⟩
-      ·
-        rw [mem_alternating_group, MonoidHom.map_mul, h, sign_swap ab, Int.units_mul_self]
-      ·
-        simp only [←hπ, coe_mk, Subgroup.coe_mul, Subtype.val_eq_coe]
-        have hd : Disjoint (swap a b) σ
-        ·
-          rw [disjoint_iff_disjoint_support, support_swap ab, Finset.disjoint_insert_left,
-            Finset.disjoint_singleton_left]
-          exact ⟨Finset.mem_compl.1 ha, Finset.mem_compl.1 hb⟩
-        rw [mul_assocₓ π _ σ, hd.commute.eq, coe_inv, coe_mk]
-        simp [mul_assocₓ]
+-- error in GroupTheory.SpecificGroups.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_conj_of
+{σ τ : alternating_group α}
+(hc : is_conj (σ : perm α) (τ : perm α))
+(hσ : «expr ≤ »(«expr + »((σ : perm α).support.card, 2), fintype.card α)) : is_conj σ τ :=
+begin
+  obtain ["⟨", ident σ, ",", ident hσ, "⟩", ":=", expr σ],
+  obtain ["⟨", ident τ, ",", ident hτ, "⟩", ":=", expr τ],
+  obtain ["⟨", ident π, ",", ident hπ, "⟩", ":=", expr is_conj_iff.1 hc],
+  rw ["[", expr subtype.coe_mk, ",", expr subtype.coe_mk, "]"] ["at", ident hπ],
+  cases [expr int.units_eq_one_or (sign π)] ["with", ident h, ident h],
+  { rw [expr is_conj_iff] [],
+    refine [expr ⟨⟨π, mem_alternating_group.mp h⟩, subtype.val_injective _⟩],
+    simpa [] [] ["only"] ["[", expr subtype.val_eq_coe, ",", expr subgroup.coe_mul, ",", expr coe_inv, ",", expr coe_mk, "]"] [] ["using", expr hπ] },
+  { have [ident h2] [":", expr «expr ≤ »(2, «expr ᶜ»(σ.support).card)] [],
+    { rw ["[", expr finset.card_compl, ",", expr le_tsub_iff_left σ.support.card_le_univ, "]"] [],
+      exact [expr hσ] },
+    obtain ["⟨", ident a, ",", ident ha, ",", ident b, ",", ident hb, ",", ident ab, "⟩", ":=", expr finset.one_lt_card.1 h2],
+    refine [expr is_conj_iff.2 ⟨⟨«expr * »(π, swap a b), _⟩, subtype.val_injective _⟩],
+    { rw ["[", expr mem_alternating_group, ",", expr monoid_hom.map_mul, ",", expr h, ",", expr sign_swap ab, ",", expr int.units_mul_self, "]"] [] },
+    { simp [] [] ["only"] ["[", "<-", expr hπ, ",", expr coe_mk, ",", expr subgroup.coe_mul, ",", expr subtype.val_eq_coe, "]"] [] [],
+      have [ident hd] [":", expr disjoint (swap a b) σ] [],
+      { rw ["[", expr disjoint_iff_disjoint_support, ",", expr support_swap ab, ",", expr finset.disjoint_insert_left, ",", expr finset.disjoint_singleton_left, "]"] [],
+        exact [expr ⟨finset.mem_compl.1 ha, finset.mem_compl.1 hb⟩] },
+      rw ["[", expr mul_assoc π _ σ, ",", expr hd.commute.eq, ",", expr coe_inv, ",", expr coe_mk, "]"] [],
+      simp [] [] [] ["[", expr mul_assoc, "]"] [] [] } }
+end
 
 theorem is_three_cycle_is_conj (h5 : 5 ≤ Fintype.card α) {σ τ : alternatingGroup α} (hσ : is_three_cycle (σ : perm α))
   (hτ : is_three_cycle (τ : perm α)) : IsConj σ τ :=
@@ -128,13 +125,13 @@ namespace Equiv.Perm
 open alternatingGroup
 
 @[simp]
-theorem closure_three_cycles_eq_alternating : closure { σ : perm α | is_three_cycle σ } = alternatingGroup α :=
+theorem closure_three_cycles_eq_alternating : closure { σ:perm α | is_three_cycle σ } = alternatingGroup α :=
   (closure_eq_of_le _ fun σ hσ => mem_alternating_group.2 hσ.sign)$
     fun σ hσ =>
       by 
         suffices hind :
           ∀ n : ℕ l : List (perm α) hl : ∀ g, g ∈ l → is_swap g hn : l.length = 2*n,
-            l.prod ∈ closure { σ : perm α | is_three_cycle σ }
+            l.prod ∈ closure { σ:perm α | is_three_cycle σ }
         ·
           obtain ⟨l, rfl, hl⟩ := trunc_swap_factors σ 
           obtain ⟨n, hn⟩ := (prod_list_swap_mem_alternating_group_iff_even_length hl).1 hσ 
@@ -155,21 +152,24 @@ theorem closure_three_cycles_eq_alternating : closure { σ : perm α | is_three_
               (hl b (List.mem_cons_of_memₓ a (l.mem_cons_self b))))
             (ih _ (fun g hg => hl g (List.mem_cons_of_memₓ _ (List.mem_cons_of_memₓ _ hg))) hn)
 
+-- error in GroupTheory.SpecificGroups.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A key lemma to prove $A_5$ is simple. Shows that any normal subgroup of an alternating group on
   at least 5 elements is the entire alternating group if it contains a 3-cycle. -/
-theorem is_three_cycle.alternating_normal_closure (h5 : 5 ≤ Fintype.card α) {f : perm α} (hf : is_three_cycle f) :
-  normal_closure ({⟨f, hf.mem_alternating_group⟩} : Set (alternatingGroup α)) = ⊤ :=
-  eq_top_iff.2
-    (by 
-      have hi : Function.Injective (alternatingGroup α).Subtype := Subtype.coe_injective 
-      refine' eq_top_iff.1 (map_injective hi (le_antisymmₓ (map_mono le_top) _))
-      rw [←MonoidHom.range_eq_map, subtype_range, normal_closure, MonoidHom.map_closure]
-      refine' (le_of_eqₓ closure_three_cycles_eq_alternating.symm).trans (closure_mono _)
-      intro g h 
-      obtain ⟨c, rfl⟩ := is_conj_iff.1 (is_conj_iff_cycle_type_eq.2 (hf.trans h.symm))
-      refine' ⟨⟨(c*f)*c⁻¹, h.mem_alternating_group⟩, _, rfl⟩
-      rw [Groupₓ.mem_conjugates_of_set_iff]
-      exact ⟨⟨f, hf.mem_alternating_group⟩, Set.mem_singleton _, is_three_cycle_is_conj h5 hf h⟩)
+theorem is_three_cycle.alternating_normal_closure
+(h5 : «expr ≤ »(5, fintype.card α))
+{f : perm α}
+(hf : is_three_cycle f) : «expr = »(normal_closure ({⟨f, hf.mem_alternating_group⟩} : set (alternating_group α)), «expr⊤»()) :=
+eq_top_iff.2 (begin
+   have [ident hi] [":", expr function.injective (alternating_group α).subtype] [":=", expr subtype.coe_injective],
+   refine [expr eq_top_iff.1 (map_injective hi (le_antisymm (map_mono le_top) _))],
+   rw ["[", "<-", expr monoid_hom.range_eq_map, ",", expr subtype_range, ",", expr normal_closure, ",", expr monoid_hom.map_closure, "]"] [],
+   refine [expr (le_of_eq closure_three_cycles_eq_alternating.symm).trans (closure_mono _)],
+   intros [ident g, ident h],
+   obtain ["⟨", ident c, ",", ident rfl, "⟩", ":=", expr is_conj_iff.1 (is_conj_iff_cycle_type_eq.2 (hf.trans h.symm))],
+   refine [expr ⟨⟨«expr * »(«expr * »(c, f), «expr ⁻¹»(c)), h.mem_alternating_group⟩, _, rfl⟩],
+   rw [expr group.mem_conjugates_of_set_iff] [],
+   exact [expr ⟨⟨f, hf.mem_alternating_group⟩, set.mem_singleton _, is_three_cycle_is_conj h5 hf h⟩]
+ end)
 
 /-- Part of proving $A_5$ is simple. Shows that the square of any element of $A_5$ with a 3-cycle in
   its cycle decomposition is a 3-cycle, so the normal closure of the original element must be
@@ -197,18 +197,15 @@ namespace alternatingGroup
 
 open Equiv.Perm
 
-theorem nontrivial_of_three_le_card (h3 : 3 ≤ card α) : Nontrivial (alternatingGroup α) :=
-  by 
-    haveI  :=
-      Fintype.one_lt_card_iff_nontrivial.1
-        (lt_transₓ
-          (by 
-            decide)
-          h3)
-    rw [←Fintype.one_lt_card_iff_nontrivial]
-    refine' lt_of_mul_lt_mul_left _ (le_of_ltₓ nat.prime_two.pos)
-    rw [two_mul_card_alternating_group, card_perm, ←Nat.succ_le_iff]
-    exact le_transₓ h3 (card α).self_le_factorial
+-- error in GroupTheory.SpecificGroups.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nontrivial_of_three_le_card (h3 : «expr ≤ »(3, card α)) : nontrivial (alternating_group α) :=
+begin
+  haveI [] [] [":=", expr fintype.one_lt_card_iff_nontrivial.1 (lt_trans exprdec_trivial() h3)],
+  rw ["<-", expr fintype.one_lt_card_iff_nontrivial] [],
+  refine [expr lt_of_mul_lt_mul_left _ (le_of_lt nat.prime_two.pos)],
+  rw ["[", expr two_mul_card_alternating_group, ",", expr card_perm, ",", "<-", expr nat.succ_le_iff, "]"] [],
+  exact [expr le_trans h3 (card α).self_le_factorial]
+end
 
 instance  {n : ℕ} : Nontrivial (alternatingGroup (Finₓ (n+3))) :=
   nontrivial_of_three_le_card
@@ -216,165 +213,107 @@ instance  {n : ℕ} : Nontrivial (alternatingGroup (Finₓ (n+3))) :=
       rw [card_fin]
       exact le_add_left (le_reflₓ 3))
 
+-- error in GroupTheory.SpecificGroups.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The normal closure of the 5-cycle `fin_rotate 5` within $A_5$ is the whole group. This will be
   used to show that the normal closure of any 5-cycle within $A_5$ is the whole group. -/
-theorem normal_closure_fin_rotate_five :
-  normal_closure ({⟨finRotate 5, fin_rotate_bit1_mem_alternating_group⟩} : Set (alternatingGroup (Finₓ 5))) = ⊤ :=
-  eq_top_iff.2
-    (by 
-      have h3 : is_three_cycle (((Finₓ.cycleRange 2*finRotate 5)*Finₓ.cycleRange 2⁻¹)*finRotate 5⁻¹) :=
-        card_support_eq_three_iff.1
-          (by 
-            decide)
-      rw
-        [←h3.alternating_normal_closure
-          (by 
-            rw [card_fin])]
-      refine' normal_closure_le_normal _ 
-      rw [Set.singleton_subset_iff, SetLike.mem_coe]
-      have h : (⟨finRotate 5, fin_rotate_bit1_mem_alternating_group⟩ : alternatingGroup (Finₓ 5)) ∈ normal_closure _ :=
-        SetLike.mem_coe.1 (subset_normal_closure (Set.mem_singleton _))
-      exact
-        mul_mem _
-          (subgroup.normal_closure_normal.conj_mem _ h
-            ⟨Finₓ.cycleRange 2, fin.is_three_cycle_cycle_range_two.mem_alternating_group⟩)
-          (inv_mem _ h))
+theorem normal_closure_fin_rotate_five : «expr = »(normal_closure ({⟨fin_rotate 5, fin_rotate_bit1_mem_alternating_group⟩} : set (alternating_group (fin 5))), «expr⊤»()) :=
+eq_top_iff.2 (begin
+   have [ident h3] [":", expr is_three_cycle «expr * »(«expr * »(«expr * »(fin.cycle_range 2, fin_rotate 5), «expr ⁻¹»(fin.cycle_range 2)), «expr ⁻¹»(fin_rotate 5))] [":=", expr card_support_eq_three_iff.1 exprdec_trivial()],
+   rw ["<-", expr h3.alternating_normal_closure (by rw ["[", expr card_fin, "]"] [])] [],
+   refine [expr normal_closure_le_normal _],
+   rw ["[", expr set.singleton_subset_iff, ",", expr set_like.mem_coe, "]"] [],
+   have [ident h] [":", expr «expr ∈ »((⟨fin_rotate 5, fin_rotate_bit1_mem_alternating_group⟩ : alternating_group (fin 5)), normal_closure _)] [":=", expr set_like.mem_coe.1 (subset_normal_closure (set.mem_singleton _))],
+   exact [expr mul_mem _ (subgroup.normal_closure_normal.conj_mem _ h ⟨fin.cycle_range 2, fin.is_three_cycle_cycle_range_two.mem_alternating_group⟩) (inv_mem _ h)]
+ end)
 
+-- error in GroupTheory.SpecificGroups.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The normal closure of $(04)(13)$ within $A_5$ is the whole group. This will be
   used to show that the normal closure of any permutation of cycle type $(2,2)$ is the whole group.
   -/
-theorem normal_closure_swap_mul_swap_five :
-  normal_closure
-      ({⟨swap 0 4*swap 1 3,
-          mem_alternating_group.2
-            (by 
-              decide)⟩} :
-      Set (alternatingGroup (Finₓ 5))) =
-    ⊤ :=
-  by 
-    let g1 :=
-      (⟨swap 0 2*swap 0 1,
-        mem_alternating_group.2
-          (by 
-            decide)⟩ :
-      alternatingGroup (Finₓ 5))
-    let g2 :=
-      (⟨swap 0 4*swap 1 3,
-        mem_alternating_group.2
-          (by 
-            decide)⟩ :
-      alternatingGroup (Finₓ 5))
-    have h5 : (((g1*g2)*g1⁻¹)*g2⁻¹) = ⟨finRotate 5, fin_rotate_bit1_mem_alternating_group⟩
-    ·
-      rw [Subtype.ext_iff]
-      simp only [Finₓ.coe_mk, Subgroup.coe_mul, Subgroup.coe_inv, Finₓ.coe_mk]
-      decide 
-    rw [eq_top_iff, ←normal_closure_fin_rotate_five]
-    refine' normal_closure_le_normal _ 
-    rw [Set.singleton_subset_iff, SetLike.mem_coe, ←h5]
-    have h : g2 ∈ normal_closure {g2} := SetLike.mem_coe.1 (subset_normal_closure (Set.mem_singleton _))
-    exact mul_mem _ (subgroup.normal_closure_normal.conj_mem _ h g1) (inv_mem _ h)
+theorem normal_closure_swap_mul_swap_five : «expr = »(normal_closure ({⟨«expr * »(swap 0 4, swap 1 3), mem_alternating_group.2 exprdec_trivial()⟩} : set (alternating_group (fin 5))), «expr⊤»()) :=
+begin
+  let [ident g1] [] [":=", expr (⟨«expr * »(swap 0 2, swap 0 1), mem_alternating_group.2 exprdec_trivial()⟩ : alternating_group (fin 5))],
+  let [ident g2] [] [":=", expr (⟨«expr * »(swap 0 4, swap 1 3), mem_alternating_group.2 exprdec_trivial()⟩ : alternating_group (fin 5))],
+  have [ident h5] [":", expr «expr = »(«expr * »(«expr * »(«expr * »(g1, g2), «expr ⁻¹»(g1)), «expr ⁻¹»(g2)), ⟨fin_rotate 5, fin_rotate_bit1_mem_alternating_group⟩)] [],
+  { rw [expr subtype.ext_iff] [],
+    simp [] [] ["only"] ["[", expr fin.coe_mk, ",", expr subgroup.coe_mul, ",", expr subgroup.coe_inv, ",", expr fin.coe_mk, "]"] [] [],
+    dec_trivial [] },
+  rw ["[", expr eq_top_iff, ",", "<-", expr normal_closure_fin_rotate_five, "]"] [],
+  refine [expr normal_closure_le_normal _],
+  rw ["[", expr set.singleton_subset_iff, ",", expr set_like.mem_coe, ",", "<-", expr h5, "]"] [],
+  have [ident h] [":", expr «expr ∈ »(g2, normal_closure {g2})] [":=", expr set_like.mem_coe.1 (subset_normal_closure (set.mem_singleton _))],
+  exact [expr mul_mem _ (subgroup.normal_closure_normal.conj_mem _ h g1) (inv_mem _ h)]
+end
 
+-- error in GroupTheory.SpecificGroups.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Shows that any non-identity element of $A_5$ whose cycle decomposition consists only of swaps
   is conjugate to $(04)(13)$. This is used to show that the normal closure of such a permutation
   in $A_5$ is $A_5$. -/
-theorem is_conj_swap_mul_swap_of_cycle_type_two {g : perm (Finₓ 5)} (ha : g ∈ alternatingGroup (Finₓ 5)) (h1 : g ≠ 1)
-  (h2 : ∀ n, n ∈ cycle_type (g : perm (Finₓ 5)) → n = 2) : IsConj (swap 0 4*swap 1 3) g :=
-  by 
-    have h := g.support.card_le_univ 
-    rw [←sum_cycle_type, Multiset.eq_repeat_of_mem h2, Multiset.sum_repeat, smul_eq_mul] at h 
-    rw [←Multiset.eq_repeat'] at h2 
-    have h56 : 5 ≤ 3*2 := Nat.le_succₓ 5
-    have h :=
-      le_of_mul_le_mul_right (le_transₓ h h56)
-        (by 
-          decide)
-    rw [mem_alternating_group, sign_of_cycle_type, h2, Multiset.map_repeat, Multiset.prod_repeat, Int.units_pow_two,
-      Units.ext_iff, Units.coe_one, Units.coe_pow, Units.coe_neg_one, Nat.neg_one_pow_eq_one_iff_even _] at ha 
-    swap
-    ·
-      decide 
-    rw [is_conj_iff_cycle_type_eq, h2]
-    intervalCases Multiset.card g.cycle_type
-    ·
-      exact (h1 (card_cycle_type_eq_zero.1 h_1)).elim
-    ·
-      contrapose! ha 
-      simp [h_1]
-    ·
-      have h04 : (0 : Finₓ 5) ≠ 4 :=
-        by 
-          decide 
-      have h13 : (1 : Finₓ 5) ≠ 3 :=
-        by 
-          decide 
-      rw [h_1, disjoint.cycle_type, (is_cycle_swap h04).cycleType, (is_cycle_swap h13).cycleType, card_support_swap h04,
-        card_support_swap h13]
-      ·
-        rfl
-      ·
-        rw [disjoint_iff_disjoint_support, support_swap h04, support_swap h13]
-        decide
-    ·
-      contrapose! ha 
-      simp [h_1]
+theorem is_conj_swap_mul_swap_of_cycle_type_two
+{g : perm (fin 5)}
+(ha : «expr ∈ »(g, alternating_group (fin 5)))
+(h1 : «expr ≠ »(g, 1))
+(h2 : ∀ n, «expr ∈ »(n, cycle_type (g : perm (fin 5))) → «expr = »(n, 2)) : is_conj «expr * »(swap 0 4, swap 1 3) g :=
+begin
+  have [ident h] [] [":=", expr g.support.card_le_univ],
+  rw ["[", "<-", expr sum_cycle_type, ",", expr multiset.eq_repeat_of_mem h2, ",", expr multiset.sum_repeat, ",", expr smul_eq_mul, "]"] ["at", ident h],
+  rw ["[", "<-", expr multiset.eq_repeat', "]"] ["at", ident h2],
+  have [ident h56] [":", expr «expr ≤ »(5, «expr * »(3, 2))] [":=", expr nat.le_succ 5],
+  have [ident h] [] [":=", expr le_of_mul_le_mul_right (le_trans h h56) exprdec_trivial()],
+  rw ["[", expr mem_alternating_group, ",", expr sign_of_cycle_type, ",", expr h2, ",", expr multiset.map_repeat, ",", expr multiset.prod_repeat, ",", expr int.units_pow_two, ",", expr units.ext_iff, ",", expr units.coe_one, ",", expr units.coe_pow, ",", expr units.coe_neg_one, ",", expr nat.neg_one_pow_eq_one_iff_even _, "]"] ["at", ident ha],
+  swap,
+  { dec_trivial [] },
+  rw ["[", expr is_conj_iff_cycle_type_eq, ",", expr h2, "]"] [],
+  interval_cases [expr multiset.card g.cycle_type] [] [],
+  { exact [expr (h1 (card_cycle_type_eq_zero.1 h_1)).elim] },
+  { contrapose ["!"] [ident ha],
+    simp [] [] [] ["[", expr h_1, "]"] [] [] },
+  { have [ident h04] [":", expr «expr ≠ »((0 : fin 5), 4)] [":=", expr exprdec_trivial()],
+    have [ident h13] [":", expr «expr ≠ »((1 : fin 5), 3)] [":=", expr exprdec_trivial()],
+    rw ["[", expr h_1, ",", expr disjoint.cycle_type, ",", expr (is_cycle_swap h04).cycle_type, ",", expr (is_cycle_swap h13).cycle_type, ",", expr card_support_swap h04, ",", expr card_support_swap h13, "]"] [],
+    { refl },
+    { rw ["[", expr disjoint_iff_disjoint_support, ",", expr support_swap h04, ",", expr support_swap h13, "]"] [],
+      dec_trivial [] } },
+  { contrapose ["!"] [ident ha],
+    simp [] [] [] ["[", expr h_1, "]"] [] [] }
+end
 
+-- error in GroupTheory.SpecificGroups.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Shows that $A_5$ is simple by taking an arbitrary non-identity element and showing by casework
   on its cycle type that its normal closure is all of $A_5$.   -/
-instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Finₓ 5)) :=
-  ⟨exists_pair_ne _,
-    fun H =>
-      by 
-        introI Hn 
-        refine' or_not.imp id fun Hb => _ 
-        rw [eq_bot_iff_forall] at Hb 
-        pushNeg  at Hb 
-        obtain ⟨⟨g, gA⟩, gH, g1⟩ : ∃ x : «expr↥ » (alternatingGroup (Finₓ 5)), x ∈ H ∧ x ≠ 1 := Hb 
-        rw [←SetLike.mem_coe, ←Set.singleton_subset_iff] at gH 
-        refine' eq_top_iff.2 (le_transₓ (ge_of_eq _) (normal_closure_le_normal gH))
-        byCases' h2 : ∀ n _ : n ∈ g.cycle_type, n = 2
-        ·
-          rw [Ne.def, Subtype.ext_iff] at g1 
-          exact
-            (is_conj_swap_mul_swap_of_cycle_type_two gA g1 h2).normal_closure_eq_top_of
-              normal_closure_swap_mul_swap_five 
-        pushNeg  at h2 
-        obtain ⟨n, ng, n2⟩ : ∃ n : ℕ, n ∈ g.cycle_type ∧ n ≠ 2 := h2 
-        have n2' : 2 < n := lt_of_le_of_neₓ (two_le_of_mem_cycle_type ng) n2.symm 
-        have n5 : n ≤ 5 := le_transₓ _ g.support.card_le_univ 
-        swap
-        ·
-          obtain ⟨m, hm⟩ := Multiset.exists_cons_of_mem ng 
-          rw [←sum_cycle_type, hm, Multiset.sum_cons]
-          exact le_add_right (le_reflₓ _)
-        intervalCases n
-        ·
-          rw [eq_top_iff,
-            ←(is_three_cycle_sq_of_three_mem_cycle_type_five ng).alternating_normal_closure
-              (by 
-                rw [card_fin])]
-          refine' normal_closure_le_normal _ 
-          rw [Set.singleton_subset_iff, SetLike.mem_coe]
-          have h := SetLike.mem_coe.1 (subset_normal_closure (Set.mem_singleton _))
-          exact mul_mem _ h h
-        ·
-          have con := mem_alternating_group.1 gA 
-          contrapose! con 
-          rw [sign_of_cycle_type,
-            cycle_type_of_card_le_mem_cycle_type_add_two
-              (by 
-                decide)
-              ng,
-            Multiset.map_singleton, Multiset.prod_singleton]
-          decide
-        ·
-          refine' (is_conj_iff_cycle_type_eq.2 _).normal_closure_eq_top_of normal_closure_fin_rotate_five 
-          rw
-            [cycle_type_of_card_le_mem_cycle_type_add_two
-              (by 
-                decide)
-              ng,
-            cycle_type_fin_rotate]⟩
+instance is_simple_group_five : is_simple_group (alternating_group (fin 5)) :=
+⟨exists_pair_ne _, λ H, begin
+   introI [ident Hn],
+   refine [expr or_not.imp id (λ Hb, _)],
+   rw ["[", expr eq_bot_iff_forall, "]"] ["at", ident Hb],
+   push_neg ["at", ident Hb],
+   obtain ["⟨", "⟨", ident g, ",", ident gA, "⟩", ",", ident gH, ",", ident g1, "⟩", ":", expr «expr∃ , »((x : «expr↥ »(alternating_group (fin 5))), «expr ∧ »(«expr ∈ »(x, H), «expr ≠ »(x, 1))), ":=", expr Hb],
+   rw ["[", "<-", expr set_like.mem_coe, ",", "<-", expr set.singleton_subset_iff, "]"] ["at", ident gH],
+   refine [expr eq_top_iff.2 (le_trans (ge_of_eq _) (normal_closure_le_normal gH))],
+   by_cases [expr h2, ":", expr ∀ n «expr ∈ » g.cycle_type, «expr = »(n, 2)],
+   { rw ["[", expr ne.def, ",", expr subtype.ext_iff, "]"] ["at", ident g1],
+     exact [expr (is_conj_swap_mul_swap_of_cycle_type_two gA g1 h2).normal_closure_eq_top_of normal_closure_swap_mul_swap_five] },
+   push_neg ["at", ident h2],
+   obtain ["⟨", ident n, ",", ident ng, ",", ident n2, "⟩", ":", expr «expr∃ , »((n : exprℕ()), «expr ∧ »(«expr ∈ »(n, g.cycle_type), «expr ≠ »(n, 2))), ":=", expr h2],
+   have [ident n2'] [":", expr «expr < »(2, n)] [":=", expr lt_of_le_of_ne (two_le_of_mem_cycle_type ng) n2.symm],
+   have [ident n5] [":", expr «expr ≤ »(n, 5)] [":=", expr le_trans _ g.support.card_le_univ],
+   swap,
+   { obtain ["⟨", ident m, ",", ident hm, "⟩", ":=", expr multiset.exists_cons_of_mem ng],
+     rw ["[", "<-", expr sum_cycle_type, ",", expr hm, ",", expr multiset.sum_cons, "]"] [],
+     exact [expr le_add_right (le_refl _)] },
+   interval_cases [expr n] [] [],
+   { rw ["[", expr eq_top_iff, ",", "<-", expr (is_three_cycle_sq_of_three_mem_cycle_type_five ng).alternating_normal_closure (by rw [expr card_fin] []), "]"] [],
+     refine [expr normal_closure_le_normal _],
+     rw ["[", expr set.singleton_subset_iff, ",", expr set_like.mem_coe, "]"] [],
+     have [ident h] [] [":=", expr set_like.mem_coe.1 (subset_normal_closure (set.mem_singleton _))],
+     exact [expr mul_mem _ h h] },
+   { have [ident con] [] [":=", expr mem_alternating_group.1 gA],
+     contrapose ["!"] [ident con],
+     rw ["[", expr sign_of_cycle_type, ",", expr cycle_type_of_card_le_mem_cycle_type_add_two exprdec_trivial() ng, ",", expr multiset.map_singleton, ",", expr multiset.prod_singleton, "]"] [],
+     dec_trivial [] },
+   { refine [expr (is_conj_iff_cycle_type_eq.2 _).normal_closure_eq_top_of normal_closure_fin_rotate_five],
+     rw ["[", expr cycle_type_of_card_le_mem_cycle_type_add_two exprdec_trivial() ng, ",", expr cycle_type_fin_rotate, "]"] [] }
+ end⟩
 
 end alternatingGroup
 

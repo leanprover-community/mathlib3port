@@ -1,6 +1,5 @@
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts 
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Terminal 
-import Mathbin.CategoryTheory.Adjunction.FullyFaithful
+import Mathbin.CategoryTheory.Adjunction.FullyFaithful 
+import Mathbin.CategoryTheory.EpiMono
 
 /-!
 # Reflective functors
@@ -18,7 +17,7 @@ noncomputable theory
 
 namespace CategoryTheory
 
-open Category Adjunction Limits
+open Category Adjunction
 
 variable{C : Type u₁}{D : Type u₂}{E : Type u₃}
 
@@ -41,20 +40,20 @@ theorem unit_obj_eq_map_unit [reflective i] (X : C) :
     rw [←cancel_mono (i.map ((of_right_adjoint i).counit.app ((left_adjoint i).obj X))), ←i.map_comp]
     simp 
 
+-- error in CategoryTheory.Adjunction.Reflective: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 When restricted to objects in `D` given by `i : D ⥤ C`, the unit is an isomorphism. In other words,
 `η_iX` is an isomorphism for any `X` in `D`.
 More generally this applies to objects essentially in the reflective subcategory, see
 `functor.ess_image.unit_iso`.
--/
-instance is_iso_unit_obj [reflective i] {B : D} : is_iso ((of_right_adjoint i).Unit.app (i.obj B)) :=
-  by 
-    have  : (of_right_adjoint i).Unit.app (i.obj B) = inv (i.map ((of_right_adjoint i).counit.app B))
-    ·
-      rw [←comp_hom_eq_id]
-      apply (of_right_adjoint i).right_triangle_components 
-    rw [this]
-    exact is_iso.inv_is_iso
+-/ instance is_iso_unit_obj [reflective i] {B : D} : is_iso ((of_right_adjoint i).unit.app (i.obj B)) :=
+begin
+  have [] [":", expr «expr = »((of_right_adjoint i).unit.app (i.obj B), inv (i.map ((of_right_adjoint i).counit.app B)))] [],
+  { rw ["<-", expr comp_hom_eq_id] [],
+    apply [expr (of_right_adjoint i).right_triangle_components] },
+  rw [expr this] [],
+  exact [expr is_iso.inv_is_iso]
+end
 
 /--
 If `A` is essentially in the image of a reflective functor `i`, then `η_A` is an isomorphism.
@@ -80,20 +79,23 @@ theorem mem_ess_image_of_unit_is_iso [is_right_adjoint i] (A : C) [is_iso ((of_r
   A ∈ i.ess_image :=
   ⟨(left_adjoint i).obj A, ⟨(as_iso ((of_right_adjoint i).Unit.app A)).symm⟩⟩
 
+-- error in CategoryTheory.Adjunction.Reflective: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `η_A` is a split monomorphism, then `A` is in the reflective subcategory. -/
-theorem mem_ess_image_of_unit_split_mono [reflective i] {A : C} [split_mono ((of_right_adjoint i).Unit.app A)] :
-  A ∈ i.ess_image :=
-  by 
-    let η : 𝟭 C ⟶ left_adjoint i ⋙ i := (of_right_adjoint i).Unit 
-    haveI  : is_iso (η.app (i.obj ((left_adjoint i).obj A))) := (i.obj_mem_ess_image _).unit_is_iso 
-    have  : epi (η.app A)
-    ·
-      apply epi_of_epi (retraction (η.app A)) _ 
-      rw [show retraction _ ≫ η.app A = _ from η.naturality (retraction (η.app A))]
-      apply epi_comp (η.app (i.obj ((left_adjoint i).obj A)))
-    resetI 
-    haveI  := is_iso_of_epi_of_split_mono (η.app A)
-    exact mem_ess_image_of_unit_is_iso A
+theorem mem_ess_image_of_unit_split_mono
+[reflective i]
+{A : C}
+[split_mono ((of_right_adjoint i).unit.app A)] : «expr ∈ »(A, i.ess_image) :=
+begin
+  let [ident η] [":", expr «expr ⟶ »(«expr𝟭»() C, «expr ⋙ »(left_adjoint i, i))] [":=", expr (of_right_adjoint i).unit],
+  haveI [] [":", expr is_iso (η.app (i.obj ((left_adjoint i).obj A)))] [":=", expr (i.obj_mem_ess_image _).unit_is_iso],
+  have [] [":", expr epi (η.app A)] [],
+  { apply [expr epi_of_epi (retraction (η.app A)) _],
+    rw [expr show «expr = »(«expr ≫ »(retraction _, η.app A), _), from η.naturality (retraction (η.app A))] [],
+    apply [expr epi_comp (η.app (i.obj ((left_adjoint i).obj A)))] },
+  resetI,
+  haveI [] [] [":=", expr is_iso_of_epi_of_split_mono (η.app A)],
+  exact [expr mem_ess_image_of_unit_is_iso A]
+end
 
 /-- Composition of reflective functors. -/
 instance reflective.comp (F : C ⥤ D) (G : D ⥤ E) [Fr : reflective F] [Gr : reflective G] : reflective (F ⋙ G) :=

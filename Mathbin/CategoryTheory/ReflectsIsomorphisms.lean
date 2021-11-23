@@ -40,7 +40,7 @@ instance (priority := 100)of_full_and_faithful (F : C ⥤ D) [full F] [faithful 
   { reflects :=
       fun X Y f i =>
         by 
-          exactI
+          exact
             ⟨⟨F.preimage (inv (F.map f)),
                 ⟨F.map_injective
                     (by 

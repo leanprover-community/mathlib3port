@@ -163,34 +163,32 @@ theorem not_mem_bot : J ∉ (⊥ : prepartition I) :=
 theorem bot_boxes : (⊥ : prepartition I).boxes = ∅ :=
   rfl
 
+-- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An auxiliary lemma used to prove that the same point can't belong to more than
 `2 ^ fintype.card ι` closed boxes of a prepartition. -/
-theorem inj_on_set_of_mem_Icc_set_of_lower_eq (x : ι → ℝ) :
-  inj_on (fun J : box ι => { i | J.lower i = x i }) { J | J ∈ π ∧ x ∈ J.Icc } :=
-  by 
-    rintro J₁ ⟨h₁, hx₁⟩ J₂ ⟨h₂, hx₂⟩ (H : { i | J₁.lower i = x i } = { i | J₂.lower i = x i })
-    suffices  : ∀ i, (Ioc (J₁.lower i) (J₁.upper i) ∩ Ioc (J₂.lower i) (J₂.upper i)).Nonempty
-    ·
-      choose y hy₁ hy₂ 
-      exact π.eq_of_mem_of_mem h₁ h₂ hy₁ hy₂ 
-    intro i 
-    simp only [Set.ext_iff, mem_set_of_eq] at H 
-    cases' (hx₁.1 i).eq_or_lt with hi₁ hi₁
-    ·
-      have hi₂ : J₂.lower i = x i 
-      exact (H _).1 hi₁ 
-      have H₁ : x i < J₁.upper i
-      ·
-        simpa only [hi₁] using J₁.lower_lt_upper i 
-      have H₂ : x i < J₂.upper i
-      ·
-        simpa only [hi₂] using J₂.lower_lt_upper i 
-      rw [Ioc_inter_Ioc, hi₁, hi₂, sup_idem, Set.nonempty_Ioc]
-      exact lt_minₓ H₁ H₂
-    ·
-      have hi₂ : J₂.lower i < x i 
-      exact (hx₂.1 i).lt_of_ne (mt (H _).2 hi₁.ne)
-      exact ⟨x i, ⟨hi₁, hx₁.2 i⟩, ⟨hi₂, hx₂.2 i⟩⟩
+theorem inj_on_set_of_mem_Icc_set_of_lower_eq
+(x : ι → exprℝ()) : inj_on (λ
+ J : box ι, {i | «expr = »(J.lower i, x i)}) {J | «expr ∧ »(«expr ∈ »(J, π), «expr ∈ »(x, J.Icc))} :=
+begin
+  rintros [ident J₁, "⟨", ident h₁, ",", ident hx₁, "⟩", ident J₂, "⟨", ident h₂, ",", ident hx₂, "⟩", "(", ident H, ":", expr «expr = »({i | «expr = »(J₁.lower i, x i)}, {i | «expr = »(J₂.lower i, x i)}), ")"],
+  suffices [] [":", expr ∀ i, «expr ∩ »(Ioc (J₁.lower i) (J₁.upper i), Ioc (J₂.lower i) (J₂.upper i)).nonempty],
+  { choose [] [ident y] [ident hy₁, ident hy₂] [],
+    exact [expr π.eq_of_mem_of_mem h₁ h₂ hy₁ hy₂] },
+  intro [ident i],
+  simp [] [] ["only"] ["[", expr set.ext_iff, ",", expr mem_set_of_eq, "]"] [] ["at", ident H],
+  cases [expr (hx₁.1 i).eq_or_lt] ["with", ident hi₁, ident hi₁],
+  { have [ident hi₂] [":", expr «expr = »(J₂.lower i, x i)] [],
+    from [expr (H _).1 hi₁],
+    have [ident H₁] [":", expr «expr < »(x i, J₁.upper i)] [],
+    by simpa [] [] ["only"] ["[", expr hi₁, "]"] [] ["using", expr J₁.lower_lt_upper i],
+    have [ident H₂] [":", expr «expr < »(x i, J₂.upper i)] [],
+    by simpa [] [] ["only"] ["[", expr hi₂, "]"] [] ["using", expr J₂.lower_lt_upper i],
+    rw ["[", expr Ioc_inter_Ioc, ",", expr hi₁, ",", expr hi₂, ",", expr sup_idem, ",", expr set.nonempty_Ioc, "]"] [],
+    exact [expr lt_min H₁ H₂] },
+  { have [ident hi₂] [":", expr «expr < »(J₂.lower i, x i)] [],
+    from [expr (hx₂.1 i).lt_of_ne (mt (H _).2 hi₁.ne)],
+    exact [expr ⟨x i, ⟨hi₁, hx₁.2 i⟩, ⟨hi₂, hx₂.2 i⟩⟩] }
+end
 
 /-- The set of boxes of a prepartition that contain `x` in their closures has cardinality
 at most `2 ^ fintype.card ι`. -/
@@ -312,7 +310,7 @@ theorem bUnion_top : (π.bUnion fun _ => ⊤) = π :=
     ext 
     simp 
 
--- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[congr]
 theorem bUnion_congr
 (h : «expr = »(π₁, π₂))
@@ -449,22 +447,19 @@ theorem sum_of_with_bot {M : Type _} [AddCommMonoidₓ M] (boxes : Finset (WithB
   (∑J in (of_with_bot boxes le_of_mem pairwise_disjoint).boxes, f J) = ∑J in boxes, Option.elim J 0 f :=
   Finset.sum_erase_none _ _
 
-/-- Restrict a prepartition to a box. -/
-def restrict (π : prepartition I) (J : box ι) : prepartition J :=
-  of_with_bot (π.boxes.image fun J' => J⊓J')
-    (fun J' hJ' =>
-      by 
-        rcases Finset.mem_image.1 hJ' with ⟨J', -, rfl⟩
-        exact inf_le_left)
-    (by 
-      simp only [Set.Pairwise, on_fun, Finset.mem_coe, Finset.mem_image]
-      rintro _ ⟨J₁, h₁, rfl⟩ _ ⟨J₂, h₂, rfl⟩ Hne 
-      have  : J₁ ≠ J₂
-      ·
-        ·
-          rintro rfl 
-          exact Hne rfl 
-      exact ((box.disjoint_coe.2$ π.disjoint_coe_of_mem h₁ h₂ this).inf_left' _).inf_right' _)
+-- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- Restrict a prepartition to a box. -/ def restrict (π : prepartition I) (J : box ι) : prepartition J :=
+of_with_bot (π.boxes.image (λ
+  J', «expr ⊓ »(J, J'))) (λ
+ J' hJ', by { rcases [expr finset.mem_image.1 hJ', "with", "⟨", ident J', ",", "-", ",", ident rfl, "⟩"],
+   exact [expr inf_le_left] }) (begin
+   simp [] [] ["only"] ["[", expr set.pairwise, ",", expr on_fun, ",", expr finset.mem_coe, ",", expr finset.mem_image, "]"] [] [],
+   rintro ["_", "⟨", ident J₁, ",", ident h₁, ",", ident rfl, "⟩", "_", "⟨", ident J₂, ",", ident h₂, ",", ident rfl, "⟩", ident Hne],
+   have [] [":", expr «expr ≠ »(J₁, J₂)] [],
+   by { rintro [ident rfl],
+     exact [expr Hne rfl] },
+   exact [expr («expr $ »(box.disjoint_coe.2, π.disjoint_coe_of_mem h₁ h₂ this).inf_left' _).inf_right' _]
+ end)
 
 @[simp]
 theorem mem_restrict : J₁ ∈ π.restrict J ↔ ∃ (J' : _)(_ : J' ∈ π), (J₁ : WithBot (box ι)) = J⊓J' :=
@@ -535,20 +530,22 @@ theorem bUnion_le_iff {πi : ∀ J, prepartition J} {π' : prepartition I} :
       rcases π'.mem_restrict.mp h₂ with ⟨J₃, h₃, H⟩
       exact ⟨J₃, h₃, Hle.trans$ WithBot.coe_le_coe.1$ H.trans_le inf_le_right⟩
 
-theorem le_bUnion_iff {πi : ∀ J, prepartition J} {π' : prepartition I} :
-  π' ≤ π.bUnion πi ↔ π' ≤ π ∧ ∀ J _ : J ∈ π, π'.restrict J ≤ πi J :=
-  by 
-    refine' ⟨fun H => ⟨H.trans (π.bUnion_le πi), fun J hJ => _⟩, _⟩
-    ·
-      rw [←π.restrict_bUnion πi hJ]
-      exact restrict_mono H
-    ·
-      rintro ⟨H, Hi⟩ J' hJ' 
-      rcases H hJ' with ⟨J, hJ, hle⟩
-      have  : J' ∈ π'.restrict J 
-      exact π'.mem_restrict.2 ⟨J', hJ', (inf_of_le_right$ WithBot.coe_le_coe.2 hle).symm⟩
-      rcases Hi J hJ this with ⟨Ji, hJi, hlei⟩
-      exact ⟨Ji, π.mem_bUnion.2 ⟨J, hJ, hJi⟩, hlei⟩
+-- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem le_bUnion_iff
+{πi : ∀ J, prepartition J}
+{π' : prepartition I} : «expr ↔ »(«expr ≤ »(π', π.bUnion πi), «expr ∧ »(«expr ≤ »(π', π), ∀
+  J «expr ∈ » π, «expr ≤ »(π'.restrict J, πi J))) :=
+begin
+  refine [expr ⟨λ H, ⟨H.trans (π.bUnion_le πi), λ J hJ, _⟩, _⟩],
+  { rw ["<-", expr π.restrict_bUnion πi hJ] [],
+    exact [expr restrict_mono H] },
+  { rintro ["⟨", ident H, ",", ident Hi, "⟩", ident J', ident hJ'],
+    rcases [expr H hJ', "with", "⟨", ident J, ",", ident hJ, ",", ident hle, "⟩"],
+    have [] [":", expr «expr ∈ »(J', π'.restrict J)] [],
+    from [expr π'.mem_restrict.2 ⟨J', hJ', «expr $ »(inf_of_le_right, with_bot.coe_le_coe.2 hle).symm⟩],
+    rcases [expr Hi J hJ this, "with", "⟨", ident Ji, ",", ident hJi, ",", ident hlei, "⟩"],
+    exact [expr ⟨Ji, π.mem_bUnion.2 ⟨J, hJ, hJi⟩, hlei⟩] }
+end
 
 instance  : HasInf (prepartition I) :=
   ⟨fun π₁ π₂ => π₁.bUnion fun J => π₂.restrict J⟩
@@ -599,7 +596,7 @@ theorem filter_of_true {p : box ι → Prop} (hp : ∀ J _ : J ∈ π, p J) : π
 theorem filter_true : (π.filter fun _ => True) = π :=
   π.filter_of_true fun _ _ => trivialₓ
 
--- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
 theorem Union_filter_not
 (π : prepartition I)

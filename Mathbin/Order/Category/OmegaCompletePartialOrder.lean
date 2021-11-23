@@ -35,7 +35,7 @@ instance  : bundled_hom @continuous_hom :=
   { toFun := @continuous_hom.simps.apply, id := @continuous_hom.id, comp := @continuous_hom.comp,
     hom_ext := @continuous_hom.coe_inj }
 
--- error in Order.Category.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Order.Category.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] ωCPO
 
 instance  : CoeSort ωCPO (Type _) :=

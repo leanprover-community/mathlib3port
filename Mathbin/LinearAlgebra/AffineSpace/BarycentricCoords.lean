@@ -113,70 +113,75 @@ theorem barycentric_coord_apply_combination_of_not_mem {s : Finset ι} {i : ι} 
     simp only [barycentric_coord_apply, hi, Finset.affine_combination_eq_linear_combination, if_false, hw, mul_boole,
       Function.comp_app, smul_eq_mul, s.sum_ite_eq, s.map_affine_combination p w hw]
 
+-- error in LinearAlgebra.AffineSpace.BarycentricCoords: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem sum_barycentric_coord_apply_eq_one [Fintype ι] (q : P) : (∑i, barycentricCoord h_ind h_tot i q) = 1 :=
-  by 
-    have hq : q ∈ affineSpan k (range p)
-    ·
-      rw [h_tot]
-      exact AffineSubspace.mem_top k V q 
-    obtain ⟨w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span_of_fintype hq 
-    convert hw 
-    ext i 
-    exact barycentric_coord_apply_combination_of_mem h_ind h_tot (Finset.mem_univ i) hw
+theorem sum_barycentric_coord_apply_eq_one
+[fintype ι]
+(q : P) : «expr = »(«expr∑ , »((i), barycentric_coord h_ind h_tot i q), 1) :=
+begin
+  have [ident hq] [":", expr «expr ∈ »(q, affine_span k (range p))] [],
+  { rw [expr h_tot] [],
+    exact [expr affine_subspace.mem_top k V q] },
+  obtain ["⟨", ident w, ",", ident hw, ",", ident rfl, "⟩", ":=", expr eq_affine_combination_of_mem_affine_span_of_fintype hq],
+  convert [] [expr hw] [],
+  ext [] [ident i] [],
+  exact [expr barycentric_coord_apply_combination_of_mem h_ind h_tot (finset.mem_univ i) hw]
+end
 
+-- error in LinearAlgebra.AffineSpace.BarycentricCoords: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem affine_combination_barycentric_coord_eq_self [Fintype ι] (q : P) :
-  (Finset.univ.affineCombination p fun i => barycentricCoord h_ind h_tot i q) = q :=
-  by 
-    have hq : q ∈ affineSpan k (range p)
-    ·
-      rw [h_tot]
-      exact AffineSubspace.mem_top k V q 
-    obtain ⟨w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span_of_fintype hq 
-    congr 
-    ext i 
-    exact barycentric_coord_apply_combination_of_mem h_ind h_tot (Finset.mem_univ i) hw
+theorem affine_combination_barycentric_coord_eq_self
+[fintype ι]
+(q : P) : «expr = »(finset.univ.affine_combination p (λ i, barycentric_coord h_ind h_tot i q), q) :=
+begin
+  have [ident hq] [":", expr «expr ∈ »(q, affine_span k (range p))] [],
+  { rw [expr h_tot] [],
+    exact [expr affine_subspace.mem_top k V q] },
+  obtain ["⟨", ident w, ",", ident hw, ",", ident rfl, "⟩", ":=", expr eq_affine_combination_of_mem_affine_span_of_fintype hq],
+  congr,
+  ext [] [ident i] [],
+  exact [expr barycentric_coord_apply_combination_of_mem h_ind h_tot (finset.mem_univ i) hw]
+end
 
+-- error in LinearAlgebra.AffineSpace.BarycentricCoords: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem coe_barycentric_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) :
-  (barycentricCoord h_ind h_tot i : P → k) = 1 :=
-  by 
-    ext q 
-    have hp : (range p).Subsingleton
-    ·
-      rw [←image_univ]
-      apply subsingleton.image 
-      apply subsingleton_of_subsingleton 
-    haveI  := AffineSubspace.subsingleton_of_subsingleton_span_eq_top hp h_tot 
-    let s : Finset ι := {i}
-    have hi : i ∈ s
-    ·
-      simp 
-    have hw : s.sum (Function.const ι (1 : k)) = 1
-    ·
-      simp 
-    have hq : q = s.affine_combination p (Function.const ι (1 : k))
-    ·
-      simp 
-    rw [Pi.one_apply, hq, barycentric_coord_apply_combination_of_mem h_ind h_tot hi hw]
+theorem coe_barycentric_coord_of_subsingleton_eq_one
+[subsingleton ι]
+(i : ι) : «expr = »((barycentric_coord h_ind h_tot i : P → k), 1) :=
+begin
+  ext [] [ident q] [],
+  have [ident hp] [":", expr (range p).subsingleton] [],
+  { rw ["<-", expr image_univ] [],
+    apply [expr subsingleton.image],
+    apply [expr subsingleton_of_subsingleton] },
+  haveI [] [] [":=", expr affine_subspace.subsingleton_of_subsingleton_span_eq_top hp h_tot],
+  let [ident s] [":", expr finset ι] [":=", expr {i}],
+  have [ident hi] [":", expr «expr ∈ »(i, s)] [],
+  { simp [] [] [] [] [] [] },
+  have [ident hw] [":", expr «expr = »(s.sum (function.const ι (1 : k)), 1)] [],
+  { simp [] [] [] [] [] [] },
+  have [ident hq] [":", expr «expr = »(q, s.affine_combination p (function.const ι (1 : k)))] [],
+  { simp [] [] [] [] [] [] },
+  rw ["[", expr pi.one_apply, ",", expr hq, ",", expr barycentric_coord_apply_combination_of_mem h_ind h_tot hi hw, "]"] []
+end
 
-theorem surjective_barycentric_coord [Nontrivial ι] (i : ι) : Function.Surjective$ barycentricCoord h_ind h_tot i :=
-  by 
-    classical 
-    intro x 
-    obtain ⟨j, hij⟩ := exists_ne i 
-    let s : Finset ι := {i, j}
-    have hi : i ∈ s
-    ·
-      simp 
-    have hj : j ∈ s
-    ·
-      simp 
-    let w : ι → k := fun j' => if j' = i then x else 1 - x 
-    have hw : s.sum w = 1
-    ·
-      simp [hij, Finset.sum_ite, Finset.filter_insert, Finset.filter_eq']
-    use s.affine_combination p w 
-    simp [barycentric_coord_apply_combination_of_mem h_ind h_tot hi hw]
+-- error in LinearAlgebra.AffineSpace.BarycentricCoords: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem surjective_barycentric_coord
+[nontrivial ι]
+(i : ι) : «expr $ »(function.surjective, barycentric_coord h_ind h_tot i) :=
+begin
+  classical,
+  intros [ident x],
+  obtain ["⟨", ident j, ",", ident hij, "⟩", ":=", expr exists_ne i],
+  let [ident s] [":", expr finset ι] [":=", expr {i, j}],
+  have [ident hi] [":", expr «expr ∈ »(i, s)] [],
+  { simp [] [] [] [] [] [] },
+  have [ident hj] [":", expr «expr ∈ »(j, s)] [],
+  { simp [] [] [] [] [] [] },
+  let [ident w] [":", expr ι → k] [":=", expr λ j', if «expr = »(j', i) then x else «expr - »(1, x)],
+  have [ident hw] [":", expr «expr = »(s.sum w, 1)] [],
+  { simp [] [] [] ["[", expr hij, ",", expr finset.sum_ite, ",", expr finset.filter_insert, ",", expr finset.filter_eq', "]"] [] [] },
+  use [expr s.affine_combination p w],
+  simp [] [] [] ["[", expr barycentric_coord_apply_combination_of_mem h_ind h_tot hi hw, "]"] [] []
+end
 

@@ -62,11 +62,13 @@ instance _root_.module.finite.matrix {ι₁ : Type _} [Fintype ι₁] {ι₂ : T
   Module.Finite R (Matrix ι₁ ι₂ R) :=
   Module.Finite.of_basis$ Pi.basis$ fun i => Pi.basisFun R _
 
-instance  [Nontrivial R] [Module.Finite R M] [Module.Finite R N] : Module.Finite R (M →ₗ[R] N) :=
-  by 
-    classical 
-    have f := (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm 
-    exact Module.Finite.of_surjective f.to_linear_map (LinearEquiv.surjective f)
+-- error in LinearAlgebra.FreeModule.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance [nontrivial R] [module.finite R M] [module.finite R N] : module.finite R «expr →ₗ[ ] »(M, R, N) :=
+begin
+  classical,
+  have [ident f] [] [":=", expr (linear_map.to_matrix (choose_basis R M) (choose_basis R N)).symm],
+  exact [expr module.finite.of_surjective f.to_linear_map (linear_equiv.surjective f)]
+end
 
 end CommRingₓ
 

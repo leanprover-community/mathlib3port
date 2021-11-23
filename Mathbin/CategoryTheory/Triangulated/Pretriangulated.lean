@@ -1,6 +1,5 @@
-import Mathbin.CategoryTheory.Additive.Basic 
-import Mathbin.CategoryTheory.Shift 
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor 
+import Mathbin.CategoryTheory.Shift 
 import Mathbin.CategoryTheory.Triangulated.Rotate
 
 /-!
@@ -87,6 +86,7 @@ theorem inv_rot_of_dist_triangle T (_ : T ∈ (dist_triang C)) : T.inv_rotate �
   (rotate_distinguished_triangle T.inv_rotate).mpr
     (isomorphic_distinguished T H T.inv_rotate.rotate T (inv_rot_comp_rot.symm.app T))
 
+-- error in CategoryTheory.Triangulated.Pretriangulated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given any distinguished triangle
 ```
@@ -96,18 +96,18 @@ Given any distinguished triangle
 the composition `f ≫ g = 0`.
 See https://stacks.math.columbia.edu/tag/0146
 -/
-theorem comp_dist_triangle_mor_zero₁₂ T (_ : T ∈ (dist_triang C)) : T.mor₁ ≫ T.mor₂ = 0 :=
-  by 
-    have h := contractible_distinguished T.obj₁ 
-    have f := complete_distinguished_triangle_morphism 
-    specialize f (contractible_triangle C T.obj₁) T h H (𝟙 T.obj₁) T.mor₁ 
-    have t : (contractible_triangle C T.obj₁).mor₁ ≫ T.mor₁ = 𝟙 T.obj₁ ≫ T.mor₁
-    ·
-      rfl 
-    specialize f t 
-    cases' f with c f 
-    rw [←f.left]
-    simp only [limits.zero_comp, contractible_triangle_mor₂]
+theorem comp_dist_triangle_mor_zero₁₂ (T «expr ∈ » «exprdist_triang »(C)) : «expr = »(«expr ≫ »(T.mor₁, T.mor₂), 0) :=
+begin
+  have [ident h] [] [":=", expr contractible_distinguished T.obj₁],
+  have [ident f] [] [":=", expr complete_distinguished_triangle_morphism],
+  specialize [expr f (contractible_triangle C T.obj₁) T h H («expr𝟙»() T.obj₁) T.mor₁],
+  have [ident t] [":", expr «expr = »(«expr ≫ »((contractible_triangle C T.obj₁).mor₁, T.mor₁), «expr ≫ »(«expr𝟙»() T.obj₁, T.mor₁))] [],
+  by refl,
+  specialize [expr f t],
+  cases [expr f] ["with", ident c, ident f],
+  rw ["<-", expr f.left] [],
+  simp [] [] ["only"] ["[", expr limits.zero_comp, ",", expr contractible_triangle_mor₂, "]"] [] []
+end
 
 /--
 Given any distinguished triangle

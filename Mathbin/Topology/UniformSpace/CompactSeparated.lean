@@ -36,7 +36,7 @@ variable{α β γ : Type _}[UniformSpace α][UniformSpace β]
 -/
 
 
--- error in Topology.UniformSpace.CompactSeparated: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.UniformSpace.CompactSeparated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- On a separated compact uniform space, the topology determines the uniform structure, entourages
 are exactly the neighborhoods of the diagonal. -/
 theorem compact_space_uniformity
@@ -66,26 +66,29 @@ begin
   contradiction
 end
 
-theorem unique_uniformity_of_compact_t2 [t : TopologicalSpace γ] [CompactSpace γ] [T2Space γ] {u u' : UniformSpace γ}
-  (h : u.to_topological_space = t) (h' : u'.to_topological_space = t) : u = u' :=
-  by 
-    apply uniform_space_eq 
-    change uniformity _ = uniformity _ 
-    haveI  : @CompactSpace γ u.to_topological_space
-    ·
-      rw [h] <;> assumption 
-    haveI  : @CompactSpace γ u'.to_topological_space
-    ·
-      rw [h'] <;> assumption 
-    haveI  : @SeparatedSpace γ u
-    ·
-      rwa [separated_iff_t2, h]
-    haveI  : @SeparatedSpace γ u'
-    ·
-      rwa [separated_iff_t2, h']
-    rw [compact_space_uniformity, compact_space_uniformity, h, h']
+-- error in Topology.UniformSpace.CompactSeparated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem unique_uniformity_of_compact_t2
+[t : topological_space γ]
+[compact_space γ]
+[t2_space γ]
+{u u' : uniform_space γ}
+(h : «expr = »(u.to_topological_space, t))
+(h' : «expr = »(u'.to_topological_space, t)) : «expr = »(u, u') :=
+begin
+  apply [expr uniform_space_eq],
+  change [expr «expr = »(uniformity _, uniformity _)] [] [],
+  haveI [] [":", expr @compact_space γ u.to_topological_space] [],
+  { rw [expr h] []; assumption },
+  haveI [] [":", expr @compact_space γ u'.to_topological_space] [],
+  { rw [expr h'] []; assumption },
+  haveI [] [":", expr @separated_space γ u] [],
+  { rwa ["[", expr separated_iff_t2, ",", expr h, "]"] [] },
+  haveI [] [":", expr @separated_space γ u'] [],
+  { rwa ["[", expr separated_iff_t2, ",", expr h', "]"] [] },
+  rw ["[", expr compact_space_uniformity, ",", expr compact_space_uniformity, ",", expr h, ",", expr h', "]"] []
+end
 
--- error in Topology.UniformSpace.CompactSeparated: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.UniformSpace.CompactSeparated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The unique uniform structure inducing a given compact Hausdorff topological structure. -/
 def uniform_space_of_compact_t2 [topological_space γ] [compact_space γ] [t2_space γ] : uniform_space γ :=
 { uniformity := «expr⨆ , »((x), expr𝓝() (x, x)),
@@ -205,7 +208,7 @@ theorem IsCompact.uniform_continuous_on_of_continuous' {s : Set α} {f : α → 
     rw [is_separated_iff_induced] at hs' 
     rw [is_compact_iff_compact_space] at hs 
     rw [continuous_on_iff_continuous_restrict] at hf 
-    resetI 
+    skip 
     exact CompactSpace.uniform_continuous_of_continuous hf
 
 /-- Heine-Cantor: a continuous function on a compact set of a separated uniform space
@@ -214,19 +217,28 @@ theorem IsCompact.uniform_continuous_on_of_continuous [SeparatedSpace α] {s : S
   (hf : ContinuousOn f s) : UniformContinuousOn f s :=
   hs.uniform_continuous_on_of_continuous' (is_separated_of_separated_space s) hf
 
+-- error in Topology.UniformSpace.CompactSeparated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is locally compact,
 `β` is compact and separated and `f` is continuous on `U × (univ : set β)` for some separated
 neighborhood `U` of `x`. -/
-theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] [SeparatedSpace β] [UniformSpace γ]
-  {f : α → β → γ} {x : α} {U : Set α} (hxU : U ∈ 𝓝 x) (hU : IsSeparated U)
-  (h : ContinuousOn («expr↿ » f) (U.prod univ)) : TendstoUniformly f (f x) (𝓝 x) :=
-  by 
-    rcases LocallyCompactSpace.local_compact_nhds _ _ hxU with ⟨K, hxK, hKU, hK⟩
-    have  : UniformContinuousOn («expr↿ » f) (K.prod univ)
-    ·
-      refine' IsCompact.uniform_continuous_on_of_continuous' (hK.prod compact_univ) _ (h.mono$ prod_mono hKU subset.rfl)
-      exact (hU.mono hKU).Prod (is_separated_of_separated_space _)
-    exact this.tendsto_uniformly hxK
+theorem continuous_on.tendsto_uniformly
+[locally_compact_space α]
+[compact_space β]
+[separated_space β]
+[uniform_space γ]
+{f : α → β → γ}
+{x : α}
+{U : set α}
+(hxU : «expr ∈ »(U, expr𝓝() x))
+(hU : is_separated U)
+(h : continuous_on «expr↿ »(f) (U.prod univ)) : tendsto_uniformly f (f x) (expr𝓝() x) :=
+begin
+  rcases [expr locally_compact_space.local_compact_nhds _ _ hxU, "with", "⟨", ident K, ",", ident hxK, ",", ident hKU, ",", ident hK, "⟩"],
+  have [] [":", expr uniform_continuous_on «expr↿ »(f) (K.prod univ)] [],
+  { refine [expr is_compact.uniform_continuous_on_of_continuous' (hK.prod compact_univ) _ «expr $ »(h.mono, prod_mono hKU subset.rfl)],
+    exact [expr (hU.mono hKU).prod (is_separated_of_separated_space _)] },
+  exact [expr this.tendsto_uniformly hxK]
+end
 
 /-- A continuous family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is
 locally compact and `β` is compact and separated. -/

@@ -151,16 +151,17 @@ theorem mem_filter_iff (B : FilterBasis α) {U : Set α} : U ∈ B.filter ↔ �
 theorem mem_filter_of_mem (B : FilterBasis α) {U : Set α} : U ∈ B → U ∈ B.filter :=
   fun U_in => ⟨U, U_in, subset.refl _⟩
 
-theorem eq_infi_principal (B : FilterBasis α) : B.filter = ⨅s : B.sets, 𝓟 s :=
-  by 
-    have  : Directed (· ≥ ·) fun s : B.sets => 𝓟 (s : Set α)
-    ·
-      rintro ⟨U, U_in⟩ ⟨V, V_in⟩
-      rcases B.inter_sets U_in V_in with ⟨W, W_in, W_sub⟩
-      use W, W_in 
-      finish 
-    ext U 
-    simp [mem_filter_iff, mem_infi_of_directed this]
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_infi_principal (B : filter_basis α) : «expr = »(B.filter, «expr⨅ , »((s : B.sets), expr𝓟() s)) :=
+begin
+  have [] [":", expr directed ((«expr ≥ »)) (λ s : B.sets, expr𝓟() (s : set α))] [],
+  { rintros ["⟨", ident U, ",", ident U_in, "⟩", "⟨", ident V, ",", ident V_in, "⟩"],
+    rcases [expr B.inter_sets U_in V_in, "with", "⟨", ident W, ",", ident W_in, ",", ident W_sub, "⟩"],
+    use ["[", expr W, ",", expr W_in, "]"],
+    finish [] [] },
+  ext [] [ident U] [],
+  simp [] [] [] ["[", expr mem_filter_iff, ",", expr mem_infi_of_directed this, "]"] [] []
+end
 
 protected theorem generate (B : FilterBasis α) : generate B.sets = B.filter :=
   by 
@@ -799,7 +800,7 @@ theorem countable_binfi_principal_eq_seq_infi {B : Set (Set α)} (Bcbl : countab
 
 section IsCountablyGenerated
 
--- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is countably generated and `f.has_basis p s`, then `f` admits a decreasing basis
 enumerated by natural numbers such that all sets have the form `s i`. More precisely, there is a
 sequence `i n` such that `p (i n)` for all `n` and `s (i n)` is a decreasing sequence of sets which
@@ -898,7 +899,7 @@ theorem is_countably_generated_iff_exists_antitone_basis {f : Filter α} :
   by 
     split 
     ·
-      introI h 
+      intro h 
       exact f.exists_antitone_basis
     ·
       rintro ⟨x, h⟩

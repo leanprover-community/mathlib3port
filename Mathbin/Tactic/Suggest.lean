@@ -1,3 +1,4 @@
+import Mathbin.Data.Bool 
 import Mathbin.Data.Mllist 
 import Mathbin.Tactic.SolveByElim
 
@@ -46,16 +47,16 @@ Compute the head symbol of an expression, then normalise synonyms.
 This is only used when analysing the goal, so it is okay to do more expensive analysis here.
 -/
 unsafe def allowed_head_symbols : expr → List Name
-| quote @LE.le ℕ _ (Nat.succ _) _ => [`has_le.le, `has_lt.lt]
-| quote @Ge ℕ _ _ (Nat.succ _) => [`has_le.le, `has_lt.lt]
-| quote @LE.le ℕ _ 1 _ => [`has_le.le, `has_lt.lt]
-| quote @Ge ℕ _ _ 1 => [`has_le.le, `has_lt.lt]
+| quote.1 (@LE.le ℕ _ (Nat.succ _) _) => [`has_le.le, `has_lt.lt]
+| quote.1 (@Ge ℕ _ _ (Nat.succ _)) => [`has_le.le, `has_lt.lt]
+| quote.1 (@LE.le ℕ _ 1 _) => [`has_le.le, `has_lt.lt]
+| quote.1 (@Ge ℕ _ _ 1) => [`has_le.le, `has_lt.lt]
 | expr.pi _ _ _ t => allowed_head_symbols t
 | expr.app f _ => allowed_head_symbols f
 | expr.const n _ => [normalize_synonym n]
 | _ => [`_]
 
--- error in Tactic.Suggest: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.Suggest: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /--
 A declaration can match the head symbol of the current goal in four possible ways:
 * `ex`  : an exact match
@@ -80,7 +81,7 @@ def head_symbol_match.to_string : head_symbol_match → Stringₓ
 /-- Determine if, and in which way, a given expression matches the specified head symbol. -/
 unsafe def match_head_symbol (hs : name_set) : expr → Option head_symbol_match
 | expr.pi _ _ _ t => match_head_symbol t
-| quote (%%a) ↔ %%b =>
+| quote.1 ((%%ₓa) ↔ %%ₓb) =>
   if hs.contains `iff then some ex else
     match (match_head_symbol a, match_head_symbol b) with 
     | (some ex, some ex) => some both

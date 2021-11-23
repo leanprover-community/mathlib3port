@@ -236,19 +236,29 @@ protected def faithful.div (F : C ⥤ E) (G : D ⥤ E) [faithful G] (obj : C →
               exact (h_obj _).symm <;>
             exact h_map.symm }
 
-theorem faithful.div_comp (F : C ⥤ E) [faithful F] (G : D ⥤ E) [faithful G] (obj : C → D)
-  (h_obj : ∀ X, G.obj (obj X) = F.obj X) (map : ∀ {X Y}, (X ⟶ Y) → (obj X ⟶ obj Y))
-  (h_map : ∀ {X Y} {f : X ⟶ Y}, HEq (G.map (map f)) (F.map f)) : faithful.div F G obj @h_obj @map @h_map ⋙ G = F :=
-  by 
-    casesI F with F_obj _ _ _ 
-    casesI G with G_obj _ _ _ 
-    unfold faithful.div Functor.Comp 
-    unfoldProjs  at h_obj 
-    have  : F_obj = G_obj ∘ obj := (funext h_obj).symm 
-    substI this 
-    congr 
-    funext 
-    exact eq_of_heq h_map
+-- error in CategoryTheory.FullyFaithful: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem faithful.div_comp
+(F : «expr ⥤ »(C, E))
+[faithful F]
+(G : «expr ⥤ »(D, E))
+[faithful G]
+(obj : C → D)
+(h_obj : ∀ X, «expr = »(G.obj (obj X), F.obj X))
+(map : ∀ {X Y}, «expr ⟶ »(X, Y) → «expr ⟶ »(obj X, obj Y))
+(h_map : ∀
+ {X Y}
+ {f : «expr ⟶ »(X, Y)}, «expr == »(G.map (map f), F.map f)) : «expr = »(«expr ⋙ »(faithful.div F G obj @h_obj @map @h_map, G), F) :=
+begin
+  casesI [expr F] ["with", ident F_obj, "_", "_", "_"],
+  casesI [expr G] ["with", ident G_obj, "_", "_", "_"],
+  unfold [ident faithful.div, ident functor.comp] [],
+  unfold_projs ["at", ident h_obj],
+  have [] [":", expr «expr = »(F_obj, «expr ∘ »(G_obj, obj))] [":=", expr (funext h_obj).symm],
+  substI [expr this],
+  congr,
+  funext [],
+  exact [expr eq_of_heq h_map]
+end
 
 theorem faithful.div_faithful (F : C ⥤ E) [faithful F] (G : D ⥤ E) [faithful G] (obj : C → D)
   (h_obj : ∀ X, G.obj (obj X) = F.obj X) (map : ∀ {X Y}, (X ⟶ Y) → (obj X ⟶ obj Y))

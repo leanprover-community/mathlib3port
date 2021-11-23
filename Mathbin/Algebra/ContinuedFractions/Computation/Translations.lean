@@ -73,73 +73,63 @@ theorem succ_nth_stream_eq_none_iff :
       cases' ifp with _ fr 
       cases Decidable.em (fr = 0) <;> finish [int_fract_pair.stream]
 
+-- error in Algebra.ContinuedFractions.Computation.Translations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Gives a recurrence to compute the `n + 1`th value of the sequence of integer and fractional
 parts of a value in case of non-termination.
 -/
-theorem succ_nth_stream_eq_some_iff {ifp_succ_n : int_fract_pair K} :
-  int_fract_pair.stream v (n+1) = some ifp_succ_n ↔
-    ∃ ifp_n : int_fract_pair K,
-      int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of (ifp_n.fr⁻¹) = ifp_succ_n :=
-  by 
-    split 
-    ·
-      intro stream_succ_nth_eq 
-      have  : int_fract_pair.stream v (n+1) ≠ none
-      ·
-        simp [stream_succ_nth_eq]
-      have  : ¬int_fract_pair.stream v n = none ∧ ¬∃ ifp, int_fract_pair.stream v n = some ifp ∧ ifp.fr = 0
-      ·
-        ·
-          have not_none_not_fract_zero 
-          exact (not_iff_not_of_iff succ_nth_stream_eq_none_iff).elim_left this 
-          exact not_or_distrib.elim_left not_none_not_fract_zero 
-      cases' this with stream_nth_ne_none nth_fr_ne_zero 
-      replace nth_fr_ne_zero : ∀ ifp, int_fract_pair.stream v n = some ifp → ifp.fr ≠ 0
-      ·
-        simpa using nth_fr_ne_zero 
-      obtain ⟨ifp_n, stream_nth_eq⟩ : ∃ ifp_n, int_fract_pair.stream v n = some ifp_n 
-      exact option.ne_none_iff_exists'.mp stream_nth_ne_none 
-      exists ifp_n 
-      have ifp_n_fr_ne_zero : ifp_n.fr ≠ 0 
-      exact nth_fr_ne_zero ifp_n stream_nth_eq 
-      cases' ifp_n with _ ifp_n_fr 
-      suffices  : int_fract_pair.of (ifp_n_fr⁻¹) = ifp_succ_n
-      ·
-        simpa [stream_nth_eq, ifp_n_fr_ne_zero]
-      simp only [int_fract_pair.stream, stream_nth_eq, ifp_n_fr_ne_zero, Option.some_bind, if_false] at
-        stream_succ_nth_eq 
-      injection stream_succ_nth_eq
-    ·
-      rintro ⟨⟨_⟩, ifp_n_props⟩
-      finish [int_fract_pair.stream, ifp_n_props]
+theorem succ_nth_stream_eq_some_iff
+{ifp_succ_n : int_fract_pair K} : «expr ↔ »(«expr = »(int_fract_pair.stream v «expr + »(n, 1), some ifp_succ_n), «expr∃ , »((ifp_n : int_fract_pair K), «expr ∧ »(«expr = »(int_fract_pair.stream v n, some ifp_n), «expr ∧ »(«expr ≠ »(ifp_n.fr, 0), «expr = »(int_fract_pair.of «expr ⁻¹»(ifp_n.fr), ifp_succ_n))))) :=
+begin
+  split,
+  { assume [binders (stream_succ_nth_eq)],
+    have [] [":", expr «expr ≠ »(int_fract_pair.stream v «expr + »(n, 1), none)] [],
+    by simp [] [] [] ["[", expr stream_succ_nth_eq, "]"] [] [],
+    have [] [":", expr «expr ∧ »(«expr¬ »(«expr = »(int_fract_pair.stream v n, none)), «expr¬ »(«expr∃ , »((ifp), «expr ∧ »(«expr = »(int_fract_pair.stream v n, some ifp), «expr = »(ifp.fr, 0)))))] [],
+    by { have [ident not_none_not_fract_zero] [] [],
+      from [expr (not_iff_not_of_iff succ_nth_stream_eq_none_iff).elim_left this],
+      exact [expr not_or_distrib.elim_left not_none_not_fract_zero] },
+    cases [expr this] ["with", ident stream_nth_ne_none, ident nth_fr_ne_zero],
+    replace [ident nth_fr_ne_zero] [":", expr ∀
+     ifp, «expr = »(int_fract_pair.stream v n, some ifp) → «expr ≠ »(ifp.fr, 0)] [],
+    by simpa [] [] [] [] [] ["using", expr nth_fr_ne_zero],
+    obtain ["⟨", ident ifp_n, ",", ident stream_nth_eq, "⟩", ":", expr «expr∃ , »((ifp_n), «expr = »(int_fract_pair.stream v n, some ifp_n))],
+    from [expr option.ne_none_iff_exists'.mp stream_nth_ne_none],
+    existsi [expr ifp_n],
+    have [ident ifp_n_fr_ne_zero] [":", expr «expr ≠ »(ifp_n.fr, 0)] [],
+    from [expr nth_fr_ne_zero ifp_n stream_nth_eq],
+    cases [expr ifp_n] ["with", "_", ident ifp_n_fr],
+    suffices [] [":", expr «expr = »(int_fract_pair.of «expr ⁻¹»(ifp_n_fr), ifp_succ_n)],
+    by simpa [] [] [] ["[", expr stream_nth_eq, ",", expr ifp_n_fr_ne_zero, "]"] [] [],
+    simp [] [] ["only"] ["[", expr int_fract_pair.stream, ",", expr stream_nth_eq, ",", expr ifp_n_fr_ne_zero, ",", expr option.some_bind, ",", expr if_false, "]"] [] ["at", ident stream_succ_nth_eq],
+    injection [expr stream_succ_nth_eq] [] },
+  { rintro ["⟨", "⟨", "_", "⟩", ",", ident ifp_n_props, "⟩"],
+    finish ["[", expr int_fract_pair.stream, ",", expr ifp_n_props, "]"] [] }
+end
 
-theorem exists_succ_nth_stream_of_fr_zero {ifp_succ_n : int_fract_pair K}
-  (stream_succ_nth_eq : int_fract_pair.stream v (n+1) = some ifp_succ_n) (succ_nth_fr_eq_zero : ifp_succ_n.fr = 0) :
-  ∃ ifp_n : int_fract_pair K, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr⁻¹ = ⌊ifp_n.fr⁻¹⌋ :=
-  by 
-    rcases succ_nth_stream_eq_some_iff.elim_left stream_succ_nth_eq with ⟨ifp_n, stream_nth_eq, nth_fr_ne_zero, _⟩
-    exists ifp_n 
-    cases' ifp_n with _ ifp_n_fr 
-    suffices  : ifp_n_fr⁻¹ = ⌊ifp_n_fr⁻¹⌋
-    ·
-      simpa [stream_nth_eq]
-    have  : int_fract_pair.of (ifp_n_fr⁻¹) = ifp_succ_n
-    ·
-      finish 
-    cases' ifp_succ_n with _ ifp_succ_n_fr 
-    change ifp_succ_n_fr = 0 at succ_nth_fr_eq_zero 
-    have  : Int.fract (ifp_n_fr⁻¹) = ifp_succ_n_fr
-    ·
-      injection this 
-    have  : Int.fract (ifp_n_fr⁻¹) = 0
-    ·
-      rwa [succ_nth_fr_eq_zero] at this 
-    calc ifp_n_fr⁻¹ = Int.fract (ifp_n_fr⁻¹)+⌊ifp_n_fr⁻¹⌋ :=
-      by 
-        rw [Int.fract_add_floor (ifp_n_fr⁻¹)]_ = ⌊ifp_n_fr⁻¹⌋ :=
-      by 
-        simp [‹Int.fract (ifp_n_fr⁻¹) = 0›]
+-- error in Algebra.ContinuedFractions.Computation.Translations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_succ_nth_stream_of_fr_zero
+{ifp_succ_n : int_fract_pair K}
+(stream_succ_nth_eq : «expr = »(int_fract_pair.stream v «expr + »(n, 1), some ifp_succ_n))
+(succ_nth_fr_eq_zero : «expr = »(ifp_succ_n.fr, 0)) : «expr∃ , »((ifp_n : int_fract_pair K), «expr ∧ »(«expr = »(int_fract_pair.stream v n, some ifp_n), «expr = »(«expr ⁻¹»(ifp_n.fr), «expr⌊ ⌋»(«expr ⁻¹»(ifp_n.fr))))) :=
+begin
+  rcases [expr succ_nth_stream_eq_some_iff.elim_left stream_succ_nth_eq, "with", "⟨", ident ifp_n, ",", ident stream_nth_eq, ",", ident nth_fr_ne_zero, ",", "_", "⟩"],
+  existsi [expr ifp_n],
+  cases [expr ifp_n] ["with", "_", ident ifp_n_fr],
+  suffices [] [":", expr «expr = »(«expr ⁻¹»(ifp_n_fr), «expr⌊ ⌋»(«expr ⁻¹»(ifp_n_fr)))],
+  by simpa [] [] [] ["[", expr stream_nth_eq, "]"] [] [],
+  have [] [":", expr «expr = »(int_fract_pair.of «expr ⁻¹»(ifp_n_fr), ifp_succ_n)] [],
+  by finish [] [],
+  cases [expr ifp_succ_n] ["with", "_", ident ifp_succ_n_fr],
+  change [expr «expr = »(ifp_succ_n_fr, 0)] [] ["at", ident succ_nth_fr_eq_zero],
+  have [] [":", expr «expr = »(int.fract «expr ⁻¹»(ifp_n_fr), ifp_succ_n_fr)] [],
+  by injection [expr this] [],
+  have [] [":", expr «expr = »(int.fract «expr ⁻¹»(ifp_n_fr), 0)] [],
+  by rwa ["[", expr succ_nth_fr_eq_zero, "]"] ["at", ident this],
+  calc
+    «expr = »(«expr ⁻¹»(ifp_n_fr), «expr + »(int.fract «expr ⁻¹»(ifp_n_fr), «expr⌊ ⌋»(«expr ⁻¹»(ifp_n_fr)))) : by rw [expr int.fract_add_floor «expr ⁻¹»(ifp_n_fr)] []
+    «expr = »(..., «expr⌊ ⌋»(«expr ⁻¹»(ifp_n_fr))) : by simp [] [] [] ["[", expr «expr‹ ›»(«expr = »(int.fract «expr ⁻¹»(ifp_n_fr), 0)), "]"] [] []
+end
 
 end IntFractPair
 

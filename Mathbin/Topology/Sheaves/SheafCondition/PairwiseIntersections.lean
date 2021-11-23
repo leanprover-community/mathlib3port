@@ -82,46 +82,43 @@ open CategoryTheory.Pairwise CategoryTheory.Pairwise.Hom
 
 open SheafConditionEqualizerProducts
 
+-- error in Topology.Sheaves.SheafCondition.PairwiseIntersections: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
-@[simps]
-def cone_equiv_functor_obj (F : presheaf C X) ⦃ι : Type v⦄ (U : ι → opens («expr↥ » X))
-  (c : limits.cone ((diagram U).op ⋙ F)) : limits.cone (sheaf_condition_equalizer_products.diagram F U) :=
-  { x := c.X,
-    π :=
-      { app :=
-          fun Z =>
-            walking_parallel_pair.cases_on Z (pi.lift fun i : ι => c.π.app (op (single i)))
-              (pi.lift fun b : ι × ι => c.π.app (op (pair b.1 b.2))),
-        naturality' :=
-          fun Y Z f =>
-            by 
-              cases Y <;> cases Z <;> cases f
-              ·
-                ext i 
-                dsimp 
-                simp only [limit.lift_π, category.id_comp, fan.mk_π_app, CategoryTheory.Functor.map_id, category.assoc]
-                dsimp 
-                simp only [limit.lift_π, category.id_comp, fan.mk_π_app]
-              ·
-                ext ⟨i, j⟩
-                dsimp [sheaf_condition_equalizer_products.left_res]
-                simp only [limit.lift_π, limit.lift_π_assoc, category.id_comp, fan.mk_π_app, category.assoc]
-                have h := c.π.naturality (Quiver.Hom.op (hom.left i j))
-                dsimp  at h 
-                simpa using h
-              ·
-                ext ⟨i, j⟩
-                dsimp [sheaf_condition_equalizer_products.right_res]
-                simp only [limit.lift_π, limit.lift_π_assoc, category.id_comp, fan.mk_π_app, category.assoc]
-                have h := c.π.naturality (Quiver.Hom.op (hom.right i j))
-                dsimp  at h 
-                simpa using h
-              ·
-                ext i 
-                dsimp 
-                simp only [limit.lift_π, category.id_comp, fan.mk_π_app, CategoryTheory.Functor.map_id, category.assoc]
-                dsimp 
-                simp only [limit.lift_π, category.id_comp, fan.mk_π_app] } }
+@[simps #[]]
+def cone_equiv_functor_obj
+(F : presheaf C X)
+{{ι : Type v}}
+(U : ι → opens «expr↥ »(X))
+(c : limits.cone «expr ⋙ »((diagram U).op, F)) : limits.cone (sheaf_condition_equalizer_products.diagram F U) :=
+{ X := c.X,
+  π := { app := λ
+    Z, walking_parallel_pair.cases_on Z (pi.lift (λ
+      i : ι, c.π.app (op (single i)))) (pi.lift (λ b : «expr × »(ι, ι), c.π.app (op (pair b.1 b.2)))),
+    naturality' := λ Y Z f, begin
+      cases [expr Y] []; cases [expr Z] []; cases [expr f] [],
+      { ext [] [ident i] [],
+        dsimp [] [] [] [],
+        simp [] [] ["only"] ["[", expr limit.lift_π, ",", expr category.id_comp, ",", expr fan.mk_π_app, ",", expr category_theory.functor.map_id, ",", expr category.assoc, "]"] [] [],
+        dsimp [] [] [] [],
+        simp [] [] ["only"] ["[", expr limit.lift_π, ",", expr category.id_comp, ",", expr fan.mk_π_app, "]"] [] [] },
+      { ext [] ["⟨", ident i, ",", ident j, "⟩"] [],
+        dsimp [] ["[", expr sheaf_condition_equalizer_products.left_res, "]"] [] [],
+        simp [] [] ["only"] ["[", expr limit.lift_π, ",", expr limit.lift_π_assoc, ",", expr category.id_comp, ",", expr fan.mk_π_app, ",", expr category.assoc, "]"] [] [],
+        have [ident h] [] [":=", expr c.π.naturality (quiver.hom.op (hom.left i j))],
+        dsimp [] [] [] ["at", ident h],
+        simpa [] [] [] [] [] ["using", expr h] },
+      { ext [] ["⟨", ident i, ",", ident j, "⟩"] [],
+        dsimp [] ["[", expr sheaf_condition_equalizer_products.right_res, "]"] [] [],
+        simp [] [] ["only"] ["[", expr limit.lift_π, ",", expr limit.lift_π_assoc, ",", expr category.id_comp, ",", expr fan.mk_π_app, ",", expr category.assoc, "]"] [] [],
+        have [ident h] [] [":=", expr c.π.naturality (quiver.hom.op (hom.right i j))],
+        dsimp [] [] [] ["at", ident h],
+        simpa [] [] [] [] [] ["using", expr h] },
+      { ext [] [ident i] [],
+        dsimp [] [] [] [],
+        simp [] [] ["only"] ["[", expr limit.lift_π, ",", expr category.id_comp, ",", expr fan.mk_π_app, ",", expr category_theory.functor.map_id, ",", expr category.assoc, "]"] [] [],
+        dsimp [] [] [] [],
+        simp [] [] ["only"] ["[", expr limit.lift_π, ",", expr category.id_comp, ",", expr fan.mk_π_app, "]"] [] [] }
+    end } }
 
 section 
 
@@ -146,59 +143,56 @@ def cone_equiv_functor (F : presheaf C X) ⦃ι : Type v⦄ (U : ι → opens (�
 
 end 
 
+-- error in Topology.Sheaves.SheafCondition.PairwiseIntersections: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
-@[simps]
-def cone_equiv_inverse_obj (F : presheaf C X) ⦃ι : Type v⦄ (U : ι → opens («expr↥ » X))
-  (c : limits.cone (sheaf_condition_equalizer_products.diagram F U)) : limits.cone ((diagram U).op ⋙ F) :=
-  { x := c.X,
-    π :=
-      { app :=
-          by 
-            intro x 
-            induction x using Opposite.rec 
-            rcases x with (⟨i⟩ | ⟨i, j⟩)
-            ·
-              exact c.π.app walking_parallel_pair.zero ≫ pi.π _ i
-            ·
-              exact c.π.app walking_parallel_pair.one ≫ pi.π _ (i, j),
-        naturality' :=
-          by 
-            intro x y f 
-            induction x using Opposite.rec 
-            induction y using Opposite.rec 
-            have ef : f = f.unop.op := rfl 
-            revert ef 
-            generalize f.unop = f' 
-            rintro rfl 
-            rcases x with (⟨i⟩ | ⟨⟩) <;> rcases y with (⟨⟩ | ⟨j, j⟩) <;> rcases f' with ⟨⟩
-            ·
-              dsimp 
-              erw [F.map_id]
-              simp 
-            ·
-              dsimp 
-              simp only [category.id_comp, category.assoc]
-              have h := c.π.naturality walking_parallel_pair_hom.left 
-              dsimp [sheaf_condition_equalizer_products.left_res]  at h 
-              simp only [category.id_comp] at h 
-              have h' := h =≫ pi.π _ (i, j)
-              rw [h']
-              simp 
-              rfl
-            ·
-              dsimp 
-              simp only [category.id_comp, category.assoc]
-              have h := c.π.naturality walking_parallel_pair_hom.right 
-              dsimp [sheaf_condition_equalizer_products.right_res]  at h 
-              simp only [category.id_comp] at h 
-              have h' := h =≫ pi.π _ (j, i)
-              rw [h']
-              simp 
-              rfl
-            ·
-              dsimp 
-              erw [F.map_id]
-              simp  } }
+@[simps #[]]
+def cone_equiv_inverse_obj
+(F : presheaf C X)
+{{ι : Type v}}
+(U : ι → opens «expr↥ »(X))
+(c : limits.cone (sheaf_condition_equalizer_products.diagram F U)) : limits.cone «expr ⋙ »((diagram U).op, F) :=
+{ X := c.X,
+  π := { app := begin
+      intro [ident x],
+      induction [expr x] ["using", ident opposite.rec] [] [],
+      rcases [expr x, "with", "(", "⟨", ident i, "⟩", "|", "⟨", ident i, ",", ident j, "⟩", ")"],
+      { exact [expr «expr ≫ »(c.π.app walking_parallel_pair.zero, pi.π _ i)] },
+      { exact [expr «expr ≫ »(c.π.app walking_parallel_pair.one, pi.π _ (i, j))] }
+    end,
+    naturality' := begin
+      intros [ident x, ident y, ident f],
+      induction [expr x] ["using", ident opposite.rec] [] [],
+      induction [expr y] ["using", ident opposite.rec] [] [],
+      have [ident ef] [":", expr «expr = »(f, f.unop.op)] [":=", expr rfl],
+      revert [ident ef],
+      generalize [] [":"] [expr «expr = »(f.unop, f')],
+      rintro [ident rfl],
+      rcases [expr x, "with", "⟨", ident i, "⟩", "|", "⟨", "⟩"]; rcases [expr y, "with", "⟨", "⟩", "|", "⟨", ident j, ",", ident j, "⟩"]; rcases [expr f', "with", "⟨", "⟩"],
+      { dsimp [] [] [] [],
+        erw ["[", expr F.map_id, "]"] [],
+        simp [] [] [] [] [] [] },
+      { dsimp [] [] [] [],
+        simp [] [] ["only"] ["[", expr category.id_comp, ",", expr category.assoc, "]"] [] [],
+        have [ident h] [] [":=", expr c.π.naturality walking_parallel_pair_hom.left],
+        dsimp [] ["[", expr sheaf_condition_equalizer_products.left_res, "]"] [] ["at", ident h],
+        simp [] [] ["only"] ["[", expr category.id_comp, "]"] [] ["at", ident h],
+        have [ident h'] [] [":=", expr «expr =≫ »(h, pi.π _ (i, j))],
+        rw [expr h'] [],
+        simp [] [] [] [] [] [],
+        refl },
+      { dsimp [] [] [] [],
+        simp [] [] ["only"] ["[", expr category.id_comp, ",", expr category.assoc, "]"] [] [],
+        have [ident h] [] [":=", expr c.π.naturality walking_parallel_pair_hom.right],
+        dsimp [] ["[", expr sheaf_condition_equalizer_products.right_res, "]"] [] ["at", ident h],
+        simp [] [] ["only"] ["[", expr category.id_comp, "]"] [] ["at", ident h],
+        have [ident h'] [] [":=", expr «expr =≫ »(h, pi.π _ (j, i))],
+        rw [expr h'] [],
+        simp [] [] [] [] [] [],
+        refl },
+      { dsimp [] [] [] [],
+        erw ["[", expr F.map_id, "]"] [],
+        simp [] [] [] [] [] [] }
+    end } }
 
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
 @[simps]
@@ -432,23 +426,23 @@ theorem is_sheaf_iff_is_sheaf_pairwise_intersections (F : presheaf C X) :
   Iff.intro (fun h ι U => ⟨is_limit_map_cone_of_is_limit_sheaf_condition_fork F U (h U).some⟩)
     fun h ι U => ⟨is_limit_sheaf_condition_fork_of_is_limit_map_cone F U (h U).some⟩
 
+-- error in Topology.Sheaves.SheafCondition.PairwiseIntersections: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The sheaf condition in terms of an equalizer diagram is equivalent
 to the reformulation in terms of the presheaf preserving the limit of the diagram
 consisting of the `U i` and `U i ⊓ U j`.
 -/
-theorem is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections (F : presheaf C X) :
-  F.is_sheaf ↔ F.is_sheaf_preserves_limit_pairwise_intersections :=
-  by 
-    rw [is_sheaf_iff_is_sheaf_pairwise_intersections]
-    split 
-    ·
-      intro h ι U 
-      exact ⟨preserves_limit_of_preserves_limit_cone (pairwise.cocone_is_colimit U).op (h U).some⟩
-    ·
-      intro h ι U 
-      haveI  := (h U).some 
-      exact ⟨preserves_limit.preserves (pairwise.cocone_is_colimit U).op⟩
+theorem is_sheaf_iff_is_sheaf_preserves_limit_pairwise_intersections
+(F : presheaf C X) : «expr ↔ »(F.is_sheaf, F.is_sheaf_preserves_limit_pairwise_intersections) :=
+begin
+  rw [expr is_sheaf_iff_is_sheaf_pairwise_intersections] [],
+  split,
+  { intros [ident h, ident ι, ident U],
+    exact [expr ⟨preserves_limit_of_preserves_limit_cone (pairwise.cocone_is_colimit U).op (h U).some⟩] },
+  { intros [ident h, ident ι, ident U],
+    haveI [] [] [":=", expr (h U).some],
+    exact [expr ⟨preserves_limit.preserves (pairwise.cocone_is_colimit U).op⟩] }
+end
 
 end Top.Presheaf
 

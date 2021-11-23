@@ -1,7 +1,6 @@
-import Mathbin.Logic.Relation 
+import Mathbin.Algebra.Group.Defs 
 import Mathbin.Data.Option.Basic 
-import Mathbin.Data.Subtype 
-import Mathbin.Algebra.Group.Defs
+import Mathbin.Logic.Relation
 
 /-!
 # Shapes of homological complexes

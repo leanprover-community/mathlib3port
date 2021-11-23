@@ -170,39 +170,38 @@ section
 
 variable(R φ)
 
+-- error in LinearAlgebra.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `I` and `J` are disjoint index sets, the product of the kernels of the `J`th projections of
 `φ` is linearly equivalent to the product over `I`. -/
-def infi_ker_proj_equiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J) :
-  (⨅(i : _)(_ : i ∈ J), ker (proj i) : Submodule R (∀ i, φ i)) ≃ₗ[R] ∀ i : I, φ i :=
-  by 
-    refine'
-      LinearEquiv.ofLinear (pi$ fun i => (proj (i : ι)).comp (Submodule.subtype _))
-        (cod_restrict _ (pi$ fun i => if h : i ∈ I then proj (⟨i, h⟩ : I) else 0) _) _ _
-    ·
-      intro b 
-      simp only [mem_infi, mem_ker, funext_iff, proj_apply, pi_apply]
-      intro j hjJ 
-      have  : j ∉ I := fun hjI => hd ⟨hjI, hjJ⟩
-      rw [dif_neg this, zero_apply]
-    ·
-      simp only [pi_comp, comp_assoc, subtype_comp_cod_restrict, proj_pi, Subtype.coe_prop]
-      ext b ⟨j, hj⟩
-      simp only [dif_pos, Function.comp_app, Function.eval_applyₓ, LinearMap.cod_restrict_apply, LinearMap.coe_comp,
-        LinearMap.coe_proj, LinearMap.pi_apply, Submodule.subtype_apply, Subtype.coe_prop]
-      rfl
-    ·
-      ext1 ⟨b, hb⟩
-      apply Subtype.ext 
-      ext j 
-      have hb : ∀ i _ : i ∈ J, b i = 0
-      ·
-        simpa only [mem_infi, mem_ker, proj_apply] using (mem_infi _).1 hb 
-      simp only [comp_apply, pi_apply, id_apply, proj_apply, subtype_apply, cod_restrict_apply]
-      splitIfs
-      ·
-        rfl
-      ·
-        exact (hb _$ (hu trivialₓ).resolve_left h).symm
+def infi_ker_proj_equiv
+{I J : set ι}
+[decidable_pred (λ i, «expr ∈ »(i, I))]
+(hd : disjoint I J)
+(hu : «expr ⊆ »(set.univ, «expr ∪ »(I, J))) : «expr ≃ₗ[ ] »((«expr⨅ , »((i «expr ∈ » J), ker (proj i)) : submodule R (∀
+  i, φ i)), R, ∀ i : I, φ i) :=
+begin
+  refine [expr linear_equiv.of_linear «expr $ »(pi, λ
+    i, (proj (i : ι)).comp (submodule.subtype _)) (cod_restrict _ «expr $ »(pi, λ
+     i, if h : «expr ∈ »(i, I) then proj (⟨i, h⟩ : I) else 0) _) _ _],
+  { assume [binders (b)],
+    simp [] [] ["only"] ["[", expr mem_infi, ",", expr mem_ker, ",", expr funext_iff, ",", expr proj_apply, ",", expr pi_apply, "]"] [] [],
+    assume [binders (j hjJ)],
+    have [] [":", expr «expr ∉ »(j, I)] [":=", expr assume hjI, hd ⟨hjI, hjJ⟩],
+    rw ["[", expr dif_neg this, ",", expr zero_apply, "]"] [] },
+  { simp [] [] ["only"] ["[", expr pi_comp, ",", expr comp_assoc, ",", expr subtype_comp_cod_restrict, ",", expr proj_pi, ",", expr subtype.coe_prop, "]"] [] [],
+    ext [] [ident b, "⟨", ident j, ",", ident hj, "⟩"] [],
+    simp [] [] ["only"] ["[", expr dif_pos, ",", expr function.comp_app, ",", expr function.eval_apply, ",", expr linear_map.cod_restrict_apply, ",", expr linear_map.coe_comp, ",", expr linear_map.coe_proj, ",", expr linear_map.pi_apply, ",", expr submodule.subtype_apply, ",", expr subtype.coe_prop, "]"] [] [],
+    refl },
+  { ext1 [] ["⟨", ident b, ",", ident hb, "⟩"],
+    apply [expr subtype.ext],
+    ext [] [ident j] [],
+    have [ident hb] [":", expr ∀ i «expr ∈ » J, «expr = »(b i, 0)] [],
+    { simpa [] [] ["only"] ["[", expr mem_infi, ",", expr mem_ker, ",", expr proj_apply, "]"] [] ["using", expr (mem_infi _).1 hb] },
+    simp [] [] ["only"] ["[", expr comp_apply, ",", expr pi_apply, ",", expr id_apply, ",", expr proj_apply, ",", expr subtype_apply, ",", expr cod_restrict_apply, "]"] [] [],
+    split_ifs [] [],
+    { refl },
+    { exact [expr «expr $ »(hb _, (hu trivial).resolve_left h).symm] } }
+end
 
 end 
 

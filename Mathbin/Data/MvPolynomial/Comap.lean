@@ -70,7 +70,7 @@ theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (g 
       apply aeval_C
 
 theorem comap_comp (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R) :
-  comap (g.comp f) = (comap f ∘ comap g) :=
+  comap (g.comp f) = comap f ∘ comap g :=
   by 
     funext x 
     exact comap_comp_apply _ _ _
@@ -82,7 +82,7 @@ theorem comap_eq_id_of_eq_id (f : MvPolynomial σ R →ₐ[R] MvPolynomial σ R)
     ext1 φ 
     rw [hf, AlgHom.id_apply]
 
-theorem comap_rename (f : σ → τ) (x : τ → R) : comap (rename f) x = (x ∘ f) :=
+theorem comap_rename (f : σ → τ) (x : τ → R) : comap (rename f) x = x ∘ f :=
   by 
     ext i 
     simp only [rename_X, comap_apply, aeval_X]

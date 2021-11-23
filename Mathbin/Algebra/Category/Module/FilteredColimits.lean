@@ -1,5 +1,5 @@
-import Mathbin.Algebra.Category.Module.Basic 
-import Mathbin.Algebra.Category.CommRing.FilteredColimits
+import Mathbin.Algebra.Category.Group.FilteredColimits 
+import Mathbin.Algebra.Category.Module.Basic
 
 /-!
 # The forgetful functor from `R`-modules preserves filtered colimits.
@@ -195,7 +195,7 @@ instance forget₂_AddCommGroup_preserves_filtered_colimits :
   { PreservesFilteredColimits :=
       fun J _ _ =>
         by 
-          exactI
+          exact
             { PreservesColimit :=
                 fun F =>
                   preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)

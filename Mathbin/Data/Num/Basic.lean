@@ -9,7 +9,7 @@ collection of theorems is to show the equivalence of the different approaches.
 -/
 
 
--- error in Data.Num.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Data.Num.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- The type of positive binary numbers.
 
      13 = 1101(base 2) = bit1 (bit0 (bit1 one)) -/
@@ -25,7 +25,7 @@ instance  : HasOne PosNum :=
 instance  : Inhabited PosNum :=
   ⟨1⟩
 
--- error in Data.Num.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Data.Num.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- The type of nonnegative binary numbers, using `pos_num`.
 
      13 = 1101(base 2) = pos (bit1 (bit0 (bit1 one))) -/
@@ -43,7 +43,7 @@ instance  : HasOne Num :=
 instance  : Inhabited Num :=
   ⟨0⟩
 
--- error in Data.Num.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Data.Num.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- Representation of integers using trichotomy around zero.
 
      13 = 1101(base 2) = pos (bit1 (bit0 (bit1 one)))

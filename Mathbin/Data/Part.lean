@@ -292,24 +292,19 @@ theorem to_of_option (o : Option α) : to_option (of_option o) = o :=
 theorem of_to_option (o : Part α) [Decidable o.dom] : of_option (to_option o) = o :=
   ext$ fun a => mem_of_option.trans mem_to_option
 
+-- error in Data.Part: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `part α` is (classically) equivalent to `option α`. -/
-noncomputable def equiv_option : Part α ≃ Option α :=
-  by 
-    haveI  := Classical.dec <;>
-      exact
-        ⟨fun o => to_option o, of_option, fun o => of_to_option o,
-          fun o =>
-            Eq.trans
-              (by 
-                dsimp <;> congr)
-              (to_of_option o)⟩
+noncomputable
+def equiv_option : «expr ≃ »(part α, option α) :=
+by haveI [] [] [":=", expr classical.dec]; exact [expr ⟨λ
+  o, to_option o, of_option, λ o, of_to_option o, λ o, eq.trans (by dsimp [] [] [] []; congr) (to_of_option o)⟩]
 
 /-- We give `part α` the order where everything is greater than `none`. -/
 instance  : PartialOrderₓ (Part α) :=
   { le := fun x y => ∀ i, i ∈ x → i ∈ y, le_refl := fun x y => id, le_trans := fun x y z f g i => g _ ∘ f _,
     le_antisymm := fun x y f g => Part.ext$ fun z => ⟨f _, g _⟩ }
 
--- error in Data.Part: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Part: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
 instance : order_bot (part α) :=
 { bot := none, bot_le := by { introv [ident x], rintro ["⟨", "⟨", "_", "⟩", ",", "_", "⟩"] } }
 

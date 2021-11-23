@@ -190,7 +190,7 @@ theorem support_C_mul_X_pow' {c : R} {n : ℕ} : (C c*X ^ n).Support ⊆ singlet
     rw [C_mul_X_pow_eq_monomial]
     exact support_monomial' n c
 
--- error in Data.Polynomial.Coeff: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Polynomial.Coeff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem coeff_X_add_one_pow
 (R : Type*)
 [semiring R]

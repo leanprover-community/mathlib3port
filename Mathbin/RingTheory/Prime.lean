@@ -15,53 +15,40 @@ open Finset
 
 open_locale BigOperators
 
+-- error in RingTheory.Prime: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `x * y = a * ∏ i in s, p i` where `p i` is always prime, then
   `x` and `y` can both be written as a divisor of `a` multiplied by
   a product over a subset of `s`  -/
-theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Finset α} {p : α → R}
-  (hp : ∀ i _ : i ∈ s, Prime (p i)) (hx : (x*y) = a*∏i in s, p i) :
-  ∃ (t u : Finset α)(b c : R), t ∪ u = s ∧ Disjoint t u ∧ (a = b*c) ∧ (x = b*∏i in t, p i) ∧ y = c*∏i in u, p i :=
-  by 
-    induction' s using Finset.induction with i s his ih generalizing x y a
-    ·
-      exact
-        ⟨∅, ∅, x, y,
-          by 
-            simp [hx]⟩
-    ·
-      rw [prod_insert his, ←mul_assocₓ] at hx 
-      have hpi : Prime (p i)
-      ·
-        exact hp i (mem_insert_self _ _)
-      rcases ih (fun i hi => hp i (mem_insert_of_mem hi)) hx with ⟨t, u, b, c, htus, htu, hbc, rfl, rfl⟩
-      have hit : i ∉ t 
-      exact fun hit => his (htus ▸ mem_union_left _ hit)
-      have hiu : i ∉ u 
-      exact fun hiu => his (htus ▸ mem_union_right _ hiu)
-      obtain ⟨d, rfl⟩ | ⟨d, rfl⟩ : p i ∣ b ∨ p i ∣ c 
-      exact
-        hpi.dvd_or_dvd
-          ⟨a,
-            by 
-              rw [←hbc, mul_commₓ]⟩
-      ·
-        rw [mul_assocₓ, mul_commₓ a, mul_right_inj' hpi.ne_zero] at hbc 
-        exact
-          ⟨insert i t, u, d, c,
-            by 
-              rw [insert_union, htus],
-            disjoint_insert_left.2 ⟨hiu, htu⟩,
-            by 
-              simp [hbc, prod_insert hit, mul_assocₓ, mul_commₓ, mul_left_commₓ]⟩
-      ·
-        rw [←mul_assocₓ, mul_right_commₓ b, mul_left_inj' hpi.ne_zero] at hbc 
-        exact
-          ⟨t, insert i u, b, d,
-            by 
-              rw [union_insert, htus],
-            disjoint_insert_right.2 ⟨hit, htu⟩,
-            by 
-              simp [←hbc, prod_insert hiu, mul_assocₓ, mul_commₓ, mul_left_commₓ]⟩
+theorem mul_eq_mul_prime_prod
+{α : Type*}
+[decidable_eq α]
+{x y a : R}
+{s : finset α}
+{p : α → R}
+(hp : ∀ i «expr ∈ » s, prime (p i))
+(hx : «expr = »(«expr * »(x, y), «expr * »(a, «expr∏ in , »((i), s, p i)))) : «expr∃ , »((t u : finset α)
+ (b
+  c : R), «expr ∧ »(«expr = »(«expr ∪ »(t, u), s), «expr ∧ »(disjoint t u, «expr ∧ »(«expr = »(a, «expr * »(b, c)), «expr ∧ »(«expr = »(x, «expr * »(b, «expr∏ in , »((i), t, p i))), «expr = »(y, «expr * »(c, «expr∏ in , »((i), u, p i)))))))) :=
+begin
+  induction [expr s] ["using", ident finset.induction] ["with", ident i, ident s, ident his, ident ih] ["generalizing", ident x, ident y, ident a],
+  { exact [expr ⟨«expr∅»(), «expr∅»(), x, y, by simp [] [] [] ["[", expr hx, "]"] [] []⟩] },
+  { rw ["[", expr prod_insert his, ",", "<-", expr mul_assoc, "]"] ["at", ident hx],
+    have [ident hpi] [":", expr prime (p i)] [],
+    { exact [expr hp i (mem_insert_self _ _)] },
+    rcases [expr ih (λ
+      i
+      hi, hp i (mem_insert_of_mem hi)) hx, "with", "⟨", ident t, ",", ident u, ",", ident b, ",", ident c, ",", ident htus, ",", ident htu, ",", ident hbc, ",", ident rfl, ",", ident rfl, "⟩"],
+    have [ident hit] [":", expr «expr ∉ »(i, t)] [],
+    from [expr λ hit, his «expr ▸ »(htus, mem_union_left _ hit)],
+    have [ident hiu] [":", expr «expr ∉ »(i, u)] [],
+    from [expr λ hiu, his «expr ▸ »(htus, mem_union_right _ hiu)],
+    obtain ["⟨", ident d, ",", ident rfl, "⟩", "|", "⟨", ident d, ",", ident rfl, "⟩", ":", expr «expr ∨ »(«expr ∣ »(p i, b), «expr ∣ »(p i, c))],
+    from [expr hpi.dvd_or_dvd ⟨a, by rw ["[", "<-", expr hbc, ",", expr mul_comm, "]"] []⟩],
+    { rw ["[", expr mul_assoc, ",", expr mul_comm a, ",", expr mul_right_inj' hpi.ne_zero, "]"] ["at", ident hbc],
+      exact [expr ⟨insert i t, u, d, c, by rw ["[", expr insert_union, ",", expr htus, "]"] [], disjoint_insert_left.2 ⟨hiu, htu⟩, by simp [] [] [] ["[", expr hbc, ",", expr prod_insert hit, ",", expr mul_assoc, ",", expr mul_comm, ",", expr mul_left_comm, "]"] [] []⟩] },
+    { rw ["[", "<-", expr mul_assoc, ",", expr mul_right_comm b, ",", expr mul_left_inj' hpi.ne_zero, "]"] ["at", ident hbc],
+      exact [expr ⟨t, insert i u, b, d, by rw ["[", expr union_insert, ",", expr htus, "]"] [], disjoint_insert_right.2 ⟨hit, htu⟩, by simp [] [] [] ["[", "<-", expr hbc, ",", expr prod_insert hiu, ",", expr mul_assoc, ",", expr mul_comm, ",", expr mul_left_comm, "]"] [] []⟩] } }
+end
 
 /-- If ` x * y = a * p ^ n` where `p` is prime, then `x` and `y` can both be written
   as the product of a power of `p` and a divisor of `a`. -/

@@ -1,3 +1,4 @@
+import Mathbin.Data.Int.Basic 
 import Mathbin.Data.Multiset.FinsetOps 
 import Mathbin.Tactic.Apply 
 import Mathbin.Tactic.Monotonicity.Default 
@@ -93,7 +94,7 @@ called `top` with `⊤ = univ`.
 * `finset.inter`: see "The lattice structure on subsets of finsets"
 * `finset.erase`: For any `a : α`, `erase s a` returns `s` with the element `a` removed.
 * `finset.sdiff`: Defines the set difference `s \ t` for finsets `s` and `t`.
-* `finset.prod`: Given finsets of `α` and `β`, defines finsets of `α × β`.
+* `finset.product`: Given finsets of `α` and `β`, defines finsets of `α × β`.
   For arbitrary dependent products, see `data.finset.pi`.
 * `finset.sigma`: Given finsets of `α` and `β`, defines finsets of the dependent sum type `Σ α, β`
 * `finset.bUnion`: Finite unions of finsets; given an indexing function `f : α → finset β` and a
@@ -469,6 +470,9 @@ theorem singleton_val (a : α) : ({a} : Finset α).1 = {a} :=
 theorem mem_singleton {a b : α} : b ∈ ({a} : Finset α) ↔ b = a :=
   mem_singleton
 
+theorem eq_of_mem_singleton {x y : α} (h : x ∈ ({y} : Finset α)) : x = y :=
+  mem_singleton.1 h
+
 theorem not_mem_singleton {a b : α} : a ∉ ({b} : Finset α) ↔ a ≠ b :=
   not_congr mem_singleton
 
@@ -822,25 +826,28 @@ theorem nonempty.cons_induction {α : Type _} {s : Finset α} (hs : s.nonempty) 
     ·
       exact h₁ t ha (h ht)
 
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Inserting an element to a finite set is equivalent to the option type. -/
-def subtype_insert_equiv_option {t : Finset α} {x : α} (h : x ∉ t) : { i // i ∈ insert x t } ≃ Option { i // i ∈ t } :=
-  by 
-    refine'
-      { toFun := fun y => if h : «expr↑ » y = x then none else some ⟨y, (mem_insert.mp y.2).resolve_left h⟩,
-        invFun := fun y => y.elim ⟨x, mem_insert_self _ _⟩$ fun z => ⟨z, mem_insert_of_mem z.2⟩, .. }
-    ·
-      intro y 
-      byCases' h : «expr↑ » y = x 
-      simp only [Subtype.ext_iff, h, Option.elim, dif_pos, Subtype.coe_mk]
-      simp only [h, Option.elim, dif_neg, not_false_iff, Subtype.coe_eta, Subtype.coe_mk]
-    ·
-      rintro (_ | y)
-      simp only [Option.elim, dif_pos, Subtype.coe_mk]
-      have  : «expr↑ » y ≠ x
-      ·
-        rintro ⟨⟩
-        exact h y.2
-      simp only [this, Option.elim, Subtype.eta, dif_neg, not_false_iff, Subtype.coe_eta, Subtype.coe_mk]
+def subtype_insert_equiv_option
+{t : finset α}
+{x : α}
+(h : «expr ∉ »(x, t)) : «expr ≃ »({i // «expr ∈ »(i, insert x t)}, option {i // «expr ∈ »(i, t)}) :=
+begin
+  refine [expr { to_fun := λ
+     y, if h : «expr = »(«expr↑ »(y), x) then none else some ⟨y, (mem_insert.mp y.2).resolve_left h⟩,
+     inv_fun := λ y, «expr $ »(y.elim ⟨x, mem_insert_self _ _⟩, λ z, ⟨z, mem_insert_of_mem z.2⟩),
+     .. }],
+  { intro [ident y],
+    by_cases [expr h, ":", expr «expr = »(«expr↑ »(y), x)],
+    simp [] [] ["only"] ["[", expr subtype.ext_iff, ",", expr h, ",", expr option.elim, ",", expr dif_pos, ",", expr subtype.coe_mk, "]"] [] [],
+    simp [] [] ["only"] ["[", expr h, ",", expr option.elim, ",", expr dif_neg, ",", expr not_false_iff, ",", expr subtype.coe_eta, ",", expr subtype.coe_mk, "]"] [] [] },
+  { rintro ["(", "_", "|", ident y, ")"],
+    simp [] [] ["only"] ["[", expr option.elim, ",", expr dif_pos, ",", expr subtype.coe_mk, "]"] [] [],
+    have [] [":", expr «expr ≠ »(«expr↑ »(y), x)] [],
+    { rintro ["⟨", "⟩"],
+      exact [expr h y.2] },
+    simp [] [] ["only"] ["[", expr this, ",", expr option.elim, ",", expr subtype.eta, ",", expr dif_neg, ",", expr not_false_iff, ",", expr subtype.coe_eta, ",", expr subtype.coe_mk, "]"] [] [] }
+end
 
 /-! ### union -/
 
@@ -973,17 +980,16 @@ theorem insert_union_distrib (a : α) (s t : Finset α) : insert a (s ∪ t) = i
   by 
     simp only [insert_union, union_insert, insert_idem]
 
-@[simp]
-theorem union_eq_left_iff_subset {s t : Finset α} : s ∪ t = s ↔ t ⊆ s :=
-  by 
-    split 
-    ·
-      intro h 
-      have  : t ⊆ s ∪ t := subset_union_right _ _ 
-      rwa [h] at this
-    ·
-      intro h 
-      exact subset.antisymm (union_subset (subset.refl _) h) (subset_union_left _ _)
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem union_eq_left_iff_subset {s t : finset α} : «expr ↔ »(«expr = »(«expr ∪ »(s, t), s), «expr ⊆ »(t, s)) :=
+begin
+  split,
+  { assume [binders (h)],
+    have [] [":", expr «expr ⊆ »(t, «expr ∪ »(s, t))] [":=", expr subset_union_right _ _],
+    rwa [expr h] ["at", ident this] },
+  { assume [binders (h)],
+    exact [expr subset.antisymm (union_subset (subset.refl _) h) (subset_union_left _ _)] }
+end
 
 @[simp]
 theorem left_eq_union_iff_subset {s t : Finset α} : s = s ∪ t ↔ t ⊆ s :=
@@ -1073,7 +1079,7 @@ theorem inter_subset_left (s₁ s₂ : Finset α) : s₁ ∩ s₂ ⊆ s₁ :=
 theorem inter_subset_right (s₁ s₂ : Finset α) : s₁ ∩ s₂ ⊆ s₂ :=
   fun a => mem_of_mem_inter_right
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem subset_inter {s₁ s₂ s₃ : finset α} : «expr ⊆ »(s₁, s₂) → «expr ⊆ »(s₁, s₃) → «expr ⊆ »(s₁, «expr ∩ »(s₂, s₃)) :=
 by simp [] [] ["only"] ["[", expr subset_iff, ",", expr mem_inter, "]"] [] [] { contextual := tt }; intros []; split; trivial
 
@@ -1227,7 +1233,7 @@ theorem bot_eq_empty {α : Type u} : (⊥ : Finset α) = ∅ :=
 instance  : SemilatticeSupBot (Finset α) :=
   { Finset.semilatticeInfBot, Finset.lattice with  }
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance : distrib_lattice (finset α) :=
 { le_sup_inf := assume
   a
@@ -1362,6 +1368,16 @@ theorem erase_ssubset {a : α} {s : Finset α} (h : a ∈ s) : s.erase a ⊂ s :
 @[simp]
 theorem erase_eq_of_not_mem {a : α} {s : Finset α} (h : a ∉ s) : erase s a = s :=
   eq_of_veq$ erase_of_not_mem h
+
+theorem erase_idem {a : α} {s : Finset α} : erase (erase s a) a = erase s a :=
+  by 
+    simp 
+
+theorem erase_right_comm {a b : α} {s : Finset α} : erase (erase s a) b = erase (erase s b) a :=
+  by 
+    ext x 
+    simp only [mem_erase, ←and_assoc]
+    rw [and_comm (x ≠ a)]
 
 theorem subset_insert_iff {a : α} {s t : Finset α} : s ⊆ insert a t ↔ erase s a ⊆ t :=
   by 
@@ -1832,7 +1848,7 @@ theorem monotone_filter_right (s : Finset α) ⦃p q : α → Prop⦄ [Decidable
   Multiset.subset_of_le (Multiset.monotone_filter_right s.val h)
 
 @[simp, normCast]
-theorem coe_filter (s : Finset α) : «expr↑ » (s.filter p) = ({ x ∈ «expr↑ » s | p x } : Set α) :=
+theorem coe_filter (s : Finset α) : «expr↑ » (s.filter p) = ({ x∈«expr↑ » s | p x } : Set α) :=
   Set.ext$ fun _ => mem_filter
 
 theorem filter_singleton (a : α) : filter p (singleton a) = if p a then singleton a else ∅ :=
@@ -1877,6 +1893,11 @@ theorem filter_insert (a : α) (s : Finset α) :
     ext x 
     simp 
     splitIfs with h <;> byCases' h' : x = a <;> simp [h, h']
+
+theorem filter_erase (a : α) (s : Finset α) : filter p (erase s a) = erase (filter p s) a :=
+  by 
+    ext x 
+    simp only [and_assoc, mem_filter, iff_selfₓ, mem_erase]
 
 theorem filter_or [DecidablePred fun a => p a ∨ q a] (s : Finset α) :
   (s.filter fun a => p a ∨ q a) = s.filter p ∪ s.filter q :=
@@ -1970,7 +1991,7 @@ noncomputable instance  {α : Type _} : HasSep α (Finset α) :=
   ⟨fun p x => x.filter p⟩
 
 @[simp]
-theorem sep_def {α : Type _} (s : Finset α) (p : α → Prop) : { x ∈ s | p x } = s.filter p :=
+theorem sep_def {α : Type _} (s : Finset α) (p : α → Prop) : { x∈s | p x } = s.filter p :=
   rfl
 
 end Classical
@@ -2254,7 +2275,7 @@ theorem to_finset_cons {a : α} {l : List α} : to_finset (a :: l) = insert a (t
     by 
       byCases' h : a ∈ l <;> simp [Finset.insert_val', Multiset.erase_dup_cons, h]
 
-theorem to_finset_surj_on : Set.SurjOn to_finset { l : List α | l.nodup } Set.Univ :=
+theorem to_finset_surj_on : Set.SurjOn to_finset { l:List α | l.nodup } Set.Univ :=
   by 
     rintro s -
     cases' s with t hl 
@@ -2292,6 +2313,11 @@ theorem to_finset_append {l l' : List α} : to_finset (l ++ l') = l.to_finset �
 @[simp]
 theorem to_finset_reverse {l : List α} : to_finset l.reverse = l.to_finset :=
   to_finset_eq_of_perm _ _ (reverse_perm l)
+
+theorem to_finset_repeat_of_ne_zero {a : α} {n : ℕ} (hn : n ≠ 0) : (List.repeat a n).toFinset = {a} :=
+  by 
+    ext x 
+    simp [hn, List.mem_repeat]
 
 @[simp]
 theorem to_finset_union (l l' : List α) : (l ∪ l').toFinset = l.to_finset ∪ l'.to_finset :=
@@ -2769,21 +2795,25 @@ theorem map_subtype_subset {t : Set α} (s : Finset t) : «expr↑ » (s.map (em
     rw [mem_coe] at ha 
     convert property_of_mem_map_subtype s ha
 
-theorem subset_image_iff {f : α → β} {s : Finset β} {t : Set α} :
-  «expr↑ » s ⊆ f '' t ↔ ∃ s' : Finset α, «expr↑ » s' ⊆ t ∧ s'.image f = s :=
-  by 
-    split 
-    swap
-    ·
-      rintro ⟨s, hs, rfl⟩
-      rw [coe_image]
-      exact Set.image_subset f hs 
-    intro h 
-    letI this : CanLift β t := ⟨f ∘ coeₓ, fun y => y ∈ f '' t, fun y ⟨x, hxt, hy⟩ => ⟨⟨x, hxt⟩, hy⟩⟩
-    lift s to Finset t using h 
-    refine' ⟨s.map (embedding.subtype _), map_subtype_subset _, _⟩
-    ext y 
-    simp 
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem subset_image_iff
+{f : α → β}
+{s : finset β}
+{t : set α} : «expr ↔ »(«expr ⊆ »(«expr↑ »(s), «expr '' »(f, t)), «expr∃ , »((s' : finset α), «expr ∧ »(«expr ⊆ »(«expr↑ »(s'), t), «expr = »(s'.image f, s)))) :=
+begin
+  split,
+  swap,
+  { rintro ["⟨", ident s, ",", ident hs, ",", ident rfl, "⟩"],
+    rw ["[", expr coe_image, "]"] [],
+    exact [expr set.image_subset f hs] },
+  intro [ident h],
+  letI [] [":", expr can_lift β t] [":=", expr ⟨«expr ∘ »(f, coe), λ
+    y, «expr ∈ »(y, «expr '' »(f, t)), λ (y) ⟨x, hxt, hy⟩, ⟨⟨x, hxt⟩, hy⟩⟩],
+  lift [expr s] ["to", expr finset t] ["using", expr h] [],
+  refine [expr ⟨s.map (embedding.subtype _), map_subtype_subset _, _⟩],
+  ext [] [ident y] [],
+  simp [] [] [] [] [] []
+end
 
 end Image
 
@@ -2997,19 +3027,22 @@ theorem card_image_of_inj_on [DecidableEq β] {f : α → β} {s : Finset α} (H
   by 
     simp only [card, image_val_of_inj_on H, card_map]
 
-theorem inj_on_of_card_image_eq [DecidableEq β] {f : α → β} {s : Finset α} (H : card (image f s) = card s) :
-  Set.InjOn f s :=
-  by 
-    change (s.1.map f).eraseDup.card = s.1.card at H 
-    have  : (s.1.map f).eraseDup = s.1.map f
-    ·
-      apply Multiset.eq_of_le_of_card_le
-      ·
-        apply Multiset.erase_dup_le 
-      rw [H]
-      simp only [Multiset.card_map]
-    rw [Multiset.erase_dup_eq_self] at this 
-    apply inj_on_of_nodup_map this
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem inj_on_of_card_image_eq
+[decidable_eq β]
+{f : α → β}
+{s : finset α}
+(H : «expr = »(card (image f s), card s)) : set.inj_on f s :=
+begin
+  change [expr «expr = »((s.1.map f).erase_dup.card, s.1.card)] [] ["at", ident H],
+  have [] [":", expr «expr = »((s.1.map f).erase_dup, s.1.map f)] [],
+  { apply [expr multiset.eq_of_le_of_card_le],
+    { apply [expr multiset.erase_dup_le] },
+    rw [expr H] [],
+    simp [] [] ["only"] ["[", expr multiset.card_map, "]"] [] [] },
+  rw [expr multiset.erase_dup_eq_self] ["at", ident this],
+  apply [expr inj_on_of_nodup_map this]
+end
 
 theorem card_image_eq_iff_inj_on [DecidableEq β] {f : α → β} {s : Finset α} :
   (s.image f).card = s.card ↔ Set.InjOn f s :=
@@ -3033,27 +3066,37 @@ theorem card_subtype (p : α → Prop) [DecidablePred p] (s : Finset α) : (s.su
   by 
     simp [Finset.subtype]
 
-theorem card_eq_of_bijective {s : Finset α} {n : ℕ} (f : ∀ i, i < n → α)
-  (hf : ∀ a _ : a ∈ s, ∃ i, ∃ h : i < n, f i h = a) (hf' : ∀ i h : i < n, f i h ∈ s)
-  (f_inj : ∀ i j hi : i < n hj : j < n, f i hi = f j hj → i = j) : card s = n :=
-  by 
-    classical 
-    have  : ∀ a : α, a ∈ s ↔ ∃ (i : _)(hi : i ∈ range n), f i (mem_range.1 hi) = a 
-    exact
-      fun a =>
-        ⟨fun ha =>
-            let ⟨i, hi, Eq⟩ := hf a ha
-            ⟨i, mem_range.2 hi, Eq⟩,
-          fun ⟨i, hi, Eq⟩ => Eq ▸ hf' i (mem_range.1 hi)⟩
-    have  : s = ((range n).attach.Image$ fun i => f i.1 (mem_range.1 i.2))
-    ·
-      simpa only [ext_iff, mem_image, exists_prop, Subtype.exists, mem_attach, true_andₓ]
-    calc card s = card ((range n).attach.Image$ fun i => f i.1 (mem_range.1 i.2)) :=
-      by 
-        rw [this]_ = card (range n).attach :=
-      card_image_of_injective _$
-        fun ⟨i, hi⟩ ⟨j, hj⟩ eq => Subtype.eq$ f_inj i j (mem_range.1 hi) (mem_range.1 hj) Eq _ = card (range n) :=
-      card_attach _ = n := card_range n
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem card_eq_of_bijective
+{s : finset α}
+{n : exprℕ()}
+(f : ∀ i, «expr < »(i, n) → α)
+(hf : ∀ a «expr ∈ » s, «expr∃ , »((i), «expr∃ , »((h : «expr < »(i, n)), «expr = »(f i h, a))))
+(hf' : ∀ (i) (h : «expr < »(i, n)), «expr ∈ »(f i h, s))
+(f_inj : ∀
+ (i j)
+ (hi : «expr < »(i, n))
+ (hj : «expr < »(j, n)), «expr = »(f i hi, f j hj) → «expr = »(i, j)) : «expr = »(card s, n) :=
+begin
+  classical,
+  have [] [":", expr ∀
+   a : α, «expr ↔ »(«expr ∈ »(a, s), «expr∃ , »((i)
+     (hi : «expr ∈ »(i, range n)), «expr = »(f i (mem_range.1 hi), a)))] [],
+  from [expr assume
+   a, ⟨assume ha, let ⟨i, hi, eq⟩ := hf a ha in
+    ⟨i, mem_range.2 hi, eq⟩, assume ⟨i, hi, eq⟩, «expr ▸ »(eq, hf' i (mem_range.1 hi))⟩],
+  have [] [":", expr «expr = »(s, «expr $ »((range n).attach.image, λ i, f i.1 (mem_range.1 i.2)))] [],
+  by simpa [] [] ["only"] ["[", expr ext_iff, ",", expr mem_image, ",", expr exists_prop, ",", expr subtype.exists, ",", expr mem_attach, ",", expr true_and, "]"] [] [],
+  calc
+    «expr = »(card s, card «expr $ »((range n).attach.image, λ
+      i, f i.1 (mem_range.1 i.2))) : by rw ["[", expr this, "]"] []
+    «expr = »(..., card (range n).attach) : «expr $ »(card_image_of_injective _, assume
+     ⟨i, hi⟩
+     ⟨j, hj⟩
+     (eq), «expr $ »(subtype.eq, f_inj i j (mem_range.1 hi) (mem_range.1 hj) eq))
+    «expr = »(..., card (range n)) : card_attach
+    «expr = »(..., n) : card_range n
+end
 
 theorem card_eq_succ [DecidableEq α] {s : Finset α} {n : ℕ} :
   (s.card = n+1) ↔ ∃ a t, a ∉ t ∧ insert a t = s ∧ card t = n :=
@@ -3115,28 +3158,20 @@ theorem card_le_card_of_inj_on {s : Finset α} {t : Finset β} (f : α → β) (
         rw [card_image_of_inj_on f_inj]_ ≤ card t :=
       card_le_of_subset$ image_subset_iff.2 hf
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /--
 If there are more pigeons than pigeonholes, then there are two pigeons
 in the same pigeonhole.
 -/
-theorem exists_ne_map_eq_of_card_lt_of_maps_to
-{s : finset α}
-{t : finset β}
-(hc : «expr < »(t.card, s.card))
-{f : α → β}
-(hf : ∀
- a «expr ∈ » s, «expr ∈ »(f a, t)) : «expr∃ , »((x «expr ∈ » s)
- (y «expr ∈ » s), «expr ∧ »(«expr ≠ »(x, y), «expr = »(f x, f y))) :=
-begin
-  classical,
-  by_contra [ident hz],
-  push_neg ["at", ident hz],
-  refine [expr hc.not_le (card_le_card_of_inj_on f hf _)],
-  intros [ident x, ident hx, ident y, ident hy],
-  contrapose [] [],
-  exact [expr hz x hx y hy]
-end
+theorem exists_ne_map_eq_of_card_lt_of_maps_to {s : Finset α} {t : Finset β} (hc : t.card < s.card) {f : α → β}
+  (hf : ∀ a _ : a ∈ s, f a ∈ t) : ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x ≠ y ∧ f x = f y :=
+  by 
+    classical 
+    byContra hz 
+    pushNeg  at hz 
+    refine' hc.not_le (card_le_card_of_inj_on f hf _)
+    intro x hx y hy 
+    contrapose 
+    exact hz x hx y hy
 
 theorem le_card_of_inj_on_range {n} {s : Finset α} (f : ℕ → α) (hf : ∀ i _ : i < n, f i ∈ s)
   (f_inj : ∀ i _ : i < n j _ : j < n, f i = f j → i = j) : n ≤ card s :=
@@ -3214,28 +3249,23 @@ theorem strong_downward_induction_on_eq {p : Finset α → Sort _} (s : Finset �
     dunfold strong_downward_induction_on 
     rw [strong_downward_induction]
 
-theorem card_congr {s : Finset α} {t : Finset β} (f : ∀ a _ : a ∈ s, β) (h₁ : ∀ a ha, f a ha ∈ t)
-  (h₂ : ∀ a b ha hb, f a ha = f b hb → a = b) (h₃ : ∀ b _ : b ∈ t, ∃ a ha, f a ha = b) : s.card = t.card :=
-  by 
-    haveI  := Classical.propDecidable <;>
-      exact
-        calc s.card = s.attach.card := card_attach.symm 
-          _ = (s.attach.image fun a : { a // a ∈ s } => f a.1 a.2).card :=
-          Eq.symm (card_image_of_injective _ fun a b h => Subtype.eq (h₂ _ _ _ _ h))
-          _ = t.card :=
-          congr_argₓ card
-            (Finset.ext$
-              fun b =>
-                ⟨fun h =>
-                    let ⟨a, ha₁, ha₂⟩ := mem_image.1 h 
-                    ha₂ ▸ h₁ _ _,
-                  fun h =>
-                    let ⟨a, ha₁, ha₂⟩ := h₃ b h 
-                    mem_image.2
-                      ⟨⟨a, ha₁⟩,
-                        by 
-                          simp [ha₂]⟩⟩)
-          
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem card_congr
+{s : finset α}
+{t : finset β}
+(f : ∀ a «expr ∈ » s, β)
+(h₁ : ∀ a ha, «expr ∈ »(f a ha, t))
+(h₂ : ∀ a b ha hb, «expr = »(f a ha, f b hb) → «expr = »(a, b))
+(h₃ : ∀ b «expr ∈ » t, «expr∃ , »((a ha), «expr = »(f a ha, b))) : «expr = »(s.card, t.card) :=
+by haveI [] [] [":=", expr classical.prop_decidable]; exact [expr calc
+   «expr = »(s.card, s.attach.card) : card_attach.symm
+   «expr = »(..., (s.attach.image (λ
+      a : {a // «expr ∈ »(a, s)}, f a.1 a.2)).card) : eq.symm (card_image_of_injective _ (λ
+     a b h, subtype.eq (h₂ _ _ _ _ h)))
+   «expr = »(..., t.card) : congr_arg card «expr $ »(finset.ext, λ
+    b, ⟨λ h, let ⟨a, ha₁, ha₂⟩ := mem_image.1 h in
+     «expr ▸ »(ha₂, h₁ _ _), λ h, let ⟨a, ha₁, ha₂⟩ := h₃ b h in
+     mem_image.2 ⟨⟨a, ha₁⟩, by simp [] [] [] ["[", expr ha₂, "]"] [] []⟩⟩)]
 
 theorem card_union_add_card_inter [DecidableEq α] (s t : Finset α) : ((s ∪ t).card+(s ∩ t).card) = s.card+t.card :=
   Finset.induction_on t
@@ -3255,53 +3285,60 @@ theorem card_union_eq [DecidableEq α] {s t : Finset α} (h : Disjoint s t) : (s
     rw [card_eq_zero]
     rwa [disjoint_iff] at h
 
-theorem surj_on_of_inj_on_of_card_le {s : Finset α} {t : Finset β} (f : ∀ a _ : a ∈ s, β) (hf : ∀ a ha, f a ha ∈ t)
-  (hinj : ∀ a₁ a₂ ha₁ ha₂, f a₁ ha₁ = f a₂ ha₂ → a₁ = a₂) (hst : card t ≤ card s) : ∀ b _ : b ∈ t, ∃ a ha, b = f a ha :=
-  by 
-    haveI  := Classical.decEq β <;>
-      exact
-        fun b hb =>
-          have h : card (image (fun a : { a // a ∈ s } => f a a.prop) (attach s)) = card s :=
-            @card_attach _ s ▸ card_image_of_injective _ fun ⟨a₁, ha₁⟩ ⟨a₂, ha₂⟩ h => Subtype.eq$ hinj _ _ _ _ h 
-          have h₁ : image (fun a : { a // a ∈ s } => f a a.prop) s.attach = t :=
-            eq_of_subset_of_card_le
-              (fun b h =>
-                let ⟨a, ha₁, ha₂⟩ := mem_image.1 h 
-                ha₂ ▸ hf _ _)
-              (by 
-                simp [hst, h])
-          by 
-            rw [←h₁] at hb 
-            rcases mem_image.1 hb with ⟨a, ha₁, ha₂⟩
-            exact ⟨a, a.2, ha₂.symm⟩
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem surj_on_of_inj_on_of_card_le
+{s : finset α}
+{t : finset β}
+(f : ∀ a «expr ∈ » s, β)
+(hf : ∀ a ha, «expr ∈ »(f a ha, t))
+(hinj : ∀ a₁ a₂ ha₁ ha₂, «expr = »(f a₁ ha₁, f a₂ ha₂) → «expr = »(a₁, a₂))
+(hst : «expr ≤ »(card t, card s)) : ∀ b «expr ∈ » t, «expr∃ , »((a ha), «expr = »(b, f a ha)) :=
+by haveI [] [] [":=", expr classical.dec_eq β]; exact [expr λ
+ b
+ hb, have h : «expr = »(card (image (λ
+    a : {a // «expr ∈ »(a, s)}, f a a.prop) (attach s)), card s), from «expr ▸ »(@card_attach _ s, card_image_of_injective _ (λ
+   ⟨a₁, ha₁⟩
+   ⟨a₂, ha₂⟩
+   (h), «expr $ »(subtype.eq, hinj _ _ _ _ h))),
+ have h₁ : «expr = »(image (λ
+   a : {a // «expr ∈ »(a, s)}, f a a.prop) s.attach, t) := eq_of_subset_of_card_le (λ
+  b h, let ⟨a, ha₁, ha₂⟩ := mem_image.1 h in
+  «expr ▸ »(ha₂, hf _ _)) (by simp [] [] [] ["[", expr hst, ",", expr h, "]"] [] []),
+ begin
+   rw ["<-", expr h₁] ["at", ident hb],
+   rcases [expr mem_image.1 hb, "with", "⟨", ident a, ",", ident ha₁, ",", ident ha₂, "⟩"],
+   exact [expr ⟨a, a.2, ha₂.symm⟩]
+ end]
 
 open Function
 
-theorem inj_on_of_surj_on_of_card_le {s : Finset α} {t : Finset β} (f : ∀ a _ : a ∈ s, β) (hf : ∀ a ha, f a ha ∈ t)
-  (hsurj : ∀ b _ : b ∈ t, ∃ a ha, b = f a ha) (hst : card s ≤ card t) ⦃a₁ a₂⦄ (ha₁ : a₁ ∈ s) (ha₂ : a₂ ∈ s)
-  (ha₁a₂ : f a₁ ha₁ = f a₂ ha₂) : a₁ = a₂ :=
-  by 
-    haveI  : Inhabited { x // x ∈ s } := ⟨⟨a₁, ha₁⟩⟩ <;>
-      exact
-        let f' : { x // x ∈ s } → { x // x ∈ t } := fun x => ⟨f x.1 x.2, hf x.1 x.2⟩
-        let g : { x // x ∈ t } → { x // x ∈ s } :=
-          @surj_inv _ _ f'
-            fun x =>
-              let ⟨y, hy₁, hy₂⟩ := hsurj x.1 x.2
-              ⟨⟨y, hy₁⟩, Subtype.eq hy₂.symm⟩
-        have hg : injective g := injective_surj_inv _ 
-        have hsg : surjective g :=
-          fun x =>
-            let ⟨y, hy⟩ :=
-              surj_on_of_inj_on_of_card_le (fun x : { x // x ∈ t } hx : x ∈ t.attach => g x)
-                (fun x _ => show g x ∈ s.attach from mem_attach _ _) (fun x y _ _ hxy => hg hxy)
-                (by 
-                  simpa)
-                x (mem_attach _ _)
-            ⟨y, hy.snd.symm⟩
-        have hif : injective f' :=
-          (left_inverse_of_surjective_of_right_inverse hsg (right_inverse_surj_inv _)).Injective 
-        Subtype.ext_iff_val.1 (@hif ⟨a₁, ha₁⟩ ⟨a₂, ha₂⟩ (Subtype.eq ha₁a₂))
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem inj_on_of_surj_on_of_card_le
+{s : finset α}
+{t : finset β}
+(f : ∀ a «expr ∈ » s, β)
+(hf : ∀ a ha, «expr ∈ »(f a ha, t))
+(hsurj : ∀ b «expr ∈ » t, «expr∃ , »((a ha), «expr = »(b, f a ha)))
+(hst : «expr ≤ »(card s, card t))
+{{a₁ a₂}}
+(ha₁ : «expr ∈ »(a₁, s))
+(ha₂ : «expr ∈ »(a₂, s))
+(ha₁a₂ : «expr = »(f a₁ ha₁, f a₂ ha₂)) : «expr = »(a₁, a₂) :=
+by haveI [] [":", expr inhabited {x // «expr ∈ »(x, s)}] [":=", expr ⟨⟨a₁, ha₁⟩⟩]; exact [expr let f' : {x // «expr ∈ »(x, s)} → {x // «expr ∈ »(x, t)} := λ
+     x, ⟨f x.1 x.2, hf x.1 x.2⟩ in
+ let g : {x // «expr ∈ »(x, t)} → {x // «expr ∈ »(x, s)} := @surj_inv _ _ f' (λ x, let ⟨y, hy₁, hy₂⟩ := hsurj x.1 x.2 in
+      ⟨⟨y, hy₁⟩, subtype.eq hy₂.symm⟩) in
+ have hg : injective g, from injective_surj_inv _,
+ have hsg : surjective g, from λ
+ x, let ⟨y, hy⟩ := surj_on_of_inj_on_of_card_le (λ
+      (x : {x // «expr ∈ »(x, t)})
+      (hx : «expr ∈ »(x, t.attach)), g x) (λ
+      x
+      _, show «expr ∈ »(g x, s.attach), from mem_attach _ _) (λ
+      x y _ _ hxy, hg hxy) (by simpa [] [] [] [] [] []) x (mem_attach _ _) in
+ ⟨y, hy.snd.symm⟩,
+ have hif : injective f', from (left_inverse_of_surjective_of_right_inverse hsg (right_inverse_surj_inv _)).injective,
+ subtype.ext_iff_val.1 (@hif ⟨a₁, ha₁⟩ ⟨a₂, ha₂⟩ (subtype.eq ha₁a₂))]
 
 end Card
 
@@ -3390,7 +3427,7 @@ theorem bUnion_insert [DecidableEq α] {a : α} : (insert a s).bUnion t = t a �
         simp only [mem_bUnion, exists_prop, mem_union, mem_insert, or_and_distrib_right, exists_or_distrib,
           exists_eq_left]
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem bUnion_congr
 {s₁ s₂ : finset α}
 {t₁ t₂ : α → finset β}
@@ -3418,25 +3455,23 @@ theorem inter_bUnion (t : Finset β) (s : Finset α) (f : α → Finset β) : t 
   by 
     rw [inter_comm, bUnion_inter] <;> simp [inter_comm]
 
-theorem image_bUnion [DecidableEq γ] {f : α → β} {s : Finset α} {t : β → Finset γ} :
-  (s.image f).bUnion t = s.bUnion fun a => t (f a) :=
-  by 
-    haveI  := Classical.decEq α <;>
-      exact
-        Finset.induction_on s rfl
-          fun a s has ih =>
-            by 
-              simp only [image_insert, bUnion_insert, ih]
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem image_bUnion
+[decidable_eq γ]
+{f : α → β}
+{s : finset α}
+{t : β → finset γ} : «expr = »((s.image f).bUnion t, s.bUnion (λ a, t (f a))) :=
+by haveI [] [] [":=", expr classical.dec_eq α]; exact [expr finset.induction_on s rfl (λ
+  a s has ih, by simp [] [] ["only"] ["[", expr image_insert, ",", expr bUnion_insert, ",", expr ih, "]"] [] [])]
 
-theorem bUnion_image [DecidableEq γ] {s : Finset α} {t : α → Finset β} {f : β → γ} :
-  (s.bUnion t).Image f = s.bUnion fun a => (t a).Image f :=
-  by 
-    haveI  := Classical.decEq α <;>
-      exact
-        Finset.induction_on s rfl
-          fun a s has ih =>
-            by 
-              simp only [bUnion_insert, image_union, ih]
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem bUnion_image
+[decidable_eq γ]
+{s : finset α}
+{t : α → finset β}
+{f : β → γ} : «expr = »((s.bUnion t).image f, s.bUnion (λ a, (t a).image f)) :=
+by haveI [] [] [":=", expr classical.dec_eq α]; exact [expr finset.induction_on s rfl (λ
+  a s has ih, by simp [] [] ["only"] ["[", expr bUnion_insert, ",", expr image_union, ",", expr ih, "]"] [] [])]
 
 theorem bUnion_bUnion [DecidableEq γ] (s : Finset α) (f : α → Finset β) (g : β → Finset γ) :
   (s.bUnion f).bUnion g = s.bUnion fun a => (f a).bUnion g :=
@@ -3696,7 +3731,7 @@ theorem card_sdiff_add_card {s t : Finset α} : ((s \ t).card+t.card) = (s ∪ t
   by 
     rw [←card_disjoint_union sdiff_disjoint, sdiff_union_self_eq_union]
 
--- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem disjoint_filter
 {s : finset α}
 {p q : α → exprProp()}
@@ -3722,38 +3757,37 @@ theorem filter_card_add_filter_neg_card_eq_card {α : Type _} {s : Finset α} (p
 
 end Disjoint
 
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given a set A and a set B inside it, we can shrink A to any appropriate size, and keep B
 inside it.
 -/
-theorem exists_intermediate_set {A B : Finset α} (i : ℕ) (h₁ : (i+card B) ≤ card A) (h₂ : B ⊆ A) :
-  ∃ C : Finset α, B ⊆ C ∧ C ⊆ A ∧ card C = i+card B :=
-  by 
-    classical 
-    rcases Nat.Le.dest h₁ with ⟨k, _⟩
-    clear h₁ 
-    induction' k with k ih generalizing A
-    ·
-      exact ⟨A, h₂, subset.refl _, h.symm⟩
-    ·
-      have  : (A \ B).Nonempty
-      ·
-        rw [←card_pos, card_sdiff h₂, ←h, Nat.add_right_comm, add_tsub_cancel_right, Nat.add_succ]
-        apply Nat.succ_posₓ 
-      rcases this with ⟨a, ha⟩
-      have z : ((i+card B)+k) = card (erase A a)
-      ·
-        rw [card_erase_of_mem, ←h, Nat.add_succ, Nat.pred_succ]
-        rw [mem_sdiff] at ha 
-        exact ha.1
-      rcases ih _ z with ⟨B', hB', B'subA', cards⟩
-      ·
-        exact ⟨B', hB', trans B'subA' (erase_subset _ _), cards⟩
-      ·
-        rintro t th 
-        apply mem_erase_of_ne_of_mem _ (h₂ th)
-        rintro rfl 
-        exact not_mem_sdiff_of_mem_right th ha
+theorem exists_intermediate_set
+{A B : finset α}
+(i : exprℕ())
+(h₁ : «expr ≤ »(«expr + »(i, card B), card A))
+(h₂ : «expr ⊆ »(B, A)) : «expr∃ , »((C : finset α), «expr ∧ »(«expr ⊆ »(B, C), «expr ∧ »(«expr ⊆ »(C, A), «expr = »(card C, «expr + »(i, card B))))) :=
+begin
+  classical,
+  rcases [expr nat.le.dest h₁, "with", "⟨", ident k, ",", "_", "⟩"],
+  clear [ident h₁],
+  induction [expr k] [] ["with", ident k, ident ih] ["generalizing", ident A],
+  { exact [expr ⟨A, h₂, subset.refl _, h.symm⟩] },
+  { have [] [":", expr «expr \ »(A, B).nonempty] [],
+    { rw ["[", "<-", expr card_pos, ",", expr card_sdiff h₂, ",", "<-", expr h, ",", expr nat.add_right_comm, ",", expr add_tsub_cancel_right, ",", expr nat.add_succ, "]"] [],
+      apply [expr nat.succ_pos] },
+    rcases [expr this, "with", "⟨", ident a, ",", ident ha, "⟩"],
+    have [ident z] [":", expr «expr = »(«expr + »(«expr + »(i, card B), k), card (erase A a))] [],
+    { rw ["[", expr card_erase_of_mem, ",", "<-", expr h, ",", expr nat.add_succ, ",", expr nat.pred_succ, "]"] [],
+      rw [expr mem_sdiff] ["at", ident ha],
+      exact [expr ha.1] },
+    rcases [expr ih _ z, "with", "⟨", ident B', ",", ident hB', ",", ident B'subA', ",", ident cards, "⟩"],
+    { exact [expr ⟨B', hB', trans B'subA' (erase_subset _ _), cards⟩] },
+    { rintros [ident t, ident th],
+      apply [expr mem_erase_of_ne_of_mem _ (h₂ th)],
+      rintro [ident rfl],
+      exact [expr not_mem_sdiff_of_mem_right th ha] } }
+end
 
 /-- We can shrink A to any smaller size. -/
 theorem exists_smaller_set (A : Finset α) (i : ℕ) (h₁ : i ≤ card A) : ∃ B : Finset α, B ⊆ A ∧ card B = i :=
@@ -3764,19 +3798,21 @@ theorem exists_smaller_set (A : Finset α) (i : ℕ) (h₁ : i ≤ card A) : ∃
       (empty_subset A)
   ⟨B, x₁, x₂⟩
 
-theorem exists_subset_or_subset_of_two_mul_lt_card [DecidableEq α] {X Y : Finset α} {n : ℕ}
-  (hXY : (2*n) < (X ∪ Y).card) : ∃ C : Finset α, n < C.card ∧ (C ⊆ X ∨ C ⊆ Y) :=
-  by 
-    have h₁ : (X ∩ (Y \ X)).card = 0 := finset.card_eq_zero.mpr (Finset.inter_sdiff_self X Y)
-    have h₂ : (X ∪ Y).card = X.card+(Y \ X).card
-    ·
-      rw [←card_union_add_card_inter X (Y \ X), Finset.union_sdiff_self_eq_union, h₁, add_zeroₓ]
-    rw [h₂, two_mul] at hXY 
-    rcases lt_or_lt_of_add_lt_add hXY with (h | h)
-    ·
-      exact ⟨X, h, Or.inl (Finset.Subset.refl X)⟩
-    ·
-      exact ⟨Y \ X, h, Or.inr (Finset.sdiff_subset Y X)⟩
+-- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_subset_or_subset_of_two_mul_lt_card
+[decidable_eq α]
+{X Y : finset α}
+{n : exprℕ()}
+(hXY : «expr < »(«expr * »(2, n), «expr ∪ »(X, Y).card)) : «expr∃ , »((C : finset α), «expr ∧ »(«expr < »(n, C.card), «expr ∨ »(«expr ⊆ »(C, X), «expr ⊆ »(C, Y)))) :=
+begin
+  have [ident h₁] [":", expr «expr = »(«expr ∩ »(X, «expr \ »(Y, X)).card, 0)] [":=", expr finset.card_eq_zero.mpr (finset.inter_sdiff_self X Y)],
+  have [ident h₂] [":", expr «expr = »(«expr ∪ »(X, Y).card, «expr + »(X.card, «expr \ »(Y, X).card))] [],
+  { rw ["[", "<-", expr card_union_add_card_inter X «expr \ »(Y, X), ",", expr finset.union_sdiff_self_eq_union, ",", expr h₁, ",", expr add_zero, "]"] [] },
+  rw ["[", expr h₂, ",", expr two_mul, "]"] ["at", ident hXY],
+  rcases [expr lt_or_lt_of_add_lt_add hXY, "with", ident h, "|", ident h],
+  { exact [expr ⟨X, h, or.inl (finset.subset.refl X)⟩] },
+  { exact [expr ⟨«expr \ »(Y, X), h, or.inr (finset.sdiff_subset Y X)⟩] }
+end
 
 /-- `finset.fin_range k` is the finset `{0, 1, ..., k-1}`, as a `finset (fin k)`. -/
 def fin_range (k : ℕ) : Finset (Finₓ k) :=

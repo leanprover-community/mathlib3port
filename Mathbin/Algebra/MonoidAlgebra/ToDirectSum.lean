@@ -112,20 +112,25 @@ theorem to_direct_sum_add [Semiringₓ M] (f g : AddMonoidAlgebra M ι) :
   (f+g).toDirectSum = f.to_direct_sum+g.to_direct_sum :=
   Finsupp.to_dfinsupp_add _ _
 
+-- error in Algebra.MonoidAlgebra.ToDirectSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem to_direct_sum_mul [DecidableEq ι] [AddMonoidₓ ι] [Semiringₓ M] (f g : AddMonoidAlgebra M ι) :
-  (f*g).toDirectSum = f.to_direct_sum*g.to_direct_sum :=
-  by 
-    let to_hom : AddMonoidAlgebra M ι →+ ⨁i : ι, M := ⟨to_direct_sum, to_direct_sum_zero, to_direct_sum_add⟩
-    have  : «expr⇑ » to_hom = to_direct_sum := rfl 
-    rw [←this]
-    revert f g 
-    rw [AddMonoidHom.map_mul_iff]
-    ext xi xv yi yv : 4
-    dsimp only [AddMonoidHom.comp_apply, AddMonoidHom.compl₂_apply, AddMonoidHom.compr₂_apply, AddMonoidHom.mul_apply,
-      AddEquiv.coe_to_add_monoid_hom, Finsupp.single_add_hom_apply]
-    simp only [AddMonoidAlgebra.single_mul_single, this, AddMonoidAlgebra.to_direct_sum_single]
-    rw [DirectSum.of_mul_of, Mul.ghas_mul_mul]
+theorem to_direct_sum_mul
+[decidable_eq ι]
+[add_monoid ι]
+[semiring M]
+(f
+ g : add_monoid_algebra M ι) : «expr = »(«expr * »(f, g).to_direct_sum, «expr * »(f.to_direct_sum, g.to_direct_sum)) :=
+begin
+  let [ident to_hom] [":", expr «expr →+ »(add_monoid_algebra M ι, «expr⨁ , »((i : ι), M))] [":=", expr ⟨to_direct_sum, to_direct_sum_zero, to_direct_sum_add⟩],
+  have [] [":", expr «expr = »(«expr⇑ »(to_hom), to_direct_sum)] [":=", expr rfl],
+  rw ["<-", expr this] [],
+  revert [ident f, ident g],
+  rw [expr add_monoid_hom.map_mul_iff] [],
+  ext [] [ident xi, ident xv, ident yi, ident yv] [":", 4],
+  dsimp ["only"] ["[", expr add_monoid_hom.comp_apply, ",", expr add_monoid_hom.compl₂_apply, ",", expr add_monoid_hom.compr₂_apply, ",", expr add_monoid_hom.mul_apply, ",", expr add_equiv.coe_to_add_monoid_hom, ",", expr finsupp.single_add_hom_apply, "]"] [] [],
+  simp [] [] ["only"] ["[", expr add_monoid_algebra.single_mul_single, ",", expr this, ",", expr add_monoid_algebra.to_direct_sum_single, "]"] [] [],
+  rw ["[", expr direct_sum.of_mul_of, ",", expr has_mul.ghas_mul_mul, "]"] []
+end
 
 end AddMonoidAlgebra
 

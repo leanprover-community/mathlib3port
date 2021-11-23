@@ -1,11 +1,8 @@
-import Mathbin.LinearAlgebra.FreeModule.Pid 
-import Mathbin.LinearAlgebra.Matrix.Basis 
-import Mathbin.LinearAlgebra.Matrix.Diagonal 
-import Mathbin.LinearAlgebra.Matrix.ToLinearEquiv 
-import Mathbin.LinearAlgebra.Matrix.Reindex 
 import Mathbin.LinearAlgebra.Multilinear.Basis 
-import Mathbin.LinearAlgebra.Dual 
-import Mathbin.RingTheory.AlgebraTower
+import Mathbin.LinearAlgebra.Matrix.Reindex 
+import Mathbin.RingTheory.AlgebraTower 
+import Mathbin.LinearAlgebra.Matrix.NonsingularInverse 
+import Mathbin.LinearAlgebra.Matrix.Basis
 
 /-!
 # Determinant of families of vectors
@@ -184,11 +181,11 @@ theorem det_eq_det_to_matrix_of_finset [DecidableEq M] {s : Finset M} (b : Basis
   by 
     rw [LinearMap.coe_det, dif_pos, det_aux_def' _ b] <;> assumption
 
+-- error in LinearAlgebra.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem det_to_matrix (b : Basis ι A M) (f : M →ₗ[A] M) : Matrix.det (to_matrix b b f) = f.det :=
-  by 
-    haveI  := Classical.decEq M 
-    rw [det_eq_det_to_matrix_of_finset b.reindex_finset_range, det_to_matrix_eq_det_to_matrix b]
+theorem det_to_matrix (b : basis ι A M) (f : «expr →ₗ[ ] »(M, A, M)) : «expr = »(matrix.det (to_matrix b b f), f.det) :=
+by { haveI [] [] [":=", expr classical.dec_eq M],
+  rw ["[", expr det_eq_det_to_matrix_of_finset b.reindex_finset_range, ",", expr det_to_matrix_eq_det_to_matrix b, "]"] [] }
 
 @[simp]
 theorem det_to_matrix' {ι : Type _} [Fintype ι] [DecidableEq ι] (f : (ι → A) →ₗ[A] ι → A) : det f.to_matrix' = f.det :=
@@ -216,28 +213,37 @@ theorem det_comp (f g : M →ₗ[A] M) : (f.comp g).det = f.det*g.det :=
 theorem det_id : (LinearMap.id : M →ₗ[A] M).det = 1 :=
   LinearMap.det.map_one
 
+-- error in LinearAlgebra.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Multiplying a map by a scalar `c` multiplies its determinant by `c ^ dim M`. -/
 @[simp]
-theorem det_smul {𝕜 : Type _} [Field 𝕜] {M : Type _} [AddCommGroupₓ M] [Module 𝕜 M] (c : 𝕜) (f : M →ₗ[𝕜] M) :
-  LinearMap.det (c • f) = (c^FiniteDimensional.finrank 𝕜 M)*LinearMap.det f :=
-  by 
-    byCases' H : ∃ s : Finset M, Nonempty (Basis s 𝕜 M)
-    ·
-      haveI  : FiniteDimensional 𝕜 M
-      ·
-        rcases H with ⟨s, ⟨hs⟩⟩
-        exact FiniteDimensional.of_finset_basis hs 
-      simp only [←det_to_matrix (FiniteDimensional.finBasis 𝕜 M), LinearEquiv.map_smul, Fintype.card_fin, det_smul]
-    ·
-      classical 
-      have  : FiniteDimensional.finrank 𝕜 M = 0 := finrank_eq_zero_of_not_exists_basis H 
-      simp [coe_det, H, this]
+theorem det_smul
+{𝕜 : Type*}
+[field 𝕜]
+{M : Type*}
+[add_comm_group M]
+[module 𝕜 M]
+(c : 𝕜)
+(f : «expr →ₗ[ ] »(M, 𝕜, M)) : «expr = »(linear_map.det «expr • »(c, f), «expr * »(«expr ^ »(c, finite_dimensional.finrank 𝕜 M), linear_map.det f)) :=
+begin
+  by_cases [expr H, ":", expr «expr∃ , »((s : finset M), nonempty (basis s 𝕜 M))],
+  { haveI [] [":", expr finite_dimensional 𝕜 M] [],
+    { rcases [expr H, "with", "⟨", ident s, ",", "⟨", ident hs, "⟩", "⟩"],
+      exact [expr finite_dimensional.of_finset_basis hs] },
+    simp [] [] ["only"] ["[", "<-", expr det_to_matrix (finite_dimensional.fin_basis 𝕜 M), ",", expr linear_equiv.map_smul, ",", expr fintype.card_fin, ",", expr det_smul, "]"] [] [] },
+  { classical,
+    have [] [":", expr «expr = »(finite_dimensional.finrank 𝕜 M, 0)] [":=", expr finrank_eq_zero_of_not_exists_basis H],
+    simp [] [] [] ["[", expr coe_det, ",", expr H, ",", expr this, "]"] [] [] }
+end
 
-theorem det_zero' {ι : Type _} [Fintype ι] [Nonempty ι] (b : Basis ι A M) : LinearMap.det (0 : M →ₗ[A] M) = 0 :=
-  by 
-    haveI  := Classical.decEq ι 
-    rw [←det_to_matrix b, LinearEquiv.map_zero, det_zero]
-    assumption
+-- error in LinearAlgebra.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem det_zero'
+{ι : Type*}
+[fintype ι]
+[nonempty ι]
+(b : basis ι A M) : «expr = »(linear_map.det (0 : «expr →ₗ[ ] »(M, A, M)), 0) :=
+by { haveI [] [] [":=", expr classical.dec_eq ι],
+  rw ["[", "<-", expr det_to_matrix b, ",", expr linear_equiv.map_zero, ",", expr det_zero, "]"] [],
+  assumption }
 
 /-- In a finite-dimensional vector space, the zero map has determinant `1` in dimension `0`,
 and `0` otherwise. -/
@@ -247,28 +253,28 @@ theorem det_zero {𝕜 : Type _} [Field 𝕜] {M : Type _} [AddCommGroupₓ M] [
   by 
     simp only [←zero_smul 𝕜 (1 : M →ₗ[𝕜] M), det_smul, mul_oneₓ, MonoidHom.map_one]
 
+-- error in LinearAlgebra.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Conjugating a linear map by a linear equiv does not change its determinant. -/
 @[simp]
-theorem det_conj {N : Type _} [AddCommGroupₓ N] [Module A N] (f : M →ₗ[A] M) (e : M ≃ₗ[A] N) :
-  LinearMap.det ((e : M →ₗ[A] N) ∘ₗ f ∘ₗ (e.symm : N →ₗ[A] M)) = LinearMap.det f :=
-  by 
-    classical 
-    byCases' H : ∃ s : Finset M, Nonempty (Basis s A M)
-    ·
-      rcases H with ⟨s, ⟨b⟩⟩
-      rw [←det_to_matrix b f, ←det_to_matrix (b.map e), to_matrix_comp (b.map e) b (b.map e),
-        to_matrix_comp (b.map e) b b, ←Matrix.mul_assoc, Matrix.det_conj]
-      ·
-        rw [←to_matrix_comp, LinearEquiv.comp_coe, e.symm_trans_self, LinearEquiv.refl_to_linear_map, to_matrix_id]
-      ·
-        rw [←to_matrix_comp, LinearEquiv.comp_coe, e.self_trans_symm, LinearEquiv.refl_to_linear_map, to_matrix_id]
-    ·
-      have H' : ¬∃ t : Finset N, Nonempty (Basis t A N)
-      ·
-        contrapose! H 
-        rcases H with ⟨s, ⟨b⟩⟩
-        exact ⟨_, ⟨(b.map e.symm).reindexFinsetRange⟩⟩
-      simp only [coe_det, H, H', Pi.one_apply, dif_neg, not_false_iff]
+theorem det_conj
+{N : Type*}
+[add_comm_group N]
+[module A N]
+(f : «expr →ₗ[ ] »(M, A, M))
+(e : «expr ≃ₗ[ ] »(M, A, N)) : «expr = »(linear_map.det «expr ∘ₗ »((e : «expr →ₗ[ ] »(M, A, N)), «expr ∘ₗ »(f, (e.symm : «expr →ₗ[ ] »(N, A, M)))), linear_map.det f) :=
+begin
+  classical,
+  by_cases [expr H, ":", expr «expr∃ , »((s : finset M), nonempty (basis s A M))],
+  { rcases [expr H, "with", "⟨", ident s, ",", "⟨", ident b, "⟩", "⟩"],
+    rw ["[", "<-", expr det_to_matrix b f, ",", "<-", expr det_to_matrix (b.map e), ",", expr to_matrix_comp (b.map e) b (b.map e), ",", expr to_matrix_comp (b.map e) b b, ",", "<-", expr matrix.mul_assoc, ",", expr matrix.det_conj, "]"] [],
+    { rw ["[", "<-", expr to_matrix_comp, ",", expr linear_equiv.comp_coe, ",", expr e.symm_trans_self, ",", expr linear_equiv.refl_to_linear_map, ",", expr to_matrix_id, "]"] [] },
+    { rw ["[", "<-", expr to_matrix_comp, ",", expr linear_equiv.comp_coe, ",", expr e.self_trans_symm, ",", expr linear_equiv.refl_to_linear_map, ",", expr to_matrix_id, "]"] [] } },
+  { have [ident H'] [":", expr «expr¬ »(«expr∃ , »((t : finset N), nonempty (basis t A N)))] [],
+    { contrapose ["!"] [ident H],
+      rcases [expr H, "with", "⟨", ident s, ",", "⟨", ident b, "⟩", "⟩"],
+      exact [expr ⟨_, ⟨(b.map e.symm).reindex_finset_range⟩⟩] },
+    simp [] [] ["only"] ["[", expr coe_det, ",", expr H, ",", expr H', ",", expr pi.one_apply, ",", expr dif_neg, ",", expr not_false_iff, "]"] [] [] }
+end
 
 end LinearMap
 
@@ -278,11 +284,16 @@ theorem LinearEquiv.is_unit_det (f : M ≃ₗ[R] M') (v : Basis ι R M) (v' : Ba
     apply is_unit_det_of_left_inverse 
     simpa using (LinearMap.to_matrix_comp v v' v f.symm f).symm
 
+-- error in LinearAlgebra.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Specialization of `linear_equiv.is_unit_det` -/
-theorem LinearEquiv.is_unit_det' {A : Type _} [CommRingₓ A] [IsDomain A] [Module A M] (f : M ≃ₗ[A] M) :
-  IsUnit (LinearMap.det (f : M →ₗ[A] M)) :=
-  by 
-    haveI  := Classical.decEq M <;> exact (f : M →ₗ[A] M).det_cases (fun s b => f.is_unit_det _ _) is_unit_one
+theorem linear_equiv.is_unit_det'
+{A : Type*}
+[comm_ring A]
+[is_domain A]
+[module A M]
+(f : «expr ≃ₗ[ ] »(M, A, M)) : is_unit (linear_map.det (f : «expr →ₗ[ ] »(M, A, M))) :=
+by haveI [] [] [":=", expr classical.dec_eq M]; exact [expr (f : «expr →ₗ[ ] »(M, A, M)).det_cases (λ
+  s b, f.is_unit_det _ _) is_unit_one]
 
 /-- Builds a linear equivalence from a linear map whose determinant in some bases is a unit. -/
 @[simps]
@@ -353,26 +364,26 @@ theorem Basis.det_ne_zero [Nontrivial R] : e.det ≠ 0 :=
     by 
       simpa [h] using e.det_self
 
-theorem is_basis_iff_det {v : ι → M} : LinearIndependent R v ∧ span R (Set.Range v) = ⊤ ↔ IsUnit (e.det v) :=
-  by 
-    split 
-    ·
-      rintro ⟨hli, hspan⟩
-      set v' := Basis.mk hli hspan with v'_eq 
-      rw [e.det_apply]
-      convert LinearEquiv.is_unit_det (LinearEquiv.refl _ _) v' e using 2 
-      ext i j 
-      simp 
-    ·
-      intro h 
-      rw [Basis.det_apply, Basis.to_matrix_eq_to_matrix_constr] at h 
-      set v' := Basis.map e (LinearEquiv.ofIsUnitDet h) with v'_def 
-      have  : «expr⇑ » v' = v
-      ·
-        ext i 
-        rw [v'_def, Basis.map_apply, LinearEquiv.of_is_unit_det_apply, e.constr_basis]
-      rw [←this]
-      exact ⟨v'.linear_independent, v'.span_eq⟩
+-- error in LinearAlgebra.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_basis_iff_det
+{v : ι → M} : «expr ↔ »(«expr ∧ »(linear_independent R v, «expr = »(span R (set.range v), «expr⊤»())), is_unit (e.det v)) :=
+begin
+  split,
+  { rintro ["⟨", ident hli, ",", ident hspan, "⟩"],
+    set [] [ident v'] [] [":="] [expr basis.mk hli hspan] ["with", ident v'_eq],
+    rw [expr e.det_apply] [],
+    convert [] [expr linear_equiv.is_unit_det (linear_equiv.refl _ _) v' e] ["using", 2],
+    ext [] [ident i, ident j] [],
+    simp [] [] [] [] [] [] },
+  { intro [ident h],
+    rw ["[", expr basis.det_apply, ",", expr basis.to_matrix_eq_to_matrix_constr, "]"] ["at", ident h],
+    set [] [ident v'] [] [":="] [expr basis.map e (linear_equiv.of_is_unit_det h)] ["with", ident v'_def],
+    have [] [":", expr «expr = »(«expr⇑ »(v'), v)] [],
+    { ext [] [ident i] [],
+      rw ["[", expr v'_def, ",", expr basis.map_apply, ",", expr linear_equiv.of_is_unit_det_apply, ",", expr e.constr_basis, "]"] [] },
+    rw ["<-", expr this] [],
+    exact [expr ⟨v'.linear_independent, v'.span_eq⟩] }
+end
 
 theorem Basis.is_unit_det (e' : Basis ι R M) : IsUnit (e.det e') :=
   (is_basis_iff_det e).mp ⟨e'.linear_independent, e'.span_eq⟩

@@ -1,5 +1,4 @@
 import Mathbin.Algebra.Star.Basic 
-import Mathbin.Algebra.Order.Algebra 
 import Mathbin.Analysis.SpecialFunctions.Pow
 
 /-!
@@ -93,7 +92,7 @@ structure IsCHSHTuple{R}[Monoidₓ R][StarMonoid R](A₀ A₁ B₀ B₁ : R) whe
 
 variable{R : Type u}
 
--- error in Algebra.Star.Chsh: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Algebra.Star.Chsh: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given a CHSH tuple (A₀, A₁, B₀, B₁) in a *commutative* ordered `*`-algebra over ℝ,
 `A₀ * B₀ + A₀ * B₁ + A₁ * B₀ - A₁ * B₁ ≤ 2`.
@@ -190,6 +189,7 @@ end tsirelson_inequality
 
 open tsirelson_inequality
 
+-- error in Algebra.Star.Chsh: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 In a noncommutative ordered `*`-algebra over ℝ,
 Tsirelson's bound for a CHSH tuple (A₀, A₁, B₀, B₁) is
@@ -200,58 +200,57 @@ of the difference.
 
 (We could work over `ℤ[2^(1/2), 2^(-1/2)]` if we really wanted to!)
 -/
-theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R] [OrderedSmul ℝ R] [StarModule ℝ R]
-  (A₀ A₁ B₀ B₁ : R) (T : IsCHSHTuple A₀ A₁ B₀ B₁) : ((((A₀*B₀)+A₀*B₁)+A₁*B₀) - A₁*B₁) ≤ (√2^3) • 1 :=
-  by 
-    have M : ∀ m : ℤ a : ℝ x : R, m • a • x = ((m : ℝ)*a) • x :=
-      fun m a x =>
-        by 
-          rw [zsmul_eq_smul_cast ℝ, ←mul_smul]
-    let P := (√2⁻¹ • A₁+A₀) - B₀ 
-    let Q := (√2⁻¹ • (A₁ - A₀))+B₁ 
-    have w : (((((√2^3) • 1 - A₀*B₀) - A₀*B₁) - A₁*B₀)+A₁*B₁) = √2⁻¹ • (P^2)+Q^2
-    ·
-      dsimp [P, Q]
-      simp only [sq, sub_mul, mul_sub, add_mulₓ, mul_addₓ, smul_add, smul_sub]
-      simp only [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, ←mul_smul, sqrt_two_inv_mul_self]
-      simp only [←sq, T.A₀_inv, T.A₁_inv, T.B₀_inv, T.B₁_inv]
-      simp only [←T.A₀B₀_commutes, ←T.A₀B₁_commutes, ←T.A₁B₀_commutes, ←T.A₁B₁_commutes]
-      abel 
-      simp only [M]
-      simp only [neg_mul_eq_neg_mul_symm, Int.cast_bit0, one_mulₓ, mul_inv_cancel_of_invertible, Int.cast_one, one_smul,
-        Int.cast_neg, add_right_injₓ, neg_smul, ←add_smul]
-      congr 
-      exact
-        mul_left_cancel₀
-          (by 
-            normNum)
-          tsirelson_inequality_aux 
-    have pos : 0 ≤ √2⁻¹ • (P^2)+Q^2
-    ·
-      have P_sa : star P = P
-      ·
-        dsimp [P]
-        simp only [star_smul, star_add, star_sub, star_id_of_comm, T.A₀_sa, T.A₁_sa, T.B₀_sa, T.B₁_sa]
-      have Q_sa : star Q = Q
-      ·
-        dsimp [Q]
-        simp only [star_smul, star_add, star_sub, star_id_of_comm, T.A₀_sa, T.A₁_sa, T.B₀_sa, T.B₁_sa]
-      have P2_nonneg : 0 ≤ (P^2)
-      ·
-        rw [sq]
-        conv  => congr skip congr rw [←P_sa]
-        convert (star_mul_self_nonneg : 0 ≤ star P*P)
-      have Q2_nonneg : 0 ≤ (Q^2)
-      ·
-        rw [sq]
-        conv  => congr skip congr rw [←Q_sa]
-        convert (star_mul_self_nonneg : 0 ≤ star Q*Q)
-      convert
-        smul_le_smul_of_nonneg (add_nonneg P2_nonneg Q2_nonneg)
-          (le_of_ltₓ
-            (show 0 < √2⁻¹by 
-              normNum))
-      simp 
-    apply le_of_sub_nonneg 
-    simpa only [sub_add_eq_sub_sub, ←sub_add, w] using Pos
+theorem tsirelson_inequality
+[ordered_ring R]
+[star_ordered_ring R]
+[algebra exprℝ() R]
+[ordered_smul exprℝ() R]
+[star_module exprℝ() R]
+(A₀ A₁ B₀ B₁ : R)
+(T : is_CHSH_tuple A₀ A₁ B₀ B₁) : «expr ≤ »(«expr - »(«expr + »(«expr + »(«expr * »(A₀, B₀), «expr * »(A₀, B₁)), «expr * »(A₁, B₀)), «expr * »(A₁, B₁)), «expr • »(«expr ^ »(«expr√2»(), 3), 1)) :=
+begin
+  have [ident M] [":", expr ∀
+   (m : exprℤ())
+   (a : exprℝ())
+   (x : R), «expr = »(«expr • »(m, «expr • »(a, x)), «expr • »(«expr * »((m : exprℝ()), a), x))] [":=", expr λ
+   m a x, by rw ["[", expr zsmul_eq_smul_cast exprℝ(), ",", "<-", expr mul_smul, "]"] []],
+  let [ident P] [] [":=", expr «expr - »(«expr • »(«expr ⁻¹»(«expr√2»()), «expr + »(A₁, A₀)), B₀)],
+  let [ident Q] [] [":=", expr «expr + »(«expr • »(«expr ⁻¹»(«expr√2»()), «expr - »(A₁, A₀)), B₁)],
+  have [ident w] [":", expr «expr = »(«expr + »(«expr - »(«expr - »(«expr - »(«expr • »(«expr ^ »(«expr√2»(), 3), 1), «expr * »(A₀, B₀)), «expr * »(A₀, B₁)), «expr * »(A₁, B₀)), «expr * »(A₁, B₁)), «expr • »(«expr ⁻¹»(«expr√2»()), «expr + »(«expr ^ »(P, 2), «expr ^ »(Q, 2))))] [],
+  { dsimp [] ["[", expr P, ",", expr Q, "]"] [] [],
+    simp [] [] ["only"] ["[", expr sq, ",", expr sub_mul, ",", expr mul_sub, ",", expr add_mul, ",", expr mul_add, ",", expr smul_add, ",", expr smul_sub, "]"] [] [],
+    simp [] [] ["only"] ["[", expr algebra.mul_smul_comm, ",", expr algebra.smul_mul_assoc, ",", "<-", expr mul_smul, ",", expr sqrt_two_inv_mul_self, "]"] [] [],
+    simp [] [] ["only"] ["[", "<-", expr sq, ",", expr T.A₀_inv, ",", expr T.A₁_inv, ",", expr T.B₀_inv, ",", expr T.B₁_inv, "]"] [] [],
+    simp [] [] ["only"] ["[", "<-", expr T.A₀B₀_commutes, ",", "<-", expr T.A₀B₁_commutes, ",", "<-", expr T.A₁B₀_commutes, ",", "<-", expr T.A₁B₁_commutes, "]"] [] [],
+    abel [] [] [],
+    simp [] [] ["only"] ["[", expr M, "]"] [] [],
+    simp [] [] ["only"] ["[", expr neg_mul_eq_neg_mul_symm, ",", expr int.cast_bit0, ",", expr one_mul, ",", expr mul_inv_cancel_of_invertible, ",", expr int.cast_one, ",", expr one_smul, ",", expr int.cast_neg, ",", expr add_right_inj, ",", expr neg_smul, ",", "<-", expr add_smul, "]"] [] [],
+    congr,
+    exact [expr mul_left_cancel₀ (by norm_num [] []) tsirelson_inequality_aux] },
+  have [ident pos] [":", expr «expr ≤ »(0, «expr • »(«expr ⁻¹»(«expr√2»()), «expr + »(«expr ^ »(P, 2), «expr ^ »(Q, 2))))] [],
+  { have [ident P_sa] [":", expr «expr = »(star P, P)] [],
+    { dsimp [] ["[", expr P, "]"] [] [],
+      simp [] [] ["only"] ["[", expr star_smul, ",", expr star_add, ",", expr star_sub, ",", expr star_id_of_comm, ",", expr T.A₀_sa, ",", expr T.A₁_sa, ",", expr T.B₀_sa, ",", expr T.B₁_sa, "]"] [] [] },
+    have [ident Q_sa] [":", expr «expr = »(star Q, Q)] [],
+    { dsimp [] ["[", expr Q, "]"] [] [],
+      simp [] [] ["only"] ["[", expr star_smul, ",", expr star_add, ",", expr star_sub, ",", expr star_id_of_comm, ",", expr T.A₀_sa, ",", expr T.A₁_sa, ",", expr T.B₀_sa, ",", expr T.B₁_sa, "]"] [] [] },
+    have [ident P2_nonneg] [":", expr «expr ≤ »(0, «expr ^ »(P, 2))] [],
+    { rw ["[", expr sq, "]"] [],
+      conv [] [] { congr,
+        skip,
+        congr,
+        rw ["<-", expr P_sa] },
+      convert [] [expr (star_mul_self_nonneg : «expr ≤ »(0, «expr * »(star P, P)))] [] },
+    have [ident Q2_nonneg] [":", expr «expr ≤ »(0, «expr ^ »(Q, 2))] [],
+    { rw ["[", expr sq, "]"] [],
+      conv [] [] { congr,
+        skip,
+        congr,
+        rw ["<-", expr Q_sa] },
+      convert [] [expr (star_mul_self_nonneg : «expr ≤ »(0, «expr * »(star Q, Q)))] [] },
+    convert [] [expr smul_le_smul_of_nonneg (add_nonneg P2_nonneg Q2_nonneg) (le_of_lt (show «expr < »(0, «expr ⁻¹»(«expr√2»())), by norm_num [] []))] [],
+    simp [] [] [] [] [] [] },
+  apply [expr le_of_sub_nonneg],
+  simpa [] [] ["only"] ["[", expr sub_add_eq_sub_sub, ",", "<-", expr sub_add, ",", expr w, "]"] [] ["using", expr pos]
+end
 

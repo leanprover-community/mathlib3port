@@ -188,33 +188,27 @@ private theorem restrict_nonpos_seq_lt (n : ℕ) (hn : ¬s ≤[i \ ⋃(k : _)(_ 
     rw [restrict_nonpos_seq_succ]
     apply some_exists_one_div_lt_lt hn
 
-private theorem measure_of_restrict_nonpos_seq (hi₂ : ¬s ≤[i] 0) (n : ℕ)
-  (hn : ¬s ≤[i \ ⋃(k : _)(_ : k < n), restrict_nonpos_seq s i k] 0) : 0 < s (restrict_nonpos_seq s i n) :=
-  by 
-    cases n
-    ·
-      rw [restrict_nonpos_seq]
-      rw [←@Set.diff_empty _ i] at hi₂ 
-      rcases some_exists_one_div_lt_spec hi₂ with ⟨_, _, h⟩
-      exact lt_transₓ Nat.one_div_pos_of_nat h
-    ·
-      rw [restrict_nonpos_seq_succ]
-      have h₁ : ¬s ≤[i \ ⋃(k : ℕ)(H : k ≤ n), restrict_nonpos_seq s i k] 0
-      ·
-        refine'
-          mt
-            (restrict_le_zero_subset _ _
-              (by 
-                simp [Nat.lt_succ_iff]))
-            hn 
-        convert measurable_of_not_restrict_le_zero _ hn 
-        exact
-          funext
-            fun x =>
-              by 
-                rw [Nat.lt_succ_iff]
-      rcases some_exists_one_div_lt_spec h₁ with ⟨_, _, h⟩
-      exact lt_transₓ Nat.one_div_pos_of_nat h
+-- error in MeasureTheory.Decomposition.SignedHahn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem measure_of_restrict_nonpos_seq
+(hi₂ : «expr¬ »(«expr ≤[ ] »(s, i, 0)))
+(n : exprℕ())
+(hn : «expr¬ »(«expr ≤[ ] »(s, «expr \ »(i, «expr⋃ , »((k «expr < » n), restrict_nonpos_seq s i k)), 0))) : «expr < »(0, s (restrict_nonpos_seq s i n)) :=
+begin
+  cases [expr n] [],
+  { rw [expr restrict_nonpos_seq] [],
+    rw ["<-", expr @set.diff_empty _ i] ["at", ident hi₂],
+    rcases [expr some_exists_one_div_lt_spec hi₂, "with", "⟨", "_", ",", "_", ",", ident h, "⟩"],
+    exact [expr lt_trans nat.one_div_pos_of_nat h] },
+  { rw [expr restrict_nonpos_seq_succ] [],
+    have [ident h₁] [":", expr «expr¬ »(«expr ≤[ ] »(s, «expr \ »(i, «expr⋃ , »((k : exprℕ())
+         (H : «expr ≤ »(k, n)), restrict_nonpos_seq s i k)), 0))] [],
+    { refine [expr mt (restrict_le_zero_subset _ _ (by simp [] [] [] ["[", expr nat.lt_succ_iff, "]"] [] [])) hn],
+      convert [] [expr measurable_of_not_restrict_le_zero _ hn] [],
+      exact [expr funext (λ x, by rw [expr nat.lt_succ_iff] [])] },
+    rcases [expr some_exists_one_div_lt_spec h₁, "with", "⟨", "_", ",", "_", ",", ident h, "⟩"],
+    exact [expr lt_trans nat.one_div_pos_of_nat h] }
+end
 
 private theorem restrict_nonpos_seq_measurable_set (n : ℕ) : MeasurableSet (restrict_nonpos_seq s i n) :=
   by 
@@ -248,63 +242,58 @@ private theorem restrict_nonpos_seq_disjoint : Pairwise (Disjoint on restrict_no
       rw [Set.inf_eq_inter, Set.inter_comm, restrict_nonpos_seq_disjoint' h]
       exact id
 
-private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ : s i < 0)
-  (hn : ¬∀ n : ℕ, ¬s ≤[i \ ⋃(l : _)(_ : l < n), restrict_nonpos_seq s i l] 0) :
-  ∃ j : Set α, MeasurableSet j ∧ j ⊆ i ∧ s ≤[j] 0 ∧ s j < 0 :=
-  by 
-    byCases' s ≤[i] 0
-    ·
-      exact ⟨i, hi₁, Set.Subset.refl _, h, hi₂⟩
-    pushNeg  at hn 
-    set k := Nat.findₓ hn with hk₁ 
-    have hk₂ : s ≤[i \ ⋃(l : _)(_ : l < k), restrict_nonpos_seq s i l] 0 := Nat.find_specₓ hn 
-    have hmeas : MeasurableSet (⋃(l : ℕ)(H : l < k), restrict_nonpos_seq s i l) :=
-      MeasurableSet.Union$ fun _ => MeasurableSet.Union_Prop fun _ => restrict_nonpos_seq_measurable_set _ 
-    refine' ⟨i \ ⋃(l : _)(_ : l < k), restrict_nonpos_seq s i l, hi₁.diff hmeas, Set.diff_subset _ _, hk₂, _⟩
-    rw [of_diff hmeas hi₁, s.of_disjoint_Union_nat]
-    ·
-      have h₁ : ∀ l _ : l < k, 0 ≤ s (restrict_nonpos_seq s i l)
-      ·
-        intro l hl 
-        refine' le_of_ltₓ (measure_of_restrict_nonpos_seq h _ _)
-        refine' mt (restrict_le_zero_subset _ (hi₁.diff _) (Set.Subset.refl _)) (Nat.find_minₓ hn hl)
-        exact MeasurableSet.Union$ fun _ => MeasurableSet.Union_Prop fun _ => restrict_nonpos_seq_measurable_set _ 
-      suffices  : 0 ≤ ∑'l : ℕ, s (⋃H : l < k, restrict_nonpos_seq s i l)
-      ·
-        rw [sub_neg]
-        exact lt_of_lt_of_leₓ hi₂ this 
-      refine' tsum_nonneg _ 
-      intro l 
-      byCases' l < k
-      ·
-        convert h₁ _ h 
-        ext x 
-        rw [Set.mem_Union, exists_prop, and_iff_right_iff_imp]
-        exact fun _ => h
-      ·
-        convert le_of_eqₓ s.empty.symm 
-        ext 
-        simp only [exists_prop, Set.mem_empty_eq, Set.mem_Union, not_and, iff_falseₓ]
-        exact fun h' => False.elim (h h')
-    ·
-      intro 
-      exact MeasurableSet.Union_Prop fun _ => restrict_nonpos_seq_measurable_set _
-    ·
-      intro a b hab x hx 
-      simp only [exists_prop, Set.mem_Union, Set.mem_inter_eq, Set.inf_eq_inter] at hx 
-      exact
-        let ⟨⟨_, hx₁⟩, _, hx₂⟩ := hx 
-        restrict_nonpos_seq_disjoint a b hab ⟨hx₁, hx₂⟩
-    ·
-      apply Set.Union_subset 
-      intro a x 
-      simp only [and_imp, exists_prop, Set.mem_Union]
-      intro _ hx 
-      exact restrict_nonpos_seq_subset _ hx
-    ·
-      infer_instance
+-- error in MeasureTheory.Decomposition.SignedHahn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem exists_subset_restrict_nonpos'
+(hi₁ : measurable_set i)
+(hi₂ : «expr < »(s i, 0))
+(hn : «expr¬ »(∀
+  n : exprℕ(), «expr¬ »(«expr ≤[ ] »(s, «expr \ »(i, «expr⋃ , »((l «expr < » n), restrict_nonpos_seq s i l)), 0)))) : «expr∃ , »((j : set α), «expr ∧ »(measurable_set j, «expr ∧ »(«expr ⊆ »(j, i), «expr ∧ »(«expr ≤[ ] »(s, j, 0), «expr < »(s j, 0))))) :=
+begin
+  by_cases [expr «expr ≤[ ] »(s, i, 0)],
+  { exact [expr ⟨i, hi₁, set.subset.refl _, h, hi₂⟩] },
+  push_neg ["at", ident hn],
+  set [] [ident k] [] [":="] [expr nat.find hn] ["with", ident hk₁],
+  have [ident hk₂] [":", expr «expr ≤[ ] »(s, «expr \ »(i, «expr⋃ , »((l «expr < » k), restrict_nonpos_seq s i l)), 0)] [":=", expr nat.find_spec hn],
+  have [ident hmeas] [":", expr measurable_set «expr⋃ , »((l : exprℕ())
+    (H : «expr < »(l, k)), restrict_nonpos_seq s i l)] [":=", expr «expr $ »(measurable_set.Union, λ
+    _, measurable_set.Union_Prop (λ _, restrict_nonpos_seq_measurable_set _))],
+  refine [expr ⟨«expr \ »(i, «expr⋃ , »((l «expr < » k), restrict_nonpos_seq s i l)), hi₁.diff hmeas, set.diff_subset _ _, hk₂, _⟩],
+  rw ["[", expr of_diff hmeas hi₁, ",", expr s.of_disjoint_Union_nat, "]"] [],
+  { have [ident h₁] [":", expr ∀ l «expr < » k, «expr ≤ »(0, s (restrict_nonpos_seq s i l))] [],
+    { intros [ident l, ident hl],
+      refine [expr le_of_lt (measure_of_restrict_nonpos_seq h _ _)],
+      refine [expr mt (restrict_le_zero_subset _ (hi₁.diff _) (set.subset.refl _)) (nat.find_min hn hl)],
+      exact [expr «expr $ »(measurable_set.Union, λ
+        _, measurable_set.Union_Prop (λ _, restrict_nonpos_seq_measurable_set _))] },
+    suffices [] [":", expr «expr ≤ »(0, «expr∑' , »((l : exprℕ()), s «expr⋃ , »((H : «expr < »(l, k)), restrict_nonpos_seq s i l)))],
+    { rw [expr sub_neg] [],
+      exact [expr lt_of_lt_of_le hi₂ this] },
+    refine [expr tsum_nonneg _],
+    intro [ident l],
+    by_cases [expr «expr < »(l, k)],
+    { convert [] [expr h₁ _ h] [],
+      ext [] [ident x] [],
+      rw ["[", expr set.mem_Union, ",", expr exists_prop, ",", expr and_iff_right_iff_imp, "]"] [],
+      exact [expr λ _, h] },
+    { convert [] [expr le_of_eq s.empty.symm] [],
+      ext [] [] [],
+      simp [] [] ["only"] ["[", expr exists_prop, ",", expr set.mem_empty_eq, ",", expr set.mem_Union, ",", expr not_and, ",", expr iff_false, "]"] [] [],
+      exact [expr λ h', false.elim (h h')] } },
+  { intro [],
+    exact [expr measurable_set.Union_Prop (λ _, restrict_nonpos_seq_measurable_set _)] },
+  { intros [ident a, ident b, ident hab, ident x, ident hx],
+    simp [] [] ["only"] ["[", expr exists_prop, ",", expr set.mem_Union, ",", expr set.mem_inter_eq, ",", expr set.inf_eq_inter, "]"] [] ["at", ident hx],
+    exact [expr let ⟨⟨_, hx₁⟩, _, hx₂⟩ := hx in restrict_nonpos_seq_disjoint a b hab ⟨hx₁, hx₂⟩] },
+  { apply [expr set.Union_subset],
+    intros [ident a, ident x],
+    simp [] [] ["only"] ["[", expr and_imp, ",", expr exists_prop, ",", expr set.mem_Union, "]"] [] [],
+    intros ["_", ident hx],
+    exact [expr restrict_nonpos_seq_subset _ hx] },
+  { apply_instance }
+end
 
--- error in MeasureTheory.Decomposition.SignedHahn: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Decomposition.SignedHahn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A measurable set of negative measure has a negative subset of negative measure. -/
 theorem exists_subset_restrict_nonpos
 (hi : «expr < »(s i, 0)) : «expr∃ , »((j : set α), «expr ∧ »(measurable_set j, «expr ∧ »(«expr ⊆ »(j, i), «expr ∧ »(«expr ≤[ ] »(s, j, 0), «expr < »(s j, 0))))) :=
@@ -389,7 +378,7 @@ def measure_of_negatives (s : signed_measure α) : Set ℝ :=
 theorem zero_mem_measure_of_negatives : (0 : ℝ) ∈ s.measure_of_negatives :=
   ⟨∅, ⟨MeasurableSet.empty, le_restrict_empty _ _⟩, s.empty⟩
 
--- error in MeasureTheory.Decomposition.SignedHahn: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Decomposition.SignedHahn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem bdd_below_measure_of_negatives : bdd_below s.measure_of_negatives :=
 begin
   simp_rw ["[", expr bdd_below, ",", expr set.nonempty, ",", expr mem_lower_bounds, "]"] [],
@@ -420,7 +409,7 @@ begin
   exact [expr lt_irrefl _ ((neg_lt.1 hn).trans_le (hfalse n))]
 end
 
--- error in MeasureTheory.Decomposition.SignedHahn: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Decomposition.SignedHahn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Alternative formulation of `measure_theory.signed_measure.exists_is_compl_positive_negative`
 (the Hahn decomposition theorem) using set complements. -/
 theorem exists_compl_positive_negative

@@ -1,7 +1,7 @@
 import Mathbin.Analysis.Convex.Function 
 import Mathbin.Topology.Algebra.Affine 
 import Mathbin.Topology.LocalExtr 
-import Mathbin.Topology.Instances.Real
+import Mathbin.Topology.MetricSpace.Basic
 
 /-!
 # Minima and maxima of convex functions
@@ -23,7 +23,7 @@ open Set Filter
 
 open_locale Classical
 
--- error in Analysis.Convex.Extrema: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.Convex.Extrema: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Helper lemma for the more general case: `is_min_on.of_is_local_min_on_of_convex_on`.
 -/
@@ -60,7 +60,7 @@ begin
     exact [expr not_lt_of_ge (ge_on_nhd z h₂) (lt_on_nhd z h₁)] }
 end
 
--- error in Analysis.Convex.Extrema: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.Convex.Extrema: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A local minimum of a convex function is a global minimum, restricted to a set `s`.
 -/

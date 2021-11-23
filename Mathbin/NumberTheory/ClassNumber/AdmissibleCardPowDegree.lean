@@ -1,6 +1,7 @@
-import Mathbin.Data.Polynomial.Degree.CardPowDegree 
-import Mathbin.FieldTheory.Finite.Basic 
-import Mathbin.NumberTheory.ClassNumber.AdmissibleAbsoluteValue
+import Mathbin.NumberTheory.ClassNumber.AdmissibleAbsoluteValue 
+import Mathbin.Analysis.SpecialFunctions.Pow 
+import Mathbin.RingTheory.Ideal.LocalRing 
+import Mathbin.Data.Polynomial.Degree.CardPowDegree
 
 /-!
 # Admissible absolute values on polynomials
@@ -21,148 +22,150 @@ open AbsoluteValue Real
 
 variable{Fq : Type _}[Field Fq][Fintype Fq]
 
+-- error in NumberTheory.ClassNumber.AdmissibleCardPowDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `A` is a family of enough low-degree polynomials over a finite field, there is a
 pair of equal elements in `A`. -/
-theorem exists_eq_polynomial {d : ℕ} {m : ℕ} (hm : (Fintype.card Fq^d) ≤ m) (b : Polynomial Fq) (hb : nat_degree b ≤ d)
-  (A : Finₓ m.succ → Polynomial Fq) (hA : ∀ i, degree (A i) < degree b) : ∃ i₀ i₁, i₀ ≠ i₁ ∧ A i₁ = A i₀ :=
-  by 
-    set f : Finₓ m.succ → Finₓ d → Fq := fun i j => (A i).coeff j 
-    have  : Fintype.card (Finₓ d → Fq) < Fintype.card (Finₓ m.succ)
-    ·
-      simpa using lt_of_le_of_ltₓ hm (Nat.lt_succ_selfₓ m)
-    obtain ⟨i₀, i₁, i_ne, i_eq⟩ := Fintype.exists_ne_map_eq_of_card_lt f this 
-    use i₀, i₁, i_ne 
-    ext j 
-    byCases' hbj : degree b ≤ j
-    ·
-      rw [coeff_eq_zero_of_degree_lt (lt_of_lt_of_leₓ (hA _) hbj),
-        coeff_eq_zero_of_degree_lt (lt_of_lt_of_leₓ (hA _) hbj)]
-    rw [not_leₓ] at hbj 
-    apply congr_funₓ i_eq.symm ⟨j, _⟩
-    exact lt_of_lt_of_leₓ (coe_lt_degree.mp hbj) hb
+theorem exists_eq_polynomial
+{d : exprℕ()}
+{m : exprℕ()}
+(hm : «expr ≤ »(«expr ^ »(fintype.card Fq, d), m))
+(b : polynomial Fq)
+(hb : «expr ≤ »(nat_degree b, d))
+(A : fin m.succ → polynomial Fq)
+(hA : ∀
+ i, «expr < »(degree (A i), degree b)) : «expr∃ , »((i₀ i₁), «expr ∧ »(«expr ≠ »(i₀, i₁), «expr = »(A i₁, A i₀))) :=
+begin
+  set [] [ident f] [":", expr fin m.succ → fin d → Fq] [":="] [expr λ i j, (A i).coeff j] [],
+  have [] [":", expr «expr < »(fintype.card (fin d → Fq), fintype.card (fin m.succ))] [],
+  { simpa [] [] [] [] [] ["using", expr lt_of_le_of_lt hm (nat.lt_succ_self m)] },
+  obtain ["⟨", ident i₀, ",", ident i₁, ",", ident i_ne, ",", ident i_eq, "⟩", ":=", expr fintype.exists_ne_map_eq_of_card_lt f this],
+  use ["[", expr i₀, ",", expr i₁, ",", expr i_ne, "]"],
+  ext [] [ident j] [],
+  by_cases [expr hbj, ":", expr «expr ≤ »(degree b, j)],
+  { rw ["[", expr coeff_eq_zero_of_degree_lt (lt_of_lt_of_le (hA _) hbj), ",", expr coeff_eq_zero_of_degree_lt (lt_of_lt_of_le (hA _) hbj), "]"] [] },
+  rw [expr not_le] ["at", ident hbj],
+  apply [expr congr_fun i_eq.symm ⟨j, _⟩],
+  exact [expr lt_of_lt_of_le (coe_lt_degree.mp hbj) hb]
+end
 
+-- error in NumberTheory.ClassNumber.AdmissibleCardPowDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `A` is a family of enough low-degree polynomials over a finite field,
 there is a pair of elements in `A` (with different indices but not necessarily
 distinct), such that their difference has small degree. -/
-theorem exists_approx_polynomial_aux {d : ℕ} {m : ℕ} (hm : (Fintype.card Fq^d) ≤ m) (b : Polynomial Fq)
-  (A : Finₓ m.succ → Polynomial Fq) (hA : ∀ i, degree (A i) < degree b) :
-  ∃ i₀ i₁, i₀ ≠ i₁ ∧ degree (A i₁ - A i₀) < «expr↑ » (nat_degree b - d) :=
-  by 
-    have hb : b ≠ 0
-    ·
-      rintro rfl 
-      specialize hA 0
-      rw [degree_zero] at hA 
-      exact not_lt_of_le bot_le hA 
-    set f : Finₓ m.succ → Finₓ d → Fq := fun i j => (A i).coeff (nat_degree b - j.succ)
-    have  : Fintype.card (Finₓ d → Fq) < Fintype.card (Finₓ m.succ)
-    ·
-      simpa using lt_of_le_of_ltₓ hm (Nat.lt_succ_selfₓ m)
-    obtain ⟨i₀, i₁, i_ne, i_eq⟩ := Fintype.exists_ne_map_eq_of_card_lt f this 
-    use i₀, i₁, i_ne 
-    refine' (degree_lt_iff_coeff_zero _ _).mpr fun j hj => _ 
-    byCases' hbj : degree b ≤ j
-    ·
-      refine' coeff_eq_zero_of_degree_lt (lt_of_lt_of_leₓ _ hbj)
-      exact lt_of_le_of_ltₓ (degree_sub_le _ _) (max_ltₓ (hA _) (hA _))
-    rw [coeff_sub, sub_eq_zero]
-    rw [not_leₓ, degree_eq_nat_degree hb, WithBot.coe_lt_coe] at hbj 
-    have hj : nat_degree b - j.succ < d
-    ·
-      byCases' hd : nat_degree b < d
-      ·
-        exact lt_of_le_of_ltₓ tsub_le_self hd
-      ·
-        rw [not_ltₓ] at hd 
-        have  := lt_of_le_of_ltₓ hj (Nat.lt_succ_selfₓ j)
-        rwa [tsub_lt_iff_tsub_lt hd hbj] at this 
-    have  : j = b.nat_degree - (nat_degree b - j.succ).succ
-    ·
-      rw [←Nat.succ_subₓ hbj, Nat.succ_sub_succ, tsub_tsub_cancel_of_le hbj.le]
-    convert congr_funₓ i_eq.symm ⟨nat_degree b - j.succ, hj⟩
+theorem exists_approx_polynomial_aux
+{d : exprℕ()}
+{m : exprℕ()}
+(hm : «expr ≤ »(«expr ^ »(fintype.card Fq, d), m))
+(b : polynomial Fq)
+(A : fin m.succ → polynomial Fq)
+(hA : ∀
+ i, «expr < »(degree (A i), degree b)) : «expr∃ , »((i₀
+  i₁), «expr ∧ »(«expr ≠ »(i₀, i₁), «expr < »(degree «expr - »(A i₁, A i₀), «expr↑ »(«expr - »(nat_degree b, d))))) :=
+begin
+  have [ident hb] [":", expr «expr ≠ »(b, 0)] [],
+  { rintro [ident rfl],
+    specialize [expr hA 0],
+    rw [expr degree_zero] ["at", ident hA],
+    exact [expr not_lt_of_le bot_le hA] },
+  set [] [ident f] [":", expr fin m.succ → fin d → Fq] [":="] [expr λ
+   i j, (A i).coeff «expr - »(nat_degree b, j.succ)] [],
+  have [] [":", expr «expr < »(fintype.card (fin d → Fq), fintype.card (fin m.succ))] [],
+  { simpa [] [] [] [] [] ["using", expr lt_of_le_of_lt hm (nat.lt_succ_self m)] },
+  obtain ["⟨", ident i₀, ",", ident i₁, ",", ident i_ne, ",", ident i_eq, "⟩", ":=", expr fintype.exists_ne_map_eq_of_card_lt f this],
+  use ["[", expr i₀, ",", expr i₁, ",", expr i_ne, "]"],
+  refine [expr (degree_lt_iff_coeff_zero _ _).mpr (λ j hj, _)],
+  by_cases [expr hbj, ":", expr «expr ≤ »(degree b, j)],
+  { refine [expr coeff_eq_zero_of_degree_lt (lt_of_lt_of_le _ hbj)],
+    exact [expr lt_of_le_of_lt (degree_sub_le _ _) (max_lt (hA _) (hA _))] },
+  rw ["[", expr coeff_sub, ",", expr sub_eq_zero, "]"] [],
+  rw ["[", expr not_le, ",", expr degree_eq_nat_degree hb, ",", expr with_bot.coe_lt_coe, "]"] ["at", ident hbj],
+  have [ident hj] [":", expr «expr < »(«expr - »(nat_degree b, j.succ), d)] [],
+  { by_cases [expr hd, ":", expr «expr < »(nat_degree b, d)],
+    { exact [expr lt_of_le_of_lt tsub_le_self hd] },
+    { rw [expr not_lt] ["at", ident hd],
+      have [] [] [":=", expr lt_of_le_of_lt hj (nat.lt_succ_self j)],
+      rwa ["[", expr tsub_lt_iff_tsub_lt hd hbj, "]"] ["at", ident this] } },
+  have [] [":", expr «expr = »(j, «expr - »(b.nat_degree, «expr - »(nat_degree b, j.succ).succ))] [],
+  { rw ["[", "<-", expr nat.succ_sub hbj, ",", expr nat.succ_sub_succ, ",", expr tsub_tsub_cancel_of_le hbj.le, "]"] [] },
+  convert [] [expr congr_fun i_eq.symm ⟨«expr - »(nat_degree b, j.succ), hj⟩] []
+end
 
+-- error in NumberTheory.ClassNumber.AdmissibleCardPowDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `A` is a family of enough low-degree polynomials over a finite field,
 there is a pair of elements in `A` (with different indices but not necessarily
 distinct), such that the difference of their remainders is close together. -/
-theorem exists_approx_polynomial {b : Polynomial Fq} (hb : b ≠ 0) {ε : ℝ} (hε : 0 < ε)
-  (A : Finₓ (Fintype.card Fq^⌈-log ε / log (Fintype.card Fq)⌉₊).succ → Polynomial Fq) :
-  ∃ i₀ i₁, i₀ ≠ i₁ ∧ (card_pow_degree (A i₁ % b - A i₀ % b) : ℝ) < card_pow_degree b • ε :=
-  by 
-    have hbε : 0 < card_pow_degree b • ε
-    ·
-      rw [Algebra.smul_def, RingHom.eq_int_cast]
-      exact mul_pos (int.cast_pos.mpr (AbsoluteValue.pos _ hb)) hε 
-    have one_lt_q : 1 < Fintype.card Fq := Fintype.one_lt_card 
-    have one_lt_q' : (1 : ℝ) < Fintype.card Fq
-    ·
-      assumptionModCast 
-    have q_pos : 0 < Fintype.card Fq
-    ·
-      linarith 
-    have q_pos' : (0 : ℝ) < Fintype.card Fq
-    ·
-      assumptionModCast 
-    byCases' le_b : b.nat_degree ≤ ⌈-log ε / log (Fintype.card Fq)⌉₊
-    ·
-      obtain ⟨i₀, i₁, i_ne, mod_eq⟩ :=
-        exists_eq_polynomial le_rfl b le_b (fun i => A i % b) fun i => EuclideanDomain.mod_lt (A i) hb 
-      refine' ⟨i₀, i₁, i_ne, _⟩
-      simp only  at mod_eq 
-      rwa [mod_eq, sub_self, AbsoluteValue.map_zero, Int.cast_zero]
-    rw [not_leₓ] at le_b 
-    obtain ⟨i₀, i₁, i_ne, deg_lt⟩ :=
-      exists_approx_polynomial_aux le_rfl b (fun i => A i % b) fun i => EuclideanDomain.mod_lt (A i) hb 
-    simp only  at deg_lt 
-    use i₀, i₁, i_ne 
-    byCases' h : A i₁ % b = A i₀ % b
-    ·
-      rwa [h, sub_self, AbsoluteValue.map_zero, Int.cast_zero]
-    have h' : A i₁ % b - A i₀ % b ≠ 0 := mt sub_eq_zero.mp h 
-    suffices  : (nat_degree (A i₁ % b - A i₀ % b) : ℝ) < b.nat_degree+log ε / log (Fintype.card Fq)
-    ·
-      rwa [←Real.log_lt_log_iff (int.cast_pos.mpr (card_pow_degree.pos h')) hbε, card_pow_degree_nonzero _ h',
-        card_pow_degree_nonzero _ hb, Algebra.smul_def, RingHom.eq_int_cast, Int.cast_pow, Int.cast_coe_nat,
-        Int.cast_pow, Int.cast_coe_nat, log_mul (pow_ne_zero _ q_pos'.ne') hε.ne', ←rpow_nat_cast, ←rpow_nat_cast,
-        log_rpow q_pos', log_rpow q_pos', ←lt_div_iff (log_pos one_lt_q'), add_div,
-        mul_div_cancel _ (log_pos one_lt_q').ne']
-    refine' lt_of_lt_of_leₓ (nat.cast_lt.mpr (with_bot.coe_lt_coe.mp _)) _ 
-    swap
-    ·
-      convert deg_lt 
-      rw [degree_eq_nat_degree h']
-    rw [←sub_neg_eq_add, neg_div]
-    refine' le_transₓ _ (sub_le_sub_left (Nat.le_ceil _) (b.nat_degree : ℝ))
-    rw [←neg_div]
-    exact le_of_eqₓ (Nat.cast_sub le_b.le)
+theorem exists_approx_polynomial
+{b : polynomial Fq}
+(hb : «expr ≠ »(b, 0))
+{ε : exprℝ()}
+(hε : «expr < »(0, ε))
+(A : fin «expr ^ »(fintype.card Fq, «expr⌈ ⌉₊»(«expr / »(«expr- »(log ε), log (fintype.card Fq)))).succ → polynomial Fq) : «expr∃ , »((i₀
+  i₁), «expr ∧ »(«expr ≠ »(i₀, i₁), «expr < »((card_pow_degree «expr - »(«expr % »(A i₁, b), «expr % »(A i₀, b)) : exprℝ()), «expr • »(card_pow_degree b, ε)))) :=
+begin
+  have [ident hbε] [":", expr «expr < »(0, «expr • »(card_pow_degree b, ε))] [],
+  { rw ["[", expr algebra.smul_def, ",", expr ring_hom.eq_int_cast, "]"] [],
+    exact [expr mul_pos (int.cast_pos.mpr (absolute_value.pos _ hb)) hε] },
+  have [ident one_lt_q] [":", expr «expr < »(1, fintype.card Fq)] [":=", expr fintype.one_lt_card],
+  have [ident one_lt_q'] [":", expr «expr < »((1 : exprℝ()), fintype.card Fq)] [],
+  { assumption_mod_cast },
+  have [ident q_pos] [":", expr «expr < »(0, fintype.card Fq)] [],
+  { linarith [] [] [] },
+  have [ident q_pos'] [":", expr «expr < »((0 : exprℝ()), fintype.card Fq)] [],
+  { assumption_mod_cast },
+  by_cases [expr le_b, ":", expr «expr ≤ »(b.nat_degree, «expr⌈ ⌉₊»(«expr / »(«expr- »(log ε), log (fintype.card Fq))))],
+  { obtain ["⟨", ident i₀, ",", ident i₁, ",", ident i_ne, ",", ident mod_eq, "⟩", ":=", expr exists_eq_polynomial le_rfl b le_b (λ
+      i, «expr % »(A i, b)) (λ i, euclidean_domain.mod_lt (A i) hb)],
+    refine [expr ⟨i₀, i₁, i_ne, _⟩],
+    simp [] [] ["only"] [] [] ["at", ident mod_eq],
+    rwa ["[", expr mod_eq, ",", expr sub_self, ",", expr absolute_value.map_zero, ",", expr int.cast_zero, "]"] [] },
+  rw [expr not_le] ["at", ident le_b],
+  obtain ["⟨", ident i₀, ",", ident i₁, ",", ident i_ne, ",", ident deg_lt, "⟩", ":=", expr exists_approx_polynomial_aux le_rfl b (λ
+    i, «expr % »(A i, b)) (λ i, euclidean_domain.mod_lt (A i) hb)],
+  simp [] [] ["only"] [] [] ["at", ident deg_lt],
+  use ["[", expr i₀, ",", expr i₁, ",", expr i_ne, "]"],
+  by_cases [expr h, ":", expr «expr = »(«expr % »(A i₁, b), «expr % »(A i₀, b))],
+  { rwa ["[", expr h, ",", expr sub_self, ",", expr absolute_value.map_zero, ",", expr int.cast_zero, "]"] [] },
+  have [ident h'] [":", expr «expr ≠ »(«expr - »(«expr % »(A i₁, b), «expr % »(A i₀, b)), 0)] [":=", expr mt sub_eq_zero.mp h],
+  suffices [] [":", expr «expr < »((nat_degree «expr - »(«expr % »(A i₁, b), «expr % »(A i₀, b)) : exprℝ()), «expr + »(b.nat_degree, «expr / »(log ε, log (fintype.card Fq))))],
+  { rwa ["[", "<-", expr real.log_lt_log_iff (int.cast_pos.mpr (card_pow_degree.pos h')) hbε, ",", expr card_pow_degree_nonzero _ h', ",", expr card_pow_degree_nonzero _ hb, ",", expr algebra.smul_def, ",", expr ring_hom.eq_int_cast, ",", expr int.cast_pow, ",", expr int.cast_coe_nat, ",", expr int.cast_pow, ",", expr int.cast_coe_nat, ",", expr log_mul (pow_ne_zero _ q_pos'.ne') hε.ne', ",", "<-", expr rpow_nat_cast, ",", "<-", expr rpow_nat_cast, ",", expr log_rpow q_pos', ",", expr log_rpow q_pos', ",", "<-", expr lt_div_iff (log_pos one_lt_q'), ",", expr add_div, ",", expr mul_div_cancel _ (log_pos one_lt_q').ne', "]"] [] },
+  refine [expr lt_of_lt_of_le (nat.cast_lt.mpr (with_bot.coe_lt_coe.mp _)) _],
+  swap,
+  { convert [] [expr deg_lt] [],
+    rw [expr degree_eq_nat_degree h'] [] },
+  rw ["[", "<-", expr sub_neg_eq_add, ",", expr neg_div, "]"] [],
+  refine [expr le_trans _ (sub_le_sub_left (nat.le_ceil _) (b.nat_degree : exprℝ()))],
+  rw ["<-", expr neg_div] [],
+  exact [expr le_of_eq (nat.cast_sub le_b.le)]
+end
 
+-- error in NumberTheory.ClassNumber.AdmissibleCardPowDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `x` is close to `y` and `y` is close to `z`, then `x` and `z` are at least as close. -/
-theorem card_pow_degree_anti_archimedean {x y z : Polynomial Fq} {a : ℤ} (hxy : card_pow_degree (x - y) < a)
-  (hyz : card_pow_degree (y - z) < a) : card_pow_degree (x - z) < a :=
-  by 
-    have ha : 0 < a := lt_of_le_of_ltₓ (AbsoluteValue.nonneg _ _) hxy 
-    byCases' hxy' : x = y
-    ·
-      rwa [hxy']
-    byCases' hyz' : y = z
-    ·
-      rwa [←hyz']
-    byCases' hxz' : x = z
-    ·
-      rwa [hxz', sub_self, AbsoluteValue.map_zero]
-    rw [←Ne.def, ←sub_ne_zero] at hxy' hyz' hxz' 
-    refine' lt_of_le_of_ltₓ _ (max_ltₓ hxy hyz)
-    rw [card_pow_degree_nonzero _ hxz', card_pow_degree_nonzero _ hxy', card_pow_degree_nonzero _ hyz']
-    have  : (1 : ℤ) ≤ Fintype.card Fq
-    ·
-      exactModCast (@Fintype.one_lt_card Fq _ _).le 
-    simp only [Int.cast_pow, Int.cast_coe_nat, le_max_iff]
-    refine' Or.imp (pow_le_pow this) (pow_le_pow this) _ 
-    rw [nat_degree_le_iff_degree_le, nat_degree_le_iff_degree_le, ←le_max_iff, ←degree_eq_nat_degree hxy',
-      ←degree_eq_nat_degree hyz']
-    convert degree_add_le (x - y) (y - z) using 2 
-    exact (sub_add_sub_cancel _ _ _).symm
+theorem card_pow_degree_anti_archimedean
+{x y z : polynomial Fq}
+{a : exprℤ()}
+(hxy : «expr < »(card_pow_degree «expr - »(x, y), a))
+(hyz : «expr < »(card_pow_degree «expr - »(y, z), a)) : «expr < »(card_pow_degree «expr - »(x, z), a) :=
+begin
+  have [ident ha] [":", expr «expr < »(0, a)] [":=", expr lt_of_le_of_lt (absolute_value.nonneg _ _) hxy],
+  by_cases [expr hxy', ":", expr «expr = »(x, y)],
+  { rwa [expr hxy'] [] },
+  by_cases [expr hyz', ":", expr «expr = »(y, z)],
+  { rwa ["<-", expr hyz'] [] },
+  by_cases [expr hxz', ":", expr «expr = »(x, z)],
+  { rwa ["[", expr hxz', ",", expr sub_self, ",", expr absolute_value.map_zero, "]"] [] },
+  rw ["[", "<-", expr ne.def, ",", "<-", expr sub_ne_zero, "]"] ["at", ident hxy', ident hyz', ident hxz'],
+  refine [expr lt_of_le_of_lt _ (max_lt hxy hyz)],
+  rw ["[", expr card_pow_degree_nonzero _ hxz', ",", expr card_pow_degree_nonzero _ hxy', ",", expr card_pow_degree_nonzero _ hyz', "]"] [],
+  have [] [":", expr «expr ≤ »((1 : exprℤ()), fintype.card Fq)] [],
+  { exact_mod_cast [expr (@fintype.one_lt_card Fq _ _).le] },
+  simp [] [] ["only"] ["[", expr int.cast_pow, ",", expr int.cast_coe_nat, ",", expr le_max_iff, "]"] [] [],
+  refine [expr or.imp (pow_le_pow this) (pow_le_pow this) _],
+  rw ["[", expr nat_degree_le_iff_degree_le, ",", expr nat_degree_le_iff_degree_le, ",", "<-", expr le_max_iff, ",", "<-", expr degree_eq_nat_degree hxy', ",", "<-", expr degree_eq_nat_degree hyz', "]"] [],
+  convert [] [expr degree_add_le «expr - »(x, y) «expr - »(y, z)] ["using", 2],
+  exact [expr (sub_add_sub_cancel _ _ _).symm]
+end
 
--- error in NumberTheory.ClassNumber.AdmissibleCardPowDegree: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in NumberTheory.ClassNumber.AdmissibleCardPowDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A slightly stronger version of `exists_partition` on which we perform induction on `n`:
 for all `ε > 0`, we can partition the remainders of any family of polynomials `A`
 into equivalence classes, where the equivalence(!) relation is "closer than `ε`". -/

@@ -129,33 +129,32 @@ theorem StrictMono.maximal_preimage_top [LinearOrderₓ α] [Preorderₓ β] [Or
         exact le_top)
     x
 
-theorem OrderTop.ext_top {α} {hA : PartialOrderₓ α} (A : OrderTop α) {hB : PartialOrderₓ α} (B : OrderTop α)
-  (H :
-    ∀ x y : α,
-      by 
-          haveI  := hA <;> exact x ≤ y ↔
-        x ≤ y) :
-  (by 
-      haveI  := A <;> exact ⊤ :
-    α) =
-    ⊤ :=
-  top_unique$
-    by 
-      rw [←H] <;> apply le_top
+-- error in Order.BoundedLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem order_top.ext_top
+{α}
+{hA : partial_order α}
+(A : order_top α)
+{hB : partial_order α}
+(B : order_top α)
+(H : ∀
+ x
+ y : α, «expr ↔ »(by haveI [] [] [":=", expr hA]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »((by haveI [] [] [":=", expr A]; exact [expr «expr⊤»()] : α), «expr⊤»()) :=
+«expr $ »(top_unique, by rw ["<-", expr H] []; apply [expr le_top])
 
-theorem OrderTop.ext {α} [PartialOrderₓ α] {A B : OrderTop α}
-  (H :
-    ∀ x y : α,
-      by 
-          haveI  := A <;> exact x ≤ y ↔
-        x ≤ y) :
-  A = B :=
-  by 
-    have tt := OrderTop.ext_top A B H 
-    casesI A with _ ha 
-    casesI B with _ hb 
-    congr 
-    exact le_antisymmₓ (hb _) (ha _)
+-- error in Order.BoundedLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem order_top.ext
+{α}
+[partial_order α]
+{A B : order_top α}
+(H : ∀
+ x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »(A, B) :=
+begin
+  have [ident tt] [] [":=", expr order_top.ext_top A B H],
+  casesI [expr A] ["with", "_", ident ha],
+  casesI [expr B] ["with", "_", ident hb],
+  congr,
+  exact [expr le_antisymm (hb _) (ha _)]
+end
 
 /-- An order is an `order_bot` if it has a least element.
 We state this using a data mixin, holding the value of `⊥` and the least element constraint. -/
@@ -195,11 +194,13 @@ theorem ne_bot_of_le_ne_bot {a b : α} (hb : b ≠ ⊥) (hab : b ≤ a) : a ≠ 
 theorem eq_bot_mono (h : a ≤ b) (h₂ : b = ⊥) : a = ⊥ :=
   le_bot_iff.1$ h₂ ▸ h
 
-theorem bot_lt_iff_ne_bot : ⊥ < a ↔ a ≠ ⊥ :=
-  by 
-    haveI  := Classical.decEq α 
-    haveI  : Decidable (a ≤ ⊥) := decidableOfIff' _ le_bot_iff 
-    simp only [lt_iff_le_not_leₓ, not_iff_not.mpr le_bot_iff, true_andₓ, bot_le]
+-- error in Order.BoundedLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem bot_lt_iff_ne_bot : «expr ↔ »(«expr < »(«expr⊥»(), a), «expr ≠ »(a, «expr⊥»())) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq α],
+  haveI [] [":", expr decidable «expr ≤ »(a, «expr⊥»())] [":=", expr decidable_of_iff' _ le_bot_iff],
+  simp [] [] ["only"] ["[", expr lt_iff_le_not_le, ",", expr not_iff_not.mpr le_bot_iff, ",", expr true_and, ",", expr bot_le, "]"] [] []
+end
 
 theorem ne_bot_of_gt (h : a < b) : b ≠ ⊥ :=
   bot_lt_iff_ne_bot.1$ lt_of_le_of_ltₓ bot_le h
@@ -226,34 +227,31 @@ theorem StrictMono.minimal_preimage_bot [LinearOrderₓ α] [PartialOrderₓ β]
         exact bot_le)
     x
 
-theorem OrderBot.ext_bot {α} [PartialOrderₓ α] (A B : OrderBot α)
-  (H :
-    ∀ x y : α,
-      by 
-          haveI  := A <;> exact x ≤ y ↔
-        x ≤ y) :
-  (by 
-      haveI  := A <;> exact ⊥ :
-    α) =
-    ⊥ :=
-  bot_unique$
-    by 
-      rw [←H] <;> apply bot_le
+-- error in Order.BoundedLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem order_bot.ext_bot
+{α}
+[partial_order α]
+(A B : order_bot α)
+(H : ∀
+ x
+ y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »((by haveI [] [] [":=", expr A]; exact [expr «expr⊥»()] : α), «expr⊥»()) :=
+«expr $ »(bot_unique, by rw ["<-", expr H] []; apply [expr bot_le])
 
-theorem OrderBot.ext {α} [PartialOrderₓ α] {A B : OrderBot α}
-  (H :
-    ∀ x y : α,
-      by 
-          haveI  := A <;> exact x ≤ y ↔
-        x ≤ y) :
-  A = B :=
-  by 
-    have  := PartialOrderₓ.ext H 
-    have tt := OrderBot.ext_bot A B H 
-    casesI A with a ha 
-    casesI B with b hb 
-    congr 
-    exact le_antisymmₓ (ha _) (hb _)
+-- error in Order.BoundedLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem order_bot.ext
+{α}
+[partial_order α]
+{A B : order_bot α}
+(H : ∀
+ x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »(A, B) :=
+begin
+  have [] [] [":=", expr partial_order.ext H],
+  have [ident tt] [] [":=", expr order_bot.ext_bot A B H],
+  casesI [expr A] ["with", ident a, ident ha],
+  casesI [expr B] ["with", ident b, ident hb],
+  congr,
+  exact [expr le_antisymm (ha _) (hb _)]
+end
 
 /-- A `semilattice_sup_top` is a semilattice with top and join. -/
 class SemilatticeSupTop(α : Type u) extends SemilatticeSup α, HasTop α where 
@@ -378,39 +376,32 @@ instance (priority := 100)semilatticeSupBotOfBoundedLattice (α : Type u) [bl : 
   SemilatticeSupBot α :=
   { bl with  }
 
-theorem BoundedLattice.ext {α} {A B : BoundedLattice α}
-  (H :
-    ∀ x y : α,
-      by 
-          haveI  := A <;> exact x ≤ y ↔
-        x ≤ y) :
-  A = B :=
-  by 
-    have H1 : @BoundedLattice.toLattice α A = @BoundedLattice.toLattice α B := Lattice.ext H 
-    have H2 := PartialOrderₓ.ext H 
-    letI this : PartialOrderₓ α :=
-      by 
-        infer_instance 
-    casesI A 
-    casesI B 
-    injection H1 with h1 h2 h3 h4 
-    injection H2 
-    convert rfl
-    ·
-      exact h1.symm
-    ·
-      exact h2.symm
-    ·
-      exact h3.symm
-    ·
-      exact h4.symm 
-    have  : A_le = B_le := h2 
-    subst A_le
-    ·
-      exact le_antisymmₓ (A_le_top _) (B_le_top _)
-    refine' le_antisymmₓ (B_bot_le _) _ 
-    convert A_bot_le _ 
-    convert rfl
+-- error in Order.BoundedLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem bounded_lattice.ext
+{α}
+{A B : bounded_lattice α}
+(H : ∀
+ x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »(A, B) :=
+begin
+  have [ident H1] [":", expr «expr = »(@bounded_lattice.to_lattice α A, @bounded_lattice.to_lattice α B)] [":=", expr lattice.ext H],
+  have [ident H2] [] [":=", expr partial_order.ext H],
+  letI [] [":", expr partial_order α] [":=", expr by apply_instance],
+  casesI [expr A] [],
+  casesI [expr B] [],
+  injection [expr H1] ["with", ident h1, ident h2, ident h3, ident h4],
+  injection [expr H2] [],
+  convert [] [expr rfl] [],
+  { exact [expr h1.symm] },
+  { exact [expr h2.symm] },
+  { exact [expr h3.symm] },
+  { exact [expr h4.symm] },
+  have [] [":", expr «expr = »(A_le, B_le)] [":=", expr h2],
+  subst [expr A_le],
+  { exact [expr le_antisymm (A_le_top _) (B_le_top _)] },
+  refine [expr le_antisymm (B_bot_le _) _],
+  convert [] [expr A_bot_le _] [],
+  convert [] [expr rfl] []
+end
 
 /-- A `distrib_lattice_bot` is a distributive lattice with a least element. -/
 class DistribLatticeBot(α) extends DistribLattice α, SemilatticeInfBot α, SemilatticeSupBot α
@@ -539,7 +530,7 @@ theorem subsingleton_iff_bot_eq_top {α : Type _} [BoundedLattice α] : (⊥ : �
   ⟨subsingleton_of_bot_eq_top,
     fun h =>
       by 
-        exactI Subsingleton.elimₓ ⊥ ⊤⟩
+        exact Subsingleton.elimₓ ⊥ ⊤⟩
 
 /-! ### `with_bot`, `with_top` -/
 

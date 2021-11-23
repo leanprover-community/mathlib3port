@@ -69,7 +69,7 @@ theorem zpow_pos_of_pos {a : K} (ha : 0 < a) : ∀ z : ℤ, 0 < a ^ z
     rw [zpow_neg_succ_of_nat]
     exact inv_pos.2 (pow_pos ha _)
 
--- error in Algebra.FieldPower: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Algebra.FieldPower: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem zpow_le_of_le
 {x : K}
 (hx : «expr ≤ »(1, x))
@@ -95,18 +95,23 @@ begin
     repeat { apply [expr pow_pos (lt_of_lt_of_le zero_lt_one hx)] } }
 end
 
-theorem pow_le_max_of_min_le {x : K} (hx : 1 ≤ x) {a b c : ℤ} (h : min a b ≤ c) : x ^ -c ≤ max (x ^ -a) (x ^ -b) :=
-  by 
-    wlog hle : a ≤ b 
-    have hnle : -b ≤ -a 
-    exact neg_le_neg hle 
-    have hfle : x ^ -b ≤ x ^ -a 
-    exact zpow_le_of_le hx hnle 
-    have  : x ^ -c ≤ x ^ -a
-    ·
-      apply zpow_le_of_le hx 
-      simpa only [min_eq_leftₓ hle, neg_le_neg_iff] using h 
-    simpa only [max_eq_leftₓ hfle]
+-- error in Algebra.FieldPower: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pow_le_max_of_min_le
+{x : K}
+(hx : «expr ≤ »(1, x))
+{a b c : exprℤ()}
+(h : «expr ≤ »(min a b, c)) : «expr ≤ »(«expr ^ »(x, «expr- »(c)), max «expr ^ »(x, «expr- »(a)) «expr ^ »(x, «expr- »(b))) :=
+begin
+  wlog [ident hle] [":", expr «expr ≤ »(a, b)] [] [],
+  have [ident hnle] [":", expr «expr ≤ »(«expr- »(b), «expr- »(a))] [],
+  from [expr neg_le_neg hle],
+  have [ident hfle] [":", expr «expr ≤ »(«expr ^ »(x, «expr- »(b)), «expr ^ »(x, «expr- »(a)))] [],
+  from [expr zpow_le_of_le hx hnle],
+  have [] [":", expr «expr ≤ »(«expr ^ »(x, «expr- »(c)), «expr ^ »(x, «expr- »(a)))] [],
+  { apply [expr zpow_le_of_le hx],
+    simpa [] [] ["only"] ["[", expr min_eq_left hle, ",", expr neg_le_neg_iff, "]"] [] ["using", expr h] },
+  simpa [] [] ["only"] ["[", expr max_eq_left hfle, "]"] [] []
+end
 
 theorem zpow_le_one_of_nonpos {p : K} (hp : 1 ≤ p) {z : ℤ} (hz : z ≤ 0) : p ^ z ≤ 1 :=
   calc p ^ z ≤ p ^ 0 := zpow_le_of_le hp hz 
@@ -233,15 +238,16 @@ theorem Nat.zpow_pos_of_pos {p : ℕ} (h : 0 < p) (n : ℤ) : 0 < (p : K) ^ n :=
 theorem Nat.zpow_ne_zero_of_pos {p : ℕ} (h : 0 < p) (n : ℤ) : (p : K) ^ n ≠ 0 :=
   ne_of_gtₓ (Nat.zpow_pos_of_pos h n)
 
-theorem zpow_strict_mono {x : K} (hx : 1 < x) : StrictMono fun n : ℤ => x ^ n :=
-  fun m n h =>
-    show x ^ m < x ^ n by 
-      have xpos : 0 < x := zero_lt_one.trans hx 
-      have h₀ : x ≠ 0 := xpos.ne' 
-      have hxm : 0 < x ^ m := zpow_pos_of_pos xpos m 
-      have h : 1 < x ^ (n - m) := one_lt_zpow hx _ (sub_pos_of_lt h)
-      replace h := mul_lt_mul_of_pos_right h hxm 
-      rwa [sub_eq_add_neg, zpow_add₀ h₀, mul_assocₓ, zpow_neg_mul_zpow_self _ h₀, one_mulₓ, mul_oneₓ] at h
+-- error in Algebra.FieldPower: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem zpow_strict_mono {x : K} (hx : «expr < »(1, x)) : strict_mono (λ n : exprℤ(), «expr ^ »(x, n)) :=
+λ m n h, show «expr < »(«expr ^ »(x, m), «expr ^ »(x, n)), begin
+  have [ident xpos] [":", expr «expr < »(0, x)] [":=", expr zero_lt_one.trans hx],
+  have [ident h₀] [":", expr «expr ≠ »(x, 0)] [":=", expr xpos.ne'],
+  have [ident hxm] [":", expr «expr < »(0, «expr ^ »(x, m))] [":=", expr zpow_pos_of_pos xpos m],
+  have [ident h] [":", expr «expr < »(1, «expr ^ »(x, «expr - »(n, m)))] [":=", expr one_lt_zpow hx _ (sub_pos_of_lt h)],
+  replace [ident h] [] [":=", expr mul_lt_mul_of_pos_right h hxm],
+  rwa ["[", expr sub_eq_add_neg, ",", expr zpow_add₀ h₀, ",", expr mul_assoc, ",", expr zpow_neg_mul_zpow_self _ h₀, ",", expr one_mul, ",", expr mul_one, "]"] ["at", ident h]
+end
 
 @[simp]
 theorem zpow_lt_iff_lt {x : K} (hx : 1 < x) {m n : ℤ} : x ^ m < x ^ n ↔ m < n :=

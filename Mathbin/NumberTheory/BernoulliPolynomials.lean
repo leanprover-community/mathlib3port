@@ -1,3 +1,4 @@
+import Mathbin.Data.Polynomial.AlgebraMap 
 import Mathbin.Data.Nat.Choose.Cast 
 import Mathbin.NumberTheory.Bernoulli
 
@@ -62,16 +63,16 @@ theorem bernoulli_poly_zero : bernoulliPoly 0 = 1 :=
   by 
     simp [bernoulliPoly]
 
-@[simp]
-theorem bernoulli_poly_eval_zero (n : ℕ) : (bernoulliPoly n).eval 0 = bernoulli n :=
-  by 
-    rw [bernoulliPoly, Polynomial.eval_finset_sum, sum_range_succ]
-    have  : (∑x : ℕ in range n, (bernoulli x*n.choose x)*0^n - x) = 0
-    ·
-      apply sum_eq_zero fun x hx => _ 
-      have h : 0 < n - x := tsub_pos_of_lt (mem_range.1 hx)
-      simp [h]
-    simp [this]
+-- error in NumberTheory.BernoulliPolynomials: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem bernoulli_poly_eval_zero (n : exprℕ()) : «expr = »((bernoulli_poly n).eval 0, bernoulli n) :=
+begin
+  rw ["[", expr bernoulli_poly, ",", expr polynomial.eval_finset_sum, ",", expr sum_range_succ, "]"] [],
+  have [] [":", expr «expr = »(«expr∑ in , »((x : exprℕ()), range n, «expr * »(«expr * »(bernoulli x, n.choose x), «expr ^ »(0, «expr - »(n, x)))), 0)] [],
+  { apply [expr sum_eq_zero (λ x hx, _)],
+    have [ident h] [":", expr «expr < »(0, «expr - »(n, x))] [":=", expr tsub_pos_of_lt (mem_range.1 hx)],
+    simp [] [] [] ["[", expr h, "]"] [] [] },
+  simp [] [] [] ["[", expr this, "]"] [] []
+end
 
 @[simp]
 theorem bernoulli_poly_eval_one (n : ℕ) : (bernoulliPoly n).eval 1 = bernoulli' n :=
@@ -88,7 +89,7 @@ theorem bernoulli_poly_eval_one (n : ℕ) : (bernoulliPoly n).eval 1 = bernoulli
 
 end Examples
 
--- error in NumberTheory.BernoulliPolynomials: ././Mathport/Syntax/Translate/Basic.lean:340:40: in conv_lhs: ././Mathport/Syntax/Translate/Basic.lean:384:40: in conv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in NumberTheory.BernoulliPolynomials: ././Mathport/Syntax/Translate/Basic.lean:341:40: in conv_lhs: ././Mathport/Syntax/Translate/Basic.lean:385:40: in conv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 @[simp]
 theorem sum_bernoulli_poly
 (n : exprℕ()) : «expr = »(«expr∑ in , »((k), range «expr + »(n, 1), «expr • »((«expr + »(n, 1).choose k : exprℚ()), bernoulli_poly k)), polynomial.monomial n («expr + »(n, 1) : exprℚ())) :=

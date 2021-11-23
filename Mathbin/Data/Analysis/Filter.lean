@@ -242,7 +242,7 @@ protected def cofinite [DecidableEq α] : (@cofinite α).Realizer :=
           ⟨fun ⟨s, h⟩ => s.finite_to_set.subset (compl_subset_comm.1 h),
             fun ⟨fs⟩ =>
               by 
-                exactI
+                exact
                   ⟨(«expr ᶜ» x).toFinset,
                     fun a h : a ∉ («expr ᶜ» x).toFinset =>
                       Classical.by_contradiction$ fun h' => h (mem_to_finset.2 h')⟩⟩⟩

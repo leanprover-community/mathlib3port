@@ -96,25 +96,26 @@ theorem Filter.Tendsto.const_mul_at_top' (hr : 0 < r) (hf : tendsto f l at_top) 
         rw [mul_assocₓ]_ ≤ r*f x :=
       mul_le_mul_of_nonneg_left hx (le_of_ltₓ hr)
 
+-- error in Order.Filter.Archimedean: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function tends to infinity along a filter, then this function multiplied by a positive
 constant (on the right) also tends to infinity. The archimedean assumption is convenient to get a
 statement that works on `ℕ`, `ℤ` and `ℝ`, although not necessary (a version in ordered fields is
 given in `filter.tendsto.at_top_mul_const`). -/
-theorem Filter.Tendsto.at_top_mul_const' (hr : 0 < r) (hf : tendsto f l at_top) : tendsto (fun x => f x*r) l at_top :=
-  by 
-    apply tendsto_at_top.2 fun b => _ 
-    obtain ⟨n : ℕ, hn : 1 ≤ n • r⟩ := Archimedean.arch 1 hr 
-    have hn' : 1 ≤ (n : R)*r
-    ·
-      rwa [nsmul_eq_mul] at hn 
-    filterUpwards [tendsto_at_top.1 hf (max b 0*n)]
-    intro x hx 
-    calc b ≤ max b 0*1 :=
-      by 
-        rw [mul_oneₓ]
-        exact le_max_leftₓ _ _ _ ≤ max b 0*n*r :=
-      mul_le_mul_of_nonneg_left hn' (le_max_rightₓ _ _)_ = (max b 0*n)*r :=
-      by 
-        rw [mul_assocₓ]_ ≤ f x*r :=
-      mul_le_mul_of_nonneg_right hx (le_of_ltₓ hr)
+theorem filter.tendsto.at_top_mul_const'
+(hr : «expr < »(0, r))
+(hf : tendsto f l at_top) : tendsto (λ x, «expr * »(f x, r)) l at_top :=
+begin
+  apply [expr tendsto_at_top.2 (λ b, _)],
+  obtain ["⟨", ident n, ":", expr exprℕ(), ",", ident hn, ":", expr «expr ≤ »(1, «expr • »(n, r)), "⟩", ":=", expr archimedean.arch 1 hr],
+  have [ident hn'] [":", expr «expr ≤ »(1, «expr * »((n : R), r))] [],
+  by rwa [expr nsmul_eq_mul] ["at", ident hn],
+  filter_upwards ["[", expr tendsto_at_top.1 hf «expr * »(max b 0, n), "]"] [],
+  assume [binders (x hx)],
+  calc
+    «expr ≤ »(b, «expr * »(max b 0, 1)) : by { rw ["[", expr mul_one, "]"] [],
+      exact [expr le_max_left _ _] }
+    «expr ≤ »(..., «expr * »(max b 0, «expr * »(n, r))) : mul_le_mul_of_nonneg_left hn' (le_max_right _ _)
+    «expr = »(..., «expr * »(«expr * »(max b 0, n), r)) : by rw ["[", expr mul_assoc, "]"] []
+    «expr ≤ »(..., «expr * »(f x, r)) : mul_le_mul_of_nonneg_right hx (le_of_lt hr)
+end
 

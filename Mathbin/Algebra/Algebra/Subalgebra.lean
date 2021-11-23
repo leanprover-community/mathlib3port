@@ -774,19 +774,21 @@ theorem _root_.alg_hom.subsingleton [Subsingleton (Subalgebra R A)] : Subsinglet
           let ⟨x, hx⟩ := Set.mem_range.mp (mem_bot.mp this)
           hx ▸ (f.commutes _).trans (g.commutes _).symm⟩
 
-theorem _root_.alg_equiv.subsingleton_left [Subsingleton (Subalgebra R A)] : Subsingleton (A ≃ₐ[R] B) :=
-  by 
-    haveI  : Subsingleton (A →ₐ[R] B) := AlgHom.subsingleton 
-    exact ⟨fun f g => AlgEquiv.ext fun x => alg_hom.ext_iff.mp (Subsingleton.elimₓ f.to_alg_hom g.to_alg_hom) x⟩
+-- error in Algebra.Algebra.Subalgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem _root_.alg_equiv.subsingleton_left [subsingleton (subalgebra R A)] : subsingleton «expr ≃ₐ[ ] »(A, R, B) :=
+begin
+  haveI [] [":", expr subsingleton «expr →ₐ[ ] »(A, R, B)] [":=", expr alg_hom.subsingleton],
+  exact [expr ⟨λ f g, alg_equiv.ext (λ x, alg_hom.ext_iff.mp (subsingleton.elim f.to_alg_hom g.to_alg_hom) x)⟩]
+end
 
-theorem _root_.alg_equiv.subsingleton_right [Subsingleton (Subalgebra R B)] : Subsingleton (A ≃ₐ[R] B) :=
-  by 
-    haveI  : Subsingleton (B ≃ₐ[R] A) := AlgEquiv.subsingleton_left 
-    exact
-      ⟨fun f g =>
-          Eq.trans (AlgEquiv.symm_symm _).symm
-            (by 
-              rw [Subsingleton.elimₓ f.symm g.symm, AlgEquiv.symm_symm])⟩
+-- error in Algebra.Algebra.Subalgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem _root_.alg_equiv.subsingleton_right [subsingleton (subalgebra R B)] : subsingleton «expr ≃ₐ[ ] »(A, R, B) :=
+begin
+  haveI [] [":", expr subsingleton «expr ≃ₐ[ ] »(B, R, A)] [":=", expr alg_equiv.subsingleton_left],
+  exact [expr ⟨λ
+    f
+    g, eq.trans (alg_equiv.symm_symm _).symm (by rw ["[", expr subsingleton.elim f.symm g.symm, ",", expr alg_equiv.symm_symm, "]"] [])⟩]
+end
 
 theorem range_val : S.val.range = S :=
   ext$ Set.ext_iff.1$ S.val.coe_range.trans Subtype.range_val

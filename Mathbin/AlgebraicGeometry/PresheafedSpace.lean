@@ -83,16 +83,12 @@ theorem ext {X Y : PresheafedSpace C} (α β : hom X Y) (w : α.base = β.base)
     dsimp [presheaf.pushforward_obj]  at *
     tidy
 
--- error in AlgebraicGeometry.PresheafedSpace: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem hext
-{X Y : PresheafedSpace C}
-(α β : hom X Y)
-(w : «expr = »(α.base, β.base))
-(h : «expr == »(α.c, β.c)) : «expr = »(α, β) :=
-by { cases [expr α] [],
-  cases [expr β] [],
-  congr,
-  exacts ["[", expr w, ",", expr h, "]"] }
+theorem hext {X Y : PresheafedSpace C} (α β : hom X Y) (w : α.base = β.base) (h : HEq α.c β.c) : α = β :=
+  by 
+    cases α 
+    cases β 
+    congr 
+    exacts[w, h]
 
 /-- The identity morphism of a `PresheafedSpace`. -/
 def id (X : PresheafedSpace C) : hom X X :=
@@ -115,30 +111,39 @@ section
 
 attribute [local simp] id comp
 
--- error in AlgebraicGeometry.PresheafedSpace: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- The category of PresheafedSpaces. Morphisms are pairs, a continuous map and a presheaf map
     from the presheaf on the target to the pushforward of the presheaf on the source. -/
 instance category_of_PresheafedSpaces : category (PresheafedSpace C) :=
-{ hom := hom,
-  id := id,
-  comp := λ X Y Z f g, comp f g,
-  id_comp' := λ X Y f, by { ext1 [] [],
-    { rw [expr comp_c] [],
-      erw [expr eq_to_hom_map] [],
-      simp [] [] [] [] [] [],
-      apply [expr comp_id] },
-    apply [expr id_comp] },
-  comp_id' := λ X Y f, by { ext1 [] [],
-    { rw [expr comp_c] [],
-      erw [expr congr_hom (presheaf.id_pushforward _) f.c] [],
-      simp [] [] [] [] [] [],
-      erw [expr eq_to_hom_trans_assoc] [],
-      simp [] [] [] [] [] [] },
-    apply [expr comp_id] },
-  assoc' := λ W X Y Z f g h, by { ext1 [] [],
-    repeat { rw [expr comp_c] [] },
-    simpa [] [] [] [] [] [],
-    refl } }
+  { Hom := hom, id := id, comp := fun X Y Z f g => comp f g,
+    id_comp' :=
+      fun X Y f =>
+        by 
+          ext1
+          ·
+            rw [comp_c]
+            erw [eq_to_hom_map]
+            simp 
+            apply comp_id 
+          apply id_comp,
+    comp_id' :=
+      fun X Y f =>
+        by 
+          ext1
+          ·
+            rw [comp_c]
+            erw [congr_hom (presheaf.id_pushforward _) f.c]
+            simp 
+            erw [eq_to_hom_trans_assoc]
+            simp 
+          apply comp_id,
+    assoc' :=
+      fun W X Y Z f g h =>
+        by 
+          ext1 
+          repeat' 
+            rw [comp_c]
+          simpa 
+          rfl }
 
 end 
 

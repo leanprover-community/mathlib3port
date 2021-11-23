@@ -12,26 +12,30 @@ def symmod (i j : Int) : Int :=
 
 attribute [local semireducible] Int.Nonneg
 
-theorem symmod_add_one_self {i : Int} : 0 < i → symmod i (i+1) = -1 :=
-  by 
-    intro h1 
-    unfold symmod 
-    rw [Int.mod_eq_of_lt (le_of_ltₓ h1) (lt_add_one _), if_neg]
-    simp only [add_commₓ, add_neg_cancel_left, neg_add_rev, sub_eq_add_neg]
-    have h2 : (2*i) = (1+1)*i := rfl 
-    simpa only [h2, add_mulₓ, one_mulₓ, add_lt_add_iff_left, not_ltₓ] using h1
-
--- error in Tactic.Omega.EqElim: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem mul_symdiv_eq {i j : int} : «expr = »(«expr * »(j, symdiv i j), «expr - »(i, symmod i j)) :=
+-- error in Tactic.Omega.EqElim: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem symmod_add_one_self {i : int} : «expr < »(0, i) → «expr = »(symmod i «expr + »(i, 1), «expr- »(1)) :=
 begin
-  unfold [ident symdiv] [],
+  intro [ident h1],
   unfold [ident symmod] [],
-  by_cases [expr h1, ":", expr «expr < »(«expr * »(2, «expr % »(i, j)), j)],
-  { repeat { rw [expr if_pos h1] [] },
-    rw ["[", expr int.mod_def, ",", expr sub_sub_cancel, "]"] [] },
-  { repeat { rw [expr if_neg h1] [] },
-    rw ["[", expr int.mod_def, ",", expr sub_sub, ",", expr sub_sub_cancel, ",", expr mul_add, ",", expr mul_one, "]"] [] }
+  rw ["[", expr int.mod_eq_of_lt (le_of_lt h1) (lt_add_one _), ",", expr if_neg, "]"] [],
+  simp [] [] ["only"] ["[", expr add_comm, ",", expr add_neg_cancel_left, ",", expr neg_add_rev, ",", expr sub_eq_add_neg, "]"] [] [],
+  have [ident h2] [":", expr «expr = »(«expr * »(2, i), «expr * »(«expr + »(1, 1), i))] [":=", expr rfl],
+  simpa [] [] ["only"] ["[", expr h2, ",", expr add_mul, ",", expr one_mul, ",", expr add_lt_add_iff_left, ",", expr not_lt, "]"] [] ["using", expr h1]
 end
+
+theorem mul_symdiv_eq {i j : Int} : (j*symdiv i j) = i - symmod i j :=
+  by 
+    unfold symdiv 
+    unfold symmod 
+    byCases' h1 : (2*i % j) < j
+    ·
+      repeat' 
+        rw [if_pos h1]
+      rw [Int.mod_def, sub_sub_cancel]
+    ·
+      repeat' 
+        rw [if_neg h1]
+      rw [Int.mod_def, sub_sub, sub_sub_cancel, mul_addₓ, mul_oneₓ]
 
 theorem symmod_eq {i j : Int} : symmod i j = i - j*symdiv i j :=
   by 
@@ -54,36 +58,34 @@ def rhs : Nat → Int → List Int → term
   let m := get n as+1
   ⟨symmod b m, (as.map fun x => symmod x m) {n ↦ -m}⟩
 
--- error in Tactic.Omega.EqElim: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem rhs_correct_aux
-{v : nat → int}
-{m : int}
-{as : list int} : ∀
-{k}, «expr∃ , »((d), «expr = »(«expr + »(«expr * »(m, d), coeffs.val_between v (as.map (λ
-     x : exprℤ(), symmod x m)) 0 k), coeffs.val_between v as 0 k))
-| 0 := begin
-  existsi [expr (0 : int)],
-  simp [] [] ["only"] ["[", expr add_zero, ",", expr mul_zero, ",", expr coeffs.val_between, "]"] [] []
-end
-| «expr + »(k, 1) := begin
-  simp [] [] ["only"] ["[", expr zero_add, ",", expr coeffs.val_between, ",", expr list.map, "]"] [] [],
-  cases [expr @rhs_correct_aux k] ["with", ident d, ident h1],
-  rw ["<-", expr h1] [],
-  by_cases [expr hk, ":", expr «expr < »(k, as.length)],
-  { rw ["[", expr get_map hk, ",", expr symmod_eq, ",", expr sub_mul, "]"] [],
-    existsi [expr «expr + »(d, «expr * »(symdiv (get k as) m, v k))],
-    ring [] },
-  { rw [expr not_lt] ["at", ident hk],
-    repeat { rw [expr get_eq_default_of_le] [] },
-    existsi [expr d],
-    rw [expr add_assoc] [],
-    exact [expr hk],
-    simp [] [] ["only"] ["[", expr hk, ",", expr list.length_map, "]"] [] [] }
-end
+theorem rhs_correct_aux {v : Nat → Int} {m : Int} {as : List Int} :
+  ∀ {k}, ∃ d, ((m*d)+coeffs.val_between v (as.map fun x : ℤ => symmod x m) 0 k) = coeffs.val_between v as 0 k
+| 0 =>
+  by 
+    exists (0 : Int)
+    simp only [add_zeroₓ, mul_zero, coeffs.val_between]
+| k+1 =>
+  by 
+    simp only [zero_addₓ, coeffs.val_between, List.map]
+    cases' @rhs_correct_aux k with d h1 
+    rw [←h1]
+    byCases' hk : k < as.length
+    ·
+      rw [get_map hk, symmod_eq, sub_mul]
+      exists d+symdiv (get k as) m*v k 
+      ring
+    ·
+      rw [not_ltₓ] at hk 
+      repeat' 
+        rw [get_eq_default_of_le]
+      exists d 
+      rw [add_assocₓ]
+      exact hk 
+      simp only [hk, List.length_map]
 
 open_locale Omega
 
--- error in Tactic.Omega.EqElim: ././Mathport/Syntax/Translate/Basic.lean:340:40: in apply: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Tactic.Omega.EqElim: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem rhs_correct
 {v : nat → int}
 {b : int}
@@ -158,7 +160,7 @@ def coeffs_reduce : Nat → Int → List Int → term
   let m := a+1
   (sym_sym m b, as.map (sym_sym m) {n ↦ -a})
 
--- error in Tactic.Omega.EqElim: ././Mathport/Syntax/Translate/Basic.lean:340:40: in have: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Tactic.Omega.EqElim: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem coeffs_reduce_correct
 {v : nat → int}
 {b : int}
@@ -264,21 +266,26 @@ def cancel (m : Nat) (t1 t2 : term) : term :=
 def subst (n : Nat) (t1 t2 : term) : term :=
   term.add (t1.mul (get n t2.snd)) (t2.fst, t2.snd {n ↦ 0})
 
-theorem subst_correct {v : Nat → Int} {b : Int} {as : List Int} {t : term} {n : Nat} :
-  0 < get n as → 0 = term.val v (b, as) → term.val v t = term.val (v ⟨n ↦ sgm v b as n⟩) (subst n (rhs n b as) t) :=
-  by 
-    intro h1 h2 
-    simp only [subst, term.val, term.val_add, term.val_mul]
-    rw [←rhs_correct _ h1 h2]
-    cases' t with b' as' 
-    simp only [term.val]
-    have h3 : coeffs.val (v ⟨n ↦ sgm v b as n⟩) (as' {n ↦ 0}) = coeffs.val_except n v as'
-    ·
-      rw [←coeffs.val_except_add_eq n, get_set, zero_mul, add_zeroₓ, coeffs.val_except_update_set]
-    rw [h3, ←coeffs.val_except_add_eq n]
-    ring
+-- error in Tactic.Omega.EqElim: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem subst_correct
+{v : nat → int}
+{b : int}
+{as : list int}
+{t : term}
+{n : nat} : «expr < »(0, get n as) → «expr = »(0, term.val v (b, as)) → «expr = »(term.val v t, term.val «expr ⟨ ↦ ⟩»(v, n, sgm v b as n) (subst n (rhs n b as) t)) :=
+begin
+  intros [ident h1, ident h2],
+  simp [] [] ["only"] ["[", expr subst, ",", expr term.val, ",", expr term.val_add, ",", expr term.val_mul, "]"] [] [],
+  rw ["<-", expr rhs_correct _ h1 h2] [],
+  cases [expr t] ["with", ident b', ident as'],
+  simp [] [] ["only"] ["[", expr term.val, "]"] [] [],
+  have [ident h3] [":", expr «expr = »(coeffs.val «expr ⟨ ↦ ⟩»(v, n, sgm v b as n) «expr { ↦ }»(as', n, 0), coeffs.val_except n v as')] [],
+  { rw ["[", "<-", expr coeffs.val_except_add_eq n, ",", expr get_set, ",", expr zero_mul, ",", expr add_zero, ",", expr coeffs.val_except_update_set, "]"] [] },
+  rw ["[", expr h3, ",", "<-", expr coeffs.val_except_add_eq n, "]"] [],
+  ring []
+end
 
--- error in Tactic.Omega.EqElim: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Omega.EqElim: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- The type of equality elimination rules. -/
 @[derive #[expr has_reflect], derive #[expr inhabited]]
 inductive ee : Type
@@ -336,119 +343,101 @@ theorem sat_empty : clause.sat ([], []) :=
       by 
         decide⟩⟩
 
-theorem sat_eq_elim : ∀ {es : List ee} {c : clause}, c.sat → (eq_elim es c).sat
-| [], ([], les), h => h
-| e :: _, ([], les), h =>
-  by 
-    cases e <;> simp only [eq_elim] <;> apply sat_empty
-| [], (_ :: _, les), h => sat_empty
-| ee.drop :: es, (Eq :: eqs, les), h1 =>
-  by 
-    apply @sat_eq_elim es _ _ 
-    rcases h1 with ⟨v, h1, h2⟩
-    refine' ⟨v, List.forall_mem_of_forall_mem_consₓ h1, h2⟩
-| ee.neg :: es, (Eq :: eqs, les), h1 =>
-  by 
-    simp only [eq_elim]
-    apply sat_eq_elim 
-    cases' h1 with v h1 
-    exists v 
-    cases' h1 with hl hr 
-    apply And.intro _ hr 
-    rw [List.forall_mem_consₓ] at *
-    apply And.intro _ hl.right 
-    rw [term.val_neg]
-    rw [←hl.left]
-    rfl
-| ee.nondiv i :: es, ((b, as) :: eqs, les), h1 =>
-  by 
-    unfold eq_elim 
-    byCases' h2 : ¬i ∣ b ∧ ∀ x : ℤ, x ∈ as → i ∣ x
-    ·
-      exFalso 
-      cases' h1 with v h1 
-      have h3 : 0 = b+coeffs.val v as := h1.left _ (Or.inl rfl)
-      have h4 : i ∣ coeffs.val v as := coeffs.dvd_val h2.right 
-      have h5 : i ∣ b+coeffs.val v as :=
-        by 
-          rw [←h3]
-          apply dvd_zero 
-      rw [←dvd_add_iff_left h4] at h5 
-      apply h2.left h5 
-    rw [if_neg h2]
-    apply sat_empty
-| ee.factor i :: es, ((b, as) :: eqs, les), h1 =>
-  by 
-    simp only [eq_elim]
-    byCases' h2 : i ∣ b ∧ ∀ x _ : x ∈ as, i ∣ x
-    ·
-      rw [if_pos h2]
-      apply sat_eq_elim 
-      cases' h1 with v h1 
-      exists v 
-      cases' h1 with h3 h4 
-      apply And.intro _ h4 
-      rw [List.forall_mem_consₓ] at *
-      cases' h3 with h5 h6 
-      apply And.intro _ h6 
-      rw [term.val_div h2.left h2.right, ←h5, Int.zero_div]
-    ·
-      rw [if_neg h2]
-      apply sat_empty
-| ee.reduce n :: es, ((b, as) :: eqs, les), h1 =>
-  by 
-    simp only [eq_elim]
-    byCases' h2 : 0 < get n as 
-    runTac 
-      tactic.rotate 1
-    ·
-      rw [if_neg h2]
-      apply sat_empty 
-    rw [if_pos h2]
-    apply sat_eq_elim 
-    cases' h1 with v h1 
-    exists v ⟨n ↦ sgm v b as n⟩
-    cases' h1 with h1 h3 
-    rw [List.forall_mem_consₓ] at h1 
-    cases' h1 with h4 h5 
-    constructor
-    ·
-      rw [List.forall_mem_consₓ]
-      constructor
-      ·
-        apply coeffs_reduce_correct h2 h4
-      ·
-        intro x h6 
-        rw [List.mem_mapₓ] at h6 
-        cases' h6 with t h6 
-        cases' h6 with h6 h7 
-        rw [←h7, ←subst_correct h2 h4]
-        apply h5 _ h6
-    ·
-      intro x h6 
-      rw [List.mem_mapₓ] at h6 
-      cases' h6 with t h6 
-      cases' h6 with h6 h7 
-      rw [←h7, ←subst_correct h2 h4]
-      apply h3 _ h6
-| ee.cancel m :: es, (Eq :: eqs, les), h1 =>
-  by 
-    unfold eq_elim 
-    apply sat_eq_elim 
-    cases' h1 with v h1 
-    exists v 
-    cases' h1 with h1 h2 
-    rw [List.forall_mem_consₓ] at h1 
-    cases' h1 with h1 h3 
-    constructor <;>
-      intro t h4 <;>
-        rw [List.mem_mapₓ] at h4 <;>
-          rcases h4 with ⟨s, h4, h5⟩ <;>
-            rw [←h5] <;> simp only [term.val_add, term.val_mul, cancel] <;> rw [←h1, mul_zero, zero_addₓ]
-    ·
-      apply h3 _ h4
-    ·
-      apply h2 _ h4
+-- error in Tactic.Omega.EqElim: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sat_eq_elim : ∀ {es : list ee} {c : clause}, c.sat → (eq_elim es c).sat
+| «expr[ , ]»([]), («expr[ , ]»([]), les), h := h
+| [«expr :: »/«expr :: »/«expr :: »](e, _), («expr[ , ]»([]), les), h := by { cases [expr e] []; simp [] [] ["only"] ["[", expr eq_elim, "]"] [] []; apply [expr sat_empty] }
+| «expr[ , ]»([]), ([«expr :: »/«expr :: »/«expr :: »](_, _), les), h := sat_empty
+| [«expr :: »/«expr :: »/«expr :: »](ee.drop, es), ([«expr :: »/«expr :: »/«expr :: »](eq, eqs), les), h1 := begin
+  apply [expr @sat_eq_elim es _ _],
+  rcases [expr h1, "with", "⟨", ident v, ",", ident h1, ",", ident h2, "⟩"],
+  refine [expr ⟨v, list.forall_mem_of_forall_mem_cons h1, h2⟩]
+end
+| [«expr :: »/«expr :: »/«expr :: »](ee.neg, es), ([«expr :: »/«expr :: »/«expr :: »](eq, eqs), les), h1 := begin
+  simp [] [] ["only"] ["[", expr eq_elim, "]"] [] [],
+  apply [expr sat_eq_elim],
+  cases [expr h1] ["with", ident v, ident h1],
+  existsi [expr v],
+  cases [expr h1] ["with", ident hl, ident hr],
+  apply [expr and.intro _ hr],
+  rw [expr list.forall_mem_cons] ["at", "*"],
+  apply [expr and.intro _ hl.right],
+  rw [expr term.val_neg] [],
+  rw ["<-", expr hl.left] [],
+  refl
+end
+| [«expr :: »/«expr :: »/«expr :: »](ee.nondiv i, es), ([«expr :: »/«expr :: »/«expr :: »]((b, as), eqs), les), h1 := begin
+  unfold [ident eq_elim] [],
+  by_cases [expr h2, ":", expr «expr ∧ »(«expr¬ »(«expr ∣ »(i, b)), ∀ x : exprℤ(), «expr ∈ »(x, as) → «expr ∣ »(i, x))],
+  { exfalso,
+    cases [expr h1] ["with", ident v, ident h1],
+    have [ident h3] [":", expr «expr = »(0, «expr + »(b, coeffs.val v as))] [":=", expr h1.left _ (or.inl rfl)],
+    have [ident h4] [":", expr «expr ∣ »(i, coeffs.val v as)] [":=", expr coeffs.dvd_val h2.right],
+    have [ident h5] [":", expr «expr ∣ »(i, «expr + »(b, coeffs.val v as))] [":=", expr by { rw ["<-", expr h3] [],
+       apply [expr dvd_zero] }],
+    rw ["<-", expr dvd_add_iff_left h4] ["at", ident h5],
+    apply [expr h2.left h5] },
+  rw [expr if_neg h2] [],
+  apply [expr sat_empty]
+end
+| [«expr :: »/«expr :: »/«expr :: »](ee.factor i, es), ([«expr :: »/«expr :: »/«expr :: »]((b, as), eqs), les), h1 := begin
+  simp [] [] ["only"] ["[", expr eq_elim, "]"] [] [],
+  by_cases [expr h2, ":", expr «expr ∧ »(«expr ∣ »(i, b), ∀ x «expr ∈ » as, «expr ∣ »(i, x))],
+  { rw [expr if_pos h2] [],
+    apply [expr sat_eq_elim],
+    cases [expr h1] ["with", ident v, ident h1],
+    existsi [expr v],
+    cases [expr h1] ["with", ident h3, ident h4],
+    apply [expr and.intro _ h4],
+    rw [expr list.forall_mem_cons] ["at", "*"],
+    cases [expr h3] ["with", ident h5, ident h6],
+    apply [expr and.intro _ h6],
+    rw ["[", expr term.val_div h2.left h2.right, ",", "<-", expr h5, ",", expr int.zero_div, "]"] [] },
+  { rw [expr if_neg h2] [],
+    apply [expr sat_empty] }
+end
+| [«expr :: »/«expr :: »/«expr :: »](ee.reduce n, es), ([«expr :: »/«expr :: »/«expr :: »]((b, as), eqs), les), h1 := begin
+  simp [] [] ["only"] ["[", expr eq_elim, "]"] [] [],
+  by_cases [expr h2, ":", expr «expr < »(0, get n as)],
+  tactic.rotate 1,
+  { rw [expr if_neg h2] [],
+    apply [expr sat_empty] },
+  rw [expr if_pos h2] [],
+  apply [expr sat_eq_elim],
+  cases [expr h1] ["with", ident v, ident h1],
+  existsi [expr «expr ⟨ ↦ ⟩»(v, n, sgm v b as n)],
+  cases [expr h1] ["with", ident h1, ident h3],
+  rw [expr list.forall_mem_cons] ["at", ident h1],
+  cases [expr h1] ["with", ident h4, ident h5],
+  constructor,
+  { rw [expr list.forall_mem_cons] [],
+    constructor,
+    { apply [expr coeffs_reduce_correct h2 h4] },
+    { intros [ident x, ident h6],
+      rw [expr list.mem_map] ["at", ident h6],
+      cases [expr h6] ["with", ident t, ident h6],
+      cases [expr h6] ["with", ident h6, ident h7],
+      rw ["[", "<-", expr h7, ",", "<-", expr subst_correct h2 h4, "]"] [],
+      apply [expr h5 _ h6] } },
+  { intros [ident x, ident h6],
+    rw [expr list.mem_map] ["at", ident h6],
+    cases [expr h6] ["with", ident t, ident h6],
+    cases [expr h6] ["with", ident h6, ident h7],
+    rw ["[", "<-", expr h7, ",", "<-", expr subst_correct h2 h4, "]"] [],
+    apply [expr h3 _ h6] }
+end
+| [«expr :: »/«expr :: »/«expr :: »](ee.cancel m, es), ([«expr :: »/«expr :: »/«expr :: »](eq, eqs), les), h1 := begin
+  unfold [ident eq_elim] [],
+  apply [expr sat_eq_elim],
+  cases [expr h1] ["with", ident v, ident h1],
+  existsi [expr v],
+  cases [expr h1] ["with", ident h1, ident h2],
+  rw [expr list.forall_mem_cons] ["at", ident h1],
+  cases [expr h1] ["with", ident h1, ident h3],
+  constructor; intros [ident t, ident h4]; rw [expr list.mem_map] ["at", ident h4]; rcases [expr h4, "with", "⟨", ident s, ",", ident h4, ",", ident h5, "⟩"]; rw ["<-", expr h5] []; simp [] [] ["only"] ["[", expr term.val_add, ",", expr term.val_mul, ",", expr cancel, "]"] [] []; rw ["[", "<-", expr h1, ",", expr mul_zero, ",", expr zero_add, "]"] [],
+  { apply [expr h3 _ h4] },
+  { apply [expr h2 _ h4] }
+end
 
 /-- If the result of equality elimination is unsatisfiable, the original clause is unsatisfiable. -/
 theorem unsat_of_unsat_eq_elim (ee : List ee) (c : clause) : (eq_elim ee c).Unsat → c.unsat :=

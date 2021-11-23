@@ -1,4 +1,5 @@
-import Mathbin.MeasureTheory.Integral.Lebesgue
+import Mathbin.MeasureTheory.Measure.MeasureSpace 
+import Mathbin.Analysis.Complex.Basic
 
 /-!
 
@@ -126,64 +127,55 @@ theorem ext {s t : vector_measure α M} (h : ∀ i : Set α, MeasurableSet i →
 
 variable[T2Space M]{v : vector_measure α M}{f : ℕ → Set α}
 
-theorem has_sum_of_disjoint_Union [Encodable β] {f : β → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
-  (hf₂ : Pairwise (Disjoint on f)) : HasSum (fun i => v (f i)) (v (⋃i, f i)) :=
-  by 
-    set g := fun i : ℕ => ⋃(b : β)(H : b ∈ Encodable.decode₂ β i), f b with hg 
-    have hg₁ : ∀ i, MeasurableSet (g i)
-    ·
-      exact fun _ => MeasurableSet.Union fun b => MeasurableSet.Union_Prop$ fun _ => hf₁ b 
-    have hg₂ : Pairwise (Disjoint on g)
-    ·
-      exact Encodable.Union_decode₂_disjoint_on hf₂ 
-    have  := v.of_disjoint_Union_nat hg₁ hg₂ 
-    rw [hg, Encodable.Union_decode₂] at this 
-    have hg₃ : (fun i : β => v (f i)) = fun i => v (g (Encodable.encode i))
-    ·
-      ext 
-      rw [hg]
-      simp only 
-      congr 
-      ext y 
-      simp only [exists_prop, mem_Union, Option.mem_def]
-      split 
-      ·
-        intro hy 
-        refine' ⟨x, (Encodable.decode₂_is_partial_inv _ _).2 rfl, hy⟩
-      ·
-        rintro ⟨b, hb₁, hb₂⟩
-        rw [Encodable.decode₂_is_partial_inv _ _] at hb₁ 
-        rwa [←Encodable.encode_injective hb₁]
-    rw [Summable.has_sum_iff, this, ←tsum_Union_decode₂]
-    ·
-      exact v.empty
-    ·
-      rw [hg₃]
-      change Summable ((fun i => v (g i)) ∘ Encodable.encode)
-      rw [Function.Injective.summable_iff Encodable.encode_injective]
-      ·
-        exact (v.m_Union hg₁ hg₂).Summable
-      ·
-        intro x hx 
-        convert v.empty 
-        simp only [Union_eq_empty, Option.mem_def, not_exists, mem_range] at hx⊢
-        intro i hi 
-        exact False.elim ((hx i) ((Encodable.decode₂_is_partial_inv _ _).1 hi))
+-- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_sum_of_disjoint_Union
+[encodable β]
+{f : β → set α}
+(hf₁ : ∀ i, measurable_set (f i))
+(hf₂ : pairwise «expr on »(disjoint, f)) : has_sum (λ i, v (f i)) (v «expr⋃ , »((i), f i)) :=
+begin
+  set [] [ident g] [] [":="] [expr λ
+   i : exprℕ(), «expr⋃ , »((b : β) (H : «expr ∈ »(b, encodable.decode₂ β i)), f b)] ["with", ident hg],
+  have [ident hg₁] [":", expr ∀ i, measurable_set (g i)] [],
+  { exact [expr λ _, measurable_set.Union (λ b, «expr $ »(measurable_set.Union_Prop, λ _, hf₁ b))] },
+  have [ident hg₂] [":", expr pairwise «expr on »(disjoint, g)] [],
+  { exact [expr encodable.Union_decode₂_disjoint_on hf₂] },
+  have [] [] [":=", expr v.of_disjoint_Union_nat hg₁ hg₂],
+  rw ["[", expr hg, ",", expr encodable.Union_decode₂, "]"] ["at", ident this],
+  have [ident hg₃] [":", expr «expr = »(λ i : β, v (f i), λ i, v (g (encodable.encode i)))] [],
+  { ext [] [] [],
+    rw [expr hg] [],
+    simp [] [] ["only"] [] [] [],
+    congr,
+    ext [] [ident y] [],
+    simp [] [] ["only"] ["[", expr exists_prop, ",", expr mem_Union, ",", expr option.mem_def, "]"] [] [],
+    split,
+    { intro [ident hy],
+      refine [expr ⟨x, (encodable.decode₂_is_partial_inv _ _).2 rfl, hy⟩] },
+    { rintro ["⟨", ident b, ",", ident hb₁, ",", ident hb₂, "⟩"],
+      rw [expr encodable.decode₂_is_partial_inv _ _] ["at", ident hb₁],
+      rwa ["<-", expr encodable.encode_injective hb₁] [] } },
+  rw ["[", expr summable.has_sum_iff, ",", expr this, ",", "<-", expr tsum_Union_decode₂, "]"] [],
+  { exact [expr v.empty] },
+  { rw [expr hg₃] [],
+    change [expr summable «expr ∘ »(λ i, v (g i), encodable.encode)] [] [],
+    rw [expr function.injective.summable_iff encodable.encode_injective] [],
+    { exact [expr (v.m_Union hg₁ hg₂).summable] },
+    { intros [ident x, ident hx],
+      convert [] [expr v.empty] [],
+      simp [] [] ["only"] ["[", expr Union_eq_empty, ",", expr option.mem_def, ",", expr not_exists, ",", expr mem_range, "]"] [] ["at", "⊢", ident hx],
+      intros [ident i, ident hi],
+      exact [expr false.elim (hx i ((encodable.decode₂_is_partial_inv _ _).1 hi))] } }
+end
 
 theorem of_disjoint_Union [Encodable β] {f : β → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
   (hf₂ : Pairwise (Disjoint on f)) : v (⋃i, f i) = ∑'i, v (f i) :=
   (has_sum_of_disjoint_Union hf₁ hf₂).tsum_eq.symm
 
--- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem of_union
-{A B : set α}
-(h : disjoint A B)
-(hA : measurable_set A)
-(hB : measurable_set B) : «expr = »(v «expr ∪ »(A, B), «expr + »(v A, v B)) :=
-begin
-  rw ["[", expr union_eq_Union, ",", expr of_disjoint_Union, ",", expr tsum_fintype, ",", expr fintype.sum_bool, ",", expr cond, ",", expr cond, "]"] [],
-  exacts ["[", expr λ b, bool.cases_on b hB hA, ",", expr pairwise_disjoint_on_bool.2 h, "]"]
-end
+theorem of_union {A B : Set α} (h : Disjoint A B) (hA : MeasurableSet A) (hB : MeasurableSet B) : v (A ∪ B) = v A+v B :=
+  by 
+    rw [union_eq_Union, of_disjoint_Union, tsum_fintype, Fintype.sum_bool, cond, cond]
+    exacts[fun b => Bool.casesOn b hB hA, pairwise_disjoint_on_bool.2 h]
 
 theorem of_add_of_diff {A B : Set α} (hA : MeasurableSet A) (hB : MeasurableSet B) (h : A ⊆ B) :
   (v A+v (B \ A)) = v B :=
@@ -379,7 +371,7 @@ def smul (r : R) (v : vector_measure α M) : vector_measure α M :=
       fun _ hi =>
         by 
           rw [Pi.smul_apply, v.not_measurable hi, smul_zero],
-    m_Union' := fun _ hf₁ hf₂ => HasSum.smul (v.m_Union hf₁ hf₂) }
+    m_Union' := fun _ hf₁ hf₂ => HasSum.const_smul (v.m_Union hf₁ hf₂) }
 
 instance  : HasScalar R (vector_measure α M) :=
   ⟨smul⟩
@@ -417,32 +409,38 @@ namespace Measureₓ
 
 include m
 
--- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- A finite measure coerced into a real function is a signed measure. -/
-@[simps #[]]
-def to_signed_measure (μ : measure α) [hμ : is_finite_measure μ] : signed_measure α :=
-{ measure_of' := λ i : set α, if measurable_set i then (μ.measure_of i).to_real else 0,
-  empty' := by simp [] [] [] ["[", expr μ.empty, "]"] [] [],
-  not_measurable' := λ _ hi, if_neg hi,
-  m_Union' := begin
-    intros ["_", ident hf₁, ident hf₂],
-    rw ["[", expr μ.m_Union hf₁ hf₂, ",", expr ennreal.tsum_to_real_eq, ",", expr if_pos (measurable_set.Union hf₁), ",", expr summable.has_sum_iff, "]"] [],
-    { congr,
-      ext [] [ident n] [],
-      rw [expr if_pos (hf₁ n)] [] },
-    { refine [expr @summable_of_nonneg_of_le _ «expr ∘ »(ennreal.to_real, «expr ∘ »(μ, f)) _ _ _ _],
-      { intro [],
-        split_ifs [] [],
-        exacts ["[", expr ennreal.to_real_nonneg, ",", expr le_refl _, "]"] },
-      { intro [],
-        split_ifs [] [],
-        exacts ["[", expr le_refl _, ",", expr ennreal.to_real_nonneg, "]"] },
-      exact [expr summable_measure_to_real hf₁ hf₂] },
-    { intros [ident a, ident ha],
-      apply [expr ne_of_lt hμ.measure_univ_lt_top],
-      rw ["[", expr eq_top_iff, ",", "<-", expr ha, ",", expr outer_measure.measure_of_eq_coe, ",", expr coe_to_outer_measure, "]"] [],
-      exact [expr measure_mono (set.subset_univ _)] }
-  end }
+@[simps]
+def to_signed_measure (μ : Measureₓ α) [hμ : is_finite_measure μ] : signed_measure α :=
+  { measureOf' := fun i : Set α => if MeasurableSet i then (μ.measure_of i).toReal else 0,
+    empty' :=
+      by 
+        simp [μ.empty],
+    not_measurable' := fun _ hi => if_neg hi,
+    m_Union' :=
+      by 
+        intro _ hf₁ hf₂ 
+        rw [μ.m_Union hf₁ hf₂, Ennreal.tsum_to_real_eq, if_pos (MeasurableSet.Union hf₁), Summable.has_sum_iff]
+        ·
+          congr 
+          ext n 
+          rw [if_pos (hf₁ n)]
+        ·
+          refine' @summable_of_nonneg_of_le _ (Ennreal.toReal ∘ μ ∘ f) _ _ _ _
+          ·
+            intro 
+            splitIfs 
+            exacts[Ennreal.to_real_nonneg, le_reflₓ _]
+          ·
+            intro 
+            splitIfs 
+            exacts[le_reflₓ _, Ennreal.to_real_nonneg]
+          exact summable_measure_to_real hf₁ hf₂
+        ·
+          intro a ha 
+          apply ne_of_ltₓ hμ.measure_univ_lt_top 
+          rw [eq_top_iff, ←ha, outer_measure.measure_of_eq_coe, coe_to_outer_measure]
+          exact measure_mono (Set.subset_univ _) }
 
 theorem to_signed_measure_apply_measurable {μ : Measureₓ α} [is_finite_measure μ] {i : Set α} (hi : MeasurableSet i) :
   μ.to_signed_measure i = (μ i).toReal :=
@@ -454,22 +452,20 @@ theorem to_signed_measure_congr {μ ν : Measureₓ α} [is_finite_measure μ] [
     congr 
     exact h
 
-theorem to_signed_measure_eq_to_signed_measure_iff {μ ν : Measureₓ α} [is_finite_measure μ] [is_finite_measure ν] :
-  μ.to_signed_measure = ν.to_signed_measure ↔ μ = ν :=
-  by 
-    refine' ⟨fun h => _, fun h => _⟩
-    ·
-      ext1 i hi 
-      have  : μ.to_signed_measure i = ν.to_signed_measure i
-      ·
-        rw [h]
-      rwa [to_signed_measure_apply_measurable hi, to_signed_measure_apply_measurable hi, Ennreal.to_real_eq_to_real] at
-          this <;>
-        ·
-          exact measure_ne_top _ _
-    ·
-      congr 
-      assumption
+-- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem to_signed_measure_eq_to_signed_measure_iff
+{μ ν : measure α}
+[is_finite_measure μ]
+[is_finite_measure ν] : «expr ↔ »(«expr = »(μ.to_signed_measure, ν.to_signed_measure), «expr = »(μ, ν)) :=
+begin
+  refine [expr ⟨λ h, _, λ h, _⟩],
+  { ext1 [] [ident i, ident hi],
+    have [] [":", expr «expr = »(μ.to_signed_measure i, ν.to_signed_measure i)] [],
+    { rw [expr h] [] },
+    rwa ["[", expr to_signed_measure_apply_measurable hi, ",", expr to_signed_measure_apply_measurable hi, ",", expr ennreal.to_real_eq_to_real, "]"] ["at", ident this]; { exact [expr measure_ne_top _ _] } },
+  { congr,
+    assumption }
+end
 
 @[simp]
 theorem to_signed_measure_zero : (0 : Measureₓ α).toSignedMeasure = 0 :=
@@ -928,18 +924,17 @@ theorem le_restrict_empty : v ≤[∅] w :=
     intro j hj 
     rw [restrict_empty, restrict_empty]
 
-theorem le_restrict_univ_iff_le : v ≤[univ] w ↔ v ≤ w :=
-  by 
-    split 
-    ·
-      intro h s hs 
-      have  := h s hs 
-      rwa [restrict_apply _ MeasurableSet.univ hs, inter_univ, restrict_apply _ MeasurableSet.univ hs, inter_univ] at
-        this
-    ·
-      intro h s hs 
-      rw [restrict_apply _ MeasurableSet.univ hs, inter_univ, restrict_apply _ MeasurableSet.univ hs, inter_univ]
-      exact h s hs
+-- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem le_restrict_univ_iff_le : «expr ↔ »(«expr ≤[ ] »(v, univ, w), «expr ≤ »(v, w)) :=
+begin
+  split,
+  { intros [ident h, ident s, ident hs],
+    have [] [] [":=", expr h s hs],
+    rwa ["[", expr restrict_apply _ measurable_set.univ hs, ",", expr inter_univ, ",", expr restrict_apply _ measurable_set.univ hs, ",", expr inter_univ, "]"] ["at", ident this] },
+  { intros [ident h, ident s, ident hs],
+    rw ["[", expr restrict_apply _ measurable_set.univ hs, ",", expr inter_univ, ",", expr restrict_apply _ measurable_set.univ hs, ",", expr inter_univ, "]"] [],
+    exact [expr h s hs] }
+end
 
 end 
 
@@ -969,39 +964,31 @@ variable{M : Type _}[TopologicalSpace M][OrderedAddCommMonoid M][OrderClosedTopo
 
 variable(v w : vector_measure α M){i j : Set α}
 
-theorem restrict_le_restrict_Union {f : ℕ → Set α} (hf₁ : ∀ n, MeasurableSet (f n)) (hf₂ : ∀ n, v ≤[f n] w) :
-  v ≤[⋃n, f n] w :=
-  by 
-    refine' restrict_le_restrict_of_subset_le v w fun a ha₁ ha₂ => _ 
-    have ha₃ : (⋃n, a ∩ disjointed f n) = a
-    ·
-      rwa [←inter_Union, Union_disjointed, inter_eq_left_iff_subset]
-    have ha₄ : Pairwise (Disjoint on fun n => a ∩ disjointed f n)
-    ·
-      exact (disjoint_disjointed _).mono fun i j => Disjoint.mono inf_le_right inf_le_right 
-    rw [←ha₃, v.of_disjoint_Union_nat _ ha₄, w.of_disjoint_Union_nat _ ha₄]
-    refine' tsum_le_tsum (fun n => (restrict_le_restrict_iff v w (hf₁ n)).1 (hf₂ n) _ _) _ _
-    ·
-      exact ha₁.inter (MeasurableSet.disjointed hf₁ n)
-    ·
-      exact Set.Subset.trans (Set.inter_subset_right _ _) (disjointed_subset _ _)
-    ·
-      refine' (v.m_Union (fun n => _) _).Summable
-      ·
-        exact ha₁.inter (MeasurableSet.disjointed hf₁ n)
-      ·
-        exact (disjoint_disjointed _).mono fun i j => Disjoint.mono inf_le_right inf_le_right
-    ·
-      refine' (w.m_Union (fun n => _) _).Summable
-      ·
-        exact ha₁.inter (MeasurableSet.disjointed hf₁ n)
-      ·
-        exact (disjoint_disjointed _).mono fun i j => Disjoint.mono inf_le_right inf_le_right
-    ·
-      intro n 
-      exact ha₁.inter (MeasurableSet.disjointed hf₁ n)
-    ·
-      exact fun n => ha₁.inter (MeasurableSet.disjointed hf₁ n)
+-- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem restrict_le_restrict_Union
+{f : exprℕ() → set α}
+(hf₁ : ∀ n, measurable_set (f n))
+(hf₂ : ∀ n, «expr ≤[ ] »(v, f n, w)) : «expr ≤[ ] »(v, «expr⋃ , »((n), f n), w) :=
+begin
+  refine [expr restrict_le_restrict_of_subset_le v w (λ a ha₁ ha₂, _)],
+  have [ident ha₃] [":", expr «expr = »(«expr⋃ , »((n), «expr ∩ »(a, disjointed f n)), a)] [],
+  { rwa ["[", "<-", expr inter_Union, ",", expr Union_disjointed, ",", expr inter_eq_left_iff_subset, "]"] [] },
+  have [ident ha₄] [":", expr pairwise «expr on »(disjoint, λ n, «expr ∩ »(a, disjointed f n))] [],
+  { exact [expr (disjoint_disjointed _).mono (λ i j, disjoint.mono inf_le_right inf_le_right)] },
+  rw ["[", "<-", expr ha₃, ",", expr v.of_disjoint_Union_nat _ ha₄, ",", expr w.of_disjoint_Union_nat _ ha₄, "]"] [],
+  refine [expr tsum_le_tsum (λ n, (restrict_le_restrict_iff v w (hf₁ n)).1 (hf₂ n) _ _) _ _],
+  { exact [expr ha₁.inter (measurable_set.disjointed hf₁ n)] },
+  { exact [expr set.subset.trans (set.inter_subset_right _ _) (disjointed_subset _ _)] },
+  { refine [expr (v.m_Union (λ n, _) _).summable],
+    { exact [expr ha₁.inter (measurable_set.disjointed hf₁ n)] },
+    { exact [expr (disjoint_disjointed _).mono (λ i j, disjoint.mono inf_le_right inf_le_right)] } },
+  { refine [expr (w.m_Union (λ n, _) _).summable],
+    { exact [expr ha₁.inter (measurable_set.disjointed hf₁ n)] },
+    { exact [expr (disjoint_disjointed _).mono (λ i j, disjoint.mono inf_le_right inf_le_right)] } },
+  { intro [ident n],
+    exact [expr ha₁.inter (measurable_set.disjointed hf₁ n)] },
+  { exact [expr λ n, ha₁.inter (measurable_set.disjointed hf₁ n)] }
+end
 
 theorem restrict_le_restrict_encodable_Union [Encodable β] {f : β → Set α} (hf₁ : ∀ b, MeasurableSet (f b))
   (hf₂ : ∀ b, v ≤[f b] w) : v ≤[⋃b, f b] w :=
@@ -1087,13 +1074,16 @@ variable(v w : vector_measure α M){i j : Set α}
 
 include m
 
-theorem exists_pos_measure_of_not_restrict_le_zero (hi : ¬v ≤[i] 0) : ∃ j : Set α, MeasurableSet j ∧ j ⊆ i ∧ 0 < v j :=
-  by 
-    have hi₁ : MeasurableSet i := measurable_of_not_restrict_le_zero _ hi 
-    rw [restrict_le_restrict_iff _ _ hi₁] at hi 
-    pushNeg  at hi 
-    obtain ⟨j, hj₁, hj₂, hj⟩ := hi 
-    exact ⟨j, hj₁, hj₂, hj⟩
+-- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_pos_measure_of_not_restrict_le_zero
+(hi : «expr¬ »(«expr ≤[ ] »(v, i, 0))) : «expr∃ , »((j : set α), «expr ∧ »(measurable_set j, «expr ∧ »(«expr ⊆ »(j, i), «expr < »(0, v j)))) :=
+begin
+  have [ident hi₁] [":", expr measurable_set i] [":=", expr measurable_of_not_restrict_le_zero _ hi],
+  rw ["[", expr restrict_le_restrict_iff _ _ hi₁, "]"] ["at", ident hi],
+  push_neg ["at", ident hi],
+  obtain ["⟨", ident j, ",", ident hj₁, ",", ident hj₂, ",", ident hj, "⟩", ":=", expr hi],
+  exact [expr ⟨j, hj₁, hj₂, hj⟩]
+end
 
 end 
 
@@ -1253,30 +1243,35 @@ theorem zero_right : v ⊥ᵥ (0 : vector_measure α N) :=
 theorem zero_left : (0 : vector_measure α M) ⊥ᵥ w :=
   zero_right.symm
 
--- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem add_left
-[t2_space N]
-[has_continuous_add M]
-(h₁ : «expr ⊥ᵥ »(v₁, w))
-(h₂ : «expr ⊥ᵥ »(v₂, w)) : «expr ⊥ᵥ »(«expr + »(v₁, v₂), w) :=
-begin
-  obtain ["⟨", ident u, ",", ident hmu, ",", ident hu₁, ",", ident hu₂, "⟩", ":=", expr h₁],
-  obtain ["⟨", ident v, ",", ident hmv, ",", ident hv₁, ",", ident hv₂, "⟩", ":=", expr h₂],
-  refine [expr mk «expr ∩ »(u, v) (hmu.inter hmv) (λ t ht hmt, _) (λ t ht hmt, _)],
-  { rw ["[", expr add_apply, ",", expr hu₁ _ (subset_inter_iff.1 ht).1, ",", expr hv₁ _ (subset_inter_iff.1 ht).2, ",", expr zero_add, "]"] [] },
-  { rw [expr compl_inter] ["at", ident ht],
-    rw ["[", expr (_ : «expr = »(t, «expr ∪ »(«expr ∩ »(«expr ᶜ»(u), t), «expr ∩ »(«expr \ »(«expr ᶜ»(v), «expr ᶜ»(u)), t)))), ",", expr of_union _ (hmu.compl.inter hmt) ((hmv.compl.diff hmu.compl).inter hmt), ",", expr hu₂, ",", expr hv₂, ",", expr add_zero, "]"] [],
-    { exact [expr subset.trans (inter_subset_left _ _) (diff_subset _ _)] },
-    { exact [expr inter_subset_left _ _] },
-    { apply_instance },
-    { exact [expr disjoint.mono (inter_subset_left _ _) (inter_subset_left _ _) disjoint_diff] },
-    { apply [expr subset.antisymm]; intros [ident x, ident hx],
-      { by_cases [expr hxu', ":", expr «expr ∈ »(x, «expr ᶜ»(u))],
-        { exact [expr or.inl ⟨hxu', hx⟩] },
-        rcases [expr ht hx, "with", "(", ident hxu, "|", ident hxv, ")"],
-        exacts ["[", expr false.elim (hxu' hxu), ",", expr or.inr ⟨⟨hxv, hxu'⟩, hx⟩, "]"] },
-      { rcases [expr hx]; exact [expr hx.2] } } }
-end
+theorem add_left [T2Space N] [HasContinuousAdd M] (h₁ : v₁ ⊥ᵥ w) (h₂ : v₂ ⊥ᵥ w) : (v₁+v₂) ⊥ᵥ w :=
+  by 
+    obtain ⟨u, hmu, hu₁, hu₂⟩ := h₁ 
+    obtain ⟨v, hmv, hv₁, hv₂⟩ := h₂ 
+    refine' mk (u ∩ v) (hmu.inter hmv) (fun t ht hmt => _) fun t ht hmt => _
+    ·
+      rw [add_apply, hu₁ _ (subset_inter_iff.1 ht).1, hv₁ _ (subset_inter_iff.1 ht).2, zero_addₓ]
+    ·
+      rw [compl_inter] at ht 
+      rw [(_ : t = «expr ᶜ» u ∩ t ∪ «expr ᶜ» v \ «expr ᶜ» u ∩ t),
+        of_union _ (hmu.compl.inter hmt) ((hmv.compl.diff hmu.compl).inter hmt), hu₂, hv₂, add_zeroₓ]
+      ·
+        exact subset.trans (inter_subset_left _ _) (diff_subset _ _)
+      ·
+        exact inter_subset_left _ _
+      ·
+        infer_instance
+      ·
+        exact Disjoint.mono (inter_subset_left _ _) (inter_subset_left _ _) disjoint_diff
+      ·
+        apply subset.antisymm <;> intro x hx
+        ·
+          byCases' hxu' : x ∈ «expr ᶜ» u
+          ·
+            exact Or.inl ⟨hxu', hx⟩
+          rcases ht hx with (hxu | hxv)
+          exacts[False.elim (hxu' hxu), Or.inr ⟨⟨hxv, hxu'⟩, hx⟩]
+        ·
+          rcases hx with ⟨⟩ <;> exact hx.2
 
 theorem add_right [T2Space M] [HasContinuousAdd N] (h₁ : v ⊥ᵥ w₁) (h₂ : v ⊥ᵥ w₂) : v ⊥ᵥ w₁+w₂ :=
   (add_left h₁.symm h₂.symm).symm
@@ -1321,27 +1316,20 @@ section Trim
 
 omit m
 
+-- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Restriction of a vector measure onto a sub-σ-algebra. -/
-@[simps]
-def trim {m n : MeasurableSpace α} (v : vector_measure α M) (hle : m ≤ n) : @vector_measure α m M _ _ :=
-  { measureOf' := fun i => if measurable_set[m] i then v i else 0,
-    empty' :=
-      by 
-        rw [if_pos MeasurableSet.empty, v.empty],
-    not_measurable' :=
-      fun i hi =>
-        by 
-          rw [if_neg hi],
-    m_Union' :=
-      fun f hf₁ hf₂ =>
-        by 
-          have hf₁' : ∀ k, measurable_set[n] (f k) := fun k => hle _ (hf₁ k)
-          convert v.m_Union hf₁' hf₂
-          ·
-            ext n 
-            rw [if_pos (hf₁ n)]
-          ·
-            rw [if_pos (@MeasurableSet.Union _ _ m _ _ hf₁)] }
+@[simps #[]]
+def trim {m n : measurable_space α} (v : vector_measure α M) (hle : «expr ≤ »(m, n)) : @vector_measure α m M _ _ :=
+{ measure_of' := λ i, if «exprmeasurable_set[ ]»(m) i then v i else 0,
+  empty' := by rw ["[", expr if_pos measurable_set.empty, ",", expr v.empty, "]"] [],
+  not_measurable' := λ i hi, by rw [expr if_neg hi] [],
+  m_Union' := λ f hf₁ hf₂, begin
+    have [ident hf₁'] [":", expr ∀ k, «exprmeasurable_set[ ]»(n) (f k)] [":=", expr λ k, hle _ (hf₁ k)],
+    convert [] [expr v.m_Union hf₁' hf₂] [],
+    { ext [] [ident n] [],
+      rw [expr if_pos (hf₁ n)] [] },
+    { rw [expr if_pos (@measurable_set.Union _ _ m _ _ hf₁)] [] }
+  end }
 
 variable{n : MeasurableSpace α}{v : vector_measure α M}
 
@@ -1391,30 +1379,30 @@ def to_measure_of_zero_le' (s : signed_measure α) (i : Set α) (hi : 0 ≤[i] s
           simp )
         (hi j hj)⟩
 
+-- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a signed measure `s` and a positive measurable set `i`, `to_measure_of_zero_le`
 provides the measure, mapping measurable sets `j` to `s (i ∩ j)`. -/
-def to_measure_of_zero_le (s : signed_measure α) (i : Set α) (hi₁ : MeasurableSet i) (hi₂ : 0 ≤[i] s) : Measureₓ α :=
-  measure.of_measurable (s.to_measure_of_zero_le' i hi₂)
-    (by 
-      simpRw [to_measure_of_zero_le', s.restrict_apply hi₁ MeasurableSet.empty, Set.empty_inter i, s.empty]
-      rfl)
-    (by 
-      intro f hf₁ hf₂ 
-      have h₁ : ∀ n, MeasurableSet (i ∩ f n) := fun n => hi₁.inter (hf₁ n)
-      have h₂ : Pairwise (Disjoint on fun n : ℕ => i ∩ f n)
-      ·
-        rintro n m hnm x ⟨⟨_, hx₁⟩, _, hx₂⟩
-        exact hf₂ n m hnm ⟨hx₁, hx₂⟩
-      simp only [to_measure_of_zero_le', s.restrict_apply hi₁ (MeasurableSet.Union hf₁), Set.inter_comm,
-        Set.inter_Union, s.of_disjoint_Union_nat h₁ h₂, Ennreal.some_eq_coe, id.def]
-      have h : ∀ n, 0 ≤ s (i ∩ f n) :=
-        fun n => s.nonneg_of_zero_le_restrict (s.zero_le_restrict_subset hi₁ (inter_subset_left _ _) hi₂)
-      rw [Nnreal.coe_tsum_of_nonneg h, Ennreal.coe_tsum]
-      ·
-        refine' tsum_congr fun n => _ 
-        simpRw [s.restrict_apply hi₁ (hf₁ n), Set.inter_comm]
-      ·
-        exact (Nnreal.summable_coe_of_nonneg h).2 (s.m_Union h₁ h₂).Summable)
+def to_measure_of_zero_le
+(s : signed_measure α)
+(i : set α)
+(hi₁ : measurable_set i)
+(hi₂ : «expr ≤[ ] »(0, i, s)) : measure α :=
+measure.of_measurable (s.to_measure_of_zero_le' i hi₂) (by { simp_rw ["[", expr to_measure_of_zero_le', ",", expr s.restrict_apply hi₁ measurable_set.empty, ",", expr set.empty_inter i, ",", expr s.empty, "]"] [],
+   refl }) (begin
+   intros [ident f, ident hf₁, ident hf₂],
+   have [ident h₁] [":", expr ∀ n, measurable_set «expr ∩ »(i, f n)] [":=", expr λ n, hi₁.inter (hf₁ n)],
+   have [ident h₂] [":", expr pairwise «expr on »(disjoint, λ n : exprℕ(), «expr ∩ »(i, f n))] [],
+   { rintro [ident n, ident m, ident hnm, ident x, "⟨", "⟨", "_", ",", ident hx₁, "⟩", ",", "_", ",", ident hx₂, "⟩"],
+     exact [expr hf₂ n m hnm ⟨hx₁, hx₂⟩] },
+   simp [] [] ["only"] ["[", expr to_measure_of_zero_le', ",", expr s.restrict_apply hi₁ (measurable_set.Union hf₁), ",", expr set.inter_comm, ",", expr set.inter_Union, ",", expr s.of_disjoint_Union_nat h₁ h₂, ",", expr ennreal.some_eq_coe, ",", expr id.def, "]"] [] [],
+   have [ident h] [":", expr ∀
+    n, «expr ≤ »(0, s «expr ∩ »(i, f n))] [":=", expr λ
+    n, s.nonneg_of_zero_le_restrict (s.zero_le_restrict_subset hi₁ (inter_subset_left _ _) hi₂)],
+   rw ["[", expr nnreal.coe_tsum_of_nonneg h, ",", expr ennreal.coe_tsum, "]"] [],
+   { refine [expr tsum_congr (λ n, _)],
+     simp_rw ["[", expr s.restrict_apply hi₁ (hf₁ n), ",", expr set.inter_comm, "]"] [] },
+   { exact [expr (nnreal.summable_coe_of_nonneg h).2 (s.m_Union h₁ h₂).summable] }
+ end)
 
 variable(s : signed_measure α){i j : Set α}
 

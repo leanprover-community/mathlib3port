@@ -138,17 +138,20 @@ class HasMeasurablePow(β γ : Type _)[MeasurableSpace β][MeasurableSpace γ][P
 
 export HasMeasurablePow(measurable_pow)
 
-instance HasMeasurableMul.hasMeasurablePow (M : Type _) [Monoidₓ M] [MeasurableSpace M] [HasMeasurableMul₂ M] :
-  HasMeasurablePow M ℕ :=
-  ⟨by 
-      haveI  : MeasurableSingletonClass ℕ := ⟨fun _ => trivialₓ⟩
-      refine' measurable_from_prod_encodable fun n => _ 
-      induction' n with n ih
-      ·
-        simp [pow_zeroₓ, measurable_one]
-      ·
-        simp only [pow_succₓ]
-        exact measurable_id.mul ih⟩
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance has_measurable_mul.has_measurable_pow
+(M : Type*)
+[monoid M]
+[measurable_space M]
+[has_measurable_mul₂ M] : has_measurable_pow M exprℕ() :=
+⟨begin
+   haveI [] [":", expr measurable_singleton_class exprℕ()] [":=", expr ⟨λ _, trivial⟩],
+   refine [expr measurable_from_prod_encodable (λ n, _)],
+   induction [expr n] [] ["with", ident n, ident ih] [],
+   { simp [] [] [] ["[", expr pow_zero, ",", expr measurable_one, "]"] [] [] },
+   { simp [] [] ["only"] ["[", expr pow_succ, "]"] [] [],
+     exact [expr measurable_id.mul ih] }
+ end⟩
 
 section Pow
 
@@ -267,7 +270,7 @@ attribute [measurability] Measurable.sub Measurable.sub' AeMeasurable.sub AeMeas
 theorem measurable_set_eq_fun {E} [MeasurableSpace E] [AddGroupₓ E] [MeasurableSingletonClass E] [HasMeasurableSub₂ E]
   {f g : α → E} (hf : Measurable f) (hg : Measurable g) : MeasurableSet { x | f x = g x } :=
   by 
-    suffices h_set_eq : { x : α | f x = g x } = { x | (f - g) x = (0 : E) }
+    suffices h_set_eq : { x:α | f x = g x } = { x | (f - g) x = (0 : E) }
     ·
       rw [h_set_eq]
       exact (hf.sub hg) measurable_set_eq 
@@ -370,18 +373,22 @@ private theorem has_measurable_zpow_aux (G : Type u) [DivInvMonoidₓ G] [Measur
     simpRw [zpow_neg_succ_of_nat]
     exact (measurable_id.pow_const (k+1)).inv
 
-instance hasMeasurableZpow (G : Type u) [DivInvMonoidₓ G] [MeasurableSpace G] [HasMeasurableMul₂ G]
-  [HasMeasurableInv G] : HasMeasurablePow G ℤ :=
-  by 
-    letI this : MeasurableSingletonClass ℤ := ⟨fun _ => trivialₓ⟩
-    constructor 
-    refine' measurable_from_prod_encodable fun n => _ 
-    dsimp 
-    apply Int.casesOn n
-    ·
-      simpa using measurable_id.pow_const
-    ·
-      exact has_measurable_zpow_aux G
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance has_measurable_zpow
+(G : Type u)
+[div_inv_monoid G]
+[measurable_space G]
+[has_measurable_mul₂ G]
+[has_measurable_inv G] : has_measurable_pow G exprℤ() :=
+begin
+  letI [] [":", expr measurable_singleton_class exprℤ()] [":=", expr ⟨λ _, trivial⟩],
+  constructor,
+  refine [expr measurable_from_prod_encodable (λ n, _)],
+  dsimp [] [] [] [],
+  apply [expr int.cases_on n],
+  { simpa [] [] [] [] [] ["using", expr measurable_id.pow_const] },
+  { exact [expr has_measurable_zpow_aux G] }
+end
 
 @[toAdditive]
 instance (priority := 100)has_measurable_div₂_of_mul_inv (G : Type _) [MeasurableSpace G] [DivInvMonoidₓ G]
@@ -540,29 +547,29 @@ end MulAction
 
 section Opposite
 
-open Opposite
+open MulOpposite
 
-instance  {α : Type _} [h : MeasurableSpace α] : MeasurableSpace («expr ᵒᵖ» α) :=
+instance  {α : Type _} [h : MeasurableSpace α] : MeasurableSpace («expr ᵐᵒᵖ» α) :=
   MeasurableSpace.map op h
 
-theorem measurable_op {α : Type _} [MeasurableSpace α] : Measurable (op : α → «expr ᵒᵖ» α) :=
+theorem measurable_op {α : Type _} [MeasurableSpace α] : Measurable (op : α → «expr ᵐᵒᵖ» α) :=
   fun s => id
 
-theorem measurable_unop {α : Type _} [MeasurableSpace α] : Measurable (unop : «expr ᵒᵖ» α → α) :=
+theorem measurable_unop {α : Type _} [MeasurableSpace α] : Measurable (unop : «expr ᵐᵒᵖ» α → α) :=
   fun s => id
 
-instance  {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] : HasMeasurableMul («expr ᵒᵖ» M) :=
+instance  {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] : HasMeasurableMul («expr ᵐᵒᵖ» M) :=
   ⟨fun c => measurable_op.comp (measurable_unop.mul_const _), fun c => measurable_op.comp (measurable_unop.const_mul _)⟩
 
-instance  {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasMeasurableMul₂ («expr ᵒᵖ» M) :=
+instance  {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasMeasurableMul₂ («expr ᵐᵒᵖ» M) :=
   ⟨measurable_op.comp ((measurable_unop.comp measurable_snd).mul (measurable_unop.comp measurable_fst))⟩
 
 instance has_measurable_smul_opposite_of_mul {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] :
-  HasMeasurableSmul («expr ᵒᵖ» M) M :=
+  HasMeasurableSmul («expr ᵐᵒᵖ» M) M :=
   ⟨fun c => measurable_mul_const (unop c), fun x => measurable_unop.const_mul x⟩
 
 instance has_measurable_smul₂_opposite_of_mul {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] :
-  HasMeasurableSmul₂ («expr ᵒᵖ» M) M :=
+  HasMeasurableSmul₂ («expr ᵐᵒᵖ» M) M :=
   ⟨measurable_snd.mul (measurable_unop.comp measurable_fst)⟩
 
 end Opposite

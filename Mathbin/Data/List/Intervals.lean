@@ -116,7 +116,7 @@ theorem inter_consecutive (n m l : ℕ) : Ico n m ∩ Ico m l = [] :=
     intro a 
     simp only [and_imp, not_and, not_ltₓ, List.mem_inter, List.ico.mem]
     intro h₁ h₂ h₃ 
-    exFalso 
+    exfalso 
     exact not_lt_of_geₓ h₃ h₂
 
 @[simp]
@@ -209,10 +209,14 @@ theorem filter_le (n m l : ℕ) : ((Ico n m).filter fun x => l ≤ x) = Ico (max
     ·
       rw [max_eq_leftₓ hln, filter_le_of_le_bot hln]
 
-theorem filter_lt_of_succ_bot {n m : ℕ} (hnm : n < m) : ((Ico n m).filter fun x => x < n+1) = [n] :=
-  by 
-    have r : min m (n+1) = n+1 := (@inf_eq_right _ _ m (n+1)).mpr hnm 
-    simp [filter_lt n m (n+1), r]
+-- error in Data.List.Intervals: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem filter_lt_of_succ_bot
+{n m : exprℕ()}
+(hnm : «expr < »(n, m)) : «expr = »((Ico n m).filter (λ x, «expr < »(x, «expr + »(n, 1))), «expr[ , ]»([n])) :=
+begin
+  have [ident r] [":", expr «expr = »(min m «expr + »(n, 1), «expr + »(n, 1))] [":=", expr (@inf_eq_right _ _ m «expr + »(n, 1)).mpr hnm],
+  simp [] [] [] ["[", expr filter_lt n m «expr + »(n, 1), ",", expr r, "]"] [] []
+end
 
 @[simp]
 theorem filter_le_of_bot {n m : ℕ} (hnm : n < m) : ((Ico n m).filter fun x => x ≤ n) = [n] :=

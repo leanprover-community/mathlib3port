@@ -36,14 +36,14 @@ unsafe def repeat_count {α : Type} (t : tactic α) : tactic ℕ :=
 
 unsafe def slice (a b : ℕ) : conv Unit :=
   do 
-    repeat$ to_expr (pquote category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
+    repeat$ to_expr (pquote.1 category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
     iterate_range (a - 1) (a - 1)
         do 
           conv.congr 
           conv.skip 
-    let k ← repeat_count$ to_expr (pquote category.assoc) >>= fun e => tactic.rewrite_target e { symm := tt }
+    let k ← repeat_count$ to_expr (pquote.1 category.assoc) >>= fun e => tactic.rewrite_target e { symm := tt }
     iterate_range (((k+1)+a) - b) (((k+1)+a) - b) conv.congr 
-    repeat$ to_expr (pquote category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
+    repeat$ to_expr (pquote.1 category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
     rotate 1
     iterate_exactly' (((k+1)+a) - b) conv.skip
 

@@ -1,6 +1,6 @@
 import Mathbin.Algebra.Group.TypeTags 
-import Mathbin.Algebra.GroupWithZero.Default 
-import Mathbin.Data.Equiv.Set
+import Mathbin.Algebra.GroupWithZero.Basic 
+import Mathbin.Data.Pi
 
 /-!
 # Multiplicative and additive equivs
@@ -235,19 +235,19 @@ theorem symm_apply_eq (e : M ≃* N) {x y} : e.symm x = y ↔ x = e y :=
 theorem eq_symm_apply (e : M ≃* N) {x y} : y = e.symm x ↔ e y = x :=
   e.to_equiv.eq_symm_apply
 
+-- error in Data.Equiv.MulAdd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Two multiplicative isomorphisms agree if they are defined by the
     same underlying function. -/
-@[ext, toAdditive "Two additive isomorphisms agree if they are defined by the same underlying function."]
-theorem ext {f g : MulEquiv M N} (h : ∀ x, f x = g x) : f = g :=
-  by 
-    have h₁ : f.to_equiv = g.to_equiv := Equiv.ext h 
-    cases f 
-    cases g 
-    congr
-    ·
-      exact funext h
-    ·
-      exact congr_argₓ Equiv.invFun h₁
+@[ext #[], to_additive #[expr "Two additive isomorphisms agree if they are defined by the same underlying function."]]
+theorem ext {f g : mul_equiv M N} (h : ∀ x, «expr = »(f x, g x)) : «expr = »(f, g) :=
+begin
+  have [ident h₁] [":", expr «expr = »(f.to_equiv, g.to_equiv)] [":=", expr equiv.ext h],
+  cases [expr f] [],
+  cases [expr g] [],
+  congr,
+  { exact [expr funext h] },
+  { exact [expr congr_arg equiv.inv_fun h₁] }
+end
 
 @[toAdditive]
 theorem ext_iff {f g : MulEquiv M N} : f = g ↔ ∀ x, f x = g x :=
@@ -624,7 +624,7 @@ end GroupWithZeroₓ
 end Equiv
 
 /-- When the group is commutative, `equiv.inv` is a `mul_equiv`. There is a variant of this
-`mul_equiv.inv' G : G ≃* Gᵒᵖ` for the non-commutative case. -/
+`mul_equiv.inv' G : G ≃* Gᵐᵒᵖ` for the non-commutative case. -/
 @[toAdditive "When the `add_group` is commutative, `equiv.neg` is an `add_equiv`."]
 def MulEquiv.inv (G : Type _) [CommGroupₓ G] : G ≃* G :=
   { Equiv.inv G with toFun := HasInv.inv, invFun := HasInv.inv, map_mul' := mul_inv }

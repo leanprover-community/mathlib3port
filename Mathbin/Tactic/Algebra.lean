@@ -10,7 +10,7 @@ attribute [local semireducible] reflected
 
 @[local instance]
 private unsafe def reflect_name_list : has_reflect (List Name)
-| ns => quote (id (%%expr.mk_app (quote Prop)$ ns.map (flip expr.const [])) : List Name)
+| ns => quote.1 (id (%%ₓexpr.mk_app (quote.1 Prop)$ ns.map (flip expr.const [])) : List Name)
 
 private unsafe def parse_name_list (e : expr) : List Name :=
   e.app_arg.get_app_args.map expr.const_name

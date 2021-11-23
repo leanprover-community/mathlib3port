@@ -262,81 +262,51 @@ theorem inner_sub_sub_self {x y : F} : ⟪x - y, x - y⟫ = (⟪x, x⟫ - ⟪x, 
   by 
     simp only [inner_sub_left, inner_sub_right] <;> ring
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 **Cauchy–Schwarz inequality**. This proof follows "Proof 2" on Wikipedia.
 We need this for the `core` structure to prove the triangle inequality below when
 showing the core is a normed group.
 -/
-theorem inner_mul_inner_self_le (x y : F) : (abs ⟪x, y⟫*abs ⟪y, x⟫) ≤ re ⟪x, x⟫*re ⟪y, y⟫ :=
-  by 
-    byCases' hy : y = 0
-    ·
-      rw [hy]
-      simp only [IsROrC.abs_zero, inner_zero_left, mul_zero, AddMonoidHom.map_zero]
-    ·
-      change y ≠ 0 at hy 
-      have hy' : ⟪y, y⟫ ≠ 0 :=
-        fun h =>
-          by 
-            rw [inner_self_eq_zero] at h <;> exact hy h 
-      set T := ⟪y, x⟫ / ⟪y, y⟫ with hT 
-      have h₁ : re ⟪y, x⟫ = re ⟪x, y⟫ := inner_re_symm 
-      have h₂ : im ⟪y, x⟫ = -im ⟪x, y⟫ := inner_im_symm 
-      have h₃ : (((⟪y, x⟫*⟪x, y⟫)*⟪y, y⟫) / ⟪y, y⟫*⟪y, y⟫) = (⟪y, x⟫*⟪x, y⟫) / ⟪y, y⟫
-      ·
-        rw [mul_div_assoc]
-        have  : (⟪y, y⟫ / ⟪y, y⟫*⟪y, y⟫) = 1 / ⟪y, y⟫ :=
-          by 
-            rw [div_mul_eq_div_mul_one_div, div_self hy', one_mulₓ]
-        rw [this, div_eq_mul_inv, one_mulₓ, ←div_eq_mul_inv]
-      have h₄ : ⟪y, y⟫ = re ⟪y, y⟫ :=
-        by 
-          simp only [inner_self_re_to_K]
-      have h₅ : re ⟪y, y⟫ > 0
-      ·
-        refine' lt_of_le_of_neₓ inner_self_nonneg _ 
-        intro H 
-        apply hy' 
-        rw [ext_iff]
-        exact
-          ⟨by 
-              simp only [H, zero_re'],
-            by 
-              simp only [inner_self_nonneg_im, AddMonoidHom.map_zero]⟩
-      have h₆ : re ⟪y, y⟫ ≠ 0 := ne_of_gtₓ h₅ 
-      have hmain :=
-        calc 0 ≤ re ⟪x - T • y, x - T • y⟫ := inner_self_nonneg 
-          _ = (re ⟪x, x⟫ - re ⟪T • y, x⟫ - re ⟪x, T • y⟫)+re ⟪T • y, T • y⟫ :=
-          by 
-            simp only [inner_sub_sub_self, inner_smul_left, inner_smul_right, h₁, h₂, neg_mul_eq_neg_mul_symm,
-              AddMonoidHom.map_add, mul_re, conj_im, AddMonoidHom.map_sub, mul_neg_eq_neg_mul_symm, conj_re, neg_negₓ]
-          _ = (re ⟪x, x⟫ - re (T†*⟪y, x⟫) - re (T*⟪x, y⟫))+re ((T*T†)*⟪y, y⟫) :=
-          by 
-            simp only [inner_smul_left, inner_smul_right, mul_assocₓ]
-          _ = re ⟪x, x⟫ - re ((⟪x, y⟫ / ⟪y, y⟫)*⟪y, x⟫) :=
-          by 
-            fieldSimp [-mul_re, inner_conj_sym, hT, RingEquiv.map_div, h₁, h₃]
-          _ = re ⟪x, x⟫ - re ((⟪x, y⟫*⟪y, x⟫) / ⟪y, y⟫) :=
-          by 
-            rw [div_mul_eq_mul_div_comm, ←mul_div_assoc]
-          _ = re ⟪x, x⟫ - re ((⟪x, y⟫*⟪y, x⟫) / re ⟪y, y⟫) :=
-          by 
-            convLHS => rw [h₄]
-          _ = re ⟪x, x⟫ - re (⟪x, y⟫*⟪y, x⟫) / re ⟪y, y⟫ :=
-          by 
-            rw [div_re_of_real]
-          _ = re ⟪x, x⟫ - abs (⟪x, y⟫*⟪y, x⟫) / re ⟪y, y⟫ :=
-          by 
-            rw [inner_mul_conj_re_abs]
-          _ = re ⟪x, x⟫ - (abs ⟪x, y⟫*abs ⟪y, x⟫) / re ⟪y, y⟫ :=
-          by 
-            rw [IsROrC.abs_mul]
-          
-      have hmain' : (abs ⟪x, y⟫*abs ⟪y, x⟫) / re ⟪y, y⟫ ≤ re ⟪x, x⟫ :=
-        by 
-          linarith 
-      have  := (mul_le_mul_right h₅).mpr hmain' 
-      rwa [div_mul_cancel (abs ⟪x, y⟫*abs ⟪y, x⟫) h₆] at this
+theorem inner_mul_inner_self_le
+(x
+ y : F) : «expr ≤ »(«expr * »(abs «expr⟪ , ⟫»(x, y), abs «expr⟪ , ⟫»(y, x)), «expr * »(re «expr⟪ , ⟫»(x, x), re «expr⟪ , ⟫»(y, y))) :=
+begin
+  by_cases [expr hy, ":", expr «expr = »(y, 0)],
+  { rw ["[", expr hy, "]"] [],
+    simp [] [] ["only"] ["[", expr is_R_or_C.abs_zero, ",", expr inner_zero_left, ",", expr mul_zero, ",", expr add_monoid_hom.map_zero, "]"] [] [] },
+  { change [expr «expr ≠ »(y, 0)] [] ["at", ident hy],
+    have [ident hy'] [":", expr «expr ≠ »(«expr⟪ , ⟫»(y, y), 0)] [":=", expr λ
+     h, by rw ["[", expr inner_self_eq_zero, "]"] ["at", ident h]; exact [expr hy h]],
+    set [] [ident T] [] [":="] [expr «expr / »(«expr⟪ , ⟫»(y, x), «expr⟪ , ⟫»(y, y))] ["with", ident hT],
+    have [ident h₁] [":", expr «expr = »(re «expr⟪ , ⟫»(y, x), re «expr⟪ , ⟫»(x, y))] [":=", expr inner_re_symm],
+    have [ident h₂] [":", expr «expr = »(im «expr⟪ , ⟫»(y, x), «expr- »(im «expr⟪ , ⟫»(x, y)))] [":=", expr inner_im_symm],
+    have [ident h₃] [":", expr «expr = »(«expr / »(«expr * »(«expr * »(«expr⟪ , ⟫»(y, x), «expr⟪ , ⟫»(x, y)), «expr⟪ , ⟫»(y, y)), «expr * »(«expr⟪ , ⟫»(y, y), «expr⟪ , ⟫»(y, y))), «expr / »(«expr * »(«expr⟪ , ⟫»(y, x), «expr⟪ , ⟫»(x, y)), «expr⟪ , ⟫»(y, y)))] [],
+    { rw ["[", expr mul_div_assoc, "]"] [],
+      have [] [":", expr «expr = »(«expr / »(«expr⟪ , ⟫»(y, y), «expr * »(«expr⟪ , ⟫»(y, y), «expr⟪ , ⟫»(y, y))), «expr / »(1, «expr⟪ , ⟫»(y, y)))] [":=", expr by rw ["[", expr div_mul_eq_div_mul_one_div, ",", expr div_self hy', ",", expr one_mul, "]"] []],
+      rw ["[", expr this, ",", expr div_eq_mul_inv, ",", expr one_mul, ",", "<-", expr div_eq_mul_inv, "]"] [] },
+    have [ident h₄] [":", expr «expr = »(«expr⟪ , ⟫»(y, y), re «expr⟪ , ⟫»(y, y))] [":=", expr by simp [] [] ["only"] ["[", expr inner_self_re_to_K, "]"] [] []],
+    have [ident h₅] [":", expr «expr > »(re «expr⟪ , ⟫»(y, y), 0)] [],
+    { refine [expr lt_of_le_of_ne inner_self_nonneg _],
+      intro [ident H],
+      apply [expr hy'],
+      rw [expr exprext_iff()] [],
+      exact [expr ⟨by simp [] [] ["only"] ["[", expr H, ",", expr zero_re', "]"] [] [], by simp [] [] ["only"] ["[", expr inner_self_nonneg_im, ",", expr add_monoid_hom.map_zero, "]"] [] []⟩] },
+    have [ident h₆] [":", expr «expr ≠ »(re «expr⟪ , ⟫»(y, y), 0)] [":=", expr ne_of_gt h₅],
+    have [ident hmain] [] [":=", expr calc
+       «expr ≤ »(0, re «expr⟪ , ⟫»(«expr - »(x, «expr • »(T, y)), «expr - »(x, «expr • »(T, y)))) : inner_self_nonneg
+       «expr = »(..., «expr + »(«expr - »(«expr - »(re «expr⟪ , ⟫»(x, x), re «expr⟪ , ⟫»(«expr • »(T, y), x)), re «expr⟪ , ⟫»(x, «expr • »(T, y))), re «expr⟪ , ⟫»(«expr • »(T, y), «expr • »(T, y)))) : by simp [] [] ["only"] ["[", expr inner_sub_sub_self, ",", expr inner_smul_left, ",", expr inner_smul_right, ",", expr h₁, ",", expr h₂, ",", expr neg_mul_eq_neg_mul_symm, ",", expr add_monoid_hom.map_add, ",", expr mul_re, ",", expr conj_im, ",", expr add_monoid_hom.map_sub, ",", expr mul_neg_eq_neg_mul_symm, ",", expr conj_re, ",", expr neg_neg, "]"] [] []
+       «expr = »(..., «expr + »(«expr - »(«expr - »(re «expr⟪ , ⟫»(x, x), re «expr * »(«expr †»(T), «expr⟪ , ⟫»(y, x))), re «expr * »(T, «expr⟪ , ⟫»(x, y))), re «expr * »(«expr * »(T, «expr †»(T)), «expr⟪ , ⟫»(y, y)))) : by simp [] [] ["only"] ["[", expr inner_smul_left, ",", expr inner_smul_right, ",", expr mul_assoc, "]"] [] []
+       «expr = »(..., «expr - »(re «expr⟪ , ⟫»(x, x), re «expr * »(«expr / »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(y, y)), «expr⟪ , ⟫»(y, x)))) : by field_simp [] ["[", "-", ident mul_re, ",", expr inner_conj_sym, ",", expr hT, ",", expr ring_equiv.map_div, ",", expr h₁, ",", expr h₃, "]"] [] []
+       «expr = »(..., «expr - »(re «expr⟪ , ⟫»(x, x), re «expr / »(«expr * »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(y, x)), «expr⟪ , ⟫»(y, y)))) : by rw ["[", expr div_mul_eq_mul_div_comm, ",", "<-", expr mul_div_assoc, "]"] []
+       «expr = »(..., «expr - »(re «expr⟪ , ⟫»(x, x), re «expr / »(«expr * »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(y, x)), re «expr⟪ , ⟫»(y, y)))) : by conv_lhs [] [] { rw ["[", expr h₄, "]"] }
+       «expr = »(..., «expr - »(re «expr⟪ , ⟫»(x, x), «expr / »(re «expr * »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(y, x)), re «expr⟪ , ⟫»(y, y)))) : by rw ["[", expr div_re_of_real, "]"] []
+       «expr = »(..., «expr - »(re «expr⟪ , ⟫»(x, x), «expr / »(abs «expr * »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(y, x)), re «expr⟪ , ⟫»(y, y)))) : by rw ["[", expr inner_mul_conj_re_abs, "]"] []
+       «expr = »(..., «expr - »(re «expr⟪ , ⟫»(x, x), «expr / »(«expr * »(abs «expr⟪ , ⟫»(x, y), abs «expr⟪ , ⟫»(y, x)), re «expr⟪ , ⟫»(y, y)))) : by rw [expr is_R_or_C.abs_mul] []],
+    have [ident hmain'] [":", expr «expr ≤ »(«expr / »(«expr * »(abs «expr⟪ , ⟫»(x, y), abs «expr⟪ , ⟫»(y, x)), re «expr⟪ , ⟫»(y, y)), re «expr⟪ , ⟫»(x, x))] [":=", expr by linarith [] [] []],
+    have [] [] [":=", expr (mul_le_mul_right h₅).mpr hmain'],
+    rwa ["[", expr div_mul_cancel «expr * »(abs «expr⟪ , ⟫»(x, y), abs «expr⟪ , ⟫»(y, x)) h₆, "]"] ["at", ident this] }
+end
 
 /-- Norm constructed from a `inner_product_space.core` structure, defined to be the square root
 of the scalar product. -/
@@ -355,60 +325,49 @@ theorem inner_self_eq_norm_mul_norm (x : F) : re ⟪x, x⟫ = ∥x∥*∥x∥ :=
 theorem sqrt_norm_sq_eq_norm {x : F} : sqrt (norm_sqF x) = ∥x∥ :=
   rfl
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Cauchy–Schwarz inequality with norm -/
-theorem abs_inner_le_norm (x y : F) : abs ⟪x, y⟫ ≤ ∥x∥*∥y∥ :=
-  nonneg_le_nonneg_of_sq_le_sq (mul_nonneg (sqrt_nonneg _) (sqrt_nonneg _))
-    (by 
-      have H : ((∥x∥*∥y∥)*∥x∥*∥y∥) = re ⟪y, y⟫*re ⟪x, x⟫
-      ·
-        simp only [inner_self_eq_norm_mul_norm]
-        ring 
-      rw [H]
-      conv  => toLHS congr rw [inner_abs_conj_sym]
-      exact inner_mul_inner_self_le y x)
+theorem abs_inner_le_norm (x y : F) : «expr ≤ »(abs «expr⟪ , ⟫»(x, y), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y))) :=
+nonneg_le_nonneg_of_sq_le_sq (mul_nonneg (sqrt_nonneg _) (sqrt_nonneg _)) (begin
+   have [ident H] [":", expr «expr = »(«expr * »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y)), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y))), «expr * »(re «expr⟪ , ⟫»(y, y), re «expr⟪ , ⟫»(x, x)))] [],
+   { simp [] [] ["only"] ["[", expr inner_self_eq_norm_mul_norm, "]"] [] [],
+     ring [] },
+   rw [expr H] [],
+   conv [] [] begin
+     to_lhs,
+     congr,
+     rw ["[", expr inner_abs_conj_sym, "]"]
+   end,
+   exact [expr inner_mul_inner_self_le y x]
+ end)
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Normed group structure constructed from an `inner_product_space.core` structure -/
-def to_normed_group : NormedGroup F :=
-  NormedGroup.ofCore F
-    { norm_eq_zero_iff :=
-        fun x =>
-          by 
-            split 
-            ·
-              intro H 
-              change sqrt (re ⟪x, x⟫) = 0 at H 
-              rw [sqrt_eq_zero inner_self_nonneg] at H 
-              apply (inner_self_eq_zero : ⟪x, x⟫ = 0 ↔ x = 0).mp 
-              rw [ext_iff]
-              exact
-                ⟨by 
-                    simp [H],
-                  by 
-                    simp [inner_self_im_zero]⟩
-            ·
-              rintro rfl 
-              change sqrt (re ⟪0, 0⟫) = 0
-              simp only [sqrt_zero, inner_zero_right, AddMonoidHom.map_zero],
-      triangle :=
-        fun x y =>
-          by 
-            have h₁ : abs ⟪x, y⟫ ≤ ∥x∥*∥y∥ := abs_inner_le_norm _ _ 
-            have h₂ : re ⟪x, y⟫ ≤ abs ⟪x, y⟫ := re_le_abs _ 
-            have h₃ : re ⟪x, y⟫ ≤ ∥x∥*∥y∥ :=
-              by 
-                linarith 
-            have h₄ : re ⟪y, x⟫ ≤ ∥x∥*∥y∥ :=
-              by 
-                rwa [←inner_conj_sym, conj_re]
-            have  : (∥x+y∥*∥x+y∥) ≤ (∥x∥+∥y∥)*∥x∥+∥y∥
-            ·
-              simp [←inner_self_eq_norm_mul_norm, inner_add_add_self, add_mulₓ, mul_addₓ, mul_commₓ]
-              linarith 
-            exact nonneg_le_nonneg_of_sq_le_sq (add_nonneg (sqrt_nonneg _) (sqrt_nonneg _)) this,
-      norm_neg :=
-        fun x =>
-          by 
-            simp only [norm, inner_neg_left, neg_negₓ, inner_neg_right] }
+def to_normed_group : normed_group F :=
+normed_group.of_core F { norm_eq_zero_iff := assume x, begin
+    split,
+    { intro [ident H],
+      change [expr «expr = »(sqrt (re «expr⟪ , ⟫»(x, x)), 0)] [] ["at", ident H],
+      rw ["[", expr sqrt_eq_zero inner_self_nonneg, "]"] ["at", ident H],
+      apply [expr (inner_self_eq_zero : «expr ↔ »(«expr = »(«expr⟪ , ⟫»(x, x), 0), «expr = »(x, 0))).mp],
+      rw [expr exprext_iff()] [],
+      exact [expr ⟨by simp [] [] [] ["[", expr H, "]"] [] [], by simp [] [] [] ["[", expr inner_self_im_zero, "]"] [] []⟩] },
+    { rintro [ident rfl],
+      change [expr «expr = »(sqrt (re «expr⟪ , ⟫»(0, 0)), 0)] [] [],
+      simp [] [] ["only"] ["[", expr sqrt_zero, ",", expr inner_zero_right, ",", expr add_monoid_hom.map_zero, "]"] [] [] }
+  end,
+  triangle := assume x y, begin
+    have [ident h₁] [":", expr «expr ≤ »(abs «expr⟪ , ⟫»(x, y), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y)))] [":=", expr abs_inner_le_norm _ _],
+    have [ident h₂] [":", expr «expr ≤ »(re «expr⟪ , ⟫»(x, y), abs «expr⟪ , ⟫»(x, y))] [":=", expr re_le_abs _],
+    have [ident h₃] [":", expr «expr ≤ »(re «expr⟪ , ⟫»(x, y), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y)))] [":=", expr by linarith [] [] []],
+    have [ident h₄] [":", expr «expr ≤ »(re «expr⟪ , ⟫»(y, x), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y)))] [":=", expr by rwa ["[", "<-", expr inner_conj_sym, ",", expr conj_re, "]"] []],
+    have [] [":", expr «expr ≤ »(«expr * »(«expr∥ ∥»(«expr + »(x, y)), «expr∥ ∥»(«expr + »(x, y))), «expr * »(«expr + »(«expr∥ ∥»(x), «expr∥ ∥»(y)), «expr + »(«expr∥ ∥»(x), «expr∥ ∥»(y))))] [],
+    { simp [] [] [] ["[", "<-", expr inner_self_eq_norm_mul_norm, ",", expr inner_add_add_self, ",", expr add_mul, ",", expr mul_add, ",", expr mul_comm, "]"] [] [],
+      linarith [] [] [] },
+    exact [expr nonneg_le_nonneg_of_sq_le_sq (add_nonneg (sqrt_nonneg _) (sqrt_nonneg _)) this]
+  end,
+  norm_neg := λ
+  x, by simp [] [] ["only"] ["[", expr norm, ",", expr inner_neg_left, ",", expr neg_neg, ",", expr inner_neg_right, "]"] [] [] }
 
 attribute [local instance] to_normed_group
 
@@ -426,20 +385,23 @@ def to_normed_space : NormedSpace 𝕜 F :=
 
 end InnerProductSpace.ofCore
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a `inner_product_space.core` structure on a space, one can use it to turn
 the space into an inner product space, constructing the norm out of the inner product -/
-def InnerProductSpace.ofCore [AddCommGroupₓ F] [Module 𝕜 F] (c : InnerProductSpace.Core 𝕜 F) : InnerProductSpace 𝕜 F :=
-  by 
-    letI this : NormedGroup F := @InnerProductSpace.OfCore.toNormedGroup 𝕜 F _ _ _ c 
-    letI this : NormedSpace 𝕜 F := @InnerProductSpace.OfCore.toNormedSpace 𝕜 F _ _ _ c 
-    exact
-      { c with
-        norm_sq_eq_inner :=
-          fun x =>
-            by 
-              have h₁ : (∥x∥^2) = (sqrt (re (c.inner x x))^2) := rfl 
-              have h₂ : 0 ≤ re (c.inner x x) := InnerProductSpace.OfCore.inner_self_nonneg 
-              simp [h₁, sq_sqrt, h₂] }
+def inner_product_space.of_core
+[add_comm_group F]
+[module 𝕜 F]
+(c : inner_product_space.core 𝕜 F) : inner_product_space 𝕜 F :=
+begin
+  letI [] [":", expr normed_group F] [":=", expr @inner_product_space.of_core.to_normed_group 𝕜 F _ _ _ c],
+  letI [] [":", expr normed_space 𝕜 F] [":=", expr @inner_product_space.of_core.to_normed_space 𝕜 F _ _ _ c],
+  exact [expr { norm_sq_eq_inner := λ x, begin
+       have [ident h₁] [":", expr «expr = »(«expr ^ »(«expr∥ ∥»(x), 2), «expr ^ »(sqrt (re (c.inner x x)), 2))] [":=", expr rfl],
+       have [ident h₂] [":", expr «expr ≤ »(0, re (c.inner x x))] [":=", expr inner_product_space.of_core.inner_self_nonneg],
+       simp [] [] [] ["[", expr h₁, ",", expr sq_sqrt, ",", expr h₂, "]"] [] []
+     end,
+     ..c }]
+end
 
 /-! ### Properties of inner product spaces -/
 
@@ -582,47 +544,39 @@ theorem inner_self_nonneg {x : E} : 0 ≤ re ⟪x, x⟫ :=
 theorem real_inner_self_nonneg {x : F} : 0 ≤ ⟪x, x⟫_ℝ :=
   @inner_self_nonneg ℝ F _ _ x
 
-@[simp]
-theorem inner_self_eq_zero {x : E} : ⟪x, x⟫ = 0 ↔ x = 0 :=
-  by 
-    split 
-    ·
-      intro h 
-      have h₁ : re ⟪x, x⟫ = 0 :=
-        by 
-          rw [IsROrC.ext_iff] at h <;> simp [h.1]
-      rw [←norm_sq_eq_inner x] at h₁ 
-      rw [←norm_eq_zero]
-      exact pow_eq_zero h₁
-    ·
-      rintro rfl 
-      exact inner_zero_left
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem inner_self_eq_zero {x : E} : «expr ↔ »(«expr = »(«expr⟪ , ⟫»(x, x), 0), «expr = »(x, 0)) :=
+begin
+  split,
+  { intro [ident h],
+    have [ident h₁] [":", expr «expr = »(re «expr⟪ , ⟫»(x, x), 0)] [":=", expr by rw [expr is_R_or_C.ext_iff] ["at", ident h]; simp [] [] [] ["[", expr h.1, "]"] [] []],
+    rw ["[", "<-", expr norm_sq_eq_inner x, "]"] ["at", ident h₁],
+    rw ["[", "<-", expr norm_eq_zero, "]"] [],
+    exact [expr pow_eq_zero h₁] },
+  { rintro [ident rfl],
+    exact [expr inner_zero_left] }
+end
 
-@[simp]
-theorem inner_self_nonpos {x : E} : re ⟪x, x⟫ ≤ 0 ↔ x = 0 :=
-  by 
-    split 
-    ·
-      intro h 
-      rw [←inner_self_eq_zero]
-      have H₁ : re ⟪x, x⟫ ≥ 0 
-      exact inner_self_nonneg 
-      have H₂ : re ⟪x, x⟫ = 0 
-      exact le_antisymmₓ h H₁ 
-      rw [IsROrC.ext_iff]
-      exact
-        ⟨by 
-            simp [H₂],
-          by 
-            simp [inner_self_nonneg_im]⟩
-    ·
-      rintro rfl 
-      simp only [inner_zero_left, AddMonoidHom.map_zero]
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem inner_self_nonpos {x : E} : «expr ↔ »(«expr ≤ »(re «expr⟪ , ⟫»(x, x), 0), «expr = »(x, 0)) :=
+begin
+  split,
+  { intro [ident h],
+    rw ["<-", expr inner_self_eq_zero] [],
+    have [ident H₁] [":", expr «expr ≥ »(re «expr⟪ , ⟫»(x, x), 0)] [],
+    exact [expr inner_self_nonneg],
+    have [ident H₂] [":", expr «expr = »(re «expr⟪ , ⟫»(x, x), 0)] [],
+    exact [expr le_antisymm h H₁],
+    rw [expr is_R_or_C.ext_iff] [],
+    exact [expr ⟨by simp [] [] [] ["[", expr H₂, "]"] [] [], by simp [] [] [] ["[", expr inner_self_nonneg_im, "]"] [] []⟩] },
+  { rintro [ident rfl],
+    simp [] [] ["only"] ["[", expr inner_zero_left, ",", expr add_monoid_hom.map_zero, "]"] [] [] }
+end
 
-theorem real_inner_self_nonpos {x : F} : ⟪x, x⟫_ℝ ≤ 0 ↔ x = 0 :=
-  by 
-    have h := @inner_self_nonpos ℝ F _ _ x 
-    simpa using h
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem real_inner_self_nonpos {x : F} : «expr ↔ »(«expr ≤ »(«expr⟪ , ⟫_ℝ»(x, x), 0), «expr = »(x, 0)) :=
+by { have [ident h] [] [":=", expr @inner_self_nonpos exprℝ() F _ _ x],
+  simpa [] [] [] [] [] ["using", expr h] }
 
 @[simp]
 theorem inner_self_re_to_K {x : E} : (re ⟪x, x⟫ : 𝕜) = ⟪x, x⟫ :=
@@ -652,10 +606,10 @@ theorem inner_self_abs_to_K {x : E} : (absK ⟪x, x⟫ : 𝕜) = ⟪x, x⟫ :=
     rw [←inner_self_re_abs]
     exact inner_self_re_to_K
 
-theorem real_inner_self_abs {x : F} : absR ⟪x, x⟫_ℝ = ⟪x, x⟫_ℝ :=
-  by 
-    have h := @inner_self_abs_to_K ℝ F _ _ x 
-    simpa using h
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem real_inner_self_abs {x : F} : «expr = »(exprabsR() «expr⟪ , ⟫_ℝ»(x, x), «expr⟪ , ⟫_ℝ»(x, x)) :=
+by { have [ident h] [] [":=", expr @inner_self_abs_to_K exprℝ() F _ _ x],
+  simpa [] [] [] [] [] ["using", expr h] }
 
 theorem inner_abs_conj_sym {x y : E} : abs ⟪x, y⟫ = abs ⟪y, x⟫ :=
   by 
@@ -704,137 +658,114 @@ theorem inner_add_add_self {x y : E} : ⟪x+y, x+y⟫ = ((⟪x, x⟫+⟪x, y⟫)
   by 
     simp only [inner_add_left, inner_add_right] <;> ring
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Expand `⟪x + y, x + y⟫_ℝ` -/
-theorem real_inner_add_add_self {x y : F} : ⟪x+y, x+y⟫_ℝ = (⟪x, x⟫_ℝ+2*⟪x, y⟫_ℝ)+⟪y, y⟫_ℝ :=
-  by 
-    have  : ⟪y, x⟫_ℝ = ⟪x, y⟫_ℝ :=
-      by 
-        rw [←inner_conj_sym] <;> rfl 
-    simp [inner_add_add_self, this]
-    ring
+theorem real_inner_add_add_self
+{x
+ y : F} : «expr = »(«expr⟪ , ⟫_ℝ»(«expr + »(x, y), «expr + »(x, y)), «expr + »(«expr + »(«expr⟪ , ⟫_ℝ»(x, x), «expr * »(2, «expr⟪ , ⟫_ℝ»(x, y))), «expr⟪ , ⟫_ℝ»(y, y))) :=
+begin
+  have [] [":", expr «expr = »(«expr⟪ , ⟫_ℝ»(y, x), «expr⟪ , ⟫_ℝ»(x, y))] [":=", expr by rw ["[", "<-", expr inner_conj_sym, "]"] []; refl],
+  simp [] [] [] ["[", expr inner_add_add_self, ",", expr this, "]"] [] [],
+  ring []
+end
 
 theorem inner_sub_sub_self {x y : E} : ⟪x - y, x - y⟫ = (⟪x, x⟫ - ⟪x, y⟫ - ⟪y, x⟫)+⟪y, y⟫ :=
   by 
     simp only [inner_sub_left, inner_sub_right] <;> ring
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Expand `⟪x - y, x - y⟫_ℝ` -/
-theorem real_inner_sub_sub_self {x y : F} : ⟪x - y, x - y⟫_ℝ = (⟪x, x⟫_ℝ - 2*⟪x, y⟫_ℝ)+⟪y, y⟫_ℝ :=
-  by 
-    have  : ⟪y, x⟫_ℝ = ⟪x, y⟫_ℝ :=
-      by 
-        rw [←inner_conj_sym] <;> rfl 
-    simp [inner_sub_sub_self, this]
-    ring
+theorem real_inner_sub_sub_self
+{x
+ y : F} : «expr = »(«expr⟪ , ⟫_ℝ»(«expr - »(x, y), «expr - »(x, y)), «expr + »(«expr - »(«expr⟪ , ⟫_ℝ»(x, x), «expr * »(2, «expr⟪ , ⟫_ℝ»(x, y))), «expr⟪ , ⟫_ℝ»(y, y))) :=
+begin
+  have [] [":", expr «expr = »(«expr⟪ , ⟫_ℝ»(y, x), «expr⟪ , ⟫_ℝ»(x, y))] [":=", expr by rw ["[", "<-", expr inner_conj_sym, "]"] []; refl],
+  simp [] [] [] ["[", expr inner_sub_sub_self, ",", expr this, "]"] [] [],
+  ring []
+end
 
 /-- Parallelogram law -/
 theorem parallelogram_law {x y : E} : (⟪x+y, x+y⟫+⟪x - y, x - y⟫) = 2*⟪x, x⟫+⟪y, y⟫ :=
   by 
     simp [inner_add_add_self, inner_sub_sub_self, two_mul, sub_eq_add_neg, add_commₓ, add_left_commₓ]
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Cauchy–Schwarz inequality. This proof follows "Proof 2" on Wikipedia. -/
-theorem inner_mul_inner_self_le (x y : E) : (abs ⟪x, y⟫*abs ⟪y, x⟫) ≤ re ⟪x, x⟫*re ⟪y, y⟫ :=
-  by 
-    byCases' hy : y = 0
-    ·
-      rw [hy]
-      simp only [IsROrC.abs_zero, inner_zero_left, mul_zero, AddMonoidHom.map_zero]
-    ·
-      change y ≠ 0 at hy 
-      have hy' : ⟪y, y⟫ ≠ 0 :=
-        fun h =>
-          by 
-            rw [inner_self_eq_zero] at h <;> exact hy h 
-      set T := ⟪y, x⟫ / ⟪y, y⟫ with hT 
-      have h₁ : re ⟪y, x⟫ = re ⟪x, y⟫ := inner_re_symm 
-      have h₂ : im ⟪y, x⟫ = -im ⟪x, y⟫ := inner_im_symm 
-      have h₃ : (((⟪y, x⟫*⟪x, y⟫)*⟪y, y⟫) / ⟪y, y⟫*⟪y, y⟫) = (⟪y, x⟫*⟪x, y⟫) / ⟪y, y⟫
-      ·
-        rw [mul_div_assoc]
-        have  : (⟪y, y⟫ / ⟪y, y⟫*⟪y, y⟫) = 1 / ⟪y, y⟫ :=
-          by 
-            rw [div_mul_eq_div_mul_one_div, div_self hy', one_mulₓ]
-        rw [this, div_eq_mul_inv, one_mulₓ, ←div_eq_mul_inv]
-      have h₄ : ⟪y, y⟫ = re ⟪y, y⟫ :=
-        by 
-          simp 
-      have h₅ : re ⟪y, y⟫ > 0
-      ·
-        refine' lt_of_le_of_neₓ inner_self_nonneg _ 
-        intro H 
-        apply hy' 
-        rw [IsROrC.ext_iff]
-        exact
-          ⟨by 
-              simp only [H, zero_re'],
-            by 
-              simp only [inner_self_nonneg_im, AddMonoidHom.map_zero]⟩
-      have h₆ : re ⟪y, y⟫ ≠ 0 := ne_of_gtₓ h₅ 
-      have hmain :=
-        calc 0 ≤ re ⟪x - T • y, x - T • y⟫ := inner_self_nonneg 
-          _ = (re ⟪x, x⟫ - re ⟪T • y, x⟫ - re ⟪x, T • y⟫)+re ⟪T • y, T • y⟫ :=
-          by 
-            simp only [inner_sub_sub_self, inner_smul_left, inner_smul_right, h₁, h₂, neg_mul_eq_neg_mul_symm,
-              AddMonoidHom.map_add, conj_im, AddMonoidHom.map_sub, mul_neg_eq_neg_mul_symm, conj_re, neg_negₓ, mul_re]
-          _ = (re ⟪x, x⟫ - re (T†*⟪y, x⟫) - re (T*⟪x, y⟫))+re ((T*T†)*⟪y, y⟫) :=
-          by 
-            simp only [inner_smul_left, inner_smul_right, mul_assocₓ]
-          _ = re ⟪x, x⟫ - re ((⟪x, y⟫ / ⟪y, y⟫)*⟪y, x⟫) :=
-          by 
-            fieldSimp [-mul_re, hT, RingEquiv.map_div, h₁, h₃, inner_conj_sym]
-          _ = re ⟪x, x⟫ - re ((⟪x, y⟫*⟪y, x⟫) / ⟪y, y⟫) :=
-          by 
-            rw [div_mul_eq_mul_div_comm, ←mul_div_assoc]
-          _ = re ⟪x, x⟫ - re ((⟪x, y⟫*⟪y, x⟫) / re ⟪y, y⟫) :=
-          by 
-            convLHS => rw [h₄]
-          _ = re ⟪x, x⟫ - re (⟪x, y⟫*⟪y, x⟫) / re ⟪y, y⟫ :=
-          by 
-            rw [div_re_of_real]
-          _ = re ⟪x, x⟫ - abs (⟪x, y⟫*⟪y, x⟫) / re ⟪y, y⟫ :=
-          by 
-            rw [inner_mul_conj_re_abs]
-          _ = re ⟪x, x⟫ - (abs ⟪x, y⟫*abs ⟪y, x⟫) / re ⟪y, y⟫ :=
-          by 
-            rw [IsROrC.abs_mul]
-          
-      have hmain' : (abs ⟪x, y⟫*abs ⟪y, x⟫) / re ⟪y, y⟫ ≤ re ⟪x, x⟫ :=
-        by 
-          linarith 
-      have  := (mul_le_mul_right h₅).mpr hmain' 
-      rwa [div_mul_cancel (abs ⟪x, y⟫*abs ⟪y, x⟫) h₆] at this
+theorem inner_mul_inner_self_le
+(x
+ y : E) : «expr ≤ »(«expr * »(abs «expr⟪ , ⟫»(x, y), abs «expr⟪ , ⟫»(y, x)), «expr * »(re «expr⟪ , ⟫»(x, x), re «expr⟪ , ⟫»(y, y))) :=
+begin
+  by_cases [expr hy, ":", expr «expr = »(y, 0)],
+  { rw ["[", expr hy, "]"] [],
+    simp [] [] ["only"] ["[", expr is_R_or_C.abs_zero, ",", expr inner_zero_left, ",", expr mul_zero, ",", expr add_monoid_hom.map_zero, "]"] [] [] },
+  { change [expr «expr ≠ »(y, 0)] [] ["at", ident hy],
+    have [ident hy'] [":", expr «expr ≠ »(«expr⟪ , ⟫»(y, y), 0)] [":=", expr λ
+     h, by rw ["[", expr inner_self_eq_zero, "]"] ["at", ident h]; exact [expr hy h]],
+    set [] [ident T] [] [":="] [expr «expr / »(«expr⟪ , ⟫»(y, x), «expr⟪ , ⟫»(y, y))] ["with", ident hT],
+    have [ident h₁] [":", expr «expr = »(re «expr⟪ , ⟫»(y, x), re «expr⟪ , ⟫»(x, y))] [":=", expr inner_re_symm],
+    have [ident h₂] [":", expr «expr = »(im «expr⟪ , ⟫»(y, x), «expr- »(im «expr⟪ , ⟫»(x, y)))] [":=", expr inner_im_symm],
+    have [ident h₃] [":", expr «expr = »(«expr / »(«expr * »(«expr * »(«expr⟪ , ⟫»(y, x), «expr⟪ , ⟫»(x, y)), «expr⟪ , ⟫»(y, y)), «expr * »(«expr⟪ , ⟫»(y, y), «expr⟪ , ⟫»(y, y))), «expr / »(«expr * »(«expr⟪ , ⟫»(y, x), «expr⟪ , ⟫»(x, y)), «expr⟪ , ⟫»(y, y)))] [],
+    { rw ["[", expr mul_div_assoc, "]"] [],
+      have [] [":", expr «expr = »(«expr / »(«expr⟪ , ⟫»(y, y), «expr * »(«expr⟪ , ⟫»(y, y), «expr⟪ , ⟫»(y, y))), «expr / »(1, «expr⟪ , ⟫»(y, y)))] [":=", expr by rw ["[", expr div_mul_eq_div_mul_one_div, ",", expr div_self hy', ",", expr one_mul, "]"] []],
+      rw ["[", expr this, ",", expr div_eq_mul_inv, ",", expr one_mul, ",", "<-", expr div_eq_mul_inv, "]"] [] },
+    have [ident h₄] [":", expr «expr = »(«expr⟪ , ⟫»(y, y), re «expr⟪ , ⟫»(y, y))] [":=", expr by simp [] [] [] [] [] []],
+    have [ident h₅] [":", expr «expr > »(re «expr⟪ , ⟫»(y, y), 0)] [],
+    { refine [expr lt_of_le_of_ne inner_self_nonneg _],
+      intro [ident H],
+      apply [expr hy'],
+      rw [expr is_R_or_C.ext_iff] [],
+      exact [expr ⟨by simp [] [] ["only"] ["[", expr H, ",", expr zero_re', "]"] [] [], by simp [] [] ["only"] ["[", expr inner_self_nonneg_im, ",", expr add_monoid_hom.map_zero, "]"] [] []⟩] },
+    have [ident h₆] [":", expr «expr ≠ »(re «expr⟪ , ⟫»(y, y), 0)] [":=", expr ne_of_gt h₅],
+    have [ident hmain] [] [":=", expr calc
+       «expr ≤ »(0, re «expr⟪ , ⟫»(«expr - »(x, «expr • »(T, y)), «expr - »(x, «expr • »(T, y)))) : inner_self_nonneg
+       «expr = »(..., «expr + »(«expr - »(«expr - »(re «expr⟪ , ⟫»(x, x), re «expr⟪ , ⟫»(«expr • »(T, y), x)), re «expr⟪ , ⟫»(x, «expr • »(T, y))), re «expr⟪ , ⟫»(«expr • »(T, y), «expr • »(T, y)))) : by simp [] [] ["only"] ["[", expr inner_sub_sub_self, ",", expr inner_smul_left, ",", expr inner_smul_right, ",", expr h₁, ",", expr h₂, ",", expr neg_mul_eq_neg_mul_symm, ",", expr add_monoid_hom.map_add, ",", expr conj_im, ",", expr add_monoid_hom.map_sub, ",", expr mul_neg_eq_neg_mul_symm, ",", expr conj_re, ",", expr neg_neg, ",", expr mul_re, "]"] [] []
+       «expr = »(..., «expr + »(«expr - »(«expr - »(re «expr⟪ , ⟫»(x, x), re «expr * »(«expr †»(T), «expr⟪ , ⟫»(y, x))), re «expr * »(T, «expr⟪ , ⟫»(x, y))), re «expr * »(«expr * »(T, «expr †»(T)), «expr⟪ , ⟫»(y, y)))) : by simp [] [] ["only"] ["[", expr inner_smul_left, ",", expr inner_smul_right, ",", expr mul_assoc, "]"] [] []
+       «expr = »(..., «expr - »(re «expr⟪ , ⟫»(x, x), re «expr * »(«expr / »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(y, y)), «expr⟪ , ⟫»(y, x)))) : by field_simp [] ["[", "-", ident mul_re, ",", expr hT, ",", expr ring_equiv.map_div, ",", expr h₁, ",", expr h₃, ",", expr inner_conj_sym, "]"] [] []
+       «expr = »(..., «expr - »(re «expr⟪ , ⟫»(x, x), re «expr / »(«expr * »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(y, x)), «expr⟪ , ⟫»(y, y)))) : by rw ["[", expr div_mul_eq_mul_div_comm, ",", "<-", expr mul_div_assoc, "]"] []
+       «expr = »(..., «expr - »(re «expr⟪ , ⟫»(x, x), re «expr / »(«expr * »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(y, x)), re «expr⟪ , ⟫»(y, y)))) : by conv_lhs [] [] { rw ["[", expr h₄, "]"] }
+       «expr = »(..., «expr - »(re «expr⟪ , ⟫»(x, x), «expr / »(re «expr * »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(y, x)), re «expr⟪ , ⟫»(y, y)))) : by rw ["[", expr div_re_of_real, "]"] []
+       «expr = »(..., «expr - »(re «expr⟪ , ⟫»(x, x), «expr / »(abs «expr * »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(y, x)), re «expr⟪ , ⟫»(y, y)))) : by rw ["[", expr inner_mul_conj_re_abs, "]"] []
+       «expr = »(..., «expr - »(re «expr⟪ , ⟫»(x, x), «expr / »(«expr * »(abs «expr⟪ , ⟫»(x, y), abs «expr⟪ , ⟫»(y, x)), re «expr⟪ , ⟫»(y, y)))) : by rw [expr is_R_or_C.abs_mul] []],
+    have [ident hmain'] [":", expr «expr ≤ »(«expr / »(«expr * »(abs «expr⟪ , ⟫»(x, y), abs «expr⟪ , ⟫»(y, x)), re «expr⟪ , ⟫»(y, y)), re «expr⟪ , ⟫»(x, x))] [":=", expr by linarith [] [] []],
+    have [] [] [":=", expr (mul_le_mul_right h₅).mpr hmain'],
+    rwa ["[", expr div_mul_cancel «expr * »(abs «expr⟪ , ⟫»(x, y), abs «expr⟪ , ⟫»(y, x)) h₆, "]"] ["at", ident this] }
+end
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Cauchy–Schwarz inequality for real inner products. -/
-theorem real_inner_mul_inner_self_le (x y : F) : (⟪x, y⟫_ℝ*⟪x, y⟫_ℝ) ≤ ⟪x, x⟫_ℝ*⟪y, y⟫_ℝ :=
-  by 
-    have h₁ : ⟪y, x⟫_ℝ = ⟪x, y⟫_ℝ :=
-      by 
-        rw [←inner_conj_sym] <;> rfl 
-    have h₂ := @inner_mul_inner_self_le ℝ F _ _ x y 
-    dsimp  at h₂ 
-    have h₃ := abs_mul_abs_self ⟪x, y⟫_ℝ
-    rw [h₁] at h₂ 
-    simpa [h₃] using h₂
+theorem real_inner_mul_inner_self_le
+(x
+ y : F) : «expr ≤ »(«expr * »(«expr⟪ , ⟫_ℝ»(x, y), «expr⟪ , ⟫_ℝ»(x, y)), «expr * »(«expr⟪ , ⟫_ℝ»(x, x), «expr⟪ , ⟫_ℝ»(y, y))) :=
+begin
+  have [ident h₁] [":", expr «expr = »(«expr⟪ , ⟫_ℝ»(y, x), «expr⟪ , ⟫_ℝ»(x, y))] [":=", expr by rw ["[", "<-", expr inner_conj_sym, "]"] []; refl],
+  have [ident h₂] [] [":=", expr @inner_mul_inner_self_le exprℝ() F _ _ x y],
+  dsimp [] [] [] ["at", ident h₂],
+  have [ident h₃] [] [":=", expr abs_mul_abs_self «expr⟪ , ⟫_ℝ»(x, y)],
+  rw ["[", expr h₁, "]"] ["at", ident h₂],
+  simpa [] [] [] ["[", expr h₃, "]"] [] ["using", expr h₂]
+end
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A family of vectors is linearly independent if they are nonzero
 and orthogonal. -/
-theorem linear_independent_of_ne_zero_of_inner_eq_zero {ι : Type _} {v : ι → E} (hz : ∀ i, v i ≠ 0)
-  (ho : ∀ i j, i ≠ j → ⟪v i, v j⟫ = 0) : LinearIndependent 𝕜 v :=
-  by 
-    rw [linear_independent_iff']
-    intro s g hg i hi 
-    have h' : (g i*inner (v i) (v i)) = inner (v i) (∑j in s, g j • v j)
-    ·
-      rw [inner_sum]
-      symm 
-      convert Finset.sum_eq_single i _ _
-      ·
-        rw [inner_smul_right]
-      ·
-        intro j hj hji 
-        rw [inner_smul_right, ho i j hji.symm, mul_zero]
-      ·
-        exact fun h => False.elim (h hi)
-    simpa [hg, hz] using h'
+theorem linear_independent_of_ne_zero_of_inner_eq_zero
+{ι : Type*}
+{v : ι → E}
+(hz : ∀ i, «expr ≠ »(v i, 0))
+(ho : ∀ i j, «expr ≠ »(i, j) → «expr = »(«expr⟪ , ⟫»(v i, v j), 0)) : linear_independent 𝕜 v :=
+begin
+  rw [expr linear_independent_iff'] [],
+  intros [ident s, ident g, ident hg, ident i, ident hi],
+  have [ident h'] [":", expr «expr = »(«expr * »(g i, inner (v i) (v i)), inner (v i) «expr∑ in , »((j), s, «expr • »(g j, v j)))] [],
+  { rw [expr inner_sum] [],
+    symmetry,
+    convert [] [expr finset.sum_eq_single i _ _] [],
+    { rw [expr inner_smul_right] [] },
+    { intros [ident j, ident hj, ident hji],
+      rw ["[", expr inner_smul_right, ",", expr ho i j hji.symm, ",", expr mul_zero, "]"] [] },
+    { exact [expr λ h, false.elim (h hi)] } },
+  simpa [] [] [] ["[", expr hg, ",", expr hz, "]"] [] ["using", expr h']
+end
 
 end BasicProperties
 
@@ -852,32 +783,28 @@ omit 𝕜
 
 variable{𝕜}
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `if ... then ... else` characterization of an indexed set of vectors being orthonormal.  (Inner
 product equals Kronecker delta.) -/
-theorem orthonormal_iff_ite {v : ι → E} : Orthonormal 𝕜 v ↔ ∀ i j, ⟪v i, v j⟫ = if i = j then (1 : 𝕜) else (0 : 𝕜) :=
-  by 
-    split 
-    ·
-      intro hv i j 
-      splitIfs
-      ·
-        simp [h, inner_self_eq_norm_sq_to_K, hv.1]
-      ·
-        exact hv.2 h
-    ·
-      intro h 
-      split 
-      ·
-        intro i 
-        have h' : (∥v i∥^2) = (1^2) :=
-          by 
-            simp [norm_sq_eq_inner, h i i]
-        have h₁ : 0 ≤ ∥v i∥ := norm_nonneg _ 
-        have h₂ : (0 : ℝ) ≤ 1 := zero_le_one 
-        rwa [sq_eq_sq h₁ h₂] at h'
-      ·
-        intro i j hij 
-        simpa [hij] using h i j
+theorem orthonormal_iff_ite
+{v : ι → E} : «expr ↔ »(orthonormal 𝕜 v, ∀
+ i j, «expr = »(«expr⟪ , ⟫»(v i, v j), if «expr = »(i, j) then (1 : 𝕜) else (0 : 𝕜))) :=
+begin
+  split,
+  { intros [ident hv, ident i, ident j],
+    split_ifs [] [],
+    { simp [] [] [] ["[", expr h, ",", expr inner_self_eq_norm_sq_to_K, ",", expr hv.1, "]"] [] [] },
+    { exact [expr hv.2 h] } },
+  { intros [ident h],
+    split,
+    { intros [ident i],
+      have [ident h'] [":", expr «expr = »(«expr ^ »(«expr∥ ∥»(v i), 2), «expr ^ »(1, 2))] [":=", expr by simp [] [] [] ["[", expr norm_sq_eq_inner, ",", expr h i i, "]"] [] []],
+      have [ident h₁] [":", expr «expr ≤ »(0, «expr∥ ∥»(v i))] [":=", expr norm_nonneg _],
+      have [ident h₂] [":", expr «expr ≤ »((0 : exprℝ()), 1)] [":=", expr zero_le_one],
+      rwa [expr sq_eq_sq h₁ h₂] ["at", ident h'] },
+    { intros [ident i, ident j, ident hij],
+      simpa [] [] [] ["[", expr hij, "]"] [] ["using", expr h i j] } }
+end
 
 /-- `if ... then ... else` characterization of a set of vectors being orthonormal.  (Inner product
 equals Kronecker delta.) -/
@@ -932,16 +859,16 @@ theorem Orthonormal.inner_left_right_finset {s : Finset ι} {v : ι → E} (hv :
   by 
     simp [orthonormal_iff_ite.mp hv, Finset.sum_ite_of_true]
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An orthonormal set is linearly independent. -/
-theorem Orthonormal.linear_independent {v : ι → E} (hv : Orthonormal 𝕜 v) : LinearIndependent 𝕜 v :=
-  by 
-    rw [linear_independent_iff]
-    intro l hl 
-    ext i 
-    have key : ⟪v i, Finsupp.total ι E 𝕜 v l⟫ = ⟪v i, 0⟫ :=
-      by 
-        rw [hl]
-    simpa [hv.inner_right_finsupp] using key
+theorem orthonormal.linear_independent {v : ι → E} (hv : orthonormal 𝕜 v) : linear_independent 𝕜 v :=
+begin
+  rw [expr linear_independent_iff] [],
+  intros [ident l, ident hl],
+  ext [] [ident i] [],
+  have [ident key] [":", expr «expr = »(«expr⟪ , ⟫»(v i, finsupp.total ι E 𝕜 v l), «expr⟪ , ⟫»(v i, 0))] [":=", expr by rw [expr hl] []],
+  simpa [] [] [] ["[", expr hv.inner_right_finsupp, "]"] [] ["using", expr key]
+end
 
 /-- A subfamily of an orthonormal family (i.e., a composition with an injective map) is an
 orthonormal family. -/
@@ -969,15 +896,20 @@ theorem orthonormal_empty : Orthonormal 𝕜 (fun x => x : (∅ : Set E) → E) 
 
 variable{𝕜 E}
 
-theorem orthonormal_Union_of_directed {η : Type _} {s : η → Set E} (hs : Directed (· ⊆ ·) s)
-  (h : ∀ i, Orthonormal 𝕜 (fun x => x : s i → E)) : Orthonormal 𝕜 (fun x => x : (⋃i, s i) → E) :=
-  by 
-    rw [orthonormal_subtype_iff_ite]
-    rintro x ⟨_, ⟨i, rfl⟩, hxi⟩ y ⟨_, ⟨j, rfl⟩, hyj⟩
-    obtain ⟨k, hik, hjk⟩ := hs i j 
-    have h_orth : Orthonormal 𝕜 (fun x => x : s k → E) := h k 
-    rw [orthonormal_subtype_iff_ite] at h_orth 
-    exact h_orth x (hik hxi) y (hjk hyj)
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem orthonormal_Union_of_directed
+{η : Type*}
+{s : η → set E}
+(hs : directed ((«expr ⊆ »)) s)
+(h : ∀ i, orthonormal 𝕜 (λ x, x : s i → E)) : orthonormal 𝕜 (λ x, x : «expr⋃ , »((i), s i) → E) :=
+begin
+  rw [expr orthonormal_subtype_iff_ite] [],
+  rintros [ident x, "⟨", "_", ",", "⟨", ident i, ",", ident rfl, "⟩", ",", ident hxi, "⟩", ident y, "⟨", "_", ",", "⟨", ident j, ",", ident rfl, "⟩", ",", ident hyj, "⟩"],
+  obtain ["⟨", ident k, ",", ident hik, ",", ident hjk, "⟩", ":=", expr hs i j],
+  have [ident h_orth] [":", expr orthonormal 𝕜 (λ x, x : s k → E)] [":=", expr h k],
+  rw [expr orthonormal_subtype_iff_ite] ["at", ident h_orth],
+  exact [expr h_orth x (hik hxi) y (hjk hyj)]
+end
 
 theorem orthonormal_sUnion_of_directed {s : Set (Set E)} (hs : DirectedOn (· ⊆ ·) s)
   (h : ∀ a _ : a ∈ s, Orthonormal 𝕜 (fun x => x : (a : Set E) → E)) : Orthonormal 𝕜 (fun x => x : ⋃₀s → E) :=
@@ -1004,13 +936,14 @@ theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coeₓ : 
       ·
         exact fun _ => Set.subset_sUnion_of_mem
 
-theorem Orthonormal.ne_zero {v : ι → E} (hv : Orthonormal 𝕜 v) (i : ι) : v i ≠ 0 :=
-  by 
-    have  : ∥v i∥ ≠ 0
-    ·
-      rw [hv.1 i]
-      normNum 
-    simpa using this
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem orthonormal.ne_zero {v : ι → E} (hv : orthonormal 𝕜 v) (i : ι) : «expr ≠ »(v i, 0) :=
+begin
+  have [] [":", expr «expr ≠ »(«expr∥ ∥»(v i), 0)] [],
+  { rw [expr hv.1 i] [],
+    norm_num [] [] },
+  simpa [] [] [] [] [] ["using", expr this]
+end
 
 open FiniteDimensional
 
@@ -1028,16 +961,18 @@ end OrthonormalSets
 
 section Norm
 
-theorem norm_eq_sqrt_inner (x : E) : ∥x∥ = sqrt (re ⟪x, x⟫) :=
-  by 
-    have h₁ : (∥x∥^2) = re ⟪x, x⟫ := norm_sq_eq_inner x 
-    have h₂ := congr_argₓ sqrt h₁ 
-    simpa using h₂
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem norm_eq_sqrt_inner (x : E) : «expr = »(«expr∥ ∥»(x), sqrt (re «expr⟪ , ⟫»(x, x))) :=
+begin
+  have [ident h₁] [":", expr «expr = »(«expr ^ »(«expr∥ ∥»(x), 2), re «expr⟪ , ⟫»(x, x))] [":=", expr norm_sq_eq_inner x],
+  have [ident h₂] [] [":=", expr congr_arg sqrt h₁],
+  simpa [] [] [] [] [] ["using", expr h₂]
+end
 
-theorem norm_eq_sqrt_real_inner (x : F) : ∥x∥ = sqrt ⟪x, x⟫_ℝ :=
-  by 
-    have h := @norm_eq_sqrt_inner ℝ F _ _ x 
-    simpa using h
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem norm_eq_sqrt_real_inner (x : F) : «expr = »(«expr∥ ∥»(x), sqrt «expr⟪ , ⟫_ℝ»(x, x)) :=
+by { have [ident h] [] [":=", expr @norm_eq_sqrt_inner exprℝ() F _ _ x],
+  simpa [] [] [] [] [] ["using", expr h] }
 
 theorem inner_self_eq_norm_mul_norm (x : E) : re ⟪x, x⟫ = ∥x∥*∥x∥ :=
   by 
@@ -1047,66 +982,69 @@ theorem inner_self_eq_norm_sq (x : E) : re ⟪x, x⟫ = (∥x∥^2) :=
   by 
     rw [pow_two, inner_self_eq_norm_mul_norm]
 
-theorem real_inner_self_eq_norm_mul_norm (x : F) : ⟪x, x⟫_ℝ = ∥x∥*∥x∥ :=
-  by 
-    have h := @inner_self_eq_norm_mul_norm ℝ F _ _ x 
-    simpa using h
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem real_inner_self_eq_norm_mul_norm
+(x : F) : «expr = »(«expr⟪ , ⟫_ℝ»(x, x), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(x))) :=
+by { have [ident h] [] [":=", expr @inner_self_eq_norm_mul_norm exprℝ() F _ _ x],
+  simpa [] [] [] [] [] ["using", expr h] }
 
 theorem real_inner_self_eq_norm_sq (x : F) : ⟪x, x⟫_ℝ = (∥x∥^2) :=
   by 
     rw [pow_two, real_inner_self_eq_norm_mul_norm]
 
--- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Expand the square -/
-theorem norm_add_sq
-{x
- y : E} : «expr = »(«expr ^ »(«expr∥ ∥»(«expr + »(x, y)), 2), «expr + »(«expr + »(«expr ^ »(«expr∥ ∥»(x), 2), «expr * »(2, re «expr⟪ , ⟫»(x, y))), «expr ^ »(«expr∥ ∥»(y), 2))) :=
-begin
-  repeat { rw ["[", expr sq, ",", "<-", expr inner_self_eq_norm_mul_norm, "]"] [] },
-  rw ["[", expr inner_add_add_self, ",", expr two_mul, "]"] [],
-  simp [] [] ["only"] ["[", expr add_assoc, ",", expr add_left_inj, ",", expr add_right_inj, ",", expr add_monoid_hom.map_add, "]"] [] [],
-  rw ["[", "<-", expr inner_conj_sym, ",", expr conj_re, "]"] []
-end
+theorem norm_add_sq {x y : E} : (∥x+y∥^2) = ((∥x∥^2)+2*re ⟪x, y⟫)+∥y∥^2 :=
+  by 
+    repeat' 
+      rw [sq, ←inner_self_eq_norm_mul_norm]
+    rw [inner_add_add_self, two_mul]
+    simp only [add_assocₓ, add_left_injₓ, add_right_injₓ, AddMonoidHom.map_add]
+    rw [←inner_conj_sym, conj_re]
 
 alias norm_add_sq ← norm_add_pow_two
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Expand the square -/
-theorem norm_add_sq_real {x y : F} : (∥x+y∥^2) = ((∥x∥^2)+2*⟪x, y⟫_ℝ)+∥y∥^2 :=
-  by 
-    have h := @norm_add_sq ℝ F _ _ 
-    simpa using h
+theorem norm_add_sq_real
+{x
+ y : F} : «expr = »(«expr ^ »(«expr∥ ∥»(«expr + »(x, y)), 2), «expr + »(«expr + »(«expr ^ »(«expr∥ ∥»(x), 2), «expr * »(2, «expr⟪ , ⟫_ℝ»(x, y))), «expr ^ »(«expr∥ ∥»(y), 2))) :=
+by { have [ident h] [] [":=", expr @norm_add_sq exprℝ() F _ _],
+  simpa [] [] [] [] [] ["using", expr h] }
 
 alias norm_add_sq_real ← norm_add_pow_two_real
 
--- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Expand the square -/
-theorem norm_add_mul_self
-{x
- y : E} : «expr = »(«expr * »(«expr∥ ∥»(«expr + »(x, y)), «expr∥ ∥»(«expr + »(x, y))), «expr + »(«expr + »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(x)), «expr * »(2, re «expr⟪ , ⟫»(x, y))), «expr * »(«expr∥ ∥»(y), «expr∥ ∥»(y)))) :=
-by { repeat { rw ["[", "<-", expr sq, "]"] [] },
-  exact [expr norm_add_sq] }
-
-/-- Expand the square -/
-theorem norm_add_mul_self_real {x y : F} : (∥x+y∥*∥x+y∥) = ((∥x∥*∥x∥)+2*⟪x, y⟫_ℝ)+∥y∥*∥y∥ :=
+theorem norm_add_mul_self {x y : E} : (∥x+y∥*∥x+y∥) = ((∥x∥*∥x∥)+2*re ⟪x, y⟫)+∥y∥*∥y∥ :=
   by 
-    have h := @norm_add_mul_self ℝ F _ _ 
-    simpa using h
+    repeat' 
+      rw [←sq]
+    exact norm_add_sq
 
--- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Expand the square -/
-theorem norm_sub_sq
+theorem norm_add_mul_self_real
 {x
- y : E} : «expr = »(«expr ^ »(«expr∥ ∥»(«expr - »(x, y)), 2), «expr + »(«expr - »(«expr ^ »(«expr∥ ∥»(x), 2), «expr * »(2, re «expr⟪ , ⟫»(x, y))), «expr ^ »(«expr∥ ∥»(y), 2))) :=
-begin
-  repeat { rw ["[", expr sq, ",", "<-", expr inner_self_eq_norm_mul_norm, "]"] [] },
-  rw ["[", expr inner_sub_sub_self, "]"] [],
-  calc
-    «expr = »(re «expr + »(«expr - »(«expr - »(«expr⟪ , ⟫»(x, x), «expr⟪ , ⟫»(x, y)), «expr⟪ , ⟫»(y, x)), «expr⟪ , ⟫»(y, y)), «expr + »(«expr - »(«expr - »(re «expr⟪ , ⟫»(x, x), re «expr⟪ , ⟫»(x, y)), re «expr⟪ , ⟫»(y, x)), re «expr⟪ , ⟫»(y, y))) : by simp [] [] [] [] [] []
-    «expr = »(..., «expr + »(«expr + »(«expr - »(«expr- »(re «expr⟪ , ⟫»(y, x)), re «expr⟪ , ⟫»(x, y)), re «expr⟪ , ⟫»(x, x)), re «expr⟪ , ⟫»(y, y))) : by ring []
-    «expr = »(..., «expr + »(«expr + »(«expr - »(«expr- »(re «expr †»(«expr⟪ , ⟫»(x, y))), re «expr⟪ , ⟫»(x, y)), re «expr⟪ , ⟫»(x, x)), re «expr⟪ , ⟫»(y, y))) : by rw ["[", expr inner_conj_sym, "]"] []
-    «expr = »(..., «expr + »(«expr + »(«expr - »(«expr- »(re «expr⟪ , ⟫»(x, y)), re «expr⟪ , ⟫»(x, y)), re «expr⟪ , ⟫»(x, x)), re «expr⟪ , ⟫»(y, y))) : by rw ["[", expr conj_re, "]"] []
-    «expr = »(..., «expr + »(«expr - »(re «expr⟪ , ⟫»(x, x), «expr * »(2, re «expr⟪ , ⟫»(x, y))), re «expr⟪ , ⟫»(y, y))) : by ring []
-end
+ y : F} : «expr = »(«expr * »(«expr∥ ∥»(«expr + »(x, y)), «expr∥ ∥»(«expr + »(x, y))), «expr + »(«expr + »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(x)), «expr * »(2, «expr⟪ , ⟫_ℝ»(x, y))), «expr * »(«expr∥ ∥»(y), «expr∥ ∥»(y)))) :=
+by { have [ident h] [] [":=", expr @norm_add_mul_self exprℝ() F _ _],
+  simpa [] [] [] [] [] ["using", expr h] }
+
+/-- Expand the square -/
+theorem norm_sub_sq {x y : E} : (∥x - y∥^2) = ((∥x∥^2) - 2*re ⟪x, y⟫)+∥y∥^2 :=
+  by 
+    repeat' 
+      rw [sq, ←inner_self_eq_norm_mul_norm]
+    rw [inner_sub_sub_self]
+    calc re ((⟪x, x⟫ - ⟪x, y⟫ - ⟪y, x⟫)+⟪y, y⟫) = (re ⟪x, x⟫ - re ⟪x, y⟫ - re ⟪y, x⟫)+re ⟪y, y⟫ :=
+      by 
+        simp _ = ((-re ⟪y, x⟫ - re ⟪x, y⟫)+re ⟪x, x⟫)+re ⟪y, y⟫ :=
+      by 
+        ring _ = ((-re (⟪x, y⟫†) - re ⟪x, y⟫)+re ⟪x, x⟫)+re ⟪y, y⟫ :=
+      by 
+        rw [inner_conj_sym]_ = ((-re ⟪x, y⟫ - re ⟪x, y⟫)+re ⟪x, x⟫)+re ⟪y, y⟫ :=
+      by 
+        rw [conj_re]_ = (re ⟪x, x⟫ - 2*re ⟪x, y⟫)+re ⟪y, y⟫ :=
+      by 
+        ring
 
 alias norm_sub_sq ← norm_sub_pow_two
 
@@ -1116,39 +1054,44 @@ theorem norm_sub_sq_real {x y : F} : (∥x - y∥^2) = ((∥x∥^2) - 2*⟪x, y�
 
 alias norm_sub_sq_real ← norm_sub_pow_two_real
 
--- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Expand the square -/
-theorem norm_sub_mul_self
-{x
- y : E} : «expr = »(«expr * »(«expr∥ ∥»(«expr - »(x, y)), «expr∥ ∥»(«expr - »(x, y))), «expr + »(«expr - »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(x)), «expr * »(2, re «expr⟪ , ⟫»(x, y))), «expr * »(«expr∥ ∥»(y), «expr∥ ∥»(y)))) :=
-by { repeat { rw ["[", "<-", expr sq, "]"] [] },
-  exact [expr norm_sub_sq] }
-
-/-- Expand the square -/
-theorem norm_sub_mul_self_real {x y : F} : (∥x - y∥*∥x - y∥) = ((∥x∥*∥x∥) - 2*⟪x, y⟫_ℝ)+∥y∥*∥y∥ :=
+theorem norm_sub_mul_self {x y : E} : (∥x - y∥*∥x - y∥) = ((∥x∥*∥x∥) - 2*re ⟪x, y⟫)+∥y∥*∥y∥ :=
   by 
-    have h := @norm_sub_mul_self ℝ F _ _ 
-    simpa using h
+    repeat' 
+      rw [←sq]
+    exact norm_sub_sq
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- Expand the square -/
+theorem norm_sub_mul_self_real
+{x
+ y : F} : «expr = »(«expr * »(«expr∥ ∥»(«expr - »(x, y)), «expr∥ ∥»(«expr - »(x, y))), «expr + »(«expr - »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(x)), «expr * »(2, «expr⟪ , ⟫_ℝ»(x, y))), «expr * »(«expr∥ ∥»(y), «expr∥ ∥»(y)))) :=
+by { have [ident h] [] [":=", expr @norm_sub_mul_self exprℝ() F _ _],
+  simpa [] [] [] [] [] ["using", expr h] }
+
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Cauchy–Schwarz inequality with norm -/
-theorem abs_inner_le_norm (x y : E) : abs ⟪x, y⟫ ≤ ∥x∥*∥y∥ :=
-  nonneg_le_nonneg_of_sq_le_sq (mul_nonneg (norm_nonneg _) (norm_nonneg _))
-    (by 
-      have  : ((∥x∥*∥y∥)*∥x∥*∥y∥) = re ⟪x, x⟫*re ⟪y, y⟫
-      simp only [inner_self_eq_norm_mul_norm]
-      ring 
-      rw [this]
-      convLHS => congr skip rw [inner_abs_conj_sym]
-      exact inner_mul_inner_self_le _ _)
+theorem abs_inner_le_norm (x y : E) : «expr ≤ »(abs «expr⟪ , ⟫»(x, y), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y))) :=
+nonneg_le_nonneg_of_sq_le_sq (mul_nonneg (norm_nonneg _) (norm_nonneg _)) (begin
+   have [] [":", expr «expr = »(«expr * »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y)), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y))), «expr * »(re «expr⟪ , ⟫»(x, x), re «expr⟪ , ⟫»(y, y)))] [],
+   simp [] [] ["only"] ["[", expr inner_self_eq_norm_mul_norm, "]"] [] [],
+   ring [],
+   rw [expr this] [],
+   conv_lhs [] [] { congr,
+     skip,
+     rw ["[", expr inner_abs_conj_sym, "]"] },
+   exact [expr inner_mul_inner_self_le _ _]
+ end)
 
 theorem norm_inner_le_norm (x y : E) : ∥⟪x, y⟫∥ ≤ ∥x∥*∥y∥ :=
   (IsROrC.norm_eq_abs _).le.trans (abs_inner_le_norm x y)
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Cauchy–Schwarz inequality with norm -/
-theorem abs_real_inner_le_norm (x y : F) : absR ⟪x, y⟫_ℝ ≤ ∥x∥*∥y∥ :=
-  by 
-    have h := @abs_inner_le_norm ℝ F _ _ x y 
-    simpa using h
+theorem abs_real_inner_le_norm
+(x y : F) : «expr ≤ »(exprabsR() «expr⟪ , ⟫_ℝ»(x, y), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y))) :=
+by { have [ident h] [] [":=", expr @abs_inner_le_norm exprℝ() F _ _ x y],
+  simpa [] [] [] [] [] ["using", expr h] }
 
 /-- Cauchy–Schwarz inequality with norm -/
 theorem real_inner_le_norm (x y : F) : ⟪x, y⟫_ℝ ≤ ∥x∥*∥y∥ :=
@@ -1164,10 +1107,12 @@ theorem parallelogram_law_with_norm {x y : E} : ((∥x+y∥*∥x+y∥)+∥x - y�
 
 omit 𝕜
 
-theorem parallelogram_law_with_norm_real {x y : F} : ((∥x+y∥*∥x+y∥)+∥x - y∥*∥x - y∥) = 2*(∥x∥*∥x∥)+∥y∥*∥y∥ :=
-  by 
-    have h := @parallelogram_law_with_norm ℝ F _ _ x y 
-    simpa using h
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem parallelogram_law_with_norm_real
+{x
+ y : F} : «expr = »(«expr + »(«expr * »(«expr∥ ∥»(«expr + »(x, y)), «expr∥ ∥»(«expr + »(x, y))), «expr * »(«expr∥ ∥»(«expr - »(x, y)), «expr∥ ∥»(«expr - »(x, y)))), «expr * »(2, «expr + »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(x)), «expr * »(«expr∥ ∥»(y), «expr∥ ∥»(y))))) :=
+by { have [ident h] [] [":=", expr @parallelogram_law_with_norm exprℝ() F _ _ x y],
+  simpa [] [] [] [] [] ["using", expr h] }
 
 /-- Polarization identity: The real part of the  inner product, in terms of the norm. -/
 theorem re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two (x y : E) :
@@ -1340,21 +1285,21 @@ theorem real_inner_smul_self_right (x : F) (r : ℝ) : ⟪x, r • x⟫_ℝ = r*
   by 
     rw [inner_smul_right, ←real_inner_self_eq_norm_mul_norm]
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inner product of a nonzero vector with a nonzero multiple of
 itself, divided by the product of their norms, has absolute value
 1. -/
-theorem abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul {x : E} {r : 𝕜} (hx : x ≠ 0) (hr : r ≠ 0) :
-  (abs ⟪x, r • x⟫ / ∥x∥*∥r • x∥) = 1 :=
-  by 
-    have hx' : ∥x∥ ≠ 0 :=
-      by 
-        simp [norm_eq_zero, hx]
-    have hr' : abs r ≠ 0 :=
-      by 
-        simp [IsROrC.abs_eq_zero, hr]
-    rw [inner_smul_right, IsROrC.abs_mul, ←inner_self_re_abs, inner_self_eq_norm_mul_norm, norm_smul]
-    rw [IsROrC.norm_eq_abs, ←mul_assocₓ, ←div_div_eq_div_mul, mul_div_cancel _ hx', ←div_div_eq_div_mul, mul_commₓ,
-      mul_div_cancel _ hr', div_self hx']
+theorem abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul
+{x : E}
+{r : 𝕜}
+(hx : «expr ≠ »(x, 0))
+(hr : «expr ≠ »(r, 0)) : «expr = »(«expr / »(abs «expr⟪ , ⟫»(x, «expr • »(r, x)), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(«expr • »(r, x)))), 1) :=
+begin
+  have [ident hx'] [":", expr «expr ≠ »(«expr∥ ∥»(x), 0)] [":=", expr by simp [] [] [] ["[", expr norm_eq_zero, ",", expr hx, "]"] [] []],
+  have [ident hr'] [":", expr «expr ≠ »(abs r, 0)] [":=", expr by simp [] [] [] ["[", expr is_R_or_C.abs_eq_zero, ",", expr hr, "]"] [] []],
+  rw ["[", expr inner_smul_right, ",", expr is_R_or_C.abs_mul, ",", "<-", expr inner_self_re_abs, ",", expr inner_self_eq_norm_mul_norm, ",", expr norm_smul, "]"] [],
+  rw ["[", expr is_R_or_C.norm_eq_abs, ",", "<-", expr mul_assoc, ",", "<-", expr div_div_eq_div_mul, ",", expr mul_div_cancel _ hx', ",", "<-", expr div_div_eq_div_mul, ",", expr mul_comm, ",", expr mul_div_cancel _ hr', ",", expr div_self hx', "]"] []
+end
 
 /-- The inner product of a nonzero vector with a nonzero multiple of
 itself, divided by the product of their norms, has absolute value
@@ -1383,112 +1328,101 @@ theorem real_inner_div_norm_mul_norm_eq_neg_one_of_ne_zero_of_neg_mul {x : F} {r
       abs_of_neg hr, ←neg_mul_eq_neg_mul, div_neg_eq_neg_div, div_self]
     exact mul_ne_zero (ne_of_ltₓ hr) fun h => hx (norm_eq_zero.1 (eq_zero_of_mul_self_eq_zero h))
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inner product of two vectors, divided by the product of their
 norms, has absolute value 1 if and only if they are nonzero and one is
 a multiple of the other. One form of equality case for Cauchy-Schwarz. -/
-theorem abs_inner_div_norm_mul_norm_eq_one_iff (x y : E) :
-  abs (⟪x, y⟫ / ∥x∥*∥y∥) = 1 ↔ x ≠ 0 ∧ ∃ r : 𝕜, r ≠ 0 ∧ y = r • x :=
-  by 
-    split 
-    ·
-      intro h 
-      have hx0 : x ≠ 0
-      ·
-        intro hx0 
-        rw [hx0, inner_zero_left, zero_div] at h 
-        normNum  at h 
-      refine' And.intro hx0 _ 
-      set r := ⟪x, y⟫ / ∥x∥*∥x∥ with hr 
-      use r 
-      set t := y - r • x with ht 
-      have ht0 : ⟪x, t⟫ = 0
-      ·
-        rw [ht, inner_sub_right, inner_smul_right, hr]
-        normCast 
-        rw [←inner_self_eq_norm_mul_norm, inner_self_re_to_K, div_mul_cancel _ fun h => hx0 (inner_self_eq_zero.1 h),
-          sub_self]
-      replace h : ∥r • x∥ / ∥t+r • x∥ = 1
-      ·
-        rw [←sub_add_cancel y (r • x), ←ht, inner_add_right, ht0, zero_addₓ, inner_smul_right, IsROrC.abs_div,
-          IsROrC.abs_mul, ←inner_self_re_abs, inner_self_eq_norm_mul_norm] at h 
-        normCast  at h 
-        rwa [_root_.abs_mul, abs_norm_eq_norm, abs_norm_eq_norm, ←mul_assocₓ, mul_commₓ,
-          mul_div_mul_left _ _ fun h => hx0 (norm_eq_zero.1 h), ←IsROrC.norm_eq_abs, ←norm_smul] at h 
-      have hr0 : r ≠ 0
-      ·
-        intro hr0 
-        rw [hr0, zero_smul, norm_zero, zero_div] at h 
-        normNum  at h 
-      refine' And.intro hr0 _ 
-      have h2 : (∥r • x∥^2) = (∥t+r • x∥^2)
-      ·
-        rw [eq_of_div_eq_one h]
-      replace h2 : ⟪r • x, r • x⟫ = ((⟪t, t⟫+⟪t, r • x⟫)+⟪r • x, t⟫)+⟪r • x, r • x⟫
-      ·
-        rw [sq, sq, ←inner_self_eq_norm_mul_norm, ←inner_self_eq_norm_mul_norm] at h2 
-        have h2' := congr_argₓ (fun z : ℝ => (z : 𝕜)) h2 
-        simpRw [inner_self_re_to_K, inner_add_add_self]  at h2' 
-        exact h2' 
-      conv  at h2 in ⟪r • x, t⟫ => rw [inner_smul_left, ht0, mul_zero]
-      symm'  at h2 
-      have h₁ : ⟪t, r • x⟫ = 0 :=
-        by 
-          rw [inner_smul_right, ←inner_conj_sym, ht0]
-          simp 
-      rw [add_zeroₓ, h₁, add_left_eq_self, add_zeroₓ, inner_self_eq_zero] at h2 
-      rw [h2] at ht 
-      exact eq_of_sub_eq_zero ht.symm
-    ·
-      intro h 
-      rcases h with ⟨hx, ⟨r, ⟨hr, hy⟩⟩⟩
-      rw [hy, IsROrC.abs_div]
-      normCast 
-      rw [_root_.abs_mul, abs_norm_eq_norm, abs_norm_eq_norm]
-      exact abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul hx hr
+theorem abs_inner_div_norm_mul_norm_eq_one_iff
+(x
+ y : E) : «expr ↔ »(«expr = »(abs «expr / »(«expr⟪ , ⟫»(x, y), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y))), 1), «expr ∧ »(«expr ≠ »(x, 0), «expr∃ , »((r : 𝕜), «expr ∧ »(«expr ≠ »(r, 0), «expr = »(y, «expr • »(r, x)))))) :=
+begin
+  split,
+  { intro [ident h],
+    have [ident hx0] [":", expr «expr ≠ »(x, 0)] [],
+    { intro [ident hx0],
+      rw ["[", expr hx0, ",", expr inner_zero_left, ",", expr zero_div, "]"] ["at", ident h],
+      norm_num [] ["at", ident h] },
+    refine [expr and.intro hx0 _],
+    set [] [ident r] [] [":="] [expr «expr / »(«expr⟪ , ⟫»(x, y), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(x)))] ["with", ident hr],
+    use [expr r],
+    set [] [ident t] [] [":="] [expr «expr - »(y, «expr • »(r, x))] ["with", ident ht],
+    have [ident ht0] [":", expr «expr = »(«expr⟪ , ⟫»(x, t), 0)] [],
+    { rw ["[", expr ht, ",", expr inner_sub_right, ",", expr inner_smul_right, ",", expr hr, "]"] [],
+      norm_cast [],
+      rw ["[", "<-", expr inner_self_eq_norm_mul_norm, ",", expr inner_self_re_to_K, ",", expr div_mul_cancel _ (λ
+        h, hx0 (inner_self_eq_zero.1 h)), ",", expr sub_self, "]"] [] },
+    replace [ident h] [":", expr «expr = »(«expr / »(«expr∥ ∥»(«expr • »(r, x)), «expr∥ ∥»(«expr + »(t, «expr • »(r, x)))), 1)] [],
+    { rw ["[", "<-", expr sub_add_cancel y «expr • »(r, x), ",", "<-", expr ht, ",", expr inner_add_right, ",", expr ht0, ",", expr zero_add, ",", expr inner_smul_right, ",", expr is_R_or_C.abs_div, ",", expr is_R_or_C.abs_mul, ",", "<-", expr inner_self_re_abs, ",", expr inner_self_eq_norm_mul_norm, "]"] ["at", ident h],
+      norm_cast ["at", ident h],
+      rwa ["[", expr _root_.abs_mul, ",", expr abs_norm_eq_norm, ",", expr abs_norm_eq_norm, ",", "<-", expr mul_assoc, ",", expr mul_comm, ",", expr mul_div_mul_left _ _ (λ
+        h, hx0 (norm_eq_zero.1 h)), ",", "<-", expr is_R_or_C.norm_eq_abs, ",", "<-", expr norm_smul, "]"] ["at", ident h] },
+    have [ident hr0] [":", expr «expr ≠ »(r, 0)] [],
+    { intro [ident hr0],
+      rw ["[", expr hr0, ",", expr zero_smul, ",", expr norm_zero, ",", expr zero_div, "]"] ["at", ident h],
+      norm_num [] ["at", ident h] },
+    refine [expr and.intro hr0 _],
+    have [ident h2] [":", expr «expr = »(«expr ^ »(«expr∥ ∥»(«expr • »(r, x)), 2), «expr ^ »(«expr∥ ∥»(«expr + »(t, «expr • »(r, x))), 2))] [],
+    { rw ["[", expr eq_of_div_eq_one h, "]"] [] },
+    replace [ident h2] [":", expr «expr = »(«expr⟪ , ⟫»(«expr • »(r, x), «expr • »(r, x)), «expr + »(«expr + »(«expr + »(«expr⟪ , ⟫»(t, t), «expr⟪ , ⟫»(t, «expr • »(r, x))), «expr⟪ , ⟫»(«expr • »(r, x), t)), «expr⟪ , ⟫»(«expr • »(r, x), «expr • »(r, x))))] [],
+    { rw ["[", expr sq, ",", expr sq, ",", "<-", expr inner_self_eq_norm_mul_norm, ",", "<-", expr inner_self_eq_norm_mul_norm, "]"] ["at", ident h2],
+      have [ident h2'] [] [":=", expr congr_arg (λ z : exprℝ(), (z : 𝕜)) h2],
+      simp_rw ["[", expr inner_self_re_to_K, ",", expr inner_add_add_self, "]"] ["at", ident h2'],
+      exact [expr h2'] },
+    conv ["at", ident h2] ["in", expr «expr⟪ , ⟫»(«expr • »(r, x), t)] { rw ["[", expr inner_smul_left, ",", expr ht0, ",", expr mul_zero, "]"] },
+    symmetry' ["at", ident h2],
+    have [ident h₁] [":", expr «expr = »(«expr⟪ , ⟫»(t, «expr • »(r, x)), 0)] [":=", expr by { rw ["[", expr inner_smul_right, ",", "<-", expr inner_conj_sym, ",", expr ht0, "]"] [],
+       simp [] [] [] [] [] [] }],
+    rw ["[", expr add_zero, ",", expr h₁, ",", expr add_left_eq_self, ",", expr add_zero, ",", expr inner_self_eq_zero, "]"] ["at", ident h2],
+    rw [expr h2] ["at", ident ht],
+    exact [expr eq_of_sub_eq_zero ht.symm] },
+  { intro [ident h],
+    rcases [expr h, "with", "⟨", ident hx, ",", "⟨", ident r, ",", "⟨", ident hr, ",", ident hy, "⟩", "⟩", "⟩"],
+    rw ["[", expr hy, ",", expr is_R_or_C.abs_div, "]"] [],
+    norm_cast [],
+    rw ["[", expr _root_.abs_mul, ",", expr abs_norm_eq_norm, ",", expr abs_norm_eq_norm, "]"] [],
+    exact [expr abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul hx hr] }
+end
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inner product of two vectors, divided by the product of their
 norms, has absolute value 1 if and only if they are nonzero and one is
 a multiple of the other. One form of equality case for Cauchy-Schwarz. -/
-theorem abs_real_inner_div_norm_mul_norm_eq_one_iff (x y : F) :
-  absR (⟪x, y⟫_ℝ / ∥x∥*∥y∥) = 1 ↔ x ≠ 0 ∧ ∃ r : ℝ, r ≠ 0 ∧ y = r • x :=
-  by 
-    have  := @abs_inner_div_norm_mul_norm_eq_one_iff ℝ F _ _ x y 
-    simpa [coe_real_eq_id] using this
+theorem abs_real_inner_div_norm_mul_norm_eq_one_iff
+(x
+ y : F) : «expr ↔ »(«expr = »(exprabsR() «expr / »(«expr⟪ , ⟫_ℝ»(x, y), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y))), 1), «expr ∧ »(«expr ≠ »(x, 0), «expr∃ , »((r : exprℝ()), «expr ∧ »(«expr ≠ »(r, 0), «expr = »(y, «expr • »(r, x)))))) :=
+begin
+  have [] [] [":=", expr @abs_inner_div_norm_mul_norm_eq_one_iff exprℝ() F _ _ x y],
+  simpa [] [] [] ["[", expr coe_real_eq_id, "]"] [] ["using", expr this]
+end
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If the inner product of two vectors is equal to the product of their norms, then the two vectors
 are multiples of each other. One form of the equality case for Cauchy-Schwarz.
 Compare `inner_eq_norm_mul_iff`, which takes the stronger hypothesis `⟪x, y⟫ = ∥x∥ * ∥y∥`. -/
-theorem abs_inner_eq_norm_iff (x y : E) (hx0 : x ≠ 0) (hy0 : y ≠ 0) :
-  (abs ⟪x, y⟫ = ∥x∥*∥y∥) ↔ ∃ r : 𝕜, r ≠ 0 ∧ y = r • x :=
-  by 
-    have hx0' : ∥x∥ ≠ 0 :=
-      by 
-        simp [norm_eq_zero, hx0]
-    have hy0' : ∥y∥ ≠ 0 :=
-      by 
-        simp [norm_eq_zero, hy0]
-    have hxy0 : (∥x∥*∥y∥) ≠ 0 :=
-      by 
-        simp [hx0', hy0']
-    have h₁ : (abs ⟪x, y⟫ = ∥x∥*∥y∥) ↔ abs (⟪x, y⟫ / ∥x∥*∥y∥) = 1
-    ·
-      refine' ⟨_, _⟩
-      ·
-        intro h 
-        normCast 
-        rw [IsROrC.abs_div, h, abs_of_real, _root_.abs_mul, abs_norm_eq_norm, abs_norm_eq_norm]
-        exact div_self hxy0
-      ·
-        intro h 
-        normCast  at h 
-        rwa [IsROrC.abs_div, abs_of_real, _root_.abs_mul, abs_norm_eq_norm, abs_norm_eq_norm, div_eq_one_iff_eq hxy0] at
-          h 
-    rw [h₁, abs_inner_div_norm_mul_norm_eq_one_iff x y]
-    have  : x ≠ 0 := fun h => hx0'$ norm_eq_zero.mpr h 
-    simp [this]
+theorem abs_inner_eq_norm_iff
+(x y : E)
+(hx0 : «expr ≠ »(x, 0))
+(hy0 : «expr ≠ »(y, 0)) : «expr ↔ »(«expr = »(abs «expr⟪ , ⟫»(x, y), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y))), «expr∃ , »((r : 𝕜), «expr ∧ »(«expr ≠ »(r, 0), «expr = »(y, «expr • »(r, x))))) :=
+begin
+  have [ident hx0'] [":", expr «expr ≠ »(«expr∥ ∥»(x), 0)] [":=", expr by simp [] [] [] ["[", expr norm_eq_zero, ",", expr hx0, "]"] [] []],
+  have [ident hy0'] [":", expr «expr ≠ »(«expr∥ ∥»(y), 0)] [":=", expr by simp [] [] [] ["[", expr norm_eq_zero, ",", expr hy0, "]"] [] []],
+  have [ident hxy0] [":", expr «expr ≠ »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y)), 0)] [":=", expr by simp [] [] [] ["[", expr hx0', ",", expr hy0', "]"] [] []],
+  have [ident h₁] [":", expr «expr ↔ »(«expr = »(abs «expr⟪ , ⟫»(x, y), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y))), «expr = »(abs «expr / »(«expr⟪ , ⟫»(x, y), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y))), 1))] [],
+  { refine [expr ⟨_, _⟩],
+    { intro [ident h],
+      norm_cast [],
+      rw ["[", expr is_R_or_C.abs_div, ",", expr h, ",", expr abs_of_real, ",", expr _root_.abs_mul, ",", expr abs_norm_eq_norm, ",", expr abs_norm_eq_norm, "]"] [],
+      exact [expr div_self hxy0] },
+    { intro [ident h],
+      norm_cast ["at", ident h],
+      rwa ["[", expr is_R_or_C.abs_div, ",", expr abs_of_real, ",", expr _root_.abs_mul, ",", expr abs_norm_eq_norm, ",", expr abs_norm_eq_norm, ",", expr div_eq_one_iff_eq hxy0, "]"] ["at", ident h] } },
+  rw ["[", expr h₁, ",", expr abs_inner_div_norm_mul_norm_eq_one_iff x y, "]"] [],
+  have [] [":", expr «expr ≠ »(x, 0)] [":=", expr λ h, «expr $ »(hx0', norm_eq_zero.mpr h)],
+  simp [] [] [] ["[", expr this, "]"] [] []
+end
 
--- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inner product of two vectors, divided by the product of their
 norms, has value 1 if and only if they are nonzero and one is
 a positive multiple of the other. -/
@@ -1514,7 +1448,7 @@ begin
     exact [expr real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_pos_mul hx hr] }
 end
 
--- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inner product of two vectors, divided by the product of their
 norms, has value -1 if and only if they are nonzero and one is
 a negative multiple of the other. -/
@@ -1540,39 +1474,36 @@ begin
     exact [expr real_inner_div_norm_mul_norm_eq_neg_one_of_ne_zero_of_neg_mul hx hr] }
 end
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the inner product of two vectors is equal to the product of their norms (i.e.,
 `⟪x, y⟫ = ∥x∥ * ∥y∥`), then the two vectors are nonnegative real multiples of each other. One form
 of the equality case for Cauchy-Schwarz.
 Compare `abs_inner_eq_norm_iff`, which takes the weaker hypothesis `abs ⟪x, y⟫ = ∥x∥ * ∥y∥`. -/
-theorem inner_eq_norm_mul_iff {x y : E} : (⟪x, y⟫ = (∥x∥ : 𝕜)*∥y∥) ↔ (∥y∥ : 𝕜) • x = (∥x∥ : 𝕜) • y :=
-  by 
-    byCases' h : x = 0 ∨ y = 0
-    ·
-      cases h <;> simp [h]
-    calc (⟪x, y⟫ = (∥x∥ : 𝕜)*∥y∥) ↔ (∥x∥*∥y∥) = re ⟪x, y⟫ :=
-      by 
-        normCast 
-        split 
-        ·
-          intro h' 
-          simp [h']
-        ·
-          have cauchy_schwarz := abs_inner_le_norm x y 
-          intro h' 
-          rw [h'] at cauchy_schwarz⊢
-          rwa [re_eq_self_of_le]_ ↔ (((2*∥x∥)*∥y∥)*(∥x∥*∥y∥) - re ⟪x, y⟫) = 0 :=
-      by 
-        simp [h,
-          show (2 : ℝ) ≠ 0 by 
-            normNum,
-          sub_eq_zero]_ ↔ (∥(∥y∥ : 𝕜) • x - (∥x∥ : 𝕜) • y∥*∥(∥y∥ : 𝕜) • x - (∥x∥ : 𝕜) • y∥) = 0 :=
-      by 
-        simp only [norm_sub_mul_self, inner_smul_left, inner_smul_right, norm_smul, conj_of_real, IsROrC.norm_eq_abs,
-          abs_of_real, of_real_im, of_real_re, mul_re, abs_norm_eq_norm]
-        refine' Eq.congr _ rfl 
-        ring _ ↔ (∥y∥ : 𝕜) • x = (∥x∥ : 𝕜) • y :=
-      by 
-        simp [norm_sub_eq_zero_iff]
+theorem inner_eq_norm_mul_iff
+{x
+ y : E} : «expr ↔ »(«expr = »(«expr⟪ , ⟫»(x, y), «expr * »((«expr∥ ∥»(x) : 𝕜), «expr∥ ∥»(y))), «expr = »(«expr • »((«expr∥ ∥»(y) : 𝕜), x), «expr • »((«expr∥ ∥»(x) : 𝕜), y))) :=
+begin
+  by_cases [expr h, ":", expr «expr ∨ »(«expr = »(x, 0), «expr = »(y, 0))],
+  { cases [expr h] []; simp [] [] [] ["[", expr h, "]"] [] [] },
+  calc
+    «expr ↔ »(«expr = »(«expr⟪ , ⟫»(x, y), «expr * »((«expr∥ ∥»(x) : 𝕜), «expr∥ ∥»(y))), «expr = »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y)), re «expr⟪ , ⟫»(x, y))) : begin
+      norm_cast [],
+      split,
+      { intros [ident h'],
+        simp [] [] [] ["[", expr h', "]"] [] [] },
+      { have [ident cauchy_schwarz] [] [":=", expr abs_inner_le_norm x y],
+        intros [ident h'],
+        rw [expr h'] ["at", "⊢", ident cauchy_schwarz],
+        rwa [expr re_eq_self_of_le] [] }
+    end
+    «expr ↔ »(..., «expr = »(«expr * »(«expr * »(«expr * »(2, «expr∥ ∥»(x)), «expr∥ ∥»(y)), «expr - »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y)), re «expr⟪ , ⟫»(x, y))), 0)) : by simp [] [] [] ["[", expr h, ",", expr show «expr ≠ »((2 : exprℝ()), 0), by norm_num [] [], ",", expr sub_eq_zero, "]"] [] []
+    «expr ↔ »(..., «expr = »(«expr * »(«expr∥ ∥»(«expr - »(«expr • »((«expr∥ ∥»(y) : 𝕜), x), «expr • »((«expr∥ ∥»(x) : 𝕜), y))), «expr∥ ∥»(«expr - »(«expr • »((«expr∥ ∥»(y) : 𝕜), x), «expr • »((«expr∥ ∥»(x) : 𝕜), y)))), 0)) : begin
+      simp [] [] ["only"] ["[", expr norm_sub_mul_self, ",", expr inner_smul_left, ",", expr inner_smul_right, ",", expr norm_smul, ",", expr conj_of_real, ",", expr is_R_or_C.norm_eq_abs, ",", expr abs_of_real, ",", expr of_real_im, ",", expr of_real_re, ",", expr mul_re, ",", expr abs_norm_eq_norm, "]"] [] [],
+      refine [expr eq.congr _ rfl],
+      ring []
+    end
+    «expr ↔ »(..., «expr = »(«expr • »((«expr∥ ∥»(y) : 𝕜), x), «expr • »((«expr∥ ∥»(x) : 𝕜), y))) : by simp [] [] [] ["[", expr norm_sub_eq_zero_iff, "]"] [] []
+end
 
 /-- If the inner product of two vectors is equal to the product of their norms (i.e.,
 `⟪x, y⟫ = ∥x∥ * ∥y∥`), then the two vectors are nonnegative real multiples of each other. One form
@@ -1662,25 +1593,25 @@ section BesselsInequality
 
 variable{ι : Type _}(x : E){v : ι → E}
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Bessel's inequality for finite sums. -/
-theorem Orthonormal.sum_inner_products_le {s : Finset ι} (hv : Orthonormal 𝕜 v) : (∑i in s, ∥⟪v i, x⟫∥^2) ≤ (∥x∥^2) :=
-  by 
-    have h₂ : (∑i in s, ∑j in s, (⟪v i, x⟫*⟪x, v j⟫)*⟪v j, v i⟫) = (∑k in s, ⟪v k, x⟫*⟪x, v k⟫ : 𝕜)
-    ·
-      exact hv.inner_left_right_finset 
-    have h₃ : ∀ z : 𝕜, re (z*conj z) = (∥z∥^2)
-    ·
-      intro z 
-      simp only [mul_conj, norm_sq_eq_def']
-      normCast 
-    suffices hbf : (∥x - ∑i in s, ⟪v i, x⟫ • v i∥^2) = (∥x∥^2) - ∑i in s, ∥⟪v i, x⟫∥^2
-    ·
-      rw [←sub_nonneg, ←hbf]
-      simp only [norm_nonneg, pow_nonneg]
-    rw [norm_sub_sq, sub_add]
-    simp only [InnerProductSpace.norm_sq_eq_inner, inner_sum]
-    simp only [sum_inner, two_mul, inner_smul_right, inner_conj_sym, ←mul_assocₓ, h₂, ←h₃, inner_conj_sym,
-      AddMonoidHom.map_sum, Finset.mul_sum, ←Finset.sum_sub_distrib, inner_smul_left, add_sub_cancel']
+theorem orthonormal.sum_inner_products_le
+{s : finset ι}
+(hv : orthonormal 𝕜 v) : «expr ≤ »(«expr∑ in , »((i), s, «expr ^ »(«expr∥ ∥»(«expr⟪ , ⟫»(v i, x)), 2)), «expr ^ »(«expr∥ ∥»(x), 2)) :=
+begin
+  have [ident h₂] [":", expr «expr = »(«expr∑ in , »((i), s, «expr∑ in , »((j), s, «expr * »(«expr * »(«expr⟪ , ⟫»(v i, x), «expr⟪ , ⟫»(x, v j)), «expr⟪ , ⟫»(v j, v i)))), («expr∑ in , »((k), s, «expr * »(«expr⟪ , ⟫»(v k, x), «expr⟪ , ⟫»(x, v k))) : 𝕜))] [],
+  { exact [expr hv.inner_left_right_finset] },
+  have [ident h₃] [":", expr ∀ z : 𝕜, «expr = »(re «expr * »(z, exprconj() z), «expr ^ »(«expr∥ ∥»(z), 2))] [],
+  { intro [ident z],
+    simp [] [] ["only"] ["[", expr mul_conj, ",", expr norm_sq_eq_def', "]"] [] [],
+    norm_cast [] },
+  suffices [ident hbf] [":", expr «expr = »(«expr ^ »(«expr∥ ∥»(«expr - »(x, «expr∑ in , »((i), s, «expr • »(«expr⟪ , ⟫»(v i, x), v i)))), 2), «expr - »(«expr ^ »(«expr∥ ∥»(x), 2), «expr∑ in , »((i), s, «expr ^ »(«expr∥ ∥»(«expr⟪ , ⟫»(v i, x)), 2))))],
+  { rw ["[", "<-", expr sub_nonneg, ",", "<-", expr hbf, "]"] [],
+    simp [] [] ["only"] ["[", expr norm_nonneg, ",", expr pow_nonneg, "]"] [] [] },
+  rw ["[", expr norm_sub_sq, ",", expr sub_add, "]"] [],
+  simp [] [] ["only"] ["[", expr inner_product_space.norm_sq_eq_inner, ",", expr inner_sum, "]"] [] [],
+  simp [] [] ["only"] ["[", expr sum_inner, ",", expr two_mul, ",", expr inner_smul_right, ",", expr inner_conj_sym, ",", "<-", expr mul_assoc, ",", expr h₂, ",", "<-", expr h₃, ",", expr inner_conj_sym, ",", expr add_monoid_hom.map_sum, ",", expr finset.mul_sum, ",", "<-", expr finset.sum_sub_distrib, ",", expr inner_smul_left, ",", expr add_sub_cancel', "]"] [] []
+end
 
 /-- Bessel's inequality. -/
 theorem Orthonormal.tsum_inner_products_le (hv : Orthonormal 𝕜 v) : (∑'i, ∥⟪v i, x⟫∥^2) ≤ (∥x∥^2) :=
@@ -1769,24 +1700,31 @@ theorem OrthogonalFamily.eq_ite (hV : OrthogonalFamily 𝕜 V) {i j : ι} (v : V
     ·
       exact hV h v.prop w.prop
 
-theorem OrthogonalFamily.inner_right_dfinsupp (hV : OrthogonalFamily 𝕜 V) (l : Π₀i, V i) (i : ι) (v : V i) :
-  ⟪(v : E), Dfinsupp.lsum ℕ (fun i => (V i).Subtype) l⟫ = ⟪v, l i⟫ :=
-  calc ⟪(v : E), Dfinsupp.lsum ℕ (fun i => (V i).Subtype) l⟫ = l.sum fun j => fun w => ⟪(v : E), w⟫ :=
-    by 
-      let F : E →+ 𝕜 := (@innerRight 𝕜 E _ _ v).toLinearMap.toAddMonoidHom 
-      have hF := congr_argₓ AddMonoidHom.toFun (Dfinsupp.comp_sum_add_hom F fun j => (V j).Subtype.toAddMonoidHom)
-      convert congr_funₓ hF l using 1
-      simp only [Dfinsupp.sum_add_hom_apply, ContinuousLinearMap.to_linear_map_eq_coe, AddMonoidHom.coe_comp,
-        inner_right_coe, AddMonoidHom.to_fun_eq_coe, LinearMap.to_add_monoid_hom_coe, ContinuousLinearMap.coe_coe]
-      congr 
-    _ = l.sum fun j => fun w => ite (i = j) ⟪(v : E), w⟫ 0 := congr_argₓ l.sum$ funext$ fun j => funext$ hV.eq_ite v 
-    _ = ⟪v, l i⟫ :=
-    by 
-      simp only [Dfinsupp.sum, Submodule.coe_inner, Finset.sum_ite_eq, ite_eq_left_iff, Dfinsupp.mem_support_to_fun,
-        not_not]
-      intro h 
-      simp [h]
-    
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem orthogonal_family.inner_right_dfinsupp
+(hV : orthogonal_family 𝕜 V)
+(l : «exprΠ₀ , »((i), V i))
+(i : ι)
+(v : V i) : «expr = »(«expr⟪ , ⟫»((v : E), dfinsupp.lsum exprℕ() (λ i, (V i).subtype) l), «expr⟪ , ⟫»(v, l i)) :=
+calc
+  «expr = »(«expr⟪ , ⟫»((v : E), dfinsupp.lsum exprℕ() (λ
+     i, (V i).subtype) l), l.sum (λ j, λ w, «expr⟪ , ⟫»((v : E), w))) : begin
+    let [ident F] [":", expr «expr →+ »(E, 𝕜)] [":=", expr (@inner_right 𝕜 E _ _ v).to_linear_map.to_add_monoid_hom],
+    have [ident hF] [] [":=", expr congr_arg add_monoid_hom.to_fun (dfinsupp.comp_sum_add_hom F (λ
+       j, (V j).subtype.to_add_monoid_hom))],
+    convert [] [expr congr_fun hF l] ["using", 1],
+    simp [] [] ["only"] ["[", expr dfinsupp.sum_add_hom_apply, ",", expr continuous_linear_map.to_linear_map_eq_coe, ",", expr add_monoid_hom.coe_comp, ",", expr inner_right_coe, ",", expr add_monoid_hom.to_fun_eq_coe, ",", expr linear_map.to_add_monoid_hom_coe, ",", expr continuous_linear_map.coe_coe, "]"] [] [],
+    congr
+  end
+  «expr = »(..., l.sum (λ
+    j, λ
+    w, ite «expr = »(i, j) «expr⟪ , ⟫»((v : E), w) 0)) : «expr $ »(congr_arg l.sum, «expr $ »(funext, λ
+    j, «expr $ »(funext, hV.eq_ite v)))
+  «expr = »(..., «expr⟪ , ⟫»(v, l i)) : begin
+    simp [] [] ["only"] ["[", expr dfinsupp.sum, ",", expr submodule.coe_inner, ",", expr finset.sum_ite_eq, ",", expr ite_eq_left_iff, ",", expr dfinsupp.mem_support_to_fun, ",", expr not_not, "]"] [] [],
+    intros [ident h],
+    simp [] [] [] ["[", expr h, "]"] [] []
+  end
 
 omit dec_ι
 
@@ -1801,21 +1739,22 @@ theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (hV : OrthogonalFamily
       simp 
     
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An orthogonal family forms an independent family of subspaces; that is, any collection of
 elements each from a different subspace in the family is linearly independent. In particular, the
 pairwise intersections of elements of the family are 0. -/
-theorem OrthogonalFamily.independent (hV : OrthogonalFamily 𝕜 V) : CompleteLattice.Independent V :=
-  by 
-    apply CompleteLattice.independent_of_dfinsupp_lsum_injective 
-    rw [←@LinearMap.ker_eq_bot _ _ _ _ _ _ (DirectSum.addCommGroup fun i => V i), Submodule.eq_bot_iff]
-    intro v hv 
-    rw [LinearMap.mem_ker] at hv 
-    ext i 
-    have  : ⟪(v i : E), Dfinsupp.lsum ℕ (fun i => (V i).Subtype) v⟫ = 0
-    ·
-      simp [hv]
-    simpa only [Submodule.coe_zero, Submodule.coe_eq_zero, DirectSum.zero_apply, inner_self_eq_zero,
-      hV.inner_right_dfinsupp] using this
+theorem orthogonal_family.independent (hV : orthogonal_family 𝕜 V) : complete_lattice.independent V :=
+begin
+  apply [expr complete_lattice.independent_of_dfinsupp_lsum_injective],
+  rw ["[", "<-", expr @linear_map.ker_eq_bot _ _ _ _ _ _ (direct_sum.add_comm_group (λ
+     i, V i)), ",", expr submodule.eq_bot_iff, "]"] [],
+  intros [ident v, ident hv],
+  rw [expr linear_map.mem_ker] ["at", ident hv],
+  ext [] [ident i] [],
+  have [] [":", expr «expr = »(«expr⟪ , ⟫»((v i : E), dfinsupp.lsum exprℕ() (λ i, (V i).subtype) v), 0)] [],
+  { simp [] [] [] ["[", expr hv, "]"] [] [] },
+  simpa [] [] ["only"] ["[", expr submodule.coe_zero, ",", expr submodule.coe_eq_zero, ",", expr direct_sum.zero_apply, ",", expr inner_self_eq_zero, ",", expr hV.inner_right_dfinsupp, "]"] [] ["using", expr this]
+end
 
 /-- The composition of an orthogonal family of subspaces with an injective function is also an
 orthogonal family. -/
@@ -1823,24 +1762,23 @@ theorem OrthogonalFamily.comp (hV : OrthogonalFamily 𝕜 V) {γ : Type _} {f : 
   OrthogonalFamily 𝕜 (V ∘ f) :=
   fun i j hij v hv w hw => hV (hf.ne hij) hv hw
 
-theorem OrthogonalFamily.orthonormal_sigma_orthonormal (hV : OrthogonalFamily 𝕜 V) {α : ι → Type _}
-  {v_family : ∀ i, α i → V i} (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) :
-  Orthonormal 𝕜 fun a : Σi, α i => (v_family a.1 a.2 : E) :=
-  by 
-    split 
-    ·
-      rintro ⟨i, vi⟩
-      exact (hv_family i).1 vi 
-    rintro ⟨i, vi⟩ ⟨j, vj⟩ hvij 
-    byCases' hij : i = j
-    ·
-      subst hij 
-      have  : vi ≠ vj :=
-        by 
-          simpa using hvij 
-      exact (hv_family i).2 this
-    ·
-      exact hV hij (v_family i vi : V i).Prop (v_family j vj : V j).Prop
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem orthogonal_family.orthonormal_sigma_orthonormal
+(hV : orthogonal_family 𝕜 V)
+{α : ι → Type*}
+{v_family : ∀ i, α i → V i}
+(hv_family : ∀ i, orthonormal 𝕜 (v_family i)) : orthonormal 𝕜 (λ a : «exprΣ , »((i), α i), (v_family a.1 a.2 : E)) :=
+begin
+  split,
+  { rintros ["⟨", ident i, ",", ident vi, "⟩"],
+    exact [expr (hv_family i).1 vi] },
+  rintros ["⟨", ident i, ",", ident vi, "⟩", "⟨", ident j, ",", ident vj, "⟩", ident hvij],
+  by_cases [expr hij, ":", expr «expr = »(i, j)],
+  { subst [expr hij],
+    have [] [":", expr «expr ≠ »(vi, vj)] [":=", expr by simpa [] [] [] [] [] ["using", expr hvij]],
+    exact [expr (hv_family i).2 this] },
+  { exact [expr hV hij (v_family i vi : V i).prop (v_family j vj : V j).prop] }
+end
 
 include dec_ι
 
@@ -1909,11 +1847,13 @@ section Continuous
 -/
 
 
-theorem continuous_inner : Continuous fun p : E × E => ⟪p.1, p.2⟫ :=
-  by 
-    letI this : InnerProductSpace ℝ E := InnerProductSpace.isROrCToReal 𝕜 E 
-    letI this : IsScalarTower ℝ 𝕜 E := RestrictScalars.is_scalar_tower _ _ _ 
-    exact is_bounded_bilinear_map_inner.continuous
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_inner : continuous (λ p : «expr × »(E, E), «expr⟪ , ⟫»(p.1, p.2)) :=
+begin
+  letI [] [":", expr inner_product_space exprℝ() E] [":=", expr inner_product_space.is_R_or_C_to_real 𝕜 E],
+  letI [] [":", expr is_scalar_tower exprℝ() 𝕜 E] [":=", expr restrict_scalars.is_scalar_tower _ _ _],
+  exact [expr is_bounded_bilinear_map_inner.continuous]
+end
 
 variable{α : Type _}
 
@@ -2010,6 +1950,18 @@ theorem inner_right_of_mem_orthogonal_singleton (u : E) {v : E} (hv : v ∈ (�
 /-- A vector in `(𝕜 ∙ u)ᗮ` is orthogonal to `u`. -/
 theorem inner_left_of_mem_orthogonal_singleton (u : E) {v : E} (hv : v ∈ (𝕜∙u)ᗮ) : ⟪v, u⟫ = 0 :=
   Submodule.inner_left_of_mem_orthogonal (Submodule.mem_span_singleton_self u) hv
+
+/-- A vector orthogonal to `u` lies in `(𝕜 ∙ u)ᗮ`. -/
+theorem mem_orthogonal_singleton_of_inner_right (u : E) {v : E} (hv : ⟪u, v⟫ = 0) : v ∈ (𝕜∙u)ᗮ :=
+  by 
+    intro w hw 
+    rw [Submodule.mem_span_singleton] at hw 
+    obtain ⟨c, rfl⟩ := hw 
+    simp [inner_smul_left, hv]
+
+/-- A vector orthogonal to `u` lies in `(𝕜 ∙ u)ᗮ`. -/
+theorem mem_orthogonal_singleton_of_inner_left (u : E) {v : E} (hv : ⟪v, u⟫ = 0) : v ∈ (𝕜∙u)ᗮ :=
+  mem_orthogonal_singleton_of_inner_right u$ inner_eq_zero_sym.2 hv
 
 variable(K)
 
@@ -2108,17 +2060,15 @@ theorem Submodule.bot_orthogonal_eq_top : (⊥ : Submodule 𝕜 E)ᗮ = ⊤ :=
     rw [←Submodule.top_orthogonal_eq_bot, eq_top_iff]
     exact Submodule.le_orthogonal_orthogonal ⊤
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem Submodule.orthogonal_eq_top_iff : Kᗮ = ⊤ ↔ K = ⊥ :=
-  by 
-    refine'
-      ⟨_,
-        by 
-          rintro rfl 
-          exact Submodule.bot_orthogonal_eq_top⟩
-    intro h 
-    have  : K⊓Kᗮ = ⊥ := K.orthogonal_disjoint.eq_bot 
-    rwa [h, inf_comm, top_inf_eq] at this
+theorem submodule.orthogonal_eq_top_iff : «expr ↔ »(«expr = »(«expr ᗮ»(K), «expr⊤»()), «expr = »(K, «expr⊥»())) :=
+begin
+  refine [expr ⟨_, by { rintro [ident rfl], exact [expr submodule.bot_orthogonal_eq_top] }⟩],
+  intro [ident h],
+  have [] [":", expr «expr = »(«expr ⊓ »(K, «expr ᗮ»(K)), «expr⊥»())] [":=", expr K.orthogonal_disjoint.eq_bot],
+  rwa ["[", expr h, ",", expr inf_comm, ",", expr top_inf_eq, "]"] ["at", ident this]
+end
 
 end Orthogonal
 

@@ -1,8 +1,7 @@
-import Mathbin.Algebra.Category.Group.Limits 
+import Mathbin.Algebra.Group.Pi 
 import Mathbin.Algebra.Category.Group.Preadditive 
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts 
-import Mathbin.CategoryTheory.Limits.Shapes.Types 
-import Mathbin.Algebra.Group.Pi
+import Mathbin.Algebra.Category.Group.Limits
 
 /-!
 # The category of abelian groups has finite biproducts
@@ -126,7 +125,7 @@ end
 instance  : has_finite_biproducts AddCommGroupₓₓ :=
   ⟨fun J _ _ =>
       by 
-        exactI
+        exact
           { HasBiproduct :=
               fun f =>
                 by 

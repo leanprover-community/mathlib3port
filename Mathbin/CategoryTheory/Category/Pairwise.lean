@@ -1,5 +1,5 @@
-import Mathbin.CategoryTheory.Limits.Preserves.Basic 
-import Mathbin.CategoryTheory.Limits.Lattice
+import Mathbin.CategoryTheory.Category.Preorder 
+import Mathbin.CategoryTheory.Limits.IsLimit
 
 /-!
 # The category of "pairwise intersections".

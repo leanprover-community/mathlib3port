@@ -1,7 +1,6 @@
+import Mathbin.Algebra.Homology.HomologicalComplex 
 import Mathbin.AlgebraicTopology.SimplicialObject 
-import Mathbin.CategoryTheory.Abelian.Basic 
-import Mathbin.CategoryTheory.Subobject.Default 
-import Mathbin.Algebra.Homology.HomologicalComplex
+import Mathbin.CategoryTheory.Abelian.Basic
 
 /-!
 ## Moore complex

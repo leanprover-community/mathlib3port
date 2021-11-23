@@ -74,7 +74,7 @@ namespace Tactic
 
 namespace Itauto
 
--- error in Tactic.Itauto: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Itauto: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- Different propositional constructors that are variants of "and" for the purposes of the
 theorem prover. -/ @[derive #["[", expr has_reflect, ",", expr decidable_eq, "]"]] inductive and_kind
 | and
@@ -84,7 +84,7 @@ theorem prover. -/ @[derive #["[", expr has_reflect, ",", expr decidable_eq, "]"
 instance  : Inhabited and_kind :=
   ⟨and_kind.and⟩
 
--- error in Tactic.Itauto: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Itauto: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- A reified inductive type for propositional logic. -/
 @[derive #["[", expr has_reflect, ",", expr decidable_eq, "]"]]
 inductive prop : Type
@@ -146,25 +146,30 @@ section
 
 open Ordering
 
--- error in Tactic.Itauto: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- A comparator for `and_kind`. (There should really be a derive handler for this.) -/
-def and_kind.cmp (p q : and_kind) : ordering :=
-by { cases [expr p] []; cases [expr q] [],
-  exacts ["[", expr eq, ",", expr lt, ",", expr lt, ",", expr gt, ",", expr eq, ",", expr lt, ",", expr gt, ",", expr gt, ",", expr eq, "]"] }
+def and_kind.cmp (p q : and_kind) : Ordering :=
+  by 
+    cases p <;> cases q 
+    exacts[Eq, lt, lt, Gt, Eq, lt, Gt, Gt, Eq]
 
--- error in Tactic.Itauto: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- A comparator for propositions. (There should really be a derive handler for this.) -/
-def prop.cmp (p q : prop) : ordering :=
-begin
-  induction [expr p] [] ["with", "_", ident ap, "_", "_", ident p₁, ident p₂, "_", "_", ident p₁, ident p₂, "_", "_", ident p₁, ident p₂, "_", "_", ident p₁, ident p₂] ["generalizing", ident q]; cases [expr q] [],
-  case [ident var, ident var] { exact [expr cmp p q] },
-  case [ident true, ident true] { exact [expr eq] },
-  case [ident false, ident false] { exact [expr eq] },
-  case [ident and', ident and', ":", ident aq, ident q₁, ident q₂] { exact [expr (ap.cmp aq).or_else ((p₁ q₁).or_else (p₂ q₂))] },
-  case [ident or, ident or, ":", ident q₁, ident q₂] { exact [expr (p₁ q₁).or_else (p₂ q₂)] },
-  case [ident imp, ident imp, ":", ident q₁, ident q₂] { exact [expr (p₁ q₁).or_else (p₂ q₂)] },
-  exacts ["[", expr lt, ",", expr lt, ",", expr lt, ",", expr lt, ",", expr lt, ",", expr gt, ",", expr lt, ",", expr lt, ",", expr lt, ",", expr lt, ",", expr gt, ",", expr gt, ",", expr lt, ",", expr lt, ",", expr lt, ",", expr gt, ",", expr gt, ",", expr gt, ",", expr lt, ",", expr lt, ",", expr gt, ",", expr gt, ",", expr gt, ",", expr gt, ",", expr lt, ",", expr gt, ",", expr gt, ",", expr gt, ",", expr gt, ",", expr gt, "]"]
-end
+def prop.cmp (p q : prop) : Ordering :=
+  by 
+    induction' p with _ ap _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ generalizing q <;> cases q 
+    case' var, var => 
+      exact cmp p q 
+    case' True, True => 
+      exact Eq 
+    case' False, False => 
+      exact Eq 
+    case' and', and' : aq q₁ q₂ => 
+      exact (ap.cmp aq).orElse ((p₁ q₁).orElse (p₂ q₂))
+    case' Or, Or : q₁ q₂ => 
+      exact (p₁ q₁).orElse (p₂ q₂)
+    case' imp, imp : q₁ q₂ => 
+      exact (p₁ q₁).orElse (p₂ q₂)
+    exacts[lt, lt, lt, lt, lt, Gt, lt, lt, lt, lt, Gt, Gt, lt, lt, lt, Gt, Gt, Gt, lt, lt, Gt, Gt, Gt, Gt, lt, Gt, Gt,
+      Gt, Gt, Gt]
 
 instance  : LT prop :=
   ⟨fun p q => p.cmp q = lt⟩
@@ -174,7 +179,7 @@ instance  : DecidableRel (@LT.lt prop _) :=
 
 end 
 
--- error in Tactic.Itauto: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Itauto: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- A reified inductive proof type for intuitionistic propositional logic. -/
 @[derive #[expr has_reflect]]
 inductive proof
@@ -382,17 +387,17 @@ unsafe def reify_atom (atoms : ref (Buffer expr)) (e : expr) : tactic prop :=
 /-- Reify an `expr` into a `prop`, allocating anything non-propositional as an atom in the
 `atoms` list. -/
 unsafe def reify (atoms : ref (Buffer expr)) : expr → tactic prop
-| quote True => pure prop.true
-| quote False => pure prop.false
-| quote ¬%%a => prop.not <$> reify a
-| quote (%%a) ∧ %%b => prop.and <$> reify a <*> reify b
-| quote (%%a) ∨ %%b => prop.or <$> reify a <*> reify b
-| quote (%%a) ↔ %%b => prop.iff <$> reify a <*> reify b
-| quote Xorₓ (%%a) (%%b) => prop.xor <$> reify a <*> reify b
-| quote @Eq Prop (%%a) (%%b) => prop.eq <$> reify a <*> reify b
-| quote @Ne Prop (%%a) (%%b) => prop.not <$> (prop.eq <$> reify a <*> reify b)
-| quote Implies (%%a) (%%b) => prop.imp <$> reify a <*> reify b
-| e@(quote (%%a) → %%b) => if b.has_var then reify_atom atoms e else prop.imp <$> reify a <*> reify b
+| quote.1 True => pure prop.true
+| quote.1 False => pure prop.false
+| quote.1 ¬%%ₓa => prop.not <$> reify a
+| quote.1 ((%%ₓa) ∧ %%ₓb) => prop.and <$> reify a <*> reify b
+| quote.1 ((%%ₓa) ∨ %%ₓb) => prop.or <$> reify a <*> reify b
+| quote.1 ((%%ₓa) ↔ %%ₓb) => prop.iff <$> reify a <*> reify b
+| quote.1 (Xorₓ (%%ₓa) (%%ₓb)) => prop.xor <$> reify a <*> reify b
+| quote.1 (@Eq Prop (%%ₓa) (%%ₓb)) => prop.eq <$> reify a <*> reify b
+| quote.1 (@Ne Prop (%%ₓa) (%%ₓb)) => prop.not <$> (prop.eq <$> reify a <*> reify b)
+| quote.1 (Implies (%%ₓa) (%%ₓb)) => prop.imp <$> reify a <*> reify b
+| e@(quote.1 ((%%ₓa) → %%ₓb)) => if b.has_var then reify_atom atoms e else prop.imp <$> reify a <*> reify b
 | e => reify_atom atoms e
 
 /-- Once we have a proof object, we have to apply it to the goal. (Some of these cases are a bit
@@ -407,7 +412,7 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
 | Γ, proof.exfalso' p =>
   do 
     let t ← mk_mvar 
-    to_expr (pquote False.elim (%%t)) tt ff >>= exact 
+    to_expr (pquote.1 (False.elim (%%ₓt))) tt ff >>= exact 
     let gs ← get_goals 
     set_goals (t :: gs)
     apply_proof Γ p
@@ -418,42 +423,42 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
 | Γ, proof.and_left and_kind.and p =>
   do 
     let t ← mk_mvar 
-    to_expr (pquote And.left (%%t)) tt ff >>= exact 
+    to_expr (pquote.1 (And.left (%%ₓt))) tt ff >>= exact 
     let gs ← get_goals 
     set_goals (t :: gs)
     apply_proof Γ p
 | Γ, proof.and_left and_kind.iff p =>
   do 
     let t ← mk_mvar 
-    to_expr (pquote Iff.mp (%%t)) tt ff >>= exact 
+    to_expr (pquote.1 (Iff.mp (%%ₓt))) tt ff >>= exact 
     let gs ← get_goals 
     set_goals (t :: gs)
     apply_proof Γ p
 | Γ, proof.and_left and_kind.eq p =>
   do 
     let t ← mk_mvar 
-    to_expr (pquote cast (%%t)) tt ff >>= exact 
+    to_expr (pquote.1 (cast (%%ₓt))) tt ff >>= exact 
     let gs ← get_goals 
     set_goals (t :: gs)
     apply_proof Γ p
 | Γ, proof.and_right and_kind.and p =>
   do 
     let t ← mk_mvar 
-    to_expr (pquote And.right (%%t)) tt ff >>= exact 
+    to_expr (pquote.1 (And.right (%%ₓt))) tt ff >>= exact 
     let gs ← get_goals 
     set_goals (t :: gs)
     apply_proof Γ p
 | Γ, proof.and_right and_kind.iff p =>
   do 
     let t ← mk_mvar 
-    to_expr (pquote Iff.mpr (%%t)) tt ff >>= exact 
+    to_expr (pquote.1 (Iff.mpr (%%ₓt))) tt ff >>= exact 
     let gs ← get_goals 
     set_goals (t :: gs)
     apply_proof Γ p
 | Γ, proof.and_right and_kind.eq p =>
   do 
     let t ← mk_mvar 
-    to_expr (pquote cast (Eq.symm (%%t))) tt ff >>= exact 
+    to_expr (pquote.1 (cast (Eq.symm (%%ₓt)))) tt ff >>= exact 
     let gs ← get_goals 
     set_goals (t :: gs)
     apply_proof Γ p
@@ -461,7 +466,7 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
   do 
     let t₁ ← mk_mvar 
     let t₂ ← mk_mvar 
-    to_expr (pquote And.intro (%%t₁) (%%t₂)) tt ff >>= exact 
+    to_expr (pquote.1 (And.intro (%%ₓt₁) (%%ₓt₂))) tt ff >>= exact 
     let gs ← get_goals 
     set_goals (t₁ :: t₂ :: gs)
     apply_proof Γ p >> apply_proof Γ q
@@ -469,7 +474,7 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
   do 
     let t₁ ← mk_mvar 
     let t₂ ← mk_mvar 
-    to_expr (pquote Iff.intro (%%t₁) (%%t₂)) tt ff >>= exact 
+    to_expr (pquote.1 (Iff.intro (%%ₓt₁) (%%ₓt₂))) tt ff >>= exact 
     let gs ← get_goals 
     set_goals (t₁ :: t₂ :: gs)
     apply_proof Γ p >> apply_proof Γ q
@@ -477,7 +482,7 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
   do 
     let t₁ ← mk_mvar 
     let t₂ ← mk_mvar 
-    to_expr (pquote propext (Iff.intro (%%t₁) (%%t₂))) tt ff >>= exact 
+    to_expr (pquote.1 (propext (Iff.intro (%%ₓt₁) (%%ₓt₂)))) tt ff >>= exact 
     let gs ← get_goals 
     set_goals (t₁ :: t₂ :: gs)
     apply_proof Γ p >> apply_proof Γ q
@@ -495,7 +500,7 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
   do 
     let A ← mk_meta_var (expr.sort level.zero)
     let B ← mk_meta_var (expr.sort level.zero)
-    let g₁ ← mk_meta_var (quote (%%A : Prop) → (%%B : Prop))
+    let g₁ ← mk_meta_var (quote.1 ((%%ₓA : Prop) → (%%ₓB : Prop)))
     let g₂ ← mk_meta_var A 
     let g :: gs ← get_goals 
     unify (g₁ g₂) g 
@@ -513,14 +518,14 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
 | Γ, proof.or_inl p =>
   do 
     let t ← mk_mvar 
-    to_expr (pquote Or.inl (%%t)) tt ff >>= exact 
+    to_expr (pquote.1 (Or.inl (%%ₓt))) tt ff >>= exact 
     let gs ← get_goals 
     set_goals (t :: gs)
     apply_proof Γ p
 | Γ, proof.or_inr p =>
   do 
     let t ← mk_mvar 
-    to_expr (pquote Or.inr (%%t)) tt ff >>= exact 
+    to_expr (pquote.1 (Or.inr (%%ₓt))) tt ff >>= exact 
     let gs ← get_goals 
     set_goals (t :: gs)
     apply_proof Γ p
@@ -529,7 +534,7 @@ unsafe def apply_proof : name_map expr → proof → tactic Unit
     let t₁ ← mk_mvar 
     let t₂ ← mk_mvar 
     let t₃ ← mk_mvar 
-    to_expr (pquote Or.elim (%%t₁) (%%t₂) (%%t₃)) tt ff >>= exact 
+    to_expr (pquote.1 (Or.elim (%%ₓt₁) (%%ₓt₂) (%%ₓt₃))) tt ff >>= exact 
     let gs ← get_goals 
     set_goals (t₁ :: t₂ :: t₃ :: gs)
     apply_proof Γ p 

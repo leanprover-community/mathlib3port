@@ -1,7 +1,7 @@
-import Mathbin.Data.MvPolynomial.Default 
-import Mathbin.Algebra.Algebra.Operations 
+import Mathbin.Algebra.DirectSum.Internal 
+import Mathbin.Algebra.GradedMonoid 
 import Mathbin.Data.Fintype.Card 
-import Mathbin.Algebra.DirectSum.Internal
+import Mathbin.Data.MvPolynomial.Variables
 
 /-!
 # Homogeneous polynomials
@@ -79,30 +79,30 @@ theorem homogeneous_submodule_eq_finsupp_supported [CommSemiringₓ R] (n : ℕ)
 
 variable{σ R}
 
-theorem homogeneous_submodule_mul [CommSemiringₓ R] (m n : ℕ) :
-  (homogeneous_submodule σ R m*homogeneous_submodule σ R n) ≤ homogeneous_submodule σ R (m+n) :=
-  by 
-    rw [Submodule.mul_le]
-    intro φ hφ ψ hψ c hc 
-    rw [coeff_mul] at hc 
-    obtain ⟨⟨d, e⟩, hde, H⟩ := Finset.exists_ne_zero_of_sum_ne_zero hc 
-    have aux : coeff d φ ≠ 0 ∧ coeff e ψ ≠ 0
-    ·
-      contrapose! H 
-      byCases' h : coeff d φ = 0 <;> simp_all only [Ne.def, not_false_iff, zero_mul, mul_zero]
-    specialize hφ aux.1
-    specialize hψ aux.2
-    rw [Finsupp.mem_antidiagonal] at hde 
-    classical 
-    have hd' : d.support ⊆ d.support ∪ e.support := Finset.subset_union_left _ _ 
-    have he' : e.support ⊆ d.support ∪ e.support := Finset.subset_union_right _ _ 
-    rw [←hde, ←hφ, ←hψ, Finset.sum_subset Finsupp.support_add, Finset.sum_subset hd', Finset.sum_subset he',
-      ←Finset.sum_add_distrib]
-    ·
-      congr 
-    all_goals 
-      intro i hi 
-      apply finsupp.not_mem_support_iff.mp
+-- error in RingTheory.Polynomial.Homogeneous: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem homogeneous_submodule_mul
+[comm_semiring R]
+(m
+ n : exprℕ()) : «expr ≤ »(«expr * »(homogeneous_submodule σ R m, homogeneous_submodule σ R n), homogeneous_submodule σ R «expr + »(m, n)) :=
+begin
+  rw [expr submodule.mul_le] [],
+  intros [ident φ, ident hφ, ident ψ, ident hψ, ident c, ident hc],
+  rw ["[", expr coeff_mul, "]"] ["at", ident hc],
+  obtain ["⟨", "⟨", ident d, ",", ident e, "⟩", ",", ident hde, ",", ident H, "⟩", ":=", expr finset.exists_ne_zero_of_sum_ne_zero hc],
+  have [ident aux] [":", expr «expr ∧ »(«expr ≠ »(coeff d φ, 0), «expr ≠ »(coeff e ψ, 0))] [],
+  { contrapose ["!"] [ident H],
+    by_cases [expr h, ":", expr «expr = »(coeff d φ, 0)]; simp [] [] ["only"] ["[", "*", ",", expr ne.def, ",", expr not_false_iff, ",", expr zero_mul, ",", expr mul_zero, "]"] [] ["at", "*"] },
+  specialize [expr hφ aux.1],
+  specialize [expr hψ aux.2],
+  rw [expr finsupp.mem_antidiagonal] ["at", ident hde],
+  classical,
+  have [ident hd'] [":", expr «expr ⊆ »(d.support, «expr ∪ »(d.support, e.support))] [":=", expr finset.subset_union_left _ _],
+  have [ident he'] [":", expr «expr ⊆ »(e.support, «expr ∪ »(d.support, e.support))] [":=", expr finset.subset_union_right _ _],
+  rw ["[", "<-", expr hde, ",", "<-", expr hφ, ",", "<-", expr hψ, ",", expr finset.sum_subset finsupp.support_add, ",", expr finset.sum_subset hd', ",", expr finset.sum_subset he', ",", "<-", expr finset.sum_add_distrib, "]"] [],
+  { congr },
+  all_goals { intros [ident i, ident hi],
+    apply [expr finsupp.not_mem_support_iff.mp] }
+end
 
 section 
 
@@ -152,11 +152,14 @@ namespace IsHomogeneous
 
 variable[CommSemiringₓ R]{φ ψ : MvPolynomial σ R}{m n : ℕ}
 
-theorem coeff_eq_zero (hφ : is_homogeneous φ n) (d : σ →₀ ℕ) (hd : (∑i in d.support, d i) ≠ n) : coeff d φ = 0 :=
-  by 
-    have aux := mt (@hφ d) hd 
-    classical 
-    rwa [not_not] at aux
+-- error in RingTheory.Polynomial.Homogeneous: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem coeff_eq_zero
+(hφ : is_homogeneous φ n)
+(d : «expr →₀ »(σ, exprℕ()))
+(hd : «expr ≠ »(«expr∑ in , »((i), d.support, d i), n)) : «expr = »(coeff d φ, 0) :=
+by { have [ident aux] [] [":=", expr mt (@hφ d) hd],
+  classical,
+  rwa [expr not_not] ["at", ident aux] }
 
 theorem inj_right (hm : is_homogeneous φ m) (hn : is_homogeneous φ n) (hφ : φ ≠ 0) : m = n :=
   by 
@@ -274,7 +277,7 @@ theorem homogeneous_component_eq_zero' (h : ∀ d : σ →₀ ℕ, d ∈ φ.supp
     rw [homogeneous_component_apply, sum_eq_zero]
     intro d hd 
     rw [mem_filter] at hd 
-    exFalso 
+    exfalso 
     exact h _ hd.1 hd.2
 
 theorem homogeneous_component_eq_zero (h : φ.total_degree < n) : homogeneous_component n φ = 0 :=

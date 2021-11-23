@@ -146,25 +146,22 @@ theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
       all_goals 
         exact pow_ne_zero _ (nat.cast_ne_zero.mpr hm.ne.symm)
 
-theorem is_liouville {m : ℕ} (hm : 2 ≤ m) : Liouville (liouville_number m) :=
-  by 
-    have mZ1 : 1 < (m : ℤ)
-    ·
-      normCast 
-      exact one_lt_two.trans_le hm 
-    have m1 : 1 < (m : ℝ)
-    ·
-      normCast 
-      exact one_lt_two.trans_le hm 
-    intro n 
-    rcases liouville_number_rat_initial_terms (zero_lt_two.trans_le hm) n with ⟨p, hp⟩
-    refine' ⟨p, m^n !, one_lt_pow mZ1 n.factorial_ne_zero, _⟩
-    pushCast 
-    rw [liouville_number_eq_initial_terms_add_tail m1 n, ←hp, add_sub_cancel',
-      abs_of_nonneg (liouville_number_tail_pos m1 _).le]
-    exact
-      ⟨((lt_add_iff_pos_right _).mpr (liouville_number_tail_pos m1 n)).Ne.symm,
-        (tsum_one_div_pow_factorial_lt n m1).trans_le (aux_calc _ (nat.cast_two.symm.le.trans (nat.cast_le.mpr hm)))⟩
+-- error in NumberTheory.Liouville.LiouvilleConstant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_liouville {m : exprℕ()} (hm : «expr ≤ »(2, m)) : liouville (liouville_number m) :=
+begin
+  have [ident mZ1] [":", expr «expr < »(1, (m : exprℤ()))] [],
+  { norm_cast [],
+    exact [expr one_lt_two.trans_le hm] },
+  have [ident m1] [":", expr «expr < »(1, (m : exprℝ()))] [],
+  { norm_cast [],
+    exact [expr one_lt_two.trans_le hm] },
+  intro [ident n],
+  rcases [expr liouville_number_rat_initial_terms (zero_lt_two.trans_le hm) n, "with", "⟨", ident p, ",", ident hp, "⟩"],
+  refine [expr ⟨p, «expr ^ »(m, «expr !»(n)), one_lt_pow mZ1 n.factorial_ne_zero, _⟩],
+  push_cast [] [],
+  rw ["[", expr liouville_number_eq_initial_terms_add_tail m1 n, ",", "<-", expr hp, ",", expr add_sub_cancel', ",", expr abs_of_nonneg (liouville_number_tail_pos m1 _).le, "]"] [],
+  exact [expr ⟨((lt_add_iff_pos_right _).mpr (liouville_number_tail_pos m1 n)).ne.symm, (tsum_one_div_pow_factorial_lt n m1).trans_le (aux_calc _ (nat.cast_two.symm.le.trans (nat.cast_le.mpr hm)))⟩]
+end
 
 theorem is_transcendental {m : ℕ} (hm : 2 ≤ m) : _root_.transcendental ℤ (liouville_number m) :=
   Transcendental (is_liouville hm)

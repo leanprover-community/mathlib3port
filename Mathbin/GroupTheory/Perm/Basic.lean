@@ -1,5 +1,5 @@
 import Mathbin.Algebra.Group.Pi 
-import Mathbin.Algebra.GroupPower.Default
+import Mathbin.Algebra.GroupPower.Lemmas
 
 /-!
 # The group of permutations (self-equivalences) of a type `α`
@@ -264,54 +264,50 @@ theorem subtype_perm_apply (f : perm α) {p : α → Prop} (h : ∀ x, p x ↔ p
 theorem subtype_perm_one (p : α → Prop) (h : ∀ x, p x ↔ p ((1 : perm α) x)) : @subtype_perm α 1 p h = 1 :=
   Equiv.ext$ fun ⟨_, _⟩ => rfl
 
+-- error in GroupTheory.Perm.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inclusion map of permutations on a subtype of `α` into permutations of `α`,
   fixing the other points. -/
-def of_subtype {p : α → Prop} [DecidablePred p] : perm (Subtype p) →* perm α :=
-  { toFun :=
-      fun f =>
-        ⟨fun x => if h : p x then f ⟨x, h⟩ else x, fun x => if h : p x then (f⁻¹) ⟨x, h⟩ else x,
-          fun x =>
-            have h : ∀ h : p x, p (f ⟨x, h⟩) := fun h => (f ⟨x, h⟩).2
-            by 
-              simp only 
-              splitIfs  at * <;> simp_all only [perm.inv_apply_self, Subtype.coe_eta, Subtype.coe_mk, not_true],
-          fun x =>
-            have h : ∀ h : p x, p ((f⁻¹) ⟨x, h⟩) := fun h => ((f⁻¹) ⟨x, h⟩).2
-            by 
-              simp only 
-              splitIfs  at * <;> simp_all only [perm.apply_inv_self, Subtype.coe_eta, Subtype.coe_mk, not_true]⟩,
-    map_one' :=
-      by 
-        ext 
-        dsimp 
-        splitIfs <;> rfl,
-    map_mul' :=
-      fun f g =>
-        Equiv.ext$
-          fun x =>
-            by 
-              byCases' h : p x
-              ·
-                have h₁ : p (f (g ⟨x, h⟩))
-                exact (f (g ⟨x, h⟩)).2
-                have h₂ : p (g ⟨x, h⟩)
-                exact (g ⟨x, h⟩).2
-                simp only [h, h₂, coe_fn_mk, perm.mul_apply, dif_pos, Subtype.coe_eta]
-              ·
-                simp only [h, coe_fn_mk, perm.mul_apply, dif_neg, not_false_iff] }
+def of_subtype {p : α → exprProp()} [decidable_pred p] : «expr →* »(perm (subtype p), perm α) :=
+{ to_fun := λ
+  f, ⟨λ
+   x, if h : p x then f ⟨x, h⟩ else x, λ
+   x, if h : p x then «expr ⁻¹»(f) ⟨x, h⟩ else x, λ x, have h : ∀ h : p x, p (f ⟨x, h⟩), from λ h, (f ⟨x, h⟩).2,
+   by { simp [] [] ["only"] ["[", "]"] [] [],
+     split_ifs ["at", "*"] []; simp [] [] ["only"] ["[", expr perm.inv_apply_self, ",", expr subtype.coe_eta, ",", expr subtype.coe_mk, ",", expr not_true, ",", "*", "]"] [] ["at", "*"] }, λ
+   x, have h : ∀ h : p x, p («expr ⁻¹»(f) ⟨x, h⟩), from λ h, («expr ⁻¹»(f) ⟨x, h⟩).2,
+   by { simp [] [] ["only"] ["[", "]"] [] [],
+     split_ifs ["at", "*"] []; simp [] [] ["only"] ["[", expr perm.apply_inv_self, ",", expr subtype.coe_eta, ",", expr subtype.coe_mk, ",", expr not_true, ",", "*", "]"] [] ["at", "*"] }⟩,
+  map_one' := begin
+    ext [] [] [],
+    dsimp [] [] [] [],
+    split_ifs [] []; refl
+  end,
+  map_mul' := λ
+  f
+  g, «expr $ »(equiv.ext, λ x, begin
+     by_cases [expr h, ":", expr p x],
+     { have [ident h₁] [":", expr p (f (g ⟨x, h⟩))] [],
+       from [expr (f (g ⟨x, h⟩)).2],
+       have [ident h₂] [":", expr p (g ⟨x, h⟩)] [],
+       from [expr (g ⟨x, h⟩).2],
+       simp [] [] ["only"] ["[", expr h, ",", expr h₂, ",", expr coe_fn_mk, ",", expr perm.mul_apply, ",", expr dif_pos, ",", expr subtype.coe_eta, "]"] [] [] },
+     { simp [] [] ["only"] ["[", expr h, ",", expr coe_fn_mk, ",", expr perm.mul_apply, ",", expr dif_neg, ",", expr not_false_iff, "]"] [] [] }
+   end) }
 
-theorem of_subtype_subtype_perm {f : perm α} {p : α → Prop} [DecidablePred p] (h₁ : ∀ x, p x ↔ p (f x))
-  (h₂ : ∀ x, f x ≠ x → p x) : of_subtype (subtype_perm f h₁) = f :=
-  Equiv.ext$
-    fun x =>
-      by 
-        rw [of_subtype, subtype_perm]
-        byCases' hx : p x
-        ·
-          simp only [hx, coe_fn_mk, dif_pos, MonoidHom.coe_mk, Subtype.coe_mk]
-        ·
-          haveI  := Classical.propDecidable 
-          simp only [hx, not_not.mp (mt (h₂ x) hx), coe_fn_mk, dif_neg, not_false_iff, MonoidHom.coe_mk]
+-- error in GroupTheory.Perm.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_subtype_subtype_perm
+{f : perm α}
+{p : α → exprProp()}
+[decidable_pred p]
+(h₁ : ∀ x, «expr ↔ »(p x, p (f x)))
+(h₂ : ∀ x, «expr ≠ »(f x, x) → p x) : «expr = »(of_subtype (subtype_perm f h₁), f) :=
+«expr $ »(equiv.ext, λ x, begin
+   rw ["[", expr of_subtype, ",", expr subtype_perm, "]"] [],
+   by_cases [expr hx, ":", expr p x],
+   { simp [] [] ["only"] ["[", expr hx, ",", expr coe_fn_mk, ",", expr dif_pos, ",", expr monoid_hom.coe_mk, ",", expr subtype.coe_mk, "]"] [] [] },
+   { haveI [] [] [":=", expr classical.prop_decidable],
+     simp [] [] ["only"] ["[", expr hx, ",", expr not_not.mp (mt (h₂ x) hx), ",", expr coe_fn_mk, ",", expr dif_neg, ",", expr not_false_iff, ",", expr monoid_hom.coe_mk, "]"] [] [] }
+ end)
 
 theorem of_subtype_apply_of_mem {p : α → Prop} [DecidablePred p] (f : perm (Subtype p)) {x : α} (hx : p x) :
   of_subtype f x = f ⟨x, hx⟩ :=

@@ -115,11 +115,13 @@ theorem sign_mul_nonneg (r : ℝ) : 0 ≤ sign r*r :=
       rw [sign_of_pos hp, one_mulₓ]
       exact hp.le
 
-theorem sign_mul_pos_of_ne_zero (r : ℝ) (hr : r ≠ 0) : 0 < sign r*r :=
-  by 
-    refine' lt_of_le_of_neₓ (sign_mul_nonneg r) fun h => hr _ 
-    have hs0 := (zero_eq_mul.mp h).resolve_right hr 
-    exact sign_eq_zero_iff.mp hs0
+-- error in Data.Real.Sign: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sign_mul_pos_of_ne_zero (r : exprℝ()) (hr : «expr ≠ »(r, 0)) : «expr < »(0, «expr * »(sign r, r)) :=
+begin
+  refine [expr lt_of_le_of_ne (sign_mul_nonneg r) (λ h, hr _)],
+  have [ident hs0] [] [":=", expr (zero_eq_mul.mp h).resolve_right hr],
+  exact [expr sign_eq_zero_iff.mp hs0]
+end
 
 @[simp]
 theorem inv_sign (r : ℝ) : sign r⁻¹ = sign r :=

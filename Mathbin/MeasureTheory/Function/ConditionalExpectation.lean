@@ -217,7 +217,7 @@ variable(F)
 /-- `Lp_meas_subgroup F m p μ` is the subspace of `Lp F p μ` containing functions `f` verifying
 `ae_measurable' m f μ`, i.e. functions which are `μ`-a.e. equal to an `m`-measurable function. -/
 def Lp_meas_subgroup (m : MeasurableSpace α) [MeasurableSpace α] (p : ℝ≥0∞) (μ : Measureₓ α) : AddSubgroup (Lp F p μ) :=
-  { Carrier := { f : Lp F p μ | ae_measurable' m f μ },
+  { Carrier := { f:Lp F p μ | ae_measurable' m f μ },
     zero_mem' := ⟨(0 : α → F), @measurable_zero _ α _ m _, Lp.coe_fn_zero _ _ _⟩,
     add_mem' := fun f g hf hg => (hf.add hg).congr (Lp.coe_fn_add f g).symm,
     neg_mem' := fun f hf => ae_measurable'.congr hf.neg (Lp.coe_fn_neg f).symm }
@@ -228,7 +228,7 @@ variable(𝕜)
 `ae_measurable' m f μ`, i.e. functions which are `μ`-a.e. equal to an `m`-measurable function. -/
 def Lp_meas [OpensMeasurableSpace 𝕜] (m : MeasurableSpace α) [MeasurableSpace α] (p : ℝ≥0∞) (μ : Measureₓ α) :
   Submodule 𝕜 (Lp F p μ) :=
-  { Carrier := { f : Lp F p μ | ae_measurable' m f μ },
+  { Carrier := { f:Lp F p μ | ae_measurable' m f μ },
     zero_mem' := ⟨(0 : α → F), @measurable_zero _ α _ m _, Lp.coe_fn_zero _ _ _⟩,
     add_mem' := fun f g hf hg => (hf.add hg).congr (Lp.coe_fn_add f g).symm,
     smul_mem' := fun c f hf => (hf.const_smul c).congr (Lp.coe_fn_smul c f).symm }
@@ -277,24 +277,26 @@ measure `μ.trim hm`. As a consequence, the completeness of `Lp` implies complet
 
 variable{ι : Type _}{m m0 : MeasurableSpace α}{μ : Measureₓ α}
 
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` belongs to `Lp_meas_subgroup F m p μ`, then the measurable function it is almost
 everywhere equal to (given by `ae_measurable.mk`) belongs to `ℒp` for the measure `μ.trim hm`. -/
-theorem mem_ℒp_trim_of_mem_Lp_meas_subgroup (hm : m ≤ m0) (f : Lp F p μ) (hf_meas : f ∈ Lp_meas_subgroup F m p μ) :
-  mem_ℒp (mem_Lp_meas_subgroup_iff_ae_measurable'.mp hf_meas).some p (μ.trim hm) :=
-  by 
-    have hf : ae_measurable' m f μ 
-    exact mem_Lp_meas_subgroup_iff_ae_measurable'.mp hf_meas 
-    let g := hf.some 
-    obtain ⟨hg, hfg⟩ := hf.some_spec 
-    change mem_ℒp g p (μ.trim hm)
-    refine' ⟨hg.ae_measurable, _⟩
-    have h_snorm_fg : snorm g p (μ.trim hm) = snorm f p μ
-    ·
-      ·
-        rw [snorm_trim hm hg]
-        exact snorm_congr_ae hfg.symm 
-    rw [h_snorm_fg]
-    exact Lp.snorm_lt_top f
+theorem mem_ℒp_trim_of_mem_Lp_meas_subgroup
+(hm : «expr ≤ »(m, m0))
+(f : Lp F p μ)
+(hf_meas : «expr ∈ »(f, Lp_meas_subgroup F m p μ)) : mem_ℒp (mem_Lp_meas_subgroup_iff_ae_measurable'.mp hf_meas).some p (μ.trim hm) :=
+begin
+  have [ident hf] [":", expr ae_measurable' m f μ] [],
+  from [expr mem_Lp_meas_subgroup_iff_ae_measurable'.mp hf_meas],
+  let [ident g] [] [":=", expr hf.some],
+  obtain ["⟨", ident hg, ",", ident hfg, "⟩", ":=", expr hf.some_spec],
+  change [expr mem_ℒp g p (μ.trim hm)] [] [],
+  refine [expr ⟨hg.ae_measurable, _⟩],
+  have [ident h_snorm_fg] [":", expr «expr = »(snorm g p (μ.trim hm), snorm f p μ)] [],
+  by { rw [expr snorm_trim hm hg] [],
+    exact [expr snorm_congr_ae hfg.symm] },
+  rw [expr h_snorm_fg] [],
+  exact [expr Lp.snorm_lt_top f]
+end
 
 /-- If `f` belongs to `Lp` for the measure `μ.trim hm`, then it belongs to the subgroup
 `Lp_meas_subgroup F m p μ`. -/
@@ -480,16 +482,20 @@ instance  [hm : Fact (m ≤ m0)] [CompleteSpace F] [hp : Fact (1 ≤ p)] : Compl
     rw [(Lp_meas_subgroup_to_Lp_meas_iso F 𝕜 p μ).symm.complete_space_iff]
     infer_instance
 
-theorem is_complete_ae_measurable' [hp : Fact (1 ≤ p)] [CompleteSpace F] (hm : m ≤ m0) :
-  IsComplete { f : Lp F p μ | ae_measurable' m f μ } :=
-  by 
-    rw [←complete_space_coe_iff_is_complete]
-    haveI  : Fact (m ≤ m0) := ⟨hm⟩
-    change CompleteSpace (Lp_meas_subgroup F m p μ)
-    infer_instance
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_complete_ae_measurable'
+[hp : fact «expr ≤ »(1, p)]
+[complete_space F]
+(hm : «expr ≤ »(m, m0)) : is_complete {f : Lp F p μ | ae_measurable' m f μ} :=
+begin
+  rw ["<-", expr complete_space_coe_iff_is_complete] [],
+  haveI [] [":", expr fact «expr ≤ »(m, m0)] [":=", expr ⟨hm⟩],
+  change [expr complete_space (Lp_meas_subgroup F m p μ)] [] [],
+  apply_instance
+end
 
 theorem is_closed_ae_measurable' [hp : Fact (1 ≤ p)] [CompleteSpace F] (hm : m ≤ m0) :
-  IsClosed { f : Lp F p μ | ae_measurable' m f μ } :=
+  IsClosed { f:Lp F p μ | ae_measurable' m f μ } :=
   IsComplete.is_closed (is_complete_ae_measurable' hm)
 
 end CompleteSubspace
@@ -517,115 +523,131 @@ section UniquenessOfConditionalExpectation
 
 variable{m m0 : MeasurableSpace α}{μ : Measureₓ α}[BorelSpace 𝕜]
 
-theorem Lp_meas.ae_eq_zero_of_forall_set_integral_eq_zero (hm : m ≤ m0) (f : Lp_meas E' 𝕜 m p μ) (hp_ne_zero : p ≠ 0)
-  (hp_ne_top : p ≠ ∞) (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → integrable_on f s μ)
-  (hf_zero : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → (∫x in s, f x ∂μ) = 0) : f =ᵐ[μ] 0 :=
-  by 
-    obtain ⟨g, hg_sm, hfg⟩ := Lp_meas.ae_fin_strongly_measurable' hm f hp_ne_zero hp_ne_top 
-    refine' hfg.trans _ 
-    refine' ae_eq_zero_of_forall_set_integral_eq_of_fin_strongly_measurable_trim hm _ _ hg_sm
-    ·
-      intro s hs hμs 
-      have hfg_restrict : f =ᵐ[μ.restrict s] g 
-      exact ae_restrict_of_ae hfg 
-      rw [integrable_on, integrable_congr hfg_restrict.symm]
-      exact hf_int_finite s hs hμs
-    ·
-      intro s hs hμs 
-      have hfg_restrict : f =ᵐ[μ.restrict s] g 
-      exact ae_restrict_of_ae hfg 
-      rw [integral_congr_ae hfg_restrict.symm]
-      exact hf_zero s hs hμs
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem Lp_meas.ae_eq_zero_of_forall_set_integral_eq_zero
+(hm : «expr ≤ »(m, m0))
+(f : Lp_meas E' 𝕜 m p μ)
+(hp_ne_zero : «expr ≠ »(p, 0))
+(hp_ne_top : «expr ≠ »(p, «expr∞»()))
+(hf_int_finite : ∀ s, «exprmeasurable_set[ ]»(m) s → «expr < »(μ s, «expr∞»()) → integrable_on f s μ)
+(hf_zero : ∀
+ s : set α, «exprmeasurable_set[ ]»(m) s → «expr < »(μ s, «expr∞»()) → «expr = »(«expr∫ in , ∂ »((x), s, f x, μ), 0)) : «expr =ᵐ[ ] »(f, μ, 0) :=
+begin
+  obtain ["⟨", ident g, ",", ident hg_sm, ",", ident hfg, "⟩", ":=", expr Lp_meas.ae_fin_strongly_measurable' hm f hp_ne_zero hp_ne_top],
+  refine [expr hfg.trans _],
+  refine [expr ae_eq_zero_of_forall_set_integral_eq_of_fin_strongly_measurable_trim hm _ _ hg_sm],
+  { intros [ident s, ident hs, ident hμs],
+    have [ident hfg_restrict] [":", expr «expr =ᵐ[ ] »(f, μ.restrict s, g)] [],
+    from [expr ae_restrict_of_ae hfg],
+    rw ["[", expr integrable_on, ",", expr integrable_congr hfg_restrict.symm, "]"] [],
+    exact [expr hf_int_finite s hs hμs] },
+  { intros [ident s, ident hs, ident hμs],
+    have [ident hfg_restrict] [":", expr «expr =ᵐ[ ] »(f, μ.restrict s, g)] [],
+    from [expr ae_restrict_of_ae hfg],
+    rw [expr integral_congr_ae hfg_restrict.symm] [],
+    exact [expr hf_zero s hs hμs] }
+end
 
 include 𝕜
 
-theorem Lp.ae_eq_zero_of_forall_set_integral_eq_zero' (hm : m ≤ m0) (f : Lp E' p μ) (hp_ne_zero : p ≠ 0)
-  (hp_ne_top : p ≠ ∞) (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → integrable_on f s μ)
-  (hf_zero : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → (∫x in s, f x ∂μ) = 0) (hf_meas : ae_measurable' m f μ) :
-  f =ᵐ[μ] 0 :=
-  by 
-    let f_meas : Lp_meas E' 𝕜 m p μ := ⟨f, hf_meas⟩
-    have hf_f_meas : f =ᵐ[μ] f_meas
-    ·
-      simp only [coe_fn_coe_base', Subtype.coe_mk]
-    refine' hf_f_meas.trans _ 
-    refine' Lp_meas.ae_eq_zero_of_forall_set_integral_eq_zero hm f_meas hp_ne_zero hp_ne_top _ _
-    ·
-      intro s hs hμs 
-      have hfg_restrict : f =ᵐ[μ.restrict s] f_meas 
-      exact ae_restrict_of_ae hf_f_meas 
-      rw [integrable_on, integrable_congr hfg_restrict.symm]
-      exact hf_int_finite s hs hμs
-    ·
-      intro s hs hμs 
-      have hfg_restrict : f =ᵐ[μ.restrict s] f_meas 
-      exact ae_restrict_of_ae hf_f_meas 
-      rw [integral_congr_ae hfg_restrict.symm]
-      exact hf_zero s hs hμs
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem Lp.ae_eq_zero_of_forall_set_integral_eq_zero'
+(hm : «expr ≤ »(m, m0))
+(f : Lp E' p μ)
+(hp_ne_zero : «expr ≠ »(p, 0))
+(hp_ne_top : «expr ≠ »(p, «expr∞»()))
+(hf_int_finite : ∀ s, «exprmeasurable_set[ ]»(m) s → «expr < »(μ s, «expr∞»()) → integrable_on f s μ)
+(hf_zero : ∀
+ s : set α, «exprmeasurable_set[ ]»(m) s → «expr < »(μ s, «expr∞»()) → «expr = »(«expr∫ in , ∂ »((x), s, f x, μ), 0))
+(hf_meas : ae_measurable' m f μ) : «expr =ᵐ[ ] »(f, μ, 0) :=
+begin
+  let [ident f_meas] [":", expr Lp_meas E' 𝕜 m p μ] [":=", expr ⟨f, hf_meas⟩],
+  have [ident hf_f_meas] [":", expr «expr =ᵐ[ ] »(f, μ, f_meas)] [],
+  by simp [] [] ["only"] ["[", expr coe_fn_coe_base', ",", expr subtype.coe_mk, "]"] [] [],
+  refine [expr hf_f_meas.trans _],
+  refine [expr Lp_meas.ae_eq_zero_of_forall_set_integral_eq_zero hm f_meas hp_ne_zero hp_ne_top _ _],
+  { intros [ident s, ident hs, ident hμs],
+    have [ident hfg_restrict] [":", expr «expr =ᵐ[ ] »(f, μ.restrict s, f_meas)] [],
+    from [expr ae_restrict_of_ae hf_f_meas],
+    rw ["[", expr integrable_on, ",", expr integrable_congr hfg_restrict.symm, "]"] [],
+    exact [expr hf_int_finite s hs hμs] },
+  { intros [ident s, ident hs, ident hμs],
+    have [ident hfg_restrict] [":", expr «expr =ᵐ[ ] »(f, μ.restrict s, f_meas)] [],
+    from [expr ae_restrict_of_ae hf_f_meas],
+    rw [expr integral_congr_ae hfg_restrict.symm] [],
+    exact [expr hf_zero s hs hμs] }
+end
 
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Uniqueness of the conditional expectation** -/
-theorem Lp.ae_eq_of_forall_set_integral_eq' (hm : m ≤ m0) (f g : Lp E' p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
-  (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → integrable_on f s μ)
-  (hg_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → integrable_on g s μ)
-  (hfg : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → (∫x in s, f x ∂μ) = ∫x in s, g x ∂μ)
-  (hf_meas : ae_measurable' m f μ) (hg_meas : ae_measurable' m g μ) : f =ᵐ[μ] g :=
-  by 
-    suffices h_sub : «expr⇑ » (f - g) =ᵐ[μ] 0
-    ·
-      ·
-        rw [←sub_ae_eq_zero]
-        exact (Lp.coe_fn_sub f g).symm.trans h_sub 
-    have hfg' : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → (∫x in s, (f - g) x ∂μ) = 0
-    ·
-      intro s hs hμs 
-      rw [integral_congr_ae (ae_restrict_of_ae (Lp.coe_fn_sub f g))]
-      rw [integral_sub' (hf_int_finite s hs hμs) (hg_int_finite s hs hμs)]
-      exact sub_eq_zero.mpr (hfg s hs hμs)
-    have hfg_int : ∀ s, measurable_set[m] s → μ s < ∞ → integrable_on («expr⇑ » (f - g)) s μ
-    ·
-      intro s hs hμs 
-      rw [integrable_on, integrable_congr (ae_restrict_of_ae (Lp.coe_fn_sub f g))]
-      exact (hf_int_finite s hs hμs).sub (hg_int_finite s hs hμs)
-    have hfg_meas : ae_measurable' m («expr⇑ » (f - g)) μ 
-    exact ae_measurable'.congr (hf_meas.sub hg_meas) (Lp.coe_fn_sub f g).symm 
-    exact Lp.ae_eq_zero_of_forall_set_integral_eq_zero' hm (f - g) hp_ne_zero hp_ne_top hfg_int hfg' hfg_meas
+theorem Lp.ae_eq_of_forall_set_integral_eq'
+(hm : «expr ≤ »(m, m0))
+(f g : Lp E' p μ)
+(hp_ne_zero : «expr ≠ »(p, 0))
+(hp_ne_top : «expr ≠ »(p, «expr∞»()))
+(hf_int_finite : ∀ s, «exprmeasurable_set[ ]»(m) s → «expr < »(μ s, «expr∞»()) → integrable_on f s μ)
+(hg_int_finite : ∀ s, «exprmeasurable_set[ ]»(m) s → «expr < »(μ s, «expr∞»()) → integrable_on g s μ)
+(hfg : ∀
+ s : set α, «exprmeasurable_set[ ]»(m) s → «expr < »(μ s, «expr∞»()) → «expr = »(«expr∫ in , ∂ »((x), s, f x, μ), «expr∫ in , ∂ »((x), s, g x, μ)))
+(hf_meas : ae_measurable' m f μ)
+(hg_meas : ae_measurable' m g μ) : «expr =ᵐ[ ] »(f, μ, g) :=
+begin
+  suffices [ident h_sub] [":", expr «expr =ᵐ[ ] »(«expr⇑ »(«expr - »(f, g)), μ, 0)],
+  by { rw ["<-", expr sub_ae_eq_zero] [],
+    exact [expr (Lp.coe_fn_sub f g).symm.trans h_sub] },
+  have [ident hfg'] [":", expr ∀
+   s : set α, «exprmeasurable_set[ ]»(m) s → «expr < »(μ s, «expr∞»()) → «expr = »(«expr∫ in , ∂ »((x), s, «expr - »(f, g) x, μ), 0)] [],
+  { intros [ident s, ident hs, ident hμs],
+    rw [expr integral_congr_ae (ae_restrict_of_ae (Lp.coe_fn_sub f g))] [],
+    rw [expr integral_sub' (hf_int_finite s hs hμs) (hg_int_finite s hs hμs)] [],
+    exact [expr sub_eq_zero.mpr (hfg s hs hμs)] },
+  have [ident hfg_int] [":", expr ∀
+   s, «exprmeasurable_set[ ]»(m) s → «expr < »(μ s, «expr∞»()) → integrable_on «expr⇑ »(«expr - »(f, g)) s μ] [],
+  { intros [ident s, ident hs, ident hμs],
+    rw ["[", expr integrable_on, ",", expr integrable_congr (ae_restrict_of_ae (Lp.coe_fn_sub f g)), "]"] [],
+    exact [expr (hf_int_finite s hs hμs).sub (hg_int_finite s hs hμs)] },
+  have [ident hfg_meas] [":", expr ae_measurable' m «expr⇑ »(«expr - »(f, g)) μ] [],
+  from [expr ae_measurable'.congr (hf_meas.sub hg_meas) (Lp.coe_fn_sub f g).symm],
+  exact [expr Lp.ae_eq_zero_of_forall_set_integral_eq_zero' hm «expr - »(f, g) hp_ne_zero hp_ne_top hfg_int hfg' hfg_meas]
+end
 
 omit 𝕜
 
-theorem ae_eq_of_forall_set_integral_eq_of_sigma_finite' (hm : m ≤ m0) [sigma_finite (μ.trim hm)] {f g : α → F'}
-  (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → integrable_on f s μ)
-  (hg_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → integrable_on g s μ)
-  (hfg_eq : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → (∫x in s, f x ∂μ) = ∫x in s, g x ∂μ)
-  (hfm : ae_measurable' m f μ) (hgm : ae_measurable' m g μ) : f =ᵐ[μ] g :=
-  by 
-    rw [←ae_eq_trim_iff_of_ae_measurable' hm hfm hgm]
-    have hf_mk_int_finite :
-      ∀ s, measurable_set[m] s → μ.trim hm s < ∞ → @integrable_on _ _ m _ _ (hfm.mk f) s (μ.trim hm)
-    ·
-      intro s hs hμs 
-      rw [trim_measurable_set_eq hm hs] at hμs 
-      rw [integrable_on, restrict_trim hm _ hs]
-      refine' integrable.trim hm _ hfm.measurable_mk 
-      exact integrable.congr (hf_int_finite s hs hμs) (ae_restrict_of_ae hfm.ae_eq_mk)
-    have hg_mk_int_finite :
-      ∀ s, measurable_set[m] s → μ.trim hm s < ∞ → @integrable_on _ _ m _ _ (hgm.mk g) s (μ.trim hm)
-    ·
-      intro s hs hμs 
-      rw [trim_measurable_set_eq hm hs] at hμs 
-      rw [integrable_on, restrict_trim hm _ hs]
-      refine' integrable.trim hm _ hgm.measurable_mk 
-      exact integrable.congr (hg_int_finite s hs hμs) (ae_restrict_of_ae hgm.ae_eq_mk)
-    have hfg_mk_eq :
-      ∀ s : Set α,
-        measurable_set[m] s → μ.trim hm s < ∞ → (∫x in s, hfm.mk f x ∂μ.trim hm) = ∫x in s, hgm.mk g x ∂μ.trim hm
-    ·
-      intro s hs hμs 
-      rw [trim_measurable_set_eq hm hs] at hμs 
-      rw [restrict_trim hm _ hs, ←integral_trim hm hfm.measurable_mk, ←integral_trim hm hgm.measurable_mk,
-        integral_congr_ae (ae_restrict_of_ae hfm.ae_eq_mk.symm),
-        integral_congr_ae (ae_restrict_of_ae hgm.ae_eq_mk.symm)]
-      exact hfg_eq s hs hμs 
-    exact ae_eq_of_forall_set_integral_eq_of_sigma_finite hf_mk_int_finite hg_mk_int_finite hfg_mk_eq
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ae_eq_of_forall_set_integral_eq_of_sigma_finite'
+(hm : «expr ≤ »(m, m0))
+[sigma_finite (μ.trim hm)]
+{f g : α → F'}
+(hf_int_finite : ∀ s, «exprmeasurable_set[ ]»(m) s → «expr < »(μ s, «expr∞»()) → integrable_on f s μ)
+(hg_int_finite : ∀ s, «exprmeasurable_set[ ]»(m) s → «expr < »(μ s, «expr∞»()) → integrable_on g s μ)
+(hfg_eq : ∀
+ s : set α, «exprmeasurable_set[ ]»(m) s → «expr < »(μ s, «expr∞»()) → «expr = »(«expr∫ in , ∂ »((x), s, f x, μ), «expr∫ in , ∂ »((x), s, g x, μ)))
+(hfm : ae_measurable' m f μ)
+(hgm : ae_measurable' m g μ) : «expr =ᵐ[ ] »(f, μ, g) :=
+begin
+  rw ["<-", expr ae_eq_trim_iff_of_ae_measurable' hm hfm hgm] [],
+  have [ident hf_mk_int_finite] [":", expr ∀
+   s, «exprmeasurable_set[ ]»(m) s → «expr < »(μ.trim hm s, «expr∞»()) → @integrable_on _ _ m _ _ (hfm.mk f) s (μ.trim hm)] [],
+  { intros [ident s, ident hs, ident hμs],
+    rw [expr trim_measurable_set_eq hm hs] ["at", ident hμs],
+    rw ["[", expr integrable_on, ",", expr restrict_trim hm _ hs, "]"] [],
+    refine [expr integrable.trim hm _ hfm.measurable_mk],
+    exact [expr integrable.congr (hf_int_finite s hs hμs) (ae_restrict_of_ae hfm.ae_eq_mk)] },
+  have [ident hg_mk_int_finite] [":", expr ∀
+   s, «exprmeasurable_set[ ]»(m) s → «expr < »(μ.trim hm s, «expr∞»()) → @integrable_on _ _ m _ _ (hgm.mk g) s (μ.trim hm)] [],
+  { intros [ident s, ident hs, ident hμs],
+    rw [expr trim_measurable_set_eq hm hs] ["at", ident hμs],
+    rw ["[", expr integrable_on, ",", expr restrict_trim hm _ hs, "]"] [],
+    refine [expr integrable.trim hm _ hgm.measurable_mk],
+    exact [expr integrable.congr (hg_int_finite s hs hμs) (ae_restrict_of_ae hgm.ae_eq_mk)] },
+  have [ident hfg_mk_eq] [":", expr ∀
+   s : set α, «exprmeasurable_set[ ]»(m) s → «expr < »(μ.trim hm s, «expr∞»()) → «expr = »(«expr∫ in , ∂ »((x), s, hfm.mk f x, μ.trim hm), «expr∫ in , ∂ »((x), s, hgm.mk g x, μ.trim hm))] [],
+  { intros [ident s, ident hs, ident hμs],
+    rw [expr trim_measurable_set_eq hm hs] ["at", ident hμs],
+    rw ["[", expr restrict_trim hm _ hs, ",", "<-", expr integral_trim hm hfm.measurable_mk, ",", "<-", expr integral_trim hm hgm.measurable_mk, ",", expr integral_congr_ae (ae_restrict_of_ae hfm.ae_eq_mk.symm), ",", expr integral_congr_ae (ae_restrict_of_ae hgm.ae_eq_mk.symm), "]"] [],
+    exact [expr hfg_eq s hs hμs] },
+  exact [expr ae_eq_of_forall_set_integral_eq_of_sigma_finite hf_mk_int_finite hg_mk_int_finite hfg_mk_eq]
+end
 
 end UniquenessOfConditionalExpectation
 
@@ -633,36 +655,37 @@ section IntegralNormLe
 
 variable{m m0 : MeasurableSpace α}{μ : Measureₓ α}{s : Set α}
 
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Let `m` be a sub-σ-algebra of `m0`, `f` a `m0`-measurable function and `g` a `m`-measurable
 function, such that their integrals coincide on `m`-measurable sets with finite measure.
 Then `∫ x in s, ∥g x∥ ∂μ ≤ ∫ x in s, ∥f x∥ ∂μ` on all `m`-measurable sets with finite measure. -/
-theorem integral_norm_le_of_forall_fin_meas_integral_eq (hm : m ≤ m0) {f g : α → ℝ} (hf : Measurable f)
-  (hfi : integrable_on f s μ) (hg : measurable[m] g) (hgi : integrable_on g s μ)
-  (hgf : ∀ t, measurable_set[m] t → μ t < ∞ → (∫x in t, g x ∂μ) = ∫x in t, f x ∂μ) (hs : measurable_set[m] s)
-  (hμs : μ s ≠ ∞) : (∫x in s, ∥g x∥ ∂μ) ≤ ∫x in s, ∥f x∥ ∂μ :=
-  by 
-    rw [integral_norm_eq_pos_sub_neg (hg.mono hm le_rfl) hgi, integral_norm_eq_pos_sub_neg hf hfi]
-    have h_meas_nonneg_g : measurable_set[m] { x | 0 ≤ g x }
-    exact @measurable_set_le _ α _ _ _ m _ _ _ _ g (@measurable_const _ α _ m _) hg 
-    have h_meas_nonneg_f : MeasurableSet { x | 0 ≤ f x }
-    exact measurable_set_le measurable_const hf 
-    have h_meas_nonpos_g : measurable_set[m] { x | g x ≤ 0 }
-    exact @measurable_set_le _ α _ _ _ m _ _ _ g _ hg (@measurable_const _ α _ m _)
-    have h_meas_nonpos_f : MeasurableSet { x | f x ≤ 0 }
-    exact measurable_set_le hf measurable_const 
-    refine' sub_le_sub _ _
-    ·
-      rw [measure.restrict_restrict (hm _ h_meas_nonneg_g), measure.restrict_restrict h_meas_nonneg_f,
-        hgf _ (@MeasurableSet.inter α m _ _ h_meas_nonneg_g hs)
-          ((measure_mono (Set.inter_subset_right _ _)).trans_lt (lt_top_iff_ne_top.mpr hμs)),
-        ←measure.restrict_restrict (hm _ h_meas_nonneg_g), ←measure.restrict_restrict h_meas_nonneg_f]
-      exact set_integral_le_nonneg (hm _ h_meas_nonneg_g) hf hfi
-    ·
-      rw [measure.restrict_restrict (hm _ h_meas_nonpos_g), measure.restrict_restrict h_meas_nonpos_f,
-        hgf _ (@MeasurableSet.inter α m _ _ h_meas_nonpos_g hs)
-          ((measure_mono (Set.inter_subset_right _ _)).trans_lt (lt_top_iff_ne_top.mpr hμs)),
-        ←measure.restrict_restrict (hm _ h_meas_nonpos_g), ←measure.restrict_restrict h_meas_nonpos_f]
-      exact set_integral_nonpos_le (hm _ h_meas_nonpos_g) hf hfi
+theorem integral_norm_le_of_forall_fin_meas_integral_eq
+(hm : «expr ≤ »(m, m0))
+{f g : α → exprℝ()}
+(hf : measurable f)
+(hfi : integrable_on f s μ)
+(hg : «exprmeasurable[ ]»(m) g)
+(hgi : integrable_on g s μ)
+(hgf : ∀
+ t, «exprmeasurable_set[ ]»(m) t → «expr < »(μ t, «expr∞»()) → «expr = »(«expr∫ in , ∂ »((x), t, g x, μ), «expr∫ in , ∂ »((x), t, f x, μ)))
+(hs : «exprmeasurable_set[ ]»(m) s)
+(hμs : «expr ≠ »(μ s, «expr∞»())) : «expr ≤ »(«expr∫ in , ∂ »((x), s, «expr∥ ∥»(g x), μ), «expr∫ in , ∂ »((x), s, «expr∥ ∥»(f x), μ)) :=
+begin
+  rw ["[", expr integral_norm_eq_pos_sub_neg (hg.mono hm le_rfl) hgi, ",", expr integral_norm_eq_pos_sub_neg hf hfi, "]"] [],
+  have [ident h_meas_nonneg_g] [":", expr «exprmeasurable_set[ ]»(m) {x | «expr ≤ »(0, g x)}] [],
+  from [expr @measurable_set_le _ α _ _ _ m _ _ _ _ g (@measurable_const _ α _ m _) hg],
+  have [ident h_meas_nonneg_f] [":", expr measurable_set {x | «expr ≤ »(0, f x)}] [],
+  from [expr measurable_set_le measurable_const hf],
+  have [ident h_meas_nonpos_g] [":", expr «exprmeasurable_set[ ]»(m) {x | «expr ≤ »(g x, 0)}] [],
+  from [expr @measurable_set_le _ α _ _ _ m _ _ _ g _ hg (@measurable_const _ α _ m _)],
+  have [ident h_meas_nonpos_f] [":", expr measurable_set {x | «expr ≤ »(f x, 0)}] [],
+  from [expr measurable_set_le hf measurable_const],
+  refine [expr sub_le_sub _ _],
+  { rw ["[", expr measure.restrict_restrict (hm _ h_meas_nonneg_g), ",", expr measure.restrict_restrict h_meas_nonneg_f, ",", expr hgf _ (@measurable_set.inter α m _ _ h_meas_nonneg_g hs) ((measure_mono (set.inter_subset_right _ _)).trans_lt (lt_top_iff_ne_top.mpr hμs)), ",", "<-", expr measure.restrict_restrict (hm _ h_meas_nonneg_g), ",", "<-", expr measure.restrict_restrict h_meas_nonneg_f, "]"] [],
+    exact [expr set_integral_le_nonneg (hm _ h_meas_nonneg_g) hf hfi] },
+  { rw ["[", expr measure.restrict_restrict (hm _ h_meas_nonpos_g), ",", expr measure.restrict_restrict h_meas_nonpos_f, ",", expr hgf _ (@measurable_set.inter α m _ _ h_meas_nonpos_g hs) ((measure_mono (set.inter_subset_right _ _)).trans_lt (lt_top_iff_ne_top.mpr hμs)), ",", "<-", expr measure.restrict_restrict (hm _ h_meas_nonpos_g), ",", "<-", expr measure.restrict_restrict h_meas_nonpos_f, "]"] [],
+    exact [expr set_integral_nonpos_le (hm _ h_meas_nonpos_g) hf hfi] }
+end
 
 /-- Let `m` be a sub-σ-algebra of `m0`, `f` a `m0`-measurable function and `g` a `m`-measurable
 function, such that their integrals coincide on `m`-measurable sets with finite measure.
@@ -700,12 +723,11 @@ local notation "⟪" x ", " y "⟫₂" => @inner 𝕜 (α →₂[μ] E) _ x y
 
 variable(𝕜)
 
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Conditional expectation of a function in L2 with respect to a sigma-algebra -/
-def condexp_L2 (hm : m ≤ m0) : (α →₂[μ] E) →L[𝕜] Lp_meas E 𝕜 m 2 μ :=
-  @orthogonalProjection 𝕜 (α →₂[μ] E) _ _ (Lp_meas E 𝕜 m 2 μ)
-    (by 
-      haveI  : Fact (m ≤ m0) := ⟨hm⟩
-      exact inferInstance)
+def condexp_L2 (hm : «expr ≤ »(m, m0)) : «expr →L[ ] »(«expr →₂[ ] »(α, μ, E), 𝕜, Lp_meas E 𝕜 m 2 μ) :=
+@orthogonal_projection 𝕜 «expr →₂[ ] »(α, μ, E) _ _ (Lp_meas E 𝕜 m 2 μ) (by { haveI [] [":", expr fact «expr ≤ »(m, m0)] [":=", expr ⟨hm⟩],
+   exact [expr infer_instance] })
 
 variable{𝕜}
 
@@ -720,10 +742,11 @@ theorem integrable_condexp_L2_of_is_finite_measure (hm : m ≤ m0) [is_finite_me
   integrable (condexp_L2 𝕜 hm f) μ :=
   integrable_on_univ.mp$ integrable_on_condexp_L2_of_measure_ne_top hm (measure_ne_top _ _) f
 
-theorem norm_condexp_L2_le_one (hm : m ≤ m0) : ∥@condexp_L2 α E 𝕜 _ _ _ _ _ _ _ _ _ _ μ hm∥ ≤ 1 :=
-  by 
-    haveI  : Fact (m ≤ m0) := ⟨hm⟩
-    exact orthogonal_projection_norm_le _
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem norm_condexp_L2_le_one
+(hm : «expr ≤ »(m, m0)) : «expr ≤ »(«expr∥ ∥»(@condexp_L2 α E 𝕜 _ _ _ _ _ _ _ _ _ _ μ hm), 1) :=
+by { haveI [] [":", expr fact «expr ≤ »(m, m0)] [":=", expr ⟨hm⟩],
+  exact [expr orthogonal_projection_norm_le _] }
 
 theorem norm_condexp_L2_le (hm : m ≤ m0) (f : α →₂[μ] E) : ∥condexp_L2 𝕜 hm f∥ ≤ ∥f∥ :=
   ((@condexp_L2 _ E 𝕜 _ _ _ _ _ _ _ _ _ _ μ hm).le_op_norm f).trans
@@ -741,25 +764,31 @@ theorem norm_condexp_L2_coe_le (hm : m ≤ m0) (f : α →₂[μ] E) : ∥(conde
     refine' (Ennreal.to_real_le_to_real _ (Lp.snorm_ne_top _)).mpr (snorm_condexp_L2_le hm f)
     exact Lp.snorm_ne_top _
 
-theorem inner_condexp_L2_left_eq_right (hm : m ≤ m0) {f g : α →₂[μ] E} :
-  ⟪(condexp_L2 𝕜 hm f : α →₂[μ] E), g⟫₂ = ⟪f, (condexp_L2 𝕜 hm g : α →₂[μ] E)⟫₂ :=
-  by 
-    haveI  : Fact (m ≤ m0) := ⟨hm⟩
-    exact inner_orthogonal_projection_left_eq_right _ f g
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem inner_condexp_L2_left_eq_right
+(hm : «expr ≤ »(m, m0))
+{f
+ g : «expr →₂[ ] »(α, μ, E)} : «expr = »(«expr⟪ , ⟫₂»((condexp_L2 𝕜 hm f : «expr →₂[ ] »(α, μ, E)), g), «expr⟪ , ⟫₂»(f, (condexp_L2 𝕜 hm g : «expr →₂[ ] »(α, μ, E)))) :=
+by { haveI [] [":", expr fact «expr ≤ »(m, m0)] [":=", expr ⟨hm⟩],
+  exact [expr inner_orthogonal_projection_left_eq_right _ f g] }
 
-theorem condexp_L2_indicator_of_measurable (hm : m ≤ m0) (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) (c : E) :
-  (condexp_L2 𝕜 hm (indicator_const_Lp 2 (hm s hs) hμs c) : α →₂[μ] E) = indicator_const_Lp 2 (hm s hs) hμs c :=
-  by 
-    rw [condexp_L2]
-    haveI  : Fact (m ≤ m0) := ⟨hm⟩
-    have h_mem : indicator_const_Lp 2 (hm s hs) hμs c ∈ Lp_meas E 𝕜 m 2 μ 
-    exact mem_Lp_meas_indicator_const_Lp hm hs hμs 
-    let ind := (⟨indicator_const_Lp 2 (hm s hs) hμs c, h_mem⟩ : Lp_meas E 𝕜 m 2 μ)
-    have h_coe_ind : (ind : α →₂[μ] E) = indicator_const_Lp 2 (hm s hs) hμs c
-    ·
-      rfl 
-    have h_orth_mem := orthogonal_projection_mem_subspace_eq_self ind 
-    rw [←h_coe_ind, h_orth_mem]
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem condexp_L2_indicator_of_measurable
+(hm : «expr ≤ »(m, m0))
+(hs : «exprmeasurable_set[ ]»(m) s)
+(hμs : «expr ≠ »(μ s, «expr∞»()))
+(c : E) : «expr = »((condexp_L2 𝕜 hm (indicator_const_Lp 2 (hm s hs) hμs c) : «expr →₂[ ] »(α, μ, E)), indicator_const_Lp 2 (hm s hs) hμs c) :=
+begin
+  rw [expr condexp_L2] [],
+  haveI [] [":", expr fact «expr ≤ »(m, m0)] [":=", expr ⟨hm⟩],
+  have [ident h_mem] [":", expr «expr ∈ »(indicator_const_Lp 2 (hm s hs) hμs c, Lp_meas E 𝕜 m 2 μ)] [],
+  from [expr mem_Lp_meas_indicator_const_Lp hm hs hμs],
+  let [ident ind] [] [":=", expr (⟨indicator_const_Lp 2 (hm s hs) hμs c, h_mem⟩ : Lp_meas E 𝕜 m 2 μ)],
+  have [ident h_coe_ind] [":", expr «expr = »((ind : «expr →₂[ ] »(α, μ, E)), indicator_const_Lp 2 (hm s hs) hμs c)] [],
+  by refl,
+  have [ident h_orth_mem] [] [":=", expr orthogonal_projection_mem_subspace_eq_self ind],
+  rw ["[", "<-", expr h_coe_ind, ",", expr h_orth_mem, "]"] []
+end
 
 theorem inner_condexp_L2_eq_inner_fun (hm : m ≤ m0) (f g : α →₂[μ] E) (hg : ae_measurable' m g μ) :
   ⟪(condexp_L2 𝕜 hm f : α →₂[μ] E), g⟫₂ = ⟪f, g⟫₂ :=
@@ -772,46 +801,48 @@ section Real
 
 variable{hm : m ≤ m0}
 
-theorem integral_condexp_L2_eq_of_fin_meas_real (f : Lp 𝕜 2 μ) (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) :
-  (∫x in s, condexp_L2 𝕜 hm f x ∂μ) = ∫x in s, f x ∂μ :=
-  by 
-    rw [←L2.inner_indicator_const_Lp_one (hm s hs) hμs]
-    have h_eq_inner :
-      (∫x in s, condexp_L2 𝕜 hm f x ∂μ) = inner (indicator_const_Lp 2 (hm s hs) hμs (1 : 𝕜)) (condexp_L2 𝕜 hm f)
-    ·
-      rw [L2.inner_indicator_const_Lp_one (hm s hs) hμs]
-      congr 
-    rw [h_eq_inner, ←inner_condexp_L2_left_eq_right, condexp_L2_indicator_of_measurable hm hs hμs]
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem integral_condexp_L2_eq_of_fin_meas_real
+(f : Lp 𝕜 2 μ)
+(hs : «exprmeasurable_set[ ]»(m) s)
+(hμs : «expr ≠ »(μ s, «expr∞»())) : «expr = »(«expr∫ in , ∂ »((x), s, condexp_L2 𝕜 hm f x, μ), «expr∫ in , ∂ »((x), s, f x, μ)) :=
+begin
+  rw ["<-", expr L2.inner_indicator_const_Lp_one (hm s hs) hμs] [],
+  have [ident h_eq_inner] [":", expr «expr = »(«expr∫ in , ∂ »((x), s, condexp_L2 𝕜 hm f x, μ), inner (indicator_const_Lp 2 (hm s hs) hμs (1 : 𝕜)) (condexp_L2 𝕜 hm f))] [],
+  { rw [expr L2.inner_indicator_const_Lp_one (hm s hs) hμs] [],
+    congr },
+  rw ["[", expr h_eq_inner, ",", "<-", expr inner_condexp_L2_left_eq_right, ",", expr condexp_L2_indicator_of_measurable hm hs hμs, "]"] []
+end
 
-theorem lintegral_nnnorm_condexp_L2_le (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) (f : Lp ℝ 2 μ) :
-  (∫⁻x in s, ∥condexp_L2 ℝ hm f x∥₊ ∂μ) ≤ ∫⁻x in s, ∥f x∥₊ ∂μ :=
-  by 
-    let h_meas := Lp_meas.ae_measurable' (condexp_L2 ℝ hm f)
-    let g := h_meas.some 
-    have hg_meas : measurable[m] g 
-    exact h_meas.some_spec.1
-    have hg_eq : g =ᵐ[μ] condexp_L2 ℝ hm f 
-    exact h_meas.some_spec.2.symm 
-    have hg_eq_restrict : g =ᵐ[μ.restrict s] condexp_L2 ℝ hm f 
-    exact ae_restrict_of_ae hg_eq 
-    have hg_nnnorm_eq : (fun x => (∥g x∥₊ : ℝ≥0∞)) =ᵐ[μ.restrict s] fun x => (∥condexp_L2 ℝ hm f x∥₊ : ℝ≥0∞)
-    ·
-      refine' hg_eq_restrict.mono fun x hx => _ 
-      dsimp only 
-      rw [hx]
-    rw [lintegral_congr_ae hg_nnnorm_eq.symm]
-    refine' lintegral_nnnorm_le_of_forall_fin_meas_integral_eq hm (Lp.measurable f) _ _ _ _ hs hμs
-    ·
-      exact integrable_on_Lp_of_measure_ne_top f fact_one_le_two_ennreal.elim hμs
-    ·
-      exact hg_meas
-    ·
-      rw [integrable_on, integrable_congr hg_eq_restrict]
-      exact integrable_on_condexp_L2_of_measure_ne_top hm hμs f
-    ·
-      intro t ht hμt 
-      rw [←integral_condexp_L2_eq_of_fin_meas_real f ht hμt.ne]
-      exact set_integral_congr_ae (hm t ht) (hg_eq.mono fun x hx _ => hx)
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lintegral_nnnorm_condexp_L2_le
+(hs : «exprmeasurable_set[ ]»(m) s)
+(hμs : «expr ≠ »(μ s, «expr∞»()))
+(f : Lp exprℝ() 2 μ) : «expr ≤ »(«expr∫⁻ in , ∂ »((x), s, «expr∥ ∥₊»(condexp_L2 exprℝ() hm f x), μ), «expr∫⁻ in , ∂ »((x), s, «expr∥ ∥₊»(f x), μ)) :=
+begin
+  let [ident h_meas] [] [":=", expr Lp_meas.ae_measurable' (condexp_L2 exprℝ() hm f)],
+  let [ident g] [] [":=", expr h_meas.some],
+  have [ident hg_meas] [":", expr «exprmeasurable[ ]»(m) g] [],
+  from [expr h_meas.some_spec.1],
+  have [ident hg_eq] [":", expr «expr =ᵐ[ ] »(g, μ, condexp_L2 exprℝ() hm f)] [],
+  from [expr h_meas.some_spec.2.symm],
+  have [ident hg_eq_restrict] [":", expr «expr =ᵐ[ ] »(g, μ.restrict s, condexp_L2 exprℝ() hm f)] [],
+  from [expr ae_restrict_of_ae hg_eq],
+  have [ident hg_nnnorm_eq] [":", expr «expr =ᵐ[ ] »(λ
+    x, («expr∥ ∥₊»(g x) : «exprℝ≥0∞»()), μ.restrict s, λ x, («expr∥ ∥₊»(condexp_L2 exprℝ() hm f x) : «exprℝ≥0∞»()))] [],
+  { refine [expr hg_eq_restrict.mono (λ x hx, _)],
+    dsimp ["only"] [] [] [],
+    rw [expr hx] [] },
+  rw [expr lintegral_congr_ae hg_nnnorm_eq.symm] [],
+  refine [expr lintegral_nnnorm_le_of_forall_fin_meas_integral_eq hm (Lp.measurable f) _ _ _ _ hs hμs],
+  { exact [expr integrable_on_Lp_of_measure_ne_top f fact_one_le_two_ennreal.elim hμs] },
+  { exact [expr hg_meas] },
+  { rw ["[", expr integrable_on, ",", expr integrable_congr hg_eq_restrict, "]"] [],
+    exact [expr integrable_on_condexp_L2_of_measure_ne_top hm hμs f] },
+  { intros [ident t, ident ht, ident hμt],
+    rw ["<-", expr integral_condexp_L2_eq_of_fin_meas_real f ht hμt.ne] [],
+    exact [expr set_integral_congr_ae (hm t ht) (hg_eq.mono (λ x hx _, hx))] }
+end
 
 theorem condexp_L2_ae_eq_zero_of_ae_eq_zero (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) {f : Lp ℝ 2 μ}
   (hf : f =ᵐ[μ.restrict s] 0) : condexp_L2 ℝ hm f =ᵐ[μ.restrict s] 0 :=
@@ -839,81 +870,80 @@ theorem condexp_L2_ae_eq_zero_of_ae_eq_zero (hs : measurable_set[m] s) (hμs : �
     ·
       exact (Lp.measurable _).nnnorm.coe_nnreal_ennreal
 
-theorem lintegral_nnnorm_condexp_L2_indicator_le_real (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (ht : measurable_set[m] t)
-  (hμt : μ t ≠ ∞) : (∫⁻a in t, ∥condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ)) a∥₊ ∂μ) ≤ μ (s ∩ t) :=
-  by 
-    refine' (lintegral_nnnorm_condexp_L2_le ht hμt _).trans (le_of_eqₓ _)
-    have h_eq :
-      (∫⁻x in t, ∥(indicator_const_Lp 2 hs hμs (1 : ℝ)) x∥₊ ∂μ) = ∫⁻x in t, s.indicator (fun x => (1 : ℝ≥0∞)) x ∂μ
-    ·
-      refine' lintegral_congr_ae (ae_restrict_of_ae _)
-      refine' (@indicator_const_Lp_coe_fn _ _ _ 2 _ _ _ _ hs hμs (1 : ℝ) _ _).mono fun x hx => _ 
-      rw [hx]
-      simpRw [Set.indicator_apply]
-      splitIfs <;> simp 
-    rw [h_eq, lintegral_indicator _ hs, lintegral_const, measure.restrict_restrict hs]
-    simp only [one_mulₓ, Set.univ_inter, MeasurableSet.univ, measure.restrict_apply]
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lintegral_nnnorm_condexp_L2_indicator_le_real
+(hs : measurable_set s)
+(hμs : «expr ≠ »(μ s, «expr∞»()))
+(ht : «exprmeasurable_set[ ]»(m) t)
+(hμt : «expr ≠ »(μ t, «expr∞»())) : «expr ≤ »(«expr∫⁻ in , ∂ »((a), t, «expr∥ ∥₊»(condexp_L2 exprℝ() hm (indicator_const_Lp 2 hs hμs (1 : exprℝ())) a), μ), μ «expr ∩ »(s, t)) :=
+begin
+  refine [expr (lintegral_nnnorm_condexp_L2_le ht hμt _).trans (le_of_eq _)],
+  have [ident h_eq] [":", expr «expr = »(«expr∫⁻ in , ∂ »((x), t, «expr∥ ∥₊»(indicator_const_Lp 2 hs hμs (1 : exprℝ()) x), μ), «expr∫⁻ in , ∂ »((x), t, s.indicator (λ
+      x, (1 : «exprℝ≥0∞»())) x, μ))] [],
+  { refine [expr lintegral_congr_ae (ae_restrict_of_ae _)],
+    refine [expr (@indicator_const_Lp_coe_fn _ _ _ 2 _ _ _ _ hs hμs (1 : exprℝ()) _ _).mono (λ x hx, _)],
+    rw [expr hx] [],
+    simp_rw [expr set.indicator_apply] [],
+    split_ifs [] []; simp [] [] [] [] [] [] },
+  rw ["[", expr h_eq, ",", expr lintegral_indicator _ hs, ",", expr lintegral_const, ",", expr measure.restrict_restrict hs, "]"] [],
+  simp [] [] ["only"] ["[", expr one_mul, ",", expr set.univ_inter, ",", expr measurable_set.univ, ",", expr measure.restrict_apply, "]"] [] []
+end
 
 end Real
 
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `condexp_L2` commutes with taking inner products with constants. See the lemma
 `condexp_L2_comp_continuous_linear_map` for a more general result about commuting with continuous
 linear maps. -/
-theorem condexp_L2_const_inner (hm : m ≤ m0) (f : Lp E 2 μ) (c : E) :
-  condexp_L2 𝕜 hm (((Lp.mem_ℒp f).const_inner c).toLp fun a => ⟪c, f a⟫) =ᵐ[μ] fun a => ⟪c, condexp_L2 𝕜 hm f a⟫ :=
-  by 
-    rw [Lp_meas_coe]
-    have h_mem_Lp : mem_ℒp (fun a => ⟪c, condexp_L2 𝕜 hm f a⟫) 2 μ
-    ·
-      refine' mem_ℒp.const_inner _ _ 
-      rw [Lp_meas_coe]
-      exact Lp.mem_ℒp _ 
-    have h_eq : h_mem_Lp.to_Lp _ =ᵐ[μ] fun a => ⟪c, condexp_L2 𝕜 hm f a⟫
-    exact h_mem_Lp.coe_fn_to_Lp 
-    refine' eventually_eq.trans _ h_eq 
-    refine'
-      Lp.ae_eq_of_forall_set_integral_eq' hm _ _ ennreal.zero_lt_two.ne.symm Ennreal.coe_ne_top
-        (fun s hs hμs => integrable_on_condexp_L2_of_measure_ne_top hm hμs.ne _) _ _ _ _
-    ·
-      intro s hs hμs 
-      rw [integrable_on, integrable_congr (ae_restrict_of_ae h_eq)]
-      exact (integrable_on_condexp_L2_of_measure_ne_top hm hμs.ne _).const_inner _
-    ·
-      intro s hs hμs 
-      rw [←Lp_meas_coe, integral_condexp_L2_eq_of_fin_meas_real _ hs hμs.ne, integral_congr_ae (ae_restrict_of_ae h_eq),
-        Lp_meas_coe,
-        ←L2.inner_indicator_const_Lp_eq_set_integral_inner («expr↑ » (condexp_L2 𝕜 hm f)) (hm s hs) c hμs.ne,
-        ←inner_condexp_L2_left_eq_right, condexp_L2_indicator_of_measurable,
-        L2.inner_indicator_const_Lp_eq_set_integral_inner f (hm s hs) c hμs.ne,
-        set_integral_congr_ae (hm s hs) ((mem_ℒp.coe_fn_to_Lp ((Lp.mem_ℒp f).const_inner c)).mono fun x hx hxs => hx)]
-    ·
-      rw [←Lp_meas_coe]
-      exact Lp_meas.ae_measurable' _
-    ·
-      refine' ae_measurable'.congr _ h_eq.symm 
-      exact (Lp_meas.ae_measurable' _).const_inner _
+theorem condexp_L2_const_inner
+(hm : «expr ≤ »(m, m0))
+(f : Lp E 2 μ)
+(c : E) : «expr =ᵐ[ ] »(condexp_L2 𝕜 hm (((Lp.mem_ℒp f).const_inner c).to_Lp (λ
+   a, «expr⟪ , ⟫»(c, f a))), μ, λ a, «expr⟪ , ⟫»(c, condexp_L2 𝕜 hm f a)) :=
+begin
+  rw [expr Lp_meas_coe] [],
+  have [ident h_mem_Lp] [":", expr mem_ℒp (λ a, «expr⟪ , ⟫»(c, condexp_L2 𝕜 hm f a)) 2 μ] [],
+  { refine [expr mem_ℒp.const_inner _ _],
+    rw [expr Lp_meas_coe] [],
+    exact [expr Lp.mem_ℒp _] },
+  have [ident h_eq] [":", expr «expr =ᵐ[ ] »(h_mem_Lp.to_Lp _, μ, λ a, «expr⟪ , ⟫»(c, condexp_L2 𝕜 hm f a))] [],
+  from [expr h_mem_Lp.coe_fn_to_Lp],
+  refine [expr eventually_eq.trans _ h_eq],
+  refine [expr Lp.ae_eq_of_forall_set_integral_eq' hm _ _ ennreal.zero_lt_two.ne.symm ennreal.coe_ne_top (λ
+    s hs hμs, integrable_on_condexp_L2_of_measure_ne_top hm hμs.ne _) _ _ _ _],
+  { intros [ident s, ident hs, ident hμs],
+    rw ["[", expr integrable_on, ",", expr integrable_congr (ae_restrict_of_ae h_eq), "]"] [],
+    exact [expr (integrable_on_condexp_L2_of_measure_ne_top hm hμs.ne _).const_inner _] },
+  { intros [ident s, ident hs, ident hμs],
+    rw ["[", "<-", expr Lp_meas_coe, ",", expr integral_condexp_L2_eq_of_fin_meas_real _ hs hμs.ne, ",", expr integral_congr_ae (ae_restrict_of_ae h_eq), ",", expr Lp_meas_coe, ",", "<-", expr L2.inner_indicator_const_Lp_eq_set_integral_inner «expr↑ »(condexp_L2 𝕜 hm f) (hm s hs) c hμs.ne, ",", "<-", expr inner_condexp_L2_left_eq_right, ",", expr condexp_L2_indicator_of_measurable, ",", expr L2.inner_indicator_const_Lp_eq_set_integral_inner f (hm s hs) c hμs.ne, ",", expr set_integral_congr_ae (hm s hs) ((mem_ℒp.coe_fn_to_Lp ((Lp.mem_ℒp f).const_inner c)).mono (λ
+       x hx hxs, hx)), "]"] [] },
+  { rw ["<-", expr Lp_meas_coe] [],
+    exact [expr Lp_meas.ae_measurable' _] },
+  { refine [expr ae_measurable'.congr _ h_eq.symm],
+    exact [expr (Lp_meas.ae_measurable' _).const_inner _] }
+end
 
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `condexp_L2` verifies the equality of integrals defining the conditional expectation. -/
-theorem integral_condexp_L2_eq [IsScalarTower ℝ 𝕜 E'] (hm : m ≤ m0) (f : Lp E' 2 μ) (hs : measurable_set[m] s)
-  (hμs : μ s ≠ ∞) : (∫x in s, condexp_L2 𝕜 hm f x ∂μ) = ∫x in s, f x ∂μ :=
-  by 
-    rw [←sub_eq_zero, Lp_meas_coe,
-      ←integral_sub' (integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs)
-        (integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs)]
-    refine' integral_eq_zero_of_forall_integral_inner_eq_zero _ _ _
-    ·
-      rw [integrable_congr (ae_restrict_of_ae (Lp.coe_fn_sub («expr↑ » (condexp_L2 𝕜 hm f)) f).symm)]
-      exact integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs 
-    intro c 
-    simpRw [Pi.sub_apply, inner_sub_right]
-    rw
-      [integral_sub ((integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs).const_inner c)
-        ((integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs).const_inner c)]
-    have h_ae_eq_f := mem_ℒp.coe_fn_to_Lp ((Lp.mem_ℒp f).const_inner c)
-    rw [←Lp_meas_coe, sub_eq_zero,
-      ←set_integral_congr_ae (hm s hs) ((condexp_L2_const_inner hm f c).mono fun x hx _ => hx),
-      ←set_integral_congr_ae (hm s hs) (h_ae_eq_f.mono fun x hx _ => hx)]
-    exact integral_condexp_L2_eq_of_fin_meas_real _ hs hμs
+theorem integral_condexp_L2_eq
+[is_scalar_tower exprℝ() 𝕜 E']
+(hm : «expr ≤ »(m, m0))
+(f : Lp E' 2 μ)
+(hs : «exprmeasurable_set[ ]»(m) s)
+(hμs : «expr ≠ »(μ s, «expr∞»())) : «expr = »(«expr∫ in , ∂ »((x), s, condexp_L2 𝕜 hm f x, μ), «expr∫ in , ∂ »((x), s, f x, μ)) :=
+begin
+  rw ["[", "<-", expr sub_eq_zero, ",", expr Lp_meas_coe, ",", "<-", expr integral_sub' (integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs) (integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs), "]"] [],
+  refine [expr integral_eq_zero_of_forall_integral_inner_eq_zero _ _ _],
+  { rw [expr integrable_congr (ae_restrict_of_ae (Lp.coe_fn_sub «expr↑ »(condexp_L2 𝕜 hm f) f).symm)] [],
+    exact [expr integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs] },
+  intro [ident c],
+  simp_rw ["[", expr pi.sub_apply, ",", expr inner_sub_right, "]"] [],
+  rw [expr integral_sub ((integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs).const_inner c) ((integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs).const_inner c)] [],
+  have [ident h_ae_eq_f] [] [":=", expr mem_ℒp.coe_fn_to_Lp ((Lp.mem_ℒp f).const_inner c)],
+  rw ["[", "<-", expr Lp_meas_coe, ",", expr sub_eq_zero, ",", "<-", expr set_integral_congr_ae (hm s hs) ((condexp_L2_const_inner hm f c).mono (λ
+     x hx _, hx)), ",", "<-", expr set_integral_congr_ae (hm s hs) (h_ae_eq_f.mono (λ x hx _, hx)), "]"] [],
+  exact [expr integral_condexp_L2_eq_of_fin_meas_real _ hs hμs]
+end
 
 variable{E'' 𝕜' :
     Type
@@ -928,28 +958,26 @@ variable{E'' 𝕜' :
 
 variable(𝕜 𝕜')
 
-theorem condexp_L2_comp_continuous_linear_map (hm : m ≤ m0) (T : E' →L[ℝ] E'') (f : α →₂[μ] E') :
-  (condexp_L2 𝕜' hm (T.comp_Lp f) : α →₂[μ] E'') =ᵐ[μ] T.comp_Lp (condexp_L2 𝕜 hm f : α →₂[μ] E') :=
-  by 
-    refine'
-      Lp.ae_eq_of_forall_set_integral_eq' hm _ _ ennreal.zero_lt_two.ne.symm Ennreal.coe_ne_top
-        (fun s hs hμs => integrable_on_condexp_L2_of_measure_ne_top hm hμs.ne _)
-        (fun s hs hμs => integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs.ne) _ _ _
-    ·
-      intro s hs hμs 
-      rw [T.set_integral_comp_Lp _ (hm s hs),
-        T.integral_comp_comm (integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs.ne), ←Lp_meas_coe,
-        ←Lp_meas_coe, integral_condexp_L2_eq hm f hs hμs.ne, integral_condexp_L2_eq hm (T.comp_Lp f) hs hμs.ne,
-        T.set_integral_comp_Lp _ (hm s hs),
-        T.integral_comp_comm (integrable_on_Lp_of_measure_ne_top f fact_one_le_two_ennreal.elim hμs.ne)]
-    ·
-      rw [←Lp_meas_coe]
-      exact Lp_meas.ae_measurable' _
-    ·
-      have h_coe := T.coe_fn_comp_Lp (condexp_L2 𝕜 hm f : α →₂[μ] E')
-      rw [←eventually_eq] at h_coe 
-      refine' ae_measurable'.congr _ h_coe.symm 
-      exact (Lp_meas.ae_measurable' (condexp_L2 𝕜 hm f)).measurable_comp T.measurable
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem condexp_L2_comp_continuous_linear_map
+(hm : «expr ≤ »(m, m0))
+(T : «expr →L[ ] »(E', exprℝ(), E''))
+(f : «expr →₂[ ] »(α, μ, E')) : «expr =ᵐ[ ] »((condexp_L2 𝕜' hm (T.comp_Lp f) : «expr →₂[ ] »(α, μ, E'')), μ, T.comp_Lp (condexp_L2 𝕜 hm f : «expr →₂[ ] »(α, μ, E'))) :=
+begin
+  refine [expr Lp.ae_eq_of_forall_set_integral_eq' hm _ _ ennreal.zero_lt_two.ne.symm ennreal.coe_ne_top (λ
+    s
+    hs
+    hμs, integrable_on_condexp_L2_of_measure_ne_top hm hμs.ne _) (λ
+    s hs hμs, integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs.ne) _ _ _],
+  { intros [ident s, ident hs, ident hμs],
+    rw ["[", expr T.set_integral_comp_Lp _ (hm s hs), ",", expr T.integral_comp_comm (integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs.ne), ",", "<-", expr Lp_meas_coe, ",", "<-", expr Lp_meas_coe, ",", expr integral_condexp_L2_eq hm f hs hμs.ne, ",", expr integral_condexp_L2_eq hm (T.comp_Lp f) hs hμs.ne, ",", expr T.set_integral_comp_Lp _ (hm s hs), ",", expr T.integral_comp_comm (integrable_on_Lp_of_measure_ne_top f fact_one_le_two_ennreal.elim hμs.ne), "]"] [] },
+  { rw ["<-", expr Lp_meas_coe] [],
+    exact [expr Lp_meas.ae_measurable' _] },
+  { have [ident h_coe] [] [":=", expr T.coe_fn_comp_Lp (condexp_L2 𝕜 hm f : «expr →₂[ ] »(α, μ, E'))],
+    rw ["<-", expr eventually_eq] ["at", ident h_coe],
+    refine [expr ae_measurable'.congr _ h_coe.symm],
+    exact [expr (Lp_meas.ae_measurable' (condexp_L2 𝕜 hm f)).measurable_comp T.measurable] }
+end
 
 variable{𝕜 𝕜'}
 
@@ -957,30 +985,37 @@ section CondexpL2Indicator
 
 variable(𝕜)
 
-theorem condexp_L2_indicator_ae_eq_smul (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : E') :
-  condexp_L2 𝕜 hm (indicator_const_Lp 2 hs hμs x) =ᵐ[μ]
-    fun a => condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ)) a • x :=
-  by 
-    rw [indicator_const_Lp_eq_to_span_singleton_comp_Lp hs hμs x]
-    have h_comp :=
-      condexp_L2_comp_continuous_linear_map ℝ 𝕜 hm (to_span_singleton ℝ x) (indicator_const_Lp 2 hs hμs (1 : ℝ))
-    rw [←Lp_meas_coe] at h_comp 
-    refine' h_comp.trans _ 
-    exact (to_span_singleton ℝ x).coe_fn_comp_Lp _
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem condexp_L2_indicator_ae_eq_smul
+(hm : «expr ≤ »(m, m0))
+(hs : measurable_set s)
+(hμs : «expr ≠ »(μ s, «expr∞»()))
+(x : E') : «expr =ᵐ[ ] »(condexp_L2 𝕜 hm (indicator_const_Lp 2 hs hμs x), μ, λ
+ a, «expr • »(condexp_L2 exprℝ() hm (indicator_const_Lp 2 hs hμs (1 : exprℝ())) a, x)) :=
+begin
+  rw [expr indicator_const_Lp_eq_to_span_singleton_comp_Lp hs hμs x] [],
+  have [ident h_comp] [] [":=", expr condexp_L2_comp_continuous_linear_map exprℝ() 𝕜 hm (to_span_singleton exprℝ() x) (indicator_const_Lp 2 hs hμs (1 : exprℝ()))],
+  rw ["<-", expr Lp_meas_coe] ["at", ident h_comp],
+  refine [expr h_comp.trans _],
+  exact [expr (to_span_singleton exprℝ() x).coe_fn_comp_Lp _]
+end
 
-theorem condexp_L2_indicator_eq_to_span_singleton_comp (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : E') :
-  (condexp_L2 𝕜 hm (indicator_const_Lp 2 hs hμs x) : α →₂[μ] E') =
-    (to_span_singleton ℝ x).compLp (condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ))) :=
-  by 
-    ext1 
-    rw [←Lp_meas_coe]
-    refine' (condexp_L2_indicator_ae_eq_smul 𝕜 hm hs hμs x).trans _ 
-    have h_comp :=
-      (to_span_singleton ℝ x).coe_fn_comp_Lp (condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ)) : α →₂[μ] ℝ)
-    rw [←eventually_eq] at h_comp 
-    refine' eventually_eq.trans _ h_comp.symm 
-    refine' eventually_of_forall fun y => _ 
-    rfl
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem condexp_L2_indicator_eq_to_span_singleton_comp
+(hm : «expr ≤ »(m, m0))
+(hs : measurable_set s)
+(hμs : «expr ≠ »(μ s, «expr∞»()))
+(x : E') : «expr = »((condexp_L2 𝕜 hm (indicator_const_Lp 2 hs hμs x) : «expr →₂[ ] »(α, μ, E')), (to_span_singleton exprℝ() x).comp_Lp (condexp_L2 exprℝ() hm (indicator_const_Lp 2 hs hμs (1 : exprℝ())))) :=
+begin
+  ext1 [] [],
+  rw ["<-", expr Lp_meas_coe] [],
+  refine [expr (condexp_L2_indicator_ae_eq_smul 𝕜 hm hs hμs x).trans _],
+  have [ident h_comp] [] [":=", expr (to_span_singleton exprℝ() x).coe_fn_comp_Lp (condexp_L2 exprℝ() hm (indicator_const_Lp 2 hs hμs (1 : exprℝ())) : «expr →₂[ ] »(α, μ, exprℝ()))],
+  rw ["<-", expr eventually_eq] ["at", ident h_comp],
+  refine [expr eventually_eq.trans _ h_comp.symm],
+  refine [expr eventually_of_forall (λ y, _)],
+  refl
+end
 
 variable{𝕜}
 
@@ -1037,18 +1072,22 @@ variable[NormedSpace ℝ G]{hm : m ≤ m0}
 def condexp_ind_smul (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G) : Lp G 2 μ :=
   (to_span_singleton ℝ x).compLpL 2 μ (condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ)))
 
-theorem ae_measurable'_condexp_ind_smul (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G) :
-  ae_measurable' m (condexp_ind_smul hm hs hμs x) μ :=
-  by 
-    have h : ae_measurable' m (condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ))) μ 
-    exact ae_measurable'_condexp_L2 _ _ 
-    rw [condexp_ind_smul]
-    suffices  : ae_measurable' m (to_span_singleton ℝ x ∘ condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ))) μ
-    ·
-      refine' ae_measurable'.congr this _ 
-      refine' eventually_eq.trans _ (coe_fn_comp_LpL _ _).symm 
-      rw [Lp_meas_coe]
-    exact ae_measurable'.measurable_comp (to_span_singleton ℝ x).Measurable h
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ae_measurable'_condexp_ind_smul
+(hm : «expr ≤ »(m, m0))
+(hs : measurable_set s)
+(hμs : «expr ≠ »(μ s, «expr∞»()))
+(x : G) : ae_measurable' m (condexp_ind_smul hm hs hμs x) μ :=
+begin
+  have [ident h] [":", expr ae_measurable' m (condexp_L2 exprℝ() hm (indicator_const_Lp 2 hs hμs (1 : exprℝ()))) μ] [],
+  from [expr ae_measurable'_condexp_L2 _ _],
+  rw [expr condexp_ind_smul] [],
+  suffices [] [":", expr ae_measurable' m «expr ∘ »(to_span_singleton exprℝ() x, condexp_L2 exprℝ() hm (indicator_const_Lp 2 hs hμs (1 : exprℝ()))) μ],
+  { refine [expr ae_measurable'.congr this _],
+    refine [expr eventually_eq.trans _ (coe_fn_comp_LpL _ _).symm],
+    rw [expr Lp_meas_coe] [] },
+  exact [expr ae_measurable'.measurable_comp (to_span_singleton exprℝ() x).measurable h]
+end
 
 theorem condexp_ind_smul_add (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x y : G) :
   condexp_ind_smul hm hs hμs (x+y) = condexp_ind_smul hm hs hμs x+condexp_ind_smul hm hs hμs y :=
@@ -1202,49 +1241,52 @@ theorem condexp_ind_L1_fin_smul' [NormedSpace ℝ F] [SmulCommClass ℝ 𝕜 F] 
     refine' (condexp_ind_L1_fin_ae_eq_condexp_ind_smul hm hs hμs x).mono fun y hy => _ 
     rw [Pi.smul_apply, Pi.smul_apply, hy]
 
-theorem norm_condexp_ind_L1_fin_le (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G) :
-  ∥condexp_ind_L1_fin hm hs hμs x∥ ≤ (μ s).toReal*∥x∥ :=
-  by 
-    have  : 0 ≤ ∫a : α, ∥condexp_ind_L1_fin hm hs hμs x a∥ ∂μ 
-    exact integral_nonneg fun a => norm_nonneg _ 
-    rw [L1.norm_eq_integral_norm, ←Ennreal.to_real_of_real (norm_nonneg x), ←Ennreal.to_real_mul,
-      ←Ennreal.to_real_of_real this,
-      Ennreal.to_real_le_to_real Ennreal.of_real_ne_top (Ennreal.mul_ne_top hμs Ennreal.of_real_ne_top),
-      of_real_integral_norm_eq_lintegral_nnnorm]
-    swap
-    ·
-      rw [←mem_ℒp_one_iff_integrable]
-      exact Lp.mem_ℒp _ 
-    have h_eq : (∫⁻a, ∥condexp_ind_L1_fin hm hs hμs x a∥₊ ∂μ) = ∫⁻a, nnnorm (condexp_ind_smul hm hs hμs x a) ∂μ
-    ·
-      refine' lintegral_congr_ae _ 
-      refine' (condexp_ind_L1_fin_ae_eq_condexp_ind_smul hm hs hμs x).mono fun z hz => _ 
-      dsimp only 
-      rw [hz]
-    rw [h_eq, of_real_norm_eq_coe_nnnorm]
-    exact lintegral_nnnorm_condexp_ind_smul_le hm hs hμs x
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem norm_condexp_ind_L1_fin_le
+(hs : measurable_set s)
+(hμs : «expr ≠ »(μ s, «expr∞»()))
+(x : G) : «expr ≤ »(«expr∥ ∥»(condexp_ind_L1_fin hm hs hμs x), «expr * »((μ s).to_real, «expr∥ ∥»(x))) :=
+begin
+  have [] [":", expr «expr ≤ »(0, «expr∫ , ∂ »((a : α), «expr∥ ∥»(condexp_ind_L1_fin hm hs hμs x a), μ))] [],
+  from [expr integral_nonneg (λ a, norm_nonneg _)],
+  rw ["[", expr L1.norm_eq_integral_norm, ",", "<-", expr ennreal.to_real_of_real (norm_nonneg x), ",", "<-", expr ennreal.to_real_mul, ",", "<-", expr ennreal.to_real_of_real this, ",", expr ennreal.to_real_le_to_real ennreal.of_real_ne_top (ennreal.mul_ne_top hμs ennreal.of_real_ne_top), ",", expr of_real_integral_norm_eq_lintegral_nnnorm, "]"] [],
+  swap,
+  { rw ["[", "<-", expr mem_ℒp_one_iff_integrable, "]"] [],
+    exact [expr Lp.mem_ℒp _] },
+  have [ident h_eq] [":", expr «expr = »(«expr∫⁻ , ∂ »((a), «expr∥ ∥₊»(condexp_ind_L1_fin hm hs hμs x a), μ), «expr∫⁻ , ∂ »((a), nnnorm (condexp_ind_smul hm hs hμs x a), μ))] [],
+  { refine [expr lintegral_congr_ae _],
+    refine [expr (condexp_ind_L1_fin_ae_eq_condexp_ind_smul hm hs hμs x).mono (λ z hz, _)],
+    dsimp ["only"] [] [] [],
+    rw [expr hz] [] },
+  rw ["[", expr h_eq, ",", expr of_real_norm_eq_coe_nnnorm, "]"] [],
+  exact [expr lintegral_nnnorm_condexp_ind_smul_le hm hs hμs x]
+end
 
-theorem condexp_ind_L1_fin_disjoint_union (hs : MeasurableSet s) (ht : MeasurableSet t) (hμs : μ s ≠ ∞) (hμt : μ t ≠ ∞)
-  (hst : s ∩ t = ∅) (x : G) :
-  condexp_ind_L1_fin hm (hs.union ht)
-      ((measure_union_le s t).trans_lt (lt_top_iff_ne_top.mpr (Ennreal.add_ne_top.mpr ⟨hμs, hμt⟩))).Ne x =
-    condexp_ind_L1_fin hm hs hμs x+condexp_ind_L1_fin hm ht hμt x :=
-  by 
-    ext1 
-    have hμst := ((measure_union_le s t).trans_lt (lt_top_iff_ne_top.mpr (ennreal.add_ne_top.mpr ⟨hμs, hμt⟩))).Ne 
-    refine' (condexp_ind_L1_fin_ae_eq_condexp_ind_smul hm (hs.union ht) hμst x).trans _ 
-    refine' eventually_eq.trans _ (Lp.coe_fn_add _ _).symm 
-    have hs_eq := condexp_ind_L1_fin_ae_eq_condexp_ind_smul hm hs hμs x 
-    have ht_eq := condexp_ind_L1_fin_ae_eq_condexp_ind_smul hm ht hμt x 
-    refine' eventually_eq.trans _ (eventually_eq.add hs_eq.symm ht_eq.symm)
-    rw [condexp_ind_smul]
-    rw [indicator_const_Lp_disjoint_union hs ht hμs hμt hst (1 : ℝ)]
-    rw [(condexp_L2 ℝ hm).map_add]
-    pushCast 
-    rw [((to_span_singleton ℝ x).compLpL 2 μ).map_add]
-    refine' (Lp.coe_fn_add _ _).trans _ 
-    refine' eventually_of_forall fun y => _ 
-    rfl
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem condexp_ind_L1_fin_disjoint_union
+(hs : measurable_set s)
+(ht : measurable_set t)
+(hμs : «expr ≠ »(μ s, «expr∞»()))
+(hμt : «expr ≠ »(μ t, «expr∞»()))
+(hst : «expr = »(«expr ∩ »(s, t), «expr∅»()))
+(x : G) : «expr = »(condexp_ind_L1_fin hm (hs.union ht) ((measure_union_le s t).trans_lt (lt_top_iff_ne_top.mpr (ennreal.add_ne_top.mpr ⟨hμs, hμt⟩))).ne x, «expr + »(condexp_ind_L1_fin hm hs hμs x, condexp_ind_L1_fin hm ht hμt x)) :=
+begin
+  ext1 [] [],
+  have [ident hμst] [] [":=", expr ((measure_union_le s t).trans_lt (lt_top_iff_ne_top.mpr (ennreal.add_ne_top.mpr ⟨hμs, hμt⟩))).ne],
+  refine [expr (condexp_ind_L1_fin_ae_eq_condexp_ind_smul hm (hs.union ht) hμst x).trans _],
+  refine [expr eventually_eq.trans _ (Lp.coe_fn_add _ _).symm],
+  have [ident hs_eq] [] [":=", expr condexp_ind_L1_fin_ae_eq_condexp_ind_smul hm hs hμs x],
+  have [ident ht_eq] [] [":=", expr condexp_ind_L1_fin_ae_eq_condexp_ind_smul hm ht hμt x],
+  refine [expr eventually_eq.trans _ (eventually_eq.add hs_eq.symm ht_eq.symm)],
+  rw [expr condexp_ind_smul] [],
+  rw [expr indicator_const_Lp_disjoint_union hs ht hμs hμt hst (1 : exprℝ())] [],
+  rw [expr (condexp_L2 exprℝ() hm).map_add] [],
+  push_cast [] [],
+  rw [expr ((to_span_singleton exprℝ() x).comp_LpL 2 μ).map_add] [],
+  refine [expr (Lp.coe_fn_add _ _).trans _],
+  refine [expr eventually_of_forall (λ y, _)],
+  refl
+end
 
 end CondexpIndL1Fin
 
@@ -1338,15 +1380,20 @@ theorem norm_condexp_ind_L1_le (x : G) : ∥condexp_ind_L1 hm μ s x∥ ≤ (μ 
 theorem continuous_condexp_ind_L1 : Continuous fun x : G => condexp_ind_L1 hm μ s x :=
   continuous_of_linear_of_bound condexp_ind_L1_add condexp_ind_L1_smul norm_condexp_ind_L1_le
 
-theorem condexp_ind_L1_disjoint_union (hs : MeasurableSet s) (ht : MeasurableSet t) (hμs : μ s ≠ ∞) (hμt : μ t ≠ ∞)
-  (hst : s ∩ t = ∅) (x : G) : condexp_ind_L1 hm μ (s ∪ t) x = condexp_ind_L1 hm μ s x+condexp_ind_L1 hm μ t x :=
-  by 
-    have hμst : μ (s ∪ t) ≠ ∞
-    exact ((measure_union_le s t).trans_lt (lt_top_iff_ne_top.mpr (ennreal.add_ne_top.mpr ⟨hμs, hμt⟩))).Ne 
-    rw [condexp_ind_L1_of_measurable_set_of_measure_ne_top hs hμs x,
-      condexp_ind_L1_of_measurable_set_of_measure_ne_top ht hμt x,
-      condexp_ind_L1_of_measurable_set_of_measure_ne_top (hs.union ht) hμst x]
-    exact condexp_ind_L1_fin_disjoint_union hs ht hμs hμt hst x
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem condexp_ind_L1_disjoint_union
+(hs : measurable_set s)
+(ht : measurable_set t)
+(hμs : «expr ≠ »(μ s, «expr∞»()))
+(hμt : «expr ≠ »(μ t, «expr∞»()))
+(hst : «expr = »(«expr ∩ »(s, t), «expr∅»()))
+(x : G) : «expr = »(condexp_ind_L1 hm μ «expr ∪ »(s, t) x, «expr + »(condexp_ind_L1 hm μ s x, condexp_ind_L1 hm μ t x)) :=
+begin
+  have [ident hμst] [":", expr «expr ≠ »(μ «expr ∪ »(s, t), «expr∞»())] [],
+  from [expr ((measure_union_le s t).trans_lt (lt_top_iff_ne_top.mpr (ennreal.add_ne_top.mpr ⟨hμs, hμt⟩))).ne],
+  rw ["[", expr condexp_ind_L1_of_measurable_set_of_measure_ne_top hs hμs x, ",", expr condexp_ind_L1_of_measurable_set_of_measure_ne_top ht hμt x, ",", expr condexp_ind_L1_of_measurable_set_of_measure_ne_top (hs.union ht) hμst x, "]"] [],
+  exact [expr condexp_ind_L1_fin_disjoint_union hs ht hμs hμt hst x]
+end
 
 end CondexpIndL1
 
@@ -1490,72 +1537,66 @@ theorem set_integral_condexp_L1_clm_of_measure_ne_top (f : α →₁[μ] F') (hs
     ·
       exact continuous_set_integral s
 
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The integral of the conditional expectation `condexp_L1_clm` over an `m`-measurable set is equal
 to the integral of `f` on that set. See also `set_integral_condexp`, the similar statement for
 `condexp`. -/
-theorem set_integral_condexp_L1_clm (f : α →₁[μ] F') (hs : measurable_set[m] s) :
-  (∫x in s, condexp_L1_clm hm μ f x ∂μ) = ∫x in s, f x ∂μ :=
-  by 
-    let S := spanning_sets (μ.trim hm)
-    have hS_meas : ∀ i, measurable_set[m] (S i) := measurable_spanning_sets (μ.trim hm)
-    have hS_meas0 : ∀ i, MeasurableSet (S i) := fun i => hm _ (hS_meas i)
-    have hs_eq : s = ⋃i, S i ∩ s
-    ·
-      simpRw [Set.inter_comm]
-      rw [←Set.inter_Union, Union_spanning_sets (μ.trim hm), Set.inter_univ]
-    have hS_finite : ∀ i, μ (S i ∩ s) < ∞
-    ·
-      refine' fun i => (measure_mono (Set.inter_subset_left _ _)).trans_lt _ 
-      have hS_finite_trim := measure_spanning_sets_lt_top (μ.trim hm) i 
-      rwa [trim_measurable_set_eq hm (hS_meas i)] at hS_finite_trim 
-    have h_mono : Monotone fun i => S i ∩ s
-    ·
-      intro i j hij x 
-      simpRw [Set.mem_inter_iff]
-      exact fun h => ⟨monotone_spanning_sets (μ.trim hm) hij h.1, h.2⟩
-    have h_eq_forall : (fun i => ∫x in S i ∩ s, condexp_L1_clm hm μ f x ∂μ) = fun i => ∫x in S i ∩ s, f x ∂μ 
-    exact
-      funext
-        fun i =>
-          set_integral_condexp_L1_clm_of_measure_ne_top f (@MeasurableSet.inter α m _ _ (hS_meas i) hs)
-            (hS_finite i).Ne 
-    have h_right : tendsto (fun i => ∫x in S i ∩ s, f x ∂μ) at_top (𝓝 (∫x in s, f x ∂μ))
-    ·
-      have h :=
-        tendsto_set_integral_of_monotone (fun i => (hS_meas0 i).inter (hm s hs)) h_mono
-          (L1.integrable_coe_fn f).IntegrableOn 
-      rwa [←hs_eq] at h 
-    have h_left :
-      tendsto (fun i => ∫x in S i ∩ s, condexp_L1_clm hm μ f x ∂μ) at_top (𝓝 (∫x in s, condexp_L1_clm hm μ f x ∂μ))
-    ·
-      have h :=
-        tendsto_set_integral_of_monotone (fun i => (hS_meas0 i).inter (hm s hs)) h_mono
-          (L1.integrable_coe_fn (condexp_L1_clm hm μ f)).IntegrableOn 
-      rwa [←hs_eq] at h 
-    rw [h_eq_forall] at h_left 
-    exact tendsto_nhds_unique h_left h_right
+theorem set_integral_condexp_L1_clm
+(f : «expr →₁[ ] »(α, μ, F'))
+(hs : «exprmeasurable_set[ ]»(m) s) : «expr = »(«expr∫ in , ∂ »((x), s, condexp_L1_clm hm μ f x, μ), «expr∫ in , ∂ »((x), s, f x, μ)) :=
+begin
+  let [ident S] [] [":=", expr spanning_sets (μ.trim hm)],
+  have [ident hS_meas] [":", expr ∀
+   i, «exprmeasurable_set[ ]»(m) (S i)] [":=", expr measurable_spanning_sets (μ.trim hm)],
+  have [ident hS_meas0] [":", expr ∀ i, measurable_set (S i)] [":=", expr λ i, hm _ (hS_meas i)],
+  have [ident hs_eq] [":", expr «expr = »(s, «expr⋃ , »((i), «expr ∩ »(S i, s)))] [],
+  { simp_rw [expr set.inter_comm] [],
+    rw ["[", "<-", expr set.inter_Union, ",", expr Union_spanning_sets (μ.trim hm), ",", expr set.inter_univ, "]"] [] },
+  have [ident hS_finite] [":", expr ∀ i, «expr < »(μ «expr ∩ »(S i, s), «expr∞»())] [],
+  { refine [expr λ i, (measure_mono (set.inter_subset_left _ _)).trans_lt _],
+    have [ident hS_finite_trim] [] [":=", expr measure_spanning_sets_lt_top (μ.trim hm) i],
+    rwa [expr trim_measurable_set_eq hm (hS_meas i)] ["at", ident hS_finite_trim] },
+  have [ident h_mono] [":", expr monotone (λ i, «expr ∩ »(S i, s))] [],
+  { intros [ident i, ident j, ident hij, ident x],
+    simp_rw [expr set.mem_inter_iff] [],
+    exact [expr λ h, ⟨monotone_spanning_sets (μ.trim hm) hij h.1, h.2⟩] },
+  have [ident h_eq_forall] [":", expr «expr = »(λ
+    i, «expr∫ in , ∂ »((x), «expr ∩ »(S i, s), condexp_L1_clm hm μ f x, μ), λ
+    i, «expr∫ in , ∂ »((x), «expr ∩ »(S i, s), f x, μ))] [],
+  from [expr funext (λ
+    i, set_integral_condexp_L1_clm_of_measure_ne_top f (@measurable_set.inter α m _ _ (hS_meas i) hs) (hS_finite i).ne)],
+  have [ident h_right] [":", expr tendsto (λ
+    i, «expr∫ in , ∂ »((x), «expr ∩ »(S i, s), f x, μ)) at_top (expr𝓝() «expr∫ in , ∂ »((x), s, f x, μ))] [],
+  { have [ident h] [] [":=", expr tendsto_set_integral_of_monotone (λ
+      i, (hS_meas0 i).inter (hm s hs)) h_mono (L1.integrable_coe_fn f).integrable_on],
+    rwa ["<-", expr hs_eq] ["at", ident h] },
+  have [ident h_left] [":", expr tendsto (λ
+    i, «expr∫ in , ∂ »((x), «expr ∩ »(S i, s), condexp_L1_clm hm μ f x, μ)) at_top (expr𝓝() «expr∫ in , ∂ »((x), s, condexp_L1_clm hm μ f x, μ))] [],
+  { have [ident h] [] [":=", expr tendsto_set_integral_of_monotone (λ
+      i, (hS_meas0 i).inter (hm s hs)) h_mono (L1.integrable_coe_fn (condexp_L1_clm hm μ f)).integrable_on],
+    rwa ["<-", expr hs_eq] ["at", ident h] },
+  rw [expr h_eq_forall] ["at", ident h_left],
+  exact [expr tendsto_nhds_unique h_left h_right]
+end
 
-theorem ae_measurable'_condexp_L1_clm (f : α →₁[μ] F') : ae_measurable' m (condexp_L1_clm hm μ f) μ :=
-  by 
-    refine' Lp.induction Ennreal.one_ne_top (fun f : α →₁[μ] F' => ae_measurable' m (condexp_L1_clm hm μ f) μ) _ _ _ f
-    ·
-      intro c s hs hμs 
-      rw [condexp_L1_clm_indicator_const hs hμs.ne c]
-      exact ae_measurable'_condexp_ind hs hμs.ne c
-    ·
-      intro f g hf hg h_disj hfm hgm 
-      rw [(condexp_L1_clm hm μ).map_add]
-      refine' ae_measurable'.congr _ (coe_fn_add _ _).symm 
-      exact ae_measurable'.add hfm hgm
-    ·
-      have  :
-        { f : Lp F' 1 μ | ae_measurable' m (condexp_L1_clm hm μ f) μ } =
-          condexp_L1_clm hm μ ⁻¹' { f | ae_measurable' m f μ }
-      ·
-        rfl 
-      rw [this]
-      refine' IsClosed.preimage (condexp_L1_clm hm μ).Continuous _ 
-      exact is_closed_ae_measurable' hm
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ae_measurable'_condexp_L1_clm (f : «expr →₁[ ] »(α, μ, F')) : ae_measurable' m (condexp_L1_clm hm μ f) μ :=
+begin
+  refine [expr Lp.induction ennreal.one_ne_top (λ
+    f : «expr →₁[ ] »(α, μ, F'), ae_measurable' m (condexp_L1_clm hm μ f) μ) _ _ _ f],
+  { intros [ident c, ident s, ident hs, ident hμs],
+    rw [expr condexp_L1_clm_indicator_const hs hμs.ne c] [],
+    exact [expr ae_measurable'_condexp_ind hs hμs.ne c] },
+  { intros [ident f, ident g, ident hf, ident hg, ident h_disj, ident hfm, ident hgm],
+    rw [expr (condexp_L1_clm hm μ).map_add] [],
+    refine [expr ae_measurable'.congr _ (coe_fn_add _ _).symm],
+    exact [expr ae_measurable'.add hfm hgm] },
+  { have [] [":", expr «expr = »({f : Lp F' 1 μ | ae_measurable' m (condexp_L1_clm hm μ f) μ}, «expr ⁻¹' »(condexp_L1_clm hm μ, {f | ae_measurable' m f μ}))] [],
+    by refl,
+    rw [expr this] [],
+    refine [expr is_closed.preimage (condexp_L1_clm hm μ).continuous _],
+    exact [expr is_closed_ae_measurable' hm] }
+end
 
 theorem Lp_meas_to_Lp_trim_lie_symm_indicator [NormedSpace ℝ F] {μ : Measureₓ α} (hs : measurable_set[m] s)
   (hμs : μ.trim hm s ≠ ∞) (c : F) :
@@ -1568,37 +1609,29 @@ theorem Lp_meas_to_Lp_trim_lie_symm_indicator [NormedSpace ℝ F] {μ : Measure�
     refine' (Lp_trim_to_Lp_meas_ae_eq hm _).trans _ 
     exact (ae_eq_of_ae_eq_trim indicator_const_Lp_coe_fn).trans indicator_const_Lp_coe_fn.symm
 
-theorem condexp_L1_clm_Lp_meas (f : Lp_meas F' ℝ m 1 μ) : condexp_L1_clm hm μ (f : α →₁[μ] F') = «expr↑ » f :=
-  by 
-    let g := Lp_meas_to_Lp_trim_lie F' ℝ 1 μ hm f 
-    have hfg : f = (Lp_meas_to_Lp_trim_lie F' ℝ 1 μ hm).symm g
-    ·
-      simp only [LinearIsometryEquiv.symm_apply_apply]
-    rw [hfg]
-    refine'
-      @Lp.induction α F' m _ _ _ _ 1 (μ.trim hm) _ Ennreal.coe_ne_top
-        (fun g : α →₁[μ.trim hm] F' =>
-          condexp_L1_clm hm μ ((Lp_meas_to_Lp_trim_lie F' ℝ 1 μ hm).symm g : α →₁[μ] F') =
-            «expr↑ » ((Lp_meas_to_Lp_trim_lie F' ℝ 1 μ hm).symm g))
-        _ _ _ g
-    ·
-      intro c s hs hμs 
-      rw [Lp.simple_func.coe_indicator_const, Lp_meas_to_Lp_trim_lie_symm_indicator hs hμs.ne c,
-        condexp_L1_clm_indicator_const_Lp]
-      exact condexp_ind_of_measurable hs ((le_trim hm).trans_lt hμs).Ne c
-    ·
-      intro f g hf hg hfg_disj hf_eq hg_eq 
-      rw [LinearIsometryEquiv.map_add]
-      pushCast 
-      rw [map_add, hf_eq, hg_eq]
-    ·
-      refine' is_closed_eq _ _
-      ·
-        refine' (condexp_L1_clm hm μ).Continuous.comp (continuous_induced_dom.comp _)
-        exact LinearIsometryEquiv.continuous _
-      ·
-        refine' continuous_induced_dom.comp _ 
-        exact LinearIsometryEquiv.continuous _
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem condexp_L1_clm_Lp_meas
+(f : Lp_meas F' exprℝ() m 1 μ) : «expr = »(condexp_L1_clm hm μ (f : «expr →₁[ ] »(α, μ, F')), «expr↑ »(f)) :=
+begin
+  let [ident g] [] [":=", expr Lp_meas_to_Lp_trim_lie F' exprℝ() 1 μ hm f],
+  have [ident hfg] [":", expr «expr = »(f, (Lp_meas_to_Lp_trim_lie F' exprℝ() 1 μ hm).symm g)] [],
+  by simp [] [] ["only"] ["[", expr linear_isometry_equiv.symm_apply_apply, "]"] [] [],
+  rw [expr hfg] [],
+  refine [expr @Lp.induction α F' m _ _ _ _ 1 (μ.trim hm) _ ennreal.coe_ne_top (λ
+    g : «expr →₁[ ] »(α, μ.trim hm, F'), «expr = »(condexp_L1_clm hm μ ((Lp_meas_to_Lp_trim_lie F' exprℝ() 1 μ hm).symm g : «expr →₁[ ] »(α, μ, F')), «expr↑ »((Lp_meas_to_Lp_trim_lie F' exprℝ() 1 μ hm).symm g))) _ _ _ g],
+  { intros [ident c, ident s, ident hs, ident hμs],
+    rw ["[", expr Lp.simple_func.coe_indicator_const, ",", expr Lp_meas_to_Lp_trim_lie_symm_indicator hs hμs.ne c, ",", expr condexp_L1_clm_indicator_const_Lp, "]"] [],
+    exact [expr condexp_ind_of_measurable hs ((le_trim hm).trans_lt hμs).ne c] },
+  { intros [ident f, ident g, ident hf, ident hg, ident hfg_disj, ident hf_eq, ident hg_eq],
+    rw [expr linear_isometry_equiv.map_add] [],
+    push_cast [] [],
+    rw ["[", expr map_add, ",", expr hf_eq, ",", expr hg_eq, "]"] [] },
+  { refine [expr is_closed_eq _ _],
+    { refine [expr (condexp_L1_clm hm μ).continuous.comp (continuous_induced_dom.comp _)],
+      exact [expr linear_isometry_equiv.continuous _] },
+    { refine [expr continuous_induced_dom.comp _],
+      exact [expr linear_isometry_equiv.continuous _] } }
+end
 
 theorem condexp_L1_clm_of_ae_measurable' (f : α →₁[μ] F') (hfm : ae_measurable' m f μ) : condexp_L1_clm hm μ f = f :=
   condexp_L1_clm_Lp_meas (⟨f, hfm⟩ : Lp_meas F' ℝ m 1 μ)
@@ -1829,13 +1862,14 @@ theorem condexp_smul (c : 𝕜) (f : α → F') : μ[c • f|hm] =ᵐ[μ] c • 
       refine' (@condexp_undef _ _ _ _ _ _ _ _ _ _ _ hm _ _ hf).mono fun x hx => _ 
       rw [Pi.zero_apply, Pi.smul_apply, hx, Pi.zero_apply, smul_zero]
 
-theorem condexp_neg (f : α → F') : μ[-f|hm] =ᵐ[μ] -μ[f|hm] :=
-  by 
-    letI this : Module ℝ (α → F') := @Pi.module α (fun _ => F') ℝ _ _ fun _ => inferInstance <;>
-      calc μ[-f|hm] = μ[(-1 : ℝ) • f|hm] :=
-        by 
-          rw [neg_one_smul ℝ f]_ =ᵐ[μ] (-1 : ℝ) • μ[f|hm] :=
-        condexp_smul (-1) f _ = -μ[f|hm] := neg_one_smul ℝ (μ[f|hm])
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem condexp_neg
+(f : α → F') : «expr =ᵐ[ ] »(«expr [ | ]»(μ, «expr- »(f), hm), μ, «expr- »(«expr [ | ]»(μ, f, hm))) :=
+by letI [] [":", expr module exprℝ() (α → F')] [":=", expr @pi.module α (λ
+  _, F') exprℝ() _ _ (λ _, infer_instance)]; calc
+  «expr = »(«expr [ | ]»(μ, «expr- »(f), hm), «expr [ | ]»(μ, «expr • »((«expr- »(1) : exprℝ()), f), hm)) : by rw [expr neg_one_smul exprℝ() f] []
+  «expr =ᵐ[ ] »(..., μ, «expr • »((«expr- »(1) : exprℝ()), «expr [ | ]»(μ, f, hm))) : condexp_smul «expr- »(1) f
+  «expr = »(..., «expr- »(«expr [ | ]»(μ, f, hm))) : neg_one_smul exprℝ() «expr [ | ]»(μ, f, hm)
 
 theorem condexp_sub (hf : integrable f μ) (hg : integrable g μ) : μ[f - g|hm] =ᵐ[μ] μ[f|hm] - μ[g|hm] :=
   by 

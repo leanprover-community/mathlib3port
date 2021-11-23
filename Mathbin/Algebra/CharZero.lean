@@ -241,7 +241,7 @@ theorem RingHom.char_zero_iff {ϕ : R →+* S} (hϕ : Function.Injective ϕ) : C
             rwa [←@Nat.cast_inj R _ _ hR, ←hϕ.eq_iff, ϕ.map_nat_cast, ϕ.map_nat_cast]⟩,
     fun hS =>
       by 
-        exactI ϕ.char_zero⟩
+        exact ϕ.char_zero⟩
 
 end RingHom
 

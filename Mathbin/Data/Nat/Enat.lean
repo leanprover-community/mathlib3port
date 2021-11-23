@@ -1,6 +1,6 @@
-import Mathbin.Data.Pfun 
+import Mathbin.Data.Equiv.MulAdd 
 import Mathbin.Tactic.NormNum 
-import Mathbin.Data.Equiv.MulAdd
+import Mathbin.Data.Part
 
 /-!
 # Natural numbers with infinity
@@ -546,7 +546,7 @@ theorem to_with_top_coe' (n : ℕ) {h : Decidable (n : Enat).Dom} : to_with_top 
 theorem to_with_top_le {x y : Enat} :
   ∀ [Decidable x.dom] [Decidable y.dom],
     by 
-      exactI to_with_top x ≤ to_with_top y ↔ x ≤ y :=
+      exact to_with_top x ≤ to_with_top y ↔ x ≤ y :=
   Enat.cases_on y
     (by 
       simp )
@@ -656,7 +656,7 @@ noncomputable def with_top_add_equiv : Enat ≃+ WithTop ℕ :=
 
 end WithTopEquiv
 
--- error in Data.Nat.Enat: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Nat.Enat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lt_wf : well_founded ((«expr < ») : enat → enat → exprProp()) :=
 show well_founded (λ
  a
@@ -680,14 +680,16 @@ theorem find_get (h : (find P).Dom) : (find P).get h = Nat.findₓ h :=
 theorem find_dom (h : ∃ n, P n) : (find P).Dom :=
   h
 
-theorem lt_find (n : ℕ) (h : ∀ m _ : m ≤ n, ¬P m) : (n : Enat) < find P :=
-  by 
-    rw [coe_lt_iff]
-    intro h' 
-    rw [find_get]
-    have  := @Nat.find_specₓ P _ h' 
-    contrapose! this 
-    exact h _ this
+-- error in Data.Nat.Enat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lt_find (n : exprℕ()) (h : ∀ m «expr ≤ » n, «expr¬ »(P m)) : «expr < »((n : enat), find P) :=
+begin
+  rw [expr coe_lt_iff] [],
+  intro [ident h'],
+  rw [expr find_get] [],
+  have [] [] [":=", expr @nat.find_spec P _ h'],
+  contrapose ["!"] [ident this],
+  exact [expr h _ this]
+end
 
 theorem lt_find_iff (n : ℕ) : (n : Enat) < find P ↔ ∀ m _ : m ≤ n, ¬P m :=
   by 

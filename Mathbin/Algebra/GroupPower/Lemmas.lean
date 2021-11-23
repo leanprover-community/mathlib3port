@@ -68,10 +68,16 @@ def invertibleOfPowEqOne (x : M) (n : ℕ) (hx : x ^ n = 1) (hn : 0 < n) : Inver
     convert hx 
     exact tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ hn)
 
-theorem is_unit_of_pow_eq_one (x : M) (n : ℕ) (hx : x ^ n = 1) (hn : 0 < n) : IsUnit x :=
-  by 
-    haveI  := invertibleOfPowEqOne x n hx hn 
-    exact is_unit_of_invertible x
+-- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_unit_of_pow_eq_one
+(x : M)
+(n : exprℕ())
+(hx : «expr = »(«expr ^ »(x, n), 1))
+(hn : «expr < »(0, n)) : is_unit x :=
+begin
+  haveI [] [] [":=", expr invertible_of_pow_eq_one x n hx hn],
+  exact [expr is_unit_of_invertible x]
+end
 
 theorem smul_pow [MulAction M N] [IsScalarTower M N N] [SmulCommClass M N N] (k : M) (x : N) (p : ℕ) :
   (k • x) ^ p = k ^ p • x ^ p :=
@@ -294,34 +300,30 @@ theorem abs_zsmul {α : Type _} [LinearOrderedAddCommGroup α] (n : ℤ) (a : α
       rw [←abs_neg (n • a), ←neg_zsmul, ←abs_neg n, ←h, coe_nat_zsmul, coe_nat_abs, coe_nat_zsmul]
       exact abs_nsmul m _
 
-theorem abs_add_eq_add_abs_le {α : Type _} [LinearOrderedAddCommGroup α] {a b : α} (hle : a ≤ b) :
-  (|a+b| = |a|+|b|) ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 :=
-  by 
-    byCases' a0 : 0 ≤ a <;> byCases' b0 : 0 ≤ b
-    ·
-      simp [a0, b0, abs_of_nonneg, add_nonneg a0 b0]
-    ·
-      exact (lt_irreflₓ (0 : α) (a0.trans_lt (hle.trans_lt (not_le.mp b0)))).elim 
-    any_goals 
-      simp [(not_le.mp a0).le, (not_le.mp b0).le, abs_of_nonpos, add_nonpos, add_commₓ]
-    obtain F := not_le.mp a0 
-    have  : ((|a+b| = (-a)+b) ↔ b ≤ 0) ↔ ((|a+b| = |a|+|b|) ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0)
-    ·
-      simp [a0, b0, abs_of_neg, abs_of_nonneg, F, F.le]
-    refine'
-      this.mp
-        ⟨fun h => _,
-          fun h =>
-            by 
-              simp only [le_antisymmₓ h b0, abs_of_neg F, add_zeroₓ]⟩
-    byCases' ba : (a+b) ≤ 0
-    ·
-      refine' le_of_eqₓ (eq_zero_of_neg_eq _)
-      rwa [abs_of_nonpos ba, neg_add_rev, add_commₓ, add_right_injₓ] at h
-    ·
-      refine' (lt_irreflₓ (0 : α) _).elim 
-      rw [abs_of_pos (not_le.mp ba), add_left_injₓ] at h 
-      rwa [eq_zero_of_neg_eq h.symm] at F
+-- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem abs_add_eq_add_abs_le
+{α : Type*}
+[linear_ordered_add_comm_group α]
+{a b : α}
+(hle : «expr ≤ »(a, b)) : «expr ↔ »(«expr = »(«expr| |»(«expr + »(a, b)), «expr + »(«expr| |»(a), «expr| |»(b))), «expr ∨ »(«expr ∧ »(«expr ≤ »(0, a), «expr ≤ »(0, b)), «expr ∧ »(«expr ≤ »(a, 0), «expr ≤ »(b, 0)))) :=
+begin
+  by_cases [expr a0, ":", expr «expr ≤ »(0, a)]; by_cases [expr b0, ":", expr «expr ≤ »(0, b)],
+  { simp [] [] [] ["[", expr a0, ",", expr b0, ",", expr abs_of_nonneg, ",", expr add_nonneg a0 b0, "]"] [] [] },
+  { exact [expr (lt_irrefl (0 : α) (a0.trans_lt (hle.trans_lt (not_le.mp b0)))).elim] },
+  any_goals { simp [] [] [] ["[", expr (not_le.mp a0).le, ",", expr (not_le.mp b0).le, ",", expr abs_of_nonpos, ",", expr add_nonpos, ",", expr add_comm, "]"] [] [] },
+  obtain [ident F, ":=", expr not_le.mp a0],
+  have [] [":", expr «expr ↔ »(«expr ↔ »(«expr = »(«expr| |»(«expr + »(a, b)), «expr + »(«expr- »(a), b)), «expr ≤ »(b, 0)), «expr ↔ »(«expr = »(«expr| |»(«expr + »(a, b)), «expr + »(«expr| |»(a), «expr| |»(b))), «expr ∨ »(«expr ∧ »(«expr ≤ »(0, a), «expr ≤ »(0, b)), «expr ∧ »(«expr ≤ »(a, 0), «expr ≤ »(b, 0)))))] [],
+  { simp [] [] [] ["[", expr a0, ",", expr b0, ",", expr abs_of_neg, ",", expr abs_of_nonneg, ",", expr F, ",", expr F.le, "]"] [] [] },
+  refine [expr this.mp ⟨λ
+    h, _, λ
+    h, by simp [] [] ["only"] ["[", expr le_antisymm h b0, ",", expr abs_of_neg F, ",", expr add_zero, "]"] [] []⟩],
+  by_cases [expr ba, ":", expr «expr ≤ »(«expr + »(a, b), 0)],
+  { refine [expr le_of_eq (eq_zero_of_neg_eq _)],
+    rwa ["[", expr abs_of_nonpos ba, ",", expr neg_add_rev, ",", expr add_comm, ",", expr add_right_inj, "]"] ["at", ident h] },
+  { refine [expr (lt_irrefl (0 : α) _).elim],
+    rw ["[", expr abs_of_pos (not_le.mp ba), ",", expr add_left_inj, "]"] ["at", ident h],
+    rwa [expr eq_zero_of_neg_eq h.symm] ["at", ident F] }
+end
 
 theorem abs_add_eq_add_abs_iff {α : Type _} [LinearOrderedAddCommGroup α] (a b : α) :
   (|a+b| = |a|+|b|) ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 :=
@@ -344,27 +346,17 @@ theorem zsmul_le_zsmul_iff' {n : ℤ} (hn : 0 < n) {a₁ a₂ : A} : n • a₁ 
 theorem zsmul_lt_zsmul_iff' {n : ℤ} (hn : 0 < n) {a₁ a₂ : A} : n • a₁ < n • a₂ ↔ a₁ < a₂ :=
   (zsmul_strict_mono_right A hn).lt_iff_lt
 
--- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem nsmul_le_nsmul_iff
-{a : A}
-{n m : exprℕ()}
-(ha : «expr < »(0, a)) : «expr ↔ »(«expr ≤ »(«expr • »(n, a), «expr • »(m, a)), «expr ≤ »(n, m)) :=
-begin
-  refine [expr ⟨λ h, _, «expr $ »(nsmul_le_nsmul, le_of_lt ha)⟩],
-  by_contra [ident H],
-  exact [expr lt_irrefl _ (lt_of_lt_of_le (nsmul_lt_nsmul ha (not_le.mp H)) h)]
-end
+theorem nsmul_le_nsmul_iff {a : A} {n m : ℕ} (ha : 0 < a) : n • a ≤ m • a ↔ n ≤ m :=
+  by 
+    refine' ⟨fun h => _, nsmul_le_nsmul$ le_of_ltₓ ha⟩
+    byContra H 
+    exact lt_irreflₓ _ (lt_of_lt_of_leₓ (nsmul_lt_nsmul ha (not_le.mp H)) h)
 
--- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem nsmul_lt_nsmul_iff
-{a : A}
-{n m : exprℕ()}
-(ha : «expr < »(0, a)) : «expr ↔ »(«expr < »(«expr • »(n, a), «expr • »(m, a)), «expr < »(n, m)) :=
-begin
-  refine [expr ⟨λ h, _, nsmul_lt_nsmul ha⟩],
-  by_contra [ident H],
-  exact [expr lt_irrefl _ (lt_of_le_of_lt «expr $ »(nsmul_le_nsmul (le_of_lt ha), not_lt.mp H) h)]
-end
+theorem nsmul_lt_nsmul_iff {a : A} {n m : ℕ} (ha : 0 < a) : n • a < m • a ↔ n < m :=
+  by 
+    refine' ⟨fun h => _, nsmul_lt_nsmul ha⟩
+    byContra H 
+    exact lt_irreflₓ _ (lt_of_le_of_ltₓ (nsmul_le_nsmul (le_of_ltₓ ha)$ not_lt.mp H) h)
 
 /-- See also `smul_right_injective`. TODO: provide a `no_zero_smul_divisors` instance. We can't
 do that here because importing that definition would create import cycles. -/
@@ -548,10 +540,16 @@ theorem pow_lt_pow_of_lt_one (h : 0 < a) (ha : a < 1) {i j : ℕ} (hij : i < j) 
   by 
     rw [hk] <;> exact pow_lt_pow_of_lt_one_aux h ha _ _
 
-theorem pow_lt_pow_iff_of_lt_one {n m : ℕ} (hpos : 0 < a) (h : a < 1) : a ^ m < a ^ n ↔ n < m :=
-  by 
-    have  : StrictMono fun n : OrderDual ℕ => a ^ (id n : ℕ) := fun m n => pow_lt_pow_of_lt_one hpos h 
-    exact this.lt_iff_lt
+-- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pow_lt_pow_iff_of_lt_one
+{n m : exprℕ()}
+(hpos : «expr < »(0, a))
+(h : «expr < »(a, 1)) : «expr ↔ »(«expr < »(«expr ^ »(a, m), «expr ^ »(a, n)), «expr < »(n, m)) :=
+begin
+  have [] [":", expr strict_mono (λ
+    n : order_dual exprℕ(), «expr ^ »(a, (id n : exprℕ())))] [":=", expr λ m n, pow_lt_pow_of_lt_one hpos h],
+  exact [expr this.lt_iff_lt]
+end
 
 theorem pow_le_pow_of_le_one (h : 0 ≤ a) (ha : a ≤ 1) {i j : ℕ} (hij : i ≤ j) : a ^ j ≤ a ^ i :=
   let ⟨k, hk⟩ := Nat.exists_eq_add_of_le hij 
@@ -570,14 +568,18 @@ section LinearOrderedSemiring
 
 variable[LinearOrderedSemiring R]
 
-theorem sign_cases_of_C_mul_pow_nonneg {C r : R} (h : ∀ n : ℕ, 0 ≤ C*r ^ n) : C = 0 ∨ 0 < C ∧ 0 ≤ r :=
-  by 
-    have  : 0 ≤ C
-    ·
-      simpa only [pow_zeroₓ, mul_oneₓ] using h 0
-    refine' this.eq_or_lt.elim (fun h => Or.inl h.symm) fun hC => Or.inr ⟨hC, _⟩
-    refine' nonneg_of_mul_nonneg_left _ hC 
-    simpa only [pow_oneₓ] using h 1
+-- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sign_cases_of_C_mul_pow_nonneg
+{C r : R}
+(h : ∀
+ n : exprℕ(), «expr ≤ »(0, «expr * »(C, «expr ^ »(r, n)))) : «expr ∨ »(«expr = »(C, 0), «expr ∧ »(«expr < »(0, C), «expr ≤ »(0, r))) :=
+begin
+  have [] [":", expr «expr ≤ »(0, C)] [],
+  by simpa [] [] ["only"] ["[", expr pow_zero, ",", expr mul_one, "]"] [] ["using", expr h 0],
+  refine [expr this.eq_or_lt.elim (λ h, or.inl h.symm) (λ hC, or.inr ⟨hC, _⟩)],
+  refine [expr nonneg_of_mul_nonneg_left _ hC],
+  simpa [] [] ["only"] ["[", expr pow_one, "]"] [] ["using", expr h 1]
+end
 
 end LinearOrderedSemiring
 
@@ -1095,7 +1097,7 @@ theorem Int.to_add_pow (a : Multiplicative ℤ) (b : ℕ) : to_add (a ^ b) = to_
   by 
     induction b <;> simp [mul_addₓ, pow_succₓ, add_commₓ]
 
--- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
 theorem int.to_add_zpow
 (a : multiplicative exprℤ())
@@ -1120,7 +1122,7 @@ theorem conj_pow' (u : Units M) (x : M) (n : ℕ) : ((«expr↑ » (u⁻¹)*x)*u
 
 end Units
 
-namespace Opposite
+namespace MulOpposite
 
 /-- Moving to the opposite monoid commutes with taking powers. -/
 @[simp]
@@ -1128,7 +1130,7 @@ theorem op_pow [Monoidₓ M] (x : M) (n : ℕ) : op (x ^ n) = op x ^ n :=
   rfl
 
 @[simp]
-theorem unop_pow [Monoidₓ M] (x : «expr ᵒᵖ» M) (n : ℕ) : unop (x ^ n) = unop x ^ n :=
+theorem unop_pow [Monoidₓ M] (x : «expr ᵐᵒᵖ» M) (n : ℕ) : unop (x ^ n) = unop x ^ n :=
   rfl
 
 /-- Moving to the opposite group or group_with_zero commutes with taking powers. -/
@@ -1137,8 +1139,8 @@ theorem op_zpow [DivInvMonoidₓ M] (x : M) (z : ℤ) : op (x ^ z) = op x ^ z :=
   rfl
 
 @[simp]
-theorem unop_zpow [DivInvMonoidₓ M] (x : «expr ᵒᵖ» M) (z : ℤ) : unop (x ^ z) = unop x ^ z :=
+theorem unop_zpow [DivInvMonoidₓ M] (x : «expr ᵐᵒᵖ» M) (z : ℤ) : unop (x ^ z) = unop x ^ z :=
   rfl
 
-end Opposite
+end MulOpposite
 

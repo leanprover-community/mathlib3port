@@ -83,29 +83,25 @@ theorem exp_neg_one_lt_d9 : exp (-1) < 0.3678794412 :=
     all_goals 
       normNum
 
-theorem log_two_near_10 : |log 2 - 287209 / 414355| ≤ 1 / (10^10) :=
-  by 
-    suffices  : |log 2 - 287209 / 414355| ≤ (1 / 17179869184)+1 / (10^10) - 1 / (2^34)
-    ·
-      normNum1  at *
-      assumption 
-    have t : |(2⁻¹ : ℝ)| = 2⁻¹
-    ·
-      rw [abs_of_pos]
-      normNum 
-    have z :=
-      Real.abs_log_sub_add_sum_range_le
-        (show |(2⁻¹ : ℝ)| < 1by 
-          rw [t]
-          normNum)
-        34
-    rw [t] at z 
-    normNum1  at z 
-    rw [one_div (2 : ℝ), log_inv, ←sub_eq_add_neg, _root_.abs_sub_comm] at z 
-    apply le_transₓ (_root_.abs_sub_le _ _ _) (add_le_add z _)
-    simpRw [sum_range_succ]
-    normNum 
-    rw [abs_of_pos] <;> normNum
+-- error in Data.Complex.ExponentialBounds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem log_two_near_10 : «expr ≤ »(«expr| |»(«expr - »(log 2, «expr / »(287209, 414355))), «expr / »(1, «expr ^ »(10, 10))) :=
+begin
+  suffices [] [":", expr «expr ≤ »(«expr| |»(«expr - »(log 2, «expr / »(287209, 414355))), «expr + »(«expr / »(1, 17179869184), «expr - »(«expr / »(1, «expr ^ »(10, 10)), «expr / »(1, «expr ^ »(2, 34)))))],
+  { norm_num1 ["at", "*"],
+    assumption },
+  have [ident t] [":", expr «expr = »(«expr| |»((«expr ⁻¹»(2) : exprℝ())), «expr ⁻¹»(2))] [],
+  { rw [expr abs_of_pos] [],
+    norm_num [] [] },
+  have [ident z] [] [":=", expr real.abs_log_sub_add_sum_range_le (show «expr < »(«expr| |»((«expr ⁻¹»(2) : exprℝ())), 1), by { rw [expr t] [],
+      norm_num [] [] }) 34],
+  rw [expr t] ["at", ident z],
+  norm_num1 ["at", ident z],
+  rw ["[", expr one_div (2 : exprℝ()), ",", expr log_inv, ",", "<-", expr sub_eq_add_neg, ",", expr _root_.abs_sub_comm, "]"] ["at", ident z],
+  apply [expr le_trans (_root_.abs_sub_le _ _ _) (add_le_add z _)],
+  simp_rw ["[", expr sum_range_succ, "]"] [],
+  norm_num [] [],
+  rw [expr abs_of_pos] []; norm_num [] []
+end
 
 theorem log_two_gt_d9 : 0.6931471803 < log 2 :=
   lt_of_lt_of_leₓ

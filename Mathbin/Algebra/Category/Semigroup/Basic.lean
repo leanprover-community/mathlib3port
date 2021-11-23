@@ -1,6 +1,6 @@
+import Mathbin.Algebra.PemptyInstances 
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom 
-import Mathbin.CategoryTheory.ConcreteCategory.ReflectsIsomorphisms 
-import Mathbin.Algebra.PemptyInstances
+import Mathbin.CategoryTheory.ReflectsIsomorphisms
 
 /-!
 # Category instances for has_mul, has_add, semigroup and add_semigroup
@@ -39,7 +39,7 @@ namespace Magma
 instance bundled_hom : bundled_hom @MulHom :=
   ⟨@MulHom.toFun, @MulHom.id, @MulHom.comp, @MulHom.coe_inj⟩
 
--- error in Algebra.Category.Semigroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Algebra.Category.Semigroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Magma
 
 attribute [toAdditive] Magma.largeCategory Magma.concreteCategory
@@ -92,7 +92,7 @@ namespace Semigroupₓₓ
 instance  : bundled_hom.parent_projection Semigroupₓ.toHasMul :=
   ⟨⟩
 
--- error in Algebra.Category.Semigroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Algebra.Category.Semigroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Semigroup
 
 attribute [toAdditive] Semigroupₓₓ.largeCategory Semigroupₓₓ.concreteCategory
@@ -221,7 +221,7 @@ instance Magma.forget_reflects_isos : reflects_isomorphisms (forget Magma.{u}) :
   { reflects :=
       fun X Y f _ =>
         by 
-          resetI 
+          skip 
           let i := as_iso ((forget Magma).map f)
           let e : X ≃* Y := { f, i.to_equiv with  }
           exact ⟨(is_iso.of_iso e.to_Magma_iso).1⟩ }
@@ -231,7 +231,7 @@ instance Semigroupₓₓ.forget_reflects_isos : reflects_isomorphisms (forget Se
   { reflects :=
       fun X Y f _ =>
         by 
-          resetI 
+          skip 
           let i := as_iso ((forget Semigroupₓₓ).map f)
           let e : X ≃* Y := { f, i.to_equiv with  }
           exact ⟨(is_iso.of_iso e.to_Semigroup_iso).1⟩ }

@@ -1,3 +1,4 @@
+import Mathbin.Logic.Relation 
 import Mathbin.Order.GaloisConnection
 
 /-!
@@ -81,12 +82,11 @@ def ker (f : α → β) : Setoidₓ α :=
 theorem ker_mk_eq (r : Setoidₓ α) : ker (@Quotientₓ.mk _ r) = r :=
   ext'$ fun x y => Quotientₓ.eq
 
-theorem ker_apply_mk_out {f : α → β} (a : α) :
-  f
-      (by 
-        haveI  := Setoidₓ.ker f <;> exact («expr⟦ ⟧» a).out) =
-    f a :=
-  @Quotientₓ.mk_out _ (Setoidₓ.ker f) a
+-- error in Data.Setoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ker_apply_mk_out
+{f : α → β}
+(a : α) : «expr = »(f (by haveI [] [] [":=", expr setoid.ker f]; exact [expr «expr⟦ ⟧»(a).out]), f a) :=
+@quotient.mk_out _ (setoid.ker f) a
 
 theorem ker_apply_mk_out' {f : α → β} (a : α) : f (Quotientₓ.mk' a : Quotientₓ$ Setoidₓ.ker f).out' = f a :=
   @Quotientₓ.mk_out' _ (Setoidₓ.ker f) a
@@ -163,7 +163,7 @@ theorem eq_top_iff {s : Setoidₓ α} : s = (⊤ : Setoidₓ α) ↔ ∀ x y : �
 
 /-- The inductively defined equivalence closure of a binary relation r is the infimum
     of the set of all equivalence relations containing r. -/
-theorem eqv_gen_eq (r : α → α → Prop) : EqvGen.setoid r = Inf { s : Setoidₓ α | ∀ ⦃x y⦄, r x y → s.rel x y } :=
+theorem eqv_gen_eq (r : α → α → Prop) : EqvGen.setoid r = Inf { s:Setoidₓ α | ∀ ⦃x y⦄, r x y → s.rel x y } :=
   le_antisymmₓ
     (fun _ _ H => EqvGen.ndrec (fun _ _ h _ hs => hs h) (refl' _) (fun _ _ _ => symm' _) (fun _ _ _ _ _ => trans' _) H)
     (Inf_le$ fun _ _ h => EqvGen.rel _ _ h)

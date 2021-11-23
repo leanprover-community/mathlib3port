@@ -177,7 +177,7 @@ variable(f : Type → Prop)
 
 namespace SlimCheck
 
--- error in Testing.SlimCheck.Testable: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Testing.SlimCheck.Testable: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- Result of trying to disprove `p`
 
 The constructors are:
@@ -209,7 +209,7 @@ protected def test_result.to_string {p} : test_result p → Stringₓ
 | test_result.gave_up n => s! "gave up {n} times"
 | test_result.failure a vs _ => s! "failed {vs}"
 
--- error in Testing.SlimCheck.Testable: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Testing.SlimCheck.Testable: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- configuration for testing a property -/
 @[derive #["[", expr has_reflect, ",", expr inhabited, "]"]]
 structure slim_check_cfg :=
@@ -389,7 +389,7 @@ def trace_if_giveup {p α β} [HasRepr α] (tracing_enabled : Bool) (var : Strin
 | test_result.gave_up _ => if tracing_enabled then trace s! " {var } := {reprₓ val}" else ·$ ()
 | _ => ·$ ()
 
--- error in Testing.SlimCheck.Testable: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Testing.SlimCheck.Testable: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
 /-- testable instance for a property iterating over the element of a list -/
 @[priority 5000]
 instance test_forall_in_list
@@ -691,9 +691,9 @@ not have to put them in themselves.
 /-- `add_existential_decorations p` adds `a `named_binder` annotation at the
 root of `p` if `p` is an existential quantification. -/
 unsafe def add_existential_decorations : expr → expr
-| e@(quote @Exists (%%α) (%%lam n bi d b)) =>
+| e@(quote.1 (@Exists (%%ₓα) (%%ₓlam n bi d b))) =>
   let n := toString n 
-  const `` named_binder [] (quote n : expr) e
+  const `` named_binder [] (quote.1 n : expr) e
 | e => e
 
 /-- Traverse the syntax of a proposition to find universal quantifiers
@@ -706,7 +706,7 @@ unsafe def add_decorations : expr → expr
       match e with 
       | pi n bi d b =>
         let n := toString n 
-        some$ const `` named_binder [] (quote n : expr) (pi n bi (add_existential_decorations d) (add_decorations b))
+        some$ const `` named_binder [] (quote.1 n : expr) (pi n bi (add_existential_decorations d) (add_decorations b))
       | e => none
 
 /-- `decorations_of p` is used as a hint to `mk_decorations` to specify
@@ -731,7 +731,7 @@ the quantifiers are annotated with `named_binder`.
 -/
 unsafe def mk_decorations : tactic Unit :=
   do 
-    let quote tactic.decorations_of (%%p) ← target 
+    let quote.1 (tactic.decorations_of (%%ₓp)) ← target 
     exact$ add_decorations p
 
 end Tactic

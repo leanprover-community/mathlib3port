@@ -70,56 +70,38 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : Polynomial R
         _ ≤ _ := card_roots_sub_C' hp
         
 
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` and `g` are quadratic polynomials, then the `f.eval a + g.eval b = 0` has a solution. -/
-theorem exists_root_sum_quadratic [Fintype R] {f g : Polynomial R} (hf2 : degree f = 2) (hg2 : degree g = 2)
-  (hR : Fintype.card R % 2 = 1) : ∃ a b, (f.eval a+g.eval b) = 0 :=
-  by 
-    letI this := Classical.decEq R <;>
-      exact
-        suffices ¬Disjoint (univ.image fun x : R => eval x f) (univ.image fun x : R => eval x (-g))by 
-          simp only [disjoint_left, mem_image] at this 
-          pushNeg  at this 
-          rcases this with ⟨x, ⟨a, _, ha⟩, ⟨b, _, hb⟩⟩
-          exact
-            ⟨a, b,
-              by 
-                rw [ha, ←hb, eval_neg, neg_add_selfₓ]⟩
-        fun hd : Disjoint _ _ =>
-          lt_irreflₓ (2*((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card)$
-            calc
-              (2*((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card) ≤ 2*Fintype.card R :=
-              Nat.mul_le_mul_leftₓ _ (Finset.card_le_univ _)
-              _ = Fintype.card R+Fintype.card R := two_mul _ 
-              _ <
-                (nat_degree
-                      f*(univ.image
-                        fun x : R => eval x f).card)+nat_degree (-g)*(univ.image fun x : R => eval x (-g)).card :=
-              add_lt_add_of_lt_of_le
-                (lt_of_le_of_neₓ
-                  (card_image_polynomial_eval
-                    (by 
-                      rw [hf2] <;>
-                        exact
-                          by 
-                            decide))
-                  (mt (congr_argₓ (· % 2))
-                    (by 
-                      simp [nat_degree_eq_of_degree_eq_some hf2, hR])))
-                (card_image_polynomial_eval
-                  (by 
-                    rw [degree_neg, hg2] <;>
-                      exact
-                        by 
-                          decide))
-              _ = 2*((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card :=
-              by 
-                rw [card_disjoint_union hd] <;>
-                  simp [nat_degree_eq_of_degree_eq_some hf2, nat_degree_eq_of_degree_eq_some hg2, bit0, mul_addₓ]
-              
+theorem exists_root_sum_quadratic
+[fintype R]
+{f g : polynomial R}
+(hf2 : «expr = »(degree f, 2))
+(hg2 : «expr = »(degree g, 2))
+(hR : «expr = »(«expr % »(fintype.card R, 2), 1)) : «expr∃ , »((a b), «expr = »(«expr + »(f.eval a, g.eval b), 0)) :=
+by letI [] [] [":=", expr classical.dec_eq R]; exact [expr suffices «expr¬ »(disjoint (univ.image (λ
+    x : R, eval x f)) (univ.image (λ x : R, eval x «expr- »(g)))), begin
+   simp [] [] ["only"] ["[", expr disjoint_left, ",", expr mem_image, "]"] [] ["at", ident this],
+   push_neg ["at", ident this],
+   rcases [expr this, "with", "⟨", ident x, ",", "⟨", ident a, ",", "_", ",", ident ha, "⟩", ",", "⟨", ident b, ",", "_", ",", ident hb, "⟩", "⟩"],
+   exact [expr ⟨a, b, by rw ["[", expr ha, ",", "<-", expr hb, ",", expr eval_neg, ",", expr neg_add_self, "]"] []⟩]
+ end,
+ assume
+ hd : disjoint _ _, «expr $ »(lt_irrefl «expr * »(2, «expr ∪ »(univ.image (λ
+     x : R, eval x f), univ.image (λ x : R, eval x «expr- »(g))).card), calc
+    «expr ≤ »(«expr * »(2, «expr ∪ »(univ.image (λ
+        x : R, eval x f), univ.image (λ
+        x : R, eval x «expr- »(g))).card), «expr * »(2, fintype.card R)) : nat.mul_le_mul_left _ (finset.card_le_univ _)
+    «expr = »(..., «expr + »(fintype.card R, fintype.card R)) : two_mul _
+    «expr < »(..., «expr + »(«expr * »(nat_degree f, (univ.image (λ
+         x : R, eval x f)).card), «expr * »(nat_degree «expr- »(g), (univ.image (λ
+         x : R, eval x «expr- »(g))).card))) : add_lt_add_of_lt_of_le (lt_of_le_of_ne (card_image_polynomial_eval (by rw [expr hf2] []; exact [expr exprdec_trivial()])) (mt (congr_arg ((«expr % » 2))) (by simp [] [] [] ["[", expr nat_degree_eq_of_degree_eq_some hf2, ",", expr hR, "]"] [] []))) (card_image_polynomial_eval (by rw ["[", expr degree_neg, ",", expr hg2, "]"] []; exact [expr exprdec_trivial()]))
+    «expr = »(..., «expr * »(2, «expr ∪ »(univ.image (λ
+        x : R, eval x f), univ.image (λ
+        x : R, eval x «expr- »(g))).card)) : by rw ["[", expr card_disjoint_union hd, "]"] []; simp [] [] [] ["[", expr nat_degree_eq_of_degree_eq_some hf2, ",", expr nat_degree_eq_of_degree_eq_some hg2, ",", expr bit0, ",", expr mul_add, "]"] [] [])]
 
 end Polynomial
 
--- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem prod_univ_units_id_eq_neg_one
 [field K]
 [fintype (units K)] : «expr = »(«expr∏ , »((x : units K), x), («expr- »(1) : units K)) :=
@@ -149,14 +131,15 @@ theorem pow_card_sub_one_eq_one (a : K) (ha : a ≠ 0) : (a^q - 1) = 1 :=
       rfl
     
 
-theorem pow_card (a : K) : (a^q) = a :=
-  by 
-    have hp : 0 < Fintype.card K := lt_transₓ zero_lt_one Fintype.one_lt_card 
-    byCases' h : a = 0
-    ·
-      rw [h]
-      apply zero_pow hp 
-    rw [←Nat.succ_pred_eq_of_posₓ hp, pow_succₓ, Nat.pred_eq_sub_one, pow_card_sub_one_eq_one a h, mul_oneₓ]
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pow_card (a : K) : «expr = »(«expr ^ »(a, exprq()), a) :=
+begin
+  have [ident hp] [":", expr «expr < »(0, fintype.card K)] [":=", expr lt_trans zero_lt_one fintype.one_lt_card],
+  by_cases [expr h, ":", expr «expr = »(a, 0)],
+  { rw [expr h] [],
+    apply [expr zero_pow hp] },
+  rw ["[", "<-", expr nat.succ_pred_eq_of_pos hp, ",", expr pow_succ, ",", expr nat.pred_eq_sub_one, ",", expr pow_card_sub_one_eq_one a h, ",", expr mul_one, "]"] []
+end
 
 theorem pow_card_pow (n : ℕ) (a : K) : (a^q^n) = a :=
   by 
@@ -170,20 +153,23 @@ end
 
 variable(K)[Field K][Fintype K]
 
-theorem card (p : ℕ) [CharP K p] : ∃ n : ℕ+, Nat.Prime p ∧ q = (p^(n : ℕ)) :=
-  by 
-    haveI hp : Fact p.prime := ⟨CharP.char_is_prime K p⟩
-    letI this : Module (Zmod p) K := { (Zmod.castHom dvd_rfl K).toModule with  }
-    obtain ⟨n, h⟩ := VectorSpace.card_fintype (Zmod p) K 
-    rw [Zmod.card] at h 
-    refine' ⟨⟨n, _⟩, hp.1, h⟩
-    apply Or.resolve_left (Nat.eq_zero_or_posₓ n)
-    rintro rfl 
-    rw [pow_zeroₓ] at h 
-    have  : (0 : K) = 1
-    ·
-      apply fintype.card_le_one_iff.mp (le_of_eqₓ h)
-    exact absurd this zero_ne_one
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem card
+(p : exprℕ())
+[char_p K p] : «expr∃ , »((n : «exprℕ+»()), «expr ∧ »(nat.prime p, «expr = »(exprq(), «expr ^ »(p, (n : exprℕ()))))) :=
+begin
+  haveI [ident hp] [":", expr fact p.prime] [":=", expr ⟨char_p.char_is_prime K p⟩],
+  letI [] [":", expr module (zmod p) K] [":=", expr { ..(zmod.cast_hom dvd_rfl K).to_module }],
+  obtain ["⟨", ident n, ",", ident h, "⟩", ":=", expr vector_space.card_fintype (zmod p) K],
+  rw [expr zmod.card] ["at", ident h],
+  refine [expr ⟨⟨n, _⟩, hp.1, h⟩],
+  apply [expr or.resolve_left (nat.eq_zero_or_pos n)],
+  rintro [ident rfl],
+  rw [expr pow_zero] ["at", ident h],
+  have [] [":", expr «expr = »((0 : K), 1)] [],
+  { apply [expr fintype.card_le_one_iff.mp (le_of_eq h)] },
+  exact [expr absurd this zero_ne_one]
+end
 
 theorem card' : ∃ (p : ℕ)(n : ℕ+), Nat.Prime p ∧ Fintype.card K = (p^(n : ℕ)) :=
   let ⟨p, hc⟩ := CharP.exists K
@@ -193,7 +179,7 @@ theorem card' : ∃ (p : ℕ)(n : ℕ+), Nat.Prime p ∧ Fintype.card K = (p^(n 
 theorem cast_card_eq_zero : (q : K) = 0 :=
   by 
     rcases CharP.exists K with ⟨p, _char_p⟩
-    resetI 
+    skip 
     rcases card K p with ⟨n, hp, hn⟩
     simp only [CharP.cast_eq_zero_iff K p, hn]
     conv  => congr rw [←pow_oneₓ p]
@@ -214,68 +200,62 @@ theorem forall_pow_eq_one_iff (i : ℕ) : (∀ x : Units K, (x^i) = 1) ↔ q - 1
       rcases hx y with ⟨j, rfl⟩
       rw [←pow_mulₓ, mul_commₓ, pow_mulₓ, h, one_pow]
 
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The sum of `x ^ i` as `x` ranges over the units of a finite field of cardinality `q`
 is equal to `0` unless `(q - 1) ∣ i`, in which case the sum is `q - 1`. -/
-theorem sum_pow_units [Fintype (Units K)] (i : ℕ) : (∑x : Units K, (x^i : K)) = if q - 1 ∣ i then -1 else 0 :=
-  by 
-    let φ : Units K →* K :=
-      { toFun := fun x => x^i,
-        map_one' :=
-          by 
-            rw [Units.coe_one, one_pow],
-        map_mul' :=
-          by 
-            intros 
-            rw [Units.coe_mul, mul_powₓ] }
-    haveI  : Decidable (φ = 1)
-    ·
-      classical 
-      infer_instance 
-    calc (∑x : Units K, φ x) = if φ = 1 then Fintype.card (Units K) else 0 :=
-      sum_hom_units φ _ = if q - 1 ∣ i then -1 else 0 := _ 
-    suffices  : q - 1 ∣ i ↔ φ = 1
-    ·
-      simp only [this]
-      splitIfs with h h 
-      swap 
-      rfl 
-      rw [Fintype.card_units, Nat.cast_sub, cast_card_eq_zero, Nat.cast_one, zero_sub]
-      show 1 ≤ q 
-      exact fintype.card_pos_iff.mpr ⟨0⟩
-    rw [←forall_pow_eq_one_iff, MonoidHom.ext_iff]
-    apply forall_congrₓ 
-    intro x 
-    rw [Units.ext_iff, Units.coe_pow, Units.coe_one, MonoidHom.one_apply]
-    rfl
+theorem sum_pow_units
+[fintype (units K)]
+(i : exprℕ()) : «expr = »(«expr∑ , »((x : units K), («expr ^ »(x, i) : K)), if «expr ∣ »(«expr - »(exprq(), 1), i) then «expr- »(1) else 0) :=
+begin
+  let [ident φ] [":", expr «expr →* »(units K, K)] [":=", expr { to_fun := λ x, «expr ^ »(x, i),
+     map_one' := by rw ["[", expr units.coe_one, ",", expr one_pow, "]"] [],
+     map_mul' := by { intros [],
+       rw ["[", expr units.coe_mul, ",", expr mul_pow, "]"] [] } }],
+  haveI [] [":", expr decidable «expr = »(φ, 1)] [],
+  { classical,
+    apply_instance },
+  calc
+    «expr = »(«expr∑ , »((x : units K), φ x), if «expr = »(φ, 1) then fintype.card (units K) else 0) : sum_hom_units φ
+    «expr = »(..., if «expr ∣ »(«expr - »(exprq(), 1), i) then «expr- »(1) else 0) : _,
+  suffices [] [":", expr «expr ↔ »(«expr ∣ »(«expr - »(exprq(), 1), i), «expr = »(φ, 1))],
+  { simp [] [] ["only"] ["[", expr this, "]"] [] [],
+    split_ifs [] ["with", ident h, ident h],
+    swap,
+    refl,
+    rw ["[", expr fintype.card_units, ",", expr nat.cast_sub, ",", expr cast_card_eq_zero, ",", expr nat.cast_one, ",", expr zero_sub, "]"] [],
+    show [expr «expr ≤ »(1, exprq())],
+    from [expr fintype.card_pos_iff.mpr ⟨0⟩] },
+  rw ["[", "<-", expr forall_pow_eq_one_iff, ",", expr monoid_hom.ext_iff, "]"] [],
+  apply [expr forall_congr],
+  intro [ident x],
+  rw ["[", expr units.ext_iff, ",", expr units.coe_pow, ",", expr units.coe_one, ",", expr monoid_hom.one_apply, "]"] [],
+  refl
+end
 
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The sum of `x ^ i` as `x` ranges over a finite field of cardinality `q`
 is equal to `0` if `i < q - 1`. -/
-theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : (∑x : K, x^i) = 0 :=
-  by 
-    byCases' hi : i = 0
-    ·
-      simp only [hi, nsmul_one, sum_const, pow_zeroₓ, card_univ, cast_card_eq_zero]
-    classical 
-    have hiq : ¬q - 1 ∣ i
-    ·
-      contrapose! h 
-      exact Nat.le_of_dvdₓ (Nat.pos_of_ne_zeroₓ hi) h 
-    let φ : Units K ↪ K := ⟨coeₓ, Units.ext⟩
-    have  : univ.map φ = univ \ {0}
-    ·
-      ext x 
-      simp only [true_andₓ, embedding.coe_fn_mk, mem_sdiff, Units.exists_iff_ne_zero, mem_univ, mem_map,
-        exists_prop_of_true, mem_singleton]
-    calc (∑x : K, x^i) = ∑x in univ \ {(0 : K)}, x^i :=
-      by 
-        rw [←sum_sdiff ({0} : Finset K).subset_univ, sum_singleton, zero_pow (Nat.pos_of_ne_zeroₓ hi),
-          add_zeroₓ]_ = ∑x : Units K, x^i :=
-      by 
-        rw [←this, univ.sum_map φ]
-        rfl _ = 0 :=
-      by 
-        rw [sum_pow_units K i, if_neg]
-        exact hiq
+theorem sum_pow_lt_card_sub_one
+(i : exprℕ())
+(h : «expr < »(i, «expr - »(exprq(), 1))) : «expr = »(«expr∑ , »((x : K), «expr ^ »(x, i)), 0) :=
+begin
+  by_cases [expr hi, ":", expr «expr = »(i, 0)],
+  { simp [] [] ["only"] ["[", expr hi, ",", expr nsmul_one, ",", expr sum_const, ",", expr pow_zero, ",", expr card_univ, ",", expr cast_card_eq_zero, "]"] [] [] },
+  classical,
+  have [ident hiq] [":", expr «expr¬ »(«expr ∣ »(«expr - »(exprq(), 1), i))] [],
+  { contrapose ["!"] [ident h],
+    exact [expr nat.le_of_dvd (nat.pos_of_ne_zero hi) h] },
+  let [ident φ] [":", expr «expr ↪ »(units K, K)] [":=", expr ⟨coe, units.ext⟩],
+  have [] [":", expr «expr = »(univ.map φ, «expr \ »(univ, {0}))] [],
+  { ext [] [ident x] [],
+    simp [] [] ["only"] ["[", expr true_and, ",", expr embedding.coe_fn_mk, ",", expr mem_sdiff, ",", expr units.exists_iff_ne_zero, ",", expr mem_univ, ",", expr mem_map, ",", expr exists_prop_of_true, ",", expr mem_singleton, "]"] [] [] },
+  calc
+    «expr = »(«expr∑ , »((x : K), «expr ^ »(x, i)), «expr∑ in , »((x), «expr \ »(univ, {(0 : K)}), «expr ^ »(x, i))) : by rw ["[", "<-", expr sum_sdiff ({0} : finset K).subset_univ, ",", expr sum_singleton, ",", expr zero_pow (nat.pos_of_ne_zero hi), ",", expr add_zero, "]"] []
+    «expr = »(..., «expr∑ , »((x : units K), «expr ^ »(x, i))) : by { rw ["[", "<-", expr this, ",", expr univ.sum_map φ, "]"] [],
+      refl }
+    «expr = »(..., 0) : by { rw ["[", expr sum_pow_units K i, ",", expr if_neg, "]"] [],
+      exact [expr hiq] }
+end
 
 section IsSplittingField
 
@@ -285,13 +265,15 @@ section
 
 variable(K' : Type _)[Field K']{p n : ℕ}
 
-theorem X_pow_card_sub_X_nat_degree_eq (hp : 1 < p) : ((X^p) - X : Polynomial K').natDegree = p :=
-  by 
-    have h1 : (X : Polynomial K').degree < (X^p : Polynomial K').degree
-    ·
-      rw [degree_X_pow, degree_X]
-      exactModCast hp 
-    rw [nat_degree_eq_of_degree_eq (degree_sub_eq_left_of_degree_lt h1), nat_degree_X_pow]
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem X_pow_card_sub_X_nat_degree_eq
+(hp : «expr < »(1, p)) : «expr = »((«expr - »(«expr ^ »(X, p), X) : polynomial K').nat_degree, p) :=
+begin
+  have [ident h1] [":", expr «expr < »((X : polynomial K').degree, («expr ^ »(X, p) : polynomial K').degree)] [],
+  { rw ["[", expr degree_X_pow, ",", expr degree_X, "]"] [],
+    exact_mod_cast [expr hp] },
+  rw ["[", expr nat_degree_eq_of_degree_eq (degree_sub_eq_left_of_degree_lt h1), ",", expr nat_degree_X_pow, "]"] []
+end
 
 theorem X_pow_card_pow_sub_X_nat_degree_eq (hn : n ≠ 0) (hp : 1 < p) :
   ((X^p^n) - X : Polynomial K').natDegree = (p^n) :=
@@ -310,37 +292,35 @@ end
 
 variable(p : ℕ)[Fact p.prime][CharP K p]
 
-theorem roots_X_pow_card_sub_X : roots ((X^q) - X : Polynomial K) = Finset.univ.val :=
-  by 
-    classical 
-    have aux : ((X^q) - X : Polynomial K) ≠ 0 := X_pow_card_sub_X_ne_zero K Fintype.one_lt_card 
-    have  : (roots ((X^q) - X : Polynomial K)).toFinset = Finset.univ
-    ·
-      rw [eq_univ_iff_forall]
-      intro x 
-      rw [Multiset.mem_to_finset, mem_roots aux, is_root.def, eval_sub, eval_pow, eval_X, sub_eq_zero, pow_card]
-    rw [←this, Multiset.to_finset_val, eq_comm, Multiset.erase_dup_eq_self]
-    apply nodup_roots 
-    rw [separable_def]
-    convert is_coprime_one_right.neg_right 
-    rw [derivative_sub, derivative_X, derivative_X_pow, ←C_eq_nat_cast, C_eq_zero.mpr (CharP.cast_card_eq_zero K),
-      zero_mul, zero_sub]
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem roots_X_pow_card_sub_X : «expr = »(roots («expr - »(«expr ^ »(X, exprq()), X) : polynomial K), finset.univ.val) :=
+begin
+  classical,
+  have [ident aux] [":", expr «expr ≠ »((«expr - »(«expr ^ »(X, exprq()), X) : polynomial K), 0)] [":=", expr X_pow_card_sub_X_ne_zero K fintype.one_lt_card],
+  have [] [":", expr «expr = »((roots («expr - »(«expr ^ »(X, exprq()), X) : polynomial K)).to_finset, finset.univ)] [],
+  { rw [expr eq_univ_iff_forall] [],
+    intro [ident x],
+    rw ["[", expr multiset.mem_to_finset, ",", expr mem_roots aux, ",", expr is_root.def, ",", expr eval_sub, ",", expr eval_pow, ",", expr eval_X, ",", expr sub_eq_zero, ",", expr pow_card, "]"] [] },
+  rw ["[", "<-", expr this, ",", expr multiset.to_finset_val, ",", expr eq_comm, ",", expr multiset.erase_dup_eq_self, "]"] [],
+  apply [expr nodup_roots],
+  rw [expr separable_def] [],
+  convert [] [expr is_coprime_one_right.neg_right] [],
+  rw ["[", expr derivative_sub, ",", expr derivative_X, ",", expr derivative_X_pow, ",", "<-", expr C_eq_nat_cast, ",", expr C_eq_zero.mpr (char_p.cast_card_eq_zero K), ",", expr zero_mul, ",", expr zero_sub, "]"] []
+end
 
-instance  : is_splitting_field (Zmod p) K ((X^q) - X) :=
-  { Splits :=
-      by 
-        have h : ((X^q) - X : Polynomial K).natDegree = q := X_pow_card_sub_X_nat_degree_eq K Fintype.one_lt_card 
-        rw [←splits_id_iff_splits, splits_iff_card_roots, map_sub, map_pow, map_X, h, roots_X_pow_card_sub_X K,
-          ←Finset.card_def, Finset.card_univ],
-    adjoin_roots :=
-      by 
-        classical 
-        trans Algebra.adjoin (Zmod p) ((roots ((X^q) - X : Polynomial K)).toFinset : Set K)
-        ·
-          simp only [map_pow, map_X, map_sub]
-          convert rfl
-        ·
-          rw [roots_X_pow_card_sub_X, val_to_finset, coe_univ, Algebra.adjoin_univ] }
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance : is_splitting_field (zmod p) K «expr - »(«expr ^ »(X, exprq()), X) :=
+{ splits := begin
+    have [ident h] [":", expr «expr = »((«expr - »(«expr ^ »(X, exprq()), X) : polynomial K).nat_degree, exprq())] [":=", expr X_pow_card_sub_X_nat_degree_eq K fintype.one_lt_card],
+    rw ["[", "<-", expr splits_id_iff_splits, ",", expr splits_iff_card_roots, ",", expr map_sub, ",", expr map_pow, ",", expr map_X, ",", expr h, ",", expr roots_X_pow_card_sub_X K, ",", "<-", expr finset.card_def, ",", expr finset.card_univ, "]"] []
+  end,
+  adjoin_roots := begin
+    classical,
+    transitivity [expr algebra.adjoin (zmod p) ((roots («expr - »(«expr ^ »(X, exprq()), X) : polynomial K)).to_finset : set K)],
+    { simp [] [] ["only"] ["[", expr map_pow, ",", expr map_X, ",", expr map_sub, "]"] [] [],
+      convert [] [expr rfl] [] },
+    { rw ["[", expr roots_X_pow_card_sub_X, ",", expr val_to_finset, ",", expr coe_univ, ",", expr algebra.adjoin_univ, "]"] [] }
+  end }
 
 end IsSplittingField
 
@@ -358,16 +338,18 @@ theorem frobenius_pow {p : ℕ} [Fact p.prime] [CharP K p] {n : ℕ} (hcard : q 
 
 open Polynomial
 
-theorem expand_card (f : Polynomial K) : expand K q f = (f^q) :=
-  by 
-    cases' CharP.exists K with p hp 
-    letI this := hp 
-    rcases FiniteField.card K p with ⟨⟨n, npos⟩, ⟨hp, hn⟩⟩
-    haveI  : Fact p.prime := ⟨hp⟩
-    dsimp  at hn 
-    rw [hn] at *
-    rw [←map_expand_pow_char]
-    rw [frobenius_pow hn, RingHom.one_def, map_id]
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem expand_card (f : polynomial K) : «expr = »(expand K exprq() f, «expr ^ »(f, exprq())) :=
+begin
+  cases [expr char_p.exists K] ["with", ident p, ident hp],
+  letI [] [] [":=", expr hp],
+  rcases [expr finite_field.card K p, "with", "⟨", "⟨", ident n, ",", ident npos, "⟩", ",", "⟨", ident hp, ",", ident hn, "⟩", "⟩"],
+  haveI [] [":", expr fact p.prime] [":=", expr ⟨hp⟩],
+  dsimp [] [] [] ["at", ident hn],
+  rw [expr hn] ["at", "*"],
+  rw ["<-", expr map_expand_pow_char] [],
+  rw ["[", expr frobenius_pow hn, ",", expr ring_hom.one_def, ",", expr map_id, "]"] []
+end
 
 end FiniteField
 
@@ -379,7 +361,7 @@ theorem sq_add_sq (p : ℕ) [hp : Fact p.prime] (x : Zmod p) : ∃ a b : Zmod p,
   by 
     cases' hp.1.eq_two_or_odd with hp2 hp_odd
     ·
-      substI p 
+      subst p 
       change Finₓ 2 at x 
       finCases x
       ·
@@ -406,13 +388,21 @@ end Zmod
 
 namespace CharP
 
-theorem sq_add_sq (R : Type _) [CommRingₓ R] [IsDomain R] (p : ℕ) [Fact (0 < p)] [CharP R p] (x : ℤ) :
-  ∃ a b : ℕ, ((a^2)+b^2 : R) = x :=
-  by 
-    haveI  := char_is_prime_of_pos R p 
-    obtain ⟨a, b, hab⟩ := Zmod.sq_add_sq p x 
-    refine' ⟨a.val, b.val, _⟩
-    simpa using congr_argₓ (Zmod.castHom dvd_rfl R) hab
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sq_add_sq
+(R : Type*)
+[comm_ring R]
+[is_domain R]
+(p : exprℕ())
+[fact «expr < »(0, p)]
+[char_p R p]
+(x : exprℤ()) : «expr∃ , »((a b : exprℕ()), «expr = »((«expr + »(«expr ^ »(a, 2), «expr ^ »(b, 2)) : R), x)) :=
+begin
+  haveI [] [] [":=", expr char_is_prime_of_pos R p],
+  obtain ["⟨", ident a, ",", ident b, ",", ident hab, "⟩", ":=", expr zmod.sq_add_sq p x],
+  refine [expr ⟨a.val, b.val, _⟩],
+  simpa [] [] [] [] [] ["using", expr congr_arg (zmod.cast_hom dvd_rfl R) hab]
+end
 
 end CharP
 
@@ -427,19 +417,19 @@ theorem Zmod.pow_totient {n : ℕ} [Fact (0 < n)] (x : Units (Zmod n)) : (x^φ n
   by 
     rw [←card_units_eq_totient, pow_card_eq_one]
 
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The **Fermat-Euler totient theorem**. `zmod.pow_totient` is an alternative statement
   of the same theorem. -/
-theorem Nat.Modeq.pow_totient {x n : ℕ} (h : Nat.Coprime x n) : (x^φ n) ≡ 1 [MOD n] :=
-  by 
-    cases n
-    ·
-      simp 
-    rw [←Zmod.eq_iff_modeq_nat]
-    let x' : Units (Zmod (n+1)) := Zmod.unitOfCoprime _ h 
-    have  := Zmod.pow_totient x' 
-    applyFun (coeₓ : Units (Zmod (n+1)) → Zmod (n+1))  at this 
-    simpa only [-Zmod.pow_totient, Nat.succ_eq_add_one, Nat.cast_pow, Units.coe_one, Nat.cast_one, coe_unit_of_coprime,
-      Units.coe_pow]
+theorem nat.modeq.pow_totient {x n : exprℕ()} (h : nat.coprime x n) : «expr ≡ [MOD ]»(«expr ^ »(x, exprφ() n), 1, n) :=
+begin
+  cases [expr n] [],
+  { simp [] [] [] [] [] [] },
+  rw ["<-", expr zmod.eq_iff_modeq_nat] [],
+  let [ident x'] [":", expr units (zmod «expr + »(n, 1))] [":=", expr zmod.unit_of_coprime _ h],
+  have [] [] [":=", expr zmod.pow_totient x'],
+  apply_fun [expr (coe : units (zmod «expr + »(n, 1)) → zmod «expr + »(n, 1))] ["at", ident this] [],
+  simpa [] [] ["only"] ["[", "-", ident zmod.pow_totient, ",", expr nat.succ_eq_add_one, ",", expr nat.cast_pow, ",", expr units.coe_one, ",", expr nat.cast_one, ",", expr coe_unit_of_coprime, ",", expr units.coe_pow, "]"] [] []
+end
 
 section 
 
@@ -456,12 +446,12 @@ open FiniteField
 
 namespace Zmod
 
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A variation on Fermat's little theorem. See `zmod.pow_card_sub_one_eq_one` -/
 @[simp]
-theorem pow_card {p : ℕ} [Fact p.prime] (x : Zmod p) : (x^p) = x :=
-  by 
-    have h := FiniteField.pow_card x 
-    rwa [Zmod.card p] at h
+theorem pow_card {p : exprℕ()} [fact p.prime] (x : zmod p) : «expr = »(«expr ^ »(x, p), x) :=
+by { have [ident h] [] [":=", expr finite_field.pow_card x],
+  rwa [expr zmod.card p] ["at", ident h] }
 
 @[simp]
 theorem pow_card_pow {n p : ℕ} [Fact p.prime] (x : Zmod p) : (x^p^n) = x :=
@@ -488,18 +478,25 @@ theorem units_pow_card_sub_one_eq_one (p : ℕ) [Fact p.prime] (a : Units (Zmod 
   by 
     rw [←card_units p, pow_card_eq_one]
 
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Fermat's Little Theorem**: for all nonzero `a : zmod p`, we have `a ^ (p - 1) = 1`. -/
-theorem pow_card_sub_one_eq_one {p : ℕ} [Fact p.prime] {a : Zmod p} (ha : a ≠ 0) : (a^p - 1) = 1 :=
-  by 
-    have h := pow_card_sub_one_eq_one a ha 
-    rwa [Zmod.card p] at h
+theorem pow_card_sub_one_eq_one
+{p : exprℕ()}
+[fact p.prime]
+{a : zmod p}
+(ha : «expr ≠ »(a, 0)) : «expr = »(«expr ^ »(a, «expr - »(p, 1)), 1) :=
+by { have [ident h] [] [":=", expr pow_card_sub_one_eq_one a ha],
+  rwa [expr zmod.card p] ["at", ident h] }
 
 open Polynomial
 
-theorem expand_card {p : ℕ} [Fact p.prime] (f : Polynomial (Zmod p)) : expand (Zmod p) p f = (f^p) :=
-  by 
-    have h := FiniteField.expand_card f 
-    rwa [Zmod.card p] at h
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem expand_card
+{p : exprℕ()}
+[fact p.prime]
+(f : polynomial (zmod p)) : «expr = »(expand (zmod p) p f, «expr ^ »(f, p)) :=
+by { have [ident h] [] [":=", expr finite_field.expand_card f],
+  rwa [expr zmod.card p] ["at", ident h] }
 
 end Zmod
 

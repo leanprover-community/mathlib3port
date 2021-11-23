@@ -1,6 +1,6 @@
+import Mathbin.Control.Traversable.Instances 
 import Mathbin.Data.Set.Finite 
 import Mathbin.Order.Copy 
-import Mathbin.Order.Zorn 
 import Mathbin.Tactic.Monotonicity.Default
 
 /-!
@@ -239,7 +239,7 @@ section Join
 
 /-- The join of a filter of filters is defined by the relation `s ∈ join f ↔ {t | s ∈ t} ∈ f`. -/
 def join (f : Filter (Filter α)) : Filter α :=
-  { Sets := { s | { t : Filter α | s ∈ t } ∈ f },
+  { Sets := { s | { t:Filter α | s ∈ t } ∈ f },
     univ_sets :=
       by 
         simp only [mem_set_of_eq, univ_sets, ←Filter.mem_sets, set_of_true],
@@ -496,54 +496,65 @@ theorem infi_eq_generate (s : ι → Filter α) : infi s = generate (⋃i, (s i)
 theorem mem_infi_of_mem {f : ι → Filter α} (i : ι) : ∀ {s}, s ∈ f i → s ∈ ⨅i, f i :=
   show (⨅i, f i) ≤ f i from infi_le _ _
 
-theorem mem_infi_of_Inter {ι} {s : ι → Filter α} {U : Set α} {I : Set ι} (I_fin : finite I) {V : I → Set α}
-  (hV : ∀ i, V i ∈ s i) (hU : (⋂i, V i) ⊆ U) : U ∈ ⨅i, s i :=
-  by 
-    haveI  := I_fin.fintype 
-    refine' mem_of_superset (Inter_mem.2$ fun i => _) hU 
-    exact mem_infi_of_mem i (hV _)
-
-theorem mem_infi {ι} {s : ι → Filter α} {U : Set α} :
-  (U ∈ ⨅i, s i) ↔ ∃ I : Set ι, finite I ∧ ∃ V : I → Set α, (∀ i, V i ∈ s i) ∧ U = ⋂i, V i :=
-  by 
-    split 
-    ·
-      rw [infi_eq_generate, mem_generate_iff]
-      rintro ⟨t, tsub, tfin, tinter⟩
-      rcases eq_finite_Union_of_finite_subset_Union tfin tsub with ⟨I, Ifin, σ, σfin, σsub, rfl⟩
-      rw [sInter_Union] at tinter 
-      set V := fun i => U ∪ ⋂₀σ i with hV 
-      have V_in : ∀ i, V i ∈ s i
-      ·
-        rintro i 
-        have  : ⋂₀σ i ∈ s i
-        ·
-          rw [sInter_mem (σfin _)]
-          apply σsub 
-        exact mem_of_superset this (subset_union_right _ _)
-      refine' ⟨I, Ifin, V, V_in, _⟩
-      rwa [hV, ←union_Inter, union_eq_self_of_subset_right]
-    ·
-      rintro ⟨I, Ifin, V, V_in, rfl⟩
-      exact mem_infi_of_Inter Ifin V_in subset.rfl
-
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem mem_infi'
+-- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_infi_of_Inter
 {ι}
 {s : ι → filter α}
-{U : set α} : «expr ↔ »(«expr ∈ »(U, «expr⨅ , »((i), s i)), «expr∃ , »((I : set ι), «expr ∧ »(finite I, «expr∃ , »((V : ι → set α), «expr ∧ »(∀
-     i, «expr ∈ »(V i, s i), «expr ∧ »(∀
-      i «expr ∉ » I, «expr = »(V i, univ), «expr ∧ »(«expr = »(U, «expr⋂ , »((i «expr ∈ » I), V i)), «expr = »(U, «expr⋂ , »((i), V i))))))))) :=
+{U : set α}
+{I : set ι}
+(I_fin : finite I)
+{V : I → set α}
+(hV : ∀ i, «expr ∈ »(V i, s i))
+(hU : «expr ⊆ »(«expr⋂ , »((i), V i), U)) : «expr ∈ »(U, «expr⨅ , »((i), s i)) :=
 begin
-  simp [] [] ["only"] ["[", expr mem_infi, ",", expr set_coe.forall', ",", expr bInter_eq_Inter, "]"] [] [],
-  refine [expr ⟨_, λ ⟨I, If, V, hVs, _, hVU, _⟩, ⟨I, If, λ i, V i, λ i, hVs i, hVU⟩⟩],
-  rintro ["⟨", ident I, ",", ident If, ",", ident V, ",", ident hV, ",", ident rfl, "⟩"],
-  refine [expr ⟨I, If, λ i, if hi : «expr ∈ »(i, I) then V ⟨i, hi⟩ else univ, λ i, _, λ i hi, _, _⟩],
-  { split_ifs [] [],
-    exacts ["[", expr hV _, ",", expr univ_mem, "]"] },
-  { exact [expr dif_neg hi] },
-  { simp [] [] [] ["[", expr Inter_dite, ",", expr bInter_eq_Inter, "]"] [] [] }
+  haveI [] [] [":=", expr I_fin.fintype],
+  refine [expr mem_of_superset «expr $ »(Inter_mem.2, λ i, _) hU],
+  exact [expr mem_infi_of_mem i (hV _)]
 end
+
+-- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_infi
+{ι}
+{s : ι → filter α}
+{U : set α} : «expr ↔ »(«expr ∈ »(U, «expr⨅ , »((i), s i)), «expr∃ , »((I : set ι), «expr ∧ »(finite I, «expr∃ , »((V : I → set α), «expr ∧ »(∀
+     i, «expr ∈ »(V i, s i), «expr = »(U, «expr⋂ , »((i), V i))))))) :=
+begin
+  split,
+  { rw ["[", expr infi_eq_generate, ",", expr mem_generate_iff, "]"] [],
+    rintro ["⟨", ident t, ",", ident tsub, ",", ident tfin, ",", ident tinter, "⟩"],
+    rcases [expr eq_finite_Union_of_finite_subset_Union tfin tsub, "with", "⟨", ident I, ",", ident Ifin, ",", ident σ, ",", ident σfin, ",", ident σsub, ",", ident rfl, "⟩"],
+    rw [expr sInter_Union] ["at", ident tinter],
+    set [] [ident V] [] [":="] [expr λ i, «expr ∪ »(U, «expr⋂₀ »(σ i))] ["with", ident hV],
+    have [ident V_in] [":", expr ∀ i, «expr ∈ »(V i, s i)] [],
+    { rintro [ident i],
+      have [] [":", expr «expr ∈ »(«expr⋂₀ »(σ i), s i)] [],
+      { rw [expr sInter_mem (σfin _)] [],
+        apply [expr σsub] },
+      exact [expr mem_of_superset this (subset_union_right _ _)] },
+    refine [expr ⟨I, Ifin, V, V_in, _⟩],
+    rwa ["[", expr hV, ",", "<-", expr union_Inter, ",", expr union_eq_self_of_subset_right, "]"] [] },
+  { rintro ["⟨", ident I, ",", ident Ifin, ",", ident V, ",", ident V_in, ",", ident rfl, "⟩"],
+    exact [expr mem_infi_of_Inter Ifin V_in subset.rfl] }
+end
+
+theorem mem_infi' {ι} {s : ι → Filter α} {U : Set α} :
+  (U ∈ ⨅i, s i) ↔
+    ∃ I : Set ι,
+      finite I ∧
+        ∃ V : ι → Set α,
+          (∀ i, V i ∈ s i) ∧ (∀ i _ : i ∉ I, V i = univ) ∧ (U = ⋂(i : _)(_ : i ∈ I), V i) ∧ U = ⋂i, V i :=
+  by 
+    simp only [mem_infi, SetCoe.forall', bInter_eq_Inter]
+    refine' ⟨_, fun ⟨I, If, V, hVs, _, hVU, _⟩ => ⟨I, If, fun i => V i, fun i => hVs i, hVU⟩⟩
+    rintro ⟨I, If, V, hV, rfl⟩
+    refine' ⟨I, If, fun i => if hi : i ∈ I then V ⟨i, hi⟩ else univ, fun i => _, fun i hi => _, _⟩
+    ·
+      splitIfs 
+      exacts[hV _, univ_mem]
+    ·
+      exact dif_neg hi
+    ·
+      simp [Inter_dite, bInter_eq_Inter]
 
 theorem exists_Inter_of_mem_infi {ι : Type _} {α : Type _} {f : ι → Filter α} {s} (hs : s ∈ ⨅i, f i) :
   ∃ t : ι → Set α, (∀ i, t i ∈ f i) ∧ s = ⋂i, t i :=
@@ -634,20 +645,13 @@ protected def Unique [IsEmpty α] : Unique (Filter α) :=
 theorem forall_mem_nonempty_iff_ne_bot {f : Filter α} : (∀ s : Set α, s ∈ f → s.nonempty) ↔ ne_bot f :=
   ⟨fun h => ⟨fun hf => empty_not_nonempty (h ∅$ hf.symm ▸ mem_bot)⟩, @nonempty_of_mem _ _⟩
 
-theorem nontrivial_iff_nonempty : Nontrivial (Filter α) ↔ Nonempty α :=
-  ⟨fun ⟨⟨f, g, hfg⟩⟩ =>
-      by_contra$
-        fun h =>
-          hfg$
-            by 
-              haveI  : IsEmpty α := not_nonempty_iff.1 h <;> exact Subsingleton.elimₓ _ _,
-    fun ⟨x⟩ =>
-      ⟨⟨⊤, ⊥,
-          ne_bot.ne$
-            forall_mem_nonempty_iff_ne_bot.1$
-              fun s hs =>
-                by 
-                  rwa [mem_top.1 hs, ←nonempty_iff_univ_nonempty]⟩⟩⟩
+-- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nontrivial_iff_nonempty : «expr ↔ »(nontrivial (filter α), nonempty α) :=
+⟨λ
+ ⟨⟨f, g, hfg⟩⟩, «expr $ »(by_contra, λ
+  h, «expr $ »(hfg, by haveI [] [":", expr is_empty α] [":=", expr not_nonempty_iff.1 h]; exact [expr subsingleton.elim _ _])), λ
+ ⟨x⟩, ⟨⟨«expr⊤»(), «expr⊥»(), «expr $ »(ne_bot.ne, «expr $ »(forall_mem_nonempty_iff_ne_bot.1, λ
+     s hs, by rwa ["[", expr mem_top.1 hs, ",", "<-", expr nonempty_iff_univ_nonempty, "]"] []))⟩⟩⟩
 
 theorem eq_Inf_of_mem_iff_exists_mem {S : Set (Filter α)} {l : Filter α}
   (h : ∀ {s}, s ∈ l ↔ ∃ (f : _)(_ : f ∈ S), s ∈ f) : l = Inf S :=
@@ -695,11 +699,14 @@ theorem mem_infi_of_directed {f : ι → Filter α} (h : Directed (· ≥ ·) f)
   by 
     simp only [←Filter.mem_sets, infi_sets_eq h, mem_Union]
 
-theorem mem_binfi_of_directed {f : β → Filter α} {s : Set β} (h : DirectedOn (f ⁻¹'o (· ≥ ·)) s) (ne : s.nonempty)
-  {t : Set α} : (t ∈ ⨅(i : _)(_ : i ∈ s), f i) ↔ ∃ (i : _)(_ : i ∈ s), t ∈ f i :=
-  by 
-    haveI  : Nonempty { x // x ∈ s } := ne.to_subtype <;>
-      erw [infi_subtype', mem_infi_of_directed h.directed_coe, Subtype.exists] <;> rfl
+-- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_binfi_of_directed
+{f : β → filter α}
+{s : set β}
+(h : directed_on «expr ⁻¹'o »(f, («expr ≥ »)) s)
+(ne : s.nonempty)
+{t : set α} : «expr ↔ »(«expr ∈ »(t, «expr⨅ , »((i «expr ∈ » s), f i)), «expr∃ , »((i «expr ∈ » s), «expr ∈ »(t, f i))) :=
+by haveI [] [":", expr nonempty {x // «expr ∈ »(x, s)}] [":=", expr ne.to_subtype]; erw ["[", expr infi_subtype', ",", expr mem_infi_of_directed h.directed_coe, ",", expr subtype.exists, "]"] []; refl
 
 theorem binfi_sets_eq {f : β → Filter α} {s : Set β} (h : DirectedOn (f ⁻¹'o (· ≥ ·)) s) (ne : s.nonempty) :
   (⨅(i : _)(_ : i ∈ s), f i).Sets = ⋃(i : _)(_ : i ∈ s), (f i).Sets :=
@@ -804,17 +811,22 @@ theorem mem_infi_finset {s : Finset α} {f : α → Filter β} {t : Set β} :
       rintro ⟨p, hpf, rfl⟩
       exact Inter_mem.2 fun a => mem_infi_of_mem a (hpf a a.2)
 
+-- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f : ι → filter α` is directed, `ι` is not empty, and `∀ i, f i ≠ ⊥`, then `infi f ≠ ⊥`.
 See also `infi_ne_bot_of_directed` for a version assuming `nonempty α` instead of `nonempty ι`. -/
-theorem infi_ne_bot_of_directed' {f : ι → Filter α} [Nonempty ι] (hd : Directed (· ≥ ·) f) (hb : ∀ i, ne_bot (f i)) :
-  ne_bot (infi f) :=
-  ⟨by 
-      intro h 
-      have he : ∅ ∈ infi f 
-      exact h.symm ▸ (mem_bot : ∅ ∈ (⊥ : Filter α))
-      obtain ⟨i, hi⟩ : ∃ i, ∅ ∈ f i 
-      exact (mem_infi_of_directed hd ∅).1 he 
-      exact (hb i).Ne (empty_mem_iff_bot.1 hi)⟩
+theorem infi_ne_bot_of_directed'
+{f : ι → filter α}
+[nonempty ι]
+(hd : directed ((«expr ≥ »)) f)
+(hb : ∀ i, ne_bot (f i)) : ne_bot (infi f) :=
+⟨begin
+   intro [ident h],
+   have [ident he] [":", expr «expr ∈ »(«expr∅»(), infi f)] [],
+   from [expr «expr ▸ »(h.symm, (mem_bot : «expr ∈ »(«expr∅»(), («expr⊥»() : filter α))))],
+   obtain ["⟨", ident i, ",", ident hi, "⟩", ":", expr «expr∃ , »((i), «expr ∈ »(«expr∅»(), f i))],
+   from [expr (mem_infi_of_directed hd «expr∅»()).1 he],
+   exact [expr (hb i).ne (empty_mem_iff_bot.1 hi)]
+ end⟩
 
 /-- If `f : ι → filter α` is directed, `α` is not empty, and `∀ i, f i ≠ ⊥`, then `infi f ≠ ⊥`.
 See also `infi_ne_bot_of_directed'` for a version assuming `nonempty ι` instead of `nonempty α`. -/
@@ -1149,17 +1161,12 @@ theorem eventually.and_frequently {p q : α → Prop} {f : Filter α} (hp : ∀�
   by 
     simpa only [And.comm] using hq.and_eventually hp
 
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem frequently.exists
-{p : α → exprProp()}
-{f : filter α}
-(hp : «expr∃ᶠ in , »((x), f, p x)) : «expr∃ , »((x), p x) :=
-begin
-  by_contradiction [ident H],
-  replace [ident H] [":", expr «expr∀ᶠ in , »((x), f, «expr¬ »(p x))] [],
-  from [expr eventually_of_forall (not_exists.1 H)],
-  exact [expr hp H]
-end
+theorem frequently.exists {p : α → Prop} {f : Filter α} (hp : ∃ᶠx in f, p x) : ∃ x, p x :=
+  by 
+    byContra H 
+    replace H : ∀ᶠx in f, ¬p x 
+    exact eventually_of_forall (not_exists.1 H)
+    exact hp H
 
 theorem eventually.exists {p : α → Prop} {f : Filter α} [ne_bot f] (hp : ∀ᶠx in f, p x) : ∃ x, p x :=
   hp.frequently.exists
@@ -1173,14 +1180,8 @@ theorem frequently_iff_forall_eventually_exists_and {p : α → Prop} {f : Filte
 
 theorem frequently_iff {f : Filter α} {P : α → Prop} : (∃ᶠx in f, P x) ↔ ∀ {U}, U ∈ f → ∃ (x : _)(_ : x ∈ U), P x :=
   by 
-    rw [frequently_iff_forall_eventually_exists_and]
-    split  <;> intro h
-    ·
-      intro U U_in 
-      simpa [exists_prop, and_comm] using h U_in
-    ·
-      intro H H' 
-      simpa [and_comm] using h H'
+    simp only [frequently_iff_forall_eventually_exists_and, exists_prop, and_comm (P _)]
+    rfl
 
 @[simp]
 theorem not_eventually {p : α → Prop} {f : Filter α} : (¬∀ᶠx in f, p x) ↔ ∃ᶠx in f, ¬p x :=
@@ -2023,7 +2024,7 @@ theorem ne_bot.comap_of_range_mem {f : Filter β} {m : α → β} (hf : ne_bot f
 @[simp]
 theorem comap_fst_ne_bot_iff {f : Filter α} : (f.comap (Prod.fst : α × β → α)).ne_bot ↔ f.ne_bot ∧ Nonempty β :=
   by 
-    casesI is_empty_or_nonempty β
+    cases' is_empty_or_nonempty β
     ·
       rw [filter_eq_bot_of_is_empty (f.comap _), ←not_iff_not] <;> [simp , infer_instance]
     ·
@@ -2036,7 +2037,7 @@ theorem comap_fst_ne_bot [Nonempty β] {f : Filter α} [ne_bot f] : (f.comap (Pr
 @[simp]
 theorem comap_snd_ne_bot_iff {f : Filter β} : (f.comap (Prod.snd : α × β → β)).ne_bot ↔ Nonempty α ∧ f.ne_bot :=
   by 
-    casesI is_empty_or_nonempty α with hα hα
+    cases' is_empty_or_nonempty α with hα hα
     ·
       rw [filter_eq_bot_of_is_empty (f.comap _), ←not_iff_not] <;> [simpa using hα.elim, infer_instance]
     ·
@@ -2046,17 +2047,20 @@ theorem comap_snd_ne_bot_iff {f : Filter β} : (f.comap (Prod.snd : α × β →
 theorem comap_snd_ne_bot [Nonempty α] {f : Filter β} [ne_bot f] : (f.comap (Prod.snd : α × β → β)).ne_bot :=
   comap_snd_ne_bot_iff.2 ⟨‹_›, ‹_›⟩
 
-theorem comap_eval_ne_bot_iff' {ι : Type _} {α : ι → Type _} {i : ι} {f : Filter (α i)} :
-  (comap (eval i) f).ne_bot ↔ (∀ j, Nonempty (α j)) ∧ ne_bot f :=
-  by 
-    casesI is_empty_or_nonempty (∀ j, α j) with H H
-    ·
-      rw [filter_eq_bot_of_is_empty (f.comap _), ←not_iff_not] <;> [skip, assumption]
-      simpa [←Classical.nonempty_pi] using H.elim
-    ·
-      haveI  : ∀ j, Nonempty (α j)
-      exact Classical.nonempty_pi.1 H 
-      simp [comap_ne_bot_iff_frequently]
+-- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem comap_eval_ne_bot_iff'
+{ι : Type*}
+{α : ι → Type*}
+{i : ι}
+{f : filter (α i)} : «expr ↔ »((comap (eval i) f).ne_bot, «expr ∧ »(∀ j, nonempty (α j), ne_bot f)) :=
+begin
+  casesI [expr is_empty_or_nonempty (∀ j, α j)] ["with", ident H, ident H],
+  { rw ["[", expr filter_eq_bot_of_is_empty (f.comap _), ",", "<-", expr not_iff_not, "]"] []; [skip, assumption],
+    simpa [] [] [] ["[", "<-", expr classical.nonempty_pi, "]"] [] ["using", expr H.elim] },
+  { haveI [] [":", expr ∀ j, nonempty (α j)] [],
+    from [expr classical.nonempty_pi.1 H],
+    simp [] [] [] ["[", expr comap_ne_bot_iff_frequently, ",", "*", "]"] [] [] }
+end
 
 @[simp]
 theorem comap_eval_ne_bot_iff {ι : Type _} {α : ι → Type _} [∀ j, Nonempty (α j)] {i : ι} {f : Filter (α i)} :
@@ -2139,18 +2143,24 @@ theorem map_infi_eq {f : ι → Filter α} {m : α → β} (hf : Directed (· �
             assumption 
       Filter.le_principal_iff.1 this
 
-theorem map_binfi_eq {ι : Type w} {f : ι → Filter α} {m : α → β} {p : ι → Prop}
-  (h : DirectedOn (f ⁻¹'o (· ≥ ·)) { x | p x }) (ne : ∃ i, p i) :
-  map m (⨅(i : _)(h : p i), f i) = ⨅(i : _)(h : p i), map m (f i) :=
-  by 
-    haveI  := nonempty_subtype.2 Ne 
-    simp only [infi_subtype']
-    exact map_infi_eq h.directed_coe
+-- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_binfi_eq
+{ι : Type w}
+{f : ι → filter α}
+{m : α → β}
+{p : ι → exprProp()}
+(h : directed_on «expr ⁻¹'o »(f, («expr ≥ »)) {x | p x})
+(ne : «expr∃ , »((i), p i)) : «expr = »(map m «expr⨅ , »((i) (h : p i), f i), «expr⨅ , »((i) (h : p i), map m (f i))) :=
+begin
+  haveI [] [] [":=", expr nonempty_subtype.2 ne],
+  simp [] [] ["only"] ["[", expr infi_subtype', "]"] [] [],
+  exact [expr map_infi_eq h.directed_coe]
+end
 
 theorem map_inf_le {f g : Filter α} {m : α → β} : map m (f⊓g) ≤ map m f⊓map m g :=
   (@map_mono _ _ m).map_inf_le f g
 
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem map_inf'
 {f g : filter α}
 {m : α → β}
@@ -2499,7 +2509,7 @@ theorem tendsto.congr {f₁ f₂ : α → β} {l₁ : Filter α} {l₂ : Filter 
   tendsto f₁ l₁ l₂ → tendsto f₂ l₁ l₂ :=
   (tendsto_congr h).1
 
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem tendsto_id' {x y : filter α} : «expr ≤ »(x, y) → tendsto id x y :=
 by simp [] [] ["only"] ["[", expr tendsto, ",", expr map_id, ",", expr forall_true_iff, "]"] [] [] { contextual := tt }
 
@@ -2661,24 +2671,17 @@ theorem tendsto.not_tendsto {f : α → β} {a : Filter α} {b₁ b₂ : Filter 
   (hb : Disjoint b₁ b₂) : ¬tendsto f a b₂ :=
   fun hf' => (tendsto_inf.2 ⟨hf, hf'⟩).ne_bot.Ne hb.eq_bot
 
--- error in Order.Filter.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem tendsto.if
-{l₁ : filter α}
-{l₂ : filter β}
-{f g : α → β}
-{p : α → exprProp()}
-[∀ x, decidable (p x)]
-(h₀ : tendsto f «expr ⊓ »(l₁, expr𝓟() {x | p x}) l₂)
-(h₁ : tendsto g «expr ⊓ »(l₁, expr𝓟() {x | «expr¬ »(p x)}) l₂) : tendsto (λ x, if p x then f x else g x) l₁ l₂ :=
-begin
-  simp [] [] ["only"] ["[", expr tendsto_def, ",", expr mem_inf_principal, "]"] [] ["at", "*"],
-  intros [ident s, ident hs],
-  filter_upwards ["[", expr h₀ s hs, ",", expr h₁ s hs, "]"] [],
-  simp [] [] ["only"] ["[", expr mem_preimage, "]"] [] [],
-  intros [ident x, ident hp₀, ident hp₁],
-  split_ifs [] [],
-  exacts ["[", expr hp₀ h, ",", expr hp₁ h, "]"]
-end
+theorem tendsto.if {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {p : α → Prop} [∀ x, Decidable (p x)]
+  (h₀ : tendsto f (l₁⊓𝓟 { x | p x }) l₂) (h₁ : tendsto g (l₁⊓𝓟 { x | ¬p x }) l₂) :
+  tendsto (fun x => if p x then f x else g x) l₁ l₂ :=
+  by 
+    simp only [tendsto_def, mem_inf_principal] at *
+    intro s hs 
+    filterUpwards [h₀ s hs, h₁ s hs]
+    simp only [mem_preimage]
+    intro x hp₀ hp₁ 
+    splitIfs 
+    exacts[hp₀ h, hp₁ h]
 
 theorem tendsto.piecewise {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {s : Set α} [∀ x, Decidable (x ∈ s)]
   (h₀ : tendsto f (l₁⊓𝓟 s) l₂) (h₁ : tendsto g (l₁⊓𝓟 («expr ᶜ» s)) l₂) : tendsto (piecewise s f g) l₁ l₂ :=
@@ -3038,6 +3041,13 @@ theorem mem_Coprod_iff {s : Set (∀ d, κ d)} {f : ∀ d, Filter (κ d)} :
   by 
     simp [Filter.coprodₓ]
 
+theorem compl_mem_Coprod_iff {s : Set (∀ d, κ d)} {f : ∀ d, Filter (κ d)} :
+  «expr ᶜ» s ∈ Filter.coprodₓ f ↔ ∃ t : ∀ d, Set (κ d), (∀ d, «expr ᶜ» (t d) ∈ f d) ∧ s ⊆ Set.Pi univ t :=
+  by 
+    rw [(surjective_pi_map fun d => @compl_surjective (Set (κ d)) _).exists]
+    simpRw [mem_Coprod_iff, Classical.skolem, exists_prop, @subset_compl_comm _ _ s, ←preimage_compl, ←subset_Inter_iff,
+      ←univ_pi_eq_Inter, compl_compl]
+
 theorem Coprod_ne_bot_iff' {f : ∀ d, Filter (κ d)} :
   ne_bot (Filter.coprodₓ f) ↔ (∀ d, Nonempty (κ d)) ∧ ∃ d, ne_bot (f d) :=
   by 
@@ -3071,7 +3081,7 @@ theorem map_pi_map_Coprod_le {μ : δ → Type _} {f : ∀ d, Filter (κ d)} {m 
     rw [mem_Coprod_iff] at h 
     obtain ⟨t, H, hH⟩ := h d 
     rw [mem_map] at H 
-    refine' ⟨{ x : κ d | m d x ∈ t }, H, _⟩
+    refine' ⟨{ x:κ d | m d x ∈ t }, H, _⟩
     intro x hx 
     simp only [mem_set_of_eq, preimage_set_of_eq] at hx 
     rw [mem_set_of_eq]

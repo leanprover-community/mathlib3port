@@ -1,4 +1,3 @@
-import Mathbin.Algebra.Associated 
 import Mathbin.Data.Fintype.Basic
 
 /-!

@@ -1,10 +1,11 @@
-import Mathbin.CategoryTheory.Adjunction.Default 
+import Mathbin.CategoryTheory.Adjunction.Limits 
+import Mathbin.CategoryTheory.Adjunction.Opposites 
 import Mathbin.CategoryTheory.Elements 
 import Mathbin.CategoryTheory.Limits.FunctorCategory 
+import Mathbin.CategoryTheory.Limits.KanExtension 
 import Mathbin.CategoryTheory.Limits.Preserves.Limits 
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal 
-import Mathbin.CategoryTheory.Limits.Types 
-import Mathbin.CategoryTheory.Limits.KanExtension
+import Mathbin.CategoryTheory.Limits.Types
 
 /-!
 # Colimit of representables
@@ -316,37 +317,35 @@ def colimit_of_representable (P : «expr ᵒᵖ» C ⥤ Type u₁) : is_colimit 
     rw [colimit.desc_extend, colimit.desc_cocone]
     infer_instance
 
+-- error in CategoryTheory.Limits.Presheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given two functors L₁ and L₂ which preserve colimits, if they agree when restricted to the
 representable presheaves then they agree everywhere.
 -/
-def nat_iso_of_nat_iso_on_representables (L₁ L₂ : («expr ᵒᵖ» C ⥤ Type u₁) ⥤ ℰ) [preserves_colimits L₁]
-  [preserves_colimits L₂] (h : yoneda ⋙ L₁ ≅ yoneda ⋙ L₂) : L₁ ≅ L₂ :=
-  by 
-    apply nat_iso.of_components _ _
-    ·
-      intro P 
-      refine'
-        (is_colimit_of_preserves L₁ (colimit_of_representable P)).coconePointsIsoOfNatIso
-          (is_colimit_of_preserves L₂ (colimit_of_representable P)) _ 
-      apply functor.associator _ _ _ ≪≫ _ 
-      exact iso_whisker_left (category_of_elements.π P).leftOp h
-    ·
-      intro P₁ P₂ f 
-      apply (is_colimit_of_preserves L₁ (colimit_of_representable P₁)).hom_ext 
-      intro j 
-      dsimp only [id.def, is_colimit.cocone_points_iso_of_nat_iso_hom, iso_whisker_left_hom]
-      have  :
-        (L₁.map_cocone (cocone_of_representable P₁)).ι.app j ≫ L₁.map f =
-          (L₁.map_cocone (cocone_of_representable P₂)).ι.app ((category_of_elements.map f).op.obj j)
-      ·
-        dsimp 
-        rw [←L₁.map_comp, cocone_of_representable_naturality]
-        rfl 
-      rw [reassoc_of this, is_colimit.ι_map_assoc, is_colimit.ι_map]
-      dsimp 
-      rw [←L₂.map_comp, cocone_of_representable_naturality]
-      rfl
+def nat_iso_of_nat_iso_on_representables
+(L₁ L₂ : «expr ⥤ »(«expr ⥤ »(«expr ᵒᵖ»(C), Type u₁), ℰ))
+[preserves_colimits L₁]
+[preserves_colimits L₂]
+(h : «expr ≅ »(«expr ⋙ »(yoneda, L₁), «expr ⋙ »(yoneda, L₂))) : «expr ≅ »(L₁, L₂) :=
+begin
+  apply [expr nat_iso.of_components _ _],
+  { intro [ident P],
+    refine [expr (is_colimit_of_preserves L₁ (colimit_of_representable P)).cocone_points_iso_of_nat_iso (is_colimit_of_preserves L₂ (colimit_of_representable P)) _],
+    apply [expr «expr ≪≫ »(functor.associator _ _ _, _)],
+    exact [expr iso_whisker_left (category_of_elements.π P).left_op h] },
+  { intros [ident P₁, ident P₂, ident f],
+    apply [expr (is_colimit_of_preserves L₁ (colimit_of_representable P₁)).hom_ext],
+    intro [ident j],
+    dsimp ["only"] ["[", expr id.def, ",", expr is_colimit.cocone_points_iso_of_nat_iso_hom, ",", expr iso_whisker_left_hom, "]"] [] [],
+    have [] [":", expr «expr = »(«expr ≫ »((L₁.map_cocone (cocone_of_representable P₁)).ι.app j, L₁.map f), (L₁.map_cocone (cocone_of_representable P₂)).ι.app ((category_of_elements.map f).op.obj j))] [],
+    { dsimp [] [] [] [],
+      rw ["[", "<-", expr L₁.map_comp, ",", expr cocone_of_representable_naturality, "]"] [],
+      refl },
+    rw ["[", expr reassoc_of this, ",", expr is_colimit.ι_map_assoc, ",", expr is_colimit.ι_map, "]"] [],
+    dsimp [] [] [] [],
+    rw ["[", "<-", expr L₂.map_comp, ",", expr cocone_of_representable_naturality, "]"] [],
+    refl }
+end
 
 variable[has_colimits ℰ]
 
@@ -378,7 +377,7 @@ def is_left_adjoint_of_preserves_colimits (L : (C ⥤ Type u₁) ⥤ ℰ) [prese
   let e : _ ⥤ Type u₁ ≌ _ ⥤ Type u₁ := (op_op_equivalence C).congr_left 
   let t := is_left_adjoint_of_preserves_colimits_aux (e.functor ⋙ L : _)
   by 
-    exactI adjunction.left_adjoint_of_nat_iso (e.inv_fun_id_assoc _)
+    exact adjunction.left_adjoint_of_nat_iso (e.inv_fun_id_assoc _)
 
 end CategoryTheory
 

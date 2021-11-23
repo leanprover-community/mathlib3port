@@ -103,23 +103,28 @@ protected def mk_of_nhds (n : α → Filter α) : TopologicalSpace α :=
     is_open_inter := fun s t hs ht x ⟨hxs, hxt⟩ => inter_mem (hs x hxs) (ht x hxt),
     is_open_sUnion := fun s hs a ⟨x, hx, hxa⟩ => mem_of_superset (hs x hx _ hxa) (Set.subset_sUnion_of_mem hx) }
 
-theorem nhds_mk_of_nhds (n : α → Filter α) (a : α) (h₀ : pure ≤ n)
-  (h₁ : ∀ {a s}, s ∈ n a → ∃ (t : _)(_ : t ∈ n a), t ⊆ s ∧ ∀ a' _ : a' ∈ t, s ∈ n a') :
-  @nhds α (TopologicalSpace.mkOfNhds n) a = n a :=
-  by 
-    letI this := TopologicalSpace.mkOfNhds n 
-    refine' le_antisymmₓ (fun s hs => _) fun s hs => _
-    ·
-      have h₀ : { b | s ∈ n b } ⊆ s := fun b hb => mem_pure.1$ h₀ b hb 
-      have h₁ : { b | s ∈ n b } ∈ 𝓝 a
-      ·
-        refine' IsOpen.mem_nhds (fun b hb : s ∈ n b => _) hs 
-        rcases h₁ hb with ⟨t, ht, hts, h⟩
-        exact mem_of_superset ht h 
-      exact mem_of_superset h₁ h₀
-    ·
-      rcases(@mem_nhds_iff α (TopologicalSpace.mkOfNhds n) _ _).1 hs with ⟨t, hts, ht, hat⟩
-      exact (n a).sets_of_superset (ht _ hat) hts
+-- error in Topology.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nhds_mk_of_nhds
+(n : α → filter α)
+(a : α)
+(h₀ : «expr ≤ »(pure, n))
+(h₁ : ∀
+ {a
+  s}, «expr ∈ »(s, n a) → «expr∃ , »((t «expr ∈ » n a), «expr ∧ »(«expr ⊆ »(t, s), ∀
+   a' «expr ∈ » t, «expr ∈ »(s, n a')))) : «expr = »(@nhds α (topological_space.mk_of_nhds n) a, n a) :=
+begin
+  letI [] [] [":=", expr topological_space.mk_of_nhds n],
+  refine [expr le_antisymm (assume s hs, _) (assume s hs, _)],
+  { have [ident h₀] [":", expr «expr ⊆ »({b | «expr ∈ »(s, n b)}, s)] [":=", expr assume
+     b hb, «expr $ »(mem_pure.1, h₀ b hb)],
+    have [ident h₁] [":", expr «expr ∈ »({b | «expr ∈ »(s, n b)}, expr𝓝() a)] [],
+    { refine [expr is_open.mem_nhds (assume (b) (hb : «expr ∈ »(s, n b)), _) hs],
+      rcases [expr h₁ hb, "with", "⟨", ident t, ",", ident ht, ",", ident hts, ",", ident h, "⟩"],
+      exact [expr mem_of_superset ht h] },
+    exact [expr mem_of_superset h₁ h₀] },
+  { rcases [expr (@mem_nhds_iff α (topological_space.mk_of_nhds n) _ _).1 hs, "with", "⟨", ident t, ",", ident hts, ",", ident ht, ",", ident hat, "⟩"],
+    exact [expr (n a).sets_of_superset (ht _ hat) hts] }
+end
 
 end TopologicalSpace
 
@@ -337,12 +342,18 @@ theorem is_open_coinduced {t : TopologicalSpace α} {s : Set β} {f : α → β}
   @IsOpen β (TopologicalSpace.coinduced f t) s ↔ IsOpen (f ⁻¹' s) :=
   Iff.rfl
 
-theorem preimage_nhds_coinduced [TopologicalSpace α] {π : α → β} {s : Set β} {a : α}
-  (hs : s ∈ @nhds β (TopologicalSpace.coinduced π ‹_›) (π a)) : π ⁻¹' s ∈ 𝓝 a :=
-  by 
-    letI this := TopologicalSpace.coinduced π ‹_›
-    rcases mem_nhds_iff.mp hs with ⟨V, hVs, V_op, mem_V⟩
-    exact mem_nhds_iff.mpr ⟨π ⁻¹' V, Set.preimage_mono hVs, V_op, mem_V⟩
+-- error in Topology.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem preimage_nhds_coinduced
+[topological_space α]
+{π : α → β}
+{s : set β}
+{a : α}
+(hs : «expr ∈ »(s, @nhds β (topological_space.coinduced π «expr‹ ›»(_)) (π a))) : «expr ∈ »(«expr ⁻¹' »(π, s), expr𝓝() a) :=
+begin
+  letI [] [] [":=", expr topological_space.coinduced π «expr‹ ›»(_)],
+  rcases [expr mem_nhds_iff.mp hs, "with", "⟨", ident V, ",", ident hVs, ",", ident V_op, ",", ident mem_V, "⟩"],
+  exact [expr mem_nhds_iff.mpr ⟨«expr ⁻¹' »(π, V), set.preimage_mono hVs, V_op, mem_V⟩]
+end
 
 variable{t t₁ t₂ : TopologicalSpace α}{t' : TopologicalSpace β}{f : α → β}{g : β → α}
 
@@ -786,7 +797,7 @@ theorem generate_from_Inter_of_generate_from_eq_self (f : ι → Set (Set α))
 variable{t : ι → TopologicalSpace α}
 
 theorem is_open_supr_iff {s : Set α} : @IsOpen _ (⨆i, t i) s ↔ ∀ i, @IsOpen _ (t i) s :=
-  show s ∈ SetOf (supr t).IsOpen ↔ s ∈ { x : Set α | ∀ i : ι, (t i).IsOpen x }by 
+  show s ∈ SetOf (supr t).IsOpen ↔ s ∈ { x:Set α | ∀ i : ι, (t i).IsOpen x }by 
     simp [set_of_is_open_supr]
 
 theorem is_closed_infi_iff {s : Set α} : @IsClosed _ (⨆i, t i) s ↔ ∀ i, @IsClosed _ (t i) s :=

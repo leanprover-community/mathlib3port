@@ -1,5 +1,5 @@
 import Mathbin.Algebra.Invertible 
-import Mathbin.Algebra.Field 
+import Mathbin.Algebra.Field.Basic 
 import Mathbin.Algebra.CharP.Basic
 
 /-!

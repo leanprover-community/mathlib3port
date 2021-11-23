@@ -166,32 +166,36 @@ open Set
 
 open Mvfunctor
 
-theorem mem_supp {α : Typevec n} (x : F α) i (u : α i) : u ∈ supp x i ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ :=
-  by 
-    rw [supp]
-    dsimp 
-    split 
-    ·
-      intro h a f haf 
-      have  : liftp (fun i u => u ∈ f i '' univ) x
-      ·
-        rw [liftp_iff]
-        refine' ⟨a, f, haf.symm, _⟩
-        intro i u 
-        exact mem_image_of_mem _ (mem_univ _)
-      exact h this 
-    intro h p 
-    rw [liftp_iff]
-    rintro ⟨a, f, xeq, h'⟩
-    rcases h a f xeq.symm with ⟨i, _, hi⟩
-    rw [←hi]
-    apply h'
+-- error in Data.Qpf.Multivariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_supp
+{α : typevec n}
+(x : F α)
+(i)
+(u : α i) : «expr ↔ »(«expr ∈ »(u, supp x i), ∀ a f, «expr = »(abs ⟨a, f⟩, x) → «expr ∈ »(u, «expr '' »(f i, univ))) :=
+begin
+  rw ["[", expr supp, "]"] [],
+  dsimp [] [] [] [],
+  split,
+  { intros [ident h, ident a, ident f, ident haf],
+    have [] [":", expr liftp (λ i u, «expr ∈ »(u, «expr '' »(f i, univ))) x] [],
+    { rw [expr liftp_iff] [],
+      refine [expr ⟨a, f, haf.symm, _⟩],
+      intros [ident i, ident u],
+      exact [expr mem_image_of_mem _ (mem_univ _)] },
+    exact [expr h this] },
+  intros [ident h, ident p],
+  rw [expr liftp_iff] [],
+  rintros ["⟨", ident a, ",", ident f, ",", ident xeq, ",", ident h', "⟩"],
+  rcases [expr h a f xeq.symm, "with", "⟨", ident i, ",", "_", ",", ident hi, "⟩"],
+  rw ["<-", expr hi] [],
+  apply [expr h']
+end
 
 theorem supp_eq {α : Typevec n} {i} (x : F α) : supp x i = { u | ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ } :=
   by 
     ext <;> apply mem_supp
 
--- error in Data.Qpf.Multivariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Qpf.Multivariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem has_good_supp_iff
 {α : typevec n}
 (x : F α) : «expr ↔ »(∀
@@ -300,7 +304,7 @@ theorem supp_preservation_iff_uniform : q.supp_preservation ↔ q.is_uniform :=
       ext 
       rwa [supp_eq_of_is_uniform, Mvpfunctor.supp_eq]
 
--- error in Data.Qpf.Multivariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Data.Qpf.Multivariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem supp_preservation_iff_liftp_preservation : «expr ↔ »(q.supp_preservation, q.liftp_preservation) :=
 begin
   split; intro [ident h],

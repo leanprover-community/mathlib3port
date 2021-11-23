@@ -51,7 +51,7 @@ unsafe def transport (s e : expr) : tactic Unit :=
                     do 
                       try unfold_projs_target 
                       sorry 
-                      try$ under_binders$ to_expr (pquote (%%e).symm.Injective) >>= apply 
+                      try$ under_binders$ to_expr (pquote.1 (%%ₓe).symm.Injective) >>= apply 
                       equiv_rw_hyp f e 
                       get_local f >>= exact))
 

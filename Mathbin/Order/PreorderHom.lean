@@ -1,7 +1,8 @@
-import Mathbin.Logic.Function.Iterate 
-import Mathbin.Order.BoundedLattice 
+import Mathbin.Order.GaloisConnection 
 import Mathbin.Order.CompleteLattice 
-import Mathbin.Tactic.Monotonicity.Default
+import Mathbin.Tactic.Monotonicity.Default 
+import Mathbin.Order.BoundedLattice 
+import Mathbin.Logic.Function.Iterate
 
 /-!
 # Preorder homomorphisms
@@ -403,33 +404,37 @@ instance  {β : Type _} [CompleteLattice β] : CompleteLattice (α →ₘ β) :=
     inf := Inf, le_Inf := fun s f hf x => le_binfi fun g hg => hf g hg x,
     Inf_le := fun s f hf x => infi_le_of_le f (infi_le _ hf) }
 
-theorem iterate_sup_le_sup_iff {α : Type _} [SemilatticeSup α] (f : α →ₘ α) :
-  (∀ n₁ n₂ a₁ a₂, (f^[n₁+n₂]) (a₁⊔a₂) ≤ (f^[n₁]) a₁⊔(f^[n₂]) a₂) ↔ ∀ a₁ a₂, f (a₁⊔a₂) ≤ f a₁⊔a₂ :=
-  by 
-    split  <;> intro h
-    ·
-      exact h 1 0
-    ·
-      intro n₁ n₂ a₁ a₂ 
-      have h' : ∀ n a₁ a₂, (f^[n]) (a₁⊔a₂) ≤ (f^[n]) a₁⊔a₂
-      ·
-        intro n 
-        induction' n with n ih <;> intro a₁ a₂
-        ·
-          rfl
-        ·
-          calc (f^[n+1]) (a₁⊔a₂) = (f^[n]) (f (a₁⊔a₂)) := Function.iterate_succ_apply f n _ _ ≤ (f^[n]) (f a₁⊔a₂) :=
-            f.mono.iterate n (h a₁ a₂)_ ≤ (f^[n]) (f a₁)⊔a₂ := ih _ _ _ = (f^[n+1]) a₁⊔a₂ :=
-            by 
-              rw [←Function.iterate_succ_apply]
-      calc (f^[n₁+n₂]) (a₁⊔a₂) = (f^[n₁]) ((f^[n₂]) (a₁⊔a₂)) :=
-        Function.iterate_add_apply f n₁ n₂ _ _ = (f^[n₁]) ((f^[n₂]) (a₂⊔a₁)) :=
-        by 
-          rw [sup_comm]_ ≤ (f^[n₁]) ((f^[n₂]) a₂⊔a₁) :=
-        f.mono.iterate n₁ (h' n₂ _ _)_ = (f^[n₁]) (a₁⊔(f^[n₂]) a₂) :=
-        by 
-          rw [sup_comm]_ ≤ (f^[n₁]) a₁⊔(f^[n₂]) a₂ :=
-        h' n₁ a₁ _
+-- error in Order.PreorderHom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem iterate_sup_le_sup_iff
+{α : Type*}
+[semilattice_sup α]
+(f : «expr →ₘ »(α, α)) : «expr ↔ »(∀
+ n₁
+ n₂
+ a₁
+ a₂, «expr ≤ »(«expr ^[ ]»(f, «expr + »(n₁, n₂)) «expr ⊔ »(a₁, a₂), «expr ⊔ »(«expr ^[ ]»(f, n₁) a₁, «expr ^[ ]»(f, n₂) a₂)), ∀
+ a₁ a₂, «expr ≤ »(f «expr ⊔ »(a₁, a₂), «expr ⊔ »(f a₁, a₂))) :=
+begin
+  split; intros [ident h],
+  { exact [expr h 1 0] },
+  { intros [ident n₁, ident n₂, ident a₁, ident a₂],
+    have [ident h'] [":", expr ∀
+     n a₁ a₂, «expr ≤ »(«expr ^[ ]»(f, n) «expr ⊔ »(a₁, a₂), «expr ⊔ »(«expr ^[ ]»(f, n) a₁, a₂))] [],
+    { intros [ident n],
+      induction [expr n] [] ["with", ident n, ident ih] []; intros [ident a₁, ident a₂],
+      { refl },
+      { calc
+          «expr = »(«expr ^[ ]»(f, «expr + »(n, 1)) «expr ⊔ »(a₁, a₂), «expr ^[ ]»(f, n) (f «expr ⊔ »(a₁, a₂))) : function.iterate_succ_apply f n _
+          «expr ≤ »(..., «expr ^[ ]»(f, n) «expr ⊔ »(f a₁, a₂)) : f.mono.iterate n (h a₁ a₂)
+          «expr ≤ »(..., «expr ⊔ »(«expr ^[ ]»(f, n) (f a₁), a₂)) : ih _ _
+          «expr = »(..., «expr ⊔ »(«expr ^[ ]»(f, «expr + »(n, 1)) a₁, a₂)) : by rw ["<-", expr function.iterate_succ_apply] [] } },
+    calc
+      «expr = »(«expr ^[ ]»(f, «expr + »(n₁, n₂)) «expr ⊔ »(a₁, a₂), «expr ^[ ]»(f, n₁) («expr ^[ ]»(f, n₂) «expr ⊔ »(a₁, a₂))) : function.iterate_add_apply f n₁ n₂ _
+      «expr = »(..., «expr ^[ ]»(f, n₁) («expr ^[ ]»(f, n₂) «expr ⊔ »(a₂, a₁))) : by rw [expr sup_comm] []
+      «expr ≤ »(..., «expr ^[ ]»(f, n₁) «expr ⊔ »(«expr ^[ ]»(f, n₂) a₂, a₁)) : f.mono.iterate n₁ (h' n₂ _ _)
+      «expr = »(..., «expr ^[ ]»(f, n₁) «expr ⊔ »(a₁, «expr ^[ ]»(f, n₂) a₂)) : by rw [expr sup_comm] []
+      «expr ≤ »(..., «expr ⊔ »(«expr ^[ ]»(f, n₁) a₁, «expr ^[ ]»(f, n₂) a₂)) : h' n₁ a₁ _ }
+end
 
 end PreorderHom
 

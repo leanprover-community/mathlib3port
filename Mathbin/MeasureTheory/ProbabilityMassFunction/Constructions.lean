@@ -87,7 +87,7 @@ def of_fintype [Fintype α] (f : α →  ℝ≥0 ) (h : (∑x, f x) = 1) : Pmf �
 theorem of_fintype_apply [Fintype α] {f : α →  ℝ≥0 } (h : (∑x, f x) = 1) (a : α) : of_fintype f h a = f a :=
   rfl
 
--- error in MeasureTheory.ProbabilityMassFunction.Constructions: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.ProbabilityMassFunction.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a non-empty multiset `s` we construct the `pmf` which sends `a` to the fraction of
   elements in `s` that are `a`. -/ def of_multiset (s : multiset α) (hs : «expr ≠ »(s, 0)) : pmf α :=
 ⟨λ
@@ -235,24 +235,21 @@ protected theorem bind_on_support.summable (p : Pmf α) (f : ∀ a _ : a ∈ p.s
         simpa 
       exact mul_le_mul_of_nonneg_left ((f a h).coe_le_one _) (p a).2
 
+-- error in MeasureTheory.ProbabilityMassFunction.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Generalized version of `bind` allowing `f` to only be defined on the support of `p`.
   `p.bind f` is equivalent to `p.bind_on_support (λ a _, f a)`, see `bind_on_support_eq_bind` -/
-def bind_on_support (p : Pmf α) (f : ∀ a _ : a ∈ p.support, Pmf β) : Pmf β :=
-  ⟨fun b => ∑'a, p a*if h : p a = 0 then 0 else f a h b,
-    Ennreal.has_sum_coe.1
-      (by 
-        simp only [Ennreal.coe_tsum (bind_on_support.summable p f _)]
-        rw [ennreal.summable.has_sum_iff, Ennreal.tsum_comm]
-        simp only [Ennreal.coe_mul, Ennreal.coe_one, Ennreal.tsum_mul_left]
-        have  : (∑'a : α, (p a : Ennreal)) = 1 :=
-          by 
-            simp only [←Ennreal.coe_tsum p.summable_coe, Ennreal.coe_one, tsum_coe]
-        refine' trans (tsum_congr fun a => _) this 
-        splitIfs with h
-        ·
-          simp [h]
-        ·
-          simp [←Ennreal.coe_tsum (f a h).summable_coe, (f a h).tsum_coe])⟩
+def bind_on_support (p : pmf α) (f : ∀ a «expr ∈ » p.support, pmf β) : pmf β :=
+⟨λ
+ b, «expr∑' , »((a), «expr * »(p a, if h : «expr = »(p a, 0) then 0 else f a h b)), ennreal.has_sum_coe.1 (begin
+    simp [] [] ["only"] ["[", expr ennreal.coe_tsum (bind_on_support.summable p f _), "]"] [] [],
+    rw ["[", expr ennreal.summable.has_sum_iff, ",", expr ennreal.tsum_comm, "]"] [],
+    simp [] [] ["only"] ["[", expr ennreal.coe_mul, ",", expr ennreal.coe_one, ",", expr ennreal.tsum_mul_left, "]"] [] [],
+    have [] [":", expr «expr = »(«expr∑' , »((a : α), (p a : ennreal)), 1)] [":=", expr by simp [] [] ["only"] ["[", "<-", expr ennreal.coe_tsum p.summable_coe, ",", expr ennreal.coe_one, ",", expr tsum_coe, "]"] [] []],
+    refine [expr trans (tsum_congr (λ a, _)) this],
+    split_ifs [] ["with", ident h],
+    { simp [] [] [] ["[", expr h, "]"] [] [] },
+    { simp [] [] [] ["[", "<-", expr ennreal.coe_tsum (f a h).summable_coe, ",", expr (f a h).tsum_coe, "]"] [] [] }
+  end)⟩
 
 @[simp]
 theorem bind_on_support_apply (p : Pmf α) (f : ∀ a _ : a ∈ p.support, Pmf β) (b : β) :

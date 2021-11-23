@@ -369,28 +369,30 @@ theorem mono_of_is_limit_mk_id_id (f : X ⟶ Y) (t : is_limit (mk (𝟙 X) (𝟙
         rcases pullback_cone.is_limit.lift' t _ _ Eq with ⟨_, rfl, rfl⟩
         rfl⟩
 
--- error in CategoryTheory.Limits.Shapes.Pullbacks: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Suppose `f` and `g` are two morphisms with a common codomain and `s` is a limit cone over the
     diagram formed by `f` and `g`. Suppose `f` and `g` both factor through a monomorphism `h` via
     `x` and `y`, respectively.  Then `s` is also a limit cone over the diagram formed by `x` and
     `y`.  -/
-def is_limit_of_factors
-(f : «expr ⟶ »(X, Z))
-(g : «expr ⟶ »(Y, Z))
-(h : «expr ⟶ »(W, Z))
-[mono h]
-(x : «expr ⟶ »(X, W))
-(y : «expr ⟶ »(Y, W))
-(hxh : «expr = »(«expr ≫ »(x, h), f))
-(hyh : «expr = »(«expr ≫ »(y, h), g))
-(s : pullback_cone f g)
-(hs : is_limit s) : is_limit (pullback_cone.mk _ _ (show «expr = »(«expr ≫ »(s.fst, x), «expr ≫ »(s.snd, y)), from «expr $ »((cancel_mono h).1, by simp [] [] ["only"] ["[", expr category.assoc, ",", expr hxh, ",", expr hyh, ",", expr s.condition, "]"] [] []))) :=
-«expr $ »(pullback_cone.is_limit_aux' _, λ
- t, ⟨hs.lift «expr $ »(pullback_cone.mk t.fst t.snd, by rw ["[", "<-", expr hxh, ",", "<-", expr hyh, ",", expr reassoc_of t.condition, "]"] []), ⟨hs.fac _ walking_cospan.left, hs.fac _ walking_cospan.right, λ
-   r hr hr', begin
-     apply [expr pullback_cone.is_limit.hom_ext hs]; simp [] [] ["only"] ["[", expr pullback_cone.mk_fst, ",", expr pullback_cone.mk_snd, "]"] [] ["at", "⊢", ident hr, ident hr']; simp [] [] ["only"] ["[", expr hr, ",", expr hr', "]"] [] []; symmetry,
-     exacts ["[", expr hs.fac _ walking_cospan.left, ",", expr hs.fac _ walking_cospan.right, "]"]
-   end⟩⟩)
+def is_limit_of_factors (f : X ⟶ Z) (g : Y ⟶ Z) (h : W ⟶ Z) [mono h] (x : X ⟶ W) (y : Y ⟶ W) (hxh : x ≫ h = f)
+  (hyh : y ≫ h = g) (s : pullback_cone f g) (hs : is_limit s) :
+  is_limit
+    (pullback_cone.mk _ _
+      (show s.fst ≫ x = s.snd ≫ y from
+        (cancel_mono h).1$
+          by 
+            simp only [category.assoc, hxh, hyh, s.condition])) :=
+  pullback_cone.is_limit_aux' _$
+    fun t =>
+      ⟨hs.lift
+          (pullback_cone.mk t.fst t.snd$
+            by 
+              rw [←hxh, ←hyh, reassoc_of t.condition]),
+        ⟨hs.fac _ walking_cospan.left, hs.fac _ walking_cospan.right,
+          fun r hr hr' =>
+            by 
+              apply pullback_cone.is_limit.hom_ext hs <;>
+                simp only [pullback_cone.mk_fst, pullback_cone.mk_snd] at hr hr'⊢ <;> simp only [hr, hr'] <;> symm 
+              exacts[hs.fac _ walking_cospan.left, hs.fac _ walking_cospan.right]⟩⟩
 
 end PullbackCone
 
@@ -554,28 +556,30 @@ theorem epi_of_is_colimit_mk_id_id (f : X ⟶ Y) (t : is_colimit (mk (𝟙 Y) (�
         rcases pushout_cocone.is_colimit.desc' t _ _ Eq with ⟨_, rfl, rfl⟩
         rfl⟩
 
--- error in CategoryTheory.Limits.Shapes.Pullbacks: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Suppose `f` and `g` are two morphisms with a common domain and `s` is a colimit cocone over the
     diagram formed by `f` and `g`. Suppose `f` and `g` both factor through an epimorphism `h` via
     `x` and `y`, respectively. Then `s` is also a colimit cocone over the diagram formed by `x` and
     `y`.  -/
-def is_colimit_of_factors
-(f : «expr ⟶ »(X, Y))
-(g : «expr ⟶ »(X, Z))
-(h : «expr ⟶ »(X, W))
-[epi h]
-(x : «expr ⟶ »(W, Y))
-(y : «expr ⟶ »(W, Z))
-(hhx : «expr = »(«expr ≫ »(h, x), f))
-(hhy : «expr = »(«expr ≫ »(h, y), g))
-(s : pushout_cocone f g)
-(hs : is_colimit s) : is_colimit (pushout_cocone.mk _ _ (show «expr = »(«expr ≫ »(x, s.inl), «expr ≫ »(y, s.inr)), from «expr $ »((cancel_epi h).1, by rw ["[", expr reassoc_of hhx, ",", expr reassoc_of hhy, ",", expr s.condition, "]"] []))) :=
-«expr $ »(pushout_cocone.is_colimit_aux' _, λ
- t, ⟨hs.desc «expr $ »(pushout_cocone.mk t.inl t.inr, by rw ["[", "<-", expr hhx, ",", "<-", expr hhy, ",", expr category.assoc, ",", expr category.assoc, ",", expr t.condition, "]"] []), ⟨hs.fac _ walking_span.left, hs.fac _ walking_span.right, λ
-   r hr hr', begin
-     apply [expr pushout_cocone.is_colimit.hom_ext hs]; simp [] [] ["only"] ["[", expr pushout_cocone.mk_inl, ",", expr pushout_cocone.mk_inr, "]"] [] ["at", "⊢", ident hr, ident hr']; simp [] [] ["only"] ["[", expr hr, ",", expr hr', "]"] [] []; symmetry,
-     exacts ["[", expr hs.fac _ walking_span.left, ",", expr hs.fac _ walking_span.right, "]"]
-   end⟩⟩)
+def is_colimit_of_factors (f : X ⟶ Y) (g : X ⟶ Z) (h : X ⟶ W) [epi h] (x : W ⟶ Y) (y : W ⟶ Z) (hhx : h ≫ x = f)
+  (hhy : h ≫ y = g) (s : pushout_cocone f g) (hs : is_colimit s) :
+  is_colimit
+    (pushout_cocone.mk _ _
+      (show x ≫ s.inl = y ≫ s.inr from
+        (cancel_epi h).1$
+          by 
+            rw [reassoc_of hhx, reassoc_of hhy, s.condition])) :=
+  pushout_cocone.is_colimit_aux' _$
+    fun t =>
+      ⟨hs.desc
+          (pushout_cocone.mk t.inl t.inr$
+            by 
+              rw [←hhx, ←hhy, category.assoc, category.assoc, t.condition]),
+        ⟨hs.fac _ walking_span.left, hs.fac _ walking_span.right,
+          fun r hr hr' =>
+            by 
+              apply pushout_cocone.is_colimit.hom_ext hs <;>
+                simp only [pushout_cocone.mk_inl, pushout_cocone.mk_inr] at hr hr'⊢ <;> simp only [hr, hr'] <;> symm 
+              exacts[hs.fac _ walking_span.left, hs.fac _ walking_span.right]⟩⟩
 
 end PushoutCocone
 
@@ -708,11 +712,11 @@ theorem pushout.condition {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} [has_pushout f
 /--
 Given such a diagram, then there is a natural morphism `W ×ₛ X ⟶ Y ×ₜ Z`.
 
-  W  ⟶  Y
-    ↘      ↘
-      S  ⟶  T
-    ↗      ↗
-  X  ⟶  Z
+    W  ⟶  Y
+      ↘      ↘
+        S  ⟶  T
+      ↗      ↗
+    X  ⟶  Z
 
 -/
 abbrev pullback.map {W X Y Z S T : C} (f₁ : W ⟶ S) (f₂ : X ⟶ S) [has_pullback f₁ f₂] (g₁ : Y ⟶ T) (g₂ : Z ⟶ T)
@@ -725,11 +729,11 @@ abbrev pullback.map {W X Y Z S T : C} (f₁ : W ⟶ S) (f₂ : X ⟶ S) [has_pul
 /--
 Given such a diagram, then there is a natural morphism `W ⨿ₛ X ⟶ Y ⨿ₜ Z`.
 
-      W  ⟶  Y
-    ↗      ↗
-  S  ⟶  T
-    ↘      ↘
-      X  ⟶  Z
+        W  ⟶  Y
+      ↗      ↗
+    S  ⟶  T
+      ↘      ↘
+        X  ⟶  Z
 
 -/
 abbrev pushout.map {W X Y Z S T : C} (f₁ : S ⟶ W) (f₂ : S ⟶ X) [has_pushout f₁ f₂] (g₁ : T ⟶ Y) (g₂ : T ⟶ Z)

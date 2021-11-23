@@ -197,7 +197,7 @@ def comp (f : NonUnitalAlgHom R B C) (g : NonUnitalAlgHom R A B) : NonUnitalAlgH
 
 @[simp, normCast]
 theorem coe_comp (f : NonUnitalAlgHom R B C) (g : NonUnitalAlgHom R A B) :
-  (f.comp g : A → C) = ((f : B → C) ∘ (g : A → B)) :=
+  (f.comp g : A → C) = (f : B → C) ∘ (g : A → B) :=
   rfl
 
 theorem comp_apply (f : NonUnitalAlgHom R B C) (g : NonUnitalAlgHom R A B) (x : A) : f.comp g x = f (g x) :=

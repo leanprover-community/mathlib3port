@@ -190,6 +190,9 @@ theorem not_lt_of_le [Preorderₓ α] {a b : α} (h : a ≤ b) : ¬b < a :=
 
 alias not_lt_of_le ← LE.le.not_lt
 
+theorem ne_of_not_le [Preorderₓ α] {a b : α} (h : ¬a ≤ b) : a ≠ b :=
+  fun hab => h (le_of_eqₓ hab)
+
 protected theorem Decidable.le_iff_eq_or_lt [PartialOrderₓ α] [@DecidableRel α (· ≤ ·)] {a b : α} :
   a ≤ b ↔ a = b ∨ a < b :=
   Decidable.le_iff_lt_or_eqₓ.trans Or.comm
@@ -205,9 +208,11 @@ protected theorem Decidable.eq_iff_le_not_lt [PartialOrderₓ α] [@DecidableRel
   ⟨fun h => ⟨h.le, h ▸ lt_irreflₓ _⟩,
     fun ⟨h₁, h₂⟩ => h₁.antisymm$ Decidable.by_contradiction$ fun h₃ => h₂ (h₁.lt_of_not_le h₃)⟩
 
-theorem eq_iff_le_not_lt [PartialOrderₓ α] {a b : α} : a = b ↔ a ≤ b ∧ ¬a < b :=
-  by 
-    haveI  := Classical.dec <;> exact Decidable.eq_iff_le_not_lt
+-- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_iff_le_not_lt
+[partial_order α]
+{a b : α} : «expr ↔ »(«expr = »(a, b), «expr ∧ »(«expr ≤ »(a, b), «expr¬ »(«expr < »(a, b)))) :=
+by haveI [] [] [":=", expr classical.dec]; exact [expr decidable.eq_iff_le_not_lt]
 
 theorem eq_or_lt_of_le [PartialOrderₓ α] {a b : α} (h : a ≤ b) : a = b ∨ a < b :=
   h.lt_or_eq.symm
@@ -225,10 +230,12 @@ protected theorem Decidable.ne_iff_lt_iff_le [PartialOrderₓ α] [@DecidableRel
   (a ≠ b ↔ a < b) ↔ a ≤ b :=
   ⟨fun h => Decidable.byCases le_of_eqₓ (le_of_ltₓ ∘ h.mp), fun h => ⟨lt_of_le_of_neₓ h, ne_of_ltₓ⟩⟩
 
+-- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem ne_iff_lt_iff_le [PartialOrderₓ α] {a b : α} : (a ≠ b ↔ a < b) ↔ a ≤ b :=
-  by 
-    haveI  := Classical.dec <;> exact Decidable.ne_iff_lt_iff_le
+theorem ne_iff_lt_iff_le
+[partial_order α]
+{a b : α} : «expr ↔ »(«expr ↔ »(«expr ≠ »(a, b), «expr < »(a, b)), «expr ≤ »(a, b)) :=
+by haveI [] [] [":=", expr classical.dec]; exact [expr decidable.ne_iff_lt_iff_le]
 
 theorem lt_of_not_ge' [LinearOrderₓ α] {a b : α} (h : ¬b ≤ a) : a < b :=
   ((le_totalₓ _ _).resolve_right h).lt_of_not_le h
@@ -300,19 +307,18 @@ theorem eq_of_forall_ge_iff [PartialOrderₓ α] {a b : α} (H : ∀ c, a ≤ c 
 theorem le_implies_le_of_le_of_le {a b c d : α} [Preorderₓ α] (hca : c ≤ a) (hbd : b ≤ d) : a ≤ b → c ≤ d :=
   fun hab => (hca.trans hab).trans hbd
 
-@[ext]
-theorem Preorderₓ.to_has_le_injective {α : Type _} : Function.Injective (@Preorderₓ.toHasLe α) :=
-  fun A B h =>
-    by 
-      cases A 
-      cases B 
-      injection h with h_le 
-      have  : A_lt = B_lt
-      ·
-        funext a b 
-        dsimp [· ≤ ·]  at A_lt_iff_le_not_le B_lt_iff_le_not_le h_le 
-        simp [A_lt_iff_le_not_le, B_lt_iff_le_not_le, h_le]
-      congr
+-- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[ext #[]] theorem preorder.to_has_le_injective {α : Type*} : function.injective (@preorder.to_has_le α) :=
+λ A B h, begin
+  cases [expr A] [],
+  cases [expr B] [],
+  injection [expr h] ["with", ident h_le],
+  have [] [":", expr «expr = »(A_lt, B_lt)] [],
+  { funext [ident a, ident b],
+    dsimp [] ["[", expr («expr ≤ »), "]"] [] ["at", ident A_lt_iff_le_not_le, ident B_lt_iff_le_not_le, ident h_le],
+    simp [] [] [] ["[", expr A_lt_iff_le_not_le, ",", expr B_lt_iff_le_not_le, ",", expr h_le, "]"] [] [] },
+  congr' [] []
+end
 
 @[ext]
 theorem PartialOrderₓ.to_preorder_injective {α : Type _} : Function.Injective (@PartialOrderₓ.toPreorder α) :=
@@ -337,38 +343,32 @@ theorem LinearOrderₓ.to_partial_order_injective {α : Type _} : Function.Injec
     obtain rfl : A_min = B_min := A_min_def.trans B_min_def.symm 
     congr
 
-theorem Preorderₓ.ext {α} {A B : Preorderₓ α}
-  (H :
-    ∀ x y : α,
-      by 
-          haveI  := A <;> exact x ≤ y ↔
-        x ≤ y) :
-  A = B :=
-  by 
-    ext x y 
-    exact H x y
+-- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem preorder.ext
+{α}
+{A B : preorder α}
+(H : ∀
+ x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »(A, B) :=
+by { ext [] [ident x, ident y] [],
+  exact [expr H x y] }
 
-theorem PartialOrderₓ.ext {α} {A B : PartialOrderₓ α}
-  (H :
-    ∀ x y : α,
-      by 
-          haveI  := A <;> exact x ≤ y ↔
-        x ≤ y) :
-  A = B :=
-  by 
-    ext x y 
-    exact H x y
+-- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem partial_order.ext
+{α}
+{A B : partial_order α}
+(H : ∀
+ x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »(A, B) :=
+by { ext [] [ident x, ident y] [],
+  exact [expr H x y] }
 
-theorem LinearOrderₓ.ext {α} {A B : LinearOrderₓ α}
-  (H :
-    ∀ x y : α,
-      by 
-          haveI  := A <;> exact x ≤ y ↔
-        x ≤ y) :
-  A = B :=
-  by 
-    ext x y 
-    exact H x y
+-- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem linear_order.ext
+{α}
+{A B : linear_order α}
+(H : ∀
+ x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »(A, B) :=
+by { ext [] [ident x, ident y] [],
+  exact [expr H x y] }
 
 /-- Given a relation `R` on `β` and a function `f : α → β`, the preimage relation on `α` is defined
 by `x ≤ y ↔ f x ≤ f y`. It is the unique relation on `α` making `f` a `rel_embedding` (assuming `f`
@@ -450,7 +450,7 @@ instance Pi.preorder {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α 
 theorem Pi.le_def {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] {x y : ∀ i, α i} : x ≤ y ↔ ∀ i, x i ≤ y i :=
   Iff.rfl
 
--- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem pi.lt_def
 {ι : Type u}
 {α : ι → Type v}
@@ -466,7 +466,7 @@ theorem update_le_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α
   {a : α i} : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ j _ : j ≠ i, x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 
--- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem update_le_update_iff
 {ι : Type u}
 {α : ι → Type v}

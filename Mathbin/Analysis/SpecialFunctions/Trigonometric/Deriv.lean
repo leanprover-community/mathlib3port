@@ -1,5 +1,4 @@
-import Mathbin.Analysis.SpecialFunctions.ExpDeriv 
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathbin.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
 # Differentiability of trigonometric functions

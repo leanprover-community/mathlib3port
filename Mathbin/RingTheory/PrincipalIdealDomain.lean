@@ -138,22 +138,26 @@ namespace IsPrime
 
 open Submodule.IsPrincipal Ideal
 
-theorem to_maximal_ideal [CommRingₓ R] [IsDomain R] [IsPrincipalIdealRing R] {S : Ideal R} [hpi : is_prime S]
-  (hS : S ≠ ⊥) : is_maximal S :=
-  is_maximal_iff.2
-    ⟨(ne_top_iff_one S).1 hpi.1,
-      by 
-        intro T x hST hxS hxT 
-        cases' (mem_iff_generator_dvd _).1 (hST$ generator_mem S) with z hz 
-        cases hpi.mem_or_mem (show (generator T*z) ∈ S from hz ▸ generator_mem S)
-        ·
-          have hTS : T ≤ S 
-          rwa [←T.span_singleton_generator, Ideal.span_le, singleton_subset_iff]
-          exact (hxS$ hTS hxT).elim 
-        cases' (mem_iff_generator_dvd _).1 h with y hy 
-        have  : generator S ≠ 0 := mt (eq_bot_iff_generator_eq_zero _).2 hS 
-        rw [←mul_oneₓ (generator S), hy, mul_left_commₓ, mul_right_inj' this] at hz 
-        exact hz.symm ▸ T.mul_mem_right _ (generator_mem T)⟩
+-- error in RingTheory.PrincipalIdealDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem to_maximal_ideal
+[comm_ring R]
+[is_domain R]
+[is_principal_ideal_ring R]
+{S : ideal R}
+[hpi : is_prime S]
+(hS : «expr ≠ »(S, «expr⊥»())) : is_maximal S :=
+is_maximal_iff.2 ⟨(ne_top_iff_one S).1 hpi.1, begin
+   assume [binders (T x hST hxS hxT)],
+   cases [expr (mem_iff_generator_dvd _).1 «expr $ »(hST, generator_mem S)] ["with", ident z, ident hz],
+   cases [expr hpi.mem_or_mem (show «expr ∈ »(«expr * »(generator T, z), S), from «expr ▸ »(hz, generator_mem S))] [],
+   { have [ident hTS] [":", expr «expr ≤ »(T, S)] [],
+     rwa ["[", "<-", expr T.span_singleton_generator, ",", expr ideal.span_le, ",", expr singleton_subset_iff, "]"] [],
+     exact [expr «expr $ »(hxS, hTS hxT).elim] },
+   cases [expr (mem_iff_generator_dvd _).1 h] ["with", ident y, ident hy],
+   have [] [":", expr «expr ≠ »(generator S, 0)] [":=", expr mt (eq_bot_iff_generator_eq_zero _).2 hS],
+   rw ["[", "<-", expr mul_one (generator S), ",", expr hy, ",", expr mul_left_comm, ",", expr mul_right_inj' this, "]"] ["at", ident hz],
+   exact [expr «expr ▸ »(hz.symm, T.mul_mem_right _ (generator_mem T))]
+ end⟩
 
 end IsPrime
 
@@ -171,24 +175,22 @@ instance (priority := 100)EuclideanDomain.to_principal_ideal_domain : IsPrincipa
   { principal :=
       fun S =>
         by 
-          exactI
-            ⟨if h : { x : R | x ∈ S ∧ x ≠ 0 }.Nonempty then
+          exact
+            ⟨if h : { x:R | x ∈ S ∧ x ≠ 0 }.Nonempty then
                 have wf : WellFounded (EuclideanDomain.R : R → R → Prop) := EuclideanDomain.r_well_founded 
                 have hmin :
-                  WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h ∈ S ∧
-                    WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h ≠ 0 :=
-                  WellFounded.min_mem wf { x : R | x ∈ S ∧ x ≠ 0 } h
-                ⟨WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h,
+                  WellFounded.min wf { x:R | x ∈ S ∧ x ≠ 0 } h ∈ S ∧ WellFounded.min wf { x:R | x ∈ S ∧ x ≠ 0 } h ≠ 0 :=
+                  WellFounded.min_mem wf { x:R | x ∈ S ∧ x ≠ 0 } h
+                ⟨WellFounded.min wf { x:R | x ∈ S ∧ x ≠ 0 } h,
                   Submodule.ext$
                     fun x =>
                       ⟨fun hx =>
-                          div_add_mod x (WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h) ▸
+                          div_add_mod x (WellFounded.min wf { x:R | x ∈ S ∧ x ≠ 0 } h) ▸
                             (Ideal.mem_span_singleton.2$
                               dvd_add (dvd_mul_right _ _)$
-                                have  :
-                                  x % WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h ∉ { x : R | x ∈ S ∧ x ≠ 0 } :=
+                                have  : x % WellFounded.min wf { x:R | x ∈ S ∧ x ≠ 0 } h ∉ { x:R | x ∈ S ∧ x ≠ 0 } :=
                                   fun h₁ => WellFounded.not_lt_min wf _ h h₁ (mod_lt x hmin.2)
-                                have  : x % WellFounded.min wf { x : R | x ∈ S ∧ x ≠ 0 } h = 0 :=
+                                have  : x % WellFounded.min wf { x:R | x ∈ S ∧ x ≠ 0 } h = 0 :=
                                   by 
                                     finish [(mod_mem_iff hmin.1).2 hx]
                                 by 
@@ -230,8 +232,8 @@ theorem is_maximal_of_irreducible [CommRingₓ R] [IsPrincipalIdealRing R] {p : 
         by 
           rcases principal I with ⟨a, rfl⟩
           erw [Ideal.span_singleton_eq_top]
-          unfreezingI 
-            rcases Ideal.span_singleton_le_span_singleton.1 (le_of_ltₓ hI) with ⟨b, rfl⟩
+          (
+            rcases Ideal.span_singleton_le_span_singleton.1 (le_of_ltₓ hI) with ⟨b, rfl⟩)
           refine' (of_irreducible_mul hp).resolve_right (mt (fun hb => _) (not_le_of_lt hI))
           erw [Ideal.span_singleton_le_span_singleton, IsUnit.mul_right_dvd hb]⟩⟩
 

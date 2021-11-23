@@ -1,4 +1,4 @@
-import Mathbin.LinearAlgebra.FinsuppVectorSpace 
+import Mathbin.LinearAlgebra.Dimension 
 import Mathbin.RingTheory.PrincipalIdealDomain 
 import Mathbin.RingTheory.Finiteness
 
@@ -105,39 +105,45 @@ variable{M : Type _}[AddCommGroupₓ M][Module R M]{b : ι → M}
 
 open Submodule.IsPrincipal
 
-theorem generator_maximal_submodule_image_dvd {N O : Submodule R M} (hNO : N ≤ O) {ϕ : O →ₗ[R] R}
-  (hϕ : ∀ ψ : O →ₗ[R] R, ϕ.submodule_image N ≤ ψ.submodule_image N → ψ.submodule_image N = ϕ.submodule_image N)
-  [(ϕ.submodule_image N).IsPrincipal] (y : M) (yN : y ∈ N) (ϕy_eq : ϕ ⟨y, hNO yN⟩ = generator (ϕ.submodule_image N))
-  (ψ : O →ₗ[R] R) : generator (ϕ.submodule_image N) ∣ ψ ⟨y, hNO yN⟩ :=
-  by 
-    let a : R := generator (ϕ.submodule_image N)
-    let d : R := is_principal.generator (Submodule.span R {a, ψ ⟨y, hNO yN⟩})
-    have d_dvd_left : d ∣ a := (mem_iff_generator_dvd _).mp (subset_span (mem_insert _ _))
-    have d_dvd_right : d ∣ ψ ⟨y, hNO yN⟩ :=
-      (mem_iff_generator_dvd _).mp (subset_span (mem_insert_of_mem _ (mem_singleton _)))
-    refine' dvd_trans _ d_dvd_right 
-    rw [dvd_generator_iff, Ideal.span, ←span_singleton_generator (Submodule.span R {a, ψ ⟨y, hNO yN⟩})]
-    obtain ⟨r₁, r₂, d_eq⟩ : ∃ r₁ r₂ : R, d = (r₁*a)+r₂*ψ ⟨y, hNO yN⟩
-    ·
-      obtain ⟨r₁, r₂', hr₂', hr₁⟩ :=
-        mem_span_insert.mp (is_principal.generator_mem (Submodule.span R {a, ψ ⟨y, hNO yN⟩}))
-      obtain ⟨r₂, rfl⟩ := mem_span_singleton.mp hr₂' 
-      exact ⟨r₁, r₂, hr₁⟩
-    let ψ' : O →ₗ[R] R := (r₁ • ϕ)+r₂ • ψ 
-    have  : span R {d} ≤ ψ'.submodule_image N
-    ·
-      rw [span_le, singleton_subset_iff, SetLike.mem_coe, LinearMap.mem_submodule_image_of_le hNO]
-      refine' ⟨y, yN, _⟩
-      change ((r₁*ϕ ⟨y, hNO yN⟩)+r₂*ψ ⟨y, hNO yN⟩) = d 
-      rw [d_eq, ϕy_eq]
-    refine' le_antisymmₓ (this.trans (le_of_eqₓ _)) (ideal.span_singleton_le_span_singleton.mpr d_dvd_left)
-    rw [span_singleton_generator]
-    refine' hϕ ψ' (le_transₓ _ this)
-    rw [←span_singleton_generator (ϕ.submodule_image N)]
-    exact ideal.span_singleton_le_span_singleton.mpr d_dvd_left
-    ·
-      exact subset_span (mem_insert _ _)
+-- error in LinearAlgebra.FreeModule.Pid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem generator_maximal_submodule_image_dvd
+{N O : submodule R M}
+(hNO : «expr ≤ »(N, O))
+{ϕ : «expr →ₗ[ ] »(O, R, R)}
+(hϕ : ∀
+ ψ : «expr →ₗ[ ] »(O, R, R), «expr ≤ »(ϕ.submodule_image N, ψ.submodule_image N) → «expr = »(ψ.submodule_image N, ϕ.submodule_image N))
+[(ϕ.submodule_image N).is_principal]
+(y : M)
+(yN : «expr ∈ »(y, N))
+(ϕy_eq : «expr = »(ϕ ⟨y, hNO yN⟩, generator (ϕ.submodule_image N)))
+(ψ : «expr →ₗ[ ] »(O, R, R)) : «expr ∣ »(generator (ϕ.submodule_image N), ψ ⟨y, hNO yN⟩) :=
+begin
+  let [ident a] [":", expr R] [":=", expr generator (ϕ.submodule_image N)],
+  let [ident d] [":", expr R] [":=", expr is_principal.generator (submodule.span R {a, ψ ⟨y, hNO yN⟩})],
+  have [ident d_dvd_left] [":", expr «expr ∣ »(d, a)] [":=", expr (mem_iff_generator_dvd _).mp (subset_span (mem_insert _ _))],
+  have [ident d_dvd_right] [":", expr «expr ∣ »(d, ψ ⟨y, hNO yN⟩)] [":=", expr (mem_iff_generator_dvd _).mp (subset_span (mem_insert_of_mem _ (mem_singleton _)))],
+  refine [expr dvd_trans _ d_dvd_right],
+  rw ["[", expr dvd_generator_iff, ",", expr ideal.span, ",", "<-", expr span_singleton_generator (submodule.span R {a, ψ ⟨y, hNO yN⟩}), "]"] [],
+  obtain ["⟨", ident r₁, ",", ident r₂, ",", ident d_eq, "⟩", ":", expr «expr∃ , »((r₁
+     r₂ : R), «expr = »(d, «expr + »(«expr * »(r₁, a), «expr * »(r₂, ψ ⟨y, hNO yN⟩))))],
+  { obtain ["⟨", ident r₁, ",", ident r₂', ",", ident hr₂', ",", ident hr₁, "⟩", ":=", expr mem_span_insert.mp (is_principal.generator_mem (submodule.span R {a, ψ ⟨y, hNO yN⟩}))],
+    obtain ["⟨", ident r₂, ",", ident rfl, "⟩", ":=", expr mem_span_singleton.mp hr₂'],
+    exact [expr ⟨r₁, r₂, hr₁⟩] },
+  let [ident ψ'] [":", expr «expr →ₗ[ ] »(O, R, R)] [":=", expr «expr + »(«expr • »(r₁, ϕ), «expr • »(r₂, ψ))],
+  have [] [":", expr «expr ≤ »(span R {d}, ψ'.submodule_image N)] [],
+  { rw ["[", expr span_le, ",", expr singleton_subset_iff, ",", expr set_like.mem_coe, ",", expr linear_map.mem_submodule_image_of_le hNO, "]"] [],
+    refine [expr ⟨y, yN, _⟩],
+    change [expr «expr = »(«expr + »(«expr * »(r₁, ϕ ⟨y, hNO yN⟩), «expr * »(r₂, ψ ⟨y, hNO yN⟩)), d)] [] [],
+    rw ["[", expr d_eq, ",", expr ϕy_eq, "]"] [] },
+  refine [expr le_antisymm (this.trans (le_of_eq _)) (ideal.span_singleton_le_span_singleton.mpr d_dvd_left)],
+  rw [expr span_singleton_generator] [],
+  refine [expr hϕ ψ' (le_trans _ this)],
+  rw ["[", "<-", expr span_singleton_generator (ϕ.submodule_image N), "]"] [],
+  exact [expr ideal.span_singleton_le_span_singleton.mpr d_dvd_left],
+  { exact [expr subset_span (mem_insert _ _)] }
+end
 
+-- error in LinearAlgebra.FreeModule.Pid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The induction hypothesis of `submodule.basis_of_pid` and `submodule.smith_normal_form`.
 
 Basically, it says: let `N ≤ M` be a pair of submodules, then we can find a pair of
@@ -149,130 +155,127 @@ For `basis_of_pid` we only need the first half and can fix `M = ⊤`,
 for `smith_normal_form` we need the full statement,
 but must also feed in a basis for `M` using `basis_of_pid` to keep the induction going.
 -/
-theorem Submodule.basis_of_pid_aux [Fintype ι] {O : Type _} [AddCommGroupₓ O] [Module R O] (M N : Submodule R O)
-  (b'M : Basis ι R M) (N_bot : N ≠ ⊥) (N_le_M : N ≤ M) :
-  ∃ (y : _)(_ : y ∈ M)(a : R)(hay : a • y ∈ N)(M' : _)(_ : M' ≤ M)(N' : _)(_ : N' ≤ N)(N'_le_M' : N' ≤ M')(y_ortho_M' :
-    ∀ c : R z : O, z ∈ M' → ((c • y)+z) = 0 → c = 0)(ay_ortho_N' : ∀ c : R z : O, z ∈ N' → ((c • a • y)+z) = 0 → c = 0),
-    ∀ n' bN' : Basis (Finₓ n') R N',
-      ∃ bN : Basis (Finₓ (n'+1)) R N,
-        ∀ m' hn'm' : n' ≤ m' bM' : Basis (Finₓ m') R M',
-          ∃ (hnm : (n'+1) ≤ m'+1)(bM : Basis (Finₓ (m'+1)) R M),
-            ∀ as : Finₓ n' → R h : ∀ i : Finₓ n', (bN' i : O) = as i • (bM' (Finₓ.castLe hn'm' i) : O),
-              ∃ as' : Finₓ (n'+1) → R, ∀ i : Finₓ (n'+1), (bN i : O) = as' i • (bM (Finₓ.castLe hnm i) : O) :=
-  by 
-    have  :
-      ∃ ϕ : M →ₗ[R] R,
-        ∀ ψ : M →ₗ[R] R, ϕ.submodule_image N ≤ ψ.submodule_image N → ψ.submodule_image N = ϕ.submodule_image N
-    ·
-      obtain ⟨P, P_eq, P_max⟩ :=
-        set_has_maximal_iff_noetherian.mpr (inferInstance : IsNoetherian R R) _
-          (show (Set.Range fun ψ : M →ₗ[R] R => ψ.submodule_image N).Nonempty from ⟨_, set.mem_range.mpr ⟨0, rfl⟩⟩)
-      obtain ⟨ϕ, rfl⟩ := set.mem_range.mp P_eq 
-      exact ⟨ϕ, fun ψ hψ => P_max _ ⟨_, rfl⟩ hψ⟩
-    let ϕ := this.some 
-    have ϕ_max := this.some_spec 
-    let a := generator (ϕ.submodule_image N)
-    have a_mem : a ∈ ϕ.submodule_image N := generator_mem _ 
-    byCases' a_zero : a = 0
-    ·
-      have  := eq_bot_of_generator_maximal_submodule_image_eq_zero b'M N_le_M ϕ_max a_zero 
-      contradiction 
-    obtain ⟨y, yN, ϕy_eq⟩ := (LinearMap.mem_submodule_image_of_le N_le_M).mp a_mem 
-    have ϕy_ne_zero : ϕ ⟨y, N_le_M yN⟩ ≠ 0 := fun h => a_zero (ϕy_eq.symm.trans h)
-    have hdvd : ∀ i, a ∣ b'M.coord i ⟨y, N_le_M yN⟩ :=
-      fun i => generator_maximal_submodule_image_dvd N_le_M ϕ_max y yN ϕy_eq (b'M.coord i)
-    choose c hc using hdvd 
-    let y' : O := ∑i, c i • b'M i 
-    have y'M : y' ∈ M := M.sum_mem fun i _ => M.smul_mem (c i) (b'M i).2
-    have mk_y' : (⟨y', y'M⟩ : M) = ∑i, c i • b'M i :=
-      Subtype.ext
-        (show y' = M.subtype _ by 
-          simp only [LinearMap.map_sum, LinearMap.map_smul]
-          rfl)
-    have a_smul_y' : a • y' = y
-    ·
-      refine' congr_argₓ coeₓ (show (a • ⟨y', y'M⟩ : M) = ⟨y, N_le_M yN⟩ from _)
-      rw [←b'M.sum_repr ⟨y, N_le_M yN⟩, mk_y', Finset.smul_sum]
-      refine' Finset.sum_congr rfl fun i _ => _ 
-      rw [←mul_smul, ←hc]
-      rfl 
-    refine' ⟨y', y'M, a, a_smul_y'.symm ▸ yN, _⟩
-    have ϕy'_eq : ϕ ⟨y', y'M⟩ = 1 :=
-      mul_left_cancel₀ a_zero
-        (calc a • ϕ ⟨y', y'M⟩ = ϕ ⟨a • y', _⟩ := (ϕ.map_smul a ⟨y', y'M⟩).symm 
-          _ = ϕ ⟨y, N_le_M yN⟩ :=
-          by 
-            simp only [a_smul_y']
-          _ = a := ϕy_eq 
-          _ = a*1 := (mul_oneₓ a).symm
-          )
-    have ϕy'_ne_zero : ϕ ⟨y', y'M⟩ ≠ 0 :=
-      by 
-        simpa only [ϕy'_eq] using one_ne_zero 
-    let M' : Submodule R O := ϕ.ker.map M.subtype 
-    let N' : Submodule R O := (ϕ.comp (of_le N_le_M)).ker.map N.subtype 
-    have M'_le_M : M' ≤ M := M.map_subtype_le ϕ.ker 
-    have N'_le_M' : N' ≤ M'
-    ·
-      intro x hx 
-      simp only [mem_map, LinearMap.mem_ker] at hx⊢
-      obtain ⟨⟨x, xN⟩, hx, rfl⟩ := hx 
-      exact ⟨⟨x, N_le_M xN⟩, hx, rfl⟩
-    have N'_le_N : N' ≤ N := N.map_subtype_le (ϕ.comp (of_le N_le_M)).ker 
-    refine' ⟨M', M'_le_M, N', N'_le_N, N'_le_M', _⟩
-    have y'_ortho_M' : ∀ c : R z _ : z ∈ M', ((c • y')+z) = 0 → c = 0
-    ·
-      intro c x xM' hc 
-      obtain ⟨⟨x, xM⟩, hx', rfl⟩ := submodule.mem_map.mp xM' 
-      rw [LinearMap.mem_ker] at hx' 
-      have hc' : ((c • ⟨y', y'M⟩)+⟨x, xM⟩ : M) = 0 := Subtype.coe_injective hc 
-      simpa only [LinearMap.map_add, LinearMap.map_zero, LinearMap.map_smul, smul_eq_mul, add_zeroₓ, mul_eq_zero,
-        ϕy'_ne_zero, hx', or_falseₓ] using congr_argₓ ϕ hc' 
-    have ay'_ortho_N' : ∀ c : R z _ : z ∈ N', ((c • a • y')+z) = 0 → c = 0
-    ·
-      intro c z zN' hc 
-      refine' (mul_eq_zero.mp (y'_ortho_M' (a*c) z (N'_le_M' zN') _)).resolve_left a_zero 
-      rw [mul_commₓ, mul_smul, hc]
-    refine' ⟨y'_ortho_M', ay'_ortho_N', fun n' bN' => ⟨_, _⟩⟩
-    ·
-      refine' Basis.mkFinConsOfLe y yN bN' N'_le_N _ _
-      ·
-        intro c z zN' hc 
-        refine' ay'_ortho_N' c z zN' _ 
-        rwa [←a_smul_y'] at hc
-      ·
-        intro z zN 
-        obtain ⟨b, hb⟩ : _ ∣ ϕ ⟨z, N_le_M zN⟩ := generator_submodule_image_dvd_of_mem N_le_M ϕ zN 
-        refine' ⟨-b, submodule.mem_map.mpr ⟨⟨_, N.sub_mem zN (N.smul_mem b yN)⟩, _, _⟩⟩
-        ·
-          refine' linear_map.mem_ker.mpr (show ϕ (⟨z, N_le_M zN⟩ - b • ⟨y, N_le_M yN⟩) = 0 from _)
-          rw [LinearMap.map_sub, LinearMap.map_smul, hb, ϕy_eq, smul_eq_mul, mul_commₓ, sub_self]
-        ·
-          simp only [sub_eq_add_neg, neg_smul]
-          rfl 
-    intro m' hn'm' bM' 
-    refine' ⟨Nat.succ_le_succₓ hn'm', _, _⟩
-    ·
-      refine' Basis.mkFinConsOfLe y' y'M bM' M'_le_M y'_ortho_M' _ 
-      intro z zM 
-      refine' ⟨-ϕ ⟨z, zM⟩, ⟨⟨z, zM⟩ - ϕ ⟨z, zM⟩ • ⟨y', y'M⟩, linear_map.mem_ker.mpr _, _⟩⟩
-      ·
-        rw [LinearMap.map_sub, LinearMap.map_smul, ϕy'_eq, smul_eq_mul, mul_oneₓ, sub_self]
-      ·
-        rw [LinearMap.map_sub, LinearMap.map_smul, sub_eq_add_neg, neg_smul]
-        rfl 
-    intro as h 
-    refine' ⟨Finₓ.cons a as, _⟩
-    intro i 
-    rw [Basis.coe_mk_fin_cons_of_le, Basis.coe_mk_fin_cons_of_le]
-    refine' Finₓ.cases _ (fun i => _) i
-    ·
-      simp only [Finₓ.cons_zero, Finₓ.cast_le_zero]
-      exact a_smul_y'.symm
-    ·
-      rw [Finₓ.cast_le_succ]
-      simp only [Finₓ.cons_succ, coe_of_le, h i]
+theorem submodule.basis_of_pid_aux
+[fintype ι]
+{O : Type*}
+[add_comm_group O]
+[module R O]
+(M N : submodule R O)
+(b'M : basis ι R M)
+(N_bot : «expr ≠ »(N, «expr⊥»()))
+(N_le_M : «expr ≤ »(N, M)) : «expr∃ , »((y «expr ∈ » M)
+ (a : R)
+ (hay : «expr ∈ »(«expr • »(a, y), N))
+ (M' «expr ≤ » M)
+ (N' «expr ≤ » N)
+ (N'_le_M' : «expr ≤ »(N', M'))
+ (y_ortho_M' : ∀ (c : R) (z : O), «expr ∈ »(z, M') → «expr = »(«expr + »(«expr • »(c, y), z), 0) → «expr = »(c, 0))
+ (ay_ortho_N' : ∀
+  (c : R)
+  (z : O), «expr ∈ »(z, N') → «expr = »(«expr + »(«expr • »(c, «expr • »(a, y)), z), 0) → «expr = »(c, 0)), ∀
+ (n')
+ (bN' : basis (fin n') R N'), «expr∃ , »((bN : basis (fin «expr + »(n', 1)) R N), ∀
+  (m')
+  (hn'm' : «expr ≤ »(n', m'))
+  (bM' : basis (fin m') R M'), «expr∃ , »((hnm : «expr ≤ »(«expr + »(n', 1), «expr + »(m', 1)))
+   (bM : basis (fin «expr + »(m', 1)) R M), ∀
+   (as : fin n' → R)
+   (h : ∀
+    i : fin n', «expr = »((bN' i : O), «expr • »(as i, (bM' (fin.cast_le hn'm' i) : O)))), «expr∃ , »((as' : fin «expr + »(n', 1) → R), ∀
+    i : fin «expr + »(n', 1), «expr = »((bN i : O), «expr • »(as' i, (bM (fin.cast_le hnm i) : O))))))) :=
+begin
+  have [] [":", expr «expr∃ , »((ϕ : «expr →ₗ[ ] »(M, R, R)), ∀
+    ψ : «expr →ₗ[ ] »(M, R, R), «expr ≤ »(ϕ.submodule_image N, ψ.submodule_image N) → «expr = »(ψ.submodule_image N, ϕ.submodule_image N))] [],
+  { obtain ["⟨", ident P, ",", ident P_eq, ",", ident P_max, "⟩", ":=", expr set_has_maximal_iff_noetherian.mpr (infer_instance : is_noetherian R R) _ (show (set.range (λ
+        ψ : «expr →ₗ[ ] »(M, R, R), ψ.submodule_image N)).nonempty, from ⟨_, set.mem_range.mpr ⟨0, rfl⟩⟩)],
+    obtain ["⟨", ident ϕ, ",", ident rfl, "⟩", ":=", expr set.mem_range.mp P_eq],
+    exact [expr ⟨ϕ, λ ψ hψ, P_max _ ⟨_, rfl⟩ hψ⟩] },
+  let [ident ϕ] [] [":=", expr this.some],
+  have [ident ϕ_max] [] [":=", expr this.some_spec],
+  let [ident a] [] [":=", expr generator (ϕ.submodule_image N)],
+  have [ident a_mem] [":", expr «expr ∈ »(a, ϕ.submodule_image N)] [":=", expr generator_mem _],
+  by_cases [expr a_zero, ":", expr «expr = »(a, 0)],
+  { have [] [] [":=", expr eq_bot_of_generator_maximal_submodule_image_eq_zero b'M N_le_M ϕ_max a_zero],
+    contradiction },
+  obtain ["⟨", ident y, ",", ident yN, ",", ident ϕy_eq, "⟩", ":=", expr (linear_map.mem_submodule_image_of_le N_le_M).mp a_mem],
+  have [ident ϕy_ne_zero] [":", expr «expr ≠ »(ϕ ⟨y, N_le_M yN⟩, 0)] [":=", expr λ h, a_zero (ϕy_eq.symm.trans h)],
+  have [ident hdvd] [":", expr ∀
+   i, «expr ∣ »(a, b'M.coord i ⟨y, N_le_M yN⟩)] [":=", expr λ
+   i, generator_maximal_submodule_image_dvd N_le_M ϕ_max y yN ϕy_eq (b'M.coord i)],
+  choose [] [ident c] [ident hc] ["using", expr hdvd],
+  let [ident y'] [":", expr O] [":=", expr «expr∑ , »((i), «expr • »(c i, b'M i))],
+  have [ident y'M] [":", expr «expr ∈ »(y', M)] [":=", expr M.sum_mem (λ i _, M.smul_mem (c i) (b'M i).2)],
+  have [ident mk_y'] [":", expr «expr = »((⟨y', y'M⟩ : M), «expr∑ , »((i), «expr • »(c i, b'M i)))] [":=", expr subtype.ext (show «expr = »(y', M.subtype _), by { simp [] [] ["only"] ["[", expr linear_map.map_sum, ",", expr linear_map.map_smul, "]"] [] [],
+      refl })],
+  have [ident a_smul_y'] [":", expr «expr = »(«expr • »(a, y'), y)] [],
+  { refine [expr congr_arg coe (show «expr = »((«expr • »(a, ⟨y', y'M⟩) : M), ⟨y, N_le_M yN⟩), from _)],
+    rw ["[", "<-", expr b'M.sum_repr ⟨y, N_le_M yN⟩, ",", expr mk_y', ",", expr finset.smul_sum, "]"] [],
+    refine [expr finset.sum_congr rfl (λ i _, _)],
+    rw ["[", "<-", expr mul_smul, ",", "<-", expr hc, "]"] [],
+    refl },
+  refine [expr ⟨y', y'M, a, «expr ▸ »(a_smul_y'.symm, yN), _⟩],
+  have [ident ϕy'_eq] [":", expr «expr = »(ϕ ⟨y', y'M⟩, 1)] [":=", expr mul_left_cancel₀ a_zero (calc
+      «expr = »(«expr • »(a, ϕ ⟨y', y'M⟩), ϕ ⟨«expr • »(a, y'), _⟩) : (ϕ.map_smul a ⟨y', y'M⟩).symm
+      «expr = »(..., ϕ ⟨y, N_le_M yN⟩) : by simp [] [] ["only"] ["[", expr a_smul_y', "]"] [] []
+      «expr = »(..., a) : ϕy_eq
+      «expr = »(..., «expr * »(a, 1)) : (mul_one a).symm)],
+  have [ident ϕy'_ne_zero] [":", expr «expr ≠ »(ϕ ⟨y', y'M⟩, 0)] [":=", expr by simpa [] [] ["only"] ["[", expr ϕy'_eq, "]"] [] ["using", expr one_ne_zero]],
+  let [ident M'] [":", expr submodule R O] [":=", expr ϕ.ker.map M.subtype],
+  let [ident N'] [":", expr submodule R O] [":=", expr (ϕ.comp (of_le N_le_M)).ker.map N.subtype],
+  have [ident M'_le_M] [":", expr «expr ≤ »(M', M)] [":=", expr M.map_subtype_le ϕ.ker],
+  have [ident N'_le_M'] [":", expr «expr ≤ »(N', M')] [],
+  { intros [ident x, ident hx],
+    simp [] [] ["only"] ["[", expr mem_map, ",", expr linear_map.mem_ker, "]"] [] ["at", ident hx, "⊢"],
+    obtain ["⟨", "⟨", ident x, ",", ident xN, "⟩", ",", ident hx, ",", ident rfl, "⟩", ":=", expr hx],
+    exact [expr ⟨⟨x, N_le_M xN⟩, hx, rfl⟩] },
+  have [ident N'_le_N] [":", expr «expr ≤ »(N', N)] [":=", expr N.map_subtype_le (ϕ.comp (of_le N_le_M)).ker],
+  refine [expr ⟨M', M'_le_M, N', N'_le_N, N'_le_M', _⟩],
+  have [ident y'_ortho_M'] [":", expr ∀
+   (c : R)
+   (z «expr ∈ » M'), «expr = »(«expr + »(«expr • »(c, y'), z), 0) → «expr = »(c, 0)] [],
+  { intros [ident c, ident x, ident xM', ident hc],
+    obtain ["⟨", "⟨", ident x, ",", ident xM, "⟩", ",", ident hx', ",", ident rfl, "⟩", ":=", expr submodule.mem_map.mp xM'],
+    rw [expr linear_map.mem_ker] ["at", ident hx'],
+    have [ident hc'] [":", expr «expr = »((«expr + »(«expr • »(c, ⟨y', y'M⟩), ⟨x, xM⟩) : M), 0)] [":=", expr subtype.coe_injective hc],
+    simpa [] [] ["only"] ["[", expr linear_map.map_add, ",", expr linear_map.map_zero, ",", expr linear_map.map_smul, ",", expr smul_eq_mul, ",", expr add_zero, ",", expr mul_eq_zero, ",", expr ϕy'_ne_zero, ",", expr hx', ",", expr or_false, "]"] [] ["using", expr congr_arg ϕ hc'] },
+  have [ident ay'_ortho_N'] [":", expr ∀
+   (c : R)
+   (z «expr ∈ » N'), «expr = »(«expr + »(«expr • »(c, «expr • »(a, y')), z), 0) → «expr = »(c, 0)] [],
+  { intros [ident c, ident z, ident zN', ident hc],
+    refine [expr (mul_eq_zero.mp (y'_ortho_M' «expr * »(a, c) z (N'_le_M' zN') _)).resolve_left a_zero],
+    rw ["[", expr mul_comm, ",", expr mul_smul, ",", expr hc, "]"] [] },
+  refine [expr ⟨y'_ortho_M', ay'_ortho_N', λ n' bN', ⟨_, _⟩⟩],
+  { refine [expr basis.mk_fin_cons_of_le y yN bN' N'_le_N _ _],
+    { intros [ident c, ident z, ident zN', ident hc],
+      refine [expr ay'_ortho_N' c z zN' _],
+      rwa ["<-", expr a_smul_y'] ["at", ident hc] },
+    { intros [ident z, ident zN],
+      obtain ["⟨", ident b, ",", ident hb, "⟩", ":", expr «expr ∣ »(_, ϕ ⟨z, N_le_M zN⟩), ":=", expr generator_submodule_image_dvd_of_mem N_le_M ϕ zN],
+      refine [expr ⟨«expr- »(b), submodule.mem_map.mpr ⟨⟨_, N.sub_mem zN (N.smul_mem b yN)⟩, _, _⟩⟩],
+      { refine [expr linear_map.mem_ker.mpr (show «expr = »(ϕ «expr - »(⟨z, N_le_M zN⟩, «expr • »(b, ⟨y, N_le_M yN⟩)), 0), from _)],
+        rw ["[", expr linear_map.map_sub, ",", expr linear_map.map_smul, ",", expr hb, ",", expr ϕy_eq, ",", expr smul_eq_mul, ",", expr mul_comm, ",", expr sub_self, "]"] [] },
+      { simp [] [] ["only"] ["[", expr sub_eq_add_neg, ",", expr neg_smul, "]"] [] [],
+        refl } } },
+  intros [ident m', ident hn'm', ident bM'],
+  refine [expr ⟨nat.succ_le_succ hn'm', _, _⟩],
+  { refine [expr basis.mk_fin_cons_of_le y' y'M bM' M'_le_M y'_ortho_M' _],
+    intros [ident z, ident zM],
+    refine [expr ⟨«expr- »(ϕ ⟨z, zM⟩), ⟨«expr - »(⟨z, zM⟩, «expr • »(ϕ ⟨z, zM⟩, ⟨y', y'M⟩)), linear_map.mem_ker.mpr _, _⟩⟩],
+    { rw ["[", expr linear_map.map_sub, ",", expr linear_map.map_smul, ",", expr ϕy'_eq, ",", expr smul_eq_mul, ",", expr mul_one, ",", expr sub_self, "]"] [] },
+    { rw ["[", expr linear_map.map_sub, ",", expr linear_map.map_smul, ",", expr sub_eq_add_neg, ",", expr neg_smul, "]"] [],
+      refl } },
+  intros [ident as, ident h],
+  refine [expr ⟨fin.cons a as, _⟩],
+  intro [ident i],
+  rw ["[", expr basis.coe_mk_fin_cons_of_le, ",", expr basis.coe_mk_fin_cons_of_le, "]"] [],
+  refine [expr fin.cases _ (λ i, _) i],
+  { simp [] [] ["only"] ["[", expr fin.cons_zero, ",", expr fin.cast_le_zero, "]"] [] [],
+    exact [expr a_smul_y'.symm] },
+  { rw [expr fin.cast_le_succ] [],
+    simp [] [] ["only"] ["[", expr fin.cons_succ, ",", expr coe_of_le, ",", expr h i, "]"] [] [] }
+end
 
+-- error in LinearAlgebra.FreeModule.Pid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A submodule of a free `R`-module of finite rank is also a free `R`-module of finite rank,
 if `R` is a principal ideal domain.
 
@@ -281,21 +284,24 @@ see `submodule.basis_of_pid`.
 
 See also the stronger version `submodule.smith_normal_form`.
 -/
-theorem Submodule.nonempty_basis_of_pid {ι : Type _} [Fintype ι] (b : Basis ι R M) (N : Submodule R M) :
-  ∃ n : ℕ, Nonempty (Basis (Finₓ n) R N) :=
-  by 
-    haveI  := Classical.decEq M 
-    refine' N.induction_on_rank b _ _ 
-    intro N ih 
-    let b' := (b.reindex (Fintype.equivFin ι)).map (LinearEquiv.ofTop _ rfl).symm 
-    byCases' N_bot : N = ⊥
-    ·
-      subst N_bot 
-      exact ⟨0, ⟨Basis.empty _⟩⟩
-    obtain ⟨y, -, a, hay, M', -, N', N'_le_N, -, -, ay_ortho, h'⟩ := Submodule.basis_of_pid_aux ⊤ N b' N_bot le_top 
-    obtain ⟨n', ⟨bN'⟩⟩ := ih N' N'_le_N _ hay ay_ortho 
-    obtain ⟨bN, hbN⟩ := h' n' bN' 
-    exact ⟨n'+1, ⟨bN⟩⟩
+theorem submodule.nonempty_basis_of_pid
+{ι : Type*}
+[fintype ι]
+(b : basis ι R M)
+(N : submodule R M) : «expr∃ , »((n : exprℕ()), nonempty (basis (fin n) R N)) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq M],
+  refine [expr N.induction_on_rank b _ _],
+  intros [ident N, ident ih],
+  let [ident b'] [] [":=", expr (b.reindex (fintype.equiv_fin ι)).map (linear_equiv.of_top _ rfl).symm],
+  by_cases [expr N_bot, ":", expr «expr = »(N, «expr⊥»())],
+  { subst [expr N_bot],
+    exact [expr ⟨0, ⟨basis.empty _⟩⟩] },
+  obtain ["⟨", ident y, ",", "-", ",", ident a, ",", ident hay, ",", ident M', ",", "-", ",", ident N', ",", ident N'_le_N, ",", "-", ",", "-", ",", ident ay_ortho, ",", ident h', "⟩", ":=", expr submodule.basis_of_pid_aux «expr⊤»() N b' N_bot le_top],
+  obtain ["⟨", ident n', ",", "⟨", ident bN', "⟩", "⟩", ":=", expr ih N' N'_le_N _ hay ay_ortho],
+  obtain ["⟨", ident bN, ",", ident hbN, "⟩", ":=", expr h' n' bN'],
+  exact [expr ⟨«expr + »(n', 1), ⟨bN⟩⟩]
+end
 
 /-- A submodule of a free `R`-module of finite rank is also a free `R`-module of finite rank,
 if `R` is a principal ideal domain.
@@ -306,16 +312,18 @@ noncomputable def Submodule.basisOfPid {ι : Type _} [Fintype ι] (b : Basis ι 
   Σn : ℕ, Basis (Finₓ n) R N :=
   ⟨_, (N.nonempty_basis_of_pid b).some_spec.some⟩
 
-theorem Submodule.basis_of_pid_bot {ι : Type _} [Fintype ι] (b : Basis ι R M) :
-  Submodule.basisOfPid b ⊥ = ⟨0, Basis.empty _⟩ :=
-  by 
-    obtain ⟨n, b'⟩ := Submodule.basisOfPid b ⊥
-    let e : Finₓ n ≃ Finₓ 0 := b'.index_equiv (Basis.empty _ : Basis (Finₓ 0) R (⊥ : Submodule R M))
-    have  : n = 0 :=
-      by 
-        simpa using fintype.card_eq.mpr ⟨e⟩
-    subst this 
-    exact Sigma.eq rfl (Basis.eq_of_apply_eq$ finZeroElim)
+-- error in LinearAlgebra.FreeModule.Pid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem submodule.basis_of_pid_bot
+{ι : Type*}
+[fintype ι]
+(b : basis ι R M) : «expr = »(submodule.basis_of_pid b «expr⊥»(), ⟨0, basis.empty _⟩) :=
+begin
+  obtain ["⟨", ident n, ",", ident b', "⟩", ":=", expr submodule.basis_of_pid b «expr⊥»()],
+  let [ident e] [":", expr «expr ≃ »(fin n, fin 0)] [":=", expr b'.index_equiv (basis.empty _ : basis (fin 0) R («expr⊥»() : submodule R M))],
+  have [] [":", expr «expr = »(n, 0)] [":=", expr by simpa [] [] [] [] [] ["using", expr fintype.card_eq.mpr ⟨e⟩]],
+  subst [expr this],
+  exact [expr sigma.eq rfl «expr $ »(basis.eq_of_apply_eq, fin_zero_elim)]
+end
 
 /-- A submodule inside a free `R`-submodule of finite rank is also a free `R`-module of finite rank,
 if `R` is a principal ideal domain.
@@ -335,55 +343,53 @@ noncomputable def Submodule.basisOfPidOfLeSpan {ι : Type _} [Fintype ι] {b : �
 
 variable{M}
 
+-- error in LinearAlgebra.FreeModule.Pid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A finite type torsion free module over a PID is free. -/
-noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M} (hs : span R (range s) = ⊤)
-  [NoZeroSmulDivisors R M] : Σn : ℕ, Basis (Finₓ n) R M :=
-  by 
-    classical 
-    have  := exists_maximal_independent R s 
-    let I : Set ι := this.some 
-    obtain
-      ⟨indepI : LinearIndependent R (s ∘ coeₓ : I → M), hI :
-        ∀ i _ : i ∉ I, ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I)⟩ :=
-      this.some_spec 
-    let N := span R (range$ (s ∘ coeₓ : I → M))
-    let sI : I → N := fun i => ⟨s i.1, subset_span (mem_range_self i)⟩
-    let sI_basis : Basis I R N 
-    exact Basis.span indepI 
-    have exists_a : ∀ i : ι, ∃ a : R, a ≠ 0 ∧ a • s i ∈ N
-    ·
-      intro i 
-      byCases' hi : i ∈ I
-      ·
-        use 1, zero_ne_one.symm 
-        rw [one_smul]
-        exact subset_span (mem_range_self (⟨i, hi⟩ : I))
-      ·
-        simpa [image_eq_range s I] using hI i hi 
-    choose a ha ha' using exists_a 
-    let A := ∏i, a i 
-    have hA : A ≠ 0
-    ·
-      rw [Finset.prod_ne_zero_iff]
-      simpa using ha 
-    let φ : M →ₗ[R] M := LinearMap.lsmul R M A 
-    have  : φ.ker = ⊥
-    exact LinearMap.ker_lsmul hA 
-    let ψ : M ≃ₗ[R] φ.range := LinearEquiv.ofInjective φ (linear_map.ker_eq_bot.mp this)
-    have  : φ.range ≤ N
-    ·
-      suffices  : ∀ i, φ (s i) ∈ N
-      ·
-        rw [LinearMap.range_eq_map, ←hs, φ.map_span_le]
-        rintro _ ⟨i, rfl⟩
-        apply this 
-      intro i 
-      calc (∏j, a j) • s i = (∏j in «expr ᶜ» {i}, a j) • a i • s i :=
-        by 
-          rw [Fintype.prod_eq_prod_compl_mul i, mul_smul]_ ∈ N :=
-        N.smul_mem _ (ha' i)
-    obtain ⟨n, b : Basis (Finₓ n) R φ.range⟩ := Submodule.basisOfPidOfLe this sI_basis 
-    exact ⟨n, b.map ψ.symm⟩
+noncomputable
+def module.free_of_finite_type_torsion_free
+[fintype ι]
+{s : ι → M}
+(hs : «expr = »(span R (range s), «expr⊤»()))
+[no_zero_smul_divisors R M] : «exprΣ , »((n : exprℕ()), basis (fin n) R M) :=
+begin
+  classical,
+  have [] [] [":=", expr exists_maximal_independent R s],
+  let [ident I] [":", expr set ι] [":=", expr this.some],
+  obtain ["⟨", ident indepI, ":", expr linear_independent R («expr ∘ »(s, coe) : I → M), ",", ident hI, ":", expr ∀
+   i «expr ∉ » I, «expr∃ , »((a : R), «expr ∧ »(«expr ≠ »(a, 0), «expr ∈ »(«expr • »(a, s i), span R «expr '' »(s, I)))), "⟩", ":=", expr this.some_spec],
+  let [ident N] [] [":=", expr span R «expr $ »(range, («expr ∘ »(s, coe) : I → M))],
+  let [ident sI] [":", expr I → N] [":=", expr λ i, ⟨s i.1, subset_span (mem_range_self i)⟩],
+  let [ident sI_basis] [":", expr basis I R N] [],
+  from [expr basis.span indepI],
+  have [ident exists_a] [":", expr ∀
+   i : ι, «expr∃ , »((a : R), «expr ∧ »(«expr ≠ »(a, 0), «expr ∈ »(«expr • »(a, s i), N)))] [],
+  { intro [ident i],
+    by_cases [expr hi, ":", expr «expr ∈ »(i, I)],
+    { use ["[", expr 1, ",", expr zero_ne_one.symm, "]"],
+      rw [expr one_smul] [],
+      exact [expr subset_span (mem_range_self (⟨i, hi⟩ : I))] },
+    { simpa [] [] [] ["[", expr image_eq_range s I, "]"] [] ["using", expr hI i hi] } },
+  choose [] [ident a] [ident ha, ident ha'] ["using", expr exists_a],
+  let [ident A] [] [":=", expr «expr∏ , »((i), a i)],
+  have [ident hA] [":", expr «expr ≠ »(A, 0)] [],
+  { rw [expr finset.prod_ne_zero_iff] [],
+    simpa [] [] [] [] [] ["using", expr ha] },
+  let [ident φ] [":", expr «expr →ₗ[ ] »(M, R, M)] [":=", expr linear_map.lsmul R M A],
+  have [] [":", expr «expr = »(φ.ker, «expr⊥»())] [],
+  from [expr linear_map.ker_lsmul hA],
+  let [ident ψ] [":", expr «expr ≃ₗ[ ] »(M, R, φ.range)] [":=", expr linear_equiv.of_injective φ (linear_map.ker_eq_bot.mp this)],
+  have [] [":", expr «expr ≤ »(φ.range, N)] [],
+  { suffices [] [":", expr ∀ i, «expr ∈ »(φ (s i), N)],
+    { rw ["[", expr linear_map.range_eq_map, ",", "<-", expr hs, ",", expr φ.map_span_le, "]"] [],
+      rintros ["_", "⟨", ident i, ",", ident rfl, "⟩"],
+      apply [expr this] },
+    intro [ident i],
+    calc
+      «expr = »(«expr • »(«expr∏ , »((j), a j), s i), «expr • »(«expr∏ in , »((j), «expr ᶜ»({i}), a j), «expr • »(a i, s i))) : by rw ["[", expr fintype.prod_eq_prod_compl_mul i, ",", expr mul_smul, "]"] []
+      «expr ∈ »(..., N) : N.smul_mem _ (ha' i) },
+  obtain ["⟨", ident n, ",", ident b, ":", expr basis (fin n) R φ.range, "⟩", ":=", expr submodule.basis_of_pid_of_le this sI_basis],
+  exact [expr ⟨n, b.map ψ.symm⟩]
+end
 
 /-- A finite type torsion free module over a PID is free. -/
 noncomputable def Module.freeOfFiniteTypeTorsionFree' [Module.Finite R M] [NoZeroSmulDivisors R M] :

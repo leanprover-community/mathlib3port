@@ -1,6 +1,6 @@
-import Mathbin.Algebra.MonoidAlgebra.ToDirectSum 
-import Mathbin.Algebra.DirectSum.Internal 
-import Mathbin.LinearAlgebra.Finsupp
+import Mathbin.LinearAlgebra.Finsupp 
+import Mathbin.Algebra.MonoidAlgebra.Basic 
+import Mathbin.Algebra.DirectSum.Internal
 
 /-!
 # Internal grading of an `add_monoid_algebra`

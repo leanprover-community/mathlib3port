@@ -152,7 +152,7 @@ def one_bits : Num → List Nat
 
 end Num
 
--- error in Data.Num.Bitwise: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Data.Num.Bitwise: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- This is a nonzero (and "non minus one") version of `snum`.
     See the documentation of `snum` for more details. -/
 @[derive #[expr has_reflect], derive #[expr decidable_eq]]
@@ -160,7 +160,7 @@ inductive nzsnum : Type
 | msb : bool → nzsnum
 | bit : bool → nzsnum → nzsnum
 
--- error in Data.Num.Bitwise: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Data.Num.Bitwise: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- Alternative representation of integers using a sign bit at the end.
   The convention on sign here is to have the argument to `msb` denote
   the sign of the MSB itself, with all higher bits set to the negation

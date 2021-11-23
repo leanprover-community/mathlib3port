@@ -1,4 +1,4 @@
-import Mathbin.MeasureTheory.Decomposition.Jordan
+import Mathbin.MeasureTheory.Measure.VectorMeasure
 
 /-!
 # Complex measure
@@ -118,18 +118,21 @@ def equiv_signed_measureₗ : complex_measure α ≃ₗ[R] signed_measure α × 
 
 end 
 
--- error in MeasureTheory.Measure.Complex: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem absolutely_continuous_ennreal_iff
-(c : complex_measure α)
-(μ : vector_measure α «exprℝ≥0∞»()) : «expr ↔ »(«expr ≪ᵥ »(c, μ), «expr ∧ »(«expr ≪ᵥ »(c.re, μ), «expr ≪ᵥ »(c.im, μ))) :=
-begin
-  split; intro [ident h],
-  { split; { intros [ident i, ident hi],
-      simp [] [] [] ["[", expr h hi, "]"] [] [] } },
-  { intros [ident i, ident hi],
-    rw ["[", "<-", expr complex.re_add_im (c i), ",", expr (_ : «expr = »((c i).re, 0)), ",", expr (_ : «expr = »((c i).im, 0)), "]"] [],
-    exacts ["[", expr by simp [] [] [] [] [] [], ",", expr h.2 hi, ",", expr h.1 hi, "]"] }
-end
+theorem absolutely_continuous_ennreal_iff (c : complex_measure α) (μ : vector_measure α ℝ≥0∞) :
+  c ≪ᵥ μ ↔ c.re ≪ᵥ μ ∧ c.im ≪ᵥ μ :=
+  by 
+    split  <;> intro h
+    ·
+      split  <;>
+        ·
+          intro i hi 
+          simp [h hi]
+    ·
+      intro i hi 
+      rw [←Complex.re_add_im (c i), (_ : (c i).re = 0), (_ : (c i).im = 0)]
+      exacts[by 
+          simp ,
+        h.2 hi, h.1 hi]
 
 end ComplexMeasure
 

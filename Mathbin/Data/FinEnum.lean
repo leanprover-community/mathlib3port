@@ -124,48 +124,45 @@ def finset.enum [DecidableEq α] : List α → List (Finset α)
     let r ← finset.enum xs
     [r, {x} ∪ r]
 
+-- error in Data.FinEnum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem finset.mem_enum [DecidableEq α] (s : Finset α) (xs : List α) : s ∈ finset.enum xs ↔ ∀ x _ : x ∈ s, x ∈ xs :=
-  by 
-    induction xs generalizing s <;> simp [finset.enum]
-    ·
-      simp [Finset.eq_empty_iff_forall_not_mem, · ∉ ·]
-      rfl
-    ·
-      split 
-      rintro ⟨a, h, h'⟩ x hx 
-      cases h'
-      ·
-        right 
-        apply h 
-        subst a 
-        exact hx
-      ·
-        simp only [h', mem_union, mem_singleton] at hx⊢
-        cases hx
-        ·
-          exact Or.inl hx
-        ·
-          exact Or.inr (h _ hx)
-      intro h 
-      exists s \ ({xs_hd} : Finset α)
-      simp only [and_imp, union_comm, mem_sdiff, mem_singleton]
-      simp only [or_iff_not_imp_left] at h 
-      exists h 
-      byCases' xs_hd ∈ s
-      ·
-        have  : {xs_hd} ⊆ s 
-        simp only [HasSubset.Subset, forall_eq, mem_singleton]
-        simp only [union_sdiff_of_subset this, or_trueₓ, Finset.union_sdiff_of_subset, eq_self_iff_true]
-      ·
-        left 
-        symm 
-        simp only [sdiff_eq_self]
-        intro a 
-        simp only [and_imp, mem_inter, mem_singleton, not_mem_empty]
-        intro h₀ h₁ 
-        subst a 
-        apply h h₀
+theorem finset.mem_enum
+[decidable_eq α]
+(s : finset α)
+(xs : list α) : «expr ↔ »(«expr ∈ »(s, finset.enum xs), ∀ x «expr ∈ » s, «expr ∈ »(x, xs)) :=
+begin
+  induction [expr xs] [] [] ["generalizing", ident s]; simp [] [] [] ["[", "*", ",", expr finset.enum, "]"] [] [],
+  { simp [] [] [] ["[", expr finset.eq_empty_iff_forall_not_mem, ",", expr («expr ∉ »), "]"] [] [],
+    refl },
+  { split,
+    rintro ["⟨", ident a, ",", ident h, ",", ident h', "⟩", ident x, ident hx],
+    cases [expr h'] [],
+    { right,
+      apply [expr h],
+      subst [expr a],
+      exact [expr hx] },
+    { simp [] [] ["only"] ["[", expr h', ",", expr mem_union, ",", expr mem_singleton, "]"] [] ["at", ident hx, "⊢"],
+      cases [expr hx] [],
+      { exact [expr or.inl hx] },
+      { exact [expr or.inr (h _ hx)] } },
+    intro [ident h],
+    existsi [expr «expr \ »(s, ({xs_hd} : finset α))],
+    simp [] [] ["only"] ["[", expr and_imp, ",", expr union_comm, ",", expr mem_sdiff, ",", expr mem_singleton, "]"] [] [],
+    simp [] [] ["only"] ["[", expr or_iff_not_imp_left, "]"] [] ["at", ident h],
+    existsi [expr h],
+    by_cases [expr «expr ∈ »(xs_hd, s)],
+    { have [] [":", expr «expr ⊆ »({xs_hd}, s)] [],
+      simp [] [] ["only"] ["[", expr has_subset.subset, ",", "*", ",", expr forall_eq, ",", expr mem_singleton, "]"] [] [],
+      simp [] [] ["only"] ["[", expr union_sdiff_of_subset this, ",", expr or_true, ",", expr finset.union_sdiff_of_subset, ",", expr eq_self_iff_true, "]"] [] [] },
+    { left,
+      symmetry,
+      simp [] [] ["only"] ["[", expr sdiff_eq_self, "]"] [] [],
+      intro [ident a],
+      simp [] [] ["only"] ["[", expr and_imp, ",", expr mem_inter, ",", expr mem_singleton, ",", expr not_mem_empty, "]"] [] [],
+      intros [ident h₀, ident h₁],
+      subst [expr a],
+      apply [expr h h₀] } }
+end
 
 instance finset.fin_enum [FinEnum α] : FinEnum (Finset α) :=
   of_list (finset.enum (to_list α))

@@ -1,4 +1,3 @@
-import Mathbin.CategoryTheory.Limits.Presheaf 
 import Mathbin.CategoryTheory.Limits.FunctorCategory 
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
 
@@ -50,7 +49,7 @@ def functor_category.prod_preserves_colimits [has_binary_products D] [has_colimi
   { PreservesColimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesColimit :=
                 fun K =>
                   { preserves :=
@@ -72,7 +71,7 @@ instance whiskering_left_preserves_limits [has_limits D] (F : C ⥤ E) :
   preserves_limits ((whiskering_left C E D).obj F) :=
   ⟨fun J hJ =>
       by 
-        exactI
+        exact
           ⟨fun K =>
               ⟨fun c hc =>
                   by 

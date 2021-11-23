@@ -60,7 +60,7 @@ instance  : DecidableEq tm.K :=
 instance  : Inhabited tm.σ :=
   ⟨tm.initial_state⟩
 
--- error in Computability.TmComputable: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Computability.TmComputable: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- The type of statements (functions) corresponding to this TM. -/ @[derive #[expr inhabited]] def stmt : Type :=
 turing.TM2.stmt tm.Γ tm.Λ tm.σ
 

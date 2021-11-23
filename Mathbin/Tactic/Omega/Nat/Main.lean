@@ -31,29 +31,29 @@ theorem univ_close_of_unsat_neg_elim_not m (p : preform) : (neg_elim (¬* p)).Un
 
 /-- Return expr of proof that argument is free of subtractions -/
 unsafe def preterm.prove_sub_free : preterm → tactic expr
-| &m => return (quote trivialₓ)
-| m ** n => return (quote trivialₓ)
+| &m => return (quote.1 trivialₓ)
+| m ** n => return (quote.1 trivialₓ)
 | t +* s =>
   do 
     let x ← preterm.prove_sub_free t 
     let y ← preterm.prove_sub_free s 
-    return (quote @And.intro (preterm.sub_free (%%quote t)) (preterm.sub_free (%%quote s)) (%%x) (%%y))
+    return (quote.1 (@And.intro (preterm.sub_free (%%ₓquote.1 t)) (preterm.sub_free (%%ₓquote.1 s)) (%%ₓx) (%%ₓy)))
 | _ -* _ => failed
 
 /-- Return expr of proof that argument is free of negations -/
 unsafe def prove_neg_free : preform → tactic expr
-| t =* s => return (quote trivialₓ)
-| t ≤* s => return (quote trivialₓ)
+| t =* s => return (quote.1 trivialₓ)
+| t ≤* s => return (quote.1 trivialₓ)
 | p ∨* q =>
   do 
     let x ← prove_neg_free p 
     let y ← prove_neg_free q 
-    return (quote @And.intro (preform.neg_free (%%quote p)) (preform.neg_free (%%quote q)) (%%x) (%%y))
+    return (quote.1 (@And.intro (preform.neg_free (%%ₓquote.1 p)) (preform.neg_free (%%ₓquote.1 q)) (%%ₓx) (%%ₓy)))
 | p ∧* q =>
   do 
     let x ← prove_neg_free p 
     let y ← prove_neg_free q 
-    return (quote @And.intro (preform.neg_free (%%quote p)) (preform.neg_free (%%quote q)) (%%x) (%%y))
+    return (quote.1 (@And.intro (preform.neg_free (%%ₓquote.1 p)) (preform.neg_free (%%ₓquote.1 q)) (%%ₓx) (%%ₓy)))
 | _ => failed
 
 /-- Return expr of proof that argument is free of subtractions -/
@@ -62,23 +62,23 @@ unsafe def prove_sub_free : preform → tactic expr
   do 
     let x ← preterm.prove_sub_free t 
     let y ← preterm.prove_sub_free s 
-    return (quote @And.intro (preterm.sub_free (%%quote t)) (preterm.sub_free (%%quote s)) (%%x) (%%y))
+    return (quote.1 (@And.intro (preterm.sub_free (%%ₓquote.1 t)) (preterm.sub_free (%%ₓquote.1 s)) (%%ₓx) (%%ₓy)))
 | t ≤* s =>
   do 
     let x ← preterm.prove_sub_free t 
     let y ← preterm.prove_sub_free s 
-    return (quote @And.intro (preterm.sub_free (%%quote t)) (preterm.sub_free (%%quote s)) (%%x) (%%y))
+    return (quote.1 (@And.intro (preterm.sub_free (%%ₓquote.1 t)) (preterm.sub_free (%%ₓquote.1 s)) (%%ₓx) (%%ₓy)))
 | ¬* p => prove_sub_free p
 | p ∨* q =>
   do 
     let x ← prove_sub_free p 
     let y ← prove_sub_free q 
-    return (quote @And.intro (preform.sub_free (%%quote p)) (preform.sub_free (%%quote q)) (%%x) (%%y))
+    return (quote.1 (@And.intro (preform.sub_free (%%ₓquote.1 p)) (preform.sub_free (%%ₓquote.1 q)) (%%ₓx) (%%ₓy)))
 | p ∧* q =>
   do 
     let x ← prove_sub_free p 
     let y ← prove_sub_free q 
-    return (quote @And.intro (preform.sub_free (%%quote p)) (preform.sub_free (%%quote q)) (%%x) (%%y))
+    return (quote.1 (@And.intro (preform.sub_free (%%ₓquote.1 p)) (preform.sub_free (%%ₓquote.1 q)) (%%ₓx) (%%ₓy)))
 
 /-- Given a p : preform, return the expr of a term t : p.unsat, where p is subtraction- and
 negation-free. -/
@@ -87,7 +87,7 @@ unsafe def prove_unsat_sub_free (p : preform) : tactic expr :=
     let x ← prove_neg_free p 
     let y ← prove_sub_free p 
     let z ← prove_unsats (dnf p)
-    return (quote unsat_of_unsat_dnf (%%quote p) (%%x) (%%y) (%%z))
+    return (quote.1 (unsat_of_unsat_dnf (%%ₓquote.1 p) (%%ₓx) (%%ₓy) (%%ₓz)))
 
 /-- Given a p : preform, return the expr of a term t : p.unsat, where p is negation-free. -/
 unsafe def prove_unsat_neg_free : preform → tactic expr
@@ -97,26 +97,26 @@ unsafe def prove_unsat_neg_free : preform → tactic expr
   | some (t, s) =>
     do 
       let x ← prove_unsat_neg_free (sub_elim t s p)
-      return (quote unsat_of_unsat_sub_elim (%%quote t) (%%quote s) (%%quote p) (%%x))
+      return (quote.1 (unsat_of_unsat_sub_elim (%%ₓquote.1 t) (%%ₓquote.1 s) (%%ₓquote.1 p) (%%ₓx)))
 
 /-- Given a (m : nat) and (p : preform), return the expr of (t : univ_close m p). -/
 unsafe def prove_univ_close (m : Nat) (p : preform) : tactic expr :=
   do 
     let x ← prove_unsat_neg_free (neg_elim (¬* p))
-    to_expr (pquote univ_close_of_unsat_neg_elim_not (%%quote m) (%%quote p) (%%x))
+    to_expr (pquote.1 (univ_close_of_unsat_neg_elim_not (%%ₓquote.1 m) (%%ₓquote.1 p) (%%ₓx)))
 
 /-- Reification to imtermediate shadow syntax that retains exprs -/
 unsafe def to_exprterm : expr → tactic exprterm
-| quote (%%x)*%%y =>
+| quote.1 ((%%ₓx)*%%ₓy) =>
   do 
     let m ← eval_expr' Nat y 
     return (exprterm.exp m x)
-| quote (%%t1x)+%%t2x =>
+| quote.1 ((%%ₓt1x)+%%ₓt2x) =>
   do 
     let t1 ← to_exprterm t1x 
     let t2 ← to_exprterm t2x 
     return (exprterm.add t1 t2)
-| quote (%%t1x) - %%t2x =>
+| quote.1 ((%%ₓt1x) - %%ₓt2x) =>
   do 
     let t1 ← to_exprterm t1x 
     let t2 ← to_exprterm t2x 
@@ -129,31 +129,31 @@ unsafe def to_exprterm : expr → tactic exprterm
 
 /-- Reification to imtermediate shadow syntax that retains exprs -/
 unsafe def to_exprform : expr → tactic exprform
-| quote (%%tx1) = %%tx2 =>
+| quote.1 ((%%ₓtx1) = %%ₓtx2) =>
   do 
     let t1 ← to_exprterm tx1 
     let t2 ← to_exprterm tx2 
     return (exprform.eq t1 t2)
-| quote (%%tx1) ≤ %%tx2 =>
+| quote.1 ((%%ₓtx1) ≤ %%ₓtx2) =>
   do 
     let t1 ← to_exprterm tx1 
     let t2 ← to_exprterm tx2 
     return (exprform.le t1 t2)
-| quote ¬%%px =>
+| quote.1 ¬%%ₓpx =>
   do 
     let p ← to_exprform px 
     return (exprform.not p)
-| quote (%%px) ∨ %%qx =>
+| quote.1 ((%%ₓpx) ∨ %%ₓqx) =>
   do 
     let p ← to_exprform px 
     let q ← to_exprform qx 
     return (exprform.or p q)
-| quote (%%px) ∧ %%qx =>
+| quote.1 ((%%ₓpx) ∧ %%ₓqx) =>
   do 
     let p ← to_exprform px 
     let q ← to_exprform qx 
     return (exprform.and p q)
-| quote _ → %%px => to_exprform px
+| quote.1 (_ → %%ₓpx) => to_exprform px
 | x => trace "Cannot reify expr : " >> trace x >> failed
 
 /-- List of all unreified exprs -/
@@ -235,24 +235,24 @@ unsafe def prove : tactic expr :=
 
 /-- Succeed iff argument is expr of ℕ -/
 unsafe def eq_nat (x : expr) : tactic Unit :=
-  if x = quote Nat then skip else failed
+  if x = quote.1 Nat then skip else failed
 
 /-- Check whether argument is expr of a well-formed formula of LNA-/
 unsafe def wff : expr → tactic Unit
-| quote ¬%%px => wff px
-| quote (%%px) ∨ %%qx => wff px >> wff qx
-| quote (%%px) ∧ %%qx => wff px >> wff qx
-| quote (%%px) ↔ %%qx => wff px >> wff qx
-| quote %%expr.pi _ _ px qx =>
+| quote.1 ¬%%ₓpx => wff px
+| quote.1 ((%%ₓpx) ∨ %%ₓqx) => wff px >> wff qx
+| quote.1 ((%%ₓpx) ∧ %%ₓqx) => wff px >> wff qx
+| quote.1 ((%%ₓpx) ↔ %%ₓqx) => wff px >> wff qx
+| quote.1 (%%ₓexpr.pi _ _ px qx) =>
   Monadₓ.cond (if expr.has_var px then return tt else is_prop px) (wff px >> wff qx) (eq_nat px >> wff qx)
-| quote @LT.lt (%%dx) (%%h) _ _ => eq_nat dx
-| quote @LE.le (%%dx) (%%h) _ _ => eq_nat dx
-| quote @Eq (%%dx) _ _ => eq_nat dx
-| quote @Ge (%%dx) (%%h) _ _ => eq_nat dx
-| quote @Gt (%%dx) (%%h) _ _ => eq_nat dx
-| quote @Ne (%%dx) _ _ => eq_nat dx
-| quote True => skip
-| quote False => skip
+| quote.1 (@LT.lt (%%ₓdx) (%%ₓh) _ _) => eq_nat dx
+| quote.1 (@LE.le (%%ₓdx) (%%ₓh) _ _) => eq_nat dx
+| quote.1 (@Eq (%%ₓdx) _ _) => eq_nat dx
+| quote.1 (@Ge (%%ₓdx) (%%ₓh) _ _) => eq_nat dx
+| quote.1 (@Gt (%%ₓdx) (%%ₓh) _ _) => eq_nat dx
+| quote.1 (@Ne (%%ₓdx) _ _) => eq_nat dx
+| quote.1 True => skip
+| quote.1 False => skip
 | _ => failed
 
 /-- Succeed iff argument is expr of term whose type is wff -/
@@ -264,12 +264,12 @@ unsafe def intro_nats_core : tactic Unit :=
   do 
     let x ← target 
     match x with 
-      | expr.pi _ _ (quote Nat) _ => intro_fresh >> intro_nats_core
+      | expr.pi _ _ (quote.1 Nat) _ => intro_fresh >> intro_nats_core
       | _ => skip
 
 unsafe def intro_nats : tactic Unit :=
   do 
-    let expr.pi _ _ (quote Nat) _ ← target 
+    let expr.pi _ _ (quote.1 Nat) _ ← target 
     intro_nats_core
 
 /-- If the goal has universal quantifiers over natural, introduce all of them.

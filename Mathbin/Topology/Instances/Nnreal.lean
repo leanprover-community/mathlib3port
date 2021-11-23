@@ -129,13 +129,18 @@ theorem has_sum_coe {f : α →  ℝ≥0 } {r :  ℝ≥0 } : HasSum (fun a => (f
   by 
     simp only [HasSum, coe_sum.symm, tendsto_coe]
 
-theorem has_sum_of_real_of_nonneg {f : α → ℝ} (hf_nonneg : ∀ n, 0 ≤ f n) (hf : Summable f) :
-  HasSum (fun n => Real.toNnreal (f n)) (Real.toNnreal (∑'n, f n)) :=
-  by 
-    have h_sum : (fun s => ∑b in s, Real.toNnreal (f b)) = fun s => Real.toNnreal (∑b in s, f b)
-    exact funext fun _ => (Real.to_nnreal_sum_of_nonneg fun n _ => hf_nonneg n).symm 
-    simpRw [HasSum, h_sum]
-    exact tendsto_of_real hf.has_sum
+-- error in Topology.Instances.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_sum_of_real_of_nonneg
+{f : α → exprℝ()}
+(hf_nonneg : ∀ n, «expr ≤ »(0, f n))
+(hf : summable f) : has_sum (λ n, real.to_nnreal (f n)) (real.to_nnreal «expr∑' , »((n), f n)) :=
+begin
+  have [ident h_sum] [":", expr «expr = »(λ
+    s, «expr∑ in , »((b), s, real.to_nnreal (f b)), λ s, real.to_nnreal «expr∑ in , »((b), s, f b))] [],
+  from [expr funext (λ _, (real.to_nnreal_sum_of_nonneg (λ n _, hf_nonneg n)).symm)],
+  simp_rw ["[", expr has_sum, ",", expr h_sum, "]"] [],
+  exact [expr tendsto_of_real hf.has_sum]
+end
 
 @[normCast]
 theorem summable_coe {f : α →  ℝ≥0 } : (Summable fun a => (f a : ℝ)) ↔ Summable f :=
@@ -203,12 +208,17 @@ theorem infi_real_pos_eq_infi_nnreal_pos [CompleteLattice α] {f : ℝ → α} :
 
 end coeₓ
 
-theorem tendsto_cofinite_zero_of_summable {α} {f : α →  ℝ≥0 } (hf : Summable f) : tendsto f cofinite (𝓝 0) :=
-  by 
-    have h_f_coe : f = fun n => Real.toNnreal (f n : ℝ)
-    exact funext fun n => real.to_nnreal_coe.symm 
-    rw [h_f_coe, ←@Real.to_nnreal_coe 0]
-    exact tendsto_of_real (summable_coe.mpr hf).tendsto_cofinite_zero
+-- error in Topology.Instances.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_cofinite_zero_of_summable
+{α}
+{f : α → «exprℝ≥0»()}
+(hf : summable f) : tendsto f cofinite (expr𝓝() 0) :=
+begin
+  have [ident h_f_coe] [":", expr «expr = »(f, λ n, real.to_nnreal (f n : exprℝ()))] [],
+  from [expr funext (λ n, real.to_nnreal_coe.symm)],
+  rw ["[", expr h_f_coe, ",", "<-", expr @real.to_nnreal_coe 0, "]"] [],
+  exact [expr tendsto_of_real (summable_coe.mpr hf).tendsto_cofinite_zero]
+end
 
 theorem tendsto_at_top_zero_of_summable {f : ℕ →  ℝ≥0 } (hf : Summable f) : tendsto f at_top (𝓝 0) :=
   by 

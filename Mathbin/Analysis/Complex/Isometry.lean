@@ -74,14 +74,16 @@ theorem LinearIsometryEquiv.congr_fun {R E F} [Semiringₓ R] [SemiNormedGroup E
   [Module R F] {f g : E ≃ₗᵢ[R] F} (h : f = g) (x : E) : f x = g x :=
   congr_argₓ _ h
 
-theorem rotation_ne_conj_lie (a : circle) : rotation a ≠ conj_lie :=
-  by 
-    intro h 
-    have h1 : rotation a 1 = conj 1 := LinearIsometryEquiv.congr_fun h 1
-    have hI : rotation a I = conj I := LinearIsometryEquiv.congr_fun h I 
-    rw [rotation_apply, RingEquiv.map_one, mul_oneₓ] at h1 
-    rw [rotation_apply, conj_I, ←neg_one_mul, mul_left_inj' I_ne_zero, h1, eq_neg_self_iff] at hI 
-    exact one_ne_zero hI
+-- error in Analysis.Complex.Isometry: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem rotation_ne_conj_lie (a : circle) : «expr ≠ »(rotation a, conj_lie) :=
+begin
+  intro [ident h],
+  have [ident h1] [":", expr «expr = »(rotation a 1, exprconj() 1)] [":=", expr linear_isometry_equiv.congr_fun h 1],
+  have [ident hI] [":", expr «expr = »(rotation a I, exprconj() I)] [":=", expr linear_isometry_equiv.congr_fun h I],
+  rw ["[", expr rotation_apply, ",", expr ring_equiv.map_one, ",", expr mul_one, "]"] ["at", ident h1],
+  rw ["[", expr rotation_apply, ",", expr conj_I, ",", "<-", expr neg_one_mul, ",", expr mul_left_inj' I_ne_zero, ",", expr h1, ",", expr eq_neg_self_iff, "]"] ["at", ident hI],
+  exact [expr one_ne_zero hI]
+end
 
 /-- Takes an element of `ℂ ≃ₗᵢ[ℝ] ℂ` and checks if it is a rotation, returns an element of the
 unit circle. -/
@@ -108,29 +110,35 @@ theorem LinearIsometry.re_apply_eq_re_of_add_conj_eq (f : ℂ →ₗᵢ[ℝ] ℂ
         simp [two_ne_zero']] using
       (h₃ z).symm
 
-theorem LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h₂ : ∀ z, (f z).re = z.re) (z : ℂ) :
-  (f z).im = z.im ∨ (f z).im = -z.im :=
-  by 
-    have h₁ := f.norm_map z 
-    simp only [Complex.abs, norm_eq_abs] at h₁ 
-    rwa [Real.sqrt_inj (norm_sq_nonneg _) (norm_sq_nonneg _), norm_sq_apply (f z), norm_sq_apply z, h₂,
-      add_left_cancel_iffₓ, mul_self_eq_mul_self_iff] at h₁
+-- error in Analysis.Complex.Isometry: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem linear_isometry.im_apply_eq_im_or_neg_of_re_apply_eq_re
+{f : «expr →ₗᵢ[ ] »(exprℂ(), exprℝ(), exprℂ())}
+(h₂ : ∀ z, «expr = »((f z).re, z.re))
+(z : exprℂ()) : «expr ∨ »(«expr = »((f z).im, z.im), «expr = »((f z).im, «expr- »(z.im))) :=
+begin
+  have [ident h₁] [] [":=", expr f.norm_map z],
+  simp [] [] ["only"] ["[", expr complex.abs, ",", expr norm_eq_abs, "]"] [] ["at", ident h₁],
+  rwa ["[", expr real.sqrt_inj (norm_sq_nonneg _) (norm_sq_nonneg _), ",", expr norm_sq_apply (f z), ",", expr norm_sq_apply z, ",", expr h₂, ",", expr add_left_cancel_iff, ",", expr mul_self_eq_mul_self_iff, "]"] ["at", ident h₁]
+end
 
-theorem LinearIsometry.im_apply_eq_im {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1) (z : ℂ) : (z+conj z) = f z+conj (f z) :=
-  by 
-    have  : ∥f z - 1∥ = ∥z - 1∥ :=
-      by 
-        rw [←f.norm_map (z - 1), f.map_sub, h]
-    applyFun fun x => x^2  at this 
-    simp only [norm_eq_abs, ←norm_sq_eq_abs] at this 
-    rw [←of_real_inj, ←mul_conj, ←mul_conj] at this 
-    rw [RingEquiv.map_sub, RingEquiv.map_sub] at this 
-    simp only [sub_mul, mul_sub, one_mulₓ, mul_oneₓ] at this 
-    rw [mul_conj, norm_sq_eq_abs, ←norm_eq_abs, LinearIsometry.norm_map] at this 
-    rw [mul_conj, norm_sq_eq_abs, ←norm_eq_abs] at this 
-    simp only [sub_sub, sub_right_inj, mul_oneₓ, of_real_pow, RingEquiv.map_one, norm_eq_abs] at this 
-    simp only [add_sub, sub_left_inj] at this 
-    rw [add_commₓ, ←this, add_commₓ]
+-- error in Analysis.Complex.Isometry: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem linear_isometry.im_apply_eq_im
+{f : «expr →ₗᵢ[ ] »(exprℂ(), exprℝ(), exprℂ())}
+(h : «expr = »(f 1, 1))
+(z : exprℂ()) : «expr = »(«expr + »(z, exprconj() z), «expr + »(f z, exprconj() (f z))) :=
+begin
+  have [] [":", expr «expr = »(«expr∥ ∥»(«expr - »(f z, 1)), «expr∥ ∥»(«expr - »(z, 1)))] [":=", expr by rw ["[", "<-", expr f.norm_map «expr - »(z, 1), ",", expr f.map_sub, ",", expr h, "]"] []],
+  apply_fun [expr λ x, «expr ^ »(x, 2)] ["at", ident this] [],
+  simp [] [] ["only"] ["[", expr norm_eq_abs, ",", "<-", expr norm_sq_eq_abs, "]"] [] ["at", ident this],
+  rw ["[", "<-", expr of_real_inj, ",", "<-", expr mul_conj, ",", "<-", expr mul_conj, "]"] ["at", ident this],
+  rw ["[", expr ring_equiv.map_sub, ",", expr ring_equiv.map_sub, "]"] ["at", ident this],
+  simp [] [] ["only"] ["[", expr sub_mul, ",", expr mul_sub, ",", expr one_mul, ",", expr mul_one, "]"] [] ["at", ident this],
+  rw ["[", expr mul_conj, ",", expr norm_sq_eq_abs, ",", "<-", expr norm_eq_abs, ",", expr linear_isometry.norm_map, "]"] ["at", ident this],
+  rw ["[", expr mul_conj, ",", expr norm_sq_eq_abs, ",", "<-", expr norm_eq_abs, "]"] ["at", ident this],
+  simp [] [] ["only"] ["[", expr sub_sub, ",", expr sub_right_inj, ",", expr mul_one, ",", expr of_real_pow, ",", expr ring_equiv.map_one, ",", expr norm_eq_abs, "]"] [] ["at", ident this],
+  simp [] [] ["only"] ["[", expr add_sub, ",", expr sub_left_inj, "]"] [] ["at", ident this],
+  rw ["[", expr add_comm, ",", "<-", expr this, ",", expr add_comm, "]"] []
+end
 
 theorem LinearIsometry.re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1) (z : ℂ) : (f z).re = z.re :=
   by 
@@ -138,42 +146,38 @@ theorem LinearIsometry.re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1)
     intro z 
     apply LinearIsometry.im_apply_eq_im h
 
-theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) : f = LinearIsometryEquiv.refl ℝ ℂ ∨ f = conj_lie :=
-  by 
-    have h0 : f I = I ∨ f I = -I
-    ·
-      have  : |f I| = 1 :=
-        by 
-          simpa using f.norm_map Complex.i 
-      simp only [ext_iff, ←and_or_distrib_left, neg_re, I_re, neg_im, neg_zero]
-      split 
-      ·
-        rw [←I_re]
-        exact @LinearIsometry.re_apply_eq_re f.to_linear_isometry h I
-      ·
-        apply @LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re f.to_linear_isometry 
-        intro z 
-        rw [@LinearIsometry.re_apply_eq_re f.to_linear_isometry h]
-    refine' h0.imp (fun h' : f I = I => _) fun h' : f I = -I => _ <;>
-      ·
-        apply LinearIsometryEquiv.to_linear_equiv_injective 
-        apply complex.basis_one_I.ext' 
-        intro i 
-        finCases i <;> simp [h, h']
+-- error in Analysis.Complex.Isometry: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem linear_isometry_complex_aux
+{f : «expr ≃ₗᵢ[ ] »(exprℂ(), exprℝ(), exprℂ())}
+(h : «expr = »(f 1, 1)) : «expr ∨ »(«expr = »(f, linear_isometry_equiv.refl exprℝ() exprℂ()), «expr = »(f, conj_lie)) :=
+begin
+  have [ident h0] [":", expr «expr ∨ »(«expr = »(f I, I), «expr = »(f I, «expr- »(I)))] [],
+  { have [] [":", expr «expr = »(«expr| |»(f I), 1)] [":=", expr by simpa [] [] [] [] [] ["using", expr f.norm_map complex.I]],
+    simp [] [] ["only"] ["[", expr ext_iff, ",", "<-", expr and_or_distrib_left, ",", expr neg_re, ",", expr I_re, ",", expr neg_im, ",", expr neg_zero, "]"] [] [],
+    split,
+    { rw ["<-", expr I_re] [],
+      exact [expr @linear_isometry.re_apply_eq_re f.to_linear_isometry h I] },
+    { apply [expr @linear_isometry.im_apply_eq_im_or_neg_of_re_apply_eq_re f.to_linear_isometry],
+      intro [ident z],
+      rw [expr @linear_isometry.re_apply_eq_re f.to_linear_isometry h] [] } },
+  refine [expr h0.imp (λ
+    h' : «expr = »(f I, I), _) (λ
+    h' : «expr = »(f I, «expr- »(I)), _)]; { apply [expr linear_isometry_equiv.to_linear_equiv_injective],
+    apply [expr complex.basis_one_I.ext'],
+    intros [ident i],
+    fin_cases [ident i] []; simp [] [] [] ["[", expr h, ",", expr h', "]"] [] [] }
+end
 
-theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) : ∃ a : circle, f = rotation a ∨ f = conj_lie.trans (rotation a) :=
-  by 
-    let a : circle :=
-      ⟨f 1,
-        by 
-          simpa using f.norm_map 1⟩
-    use a 
-    have  : (f.trans (rotation a).symm) 1 = 1
-    ·
-      simpa using rotation_apply (a⁻¹) (f 1)
-    refine' (linear_isometry_complex_aux this).imp (fun h₁ => _) fun h₂ => _
-    ·
-      simpa using eq_mul_of_inv_mul_eq h₁
-    ·
-      exact eq_mul_of_inv_mul_eq h₂
+-- error in Analysis.Complex.Isometry: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem linear_isometry_complex
+(f : «expr ≃ₗᵢ[ ] »(exprℂ(), exprℝ(), exprℂ())) : «expr∃ , »((a : circle), «expr ∨ »(«expr = »(f, rotation a), «expr = »(f, conj_lie.trans (rotation a)))) :=
+begin
+  let [ident a] [":", expr circle] [":=", expr ⟨f 1, by simpa [] [] [] [] [] ["using", expr f.norm_map 1]⟩],
+  use [expr a],
+  have [] [":", expr «expr = »(f.trans (rotation a).symm 1, 1)] [],
+  { simpa [] [] [] [] [] ["using", expr rotation_apply «expr ⁻¹»(a) (f 1)] },
+  refine [expr (linear_isometry_complex_aux this).imp (λ h₁, _) (λ h₂, _)],
+  { simpa [] [] [] [] [] ["using", expr eq_mul_of_inv_mul_eq h₁] },
+  { exact [expr eq_mul_of_inv_mul_eq h₂] }
+end
 

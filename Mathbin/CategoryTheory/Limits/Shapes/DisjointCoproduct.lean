@@ -1,6 +1,5 @@
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts 
-import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks 
-import Mathbin.CategoryTheory.Limits.Over
+import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 
 /-!
 # Disjoint coproducts

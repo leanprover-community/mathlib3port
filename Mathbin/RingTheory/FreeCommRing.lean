@@ -52,7 +52,7 @@ universe u v
 
 variable(α : Type u)
 
--- error in RingTheory.FreeCommRing: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler comm_ring
+-- error in RingTheory.FreeCommRing: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler comm_ring
 /-- `free_comm_ring α` is the free commutative ring on the type `α`. -/
 @[derive #["[", expr comm_ring, ",", expr inhabited, "]"]]
 def free_comm_ring (α : Type u) : Type u :=
@@ -147,7 +147,7 @@ variable{β : Type v}(f : α → β)
 
 /-- A map `f : α → β` produces a ring homomorphism `free_comm_ring α →+* free_comm_ring β`. -/
 def map : FreeCommRing α →+* FreeCommRing β :=
-  lift$ (of ∘ f)
+  lift$ of ∘ f
 
 @[simp]
 theorem map_of (x : α) : map f (of x) = of (f x) :=
@@ -208,46 +208,42 @@ theorem restriction_of p : restriction s (of p) = if H : p ∈ s then of ⟨p, H
 
 end Restriction
 
-theorem is_supported_of {p} {s : Set α} : is_supported (of p) s ↔ p ∈ s :=
-  suffices is_supported (of p) s → p ∈ s from ⟨this, fun hps => Subring.subset_closure ⟨p, hps, rfl⟩⟩
-  fun hps : is_supported (of p) s =>
-    by 
-      haveI  := Classical.decPred s 
-      have  : ∀ x, is_supported x s → ∃ n : ℤ, lift (fun a => if a ∈ s then (0 : Polynomial ℤ) else Polynomial.x) x = n
-      ·
-        intro x hx 
-        refine' Subring.InClosure.rec_on hx _ _ _ _
-        ·
-          use 1
-          rw [RingHom.map_one]
-          normCast
-        ·
-          use -1
-          rw [RingHom.map_neg, RingHom.map_one]
-          normCast
-        ·
-          rintro _ ⟨z, hzs, rfl⟩ _ _ 
-          use 0
-          rw [RingHom.map_mul, lift_of, if_pos hzs, zero_mul]
-          normCast
-        ·
-          rintro x y ⟨q, hq⟩ ⟨r, hr⟩
-          refine' ⟨q+r, _⟩
-          rw [RingHom.map_add, hq, hr]
-          normCast 
-      specialize this (of p) hps 
-      rw [lift_of] at this 
-      splitIfs  at this
-      ·
-        exact h 
-      exFalso 
-      apply Ne.symm Int.zero_ne_one 
-      rcases this with ⟨w, H⟩
-      rw [←Polynomial.C_eq_int_cast] at H 
-      have  : polynomial.X.coeff 1 = (Polynomial.c («expr↑ » w)).coeff 1
-      ·
-        rw [H]
-      rwa [Polynomial.coeff_C, if_neg (one_ne_zero : 1 ≠ 0), Polynomial.coeff_X, if_pos rfl] at this
+-- error in RingTheory.FreeCommRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_supported_of {p} {s : set α} : «expr ↔ »(is_supported (of p) s, «expr ∈ »(p, s)) :=
+suffices is_supported (of p) s → «expr ∈ »(p, s), from ⟨this, λ hps, subring.subset_closure ⟨p, hps, rfl⟩⟩,
+assume hps : is_supported (of p) s, begin
+  haveI [] [] [":=", expr classical.dec_pred s],
+  have [] [":", expr ∀
+   x, is_supported x s → «expr∃ , »((n : exprℤ()), «expr = »(lift (λ
+      a, if «expr ∈ »(a, s) then (0 : polynomial exprℤ()) else polynomial.X) x, n))] [],
+  { intros [ident x, ident hx],
+    refine [expr subring.in_closure.rec_on hx _ _ _ _],
+    { use [expr 1],
+      rw ["[", expr ring_hom.map_one, "]"] [],
+      norm_cast [] },
+    { use [expr «expr- »(1)],
+      rw ["[", expr ring_hom.map_neg, ",", expr ring_hom.map_one, "]"] [],
+      norm_cast [] },
+    { rintros ["_", "⟨", ident z, ",", ident hzs, ",", ident rfl, "⟩", "_", "_"],
+      use [expr 0],
+      rw ["[", expr ring_hom.map_mul, ",", expr lift_of, ",", expr if_pos hzs, ",", expr zero_mul, "]"] [],
+      norm_cast [] },
+    { rintros [ident x, ident y, "⟨", ident q, ",", ident hq, "⟩", "⟨", ident r, ",", ident hr, "⟩"],
+      refine [expr ⟨«expr + »(q, r), _⟩],
+      rw ["[", expr ring_hom.map_add, ",", expr hq, ",", expr hr, "]"] [],
+      norm_cast [] } },
+  specialize [expr this (of p) hps],
+  rw ["[", expr lift_of, "]"] ["at", ident this],
+  split_ifs ["at", ident this] [],
+  { exact [expr h] },
+  exfalso,
+  apply [expr ne.symm int.zero_ne_one],
+  rcases [expr this, "with", "⟨", ident w, ",", ident H, "⟩"],
+  rw ["<-", expr polynomial.C_eq_int_cast] ["at", ident H],
+  have [] [":", expr «expr = »(polynomial.X.coeff 1, (polynomial.C «expr↑ »(w)).coeff 1)] [],
+  by rw [expr H] [],
+  rwa ["[", expr polynomial.coeff_C, ",", expr if_neg (one_ne_zero : «expr ≠ »(1, 0)), ",", expr polynomial.coeff_X, ",", expr if_pos rfl, "]"] ["at", ident this]
+end
 
 theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)] (hxs : is_supported x s) :
   map (Subtype.val : s → α) (restriction s x) = x :=
@@ -383,7 +379,7 @@ def subsingleton_equiv_free_comm_ring [Subsingleton α] : FreeRing α ≃+* Free
     by 
       delta' Functor.mapEquiv 
       rw [congr_argₓ IsRingHom _]
-      workOnGoal 2 
+      workOnGoal 2
         symm 
         exact coe_eq α 
       exact (coe_ring_hom _).to_is_ring_hom

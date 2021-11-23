@@ -1,4 +1,5 @@
-import Mathbin.Algebra.Group.Prod
+import Mathbin.Algebra.Group.Prod 
+import Mathbin.GroupTheory.GroupAction.Defs
 
 /-!
 # Prod instances for additive and multiplicative actions

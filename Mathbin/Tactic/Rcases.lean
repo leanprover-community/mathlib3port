@@ -198,18 +198,13 @@ unsafe def alts₁ : listΣ (listΠ rcases_patt) → rcases_patt
 | [[alts ps]] => tuple [alts ps]
 | ps => alts' (alts₁_core ps)
 
-unsafe instance has_reflect : has_reflect rcases_patt
-| one n => quote _
-| clear => quote _
-| typed l e => ((quote typed).subst (has_reflect l)).subst (reflect e)
-| tuple l =>
-  (quote fun l => tuple l).subst$
-    by 
-      haveI  := has_reflect <;> exact list.reflect l
-| alts l =>
-  (quote fun l => alts l).subst$
-    by 
-      haveI  := has_reflect <;> exact list.reflect l
+-- error in Tactic.Rcases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+meta instance has_reflect : has_reflect rcases_patt
+| one n := `(_)
+| clear := `(_)
+| typed l e := ((`(typed)).subst (has_reflect l)).subst (reflect e)
+| tuple l := «expr $ »((`(λ l, tuple l)).subst, by haveI [] [] [":=", expr has_reflect]; exact [expr list.reflect l])
+| alts l := «expr $ »((`(λ l, alts l)).subst, by haveI [] [] [":=", expr has_reflect]; exact [expr list.reflect l])
 
 /-- Formats an `rcases` pattern. If the `bracket` argument is true, then it will be
 printed at high precedence, i.e. it will have parentheses around it if it is not already a tuple
@@ -320,7 +315,7 @@ mutual
   | rcases_patt.typed p ty, e =>
     do 
       let (t, e) ← get_local_and_type e 
-      let ty ← i_to_expr_no_subgoals (pquote (%%ty : Sort _))
+      let ty ← i_to_expr_no_subgoals (pquote.1 (%%ₓty : Sort _))
       unify t ty 
       let t ← instantiate_mvars t 
       let ty ← instantiate_mvars ty 
@@ -404,7 +399,7 @@ unsafe def rcases (h : Option Name) (p : pexpr) (pat : rcases_patt) : tactic Uni
   do 
     let p :=
       match pat with 
-      | rcases_patt.typed _ ty => pquote (%%p : %%ty)
+      | rcases_patt.typed _ ty => pquote.1 (%%ₓp : %%ₓty)
       | _ => p 
     let e ←
       match h with 
@@ -439,7 +434,7 @@ unsafe def rcases_many (ps : listΠ pexpr) (pat : rcases_patt) : tactic Unit :=
             do 
               let p :=
                 match pat with 
-                | rcases_patt.typed _ ty => pquote (%%p : %%ty)
+                | rcases_patt.typed _ ty => pquote.1 (%%ₓp : %%ₓty)
                 | _ => p 
               let e ← i_to_expr p 
               if e.is_local_constant then pure (pat, e) else
@@ -776,7 +771,7 @@ unsafe def rcases_parse_depth : parser Nat :=
     let o ← (tk ":" *> small_nat)?
     pure$ o.get_or_else 5
 
--- error in Tactic.Rcases: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Rcases: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- The arguments to `rcases`, which in fact dispatch to several other tactics.
 * `rcases? expr (: n)?` or `rcases? ⟨expr, ...⟩ (: n)?` calls `rcases_hint`
 * `rcases? ⟨expr, ...⟩ (: n)?` calls `rcases_hint_many`
@@ -1067,7 +1062,7 @@ unsafe def obtain : parse obtain_parse → tactic Unit
     let e ← to_expr tp >>= assert nm 
     let g :: gs ← get_goals 
     set_goals gs 
-    tactic.rcases none (pquote %%e) (pat.get_or_else (rcases_patt.one `this))
+    tactic.rcases none (pquote.1 (%%ₓe)) (pat.get_or_else (rcases_patt.one `this))
     let gs ← get_goals 
     set_goals (g :: gs)
 | ((pat, none), none) =>

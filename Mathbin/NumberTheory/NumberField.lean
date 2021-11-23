@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Field 
+import Mathbin.Algebra.Field.Basic 
 import Mathbin.Data.Rat.Basic 
 import Mathbin.RingTheory.Algebraic 
 import Mathbin.RingTheory.DedekindDomain 

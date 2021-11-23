@@ -213,38 +213,38 @@ theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈
     rw [B.nhds_one_has_basis.mem_iff]
     exact ⟨U, hU, rfl.subset⟩
 
+-- error in Topology.Algebra.FilterBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a group is endowed with a topological structure coming from
 a group filter basis then it's a topological group. -/
-@[toAdditive]
-instance (priority := 100)is_topological_group (B : GroupFilterBasis G) : @TopologicalGroup G B.topology _ :=
-  by 
-    letI this := B.topology 
-    have basis := B.nhds_one_has_basis 
-    have basis' := basis.prod basis 
-    refine' TopologicalGroup.of_nhds_one _ _ _ _
-    ·
-      rw [basis'.tendsto_iff basis]
-      suffices  : ∀ U _ : U ∈ B, ∃ V W, (V ∈ B ∧ W ∈ B) ∧ ∀ a b, a ∈ V → b ∈ W → (a*b) ∈ U
-      ·
-        simpa 
-      intro U U_in 
-      rcases mul U_in with ⟨V, V_in, hV⟩
-      use V, V, V_in, V_in 
-      intro a b a_in b_in 
-      exact hV ⟨a, b, a_in, b_in, rfl⟩
-    ·
-      rw [basis.tendsto_iff basis]
-      intro U U_in 
-      simpa using inv U_in
-    ·
-      intro x₀ 
-      rw [nhds_eq, nhds_one_eq]
-      rfl
-    ·
-      intro x₀ 
-      rw [basis.tendsto_iff basis]
-      intro U U_in 
-      exact conj x₀ U_in
+@[to_additive #[], priority 100]
+instance is_topological_group (B : group_filter_basis G) : @topological_group G B.topology _ :=
+begin
+  letI [] [] [":=", expr B.topology],
+  have [ident basis] [] [":=", expr B.nhds_one_has_basis],
+  have [ident basis'] [] [":=", expr basis.prod basis],
+  refine [expr topological_group.of_nhds_one _ _ _ _],
+  { rw [expr basis'.tendsto_iff basis] [],
+    suffices [] [":", expr ∀
+     U «expr ∈ » B, «expr∃ , »((V
+       W), «expr ∧ »(«expr ∧ »(«expr ∈ »(V, B), «expr ∈ »(W, B)), ∀
+       a b, «expr ∈ »(a, V) → «expr ∈ »(b, W) → «expr ∈ »(«expr * »(a, b), U)))],
+    by simpa [] [] [] [] [] [],
+    intros [ident U, ident U_in],
+    rcases [expr mul U_in, "with", "⟨", ident V, ",", ident V_in, ",", ident hV, "⟩"],
+    use ["[", expr V, ",", expr V, ",", expr V_in, ",", expr V_in, "]"],
+    intros [ident a, ident b, ident a_in, ident b_in],
+    exact [expr hV ⟨a, b, a_in, b_in, rfl⟩] },
+  { rw [expr basis.tendsto_iff basis] [],
+    intros [ident U, ident U_in],
+    simpa [] [] [] [] [] ["using", expr inv U_in] },
+  { intro [ident x₀],
+    rw ["[", expr nhds_eq, ",", expr nhds_one_eq, "]"] [],
+    refl },
+  { intro [ident x₀],
+    rw [expr basis.tendsto_iff basis] [],
+    intros [ident U, ident U_in],
+    exact [expr conj x₀ U_in] }
+end
 
 end GroupFilterBasis
 
@@ -278,37 +278,38 @@ It has the given basis as a basis of neighborhoods of zero. -/
 def topology : TopologicalSpace R :=
   B.to_add_group_filter_basis.topology
 
+-- error in Topology.Algebra.FilterBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a ring is endowed with a topological structure coming from
 a ring filter basis then it's a topological ring. -/
-instance (priority := 100)is_topological_ring {R : Type u} [Ringₓ R] (B : RingFilterBasis R) :
-  @TopologicalRing R B.topology _ :=
-  by 
-    let B' := B.to_add_group_filter_basis 
-    letI this := B'.topology 
-    have basis := B'.nhds_zero_has_basis 
-    have basis' := basis.prod basis 
-    haveI  := B'.is_topological_add_group 
-    apply TopologicalRing.of_add_group_of_nhds_zero
-    ·
-      rw [basis'.tendsto_iff basis]
-      suffices  : ∀ U _ : U ∈ B', ∃ V W, (V ∈ B' ∧ W ∈ B') ∧ ∀ a b, a ∈ V → b ∈ W → (a*b) ∈ U
-      ·
-        simpa 
-      intro U U_in 
-      rcases B.mul U_in with ⟨V, V_in, hV⟩
-      use V, V, V_in, V_in 
-      intro a b a_in b_in 
-      exact hV ⟨a, b, a_in, b_in, rfl⟩
-    ·
-      intro x₀ 
-      rw [basis.tendsto_iff basis]
-      intro U 
-      simpa using B.mul_left x₀
-    ·
-      intro x₀ 
-      rw [basis.tendsto_iff basis]
-      intro U 
-      simpa using B.mul_right x₀
+@[priority 100]
+instance is_topological_ring {R : Type u} [ring R] (B : ring_filter_basis R) : @topological_ring R B.topology _ :=
+begin
+  let [ident B'] [] [":=", expr B.to_add_group_filter_basis],
+  letI [] [] [":=", expr B'.topology],
+  have [ident basis] [] [":=", expr B'.nhds_zero_has_basis],
+  have [ident basis'] [] [":=", expr basis.prod basis],
+  haveI [] [] [":=", expr B'.is_topological_add_group],
+  apply [expr topological_ring.of_add_group_of_nhds_zero],
+  { rw [expr basis'.tendsto_iff basis] [],
+    suffices [] [":", expr ∀
+     U «expr ∈ » B', «expr∃ , »((V
+       W), «expr ∧ »(«expr ∧ »(«expr ∈ »(V, B'), «expr ∈ »(W, B')), ∀
+       a b, «expr ∈ »(a, V) → «expr ∈ »(b, W) → «expr ∈ »(«expr * »(a, b), U)))],
+    by simpa [] [] [] [] [] [],
+    intros [ident U, ident U_in],
+    rcases [expr B.mul U_in, "with", "⟨", ident V, ",", ident V_in, ",", ident hV, "⟩"],
+    use ["[", expr V, ",", expr V, ",", expr V_in, ",", expr V_in, "]"],
+    intros [ident a, ident b, ident a_in, ident b_in],
+    exact [expr hV ⟨a, b, a_in, b_in, rfl⟩] },
+  { intro [ident x₀],
+    rw [expr basis.tendsto_iff basis] [],
+    intros [ident U],
+    simpa [] [] [] [] [] ["using", expr B.mul_left x₀] },
+  { intro [ident x₀],
+    rw [expr basis.tendsto_iff basis] [],
+    intros [ident U],
+    simpa [] [] [] [] [] ["using", expr B.mul_right x₀] }
+end
 
 end RingFilterBasis
 
@@ -373,33 +374,33 @@ def topology' {R M : Type _} [CommRingₓ R] {tR : TopologicalSpace R} [AddCommG
   (B : ModuleFilterBasis R M) : TopologicalSpace M :=
   B.to_add_group_filter_basis.topology
 
+-- error in Topology.Algebra.FilterBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a module is endowed with a topological structure coming from
 a module filter basis then it's a topological module. -/
-instance (priority := 100)HasContinuousSmul [TopologicalRing R] : @HasContinuousSmul R M _ _ B.topology :=
-  by 
-    let B' := B.to_add_group_filter_basis 
-    letI this := B'.topology 
-    have basis := B'.nhds_zero_has_basis 
-    haveI  := B'.is_topological_add_group 
-    apply HasContinuousSmul.of_nhds_zero
-    ·
-      rw [basis.tendsto_right_iff]
-      intro U U_in 
-      rcases B.smul U_in with ⟨V, V_in, W, W_in, H⟩
-      apply mem_of_superset (prod_mem_prod V_in$ B'.mem_nhds_zero W_in)
-      rintro ⟨v, w⟩ ⟨v_in : v ∈ V, w_in : w ∈ W⟩
-      exact H (Set.mem_smul_of_mem v_in w_in)
-    ·
-      intro m₀ 
-      rw [basis.tendsto_right_iff]
-      intro U U_in 
-      exact B.smul_right m₀ U_in
-    ·
-      intro x₀ 
-      rw [basis.tendsto_right_iff]
-      intro U U_in 
-      rcases B.smul_left x₀ U_in with ⟨V, V_in, hV⟩
-      exact mem_of_superset (B'.mem_nhds_zero V_in) hV
+@[priority 100]
+instance has_continuous_smul [topological_ring R] : @has_continuous_smul R M _ _ B.topology :=
+begin
+  let [ident B'] [] [":=", expr B.to_add_group_filter_basis],
+  letI [] [] [":=", expr B'.topology],
+  have [ident basis] [] [":=", expr B'.nhds_zero_has_basis],
+  haveI [] [] [":=", expr B'.is_topological_add_group],
+  apply [expr has_continuous_smul.of_nhds_zero],
+  { rw [expr basis.tendsto_right_iff] [],
+    intros [ident U, ident U_in],
+    rcases [expr B.smul U_in, "with", "⟨", ident V, ",", ident V_in, ",", ident W, ",", ident W_in, ",", ident H, "⟩"],
+    apply [expr mem_of_superset «expr $ »(prod_mem_prod V_in, B'.mem_nhds_zero W_in)],
+    rintros ["⟨", ident v, ",", ident w, "⟩", "⟨", ident v_in, ":", expr «expr ∈ »(v, V), ",", ident w_in, ":", expr «expr ∈ »(w, W), "⟩"],
+    exact [expr H (set.mem_smul_of_mem v_in w_in)] },
+  { intro [ident m₀],
+    rw [expr basis.tendsto_right_iff] [],
+    intros [ident U, ident U_in],
+    exact [expr B.smul_right m₀ U_in] },
+  { intro [ident x₀],
+    rw [expr basis.tendsto_right_iff] [],
+    intros [ident U, ident U_in],
+    rcases [expr B.smul_left x₀ U_in, "with", "⟨", ident V, ",", ident V_in, ",", ident hV, "⟩"],
+    exact [expr mem_of_superset (B'.mem_nhds_zero V_in) hV] }
+end
 
 /-- Build a module filter basis from compatible ring and additive group filter bases. -/
 def of_bases {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (BR : RingFilterBasis R)

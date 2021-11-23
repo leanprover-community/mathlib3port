@@ -15,11 +15,16 @@ variable(K : Type _)[DivisionRing K][CharZero K]
 
 namespace Nat
 
-theorem cast_choose {a b : ℕ} (h : a ≤ b) : (b.choose a : K) = b ! / a !*(b - a)! :=
-  by 
-    have  : ∀ {n : ℕ}, (n ! : K) ≠ 0 := fun n => Nat.cast_ne_zero.2 (factorial_ne_zero _)
-    rw [eq_div_iff_mul_eq (mul_ne_zero this this)]
-    rwModCast [←mul_assocₓ, choose_mul_factorial_mul_factorial h]
+-- error in Data.Nat.Choose.Cast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cast_choose
+{a b : exprℕ()}
+(h : «expr ≤ »(a, b)) : «expr = »((b.choose a : K), «expr / »(«expr !»(b), «expr * »(«expr !»(a), «expr !»(«expr - »(b, a))))) :=
+begin
+  have [] [":", expr ∀
+   {n : exprℕ()}, «expr ≠ »((«expr !»(n) : K), 0)] [":=", expr λ n, nat.cast_ne_zero.2 (factorial_ne_zero _)],
+  rw [expr eq_div_iff_mul_eq (mul_ne_zero this this)] [],
+  rw_mod_cast ["[", "<-", expr mul_assoc, ",", expr choose_mul_factorial_mul_factorial h, "]"] []
+end
 
 theorem cast_add_choose {a b : ℕ} : ((a+b).choose a : K) = (a+b)! / a !*b ! :=
   by 

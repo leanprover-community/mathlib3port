@@ -44,33 +44,45 @@ theorem rat_add_continuous_lemma {ε : α} (ε0 : 0 < ε) :
         simpa [add_halves, sub_eq_add_neg, add_commₓ, add_left_commₓ, add_assocₓ] using
           lt_of_le_of_ltₓ (abv_add abv _ _) (add_lt_add h₁ h₂)⟩
 
-theorem rat_mul_continuous_lemma {ε K₁ K₂ : α} (ε0 : 0 < ε) :
-  ∃ (δ : _)(_ : δ > 0),
-    ∀ {a₁ a₂ b₁ b₂ : β},
-      abv a₁ < K₁ → abv b₂ < K₂ → abv (a₁ - b₁) < δ → abv (a₂ - b₂) < δ → abv ((a₁*a₂) - b₁*b₂) < ε :=
-  by 
-    have K0 : (0 : α) < max 1 (max K₁ K₂) := lt_of_lt_of_leₓ zero_lt_one (le_max_leftₓ _ _)
-    have εK := div_pos (half_pos ε0) K0 
-    refine' ⟨_, εK, fun a₁ a₂ b₁ b₂ ha₁ hb₂ h₁ h₂ => _⟩
-    replace ha₁ := lt_of_lt_of_leₓ ha₁ (le_transₓ (le_max_leftₓ _ K₂) (le_max_rightₓ 1 _))
-    replace hb₂ := lt_of_lt_of_leₓ hb₂ (le_transₓ (le_max_rightₓ K₁ _) (le_max_rightₓ 1 _))
-    have  :=
-      add_lt_add (mul_lt_mul' (le_of_ltₓ h₁) hb₂ (abv_nonneg abv _) εK)
-        (mul_lt_mul' (le_of_ltₓ h₂) ha₁ (abv_nonneg abv _) εK)
-    rw [←abv_mul abv, mul_commₓ, div_mul_cancel _ (ne_of_gtₓ K0), ←abv_mul abv, add_halves] at this 
-    simpa [mul_addₓ, add_mulₓ, sub_eq_add_neg, add_commₓ, add_left_commₓ] using lt_of_le_of_ltₓ (abv_add abv _ _) this
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem rat_mul_continuous_lemma
+{ε K₁ K₂ : α}
+(ε0 : «expr < »(0, ε)) : «expr∃ , »((δ «expr > » 0), ∀
+ {a₁
+  a₂
+  b₁
+  b₂ : β}, «expr < »(abv a₁, K₁) → «expr < »(abv b₂, K₂) → «expr < »(abv «expr - »(a₁, b₁), δ) → «expr < »(abv «expr - »(a₂, b₂), δ) → «expr < »(abv «expr - »(«expr * »(a₁, a₂), «expr * »(b₁, b₂)), ε)) :=
+begin
+  have [ident K0] [":", expr «expr < »((0 : α), max 1 (max K₁ K₂))] [":=", expr lt_of_lt_of_le zero_lt_one (le_max_left _ _)],
+  have [ident εK] [] [":=", expr div_pos (half_pos ε0) K0],
+  refine [expr ⟨_, εK, λ a₁ a₂ b₁ b₂ ha₁ hb₂ h₁ h₂, _⟩],
+  replace [ident ha₁] [] [":=", expr lt_of_lt_of_le ha₁ (le_trans (le_max_left _ K₂) (le_max_right 1 _))],
+  replace [ident hb₂] [] [":=", expr lt_of_lt_of_le hb₂ (le_trans (le_max_right K₁ _) (le_max_right 1 _))],
+  have [] [] [":=", expr add_lt_add (mul_lt_mul' (le_of_lt h₁) hb₂ (abv_nonneg abv _) εK) (mul_lt_mul' (le_of_lt h₂) ha₁ (abv_nonneg abv _) εK)],
+  rw ["[", "<-", expr abv_mul abv, ",", expr mul_comm, ",", expr div_mul_cancel _ (ne_of_gt K0), ",", "<-", expr abv_mul abv, ",", expr add_halves, "]"] ["at", ident this],
+  simpa [] [] [] ["[", expr mul_add, ",", expr add_mul, ",", expr sub_eq_add_neg, ",", expr add_comm, ",", expr add_left_comm, "]"] [] ["using", expr lt_of_le_of_lt (abv_add abv _ _) this]
+end
 
-theorem rat_inv_continuous_lemma {β : Type _} [Field β] (abv : β → α) [IsAbsoluteValue abv] {ε K : α} (ε0 : 0 < ε)
-  (K0 : 0 < K) : ∃ (δ : _)(_ : δ > 0), ∀ {a b : β}, K ≤ abv a → K ≤ abv b → abv (a - b) < δ → abv (a⁻¹ - b⁻¹) < ε :=
-  by 
-    have KK := mul_pos K0 K0 
-    have εK := mul_pos ε0 KK 
-    refine' ⟨_, εK, fun a b ha hb h => _⟩
-    have a0 := lt_of_lt_of_leₓ K0 ha 
-    have b0 := lt_of_lt_of_leₓ K0 hb 
-    rw [inv_sub_inv ((abv_pos abv).1 a0) ((abv_pos abv).1 b0), abv_div abv, abv_mul abv, mul_commₓ, abv_sub abv,
-      ←mul_div_cancel ε (ne_of_gtₓ KK)]
-    exact div_lt_div h (mul_le_mul hb ha (le_of_ltₓ K0) (abv_nonneg abv _)) (le_of_ltₓ$ mul_pos ε0 KK) KK
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem rat_inv_continuous_lemma
+{β : Type*}
+[field β]
+(abv : β → α)
+[is_absolute_value abv]
+{ε K : α}
+(ε0 : «expr < »(0, ε))
+(K0 : «expr < »(0, K)) : «expr∃ , »((δ «expr > » 0), ∀
+ {a
+  b : β}, «expr ≤ »(K, abv a) → «expr ≤ »(K, abv b) → «expr < »(abv «expr - »(a, b), δ) → «expr < »(abv «expr - »(«expr ⁻¹»(a), «expr ⁻¹»(b)), ε)) :=
+begin
+  have [ident KK] [] [":=", expr mul_pos K0 K0],
+  have [ident εK] [] [":=", expr mul_pos ε0 KK],
+  refine [expr ⟨_, εK, λ a b ha hb h, _⟩],
+  have [ident a0] [] [":=", expr lt_of_lt_of_le K0 ha],
+  have [ident b0] [] [":=", expr lt_of_lt_of_le K0 hb],
+  rw ["[", expr inv_sub_inv ((abv_pos abv).1 a0) ((abv_pos abv).1 b0), ",", expr abv_div abv, ",", expr abv_mul abv, ",", expr mul_comm, ",", expr abv_sub abv, ",", "<-", expr mul_div_cancel ε (ne_of_gt KK), "]"] [],
+  exact [expr div_lt_div h (mul_le_mul hb ha (le_of_lt K0) (abv_nonneg abv _)) «expr $ »(le_of_lt, mul_pos ε0 KK) KK]
+end
 
 end 
 
@@ -143,28 +155,25 @@ theorem cauchy₂ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ j k _ : j ≥
 theorem cauchy₃ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ j _ : j ≥ i, ∀ k _ : k ≥ j, abv (f k - f j) < ε :=
   f.2.cauchy₃
 
-theorem Bounded (f : CauSeq β abv) : ∃ r, ∀ i, abv (f i) < r :=
-  by 
-    cases' f.cauchy zero_lt_one with i h 
-    let R := ∑j in Finset.range (i+1), abv (f j)
-    have  : ∀ j _ : j ≤ i, abv (f j) ≤ R
-    ·
-      intro j ij 
-      change (fun j => abv (f j)) j ≤ R 
-      apply Finset.single_le_sum
-      ·
-        intros 
-        apply abv_nonneg abv
-      ·
-        rwa [Finset.mem_range, Nat.lt_succ_iff]
-    refine' ⟨R+1, fun j => _⟩
-    cases' lt_or_leₓ j i with ij ij
-    ·
-      exact lt_of_le_of_ltₓ (this _ (le_of_ltₓ ij)) (lt_add_one _)
-    ·
-      have  := lt_of_le_of_ltₓ (abv_add abv _ _) (add_lt_add_of_le_of_lt (this _ (le_reflₓ _)) (h _ ij))
-      rw [add_sub, add_commₓ] at this 
-      simpa
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem bounded (f : cau_seq β abv) : «expr∃ , »((r), ∀ i, «expr < »(abv (f i), r)) :=
+begin
+  cases [expr f.cauchy zero_lt_one] ["with", ident i, ident h],
+  let [ident R] [] [":=", expr «expr∑ in , »((j), finset.range «expr + »(i, 1), abv (f j))],
+  have [] [":", expr ∀ j «expr ≤ » i, «expr ≤ »(abv (f j), R)] [],
+  { intros [ident j, ident ij],
+    change [expr «expr ≤ »(λ j, abv (f j) j, R)] [] [],
+    apply [expr finset.single_le_sum],
+    { intros [],
+      apply [expr abv_nonneg abv] },
+    { rwa ["[", expr finset.mem_range, ",", expr nat.lt_succ_iff, "]"] [] } },
+  refine [expr ⟨«expr + »(R, 1), λ j, _⟩],
+  cases [expr lt_or_le j i] ["with", ident ij, ident ij],
+  { exact [expr lt_of_le_of_lt (this _ (le_of_lt ij)) (lt_add_one _)] },
+  { have [] [] [":=", expr lt_of_le_of_lt (abv_add abv _ _) (add_lt_add_of_le_of_lt (this _ (le_refl _)) (h _ ij))],
+    rw ["[", expr add_sub, ",", expr add_comm, "]"] ["at", ident this],
+    simpa [] [] [] [] [] [] }
+end
 
 theorem bounded' (f : CauSeq β abv) (x : α) : ∃ (r : _)(_ : r > x), ∀ i, abv (f i) < r :=
   let ⟨r, h⟩ := f.bounded
@@ -308,23 +317,23 @@ theorem add_lim_zero {f g : CauSeq β abv} (hf : lim_zero f) (hg : lim_zero g) :
       by 
         simpa [add_halves ε] using lt_of_le_of_ltₓ (abv_add abv _ _) (add_lt_add H₁ H₂)
 
-theorem mul_lim_zero_right (f : CauSeq β abv) {g} (hg : lim_zero g) : lim_zero (f*g)
-| ε, ε0 =>
-  let ⟨F, F0, hF⟩ := f.bounded' 0
-  (hg _$ div_pos ε0 F0).imp$
-    fun i H j ij =>
-      by 
-        have  := mul_lt_mul' (le_of_ltₓ$ hF j) (H _ ij) (abv_nonneg abv _) F0 <;>
-          rwa [mul_commₓ F, div_mul_cancel _ (ne_of_gtₓ F0), ←abv_mul abv] at this
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mul_lim_zero_right (f : cau_seq β abv) {g} (hg : lim_zero g) : lim_zero «expr * »(f, g)
+| ε, ε0 := let ⟨F, F0, hF⟩ := f.bounded' 0 in
+«expr $ »(«expr $ »(hg _, div_pos ε0 F0).imp, λ
+ i
+ H
+ j
+ ij, by have [] [] [":=", expr mul_lt_mul' «expr $ »(le_of_lt, hF j) (H _ ij) (abv_nonneg abv _) F0]; rwa ["[", expr mul_comm F, ",", expr div_mul_cancel _ (ne_of_gt F0), ",", "<-", expr abv_mul abv, "]"] ["at", ident this])
 
-theorem mul_lim_zero_left {f} (g : CauSeq β abv) (hg : lim_zero f) : lim_zero (f*g)
-| ε, ε0 =>
-  let ⟨G, G0, hG⟩ := g.bounded' 0
-  (hg _$ div_pos ε0 G0).imp$
-    fun i H j ij =>
-      by 
-        have  := mul_lt_mul'' (H _ ij) (hG j) (abv_nonneg abv _) (abv_nonneg abv _) <;>
-          rwa [div_mul_cancel _ (ne_of_gtₓ G0), ←abv_mul abv] at this
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mul_lim_zero_left {f} (g : cau_seq β abv) (hg : lim_zero f) : lim_zero «expr * »(f, g)
+| ε, ε0 := let ⟨G, G0, hG⟩ := g.bounded' 0 in
+«expr $ »(«expr $ »(hg _, div_pos ε0 G0).imp, λ
+ i
+ H
+ j
+ ij, by have [] [] [":=", expr mul_lt_mul'' (H _ ij) (hG j) (abv_nonneg abv _) (abv_nonneg abv _)]; rwa ["[", expr div_mul_cancel _ (ne_of_gt G0), ",", "<-", expr abv_mul abv, "]"] ["at", ident this])
 
 theorem neg_lim_zero {f : CauSeq β abv} (hf : lim_zero f) : lim_zero (-f) :=
   by 
@@ -376,21 +385,24 @@ theorem add_equiv_add {f1 f2 g1 g2 : CauSeq β abv} (hf : f1 ≈ f2) (hg : g1 �
     congr 2
     simp 
 
-theorem neg_equiv_neg {f g : CauSeq β abv} (hf : f ≈ g) : -f ≈ -g :=
-  by 
-    have hf : lim_zero _ := neg_lim_zero hf 
-    show lim_zero (-f - -g)
-    convert hf using 1
-    simp 
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem neg_equiv_neg {f g : cau_seq β abv} (hf : «expr ≈ »(f, g)) : «expr ≈ »(«expr- »(f), «expr- »(g)) :=
+begin
+  have [ident hf] [":", expr lim_zero _] [":=", expr neg_lim_zero hf],
+  show [expr lim_zero «expr - »(«expr- »(f), «expr- »(g))],
+  convert [] [expr hf] ["using", 1],
+  simp [] [] [] [] [] []
+end
 
-theorem equiv_def₃ {f g : CauSeq β abv} (h : f ≈ g) {ε : α} (ε0 : 0 < ε) :
-  ∃ i, ∀ j _ : j ≥ i, ∀ k _ : k ≥ j, abv (f k - g j) < ε :=
-  (exists_forall_ge_and (h _$ half_pos ε0) (f.cauchy₃$ half_pos ε0)).imp$
-    fun i H j ij k jk =>
-      let ⟨h₁, h₂⟩ := H _ ij 
-      by 
-        have  := lt_of_le_of_ltₓ (abv_add abv (f j - g j) _) (add_lt_add h₁ (h₂ _ jk)) <;>
-          rwa [sub_add_sub_cancel', add_halves] at this
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem equiv_def₃
+{f g : cau_seq β abv}
+(h : «expr ≈ »(f, g))
+{ε : α}
+(ε0 : «expr < »(0, ε)) : «expr∃ , »((i), ∀ j «expr ≥ » i, ∀ k «expr ≥ » j, «expr < »(abv «expr - »(f k, g j), ε)) :=
+«expr $ »((exists_forall_ge_and «expr $ »(h _, half_pos ε0) «expr $ »(f.cauchy₃, half_pos ε0)).imp, λ
+ i H j ij k jk, let ⟨h₁, h₂⟩ := H _ ij in
+ by have [] [] [":=", expr lt_of_le_of_lt (abv_add abv «expr - »(f j, g j) _) (add_lt_add h₁ (h₂ _ jk))]; rwa ["[", expr sub_add_sub_cancel', ",", expr add_halves, "]"] ["at", ident this])
 
 theorem lim_zero_congr {f g : CauSeq β abv} (h : f ≈ g) : lim_zero f ↔ lim_zero g :=
   ⟨fun l =>
@@ -400,7 +412,7 @@ theorem lim_zero_congr {f g : CauSeq β abv} (h : f ≈ g) : lim_zero f ↔ lim_
       by 
         simpa using add_lim_zero h l⟩
 
--- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem abv_pos_of_not_lim_zero
 {f : cau_seq β abv}
 (hf : «expr¬ »(lim_zero f)) : «expr∃ , »((K «expr > » 0), «expr∃ , »((i), ∀ j «expr ≥ » i, «expr ≤ »(K, abv (f j)))) :=
@@ -416,18 +428,19 @@ begin
   rwa ["[", expr sub_add_cancel, ",", expr add_halves, "]"] ["at", ident this]
 end
 
-theorem of_near (f : ℕ → β) (g : CauSeq β abv) (h : ∀ ε _ : ε > 0, ∃ i, ∀ j _ : j ≥ i, abv (f j - g j) < ε) :
-  IsCauSeq abv f
-| ε, ε0 =>
-  let ⟨i, hi⟩ := exists_forall_ge_and (h _ (half_pos$ half_pos ε0)) (g.cauchy₃$ half_pos ε0)
-  ⟨i,
-    fun j ij =>
-      by 
-        cases' hi _ (le_reflₓ _) with h₁ h₂ 
-        rw [abv_sub abv] at h₁ 
-        have  := lt_of_le_of_ltₓ (abv_add abv _ _) (add_lt_add (hi _ ij).1 h₁)
-        have  := lt_of_le_of_ltₓ (abv_add abv _ _) (add_lt_add this (h₂ _ ij))
-        rwa [add_halves, add_halves, add_right_commₓ, sub_add_sub_cancel, sub_add_sub_cancel] at this⟩
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_near
+(f : exprℕ() → β)
+(g : cau_seq β abv)
+(h : ∀ ε «expr > » 0, «expr∃ , »((i), ∀ j «expr ≥ » i, «expr < »(abv «expr - »(f j, g j), ε))) : is_cau_seq abv f
+| ε, ε0 := let ⟨i, hi⟩ := exists_forall_ge_and (h _ «expr $ »(half_pos, half_pos ε0)) «expr $ »(g.cauchy₃, half_pos ε0) in
+⟨i, λ j ij, begin
+   cases [expr hi _ (le_refl _)] ["with", ident h₁, ident h₂],
+   rw [expr abv_sub abv] ["at", ident h₁],
+   have [] [] [":=", expr lt_of_le_of_lt (abv_add abv _ _) (add_lt_add (hi _ ij).1 h₁)],
+   have [] [] [":=", expr lt_of_le_of_lt (abv_add abv _ _) (add_lt_add this (h₂ _ ij))],
+   rwa ["[", expr add_halves, ",", expr add_halves, ",", expr add_right_comm, ",", expr sub_add_sub_cancel, ",", expr sub_add_sub_cancel, "]"] ["at", ident this]
+ end⟩
 
 theorem not_lim_zero_of_not_congr_zero {f : CauSeq _ abv} (hf : ¬f ≈ 0) : ¬lim_zero f :=
   fun this : lim_zero f =>
@@ -445,37 +458,31 @@ theorem mul_equiv_zero (g : CauSeq _ abv) {f : CauSeq _ abv} (hf : f ≈ 0) : (g
   show lim_zero ((g*f) - 0)by 
     simpa
 
-theorem mul_not_equiv_zero {f g : CauSeq _ abv} (hf : ¬f ≈ 0) (hg : ¬g ≈ 0) : ¬(f*g) ≈ 0 :=
-  fun this : lim_zero ((f*g) - 0) =>
-    have hlz : lim_zero (f*g) :=
-      by 
-        simpa 
-    have hf' : ¬lim_zero f :=
-      by 
-        simpa using show ¬lim_zero (f - 0) from hf 
-    have hg' : ¬lim_zero g :=
-      by 
-        simpa using show ¬lim_zero (g - 0) from hg 
-    by 
-      rcases abv_pos_of_not_lim_zero hf' with ⟨a1, ha1, N1, hN1⟩
-      rcases abv_pos_of_not_lim_zero hg' with ⟨a2, ha2, N2, hN2⟩
-      have  : 0 < a1*a2 
-      exact mul_pos ha1 ha2 
-      cases' hlz _ this with N hN 
-      let i := max N (max N1 N2)
-      have hN' := hN i (le_max_leftₓ _ _)
-      have hN1' := hN1 i (le_transₓ (le_max_leftₓ _ _) (le_max_rightₓ _ _))
-      have hN1' := hN2 i (le_transₓ (le_max_rightₓ _ _) (le_max_rightₓ _ _))
-      apply not_le_of_lt hN' 
-      change _ ≤ abv (_*_)
-      rw [IsAbsoluteValue.abv_mul abv]
-      apply mul_le_mul <;>
-        try 
-          assumption
-      ·
-        apply le_of_ltₓ ha2
-      ·
-        apply IsAbsoluteValue.abv_nonneg abv
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mul_not_equiv_zero
+{f g : cau_seq _ abv}
+(hf : «expr¬ »(«expr ≈ »(f, 0)))
+(hg : «expr¬ »(«expr ≈ »(g, 0))) : «expr¬ »(«expr ≈ »(«expr * »(f, g), 0)) :=
+assume: lim_zero «expr - »(«expr * »(f, g), 0), have hlz : lim_zero «expr * »(f, g), by simpa [] [] [] [] [] [],
+have hf' : «expr¬ »(lim_zero f), by simpa [] [] [] [] [] ["using", expr show «expr¬ »(lim_zero «expr - »(f, 0)), from hf],
+have hg' : «expr¬ »(lim_zero g), by simpa [] [] [] [] [] ["using", expr show «expr¬ »(lim_zero «expr - »(g, 0)), from hg],
+begin
+  rcases [expr abv_pos_of_not_lim_zero hf', "with", "⟨", ident a1, ",", ident ha1, ",", ident N1, ",", ident hN1, "⟩"],
+  rcases [expr abv_pos_of_not_lim_zero hg', "with", "⟨", ident a2, ",", ident ha2, ",", ident N2, ",", ident hN2, "⟩"],
+  have [] [":", expr «expr < »(0, «expr * »(a1, a2))] [],
+  from [expr mul_pos ha1 ha2],
+  cases [expr hlz _ this] ["with", ident N, ident hN],
+  let [ident i] [] [":=", expr max N (max N1 N2)],
+  have [ident hN'] [] [":=", expr hN i (le_max_left _ _)],
+  have [ident hN1'] [] [":=", expr hN1 i (le_trans (le_max_left _ _) (le_max_right _ _))],
+  have [ident hN1'] [] [":=", expr hN2 i (le_trans (le_max_right _ _) (le_max_right _ _))],
+  apply [expr not_le_of_lt hN'],
+  change [expr «expr ≤ »(_, abv «expr * »(_, _))] [] [],
+  rw [expr is_absolute_value.abv_mul abv] [],
+  apply [expr mul_le_mul]; try { assumption },
+  { apply [expr le_of_lt ha2] },
+  { apply [expr is_absolute_value.abv_nonneg abv] }
+end
 
 theorem const_equiv {x y : β} : const x ≈ const y ↔ x = y :=
   show lim_zero _ ↔ _ by 
@@ -583,15 +590,14 @@ theorem add_pos {f g : CauSeq α abs} : Pos f → Pos g → Pos (f+g)
       let ⟨h₁, h₂⟩ := h _ ij 
       add_le_add h₁ h₂⟩
 
-theorem pos_add_lim_zero {f g : CauSeq α abs} : Pos f → lim_zero g → Pos (f+g)
-| ⟨F, F0, hF⟩, H =>
-  let ⟨i, h⟩ := exists_forall_ge_and hF (H _ (half_pos F0))
-  ⟨_, half_pos F0, i,
-    fun j ij =>
-      by 
-        cases' h j ij with h₁ h₂ 
-        have  := add_le_add h₁ (le_of_ltₓ (abs_lt.1 h₂).1)
-        rwa [←sub_eq_add_neg, sub_self_div_two] at this⟩
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pos_add_lim_zero {f g : cau_seq α abs} : pos f → lim_zero g → pos «expr + »(f, g)
+| ⟨F, F0, hF⟩, H := let ⟨i, h⟩ := exists_forall_ge_and hF (H _ (half_pos F0)) in
+⟨_, half_pos F0, i, λ j ij, begin
+   cases [expr h j ij] ["with", ident h₁, ident h₂],
+   have [] [] [":=", expr add_le_add h₁ (le_of_lt (abs_lt.1 h₂).1)],
+   rwa ["[", "<-", expr sub_eq_add_neg, ",", expr sub_self_div_two, "]"] ["at", ident this]
+ end⟩
 
 protected theorem mul_pos {f g : CauSeq α abs} : Pos f → Pos g → Pos (f*g)
 | ⟨F, F0, hF⟩, ⟨G, G0, hG⟩ =>
@@ -601,22 +607,23 @@ protected theorem mul_pos {f g : CauSeq α abs} : Pos f → Pos g → Pos (f*g)
       let ⟨h₁, h₂⟩ := h _ ij 
       mul_le_mul h₁ h₂ (le_of_ltₓ G0) (le_transₓ (le_of_ltₓ F0) h₁)⟩
 
-theorem trichotomy (f : CauSeq α abs) : Pos f ∨ lim_zero f ∨ Pos (-f) :=
-  by 
-    cases Classical.em (lim_zero f) <;> simp 
-    rcases abv_pos_of_not_lim_zero h with ⟨K, K0, hK⟩
-    rcases exists_forall_ge_and hK (f.cauchy₃ K0) with ⟨i, hi⟩
-    refine' (le_totalₓ 0 (f i)).imp _ _ <;>
-      refine' fun h => ⟨K, K0, i, fun j ij => _⟩ <;> have  := (hi _ ij).1 <;> cases' hi _ (le_reflₓ _) with h₁ h₂
-    ·
-      rwa [abs_of_nonneg] at this 
-      rw [abs_of_nonneg h] at h₁ 
-      exact (le_add_iff_nonneg_right _).1 (le_transₓ h₁$ neg_le_sub_iff_le_add'.1$ le_of_ltₓ (abs_lt.1$ h₂ _ ij).1)
-    ·
-      rwa [abs_of_nonpos] at this 
-      rw [abs_of_nonpos h] at h₁ 
-      rw [←sub_le_sub_iff_right, zero_sub]
-      exact le_transₓ (le_of_ltₓ (abs_lt.1$ h₂ _ ij).2) h₁
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem trichotomy (f : cau_seq α abs) : «expr ∨ »(pos f, «expr ∨ »(lim_zero f, pos «expr- »(f))) :=
+begin
+  cases [expr classical.em (lim_zero f)] []; simp [] [] [] ["*"] [] [],
+  rcases [expr abv_pos_of_not_lim_zero h, "with", "⟨", ident K, ",", ident K0, ",", ident hK, "⟩"],
+  rcases [expr exists_forall_ge_and hK (f.cauchy₃ K0), "with", "⟨", ident i, ",", ident hi, "⟩"],
+  refine [expr (le_total 0 (f i)).imp _ _]; refine [expr λ
+   h, ⟨K, K0, i, λ
+    j ij, _⟩]; have [] [] [":=", expr (hi _ ij).1]; cases [expr hi _ (le_refl _)] ["with", ident h₁, ident h₂],
+  { rwa [expr abs_of_nonneg] ["at", ident this],
+    rw [expr abs_of_nonneg h] ["at", ident h₁],
+    exact [expr (le_add_iff_nonneg_right _).1 «expr $ »(le_trans h₁, «expr $ »(neg_le_sub_iff_le_add'.1, le_of_lt «expr $ »(abs_lt.1, h₂ _ ij).1))] },
+  { rwa [expr abs_of_nonpos] ["at", ident this],
+    rw [expr abs_of_nonpos h] ["at", ident h₁],
+    rw ["[", "<-", expr sub_le_sub_iff_right, ",", expr zero_sub, "]"] [],
+    exact [expr le_trans (le_of_lt «expr $ »(abs_lt.1, h₂ _ ij).2) h₁] }
+end
 
 instance  : LT (CauSeq α abs) :=
   ⟨fun f g => Pos (g - f)⟩
@@ -628,9 +635,9 @@ theorem lt_of_lt_of_eq {f g h : CauSeq α abs} (fg : f < g) (gh : g ≈ h) : f <
   show Pos (h - f)by 
     simpa [sub_eq_add_neg, add_commₓ, add_left_commₓ] using pos_add_lim_zero fg (neg_lim_zero gh)
 
-theorem lt_of_eq_of_lt {f g h : CauSeq α abs} (fg : f ≈ g) (gh : g < h) : f < h :=
-  by 
-    have  := pos_add_lim_zero gh (neg_lim_zero fg) <;> rwa [←sub_eq_add_neg, sub_sub_sub_cancel_right] at this
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lt_of_eq_of_lt {f g h : cau_seq α abs} (fg : «expr ≈ »(f, g)) (gh : «expr < »(g, h)) : «expr < »(f, h) :=
+by have [] [] [":=", expr pos_add_lim_zero gh (neg_lim_zero fg)]; rwa ["[", "<-", expr sub_eq_add_neg, ",", expr sub_sub_sub_cancel_right, "]"] ["at", ident this]
 
 theorem lt_transₓ {f g h : CauSeq α abs} (fg : f < g) (gh : g < h) : f < h :=
   show Pos (h - f)by 

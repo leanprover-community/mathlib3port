@@ -95,13 +95,13 @@ instance has_limits : has_limits (Mon_ C) :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
+          exact { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
 
 instance forget_preserves_limits : preserves_limits (Mon_.forget C) :=
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesLimit :=
                 fun F : J ⥤ Mon_ C =>
                   preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)

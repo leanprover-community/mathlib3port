@@ -198,7 +198,7 @@ theorem Finset.prod_attach_univ [Fintype α] [CommMonoidₓ β] (f : { a : α //
       by 
         simp 
 
--- error in Data.Fintype.Card: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Fintype.Card: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Taking a product over `univ.pi t` is the same as taking the product over `fintype.pi_finset t`.
   `univ.pi t` and `fintype.pi_finset t` are essentially the same `finset`, but differ
   in the type of their element, `univ.pi t` is a `finset (Π a ∈ univ, t a)` and
@@ -329,54 +329,52 @@ end
 
 namespace List
 
-@[toAdditive]
-theorem prod_take_of_fn [CommMonoidₓ α] {n : ℕ} (f : Finₓ n → α) (i : ℕ) :
-  ((of_fn f).take i).Prod = ∏j in Finset.univ.filter fun j : Finₓ n => j.val < i, f j :=
-  by 
-    have A : ∀ j : Finₓ n, ¬(j : ℕ) < 0 := fun j => not_lt_bot 
-    induction' i with i IH
-    ·
-      simp [A]
-    byCases' h : i < n
-    ·
-      have  : i < length (of_fn f)
-      ·
-        rwa [length_of_fn f]
-      rw [prod_take_succ _ _ this]
-      have A :
-        ((Finset.univ : Finset (Finₓ n)).filter fun j => j.val < i+1) =
-          ((Finset.univ : Finset (Finₓ n)).filter fun j => j.val < i) ∪ {(⟨i, h⟩ : Finₓ n)}
-      ·
-        ·
-          ext j 
-          simp [Nat.lt_succ_iff_lt_or_eq, Finₓ.ext_iff, -add_commₓ]
-      have B : _root_.disjoint (Finset.filter (fun j : Finₓ n => j.val < i) Finset.univ) (singleton (⟨i, h⟩ : Finₓ n))
-      ·
-        simp 
-      rw [A, Finset.prod_union B, IH]
-      simp 
-    ·
-      have A : (of_fn f).take i = (of_fn f).take i.succ
-      ·
-        rw [←length_of_fn f] at h 
-        have  : length (of_fn f) ≤ i := not_lt.mp h 
-        rw [take_all_of_le this, take_all_of_le (le_transₓ this (Nat.le_succₓ _))]
-      have B : ∀ j : Finₓ n, ((j : ℕ) < i.succ) = ((j : ℕ) < i)
-      ·
-        intro j 
-        have  : (j : ℕ) < i := lt_of_lt_of_leₓ j.2 (not_lt.mp h)
-        simp [this, lt_transₓ this (Nat.lt_succ_selfₓ _)]
-      simp [←A, B, IH]
+-- error in Data.Fintype.Card: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_take_of_fn
+[comm_monoid α]
+{n : exprℕ()}
+(f : fin n → α)
+(i : exprℕ()) : «expr = »(((of_fn f).take i).prod, «expr∏ in , »((j), finset.univ.filter (λ
+   j : fin n, «expr < »(j.val, i)), f j)) :=
+begin
+  have [ident A] [":", expr ∀ j : fin n, «expr¬ »(«expr < »((j : exprℕ()), 0))] [":=", expr λ j, not_lt_bot],
+  induction [expr i] [] ["with", ident i, ident IH] [],
+  { simp [] [] [] ["[", expr A, "]"] [] [] },
+  by_cases [expr h, ":", expr «expr < »(i, n)],
+  { have [] [":", expr «expr < »(i, length (of_fn f))] [],
+    by rwa ["[", expr length_of_fn f, "]"] [],
+    rw [expr prod_take_succ _ _ this] [],
+    have [ident A] [":", expr «expr = »((finset.univ : finset (fin n)).filter (λ
+       j, «expr < »(j.val, «expr + »(i, 1))), «expr ∪ »((finset.univ : finset (fin n)).filter (λ
+        j, «expr < »(j.val, i)), {(⟨i, h⟩ : fin n)}))] [],
+    by { ext [] [ident j] [],
+      simp [] [] [] ["[", expr nat.lt_succ_iff_lt_or_eq, ",", expr fin.ext_iff, ",", "-", ident add_comm, "]"] [] [] },
+    have [ident B] [":", expr _root_.disjoint (finset.filter (λ
+       j : fin n, «expr < »(j.val, i)) finset.univ) (singleton (⟨i, h⟩ : fin n))] [],
+    by simp [] [] [] [] [] [],
+    rw ["[", expr A, ",", expr finset.prod_union B, ",", expr IH, "]"] [],
+    simp [] [] [] [] [] [] },
+  { have [ident A] [":", expr «expr = »((of_fn f).take i, (of_fn f).take i.succ)] [],
+    { rw ["<-", expr length_of_fn f] ["at", ident h],
+      have [] [":", expr «expr ≤ »(length (of_fn f), i)] [":=", expr not_lt.mp h],
+      rw ["[", expr take_all_of_le this, ",", expr take_all_of_le (le_trans this (nat.le_succ _)), "]"] [] },
+    have [ident B] [":", expr ∀ j : fin n, «expr = »(«expr < »((j : exprℕ()), i.succ), «expr < »((j : exprℕ()), i))] [],
+    { assume [binders (j)],
+      have [] [":", expr «expr < »((j : exprℕ()), i)] [":=", expr lt_of_lt_of_le j.2 (not_lt.mp h)],
+      simp [] [] [] ["[", expr this, ",", expr lt_trans this (nat.lt_succ_self _), "]"] [] [] },
+    simp [] [] [] ["[", "<-", expr A, ",", expr B, ",", expr IH, "]"] [] [] }
+end
 
-@[toAdditive]
-theorem prod_of_fn [CommMonoidₓ α] {n : ℕ} {f : Finₓ n → α} : (of_fn f).Prod = ∏i, f i :=
-  by 
-    convert prod_take_of_fn f n
-    ·
-      rw [take_all_of_le (le_of_eqₓ (length_of_fn f))]
-    ·
-      have  : ∀ j : Finₓ n, (j : ℕ) < n := fun j => j.is_lt 
-      simp [this]
+-- error in Data.Fintype.Card: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_of_fn [comm_monoid α] {n : exprℕ()} {f : fin n → α} : «expr = »((of_fn f).prod, «expr∏ , »((i), f i)) :=
+begin
+  convert [] [expr prod_take_of_fn f n] [],
+  { rw ["[", expr take_all_of_le (le_of_eq (length_of_fn f)), "]"] [] },
+  { have [] [":", expr ∀ j : fin n, «expr < »((j : exprℕ()), n)] [":=", expr λ j, j.is_lt],
+    simp [] [] [] ["[", expr this, "]"] [] [] }
+end
 
 theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroupₓ G] :
   ∀ L : List G, alternating_sum L = ∑i : Finₓ L.length, (-1 : ℤ) ^ (i : ℕ) • L.nth_le i i.is_lt

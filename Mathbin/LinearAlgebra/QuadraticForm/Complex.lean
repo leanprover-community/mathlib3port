@@ -18,63 +18,60 @@ open Finset
 
 variable{ι : Type _}[Fintype ι]
 
+-- error in LinearAlgebra.QuadraticForm.Complex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The isometry between a weighted sum of squares on the complex numbers and the
 sum of squares, i.e. `weighted_sum_squares` with weights 1 or 0. -/
-noncomputable def isometry_sum_squares [DecidableEq ι] (w' : ι → ℂ) :
-  Isometry (weighted_sum_squares ℂ w') (weighted_sum_squares ℂ (fun i => if w' i = 0 then 0 else 1 : ι → ℂ)) :=
-  by 
-    let w := fun i => if h : w' i = 0 then (1 : Units ℂ) else Units.mk0 (w' i) h 
-    have hw' : ∀ i : ι, ((w i : ℂ)^-(1 / 2 : ℂ)) ≠ 0
-    ·
-      intro i hi 
-      exact (w i).ne_zero ((Complex.cpow_eq_zero_iff _ _).1 hi).1
-    convert
-      (weighted_sum_squares ℂ w').isometryBasisRepr
-        ((Pi.basisFun ℂ ι).units_smul fun i => (is_unit_iff_ne_zero.2$ hw' i).Unit)
-    ext1 v 
-    erw [basis_repr_apply, weighted_sum_squares_apply, weighted_sum_squares_apply]
-    refine' sum_congr rfl fun j hj => _ 
-    have hsum :
-      (∑i : ι, v i • ((is_unit_iff_ne_zero.2$ hw' i).Unit : ℂ) • (Pi.basisFun ℂ ι) i) j = v j • (w j^-(1 / 2 : ℂ))
-    ·
-      rw [Finset.sum_apply, sum_eq_single j, Pi.basis_fun_apply, IsUnit.unit_spec, LinearMap.std_basis_apply,
-        Pi.smul_apply, Pi.smul_apply, Function.update_same, smul_eq_mul, smul_eq_mul, smul_eq_mul, mul_oneₓ]
-      intro i _ hij 
-      rw [Pi.basis_fun_apply, LinearMap.std_basis_apply, Pi.smul_apply, Pi.smul_apply, Function.update_noteq hij.symm,
-        Pi.zero_apply, smul_eq_mul, smul_eq_mul, mul_zero, mul_zero]
-      intro hj' 
-      exact False.elim (hj' hj)
-    simpRw [Basis.units_smul_apply]
-    erw [hsum, smul_eq_mul]
-    splitIfs
-    ·
-      simp only [h, zero_smul, zero_mul]
-    have hww' : w' j = w j
-    ·
-      simp only [w, dif_neg h, Units.coe_mk0]
-    simp only [hww', one_mulₓ]
-    change (v j*v j) = «expr↑ » (w j)*(v j*«expr↑ » (w j)^-(1 / 2 : ℂ))*v j*«expr↑ » (w j)^-(1 / 2 : ℂ)
-    suffices  : (v j*v j) = ((((w j^-(1 / 2 : ℂ))*w j^-(1 / 2 : ℂ))*w j)*v j)*v j
-    ·
-      rw [this]
-      ring 
-    rw [←Complex.cpow_add _ _ (w j).ne_zero,
-      show ((-(1 / 2 : ℂ))+-(1 / 2)) = -1by 
-        ring,
-      Complex.cpow_neg_one, inv_mul_cancel (w j).ne_zero, one_mulₓ]
+noncomputable
+def isometry_sum_squares
+[decidable_eq ι]
+(w' : ι → exprℂ()) : isometry (weighted_sum_squares exprℂ() w') (weighted_sum_squares exprℂ() (λ
+ i, if «expr = »(w' i, 0) then 0 else 1 : ι → exprℂ())) :=
+begin
+  let [ident w] [] [":=", expr λ i, if h : «expr = »(w' i, 0) then (1 : units exprℂ()) else units.mk0 (w' i) h],
+  have [ident hw'] [":", expr ∀
+   i : ι, «expr ≠ »(«expr ^ »((w i : exprℂ()), «expr- »((«expr / »(1, 2) : exprℂ()))), 0)] [],
+  { intros [ident i, ident hi],
+    exact [expr (w i).ne_zero ((complex.cpow_eq_zero_iff _ _).1 hi).1] },
+  convert [] [expr (weighted_sum_squares exprℂ() w').isometry_basis_repr ((pi.basis_fun exprℂ() ι).units_smul (λ
+     i, «expr $ »(is_unit_iff_ne_zero.2, hw' i).unit))] [],
+  ext1 [] [ident v],
+  erw ["[", expr basis_repr_apply, ",", expr weighted_sum_squares_apply, ",", expr weighted_sum_squares_apply, "]"] [],
+  refine [expr sum_congr rfl (λ j hj, _)],
+  have [ident hsum] [":", expr «expr = »(«expr∑ , »((i : ι), «expr • »(v i, «expr • »((«expr $ »(is_unit_iff_ne_zero.2, hw' i).unit : exprℂ()), pi.basis_fun exprℂ() ι i))) j, «expr • »(v j, «expr ^ »(w j, «expr- »((«expr / »(1, 2) : exprℂ())))))] [],
+  { rw ["[", expr finset.sum_apply, ",", expr sum_eq_single j, ",", expr pi.basis_fun_apply, ",", expr is_unit.unit_spec, ",", expr linear_map.std_basis_apply, ",", expr pi.smul_apply, ",", expr pi.smul_apply, ",", expr function.update_same, ",", expr smul_eq_mul, ",", expr smul_eq_mul, ",", expr smul_eq_mul, ",", expr mul_one, "]"] [],
+    intros [ident i, "_", ident hij],
+    rw ["[", expr pi.basis_fun_apply, ",", expr linear_map.std_basis_apply, ",", expr pi.smul_apply, ",", expr pi.smul_apply, ",", expr function.update_noteq hij.symm, ",", expr pi.zero_apply, ",", expr smul_eq_mul, ",", expr smul_eq_mul, ",", expr mul_zero, ",", expr mul_zero, "]"] [],
+    intro [ident hj'],
+    exact [expr false.elim (hj' hj)] },
+  simp_rw [expr basis.units_smul_apply] [],
+  erw ["[", expr hsum, ",", expr smul_eq_mul, "]"] [],
+  split_ifs [] [],
+  { simp [] [] ["only"] ["[", expr h, ",", expr zero_smul, ",", expr zero_mul, "]"] [] [] },
+  have [ident hww'] [":", expr «expr = »(w' j, w j)] [],
+  { simp [] [] ["only"] ["[", expr w, ",", expr dif_neg h, ",", expr units.coe_mk0, "]"] [] [] },
+  simp [] [] ["only"] ["[", expr hww', ",", expr one_mul, "]"] [] [],
+  change [expr «expr = »(«expr * »(v j, v j), «expr * »(«expr↑ »(w j), «expr * »(«expr * »(v j, «expr ^ »(«expr↑ »(w j), «expr- »((«expr / »(1, 2) : exprℂ())))), «expr * »(v j, «expr ^ »(«expr↑ »(w j), «expr- »((«expr / »(1, 2) : exprℂ())))))))] [] [],
+  suffices [] [":", expr «expr = »(«expr * »(v j, v j), «expr * »(«expr * »(«expr * »(«expr * »(«expr ^ »(w j, «expr- »((«expr / »(1, 2) : exprℂ()))), «expr ^ »(w j, «expr- »((«expr / »(1, 2) : exprℂ())))), w j), v j), v j))],
+  { rw ["[", expr this, "]"] [],
+    ring [] },
+  rw ["[", "<-", expr complex.cpow_add _ _ (w j).ne_zero, ",", expr show «expr = »(«expr + »(«expr- »((«expr / »(1, 2) : exprℂ())), «expr- »(«expr / »(1, 2))), «expr- »(1)), by ring [], ",", expr complex.cpow_neg_one, ",", expr inv_mul_cancel (w j).ne_zero, ",", expr one_mul, "]"] []
+end
 
+-- error in LinearAlgebra.QuadraticForm.Complex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The isometry between a weighted sum of squares on the complex numbers and the
 sum of squares, i.e. `weighted_sum_squares` with weight `λ i : ι, 1`. -/
-noncomputable def isometry_sum_squares_units [DecidableEq ι] (w : ι → Units ℂ) :
-  Isometry (weighted_sum_squares ℂ w) (weighted_sum_squares ℂ (1 : ι → ℂ)) :=
-  by 
-    have hw1 : (fun i => if (w i : ℂ) = 0 then 0 else 1 : ι → ℂ) = 1
-    ·
-      ext i : 1 
-      exact dif_neg (w i).ne_zero 
-    have  := isometry_sum_squares (coeₓ ∘ w)
-    rw [hw1] at this 
-    exact this
+noncomputable
+def isometry_sum_squares_units
+[decidable_eq ι]
+(w : ι → units exprℂ()) : isometry (weighted_sum_squares exprℂ() w) (weighted_sum_squares exprℂ() (1 : ι → exprℂ())) :=
+begin
+  have [ident hw1] [":", expr «expr = »((λ i, if «expr = »((w i : exprℂ()), 0) then 0 else 1 : ι → exprℂ()), 1)] [],
+  { ext [] [ident i] [":", 1],
+    exact [expr dif_neg (w i).ne_zero] },
+  have [] [] [":=", expr isometry_sum_squares «expr ∘ »(coe, w)],
+  rw [expr hw1] ["at", ident this],
+  exact [expr this]
+end
 
 /-- A nondegenerate quadratic form on the complex numbers is equivalent to
 the sum of squares, i.e. `weighted_sum_squares` with weight `λ i : ι, 1`. -/

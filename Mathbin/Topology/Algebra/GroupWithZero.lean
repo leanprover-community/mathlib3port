@@ -1,6 +1,5 @@
 import Mathbin.Topology.Algebra.Monoid 
 import Mathbin.Algebra.Group.Pi 
-import Mathbin.Algebra.GroupWithZero.Power 
 import Mathbin.Topology.Homeomorph
 
 /-!
@@ -229,16 +228,19 @@ section Zpow
 
 variable[GroupWithZeroₓ G₀][TopologicalSpace G₀][HasContinuousInv₀ G₀][HasContinuousMul G₀]
 
-theorem continuous_at_zpow (x : G₀) (m : ℤ) (h : x ≠ 0 ∨ 0 ≤ m) : ContinuousAt (fun x => x ^ m) x :=
-  by 
-    cases m
-    ·
-      simpa only [zpow_of_nat] using continuous_at_pow x m
-    ·
-      simp only [zpow_neg_succ_of_nat]
-      have hx : x ≠ 0 
-      exact h.resolve_right (Int.neg_succ_of_nat_lt_zero m).not_le 
-      exact (continuous_at_pow x (m+1)).inv₀ (pow_ne_zero _ hx)
+-- error in Topology.Algebra.GroupWithZero: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_at_zpow
+(x : G₀)
+(m : exprℤ())
+(h : «expr ∨ »(«expr ≠ »(x, 0), «expr ≤ »(0, m))) : continuous_at (λ x, «expr ^ »(x, m)) x :=
+begin
+  cases [expr m] [],
+  { simpa [] [] ["only"] ["[", expr zpow_of_nat, "]"] [] ["using", expr continuous_at_pow x m] },
+  { simp [] [] ["only"] ["[", expr zpow_neg_succ_of_nat, "]"] [] [],
+    have [ident hx] [":", expr «expr ≠ »(x, 0)] [],
+    from [expr h.resolve_right (int.neg_succ_of_nat_lt_zero m).not_le],
+    exact [expr (continuous_at_pow x «expr + »(m, 1)).inv₀ (pow_ne_zero _ hx)] }
+end
 
 theorem continuous_on_zpow (m : ℤ) : ContinuousOn (fun x : G₀ => x ^ m) («expr ᶜ» {0}) :=
   fun x hx => (continuous_at_zpow _ _ (Or.inl hx)).ContinuousWithinAt

@@ -52,30 +52,27 @@ theorem not_mem_of_mem_powerset_of_not_mem {s t : Finset α} {a : α} (ht : t �
     apply mt _ h 
     apply mem_powerset.1 ht
 
-theorem powerset_insert [DecidableEq α] (s : Finset α) (a : α) :
-  powerset (insert a s) = s.powerset ∪ s.powerset.image (insert a) :=
-  by 
-    ext t 
-    simp only [exists_prop, mem_powerset, mem_image, mem_union, subset_insert_iff]
-    byCases' h : a ∈ t
-    ·
-      split 
-      ·
-        exact fun H => Or.inr ⟨_, H, insert_erase h⟩
-      ·
-        intro H 
-        cases H
-        ·
-          exact subset.trans (erase_subset a t) H
-        ·
-          rcases H with ⟨u, hu⟩
-          rw [←hu.2]
-          exact subset.trans (erase_insert_subset a u) hu.1
-    ·
-      have  : ¬∃ u : Finset α, u ⊆ s ∧ insert a u = t
-      ·
-        simp [Ne.symm (ne_insert_of_not_mem _ _ h)]
-      simp [Finset.erase_eq_of_not_mem h, this]
+-- error in Data.Finset.Powerset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem powerset_insert
+[decidable_eq α]
+(s : finset α)
+(a : α) : «expr = »(powerset (insert a s), «expr ∪ »(s.powerset, s.powerset.image (insert a))) :=
+begin
+  ext [] [ident t] [],
+  simp [] [] ["only"] ["[", expr exists_prop, ",", expr mem_powerset, ",", expr mem_image, ",", expr mem_union, ",", expr subset_insert_iff, "]"] [] [],
+  by_cases [expr h, ":", expr «expr ∈ »(a, t)],
+  { split,
+    { exact [expr λ H, or.inr ⟨_, H, insert_erase h⟩] },
+    { intros [ident H],
+      cases [expr H] [],
+      { exact [expr subset.trans (erase_subset a t) H] },
+      { rcases [expr H, "with", "⟨", ident u, ",", ident hu, "⟩"],
+        rw ["<-", expr hu.2] [],
+        exact [expr subset.trans (erase_insert_subset a u) hu.1] } } },
+  { have [] [":", expr «expr¬ »(«expr∃ , »((u : finset α), «expr ∧ »(«expr ⊆ »(u, s), «expr = »(insert a u, t))))] [],
+    by simp [] [] [] ["[", expr ne.symm (ne_insert_of_not_mem _ _ h), "]"] [] [],
+    simp [] [] [] ["[", expr finset.erase_eq_of_not_mem h, ",", expr this, "]"] [] [] }
+end
 
 /-- For predicate `p` decidable on subsets, it is decidable whether `p` holds for any subset. -/
 instance decidable_exists_of_decidable_subsets {s : Finset α} {p : ∀ t _ : t ⊆ s, Prop}
@@ -192,18 +189,24 @@ theorem powerset_len_eq_filter {n} {s : Finset α} : powerset_len n s = (powerse
     ext 
     simp [mem_powerset_len]
 
-theorem powerset_len_succ_insert [DecidableEq α] {x : α} {s : Finset α} (h : x ∉ s) (n : ℕ) :
-  powerset_len n.succ (insert x s) = powerset_len n.succ s ∪ (powerset_len n s).Image (insert x) :=
-  by 
-    rw [powerset_len_eq_filter, powerset_insert, filter_union, ←powerset_len_eq_filter]
-    congr 
-    rw [powerset_len_eq_filter, image_filter]
-    congr 1 
-    ext t 
-    simp only [mem_powerset, mem_filter, Function.comp_app, And.congr_right_iff]
-    intro ht 
-    have  : x ∉ t := fun H => h (ht H)
-    simp [card_insert_of_not_mem this, Nat.succ_inj']
+-- error in Data.Finset.Powerset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem powerset_len_succ_insert
+[decidable_eq α]
+{x : α}
+{s : finset α}
+(h : «expr ∉ »(x, s))
+(n : exprℕ()) : «expr = »(powerset_len n.succ (insert x s), «expr ∪ »(powerset_len n.succ s, (powerset_len n s).image (insert x))) :=
+begin
+  rw ["[", expr powerset_len_eq_filter, ",", expr powerset_insert, ",", expr filter_union, ",", "<-", expr powerset_len_eq_filter, "]"] [],
+  congr,
+  rw ["[", expr powerset_len_eq_filter, ",", expr image_filter, "]"] [],
+  congr' [1] [],
+  ext [] [ident t] [],
+  simp [] [] ["only"] ["[", expr mem_powerset, ",", expr mem_filter, ",", expr function.comp_app, ",", expr and.congr_right_iff, "]"] [] [],
+  intro [ident ht],
+  have [] [":", expr «expr ∉ »(x, t)] [":=", expr λ H, h (ht H)],
+  simp [] [] [] ["[", expr card_insert_of_not_mem this, ",", expr nat.succ_inj', "]"] [] []
+end
 
 theorem powerset_len_nonempty {n : ℕ} {s : Finset α} (h : n < s.card) : (powerset_len n s).Nonempty :=
   by 

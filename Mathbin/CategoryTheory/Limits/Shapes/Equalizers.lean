@@ -49,7 +49,7 @@ attribute [local tidy] tactic.case_bash
 
 universe v u u₂
 
--- error in CategoryTheory.Limits.Shapes.Equalizers: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in CategoryTheory.Limits.Shapes.Equalizers: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- The type of objects for the diagram indexing a (co)equalizer. -/
 @[derive #[expr decidable_eq], derive #[expr inhabited]]
 inductive walking_parallel_pair : Type v
@@ -58,7 +58,7 @@ inductive walking_parallel_pair : Type v
 
 open WalkingParallelPair
 
--- error in CategoryTheory.Limits.Shapes.Equalizers: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in CategoryTheory.Limits.Shapes.Equalizers: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- The type family of morphisms for the diagram indexing a (co)equalizer. -/
 @[derive #[expr decidable_eq]]
 inductive walking_parallel_pair_hom : walking_parallel_pair → walking_parallel_pair → Type v

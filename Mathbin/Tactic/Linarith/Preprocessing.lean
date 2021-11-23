@@ -37,29 +37,29 @@ If `prf` is a proof of `¬ e`, where `e` is a comparison,
 For example, if `prf : ¬ a < b`, ``rem_neg prf `(a < b)`` returns a proof of `a ≥ b`.
 -/
 unsafe def rem_neg (prf : expr) : expr → tactic expr
-| quote _ ≤ _ => mk_app `` lt_of_not_geₓ [prf]
-| quote _ < _ => mk_app `` le_of_not_gtₓ [prf]
-| quote _ > _ => mk_app `` le_of_not_gtₓ [prf]
-| quote _ ≥ _ => mk_app `` lt_of_not_geₓ [prf]
+| quote.1 (_ ≤ _) => mk_app `` lt_of_not_geₓ [prf]
+| quote.1 (_ < _) => mk_app `` le_of_not_gtₓ [prf]
+| quote.1 (_ > _) => mk_app `` le_of_not_gtₓ [prf]
+| quote.1 (_ ≥ _) => mk_app `` lt_of_not_geₓ [prf]
 | e => failed
 
 private unsafe def rearr_comp_aux : expr → expr → tactic expr
-| prf, quote (%%a) ≤ 0 => return prf
-| prf, quote (%%a) < 0 => return prf
-| prf, quote (%%a) = 0 => return prf
-| prf, quote (%%a) ≥ 0 => mk_app `` neg_nonpos_of_nonneg [prf]
-| prf, quote (%%a) > 0 => mk_app `neg_neg_of_pos [prf]
-| prf, quote 0 ≥ %%a => to_expr (pquote idRhs ((%%a) ≤ 0) (%%prf))
-| prf, quote 0 > %%a => to_expr (pquote idRhs ((%%a) < 0) (%%prf))
-| prf, quote 0 = %%a => mk_app `eq.symm [prf]
-| prf, quote 0 ≤ %%a => mk_app `` neg_nonpos_of_nonneg [prf]
-| prf, quote 0 < %%a => mk_app `neg_neg_of_pos [prf]
-| prf, quote (%%a) ≤ %%b => mk_app `` sub_nonpos_of_le [prf]
-| prf, quote (%%a) < %%b => mk_app `sub_neg_of_lt [prf]
-| prf, quote (%%a) = %%b => mk_app `sub_eq_zero_of_eq [prf]
-| prf, quote (%%a) > %%b => mk_app `sub_neg_of_lt [prf]
-| prf, quote (%%a) ≥ %%b => mk_app `` sub_nonpos_of_le [prf]
-| prf, quote ¬%%t =>
+| prf, quote.1 ((%%ₓa) ≤ 0) => return prf
+| prf, quote.1 ((%%ₓa) < 0) => return prf
+| prf, quote.1 ((%%ₓa) = 0) => return prf
+| prf, quote.1 ((%%ₓa) ≥ 0) => mk_app `` neg_nonpos_of_nonneg [prf]
+| prf, quote.1 ((%%ₓa) > 0) => mk_app `neg_neg_of_pos [prf]
+| prf, quote.1 (0 ≥ %%ₓa) => to_expr (pquote.1 (idRhs ((%%ₓa) ≤ 0) (%%ₓprf)))
+| prf, quote.1 (0 > %%ₓa) => to_expr (pquote.1 (idRhs ((%%ₓa) < 0) (%%ₓprf)))
+| prf, quote.1 (0 = %%ₓa) => mk_app `eq.symm [prf]
+| prf, quote.1 (0 ≤ %%ₓa) => mk_app `` neg_nonpos_of_nonneg [prf]
+| prf, quote.1 (0 < %%ₓa) => mk_app `neg_neg_of_pos [prf]
+| prf, quote.1 ((%%ₓa) ≤ %%ₓb) => mk_app `` sub_nonpos_of_le [prf]
+| prf, quote.1 ((%%ₓa) < %%ₓb) => mk_app `sub_neg_of_lt [prf]
+| prf, quote.1 ((%%ₓa) = %%ₓb) => mk_app `sub_eq_zero_of_eq [prf]
+| prf, quote.1 ((%%ₓa) > %%ₓb) => mk_app `sub_neg_of_lt [prf]
+| prf, quote.1 ((%%ₓa) ≥ %%ₓb) => mk_app `` sub_nonpos_of_le [prf]
+| prf, quote.1 ¬%%ₓt =>
   do 
     let nprf ← rem_neg prf t 
     let tp ← infer_type nprf 
@@ -75,7 +75,7 @@ unsafe def rearr_comp (e : expr) : tactic expr :=
 
 /-- If `e` is of the form `((n : ℕ) : ℤ)`, `is_nat_int_coe e` returns `n : ℕ`. -/
 unsafe def is_nat_int_coe : expr → Option expr
-| quote @coeₓ ℕ ℤ (%%_) (%%n) => some n
+| quote.1 (@coeₓ ℕ ℤ (%%ₓ_) (%%ₓn)) => some n
 | _ => none
 
 /-- If `e : ℕ`, returns a proof of `0 ≤ (e : ℤ)`. -/
@@ -84,8 +84,8 @@ unsafe def mk_coe_nat_nonneg_prf (e : expr) : tactic expr :=
 
 /-- `get_nat_comps e` returns a list of all subexpressions of `e` of the form `((t : ℕ) : ℤ)`. -/
 unsafe def get_nat_comps : expr → List expr
-| quote (%%a)+%%b => (get_nat_comps a).append (get_nat_comps b)
-| quote (%%a)*%%b => (get_nat_comps a).append (get_nat_comps b)
+| quote.1 ((%%ₓa)+%%ₓb) => (get_nat_comps a).append (get_nat_comps b)
+| quote.1 ((%%ₓa)*%%ₓb) => (get_nat_comps a).append (get_nat_comps b)
 | e =>
   match is_nat_int_coe e with 
   | some e' => [e']
@@ -100,10 +100,10 @@ unsafe def mk_non_strict_int_pf_of_strict_int_pf (pf : expr) : tactic expr :=
   do 
     let tp ← infer_type pf 
     match tp with 
-      | quote (%%a) < %%b => to_expr (pquote Int.add_one_le_iff.mpr (%%pf))
-      | quote (%%a) > %%b => to_expr (pquote Int.add_one_le_iff.mpr (%%pf))
-      | quote ¬(%%a) ≤ %%b => to_expr (pquote Int.add_one_le_iff.mpr (le_of_not_gtₓ (%%pf)))
-      | quote ¬(%%a) ≥ %%b => to_expr (pquote Int.add_one_le_iff.mpr (le_of_not_gtₓ (%%pf)))
+      | quote.1 ((%%ₓa) < %%ₓb) => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓpf)))
+      | quote.1 ((%%ₓa) > %%ₓb) => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓpf)))
+      | quote.1 ¬(%%ₓa) ≤ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iff.mpr (le_of_not_gtₓ (%%ₓpf))))
+      | quote.1 ¬(%%ₓa) ≥ %%ₓb => to_expr (pquote.1 (Int.add_one_le_iff.mpr (le_of_not_gtₓ (%%ₓpf))))
       | _ => fail "mk_non_strict_int_pf_of_strict_int_pf failed: proof is not an inequality"
 
 /--
@@ -111,12 +111,12 @@ unsafe def mk_non_strict_int_pf_of_strict_int_pf (pf : expr) : tactic expr :=
 or the negation thereof.
 -/
 unsafe def is_nat_prop : expr → Bool
-| quote @Eq ℕ (%%_) _ => tt
-| quote @LE.le ℕ (%%_) _ _ => tt
-| quote @LT.lt ℕ (%%_) _ _ => tt
-| quote @Ge ℕ (%%_) _ _ => tt
-| quote @Gt ℕ (%%_) _ _ => tt
-| quote ¬%%p => is_nat_prop p
+| quote.1 (@Eq ℕ (%%ₓ_) _) => tt
+| quote.1 (@LE.le ℕ (%%ₓ_) _ _) => tt
+| quote.1 (@LT.lt ℕ (%%ₓ_) _ _) => tt
+| quote.1 (@Ge ℕ (%%ₓ_) _ _) => tt
+| quote.1 (@Gt ℕ (%%ₓ_) _ _) => tt
+| quote.1 ¬%%ₓp => is_nat_prop p
 | _ => ff
 
 /--
@@ -124,14 +124,14 @@ unsafe def is_nat_prop : expr → Bool
 or the negation of a weak inequality between integers.
 -/
 unsafe def is_strict_int_prop : expr → Bool
-| quote @LT.lt ℤ (%%_) _ _ => tt
-| quote @Gt ℤ (%%_) _ _ => tt
-| quote ¬@LE.le ℤ (%%_) _ _ => tt
-| quote ¬@Ge ℤ (%%_) _ _ => tt
+| quote.1 (@LT.lt ℤ (%%ₓ_) _ _) => tt
+| quote.1 (@Gt ℤ (%%ₓ_) _ _) => tt
+| quote.1 ¬@LE.le ℤ (%%ₓ_) _ _ => tt
+| quote.1 ¬@Ge ℤ (%%ₓ_) _ _ => tt
 | _ => ff
 
 private unsafe def filter_comparisons_aux : expr → Bool
-| quote ¬%%p => p.app_symbol_in [`has_lt.lt, `has_le.le, `gt, `ge]
+| quote.1 ¬%%ₓp => p.app_symbol_in [`has_lt.lt, `has_le.le, `gt, `ge]
 | tp => tp.app_symbol_in [`has_lt.lt, `has_le.le, `gt, `ge, `eq]
 
 /--
@@ -159,7 +159,7 @@ unsafe def remove_negations : preprocessor :=
         do 
           let tp ← infer_type h 
           match tp with 
-            | quote ¬%%p => singleton <$> rem_neg h p
+            | quote.1 ¬%%ₓp => singleton <$> rem_neg h p
             | _ => return [h] }
 
 /--
@@ -234,11 +234,11 @@ and adds them to the set `m`.
 A pair `(a, tt)` is added to `m` when `a^2` appears in `e`, and `(a, ff)` is added to `m`
 when `a*a` appears in `e`.  -/
 unsafe def find_squares : rb_set (expr × Bool) → expr → tactic (rb_set (Lex expr Bool))
-| s, quote (%%a) ^ 2 =>
+| s, quote.1 ((%%ₓa) ^ 2) =>
   do 
     let s ← find_squares s a 
     return (s.insert (a, tt))
-| s, e@(quote (%%e1)*%%e2) =>
+| s, e@(quote.1 ((%%ₓe1)*%%ₓe2)) =>
   if e1 = e2 then
     do 
       let s ← find_squares s e1 
@@ -312,7 +312,7 @@ unsafe def remove_ne_aux : List expr → tactic (List branch) :=
                 do 
                   let e ← infer_type e 
                   guardₓ$ e.is_ne.is_some 
-        let [(_, ng1), (_, ng2)] ← to_expr (pquote Or.elim (lt_or_gt_of_neₓ (%%e))) >>= apply 
+        let [(_, ng1), (_, ng2)] ← to_expr (pquote.1 (Or.elim (lt_or_gt_of_neₓ (%%ₓe)))) >>= apply 
         let do_goal : expr → tactic (List branch) :=
             fun g =>
               do 

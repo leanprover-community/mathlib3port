@@ -26,9 +26,9 @@ namespace ContinuousFunctions
 
 variable{α : Type _}{β : Type _}[TopologicalSpace α][TopologicalSpace β]
 
-variable{f g : { f : α → β | Continuous f }}
+variable{f g : { f:α → β | Continuous f }}
 
-instance  : CoeFun { f : α → β | Continuous f } fun _ => α → β :=
+instance  : CoeFun { f:α → β | Continuous f } fun _ => α → β :=
   ⟨Subtype.val⟩
 
 end ContinuousFunctions
@@ -85,7 +85,7 @@ section Subtype
 @[toAdditive "The `add_submonoid` of continuous maps `α → β`. "]
 def continuousSubmonoid (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β] [Monoidₓ β]
   [HasContinuousMul β] : Submonoid (α → β) :=
-  { Carrier := { f : α → β | Continuous f }, one_mem' := @continuous_const _ _ _ _ 1,
+  { Carrier := { f:α → β | Continuous f }, one_mem' := @continuous_const _ _ _ _ 1,
     mul_mem' := fun f g fc gc => Continuous.comp HasContinuousMul.continuous_mul (Continuous.prod_mk fc gc : _) }
 
 /-- The subgroup of continuous maps `α → β`. -/
@@ -324,7 +324,7 @@ variable[Module R M][HasContinuousSmul R M][TopologicalAddGroup M]
 
 /-- The `R`-submodule of continuous maps `α → M`. -/
 def continuousSubmodule : Submodule R (α → M) :=
-  { continuousAddSubgroup α M with Carrier := { f : α → M | Continuous f },
+  { continuousAddSubgroup α M with Carrier := { f:α → M | Continuous f },
     smul_mem' := fun c f hf => continuous_smul.comp (Continuous.prod_mk (continuous_const : Continuous fun x => c) hf) }
 
 end Subtype
@@ -433,7 +433,7 @@ variable{α :
 
 /-- The `R`-subalgebra of continuous maps `α → A`. -/
 def continuousSubalgebra : Subalgebra R (α → A) :=
-  { continuousSubsemiring α A with Carrier := { f : α → A | Continuous f },
+  { continuousSubsemiring α A with Carrier := { f:α → A | Continuous f },
     algebra_map_mem' := fun r => (continuous_const : Continuous$ fun x : α => algebraMap R A r) }
 
 end Subtype
@@ -552,7 +552,7 @@ def Set.SeparatesPointsStrongly (s : Set C(α, 𝕜)) : Prop :=
 
 variable[Field 𝕜][TopologicalRing 𝕜]
 
--- error in Topology.ContinuousFunction.Algebra: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Topology.ContinuousFunction.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 /--
 Working in continuous functions into a topological field,
 a subalgebra of functions that separates points also separates points strongly.
@@ -584,30 +584,34 @@ end
 
 end ContinuousMap
 
-theorem ContinuousMap.subsingleton_subalgebra (α : Type _) [TopologicalSpace α] (R : Type _) [CommSemiringₓ R]
-  [TopologicalSpace R] [TopologicalRing R] [Subsingleton α] : Subsingleton (Subalgebra R C(α, R)) :=
-  by 
-    fsplit 
-    intro s₁ s₂ 
-    byCases' n : Nonempty α
-    ·
-      obtain ⟨x⟩ := n 
-      ext f 
-      have h : f = algebraMap R C(α, R) (f x)
-      ·
-        ext x' 
-        simp only [mul_oneₓ, Algebra.id.smul_eq_mul, algebra_map_apply]
-        congr 
-      rw [h]
-      simp only [Subalgebra.algebra_map_mem]
-    ·
-      ext f 
-      have h : f = 0
-      ·
-        ext x' 
-        exact False.elim (n ⟨x'⟩)
-      subst h 
-      simp only [Subalgebra.zero_mem]
+-- error in Topology.ContinuousFunction.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_map.subsingleton_subalgebra
+(α : Type*)
+[topological_space α]
+(R : Type*)
+[comm_semiring R]
+[topological_space R]
+[topological_ring R]
+[subsingleton α] : subsingleton (subalgebra R «exprC( , )»(α, R)) :=
+begin
+  fsplit,
+  intros [ident s₁, ident s₂],
+  by_cases [expr n, ":", expr nonempty α],
+  { obtain ["⟨", ident x, "⟩", ":=", expr n],
+    ext [] [ident f] [],
+    have [ident h] [":", expr «expr = »(f, algebra_map R «exprC( , )»(α, R) (f x))] [],
+    { ext [] [ident x'] [],
+      simp [] [] ["only"] ["[", expr mul_one, ",", expr algebra.id.smul_eq_mul, ",", expr algebra_map_apply, "]"] [] [],
+      congr },
+    rw [expr h] [],
+    simp [] [] ["only"] ["[", expr subalgebra.algebra_map_mem, "]"] [] [] },
+  { ext [] [ident f] [],
+    have [ident h] [":", expr «expr = »(f, 0)] [],
+    { ext [] [ident x'] [],
+      exact [expr false.elim (n ⟨x'⟩)] },
+    subst [expr h],
+    simp [] [] ["only"] ["[", expr subalgebra.zero_mem, "]"] [] [] }
+end
 
 end AlgebraStructure
 

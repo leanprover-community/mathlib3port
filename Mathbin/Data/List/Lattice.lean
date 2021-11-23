@@ -114,7 +114,7 @@ theorem disjoint_of_disjoint_append_right_left (d : Disjoint l (l₁ ++ l₂)) :
 theorem disjoint_of_disjoint_append_right_right (d : Disjoint l (l₁ ++ l₂)) : Disjoint l l₂ :=
   (disjoint_append_right.1 d).2
 
--- error in Data.List.Lattice: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Data.List.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem disjoint_take_drop {m n : exprℕ()} (hl : l.nodup) (h : «expr ≤ »(m, n)) : disjoint (l.take m) (l.drop n) :=
 begin
   induction [expr l] [] [] ["generalizing", ident m, ident n],

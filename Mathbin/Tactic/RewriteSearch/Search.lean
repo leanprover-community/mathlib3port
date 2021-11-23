@@ -1,5 +1,4 @@
 import Mathbin.Data.Buffer.Basic 
-import Mathbin.Meta.RbMap 
 import Mathbin.Tactic.RewriteSearch.Discovery 
 import Mathbin.Tactic.RewriteSearch.Types
 

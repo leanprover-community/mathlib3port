@@ -56,12 +56,12 @@ open TensorAlgebra
 
 The Clifford algebra of `M` is defined as the quotient modulo this relation.
 -/
-inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
-  | of (m : M) : Rel (ι R m*ι R m) (algebraMap R _ (Q m))
+inductive rel : TensorAlgebra R M → TensorAlgebra R M → Prop
+  | of (m : M) : rel (ι R m*ι R m) (algebraMap R _ (Q m))
 
 end CliffordAlgebra
 
--- error in LinearAlgebra.CliffordAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in LinearAlgebra.CliffordAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /--
 The Clifford algebra of an `R`-module `M` equipped with a quadratic_form `Q`.
 -/ @[derive #["[", expr inhabited, ",", expr ring, ",", expr algebra R, "]"]] def clifford_algebra :=
@@ -102,7 +102,7 @@ def lift : { f : M →ₗ[R] A // ∀ m, (f m*f m) = algebraMap _ _ (Q m) } ≃ 
       fun f =>
         RingQuot.liftAlgHom R
           ⟨TensorAlgebra.lift R (f : M →ₗ[R] A),
-            fun x y h : Rel Q x y =>
+            fun x y h : rel Q x y =>
               by 
                 induction h 
                 rw [AlgHom.commutes, AlgHom.map_mul, TensorAlgebra.lift_ι_apply, f.prop]⟩,
@@ -164,24 +164,32 @@ theorem hom_ext {A : Type _} [Semiringₓ A] [Algebra R A] {f g : CliffordAlgebr
     rw [lift_symm_apply, lift_symm_apply]
     simp only [h]
 
+-- error in LinearAlgebra.CliffordAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `C` holds for the `algebra_map` of `r : R` into `clifford_algebra Q`, the `ι` of `x : M`,
 and is preserved under addition and muliplication, then it holds for all of `clifford_algebra Q`.
 -/
 @[elab_as_eliminator]
-theorem induction {C : CliffordAlgebra Q → Prop} (h_grade0 : ∀ r, C (algebraMap R (CliffordAlgebra Q) r))
-  (h_grade1 : ∀ x, C (ι Q x)) (h_mul : ∀ a b, C a → C b → C (a*b)) (h_add : ∀ a b, C a → C b → C (a+b))
-  (a : CliffordAlgebra Q) : C a :=
-  by 
-    let s : Subalgebra R (CliffordAlgebra Q) :=
-      { Carrier := C, mul_mem' := h_mul, add_mem' := h_add, algebra_map_mem' := h_grade0 }
-    let of : { f : M →ₗ[R] s // ∀ m, (f m*f m) = algebraMap _ _ (Q m) } :=
-      ⟨(ι Q).codRestrict s.to_submodule h_grade1, fun m => Subtype.eq$ ι_sq_scalar Q m⟩
-    have of_id : AlgHom.id R (CliffordAlgebra Q) = s.val.comp (lift Q of)
-    ·
-      ext 
-      simp [of]
-    convert Subtype.prop (lift Q of a)
-    exact AlgHom.congr_fun of_id a
+theorem induction
+{C : clifford_algebra Q → exprProp()}
+(h_grade0 : ∀ r, C (algebra_map R (clifford_algebra Q) r))
+(h_grade1 : ∀ x, C (ι Q x))
+(h_mul : ∀ a b, C a → C b → C «expr * »(a, b))
+(h_add : ∀ a b, C a → C b → C «expr + »(a, b))
+(a : clifford_algebra Q) : C a :=
+begin
+  let [ident s] [":", expr subalgebra R (clifford_algebra Q)] [":=", expr { carrier := C,
+     mul_mem' := h_mul,
+     add_mem' := h_add,
+     algebra_map_mem' := h_grade0 }],
+  let [ident of] [":", expr {f : «expr →ₗ[ ] »(M, R, s) // ∀
+   m, «expr = »(«expr * »(f m, f m), algebra_map _ _ (Q m))}] [":=", expr ⟨(ι Q).cod_restrict s.to_submodule h_grade1, λ
+    m, «expr $ »(subtype.eq, ι_sq_scalar Q m)⟩],
+  have [ident of_id] [":", expr «expr = »(alg_hom.id R (clifford_algebra Q), s.val.comp (lift Q of))] [],
+  { ext [] [] [],
+    simp [] [] [] ["[", expr of, "]"] [] [] },
+  convert [] [expr subtype.prop (lift Q of a)] [],
+  exact [expr alg_hom.congr_fun of_id a]
+end
 
 /-- A Clifford algebra with a zero quadratic form is isomorphic to an `exterior_algebra` -/
 def as_exterior : CliffordAlgebra (0 : QuadraticForm R M) ≃ₐ[R] ExteriorAlgebra R M :=

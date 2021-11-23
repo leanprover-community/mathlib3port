@@ -1,5 +1,4 @@
 import Mathbin.Data.String.Defs 
-import Mathbin.Meta.RbMap 
 import Mathbin.Tactic.DeriveInhabited
 
 /-!
@@ -15,7 +14,7 @@ expr, name, declaration, level, environment, meta, metaprogramming, tactic
 -/
 
 
--- error in Meta.Expr: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Meta.Expr: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 attribute [derive #[expr has_reflect], derive #[expr decidable_eq]] binder_info congr_arg_kind
 
 unsafe instance (priority := 100)has_reflect.has_to_pexpr {α} [has_reflect α] : has_to_pexpr α :=
@@ -262,7 +261,7 @@ end Level
 /-! ### Declarations about `binder` -/
 
 
--- error in Meta.Expr: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Meta.Expr: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- The type of binders containing a name, the binding info and the binding type -/
 @[derive #[expr decidable_eq], derive #[expr inhabited]]
 meta
@@ -306,12 +305,13 @@ See also the tactics `expr.of_nat`, `expr.of_int`, `expr.of_rat`.
 `has_zero`, `has_one`, `has_add`: expressions of the type `has_zero %%type`, etc.
  -/
 unsafe def nat.mk_numeral (type has_zero has_one has_add : expr) : ℕ → expr :=
-  let z : expr := quote @HasZero.zero.{0} (%%type) (%%HasZero)
-  let o : expr := quote @HasOne.one.{0} (%%type) (%%HasOne)
+  let z : expr := quote.1 (@HasZero.zero.{0} (%%ₓtype) (%%ₓHasZero))
+  let o : expr := quote.1 (@HasOne.one.{0} (%%ₓtype) (%%ₓHasOne))
   Nat.binaryRec z
     fun b n e =>
       if n = 0 then o else
-        if b then quote @bit1.{0} (%%type) (%%HasOne) (%%Add) (%%e) else quote @bit0.{0} (%%type) (%%Add) (%%e)
+        if b then quote.1 (@bit1.{0} (%%ₓtype) (%%ₓHasOne) (%%ₓAdd) (%%ₓe)) else
+          quote.1 (@bit0.{0} (%%ₓtype) (%%ₓAdd) (%%ₓe))
 
 /--
 `int.mk_numeral z` embeds `z` as a numeral expression inside a type with 0, 1, +, and -.
@@ -322,7 +322,7 @@ unsafe def int.mk_numeral (type has_zero has_one has_add has_neg : expr) : ℤ �
 | Int.ofNat n => n.mk_numeral type HasZero HasOne Add
 | -[1+ n] =>
   let ne := (n+1).mk_numeral type HasZero HasOne Add 
-  quote @Neg.neg.{0} (%%type) (%%Neg) (%%Ne)
+  quote.1 (@Neg.neg.{0} (%%ₓtype) (%%ₓNeg) (%%ₓNe))
 
 /--
 `nat.to_pexpr n` creates a `pexpr` that will evaluate to `n`.
@@ -330,9 +330,9 @@ The `pexpr` does not hold any typing information:
 `to_expr ``((%%(nat.to_pexpr 5) : ℤ))` will create a native integer numeral `(5 : ℤ)`.
 -/
 unsafe def nat.to_pexpr : ℕ → pexpr
-| 0 => pquote 0
-| 1 => pquote 1
-| n => if n % 2 = 0 then pquote bit0 (%%nat.to_pexpr (n / 2)) else pquote bit1 (%%nat.to_pexpr (n / 2))
+| 0 => pquote.1 0
+| 1 => pquote.1 1
+| n => if n % 2 = 0 then pquote.1 (bit0 (%%ₓnat.to_pexpr (n / 2))) else pquote.1 (bit1 (%%ₓnat.to_pexpr (n / 2)))
 
 namespace Expr
 
@@ -341,12 +341,12 @@ Turns an expression into a natural number, assuming it is only built up from
 `has_one.one`, `bit0`, `bit1`, `has_zero.zero`, `nat.zero`, and `nat.succ`.
 -/
 protected unsafe def to_nat : expr → Option ℕ
-| quote HasZero.zero => some 0
-| quote HasOne.one => some 1
-| quote bit0 (%%e) => bit0 <$> e.to_nat
-| quote bit1 (%%e) => bit1 <$> e.to_nat
-| quote Nat.succ (%%e) => (·+1) <$> e.to_nat
-| quote Nat.zero => some 0
+| quote.1 HasZero.zero => some 0
+| quote.1 HasOne.one => some 1
+| quote.1 (bit0 (%%ₓe)) => bit0 <$> e.to_nat
+| quote.1 (bit1 (%%ₓe)) => bit1 <$> e.to_nat
+| quote.1 (Nat.succ (%%ₓe)) => (·+1) <$> e.to_nat
+| quote.1 Nat.zero => some 0
 | _ => none
 
 /--
@@ -354,7 +354,7 @@ Turns an expression into a integer, assuming it is only built up from
 `has_one.one`, `bit0`, `bit1`, `has_zero.zero` and a optionally a single `has_neg.neg` as head.
 -/
 protected unsafe def to_int : expr → Option ℤ
-| quote Neg.neg (%%e) =>
+| quote.1 (Neg.neg (%%ₓe)) =>
   do 
     let n ← e.to_nat 
     some (-n)
@@ -364,8 +364,8 @@ protected unsafe def to_int : expr → Option ℤ
 Turns an expression into a list, assuming it is only built up from `list.nil` and `list.cons`.
 -/
 protected unsafe def to_list {α} (f : expr → Option α) : expr → Option (List α)
-| quote List.nil => some []
-| quote List.cons (%%x) (%%l) => List.cons <$> f x <*> l.to_list
+| quote.1 List.nil => some []
+| quote.1 (List.cons (%%ₓx) (%%ₓl)) => List.cons <$> f x <*> l.to_list
 | _ => none
 
 /--
@@ -373,12 +373,12 @@ protected unsafe def to_list {α} (f : expr → Option α) : expr → Option (Li
 ignoring differences in type and type class arguments.
 -/
 unsafe def is_num_eq : expr → expr → Bool
-| quote @HasZero.zero _ _, quote @HasZero.zero _ _ => tt
-| quote @HasOne.one _ _, quote @HasOne.one _ _ => tt
-| quote bit0 (%%a), quote bit0 (%%b) => a.is_num_eq b
-| quote bit1 (%%a), quote bit1 (%%b) => a.is_num_eq b
-| quote -%%a, quote -%%b => a.is_num_eq b
-| quote (%%a) / %%a', quote (%%b) / %%b' => a.is_num_eq b
+| quote.1 (@HasZero.zero _ _), quote.1 (@HasZero.zero _ _) => tt
+| quote.1 (@HasOne.one _ _), quote.1 (@HasOne.one _ _) => tt
+| quote.1 (bit0 (%%ₓa)), quote.1 (bit0 (%%ₓb)) => a.is_num_eq b
+| quote.1 (bit1 (%%ₓa)), quote.1 (bit1 (%%ₓb)) => a.is_num_eq b
+| quote.1 (-%%ₓa), quote.1 (-%%ₓb) => a.is_num_eq b
+| quote.1 ((%%ₓa) / %%ₓa'), quote.1 ((%%ₓb) / %%ₓb') => a.is_num_eq b
 | _, _ => ff
 
 end Expr
@@ -486,7 +486,7 @@ unsafe def match_app {elab} : expr elab → Option (expr elab × expr elab)
 
 /-- Match an application of `coe_fn`. -/
 unsafe def match_app_coe_fn : expr → Option (expr × expr × expr × expr × expr)
-| app (quote @coeFn (%%α) (%%β) (%%inst) (%%fexpr)) x => some (α, β, inst, fexpr, x)
+| app (quote.1 (@coeFn (%%ₓα) (%%ₓβ) (%%ₓinst) (%%ₓfexpr))) x => some (α, β, inst, fexpr, x)
 | _ => none
 
 /-- Match an abstraction. -/
@@ -753,11 +753,11 @@ unsafe def mk_op_lst (op : expr) (empty : expr) : List expr → expr
 
 /-- `mk_and_lst [x1, x2, ...]` is defined as `x1 ∧ (x2 ∧ ...)`, or `true` if the list is empty. -/
 unsafe def mk_and_lst : List expr → expr :=
-  mk_op_lst (quote And) (quote True)
+  mk_op_lst (quote.1 And) (quote.1 True)
 
 /-- `mk_or_lst [x1, x2, ...]` is defined as `x1 ∨ (x2 ∨ ...)`, or `false` if the list is empty. -/
 unsafe def mk_or_lst : List expr → expr :=
-  mk_op_lst (quote Or) (quote False)
+  mk_op_lst (quote.1 Or) (quote.1 False)
 
 /-- `local_binding_info e` returns the binding info of `e` if `e` is a local constant.
 Otherwise returns `binder_info.default`. -/

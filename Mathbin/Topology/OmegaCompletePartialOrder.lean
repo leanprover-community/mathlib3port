@@ -46,7 +46,7 @@ theorem is_open_univ : IsOpen α Set.Univ :=
     by 
       convert @CompleteLattice.top_continuous α Prop _ _ <;> ext <;> simp ⟩
 
--- error in Topology.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Topology.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem is_open.inter (s t : set α) : is_open α s → is_open α t → is_open α «expr ∩ »(s, t) :=
 begin
   simp [] [] ["only"] ["[", expr is_open, ",", expr exists_imp_distrib, ",", expr continuous', "]"] [] [],
@@ -62,7 +62,7 @@ begin
     apply [expr and_implies]; solve_by_elim [] [] ["[", expr h₀ h, ",", expr h₂ h, "]"] [] }
 end
 
--- error in Topology.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
 theorem is_open_sUnion : ∀ s, ∀ t «expr ∈ » s, is_open α t → is_open α «expr⋃₀ »(s) :=
 begin
   introv [ident h₀],
@@ -104,21 +104,21 @@ to prove the monotonicity of continuous functions -/
 def NotBelow :=
   { x | ¬x ≤ y }
 
-theorem not_below_is_open : IsOpen (NotBelow y) :=
-  by 
-    have h : Monotone (NotBelow y)
-    ·
-      intro x y' h 
-      simp only [NotBelow, SetOf, le_Prop_eq]
-      intro h₀ h₁ 
-      apply h₀ (le_transₓ h h₁)
-    exists h 
-    rintro c 
-    apply eq_of_forall_ge_iff 
-    intro z 
-    rw [ωSup_le_iff]
-    simp only [ωSup_le_iff, NotBelow, Set.mem_set_of_eq, le_Prop_eq, PreorderHom.coe_fun_mk, chain.map_coe,
-      Function.comp_app, exists_imp_distrib, not_forall]
+-- error in Topology.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem not_below_is_open : is_open (not_below y) :=
+begin
+  have [ident h] [":", expr monotone (not_below y)] [],
+  { intros [ident x, ident y', ident h],
+    simp [] [] ["only"] ["[", expr not_below, ",", expr set_of, ",", expr le_Prop_eq, "]"] [] [],
+    intros [ident h₀, ident h₁],
+    apply [expr h₀ (le_trans h h₁)] },
+  existsi [expr h],
+  rintros [ident c],
+  apply [expr eq_of_forall_ge_iff],
+  intro [ident z],
+  rw [expr ωSup_le_iff] [],
+  simp [] [] ["only"] ["[", expr ωSup_le_iff, ",", expr not_below, ",", expr set.mem_set_of_eq, ",", expr le_Prop_eq, ",", expr preorder_hom.coe_fun_mk, ",", expr chain.map_coe, ",", expr function.comp_app, ",", expr exists_imp_distrib, ",", expr not_forall, "]"] [] []
+end
 
 end NotBelow
 
@@ -134,7 +134,7 @@ theorem is_ωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : chain α) : is_�
     ·
       apply ωSup_le
 
--- error in Topology.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:341:40: in specialize: ././Mathport/Syntax/Translate/Tactic/Lean3.lean:518:11: unsupported: specialize non-hyp
 theorem Scott_continuous_of_continuous
 {α β}
 [omega_complete_partial_order α]

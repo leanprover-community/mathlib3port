@@ -1,5 +1,5 @@
-import Mathbin.CategoryTheory.Arrow 
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Terminal
+import Mathbin.CategoryTheory.Limits.Shapes.Terminal 
+import Mathbin.CategoryTheory.Arrow
 
 /-!
 # Lifting properties
@@ -57,25 +57,27 @@ theorem iso_has_right_lifting_property (i : arrow C) (p : X ≅ Y) : has_lifting
 theorem id_has_right_lifting_property (i : arrow C) : has_lifting_property i (arrow.mk (𝟙 X)) :=
   iso_has_right_lifting_property i (iso.refl _)
 
+-- error in CategoryTheory.LiftingProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An equivalent characterization for right lifting with respect to a map `i` whose source is
 initial.
 ∅ → X
 ↓   ↓
 B → Y has a lifting iff there is a map B → X making the right part commute.
 -/
-theorem right_lifting_property_initial_iff (i p : arrow C) (h : is_initial i.left) :
-  has_lifting_property i p ↔ ∀ {e : i.right ⟶ p.right}, ∃ l : i.right ⟶ p.left, l ≫ p.hom = e :=
-  by 
-    fsplit
-    ·
-      introI hlift e 
-      have comm : is_initial.to h p.left ≫ p.hom = i.hom ≫ e := is_initial.hom_ext h _ _ 
-      use arrow.lift (arrow.hom_mk comm)
-      simp 
-    ·
-      refine' fun hlift => ⟨fun sq => _⟩
-      obtain ⟨l, hl⟩ : ∃ l : i.right ⟶ p.left, l ≫ p.hom = sq.right := hlift 
-      exact arrow.has_lift.mk ⟨l, is_initial.hom_ext h _ _⟩
+theorem right_lifting_property_initial_iff
+(i p : arrow C)
+(h : is_initial i.left) : «expr ↔ »(has_lifting_property i p, ∀
+ {e : «expr ⟶ »(i.right, p.right)}, «expr∃ , »((l : «expr ⟶ »(i.right, p.left)), «expr = »(«expr ≫ »(l, p.hom), e))) :=
+begin
+  fsplit,
+  { introsI [ident hlift, ident e],
+    have [ident comm] [":", expr «expr = »(«expr ≫ »(is_initial.to h p.left, p.hom), «expr ≫ »(i.hom, e))] [":=", expr is_initial.hom_ext h _ _],
+    use [expr arrow.lift (arrow.hom_mk comm)],
+    simp [] [] [] [] [] [] },
+  { refine [expr λ hlift, ⟨λ sq, _⟩],
+    obtain ["⟨", ident l, ",", ident hl, "⟩", ":", expr «expr∃ , »((l : «expr ⟶ »(i.right, p.left)), «expr = »(«expr ≫ »(l, p.hom), sq.right)), ":=", expr hlift],
+    exact [expr arrow.has_lift.mk ⟨l, is_initial.hom_ext h _ _⟩] }
+end
 
 /-- The condition of having the rlp with respect to a morphism `i` is stable under composition. -/
 theorem has_right_lifting_property_comp {i : arrow C} {f : X ⟶ Y} {g : Y ⟶ Z} (hf : has_lifting_property i (arrow.mk f))

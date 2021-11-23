@@ -1,8 +1,7 @@
+import Mathbin.MeasureTheory.Measure.MeasureSpaceDef 
 import Mathbin.Tactic.AutoCases 
 import Mathbin.Tactic.Tidy 
-import Mathbin.Tactic.WithLocalReducibility 
-import Mathbin.Tactic.ShowTerm 
-import Mathbin.MeasureTheory.Measure.MeasureSpaceDef
+import Mathbin.Tactic.WithLocalReducibility
 
 /-!
 # Tactics for measure theory
@@ -86,16 +85,16 @@ unsafe def goal_is_not_measurable : tactic Unit :=
   do 
     let t ← tactic.target 
     match t with 
-      | quote Measurable (%%l) => failed
-      | quote AeMeasurable (%%l) (%%r) => failed
-      | quote MeasurableSet (%%l) => failed
+      | quote.1 (Measurable (%%ₓl)) => failed
+      | quote.1 (AeMeasurable (%%ₓl) (%%ₓr)) => failed
+      | quote.1 (MeasurableSet (%%ₓl)) => failed
       | _ => skip
 
 /-- List of tactics used by `measurability` internally. -/
 unsafe def measurability_tactics (md : transparency := semireducible) : List (tactic Stringₓ) :=
   [propositional_goal >> apply_assumption >> pure "apply_assumption",
     goal_is_not_measurable >> intro1 >>= fun ns => pure ("intro " ++ ns.to_string),
-    apply_rules [pquote measurability] 50 { md } >> pure "apply_rules measurability",
+    apply_rules [pquote.1 measurability] 50 { md } >> pure "apply_rules measurability",
     apply_measurable.comp >> pure "refine measurable.comp _ _",
     apply_measurable.comp_ae_measurable >> pure "refine measurable.comp_ae_measurable _ _",
     sorry >> pure "refine measurable.ae_measurable _"]

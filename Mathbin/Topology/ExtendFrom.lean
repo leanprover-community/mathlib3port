@@ -38,42 +38,53 @@ theorem tendsto_extend_from {A : Set X} {f : X → Y} {x : X} (h : ∃ y, tendst
   tendsto f (𝓝[A] x) (𝓝$ extendFrom A f x) :=
   tendsto_nhds_lim h
 
-theorem extend_from_eq [T2Space Y] {A : Set X} {f : X → Y} {x : X} {y : Y} (hx : x ∈ Closure A)
-  (hf : tendsto f (𝓝[A] x) (𝓝 y)) : extendFrom A f x = y :=
-  by 
-    haveI  := mem_closure_iff_nhds_within_ne_bot.mp hx 
-    exact tendsto_nhds_unique (tendsto_nhds_lim ⟨y, hf⟩) hf
+-- error in Topology.ExtendFrom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem extend_from_eq
+[t2_space Y]
+{A : set X}
+{f : X → Y}
+{x : X}
+{y : Y}
+(hx : «expr ∈ »(x, closure A))
+(hf : tendsto f «expr𝓝[ ] »(A, x) (expr𝓝() y)) : «expr = »(extend_from A f x, y) :=
+begin
+  haveI [] [] [":=", expr mem_closure_iff_nhds_within_ne_bot.mp hx],
+  exact [expr tendsto_nhds_unique (tendsto_nhds_lim ⟨y, hf⟩) hf]
+end
 
 theorem extend_from_extends [T2Space Y] {f : X → Y} {A : Set X} (hf : ContinuousOn f A) :
   ∀ x _ : x ∈ A, extendFrom A f x = f x :=
   fun x x_in => extend_from_eq (subset_closure x_in) (hf x x_in)
 
+-- error in Topology.ExtendFrom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a function to a regular space `Y` which has a limit within `A` at any
 point of a set `B ⊆ closure A`, then `extend_from A f` is continuous on `B`. -/
-theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (hB : B ⊆ Closure A)
-  (hf : ∀ x _ : x ∈ B, ∃ y, tendsto f (𝓝[A] x) (𝓝 y)) : ContinuousOn (extendFrom A f) B :=
-  by 
-    set φ := extendFrom A f 
-    intro x x_in 
-    suffices  : ∀ V' _ : V' ∈ 𝓝 (φ x), IsClosed V' → φ ⁻¹' V' ∈ 𝓝[B] x
-    ·
-      simpa [ContinuousWithinAt, (closed_nhds_basis _).tendsto_right_iff]
-    intro V' V'_in V'_closed 
-    obtain ⟨V, V_in, V_op, hV⟩ : ∃ (V : _)(_ : V ∈ 𝓝 x), IsOpen V ∧ V ∩ A ⊆ f ⁻¹' V'
-    ·
-      have  := tendsto_extend_from (hf x x_in)
-      rcases(nhds_within_basis_open x A).tendsto_left_iff.mp this V' V'_in with ⟨V, ⟨hxV, V_op⟩, hV⟩
-      use V, IsOpen.mem_nhds V_op hxV, V_op, hV 
-    suffices  : ∀ y _ : y ∈ V ∩ B, φ y ∈ V' 
-    exact mem_of_superset (inter_mem_inf V_in$ mem_principal_self B) this 
-    rintro y ⟨hyV, hyB⟩
-    haveI  := mem_closure_iff_nhds_within_ne_bot.mp (hB hyB)
-    have limy : tendsto f (𝓝[A] y) (𝓝$ φ y) := tendsto_extend_from (hf y hyB)
-    have hVy : V ∈ 𝓝 y := IsOpen.mem_nhds V_op hyV 
-    have  : V ∩ A ∈ 𝓝[A] y
-    ·
-      simpa [inter_comm] using inter_mem_nhds_within _ hVy 
-    exact V'_closed.mem_of_tendsto limy (mem_of_superset this hV)
+theorem continuous_on_extend_from
+[regular_space Y]
+{f : X → Y}
+{A B : set X}
+(hB : «expr ⊆ »(B, closure A))
+(hf : ∀ x «expr ∈ » B, «expr∃ , »((y), tendsto f «expr𝓝[ ] »(A, x) (expr𝓝() y))) : continuous_on (extend_from A f) B :=
+begin
+  set [] [ident φ] [] [":="] [expr extend_from A f] [],
+  intros [ident x, ident x_in],
+  suffices [] [":", expr ∀ V' «expr ∈ » expr𝓝() (φ x), is_closed V' → «expr ∈ »(«expr ⁻¹' »(φ, V'), «expr𝓝[ ] »(B, x))],
+  by simpa [] [] [] ["[", expr continuous_within_at, ",", expr (closed_nhds_basis _).tendsto_right_iff, "]"] [] [],
+  intros [ident V', ident V'_in, ident V'_closed],
+  obtain ["⟨", ident V, ",", ident V_in, ",", ident V_op, ",", ident hV, "⟩", ":", expr «expr∃ , »((V «expr ∈ » expr𝓝() x), «expr ∧ »(is_open V, «expr ⊆ »(«expr ∩ »(V, A), «expr ⁻¹' »(f, V'))))],
+  { have [] [] [":=", expr tendsto_extend_from (hf x x_in)],
+    rcases [expr (nhds_within_basis_open x A).tendsto_left_iff.mp this V' V'_in, "with", "⟨", ident V, ",", "⟨", ident hxV, ",", ident V_op, "⟩", ",", ident hV, "⟩"],
+    use ["[", expr V, ",", expr is_open.mem_nhds V_op hxV, ",", expr V_op, ",", expr hV, "]"] },
+  suffices [] [":", expr ∀ y «expr ∈ » «expr ∩ »(V, B), «expr ∈ »(φ y, V')],
+  from [expr mem_of_superset «expr $ »(inter_mem_inf V_in, mem_principal_self B) this],
+  rintros [ident y, "⟨", ident hyV, ",", ident hyB, "⟩"],
+  haveI [] [] [":=", expr mem_closure_iff_nhds_within_ne_bot.mp (hB hyB)],
+  have [ident limy] [":", expr tendsto f «expr𝓝[ ] »(A, y) «expr $ »(expr𝓝(), φ y)] [":=", expr tendsto_extend_from (hf y hyB)],
+  have [ident hVy] [":", expr «expr ∈ »(V, expr𝓝() y)] [":=", expr is_open.mem_nhds V_op hyV],
+  have [] [":", expr «expr ∈ »(«expr ∩ »(V, A), «expr𝓝[ ] »(A, y))] [],
+  by simpa [] [] [] ["[", expr inter_comm, "]"] [] ["using", expr inter_mem_nhds_within _ hVy],
+  exact [expr V'_closed.mem_of_tendsto limy (mem_of_superset this hV)]
+end
 
 /-- If a function `f` to a regular space `Y` has a limit within a
 dense set `A` for any `x`, then `extend_from A f` is continuous. -/

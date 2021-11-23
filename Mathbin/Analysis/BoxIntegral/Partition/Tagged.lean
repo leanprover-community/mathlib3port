@@ -115,13 +115,19 @@ theorem mem_bUnion_tagged (π : prepartition I) {πi : ∀ J, tagged_prepartitio
   J ∈ π.bUnion_tagged πi ↔ ∃ (J' : _)(_ : J' ∈ π), J ∈ πi J' :=
   π.mem_bUnion
 
-theorem tag_bUnion_tagged (π : prepartition I) {πi : ∀ J, tagged_prepartition J} (hJ : J ∈ π) {J'} (hJ' : J' ∈ πi J) :
-  (π.bUnion_tagged πi).Tag J' = (πi J).Tag J' :=
-  by 
-    have  : J' ∈ π.bUnion_tagged πi 
-    exact π.mem_bUnion.2 ⟨J, hJ, hJ'⟩
-    obtain rfl := π.bUnion_index_of_mem hJ hJ' 
-    rfl
+-- error in Analysis.BoxIntegral.Partition.Tagged: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tag_bUnion_tagged
+(π : prepartition I)
+{πi : ∀ J, tagged_prepartition J}
+(hJ : «expr ∈ »(J, π))
+{J'}
+(hJ' : «expr ∈ »(J', πi J)) : «expr = »((π.bUnion_tagged πi).tag J', (πi J).tag J') :=
+begin
+  have [] [":", expr «expr ∈ »(J', π.bUnion_tagged πi)] [],
+  from [expr π.mem_bUnion.2 ⟨J, hJ, hJ'⟩],
+  obtain [ident rfl, ":=", expr π.bUnion_index_of_mem hJ hJ'],
+  refl
+end
 
 @[simp]
 theorem Union_bUnion_tagged (π : prepartition I) (πi : ∀ J, tagged_prepartition J) :
@@ -285,14 +291,15 @@ theorem is_subordinate_single [Fintype ι] (hJ : J ≤ I) (h : x ∈ I.Icc) :
 theorem Union_single (hJ : J ≤ I) (h : x ∈ I.Icc) : (single I J hJ x h).Union = J :=
   prepartition.Union_single hJ
 
--- error in Analysis.BoxIntegral.Partition.Tagged: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Union of two tagged prepartitions with disjoint unions of boxes. -/
-def disj_union (π₁ π₂ : tagged_prepartition I) (h : disjoint π₁.Union π₂.Union) : tagged_prepartition I :=
-{ to_prepartition := π₁.to_prepartition.disj_union π₂.to_prepartition h,
-  tag := π₁.boxes.piecewise π₁.tag π₂.tag,
-  tag_mem_Icc := λ J, by { dunfold [ident finset.piecewise] [],
-    split_ifs [] [],
-    exacts ["[", expr π₁.tag_mem_Icc J, ",", expr π₂.tag_mem_Icc J, "]"] } }
+def disj_union (π₁ π₂ : tagged_prepartition I) (h : Disjoint π₁.Union π₂.Union) : tagged_prepartition I :=
+  { toPrepartition := π₁.to_prepartition.disj_union π₂.to_prepartition h, Tag := π₁.boxes.piecewise π₁.tag π₂.tag,
+    tag_mem_Icc :=
+      fun J =>
+        by 
+          dunfold Finset.piecewise 
+          splitIfs 
+          exacts[π₁.tag_mem_Icc J, π₂.tag_mem_Icc J] }
 
 @[simp]
 theorem disj_union_boxes (h : Disjoint π₁.Union π₂.Union) : (π₁.disj_union π₂ h).boxes = π₁.boxes ∪ π₂.boxes :=

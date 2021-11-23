@@ -413,10 +413,10 @@ instance  : StarRing ℍ[R,c₁,c₂] :=
 theorem star_def (a : ℍ[R,c₁,c₂]) : star a = conj a :=
   rfl
 
-open Opposite
+open MulOpposite
 
 /-- Quaternion conjugate as an `alg_equiv` to the opposite ring. -/
-def conj_ae : ℍ[R,c₁,c₂] ≃ₐ[R] «expr ᵒᵖ» ℍ[R,c₁,c₂] :=
+def conj_ae : ℍ[R,c₁,c₂] ≃ₐ[R] «expr ᵐᵒᵖ» ℍ[R,c₁,c₂] :=
   { conj.toAddEquiv.trans op_add_equiv with toFun := op ∘ conj, invFun := conj ∘ unop,
     map_mul' :=
       fun x y =>
@@ -428,7 +428,7 @@ def conj_ae : ℍ[R,c₁,c₂] ≃ₐ[R] «expr ᵒᵖ» ℍ[R,c₁,c₂] :=
           simp  }
 
 @[simp]
-theorem coe_conj_ae : «expr⇑ » (conj_ae : ℍ[R,c₁,c₂] ≃ₐ[R] _) = (op ∘ conj) :=
+theorem coe_conj_ae : «expr⇑ » (conj_ae : ℍ[R,c₁,c₂] ≃ₐ[R] _) = op ∘ conj :=
   rfl
 
 end QuaternionAlgebra
@@ -758,14 +758,14 @@ theorem conj_neg : (-a).conj = -a.conj :=
 theorem conj_sub : (a - b).conj = a.conj - b.conj :=
   a.conj_sub b
 
-open Opposite
+open MulOpposite
 
 /-- Quaternion conjugate as an `alg_equiv` to the opposite ring. -/
-def conj_ae : ℍ[R] ≃ₐ[R] «expr ᵒᵖ» ℍ[R] :=
+def conj_ae : ℍ[R] ≃ₐ[R] «expr ᵐᵒᵖ» ℍ[R] :=
   QuaternionAlgebra.conjAe
 
 @[simp]
-theorem coe_conj_ae : «expr⇑ » (conj_ae : ℍ[R] ≃ₐ[R] «expr ᵒᵖ» ℍ[R]) = (op ∘ conj) :=
+theorem coe_conj_ae : «expr⇑ » (conj_ae : ℍ[R] ≃ₐ[R] «expr ᵐᵒᵖ» ℍ[R]) = op ∘ conj :=
   rfl
 
 /-- Square of the norm. -/

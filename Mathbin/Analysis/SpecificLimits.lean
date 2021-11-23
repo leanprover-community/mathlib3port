@@ -140,6 +140,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
     refine' (is_o.of_norm_left _).of_norm_right 
     exact (is_o_pow_pow_of_lt_left (abs_nonneg r₁) h).congr (pow_abs r₁) (pow_abs r₂)
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Various statements equivalent to the fact that `f n` grows exponentially slower than `R ^ n`.
 
 * 0: $f n = o(a ^ n)$ for some $-R < a < R$;
@@ -154,71 +155,65 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
 
 NB: For backwards compatibility, if you add more items to the list, please append them at the end of
 the list. -/
-theorem tfae_exists_lt_is_o_pow (f : ℕ → ℝ) (R : ℝ) :
-  tfae
-    [∃ (a : _)(_ : a ∈ Ioo (-R) R), is_o f (pow a) at_top, ∃ (a : _)(_ : a ∈ Ioo 0 R), is_o f (pow a) at_top,
-      ∃ (a : _)(_ : a ∈ Ioo (-R) R), is_O f (pow a) at_top, ∃ (a : _)(_ : a ∈ Ioo 0 R), is_O f (pow a) at_top,
-      ∃ (a : _)(_ : a < R)(C : _)(h₀ : 0 < C ∨ 0 < R), ∀ n, |f n| ≤ C*a ^ n,
-      ∃ (a : _)(_ : a ∈ Ioo 0 R)(C : _)(_ : C > 0), ∀ n, |f n| ≤ C*a ^ n,
-      ∃ (a : _)(_ : a < R), ∀ᶠn in at_top, |f n| ≤ a ^ n, ∃ (a : _)(_ : a ∈ Ioo 0 R), ∀ᶠn in at_top, |f n| ≤ a ^ n] :=
-  by 
-    have A : Ico 0 R ⊆ Ioo (-R) R 
-    exact fun x hx => ⟨(neg_lt_zero.2 (hx.1.trans_lt hx.2)).trans_le hx.1, hx.2⟩
-    have B : Ioo 0 R ⊆ Ioo (-R) R := subset.trans Ioo_subset_Ico_self A 
-    tfaeHave 1 → 3 
-    exact fun ⟨a, ha, H⟩ => ⟨a, ha, H.is_O⟩
-    tfaeHave 2 → 1 
-    exact fun ⟨a, ha, H⟩ => ⟨a, B ha, H⟩
-    tfaeHave 3 → 2
-    ·
-      rintro ⟨a, ha, H⟩
-      rcases exists_between (abs_lt.2 ha) with ⟨b, hab, hbR⟩
-      exact
-        ⟨b, ⟨(abs_nonneg a).trans_lt hab, hbR⟩,
-          H.trans_is_o (is_o_pow_pow_of_abs_lt_left (hab.trans_le (le_abs_self b)))⟩
-    tfaeHave 2 → 4 
-    exact fun ⟨a, ha, H⟩ => ⟨a, ha, H.is_O⟩
-    tfaeHave 4 → 3 
-    exact fun ⟨a, ha, H⟩ => ⟨a, B ha, H⟩
-    tfaeHave 4 → 6
-    ·
-      rintro ⟨a, ha, H⟩
-      rcases bound_of_is_O_nat_at_top H with ⟨C, hC₀, hC⟩
-      refine' ⟨a, ha, C, hC₀, fun n => _⟩
-      simpa only [Real.norm_eq_abs, abs_pow, abs_of_nonneg ha.1.le] using hC (pow_ne_zero n ha.1.ne')
-    tfaeHave 6 → 5 
-    exact fun ⟨a, ha, C, H₀, H⟩ => ⟨a, ha.2, C, Or.inl H₀, H⟩
-    tfaeHave 5 → 3
-    ·
-      rintro ⟨a, ha, C, h₀, H⟩
-      rcases sign_cases_of_C_mul_pow_nonneg fun n => (abs_nonneg _).trans (H n) with (rfl | ⟨hC₀, ha₀⟩)
-      ·
-        obtain rfl : f = 0
-        ·
-          ·
-            ext n 
-            simpa using H n 
-        simp only [lt_irreflₓ, false_orₓ] at h₀ 
-        exact ⟨0, ⟨neg_lt_zero.2 h₀, h₀⟩, is_O_zero _ _⟩
-      exact ⟨a, A ⟨ha₀, ha⟩, is_O_of_le' _ fun n => (H n).trans$ mul_le_mul_of_nonneg_left (le_abs_self _) hC₀.le⟩
-    tfaeHave 2 → 8
-    ·
-      rintro ⟨a, ha, H⟩
-      refine' ⟨a, ha, (H.def zero_lt_one).mono fun n hn => _⟩
-      rwa [Real.norm_eq_abs, Real.norm_eq_abs, one_mulₓ, abs_pow, abs_of_pos ha.1] at hn 
-    tfaeHave 8 → 7 
-    exact fun ⟨a, ha, H⟩ => ⟨a, ha.2, H⟩
-    tfaeHave 7 → 3
-    ·
-      rintro ⟨a, ha, H⟩
-      have  : 0 ≤ a 
-      exact nonneg_of_eventually_pow_nonneg (H.mono$ fun n => (abs_nonneg _).trans)
-      refine' ⟨a, A ⟨this, ha⟩, is_O.of_bound 1 _⟩
-      simpa only [Real.norm_eq_abs, one_mulₓ, abs_pow, abs_of_nonneg this]
-    tfaeFinish
+theorem tfae_exists_lt_is_o_pow
+(f : exprℕ() → exprℝ())
+(R : exprℝ()) : tfae «expr[ , ]»([«expr∃ , »((a «expr ∈ » Ioo «expr- »(R) R), is_o f (pow a) at_top), «expr∃ , »((a «expr ∈ » Ioo 0 R), is_o f (pow a) at_top), «expr∃ , »((a «expr ∈ » Ioo «expr- »(R) R), is_O f (pow a) at_top), «expr∃ , »((a «expr ∈ » Ioo 0 R), is_O f (pow a) at_top), «expr∃ , »((a «expr < » R)
+   (C)
+   (h₀ : «expr ∨ »(«expr < »(0, C), «expr < »(0, R))), ∀
+   n, «expr ≤ »(«expr| |»(f n), «expr * »(C, «expr ^ »(a, n)))), «expr∃ , »((a «expr ∈ » Ioo 0 R)
+   (C «expr > » 0), ∀
+   n, «expr ≤ »(«expr| |»(f n), «expr * »(C, «expr ^ »(a, n)))), «expr∃ , »((a «expr < » R), «expr∀ᶠ in , »((n), at_top, «expr ≤ »(«expr| |»(f n), «expr ^ »(a, n)))), «expr∃ , »((a «expr ∈ » Ioo 0 R), «expr∀ᶠ in , »((n), at_top, «expr ≤ »(«expr| |»(f n), «expr ^ »(a, n))))]) :=
+begin
+  have [ident A] [":", expr «expr ⊆ »(Ico 0 R, Ioo «expr- »(R) R)] [],
+  from [expr λ x hx, ⟨(neg_lt_zero.2 (hx.1.trans_lt hx.2)).trans_le hx.1, hx.2⟩],
+  have [ident B] [":", expr «expr ⊆ »(Ioo 0 R, Ioo «expr- »(R) R)] [":=", expr subset.trans Ioo_subset_Ico_self A],
+  tfae_have [":"] [1] ["->"] [3],
+  from [expr λ ⟨a, ha, H⟩, ⟨a, ha, H.is_O⟩],
+  tfae_have [":"] [2] ["->"] [1],
+  from [expr λ ⟨a, ha, H⟩, ⟨a, B ha, H⟩],
+  tfae_have [":"] [3] ["->"] [2],
+  { rintro ["⟨", ident a, ",", ident ha, ",", ident H, "⟩"],
+    rcases [expr exists_between (abs_lt.2 ha), "with", "⟨", ident b, ",", ident hab, ",", ident hbR, "⟩"],
+    exact [expr ⟨b, ⟨(abs_nonneg a).trans_lt hab, hbR⟩, H.trans_is_o (is_o_pow_pow_of_abs_lt_left (hab.trans_le (le_abs_self b)))⟩] },
+  tfae_have [":"] [2] ["->"] [4],
+  from [expr λ ⟨a, ha, H⟩, ⟨a, ha, H.is_O⟩],
+  tfae_have [":"] [4] ["->"] [3],
+  from [expr λ ⟨a, ha, H⟩, ⟨a, B ha, H⟩],
+  tfae_have [":"] [4] ["->"] [6],
+  { rintro ["⟨", ident a, ",", ident ha, ",", ident H, "⟩"],
+    rcases [expr bound_of_is_O_nat_at_top H, "with", "⟨", ident C, ",", ident hC₀, ",", ident hC, "⟩"],
+    refine [expr ⟨a, ha, C, hC₀, λ n, _⟩],
+    simpa [] [] ["only"] ["[", expr real.norm_eq_abs, ",", expr abs_pow, ",", expr abs_of_nonneg ha.1.le, "]"] [] ["using", expr hC (pow_ne_zero n ha.1.ne')] },
+  tfae_have [":"] [6] ["->"] [5],
+  from [expr λ ⟨a, ha, C, H₀, H⟩, ⟨a, ha.2, C, or.inl H₀, H⟩],
+  tfae_have [":"] [5] ["->"] [3],
+  { rintro ["⟨", ident a, ",", ident ha, ",", ident C, ",", ident h₀, ",", ident H, "⟩"],
+    rcases [expr sign_cases_of_C_mul_pow_nonneg (λ
+      n, (abs_nonneg _).trans (H n)), "with", ident rfl, "|", "⟨", ident hC₀, ",", ident ha₀, "⟩"],
+    { obtain [ident rfl, ":", expr «expr = »(f, 0)],
+      by { ext [] [ident n] [],
+        simpa [] [] [] [] [] ["using", expr H n] },
+      simp [] [] ["only"] ["[", expr lt_irrefl, ",", expr false_or, "]"] [] ["at", ident h₀],
+      exact [expr ⟨0, ⟨neg_lt_zero.2 h₀, h₀⟩, is_O_zero _ _⟩] },
+    exact [expr ⟨a, A ⟨ha₀, ha⟩, is_O_of_le' _ (λ
+       n, «expr $ »((H n).trans, mul_le_mul_of_nonneg_left (le_abs_self _) hC₀.le))⟩] },
+  tfae_have [":"] [2] ["->"] [8],
+  { rintro ["⟨", ident a, ",", ident ha, ",", ident H, "⟩"],
+    refine [expr ⟨a, ha, (H.def zero_lt_one).mono (λ n hn, _)⟩],
+    rwa ["[", expr real.norm_eq_abs, ",", expr real.norm_eq_abs, ",", expr one_mul, ",", expr abs_pow, ",", expr abs_of_pos ha.1, "]"] ["at", ident hn] },
+  tfae_have [":"] [8] ["->"] [7],
+  from [expr λ ⟨a, ha, H⟩, ⟨a, ha.2, H⟩],
+  tfae_have [":"] [7] ["->"] [3],
+  { rintro ["⟨", ident a, ",", ident ha, ",", ident H, "⟩"],
+    have [] [":", expr «expr ≤ »(0, a)] [],
+    from [expr nonneg_of_eventually_pow_nonneg «expr $ »(H.mono, λ n, (abs_nonneg _).trans)],
+    refine [expr ⟨a, A ⟨this, ha⟩, is_O.of_bound 1 _⟩],
+    simpa [] [] ["only"] ["[", expr real.norm_eq_abs, ",", expr one_mul, ",", expr abs_pow, ",", expr abs_of_nonneg this, "]"] [] [] },
+  tfae_finish
+end
 
 theorem uniformity_basis_dist_pow_of_lt_1 {α : Type _} [PseudoMetricSpace α] {r : ℝ} (h₀ : 0 < r) (h₁ : r < 1) :
-  (𝓤 α).HasBasis (fun k : ℕ => True) fun k => { p : α × α | dist p.1 p.2 < r ^ k } :=
+  (𝓤 α).HasBasis (fun k : ℕ => True) fun k => { p:α × α | dist p.1 p.2 < r ^ k } :=
   (Metric.mk_uniformity_basis fun i _ => pow_pos h₀ _)$
     fun ε ε0 => (exists_pow_lt_of_lt_one ε0 h₁).imp$ fun k hk => ⟨trivialₓ, hk.le⟩
 
@@ -248,24 +243,30 @@ theorem le_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀ k 
   by 
     refine' (monotone_mul_left_of_nonneg hc).seq_le_seq n _ h _ <;> simp [pow_succₓ, mul_assocₓ, le_reflₓ]
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For any natural `k` and a real `r > 1` we have `n ^ k = o(r ^ n)` as `n → ∞`. -/
-theorem is_o_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ) {r : ℝ} (hr : 1 < r) :
-  is_o (fun n => n ^ k : ℕ → R) (fun n => r ^ n) at_top :=
-  by 
-    have  : tendsto (fun x : ℝ => x ^ k) (𝓝[Ioi 1] 1) (𝓝 1)
-    exact ((continuous_id.pow k).tendsto' (1 : ℝ) 1 (one_pow _)).mono_left inf_le_left 
-    obtain ⟨r' : ℝ, hr' : r' ^ k < r, h1 : 1 < r'⟩ :=
-      ((this.eventually (gt_mem_nhds hr)).And self_mem_nhds_within).exists 
-    have h0 : 0 ≤ r' := zero_le_one.trans h1.le 
-    suffices  : is_O _ (fun n : ℕ => (r' ^ k) ^ n) at_top 
-    exact this.trans_is_o (is_o_pow_pow_of_lt_left (pow_nonneg h0 _) hr')
-    conv  in (r' ^ _) ^ _ => rw [←pow_mulₓ, mul_commₓ, pow_mulₓ]
-    suffices  : ∀ n : ℕ, ∥(n : R)∥ ≤ ((r' - 1)⁻¹*∥(1 : R)∥)*∥r' ^ n∥
-    exact (is_O_of_le' _ this).pow _ 
-    intro n 
-    rw [mul_right_commₓ]
-    refine' n.norm_cast_le.trans (mul_le_mul_of_nonneg_right _ (norm_nonneg _))
-    simpa [div_eq_inv_mul, Real.norm_eq_abs, abs_of_nonneg h0] using n.cast_le_pow_div_sub h1
+theorem is_o_pow_const_const_pow_of_one_lt
+{R : Type*}
+[normed_ring R]
+(k : exprℕ())
+{r : exprℝ()}
+(hr : «expr < »(1, r)) : is_o (λ n, «expr ^ »(n, k) : exprℕ() → R) (λ n, «expr ^ »(r, n)) at_top :=
+begin
+  have [] [":", expr tendsto (λ x : exprℝ(), «expr ^ »(x, k)) «expr𝓝[ ] »(Ioi 1, 1) (expr𝓝() 1)] [],
+  from [expr ((continuous_id.pow k).tendsto' (1 : exprℝ()) 1 (one_pow _)).mono_left inf_le_left],
+  obtain ["⟨", ident r', ":", expr exprℝ(), ",", ident hr', ":", expr «expr < »(«expr ^ »(r', k), r), ",", ident h1, ":", expr «expr < »(1, r'), "⟩", ":=", expr ((this.eventually (gt_mem_nhds hr)).and self_mem_nhds_within).exists],
+  have [ident h0] [":", expr «expr ≤ »(0, r')] [":=", expr zero_le_one.trans h1.le],
+  suffices [] [":", expr is_O _ (λ n : exprℕ(), «expr ^ »(«expr ^ »(r', k), n)) at_top],
+  from [expr this.trans_is_o (is_o_pow_pow_of_lt_left (pow_nonneg h0 _) hr')],
+  conv [] ["in", expr «expr ^ »(«expr ^ »(r', _), _)] { rw ["[", "<-", expr pow_mul, ",", expr mul_comm, ",", expr pow_mul, "]"] },
+  suffices [] [":", expr ∀
+   n : exprℕ(), «expr ≤ »(«expr∥ ∥»((n : R)), «expr * »(«expr * »(«expr ⁻¹»(«expr - »(r', 1)), «expr∥ ∥»((1 : R))), «expr∥ ∥»(«expr ^ »(r', n))))],
+  from [expr (is_O_of_le' _ this).pow _],
+  intro [ident n],
+  rw [expr mul_right_comm] [],
+  refine [expr n.norm_cast_le.trans (mul_le_mul_of_nonneg_right _ (norm_nonneg _))],
+  simpa [] [] [] ["[", expr div_eq_inv_mul, ",", expr real.norm_eq_abs, ",", expr abs_of_nonneg h0, "]"] [] ["using", expr n.cast_le_pow_div_sub h1]
+end
 
 /-- For a real `r > 1` we have `n = o(r ^ n)` as `n → ∞`. -/
 theorem is_o_coe_const_pow_of_one_lt {R : Type _} [NormedRing R] {r : ℝ} (hr : 1 < r) :
@@ -273,46 +274,49 @@ theorem is_o_coe_const_pow_of_one_lt {R : Type _} [NormedRing R] {r : ℝ} (hr :
   by 
     simpa only [pow_oneₓ] using is_o_pow_const_const_pow_of_one_lt 1 hr
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `∥r₁∥ < r₂`, then for any naturak `k` we have `n ^ k r₁ ^ n = o (r₂ ^ n)` as `n → ∞`. -/
-theorem is_o_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [NormedRing R] (k : ℕ) {r₁ : R} {r₂ : ℝ}
-  (h : ∥r₁∥ < r₂) : is_o (fun n => (n ^ k)*r₁ ^ n : ℕ → R) (fun n => r₂ ^ n) at_top :=
-  by 
-    byCases' h0 : r₁ = 0
-    ·
-      refine' (is_o_zero _ _).congr' (mem_at_top_sets.2$ ⟨1, fun n hn => _⟩) eventually_eq.rfl 
-      simp [zero_pow (zero_lt_one.trans_le hn), h0]
-    rw [←Ne.def, ←norm_pos_iff] at h0 
-    have A : is_o (fun n => n ^ k : ℕ → R) (fun n => (r₂ / ∥r₁∥) ^ n) at_top 
-    exact is_o_pow_const_const_pow_of_one_lt k ((one_lt_div h0).2 h)
-    suffices  : is_O (fun n => r₁ ^ n) (fun n => ∥r₁∥ ^ n) at_top
-    ·
-      simpa [div_mul_cancel _ (pow_pos h0 _).ne'] using A.mul_is_O this 
-    exact
-      is_O.of_bound 1
-        (by 
-          simpa using eventually_norm_pow_le r₁)
+theorem is_o_pow_const_mul_const_pow_const_pow_of_norm_lt
+{R : Type*}
+[normed_ring R]
+(k : exprℕ())
+{r₁ : R}
+{r₂ : exprℝ()}
+(h : «expr < »(«expr∥ ∥»(r₁), r₂)) : is_o (λ
+n, «expr * »(«expr ^ »(n, k), «expr ^ »(r₁, n)) : exprℕ() → R) (λ n, «expr ^ »(r₂, n)) at_top :=
+begin
+  by_cases [expr h0, ":", expr «expr = »(r₁, 0)],
+  { refine [expr (is_o_zero _ _).congr' «expr $ »(mem_at_top_sets.2, ⟨1, λ n hn, _⟩) eventually_eq.rfl],
+    simp [] [] [] ["[", expr zero_pow (zero_lt_one.trans_le hn), ",", expr h0, "]"] [] [] },
+  rw ["[", "<-", expr ne.def, ",", "<-", expr norm_pos_iff, "]"] ["at", ident h0],
+  have [ident A] [":", expr is_o (λ
+   n, «expr ^ »(n, k) : exprℕ() → R) (λ n, «expr ^ »(«expr / »(r₂, «expr∥ ∥»(r₁)), n)) at_top] [],
+  from [expr is_o_pow_const_const_pow_of_one_lt k ((one_lt_div h0).2 h)],
+  suffices [] [":", expr is_O (λ n, «expr ^ »(r₁, n)) (λ n, «expr ^ »(«expr∥ ∥»(r₁), n)) at_top],
+  by simpa [] [] [] ["[", expr div_mul_cancel _ (pow_pos h0 _).ne', "]"] [] ["using", expr A.mul_is_O this],
+  exact [expr is_O.of_bound 1 (by simpa [] [] [] [] [] ["using", expr eventually_norm_pow_le r₁])]
+end
 
 theorem tendsto_pow_const_div_const_pow_of_one_lt (k : ℕ) {r : ℝ} (hr : 1 < r) :
   tendsto (fun n => n ^ k / r ^ n : ℕ → ℝ) at_top (𝓝 0) :=
   (is_o_pow_const_const_pow_of_one_lt k hr).tendsto_0
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `|r| < 1`, then `n ^ k r ^ n` tends to zero for any natural `k`. -/
-theorem tendsto_pow_const_mul_const_pow_of_abs_lt_one (k : ℕ) {r : ℝ} (hr : |r| < 1) :
-  tendsto (fun n => (n ^ k)*r ^ n : ℕ → ℝ) at_top (𝓝 0) :=
-  by 
-    byCases' h0 : r = 0
-    ·
-      exact
-        tendsto_const_nhds.congr'
-          (mem_at_top_sets.2
-            ⟨1,
-              fun n hn =>
-                by 
-                  simp [zero_lt_one.trans_le hn, h0]⟩)
-    have hr' : 1 < |r|⁻¹
-    exact one_lt_inv (abs_pos.2 h0) hr 
-    rw [tendsto_zero_iff_norm_tendsto_zero]
-    simpa [div_eq_mul_inv] using tendsto_pow_const_div_const_pow_of_one_lt k hr'
+theorem tendsto_pow_const_mul_const_pow_of_abs_lt_one
+(k : exprℕ())
+{r : exprℝ()}
+(hr : «expr < »(«expr| |»(r), 1)) : tendsto (λ
+n, «expr * »(«expr ^ »(n, k), «expr ^ »(r, n)) : exprℕ() → exprℝ()) at_top (expr𝓝() 0) :=
+begin
+  by_cases [expr h0, ":", expr «expr = »(r, 0)],
+  { exact [expr tendsto_const_nhds.congr' (mem_at_top_sets.2 ⟨1, λ
+       n hn, by simp [] [] [] ["[", expr zero_lt_one.trans_le hn, ",", expr h0, "]"] [] []⟩)] },
+  have [ident hr'] [":", expr «expr < »(1, «expr ⁻¹»(«expr| |»(r)))] [],
+  from [expr one_lt_inv (abs_pos.2 h0) hr],
+  rw [expr tendsto_zero_iff_norm_tendsto_zero] [],
+  simpa [] [] [] ["[", expr div_eq_mul_inv, "]"] [] ["using", expr tendsto_pow_const_div_const_pow_of_one_lt k hr']
+end
 
 /-- If a sequence `v` of real numbers satisfies `k * v n ≤ v (n+1)` with `1 < k`,
 then it goes to +∞. -/
@@ -373,15 +377,17 @@ theorem summable_geometric_two : Summable fun n : ℕ => ((1 : ℝ) / 2) ^ n :=
 theorem tsum_geometric_two : (∑'n : ℕ, ((1 : ℝ) / 2) ^ n) = 2 :=
   has_sum_geometric_two.tsum_eq
 
-theorem sum_geometric_two_le (n : ℕ) : (∑i : ℕ in range n, (1 / (2 : ℝ)) ^ i) ≤ 2 :=
-  by 
-    have  : ∀ i, 0 ≤ (1 / (2 : ℝ)) ^ i
-    ·
-      intro i 
-      apply pow_nonneg 
-      normNum 
-    convert sum_le_tsum (range n) (fun i _ => this i) summable_geometric_two 
-    exact tsum_geometric_two.symm
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sum_geometric_two_le
+(n : exprℕ()) : «expr ≤ »(«expr∑ in , »((i : exprℕ()), range n, «expr ^ »(«expr / »(1, (2 : exprℝ())), i)), 2) :=
+begin
+  have [] [":", expr ∀ i, «expr ≤ »(0, «expr ^ »(«expr / »(1, (2 : exprℝ())), i))] [],
+  { intro [ident i],
+    apply [expr pow_nonneg],
+    norm_num [] [] },
+  convert [] [expr sum_le_tsum (range n) (λ i _, this i) summable_geometric_two] [],
+  exact [expr tsum_geometric_two.symm]
+end
 
 theorem has_sum_geometric_two' (a : ℝ) : HasSum (fun n : ℕ => a / 2 / 2 ^ n) a :=
   by 
@@ -434,21 +440,22 @@ theorem Ennreal.tsum_geometric (r : ℝ≥0∞) : (∑'n : ℕ, r ^ n) = (1 - r)
 
 variable{K : Type _}[NormedField K]{ξ : K}
 
-theorem has_sum_geometric_of_norm_lt_1 (h : ∥ξ∥ < 1) : HasSum (fun n : ℕ => ξ ^ n) ((1 - ξ)⁻¹) :=
-  by 
-    have xi_ne_one : ξ ≠ 1
-    ·
-      ·
-        contrapose! h 
-        simp [h]
-    have A : tendsto (fun n => (ξ ^ n - 1)*(ξ - 1)⁻¹) at_top (𝓝 ((0 - 1)*(ξ - 1)⁻¹))
-    exact ((tendsto_pow_at_top_nhds_0_of_norm_lt_1 h).sub tendsto_const_nhds).mul tendsto_const_nhds 
-    have B : (fun n => ∑i in range n, ξ ^ i) = fun n => geomSum ξ n := rfl 
-    rw [has_sum_iff_tendsto_nat_of_summable_norm, B]
-    ·
-      simpa [geom_sum_eq, xi_ne_one, neg_inv, div_eq_mul_inv] using A
-    ·
-      simp [NormedField.norm_pow, summable_geometric_of_lt_1 (norm_nonneg _) h]
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_sum_geometric_of_norm_lt_1
+(h : «expr < »(«expr∥ ∥»(ξ), 1)) : has_sum (λ n : exprℕ(), «expr ^ »(ξ, n)) «expr ⁻¹»(«expr - »(1, ξ)) :=
+begin
+  have [ident xi_ne_one] [":", expr «expr ≠ »(ξ, 1)] [],
+  by { contrapose ["!"] [ident h],
+    simp [] [] [] ["[", expr h, "]"] [] [] },
+  have [ident A] [":", expr tendsto (λ
+    n, «expr * »(«expr - »(«expr ^ »(ξ, n), 1), «expr ⁻¹»(«expr - »(ξ, 1)))) at_top (expr𝓝() «expr * »(«expr - »(0, 1), «expr ⁻¹»(«expr - »(ξ, 1))))] [],
+  from [expr ((tendsto_pow_at_top_nhds_0_of_norm_lt_1 h).sub tendsto_const_nhds).mul tendsto_const_nhds],
+  have [ident B] [":", expr «expr = »(λ
+    n, «expr∑ in , »((i), range n, «expr ^ »(ξ, i)), λ n, geom_sum ξ n)] [":=", expr rfl],
+  rw ["[", expr has_sum_iff_tendsto_nat_of_summable_norm, ",", expr B, "]"] [],
+  { simpa [] [] [] ["[", expr geom_sum_eq, ",", expr xi_ne_one, ",", expr neg_inv, ",", expr div_eq_mul_inv, "]"] [] ["using", expr A] },
+  { simp [] [] [] ["[", expr normed_field.norm_pow, ",", expr summable_geometric_of_lt_1 (norm_nonneg _) h, "]"] [] [] }
+end
 
 theorem summable_geometric_of_norm_lt_1 (h : ∥ξ∥ < 1) : Summable fun n : ℕ => ξ ^ n :=
   ⟨_, has_sum_geometric_of_norm_lt_1 h⟩
@@ -493,32 +500,33 @@ theorem summable_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R] [Com
   (hr : ∥r∥ < 1) : Summable (fun n => (n ^ k)*r ^ n : ℕ → R) :=
   summable_of_summable_norm$ summable_norm_pow_mul_geometric_of_norm_lt_1 _ hr
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `∥r∥ < 1`, then `∑' n : ℕ, n * r ^ n = r / (1 - r) ^ 2`, `has_sum` version. -/
-theorem has_sum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜] [CompleteSpace 𝕜] {r : 𝕜} (hr : ∥r∥ < 1) :
-  HasSum (fun n => n*r ^ n : ℕ → 𝕜) (r / (1 - r) ^ 2) :=
-  by 
-    have A : Summable (fun n => n*r ^ n : ℕ → 𝕜)
-    ·
-      simpa using summable_pow_mul_geometric_of_norm_lt_1 1 hr 
-    have B : HasSum (pow r : ℕ → 𝕜) ((1 - r)⁻¹)
-    exact has_sum_geometric_of_norm_lt_1 hr 
-    refine' A.has_sum_iff.2 _ 
-    have hr' : r ≠ 1
-    ·
-      ·
-        rintro rfl 
-        simpa [lt_irreflₓ] using hr 
-    set s : 𝕜 := ∑'n : ℕ, n*r ^ n 
-    calc s = ((1 - r)*s) / (1 - r) := (mul_div_cancel_left _ (sub_ne_zero.2 hr'.symm)).symm _ = (s - r*s) / (1 - r) :=
-      by 
-        rw [sub_mul, one_mulₓ]_ = ((((0 : ℕ)*r ^ 0)+∑'n : ℕ, (n+1)*r ^ n+1) - r*s) / (1 - r) :=
-      by 
-        congr 
-        exact tsum_eq_zero_add A _ = ((r*∑'n : ℕ, (n+1)*r ^ n) - r*s) / (1 - r) :=
-      by 
-        simp [pow_succₓ, mul_left_commₓ _ r, tsum_mul_left]_ = r / (1 - r) ^ 2 :=
-      by 
-        simp [add_mulₓ, tsum_add A B.summable, mul_addₓ, B.tsum_eq, ←div_eq_mul_inv, sq, div_div_eq_div_mul]
+theorem has_sum_coe_mul_geometric_of_norm_lt_1
+{𝕜 : Type*}
+[normed_field 𝕜]
+[complete_space 𝕜]
+{r : 𝕜}
+(hr : «expr < »(«expr∥ ∥»(r), 1)) : has_sum (λ
+n, «expr * »(n, «expr ^ »(r, n)) : exprℕ() → 𝕜) «expr / »(r, «expr ^ »(«expr - »(1, r), 2)) :=
+begin
+  have [ident A] [":", expr summable (λ n, «expr * »(n, «expr ^ »(r, n)) : exprℕ() → 𝕜)] [],
+  by simpa [] [] [] [] [] ["using", expr summable_pow_mul_geometric_of_norm_lt_1 1 hr],
+  have [ident B] [":", expr has_sum (pow r : exprℕ() → 𝕜) «expr ⁻¹»(«expr - »(1, r))] [],
+  from [expr has_sum_geometric_of_norm_lt_1 hr],
+  refine [expr A.has_sum_iff.2 _],
+  have [ident hr'] [":", expr «expr ≠ »(r, 1)] [],
+  by { rintro [ident rfl],
+    simpa [] [] [] ["[", expr lt_irrefl, "]"] [] ["using", expr hr] },
+  set [] [ident s] [":", expr 𝕜] [":="] [expr «expr∑' , »((n : exprℕ()), «expr * »(n, «expr ^ »(r, n)))] [],
+  calc
+    «expr = »(s, «expr / »(«expr * »(«expr - »(1, r), s), «expr - »(1, r))) : (mul_div_cancel_left _ (sub_ne_zero.2 hr'.symm)).symm
+    «expr = »(..., «expr / »(«expr - »(s, «expr * »(r, s)), «expr - »(1, r))) : by rw ["[", expr sub_mul, ",", expr one_mul, "]"] []
+    «expr = »(..., «expr / »(«expr - »(«expr + »(«expr * »((0 : exprℕ()), «expr ^ »(r, 0)), «expr∑' , »((n : exprℕ()), «expr * »(«expr + »(n, 1), «expr ^ »(r, «expr + »(n, 1))))), «expr * »(r, s)), «expr - »(1, r))) : by { congr,
+      exact [expr tsum_eq_zero_add A] }
+    «expr = »(..., «expr / »(«expr - »(«expr * »(r, «expr∑' , »((n : exprℕ()), «expr * »(«expr + »(n, 1), «expr ^ »(r, n)))), «expr * »(r, s)), «expr - »(1, r))) : by simp [] [] [] ["[", expr pow_succ, ",", expr mul_left_comm _ r, ",", expr tsum_mul_left, "]"] [] []
+    «expr = »(..., «expr / »(r, «expr ^ »(«expr - »(1, r), 2))) : by simp [] [] [] ["[", expr add_mul, ",", expr tsum_add A B.summable, ",", expr mul_add, ",", expr B.tsum_eq, ",", "<-", expr div_eq_mul_inv, ",", expr sq, ",", expr div_div_eq_div_mul, "]"] [] []
+end
 
 /-- If `∥r∥ < 1`, then `∑' n : ℕ, n * r ^ n = r / (1 - r) ^ 2`. -/
 theorem tsum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜] [CompleteSpace 𝕜] {r : 𝕜} (hr : ∥r∥ < 1) :
@@ -636,16 +644,20 @@ theorem dist_le_of_le_geometric_of_tendsto₀ {a : α} (ha : tendsto f at_top (�
   (aux_has_sum_of_le_geometric hr hu).tsum_eq ▸
     dist_le_tsum_of_dist_le_of_tendsto₀ _ hu ⟨_, aux_has_sum_of_le_geometric hr hu⟩ ha
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `dist (f n) (f (n+1))` is bounded by `C * r^n`, `r < 1`, then the distance from
 `f 0` to the limit of `f` is bounded above by `C / (1 - r)`. -/
-theorem dist_le_of_le_geometric_of_tendsto {a : α} (ha : tendsto f at_top (𝓝 a)) (n : ℕ) :
-  dist (f n) a ≤ (C*r ^ n) / (1 - r) :=
-  by 
-    have  := aux_has_sum_of_le_geometric hr hu 
-    convert dist_le_tsum_of_dist_le_of_tendsto _ hu ⟨_, this⟩ ha n 
-    simp only [pow_addₓ, mul_left_commₓ C, mul_div_right_comm]
-    rw [mul_commₓ]
-    exact (this.mul_left _).tsum_eq.symm
+theorem dist_le_of_le_geometric_of_tendsto
+{a : α}
+(ha : tendsto f at_top (expr𝓝() a))
+(n : exprℕ()) : «expr ≤ »(dist (f n) a, «expr / »(«expr * »(C, «expr ^ »(r, n)), «expr - »(1, r))) :=
+begin
+  have [] [] [":=", expr aux_has_sum_of_le_geometric hr hu],
+  convert [] [expr dist_le_tsum_of_dist_le_of_tendsto _ hu ⟨_, this⟩ ha n] [],
+  simp [] [] ["only"] ["[", expr pow_add, ",", expr mul_left_comm C, ",", expr mul_div_right_comm, "]"] [] [],
+  rw ["[", expr mul_comm, "]"] [],
+  exact [expr (this.mul_left _).tsum_eq.symm]
+end
 
 omit hr hu
 
@@ -723,60 +735,65 @@ theorem cauchy_series_of_le_geometric {C : ℝ} {u : ℕ → α} {r : ℝ} (hr :
     (by 
       simp [h])
 
-theorem NormedGroup.cauchy_series_of_le_geometric' {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r < 1) (h : ∀ n, ∥u n∥ ≤ C*r ^ n) :
-  CauchySeq fun n => ∑k in range (n+1), u k :=
-  by 
-    byCases' hC : C = 0
-    ·
-      subst hC 
-      simp  at h 
-      exact
-        cauchy_seq_of_le_geometric 0 0 zero_lt_one
-          (by 
-            simp [h])
-    have  : 0 ≤ C
-    ·
-      simpa using (norm_nonneg _).trans (h 0)
-    replace hC : 0 < C 
-    exact (Ne.symm hC).le_iff_lt.mp this 
-    have  : 0 ≤ r
-    ·
-      have  := (norm_nonneg _).trans (h 1)
-      rw [pow_oneₓ] at this 
-      exact (zero_le_mul_left hC).mp this 
-    simpRw [Finset.sum_range_succ_comm]
-    have  : CauchySeq u
-    ·
-      apply tendsto.cauchy_seq 
-      apply squeeze_zero_norm h 
-      rw
-        [show 0 = C*0 by 
-          simp ]
-      exact tendsto_const_nhds.mul (tendsto_pow_at_top_nhds_0_of_lt_1 this hr)
-    exact this.add (cauchy_series_of_le_geometric hr h)
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem normed_group.cauchy_series_of_le_geometric'
+{C : exprℝ()}
+{u : exprℕ() → α}
+{r : exprℝ()}
+(hr : «expr < »(r, 1))
+(h : ∀
+ n, «expr ≤ »(«expr∥ ∥»(u n), «expr * »(C, «expr ^ »(r, n)))) : cauchy_seq (λ
+ n, «expr∑ in , »((k), range «expr + »(n, 1), u k)) :=
+begin
+  by_cases [expr hC, ":", expr «expr = »(C, 0)],
+  { subst [expr hC],
+    simp [] [] [] [] [] ["at", ident h],
+    exact [expr cauchy_seq_of_le_geometric 0 0 zero_lt_one (by simp [] [] [] ["[", expr h, "]"] [] [])] },
+  have [] [":", expr «expr ≤ »(0, C)] [],
+  { simpa [] [] [] [] [] ["using", expr (norm_nonneg _).trans (h 0)] },
+  replace [ident hC] [":", expr «expr < »(0, C)] [],
+  from [expr (ne.symm hC).le_iff_lt.mp this],
+  have [] [":", expr «expr ≤ »(0, r)] [],
+  { have [] [] [":=", expr (norm_nonneg _).trans (h 1)],
+    rw [expr pow_one] ["at", ident this],
+    exact [expr (zero_le_mul_left hC).mp this] },
+  simp_rw [expr finset.sum_range_succ_comm] [],
+  have [] [":", expr cauchy_seq u] [],
+  { apply [expr tendsto.cauchy_seq],
+    apply [expr squeeze_zero_norm h],
+    rw [expr show «expr = »(0, «expr * »(C, 0)), by simp [] [] [] [] [] []] [],
+    exact [expr tendsto_const_nhds.mul (tendsto_pow_at_top_nhds_0_of_lt_1 this hr)] },
+  exact [expr this.add (cauchy_series_of_le_geometric hr h)]
+end
 
-theorem NormedGroup.cauchy_series_of_le_geometric'' {C : ℝ} {u : ℕ → α} {N : ℕ} {r : ℝ} (hr₀ : 0 < r) (hr₁ : r < 1)
-  (h : ∀ n _ : n ≥ N, ∥u n∥ ≤ C*r ^ n) : CauchySeq fun n => ∑k in range (n+1), u k :=
-  by 
-    set v : ℕ → α := fun n => if n < N then 0 else u n 
-    have hC : 0 ≤ C 
-    exact (zero_le_mul_right$ pow_pos hr₀ N).mp ((norm_nonneg _).trans$ h N$ le_reflₓ N)
-    have  : ∀ n _ : n ≥ N, u n = v n
-    ·
-      intro n hn 
-      simp [v, hn, if_neg (not_lt.mpr hn)]
-    refine' cauchy_seq_sum_of_eventually_eq this (NormedGroup.cauchy_series_of_le_geometric' hr₁ _)
-    ·
-      exact C 
-    intro n 
-    dsimp [v]
-    splitIfs with H H
-    ·
-      rw [norm_zero]
-      exact mul_nonneg hC (pow_nonneg hr₀.le _)
-    ·
-      pushNeg  at H 
-      exact h _ H
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem normed_group.cauchy_series_of_le_geometric''
+{C : exprℝ()}
+{u : exprℕ() → α}
+{N : exprℕ()}
+{r : exprℝ()}
+(hr₀ : «expr < »(0, r))
+(hr₁ : «expr < »(r, 1))
+(h : ∀
+ n «expr ≥ » N, «expr ≤ »(«expr∥ ∥»(u n), «expr * »(C, «expr ^ »(r, n)))) : cauchy_seq (λ
+ n, «expr∑ in , »((k), range «expr + »(n, 1), u k)) :=
+begin
+  set [] [ident v] [":", expr exprℕ() → α] [":="] [expr λ n, if «expr < »(n, N) then 0 else u n] [],
+  have [ident hC] [":", expr «expr ≤ »(0, C)] [],
+  from [expr «expr $ »(zero_le_mul_right, pow_pos hr₀ N).mp «expr $ »((norm_nonneg _).trans, «expr $ »(h N, le_refl N))],
+  have [] [":", expr ∀ n «expr ≥ » N, «expr = »(u n, v n)] [],
+  { intros [ident n, ident hn],
+    simp [] [] [] ["[", expr v, ",", expr hn, ",", expr if_neg (not_lt.mpr hn), "]"] [] [] },
+  refine [expr cauchy_seq_sum_of_eventually_eq this (normed_group.cauchy_series_of_le_geometric' hr₁ _)],
+  { exact [expr C] },
+  intro [ident n],
+  dsimp [] ["[", expr v, "]"] [] [],
+  split_ifs [] ["with", ident H, ident H],
+  { rw [expr norm_zero] [],
+    exact [expr mul_nonneg hC (pow_nonneg hr₀.le _)] },
+  { push_neg ["at", ident H],
+    exact [expr h _ H] }
+end
 
 end SummableLeGeometric
 
@@ -786,86 +803,95 @@ variable{R : Type _}[NormedRing R][CompleteSpace R]
 
 open NormedSpace
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A geometric series in a complete normed ring is summable.
 Proved above (same name, different namespace) for not-necessarily-complete normed fields. -/
-theorem NormedRing.summable_geometric_of_norm_lt_1 (x : R) (h : ∥x∥ < 1) : Summable fun n : ℕ => x ^ n :=
-  by 
-    have h1 : Summable fun n : ℕ => ∥x∥ ^ n := summable_geometric_of_lt_1 (norm_nonneg _) h 
-    refine' summable_of_norm_bounded_eventually _ h1 _ 
-    rw [Nat.cofinite_eq_at_top]
-    exact eventually_norm_pow_le x
+theorem normed_ring.summable_geometric_of_norm_lt_1
+(x : R)
+(h : «expr < »(«expr∥ ∥»(x), 1)) : summable (λ n : exprℕ(), «expr ^ »(x, n)) :=
+begin
+  have [ident h1] [":", expr summable (λ
+    n : exprℕ(), «expr ^ »(«expr∥ ∥»(x), n))] [":=", expr summable_geometric_of_lt_1 (norm_nonneg _) h],
+  refine [expr summable_of_norm_bounded_eventually _ h1 _],
+  rw [expr nat.cofinite_eq_at_top] [],
+  exact [expr eventually_norm_pow_le x]
+end
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Bound for the sum of a geometric series in a normed ring.  This formula does not assume that the
 normed ring satisfies the axiom `∥1∥ = 1`. -/
-theorem NormedRing.tsum_geometric_of_norm_lt_1 (x : R) (h : ∥x∥ < 1) : ∥∑'n : ℕ, x ^ n∥ ≤ (∥(1 : R)∥ - 1)+(1 - ∥x∥)⁻¹ :=
-  by 
-    rw [tsum_eq_zero_add (NormedRing.summable_geometric_of_norm_lt_1 x h)]
-    simp only [pow_zeroₓ]
-    refine' le_transₓ (norm_add_le _ _) _ 
-    have  : ∥∑'b : ℕ, (fun n => x ^ n+1) b∥ ≤ (1 - ∥x∥)⁻¹ - 1
-    ·
-      refine' tsum_of_norm_bounded _ fun b => norm_pow_le' _ (Nat.succ_posₓ b)
-      convert (has_sum_nat_add_iff' 1).mpr (has_sum_geometric_of_lt_1 (norm_nonneg x) h)
-      simp 
-    linarith
+theorem normed_ring.tsum_geometric_of_norm_lt_1
+(x : R)
+(h : «expr < »(«expr∥ ∥»(x), 1)) : «expr ≤ »(«expr∥ ∥»(«expr∑' , »((n : exprℕ()), «expr ^ »(x, n))), «expr + »(«expr - »(«expr∥ ∥»((1 : R)), 1), «expr ⁻¹»(«expr - »(1, «expr∥ ∥»(x))))) :=
+begin
+  rw [expr tsum_eq_zero_add (normed_ring.summable_geometric_of_norm_lt_1 x h)] [],
+  simp [] [] ["only"] ["[", expr pow_zero, "]"] [] [],
+  refine [expr le_trans (norm_add_le _ _) _],
+  have [] [":", expr «expr ≤ »(«expr∥ ∥»(«expr∑' , »((b : exprℕ()), λ
+      n, «expr ^ »(x, «expr + »(n, 1)) b)), «expr - »(«expr ⁻¹»(«expr - »(1, «expr∥ ∥»(x))), 1))] [],
+  { refine [expr tsum_of_norm_bounded _ (λ b, norm_pow_le' _ (nat.succ_pos b))],
+    convert [] [expr (has_sum_nat_add_iff' 1).mpr (has_sum_geometric_of_lt_1 (norm_nonneg x) h)] [],
+    simp [] [] [] [] [] [] },
+  linarith [] [] []
+end
 
-theorem geom_series_mul_neg (x : R) (h : ∥x∥ < 1) : ((∑'i : ℕ, x ^ i)*1 - x) = 1 :=
-  by 
-    have  := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mul_right (1 - x)
-    refine' tendsto_nhds_unique this.tendsto_sum_nat _ 
-    have  : tendsto (fun n : ℕ => 1 - x ^ n) at_top (𝓝 1)
-    ·
-      simpa using tendsto_const_nhds.sub (tendsto_pow_at_top_nhds_0_of_norm_lt_1 h)
-    convert ← this 
-    ext n 
-    rw [←geom_sum_mul_neg, geom_sum_def, Finset.sum_mul]
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem geom_series_mul_neg
+(x : R)
+(h : «expr < »(«expr∥ ∥»(x), 1)) : «expr = »(«expr * »(«expr∑' , »((i : exprℕ()), «expr ^ »(x, i)), «expr - »(1, x)), 1) :=
+begin
+  have [] [] [":=", expr (normed_ring.summable_geometric_of_norm_lt_1 x h).has_sum.mul_right «expr - »(1, x)],
+  refine [expr tendsto_nhds_unique this.tendsto_sum_nat _],
+  have [] [":", expr tendsto (λ n : exprℕ(), «expr - »(1, «expr ^ »(x, n))) at_top (expr𝓝() 1)] [],
+  { simpa [] [] [] [] [] ["using", expr tendsto_const_nhds.sub (tendsto_pow_at_top_nhds_0_of_norm_lt_1 h)] },
+  convert ["<-"] [expr this] [],
+  ext [] [ident n] [],
+  rw ["[", "<-", expr geom_sum_mul_neg, ",", expr geom_sum_def, ",", expr finset.sum_mul, "]"] []
+end
 
-theorem mul_neg_geom_series (x : R) (h : ∥x∥ < 1) : ((1 - x)*∑'i : ℕ, x ^ i) = 1 :=
-  by 
-    have  := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mul_left (1 - x)
-    refine' tendsto_nhds_unique this.tendsto_sum_nat _ 
-    have  : tendsto (fun n : ℕ => 1 - x ^ n) at_top (nhds 1)
-    ·
-      simpa using tendsto_const_nhds.sub (tendsto_pow_at_top_nhds_0_of_norm_lt_1 h)
-    convert ← this 
-    ext n 
-    rw [←mul_neg_geom_sum, geom_sum_def, Finset.mul_sum]
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mul_neg_geom_series
+(x : R)
+(h : «expr < »(«expr∥ ∥»(x), 1)) : «expr = »(«expr * »(«expr - »(1, x), «expr∑' , »((i : exprℕ()), «expr ^ »(x, i))), 1) :=
+begin
+  have [] [] [":=", expr (normed_ring.summable_geometric_of_norm_lt_1 x h).has_sum.mul_left «expr - »(1, x)],
+  refine [expr tendsto_nhds_unique this.tendsto_sum_nat _],
+  have [] [":", expr tendsto (λ n : exprℕ(), «expr - »(1, «expr ^ »(x, n))) at_top (nhds 1)] [],
+  { simpa [] [] [] [] [] ["using", expr tendsto_const_nhds.sub (tendsto_pow_at_top_nhds_0_of_norm_lt_1 h)] },
+  convert ["<-"] [expr this] [],
+  ext [] [ident n] [],
+  rw ["[", "<-", expr mul_neg_geom_sum, ",", expr geom_sum_def, ",", expr finset.mul_sum, "]"] []
+end
 
 end NormedRingGeometric
 
 /-! ### Summability tests based on comparison with geometric series -/
 
 
--- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem summable_of_ratio_norm_eventually_le
-{α : Type*}
-[semi_normed_group α]
-[complete_space α]
-{f : exprℕ() → α}
-{r : exprℝ()}
-(hr₁ : «expr < »(r, 1))
-(h : «expr∀ᶠ in , »((n), at_top, «expr ≤ »(«expr∥ ∥»(f «expr + »(n, 1)), «expr * »(r, «expr∥ ∥»(f n))))) : summable f :=
-begin
-  by_cases [expr hr₀, ":", expr «expr ≤ »(0, r)],
-  { rw [expr eventually_at_top] ["at", ident h],
-    rcases [expr h, "with", "⟨", ident N, ",", ident hN, "⟩"],
-    rw ["<-", expr @summable_nat_add_iff α _ _ _ _ N] [],
-    refine [expr summable_of_norm_bounded (λ
-      n, «expr * »(«expr∥ ∥»(f N), «expr ^ »(r, n))) «expr $ »(summable.mul_left _, summable_geometric_of_lt_1 hr₀ hr₁) (λ
-      n, _)],
-    conv_rhs [] [] { rw ["[", expr mul_comm, ",", "<-", expr zero_add N, "]"] },
-    refine [expr le_geom hr₀ n (λ i _, _)],
-    convert [] [expr hN «expr + »(i, N) (N.le_add_left i)] ["using", 3],
-    ac_refl },
-  { push_neg ["at", ident hr₀],
-    refine [expr summable_of_norm_bounded_eventually 0 summable_zero _],
-    rw [expr nat.cofinite_eq_at_top] [],
-    filter_upwards ["[", expr h, "]"] [],
-    intros [ident n, ident hn],
-    by_contra [ident h],
-    push_neg ["at", ident h],
-    exact [expr not_lt.mpr (norm_nonneg _) «expr $ »(lt_of_le_of_lt hn, mul_neg_of_neg_of_pos hr₀ h)] }
-end
+theorem summable_of_ratio_norm_eventually_le {α : Type _} [SemiNormedGroup α] [CompleteSpace α] {f : ℕ → α} {r : ℝ}
+  (hr₁ : r < 1) (h : ∀ᶠn in at_top, ∥f (n+1)∥ ≤ r*∥f n∥) : Summable f :=
+  by 
+    byCases' hr₀ : 0 ≤ r
+    ·
+      rw [eventually_at_top] at h 
+      rcases h with ⟨N, hN⟩
+      rw [←@summable_nat_add_iff α _ _ _ _ N]
+      refine'
+        summable_of_norm_bounded (fun n => ∥f N∥*r ^ n) (Summable.mul_left _$ summable_geometric_of_lt_1 hr₀ hr₁)
+          fun n => _ 
+      convRHS => rw [mul_commₓ, ←zero_addₓ N]
+      refine' le_geom hr₀ n fun i _ => _ 
+      convert hN (i+N) (N.le_add_left i) using 3
+      acRfl
+    ·
+      pushNeg  at hr₀ 
+      refine' summable_of_norm_bounded_eventually 0 summable_zero _ 
+      rw [Nat.cofinite_eq_at_top]
+      filterUpwards [h]
+      intro n hn 
+      byContra h 
+      pushNeg  at h 
+      exact not_lt.mpr (norm_nonneg _) (lt_of_le_of_ltₓ hn$ mul_neg_of_neg_of_pos hr₀ h)
 
 theorem summable_of_ratio_test_tendsto_lt_one {α : Type _} [NormedGroup α] [CompleteSpace α] {f : ℕ → α} {l : ℝ}
   (hl₁ : l < 1) (hf : ∀ᶠn in at_top, f n ≠ 0) (h : tendsto (fun n => ∥f (n+1)∥ / ∥f n∥) at_top (𝓝 l)) : Summable f :=
@@ -898,20 +924,27 @@ theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SemiNormedGroup 
       convert hN₀ (i+N) (hNN₀.trans (N.le_add_left i)) using 3
       acRfl
 
-theorem not_summable_of_ratio_test_tendsto_gt_one {α : Type _} [SemiNormedGroup α] {f : ℕ → α} {l : ℝ} (hl : 1 < l)
-  (h : tendsto (fun n => ∥f (n+1)∥ / ∥f n∥) at_top (𝓝 l)) : ¬Summable f :=
-  by 
-    have key : ∀ᶠn in at_top, ∥f n∥ ≠ 0
-    ·
-      filterUpwards [eventually_ge_of_tendsto_gt hl h]
-      intro n hn hc 
-      rw [hc, div_zero] at hn 
-      linarith 
-    rcases exists_between hl with ⟨r, hr₀, hr₁⟩
-    refine' not_summable_of_ratio_norm_eventually_ge hr₀ key.frequently _ 
-    filterUpwards [eventually_ge_of_tendsto_gt hr₁ h, key]
-    intro n h₀ h₁ 
-    rwa [←le_div_iff (lt_of_le_of_neₓ (norm_nonneg _) h₁.symm)]
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem not_summable_of_ratio_test_tendsto_gt_one
+{α : Type*}
+[semi_normed_group α]
+{f : exprℕ() → α}
+{l : exprℝ()}
+(hl : «expr < »(1, l))
+(h : tendsto (λ
+  n, «expr / »(«expr∥ ∥»(f «expr + »(n, 1)), «expr∥ ∥»(f n))) at_top (expr𝓝() l)) : «expr¬ »(summable f) :=
+begin
+  have [ident key] [":", expr «expr∀ᶠ in , »((n), at_top, «expr ≠ »(«expr∥ ∥»(f n), 0))] [],
+  { filter_upwards ["[", expr eventually_ge_of_tendsto_gt hl h, "]"] [],
+    intros [ident n, ident hn, ident hc],
+    rw ["[", expr hc, ",", expr div_zero, "]"] ["at", ident hn],
+    linarith [] [] [] },
+  rcases [expr exists_between hl, "with", "⟨", ident r, ",", ident hr₀, ",", ident hr₁, "⟩"],
+  refine [expr not_summable_of_ratio_norm_eventually_ge hr₀ key.frequently _],
+  filter_upwards ["[", expr eventually_ge_of_tendsto_gt hr₁ h, ",", expr key, "]"] [],
+  intros [ident n, ident h₀, ident h₁],
+  rwa ["<-", expr le_div_iff (lt_of_le_of_ne (norm_nonneg _) h₁.symm)] []
+end
 
 /-- A series whose terms are bounded by the terms of a converging geometric series converges. -/
 theorem summable_one_div_pow_of_le {m : ℝ} {f : ℕ → ℕ} (hm : 1 < m) (fi : ∀ i, i ≤ f i) :
@@ -927,24 +960,28 @@ theorem summable_one_div_pow_of_le {m : ℝ} {f : ℕ → ℕ} (hm : 1 < m) (fi 
 /-! ### Positive sequences with small sums on encodable types -/
 
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For any positive `ε`, define on an encodable type a positive sequence with sum less than `ε` -/
-def posSumOfEncodable {ε : ℝ} (hε : 0 < ε) ι [Encodable ι] :
-  { ε' : ι → ℝ // (∀ i, 0 < ε' i) ∧ ∃ c, HasSum ε' c ∧ c ≤ ε } :=
-  by 
-    let f := fun n => ε / 2 / 2 ^ n 
-    have hf : HasSum f ε := has_sum_geometric_two' _ 
-    have f0 : ∀ n, 0 < f n := fun n => div_pos (half_pos hε) (pow_pos zero_lt_two _)
-    refine' ⟨f ∘ Encodable.encode, fun i => f0 _, _⟩
-    rcases hf.summable.comp_injective (@Encodable.encode_injective ι _) with ⟨c, hg⟩
-    refine' ⟨c, hg, has_sum_le_inj _ (@Encodable.encode_injective ι _) _ _ hg hf⟩
-    ·
-      intro i _ 
-      exact le_of_ltₓ (f0 _)
-    ·
-      intro n 
-      exact le_reflₓ _
+def pos_sum_of_encodable
+{ε : exprℝ()}
+(hε : «expr < »(0, ε))
+(ι)
+[encodable ι] : {ε' : ι → exprℝ() // «expr ∧ »(∀
+ i, «expr < »(0, ε' i), «expr∃ , »((c), «expr ∧ »(has_sum ε' c, «expr ≤ »(c, ε))))} :=
+begin
+  let [ident f] [] [":=", expr λ n, «expr / »(«expr / »(ε, 2), «expr ^ »(2, n))],
+  have [ident hf] [":", expr has_sum f ε] [":=", expr has_sum_geometric_two' _],
+  have [ident f0] [":", expr ∀ n, «expr < »(0, f n)] [":=", expr λ n, div_pos (half_pos hε) (pow_pos zero_lt_two _)],
+  refine [expr ⟨«expr ∘ »(f, encodable.encode), λ i, f0 _, _⟩],
+  rcases [expr hf.summable.comp_injective (@encodable.encode_injective ι _), "with", "⟨", ident c, ",", ident hg, "⟩"],
+  refine [expr ⟨c, hg, has_sum_le_inj _ (@encodable.encode_injective ι _) _ _ hg hf⟩],
+  { assume [binders (i _)],
+    exact [expr le_of_lt (f0 _)] },
+  { assume [binders (n)],
+    exact [expr le_refl _] }
+end
 
--- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem set.countable.exists_pos_has_sum_le
 {ι : Type*}
 {s : set ι}
@@ -997,18 +1034,27 @@ theorem exists_pos_sum_of_encodable' {ε : ℝ≥0∞} (hε : ε ≠ 0) ι [Enco
   let ⟨δ, δpos, hδ⟩ := exists_pos_sum_of_encodable hε ι
   ⟨fun i => δ i, fun i => Ennreal.coe_pos.2 (δpos i), hδ⟩
 
-theorem exists_pos_tsum_mul_lt_of_encodable {ε : ℝ≥0∞} (hε : ε ≠ 0) {ι} [Encodable ι] (w : ι → ℝ≥0∞)
-  (hw : ∀ i, w i ≠ ∞) : ∃ δ : ι →  ℝ≥0 , (∀ i, 0 < δ i) ∧ (∑'i, (w i*δ i : ℝ≥0∞)) < ε :=
-  by 
-    lift w to ι →  ℝ≥0  using hw 
-    rcases exists_pos_sum_of_encodable hε ι with ⟨δ', Hpos, Hsum⟩
-    have  : ∀ i, 0 < max 1 (w i)
-    exact fun i => zero_lt_one.trans_le (le_max_leftₓ _ _)
-    refine' ⟨fun i => δ' i / max 1 (w i), fun i => Nnreal.div_pos (Hpos _) (this i), _⟩
-    refine' lt_of_le_of_ltₓ (Ennreal.tsum_le_tsum$ fun i => _) Hsum 
-    rw [coe_div (this i).ne']
-    refine' mul_le_of_le_div' (Ennreal.mul_le_mul le_rfl$ Ennreal.inv_le_inv.2 _)
-    exact coe_le_coe.2 (le_max_rightₓ _ _)
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_pos_tsum_mul_lt_of_encodable
+{ε : «exprℝ≥0∞»()}
+(hε : «expr ≠ »(ε, 0))
+{ι}
+[encodable ι]
+(w : ι → «exprℝ≥0∞»())
+(hw : ∀
+ i, «expr ≠ »(w i, «expr∞»())) : «expr∃ , »((δ : ι → «exprℝ≥0»()), «expr ∧ »(∀
+  i, «expr < »(0, δ i), «expr < »(«expr∑' , »((i), («expr * »(w i, δ i) : «exprℝ≥0∞»())), ε))) :=
+begin
+  lift [expr w] ["to", expr ι → «exprℝ≥0»()] ["using", expr hw] [],
+  rcases [expr exists_pos_sum_of_encodable hε ι, "with", "⟨", ident δ', ",", ident Hpos, ",", ident Hsum, "⟩"],
+  have [] [":", expr ∀ i, «expr < »(0, max 1 (w i))] [],
+  from [expr λ i, zero_lt_one.trans_le (le_max_left _ _)],
+  refine [expr ⟨λ i, «expr / »(δ' i, max 1 (w i)), λ i, nnreal.div_pos (Hpos _) (this i), _⟩],
+  refine [expr lt_of_le_of_lt «expr $ »(ennreal.tsum_le_tsum, λ i, _) Hsum],
+  rw ["[", expr coe_div (this i).ne', "]"] [],
+  refine [expr mul_le_of_le_div' «expr $ »(ennreal.mul_le_mul le_rfl, ennreal.inv_le_inv.2 _)],
+  exact [expr coe_le_coe.2 (le_max_right _ _)]
+end
 
 end Ennreal
 
@@ -1055,27 +1101,25 @@ theorem tendsto_factorial_div_pow_self_at_top : tendsto (fun n => n ! / n ^ n : 
         normCast 
         linarith)
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The series `∑' n, x ^ n / n!` is summable of any `x : ℝ`. See also `exp_series_field_summable`
 for a version that also works in `ℂ`, and `exp_series_summable'` for a version that works in
 any normed algebra over `ℝ` or `ℂ`. -/
-theorem Real.summable_pow_div_factorial (x : ℝ) : Summable (fun n => x ^ n / n ! : ℕ → ℝ) :=
-  by 
-    have A : (0 : ℝ) < ⌊∥x∥⌋₊+1 
-    exact
-      zero_lt_one.trans_le
-        (by 
-          simp )
-    have B : (∥x∥ / ⌊∥x∥⌋₊+1) < 1 
-    exact (div_lt_one A).2 (Nat.lt_floor_add_one _)
-    suffices  : ∀ n _ : n ≥ ⌊∥x∥⌋₊, ∥(x ^ n+1) / (n+1)!∥ ≤ (∥x∥ / ⌊∥x∥⌋₊+1)*∥x ^ n / «expr↑ » n !∥
-    exact summable_of_ratio_norm_eventually_le B (eventually_at_top.2 ⟨⌊∥x∥⌋₊, this⟩)
-    intro n hn 
-    calc ∥(x ^ n+1) / (n+1)!∥ = (∥x∥ / n+1)*∥x ^ n / n !∥ :=
-      by 
-        rw [pow_succₓ, Nat.factorial_succ, Nat.cast_mul, ←div_mul_div, NormedField.norm_mul, NormedField.norm_div,
-          Real.norm_coe_nat, Nat.cast_succ]_ ≤ (∥x∥ / ⌊∥x∥⌋₊+1)*∥x ^ n / n !∥ :=
-      by 
-        mono* with 0 ≤ ∥x ^ n / n !∥, 0 ≤ ∥x∥ <;> apply norm_nonneg
+theorem real.summable_pow_div_factorial
+(x : exprℝ()) : summable (λ n, «expr / »(«expr ^ »(x, n), «expr !»(n)) : exprℕ() → exprℝ()) :=
+begin
+  have [ident A] [":", expr «expr < »((0 : exprℝ()), «expr + »(«expr⌊ ⌋₊»(«expr∥ ∥»(x)), 1))] [],
+  from [expr zero_lt_one.trans_le (by simp [] [] [] [] [] [])],
+  have [ident B] [":", expr «expr < »(«expr / »(«expr∥ ∥»(x), «expr + »(«expr⌊ ⌋₊»(«expr∥ ∥»(x)), 1)), 1)] [],
+  from [expr (div_lt_one A).2 (nat.lt_floor_add_one _)],
+  suffices [] [":", expr ∀
+   n «expr ≥ » «expr⌊ ⌋₊»(«expr∥ ∥»(x)), «expr ≤ »(«expr∥ ∥»(«expr / »(«expr ^ »(x, «expr + »(n, 1)), «expr !»(«expr + »(n, 1)))), «expr * »(«expr / »(«expr∥ ∥»(x), «expr + »(«expr⌊ ⌋₊»(«expr∥ ∥»(x)), 1)), «expr∥ ∥»(«expr / »(«expr ^ »(x, n), «expr↑ »(«expr !»(n))))))],
+  from [expr summable_of_ratio_norm_eventually_le B (eventually_at_top.2 ⟨«expr⌊ ⌋₊»(«expr∥ ∥»(x)), this⟩)],
+  intros [ident n, ident hn],
+  calc
+    «expr = »(«expr∥ ∥»(«expr / »(«expr ^ »(x, «expr + »(n, 1)), «expr !»(«expr + »(n, 1)))), «expr * »(«expr / »(«expr∥ ∥»(x), «expr + »(n, 1)), «expr∥ ∥»(«expr / »(«expr ^ »(x, n), «expr !»(n))))) : by rw ["[", expr pow_succ, ",", expr nat.factorial_succ, ",", expr nat.cast_mul, ",", "<-", expr div_mul_div, ",", expr normed_field.norm_mul, ",", expr normed_field.norm_div, ",", expr real.norm_coe_nat, ",", expr nat.cast_succ, "]"] []
+    «expr ≤ »(..., «expr * »(«expr / »(«expr∥ ∥»(x), «expr + »(«expr⌊ ⌋₊»(«expr∥ ∥»(x)), 1)), «expr∥ ∥»(«expr / »(«expr ^ »(x, n), «expr !»(n))))) : by mono ["*"] [] ["with", "[", expr «expr ≤ »(0, «expr∥ ∥»(«expr / »(«expr ^ »(x, n), «expr !»(n)))), ",", expr «expr ≤ »(0, «expr∥ ∥»(x)), "]"] []; apply [expr norm_nonneg]
+end
 
 theorem Real.tendsto_pow_div_factorial_at_top (x : ℝ) : tendsto (fun n => x ^ n / n ! : ℕ → ℝ) at_top (𝓝 0) :=
   (Real.summable_pow_div_factorial x).tendsto_at_top_zero
@@ -1089,34 +1133,39 @@ section
 
 variable{R : Type _}[TopologicalSpace R][LinearOrderedField R][OrderTopology R][FloorRing R]
 
-theorem tendsto_nat_floor_mul_div_at_top {a : R} (ha : 0 ≤ a) : tendsto (fun x => (⌊a*x⌋₊ : R) / x) at_top (𝓝 a) :=
-  by 
-    have A : tendsto (fun x : R => a - x⁻¹) at_top (𝓝 (a - 0)) := tendsto_const_nhds.sub tendsto_inv_at_top_zero 
-    rw [sub_zero] at A 
-    apply tendsto_of_tendsto_of_tendsto_of_le_of_le' A tendsto_const_nhds
-    ·
-      refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
-      simp only [le_div_iff (zero_lt_one.trans_le hx), sub_mul, inv_mul_cancel (zero_lt_one.trans_le hx).ne']
-      have  := Nat.lt_floor_add_one (a*x)
-      linarith
-    ·
-      refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
-      rw [div_le_iff (zero_lt_one.trans_le hx)]
-      simp [Nat.floor_le (mul_nonneg ha (zero_le_one.trans hx))]
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_nat_floor_mul_div_at_top
+{a : R}
+(ha : «expr ≤ »(0, a)) : tendsto (λ x, «expr / »((«expr⌊ ⌋₊»(«expr * »(a, x)) : R), x)) at_top (expr𝓝() a) :=
+begin
+  have [ident A] [":", expr tendsto (λ
+    x : R, «expr - »(a, «expr ⁻¹»(x))) at_top (expr𝓝() «expr - »(a, 0))] [":=", expr tendsto_const_nhds.sub tendsto_inv_at_top_zero],
+  rw [expr sub_zero] ["at", ident A],
+  apply [expr tendsto_of_tendsto_of_tendsto_of_le_of_le' A tendsto_const_nhds],
+  { refine [expr eventually_at_top.2 ⟨1, λ x hx, _⟩],
+    simp [] [] ["only"] ["[", expr le_div_iff (zero_lt_one.trans_le hx), ",", expr sub_mul, ",", expr inv_mul_cancel (zero_lt_one.trans_le hx).ne', "]"] [] [],
+    have [] [] [":=", expr nat.lt_floor_add_one «expr * »(a, x)],
+    linarith [] [] [] },
+  { refine [expr eventually_at_top.2 ⟨1, λ x hx, _⟩],
+    rw [expr div_le_iff (zero_lt_one.trans_le hx)] [],
+    simp [] [] [] ["[", expr nat.floor_le (mul_nonneg ha (zero_le_one.trans hx)), "]"] [] [] }
+end
 
-theorem tendsto_nat_ceil_mul_div_at_top {a : R} (ha : 0 ≤ a) : tendsto (fun x => (⌈a*x⌉₊ : R) / x) at_top (𝓝 a) :=
-  by 
-    have A : tendsto (fun x : R => a+x⁻¹) at_top (𝓝 (a+0)) := tendsto_const_nhds.add tendsto_inv_at_top_zero 
-    rw [add_zeroₓ] at A 
-    apply tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds A
-    ·
-      refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
-      rw [le_div_iff (zero_lt_one.trans_le hx)]
-      exact Nat.le_ceil _
-    ·
-      refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
-      simp [div_le_iff (zero_lt_one.trans_le hx), inv_mul_cancel (zero_lt_one.trans_le hx).ne',
-        (Nat.ceil_lt_add_one (mul_nonneg ha (zero_le_one.trans hx))).le, add_mulₓ]
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_nat_ceil_mul_div_at_top
+{a : R}
+(ha : «expr ≤ »(0, a)) : tendsto (λ x, «expr / »((«expr⌈ ⌉₊»(«expr * »(a, x)) : R), x)) at_top (expr𝓝() a) :=
+begin
+  have [ident A] [":", expr tendsto (λ
+    x : R, «expr + »(a, «expr ⁻¹»(x))) at_top (expr𝓝() «expr + »(a, 0))] [":=", expr tendsto_const_nhds.add tendsto_inv_at_top_zero],
+  rw [expr add_zero] ["at", ident A],
+  apply [expr tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds A],
+  { refine [expr eventually_at_top.2 ⟨1, λ x hx, _⟩],
+    rw [expr le_div_iff (zero_lt_one.trans_le hx)] [],
+    exact [expr nat.le_ceil _] },
+  { refine [expr eventually_at_top.2 ⟨1, λ x hx, _⟩],
+    simp [] [] [] ["[", expr div_le_iff (zero_lt_one.trans_le hx), ",", expr inv_mul_cancel (zero_lt_one.trans_le hx).ne', ",", expr (nat.ceil_lt_add_one (mul_nonneg ha (zero_le_one.trans hx))).le, ",", expr add_mul, "]"] [] [] }
+end
 
 end 
 

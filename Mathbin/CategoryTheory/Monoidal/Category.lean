@@ -53,7 +53,7 @@ open CategoryTheory.Iso
 
 namespace CategoryTheory
 
--- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:988:29: unsupported: (notation) in structure
+-- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:990:29: unsupported: (notation) in structure
 /--
 In a monoidal category, we can take the tensor product of objects, `X ⊗ Y` and of morphisms `f ⊗ g`.
 Tensor product does not need to be strictly associative on objects, but there is a
@@ -403,25 +403,33 @@ theorem tensor_inv_hom_id {V W X Y Z : C} (f : V ≅ W) (g : X ⟶ Y) (h : Y ⟶
   by 
     rw [←tensor_comp, f.inv_hom_id]
 
-@[reassoc]
-theorem pentagon_hom_inv {W X Y Z : C} :
-  (α_ W X (Y ⊗ Z)).Hom ≫ (𝟙 W ⊗ (α_ X Y Z).inv) =
-    (α_ (W ⊗ X) Y Z).inv ≫ ((α_ W X Y).Hom ⊗ 𝟙 Z) ≫ (α_ W (X ⊗ Y) Z).Hom :=
-  by 
-    have pent := pentagon W X Y Z 
-    rw [←iso.comp_inv_eq] at pent 
-    rw [iso.eq_inv_comp, ←pent]
-    simp only [tensor_hom_inv_id, iso.inv_hom_id_assoc, tensor_id, category.comp_id, category.assoc]
+-- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[reassoc #[]]
+theorem pentagon_hom_inv
+{W
+ X
+ Y
+ Z : C} : «expr = »(«expr ≫ »((exprα_() W X [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](Y, Z)).hom, [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](«expr𝟙»() W, (exprα_() X Y Z).inv)), «expr ≫ »((exprα_() [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](W, X) Y Z).inv, «expr ≫ »([«expr ⊗ »/«expr ⊗ »/«expr ⊗ »]((exprα_() W X Y).hom, «expr𝟙»() Z), (exprα_() W [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](X, Y) Z).hom))) :=
+begin
+  have [ident pent] [] [":=", expr pentagon W X Y Z],
+  rw ["<-", expr iso.comp_inv_eq] ["at", ident pent],
+  rw ["[", expr iso.eq_inv_comp, ",", "<-", expr pent, "]"] [],
+  simp [] [] ["only"] ["[", expr tensor_hom_inv_id, ",", expr iso.inv_hom_id_assoc, ",", expr tensor_id, ",", expr category.comp_id, ",", expr category.assoc, "]"] [] []
+end
 
-@[reassoc]
-theorem pentagon_inv_hom (W X Y Z : C) :
-  (α_ (W ⊗ X) Y Z).inv ≫ ((α_ W X Y).Hom ⊗ 𝟙 Z) =
-    (α_ W X (Y ⊗ Z)).Hom ≫ (𝟙 W ⊗ (α_ X Y Z).inv) ≫ (α_ W (X ⊗ Y) Z).inv :=
-  by 
-    have pent := pentagon W X Y Z 
-    rw [←iso.inv_comp_eq] at pent 
-    rw [←pent]
-    simp only [tensor_id, assoc, id_comp, comp_id, hom_inv_id, tensor_hom_inv_id_assoc]
+-- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[reassoc #[]]
+theorem pentagon_inv_hom
+(W
+ X
+ Y
+ Z : C) : «expr = »(«expr ≫ »((exprα_() [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](W, X) Y Z).inv, [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »]((exprα_() W X Y).hom, «expr𝟙»() Z)), «expr ≫ »((exprα_() W X [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](Y, Z)).hom, «expr ≫ »([«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](«expr𝟙»() W, (exprα_() X Y Z).inv), (exprα_() W [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](X, Y) Z).inv))) :=
+begin
+  have [ident pent] [] [":=", expr pentagon W X Y Z],
+  rw ["<-", expr iso.inv_comp_eq] ["at", ident pent],
+  rw ["[", "<-", expr pent, "]"] [],
+  simp [] [] ["only"] ["[", expr tensor_id, ",", expr assoc, ",", expr id_comp, ",", expr comp_id, ",", expr hom_inv_id, ",", expr tensor_hom_inv_id_assoc, "]"] [] []
+end
 
 @[reassoc]
 theorem pentagon_comp_id_tensor {W X Y Z : C} :

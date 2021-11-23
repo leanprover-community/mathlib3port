@@ -1,5 +1,5 @@
-import Mathbin.Tactic.NormCast 
-import Mathbin.Data.Int.Cast
+import Mathbin.Data.Int.Cast 
+import Mathbin.Tactic.NormCast
 
 /-!
 # A tactic to shift `ℕ` goals to `ℤ`

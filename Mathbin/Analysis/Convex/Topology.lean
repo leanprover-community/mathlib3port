@@ -110,28 +110,37 @@ theorem Convex.closure {s : Set E} (hs : Convex ℝ s) : Convex ℝ (Closure s) 
     show f x y ∈ Closure s from
       mem_closure_of_continuous2 hf hx hy fun x' hx' y' hy' => subset_closure (hs hx' hy' ha hb hab)
 
+-- error in Analysis.Convex.Topology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Convex hull of a finite set is compact. -/
-theorem Set.Finite.compact_convex_hull {s : Set E} (hs : finite s) : IsCompact (convexHull ℝ s) :=
-  by 
-    rw [hs.convex_hull_eq_image]
-    apply (compact_std_simplex _).Image 
-    haveI  := hs.fintype 
-    apply LinearMap.continuous_on_pi
+theorem set.finite.compact_convex_hull {s : set E} (hs : finite s) : is_compact (convex_hull exprℝ() s) :=
+begin
+  rw ["[", expr hs.convex_hull_eq_image, "]"] [],
+  apply [expr (compact_std_simplex _).image],
+  haveI [] [] [":=", expr hs.fintype],
+  apply [expr linear_map.continuous_on_pi]
+end
 
 /-- Convex hull of a finite set is closed. -/
 theorem Set.Finite.is_closed_convex_hull [T2Space E] {s : Set E} (hs : finite s) : IsClosed (convexHull ℝ s) :=
   hs.compact_convex_hull.is_closed
 
+-- error in Analysis.Convex.Topology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `x ∈ s` and `y ∈ interior s`, then the segment `(x, y]` is included in `interior s`. -/
-theorem Convex.add_smul_sub_mem_interior {s : Set E} (hs : Convex ℝ s) {x y : E} (hx : x ∈ s) (hy : y ∈ Interior s)
-  {t : ℝ} (ht : t ∈ Ioc (0 : ℝ) 1) : (x+t • (y - x)) ∈ Interior s :=
-  by 
-    let f := fun z => x+t • (z - x)
-    have  : IsOpenMap f :=
-      (is_open_map_add_left _).comp ((is_open_map_smul (Units.mk0 _ ht.1.ne')).comp (is_open_map_sub_right _))
-    apply mem_interior.2 ⟨f '' Interior s, _, this _ is_open_interior, mem_image_of_mem _ hy⟩
-    refine' image_subset_iff.2 fun z hz => _ 
-    exact hs.add_smul_sub_mem hx (interior_subset hz) ⟨ht.1.le, ht.2⟩
+theorem convex.add_smul_sub_mem_interior
+{s : set E}
+(hs : convex exprℝ() s)
+{x y : E}
+(hx : «expr ∈ »(x, s))
+(hy : «expr ∈ »(y, interior s))
+{t : exprℝ()}
+(ht : «expr ∈ »(t, Ioc (0 : exprℝ()) 1)) : «expr ∈ »(«expr + »(x, «expr • »(t, «expr - »(y, x))), interior s) :=
+begin
+  let [ident f] [] [":=", expr λ z, «expr + »(x, «expr • »(t, «expr - »(z, x)))],
+  have [] [":", expr is_open_map f] [":=", expr (is_open_map_add_left _).comp ((is_open_map_smul (units.mk0 _ ht.1.ne')).comp (is_open_map_sub_right _))],
+  apply [expr mem_interior.2 ⟨«expr '' »(f, interior s), _, this _ is_open_interior, mem_image_of_mem _ hy⟩],
+  refine [expr image_subset_iff.2 (λ z hz, _)],
+  exact [expr hs.add_smul_sub_mem hx (interior_subset hz) ⟨ht.1.le, ht.2⟩]
+end
 
 /-- If `x ∈ s` and `x + y ∈ interior s`, then `x + t y ∈ interior s` for `t ∈ (0, 1]`. -/
 theorem Convex.add_smul_mem_interior {s : Set E} (hs : Convex ℝ s) {x y : E} (hx : x ∈ s) (hy : (x+y) ∈ Interior s)
@@ -142,45 +151,43 @@ theorem Convex.add_smul_mem_interior {s : Set E} (hs : Convex ℝ s) {x y : E} (
 
 open AffineMap
 
+-- error in Analysis.Convex.Topology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If we dilate a convex set about a point in its interior by a scale `t > 1`, the interior of
 the result contains the original set.
 
 TODO Generalise this from convex sets to sets that are balanced / star-shaped about `x`. -/
-theorem Convex.subset_interior_image_homothety_of_one_lt {s : Set E} (hs : Convex ℝ s) {x : E} (hx : x ∈ Interior s)
-  (t : ℝ) (ht : 1 < t) : s ⊆ Interior (image (homothety x t) s) :=
-  by 
-    intro y hy 
-    let I := { z | ∃ u : ℝ, u ∈ Ioc (0 : ℝ) 1 ∧ z = y+u • (x - y) }
-    have hI : I ⊆ Interior s
-    ·
-      rintro z ⟨u, hu, rfl⟩
-      exact hs.add_smul_sub_mem_interior hy hx hu 
-    let z := homothety x (t⁻¹) y 
-    have hz₁ : z ∈ Interior s
-    ·
-      suffices  : z ∈ I
-      ·
-        exact hI this 
-      use 1 - t⁻¹
-      split 
-      ·
-        simp only [mem_Ioc, sub_le_self_iff, inv_nonneg, sub_pos, inv_lt_one ht, true_andₓ]
-        linarith
-      ·
-        simp only [z, homothety_apply, sub_smul, smul_sub, vsub_eq_sub, vadd_eq_add, one_smul]
-        abel 
-    have ht' : t ≠ 0
-    ·
-      linarith 
-    have hz₂ : y = homothety x t z
-    ·
-      simp [z, ht', homothety_apply, smul_smul]
-    rw [hz₂]
-    rw [mem_interior] at hz₁⊢
-    obtain ⟨U, hU₁, hU₂, hU₃⟩ := hz₁ 
-    exact
-      ⟨image (homothety x t) U, image_subset («expr⇑ » (homothety x t)) hU₁, homothety_is_open_map x t ht' U hU₂,
-        mem_image_of_mem («expr⇑ » (homothety x t)) hU₃⟩
+theorem convex.subset_interior_image_homothety_of_one_lt
+{s : set E}
+(hs : convex exprℝ() s)
+{x : E}
+(hx : «expr ∈ »(x, interior s))
+(t : exprℝ())
+(ht : «expr < »(1, t)) : «expr ⊆ »(s, interior (image (homothety x t) s)) :=
+begin
+  intros [ident y, ident hy],
+  let [ident I] [] [":=", expr {z | «expr∃ , »((u : exprℝ()), «expr ∧ »(«expr ∈ »(u, Ioc (0 : exprℝ()) 1), «expr = »(z, «expr + »(y, «expr • »(u, «expr - »(x, y))))))}],
+  have [ident hI] [":", expr «expr ⊆ »(I, interior s)] [],
+  { rintros [ident z, "⟨", ident u, ",", ident hu, ",", ident rfl, "⟩"],
+    exact [expr hs.add_smul_sub_mem_interior hy hx hu] },
+  let [ident z] [] [":=", expr homothety x «expr ⁻¹»(t) y],
+  have [ident hz₁] [":", expr «expr ∈ »(z, interior s)] [],
+  { suffices [] [":", expr «expr ∈ »(z, I)],
+    { exact [expr hI this] },
+    use [expr «expr - »(1, «expr ⁻¹»(t))],
+    split,
+    { simp [] [] ["only"] ["[", expr mem_Ioc, ",", expr sub_le_self_iff, ",", expr inv_nonneg, ",", expr sub_pos, ",", expr inv_lt_one ht, ",", expr true_and, "]"] [] [],
+      linarith [] [] [] },
+    { simp [] [] ["only"] ["[", expr z, ",", expr homothety_apply, ",", expr sub_smul, ",", expr smul_sub, ",", expr vsub_eq_sub, ",", expr vadd_eq_add, ",", expr one_smul, "]"] [] [],
+      abel [] [] [] } },
+  have [ident ht'] [":", expr «expr ≠ »(t, 0)] [],
+  { linarith [] [] [] },
+  have [ident hz₂] [":", expr «expr = »(y, homothety x t z)] [],
+  { simp [] [] [] ["[", expr z, ",", expr ht', ",", expr homothety_apply, ",", expr smul_smul, "]"] [] [] },
+  rw [expr hz₂] [],
+  rw [expr mem_interior] ["at", ident hz₁, "⊢"],
+  obtain ["⟨", ident U, ",", ident hU₁, ",", ident hU₂, ",", ident hU₃, "⟩", ":=", expr hz₁],
+  exact [expr ⟨image (homothety x t) U, image_subset «expr⇑ »(homothety x t) hU₁, homothety_is_open_map x t ht' U hU₂, mem_image_of_mem «expr⇑ »(homothety x t) hU₃⟩]
+end
 
 end HasContinuousSmul
 
@@ -255,26 +262,24 @@ theorem bounded_convex_hull {s : Set E} : Metric.Bounded (convexHull ℝ s) ↔ 
   by 
     simp only [Metric.bounded_iff_ediam_ne_top, convex_hull_ediam]
 
-theorem Convex.is_path_connected {s : Set E} (hconv : Convex ℝ s) (hne : s.nonempty) : IsPathConnected s :=
-  by 
-    refine' is_path_connected_iff.mpr ⟨hne, _⟩
-    intro x y x_in y_in 
-    let f := fun θ : ℝ => x+θ • (y - x)
-    have hf : Continuous f
-    ·
-      continuity 
-    have h₀ : f 0 = x
-    ·
-      simp [f]
-    have h₁ : f 1 = y
-    ·
-      ·
-        dsimp [f]
-        rw [one_smul]
-        abel 
-    have H := hconv.segment_subset x_in y_in 
-    rw [segment_eq_image'] at H 
-    exact JoinedIn.of_line hf.continuous_on h₀ h₁ H
+-- error in Analysis.Convex.Topology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem convex.is_path_connected {s : set E} (hconv : convex exprℝ() s) (hne : s.nonempty) : is_path_connected s :=
+begin
+  refine [expr is_path_connected_iff.mpr ⟨hne, _⟩],
+  intros [ident x, ident y, ident x_in, ident y_in],
+  let [ident f] [] [":=", expr λ θ : exprℝ(), «expr + »(x, «expr • »(θ, «expr - »(y, x)))],
+  have [ident hf] [":", expr continuous f] [],
+  by continuity [] [],
+  have [ident h₀] [":", expr «expr = »(f 0, x)] [],
+  by simp [] [] [] ["[", expr f, "]"] [] [],
+  have [ident h₁] [":", expr «expr = »(f 1, y)] [],
+  by { dsimp [] ["[", expr f, "]"] [] [],
+    rw [expr one_smul] [],
+    abel [] [] [] },
+  have [ident H] [] [":=", expr hconv.segment_subset x_in y_in],
+  rw [expr segment_eq_image'] ["at", ident H],
+  exact [expr joined_in.of_line hf.continuous_on h₀ h₁ H]
+end
 
 instance (priority := 100)NormedSpace.path_connected : PathConnectedSpace E :=
   path_connected_space_iff_univ.mpr$ convex_univ.IsPathConnected ⟨(0 : E), trivialₓ⟩

@@ -1,7 +1,7 @@
-import Mathbin.Tactic.Monotonicity.Basic 
-import Mathbin.Control.Traversable.Default 
 import Mathbin.Control.Traversable.Derive 
-import Leanbin.Data.Dlist
+import Mathbin.Control.Traversable.Lemmas 
+import Leanbin.Data.Dlist 
+import Mathbin.Tactic.Monotonicity.Basic
 
 variable{a b c p : Prop}
 
@@ -49,7 +49,7 @@ unsafe def mono_function.to_tactic_format : mono_function → tactic format
 unsafe instance has_to_tactic_format_mono_function : has_to_tactic_format mono_function :=
   { to_tactic_format := mono_function.to_tactic_format }
 
--- error in Tactic.Monotonicity.Interactive: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler traversable
+-- error in Tactic.Monotonicity.Interactive: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler traversable
 @[derive #[expr traversable]]
 meta
 structure ac_mono_ctx' (rel : Type) := (to_rel : rel) (function : mono_function) (left right rel_def : expr)
@@ -167,14 +167,14 @@ unsafe def check_ac : expr → tactic (Bool × Bool × Option (expr × expr × e
 | expr.app (expr.app f x) y =>
   do 
     let t ← infer_type x 
-    let a ← try_core$ to_expr (pquote IsAssociative (%%t) (%%f)) >>= mk_instance 
-    let c ← try_core$ to_expr (pquote IsCommutative (%%t) (%%f)) >>= mk_instance 
+    let a ← try_core$ to_expr (pquote.1 (IsAssociative (%%ₓt) (%%ₓf))) >>= mk_instance 
+    let c ← try_core$ to_expr (pquote.1 (IsCommutative (%%ₓt) (%%ₓf))) >>= mk_instance 
     let i ←
       try_core
           do 
             let v ← mk_meta_var t 
-            let l_inst_p ← to_expr (pquote IsLeftId (%%t) (%%f) (%%v))
-            let r_inst_p ← to_expr (pquote IsRightId (%%t) (%%f) (%%v))
+            let l_inst_p ← to_expr (pquote.1 (IsLeftId (%%ₓt) (%%ₓf) (%%ₓv)))
+            let r_inst_p ← to_expr (pquote.1 (IsRightId (%%ₓt) (%%ₓf) (%%ₓv)))
             let l_v ← mk_meta_var l_inst_p 
             let r_v ← mk_meta_var r_inst_p 
             let l_id ← mk_mapp `is_left_id.left_id [some t, f, v, some l_v]
@@ -191,7 +191,7 @@ unsafe def parse_assoc_chain' (f : expr) : expr → tactic (Dlist expr)
   (do 
       let expr.app (expr.app f' x) y ← return e 
       is_def_eq f f'
-      ((· ++ ·) <$> parse_assoc_chain' x)<*>parse_assoc_chain' y) <|>
+      (· ++ ·) <$> parse_assoc_chain' x <*> parse_assoc_chain' y) <|>
     return (singleton e)
 
 unsafe def parse_assoc_chain (f : expr) : expr → tactic (List expr) :=
@@ -220,14 +220,14 @@ unsafe def parse_ac_mono_function (l r : expr) : tactic (expr × expr × List ex
     if a then
         if c then
           do 
-            let (s, ls, rs) ← Monadₓ.join ((match_ac <$> parse_assoc_chain f l)<*>parse_assoc_chain f r)
+            let (s, ls, rs) ← Monadₓ.join (match_ac <$> parse_assoc_chain f l <*> parse_assoc_chain f r)
             let (l', l_id) ← fold_assoc f i ls 
             let (r', r_id) ← fold_assoc f i rs 
             let s' ← fold_assoc1 f s 
             return (l', r', l_id ++ r_id, mono_function.assoc_comm f s')
         else
           do 
-            let (pre, ls, rs, suff) ← Monadₓ.join ((match_assoc <$> parse_assoc_chain f l)<*>parse_assoc_chain f r)
+            let (pre, ls, rs, suff) ← Monadₓ.join (match_assoc <$> parse_assoc_chain f l <*> parse_assoc_chain f r)
             let (l', l_id) ← fold_assoc f i ls 
             let (r', r_id) ← fold_assoc f i rs 
             let pre' := fold_assoc1 f pre 
@@ -245,21 +245,21 @@ unsafe def parse_ac_mono_function' (l r : pexpr) :=
     parse_ac_mono_function l' r'
 
 unsafe def ac_monotonicity_goal : expr → tactic (expr × expr × List expr × ac_mono_ctx)
-| quote (%%e₀) → %%e₁ =>
+| quote.1 ((%%ₓe₀) → %%ₓe₁) =>
   do 
     let (l, r, id_rs, f) ← parse_ac_mono_function e₀ e₁ 
     let t₀ ← infer_type e₀ 
     let t₁ ← infer_type e₁ 
-    let rel_def ← to_expr (pquote fun x₀ x₁ => (x₀ : %%t₀) → (x₁ : %%t₁))
+    let rel_def ← to_expr (pquote.1 fun x₀ x₁ => (x₀ : %%ₓt₀) → (x₁ : %%ₓt₁))
     return
         (e₀, e₁, id_rs,
         { function := f, left := l, right := r, to_rel := some$ expr.pi `x BinderInfo.default, rel_def })
-| quote (%%e₀) = %%e₁ =>
+| quote.1 ((%%ₓe₀) = %%ₓe₁) =>
   do 
     let (l, r, id_rs, f) ← parse_ac_mono_function e₀ e₁ 
     let t₀ ← infer_type e₀ 
     let t₁ ← infer_type e₁ 
-    let rel_def ← to_expr (pquote fun x₀ x₁ => (x₀ : %%t₀) = (x₁ : %%t₁))
+    let rel_def ← to_expr (pquote.1 fun x₀ x₁ => (x₀ : %%ₓt₀) = (x₁ : %%ₓt₁))
     return (e₀, e₁, id_rs, { function := f, left := l, right := r, to_rel := none, rel_def })
 | expr.app (expr.app rel e₀) e₁ =>
   do 
@@ -347,21 +347,21 @@ unsafe def match_rule (pat : expr) (r : Name) : tactic expr :=
     let t ← infer_type r' 
     let t ←
       expr.dsimp t { failIfUnchanged := ff } tt []
-          [simp_arg_type.expr (pquote Monotone), simp_arg_type.expr (pquote StrictMono)]
+          [simp_arg_type.expr (pquote.1 Monotone), simp_arg_type.expr (pquote.1 StrictMono)]
     match_rule_head pat [] r' t
 
 unsafe def find_lemma (pat : expr) : List Name → tactic (List expr)
 | [] => return []
 | r :: rs =>
   do 
-    (cons <$> match_rule pat r <|> pure id)<*>find_lemma rs
+    (cons <$> match_rule pat r <|> pure id) <*> find_lemma rs
 
 unsafe def match_chaining_rules (ls : List Name) (x₀ x₁ : expr) : tactic (List expr) :=
   do 
-    let x' ← to_expr (pquote (%%x₁) → %%x₀)
+    let x' ← to_expr (pquote.1 ((%%ₓx₁) → %%ₓx₀))
     let r₀ ← find_lemma x' ls 
     let r₁ ← find_lemma x₁ ls 
-    return ((expr.app <$> r₀)<*>r₁)
+    return (expr.app <$> r₀ <*> r₁)
 
 unsafe def find_rule (ls : List Name) : mono_law → tactic (List expr)
 | mono_law.assoc (x₀, x₁) (y₀, y₁) => match_chaining_rules ls x₀ x₁ <|> match_chaining_rules ls y₀ y₁
@@ -377,7 +377,7 @@ def apply_rel {α : Sort u} (R : α → α → Sort v) {x y : α} (x' y' : α) (
     apply h
 
 unsafe def ac_refine (e : expr) : tactic Unit :=
-  refine (pquote Eq.mp _ (%%e)); ac_refl
+  refine (pquote.1 (Eq.mp _ (%%ₓe))); ac_refl
 
 unsafe def one_line (e : expr) : tactic format :=
   do 
@@ -407,13 +407,13 @@ private unsafe def monotonicity.generalize' (h : Name) (v : expr) (x : Name) : t
     let tgt' ←
       (do 
             let ⟨tgt', _⟩ ← solve_aux tgt (tactic.generalize v x >> target)
-            to_expr (pquote fun y : %%t => ∀ x, y = x → %%tgt'.binding_body.lift_vars 0 1)) <|>
-          to_expr (pquote fun y : %%t => ∀ x, (%%v) = x → %%tgt)
+            to_expr (pquote.1 fun y : %%ₓt => ∀ x, y = x → %%ₓtgt'.binding_body.lift_vars 0 1)) <|>
+          to_expr (pquote.1 fun y : %%ₓt => ∀ x, (%%ₓv) = x → %%ₓtgt)
     let t ← head_beta (tgt' v) >>= assert h 
     swap 
     let r ← mk_eq_refl v 
     solve1$ tactic.exact (t v r)
-    (Prod.mk <$> tactic.intro x)<*>tactic.intro h
+    Prod.mk <$> tactic.intro x <*> tactic.intro h
 
 private unsafe def hide_meta_vars (tac : List expr → tactic Unit) : tactic Unit :=
   focus1$
@@ -575,11 +575,11 @@ unsafe def ac_mono_aux (cfg : mono_cfg := {  }) : tactic Unit :=
             best_match rules
               fun rule =>
                 do 
-                  let t₀ ← mk_meta_var (quote Prop)
+                  let t₀ ← mk_meta_var (quote.1 Prop)
                   let v₀ ← mk_meta_var t₀ 
-                  let t₁ ← mk_meta_var (quote Prop)
+                  let t₁ ← mk_meta_var (quote.1 Prop)
                   let v₁ ← mk_meta_var t₁ 
-                  tactic.refine$ pquote apply_rel (%%g.rel_def) (%%l) (%%r) (%%rule) (%%v₀) (%%v₁)
+                  tactic.refine$ pquote.1 (apply_rel (%%ₓg.rel_def) (%%ₓl) (%%ₓr) (%%ₓrule) (%%ₓv₀) (%%ₓv₁))
                   solve_mvar v₀ (try (any_of id_rs rewrite_target) >> (done <|> refl <|> ac_refl <|> sorry))
                   solve_mvar v₁ (try (any_of id_rs rewrite_target) >> (done <|> refl <|> ac_refl <|> sorry))
                   let n ← num_goals 
@@ -596,7 +596,7 @@ unsafe def repeat_until_or_at_most : Nat → tactic Unit → tactic Unit → tac
 unsafe def repeat_until : tactic Unit → tactic Unit → tactic Unit :=
   repeat_until_or_at_most 100000
 
--- error in Tactic.Monotonicity.Interactive: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler _root_.has_reflect
+-- error in Tactic.Monotonicity.Interactive: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler _root_.has_reflect
 @[derive #[expr _root_.has_reflect], derive #[expr _root_.inhabited]] inductive rep_arity : Type
 | one
 | exactly (n : exprℕ())

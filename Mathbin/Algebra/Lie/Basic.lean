@@ -1,6 +1,6 @@
-import Mathbin.Data.Bracket 
-import Mathbin.Algebra.Algebra.Basic 
-import Mathbin.Tactic.NoncommRing
+import Mathbin.Tactic.NoncommRing 
+import Mathbin.Data.Equiv.Module 
+import Mathbin.Data.Bracket
 
 /-!
 # Lie algebras
@@ -395,7 +395,7 @@ theorem comp_apply (f : L₂ →ₗ⁅R⁆ L₃) (g : L₁ →ₗ⁅R⁆ L₂) (
   rfl
 
 @[normCast, simp]
-theorem coe_comp (f : L₂ →ₗ⁅R⁆ L₃) (g : L₁ →ₗ⁅R⁆ L₂) : (f.comp g : L₁ → L₃) = (f ∘ g) :=
+theorem coe_comp (f : L₂ →ₗ⁅R⁆ L₃) (g : L₁ →ₗ⁅R⁆ L₂) : (f.comp g : L₁ → L₃) = f ∘ g :=
   rfl
 
 @[normCast, simp]
@@ -482,17 +482,15 @@ theorem to_linear_equiv_mk (f : L₁ →ₗ⁅R⁆ L₂) g h₁ h₂ :
   (mk f g h₁ h₂ : L₁ ≃ₗ[R] L₂) = { f with invFun := g, left_inv := h₁, right_inv := h₂ } :=
   rfl
 
--- error in Algebra.Lie.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem coe_linear_equiv_injective : injective (coe : «expr ≃ₗ⁅ ⁆ »(L₁, R, L₂) → «expr ≃ₗ[ ] »(L₁, R, L₂)) :=
-begin
-  intros [ident f₁, ident f₂, ident h],
-  cases [expr f₁] [],
-  cases [expr f₂] [],
-  dsimp [] [] [] ["at", ident h],
-  simp [] [] ["only"] [] [] ["at", ident h],
-  congr,
-  exacts ["[", expr lie_hom.coe_injective h.1, ",", expr h.2, "]"]
-end
+theorem coe_linear_equiv_injective : injective (coeₓ : (L₁ ≃ₗ⁅R⁆ L₂) → L₁ ≃ₗ[R] L₂) :=
+  by 
+    intro f₁ f₂ h 
+    cases f₁ 
+    cases f₂ 
+    dsimp  at h 
+    simp only  at h 
+    congr 
+    exacts[LieHom.coe_injective h.1, h.2]
 
 theorem coe_injective : @injective (L₁ ≃ₗ⁅R⁆ L₂) (L₁ → L₂) coeFn :=
   LinearEquiv.coe_injective.comp coe_linear_equiv_injective
@@ -710,7 +708,7 @@ theorem comp_apply (f : N →ₗ⁅R,L⁆ P) (g : M →ₗ⁅R,L⁆ N) (m : M) :
   rfl
 
 @[normCast, simp]
-theorem coe_comp (f : N →ₗ⁅R,L⁆ P) (g : M →ₗ⁅R,L⁆ N) : (f.comp g : M → P) = (f ∘ g) :=
+theorem coe_comp (f : N →ₗ⁅R,L⁆ P) (g : M →ₗ⁅R,L⁆ N) : (f.comp g : M → P) = f ∘ g :=
   rfl
 
 @[normCast, simp]
@@ -872,21 +870,20 @@ theorem coe_to_lie_module_hom (e : M ≃ₗ⁅R,L⁆ N) : ((e : M →ₗ⁅R,L�
 theorem coe_to_linear_equiv (e : M ≃ₗ⁅R,L⁆ N) : ((e : M ≃ₗ[R] N) : M → N) = e :=
   rfl
 
-theorem to_equiv_injective : Function.Injective (to_equiv : (M ≃ₗ⁅R,L⁆ N) → M ≃ N) :=
-  fun e₁ e₂ h =>
-    by 
-      rcases e₁ with ⟨⟨⟩⟩
-      rcases e₂ with ⟨⟨⟩⟩
-      have inj := Equiv.mk.inj h 
-      dsimp  at inj 
-      apply lie_module_equiv.mk.inj_eq.mpr 
-      split 
-      ·
-        congr 
-        ext 
-        rw [inj.1]
-      ·
-        exact inj.2
+-- error in Algebra.Lie.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem to_equiv_injective : function.injective (to_equiv : «expr ≃ₗ⁅ , ⁆ »(M, R, L, N) → «expr ≃ »(M, N)) :=
+λ e₁ e₂ h, begin
+  rcases [expr e₁, "with", "⟨", "⟨", "⟩", "⟩"],
+  rcases [expr e₂, "with", "⟨", "⟨", "⟩", "⟩"],
+  have [ident inj] [] [":=", expr equiv.mk.inj h],
+  dsimp [] [] [] ["at", ident inj],
+  apply [expr lie_module_equiv.mk.inj_eq.mpr],
+  split,
+  { congr,
+    ext [] [] [],
+    rw [expr inj.1] [] },
+  { exact [expr inj.2] }
+end
 
 @[ext]
 theorem ext (e₁ e₂ : M ≃ₗ⁅R,L⁆ N) (h : ∀ m, e₁ m = e₂ m) : e₁ = e₂ :=

@@ -244,39 +244,34 @@ theorem zero_ne_cons {a : α} {m : Multiset α} : 0 ≠ a ::ₘ m :=
 theorem cons_ne_zero {a : α} {m : Multiset α} : a ::ₘ m ≠ 0 :=
   zero_ne_cons.symm
 
-theorem cons_eq_cons {a b : α} {as bs : Multiset α} :
-  a ::ₘ as = b ::ₘ bs ↔ a = b ∧ as = bs ∨ a ≠ b ∧ ∃ cs, as = b ::ₘ cs ∧ bs = a ::ₘ cs :=
-  by 
-    haveI  : DecidableEq α := Classical.decEq α 
-    split 
-    ·
-      intro eq 
-      byCases' a = b
-      ·
-        subst h 
-        simp_all 
-      ·
-        have  : a ∈ b ::ₘ bs 
-        exact Eq ▸ mem_cons_self _ _ 
-        have  : a ∈ bs
-        ·
-          simpa [h]
-        rcases exists_cons_of_mem this with ⟨cs, hcs⟩
-        simp [h, hcs]
-        have  : a ::ₘ as = b ::ₘ a ::ₘ cs
-        ·
-          simp [Eq, hcs]
-        have  : a ::ₘ as = a ::ₘ b ::ₘ cs
-        ·
-          rwa [cons_swap]
-        simpa using this
-    ·
-      intro h 
-      rcases h with (⟨eq₁, eq₂⟩ | ⟨h, cs, eq₁, eq₂⟩)
-      ·
-        simp 
-      ·
-        simp [cons_swap a b]
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cons_eq_cons
+{a b : α}
+{as
+ bs : multiset α} : «expr ↔ »(«expr = »(«expr ::ₘ »(a, as), «expr ::ₘ »(b, bs)), «expr ∨ »(«expr ∧ »(«expr = »(a, b), «expr = »(as, bs)), «expr ∧ »(«expr ≠ »(a, b), «expr∃ , »((cs), «expr ∧ »(«expr = »(as, «expr ::ₘ »(b, cs)), «expr = »(bs, «expr ::ₘ »(a, cs))))))) :=
+begin
+  haveI [] [":", expr decidable_eq α] [":=", expr classical.dec_eq α],
+  split,
+  { assume [binders (eq)],
+    by_cases [expr «expr = »(a, b)],
+    { subst [expr h],
+      simp [] [] [] ["*"] [] ["at", "*"] },
+    { have [] [":", expr «expr ∈ »(a, «expr ::ₘ »(b, bs))] [],
+      from [expr «expr ▸ »(eq, mem_cons_self _ _)],
+      have [] [":", expr «expr ∈ »(a, bs)] [],
+      by simpa [] [] [] ["[", expr h, "]"] [] [],
+      rcases [expr exists_cons_of_mem this, "with", "⟨", ident cs, ",", ident hcs, "⟩"],
+      simp [] [] [] ["[", expr h, ",", expr hcs, "]"] [] [],
+      have [] [":", expr «expr = »(«expr ::ₘ »(a, as), «expr ::ₘ »(b, «expr ::ₘ »(a, cs)))] [],
+      by simp [] [] [] ["[", expr eq, ",", expr hcs, "]"] [] [],
+      have [] [":", expr «expr = »(«expr ::ₘ »(a, as), «expr ::ₘ »(a, «expr ::ₘ »(b, cs)))] [],
+      by rwa ["[", expr cons_swap, "]"] [],
+      simpa [] [] [] [] [] ["using", expr this] } },
+  { assume [binders (h)],
+    rcases [expr h, "with", "⟨", ident eq₁, ",", ident eq₂, "⟩", "|", "⟨", ident h, ",", ident cs, ",", ident eq₁, ",", ident eq₂, "⟩"],
+    { simp [] [] [] ["*"] [] [] },
+    { simp [] [] [] ["[", "*", ",", expr cons_swap a b, "]"] [] [] } }
+end
 
 end Mem
 
@@ -416,7 +411,7 @@ theorem cons_le_cons_iff (a : α) {s t : Multiset α} : a ::ₘ s ≤ a ::ₘ t 
 theorem cons_le_cons (a : α) {s t : Multiset α} : s ≤ t → a ::ₘ s ≤ a ::ₘ t :=
   (cons_le_cons_iff a).2
 
--- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
 theorem le_cons_of_not_mem
 {a : α}
 {s t : multiset α}
@@ -1094,20 +1089,26 @@ theorem foldl_swap (f : β → α → β) (H : RightCommutative f) (b : β) (s :
   foldl f H b s = foldr (fun x y => f y x) (fun x y z => (H _ _ _).symm) b s :=
   (foldr_swap _ _ _ _).symm
 
-theorem foldr_induction' (f : α → β → β) (H : LeftCommutative f) (x : β) (q : α → Prop) (p : β → Prop) (s : Multiset α)
-  (hpqf : ∀ a b, q a → p b → p (f a b)) (px : p x) (q_s : ∀ a _ : a ∈ s, q a) : p (foldr f H x s) :=
-  by 
-    revert s 
-    refine'
-      Multiset.induction
-        (by 
-          simp [px])
-        _ 
-    intro a s hs hsa 
-    rw [foldr_cons]
-    have hps : ∀ x : α, x ∈ s → q x 
-    exact fun x hxs => hsa x (mem_cons_of_mem hxs)
-    exact hpqf a (foldr f H x s) (hsa a (mem_cons_self a s)) (hs hps)
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem foldr_induction'
+(f : α → β → β)
+(H : left_commutative f)
+(x : β)
+(q : α → exprProp())
+(p : β → exprProp())
+(s : multiset α)
+(hpqf : ∀ a b, q a → p b → p (f a b))
+(px : p x)
+(q_s : ∀ a «expr ∈ » s, q a) : p (foldr f H x s) :=
+begin
+  revert [ident s],
+  refine [expr multiset.induction (by simp [] [] [] ["[", expr px, "]"] [] []) _],
+  intros [ident a, ident s, ident hs, ident hsa],
+  rw [expr foldr_cons] [],
+  have [ident hps] [":", expr ∀ x : α, «expr ∈ »(x, s) → q x] [],
+  from [expr λ x hxs, hsa x (mem_cons_of_mem hxs)],
+  exact [expr hpqf a (foldr f H x s) (hsa a (mem_cons_self a s)) (hs hps)]
+end
 
 theorem foldr_induction (f : α → α → α) (H : LeftCommutative f) (x : α) (p : α → Prop) (s : Multiset α)
   (p_f : ∀ a b, p a → p b → p (f a b)) (px : p x) (p_s : ∀ a _ : a ∈ s, p a) : p (foldr f H x s) :=
@@ -1366,22 +1367,31 @@ theorem prod_induction {M : Type _} [CommMonoidₓ M] (p : M → Prop) (s : Mult
             simp [mul_left_commₓ])
         1 p s p_mul p_one p_s
 
-@[toAdditive le_sum_of_subadditive_on_pred]
-theorem le_prod_of_submultiplicative_on_pred [CommMonoidₓ α] [OrderedCommMonoid β] (f : α → β) (p : α → Prop)
-  (h_one : f 1 = 1) (hp_one : p 1) (h_mul : ∀ a b, p a → p b → f (a*b) ≤ f a*f b) (hp_mul : ∀ a b, p a → p b → p (a*b))
-  (s : Multiset α) (hps : ∀ a, a ∈ s → p a) : f s.prod ≤ (s.map f).Prod :=
-  by 
-    revert s 
-    refine' Multiset.induction _ _
-    ·
-      simp [le_of_eqₓ h_one]
-    intro a s hs hpsa 
-    have hps : ∀ x, x ∈ s → p x 
-    exact fun x hx => hpsa x (mem_cons_of_mem hx)
-    have hp_prod : p s.prod 
-    exact prod_induction p s hp_mul hp_one hps 
-    rw [prod_cons, map_cons, prod_cons]
-    exact (h_mul a s.prod (hpsa a (mem_cons_self a s)) hp_prod).trans (mul_le_mul_left' (hs hps) _)
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[ident le_sum_of_subadditive_on_pred]]
+theorem le_prod_of_submultiplicative_on_pred
+[comm_monoid α]
+[ordered_comm_monoid β]
+(f : α → β)
+(p : α → exprProp())
+(h_one : «expr = »(f 1, 1))
+(hp_one : p 1)
+(h_mul : ∀ a b, p a → p b → «expr ≤ »(f «expr * »(a, b), «expr * »(f a, f b)))
+(hp_mul : ∀ a b, p a → p b → p «expr * »(a, b))
+(s : multiset α)
+(hps : ∀ a, «expr ∈ »(a, s) → p a) : «expr ≤ »(f s.prod, (s.map f).prod) :=
+begin
+  revert [ident s],
+  refine [expr multiset.induction _ _],
+  { simp [] [] [] ["[", expr le_of_eq h_one, "]"] [] [] },
+  intros [ident a, ident s, ident hs, ident hpsa],
+  have [ident hps] [":", expr ∀ x, «expr ∈ »(x, s) → p x] [],
+  from [expr λ x hx, hpsa x (mem_cons_of_mem hx)],
+  have [ident hp_prod] [":", expr p s.prod] [],
+  from [expr prod_induction p s hp_mul hp_one hps],
+  rw ["[", expr prod_cons, ",", expr map_cons, ",", expr prod_cons, "]"] [],
+  exact [expr (h_mul a s.prod (hpsa a (mem_cons_self a s)) hp_prod).trans (mul_le_mul_left' (hs hps) _)]
+end
 
 @[toAdditive le_sum_of_subadditive]
 theorem le_prod_of_submultiplicative [CommMonoidₓ α] [OrderedCommMonoid β] (f : α → β) (h_one : f 1 = 1)
@@ -1393,48 +1403,61 @@ theorem le_prod_of_submultiplicative [CommMonoidₓ α] [OrderedCommMonoid β] (
     (by 
       simp )
 
-@[toAdditive]
-theorem prod_induction_nonempty {M : Type _} [CommMonoidₓ M] (p : M → Prop) (p_mul : ∀ a b, p a → p b → p (a*b))
-  {s : Multiset M} (hs_nonempty : s ≠ ∅) (p_s : ∀ a _ : a ∈ s, p a) : p s.prod :=
-  by 
-    revert s 
-    refine' Multiset.induction _ _
-    ·
-      intro h 
-      exFalso 
-      simpa using h 
-    intro a s hs hsa hpsa 
-    rw [prod_cons]
-    byCases' hs_empty : s = ∅
-    ·
-      simp [hs_empty, hpsa a]
-    have hps : ∀ x : M, x ∈ s → p x 
-    exact fun x hxs => hpsa x (mem_cons_of_mem hxs)
-    exact p_mul a s.prod (hpsa a (mem_cons_self a s)) (hs hs_empty hps)
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_induction_nonempty
+{M : Type*}
+[comm_monoid M]
+(p : M → exprProp())
+(p_mul : ∀ a b, p a → p b → p «expr * »(a, b))
+{s : multiset M}
+(hs_nonempty : «expr ≠ »(s, «expr∅»()))
+(p_s : ∀ a «expr ∈ » s, p a) : p s.prod :=
+begin
+  revert [ident s],
+  refine [expr multiset.induction _ _],
+  { intro [ident h],
+    exfalso,
+    simpa [] [] [] [] [] ["using", expr h] },
+  intros [ident a, ident s, ident hs, ident hsa, ident hpsa],
+  rw [expr prod_cons] [],
+  by_cases [expr hs_empty, ":", expr «expr = »(s, «expr∅»())],
+  { simp [] [] [] ["[", expr hs_empty, ",", expr hpsa a, "]"] [] [] },
+  have [ident hps] [":", expr ∀ x : M, «expr ∈ »(x, s) → p x] [],
+  from [expr λ x hxs, hpsa x (mem_cons_of_mem hxs)],
+  exact [expr p_mul a s.prod (hpsa a (mem_cons_self a s)) (hs hs_empty hps)]
+end
 
-@[toAdditive le_sum_nonempty_of_subadditive_on_pred]
-theorem le_prod_nonempty_of_submultiplicative_on_pred [CommMonoidₓ α] [OrderedCommMonoid β] (f : α → β) (p : α → Prop)
-  (h_mul : ∀ a b, p a → p b → f (a*b) ≤ f a*f b) (hp_mul : ∀ a b, p a → p b → p (a*b)) (s : Multiset α)
-  (hs_nonempty : s ≠ ∅) (hs : ∀ a, a ∈ s → p a) : f s.prod ≤ (s.map f).Prod :=
-  by 
-    revert s 
-    refine' Multiset.induction _ _
-    ·
-      intro h 
-      exFalso 
-      exact h rfl 
-    rintro a s hs hsa_nonempty hsa_prop 
-    rw [prod_cons, map_cons, prod_cons]
-    byCases' hs_empty : s = ∅
-    ·
-      simp [hs_empty]
-    have hsa_restrict : ∀ x, x ∈ s → p x 
-    exact fun x hx => hsa_prop x (mem_cons_of_mem hx)
-    have hp_sup : p s.prod 
-    exact prod_induction_nonempty p hp_mul hs_empty hsa_restrict 
-    have hp_a : p a 
-    exact hsa_prop a (mem_cons_self a s)
-    exact (h_mul a _ hp_a hp_sup).trans (mul_le_mul_left' (hs hs_empty hsa_restrict) _)
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[ident le_sum_nonempty_of_subadditive_on_pred]]
+theorem le_prod_nonempty_of_submultiplicative_on_pred
+[comm_monoid α]
+[ordered_comm_monoid β]
+(f : α → β)
+(p : α → exprProp())
+(h_mul : ∀ a b, p a → p b → «expr ≤ »(f «expr * »(a, b), «expr * »(f a, f b)))
+(hp_mul : ∀ a b, p a → p b → p «expr * »(a, b))
+(s : multiset α)
+(hs_nonempty : «expr ≠ »(s, «expr∅»()))
+(hs : ∀ a, «expr ∈ »(a, s) → p a) : «expr ≤ »(f s.prod, (s.map f).prod) :=
+begin
+  revert [ident s],
+  refine [expr multiset.induction _ _],
+  { intro [ident h],
+    exfalso,
+    exact [expr h rfl] },
+  rintros [ident a, ident s, ident hs, ident hsa_nonempty, ident hsa_prop],
+  rw ["[", expr prod_cons, ",", expr map_cons, ",", expr prod_cons, "]"] [],
+  by_cases [expr hs_empty, ":", expr «expr = »(s, «expr∅»())],
+  { simp [] [] [] ["[", expr hs_empty, "]"] [] [] },
+  have [ident hsa_restrict] [":", expr ∀ x, «expr ∈ »(x, s) → p x] [],
+  from [expr λ x hx, hsa_prop x (mem_cons_of_mem hx)],
+  have [ident hp_sup] [":", expr p s.prod] [],
+  from [expr prod_induction_nonempty p hp_mul hs_empty hsa_restrict],
+  have [ident hp_a] [":", expr p a] [],
+  from [expr hsa_prop a (mem_cons_self a s)],
+  exact [expr (h_mul a _ hp_a hp_sup).trans (mul_le_mul_left' (hs hs_empty hsa_restrict) _)]
+end
 
 @[toAdditive le_sum_nonempty_of_subadditive]
 theorem le_prod_nonempty_of_submultiplicative [CommMonoidₓ α] [OrderedCommMonoid β] (f : α → β)
@@ -1494,7 +1517,7 @@ theorem join_add S T : @join α (S+T) = join S+join T :=
 theorem singleton_join a : join ({a} : Multiset (Multiset α)) = a :=
   sum_singleton _
 
--- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp] theorem mem_join {a S} : «expr ↔ »(«expr ∈ »(a, @join α S), «expr∃ , »((s «expr ∈ » S), «expr ∈ »(a, s))) :=
 «expr $ »(multiset.induction_on S (by simp [] [] [] [] [] []), by simp [] [] [] ["[", expr or_and_distrib_right, ",", expr exists_or_distrib, "]"] [] [] { contextual := tt })
 
@@ -1548,7 +1571,7 @@ theorem bind_add (s : Multiset α) (f g : α → Multiset β) : (bind s fun a =>
   by 
     simp [bind, join]
 
--- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
 theorem bind_cons
 (s : multiset α)
@@ -1575,7 +1598,7 @@ theorem card_bind s (f : α → Multiset β) : card (bind s f) = Sum (map (card 
   by 
     simp [bind]
 
--- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem bind_congr
 {f g : α → multiset β}
 {m : multiset α} : ∀ a «expr ∈ » m, «expr = »(f a, g a) → «expr = »(bind m f, bind m g) :=
@@ -1588,28 +1611,28 @@ theorem bind_hcongr {β' : Type _} {m : Multiset α} {f : α → Multiset β} {f
     simp  at hf 
     simp [bind_congr hf]
 
--- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem map_bind
 (m : multiset α)
 (n : α → multiset β)
 (f : β → γ) : «expr = »(map f (bind m n), bind m (λ a, map f (n a))) :=
 multiset.induction_on m (by simp [] [] [] [] [] []) (by simp [] [] [] [] [] [] { contextual := tt })
 
--- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem bind_map
 (m : multiset α)
 (n : β → multiset γ)
 (f : α → β) : «expr = »(bind (map f m) n, bind m (λ a, n (f a))) :=
 multiset.induction_on m (by simp [] [] [] [] [] []) (by simp [] [] [] [] [] [] { contextual := tt })
 
--- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem bind_assoc
 {s : multiset α}
 {f : α → multiset β}
 {g : β → multiset γ} : «expr = »((s.bind f).bind g, s.bind (λ a, (f a).bind g)) :=
 multiset.induction_on s (by simp [] [] [] [] [] []) (by simp [] [] [] [] [] [] { contextual := tt })
 
--- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem bind_bind
 (m : multiset α)
 (n : multiset β)
@@ -1617,7 +1640,7 @@ theorem bind_bind
   a, «expr $ »(bind n, λ b, f a b)), «expr $ »(bind n, λ b, «expr $ »(bind m, λ a, f a b))) :=
 multiset.induction_on m (by simp [] [] [] [] [] []) (by simp [] [] [] [] [] [] { contextual := tt })
 
--- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem bind_map_comm
 (m : multiset α)
 (n : multiset β)
@@ -2094,15 +2117,19 @@ theorem cons_union_distrib (a : α) (s t : Multiset α) : a ::ₘ (s ∪ t) = a 
   by 
     simpa using add_union_distrib (a ::ₘ 0) s t
 
--- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem inter_add_distrib
-(s t u : multiset α) : «expr = »(«expr + »(«expr ∩ »(s, t), u), «expr ∩ »(«expr + »(s, u), «expr + »(t, u))) :=
-begin
-  by_contra [ident h],
-  cases [expr lt_iff_cons_le.1 (lt_of_le_of_ne (le_inter (add_le_add_right (inter_le_left s t) u) (add_le_add_right (inter_le_right s t) u)) h)] ["with", ident a, ident hl],
-  rw ["<-", expr cons_add] ["at", ident hl],
-  exact [expr not_le_of_lt (lt_cons_self «expr ∩ »(s, t) a) (le_inter (le_of_add_le_add_right (le_trans hl (inter_le_left _ _))) (le_of_add_le_add_right (le_trans hl (inter_le_right _ _))))]
-end
+theorem inter_add_distrib (s t u : Multiset α) : ((s ∩ t)+u) = (s+u) ∩ t+u :=
+  by 
+    byContra h 
+    cases'
+      lt_iff_cons_le.1
+        (lt_of_le_of_neₓ (le_inter (add_le_add_right (inter_le_left s t) u) (add_le_add_right (inter_le_right s t) u))
+          h) with
+      a hl 
+    rw [←cons_add] at hl 
+    exact
+      not_le_of_lt (lt_cons_self (s ∩ t) a)
+        (le_inter (le_of_add_le_add_right (le_transₓ hl (inter_le_left _ _)))
+          (le_of_add_le_add_right (le_transₓ hl (inter_le_right _ _))))
 
 theorem add_inter_distrib (s t u : Multiset α) : (s+t ∩ u) = (s+t) ∩ s+u :=
   by 
@@ -2686,7 +2713,7 @@ theorem repeat_inf (s : Multiset α) (a : α) (n : ℕ) : repeat a n⊓s = repea
 
 /-- `multiset.map f` preserves `count` if `f` is injective on the set of elements contained in
 the multiset -/
-theorem count_map_eq_count [DecidableEq β] (f : α → β) (s : Multiset α) (hf : Set.InjOn f { x : α | x ∈ s }) x
+theorem count_map_eq_count [DecidableEq β] (f : α → β) (s : Multiset α) (hf : Set.InjOn f { x:α | x ∈ s }) x
   (_ : x ∈ s) : (s.map f).count (f x) = s.count x :=
   by 
     suffices  : (filter (fun a : α => f x = f a) s).count x = card (filter (fun a : α => f x = f a) s)
@@ -2835,7 +2862,7 @@ theorem rel_add_right {as bs₀ bs₁} : rel r as (bs₀+bs₁) ↔ ∃ as₀ as
   by 
     rw [←rel_flip, rel_add_left] <;> simp [rel_flip]
 
--- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem rel_map_left {s : multiset γ} {f : γ → α} : ∀ {t}, «expr ↔ »(rel r (s.map f) t, rel (λ a b, r (f a) b) s t) :=
 multiset.induction_on s (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr rel_cons_left, "]"] [] [] { contextual := tt })
 

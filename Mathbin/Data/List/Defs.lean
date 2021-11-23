@@ -613,7 +613,7 @@ attribute [simp] pairwise.nil
 
 instance decidable_pairwise [DecidableRel R] (l : List α) : Decidable (pairwise R l) :=
   by 
-    induction' l with hd tl ih <;> [exact is_true pairwise.nil, exactI decidableOfIff' _ pairwise_cons]
+    induction' l with hd tl ih <;> [exact is_true pairwise.nil, exact decidableOfIff' _ pairwise_cons]
 
 end Pairwise
 
@@ -659,7 +659,7 @@ attribute [simp] chain.nil
 
 instance decidable_chain [DecidableRel R] (a : α) (l : List α) : Decidable (chain R a l) :=
   by 
-    induction l generalizing a <;> simp only [chain.nil, chain_cons] <;> resetI <;> infer_instance
+    induction l generalizing a <;> simp only [chain.nil, chain_cons] <;> skip <;> infer_instance
 
 instance decidable_chain' [DecidableRel R] (l : List α) : Decidable (chain' R l) :=
   by 

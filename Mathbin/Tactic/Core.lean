@@ -1,18 +1,15 @@
-import Mathbin.Data.Dlist.Basic 
-import Mathbin.Logic.Function.Basic 
 import Mathbin.Control.Basic 
+import Mathbin.Data.Dlist.Basic 
 import Mathbin.Meta.Expr 
-import Mathbin.Meta.RbMap 
-import Mathbin.Data.Bool 
+import Leanbin.System.Io 
 import Mathbin.Tactic.BinderMatching 
-import Mathbin.Tactic.LeanCoreDocs 
 import Mathbin.Tactic.InteractiveExpr 
-import Mathbin.Tactic.ProjectDir 
-import Leanbin.System.Io
+import Mathbin.Tactic.LeanCoreDocs 
+import Mathbin.Tactic.ProjectDir
 
 universe u
 
--- error in Tactic.Core: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Core: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 attribute [derive #["[", expr has_reflect, ",", expr decidable_eq, "]"]] tactic.transparency
 
 instance  : LT Pos :=
@@ -1051,7 +1048,7 @@ or `` `iff.mpr``. If the passed expression is an iterated function type eventual
 implication, as requested. -/
 unsafe def mk_iff_mp_app (iffmp : Name) : expr → (Nat → expr) → Option expr
 | expr.pi n bi e t, f => expr.lam n bi e <$> mk_iff_mp_app t fun n => f (n+1) (expr.var n)
-| quote (%%a) ↔ %%b, f => some$ @expr.const tt iffmp [] a b (f 0)
+| quote.1 ((%%ₓa) ↔ %%ₓb), f => some$ @expr.const tt iffmp [] a b (f 0)
 | _, f => none
 
 /-- `iff_mp_core e ty` assumes that `ty` is the type of `e`.
@@ -1198,7 +1195,7 @@ unsafe def subsingleton_goal : tactic Unit :=
   do 
     let g :: _ ← get_goals 
     let ty ← infer_type g >>= instantiate_mvars 
-    to_expr (pquote Subsingleton (%%ty)) >>= mk_instance >> skip
+    to_expr (pquote.1 (Subsingleton (%%ₓty))) >>= mk_instance >> skip
 
 /--
 Succeeds only if the current goal is "terminal",
@@ -1585,7 +1582,7 @@ unsafe def mk_patterns (t : expr) : tactic (List format) :=
                   fun v =>
                     do 
                       let v' ← get_unused_name v.local_pp_name 
-                      pose v' none (quote ())
+                      pose v' none (quote.1 ())
                       pure v' 
             vs.mmap'$ fun v => get_local v >>= clear 
             let args := List.intersperse (" " : format)$ vs.map to_fmt 
@@ -1814,7 +1811,7 @@ unsafe def mk_comp (v : expr) : expr → tactic expr
 
 /-- Given two expressions `e₀` and `e₁`, return the expression `` `(%%e₀ ↔ %%e₁)``. -/
 unsafe def mk_iff (e₀ : expr) (e₁ : expr) : expr :=
-  quote (%%e₀) ↔ %%e₁
+  quote.1 ((%%ₓe₀) ↔ %%ₓe₁)
 
 /--
 From a lemma of the shape `∀ x, f (g x) = h x`
@@ -2199,7 +2196,7 @@ unsafe def get_proof_state : tactic proof_state :=
                   (fun g v =>
                     do 
                       let g ← kabstract g v reducible ff 
-                      pure$ pi `goal BinderInfo.default (quote True) g)
+                      pure$ pi `goal BinderInfo.default (quote.1 True) g)
                   g 
             pure (n, g)
 
@@ -2234,18 +2231,18 @@ unsafe instance tactic.has_to_tactic_format [has_to_tactic_format α] : has_to_t
   ⟨fun x => x >>= to_pfmt⟩
 
 private unsafe def parse_pformat : Stringₓ → List Charₓ → parser pexpr
-| Acc, [] => pure (pquote to_pfmt (%%reflect Acc))
+| Acc, [] => pure (pquote.1 (to_pfmt (%%ₓreflect Acc)))
 | Acc, '\n' :: s =>
   do 
     let f ← parse_pformat "" s 
-    pure (pquote to_pfmt (%%reflect Acc) ++ pformat.mk format.line ++ %%f)
+    pure (pquote.1 (to_pfmt (%%ₓreflect Acc) ++ pformat.mk format.line ++ %%ₓf))
 | Acc, '{' :: '{' :: s => parse_pformat (Acc ++ "{") s
 | Acc, '{' :: s =>
   do 
     let (e, s) ← with_input (lean.parser.pexpr 0) s.as_string 
     let '}' :: s ← return s.to_list | fail "'}' expected"
     let f ← parse_pformat "" s 
-    pure (pquote to_pfmt (%%reflect Acc) ++ to_pfmt (%%e) ++ %%f)
+    pure (pquote.1 (to_pfmt (%%ₓreflect Acc) ++ to_pfmt (%%ₓe) ++ %%ₓf))
 | Acc, c :: s => parse_pformat (acc.str c) s
 
 /-- See `format!` in `init/meta/interactive_base.lean`.
@@ -2274,7 +2271,7 @@ See also: `trace!` and `fail!`
 unsafe def pformat_macro (_ : parse$ tk "pformat!") (s : Stringₓ) : parser pexpr :=
   do 
     let e ← parse_pformat "" s.to_list 
-    return (pquote (%%e : pformat))
+    return (pquote.1 (%%ₓe : pformat))
 
 /--
 The combination of `pformat` and `fail`.
@@ -2283,7 +2280,7 @@ The combination of `pformat` and `fail`.
 unsafe def fail_macro (_ : parse$ tk "fail!") (s : Stringₓ) : parser pexpr :=
   do 
     let e ← pformat_macro () s 
-    pure (pquote (%%e : pformat) >>= fail)
+    pure (pquote.1 ((%%ₓe : pformat) >>= fail))
 
 /--
 The combination of `pformat` and `trace`.
@@ -2292,7 +2289,7 @@ The combination of `pformat` and `trace`.
 unsafe def trace_macro (_ : parse$ tk "trace!") (s : Stringₓ) : parser pexpr :=
   do 
     let e ← pformat_macro () s 
-    pure (pquote (%%e : pformat) >>= trace)
+    pure (pquote.1 ((%%ₓe : pformat) >>= trace))
 
 /-- A hackish way to get the `src` directory of any project.
   Requires as argument any declaration name `n` in that project, and `k`, the number of characters
@@ -2332,8 +2329,8 @@ unsafe def name_to_tactic (n : Name) : tactic Stringₓ :=
     let d ← get_decl n 
     let e ← mk_const n 
     let t := d.type 
-    if t =ₐ quote tactic Unit then eval_expr (tactic Unit) e >>= fun t => t >> Name.toString <$> strip_prefix n else
-        if t =ₐ quote tactic Stringₓ then eval_expr (tactic Stringₓ) e >>= fun t => t else
+    if t =ₐ quote.1 (tactic Unit) then eval_expr (tactic Unit) e >>= fun t => t >> Name.toString <$> strip_prefix n else
+        if t =ₐ quote.1 (tactic Stringₓ) then eval_expr (tactic Stringₓ) e >>= fun t => t else
           throwError "name_to_tactic cannot take `{ ← n} as input: its type must be `tactic string` or `tactic unit`"
 
 /-- auxiliary function for `apply_under_n_pis` -/
@@ -2376,7 +2373,7 @@ unsafe def get_pexpr_arg_arity_with_tgt (func : pexpr) (tgt : expr) : tactic ℕ
   lock_tactic_state$
     do 
       let mv ← mk_mvar 
-      solve_aux tgt$ intros >> to_expr (pquote (%%func) (%%mv))
+      solve_aux tgt$ intros >> to_expr (pquote.1 ((%%ₓfunc) (%%ₓmv)))
       expr.pi_arity <$> (infer_type mv >>= instantiate_mvars)
 
 /-- `find_private_decl n none` finds a private declaration named `n` in any of the imported files.
@@ -2457,7 +2454,7 @@ unsafe def mk_simp_attribute_cmd (_ : parse$ tk "mk_simp_attribute") : lean.pars
   do 
     let n ← ident 
     let d ← parser.pexpr 
-    let d ← to_expr (pquote (%%d : Option Stringₓ))
+    let d ← to_expr (pquote.1 (%%ₓd : Option Stringₓ))
     let descr ← eval_expr (Option Stringₓ) d 
     let with_list ← tk "with" *> many ident <|> return []
     mk_simp_attr n with_list 
@@ -2500,7 +2497,7 @@ unsafe def set_attribute (attr_name : Name) (c_name : Name) (persistent := tt) (
           let user_attr_const ← mk_const user_attr_nm 
           let tac ←
             eval_pexpr (tactic Unit)
-                  (pquote user_attribute.set (%%user_attr_const) (%%c_name) (default _) (%%persistent)) <|>
+                  (pquote.1 (user_attribute.set (%%ₓuser_attr_const) (%%ₓc_name) (default _) (%%ₓpersistent))) <|>
                 throwError "Cannot set attribute @[{( ← attr_name)}].
                   The corresponding user attribute { ← user_attr_nm } has a parameter without a default value.
                   Solution: provide an `inhabited` instance."

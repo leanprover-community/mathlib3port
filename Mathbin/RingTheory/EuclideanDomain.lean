@@ -45,7 +45,7 @@ end GcdMonoid
 
 variable{α : Type _}[EuclideanDomain α][DecidableEq α]
 
--- error in RingTheory.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem span_gcd {α} [euclidean_domain α] (x y : α) : «expr = »(span ({gcd x y} : set α), span ({x, y} : set α)) :=
 begin
   apply [expr le_antisymm],
@@ -67,31 +67,25 @@ theorem gcd_is_unit_iff {α} [EuclideanDomain α] {x y : α} : IsUnit (gcd x y) 
     fun ⟨a, b, h⟩ =>
       is_unit_iff_dvd_one.2$ h ▸ dvd_add ((gcd_dvd_left x y).mul_left _) ((gcd_dvd_right x y).mul_left _)⟩
 
--- error in RingTheory.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem is_coprime_of_dvd
-{α}
-[euclidean_domain α]
-{x y : α}
-(z : «expr¬ »(«expr ∧ »(«expr = »(x, 0), «expr = »(y, 0))))
-(H : ∀ z «expr ∈ » nonunits α, «expr ≠ »(z, 0) → «expr ∣ »(z, x) → «expr¬ »(«expr ∣ »(z, y))) : is_coprime x y :=
-begin
-  rw ["[", "<-", expr gcd_is_unit_iff, "]"] [],
-  by_contra [ident h],
-  refine [expr H _ h _ (gcd_dvd_left _ _) (gcd_dvd_right _ _)],
-  rwa ["[", expr ne, ",", expr euclidean_domain.gcd_eq_zero_iff, "]"] []
-end
+theorem is_coprime_of_dvd {α} [EuclideanDomain α] {x y : α} (z : ¬(x = 0 ∧ y = 0))
+  (H : ∀ z _ : z ∈ Nonunits α, z ≠ 0 → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
+  by 
+    rw [←gcd_is_unit_iff]
+    byContra h 
+    refine' H _ h _ (gcd_dvd_left _ _) (gcd_dvd_right _ _)
+    rwa [Ne, EuclideanDomain.gcd_eq_zero_iff]
 
 theorem dvd_or_coprime {α} [EuclideanDomain α] (x y : α) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y :=
   by 
     refine' or_iff_not_imp_left.2 fun h' => _ 
     apply is_coprime_of_dvd
     ·
-      unfreezingI 
-        rintro ⟨rfl, rfl⟩
+      (
+        rintro ⟨rfl, rfl⟩)
       simpa using h
     ·
-      unfreezingI 
-        rintro z nu nz ⟨w, rfl⟩ dy 
+      (
+        rintro z nu nz ⟨w, rfl⟩ dy)
       refine' h' (dvd_trans _ dy)
       simpa using mul_dvd_mul_left z (is_unit_iff_dvd_one.1$ (of_irreducible_mul h).resolve_left nu)
 

@@ -82,27 +82,28 @@ a smaller `c` (in absolute value). -/
 def minimal (a b c : ℤ) : Prop :=
   Fermat42 a b c ∧ ∀ a1 b1 c1 : ℤ, Fermat42 a1 b1 c1 → Int.natAbs c ≤ Int.natAbs c1
 
+-- error in NumberTheory.Fermat4: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- if we have a solution to `a ^ 4 + b ^ 4 = c ^ 2` then there must be a minimal one. -/
-theorem exists_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, minimal a0 b0 c0 :=
-  by 
-    let S : Set ℕ := { n | ∃ s : ℤ × ℤ × ℤ, Fermat42 s.1 s.2.1 s.2.2 ∧ n = Int.natAbs s.2.2 }
-    have S_nonempty : S.nonempty
-    ·
-      use Int.natAbs c 
-      rw [Set.mem_set_of_eq]
-      use ⟨a, ⟨b, c⟩⟩
-      tauto 
-    let m : ℕ := Nat.findₓ S_nonempty 
-    have m_mem : m ∈ S := Nat.find_specₓ S_nonempty 
-    rcases m_mem with ⟨s0, hs0, hs1⟩
-    use s0.1, s0.2.1, s0.2.2, hs0 
-    intro a1 b1 c1 h1 
-    rw [←hs1]
-    apply Nat.find_min'ₓ 
-    use ⟨a1, ⟨b1, c1⟩⟩
-    tauto
+theorem exists_minimal {a b c : exprℤ()} (h : fermat_42 a b c) : «expr∃ , »((a0 b0 c0), minimal a0 b0 c0) :=
+begin
+  let [ident S] [":", expr set exprℕ()] [":=", expr {n | «expr∃ , »((s : «expr × »(exprℤ(), «expr × »(exprℤ(), exprℤ()))), «expr ∧ »(fermat_42 s.1 s.2.1 s.2.2, «expr = »(n, int.nat_abs s.2.2)))}],
+  have [ident S_nonempty] [":", expr S.nonempty] [],
+  { use [expr int.nat_abs c],
+    rw [expr set.mem_set_of_eq] [],
+    use [expr ⟨a, ⟨b, c⟩⟩],
+    tauto [] },
+  let [ident m] [":", expr exprℕ()] [":=", expr nat.find S_nonempty],
+  have [ident m_mem] [":", expr «expr ∈ »(m, S)] [":=", expr nat.find_spec S_nonempty],
+  rcases [expr m_mem, "with", "⟨", ident s0, ",", ident hs0, ",", ident hs1, "⟩"],
+  use ["[", expr s0.1, ",", expr s0.2.1, ",", expr s0.2.2, ",", expr hs0, "]"],
+  intros [ident a1, ident b1, ident c1, ident h1],
+  rw ["<-", expr hs1] [],
+  apply [expr nat.find_min'],
+  use [expr ⟨a1, ⟨b1, c1⟩⟩],
+  tauto []
+end
 
--- error in NumberTheory.Fermat4: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in NumberTheory.Fermat4: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` must have `a` and `b` coprime. -/
 theorem coprime_of_minimal {a b c : exprℤ()} (h : minimal a b c) : is_coprime a b :=
 begin
@@ -140,24 +141,24 @@ theorem neg_of_minimal {a b c : ℤ} : minimal a b c → minimal a b (-c) :=
       exact (neg_sq c).symm 
     rwa [Int.nat_abs_neg c]
 
+-- error in NumberTheory.Fermat4: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has `a` odd. -/
-theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, minimal a0 b0 c0 ∧ a0 % 2 = 1 :=
-  by 
-    obtain ⟨a0, b0, c0, hf⟩ := exists_minimal h 
-    cases' Int.mod_two_eq_zero_or_one a0 with hap hap
-    ·
-      cases' Int.mod_two_eq_zero_or_one b0 with hbp hbp
-      ·
-        exFalso 
-        have h1 : 2 ∣ (Int.gcdₓ a0 b0 : ℤ)
-        ·
-          exact Int.dvd_gcd (Int.dvd_of_mod_eq_zero hap) (Int.dvd_of_mod_eq_zero hbp)
-        rw [int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal hf)] at h1 
-        revert h1 
-        normNum
-      ·
-        exact ⟨b0, ⟨a0, ⟨c0, minimal_comm hf, hbp⟩⟩⟩
-    exact ⟨a0, ⟨b0, ⟨c0, hf, hap⟩⟩⟩
+theorem exists_odd_minimal
+{a b c : exprℤ()}
+(h : fermat_42 a b c) : «expr∃ , »((a0 b0 c0), «expr ∧ »(minimal a0 b0 c0, «expr = »(«expr % »(a0, 2), 1))) :=
+begin
+  obtain ["⟨", ident a0, ",", ident b0, ",", ident c0, ",", ident hf, "⟩", ":=", expr exists_minimal h],
+  cases [expr int.mod_two_eq_zero_or_one a0] ["with", ident hap, ident hap],
+  { cases [expr int.mod_two_eq_zero_or_one b0] ["with", ident hbp, ident hbp],
+    { exfalso,
+      have [ident h1] [":", expr «expr ∣ »(2, (int.gcd a0 b0 : exprℤ()))] [],
+      { exact [expr int.dvd_gcd (int.dvd_of_mod_eq_zero hap) (int.dvd_of_mod_eq_zero hbp)] },
+      rw [expr int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal hf)] ["at", ident h1],
+      revert [ident h1],
+      norm_num [] [] },
+    { exact [expr ⟨b0, ⟨a0, ⟨c0, minimal_comm hf, hbp⟩⟩⟩] } },
+  exact [expr ⟨a0, ⟨b0, ⟨c0, hf, hap⟩⟩⟩]
+end
 
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has
 `a` odd and `c` positive. -/
@@ -169,7 +170,7 @@ theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0
       use a0, b0, c0 
       tauto
     ·
-      exFalso 
+      exfalso 
       exact ne_zero hf.1 rfl
     ·
       use a0, b0, -c0, neg_of_minimal hf, hc 
@@ -190,7 +191,7 @@ theorem Int.coprime_of_sq_sum' {r s : ℤ} (h : IsCoprime r s) : IsCoprime ((r^2
 
 namespace Fermat42
 
--- error in NumberTheory.Fermat4: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in NumberTheory.Fermat4: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem not_minimal
 {a b c : exprℤ()}
 (h : minimal a b c)

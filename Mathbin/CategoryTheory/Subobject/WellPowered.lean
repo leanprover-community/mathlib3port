@@ -78,10 +78,10 @@ theorem well_powered_of_equiv (e : C ≌ D) [well_powered C] : well_powered D :=
 theorem well_powered_congr (e : C ≌ D) : well_powered C ↔ well_powered D :=
   ⟨fun i =>
       by 
-        exactI well_powered_of_equiv e,
+        exact well_powered_of_equiv e,
     fun i =>
       by 
-        exactI well_powered_of_equiv e.symm⟩
+        exact well_powered_of_equiv e.symm⟩
 
 end Equivalenceₓ
 

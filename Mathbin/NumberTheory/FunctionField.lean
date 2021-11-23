@@ -42,33 +42,36 @@ Note that `F` can be a function field over multiple, non-isomorphic, `Fq`.
 abbrev FunctionField [Algebra (Ratfunc Fq) F] : Prop :=
   FiniteDimensional (Ratfunc Fq) F
 
+-- error in NumberTheory.FunctionField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `F` is a function field over `Fq` iff it is a finite extension of `Fq(t)`. -/
-protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra (Polynomial Fq) Fqt]
-  [IsFractionRing (Polynomial Fq) Fqt] [Algebra (Ratfunc Fq) F] [Algebra Fqt F] [Algebra (Polynomial Fq) F]
-  [IsScalarTower (Polynomial Fq) Fqt F] [IsScalarTower (Polynomial Fq) (Ratfunc Fq) F] :
-  FunctionField Fq F ↔ FiniteDimensional Fqt F :=
-  by 
-    let e := IsLocalization.algEquiv (nonZeroDivisors (Polynomial Fq)) (Ratfunc Fq) Fqt 
-    have  : ∀ c x : F, e c • x = c • x
-    ·
-      intro c x 
-      rw [Algebra.smul_def, Algebra.smul_def]
-      congr 
-      refine' congr_funₓ _ c 
-      refine' IsLocalization.ext (nonZeroDivisors (Polynomial Fq)) _ _ _ _ _ _ _ <;>
-        intros  <;>
-          simp only [AlgEquiv.map_one, RingHom.map_one, AlgEquiv.map_mul, RingHom.map_mul, AlgEquiv.commutes,
-            ←IsScalarTower.algebra_map_apply]
-    split  <;> intro h <;> resetI
-    ·
-      let b := FiniteDimensional.finBasis (Ratfunc Fq) F 
-      exact FiniteDimensional.of_fintype_basis (b.map_coeffs e this)
-    ·
-      let b := FiniteDimensional.finBasis Fqt F 
-      refine' FiniteDimensional.of_fintype_basis (b.map_coeffs e.symm _)
-      intro c x 
-      convert (this (e.symm c) x).symm 
-      simp only [e.apply_symm_apply]
+protected
+theorem function_field_iff
+(Fqt : Type*)
+[field Fqt]
+[algebra (polynomial Fq) Fqt]
+[is_fraction_ring (polynomial Fq) Fqt]
+[algebra (ratfunc Fq) F]
+[algebra Fqt F]
+[algebra (polynomial Fq) F]
+[is_scalar_tower (polynomial Fq) Fqt F]
+[is_scalar_tower (polynomial Fq) (ratfunc Fq) F] : «expr ↔ »(function_field Fq F, finite_dimensional Fqt F) :=
+begin
+  let [ident e] [] [":=", expr is_localization.alg_equiv (non_zero_divisors (polynomial Fq)) (ratfunc Fq) Fqt],
+  have [] [":", expr ∀ (c) (x : F), «expr = »(«expr • »(e c, x), «expr • »(c, x))] [],
+  { intros [ident c, ident x],
+    rw ["[", expr algebra.smul_def, ",", expr algebra.smul_def, "]"] [],
+    congr,
+    refine [expr congr_fun _ c],
+    refine [expr is_localization.ext (non_zero_divisors (polynomial Fq)) _ _ _ _ _ _ _]; intros []; simp [] [] ["only"] ["[", expr alg_equiv.map_one, ",", expr ring_hom.map_one, ",", expr alg_equiv.map_mul, ",", expr ring_hom.map_mul, ",", expr alg_equiv.commutes, ",", "<-", expr is_scalar_tower.algebra_map_apply, "]"] [] [] },
+  split; intro [ident h]; resetI,
+  { let [ident b] [] [":=", expr finite_dimensional.fin_basis (ratfunc Fq) F],
+    exact [expr finite_dimensional.of_fintype_basis (b.map_coeffs e this)] },
+  { let [ident b] [] [":=", expr finite_dimensional.fin_basis Fqt F],
+    refine [expr finite_dimensional.of_fintype_basis (b.map_coeffs e.symm _)],
+    intros [ident c, ident x],
+    convert [] [expr (this (e.symm c) x).symm] [],
+    simp [] [] ["only"] ["[", expr e.apply_symm_apply, "]"] [] [] }
+end
 
 namespace FunctionField
 

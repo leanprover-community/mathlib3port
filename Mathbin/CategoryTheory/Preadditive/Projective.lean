@@ -90,7 +90,7 @@ end
 theorem of_iso {P Q : C} (i : P ≅ Q) (hP : projective P) : projective Q :=
   by 
     fsplit 
-    introI E X f e e_epi 
+    intros E X f e e_epi 
     obtain ⟨f', hf'⟩ := projective.factors (i.hom ≫ f) e 
     exact
       ⟨i.inv ≫ f',
@@ -116,7 +116,7 @@ instance  {P Q : C} [has_binary_coproduct P Q] [projective P] [projective Q] : p
   { Factors :=
       fun E X' f e epi =>
         by 
-          exactI
+          exact
             ⟨coprod.desc (factor_thru (coprod.inl ≫ f) e) (factor_thru (coprod.inr ≫ f) e),
               by 
                 tidy⟩ }
@@ -125,7 +125,7 @@ instance  {β : Type v} (g : β → C) [has_coproduct g] [∀ b, projective (g b
   { Factors :=
       fun E X' f e epi =>
         by 
-          exactI
+          exact
             ⟨sigma.desc fun b => factor_thru (sigma.ι g b ≫ f) e,
               by 
                 tidy⟩ }
@@ -135,7 +135,7 @@ instance  {P Q : C} [has_zero_morphisms C] [has_binary_biproduct P Q] [projectiv
   { Factors :=
       fun E X' f e epi =>
         by 
-          exactI
+          exact
             ⟨biprod.desc (factor_thru (biprod.inl ≫ f) e) (factor_thru (biprod.inr ≫ f) e),
               by 
                 tidy⟩ }
@@ -145,7 +145,7 @@ instance  {β : Type v} [DecidableEq β] (g : β → C) [has_zero_morphisms C] [
   { Factors :=
       fun E X' f e epi =>
         by 
-          exactI
+          exact
             ⟨biproduct.desc fun b => factor_thru (biproduct.ι g b ≫ f) e,
               by 
                 tidy⟩ }
@@ -178,7 +178,7 @@ section
 
 variable[has_zero_morphisms C]{X Y : C}(f : X ⟶ Y)[has_kernel f]
 
--- error in CategoryTheory.Preadditive.Projective: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler projective
+-- error in CategoryTheory.Preadditive.Projective: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler projective
 /--
 When `C` has enough projectives, the object `projective.syzygies f` is
 an arbitrarily chosen projective object over `kernel f`.

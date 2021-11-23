@@ -106,7 +106,7 @@ theorem eqv_class_mem {c : Set (Set α)} (H : ∀ a, ∃!(b : _)(_ : b ∈ c), a
   (H y).elim2$ fun b hc hy hb => eq_eqv_class_of_mem H hc hy ▸ hc
 
 theorem eqv_class_mem' {c : Set (Set α)} (H : ∀ a, ∃!(b : _)(_ : b ∈ c), a ∈ b) {x} :
-  { y : α | (mk_classes c H).Rel x y } ∈ c :=
+  { y:α | (mk_classes c H).Rel x y } ∈ c :=
   by 
     convert Setoidₓ.eqv_class_mem H 
     ext 

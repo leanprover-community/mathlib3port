@@ -1,8 +1,6 @@
-import Mathbin.CategoryTheory.Over 
-import Mathbin.CategoryTheory.Limits.Preserves.Basic 
-import Mathbin.CategoryTheory.Limits.Creates 
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts 
-import Mathbin.CategoryTheory.Monad.Products
+import Mathbin.CategoryTheory.Monad.Products 
+import Mathbin.CategoryTheory.Over
 
 /-!
 # Adjunctions related to the over category

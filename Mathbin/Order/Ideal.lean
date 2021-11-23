@@ -194,7 +194,7 @@ theorem ideal_Inter_nonempty_of_exists_all_mem (h : ∃ a : P, ∀ I : ideal P, 
 theorem ideal_Inter_nonempty_iff : ideal_Inter_nonempty P ↔ ∃ a : P, ∀ I : ideal P, a ∈ I :=
   ⟨fun _ =>
       by 
-        exactI ideal_Inter_nonempty.exists_all_mem,
+        exact ideal_Inter_nonempty.exists_all_mem,
     ideal_Inter_nonempty_of_exists_all_mem⟩
 
 end Preorderₓ
@@ -254,10 +254,10 @@ theorem is_proper.ne_top {I : ideal P} (hI : is_proper I) : I ≠ ⊤ :=
     apply hI.ne_univ 
     assumption
 
--- error in Order.Ideal: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem is_proper.top_not_mem {I : ideal P} (hI : is_proper I) : «expr ∉ »(«expr⊤»(), I) :=
-by { by_contra [],
-  exact [expr hI.ne_top (top_of_mem_top h)] }
+theorem is_proper.top_not_mem {I : ideal P} (hI : is_proper I) : ⊤ ∉ I :=
+  by 
+    byContra 
+    exact hI.ne_top (top_of_mem_top h)
 
 theorem _root_.is_coatom.is_proper {I : ideal P} (hI : IsCoatom I) : is_proper I :=
   is_proper_of_ne_top hI.1
@@ -501,12 +501,14 @@ section BooleanAlgebra
 
 variable[BooleanAlgebra P]{x : P}{I : ideal P}
 
-theorem is_proper.not_mem_of_compl_mem (hI : is_proper I) (hxc : «expr ᶜ» x ∈ I) : x ∉ I :=
-  by 
-    intro hx 
-    apply hI.top_not_mem 
-    have ht : x⊔«expr ᶜ» x ∈ I := sup_mem _ _ ‹_› ‹_›
-    rwa [sup_compl_eq_top] at ht
+-- error in Order.Ideal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_proper.not_mem_of_compl_mem (hI : is_proper I) (hxc : «expr ∈ »(«expr ᶜ»(x), I)) : «expr ∉ »(x, I) :=
+begin
+  intro [ident hx],
+  apply [expr hI.top_not_mem],
+  have [ident ht] [":", expr «expr ∈ »(«expr ⊔ »(x, «expr ᶜ»(x)), I)] [":=", expr sup_mem _ _ «expr‹ ›»(_) «expr‹ ›»(_)],
+  rwa [expr sup_compl_eq_top] ["at", ident ht]
+end
 
 theorem is_proper.not_mem_or_compl_not_mem (hI : is_proper I) : x ∉ I ∨ «expr ᶜ» x ∉ I :=
   have h : «expr ᶜ» x ∈ I → x ∉ I := hI.not_mem_of_compl_mem 
@@ -585,7 +587,7 @@ theorem sequence_of_cofinals.encode_mem (i : ι) : sequence_of_cofinals p 𝒟 (
 
   This proves the Rasiowa–Sikorski lemma. -/
 def ideal_of_cofinals : ideal P :=
-  { Carrier := { x : P | ∃ n, x ≤ sequence_of_cofinals p 𝒟 n }, Nonempty := ⟨p, 0, le_reflₓ _⟩,
+  { Carrier := { x:P | ∃ n, x ≤ sequence_of_cofinals p 𝒟 n }, Nonempty := ⟨p, 0, le_reflₓ _⟩,
     Directed :=
       fun x ⟨n, hn⟩ y ⟨m, hm⟩ =>
         ⟨_, ⟨max n m, le_reflₓ _⟩, le_transₓ hn$ sequence_of_cofinals.monotone p 𝒟 (le_max_leftₓ _ _),

@@ -37,7 +37,7 @@ noncomputable theory
 
 variable(R : Type u)(X : Type v)[Semiringₓ R]
 
--- error in Algebra.FreeNonUnitalNonAssocAlgebra: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Algebra.FreeNonUnitalNonAssocAlgebra: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- The free non-unital, non-associative algebra on the type `X` with coefficients in `R`. -/
 @[derive #["[", expr inhabited, ",", expr non_unital_non_assoc_semiring, ",", expr module R, "]"]]
 def free_non_unital_non_assoc_algebra :=
@@ -74,16 +74,16 @@ def lift : (X → A) ≃ NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A 
   FreeMagma.lift.trans (MonoidAlgebra.liftMagma R)
 
 @[simp]
-theorem lift_symm_apply (F : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A) : (lift R).symm F = (F ∘ of R) :=
+theorem lift_symm_apply (F : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A) : (lift R).symm F = F ∘ of R :=
   rfl
 
 @[simp]
-theorem of_comp_lift (f : X → A) : (lift R f ∘ of R) = f :=
+theorem of_comp_lift (f : X → A) : lift R f ∘ of R = f :=
   (lift R).left_inv f
 
 @[simp]
 theorem lift_unique (f : X → A) (F : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A) :
-  (F ∘ of R) = f ↔ F = lift R f :=
+  F ∘ of R = f ↔ F = lift R f :=
   (lift R).symm_apply_eq
 
 attribute [irreducible] of lift

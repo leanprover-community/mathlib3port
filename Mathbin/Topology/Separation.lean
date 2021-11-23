@@ -45,7 +45,7 @@ This file defines the predicate `separated`, and common separation axioms
 * `t2_iff_nhds`: A space is T₂ iff the neighbourhoods of distinct points generate the bottom filter.
 * `t2_iff_is_closed_diagonal`: A space is T₂ iff the `diagonal` of `α` (that is, the set of all
   points of the form `(a, a) : α × α`) is closed under the product topology.
-* `finset_disjoing_finset_opens_of_t2`: Any two disjoint finsets are `separated`.
+* `finset_disjoint_finset_opens_of_t2`: Any two disjoint finsets are `separated`.
 * Most topological constructions preserve Hausdorffness;
   these results are part of the typeclass inference system (e.g. `embedding.t2_space`)
 * `set.eq_on.closure`: If two functions are equal on some set `s`, they are equal on its closure.
@@ -137,84 +137,93 @@ end Separated
 class T0Space(α : Type u)[TopologicalSpace α] : Prop where 
   t0 : ∀ x y, x ≠ y → ∃ U : Set α, IsOpen U ∧ Xorₓ (x ∈ U) (y ∈ U)
 
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a closed set `S` in a compact T₀ space,
 there is some `x ∈ S` such that `{x}` is closed. -/
-theorem IsClosed.exists_closed_singleton {α : Type _} [TopologicalSpace α] [T0Space α] [CompactSpace α] {S : Set α}
-  (hS : IsClosed S) (hne : S.nonempty) : ∃ x : α, x ∈ S ∧ IsClosed ({x} : Set α) :=
-  by 
-    obtain ⟨V, Vsub, Vne, Vcls, hV⟩ := hS.exists_minimal_nonempty_closed_subset hne 
-    byCases' hnt : ∃ (x y : α)(hx : x ∈ V)(hy : y ∈ V), x ≠ y
-    ·
-      exFalso 
-      obtain ⟨x, y, hx, hy, hne⟩ := hnt 
-      obtain ⟨U, hU, hsep⟩ := T0Space.t0 _ _ hne 
-      have  : ∀ z w : α hz : z ∈ V hw : w ∈ V hz' : z ∈ U hw' : ¬w ∈ U, False
-      ·
-        intro z w hz hw hz' hw' 
-        have uvne : (V ∩ «expr ᶜ» U).Nonempty
-        ·
-          use w 
-          simp only [hw, hw', Set.mem_inter_eq, not_false_iff, and_selfₓ, Set.mem_compl_eq]
-        specialize
-          hV (V ∩ «expr ᶜ» U) (Set.inter_subset_left _ _) uvne (IsClosed.inter Vcls (is_closed_compl_iff.mpr hU))
-        have  : V ⊆ «expr ᶜ» U
-        ·
-          rw [←hV]
-          exact Set.inter_subset_right _ _ 
-        exact this hz hz' 
-      cases hsep
-      ·
-        exact this x y hx hy hsep.1 hsep.2
-      ·
-        exact this y x hy hx hsep.1 hsep.2
-    ·
-      pushNeg  at hnt 
-      obtain ⟨z, hz⟩ := Vne 
-      refine' ⟨z, Vsub hz, _⟩
-      convert Vcls 
-      ext 
-      simp only [Set.mem_singleton_iff, Set.mem_compl_eq]
-      split 
-      ·
-        rintro rfl 
-        exact hz
-      ·
-        exact fun hx => hnt x z hx hz
+theorem is_closed.exists_closed_singleton
+{α : Type*}
+[topological_space α]
+[t0_space α]
+[compact_space α]
+{S : set α}
+(hS : is_closed S)
+(hne : S.nonempty) : «expr∃ , »((x : α), «expr ∧ »(«expr ∈ »(x, S), is_closed ({x} : set α))) :=
+begin
+  obtain ["⟨", ident V, ",", ident Vsub, ",", ident Vne, ",", ident Vcls, ",", ident hV, "⟩", ":=", expr hS.exists_minimal_nonempty_closed_subset hne],
+  by_cases [expr hnt, ":", expr «expr∃ , »((x y : α) (hx : «expr ∈ »(x, V)) (hy : «expr ∈ »(y, V)), «expr ≠ »(x, y))],
+  { exfalso,
+    obtain ["⟨", ident x, ",", ident y, ",", ident hx, ",", ident hy, ",", ident hne, "⟩", ":=", expr hnt],
+    obtain ["⟨", ident U, ",", ident hU, ",", ident hsep, "⟩", ":=", expr t0_space.t0 _ _ hne],
+    have [] [":", expr ∀
+     (z w : α)
+     (hz : «expr ∈ »(z, V))
+     (hw : «expr ∈ »(w, V))
+     (hz' : «expr ∈ »(z, U))
+     (hw' : «expr¬ »(«expr ∈ »(w, U))), false] [],
+    { intros [ident z, ident w, ident hz, ident hw, ident hz', ident hw'],
+      have [ident uvne] [":", expr «expr ∩ »(V, «expr ᶜ»(U)).nonempty] [],
+      { use [expr w],
+        simp [] [] ["only"] ["[", expr hw, ",", expr hw', ",", expr set.mem_inter_eq, ",", expr not_false_iff, ",", expr and_self, ",", expr set.mem_compl_eq, "]"] [] [] },
+      specialize [expr hV «expr ∩ »(V, «expr ᶜ»(U)) (set.inter_subset_left _ _) uvne (is_closed.inter Vcls (is_closed_compl_iff.mpr hU))],
+      have [] [":", expr «expr ⊆ »(V, «expr ᶜ»(U))] [],
+      { rw ["<-", expr hV] [],
+        exact [expr set.inter_subset_right _ _] },
+      exact [expr this hz hz'] },
+    cases [expr hsep] [],
+    { exact [expr this x y hx hy hsep.1 hsep.2] },
+    { exact [expr this y x hy hx hsep.1 hsep.2] } },
+  { push_neg ["at", ident hnt],
+    obtain ["⟨", ident z, ",", ident hz, "⟩", ":=", expr Vne],
+    refine [expr ⟨z, Vsub hz, _⟩],
+    convert [] [expr Vcls] [],
+    ext [] [] [],
+    simp [] [] ["only"] ["[", expr set.mem_singleton_iff, ",", expr set.mem_compl_eq, "]"] [] [],
+    split,
+    { rintro [ident rfl],
+      exact [expr hz] },
+    { exact [expr λ hx, hnt x z hx hz] } }
+end
 
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given an open `finset` `S` in a T₀ space, there is some `x ∈ S` such that `{x}` is open. -/
-theorem exists_open_singleton_of_open_finset [T0Space α] (s : Finset α) (sne : s.nonempty) (hso : IsOpen (s : Set α)) :
-  ∃ (x : _)(_ : x ∈ s), IsOpen ({x} : Set α) :=
-  by 
-    induction' s using Finset.strongInductionOn with s ihs 
-    byCases' hs : Set.Subsingleton (s : Set α)
-    ·
-      rcases sne with ⟨x, hx⟩
-      refine' ⟨x, hx, _⟩
-      have  : (s : Set α) = {x}
-      exact hs.eq_singleton_of_mem hx 
-      rwa [this] at hso
-    ·
-      dunfold Set.Subsingleton  at hs 
-      pushNeg  at hs 
-      rcases hs with ⟨x, hx, y, hy, hxy⟩
-      rcases T0Space.t0 x y hxy with ⟨U, hU, hxyU⟩
-      wlog H : x ∈ U ∧ y ∉ U := hxyU using x y, y x 
-      obtain ⟨z, hzs, hz⟩ : ∃ (z : _)(_ : z ∈ s.filter fun z => z ∈ U), IsOpen ({z} : Set α)
-      ·
-        refine' ihs _ (Finset.filter_ssubset.2 ⟨y, hy, H.2⟩) ⟨x, Finset.mem_filter.2 ⟨hx, H.1⟩⟩ _ 
-        rw [Finset.coe_filter]
-        exact IsOpen.inter hso hU 
-      exact ⟨z, (Finset.mem_filter.1 hzs).1, hz⟩
+theorem exists_open_singleton_of_open_finset
+[t0_space α]
+(s : finset α)
+(sne : s.nonempty)
+(hso : is_open (s : set α)) : «expr∃ , »((x «expr ∈ » s), is_open ({x} : set α)) :=
+begin
+  induction [expr s] ["using", ident finset.strong_induction_on] ["with", ident s, ident ihs] [],
+  by_cases [expr hs, ":", expr set.subsingleton (s : set α)],
+  { rcases [expr sne, "with", "⟨", ident x, ",", ident hx, "⟩"],
+    refine [expr ⟨x, hx, _⟩],
+    have [] [":", expr «expr = »((s : set α), {x})] [],
+    from [expr hs.eq_singleton_of_mem hx],
+    rwa [expr this] ["at", ident hso] },
+  { dunfold [ident set.subsingleton] ["at", ident hs],
+    push_neg ["at", ident hs],
+    rcases [expr hs, "with", "⟨", ident x, ",", ident hx, ",", ident y, ",", ident hy, ",", ident hxy, "⟩"],
+    rcases [expr t0_space.t0 x y hxy, "with", "⟨", ident U, ",", ident hU, ",", ident hxyU, "⟩"],
+    wlog [ident H] [":", expr «expr ∧ »(«expr ∈ »(x, U), «expr ∉ »(y, U))] [":=", expr hxyU] ["using", "[", ident x, ident y, ",", ident y, ident x, "]"],
+    obtain ["⟨", ident z, ",", ident hzs, ",", ident hz, "⟩", ":", expr «expr∃ , »((z «expr ∈ » s.filter (λ
+        z, «expr ∈ »(z, U))), is_open ({z} : set α))],
+    { refine [expr ihs _ (finset.filter_ssubset.2 ⟨y, hy, H.2⟩) ⟨x, finset.mem_filter.2 ⟨hx, H.1⟩⟩ _],
+      rw ["[", expr finset.coe_filter, "]"] [],
+      exact [expr is_open.inter hso hU] },
+    exact [expr ⟨z, (finset.mem_filter.1 hzs).1, hz⟩] }
+end
 
-theorem exists_open_singleton_of_fintype [T0Space α] [f : Fintype α] [ha : Nonempty α] :
-  ∃ x : α, IsOpen ({x} : Set α) :=
-  by 
-    refine' ha.elim fun x => _ 
-    have  : IsOpen ((Finset.univ : Finset α) : Set α)
-    ·
-      simp 
-    rcases exists_open_singleton_of_open_finset _ ⟨x, Finset.mem_univ x⟩ this with ⟨x, _, hx⟩
-    exact ⟨x, hx⟩
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_open_singleton_of_fintype
+[t0_space α]
+[f : fintype α]
+[ha : nonempty α] : «expr∃ , »((x : α), is_open ({x} : set α)) :=
+begin
+  refine [expr ha.elim (λ x, _)],
+  have [] [":", expr is_open ((finset.univ : finset α) : set α)] [],
+  { simp [] [] [] [] [] [] },
+  rcases [expr exists_open_singleton_of_open_finset _ ⟨x, finset.mem_univ x⟩ this, "with", "⟨", ident x, ",", "_", ",", ident hx, "⟩"],
+  exact [expr ⟨x, hx⟩]
+end
 
 instance Subtype.t0_space [T0Space α] {p : α → Prop} : T0Space (Subtype p) :=
   ⟨fun x y hxy =>
@@ -275,30 +284,28 @@ instance Subtype.t1_space {α : Type u} [TopologicalSpace α] [T1Space α] {p : 
 instance (priority := 100)T1Space.t0_space [T1Space α] : T0Space α :=
   ⟨fun x y h => ⟨{ z | z ≠ y }, is_open_ne, Or.inl ⟨h, not_not_intro rfl⟩⟩⟩
 
-theorem t1_iff_exists_open : T1Space α ↔ ∀ x y, x ≠ y → ∃ (U : Set α)(hU : IsOpen U), x ∈ U ∧ y ∉ U :=
-  by 
-    split 
-    ·
-      introI t1 x y hxy 
-      exact ⟨«expr ᶜ» {y}, is_open_compl_iff.mpr (T1Space.t1 y), mem_compl_singleton_iff.mpr hxy, not_not.mpr rfl⟩
-    ·
-      intro h 
-      constructor 
-      intro x 
-      rw [←is_open_compl_iff]
-      have p : ⋃₀{ U : Set α | x ∉ U ∧ IsOpen U } = «expr ᶜ» {x}
-      ·
-        apply subset.antisymm <;> intro t ht
-        ·
-          rcases ht with ⟨A, ⟨hxA, hA⟩, htA⟩
-          rw [mem_compl_eq, mem_singleton_iff]
-          rintro rfl 
-          contradiction
-        ·
-          obtain ⟨U, hU, hh⟩ := h t x (mem_compl_singleton_iff.mp ht)
-          exact ⟨U, ⟨hh.2, hU⟩, hh.1⟩
-      rw [←p]
-      exact is_open_sUnion fun B hB => hB.2
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem t1_iff_exists_open : «expr ↔ »(t1_space α, ∀
+ x y, «expr ≠ »(x, y) → «expr∃ , »((U : set α) (hU : is_open U), «expr ∧ »(«expr ∈ »(x, U), «expr ∉ »(y, U)))) :=
+begin
+  split,
+  { introsI [ident t1, ident x, ident y, ident hxy],
+    exact [expr ⟨«expr ᶜ»({y}), is_open_compl_iff.mpr (t1_space.t1 y), mem_compl_singleton_iff.mpr hxy, not_not.mpr rfl⟩] },
+  { intro [ident h],
+    constructor,
+    intro [ident x],
+    rw ["<-", expr is_open_compl_iff] [],
+    have [ident p] [":", expr «expr = »(«expr⋃₀ »({U : set α | «expr ∧ »(«expr ∉ »(x, U), is_open U)}), «expr ᶜ»({x}))] [],
+    { apply [expr subset.antisymm]; intros [ident t, ident ht],
+      { rcases [expr ht, "with", "⟨", ident A, ",", "⟨", ident hxA, ",", ident hA, "⟩", ",", ident htA, "⟩"],
+        rw ["[", expr mem_compl_eq, ",", expr mem_singleton_iff, "]"] [],
+        rintro [ident rfl],
+        contradiction },
+      { obtain ["⟨", ident U, ",", ident hU, ",", ident hh, "⟩", ":=", expr h t x (mem_compl_singleton_iff.mp ht)],
+        exact [expr ⟨U, ⟨hh.2, hU⟩, hh.1⟩] } },
+    rw ["<-", expr p] [],
+    exact [expr is_open_sUnion (λ B hB, hB.2)] }
+end
 
 theorem compl_singleton_mem_nhds [T1Space α] {x y : α} (h : y ≠ x) : «expr ᶜ» {x} ∈ 𝓝 y :=
   IsOpen.mem_nhds is_open_compl_singleton$
@@ -328,7 +335,7 @@ theorem is_closed_map_const {α β} [TopologicalSpace α] [TopologicalSpace β] 
     intro s hs h2s 
     simpRw [h2s.image_const, is_closed_singleton]
 
-theorem Finite.is_closed {α} [TopologicalSpace α] [T1Space α] {s : Set α} (hs : Set.Finite s) : IsClosed s :=
+theorem Finite.is_closed [T1Space α] {s : Set α} (hs : Set.Finite s) : IsClosed s :=
   by 
     rw [←bUnion_of_singleton s]
     exact is_closed_bUnion hs fun i hi => is_closed_singleton
@@ -341,6 +348,31 @@ theorem bInter_basis_nhds [T1Space α] {ι : Sort _} {p : ι → Prop} {s : ι �
     contrapose! hy 
     rcases h.mem_iff.1 (compl_singleton_mem_nhds hy.symm) with ⟨i, hi, hsub⟩
     exact ⟨i, hi, fun h => hsub h rfl⟩
+
+/-- Removing a non-isolated point from a dense set, one still obtains a dense set. -/
+theorem Dense.diff_singleton [T1Space α] {s : Set α} (hs : Dense s) (x : α) [ne_bot (𝓝[«expr ᶜ» {x}] x)] :
+  Dense (s \ {x}) :=
+  hs.inter_of_open_right (dense_compl_singleton x) is_open_compl_singleton
+
+/-- Removing a finset from a dense set in a space without isolated points, one still
+obtains a dense set. -/
+theorem Dense.diff_finset [T1Space α] [∀ x : α, ne_bot (𝓝[«expr ᶜ» {x}] x)] {s : Set α} (hs : Dense s) (t : Finset α) :
+  Dense (s \ t) :=
+  by 
+    induction' t using Finset.induction_on with x s hxs ih hd
+    ·
+      simpa using hs
+    ·
+      rw [Finset.coe_insert, ←union_singleton, ←diff_diff]
+      exact ih.diff_singleton _
+
+/-- Removing a finite set from a dense set in a space without isolated points, one still
+obtains a dense set. -/
+theorem Dense.diff_finite [T1Space α] [∀ x : α, ne_bot (𝓝[«expr ᶜ» {x}] x)] {s : Set α} (hs : Dense s) {t : Set α}
+  (ht : finite t) : Dense (s \ t) :=
+  by 
+    convert hs.diff_finset ht.to_finset 
+    exact (finite.coe_to_finset _).symm
 
 /-- If a function to a `t1_space` tends to some limit `b` at some point `a`, then necessarily
 `b = f a`. -/
@@ -359,30 +391,33 @@ theorem continuous_at_of_tendsto_nhds [TopologicalSpace β] [T1Space β] {f : α
   show tendsto f (𝓝 a) (𝓝$ f a)by 
     rwa [eq_of_tendsto_nhds h]
 
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the punctured neighborhoods of a point form a nontrivial filter, then any neighborhood is
 infinite. -/
-theorem infinite_of_mem_nhds {α} [TopologicalSpace α] [T1Space α] (x : α) [hx : ne_bot (𝓝[«expr ᶜ» {x}] x)] {s : Set α}
-  (hs : s ∈ 𝓝 x) : Set.Infinite s :=
-  by 
-    unfreezingI 
-      contrapose! hx 
-    rw [Set.not_infinite] at hx 
-    have A : IsClosed (s \ {x}) := Finite.is_closed (hx.subset (diff_subset _ _))
-    have B : «expr ᶜ» (s \ {x}) ∈ 𝓝 x
-    ·
-      apply IsOpen.mem_nhds
-      ·
-        apply is_open_compl_iff.2 A
-      ·
-        simp only [not_true, not_false_iff, mem_diff, and_falseₓ, mem_compl_eq, mem_singleton]
-    have C : {x} ∈ 𝓝 x
-    ·
-      apply Filter.mem_of_superset (Filter.inter_mem hs B)
-      intro y hy 
-      simp only [mem_singleton_iff, mem_inter_eq, not_and, not_not, mem_diff, mem_compl_eq] at hy 
-      simp only [hy.right hy.left, mem_singleton]
-    have D : «expr ᶜ» {x} ∈ 𝓝[«expr ᶜ» {x}] x := self_mem_nhds_within 
-    simpa [←empty_mem_iff_bot] using Filter.inter_mem (mem_nhds_within_of_mem_nhds C) D
+theorem infinite_of_mem_nhds
+{α}
+[topological_space α]
+[t1_space α]
+(x : α)
+[hx : ne_bot «expr𝓝[ ] »(«expr ᶜ»({x}), x)]
+{s : set α}
+(hs : «expr ∈ »(s, expr𝓝() x)) : set.infinite s :=
+begin
+  unfreezingI { contrapose ["!"] [ident hx] },
+  rw [expr set.not_infinite] ["at", ident hx],
+  have [ident A] [":", expr is_closed «expr \ »(s, {x})] [":=", expr finite.is_closed (hx.subset (diff_subset _ _))],
+  have [ident B] [":", expr «expr ∈ »(«expr ᶜ»(«expr \ »(s, {x})), expr𝓝() x)] [],
+  { apply [expr is_open.mem_nhds],
+    { apply [expr is_open_compl_iff.2 A] },
+    { simp [] [] ["only"] ["[", expr not_true, ",", expr not_false_iff, ",", expr mem_diff, ",", expr and_false, ",", expr mem_compl_eq, ",", expr mem_singleton, "]"] [] [] } },
+  have [ident C] [":", expr «expr ∈ »({x}, expr𝓝() x)] [],
+  { apply [expr filter.mem_of_superset (filter.inter_mem hs B)],
+    assume [binders (y hy)],
+    simp [] [] ["only"] ["[", expr mem_singleton_iff, ",", expr mem_inter_eq, ",", expr not_and, ",", expr not_not, ",", expr mem_diff, ",", expr mem_compl_eq, "]"] [] ["at", ident hy],
+    simp [] [] ["only"] ["[", expr hy.right hy.left, ",", expr mem_singleton, "]"] [] [] },
+  have [ident D] [":", expr «expr ∈ »(«expr ᶜ»({x}), «expr𝓝[ ] »(«expr ᶜ»({x}), x))] [":=", expr self_mem_nhds_within],
+  simpa [] [] [] ["[", "<-", expr empty_mem_iff_bot, "]"] [] ["using", expr filter.inter_mem (mem_nhds_within_of_mem_nhds C) D]
+end
 
 theorem discrete_of_t1_of_finite {X : Type _} [TopologicalSpace X] [T1Space X] [Fintype X] : DiscreteTopology X :=
   by 
@@ -391,13 +426,17 @@ theorem discrete_of_t1_of_finite {X : Type _} [TopologicalSpace X] [T1Space X] [
     rw [←is_closed_compl_iff]
     exact Finite.is_closed (finite.of_fintype _)
 
-theorem singleton_mem_nhds_within_of_mem_discrete {s : Set α} [DiscreteTopology s] {x : α} (hx : x ∈ s) :
-  {x} ∈ 𝓝[s] x :=
-  by 
-    have  : ({⟨x, hx⟩} : Set s) ∈ 𝓝 (⟨x, hx⟩ : s)
-    ·
-      simp [nhds_discrete]
-    simpa only [nhds_within_eq_map_subtype_coe hx, image_singleton] using @image_mem_map _ _ _ (coeₓ : s → α) _ this
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem singleton_mem_nhds_within_of_mem_discrete
+{s : set α}
+[discrete_topology s]
+{x : α}
+(hx : «expr ∈ »(x, s)) : «expr ∈ »({x}, «expr𝓝[ ] »(s, x)) :=
+begin
+  have [] [":", expr «expr ∈ »(({⟨x, hx⟩} : set s), expr𝓝() (⟨x, hx⟩ : s))] [],
+  by simp [] [] [] ["[", expr nhds_discrete, "]"] [] [],
+  simpa [] [] ["only"] ["[", expr nhds_within_eq_map_subtype_coe hx, ",", expr image_singleton, "]"] [] ["using", expr @image_mem_map _ _ _ (coe : s → α) _ this]
+end
 
 /-- The neighbourhoods filter of `x` within `s`, under the discrete topology, is equal to
 the pure `x` filter (which is the principal filter at the singleton `{x}`.) -/
@@ -448,7 +487,7 @@ theorem discrete_topology_iff_nhds {X : Type _} [TopologicalSpace X] :
   by 
     split 
     ·
-      introI hX 
+      intro hX 
       exact nhds_discrete X
     ·
       intro h 
@@ -510,7 +549,7 @@ theorem eq_of_nhds_ne_bot [ht : T2Space α] {x y : α} (h : ne_bot (𝓝 x⊓�
 theorem t2_iff_nhds : T2Space α ↔ ∀ {x y : α}, ne_bot (𝓝 x⊓𝓝 y) → x = y :=
   ⟨fun h =>
       by 
-        exactI fun x y => eq_of_nhds_ne_bot,
+        exact fun x y => eq_of_nhds_ne_bot,
     fun h =>
       ⟨fun x y xy =>
           have  : 𝓝 x⊓𝓝 y = ⊥ := not_ne_bot.1$ mt h xy 
@@ -527,41 +566,41 @@ theorem t2_iff_ultrafilter : T2Space α ↔ ∀ {x y : α} f : Ultrafilter α, �
     by 
       simp only [←exists_ultrafilter_iff, and_imp, le_inf_iff, exists_imp_distrib]
 
-theorem is_closed_diagonal [T2Space α] : IsClosed (diagonal α) :=
-  by 
-    refine' is_closed_iff_cluster_pt.mpr _ 
-    rintro ⟨a₁, a₂⟩ h 
-    refine' eq_of_nhds_ne_bot ⟨fun this : 𝓝 a₁⊓𝓝 a₂ = ⊥ => h.ne _⟩
-    obtain ⟨t₁, ht₁ : t₁ ∈ 𝓝 a₁, t₂, ht₂ : t₂ ∈ 𝓝 a₂, h' : t₁ ∩ t₂ = ∅⟩ := inf_eq_bot_iff.1 this 
-    rw [inf_principal_eq_bot, nhds_prod_eq]
-    apply mem_of_superset (prod_mem_prod ht₁ ht₂)
-    rintro ⟨x, y⟩ ⟨x_in, y_in⟩ (heq : x = y)
-    rw [←HEq] at *
-    have  : x ∈ t₁ ∩ t₂ := ⟨x_in, y_in⟩
-    rwa [h'] at this
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_closed_diagonal [t2_space α] : is_closed (diagonal α) :=
+begin
+  refine [expr is_closed_iff_cluster_pt.mpr _],
+  rintro ["⟨", ident a₁, ",", ident a₂, "⟩", ident h],
+  refine [expr eq_of_nhds_ne_bot ⟨λ this : «expr = »(«expr ⊓ »(expr𝓝() a₁, expr𝓝() a₂), «expr⊥»()), h.ne _⟩],
+  obtain ["⟨", ident t₁, ",", "(", ident ht₁, ":", expr «expr ∈ »(t₁, expr𝓝() a₁), ")", ",", ident t₂, ",", "(", ident ht₂, ":", expr «expr ∈ »(t₂, expr𝓝() a₂), ")", ",", "(", ident h', ":", expr «expr = »(«expr ∩ »(t₁, t₂), «expr∅»()), ")", "⟩", ":=", expr inf_eq_bot_iff.1 this],
+  rw ["[", expr inf_principal_eq_bot, ",", expr nhds_prod_eq, "]"] [],
+  apply [expr mem_of_superset (prod_mem_prod ht₁ ht₂)],
+  rintro ["⟨", ident x, ",", ident y, "⟩", "⟨", ident x_in, ",", ident y_in, "⟩", "(", ident heq, ":", expr «expr = »(x, y), ")"],
+  rw ["<-", expr heq] ["at", "*"],
+  have [] [":", expr «expr ∈ »(x, «expr ∩ »(t₁, t₂))] [":=", expr ⟨x_in, y_in⟩],
+  rwa [expr h'] ["at", ident this]
+end
 
-theorem t2_iff_is_closed_diagonal : T2Space α ↔ IsClosed (diagonal α) :=
-  by 
-    split 
-    ·
-      introI h 
-      exact is_closed_diagonal
-    ·
-      intro h 
-      constructor 
-      intro x y hxy 
-      have  : (x, y) ∈ «expr ᶜ» (diagonal α)
-      ·
-        rwa [mem_compl_iff]
-      obtain ⟨t, t_sub, t_op, xyt⟩ : ∃ (t : _)(_ : t ⊆ «expr ᶜ» (diagonal α)), IsOpen t ∧ (x, y) ∈ t :=
-        is_open_iff_forall_mem_open.mp h.is_open_compl _ this 
-      rcases is_open_prod_iff.mp t_op x y xyt with ⟨U, V, U_op, V_op, xU, yV, H⟩
-      use U, V, U_op, V_op, xU, yV 
-      have  := subset.trans H t_sub 
-      rw [eq_empty_iff_forall_not_mem]
-      rintro z ⟨zU, zV⟩
-      have  : ¬(z, z) ∈ diagonal α := this (mk_mem_prod zU zV)
-      exact this rfl
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem t2_iff_is_closed_diagonal : «expr ↔ »(t2_space α, is_closed (diagonal α)) :=
+begin
+  split,
+  { introI [ident h],
+    exact [expr is_closed_diagonal] },
+  { intro [ident h],
+    constructor,
+    intros [ident x, ident y, ident hxy],
+    have [] [":", expr «expr ∈ »((x, y), «expr ᶜ»(diagonal α))] [],
+    by rwa ["[", expr mem_compl_iff, "]"] [],
+    obtain ["⟨", ident t, ",", ident t_sub, ",", ident t_op, ",", ident xyt, "⟩", ":", expr «expr∃ , »((t «expr ⊆ » «expr ᶜ»(diagonal α)), «expr ∧ »(is_open t, «expr ∈ »((x, y), t))), ":=", expr is_open_iff_forall_mem_open.mp h.is_open_compl _ this],
+    rcases [expr is_open_prod_iff.mp t_op x y xyt, "with", "⟨", ident U, ",", ident V, ",", ident U_op, ",", ident V_op, ",", ident xU, ",", ident yV, ",", ident H, "⟩"],
+    use ["[", expr U, ",", expr V, ",", expr U_op, ",", expr V_op, ",", expr xU, ",", expr yV, "]"],
+    have [] [] [":=", expr subset.trans H t_sub],
+    rw [expr eq_empty_iff_forall_not_mem] [],
+    rintros [ident z, "⟨", ident zU, ",", ident zV, "⟩"],
+    have [] [":", expr «expr¬ »(«expr ∈ »((z, z), diagonal α))] [":=", expr this (mk_mem_prod zU zV)],
+    exact [expr this rfl] }
+end
 
 section Separated
 
@@ -616,7 +655,7 @@ theorem tendsto_const_nhds_iff [T2Space α] {l : Filter α} [ne_bot l] {c d : α
   ⟨fun h => tendsto_nhds_unique tendsto_const_nhds h, fun h => h ▸ tendsto_const_nhds⟩
 
 /-- A T₂.₅ space, also known as a Urysohn space, is a topological space
-  where for every pair `x ≠ y`, there are two open sets, with the intersection of clousures
+  where for every pair `x ≠ y`, there are two open sets, with the intersection of closures
   empty, one containing `x` and the other `y` . -/
 class T25Space(α : Type u)[TopologicalSpace α] : Prop where 
   t2_5 : ∀ x y h : x ≠ y, ∃ U V : Set α, IsOpen U ∧ IsOpen V ∧ Closure U ∩ Closure V = ∅ ∧ x ∈ U ∧ y ∈ V
@@ -676,10 +715,13 @@ theorem Lim_nhds (a : α) : @lim _ _ ⟨a⟩ (𝓝 a) = a :=
 theorem lim_nhds_id (a : α) : @limₓ _ _ _ ⟨a⟩ (𝓝 a) id = a :=
   Lim_nhds a
 
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem Lim_nhds_within {a : α} {s : Set α} (h : a ∈ Closure s) : @lim _ _ ⟨a⟩ (𝓝[s] a) = a :=
-  by 
-    haveI  : ne_bot (𝓝[s] a) := mem_closure_iff_cluster_pt.1 h <;> exact Lim_eq inf_le_left
+theorem Lim_nhds_within
+{a : α}
+{s : set α}
+(h : «expr ∈ »(a, closure s)) : «expr = »(@Lim _ _ ⟨a⟩ «expr𝓝[ ] »(s, a), a) :=
+by haveI [] [":", expr ne_bot «expr𝓝[ ] »(s, a)] [":=", expr mem_closure_iff_cluster_pt.1 h]; exact [expr Lim_eq inf_le_left]
 
 @[simp]
 theorem lim_nhds_within_id {a : α} {s : Set α} (h : a ∈ Closure s) : @limₓ _ _ _ ⟨a⟩ (𝓝[s] a) id = a :=
@@ -778,8 +820,7 @@ instance Sigma.t2_space {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSp
 
 variable[TopologicalSpace β]
 
-theorem is_closed_eq [T2Space α] {f g : β → α} (hf : Continuous f) (hg : Continuous g) :
-  IsClosed { x : β | f x = g x } :=
+theorem is_closed_eq [T2Space α] {f g : β → α} (hf : Continuous f) (hg : Continuous g) : IsClosed { x:β | f x = g x } :=
   continuous_iff_is_closed.mp (hf.prod_mk hg) _ is_closed_diagonal
 
 /-- If two continuous maps are equal on `s`, then they are equal on the closure of `s`. -/
@@ -805,7 +846,7 @@ theorem Function.LeftInverse.closed_embedding [T2Space α] {f : α → β} {g : 
   (hf : Continuous f) (hg : Continuous g) : ClosedEmbedding g :=
   ⟨h.embedding hf hg, h.closed_range hf hg⟩
 
-theorem diagonal_eq_range_diagonal_map {α : Type _} : { p : α × α | p.1 = p.2 } = range fun x => (x, x) :=
+theorem diagonal_eq_range_diagonal_map {α : Type _} : { p:α × α | p.1 = p.2 } = range fun x => (x, x) :=
   ext$
     fun p =>
       Iff.intro (fun h => ⟨p.1, Prod.ext_iff.2 ⟨rfl, h⟩⟩)
@@ -814,7 +855,7 @@ theorem diagonal_eq_range_diagonal_map {α : Type _} : { p : α × α | p.1 = p.
             rw [←hx]
 
 theorem prod_subset_compl_diagonal_iff_disjoint {α : Type _} {s t : Set α} :
-  Set.Prod s t ⊆ «expr ᶜ» { p : α × α | p.1 = p.2 } ↔ s ∩ t = ∅ :=
+  Set.Prod s t ⊆ «expr ᶜ» { p:α × α | p.1 = p.2 } ↔ s ∩ t = ∅ :=
   by 
     rw [eq_empty_iff_forall_not_mem, subset_compl_comm, diagonal_eq_range_diagonal_map, range_subset_iff] <;> simp 
 
@@ -895,41 +936,41 @@ section
 
 open Finset Function
 
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For every finite open cover `Uᵢ` of a compact set, there exists a compact cover `Kᵢ ⊆ Uᵢ`. -/
-theorem IsCompact.finite_compact_cover [T2Space α] {s : Set α} (hs : IsCompact s) {ι} (t : Finset ι) (U : ι → Set α)
-  (hU : ∀ i _ : i ∈ t, IsOpen (U i)) (hsC : s ⊆ ⋃(i : _)(_ : i ∈ t), U i) :
-  ∃ K : ι → Set α, (∀ i, IsCompact (K i)) ∧ (∀ i, K i ⊆ U i) ∧ s = ⋃(i : _)(_ : i ∈ t), K i :=
-  by 
-    classical 
-    induction' t using Finset.induction with x t hx ih generalizing U hU s hs hsC
-    ·
-      refine' ⟨fun _ => ∅, fun i => is_compact_empty, fun i => empty_subset _, _⟩
-      simpa only [subset_empty_iff, Union_false, Union_empty] using hsC 
-    simp only [Finset.set_bUnion_insert] at hsC 
-    simp only [Finset.mem_insert] at hU 
-    have hU' : ∀ i _ : i ∈ t, IsOpen (U i) := fun i hi => hU i (Or.inr hi)
-    rcases hs.binary_compact_cover (hU x (Or.inl rfl)) (is_open_bUnion hU') hsC with
-      ⟨K₁, K₂, h1K₁, h1K₂, h2K₁, h2K₂, hK⟩
-    rcases ih U hU' h1K₂ h2K₂ with ⟨K, h1K, h2K, h3K⟩
-    refine' ⟨update K x K₁, _, _, _⟩
-    ·
-      intro i 
-      byCases' hi : i = x
-      ·
-        simp only [update_same, hi, h1K₁]
-      ·
-        rw [←Ne.def] at hi 
-        simp only [update_noteq hi, h1K]
-    ·
-      intro i 
-      byCases' hi : i = x
-      ·
-        simp only [update_same, hi, h2K₁]
-      ·
-        rw [←Ne.def] at hi 
-        simp only [update_noteq hi, h2K]
-    ·
-      simp only [set_bUnion_insert_update _ hx, hK, h3K]
+theorem is_compact.finite_compact_cover
+[t2_space α]
+{s : set α}
+(hs : is_compact s)
+{ι}
+(t : finset ι)
+(U : ι → set α)
+(hU : ∀ i «expr ∈ » t, is_open (U i))
+(hsC : «expr ⊆ »(s, «expr⋃ , »((i «expr ∈ » t), U i))) : «expr∃ , »((K : ι → set α), «expr ∧ »(∀
+  i, is_compact (K i), «expr ∧ »(∀ i, «expr ⊆ »(K i, U i), «expr = »(s, «expr⋃ , »((i «expr ∈ » t), K i))))) :=
+begin
+  classical,
+  induction [expr t] ["using", ident finset.induction] ["with", ident x, ident t, ident hx, ident ih] ["generalizing", ident U, ident hU, ident s, ident hs, ident hsC],
+  { refine [expr ⟨λ _, «expr∅»(), λ i, is_compact_empty, λ i, empty_subset _, _⟩],
+    simpa [] [] ["only"] ["[", expr subset_empty_iff, ",", expr Union_false, ",", expr Union_empty, "]"] [] ["using", expr hsC] },
+  simp [] [] ["only"] ["[", expr finset.set_bUnion_insert, "]"] [] ["at", ident hsC],
+  simp [] [] ["only"] ["[", expr finset.mem_insert, "]"] [] ["at", ident hU],
+  have [ident hU'] [":", expr ∀ i «expr ∈ » t, is_open (U i)] [":=", expr λ i hi, hU i (or.inr hi)],
+  rcases [expr hs.binary_compact_cover (hU x (or.inl rfl)) (is_open_bUnion hU') hsC, "with", "⟨", ident K₁, ",", ident K₂, ",", ident h1K₁, ",", ident h1K₂, ",", ident h2K₁, ",", ident h2K₂, ",", ident hK, "⟩"],
+  rcases [expr ih U hU' h1K₂ h2K₂, "with", "⟨", ident K, ",", ident h1K, ",", ident h2K, ",", ident h3K, "⟩"],
+  refine [expr ⟨update K x K₁, _, _, _⟩],
+  { intros [ident i],
+    by_cases [expr hi, ":", expr «expr = »(i, x)],
+    { simp [] [] ["only"] ["[", expr update_same, ",", expr hi, ",", expr h1K₁, "]"] [] [] },
+    { rw ["[", "<-", expr ne.def, "]"] ["at", ident hi],
+      simp [] [] ["only"] ["[", expr update_noteq hi, ",", expr h1K, "]"] [] [] } },
+  { intros [ident i],
+    by_cases [expr hi, ":", expr «expr = »(i, x)],
+    { simp [] [] ["only"] ["[", expr update_same, ",", expr hi, ",", expr h2K₁, "]"] [] [] },
+    { rw ["[", "<-", expr ne.def, "]"] ["at", ident hi],
+      simp [] [] ["only"] ["[", expr update_noteq hi, ",", expr h2K, "]"] [] [] } },
+  { simp [] [] ["only"] ["[", expr set_bUnion_insert_update _ hx, ",", expr hK, ",", expr h3K, "]"] [] [] }
+end
 
 end 
 
@@ -1065,14 +1106,20 @@ theorem normal_separation [NormalSpace α] {s t : Set α} (H1 : IsClosed s) (H2 
   ∃ u v, IsOpen u ∧ IsOpen v ∧ s ⊆ u ∧ t ⊆ v ∧ Disjoint u v :=
   NormalSpace.normal s t H1 H2 H3
 
-theorem normal_exists_closure_subset [NormalSpace α] {s t : Set α} (hs : IsClosed s) (ht : IsOpen t) (hst : s ⊆ t) :
-  ∃ u, IsOpen u ∧ s ⊆ u ∧ Closure u ⊆ t :=
-  by 
-    have  : Disjoint s («expr ᶜ» t)
-    exact fun x ⟨hxs, hxt⟩ => hxt (hst hxs)
-    rcases normal_separation hs (is_closed_compl_iff.2 ht) this with ⟨s', t', hs', ht', hss', htt', hs't'⟩
-    refine' ⟨s', hs', hss', subset.trans (closure_minimal _ (is_closed_compl_iff.2 ht')) (compl_subset_comm.1 htt')⟩
-    exact fun x hxs hxt => hs't' ⟨hxs, hxt⟩
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem normal_exists_closure_subset
+[normal_space α]
+{s t : set α}
+(hs : is_closed s)
+(ht : is_open t)
+(hst : «expr ⊆ »(s, t)) : «expr∃ , »((u), «expr ∧ »(is_open u, «expr ∧ »(«expr ⊆ »(s, u), «expr ⊆ »(closure u, t)))) :=
+begin
+  have [] [":", expr disjoint s «expr ᶜ»(t)] [],
+  from [expr λ (x) ⟨hxs, hxt⟩, hxt (hst hxs)],
+  rcases [expr normal_separation hs (is_closed_compl_iff.2 ht) this, "with", "⟨", ident s', ",", ident t', ",", ident hs', ",", ident ht', ",", ident hss', ",", ident htt', ",", ident hs't', "⟩"],
+  refine [expr ⟨s', hs', hss', subset.trans (closure_minimal _ (is_closed_compl_iff.2 ht')) (compl_subset_comm.1 htt')⟩],
+  exact [expr λ x hxs hxt, hs't' ⟨hxs, hxt⟩]
+end
 
 instance (priority := 100)NormalSpace.regular_space [NormalSpace α] : RegularSpace α :=
   { regular :=
@@ -1095,72 +1142,64 @@ theorem normal_of_compact_t2 [CompactSpace α] [T2Space α] : NormalSpace α :=
 
 end Normality
 
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a compact t2 space, the connected component of a point equals the intersection of all
 its clopen neighbourhoods. -/
-theorem connected_component_eq_Inter_clopen [T2Space α] [CompactSpace α] {x : α} :
-  ConnectedComponent x = ⋂Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, Z :=
-  by 
-    apply eq_of_subset_of_subset connected_component_subset_Inter_clopen 
-    refine' IsPreconnected.subset_connected_component _ (mem_Inter.2 fun Z => Z.2.2)
-    have hs : @IsClosed _ _inst_1 (⋂Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, Z) := is_closed_Inter fun Z => Z.2.1.2
-    rw [is_preconnected_iff_subset_of_fully_disjoint_closed hs]
-    intro a b ha hb hab ab_empty 
-    haveI  := @normal_of_compact_t2 α _ _ _ 
-    rcases normal_separation ha hb (disjoint_iff.2 ab_empty) with ⟨u, v, hu, hv, hau, hbv, huv⟩
-    suffices  : ∃ Z : Set α, IsClopen Z ∧ x ∈ Z ∧ Z ⊆ u ∪ v
-    ·
-      cases' this with Z H 
-      rw [disjoint_iff_inter_eq_empty] at huv 
-      have H1 := is_clopen_inter_of_disjoint_cover_clopen H.1 H.2.2 hu hv huv 
-      rw [union_comm] at H 
-      have H2 := is_clopen_inter_of_disjoint_cover_clopen H.1 H.2.2 hv hu (inter_comm u v ▸ huv)
-      byCases' x ∈ u
-      ·
-        left 
-        suffices  : (⋂Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, «expr↑ » Z) ⊆ u
-        ·
-          rw [←Set.disjoint_iff_inter_eq_empty] at huv 
-          replace hab : (⋂Z : { Z // IsClopen Z ∧ x ∈ Z }, «expr↑ » Z) ≤ a ∪ b := hab 
-          replace this : (⋂Z : { Z // IsClopen Z ∧ x ∈ Z }, «expr↑ » Z) ≤ u := this 
-          exact Disjoint.left_le_of_le_sup_right hab (huv.mono this hbv)
-        ·
-          apply subset.trans _ (inter_subset_right Z u)
-          apply Inter_subset (fun Z : { Z : Set α // IsClopen Z ∧ x ∈ Z } => «expr↑ » Z) ⟨Z ∩ u, H1, mem_inter H.2.1 h⟩
-      have h1 : x ∈ v
-      ·
-        cases'
-          (mem_union x u v).1
-            (mem_of_subset_of_mem (subset.trans hab (union_subset_union hau hbv)) (mem_Inter.2 fun i => i.2.2)) with
-          h1 h1
-        ·
-          exFalso 
-          exact h h1
-        ·
-          exact h1 
-      right 
-      suffices  : (⋂Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, «expr↑ » Z) ⊆ v
-      ·
-        rw [inter_comm, ←Set.disjoint_iff_inter_eq_empty] at huv 
-        replace hab : (⋂Z : { Z // IsClopen Z ∧ x ∈ Z }, «expr↑ » Z) ≤ a ∪ b := hab 
-        replace this : (⋂Z : { Z // IsClopen Z ∧ x ∈ Z }, «expr↑ » Z) ≤ v := this 
-        exact Disjoint.left_le_of_le_sup_left hab (huv.mono this hau)
-      ·
-        apply subset.trans _ (inter_subset_right Z v)
-        apply Inter_subset (fun Z : { Z : Set α // IsClopen Z ∧ x ∈ Z } => «expr↑ » Z) ⟨Z ∩ v, H2, mem_inter H.2.1 h1⟩
-    have H1 :=
-      (is_closed_compl_iff.2 (hu.union hv)).IsCompact.inter_Inter_nonempty
-        (fun Z : { Z : Set α // IsClopen Z ∧ x ∈ Z } => Z) fun Z => Z.2.1.2
-    rw [←not_imp_not, not_forall, not_nonempty_iff_eq_empty, inter_comm] at H1 
-    have huv_union := subset.trans hab (union_subset_union hau hbv)
-    rw [←compl_compl (u ∪ v), subset_compl_iff_disjoint] at huv_union 
-    cases' H1 huv_union with Zi H2 
-    refine' ⟨⋂(U : _)(_ : U ∈ Zi), Subtype.val U, _, _, _⟩
-    ·
-      exact is_clopen_bInter fun Z hZ => Z.2.1
-    ·
-      exact mem_bInter_iff.2 fun Z hZ => Z.2.2
-    ·
-      rwa [not_nonempty_iff_eq_empty, inter_comm, ←subset_compl_iff_disjoint, compl_compl] at H2
+theorem connected_component_eq_Inter_clopen
+[t2_space α]
+[compact_space α]
+{x : α} : «expr = »(connected_component x, «expr⋂ , »((Z : {Z : set α // «expr ∧ »(is_clopen Z, «expr ∈ »(x, Z))}), Z)) :=
+begin
+  apply [expr eq_of_subset_of_subset connected_component_subset_Inter_clopen],
+  refine [expr is_preconnected.subset_connected_component _ (mem_Inter.2 (λ Z, Z.2.2))],
+  have [ident hs] [":", expr @is_closed _ _inst_1 «expr⋂ , »((Z : {Z : set α // «expr ∧ »(is_clopen Z, «expr ∈ »(x, Z))}), Z)] [":=", expr is_closed_Inter (λ
+    Z, Z.2.1.2)],
+  rw [expr is_preconnected_iff_subset_of_fully_disjoint_closed hs] [],
+  intros [ident a, ident b, ident ha, ident hb, ident hab, ident ab_empty],
+  haveI [] [] [":=", expr @normal_of_compact_t2 α _ _ _],
+  rcases [expr normal_separation ha hb (disjoint_iff.2 ab_empty), "with", "⟨", ident u, ",", ident v, ",", ident hu, ",", ident hv, ",", ident hau, ",", ident hbv, ",", ident huv, "⟩"],
+  suffices [] [":", expr «expr∃ , »((Z : set α), «expr ∧ »(is_clopen Z, «expr ∧ »(«expr ∈ »(x, Z), «expr ⊆ »(Z, «expr ∪ »(u, v)))))],
+  { cases [expr this] ["with", ident Z, ident H],
+    rw ["[", expr disjoint_iff_inter_eq_empty, "]"] ["at", ident huv],
+    have [ident H1] [] [":=", expr is_clopen_inter_of_disjoint_cover_clopen H.1 H.2.2 hu hv huv],
+    rw ["[", expr union_comm, "]"] ["at", ident H],
+    have [ident H2] [] [":=", expr is_clopen_inter_of_disjoint_cover_clopen H.1 H.2.2 hv hu «expr ▸ »(inter_comm u v, huv)],
+    by_cases [expr «expr ∈ »(x, u)],
+    { left,
+      suffices [] [":", expr «expr ⊆ »(«expr⋂ , »((Z : {Z : set α // «expr ∧ »(is_clopen Z, «expr ∈ »(x, Z))}), «expr↑ »(Z)), u)],
+      { rw ["<-", expr set.disjoint_iff_inter_eq_empty] ["at", ident huv],
+        replace [ident hab] [":", expr «expr ≤ »(«expr⋂ , »((Z : {Z // «expr ∧ »(is_clopen Z, «expr ∈ »(x, Z))}), «expr↑ »(Z)), «expr ∪ »(a, b))] [":=", expr hab],
+        replace [ident this] [":", expr «expr ≤ »(«expr⋂ , »((Z : {Z // «expr ∧ »(is_clopen Z, «expr ∈ »(x, Z))}), «expr↑ »(Z)), u)] [":=", expr this],
+        exact [expr disjoint.left_le_of_le_sup_right hab (huv.mono this hbv)] },
+      { apply [expr subset.trans _ (inter_subset_right Z u)],
+        apply [expr Inter_subset (λ
+          Z : {Z : set α // «expr ∧ »(is_clopen Z, «expr ∈ »(x, Z))}, «expr↑ »(Z)) ⟨«expr ∩ »(Z, u), H1, mem_inter H.2.1 h⟩] } },
+    have [ident h1] [":", expr «expr ∈ »(x, v)] [],
+    { cases [expr (mem_union x u v).1 (mem_of_subset_of_mem (subset.trans hab (union_subset_union hau hbv)) (mem_Inter.2 (λ
+          i, i.2.2)))] ["with", ident h1, ident h1],
+      { exfalso,
+        exact [expr h h1] },
+      { exact [expr h1] } },
+    right,
+    suffices [] [":", expr «expr ⊆ »(«expr⋂ , »((Z : {Z : set α // «expr ∧ »(is_clopen Z, «expr ∈ »(x, Z))}), «expr↑ »(Z)), v)],
+    { rw ["[", expr inter_comm, ",", "<-", expr set.disjoint_iff_inter_eq_empty, "]"] ["at", ident huv],
+      replace [ident hab] [":", expr «expr ≤ »(«expr⋂ , »((Z : {Z // «expr ∧ »(is_clopen Z, «expr ∈ »(x, Z))}), «expr↑ »(Z)), «expr ∪ »(a, b))] [":=", expr hab],
+      replace [ident this] [":", expr «expr ≤ »(«expr⋂ , »((Z : {Z // «expr ∧ »(is_clopen Z, «expr ∈ »(x, Z))}), «expr↑ »(Z)), v)] [":=", expr this],
+      exact [expr disjoint.left_le_of_le_sup_left hab (huv.mono this hau)] },
+    { apply [expr subset.trans _ (inter_subset_right Z v)],
+      apply [expr Inter_subset (λ
+        Z : {Z : set α // «expr ∧ »(is_clopen Z, «expr ∈ »(x, Z))}, «expr↑ »(Z)) ⟨«expr ∩ »(Z, v), H2, mem_inter H.2.1 h1⟩] } },
+  have [ident H1] [] [":=", expr (is_closed_compl_iff.2 (hu.union hv)).is_compact.inter_Inter_nonempty (λ
+    Z : {Z : set α // «expr ∧ »(is_clopen Z, «expr ∈ »(x, Z))}, Z) (λ Z, Z.2.1.2)],
+  rw ["[", "<-", expr not_imp_not, ",", expr not_forall, ",", expr not_nonempty_iff_eq_empty, ",", expr inter_comm, "]"] ["at", ident H1],
+  have [ident huv_union] [] [":=", expr subset.trans hab (union_subset_union hau hbv)],
+  rw ["[", "<-", expr compl_compl «expr ∪ »(u, v), ",", expr subset_compl_iff_disjoint, "]"] ["at", ident huv_union],
+  cases [expr H1 huv_union] ["with", ident Zi, ident H2],
+  refine [expr ⟨«expr⋂ , »((U «expr ∈ » Zi), subtype.val U), _, _, _⟩],
+  { exact [expr is_clopen_bInter (λ Z hZ, Z.2.1)] },
+  { exact [expr mem_bInter_iff.2 (λ Z hZ, Z.2.2)] },
+  { rwa ["[", expr not_nonempty_iff_eq_empty, ",", expr inter_comm, ",", "<-", expr subset_compl_iff_disjoint, ",", expr compl_compl, "]"] ["at", ident H2] }
+end
 
 section Profinite
 
@@ -1168,84 +1207,83 @@ open TopologicalSpace
 
 variable[T2Space α]
 
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A Hausdorff space with a clopen basis is totally separated. -/
-theorem tot_sep_of_zero_dim (h : is_topological_basis { s : Set α | IsClopen s }) : TotallySeparatedSpace α :=
-  by 
-    constructor 
-    rintro x - y - hxy 
-    obtain ⟨u, v, hu, hv, xu, yv, disj⟩ := t2_separation hxy 
-    obtain ⟨w, hw : IsClopen w, xw, wu⟩ := (is_topological_basis.mem_nhds_iff h).1 (IsOpen.mem_nhds hu xu)
-    refine' ⟨w, «expr ᶜ» w, hw.1, (is_clopen_compl_iff.2 hw).1, xw, _, _, Set.inter_compl_self w⟩
-    ·
-      intro h 
-      have  : y ∈ u ∩ v := ⟨wu h, yv⟩
-      rwa [disj] at this 
-    rw [Set.union_compl_self]
+theorem tot_sep_of_zero_dim (h : is_topological_basis {s : set α | is_clopen s}) : totally_separated_space α :=
+begin
+  constructor,
+  rintros [ident x, "-", ident y, "-", ident hxy],
+  obtain ["⟨", ident u, ",", ident v, ",", ident hu, ",", ident hv, ",", ident xu, ",", ident yv, ",", ident disj, "⟩", ":=", expr t2_separation hxy],
+  obtain ["⟨", ident w, ",", ident hw, ":", expr is_clopen w, ",", ident xw, ",", ident wu, "⟩", ":=", expr (is_topological_basis.mem_nhds_iff h).1 (is_open.mem_nhds hu xu)],
+  refine [expr ⟨w, «expr ᶜ»(w), hw.1, (is_clopen_compl_iff.2 hw).1, xw, _, _, set.inter_compl_self w⟩],
+  { intro [ident h],
+    have [] [":", expr «expr ∈ »(y, «expr ∩ »(u, v))] [":=", expr ⟨wu h, yv⟩],
+    rwa [expr disj] ["at", ident this] },
+  rw [expr set.union_compl_self] []
+end
 
 variable[CompactSpace α]
 
--- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- A compact Hausdorff space is totally disconnected if and only if it is totally separated, this
   is also true for locally compact spaces. -/
-theorem compact_t2_tot_disc_iff_tot_sep : «expr ↔ »(totally_disconnected_space α, totally_separated_space α) :=
-begin
-  split,
-  { intro [ident h],
-    constructor,
-    rintros [ident x, "-", ident y, "-"],
-    contrapose ["!"] [],
-    intros [ident hyp],
-    suffices [] [":", expr «expr ∈ »(x, connected_component y)],
-    by simpa [] [] [] ["[", expr totally_disconnected_space_iff_connected_component_singleton.1 h y, ",", expr mem_singleton_iff, "]"] [] [],
-    rw ["[", expr connected_component_eq_Inter_clopen, ",", expr mem_Inter, "]"] [],
-    rintro ["⟨", ident w, ":", expr set α, ",", ident hw, ":", expr is_clopen w, ",", ident hy, ":", expr «expr ∈ »(y, w), "⟩"],
-    by_contra [ident hx],
-    simpa [] [] [] [] [] ["using", expr hyp «expr ᶜ»(w) w (is_open_compl_iff.mpr hw.2) hw.1 hx hy] },
-  apply [expr totally_separated_space.totally_disconnected_space]
-end
+theorem compact_t2_tot_disc_iff_tot_sep : TotallyDisconnectedSpace α ↔ TotallySeparatedSpace α :=
+  by 
+    split 
+    ·
+      intro h 
+      constructor 
+      rintro x - y -
+      contrapose! 
+      intro hyp 
+      suffices  : x ∈ ConnectedComponent y
+      ·
+        simpa [totally_disconnected_space_iff_connected_component_singleton.1 h y, mem_singleton_iff]
+      rw [connected_component_eq_Inter_clopen, mem_Inter]
+      rintro ⟨w : Set α, hw : IsClopen w, hy : y ∈ w⟩
+      byContra hx 
+      simpa using hyp («expr ᶜ» w) w (is_open_compl_iff.mpr hw.2) hw.1 hx hy 
+    apply TotallySeparatedSpace.totally_disconnected_space
 
 variable[TotallyDisconnectedSpace α]
 
-theorem nhds_basis_clopen (x : α) : (𝓝 x).HasBasis (fun s : Set α => x ∈ s ∧ IsClopen s) id :=
-  ⟨fun U =>
-      by 
-        split 
-        ·
-          have  : ConnectedComponent x = {x}
-          exact totally_disconnected_space_iff_connected_component_singleton.mp ‹_› x 
-          rw [connected_component_eq_Inter_clopen] at this 
-          intro hU 
-          let N := { Z // IsClopen Z ∧ x ∈ Z }
-          suffices  : ∃ Z : N, Z.val ⊆ U
-          ·
-            rcases this with ⟨⟨s, hs, hs'⟩, hs''⟩
-            exact ⟨s, ⟨hs', hs⟩, hs''⟩
-          haveI  : Nonempty N := ⟨⟨univ, is_clopen_univ, mem_univ x⟩⟩
-          have hNcl : ∀ Z : N, IsClosed Z.val := fun Z => Z.property.1.2
-          have hdir : Directed Superset fun Z : N => Z.val
-          ·
-            rintro ⟨s, hs, hxs⟩ ⟨t, ht, hxt⟩
-            exact ⟨⟨s ∩ t, hs.inter ht, ⟨hxs, hxt⟩⟩, inter_subset_left s t, inter_subset_right s t⟩
-          have h_nhd : ∀ y _ : y ∈ ⋂Z : N, Z.val, U ∈ 𝓝 y
-          ·
-            intro y y_in 
-            erw [this, mem_singleton_iff] at y_in 
-            rwa [y_in]
-          exact exists_subset_nhd_of_compact_space hdir hNcl h_nhd
-        ·
-          rintro ⟨V, ⟨hxV, V_op, -⟩, hUV : V ⊆ U⟩
-          rw [mem_nhds_iff]
-          exact ⟨V, hUV, V_op, hxV⟩⟩
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nhds_basis_clopen (x : α) : (expr𝓝() x).has_basis (λ s : set α, «expr ∧ »(«expr ∈ »(x, s), is_clopen s)) id :=
+⟨λ U, begin
+   split,
+   { have [] [":", expr «expr = »(connected_component x, {x})] [],
+     from [expr totally_disconnected_space_iff_connected_component_singleton.mp «expr‹ ›»(_) x],
+     rw [expr connected_component_eq_Inter_clopen] ["at", ident this],
+     intros [ident hU],
+     let [ident N] [] [":=", expr {Z // «expr ∧ »(is_clopen Z, «expr ∈ »(x, Z))}],
+     suffices [] [":", expr «expr∃ , »((Z : N), «expr ⊆ »(Z.val, U))],
+     { rcases [expr this, "with", "⟨", "⟨", ident s, ",", ident hs, ",", ident hs', "⟩", ",", ident hs'', "⟩"],
+       exact [expr ⟨s, ⟨hs', hs⟩, hs''⟩] },
+     haveI [] [":", expr nonempty N] [":=", expr ⟨⟨univ, is_clopen_univ, mem_univ x⟩⟩],
+     have [ident hNcl] [":", expr ∀ Z : N, is_closed Z.val] [":=", expr λ Z, Z.property.1.2],
+     have [ident hdir] [":", expr directed superset (λ Z : N, Z.val)] [],
+     { rintros ["⟨", ident s, ",", ident hs, ",", ident hxs, "⟩", "⟨", ident t, ",", ident ht, ",", ident hxt, "⟩"],
+       exact [expr ⟨⟨«expr ∩ »(s, t), hs.inter ht, ⟨hxs, hxt⟩⟩, inter_subset_left s t, inter_subset_right s t⟩] },
+     have [ident h_nhd] [":", expr ∀ y «expr ∈ » «expr⋂ , »((Z : N), Z.val), «expr ∈ »(U, expr𝓝() y)] [],
+     { intros [ident y, ident y_in],
+       erw ["[", expr this, ",", expr mem_singleton_iff, "]"] ["at", ident y_in],
+       rwa [expr y_in] [] },
+     exact [expr exists_subset_nhd_of_compact_space hdir hNcl h_nhd] },
+   { rintro ["⟨", ident V, ",", "⟨", ident hxV, ",", ident V_op, ",", "-", "⟩", ",", ident hUV, ":", expr «expr ⊆ »(V, U), "⟩"],
+     rw [expr mem_nhds_iff] [],
+     exact [expr ⟨V, hUV, V_op, hxV⟩] }
+ end⟩
 
-theorem is_topological_basis_clopen : is_topological_basis { s : Set α | IsClopen s } :=
-  by 
-    apply is_topological_basis_of_open_of_nhds fun U hU : IsClopen U => hU.1
-    intro x U hxU U_op 
-    have  : U ∈ 𝓝 x 
-    exact IsOpen.mem_nhds U_op hxU 
-    rcases(nhds_basis_clopen x).mem_iff.mp this with ⟨V, ⟨hxV, hV⟩, hVU : V ⊆ U⟩
-    use V 
-    tauto
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_topological_basis_clopen : is_topological_basis {s : set α | is_clopen s} :=
+begin
+  apply [expr is_topological_basis_of_open_of_nhds (λ (U) (hU : is_clopen U), hU.1)],
+  intros [ident x, ident U, ident hxU, ident U_op],
+  have [] [":", expr «expr ∈ »(U, expr𝓝() x)] [],
+  from [expr is_open.mem_nhds U_op hxU],
+  rcases [expr (nhds_basis_clopen x).mem_iff.mp this, "with", "⟨", ident V, ",", "⟨", ident hxV, ",", ident hV, "⟩", ",", ident hVU, ":", expr «expr ⊆ »(V, U), "⟩"],
+  use [expr V],
+  tauto []
+end
 
 /-- Every member of an open set in a compact Hausdorff totally disconnected space
   is contained in a clopen set contained in the open set.  -/
@@ -1261,51 +1299,43 @@ open TopologicalSpace
 
 variable{H : Type _}[TopologicalSpace H][LocallyCompactSpace H][T2Space H]
 
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A locally compact Hausdorff totally disconnected space has a basis with clopen elements. -/
-theorem loc_compact_Haus_tot_disc_of_zero_dim [TotallyDisconnectedSpace H] :
-  is_topological_basis { s : Set H | IsClopen s } :=
-  by 
-    refine' is_topological_basis_of_open_of_nhds (fun u hu => hu.1) _ 
-    rintro x U memU hU 
-    obtain ⟨s, comp, xs, sU⟩ := exists_compact_subset hU memU 
-    obtain ⟨t, h, ht, xt⟩ := mem_interior.1 xs 
-    let u : Set s := (coeₓ : s → H) ⁻¹' Interior s 
-    have u_open_in_s : IsOpen u := is_open_interior.preimage continuous_subtype_coe 
-    let X : s := ⟨x, h xt⟩
-    have Xu : X ∈ u := xs 
-    haveI  : CompactSpace s := is_compact_iff_compact_space.1 comp 
-    obtain ⟨V : Set s, clopen_in_s, Vx, V_sub⟩ := compact_exists_clopen_in_open u_open_in_s Xu 
-    have V_clopen : IsClopen ((coeₓ : s → H) '' V)
-    ·
-      refine' ⟨_, comp.is_closed.closed_embedding_subtype_coe.closed_iff_image_closed.1 clopen_in_s.2⟩
-      let v : Set u := (coeₓ : u → s) ⁻¹' V 
-      have  : (coeₓ : u → H) = ((coeₓ : s → H) ∘ (coeₓ : u → s)) := rfl 
-      have f0 : Embedding (coeₓ : u → H) := embedding_subtype_coe.comp embedding_subtype_coe 
-      have f1 : OpenEmbedding (coeₓ : u → H)
-      ·
-        refine' ⟨f0, _⟩
-        ·
-          have  : Set.Range (coeₓ : u → H) = Interior s
-          ·
-            rw [this, Set.range_comp, Subtype.range_coe, Subtype.image_preimage_coe]
-            apply Set.inter_eq_self_of_subset_left interior_subset 
-          rw [this]
-          apply is_open_interior 
-      have f2 : IsOpen v := clopen_in_s.1.Preimage continuous_subtype_coe 
-      have f3 : (coeₓ : s → H) '' V = (coeₓ : u → H) '' v
-      ·
-        rw [this, image_comp coeₓ coeₓ, Subtype.image_preimage_coe, inter_eq_self_of_subset_left V_sub]
-      rw [f3]
-      apply f1.is_open_map v f2 
-    refine'
-      ⟨coeₓ '' V, V_clopen,
-        by 
-          simp [Vx, h xt],
-        _⟩
-    trans s
-    ·
-      simp 
-    assumption
+theorem loc_compact_Haus_tot_disc_of_zero_dim
+[totally_disconnected_space H] : is_topological_basis {s : set H | is_clopen s} :=
+begin
+  refine [expr is_topological_basis_of_open_of_nhds (λ u hu, hu.1) _],
+  rintros [ident x, ident U, ident memU, ident hU],
+  obtain ["⟨", ident s, ",", ident comp, ",", ident xs, ",", ident sU, "⟩", ":=", expr exists_compact_subset hU memU],
+  obtain ["⟨", ident t, ",", ident h, ",", ident ht, ",", ident xt, "⟩", ":=", expr mem_interior.1 xs],
+  let [ident u] [":", expr set s] [":=", expr «expr ⁻¹' »((coe : s → H), interior s)],
+  have [ident u_open_in_s] [":", expr is_open u] [":=", expr is_open_interior.preimage continuous_subtype_coe],
+  let [ident X] [":", expr s] [":=", expr ⟨x, h xt⟩],
+  have [ident Xu] [":", expr «expr ∈ »(X, u)] [":=", expr xs],
+  haveI [] [":", expr compact_space s] [":=", expr is_compact_iff_compact_space.1 comp],
+  obtain ["⟨", ident V, ":", expr set s, ",", ident clopen_in_s, ",", ident Vx, ",", ident V_sub, "⟩", ":=", expr compact_exists_clopen_in_open u_open_in_s Xu],
+  have [ident V_clopen] [":", expr is_clopen «expr '' »((coe : s → H), V)] [],
+  { refine [expr ⟨_, comp.is_closed.closed_embedding_subtype_coe.closed_iff_image_closed.1 clopen_in_s.2⟩],
+    let [ident v] [":", expr set u] [":=", expr «expr ⁻¹' »((coe : u → s), V)],
+    have [] [":", expr «expr = »((coe : u → H), «expr ∘ »((coe : s → H), (coe : u → s)))] [":=", expr rfl],
+    have [ident f0] [":", expr embedding (coe : u → H)] [":=", expr embedding_subtype_coe.comp embedding_subtype_coe],
+    have [ident f1] [":", expr open_embedding (coe : u → H)] [],
+    { refine [expr ⟨f0, _⟩],
+      { have [] [":", expr «expr = »(set.range (coe : u → H), interior s)] [],
+        { rw ["[", expr this, ",", expr set.range_comp, ",", expr subtype.range_coe, ",", expr subtype.image_preimage_coe, "]"] [],
+          apply [expr set.inter_eq_self_of_subset_left interior_subset] },
+        rw [expr this] [],
+        apply [expr is_open_interior] } },
+    have [ident f2] [":", expr is_open v] [":=", expr clopen_in_s.1.preimage continuous_subtype_coe],
+    have [ident f3] [":", expr «expr = »(«expr '' »((coe : s → H), V), «expr '' »((coe : u → H), v))] [],
+    { rw ["[", expr this, ",", expr image_comp coe coe, ",", expr subtype.image_preimage_coe, ",", expr inter_eq_self_of_subset_left V_sub, "]"] [] },
+    rw [expr f3] [],
+    apply [expr f1.is_open_map v f2] },
+  refine [expr ⟨«expr '' »(coe, V), V_clopen, by simp [] [] [] ["[", expr Vx, ",", expr h xt, "]"] [] [], _⟩],
+  transitivity [expr s],
+  { simp [] [] [] [] [] [] },
+  assumption
+end
 
 /-- A locally compact Hausdorff space is totally disconnected
   if and only if it is totally separated. -/
@@ -1313,7 +1343,7 @@ theorem loc_compact_t2_tot_disc_iff_tot_sep : TotallyDisconnectedSpace H ↔ Tot
   by 
     split 
     ·
-      introI h 
+      intro h 
       exact tot_sep_of_zero_dim loc_compact_Haus_tot_disc_of_zero_dim 
     apply TotallySeparatedSpace.totally_disconnected_space
 
@@ -1323,40 +1353,35 @@ section connectedComponentSetoid
 
 attribute [local instance] connectedComponentSetoid
 
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `connected_components α` is Hausdorff when `α` is Hausdorff and compact -/
-instance ConnectedComponents.t2 [T2Space α] [CompactSpace α] : T2Space (ConnectedComponents α) :=
-  by 
-    refine' ⟨fun x y => Quotientₓ.induction_on x (Quotientₓ.induction_on y fun a b ne => _)⟩
-    rw [connected_component_nrel_iff] at ne 
-    have h := connected_component_disjoint Ne 
-    rw [connected_component_eq_Inter_clopen, disjoint_iff_inter_eq_empty, inter_comm] at h 
-    cases' is_closed_connected_component.is_compact.elim_finite_subfamily_closed _ _ h with fin_a ha 
-    swap
-    ·
-      exact fun Z => Z.2.1.2
-    set U : Set α := ⋂(i : { Z // IsClopen Z ∧ b ∈ Z })(H : i ∈ fin_a), i with hU 
-    rw [←hU] at ha 
-    have hu_clopen : IsClopen U := is_clopen_bInter fun i j => i.2.1
-    use Quotientₓ.mk '' U, Quotientₓ.mk '' «expr ᶜ» U 
-    have hu : Quotientₓ.mk ⁻¹' (Quotientₓ.mk '' U) = U :=
-      (connected_components_preimage_image U ▸ Eq.symm) hu_clopen.eq_union_connected_components 
-    have huc : Quotientₓ.mk ⁻¹' (Quotientₓ.mk '' «expr ᶜ» U) = «expr ᶜ» U :=
-      (connected_components_preimage_image («expr ᶜ» U) ▸ Eq.symm)
-        (IsClopen.compl hu_clopen).eq_union_connected_components 
-    refine' ⟨_, _, _, _, _⟩
-    ·
-      rw [(quotient_map_iff.1 quotient_map_quotient_mk).2 _, hu]
-      exact hu_clopen.1
-    ·
-      rw [(quotient_map_iff.1 quotient_map_quotient_mk).2 _, huc]
-      exact is_open_compl_iff.2 hu_clopen.2
-    ·
-      exact mem_image_of_mem _ (mem_Inter.2 fun Z => mem_Inter.2 fun Zmem => Z.2.2)
-    ·
-      apply mem_image_of_mem 
-      exact mem_of_subset_of_mem (subset_compl_iff_disjoint.2 ha) (@mem_connected_component _ _ a)
-    apply preimage_injective.2 (@surjective_quotient_mk _ _)
-    rw [preimage_inter, preimage_empty, hu, huc, inter_compl_self _]
+instance connected_components.t2 [t2_space α] [compact_space α] : t2_space (connected_components α) :=
+begin
+  refine [expr ⟨λ x y, quotient.induction_on x (quotient.induction_on y (λ a b ne, _))⟩],
+  rw [expr connected_component_nrel_iff] ["at", ident ne],
+  have [ident h] [] [":=", expr connected_component_disjoint ne],
+  rw ["[", expr connected_component_eq_Inter_clopen, ",", expr disjoint_iff_inter_eq_empty, ",", expr inter_comm, "]"] ["at", ident h],
+  cases [expr is_closed_connected_component.is_compact.elim_finite_subfamily_closed _ _ h] ["with", ident fin_a, ident ha],
+  swap,
+  { exact [expr λ Z, Z.2.1.2] },
+  set [] [ident U] [":", expr set α] [":="] [expr «expr⋂ , »((i : {Z // «expr ∧ »(is_clopen Z, «expr ∈ »(b, Z))})
+    (H : «expr ∈ »(i, fin_a)), i)] ["with", ident hU],
+  rw ["<-", expr hU] ["at", ident ha],
+  have [ident hu_clopen] [":", expr is_clopen U] [":=", expr is_clopen_bInter (λ i j, i.2.1)],
+  use ["[", expr «expr '' »(quotient.mk, U), ",", expr «expr '' »(quotient.mk, «expr ᶜ»(U)), "]"],
+  have [ident hu] [":", expr «expr = »(«expr ⁻¹' »(quotient.mk, «expr '' »(quotient.mk, U)), U)] [":=", expr «expr ▸ »(connected_components_preimage_image U, eq.symm) hu_clopen.eq_union_connected_components],
+  have [ident huc] [":", expr «expr = »(«expr ⁻¹' »(quotient.mk, «expr '' »(quotient.mk, «expr ᶜ»(U))), «expr ᶜ»(U))] [":=", expr «expr ▸ »(connected_components_preimage_image «expr ᶜ»(U), eq.symm) (is_clopen.compl hu_clopen).eq_union_connected_components],
+  refine [expr ⟨_, _, _, _, _⟩],
+  { rw ["[", expr (quotient_map_iff.1 quotient_map_quotient_mk).2 _, ",", expr hu, "]"] [],
+    exact [expr hu_clopen.1] },
+  { rw ["[", expr (quotient_map_iff.1 quotient_map_quotient_mk).2 _, ",", expr huc, "]"] [],
+    exact [expr is_open_compl_iff.2 hu_clopen.2] },
+  { exact [expr mem_image_of_mem _ (mem_Inter.2 (λ Z, mem_Inter.2 (λ Zmem, Z.2.2)))] },
+  { apply [expr mem_image_of_mem],
+    exact [expr mem_of_subset_of_mem (subset_compl_iff_disjoint.2 ha) (@mem_connected_component _ _ a)] },
+  apply [expr preimage_injective.2 (@surjective_quotient_mk _ _)],
+  rw ["[", expr preimage_inter, ",", expr preimage_empty, ",", expr hu, ",", expr huc, ",", expr inter_compl_self _, "]"] []
+end
 
 end connectedComponentSetoid
 

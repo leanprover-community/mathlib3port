@@ -1,8 +1,9 @@
-import Mathbin.Order.ConditionallyCompleteLattice 
-import Mathbin.Data.Real.CauSeqCompletion 
+import Mathbin.Algebra.Module.Basic 
 import Mathbin.Algebra.Bounds 
 import Mathbin.Algebra.Order.Archimedean 
-import Mathbin.Algebra.Star.Basic
+import Mathbin.Algebra.Star.Basic 
+import Mathbin.Data.Real.CauSeqCompletion 
+import Mathbin.Order.ConditionallyCompleteLattice
 
 /-!
 # Real numbers from Cauchy sequences
@@ -97,19 +98,26 @@ theorem mul_cauchy {a b} : (⟨a⟩*⟨b⟩ : ℝ) = ⟨a*b⟩ :=
   show mul _ _ = _ by 
     rw [mul]
 
--- error in Data.Real.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-instance : comm_ring exprℝ() :=
-begin
-  refine_struct [expr { zero := (0 : exprℝ()),
-     one := (1 : exprℝ()),
-     mul := («expr * »),
-     add := («expr + »),
-     neg := @has_neg.neg exprℝ() _,
-     sub := λ a b, «expr + »(a, «expr- »(b)),
-     npow := @npow_rec exprℝ() ⟨1⟩ ⟨(«expr * »)⟩,
-     nsmul := @nsmul_rec exprℝ() ⟨0⟩ ⟨(«expr + »)⟩,
-     zsmul := @zsmul_rec exprℝ() ⟨0⟩ ⟨(«expr + »)⟩ ⟨@has_neg.neg exprℝ() _⟩ }]; repeat { rintro ["⟨", "_", "⟩"] }; try { refl }; simp [] [] [] ["[", "<-", expr zero_cauchy, ",", "<-", expr one_cauchy, ",", expr add_cauchy, ",", expr neg_cauchy, ",", expr mul_cauchy, "]"] [] []; apply [expr add_assoc] <|> apply [expr add_comm] <|> apply [expr mul_assoc] <|> apply [expr mul_comm] <|> apply [expr left_distrib] <|> apply [expr right_distrib] <|> apply [expr sub_eq_add_neg] <|> skip
-end
+instance  : CommRingₓ ℝ :=
+  by 
+    refineStruct
+        { zero := (0 : ℝ), one := (1 : ℝ), mul := ·*·, add := ·+·, neg := @Neg.neg ℝ _, sub := fun a b => a+-b,
+          npow := @npowRec ℝ ⟨1⟩ ⟨·*·⟩, nsmul := @nsmulRec ℝ ⟨0⟩ ⟨·+·⟩,
+          zsmul := @zsmulRec ℝ ⟨0⟩ ⟨·+·⟩ ⟨@Neg.neg ℝ _⟩ } <;>
+      repeat' 
+          rintro ⟨_⟩ <;>
+        try 
+            rfl <;>
+          simp [←zero_cauchy, ←one_cauchy, add_cauchy, neg_cauchy, mul_cauchy] <;>
+            first |
+              apply add_assocₓ|
+              apply add_commₓ|
+              apply mul_assocₓ|
+              apply mul_commₓ|
+              apply left_distrib|
+              apply right_distrib|
+              apply sub_eq_add_neg|
+              skip
 
 /-! Extra instances to short-circuit type class resolution.
 
@@ -500,20 +508,23 @@ open Rat
 theorem of_rat_eq_cast : ∀ x : ℚ, of_rat x = x :=
   of_rat.eq_rat_cast
 
-theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀ j _ : j ≥ i, x ≤ f j) → x ≤ mk f :=
-  by 
-    intro h 
-    induction' x using Real.ind_mk with x 
-    apply le_of_not_ltₓ 
-    rw [mk_lt]
-    rintro ⟨K, K0, hK⟩
-    obtain ⟨i, H⟩ := exists_forall_ge_and h (exists_forall_ge_and hK (f.cauchy₃$ half_pos K0))
-    apply not_lt_of_le (H _ (le_reflₓ _)).1
-    rw [←of_rat_eq_cast]
-    rw [mk_lt]
-    refine' ⟨_, half_pos K0, i, fun j ij => _⟩
-    have  := add_le_add (H _ ij).2.1 (le_of_ltₓ (abs_lt.1$ (H _ (le_reflₓ _)).2.2 _ ij).1)
-    rwa [←sub_eq_add_neg, sub_self_div_two, sub_apply, sub_add_sub_cancel] at this
+-- error in Data.Real.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem le_mk_of_forall_le
+{f : cau_seq exprℚ() abs} : «expr∃ , »((i), ∀ j «expr ≥ » i, «expr ≤ »(x, f j)) → «expr ≤ »(x, mk f) :=
+begin
+  intro [ident h],
+  induction [expr x] ["using", ident real.ind_mk] ["with", ident x] [],
+  apply [expr le_of_not_lt],
+  rw [expr mk_lt] [],
+  rintro ["⟨", ident K, ",", ident K0, ",", ident hK, "⟩"],
+  obtain ["⟨", ident i, ",", ident H, "⟩", ":=", expr exists_forall_ge_and h (exists_forall_ge_and hK «expr $ »(f.cauchy₃, half_pos K0))],
+  apply [expr not_lt_of_le (H _ (le_refl _)).1],
+  rw ["<-", expr of_rat_eq_cast] [],
+  rw ["[", expr mk_lt, "]"] [] { md := tactic.transparency.semireducible },
+  refine [expr ⟨_, half_pos K0, i, λ j ij, _⟩],
+  have [] [] [":=", expr add_le_add (H _ ij).2.1 (le_of_lt «expr $ »(abs_lt.1, (H _ (le_refl _)).2.2 _ ij).1)],
+  rwa ["[", "<-", expr sub_eq_add_neg, ",", expr sub_self_div_two, ",", expr sub_apply, ",", expr sub_add_sub_cancel, "]"] ["at", ident this]
+end
 
 theorem mk_le_of_forall_le {f : CauSeq ℚ abs} {x : ℝ} (h : ∃ i, ∀ j _ : j ≥ i, (f j : ℝ) ≤ x) : mk f ≤ x :=
   by 
@@ -574,65 +585,59 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
     (let ⟨n, hn⟩ := exists_int_lt x
     ⟨n, le_of_ltₓ hn⟩)
 
-theorem exists_is_lub (S : Set ℝ) (hne : S.nonempty) (hbdd : BddAbove S) : ∃ x, IsLub S x :=
-  by 
-    rcases hne, hbdd with ⟨⟨L, hL⟩, ⟨U, hU⟩⟩
-    have  : ∀ d : ℕ, BddAbove { m : ℤ | ∃ (y : _)(_ : y ∈ S), (m : ℝ) ≤ y*d }
-    ·
-      cases' exists_int_gt U with k hk 
-      refine' fun d => ⟨k*d, fun z h => _⟩
-      rcases h with ⟨y, yS, hy⟩
-      refine' Int.cast_le.1 (hy.trans _)
-      pushCast 
-      exact mul_le_mul_of_nonneg_right ((hU yS).trans hk.le) d.cast_nonneg 
-    choose f hf using fun d : ℕ => Int.exists_greatest_of_bdd (this d) ⟨⌊L*d⌋, L, hL, Int.floor_le _⟩
-    have hf₁ : ∀ n _ : n > 0, ∃ (y : _)(_ : y ∈ S), ((f n / n : ℚ) : ℝ) ≤ y :=
-      fun n n0 =>
-        let ⟨y, yS, hy⟩ := (hf n).1
-        ⟨y, yS,
-          by 
-            simpa using (div_le_iff (Nat.cast_pos.2 n0 : (_ : ℝ) < _)).2 hy⟩
-    have hf₂ : ∀ n _ : n > 0 y _ : y ∈ S, (y - (n : ℕ)⁻¹ : ℝ) < (f n / n : ℚ)
-    ·
-      intro n n0 y yS 
-      have  := (Int.sub_one_lt_floor _).trans_le (Int.cast_le.2$ (hf n).2 _ ⟨y, yS, Int.floor_le _⟩)
-      simp [-sub_eq_add_neg]
-      rwa [lt_div_iff (Nat.cast_pos.2 n0 : (_ : ℝ) < _), sub_mul, _root_.inv_mul_cancel]
-      exact ne_of_gtₓ (Nat.cast_pos.2 n0)
-    have hg : IsCauSeq abs (fun n => f n / n : ℕ → ℚ)
-    ·
-      intro ε ε0 
-      suffices  : ∀ j k _ : j ≥ ⌈ε⁻¹⌉₊ _ : k ≥ ⌈ε⁻¹⌉₊, (f j / j - f k / k : ℚ) < ε
-      ·
-        refine' ⟨_, fun j ij => abs_lt.2 ⟨_, this _ _ ij (le_reflₓ _)⟩⟩
-        rw [neg_lt, neg_sub]
-        exact this _ _ (le_reflₓ _) ij 
-      intro j k ij ik 
-      replace ij := le_transₓ (Nat.le_ceil _) (Nat.cast_le.2 ij)
-      replace ik := le_transₓ (Nat.le_ceil _) (Nat.cast_le.2 ik)
-      have j0 := Nat.cast_pos.1 (lt_of_lt_of_leₓ (inv_pos.2 ε0) ij)
-      have k0 := Nat.cast_pos.1 (lt_of_lt_of_leₓ (inv_pos.2 ε0) ik)
-      rcases hf₁ _ j0 with ⟨y, yS, hy⟩
-      refine' lt_of_lt_of_leₓ ((@Rat.cast_lt ℝ _ _ _).1 _) ((inv_le ε0 (Nat.cast_pos.2 k0)).1 ik)
-      simpa using sub_lt_iff_lt_add'.2 (lt_of_le_of_ltₓ hy$ sub_lt_iff_lt_add.1$ hf₂ _ k0 _ yS)
-    let g : CauSeq ℚ abs := ⟨fun n => f n / n, hg⟩
-    refine' ⟨mk g, ⟨fun x xS => _, fun y h => _⟩⟩
-    ·
-      refine' le_of_forall_ge_of_dense fun z xz => _ 
-      cases' exists_nat_gt ((x - z)⁻¹) with K hK 
-      refine' le_mk_of_forall_le ⟨K, fun n nK => _⟩
-      replace xz := sub_pos.2 xz 
-      replace hK := le_transₓ (le_of_ltₓ hK) (Nat.cast_le.2 nK)
-      have n0 : 0 < n := Nat.cast_pos.1 (lt_of_lt_of_leₓ (inv_pos.2 xz) hK)
-      refine' le_transₓ _ (le_of_ltₓ$ hf₂ _ n0 _ xS)
-      rwa [le_sub, inv_le (Nat.cast_pos.2 n0 : (_ : ℝ) < _) xz]
-    ·
-      exact
-        mk_le_of_forall_le
-          ⟨1,
-            fun n n1 =>
-              let ⟨x, xS, hx⟩ := hf₁ _ n1 
-              le_transₓ hx (h xS)⟩
+-- error in Data.Real.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_is_lub (S : set exprℝ()) (hne : S.nonempty) (hbdd : bdd_above S) : «expr∃ , »((x), is_lub S x) :=
+begin
+  rcases ["⟨", expr hne, ",", expr hbdd, "⟩", "with", "⟨", "⟨", ident L, ",", ident hL, "⟩", ",", "⟨", ident U, ",", ident hU, "⟩", "⟩"],
+  have [] [":", expr ∀
+   d : exprℕ(), bdd_above {m : exprℤ() | «expr∃ , »((y «expr ∈ » S), «expr ≤ »((m : exprℝ()), «expr * »(y, d)))}] [],
+  { cases [expr exists_int_gt U] ["with", ident k, ident hk],
+    refine [expr λ d, ⟨«expr * »(k, d), λ z h, _⟩],
+    rcases [expr h, "with", "⟨", ident y, ",", ident yS, ",", ident hy, "⟩"],
+    refine [expr int.cast_le.1 (hy.trans _)],
+    push_cast [] [],
+    exact [expr mul_le_mul_of_nonneg_right ((hU yS).trans hk.le) d.cast_nonneg] },
+  choose [] [ident f] [ident hf] ["using", expr λ
+   d : exprℕ(), int.exists_greatest_of_bdd (this d) ⟨«expr⌊ ⌋»(«expr * »(L, d)), L, hL, int.floor_le _⟩],
+  have [ident hf₁] [":", expr ∀
+   n «expr > » 0, «expr∃ , »((y «expr ∈ » S), «expr ≤ »(((«expr / »(f n, n) : exprℚ()) : exprℝ()), y))] [":=", expr λ
+   n n0, let ⟨y, yS, hy⟩ := (hf n).1 in
+   ⟨y, yS, by simpa [] [] [] [] [] ["using", expr (div_le_iff (nat.cast_pos.2 n0 : «expr < »((_ : exprℝ()), _))).2 hy]⟩],
+  have [ident hf₂] [":", expr ∀
+   (n «expr > » 0)
+   (y «expr ∈ » S), «expr < »((«expr - »(y, «expr ⁻¹»((n : exprℕ()))) : exprℝ()), («expr / »(f n, n) : exprℚ()))] [],
+  { intros [ident n, ident n0, ident y, ident yS],
+    have [] [] [":=", expr (int.sub_one_lt_floor _).trans_le «expr $ »(int.cast_le.2, (hf n).2 _ ⟨y, yS, int.floor_le _⟩)],
+    simp [] [] [] ["[", "-", ident sub_eq_add_neg, "]"] [] [],
+    rwa ["[", expr lt_div_iff (nat.cast_pos.2 n0 : «expr < »((_ : exprℝ()), _)), ",", expr sub_mul, ",", expr _root_.inv_mul_cancel, "]"] [],
+    exact [expr ne_of_gt (nat.cast_pos.2 n0)] },
+  have [ident hg] [":", expr is_cau_seq abs (λ n, «expr / »(f n, n) : exprℕ() → exprℚ())] [],
+  { intros [ident ε, ident ε0],
+    suffices [] [":", expr ∀
+     j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)), «expr < »((«expr - »(«expr / »(f j, j), «expr / »(f k, k)) : exprℚ()), ε)],
+    { refine [expr ⟨_, λ j ij, abs_lt.2 ⟨_, this _ _ ij (le_refl _)⟩⟩],
+      rw ["[", expr neg_lt, ",", expr neg_sub, "]"] [],
+      exact [expr this _ _ (le_refl _) ij] },
+    intros [ident j, ident k, ident ij, ident ik],
+    replace [ident ij] [] [":=", expr le_trans (nat.le_ceil _) (nat.cast_le.2 ij)],
+    replace [ident ik] [] [":=", expr le_trans (nat.le_ceil _) (nat.cast_le.2 ik)],
+    have [ident j0] [] [":=", expr nat.cast_pos.1 (lt_of_lt_of_le (inv_pos.2 ε0) ij)],
+    have [ident k0] [] [":=", expr nat.cast_pos.1 (lt_of_lt_of_le (inv_pos.2 ε0) ik)],
+    rcases [expr hf₁ _ j0, "with", "⟨", ident y, ",", ident yS, ",", ident hy, "⟩"],
+    refine [expr lt_of_lt_of_le ((@rat.cast_lt exprℝ() _ _ _).1 _) ((inv_le ε0 (nat.cast_pos.2 k0)).1 ik)],
+    simpa [] [] [] [] [] ["using", expr sub_lt_iff_lt_add'.2 «expr $ »(lt_of_le_of_lt hy, «expr $ »(sub_lt_iff_lt_add.1, hf₂ _ k0 _ yS))] },
+  let [ident g] [":", expr cau_seq exprℚ() abs] [":=", expr ⟨λ n, «expr / »(f n, n), hg⟩],
+  refine [expr ⟨mk g, ⟨λ x xS, _, λ y h, _⟩⟩],
+  { refine [expr le_of_forall_ge_of_dense (λ z xz, _)],
+    cases [expr exists_nat_gt «expr ⁻¹»(«expr - »(x, z))] ["with", ident K, ident hK],
+    refine [expr le_mk_of_forall_le ⟨K, λ n nK, _⟩],
+    replace [ident xz] [] [":=", expr sub_pos.2 xz],
+    replace [ident hK] [] [":=", expr le_trans (le_of_lt hK) (nat.cast_le.2 nK)],
+    have [ident n0] [":", expr «expr < »(0, n)] [":=", expr nat.cast_pos.1 (lt_of_lt_of_le (inv_pos.2 xz) hK)],
+    refine [expr le_trans _ «expr $ »(le_of_lt, hf₂ _ n0 _ xS)],
+    rwa ["[", expr le_sub, ",", expr inv_le (nat.cast_pos.2 n0 : «expr < »((_ : exprℝ()), _)) xz, "]"] [] },
+  { exact [expr mk_le_of_forall_le ⟨1, λ n n1, let ⟨x, xS, hx⟩ := hf₁ _ n1 in le_trans hx (h xS)⟩] }
+end
 
 noncomputable instance  : HasSupₓ ℝ :=
   ⟨fun S => if h : S.nonempty ∧ BddAbove S then Classical.some (exists_is_lub S h.1 h.2) else 0⟩
@@ -724,25 +729,23 @@ theorem Sup_nonneg (S : Set ℝ) (hS : ∀ x _ : x ∈ S, (0 : ℝ) ≤ x) : 0 �
     ·
       apply dite _ (fun h => le_cSup_of_le h hy$ hS y hy) fun h => (Sup_of_not_bdd_above h).Ge
 
--- error in Data.Real.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /--
 As `0` is the default value for `real.Sup` of the empty set, it suffices to show that `S` is
 bounded above by `0` to show that `Sup S ≤ 0`.
--/ theorem Sup_nonpos (S : set exprℝ()) (hS : ∀ x «expr ∈ » S, «expr ≤ »(x, (0 : exprℝ()))) : «expr ≤ »(Sup S, 0) :=
-begin
-  rcases [expr S.eq_empty_or_nonempty, "with", ident rfl, "|", ident hS₂],
-  exacts ["[", expr Sup_empty.le, ",", expr cSup_le hS₂ hS, "]"]
-end
+-/
+theorem Sup_nonpos (S : Set ℝ) (hS : ∀ x _ : x ∈ S, x ≤ (0 : ℝ)) : Sup S ≤ 0 :=
+  by 
+    rcases S.eq_empty_or_nonempty with (rfl | hS₂)
+    exacts[Sup_empty.le, cSup_le hS₂ hS]
 
--- error in Data.Real.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /--
 As `0` is the default value for `real.Inf` of the empty set, it suffices to show that `S` is
 bounded below by `0` to show that `0 ≤ Inf S`.
--/ theorem Inf_nonneg (S : set exprℝ()) (hS : ∀ x «expr ∈ » S, «expr ≤ »((0 : exprℝ()), x)) : «expr ≤ »(0, Inf S) :=
-begin
-  rcases [expr S.eq_empty_or_nonempty, "with", ident rfl, "|", ident hS₂],
-  exacts ["[", expr Inf_empty.ge, ",", expr le_cInf hS₂ hS, "]"]
-end
+-/
+theorem Inf_nonneg (S : Set ℝ) (hS : ∀ x _ : x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ Inf S :=
+  by 
+    rcases S.eq_empty_or_nonempty with (rfl | hS₂)
+    exacts[Inf_empty.ge, le_cInf hS₂ hS]
 
 /--
 As `0` is the default value for `real.Inf` of the empty set or sets which are not bounded below, it
@@ -764,26 +767,28 @@ theorem Inf_le_Sup (s : Set ℝ) (h₁ : BddBelow s) (h₂ : BddAbove s) : Inf s
     ·
       exact cInf_le_cSup h₁ h₂ hne
 
-theorem cau_seq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x :=
-  by 
-    let S := { x : ℝ | const abs x < f }
-    have lb : ∃ x, x ∈ S := exists_lt f 
-    have ub' : ∀ x, f < const abs x → ∀ y _ : y ∈ S, y ≤ x :=
-      fun x h y yS => le_of_ltₓ$ const_lt.1$ CauSeq.lt_trans yS h 
-    have ub : ∃ x, ∀ y _ : y ∈ S, y ≤ x := (exists_gt f).imp ub' 
-    refine' ⟨Sup S, ((lt_total _ _).resolve_left fun h => _).resolve_right fun h => _⟩
-    ·
-      rcases h with ⟨ε, ε0, i, ih⟩
-      refine' (cSup_le lb (ub' _ _)).not_lt (sub_lt_self _ (half_pos ε0))
-      refine' ⟨_, half_pos ε0, i, fun j ij => _⟩
-      rw [sub_apply, const_apply, sub_right_comm, le_sub_iff_add_le, add_halves]
-      exact ih _ ij
-    ·
-      rcases h with ⟨ε, ε0, i, ih⟩
-      refine' (le_cSup ub _).not_lt ((lt_add_iff_pos_left _).2 (half_pos ε0))
-      refine' ⟨_, half_pos ε0, i, fun j ij => _⟩
-      rw [sub_apply, const_apply, add_commₓ, ←sub_sub, le_sub_iff_add_le, add_halves]
-      exact ih _ ij
+-- error in Data.Real.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cau_seq_converges (f : cau_seq exprℝ() abs) : «expr∃ , »((x), «expr ≈ »(f, const abs x)) :=
+begin
+  let [ident S] [] [":=", expr {x : exprℝ() | «expr < »(const abs x, f)}],
+  have [ident lb] [":", expr «expr∃ , »((x), «expr ∈ »(x, S))] [":=", expr exists_lt f],
+  have [ident ub'] [":", expr ∀
+   x, «expr < »(f, const abs x) → ∀
+   y «expr ∈ » S, «expr ≤ »(y, x)] [":=", expr λ
+   x h y yS, «expr $ »(le_of_lt, «expr $ »(const_lt.1, cau_seq.lt_trans yS h))],
+  have [ident ub] [":", expr «expr∃ , »((x), ∀ y «expr ∈ » S, «expr ≤ »(y, x))] [":=", expr (exists_gt f).imp ub'],
+  refine [expr ⟨Sup S, ((lt_total _ _).resolve_left (λ h, _)).resolve_right (λ h, _)⟩],
+  { rcases [expr h, "with", "⟨", ident ε, ",", ident ε0, ",", ident i, ",", ident ih, "⟩"],
+    refine [expr (cSup_le lb (ub' _ _)).not_lt (sub_lt_self _ (half_pos ε0))],
+    refine [expr ⟨_, half_pos ε0, i, λ j ij, _⟩],
+    rw ["[", expr sub_apply, ",", expr const_apply, ",", expr sub_right_comm, ",", expr le_sub_iff_add_le, ",", expr add_halves, "]"] [],
+    exact [expr ih _ ij] },
+  { rcases [expr h, "with", "⟨", ident ε, ",", ident ε0, ",", ident i, ",", ident ih, "⟩"],
+    refine [expr (le_cSup ub _).not_lt ((lt_add_iff_pos_left _).2 (half_pos ε0))],
+    refine [expr ⟨_, half_pos ε0, i, λ j ij, _⟩],
+    rw ["[", expr sub_apply, ",", expr const_apply, ",", expr add_comm, ",", "<-", expr sub_sub, ",", expr le_sub_iff_add_le, ",", expr add_halves, "]"] [],
+    exact [expr ih _ ij] }
+end
 
 noncomputable instance  : CauSeq.IsComplete ℝ abs :=
   ⟨cau_seq_converges⟩

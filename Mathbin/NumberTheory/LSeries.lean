@@ -47,50 +47,53 @@ theorem l_series_summable_zero {z : ℂ} : l_series_summable 0 z :=
   by 
     simp [l_series_summable, summable_zero]
 
-theorem l_series_summable_of_bounded_of_one_lt_real {f : arithmetic_function ℂ} {m : ℝ}
-  (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℝ} (hz : 1 < z) : f.l_series_summable z :=
-  by 
-    byCases' h0 : m = 0
-    ·
-      subst h0 
-      have hf : f = 0 :=
-        arithmetic_function.ext fun n => Complex.abs_eq_zero.1 (le_antisymmₓ (h n) (Complex.abs_nonneg _))
-      simp [hf]
-    refine' summable_of_norm_bounded (fun n : ℕ => m / (n^z)) _ _
-    ·
-      simpRw [div_eq_mul_inv]
-      exact (summable_mul_left_iff h0).1 (Real.summable_nat_rpow_inv.2 hz)
-    ·
-      intro n 
-      have hm : 0 ≤ m := le_transₓ (Complex.abs_nonneg _) (h 0)
-      cases n
-      ·
-        simp [hm, Real.zero_rpow (ne_of_gtₓ (lt_transₓ Real.zero_lt_one hz))]
-      simp only [Complex.abs_div, Complex.norm_eq_abs]
-      apply div_le_div hm (h _) (Real.rpow_pos_of_pos (Nat.cast_pos.2 n.succ_pos) _) (le_of_eqₓ _)
-      rw [Complex.abs_cpow_real, Complex.abs_cast_nat]
+-- error in NumberTheory.LSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem l_series_summable_of_bounded_of_one_lt_real
+{f : arithmetic_function exprℂ()}
+{m : exprℝ()}
+(h : ∀ n : exprℕ(), «expr ≤ »(complex.abs (f n), m))
+{z : exprℝ()}
+(hz : «expr < »(1, z)) : f.l_series_summable z :=
+begin
+  by_cases [expr h0, ":", expr «expr = »(m, 0)],
+  { subst [expr h0],
+    have [ident hf] [":", expr «expr = »(f, 0)] [":=", expr arithmetic_function.ext (λ
+      n, complex.abs_eq_zero.1 (le_antisymm (h n) (complex.abs_nonneg _)))],
+    simp [] [] [] ["[", expr hf, "]"] [] [] },
+  refine [expr summable_of_norm_bounded (λ n : exprℕ(), «expr / »(m, «expr ^ »(n, z))) _ _],
+  { simp_rw ["[", expr div_eq_mul_inv, "]"] [],
+    exact [expr (summable_mul_left_iff h0).1 (real.summable_nat_rpow_inv.2 hz)] },
+  { intro [ident n],
+    have [ident hm] [":", expr «expr ≤ »(0, m)] [":=", expr le_trans (complex.abs_nonneg _) (h 0)],
+    cases [expr n] [],
+    { simp [] [] [] ["[", expr hm, ",", expr real.zero_rpow (ne_of_gt (lt_trans real.zero_lt_one hz)), "]"] [] [] },
+    simp [] [] ["only"] ["[", expr complex.abs_div, ",", expr complex.norm_eq_abs, "]"] [] [],
+    apply [expr div_le_div hm (h _) (real.rpow_pos_of_pos (nat.cast_pos.2 n.succ_pos) _) (le_of_eq _)],
+    rw ["[", expr complex.abs_cpow_real, ",", expr complex.abs_cast_nat, "]"] [] }
+end
 
-theorem l_series_summable_iff_of_re_eq_re {f : arithmetic_function ℂ} {w z : ℂ} (h : w.re = z.re) :
-  f.l_series_summable w ↔ f.l_series_summable z :=
-  by 
-    suffices h :
-      ∀ n : ℕ, Complex.abs (f n) / Complex.abs («expr↑ » n^w) = Complex.abs (f n) / Complex.abs («expr↑ » n^z)
-    ·
-      simp [l_series_summable, ←summable_norm_iff, h, Complex.norm_eq_abs]
-    intro n 
-    cases n
-    ·
-      simp 
-    apply congr rfl 
-    have h0 : (n.succ : ℂ) ≠ 0
-    ·
-      rw [Ne.def, Nat.cast_eq_zero]
-      apply n.succ_ne_zero 
-    rw [Complex.cpow_def, Complex.cpow_def, if_neg h0, if_neg h0, Complex.abs_exp_eq_iff_re_eq]
-    simp only [h, Complex.mul_re, mul_eq_mul_left_iff, sub_right_inj]
-    right 
-    rw [Complex.log_im, ←Complex.of_real_nat_cast]
-    exact Complex.arg_of_real_of_nonneg (le_of_ltₓ (cast_pos.2 n.succ_pos))
+-- error in NumberTheory.LSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem l_series_summable_iff_of_re_eq_re
+{f : arithmetic_function exprℂ()}
+{w z : exprℂ()}
+(h : «expr = »(w.re, z.re)) : «expr ↔ »(f.l_series_summable w, f.l_series_summable z) :=
+begin
+  suffices [ident h] [":", expr ∀
+   n : exprℕ(), «expr = »(«expr / »(complex.abs (f n), complex.abs «expr ^ »(«expr↑ »(n), w)), «expr / »(complex.abs (f n), complex.abs «expr ^ »(«expr↑ »(n), z)))],
+  { simp [] [] [] ["[", expr l_series_summable, ",", "<-", expr summable_norm_iff, ",", expr h, ",", expr complex.norm_eq_abs, "]"] [] [] },
+  intro [ident n],
+  cases [expr n] [],
+  { simp [] [] [] [] [] [] },
+  apply [expr congr rfl],
+  have [ident h0] [":", expr «expr ≠ »((n.succ : exprℂ()), 0)] [],
+  { rw ["[", expr ne.def, ",", expr nat.cast_eq_zero, "]"] [],
+    apply [expr n.succ_ne_zero] },
+  rw ["[", expr complex.cpow_def, ",", expr complex.cpow_def, ",", expr if_neg h0, ",", expr if_neg h0, ",", expr complex.abs_exp_eq_iff_re_eq, "]"] [],
+  simp [] [] ["only"] ["[", expr h, ",", expr complex.mul_re, ",", expr mul_eq_mul_left_iff, ",", expr sub_right_inj, "]"] [] [],
+  right,
+  rw ["[", expr complex.log_im, ",", "<-", expr complex.of_real_nat_cast, "]"] [],
+  exact [expr complex.arg_of_real_of_nonneg (le_of_lt (cast_pos.2 n.succ_pos))]
+end
 
 theorem l_series_summable_of_bounded_of_one_lt_re {f : arithmetic_function ℂ} {m : ℝ}
   (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℂ} (hz : 1 < z.re) : f.l_series_summable z :=

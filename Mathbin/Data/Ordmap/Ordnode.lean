@@ -104,7 +104,7 @@ def ratio :=
 protected def singleton (a : α) : Ordnode α :=
   node 1 nil a nil
 
--- error in Data.Ordmap.Ordnode: ././Mathport/Syntax/Translate/Basic.lean:264:9: unsupported: advanced prec syntax
+-- error in Data.Ordmap.Ordnode: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 local prefix `ι`:max := ordnode.singleton
 
 instance  : HasSingleton α (Ordnode α) :=
@@ -324,7 +324,7 @@ def all (P : α → Prop) : Ordnode α → Prop
 
 instance all.decidable {P : α → Prop} [DecidablePred P] t : Decidable (all P t) :=
   by 
-    induction t <;> dunfold all <;> resetI <;> infer_instance
+    induction t <;> dunfold all <;> skip <;> infer_instance
 
 /-- O(n). Does any element of the map satisfy property `P`?
 
@@ -336,7 +336,7 @@ def any (P : α → Prop) : Ordnode α → Prop
 
 instance any.decidable {P : α → Prop} [DecidablePred P] t : Decidable (any P t) :=
   by 
-    induction t <;> dunfold any <;> resetI <;> infer_instance
+    induction t <;> dunfold any <;> skip <;> infer_instance
 
 /-- O(n). Exact membership in the set. This is useful primarily for stating
 correctness properties; use `∈` for a version that actually uses the BST property

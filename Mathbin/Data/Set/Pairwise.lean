@@ -1,4 +1,5 @@
-import Mathbin.Data.Set.Lattice
+import Mathbin.Data.Set.Lattice 
+import Mathbin.Logic.Relation
 
 /-!
 # Relations holding pairwise
@@ -167,7 +168,7 @@ theorem pairwise.on_injective (hs : s.pairwise r) (hf : Function.Injective f) (h
   Pairwise (r on f) :=
   fun i j hij => hs _ (hfs i) _ (hfs j) (hf.ne hij)
 
--- error in Data.Set.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Set.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem inj_on.pairwise_image
 {s : set ι}
 (h : s.inj_on f) : «expr ↔ »(«expr '' »(f, s).pairwise r, s.pairwise «expr on »(r, f)) :=

@@ -235,20 +235,23 @@ theorem affine_combination_vsub (w₁ w₂ : ι → k) (p : ι → P) :
   by 
     rw [←AffineMap.linear_map_vsub, affine_combination_linear, vsub_eq_sub]
 
-theorem attach_affine_combination_of_injective (s : Finset P) (w : P → k) (f : s → P) (hf : Function.Injective f) :
-  s.attach.affine_combination f (w ∘ f) = (image f univ).affineCombination id w :=
-  by 
-    simp only [affine_combination, weighted_vsub_of_point_apply, id.def, vadd_right_cancel_iff, Function.comp_app,
-      AffineMap.coe_mk]
-    let g₁ : s → V := fun i => w (f i) • (f i -ᵥ Classical.choice S.nonempty)
-    let g₂ : P → V := fun i => w i • (i -ᵥ Classical.choice S.nonempty)
-    change univ.sum g₁ = (image f univ).Sum g₂ 
-    have hgf : g₁ = (g₂ ∘ f)
-    ·
-      ext 
-      simp 
-    rw [hgf, sum_image]
-    exact fun _ _ _ _ hxy => hf hxy
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem attach_affine_combination_of_injective
+(s : finset P)
+(w : P → k)
+(f : s → P)
+(hf : function.injective f) : «expr = »(s.attach.affine_combination f «expr ∘ »(w, f), (image f univ).affine_combination id w) :=
+begin
+  simp [] [] ["only"] ["[", expr affine_combination, ",", expr weighted_vsub_of_point_apply, ",", expr id.def, ",", expr vadd_right_cancel_iff, ",", expr function.comp_app, ",", expr affine_map.coe_mk, "]"] [] [],
+  let [ident g₁] [":", expr s → V] [":=", expr λ i, «expr • »(w (f i), «expr -ᵥ »(f i, classical.choice S.nonempty))],
+  let [ident g₂] [":", expr P → V] [":=", expr λ i, «expr • »(w i, «expr -ᵥ »(i, classical.choice S.nonempty))],
+  change [expr «expr = »(univ.sum g₁, (image f univ).sum g₂)] [] [],
+  have [ident hgf] [":", expr «expr = »(g₁, «expr ∘ »(g₂, f))] [],
+  { ext [] [] [],
+    simp [] [] [] [] [] [] },
+  rw ["[", expr hgf, ",", expr sum_image, "]"] [],
+  exact [expr λ _ _ _ _ hxy, hf hxy]
+end
 
 theorem attach_affine_combination_coe (s : Finset P) (w : P → k) :
   s.attach.affine_combination (coeₓ : s → P) (w ∘ coeₓ) = s.affine_combination id w :=
@@ -268,22 +271,28 @@ theorem affine_combination_eq_linear_combination (s : Finset ι) (p : ι → V) 
 
 include S
 
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An `affine_combination` equals a point if that point is in the set
 and has weight 1 and the other points in the set have weight 0. -/
 @[simp]
-theorem affine_combination_of_eq_one_of_eq_zero (w : ι → k) (p : ι → P) {i : ι} (his : i ∈ s) (hwi : w i = 1)
-  (hw0 : ∀ i2 _ : i2 ∈ s, i2 ≠ i → w i2 = 0) : s.affine_combination p w = p i :=
-  by 
-    have h1 : (∑i in s, w i) = 1 := hwi ▸ sum_eq_single i hw0 fun h => False.elim (h his)
-    rw [s.affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one w p h1 (p i), weighted_vsub_of_point_apply]
-    convert zero_vadd V (p i)
-    convert sum_eq_zero _ 
-    intro i2 hi2 
-    byCases' h : i2 = i
-    ·
-      simp [h]
-    ·
-      simp [hw0 i2 hi2 h]
+theorem affine_combination_of_eq_one_of_eq_zero
+(w : ι → k)
+(p : ι → P)
+{i : ι}
+(his : «expr ∈ »(i, s))
+(hwi : «expr = »(w i, 1))
+(hw0 : ∀ i2 «expr ∈ » s, «expr ≠ »(i2, i) → «expr = »(w i2, 0)) : «expr = »(s.affine_combination p w, p i) :=
+begin
+  have [ident h1] [":", expr «expr = »(«expr∑ in , »((i), s, w i), 1)] [":=", expr «expr ▸ »(hwi, sum_eq_single i hw0 (λ
+     h, false.elim (h his)))],
+  rw ["[", expr s.affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one w p h1 (p i), ",", expr weighted_vsub_of_point_apply, "]"] [],
+  convert [] [expr zero_vadd V (p i)] [],
+  convert [] [expr sum_eq_zero _] [],
+  intros [ident i2, ident hi2],
+  by_cases [expr h, ":", expr «expr = »(i2, i)],
+  { simp [] [] [] ["[", expr h, "]"] [] [] },
+  { simp [] [] [] ["[", expr hw0 i2 hi2 h, "]"] [] [] }
+end
 
 /-- An affine combination is unaffected by changing the weights to the
 corresponding indicator function and adding points to the set. -/
@@ -357,17 +366,23 @@ theorem eq_affine_combination_subset_iff_eq_affine_combination_subtype {p0 : P} 
 
 variable{k V}
 
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Affine maps commute with affine combinations. -/
-theorem map_affine_combination {V₂ P₂ : Type _} [AddCommGroupₓ V₂] [Module k V₂] [affine_space V₂ P₂] (p : ι → P)
-  (w : ι → k) (hw : s.sum w = 1) (f : P →ᵃ[k] P₂) : f (s.affine_combination p w) = s.affine_combination (f ∘ p) w :=
-  by 
-    have b := Classical.choice (inferInstance : affine_space V P).Nonempty 
-    have b₂ := Classical.choice (inferInstance : affine_space V₂ P₂).Nonempty 
-    rw [s.affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one w p hw b,
-      s.affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one w (f ∘ p) hw b₂,
-      ←s.weighted_vsub_of_point_vadd_eq_of_sum_eq_one w (f ∘ p) hw (f b) b₂]
-    simp only [weighted_vsub_of_point_apply, RingHom.id_apply, AffineMap.map_vadd, LinearMap.map_smulₛₗ,
-      AffineMap.linear_map_vsub, LinearMap.map_sum]
+theorem map_affine_combination
+{V₂ P₂ : Type*}
+[add_comm_group V₂]
+[module k V₂]
+[expraffine_space() V₂ P₂]
+(p : ι → P)
+(w : ι → k)
+(hw : «expr = »(s.sum w, 1))
+(f : «expr →ᵃ[ ] »(P, k, P₂)) : «expr = »(f (s.affine_combination p w), s.affine_combination «expr ∘ »(f, p) w) :=
+begin
+  have [ident b] [] [":=", expr classical.choice (infer_instance : expraffine_space() V P).nonempty],
+  have [ident b₂] [] [":=", expr classical.choice (infer_instance : expraffine_space() V₂ P₂).nonempty],
+  rw ["[", expr s.affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one w p hw b, ",", expr s.affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one w «expr ∘ »(f, p) hw b₂, ",", "<-", expr s.weighted_vsub_of_point_vadd_eq_of_sum_eq_one w «expr ∘ »(f, p) hw (f b) b₂, "]"] [],
+  simp [] [] ["only"] ["[", expr weighted_vsub_of_point_apply, ",", expr ring_hom.id_apply, ",", expr affine_map.map_vadd, ",", expr linear_map.map_smulₛₗ, ",", expr affine_map.linear_map_vsub, ",", expr linear_map.map_sum, "]"] [] []
+end
 
 end Finset
 
@@ -444,25 +459,25 @@ theorem centroid_singleton (p : ι → P) (i : ι) : ({i} : Finset ι).centroid 
   by 
     simp [centroid_def, affine_combination_apply]
 
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The centroid of two points, expressed directly as adding a vector
 to a point. -/
-theorem centroid_insert_singleton [Invertible (2 : k)] (p : ι → P) (i₁ i₂ : ι) :
-  ({i₁, i₂} : Finset ι).centroid k p = (2⁻¹ : k) • (p i₂ -ᵥ p i₁) +ᵥ p i₁ :=
-  by 
-    byCases' h : i₁ = i₂
-    ·
-      simp [h]
-    ·
-      have hc : (card ({i₁, i₂} : Finset ι) : k) ≠ 0
-      ·
-        rw [card_insert_of_not_mem (not_mem_singleton.2 h), card_singleton]
-        normNum 
-        exact nonzero_of_invertible _ 
-      rw [centroid_def,
-        affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one _ _ _
-          (sum_centroid_weights_eq_one_of_cast_card_ne_zero _ hc) (p i₁)]
-      simp [h]
-      normNum
+theorem centroid_insert_singleton
+[invertible (2 : k)]
+(p : ι → P)
+(i₁
+ i₂ : ι) : «expr = »(({i₁, i₂} : finset ι).centroid k p, «expr +ᵥ »(«expr • »((«expr ⁻¹»(2) : k), «expr -ᵥ »(p i₂, p i₁)), p i₁)) :=
+begin
+  by_cases [expr h, ":", expr «expr = »(i₁, i₂)],
+  { simp [] [] [] ["[", expr h, "]"] [] [] },
+  { have [ident hc] [":", expr «expr ≠ »((card ({i₁, i₂} : finset ι) : k), 0)] [],
+    { rw ["[", expr card_insert_of_not_mem (not_mem_singleton.2 h), ",", expr card_singleton, "]"] [],
+      norm_num [] [],
+      exact [expr nonzero_of_invertible _] },
+    rw ["[", expr centroid_def, ",", expr affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one _ _ _ (sum_centroid_weights_eq_one_of_cast_card_ne_zero _ hc) (p i₁), "]"] [],
+    simp [] [] [] ["[", expr h, "]"] [] [],
+    norm_num [] [] }
+end
 
 /-- The centroid of two points indexed by `fin 2`, expressed directly
 as adding a vector to the first point. -/
@@ -531,41 +546,45 @@ theorem centroid_eq_affine_combination_fintype [Fintype ι] (p : ι → P) :
   s.centroid k p = univ.affineCombination p (s.centroid_weights_indicator k) :=
   affine_combination_indicator_subset _ _ (subset_univ _)
 
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An indexed family of points that is injective on the given
 `finset` has the same centroid as the image of that `finset`.  This is
 stated in terms of a set equal to the image to provide control of
 definitional equality for the index type used for the centroid of the
 image. -/
-theorem centroid_eq_centroid_image_of_inj_on {p : ι → P} (hi : ∀ i j _ : i ∈ s _ : j ∈ s, p i = p j → i = j)
-  {ps : Set P} [Fintype ps] (hps : ps = p '' «expr↑ » s) : s.centroid k p = (univ : Finset ps).centroid k fun x => x :=
-  by 
-    let f : p '' «expr↑ » s → ι := fun x => x.property.some 
-    have hf : ∀ x, f x ∈ s ∧ p (f x) = x := fun x => x.property.some_spec 
-    let f' : ps → ι := fun x => f ⟨x, hps ▸ x.property⟩
-    have hf' : ∀ x, f' x ∈ s ∧ p (f' x) = x := fun x => hf ⟨x, hps ▸ x.property⟩
-    have hf'i : Function.Injective f'
-    ·
-      intro x y h 
-      rw [Subtype.ext_iff, ←(hf' x).2, ←(hf' y).2, h]
-    let f'e : ps ↪ ι := ⟨f', hf'i⟩
-    have hu : finset.univ.map f'e = s
-    ·
-      ext x 
-      rw [mem_map]
-      split 
-      ·
-        rintro ⟨i, _, rfl⟩
-        exact (hf' i).1
-      ·
-        intro hx 
-        use ⟨p x, hps.symm ▸ Set.mem_image_of_mem _ hx⟩, mem_univ _ 
-        refine' hi _ _ (hf' _).1 hx _ 
-        rw [(hf' _).2]
-        rfl 
-    rw [←hu, centroid_map]
-    congr with x 
-    change p (f' x) = «expr↑ » x 
-    rw [(hf' x).2]
+theorem centroid_eq_centroid_image_of_inj_on
+{p : ι → P}
+(hi : ∀ i j «expr ∈ » s, «expr = »(p i, p j) → «expr = »(i, j))
+{ps : set P}
+[fintype ps]
+(hps : «expr = »(ps, «expr '' »(p, «expr↑ »(s)))) : «expr = »(s.centroid k p, (univ : finset ps).centroid k (λ x, x)) :=
+begin
+  let [ident f] [":", expr «expr '' »(p, «expr↑ »(s)) → ι] [":=", expr λ x, x.property.some],
+  have [ident hf] [":", expr ∀
+   x, «expr ∧ »(«expr ∈ »(f x, s), «expr = »(p (f x), x))] [":=", expr λ x, x.property.some_spec],
+  let [ident f'] [":", expr ps → ι] [":=", expr λ x, f ⟨x, «expr ▸ »(hps, x.property)⟩],
+  have [ident hf'] [":", expr ∀
+   x, «expr ∧ »(«expr ∈ »(f' x, s), «expr = »(p (f' x), x))] [":=", expr λ x, hf ⟨x, «expr ▸ »(hps, x.property)⟩],
+  have [ident hf'i] [":", expr function.injective f'] [],
+  { intros [ident x, ident y, ident h],
+    rw ["[", expr subtype.ext_iff, ",", "<-", expr (hf' x).2, ",", "<-", expr (hf' y).2, ",", expr h, "]"] [] },
+  let [ident f'e] [":", expr «expr ↪ »(ps, ι)] [":=", expr ⟨f', hf'i⟩],
+  have [ident hu] [":", expr «expr = »(finset.univ.map f'e, s)] [],
+  { ext [] [ident x] [],
+    rw [expr mem_map] [],
+    split,
+    { rintros ["⟨", ident i, ",", "_", ",", ident rfl, "⟩"],
+      exact [expr (hf' i).1] },
+    { intro [ident hx],
+      use ["[", expr ⟨p x, «expr ▸ »(hps.symm, set.mem_image_of_mem _ hx)⟩, ",", expr mem_univ _, "]"],
+      refine [expr hi _ _ (hf' _).1 hx _],
+      rw [expr (hf' _).2] [],
+      refl } },
+  rw ["[", "<-", expr hu, ",", expr centroid_map, "]"] [],
+  congr' [] ["with", ident x],
+  change [expr «expr = »(p (f' x), «expr↑ »(x))] [] [],
+  rw [expr (hf' x).2] []
+end
 
 /-- Two indexed families of points that are injective on the given
 `finset`s and with the same points in the image of those `finset`s
@@ -586,136 +605,134 @@ variable{ι : Type _}
 
 include V
 
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A `weighted_vsub` with sum of weights 0 is in the `vector_span` of
 an indexed family. -/
-theorem weighted_vsub_mem_vector_span {s : Finset ι} {w : ι → k} (h : (∑i in s, w i) = 0) (p : ι → P) :
-  s.weighted_vsub p w ∈ vectorSpan k (Set.Range p) :=
-  by 
-    rcases is_empty_or_nonempty ι with (hι | ⟨⟨i0⟩⟩)
-    ·
-      resetI 
-      simp [Finset.eq_empty_of_is_empty s]
-    ·
-      rw [vector_span_range_eq_span_range_vsub_right k p i0, ←Set.image_univ, Finsupp.mem_span_image_iff_total,
-        Finset.weighted_vsub_eq_weighted_vsub_of_point_of_sum_eq_zero s w p h (p i0),
-        Finset.weighted_vsub_of_point_apply]
-      let w' := Set.indicator («expr↑ » s) w 
-      have hwx : ∀ i, w' i ≠ 0 → i ∈ s := fun i => Set.mem_of_indicator_ne_zero 
-      use Finsupp.onFinset s w' hwx, Set.subset_univ _ 
-      rw [Finsupp.total_apply, Finsupp.on_finset_sum hwx]
-      ·
-        apply Finset.sum_congr rfl 
-        intro i hi 
-        simp [w', Set.indicator_apply, if_pos hi]
-      ·
-        exact fun _ => zero_smul k _
+theorem weighted_vsub_mem_vector_span
+{s : finset ι}
+{w : ι → k}
+(h : «expr = »(«expr∑ in , »((i), s, w i), 0))
+(p : ι → P) : «expr ∈ »(s.weighted_vsub p w, vector_span k (set.range p)) :=
+begin
+  rcases [expr is_empty_or_nonempty ι, "with", ident hι, "|", "⟨", "⟨", ident i0, "⟩", "⟩"],
+  { resetI,
+    simp [] [] [] ["[", expr finset.eq_empty_of_is_empty s, "]"] [] [] },
+  { rw ["[", expr vector_span_range_eq_span_range_vsub_right k p i0, ",", "<-", expr set.image_univ, ",", expr finsupp.mem_span_image_iff_total, ",", expr finset.weighted_vsub_eq_weighted_vsub_of_point_of_sum_eq_zero s w p h (p i0), ",", expr finset.weighted_vsub_of_point_apply, "]"] [],
+    let [ident w'] [] [":=", expr set.indicator «expr↑ »(s) w],
+    have [ident hwx] [":", expr ∀
+     i, «expr ≠ »(w' i, 0) → «expr ∈ »(i, s)] [":=", expr λ i, set.mem_of_indicator_ne_zero],
+    use ["[", expr finsupp.on_finset s w' hwx, ",", expr set.subset_univ _, "]"],
+    rw ["[", expr finsupp.total_apply, ",", expr finsupp.on_finset_sum hwx, "]"] [],
+    { apply [expr finset.sum_congr rfl],
+      intros [ident i, ident hi],
+      simp [] [] [] ["[", expr w', ",", expr set.indicator_apply, ",", expr if_pos hi, "]"] [] [] },
+    { exact [expr λ _, zero_smul k _] } }
+end
 
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An `affine_combination` with sum of weights 1 is in the
 `affine_span` of an indexed family, if the underlying ring is
 nontrivial. -/
-theorem affine_combination_mem_affine_span [Nontrivial k] {s : Finset ι} {w : ι → k} (h : (∑i in s, w i) = 1)
-  (p : ι → P) : s.affine_combination p w ∈ affineSpan k (Set.Range p) :=
-  by 
-    have hnz : (∑i in s, w i) ≠ 0 := h.symm ▸ one_ne_zero 
-    have hn : s.nonempty := Finset.nonempty_of_sum_ne_zero hnz 
-    cases' hn with i1 hi1 
-    let w1 : ι → k := Function.update (Function.const ι 0) i1 1
-    have hw1 : (∑i in s, w1 i) = 1
-    ·
-      rw [Finset.sum_update_of_mem hi1, Finset.sum_const_zero, add_zeroₓ]
-    have hw1s : s.affine_combination p w1 = p i1 :=
-      s.affine_combination_of_eq_one_of_eq_zero w1 p hi1 (Function.update_same _ _ _)
-        fun _ _ hne => Function.update_noteq hne _ _ 
-    have hv : s.affine_combination p w -ᵥ p i1 ∈ (affineSpan k (Set.Range p)).direction
-    ·
-      rw [direction_affine_span, ←hw1s, Finset.affine_combination_vsub]
-      apply weighted_vsub_mem_vector_span 
-      simp [Pi.sub_apply, h, hw1]
-    rw [←vsub_vadd (s.affine_combination p w) (p i1)]
-    exact AffineSubspace.vadd_mem_of_mem_direction hv (mem_affine_span k (Set.mem_range_self _))
+theorem affine_combination_mem_affine_span
+[nontrivial k]
+{s : finset ι}
+{w : ι → k}
+(h : «expr = »(«expr∑ in , »((i), s, w i), 1))
+(p : ι → P) : «expr ∈ »(s.affine_combination p w, affine_span k (set.range p)) :=
+begin
+  have [ident hnz] [":", expr «expr ≠ »(«expr∑ in , »((i), s, w i), 0)] [":=", expr «expr ▸ »(h.symm, one_ne_zero)],
+  have [ident hn] [":", expr s.nonempty] [":=", expr finset.nonempty_of_sum_ne_zero hnz],
+  cases [expr hn] ["with", ident i1, ident hi1],
+  let [ident w1] [":", expr ι → k] [":=", expr function.update (function.const ι 0) i1 1],
+  have [ident hw1] [":", expr «expr = »(«expr∑ in , »((i), s, w1 i), 1)] [],
+  { rw ["[", expr finset.sum_update_of_mem hi1, ",", expr finset.sum_const_zero, ",", expr add_zero, "]"] [] },
+  have [ident hw1s] [":", expr «expr = »(s.affine_combination p w1, p i1)] [":=", expr s.affine_combination_of_eq_one_of_eq_zero w1 p hi1 (function.update_same _ _ _) (λ
+    _ _ hne, function.update_noteq hne _ _)],
+  have [ident hv] [":", expr «expr ∈ »(«expr -ᵥ »(s.affine_combination p w, p i1), (affine_span k (set.range p)).direction)] [],
+  { rw ["[", expr direction_affine_span, ",", "<-", expr hw1s, ",", expr finset.affine_combination_vsub, "]"] [],
+    apply [expr weighted_vsub_mem_vector_span],
+    simp [] [] [] ["[", expr pi.sub_apply, ",", expr h, ",", expr hw1, "]"] [] [] },
+  rw ["<-", expr vsub_vadd (s.affine_combination p w) (p i1)] [],
+  exact [expr affine_subspace.vadd_mem_of_mem_direction hv (mem_affine_span k (set.mem_range_self _))]
+end
 
 variable(k){V}
 
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A vector is in the `vector_span` of an indexed family if and only
 if it is a `weighted_vsub` with sum of weights 0. -/
-theorem mem_vector_span_iff_eq_weighted_vsub {v : V} {p : ι → P} :
-  v ∈ vectorSpan k (Set.Range p) ↔ ∃ (s : Finset ι)(w : ι → k)(h : (∑i in s, w i) = 0), v = s.weighted_vsub p w :=
-  by 
-    split 
-    ·
-      rcases is_empty_or_nonempty ι with (hι | ⟨⟨i0⟩⟩)
-      swap
-      ·
-        rw [vector_span_range_eq_span_range_vsub_right k p i0, ←Set.image_univ, Finsupp.mem_span_image_iff_total]
-        rintro ⟨l, hl, hv⟩
-        use insert i0 l.support 
-        set w := (l : ι → k) - Function.update (Function.const ι 0 : ι → k) i0 (∑i in l.support, l i) with hwdef 
-        use w 
-        have hw : (∑i in insert i0 l.support, w i) = 0
-        ·
-          rw [hwdef]
-          simpRw [Pi.sub_apply, Finset.sum_sub_distrib, Finset.sum_update_of_mem (Finset.mem_insert_self _ _),
-            Finset.sum_const_zero, Finset.sum_insert_of_eq_zero_if_not_mem Finsupp.not_mem_support_iff.1, add_zeroₓ,
-            sub_self]
-        use hw 
-        have hz : w i0 • (p i0 -ᵥ p i0 : V) = 0 := (vsub_self (p i0)).symm ▸ smul_zero _ 
-        change (fun i => w i • (p i -ᵥ p i0 : V)) i0 = 0 at hz 
-        rw [Finset.weighted_vsub_eq_weighted_vsub_of_point_of_sum_eq_zero _ w p hw (p i0),
-          Finset.weighted_vsub_of_point_apply, ←hv, Finsupp.total_apply, Finset.sum_insert_zero hz]
-        change (∑i in l.support, l i • _) = _ 
-        congr with i 
-        byCases' h : i = i0
-        ·
-          simp [h]
-        ·
-          simp [hwdef, h]
-      ·
-        resetI 
-        rw [Set.range_eq_empty, vector_span_empty, Submodule.mem_bot]
-        rintro rfl 
-        use ∅
-        simp 
-    ·
-      rintro ⟨s, w, hw, rfl⟩
-      exact weighted_vsub_mem_vector_span hw p
+theorem mem_vector_span_iff_eq_weighted_vsub
+{v : V}
+{p : ι → P} : «expr ↔ »(«expr ∈ »(v, vector_span k (set.range p)), «expr∃ , »((s : finset ι)
+  (w : ι → k)
+  (h : «expr = »(«expr∑ in , »((i), s, w i), 0)), «expr = »(v, s.weighted_vsub p w))) :=
+begin
+  split,
+  { rcases [expr is_empty_or_nonempty ι, "with", ident hι, "|", "⟨", "⟨", ident i0, "⟩", "⟩"],
+    swap,
+    { rw ["[", expr vector_span_range_eq_span_range_vsub_right k p i0, ",", "<-", expr set.image_univ, ",", expr finsupp.mem_span_image_iff_total, "]"] [],
+      rintros ["⟨", ident l, ",", ident hl, ",", ident hv, "⟩"],
+      use [expr insert i0 l.support],
+      set [] [ident w] [] [":="] [expr «expr - »((l : ι → k), function.update (function.const ι 0 : ι → k) i0 «expr∑ in , »((i), l.support, l i))] ["with", ident hwdef],
+      use [expr w],
+      have [ident hw] [":", expr «expr = »(«expr∑ in , »((i), insert i0 l.support, w i), 0)] [],
+      { rw [expr hwdef] [],
+        simp_rw ["[", expr pi.sub_apply, ",", expr finset.sum_sub_distrib, ",", expr finset.sum_update_of_mem (finset.mem_insert_self _ _), ",", expr finset.sum_const_zero, ",", expr finset.sum_insert_of_eq_zero_if_not_mem finsupp.not_mem_support_iff.1, ",", expr add_zero, ",", expr sub_self, "]"] [] },
+      use [expr hw],
+      have [ident hz] [":", expr «expr = »(«expr • »(w i0, («expr -ᵥ »(p i0, p i0) : V)), 0)] [":=", expr «expr ▸ »((vsub_self (p i0)).symm, smul_zero _)],
+      change [expr «expr = »(λ i, «expr • »(w i, («expr -ᵥ »(p i, p i0) : V)) i0, 0)] [] ["at", ident hz],
+      rw ["[", expr finset.weighted_vsub_eq_weighted_vsub_of_point_of_sum_eq_zero _ w p hw (p i0), ",", expr finset.weighted_vsub_of_point_apply, ",", "<-", expr hv, ",", expr finsupp.total_apply, ",", expr finset.sum_insert_zero hz, "]"] [],
+      change [expr «expr = »(«expr∑ in , »((i), l.support, «expr • »(l i, _)), _)] [] [],
+      congr' [] ["with", ident i],
+      by_cases [expr h, ":", expr «expr = »(i, i0)],
+      { simp [] [] [] ["[", expr h, "]"] [] [] },
+      { simp [] [] [] ["[", expr hwdef, ",", expr h, "]"] [] [] } },
+    { resetI,
+      rw ["[", expr set.range_eq_empty, ",", expr vector_span_empty, ",", expr submodule.mem_bot, "]"] [],
+      rintro [ident rfl],
+      use ["[", expr «expr∅»(), "]"],
+      simp [] [] [] [] [] [] } },
+  { rintros ["⟨", ident s, ",", ident w, ",", ident hw, ",", ident rfl, "⟩"],
+    exact [expr weighted_vsub_mem_vector_span hw p] }
+end
 
 variable{k}
 
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A point in the `affine_span` of an indexed family is an
 `affine_combination` with sum of weights 1. See also
 `eq_affine_combination_of_mem_affine_span_of_fintype`. -/
-theorem eq_affine_combination_of_mem_affine_span {p1 : P} {p : ι → P} (h : p1 ∈ affineSpan k (Set.Range p)) :
-  ∃ (s : Finset ι)(w : ι → k)(hw : (∑i in s, w i) = 1), p1 = s.affine_combination p w :=
-  by 
-    have hn : (affineSpan k (Set.Range p) : Set P).Nonempty := ⟨p1, h⟩
-    rw [affine_span_nonempty, Set.range_nonempty_iff_nonempty] at hn 
-    cases' hn with i0 
-    have h0 : p i0 ∈ affineSpan k (Set.Range p) := mem_affine_span k (Set.mem_range_self i0)
-    have hd : p1 -ᵥ p i0 ∈ (affineSpan k (Set.Range p)).direction := AffineSubspace.vsub_mem_direction h h0 
-    rw [direction_affine_span, mem_vector_span_iff_eq_weighted_vsub] at hd 
-    rcases hd with ⟨s, w, h, hs⟩
-    let s' := insert i0 s 
-    let w' := Set.indicator («expr↑ » s) w 
-    have h' : (∑i in s', w' i) = 0
-    ·
-      rw [←h, Set.sum_indicator_subset _ (Finset.subset_insert i0 s)]
-    have hs' : s'.weighted_vsub p w' = p1 -ᵥ p i0
-    ·
-      rw [hs]
-      exact (Finset.weighted_vsub_indicator_subset _ _ (Finset.subset_insert i0 s)).symm 
-    let w0 : ι → k := Function.update (Function.const ι 0) i0 1
-    have hw0 : (∑i in s', w0 i) = 1
-    ·
-      rw [Finset.sum_update_of_mem (Finset.mem_insert_self _ _), Finset.sum_const_zero, add_zeroₓ]
-    have hw0s : s'.affine_combination p w0 = p i0 :=
-      s'.affine_combination_of_eq_one_of_eq_zero w0 p (Finset.mem_insert_self _ _) (Function.update_same _ _ _)
-        fun _ _ hne => Function.update_noteq hne _ _ 
-    use s', w0+w' 
-    split 
-    ·
-      simp [Pi.add_apply, Finset.sum_add_distrib, hw0, h']
-    ·
-      rw [add_commₓ, ←Finset.weighted_vsub_vadd_affine_combination, hw0s, hs', vsub_vadd]
+theorem eq_affine_combination_of_mem_affine_span
+{p1 : P}
+{p : ι → P}
+(h : «expr ∈ »(p1, affine_span k (set.range p))) : «expr∃ , »((s : finset ι)
+ (w : ι → k)
+ (hw : «expr = »(«expr∑ in , »((i), s, w i), 1)), «expr = »(p1, s.affine_combination p w)) :=
+begin
+  have [ident hn] [":", expr (affine_span k (set.range p) : set P).nonempty] [":=", expr ⟨p1, h⟩],
+  rw ["[", expr affine_span_nonempty, ",", expr set.range_nonempty_iff_nonempty, "]"] ["at", ident hn],
+  cases [expr hn] ["with", ident i0],
+  have [ident h0] [":", expr «expr ∈ »(p i0, affine_span k (set.range p))] [":=", expr mem_affine_span k (set.mem_range_self i0)],
+  have [ident hd] [":", expr «expr ∈ »(«expr -ᵥ »(p1, p i0), (affine_span k (set.range p)).direction)] [":=", expr affine_subspace.vsub_mem_direction h h0],
+  rw ["[", expr direction_affine_span, ",", expr mem_vector_span_iff_eq_weighted_vsub, "]"] ["at", ident hd],
+  rcases [expr hd, "with", "⟨", ident s, ",", ident w, ",", ident h, ",", ident hs, "⟩"],
+  let [ident s'] [] [":=", expr insert i0 s],
+  let [ident w'] [] [":=", expr set.indicator «expr↑ »(s) w],
+  have [ident h'] [":", expr «expr = »(«expr∑ in , »((i), s', w' i), 0)] [],
+  { rw ["[", "<-", expr h, ",", expr set.sum_indicator_subset _ (finset.subset_insert i0 s), "]"] [] },
+  have [ident hs'] [":", expr «expr = »(s'.weighted_vsub p w', «expr -ᵥ »(p1, p i0))] [],
+  { rw [expr hs] [],
+    exact [expr (finset.weighted_vsub_indicator_subset _ _ (finset.subset_insert i0 s)).symm] },
+  let [ident w0] [":", expr ι → k] [":=", expr function.update (function.const ι 0) i0 1],
+  have [ident hw0] [":", expr «expr = »(«expr∑ in , »((i), s', w0 i), 1)] [],
+  { rw ["[", expr finset.sum_update_of_mem (finset.mem_insert_self _ _), ",", expr finset.sum_const_zero, ",", expr add_zero, "]"] [] },
+  have [ident hw0s] [":", expr «expr = »(s'.affine_combination p w0, p i0)] [":=", expr s'.affine_combination_of_eq_one_of_eq_zero w0 p (finset.mem_insert_self _ _) (function.update_same _ _ _) (λ
+    _ _ hne, function.update_noteq hne _ _)],
+  use ["[", expr s', ",", expr «expr + »(w0, w'), "]"],
+  split,
+  { simp [] [] [] ["[", expr pi.add_apply, ",", expr finset.sum_add_distrib, ",", expr hw0, ",", expr h', "]"] [] [] },
+  { rw ["[", expr add_comm, ",", "<-", expr finset.weighted_vsub_vadd_affine_combination, ",", expr hw0s, ",", expr hs', ",", expr vsub_vadd, "]"] [] }
+end
 
 theorem eq_affine_combination_of_mem_affine_span_of_fintype [Fintype ι] {p1 : P} {p : ι → P}
   (h : p1 ∈ affineSpan k (Set.Range p)) : ∃ (w : ι → k)(hw : (∑i, w i) = 1), p1 = Finset.univ.affineCombination p w :=
@@ -743,53 +760,56 @@ theorem mem_affine_span_iff_eq_affine_combination [Nontrivial k] {p1 : P} {p : �
       rintro ⟨s, w, hw, rfl⟩
       exact affine_combination_mem_affine_span hw p
 
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a family of points together with a chosen base point in that family, membership of the
 affine span of this family corresponds to an identity in terms of `weighted_vsub_of_point`, with
 weights that are not required to sum to 1. -/
-theorem mem_affine_span_iff_eq_weighted_vsub_of_point_vadd [Nontrivial k] (p : ι → P) (j : ι) (q : P) :
-  q ∈ affineSpan k (Set.Range p) ↔ ∃ (s : Finset ι)(w : ι → k), q = s.weighted_vsub_of_point p (p j) w +ᵥ p j :=
-  by 
-    split 
-    ·
-      intro hq 
-      obtain ⟨s, w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span hq 
-      exact ⟨s, w, s.affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one w p hw (p j)⟩
-    ·
-      rintro ⟨s, w, rfl⟩
-      classical 
-      let w' : ι → k := Function.update w j (1 - (s \ {j}).Sum w)
-      have h₁ : (insert j s).Sum w' = 1
-      ·
-        byCases' hj : j ∈ s
-        ·
-          simp [Finset.sum_update_of_mem hj, Finset.insert_eq_of_mem hj]
-        ·
-          simp [w', Finset.sum_insert hj, Finset.sum_update_of_not_mem hj, hj]
-      have hww : ∀ i, i ≠ j → w i = w' i
-      ·
-        intro i hij 
-        simp [w', hij]
-      rw [s.weighted_vsub_of_point_eq_of_weights_eq p j w w' hww, ←s.weighted_vsub_of_point_insert w' p j,
-        ←(insert j s).affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one w' p h₁ (p j)]
-      exact affine_combination_mem_affine_span h₁ p
+theorem mem_affine_span_iff_eq_weighted_vsub_of_point_vadd
+[nontrivial k]
+(p : ι → P)
+(j : ι)
+(q : P) : «expr ↔ »(«expr ∈ »(q, affine_span k (set.range p)), «expr∃ , »((s : finset ι)
+  (w : ι → k), «expr = »(q, «expr +ᵥ »(s.weighted_vsub_of_point p (p j) w, p j)))) :=
+begin
+  split,
+  { intros [ident hq],
+    obtain ["⟨", ident s, ",", ident w, ",", ident hw, ",", ident rfl, "⟩", ":=", expr eq_affine_combination_of_mem_affine_span hq],
+    exact [expr ⟨s, w, s.affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one w p hw (p j)⟩] },
+  { rintros ["⟨", ident s, ",", ident w, ",", ident rfl, "⟩"],
+    classical,
+    let [ident w'] [":", expr ι → k] [":=", expr function.update w j «expr - »(1, «expr \ »(s, {j}).sum w)],
+    have [ident h₁] [":", expr «expr = »((insert j s).sum w', 1)] [],
+    { by_cases [expr hj, ":", expr «expr ∈ »(j, s)],
+      { simp [] [] [] ["[", expr finset.sum_update_of_mem hj, ",", expr finset.insert_eq_of_mem hj, "]"] [] [] },
+      { simp [] [] [] ["[", expr w', ",", expr finset.sum_insert hj, ",", expr finset.sum_update_of_not_mem hj, ",", expr hj, "]"] [] [] } },
+    have [ident hww] [":", expr ∀ i, «expr ≠ »(i, j) → «expr = »(w i, w' i)] [],
+    { intros [ident i, ident hij],
+      simp [] [] [] ["[", expr w', ",", expr hij, "]"] [] [] },
+    rw ["[", expr s.weighted_vsub_of_point_eq_of_weights_eq p j w w' hww, ",", "<-", expr s.weighted_vsub_of_point_insert w' p j, ",", "<-", expr (insert j s).affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one w' p h₁ (p j), "]"] [],
+    exact [expr affine_combination_mem_affine_span h₁ p] }
+end
 
 variable{k V}
 
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a set of points, together with a chosen base point in this set, if we affinely transport
 all other members of the set along the line joining them to this base point, the affine span is
 unchanged. -/
-theorem affine_span_eq_affine_span_line_map_units [Nontrivial k] {s : Set P} {p : P} (hp : p ∈ s) (w : s → Units k) :
-  affineSpan k (Set.Range fun q : s => AffineMap.lineMap p («expr↑ » q) (w q : k)) = affineSpan k s :=
-  by 
-    have  : s = Set.Range (coeₓ : s → P)
-    ·
-      simp 
-    convRHS => rw [this]
-    apply le_antisymmₓ <;>
-      intro q hq <;>
-        erw [mem_affine_span_iff_eq_weighted_vsub_of_point_vadd k V _ (⟨p, hp⟩ : s) q] at hq⊢ <;>
-          obtain ⟨t, μ, rfl⟩ := hq <;>
-            use t <;> [use fun x => μ x*«expr↑ » (w x), use fun x => μ x*«expr↑ » (w x⁻¹)] <;> simp [smul_smul]
+theorem affine_span_eq_affine_span_line_map_units
+[nontrivial k]
+{s : set P}
+{p : P}
+(hp : «expr ∈ »(p, s))
+(w : s → units k) : «expr = »(affine_span k (set.range (λ
+   q : s, affine_map.line_map p «expr↑ »(q) (w q : k))), affine_span k s) :=
+begin
+  have [] [":", expr «expr = »(s, set.range (coe : s → P))] [],
+  { simp [] [] [] [] [] [] },
+  conv_rhs [] [] { rw [expr this] },
+  apply [expr le_antisymm]; intros [ident q, ident hq]; erw [expr mem_affine_span_iff_eq_weighted_vsub_of_point_vadd k V _ (⟨p, hp⟩ : s) q] ["at", ident hq, "⊢"]; obtain ["⟨", ident t, ",", ident μ, ",", ident rfl, "⟩", ":=", expr hq]; use [expr t]; [use [expr λ
+    x, «expr * »(μ x, «expr↑ »(w x))], use [expr λ
+    x, «expr * »(μ x, «expr↑ »(«expr ⁻¹»(w x)))]]; simp [] [] [] ["[", expr smul_smul, "]"] [] []
+end
 
 end AffineSpace'
 

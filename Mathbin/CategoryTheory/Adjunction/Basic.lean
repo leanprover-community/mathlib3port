@@ -286,34 +286,34 @@ def mk_of_hom_equiv (adj : core_hom_equiv F G) : F ⊣ G :=
         by 
           erw [←adj.hom_equiv_naturality_left_symm] <;> simp  }
 
+-- error in CategoryTheory.Adjunction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct an adjunction between functors `F` and `G` given a unit and counit for the adjunction
 satisfying the triangle identities. -/
-@[simps]
-def mk_of_unit_counit (adj : core_unit_counit F G) : F ⊣ G :=
-  { adj with
-    homEquiv :=
-      fun X Y =>
-        { toFun := fun f => adj.unit.app X ≫ G.map f, invFun := fun g => F.map g ≫ adj.counit.app Y,
-          left_inv :=
-            fun f =>
-              by 
-                change F.map (_ ≫ _) ≫ _ = _ 
-                rw [F.map_comp, assoc, ←functor.comp_map, adj.counit.naturality, ←assoc]
-                convert id_comp f 
-                have t := congr_argₓ (fun t : nat_trans _ _ => t.app _) adj.left_triangle 
-                dsimp  at t 
-                simp only [id_comp] at t 
-                exact t,
-          right_inv :=
-            fun g =>
-              by 
-                change _ ≫ G.map (_ ≫ _) = _ 
-                rw [G.map_comp, ←assoc, ←functor.comp_map, ←adj.unit.naturality, assoc]
-                convert comp_id g 
-                have t := congr_argₓ (fun t : nat_trans _ _ => t.app _) adj.right_triangle 
-                dsimp  at t 
-                simp only [id_comp] at t 
-                exact t } }
+@[simps #[]]
+def mk_of_unit_counit (adj : core_unit_counit F G) : «expr ⊣ »(F, G) :=
+{ hom_equiv := λ
+  X
+  Y, { to_fun := λ f, «expr ≫ »(adj.unit.app X, G.map f),
+    inv_fun := λ g, «expr ≫ »(F.map g, adj.counit.app Y),
+    left_inv := λ f, begin
+      change [expr «expr = »(«expr ≫ »(F.map «expr ≫ »(_, _), _), _)] [] [],
+      rw ["[", expr F.map_comp, ",", expr assoc, ",", "<-", expr functor.comp_map, ",", expr adj.counit.naturality, ",", "<-", expr assoc, "]"] [],
+      convert [] [expr id_comp f] [],
+      have [ident t] [] [":=", expr congr_arg (λ t : nat_trans _ _, t.app _) adj.left_triangle],
+      dsimp [] [] [] ["at", ident t],
+      simp [] [] ["only"] ["[", expr id_comp, "]"] [] ["at", ident t],
+      exact [expr t]
+    end,
+    right_inv := λ g, begin
+      change [expr «expr = »(«expr ≫ »(_, G.map «expr ≫ »(_, _)), _)] [] [],
+      rw ["[", expr G.map_comp, ",", "<-", expr assoc, ",", "<-", expr functor.comp_map, ",", "<-", expr adj.unit.naturality, ",", expr assoc, "]"] [],
+      convert [] [expr comp_id g] [],
+      have [ident t] [] [":=", expr congr_arg (λ t : nat_trans _ _, t.app _) adj.right_triangle],
+      dsimp [] [] [] ["at", ident t],
+      simp [] [] ["only"] ["[", expr id_comp, "]"] [] ["at", ident t],
+      exact [expr t]
+    end },
+  ..adj }
 
 /-- The adjunction between the identity functor on a category and itself. -/
 def id : 𝟭 C ⊣ 𝟭 C :=

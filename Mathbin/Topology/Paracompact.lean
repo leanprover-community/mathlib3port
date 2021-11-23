@@ -59,34 +59,34 @@ class ParacompactSpace(X : Type v)[TopologicalSpace X] : Prop where
 
 variable{ι : Type u}{X : Type v}[TopologicalSpace X]
 
+-- error in Topology.Paracompact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any open cover of a paracompact space has a locally finite *precise* refinement, that is,
 one indexed on the same type with each open set contained in the corresponding original one. -/
-theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, IsOpen (u a)) (uc : (⋃i, u i) = univ) :
-  ∃ v : ι → Set X, (∀ a, IsOpen (v a)) ∧ (⋃i, v i) = univ ∧ LocallyFinite v ∧ ∀ a, v a ⊆ u a :=
-  by 
-    have  :=
-      ParacompactSpace.locally_finite_refinement (range u) coeₓ (SetCoe.forall.2$ forall_range_iff.2 uo)
-        (by 
-          rwa [←sUnion_range, Subtype.range_coe])
-    simp only [SetCoe.exists, Subtype.coe_mk, exists_range_iff', Union_eq_univ_iff, exists_prop] at this 
-    choose α t hto hXt htf ind hind 
-    choose t_inv ht_inv using hXt 
-    choose U hxU hU using htf 
-    refine' ⟨fun i => ⋃(a : α)(ha : ind a = i), t a, _, _, _, _⟩
-    ·
-      exact fun a => is_open_Union fun a => is_open_Union$ fun ha => hto a
-    ·
-      simp only [eq_univ_iff_forall, mem_Union]
-      exact fun x => ⟨ind (t_inv x), _, rfl, ht_inv _⟩
-    ·
-      refine' fun x => ⟨U x, hxU x, ((hU x).Image ind).Subset _⟩
-      simp only [subset_def, mem_Union, mem_set_of_eq, Set.Nonempty, mem_inter_eq]
-      rintro i ⟨y, ⟨a, rfl, hya⟩, hyU⟩
-      exact mem_image_of_mem _ ⟨y, hya, hyU⟩
-    ·
-      simp only [subset_def, mem_Union]
-      rintro i x ⟨a, rfl, hxa⟩
-      exact hind _ hxa
+theorem precise_refinement
+[paracompact_space X]
+(u : ι → set X)
+(uo : ∀ a, is_open (u a))
+(uc : «expr = »(«expr⋃ , »((i), u i), univ)) : «expr∃ , »((v : ι → set X), «expr ∧ »(∀
+  a, is_open (v a), «expr ∧ »(«expr = »(«expr⋃ , »((i), v i), univ), «expr ∧ »(locally_finite v, ∀
+    a, «expr ⊆ »(v a, u a))))) :=
+begin
+  have [] [] [":=", expr paracompact_space.locally_finite_refinement (range u) coe «expr $ »(set_coe.forall.2, forall_range_iff.2 uo) (by rwa ["[", "<-", expr sUnion_range, ",", expr subtype.range_coe, "]"] [])],
+  simp [] [] ["only"] ["[", expr set_coe.exists, ",", expr subtype.coe_mk, ",", expr exists_range_iff', ",", expr Union_eq_univ_iff, ",", expr exists_prop, "]"] [] ["at", ident this],
+  choose [] [ident α] [ident t, ident hto, ident hXt, ident htf, ident ind, ident hind] [],
+  choose [] [ident t_inv] [ident ht_inv] ["using", expr hXt],
+  choose [] [ident U] [ident hxU, ident hU] ["using", expr htf],
+  refine [expr ⟨λ i, «expr⋃ , »((a : α) (ha : «expr = »(ind a, i)), t a), _, _, _, _⟩],
+  { exact [expr λ a, is_open_Union (λ a, «expr $ »(is_open_Union, λ ha, hto a))] },
+  { simp [] [] ["only"] ["[", expr eq_univ_iff_forall, ",", expr mem_Union, "]"] [] [],
+    exact [expr λ x, ⟨ind (t_inv x), _, rfl, ht_inv _⟩] },
+  { refine [expr λ x, ⟨U x, hxU x, ((hU x).image ind).subset _⟩],
+    simp [] [] ["only"] ["[", expr subset_def, ",", expr mem_Union, ",", expr mem_set_of_eq, ",", expr set.nonempty, ",", expr mem_inter_eq, "]"] [] [],
+    rintro [ident i, "⟨", ident y, ",", "⟨", ident a, ",", ident rfl, ",", ident hya, "⟩", ",", ident hyU, "⟩"],
+    exact [expr mem_image_of_mem _ ⟨y, hya, hyU⟩] },
+  { simp [] [] ["only"] ["[", expr subset_def, ",", expr mem_Union, "]"] [] [],
+    rintro [ident i, ident x, "⟨", ident a, ",", ident rfl, ",", ident hxa, "⟩"],
+    exact [expr hind _ hxa] }
+end
 
 /-- In a paracompact space, every open covering of a closed set admits a locally finite refinement
 indexed by the same type. -/
@@ -104,17 +104,21 @@ theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s
     ·
       simpa only [Union_option, Option.elim, ←compl_subset_iff_union, compl_compl]
 
+-- error in Topology.Paracompact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A compact space is paracompact. -/
-instance (priority := 100)paracompact_of_compact [CompactSpace X] : ParacompactSpace X :=
-  by 
-    refine' ⟨fun ι s ho hu => _⟩
-    rcases compact_univ.elim_finite_subcover _ ho hu.ge with ⟨T, hT⟩
-    have  := hT 
-    simp only [subset_def, mem_Union] at this 
-    choose i hiT hi using fun x => this x (mem_univ x)
-    refine' ⟨(T : Set ι), fun t => s t, fun t => ho _, _, locally_finite_of_fintype _, fun t => ⟨t, subset.rfl⟩⟩
-    rwa [Union_coe_set, Finset.set_bUnion_coe, ←univ_subset_iff]
+@[priority 100]
+instance paracompact_of_compact [compact_space X] : paracompact_space X :=
+begin
+  refine [expr ⟨λ ι s ho hu, _⟩],
+  rcases [expr compact_univ.elim_finite_subcover _ ho hu.ge, "with", "⟨", ident T, ",", ident hT, "⟩"],
+  have [] [] [":=", expr hT],
+  simp [] [] ["only"] ["[", expr subset_def, ",", expr mem_Union, "]"] [] ["at", ident this],
+  choose [] [ident i] [ident hiT, ident hi] ["using", expr λ x, this x (mem_univ x)],
+  refine [expr ⟨(T : set ι), λ t, s t, λ t, ho _, _, locally_finite_of_fintype _, λ t, ⟨t, subset.rfl⟩⟩],
+  rwa ["[", expr Union_coe_set, ",", expr finset.set_bUnion_coe, ",", "<-", expr univ_subset_iff, "]"] []
+end
 
+-- error in Topology.Paracompact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Let `X` be a locally compact sigma compact Hausdorff topological space, let `s` be a closed set
 in `X`. Suppose that for each `x ∈ s` the sets `B x : ι x → set X` with the predicate
 `p x : ι x → Prop` form a basis of the filter `𝓝 x`. Then there exists a locally finite covering
@@ -135,51 +139,64 @@ dealing with a covering of the whole space.
 
 In most cases (namely, if `B c r ∪ B c r'` is again a set of the form `B c r''`) it is possible
 to choose `α = X`. This fact is not yet formalized in `mathlib`. -/
-theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCompactSpace X] [SigmaCompactSpace X]
-  [T2Space X] {ι : X → Type u} {p : ∀ x, ι x → Prop} {B : ∀ x, ι x → Set X} {s : Set X} (hs : IsClosed s)
-  (hB : ∀ x _ : x ∈ s, (𝓝 x).HasBasis (p x) (B x)) :
-  ∃ (α : Type v)(c : α → X)(r : ∀ a, ι (c a)),
-    (∀ a, c a ∈ s ∧ p (c a) (r a)) ∧ (s ⊆ ⋃a, B (c a) (r a)) ∧ LocallyFinite fun a => B (c a) (r a) :=
-  by 
-    classical 
-    set K' : CompactExhaustion X := CompactExhaustion.choice X 
-    set K : CompactExhaustion X := K'.shiftr.shiftr 
-    set Kdiff := fun n => K (n+1) \ Interior (K n)
-    have hKcov : ∀ x, x ∈ Kdiff (K'.find x+1)
-    ·
-      intro x 
-      simpa only [K'.find_shiftr] using diff_subset_diff_right interior_subset (K'.shiftr.mem_diff_shiftr_find x)
-    have Kdiffc : ∀ n, IsCompact (Kdiff n ∩ s)
-    exact fun n => ((K.is_compact _).diff is_open_interior).inter_right hs 
-    have  : ∀ n x : Kdiff (n+1) ∩ s, «expr ᶜ» (K n) ∈ 𝓝 (x : X)
-    exact fun n x => IsOpen.mem_nhds (K.is_closed n).is_open_compl fun hx' => x.2.1.2$ K.subset_interior_succ _ hx' 
-    haveI  : ∀ n x : Kdiff n ∩ s, Nonempty (ι x) := fun n x => (hB x x.2.2).Nonempty 
-    choose! r hrp hr using fun n x : Kdiff (n+1) ∩ s => (hB x x.2.2).mem_iff.1 (this n x)
-    have hxr : ∀ n x hx : x ∈ Kdiff (n+1) ∩ s, B x (r n ⟨x, hx⟩) ∈ 𝓝 x 
-    exact fun n x hx => (hB x hx.2).mem_of_mem (hrp _ ⟨x, hx⟩)
-    choose T hT using fun n => (Kdiffc (n+1)).elim_nhds_subcover' _ (hxr n)
-    set T' : ∀ n, Set («expr↥ » (Kdiff (n+1) ∩ s)) := fun n => T n 
-    refine' ⟨Σn, T' n, fun a => a.2, fun a => r a.1 a.2, _, _, _⟩
-    ·
-      rintro ⟨n, x, hx⟩
-      exact ⟨x.2.2, hrp _ _⟩
-    ·
-      refine' fun x hx => mem_Union.2 _ 
-      rcases mem_bUnion_iff.1 (hT _ ⟨hKcov x, hx⟩) with ⟨⟨c, hc⟩, hcT, hcx⟩
-      exact ⟨⟨_, ⟨c, hc⟩, hcT⟩, hcx⟩
-    ·
-      intro x 
-      refine' ⟨Interior (K (K'.find x+3)), IsOpen.mem_nhds is_open_interior (K.subset_interior_succ _ (hKcov x).1), _⟩
-      have  : (⋃(k : _)(_ : k ≤ K'.find x+2), range$ Sigma.mk k : Set (Σn, T' n)).Finite 
-      exact (finite_le_nat _).bUnion fun k hk => finite_range _ 
-      apply this.subset 
-      rintro ⟨k, c, hc⟩
-      simp only [mem_Union, mem_set_of_eq, mem_image_eq, Subtype.coe_mk]
-      rintro ⟨x, hxB : x ∈ B c (r k c), hxK⟩
-      refine' ⟨k, _, ⟨c, hc⟩, rfl⟩
-      have  := (mem_compl_iff _ _).1 (hr k c hxB)
-      contrapose! this with hnk 
-      exact K.subset hnk (interior_subset hxK)
+theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set
+[locally_compact_space X]
+[sigma_compact_space X]
+[t2_space X]
+{ι : X → Type u}
+{p : ∀ x, ι x → exprProp()}
+{B : ∀ x, ι x → set X}
+{s : set X}
+(hs : is_closed s)
+(hB : ∀
+ x «expr ∈ » s, (expr𝓝() x).has_basis (p x) (B x)) : «expr∃ , »((α : Type v)
+ (c : α → X)
+ (r : ∀
+  a, ι (c a)), «expr ∧ »(∀
+  a, «expr ∧ »(«expr ∈ »(c a, s), p (c a) (r a)), «expr ∧ »(«expr ⊆ »(s, «expr⋃ , »((a), B (c a) (r a))), locally_finite (λ
+    a, B (c a) (r a))))) :=
+begin
+  classical,
+  set [] [ident K'] [":", expr compact_exhaustion X] [":="] [expr compact_exhaustion.choice X] [],
+  set [] [ident K] [":", expr compact_exhaustion X] [":="] [expr K'.shiftr.shiftr] [],
+  set [] [ident Kdiff] [] [":="] [expr λ n, «expr \ »(K «expr + »(n, 1), interior (K n))] [],
+  have [ident hKcov] [":", expr ∀ x, «expr ∈ »(x, Kdiff «expr + »(K'.find x, 1))] [],
+  { intro [ident x],
+    simpa [] [] ["only"] ["[", expr K'.find_shiftr, "]"] [] ["using", expr diff_subset_diff_right interior_subset (K'.shiftr.mem_diff_shiftr_find x)] },
+  have [ident Kdiffc] [":", expr ∀ n, is_compact «expr ∩ »(Kdiff n, s)] [],
+  from [expr λ n, ((K.is_compact _).diff is_open_interior).inter_right hs],
+  have [] [":", expr ∀ (n) (x : «expr ∩ »(Kdiff «expr + »(n, 1), s)), «expr ∈ »(«expr ᶜ»(K n), expr𝓝() (x : X))] [],
+  from [expr λ
+   n x, is_open.mem_nhds (K.is_closed n).is_open_compl (λ hx', «expr $ »(x.2.1.2, K.subset_interior_succ _ hx'))],
+  haveI [] [":", expr ∀ (n) (x : «expr ∩ »(Kdiff n, s)), nonempty (ι x)] [":=", expr λ n x, (hB x x.2.2).nonempty],
+  choose ["!"] [ident r] [ident hrp, ident hr] ["using", expr λ
+   (n)
+   (x : «expr ∩ »(Kdiff «expr + »(n, 1), s)), (hB x x.2.2).mem_iff.1 (this n x)],
+  have [ident hxr] [":", expr ∀
+   (n x)
+   (hx : «expr ∈ »(x, «expr ∩ »(Kdiff «expr + »(n, 1), s))), «expr ∈ »(B x (r n ⟨x, hx⟩), expr𝓝() x)] [],
+  from [expr λ n x hx, (hB x hx.2).mem_of_mem (hrp _ ⟨x, hx⟩)],
+  choose [] [ident T] [ident hT] ["using", expr λ n, (Kdiffc «expr + »(n, 1)).elim_nhds_subcover' _ (hxr n)],
+  set [] [ident T'] [":", expr ∀ n, set «expr↥ »(«expr ∩ »(Kdiff «expr + »(n, 1), s))] [":="] [expr λ n, T n] [],
+  refine [expr ⟨«exprΣ , »((n), T' n), λ a, a.2, λ a, r a.1 a.2, _, _, _⟩],
+  { rintro ["⟨", ident n, ",", ident x, ",", ident hx, "⟩"],
+    exact [expr ⟨x.2.2, hrp _ _⟩] },
+  { refine [expr λ x hx, mem_Union.2 _],
+    rcases [expr mem_bUnion_iff.1 (hT _ ⟨hKcov x, hx⟩), "with", "⟨", "⟨", ident c, ",", ident hc, "⟩", ",", ident hcT, ",", ident hcx, "⟩"],
+    exact [expr ⟨⟨_, ⟨c, hc⟩, hcT⟩, hcx⟩] },
+  { intro [ident x],
+    refine [expr ⟨interior (K «expr + »(K'.find x, 3)), is_open.mem_nhds is_open_interior (K.subset_interior_succ _ (hKcov x).1), _⟩],
+    have [] [":", expr («expr⋃ , »((k «expr ≤ » «expr + »(K'.find x, 2)), «expr $ »(range, sigma.mk k)) : set «exprΣ , »((n), T' n)).finite] [],
+    from [expr (finite_le_nat _).bUnion (λ k hk, finite_range _)],
+    apply [expr this.subset],
+    rintro ["⟨", ident k, ",", ident c, ",", ident hc, "⟩"],
+    simp [] [] ["only"] ["[", expr mem_Union, ",", expr mem_set_of_eq, ",", expr mem_image_eq, ",", expr subtype.coe_mk, "]"] [] [],
+    rintro ["⟨", ident x, ",", ident hxB, ":", expr «expr ∈ »(x, B c (r k c)), ",", ident hxK, "⟩"],
+    refine [expr ⟨k, _, ⟨c, hc⟩, rfl⟩],
+    have [] [] [":=", expr (mem_compl_iff _ _).1 (hr k c hxB)],
+    contrapose ["!"] [ident this, "with", ident hnk],
+    exact [expr K.subset hnk (interior_subset hxK)] }
+end
 
 /-- Let `X` be a locally compact sigma compact Hausdorff topological space. Suppose that for each
 `x` the sets `B x : ι x → set X` with the predicate `p x : ι x → Prop` form a basis of the filter
@@ -208,47 +225,52 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis [LocallyCompac
     refinement_of_locally_compact_sigma_compact_of_nhds_basis_set is_closed_univ fun x _ => hB x
   ⟨α, c, r, fun a => (hp a).2, univ_subset_iff.1 hU, hfin⟩
 
+-- error in Topology.Paracompact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A locally compact sigma compact Hausdorff space is paracompact. See also
 `refinement_of_locally_compact_sigma_compact_of_nhds_basis` for a more precise statement. -/
-instance (priority := 100)paracompact_of_locally_compact_sigma_compact [LocallyCompactSpace X] [SigmaCompactSpace X]
-  [T2Space X] : ParacompactSpace X :=
-  by 
-    refine' ⟨fun α s ho hc => _⟩
-    choose i hi using Union_eq_univ_iff.1 hc 
-    have  : ∀ x : X, (𝓝 x).HasBasis (fun t : Set X => (x ∈ t ∧ IsOpen t) ∧ t ⊆ s (i x)) id 
-    exact fun x : X => (nhds_basis_opens x).restrict_subset (IsOpen.mem_nhds (ho (i x)) (hi x))
-    rcases refinement_of_locally_compact_sigma_compact_of_nhds_basis this with ⟨β, c, t, hto, htc, htf⟩
-    exact ⟨β, t, fun x => (hto x).1.2, htc, htf, fun b => ⟨i$ c b, (hto b).2⟩⟩
+@[priority 100]
+instance paracompact_of_locally_compact_sigma_compact
+[locally_compact_space X]
+[sigma_compact_space X]
+[t2_space X] : paracompact_space X :=
+begin
+  refine [expr ⟨λ α s ho hc, _⟩],
+  choose [] [ident i] [ident hi] ["using", expr Union_eq_univ_iff.1 hc],
+  have [] [":", expr ∀
+   x : X, (expr𝓝() x).has_basis (λ
+    t : set X, «expr ∧ »(«expr ∧ »(«expr ∈ »(x, t), is_open t), «expr ⊆ »(t, s (i x)))) id] [],
+  from [expr λ x : X, (nhds_basis_opens x).restrict_subset (is_open.mem_nhds (ho (i x)) (hi x))],
+  rcases [expr refinement_of_locally_compact_sigma_compact_of_nhds_basis this, "with", "⟨", ident β, ",", ident c, ",", ident t, ",", ident hto, ",", ident htc, ",", ident htf, "⟩"],
+  exact [expr ⟨β, t, λ x, (hto x).1.2, htc, htf, λ b, ⟨«expr $ »(i, c b), (hto b).2⟩⟩]
+end
 
-theorem normal_of_paracompact_t2 [T2Space X] [ParacompactSpace X] : NormalSpace X :=
-  by 
-    have  :
-      ∀ s t : Set X,
-        IsClosed s →
-          IsClosed t →
-            (∀ x _ : x ∈ s, ∃ u v, IsOpen u ∧ IsOpen v ∧ x ∈ u ∧ t ⊆ v ∧ Disjoint u v) →
-              ∃ u v, IsOpen u ∧ IsOpen v ∧ s ⊆ u ∧ t ⊆ v ∧ Disjoint u v
-    ·
-      intro s t hs ht H 
-      choose u v hu hv hxu htv huv using SetCoe.forall'.1 H 
-      rcases precise_refinement_set hs u hu fun x hx => mem_Union.2 ⟨⟨x, hx⟩, hxu _⟩ with
-        ⟨u', hu'o, hcov', hu'fin, hsub⟩
-      refine'
-        ⟨⋃i, u' i, «expr ᶜ» (Closure (⋃i, u' i)), is_open_Union hu'o, is_closed_closure.is_open_compl, hcov', _,
-          disjoint_compl_right.mono le_rfl (compl_le_compl subset_closure)⟩
-      rw [hu'fin.closure_Union, compl_Union, subset_Inter_iff]
-      refine' fun i x hxt hxu => absurd (htv i hxt) (closure_minimal _ (is_closed_compl_iff.2$ hv _) hxu)
-      exact fun y hyu hyv => huv i ⟨hsub _ hyu, hyv⟩
-    refine' ⟨fun s t hs ht hst => this s t hs ht fun x hx => _⟩
-    rcases this t {x} ht is_closed_singleton fun y hyt => _ with ⟨v, u, hv, hu, htv, hxu, huv⟩
-    ·
-      exact ⟨u, v, hu, hv, singleton_subset_iff.1 hxu, htv, huv.symm⟩
-    ·
-      have  : x ≠ y
-      ·
-        ·
-          rintro rfl 
-          exact hst ⟨hx, hyt⟩
-      rcases t2_separation this with ⟨v, u, hv, hu, hxv, hyu, hd⟩
-      exact ⟨u, v, hu, hv, hyu, singleton_subset_iff.2 hxv, Disjoint.symm hd.le⟩
+-- error in Topology.Paracompact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem normal_of_paracompact_t2 [t2_space X] [paracompact_space X] : normal_space X :=
+begin
+  have [] [":", expr ∀
+   s
+   t : set X, is_closed s → is_closed t → ∀
+   x «expr ∈ » s, «expr∃ , »((u
+     v), «expr ∧ »(is_open u, «expr ∧ »(is_open v, «expr ∧ »(«expr ∈ »(x, u), «expr ∧ »(«expr ⊆ »(t, v), disjoint u v))))) → «expr∃ , »((u
+     v), «expr ∧ »(is_open u, «expr ∧ »(is_open v, «expr ∧ »(«expr ⊆ »(s, u), «expr ∧ »(«expr ⊆ »(t, v), disjoint u v)))))] [],
+  { intros [ident s, ident t, ident hs, ident ht, ident H],
+    choose [] [ident u] [ident v, ident hu, ident hv, ident hxu, ident htv, ident huv] ["using", expr set_coe.forall'.1 H],
+    rcases [expr precise_refinement_set hs u hu (λ
+      x
+      hx, mem_Union.2 ⟨⟨x, hx⟩, hxu _⟩), "with", "⟨", ident u', ",", ident hu'o, ",", ident hcov', ",", ident hu'fin, ",", ident hsub, "⟩"],
+    refine [expr ⟨«expr⋃ , »((i), u' i), «expr ᶜ»(closure «expr⋃ , »((i), u' i)), is_open_Union hu'o, is_closed_closure.is_open_compl, hcov', _, disjoint_compl_right.mono le_rfl (compl_le_compl subset_closure)⟩],
+    rw ["[", expr hu'fin.closure_Union, ",", expr compl_Union, ",", expr subset_Inter_iff, "]"] [],
+    refine [expr λ i x hxt hxu, absurd (htv i hxt) (closure_minimal _ «expr $ »(is_closed_compl_iff.2, hv _) hxu)],
+    exact [expr λ y hyu hyv, huv i ⟨hsub _ hyu, hyv⟩] },
+  refine [expr ⟨λ s t hs ht hst, this s t hs ht (λ x hx, _)⟩],
+  rcases [expr this t {x} ht is_closed_singleton (λ
+    y
+    hyt, _), "with", "⟨", ident v, ",", ident u, ",", ident hv, ",", ident hu, ",", ident htv, ",", ident hxu, ",", ident huv, "⟩"],
+  { exact [expr ⟨u, v, hu, hv, singleton_subset_iff.1 hxu, htv, huv.symm⟩] },
+  { have [] [":", expr «expr ≠ »(x, y)] [],
+    by { rintro [ident rfl],
+      exact [expr hst ⟨hx, hyt⟩] },
+    rcases [expr t2_separation this, "with", "⟨", ident v, ",", ident u, ",", ident hv, ",", ident hu, ",", ident hxv, ",", ident hyu, ",", ident hd, "⟩"],
+    exact [expr ⟨u, v, hu, hv, hyu, singleton_subset_iff.2 hxv, disjoint.symm hd.le⟩] }
+end
 

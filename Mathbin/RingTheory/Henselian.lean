@@ -57,26 +57,29 @@ open_locale BigOperators
 
 open LocalRing Polynomial Function
 
-theorem is_local_ring_hom_of_le_jacobson_bot {R : Type _} [CommRingₓ R] (I : Ideal R) (h : I ≤ Ideal.jacobson ⊥) :
-  IsLocalRingHom (Ideal.Quotient.mk I) :=
-  by 
-    constructor 
-    intro a h 
-    have  : IsUnit (Ideal.Quotient.mk (Ideal.jacobson ⊥) a)
-    ·
-      rw [is_unit_iff_exists_inv] at *
-      obtain ⟨b, hb⟩ := h 
-      obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective b 
-      use Ideal.Quotient.mk _ b 
-      rw [←(Ideal.Quotient.mk _).map_one, ←(Ideal.Quotient.mk _).map_mul, Ideal.Quotient.eq] at hb⊢
-      exact h hb 
-    obtain ⟨⟨x, y, h1, h2⟩, rfl : x = _⟩ := this 
-    obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y 
-    rw [←(Ideal.Quotient.mk _).map_mul, ←(Ideal.Quotient.mk _).map_one, Ideal.Quotient.eq, Ideal.mem_jacobson_bot] at h1
-      h2 
-    specialize h1 1
-    simp  at h1 
-    exact h1.1
+-- error in RingTheory.Henselian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_local_ring_hom_of_le_jacobson_bot
+{R : Type*}
+[comm_ring R]
+(I : ideal R)
+(h : «expr ≤ »(I, ideal.jacobson «expr⊥»())) : is_local_ring_hom (ideal.quotient.mk I) :=
+begin
+  constructor,
+  intros [ident a, ident h],
+  have [] [":", expr is_unit (ideal.quotient.mk (ideal.jacobson «expr⊥»()) a)] [],
+  { rw ["[", expr is_unit_iff_exists_inv, "]"] ["at", "*"],
+    obtain ["⟨", ident b, ",", ident hb, "⟩", ":=", expr h],
+    obtain ["⟨", ident b, ",", ident rfl, "⟩", ":=", expr ideal.quotient.mk_surjective b],
+    use [expr ideal.quotient.mk _ b],
+    rw ["[", "<-", expr (ideal.quotient.mk _).map_one, ",", "<-", expr (ideal.quotient.mk _).map_mul, ",", expr ideal.quotient.eq, "]"] ["at", "⊢", ident hb],
+    exact [expr h hb] },
+  obtain ["⟨", "⟨", ident x, ",", ident y, ",", ident h1, ",", ident h2, "⟩", ",", ident rfl, ":", expr «expr = »(x, _), "⟩", ":=", expr this],
+  obtain ["⟨", ident y, ",", ident rfl, "⟩", ":=", expr ideal.quotient.mk_surjective y],
+  rw ["[", "<-", expr (ideal.quotient.mk _).map_mul, ",", "<-", expr (ideal.quotient.mk _).map_one, ",", expr ideal.quotient.eq, ",", expr ideal.mem_jacobson_bot, "]"] ["at", ident h1, ident h2],
+  specialize [expr h1 1],
+  simp [] [] [] [] [] ["at", ident h1],
+  exact [expr h1.1]
+end
 
 /-- A ring `R` is *Henselian* at an ideal `I` if the following condition holds:
 for every polynomial `f` over `R`, with a *simple* root `a₀` over the quotient ring `R/I`,
@@ -112,48 +115,52 @@ instance (priority := 100)Field.henselian (K : Type _) [Field K] : HenselianLoca
           refine' ⟨a₀, _, _⟩ <;> rwa [(maximal_ideal K).eq_bot_of_prime, Ideal.mem_bot] at *
           rw [sub_self] }
 
-theorem HenselianLocalRing.tfae (R : Type u) [CommRingₓ R] [LocalRing R] :
-  tfae
-    [HenselianLocalRing R,
-      ∀ f : Polynomial R hf : f.monic a₀ : residue_field R h₁ : aeval a₀ f = 0 h₂ : aeval a₀ f.derivative ≠ 0,
-        ∃ a : R, f.is_root a ∧ residue R a = a₀,
-      ∀ {K : Type u} [Field K],
-        by 
-          exactI
-            ∀ φ : R →+* K hφ : surjective φ f : Polynomial R hf : f.monic a₀ : K h₁ : f.eval₂ φ a₀ = 0 h₂ :
-              f.derivative.eval₂ φ a₀ ≠ 0, ∃ a : R, f.is_root a ∧ φ a = a₀] :=
-  by 
-    tfaeHave _3_2 : 3 → 2
-    ·
-      intro H 
-      exact H (residue R) Ideal.Quotient.mk_surjective 
-    tfaeHave _2_1 : 2 → 1
-    ·
-      intro H 
-      constructor 
-      intro f hf a₀ h₁ h₂ 
-      specialize H f hf (residue R a₀)
-      have aux := flip mem_nonunits_iff.mp h₂ 
-      simp only [aeval_def, RingHom.algebra_map_to_algebra, eval₂_at_apply, ←Ideal.Quotient.eq_zero_iff_mem,
-        ←LocalRing.mem_maximal_ideal] at H h₁ aux 
-      obtain ⟨a, ha₁, ha₂⟩ := H h₁ aux 
-      refine' ⟨a, ha₁, _⟩
-      rw [←Ideal.Quotient.eq_zero_iff_mem]
-      rwa [←sub_eq_zero, ←RingHom.map_sub] at ha₂ 
-    tfaeHave _1_3 : 1 → 3
-    ·
-      introI hR K _K φ hφ f hf a₀ h₁ h₂ 
-      obtain ⟨a₀, rfl⟩ := hφ a₀ 
-      have H := HenselianLocalRing.is_henselian f hf a₀ 
-      simp only [←ker_eq_maximal_ideal φ hφ, eval₂_at_apply, φ.mem_ker] at H h₁ h₂ 
-      obtain ⟨a, ha₁, ha₂⟩ := H h₁ _
-      ·
-        refine' ⟨a, ha₁, _⟩
-        rwa [φ.map_sub, sub_eq_zero] at ha₂
-      ·
-        contrapose! h₂ 
-        rwa [←mem_nonunits_iff, ←LocalRing.mem_maximal_ideal, ←LocalRing.ker_eq_maximal_ideal φ hφ, φ.mem_ker] at h₂ 
-    tfaeFinish
+-- error in RingTheory.Henselian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem henselian_local_ring.tfae
+(R : Type u)
+[comm_ring R]
+[local_ring R] : tfae «expr[ , ]»([henselian_local_ring R, ∀
+  (f : polynomial R)
+  (hf : f.monic)
+  (a₀ : residue_field R)
+  (h₁ : «expr = »(aeval a₀ f, 0))
+  (h₂ : «expr ≠ »(aeval a₀ f.derivative, 0)), «expr∃ , »((a : R), «expr ∧ »(f.is_root a, «expr = »(residue R a, a₀))), ∀
+  {K : Type u}
+  [field K], by exactI [expr ∀
+   (φ : «expr →+* »(R, K))
+   (hφ : surjective φ)
+   (f : polynomial R)
+   (hf : f.monic)
+   (a₀ : K)
+   (h₁ : «expr = »(f.eval₂ φ a₀, 0))
+   (h₂ : «expr ≠ »(f.derivative.eval₂ φ a₀, 0)), «expr∃ , »((a : R), «expr ∧ »(f.is_root a, «expr = »(φ a, a₀)))]]) :=
+begin
+  tfae_have [ident _3_2, ":"] [3] ["->"] [2],
+  { intro [ident H],
+    exact [expr H (residue R) ideal.quotient.mk_surjective] },
+  tfae_have [ident _2_1, ":"] [2] ["->"] [1],
+  { intros [ident H],
+    constructor,
+    intros [ident f, ident hf, ident a₀, ident h₁, ident h₂],
+    specialize [expr H f hf (residue R a₀)],
+    have [ident aux] [] [":=", expr flip mem_nonunits_iff.mp h₂],
+    simp [] [] ["only"] ["[", expr aeval_def, ",", expr ring_hom.algebra_map_to_algebra, ",", expr eval₂_at_apply, ",", "<-", expr ideal.quotient.eq_zero_iff_mem, ",", "<-", expr local_ring.mem_maximal_ideal, "]"] [] ["at", ident H, ident h₁, ident aux],
+    obtain ["⟨", ident a, ",", ident ha₁, ",", ident ha₂, "⟩", ":=", expr H h₁ aux],
+    refine [expr ⟨a, ha₁, _⟩],
+    rw ["<-", expr ideal.quotient.eq_zero_iff_mem] [],
+    rwa ["[", "<-", expr sub_eq_zero, ",", "<-", expr ring_hom.map_sub, "]"] ["at", ident ha₂] },
+  tfae_have [ident _1_3, ":"] [1] ["->"] [3],
+  { introsI [ident hR, ident K, ident _K, ident φ, ident hφ, ident f, ident hf, ident a₀, ident h₁, ident h₂],
+    obtain ["⟨", ident a₀, ",", ident rfl, "⟩", ":=", expr hφ a₀],
+    have [ident H] [] [":=", expr henselian_local_ring.is_henselian f hf a₀],
+    simp [] [] ["only"] ["[", "<-", expr ker_eq_maximal_ideal φ hφ, ",", expr eval₂_at_apply, ",", expr φ.mem_ker, "]"] [] ["at", ident H, ident h₁, ident h₂],
+    obtain ["⟨", ident a, ",", ident ha₁, ",", ident ha₂, "⟩", ":=", expr H h₁ _],
+    { refine [expr ⟨a, ha₁, _⟩],
+      rwa ["[", expr φ.map_sub, ",", expr sub_eq_zero, "]"] ["at", ident ha₂] },
+    { contrapose ["!"] [ident h₂],
+      rwa ["[", "<-", expr mem_nonunits_iff, ",", "<-", expr local_ring.mem_maximal_ideal, ",", "<-", expr local_ring.ker_eq_maximal_ideal φ hφ, ",", expr φ.mem_ker, "]"] ["at", ident h₂] } },
+  tfae_finish
+end
 
 instance  (R : Type _) [CommRingₓ R] [hR : HenselianLocalRing R] : HenselianRing R (maximal_ideal R) :=
   { jac :=
@@ -170,106 +177,97 @@ instance  (R : Type _) [CommRingₓ R] [hR : HenselianLocalRing R] : HenselianRi
         rw [h₂]
         exact not_is_unit_zero }
 
+-- error in RingTheory.Henselian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A ring `R` that is `I`-adically complete is Henselian at `I`. -/
-instance (priority := 100)IsAdicComplete.henselian_ring (R : Type _) [CommRingₓ R] (I : Ideal R) [IsAdicComplete I R] :
-  HenselianRing R I :=
-  { jac := IsAdicComplete.le_jacobson_bot _,
-    is_henselian :=
-      by 
-        intro f hf a₀ h₁ h₂ 
-        classical 
-        let f' := f.derivative 
-        let c : ℕ → R := fun n => Nat.recOn n a₀ fun _ b => b - f.eval b*Ring.inverse (f'.eval b)
-        have hc : ∀ n, c (n+1) = c n - f.eval (c n)*Ring.inverse (f'.eval (c n))
-        ·
-          intro n 
-          dsimp only [c, Nat.rec_add_one]
-          rfl 
-        have hc_mod : ∀ n, c n ≡ a₀ [SMOD I]
-        ·
-          intro n 
-          induction' n with n ih
-          ·
-            rfl 
-          rw [Nat.succ_eq_add_one, hc, sub_eq_add_neg, ←add_zeroₓ a₀]
-          refine' ih.add _ 
-          rw [Smodeq.zero, Ideal.neg_mem_iff]
-          refine' I.mul_mem_right _ _ 
-          rw [←Smodeq.zero] at h₁⊢
-          exact (ih.eval f).trans h₁ 
-        have hf'c : ∀ n, IsUnit (f'.eval (c n))
-        ·
-          intro n 
-          haveI  := is_local_ring_hom_of_le_jacobson_bot I (IsAdicComplete.le_jacobson_bot I)
-          apply is_unit_of_map_unit (Ideal.Quotient.mk I)
-          convert h₂ using 1 
-          exact smodeq.def.mp ((hc_mod n).eval _)
-        have hfcI : ∀ n, f.eval (c n) ∈ (I^n+1)
-        ·
-          intro n 
-          induction' n with n ih
-          ·
-            simpa only [pow_oneₓ]
-          simp only [Nat.succ_eq_add_one]
-          rw [←taylor_eval_sub (c n), hc]
-          simp only [sub_eq_add_neg, add_neg_cancel_comm]
-          rw [eval_eq_sum, sum_over_range' _ _ _ (lt_add_of_pos_right _ zero_lt_two),
-            ←Finset.sum_range_add_sum_Ico _ (Nat.le_add_leftₓ _ _)]
-          swap
-          ·
-            intro i 
-            rw [zero_mul]
-          refine' Ideal.add_mem _ _ _
-          ·
-            simp only [Finset.sum_range_succ, taylor_coeff_one, mul_oneₓ, pow_oneₓ, taylor_coeff_zero,
-              mul_neg_eq_neg_mul_symm, Finset.sum_singleton, Finset.range_one, pow_zeroₓ]
-            rw [mul_left_commₓ, Ring.mul_inverse_cancel _ (hf'c n), mul_oneₓ, add_neg_selfₓ]
-            exact Ideal.zero_mem _
-          ·
-            refine' Submodule.sum_mem _ _ 
-            simp only [Finset.mem_Ico]
-            rintro i ⟨h2i, hi⟩
-            have aux : (n+2) ≤ i*n+1
-            ·
-              trans 2*n+1 <;> nlinarith only [h2i]
-            refine' Ideal.mul_mem_left _ _ (Ideal.pow_le_pow aux _)
-            rw [pow_mul']
-            refine' Ideal.pow_mem_pow ((Ideal.neg_mem_iff _).2$ Ideal.mul_mem_right _ _ ih) _ 
-        have aux : ∀ m n, m ≤ n → c m ≡ c n [SMOD ((I^m) • ⊤ : Ideal R)]
-        ·
-          intro m n hmn 
-          rw [←Ideal.one_eq_top, Algebra.id.smul_eq_mul, mul_oneₓ]
-          obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hmn 
-          clear hmn 
-          induction' k with k ih
-          ·
-            rw [add_zeroₓ]
-          rw [Nat.succ_eq_add_one, ←add_assocₓ, hc, ←add_zeroₓ (c m), sub_eq_add_neg]
-          refine' ih.add _ 
-          symm 
-          rw [Smodeq.zero, Ideal.neg_mem_iff]
-          refine' Ideal.mul_mem_right _ _ (Ideal.pow_le_pow _ (hfcI _))
-          rw [add_assocₓ]
-          exact le_self_add 
-        obtain ⟨a, ha⟩ := IsPrecomplete.prec' c aux 
-        refine' ⟨a, _, _⟩
-        ·
-          show f.is_root a 
-          suffices  : ∀ n, f.eval a ≡ 0 [SMOD ((I^n) • ⊤ : Ideal R)]
-          ·
-            exact IsHausdorff.haus' _ this 
-          intro n 
-          specialize ha n 
-          rw [←Ideal.one_eq_top, Algebra.id.smul_eq_mul, mul_oneₓ] at ha⊢
-          refine' (ha.symm.eval f).trans _ 
-          rw [Smodeq.zero]
-          exact Ideal.pow_le_pow le_self_add (hfcI _)
-        ·
-          show a - a₀ ∈ I 
-          specialize ha 1
-          rw [hc, pow_oneₓ, ←Ideal.one_eq_top, Algebra.id.smul_eq_mul, mul_oneₓ, sub_eq_add_neg] at ha 
-          rw [←Smodeq.sub_mem, ←add_zeroₓ a₀]
-          refine' ha.symm.trans (smodeq.refl.add _)
-          rw [Smodeq.zero, Ideal.neg_mem_iff]
-          exact Ideal.mul_mem_right _ _ h₁ }
+@[priority 100]
+instance is_adic_complete.henselian_ring
+(R : Type*)
+[comm_ring R]
+(I : ideal R)
+[is_adic_complete I R] : henselian_ring R I :=
+{ jac := is_adic_complete.le_jacobson_bot _,
+  is_henselian := begin
+    intros [ident f, ident hf, ident a₀, ident h₁, ident h₂],
+    classical,
+    let [ident f'] [] [":=", expr f.derivative],
+    let [ident c] [":", expr exprℕ() → R] [":=", expr λ
+     n, nat.rec_on n a₀ (λ _ b, «expr - »(b, «expr * »(f.eval b, ring.inverse (f'.eval b))))],
+    have [ident hc] [":", expr ∀
+     n, «expr = »(c «expr + »(n, 1), «expr - »(c n, «expr * »(f.eval (c n), ring.inverse (f'.eval (c n)))))] [],
+    { intro [ident n],
+      dsimp ["only"] ["[", expr c, ",", expr nat.rec_add_one, "]"] [] [],
+      refl },
+    have [ident hc_mod] [":", expr ∀ n, «expr ≡ [SMOD ]»(c n, a₀, I)] [],
+    { intro [ident n],
+      induction [expr n] [] ["with", ident n, ident ih] [],
+      { refl },
+      rw ["[", expr nat.succ_eq_add_one, ",", expr hc, ",", expr sub_eq_add_neg, ",", "<-", expr add_zero a₀, "]"] [],
+      refine [expr ih.add _],
+      rw ["[", expr smodeq.zero, ",", expr ideal.neg_mem_iff, "]"] [],
+      refine [expr I.mul_mem_right _ _],
+      rw ["[", "<-", expr smodeq.zero, "]"] ["at", ident h₁, "⊢"],
+      exact [expr (ih.eval f).trans h₁] },
+    have [ident hf'c] [":", expr ∀ n, is_unit (f'.eval (c n))] [],
+    { intro [ident n],
+      haveI [] [] [":=", expr is_local_ring_hom_of_le_jacobson_bot I (is_adic_complete.le_jacobson_bot I)],
+      apply [expr is_unit_of_map_unit (ideal.quotient.mk I)],
+      convert [] [expr h₂] ["using", 1],
+      exact [expr smodeq.def.mp ((hc_mod n).eval _)] },
+    have [ident hfcI] [":", expr ∀ n, «expr ∈ »(f.eval (c n), «expr ^ »(I, «expr + »(n, 1)))] [],
+    { intro [ident n],
+      induction [expr n] [] ["with", ident n, ident ih] [],
+      { simpa [] [] ["only"] ["[", expr pow_one, "]"] [] [] },
+      simp [] [] ["only"] ["[", expr nat.succ_eq_add_one, "]"] [] [],
+      rw ["[", "<-", expr taylor_eval_sub (c n), ",", expr hc, "]"] [],
+      simp [] [] ["only"] ["[", expr sub_eq_add_neg, ",", expr add_neg_cancel_comm, "]"] [] [],
+      rw ["[", expr eval_eq_sum, ",", expr sum_over_range' _ _ _ (lt_add_of_pos_right _ zero_lt_two), ",", "<-", expr finset.sum_range_add_sum_Ico _ (nat.le_add_left _ _), "]"] [],
+      swap,
+      { intro [ident i],
+        rw [expr zero_mul] [] },
+      refine [expr ideal.add_mem _ _ _],
+      { simp [] [] ["only"] ["[", expr finset.sum_range_succ, ",", expr taylor_coeff_one, ",", expr mul_one, ",", expr pow_one, ",", expr taylor_coeff_zero, ",", expr mul_neg_eq_neg_mul_symm, ",", expr finset.sum_singleton, ",", expr finset.range_one, ",", expr pow_zero, "]"] [] [],
+        rw ["[", expr mul_left_comm, ",", expr ring.mul_inverse_cancel _ (hf'c n), ",", expr mul_one, ",", expr add_neg_self, "]"] [],
+        exact [expr ideal.zero_mem _] },
+      { refine [expr submodule.sum_mem _ _],
+        simp [] [] ["only"] ["[", expr finset.mem_Ico, "]"] [] [],
+        rintro [ident i, "⟨", ident h2i, ",", ident hi, "⟩"],
+        have [ident aux] [":", expr «expr ≤ »(«expr + »(n, 2), «expr * »(i, «expr + »(n, 1)))] [],
+        { transitivity [expr «expr * »(2, «expr + »(n, 1))]; nlinarith [] ["only"] ["[", expr h2i, "]"] },
+        refine [expr ideal.mul_mem_left _ _ (ideal.pow_le_pow aux _)],
+        rw ["[", expr pow_mul', "]"] [],
+        refine [expr ideal.pow_mem_pow «expr $ »((ideal.neg_mem_iff _).2, ideal.mul_mem_right _ _ ih) _] } },
+    have [ident aux] [":", expr ∀
+     m n, «expr ≤ »(m, n) → «expr ≡ [SMOD ]»(c m, c n, («expr • »(«expr ^ »(I, m), «expr⊤»()) : ideal R))] [],
+    { intros [ident m, ident n, ident hmn],
+      rw ["[", "<-", expr ideal.one_eq_top, ",", expr algebra.id.smul_eq_mul, ",", expr mul_one, "]"] [],
+      obtain ["⟨", ident k, ",", ident rfl, "⟩", ":=", expr nat.exists_eq_add_of_le hmn],
+      clear [ident hmn],
+      induction [expr k] [] ["with", ident k, ident ih] [],
+      { rw [expr add_zero] [] },
+      rw ["[", expr nat.succ_eq_add_one, ",", "<-", expr add_assoc, ",", expr hc, ",", "<-", expr add_zero (c m), ",", expr sub_eq_add_neg, "]"] [],
+      refine [expr ih.add _],
+      symmetry,
+      rw ["[", expr smodeq.zero, ",", expr ideal.neg_mem_iff, "]"] [],
+      refine [expr ideal.mul_mem_right _ _ (ideal.pow_le_pow _ (hfcI _))],
+      rw ["[", expr add_assoc, "]"] [],
+      exact [expr le_self_add] },
+    obtain ["⟨", ident a, ",", ident ha, "⟩", ":=", expr is_precomplete.prec' c aux],
+    refine [expr ⟨a, _, _⟩],
+    { show [expr f.is_root a],
+      suffices [] [":", expr ∀ n, «expr ≡ [SMOD ]»(f.eval a, 0, («expr • »(«expr ^ »(I, n), «expr⊤»()) : ideal R))],
+      { from [expr is_Hausdorff.haus' _ this] },
+      intro [ident n],
+      specialize [expr ha n],
+      rw ["[", "<-", expr ideal.one_eq_top, ",", expr algebra.id.smul_eq_mul, ",", expr mul_one, "]"] ["at", ident ha, "⊢"],
+      refine [expr (ha.symm.eval f).trans _],
+      rw ["[", expr smodeq.zero, "]"] [],
+      exact [expr ideal.pow_le_pow le_self_add (hfcI _)] },
+    { show [expr «expr ∈ »(«expr - »(a, a₀), I)],
+      specialize [expr ha 1],
+      rw ["[", expr hc, ",", expr pow_one, ",", "<-", expr ideal.one_eq_top, ",", expr algebra.id.smul_eq_mul, ",", expr mul_one, ",", expr sub_eq_add_neg, "]"] ["at", ident ha],
+      rw ["[", "<-", expr smodeq.sub_mem, ",", "<-", expr add_zero a₀, "]"] [],
+      refine [expr ha.symm.trans (smodeq.refl.add _)],
+      rw ["[", expr smodeq.zero, ",", expr ideal.neg_mem_iff, "]"] [],
+      exact [expr ideal.mul_mem_right _ _ h₁] }
+  end }
 

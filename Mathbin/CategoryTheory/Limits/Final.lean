@@ -400,29 +400,29 @@ theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶
       exact ih₁ 
       exact ih₂
 
+-- error in CategoryTheory.Limits.Final: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit` for all `d : D`, then `F` is cofinal.
 -/
-theorem cofinal_of_colimit_comp_coyoneda_iso_punit (I : ∀ d, colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit) : final F :=
-  ⟨fun d =>
-      by 
-        haveI  : Nonempty (structured_arrow d F)
-        ·
-          have  := (I d).inv PUnit.unit 
-          obtain ⟨j, y, rfl⟩ := limits.types.jointly_surjective' this 
-          exact ⟨structured_arrow.mk y⟩
-        apply zigzag_is_connected 
-        rintro ⟨⟨⟩, X₁, f₁⟩ ⟨⟨⟩, X₂, f₂⟩
-        dsimp  at *
-        let y₁ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₁ f₁ 
-        let y₂ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₂ f₂ 
-        have e : y₁ = y₂
-        ·
-          apply (I d).toEquiv.Injective 
-          ext 
-        have t := types.colimit_eq e 
-        clear e y₁ y₂ 
-        exact zigzag_of_eqv_gen_quot_rel t⟩
+theorem cofinal_of_colimit_comp_coyoneda_iso_punit
+(I : ∀ d, «expr ≅ »(colimit «expr ⋙ »(F, coyoneda.obj (op d)), punit)) : final F :=
+⟨λ d, begin
+   haveI [] [":", expr nonempty (structured_arrow d F)] [],
+   { have [] [] [":=", expr (I d).inv punit.star],
+     obtain ["⟨", ident j, ",", ident y, ",", ident rfl, "⟩", ":=", expr limits.types.jointly_surjective' this],
+     exact [expr ⟨structured_arrow.mk y⟩] },
+   apply [expr zigzag_is_connected],
+   rintros ["⟨", "⟨", "⟩", ",", ident X₁, ",", ident f₁, "⟩", "⟨", "⟨", "⟩", ",", ident X₂, ",", ident f₂, "⟩"],
+   dsimp [] [] [] ["at", "*"],
+   let [ident y₁] [] [":=", expr colimit.ι «expr ⋙ »(F, coyoneda.obj (op d)) X₁ f₁],
+   let [ident y₂] [] [":=", expr colimit.ι «expr ⋙ »(F, coyoneda.obj (op d)) X₂ f₂],
+   have [ident e] [":", expr «expr = »(y₁, y₂)] [],
+   { apply [expr (I d).to_equiv.injective],
+     ext [] [] [] },
+   have [ident t] [] [":=", expr types.colimit_eq e],
+   clear [ident e, ident y₁, ident y₂],
+   exact [expr zigzag_of_eqv_gen_quot_rel t]
+ end⟩
 
 end Final
 

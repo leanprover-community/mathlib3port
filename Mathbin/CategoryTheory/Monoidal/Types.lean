@@ -1,5 +1,4 @@
 import Mathbin.CategoryTheory.Monoidal.OfChosenFiniteProducts 
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts 
 import Mathbin.CategoryTheory.Limits.Shapes.Types
 
 /-!

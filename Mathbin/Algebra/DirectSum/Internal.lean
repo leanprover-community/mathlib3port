@@ -1,3 +1,4 @@
+import Mathbin.Algebra.Algebra.Operations 
 import Mathbin.Algebra.DirectSum.Algebra
 
 /-!
@@ -78,14 +79,14 @@ instance gsemiring [AddMonoidₓ ι] [Ringₓ R] (A : ι → AddSubgroup R) [h :
   DirectSum.Gsemiring fun i => A i :=
   have i' : SetLike.GradedMonoid fun i => (A i).toAddSubmonoid := { h with  }
   by 
-    exactI AddSubmonoid.gsemiring fun i => (A i).toAddSubmonoid
+    exact AddSubmonoid.gsemiring fun i => (A i).toAddSubmonoid
 
 /-- Build a `gcomm_semiring` instance for a collection of `add_subgroup`s. -/
 instance gcomm_semiring [AddCommGroupₓ ι] [CommRingₓ R] (A : ι → AddSubgroup R) [h : SetLike.GradedMonoid A] :
   DirectSum.Gsemiring fun i => A i :=
   have i' : SetLike.GradedMonoid fun i => (A i).toAddSubmonoid := { h with  }
   by 
-    exactI AddSubmonoid.gsemiring fun i => (A i).toAddSubmonoid
+    exact AddSubmonoid.gsemiring fun i => (A i).toAddSubmonoid
 
 end AddSubgroup
 
@@ -109,14 +110,14 @@ instance gsemiring [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebr
   [h : SetLike.GradedMonoid A] : DirectSum.Gsemiring fun i => A i :=
   have i' : SetLike.GradedMonoid fun i => (A i).toAddSubmonoid := { h with  }
   by 
-    exactI AddSubmonoid.gsemiring fun i => (A i).toAddSubmonoid
+    exact AddSubmonoid.gsemiring fun i => (A i).toAddSubmonoid
 
 /-- Build a `gsemiring` instance for a collection of `submodule`s. -/
 instance gcomm_semiring [AddCommMonoidₓ ι] [CommSemiringₓ S] [CommSemiringₓ R] [Algebra S R] (A : ι → Submodule S R)
   [h : SetLike.GradedMonoid A] : DirectSum.GcommSemiring fun i => A i :=
   have i' : SetLike.GradedMonoid fun i => (A i).toAddSubmonoid := { h with  }
   by 
-    exactI AddSubmonoid.gcommSemiring fun i => (A i).toAddSubmonoid
+    exact AddSubmonoid.gcommSemiring fun i => (A i).toAddSubmonoid
 
 /-- Build a `galgebra` instance for a collection of `submodule`s. -/
 instance galgebra [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R] (A : ι → Submodule S R)

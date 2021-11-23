@@ -136,18 +136,17 @@ theorem _root_.is_smul_regular.polynomial {S : Type _} [Monoidₓ S] [DistribMul
 instance  : Inhabited (Polynomial R) :=
   ⟨0⟩
 
--- error in Data.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-instance : semiring (polynomial R) :=
-by refine_struct [expr { zero := (0 : polynomial R),
-   one := 1,
-   mul := («expr * »),
-   add := («expr + »),
-   nsmul := («expr • »),
-   npow := npow_rec,
-   npow_zero' := λ x, rfl,
-   npow_succ' := λ
-   n
-   x, rfl }]; { repeat { rintro ["⟨", "_", "⟩"] }; simp [] [] [] ["[", "<-", expr zero_to_finsupp, ",", "<-", expr one_to_finsupp, ",", expr add_to_finsupp, ",", expr mul_to_finsupp, ",", expr mul_assoc, ",", expr mul_add, ",", expr add_mul, ",", expr smul_to_finsupp, ",", expr nat.succ_eq_one_add, "]"] [] []; abel [] [] [] }
+instance  : Semiringₓ (Polynomial R) :=
+  by 
+    refineStruct
+        { zero := (0 : Polynomial R), one := 1, mul := ·*·, add := ·+·, nsmul := · • ·, npow := npowRec,
+          npow_zero' := fun x => rfl, npow_succ' := fun n x => rfl } <;>
+      ·
+        repeat' 
+            rintro ⟨_⟩ <;>
+          simp [←zero_to_finsupp, ←one_to_finsupp, add_to_finsupp, mul_to_finsupp, mul_assocₓ, mul_addₓ, add_mulₓ,
+              smul_to_finsupp, Nat.succ_eq_one_add] <;>
+            abel
 
 instance  {S} [Monoidₓ S] [DistribMulAction S R] : DistribMulAction S (Polynomial R) :=
   { smul := · • ·,
@@ -219,9 +218,9 @@ def to_finsupp_iso : Polynomial R ≃+* AddMonoidAlgebra R ℕ :=
         rintro ⟨⟩ ⟨⟩
         simp [add_to_finsupp] }
 
-/-- Ring isomorphism between `(polynomial R)ᵒᵖ` and `polynomial Rᵒᵖ`. -/
+/-- Ring isomorphism between `(polynomial R)ᵐᵒᵖ` and `polynomial Rᵐᵒᵖ`. -/
 @[simps]
-def op_ring_equiv : «expr ᵒᵖ» (Polynomial R) ≃+* Polynomial («expr ᵒᵖ» R) :=
+def op_ring_equiv : «expr ᵐᵒᵖ» (Polynomial R) ≃+* Polynomial («expr ᵐᵒᵖ» R) :=
   ((to_finsupp_iso R).op.trans AddMonoidAlgebra.opRingEquiv).trans (to_finsupp_iso _).symm
 
 variable{R}
@@ -548,31 +547,30 @@ theorem ext_iff {p q : Polynomial R} : p = q ↔ ∀ n, coeff p n = coeff q n :=
 theorem ext {p q : Polynomial R} : (∀ n, coeff p n = coeff q n) → p = q :=
   ext_iff.2
 
-theorem add_hom_ext {M : Type _} [AddMonoidₓ M] {f g : Polynomial R →+ M}
-  (h : ∀ n a, f (monomial n a) = g (monomial n a)) : f = g :=
-  by 
-    set f' : AddMonoidAlgebra R ℕ →+ M := f.comp (to_finsupp_iso R).symm with hf' 
-    set g' : AddMonoidAlgebra R ℕ →+ M := g.comp (to_finsupp_iso R).symm with hg' 
-    have  : ∀ n a, f' (single n a) = g' (single n a) :=
-      fun n =>
-        by 
-          simp [hf', hg', h n]
-    have A : f' = g' := Finsupp.add_hom_ext this 
-    have B : f = f'.comp (to_finsupp_iso R)
-    ·
-      ·
-        rw [hf', AddMonoidHom.comp_assoc]
-        ext x 
-        simp only [RingEquiv.symm_apply_apply, AddMonoidHom.coe_comp, Function.comp_app, RingHom.coe_add_monoid_hom,
-          RingEquiv.coe_to_ring_hom, coe_coe]
-    have C : g = g'.comp (to_finsupp_iso R)
-    ·
-      ·
-        rw [hg', AddMonoidHom.comp_assoc]
-        ext x 
-        simp only [RingEquiv.symm_apply_apply, AddMonoidHom.coe_comp, Function.comp_app, RingHom.coe_add_monoid_hom,
-          RingEquiv.coe_to_ring_hom, coe_coe]
-    rw [B, C, A]
+-- error in Data.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem add_hom_ext
+{M : Type*}
+[add_monoid M]
+{f g : «expr →+ »(polynomial R, M)}
+(h : ∀ n a, «expr = »(f (monomial n a), g (monomial n a))) : «expr = »(f, g) :=
+begin
+  set [] [ident f'] [":", expr «expr →+ »(add_monoid_algebra R exprℕ(), M)] [":="] [expr f.comp (to_finsupp_iso R).symm] ["with", ident hf'],
+  set [] [ident g'] [":", expr «expr →+ »(add_monoid_algebra R exprℕ(), M)] [":="] [expr g.comp (to_finsupp_iso R).symm] ["with", ident hg'],
+  have [] [":", expr ∀
+   n
+   a, «expr = »(f' (single n a), g' (single n a))] [":=", expr λ
+   n, by simp [] [] [] ["[", expr hf', ",", expr hg', ",", expr h n, "]"] [] []],
+  have [ident A] [":", expr «expr = »(f', g')] [":=", expr finsupp.add_hom_ext this],
+  have [ident B] [":", expr «expr = »(f, f'.comp (to_finsupp_iso R))] [],
+  by { rw ["[", expr hf', ",", expr add_monoid_hom.comp_assoc, "]"] [],
+    ext [] [ident x] [],
+    simp [] [] ["only"] ["[", expr ring_equiv.symm_apply_apply, ",", expr add_monoid_hom.coe_comp, ",", expr function.comp_app, ",", expr ring_hom.coe_add_monoid_hom, ",", expr ring_equiv.coe_to_ring_hom, ",", expr coe_coe, "]"] [] [] },
+  have [ident C] [":", expr «expr = »(g, g'.comp (to_finsupp_iso R))] [],
+  by { rw ["[", expr hg', ",", expr add_monoid_hom.comp_assoc, "]"] [],
+    ext [] [ident x] [],
+    simp [] [] ["only"] ["[", expr ring_equiv.symm_apply_apply, ",", expr add_monoid_hom.coe_comp, ",", expr function.comp_app, ",", expr ring_hom.coe_add_monoid_hom, ",", expr ring_equiv.coe_to_ring_hom, ",", expr coe_coe, "]"] [] [] },
+  rw ["[", expr B, ",", expr C, ",", expr A, "]"] []
+end
 
 @[ext]
 theorem add_hom_ext' {M : Type _} [AddMonoidₓ M] {f g : Polynomial R →+ M}
@@ -877,14 +875,14 @@ section NonzeroSemiring
 
 variable[Semiringₓ R][Nontrivial R]
 
-instance  : Nontrivial (Polynomial R) :=
-  by 
-    have h : Nontrivial (AddMonoidAlgebra R ℕ) :=
-      by 
-        infer_instance 
-    rcases h.exists_pair_ne with ⟨x, y, hxy⟩
-    refine' ⟨⟨⟨x⟩, ⟨y⟩, _⟩⟩
-    simp [hxy]
+-- error in Data.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance : nontrivial (polynomial R) :=
+begin
+  have [ident h] [":", expr nontrivial (add_monoid_algebra R exprℕ())] [":=", expr by apply_instance],
+  rcases [expr h.exists_pair_ne, "with", "⟨", ident x, ",", ident y, ",", ident hxy, "⟩"],
+  refine [expr ⟨⟨⟨x⟩, ⟨y⟩, _⟩⟩],
+  simp [] [] [] ["[", expr hxy, "]"] [] []
+end
 
 theorem X_ne_zero : (X : Polynomial R) ≠ 0 :=
   mt (congr_argₓ fun p => coeff p 1)

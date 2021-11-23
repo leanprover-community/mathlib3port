@@ -52,10 +52,9 @@ theorem of_rat_zero : of_rat 0 = 0 :=
 theorem of_rat_one : of_rat 1 = 1 :=
   rfl
 
-@[simp]
-theorem mk_eq_zero {f} : mk f = 0 ↔ lim_zero f :=
-  by 
-    have  : mk f = 0 ↔ lim_zero (f - 0) := Quotientₓ.eq <;> rwa [sub_zero] at this
+-- error in Data.Real.CauSeqCompletion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem mk_eq_zero {f} : «expr ↔ »(«expr = »(mk f, 0), lim_zero f) :=
+by have [] [":", expr «expr ↔ »(«expr = »(mk f, 0), lim_zero «expr - »(f, 0))] [":=", expr quotient.eq]; rwa [expr sub_zero] ["at", ident this]
 
 instance  : Add Cauchy :=
   ⟨fun x y =>
@@ -121,20 +120,17 @@ private theorem zero_def : 0 = mk 0 :=
 private theorem one_def : 1 = mk 1 :=
   rfl
 
--- error in Data.Real.CauSeqCompletion: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-instance : comm_ring Cauchy :=
-by refine [expr { neg := has_neg.neg,
-   sub := has_sub.sub,
-   sub_eq_add_neg := _,
-   add := («expr + »),
-   zero := (0 : Cauchy),
-   mul := («expr * »),
-   one := 1,
-   nsmul := nsmul_rec,
-   npow := npow_rec,
-   zsmul := zsmul_rec,
-   .. }]; try { intros []; refl }; { repeat { refine [expr λ a, quotient.induction_on a (λ _, _)] },
-  simp [] [] [] ["[", expr zero_def, ",", expr one_def, ",", expr mul_left_comm, ",", expr mul_comm, ",", expr mul_add, ",", expr add_comm, ",", expr add_left_comm, ",", expr sub_eq_add_neg, "]"] [] [] }
+instance  : CommRingₓ Cauchy :=
+  by 
+    refine'
+        { neg := Neg.neg, sub := Sub.sub, sub_eq_add_neg := _, add := ·+·, zero := (0 : Cauchy), mul := ·*·, one := 1,
+          nsmul := nsmulRec, npow := npowRec, zsmul := zsmulRec, .. } <;>
+      try 
+          intros  <;> rfl <;>
+        ·
+          repeat' 
+            refine' fun a => Quotientₓ.induction_on a fun _ => _ 
+          simp [zero_def, one_def, mul_left_commₓ, mul_commₓ, mul_addₓ, add_commₓ, add_left_commₓ, sub_eq_add_neg]
 
 theorem of_rat_sub (x y : β) : of_rat (x - y) = of_rat x - of_rat y :=
   congr_argₓ mk (const_sub _ _)
@@ -151,23 +147,21 @@ parameter {β : Type _}[Field β]{abv : β → α}[IsAbsoluteValue abv]
 
 local notation "Cauchy" => @Cauchy _ _ _ _ abv _
 
-noncomputable instance  : HasInv Cauchy :=
-  ⟨fun x =>
-      (Quotientₓ.liftOn x fun f => mk$ if h : lim_zero f then 0 else inv f h)$
-        fun f g fg =>
-          by 
-            have  := lim_zero_congr fg 
-            byCases' hf : lim_zero f
-            ·
-              simp [hf, this.1 hf, Setoidₓ.refl]
-            ·
-              have hg := mt this.2 hf 
-              simp [hf, hg]
-              have If : (mk (inv f hf)*mk f) = 1 := mk_eq.2 (inv_mul_cancel hf)
-              have Ig : (mk (inv g hg)*mk g) = 1 := mk_eq.2 (inv_mul_cancel hg)
-              rw [mk_eq.2 fg, ←Ig] at If 
-              rw [mul_commₓ] at Ig 
-              rw [←mul_oneₓ (mk (inv f hf)), ←Ig, ←mul_assocₓ, If, mul_assocₓ, Ig, mul_oneₓ]⟩
+-- error in Data.Real.CauSeqCompletion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+noncomputable instance : has_inv exprCauchy() :=
+⟨λ
+ x, «expr $ »(quotient.lift_on x (λ f, «expr $ »(mk, if h : lim_zero f then 0 else inv f h)), λ f g fg, begin
+    have [] [] [":=", expr lim_zero_congr fg],
+    by_cases [expr hf, ":", expr lim_zero f],
+    { simp [] [] [] ["[", expr hf, ",", expr this.1 hf, ",", expr setoid.refl, "]"] [] [] },
+    { have [ident hg] [] [":=", expr mt this.2 hf],
+      simp [] [] [] ["[", expr hf, ",", expr hg, "]"] [] [],
+      have [ident If] [":", expr «expr = »(«expr * »(mk (inv f hf), mk f), 1)] [":=", expr mk_eq.2 (inv_mul_cancel hf)],
+      have [ident Ig] [":", expr «expr = »(«expr * »(mk (inv g hg), mk g), 1)] [":=", expr mk_eq.2 (inv_mul_cancel hg)],
+      rw ["[", expr mk_eq.2 fg, ",", "<-", expr Ig, "]"] ["at", ident If],
+      rw [expr mul_comm] ["at", ident Ig],
+      rw ["[", "<-", expr mul_one (mk (inv f hf)), ",", "<-", expr Ig, ",", "<-", expr mul_assoc, ",", expr If, ",", expr mul_assoc, ",", expr Ig, ",", expr mul_one, "]"] [] }
+  end)⟩
 
 @[simp]
 theorem inv_zero : (0 : Cauchy)⁻¹ = 0 :=
@@ -296,18 +290,13 @@ theorem lim_neg (f : CauSeq β abv) : lim (-f) = -lim f :=
     (show lim_zero (-f - const abv (-lim f))by 
       rw [const_neg, sub_neg_eq_add, add_commₓ, ←sub_eq_add_neg] <;> exact Setoidₓ.symm (equiv_lim f))
 
-theorem lim_eq_zero_iff (f : CauSeq β abv) : lim f = 0 ↔ lim_zero f :=
-  ⟨fun h =>
-      by 
-        have hf := equiv_lim f <;> rw [h] at hf <;> exact (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl),
-    fun h =>
-      have h₁ : f = f - const abv 0 :=
-        ext
-          fun n =>
-            by 
-              simp [sub_apply, const_apply]
-      by 
-        rw [h₁] at h <;> exact lim_eq_of_equiv_const h⟩
+-- error in Data.Real.CauSeqCompletion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lim_eq_zero_iff (f : cau_seq β abv) : «expr ↔ »(«expr = »(lim f, 0), lim_zero f) :=
+⟨assume
+ h, by have [ident hf] [] [":=", expr equiv_lim f]; rw [expr h] ["at", ident hf]; exact [expr (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl)], assume
+ h, have h₁ : «expr = »(f, «expr - »(f, const abv 0)) := ext (λ
+  n, by simp [] [] [] ["[", expr sub_apply, ",", expr const_apply, "]"] [] []),
+ by rw [expr h₁] ["at", ident h]; exact [expr lim_eq_of_equiv_const h]⟩
 
 end 
 

@@ -31,7 +31,7 @@ def parallel.aux1 : List (Computation α) × Wseq (Computation α) → Sum α (L
 def parallel (S : Wseq (Computation α)) : Computation α :=
   corec parallel.aux1 ([], S)
 
--- error in Data.Seq.Parallel: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Seq.Parallel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem terminates_parallel.aux : ∀
 {l : list (computation α)}
 {S c}, «expr ∈ »(c, l) → terminates c → terminates (corec parallel.aux1 (l, S)) :=
@@ -93,206 +93,178 @@ begin
       rcases [expr seq.destruct S, "with", "_", "|", "⟨", "_", "|", ident c, ",", ident S', "⟩"]; simp [] [] [] ["[", expr parallel.aux1, "]"] [] []; apply [expr IH]; simp [] [] [] ["[", expr this, "]"] [] [] } }
 end
 
-theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : terminates c] : terminates (parallel S) :=
-  suffices
-    ∀ n l : List (Computation α) S c,
-      c ∈ l ∨ some (some c) = Seqₓₓ.nth S n → terminates c → terminates (corec parallel.aux1 (l, S)) from
-    let ⟨n, h⟩ := h 
-    this n [] S c (Or.inr h) T 
-  by 
-    intro n 
-    induction' n with n IH <;> intro l S c o T
-    ·
-      cases' o with a a
-      ·
-        exact terminates_parallel.aux a T 
-      have H : Seqₓₓ.destruct S = some (some c, _)
-      ·
-        unfold Seqₓₓ.destruct Functor.map 
-        rw [←a]
-        simp 
-      induction' h : parallel.aux2 l with a l' <;> have C : corec parallel.aux1 (l, S) = _
-      ·
-        apply destruct_eq_ret 
-        simp [parallel.aux1]
-        rw [h]
-        simp [rmap]
-      ·
-        rw [C]
-        resetI 
-        infer_instance
-      ·
-        apply destruct_eq_think 
-        simp [parallel.aux1]
-        rw [h, H]
-        simp [rmap]
-      ·
-        rw [C]
-        apply @Computation.think_terminates _ _ _ 
-        apply terminates_parallel.aux _ T 
-        simp 
-    ·
-      cases' o with a a
-      ·
-        exact terminates_parallel.aux a T 
-      induction' h : parallel.aux2 l with a l' <;> have C : corec parallel.aux1 (l, S) = _
-      ·
-        apply destruct_eq_ret 
-        simp [parallel.aux1]
-        rw [h]
-        simp [rmap]
-      ·
-        rw [C]
-        resetI 
-        infer_instance
-      ·
-        apply destruct_eq_think 
-        simp [parallel.aux1]
-        rw [h]
-        simp [rmap]
-      ·
-        rw [C]
-        apply @Computation.think_terminates _ _ _ 
-        have TT : ∀ l', terminates (corec parallel.aux1 (l', S.tail))
-        ·
-          intro 
-          apply IH _ _ _ (Or.inr _) T 
-          rw [a]
-          cases' S with f al 
-          rfl 
-        induction' e : Seqₓₓ.nth S 0 with o
-        ·
-          have D : Seqₓₓ.destruct S = none
-          ·
-            dsimp [Seqₓₓ.destruct]
-            rw [e]
-            rfl 
-          rw [D]
-          simp [parallel.aux1]
-          have TT := TT l' 
-          rwa [Seqₓₓ.destruct_eq_nil D, Seqₓₓ.tail_nil] at TT
-        ·
-          have D : Seqₓₓ.destruct S = some (o, S.tail)
-          ·
-            dsimp [Seqₓₓ.destruct]
-            rw [e]
-            rfl 
-          rw [D]
-          cases' o with c <;> simp [parallel.aux1, TT]
+-- error in Data.Seq.Parallel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem terminates_parallel
+{S : wseq (computation α)}
+{c}
+(h : «expr ∈ »(c, S))
+[T : terminates c] : terminates (parallel S) :=
+suffices ∀
+(n)
+(l : list (computation α))
+(S
+ c), «expr ∨ »(«expr ∈ »(c, l), «expr = »(some (some c), seq.nth S n)) → terminates c → terminates (corec parallel.aux1 (l, S)), from let ⟨n, h⟩ := h in
+this n «expr[ , ]»([]) S c (or.inr h) T,
+begin
+  intro [ident n],
+  induction [expr n] [] ["with", ident n, ident IH] []; intros [ident l, ident S, ident c, ident o, ident T],
+  { cases [expr o] ["with", ident a, ident a],
+    { exact [expr terminates_parallel.aux a T] },
+    have [ident H] [":", expr «expr = »(seq.destruct S, some (some c, _))] [],
+    { unfold [ident seq.destruct, ident functor.map] [],
+      rw ["<-", expr a] [],
+      simp [] [] [] [] [] [] },
+    induction [expr h, ":", expr parallel.aux2 l] [] ["with", ident a, ident l'] []; have [ident C] [":", expr «expr = »(corec parallel.aux1 (l, S), _)] [],
+    { apply [expr destruct_eq_ret],
+      simp [] [] [] ["[", expr parallel.aux1, "]"] [] [],
+      rw ["[", expr h, "]"] [],
+      simp [] [] [] ["[", expr rmap, "]"] [] [] },
+    { rw [expr C] [],
+      resetI,
+      apply_instance },
+    { apply [expr destruct_eq_think],
+      simp [] [] [] ["[", expr parallel.aux1, "]"] [] [],
+      rw ["[", expr h, ",", expr H, "]"] [],
+      simp [] [] [] ["[", expr rmap, "]"] [] [] },
+    { rw [expr C] [],
+      apply [expr @computation.think_terminates _ _ _],
+      apply [expr terminates_parallel.aux _ T],
+      simp [] [] [] [] [] [] } },
+  { cases [expr o] ["with", ident a, ident a],
+    { exact [expr terminates_parallel.aux a T] },
+    induction [expr h, ":", expr parallel.aux2 l] [] ["with", ident a, ident l'] []; have [ident C] [":", expr «expr = »(corec parallel.aux1 (l, S), _)] [],
+    { apply [expr destruct_eq_ret],
+      simp [] [] [] ["[", expr parallel.aux1, "]"] [] [],
+      rw ["[", expr h, "]"] [],
+      simp [] [] [] ["[", expr rmap, "]"] [] [] },
+    { rw [expr C] [],
+      resetI,
+      apply_instance },
+    { apply [expr destruct_eq_think],
+      simp [] [] [] ["[", expr parallel.aux1, "]"] [] [],
+      rw ["[", expr h, "]"] [],
+      simp [] [] [] ["[", expr rmap, "]"] [] [] },
+    { rw [expr C] [],
+      apply [expr @computation.think_terminates _ _ _],
+      have [ident TT] [":", expr ∀ l', terminates (corec parallel.aux1 (l', S.tail))] [],
+      { intro [],
+        apply [expr IH _ _ _ (or.inr _) T],
+        rw [expr a] [],
+        cases [expr S] ["with", ident f, ident al],
+        refl },
+      induction [expr e, ":", expr seq.nth S 0] [] ["with", ident o] [],
+      { have [ident D] [":", expr «expr = »(seq.destruct S, none)] [],
+        { dsimp [] ["[", expr seq.destruct, "]"] [] [],
+          rw [expr e] [],
+          refl },
+        rw [expr D] [],
+        simp [] [] [] ["[", expr parallel.aux1, "]"] [] [],
+        have [ident TT] [] [":=", expr TT l'],
+        rwa ["[", expr seq.destruct_eq_nil D, ",", expr seq.tail_nil, "]"] ["at", ident TT] },
+      { have [ident D] [":", expr «expr = »(seq.destruct S, some (o, S.tail))] [],
+        { dsimp [] ["[", expr seq.destruct, "]"] [] [],
+          rw [expr e] [],
+          refl },
+        rw [expr D] [],
+        cases [expr o] ["with", ident c]; simp [] [] [] ["[", expr parallel.aux1, ",", expr TT, "]"] [] [] } } }
+end
 
-theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parallel S) : ∃ (c : _)(_ : c ∈ S), a ∈ c :=
-  suffices ∀ C, a ∈ C → ∀ l : List (Computation α) S, corec parallel.aux1 (l, S) = C → ∃ c, (c ∈ l ∨ c ∈ S) ∧ a ∈ c from
-    let ⟨c, h1, h2⟩ := this _ h [] S rfl
-    ⟨c, h1.resolve_left id, h2⟩
-  by 
-    let F : List (Computation α) → Sum α (List (Computation α)) → Prop
-    ·
-      intro l a 
-      cases' a with a l' 
-      exact ∃ (c : _)(_ : c ∈ l), a ∈ c 
-      exact ∀ a', (∃ (c : _)(_ : c ∈ l'), a' ∈ c) → ∃ (c : _)(_ : c ∈ l), a' ∈ c 
-    have lem1 : ∀ l : List (Computation α), F l (parallel.aux2 l)
-    ·
-      intro l 
-      induction' l with c l IH <;> simp [parallel.aux2]
-      ·
-        intro a h 
-        rcases h with ⟨c, hn, _⟩
-        exact False.elim hn
-      ·
-        simp [parallel.aux2] at IH 
-        cases' List.foldr parallel.aux2._match_1 (Sum.inr List.nil) l with a ls <;> simp [parallel.aux2]
-        ·
-          rcases IH with ⟨c', cl, ac⟩
-          refine' ⟨c', Or.inr cl, ac⟩
-        ·
-          induction' h : destruct c with a c' <;> simp [rmap]
-          ·
-            refine' ⟨c, List.mem_cons_selfₓ _ _, _⟩
-            rw [destruct_eq_ret h]
-            apply ret_mem
-          ·
-            intro a' h 
-            rcases h with ⟨d, dm, ad⟩
-            simp  at dm 
-            cases' dm with e dl
-            ·
-              rw [e] at ad 
-              refine' ⟨c, List.mem_cons_selfₓ _ _, _⟩
-              rw [destruct_eq_think h]
-              exact think_mem ad
-            ·
-              cases' IH a' ⟨d, dl, ad⟩ with d dm 
-              cases' dm with dm ad 
-              exact ⟨d, Or.inr dm, ad⟩
-    intro C aC 
-    refine' mem_rec_on aC _ fun C' IH => _ <;>
-      intro l S e <;>
-        have e' := congr_argₓ destruct e <;>
-          have  := lem1 l <;> simp [parallel.aux1] at e' <;> cases' parallel.aux2 l with a' l' <;> injection e' with h'
-    ·
-      rw [h'] at this 
-      rcases this with ⟨c, cl, ac⟩
-      exact ⟨c, Or.inl cl, ac⟩
-    ·
-      induction' e : Seqₓₓ.destruct S with a <;> rw [e] at h'
-      ·
-        exact
-          let ⟨d, o, ad⟩ := IH _ _ h' 
-          let ⟨c, cl, ac⟩ := this a ⟨d, o.resolve_right (not_mem_nil _), ad⟩
-          ⟨c, Or.inl cl, ac⟩
-      ·
-        cases' a with o S' 
-        cases' o with c <;> simp [parallel.aux1] at h' <;> rcases IH _ _ h' with ⟨d, dl | dS', ad⟩
-        ·
-          exact
-            let ⟨c, cl, ac⟩ := this a ⟨d, dl, ad⟩
-            ⟨c, Or.inl cl, ac⟩
-        ·
-          refine' ⟨d, Or.inr _, ad⟩
-          rw [Seqₓₓ.destruct_eq_cons e]
-          exact Seqₓₓ.mem_cons_of_mem _ dS'
-        ·
-          simp  at dl 
-          cases' dl with dc dl
-          ·
-            rw [dc] at ad 
-            refine' ⟨c, Or.inr _, ad⟩
-            rw [Seqₓₓ.destruct_eq_cons e]
-            apply Seqₓₓ.mem_cons
-          ·
-            exact
-              let ⟨c, cl, ac⟩ := this a ⟨d, dl, ad⟩
-              ⟨c, Or.inl cl, ac⟩
-        ·
-          refine' ⟨d, Or.inr _, ad⟩
-          rw [Seqₓₓ.destruct_eq_cons e]
-          exact Seqₓₓ.mem_cons_of_mem _ dS'
+-- error in Data.Seq.Parallel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_of_mem_parallel
+{S : wseq (computation α)}
+{a}
+(h : «expr ∈ »(a, parallel S)) : «expr∃ , »((c «expr ∈ » S), «expr ∈ »(a, c)) :=
+suffices ∀
+C, «expr ∈ »(a, C) → ∀
+(l : list (computation α))
+(S), «expr = »(corec parallel.aux1 (l, S), C) → «expr∃ , »((c), «expr ∧ »(«expr ∨ »(«expr ∈ »(c, l), «expr ∈ »(c, S)), «expr ∈ »(a, c))), from let ⟨c, h1, h2⟩ := this _ h «expr[ , ]»([]) S rfl in
+⟨c, h1.resolve_left id, h2⟩,
+begin
+  let [ident F] [":", expr list (computation α) → «expr ⊕ »(α, list (computation α)) → exprProp()] [],
+  { intros [ident l, ident a],
+    cases [expr a] ["with", ident a, ident l'],
+    exact [expr «expr∃ , »((c «expr ∈ » l), «expr ∈ »(a, c))],
+    exact [expr ∀ a', «expr∃ , »((c «expr ∈ » l'), «expr ∈ »(a', c)) → «expr∃ , »((c «expr ∈ » l), «expr ∈ »(a', c))] },
+  have [ident lem1] [":", expr ∀ l : list (computation α), F l (parallel.aux2 l)] [],
+  { intro [ident l],
+    induction [expr l] [] ["with", ident c, ident l, ident IH] []; simp [] [] [] ["[", expr parallel.aux2, "]"] [] [],
+    { intros [ident a, ident h],
+      rcases [expr h, "with", "⟨", ident c, ",", ident hn, ",", "_", "⟩"],
+      exact [expr false.elim hn] },
+    { simp [] [] [] ["[", expr parallel.aux2, "]"] [] ["at", ident IH],
+      cases [expr list.foldr parallel.aux2._match_1 (sum.inr list.nil) l] ["with", ident a, ident ls]; simp [] [] [] ["[", expr parallel.aux2, "]"] [] [],
+      { rcases [expr IH, "with", "⟨", ident c', ",", ident cl, ",", ident ac, "⟩"],
+        refine [expr ⟨c', or.inr cl, ac⟩] },
+      { induction [expr h, ":", expr destruct c] [] ["with", ident a, ident c'] []; simp [] [] [] ["[", expr rmap, "]"] [] [],
+        { refine [expr ⟨c, list.mem_cons_self _ _, _⟩],
+          rw [expr destruct_eq_ret h] [],
+          apply [expr ret_mem] },
+        { intros [ident a', ident h],
+          rcases [expr h, "with", "⟨", ident d, ",", ident dm, ",", ident ad, "⟩"],
+          simp [] [] [] [] [] ["at", ident dm],
+          cases [expr dm] ["with", ident e, ident dl],
+          { rw [expr e] ["at", ident ad],
+            refine [expr ⟨c, list.mem_cons_self _ _, _⟩],
+            rw [expr destruct_eq_think h] [],
+            exact [expr think_mem ad] },
+          { cases [expr IH a' ⟨d, dl, ad⟩] ["with", ident d, ident dm],
+            cases [expr dm] ["with", ident dm, ident ad],
+            exact [expr ⟨d, or.inr dm, ad⟩] } } } } },
+  intros [ident C, ident aC],
+  refine [expr mem_rec_on aC _ (λ
+    C'
+    IH, _)]; intros [ident l, ident S, ident e]; have [ident e'] [] [":=", expr congr_arg destruct e]; have [] [] [":=", expr lem1 l]; simp [] [] [] ["[", expr parallel.aux1, "]"] [] ["at", ident e']; cases [expr parallel.aux2 l] ["with", ident a', ident l']; injection [expr e'] ["with", ident h'],
+  { rw [expr h'] ["at", ident this],
+    rcases [expr this, "with", "⟨", ident c, ",", ident cl, ",", ident ac, "⟩"],
+    exact [expr ⟨c, or.inl cl, ac⟩] },
+  { induction [expr e, ":", expr seq.destruct S] [] ["with", ident a] []; rw [expr e] ["at", ident h'],
+    { exact [expr let ⟨d, o, ad⟩ := IH _ _ h', ⟨c, cl, ac⟩ := this a ⟨d, o.resolve_right (not_mem_nil _), ad⟩ in
+       ⟨c, or.inl cl, ac⟩] },
+    { cases [expr a] ["with", ident o, ident S'],
+      cases [expr o] ["with", ident c]; simp [] [] [] ["[", expr parallel.aux1, "]"] [] ["at", ident h']; rcases [expr IH _ _ h', "with", "⟨", ident d, ",", ident dl, "|", ident dS', ",", ident ad, "⟩"],
+      { exact [expr let ⟨c, cl, ac⟩ := this a ⟨d, dl, ad⟩ in ⟨c, or.inl cl, ac⟩] },
+      { refine [expr ⟨d, or.inr _, ad⟩],
+        rw [expr seq.destruct_eq_cons e] [],
+        exact [expr seq.mem_cons_of_mem _ dS'] },
+      { simp [] [] [] [] [] ["at", ident dl],
+        cases [expr dl] ["with", ident dc, ident dl],
+        { rw [expr dc] ["at", ident ad],
+          refine [expr ⟨c, or.inr _, ad⟩],
+          rw [expr seq.destruct_eq_cons e] [],
+          apply [expr seq.mem_cons] },
+        { exact [expr let ⟨c, cl, ac⟩ := this a ⟨d, dl, ad⟩ in ⟨c, or.inl cl, ac⟩] } },
+      { refine [expr ⟨d, or.inr _, ad⟩],
+        rw [expr seq.destruct_eq_cons e] [],
+        exact [expr seq.mem_cons_of_mem _ dS'] } } }
+end
 
-theorem map_parallel (f : α → β) S : map f (parallel S) = parallel (S.map (map f)) :=
-  by 
-    refine'
-      eq_of_bisim
-        (fun c1 c2 =>
-          ∃ l S, c1 = map f (corec parallel.aux1 (l, S)) ∧ c2 = corec parallel.aux1 (l.map (map f), S.map (map f)))
-        _ ⟨[], S, rfl, rfl⟩
-    intro c1 c2 h 
-    exact
-      match c1, c2, h with 
-      | _, _, ⟨l, S, rfl, rfl⟩ =>
-        by 
-          clear _match 
-          have  : parallel.aux2 (l.map (map f)) = lmap f (rmap (List.map (map f)) (parallel.aux2 l))
-          ·
-            simp [parallel.aux2]
-            induction' l with c l IH <;> simp 
-            rw [IH]
-            cases List.foldr parallel.aux2._match_1 (Sum.inr List.nil) l <;> simp [parallel.aux2]
-            cases destruct c <;> simp 
-          simp [parallel.aux1]
-          rw [this]
-          cases' parallel.aux2 l with a l' <;> simp 
-          apply S.cases_on _ (fun c S => _) fun S => _ <;> simp  <;> simp [parallel.aux1] <;> exact ⟨_, _, rfl, rfl⟩
+-- error in Data.Seq.Parallel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_parallel (f : α → β) (S) : «expr = »(map f (parallel S), parallel (S.map (map f))) :=
+begin
+  refine [expr eq_of_bisim (λ
+    c1
+    c2, «expr∃ , »((l
+      S), «expr ∧ »(«expr = »(c1, map f (corec parallel.aux1 (l, S))), «expr = »(c2, corec parallel.aux1 (l.map (map f), S.map (map f)))))) _ ⟨«expr[ , ]»([]), S, rfl, rfl⟩],
+  intros [ident c1, ident c2, ident h],
+  exact [expr match c1, c2, h with
+   | ._, ._, ⟨l, S, rfl, rfl⟩ := begin
+     clear [ident _match],
+     have [] [":", expr «expr = »(parallel.aux2 (l.map (map f)), lmap f (rmap (list.map (map f)) (parallel.aux2 l)))] [],
+     { simp [] [] [] ["[", expr parallel.aux2, "]"] [] [],
+       induction [expr l] [] ["with", ident c, ident l, ident IH] []; simp [] [] [] [] [] [],
+       rw ["[", expr IH, "]"] [],
+       cases [expr list.foldr parallel.aux2._match_1 (sum.inr list.nil) l] []; simp [] [] [] ["[", expr parallel.aux2, "]"] [] [],
+       cases [expr destruct c] []; simp [] [] [] [] [] [] },
+     simp [] [] [] ["[", expr parallel.aux1, "]"] [] [],
+     rw [expr this] [],
+     cases [expr parallel.aux2 l] ["with", ident a, ident l']; simp [] [] [] [] [] [],
+     apply [expr S.cases_on _ (λ
+       c
+       S, _) (λ
+       S, _)]; simp [] [] [] [] [] []; simp [] [] [] ["[", expr parallel.aux1, "]"] [] []; exact [expr ⟨_, _, rfl, rfl⟩]
+   end
+   end]
+end
 
 theorem parallel_empty (S : Wseq (Computation α)) (h : S.head ~> none) : parallel S = Empty _ :=
   eq_empty_of_not_terminates$
@@ -303,52 +275,61 @@ theorem parallel_empty (S : Wseq (Computation α)) (h : S.head ~> none) : parall
       by 
         injection h h'
 
-def parallel_rec {S : Wseq (Computation α)} (C : α → Sort v) (H : ∀ s _ : s ∈ S, ∀ a _ : a ∈ s, C a) {a}
-  (h : a ∈ parallel S) : C a :=
-  by 
-    let T : Wseq (Computation (α × Computation α)) := S.map fun c => c.map fun a => (a, c)
-    have  : S = T.map (map fun c => c.1)
-    ·
-      rw [←Wseq.map_comp]
-      refine' (Wseq.map_id _).symm.trans (congr_argₓ (fun f => Wseq.map f S) _)
-      funext c 
-      dsimp [id, Function.comp]
-      rw [←map_comp]
-      exact (map_id _).symm 
-    have pe := congr_argₓ parallel this 
-    rw [←map_parallel] at pe 
-    have h' := h 
-    rw [pe] at h' 
-    haveI  : terminates (parallel T) := (terminates_map_iff _ _).1 ⟨⟨_, h'⟩⟩
-    induction' e : get (parallel T) with a' c 
-    have  : a ∈ c ∧ c ∈ S
-    ·
-      rcases exists_of_mem_map h' with ⟨d, dT, cd⟩
-      rw [get_eq_of_mem _ dT] at e 
-      cases e 
-      dsimp  at cd 
-      cases cd 
-      rcases exists_of_mem_parallel dT with ⟨d', dT', ad'⟩
-      rcases Wseq.exists_of_mem_map dT' with ⟨c', cs', e'⟩
-      rw [←e'] at ad' 
-      rcases exists_of_mem_map ad' with ⟨a', ac', e'⟩
-      injection e' with i1 i2 
-      constructor 
-      rwa [i1, i2] at ac' 
-      rwa [i2] at cs' 
-    cases' this with ac cs 
-    apply H _ cs _ ac
+-- error in Data.Seq.Parallel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+def parallel_rec
+{S : wseq (computation α)}
+(C : α → Sort v)
+(H : ∀ s «expr ∈ » S, ∀ a «expr ∈ » s, C a)
+{a}
+(h : «expr ∈ »(a, parallel S)) : C a :=
+begin
+  let [ident T] [":", expr wseq (computation «expr × »(α, computation α))] [":=", expr S.map (λ
+    c, c.map (λ a, (a, c)))],
+  have [] [":", expr «expr = »(S, T.map (map (λ c, c.1)))] [],
+  { rw ["[", "<-", expr wseq.map_comp, "]"] [],
+    refine [expr (wseq.map_id _).symm.trans (congr_arg (λ f, wseq.map f S) _)],
+    funext [ident c],
+    dsimp [] ["[", expr id, ",", expr function.comp, "]"] [] [],
+    rw ["[", "<-", expr map_comp, "]"] [],
+    exact [expr (map_id _).symm] },
+  have [ident pe] [] [":=", expr congr_arg parallel this],
+  rw ["<-", expr map_parallel] ["at", ident pe],
+  have [ident h'] [] [":=", expr h],
+  rw [expr pe] ["at", ident h'],
+  haveI [] [":", expr terminates (parallel T)] [":=", expr (terminates_map_iff _ _).1 ⟨⟨_, h'⟩⟩],
+  induction [expr e, ":", expr get (parallel T)] [] ["with", ident a', ident c] [],
+  have [] [":", expr «expr ∧ »(«expr ∈ »(a, c), «expr ∈ »(c, S))] [],
+  { rcases [expr exists_of_mem_map h', "with", "⟨", ident d, ",", ident dT, ",", ident cd, "⟩"],
+    rw [expr get_eq_of_mem _ dT] ["at", ident e],
+    cases [expr e] [],
+    dsimp [] [] [] ["at", ident cd],
+    cases [expr cd] [],
+    rcases [expr exists_of_mem_parallel dT, "with", "⟨", ident d', ",", ident dT', ",", ident ad', "⟩"],
+    rcases [expr wseq.exists_of_mem_map dT', "with", "⟨", ident c', ",", ident cs', ",", ident e', "⟩"],
+    rw ["<-", expr e'] ["at", ident ad'],
+    rcases [expr exists_of_mem_map ad', "with", "⟨", ident a', ",", ident ac', ",", ident e', "⟩"],
+    injection [expr e'] ["with", ident i1, ident i2],
+    constructor,
+    rwa ["[", expr i1, ",", expr i2, "]"] ["at", ident ac'],
+    rwa [expr i2] ["at", ident cs'] },
+  cases [expr this] ["with", ident ac, ident cs],
+  apply [expr H _ cs _ ac]
+end
 
 theorem parallel_promises {S : Wseq (Computation α)} {a} (H : ∀ s _ : s ∈ S, s ~> a) : parallel S ~> a :=
   fun a' ma' =>
     let ⟨c, cs, ac⟩ := exists_of_mem_parallel ma' 
     H _ cs ac
 
-theorem mem_parallel {S : Wseq (Computation α)} {a} (H : ∀ s _ : s ∈ S, s ~> a) {c} (cs : c ∈ S) (ac : a ∈ c) :
-  a ∈ parallel S :=
-  by 
-    haveI  := terminates_of_mem ac <;>
-      haveI  := terminates_parallel cs <;> exact mem_of_promises _ (parallel_promises H)
+-- error in Data.Seq.Parallel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_parallel
+{S : wseq (computation α)}
+{a}
+(H : ∀ s «expr ∈ » S, «expr ~> »(s, a))
+{c}
+(cs : «expr ∈ »(c, S))
+(ac : «expr ∈ »(a, c)) : «expr ∈ »(a, parallel S) :=
+by haveI [] [] [":=", expr terminates_of_mem ac]; haveI [] [] [":=", expr terminates_parallel cs]; exact [expr mem_of_promises _ (parallel_promises H)]
 
 theorem parallel_congr_lem {S T : Wseq (Computation α)} {a} (H : S.lift_rel Equiv T) :
   (∀ s _ : s ∈ S, s ~> a) ↔ ∀ t _ : t ∈ T, t ~> a :=
@@ -359,30 +340,23 @@ theorem parallel_congr_lem {S T : Wseq (Computation α)} {a} (H : S.lift_rel Equ
       let ⟨t, tT, se⟩ := Wseq.exists_of_lift_rel_left H sS
       (promises_congr se _).2 (h2 _ tT)⟩
 
-theorem parallel_congr_left {S T : Wseq (Computation α)} {a} (h1 : ∀ s _ : s ∈ S, s ~> a) (H : S.lift_rel Equiv T) :
-  parallel S ~ parallel T :=
-  let h2 := (parallel_congr_lem H).1 h1 
-  fun a' =>
-    ⟨fun h =>
-        by 
-          have aa := parallel_promises h1 h <;>
-            rw [←aa] <;>
-              rw [←aa] at h <;>
-                exact
-                  let ⟨s, sS, as⟩ := exists_of_mem_parallel h 
-                  let ⟨t, tT, st⟩ := Wseq.exists_of_lift_rel_left H sS 
-                  let aT := (st _).1 as 
-                  mem_parallel h2 tT aT,
-      fun h =>
-        by 
-          have aa := parallel_promises h2 h <;>
-            rw [←aa] <;>
-              rw [←aa] at h <;>
-                exact
-                  let ⟨s, sS, as⟩ := exists_of_mem_parallel h 
-                  let ⟨t, tT, st⟩ := Wseq.exists_of_lift_rel_right H sS 
-                  let aT := (st _).2 as 
-                  mem_parallel h1 tT aT⟩
+-- error in Data.Seq.Parallel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem parallel_congr_left
+{S T : wseq (computation α)}
+{a}
+(h1 : ∀ s «expr ∈ » S, «expr ~> »(s, a))
+(H : S.lift_rel equiv T) : [«expr ~ »/«expr ~ »](parallel S, parallel T) :=
+let h2 := (parallel_congr_lem H).1 h1 in
+λ
+a', ⟨λ
+ h, by have [ident aa] [] [":=", expr parallel_promises h1 h]; rw ["<-", expr aa] []; rw ["<-", expr aa] ["at", ident h]; exact [expr let ⟨s, sS, as⟩ := exists_of_mem_parallel h,
+      ⟨t, tT, st⟩ := wseq.exists_of_lift_rel_left H sS,
+      aT := (st _).1 as in
+  mem_parallel h2 tT aT], λ
+ h, by have [ident aa] [] [":=", expr parallel_promises h2 h]; rw ["<-", expr aa] []; rw ["<-", expr aa] ["at", ident h]; exact [expr let ⟨s, sS, as⟩ := exists_of_mem_parallel h,
+      ⟨t, tT, st⟩ := wseq.exists_of_lift_rel_right H sS,
+      aT := (st _).2 as in
+  mem_parallel h1 tT aT]⟩
 
 theorem parallel_congr_right {S T : Wseq (Computation α)} {a} (h2 : ∀ t _ : t ∈ T, t ~> a) (H : S.lift_rel Equiv T) :
   parallel S ~ parallel T :=

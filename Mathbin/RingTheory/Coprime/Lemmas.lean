@@ -63,25 +63,24 @@ theorem IsCoprime.of_prod_left (H1 : IsCoprime (∏i in t, s i) x) (i : I) (hit 
 theorem IsCoprime.of_prod_right (H1 : IsCoprime x (∏i in t, s i)) (i : I) (hit : i ∈ t) : IsCoprime x (s i) :=
   IsCoprime.prod_right_iff.1 H1 i hit
 
-theorem Finset.prod_dvd_of_coprime :
-  ∀ Hs : Set.Pairwise («expr↑ » t : Set I) (IsCoprime on s) Hs1 : ∀ i _ : i ∈ t, s i ∣ z, (∏x in t, s x) ∣ z :=
-  Finset.induction_on t (fun _ _ => one_dvd z)
-    (by 
-      intro a r har ih Hs Hs1 
-      rw [Finset.prod_insert har]
-      have aux1 : a ∈ («expr↑ » (insert a r) : Set I) := Finset.mem_insert_self a r 
-      refine'
-        (IsCoprime.prod_right$
-              fun i hir =>
-                Hs a aux1 i _
-                  (by 
-                    rintro rfl 
-                    exact har hir)).mul_dvd
-          (Hs1 a aux1) (ih (Hs.mono _)$ fun i hi => Hs1 i (Finset.mem_insert_of_mem hi))
-      ·
-        exact Finset.mem_insert_of_mem hir
-      ·
-        simp only [Finset.coe_insert, Set.subset_insert])
+-- error in RingTheory.Coprime.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem finset.prod_dvd_of_coprime : ∀
+(Hs : set.pairwise («expr↑ »(t) : set I) «expr on »(is_coprime, s))
+(Hs1 : ∀ i «expr ∈ » t, «expr ∣ »(s i, z)), «expr ∣ »(«expr∏ in , »((x), t, s x), z) :=
+finset.induction_on t (λ
+ _
+ _, one_dvd z) (begin
+   intros [ident a, ident r, ident har, ident ih, ident Hs, ident Hs1],
+   rw [expr finset.prod_insert har] [],
+   have [ident aux1] [":", expr «expr ∈ »(a, («expr↑ »(insert a r) : set I))] [":=", expr finset.mem_insert_self a r],
+   refine [expr «expr $ »(is_coprime.prod_right, λ
+     i
+     hir, Hs a aux1 i _ (by { rintro [ident rfl],
+        exact [expr har hir] })).mul_dvd (Hs1 a aux1) «expr $ »(ih (Hs.mono _), λ
+     i hi, Hs1 i (finset.mem_insert_of_mem hi))],
+   { exact [expr finset.mem_insert_of_mem hir] },
+   { simp [] [] ["only"] ["[", expr finset.coe_insert, ",", expr set.subset_insert, "]"] [] [] }
+ end)
 
 theorem Fintype.prod_dvd_of_coprime [Fintype I] (Hs : Pairwise (IsCoprime on s)) (Hs1 : ∀ i, s i ∣ z) : (∏x, s x) ∣ z :=
   Finset.prod_dvd_of_coprime (Hs.set_pairwise _) fun i _ => Hs1 i

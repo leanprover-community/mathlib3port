@@ -1,5 +1,6 @@
-import Mathbin.Topology.ContinuousFunction.Algebra 
-import Mathbin.LinearAlgebra.AffineSpace.AffineMap
+import Mathbin.LinearAlgebra.AffineSpace.AffineMap 
+import Mathbin.Topology.Algebra.Group 
+import Mathbin.Topology.Algebra.MulAction
 
 /-!
 # Topological properties of affine spaces and maps
@@ -25,21 +26,21 @@ section Ringₓ
 
 variable[Ringₓ R][Module R E][Module R F]
 
+-- error in Topology.Algebra.Affine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An affine map is continuous iff its underlying linear map is continuous. See also
 `affine_map.continuous_linear_iff`. -/
-theorem continuous_iff {f : E →ᵃ[R] F} : Continuous f ↔ Continuous f.linear :=
-  by 
-    split 
-    ·
-      intro hc 
-      rw [decomp' f]
-      have  := hc.sub continuous_const 
-      exact this
-    ·
-      intro hc 
-      rw [decomp f]
-      have  := hc.add continuous_const 
-      exact this
+theorem continuous_iff {f : «expr →ᵃ[ ] »(E, R, F)} : «expr ↔ »(continuous f, continuous f.linear) :=
+begin
+  split,
+  { intro [ident hc],
+    rw [expr decomp' f] [],
+    have [] [] [":=", expr hc.sub continuous_const],
+    exact [expr this] },
+  { intro [ident hc],
+    rw [expr decomp f] [],
+    have [] [] [":=", expr hc.add continuous_const],
+    exact [expr this] }
+end
 
 /-- The line map is continuous. -/
 @[continuity]

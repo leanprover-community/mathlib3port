@@ -78,7 +78,7 @@ theorem iterated_deriv_X (h : 1 < n) : iterated_deriv (X : Polynomial R) n = 0 :
   by 
     induction' n with n ih
     ·
-      exFalso 
+      exfalso 
       exact Nat.not_lt_zeroₓ 1 h
     ·
       simp only [iterated_deriv_succ]
@@ -101,7 +101,7 @@ theorem iterated_deriv_C (h : 0 < n) : iterated_deriv (C r) n = 0 :=
   by 
     induction' n with n ih
     ·
-      exFalso 
+      exfalso 
       exact Nat.lt_asymmₓ h h
     ·
       byCases' H : n = 0
@@ -118,15 +118,13 @@ theorem iterated_deriv_one_zero : iterated_deriv (1 : Polynomial R) 0 = 1 :=
   by 
     simp only [iterated_deriv_zero_right]
 
-@[simp]
-theorem iterated_deriv_one : 0 < n → iterated_deriv (1 : Polynomial R) n = 0 :=
-  fun h =>
-    by 
-      have eq1 : (1 : Polynomial R) = C 1 :=
-        by 
-          simp only [RingHom.map_one]
-      rw [eq1]
-      exact iterated_deriv_C _ _ h
+-- error in Data.Polynomial.IteratedDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem iterated_deriv_one : «expr < »(0, n) → «expr = »(iterated_deriv (1 : polynomial R) n, 0) :=
+λ h, begin
+  have [ident eq1] [":", expr «expr = »((1 : polynomial R), C 1)] [":=", expr by simp [] [] ["only"] ["[", expr ring_hom.map_one, "]"] [] []],
+  rw [expr eq1] [],
+  exact [expr iterated_deriv_C _ _ h]
+end
 
 end Semiringₓ
 
@@ -156,35 +154,28 @@ variable[CommSemiringₓ R]
 
 variable(f p q : Polynomial R)(n k : ℕ)
 
-theorem coeff_iterated_deriv_as_prod_Ico :
-  ∀ m : ℕ, (iterated_deriv f k).coeff m = (∏i in Ico m.succ (m+k.succ), i)*f.coeff (m+k) :=
-  by 
-    induction' k with k ih
-    ·
-      simp only [add_zeroₓ, forall_const, one_mulₓ, Ico_self, eq_self_iff_true, iterated_deriv_zero_right, prod_empty]
-    ·
-      intro m 
-      rw [iterated_deriv_succ, coeff_derivative, ih (m+1), mul_right_commₓ]
-      apply congr_arg2
-      ·
-        have set_eq : Ico m.succ (m+k.succ.succ) = Ico (m+1).succ ((m+1)+k.succ) ∪ {m+1}
-        ·
-          rw [union_comm, ←insert_eq, Ico_insert_succ_left, add_succ, add_succ, add_succ _ k, ←succ_eq_add_one,
-            succ_add]
-          rw [succ_eq_add_one]
-          linarith 
-        rw [set_eq, prod_union]
-        apply congr_arg2
-        ·
-          rfl
-        ·
-          simp only [prod_singleton]
-          normCast
-        ·
-          rw [disjoint_singleton_right, mem_Ico]
-          exact fun h => (Nat.lt_succ_selfₓ _).not_le h.1
-      ·
-        exact congr_argₓ _ (succ_add m k)
+-- error in Data.Polynomial.IteratedDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem coeff_iterated_deriv_as_prod_Ico : ∀
+m : exprℕ(), «expr = »((iterated_deriv f k).coeff m, «expr * »(«expr∏ in , »((i), Ico m.succ «expr + »(m, k.succ), i), f.coeff «expr + »(m, k))) :=
+begin
+  induction [expr k] [] ["with", ident k, ident ih] [],
+  { simp [] [] ["only"] ["[", expr add_zero, ",", expr forall_const, ",", expr one_mul, ",", expr Ico_self, ",", expr eq_self_iff_true, ",", expr iterated_deriv_zero_right, ",", expr prod_empty, "]"] [] [] },
+  { intro [ident m],
+    rw ["[", expr iterated_deriv_succ, ",", expr coeff_derivative, ",", expr ih «expr + »(m, 1), ",", expr mul_right_comm, "]"] [],
+    apply [expr congr_arg2],
+    { have [ident set_eq] [":", expr «expr = »(Ico m.succ «expr + »(m, k.succ.succ), «expr ∪ »(Ico «expr + »(m, 1).succ «expr + »(«expr + »(m, 1), k.succ), {«expr + »(m, 1)}))] [],
+      { rw ["[", expr union_comm, ",", "<-", expr insert_eq, ",", expr Ico_insert_succ_left, ",", expr add_succ, ",", expr add_succ, ",", expr add_succ _ k, ",", "<-", expr succ_eq_add_one, ",", expr succ_add, "]"] [],
+        rw [expr succ_eq_add_one] [],
+        linarith [] [] [] },
+      rw ["[", expr set_eq, ",", expr prod_union, "]"] [],
+      apply [expr congr_arg2],
+      { refl },
+      { simp [] [] ["only"] ["[", expr prod_singleton, "]"] [] [],
+        norm_cast [] },
+      { rw ["[", expr disjoint_singleton_right, ",", expr mem_Ico, "]"] [],
+        exact [expr λ h, (nat.lt_succ_self _).not_le h.1] } },
+    { exact [expr congr_arg _ (succ_add m k)] } }
+end
 
 theorem coeff_iterated_deriv_as_prod_range :
   ∀ m : ℕ, (iterated_deriv f k).coeff m = f.coeff (m+k)*∏i in range k, «expr↑ » ((m+k) - i) :=

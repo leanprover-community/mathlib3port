@@ -1,8 +1,6 @@
-import Mathbin.Algebra.Algebra.Basic 
-import Mathbin.Algebra.Algebra.Operations 
-import Mathbin.Algebra.DirectSum.Basic 
 import Mathbin.GroupTheory.Subgroup.Basic 
-import Mathbin.Algebra.GradedMonoid
+import Mathbin.Algebra.GradedMonoid 
+import Mathbin.Algebra.DirectSum.Basic
 
 /-!
 # Additively-graded multiplicative structures on `⨁ i, A i`
@@ -296,10 +294,12 @@ instance grade_zero.non_unital_non_assoc_semiring : NonUnitalNonAssocSemiring (A
   Function.Injective.nonUnitalNonAssocSemiring (of A 0) Dfinsupp.single_injective (of A 0).map_zero (of A 0).map_add
     (of_zero_mul A)
 
-instance grade_zero.smul_with_zero (i : ι) : SmulWithZero (A 0) (A i) :=
-  by 
-    letI this := SmulWithZero.compHom (⨁i, A i) (of A 0).toZeroHom 
-    refine' dfinsupp.single_injective.smul_with_zero (of A i).toZeroHom (of_zero_smul A)
+-- error in Algebra.DirectSum.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance grade_zero.smul_with_zero (i : ι) : smul_with_zero (A 0) (A i) :=
+begin
+  letI [] [] [":=", expr smul_with_zero.comp_hom «expr⨁ , »((i), A i) (of A 0).to_zero_hom],
+  refine [expr dfinsupp.single_injective.smul_with_zero (of A i).to_zero_hom (of_zero_smul A)]
+end
 
 end Mul
 
@@ -316,13 +316,14 @@ instance grade_zero.semiring : Semiringₓ (A 0) :=
 def of_zero_ring_hom : A 0 →+* ⨁i, A i :=
   { of _ 0 with map_one' := of_zero_one A, map_mul' := of_zero_mul A }
 
+-- error in Algebra.DirectSum.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Each grade `A i` derives a `A 0`-module structure from `gsemiring A`. Note that this results
 in an overall `module (A 0) (⨁ i, A i)` structure via `direct_sum.module`.
--/
-instance grade_zero.module {i} : Module (A 0) (A i) :=
-  by 
-    letI this := Module.compHom (⨁i, A i) (of_zero_ring_hom A)
-    exact dfinsupp.single_injective.module (A 0) (of A i) fun a => of_zero_smul A a
+-/ instance grade_zero.module {i} : module (A 0) (A i) :=
+begin
+  letI [] [] [":=", expr module.comp_hom «expr⨁ , »((i), A i) (of_zero_ring_hom A)],
+  exact [expr dfinsupp.single_injective.module (A 0) (of A i) (λ a, of_zero_smul A a)]
+end
 
 end Semiringₓ
 

@@ -230,34 +230,36 @@ end Indep
 
 section FromIndepToIndep
 
-theorem Indep_sets.indep_sets {α ι} {s : ι → Set (Set α)} [MeasurableSpace α] {μ : Measureₓ α}
-  (h_indep : Indep_sets s μ) {i j : ι} (hij : i ≠ j) : indep_sets (s i) (s j) μ :=
-  by 
-    intro t₁ t₂ ht₁ ht₂ 
-    have hf_m : ∀ x : ι, x ∈ {i, j} → ite (x = i) t₁ t₂ ∈ s x
-    ·
-      intro x hx 
-      cases' finset.mem_insert.mp hx with hx hx
-      ·
-        simp [hx, ht₁]
-      ·
-        simp [finset.mem_singleton.mp hx, hij.symm, ht₂]
-    have h1 : t₁ = ite (i = i) t₁ t₂
-    ·
-      simp only [if_true, eq_self_iff_true]
-    have h2 : t₂ = ite (j = i) t₁ t₂
-    ·
-      simp only [hij.symm, if_false]
-    have h_inter : (⋂(t : ι)(H : t ∈ ({i, j} : Finset ι)), ite (t = i) t₁ t₂) = ite (i = i) t₁ t₂ ∩ ite (j = i) t₁ t₂
-    ·
-      simp only [Finset.set_bInter_singleton, Finset.set_bInter_insert]
-    have h_prod : (∏t : ι in ({i, j} : Finset ι), μ (ite (t = i) t₁ t₂)) = μ (ite (i = i) t₁ t₂)*μ (ite (j = i) t₁ t₂)
-    ·
-      simp only [hij, Finset.prod_singleton, Finset.prod_insert, not_false_iff, Finset.mem_singleton]
-    rw [h1]
-    nthRw 1[h2]
-    nthRw 3[h2]
-    rw [←h_inter, ←h_prod, h_indep {i, j} hf_m]
+-- error in ProbabilityTheory.Independence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem Indep_sets.indep_sets
+{α ι}
+{s : ι → set (set α)}
+[measurable_space α]
+{μ : measure α}
+(h_indep : Indep_sets s μ)
+{i j : ι}
+(hij : «expr ≠ »(i, j)) : indep_sets (s i) (s j) μ :=
+begin
+  intros [ident t₁, ident t₂, ident ht₁, ident ht₂],
+  have [ident hf_m] [":", expr ∀ x : ι, «expr ∈ »(x, {i, j}) → «expr ∈ »(ite «expr = »(x, i) t₁ t₂, s x)] [],
+  { intros [ident x, ident hx],
+    cases [expr finset.mem_insert.mp hx] ["with", ident hx, ident hx],
+    { simp [] [] [] ["[", expr hx, ",", expr ht₁, "]"] [] [] },
+    { simp [] [] [] ["[", expr finset.mem_singleton.mp hx, ",", expr hij.symm, ",", expr ht₂, "]"] [] [] } },
+  have [ident h1] [":", expr «expr = »(t₁, ite «expr = »(i, i) t₁ t₂)] [],
+  by simp [] [] ["only"] ["[", expr if_true, ",", expr eq_self_iff_true, "]"] [] [],
+  have [ident h2] [":", expr «expr = »(t₂, ite «expr = »(j, i) t₁ t₂)] [],
+  by simp [] [] ["only"] ["[", expr hij.symm, ",", expr if_false, "]"] [] [],
+  have [ident h_inter] [":", expr «expr = »(«expr⋂ , »((t : ι)
+     (H : «expr ∈ »(t, ({i, j} : finset ι))), ite «expr = »(t, i) t₁ t₂), «expr ∩ »(ite «expr = »(i, i) t₁ t₂, ite «expr = »(j, i) t₁ t₂))] [],
+  by simp [] [] ["only"] ["[", expr finset.set_bInter_singleton, ",", expr finset.set_bInter_insert, "]"] [] [],
+  have [ident h_prod] [":", expr «expr = »(«expr∏ in , »((t : ι), ({i, j} : finset ι), μ (ite «expr = »(t, i) t₁ t₂)), «expr * »(μ (ite «expr = »(i, i) t₁ t₂), μ (ite «expr = »(j, i) t₁ t₂)))] [],
+  by simp [] [] ["only"] ["[", expr hij, ",", expr finset.prod_singleton, ",", expr finset.prod_insert, ",", expr not_false_iff, ",", expr finset.mem_singleton, "]"] [] [],
+  rw [expr h1] [],
+  nth_rewrite [1] [expr h2] [],
+  nth_rewrite [3] [expr h2] [],
+  rw ["[", "<-", expr h_inter, ",", "<-", expr h_prod, ",", expr h_indep {i, j} hf_m, "]"] []
+end
 
 theorem Indep.indep {α ι} {m : ι → MeasurableSpace α} [MeasurableSpace α] {μ : Measureₓ α} (h_indep : Indep m μ)
   {i j : ι} (hij : i ≠ j) : indep (m i) (m j) μ :=
@@ -297,47 +299,69 @@ section FromPiSystemsToMeasurableSpaces
 /-! ### Independence of generating π-systems implies independence of measurable space structures -/
 
 
-private theorem indep_sets.indep_aux {α} {m2 : MeasurableSpace α} {m : MeasurableSpace α} {μ : Measureₓ α}
-  [is_probability_measure μ] {p1 p2 : Set (Set α)} (h2 : m2 ≤ m) (hp2 : IsPiSystem p2) (hpm2 : m2 = generate_from p2)
-  (hyp : indep_sets p1 p2 μ) {t1 t2 : Set α} (ht1 : t1 ∈ p1) (ht2m : m2.measurable_set' t2) : μ (t1 ∩ t2) = μ t1*μ t2 :=
-  by 
-    let μ_inter := μ.restrict t1 
-    let ν := μ t1 • μ 
-    have h_univ : μ_inter Set.Univ = ν Set.Univ
-    ·
-      rw [measure.restrict_apply_univ, measure.smul_apply, measure_univ, mul_oneₓ]
-    haveI  : is_finite_measure μ_inter := @restrict.is_finite_measure α _ t1 μ ⟨measure_lt_top μ t1⟩
-    rw [Set.inter_comm, ←@measure.restrict_apply α _ μ t1 t2 (h2 t2 ht2m)]
-    refine' ext_on_measurable_space_of_generate_finite m p2 (fun t ht => _) h2 hpm2 hp2 h_univ ht2m 
-    have ht2 : m.measurable_set' t
-    ·
-      refine' h2 _ _ 
-      rw [hpm2]
-      exact measurable_set_generate_from ht 
-    rw [measure.restrict_apply ht2, measure.smul_apply, Set.inter_comm]
-    exact hyp t1 t ht1 ht
+-- error in ProbabilityTheory.Independence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem indep_sets.indep_aux
+{α}
+{m2 : measurable_space α}
+{m : measurable_space α}
+{μ : measure α}
+[is_probability_measure μ]
+{p1 p2 : set (set α)}
+(h2 : «expr ≤ »(m2, m))
+(hp2 : is_pi_system p2)
+(hpm2 : «expr = »(m2, generate_from p2))
+(hyp : indep_sets p1 p2 μ)
+{t1 t2 : set α}
+(ht1 : «expr ∈ »(t1, p1))
+(ht2m : m2.measurable_set' t2) : «expr = »(μ «expr ∩ »(t1, t2), «expr * »(μ t1, μ t2)) :=
+begin
+  let [ident μ_inter] [] [":=", expr μ.restrict t1],
+  let [ident ν] [] [":=", expr «expr • »(μ t1, μ)],
+  have [ident h_univ] [":", expr «expr = »(μ_inter set.univ, ν set.univ)] [],
+  by rw ["[", expr measure.restrict_apply_univ, ",", expr measure.smul_apply, ",", expr measure_univ, ",", expr mul_one, "]"] [],
+  haveI [] [":", expr is_finite_measure μ_inter] [":=", expr @restrict.is_finite_measure α _ t1 μ ⟨measure_lt_top μ t1⟩],
+  rw ["[", expr set.inter_comm, ",", "<-", expr @measure.restrict_apply α _ μ t1 t2 (h2 t2 ht2m), "]"] [],
+  refine [expr ext_on_measurable_space_of_generate_finite m p2 (λ t ht, _) h2 hpm2 hp2 h_univ ht2m],
+  have [ident ht2] [":", expr m.measurable_set' t] [],
+  { refine [expr h2 _ _],
+    rw [expr hpm2] [],
+    exact [expr measurable_set_generate_from ht] },
+  rw ["[", expr measure.restrict_apply ht2, ",", expr measure.smul_apply, ",", expr set.inter_comm, "]"] [],
+  exact [expr hyp t1 t ht1 ht]
+end
 
-theorem indep_sets.indep {α} {m1 m2 : MeasurableSpace α} {m : MeasurableSpace α} {μ : Measureₓ α}
-  [is_probability_measure μ] {p1 p2 : Set (Set α)} (h1 : m1 ≤ m) (h2 : m2 ≤ m) (hp1 : IsPiSystem p1)
-  (hp2 : IsPiSystem p2) (hpm1 : m1 = generate_from p1) (hpm2 : m2 = generate_from p2) (hyp : indep_sets p1 p2 μ) :
-  indep m1 m2 μ :=
-  by 
-    intro t1 t2 ht1 ht2 
-    let μ_inter := μ.restrict t2 
-    let ν := μ t2 • μ 
-    have h_univ : μ_inter Set.Univ = ν Set.Univ
-    ·
-      rw [measure.restrict_apply_univ, measure.smul_apply, measure_univ, mul_oneₓ]
-    haveI  : is_finite_measure μ_inter := @restrict.is_finite_measure α _ t2 μ ⟨measure_lt_top μ t2⟩
-    rw [mul_commₓ, ←@measure.restrict_apply α _ μ t2 t1 (h1 t1 ht1)]
-    refine' ext_on_measurable_space_of_generate_finite m p1 (fun t ht => _) h1 hpm1 hp1 h_univ ht1 
-    have ht1 : m.measurable_set' t
-    ·
-      refine' h1 _ _ 
-      rw [hpm1]
-      exact measurable_set_generate_from ht 
-    rw [measure.restrict_apply ht1, measure.smul_apply, mul_commₓ]
-    exact indep_sets.indep_aux h2 hp2 hpm2 hyp ht ht2
+-- error in ProbabilityTheory.Independence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem indep_sets.indep
+{α}
+{m1 m2 : measurable_space α}
+{m : measurable_space α}
+{μ : measure α}
+[is_probability_measure μ]
+{p1 p2 : set (set α)}
+(h1 : «expr ≤ »(m1, m))
+(h2 : «expr ≤ »(m2, m))
+(hp1 : is_pi_system p1)
+(hp2 : is_pi_system p2)
+(hpm1 : «expr = »(m1, generate_from p1))
+(hpm2 : «expr = »(m2, generate_from p2))
+(hyp : indep_sets p1 p2 μ) : indep m1 m2 μ :=
+begin
+  intros [ident t1, ident t2, ident ht1, ident ht2],
+  let [ident μ_inter] [] [":=", expr μ.restrict t2],
+  let [ident ν] [] [":=", expr «expr • »(μ t2, μ)],
+  have [ident h_univ] [":", expr «expr = »(μ_inter set.univ, ν set.univ)] [],
+  by rw ["[", expr measure.restrict_apply_univ, ",", expr measure.smul_apply, ",", expr measure_univ, ",", expr mul_one, "]"] [],
+  haveI [] [":", expr is_finite_measure μ_inter] [":=", expr @restrict.is_finite_measure α _ t2 μ ⟨measure_lt_top μ t2⟩],
+  rw ["[", expr mul_comm, ",", "<-", expr @measure.restrict_apply α _ μ t2 t1 (h1 t1 ht1), "]"] [],
+  refine [expr ext_on_measurable_space_of_generate_finite m p1 (λ t ht, _) h1 hpm1 hp1 h_univ ht1],
+  have [ident ht1] [":", expr m.measurable_set' t] [],
+  { refine [expr h1 _ _],
+    rw [expr hpm1] [],
+    exact [expr measurable_set_generate_from ht] },
+  rw ["[", expr measure.restrict_apply ht1, ",", expr measure.smul_apply, ",", expr mul_comm, "]"] [],
+  exact [expr indep_sets.indep_aux h2 hp2 hpm2 hyp ht ht2]
+end
 
 end FromPiSystemsToMeasurableSpaces
 

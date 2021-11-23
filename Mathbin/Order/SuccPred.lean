@@ -1,7 +1,7 @@
-import Mathbin.Order.BoundedLattice 
-import Mathbin.Order.GaloisConnection 
+import Mathbin.Order.CompleteLattice 
 import Mathbin.Order.Iterate 
-import Mathbin.Tactic.Monotonicity.Default
+import Mathbin.Tactic.Monotonicity.Default 
+import Mathbin.Order.BoundedLattice
 
 /-!
 # Successor and predecessor
@@ -80,7 +80,7 @@ def of_succ_le_iff_of_le_lt_succ (succ : α → α) (hsucc_le_iff : ∀ {a b}, s
 
 variable[SuccOrder α]
 
--- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp, mono #[]] theorem succ_le_succ {a b : α} (h : «expr ≤ »(a, b)) : «expr ≤ »(succ a, succ b) :=
 begin
   by_cases [expr ha, ":", expr ∀ {{c}}, «expr¬ »(«expr < »(a, c))],
@@ -137,19 +137,22 @@ section PartialOrderₓ
 
 variable[PartialOrderₓ α]
 
--- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-/-- There is at most one way to define the successors in a `partial_order`. -/ instance : subsingleton (succ_order α) :=
-begin
-  refine [expr subsingleton.intro (λ h₀ h₁, _)],
-  ext [] [ident a] [],
-  by_cases [expr ha, ":", expr «expr ≤ »(@succ _ _ h₀ a, a)],
-  { refine [expr (ha.trans (@le_succ _ _ h₁ a)).antisymm _],
-    by_contra [ident H],
-    exact [expr @maximal_of_succ_le _ _ h₀ _ ha _ «expr $ »((@le_succ _ _ h₁ a).lt_of_not_le, λ
-      h, «expr $ »(H, «expr $ »(h.trans, @le_succ _ _ h₀ a)))] },
-  { exact [expr «expr $ »(@succ_le_of_lt _ _ h₀ _ _, «expr $ »((@le_succ _ _ h₁ a).lt_of_not_le, λ
-       h, «expr $ »(@maximal_of_succ_le _ _ h₁ _ h _, (@le_succ _ _ h₀ a).lt_of_not_le ha))).antisymm «expr $ »(@succ_le_of_lt _ _ h₁ _ _, (@le_succ _ _ h₀ a).lt_of_not_le ha)] }
-end
+/-- There is at most one way to define the successors in a `partial_order`. -/
+instance  : Subsingleton (SuccOrder α) :=
+  by 
+    refine' Subsingleton.intro fun h₀ h₁ => _ 
+    ext a 
+    byCases' ha : @succ _ _ h₀ a ≤ a
+    ·
+      refine' (ha.trans (@le_succ _ _ h₁ a)).antisymm _ 
+      byContra H 
+      exact @maximal_of_succ_le _ _ h₀ _ ha _ ((@le_succ _ _ h₁ a).lt_of_not_le$ fun h => H$ h.trans$ @le_succ _ _ h₀ a)
+    ·
+      exact
+        (@succ_le_of_lt _ _ h₀ _ _$
+              (@le_succ _ _ h₁ a).lt_of_not_le$
+                fun h => @maximal_of_succ_le _ _ h₁ _ h _$ (@le_succ _ _ h₀ a).lt_of_not_le ha).antisymm
+          (@succ_le_of_lt _ _ h₁ _ _$ (@le_succ _ _ h₀ a).lt_of_not_le ha)
 
 variable[SuccOrder α]
 
@@ -222,13 +225,15 @@ section OrderBot
 
 variable[PartialOrderₓ α][OrderBot α][SuccOrder α][Nontrivial α]
 
-theorem bot_lt_succ (a : α) : ⊥ < succ a :=
-  by 
-    obtain ⟨b, hb⟩ := exists_ne (⊥ : α)
-    refine' bot_lt_iff_ne_bot.2 fun h => _ 
-    have  := eq_bot_iff.2 ((le_succ a).trans h.le)
-    rw [this] at h 
-    exact maximal_of_succ_le h.le (bot_lt_iff_ne_bot.2 hb)
+-- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem bot_lt_succ (a : α) : «expr < »(«expr⊥»(), succ a) :=
+begin
+  obtain ["⟨", ident b, ",", ident hb, "⟩", ":=", expr exists_ne («expr⊥»() : α)],
+  refine [expr bot_lt_iff_ne_bot.2 (λ h, _)],
+  have [] [] [":=", expr eq_bot_iff.2 ((le_succ a).trans h.le)],
+  rw [expr this] ["at", ident h],
+  exact [expr maximal_of_succ_le h.le (bot_lt_iff_ne_bot.2 hb)]
+end
 
 theorem succ_ne_bot (a : α) : succ a ≠ ⊥ :=
   (bot_lt_succ a).ne'
@@ -292,7 +297,7 @@ def of_le_pred_iff_of_pred_le_pred (pred : α → α) (hle_pred_iff : ∀ {a b},
 
 variable[PredOrder α]
 
--- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp, mono #[]] theorem pred_le_pred {a b : α} (h : «expr ≤ »(a, b)) : «expr ≤ »(pred a, pred b) :=
 begin
   by_cases [expr hb, ":", expr ∀ {{c}}, «expr¬ »(«expr < »(c, b))],
@@ -350,20 +355,23 @@ section PartialOrderₓ
 
 variable[PartialOrderₓ α]
 
--- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- There is at most one way to define the predecessors in a `partial_order`. -/
-instance : subsingleton (pred_order α) :=
-begin
-  refine [expr subsingleton.intro (λ h₀ h₁, _)],
-  ext [] [ident a] [],
-  by_cases [expr ha, ":", expr «expr ≤ »(a, @pred _ _ h₀ a)],
-  { refine [expr le_antisymm _ ((@pred_le _ _ h₁ a).trans ha)],
-    by_contra [ident H],
-    exact [expr @minimal_of_le_pred _ _ h₀ _ ha _ «expr $ »((@pred_le _ _ h₁ a).lt_of_not_le, λ
-      h, «expr $ »(H, (@pred_le _ _ h₀ a).trans h))] },
-  { exact [expr «expr $ »(@le_pred_of_lt _ _ h₁ _ _, (@pred_le _ _ h₀ a).lt_of_not_le ha).antisymm «expr $ »(@le_pred_of_lt _ _ h₀ _ _, «expr $ »((@pred_le _ _ h₁ a).lt_of_not_le, λ
-       h, «expr $ »(@minimal_of_le_pred _ _ h₁ _ h _, (@pred_le _ _ h₀ a).lt_of_not_le ha)))] }
-end
+instance  : Subsingleton (PredOrder α) :=
+  by 
+    refine' Subsingleton.intro fun h₀ h₁ => _ 
+    ext a 
+    byCases' ha : a ≤ @pred _ _ h₀ a
+    ·
+      refine' le_antisymmₓ _ ((@pred_le _ _ h₁ a).trans ha)
+      byContra H 
+      exact
+        @minimal_of_le_pred _ _ h₀ _ ha _ ((@pred_le _ _ h₁ a).lt_of_not_le$ fun h => H$ (@pred_le _ _ h₀ a).trans h)
+    ·
+      exact
+        (@le_pred_of_lt _ _ h₁ _ _$ (@pred_le _ _ h₀ a).lt_of_not_le ha).antisymm
+          (@le_pred_of_lt _ _ h₀ _ _$
+            (@pred_le _ _ h₁ a).lt_of_not_le$
+              fun h => @minimal_of_le_pred _ _ h₁ _ h _$ (@pred_le _ _ h₀ a).lt_of_not_le ha)
 
 variable[PredOrder α]
 
@@ -434,13 +442,15 @@ section OrderTop
 
 variable[PartialOrderₓ α][OrderTop α][PredOrder α]
 
-theorem pred_lt_top [Nontrivial α] (a : α) : pred a < ⊤ :=
-  by 
-    obtain ⟨b, hb⟩ := exists_ne (⊤ : α)
-    refine' lt_top_iff_ne_top.2 fun h => _ 
-    have  := eq_top_iff.2 (h.ge.trans (pred_le a))
-    rw [this] at h 
-    exact minimal_of_le_pred h.ge (lt_top_iff_ne_top.2 hb)
+-- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pred_lt_top [nontrivial α] (a : α) : «expr < »(pred a, «expr⊤»()) :=
+begin
+  obtain ["⟨", ident b, ",", ident hb, "⟩", ":=", expr exists_ne («expr⊤»() : α)],
+  refine [expr lt_top_iff_ne_top.2 (λ h, _)],
+  have [] [] [":=", expr eq_top_iff.2 (h.ge.trans (pred_le a))],
+  rw [expr this] ["at", ident h],
+  exact [expr minimal_of_le_pred h.ge (lt_top_iff_ne_top.2 hb)]
+end
 
 theorem pred_ne_top [Nontrivial α] (a : α) : pred a ≠ ⊤ :=
   (pred_lt_top a).Ne
@@ -677,7 +687,7 @@ instance ofNoTop [PartialOrderₓ α] [NoTopOrder α] [SuccOrder α] : SuccOrder
 
 instance  [PartialOrderₓ α] [NoTopOrder α] [hα : Nonempty α] : IsEmpty (PredOrder (WithTop α)) :=
   ⟨by 
-      introI 
+      intro 
       set b := pred (⊤ : WithTop α) with h 
       cases' pred (⊤ : WithTop α) with a ha <;> change b with pred ⊤ at h
       ·
@@ -812,7 +822,7 @@ instance  [DecidableEq α] [PartialOrderₓ α] [OrderBot α] [PredOrder α] : P
 
 instance  [PartialOrderₓ α] [NoBotOrder α] [hα : Nonempty α] : IsEmpty (SuccOrder (WithBot α)) :=
   ⟨by 
-      introI 
+      intro 
       set b : WithBot α := succ ⊥ with h 
       cases' succ (⊥ : WithBot α) with a ha <;> change b with succ ⊥ at h
       ·

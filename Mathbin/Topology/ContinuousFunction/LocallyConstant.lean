@@ -1,5 +1,6 @@
 import Mathbin.Topology.LocallyConstant.Algebra 
-import Mathbin.Topology.ContinuousFunction.Basic
+import Mathbin.Topology.ContinuousFunction.Basic 
+import Mathbin.Topology.ContinuousFunction.Algebra
 
 /-!
 # The algebra morphism from locally constant functions to continuous functions.

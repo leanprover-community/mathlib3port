@@ -206,7 +206,7 @@ theorem is_basis_iff_cover {B : Set (opens α)} : is_basis B ↔ ∀ U : opens �
     split 
     ·
       intro hB U 
-      refine' ⟨{ V : opens α | V ∈ B ∧ V ⊆ U }, fun U hU => hU.left, _⟩
+      refine' ⟨{ V:opens α | V ∈ B ∧ V ⊆ U }, fun U hU => hU.left, _⟩
       apply ext 
       rw [Sup_s, hB.open_eq_sUnion' U.prop]
       simpRw [sUnion_image, sUnion_eq_bUnion, Union, supr_and, supr_image]

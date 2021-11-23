@@ -1,11 +1,10 @@
-import Mathbin.RingTheory.AdjoinRoot 
-import Mathbin.RingTheory.AlgebraTower 
-import Mathbin.RingTheory.Algebraic 
-import Mathbin.RingTheory.Polynomial.Default 
 import Mathbin.FieldTheory.Minpoly 
+import Mathbin.RingTheory.AdjoinRoot 
 import Mathbin.LinearAlgebra.FiniteDimensional 
-import Mathbin.Tactic.FieldSimp 
-import Mathbin.Algebra.Polynomial.BigOperators
+import Mathbin.Algebra.Polynomial.BigOperators 
+import Mathbin.RingTheory.Algebraic 
+import Mathbin.RingTheory.AlgebraTower 
+import Mathbin.Tactic.FieldSimp
 
 /-!
 # Splitting fields
@@ -66,54 +65,33 @@ def splits (f : Polynomial K) : Prop :=
 theorem splits_zero : splits i (0 : Polynomial K) :=
   Or.inl rfl
 
-@[simp]
-theorem splits_C (a : K) : splits i (C a) :=
-  if ha : a = 0 then ha.symm ▸ (@C_0 K _).symm ▸ splits_zero i else
-    have hia : i a ≠ 0 := mt (i.injective_iff.1 i.injective _) ha 
-    Or.inr$
-      fun g hg ⟨p, hp⟩ =>
-        absurd hg.1
-          (not_not.2
-            (is_unit_iff_degree_eq_zero.2$
-              by 
-                have  := congr_argₓ degree hp <;>
-                  simp [degree_C hia, @eq_comm (WithBot ℕ) 0, Nat.WithBot.add_eq_zero_iff] at this <;>
-                    clear _fun_match <;> tauto))
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem splits_C (a : K) : splits i (C a) :=
+if ha : «expr = »(a, 0) then «expr ▸ »(ha.symm, «expr ▸ »((@C_0 K _).symm, splits_zero i)) else have hia : «expr ≠ »(i a, 0), from mt (i.injective_iff.1 i.injective _) ha,
+«expr $ »(or.inr, λ
+ (g hg)
+ ⟨p, hp⟩, absurd hg.1 (not_not.2 «expr $ »(is_unit_iff_degree_eq_zero.2, by have [] [] [":=", expr congr_arg degree hp]; simp [] [] [] ["[", expr degree_C hia, ",", expr @eq_comm (with_bot exprℕ()) 0, ",", expr nat.with_bot.add_eq_zero_iff, "]"] [] ["at", ident this]; clear [ident _fun_match]; tauto [])))
 
-theorem splits_of_degree_eq_one {f : Polynomial K} (hf : degree f = 1) : splits i f :=
-  Or.inr$
-    fun g hg ⟨p, hp⟩ =>
-      by 
-        have  := congr_argₓ degree hp <;>
-          simp [Nat.WithBot.add_eq_one_iff, hf, @eq_comm (WithBot ℕ) 1, mt is_unit_iff_degree_eq_zero.2 hg.1] at
-              this <;>
-            clear _fun_match <;> tauto
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem splits_of_degree_eq_one {f : polynomial K} (hf : «expr = »(degree f, 1)) : splits i f :=
+«expr $ »(or.inr, λ
+ (g hg)
+ ⟨p, hp⟩, by have [] [] [":=", expr congr_arg degree hp]; simp [] [] [] ["[", expr nat.with_bot.add_eq_one_iff, ",", expr hf, ",", expr @eq_comm (with_bot exprℕ()) 1, ",", expr mt is_unit_iff_degree_eq_zero.2 hg.1, "]"] [] ["at", ident this]; clear [ident _fun_match]; tauto [])
 
-theorem splits_of_degree_le_one {f : Polynomial K} (hf : degree f ≤ 1) : splits i f :=
-  by 
-    cases' h : degree f with n
-    ·
-      rw [degree_eq_bot.1 h] <;> exact splits_zero i
-    ·
-      cases' n with n
-      ·
-        rw [eq_C_of_degree_le_zero (trans_rel_right (· ≤ ·) h (le_reflₓ _))] <;> exact splits_C _ _
-      ·
-        have hn : n = 0
-        ·
-          rw [h] at hf 
-          cases n
-          ·
-            rfl
-          ·
-            exact
-              absurd hf
-                (by 
-                  decide)
-        exact
-          splits_of_degree_eq_one _
-            (by 
-              rw [h, hn] <;> rfl)
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem splits_of_degree_le_one {f : polynomial K} (hf : «expr ≤ »(degree f, 1)) : splits i f :=
+begin
+  cases [expr h, ":", expr degree f] ["with", ident n],
+  { rw ["[", expr degree_eq_bot.1 h, "]"] []; exact [expr splits_zero i] },
+  { cases [expr n] ["with", ident n],
+    { rw ["[", expr eq_C_of_degree_le_zero (trans_rel_right ((«expr ≤ »)) h (le_refl _)), "]"] []; exact [expr splits_C _ _] },
+    { have [ident hn] [":", expr «expr = »(n, 0)] [],
+      { rw [expr h] ["at", ident hf],
+        cases [expr n] [],
+        { refl },
+        { exact [expr absurd hf exprdec_trivial()] } },
+      exact [expr splits_of_degree_eq_one _ (by rw ["[", expr h, ",", expr hn, "]"] []; refl)] } }
+end
 
 theorem splits_of_nat_degree_le_one {f : Polynomial K} (hf : nat_degree f ≤ 1) : splits i f :=
   splits_of_degree_le_one i (degree_le_of_nat_degree_le hf)
@@ -302,29 +280,27 @@ theorem roots_map {f : Polynomial K} (hf : f.splits$ RingHom.id K) : (f.map i).r
       simpRw [roots_X_sub_C]
       rw [Multiset.bind_singleton, Multiset.bind_singleton, Multiset.map_id']
 
-theorem eq_prod_roots_of_splits {p : Polynomial K} {i : K →+* L} (hsplit : splits i p) :
-  p.map i = C (i p.leading_coeff)*((p.map i).roots.map fun a => X - C a).Prod :=
-  by 
-    byCases' p_eq_zero : p = 0
-    ·
-      rw [p_eq_zero, map_zero, leading_coeff_zero, i.map_zero, C.map_zero, zero_mul]
-    obtain ⟨s, hs⟩ := exists_multiset_of_splits i hsplit 
-    have map_ne_zero : p.map i ≠ 0 := map_ne_zero p_eq_zero 
-    have prod_ne_zero : (C (i p.leading_coeff)*(Multiset.map (fun a => X - C a) s).Prod) ≠ 0 :=
-      by 
-        rwa [hs] at map_ne_zero 
-    have zero_nmem : (0 : Polynomial L) ∉ s.map fun a => X - C a 
-    exact zero_nmem_multiset_map_X_sub_C _ _ 
-    have map_bind_roots_eq : ((s.map fun a => X - C a).bind fun a => a.roots) = s
-    ·
-      refine'
-        Multiset.induction_on s
-          (by 
-            rw [Multiset.map_zero, Multiset.zero_bind])
-          _ 
-      intro a s ih 
-      rw [Multiset.map_cons, Multiset.cons_bind, ih, roots_X_sub_C, Multiset.singleton_add]
-    rw [hs, roots_mul prod_ne_zero, roots_C, zero_addₓ, roots_multiset_prod _ zero_nmem, map_bind_roots_eq]
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_prod_roots_of_splits
+{p : polynomial K}
+{i : «expr →+* »(K, L)}
+(hsplit : splits i p) : «expr = »(p.map i, «expr * »(C (i p.leading_coeff), ((p.map i).roots.map (λ
+    a, «expr - »(X, C a))).prod)) :=
+begin
+  by_cases [expr p_eq_zero, ":", expr «expr = »(p, 0)],
+  { rw ["[", expr p_eq_zero, ",", expr map_zero, ",", expr leading_coeff_zero, ",", expr i.map_zero, ",", expr C.map_zero, ",", expr zero_mul, "]"] [] },
+  obtain ["⟨", ident s, ",", ident hs, "⟩", ":=", expr exists_multiset_of_splits i hsplit],
+  have [ident map_ne_zero] [":", expr «expr ≠ »(p.map i, 0)] [":=", expr map_ne_zero p_eq_zero],
+  have [ident prod_ne_zero] [":", expr «expr ≠ »(«expr * »(C (i p.leading_coeff), (multiset.map (λ
+       a, «expr - »(X, C a)) s).prod), 0)] [":=", expr by rwa [expr hs] ["at", ident map_ne_zero]],
+  have [ident zero_nmem] [":", expr «expr ∉ »((0 : polynomial L), s.map (λ a, «expr - »(X, C a)))] [],
+  from [expr zero_nmem_multiset_map_X_sub_C _ _],
+  have [ident map_bind_roots_eq] [":", expr «expr = »((s.map (λ a, «expr - »(X, C a))).bind (λ a, a.roots), s)] [],
+  { refine [expr multiset.induction_on s (by rw ["[", expr multiset.map_zero, ",", expr multiset.zero_bind, "]"] []) _],
+    intros [ident a, ident s, ident ih],
+    rw ["[", expr multiset.map_cons, ",", expr multiset.cons_bind, ",", expr ih, ",", expr roots_X_sub_C, ",", expr multiset.singleton_add, "]"] [] },
+  rw ["[", expr hs, ",", expr roots_mul prod_ne_zero, ",", expr roots_C, ",", expr zero_add, ",", expr roots_multiset_prod _ zero_nmem, ",", expr map_bind_roots_eq, "]"] []
+end
 
 theorem eq_prod_roots_of_splits_id {p : Polynomial K} (hsplit : splits (RingHom.id K) p) :
   p = C p.leading_coeff*(p.roots.map fun a => X - C a).Prod :=
@@ -344,19 +320,21 @@ theorem eq_X_sub_C_of_splits_of_single_root {x : K} {h : Polynomial K} (h_splits
     rw [eq_prod_roots_of_splits h_splits, h_roots]
     simp 
 
-theorem nat_degree_eq_card_roots {p : Polynomial K} {i : K →+* L} (hsplit : splits i p) :
-  p.nat_degree = (p.map i).roots.card :=
-  by 
-    byCases' p_eq_zero : p = 0
-    ·
-      rw [p_eq_zero, nat_degree_zero, map_zero, roots_zero, Multiset.card_zero]
-    have map_ne_zero : p.map i ≠ 0 := map_ne_zero p_eq_zero 
-    rw [eq_prod_roots_of_splits hsplit] at map_ne_zero 
-    convLHS => rw [←nat_degree_map i, eq_prod_roots_of_splits hsplit]
-    have  : (0 : Polynomial L) ∉ (map i p).roots.map fun a => X - C a 
-    exact zero_nmem_multiset_map_X_sub_C _ _ 
-    simp [nat_degree_mul (left_ne_zero_of_mul map_ne_zero) (right_ne_zero_of_mul map_ne_zero),
-      nat_degree_multiset_prod _ this]
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nat_degree_eq_card_roots
+{p : polynomial K}
+{i : «expr →+* »(K, L)}
+(hsplit : splits i p) : «expr = »(p.nat_degree, (p.map i).roots.card) :=
+begin
+  by_cases [expr p_eq_zero, ":", expr «expr = »(p, 0)],
+  { rw ["[", expr p_eq_zero, ",", expr nat_degree_zero, ",", expr map_zero, ",", expr roots_zero, ",", expr multiset.card_zero, "]"] [] },
+  have [ident map_ne_zero] [":", expr «expr ≠ »(p.map i, 0)] [":=", expr map_ne_zero p_eq_zero],
+  rw [expr eq_prod_roots_of_splits hsplit] ["at", ident map_ne_zero],
+  conv_lhs [] [] { rw ["[", "<-", expr nat_degree_map i, ",", expr eq_prod_roots_of_splits hsplit, "]"] },
+  have [] [":", expr «expr ∉ »((0 : polynomial L), (map i p).roots.map (λ a, «expr - »(X, C a)))] [],
+  from [expr zero_nmem_multiset_map_X_sub_C _ _],
+  simp [] [] [] ["[", expr nat_degree_mul (left_ne_zero_of_mul map_ne_zero) (right_ne_zero_of_mul map_ne_zero), ",", expr nat_degree_multiset_prod _ this, "]"] [] []
+end
 
 theorem degree_eq_card_roots {p : Polynomial K} {i : K →+* L} (p_ne_zero : p ≠ 0) (hsplit : splits i p) :
   p.degree = (p.map i).roots.card :=
@@ -432,70 +410,65 @@ theorem splits_comp_of_splits (j : L →+* F) {f : Polynomial K} (h : splits i f
     rw [←splits_map_iff i] at h 
     exact splits_of_splits_id _ h
 
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A monic polynomial `p` that has as many roots as its degree
 can be written `p = ∏(X - a)`, for `a` in `p.roots`. -/
-theorem prod_multiset_X_sub_C_of_monic_of_roots_card_eq {p : Polynomial K} (hmonic : p.monic)
-  (hroots : p.roots.card = p.nat_degree) : (Multiset.map (fun a : K => X - C a) p.roots).Prod = p :=
-  by 
-    have hprodmonic : (Multiset.map (fun a : K => X - C a) p.roots).Prod.Monic
-    ·
-      simp only [prod_multiset_root_eq_finset_root (ne_zero_of_monic hmonic), monic_prod_of_monic, monic_X_sub_C,
-        monic_pow, forall_true_iff]
-    have hdegree : (Multiset.map (fun a : K => X - C a) p.roots).Prod.natDegree = p.nat_degree
-    ·
-      rw [←hroots, nat_degree_multiset_prod _ (zero_nmem_multiset_map_X_sub_C _ fun a : K => a)]
-      simp only [eq_self_iff_true, mul_oneₓ, Nat.cast_id, nsmul_eq_mul, Multiset.sum_repeat, Multiset.map_const,
-        nat_degree_X_sub_C, Function.comp, Multiset.map_map]
-    obtain ⟨q, hq⟩ := prod_multiset_X_sub_C_dvd p 
-    have qzero : q ≠ 0
-    ·
-      rintro rfl 
-      apply hmonic.ne_zero 
-      simpa only [mul_zero] using hq 
-    have degp : p.nat_degree = (Multiset.map (fun a : K => X - C a) p.roots).Prod.natDegree+q.nat_degree
-    ·
-      nthRw 0[hq]
-      simp only [nat_degree_mul (ne_zero_of_monic hprodmonic) qzero]
-    have degq : q.nat_degree = 0
-    ·
-      rw [hdegree] at degp 
-      exact (add_right_injₓ p.nat_degree).mp (Tactic.RingExp.add_pf_sum_z degp rfl).symm 
-    obtain ⟨u, hu⟩ := is_unit_iff_degree_eq_zero.2 ((degree_eq_iff_nat_degree_eq qzero).2 degq)
-    have hassoc : Associated (Multiset.map (fun a : K => X - C a) p.roots).Prod p
-    ·
-      rw [Associated]
-      use u 
-      rw [hu, ←hq]
-    exact eq_of_monic_of_associated hprodmonic hmonic hassoc
+theorem prod_multiset_X_sub_C_of_monic_of_roots_card_eq
+{p : polynomial K}
+(hmonic : p.monic)
+(hroots : «expr = »(p.roots.card, p.nat_degree)) : «expr = »((multiset.map (λ
+   a : K, «expr - »(X, C a)) p.roots).prod, p) :=
+begin
+  have [ident hprodmonic] [":", expr (multiset.map (λ a : K, «expr - »(X, C a)) p.roots).prod.monic] [],
+  { simp [] [] ["only"] ["[", expr prod_multiset_root_eq_finset_root (ne_zero_of_monic hmonic), ",", expr monic_prod_of_monic, ",", expr monic_X_sub_C, ",", expr monic_pow, ",", expr forall_true_iff, "]"] [] [] },
+  have [ident hdegree] [":", expr «expr = »((multiset.map (λ
+      a : K, «expr - »(X, C a)) p.roots).prod.nat_degree, p.nat_degree)] [],
+  { rw ["[", "<-", expr hroots, ",", expr nat_degree_multiset_prod _ (zero_nmem_multiset_map_X_sub_C _ (λ
+       a : K, a)), "]"] [],
+    simp [] [] ["only"] ["[", expr eq_self_iff_true, ",", expr mul_one, ",", expr nat.cast_id, ",", expr nsmul_eq_mul, ",", expr multiset.sum_repeat, ",", expr multiset.map_const, ",", expr nat_degree_X_sub_C, ",", expr function.comp, ",", expr multiset.map_map, "]"] [] [] },
+  obtain ["⟨", ident q, ",", ident hq, "⟩", ":=", expr prod_multiset_X_sub_C_dvd p],
+  have [ident qzero] [":", expr «expr ≠ »(q, 0)] [],
+  { rintro [ident rfl],
+    apply [expr hmonic.ne_zero],
+    simpa [] [] ["only"] ["[", expr mul_zero, "]"] [] ["using", expr hq] },
+  have [ident degp] [":", expr «expr = »(p.nat_degree, «expr + »((multiset.map (λ
+       a : K, «expr - »(X, C a)) p.roots).prod.nat_degree, q.nat_degree))] [],
+  { nth_rewrite [0] ["[", expr hq, "]"] [],
+    simp [] [] ["only"] ["[", expr nat_degree_mul (ne_zero_of_monic hprodmonic) qzero, "]"] [] [] },
+  have [ident degq] [":", expr «expr = »(q.nat_degree, 0)] [],
+  { rw [expr hdegree] ["at", ident degp],
+    exact [expr (add_right_inj p.nat_degree).mp (tactic.ring_exp.add_pf_sum_z degp rfl).symm] },
+  obtain ["⟨", ident u, ",", ident hu, "⟩", ":=", expr is_unit_iff_degree_eq_zero.2 ((degree_eq_iff_nat_degree_eq qzero).2 degq)],
+  have [ident hassoc] [":", expr associated (multiset.map (λ a : K, «expr - »(X, C a)) p.roots).prod p] [],
+  { rw [expr associated] [],
+    use [expr u],
+    rw ["[", expr hu, ",", "<-", expr hq, "]"] [] },
+  exact [expr eq_of_monic_of_associated hprodmonic hmonic hassoc]
+end
 
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A polynomial `p` that has as many roots as its degree
 can be written `p = p.leading_coeff * ∏(X - a)`, for `a` in `p.roots`. -/
-theorem C_leading_coeff_mul_prod_multiset_X_sub_C {p : Polynomial K} (hroots : p.roots.card = p.nat_degree) :
-  (C p.leading_coeff*(Multiset.map (fun a : K => X - C a) p.roots).Prod) = p :=
-  by 
-    byCases' hzero : p = 0
-    ·
-      rw [hzero, leading_coeff_zero, RingHom.map_zero, zero_mul]
-    ·
-      have hcoeff : p.leading_coeff ≠ 0
-      ·
-        intro h 
-        exact hzero (leading_coeff_eq_zero.1 h)
-      have hrootsnorm : (normalize p).roots.card = (normalize p).natDegree
-      ·
-        rw [roots_normalize, normalize_apply, nat_degree_mul hzero (Units.ne_zero _), hroots, coe_norm_unit,
-          nat_degree_C, add_zeroₓ]
-      have hprod := prod_multiset_X_sub_C_of_monic_of_roots_card_eq (monic_normalize hzero) hrootsnorm 
-      rw [roots_normalize, normalize_apply, coe_norm_unit_of_ne_zero hzero] at hprod 
-      calc
-        (C p.leading_coeff*(Multiset.map (fun a : K => X - C a) p.roots).Prod) =
-          p*C (p.leading_coeff⁻¹*p.leading_coeff) :=
-        by 
-          rw [hprod, mul_commₓ, mul_assocₓ, ←C_mul]_ = p*C 1 :=
-        by 
-          fieldSimp _ = p :=
-        by 
-          simp only [mul_oneₓ, RingHom.map_one]
+theorem C_leading_coeff_mul_prod_multiset_X_sub_C
+{p : polynomial K}
+(hroots : «expr = »(p.roots.card, p.nat_degree)) : «expr = »(«expr * »(C p.leading_coeff, (multiset.map (λ
+    a : K, «expr - »(X, C a)) p.roots).prod), p) :=
+begin
+  by_cases [expr hzero, ":", expr «expr = »(p, 0)],
+  { rw ["[", expr hzero, ",", expr leading_coeff_zero, ",", expr ring_hom.map_zero, ",", expr zero_mul, "]"] [] },
+  { have [ident hcoeff] [":", expr «expr ≠ »(p.leading_coeff, 0)] [],
+    { intro [ident h],
+      exact [expr hzero (leading_coeff_eq_zero.1 h)] },
+    have [ident hrootsnorm] [":", expr «expr = »((normalize p).roots.card, (normalize p).nat_degree)] [],
+    { rw ["[", expr roots_normalize, ",", expr normalize_apply, ",", expr nat_degree_mul hzero (units.ne_zero _), ",", expr hroots, ",", expr coe_norm_unit, ",", expr nat_degree_C, ",", expr add_zero, "]"] [] },
+    have [ident hprod] [] [":=", expr prod_multiset_X_sub_C_of_monic_of_roots_card_eq (monic_normalize hzero) hrootsnorm],
+    rw ["[", expr roots_normalize, ",", expr normalize_apply, ",", expr coe_norm_unit_of_ne_zero hzero, "]"] ["at", ident hprod],
+    calc
+      «expr = »(«expr * »(C p.leading_coeff, (multiset.map (λ
+          a : K, «expr - »(X, C a)) p.roots).prod), «expr * »(p, C «expr * »(«expr ⁻¹»(p.leading_coeff), p.leading_coeff))) : by rw ["[", expr hprod, ",", expr mul_comm, ",", expr mul_assoc, ",", "<-", expr C_mul, "]"] []
+      «expr = »(..., «expr * »(p, C 1)) : by field_simp [] [] [] []
+      «expr = »(..., p) : by simp [] [] ["only"] ["[", expr mul_one, ",", expr ring_hom.map_one, "]"] [] [] }
+end
 
 /-- A polynomial splits if and only if it has as many roots as its degree. -/
 theorem splits_iff_card_roots {p : Polynomial K} : splits (RingHom.id K) p ↔ p.roots.card = p.nat_degree :=
@@ -554,44 +527,41 @@ theorem FiniteDimensional.of_subalgebra_to_submodule {K V : Type _} [Field K] [R
   {s : Subalgebra K V} (h : FiniteDimensional K s.to_submodule) : FiniteDimensional K s :=
   h
 
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `K` and `L` are field extensions of `F` and we have `s : finset K` such that
 the minimal polynomial of each `x ∈ s` splits in `L` then `algebra.adjoin F s` embeds in `L`. -/
-theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F K] [Algebra F L] (s : Finset K) :
-  (∀ x _ : x ∈ s, IsIntegral F x ∧ Polynomial.Splits (algebraMap F L) (minpoly F x)) →
-    Nonempty (Algebra.adjoin F («expr↑ » s : Set K) →ₐ[F] L) :=
-  by 
-    refine' Finset.induction_on s (fun H => _) fun a s has ih H => _
-    ·
-      rw [coe_empty, Algebra.adjoin_empty]
-      exact ⟨(Algebra.ofId F L).comp (Algebra.botEquiv F K)⟩
-    rw [forall_mem_insert] at H 
-    rcases H with ⟨⟨H1, H2⟩, H3⟩
-    cases' ih H3 with f 
-    choose H3 H4 using H3 
-    rw [coe_insert, Set.insert_eq, Set.union_comm, Algebra.adjoin_union_eq_adjoin_adjoin]
-    letI this := (f : Algebra.adjoin F («expr↑ » s : Set K) →+* L).toAlgebra 
-    haveI  : FiniteDimensional F (Algebra.adjoin F («expr↑ » s : Set K)) :=
-      ((Submodule.fg_iff_finite_dimensional _).1
-          (fg_adjoin_of_finite (Set.finite_mem_finset s) H3)).of_subalgebra_to_submodule
-        
-    letI this := fieldOfFiniteDimensional F (Algebra.adjoin F («expr↑ » s : Set K))
-    have H5 : IsIntegral (Algebra.adjoin F («expr↑ » s : Set K)) a := is_integral_of_is_scalar_tower a H1 
-    have H6 :
-      (minpoly (Algebra.adjoin F («expr↑ » s : Set K)) a).Splits (algebraMap (Algebra.adjoin F («expr↑ » s : Set K)) L)
-    ·
-      refine'
-        Polynomial.splits_of_splits_of_dvd _
-          (Polynomial.map_ne_zero$ minpoly.ne_zero H1 : Polynomial.map (algebraMap _ _) _ ≠ 0)
-          ((Polynomial.splits_map_iff _ _).2 _) (minpoly.dvd _ _ _)
-      ·
-        rw [←IsScalarTower.algebra_map_eq]
-        exact H2
-      ·
-        rw [←IsScalarTower.aeval_apply, minpoly.aeval]
-    obtain ⟨y, hy⟩ := Polynomial.exists_root_of_splits _ H6 (ne_of_ltₓ (minpoly.degree_pos H5)).symm 
-    refine' ⟨Subalgebra.ofRestrictScalars _ _ _⟩
-    refine' (AdjoinRoot.liftHom (minpoly (Algebra.adjoin F («expr↑ » s : Set K)) a) y hy).comp _ 
-    exact AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly (Algebra.adjoin F («expr↑ » s : Set K)) a
+theorem lift_of_splits
+{F K L : Type*}
+[field F]
+[field K]
+[field L]
+[algebra F K]
+[algebra F L]
+(s : finset K) : ∀
+x «expr ∈ » s, «expr ∧ »(is_integral F x, polynomial.splits (algebra_map F L) (minpoly F x)) → nonempty «expr →ₐ[ ] »(algebra.adjoin F («expr↑ »(s) : set K), F, L) :=
+begin
+  refine [expr finset.induction_on s (λ H, _) (λ a s has ih H, _)],
+  { rw ["[", expr coe_empty, ",", expr algebra.adjoin_empty, "]"] [],
+    exact [expr ⟨(algebra.of_id F L).comp (algebra.bot_equiv F K)⟩] },
+  rw [expr forall_mem_insert] ["at", ident H],
+  rcases [expr H, "with", "⟨", "⟨", ident H1, ",", ident H2, "⟩", ",", ident H3, "⟩"],
+  cases [expr ih H3] ["with", ident f],
+  choose [] [ident H3] [ident H4] ["using", expr H3],
+  rw ["[", expr coe_insert, ",", expr set.insert_eq, ",", expr set.union_comm, ",", expr algebra.adjoin_union_eq_adjoin_adjoin, "]"] [],
+  letI [] [] [":=", expr (f : «expr →+* »(algebra.adjoin F («expr↑ »(s) : set K), L)).to_algebra],
+  haveI [] [":", expr finite_dimensional F (algebra.adjoin F («expr↑ »(s) : set K))] [":=", expr ((submodule.fg_iff_finite_dimensional _).1 (fg_adjoin_of_finite (set.finite_mem_finset s) H3)).of_subalgebra_to_submodule],
+  letI [] [] [":=", expr field_of_finite_dimensional F (algebra.adjoin F («expr↑ »(s) : set K))],
+  have [ident H5] [":", expr is_integral (algebra.adjoin F («expr↑ »(s) : set K)) a] [":=", expr is_integral_of_is_scalar_tower a H1],
+  have [ident H6] [":", expr (minpoly (algebra.adjoin F («expr↑ »(s) : set K)) a).splits (algebra_map (algebra.adjoin F («expr↑ »(s) : set K)) L)] [],
+  { refine [expr polynomial.splits_of_splits_of_dvd _ («expr $ »(polynomial.map_ne_zero, minpoly.ne_zero H1) : «expr ≠ »(polynomial.map (algebra_map _ _) _, 0)) ((polynomial.splits_map_iff _ _).2 _) (minpoly.dvd _ _ _)],
+    { rw ["<-", expr is_scalar_tower.algebra_map_eq] [],
+      exact [expr H2] },
+    { rw ["[", "<-", expr is_scalar_tower.aeval_apply, ",", expr minpoly.aeval, "]"] [] } },
+  obtain ["⟨", ident y, ",", ident hy, "⟩", ":=", expr polynomial.exists_root_of_splits _ H6 (ne_of_lt (minpoly.degree_pos H5)).symm],
+  refine [expr ⟨subalgebra.of_restrict_scalars _ _ _⟩],
+  refine [expr (adjoin_root.lift_hom (minpoly (algebra.adjoin F («expr↑ »(s) : set K)) a) y hy).comp _],
+  exact [expr alg_equiv.adjoin_singleton_equiv_adjoin_root_minpoly (algebra.adjoin F («expr↑ »(s) : set K)) a]
+end
 
 end Embeddings
 
@@ -655,11 +625,11 @@ theorem nat_degree_remove_factor' {f : Polynomial K} {n : ℕ} (hfn : f.nat_degr
 def splitting_field_aux (n : ℕ) :
   ∀ {K : Type u} [Field K],
     by 
-      exactI ∀ f : Polynomial K, f.nat_degree = n → Type u :=
+      exact ∀ f : Polynomial K, f.nat_degree = n → Type u :=
   (Nat.recOn n fun K _ _ _ => K)$
     fun n ih K _ f hf =>
       by 
-        exactI ih f.remove_factor (nat_degree_remove_factor' hf)
+        exact ih f.remove_factor (nat_degree_remove_factor' hf)
 
 namespace SplittingFieldAux
 
@@ -670,43 +640,66 @@ theorem succ (n : ℕ) (f : Polynomial K) (hfn : f.nat_degree = n+1) :
 instance Field (n : ℕ) :
   ∀ {K : Type u} [Field K],
     by 
-      exactI ∀ {f : Polynomial K} hfn : f.nat_degree = n, Field (splitting_field_aux n f hfn) :=
+      exact ∀ {f : Polynomial K} hfn : f.nat_degree = n, Field (splitting_field_aux n f hfn) :=
   (Nat.recOn n fun K _ _ _ => ‹Field K›)$ fun n ih K _ f hf => ih _
 
 instance Inhabited {n : ℕ} {f : Polynomial K} (hfn : f.nat_degree = n) : Inhabited (splitting_field_aux n f hfn) :=
   ⟨37⟩
 
 instance Algebra (n : ℕ) :
-  ∀ {K : Type u} [Field K],
+  ∀ R : Type _ {K : Type u} [CommSemiringₓ R] [Field K],
     by 
-      exactI ∀ {f : Polynomial K} hfn : f.nat_degree = n, Algebra K (splitting_field_aux n f hfn) :=
+      exact ∀ [Algebra R K] {f : Polynomial K} hfn : f.nat_degree = n, Algebra R (splitting_field_aux n f hfn) :=
   (Nat.recOn n
-      fun K _ _ _ =>
+      fun R K _ _ _ _ _ =>
         by 
-          exactI Algebra.id K)$
-    fun n ih K _ f hfn =>
+          exact ‹Algebra R K›)$
+    fun n ih R K _ _ _ f hfn =>
       by 
-        exactI @RestrictScalars.algebra _ _ _ _ _ (ih _) _ _
+        exact ih R (nat_degree_remove_factor' hfn)
 
-instance algebra' {n : ℕ} {f : Polynomial K} (hfn : f.nat_degree = n+1) :
-  Algebra (AdjoinRoot f.factor) (splitting_field_aux _ _ hfn) :=
-  splitting_field_aux.algebra n _
-
-instance algebra'' {n : ℕ} {f : Polynomial K} (hfn : f.nat_degree = n+1) :
-  Algebra K (splitting_field_aux n f.remove_factor (nat_degree_remove_factor' hfn)) :=
-  splitting_field_aux.algebra (n+1) hfn
+instance IsScalarTower (n : ℕ) :
+  ∀ R₁ R₂ : Type _ {K : Type u} [CommSemiringₓ R₁] [CommSemiringₓ R₂] [HasScalar R₁ R₂] [Field K],
+    by 
+      exact
+        ∀ [Algebra R₁ K] [Algebra R₂ K],
+          by 
+            exact
+              ∀ [IsScalarTower R₁ R₂ K] {f : Polynomial K} hfn : f.nat_degree = n,
+                IsScalarTower R₁ R₂ (splitting_field_aux n f hfn) :=
+  (Nat.recOn n
+      fun R₁ R₂ K _ _ _ _ _ _ _ _ _ =>
+        by 
+          exact ‹IsScalarTower R₁ R₂ K›)$
+    fun n ih R₁ R₂ K _ _ _ _ _ _ _ f hfn =>
+      by 
+        exact ih R₁ R₂ (nat_degree_remove_factor' hfn)
 
 instance algebra''' {n : ℕ} {f : Polynomial K} (hfn : f.nat_degree = n+1) :
   Algebra (AdjoinRoot f.factor) (splitting_field_aux n f.remove_factor (nat_degree_remove_factor' hfn)) :=
-  splitting_field_aux.algebra n _
+  splitting_field_aux.algebra n _ _
+
+instance algebra' {n : ℕ} {f : Polynomial K} (hfn : f.nat_degree = n+1) :
+  Algebra (AdjoinRoot f.factor) (splitting_field_aux n.succ f hfn) :=
+  splitting_field_aux.algebra''' _
+
+instance algebra'' {n : ℕ} {f : Polynomial K} (hfn : f.nat_degree = n+1) :
+  Algebra K (splitting_field_aux n f.remove_factor (nat_degree_remove_factor' hfn)) :=
+  splitting_field_aux.algebra n K _
+
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance scalar_tower'
+{n : exprℕ()}
+{f : polynomial K}
+(hfn : «expr = »(f.nat_degree, «expr + »(n, 1))) : is_scalar_tower K (adjoin_root f.factor) (splitting_field_aux n f.remove_factor (nat_degree_remove_factor' hfn)) :=
+begin
+  haveI [] [":", expr is_scalar_tower K (adjoin_root f.factor) (adjoin_root f.factor)] [":=", expr is_scalar_tower.right],
+  exact [expr splitting_field_aux.is_scalar_tower n K (adjoin_root f.factor) (nat_degree_remove_factor' hfn)]
+end
 
 instance scalar_tower {n : ℕ} {f : Polynomial K} (hfn : f.nat_degree = n+1) :
-  IsScalarTower K (AdjoinRoot f.factor) (splitting_field_aux _ _ hfn) :=
-  IsScalarTower.of_algebra_map_eq$ fun x => rfl
-
-instance scalar_tower' {n : ℕ} {f : Polynomial K} (hfn : f.nat_degree = n+1) :
-  IsScalarTower K (AdjoinRoot f.factor) (splitting_field_aux n f.remove_factor (nat_degree_remove_factor' hfn)) :=
-  IsScalarTower.of_algebra_map_eq$ fun x => rfl
+  IsScalarTower K (AdjoinRoot f.factor) (splitting_field_aux _ f hfn) :=
+  splitting_field_aux.scalar_tower' _
 
 theorem algebra_map_succ (n : ℕ) (f : Polynomial K) (hfn : f.nat_degree = n+1) :
   by 
@@ -714,20 +707,19 @@ theorem algebra_map_succ (n : ℕ) (f : Polynomial K) (hfn : f.nat_degree = n+1)
       algebraMap K (splitting_field_aux _ _ hfn) =
         (algebraMap (AdjoinRoot f.factor) (splitting_field_aux n f.remove_factor (nat_degree_remove_factor' hfn))).comp
           (AdjoinRoot.of f.factor) :=
-  rfl
+  IsScalarTower.algebra_map_eq _ _ _
 
 protected theorem splits (n : ℕ) :
   ∀ {K : Type u} [Field K],
     by 
-      exactI ∀ f : Polynomial K hfn : f.nat_degree = n, splits (algebraMap K$ splitting_field_aux n f hfn) f :=
+      exact ∀ f : Polynomial K hfn : f.nat_degree = n, splits (algebraMap K$ splitting_field_aux n f hfn) f :=
   (Nat.recOn n
       fun K _ _ hf =>
         by 
-          exactI
-            splits_of_degree_le_one _ (le_transₓ degree_le_nat_degree$ hf.symm ▸ WithBot.coe_le_coe.2 zero_le_one))$
+          exact splits_of_degree_le_one _ (le_transₓ degree_le_nat_degree$ hf.symm ▸ WithBot.coe_le_coe.2 zero_le_one))$
     fun n ih K _ f hf =>
       by 
-        resetI 
+        skip 
         rw [←splits_id_iff_splits, algebra_map_succ, ←map_map, splits_id_iff_splits,
           ←X_sub_C_mul_remove_factor f
             fun h =>
@@ -739,18 +731,17 @@ protected theorem splits (n : ℕ) :
 theorem exists_lift (n : ℕ) :
   ∀ {K : Type u} [Field K],
     by 
-      exactI
+      exact
         ∀ f : Polynomial K hfn : f.nat_degree = n {L : Type _} [Field L],
           by 
-            exactI
-              ∀ j : K →+* L hf : splits j f, ∃ k : splitting_field_aux n f hfn →+* L, k.comp (algebraMap _ _) = j :=
+            exact ∀ j : K →+* L hf : splits j f, ∃ k : splitting_field_aux n f hfn →+* L, k.comp (algebraMap _ _) = j :=
   (Nat.recOn n
       fun K _ _ _ L _ j _ =>
         by 
-          exactI ⟨j, j.comp_id⟩)$
+          exact ⟨j, j.comp_id⟩)$
     fun n ih K _ f hf L _ j hj =>
       by 
-        exactI
+        exact
           have hndf : f.nat_degree ≠ 0 :=
             by 
               intro h 
@@ -779,7 +770,7 @@ theorem exists_lift (n : ℕ) :
 theorem adjoin_roots (n : ℕ) :
   ∀ {K : Type u} [Field K],
     by 
-      exactI
+      exact
         ∀ f : Polynomial K hfn : f.nat_degree = n,
           Algebra.adjoin K
               («expr↑ » (f.map$ algebraMap K$ splitting_field_aux n f hfn).roots.toFinset :
@@ -788,10 +779,10 @@ theorem adjoin_roots (n : ℕ) :
   (Nat.recOn n
       fun K _ f hf =>
         by 
-          exactI Algebra.eq_top_iff.2 fun x => Subalgebra.range_le _ ⟨x, rfl⟩)$
+          exact Algebra.eq_top_iff.2 fun x => Subalgebra.range_le _ ⟨x, rfl⟩)$
     fun n ih K _ f hfn =>
       by 
-        exactI
+        exact
           have hndf : f.nat_degree ≠ 0 :=
             by 
               intro h 
@@ -831,22 +822,45 @@ instance  : Field (splitting_field f) :=
 instance Inhabited : Inhabited (splitting_field f) :=
   ⟨37⟩
 
+/-- This should be an instance globally, but it creates diamonds with the `ℕ` and `ℤ` actions:
+
+```lean
+example :
+  (add_comm_monoid.nat_module : module ℕ (splitting_field f)) =
+    @algebra.to_module _ _ _ _ (splitting_field.algebra' f) :=
+rfl  -- fails
+
+example :
+  (add_comm_group.int_module _ : module ℤ (splitting_field f)) =
+    @algebra.to_module _ _ _ _ (splitting_field.algebra' f) :=
+rfl  -- fails
+```
+
+Until we resolve these diamonds, it's more convenient to only turn this instance on with
+`local attribute [instance]` in places where the benefit of having the instance outweighs the cost.
+
+In the meantime, the `splitting_field.algebra` instance below is immune to these particular diamonds
+since `K = ℕ` and `K = ℤ` are not possible due to the `field K` assumption. Diamonds in
+`algebra ℚ (splitting_field f)` instances are still possible, but this is a problem throughout the
+library and not unique to this `algebra` instance.
+-/
+instance algebra' {R} [CommSemiringₓ R] [Algebra R K] : Algebra R (splitting_field f) :=
+  splitting_field_aux.algebra _ _ _
+
 instance  : Algebra K (splitting_field f) :=
-  splitting_field_aux.algebra _ _
+  splitting_field_aux.algebra _ _ _
 
 protected theorem splits : splits (algebraMap K (splitting_field f)) f :=
   splitting_field_aux.splits _ _ _
 
 variable[Algebra K L](hb : splits (algebraMap K L) f)
 
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Embeds the splitting field into any other field that splits the polynomial. -/
-def lift : splitting_field f →ₐ[K] L :=
-  { Classical.some (splitting_field_aux.exists_lift _ _ _ _ hb) with
-    commutes' :=
-      fun r =>
-        by 
-          have  := Classical.some_spec (splitting_field_aux.exists_lift _ _ _ _ hb)
-          exact RingHom.ext_iff.1 this r }
+def lift : «expr →ₐ[ ] »(splitting_field f, K, L) :=
+{ commutes' := λ r, by { have [] [] [":=", expr classical.some_spec (splitting_field_aux.exists_lift _ _ _ _ hb)],
+    exact [expr ring_hom.ext_iff.1 this r] },
+  ..classical.some (splitting_field_aux.exists_lift _ _ _ _ hb) }
 
 theorem adjoin_roots :
   Algebra.adjoin K («expr↑ » (f.map (algebraMap K$ splitting_field f)).roots.toFinset : Set (splitting_field f)) = ⊤ :=
@@ -971,25 +985,18 @@ theorem FiniteDimensional (f : Polynomial K) [is_splitting_field K L f] : Finite
 instance  (f : Polynomial K) : _root_.finite_dimensional K f.splitting_field :=
   FiniteDimensional f.splitting_field f
 
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any splitting field is isomorphic to `splitting_field f`. -/
-def AlgEquiv (f : Polynomial K) [is_splitting_field K L f] : L ≃ₐ[K] splitting_field f :=
-  by 
-    refine'
-      AlgEquiv.ofBijective (lift L f$ splits (splitting_field f) f)
-        ⟨RingHom.injective (lift L f$ splits (splitting_field f) f).toRingHom, _⟩
-    haveI  := FiniteDimensional (splitting_field f) f 
-    haveI  := FiniteDimensional L f 
-    have  : FiniteDimensional.finrank K L = FiniteDimensional.finrank K (splitting_field f) :=
-      le_antisymmₓ
-        (LinearMap.finrank_le_finrank_of_injective
-          (show Function.Injective (lift L f$ splits (splitting_field f) f).toLinearMap from
-            RingHom.injective (lift L f$ splits (splitting_field f) f : L →+* f.splitting_field)))
-        (LinearMap.finrank_le_finrank_of_injective
-          (show Function.Injective (lift (splitting_field f) f$ splits L f).toLinearMap from
-            RingHom.injective (lift (splitting_field f) f$ splits L f : f.splitting_field →+* L)))
-    change Function.Surjective (lift L f$ splits (splitting_field f) f).toLinearMap 
-    refine' (LinearMap.injective_iff_surjective_of_finrank_eq_finrank this).1 _ 
-    exact RingHom.injective (lift L f$ splits (splitting_field f) f : L →+* f.splitting_field)
+def alg_equiv (f : polynomial K) [is_splitting_field K L f] : «expr ≃ₐ[ ] »(L, K, splitting_field f) :=
+begin
+  refine [expr alg_equiv.of_bijective «expr $ »(lift L f, splits (splitting_field f) f) ⟨ring_hom.injective «expr $ »(lift L f, splits (splitting_field f) f).to_ring_hom, _⟩],
+  haveI [] [] [":=", expr finite_dimensional (splitting_field f) f],
+  haveI [] [] [":=", expr finite_dimensional L f],
+  have [] [":", expr «expr = »(finite_dimensional.finrank K L, finite_dimensional.finrank K (splitting_field f))] [":=", expr le_antisymm (linear_map.finrank_le_finrank_of_injective (show function.injective «expr $ »(lift L f, splits (splitting_field f) f).to_linear_map, from ring_hom.injective («expr $ »(lift L f, splits (splitting_field f) f) : «expr →+* »(L, f.splitting_field)))) (linear_map.finrank_le_finrank_of_injective (show function.injective «expr $ »(lift (splitting_field f) f, splits L f).to_linear_map, from ring_hom.injective («expr $ »(lift (splitting_field f) f, splits L f) : «expr →+* »(f.splitting_field, L))))],
+  change [expr function.surjective «expr $ »(lift L f, splits (splitting_field f) f).to_linear_map] [] [],
+  refine [expr (linear_map.injective_iff_surjective_of_finrank_eq_finrank this).1 _],
+  exact [expr ring_hom.injective («expr $ »(lift L f, splits (splitting_field f) f) : «expr →+* »(L, f.splitting_field))]
+end
 
 end IsSplittingField
 

@@ -1,4 +1,3 @@
-import Mathbin.Algebra.Algebra.Basic 
 import Mathbin.LinearAlgebra.Basic
 
 /-!
@@ -430,26 +429,29 @@ def comap_mkq.order_embedding : Submodule R p.quotient ↪o Submodule R M :=
 theorem comap_mkq_embedding_eq (p' : Submodule R p.quotient) : comap_mkq.order_embedding p p' = comap p.mkq p' :=
   rfl
 
-theorem span_preimage_eq [RingHomSurjective τ₁₂] {f : M →ₛₗ[τ₁₂] M₂} {s : Set M₂} (h₀ : s.nonempty) (h₁ : s ⊆ range f) :
-  span R (f ⁻¹' s) = (span R₂ s).comap f :=
-  by 
-    suffices  : (span R₂ s).comap f ≤ span R (f ⁻¹' s)
-    ·
-      exact le_antisymmₓ (span_preimage_le f s) this 
-    have hk : ker f ≤ span R (f ⁻¹' s)
-    ·
-      let y := Classical.some h₀ 
-      have hy : y ∈ s
-      ·
-        exact Classical.some_spec h₀ 
-      rw [ker_le_iff]
-      use y, h₁ hy 
-      rw [←Set.singleton_subset_iff] at hy 
-      exact Set.Subset.trans subset_span (span_mono (Set.preimage_mono hy))
-    rw [←left_eq_sup] at hk 
-    rw [f.range_coe] at h₁ 
-    rw [hk, ←map_le_map_iff, map_span, map_comap_eq, Set.image_preimage_eq_of_subset h₁]
-    exact inf_le_right
+-- error in LinearAlgebra.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem span_preimage_eq
+[ring_hom_surjective τ₁₂]
+{f : «expr →ₛₗ[ ] »(M, τ₁₂, M₂)}
+{s : set M₂}
+(h₀ : s.nonempty)
+(h₁ : «expr ⊆ »(s, range f)) : «expr = »(span R «expr ⁻¹' »(f, s), (span R₂ s).comap f) :=
+begin
+  suffices [] [":", expr «expr ≤ »((span R₂ s).comap f, span R «expr ⁻¹' »(f, s))],
+  { exact [expr le_antisymm (span_preimage_le f s) this] },
+  have [ident hk] [":", expr «expr ≤ »(ker f, span R «expr ⁻¹' »(f, s))] [],
+  { let [ident y] [] [":=", expr classical.some h₀],
+    have [ident hy] [":", expr «expr ∈ »(y, s)] [],
+    { exact [expr classical.some_spec h₀] },
+    rw [expr ker_le_iff] [],
+    use ["[", expr y, ",", expr h₁ hy, "]"],
+    rw ["<-", expr set.singleton_subset_iff] ["at", ident hy],
+    exact [expr set.subset.trans subset_span (span_mono (set.preimage_mono hy))] },
+  rw ["<-", expr left_eq_sup] ["at", ident hk],
+  rw [expr f.range_coe] ["at", ident h₁],
+  rw ["[", expr hk, ",", "<-", expr map_le_map_iff, ",", expr map_span, ",", expr map_comap_eq, ",", expr set.image_preimage_eq_of_subset h₁, "]"] [],
+  exact [expr inf_le_right]
+end
 
 end Submodule
 
@@ -482,13 +484,18 @@ theorem ker_le_range_iff {f : M →ₛₗ[τ₁₂] M₂} {g : M₂ →ₛₗ[τ
   by 
     rw [←range_le_ker_iff, Submodule.ker_mkq, Submodule.range_subtype]
 
+-- error in LinearAlgebra.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An epimorphism is surjective. -/
-theorem range_eq_top_of_cancel {f : M →ₛₗ[τ₁₂] M₂}
-  (h : ∀ u v : M₂ →ₗ[R₂] f.range.quotient, u.comp f = v.comp f → u = v) : f.range = ⊤ :=
-  by 
-    have h₁ : (0 : M₂ →ₗ[R₂] f.range.quotient).comp f = 0 := zero_comp _ 
-    rw [←Submodule.ker_mkq f.range, ←h 0 f.range.mkq (Eq.trans h₁ (range_mkq_comp _).symm)]
-    exact ker_zero
+theorem range_eq_top_of_cancel
+{f : «expr →ₛₗ[ ] »(M, τ₁₂, M₂)}
+(h : ∀
+ u
+ v : «expr →ₗ[ ] »(M₂, R₂, f.range.quotient), «expr = »(u.comp f, v.comp f) → «expr = »(u, v)) : «expr = »(f.range, «expr⊤»()) :=
+begin
+  have [ident h₁] [":", expr «expr = »((0 : «expr →ₗ[ ] »(M₂, R₂, f.range.quotient)).comp f, 0)] [":=", expr zero_comp _],
+  rw ["[", "<-", expr submodule.ker_mkq f.range, ",", "<-", expr h 0 f.range.mkq (eq.trans h₁ (range_mkq_comp _).symm), "]"] [],
+  exact [expr ker_zero]
+end
 
 end Ringₓ
 

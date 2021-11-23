@@ -58,7 +58,7 @@ unsafe def add_simps : simp_lemmas → List Name → tactic simp_lemmas
     let s' ← s.add_simp n 
     add_simps s' ns
 
--- error in Tactic.Finish: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.Finish: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /--
 Configuration information for the auto tactics.
 * `(use_simp := tt)`: call the simplifier
@@ -143,37 +143,37 @@ private unsafe def transform_negation_step (cfg : auto_config) (e : expr) : tact
   do 
     let e ← whnf_reducible e 
     match e with 
-      | quote ¬%%Ne =>
+      | quote.1 ¬%%ₓNe =>
         do 
           let ne ← whnf_reducible Ne 
           match Ne with 
-            | quote ¬%%a =>
+            | quote.1 ¬%%ₓa =>
               do 
                 let pr ← mk_app `` not_not_eq [a]
                 return (some (a, pr))
-            | quote (%%a) ∧ %%b =>
+            | quote.1 ((%%ₓa) ∧ %%ₓb) =>
               do 
                 let pr ← mk_app `` not_and_eq [a, b]
-                return (some (quote (¬%%a) ∨ ¬%%b, pr))
-            | quote (%%a) ∨ %%b =>
+                return (some (quote.1 ((¬%%ₓa) ∨ ¬%%ₓb), pr))
+            | quote.1 ((%%ₓa) ∨ %%ₓb) =>
               do 
                 let pr ← mk_app `` not_or_eq [a, b]
-                return (some (quote (¬%%a) ∧ ¬%%b, pr))
-            | quote Exists (%%p) =>
+                return (some (quote.1 ((¬%%ₓa) ∧ ¬%%ₓb), pr))
+            | quote.1 (Exists (%%ₓp)) =>
               do 
                 let pr ← mk_app `` not_exists_eq [p]
-                let quote (%%_) = %%e' ← infer_type pr 
+                let quote.1 ((%%ₓ_) = %%ₓe') ← infer_type pr 
                 return (some (e', pr))
             | pi n bi d p =>
               if p.has_var then
                 do 
                   let pr ← mk_app `` not_forall_eq [lam n bi d (expr.abstract_local p n)]
-                  let quote (%%_) = %%e' ← infer_type pr 
+                  let quote.1 ((%%ₓ_) = %%ₓe') ← infer_type pr 
                   return (some (e', pr))
               else
                 do 
                   let pr ← mk_app `` not_implies_eq [d, p]
-                  let quote (%%_) = %%e' ← infer_type pr 
+                  let quote.1 ((%%ₓ_) = %%ₓe') ← infer_type pr 
                   return (some (e', pr))
             | _ => return none
       | _ => return none
@@ -241,7 +241,7 @@ unsafe def eelim : tactic Unit :=
               let t ← infer_type h >>= whnf_reducible 
               guardₓ (is_app_of t `` Exists)
               let tgt ← target 
-              to_expr (pquote @Exists.elim _ _ (%%tgt) (%%h)) >>= apply 
+              to_expr (pquote.1 (@Exists.elim _ _ (%%ₓtgt) (%%ₓh))) >>= apply 
               intros 
               clear h
 
@@ -264,7 +264,7 @@ unsafe def do_subst : tactic Unit :=
             do 
               let t ← infer_type h >>= whnf_reducible 
               match t with 
-                | quote (%%a) = %%b => subst h
+                | quote.1 ((%%ₓa) = %%ₓb) => subst h
                 | _ => failed
 
 unsafe def do_substs : tactic Unit :=
@@ -283,14 +283,14 @@ unsafe def add_conjuncts : expr → expr → tactic Bool :=
     do 
       let t' ← whnf_reducible t 
       match t' with 
-        | quote (%%a) ∧ %%b =>
+        | quote.1 ((%%ₓa) ∧ %%ₓb) =>
           do 
             let e₁ ← mk_app `` And.left [pr]
             assert_consequences e₁ a 
             let e₂ ← mk_app `` And.right [pr]
             assert_consequences e₂ b 
             return tt
-        | quote True =>
+        | quote.1 True =>
           do 
             return tt
         | _ => return ff
@@ -352,7 +352,7 @@ unsafe def mk_hinst_lemmas : List expr → smt_tactic hinst_lemmas
       | pi _ _ _ _ =>
         do 
           let t' ← infer_type t 
-          if t' = quote Prop then
+          if t' = quote.1 Prop then
               (do 
                   let new_lemma ← hinst_lemma.mk h 
                   return (hinst_lemmas.add his new_lemma)) <|>
@@ -426,7 +426,7 @@ unsafe def done (ps : List pexpr) (cfg : auto_config := {  }) : tactic Unit :=
 -/
 
 
--- error in Tactic.Finish: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.Finish: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 @[derive #[expr decidable_eq], derive #[expr inhabited]] inductive case_option
 | force
 | at_most_one
@@ -445,7 +445,7 @@ unsafe def case_hyp (h : expr) (s : case_option) (cont : case_option → tactic 
   do 
     let t ← infer_type h 
     match t with 
-      | quote (%%a) ∨ %%b => cases h >> case_cont s cont >> return tt
+      | quote.1 ((%%ₓa) ∨ %%ₓb) => cases h >> case_cont s cont >> return tt
       | _ => return ff
 
 unsafe def case_some_hyp_aux (s : case_option) (cont : case_option → tactic Unit) : List expr → tactic Bool

@@ -120,32 +120,37 @@ open_locale Filter
 
 open Function
 
-@[toAdditive]
-theorem HasContinuousMul.of_nhds_one {M : Type u} [Monoidₓ M] [TopologicalSpace M]
-  (hmul : tendsto (uncurry (·*· : M → M → M)) (𝓝 1 ×ᶠ 𝓝 1)$ 𝓝 1) (hleft : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x₀*x) (𝓝 1))
-  (hright : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x*x₀) (𝓝 1)) : HasContinuousMul M :=
-  ⟨by 
-      rw [continuous_iff_continuous_at]
-      rintro ⟨x₀, y₀⟩
-      have key : (fun p : M × M => (x₀*p.1)*p.2*y₀) = (((fun x => x₀*x) ∘ fun x => x*y₀) ∘ uncurry (·*·))
-      ·
-        ext p 
-        simp [uncurry, mul_assocₓ]
-      have key₂ : ((fun x => x₀*x) ∘ fun x => y₀*x) = fun x => (x₀*y₀)*x
-      ·
-        ext x 
-        simp 
-      calc map (uncurry (·*·)) (𝓝 (x₀, y₀)) = map (uncurry (·*·)) (𝓝 x₀ ×ᶠ 𝓝 y₀) :=
-        by 
-          rw [nhds_prod_eq]_ = map (fun p : M × M => (x₀*p.1)*p.2*y₀) (𝓝 1 ×ᶠ 𝓝 1) :=
-        by 
-          rw [uncurry, hleft x₀, hright y₀, prod_map_map_eq,
-            Filter.map_map]_ = map ((fun x => x₀*x) ∘ fun x => x*y₀) (map (uncurry (·*·)) (𝓝 1 ×ᶠ 𝓝 1)) :=
-        by 
-          rw [key, ←Filter.map_map]_ ≤ map ((fun x : M => x₀*x) ∘ fun x => x*y₀) (𝓝 1) :=
-        map_mono hmul _ = 𝓝 (x₀*y₀) :=
-        by 
-          rw [←Filter.map_map, ←hright, hleft y₀, Filter.map_map, key₂, ←hleft]⟩
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem has_continuous_mul.of_nhds_one
+{M : Type u}
+[monoid M]
+[topological_space M]
+(hmul : «expr $ »(tendsto (uncurry ((«expr * ») : M → M → M)) «expr ×ᶠ »(expr𝓝() 1, expr𝓝() 1), expr𝓝() 1))
+(hleft : ∀ x₀ : M, «expr = »(expr𝓝() x₀, map (λ x, «expr * »(x₀, x)) (expr𝓝() 1)))
+(hright : ∀ x₀ : M, «expr = »(expr𝓝() x₀, map (λ x, «expr * »(x, x₀)) (expr𝓝() 1))) : has_continuous_mul M :=
+⟨begin
+   rw [expr continuous_iff_continuous_at] [],
+   rintros ["⟨", ident x₀, ",", ident y₀, "⟩"],
+   have [ident key] [":", expr «expr = »(λ
+     p : «expr × »(M, M), «expr * »(«expr * »(x₀, p.1), «expr * »(p.2, y₀)), «expr ∘ »(«expr ∘ »(λ
+       x, «expr * »(x₀, x), λ x, «expr * »(x, y₀)), uncurry ((«expr * »))))] [],
+   { ext [] [ident p] [],
+     simp [] [] [] ["[", expr uncurry, ",", expr mul_assoc, "]"] [] [] },
+   have [ident key₂] [":", expr «expr = »(«expr ∘ »(λ
+      x, «expr * »(x₀, x), λ x, «expr * »(y₀, x)), λ x, «expr * »(«expr * »(x₀, y₀), x))] [],
+   { ext [] [ident x] [],
+     simp [] [] [] [] [] [] },
+   calc
+     «expr = »(map (uncurry ((«expr * »))) (expr𝓝() (x₀, y₀)), map (uncurry ((«expr * »))) «expr ×ᶠ »(expr𝓝() x₀, expr𝓝() y₀)) : by rw [expr nhds_prod_eq] []
+     «expr = »(..., map (λ
+       p : «expr × »(M, M), «expr * »(«expr * »(x₀, p.1), «expr * »(p.2, y₀))) «expr ×ᶠ »(expr𝓝() 1, expr𝓝() 1)) : by rw ["[", expr uncurry, ",", expr hleft x₀, ",", expr hright y₀, ",", expr prod_map_map_eq, ",", expr filter.map_map, "]"] []
+     «expr = »(..., map «expr ∘ »(λ
+       x, «expr * »(x₀, x), λ
+       x, «expr * »(x, y₀)) (map (uncurry ((«expr * »))) «expr ×ᶠ »(expr𝓝() 1, expr𝓝() 1))) : by { rw ["[", expr key, ",", "<-", expr filter.map_map, "]"] [] }
+     «expr ≤ »(..., map «expr ∘ »(λ x : M, «expr * »(x₀, x), λ x, «expr * »(x, y₀)) (expr𝓝() 1)) : map_mono hmul
+     «expr = »(..., expr𝓝() «expr * »(x₀, y₀)) : by rw ["[", "<-", expr filter.map_map, ",", "<-", expr hright, ",", expr hleft y₀, ",", expr filter.map_map, ",", expr key₂, ",", "<-", expr hleft, "]"] []
+ end⟩
 
 @[toAdditive]
 theorem has_continuous_mul_of_comm_of_nhds_one (M : Type u) [CommMonoidₓ M] [TopologicalSpace M]
@@ -298,24 +303,24 @@ end HasContinuousMul
 
 section Op
 
-open Opposite
+open MulOpposite
 
 /-- Put the same topological space structure on the opposite monoid as on the original space. -/
-instance  [_i : TopologicalSpace α] : TopologicalSpace («expr ᵒᵖ» α) :=
-  TopologicalSpace.induced (unop : «expr ᵒᵖ» α → α) _i
+instance  [_i : TopologicalSpace α] : TopologicalSpace («expr ᵐᵒᵖ» α) :=
+  TopologicalSpace.induced (unop : «expr ᵐᵒᵖ» α → α) _i
 
 variable[TopologicalSpace α]
 
-theorem continuous_unop : Continuous (unop : «expr ᵒᵖ» α → α) :=
+theorem continuous_unop : Continuous (unop : «expr ᵐᵒᵖ» α → α) :=
   continuous_induced_dom
 
-theorem continuous_op : Continuous (op : α → «expr ᵒᵖ» α) :=
+theorem continuous_op : Continuous (op : α → «expr ᵐᵒᵖ» α) :=
   continuous_induced_rng continuous_id
 
 variable[Monoidₓ α][HasContinuousMul α]
 
-/-- If multiplication is continuous in the monoid `α`, then it also is in the monoid `αᵒᵖ`. -/
-instance  : HasContinuousMul («expr ᵒᵖ» α) :=
+/-- If multiplication is continuous in the monoid `α`, then it also is in the monoid `αᵐᵒᵖ`. -/
+instance  : HasContinuousMul («expr ᵐᵒᵖ» α) :=
   ⟨let h₁ := @continuous_mul α _ _ _ 
     let h₂ : Continuous fun p : α × α => _ := continuous_snd.prod_mk continuous_fst 
     continuous_induced_rng$ (h₁.comp h₂).comp (continuous_unop.prod_map continuous_unop)⟩
@@ -324,7 +329,7 @@ end Op
 
 namespace Units
 
-open Opposite
+open MulOpposite
 
 variable[TopologicalSpace α][Monoidₓ α]
 
@@ -349,7 +354,7 @@ with respect to the induced topology, is continuous.
 Inversion is also continuous, but we register this in a later file, `topology.algebra.group`,
 because the predicate `has_continuous_inv` has not yet been defined. -/
 instance  : HasContinuousMul (Units α) :=
-  ⟨let h := @continuous_mul (α × «expr ᵒᵖ» α) _ _ _ 
+  ⟨let h := @continuous_mul (α × «expr ᵐᵒᵖ» α) _ _ _ 
     continuous_induced_rng$ h.comp$ continuous_embed_product.prod_map continuous_embed_product⟩
 
 end Units
@@ -390,18 +395,22 @@ theorem continuous_finset_prod {f : ι → X → M} (s : Finset ι) :
 
 open Function
 
-@[toAdditive]
-theorem continuous_finprod {f : ι → X → M} (hc : ∀ i, Continuous (f i))
-  (hf : LocallyFinite fun i => mul_support (f i)) : Continuous fun x => ∏ᶠi, f i x :=
-  by 
-    refine' continuous_iff_continuous_at.2 fun x => _ 
-    rcases hf x with ⟨U, hxU, hUf⟩
-    have  : ContinuousAt (fun x => ∏i in hUf.to_finset, f i x) x 
-    exact tendsto_finset_prod _ fun i hi => (hc i).ContinuousAt 
-    refine' this.congr (mem_of_superset hxU$ fun y hy => _)
-    refine' (finprod_eq_prod_of_mul_support_subset _ fun i hi => _).symm 
-    rw [hUf.coe_to_finset]
-    exact ⟨y, hi, hy⟩
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem continuous_finprod
+{f : ι → X → M}
+(hc : ∀ i, continuous (f i))
+(hf : locally_finite (λ i, mul_support (f i))) : continuous (λ x, «expr∏ᶠ , »((i), f i x)) :=
+begin
+  refine [expr continuous_iff_continuous_at.2 (λ x, _)],
+  rcases [expr hf x, "with", "⟨", ident U, ",", ident hxU, ",", ident hUf, "⟩"],
+  have [] [":", expr continuous_at (λ x, «expr∏ in , »((i), hUf.to_finset, f i x)) x] [],
+  from [expr tendsto_finset_prod _ (λ i hi, (hc i).continuous_at)],
+  refine [expr this.congr «expr $ »(mem_of_superset hxU, λ y hy, _)],
+  refine [expr (finprod_eq_prod_of_mul_support_subset _ (λ i hi, _)).symm],
+  rw ["[", expr hUf.coe_to_finset, "]"] [],
+  exact [expr ⟨y, hi, hy⟩]
+end
 
 @[toAdditive]
 theorem continuous_finprod_cond {f : ι → X → M} {p : ι → Prop} (hc : ∀ i, p i → Continuous (f i))

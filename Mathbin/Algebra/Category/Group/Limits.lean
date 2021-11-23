@@ -94,7 +94,7 @@ instance has_limits : has_limits Groupₓₓ :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { HasLimit := fun F => has_limit_of_created F (forget₂ Groupₓₓ Mon) } }
+          exact { HasLimit := fun F => has_limit_of_created F (forget₂ Groupₓₓ Mon) } }
 
 /--
 The forgetful functor from groups to monoids preserves all limits.
@@ -119,7 +119,7 @@ instance forget_preserves_limits : preserves_limits (forget Groupₓₓ) :=
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ Groupₓₓ Mon) (forget Mon) } }
+          exact { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ Groupₓₓ Mon) (forget Mon) } }
 
 end Groupₓₓ
 
@@ -181,7 +181,7 @@ instance has_limits : has_limits CommGroupₓₓ :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { HasLimit := fun F => has_limit_of_created F (forget₂ CommGroupₓₓ Groupₓₓ) } }
+          exact { HasLimit := fun F => has_limit_of_created F (forget₂ CommGroupₓₓ Groupₓₓ) } }
 
 /--
 The forgetful functor from commutative groups to groups preserves all limits.
@@ -215,7 +215,7 @@ instance forget₂_CommMon_preserves_limits : preserves_limits (forget₂ CommGr
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesLimit :=
                 fun F =>
                   preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
@@ -230,7 +230,7 @@ instance forget_preserves_limits : preserves_limits (forget CommGroupₓₓ) :=
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ CommGroupₓₓ Groupₓₓ) (forget Groupₓₓ) } }
 
 end CommGroupₓₓ
@@ -242,7 +242,7 @@ The categorical kernel of a morphism in `AddCommGroup`
 agrees with the usual group-theoretical kernel.
 -/
 def kernel_iso_ker {G H : AddCommGroupₓₓ} (f : G ⟶ H) : kernel f ≅ AddCommGroupₓₓ.of f.ker :=
-  { hom :=
+  { Hom :=
       { toFun :=
           fun g =>
             ⟨kernel.ι f g,
@@ -276,7 +276,7 @@ def kernel_iso_ker {G H : AddCommGroupₓₓ} (f : G ⟶ H) : kernel f ≅ AddCo
 
 @[simp]
 theorem kernel_iso_ker_hom_comp_subtype {G H : AddCommGroupₓₓ} (f : G ⟶ H) :
-  (kernel_iso_ker f).hom ≫ AddSubgroup.subtype f.ker = kernel.ι f :=
+  (kernel_iso_ker f).Hom ≫ AddSubgroup.subtype f.ker = kernel.ι f :=
   by 
     ext <;> rfl
 

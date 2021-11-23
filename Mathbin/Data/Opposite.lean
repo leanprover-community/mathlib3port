@@ -4,13 +4,8 @@ import Mathbin.Data.Equiv.Basic
 # Opposites
 
 In this file we define a type synonym `opposite α := α`, denoted by `αᵒᵖ` and two synonyms for the
-identity map, `op : α → αᵒᵖ` and `unop : αᵒᵖ → α`. The type tag `αᵒᵖ` is used with two different
-meanings:
-
-- if `α` is a category, then `αᵒᵖ` is the opposite category, with all arrows reversed;
-
-- if `α` is a monoid (group, etc), then `αᵒᵖ` is the opposite monoid (group, etc) with
-  `op (x * y) = op x * op y`.
+identity map, `op : α → αᵒᵖ` and `unop : αᵒᵖ → α`. If `α` is a category, then `αᵒᵖ` is the opposite
+category, with all arrows reversed.
 -/
 
 
@@ -18,7 +13,7 @@ universe v u
 
 variable(α : Sort u)
 
-/-- The type of objects of the opposite of `α`; used to define the opposite category or group.
+/-- The type of objects of the opposite of `α`; used to define the opposite category.
 
   In order to avoid confusion between `α` and its opposite type, we
   set up the type of objects `opposite α` using the following pattern,
@@ -43,7 +38,7 @@ variable(α : Sort u)
 def Opposite : Sort u :=
   α
 
--- error in Data.Opposite: ././Mathport/Syntax/Translate/Basic.lean:264:9: unsupported: advanced prec syntax
+-- error in Data.Opposite: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 notation α `ᵒᵖ`:std.prec.max_plus := opposite α
 
 namespace Opposite
@@ -122,7 +117,7 @@ namespace OpInduction
 unsafe def is_opposite (e : expr) : tactic Bool :=
   do 
     let t ← infer_type e 
-    let quote Opposite _ ← whnf t | return ff 
+    let quote.1 (Opposite _) ← whnf t | return ff 
     return tt
 
 /-- Find the first hypothesis of type `opposite _`. Fail if no such hypothesis exist in the local

@@ -1,5 +1,6 @@
 import Mathbin.CategoryTheory.Category.Cat 
-import Mathbin.CategoryTheory.Groupoid
+import Mathbin.CategoryTheory.Groupoid 
+import Mathbin.CategoryTheory.Types
 
 /-!
 # Objects of a category up to an isomorphism

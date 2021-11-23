@@ -40,19 +40,22 @@ theorem Functor.map_comp_map (f : α → β) (g : β → γ) : ((· <$> ·) g �
   by 
     apply funext <;> intro  <;> rw [comp_map]
 
-theorem Functor.ext {F} :
-  ∀ {F1 : Functor F} {F2 : Functor F} [@IsLawfulFunctor F F1] [@IsLawfulFunctor F F2] H :
-    ∀ α β f : α → β x : F α, @Functor.map _ F1 _ _ f x = @Functor.map _ F2 _ _ f x, F1 = F2
-| ⟨m, mc⟩, ⟨m', mc'⟩, H1, H2, H =>
-  by 
-    cases
-      show @m = @m' by 
-        funext α β f x <;> apply H 
-    congr 
-    funext α β 
-    have E1 := @map_const_eq _ ⟨@m, @mc⟩ H1 
-    have E2 := @map_const_eq _ ⟨@m, @mc'⟩ H2 
-    exact E1.trans E2.symm
+-- error in Control.Functor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem functor.ext
+{F} : ∀
+{F1 : functor F}
+{F2 : functor F}
+[@is_lawful_functor F F1]
+[@is_lawful_functor F F2]
+(H : ∀ (α β) (f : α → β) (x : F α), «expr = »(@functor.map _ F1 _ _ f x, @functor.map _ F2 _ _ f x)), «expr = »(F1, F2)
+| ⟨m, mc⟩, ⟨m', mc'⟩, H1, H2, H := begin
+  cases [expr show «expr = »(@m, @m'), by funext [ident α, ident β, ident f, ident x]; apply [expr H]] [],
+  congr,
+  funext [ident α, ident β],
+  have [ident E1] [] [":=", expr @map_const_eq _ ⟨@m, @mc⟩ H1],
+  have [ident E2] [] [":=", expr @map_const_eq _ ⟨@m, @mc'⟩ H2],
+  exact [expr E1.trans E2.symm]
+end
 
 end Functor
 
@@ -253,7 +256,7 @@ def liftr {α : Type u} (r : α → α → Prop) (x y : F α) : Prop :=
 /-- If we consider `x : F α` to, in some sense, contain values of type `α`, then
 `supp x` is the set of values of type `α` that `x` contains. -/
 def supp {α : Type u} (x : F α) : Set α :=
-  { y : α | ∀ ⦃p⦄, liftp p x → p y }
+  { y:α | ∀ ⦃p⦄, liftp p x → p y }
 
 theorem of_mem_supp {α : Type u} {x : F α} {p : α → Prop} (h : liftp p x) : ∀ y _ : y ∈ supp x, p y :=
   fun y hy => hy h

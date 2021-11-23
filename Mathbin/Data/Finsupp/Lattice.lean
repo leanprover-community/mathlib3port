@@ -64,14 +64,13 @@ instance SemilatticeInfBot : SemilatticeInfBot (α →₀ γ) :=
 theorem bot_eq_zero : (⊥ : α →₀ γ) = 0 :=
   rfl
 
--- error in Data.Finsupp.Lattice: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem disjoint_iff {x y : «expr →₀ »(α, γ)} : «expr ↔ »(disjoint x y, disjoint x.support y.support) :=
-begin
-  unfold [ident disjoint] [],
-  repeat { rw [expr le_bot_iff] [] },
-  rw ["[", expr finsupp.bot_eq_zero, ",", "<-", expr finsupp.support_eq_empty, ",", expr finsupp.support_inf, "]"] [],
-  refl
-end
+theorem disjoint_iff {x y : α →₀ γ} : Disjoint x y ↔ Disjoint x.support y.support :=
+  by 
+    unfold Disjoint 
+    repeat' 
+      rw [le_bot_iff]
+    rw [Finsupp.bot_eq_zero, ←Finsupp.support_eq_empty, Finsupp.support_inf]
+    rfl
 
 variable[PartialOrderₓ β]
 

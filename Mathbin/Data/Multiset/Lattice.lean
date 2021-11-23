@@ -40,7 +40,7 @@ theorem sup_add (s₁ s₂ : Multiset α) : (s₁+s₂).sup = s₁.sup⊔s₂.su
       simp [sup])
     (fold_add _ _ _ _ _)
 
--- error in Data.Multiset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem sup_le {s : multiset α} {a : α} : «expr ↔ »(«expr ≤ »(s.sup, a), ∀ b «expr ∈ » s, «expr ≤ »(b, a)) :=
 multiset.induction_on s (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr or_imp_distrib, ",", expr forall_and_distrib, "]"] [] [] { contextual := tt })
 
@@ -113,7 +113,7 @@ theorem inf_add (s₁ s₂ : Multiset α) : (s₁+s₂).inf = s₁.inf⊓s₂.in
       simp [inf])
     (fold_add _ _ _ _ _)
 
--- error in Data.Multiset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem le_inf {s : multiset α} {a : α} : «expr ↔ »(«expr ≤ »(a, s.inf), ∀ b «expr ∈ » s, «expr ≤ »(a, b)) :=
 multiset.induction_on s (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr or_imp_distrib, ",", expr forall_and_distrib, "]"] [] [] { contextual := tt })
 

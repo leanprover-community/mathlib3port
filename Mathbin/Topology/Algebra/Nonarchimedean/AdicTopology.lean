@@ -105,12 +105,16 @@ theorem has_basis_nhds_zero_adic (I : Ideal R) :
                 simp ⟩,
             h⟩⟩
 
-theorem has_basis_nhds_adic (I : Ideal R) (x : R) :
-  has_basis (@nhds R I.adic_topology x) (fun n : ℕ => True) fun n => (fun y => x+y) '' (I ^ n : Ideal R) :=
-  by 
-    letI this := I.adic_topology 
-    have  := I.has_basis_nhds_zero_adic.map fun y => x+y 
-    rwa [map_add_left_nhds_zero x] at this
+-- error in Topology.Algebra.Nonarchimedean.AdicTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_basis_nhds_adic
+(I : ideal R)
+(x : R) : has_basis (@nhds R I.adic_topology x) (λ
+ n : exprℕ(), true) (λ n, «expr '' »(λ y, «expr + »(x, y), («expr ^ »(I, n) : ideal R))) :=
+begin
+  letI [] [] [":=", expr I.adic_topology],
+  have [] [] [":=", expr I.has_basis_nhds_zero_adic.map (λ y, «expr + »(x, y))],
+  rwa [expr map_add_left_nhds_zero x] ["at", ident this]
+end
 
 variable(I : Ideal R)(M : Type _)[AddCommGroupₓ M][Module R M]
 
@@ -136,15 +140,16 @@ def adic_module_topology : TopologicalSpace M :=
   @ModuleFilterBasis.topology R M _ I.adic_basis.topology _ _
     (I.ring_filter_basis.module_filter_basis (I.adic_module_basis M))
 
+-- error in Topology.Algebra.Nonarchimedean.AdicTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The elements of the basis of neighborhoods of zero for the `I`-adic topology
 on a `R`-module `M`, seen as open additive subgroups of `M`. -/
-def OpenAddSubgroup (n : ℕ) : @OpenAddSubgroup R _ I.adic_topology :=
-  { (I ^ n).toAddSubgroup with
-    is_open' :=
-      by 
-        letI this := I.adic_topology 
-        convert (I.adic_basis.to_ring_subgroups_basis.open_add_subgroup n).IsOpen 
-        simp  }
+def open_add_subgroup (n : exprℕ()) : @open_add_subgroup R _ I.adic_topology :=
+{ is_open' := begin
+    letI [] [] [":=", expr I.adic_topology],
+    convert [] [expr (I.adic_basis.to_ring_subgroups_basis.open_add_subgroup n).is_open] [],
+    simp [] [] [] [] [] []
+  end,
+  ..«expr ^ »(I, n).to_add_subgroup }
 
 end Ideal
 
@@ -155,44 +160,40 @@ section IsAdic
 def IsAdic [H : TopologicalSpace R] (J : Ideal R) : Prop :=
   H = J.adic_topology
 
+-- error in Topology.Algebra.Nonarchimedean.AdicTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A topological ring is `J`-adic if and only if it admits the powers of `J` as a basis of
 open neighborhoods of zero. -/
-theorem is_adic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R} :
-  IsAdic J ↔
-    (∀ n : ℕ, IsOpen ((J ^ n : Ideal R) : Set R)) ∧ ∀ s _ : s ∈ 𝓝 (0 : R), ∃ n : ℕ, ((J ^ n : Ideal R) : Set R) ⊆ s :=
-  by 
-    split 
-    ·
-      intro H 
-      change _ = _ at H 
-      rw [H]
-      letI this := J.adic_topology 
-      split 
-      ·
-        intro n 
-        exact (J.open_add_subgroup n).is_open'
-      ·
-        intro s hs 
-        simpa using J.has_basis_nhds_zero_adic.mem_iff.mp hs
-    ·
-      rintro ⟨H₁, H₂⟩
-      apply TopologicalAddGroup.ext
-      ·
-        apply @TopologicalRing.to_topological_add_group
-      ·
-        apply (RingSubgroupsBasis.toRingFilterBasis _).toAddGroupFilterBasis.is_topological_add_group
-      ·
-        ext s 
-        letI this := Ideal.adic_basis J 
-        rw [J.has_basis_nhds_zero_adic.mem_iff]
-        split  <;> intro H
-        ·
-          rcases H₂ s H with ⟨n, h⟩
-          use n, trivialₓ, h
-        ·
-          rcases H with ⟨n, -, hn⟩
-          rw [mem_nhds_iff]
-          refine' ⟨_, hn, H₁ n, (J ^ n).zero_mem⟩
+theorem is_adic_iff
+[top : topological_space R]
+[topological_ring R]
+{J : ideal R} : «expr ↔ »(is_adic J, «expr ∧ »(∀
+  n : exprℕ(), is_open ((«expr ^ »(J, n) : ideal R) : set R), ∀
+  s «expr ∈ » expr𝓝() (0 : R), «expr∃ , »((n : exprℕ()), «expr ⊆ »(((«expr ^ »(J, n) : ideal R) : set R), s)))) :=
+begin
+  split,
+  { intro [ident H],
+    change [expr «expr = »(_, _)] [] ["at", ident H],
+    rw [expr H] [],
+    letI [] [] [":=", expr J.adic_topology],
+    split,
+    { intro [ident n],
+      exact [expr (J.open_add_subgroup n).is_open'] },
+    { intros [ident s, ident hs],
+      simpa [] [] [] [] [] ["using", expr J.has_basis_nhds_zero_adic.mem_iff.mp hs] } },
+  { rintro ["⟨", ident H₁, ",", ident H₂, "⟩"],
+    apply [expr topological_add_group.ext],
+    { apply [expr @topological_ring.to_topological_add_group] },
+    { apply [expr (ring_subgroups_basis.to_ring_filter_basis _).to_add_group_filter_basis.is_topological_add_group] },
+    { ext [] [ident s] [],
+      letI [] [] [":=", expr ideal.adic_basis J],
+      rw [expr J.has_basis_nhds_zero_adic.mem_iff] [],
+      split; intro [ident H],
+      { rcases [expr H₂ s H, "with", "⟨", ident n, ",", ident h, "⟩"],
+        use ["[", expr n, ",", expr trivial, ",", expr h, "]"] },
+      { rcases [expr H, "with", "⟨", ident n, ",", "-", ",", ident hn, "⟩"],
+        rw [expr mem_nhds_iff] [],
+        refine [expr ⟨_, hn, H₁ n, «expr ^ »(J, n).zero_mem⟩] } } }
+end
 
 variable[TopologicalSpace R][TopologicalRing R]
 
@@ -211,7 +212,7 @@ theorem is_ideal_adic_pow {J : Ideal R} (h : IsAdic J) {n : ℕ} (hn : 0 < n) : 
       refine' Set.Subset.trans _ hm 
       cases n
       ·
-        exFalso 
+        exfalso 
         exact Nat.not_succ_le_zeroₓ 0 hn 
       rw [←pow_mulₓ, Nat.succ_mul]
       apply Ideal.pow_le_pow 
@@ -227,7 +228,7 @@ theorem is_bot_adic_iff {A : Type _} [CommRingₓ A] [TopologicalSpace A] [Topol
       rw [discrete_topology_iff_open_singleton_zero]
       simpa using h 1
     ·
-      introsI 
+      intros 
       split 
       ·
         simp 

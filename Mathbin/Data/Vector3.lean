@@ -35,7 +35,7 @@ def cons {α} {n} (a : α) (v : Vector3 α n) : Vector3 α (succ n) :=
       exact a 
       exact v
 
--- error in Data.Vector3: ././Mathport/Syntax/Translate/Basic.lean:1264:43: in localized: ././Mathport/Syntax/Translate/Basic.lean:1094:9: unsupported: advanced notation (l:(foldr `, ` (h t, vector3.cons h t) nil `]`))
+-- error in Data.Vector3: ././Mathport/Syntax/Translate/Basic.lean:1266:43: in localized: ././Mathport/Syntax/Translate/Basic.lean:1096:9: unsupported: advanced notation (l:(foldr `, ` (h t, vector3.cons h t) nil `]`))
 localized [expr "notation `[` l:(foldr `, ` (h t, vector3.cons h t) nil `]`) := l", [command <some 0>], "in", ident vector3]
 
 @[simp]
@@ -151,21 +151,26 @@ theorem insert_fs {α} (a : α) {n} (b : α) (v : Vector3 α n) (i : Fin2 (succ 
         refine' j.cases' _ fun j => _ <;> simp [insert, insert_perm]
         refine' Fin2.cases' _ _ (insert_perm i j) <;> simp [insert_perm]
 
-theorem append_insert {α} (a : α) {k} (t : Vector3 α k) {n} (v : Vector3 α n) (i : Fin2 (succ n))
-  (e : (succ n+k) = succ (n+k)) : insert a (t +-+ v) (Eq.recOnₓ e (i.add k)) = Eq.recOnₓ e (t +-+ insert a v i) :=
-  by 
-    refine' Vector3.recOn t (fun e => _) (fun k b t IH e => _) e 
-    rfl 
-    have e' := succ_add n k 
-    change
-      insert a (b :: (t +-+ v)) (Eq.recOnₓ (congr_argₓ succ e') (fs (add i k))) =
-        Eq.recOnₓ (congr_argₓ succ e') (b :: (t +-+ insert a v i))
-    rw
-      [←(Eq.drecOn e' rfl :
-      fs (Eq.recOnₓ e' (i.add k) : Fin2 (succ (n+k))) = Eq.recOnₓ (congr_argₓ succ e') (fs (i.add k)))]
-    simp 
-    rw [IH]
-    exact Eq.drecOn e' rfl
+-- error in Data.Vector3: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem append_insert
+{α}
+(a : α)
+{k}
+(t : vector3 α k)
+{n}
+(v : vector3 α n)
+(i : fin2 (succ n))
+(e : «expr = »(«expr + »(succ n, k), succ «expr + »(n, k))) : «expr = »(insert a «expr +-+ »(t, v) (eq.rec_on e (i.add k)), eq.rec_on e «expr +-+ »(t, insert a v i)) :=
+begin
+  refine [expr vector3.rec_on t (λ e, _) (λ k b t IH e, _) e],
+  refl,
+  have [ident e'] [] [":=", expr succ_add n k],
+  change [expr «expr = »(insert a [«expr :: »/«expr :: »](b, «expr +-+ »(t, v)) (eq.rec_on (congr_arg succ e') (fs (add i k))), eq.rec_on (congr_arg succ e') [«expr :: »/«expr :: »](b, «expr +-+ »(t, insert a v i)))] [] [],
+  rw ["<-", expr (eq.drec_on e' rfl : «expr = »(fs (eq.rec_on e' (i.add k) : fin2 (succ «expr + »(n, k))), eq.rec_on (congr_arg succ e') (fs (i.add k))))] [],
+  simp [] [] [] [] [] [],
+  rw [expr IH] [],
+  exact [expr eq.drec_on e' rfl]
+end
 
 end Vector3
 
@@ -226,7 +231,7 @@ theorem vector_allp_cons {α} (p : α → Prop) {n} (x : α) (v : Vector3 α n) 
   VectorAllp p (x :: v) ↔ p x ∧ VectorAllp p v :=
   Vector3.recOn v (and_trueₓ _).symm fun n a v IH => Iff.rfl
 
--- error in Data.Vector3: ././Mathport/Syntax/Translate/Basic.lean:340:40: in refine: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Vector3: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem vector_allp_iff_forall
 {α}
 (p : α → exprProp())

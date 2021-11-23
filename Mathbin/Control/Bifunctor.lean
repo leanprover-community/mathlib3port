@@ -1,3 +1,4 @@
+import Mathbin.Data.Sum 
 import Mathbin.Logic.Function.Basic 
 import Mathbin.Control.Functor 
 import Mathbin.Tactic.Core

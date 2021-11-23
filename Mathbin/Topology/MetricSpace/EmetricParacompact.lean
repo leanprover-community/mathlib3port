@@ -25,7 +25,7 @@ open Set
 
 namespace Emetric
 
--- error in Topology.MetricSpace.EmetricParacompact: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.MetricSpace.EmetricParacompact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
 on [MR0236876]. -/ @[priority 100] instance [pseudo_emetric_space α] : paracompact_space α :=
 begin

@@ -69,11 +69,11 @@ theorem conformal_at_iff_is_conformal_map_fderiv {f : X → Y} {x : X} :
       ·
         exact ⟨fderiv ℝ f x, h.has_fderiv_at, H⟩
       ·
-        cases' subsingleton_or_nontrivial X with w w <;> resetI
+        cases' subsingleton_or_nontrivial X with w w <;> skip
         ·
           exact ⟨(0 : X →L[ℝ] Y), has_fderiv_at_of_subsingleton f x, is_conformal_map_of_subsingleton 0⟩
         ·
-          exFalso 
+          exfalso 
           exact H.ne_zero (fderiv_zero_of_not_differentiable_at h)
 
 namespace ConformalAt

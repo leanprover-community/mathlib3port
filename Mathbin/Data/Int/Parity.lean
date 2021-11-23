@@ -64,7 +64,7 @@ theorem odd_iff_not_even : Odd n ↔ ¬Even n :=
   by 
     rw [not_even_iff, odd_iff]
 
-theorem is_compl_even_odd : IsCompl { n : ℤ | Even n } { n | Odd n } :=
+theorem is_compl_even_odd : IsCompl { n:ℤ | Even n } { n | Odd n } :=
   by 
     simp [←Set.compl_set_of, is_compl_compl]
 

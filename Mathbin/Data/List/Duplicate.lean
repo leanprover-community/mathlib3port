@@ -1,4 +1,3 @@
-import Mathbin.Data.Fin.Basic 
 import Mathbin.Data.List.Nodup
 
 /-!

@@ -1,8 +1,9 @@
-import Mathbin.MeasureTheory.Constructions.Pi 
-import Mathbin.MeasureTheory.Measure.Stieltjes 
-import Mathbin.LinearAlgebra.Matrix.Transvection 
 import Mathbin.Dynamics.Ergodic.MeasurePreserving 
-import Mathbin.LinearAlgebra.Determinant
+import Mathbin.LinearAlgebra.Determinant 
+import Mathbin.LinearAlgebra.Matrix.Diagonal 
+import Mathbin.LinearAlgebra.Matrix.Transvection 
+import Mathbin.MeasureTheory.Constructions.Pi 
+import Mathbin.MeasureTheory.Measure.Stieltjes
 
 /-!
 # Lebesgue measure on the real line and on `ℝⁿ`
@@ -354,16 +355,17 @@ theorem map_volume_neg : measure.map Neg.neg (volume : Measureₓ ℝ) = volume 
 -/
 
 
-theorem map_volume_pi_add_left (a : ι → ℝ) : measure.map ((·+·) a) volume = volume :=
-  by 
-    refine' (measure.pi_eq fun s hs => _).symm 
-    have A : (Add.add a ⁻¹' Set.Pi univ fun i : ι => s i) = Set.Pi univ fun i : ι => (·+·) (a i) ⁻¹' s i
-    ·
-      ·
-        ext 
-        simp 
-    rw [measure.map_apply (measurable_const_add a) (MeasurableSet.univ_pi_fintype hs), A, volume_pi_pi]
-    simp only [volume_preimage_add_left]
+-- error in MeasureTheory.Measure.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_volume_pi_add_left (a : ι → exprℝ()) : «expr = »(measure.map (((«expr + »)) a) volume, volume) :=
+begin
+  refine [expr (measure.pi_eq (λ s hs, _)).symm],
+  have [ident A] [":", expr «expr = »(«expr ⁻¹' »(has_add.add a, set.pi univ (λ
+      i : ι, s i)), set.pi univ (λ i : ι, «expr ⁻¹' »(((«expr + »)) (a i), s i)))] [],
+  by { ext [] [] [],
+    simp [] [] [] [] [] [] },
+  rw ["[", expr measure.map_apply (measurable_const_add a) (measurable_set.univ_pi_fintype hs), ",", expr A, ",", expr volume_pi_pi, "]"] [],
+  simp [] [] ["only"] ["[", expr volume_preimage_add_left, "]"] [] []
+end
 
 @[simp]
 theorem volume_pi_preimage_add_left (a : ι → ℝ) (s : Set (ι → ℝ)) : volume ((·+·) a ⁻¹' s) = volume s :=
@@ -376,84 +378,74 @@ theorem volume_pi_preimage_add_left (a : ι → ℝ) (s : Set (ι → ℝ)) : vo
 
 open Matrix
 
+-- error in MeasureTheory.Measure.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A diagonal matrix rescales Lebesgue according to its determinant. This is a special case of
 `real.map_matrix_volume_pi_eq_smul_volume_pi`, that one should use instead (and whose proof
 uses this particular case). -/
-theorem smul_map_diagonal_volume_pi [DecidableEq ι] {D : ι → ℝ} (h : det (diagonal D) ≠ 0) :
-  Ennreal.ofReal (abs (det (diagonal D))) • measure.map (diagonal D).toLin' volume = volume :=
-  by 
-    refine' (measure.pi_eq fun s hs => _).symm 
-    simp only [det_diagonal, measure.coe_smul, Algebra.id.smul_eq_mul, Pi.smul_apply]
-    rw [measure.map_apply _ (MeasurableSet.univ_pi_fintype hs)]
-    swap
-    ·
-      exact Continuous.measurable (LinearMap.continuous_on_pi _)
-    have  :
-      (Matrix.toLin' (diagonal D) ⁻¹' Set.Pi Set.Univ fun i : ι => s i) =
-        Set.Pi Set.Univ fun i : ι => (·*·) (D i) ⁻¹' s i
-    ·
-      ext f 
-      simp only [LinearMap.coe_proj, Algebra.id.smul_eq_mul, LinearMap.smul_apply, mem_univ_pi, mem_preimage,
-        LinearMap.pi_apply, diagonal_to_lin']
-    have B : ∀ i, (of_real (abs (D i))*volume (Mul.mul (D i) ⁻¹' s i)) = volume (s i)
-    ·
-      intro i 
-      have A : D i ≠ 0
-      ·
-        simp only [det_diagonal, Ne.def] at h 
-        exact Finset.prod_ne_zero_iff.1 h i (Finset.mem_univ i)
-      rw [volume_preimage_mul_left A, ←mul_assocₓ, ←Ennreal.of_real_mul (abs_nonneg _), ←abs_mul, mul_inv_cancel A,
-        abs_one, Ennreal.of_real_one, one_mulₓ]
-    rw [this, volume_pi_pi, Finset.abs_prod, Ennreal.of_real_prod_of_nonneg fun i hi => abs_nonneg (D i),
-      ←Finset.prod_mul_distrib]
-    simp only [B]
+theorem smul_map_diagonal_volume_pi
+[decidable_eq ι]
+{D : ι → exprℝ()}
+(h : «expr ≠ »(det (diagonal D), 0)) : «expr = »(«expr • »(ennreal.of_real (abs (det (diagonal D))), measure.map (diagonal D).to_lin' volume), volume) :=
+begin
+  refine [expr (measure.pi_eq (λ s hs, _)).symm],
+  simp [] [] ["only"] ["[", expr det_diagonal, ",", expr measure.coe_smul, ",", expr algebra.id.smul_eq_mul, ",", expr pi.smul_apply, "]"] [] [],
+  rw ["[", expr measure.map_apply _ (measurable_set.univ_pi_fintype hs), "]"] [],
+  swap,
+  { exact [expr continuous.measurable (linear_map.continuous_on_pi _)] },
+  have [] [":", expr «expr = »(«expr ⁻¹' »(matrix.to_lin' (diagonal D), set.pi set.univ (λ
+      i : ι, s i)), set.pi set.univ (λ i : ι, «expr ⁻¹' »(((«expr * »)) (D i), s i)))] [],
+  { ext [] [ident f] [],
+    simp [] [] ["only"] ["[", expr linear_map.coe_proj, ",", expr algebra.id.smul_eq_mul, ",", expr linear_map.smul_apply, ",", expr mem_univ_pi, ",", expr mem_preimage, ",", expr linear_map.pi_apply, ",", expr diagonal_to_lin', "]"] [] [] },
+  have [ident B] [":", expr ∀
+   i, «expr = »(«expr * »(of_real (abs (D i)), volume «expr ⁻¹' »(has_mul.mul (D i), s i)), volume (s i))] [],
+  { assume [binders (i)],
+    have [ident A] [":", expr «expr ≠ »(D i, 0)] [],
+    { simp [] [] ["only"] ["[", expr det_diagonal, ",", expr ne.def, "]"] [] ["at", ident h],
+      exact [expr finset.prod_ne_zero_iff.1 h i (finset.mem_univ i)] },
+    rw ["[", expr volume_preimage_mul_left A, ",", "<-", expr mul_assoc, ",", "<-", expr ennreal.of_real_mul (abs_nonneg _), ",", "<-", expr abs_mul, ",", expr mul_inv_cancel A, ",", expr abs_one, ",", expr ennreal.of_real_one, ",", expr one_mul, "]"] [] },
+  rw ["[", expr this, ",", expr volume_pi_pi, ",", expr finset.abs_prod, ",", expr ennreal.of_real_prod_of_nonneg (λ
+    i hi, abs_nonneg (D i)), ",", "<-", expr finset.prod_mul_distrib, "]"] [],
+  simp [] [] ["only"] ["[", expr B, "]"] [] []
+end
 
+-- error in MeasureTheory.Measure.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A transvection preserves Lebesgue measure. -/
-theorem map_transvection_volume_pi [DecidableEq ι] (t : transvection_struct ι ℝ) :
-  measure.map t.to_matrix.to_lin' volume = volume :=
-  by 
-    suffices H : measure_preserving t.to_matrix.to_lin' volume volume
-    ·
-      exact H.2
-    let p : ι → Prop := fun i => i ≠ t.i 
-    let α : Type _ := { x // p x }
-    let β : Type _ := { x // ¬p x }
-    let g : (α → ℝ) → (β → ℝ) → β → ℝ := fun a b => (fun x => t.c*a ⟨t.j, t.hij.symm⟩)+b 
-    let F : (α → ℝ) × (β → ℝ) → (α → ℝ) × (β → ℝ) := fun p => (id p.1, g p.1 p.2)
-    let e := Equiv.piEquivPiSubtypeProd p fun i : ι => ℝ 
-    have  : (t.to_matrix.to_lin' : (ι → ℝ) → ι → ℝ) = (e.symm ∘ F ∘ e)
-    ·
-      cases t 
-      ext f k 
-      simp only [LinearEquiv.map_smul, dite_eq_ite, LinearMap.id_coe, p, ite_not, Algebra.id.smul_eq_mul, one_mulₓ,
-        dot_product, std_basis_matrix, Equiv.pi_equiv_pi_subtype_prod_symm_apply, id.def, transvection, Pi.add_apply,
-        zero_mul, LinearMap.smul_apply, Function.comp_app, Equiv.pi_equiv_pi_subtype_prod_apply,
-        Matrix.TransvectionStruct.to_matrix_mk, Matrix.mulVecₓ, LinearEquiv.map_add, ite_mul, e, Matrix.to_lin'_apply,
-        Pi.smul_apply, Subtype.coe_mk, g, LinearMap.add_apply, Finset.sum_congr, Matrix.to_lin'_one]
-      byCases' h : t_i = k
-      ·
-        simp only [h, true_andₓ, Finset.mem_univ, if_true, eq_self_iff_true, Finset.sum_ite_eq, one_apply, boole_mul,
-          add_commₓ]
-      ·
-        simp only [h, Ne.symm h, add_zeroₓ, if_false, Finset.sum_const_zero, false_andₓ, mul_zero]
-    rw [this]
-    have A : measure_preserving e volume volume :=
-      ⟨measurable_pi_equiv_pi_subtype_prod (fun i => ℝ) _,
-        (measure.map_pi_equiv_pi_subtype_prod (fun i => (volume : Measureₓ ℝ)) p : _)⟩
-    have B : measure_preserving F volume volume
-    ·
-      have g_meas : Measurable (Function.uncurry g)
-      ·
-        have  : Measurable fun c : α → ℝ => c ⟨t.j, t.hij.symm⟩ := measurable_pi_apply ⟨t.j, t.hij.symm⟩
-        refine' Measurable.add (measurable_pi_lambda _ fun i => Measurable.const_mul _ _) measurable_snd 
-        exact this.comp measurable_fst 
-      exact
-        measure_preserving.skew_product (measure_preserving.id _) g_meas
-          (eventually_of_forall fun a => map_volume_pi_add_left _)
-    have C : measure_preserving e.symm volume volume :=
-      ⟨(measurable_pi_equiv_pi_subtype_prod_symm (fun i : ι => ℝ) p : _),
-        (measure.map_pi_equiv_pi_subtype_prod_symm (fun i : ι => volume) p : _)⟩
-    exact (C.comp B).comp A
+theorem map_transvection_volume_pi
+[decidable_eq ι]
+(t : transvection_struct ι exprℝ()) : «expr = »(measure.map t.to_matrix.to_lin' volume, volume) :=
+begin
+  suffices [ident H] [":", expr measure_preserving t.to_matrix.to_lin' volume volume],
+  by exact [expr H.2],
+  let [ident p] [":", expr ι → exprProp()] [":=", expr λ i, «expr ≠ »(i, t.i)],
+  let [ident α] [":", expr Type*] [":=", expr {x // p x}],
+  let [ident β] [":", expr Type*] [":=", expr {x // «expr¬ »(p x)}],
+  let [ident g] [":", expr (α → exprℝ()) → (β → exprℝ()) → β → exprℝ()] [":=", expr λ
+   a b, «expr + »(λ x, «expr * »(t.c, a ⟨t.j, t.hij.symm⟩), b)],
+  let [ident F] [":", expr «expr × »(α → exprℝ(), β → exprℝ()) → «expr × »(α → exprℝ(), β → exprℝ())] [":=", expr λ
+   p, (id p.1, g p.1 p.2)],
+  let [ident e] [] [":=", expr equiv.pi_equiv_pi_subtype_prod p (λ i : ι, exprℝ())],
+  have [] [":", expr «expr = »((t.to_matrix.to_lin' : (ι → exprℝ()) → ι → exprℝ()), «expr ∘ »(e.symm, «expr ∘ »(F, e)))] [],
+  { cases [expr t] [],
+    ext [] [ident f, ident k] [],
+    simp [] [] ["only"] ["[", expr linear_equiv.map_smul, ",", expr dite_eq_ite, ",", expr linear_map.id_coe, ",", expr p, ",", expr ite_not, ",", expr algebra.id.smul_eq_mul, ",", expr one_mul, ",", expr dot_product, ",", expr std_basis_matrix, ",", expr equiv.pi_equiv_pi_subtype_prod_symm_apply, ",", expr id.def, ",", expr transvection, ",", expr pi.add_apply, ",", expr zero_mul, ",", expr linear_map.smul_apply, ",", expr function.comp_app, ",", expr equiv.pi_equiv_pi_subtype_prod_apply, ",", expr matrix.transvection_struct.to_matrix_mk, ",", expr matrix.mul_vec, ",", expr linear_equiv.map_add, ",", expr ite_mul, ",", expr e, ",", expr matrix.to_lin'_apply, ",", expr pi.smul_apply, ",", expr subtype.coe_mk, ",", expr g, ",", expr linear_map.add_apply, ",", expr finset.sum_congr, ",", expr matrix.to_lin'_one, "]"] [] [],
+    by_cases [expr h, ":", expr «expr = »(t_i, k)],
+    { simp [] [] ["only"] ["[", expr h, ",", expr true_and, ",", expr finset.mem_univ, ",", expr if_true, ",", expr eq_self_iff_true, ",", expr finset.sum_ite_eq, ",", expr one_apply, ",", expr boole_mul, ",", expr add_comm, "]"] [] [] },
+    { simp [] [] ["only"] ["[", expr h, ",", expr ne.symm h, ",", expr add_zero, ",", expr if_false, ",", expr finset.sum_const_zero, ",", expr false_and, ",", expr mul_zero, "]"] [] [] } },
+  rw [expr this] [],
+  have [ident A] [":", expr measure_preserving e volume volume] [":=", expr ⟨measurable_pi_equiv_pi_subtype_prod (λ
+     i, exprℝ()) _, (measure.map_pi_equiv_pi_subtype_prod (λ i, (volume : measure exprℝ())) p : _)⟩],
+  have [ident B] [":", expr measure_preserving F volume volume] [],
+  { have [ident g_meas] [":", expr measurable (function.uncurry g)] [],
+    { have [] [":", expr measurable (λ
+        c : α → exprℝ(), c ⟨t.j, t.hij.symm⟩)] [":=", expr measurable_pi_apply ⟨t.j, t.hij.symm⟩],
+      refine [expr measurable.add (measurable_pi_lambda _ (λ i, measurable.const_mul _ _)) measurable_snd],
+      exact [expr this.comp measurable_fst] },
+    exact [expr measure_preserving.skew_product (measure_preserving.id _) g_meas (eventually_of_forall (λ
+       a, map_volume_pi_add_left _))] },
+  have [ident C] [":", expr measure_preserving e.symm volume volume] [":=", expr ⟨(measurable_pi_equiv_pi_subtype_prod_symm (λ
+     i : ι, exprℝ()) p : _), (measure.map_pi_equiv_pi_subtype_prod_symm (λ i : ι, volume) p : _)⟩],
+  exact [expr (C.comp B).comp A]
+end
 
 /-- Any invertible matrix rescales Lebesgue measure through the absolute value of its
 determinant. -/
@@ -478,22 +470,23 @@ theorem map_matrix_volume_pi_eq_smul_volume_pi [DecidableEq ι] {M : Matrix ι �
         apply Continuous.measurable 
         apply LinearMap.continuous_on_pi
 
+-- error in MeasureTheory.Measure.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any invertible linear map rescales Lebesgue measure through the absolute value of its
 determinant. -/
-theorem map_linear_map_volume_pi_eq_smul_volume_pi {f : (ι → ℝ) →ₗ[ℝ] ι → ℝ} (hf : f.det ≠ 0) :
-  measure.map f volume = Ennreal.ofReal (abs (f.det⁻¹)) • volume :=
-  by 
-    classical 
-    let M := f.to_matrix' 
-    have A : f.det = det M
-    ·
-      simp only [LinearMap.det_to_matrix']
-    have B : f = M.to_lin'
-    ·
-      simp only [to_lin'_to_matrix']
-    rw [A, B]
-    apply map_matrix_volume_pi_eq_smul_volume_pi 
-    rwa [A] at hf
+theorem map_linear_map_volume_pi_eq_smul_volume_pi
+{f : «expr →ₗ[ ] »(ι → exprℝ(), exprℝ(), ι → exprℝ())}
+(hf : «expr ≠ »(f.det, 0)) : «expr = »(measure.map f volume, «expr • »(ennreal.of_real (abs «expr ⁻¹»(f.det)), volume)) :=
+begin
+  classical,
+  let [ident M] [] [":=", expr f.to_matrix'],
+  have [ident A] [":", expr «expr = »(f.det, det M)] [],
+  by simp [] [] ["only"] ["[", expr linear_map.det_to_matrix', "]"] [] [],
+  have [ident B] [":", expr «expr = »(f, M.to_lin')] [],
+  by simp [] [] ["only"] ["[", expr to_lin'_to_matrix', "]"] [] [],
+  rw ["[", expr A, ",", expr B, "]"] [],
+  apply [expr map_matrix_volume_pi_eq_smul_volume_pi],
+  rwa [expr A] ["at", ident hf]
+end
 
 end Real
 
@@ -514,7 +507,7 @@ variable{α : Type _}
 
 /-- The region between two real-valued functions on an arbitrary set. -/
 def RegionBetween (f g : α → ℝ) (s : Set α) : Set (α × ℝ) :=
-  { p : α × ℝ | p.1 ∈ s ∧ p.2 ∈ Ioo (f p.1) (g p.1) }
+  { p:α × ℝ | p.1 ∈ s ∧ p.2 ∈ Ioo (f p.1) (g p.1) }
 
 theorem region_between_subset (f g : α → ℝ) (s : Set α) : RegionBetween f g s ⊆ s.prod univ :=
   by 
@@ -534,71 +527,65 @@ theorem measurable_set_region_between (hf : Measurable f) (hg : Measurable g) (h
     convert hs.prod MeasurableSet.univ 
     simp only [and_trueₓ, mem_univ]
 
-theorem volume_region_between_eq_lintegral' (hf : Measurable f) (hg : Measurable g) (hs : MeasurableSet s) :
-  μ.prod volume (RegionBetween f g s) = ∫⁻y in s, Ennreal.ofReal ((g - f) y) ∂μ :=
-  by 
-    rw [measure.prod_apply]
-    ·
-      have h : (fun x => volume { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) }) = s.indicator fun x => Ennreal.ofReal (g x - f x)
-      ·
-        funext x 
-        rw [indicator_apply]
-        splitIfs
-        ·
-          have hx : { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) } = Ioo (f x) (g x) :=
-            by 
-              simp [h, Ioo]
-          simp only [hx, Real.volume_Ioo, sub_zero]
-        ·
-          have hx : { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) } = ∅ :=
-            by 
-              simp [h]
-          simp only [hx, measure_empty]
-      dsimp only [RegionBetween, preimage_set_of_eq]
-      rw [h, lintegral_indicator] <;> simp only [hs, Pi.sub_apply]
-    ·
-      exact measurable_set_region_between hf hg hs
+-- error in MeasureTheory.Measure.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem volume_region_between_eq_lintegral'
+(hf : measurable f)
+(hg : measurable g)
+(hs : measurable_set s) : «expr = »(μ.prod volume (region_between f g s), «expr∫⁻ in , ∂ »((y), s, ennreal.of_real («expr - »(g, f) y), μ)) :=
+begin
+  rw [expr measure.prod_apply] [],
+  { have [ident h] [":", expr «expr = »(λ
+      x, volume {a | «expr ∧ »(«expr ∈ »(x, s), «expr ∈ »(a, Ioo (f x) (g x)))}, s.indicator (λ
+       x, ennreal.of_real «expr - »(g x, f x)))] [],
+    { funext [ident x],
+      rw [expr indicator_apply] [],
+      split_ifs [] [],
+      { have [ident hx] [":", expr «expr = »({a | «expr ∧ »(«expr ∈ »(x, s), «expr ∈ »(a, Ioo (f x) (g x)))}, Ioo (f x) (g x))] [":=", expr by simp [] [] [] ["[", expr h, ",", expr Ioo, "]"] [] []],
+        simp [] [] ["only"] ["[", expr hx, ",", expr real.volume_Ioo, ",", expr sub_zero, "]"] [] [] },
+      { have [ident hx] [":", expr «expr = »({a | «expr ∧ »(«expr ∈ »(x, s), «expr ∈ »(a, Ioo (f x) (g x)))}, «expr∅»())] [":=", expr by simp [] [] [] ["[", expr h, "]"] [] []],
+        simp [] [] ["only"] ["[", expr hx, ",", expr measure_empty, "]"] [] [] } },
+    dsimp ["only"] ["[", expr region_between, ",", expr preimage_set_of_eq, "]"] [] [],
+    rw ["[", expr h, ",", expr lintegral_indicator, "]"] []; simp [] [] ["only"] ["[", expr hs, ",", expr pi.sub_apply, "]"] [] [] },
+  { exact [expr measurable_set_region_between hf hg hs] }
+end
 
+-- error in MeasureTheory.Measure.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The volume of the region between two almost everywhere measurable functions on a measurable set
     can be represented as a Lebesgue integral. -/
-theorem volume_region_between_eq_lintegral [sigma_finite μ] (hf : AeMeasurable f (μ.restrict s))
-  (hg : AeMeasurable g (μ.restrict s)) (hs : MeasurableSet s) :
-  μ.prod volume (RegionBetween f g s) = ∫⁻y in s, Ennreal.ofReal ((g - f) y) ∂μ :=
-  by 
-    have h₁ :
-      (fun y => Ennreal.ofReal ((g - f) y)) =ᵐ[μ.restrict s]
-        fun y => Ennreal.ofReal ((AeMeasurable.mk g hg - AeMeasurable.mk f hf) y) :=
-      (hg.ae_eq_mk.sub hf.ae_eq_mk).fun_comp _ 
-    have h₂ :
-      (μ.restrict s).Prod volume (RegionBetween f g s) =
-        (μ.restrict s).Prod volume (RegionBetween (AeMeasurable.mk f hf) (AeMeasurable.mk g hg) s)
-    ·
-      apply measure_congr 
-      apply eventually_eq.rfl.inter 
-      exact
-        ((ae_eq_comp' measurable_fst hf.ae_eq_mk measure.prod_fst_absolutely_continuous).comp₂ _
-              eventually_eq.rfl).inter
-          (eventually_eq.rfl.comp₂ _ (ae_eq_comp' measurable_fst hg.ae_eq_mk measure.prod_fst_absolutely_continuous))
-    rw [lintegral_congr_ae h₁, ←volume_region_between_eq_lintegral' hf.measurable_mk hg.measurable_mk hs]
-    convert h₂ using 1
-    ·
-      rw [measure.restrict_prod_eq_prod_univ]
-      exact (measure.restrict_eq_self' (hs.prod MeasurableSet.univ) (region_between_subset f g s)).symm
-    ·
-      rw [measure.restrict_prod_eq_prod_univ]
-      exact
-        (measure.restrict_eq_self' (hs.prod MeasurableSet.univ)
-            (region_between_subset (AeMeasurable.mk f hf) (AeMeasurable.mk g hg) s)).symm
+theorem volume_region_between_eq_lintegral
+[sigma_finite μ]
+(hf : ae_measurable f (μ.restrict s))
+(hg : ae_measurable g (μ.restrict s))
+(hs : measurable_set s) : «expr = »(μ.prod volume (region_between f g s), «expr∫⁻ in , ∂ »((y), s, ennreal.of_real («expr - »(g, f) y), μ)) :=
+begin
+  have [ident h₁] [":", expr «expr =ᵐ[ ] »(λ
+    y, ennreal.of_real («expr - »(g, f) y), μ.restrict s, λ
+    y, ennreal.of_real («expr - »(ae_measurable.mk g hg, ae_measurable.mk f hf) y))] [":=", expr (hg.ae_eq_mk.sub hf.ae_eq_mk).fun_comp _],
+  have [ident h₂] [":", expr «expr = »((μ.restrict s).prod volume (region_between f g s), (μ.restrict s).prod volume (region_between (ae_measurable.mk f hf) (ae_measurable.mk g hg) s))] [],
+  { apply [expr measure_congr],
+    apply [expr eventually_eq.rfl.inter],
+    exact [expr ((ae_eq_comp' measurable_fst hf.ae_eq_mk measure.prod_fst_absolutely_continuous).comp₂ _ eventually_eq.rfl).inter (eventually_eq.rfl.comp₂ _ (ae_eq_comp' measurable_fst hg.ae_eq_mk measure.prod_fst_absolutely_continuous))] },
+  rw ["[", expr lintegral_congr_ae h₁, ",", "<-", expr volume_region_between_eq_lintegral' hf.measurable_mk hg.measurable_mk hs, "]"] [],
+  convert [] [expr h₂] ["using", 1],
+  { rw [expr measure.restrict_prod_eq_prod_univ] [],
+    exact [expr (measure.restrict_eq_self' (hs.prod measurable_set.univ) (region_between_subset f g s)).symm] },
+  { rw [expr measure.restrict_prod_eq_prod_univ] [],
+    exact [expr (measure.restrict_eq_self' (hs.prod measurable_set.univ) (region_between_subset (ae_measurable.mk f hf) (ae_measurable.mk g hg) s)).symm] }
+end
 
-theorem volume_region_between_eq_integral' [sigma_finite μ] (f_int : integrable_on f s μ) (g_int : integrable_on g s μ)
-  (hs : MeasurableSet s) (hfg : f ≤ᵐ[μ.restrict s] g) :
-  μ.prod volume (RegionBetween f g s) = Ennreal.ofReal (∫y in s, (g - f) y ∂μ) :=
-  by 
-    have h : g - f =ᵐ[μ.restrict s] fun x => Real.toNnreal (g x - f x)
-    exact hfg.mono fun x hx => (Real.coe_to_nnreal _$ sub_nonneg.2 hx).symm 
-    rw [volume_region_between_eq_lintegral f_int.ae_measurable g_int.ae_measurable hs, integral_congr_ae h,
-      lintegral_congr_ae, lintegral_coe_eq_integral _ ((integrable_congr h).mp (g_int.sub f_int))]
-    simpa only
+-- error in MeasureTheory.Measure.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem volume_region_between_eq_integral'
+[sigma_finite μ]
+(f_int : integrable_on f s μ)
+(g_int : integrable_on g s μ)
+(hs : measurable_set s)
+(hfg : «expr ≤ᵐ[ ] »(f, μ.restrict s, g)) : «expr = »(μ.prod volume (region_between f g s), ennreal.of_real «expr∫ in , ∂ »((y), s, «expr - »(g, f) y, μ)) :=
+begin
+  have [ident h] [":", expr «expr =ᵐ[ ] »(«expr - »(g, f), μ.restrict s, λ x, real.to_nnreal «expr - »(g x, f x))] [],
+  from [expr hfg.mono (λ x hx, «expr $ »(real.coe_to_nnreal _, sub_nonneg.2 hx).symm)],
+  rw ["[", expr volume_region_between_eq_lintegral f_int.ae_measurable g_int.ae_measurable hs, ",", expr integral_congr_ae h, ",", expr lintegral_congr_ae, ",", expr lintegral_coe_eq_integral _ ((integrable_congr h).mp (g_int.sub f_int)), "]"] [],
+  simpa [] [] ["only"] [] [] []
+end
 
 /-- If two functions are integrable on a measurable set, and one function is less than
     or equal to the other on that set, then the volume of the region

@@ -21,8 +21,8 @@ private unsafe def rules_from_exprs (l : List expr) : List (expr × Bool) :=
 /-- Returns true if expression is an equation or iff. -/
 private unsafe def is_acceptable_rewrite : expr → Bool
 | expr.pi n bi d b => is_acceptable_rewrite b
-| quote (%%a) = %%b => tt
-| quote (%%a) ↔ %%b => tt
+| quote.1 ((%%ₓa) = %%ₓb) => tt
+| quote.1 ((%%ₓa) ↔ %%ₓb) => tt
 | _ => ff
 
 /-- Returns true if the expression is an equation or iff and has no metavariables. -/

@@ -95,10 +95,10 @@ theorem span_mul_span : (span R S*span R T) = span R (S*T) :=
       rw [mul_le]
       intro a ha b hb 
       apply span_induction ha 
-      workOnGoal 0 
+      workOnGoal 0
         intros 
         apply span_induction hb 
-        workOnGoal 0 
+        workOnGoal 0
           intros 
           exact subset_span ⟨_, _, ‹_›, ‹_›, rfl⟩
       all_goals 
@@ -219,17 +219,22 @@ section DecidableEq
 
 open_locale Classical
 
-theorem mem_span_mul_finite_of_mem_span_mul {S : Set A} {S' : Set A} {x : A} (hx : x ∈ span R (S*S')) :
-  ∃ T T' : Finset A, «expr↑ » T ⊆ S ∧ «expr↑ » T' ⊆ S' ∧ x ∈ span R (T*T' : Set A) :=
-  by 
-    obtain ⟨U, h, hU⟩ := mem_span_finite_of_mem_span hx 
-    obtain ⟨T, T', hS, hS', h⟩ := Finset.subset_mul h 
-    use T, T', hS, hS' 
-    have h' : (U : Set A) ⊆ T*T'
-    ·
-      assumptionModCast 
-    have h'' := span_mono h' hU 
-    assumption
+-- error in Algebra.Algebra.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_span_mul_finite_of_mem_span_mul
+{S : set A}
+{S' : set A}
+{x : A}
+(hx : «expr ∈ »(x, span R «expr * »(S, S'))) : «expr∃ , »((T
+  T' : finset A), «expr ∧ »(«expr ⊆ »(«expr↑ »(T), S), «expr ∧ »(«expr ⊆ »(«expr↑ »(T'), S'), «expr ∈ »(x, span R («expr * »(T, T') : set A))))) :=
+begin
+  obtain ["⟨", ident U, ",", ident h, ",", ident hU, "⟩", ":=", expr mem_span_finite_of_mem_span hx],
+  obtain ["⟨", ident T, ",", ident T', ",", ident hS, ",", ident hS', ",", ident h, "⟩", ":=", expr finset.subset_mul h],
+  use ["[", expr T, ",", expr T', ",", expr hS, ",", expr hS', "]"],
+  have [ident h'] [":", expr «expr ⊆ »((U : set A), «expr * »(T, T'))] [],
+  { assumption_mod_cast },
+  have [ident h''] [] [":=", expr span_mono h' hU],
+  assumption
+end
 
 end DecidableEq
 
@@ -309,16 +314,18 @@ protected theorem mul_commₓ : (M*N) = N*M :=
 instance  : CommSemiringₓ (Submodule R A) :=
   { Submodule.semiring with mul_comm := Submodule.mul_comm }
 
-theorem prod_span {ι : Type _} (s : Finset ι) (M : ι → Set A) :
-  (∏i in s, Submodule.span R (M i)) = Submodule.span R (∏i in s, M i) :=
-  by 
-    letI this := Classical.decEq ι 
-    refine' Finset.induction_on s _ _
-    ·
-      simp [one_eq_span, Set.singleton_one]
-    ·
-      intro _ _ H ih 
-      rw [Finset.prod_insert H, Finset.prod_insert H, ih, span_mul_span]
+-- error in Algebra.Algebra.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prod_span
+{ι : Type*}
+(s : finset ι)
+(M : ι → set A) : «expr = »(«expr∏ in , »((i), s, submodule.span R (M i)), submodule.span R «expr∏ in , »((i), s, M i)) :=
+begin
+  letI [] [] [":=", expr classical.dec_eq ι],
+  refine [expr finset.induction_on s _ _],
+  { simp [] [] [] ["[", expr one_eq_span, ",", expr set.singleton_one, "]"] [] [] },
+  { intros ["_", "_", ident H, ident ih],
+    rw ["[", expr finset.prod_insert H, ",", expr finset.prod_insert H, ",", expr ih, ",", expr span_mul_span, "]"] [] }
+end
 
 theorem prod_span_singleton {ι : Type _} (s : Finset ι) (x : ι → A) :
   (∏i in s, span R ({x i} : Set A)) = span R {∏i in s, x i} :=

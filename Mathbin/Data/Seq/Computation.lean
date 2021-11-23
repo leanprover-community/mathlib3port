@@ -1,5 +1,6 @@
+import Mathbin.Tactic.Basic 
 import Mathbin.Data.Stream.Init 
-import Mathbin.Tactic.Basic
+import Mathbin.Logic.Relator
 
 open Function
 
@@ -241,44 +242,35 @@ attribute [simp] bisim_o
 def is_bisimulation :=
   ∀ ⦃s₁ s₂⦄, s₁ ~ s₂ → bisim_o R (destruct s₁) (destruct s₂)
 
-theorem eq_of_bisim (bisim : is_bisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s₁ = s₂ :=
-  by 
-    apply Subtype.eq 
-    apply Streamₓ.eq_of_bisim fun x y => ∃ s s' : Computation α, s.1 = x ∧ s'.1 = y ∧ R s s' 
-    dsimp [Streamₓ.IsBisimulation]
-    intro t₁ t₂ e 
-    exact
-      match t₁, t₂, e with 
-      | _, _, ⟨s, s', rfl, rfl, r⟩ =>
-        suffices head s = head s' ∧ R (tail s) (tail s') from
-          And.imp id
-            (fun r =>
-              ⟨tail s, tail s',
-                by 
-                  cases s <;> rfl,
-                by 
-                  cases s' <;> rfl,
-                r⟩)
-            this 
-        by 
-          have  := bisim r 
-          revert r this 
-          apply cases_on s _ _ <;> intros  <;> apply cases_on s' _ _ <;> intros  <;> intro r this
-          ·
-            constructor 
-            dsimp  at this 
-            rw [this]
-            assumption
-          ·
-            rw [destruct_ret, destruct_think] at this 
-            exact False.elim this
-          ·
-            rw [destruct_ret, destruct_think] at this 
-            exact False.elim this
-          ·
-            simp  at this 
-            simp 
-    exact ⟨s₁, s₂, rfl, rfl, r⟩
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_of_bisim (bisim : is_bisimulation R) {s₁ s₂} (r : «expr ~ »(s₁, s₂)) : «expr = »(s₁, s₂) :=
+begin
+  apply [expr subtype.eq],
+  apply [expr stream.eq_of_bisim (λ
+    x y, «expr∃ , »((s s' : computation α), «expr ∧ »(«expr = »(s.1, x), «expr ∧ »(«expr = »(s'.1, y), R s s'))))],
+  dsimp [] ["[", expr stream.is_bisimulation, "]"] [] [],
+  intros [ident t₁, ident t₂, ident e],
+  exact [expr match t₁, t₂, e with
+   | ._, ._, ⟨s, s', rfl, rfl, r⟩ := suffices «expr ∧ »(«expr = »(head s, head s'), R (tail s) (tail s')), from and.imp id (λ
+    r, ⟨tail s, tail s', by cases [expr s] []; refl, by cases [expr s'] []; refl, r⟩) this,
+   begin
+     have [] [] [":=", expr bisim r],
+     revert [ident r, ident this],
+     apply [expr cases_on s _ _]; intros []; apply [expr cases_on s' _ _]; intros []; intros [ident r, ident this],
+     { constructor,
+       dsimp [] [] [] ["at", ident this],
+       rw [expr this] [],
+       assumption },
+     { rw ["[", expr destruct_ret, ",", expr destruct_think, "]"] ["at", ident this],
+       exact [expr false.elim this] },
+     { rw ["[", expr destruct_ret, ",", expr destruct_think, "]"] ["at", ident this],
+       exact [expr false.elim this] },
+     { simp [] [] [] [] [] ["at", ident this],
+       simp [] [] [] ["[", "*", "]"] [] [] }
+   end
+   end],
+  exact [expr ⟨s₁, s₂, rfl, rfl, r⟩]
+end
 
 end Bisim
 
@@ -288,14 +280,11 @@ protected def mem (a : α) (s : Computation α) :=
 instance  : HasMem α (Computation α) :=
   ⟨Computation.Mem⟩
 
--- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem le_stable
-(s : computation α)
-{a m n}
-(h : «expr ≤ »(m, n)) : «expr = »(s.1 m, some a) → «expr = »(s.1 n, some a) :=
-by { cases [expr s] ["with", ident f, ident al],
-  induction [expr h] [] ["with", ident n, ident h, ident IH] [],
-  exacts ["[", expr id, ",", expr λ h2, al (IH h2), "]"] }
+theorem le_stable (s : Computation α) {a m n} (h : m ≤ n) : s.1 m = some a → s.1 n = some a :=
+  by 
+    cases' s with f al 
+    induction' h with n h IH 
+    exacts[id, fun h2 => al (IH h2)]
 
 theorem mem_unique {s : Computation α} {a b : α} : a ∈ s → b ∈ s → a = b
 | ⟨m, ha⟩, ⟨n, hb⟩ =>
@@ -429,7 +418,7 @@ theorem get_promises : s ~> get s :=
 
 theorem mem_of_promises {a} (p : s ~> a) : a ∈ s :=
   by 
-    casesI h 
+    cases' h 
     cases' h with a' h 
     rw [p h]
     exact h
@@ -463,13 +452,13 @@ theorem results.length {s : Computation α} {a n} [T : terminates s] : results s
 theorem results.val_unique {s : Computation α} {a b m n} (h1 : results s a m) (h2 : results s b n) : a = b :=
   mem_unique h1.mem h2.mem
 
-theorem results.len_unique {s : Computation α} {a b m n} (h1 : results s a m) (h2 : results s b n) : m = n :=
-  by 
-    haveI  := h1.terminates <;> haveI  := h2.terminates <;> rw [←h1.length, h2.length]
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem results.len_unique {s : computation α} {a b m n} (h1 : results s a m) (h2 : results s b n) : «expr = »(m, n) :=
+by haveI [] [] [":=", expr h1.terminates]; haveI [] [] [":=", expr h2.terminates]; rw ["[", "<-", expr h1.length, ",", expr h2.length, "]"] []
 
-theorem exists_results_of_mem {s : Computation α} {a} (h : a ∈ s) : ∃ n, results s a n :=
-  by 
-    haveI  := terminates_of_mem h <;> exact ⟨_, results_of_terminates' s h⟩
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_results_of_mem {s : computation α} {a} (h : «expr ∈ »(a, s)) : «expr∃ , »((n), results s a n) :=
+by haveI [] [] [":=", expr terminates_of_mem h]; exact [expr ⟨_, results_of_terminates' s h⟩]
 
 @[simp]
 theorem get_ret (a : α) : get (return a) = a :=
@@ -483,36 +472,34 @@ theorem length_ret (a : α) : length (return a) = 0 :=
 theorem results_ret (a : α) : results (return a) a 0 :=
   ⟨_, length_ret _⟩
 
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem length_think (s : Computation α) [h : terminates s] : length (think s) = length s+1 :=
-  by 
-    apply le_antisymmₓ
-    ·
-      exact Nat.find_min'ₓ _ (Nat.find_specₓ ((terminates_def _).1 h))
-    ·
-      have  : (Option.isSome ((think s).val (length (think s))) : Prop) :=
-        Nat.find_specₓ ((terminates_def _).1 s.think_terminates)
-      cases' length (think s) with n
-      ·
-        contradiction
-      ·
-        apply Nat.succ_le_succₓ 
-        apply Nat.find_min'ₓ 
-        apply this
+theorem length_think (s : computation α) [h : terminates s] : «expr = »(length (think s), «expr + »(length s, 1)) :=
+begin
+  apply [expr le_antisymm],
+  { exact [expr nat.find_min' _ (nat.find_spec ((terminates_def _).1 h))] },
+  { have [] [":", expr (option.is_some ((think s).val (length (think s))) : exprProp())] [":=", expr nat.find_spec ((terminates_def _).1 s.think_terminates)],
+    cases [expr length (think s)] ["with", ident n],
+    { contradiction },
+    { apply [expr nat.succ_le_succ],
+      apply [expr nat.find_min'],
+      apply [expr this] } }
+end
 
-theorem results_think {s : Computation α} {a n} (h : results s a n) : results (think s) a (n+1) :=
-  by 
-    haveI  := h.terminates <;>
-      exact
-        ⟨think_mem h.mem,
-          by 
-            rw [length_think, h.length]⟩
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem results_think {s : computation α} {a n} (h : results s a n) : results (think s) a «expr + »(n, 1) :=
+by haveI [] [] [":=", expr h.terminates]; exact [expr ⟨think_mem h.mem, by rw ["[", expr length_think, ",", expr h.length, "]"] []⟩]
 
-theorem of_results_think {s : Computation α} {a n} (h : results (think s) a n) : ∃ m, results s a m ∧ n = m+1 :=
-  by 
-    haveI  := of_think_terminates h.terminates 
-    have  := results_of_terminates' _ (of_think_mem h.mem)
-    exact ⟨_, this, results.len_unique h (results_think this)⟩
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_results_think
+{s : computation α}
+{a n}
+(h : results (think s) a n) : «expr∃ , »((m), «expr ∧ »(results s a m, «expr = »(n, «expr + »(m, 1)))) :=
+begin
+  haveI [] [] [":=", expr of_think_terminates h.terminates],
+  have [] [] [":=", expr results_of_terminates' _ (of_think_mem h.mem)],
+  exact [expr ⟨_, this, results.len_unique h (results_think this)⟩]
+end
 
 @[simp]
 theorem results_think_iff {s : Computation α} {a n} : results (think s) a (n+1) ↔ results s a n :=
@@ -526,36 +513,35 @@ theorem results_thinkN {s : Computation α} {a m} : ∀ n, results s a m → res
 | 0, h => h
 | n+1, h => results_think (results_thinkN n h)
 
-theorem results_thinkN_ret (a : α) n : results (thinkN (return a) n) a n :=
-  by 
-    have  := results_thinkN n (results_ret a) <;> rwa [Nat.zero_add] at this
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem results_thinkN_ret (a : α) (n) : results (thinkN (return a) n) a n :=
+by have [] [] [":=", expr results_thinkN n (results_ret a)]; rwa [expr nat.zero_add] ["at", ident this]
 
 @[simp]
 theorem length_thinkN (s : Computation α) [h : terminates s] n : length (thinkN s n) = length s+n :=
   (results_thinkN n (results_of_terminates _)).length
 
-theorem eq_thinkN {s : Computation α} {a n} (h : results s a n) : s = thinkN (return a) n :=
-  by 
-    revert s 
-    induction' n with n IH <;> intro s <;> apply cases_on s (fun a' => _) fun s => _ <;> intro h
-    ·
-      rw [←eq_of_ret_mem h.mem]
-      rfl
-    ·
-      cases' of_results_think h with n h 
-      cases h 
-      contradiction
-    ·
-      have  := h.len_unique (results_ret _)
-      contradiction
-    ·
-      rw [IH (results_think_iff.1 h)]
-      rfl
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_thinkN {s : computation α} {a n} (h : results s a n) : «expr = »(s, thinkN (return a) n) :=
+begin
+  revert [ident s],
+  induction [expr n] [] ["with", ident n, ident IH] []; intro [ident s]; apply [expr cases_on s (λ
+    a', _) (λ s, _)]; intro [ident h],
+  { rw ["<-", expr eq_of_ret_mem h.mem] [],
+    refl },
+  { cases [expr of_results_think h] ["with", ident n, ident h],
+    cases [expr h] [],
+    contradiction },
+  { have [] [] [":=", expr h.len_unique (results_ret _)],
+    contradiction },
+  { rw [expr IH (results_think_iff.1 h)] [],
+    refl }
+end
 
 theorem eq_thinkN' (s : Computation α) [h : terminates s] : s = thinkN (return (get s)) (length s) :=
   eq_thinkN (results_of_terminates _)
 
--- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 def mem_rec_on
 {C : computation α → Sort v}
 {a s}
@@ -627,15 +613,14 @@ theorem destruct_map (f : α → β) s : destruct (map f s) = lmap f (rmap (map 
   by 
     apply s.cases_on <;> intro  <;> simp 
 
-@[simp]
-theorem map_id : ∀ s : Computation α, map id s = s
-| ⟨f, al⟩ =>
-  by 
-    apply Subtype.eq <;> simp [map, Function.comp]
-    have e : @Option.rec α (fun _ => Option α) none some = id
-    ·
-      ext ⟨⟩ <;> rfl 
-    simp [e, Streamₓ.map_id]
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem map_id : ∀ s : computation α, «expr = »(map id s, s)
+| ⟨f, al⟩ := begin
+  apply [expr subtype.eq]; simp [] [] [] ["[", expr map, ",", expr function.comp, "]"] [] [],
+  have [ident e] [":", expr «expr = »(@option.rec α (λ _, option α) none some, id)] [],
+  { ext [] ["⟨", "⟩"] []; refl },
+  simp [] [] [] ["[", expr e, ",", expr stream.map_id, "]"] [] []
+end
 
 theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Computation α, map (g ∘ f) s = map g (map f s)
 | ⟨s, al⟩ =>
@@ -718,22 +703,26 @@ theorem bind_assoc (s : Computation α) (f : α → Computation β) (g : β → 
     ·
       exact Or.inr ⟨s, rfl, rfl⟩
 
-theorem results_bind {s : Computation α} {f : α → Computation β} {a b m n} (h1 : results s a m)
-  (h2 : results (f a) b n) : results (bind s f) b (n+m) :=
-  by 
-    have  := h1.mem 
-    revert m 
-    apply mem_rec_on this _ fun s IH => _ <;> intro m h1
-    ·
-      rw [ret_bind]
-      rw [h1.len_unique (results_ret _)]
-      exact h2
-    ·
-      rw [think_bind]
-      cases' of_results_think h1 with m' h 
-      cases' h with h1 e 
-      rw [e]
-      exact results_think (IH h1)
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem results_bind
+{s : computation α}
+{f : α → computation β}
+{a b m n}
+(h1 : results s a m)
+(h2 : results (f a) b n) : results (bind s f) b «expr + »(n, m) :=
+begin
+  have [] [] [":=", expr h1.mem],
+  revert [ident m],
+  apply [expr mem_rec_on this _ (λ s IH, _)]; intros [ident m, ident h1],
+  { rw ["[", expr ret_bind, "]"] [],
+    rw [expr h1.len_unique (results_ret _)] [],
+    exact [expr h2] },
+  { rw ["[", expr think_bind, "]"] [],
+    cases [expr of_results_think h1] ["with", ident m', ident h],
+    cases [expr h] ["with", ident h1, ident e],
+    rw [expr e] [],
+    exact [expr results_think (IH h1)] }
+end
 
 theorem mem_bind {s : Computation α} {f : α → Computation β} {a b} (h1 : a ∈ s) (h2 : b ∈ f a) : b ∈ bind s f :=
   let ⟨m, h1⟩ := exists_results_of_mem h1 
@@ -754,25 +743,27 @@ theorem length_bind (s : Computation α) (f : α → Computation β) [T1 : termi
   length (bind s f) = length (f (get s))+length s :=
   (results_of_terminates _).len_unique$ results_bind (results_of_terminates _) (results_of_terminates _)
 
-theorem of_results_bind {s : Computation α} {f : α → Computation β} {b k} :
-  results (bind s f) b k → ∃ a m n, results s a m ∧ results (f a) b n ∧ k = n+m :=
-  by 
-    induction' k with n IH generalizing s <;> apply cases_on s (fun a => _) fun s' => _ <;> intro e
-    ·
-      simp [thinkN] at e 
-      refine' ⟨a, _, _, results_ret _, e, rfl⟩
-    ·
-      have  := congr_argₓ head (eq_thinkN e)
-      contradiction
-    ·
-      simp  at e 
-      refine' ⟨a, _, n+1, results_ret _, e, rfl⟩
-    ·
-      simp  at e 
-      exact
-        let ⟨a, m, n', h1, h2, e'⟩ := IH e 
-        by 
-          rw [e'] <;> exact ⟨a, m.succ, n', results_think h1, h2, rfl⟩
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_results_bind
+{s : computation α}
+{f : α → computation β}
+{b
+ k} : results (bind s f) b k → «expr∃ , »((a
+  m
+  n), «expr ∧ »(results s a m, «expr ∧ »(results (f a) b n, «expr = »(k, «expr + »(n, m))))) :=
+begin
+  induction [expr k] [] ["with", ident n, ident IH] ["generalizing", ident s]; apply [expr cases_on s (λ
+    a, _) (λ s', _)]; intro [ident e],
+  { simp [] [] [] ["[", expr thinkN, "]"] [] ["at", ident e],
+    refine [expr ⟨a, _, _, results_ret _, e, rfl⟩] },
+  { have [] [] [":=", expr congr_arg head (eq_thinkN e)],
+    contradiction },
+  { simp [] [] [] [] [] ["at", ident e],
+    refine [expr ⟨a, _, «expr + »(n, 1), results_ret _, e, rfl⟩] },
+  { simp [] [] [] [] [] ["at", ident e],
+    exact [expr let ⟨a, m, n', h1, h2, e'⟩ := IH e in
+     by rw [expr e'] []; exact [expr ⟨a, m.succ, n', results_think h1, h2, rfl⟩]] }
+end
 
 theorem exists_of_mem_bind {s : Computation α} {f : α → Computation β} {b} (h : b ∈ bind s f) :
   ∃ (a : _)(_ : a ∈ s), b ∈ f a :=
@@ -1157,21 +1148,27 @@ theorem lift_rel_aux.ret_right (R : α → β → Prop) (C : Computation α → 
   by 
     rw [←lift_rel_aux.swap, lift_rel_aux.ret_left]
 
-theorem lift_rel_rec.lem {R : α → β → Prop} (C : Computation α → Computation β → Prop)
-  (H : ∀ {ca cb}, C ca cb → lift_rel_aux R C (destruct ca) (destruct cb)) ca cb (Hc : C ca cb) a (ha : a ∈ ca) :
-  lift_rel R ca cb :=
-  by 
-    revert cb 
-    refine' mem_rec_on ha _ fun ca' IH => _ <;> intro cb Hc <;> have h := H Hc
-    ·
-      simp  at h 
-      simp [h]
-    ·
-      have h := H Hc 
-      simp 
-      revert h 
-      apply cb.cases_on (fun b => _) fun cb' => _ <;> intro h <;> simp  at h <;> simp [h]
-      exact IH _ h
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lift_rel_rec.lem
+{R : α → β → exprProp()}
+(C : computation α → computation β → exprProp())
+(H : ∀ {ca cb}, C ca cb → lift_rel_aux R C (destruct ca) (destruct cb))
+(ca cb)
+(Hc : C ca cb)
+(a)
+(ha : «expr ∈ »(a, ca)) : lift_rel R ca cb :=
+begin
+  revert [ident cb],
+  refine [expr mem_rec_on ha _ (λ ca' IH, _)]; intros [ident cb, ident Hc]; have [ident h] [] [":=", expr H Hc],
+  { simp [] [] [] [] [] ["at", ident h],
+    simp [] [] [] ["[", expr h, "]"] [] [] },
+  { have [ident h] [] [":=", expr H Hc],
+    simp [] [] [] [] [] [],
+    revert [ident h],
+    apply [expr cb.cases_on (λ
+      b, _) (λ cb', _)]; intro [ident h]; simp [] [] [] [] [] ["at", ident h]; simp [] [] [] ["[", expr h, "]"] [] [],
+    exact [expr IH _ h] }
+end
 
 theorem lift_rel_rec {R : α → β → Prop} (C : Computation α → Computation β → Prop)
   (H : ∀ {ca cb}, C ca cb → lift_rel_aux R C (destruct ca) (destruct cb)) ca cb (Hc : C ca cb) : lift_rel R ca cb :=

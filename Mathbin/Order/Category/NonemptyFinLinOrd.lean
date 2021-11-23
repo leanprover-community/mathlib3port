@@ -1,5 +1,4 @@
 import Mathbin.Data.Fin.Basic 
-import Mathbin.Data.Fintype.Sort 
 import Mathbin.Order.Category.LinearOrder
 
 /-! # Nonempty finite linear orders
@@ -62,7 +61,7 @@ namespace NonemptyFinLinOrdₓ
 instance  : bundled_hom.parent_projection @NonemptyFinLinOrd.toLinearOrder :=
   ⟨⟩
 
--- error in Order.Category.NonemptyFinLinOrd: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Order.Category.NonemptyFinLinOrd: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] NonemptyFinLinOrd
 
 instance  : CoeSort NonemptyFinLinOrdₓ (Type _) :=

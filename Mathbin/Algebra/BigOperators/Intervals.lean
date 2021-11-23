@@ -100,22 +100,24 @@ theorem prod_Ico_eq_prod_range (f : ℕ → β) (m n : ℕ) : (∏k in Ico m n, 
       replace h : n ≤ m := le_of_not_geₓ h 
       rw [Ico_eq_empty_of_le h, tsub_eq_zero_iff_le.mpr h, range_zero, prod_empty, prod_empty]
 
-theorem prod_Ico_reflect (f : ℕ → β) (k : ℕ) {m n : ℕ} (h : m ≤ n+1) :
-  (∏j in Ico k m, f (n - j)) = ∏j in Ico ((n+1) - m) ((n+1) - k), f j :=
-  by 
-    have  : ∀ i _ : i < m, i ≤ n
-    ·
-      intro i hi 
-      exact (add_le_add_iff_right 1).1 (le_transₓ (Nat.lt_iff_add_one_le.1 hi) h)
-    cases' lt_or_leₓ k m with hkm hkm
-    ·
-      rw [←Nat.Ico_image_const_sub_eq_Ico (this _ hkm)]
-      refine' (prod_image _).symm 
-      simp only [mem_Ico]
-      rintro i ⟨ki, im⟩ j ⟨kj, jm⟩ Hij 
-      rw [←tsub_tsub_cancel_of_le (this _ im), Hij, tsub_tsub_cancel_of_le (this _ jm)]
-    ·
-      simp [Ico_eq_empty_of_le, tsub_le_tsub_left, hkm]
+-- error in Algebra.BigOperators.Intervals: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prod_Ico_reflect
+(f : exprℕ() → β)
+(k : exprℕ())
+{m n : exprℕ()}
+(h : «expr ≤ »(m, «expr + »(n, 1))) : «expr = »(«expr∏ in , »((j), Ico k m, f «expr - »(n, j)), «expr∏ in , »((j), Ico «expr - »(«expr + »(n, 1), m) «expr - »(«expr + »(n, 1), k), f j)) :=
+begin
+  have [] [":", expr ∀ i «expr < » m, «expr ≤ »(i, n)] [],
+  { intros [ident i, ident hi],
+    exact [expr (add_le_add_iff_right 1).1 (le_trans (nat.lt_iff_add_one_le.1 hi) h)] },
+  cases [expr lt_or_le k m] ["with", ident hkm, ident hkm],
+  { rw ["[", "<-", expr nat.Ico_image_const_sub_eq_Ico (this _ hkm), "]"] [],
+    refine [expr (prod_image _).symm],
+    simp [] [] ["only"] ["[", expr mem_Ico, "]"] [] [],
+    rintros [ident i, "⟨", ident ki, ",", ident im, "⟩", ident j, "⟨", ident kj, ",", ident jm, "⟩", ident Hij],
+    rw ["[", "<-", expr tsub_tsub_cancel_of_le (this _ im), ",", expr Hij, ",", expr tsub_tsub_cancel_of_le (this _ jm), "]"] [] },
+  { simp [] [] [] ["[", expr Ico_eq_empty_of_le, ",", expr tsub_le_tsub_left, ",", expr hkm, "]"] [] [] }
+end
 
 theorem sum_Ico_reflect {δ : Type _} [AddCommMonoidₓ δ] (f : ℕ → δ) (k : ℕ) {m n : ℕ} (h : m ≤ n+1) :
   (∑j in Ico k m, f (n - j)) = ∑j in Ico ((n+1) - m) ((n+1) - k), f j :=

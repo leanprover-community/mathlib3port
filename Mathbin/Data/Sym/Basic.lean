@@ -1,5 +1,6 @@
 import Mathbin.Data.Multiset.Basic 
-import Mathbin.Data.Vector.Basic
+import Mathbin.Data.Vector.Basic 
+import Mathbin.Tactic.ApplyFun
 
 /-!
 # Symmetric powers

@@ -85,7 +85,7 @@ unsafe def context.mk_term (c : context) (n x a : expr) : expr :=
 
 /-- Interpret an integer as a coefficient to a term. -/
 unsafe def context.int_to_expr (c : context) (n : ℤ) : tactic expr :=
-  expr.of_int (if c.is_group then quote ℤ else quote ℕ) n
+  expr.of_int (if c.is_group then quote.1 ℤ else quote.1 ℕ) n
 
 unsafe inductive normal_expr : Type
   | zero (e : expr) : normal_expr
@@ -292,40 +292,40 @@ unsafe def eval_smul' (c : context) (eval : expr → tactic (normal_expr × expr
     return (e', c.iapp `` subst_into_smul [e₁, e₂, e₁', e₂', e', p₁, p₂, p])
 
 unsafe def eval (c : context) : expr → tactic (normal_expr × expr)
-| quote (%%e₁)+%%e₂ =>
+| quote.1 ((%%ₓe₁)+%%ₓe₂) =>
   do 
     let (e₁', p₁) ← eval e₁ 
     let (e₂', p₂) ← eval e₂ 
     let (e', p') ← eval_add c e₁' e₂' 
     let p ← c.mk_app `` NormNum.subst_into_add `` Add [e₁, e₂, e₁', e₂', e', p₁, p₂, p']
     return (e', p)
-| quote (%%e₁) - %%e₂ =>
+| quote.1 ((%%ₓe₁) - %%ₓe₂) =>
   do 
     let e₂' ← mk_app `` Neg.neg [e₂]
     let e ← mk_app `` Add.add [e₁, e₂']
     let (e', p) ← eval e 
     let p' ← c.mk_app `` unfold_sub `` AddGroupₓ [e₁, e₂, e', p]
     return (e', p')
-| quote -%%e =>
+| quote.1 (-%%ₓe) =>
   do 
     let (e₁, p₁) ← eval e 
     let (e₂, p₂) ← eval_neg c e₁ 
     let p ← c.mk_app `` NormNum.subst_into_neg `` Neg [e, e₁, e₂, p₁, p₂]
     return (e₂, p)
-| quote AddMonoidₓ.nsmul (%%e₁) (%%e₂) =>
+| quote.1 (AddMonoidₓ.nsmul (%%ₓe₁) (%%ₓe₂)) =>
   do 
     let n ← if c.is_group then mk_app `` Int.ofNat [e₁] else return e₁ 
     let (e', p) ← eval$ c.iapp `` smul [n, e₂]
     return (e', c.iapp `` unfold_smul [e₁, e₂, e', p])
-| quote SubNegMonoidₓ.zsmul (%%e₁) (%%e₂) =>
+| quote.1 (SubNegMonoidₓ.zsmul (%%ₓe₁) (%%ₓe₂)) =>
   do 
     guardb c.is_group 
     let (e', p) ← eval$ c.iapp `` smul [e₁, e₂]
     return (e', c.app `` unfold_zsmul c.inst [e₁, e₂, e', p])
-| quote @HasScalar.smul Nat _ AddMonoidₓ.hasScalarNat (%%e₁) (%%e₂) => eval_smul' c eval e₁ e₂
-| quote @HasScalar.smul Int _ SubNegMonoidₓ.hasScalarInt (%%e₁) (%%e₂) => eval_smul' c eval e₁ e₂
-| quote smul (%%e₁) (%%e₂) => eval_smul' c eval e₁ e₂
-| quote smulg (%%e₁) (%%e₂) => eval_smul' c eval e₁ e₂
+| quote.1 (@HasScalar.smul Nat _ AddMonoidₓ.hasScalarNat (%%ₓe₁) (%%ₓe₂)) => eval_smul' c eval e₁ e₂
+| quote.1 (@HasScalar.smul Int _ SubNegMonoidₓ.hasScalarInt (%%ₓe₁) (%%ₓe₂)) => eval_smul' c eval e₁ e₂
+| quote.1 (smul (%%ₓe₁) (%%ₓe₂)) => eval_smul' c eval e₁ e₂
+| quote.1 (smulg (%%ₓe₁) (%%ₓe₂)) => eval_smul' c eval e₁ e₂
 | e => eval_atom c e
 
 unsafe def eval' (c : context) (e : expr) : tactic (expr × expr) :=
@@ -333,7 +333,7 @@ unsafe def eval' (c : context) (e : expr) : tactic (expr × expr) :=
     let (e', p) ← eval c e 
     return (e', p)
 
--- error in Tactic.Abel: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Abel: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 @[derive #[expr has_reflect]] inductive normalize_mode
 | raw
 | term
@@ -388,7 +388,7 @@ This can prove goals that `abel` cannot, but is more expensive.
 -/
 unsafe def abel1 (red : parse (tk "!")?) : tactic Unit :=
   do 
-    let quote (%%e₁) = %%e₂ ← target 
+    let quote.1 ((%%ₓe₁) = %%ₓe₂) ← target 
     let c ← mk_context (if red.is_some then semireducible else reducible) e₁ 
     let (e₁', p₁) ← eval c e₁ 
     let (e₂', p₂) ← eval c e₂ 

@@ -83,7 +83,7 @@ with morphisms becoming inequalities, and isomorphisms becoming equations.
 -/
 
 
--- error in CategoryTheory.Subobject.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler partial_order
+-- error in CategoryTheory.Subobject.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler partial_order
 /--
 The category of subobjects of `X : C`, defined as isomorphism classes of monomorphisms into `X`.
 -/ @[derive #["[", expr partial_order, ",", expr category, "]"]] def subobject (X : C) :=
@@ -264,7 +264,7 @@ theorem of_le_mk_le_mk_of_comm {B A₁ A₂ : C} {f₁ : A₁ ⟶ B} {f₂ : A�
     ext 
     simp [w]
 
--- error in CategoryTheory.Subobject.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler mono
+-- error in CategoryTheory.Subobject.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 @[derive #[expr mono]]
 def of_le_mk
@@ -280,7 +280,7 @@ theorem of_le_mk_comp {B A : C} {X : subobject B} {f : A ⟶ B} [mono f] (h : X 
   by 
     simp [of_le_mk]
 
--- error in CategoryTheory.Subobject.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler mono
+-- error in CategoryTheory.Subobject.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 @[derive #[expr mono]]
 def of_mk_le
@@ -296,7 +296,7 @@ theorem of_mk_le_arrow {B A : C} {f : A ⟶ B} [mono f] {X : subobject B} (h : m
   by 
     simp [of_mk_le]
 
--- error in CategoryTheory.Subobject.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler mono
+-- error in CategoryTheory.Subobject.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 @[derive #[expr mono]]
 def of_mk_le_mk

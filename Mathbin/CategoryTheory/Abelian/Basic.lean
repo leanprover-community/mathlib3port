@@ -467,76 +467,54 @@ section EpiPullback
 
 variable[limits.has_pullbacks C]{W X Y Z : C}(f : X ⟶ Z)(g : Y ⟶ Z)
 
+-- error in CategoryTheory.Abelian.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In an abelian category, the pullback of an epimorphism is an epimorphism.
     Proof from [aluffi2016, IX.2.3], cf. [borceux-vol2, 1.7.6] -/
-instance epi_pullback_of_epi_f [epi f] : epi (pullback.snd : pullback f g ⟶ Y) :=
-  epi_of_cancel_zero _$
-    fun R e h =>
-      by 
-        let u := biprod.desc (0 : X ⟶ R) e 
-        have hu : pullback_to_biproduct_is_kernel.pullback_to_biproduct f g ≫ u = 0 :=
-          by 
-            simpa 
-        have  := epi_is_cokernel_of_kernel _ (pullback_to_biproduct_is_kernel.is_limit_pullback_to_biproduct f g)
-        obtain ⟨d, hd⟩ := cokernel_cofork.is_colimit.desc' this u hu 
-        change Z ⟶ R at d 
-        change biprod.desc f (-g) ≫ d = u at hd 
-        have  : f ≫ d = 0
-        calc f ≫ d = (biprod.inl ≫ biprod.desc f (-g)) ≫ d :=
-          by 
-            rw [biprod.inl_desc]_ = biprod.inl ≫ u :=
-          by 
-            rw [category.assoc, hd]_ = 0 :=
-          biprod.inl_desc _ _ 
-        have  : d = 0 :=
-          (cancel_epi f).1
-            (by 
-              simpa)
-        calc e = biprod.inr ≫ u :=
-          by 
-            rw [biprod.inr_desc]_ = biprod.inr ≫ biprod.desc f (-g) ≫ d :=
-          by 
-            rw [←hd]_ = biprod.inr ≫ biprod.desc f (-g) ≫ 0 :=
-          by 
-            rw [this]_ = (biprod.inr ≫ biprod.desc f (-g)) ≫ 0 :=
-          by 
-            rw [←category.assoc]_ = 0 :=
-          has_zero_morphisms.comp_zero _ _
+instance epi_pullback_of_epi_f [epi f] : epi (pullback.snd : «expr ⟶ »(pullback f g, Y)) :=
+«expr $ »(epi_of_cancel_zero _, λ R e h, begin
+   let [ident u] [] [":=", expr biprod.desc (0 : «expr ⟶ »(X, R)) e],
+   have [ident hu] [":", expr «expr = »(«expr ≫ »(pullback_to_biproduct_is_kernel.pullback_to_biproduct f g, u), 0)] [":=", expr by simpa [] [] [] [] [] []],
+   have [] [] [":=", expr epi_is_cokernel_of_kernel _ (pullback_to_biproduct_is_kernel.is_limit_pullback_to_biproduct f g)],
+   obtain ["⟨", ident d, ",", ident hd, "⟩", ":=", expr cokernel_cofork.is_colimit.desc' this u hu],
+   change [expr «expr ⟶ »(Z, R)] [] ["at", ident d],
+   change [expr «expr = »(«expr ≫ »(biprod.desc f «expr- »(g), d), u)] [] ["at", ident hd],
+   have [] [":", expr «expr = »(«expr ≫ »(f, d), 0)] [],
+   calc
+     «expr = »(«expr ≫ »(f, d), «expr ≫ »(«expr ≫ »(biprod.inl, biprod.desc f «expr- »(g)), d)) : by rw [expr biprod.inl_desc] []
+     «expr = »(..., «expr ≫ »(biprod.inl, u)) : by rw ["[", expr category.assoc, ",", expr hd, "]"] []
+     «expr = »(..., 0) : biprod.inl_desc _ _,
+   have [] [":", expr «expr = »(d, 0)] [":=", expr (cancel_epi f).1 (by simpa [] [] [] [] [] [])],
+   calc
+     «expr = »(e, «expr ≫ »(biprod.inr, u)) : by rw [expr biprod.inr_desc] []
+     «expr = »(..., «expr ≫ »(biprod.inr, «expr ≫ »(biprod.desc f «expr- »(g), d))) : by rw ["<-", expr hd] []
+     «expr = »(..., «expr ≫ »(biprod.inr, «expr ≫ »(biprod.desc f «expr- »(g), 0))) : by rw [expr this] []
+     «expr = »(..., «expr ≫ »(«expr ≫ »(biprod.inr, biprod.desc f «expr- »(g)), 0)) : by rw ["<-", expr category.assoc] []
+     «expr = »(..., 0) : has_zero_morphisms.comp_zero _ _
+ end)
 
+-- error in CategoryTheory.Abelian.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In an abelian category, the pullback of an epimorphism is an epimorphism. -/
-instance epi_pullback_of_epi_g [epi g] : epi (pullback.fst : pullback f g ⟶ X) :=
-  epi_of_cancel_zero _$
-    fun R e h =>
-      by 
-        let u := biprod.desc e (0 : Y ⟶ R)
-        have hu : pullback_to_biproduct_is_kernel.pullback_to_biproduct f g ≫ u = 0 :=
-          by 
-            simpa 
-        have  := epi_is_cokernel_of_kernel _ (pullback_to_biproduct_is_kernel.is_limit_pullback_to_biproduct f g)
-        obtain ⟨d, hd⟩ := cokernel_cofork.is_colimit.desc' this u hu 
-        change Z ⟶ R at d 
-        change biprod.desc f (-g) ≫ d = u at hd 
-        have  : -g ≫ d = 0
-        calc -g ≫ d = (biprod.inr ≫ biprod.desc f (-g)) ≫ d :=
-          by 
-            rw [biprod.inr_desc]_ = biprod.inr ≫ u :=
-          by 
-            rw [category.assoc, hd]_ = 0 :=
-          biprod.inr_desc _ _ 
-        have  : d = 0 :=
-          (cancel_epi (-g)).1
-            (by 
-              simpa)
-        calc e = biprod.inl ≫ u :=
-          by 
-            rw [biprod.inl_desc]_ = biprod.inl ≫ biprod.desc f (-g) ≫ d :=
-          by 
-            rw [←hd]_ = biprod.inl ≫ biprod.desc f (-g) ≫ 0 :=
-          by 
-            rw [this]_ = (biprod.inl ≫ biprod.desc f (-g)) ≫ 0 :=
-          by 
-            rw [←category.assoc]_ = 0 :=
-          has_zero_morphisms.comp_zero _ _
+instance epi_pullback_of_epi_g [epi g] : epi (pullback.fst : «expr ⟶ »(pullback f g, X)) :=
+«expr $ »(epi_of_cancel_zero _, λ R e h, begin
+   let [ident u] [] [":=", expr biprod.desc e (0 : «expr ⟶ »(Y, R))],
+   have [ident hu] [":", expr «expr = »(«expr ≫ »(pullback_to_biproduct_is_kernel.pullback_to_biproduct f g, u), 0)] [":=", expr by simpa [] [] [] [] [] []],
+   have [] [] [":=", expr epi_is_cokernel_of_kernel _ (pullback_to_biproduct_is_kernel.is_limit_pullback_to_biproduct f g)],
+   obtain ["⟨", ident d, ",", ident hd, "⟩", ":=", expr cokernel_cofork.is_colimit.desc' this u hu],
+   change [expr «expr ⟶ »(Z, R)] [] ["at", ident d],
+   change [expr «expr = »(«expr ≫ »(biprod.desc f «expr- »(g), d), u)] [] ["at", ident hd],
+   have [] [":", expr «expr = »(«expr ≫ »(«expr- »(g), d), 0)] [],
+   calc
+     «expr = »(«expr ≫ »(«expr- »(g), d), «expr ≫ »(«expr ≫ »(biprod.inr, biprod.desc f «expr- »(g)), d)) : by rw [expr biprod.inr_desc] []
+     «expr = »(..., «expr ≫ »(biprod.inr, u)) : by rw ["[", expr category.assoc, ",", expr hd, "]"] []
+     «expr = »(..., 0) : biprod.inr_desc _ _,
+   have [] [":", expr «expr = »(d, 0)] [":=", expr (cancel_epi «expr- »(g)).1 (by simpa [] [] [] [] [] [])],
+   calc
+     «expr = »(e, «expr ≫ »(biprod.inl, u)) : by rw [expr biprod.inl_desc] []
+     «expr = »(..., «expr ≫ »(biprod.inl, «expr ≫ »(biprod.desc f «expr- »(g), d))) : by rw ["<-", expr hd] []
+     «expr = »(..., «expr ≫ »(biprod.inl, «expr ≫ »(biprod.desc f «expr- »(g), 0))) : by rw [expr this] []
+     «expr = »(..., «expr ≫ »(«expr ≫ »(biprod.inl, biprod.desc f «expr- »(g)), 0)) : by rw ["<-", expr category.assoc] []
+     «expr = »(..., 0) : has_zero_morphisms.comp_zero _ _
+ end)
 
 theorem epi_snd_of_is_limit [epi f] {s : pullback_cone f g} (hs : is_limit s) : epi s.snd :=
   by 
@@ -568,73 +546,51 @@ section MonoPushout
 
 variable[limits.has_pushouts C]{W X Y Z : C}(f : X ⟶ Y)(g : X ⟶ Z)
 
-instance mono_pushout_of_mono_f [mono f] : mono (pushout.inr : Z ⟶ pushout f g) :=
-  mono_of_cancel_zero _$
-    fun R e h =>
-      by 
-        let u := biprod.lift (0 : R ⟶ Y) e 
-        have hu : u ≫ biproduct_to_pushout_is_cokernel.biproduct_to_pushout f g = 0 :=
-          by 
-            simpa 
-        have  := mono_is_kernel_of_cokernel _ (biproduct_to_pushout_is_cokernel.is_colimit_biproduct_to_pushout f g)
-        obtain ⟨d, hd⟩ := kernel_fork.is_limit.lift' this u hu 
-        change R ⟶ X at d 
-        change d ≫ biprod.lift f (-g) = u at hd 
-        have  : d ≫ f = 0
-        calc d ≫ f = d ≫ biprod.lift f (-g) ≫ biprod.fst :=
-          by 
-            rw [biprod.lift_fst]_ = u ≫ biprod.fst :=
-          by 
-            rw [←category.assoc, hd]_ = 0 :=
-          biprod.lift_fst _ _ 
-        have  : d = 0 :=
-          (cancel_mono f).1
-            (by 
-              simpa)
-        calc e = u ≫ biprod.snd :=
-          by 
-            rw [biprod.lift_snd]_ = (d ≫ biprod.lift f (-g)) ≫ biprod.snd :=
-          by 
-            rw [←hd]_ = (0 ≫ biprod.lift f (-g)) ≫ biprod.snd :=
-          by 
-            rw [this]_ = 0 ≫ biprod.lift f (-g) ≫ biprod.snd :=
-          by 
-            rw [category.assoc]_ = 0 :=
-          zero_comp
+-- error in CategoryTheory.Abelian.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance mono_pushout_of_mono_f [mono f] : mono (pushout.inr : «expr ⟶ »(Z, pushout f g)) :=
+«expr $ »(mono_of_cancel_zero _, λ R e h, begin
+   let [ident u] [] [":=", expr biprod.lift (0 : «expr ⟶ »(R, Y)) e],
+   have [ident hu] [":", expr «expr = »(«expr ≫ »(u, biproduct_to_pushout_is_cokernel.biproduct_to_pushout f g), 0)] [":=", expr by simpa [] [] [] [] [] []],
+   have [] [] [":=", expr mono_is_kernel_of_cokernel _ (biproduct_to_pushout_is_cokernel.is_colimit_biproduct_to_pushout f g)],
+   obtain ["⟨", ident d, ",", ident hd, "⟩", ":=", expr kernel_fork.is_limit.lift' this u hu],
+   change [expr «expr ⟶ »(R, X)] [] ["at", ident d],
+   change [expr «expr = »(«expr ≫ »(d, biprod.lift f «expr- »(g)), u)] [] ["at", ident hd],
+   have [] [":", expr «expr = »(«expr ≫ »(d, f), 0)] [],
+   calc
+     «expr = »(«expr ≫ »(d, f), «expr ≫ »(d, «expr ≫ »(biprod.lift f «expr- »(g), biprod.fst))) : by rw [expr biprod.lift_fst] []
+     «expr = »(..., «expr ≫ »(u, biprod.fst)) : by rw ["[", "<-", expr category.assoc, ",", expr hd, "]"] []
+     «expr = »(..., 0) : biprod.lift_fst _ _,
+   have [] [":", expr «expr = »(d, 0)] [":=", expr (cancel_mono f).1 (by simpa [] [] [] [] [] [])],
+   calc
+     «expr = »(e, «expr ≫ »(u, biprod.snd)) : by rw [expr biprod.lift_snd] []
+     «expr = »(..., «expr ≫ »(«expr ≫ »(d, biprod.lift f «expr- »(g)), biprod.snd)) : by rw ["<-", expr hd] []
+     «expr = »(..., «expr ≫ »(«expr ≫ »(0, biprod.lift f «expr- »(g)), biprod.snd)) : by rw [expr this] []
+     «expr = »(..., «expr ≫ »(0, «expr ≫ »(biprod.lift f «expr- »(g), biprod.snd))) : by rw [expr category.assoc] []
+     «expr = »(..., 0) : zero_comp
+ end)
 
-instance mono_pushout_of_mono_g [mono g] : mono (pushout.inl : Y ⟶ pushout f g) :=
-  mono_of_cancel_zero _$
-    fun R e h =>
-      by 
-        let u := biprod.lift e (0 : R ⟶ Z)
-        have hu : u ≫ biproduct_to_pushout_is_cokernel.biproduct_to_pushout f g = 0 :=
-          by 
-            simpa 
-        have  := mono_is_kernel_of_cokernel _ (biproduct_to_pushout_is_cokernel.is_colimit_biproduct_to_pushout f g)
-        obtain ⟨d, hd⟩ := kernel_fork.is_limit.lift' this u hu 
-        change R ⟶ X at d 
-        change d ≫ biprod.lift f (-g) = u at hd 
-        have  : d ≫ -g = 0
-        calc d ≫ -g = d ≫ biprod.lift f (-g) ≫ biprod.snd :=
-          by 
-            rw [biprod.lift_snd]_ = u ≫ biprod.snd :=
-          by 
-            rw [←category.assoc, hd]_ = 0 :=
-          biprod.lift_snd _ _ 
-        have  : d = 0 :=
-          (cancel_mono (-g)).1
-            (by 
-              simpa)
-        calc e = u ≫ biprod.fst :=
-          by 
-            rw [biprod.lift_fst]_ = (d ≫ biprod.lift f (-g)) ≫ biprod.fst :=
-          by 
-            rw [←hd]_ = (0 ≫ biprod.lift f (-g)) ≫ biprod.fst :=
-          by 
-            rw [this]_ = 0 ≫ biprod.lift f (-g) ≫ biprod.fst :=
-          by 
-            rw [category.assoc]_ = 0 :=
-          zero_comp
+-- error in CategoryTheory.Abelian.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance mono_pushout_of_mono_g [mono g] : mono (pushout.inl : «expr ⟶ »(Y, pushout f g)) :=
+«expr $ »(mono_of_cancel_zero _, λ R e h, begin
+   let [ident u] [] [":=", expr biprod.lift e (0 : «expr ⟶ »(R, Z))],
+   have [ident hu] [":", expr «expr = »(«expr ≫ »(u, biproduct_to_pushout_is_cokernel.biproduct_to_pushout f g), 0)] [":=", expr by simpa [] [] [] [] [] []],
+   have [] [] [":=", expr mono_is_kernel_of_cokernel _ (biproduct_to_pushout_is_cokernel.is_colimit_biproduct_to_pushout f g)],
+   obtain ["⟨", ident d, ",", ident hd, "⟩", ":=", expr kernel_fork.is_limit.lift' this u hu],
+   change [expr «expr ⟶ »(R, X)] [] ["at", ident d],
+   change [expr «expr = »(«expr ≫ »(d, biprod.lift f «expr- »(g)), u)] [] ["at", ident hd],
+   have [] [":", expr «expr = »(«expr ≫ »(d, «expr- »(g)), 0)] [],
+   calc
+     «expr = »(«expr ≫ »(d, «expr- »(g)), «expr ≫ »(d, «expr ≫ »(biprod.lift f «expr- »(g), biprod.snd))) : by rw [expr biprod.lift_snd] []
+     «expr = »(..., «expr ≫ »(u, biprod.snd)) : by rw ["[", "<-", expr category.assoc, ",", expr hd, "]"] []
+     «expr = »(..., 0) : biprod.lift_snd _ _,
+   have [] [":", expr «expr = »(d, 0)] [":=", expr (cancel_mono «expr- »(g)).1 (by simpa [] [] [] [] [] [])],
+   calc
+     «expr = »(e, «expr ≫ »(u, biprod.fst)) : by rw [expr biprod.lift_fst] []
+     «expr = »(..., «expr ≫ »(«expr ≫ »(d, biprod.lift f «expr- »(g)), biprod.fst)) : by rw ["<-", expr hd] []
+     «expr = »(..., «expr ≫ »(«expr ≫ »(0, biprod.lift f «expr- »(g)), biprod.fst)) : by rw [expr this] []
+     «expr = »(..., «expr ≫ »(0, «expr ≫ »(biprod.lift f «expr- »(g), biprod.fst))) : by rw [expr category.assoc] []
+     «expr = »(..., 0) : zero_comp
+ end)
 
 theorem mono_inr_of_is_colimit [mono f] {s : pushout_cocone f g} (hs : is_colimit s) : mono s.inr :=
   by 
@@ -689,11 +645,11 @@ def abelian : abelian C :=
           limits.has_cokernels C),
     NormalMono :=
       by 
-        introsI 
+        intros 
         convert normal_mono f,
     NormalEpi :=
       by 
-        introsI 
+        intros 
         convert normal_epi f }
 
 end CategoryTheory.NonPreadditiveAbelian

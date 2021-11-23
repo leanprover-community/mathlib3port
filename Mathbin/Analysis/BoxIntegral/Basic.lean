@@ -342,19 +342,19 @@ theorem integrable.of_smul {c : ℝ} (hf : integrable I l (c • f) vol) (hc : c
     ext x 
     simp only [Pi.smul_apply, inv_smul_smul₀ hc]
 
+-- error in Analysis.BoxIntegral.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem integral_smul (c : ℝ) : integral I l (fun x => c • f x) vol = c • integral I l f vol :=
-  by 
-    rcases eq_or_ne c 0 with (rfl | hc)
-    ·
-      simp only [zero_smul, integral_zero]
-    byCases' hf : integrable I l f vol
-    ·
-      exact (hf.has_integral.smul c).integral_eq
-    ·
-      have  : ¬integrable I l (fun x => c • f x) vol 
-      exact mt (fun h => h.of_smul hc) hf 
-      rw [integral, integral, dif_neg hf, dif_neg this, smul_zero]
+theorem integral_smul
+(c : exprℝ()) : «expr = »(integral I l (λ x, «expr • »(c, f x)) vol, «expr • »(c, integral I l f vol)) :=
+begin
+  rcases [expr eq_or_ne c 0, "with", ident rfl, "|", ident hc],
+  { simp [] [] ["only"] ["[", expr zero_smul, ",", expr integral_zero, "]"] [] [] },
+  by_cases [expr hf, ":", expr integrable I l f vol],
+  { exact [expr (hf.has_integral.smul c).integral_eq] },
+  { have [] [":", expr «expr¬ »(integrable I l (λ x, «expr • »(c, f x)) vol)] [],
+    from [expr mt (λ h, h.of_smul hc) hf],
+    rw ["[", expr integral, ",", expr integral, ",", expr dif_neg hf, ",", expr dif_neg this, ",", expr smul_zero, "]"] [] }
+end
 
 open MeasureTheory
 
@@ -435,16 +435,11 @@ def convergence_r (h : integrable I l f vol) (ε : ℝ) :  ℝ≥0  → ℝⁿ �
 
 variable{c c₁ c₂ :  ℝ≥0 }{ε ε₁ ε₂ : ℝ}{π₁ π₂ : tagged_prepartition I}
 
--- error in Analysis.BoxIntegral.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem convergence_r_cond
-(h : integrable I l f vol)
-(ε : exprℝ())
-(c : «exprℝ≥0»()) : l.r_cond (h.convergence_r ε c) :=
-begin
-  rw [expr convergence_r] [],
-  split_ifs [] ["with", ident h₀],
-  exacts ["[", expr (has_integral_iff.1 h.has_integral ε h₀).some_spec.1 _, ",", expr λ _ x, rfl, "]"]
-end
+theorem convergence_r_cond (h : integrable I l f vol) (ε : ℝ) (c :  ℝ≥0 ) : l.r_cond (h.convergence_r ε c) :=
+  by 
+    rw [convergence_r]
+    splitIfs with h₀ 
+    exacts[(has_integral_iff.1 h.has_integral ε h₀).some_spec.1 _, fun _ x => rfl]
 
 theorem dist_integral_sum_integral_le_of_mem_base_set (h : integrable I l f vol) (h₀ : 0 < ε)
   (hπ : l.mem_base_set I c (h.convergence_r ε c) π) (hπp : π.is_partition) :
@@ -453,6 +448,7 @@ theorem dist_integral_sum_integral_le_of_mem_base_set (h : integrable I l f vol)
     rw [convergence_r, dif_pos h₀] at hπ 
     exact (has_integral_iff.1 h.has_integral ε h₀).some_spec.2 c _ hπ hπp
 
+-- error in Analysis.BoxIntegral.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Henstock-Sacks inequality**. Let `r₁ r₂ : ℝⁿ → (0, ∞)` be function such that for any tagged
 *partition* of `I` subordinate to `rₖ`, `k=1,2`, the integral sum of `f` over this partition differs
 from the integral of `f` by at most `εₖ`. Then for any two tagged *prepartition* `π₁ π₂` subordinate
@@ -469,26 +465,28 @@ The actual statement
 See also `box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq` and
 `box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_set`.
 -/
-theorem dist_integral_sum_le_of_mem_base_set (h : integrable I l f vol) (hpos₁ : 0 < ε₁) (hpos₂ : 0 < ε₂)
-  (h₁ : l.mem_base_set I c₁ (h.convergence_r ε₁ c₁) π₁) (h₂ : l.mem_base_set I c₂ (h.convergence_r ε₂ c₂) π₂)
-  (HU : π₁.Union = π₂.Union) : dist (integral_sum f vol π₁) (integral_sum f vol π₂) ≤ ε₁+ε₂ :=
-  by 
-    rcases h₁.exists_common_compl h₂ HU with ⟨π, hπU, hπc₁, hπc₂⟩
-    set r : ℝⁿ → Ioi (0 : ℝ) := fun x => min (h.convergence_r ε₁ c₁ x) (h.convergence_r ε₂ c₂ x)
-    have hr : l.r_cond r := (h.convergence_r_cond _ c₁).min (h.convergence_r_cond _ c₂)
-    set πr := π.to_subordinate r 
-    have H₁ : dist (integral_sum f vol (π₁.union_compl_to_subordinate π hπU r)) (integral I l f vol) ≤ ε₁ 
-    exact
-      h.dist_integral_sum_integral_le_of_mem_base_set hpos₁
-        (h₁.union_compl_to_subordinate (fun _ _ => min_le_leftₓ _ _) hπU hπc₁)
-        (is_partition_union_compl_to_subordinate _ _ _ _)
-    rw [HU] at hπU 
-    have H₂ : dist (integral_sum f vol (π₂.union_compl_to_subordinate π hπU r)) (integral I l f vol) ≤ ε₂ 
-    exact
-      h.dist_integral_sum_integral_le_of_mem_base_set hpos₂
-        (h₂.union_compl_to_subordinate (fun _ _ => min_le_rightₓ _ _) hπU hπc₂)
-        (is_partition_union_compl_to_subordinate _ _ _ _)
-    simpa [union_compl_to_subordinate] using (dist_triangle_right _ _ _).trans (add_le_add H₁ H₂)
+theorem dist_integral_sum_le_of_mem_base_set
+(h : integrable I l f vol)
+(hpos₁ : «expr < »(0, ε₁))
+(hpos₂ : «expr < »(0, ε₂))
+(h₁ : l.mem_base_set I c₁ (h.convergence_r ε₁ c₁) π₁)
+(h₂ : l.mem_base_set I c₂ (h.convergence_r ε₂ c₂) π₂)
+(HU : «expr = »(π₁.Union, π₂.Union)) : «expr ≤ »(dist (integral_sum f vol π₁) (integral_sum f vol π₂), «expr + »(ε₁, ε₂)) :=
+begin
+  rcases [expr h₁.exists_common_compl h₂ HU, "with", "⟨", ident π, ",", ident hπU, ",", ident hπc₁, ",", ident hπc₂, "⟩"],
+  set [] [ident r] [":", expr «exprℝⁿ»() → Ioi (0 : exprℝ())] [":="] [expr λ
+   x, min (h.convergence_r ε₁ c₁ x) (h.convergence_r ε₂ c₂ x)] [],
+  have [ident hr] [":", expr l.r_cond r] [":=", expr (h.convergence_r_cond _ c₁).min (h.convergence_r_cond _ c₂)],
+  set [] [ident πr] [] [":="] [expr π.to_subordinate r] [],
+  have [ident H₁] [":", expr «expr ≤ »(dist (integral_sum f vol (π₁.union_compl_to_subordinate π hπU r)) (integral I l f vol), ε₁)] [],
+  from [expr h.dist_integral_sum_integral_le_of_mem_base_set hpos₁ (h₁.union_compl_to_subordinate (λ
+     _ _, min_le_left _ _) hπU hπc₁) (is_partition_union_compl_to_subordinate _ _ _ _)],
+  rw [expr HU] ["at", ident hπU],
+  have [ident H₂] [":", expr «expr ≤ »(dist (integral_sum f vol (π₂.union_compl_to_subordinate π hπU r)) (integral I l f vol), ε₂)] [],
+  from [expr h.dist_integral_sum_integral_le_of_mem_base_set hpos₂ (h₂.union_compl_to_subordinate (λ
+     _ _, min_le_right _ _) hπU hπc₂) (is_partition_union_compl_to_subordinate _ _ _ _)],
+  simpa [] [] [] ["[", expr union_compl_to_subordinate, "]"] [] ["using", expr (dist_triangle_right _ _ _).trans (add_le_add H₁ H₂)]
+end
 
 /-- If `f` is integrable on `I` along `l`, then for two sufficiently fine tagged prepartitions
 (in the sense of the filter `box_integral.integration_params.to_filter l I`) such that they cover
@@ -539,6 +537,7 @@ theorem tendsto_integral_sum_to_filter_Union_single (h : integrable I l f vol) (
   let ⟨y, h₁, h₂⟩ := h.to_subbox_aux hJ 
   h₁.integral_eq.symm ▸ h₂
 
+-- error in Analysis.BoxIntegral.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Henstock-Sacks inequality**. Let `r : ℝⁿ → (0, ∞)` be a function such that for any tagged
 *partition* of `I` subordinate to `r`, the integral sum of `f` over this partition differs from the
 integral of `f` by at most `ε`. Then for any tagged *prepartition* `π` subordinate to `r`, the
@@ -554,56 +553,49 @@ The actual statement
 - takes an extra argument `π₀ : prepartition I` and an assumption `π.Union = π₀.Union` instead of
   using `π.to_prepartition`.
 -/
-theorem dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq (h : integrable I l f vol) (h0 : 0 < ε)
-  (hπ : l.mem_base_set I c (h.convergence_r ε c) π) {π₀ : prepartition I} (hU : π.Union = π₀.Union) :
-  dist (integral_sum f vol π) (∑J in π₀.boxes, integral J l f vol) ≤ ε :=
-  by 
-    refine' le_of_forall_pos_le_add fun δ δ0 => _ 
-    set δ' : ℝ := δ / π₀.boxes.card+1
-    have H0 : 0 < (π₀.boxes.card+1 : ℝ) := Nat.cast_add_one_pos _ 
-    have δ'0 : 0 < δ' := div_pos δ0 H0 
-    set C := max π₀.distortion π₀.compl.distortion 
-    have  :
-      ∀ J _ : J ∈ π₀,
-        ∃ πi : tagged_prepartition J,
-          πi.is_partition ∧
-            dist (integral_sum f vol πi) (integral J l f vol) ≤ δ' ∧ l.mem_base_set J C (h.convergence_r δ' C) πi
-    ·
-      intro J hJ 
-      have Hle : J ≤ I := π₀.le_of_mem hJ 
-      have HJi : integrable J l f vol := h.to_subbox Hle 
-      set r := fun x => min (h.convergence_r δ' C x) (HJi.convergence_r δ' C x)
-      have hr : l.r_cond r 
-      exact (h.convergence_r_cond _ C).min (HJi.convergence_r_cond _ C)
-      have hJd : J.distortion ≤ C 
-      exact le_transₓ (Finset.le_sup hJ) (le_max_leftₓ _ _)
-      rcases l.exists_mem_base_set_is_partition J hJd r with ⟨πJ, hC, hp⟩
-      have hC₁ : l.mem_base_set J C (HJi.convergence_r δ' C) πJ
-      ·
-        refine' hC.mono J le_rfl le_rfl fun x hx => _ 
-        exact min_le_rightₓ _ _ 
-      have hC₂ : l.mem_base_set J C (h.convergence_r δ' C) πJ
-      ·
-        refine' hC.mono J le_rfl le_rfl fun x hx => _ 
-        exact min_le_leftₓ _ _ 
-      exact ⟨πJ, hp, HJi.dist_integral_sum_integral_le_of_mem_base_set δ'0 hC₁ hp, hC₂⟩
-    choose! πi hπip hπiδ' hπiC 
-    have  : l.mem_base_set I C (h.convergence_r δ' C) (π₀.bUnion_tagged πi)
-    exact bUnion_tagged_mem_base_set hπiC hπip fun _ => le_max_rightₓ _ _ 
-    have hU' : π.Union = (π₀.bUnion_tagged πi).Union 
-    exact hU.trans (prepartition.Union_bUnion_partition _ hπip).symm 
-    have  := h.dist_integral_sum_le_of_mem_base_set h0 δ'0 hπ this hU' 
-    rw [integral_sum_bUnion_tagged] at this 
-    calc
-      dist (integral_sum f vol π) (∑J in π₀.boxes, integral J l f vol) ≤
-        dist (integral_sum f vol π)
-            (∑J in π₀.boxes,
-              integral_sum f vol
-                (πi J))+dist (∑J in π₀.boxes, integral_sum f vol (πi J)) (∑J in π₀.boxes, integral J l f vol) :=
-      dist_triangle _ _ _ _ ≤ (ε+δ')+∑J in π₀.boxes, δ' := add_le_add this (dist_sum_sum_le_of_le _ hπiδ')_ = ε+δ :=
-      by 
-        fieldSimp [H0.ne']
-        ring
+theorem dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq
+(h : integrable I l f vol)
+(h0 : «expr < »(0, ε))
+(hπ : l.mem_base_set I c (h.convergence_r ε c) π)
+{π₀ : prepartition I}
+(hU : «expr = »(π.Union, π₀.Union)) : «expr ≤ »(dist (integral_sum f vol π) «expr∑ in , »((J), π₀.boxes, integral J l f vol), ε) :=
+begin
+  refine [expr le_of_forall_pos_le_add (λ δ δ0, _)],
+  set [] [ident δ'] [":", expr exprℝ()] [":="] [expr «expr / »(δ, «expr + »(π₀.boxes.card, 1))] [],
+  have [ident H0] [":", expr «expr < »(0, («expr + »(π₀.boxes.card, 1) : exprℝ()))] [":=", expr nat.cast_add_one_pos _],
+  have [ident δ'0] [":", expr «expr < »(0, δ')] [":=", expr div_pos δ0 H0],
+  set [] [ident C] [] [":="] [expr max π₀.distortion π₀.compl.distortion] [],
+  have [] [":", expr ∀
+   J «expr ∈ » π₀, «expr∃ , »((πi : tagged_prepartition J), «expr ∧ »(πi.is_partition, «expr ∧ »(«expr ≤ »(dist (integral_sum f vol πi) (integral J l f vol), δ'), l.mem_base_set J C (h.convergence_r δ' C) πi)))] [],
+  { intros [ident J, ident hJ],
+    have [ident Hle] [":", expr «expr ≤ »(J, I)] [":=", expr π₀.le_of_mem hJ],
+    have [ident HJi] [":", expr integrable J l f vol] [":=", expr h.to_subbox Hle],
+    set [] [ident r] [] [":="] [expr λ x, min (h.convergence_r δ' C x) (HJi.convergence_r δ' C x)] [],
+    have [ident hr] [":", expr l.r_cond r] [],
+    from [expr (h.convergence_r_cond _ C).min (HJi.convergence_r_cond _ C)],
+    have [ident hJd] [":", expr «expr ≤ »(J.distortion, C)] [],
+    from [expr le_trans (finset.le_sup hJ) (le_max_left _ _)],
+    rcases [expr l.exists_mem_base_set_is_partition J hJd r, "with", "⟨", ident πJ, ",", ident hC, ",", ident hp, "⟩"],
+    have [ident hC₁] [":", expr l.mem_base_set J C (HJi.convergence_r δ' C) πJ] [],
+    { refine [expr hC.mono J le_rfl le_rfl (λ x hx, _)],
+      exact [expr min_le_right _ _] },
+    have [ident hC₂] [":", expr l.mem_base_set J C (h.convergence_r δ' C) πJ] [],
+    { refine [expr hC.mono J le_rfl le_rfl (λ x hx, _)],
+      exact [expr min_le_left _ _] },
+    exact [expr ⟨πJ, hp, HJi.dist_integral_sum_integral_le_of_mem_base_set δ'0 hC₁ hp, hC₂⟩] },
+  choose ["!"] [ident πi] [ident hπip, ident hπiδ', ident hπiC] [],
+  have [] [":", expr l.mem_base_set I C (h.convergence_r δ' C) (π₀.bUnion_tagged πi)] [],
+  from [expr bUnion_tagged_mem_base_set hπiC hπip (λ _, le_max_right _ _)],
+  have [ident hU'] [":", expr «expr = »(π.Union, (π₀.bUnion_tagged πi).Union)] [],
+  from [expr hU.trans (prepartition.Union_bUnion_partition _ hπip).symm],
+  have [] [] [":=", expr h.dist_integral_sum_le_of_mem_base_set h0 δ'0 hπ this hU'],
+  rw [expr integral_sum_bUnion_tagged] ["at", ident this],
+  calc
+    «expr ≤ »(dist (integral_sum f vol π) «expr∑ in , »((J), π₀.boxes, integral J l f vol), «expr + »(dist (integral_sum f vol π) «expr∑ in , »((J), π₀.boxes, integral_sum f vol (πi J)), dist «expr∑ in , »((J), π₀.boxes, integral_sum f vol (πi J)) «expr∑ in , »((J), π₀.boxes, integral J l f vol))) : dist_triangle _ _ _
+    «expr ≤ »(..., «expr + »(«expr + »(ε, δ'), «expr∑ in , »((J), π₀.boxes, δ'))) : add_le_add this (dist_sum_sum_le_of_le _ hπiδ')
+    «expr = »(..., «expr + »(ε, δ)) : by { field_simp [] ["[", expr H0.ne', "]"] [] [],
+      ring [] }
+end
 
 /-- **Henstock-Sacks inequality**. Let `r : ℝⁿ → (0, ∞)` be a function such that for any tagged
 *partition* of `I` subordinate to `r`, the integral sum of `f` over this partition differs from the
@@ -672,130 +664,128 @@ open MeasureTheory
 
 variable(l)
 
+-- error in Analysis.BoxIntegral.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A continuous function is box-integrable with respect to any locally finite measure.
 
 This is true for any volume with bounded variation. -/
-theorem integrable_of_continuous_on [CompleteSpace E] {I : box ι} {f : ℝⁿ → E} (hc : ContinuousOn f I.Icc)
-  (μ : Measureₓ ℝⁿ) [is_locally_finite_measure μ] : integrable.{u, v, v} I l f μ.to_box_additive.to_smul :=
-  by 
-    have huc := I.is_compact_Icc.uniform_continuous_on_of_continuous hc 
-    rw [Metric.uniform_continuous_on_iff_le] at huc 
-    refine' integrable_iff_cauchy_basis.2 fun ε ε0 => _ 
-    rcases exists_pos_mul_lt ε0 (μ.to_box_additive I) with ⟨ε', ε0', hε⟩
-    rcases huc ε' ε0' with ⟨δ, δ0 : 0 < δ, Hδ⟩
-    refine' ⟨fun _ _ => ⟨δ / 2, half_pos δ0⟩, fun _ _ _ => rfl, fun c₁ c₂ π₁ π₂ h₁ h₁p h₂ h₂p => _⟩
-    simp only [dist_eq_norm, integral_sum_sub_partitions _ _ h₁p h₂p, box_additive_map.to_smul_apply, ←smul_sub]
-    have  :
-      ∀ J _ : J ∈ π₁.to_prepartition⊓π₂.to_prepartition,
-        ∥μ.to_box_additive J •
-              (f ((π₁.inf_prepartition π₂.to_prepartition).Tag J) -
-                f ((π₂.inf_prepartition π₁.to_prepartition).Tag J))∥ ≤
-          μ.to_box_additive J*ε'
-    ·
-      intro J hJ 
-      have  : 0 ≤ μ.to_box_additive J 
-      exact Ennreal.to_real_nonneg 
-      rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg this, ←dist_eq_norm]
-      refine' mul_le_mul_of_nonneg_left _ this 
-      refine' Hδ _ _ (tagged_prepartition.tag_mem_Icc _ _) (tagged_prepartition.tag_mem_Icc _ _) _ 
-      rw [←add_halves δ]
-      refine' (dist_triangle_left _ _ J.upper).trans (add_le_add (h₁.1 _ _ _) (h₂.1 _ _ _))
-      ·
-        exact prepartition.bUnion_index_mem _ hJ
-      ·
-        exact box.le_iff_Icc.1 (prepartition.le_bUnion_index _ hJ) J.upper_mem_Icc
-      ·
-        rw [inf_comm] at hJ 
-        exact prepartition.bUnion_index_mem _ hJ
-      ·
-        rw [inf_comm] at hJ 
-        exact box.le_iff_Icc.1 (prepartition.le_bUnion_index _ hJ) J.upper_mem_Icc 
-    refine' (norm_sum_le_of_le _ this).trans _ 
-    rw [←Finset.sum_mul, μ.to_box_additive.sum_partition_boxes le_top (h₁p.inf h₂p)]
-    exact hε.le
+theorem integrable_of_continuous_on
+[complete_space E]
+{I : box ι}
+{f : «exprℝⁿ»() → E}
+(hc : continuous_on f I.Icc)
+(μ : measure «exprℝⁿ»())
+[is_locally_finite_measure μ] : integrable.{u, v, v} I l f μ.to_box_additive.to_smul :=
+begin
+  have [ident huc] [] [":=", expr I.is_compact_Icc.uniform_continuous_on_of_continuous hc],
+  rw [expr metric.uniform_continuous_on_iff_le] ["at", ident huc],
+  refine [expr integrable_iff_cauchy_basis.2 (λ ε ε0, _)],
+  rcases [expr exists_pos_mul_lt ε0 (μ.to_box_additive I), "with", "⟨", ident ε', ",", ident ε0', ",", ident hε, "⟩"],
+  rcases [expr huc ε' ε0', "with", "⟨", ident δ, ",", ident δ0, ":", expr «expr < »(0, δ), ",", ident Hδ, "⟩"],
+  refine [expr ⟨λ _ _, ⟨«expr / »(δ, 2), half_pos δ0⟩, λ _ _ _, rfl, λ c₁ c₂ π₁ π₂ h₁ h₁p h₂ h₂p, _⟩],
+  simp [] [] ["only"] ["[", expr dist_eq_norm, ",", expr integral_sum_sub_partitions _ _ h₁p h₂p, ",", expr box_additive_map.to_smul_apply, ",", "<-", expr smul_sub, "]"] [] [],
+  have [] [":", expr ∀
+   J «expr ∈ » «expr ⊓ »(π₁.to_prepartition, π₂.to_prepartition), «expr ≤ »(«expr∥ ∥»(«expr • »(μ.to_box_additive J, «expr - »(f ((π₁.inf_prepartition π₂.to_prepartition).tag J), f ((π₂.inf_prepartition π₁.to_prepartition).tag J)))), «expr * »(μ.to_box_additive J, ε'))] [],
+  { intros [ident J, ident hJ],
+    have [] [":", expr «expr ≤ »(0, μ.to_box_additive J)] [],
+    from [expr ennreal.to_real_nonneg],
+    rw ["[", expr norm_smul, ",", expr real.norm_eq_abs, ",", expr abs_of_nonneg this, ",", "<-", expr dist_eq_norm, "]"] [],
+    refine [expr mul_le_mul_of_nonneg_left _ this],
+    refine [expr Hδ _ _ (tagged_prepartition.tag_mem_Icc _ _) (tagged_prepartition.tag_mem_Icc _ _) _],
+    rw ["[", "<-", expr add_halves δ, "]"] [],
+    refine [expr (dist_triangle_left _ _ J.upper).trans (add_le_add (h₁.1 _ _ _) (h₂.1 _ _ _))],
+    { exact [expr prepartition.bUnion_index_mem _ hJ] },
+    { exact [expr box.le_iff_Icc.1 (prepartition.le_bUnion_index _ hJ) J.upper_mem_Icc] },
+    { rw [expr inf_comm] ["at", ident hJ],
+      exact [expr prepartition.bUnion_index_mem _ hJ] },
+    { rw [expr inf_comm] ["at", ident hJ],
+      exact [expr box.le_iff_Icc.1 (prepartition.le_bUnion_index _ hJ) J.upper_mem_Icc] } },
+  refine [expr (norm_sum_le_of_le _ this).trans _],
+  rw ["[", "<-", expr finset.sum_mul, ",", expr μ.to_box_additive.sum_partition_boxes le_top (h₁p.inf h₂p), "]"] [],
+  exact [expr hε.le]
+end
 
 variable{l}
 
+-- error in Analysis.BoxIntegral.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- This is an auxiliary lemma used to prove two statements at once. Use one of the next two
 lemmas instead. -/
-theorem has_integral_of_bRiemann_eq_ff_of_forall_is_o (hl : l.bRiemann = ff) (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 ≤ B J)
-  (g : ι →ᵇᵃ[I] F) (s : Set ℝⁿ) (hs : s.countable) (hlH : s.nonempty → l.bHenstock = tt)
-  (H₁ :
-    ∀ c :  ℝ≥0  x _ : x ∈ I.Icc ∩ s ε _ : ε > (0 : ℝ),
-      ∃ (δ : _)(_ : δ > 0),
-        ∀ J _ : J ≤ I,
-          J.Icc ⊆ Metric.ClosedBall x δ → x ∈ J.Icc → (l.bDistortion → J.distortion ≤ c) → dist (vol J (f x)) (g J) ≤ ε)
-  (H₂ :
-    ∀ c :  ℝ≥0  x _ : x ∈ I.Icc \ s ε _ : ε > (0 : ℝ),
-      ∃ (δ : _)(_ : δ > 0),
-        ∀ J _ : J ≤ I,
-          J.Icc ⊆ Metric.ClosedBall x δ →
-            (l.bHenstock → x ∈ J.Icc) → (l.bDistortion → J.distortion ≤ c) → dist (vol J (f x)) (g J) ≤ ε*B J) :
-  has_integral I l f vol (g I) :=
-  by 
-    refine' ((l.has_basis_to_filter_Union_top _).tendsto_iff Metric.nhds_basis_closed_ball).2 _ 
-    intro ε ε0 
-    simp only [Subtype.exists'] at H₁ H₂ 
-    choose! δ₁ Hδ₁ using H₁ 
-    choose! δ₂ Hδ₂ using H₂ 
-    have ε0' := half_pos ε0 
-    have H0 : 0 < (2^Fintype.card ι : ℝ)
-    exact pow_pos zero_lt_two _ 
-    rcases hs.exists_pos_forall_sum_le (div_pos ε0' H0) with ⟨εs, hεs0, hεs⟩
-    simp only [le_div_iff' H0, mul_sum] at hεs 
-    rcases exists_pos_mul_lt ε0' (B I) with ⟨ε', ε'0, hεI⟩
-    set δ :  ℝ≥0  → ℝⁿ → Ioi (0 : ℝ) := fun c x => if x ∈ s then δ₁ c x (εs x) else (δ₂ c) x ε' 
-    refine' ⟨δ, fun c => l.r_cond_of_bRiemann_eq_ff hl, _⟩
-    simp only [Set.mem_Union, mem_inter_eq, mem_set_of_eq]
-    rintro π ⟨c, hπδ, hπp⟩
-    rw [←g.sum_partition_boxes le_rfl hπp, mem_closed_ball, integral_sum,
-      ←sum_filter_add_sum_filter_not π.boxes fun J => π.tag J ∈ s,
-      ←sum_filter_add_sum_filter_not π.boxes fun J => π.tag J ∈ s, ←add_halves ε]
-    refine' dist_add_add_le_of_le _ _
-    ·
-      unfreezingI 
-        rcases s.eq_empty_or_nonempty with (rfl | hsne)
-      ·
-        simp [ε0'.le]
-      specialize hlH hsne 
-      have  : ∀ J _ : J ∈ π.boxes.filter fun J => π.tag J ∈ s, dist (vol J (f$ π.tag J)) (g J) ≤ εs (π.tag J)
-      ·
-        intro J hJ 
-        rw [Finset.mem_filter] at hJ 
-        cases' hJ with hJ hJs 
-        refine'
-          Hδ₁ c _ ⟨π.tag_mem_Icc _, hJs⟩ _ (hεs0 _) _ (π.le_of_mem' _ hJ) _ (hπδ.2 hlH J hJ)
-            fun hD => (Finset.le_sup hJ).trans (hπδ.3 hD)
-        convert hπδ.1 J hJ 
-        exact (dif_pos hJs).symm 
-      refine' (dist_sum_sum_le_of_le _ this).trans _ 
-      rw [sum_comp]
-      refine' (sum_le_sum _).trans (hεs _ _)
-      ·
-        rintro b -
-        rw [←Nat.cast_two, ←Nat.cast_pow, ←nsmul_eq_mul]
-        refine' nsmul_le_nsmul (hεs0 _).le _ 
-        refine' (Finset.card_le_of_subset _).trans ((hπδ.is_Henstock hlH).card_filter_tag_eq_le b)
-        exact filter_subset_filter _ (filter_subset _ _)
-      ·
-        rw [Finset.coe_image, Set.image_subset_iff]
-        exact fun J hJ => (Finset.mem_filter.1 hJ).2
-    have H₂ : ∀ J _ : J ∈ π.boxes.filter fun J => π.tag J ∉ s, dist (vol J (f$ π.tag J)) (g J) ≤ ε'*B J
-    ·
-      intro J hJ 
-      rw [Finset.mem_filter] at hJ 
-      cases' hJ with hJ hJs 
-      refine'
-        Hδ₂ c _ ⟨π.tag_mem_Icc _, hJs⟩ _ ε'0 _ (π.le_of_mem' _ hJ) _ (fun hH => hπδ.2 hH J hJ)
-          fun hD => (Finset.le_sup hJ).trans (hπδ.3 hD)
-      convert hπδ.1 J hJ 
-      exact (dif_neg hJs).symm 
-    refine' (dist_sum_sum_le_of_le _ H₂).trans ((sum_le_sum_of_subset_of_nonneg (filter_subset _ _) _).trans _)
-    ·
-      exact fun _ _ _ => mul_nonneg ε'0.le (hB0 _)
-    ·
-      rw [←mul_sum, B.sum_partition_boxes le_rfl hπp, mul_commₓ]
-      exact hεI.le
+theorem has_integral_of_bRiemann_eq_ff_of_forall_is_o
+(hl : «expr = »(l.bRiemann, ff))
+(B : «expr →ᵇᵃ[ ] »(ι, I, exprℝ()))
+(hB0 : ∀ J, «expr ≤ »(0, B J))
+(g : «expr →ᵇᵃ[ ] »(ι, I, F))
+(s : set «exprℝⁿ»())
+(hs : s.countable)
+(hlH : s.nonempty → «expr = »(l.bHenstock, tt))
+(H₁ : ∀
+ (c : «exprℝ≥0»())
+ (x «expr ∈ » «expr ∩ »(I.Icc, s))
+ (ε «expr > » (0 : exprℝ())), «expr∃ , »((δ «expr > » 0), ∀
+  J «expr ≤ » I, «expr ⊆ »(J.Icc, metric.closed_ball x δ) → «expr ∈ »(x, J.Icc) → (l.bDistortion → «expr ≤ »(J.distortion, c)) → «expr ≤ »(dist (vol J (f x)) (g J), ε)))
+(H₂ : ∀
+ (c : «exprℝ≥0»())
+ (x «expr ∈ » «expr \ »(I.Icc, s))
+ (ε «expr > » (0 : exprℝ())), «expr∃ , »((δ «expr > » 0), ∀
+  J «expr ≤ » I, «expr ⊆ »(J.Icc, metric.closed_ball x δ) → (l.bHenstock → «expr ∈ »(x, J.Icc)) → (l.bDistortion → «expr ≤ »(J.distortion, c)) → «expr ≤ »(dist (vol J (f x)) (g J), «expr * »(ε, B J)))) : has_integral I l f vol (g I) :=
+begin
+  refine [expr ((l.has_basis_to_filter_Union_top _).tendsto_iff metric.nhds_basis_closed_ball).2 _],
+  intros [ident ε, ident ε0],
+  simp [] [] ["only"] ["[", expr subtype.exists', "]"] [] ["at", ident H₁, ident H₂],
+  choose ["!"] [ident δ₁] [ident Hδ₁] ["using", expr H₁],
+  choose ["!"] [ident δ₂] [ident Hδ₂] ["using", expr H₂],
+  have [ident ε0'] [] [":=", expr half_pos ε0],
+  have [ident H0] [":", expr «expr < »(0, («expr ^ »(2, fintype.card ι) : exprℝ()))] [],
+  from [expr pow_pos zero_lt_two _],
+  rcases [expr hs.exists_pos_forall_sum_le (div_pos ε0' H0), "with", "⟨", ident εs, ",", ident hεs0, ",", ident hεs, "⟩"],
+  simp [] [] ["only"] ["[", expr le_div_iff' H0, ",", expr mul_sum, "]"] [] ["at", ident hεs],
+  rcases [expr exists_pos_mul_lt ε0' (B I), "with", "⟨", ident ε', ",", ident ε'0, ",", ident hεI, "⟩"],
+  set [] [ident δ] [":", expr «exprℝ≥0»() → «exprℝⁿ»() → Ioi (0 : exprℝ())] [":="] [expr λ
+   c x, if «expr ∈ »(x, s) then δ₁ c x (εs x) else δ₂ c x ε'] [],
+  refine [expr ⟨δ, λ c, l.r_cond_of_bRiemann_eq_ff hl, _⟩],
+  simp [] [] ["only"] ["[", expr set.mem_Union, ",", expr mem_inter_eq, ",", expr mem_set_of_eq, "]"] [] [],
+  rintro [ident π, "⟨", ident c, ",", ident hπδ, ",", ident hπp, "⟩"],
+  rw ["[", "<-", expr g.sum_partition_boxes le_rfl hπp, ",", expr mem_closed_ball, ",", expr integral_sum, ",", "<-", expr sum_filter_add_sum_filter_not π.boxes (λ
+    J, «expr ∈ »(π.tag J, s)), ",", "<-", expr sum_filter_add_sum_filter_not π.boxes (λ
+    J, «expr ∈ »(π.tag J, s)), ",", "<-", expr add_halves ε, "]"] [],
+  refine [expr dist_add_add_le_of_le _ _],
+  { unfreezingI { rcases [expr s.eq_empty_or_nonempty, "with", ident rfl, "|", ident hsne] },
+    { simp [] [] [] ["[", expr ε0'.le, "]"] [] [] },
+    specialize [expr hlH hsne],
+    have [] [":", expr ∀
+     J «expr ∈ » π.boxes.filter (λ
+      J, «expr ∈ »(π.tag J, s)), «expr ≤ »(dist (vol J «expr $ »(f, π.tag J)) (g J), εs (π.tag J))] [],
+    { intros [ident J, ident hJ],
+      rw [expr finset.mem_filter] ["at", ident hJ],
+      cases [expr hJ] ["with", ident hJ, ident hJs],
+      refine [expr Hδ₁ c _ ⟨π.tag_mem_Icc _, hJs⟩ _ (hεs0 _) _ (π.le_of_mem' _ hJ) _ (hπδ.2 hlH J hJ) (λ
+        hD, (finset.le_sup hJ).trans (hπδ.3 hD))],
+      convert [] [expr hπδ.1 J hJ] [],
+      exact [expr (dif_pos hJs).symm] },
+    refine [expr (dist_sum_sum_le_of_le _ this).trans _],
+    rw [expr sum_comp] [],
+    refine [expr (sum_le_sum _).trans (hεs _ _)],
+    { rintro [ident b, "-"],
+      rw ["[", "<-", expr nat.cast_two, ",", "<-", expr nat.cast_pow, ",", "<-", expr nsmul_eq_mul, "]"] [],
+      refine [expr nsmul_le_nsmul (hεs0 _).le _],
+      refine [expr (finset.card_le_of_subset _).trans ((hπδ.is_Henstock hlH).card_filter_tag_eq_le b)],
+      exact [expr filter_subset_filter _ (filter_subset _ _)] },
+    { rw ["[", expr finset.coe_image, ",", expr set.image_subset_iff, "]"] [],
+      exact [expr λ J hJ, (finset.mem_filter.1 hJ).2] } },
+  have [ident H₂] [":", expr ∀
+   J «expr ∈ » π.boxes.filter (λ
+    J, «expr ∉ »(π.tag J, s)), «expr ≤ »(dist (vol J «expr $ »(f, π.tag J)) (g J), «expr * »(ε', B J))] [],
+  { intros [ident J, ident hJ],
+    rw [expr finset.mem_filter] ["at", ident hJ],
+    cases [expr hJ] ["with", ident hJ, ident hJs],
+    refine [expr Hδ₂ c _ ⟨π.tag_mem_Icc _, hJs⟩ _ ε'0 _ (π.le_of_mem' _ hJ) _ (λ
+      hH, hπδ.2 hH J hJ) (λ hD, (finset.le_sup hJ).trans (hπδ.3 hD))],
+    convert [] [expr hπδ.1 J hJ] [],
+    exact [expr (dif_neg hJs).symm] },
+  refine [expr (dist_sum_sum_le_of_le _ H₂).trans ((sum_le_sum_of_subset_of_nonneg (filter_subset _ _) _).trans _)],
+  { exact [expr λ _ _ _, mul_nonneg ε'0.le (hB0 _)] },
+  { rw ["[", "<-", expr mul_sum, ",", expr B.sum_partition_boxes le_rfl hπp, ",", expr mul_comm, "]"] [],
+    exact [expr hεI.le] }
+end
 
 /-- A function `f` has Henstock (or `⊥`) integral over `I` is equal to the value of a box-additive
 function `g` on `I` provided that `vol J (f x)` is sufficiently close to `g J` for sufficiently

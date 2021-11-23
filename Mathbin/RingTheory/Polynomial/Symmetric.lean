@@ -206,28 +206,29 @@ theorem esymm_is_symmetric (n : ℕ) : is_symmetric (esymm σ R n) :=
     intro 
     rw [rename_esymm]
 
-theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
-  (esymm σ R n).Support =
-    (powerset_len n (univ : Finset σ)).bUnion
-      fun t => (Finsupp.single (∑i : σ in t, Finsupp.single i 1) (1 : R)).Support :=
-  by 
-    rw [esymm_eq_sum_monomial]
-    simp only [←single_eq_monomial]
-    convert Finsupp.support_sum_eq_bUnion (powerset_len n (univ : Finset σ)) _ 
-    intro s t hst d 
-    simp only [Finsupp.support_single_ne_zero one_ne_zero, and_imp, inf_eq_inter, mem_inter, mem_singleton]
-    rintro h rfl 
-    have  := congr_argₓ Finsupp.support h 
-    rw [Finsupp.support_sum_eq_bUnion, Finsupp.support_sum_eq_bUnion] at this
-    ·
-      simp only [Finsupp.support_single_ne_zero one_ne_zero, bUnion_singleton_eq_self] at this 
-      exact absurd this hst.symm 
-    all_goals 
-      intro x y 
-      simp [Finsupp.support_single_disjoint]
+-- error in RingTheory.Polynomial.Symmetric: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem support_esymm''
+(n : exprℕ())
+[decidable_eq σ]
+[nontrivial R] : «expr = »((esymm σ R n).support, (powerset_len n (univ : finset σ)).bUnion (λ
+  t, (finsupp.single «expr∑ in , »((i : σ), t, finsupp.single i 1) (1 : R)).support)) :=
+begin
+  rw [expr esymm_eq_sum_monomial] [],
+  simp [] [] ["only"] ["[", "<-", expr single_eq_monomial, "]"] [] [],
+  convert [] [expr finsupp.support_sum_eq_bUnion (powerset_len n (univ : finset σ)) _] [],
+  intros [ident s, ident t, ident hst, ident d],
+  simp [] [] ["only"] ["[", expr finsupp.support_single_ne_zero one_ne_zero, ",", expr and_imp, ",", expr inf_eq_inter, ",", expr mem_inter, ",", expr mem_singleton, "]"] [] [],
+  rintro [ident h, ident rfl],
+  have [] [] [":=", expr congr_arg finsupp.support h],
+  rw ["[", expr finsupp.support_sum_eq_bUnion, ",", expr finsupp.support_sum_eq_bUnion, "]"] ["at", ident this],
+  { simp [] [] ["only"] ["[", expr finsupp.support_single_ne_zero one_ne_zero, ",", expr bUnion_singleton_eq_self, "]"] [] ["at", ident this],
+    exact [expr absurd this hst.symm] },
+  all_goals { intros [ident x, ident y],
+    simp [] [] [] ["[", expr finsupp.support_single_disjoint, "]"] [] [] }
+end
 
 theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
-  (esymm σ R n).Support = (powerset_len n (univ : Finset σ)).bUnion fun t => {∑i : σ in t, Finsupp.single i 1} :=
+  (esymm σ R n).support = (powerset_len n (univ : Finset σ)).bUnion fun t => {∑i : σ in t, Finsupp.single i 1} :=
   by 
     rw [support_esymm'']
     congr 
@@ -235,29 +236,31 @@ theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     exact Finsupp.support_single_ne_zero one_ne_zero
 
 theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
-  (esymm σ R n).Support = (powerset_len n (univ : Finset σ)).Image fun t => ∑i : σ in t, Finsupp.single i 1 :=
+  (esymm σ R n).support = (powerset_len n (univ : Finset σ)).Image fun t => ∑i : σ in t, Finsupp.single i 1 :=
   by 
     rw [support_esymm']
     exact bUnion_singleton
 
-theorem degrees_esymm [Nontrivial R] (n : ℕ) (hpos : 0 < n) (hn : n ≤ Fintype.card σ) :
-  (esymm σ R n).degrees = (univ : Finset σ).val :=
-  by 
-    classical 
-    have  : (Finsupp.toMultiset ∘ fun t : Finset σ => ∑i : σ in t, Finsupp.single i 1) = Finset.val
-    ·
-      funext 
-      simp [Finsupp.to_multiset_sum_single]
-    rw [degrees, support_esymm, sup_finset_image, this, ←comp_sup_eq_sup_comp]
-    ·
-      obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hpos.ne' 
-      simpa using powerset_len_sup _ _ (Nat.lt_of_succ_leₓ hn)
-    ·
-      intros 
-      simp only [union_val, sup_eq_union]
-      congr
-    ·
-      rfl
+-- error in RingTheory.Polynomial.Symmetric: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem degrees_esymm
+[nontrivial R]
+(n : exprℕ())
+(hpos : «expr < »(0, n))
+(hn : «expr ≤ »(n, fintype.card σ)) : «expr = »((esymm σ R n).degrees, (univ : finset σ).val) :=
+begin
+  classical,
+  have [] [":", expr «expr = »(«expr ∘ »(finsupp.to_multiset, λ
+     t : finset σ, «expr∑ in , »((i : σ), t, finsupp.single i 1)), finset.val)] [],
+  { funext [],
+    simp [] [] [] ["[", expr finsupp.to_multiset_sum_single, "]"] [] [] },
+  rw ["[", expr degrees, ",", expr support_esymm, ",", expr sup_finset_image, ",", expr this, ",", "<-", expr comp_sup_eq_sup_comp, "]"] [],
+  { obtain ["⟨", ident k, ",", ident rfl, "⟩", ":=", expr nat.exists_eq_succ_of_ne_zero hpos.ne'],
+    simpa [] [] [] [] [] ["using", expr powerset_len_sup _ _ (nat.lt_of_succ_le hn)] },
+  { intros [],
+    simp [] [] ["only"] ["[", expr union_val, ",", expr sup_eq_union, "]"] [] [],
+    congr },
+  { refl }
+end
 
 end ElementarySymmetric
 

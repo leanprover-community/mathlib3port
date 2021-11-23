@@ -29,7 +29,7 @@ theorem iff_dim_lt_omega : IsNoetherian K V ↔ Module.rank K V < ω :=
     rw [←b.mk_eq_dim'', lt_omega_iff_finite]
     split 
     ·
-      introI 
+      intro 
       exact finite_of_linear_independent (Basis.OfVectorSpaceIndex.linear_independent K V)
     ·
       intro hbfinite 
@@ -100,7 +100,7 @@ theorem iff_fg : IsNoetherian K V ↔ Module.Finite K V :=
   by 
     split 
     ·
-      introI h 
+      intro h 
       exact
         ⟨⟨finset_basis_index K V,
             by 

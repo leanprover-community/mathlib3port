@@ -247,19 +247,26 @@ theorem mem_fix_iff {f : α →. Sum β α} {a : α} {b : β} :
             rw [WellFounded.fix_F_eq]
             simp [h₁, h₂, h₄]⟩
 
+-- error in Data.Pfun: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A recursion principle for `pfun.fix`. -/
 @[elab_as_eliminator]
-def fix_induction {f : α →. Sum β α} {b : β} {C : α → Sort _} {a : α} (h : b ∈ f.fix a)
-  (H : ∀ a, b ∈ f.fix a → (∀ a', b ∈ f.fix a' → Sum.inr a' ∈ f a → C a') → C a) : C a :=
-  by 
-    replace h := Part.mem_assert_iff.1 h 
-    have  := h.snd 
-    revert this 
-    induction' h.fst with a ha IH 
-    intro h₂ 
-    refine' H a (Part.mem_assert_iff.2 ⟨⟨_, ha⟩, h₂⟩) fun a' ha' fa' => _ 
-    have  := (Part.mem_assert_iff.1 ha').snd 
-    exact IH _ fa' ⟨ha _ fa', this⟩ this
+def fix_induction
+{f : «expr →. »(α, «expr ⊕ »(β, α))}
+{b : β}
+{C : α → Sort*}
+{a : α}
+(h : «expr ∈ »(b, f.fix a))
+(H : ∀ a, «expr ∈ »(b, f.fix a) → ∀ a', «expr ∈ »(b, f.fix a') → «expr ∈ »(sum.inr a', f a) → C a' → C a) : C a :=
+begin
+  replace [ident h] [] [":=", expr part.mem_assert_iff.1 h],
+  have [] [] [":=", expr h.snd],
+  revert [ident this],
+  induction [expr h.fst] [] ["with", ident a, ident ha, ident IH] [],
+  intro [ident h₂],
+  refine [expr H a (part.mem_assert_iff.2 ⟨⟨_, ha⟩, h₂⟩) (λ a' ha' fa', _)],
+  have [] [] [":=", expr (part.mem_assert_iff.1 ha').snd],
+  exact [expr IH _ fa' ⟨ha _ fa', this⟩ this]
+end
 
 end Pfun
 

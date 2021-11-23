@@ -257,17 +257,19 @@ variable(f : L →ₗ⁅R⁆ L₂)
 
 namespace LieHom
 
--- error in Algebra.Lie.Subalgebra: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-/-- The range of a morphism of Lie algebras is a Lie subalgebra. -/ def range : lie_subalgebra R L₂ :=
-{ lie_mem' := λ
-  x
-  y, show «expr ∈ »(x, f.to_linear_map.range) → «expr ∈ »(y, f.to_linear_map.range) → «expr ∈ »(«expr⁅ , ⁆»(x, y), f.to_linear_map.range), by { repeat { rw [expr linear_map.mem_range] [] },
-    rintros ["⟨", ident x', ",", ident hx, "⟩", "⟨", ident y', ",", ident hy, "⟩"],
-    refine [expr ⟨«expr⁅ , ⁆»(x', y'), _⟩],
-    rw ["[", "<-", expr hx, ",", "<-", expr hy, "]"] [],
-    change [expr «expr = »(f «expr⁅ , ⁆»(x', y'), «expr⁅ , ⁆»(f x', f y'))] [] [],
-    rw [expr map_lie] [] },
-  ..(f : «expr →ₗ[ ] »(L, R, L₂)).range }
+/-- The range of a morphism of Lie algebras is a Lie subalgebra. -/
+def range : LieSubalgebra R L₂ :=
+  { (f : L →ₗ[R] L₂).range with
+    lie_mem' :=
+      fun x y =>
+        show x ∈ f.to_linear_map.range → y ∈ f.to_linear_map.range → ⁅x,y⁆ ∈ f.to_linear_map.range by 
+          repeat' 
+            rw [LinearMap.mem_range]
+          rintro ⟨x', hx⟩ ⟨y', hy⟩
+          refine' ⟨⁅x',y'⁆, _⟩
+          rw [←hx, ←hy]
+          change f ⁅x',y'⁆ = ⁅f x',f y'⁆
+          rw [map_lie] }
 
 @[simp]
 theorem range_coe : (f.range : Set L₂) = Set.Range f :=
@@ -444,15 +446,16 @@ theorem Inf_coe (S : Set (LieSubalgebra R L)) : («expr↑ » (Inf S) : Set L) =
     ext x 
     simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp_distrib]
 
-theorem Inf_glb (S : Set (LieSubalgebra R L)) : IsGlb S (Inf S) :=
-  by 
-    have h : ∀ K K' : LieSubalgebra R L, (K : Set L) ≤ K' ↔ K ≤ K'
-    ·
-      intros 
-      exact Iff.rfl 
-    apply IsGlb.of_image h 
-    simp only [Inf_coe]
-    exact is_glb_binfi
+-- error in Algebra.Lie.Subalgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem Inf_glb (S : set (lie_subalgebra R L)) : is_glb S (Inf S) :=
+begin
+  have [ident h] [":", expr ∀ K K' : lie_subalgebra R L, «expr ↔ »(«expr ≤ »((K : set L), K'), «expr ≤ »(K, K'))] [],
+  { intros [],
+    exact [expr iff.rfl] },
+  apply [expr is_glb.of_image h],
+  simp [] [] ["only"] ["[", expr Inf_coe, "]"] [] [],
+  exact [expr is_glb_binfi]
+end
 
 /-- The set of Lie subalgebras of a Lie algebra form a complete lattice.
 

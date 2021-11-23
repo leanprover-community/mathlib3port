@@ -111,19 +111,19 @@ attribute [local elab_as_eliminator] Fintype.induction_empty_option
 instance is_artinian_pi {R ι : Type _} [Fintype ι] :
   ∀ {M : ι → Type _} [Ringₓ R] [∀ i, AddCommGroupₓ (M i)],
     by 
-      exactI
+      exact
         ∀ [∀ i, Module R (M i)],
           by 
-            exactI ∀ [∀ i, IsArtinian R (M i)], IsArtinian R (∀ i, M i) :=
+            exact ∀ [∀ i, IsArtinian R (M i)], IsArtinian R (∀ i, M i) :=
   Fintype.induction_empty_option
     (by 
-      introI α β e hα M _ _ _ _ 
+      intros α β e hα M _ _ _ _ 
       exact is_artinian_of_linear_equiv (LinearEquiv.piCongrLeft R M e))
     (by 
-      introI M _ _ _ _ 
+      intros M _ _ _ _ 
       infer_instance)
     (by 
-      introI α _ ih M _ _ _ _ 
+      intros α _ ih M _ _ _ _ 
       exact is_artinian_of_linear_equiv (LinearEquiv.piOptionEquivProd R).symm)
     ι
 
@@ -147,7 +147,7 @@ theorem is_artinian_iff_well_founded : IsArtinian R M ↔ WellFounded (· < · :
 
 variable{R M}
 
--- error in RingTheory.Artinian: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.Artinian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_artinian.finite_of_linear_independent
 [nontrivial R]
 [is_artinian R M]
@@ -205,41 +205,33 @@ theorem IsArtinian.induction [IsArtinian R M] {P : Submodule R M → Prop} (hgt 
   (I : Submodule R M) : P I :=
   WellFounded.recursionₓ (well_founded_submodule_lt R M) I hgt
 
+-- error in RingTheory.Artinian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 For any endomorphism of a Artinian module, there is some nontrivial iterate
 with disjoint kernel and range.
 -/
-theorem IsArtinian.exists_endomorphism_iterate_ker_sup_range_eq_top [I : IsArtinian R M] (f : M →ₗ[R] M) :
-  ∃ n : ℕ, n ≠ 0 ∧ (f^n).ker⊔(f^n).range = ⊤ :=
-  by 
-    obtain ⟨n, w⟩ :=
-      monotone_stabilizes_iff_artinian.mpr I
-        (f.iterate_range.comp
-          ⟨fun n => n+1,
-            fun n m w =>
-              by 
-                linarith⟩)
-    specialize
-      w ((n+1)+n)
-        (by 
-          linarith)
-    dsimp  at w 
-    refine' ⟨n+1, Nat.succ_ne_zero _, _⟩
-    simpRw [eq_top_iff', mem_sup]
-    intro x 
-    have  : (f^n+1) x ∈ (f^((n+1)+n)+1).range
-    ·
-      rw [←w]
-      exact mem_range_self _ 
-    rcases this with ⟨y, hy⟩
-    use x - (f^n+1) y 
-    split 
-    ·
-      rw [LinearMap.mem_ker, LinearMap.map_sub, ←hy, sub_eq_zero, pow_addₓ]
-      simp [iterate_add_apply]
-    ·
-      use (f^n+1) y 
-      simp 
+theorem is_artinian.exists_endomorphism_iterate_ker_sup_range_eq_top
+[I : is_artinian R M]
+(f : «expr →ₗ[ ] »(M, R, M)) : «expr∃ , »((n : exprℕ()), «expr ∧ »(«expr ≠ »(n, 0), «expr = »(«expr ⊔ »(«expr ^ »(f, n).ker, «expr ^ »(f, n).range), «expr⊤»()))) :=
+begin
+  obtain ["⟨", ident n, ",", ident w, "⟩", ":=", expr monotone_stabilizes_iff_artinian.mpr I (f.iterate_range.comp ⟨λ
+     n, «expr + »(n, 1), λ n m w, by linarith [] [] []⟩)],
+  specialize [expr w «expr + »(«expr + »(n, 1), n) (by linarith [] [] [])],
+  dsimp [] [] [] ["at", ident w],
+  refine [expr ⟨«expr + »(n, 1), nat.succ_ne_zero _, _⟩],
+  simp_rw ["[", expr eq_top_iff', ",", expr mem_sup, "]"] [],
+  intro [ident x],
+  have [] [":", expr «expr ∈ »(«expr ^ »(f, «expr + »(n, 1)) x, «expr ^ »(f, «expr + »(«expr + »(«expr + »(n, 1), n), 1)).range)] [],
+  { rw ["<-", expr w] [],
+    exact [expr mem_range_self _] },
+  rcases [expr this, "with", "⟨", ident y, ",", ident hy, "⟩"],
+  use [expr «expr - »(x, «expr ^ »(f, «expr + »(n, 1)) y)],
+  split,
+  { rw ["[", expr linear_map.mem_ker, ",", expr linear_map.map_sub, ",", "<-", expr hy, ",", expr sub_eq_zero, ",", expr pow_add, "]"] [],
+    simp [] [] [] ["[", expr iterate_add_apply, "]"] [] [] },
+  { use [expr «expr ^ »(f, «expr + »(n, 1)) y],
+    simp [] [] [] [] [] [] }
+end
 
 /-- Any injective endomorphism of an Artinian module is surjective. -/
 theorem IsArtinian.surjective_of_injective_endomorphism [IsArtinian R M] (f : M →ₗ[R] M) (s : injective f) :
@@ -290,9 +282,9 @@ class IsArtinianRing(R)[Ringₓ R] extends IsArtinian R R : Prop
 theorem is_artinian_ring_iff {R} [Ringₓ R] : IsArtinianRing R ↔ IsArtinian R R :=
   ⟨fun h => h.1, @IsArtinianRing.mk _ _⟩
 
-theorem Ringₓ.is_artinian_of_zero_eq_one {R} [Ringₓ R] (h01 : (0 : R) = 1) : IsArtinianRing R :=
-  by 
-    haveI  := subsingleton_of_zero_eq_one h01 <;> haveI  := Fintype.ofSubsingleton (0 : R) <;> split  <;> infer_instance
+-- error in RingTheory.Artinian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ring.is_artinian_of_zero_eq_one {R} [ring R] (h01 : «expr = »((0 : R), 1)) : is_artinian_ring R :=
+by haveI [] [] [":=", expr subsingleton_of_zero_eq_one h01]; haveI [] [] [":=", expr fintype.of_subsingleton (0 : R)]; split; apply_instance
 
 theorem is_artinian_of_submodule_of_artinian R M [Ringₓ R] [AddCommGroupₓ M] [Module R M] (N : Submodule R M)
   (h : IsArtinian R M) : IsArtinian R N :=
@@ -311,49 +303,54 @@ theorem is_artinian_of_tower R {S M} [CommRingₓ R] [Ringₓ S] [AddCommGroup�
     rw [is_artinian_iff_well_founded] at h⊢
     refine' (Submodule.restrictScalarsEmbedding R S M).WellFounded h
 
-theorem is_artinian_of_fg_of_artinian {R M} [Ringₓ R] [AddCommGroupₓ M] [Module R M] (N : Submodule R M)
-  [IsArtinianRing R] (hN : N.fg) : IsArtinian R N :=
-  let ⟨s, hs⟩ := hN 
-  by 
-    haveI  := Classical.decEq M 
-    haveI  := Classical.decEq R 
-    letI this : IsArtinian R R :=
-      by 
-        infer_instance 
-    have  : ∀ x _ : x ∈ s, x ∈ N 
-    exact fun x hx => hs ▸ Submodule.subset_span hx 
-    refine' @is_artinian_of_surjective ((«expr↑ » s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ is_artinian_pi
-    ·
-      fapply LinearMap.mk
-      ·
-        exact fun f => ⟨∑i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _$ this _ c.2⟩
-      ·
-        intro f g 
-        apply Subtype.eq 
-        change (∑i in s.attach, (f i+g i) • _) = _ 
-        simp only [add_smul, Finset.sum_add_distrib]
-        rfl
-      ·
-        intro c f 
-        apply Subtype.eq 
-        change (∑i in s.attach, (c • f i) • _) = _ 
-        simp only [smul_eq_mul, mul_smul]
-        exact finset.smul_sum.symm 
-    rintro ⟨n, hn⟩
-    change n ∈ N at hn 
-    rw [←hs, ←Set.image_id («expr↑ » s), Finsupp.mem_span_image_iff_total] at hn 
-    rcases hn with ⟨l, hl1, hl2⟩
-    refine' ⟨fun x => l x, Subtype.ext _⟩
-    change (∑i in s.attach, l i • (i : M)) = n 
-    rw [@Finset.sum_attach M M s _ fun i => l i • i, ←hl2, Finsupp.total_apply, Finsupp.sum, eq_comm]
-    refine' Finset.sum_subset hl1 fun x _ hx => _ 
-    rw [Finsupp.not_mem_support_iff.1 hx, zero_smul]
+-- error in RingTheory.Artinian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_artinian_of_fg_of_artinian
+{R M}
+[ring R]
+[add_comm_group M]
+[module R M]
+(N : submodule R M)
+[is_artinian_ring R]
+(hN : N.fg) : is_artinian R N :=
+let ⟨s, hs⟩ := hN in
+begin
+  haveI [] [] [":=", expr classical.dec_eq M],
+  haveI [] [] [":=", expr classical.dec_eq R],
+  letI [] [":", expr is_artinian R R] [":=", expr by apply_instance],
+  have [] [":", expr ∀ x «expr ∈ » s, «expr ∈ »(x, N)] [],
+  from [expr λ x hx, «expr ▸ »(hs, submodule.subset_span hx)],
+  refine [expr @@is_artinian_of_surjective ((«expr↑ »(s) : set M) → R) _ _ _ (pi.module _ _ _) _ _ _ is_artinian_pi],
+  { fapply [expr linear_map.mk],
+    { exact [expr λ
+       f, ⟨«expr∑ in , »((i), s.attach, «expr • »(f i, i.1)), N.sum_mem (λ
+         c _, «expr $ »(N.smul_mem _, this _ c.2))⟩] },
+    { intros [ident f, ident g],
+      apply [expr subtype.eq],
+      change [expr «expr = »(«expr∑ in , »((i), s.attach, «expr • »(«expr + »(f i, g i), _)), _)] [] [],
+      simp [] [] ["only"] ["[", expr add_smul, ",", expr finset.sum_add_distrib, "]"] [] [],
+      refl },
+    { intros [ident c, ident f],
+      apply [expr subtype.eq],
+      change [expr «expr = »(«expr∑ in , »((i), s.attach, «expr • »(«expr • »(c, f i), _)), _)] [] [],
+      simp [] [] ["only"] ["[", expr smul_eq_mul, ",", expr mul_smul, "]"] [] [],
+      exact [expr finset.smul_sum.symm] } },
+  rintro ["⟨", ident n, ",", ident hn, "⟩"],
+  change [expr «expr ∈ »(n, N)] [] ["at", ident hn],
+  rw ["[", "<-", expr hs, ",", "<-", expr set.image_id «expr↑ »(s), ",", expr finsupp.mem_span_image_iff_total, "]"] ["at", ident hn],
+  rcases [expr hn, "with", "⟨", ident l, ",", ident hl1, ",", ident hl2, "⟩"],
+  refine [expr ⟨λ x, l x, subtype.ext _⟩],
+  change [expr «expr = »(«expr∑ in , »((i), s.attach, «expr • »(l i, (i : M))), n)] [] [],
+  rw ["[", expr @finset.sum_attach M M s _ (λ
+    i, «expr • »(l i, i)), ",", "<-", expr hl2, ",", expr finsupp.total_apply, ",", expr finsupp.sum, ",", expr eq_comm, "]"] [],
+  refine [expr finset.sum_subset hl1 (λ x _ hx, _)],
+  rw ["[", expr finsupp.not_mem_support_iff.1 hx, ",", expr zero_smul, "]"] []
+end
 
 theorem is_artinian_of_fg_of_artinian' {R M} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [IsArtinianRing R]
   (h : (⊤ : Submodule R M).Fg) : IsArtinian R M :=
   have  : IsArtinian R (⊤ : Submodule R M) := is_artinian_of_fg_of_artinian _ h 
   by 
-    exactI is_artinian_of_linear_equiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl)
+    exact is_artinian_of_linear_equiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl)
 
 /-- In a module over a artinian ring, the submodule generated by finitely many vectors is
 artinian. -/
@@ -381,7 +378,7 @@ open IsArtinian
 
 variable{R : Type _}[CommRingₓ R][IsArtinianRing R]
 
--- error in RingTheory.Artinian: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in RingTheory.Artinian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_nilpotent_jacobson_bot : is_nilpotent (ideal.jacobson («expr⊥»() : ideal R)) :=
 begin
   let [ident Jac] [] [":=", expr ideal.jacobson («expr⊥»() : ideal R)],

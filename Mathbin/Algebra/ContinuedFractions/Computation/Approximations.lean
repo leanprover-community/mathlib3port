@@ -57,21 +57,21 @@ of great interest for the end user.
 -/
 
 
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Shows that the fractional parts of the stream are in `[0,1)`. -/
-theorem nth_stream_fr_nonneg_lt_one {ifp_n : int_fract_pair K}
-  (nth_stream_eq : int_fract_pair.stream v n = some ifp_n) : 0 ≤ ifp_n.fr ∧ ifp_n.fr < 1 :=
-  by 
-    cases n 
-    case nat.zero => 
-      have  : int_fract_pair.of v = ifp_n
-      ·
-        injection nth_stream_eq 
-      rw [←this, int_fract_pair.of]
-      exact ⟨fract_nonneg _, fract_lt_one _⟩
-    case nat.succ => 
-      rcases succ_nth_stream_eq_some_iff.elim_left nth_stream_eq with ⟨_, _, _, ifp_of_eq_ifp_n⟩
-      rw [←ifp_of_eq_ifp_n, int_fract_pair.of]
-      exact ⟨fract_nonneg _, fract_lt_one _⟩
+theorem nth_stream_fr_nonneg_lt_one
+{ifp_n : int_fract_pair K}
+(nth_stream_eq : «expr = »(int_fract_pair.stream v n, some ifp_n)) : «expr ∧ »(«expr ≤ »(0, ifp_n.fr), «expr < »(ifp_n.fr, 1)) :=
+begin
+  cases [expr n] [],
+  case [ident nat.zero] { have [] [":", expr «expr = »(int_fract_pair.of v, ifp_n)] [],
+    by injection [expr nth_stream_eq] [],
+    rw ["[", "<-", expr this, ",", expr int_fract_pair.of, "]"] [],
+    exact [expr ⟨fract_nonneg _, fract_lt_one _⟩] },
+  case [ident nat.succ] { rcases [expr succ_nth_stream_eq_some_iff.elim_left nth_stream_eq, "with", "⟨", "_", ",", "_", ",", "_", ",", ident ifp_of_eq_ifp_n, "⟩"],
+    rw ["[", "<-", expr ifp_of_eq_ifp_n, ",", expr int_fract_pair.of, "]"] [],
+    exact [expr ⟨fract_nonneg _, fract_lt_one _⟩] }
+end
 
 /-- Shows that the fractional parts of the stream are nonnegative. -/
 theorem nth_stream_fr_nonneg {ifp_n : int_fract_pair K} (nth_stream_eq : int_fract_pair.stream v n = some ifp_n) :
@@ -83,45 +83,45 @@ theorem nth_stream_fr_lt_one {ifp_n : int_fract_pair K} (nth_stream_eq : int_fra
   ifp_n.fr < 1 :=
   (nth_stream_fr_nonneg_lt_one nth_stream_eq).right
 
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Shows that the integer parts of the stream are at least one. -/
-theorem one_le_succ_nth_stream_b {ifp_succ_n : int_fract_pair K}
-  (succ_nth_stream_eq : int_fract_pair.stream v (n+1) = some ifp_succ_n) : 1 ≤ ifp_succ_n.b :=
-  by 
-    obtain ⟨ifp_n, nth_stream_eq, stream_nth_fr_ne_zero, ⟨-⟩⟩ :
-      ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of (ifp_n.fr⁻¹) = ifp_succ_n 
-    exact succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq 
-    suffices  : 1 ≤ ifp_n.fr⁻¹
-    ·
-      rwModCast [le_floor]
-      assumption 
-    suffices  : ifp_n.fr ≤ 1
-    ·
-      have h : 0 < ifp_n.fr 
-      exact lt_of_le_of_neₓ (nth_stream_fr_nonneg nth_stream_eq) stream_nth_fr_ne_zero.symm 
-      apply one_le_inv h this 
-    simp only [le_of_ltₓ (nth_stream_fr_lt_one nth_stream_eq)]
+theorem one_le_succ_nth_stream_b
+{ifp_succ_n : int_fract_pair K}
+(succ_nth_stream_eq : «expr = »(int_fract_pair.stream v «expr + »(n, 1), some ifp_succ_n)) : «expr ≤ »(1, ifp_succ_n.b) :=
+begin
+  obtain ["⟨", ident ifp_n, ",", ident nth_stream_eq, ",", ident stream_nth_fr_ne_zero, ",", "⟨", "-", "⟩", "⟩", ":", expr «expr∃ , »((ifp_n), «expr ∧ »(«expr = »(int_fract_pair.stream v n, some ifp_n), «expr ∧ »(«expr ≠ »(ifp_n.fr, 0), «expr = »(int_fract_pair.of «expr ⁻¹»(ifp_n.fr), ifp_succ_n))))],
+  from [expr succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq],
+  suffices [] [":", expr «expr ≤ »(1, «expr ⁻¹»(ifp_n.fr))],
+  { rw_mod_cast ["[", expr le_floor, "]"] [],
+    assumption },
+  suffices [] [":", expr «expr ≤ »(ifp_n.fr, 1)],
+  { have [ident h] [":", expr «expr < »(0, ifp_n.fr)] [],
+    from [expr lt_of_le_of_ne (nth_stream_fr_nonneg nth_stream_eq) stream_nth_fr_ne_zero.symm],
+    apply [expr one_le_inv h this] },
+  simp [] [] ["only"] ["[", expr le_of_lt (nth_stream_fr_lt_one nth_stream_eq), "]"] [] []
+end
 
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Shows that the `n + 1`th integer part `bₙ₊₁` of the stream is smaller or equal than the inverse of
 the `n`th fractional part `frₙ` of the stream.
 This result is straight-forward as `bₙ₊₁` is defined as the floor of `1 / frₙ`
 -/
-theorem succ_nth_stream_b_le_nth_stream_fr_inv {ifp_n ifp_succ_n : int_fract_pair K}
-  (nth_stream_eq : int_fract_pair.stream v n = some ifp_n)
-  (succ_nth_stream_eq : int_fract_pair.stream v (n+1) = some ifp_succ_n) : (ifp_succ_n.b : K) ≤ ifp_n.fr⁻¹ :=
-  by 
-    suffices  : (⌊ifp_n.fr⁻¹⌋ : K) ≤ ifp_n.fr⁻¹
-    ·
-      cases' ifp_n with _ ifp_n_fr 
-      have  : ifp_n_fr ≠ 0
-      ·
-        intro h 
-        simpa [h, int_fract_pair.stream, nth_stream_eq] using succ_nth_stream_eq 
-      have  : int_fract_pair.of (ifp_n_fr⁻¹) = ifp_succ_n
-      ·
-        simpa [this, int_fract_pair.stream, nth_stream_eq, Option.coe_def] using succ_nth_stream_eq 
-      rwa [←this]
-    exact floor_le (ifp_n.fr⁻¹)
+theorem succ_nth_stream_b_le_nth_stream_fr_inv
+{ifp_n ifp_succ_n : int_fract_pair K}
+(nth_stream_eq : «expr = »(int_fract_pair.stream v n, some ifp_n))
+(succ_nth_stream_eq : «expr = »(int_fract_pair.stream v «expr + »(n, 1), some ifp_succ_n)) : «expr ≤ »((ifp_succ_n.b : K), «expr ⁻¹»(ifp_n.fr)) :=
+begin
+  suffices [] [":", expr «expr ≤ »((«expr⌊ ⌋»(«expr ⁻¹»(ifp_n.fr)) : K), «expr ⁻¹»(ifp_n.fr))],
+  { cases [expr ifp_n] ["with", "_", ident ifp_n_fr],
+    have [] [":", expr «expr ≠ »(ifp_n_fr, 0)] [],
+    { intro [ident h],
+      simpa [] [] [] ["[", expr h, ",", expr int_fract_pair.stream, ",", expr nth_stream_eq, "]"] [] ["using", expr succ_nth_stream_eq] },
+    have [] [":", expr «expr = »(int_fract_pair.of «expr ⁻¹»(ifp_n_fr), ifp_succ_n)] [],
+    { simpa [] [] [] ["[", expr this, ",", expr int_fract_pair.stream, ",", expr nth_stream_eq, ",", expr option.coe_def, "]"] [] ["using", expr succ_nth_stream_eq] },
+    rwa ["<-", expr this] [] },
+  exact [expr floor_le «expr ⁻¹»(ifp_n.fr)]
+end
 
 end IntFractPair
 
@@ -142,44 +142,51 @@ theorem of_one_le_nth_part_denom {b : K} (nth_part_denom_eq : (of v).partialDeno
     rw [←ifp_n_b_eq_gp_n_b]
     exactModCast int_fract_pair.one_le_succ_nth_stream_b succ_nth_stream_eq
 
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Shows that the partial numerators `aᵢ` of the continued fraction are equal to one and the partial
 denominators `bᵢ` correspond to integers.
 -/
-theorem of_part_num_eq_one_and_exists_int_part_denom_eq {gp : GeneralizedContinuedFraction.Pair K}
-  (nth_s_eq : (of v).s.nth n = some gp) : gp.a = 1 ∧ ∃ z : ℤ, gp.b = (z : K) :=
-  by 
-    obtain ⟨ifp, stream_succ_nth_eq, -⟩ : ∃ ifp, int_fract_pair.stream v (n+1) = some ifp ∧ _ 
-    exact int_fract_pair.exists_succ_nth_stream_of_gcf_of_nth_eq_some nth_s_eq 
-    have  : gp = ⟨1, ifp.b⟩
-    ·
-      ·
-        have  : (of v).s.nth n = some ⟨1, ifp.b⟩
-        exact nth_of_eq_some_of_succ_nth_int_fract_pair_stream stream_succ_nth_eq 
-        have  : some gp = some ⟨1, ifp.b⟩
-        ·
-          rwa [nth_s_eq] at this 
-        injection this 
-    finish
+theorem of_part_num_eq_one_and_exists_int_part_denom_eq
+{gp : generalized_continued_fraction.pair K}
+(nth_s_eq : «expr = »((of v).s.nth n, some gp)) : «expr ∧ »(«expr = »(gp.a, 1), «expr∃ , »((z : exprℤ()), «expr = »(gp.b, (z : K)))) :=
+begin
+  obtain ["⟨", ident ifp, ",", ident stream_succ_nth_eq, ",", "-", "⟩", ":", expr «expr∃ , »((ifp), «expr ∧ »(«expr = »(int_fract_pair.stream v «expr + »(n, 1), some ifp), _))],
+  from [expr int_fract_pair.exists_succ_nth_stream_of_gcf_of_nth_eq_some nth_s_eq],
+  have [] [":", expr «expr = »(gp, ⟨1, ifp.b⟩)] [],
+  by { have [] [":", expr «expr = »((of v).s.nth n, some ⟨1, ifp.b⟩)] [],
+    from [expr nth_of_eq_some_of_succ_nth_int_fract_pair_stream stream_succ_nth_eq],
+    have [] [":", expr «expr = »(some gp, some ⟨1, ifp.b⟩)] [],
+    by rwa [expr nth_s_eq] ["at", ident this],
+    injection [expr this] [] },
+  finish [] []
+end
 
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Shows that the partial numerators `aᵢ` are equal to one. -/
-theorem of_part_num_eq_one {a : K} (nth_part_num_eq : (of v).partialNumerators.nth n = some a) : a = 1 :=
-  by 
-    obtain ⟨gp, nth_s_eq, gp_a_eq_a_n⟩ : ∃ gp, (of v).s.nth n = some gp ∧ gp.a = a 
-    exact exists_s_a_of_part_num nth_part_num_eq 
-    have  : gp.a = 1 
-    exact (of_part_num_eq_one_and_exists_int_part_denom_eq nth_s_eq).left 
-    rwa [gp_a_eq_a_n] at this
+theorem of_part_num_eq_one
+{a : K}
+(nth_part_num_eq : «expr = »((of v).partial_numerators.nth n, some a)) : «expr = »(a, 1) :=
+begin
+  obtain ["⟨", ident gp, ",", ident nth_s_eq, ",", ident gp_a_eq_a_n, "⟩", ":", expr «expr∃ , »((gp), «expr ∧ »(«expr = »((of v).s.nth n, some gp), «expr = »(gp.a, a)))],
+  from [expr exists_s_a_of_part_num nth_part_num_eq],
+  have [] [":", expr «expr = »(gp.a, 1)] [],
+  from [expr (of_part_num_eq_one_and_exists_int_part_denom_eq nth_s_eq).left],
+  rwa [expr gp_a_eq_a_n] ["at", ident this]
+end
 
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Shows that the partial denominators `bᵢ` correspond to an integer. -/
-theorem exists_int_eq_of_part_denom {b : K} (nth_part_denom_eq : (of v).partialDenominators.nth n = some b) :
-  ∃ z : ℤ, b = (z : K) :=
-  by 
-    obtain ⟨gp, nth_s_eq, gp_b_eq_b_n⟩ : ∃ gp, (of v).s.nth n = some gp ∧ gp.b = b 
-    exact exists_s_b_of_part_denom nth_part_denom_eq 
-    have  : ∃ z : ℤ, gp.b = (z : K)
-    exact (of_part_num_eq_one_and_exists_int_part_denom_eq nth_s_eq).right 
-    rwa [gp_b_eq_b_n] at this
+theorem exists_int_eq_of_part_denom
+{b : K}
+(nth_part_denom_eq : «expr = »((of v).partial_denominators.nth n, some b)) : «expr∃ , »((z : exprℤ()), «expr = »(b, (z : K))) :=
+begin
+  obtain ["⟨", ident gp, ",", ident nth_s_eq, ",", ident gp_b_eq_b_n, "⟩", ":", expr «expr∃ , »((gp), «expr ∧ »(«expr = »((of v).s.nth n, some gp), «expr = »(gp.b, b)))],
+  from [expr exists_s_b_of_part_denom nth_part_denom_eq],
+  have [] [":", expr «expr∃ , »((z : exprℤ()), «expr = »(gp.b, (z : K)))] [],
+  from [expr (of_part_num_eq_one_and_exists_int_part_denom_eq nth_s_eq).right],
+  rwa [expr gp_b_eq_b_n] ["at", ident this]
+end
 
 /-!
 One of our next goals is to show that `bₙ * Bₙ ≤ Bₙ₊₁`. For this, we first show that the partial
@@ -190,7 +197,7 @@ denominators `Bₙ` are bounded from below by the fibonacci sequence `nat.fib`. 
 
 open Nat
 
--- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem fib_le_of_continuants_aux_b : «expr ∨ »(«expr ≤ »(n, 1), «expr¬ »((of v).terminated_at «expr - »(n, 2))) → «expr ≤ »((fib n : K), ((of v).continuants_aux n).b) :=
 nat.strong_induction_on n (begin
    clear [ident n],
@@ -232,46 +239,39 @@ nat.strong_induction_on n (begin
      mono [] [] [] [] }
  end)
 
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Shows that the `n`th denominator is greater than or equal to the `n + 1`th fibonacci number,
 that is `nat.fib (n + 1) ≤ Bₙ`. -/
-theorem succ_nth_fib_le_of_nth_denom (hyp : n = 0 ∨ ¬(of v).TerminatedAt (n - 1)) :
-  (fib (n+1) : K) ≤ (of v).denominators n :=
-  by 
-    rw [denom_eq_conts_b, nth_cont_eq_succ_nth_cont_aux]
-    have  : (n+1) ≤ 1 ∨ ¬(of v).TerminatedAt (n - 1)
-    ·
-      ·
-        cases n 
-        case nat.zero => 
-          exact Or.inl$ le_reflₓ 1
-        case nat.succ => 
-          exact Or.inr (Or.resolve_left hyp n.succ_ne_zero)
-    exact fib_le_of_continuants_aux_b this
+theorem succ_nth_fib_le_of_nth_denom
+(hyp : «expr ∨ »(«expr = »(n, 0), «expr¬ »((of v).terminated_at «expr - »(n, 1)))) : «expr ≤ »((fib «expr + »(n, 1) : K), (of v).denominators n) :=
+begin
+  rw ["[", expr denom_eq_conts_b, ",", expr nth_cont_eq_succ_nth_cont_aux, "]"] [],
+  have [] [":", expr «expr ∨ »(«expr ≤ »(«expr + »(n, 1), 1), «expr¬ »((of v).terminated_at «expr - »(n, 1)))] [],
+  by { cases [expr n] [],
+    case [ident nat.zero, ":"] { exact [expr «expr $ »(or.inl, le_refl 1)] },
+    case [ident nat.succ, ":"] { exact [expr or.inr (or.resolve_left hyp n.succ_ne_zero)] } },
+  exact [expr fib_le_of_continuants_aux_b this]
+end
 
 /-! As a simple consequence, we can now derive that all denominators are nonnegative. -/
 
 
-theorem zero_le_of_continuants_aux_b : 0 ≤ ((of v).continuantsAux n).b :=
-  by 
-    let g := of v 
-    induction' n with n IH 
-    case nat.zero => 
-      rfl 
-    case nat.succ => 
-      cases' Decidable.em$ g.terminated_at (n - 1) with terminated not_terminated
-      ·
-        cases n
-        ·
-          simp [zero_le_one]
-        ·
-          have  : g.continuants_aux (n+2) = g.continuants_aux (n+1)
-          exact continuants_aux_stable_step_of_terminated terminated 
-          simp only [this, IH]
-      ·
-        calc (0 : K) ≤ fib (n+1) :=
-          by 
-            exactModCast (n+1).fib.zero_le _ ≤ ((of v).continuantsAux (n+1)).b :=
-          fib_le_of_continuants_aux_b (Or.inr not_terminated)
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem zero_le_of_continuants_aux_b : «expr ≤ »(0, ((of v).continuants_aux n).b) :=
+begin
+  let [ident g] [] [":=", expr of v],
+  induction [expr n] [] ["with", ident n, ident IH] [],
+  case [ident nat.zero, ":"] { refl },
+  case [ident nat.succ, ":"] { cases [expr «expr $ »(decidable.em, g.terminated_at «expr - »(n, 1))] ["with", ident terminated, ident not_terminated],
+    { cases [expr n] [],
+      { simp [] [] [] ["[", expr zero_le_one, "]"] [] [] },
+      { have [] [":", expr «expr = »(g.continuants_aux «expr + »(n, 2), g.continuants_aux «expr + »(n, 1))] [],
+        from [expr continuants_aux_stable_step_of_terminated terminated],
+        simp [] [] ["only"] ["[", expr this, ",", expr IH, "]"] [] [] } },
+    { calc
+        «expr ≤ »((0 : K), fib «expr + »(n, 1)) : by exact_mod_cast [expr «expr + »(n, 1).fib.zero_le]
+        «expr ≤ »(..., ((of v).continuants_aux «expr + »(n, 1)).b) : fib_le_of_continuants_aux_b (or.inr not_terminated) } }
+end
 
 /-- Shows that all denominators are nonnegative. -/
 theorem zero_le_of_denom : 0 ≤ (of v).denominators n :=
@@ -279,7 +279,7 @@ theorem zero_le_of_denom : 0 ≤ (of v).denominators n :=
     rw [denom_eq_conts_b, nth_cont_eq_succ_nth_cont_aux]
     exact zero_le_of_continuants_aux_b
 
--- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem le_of_succ_succ_nth_continuants_aux_b
 {b : K}
 (nth_part_denom_eq : «expr = »((of v).partial_denominators.nth n, some b)) : «expr ≤ »(«expr * »(b, «expr $ »((of v).continuants_aux, «expr + »(n, 1)).b), «expr $ »((of v).continuants_aux, «expr + »(n, 2)).b) :=
@@ -307,32 +307,27 @@ theorem le_of_succ_nth_denom {b : K} (nth_part_denom_eq : (of v).partialDenomina
     rw [denom_eq_conts_b, nth_cont_eq_succ_nth_cont_aux]
     exact le_of_succ_succ_nth_continuants_aux_b nth_part_denom_eq
 
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Shows that the sequence of denominators is monotone, that is `Bₙ ≤ Bₙ₊₁`. -/
-theorem of_denom_mono : (of v).denominators n ≤ (of v).denominators (n+1) :=
-  by 
-    let g := of v 
-    cases' Decidable.em$ g.partial_denominators.terminated_at n with terminated not_terminated
-    ·
-      have  : g.partial_denominators.nth n = none
-      ·
-        rwa [Seqₓₓ.TerminatedAt] at terminated 
-      have  : g.terminated_at n 
-      exact
-        terminated_at_iff_part_denom_none.elim_right
-          (by 
-            rwa [Seqₓₓ.TerminatedAt] at terminated)
-      have  : g.denominators (n+1) = g.denominators n 
-      exact denominators_stable_of_terminated n.le_succ this 
-      rw [this]
-    ·
-      obtain ⟨b, nth_part_denom_eq⟩ : ∃ b, g.partial_denominators.nth n = some b 
-      exact option.ne_none_iff_exists'.mp not_terminated 
-      have  : 1 ≤ b 
-      exact of_one_le_nth_part_denom nth_part_denom_eq 
-      calc g.denominators n ≤ b*g.denominators n :=
-        by 
-          simpa using mul_le_mul_of_nonneg_right this zero_le_of_denom _ ≤ g.denominators (n+1) :=
-        le_of_succ_nth_denom nth_part_denom_eq
+theorem of_denom_mono : «expr ≤ »((of v).denominators n, (of v).denominators «expr + »(n, 1)) :=
+begin
+  let [ident g] [] [":=", expr of v],
+  cases [expr «expr $ »(decidable.em, g.partial_denominators.terminated_at n)] ["with", ident terminated, ident not_terminated],
+  { have [] [":", expr «expr = »(g.partial_denominators.nth n, none)] [],
+    by rwa [expr seq.terminated_at] ["at", ident terminated],
+    have [] [":", expr g.terminated_at n] [],
+    from [expr terminated_at_iff_part_denom_none.elim_right (by rwa [expr seq.terminated_at] ["at", ident terminated])],
+    have [] [":", expr «expr = »(g.denominators «expr + »(n, 1), g.denominators n)] [],
+    from [expr denominators_stable_of_terminated n.le_succ this],
+    rw [expr this] [] },
+  { obtain ["⟨", ident b, ",", ident nth_part_denom_eq, "⟩", ":", expr «expr∃ , »((b), «expr = »(g.partial_denominators.nth n, some b))],
+    from [expr option.ne_none_iff_exists'.mp not_terminated],
+    have [] [":", expr «expr ≤ »(1, b)] [],
+    from [expr of_one_le_nth_part_denom nth_part_denom_eq],
+    calc
+      «expr ≤ »(g.denominators n, «expr * »(b, g.denominators n)) : by simpa [] [] [] [] [] ["using", expr mul_le_mul_of_nonneg_right this zero_le_of_denom]
+      «expr ≤ »(..., g.denominators «expr + »(n, 1)) : le_of_succ_nth_denom nth_part_denom_eq }
+end
 
 section Determinant
 
@@ -344,52 +339,43 @@ Next we prove the so-called *determinant formula* for `generalized_continued_fra
 -/
 
 
-theorem determinant_aux (hyp : n = 0 ∨ ¬(of v).TerminatedAt (n - 1)) :
-  ((((of v).continuantsAux n).a*((of v).continuantsAux (n+1)).b) -
-      ((of v).continuantsAux n).b*((of v).continuantsAux (n+1)).a) =
-    -1 ^ n :=
-  by 
-    induction' n with n IH 
-    case nat.zero => 
-      simp [continuants_aux]
-    case nat.succ => 
-      let g := of v 
-      let conts := continuants_aux g (n+2)
-      set pred_conts := continuants_aux g (n+1) with pred_conts_eq 
-      set ppred_conts := continuants_aux g n with ppred_conts_eq 
-      let pA := pred_conts.a 
-      let pB := pred_conts.b 
-      let ppA := ppred_conts.a 
-      let ppB := ppred_conts.b 
-      change ((pA*conts.b) - pB*conts.a) = -1 ^ n+1
-      have not_terminated_at_n : ¬terminated_at g n 
-      exact Or.resolve_left hyp n.succ_ne_zero 
-      obtain ⟨gp, s_nth_eq⟩ : ∃ gp, g.s.nth n = some gp 
-      exact option.ne_none_iff_exists'.elim_left not_terminated_at_n 
-      suffices  : ((pA*ppB+gp.b*pB) - pB*ppA+gp.b*pA) = -1 ^ n+1
-      ·
-        ·
-          simp only [conts, continuants_aux_recurrence s_nth_eq ppred_conts_eq pred_conts_eq]
-          have gp_a_eq_one : gp.a = 1 
-          exact of_part_num_eq_one (part_num_eq_s_a s_nth_eq)
-          rw [gp_a_eq_one, this.symm]
-          ring 
-      suffices  : ((pA*ppB) - pB*ppA) = -1 ^ n+1
-      calc ((pA*ppB+gp.b*pB) - pB*ppA+gp.b*pA) = (((pA*ppB)+(pA*gp.b)*pB) - pB*ppA) - (pB*gp.b)*pA :=
-        by 
-          ring _ = (pA*ppB) - pB*ppA :=
-        by 
-          ring _ = -1 ^ n+1 :=
-        by 
-          assumption 
-      suffices  : ((ppA*pB) - ppB*pA) = -1 ^ n
-      ·
-        ·
-          have pow_succ_n : ((-1 : K) ^ n+1) = (-1)*-1 ^ n 
-          exact pow_succₓ (-1) n 
-          rw [pow_succ_n, ←this]
-          ring 
-      exact IH$ Or.inr$ mt (terminated_stable$ n.sub_le 1) not_terminated_at_n
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem determinant_aux
+(hyp : «expr ∨ »(«expr = »(n, 0), «expr¬ »((of v).terminated_at «expr - »(n, 1)))) : «expr = »(«expr - »(«expr * »(((of v).continuants_aux n).a, ((of v).continuants_aux «expr + »(n, 1)).b), «expr * »(((of v).continuants_aux n).b, ((of v).continuants_aux «expr + »(n, 1)).a)), «expr ^ »(«expr- »(1), n)) :=
+begin
+  induction [expr n] [] ["with", ident n, ident IH] [],
+  case [ident nat.zero] { simp [] [] [] ["[", expr continuants_aux, "]"] [] [] },
+  case [ident nat.succ] { let [ident g] [] [":=", expr of v],
+    let [ident conts] [] [":=", expr continuants_aux g «expr + »(n, 2)],
+    set [] [ident pred_conts] [] [":="] [expr continuants_aux g «expr + »(n, 1)] ["with", ident pred_conts_eq],
+    set [] [ident ppred_conts] [] [":="] [expr continuants_aux g n] ["with", ident ppred_conts_eq],
+    let [ident pA] [] [":=", expr pred_conts.a],
+    let [ident pB] [] [":=", expr pred_conts.b],
+    let [ident ppA] [] [":=", expr ppred_conts.a],
+    let [ident ppB] [] [":=", expr ppred_conts.b],
+    change [expr «expr = »(«expr - »(«expr * »(pA, conts.b), «expr * »(pB, conts.a)), «expr ^ »(«expr- »(1), «expr + »(n, 1)))] [] [],
+    have [ident not_terminated_at_n] [":", expr «expr¬ »(terminated_at g n)] [],
+    from [expr or.resolve_left hyp n.succ_ne_zero],
+    obtain ["⟨", ident gp, ",", ident s_nth_eq, "⟩", ":", expr «expr∃ , »((gp), «expr = »(g.s.nth n, some gp))],
+    from [expr option.ne_none_iff_exists'.elim_left not_terminated_at_n],
+    suffices [] [":", expr «expr = »(«expr - »(«expr * »(pA, «expr + »(ppB, «expr * »(gp.b, pB))), «expr * »(pB, «expr + »(ppA, «expr * »(gp.b, pA)))), «expr ^ »(«expr- »(1), «expr + »(n, 1)))],
+    by { simp [] [] ["only"] ["[", expr conts, ",", expr continuants_aux_recurrence s_nth_eq ppred_conts_eq pred_conts_eq, "]"] [] [],
+      have [ident gp_a_eq_one] [":", expr «expr = »(gp.a, 1)] [],
+      from [expr of_part_num_eq_one (part_num_eq_s_a s_nth_eq)],
+      rw ["[", expr gp_a_eq_one, ",", expr this.symm, "]"] [],
+      ring [] },
+    suffices [] [":", expr «expr = »(«expr - »(«expr * »(pA, ppB), «expr * »(pB, ppA)), «expr ^ »(«expr- »(1), «expr + »(n, 1)))],
+    calc
+      «expr = »(«expr - »(«expr * »(pA, «expr + »(ppB, «expr * »(gp.b, pB))), «expr * »(pB, «expr + »(ppA, «expr * »(gp.b, pA)))), «expr - »(«expr - »(«expr + »(«expr * »(pA, ppB), «expr * »(«expr * »(pA, gp.b), pB)), «expr * »(pB, ppA)), «expr * »(«expr * »(pB, gp.b), pA))) : by ring []
+      «expr = »(..., «expr - »(«expr * »(pA, ppB), «expr * »(pB, ppA))) : by ring []
+      «expr = »(..., «expr ^ »(«expr- »(1), «expr + »(n, 1))) : by assumption,
+    suffices [] [":", expr «expr = »(«expr - »(«expr * »(ppA, pB), «expr * »(ppB, pA)), «expr ^ »(«expr- »(1), n))],
+    by { have [ident pow_succ_n] [":", expr «expr = »(«expr ^ »((«expr- »(1) : K), «expr + »(n, 1)), «expr * »(«expr- »(1), «expr ^ »(«expr- »(1), n)))] [],
+      from [expr pow_succ «expr- »(1) n],
+      rw ["[", expr pow_succ_n, ",", "<-", expr this, "]"] [],
+      ring [] },
+    exact [expr «expr $ »(IH, «expr $ »(or.inr, mt «expr $ »(terminated_stable, n.sub_le 1) not_terminated_at_n))] }
+end
 
 /-- The determinant formula `Aₙ * Bₙ₊₁ - Bₙ * Aₙ₊₁ = (-1)^(n + 1)` -/
 theorem determinant (not_terminated_at_n : ¬(of v).TerminatedAt n) :
@@ -408,7 +394,7 @@ position, i.e. bounds for the term `|v - (generalized_continued_fraction.of v).c
 -/
 
 
--- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- This lemma follows from the finite correctness proof, the determinant equality, and
 by simplifying the difference. -/
 theorem sub_convergents_eq
@@ -492,7 +478,7 @@ begin
       «expr = »(..., «expr / »(«expr ^ »(«expr- »(1), n), «expr * »(B, «expr + »(«expr * »(«expr ⁻¹»(ifp.fr), B), pB)))) : by ac_refl }
 end
 
--- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:340:40: in any_goals: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Shows that `|v - Aₙ / Bₙ| ≤ 1 / (Bₙ * Bₙ₊₁)` -/
 theorem abs_sub_convergents_le
 (not_terminated_at_n : «expr¬ »((of v).terminated_at n)) : «expr ≤ »(«expr| |»(«expr - »(v, (of v).convergents n)), «expr / »(1, «expr * »((of v).denominators n, «expr $ »((of v).denominators, «expr + »(n, 1))))) :=
@@ -575,7 +561,7 @@ begin
     mono [] [] [] [] }
 end
 
--- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:340:40: in any_goals: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Algebra.ContinuedFractions.Computation.Approximations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Shows that `|v - Aₙ / Bₙ| ≤ 1 / (bₙ * Bₙ * Bₙ)`. This bound is worse than the one shown in
 `gcf.abs_sub_convergents_le`, but sometimes it is easier to apply and sufficient for one's use case.

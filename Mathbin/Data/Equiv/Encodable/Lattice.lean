@@ -66,7 +66,7 @@ theorem nonempty_encodable {α} (t : Finset α) : Nonempty$ Encodable { i // i �
       refine' ⟨⟨fun _ => 0, fun _ => none, fun ⟨x, y⟩ => y.rec _⟩⟩
     ·
       cases' ih with ih 
-      exactI ⟨Encodable.ofEquiv _ (Finset.subtypeInsertEquivOption hx)⟩
+      exact ⟨Encodable.ofEquiv _ (Finset.subtypeInsertEquivOption hx)⟩
 
 end Finset
 

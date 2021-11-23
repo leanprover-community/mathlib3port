@@ -1,8 +1,7 @@
 import Mathbin.Algebra.Polynomial.BigOperators 
+import Mathbin.Algebra.Squarefree 
 import Mathbin.FieldTheory.Minpoly 
-import Mathbin.FieldTheory.SplittingField 
-import Mathbin.FieldTheory.Tower 
-import Mathbin.Algebra.Squarefree
+import Mathbin.FieldTheory.SplittingField
 
 /-!
 
@@ -65,11 +64,13 @@ theorem separable_C (r : R) : (C r).Separable ↔ IsUnit r :=
   by 
     rw [separable_def, derivative_C, is_coprime_zero_right, is_unit_C]
 
-theorem separable.of_mul_left {f g : Polynomial R} (h : (f*g).Separable) : f.separable :=
-  by 
-    have  := h.of_mul_left_left 
-    rw [derivative_mul] at this 
-    exact IsCoprime.of_mul_right_left (IsCoprime.of_add_mul_left_right this)
+-- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem separable.of_mul_left {f g : polynomial R} (h : «expr * »(f, g).separable) : f.separable :=
+begin
+  have [] [] [":=", expr h.of_mul_left_left],
+  rw [expr derivative_mul] ["at", ident this],
+  exact [expr is_coprime.of_mul_right_left (is_coprime.of_add_mul_left_right this)]
+end
 
 theorem separable.of_mul_right {f g : Polynomial R} (h : (f*g).Separable) : g.separable :=
   by 
@@ -89,11 +90,13 @@ theorem separable_gcd_right {F : Type _} [Field F] {g : Polynomial F} (f : Polyn
   (EuclideanDomain.gcd f g).Separable :=
   separable.of_dvd hg (EuclideanDomain.gcd_dvd_right f g)
 
-theorem separable.is_coprime {f g : Polynomial R} (h : (f*g).Separable) : IsCoprime f g :=
-  by 
-    have  := h.of_mul_left_left 
-    rw [derivative_mul] at this 
-    exact IsCoprime.of_mul_right_right (IsCoprime.of_add_mul_left_right this)
+-- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem separable.is_coprime {f g : polynomial R} (h : «expr * »(f, g).separable) : is_coprime f g :=
+begin
+  have [] [] [":=", expr h.of_mul_left_left],
+  rw [expr derivative_mul] ["at", ident this],
+  exact [expr is_coprime.of_mul_right_right (is_coprime.of_add_mul_left_right this)]
+end
 
 theorem separable.of_pow' {f : Polynomial R} : ∀ {n : ℕ} h : (f^n).Separable, IsUnit f ∨ f.separable ∧ n = 1 ∨ n = 0
 | 0 => fun h => Or.inr$ Or.inr rfl
@@ -233,31 +236,29 @@ theorem expand_eq_C {p : ℕ} (hp : 0 < p) {f : Polynomial R} {r : R} : expand R
   by 
     rw [←expand_C, expand_inj hp, expand_C]
 
-theorem nat_degree_expand (p : ℕ) (f : Polynomial R) : (expand R p f).natDegree = f.nat_degree*p :=
-  by 
-    cases' p.eq_zero_or_pos with hp hp
-    ·
-      rw [hp, coe_expand, pow_zeroₓ, mul_zero, ←C_1, eval₂_hom, nat_degree_C]
-    byCases' hf : f = 0
-    ·
-      rw [hf, AlgHom.map_zero, nat_degree_zero, zero_mul]
-    have hf1 : expand R p f ≠ 0 := mt (expand_eq_zero hp).1 hf 
-    rw [←WithBot.coe_eq_coe, ←degree_eq_nat_degree hf1]
-    refine' le_antisymmₓ ((degree_le_iff_coeff_zero _ _).2$ fun n hn => _) _
-    ·
-      rw [coeff_expand hp]
-      splitIfs with hpn
-      ·
-        rw [coeff_eq_zero_of_nat_degree_lt]
-        contrapose! hn 
-        rw [WithBot.coe_le_coe, ←Nat.div_mul_cancelₓ hpn]
-        exact Nat.mul_le_mul_rightₓ p hn
-      ·
-        rfl
-    ·
-      refine' le_degree_of_ne_zero _ 
-      rw [coeff_expand_mul hp, ←leading_coeff]
-      exact mt leading_coeff_eq_zero.1 hf
+-- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nat_degree_expand
+(p : exprℕ())
+(f : polynomial R) : «expr = »((expand R p f).nat_degree, «expr * »(f.nat_degree, p)) :=
+begin
+  cases [expr p.eq_zero_or_pos] ["with", ident hp, ident hp],
+  { rw ["[", expr hp, ",", expr coe_expand, ",", expr pow_zero, ",", expr mul_zero, ",", "<-", expr C_1, ",", expr eval₂_hom, ",", expr nat_degree_C, "]"] [] },
+  by_cases [expr hf, ":", expr «expr = »(f, 0)],
+  { rw ["[", expr hf, ",", expr alg_hom.map_zero, ",", expr nat_degree_zero, ",", expr zero_mul, "]"] [] },
+  have [ident hf1] [":", expr «expr ≠ »(expand R p f, 0)] [":=", expr mt (expand_eq_zero hp).1 hf],
+  rw ["[", "<-", expr with_bot.coe_eq_coe, ",", "<-", expr degree_eq_nat_degree hf1, "]"] [],
+  refine [expr le_antisymm «expr $ »((degree_le_iff_coeff_zero _ _).2, λ n hn, _) _],
+  { rw [expr coeff_expand hp] [],
+    split_ifs [] ["with", ident hpn],
+    { rw [expr coeff_eq_zero_of_nat_degree_lt] [],
+      contrapose ["!"] [ident hn],
+      rw ["[", expr with_bot.coe_le_coe, ",", "<-", expr nat.div_mul_cancel hpn, "]"] [],
+      exact [expr nat.mul_le_mul_right p hn] },
+    { refl } },
+  { refine [expr le_degree_of_ne_zero _],
+    rw ["[", expr coeff_expand_mul hp, ",", "<-", expr leading_coeff, "]"] [],
+    exact [expr mt leading_coeff_eq_zero.1 hf] }
+end
 
 theorem map_expand {p : ℕ} (hp : 0 < p) {f : R →+* S} {q : Polynomial R} :
   map f (expand R p q) = expand S p (map f q) :=
@@ -266,19 +267,20 @@ theorem map_expand {p : ℕ} (hp : 0 < p) {f : R →+* S} {q : Polynomial R} :
     rw [coeff_map, coeff_expand hp, coeff_expand hp]
     splitIfs <;> simp 
 
+-- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Expansion is injective. -/
-theorem expand_injective {n : ℕ} (hn : 0 < n) : Function.Injective (expand R n) :=
-  fun g g' h =>
-    by 
-      ext 
-      have h' : (expand R n g).coeff (n*n_1) = (expand R n g').coeff (n*n_1) :=
-        by 
-          apply Polynomial.ext_iff.1 
-          exact h 
-      rw [Polynomial.coeff_expand hn g (n*n_1), Polynomial.coeff_expand hn g' (n*n_1)] at h' 
-      simp only [if_true, dvd_mul_right] at h' 
-      rw [Nat.mul_div_rightₓ n_1 hn] at h' 
-      exact h'
+theorem expand_injective {n : exprℕ()} (hn : «expr < »(0, n)) : function.injective (expand R n) :=
+λ g g' h, begin
+  ext [] [] [],
+  have [ident h'] [":", expr «expr = »((expand R n g).coeff «expr * »(n, n_1), (expand R n g').coeff «expr * »(n, n_1))] [":=", expr begin
+     apply [expr polynomial.ext_iff.1],
+     exact [expr h]
+   end],
+  rw ["[", expr polynomial.coeff_expand hn g «expr * »(n, n_1), ",", expr polynomial.coeff_expand hn g' «expr * »(n, n_1), "]"] ["at", ident h'],
+  simp [] [] ["only"] ["[", expr if_true, ",", expr dvd_mul_right, "]"] [] ["at", ident h'],
+  rw [expr nat.mul_div_right n_1 hn] ["at", ident h'],
+  exact [expr h']
+end
 
 end CommSemiringₓ
 
@@ -312,38 +314,37 @@ theorem separable_prod {ι : Sort _} [Fintype ι] {f : ι → Polynomial R} (h1 
   (h2 : ∀ x, (f x).Separable) : (∏x, f x).Separable :=
   separable_prod' (fun x hx y hy hxy => h1 x y hxy) fun x hx => h2 x
 
--- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem separable.inj_of_prod_X_sub_C
-[nontrivial R]
-{ι : Sort*}
-{f : ι → R}
-{s : finset ι}
-(hfs : «expr∏ in , »((i), s, «expr - »(X, C (f i))).separable)
-{x y : ι}
-(hx : «expr ∈ »(x, s))
-(hy : «expr ∈ »(y, s))
-(hfxy : «expr = »(f x, f y)) : «expr = »(x, y) :=
-begin
-  by_contra [ident hxy],
-  rw ["[", "<-", expr insert_erase hx, ",", expr prod_insert (not_mem_erase _ _), ",", "<-", expr insert_erase (mem_erase_of_ne_of_mem (ne.symm hxy) hy), ",", expr prod_insert (not_mem_erase _ _), ",", "<-", expr mul_assoc, ",", expr hfxy, ",", "<-", expr sq, "]"] ["at", ident hfs],
-  cases [expr (hfs.of_mul_left.of_pow (by exact [expr not_is_unit_X_sub_C]) two_ne_zero).2] []
-end
+theorem separable.inj_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} {f : ι → R} {s : Finset ι}
+  (hfs : (∏i in s, X - C (f i)).Separable) {x y : ι} (hx : x ∈ s) (hy : y ∈ s) (hfxy : f x = f y) : x = y :=
+  by 
+    byContra hxy 
+    rw [←insert_erase hx, prod_insert (not_mem_erase _ _), ←insert_erase (mem_erase_of_ne_of_mem (Ne.symm hxy) hy),
+      prod_insert (not_mem_erase _ _), ←mul_assocₓ, hfxy, ←sq] at hfs 
+    cases
+      (hfs.of_mul_left.of_pow
+          (by 
+            exact not_is_unit_X_sub_C)
+          two_ne_zero).2
 
 theorem separable.injective_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} [Fintype ι] {f : ι → R}
   (hfs : (∏i, X - C (f i)).Separable) : Function.Injective f :=
   fun x y hfxy => hfs.inj_of_prod_X_sub_C (mem_univ _) (mem_univ _) hfxy
 
-theorem is_unit_of_self_mul_dvd_separable {p q : Polynomial R} (hp : p.separable) (hq : (q*q) ∣ p) : IsUnit q :=
-  by 
-    obtain ⟨p, rfl⟩ := hq 
-    apply is_coprime_self.mp 
-    have  : IsCoprime (q*q*p) (q*((q.derivative*p)+q.derivative*p)+q*p.derivative)
-    ·
-      simp only [←mul_assocₓ, mul_addₓ]
-      convert hp 
-      rw [derivative_mul, derivative_mul]
-      ring 
-    exact IsCoprime.of_mul_right_left (IsCoprime.of_mul_left_left this)
+-- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_unit_of_self_mul_dvd_separable
+{p q : polynomial R}
+(hp : p.separable)
+(hq : «expr ∣ »(«expr * »(q, q), p)) : is_unit q :=
+begin
+  obtain ["⟨", ident p, ",", ident rfl, "⟩", ":=", expr hq],
+  apply [expr is_coprime_self.mp],
+  have [] [":", expr is_coprime «expr * »(q, «expr * »(q, p)) «expr * »(q, «expr + »(«expr + »(«expr * »(q.derivative, p), «expr * »(q.derivative, p)), «expr * »(q, p.derivative)))] [],
+  { simp [] [] ["only"] ["[", "<-", expr mul_assoc, ",", expr mul_add, "]"] [] [],
+    convert [] [expr hp] [],
+    rw ["[", expr derivative_mul, ",", expr derivative_mul, "]"] [],
+    ring [] },
+  exact [expr is_coprime.of_mul_right_left (is_coprime.of_mul_left_left this)]
+end
 
 end CommRingₓ
 
@@ -351,16 +352,19 @@ section IsDomain
 
 variable(R : Type u)[CommRingₓ R][IsDomain R]
 
-theorem is_local_ring_hom_expand {p : ℕ} (hp : 0 < p) :
-  IsLocalRingHom («expr↑ » (expand R p) : Polynomial R →+* Polynomial R) :=
-  by 
-    refine' ⟨fun f hf1 => _⟩
-    rw [←coe_fn_coe_base] at hf1 
-    have hf2 := eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit hf1)
-    rw [coeff_expand hp, if_pos (dvd_zero _), p.zero_div] at hf2 
-    rw [hf2, is_unit_C] at hf1 
-    rw [expand_eq_C hp] at hf2 
-    rwa [hf2, is_unit_C]
+-- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_local_ring_hom_expand
+{p : exprℕ()}
+(hp : «expr < »(0, p)) : is_local_ring_hom («expr↑ »(expand R p) : «expr →+* »(polynomial R, polynomial R)) :=
+begin
+  refine [expr ⟨λ f hf1, _⟩],
+  rw ["<-", expr coe_fn_coe_base] ["at", ident hf1],
+  have [ident hf2] [] [":=", expr eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit hf1)],
+  rw ["[", expr coeff_expand hp, ",", expr if_pos (dvd_zero _), ",", expr p.zero_div, "]"] ["at", ident hf2],
+  rw ["[", expr hf2, ",", expr is_unit_C, "]"] ["at", ident hf1],
+  rw [expr expand_eq_C hp] ["at", ident hf2],
+  rwa ["[", expr hf2, ",", expr is_unit_C, "]"] []
+end
 
 end IsDomain
 
@@ -441,98 +445,87 @@ theorem map_expand_pow_char (f : Polynomial F) (n : ℕ) : map (frobenius F p^n)
     rw [pow_succ'ₓ, pow_mulₓ, ←n_ih, ←expand_char, pow_succₓ, RingHom.mul_def, ←map_map, mul_commₓ, expand_mul,
       ←map_expand (Nat.Prime.pos hp.1)]
 
-theorem expand_contract {f : Polynomial F} (hf : f.derivative = 0) : expand F p (contract p f) = f :=
-  by 
-    ext n 
-    rw [coeff_expand hp.1.Pos, coeff_contract]
-    splitIfs with h
-    ·
-      rw [Nat.div_mul_cancelₓ h]
-    ·
-      cases n
-      ·
-        exact absurd (dvd_zero p) h 
-      have  := coeff_derivative f n 
-      rw [hf, coeff_zero, zero_eq_mul] at this 
-      cases this
-      ·
-        rw [this]
-      rw [←Nat.cast_succ, CharP.cast_eq_zero_iff F p] at this 
-      exact absurd this h
+-- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem expand_contract
+{f : polynomial F}
+(hf : «expr = »(f.derivative, 0)) : «expr = »(expand F p (contract p f), f) :=
+begin
+  ext [] [ident n] [],
+  rw ["[", expr coeff_expand hp.1.pos, ",", expr coeff_contract, "]"] [],
+  split_ifs [] ["with", ident h],
+  { rw [expr nat.div_mul_cancel h] [] },
+  { cases [expr n] [],
+    { exact [expr absurd (dvd_zero p) h] },
+    have [] [] [":=", expr coeff_derivative f n],
+    rw ["[", expr hf, ",", expr coeff_zero, ",", expr zero_eq_mul, "]"] ["at", ident this],
+    cases [expr this] [],
+    { rw [expr this] [] },
+    rw ["[", "<-", expr nat.cast_succ, ",", expr char_p.cast_eq_zero_iff F p, "]"] ["at", ident this],
+    exact [expr absurd this h] }
+end
 
-theorem separable_or {f : Polynomial F} (hf : Irreducible f) :
-  f.separable ∨ ¬f.separable ∧ ∃ g : Polynomial F, Irreducible g ∧ expand F p g = f :=
-  if H : f.derivative = 0 then
-    Or.inr
-      ⟨by 
-          rw [separable_iff_derivative_ne_zero hf, not_not, H],
-        contract p f,
-        by 
-          haveI  := is_local_ring_hom_expand F hp.1.Pos <;>
-            exact
-              of_irreducible_map («expr↑ » (expand F p))
-                (by 
-                  rwa [←expand_contract p H] at hf),
-        expand_contract p H⟩
-  else Or.inl$ (separable_iff_derivative_ne_zero hf).2 H
+-- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem separable_or
+{f : polynomial F}
+(hf : irreducible f) : «expr ∨ »(f.separable, «expr ∧ »(«expr¬ »(f.separable), «expr∃ , »((g : polynomial F), «expr ∧ »(irreducible g, «expr = »(expand F p g, f))))) :=
+if H : «expr = »(f.derivative, 0) then or.inr ⟨by rw ["[", expr separable_iff_derivative_ne_zero hf, ",", expr not_not, ",", expr H, "]"] [], contract p f, by haveI [] [] [":=", expr is_local_ring_hom_expand F hp.1.pos]; exact [expr of_irreducible_map «expr↑ »(expand F p) (by rwa ["<-", expr expand_contract p H] ["at", ident hf])], expand_contract p H⟩ else «expr $ »(or.inl, (separable_iff_derivative_ne_zero hf).2 H)
 
-theorem exists_separable_of_irreducible {f : Polynomial F} (hf : Irreducible f) (hf0 : f ≠ 0) :
-  ∃ (n : ℕ)(g : Polynomial F), g.separable ∧ expand F (p^n) g = f :=
-  by 
-    unfreezingI 
-      induction' hn : f.nat_degree using Nat.strong_induction_onₓ with N ih generalizing f 
-    rcases separable_or p hf with (h | ⟨h1, g, hg, hgf⟩)
-    ·
-      refine' ⟨0, f, h, _⟩
-      rw [pow_zeroₓ, expand_one]
-    ·
-      cases' N with N
-      ·
-        rw [nat_degree_eq_zero_iff_degree_le_zero, degree_le_zero_iff] at hn 
-        rw [hn, separable_C, is_unit_iff_ne_zero, not_not] at h1 
-        rw [h1, C_0] at hn 
-        exact absurd hn hf0 
-      have hg1 : (g.nat_degree*p) = N.succ
-      ·
-        rwa [←nat_degree_expand, hgf]
-      have hg2 : g.nat_degree ≠ 0
-      ·
-        intro this 
-        rw [this, zero_mul] at hg1 
-        cases hg1 
-      have hg3 : g.nat_degree < N.succ
-      ·
-        rw [←mul_oneₓ g.nat_degree, ←hg1]
-        exact Nat.mul_lt_mul_of_pos_leftₓ hp.1.one_lt (Nat.pos_of_ne_zeroₓ hg2)
-      have hg4 : g ≠ 0
-      ·
-        rintro rfl 
-        exact hg2 nat_degree_zero 
-      rcases ih _ hg3 hg hg4 rfl with ⟨n, g, hg5, rfl⟩
-      refine' ⟨n+1, g, hg5, _⟩
-      rw [←hgf, expand_expand, pow_succₓ]
+-- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_separable_of_irreducible
+{f : polynomial F}
+(hf : irreducible f)
+(hf0 : «expr ≠ »(f, 0)) : «expr∃ , »((n : exprℕ())
+ (g : polynomial F), «expr ∧ »(g.separable, «expr = »(expand F «expr ^ »(p, n) g, f))) :=
+begin
+  unfreezingI { induction [expr hn, ":", expr f.nat_degree] ["using", ident nat.strong_induction_on] ["with", ident N, ident ih] ["generalizing", ident f] },
+  rcases [expr separable_or p hf, "with", ident h, "|", "⟨", ident h1, ",", ident g, ",", ident hg, ",", ident hgf, "⟩"],
+  { refine [expr ⟨0, f, h, _⟩],
+    rw ["[", expr pow_zero, ",", expr expand_one, "]"] [] },
+  { cases [expr N] ["with", ident N],
+    { rw ["[", expr nat_degree_eq_zero_iff_degree_le_zero, ",", expr degree_le_zero_iff, "]"] ["at", ident hn],
+      rw ["[", expr hn, ",", expr separable_C, ",", expr is_unit_iff_ne_zero, ",", expr not_not, "]"] ["at", ident h1],
+      rw ["[", expr h1, ",", expr C_0, "]"] ["at", ident hn],
+      exact [expr absurd hn hf0] },
+    have [ident hg1] [":", expr «expr = »(«expr * »(g.nat_degree, p), N.succ)] [],
+    { rwa ["[", "<-", expr nat_degree_expand, ",", expr hgf, "]"] [] },
+    have [ident hg2] [":", expr «expr ≠ »(g.nat_degree, 0)] [],
+    { intro [ident this],
+      rw ["[", expr this, ",", expr zero_mul, "]"] ["at", ident hg1],
+      cases [expr hg1] [] },
+    have [ident hg3] [":", expr «expr < »(g.nat_degree, N.succ)] [],
+    { rw ["[", "<-", expr mul_one g.nat_degree, ",", "<-", expr hg1, "]"] [],
+      exact [expr nat.mul_lt_mul_of_pos_left hp.1.one_lt (nat.pos_of_ne_zero hg2)] },
+    have [ident hg4] [":", expr «expr ≠ »(g, 0)] [],
+    { rintro [ident rfl],
+      exact [expr hg2 nat_degree_zero] },
+    rcases [expr ih _ hg3 hg hg4 rfl, "with", "⟨", ident n, ",", ident g, ",", ident hg5, ",", ident rfl, "⟩"],
+    refine [expr ⟨«expr + »(n, 1), g, hg5, _⟩],
+    rw ["[", "<-", expr hgf, ",", expr expand_expand, ",", expr pow_succ, "]"] [] }
+end
 
-theorem is_unit_or_eq_zero_of_separable_expand {f : Polynomial F} (n : ℕ) (hf : (expand F (p^n) f).Separable) :
-  IsUnit f ∨ n = 0 :=
-  by 
-    rw [or_iff_not_imp_right]
-    intro hn 
-    have hf2 : (expand F (p^n) f).derivative = 0
-    ·
-      ·
-        rw [derivative_expand, Nat.cast_pow, CharP.cast_eq_zero, zero_pow (Nat.pos_of_ne_zeroₓ hn), zero_mul, mul_zero]
-    rw [separable_def, hf2, is_coprime_zero_right, is_unit_iff] at hf 
-    rcases hf with ⟨r, hr, hrf⟩
-    rw [eq_comm, expand_eq_C (pow_pos hp.1.Pos _)] at hrf 
-    rwa [hrf, is_unit_C]
+-- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_unit_or_eq_zero_of_separable_expand
+{f : polynomial F}
+(n : exprℕ())
+(hf : (expand F «expr ^ »(p, n) f).separable) : «expr ∨ »(is_unit f, «expr = »(n, 0)) :=
+begin
+  rw [expr or_iff_not_imp_right] [],
+  intro [ident hn],
+  have [ident hf2] [":", expr «expr = »((expand F «expr ^ »(p, n) f).derivative, 0)] [],
+  { by rw ["[", expr derivative_expand, ",", expr nat.cast_pow, ",", expr char_p.cast_eq_zero, ",", expr zero_pow (nat.pos_of_ne_zero hn), ",", expr zero_mul, ",", expr mul_zero, "]"] [] },
+  rw ["[", expr separable_def, ",", expr hf2, ",", expr is_coprime_zero_right, ",", expr is_unit_iff, "]"] ["at", ident hf],
+  rcases [expr hf, "with", "⟨", ident r, ",", ident hr, ",", ident hrf, "⟩"],
+  rw ["[", expr eq_comm, ",", expr expand_eq_C (pow_pos hp.1.pos _), "]"] ["at", ident hrf],
+  rwa ["[", expr hrf, ",", expr is_unit_C, "]"] []
+end
 
 theorem unique_separable_of_irreducible {f : Polynomial F} (hf : Irreducible f) (hf0 : f ≠ 0) (n₁ : ℕ)
   (g₁ : Polynomial F) (hg₁ : g₁.separable) (hgf₁ : expand F (p^n₁) g₁ = f) (n₂ : ℕ) (g₂ : Polynomial F)
   (hg₂ : g₂.separable) (hgf₂ : expand F (p^n₂) g₂ = f) : n₁ = n₂ ∧ g₁ = g₂ :=
   by 
     revert g₁ g₂ 
-    wlog (discharger := tactic.skip) hn : n₁ ≤ n₂ := le_totalₓ n₁ n₂ using n₁ n₂, n₂ n₁ 
-    unfreezingI 
+    wlog (discharger := tactic.skip) hn : n₁ ≤ n₂ := le_totalₓ n₁ n₂ using n₁ n₂, n₂ n₁
+    (
       intros 
       rw [le_iff_exists_add] at hn 
       rcases hn with ⟨k, rfl⟩
@@ -547,7 +540,7 @@ theorem unique_separable_of_irreducible {f : Polynomial F} (hf : Irreducible f) 
         exact absurd (is_unit_C.2 hr) hf.1
       ·
         rw [add_zeroₓ, pow_zeroₓ, expand_one]
-        split  <;> rfl 
+        split  <;> rfl)
     exact
       fun g₁ g₂ hg₁ hgf₁ hg₂ hgf₂ =>
         let ⟨hn, hg⟩ := this g₂ g₁ hg₂ hgf₂ hg₁ hgf₁
@@ -637,15 +630,18 @@ theorem separable_X_pow_sub_C_unit {R : Type _} [CommRingₓ R] [Nontrivial R] {
 theorem separable_X_pow_sub_C {n : ℕ} (a : F) (hn : (n : F) ≠ 0) (ha : a ≠ 0) : separable ((X^n) - C a) :=
   separable_X_pow_sub_C_unit (Units.mk0 a ha) (IsUnit.mk0 n hn)
 
+-- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a field `F`, `X ^ n - 1` is separable iff `↑n ≠ 0`. -/
-theorem X_pow_sub_one_separable_iff {n : ℕ} : ((X^n) - 1 : Polynomial F).Separable ↔ (n : F) ≠ 0 :=
-  by 
-    refine' ⟨_, fun h => separable_X_pow_sub_C_unit 1 (IsUnit.mk0 («expr↑ » n) h)⟩
-    rw [separable_def', derivative_sub, derivative_X_pow, derivative_one, sub_zero]
-    rintro (h : IsCoprime _ _) hn' 
-    rw [←C_eq_nat_cast, hn', C.map_zero, zero_mul, is_coprime_zero_right] at h 
-    have  := not_is_unit_X_pow_sub_one F n 
-    contradiction
+theorem X_pow_sub_one_separable_iff
+{n : exprℕ()} : «expr ↔ »((«expr - »(«expr ^ »(X, n), 1) : polynomial F).separable, «expr ≠ »((n : F), 0)) :=
+begin
+  refine [expr ⟨_, λ h, separable_X_pow_sub_C_unit 1 (is_unit.mk0 «expr↑ »(n) h)⟩],
+  rw ["[", expr separable_def', ",", expr derivative_sub, ",", expr derivative_X_pow, ",", expr derivative_one, ",", expr sub_zero, "]"] [],
+  rintro ["(", ident h, ":", expr is_coprime _ _, ")", ident hn'],
+  rw ["[", "<-", expr C_eq_nat_cast, ",", expr hn', ",", expr C.map_zero, ",", expr zero_mul, ",", expr is_coprime_zero_right, "]"] ["at", ident h],
+  have [] [] [":=", expr not_is_unit_X_pow_sub_one F n],
+  contradiction
+end
 
 /--If `n ≠ 0` in `F`, then ` X ^ n - a` is squarefree for any `a ≠ 0`. -/
 theorem squarefree_X_pow_sub_C {n : ℕ} (a : F) (hn : (n : F) ≠ 0) (ha : a ≠ 0) : Squarefree ((X^n) - C a) :=
@@ -794,12 +790,18 @@ theorem is_separable_tower_bot_of_is_separable [h : IsSeparable F E] : IsSeparab
 
 variable{E}
 
-theorem IsSeparable.of_alg_hom (E' : Type _) [Field E'] [Algebra F E'] (f : E →ₐ[F] E') [IsSeparable F E'] :
-  IsSeparable F E :=
-  by 
-    letI this : Algebra E E' := RingHom.toAlgebra f.to_ring_hom 
-    haveI  : IsScalarTower F E E' := IsScalarTower.of_algebra_map_eq fun x => (f.commutes x).symm 
-    exact is_separable_tower_bot_of_is_separable F E E'
+-- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_separable.of_alg_hom
+(E' : Type*)
+[field E']
+[algebra F E']
+(f : «expr →ₐ[ ] »(E, F, E'))
+[is_separable F E'] : is_separable F E :=
+begin
+  letI [] [":", expr algebra E E'] [":=", expr ring_hom.to_algebra f.to_ring_hom],
+  haveI [] [":", expr is_scalar_tower F E E'] [":=", expr is_scalar_tower.of_algebra_map_eq (λ x, (f.commutes x).symm)],
+  exact [expr is_separable_tower_bot_of_is_separable F E E']
+end
 
 end IsSeparableTower
 
@@ -811,15 +813,17 @@ variable{K L F : Type _}[Field K][Field L][Field F]
 
 variable[Algebra K S][Algebra K L]
 
-theorem AlgHom.card_of_power_basis (pb : PowerBasis K S) (h_sep : (minpoly K pb.gen).Separable)
-  (h_splits : (minpoly K pb.gen).Splits (algebraMap K L)) :
-  @Fintype.card (S →ₐ[K] L) (PowerBasis.AlgHom.fintype pb) = pb.dim :=
-  by 
-    let s := ((minpoly K pb.gen).map (algebraMap K L)).roots.toFinset 
-    have H := fun x => Multiset.mem_to_finset 
-    rw [Fintype.card_congr pb.lift_equiv', Fintype.card_of_subtype s H, ←pb.nat_degree_minpoly,
-      nat_degree_eq_card_roots h_splits, Multiset.to_finset_card_of_nodup]
-    exact nodup_roots ((separable_map (algebraMap K L)).mpr h_sep)
+-- error in FieldTheory.Separable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem alg_hom.card_of_power_basis
+(pb : power_basis K S)
+(h_sep : (minpoly K pb.gen).separable)
+(h_splits : (minpoly K pb.gen).splits (algebra_map K L)) : «expr = »(@fintype.card «expr →ₐ[ ] »(S, K, L) (power_basis.alg_hom.fintype pb), pb.dim) :=
+begin
+  let [ident s] [] [":=", expr ((minpoly K pb.gen).map (algebra_map K L)).roots.to_finset],
+  have [ident H] [] [":=", expr λ x, multiset.mem_to_finset],
+  rw ["[", expr fintype.card_congr pb.lift_equiv', ",", expr fintype.card_of_subtype s H, ",", "<-", expr pb.nat_degree_minpoly, ",", expr nat_degree_eq_card_roots h_splits, ",", expr multiset.to_finset_card_of_nodup, "]"] [],
+  exact [expr nodup_roots ((separable_map (algebra_map K L)).mpr h_sep)]
+end
 
 end CardAlgHom
 

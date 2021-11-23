@@ -232,16 +232,19 @@ theorem chain'.drop : ∀ n {l} h : chain' R l, chain' R (drop n l)
     exact chain'_nil
 | n+1, a :: b :: l, h => chain'.drop n (chain'_cons'.mp h).right
 
-theorem chain'.append :
-  ∀ {l₁ l₂ : List α} h₁ : chain' R l₁ h₂ : chain' R l₂ h : ∀ x _ : x ∈ l₁.last' y _ : y ∈ l₂.head', R x y,
-    chain' R (l₁ ++ l₂)
-| [], l₂, h₁, h₂, h => h₂
-| [a], l₂, h₁, h₂, h => h₂.cons'$ h _ rfl
-| a :: b :: l, l₂, h₁, h₂, h =>
-  by 
-    simp only [last'] at h 
-    have  : chain' R (b :: l) := h₁.tail 
-    exact (this.append h₂ h).cons h₁.rel_head
+-- error in Data.List.Chain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem chain'.append : ∀
+{l₁ l₂ : list α}
+(h₁ : chain' R l₁)
+(h₂ : chain' R l₂)
+(h : ∀ (x «expr ∈ » l₁.last') (y «expr ∈ » l₂.head'), R x y), chain' R «expr ++ »(l₁, l₂)
+| «expr[ , ]»([]), l₂, h₁, h₂, h := h₂
+| «expr[ , ]»([a]), l₂, h₁, h₂, h := «expr $ »(h₂.cons', h _ rfl)
+| «expr :: »(a, «expr :: »(b, l)), l₂, h₁, h₂, h := begin
+  simp [] [] ["only"] ["[", expr last', "]"] [] ["at", ident h],
+  have [] [":", expr chain' R «expr :: »(b, l)] [":=", expr h₁.tail],
+  exact [expr (this.append h₂ h).cons h₁.rel_head]
+end
 
 theorem chain'_pair {x y} : chain' R [x, y] ↔ R x y :=
   by 

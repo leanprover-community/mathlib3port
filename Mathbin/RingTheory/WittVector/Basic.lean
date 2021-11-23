@@ -125,11 +125,11 @@ open Tactic
 /-- An auxiliary tactic for proving that `ghost_fun` respects the ring operations. -/
 unsafe def tactic.interactive.ghost_fun_tac (φ fn : parse parser.pexpr) : tactic Unit :=
   do 
-    let fn ← to_expr (ppquote (%%fn : Finₓ _ → ℕ → R))
-    let quote Finₓ (%%k) → _ → _ ← infer_type fn 
+    let fn ← to_expr (ppquote.1 (%%ₓfn : Finₓ _ → ℕ → R))
+    let quote.1 (Finₓ (%%ₓk) → _ → _) ← infer_type fn 
     sorry 
     sorry 
-    to_expr (ppquote congr_funₓ (congr_argₓ (@peval R _ (%%k)) (witt_structure_int_prop p (%%φ) n)) (%%fn)) >>=
+    to_expr (ppquote.1 (congr_funₓ (congr_argₓ (@peval R _ (%%ₓk)) (witt_structure_int_prop p (%%ₓφ) n)) (%%ₓfn))) >>=
         note `this none 
     sorry
 
@@ -160,27 +160,27 @@ theorem matrix_vec_empty_coeff {R} i j : @coeff p R (Matrix.vecEmpty i) j = (Mat
 
 include hp
 
--- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in ghost_fun_tac: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:341:40: in ghost_fun_tac: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 private theorem ghost_fun_zero : «expr = »(ghost_fun (0 : expr𝕎() R), 0) :=
 by ghost_fun_tac [expr 0] [expr «expr![ , ]»([])]
 
--- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in ghost_fun_tac: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:341:40: in ghost_fun_tac: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 private theorem ghost_fun_one : «expr = »(ghost_fun (1 : expr𝕎() R), 1) :=
 by ghost_fun_tac [expr 1] [expr «expr![ , ]»([])]
 
--- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in ghost_fun_tac: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:341:40: in ghost_fun_tac: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 private theorem ghost_fun_add : «expr = »(ghost_fun «expr + »(x, y), «expr + »(ghost_fun x, ghost_fun y)) :=
 by ghost_fun_tac [expr «expr + »(X 0, X 1)] [expr «expr![ , ]»([x.coeff, y.coeff])]
 
--- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in ghost_fun_tac: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:341:40: in ghost_fun_tac: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 private theorem ghost_fun_sub : «expr = »(ghost_fun «expr - »(x, y), «expr - »(ghost_fun x, ghost_fun y)) :=
 by ghost_fun_tac [expr «expr - »(X 0, X 1)] [expr «expr![ , ]»([x.coeff, y.coeff])]
 
--- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in ghost_fun_tac: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:341:40: in ghost_fun_tac: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 private theorem ghost_fun_mul : «expr = »(ghost_fun «expr * »(x, y), «expr * »(ghost_fun x, ghost_fun y)) :=
 by ghost_fun_tac [expr «expr * »(X 0, X 1)] [expr «expr![ , ]»([x.coeff, y.coeff])]
 
--- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in ghost_fun_tac: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:341:40: in ghost_fun_tac: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 private theorem ghost_fun_neg : «expr = »(ghost_fun «expr- »(x), «expr- »(ghost_fun x)) :=
 by ghost_fun_tac [expr «expr- »(X 0)] [expr «expr![ , ]»([x.coeff])]
 
@@ -188,24 +188,27 @@ end GhostFun
 
 variable(p)(R)
 
+-- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The bijection between `𝕎 R` and `ℕ → R`, under the assumption that `p` is invertible in `R`.
 In `witt_vector.ghost_equiv` we upgrade this to an isomorphism of rings. -/
-private def ghost_equiv' [Invertible (p : R)] : 𝕎 R ≃ (ℕ → R) :=
-  { toFun := ghost_fun, invFun := fun x => mk p$ fun n => aeval x (xInTermsOfW p R n),
-    left_inv :=
-      by 
-        intro x 
-        ext n 
-        have  := bind₁_witt_polynomial_X_in_terms_of_W p R n 
-        applyFun aeval x.coeff  at this 
-        simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_witt_polynomial],
-    right_inv :=
-      by 
-        intro x 
-        ext n 
-        have  := bind₁_X_in_terms_of_W_witt_polynomial p R n 
-        applyFun aeval x  at this 
-        simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_witt_polynomial] }
+private
+def ghost_equiv' [invertible (p : R)] : «expr ≃ »(expr𝕎() R, exprℕ() → R) :=
+{ to_fun := ghost_fun,
+  inv_fun := λ x, «expr $ »(mk p, λ n, aeval x (X_in_terms_of_W p R n)),
+  left_inv := begin
+    intro [ident x],
+    ext [] [ident n] [],
+    have [] [] [":=", expr bind₁_witt_polynomial_X_in_terms_of_W p R n],
+    apply_fun [expr aeval x.coeff] ["at", ident this] [],
+    simpa [] [] ["only"] ["[", expr aeval_bind₁, ",", expr aeval_X, ",", expr ghost_fun, ",", expr aeval_witt_polynomial, "]"] [] []
+  end,
+  right_inv := begin
+    intro [ident x],
+    ext [] [ident n] [],
+    have [] [] [":=", expr bind₁_X_in_terms_of_W_witt_polynomial p R n],
+    apply_fun [expr aeval x] ["at", ident this] [],
+    simpa [] [] ["only"] ["[", expr aeval_bind₁, ",", expr aeval_X, ",", expr ghost_fun, ",", expr aeval_witt_polynomial, "]"] [] []
+  end }
 
 include hp
 

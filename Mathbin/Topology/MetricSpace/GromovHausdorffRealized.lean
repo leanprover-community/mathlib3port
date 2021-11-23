@@ -80,7 +80,7 @@ def candidates : Set (prod_space_fun X Y) :=
 /-- Version of the set of candidates in bounded_continuous_functions, to apply
 Arzela-Ascoli -/
 private def candidates_b : Set (Cb X Y) :=
-  { f : Cb X Y | (f : _ → ℝ) ∈ candidates X Y }
+  { f:Cb X Y | (f : _ → ℝ) ∈ candidates X Y }
 
 end Definitions
 
@@ -126,20 +126,16 @@ private theorem candidates_triangle (fA : f ∈ candidates X Y) : f (x, z) ≤ f
 private theorem candidates_refl (fA : f ∈ candidates X Y) : f (x, x) = 0 :=
   fA.1.2 x
 
-private theorem candidates_nonneg (fA : f ∈ candidates X Y) : 0 ≤ f (x, y) :=
-  by 
-    have  : 0 ≤ 2*f (x, y) :=
-      calc 0 = f (x, x) := (candidates_refl fA).symm 
-        _ ≤ f (x, y)+f (y, x) := candidates_triangle fA 
-        _ = f (x, y)+f (x, y) :=
-        by 
-          rw [candidates_symm fA]
-        _ = 2*f (x, y) :=
-        by 
-          ring
-        
-    ·
-      linarith
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private theorem candidates_nonneg (fA : «expr ∈ »(f, candidates X Y)) : «expr ≤ »(0, f (x, y)) :=
+begin
+  have [] [":", expr «expr ≤ »(0, «expr * »(2, f (x, y)))] [":=", expr calc
+     «expr = »(0, f (x, x)) : (candidates_refl fA).symm
+     «expr ≤ »(..., «expr + »(f (x, y), f (y, x))) : candidates_triangle fA
+     «expr = »(..., «expr + »(f (x, y), f (x, y))) : by rw ["[", expr candidates_symm fA, "]"] []
+     «expr = »(..., «expr * »(2, f (x, y))) : by ring []],
+  by linarith [] [] []
+end
 
 private theorem candidates_dist_inl (fA : f ∈ candidates X Y) (x y : X) : f (inl x, inl y) = dist x y :=
   fA.1.1.1.1.1 x y
@@ -232,16 +228,20 @@ theorem candidates_b_of_candidates_mem (f : prod_space_fun X Y) (fA : f ∈ cand
   candidates_b_of_candidates f fA ∈ candidates_b X Y :=
   fA
 
--- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- The distance on `X ⊕ Y` is a candidate -/
-private
-theorem dist_mem_candidates : «expr ∈ »(λ
- p : «expr × »(«expr ⊕ »(X, Y), «expr ⊕ »(X, Y)), dist p.1 p.2, candidates X Y) :=
-begin
-  simp [] [] ["only"] ["[", expr candidates, ",", expr dist_comm, ",", expr forall_const, ",", expr and_true, ",", expr add_comm, ",", expr eq_self_iff_true, ",", expr and_self, ",", expr sum.forall, ",", expr set.mem_set_of_eq, ",", expr dist_self, "]"] [] [],
-  repeat { split <|> exact [expr λ
-     a y z, dist_triangle_left _ _ _] <|> exact [expr λ x y, by refl] <|> exact [expr λ x y, max_var_bound] }
-end
+private theorem dist_mem_candidates : (fun p : Sum X Y × Sum X Y => dist p.1 p.2) ∈ candidates X Y :=
+  by 
+    simp only [candidates, dist_comm, forall_const, and_trueₓ, add_commₓ, eq_self_iff_true, and_selfₓ, Sum.forall,
+      Set.mem_set_of_eq, dist_self]
+    repeat' 
+      first |
+        split |
+        exact fun a y z => dist_triangle_left _ _ _|
+        exact
+          fun x y =>
+            by 
+              rfl|
+        exact fun x y => max_var_bound
 
 /-- The distance on `X ⊕ Y` as a candidate -/
 def candidates_b_dist (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [Inhabited X] [MetricSpace Y]
@@ -254,7 +254,7 @@ theorem candidates_b_dist_mem_candidates_b : candidates_b_dist X Y ∈ candidate
 private theorem candidates_b_nonempty : (candidates_b X Y).Nonempty :=
   ⟨_, candidates_b_dist_mem_candidates_b⟩
 
--- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- To apply Arzela-Ascoli, we need to check that the set of candidates is closed and
 equicontinuous. Equicontinuity follows from the Lipschitz control, we check closedness. -/
 private
@@ -297,23 +297,22 @@ begin
      (x)] }
 end
 
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Compactness of candidates (in bounded_continuous_functions) follows. -/
-private theorem compact_candidates_b : IsCompact (candidates_b X Y) :=
-  by 
-    refine' arzela_ascoli₂ (Icc 0 (max_var X Y)) is_compact_Icc (candidates_b X Y) closed_candidates_b _ _
-    ·
-      rintro f ⟨x1, x2⟩ hf 
-      simp only [Set.mem_Icc]
-      exact ⟨candidates_nonneg hf, candidates_le_max_var hf⟩
-    ·
-      refine' equicontinuous_of_continuity_modulus (fun t => (2*max_var X Y)*t) _ _ _
-      ·
-        have  : tendsto (fun t : ℝ => (2*(max_var X Y : ℝ))*t) (𝓝 0) (𝓝 ((2*max_var X Y)*0)) :=
-          tendsto_const_nhds.mul tendsto_id 
-        simpa using this
-      ·
-        intro x y f hf 
-        exact (candidates_lipschitz hf).dist_le_mul _ _
+private
+theorem compact_candidates_b : is_compact (candidates_b X Y) :=
+begin
+  refine [expr arzela_ascoli₂ (Icc 0 (max_var X Y)) is_compact_Icc (candidates_b X Y) closed_candidates_b _ _],
+  { rintros [ident f, "⟨", ident x1, ",", ident x2, "⟩", ident hf],
+    simp [] [] ["only"] ["[", expr set.mem_Icc, "]"] [] [],
+    exact [expr ⟨candidates_nonneg hf, candidates_le_max_var hf⟩] },
+  { refine [expr equicontinuous_of_continuity_modulus (λ t, «expr * »(«expr * »(2, max_var X Y), t)) _ _ _],
+    { have [] [":", expr tendsto (λ
+        t : exprℝ(), «expr * »(«expr * »(2, (max_var X Y : exprℝ())), t)) (expr𝓝() 0) (expr𝓝() «expr * »(«expr * »(2, max_var X Y), 0))] [":=", expr tendsto_const_nhds.mul tendsto_id],
+      simpa [] [] [] [] [] ["using", expr this] },
+    { assume [binders (x y f hf)],
+      exact [expr (candidates_lipschitz hf).dist_le_mul _ _] } }
+end
 
 /-- We will then choose the candidate minimizing the Hausdorff distance. Except that we are not
 in a metric space setting, so we need to define our custom version of Hausdorff distance,
@@ -343,109 +342,91 @@ private theorem HD_bound_aux2 (f : Cb X Y) (C : ℝ) : BddAbove (range fun y : Y
     calc (⨅x, f (inl x, inr y)+C) ≤ f (inl (default X), inr y)+C := cinfi_le (HD_below_aux2 C) (default X)_ ≤ Cf+C :=
       add_le_add ((fun x => hCf (mem_range_self x)) _) (le_reflₓ _)
 
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Explicit bound on `HD (dist)`. This means that when looking for minimizers it will
 be sufficient to look for functions with `HD(f)` bounded by this bound. -/
-theorem HD_candidates_b_dist_le : HD (candidates_b_dist X Y) ≤ (diam (univ : Set X)+1)+diam (univ : Set Y) :=
-  by 
-    refine' max_leₓ (csupr_le fun x => _) (csupr_le fun y => _)
-    ·
-      have A : (⨅y, candidates_b_dist X Y (inl x, inr y)) ≤ candidates_b_dist X Y (inl x, inr (default Y)) :=
-        cinfi_le
-          (by 
-            simpa using HD_below_aux1 0)
-          (default Y)
-      have B : dist (inl x) (inr (default Y)) ≤ (diam (univ : Set X)+1)+diam (univ : Set Y) :=
-        calc dist (inl x) (inr (default Y)) = (dist x (default X)+1)+dist (default Y) (default Y) := rfl 
-          _ ≤ (diam (univ : Set X)+1)+diam (univ : Set Y) :=
-          by 
-            apply add_le_add (add_le_add _ (le_reflₓ _))
-            exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
-            any_goals 
-              exact OrderedAddCommMonoid.to_covariant_class_left ℝ 
-            any_goals 
-              exact OrderedAddCommMonoid.to_covariant_class_right ℝ 
-            exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
-          
-      exact le_transₓ A B
-    ·
-      have A : (⨅x, candidates_b_dist X Y (inl x, inr y)) ≤ candidates_b_dist X Y (inl (default X), inr y) :=
-        cinfi_le
-          (by 
-            simpa using HD_below_aux2 0)
-          (default X)
-      have B : dist (inl (default X)) (inr y) ≤ (diam (univ : Set X)+1)+diam (univ : Set Y) :=
-        calc dist (inl (default X)) (inr y) = (dist (default X) (default X)+1)+dist (default Y) y := rfl 
-          _ ≤ (diam (univ : Set X)+1)+diam (univ : Set Y) :=
-          by 
-            apply add_le_add (add_le_add _ (le_reflₓ _))
-            exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
-            any_goals 
-              exact OrderedAddCommMonoid.to_covariant_class_left ℝ 
-            any_goals 
-              exact OrderedAddCommMonoid.to_covariant_class_right ℝ 
-            exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
-          
-      exact le_transₓ A B
+theorem HD_candidates_b_dist_le : «expr ≤ »(HD (candidates_b_dist X Y), «expr + »(«expr + »(diam (univ : set X), 1), diam (univ : set Y))) :=
+begin
+  refine [expr max_le (csupr_le (λ x, _)) (csupr_le (λ y, _))],
+  { have [ident A] [":", expr «expr ≤ »(«expr⨅ , »((y), candidates_b_dist X Y (inl x, inr y)), candidates_b_dist X Y (inl x, inr (default Y)))] [":=", expr cinfi_le (by simpa [] [] [] [] [] ["using", expr HD_below_aux1 0]) (default Y)],
+    have [ident B] [":", expr «expr ≤ »(dist (inl x) (inr (default Y)), «expr + »(«expr + »(diam (univ : set X), 1), diam (univ : set Y)))] [":=", expr calc
+       «expr = »(dist (inl x) (inr (default Y)), «expr + »(«expr + »(dist x (default X), 1), dist (default Y) (default Y))) : rfl
+       «expr ≤ »(..., «expr + »(«expr + »(diam (univ : set X), 1), diam (univ : set Y))) : begin
+         apply [expr add_le_add (add_le_add _ (le_refl _))],
+         exact [expr dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)],
+         any_goals { exact [expr ordered_add_comm_monoid.to_covariant_class_left exprℝ()] },
+         any_goals { exact [expr ordered_add_comm_monoid.to_covariant_class_right exprℝ()] },
+         exact [expr dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)]
+       end],
+    exact [expr le_trans A B] },
+  { have [ident A] [":", expr «expr ≤ »(«expr⨅ , »((x), candidates_b_dist X Y (inl x, inr y)), candidates_b_dist X Y (inl (default X), inr y))] [":=", expr cinfi_le (by simpa [] [] [] [] [] ["using", expr HD_below_aux2 0]) (default X)],
+    have [ident B] [":", expr «expr ≤ »(dist (inl (default X)) (inr y), «expr + »(«expr + »(diam (univ : set X), 1), diam (univ : set Y)))] [":=", expr calc
+       «expr = »(dist (inl (default X)) (inr y), «expr + »(«expr + »(dist (default X) (default X), 1), dist (default Y) y)) : rfl
+       «expr ≤ »(..., «expr + »(«expr + »(diam (univ : set X), 1), diam (univ : set Y))) : begin
+         apply [expr add_le_add (add_le_add _ (le_refl _))],
+         exact [expr dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)],
+         any_goals { exact [expr ordered_add_comm_monoid.to_covariant_class_left exprℝ()] },
+         any_goals { exact [expr ordered_add_comm_monoid.to_covariant_class_right exprℝ()] },
+         exact [expr dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)]
+       end],
+    exact [expr le_trans A B] }
+end
 
-private theorem HD_lipschitz_aux1 (f g : Cb X Y) : (⨆x, ⨅y, f (inl x, inr y)) ≤ (⨆x, ⨅y, g (inl x, inr y))+dist f g :=
-  by 
-    rcases(Real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1 with ⟨cg, hcg⟩
-    have Hcg : ∀ x, cg ≤ g x := fun x => hcg (mem_range_self x)
-    rcases(Real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1 with ⟨cf, hcf⟩
-    have Hcf : ∀ x, cf ≤ f x := fun x => hcf (mem_range_self x)
-    have Z : (⨆x, ⨅y, f (inl x, inr y)) ≤ ⨆x, ⨅y, g (inl x, inr y)+dist f g :=
-      csupr_le_csupr (HD_bound_aux1 _ (dist f g))
-        fun x => cinfi_le_cinfi ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist 
-    have E1 : ∀ x, ((⨅y, g (inl x, inr y))+dist f g) = ⨅y, g (inl x, inr y)+dist f g
-    ·
-      intro x 
-      refine' map_cinfi_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _
-      ·
-        intro x y hx 
-        simpa
-      ·
-        show BddBelow (range fun y : Y => g (inl x, inr y))
-        exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
-    have E2 : ((⨆x, ⨅y, g (inl x, inr y))+dist f g) = ⨆x, (⨅y, g (inl x, inr y))+dist f g
-    ·
-      refine' map_csupr_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _
-      ·
-        intro x y hx 
-        simpa
-      ·
-        ·
-          simpa using HD_bound_aux1 _ 0
-    simpa [E2, E1, Function.comp]
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem HD_lipschitz_aux1
+(f
+ g : Cb X Y) : «expr ≤ »(«expr⨆ , »((x), «expr⨅ , »((y), f (inl x, inr y))), «expr + »(«expr⨆ , »((x), «expr⨅ , »((y), g (inl x, inr y))), dist f g)) :=
+begin
+  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1, "with", "⟨", ident cg, ",", ident hcg, "⟩"],
+  have [ident Hcg] [":", expr ∀ x, «expr ≤ »(cg, g x)] [":=", expr λ x, hcg (mem_range_self x)],
+  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1, "with", "⟨", ident cf, ",", ident hcf, "⟩"],
+  have [ident Hcf] [":", expr ∀ x, «expr ≤ »(cf, f x)] [":=", expr λ x, hcf (mem_range_self x)],
+  have [ident Z] [":", expr «expr ≤ »(«expr⨆ , »((x), «expr⨅ , »((y), f (inl x, inr y))), «expr⨆ , »((x), «expr⨅ , »((y), «expr + »(g (inl x, inr y), dist f g))))] [":=", expr csupr_le_csupr (HD_bound_aux1 _ (dist f g)) (λ
+    x, cinfi_le_cinfi ⟨cf, forall_range_iff.2 (λ i, Hcf _)⟩ (λ y, coe_le_coe_add_dist))],
+  have [ident E1] [":", expr ∀
+   x, «expr = »(«expr + »(«expr⨅ , »((y), g (inl x, inr y)), dist f g), «expr⨅ , »((y), «expr + »(g (inl x, inr y), dist f g)))] [],
+  { assume [binders (x)],
+    refine [expr map_cinfi_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _],
+    { assume [binders (x y hx)],
+      simpa [] [] [] [] [] [] },
+    { show [expr bdd_below (range (λ y : Y, g (inl x, inr y)))],
+      from [expr ⟨cg, forall_range_iff.2 (λ i, Hcg _)⟩] } },
+  have [ident E2] [":", expr «expr = »(«expr + »(«expr⨆ , »((x), «expr⨅ , »((y), g (inl x, inr y))), dist f g), «expr⨆ , »((x), «expr + »(«expr⨅ , »((y), g (inl x, inr y)), dist f g)))] [],
+  { refine [expr map_csupr_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _],
+    { assume [binders (x y hx)],
+      simpa [] [] [] [] [] [] },
+    { by simpa [] [] [] [] [] ["using", expr HD_bound_aux1 _ 0] } },
+  simpa [] [] [] ["[", expr E2, ",", expr E1, ",", expr function.comp, "]"] [] []
+end
 
-private theorem HD_lipschitz_aux2 (f g : Cb X Y) : (⨆y, ⨅x, f (inl x, inr y)) ≤ (⨆y, ⨅x, g (inl x, inr y))+dist f g :=
-  by 
-    rcases(Real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1 with ⟨cg, hcg⟩
-    have Hcg : ∀ x, cg ≤ g x := fun x => hcg (mem_range_self x)
-    rcases(Real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1 with ⟨cf, hcf⟩
-    have Hcf : ∀ x, cf ≤ f x := fun x => hcf (mem_range_self x)
-    have Z : (⨆y, ⨅x, f (inl x, inr y)) ≤ ⨆y, ⨅x, g (inl x, inr y)+dist f g :=
-      csupr_le_csupr (HD_bound_aux2 _ (dist f g))
-        fun y => cinfi_le_cinfi ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist 
-    have E1 : ∀ y, ((⨅x, g (inl x, inr y))+dist f g) = ⨅x, g (inl x, inr y)+dist f g
-    ·
-      intro y 
-      refine' map_cinfi_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _
-      ·
-        intro x y hx 
-        simpa
-      ·
-        show BddBelow (range fun x : X => g (inl x, inr y))
-        exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
-    have E2 : ((⨆y, ⨅x, g (inl x, inr y))+dist f g) = ⨆y, (⨅x, g (inl x, inr y))+dist f g
-    ·
-      refine' map_csupr_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _
-      ·
-        intro x y hx 
-        simpa
-      ·
-        ·
-          simpa using HD_bound_aux2 _ 0
-    simpa [E2, E1]
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem HD_lipschitz_aux2
+(f
+ g : Cb X Y) : «expr ≤ »(«expr⨆ , »((y), «expr⨅ , »((x), f (inl x, inr y))), «expr + »(«expr⨆ , »((y), «expr⨅ , »((x), g (inl x, inr y))), dist f g)) :=
+begin
+  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1, "with", "⟨", ident cg, ",", ident hcg, "⟩"],
+  have [ident Hcg] [":", expr ∀ x, «expr ≤ »(cg, g x)] [":=", expr λ x, hcg (mem_range_self x)],
+  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1, "with", "⟨", ident cf, ",", ident hcf, "⟩"],
+  have [ident Hcf] [":", expr ∀ x, «expr ≤ »(cf, f x)] [":=", expr λ x, hcf (mem_range_self x)],
+  have [ident Z] [":", expr «expr ≤ »(«expr⨆ , »((y), «expr⨅ , »((x), f (inl x, inr y))), «expr⨆ , »((y), «expr⨅ , »((x), «expr + »(g (inl x, inr y), dist f g))))] [":=", expr csupr_le_csupr (HD_bound_aux2 _ (dist f g)) (λ
+    y, cinfi_le_cinfi ⟨cf, forall_range_iff.2 (λ i, Hcf _)⟩ (λ y, coe_le_coe_add_dist))],
+  have [ident E1] [":", expr ∀
+   y, «expr = »(«expr + »(«expr⨅ , »((x), g (inl x, inr y)), dist f g), «expr⨅ , »((x), «expr + »(g (inl x, inr y), dist f g)))] [],
+  { assume [binders (y)],
+    refine [expr map_cinfi_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _],
+    { assume [binders (x y hx)],
+      simpa [] [] [] [] [] [] },
+    { show [expr bdd_below (range (λ x : X, g (inl x, inr y)))],
+      from [expr ⟨cg, forall_range_iff.2 (λ i, Hcg _)⟩] } },
+  have [ident E2] [":", expr «expr = »(«expr + »(«expr⨆ , »((y), «expr⨅ , »((x), g (inl x, inr y))), dist f g), «expr⨆ , »((y), «expr + »(«expr⨅ , »((x), g (inl x, inr y)), dist f g)))] [],
+  { refine [expr map_csupr_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) _ _],
+    { assume [binders (x y hx)],
+      simpa [] [] [] [] [] [] },
+    { by simpa [] [] [] [] [] ["using", expr HD_bound_aux2 _ 0] } },
+  simpa [] [] [] ["[", expr E2, ",", expr E1, "]"] [] []
+end
 
 private theorem HD_lipschitz_aux3 (f g : Cb X Y) : HD f ≤ HD g+dist f g :=
   max_leₓ (le_transₓ (HD_lipschitz_aux1 f g) (add_le_add_right (le_max_leftₓ _ _) _))
@@ -486,7 +467,7 @@ def premetric_optimal_GH_dist : PseudoMetricSpace (Sum X Y) :=
 
 attribute [local instance] premetric_optimal_GH_dist PseudoMetric.distSetoid
 
--- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler metric_space
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler metric_space
 /-- A metric space which realizes the optimal coupling between `X` and `Y` -/
 @[derive #[expr metric_space], nolint #[ident has_inhabited_instance]]
 def optimal_GH_coupling : Type* :=
@@ -514,83 +495,69 @@ theorem isometry_optimal_GH_injr : Isometry (optimal_GH_injr X Y) :=
     change dist («expr⟦ ⟧» (inr x)) («expr⟦ ⟧» (inr y)) = dist x y 
     exact candidates_dist_inr (optimal_GH_dist_mem_candidates_b X Y) _ _
 
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The optimal coupling between two compact spaces `X` and `Y` is still a compact space -/
-instance compact_space_optimal_GH_coupling : CompactSpace (optimal_GH_coupling X Y) :=
-  ⟨by 
-      have  : (univ : Set (optimal_GH_coupling X Y)) = optimal_GH_injl X Y '' univ ∪ optimal_GH_injr X Y '' univ
-      ·
-        refine' subset.antisymm (fun xc hxc => _) (subset_univ _)
-        rcases Quotientₓ.exists_rep xc with ⟨x, hx⟩
-        cases x <;> rw [←hx]
-        ·
-          have  : «expr⟦ ⟧» (inl x) = optimal_GH_injl X Y x := rfl 
-          rw [this]
-          exact mem_union_left _ (mem_image_of_mem _ (mem_univ _))
-        ·
-          have  : «expr⟦ ⟧» (inr x) = optimal_GH_injr X Y x := rfl 
-          rw [this]
-          exact mem_union_right _ (mem_image_of_mem _ (mem_univ _))
-      rw [this]
-      exact
-        (compact_univ.image (isometry_optimal_GH_injl X Y).Continuous).union
-          (compact_univ.image (isometry_optimal_GH_injr X Y).Continuous)⟩
+instance compact_space_optimal_GH_coupling : compact_space (optimal_GH_coupling X Y) :=
+⟨begin
+   have [] [":", expr «expr = »((univ : set (optimal_GH_coupling X Y)), «expr ∪ »(«expr '' »(optimal_GH_injl X Y, univ), «expr '' »(optimal_GH_injr X Y, univ)))] [],
+   { refine [expr subset.antisymm (λ xc hxc, _) (subset_univ _)],
+     rcases [expr quotient.exists_rep xc, "with", "⟨", ident x, ",", ident hx, "⟩"],
+     cases [expr x] []; rw ["<-", expr hx] [],
+     { have [] [":", expr «expr = »(«expr⟦ ⟧»(inl x), optimal_GH_injl X Y x)] [":=", expr rfl],
+       rw [expr this] [],
+       exact [expr mem_union_left _ (mem_image_of_mem _ (mem_univ _))] },
+     { have [] [":", expr «expr = »(«expr⟦ ⟧»(inr x), optimal_GH_injr X Y x)] [":=", expr rfl],
+       rw [expr this] [],
+       exact [expr mem_union_right _ (mem_image_of_mem _ (mem_univ _))] } },
+   rw [expr this] [],
+   exact [expr (compact_univ.image (isometry_optimal_GH_injl X Y).continuous).union (compact_univ.image (isometry_optimal_GH_injr X Y).continuous)]
+ end⟩
 
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For any candidate `f`, `HD(f)` is larger than or equal to the Hausdorff distance in the
 optimal coupling. This follows from the fact that HD of the optimal candidate is exactly
 the Hausdorff distance in the optimal coupling, although we only prove here the inequality
 we need. -/
-theorem Hausdorff_dist_optimal_le_HD {f} (h : f ∈ candidates_b X Y) :
-  Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)) ≤ HD f :=
-  by 
-    refine' le_transₓ (le_of_forall_le_of_dense fun r hr => _) (HD_optimal_GH_dist_le X Y f h)
-    have A : ∀ x _ : x ∈ range (optimal_GH_injl X Y), ∃ (y : _)(_ : y ∈ range (optimal_GH_injr X Y)), dist x y ≤ r
-    ·
-      intro x hx 
-      rcases mem_range.1 hx with ⟨z, hz⟩
-      rw [←hz]
-      have I1 : (⨆x, ⨅y, optimal_GH_dist X Y (inl x, inr y)) < r := lt_of_le_of_ltₓ (le_max_leftₓ _ _) hr 
-      have I2 : (⨅y, optimal_GH_dist X Y (inl z, inr y)) ≤ ⨆x, ⨅y, optimal_GH_dist X Y (inl x, inr y) :=
-        le_cSup
-          (by 
-            simpa using HD_bound_aux1 _ 0)
-          (mem_range_self _)
-      have I : (⨅y, optimal_GH_dist X Y (inl z, inr y)) < r := lt_of_le_of_ltₓ I2 I1 
-      rcases exists_lt_of_cInf_lt (range_nonempty _) I with ⟨r', r'range, hr'⟩
-      rcases mem_range.1 r'range with ⟨z', hz'⟩
-      exists optimal_GH_injr X Y z', mem_range_self _ 
-      have  : (optimal_GH_dist X Y) (inl z, inr z') ≤ r
-      ·
-        ·
-          rw [hz']
-          exact le_of_ltₓ hr' 
-      exact this 
-    refine' Hausdorff_dist_le_of_mem_dist _ A _
-    ·
-      rcases exists_mem_of_nonempty X with ⟨xX, _⟩
-      have  : optimal_GH_injl X Y xX ∈ range (optimal_GH_injl X Y) := mem_range_self _ 
-      rcases A _ this with ⟨y, yrange, hy⟩
-      exact le_transₓ dist_nonneg hy
-    ·
-      intro y hy 
-      rcases mem_range.1 hy with ⟨z, hz⟩
-      rw [←hz]
-      have I1 : (⨆y, ⨅x, optimal_GH_dist X Y (inl x, inr y)) < r := lt_of_le_of_ltₓ (le_max_rightₓ _ _) hr 
-      have I2 : (⨅x, optimal_GH_dist X Y (inl x, inr z)) ≤ ⨆y, ⨅x, optimal_GH_dist X Y (inl x, inr y) :=
-        le_cSup
-          (by 
-            simpa using HD_bound_aux2 _ 0)
-          (mem_range_self _)
-      have I : (⨅x, optimal_GH_dist X Y (inl x, inr z)) < r := lt_of_le_of_ltₓ I2 I1 
-      rcases exists_lt_of_cInf_lt (range_nonempty _) I with ⟨r', r'range, hr'⟩
-      rcases mem_range.1 r'range with ⟨z', hz'⟩
-      exists optimal_GH_injl X Y z', mem_range_self _ 
-      have  : (optimal_GH_dist X Y) (inl z', inr z) ≤ r
-      ·
-        ·
-          rw [hz']
-          exact le_of_ltₓ hr' 
-      rw [dist_comm]
-      exact this
+theorem Hausdorff_dist_optimal_le_HD
+{f}
+(h : «expr ∈ »(f, candidates_b X Y)) : «expr ≤ »(Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)), HD f) :=
+begin
+  refine [expr le_trans (le_of_forall_le_of_dense (λ r hr, _)) (HD_optimal_GH_dist_le X Y f h)],
+  have [ident A] [":", expr ∀
+   x «expr ∈ » range (optimal_GH_injl X Y), «expr∃ , »((y «expr ∈ » range (optimal_GH_injr X Y)), «expr ≤ »(dist x y, r))] [],
+  { assume [binders (x hx)],
+    rcases [expr mem_range.1 hx, "with", "⟨", ident z, ",", ident hz, "⟩"],
+    rw ["<-", expr hz] [],
+    have [ident I1] [":", expr «expr < »(«expr⨆ , »((x), «expr⨅ , »((y), optimal_GH_dist X Y (inl x, inr y))), r)] [":=", expr lt_of_le_of_lt (le_max_left _ _) hr],
+    have [ident I2] [":", expr «expr ≤ »(«expr⨅ , »((y), optimal_GH_dist X Y (inl z, inr y)), «expr⨆ , »((x), «expr⨅ , »((y), optimal_GH_dist X Y (inl x, inr y))))] [":=", expr le_cSup (by simpa [] [] [] [] [] ["using", expr HD_bound_aux1 _ 0]) (mem_range_self _)],
+    have [ident I] [":", expr «expr < »(«expr⨅ , »((y), optimal_GH_dist X Y (inl z, inr y)), r)] [":=", expr lt_of_le_of_lt I2 I1],
+    rcases [expr exists_lt_of_cInf_lt (range_nonempty _) I, "with", "⟨", ident r', ",", ident r'range, ",", ident hr', "⟩"],
+    rcases [expr mem_range.1 r'range, "with", "⟨", ident z', ",", ident hz', "⟩"],
+    existsi ["[", expr optimal_GH_injr X Y z', ",", expr mem_range_self _, "]"],
+    have [] [":", expr «expr ≤ »(optimal_GH_dist X Y (inl z, inr z'), r)] [],
+    by { rw [expr hz'] [],
+      exact [expr le_of_lt hr'] },
+    exact [expr this] },
+  refine [expr Hausdorff_dist_le_of_mem_dist _ A _],
+  { rcases [expr exists_mem_of_nonempty X, "with", "⟨", ident xX, ",", "_", "⟩"],
+    have [] [":", expr «expr ∈ »(optimal_GH_injl X Y xX, range (optimal_GH_injl X Y))] [":=", expr mem_range_self _],
+    rcases [expr A _ this, "with", "⟨", ident y, ",", ident yrange, ",", ident hy, "⟩"],
+    exact [expr le_trans dist_nonneg hy] },
+  { assume [binders (y hy)],
+    rcases [expr mem_range.1 hy, "with", "⟨", ident z, ",", ident hz, "⟩"],
+    rw ["<-", expr hz] [],
+    have [ident I1] [":", expr «expr < »(«expr⨆ , »((y), «expr⨅ , »((x), optimal_GH_dist X Y (inl x, inr y))), r)] [":=", expr lt_of_le_of_lt (le_max_right _ _) hr],
+    have [ident I2] [":", expr «expr ≤ »(«expr⨅ , »((x), optimal_GH_dist X Y (inl x, inr z)), «expr⨆ , »((y), «expr⨅ , »((x), optimal_GH_dist X Y (inl x, inr y))))] [":=", expr le_cSup (by simpa [] [] [] [] [] ["using", expr HD_bound_aux2 _ 0]) (mem_range_self _)],
+    have [ident I] [":", expr «expr < »(«expr⨅ , »((x), optimal_GH_dist X Y (inl x, inr z)), r)] [":=", expr lt_of_le_of_lt I2 I1],
+    rcases [expr exists_lt_of_cInf_lt (range_nonempty _) I, "with", "⟨", ident r', ",", ident r'range, ",", ident hr', "⟩"],
+    rcases [expr mem_range.1 r'range, "with", "⟨", ident z', ",", ident hz', "⟩"],
+    existsi ["[", expr optimal_GH_injl X Y z', ",", expr mem_range_self _, "]"],
+    have [] [":", expr «expr ≤ »(optimal_GH_dist X Y (inl z', inr z), r)] [],
+    by { rw [expr hz'] [],
+      exact [expr le_of_lt hr'] },
+    rw [expr dist_comm] [],
+    exact [expr this] }
+end
 
 end Consequences
 

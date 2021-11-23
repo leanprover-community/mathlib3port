@@ -71,19 +71,18 @@ theorem iterate_to_endomorphism_mem_lower_central_series (x : L) (m : M) (k : �
 
 open LieAlgebra
 
-theorem derived_series_le_lower_central_series (k : ℕ) : derived_series R L k ≤ lower_central_series R L L k :=
-  by 
-    induction' k with k h
-    ·
-      rw [derived_series_def, derived_series_of_ideal_zero, lower_central_series_zero]
-      exact le_reflₓ _
-    ·
-      have h' : derived_series R L k ≤ ⊤
-      ·
-        ·
-          simp only [le_top]
-      rw [derived_series_def, derived_series_of_ideal_succ, lower_central_series_succ]
-      exact LieSubmodule.mono_lie _ _ _ _ h' h
+-- error in Algebra.Lie.Nilpotent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem derived_series_le_lower_central_series
+(k : exprℕ()) : «expr ≤ »(derived_series R L k, lower_central_series R L L k) :=
+begin
+  induction [expr k] [] ["with", ident k, ident h] [],
+  { rw ["[", expr derived_series_def, ",", expr derived_series_of_ideal_zero, ",", expr lower_central_series_zero, "]"] [],
+    exact [expr le_refl _] },
+  { have [ident h'] [":", expr «expr ≤ »(derived_series R L k, «expr⊤»())] [],
+    { by simp [] [] ["only"] ["[", expr le_top, "]"] [] [] },
+    rw ["[", expr derived_series_def, ",", expr derived_series_of_ideal_succ, ",", expr lower_central_series_succ, "]"] [],
+    exact [expr lie_submodule.mono_lie _ _ _ _ h' h] }
+end
 
 /-- A Lie module is nilpotent if its lower central series reaches 0 (in a finite number of
 steps). -/
@@ -99,8 +98,8 @@ instance (priority := 100)trivial_is_nilpotent [is_trivial L M] : IsNilpotent R 
 theorem nilpotent_endo_of_nilpotent_module [hM : IsNilpotent R L M] :
   ∃ k : ℕ, ∀ x : L, (to_endomorphism R L M x^k) = 0 :=
   by 
-    unfreezingI 
-      obtain ⟨k, hM⟩ := hM 
+    (
+      obtain ⟨k, hM⟩ := hM)
     use k 
     intro x 
     ext m 
@@ -168,19 +167,20 @@ theorem LieIdeal.lower_central_series_map_le (k : ℕ) {f : L →ₗ⁅R⁆ L'} 
       simp only [LieModule.lower_central_series_succ]
       exact le_transₓ (LieIdeal.map_bracket_le f) (LieSubmodule.mono_lie _ _ _ _ le_top ih)
 
-theorem LieIdeal.lower_central_series_map_eq (k : ℕ) {f : L →ₗ⁅R⁆ L'} (h : Function.Surjective f) :
-  LieIdeal.map f (lower_central_series R L L k) = lower_central_series R L' L' k :=
-  by 
-    have h' : (⊤ : LieIdeal R L).map f = ⊤
-    ·
-      rw [←f.ideal_range_eq_map]
-      exact f.ideal_range_eq_top_of_surjective h 
-    induction' k with k ih
-    ·
-      simp only [LieModule.lower_central_series_zero]
-      exact h'
-    ·
-      simp only [LieModule.lower_central_series_succ, LieIdeal.map_bracket_eq f h, ih, h']
+-- error in Algebra.Lie.Nilpotent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lie_ideal.lower_central_series_map_eq
+(k : exprℕ())
+{f : «expr →ₗ⁅ ⁆ »(L, R, L')}
+(h : function.surjective f) : «expr = »(lie_ideal.map f (lower_central_series R L L k), lower_central_series R L' L' k) :=
+begin
+  have [ident h'] [":", expr «expr = »((«expr⊤»() : lie_ideal R L).map f, «expr⊤»())] [],
+  { rw ["<-", expr f.ideal_range_eq_map] [],
+    exact [expr f.ideal_range_eq_top_of_surjective h] },
+  induction [expr k] [] ["with", ident k, ident ih] [],
+  { simp [] [] ["only"] ["[", expr lie_module.lower_central_series_zero, "]"] [] [],
+    exact [expr h'] },
+  { simp [] [] ["only"] ["[", expr lie_module.lower_central_series_succ, ",", expr lie_ideal.map_bracket_eq f h, ",", expr ih, ",", expr h', "]"] [] [] }
+end
 
 theorem Function.Injective.lie_algebra_is_nilpotent [h₁ : IsNilpotent R L'] {f : L →ₗ⁅R⁆ L'}
   (h₂ : Function.Injective f) : IsNilpotent R L :=
@@ -207,7 +207,7 @@ theorem Function.Surjective.lie_algebra_is_nilpotent [h₁ : IsNilpotent R L] {f
 
 theorem LieEquiv.nilpotent_iff_equiv_nilpotent (e : L ≃ₗ⁅R⁆ L') : IsNilpotent R L ↔ IsNilpotent R L' :=
   by 
-    split  <;> introI h
+    split  <;> intros h
     ·
       exact e.symm.injective.lie_algebra_is_nilpotent
     ·
@@ -222,16 +222,16 @@ section OfAssociative
 
 variable(R : Type u){A : Type v}[CommRingₓ R][Ringₓ A][Algebra R A]
 
-theorem LieAlgebra.ad_nilpotent_of_nilpotent {a : A} (h : IsNilpotent a) : IsNilpotent (LieAlgebra.ad R A a) :=
-  by 
-    rw [LieAlgebra.ad_eq_lmul_left_sub_lmul_right]
-    have hl : IsNilpotent (Algebra.lmulLeft R a)
-    ·
-      rwa [Algebra.is_nilpotent_lmul_left_iff]
-    have hr : IsNilpotent (Algebra.lmulRight R a)
-    ·
-      rwa [Algebra.is_nilpotent_lmul_right_iff]
-    exact (Algebra.commute_lmul_left_right R a a).is_nilpotent_sub hl hr
+-- error in Algebra.Lie.Nilpotent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lie_algebra.ad_nilpotent_of_nilpotent {a : A} (h : is_nilpotent a) : is_nilpotent (lie_algebra.ad R A a) :=
+begin
+  rw [expr lie_algebra.ad_eq_lmul_left_sub_lmul_right] [],
+  have [ident hl] [":", expr is_nilpotent (algebra.lmul_left R a)] [],
+  { rwa [expr algebra.is_nilpotent_lmul_left_iff] [] },
+  have [ident hr] [":", expr is_nilpotent (algebra.lmul_right R a)] [],
+  { rwa [expr algebra.is_nilpotent_lmul_right_iff] [] },
+  exact [expr (algebra.commute_lmul_left_right R a a).is_nilpotent_sub hl hr]
+end
 
 variable{R}
 

@@ -70,11 +70,11 @@ def Monotone (f : α → β) : Prop :=
 def Antitone (f : α → β) : Prop :=
   ∀ ⦃a b⦄, a ≤ b → f b ≤ f a
 
-/-- A function `f` is monotone on `s` if, for all `a, b ∈ s`, `a ≤ b` implies `f b ≤ f a`. -/
+/-- A function `f` is monotone on `s` if, for all `a, b ∈ s`, `a ≤ b` implies `f a ≤ f b`. -/
 def MonotoneOn (f : α → β) (s : Set α) : Prop :=
   ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a ≤ b → f a ≤ f b
 
-/-- A function `f` is antitone on `s` if, for all `a, b ∈ s`, `a ≤ b` implies `f a ≤ f b`. -/
+/-- A function `f` is antitone on `s` if, for all `a, b ∈ s`, `a ≤ b` implies `f b ≤ f a`. -/
 def AntitoneOn (f : α → β) (s : Set α) : Prop :=
   ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a ≤ b → f b ≤ f a
 
@@ -305,7 +305,7 @@ theorem monotone_const [Preorderₓ α] [Preorderₓ β] {c : β} : Monotone fun
 theorem antitone_const [Preorderₓ α] [Preorderₓ β] {c : β} : Antitone fun a : α => c :=
   fun a b _ => le_reflₓ c
 
--- error in Order.Monotone: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Order.Monotone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem strict_mono_of_le_iff_le
 [preorder α]
 [preorder β]
@@ -332,20 +332,25 @@ section Preorderₓ
 
 variable[Preorderₓ α][Preorderₓ β]{f g : α → β}
 
-protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop} [DecidablePred p]
-  (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ ⦃x y⦄, p x → ¬p y → x < y → f x < g y) :
-  StrictMono fun x => if p x then f x else g x :=
-  by 
-    intro x y h 
-    byCases' hy : p y
-    ·
-      have hx : p x := hp h hy 
-      simpa [hx, hy] using hf h 
-    byCases' hx : p x
-    ·
-      simpa [hx, hy] using hfg hx hy h
-    ·
-      simpa [hx, hy] using hg h
+-- error in Order.Monotone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem strict_mono.ite'
+(hf : strict_mono f)
+(hg : strict_mono g)
+{p : α → exprProp()}
+[decidable_pred p]
+(hp : ∀ {{x y}}, «expr < »(x, y) → p y → p x)
+(hfg : ∀
+ {{x y}}, p x → «expr¬ »(p y) → «expr < »(x, y) → «expr < »(f x, g y)) : strict_mono (λ x, if p x then f x else g x) :=
+begin
+  intros [ident x, ident y, ident h],
+  by_cases [expr hy, ":", expr p y],
+  { have [ident hx] [":", expr p x] [":=", expr hp h hy],
+    simpa [] [] [] ["[", expr hx, ",", expr hy, "]"] [] ["using", expr hf h] },
+  by_cases [expr hx, ":", expr p x],
+  { simpa [] [] [] ["[", expr hx, ",", expr hy, "]"] [] ["using", expr hfg hx hy h] },
+  { simpa [] [] [] ["[", expr hx, ",", expr hy, "]"] [] ["using", expr hg h] }
+end
 
 protected theorem StrictMono.ite (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop} [DecidablePred p]
   (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, f x ≤ g x) : StrictMono fun x => if p x then f x else g x :=

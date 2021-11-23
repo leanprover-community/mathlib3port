@@ -49,7 +49,7 @@ universe u v w
 
 variable{α : Type u}{β : Type v}
 
--- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct a uniform structure core from a distance function and metric space axioms.
 This is a technical construction that can be immediately used to construct a uniform structure
 from a distance function and metric space axioms but is also useful when discussing
@@ -127,7 +127,7 @@ class PseudoMetricSpace(α : Type u) extends HasDist α : Type u where
   runTac 
     pseudo_metric_space.edist_dist_tac 
   toUniformSpace : UniformSpace α := uniformSpaceOfDist dist dist_self dist_comm dist_triangle 
-  uniformity_dist : 𝓤 α = ⨅(ε : _)(_ : ε > 0), 𝓟 { p : α × α | dist p.1 p.2 < ε } :=  by 
+  uniformity_dist : 𝓤 α = ⨅(ε : _)(_ : ε > 0), 𝓟 { p:α × α | dist p.1 p.2 < ε } :=  by 
   runTac 
     control_laws_tac
 
@@ -554,7 +554,7 @@ theorem exists_ball_subset_ball (h : y ∈ ball x ε) : ∃ (ε' : _)(_ : ε' > 
       by 
         rw [sub_sub_self]⟩
 
-theorem uniformity_basis_dist : (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : α × α | dist p.1 p.2 < ε } :=
+theorem uniformity_basis_dist : (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p:α × α | dist p.1 p.2 < ε } :=
   by 
     rw [←pseudo_metric_space.uniformity_dist.symm]
     refine' has_basis_binfi_principal _ nonempty_Ioi 
@@ -569,7 +569,7 @@ accumulating to zero, then `f i`-neighborhoods of the diagonal form a basis of `
 For specific bases see `uniformity_basis_dist`, `uniformity_basis_dist_inv_nat_succ`,
 and `uniformity_basis_dist_inv_nat_pos`. -/
 protected theorem mk_uniformity_basis {β : Type _} {p : β → Prop} {f : β → ℝ} (hf₀ : ∀ i, p i → 0 < f i)
-  (hf : ∀ ⦃ε⦄, 0 < ε → ∃ (i : _)(hi : p i), f i ≤ ε) : (𝓤 α).HasBasis p fun i => { p : α × α | dist p.1 p.2 < f i } :=
+  (hf : ∀ ⦃ε⦄, 0 < ε → ∃ (i : _)(hi : p i), f i ≤ ε) : (𝓤 α).HasBasis p fun i => { p:α × α | dist p.1 p.2 < f i } :=
   by 
     refine' ⟨fun s => uniformity_basis_dist.mem_iff.trans _⟩
     split 
@@ -582,26 +582,26 @@ protected theorem mk_uniformity_basis {β : Type _} {p : β → Prop} {f : β �
       exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, H⟩
 
 theorem uniformity_basis_dist_inv_nat_succ :
-  (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => { p : α × α | dist p.1 p.2 < 1 / «expr↑ » n+1 } :=
+  (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => { p:α × α | dist p.1 p.2 < 1 / «expr↑ » n+1 } :=
   Metric.mk_uniformity_basis (fun n _ => div_pos zero_lt_one$ Nat.cast_add_one_pos n)
     fun ε ε0 => (exists_nat_one_div_lt ε0).imp$ fun n hn => ⟨trivialₓ, le_of_ltₓ hn⟩
 
 theorem uniformity_basis_dist_inv_nat_pos :
-  (𝓤 α).HasBasis (fun n : ℕ => 0 < n) fun n : ℕ => { p : α × α | dist p.1 p.2 < 1 / «expr↑ » n } :=
+  (𝓤 α).HasBasis (fun n : ℕ => 0 < n) fun n : ℕ => { p:α × α | dist p.1 p.2 < 1 / «expr↑ » n } :=
   Metric.mk_uniformity_basis (fun n hn => div_pos zero_lt_one$ Nat.cast_pos.2 hn)
     fun ε ε0 =>
       let ⟨n, hn⟩ := exists_nat_one_div_lt ε0
       ⟨n+1, Nat.succ_posₓ n, hn.le⟩
 
 theorem uniformity_basis_dist_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
-  (𝓤 α).HasBasis (fun n : ℕ => True) fun n : ℕ => { p : α × α | dist p.1 p.2 < r ^ n } :=
+  (𝓤 α).HasBasis (fun n : ℕ => True) fun n : ℕ => { p:α × α | dist p.1 p.2 < r ^ n } :=
   Metric.mk_uniformity_basis (fun n hn => pow_pos h0 _)
     fun ε ε0 =>
       let ⟨n, hn⟩ := exists_pow_lt_of_lt_one ε0 h1
       ⟨n, trivialₓ, hn.le⟩
 
 theorem uniformity_basis_dist_lt {R : ℝ} (hR : 0 < R) :
-  (𝓤 α).HasBasis (fun r : ℝ => 0 < r ∧ r < R) fun r => { p : α × α | dist p.1 p.2 < r } :=
+  (𝓤 α).HasBasis (fun r : ℝ => 0 < r ∧ r < R) fun r => { p:α × α | dist p.1 p.2 < r } :=
   (Metric.mk_uniformity_basis fun r => And.left)$
     fun r hr => ⟨min r (R / 2), ⟨lt_minₓ hr (half_pos hR), min_lt_iff.2$ Or.inr (half_lt_self hR)⟩, min_le_leftₓ _ _⟩
 
@@ -612,7 +612,7 @@ form a basis of `𝓤 α`.
 Currently we have only one specific basis `uniformity_basis_dist_le` based on this constructor.
 More can be easily added if needed in the future. -/
 protected theorem mk_uniformity_basis_le {β : Type _} {p : β → Prop} {f : β → ℝ} (hf₀ : ∀ x, p x → 0 < f x)
-  (hf : ∀ ε, 0 < ε → ∃ (x : _)(hx : p x), f x ≤ ε) : (𝓤 α).HasBasis p fun x => { p : α × α | dist p.1 p.2 ≤ f x } :=
+  (hf : ∀ ε, 0 < ε → ∃ (x : _)(hx : p x), f x ≤ ε) : (𝓤 α).HasBasis p fun x => { p:α × α | dist p.1 p.2 ≤ f x } :=
   by 
     refine' ⟨fun s => uniformity_basis_dist.mem_iff.trans _⟩
     split 
@@ -626,11 +626,11 @@ protected theorem mk_uniformity_basis_le {β : Type _} {p : β → Prop} {f : β
 
 /-- Contant size closed neighborhoods of the diagonal form a basis
 of the uniformity filter. -/
-theorem uniformity_basis_dist_le : (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : α × α | dist p.1 p.2 ≤ ε } :=
+theorem uniformity_basis_dist_le : (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p:α × α | dist p.1 p.2 ≤ ε } :=
   Metric.mk_uniformity_basis_le (fun _ => id) fun ε ε₀ => ⟨ε, ε₀, le_reflₓ ε⟩
 
 theorem uniformity_basis_dist_le_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
-  (𝓤 α).HasBasis (fun n : ℕ => True) fun n : ℕ => { p : α × α | dist p.1 p.2 ≤ r ^ n } :=
+  (𝓤 α).HasBasis (fun n : ℕ => True) fun n : ℕ => { p:α × α | dist p.1 p.2 ≤ r ^ n } :=
   Metric.mk_uniformity_basis_le (fun n hn => pow_pos h0 _)
     fun ε ε0 =>
       let ⟨n, hn⟩ := exists_pow_lt_of_lt_one ε0 h1
@@ -641,7 +641,7 @@ theorem mem_uniformity_dist {s : Set (α × α)} :
   uniformity_basis_dist.mem_uniformity_iff
 
 /-- A constant size neighborhood of the diagonal is an entourage. -/
-theorem dist_mem_uniformity {ε : ℝ} (ε0 : 0 < ε) : { p : α × α | dist p.1 p.2 < ε } ∈ 𝓤 α :=
+theorem dist_mem_uniformity {ε : ℝ} (ε0 : 0 < ε) : { p:α × α | dist p.1 p.2 < ε } ∈ 𝓤 α :=
   mem_uniformity_dist.2 ⟨ε, ε0, fun a b => id⟩
 
 theorem uniform_continuous_iff [PseudoMetricSpace β] {f : α → β} :
@@ -692,27 +692,31 @@ theorem totally_bounded_iff {s : Set α} :
       let ⟨t, ft, h⟩ := H ε ε0
       ⟨t, ft, subset.trans h$ Union_subset_Union$ fun y => Union_subset_Union$ fun yt z => hε⟩⟩
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A pseudometric space is totally bounded if one can reconstruct up to any ε>0 any element of the
 space from finitely many data. -/
-theorem totally_bounded_of_finite_discretization {s : Set α}
-  (H : ∀ ε _ : ε > (0 : ℝ), ∃ (β : Type u)(_ : Fintype β)(F : s → β), ∀ x y, F x = F y → dist (x : α) y < ε) :
-  TotallyBounded s :=
-  by 
-    cases' s.eq_empty_or_nonempty with hs hs
-    ·
-      rw [hs]
-      exact totally_bounded_empty 
-    rcases hs with ⟨x0, hx0⟩
-    haveI  : Inhabited s := ⟨⟨x0, hx0⟩⟩
-    refine' totally_bounded_iff.2 fun ε ε0 => _ 
-    rcases H ε ε0 with ⟨β, fβ, F, hF⟩
-    resetI 
-    let Finv := Function.invFun F 
-    refine' ⟨range (Subtype.val ∘ Finv), finite_range _, fun x xs => _⟩
-    let x' := Finv (F ⟨x, xs⟩)
-    have  : F x' = F ⟨x, xs⟩ := Function.inv_fun_eq ⟨⟨x, xs⟩, rfl⟩
-    simp only [Set.mem_Union, Set.mem_range]
-    exact ⟨_, ⟨F ⟨x, xs⟩, rfl⟩, hF _ _ this.symm⟩
+theorem totally_bounded_of_finite_discretization
+{s : set α}
+(H : ∀
+ ε «expr > » (0 : exprℝ()), «expr∃ , »((β : Type u)
+  (_ : fintype β)
+  (F : s → β), ∀ x y, «expr = »(F x, F y) → «expr < »(dist (x : α) y, ε))) : totally_bounded s :=
+begin
+  cases [expr s.eq_empty_or_nonempty] ["with", ident hs, ident hs],
+  { rw [expr hs] [],
+    exact [expr totally_bounded_empty] },
+  rcases [expr hs, "with", "⟨", ident x0, ",", ident hx0, "⟩"],
+  haveI [] [":", expr inhabited s] [":=", expr ⟨⟨x0, hx0⟩⟩],
+  refine [expr totally_bounded_iff.2 (λ ε ε0, _)],
+  rcases [expr H ε ε0, "with", "⟨", ident β, ",", ident fβ, ",", ident F, ",", ident hF, "⟩"],
+  resetI,
+  let [ident Finv] [] [":=", expr function.inv_fun F],
+  refine [expr ⟨range «expr ∘ »(subtype.val, Finv), finite_range _, λ x xs, _⟩],
+  let [ident x'] [] [":=", expr Finv (F ⟨x, xs⟩)],
+  have [] [":", expr «expr = »(F x', F ⟨x, xs⟩)] [":=", expr function.inv_fun_eq ⟨⟨x, xs⟩, rfl⟩],
+  simp [] [] ["only"] ["[", expr set.mem_Union, ",", expr set.mem_range, "]"] [] [],
+  exact [expr ⟨_, ⟨F ⟨x, xs⟩, rfl⟩, hF _ _ this.symm⟩]
+end
 
 theorem finite_approx_of_totally_bounded {s : Set α} (hs : TotallyBounded s) :
   ∀ ε _ : ε > 0, ∃ (t : _)(_ : t ⊆ s), finite t ∧ s ⊆ ⋃(y : _)(_ : y ∈ t), ball y ε :=
@@ -924,7 +928,7 @@ protected theorem PseudoMetric.uniformity_basis_edist :
         refine' ⟨ε', ε0', fun a b h => Hε (lt_transₓ _ hε)⟩
         rwa [edist_dist, Ennreal.of_real_lt_of_real_iff ε0']⟩
 
-theorem Metric.uniformity_edist : 𝓤 α = ⨅(ε : _)(_ : ε > 0), 𝓟 { p : α × α | edist p.1 p.2 < ε } :=
+theorem Metric.uniformity_edist : 𝓤 α = ⨅(ε : _)(_ : ε > 0), 𝓟 { p:α × α | edist p.1 p.2 < ε } :=
   PseudoMetric.uniformity_basis_edist.eq_binfi
 
 /-- A pseudometric space induces a pseudoemetric space -/
@@ -1213,54 +1217,62 @@ theorem cauchy_seq_of_le_tendsto_0 {s : β → α} (b : β → ℝ) (h : ∀ n m
             _ < ε := hN _ (le_reflₓ N)
             
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A Cauchy sequence on the natural numbers is bounded. -/
-theorem cauchy_seq_bdd {u : ℕ → α} (hu : CauchySeq u) : ∃ (R : _)(_ : R > 0), ∀ m n, dist (u m) (u n) < R :=
-  by 
-    rcases Metric.cauchy_seq_iff'.1 hu 1 zero_lt_one with ⟨N, hN⟩
-    suffices  : ∃ (R : _)(_ : R > 0), ∀ n, dist (u n) (u N) < R
-    ·
-      rcases this with ⟨R, R0, H⟩
-      exact ⟨_, add_pos R0 R0, fun m n => lt_of_le_of_ltₓ (dist_triangle_right _ _ _) (add_lt_add (H m) (H n))⟩
-    let R := Finset.sup (Finset.range N) fun n => nndist (u n) (u N)
-    refine' ⟨«expr↑ » R+1, add_pos_of_nonneg_of_pos R.2 zero_lt_one, fun n => _⟩
-    cases le_or_ltₓ N n
-    ·
-      exact lt_of_lt_of_leₓ (hN _ h) (le_add_of_nonneg_left R.2)
-    ·
-      have  : _ ≤ R := Finset.le_sup (Finset.mem_range.2 h)
-      exact lt_of_le_of_ltₓ this (lt_add_of_pos_right _ zero_lt_one)
+theorem cauchy_seq_bdd
+{u : exprℕ() → α}
+(hu : cauchy_seq u) : «expr∃ , »((R «expr > » 0), ∀ m n, «expr < »(dist (u m) (u n), R)) :=
+begin
+  rcases [expr metric.cauchy_seq_iff'.1 hu 1 zero_lt_one, "with", "⟨", ident N, ",", ident hN, "⟩"],
+  suffices [] [":", expr «expr∃ , »((R «expr > » 0), ∀ n, «expr < »(dist (u n) (u N), R))],
+  { rcases [expr this, "with", "⟨", ident R, ",", ident R0, ",", ident H, "⟩"],
+    exact [expr ⟨_, add_pos R0 R0, λ m n, lt_of_le_of_lt (dist_triangle_right _ _ _) (add_lt_add (H m) (H n))⟩] },
+  let [ident R] [] [":=", expr finset.sup (finset.range N) (λ n, nndist (u n) (u N))],
+  refine [expr ⟨«expr + »(«expr↑ »(R), 1), add_pos_of_nonneg_of_pos R.2 zero_lt_one, λ n, _⟩],
+  cases [expr le_or_lt N n] [],
+  { exact [expr lt_of_lt_of_le (hN _ h) (le_add_of_nonneg_left R.2)] },
+  { have [] [":", expr «expr ≤ »(_, R)] [":=", expr finset.le_sup (finset.mem_range.2 h)],
+    exact [expr lt_of_le_of_lt this (lt_add_of_pos_right _ zero_lt_one)] }
+end
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Yet another metric characterization of Cauchy sequences on integers. This one is often the
 most efficient. -/
-theorem cauchy_seq_iff_le_tendsto_0 {s : ℕ → α} :
-  CauchySeq s ↔
-    ∃ b : ℕ → ℝ, (∀ n, 0 ≤ b n) ∧ (∀ n m N : ℕ, N ≤ n → N ≤ m → dist (s n) (s m) ≤ b N) ∧ tendsto b at_top (𝓝 0) :=
-  ⟨fun hs =>
-      by 
-        let S := fun N => (fun p : ℕ × ℕ => dist (s p.1) (s p.2)) '' { p | p.1 ≥ N ∧ p.2 ≥ N }
-        have hS : ∀ N, ∃ x, ∀ y _ : y ∈ S N, y ≤ x
-        ·
-          rcases cauchy_seq_bdd hs with ⟨R, R0, hR⟩
-          refine' fun N => ⟨R, _⟩
-          rintro _ ⟨⟨m, n⟩, _, rfl⟩
-          exact le_of_ltₓ (hR m n)
-        have bdd : BddAbove (range fun p : ℕ × ℕ => dist (s p.1) (s p.2))
-        ·
-          rcases cauchy_seq_bdd hs with ⟨R, R0, hR⟩
-          use R 
-          rintro _ ⟨⟨m, n⟩, rfl⟩
-          exact le_of_ltₓ (hR m n)
-        have ub : ∀ m n N, N ≤ m → N ≤ n → dist (s m) (s n) ≤ Sup (S N) :=
-          fun m n N hm hn => le_cSup (hS N) ⟨⟨_, _⟩, ⟨hm, hn⟩, rfl⟩
-        have S0m : ∀ n, (0 : ℝ) ∈ S n := fun n => ⟨⟨n, n⟩, ⟨le_reflₓ _, le_reflₓ _⟩, dist_self _⟩
-        have S0 := fun n => le_cSup (hS n) (S0m n)
-        refine' ⟨fun N => Sup (S N), S0, ub, Metric.tendsto_at_top.2 fun ε ε0 => _⟩
-        refine' (Metric.cauchy_seq_iff.1 hs (ε / 2) (half_pos ε0)).imp fun N hN n hn => _ 
-        rw [Real.dist_0_eq_abs, abs_of_nonneg (S0 n)]
-        refine' lt_of_le_of_ltₓ (cSup_le ⟨_, S0m _⟩ _) (half_lt_self ε0)
-        rintro _ ⟨⟨m', n'⟩, ⟨hm', hn'⟩, rfl⟩
-        exact le_of_ltₓ (hN _ _ (le_transₓ hn hm') (le_transₓ hn hn')),
-    fun ⟨b, _, b_bound, b_lim⟩ => cauchy_seq_of_le_tendsto_0 b b_bound b_lim⟩
+theorem cauchy_seq_iff_le_tendsto_0
+{s : exprℕ() → α} : «expr ↔ »(cauchy_seq s, «expr∃ , »((b : exprℕ() → exprℝ()), «expr ∧ »(∀
+   n, «expr ≤ »(0, b n), «expr ∧ »(∀
+    n
+    m
+    N : exprℕ(), «expr ≤ »(N, n) → «expr ≤ »(N, m) → «expr ≤ »(dist (s n) (s m), b N), tendsto b at_top (expr𝓝() 0))))) :=
+⟨λ hs, begin
+   let [ident S] [] [":=", expr λ
+    N, «expr '' »(λ
+     p : «expr × »(exprℕ(), exprℕ()), dist (s p.1) (s p.2), {p | «expr ∧ »(«expr ≥ »(p.1, N), «expr ≥ »(p.2, N))})],
+   have [ident hS] [":", expr ∀ N, «expr∃ , »((x), ∀ y «expr ∈ » S N, «expr ≤ »(y, x))] [],
+   { rcases [expr cauchy_seq_bdd hs, "with", "⟨", ident R, ",", ident R0, ",", ident hR, "⟩"],
+     refine [expr λ N, ⟨R, _⟩],
+     rintro ["_", "⟨", "⟨", ident m, ",", ident n, "⟩", ",", "_", ",", ident rfl, "⟩"],
+     exact [expr le_of_lt (hR m n)] },
+   have [ident bdd] [":", expr bdd_above (range (λ p : «expr × »(exprℕ(), exprℕ()), dist (s p.1) (s p.2)))] [],
+   { rcases [expr cauchy_seq_bdd hs, "with", "⟨", ident R, ",", ident R0, ",", ident hR, "⟩"],
+     use [expr R],
+     rintro ["_", "⟨", "⟨", ident m, ",", ident n, "⟩", ",", ident rfl, "⟩"],
+     exact [expr le_of_lt (hR m n)] },
+   have [ident ub] [":", expr ∀
+    m
+    n
+    N, «expr ≤ »(N, m) → «expr ≤ »(N, n) → «expr ≤ »(dist (s m) (s n), Sup (S N))] [":=", expr λ
+    m n N hm hn, le_cSup (hS N) ⟨⟨_, _⟩, ⟨hm, hn⟩, rfl⟩],
+   have [ident S0m] [":", expr ∀
+    n, «expr ∈ »((0 : exprℝ()), S n)] [":=", expr λ n, ⟨⟨n, n⟩, ⟨le_refl _, le_refl _⟩, dist_self _⟩],
+   have [ident S0] [] [":=", expr λ n, le_cSup (hS n) (S0m n)],
+   refine [expr ⟨λ N, Sup (S N), S0, ub, metric.tendsto_at_top.2 (λ ε ε0, _)⟩],
+   refine [expr (metric.cauchy_seq_iff.1 hs «expr / »(ε, 2) (half_pos ε0)).imp (λ N hN n hn, _)],
+   rw ["[", expr real.dist_0_eq_abs, ",", expr abs_of_nonneg (S0 n), "]"] [],
+   refine [expr lt_of_le_of_lt (cSup_le ⟨_, S0m _⟩ _) (half_lt_self ε0)],
+   rintro ["_", "⟨", "⟨", ident m', ",", ident n', "⟩", ",", "⟨", ident hm', ",", ident hn', "⟩", ",", ident rfl, "⟩"],
+   exact [expr le_of_lt (hN _ _ (le_trans hn hm') (le_trans hn hn'))]
+ end, λ ⟨b, _, b_bound, b_lim⟩, cauchy_seq_of_le_tendsto_0 b b_bound b_lim⟩
 
 end CauchySeq
 
@@ -1321,38 +1333,32 @@ end Nnreal
 
 section Prod
 
-noncomputable instance Prod.pseudoMetricSpaceMax [PseudoMetricSpace β] : PseudoMetricSpace (α × β) :=
-  { dist := fun x y => max (dist x.1 y.1) (dist x.2 y.2),
-    dist_self :=
-      fun x =>
-        by 
-          simp ,
-    dist_comm :=
-      fun x y =>
-        by 
-          simp [dist_comm],
-    dist_triangle :=
-      fun x y z =>
-        max_leₓ (le_transₓ (dist_triangle _ _ _) (add_le_add (le_max_leftₓ _ _) (le_max_leftₓ _ _)))
-          (le_transₓ (dist_triangle _ _ _) (add_le_add (le_max_rightₓ _ _) (le_max_rightₓ _ _))),
-    edist := fun x y => max (edist x.1 y.1) (edist x.2 y.2),
-    edist_dist :=
-      fun x y =>
-        by 
-          have  : Monotone Ennreal.ofReal := fun x y h => Ennreal.of_real_le_of_real h 
-          rw [edist_dist, edist_dist, ←this.map_max],
-    uniformity_dist :=
-      by 
-        refine' uniformity_prod.trans _ 
-        simp only [uniformity_basis_dist.eq_binfi, comap_infi]
-        rw [←infi_inf_eq]
-        congr 
-        funext 
-        rw [←infi_inf_eq]
-        congr 
-        funext 
-        simp [inf_principal, ext_iff, max_lt_iff],
-    toUniformSpace := Prod.uniformSpace }
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+noncomputable instance prod.pseudo_metric_space_max [pseudo_metric_space β] : pseudo_metric_space «expr × »(α, β) :=
+{ dist := λ x y, max (dist x.1 y.1) (dist x.2 y.2),
+  dist_self := λ x, by simp [] [] [] [] [] [],
+  dist_comm := λ x y, by simp [] [] [] ["[", expr dist_comm, "]"] [] [],
+  dist_triangle := λ
+  x
+  y
+  z, max_le (le_trans (dist_triangle _ _ _) (add_le_add (le_max_left _ _) (le_max_left _ _))) (le_trans (dist_triangle _ _ _) (add_le_add (le_max_right _ _) (le_max_right _ _))),
+  edist := λ x y, max (edist x.1 y.1) (edist x.2 y.2),
+  edist_dist := assume x y, begin
+    have [] [":", expr monotone ennreal.of_real] [":=", expr assume x y h, ennreal.of_real_le_of_real h],
+    rw ["[", expr edist_dist, ",", expr edist_dist, ",", "<-", expr this.map_max, "]"] []
+  end,
+  uniformity_dist := begin
+    refine [expr uniformity_prod.trans _],
+    simp [] [] ["only"] ["[", expr uniformity_basis_dist.eq_binfi, ",", expr comap_infi, "]"] [] [],
+    rw ["<-", expr infi_inf_eq] [],
+    congr,
+    funext [],
+    rw ["<-", expr infi_inf_eq] [],
+    congr,
+    funext [],
+    simp [] [] [] ["[", expr inf_principal, ",", expr ext_iff, ",", expr max_lt_iff, "]"] [] []
+  end,
+  to_uniform_space := prod.uniform_space }
 
 theorem Prod.dist_eq [PseudoMetricSpace β] {x y : α × β} : dist x y = max (dist x.1 y.1) (dist x.2 y.2) :=
   rfl
@@ -1372,31 +1378,27 @@ theorem closed_ball_prod_same [PseudoMetricSpace β] (x : α) (y : β) (r : ℝ)
 
 end Prod
 
-theorem uniform_continuous_dist : UniformContinuous fun p : α × α => dist p.1 p.2 :=
-  Metric.uniform_continuous_iff.2
-    fun ε ε0 =>
-      ⟨ε / 2, half_pos ε0,
-        by 
-          suffices 
-          ·
-            intro p q h 
-            cases' p with p₁ p₂ 
-            cases' q with q₁ q₂ 
-            cases' max_lt_iff.1 h with h₁ h₂ 
-            clear h 
-            dsimp  at h₁ h₂⊢
-            rw [Real.dist_eq]
-            refine' abs_sub_lt_iff.2 ⟨_, _⟩
-            ·
-              revert p₁ p₂ q₁ q₂ h₁ h₂ 
-              exact this
-            ·
-              apply this <;> rwa [dist_comm]
-          intro p₁ p₂ q₁ q₂ h₁ h₂ 
-          have  :=
-            add_lt_add (abs_sub_lt_iff.1 (lt_of_le_of_ltₓ (abs_dist_sub_le p₁ q₁ p₂) h₁)).1
-              (abs_sub_lt_iff.1 (lt_of_le_of_ltₓ (abs_dist_sub_le p₂ q₂ q₁) h₂)).1
-          rwa [add_halves, dist_comm p₂, sub_add_sub_cancel, dist_comm q₂] at this⟩
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem uniform_continuous_dist : uniform_continuous (λ p : «expr × »(α, α), dist p.1 p.2) :=
+metric.uniform_continuous_iff.2 (λ
+ ε
+ ε0, ⟨«expr / »(ε, 2), half_pos ε0, begin
+    suffices [] [],
+    { intros [ident p, ident q, ident h],
+      cases [expr p] ["with", ident p₁, ident p₂],
+      cases [expr q] ["with", ident q₁, ident q₂],
+      cases [expr max_lt_iff.1 h] ["with", ident h₁, ident h₂],
+      clear [ident h],
+      dsimp [] [] [] ["at", ident h₁, ident h₂, "⊢"],
+      rw [expr real.dist_eq] [],
+      refine [expr abs_sub_lt_iff.2 ⟨_, _⟩],
+      { revert [ident p₁, ident p₂, ident q₁, ident q₂, ident h₁, ident h₂],
+        exact [expr this] },
+      { apply [expr this]; rwa [expr dist_comm] [] } },
+    intros [ident p₁, ident p₂, ident q₁, ident q₂, ident h₁, ident h₂],
+    have [] [] [":=", expr add_lt_add (abs_sub_lt_iff.1 (lt_of_le_of_lt (abs_dist_sub_le p₁ q₁ p₂) h₁)).1 (abs_sub_lt_iff.1 (lt_of_le_of_lt (abs_dist_sub_le p₂ q₂ q₁) h₂)).1],
+    rwa ["[", expr add_halves, ",", expr dist_comm p₂, ",", expr sub_add_sub_cancel, ",", expr dist_comm q₂, "]"] ["at", ident this]
+  end⟩)
 
 theorem UniformContinuous.dist [UniformSpace β] {f g : β → α} (hf : UniformContinuous f) (hg : UniformContinuous g) :
   UniformContinuous fun b => dist (f b) (g b) :=
@@ -1499,25 +1501,27 @@ open Finset
 
 variable{π : β → Type _}[Fintype β][∀ b, PseudoMetricSpace (π b)]
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A finite product of pseudometric spaces is a pseudometric space, with the sup distance. -/
-noncomputable instance pseudoMetricSpacePi : PseudoMetricSpace (∀ b, π b) :=
-  by 
-    refine'
-      PseudoEmetricSpace.toPseudoMetricSpaceOfDist (fun f g => ((sup univ fun b => nndist (f b) (g b) :  ℝ≥0 ) : ℝ)) _
-        _ 
-    show ∀ x y : ∀ b : β, π b, edist x y ≠ ⊤
-    ·
-      intro x y 
-      rw [←lt_top_iff_ne_top]
-      have  : (⊥ : ℝ≥0∞) < ⊤ := Ennreal.coe_lt_top 
-      simp [edist_pi_def, Finset.sup_lt_iff this, edist_lt_top]
-    show
-      ∀ x y : ∀ b : β, π b,
-        «expr↑ » (sup univ fun b : β => nndist (x b) (y b)) = Ennreal.toReal (sup univ fun b : β => edist (x b) (y b))
-    ·
-      intro x y 
-      simp only [edist_nndist]
-      normCast
+noncomputable
+instance pseudo_metric_space_pi : pseudo_metric_space (∀ b, π b) :=
+begin
+  refine [expr pseudo_emetric_space.to_pseudo_metric_space_of_dist (λ
+    f g, ((sup univ (λ b, nndist (f b) (g b)) : «exprℝ≥0»()) : exprℝ())) _ _],
+  show [expr ∀ x y : ∀ b : β, π b, «expr ≠ »(edist x y, «expr⊤»())],
+  { assume [binders (x y)],
+    rw ["<-", expr lt_top_iff_ne_top] [],
+    have [] [":", expr «expr < »((«expr⊥»() : «exprℝ≥0∞»()), «expr⊤»())] [":=", expr ennreal.coe_lt_top],
+    simp [] [] [] ["[", expr edist_pi_def, ",", expr finset.sup_lt_iff this, ",", expr edist_lt_top, "]"] [] [] },
+  show [expr ∀
+   x
+   y : ∀
+   b : β, π b, «expr = »(«expr↑ »(sup univ (λ
+      b : β, nndist (x b) (y b))), ennreal.to_real (sup univ (λ b : β, edist (x b) (y b))))],
+  { assume [binders (x y)],
+    simp [] [] ["only"] ["[", expr edist_nndist, "]"] [] [],
+    norm_cast [] }
+end
 
 theorem nndist_pi_def (f g : ∀ b, π b) : nndist f g = sup univ fun b => nndist (f b) (g b) :=
   Subtype.eta _ _
@@ -1585,16 +1589,12 @@ theorem closed_ball_pi' [Nonempty β] (x : ∀ b, π b) (r : ℝ) :
       by 
         simp [closed_ball_eq_empty.2 hr]
 
--- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem real.dist_le_of_mem_pi_Icc
-{x y x' y' : β → exprℝ()}
-(hx : «expr ∈ »(x, Icc x' y'))
-(hy : «expr ∈ »(y, Icc x' y')) : «expr ≤ »(dist x y, dist x' y') :=
-begin
-  refine [expr (dist_pi_le_iff dist_nonneg).2 (λ
-    b, (real.dist_le_of_mem_interval _ _).trans (dist_le_pi_dist _ _ b))]; refine [expr Icc_subset_interval _],
-  exacts ["[", expr ⟨hx.1 _, hx.2 _⟩, ",", expr ⟨hy.1 _, hy.2 _⟩, "]"]
-end
+theorem Real.dist_le_of_mem_pi_Icc {x y x' y' : β → ℝ} (hx : x ∈ Icc x' y') (hy : y ∈ Icc x' y') :
+  dist x y ≤ dist x' y' :=
+  by 
+    refine' (dist_pi_le_iff dist_nonneg).2 fun b => (Real.dist_le_of_mem_interval _ _).trans (dist_le_pi_dist _ _ b) <;>
+      refine' Icc_subset_interval _ 
+    exacts[⟨hx.1 _, hx.2 _⟩, ⟨hy.1 _, hy.2 _⟩]
 
 end Pi
 
@@ -1642,7 +1642,7 @@ instance (priority := 100)second_countable_of_proper [ProperSpace α] : second_c
   by 
     suffices  : SigmaCompactSpace α
     ·
-      exactI Emetric.second_countable_of_sigma_compact α 
+      exact Emetric.second_countable_of_sigma_compact α 
     rcases em (Nonempty α) with (⟨⟨x⟩⟩ | hn)
     ·
       exact ⟨⟨fun n => closed_ball x n, fun n => ProperSpace.is_compact_closed_ball _ _, Union_closed_ball_nat _⟩⟩
@@ -1659,23 +1659,23 @@ theorem tendsto_dist_left_cocompact_at_top [ProperSpace α] (x : α) : tendsto (
   by 
     simpa only [dist_comm] using tendsto_dist_right_cocompact_at_top x
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If all closed balls of large enough radius are compact, then the space is proper. Especially
 useful when the lower bound for the radius is 0. -/
-theorem proper_space_of_compact_closed_ball_of_le (R : ℝ) (h : ∀ x : α, ∀ r, R ≤ r → IsCompact (closed_ball x r)) :
-  ProperSpace α :=
-  ⟨by 
-      intro x r 
-      byCases' hr : R ≤ r
-      ·
-        exact h x r hr
-      ·
-        have  : closed_ball x r = closed_ball x R ∩ closed_ball x r
-        ·
-          symm 
-          apply inter_eq_self_of_subset_right 
-          exact closed_ball_subset_closed_ball (le_of_ltₓ (not_leₓ.1 hr))
-        rw [this]
-        exact (h x R (le_reflₓ _)).inter_right is_closed_ball⟩
+theorem proper_space_of_compact_closed_ball_of_le
+(R : exprℝ())
+(h : ∀ x : α, ∀ r, «expr ≤ »(R, r) → is_compact (closed_ball x r)) : proper_space α :=
+⟨begin
+   assume [binders (x r)],
+   by_cases [expr hr, ":", expr «expr ≤ »(R, r)],
+   { exact [expr h x r hr] },
+   { have [] [":", expr «expr = »(closed_ball x r, «expr ∩ »(closed_ball x R, closed_ball x r))] [],
+     { symmetry,
+       apply [expr inter_eq_self_of_subset_right],
+       exact [expr closed_ball_subset_closed_ball (le_of_lt (not_le.1 hr))] },
+     rw [expr this] [],
+     exact [expr (h x R (le_refl _)).inter_right is_closed_ball] }
+ end⟩
 
 instance (priority := 100)proper_of_compact [CompactSpace α] : ProperSpace α :=
   ⟨fun x r => is_closed_ball.IsCompact⟩
@@ -1685,18 +1685,17 @@ instance (priority := 100)locally_compact_of_proper [ProperSpace α] : LocallyCo
   (locally_compact_space_of_has_basis fun x => nhds_basis_closed_ball)$
     fun x ε ε0 => ProperSpace.is_compact_closed_ball _ _
 
-/-- A proper space is complete -/
-instance (priority := 100)complete_of_proper [ProperSpace α] : CompleteSpace α :=
-  ⟨by 
-      intro f hf 
-      obtain ⟨t, t_fset, ht⟩ : ∃ (t : _)(_ : t ∈ f), ∀ x y _ : x ∈ t _ : y ∈ t, dist x y < 1 :=
-        (Metric.cauchy_iff.1 hf).2 1 zero_lt_one 
-      rcases hf.1.nonempty_of_mem t_fset with ⟨x, xt⟩
-      have  : closed_ball x 1 ∈ f := mem_of_superset t_fset fun y yt => (ht y x yt xt).le 
-      rcases(compact_iff_totally_bounded_complete.1 (ProperSpace.is_compact_closed_ball x 1)).2 f hf
-          (le_principal_iff.2 this) with
-        ⟨y, -, hy⟩
-      exact ⟨y, hy⟩⟩
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- A proper space is complete -/ @[priority 100] instance complete_of_proper [proper_space α] : complete_space α :=
+⟨begin
+   intros [ident f, ident hf],
+   obtain ["⟨", ident t, ",", ident t_fset, ",", ident ht, "⟩", ":", expr «expr∃ , »((t «expr ∈ » f), ∀
+     x y «expr ∈ » t, «expr < »(dist x y, 1)), ":=", expr (metric.cauchy_iff.1 hf).2 1 zero_lt_one],
+   rcases [expr hf.1.nonempty_of_mem t_fset, "with", "⟨", ident x, ",", ident xt, "⟩"],
+   have [] [":", expr «expr ∈ »(closed_ball x 1, f)] [":=", expr mem_of_superset t_fset (λ y yt, (ht y x yt xt).le)],
+   rcases [expr (compact_iff_totally_bounded_complete.1 (proper_space.is_compact_closed_ball x 1)).2 f hf (le_principal_iff.2 this), "with", "⟨", ident y, ",", "-", ",", ident hy, "⟩"],
+   exact [expr ⟨y, hy⟩]
+ end⟩
 
 /-- A finite product of proper spaces is proper. -/
 instance pi_proper_space {π : β → Type _} [Fintype β] [∀ b, PseudoMetricSpace (π b)] [h : ∀ b, ProperSpace (π b)] :
@@ -1709,24 +1708,25 @@ instance pi_proper_space {π : β → Type _} [Fintype β] [∀ b, PseudoMetricS
 
 variable[ProperSpace α]{x : α}{r : ℝ}{s : Set α}
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a nonempty ball in a proper space includes a closed set `s`, then there exists a nonempty
 ball with the same center and a strictly smaller radius that includes `s`. -/
-theorem exists_pos_lt_subset_ball (hr : 0 < r) (hs : IsClosed s) (h : s ⊆ ball x r) :
-  ∃ (r' : _)(_ : r' ∈ Ioo 0 r), s ⊆ ball x r' :=
-  by 
-    unfreezingI 
-      rcases eq_empty_or_nonempty s with (rfl | hne)
-    ·
-      exact ⟨r / 2, ⟨half_pos hr, half_lt_self hr⟩, empty_subset _⟩
-    have  : IsCompact s 
-    exact
-      compact_of_is_closed_subset (ProperSpace.is_compact_closed_ball x r) hs (subset.trans h ball_subset_closed_ball)
-    obtain ⟨y, hys, hy⟩ : ∃ (y : _)(_ : y ∈ s), s ⊆ closed_ball x (dist y x)
-    exact this.exists_forall_ge hne (continuous_id.dist continuous_const).ContinuousOn 
-    have hyr : dist y x < r 
-    exact h hys 
-    rcases exists_between hyr with ⟨r', hyr', hrr'⟩
-    exact ⟨r', ⟨dist_nonneg.trans_lt hyr', hrr'⟩, subset.trans hy$ closed_ball_subset_ball hyr'⟩
+theorem exists_pos_lt_subset_ball
+(hr : «expr < »(0, r))
+(hs : is_closed s)
+(h : «expr ⊆ »(s, ball x r)) : «expr∃ , »((r' «expr ∈ » Ioo 0 r), «expr ⊆ »(s, ball x r')) :=
+begin
+  unfreezingI { rcases [expr eq_empty_or_nonempty s, "with", ident rfl, "|", ident hne] },
+  { exact [expr ⟨«expr / »(r, 2), ⟨half_pos hr, half_lt_self hr⟩, empty_subset _⟩] },
+  have [] [":", expr is_compact s] [],
+  from [expr compact_of_is_closed_subset (proper_space.is_compact_closed_ball x r) hs (subset.trans h ball_subset_closed_ball)],
+  obtain ["⟨", ident y, ",", ident hys, ",", ident hy, "⟩", ":", expr «expr∃ , »((y «expr ∈ » s), «expr ⊆ »(s, closed_ball x (dist y x)))],
+  from [expr this.exists_forall_ge hne (continuous_id.dist continuous_const).continuous_on],
+  have [ident hyr] [":", expr «expr < »(dist y x, r)] [],
+  from [expr h hys],
+  rcases [expr exists_between hyr, "with", "⟨", ident r', ",", ident hyr', ",", ident hrr', "⟩"],
+  exact [expr ⟨r', ⟨dist_nonneg.trans_lt hyr', hrr'⟩, «expr $ »(subset.trans hy, closed_ball_subset_ball hyr')⟩]
+end
 
 /-- If a ball in a proper space includes a closed set `s`, then there exists a ball with the same
 center and a strictly smaller radius that includes `s`. -/
@@ -1734,9 +1734,9 @@ theorem exists_lt_subset_ball (hs : IsClosed s) (h : s ⊆ ball x r) : ∃ (r' :
   by 
     cases' le_or_ltₓ r 0 with hr hr
     ·
-      rw [ball_eq_empty.2 hr, subset_empty_iff] at h 
-      unfreezingI 
-        subst s 
+      rw [ball_eq_empty.2 hr, subset_empty_iff] at h
+      (
+        subst s)
       exact (no_bot r).imp fun r' hr' => ⟨hr', empty_subset _⟩
     ·
       exact (exists_pos_lt_subset_ball hr hs h).imp fun r' hr' => ⟨hr'.fst.2, hr'.snd⟩
@@ -1924,8 +1924,8 @@ theorem bounded_of_compact_space [CompactSpace α] : Bounded s :=
 
 theorem is_compact_of_is_closed_bounded [ProperSpace α] (hc : IsClosed s) (hb : Bounded s) : IsCompact s :=
   by 
-    unfreezingI 
-      rcases eq_empty_or_nonempty s with (rfl | ⟨x, hx⟩)
+    (
+      rcases eq_empty_or_nonempty s with (rfl | ⟨x, hx⟩))
     ·
       exact is_compact_empty
     ·
@@ -2074,7 +2074,7 @@ theorem diam_mono {s t : Set α} (h : s ⊆ t) (ht : Bounded t) : diam s ≤ dia
     rw [Ennreal.to_real_le_to_real (bounded.mono h ht).ediam_ne_top ht.ediam_ne_top]
     exact Emetric.diam_mono h
 
--- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The diameter of a union is controlled by the sum of the diameters, and the distance between
 any two points in each of the sets. This lemma is true without any side condition, since it is
 obviously true if `s ∪ t` is unbounded. -/
@@ -2224,30 +2224,31 @@ variable{x : γ}{s : Set γ}
 theorem closed_ball_zero : closed_ball x 0 = {x} :=
   Set.ext$ fun y => dist_le_zero
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A map between metric spaces is a uniform embedding if and only if the distance between `f x`
 and `f y` is controlled in terms of the distance between `x` and `y` and conversely. -/
-theorem uniform_embedding_iff' [MetricSpace β] {f : γ → β} :
-  UniformEmbedding f ↔
-    (∀ ε _ : ε > 0, ∃ (δ : _)(_ : δ > 0), ∀ {a b : γ}, dist a b < δ → dist (f a) (f b) < ε) ∧
-      ∀ δ _ : δ > 0, ∃ (ε : _)(_ : ε > 0), ∀ {a b : γ}, dist (f a) (f b) < ε → dist a b < δ :=
-  by 
-    split 
-    ·
-      intro h 
-      exact ⟨uniform_continuous_iff.1 (uniform_embedding_iff.1 h).2.1, (uniform_embedding_iff.1 h).2.2⟩
-    ·
-      rintro ⟨h₁, h₂⟩
-      refine' uniform_embedding_iff.2 ⟨_, uniform_continuous_iff.2 h₁, h₂⟩
-      intro x y hxy 
-      have  : dist x y ≤ 0
-      ·
-        refine' le_of_forall_lt' fun δ δpos => _ 
-        rcases h₂ δ δpos with ⟨ε, εpos, hε⟩
-        have  : dist (f x) (f y) < ε
-        ·
-          simpa [hxy]
-        exact hε this 
-      simpa using this
+theorem uniform_embedding_iff'
+[metric_space β]
+{f : γ → β} : «expr ↔ »(uniform_embedding f, «expr ∧ »(∀
+  ε «expr > » 0, «expr∃ , »((δ «expr > » 0), ∀
+   {a
+    b : γ}, «expr < »(dist a b, δ) → «expr < »(dist (f a) (f b), ε)), ∀
+  δ «expr > » 0, «expr∃ , »((ε «expr > » 0), ∀ {a b : γ}, «expr < »(dist (f a) (f b), ε) → «expr < »(dist a b, δ)))) :=
+begin
+  split,
+  { assume [binders (h)],
+    exact [expr ⟨uniform_continuous_iff.1 (uniform_embedding_iff.1 h).2.1, (uniform_embedding_iff.1 h).2.2⟩] },
+  { rintros ["⟨", ident h₁, ",", ident h₂, "⟩"],
+    refine [expr uniform_embedding_iff.2 ⟨_, uniform_continuous_iff.2 h₁, h₂⟩],
+    assume [binders (x y hxy)],
+    have [] [":", expr «expr ≤ »(dist x y, 0)] [],
+    { refine [expr le_of_forall_lt' (λ δ δpos, _)],
+      rcases [expr h₂ δ δpos, "with", "⟨", ident ε, ",", ident εpos, ",", ident hε, "⟩"],
+      have [] [":", expr «expr < »(dist (f x) (f y), ε)] [],
+      by simpa [] [] [] ["[", expr hxy, "]"] [] [],
+      exact [expr hε this] },
+    simpa [] [] [] [] [] ["using", expr this] }
+end
 
 instance (priority := 100)metric_space.to_separated : SeparatedSpace γ :=
   separated_def.2$ fun x y h => eq_of_forall_dist_le$ fun ε ε0 => le_of_ltₓ (h _ (dist_mem_uniformity ε0))
@@ -2396,18 +2397,17 @@ open Finset
 
 variable{π : β → Type _}[Fintype β][∀ b, MetricSpace (π b)]
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A finite product of metric spaces is a metric space, with the sup distance. -/
-noncomputable instance metricSpacePi : MetricSpace (∀ b, π b) :=
-  { pseudoMetricSpacePi with
-    eq_of_dist_eq_zero :=
-      fun f g eq0 =>
-        by 
-          have eq1 : edist f g = 0 :=
-            by 
-              simp only [edist_dist, eq0, Ennreal.of_real_zero]
-          have eq2 : (sup univ fun b : β => edist (f b) (g b)) ≤ 0 := le_of_eqₓ eq1 
-          simp only [Finset.sup_le_iff] at eq2 
-          exact funext$ fun b => edist_le_zero.1$ eq2 b$ mem_univ b }
+noncomputable
+instance metric_space_pi : metric_space (∀ b, π b) :=
+{ eq_of_dist_eq_zero := assume f g eq0, begin
+    have [ident eq1] [":", expr «expr = »(edist f g, 0)] [":=", expr by simp [] [] ["only"] ["[", expr edist_dist, ",", expr eq0, ",", expr ennreal.of_real_zero, "]"] [] []],
+    have [ident eq2] [":", expr «expr ≤ »(sup univ (λ b : β, edist (f b) (g b)), 0)] [":=", expr le_of_eq eq1],
+    simp [] [] ["only"] ["[", expr finset.sup_le_iff, "]"] [] ["at", ident eq2],
+    exact [expr «expr $ »(funext, assume b, «expr $ »(edist_le_zero.1, «expr $ »(eq2 b, mem_univ b)))]
+  end,
+  ..pseudo_metric_space_pi }
 
 end Pi
 
@@ -2417,29 +2417,31 @@ section SecondCountable
 
 open TopologicalSpace
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A metric space is second countable if one can reconstruct up to any `ε>0` any element of the
 space from countably many data. -/
-theorem second_countable_of_countable_discretization {α : Type u} [MetricSpace α]
-  (H : ∀ ε _ : ε > (0 : ℝ), ∃ (β : Type _)(_ : Encodable β)(F : α → β), ∀ x y, F x = F y → dist x y ≤ ε) :
-  second_countable_topology α :=
-  by 
-    cases' (univ : Set α).eq_empty_or_nonempty with hs hs
-    ·
-      haveI  : CompactSpace α :=
-        ⟨by 
-            rw [hs] <;> exact is_compact_empty⟩
-      ·
-        infer_instance 
-    rcases hs with ⟨x0, hx0⟩
-    letI this : Inhabited α := ⟨x0⟩
-    refine' second_countable_of_almost_dense_set fun ε ε0 => _ 
-    rcases H ε ε0 with ⟨β, fβ, F, hF⟩
-    resetI 
-    let Finv := Function.invFun F 
-    refine' ⟨range Finv, ⟨countable_range _, fun x => _⟩⟩
-    let x' := Finv (F x)
-    have  : F x' = F x := Function.inv_fun_eq ⟨x, rfl⟩
-    exact ⟨x', mem_range_self _, hF _ _ this.symm⟩
+theorem second_countable_of_countable_discretization
+{α : Type u}
+[metric_space α]
+(H : ∀
+ ε «expr > » (0 : exprℝ()), «expr∃ , »((β : Type*)
+  (_ : encodable β)
+  (F : α → β), ∀ x y, «expr = »(F x, F y) → «expr ≤ »(dist x y, ε))) : second_countable_topology α :=
+begin
+  cases [expr (univ : set α).eq_empty_or_nonempty] ["with", ident hs, ident hs],
+  { haveI [] [":", expr compact_space α] [":=", expr ⟨by rw [expr hs] []; exact [expr is_compact_empty]⟩],
+    by apply_instance },
+  rcases [expr hs, "with", "⟨", ident x0, ",", ident hx0, "⟩"],
+  letI [] [":", expr inhabited α] [":=", expr ⟨x0⟩],
+  refine [expr second_countable_of_almost_dense_set (λ ε ε0, _)],
+  rcases [expr H ε ε0, "with", "⟨", ident β, ",", ident fβ, ",", ident F, ",", ident hF, "⟩"],
+  resetI,
+  let [ident Finv] [] [":=", expr function.inv_fun F],
+  refine [expr ⟨range Finv, ⟨countable_range _, λ x, _⟩⟩],
+  let [ident x'] [] [":=", expr Finv (F x)],
+  have [] [":", expr «expr = »(F x', F x)] [":=", expr function.inv_fun_eq ⟨x, rfl⟩],
+  exact [expr ⟨x', mem_range_self _, hF _ _ this.symm⟩]
+end
 
 end SecondCountable
 
@@ -2447,24 +2449,26 @@ end Metric
 
 section EqRel
 
--- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- The canonical equivalence relation on a pseudometric space. -/
-def pseudo_metric.dist_setoid (α : Type u) [pseudo_metric_space α] : setoid α :=
-setoid.mk (λ
- x
- y, «expr = »(dist x y, 0)) (begin
-   unfold [ident equivalence] [],
-   repeat { split },
-   { exact [expr pseudo_metric_space.dist_self] },
-   { assume [binders (x y h)],
-     rwa [expr pseudo_metric_space.dist_comm] [] },
-   { assume [binders (x y z hxy hyz)],
-     refine [expr le_antisymm _ dist_nonneg],
-     calc
-       «expr ≤ »(dist x z, «expr + »(dist x y, dist y z)) : pseudo_metric_space.dist_triangle _ _ _
-       «expr = »(..., «expr + »(0, 0)) : by rw ["[", expr hxy, ",", expr hyz, "]"] []
-       «expr = »(..., 0) : by simp [] [] [] [] [] [] }
- end)
+def PseudoMetric.distSetoid (α : Type u) [PseudoMetricSpace α] : Setoidₓ α :=
+  Setoidₓ.mk (fun x y => dist x y = 0)
+    (by 
+      unfold Equivalenceₓ 
+      repeat' 
+        split 
+      ·
+        exact PseudoMetricSpace.dist_self
+      ·
+        intro x y h 
+        rwa [PseudoMetricSpace.dist_comm]
+      ·
+        intro x y z hxy hyz 
+        refine' le_antisymmₓ _ dist_nonneg 
+        calc dist x z ≤ dist x y+dist y z := PseudoMetricSpace.dist_triangle _ _ _ _ = 0+0 :=
+          by 
+            rw [hxy, hyz]_ = 0 :=
+          by 
+            simp )
 
 attribute [local instance] PseudoMetric.distSetoid
 
@@ -2473,34 +2477,26 @@ attribute [local instance] PseudoMetric.distSetoid
 def PseudoMetricQuot (α : Type u) [PseudoMetricSpace α] : Type _ :=
   Quotientₓ (PseudoMetric.distSetoid α)
 
-instance hasDistMetricQuot {α : Type u} [PseudoMetricSpace α] : HasDist (PseudoMetricQuot α) :=
-  { dist :=
-      Quotientₓ.lift₂ (fun p q : α => dist p q)
-        (by 
-          intro x y x' y' hxx' hyy' 
-          have Hxx' : dist x x' = 0 := hxx' 
-          have Hyy' : dist y y' = 0 := hyy' 
-          have A : dist x y ≤ dist x' y' :=
-            calc dist x y ≤ dist x x'+dist x' y := PseudoMetricSpace.dist_triangle _ _ _ 
-              _ = dist x' y :=
-              by 
-                simp [Hxx']
-              _ ≤ dist x' y'+dist y' y := PseudoMetricSpace.dist_triangle _ _ _ 
-              _ = dist x' y' :=
-              by 
-                simp [PseudoMetricSpace.dist_comm, Hyy']
-              
-          have B : dist x' y' ≤ dist x y :=
-            calc dist x' y' ≤ dist x' x+dist x y' := PseudoMetricSpace.dist_triangle _ _ _ 
-              _ = dist x y' :=
-              by 
-                simp [PseudoMetricSpace.dist_comm, Hxx']
-              _ ≤ dist x y+dist y y' := PseudoMetricSpace.dist_triangle _ _ _ 
-              _ = dist x y :=
-              by 
-                simp [Hyy']
-              
-          exact le_antisymmₓ A B) }
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance has_dist_metric_quot {α : Type u} [pseudo_metric_space α] : has_dist (pseudo_metric_quot α) :=
+{ dist := quotient.lift₂ (λ
+   p
+   q : α, dist p q) (begin
+     assume [binders (x y x' y' hxx' hyy')],
+     have [ident Hxx'] [":", expr «expr = »(dist x x', 0)] [":=", expr hxx'],
+     have [ident Hyy'] [":", expr «expr = »(dist y y', 0)] [":=", expr hyy'],
+     have [ident A] [":", expr «expr ≤ »(dist x y, dist x' y')] [":=", expr calc
+        «expr ≤ »(dist x y, «expr + »(dist x x', dist x' y)) : pseudo_metric_space.dist_triangle _ _ _
+        «expr = »(..., dist x' y) : by simp [] [] [] ["[", expr Hxx', "]"] [] []
+        «expr ≤ »(..., «expr + »(dist x' y', dist y' y)) : pseudo_metric_space.dist_triangle _ _ _
+        «expr = »(..., dist x' y') : by simp [] [] [] ["[", expr pseudo_metric_space.dist_comm, ",", expr Hyy', "]"] [] []],
+     have [ident B] [":", expr «expr ≤ »(dist x' y', dist x y)] [":=", expr calc
+        «expr ≤ »(dist x' y', «expr + »(dist x' x, dist x y')) : pseudo_metric_space.dist_triangle _ _ _
+        «expr = »(..., dist x y') : by simp [] [] [] ["[", expr pseudo_metric_space.dist_comm, ",", expr Hxx', "]"] [] []
+        «expr ≤ »(..., «expr + »(dist x y, dist y y')) : pseudo_metric_space.dist_triangle _ _ _
+        «expr = »(..., dist x y) : by simp [] [] [] ["[", expr Hyy', "]"] [] []],
+     exact [expr le_antisymm A B]
+   end) }
 
 theorem pseudo_metric_quot_dist_eq {α : Type u} [PseudoMetricSpace α] (p q : α) :
   dist («expr⟦ ⟧» p) («expr⟦ ⟧» q) = dist p q :=

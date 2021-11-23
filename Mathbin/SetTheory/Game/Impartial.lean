@@ -67,7 +67,7 @@ instance move_right_impartial {G : Pgame} [h : G.impartial] (j : G.right_moves) 
 instance impartial_add : ∀ G H : Pgame [G.impartial] [H.impartial], (G+H).Impartial
 | G, H =>
   by 
-    introI hG hH 
+    intros hG hH 
     rw [impartial_def]
     split 
     ·
@@ -87,7 +87,7 @@ instance impartial_add : ∀ G H : Pgame [G.impartial] [H.impartial], (G+H).Impa
 instance impartial_neg : ∀ G : Pgame [G.impartial], (-G).Impartial
 | G =>
   by 
-    introI hG 
+    intro hG 
     rw [impartial_def]
     split 
     ·
@@ -103,27 +103,25 @@ instance impartial_neg : ∀ G : Pgame [G.impartial], (-G).Impartial
       simp only [move_left_left_moves_neg_symm, move_right_right_moves_neg_symm]
       exact impartial_neg _
 
-theorem winner_cases (G : Pgame) [G.impartial] : G.first_loses ∨ G.first_wins :=
-  by 
-    rcases G.winner_cases with (hl | hr | hp | hn)
-    ·
-      cases' hl with hpos hnonneg 
-      rw [←not_ltₓ] at hnonneg 
-      have hneg := lt_of_lt_of_equiv hpos (neg_equiv_self G)
-      rw [lt_iff_neg_gt, neg_negₓ, neg_zero] at hneg 
-      contradiction
-    ·
-      cases' hr with hnonpos hneg 
-      rw [←not_ltₓ] at hnonpos 
-      have hpos := lt_of_equiv_of_lt (neg_equiv_self G).symm hneg 
-      rw [lt_iff_neg_gt, neg_negₓ, neg_zero] at hpos 
-      contradiction
-    ·
-      left 
-      assumption
-    ·
-      right 
-      assumption
+-- error in SetTheory.Game.Impartial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem winner_cases (G : pgame) [G.impartial] : «expr ∨ »(G.first_loses, G.first_wins) :=
+begin
+  rcases [expr G.winner_cases, "with", ident hl, "|", ident hr, "|", ident hp, "|", ident hn],
+  { cases [expr hl] ["with", ident hpos, ident hnonneg],
+    rw ["<-", expr not_lt] ["at", ident hnonneg],
+    have [ident hneg] [] [":=", expr lt_of_lt_of_equiv hpos (neg_equiv_self G)],
+    rw ["[", expr lt_iff_neg_gt, ",", expr neg_neg, ",", expr neg_zero, "]"] ["at", ident hneg],
+    contradiction },
+  { cases [expr hr] ["with", ident hnonpos, ident hneg],
+    rw ["<-", expr not_lt] ["at", ident hnonpos],
+    have [ident hpos] [] [":=", expr lt_of_equiv_of_lt (neg_equiv_self G).symm hneg],
+    rw ["[", expr lt_iff_neg_gt, ",", expr neg_neg, ",", expr neg_zero, "]"] ["at", ident hpos],
+    contradiction },
+  { left,
+    assumption },
+  { right,
+    assumption }
+end
 
 theorem not_first_wins (G : Pgame) [G.impartial] : ¬G.first_wins ↔ G.first_loses :=
   by 

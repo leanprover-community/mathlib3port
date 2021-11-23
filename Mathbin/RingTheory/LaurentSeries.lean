@@ -147,55 +147,47 @@ theorem coe_algebra_map [CommSemiringₓ R] :
   «expr⇑ » (algebraMap (PowerSeries R) (LaurentSeries R)) = HahnSeries.ofPowerSeries ℤ R :=
   rfl
 
+-- error in RingTheory.LaurentSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The localization map from power series to Laurent series. -/
-@[simps]
-instance of_power_series_localization [CommRingₓ R] :
-  IsLocalization (Submonoid.powers (PowerSeries.x : PowerSeries R)) (LaurentSeries R) :=
-  { map_units :=
-      by 
-        rintro ⟨_, n, rfl⟩
-        refine' ⟨⟨single (n : ℤ) 1, single (-n : ℤ) 1, _, _⟩, _⟩
-        ·
-          simp only [single_mul_single, mul_oneₓ, add_right_negₓ]
-          rfl
-        ·
-          simp only [single_mul_single, mul_oneₓ, add_left_negₓ]
-          rfl
-        ·
-          simp ,
-    surj :=
-      by 
-        intro z 
-        byCases' h : 0 ≤ z.order
-        ·
-          refine' ⟨⟨(PowerSeries.x^Int.natAbs z.order)*power_series_part z, 1⟩, _⟩
-          simp only [RingHom.map_one, mul_oneₓ, RingHom.map_mul, coe_algebra_map, of_power_series_X_pow,
-            Submonoid.coe_one]
-          rw [Int.nat_abs_of_nonneg h, ←coe_power_series, single_order_mul_power_series_part]
-        ·
-          refine' ⟨⟨power_series_part z, PowerSeries.x^Int.natAbs z.order, ⟨_, rfl⟩⟩, _⟩
-          simp only [coe_algebra_map, of_power_series_power_series_part]
-          rw [mul_commₓ _ z]
-          refine' congr rfl _ 
-          rw [Subtype.coe_mk, of_power_series_X_pow, Int.of_nat_nat_abs_of_nonpos]
-          exact le_of_not_geₓ h,
-    eq_iff_exists :=
-      by 
-        intro x y 
-        rw [coe_algebra_map, of_power_series_injective.eq_iff]
-        split 
-        ·
-          rintro rfl 
-          exact ⟨1, rfl⟩
-        ·
-          rintro ⟨⟨_, n, rfl⟩, hc⟩
-          rw [←sub_eq_zero, ←sub_mul, PowerSeries.ext_iff] at hc 
-          rw [←sub_eq_zero, PowerSeries.ext_iff]
-          intro m 
-          have h := hc (m+n)
-          rw [LinearMap.map_zero, Subtype.coe_mk, PowerSeries.X_pow_eq, PowerSeries.monomial, PowerSeries.coeff,
-            Finsupp.single_add, MvPowerSeries.coeff_add_mul_monomial, mul_oneₓ] at h 
-          exact h }
+@[simps #[]]
+instance of_power_series_localization
+[comm_ring R] : is_localization (submonoid.powers (power_series.X : power_series R)) (laurent_series R) :=
+{ map_units := begin
+    rintro ["⟨", "_", ",", ident n, ",", ident rfl, "⟩"],
+    refine [expr ⟨⟨single (n : exprℤ()) 1, single («expr- »(n) : exprℤ()) 1, _, _⟩, _⟩],
+    { simp [] [] ["only"] ["[", expr single_mul_single, ",", expr mul_one, ",", expr add_right_neg, "]"] [] [],
+      refl },
+    { simp [] [] ["only"] ["[", expr single_mul_single, ",", expr mul_one, ",", expr add_left_neg, "]"] [] [],
+      refl },
+    { simp [] [] [] [] [] [] }
+  end,
+  surj := begin
+    intro [ident z],
+    by_cases [expr h, ":", expr «expr ≤ »(0, z.order)],
+    { refine [expr ⟨⟨«expr * »(«expr ^ »(power_series.X, int.nat_abs z.order), power_series_part z), 1⟩, _⟩],
+      simp [] [] ["only"] ["[", expr ring_hom.map_one, ",", expr mul_one, ",", expr ring_hom.map_mul, ",", expr coe_algebra_map, ",", expr of_power_series_X_pow, ",", expr submonoid.coe_one, "]"] [] [],
+      rw ["[", expr int.nat_abs_of_nonneg h, ",", "<-", expr coe_power_series, ",", expr single_order_mul_power_series_part, "]"] [] },
+    { refine [expr ⟨⟨power_series_part z, «expr ^ »(power_series.X, int.nat_abs z.order), ⟨_, rfl⟩⟩, _⟩],
+      simp [] [] ["only"] ["[", expr coe_algebra_map, ",", expr of_power_series_power_series_part, "]"] [] [],
+      rw ["[", expr mul_comm _ z, "]"] [],
+      refine [expr congr rfl _],
+      rw ["[", expr subtype.coe_mk, ",", expr of_power_series_X_pow, ",", expr int.of_nat_nat_abs_of_nonpos, "]"] [],
+      exact [expr le_of_not_ge h] }
+  end,
+  eq_iff_exists := begin
+    intros [ident x, ident y],
+    rw ["[", expr coe_algebra_map, ",", expr of_power_series_injective.eq_iff, "]"] [],
+    split,
+    { rintro [ident rfl],
+      exact [expr ⟨1, rfl⟩] },
+    { rintro ["⟨", "⟨", "_", ",", ident n, ",", ident rfl, "⟩", ",", ident hc, "⟩"],
+      rw ["[", "<-", expr sub_eq_zero, ",", "<-", expr sub_mul, ",", expr power_series.ext_iff, "]"] ["at", ident hc],
+      rw ["[", "<-", expr sub_eq_zero, ",", expr power_series.ext_iff, "]"] [],
+      intro [ident m],
+      have [ident h] [] [":=", expr hc «expr + »(m, n)],
+      rw ["[", expr linear_map.map_zero, ",", expr subtype.coe_mk, ",", expr power_series.X_pow_eq, ",", expr power_series.monomial, ",", expr power_series.coeff, ",", expr finsupp.single_add, ",", expr mv_power_series.coeff_add_mul_monomial, ",", expr mul_one, "]"] ["at", ident h],
+      exact [expr h] }
+  end }
 
 end LaurentSeries
 

@@ -99,30 +99,21 @@ theorem restrict_extend_compl_range (f : α → β) (g : α → γ) (g' : β →
   by 
     convert restrict_dite_compl _ _
 
--- error in Data.Set.Function: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem range_extend_subset
-(f : α → β)
-(g : α → γ)
-(g' : β → γ) : «expr ⊆ »(range (extend f g g'), «expr ∪ »(range g, «expr '' »(g', «expr ᶜ»(range f)))) :=
-begin
-  classical,
-  rintro ["_", "⟨", ident y, ",", ident rfl, "⟩"],
-  rw [expr extend_def] [],
-  split_ifs [] [],
-  exacts ["[", expr or.inl (mem_range_self _), ",", expr or.inr (mem_image_of_mem _ h), "]"]
-end
+theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) :
+  range (extend f g g') ⊆ range g ∪ g' '' «expr ᶜ» (range f) :=
+  by 
+    classical 
+    rintro _ ⟨y, rfl⟩
+    rw [extend_def]
+    splitIfs 
+    exacts[Or.inl (mem_range_self _), Or.inr (mem_image_of_mem _ h)]
 
--- error in Data.Set.Function: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem range_extend
-{f : α → β}
-(hf : injective f)
-(g : α → γ)
-(g' : β → γ) : «expr = »(range (extend f g g'), «expr ∪ »(range g, «expr '' »(g', «expr ᶜ»(range f)))) :=
-begin
-  refine [expr (range_extend_subset _ _ _).antisymm _],
-  rintro [ident z, "(", "⟨", ident x, ",", ident rfl, "⟩", "|", "⟨", ident y, ",", ident hy, ",", ident rfl, "⟩", ")"],
-  exacts ["[", expr ⟨f x, extend_apply hf _ _ _⟩, ",", expr ⟨y, extend_apply' _ _ _ hy⟩, "]"]
-end
+theorem range_extend {f : α → β} (hf : injective f) (g : α → γ) (g' : β → γ) :
+  range (extend f g g') = range g ∪ g' '' «expr ᶜ» (range f) :=
+  by 
+    refine' (range_extend_subset _ _ _).antisymm _ 
+    rintro z (⟨x, rfl⟩ | ⟨y, hy, rfl⟩)
+    exacts[⟨f x, extend_apply hf _ _ _⟩, ⟨y, extend_apply' _ _ _ hy⟩]
 
 /-- Restrict codomain of a function `f` to a set `s`. Same as `subtype.coind` but this version
 has codomain `↥s` instead of `subtype s`. -/
@@ -339,21 +330,19 @@ theorem eq_on.inj_on_iff (H : eq_on f₁ f₂ s) : inj_on f₁ s ↔ inj_on f₂
 theorem inj_on.mono (h : s₁ ⊆ s₂) (ht : inj_on f s₂) : inj_on f s₁ :=
   fun x hx y hy H => ht (h hx) (h hy) H
 
--- error in Data.Set.Function: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem inj_on_union
-(h : disjoint s₁ s₂) : «expr ↔ »(inj_on f «expr ∪ »(s₁, s₂), «expr ∧ »(inj_on f s₁, «expr ∧ »(inj_on f s₂, ∀
-   (x «expr ∈ » s₁)
-   (y «expr ∈ » s₂), «expr ≠ »(f x, f y)))) :=
-begin
-  refine [expr ⟨λ H, ⟨«expr $ »(H.mono, subset_union_left _ _), «expr $ »(H.mono, subset_union_right _ _), _⟩, _⟩],
-  { intros [ident x, ident hx, ident y, ident hy, ident hxy],
-    obtain [ident rfl, ":", expr «expr = »(x, y)],
-    from [expr H (or.inl hx) (or.inr hy) hxy],
-    exact [expr h ⟨hx, hy⟩] },
-  { rintro ["⟨", ident h₁, ",", ident h₂, ",", ident h₁₂, "⟩"],
-    rintro [ident x, "(", ident hx, "|", ident hx, ")", ident y, "(", ident hy, "|", ident hy, ")", ident hxy],
-    exacts ["[", expr h₁ hx hy hxy, ",", expr (h₁₂ _ hx _ hy hxy).elim, ",", expr (h₁₂ _ hy _ hx hxy.symm).elim, ",", expr h₂ hx hy hxy, "]"] }
-end
+theorem inj_on_union (h : Disjoint s₁ s₂) :
+  inj_on f (s₁ ∪ s₂) ↔ inj_on f s₁ ∧ inj_on f s₂ ∧ ∀ x _ : x ∈ s₁ y _ : y ∈ s₂, f x ≠ f y :=
+  by 
+    refine' ⟨fun H => ⟨H.mono$ subset_union_left _ _, H.mono$ subset_union_right _ _, _⟩, _⟩
+    ·
+      intro x hx y hy hxy 
+      obtain rfl : x = y 
+      exact H (Or.inl hx) (Or.inr hy) hxy 
+      exact h ⟨hx, hy⟩
+    ·
+      rintro ⟨h₁, h₂, h₁₂⟩
+      rintro x (hx | hx) y (hy | hy) hxy 
+      exacts[h₁ hx hy hxy, (h₁₂ _ hx _ hy hxy).elim, (h₁₂ _ hy _ hx hxy.symm).elim, h₂ hx hy hxy]
 
 theorem inj_on_insert {f : α → β} {s : Set α} {a : α} (has : a ∉ s) :
   Set.InjOn f (insert a s) ↔ Set.InjOn f s ∧ f a ∉ f '' s :=
@@ -434,16 +423,20 @@ theorem surj_on.union (h₁ : surj_on f s t₁) (h₂ : surj_on f s t₂) : surj
 theorem surj_on.union_union (h₁ : surj_on f s₁ t₁) (h₂ : surj_on f s₂ t₂) : surj_on f (s₁ ∪ s₂) (t₁ ∪ t₂) :=
   (h₁.mono (subset_union_left _ _) (subset.refl _)).union (h₂.mono (subset_union_right _ _) (subset.refl _))
 
-theorem surj_on.inter_inter (h₁ : surj_on f s₁ t₁) (h₂ : surj_on f s₂ t₂) (h : inj_on f (s₁ ∪ s₂)) :
-  surj_on f (s₁ ∩ s₂) (t₁ ∩ t₂) :=
-  by 
-    intro y hy 
-    rcases h₁ hy.1 with ⟨x₁, hx₁, rfl⟩
-    rcases h₂ hy.2 with ⟨x₂, hx₂, heq⟩
-    have  : x₁ = x₂ 
-    exact h (Or.inl hx₁) (Or.inr hx₂) HEq.symm 
-    subst x₂ 
-    exact mem_image_of_mem f ⟨hx₁, hx₂⟩
+-- error in Data.Set.Function: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem surj_on.inter_inter
+(h₁ : surj_on f s₁ t₁)
+(h₂ : surj_on f s₂ t₂)
+(h : inj_on f «expr ∪ »(s₁, s₂)) : surj_on f «expr ∩ »(s₁, s₂) «expr ∩ »(t₁, t₂) :=
+begin
+  intros [ident y, ident hy],
+  rcases [expr h₁ hy.1, "with", "⟨", ident x₁, ",", ident hx₁, ",", ident rfl, "⟩"],
+  rcases [expr h₂ hy.2, "with", "⟨", ident x₂, ",", ident hx₂, ",", ident heq, "⟩"],
+  have [] [":", expr «expr = »(x₁, x₂)] [],
+  from [expr h (or.inl hx₁) (or.inr hx₂) heq.symm],
+  subst [expr x₂],
+  exact [expr mem_image_of_mem f ⟨hx₁, hx₂⟩]
+end
 
 theorem surj_on.inter (h₁ : surj_on f s₁ t) (h₂ : surj_on f s₂ t) (h : inj_on f (s₁ ∪ s₂)) : surj_on f (s₁ ∩ s₂) t :=
   inter_self t ▸ h₁.inter_inter h₂ h
@@ -729,20 +722,18 @@ theorem surj_on.bij_on_subset [Nonempty α] (h : surj_on f s t) : bij_on f (inv_
     rintro _ ⟨y, hy, rfl⟩
     rwa [h.right_inv_on_inv_fun_on hy]
 
-theorem surj_on_iff_exists_bij_on_subset : surj_on f s t ↔ ∃ (s' : _)(_ : s' ⊆ s), bij_on f s' t :=
-  by 
-    split 
-    ·
-      rcases eq_empty_or_nonempty t with (rfl | ht)
-      ·
-        exact fun _ => ⟨∅, empty_subset _, bij_on_empty f⟩
-      ·
-        intro h 
-        haveI  : Nonempty α := ⟨Classical.some (h.comap_nonempty ht)⟩
-        exact ⟨_, h.maps_to_inv_fun_on.image_subset, h.bij_on_subset⟩
-    ·
-      rintro ⟨s', hs', hfs'⟩
-      exact hfs'.surj_on.mono hs' (subset.refl _)
+-- error in Data.Set.Function: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem surj_on_iff_exists_bij_on_subset : «expr ↔ »(surj_on f s t, «expr∃ , »((s' «expr ⊆ » s), bij_on f s' t)) :=
+begin
+  split,
+  { rcases [expr eq_empty_or_nonempty t, "with", ident rfl, "|", ident ht],
+    { exact [expr λ _, ⟨«expr∅»(), empty_subset _, bij_on_empty f⟩] },
+    { assume [binders (h)],
+      haveI [] [":", expr nonempty α] [":=", expr ⟨classical.some (h.comap_nonempty ht)⟩],
+      exact [expr ⟨_, h.maps_to_inv_fun_on.image_subset, h.bij_on_subset⟩] } },
+  { rintros ["⟨", ident s', ",", ident hs', ",", ident hfs', "⟩"],
+    exact [expr hfs'.surj_on.mono hs' (subset.refl _)] }
+end
 
 theorem preimage_inv_fun_of_mem [n : Nonempty α] {f : α → β} (hf : injective f) {s : Set α}
   (h : Classical.choice n ∈ s) : inv_fun f ⁻¹' s = f '' s ∪ «expr ᶜ» (range f) :=
@@ -754,17 +745,21 @@ theorem preimage_inv_fun_of_mem [n : Nonempty α] {f : α → β} (hf : injectiv
     ·
       simp [mem_preimage, inv_fun_neg hx, h, hx]
 
-theorem preimage_inv_fun_of_not_mem [n : Nonempty α] {f : α → β} (hf : injective f) {s : Set α}
-  (h : Classical.choice n ∉ s) : inv_fun f ⁻¹' s = f '' s :=
-  by 
-    ext x 
-    rcases em (x ∈ range f) with (⟨a, rfl⟩ | hx)
-    ·
-      rw [mem_preimage, left_inverse_inv_fun hf, hf.mem_set_image]
-    ·
-      have  : x ∉ f '' s 
-      exact fun h' => hx (image_subset_range _ _ h')
-      simp only [mem_preimage, inv_fun_neg hx, h, this]
+-- error in Data.Set.Function: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem preimage_inv_fun_of_not_mem
+[n : nonempty α]
+{f : α → β}
+(hf : injective f)
+{s : set α}
+(h : «expr ∉ »(classical.choice n, s)) : «expr = »(«expr ⁻¹' »(inv_fun f, s), «expr '' »(f, s)) :=
+begin
+  ext [] [ident x] [],
+  rcases [expr em «expr ∈ »(x, range f), "with", "⟨", ident a, ",", ident rfl, "⟩", "|", ident hx],
+  { rw ["[", expr mem_preimage, ",", expr left_inverse_inv_fun hf, ",", expr hf.mem_set_image, "]"] [] },
+  { have [] [":", expr «expr ∉ »(x, «expr '' »(f, s))] [],
+    from [expr λ h', hx (image_subset_range _ _ h')],
+    simp [] [] ["only"] ["[", expr mem_preimage, ",", expr inv_fun_neg hx, ",", expr h, ",", expr this, "]"] [] [] }
+end
 
 end Set
 
@@ -894,18 +889,13 @@ theorem piecewise_range_comp {ι : Sort _} (f : ι → α) [∀ j, Decidable (j 
   (range f).piecewise g₁ g₂ ∘ f = g₁ ∘ f :=
   comp_eq_of_eq_on_range$ piecewise_eq_on _ _ _
 
--- error in Data.Set.Function: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem maps_to.piecewise_ite
-{s s₁ s₂ : set α}
-{t t₁ t₂ : set β}
-{f₁ f₂ : α → β}
-[∀ i, decidable «expr ∈ »(i, s)]
-(h₁ : maps_to f₁ «expr ∩ »(s₁, s) «expr ∩ »(t₁, t))
-(h₂ : maps_to f₂ «expr ∩ »(s₂, «expr ᶜ»(s)) «expr ∩ »(t₂, «expr ᶜ»(t))) : maps_to (s.piecewise f₁ f₂) (s.ite s₁ s₂) (t.ite t₁ t₂) :=
-begin
-  refine [expr (h₁.congr _).union_union (h₂.congr _)],
-  exacts ["[", expr (piecewise_eq_on s f₁ f₂).symm.mono (inter_subset_right _ _), ",", expr (piecewise_eq_on_compl s f₁ f₂).symm.mono (inter_subset_right _ _), "]"]
-end
+theorem maps_to.piecewise_ite {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {f₁ f₂ : α → β} [∀ i, Decidable (i ∈ s)]
+  (h₁ : maps_to f₁ (s₁ ∩ s) (t₁ ∩ t)) (h₂ : maps_to f₂ (s₂ ∩ «expr ᶜ» s) (t₂ ∩ «expr ᶜ» t)) :
+  maps_to (s.piecewise f₁ f₂) (s.ite s₁ s₂) (t.ite t₁ t₂) :=
+  by 
+    refine' (h₁.congr _).union_union (h₂.congr _)
+    exacts[(piecewise_eq_on s f₁ f₂).symm.mono (inter_subset_right _ _),
+      (piecewise_eq_on_compl s f₁ f₂).symm.mono (inter_subset_right _ _)]
 
 theorem eq_on_piecewise {f f' g : α → β} {t} :
   eq_on (s.piecewise f f') g t ↔ eq_on f g (t ∩ s) ∧ eq_on f' g (t ∩ «expr ᶜ» s) :=
@@ -1091,13 +1081,18 @@ theorem maps_to_preimage (h : semiconj f fa fb) {s t : Set β} (hb : maps_to fb 
     by 
       simp only [mem_preimage, h x, hb hx]
 
-theorem inj_on_preimage (h : semiconj f fa fb) {s : Set β} (hb : inj_on fb s) (hf : inj_on f (f ⁻¹' s)) :
-  inj_on fa (f ⁻¹' s) :=
-  by 
-    intro x hx y hy H 
-    have  := congr_argₓ f H 
-    rw [h.eq, h.eq] at this 
-    exact hf hx hy (hb hx hy this)
+-- error in Data.Set.Function: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem inj_on_preimage
+(h : semiconj f fa fb)
+{s : set β}
+(hb : inj_on fb s)
+(hf : inj_on f «expr ⁻¹' »(f, s)) : inj_on fa «expr ⁻¹' »(f, s) :=
+begin
+  intros [ident x, ident hx, ident y, ident hy, ident H],
+  have [] [] [":=", expr congr_arg f H],
+  rw ["[", expr h.eq, ",", expr h.eq, "]"] ["at", ident this],
+  exact [expr hf hx hy (hb hx hy this)]
+end
 
 end Semiconj
 

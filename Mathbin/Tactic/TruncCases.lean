@@ -12,7 +12,7 @@ private unsafe def trunc_cases_subsingleton (e : expr) (ids : List Name) : tacti
 /-- Auxiliary tactic for `trunc_cases`. -/
 private unsafe def trunc_cases_nondependent (e : expr) (ids : List Name) : tactic expr :=
   do 
-    to_expr (pquote Trunc.liftOn (%%e)) >>= tactic.fapply 
+    to_expr (pquote.1 (Trunc.liftOn (%%ₓe))) >>= tactic.fapply 
     tactic.clear e 
     let e ← tactic.intro e.local_pp_name 
     tactic.swap 

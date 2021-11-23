@@ -37,7 +37,7 @@ variable{E : Type _}[AddCommMonoidₓ E][Module 𝕜 E][TopologicalSpace E]
 
 /-- The set of all tangent directions to the set `s` at the point `x`. -/
 def TangentConeAt (s : Set E) (x : E) : Set E :=
-  { y : E |
+  { y:E |
     ∃ (c : ℕ → 𝕜)(d : ℕ → E),
       (∀ᶠn in at_top, (x+d n) ∈ s) ∧
         tendsto (fun n => ∥c n∥) at_top at_top ∧ tendsto (fun n => c n • d n) at_top (𝓝 y) }
@@ -74,46 +74,55 @@ section TangentCone
 
 open NormedField
 
-theorem tangent_cone_univ : TangentConeAt 𝕜 univ x = univ :=
-  by 
-    refine' univ_subset_iff.1 fun y hy => _ 
-    rcases exists_one_lt_norm 𝕜 with ⟨w, hw⟩
-    refine' ⟨fun n => w ^ n, fun n => (w ^ n)⁻¹ • y, univ_mem' fun n => mem_univ _, _, _⟩
-    ·
-      simp only [norm_pow]
-      exact tendsto_pow_at_top_at_top_of_one_lt hw
-    ·
-      convert tendsto_const_nhds 
-      ext n 
-      have  : ((w ^ n)*(w ^ n)⁻¹) = 1
-      ·
-        apply mul_inv_cancel 
-        apply pow_ne_zero 
-        simpa [norm_eq_zero] using (ne_of_ltₓ (lt_transₓ zero_lt_one hw)).symm 
-      rw [smul_smul, this, one_smul]
+-- error in Analysis.Calculus.TangentCone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tangent_cone_univ : «expr = »(tangent_cone_at 𝕜 univ x, univ) :=
+begin
+  refine [expr univ_subset_iff.1 (λ y hy, _)],
+  rcases [expr exists_one_lt_norm 𝕜, "with", "⟨", ident w, ",", ident hw, "⟩"],
+  refine [expr ⟨λ
+    n, «expr ^ »(w, n), λ n, «expr • »(«expr ⁻¹»(«expr ^ »(w, n)), y), univ_mem' (λ n, mem_univ _), _, _⟩],
+  { simp [] [] ["only"] ["[", expr norm_pow, "]"] [] [],
+    exact [expr tendsto_pow_at_top_at_top_of_one_lt hw] },
+  { convert [] [expr tendsto_const_nhds] [],
+    ext [] [ident n] [],
+    have [] [":", expr «expr = »(«expr * »(«expr ^ »(w, n), «expr ⁻¹»(«expr ^ »(w, n))), 1)] [],
+    { apply [expr mul_inv_cancel],
+      apply [expr pow_ne_zero],
+      simpa [] [] [] ["[", expr norm_eq_zero, "]"] [] ["using", expr (ne_of_lt (lt_trans zero_lt_one hw)).symm] },
+    rw ["[", expr smul_smul, ",", expr this, ",", expr one_smul, "]"] [] }
+end
 
 theorem tangent_cone_mono (h : s ⊆ t) : TangentConeAt 𝕜 s x ⊆ TangentConeAt 𝕜 t x :=
   by 
     rintro y ⟨c, d, ds, ctop, clim⟩
     exact ⟨c, d, mem_of_superset ds fun n hn => h hn, ctop, clim⟩
 
+-- error in Analysis.Calculus.TangentCone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Auxiliary lemma ensuring that, under the assumptions defining the tangent cone,
 the sequence `d` tends to 0 at infinity. -/
-theorem TangentConeAt.lim_zero {α : Type _} (l : Filter α) {c : α → 𝕜} {d : α → E}
-  (hc : tendsto (fun n => ∥c n∥) l at_top) (hd : tendsto (fun n => c n • d n) l (𝓝 y)) : tendsto d l (𝓝 0) :=
-  by 
-    have A : tendsto (fun n => ∥c n∥⁻¹) l (𝓝 0) := tendsto_inv_at_top_zero.comp hc 
-    have B : tendsto (fun n => ∥c n • d n∥) l (𝓝 ∥y∥) := (continuous_norm.tendsto _).comp hd 
-    have C : tendsto (fun n => ∥c n∥⁻¹*∥c n • d n∥) l (𝓝 (0*∥y∥)) := A.mul B 
-    rw [zero_mul] at C 
-    have  : ∀ᶠn in l, (∥c n∥⁻¹*∥c n • d n∥) = ∥d n∥
-    ·
-      apply (eventually_ne_of_tendsto_norm_at_top hc 0).mono fun n hn => _ 
-      rw [norm_smul, ←mul_assocₓ, inv_mul_cancel, one_mulₓ]
-      rwa [Ne.def, norm_eq_zero]
-    have D : tendsto (fun n => ∥d n∥) l (𝓝 0) := tendsto.congr' this C 
-    rw [tendsto_zero_iff_norm_tendsto_zero]
-    exact D
+theorem tangent_cone_at.lim_zero
+{α : Type*}
+(l : filter α)
+{c : α → 𝕜}
+{d : α → E}
+(hc : tendsto (λ n, «expr∥ ∥»(c n)) l at_top)
+(hd : tendsto (λ n, «expr • »(c n, d n)) l (expr𝓝() y)) : tendsto d l (expr𝓝() 0) :=
+begin
+  have [ident A] [":", expr tendsto (λ
+    n, «expr ⁻¹»(«expr∥ ∥»(c n))) l (expr𝓝() 0)] [":=", expr tendsto_inv_at_top_zero.comp hc],
+  have [ident B] [":", expr tendsto (λ
+    n, «expr∥ ∥»(«expr • »(c n, d n))) l (expr𝓝() «expr∥ ∥»(y))] [":=", expr (continuous_norm.tendsto _).comp hd],
+  have [ident C] [":", expr tendsto (λ
+    n, «expr * »(«expr ⁻¹»(«expr∥ ∥»(c n)), «expr∥ ∥»(«expr • »(c n, d n)))) l (expr𝓝() «expr * »(0, «expr∥ ∥»(y)))] [":=", expr A.mul B],
+  rw [expr zero_mul] ["at", ident C],
+  have [] [":", expr «expr∀ᶠ in , »((n), l, «expr = »(«expr * »(«expr ⁻¹»(«expr∥ ∥»(c n)), «expr∥ ∥»(«expr • »(c n, d n))), «expr∥ ∥»(d n)))] [],
+  { apply [expr (eventually_ne_of_tendsto_norm_at_top hc 0).mono (λ n hn, _)],
+    rw ["[", expr norm_smul, ",", "<-", expr mul_assoc, ",", expr inv_mul_cancel, ",", expr one_mul, "]"] [],
+    rwa ["[", expr ne.def, ",", expr norm_eq_zero, "]"] [] },
+  have [ident D] [":", expr tendsto (λ n, «expr∥ ∥»(d n)) l (expr𝓝() 0)] [":=", expr tendsto.congr' this C],
+  rw [expr tendsto_zero_iff_norm_tendsto_zero] [],
+  exact [expr D]
+end
 
 theorem tangent_cone_mono_nhds (h : 𝓝[s] x ≤ 𝓝[t] x) : TangentConeAt 𝕜 s x ⊆ TangentConeAt 𝕜 t x :=
   by 
@@ -132,148 +141,125 @@ theorem tangent_cone_congr (h : 𝓝[s] x = 𝓝[t] x) : TangentConeAt 𝕜 s x 
 theorem tangent_cone_inter_nhds (ht : t ∈ 𝓝 x) : TangentConeAt 𝕜 (s ∩ t) x = TangentConeAt 𝕜 s x :=
   tangent_cone_congr (nhds_within_restrict' _ ht).symm
 
+-- error in Analysis.Calculus.TangentCone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The tangent cone of a product contains the tangent cone of its left factor. -/
-theorem subset_tangent_cone_prod_left {t : Set F} {y : F} (ht : y ∈ Closure t) :
-  LinearMap.inl 𝕜 E F '' TangentConeAt 𝕜 s x ⊆ TangentConeAt 𝕜 (Set.Prod s t) (x, y) :=
-  by 
-    rintro _ ⟨v, ⟨c, d, hd, hc, hy⟩, rfl⟩
-    have  : ∀ n, ∃ d', (y+d') ∈ t ∧ ∥c n • d'∥ < ((1 : ℝ) / 2) ^ n
-    ·
-      intro n 
-      rcases mem_closure_iff_nhds.1 ht _ (eventually_nhds_norm_smul_sub_lt (c n) y (pow_pos one_half_pos n)) with
-        ⟨z, hz, hzt⟩
-      exact
-        ⟨z - y,
-          by 
-            simpa using hzt,
-          by 
-            simpa using hz⟩
-    choose d' hd' using this 
-    refine' ⟨c, fun n => (d n, d' n), _, hc, _⟩
-    show ∀ᶠn in at_top, ((x, y)+(d n, d' n)) ∈ Set.Prod s t
-    ·
-      filterUpwards [hd]
-      intro n hn 
-      simp [hn, (hd' n).1]
-    ·
-      apply tendsto.prod_mk_nhds hy _ 
-      refine' squeeze_zero_norm (fun n => (hd' n).2.le) _ 
-      exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
+theorem subset_tangent_cone_prod_left
+{t : set F}
+{y : F}
+(ht : «expr ∈ »(y, closure t)) : «expr ⊆ »(«expr '' »(linear_map.inl 𝕜 E F, tangent_cone_at 𝕜 s x), tangent_cone_at 𝕜 (set.prod s t) (x, y)) :=
+begin
+  rintros ["_", "⟨", ident v, ",", "⟨", ident c, ",", ident d, ",", ident hd, ",", ident hc, ",", ident hy, "⟩", ",", ident rfl, "⟩"],
+  have [] [":", expr ∀
+   n, «expr∃ , »((d'), «expr ∧ »(«expr ∈ »(«expr + »(y, d'), t), «expr < »(«expr∥ ∥»(«expr • »(c n, d')), «expr ^ »(«expr / »((1 : exprℝ()), 2), n))))] [],
+  { assume [binders (n)],
+    rcases [expr mem_closure_iff_nhds.1 ht _ (eventually_nhds_norm_smul_sub_lt (c n) y (pow_pos one_half_pos n)), "with", "⟨", ident z, ",", ident hz, ",", ident hzt, "⟩"],
+    exact [expr ⟨«expr - »(z, y), by simpa [] [] [] [] [] ["using", expr hzt], by simpa [] [] [] [] [] ["using", expr hz]⟩] },
+  choose [] [ident d'] [ident hd'] ["using", expr this],
+  refine [expr ⟨c, λ n, (d n, d' n), _, hc, _⟩],
+  show [expr «expr∀ᶠ in , »((n), at_top, «expr ∈ »(«expr + »((x, y), (d n, d' n)), set.prod s t))],
+  { filter_upwards ["[", expr hd, "]"] [],
+    assume [binders (n hn)],
+    simp [] [] [] ["[", expr hn, ",", expr (hd' n).1, "]"] [] [] },
+  { apply [expr tendsto.prod_mk_nhds hy _],
+    refine [expr squeeze_zero_norm (λ n, (hd' n).2.le) _],
+    exact [expr tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one] }
+end
 
+-- error in Analysis.Calculus.TangentCone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The tangent cone of a product contains the tangent cone of its right factor. -/
-theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ Closure s) :
-  LinearMap.inr 𝕜 E F '' TangentConeAt 𝕜 t y ⊆ TangentConeAt 𝕜 (Set.Prod s t) (x, y) :=
-  by 
-    rintro _ ⟨w, ⟨c, d, hd, hc, hy⟩, rfl⟩
-    have  : ∀ n, ∃ d', (x+d') ∈ s ∧ ∥c n • d'∥ < ((1 : ℝ) / 2) ^ n
-    ·
-      intro n 
-      rcases mem_closure_iff_nhds.1 hs _ (eventually_nhds_norm_smul_sub_lt (c n) x (pow_pos one_half_pos n)) with
-        ⟨z, hz, hzs⟩
-      exact
-        ⟨z - x,
-          by 
-            simpa using hzs,
-          by 
-            simpa using hz⟩
-    choose d' hd' using this 
-    refine' ⟨c, fun n => (d' n, d n), _, hc, _⟩
-    show ∀ᶠn in at_top, ((x, y)+(d' n, d n)) ∈ Set.Prod s t
-    ·
-      filterUpwards [hd]
-      intro n hn 
-      simp [hn, (hd' n).1]
-    ·
-      apply tendsto.prod_mk_nhds _ hy 
-      refine' squeeze_zero_norm (fun n => (hd' n).2.le) _ 
-      exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
+theorem subset_tangent_cone_prod_right
+{t : set F}
+{y : F}
+(hs : «expr ∈ »(x, closure s)) : «expr ⊆ »(«expr '' »(linear_map.inr 𝕜 E F, tangent_cone_at 𝕜 t y), tangent_cone_at 𝕜 (set.prod s t) (x, y)) :=
+begin
+  rintros ["_", "⟨", ident w, ",", "⟨", ident c, ",", ident d, ",", ident hd, ",", ident hc, ",", ident hy, "⟩", ",", ident rfl, "⟩"],
+  have [] [":", expr ∀
+   n, «expr∃ , »((d'), «expr ∧ »(«expr ∈ »(«expr + »(x, d'), s), «expr < »(«expr∥ ∥»(«expr • »(c n, d')), «expr ^ »(«expr / »((1 : exprℝ()), 2), n))))] [],
+  { assume [binders (n)],
+    rcases [expr mem_closure_iff_nhds.1 hs _ (eventually_nhds_norm_smul_sub_lt (c n) x (pow_pos one_half_pos n)), "with", "⟨", ident z, ",", ident hz, ",", ident hzs, "⟩"],
+    exact [expr ⟨«expr - »(z, x), by simpa [] [] [] [] [] ["using", expr hzs], by simpa [] [] [] [] [] ["using", expr hz]⟩] },
+  choose [] [ident d'] [ident hd'] ["using", expr this],
+  refine [expr ⟨c, λ n, (d' n, d n), _, hc, _⟩],
+  show [expr «expr∀ᶠ in , »((n), at_top, «expr ∈ »(«expr + »((x, y), (d' n, d n)), set.prod s t))],
+  { filter_upwards ["[", expr hd, "]"] [],
+    assume [binders (n hn)],
+    simp [] [] [] ["[", expr hn, ",", expr (hd' n).1, "]"] [] [] },
+  { apply [expr tendsto.prod_mk_nhds _ hy],
+    refine [expr squeeze_zero_norm (λ n, (hd' n).2.le) _],
+    exact [expr tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one] }
+end
 
+-- error in Analysis.Calculus.TangentCone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The tangent cone of a product contains the tangent cone of each factor. -/
-theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type _} [∀ i, NormedGroup (E i)]
-  [∀ i, NormedSpace 𝕜 (E i)] {s : ∀ i, Set (E i)} {x : ∀ i, E i} {i : ι} (hi : ∀ j _ : j ≠ i, x j ∈ Closure (s j)) :
-  maps_to (LinearMap.single i : E i →ₗ[𝕜] ∀ j, E j) (TangentConeAt 𝕜 (s i) (x i)) (TangentConeAt 𝕜 (Set.Pi univ s) x) :=
-  by 
-    rintro w ⟨c, d, hd, hc, hy⟩
-    have  : ∀ n j _ : j ≠ i, ∃ d', (x j+d') ∈ s j ∧ ∥c n • d'∥ < (1 / 2 : ℝ) ^ n
-    ·
-      intro n j hj 
-      rcases
-        mem_closure_iff_nhds.1 (hi j hj) _ (eventually_nhds_norm_smul_sub_lt (c n) (x j) (pow_pos one_half_pos n)) with
-        ⟨z, hz, hzs⟩
-      exact
-        ⟨z - x j,
-          by 
-            simpa using hzs,
-          by 
-            simpa using hz⟩
-    choose! d' hd's hcd' 
-    refine' ⟨c, fun n => Function.update (d' n) i (d n), hd.mono fun n hn j hj' => _, hc, tendsto_pi.2$ fun j => _⟩
-    ·
-      rcases em (j = i) with (rfl | hj) <;> simp 
-    ·
-      rcases em (j = i) with (rfl | hj)
-      ·
-        simp [hy]
-      ·
-        suffices  : tendsto (fun n => c n • d' n j) at_top (𝓝 0)
-        ·
-          simpa [hj]
-        refine' squeeze_zero_norm (fun n => (hcd' n j hj).le) _ 
-        exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
+theorem maps_to_tangent_cone_pi
+{ι : Type*}
+[decidable_eq ι]
+{E : ι → Type*}
+[∀ i, normed_group (E i)]
+[∀ i, normed_space 𝕜 (E i)]
+{s : ∀ i, set (E i)}
+{x : ∀ i, E i}
+{i : ι}
+(hi : ∀
+ j «expr ≠ » i, «expr ∈ »(x j, closure (s j))) : maps_to (linear_map.single i : «expr →ₗ[ ] »(E i, 𝕜, ∀
+ j, E j)) (tangent_cone_at 𝕜 (s i) (x i)) (tangent_cone_at 𝕜 (set.pi univ s) x) :=
+begin
+  rintros [ident w, "⟨", ident c, ",", ident d, ",", ident hd, ",", ident hc, ",", ident hy, "⟩"],
+  have [] [":", expr ∀
+   (n)
+   (j «expr ≠ » i), «expr∃ , »((d'), «expr ∧ »(«expr ∈ »(«expr + »(x j, d'), s j), «expr < »(«expr∥ ∥»(«expr • »(c n, d')), «expr ^ »((«expr / »(1, 2) : exprℝ()), n))))] [],
+  { assume [binders (n j hj)],
+    rcases [expr mem_closure_iff_nhds.1 (hi j hj) _ (eventually_nhds_norm_smul_sub_lt (c n) (x j) (pow_pos one_half_pos n)), "with", "⟨", ident z, ",", ident hz, ",", ident hzs, "⟩"],
+    exact [expr ⟨«expr - »(z, x j), by simpa [] [] [] [] [] ["using", expr hzs], by simpa [] [] [] [] [] ["using", expr hz]⟩] },
+  choose ["!"] [ident d'] [ident hd's, ident hcd'] [],
+  refine [expr ⟨c, λ
+    n, function.update (d' n) i (d n), hd.mono (λ n hn j hj', _), hc, «expr $ »(tendsto_pi.2, λ j, _)⟩],
+  { rcases [expr em «expr = »(j, i), "with", ident rfl, "|", ident hj]; simp [] [] [] ["*"] [] [] },
+  { rcases [expr em «expr = »(j, i), "with", ident rfl, "|", ident hj],
+    { simp [] [] [] ["[", expr hy, "]"] [] [] },
+    { suffices [] [":", expr tendsto (λ n, «expr • »(c n, d' n j)) at_top (expr𝓝() 0)],
+      by simpa [] [] [] ["[", expr hj, "]"] [] [],
+      refine [expr squeeze_zero_norm (λ n, (hcd' n j hj).le) _],
+      exact [expr tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one] } }
+end
 
+-- error in Analysis.Calculus.TangentCone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a subset of a real vector space contains a segment, then the direction of this
 segment belongs to the tangent cone at its endpoints. -/
-theorem mem_tangent_cone_of_segment_subset {s : Set G} {x y : G} (h : Segment ℝ x y ⊆ s) :
-  y - x ∈ TangentConeAt ℝ s x :=
-  by 
-    let c := fun n : ℕ => (2 : ℝ) ^ n 
-    let d := fun n : ℕ => c n⁻¹ • (y - x)
-    refine' ⟨c, d, Filter.univ_mem' fun n => h _, _, _⟩
-    show (x+d n) ∈ Segment ℝ x y
-    ·
-      rw [segment_eq_image]
-      refine' ⟨c n⁻¹, ⟨_, _⟩, _⟩
-      ·
-        rw [inv_nonneg]
-        apply pow_nonneg 
-        normNum
-      ·
-        apply inv_le_one 
-        apply one_le_pow_of_one_le 
-        normNum
-      ·
-        simp only [d, sub_smul, smul_sub, one_smul]
-        abel 
-    show Filter.Tendsto (fun n : ℕ => ∥c n∥) Filter.atTop Filter.atTop
-    ·
-      have  : (fun n : ℕ => ∥c n∥) = c
-      ·
-        ·
-          ext n 
-          exact
-            abs_of_nonneg
-              (pow_nonneg
-                (by 
-                  normNum)
-                _)
-      rw [this]
-      exact
-        tendsto_pow_at_top_at_top_of_one_lt
-          (by 
-            normNum)
-    show Filter.Tendsto (fun n : ℕ => c n • d n) Filter.atTop (𝓝 (y - x))
-    ·
-      have  : (fun n : ℕ => c n • d n) = fun n => y - x
-      ·
-        ext n 
-        simp only [d, smul_smul]
-        rw [mul_inv_cancel, one_smul]
-        exact
-          pow_ne_zero _
-            (by 
-              normNum)
-      rw [this]
-      apply tendsto_const_nhds
+theorem mem_tangent_cone_of_segment_subset
+{s : set G}
+{x y : G}
+(h : «expr ⊆ »(segment exprℝ() x y, s)) : «expr ∈ »(«expr - »(y, x), tangent_cone_at exprℝ() s x) :=
+begin
+  let [ident c] [] [":=", expr λ n : exprℕ(), «expr ^ »((2 : exprℝ()), n)],
+  let [ident d] [] [":=", expr λ n : exprℕ(), «expr • »(«expr ⁻¹»(c n), «expr - »(y, x))],
+  refine [expr ⟨c, d, filter.univ_mem' (λ n, h _), _, _⟩],
+  show [expr «expr ∈ »(«expr + »(x, d n), segment exprℝ() x y)],
+  { rw [expr segment_eq_image] [],
+    refine [expr ⟨«expr ⁻¹»(c n), ⟨_, _⟩, _⟩],
+    { rw [expr inv_nonneg] [],
+      apply [expr pow_nonneg],
+      norm_num [] [] },
+    { apply [expr inv_le_one],
+      apply [expr one_le_pow_of_one_le],
+      norm_num [] [] },
+    { simp [] [] ["only"] ["[", expr d, ",", expr sub_smul, ",", expr smul_sub, ",", expr one_smul, "]"] [] [],
+      abel [] [] [] } },
+  show [expr filter.tendsto (λ n : exprℕ(), «expr∥ ∥»(c n)) filter.at_top filter.at_top],
+  { have [] [":", expr «expr = »(λ n : exprℕ(), «expr∥ ∥»(c n), c)] [],
+    by { ext [] [ident n] [],
+      exact [expr abs_of_nonneg (pow_nonneg (by norm_num [] []) _)] },
+    rw [expr this] [],
+    exact [expr tendsto_pow_at_top_at_top_of_one_lt (by norm_num [] [])] },
+  show [expr filter.tendsto (λ n : exprℕ(), «expr • »(c n, d n)) filter.at_top (expr𝓝() «expr - »(y, x))],
+  { have [] [":", expr «expr = »(λ n : exprℕ(), «expr • »(c n, d n), λ n, «expr - »(y, x))] [],
+    { ext [] [ident n] [],
+      simp [] [] ["only"] ["[", expr d, ",", expr smul_smul, "]"] [] [],
+      rw ["[", expr mul_inv_cancel, ",", expr one_smul, "]"] [],
+      exact [expr pow_ne_zero _ (by norm_num [] [])] },
+    rw [expr this] [],
+    apply [expr tendsto_const_nhds] }
+end
 
 end TangentCone
 
@@ -338,18 +324,22 @@ theorem UniqueDiffOn.inter (hs : UniqueDiffOn 𝕜 s) (ht : IsOpen t) : UniqueDi
 theorem IsOpen.unique_diff_on (hs : IsOpen s) : UniqueDiffOn 𝕜 s :=
   fun x hx => IsOpen.unique_diff_within_at hs hx
 
+-- error in Analysis.Calculus.TangentCone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of two sets of unique differentiability at points `x` and `y` has unique
 differentiability at `(x, y)`. -/
-theorem UniqueDiffWithinAt.prod {t : Set F} {y : F} (hs : UniqueDiffWithinAt 𝕜 s x) (ht : UniqueDiffWithinAt 𝕜 t y) :
-  UniqueDiffWithinAt 𝕜 (Set.Prod s t) (x, y) :=
-  by 
-    rw [unique_diff_within_at_iff] at hs ht⊢
-    rw [closure_prod_eq]
-    refine' ⟨_, hs.2, ht.2⟩
-    have  : _ ≤ Submodule.span 𝕜 (TangentConeAt 𝕜 (s.prod t) (x, y)) :=
-      Submodule.span_mono (union_subset (subset_tangent_cone_prod_left ht.2) (subset_tangent_cone_prod_right hs.2))
-    rw [LinearMap.span_inl_union_inr, SetLike.le_def] at this 
-    exact (hs.1.Prod ht.1).mono this
+theorem unique_diff_within_at.prod
+{t : set F}
+{y : F}
+(hs : unique_diff_within_at 𝕜 s x)
+(ht : unique_diff_within_at 𝕜 t y) : unique_diff_within_at 𝕜 (set.prod s t) (x, y) :=
+begin
+  rw ["[", expr unique_diff_within_at_iff, "]"] ["at", "⊢", ident hs, ident ht],
+  rw ["[", expr closure_prod_eq, "]"] [],
+  refine [expr ⟨_, hs.2, ht.2⟩],
+  have [] [":", expr «expr ≤ »(_, submodule.span 𝕜 (tangent_cone_at 𝕜 (s.prod t) (x, y)))] [":=", expr submodule.span_mono (union_subset (subset_tangent_cone_prod_left ht.2) (subset_tangent_cone_prod_right hs.2))],
+  rw ["[", expr linear_map.span_inl_union_inr, ",", expr set_like.le_def, "]"] ["at", ident this],
+  exact [expr (hs.1.prod ht.1).mono this]
+end
 
 theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀ i, NormedGroup (E i)]
   [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i) (h : ∀ i, UniqueDiffWithinAt 𝕜 (s i) (x i)) :

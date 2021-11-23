@@ -1,5 +1,5 @@
 import Mathbin.Topology.Instances.Nnreal 
-import Mathbin.Topology.Algebra.Ordered.LiminfLimsup 
+import Mathbin.Order.LiminfLimsup 
 import Mathbin.Topology.MetricSpace.Lipschitz
 
 /-!
@@ -39,7 +39,7 @@ instance  : T2Space ℝ≥0∞ :=
   by 
     infer_instance
 
--- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance : second_countable_topology «exprℝ≥0∞»() :=
 ⟨⟨«expr⋃ , »((q «expr ≥ » (0 : exprℚ())), {{a : «exprℝ≥0∞»() | «expr < »(a, real.to_nnreal q)}, {a : «exprℝ≥0∞»() | «expr < »(«expr↑ »(real.to_nnreal q), a)}}), «expr $ »((countable_encodable _).bUnion, assume
    a
@@ -61,10 +61,10 @@ theorem embedding_coe : Embedding (coeₓ :  ℝ≥0  → ℝ≥0∞) :=
           rw [@OrderTopology.topology_eq_generate_intervals ℝ≥0∞ _, ←coinduced_le_iff_le_induced]
           refine' le_generate_from fun s ha => _ 
           rcases ha with ⟨a, rfl | rfl⟩
-          show IsOpen { b :  ℝ≥0  | a < «expr↑ » b }
+          show IsOpen { b: ℝ≥0  | a < «expr↑ » b }
           ·
             cases a <;> simp [none_eq_top, some_eq_coe, is_open_lt']
-          show IsOpen { b :  ℝ≥0  | «expr↑ » b < a }
+          show IsOpen { b: ℝ≥0  | «expr↑ » b < a }
           ·
             cases a <;> simp [none_eq_top, some_eq_coe, is_open_gt', is_open_const]
         ·
@@ -81,7 +81,7 @@ theorem embedding_coe : Embedding (coeₓ :  ℝ≥0  → ℝ≥0∞) :=
                 simp [Iio]⟩⟩,
     fun a b => coe_eq_coe.1⟩
 
-theorem is_open_ne_top : IsOpen { a : ℝ≥0∞ | a ≠ ⊤ } :=
+theorem is_open_ne_top : IsOpen { a:ℝ≥0∞ | a ≠ ⊤ } :=
   is_open_ne
 
 theorem is_open_Ico_zero : IsOpen (Ico 0 b) :=
@@ -223,52 +223,59 @@ theorem nhds_within_Ioi_coe_ne_bot {r :  ℝ≥0 } : (𝓝[Ioi r] (r : ℝ≥0�
 theorem nhds_within_Ioi_zero_ne_bot : (𝓝[Ioi 0] (0 : ℝ≥0∞)).ne_bot :=
   nhds_within_Ioi_coe_ne_bot
 
-theorem Icc_mem_nhds (xt : x ≠ ⊤) (ε0 : ε ≠ 0) : Icc (x - ε) (x+ε) ∈ 𝓝 x :=
-  by 
-    rw [_root_.mem_nhds_iff]
-    byCases' x0 : x = 0
-    ·
-      use Iio (x+ε)
-      have  : Iio (x+ε) ⊆ Icc (x - ε) (x+ε)
-      intro a 
-      rw [x0]
-      simpa using le_of_ltₓ 
-      use this 
-      exact ⟨is_open_Iio, mem_Iio_self_add xt ε0⟩
-    ·
-      use Ioo (x - ε) (x+ε)
-      use Ioo_subset_Icc_self 
-      exact ⟨is_open_Ioo, mem_Ioo_self_sub_add xt x0 ε0 ε0⟩
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem Icc_mem_nhds
+(xt : «expr ≠ »(x, «expr⊤»()))
+(ε0 : «expr ≠ »(ε, 0)) : «expr ∈ »(Icc «expr - »(x, ε) «expr + »(x, ε), expr𝓝() x) :=
+begin
+  rw [expr _root_.mem_nhds_iff] [],
+  by_cases [expr x0, ":", expr «expr = »(x, 0)],
+  { use [expr Iio «expr + »(x, ε)],
+    have [] [":", expr «expr ⊆ »(Iio «expr + »(x, ε), Icc «expr - »(x, ε) «expr + »(x, ε))] [],
+    assume [binders (a)],
+    rw [expr x0] [],
+    simpa [] [] [] [] [] ["using", expr le_of_lt],
+    use [expr this],
+    exact [expr ⟨is_open_Iio, mem_Iio_self_add xt ε0⟩] },
+  { use [expr Ioo «expr - »(x, ε) «expr + »(x, ε)],
+    use [expr Ioo_subset_Icc_self],
+    exact [expr ⟨is_open_Ioo, mem_Ioo_self_sub_add xt x0 ε0 ε0⟩] }
+end
 
-theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅(ε : _)(_ : ε > 0), 𝓟 (Icc (x - ε) (x+ε)) :=
-  by 
-    refine' le_antisymmₓ _ _ 
-    simp only [le_infi_iff, le_principal_iff]
-    intro ε ε0 
-    exact Icc_mem_nhds xt ε0.lt.ne' 
-    rw [nhds_generate_from]
-    refine' le_infi fun s => le_infi$ fun hs => _ 
-    rcases hs with ⟨xs, ⟨a, (rfl : s = Ioi a) | (rfl : s = Iio a)⟩⟩
-    ·
-      rcases exists_between xs with ⟨b, ab, bx⟩
-      have xb_pos : 0 < x - b := tsub_pos_iff_lt.2 bx 
-      have xxb : x - (x - b) = b := sub_sub_cancel xt bx.le 
-      refine' infi_le_of_le (x - b) (infi_le_of_le xb_pos _)
-      simp only [mem_principal, le_principal_iff]
-      intro y 
-      rintro ⟨h₁, h₂⟩
-      rw [xxb] at h₁ 
-      calc a < b := ab _ ≤ y := h₁
-    ·
-      rcases exists_between xs with ⟨b, xb, ba⟩
-      have bx_pos : 0 < b - x := tsub_pos_iff_lt.2 xb 
-      have xbx : (x+b - x) = b := add_tsub_cancel_of_le xb.le 
-      refine' infi_le_of_le (b - x) (infi_le_of_le bx_pos _)
-      simp only [mem_principal, le_principal_iff]
-      intro y 
-      rintro ⟨h₁, h₂⟩
-      rw [xbx] at h₂ 
-      calc y ≤ b := h₂ _ < a := ba
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nhds_of_ne_top
+(xt : «expr ≠ »(x, «expr⊤»())) : «expr = »(expr𝓝() x, «expr⨅ , »((ε «expr > » 0), expr𝓟() (Icc «expr - »(x, ε) «expr + »(x, ε)))) :=
+begin
+  refine [expr le_antisymm _ _],
+  simp [] [] ["only"] ["[", expr le_infi_iff, ",", expr le_principal_iff, "]"] [] [],
+  assume [binders (ε ε0)],
+  exact [expr Icc_mem_nhds xt ε0.lt.ne'],
+  rw [expr nhds_generate_from] [],
+  refine [expr le_infi (assume s, «expr $ »(le_infi, assume hs, _))],
+  rcases [expr hs, "with", "⟨", ident xs, ",", "⟨", ident a, ",", "(", ident rfl, ":", expr «expr = »(s, Ioi a), ")", "|", "(", ident rfl, ":", expr «expr = »(s, Iio a), ")", "⟩", "⟩"],
+  { rcases [expr exists_between xs, "with", "⟨", ident b, ",", ident ab, ",", ident bx, "⟩"],
+    have [ident xb_pos] [":", expr «expr < »(0, «expr - »(x, b))] [":=", expr tsub_pos_iff_lt.2 bx],
+    have [ident xxb] [":", expr «expr = »(«expr - »(x, «expr - »(x, b)), b)] [":=", expr sub_sub_cancel xt bx.le],
+    refine [expr infi_le_of_le «expr - »(x, b) (infi_le_of_le xb_pos _)],
+    simp [] [] ["only"] ["[", expr mem_principal, ",", expr le_principal_iff, "]"] [] [],
+    assume [binders (y)],
+    rintros ["⟨", ident h₁, ",", ident h₂, "⟩"],
+    rw [expr xxb] ["at", ident h₁],
+    calc
+      «expr < »(a, b) : ab
+      «expr ≤ »(..., y) : h₁ },
+  { rcases [expr exists_between xs, "with", "⟨", ident b, ",", ident xb, ",", ident ba, "⟩"],
+    have [ident bx_pos] [":", expr «expr < »(0, «expr - »(b, x))] [":=", expr tsub_pos_iff_lt.2 xb],
+    have [ident xbx] [":", expr «expr = »(«expr + »(x, «expr - »(b, x)), b)] [":=", expr add_tsub_cancel_of_le xb.le],
+    refine [expr infi_le_of_le «expr - »(b, x) (infi_le_of_le bx_pos _)],
+    simp [] [] ["only"] ["[", expr mem_principal, ",", expr le_principal_iff, "]"] [] [],
+    assume [binders (y)],
+    rintros ["⟨", ident h₁, ",", ident h₂, "⟩"],
+    rw [expr xbx] ["at", ident h₂],
+    calc
+      «expr ≤ »(y, b) : h₂
+      «expr < »(..., a) : ba }
+end
 
 /-- Characterization of neighborhoods for `ℝ≥0∞` numbers. See also `tendsto_order`
 for a version with strict inequalities. -/
@@ -397,13 +404,16 @@ protected theorem tendsto.pow {f : Filter α} {m : α → ℝ≥0∞} {a : ℝ�
   tendsto (fun x => m x ^ n) f (𝓝 (a ^ n)) :=
   ((continuous_pow n).Tendsto a).comp hm
 
-theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0∞} (h : ∀ a _ : a < 1, (a*x) ≤ y) : x ≤ y :=
-  by 
-    have  : tendsto (·*x) (𝓝[Iio 1] 1) (𝓝 (1*x)) :=
-      (Ennreal.continuous_at_mul_const (Or.inr one_ne_zero)).mono_left inf_le_left 
-    rw [one_mulₓ] at this 
-    haveI  : (𝓝[Iio 1] (1 : ℝ≥0∞)).ne_bot := nhds_within_Iio_self_ne_bot' Ennreal.zero_lt_one 
-    exact le_of_tendsto this (eventually_nhds_within_iff.2$ eventually_of_forall h)
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem le_of_forall_lt_one_mul_le
+{x y : «exprℝ≥0∞»()}
+(h : ∀ a «expr < » 1, «expr ≤ »(«expr * »(a, x), y)) : «expr ≤ »(x, y) :=
+begin
+  have [] [":", expr tendsto ((«expr * » x)) «expr𝓝[ ] »(Iio 1, 1) (expr𝓝() «expr * »(1, x))] [":=", expr (ennreal.continuous_at_mul_const (or.inr one_ne_zero)).mono_left inf_le_left],
+  rw [expr one_mul] ["at", ident this],
+  haveI [] [":", expr «expr𝓝[ ] »(Iio 1, (1 : «exprℝ≥0∞»())).ne_bot] [":=", expr nhds_within_Iio_self_ne_bot' ennreal.zero_lt_one],
+  exact [expr le_of_tendsto this «expr $ »(eventually_nhds_within_iff.2, eventually_of_forall h)]
+end
 
 theorem infi_mul_left' {ι} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} (h : a = ⊤ → (⨅i, f i) = 0 → ∃ i, f i = 0)
   (h0 : a = 0 → Nonempty ι) : (⨅i, a*f i) = a*⨅i, f i :=
@@ -419,7 +429,7 @@ theorem infi_mul_left' {ι} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} (h : a = �
               rwa [hi, mul_zero, ←bot_eq_zero]⟩
     ·
       rw [not_and_distrib] at H 
-      casesI is_empty_or_nonempty ι
+      cases' is_empty_or_nonempty ι
       ·
         rw [infi_of_empty, infi_of_empty, mul_top, if_neg]
         exact mt h0 (not_nonempty_iff.2 ‹_›)
@@ -480,20 +490,14 @@ protected theorem tendsto.div_const {f : Filter α} {m : α → ℝ≥0∞} {a b
 protected theorem tendsto_inv_nat_nhds_zero : tendsto (fun n : ℕ => (n : ℝ≥0∞)⁻¹) at_top (𝓝 0) :=
   Ennreal.inv_top ▸ Ennreal.tendsto_inv_iff.2 tendsto_nat_nhds_top
 
--- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem bsupr_add
-{ι}
-{s : set ι}
-(hs : s.nonempty)
-{f : ι → «exprℝ≥0∞»()} : «expr = »(«expr + »(«expr⨆ , »((i «expr ∈ » s), f i), a), «expr⨆ , »((i «expr ∈ » s), «expr + »(f i, a))) :=
-begin
-  simp [] [] ["only"] ["[", "<-", expr Sup_image, "]"] [] [],
-  symmetry,
-  rw ["[", expr image_comp ((«expr + » a)), "]"] [],
-  refine [expr is_lub.Sup_eq («expr $ »(is_lub_Sup, «expr '' »(f, s)).is_lub_of_tendsto _ (hs.image _) _)],
-  exacts ["[", expr λ
-   x _ y _ hxy, add_le_add hxy le_rfl, ",", expr tendsto.add (tendsto_id' inf_le_left) tendsto_const_nhds, "]"]
-end
+theorem bsupr_add {ι} {s : Set ι} (hs : s.nonempty) {f : ι → ℝ≥0∞} :
+  ((⨆(i : _)(_ : i ∈ s), f i)+a) = ⨆(i : _)(_ : i ∈ s), f i+a :=
+  by 
+    simp only [←Sup_image]
+    symm 
+    rw [image_comp (·+a)]
+    refine' IsLub.Sup_eq ((is_lub_Sup$ f '' s).is_lub_of_tendsto _ (hs.image _) _)
+    exacts[fun x _ y _ hxy => add_le_add hxy le_rfl, tendsto.add (tendsto_id' inf_le_left) tendsto_const_nhds]
 
 theorem Sup_add {s : Set ℝ≥0∞} (hs : s.nonempty) : (Sup s+a) = ⨆(b : _)(_ : b ∈ s), b+a :=
   by 
@@ -512,21 +516,24 @@ theorem add_supr {ι : Sort _} {s : ι → ℝ≥0∞} [h : Nonempty ι] : (a+su
   by 
     rw [add_commₓ, supr_add] <;> simp [add_commₓ]
 
-theorem supr_add_supr {ι : Sort _} {f g : ι → ℝ≥0∞} (h : ∀ i j, ∃ k, (f i+g j) ≤ f k+g k) :
-  (supr f+supr g) = ⨆a, f a+g a :=
-  by 
-    byCases' hι : Nonempty ι
-    ·
-      letI this := hι 
-      refine' le_antisymmₓ _ (supr_le$ fun a => add_le_add (le_supr _ _) (le_supr _ _))
-      simpa [add_supr, supr_add] using
-        fun i j : ι =>
-          show (f i+g j) ≤ ⨆a, f a+g a from
-            let ⟨k, hk⟩ := h i j 
-            le_supr_of_le k hk
-    ·
-      have  : ∀ f : ι → ℝ≥0∞, (⨆i, f i) = 0 := fun f => supr_eq_zero.mpr fun i => (hι ⟨i⟩).elim 
-      rw [this, this, this, zero_addₓ]
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem supr_add_supr
+{ι : Sort*}
+{f g : ι → «exprℝ≥0∞»()}
+(h : ∀
+ i
+ j, «expr∃ , »((k), «expr ≤ »(«expr + »(f i, g j), «expr + »(f k, g k)))) : «expr = »(«expr + »(supr f, supr g), «expr⨆ , »((a), «expr + »(f a, g a))) :=
+begin
+  by_cases [expr hι, ":", expr nonempty ι],
+  { letI [] [] [":=", expr hι],
+    refine [expr le_antisymm _ «expr $ »(supr_le, λ a, add_le_add (le_supr _ _) (le_supr _ _))],
+    simpa [] [] [] ["[", expr add_supr, ",", expr supr_add, "]"] [] ["using", expr λ
+     i j : ι, show «expr ≤ »(«expr + »(f i, g j), «expr⨆ , »((a), «expr + »(f a, g a))), from let ⟨k, hk⟩ := h i j in
+     le_supr_of_le k hk] },
+  { have [] [":", expr ∀
+     f : ι → «exprℝ≥0∞»(), «expr = »(«expr⨆ , »((i), f i), 0)] [":=", expr λ f, supr_eq_zero.mpr (λ i, (hι ⟨i⟩).elim)],
+    rw ["[", expr this, ",", expr this, ",", expr this, ",", expr zero_add, "]"] [] }
+end
 
 theorem supr_add_supr_of_monotone {ι : Sort _} [SemilatticeSup ι] {f g : ι → ℝ≥0∞} (hf : Monotone f) (hg : Monotone g) :
   (supr f+supr g) = ⨆a, f a+g a :=
@@ -545,29 +552,25 @@ theorem finset_sum_supr_nat {α} {ι} [SemilatticeSup ι] {s : Finset α} {f : �
       intro i j h 
       exact Finset.sum_le_sum$ fun a ha => hf a h
 
-theorem mul_Sup {s : Set ℝ≥0∞} {a : ℝ≥0∞} : (a*Sup s) = ⨆(i : _)(_ : i ∈ s), a*i :=
-  by 
-    byCases' hs : ∀ x _ : x ∈ s, x = (0 : ℝ≥0∞)
-    ·
-      have h₁ : Sup s = 0 := bot_unique$ Sup_le$ fun a ha => (hs a ha).symm ▸ le_reflₓ 0
-      have h₂ : (⨆(i : _)(_ : i ∈ s), a*i) = 0 :=
-        bot_unique$
-          supr_le$
-            fun a =>
-              supr_le$
-                fun ha =>
-                  by 
-                    simp [hs a ha]
-      rw [h₁, h₂, mul_zero]
-    ·
-      simp only [not_forall] at hs 
-      rcases hs with ⟨x, hx, hx0⟩
-      have s₁ : Sup s ≠ 0 := pos_iff_ne_zero.1 (lt_of_lt_of_leₓ (pos_iff_ne_zero.2 hx0) (le_Sup hx))
-      have  : Sup ((fun b => a*b) '' s) = a*Sup s :=
-        IsLub.Sup_eq
-          ((is_lub_Sup s).is_lub_of_tendsto (fun x _ y _ h => mul_le_mul_left' h _) ⟨x, hx⟩
-            (Ennreal.Tendsto.const_mul (tendsto_id' inf_le_left) (Or.inl s₁)))
-      rw [this.symm, Sup_image]
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mul_Sup
+{s : set «exprℝ≥0∞»()}
+{a : «exprℝ≥0∞»()} : «expr = »(«expr * »(a, Sup s), «expr⨆ , »((i «expr ∈ » s), «expr * »(a, i))) :=
+begin
+  by_cases [expr hs, ":", expr ∀ x «expr ∈ » s, «expr = »(x, (0 : «exprℝ≥0∞»()))],
+  { have [ident h₁] [":", expr «expr = »(Sup s, 0)] [":=", expr «expr $ »(bot_unique, «expr $ »(Sup_le, assume
+       a ha, «expr ▸ »((hs a ha).symm, le_refl 0)))],
+    have [ident h₂] [":", expr «expr = »(«expr⨆ , »((i «expr ∈ » s), «expr * »(a, i)), 0)] [":=", expr «expr $ »(bot_unique, «expr $ »(supr_le, assume
+       a, «expr $ »(supr_le, assume ha, by simp [] [] [] ["[", expr hs a ha, "]"] [] [])))],
+    rw ["[", expr h₁, ",", expr h₂, ",", expr mul_zero, "]"] [] },
+  { simp [] [] ["only"] ["[", expr not_forall, "]"] [] ["at", ident hs],
+    rcases [expr hs, "with", "⟨", ident x, ",", ident hx, ",", ident hx0, "⟩"],
+    have [ident s₁] [":", expr «expr ≠ »(Sup s, 0)] [":=", expr pos_iff_ne_zero.1 (lt_of_lt_of_le (pos_iff_ne_zero.2 hx0) (le_Sup hx))],
+    have [] [":", expr «expr = »(Sup «expr '' »(λ
+       b, «expr * »(a, b), s), «expr * »(a, Sup s))] [":=", expr is_lub.Sup_eq ((is_lub_Sup s).is_lub_of_tendsto (assume
+       x _ y _ h, mul_le_mul_left' h _) ⟨x, hx⟩ (ennreal.tendsto.const_mul (tendsto_id' inf_le_left) (or.inl s₁)))],
+    rw ["[", expr this.symm, ",", expr Sup_image, "]"] [] }
+end
 
 theorem mul_supr {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : (a*supr f) = ⨆i, a*f i :=
   by 
@@ -580,7 +583,7 @@ theorem supr_mul {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : (supr 
 theorem supr_div {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : supr f / a = ⨆i, f i / a :=
   supr_mul
 
--- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 protected
 theorem tendsto_coe_sub : ∀
 {b : «exprℝ≥0∞»()}, tendsto (λ
@@ -601,6 +604,24 @@ theorem sub_supr {ι : Sort _} [Nonempty ι] {b : ι → ℝ≥0∞} (hr : a < �
         (Ennreal.tendsto_coe_sub.comp (tendsto_id' inf_le_left))
   by 
     rw [Eq, ←this] <;> simp [Inf_image, infi_range, -mem_range] <;> exact le_rfl
+
+theorem exists_countable_dense_no_zero_top : ∃ s : Set ℝ≥0∞, countable s ∧ Dense s ∧ 0 ∉ s ∧ ∞ ∉ s :=
+  by 
+    obtain ⟨s, s_count, s_dense, hs⟩ :
+      ∃ s : Set ℝ≥0∞, countable s ∧ Dense s ∧ (∀ x, IsBot x → x ∉ s) ∧ ∀ x, IsTop x → x ∉ s :=
+      exists_countable_dense_no_bot_top ℝ≥0∞
+    exact
+      ⟨s, s_count, s_dense,
+        fun h =>
+          hs.1 0
+            (by 
+              simp )
+            h,
+        fun h =>
+          hs.2 ∞
+            (by 
+              simp )
+            h⟩
 
 end TopologicalSpace
 
@@ -712,18 +733,23 @@ protected theorem tsum_top [Nonempty α] : (∑'a : α, ∞) = ∞ :=
   let ⟨a⟩ := ‹Nonempty α›
   Ennreal.tsum_eq_top_of_eq_top ⟨a, rfl⟩
 
-theorem tsum_const_eq_top_of_ne_zero {α : Type _} [Infinite α] {c : ℝ≥0∞} (hc : c ≠ 0) : (∑'a : α, c) = ∞ :=
-  by 
-    have A : tendsto (fun n : ℕ => (n : ℝ≥0∞)*c) at_top (𝓝 (∞*c))
-    ·
-      apply Ennreal.Tendsto.mul_const tendsto_nat_nhds_top 
-      simp only [true_orₓ, top_ne_zero, Ne.def, not_false_iff]
-    have B : ∀ n : ℕ, ((n : ℝ≥0∞)*c) ≤ ∑'a : α, c
-    ·
-      intro n 
-      rcases Infinite.exists_subset_card_eq α n with ⟨s, hs⟩
-      simpa [hs] using @Ennreal.sum_le_tsum α (fun i => c) s 
-    simpa [hc] using le_of_tendsto' A B
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tsum_const_eq_top_of_ne_zero
+{α : Type*}
+[infinite α]
+{c : «exprℝ≥0∞»()}
+(hc : «expr ≠ »(c, 0)) : «expr = »(«expr∑' , »((a : α), c), «expr∞»()) :=
+begin
+  have [ident A] [":", expr tendsto (λ
+    n : exprℕ(), «expr * »((n : «exprℝ≥0∞»()), c)) at_top (expr𝓝() «expr * »(«expr∞»(), c))] [],
+  { apply [expr ennreal.tendsto.mul_const tendsto_nat_nhds_top],
+    simp [] [] ["only"] ["[", expr true_or, ",", expr top_ne_zero, ",", expr ne.def, ",", expr not_false_iff, "]"] [] [] },
+  have [ident B] [":", expr ∀ n : exprℕ(), «expr ≤ »(«expr * »((n : «exprℝ≥0∞»()), c), «expr∑' , »((a : α), c))] [],
+  { assume [binders (n)],
+    rcases [expr infinite.exists_subset_card_eq α n, "with", "⟨", ident s, ",", ident hs, "⟩"],
+    simpa [] [] [] ["[", expr hs, "]"] [] ["using", expr @ennreal.sum_le_tsum α (λ i, c) s] },
+  simpa [] [] [] ["[", expr hc, "]"] [] ["using", expr le_of_tendsto' A B]
+end
 
 protected theorem ne_top_of_tsum_ne_top (h : (∑'a, f a) ≠ ∞) (a : α) : f a ≠ ∞ :=
   fun ha => h$ Ennreal.tsum_eq_top_of_eq_top ⟨a, ha⟩
@@ -800,14 +826,19 @@ theorem summable_to_nnreal_of_tsum_ne_top {α : Type _} {f : α → ℝ≥0∞} 
   by 
     simpa only [←tsum_coe_ne_top_iff_summable, to_nnreal_apply_of_tsum_ne_top hf] using hf
 
-theorem tendsto_cofinite_zero_of_tsum_ne_top {α} {f : α → ℝ≥0∞} (hf : (∑'x, f x) ≠ ∞) : tendsto f cofinite (𝓝 0) :=
-  by 
-    have f_ne_top : ∀ n, f n ≠ ∞
-    exact Ennreal.ne_top_of_tsum_ne_top hf 
-    have h_f_coe : f = fun n => ((f n).toNnreal : Ennreal)
-    exact funext fun n => (coe_to_nnreal (f_ne_top n)).symm 
-    rw [h_f_coe, ←@coe_zero, tendsto_coe]
-    exact Nnreal.tendsto_cofinite_zero_of_summable (summable_to_nnreal_of_tsum_ne_top hf)
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_cofinite_zero_of_tsum_ne_top
+{α}
+{f : α → «exprℝ≥0∞»()}
+(hf : «expr ≠ »(«expr∑' , »((x), f x), «expr∞»())) : tendsto f cofinite (expr𝓝() 0) :=
+begin
+  have [ident f_ne_top] [":", expr ∀ n, «expr ≠ »(f n, «expr∞»())] [],
+  from [expr ennreal.ne_top_of_tsum_ne_top hf],
+  have [ident h_f_coe] [":", expr «expr = »(f, λ n, ((f n).to_nnreal : ennreal))] [],
+  from [expr funext (λ n, (coe_to_nnreal (f_ne_top n)).symm)],
+  rw ["[", expr h_f_coe, ",", "<-", expr @coe_zero, ",", expr tendsto_coe, "]"] [],
+  exact [expr nnreal.tendsto_cofinite_zero_of_summable (summable_to_nnreal_of_tsum_ne_top hf)]
+end
 
 theorem tendsto_at_top_zero_of_tsum_ne_top {f : ℕ → ℝ≥0∞} (hf : (∑'x, f x) ≠ ∞) : tendsto f at_top (𝓝 0) :=
   by 
@@ -828,32 +859,41 @@ theorem tendsto_tsum_compl_at_top_zero {α : Type _} {f : α → ℝ≥0∞} (hf
 protected theorem tsum_apply {ι α : Type _} {f : ι → α → ℝ≥0∞} {x : α} : (∑'i, f i) x = ∑'i, f i x :=
   tsum_apply$ Pi.summable.mpr$ fun _ => Ennreal.summable
 
-theorem tsum_sub {f : ℕ → ℝ≥0∞} {g : ℕ → ℝ≥0∞} (h₁ : (∑'i, g i) ≠ ∞) (h₂ : g ≤ f) :
-  (∑'i, f i - g i) = (∑'i, f i) - ∑'i, g i :=
-  by 
-    have h₃ : (∑'i, f i - g i) = (∑'i, (f i - g i)+g i) - ∑'i, g i
-    ·
-      rw [Ennreal.tsum_add, add_sub_self h₁]
-    have h₄ : (fun i => (f i - g i)+g i) = f
-    ·
-      ext n 
-      rw [tsub_add_cancel_of_le (h₂ n)]
-    rw [h₄] at h₃ 
-    apply h₃
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tsum_sub
+{f : exprℕ() → «exprℝ≥0∞»()}
+{g : exprℕ() → «exprℝ≥0∞»()}
+(h₁ : «expr ≠ »(«expr∑' , »((i), g i), «expr∞»()))
+(h₂ : «expr ≤ »(g, f)) : «expr = »(«expr∑' , »((i), «expr - »(f i, g i)), «expr - »(«expr∑' , »((i), f i), «expr∑' , »((i), g i))) :=
+begin
+  have [ident h₃] [":", expr «expr = »(«expr∑' , »((i), «expr - »(f i, g i)), «expr - »(«expr∑' , »((i), «expr + »(«expr - »(f i, g i), g i)), «expr∑' , »((i), g i)))] [],
+  { rw ["[", expr ennreal.tsum_add, ",", expr add_sub_self h₁, "]"] [] },
+  have [ident h₄] [":", expr «expr = »(λ i, «expr + »(«expr - »(f i, g i), g i), f)] [],
+  { ext [] [ident n] [],
+    rw [expr tsub_add_cancel_of_le (h₂ n)] [] },
+  rw [expr h₄] ["at", ident h₃],
+  apply [expr h₃]
+end
 
 end tsum
 
-theorem tendsto_to_real_iff {ι} {fi : Filter ι} {f : ι → ℝ≥0∞} (hf : ∀ i, f i ≠ ∞) {x : ℝ≥0∞} (hx : x ≠ ∞) :
-  fi.tendsto (fun n => (f n).toReal) (𝓝 x.to_real) ↔ fi.tendsto f (𝓝 x) :=
-  by 
-    refine' ⟨fun h => _, fun h => tendsto.comp (Ennreal.tendsto_to_real hx) h⟩
-    have h_eq : f = fun n => Ennreal.ofReal (f n).toReal
-    ·
-      ·
-        ext1 n 
-        rw [Ennreal.of_real_to_real (hf n)]
-    rw [h_eq, ←Ennreal.of_real_to_real hx]
-    exact Ennreal.tendsto_of_real h
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_to_real_iff
+{ι}
+{fi : filter ι}
+{f : ι → «exprℝ≥0∞»()}
+(hf : ∀ i, «expr ≠ »(f i, «expr∞»()))
+{x : «exprℝ≥0∞»()}
+(hx : «expr ≠ »(x, «expr∞»())) : «expr ↔ »(fi.tendsto (λ
+  n, (f n).to_real) (expr𝓝() x.to_real), fi.tendsto f (expr𝓝() x)) :=
+begin
+  refine [expr ⟨λ h, _, λ h, tendsto.comp (ennreal.tendsto_to_real hx) h⟩],
+  have [ident h_eq] [":", expr «expr = »(f, λ n, ennreal.of_real (f n).to_real)] [],
+  by { ext1 [] [ident n],
+    rw [expr ennreal.of_real_to_real (hf n)] [] },
+  rw ["[", expr h_eq, ",", "<-", expr ennreal.of_real_to_real hx, "]"] [],
+  exact [expr ennreal.tendsto_of_real h]
+end
 
 theorem tsum_coe_ne_top_iff_summable_coe {f : α →  ℝ≥0 } : (∑'a, (f a : ℝ≥0∞)) ≠ ∞ ↔ Summable fun a => (f a : ℝ) :=
   by 
@@ -876,15 +916,16 @@ namespace Nnreal
 
 open_locale Nnreal
 
-theorem tsum_eq_to_nnreal_tsum {f : β →  ℝ≥0 } : (∑'b, f b) = (∑'b, (f b : ℝ≥0∞)).toNnreal :=
-  by 
-    byCases' h : Summable f
-    ·
-      rw [←Ennreal.coe_tsum h, Ennreal.to_nnreal_coe]
-    ·
-      have A := tsum_eq_zero_of_not_summable h 
-      simp only [←Ennreal.tsum_coe_ne_top_iff_summable, not_not] at h 
-      simp only [h, Ennreal.top_to_nnreal, A]
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tsum_eq_to_nnreal_tsum
+{f : β → «exprℝ≥0»()} : «expr = »(«expr∑' , »((b), f b), «expr∑' , »((b), (f b : «exprℝ≥0∞»())).to_nnreal) :=
+begin
+  by_cases [expr h, ":", expr summable f],
+  { rw ["[", "<-", expr ennreal.coe_tsum h, ",", expr ennreal.to_nnreal_coe, "]"] [] },
+  { have [ident A] [] [":=", expr tsum_eq_zero_of_not_summable h],
+    simp [] [] ["only"] ["[", "<-", expr ennreal.tsum_coe_ne_top_iff_summable, ",", expr not_not, "]"] [] ["at", ident h],
+    simp [] [] ["only"] ["[", expr h, ",", expr ennreal.top_to_nnreal, ",", expr A, "]"] [] [] }
+end
 
 /-- Comparison test of convergence of `ℝ≥0`-valued series. -/
 theorem exists_le_has_sum_of_le {f g : β →  ℝ≥0 } {r :  ℝ≥0 } (hgf : ∀ b, g b ≤ f b) (hfr : HasSum f r) :
@@ -911,18 +952,17 @@ theorem has_sum_iff_tendsto_nat {f : ℕ →  ℝ≥0 } {r :  ℝ≥0 } :
     simp only [ennreal.coe_finset_sum.symm]
     exact Ennreal.tendsto_coe
 
--- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem not_summable_iff_tendsto_nat_at_top
-{f : exprℕ() → «exprℝ≥0»()} : «expr ↔ »(«expr¬ »(summable f), tendsto (λ
-  n : exprℕ(), «expr∑ in , »((i), finset.range n, f i)) at_top at_top) :=
-begin
-  split,
-  { intros [ident h],
-    refine [expr ((tendsto_of_monotone _).resolve_right h).comp _],
-    exacts ["[", expr finset.sum_mono_set _, ",", expr tendsto_finset_range, "]"] },
-  { rintros [ident hnat, "⟨", ident r, ",", ident hr, "⟩"],
-    exact [expr not_tendsto_nhds_of_tendsto_at_top hnat _ (has_sum_iff_tendsto_nat.1 hr)] }
-end
+theorem not_summable_iff_tendsto_nat_at_top {f : ℕ →  ℝ≥0 } :
+  ¬Summable f ↔ tendsto (fun n : ℕ => ∑i in Finset.range n, f i) at_top at_top :=
+  by 
+    split 
+    ·
+      intro h 
+      refine' ((tendsto_of_monotone _).resolve_right h).comp _ 
+      exacts[Finset.sum_mono_set _, tendsto_finset_range]
+    ·
+      rintro hnat ⟨r, hr⟩
+      exact not_tendsto_nhds_of_tendsto_at_top hnat _ (has_sum_iff_tendsto_nat.1 hr)
 
 theorem summable_iff_not_tendsto_nat_at_top {f : ℕ →  ℝ≥0 } :
   Summable f ↔ ¬tendsto (fun n : ℕ => ∑i in Finset.range n, f i) at_top at_top :=
@@ -978,12 +1018,20 @@ theorem tendsto_sum_nat_add (f : ℕ →  ℝ≥0 ) : tendsto (fun i => ∑'k, f
     convert tendsto_sum_nat_add fun i => (f i : ℝ)
     normCast
 
-theorem has_sum_lt {f g : α →  ℝ≥0 } {sf sg :  ℝ≥0 } {i : α} (h : ∀ a : α, f a ≤ g a) (hi : f i < g i)
-  (hf : HasSum f sf) (hg : HasSum g sg) : sf < sg :=
-  by 
-    have A : ∀ a : α, (f a : ℝ) ≤ g a := fun a => Nnreal.coe_le_coe.2 (h a)
-    have  : (sf : ℝ) < sg := has_sum_lt A (Nnreal.coe_lt_coe.2 hi) (has_sum_coe.2 hf) (has_sum_coe.2 hg)
-    exact Nnreal.coe_lt_coe.1 this
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_sum_lt
+{f g : α → «exprℝ≥0»()}
+{sf sg : «exprℝ≥0»()}
+{i : α}
+(h : ∀ a : α, «expr ≤ »(f a, g a))
+(hi : «expr < »(f i, g i))
+(hf : has_sum f sf)
+(hg : has_sum g sg) : «expr < »(sf, sg) :=
+begin
+  have [ident A] [":", expr ∀ a : α, «expr ≤ »((f a : exprℝ()), g a)] [":=", expr λ a, nnreal.coe_le_coe.2 (h a)],
+  have [] [":", expr «expr < »((sf : exprℝ()), sg)] [":=", expr has_sum_lt A (nnreal.coe_lt_coe.2 hi) (has_sum_coe.2 hf) (has_sum_coe.2 hg)],
+  exact [expr nnreal.coe_lt_coe.1 this]
+end
 
 @[mono]
 theorem has_sum_strict_mono {f g : α →  ℝ≥0 } {sf sg :  ℝ≥0 } (hf : HasSum f sf) (hg : HasSum g sg) (h : f < g) :
@@ -1009,15 +1057,18 @@ end Nnreal
 
 namespace Ennreal
 
-theorem tsum_to_real_eq {f : α → ℝ≥0∞} (hf : ∀ a, f a ≠ ∞) : (∑'a, f a).toReal = ∑'a, (f a).toReal :=
-  by 
-    lift f to α →  ℝ≥0  using hf 
-    have  : (∑'a : α, (f a : ℝ≥0∞)).toReal = ((∑'a : α, (f a : ℝ≥0∞)).toNnreal : ℝ≥0∞).toReal
-    ·
-      rw [Ennreal.coe_to_real]
-      rfl 
-    rw [this, ←Nnreal.tsum_eq_to_nnreal_tsum, Ennreal.coe_to_real]
-    exact Nnreal.coe_tsum
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tsum_to_real_eq
+{f : α → «exprℝ≥0∞»()}
+(hf : ∀ a, «expr ≠ »(f a, «expr∞»())) : «expr = »(«expr∑' , »((a), f a).to_real, «expr∑' , »((a), (f a).to_real)) :=
+begin
+  lift [expr f] ["to", expr α → «exprℝ≥0»()] ["using", expr hf] [],
+  have [] [":", expr «expr = »(«expr∑' , »((a : α), (f a : «exprℝ≥0∞»())).to_real, («expr∑' , »((a : α), (f a : «exprℝ≥0∞»())).to_nnreal : «exprℝ≥0∞»()).to_real)] [],
+  { rw ["[", expr ennreal.coe_to_real, "]"] [],
+    refl },
+  rw ["[", expr this, ",", "<-", expr nnreal.tsum_eq_to_nnreal_tsum, ",", expr ennreal.coe_to_real, "]"] [],
+  exact [expr nnreal.coe_tsum]
+end
 
 theorem tendsto_sum_nat_add (f : ℕ → ℝ≥0∞) (hf : (∑'i, f i) ≠ ∞) : tendsto (fun i => ∑'k, f (k+i)) at_top (𝓝 0) :=
   by 
@@ -1138,81 +1189,80 @@ theorem tendsto_iff_edist_tendsto_0 {l : Filter β} {f : β → α} {y : α} :
     simp only [emetric.nhds_basis_eball.tendsto_right_iff, Emetric.mem_ball, @tendsto_order ℝ≥0∞ β _ _,
       forall_prop_of_false Ennreal.not_lt_zero, forall_const, true_andₓ]
 
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Yet another metric characterization of Cauchy sequences on integers. This one is often the
 most efficient. -/
-theorem Emetric.cauchy_seq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s : β → α} :
-  CauchySeq s ↔ ∃ b : β → ℝ≥0∞, (∀ n m N : β, N ≤ n → N ≤ m → edist (s n) (s m) ≤ b N) ∧ tendsto b at_top (𝓝 0) :=
-  ⟨by 
-      intro hs 
-      rw [Emetric.cauchy_seq_iff] at hs 
-      let b := fun N => Sup ((fun p : β × β => edist (s p.1) (s p.2)) '' { p | p.1 ≥ N ∧ p.2 ≥ N })
-      have C : ∀ n m N, N ≤ n → N ≤ m → edist (s n) (s m) ≤ b N
-      ·
-        refine' fun m n N hm hn => le_Sup _ 
-        use Prod.mk m n 
-        simp only [and_trueₓ, eq_self_iff_true, Set.mem_set_of_eq]
-        exact ⟨hm, hn⟩
-      have D : tendsto b at_top (𝓝 0)
-      ·
-        refine' tendsto_order.2 ⟨fun a ha => absurd ha Ennreal.not_lt_zero, fun ε εpos => _⟩
-        rcases exists_between εpos with ⟨δ, δpos, δlt⟩
-        rcases hs δ δpos with ⟨N, hN⟩
-        refine' Filter.mem_at_top_sets.2 ⟨N, fun n hn => _⟩
-        have  : b n ≤ δ :=
-          Sup_le
-            (by 
-              simp only [and_imp, Set.mem_image, Set.mem_set_of_eq, exists_imp_distrib, Prod.exists]
-              intro d p q hp hq hd 
-              rw [←hd]
-              exact le_of_ltₓ (hN p q (le_transₓ hn hp) (le_transₓ hn hq)))
-        simpa using lt_of_le_of_ltₓ this δlt 
-      exact ⟨b, ⟨C, D⟩⟩,
-    by 
-      rintro ⟨b, ⟨b_bound, b_lim⟩⟩
-      refine' Emetric.cauchy_seq_iff.2 fun ε εpos => _ 
-      have  : ∀ᶠn in at_top, b n < ε := (tendsto_order.1 b_lim).2 _ εpos 
-      rcases Filter.mem_at_top_sets.1 this with ⟨N, hN⟩
-      exact
-        ⟨N,
-          fun m n hm hn =>
-            calc edist (s m) (s n) ≤ b N := b_bound m n N hm hn 
-              _ < ε := hN _ (le_reflₓ N)
-              ⟩⟩
+theorem emetric.cauchy_seq_iff_le_tendsto_0
+[nonempty β]
+[semilattice_sup β]
+{s : β → α} : «expr ↔ »(cauchy_seq s, «expr∃ , »((b : β → «exprℝ≥0∞»()), «expr ∧ »(∀
+   n m N : β, «expr ≤ »(N, n) → «expr ≤ »(N, m) → «expr ≤ »(edist (s n) (s m), b N), tendsto b at_top (expr𝓝() 0)))) :=
+⟨begin
+   assume [binders (hs)],
+   rw [expr emetric.cauchy_seq_iff] ["at", ident hs],
+   let [ident b] [] [":=", expr λ
+    N, Sup «expr '' »(λ
+     p : «expr × »(β, β), edist (s p.1) (s p.2), {p | «expr ∧ »(«expr ≥ »(p.1, N), «expr ≥ »(p.2, N))})],
+   have [ident C] [":", expr ∀ n m N, «expr ≤ »(N, n) → «expr ≤ »(N, m) → «expr ≤ »(edist (s n) (s m), b N)] [],
+   { refine [expr λ m n N hm hn, le_Sup _],
+     use [expr prod.mk m n],
+     simp [] [] ["only"] ["[", expr and_true, ",", expr eq_self_iff_true, ",", expr set.mem_set_of_eq, "]"] [] [],
+     exact [expr ⟨hm, hn⟩] },
+   have [ident D] [":", expr tendsto b at_top (expr𝓝() 0)] [],
+   { refine [expr tendsto_order.2 ⟨λ a ha, absurd ha ennreal.not_lt_zero, λ ε εpos, _⟩],
+     rcases [expr exists_between εpos, "with", "⟨", ident δ, ",", ident δpos, ",", ident δlt, "⟩"],
+     rcases [expr hs δ δpos, "with", "⟨", ident N, ",", ident hN, "⟩"],
+     refine [expr filter.mem_at_top_sets.2 ⟨N, λ n hn, _⟩],
+     have [] [":", expr «expr ≤ »(b n, δ)] [":=", expr Sup_le (begin
+         simp [] [] ["only"] ["[", expr and_imp, ",", expr set.mem_image, ",", expr set.mem_set_of_eq, ",", expr exists_imp_distrib, ",", expr prod.exists, "]"] [] [],
+         intros [ident d, ident p, ident q, ident hp, ident hq, ident hd],
+         rw ["<-", expr hd] [],
+         exact [expr le_of_lt (hN p q (le_trans hn hp) (le_trans hn hq))]
+       end)],
+     simpa [] [] [] [] [] ["using", expr lt_of_le_of_lt this δlt] },
+   exact [expr ⟨b, ⟨C, D⟩⟩]
+ end, begin
+   rintros ["⟨", ident b, ",", "⟨", ident b_bound, ",", ident b_lim, "⟩", "⟩"],
+   refine [expr emetric.cauchy_seq_iff.2 (λ ε εpos, _)],
+   have [] [":", expr «expr∀ᶠ in , »((n), at_top, «expr < »(b n, ε))] [":=", expr (tendsto_order.1 b_lim).2 _ εpos],
+   rcases [expr filter.mem_at_top_sets.1 this, "with", "⟨", ident N, ",", ident hN, "⟩"],
+   exact [expr ⟨N, λ m n hm hn, calc
+       «expr ≤ »(edist (s m) (s n), b N) : b_bound m n N hm hn
+       «expr < »(..., ε) : hN _ (le_refl N)⟩]
+ end⟩
 
-theorem continuous_of_le_add_edist {f : α → ℝ≥0∞} (C : ℝ≥0∞) (hC : C ≠ ⊤) (h : ∀ x y, f x ≤ f y+C*edist x y) :
-  Continuous f :=
-  by 
-    rcases eq_or_ne C 0 with (rfl | C0)
-    ·
-      simp only [zero_mul, add_zeroₓ] at h 
-      exact continuous_of_const fun x y => le_antisymmₓ (h _ _) (h _ _)
-    ·
-      refine' continuous_iff_continuous_at.2 fun x => _ 
-      byCases' hx : f x = ∞
-      ·
-        have  : f =ᶠ[𝓝 x] fun _ => ∞
-        ·
-          filterUpwards [Emetric.ball_mem_nhds x Ennreal.coe_lt_top]
-          refine' fun y hy : edist y x < ⊤ => _ 
-          rw [edist_comm] at hy 
-          simpa [hx, hC, hy.ne] using h x y 
-        exact this.continuous_at
-      ·
-        refine' (Ennreal.tendsto_nhds hx).2 fun ε ε0 : 0 < ε => _ 
-        filterUpwards [Emetric.closed_ball_mem_nhds x (Ennreal.div_pos_iff.2 ⟨ε0.ne', hC⟩)]
-        have hεC : (C*ε / C) = ε := Ennreal.mul_div_cancel' C0 hC 
-        refine' fun y hy : edist y x ≤ ε / C => ⟨tsub_le_iff_right.2 _, _⟩
-        ·
-          rw [edist_comm] at hy 
-          calc f x ≤ f y+C*edist x y := h x y _ ≤ f y+C*ε / C :=
-            add_le_add_left (mul_le_mul_left' hy C) (f y)_ = f y+ε :=
-            by 
-              rw [hεC]
-        ·
-          calc f y ≤ f x+C*edist y x := h y x _ ≤ f x+C*ε / C :=
-            add_le_add_left (mul_le_mul_left' hy C) (f x)_ = f x+ε :=
-            by 
-              rw [hεC]
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_of_le_add_edist
+{f : α → «exprℝ≥0∞»()}
+(C : «exprℝ≥0∞»())
+(hC : «expr ≠ »(C, «expr⊤»()))
+(h : ∀ x y, «expr ≤ »(f x, «expr + »(f y, «expr * »(C, edist x y)))) : continuous f :=
+begin
+  rcases [expr eq_or_ne C 0, "with", "(", ident rfl, "|", ident C0, ")"],
+  { simp [] [] ["only"] ["[", expr zero_mul, ",", expr add_zero, "]"] [] ["at", ident h],
+    exact [expr continuous_of_const (λ x y, le_antisymm (h _ _) (h _ _))] },
+  { refine [expr continuous_iff_continuous_at.2 (λ x, _)],
+    by_cases [expr hx, ":", expr «expr = »(f x, «expr∞»())],
+    { have [] [":", expr «expr =ᶠ[ ] »(f, expr𝓝() x, λ _, «expr∞»())] [],
+      { filter_upwards ["[", expr emetric.ball_mem_nhds x ennreal.coe_lt_top, "]"] [],
+        refine [expr λ (y) (hy : «expr < »(edist y x, «expr⊤»())), _],
+        rw [expr edist_comm] ["at", ident hy],
+        simpa [] [] [] ["[", expr hx, ",", expr hC, ",", expr hy.ne, "]"] [] ["using", expr h x y] },
+      exact [expr this.continuous_at] },
+    { refine [expr (ennreal.tendsto_nhds hx).2 (λ (ε) (ε0 : «expr < »(0, ε)), _)],
+      filter_upwards ["[", expr emetric.closed_ball_mem_nhds x (ennreal.div_pos_iff.2 ⟨ε0.ne', hC⟩), "]"] [],
+      have [ident hεC] [":", expr «expr = »(«expr * »(C, «expr / »(ε, C)), ε)] [":=", expr ennreal.mul_div_cancel' C0 hC],
+      refine [expr λ (y) (hy : «expr ≤ »(edist y x, «expr / »(ε, C))), ⟨tsub_le_iff_right.2 _, _⟩],
+      { rw [expr edist_comm] ["at", ident hy],
+        calc
+          «expr ≤ »(f x, «expr + »(f y, «expr * »(C, edist x y))) : h x y
+          «expr ≤ »(..., «expr + »(f y, «expr * »(C, «expr / »(ε, C)))) : add_le_add_left (mul_le_mul_left' hy C) (f y)
+          «expr = »(..., «expr + »(f y, ε)) : by rw [expr hεC] [] },
+      { calc
+          «expr ≤ »(f y, «expr + »(f x, «expr * »(C, edist y x))) : h y x
+          «expr ≤ »(..., «expr + »(f x, «expr * »(C, «expr / »(ε, C)))) : add_le_add_left (mul_le_mul_left' hy C) (f x)
+          «expr = »(..., «expr + »(f x, ε)) : by rw [expr hεC] [] } } }
+end
 
 theorem continuous_edist : Continuous fun p : α × α => edist p.1 p.2 :=
   by 
@@ -1248,56 +1298,53 @@ theorem cauchy_seq_of_edist_le_of_tsum_ne_top {f : ℕ → α} (d : ℕ → ℝ�
 theorem Emetric.is_closed_ball {a : α} {r : ℝ≥0∞} : IsClosed (closed_ball a r) :=
   is_closed_le (continuous_id.edist continuous_const) continuous_const
 
-@[simp]
-theorem Emetric.diam_closure (s : Set α) : diam (Closure s) = diam s :=
-  by 
-    refine' le_antisymmₓ (diam_le$ fun x hx y hy => _) (diam_mono subset_closure)
-    have  : edist x y ∈ Closure (Iic (diam s))
-    exact map_mem_closure2 (@continuous_edist α _) hx hy fun _ _ => edist_le_diam_of_mem 
-    rwa [closure_Iic] at this
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem emetric.diam_closure (s : set α) : «expr = »(diam (closure s), diam s) :=
+begin
+  refine [expr le_antisymm «expr $ »(diam_le, λ x hx y hy, _) (diam_mono subset_closure)],
+  have [] [":", expr «expr ∈ »(edist x y, closure (Iic (diam s)))] [],
+  from [expr map_mem_closure2 (@continuous_edist α _) hx hy (λ _ _, edist_le_diam_of_mem)],
+  rwa [expr closure_Iic] ["at", ident this]
+end
 
 @[simp]
 theorem Metric.diam_closure {α : Type _} [PseudoMetricSpace α] (s : Set α) : Metric.diam (Closure s) = diam s :=
   by 
     simp only [Metric.diam, Emetric.diam_closure]
 
--- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem is_closed_set_of_lipschitz_on_with
-{α β}
-[pseudo_emetric_space α]
-[pseudo_emetric_space β]
-(K : «exprℝ≥0»())
-(s : set α) : is_closed {f : α → β | lipschitz_on_with K f s} :=
-begin
-  simp [] [] ["only"] ["[", expr lipschitz_on_with, ",", expr set_of_forall, "]"] [] [],
-  refine [expr is_closed_bInter (λ x hx, «expr $ »(is_closed_bInter, λ y hy, is_closed_le _ _))],
-  exacts ["[", expr continuous.edist (continuous_apply x) (continuous_apply y), ",", expr continuous_const, "]"]
-end
+theorem is_closed_set_of_lipschitz_on_with {α β} [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K :  ℝ≥0 ) (s : Set α) :
+  IsClosed { f:α → β | LipschitzOnWith K f s } :=
+  by 
+    simp only [LipschitzOnWith, set_of_forall]
+    refine' is_closed_bInter fun x hx => is_closed_bInter$ fun y hy => is_closed_le _ _ 
+    exacts[Continuous.edist (continuous_apply x) (continuous_apply y), continuous_const]
 
 theorem is_closed_set_of_lipschitz_with {α β} [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K :  ℝ≥0 ) :
-  IsClosed { f : α → β | LipschitzWith K f } :=
+  IsClosed { f:α → β | LipschitzWith K f } :=
   by 
     simp only [←lipschitz_on_univ, is_closed_set_of_lipschitz_on_with]
 
 namespace Real
 
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For a bounded set `s : set ℝ`, its `emetric.diam` is equal to `Sup s - Inf s` reinterpreted as
 `ℝ≥0∞`. -/
-theorem ediam_eq {s : Set ℝ} (h : Bounded s) : Emetric.diam s = Ennreal.ofReal (Sup s - Inf s) :=
-  by 
-    rcases eq_empty_or_nonempty s with (rfl | hne)
-    ·
-      simp 
-    refine' le_antisymmₓ (Metric.ediam_le_of_forall_dist_le$ fun x hx y hy => _) _
-    ·
-      have  := Real.subset_Icc_Inf_Sup_of_bounded h 
-      exact Real.dist_le_of_mem_Icc (this hx) (this hy)
-    ·
-      apply Ennreal.of_real_le_of_le_to_real 
-      rw [←Metric.diam, ←Metric.diam_closure]
-      have h' := Real.bounded_iff_bdd_below_bdd_above.1 h 
-      calc Sup s - Inf s ≤ dist (Sup s) (Inf s) := le_abs_self _ _ ≤ diam (Closure s) :=
-        dist_le_diam_of_mem h.closure (cSup_mem_closure hne h'.2) (cInf_mem_closure hne h'.1)
+theorem ediam_eq
+{s : set exprℝ()}
+(h : bounded s) : «expr = »(emetric.diam s, ennreal.of_real «expr - »(Sup s, Inf s)) :=
+begin
+  rcases [expr eq_empty_or_nonempty s, "with", ident rfl, "|", ident hne],
+  { simp [] [] [] [] [] [] },
+  refine [expr le_antisymm «expr $ »(metric.ediam_le_of_forall_dist_le, λ x hx y hy, _) _],
+  { have [] [] [":=", expr real.subset_Icc_Inf_Sup_of_bounded h],
+    exact [expr real.dist_le_of_mem_Icc (this hx) (this hy)] },
+  { apply [expr ennreal.of_real_le_of_le_to_real],
+    rw ["[", "<-", expr metric.diam, ",", "<-", expr metric.diam_closure, "]"] [],
+    have [ident h'] [] [":=", expr real.bounded_iff_bdd_below_bdd_above.1 h],
+    calc
+      «expr ≤ »(«expr - »(Sup s, Inf s), dist (Sup s) (Inf s)) : le_abs_self _
+      «expr ≤ »(..., diam (closure s)) : dist_le_diam_of_mem h.closure (cSup_mem_closure hne h'.2) (cInf_mem_closure hne h'.1) }
+end
 
 /-- For a bounded set `s : set ℝ`, its `metric.diam` is equal to `Sup s - Inf s`. -/
 theorem diam_eq {s : Set ℝ} (h : Bounded s) : Metric.diam s = Sup s - Inf s :=

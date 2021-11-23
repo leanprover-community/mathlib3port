@@ -109,25 +109,28 @@ end GroupWithZeroₓ
 
 open_locale Pointwise
 
-@[toAdditive]
-theorem mem_closure_inv {G : Type _} [Groupₓ G] (S : Set G) (x : G) :
-  x ∈ Submonoid.closure (S⁻¹) ↔ x⁻¹ ∈ Submonoid.closure S :=
-  by 
-    suffices  : ∀ S : Set G x : G, x ∈ Submonoid.closure (S⁻¹) → x⁻¹ ∈ Submonoid.closure S
-    ·
-      refine' ⟨this S x, _⟩
-      have  := this (S⁻¹) (x⁻¹)
-      rwa [inv_invₓ, Set.inv_inv] at this 
-    intro S x hx 
-    refine' Submonoid.closure_induction hx (fun x hx => _) _ fun x y hx hy => _
-    ·
-      exact Submonoid.subset_closure (set.mem_inv.mp hx)
-    ·
-      rw [one_inv]
-      exact Submonoid.one_mem _
-    ·
-      rw [mul_inv_rev x y]
-      exact Submonoid.mul_mem _ hy hx
+-- error in GroupTheory.Submonoid.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem mem_closure_inv
+{G : Type*}
+[group G]
+(S : set G)
+(x : G) : «expr ↔ »(«expr ∈ »(x, submonoid.closure «expr ⁻¹»(S)), «expr ∈ »(«expr ⁻¹»(x), submonoid.closure S)) :=
+begin
+  suffices [] [":", expr ∀
+   (S : set G)
+   (x : G), «expr ∈ »(x, submonoid.closure «expr ⁻¹»(S)) → «expr ∈ »(«expr ⁻¹»(x), submonoid.closure S)],
+  { refine [expr ⟨this S x, _⟩],
+    have [] [] [":=", expr this «expr ⁻¹»(S) «expr ⁻¹»(x)],
+    rwa ["[", expr inv_inv, ",", expr set.inv_inv, "]"] ["at", ident this] },
+  intros [ident S, ident x, ident hx],
+  refine [expr submonoid.closure_induction hx (λ x hx, _) _ (λ x y hx hy, _)],
+  { exact [expr submonoid.subset_closure (set.mem_inv.mp hx)] },
+  { rw [expr one_inv] [],
+    exact [expr submonoid.one_mem _] },
+  { rw [expr mul_inv_rev x y] [],
+    exact [expr submonoid.mul_mem _ hy hx] }
+end
 
 end Submonoid
 

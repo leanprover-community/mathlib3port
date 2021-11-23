@@ -71,7 +71,7 @@ theorem is_unit_iff_is_iso {C : Type u} [category.{v} C] {X : C} (f : End X) : I
   ⟨fun h => { out := ⟨h.unit.inv, ⟨h.unit.inv_val, h.unit.val_inv⟩⟩ },
     fun h =>
       by 
-        exactI
+        exact
           ⟨⟨f, inv f,
               by 
                 simp ,

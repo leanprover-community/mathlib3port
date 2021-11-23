@@ -20,25 +20,25 @@ unsafe def tac_induction : auto_cases_tac :=
 
 /-- Find an `auto_cases_tac` which matches the given `type : expr`. -/
 unsafe def find_tac : expr → Option auto_cases_tac
-| quote Empty => tac_cases
-| quote Pempty => tac_cases
-| quote False => tac_cases
-| quote Unit => tac_cases
-| quote PUnit => tac_cases
-| quote Ulift _ => tac_cases
-| quote Plift _ => tac_cases
-| quote Prod _ _ => tac_cases
-| quote And _ _ => tac_cases
-| quote Sigma _ => tac_cases
-| quote Psigma _ => tac_cases
-| quote Subtype _ => tac_cases
-| quote Exists _ => tac_cases
-| quote Finₓ 0 => tac_cases
-| quote Sum _ _ => tac_cases
-| quote Or _ _ => tac_cases
-| quote Iff _ _ => tac_cases
-| quote Eq _ _ => tac_induction
-| quote Quot _ => tac_induction
+| quote.1 Empty => tac_cases
+| quote.1 Pempty => tac_cases
+| quote.1 False => tac_cases
+| quote.1 Unit => tac_cases
+| quote.1 PUnit => tac_cases
+| quote.1 (Ulift _) => tac_cases
+| quote.1 (Plift _) => tac_cases
+| quote.1 (Prod _ _) => tac_cases
+| quote.1 (And _ _) => tac_cases
+| quote.1 (Sigma _) => tac_cases
+| quote.1 (Psigma _) => tac_cases
+| quote.1 (Subtype _) => tac_cases
+| quote.1 (Exists _) => tac_cases
+| quote.1 (Finₓ 0) => tac_cases
+| quote.1 (Sum _ _) => tac_cases
+| quote.1 (Or _ _) => tac_cases
+| quote.1 (Iff _ _) => tac_cases
+| quote.1 (Eq _ _) => tac_induction
+| quote.1 (Quot _) => tac_induction
 | _ => none
 
 end AutoCases

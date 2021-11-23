@@ -14,7 +14,7 @@ unsafe inductive exprterm : Type
   | exp : Int → expr → exprterm
   | add : exprterm → exprterm → exprterm
 
--- error in Tactic.Omega.Int.Preterm: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Omega.Int.Preterm: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- Similar to `exprterm`, except that all exprs are now replaced with
 de Brujin indices of type `nat`. This is akin to generalizing over
 the terms represented by the said exprs. -/

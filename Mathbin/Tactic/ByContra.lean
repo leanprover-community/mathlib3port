@@ -58,7 +58,7 @@ unsafe def by_contra' (h : parse (ident)?) (t : parse (tk ":" *> texpr)?) : tact
       | none => () <$ replace_hyp h₁ e' pr'
       | some t =>
         do 
-          let t ← to_expr (pquote (%%t : Prop))
+          let t ← to_expr (pquote.1 (%%ₓt : Prop))
           let (e, pr) ← push_neg.normalize_negations t <|> refl_conv t 
           unify e e'
           () <$ (mk_eq_symm pr >>= mk_eq_trans pr' >>= replace_hyp h₁ t)

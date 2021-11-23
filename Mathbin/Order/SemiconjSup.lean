@@ -85,13 +85,20 @@ theorem semiconj.symm_adjoint [PartialOrderₓ α] [Preorderₓ β] {fa : α ≃
 
 variable{G : Type _}
 
-theorem semiconj_of_is_lub [PartialOrderₓ α] [Groupₓ G] (f₁ f₂ : G →* α ≃o α) {h : α → α}
-  (H : ∀ x, IsLub (range fun g' => (f₁ g'⁻¹) (f₂ g' x)) (h x)) (g : G) : Function.Semiconj h (f₂ g) (f₁ g) :=
-  by 
-    refine' fun y => (H _).unique _ 
-    have  := (f₁ g).LeftOrdContinuous (H y)
-    rw [←range_comp, ←(Equiv.mulRight g).Surjective.range_comp _] at this 
-    simpa [· ∘ ·] using this
+-- error in Order.SemiconjSup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem semiconj_of_is_lub
+[partial_order α]
+[group G]
+(f₁ f₂ : «expr →* »(G, «expr ≃o »(α, α)))
+{h : α → α}
+(H : ∀ x, is_lub (range (λ g', «expr ⁻¹»(f₁ g') (f₂ g' x))) (h x))
+(g : G) : function.semiconj h (f₂ g) (f₁ g) :=
+begin
+  refine [expr λ y, (H _).unique _],
+  have [] [] [":=", expr (f₁ g).left_ord_continuous (H y)],
+  rw ["[", "<-", expr range_comp, ",", "<-", expr (equiv.mul_right g).surjective.range_comp _, "]"] ["at", ident this],
+  simpa [] [] [] ["[", expr («expr ∘ »), "]"] [] ["using", expr this]
+end
 
 /-- Consider two actions `f₁ f₂ : G → α → α` of a group on a complete lattice by order
 isomorphisms. Then the map `x ↦ ⨆ g : G, (f₁ g)⁻¹ (f₂ g x)` semiconjugates each `f₁ g'` to `f₂ g'`.

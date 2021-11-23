@@ -154,80 +154,74 @@ theorem tendsto_fract_right [OrderClosedTopology α] [TopologicalAddGroup α] (n
 
 local notation "I" => (Icc 0 1 : Set α)
 
-theorem ContinuousOn.comp_fract' {β γ : Type _} [OrderTopology α] [TopologicalAddGroup α] [TopologicalSpace β]
-  [TopologicalSpace γ] {f : β → α → γ} (h : ContinuousOn (uncurry f)$ (univ : Set β).Prod I) (hf : ∀ s, f s 0 = f s 1) :
-  Continuous fun st : β × α => f st.1$ fract st.2 :=
-  by 
-    change Continuous (uncurry f ∘ Prod.mapₓ id fract)
-    rw [continuous_iff_continuous_at]
-    rintro ⟨s, t⟩
-    byCases' ht : t = floor t
-    ·
-      rw [ht]
-      rw [←continuous_within_at_univ]
-      have  : (univ : Set (β × α)) ⊆ Set.Prod univ (Iio$ floor t) ∪ Set.Prod univ (Ici$ floor t)
-      ·
-        rintro p -
-        rw [←prod_union]
-        exact ⟨True.intro, lt_or_leₓ _ _⟩
-      refine' ContinuousWithinAt.mono _ this 
-      refine' ContinuousWithinAt.union _ _
-      ·
-        simp only [ContinuousWithinAt, fract_coe, nhds_within_prod_eq, nhds_within_univ, id.def, comp_app, Prod.map_mkₓ]
-        have  : (uncurry f) (s, 0) = (uncurry f) (s, (1 : α))
-        ·
-          simp [uncurry, hf]
-        rw [this]
-        refine'
-          (h _
-                  ⟨True.intro,
-                    by 
-                      exactModCast right_mem_Icc.mpr zero_le_one⟩).Tendsto.comp
-            _ 
-        rw [nhds_within_prod_eq, nhds_within_univ]
-        rw [nhds_within_Icc_eq_nhds_within_Iic (@zero_lt_one α _ _)]
-        exact tendsto_id.prod_map (tendsto_nhds_within_mono_right Iio_subset_Iic_self$ tendsto_fract_left _)
-      ·
-        simp only [ContinuousWithinAt, fract_coe, nhds_within_prod_eq, nhds_within_univ, id.def, comp_app, Prod.map_mkₓ]
-        refine'
-          (h _
-                  ⟨True.intro,
-                    by 
-                      exactModCast left_mem_Icc.mpr zero_le_one⟩).Tendsto.comp
-            _ 
-        rw [nhds_within_prod_eq, nhds_within_univ, nhds_within_Icc_eq_nhds_within_Ici (@zero_lt_one α _ _)]
-        exact tendsto_id.prod_map (tendsto_fract_right _)
-    ·
-      have  : t ∈ Ioo (floor t : α) ((floor t : α)+1)
-      exact ⟨lt_of_le_of_neₓ (floor_le t) (Ne.symm ht), lt_floor_add_one _⟩
-      apply (h ((Prod.mapₓ _ fract) _) ⟨trivialₓ, ⟨fract_nonneg _, (fract_lt_one _).le⟩⟩).Tendsto.comp 
-      simp only [nhds_prod_eq, nhds_within_prod_eq, nhds_within_univ, id.def, Prod.map_mkₓ]
-      exact
-        continuous_at_id.tendsto.prod_map
-          (tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _
-            (((continuous_on_fract _ _ (Ioo_subset_Ico_self this)).mono Ioo_subset_Ico_self).ContinuousAt
-              (Ioo_mem_nhds this.1 this.2))
-            (eventually_of_forall fun x => ⟨fract_nonneg _, (fract_lt_one _).le⟩))
+-- error in Topology.Algebra.FloorRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_on.comp_fract'
+{β γ : Type*}
+[order_topology α]
+[topological_add_group α]
+[topological_space β]
+[topological_space γ]
+{f : β → α → γ}
+(h : «expr $ »(continuous_on (uncurry f), (univ : set β).prod exprI()))
+(hf : ∀ s, «expr = »(f s 0, f s 1)) : continuous (λ st : «expr × »(β, α), «expr $ »(f st.1, fract st.2)) :=
+begin
+  change [expr continuous «expr ∘ »(uncurry f, prod.map id fract)] [] [],
+  rw [expr continuous_iff_continuous_at] [],
+  rintro ["⟨", ident s, ",", ident t, "⟩"],
+  by_cases [expr ht, ":", expr «expr = »(t, floor t)],
+  { rw [expr ht] [],
+    rw ["<-", expr continuous_within_at_univ] [],
+    have [] [":", expr «expr ⊆ »((univ : set «expr × »(β, α)), «expr ∪ »(set.prod univ «expr $ »(Iio, floor t), set.prod univ «expr $ »(Ici, floor t)))] [],
+    { rintros [ident p, "-"],
+      rw ["<-", expr prod_union] [],
+      exact [expr ⟨true.intro, lt_or_le _ _⟩] },
+    refine [expr continuous_within_at.mono _ this],
+    refine [expr continuous_within_at.union _ _],
+    { simp [] [] ["only"] ["[", expr continuous_within_at, ",", expr fract_coe, ",", expr nhds_within_prod_eq, ",", expr nhds_within_univ, ",", expr id.def, ",", expr comp_app, ",", expr prod.map_mk, "]"] [] [],
+      have [] [":", expr «expr = »(uncurry f (s, 0), uncurry f (s, (1 : α)))] [],
+      by simp [] [] [] ["[", expr uncurry, ",", expr hf, "]"] [] [],
+      rw [expr this] [],
+      refine [expr (h _ ⟨true.intro, by exact_mod_cast [expr right_mem_Icc.mpr zero_le_one]⟩).tendsto.comp _],
+      rw ["[", expr nhds_within_prod_eq, ",", expr nhds_within_univ, "]"] [],
+      rw [expr nhds_within_Icc_eq_nhds_within_Iic (@zero_lt_one α _ _)] [],
+      exact [expr tendsto_id.prod_map «expr $ »(tendsto_nhds_within_mono_right Iio_subset_Iic_self, tendsto_fract_left _)] },
+    { simp [] [] ["only"] ["[", expr continuous_within_at, ",", expr fract_coe, ",", expr nhds_within_prod_eq, ",", expr nhds_within_univ, ",", expr id.def, ",", expr comp_app, ",", expr prod.map_mk, "]"] [] [],
+      refine [expr (h _ ⟨true.intro, by exact_mod_cast [expr left_mem_Icc.mpr zero_le_one]⟩).tendsto.comp _],
+      rw ["[", expr nhds_within_prod_eq, ",", expr nhds_within_univ, ",", expr nhds_within_Icc_eq_nhds_within_Ici (@zero_lt_one α _ _), "]"] [],
+      exact [expr tendsto_id.prod_map (tendsto_fract_right _)] } },
+  { have [] [":", expr «expr ∈ »(t, Ioo (floor t : α) «expr + »((floor t : α), 1))] [],
+    from [expr ⟨lt_of_le_of_ne (floor_le t) (ne.symm ht), lt_floor_add_one _⟩],
+    apply [expr (h (prod.map _ fract _) ⟨trivial, ⟨fract_nonneg _, (fract_lt_one _).le⟩⟩).tendsto.comp],
+    simp [] [] ["only"] ["[", expr nhds_prod_eq, ",", expr nhds_within_prod_eq, ",", expr nhds_within_univ, ",", expr id.def, ",", expr prod.map_mk, "]"] [] [],
+    exact [expr continuous_at_id.tendsto.prod_map (tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ (((continuous_on_fract _ _ (Ioo_subset_Ico_self this)).mono Ioo_subset_Ico_self).continuous_at (Ioo_mem_nhds this.1 this.2)) (eventually_of_forall (λ
+        x, ⟨fract_nonneg _, (fract_lt_one _).le⟩)))] }
+end
 
-theorem ContinuousOn.comp_fract {β : Type _} [OrderTopology α] [TopologicalAddGroup α] [TopologicalSpace β] {f : α → β}
-  (h : ContinuousOn f I) (hf : f 0 = f 1) : Continuous (f ∘ fract) :=
-  by 
-    let f' : Unit → α → β := fun x y => f y 
-    have  : ContinuousOn (uncurry f') ((univ : Set Unit).Prod I)
-    ·
-      rintro ⟨s, t⟩ ⟨-, ht : t ∈ I⟩
-      simp only [ContinuousWithinAt, uncurry, nhds_within_prod_eq, nhds_within_univ, f']
-      rw [tendsto_prod_iff]
-      intro W hW 
-      specialize h t ht hW 
-      rw [mem_map_iff_exists_image] at h 
-      rcases h with ⟨V, hV, hVW⟩
-      rw [image_subset_iff] at hVW 
-      use univ, univ_mem, V, hV 
-      intro x y hx hy 
-      exact hVW hy 
-    have key : Continuous (fun s => ⟨Unit.star, s⟩ : α → Unit × α) :=
-      by 
-        continuity 
-    exact (this.comp_fract' fun s => hf).comp key
+-- error in Topology.Algebra.FloorRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_on.comp_fract
+{β : Type*}
+[order_topology α]
+[topological_add_group α]
+[topological_space β]
+{f : α → β}
+(h : continuous_on f exprI())
+(hf : «expr = »(f 0, f 1)) : continuous «expr ∘ »(f, fract) :=
+begin
+  let [ident f'] [":", expr unit → α → β] [":=", expr λ x y, f y],
+  have [] [":", expr continuous_on (uncurry f') ((univ : set unit).prod exprI())] [],
+  { rintros ["⟨", ident s, ",", ident t, "⟩", "⟨", "-", ",", ident ht, ":", expr «expr ∈ »(t, exprI()), "⟩"],
+    simp [] [] ["only"] ["[", expr continuous_within_at, ",", expr uncurry, ",", expr nhds_within_prod_eq, ",", expr nhds_within_univ, ",", expr f', "]"] [] [],
+    rw [expr tendsto_prod_iff] [],
+    intros [ident W, ident hW],
+    specialize [expr h t ht hW],
+    rw [expr mem_map_iff_exists_image] ["at", ident h],
+    rcases [expr h, "with", "⟨", ident V, ",", ident hV, ",", ident hVW, "⟩"],
+    rw [expr image_subset_iff] ["at", ident hVW],
+    use ["[", expr univ, ",", expr univ_mem, ",", expr V, ",", expr hV, "]"],
+    intros [ident x, ident y, ident hx, ident hy],
+    exact [expr hVW hy] },
+  have [ident key] [":", expr continuous (λ
+   s, ⟨unit.star, s⟩ : α → «expr × »(unit, α))] [":=", expr by continuity [] []],
+  exact [expr (this.comp_fract' (λ s, hf)).comp key]
+end
 

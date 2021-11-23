@@ -37,7 +37,7 @@ section InversionEstimate
 
 variable{Γ₀ : Type _}[LinearOrderedCommGroupWithZero Γ₀](v : Valuation K Γ₀)
 
--- error in Topology.Algebra.ValuedField: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.Algebra.ValuedField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem valuation.inversion_estimate
 {x y : K}
 {γ : units Γ₀}
@@ -73,42 +73,41 @@ end InversionEstimate
 
 open Valued
 
+-- error in Topology.Algebra.ValuedField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The topology coming from a valuation on a division ring makes it a topological division ring
     [BouAC, VI.5.1 middle of Proposition 1] -/
-instance (priority := 100)Valued.topological_division_ring [Valued K] : TopologicalDivisionRing K :=
-  { (by 
-      infer_instance :
-    TopologicalRing K) with
-    continuous_inv :=
-      by 
-        intro x x_ne s s_in 
-        cases' valued.mem_nhds.mp s_in with γ hs 
-        clear s_in 
-        rw [mem_map, Valued.mem_nhds]
-        change ∃ γ : Units (Valued.Γ₀ K), { y : K | v (y - x) < γ } ⊆ { x : K | x⁻¹ ∈ s }
-        have vx_ne := (Valuation.ne_zero_iff$ v).mpr x_ne 
-        let γ' := Units.mk0 _ vx_ne 
-        use min (γ*γ'*γ') γ' 
-        intro y y_in 
-        apply hs 
-        simp only [mem_set_of_eq] at y_in 
-        rw [Units.min_coe, Units.coe_mul, Units.coe_mul] at y_in 
-        exact Valuation.inversion_estimate _ x_ne y_in }
+@[priority 100]
+instance valued.topological_division_ring [valued K] : topological_division_ring K :=
+{ continuous_inv := begin
+    intros [ident x, ident x_ne, ident s, ident s_in],
+    cases [expr valued.mem_nhds.mp s_in] ["with", ident γ, ident hs],
+    clear [ident s_in],
+    rw ["[", expr mem_map, ",", expr valued.mem_nhds, "]"] [],
+    change [expr «expr∃ , »((γ : units (valued.Γ₀ K)), «expr ⊆ »({y : K | «expr < »(v «expr - »(y, x), γ)}, {x : K | «expr ∈ »(«expr ⁻¹»(x), s)}))] [] [],
+    have [ident vx_ne] [] [":=", expr «expr $ »(valuation.ne_zero_iff, v).mpr x_ne],
+    let [ident γ'] [] [":=", expr units.mk0 _ vx_ne],
+    use [expr min «expr * »(γ, «expr * »(γ', γ')) γ'],
+    intros [ident y, ident y_in],
+    apply [expr hs],
+    simp [] [] ["only"] ["[", expr mem_set_of_eq, "]"] [] ["at", ident y_in],
+    rw ["[", expr units.min_coe, ",", expr units.coe_mul, ",", expr units.coe_mul, "]"] ["at", ident y_in],
+    exact [expr valuation.inversion_estimate _ x_ne y_in]
+  end,
+  ..(by apply_instance : topological_ring K) }
 
+-- error in Topology.Algebra.ValuedField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A valued division ring is separated. -/
-instance (priority := 100)ValuedRing.separated [Valued K] : SeparatedSpace K :=
-  by 
-    apply TopologicalAddGroup.separated_of_zero_sep 
-    intro x x_ne 
-    refine' ⟨{ k | v k < v x }, _, fun h => lt_irreflₓ _ h⟩
-    rw [Valued.mem_nhds]
-    have vx_ne := (Valuation.ne_zero_iff$ v).mpr x_ne 
-    let γ' := Units.mk0 _ vx_ne 
-    exact
-      ⟨γ',
-        fun y hy =>
-          by 
-            simpa using hy⟩
+@[priority 100]
+instance valued_ring.separated [valued K] : separated_space K :=
+begin
+  apply [expr topological_add_group.separated_of_zero_sep],
+  intros [ident x, ident x_ne],
+  refine [expr ⟨{k | «expr < »(v k, v x)}, _, λ h, lt_irrefl _ h⟩],
+  rw [expr valued.mem_nhds] [],
+  have [ident vx_ne] [] [":=", expr «expr $ »(valuation.ne_zero_iff, v).mpr x_ne],
+  let [ident γ'] [] [":=", expr units.mk0 _ vx_ne],
+  exact [expr ⟨γ', λ y hy, by simpa [] [] [] [] [] ["using", expr hy]⟩]
+end
 
 section 
 
@@ -116,26 +115,26 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
 open Valued
 
-theorem Valued.continuous_valuation [Valued K] : Continuous (v : K → Γ₀ K) :=
-  by 
-    rw [continuous_iff_continuous_at]
-    intro x 
-    classical 
-    byCases' h : x = 0
-    ·
-      rw [h]
-      change tendsto _ _ (𝓝 (v (0 : K)))
-      erw [Valuation.map_zero]
-      rw [LinearOrderedCommGroupWithZero.tendsto_zero]
-      intro γ 
-      rw [Valued.mem_nhds_zero]
-      use γ, Set.Subset.refl _
-    ·
-      change tendsto _ _ _ 
-      have v_ne : v x ≠ 0 
-      exact (Valuation.ne_zero_iff _).mpr h 
-      rw [LinearOrderedCommGroupWithZero.tendsto_of_ne_zero v_ne]
-      apply Valued.loc_const v_ne
+-- error in Topology.Algebra.ValuedField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valued.continuous_valuation [valued K] : continuous (v : K → Γ₀ K) :=
+begin
+  rw [expr continuous_iff_continuous_at] [],
+  intro [ident x],
+  classical,
+  by_cases [expr h, ":", expr «expr = »(x, 0)],
+  { rw [expr h] [],
+    change [expr tendsto _ _ (expr𝓝() (v (0 : K)))] [] [],
+    erw [expr valuation.map_zero] [],
+    rw [expr linear_ordered_comm_group_with_zero.tendsto_zero] [],
+    intro [ident γ],
+    rw [expr valued.mem_nhds_zero] [],
+    use ["[", expr γ, ",", expr set.subset.refl _, "]"] },
+  { change [expr tendsto _ _ _] [] [],
+    have [ident v_ne] [":", expr «expr ≠ »(v x, 0)] [],
+    from [expr (valuation.ne_zero_iff _).mpr h],
+    rw [expr linear_ordered_comm_group_with_zero.tendsto_of_ne_zero v_ne] [],
+    apply [expr valued.loc_const v_ne] }
+end
 
 end 
 
@@ -153,62 +152,56 @@ open Valued UniformSpace
 
 local notation "hat " => completion
 
-/-- A valued field is completable. -/
-instance (priority := 100)Valued.completable : CompletableTopField K :=
-  { ValuedRing.separated with
-    nice :=
-      by 
-        rintro F hF h0 
-        have  : ∃ (γ₀ : Units (Γ₀ K))(M : _)(_ : M ∈ F), ∀ x _ : x ∈ M, (γ₀ : Γ₀ K) ≤ v x
-        ·
-          rcases filter.inf_eq_bot_iff.mp h0 with ⟨U, U_in, M, M_in, H⟩
-          rcases valued.mem_nhds_zero.mp U_in with ⟨γ₀, hU⟩
-          exists γ₀, M, M_in 
-          intro x xM 
-          apply le_of_not_ltₓ _ 
-          intro hyp 
-          have  : x ∈ U ∩ M := ⟨hU hyp, xM⟩
-          rwa [H] at this 
-        rcases this with ⟨γ₀, M₀, M₀_in, H₀⟩
-        rw [Valued.cauchy_iff] at hF⊢
-        refine' ⟨hF.1.map _, _⟩
-        replace hF := hF.2
-        intro γ 
-        rcases hF (min ((γ*γ₀)*γ₀) γ₀) with ⟨M₁, M₁_in, H₁⟩
-        clear hF 
-        use (fun x : K => x⁻¹) '' (M₀ ∩ M₁)
-        split 
-        ·
-          rw [mem_map]
-          apply mem_of_superset (Filter.inter_mem M₀_in M₁_in)
-          exact subset_preimage_image _ _
-        ·
-          rintro _ _ ⟨x, ⟨x_in₀, x_in₁⟩, rfl⟩ ⟨y, ⟨y_in₀, y_in₁⟩, rfl⟩
-          simp only [mem_set_of_eq]
-          specialize H₁ x y x_in₁ y_in₁ 
-          replace x_in₀ := H₀ x x_in₀ 
-          replace y_in₀ := H₀ y y_in₀ 
-          clear H₀ 
-          apply Valuation.inversion_estimate
-          ·
-            have  : v x ≠ 0
-            ·
-              intro h 
-              rw [h] at x_in₀ 
-              simpa using x_in₀ 
-            exact (Valuation.ne_zero_iff _).mp this
-          ·
-            refine' lt_of_lt_of_leₓ H₁ _ 
-            rw [Units.min_coe]
-            apply min_le_min _ x_in₀ 
-            rw [mul_assocₓ]
-            have  : ((γ₀*γ₀ : Units (Γ₀ K)) : Γ₀ K) ≤ v x*v x 
-            exact
-              calc («expr↑ » γ₀*«expr↑ » γ₀) ≤ «expr↑ » γ₀*v x := mul_le_mul_left' x_in₀ («expr↑ » γ₀)
-                _ ≤ _ := mul_le_mul_right' x_in₀ (v x)
-                
-            rw [Units.coe_mul]
-            exact mul_le_mul_left' this γ }
+-- error in Topology.Algebra.ValuedField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- A valued field is completable. -/ @[priority 100] instance valued.completable : completable_top_field K :=
+{ nice := begin
+    rintros [ident F, ident hF, ident h0],
+    have [] [":", expr «expr∃ , »((γ₀ : units (Γ₀ K))
+      (M «expr ∈ » F), ∀ x «expr ∈ » M, «expr ≤ »((γ₀ : Γ₀ K), v x))] [],
+    { rcases [expr filter.inf_eq_bot_iff.mp h0, "with", "⟨", ident U, ",", ident U_in, ",", ident M, ",", ident M_in, ",", ident H, "⟩"],
+      rcases [expr valued.mem_nhds_zero.mp U_in, "with", "⟨", ident γ₀, ",", ident hU, "⟩"],
+      existsi ["[", expr γ₀, ",", expr M, ",", expr M_in, "]"],
+      intros [ident x, ident xM],
+      apply [expr le_of_not_lt _],
+      intro [ident hyp],
+      have [] [":", expr «expr ∈ »(x, «expr ∩ »(U, M))] [":=", expr ⟨hU hyp, xM⟩],
+      rwa [expr H] ["at", ident this] },
+    rcases [expr this, "with", "⟨", ident γ₀, ",", ident M₀, ",", ident M₀_in, ",", ident H₀, "⟩"],
+    rw [expr valued.cauchy_iff] ["at", ident hF, "⊢"],
+    refine [expr ⟨hF.1.map _, _⟩],
+    replace [ident hF] [] [":=", expr hF.2],
+    intros [ident γ],
+    rcases [expr hF (min «expr * »(«expr * »(γ, γ₀), γ₀) γ₀), "with", "⟨", ident M₁, ",", ident M₁_in, ",", ident H₁, "⟩"],
+    clear [ident hF],
+    use [expr «expr '' »(λ x : K, «expr ⁻¹»(x), «expr ∩ »(M₀, M₁))],
+    split,
+    { rw [expr mem_map] [],
+      apply [expr mem_of_superset (filter.inter_mem M₀_in M₁_in)],
+      exact [expr subset_preimage_image _ _] },
+    { rintros ["_", "_", "⟨", ident x, ",", "⟨", ident x_in₀, ",", ident x_in₁, "⟩", ",", ident rfl, "⟩", "⟨", ident y, ",", "⟨", ident y_in₀, ",", ident y_in₁, "⟩", ",", ident rfl, "⟩"],
+      simp [] [] ["only"] ["[", expr mem_set_of_eq, "]"] [] [],
+      specialize [expr H₁ x y x_in₁ y_in₁],
+      replace [ident x_in₀] [] [":=", expr H₀ x x_in₀],
+      replace [ident y_in₀] [] [":=", expr H₀ y y_in₀],
+      clear [ident H₀],
+      apply [expr valuation.inversion_estimate],
+      { have [] [":", expr «expr ≠ »(v x, 0)] [],
+        { intro [ident h],
+          rw [expr h] ["at", ident x_in₀],
+          simpa [] [] [] [] [] ["using", expr x_in₀] },
+        exact [expr (valuation.ne_zero_iff _).mp this] },
+      { refine [expr lt_of_lt_of_le H₁ _],
+        rw [expr units.min_coe] [],
+        apply [expr min_le_min _ x_in₀],
+        rw [expr mul_assoc] [],
+        have [] [":", expr «expr ≤ »(((«expr * »(γ₀, γ₀) : units (Γ₀ K)) : Γ₀ K), «expr * »(v x, v x))] [],
+        from [expr calc
+           «expr ≤ »(«expr * »(«expr↑ »(γ₀), «expr↑ »(γ₀)), «expr * »(«expr↑ »(γ₀), v x)) : mul_le_mul_left' x_in₀ «expr↑ »(γ₀)
+           «expr ≤ »(..., _) : mul_le_mul_right' x_in₀ (v x)],
+        rw [expr units.coe_mul] [],
+        exact [expr mul_le_mul_left' this γ] } }
+  end,
+  ..valued_ring.separated }
 
 attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
@@ -216,7 +209,7 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 noncomputable def Valued.extension : hat  K → Γ₀ K :=
   completion.dense_inducing_coe.extend (v : K → Γ₀ K)
 
--- error in Topology.Algebra.ValuedField: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Topology.Algebra.ValuedField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem valued.continuous_extension : continuous (valued.extension : exprhat() K → Γ₀ K) :=
 begin
   refine [expr completion.dense_inducing_coe.continuous_extend _],
@@ -304,55 +297,47 @@ begin
       «expr = »(..., v z₀) : by rw ["[", expr this, ",", expr one_mul, "]"] [] }
 end
 
-@[normCast]
-theorem Valued.extension_extends (x : K) : Valued.extension (x : hat  K) = v x :=
-  by 
-    haveI  : T2Space (Valued.Γ₀ K) := RegularSpace.t2_space _ 
-    refine' completion.dense_inducing_coe.extend_eq_of_tendsto _ 
-    rw [←completion.dense_inducing_coe.nhds_eq_comap]
-    exact valued.continuous_valuation.continuous_at
+-- error in Topology.Algebra.ValuedField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[norm_cast #[]] theorem valued.extension_extends (x : K) : «expr = »(valued.extension (x : exprhat() K), v x) :=
+begin
+  haveI [] [":", expr t2_space (valued.Γ₀ K)] [":=", expr regular_space.t2_space _],
+  refine [expr completion.dense_inducing_coe.extend_eq_of_tendsto _],
+  rw ["<-", expr completion.dense_inducing_coe.nhds_eq_comap] [],
+  exact [expr valued.continuous_valuation.continuous_at]
+end
 
+-- error in Topology.Algebra.ValuedField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- the extension of a valuation on a division ring to its completion. -/
-noncomputable def Valued.extensionValuation : Valuation (hat  K) (Γ₀ K) :=
-  { toFun := Valued.extension,
-    map_zero' :=
-      by 
-        simpa [←v.map_zero, ←Valued.extension_extends (0 : K)],
-    map_one' :=
-      by 
-        rw [←completion.coe_one, Valued.extension_extends (1 : K)]
-        exact Valuation.map_one _,
-    map_mul' :=
-      fun x y =>
-        by 
-          apply completion.induction_on₂ x y
-          ·
-            have c1 : Continuous fun x : hat  K × hat  K => Valued.extension (x.1*x.2)
-            exact valued.continuous_extension.comp (continuous_fst.mul continuous_snd)
-            have c2 : Continuous fun x : hat  K × hat  K => Valued.extension x.1*Valued.extension x.2 
-            exact
-              (valued.continuous_extension.comp continuous_fst).mul (valued.continuous_extension.comp continuous_snd)
-            exact is_closed_eq c1 c2
-          ·
-            intro x y 
-            normCast 
-            exact Valuation.map_mul _ _ _,
-    map_add' :=
-      fun x y =>
-        by 
-          rw [le_max_iff]
-          apply completion.induction_on₂ x y
-          ·
-            have cont : Continuous (Valued.extension : hat  K → Γ₀ K) := Valued.continuous_extension 
-            exact
-              (is_closed_le (cont.comp continuous_add)$ cont.comp continuous_fst).union
-                (is_closed_le (cont.comp continuous_add)$ cont.comp continuous_snd)
-          ·
-            intro x y 
-            dsimp 
-            normCast 
-            rw [←le_max_iff]
-            exact v.map_add x y }
+noncomputable
+def valued.extension_valuation : valuation (exprhat() K) (Γ₀ K) :=
+{ to_fun := valued.extension,
+  map_zero' := by { simpa [] [] [] ["[", "<-", expr v.map_zero, ",", "<-", expr valued.extension_extends (0 : K), "]"] [] [] },
+  map_one' := by { rw ["[", "<-", expr completion.coe_one, ",", expr valued.extension_extends (1 : K), "]"] [],
+    exact [expr valuation.map_one _] },
+  map_mul' := λ x y, begin
+    apply [expr completion.induction_on₂ x y],
+    { have [ident c1] [":", expr continuous (λ
+        x : «expr × »(exprhat() K, exprhat() K), valued.extension «expr * »(x.1, x.2))] [],
+      from [expr valued.continuous_extension.comp (continuous_fst.mul continuous_snd)],
+      have [ident c2] [":", expr continuous (λ
+        x : «expr × »(exprhat() K, exprhat() K), «expr * »(valued.extension x.1, valued.extension x.2))] [],
+      from [expr (valued.continuous_extension.comp continuous_fst).mul (valued.continuous_extension.comp continuous_snd)],
+      exact [expr is_closed_eq c1 c2] },
+    { intros [ident x, ident y],
+      norm_cast [],
+      exact [expr valuation.map_mul _ _ _] }
+  end,
+  map_add' := λ x y, begin
+    rw [expr le_max_iff] [],
+    apply [expr completion.induction_on₂ x y],
+    { have [ident cont] [":", expr continuous (valued.extension : exprhat() K → Γ₀ K)] [":=", expr valued.continuous_extension],
+      exact [expr «expr $ »(is_closed_le (cont.comp continuous_add), cont.comp continuous_fst).union «expr $ »(is_closed_le (cont.comp continuous_add), cont.comp continuous_snd)] },
+    { intros [ident x, ident y],
+      dsimp [] [] [] [],
+      norm_cast [],
+      rw ["<-", expr le_max_iff] [],
+      exact [expr v.map_add x y] }
+  end }
 
 end ValuationOnValuedFieldCompletion
 

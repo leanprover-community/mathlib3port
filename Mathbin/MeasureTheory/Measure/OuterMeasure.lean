@@ -95,54 +95,59 @@ protected theorem Union_finset (m : outer_measure α) (s : β → Set α) (t : F
 protected theorem union (m : outer_measure α) (s₁ s₂ : Set α) : m (s₁ ∪ s₂) ≤ m s₁+m s₂ :=
   rel_sup_add m m.empty (· ≤ ·) m.Union_nat s₁ s₂
 
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `s : ι → set α` is a sequence of sets, `S = ⋃ n, s n`, and `m (S \ s n)` tends to zero along
 some nontrivial filter (usually `at_top` on `α = ℕ`), then `m S = ⨆ n, m (s n)`. -/
-theorem Union_of_tendsto_zero {ι} (m : outer_measure α) {s : ι → Set α} (l : Filter ι) [ne_bot l]
-  (h0 : tendsto (fun k => m ((⋃n, s n) \ s k)) l (𝓝 0)) : m (⋃n, s n) = ⨆n, m (s n) :=
-  by 
-    set S := ⋃n, s n 
-    set M := ⨆n, m (s n)
-    have hsS : ∀ {k}, s k ⊆ S 
-    exact fun k => subset_Union _ _ 
-    refine' le_antisymmₓ _ (supr_le$ fun n => m.mono hsS)
-    have A : ∀ k, m S ≤ M+m (S \ s k)
-    exact
-      fun k =>
-        calc m S = m (s k ∪ S \ s k) :=
-          by 
-            rw [union_diff_self, union_eq_self_of_subset_left hsS]
-          _ ≤ m (s k)+m (S \ s k) := m.union _ _ 
-          _ ≤ M+m (S \ s k) := add_le_add_right (le_supr _ k) _ 
-          
-    have B : tendsto (fun k => M+m (S \ s k)) l (𝓝 (M+0))
-    exact tendsto_const_nhds.add h0 
-    rw [add_zeroₓ] at B 
-    exact ge_of_tendsto' B A
+theorem Union_of_tendsto_zero
+{ι}
+(m : outer_measure α)
+{s : ι → set α}
+(l : filter ι)
+[ne_bot l]
+(h0 : tendsto (λ
+  k, m «expr \ »(«expr⋃ , »((n), s n), s k)) l (expr𝓝() 0)) : «expr = »(m «expr⋃ , »((n), s n), «expr⨆ , »((n), m (s n))) :=
+begin
+  set [] [ident S] [] [":="] [expr «expr⋃ , »((n), s n)] [],
+  set [] [ident M] [] [":="] [expr «expr⨆ , »((n), m (s n))] [],
+  have [ident hsS] [":", expr ∀ {k}, «expr ⊆ »(s k, S)] [],
+  from [expr λ k, subset_Union _ _],
+  refine [expr le_antisymm _ «expr $ »(supr_le, λ n, m.mono hsS)],
+  have [ident A] [":", expr ∀ k, «expr ≤ »(m S, «expr + »(M, m «expr \ »(S, s k)))] [],
+  from [expr λ k, calc
+     «expr = »(m S, m «expr ∪ »(s k, «expr \ »(S, s k))) : by rw ["[", expr union_diff_self, ",", expr union_eq_self_of_subset_left hsS, "]"] []
+     «expr ≤ »(..., «expr + »(m (s k), m «expr \ »(S, s k))) : m.union _ _
+     «expr ≤ »(..., «expr + »(M, m «expr \ »(S, s k))) : add_le_add_right (le_supr _ k) _],
+  have [ident B] [":", expr tendsto (λ k, «expr + »(M, m «expr \ »(S, s k))) l (expr𝓝() «expr + »(M, 0))] [],
+  from [expr tendsto_const_nhds.add h0],
+  rw [expr add_zero] ["at", ident B],
+  exact [expr ge_of_tendsto' B A]
+end
 
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `s : ℕ → set α` is a monotone sequence of sets such that `∑' k, m (s (k + 1) \ s k) ≠ ∞`,
 then `m (⋃ n, s n) = ⨆ n, m (s n)`. -/
-theorem Union_nat_of_monotone_of_tsum_ne_top (m : outer_measure α) {s : ℕ → Set α} (h_mono : ∀ n, s n ⊆ s (n+1))
-  (h0 : (∑'k, m (s (k+1) \ s k)) ≠ ∞) : m (⋃n, s n) = ⨆n, m (s n) :=
-  by 
-    refine' m.Union_of_tendsto_zero at_top _ 
-    refine' tendsto_nhds_bot_mono' (Ennreal.tendsto_sum_nat_add _ h0) fun n => _ 
-    refine' (m.mono _).trans (m.Union _)
-    have h' : Monotone s := @monotone_nat_of_le_succ (Set α) _ _ h_mono 
-    simp only [diff_subset_iff, Union_subset_iff]
-    intro i x hx 
-    rcases Nat.findX ⟨i, hx⟩ with ⟨j, hj, hlt⟩
-    clear hx i 
-    cases' le_or_ltₓ j n with hjn hnj
-    ·
-      exact Or.inl (h' hjn hj)
-    have  : (((j - n+1)+n)+1) = j
-    ·
-      rw [add_assocₓ, tsub_add_cancel_of_le hnj.nat_succ_le]
-    refine' Or.inr (mem_Union.2 ⟨j - n+1, _, hlt _ _⟩)
-    ·
-      rwa [this]
-    ·
-      rw [←Nat.succ_le_iff, Nat.succ_eq_add_one, this]
+theorem Union_nat_of_monotone_of_tsum_ne_top
+(m : outer_measure α)
+{s : exprℕ() → set α}
+(h_mono : ∀ n, «expr ⊆ »(s n, s «expr + »(n, 1)))
+(h0 : «expr ≠ »(«expr∑' , »((k), m «expr \ »(s «expr + »(k, 1), s k)), «expr∞»())) : «expr = »(m «expr⋃ , »((n), s n), «expr⨆ , »((n), m (s n))) :=
+begin
+  refine [expr m.Union_of_tendsto_zero at_top _],
+  refine [expr tendsto_nhds_bot_mono' (ennreal.tendsto_sum_nat_add _ h0) (λ n, _)],
+  refine [expr (m.mono _).trans (m.Union _)],
+  have [ident h'] [":", expr monotone s] [":=", expr @monotone_nat_of_le_succ (set α) _ _ h_mono],
+  simp [] [] ["only"] ["[", expr diff_subset_iff, ",", expr Union_subset_iff, "]"] [] [],
+  intros [ident i, ident x, ident hx],
+  rcases [expr nat.find_x ⟨i, hx⟩, "with", "⟨", ident j, ",", ident hj, ",", ident hlt, "⟩"],
+  clear [ident hx, ident i],
+  cases [expr le_or_lt j n] ["with", ident hjn, ident hnj],
+  { exact [expr or.inl (h' hjn hj)] },
+  have [] [":", expr «expr = »(«expr + »(«expr + »(«expr - »(j, «expr + »(n, 1)), n), 1), j)] [],
+  by rw ["[", expr add_assoc, ",", expr tsub_add_cancel_of_le hnj.nat_succ_le, "]"] [],
+  refine [expr or.inr (mem_Union.2 ⟨«expr - »(j, «expr + »(n, 1)), _, hlt _ _⟩)],
+  { rwa [expr this] [] },
+  { rw ["[", "<-", expr nat.succ_le_iff, ",", expr nat.succ_eq_add_one, ",", expr this, "]"] [] }
+end
 
 theorem le_inter_add_diff {m : outer_measure α} {t : Set α} (s : Set α) : m t ≤ m (t ∩ s)+m (t \ s) :=
   by 
@@ -302,10 +307,11 @@ theorem coe_supr {ι} (f : ι → outer_measure α) : «expr⇑ » (⨆i, f i) =
       by 
         rw [supr_apply, _root_.supr_apply]
 
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem sup_apply (m₁ m₂ : outer_measure α) (s : Set α) : (m₁⊔m₂) s = m₁ s⊔m₂ s :=
-  by 
-    have  := supr_apply (fun b => cond b m₁ m₂) s <;> rwa [supr_bool_eq, supr_bool_eq] at this
+theorem sup_apply (m₁ m₂ : outer_measure α) (s : set α) : «expr = »(«expr ⊔ »(m₁, m₂) s, «expr ⊔ »(m₁ s, m₂ s)) :=
+by have [] [] [":=", expr supr_apply (λ
+  b, cond b m₁ m₂) s]; rwa ["[", expr supr_bool_eq, ",", expr supr_bool_eq, "]"] ["at", ident this]
 
 theorem smul_supr {ι} (f : ι → outer_measure α) (c : ℝ≥0∞) : (c • ⨆i, f i) = ⨆i, c • f i :=
   ext$
@@ -556,51 +562,36 @@ variable{α : Type _}(m : Set α → ℝ≥0∞)(m_empty : m ∅ = 0)
 
 include m_empty
 
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given any function `m` assigning measures to sets satisying `m ∅ = 0`, there is
   a unique maximal outer measure `μ` satisfying `μ s ≤ m s` for all `s : set α`. -/
-protected def of_function : outer_measure α :=
-  let μ := fun s => ⨅(f : ℕ → Set α)(h : s ⊆ ⋃i, f i), ∑'i, m (f i)
-  { measureOf := μ,
-    Empty :=
-      le_antisymmₓ
-        ((infi_le_of_le fun _ => ∅)$
-          infi_le_of_le (empty_subset _)$
-            by 
-              simp [m_empty])
-        (zero_le _),
-    mono := fun s₁ s₂ hs => infi_le_infi$ fun f => infi_le_infi2$ fun hb => ⟨subset.trans hs hb, le_reflₓ _⟩,
-    Union_nat :=
-      fun s =>
-        Ennreal.le_of_forall_pos_le_add$
-          by 
-            intro ε hε(hb : (∑'i, μ (s i)) < ∞)
-            rcases Ennreal.exists_pos_sum_of_encodable (Ennreal.coe_pos.2 hε).ne' ℕ with ⟨ε', hε', hl⟩
-            refine' le_transₓ _ (add_le_add_left (le_of_ltₓ hl) _)
-            rw [←Ennreal.tsum_add]
-            choose f hf using
-              show ∀ i, ∃ f : ℕ → Set α, (s i ⊆ ⋃i, f i) ∧ (∑'i, m (f i)) < μ (s i)+ε' i by 
-                intro 
-                have  : μ (s i) < μ (s i)+ε' i :=
-                  Ennreal.lt_add_right (ne_top_of_le_ne_top hb.ne$ Ennreal.le_tsum _)
-                    (by 
-                      simpa using (hε' i).ne')
-                simpa [μ, infi_lt_iff]
-            refine' le_transₓ _ (Ennreal.tsum_le_tsum$ fun i => le_of_ltₓ (hf i).2)
-            rw [←Ennreal.tsum_prod, ←equiv.nat_prod_nat_equiv_nat.symm.tsum_eq]
-            swap
-            ·
-              infer_instance 
-            refine' infi_le_of_le _ (infi_le _ _)
-            exact
-              Union_subset
-                fun i =>
-                  subset.trans (hf i).1$
-                    Union_subset$
-                      fun j =>
-                        subset.trans
-                            (by 
-                              simp )$
-                          subset_Union _$ Equiv.natProdNatEquivNat (i, j) }
+protected
+def of_function : outer_measure α :=
+let μ := λ s, «expr⨅ , »({f : exprℕ() → set α} (h : «expr ⊆ »(s, «expr⋃ , »((i), f i))), «expr∑' , »((i), m (f i))) in
+{ measure_of := μ,
+  empty := le_antisymm «expr $ »(infi_le_of_le (λ
+    _, «expr∅»()), «expr $ »(infi_le_of_le (empty_subset _), by simp [] [] [] ["[", expr m_empty, "]"] [] [])) (zero_le _),
+  mono := assume
+  s₁ s₂ hs, «expr $ »(infi_le_infi, assume f, «expr $ »(infi_le_infi2, assume hb, ⟨subset.trans hs hb, le_refl _⟩)),
+  Union_nat := assume
+  s, «expr $ »(ennreal.le_of_forall_pos_le_add, begin
+     assume [binders (ε hε) (hb : «expr < »(«expr∑' , »((i), μ (s i)), «expr∞»()))],
+     rcases [expr ennreal.exists_pos_sum_of_encodable (ennreal.coe_pos.2 hε).ne' exprℕ(), "with", "⟨", ident ε', ",", ident hε', ",", ident hl, "⟩"],
+     refine [expr le_trans _ (add_le_add_left (le_of_lt hl) _)],
+     rw ["<-", expr ennreal.tsum_add] [],
+     choose [] [ident f] [ident hf] ["using", expr show ∀
+      i, «expr∃ , »((f : exprℕ() → set α), «expr ∧ »(«expr ⊆ »(s i, «expr⋃ , »((i), f i)), «expr < »(«expr∑' , »((i), m (f i)), «expr + »(μ (s i), ε' i)))), { intro [],
+        have [] [":", expr «expr < »(μ (s i), «expr + »(μ (s i), ε' i))] [":=", expr ennreal.lt_add_right «expr $ »(ne_top_of_le_ne_top hb.ne, ennreal.le_tsum _) (by simpa [] [] [] [] [] ["using", expr (hε' i).ne'])],
+        simpa [] [] [] ["[", expr μ, ",", expr infi_lt_iff, "]"] [] [] }],
+     refine [expr le_trans _ «expr $ »(ennreal.tsum_le_tsum, λ i, le_of_lt (hf i).2)],
+     rw ["[", "<-", expr ennreal.tsum_prod, ",", "<-", expr equiv.nat_prod_nat_equiv_nat.symm.tsum_eq, "]"] [],
+     swap,
+     { apply_instance },
+     refine [expr infi_le_of_le _ (infi_le _ _)],
+     exact [expr Union_subset (λ
+       i, «expr $ »(subset.trans (hf i).1, «expr $ »(Union_subset, λ
+         j, «expr $ »(subset.trans (by simp [] [] [] [] [] []), «expr $ »(subset_Union _, equiv.nat_prod_nat_equiv_nat (i, j))))))]
+   end) }
 
 theorem of_function_apply (s : Set α) :
   outer_measure.of_function m m_empty s = ⨅(t : ℕ → Set α)(h : s ⊆ Union t), ∑'n, m (t n) :=
@@ -628,67 +619,66 @@ theorem le_of_function {μ : outer_measure α} : μ ≤ outer_measure.of_functio
         fun f => le_infi$ fun hs => le_transₓ (μ.mono hs)$ le_transₓ (μ.Union f)$ Ennreal.tsum_le_tsum$ fun i => H _⟩
 
 theorem is_greatest_of_function :
-  IsGreatest { μ : outer_measure α | ∀ s, μ s ≤ m s } (outer_measure.of_function m m_empty) :=
+  IsGreatest { μ:outer_measure α | ∀ s, μ s ≤ m s } (outer_measure.of_function m m_empty) :=
   ⟨fun s => of_function_le _, fun μ => le_of_function.2⟩
 
 theorem of_function_eq_Sup : outer_measure.of_function m m_empty = Sup { μ | ∀ s, μ s ≤ m s } :=
   (@is_greatest_of_function α m m_empty).IsLub.Sup_eq.symm
 
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `m u = ∞` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = measure_theory.outer_measure.of_function m m_empty`.
 
 E.g., if `α` is an (e)metric space and `m u = ∞` on any set of diameter `≥ r`, then this lemma
 implies that `μ (s ∪ t) = μ s + μ t` on any two sets such that `r ≤ edist x y` for all `x ∈ s`
 and `y ∈ t`.  -/
-theorem of_function_union_of_top_of_nonempty_inter {s t : Set α}
-  (h : ∀ u, (s ∩ u).Nonempty → (t ∩ u).Nonempty → m u = ∞) :
-  outer_measure.of_function m m_empty (s ∪ t) =
-    outer_measure.of_function m m_empty s+outer_measure.of_function m m_empty t :=
-  by 
-    refine' le_antisymmₓ (outer_measure.union _ _ _) (le_infi$ fun f => le_infi$ fun hf => _)
-    set μ := outer_measure.of_function m m_empty 
-    rcases em (∃ i, (s ∩ f i).Nonempty ∧ (t ∩ f i).Nonempty) with (⟨i, hs, ht⟩ | he)
-    ·
-      calc (μ s+μ t) ≤ ∞ := le_top _ = m (f i) := (h (f i) hs ht).symm _ ≤ ∑'i, m (f i) := Ennreal.le_tsum i 
-    set I := fun s => { i : ℕ | (s ∩ f i).Nonempty }
-    have hd : Disjoint (I s) (I t)
-    exact fun i hi => he ⟨i, hi⟩
-    have hI : ∀ u _ : u ⊆ s ∪ t, μ u ≤ ∑'i : I u, μ (f i)
-    exact
-      fun u hu =>
-        calc μ u ≤ μ (⋃i : I u, f i) :=
-          μ.mono
-            fun x hx =>
-              let ⟨i, hi⟩ := mem_Union.1 (hf (hu hx))
-              mem_Union.2 ⟨⟨i, ⟨x, hx, hi⟩⟩, hi⟩
-          _ ≤ ∑'i : I u, μ (f i) := μ.Union _ 
-          
-    calc (μ s+μ t) ≤ (∑'i : I s, μ (f i))+∑'i : I t, μ (f i) :=
-      add_le_add (hI _$ subset_union_left _ _) (hI _$ subset_union_right _ _)_ = ∑'i : I s ∪ I t, μ (f i) :=
-      (@tsum_union_disjoint _ _ _ _ _ (fun i => μ (f i)) _ _ _ hd Ennreal.summable Ennreal.summable).symm
-        _ ≤ ∑'i, μ (f i) :=
-      tsum_le_tsum_of_inj coeₓ Subtype.coe_injective (fun _ _ => zero_le _) (fun _ => le_rfl) Ennreal.summable
-        Ennreal.summable _ ≤ ∑'i, m (f i) :=
-      Ennreal.tsum_le_tsum fun i => of_function_le _
-
--- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem comap_of_function
-{β}
-(f : β → α)
-(h : «expr ∨ »(monotone m, surjective f)) : «expr = »(comap f (outer_measure.of_function m m_empty), outer_measure.of_function (λ
-  s, m «expr '' »(f, s)) (by rwa [expr set.image_empty] [])) :=
+theorem of_function_union_of_top_of_nonempty_inter
+{s t : set α}
+(h : ∀
+ u, «expr ∩ »(s, u).nonempty → «expr ∩ »(t, u).nonempty → «expr = »(m u, «expr∞»())) : «expr = »(outer_measure.of_function m m_empty «expr ∪ »(s, t), «expr + »(outer_measure.of_function m m_empty s, outer_measure.of_function m m_empty t)) :=
 begin
-  refine [expr le_antisymm «expr $ »(le_of_function.2, λ s, _) (λ s, _)],
-  { rw [expr comap_apply] [],
-    apply [expr of_function_le] },
-  { rw ["[", expr comap_apply, ",", expr of_function_apply, ",", expr of_function_apply, "]"] [],
-    refine [expr infi_le_infi2 (λ t, ⟨λ k, «expr ⁻¹' »(f, t k), _⟩)],
-    refine [expr infi_le_infi2 (λ ht, _)],
-    rw ["[", expr set.image_subset_iff, ",", expr preimage_Union, "]"] ["at", ident ht],
-    refine [expr ⟨ht, «expr $ »(ennreal.tsum_le_tsum, λ n, _)⟩],
-    cases [expr h] [],
-    exacts ["[", expr h (image_preimage_subset _ _), ",", expr (congr_arg m (h.image_preimage (t n))).le, "]"] }
+  refine [expr le_antisymm (outer_measure.union _ _ _) «expr $ »(le_infi, λ f, «expr $ »(le_infi, λ hf, _))],
+  set [] [ident μ] [] [":="] [expr outer_measure.of_function m m_empty] [],
+  rcases [expr em «expr∃ , »((i), «expr ∧ »(«expr ∩ »(s, f i).nonempty, «expr ∩ »(t, f i).nonempty)), "with", "⟨", ident i, ",", ident hs, ",", ident ht, "⟩", "|", ident he],
+  { calc
+      «expr ≤ »(«expr + »(μ s, μ t), «expr∞»()) : le_top
+      «expr = »(..., m (f i)) : (h (f i) hs ht).symm
+      «expr ≤ »(..., «expr∑' , »((i), m (f i))) : ennreal.le_tsum i },
+  set [] [ident I] [] [":="] [expr λ s, {i : exprℕ() | «expr ∩ »(s, f i).nonempty}] [],
+  have [ident hd] [":", expr disjoint (I s) (I t)] [],
+  from [expr λ i hi, he ⟨i, hi⟩],
+  have [ident hI] [":", expr ∀ u «expr ⊆ » «expr ∪ »(s, t), «expr ≤ »(μ u, «expr∑' , »((i : I u), μ (f i)))] [],
+  from [expr λ u hu, calc
+     «expr ≤ »(μ u, μ «expr⋃ , »((i : I u), f i)) : μ.mono (λ x hx, let ⟨i, hi⟩ := mem_Union.1 (hf (hu hx)) in
+      mem_Union.2 ⟨⟨i, ⟨x, hx, hi⟩⟩, hi⟩)
+     «expr ≤ »(..., «expr∑' , »((i : I u), μ (f i))) : μ.Union _],
+  calc
+    «expr ≤ »(«expr + »(μ s, μ t), «expr + »(«expr∑' , »((i : I s), μ (f i)), «expr∑' , »((i : I t), μ (f i)))) : add_le_add «expr $ »(hI _, subset_union_left _ _) «expr $ »(hI _, subset_union_right _ _)
+    «expr = »(..., «expr∑' , »((i : «expr ∪ »(I s, I t)), μ (f i))) : (@tsum_union_disjoint _ _ _ _ _ (λ
+      i, μ (f i)) _ _ _ hd ennreal.summable ennreal.summable).symm
+    «expr ≤ »(..., «expr∑' , »((i), μ (f i))) : tsum_le_tsum_of_inj coe subtype.coe_injective (λ
+     _ _, zero_le _) (λ _, le_rfl) ennreal.summable ennreal.summable
+    «expr ≤ »(..., «expr∑' , »((i), m (f i))) : ennreal.tsum_le_tsum (λ i, of_function_le _)
 end
+
+theorem comap_of_function {β} (f : β → α) (h : Monotone m ∨ surjective f) :
+  comap f (outer_measure.of_function m m_empty) =
+    outer_measure.of_function (fun s => m (f '' s))
+      (by 
+        rwa [Set.image_empty]) :=
+  by 
+    refine' le_antisymmₓ (le_of_function.2$ fun s => _) fun s => _
+    ·
+      rw [comap_apply]
+      apply of_function_le
+    ·
+      rw [comap_apply, of_function_apply, of_function_apply]
+      refine' infi_le_infi2 fun t => ⟨fun k => f ⁻¹' t k, _⟩
+      refine' infi_le_infi2 fun ht => _ 
+      rw [Set.image_subset_iff, preimage_Union] at ht 
+      refine' ⟨ht, Ennreal.tsum_le_tsum$ fun n => _⟩
+      cases h 
+      exacts[h (image_preimage_subset _ _), (congr_argₓ m (h.image_preimage (t n))).le]
 
 theorem map_of_function_le {β} (f : α → β) :
   map f (outer_measure.of_function m m_empty) ≤ outer_measure.of_function (fun s => m (f ⁻¹' s)) m_empty :=
@@ -721,16 +711,17 @@ theorem restrict_of_function (s : Set α) (hm : Monotone m) :
     simp only [restrict, LinearMap.comp_apply, comap_of_function _ (Or.inl hm), map_of_function Subtype.coe_injective,
       Subtype.image_preimage_coe]
 
-theorem smul_of_function {c : ℝ≥0∞} (hc : c ≠ ∞) :
-  c • outer_measure.of_function m m_empty =
-    outer_measure.of_function (c • m)
-      (by 
-        simp [m_empty]) :=
-  by 
-    ext1 s 
-    haveI  : Nonempty { t : ℕ → Set α // s ⊆ ⋃i, t i } := ⟨⟨fun _ => s, subset_Union (fun _ => s) 0⟩⟩
-    simp only [smul_apply, of_function_apply, Ennreal.tsum_mul_left, Pi.smul_apply, smul_eq_mul, infi_subtype',
-      Ennreal.infi_mul_left fun h => (hc h).elim]
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem smul_of_function
+{c : «exprℝ≥0∞»()}
+(hc : «expr ≠ »(c, «expr∞»())) : «expr = »(«expr • »(c, outer_measure.of_function m m_empty), outer_measure.of_function «expr • »(c, m) (by simp [] [] [] ["[", expr m_empty, "]"] [] [])) :=
+begin
+  ext1 [] [ident s],
+  haveI [] [":", expr nonempty {t : exprℕ() → set α // «expr ⊆ »(s, «expr⋃ , »((i), t i))}] [":=", expr ⟨⟨λ
+     _, s, subset_Union (λ _, s) 0⟩⟩],
+  simp [] [] ["only"] ["[", expr smul_apply, ",", expr of_function_apply, ",", expr ennreal.tsum_mul_left, ",", expr pi.smul_apply, ",", expr smul_eq_mul, ",", expr infi_subtype', ",", expr ennreal.infi_mul_left (λ
+    h, (hc h).elim), "]"] [] []
+end
 
 end OfFunction
 
@@ -751,14 +742,16 @@ variable{m}
 theorem bounded_by_le (s : Set α) : bounded_by m s ≤ m s :=
   (of_function_le _).trans supr_const_le
 
-theorem bounded_by_eq_of_function (m_empty : m ∅ = 0) (s : Set α) :
-  bounded_by m s = outer_measure.of_function m m_empty s :=
-  by 
-    have  : (fun s : Set α => ⨆h : s.nonempty, m s) = m
-    ·
-      ext1 t 
-      cases' t.eq_empty_or_nonempty with h h <;> simp [h, empty_not_nonempty, m_empty]
-    simp [bounded_by, this]
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem bounded_by_eq_of_function
+(m_empty : «expr = »(m «expr∅»(), 0))
+(s : set α) : «expr = »(bounded_by m s, outer_measure.of_function m m_empty s) :=
+begin
+  have [] [":", expr «expr = »(λ s : set α, «expr⨆ , »((h : s.nonempty), m s), m)] [],
+  { ext1 [] [ident t],
+    cases [expr t.eq_empty_or_nonempty] ["with", ident h, ident h]; simp [] [] [] ["[", expr h, ",", expr empty_not_nonempty, ",", expr m_empty, "]"] [] [] },
+  simp [] [] [] ["[", expr bounded_by, ",", expr this, "]"] [] []
+end
 
 theorem bounded_by_apply (s : Set α) :
   bounded_by m s = ⨅(t : ℕ → Set α)(h : s ⊆ Union t), ∑'n, ⨆h : (t n).Nonempty, m (t n) :=
@@ -792,18 +785,22 @@ theorem smul_bounded_by {c : ℝ≥0∞} (hc : c ≠ ∞) : c • bounded_by m =
     congr 1 with s : 1
     rcases s.eq_empty_or_nonempty with (rfl | hs) <;> simp 
 
-theorem comap_bounded_by {β} (f : β → α) (h : (Monotone fun s : { s : Set α // s.nonempty } => m s) ∨ surjective f) :
-  comap f (bounded_by m) = bounded_by fun s => m (f '' s) :=
-  by 
-    refine' (comap_of_function _ _).trans _
-    ·
-      refine' h.imp (fun H s t hst => supr_le$ fun hs => _) id 
-      have ht : t.nonempty := hs.mono hst 
-      exact (@H ⟨s, hs⟩ ⟨t, ht⟩ hst).trans (le_supr (fun h : t.nonempty => m t) ht)
-    ·
-      dunfold bounded_by 
-      congr with s : 1
-      rw [nonempty_image_iff]
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem comap_bounded_by
+{β}
+(f : β → α)
+(h : «expr ∨ »(monotone (λ
+   s : {s : set α // s.nonempty}, m s), surjective f)) : «expr = »(comap f (bounded_by m), bounded_by (λ
+  s, m «expr '' »(f, s))) :=
+begin
+  refine [expr (comap_of_function _ _).trans _],
+  { refine [expr h.imp (λ H s t hst, «expr $ »(supr_le, λ hs, _)) id],
+    have [ident ht] [":", expr t.nonempty] [":=", expr hs.mono hst],
+    exact [expr (@H ⟨s, hs⟩ ⟨t, ht⟩ hst).trans (le_supr (λ h : t.nonempty, m t) ht)] },
+  { dunfold [ident bounded_by] [],
+    congr' [] ["with", ident s, ":", 1],
+    rw [expr nonempty_image_iff] [] }
+end
 
 /-- If `m u = ∞` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = measure_theory.outer_measure.bounded_by m`.
@@ -895,35 +892,37 @@ theorem is_caratheodory_sum {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s 
     intro a 
     simpa using fun h₁ : a ∈ s n i hi : i < n h₂ => hd _ _ (ne_of_gtₓ hi) ⟨h₁, h₂⟩
 
-theorem is_caratheodory_Union_nat {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i)) (hd : Pairwise (Disjoint on s)) :
-  is_caratheodory (⋃i, s i) :=
-  is_caratheodory_iff_le'.2$
-    fun t =>
-      by 
-        have hp : m (t ∩ ⋃i, s i) ≤ ⨆n, m (t ∩ ⋃(i : _)(_ : i < n), s i)
-        ·
-          convert m.Union fun i => t ∩ s i
-          ·
-            rw [inter_Union]
-          ·
-            simp [Ennreal.tsum_eq_supr_nat, is_caratheodory_sum m h hd]
-        refine' le_transₓ (add_le_add_right hp _) _ 
-        rw [Ennreal.supr_add]
-        refine'
-          supr_le fun n => le_transₓ (add_le_add_left _ _) (ge_of_eq (is_caratheodory_Union_lt m (fun i _ => h i) _))
-        refine' m.mono (diff_subset_diff_right _)
-        exact bUnion_subset fun i _ => subset_Union _ i
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_caratheodory_Union_nat
+{s : exprℕ() → set α}
+(h : ∀ i, is_caratheodory (s i))
+(hd : pairwise «expr on »(disjoint, s)) : is_caratheodory «expr⋃ , »((i), s i) :=
+«expr $ »(is_caratheodory_iff_le'.2, λ t, begin
+   have [ident hp] [":", expr «expr ≤ »(m «expr ∩ »(t, «expr⋃ , »((i), s i)), «expr⨆ , »((n), m «expr ∩ »(t, «expr⋃ , »((i «expr < » n), s i))))] [],
+   { convert [] [expr m.Union (λ i, «expr ∩ »(t, s i))] [],
+     { rw [expr inter_Union] [] },
+     { simp [] [] [] ["[", expr ennreal.tsum_eq_supr_nat, ",", expr is_caratheodory_sum m h hd, "]"] [] [] } },
+   refine [expr le_trans (add_le_add_right hp _) _],
+   rw [expr ennreal.supr_add] [],
+   refine [expr supr_le (λ n, le_trans (add_le_add_left _ _) (ge_of_eq (is_caratheodory_Union_lt m (λ i _, h i) _)))],
+   refine [expr m.mono (diff_subset_diff_right _)],
+   exact [expr bUnion_subset (λ i _, subset_Union _ i)]
+ end)
 
-theorem f_Union {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i)) (hd : Pairwise (Disjoint on s)) :
-  m (⋃i, s i) = ∑'i, m (s i) :=
-  by 
-    refine' le_antisymmₓ (m.Union_nat s) _ 
-    rw [Ennreal.tsum_eq_supr_nat]
-    refine' supr_le fun n => _ 
-    have  := @is_caratheodory_sum _ m _ h hd univ n 
-    simp  at this 
-    simp [this]
-    exact m.mono (bUnion_subset fun i _ => subset_Union _ i)
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem f_Union
+{s : exprℕ() → set α}
+(h : ∀ i, is_caratheodory (s i))
+(hd : pairwise «expr on »(disjoint, s)) : «expr = »(m «expr⋃ , »((i), s i), «expr∑' , »((i), m (s i))) :=
+begin
+  refine [expr le_antisymm (m.Union_nat s) _],
+  rw [expr ennreal.tsum_eq_supr_nat] [],
+  refine [expr supr_le (λ n, _)],
+  have [] [] [":=", expr @is_caratheodory_sum _ m _ h hd univ n],
+  simp [] [] [] [] [] ["at", ident this],
+  simp [] [] [] ["[", expr this, "]"] [] [],
+  exact [expr m.mono (bUnion_subset (λ i _, subset_Union _ i))]
+end
 
 /-- The Carathéodory-measurable sets for an outer measure `m` form a Dynkin system.  -/
 def caratheodory_dynkin : MeasurableSpace.DynkinSystem α :=
@@ -1100,14 +1099,19 @@ theorem infi_apply' {ι} (m : ι → outer_measure α) {s : Set α} (hs : s.none
     rw [infi, Inf_apply' hs]
     simp only [infi_range]
 
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The value of the Infimum of a nonempty family of outer measures on a set is not simply
 the minimum value of a measure on that set: it is the infimum sum of measures of countable set of
 sets that covers that set, where a different measure can be used for each set in the cover. -/
-theorem binfi_apply {ι} {I : Set ι} (hI : I.nonempty) (m : ι → outer_measure α) (s : Set α) :
-  (⨅(i : _)(_ : i ∈ I), m i) s = ⨅(t : ℕ → Set α)(h2 : s ⊆ Union t), ∑'n, ⨅(i : _)(_ : i ∈ I), m i (t n) :=
-  by 
-    haveI  := hI.to_subtype 
-    simp only [←infi_subtype'', infi_apply]
+theorem binfi_apply
+{ι}
+{I : set ι}
+(hI : I.nonempty)
+(m : ι → outer_measure α)
+(s : set α) : «expr = »(«expr⨅ , »((i «expr ∈ » I), m i) s, «expr⨅ , »((t : exprℕ() → set α)
+  (h2 : «expr ⊆ »(s, Union t)), «expr∑' , »((n), «expr⨅ , »((i «expr ∈ » I), m i (t n))))) :=
+by { haveI [] [] [":=", expr hI.to_subtype],
+  simp [] [] ["only"] ["[", "<-", expr infi_subtype'', ",", expr infi_apply, "]"] [] [] }
 
 /-- The value of the Infimum of a nonempty family of outer measures on a set is not simply
 the minimum value of a measure on that set: it is the infimum sum of measures of countable set of
@@ -1148,12 +1152,16 @@ theorem map_infi_comap {ι β} [Nonempty ι] {f : α → β} (m : ι → outer_m
       refine' Ennreal.tsum_le_tsum fun n => infi_le_infi fun i => (m i).mono _ 
       simp 
 
-theorem map_binfi_comap {ι β} {I : Set ι} (hI : I.nonempty) {f : α → β} (m : ι → outer_measure β) :
-  map f (⨅(i : _)(_ : i ∈ I), comap f (m i)) = ⨅(i : _)(_ : i ∈ I), map f (comap f (m i)) :=
-  by 
-    haveI  := hI.to_subtype 
-    rw [←infi_subtype'', ←infi_subtype'']
-    exact map_infi_comap _
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_binfi_comap
+{ι β}
+{I : set ι}
+(hI : I.nonempty)
+{f : α → β}
+(m : ι → outer_measure β) : «expr = »(map f «expr⨅ , »((i «expr ∈ » I), comap f (m i)), «expr⨅ , »((i «expr ∈ » I), map f (comap f (m i)))) :=
+by { haveI [] [] [":=", expr hI.to_subtype],
+  rw ["[", "<-", expr infi_subtype'', ",", "<-", expr infi_subtype'', "]"] [],
+  exact [expr map_infi_comap _] }
 
 theorem restrict_infi_restrict {ι} (s : Set α) (m : ι → outer_measure α) :
   restrict s (⨅i, restrict s (m i)) = restrict s (⨅i, m i) :=
@@ -1168,12 +1176,16 @@ theorem restrict_infi {ι} [Nonempty ι] (s : Set α) (m : ι → outer_measure 
   restrict s (⨅i, m i) = ⨅i, restrict s (m i) :=
   (congr_argₓ (map coeₓ) (comap_infi _ _)).trans (map_infi_comap _)
 
-theorem restrict_binfi {ι} {I : Set ι} (hI : I.nonempty) (s : Set α) (m : ι → outer_measure α) :
-  restrict s (⨅(i : _)(_ : i ∈ I), m i) = ⨅(i : _)(_ : i ∈ I), restrict s (m i) :=
-  by 
-    haveI  := hI.to_subtype 
-    rw [←infi_subtype'', ←infi_subtype'']
-    exact restrict_infi _ _
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem restrict_binfi
+{ι}
+{I : set ι}
+(hI : I.nonempty)
+(s : set α)
+(m : ι → outer_measure α) : «expr = »(restrict s «expr⨅ , »((i «expr ∈ » I), m i), «expr⨅ , »((i «expr ∈ » I), restrict s (m i))) :=
+by { haveI [] [] [":=", expr hI.to_subtype],
+  rw ["[", "<-", expr infi_subtype'', ",", "<-", expr infi_subtype'', "]"] [],
+  exact [expr restrict_infi _ _] }
 
 /-- This proves that Inf and restrict commute for outer measures, so long as the set of
 outer measures is nonempty. -/
@@ -1380,14 +1392,21 @@ theorem induced_outer_measure_preimage (f : α ≃ α) (Pm : ∀ s : Set α, P (
     intro h2s 
     exact mm s hs
 
-theorem induced_outer_measure_exists_set {s : Set α} (hs : induced_outer_measure m P0 m0 s ≠ ∞) {ε : ℝ≥0∞}
-  (hε : ε ≠ 0) : ∃ (t : Set α)(ht : P t), s ⊆ t ∧ induced_outer_measure m P0 m0 t ≤ induced_outer_measure m P0 m0 s+ε :=
-  by 
-    have  := Ennreal.lt_add_right hs hε 
-    conv  at this => toLHS rw [induced_outer_measure_eq_infi _ msU m_mono]
-    simp only [infi_lt_iff] at this 
-    rcases this with ⟨t, h1t, h2t, h3t⟩
-    exact ⟨t, h1t, h2t, le_transₓ (le_of_eqₓ$ induced_outer_measure_eq' _ msU m_mono h1t) (le_of_ltₓ h3t)⟩
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem induced_outer_measure_exists_set
+{s : set α}
+(hs : «expr ≠ »(induced_outer_measure m P0 m0 s, «expr∞»()))
+{ε : «exprℝ≥0∞»()}
+(hε : «expr ≠ »(ε, 0)) : «expr∃ , »((t : set α)
+ (ht : P t), «expr ∧ »(«expr ⊆ »(s, t), «expr ≤ »(induced_outer_measure m P0 m0 t, «expr + »(induced_outer_measure m P0 m0 s, ε)))) :=
+begin
+  have [] [] [":=", expr ennreal.lt_add_right hs hε],
+  conv ["at", ident this] [] { to_lhs,
+    rw [expr induced_outer_measure_eq_infi _ msU m_mono] },
+  simp [] [] ["only"] ["[", expr infi_lt_iff, "]"] [] ["at", ident this],
+  rcases [expr this, "with", "⟨", ident t, ",", ident h1t, ",", ident h2t, ",", ident h3t, "⟩"],
+  exact [expr ⟨t, h1t, h2t, le_trans «expr $ »(le_of_eq, induced_outer_measure_eq' _ msU m_mono h1t) (le_of_lt h3t)⟩]
+end
 
 /-- To test whether `s` is Carathéodory-measurable we only need to check the sets `t` for which
   `P t` holds. See `of_function_caratheodory` for another way to show the Carathéodory-measurability
@@ -1437,16 +1456,21 @@ variable(mU :
 
 include m0 mU
 
-theorem extend_mono {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (hs : s₁ ⊆ s₂) : extend m s₁ ≤ extend m s₂ :=
-  by 
-    refine' le_infi _ 
-    intro h₂ 
-    have  := extend_union MeasurableSet.empty m0 MeasurableSet.Union mU disjoint_diff h₁ (h₂.diff h₁)
-    rw [union_diff_cancel hs] at this 
-    rw [←extend_eq m]
-    exact le_iff_exists_add.2 ⟨_, this⟩
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem extend_mono
+{s₁ s₂ : set α}
+(h₁ : measurable_set s₁)
+(hs : «expr ⊆ »(s₁, s₂)) : «expr ≤ »(extend m s₁, extend m s₂) :=
+begin
+  refine [expr le_infi _],
+  intro [ident h₂],
+  have [] [] [":=", expr extend_union measurable_set.empty m0 measurable_set.Union mU disjoint_diff h₁ (h₂.diff h₁)],
+  rw [expr union_diff_cancel hs] ["at", ident this],
+  rw ["<-", expr extend_eq m] [],
+  exact [expr le_iff_exists_add.2 ⟨_, this⟩]
+end
 
--- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem extend_Union_le_tsum_nat : ∀
 s : exprℕ() → set α, «expr ≤ »(extend m «expr⋃ , »((i), s i), «expr∑' , »((i), extend m (s i))) :=
 begin
@@ -1511,7 +1535,7 @@ theorem trim_eq_trim_iff {m₁ m₂ : outer_measure α} : m₁.trim = m₂.trim 
   by 
     simp only [le_antisymm_iffₓ, trim_le_trim_iff, forall_and_distrib]
 
--- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem trim_eq_infi
 (s : set α) : «expr = »(m.trim s, «expr⨅ , »((t) (st : «expr ⊆ »(s, t)) (ht : measurable_set t), m t)) :=
 by { simp [] [] ["only"] ["[", expr infi_comm, "]"] [] [] { single_pass := tt },
@@ -1536,38 +1560,37 @@ theorem trim_sum_ge {ι} (m : ι → outer_measure α) : (Sum fun i => (m i).tri
       simp [trim_eq_infi] <;>
         exact fun t st ht => Ennreal.tsum_le_tsum fun i => infi_le_of_le t$ infi_le_of_le st$ infi_le _ ht
 
-theorem exists_measurable_superset_eq_trim (m : outer_measure α) (s : Set α) :
-  ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t = m.trim s :=
-  by 
-    simp only [trim_eq_infi]
-    set ms := ⨅(t : Set α)(st : s ⊆ t)(ht : MeasurableSet t), m t 
-    byCases' hs : ms = ∞
-    ·
-      simp only [hs]
-      simp only [infi_eq_top] at hs 
-      exact ⟨univ, subset_univ s, MeasurableSet.univ, hs _ (subset_univ s) MeasurableSet.univ⟩
-    ·
-      have  : ∀ r _ : r > ms, ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t < r
-      ·
-        intro r hs 
-        simpa [infi_lt_iff] using hs 
-      have  : ∀ n : ℕ, ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t < ms+n⁻¹
-      ·
-        intro n 
-        refine' this _ (Ennreal.lt_add_right hs _)
-        simp 
-      choose t hsub hm hm' 
-      refine' ⟨⋂n, t n, subset_Inter hsub, MeasurableSet.Inter hm, _⟩
-      have  : tendsto (fun n : ℕ => ms+n⁻¹) at_top (𝓝 (ms+0))
-      exact tendsto_const_nhds.add Ennreal.tendsto_inv_nat_nhds_zero 
-      rw [add_zeroₓ] at this 
-      refine' le_antisymmₓ (ge_of_tendsto' this$ fun n => _) _
-      ·
-        exact le_transₓ (m.mono'$ Inter_subset t n) (hm' n).le
-      ·
-        refine' infi_le_of_le (⋂n, t n) _ 
-        refine' infi_le_of_le (subset_Inter hsub) _ 
-        refine' infi_le _ (MeasurableSet.Inter hm)
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_measurable_superset_eq_trim
+(m : outer_measure α)
+(s : set α) : «expr∃ , »((t), «expr ∧ »(«expr ⊆ »(s, t), «expr ∧ »(measurable_set t, «expr = »(m t, m.trim s)))) :=
+begin
+  simp [] [] ["only"] ["[", expr trim_eq_infi, "]"] [] [],
+  set [] [ident ms] [] [":="] [expr «expr⨅ , »((t : set α) (st : «expr ⊆ »(s, t)) (ht : measurable_set t), m t)] [],
+  by_cases [expr hs, ":", expr «expr = »(ms, «expr∞»())],
+  { simp [] [] ["only"] ["[", expr hs, "]"] [] [],
+    simp [] [] ["only"] ["[", expr infi_eq_top, "]"] [] ["at", ident hs],
+    exact [expr ⟨univ, subset_univ s, measurable_set.univ, hs _ (subset_univ s) measurable_set.univ⟩] },
+  { have [] [":", expr ∀
+     r «expr > » ms, «expr∃ , »((t), «expr ∧ »(«expr ⊆ »(s, t), «expr ∧ »(measurable_set t, «expr < »(m t, r))))] [],
+    { intros [ident r, ident hs],
+      simpa [] [] [] ["[", expr infi_lt_iff, "]"] [] ["using", expr hs] },
+    have [] [":", expr ∀
+     n : exprℕ(), «expr∃ , »((t), «expr ∧ »(«expr ⊆ »(s, t), «expr ∧ »(measurable_set t, «expr < »(m t, «expr + »(ms, «expr ⁻¹»(n))))))] [],
+    { assume [binders (n)],
+      refine [expr this _ (ennreal.lt_add_right hs _)],
+      simp [] [] [] [] [] [] },
+    choose [] [ident t] [ident hsub, ident hm, ident hm'] [],
+    refine [expr ⟨«expr⋂ , »((n), t n), subset_Inter hsub, measurable_set.Inter hm, _⟩],
+    have [] [":", expr tendsto (λ n : exprℕ(), «expr + »(ms, «expr ⁻¹»(n))) at_top (expr𝓝() «expr + »(ms, 0))] [],
+    from [expr tendsto_const_nhds.add ennreal.tendsto_inv_nat_nhds_zero],
+    rw [expr add_zero] ["at", ident this],
+    refine [expr le_antisymm «expr $ »(ge_of_tendsto' this, λ n, _) _],
+    { exact [expr le_trans «expr $ »(m.mono', Inter_subset t n) (hm' n).le] },
+    { refine [expr infi_le_of_le «expr⋂ , »((n), t n) _],
+      refine [expr infi_le_of_le (subset_Inter hsub) _],
+      refine [expr infi_le _ (measurable_set.Inter hm)] } }
+end
 
 theorem exists_measurable_superset_of_trim_eq_zero {m : outer_measure α} {s : Set α} (h : m.trim s = 0) :
   ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t = 0 :=
@@ -1575,24 +1598,18 @@ theorem exists_measurable_superset_of_trim_eq_zero {m : outer_measure α} {s : S
     rcases exists_measurable_superset_eq_trim m s with ⟨t, hst, ht, hm⟩
     exact ⟨t, hst, ht, h ▸ hm⟩
 
--- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If `μ i` is a countable family of outer measures, then for every set `s` there exists
 a measurable set `t ⊇ s` such that `μ i t = (μ i).trim s` for all `i`. -/
-theorem exists_measurable_superset_forall_eq_trim
-{ι}
-[encodable ι]
-(μ : ι → outer_measure α)
-(s : set α) : «expr∃ , »((t), «expr ∧ »(«expr ⊆ »(s, t), «expr ∧ »(measurable_set t, ∀
-   i, «expr = »(μ i t, (μ i).trim s)))) :=
-begin
-  choose [] [ident t] [ident hst, ident ht, ident hμt] ["using", expr λ i, (μ i).exists_measurable_superset_eq_trim s],
-  replace [ident hst] [] [":=", expr subset_Inter hst],
-  replace [ident ht] [] [":=", expr measurable_set.Inter ht],
-  refine [expr ⟨«expr⋂ , »((i), t i), hst, ht, λ i, le_antisymm _ _⟩],
-  exacts ["[", expr «expr ▸ »(hμt i, (μ i).mono (Inter_subset _ _)), ",", expr (mono' _ hst).trans_eq ((μ i).trim_eq ht), "]"]
-end
+theorem exists_measurable_superset_forall_eq_trim {ι} [Encodable ι] (μ : ι → outer_measure α) (s : Set α) :
+  ∃ t, s ⊆ t ∧ MeasurableSet t ∧ ∀ i, μ i t = (μ i).trim s :=
+  by 
+    choose t hst ht hμt using fun i => (μ i).exists_measurable_superset_eq_trim s 
+    replace hst := subset_Inter hst 
+    replace ht := MeasurableSet.Inter ht 
+    refine' ⟨⋂i, t i, hst, ht, fun i => le_antisymmₓ _ _⟩
+    exacts[hμt i ▸ (μ i).mono (Inter_subset _ _), (mono' _ hst).trans_eq ((μ i).trim_eq ht)]
 
--- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:340:40: in rcases: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:341:40: in rcases: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- If `m₁ s = op (m₂ s) (m₃ s)` for all `s`, then the same is true for `m₁.trim`, `m₂.trim`,
 and `m₃ s`. -/
 theorem trim_binop

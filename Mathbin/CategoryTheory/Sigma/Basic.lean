@@ -1,7 +1,7 @@
+import Mathbin.CategoryTheory.Whiskering 
+import Mathbin.CategoryTheory.FullyFaithful 
 import Mathbin.CategoryTheory.NaturalIsomorphism 
-import Mathbin.CategoryTheory.EqToHom 
-import Mathbin.Data.Sigma.Basic 
-import Mathbin.CategoryTheory.Pi.Basic
+import Mathbin.Data.Sigma.Basic
 
 /-!
 # Disjoint union of categories

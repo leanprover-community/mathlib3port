@@ -12,7 +12,7 @@ unsafe inductive exprform
   | Or : exprform → exprform → exprform
   | And : exprform → exprform → exprform
 
--- error in Tactic.Omega.Int.Form: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Omega.Int.Form: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- Intermediate shadow syntax for LIA formulas that includes non-canonical terms -/
 @[derive #[expr has_reflect], derive #[expr inhabited]]
 inductive preform

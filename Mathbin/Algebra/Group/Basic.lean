@@ -681,10 +681,11 @@ theorem add_add_neg_cancel'_right (a b : G) : (a+b+-a) = b :=
   by 
     rw [←sub_eq_add_neg, add_sub_cancel'_right a b]
 
--- error in Algebra.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem sub_right_comm (a b c : G) : «expr = »(«expr - »(«expr - »(a, b), c), «expr - »(«expr - »(a, c), b)) :=
-by { repeat { rw [expr sub_eq_add_neg] [] },
-  exact [expr add_right_comm _ _ _] }
+theorem sub_right_comm (a b c : G) : a - b - c = a - c - b :=
+  by 
+    repeat' 
+      rw [sub_eq_add_neg]
+    exact add_right_commₓ _ _ _
 
 @[simp]
 theorem add_add_sub_cancel (a b c : G) : ((a+c)+b - c) = a+b :=

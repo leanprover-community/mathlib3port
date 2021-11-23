@@ -48,32 +48,28 @@ theorem set_of_liouville_eq_irrational_inter_Inter_Union :
       refine' diff_subset_diff subset.rfl (singleton_subset_iff.2 ⟨a / b, _⟩)
       normCast
 
+-- error in NumberTheory.Liouville.Residual: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The set of Liouville numbers is a residual set. -/
-theorem eventually_residual_liouville : ∀ᶠx in residual ℝ, Liouville x :=
-  by 
-    rw [Filter.Eventually, set_of_liouville_eq_irrational_inter_Inter_Union]
-    refine' eventually_residual_irrational.and _ 
-    refine' eventually_residual.2 ⟨_, _, rat.dense_embedding_coe_real.dense.mono _, subset.rfl⟩
-    ·
-      exact
-        is_Gδ_Inter
-          fun n => IsOpen.is_Gδ$ is_open_Union$ fun a => is_open_Union$ fun b => is_open_Union$ fun hb => is_open_ball
-    ·
-      rintro _ ⟨r, rfl⟩
-      simp only [mem_Inter, mem_Union]
-      refine' fun n => ⟨r.num*2, r.denom*2, _, _⟩
-      ·
-        have  := Int.coe_nat_le.2 r.pos 
-        rw [Int.coe_nat_one] at this 
-        linarith
-      ·
-        convert mem_ball_self _ using 2
-        ·
-          normCast 
-          fieldSimp
-        ·
-          refine' one_div_pos.2 (pow_pos (Int.cast_pos.2 _) _)
-          exact mul_pos (Int.coe_nat_pos.2 r.pos) zero_lt_two
+theorem eventually_residual_liouville : «expr∀ᶠ in , »((x), residual exprℝ(), liouville x) :=
+begin
+  rw ["[", expr filter.eventually, ",", expr set_of_liouville_eq_irrational_inter_Inter_Union, "]"] [],
+  refine [expr eventually_residual_irrational.and _],
+  refine [expr eventually_residual.2 ⟨_, _, rat.dense_embedding_coe_real.dense.mono _, subset.rfl⟩],
+  { exact [expr is_Gδ_Inter (λ
+      n, «expr $ »(is_open.is_Gδ, «expr $ »(is_open_Union, λ
+        a, «expr $ »(is_open_Union, λ b, «expr $ »(is_open_Union, λ hb, is_open_ball)))))] },
+  { rintro ["_", "⟨", ident r, ",", ident rfl, "⟩"],
+    simp [] [] ["only"] ["[", expr mem_Inter, ",", expr mem_Union, "]"] [] [],
+    refine [expr λ n, ⟨«expr * »(r.num, 2), «expr * »(r.denom, 2), _, _⟩],
+    { have [] [] [":=", expr int.coe_nat_le.2 r.pos],
+      rw [expr int.coe_nat_one] ["at", ident this],
+      linarith [] [] [] },
+    { convert [] [expr mem_ball_self _] ["using", 2],
+      { norm_cast [],
+        field_simp [] [] [] [] },
+      { refine [expr one_div_pos.2 (pow_pos (int.cast_pos.2 _) _)],
+        exact [expr mul_pos (int.coe_nat_pos.2 r.pos) zero_lt_two] } } }
+end
 
 /-- The set of Liouville numbers in dense. -/
 theorem dense_liouville : Dense { x | Liouville x } :=

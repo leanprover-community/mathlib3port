@@ -1,4 +1,4 @@
-import Mathbin.Algebra.GroupWithZero.Default
+import Mathbin.Algebra.GroupWithZero.Basic
 
 /-!
 # Divisibility

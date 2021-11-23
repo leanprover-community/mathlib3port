@@ -125,7 +125,7 @@ def transport (e : C ≌ D) : monoidal_category.{v₂} D :=
           sliceRHS 2 3 => rw [id_tensor_comp_tensor_id, ←tensor_id_comp_id_tensor]
           sliceRHS 1 2 => rw [id_tensor_comp_tensor_id] }
 
--- error in CategoryTheory.Monoidal.Transport: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in CategoryTheory.Monoidal.Transport: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- A type synonym for `D`, which will carry the transported monoidal structure. -/
 @[derive #[expr category], nolint #[ident unused_arguments]]
 def transported (e : «expr ≌ »(C, D)) :=

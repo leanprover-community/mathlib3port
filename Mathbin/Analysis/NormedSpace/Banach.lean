@@ -62,7 +62,7 @@ noncomputable instance  (f : E ≃L[𝕜] F) : Inhabited (ContinuousLinearMap.No
 
 variable[CompleteSpace F]
 
--- error in Analysis.NormedSpace.Banach: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.NormedSpace.Banach: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 First step of the proof of the Banach open mapping theorem (using completeness of `F`):
 by Baire's theorem, there exists a ball in `E` whose image closure has nonempty interior.
@@ -152,119 +152,99 @@ end
 
 variable[CompleteSpace E]
 
+-- error in Analysis.NormedSpace.Banach: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Banach open mapping theorem: if a bounded linear map between Banach spaces is onto, then
 any point has a preimage with controlled norm. -/
-theorem exists_preimage_norm_le (surj : surjective f) : ∃ (C : _)(_ : C > 0), ∀ y, ∃ x, f x = y ∧ ∥x∥ ≤ C*∥y∥ :=
-  by 
-    obtain ⟨C, C0, hC⟩ := exists_approx_preimage_norm_le f surj 
-    choose g hg using hC 
-    let h := fun y => y - f (g y)
-    have hle : ∀ y, ∥h y∥ ≤ (1 / 2)*∥y∥
-    ·
-      intro y 
-      rw [←dist_eq_norm, dist_comm]
-      exact (hg y).1
-    refine'
-      ⟨(2*C)+1,
-        by 
-          linarith,
-        fun y => _⟩
-    have hnle : ∀ n : ℕ, ∥(h^[n]) y∥ ≤ ((1 / 2) ^ n)*∥y∥
-    ·
-      intro n 
-      induction' n with n IH
-      ·
-        simp only [one_div, Nat.nat_zero_eq_zero, one_mulₓ, iterate_zero_apply, pow_zeroₓ]
-      ·
-        rw [iterate_succ']
-        apply le_transₓ (hle _) _ 
-        rw [pow_succₓ, mul_assocₓ]
-        apply mul_le_mul_of_nonneg_left IH 
-        normNum 
-    let u := fun n => g ((h^[n]) y)
-    have ule : ∀ n, ∥u n∥ ≤ ((1 / 2) ^ n)*C*∥y∥
-    ·
-      intro n 
-      apply le_transₓ (hg _).2 _ 
-      calc (C*∥(h^[n]) y∥) ≤ C*((1 / 2) ^ n)*∥y∥ := mul_le_mul_of_nonneg_left (hnle n) C0 _ = ((1 / 2) ^ n)*C*∥y∥ :=
-        by 
-          ring 
-    have sNu : Summable fun n => ∥u n∥
-    ·
-      refine' summable_of_nonneg_of_le (fun n => norm_nonneg _) ule _ 
-      exact
-        Summable.mul_right _
-          (summable_geometric_of_lt_1
-            (by 
-              normNum)
-            (by 
-              normNum))
-    have su : Summable u := summable_of_summable_norm sNu 
-    let x := tsum u 
-    have x_ineq : ∥x∥ ≤ ((2*C)+1)*∥y∥ :=
-      calc ∥x∥ ≤ ∑'n, ∥u n∥ := norm_tsum_le_tsum_norm sNu 
-        _ ≤ ∑'n, ((1 / 2) ^ n)*C*∥y∥ := tsum_le_tsum ule sNu (Summable.mul_right _ summable_geometric_two)
-        _ = (∑'n, (1 / 2) ^ n)*C*∥y∥ := tsum_mul_right 
-        _ = (2*C)*∥y∥ :=
-        by 
-          rw [tsum_geometric_two, mul_assocₓ]
-        _ ≤ ((2*C)*∥y∥)+∥y∥ := le_add_of_nonneg_right (norm_nonneg y)
-        _ = ((2*C)+1)*∥y∥ :=
-        by 
-          ring 
-        
-    have fsumeq : ∀ n : ℕ, f (∑i in range n, u i) = y - (h^[n]) y
-    ·
-      intro n 
-      induction' n with n IH
-      ·
-        simp [f.map_zero]
-      ·
-        rw [sum_range_succ, f.map_add, IH, iterate_succ', sub_add]
-    have  : tendsto (fun n => ∑i in range n, u i) at_top (𝓝 x) := su.has_sum.tendsto_sum_nat 
-    have L₁ : tendsto (fun n => f (∑i in range n, u i)) at_top (𝓝 (f x)) := (f.continuous.tendsto _).comp this 
-    simp only [fsumeq] at L₁ 
-    have L₂ : tendsto (fun n => y - (h^[n]) y) at_top (𝓝 (y - 0))
-    ·
-      refine' tendsto_const_nhds.sub _ 
-      rw [tendsto_iff_norm_tendsto_zero]
-      simp only [sub_zero]
-      refine' squeeze_zero (fun _ => norm_nonneg _) hnle _ 
-      rw [←zero_mul ∥y∥]
-      refine' (tendsto_pow_at_top_nhds_0_of_lt_1 _ _).mul tendsto_const_nhds <;> normNum 
-    have feq : f x = y - 0 := tendsto_nhds_unique L₁ L₂ 
-    rw [sub_zero] at feq 
-    exact ⟨x, feq, x_ineq⟩
+theorem exists_preimage_norm_le
+(surj : surjective f) : «expr∃ , »((C «expr > » 0), ∀
+ y, «expr∃ , »((x), «expr ∧ »(«expr = »(f x, y), «expr ≤ »(«expr∥ ∥»(x), «expr * »(C, «expr∥ ∥»(y)))))) :=
+begin
+  obtain ["⟨", ident C, ",", ident C0, ",", ident hC, "⟩", ":=", expr exists_approx_preimage_norm_le f surj],
+  choose [] [ident g] [ident hg] ["using", expr hC],
+  let [ident h] [] [":=", expr λ y, «expr - »(y, f (g y))],
+  have [ident hle] [":", expr ∀ y, «expr ≤ »(«expr∥ ∥»(h y), «expr * »(«expr / »(1, 2), «expr∥ ∥»(y)))] [],
+  { assume [binders (y)],
+    rw ["[", "<-", expr dist_eq_norm, ",", expr dist_comm, "]"] [],
+    exact [expr (hg y).1] },
+  refine [expr ⟨«expr + »(«expr * »(2, C), 1), by linarith [] [] [], λ y, _⟩],
+  have [ident hnle] [":", expr ∀
+   n : exprℕ(), «expr ≤ »(«expr∥ ∥»(«expr ^[ ]»(h, n) y), «expr * »(«expr ^ »(«expr / »(1, 2), n), «expr∥ ∥»(y)))] [],
+  { assume [binders (n)],
+    induction [expr n] [] ["with", ident n, ident IH] [],
+    { simp [] [] ["only"] ["[", expr one_div, ",", expr nat.nat_zero_eq_zero, ",", expr one_mul, ",", expr iterate_zero_apply, ",", expr pow_zero, "]"] [] [] },
+    { rw ["[", expr iterate_succ', "]"] [],
+      apply [expr le_trans (hle _) _],
+      rw ["[", expr pow_succ, ",", expr mul_assoc, "]"] [],
+      apply [expr mul_le_mul_of_nonneg_left IH],
+      norm_num [] [] } },
+  let [ident u] [] [":=", expr λ n, g («expr ^[ ]»(h, n) y)],
+  have [ident ule] [":", expr ∀
+   n, «expr ≤ »(«expr∥ ∥»(u n), «expr * »(«expr ^ »(«expr / »(1, 2), n), «expr * »(C, «expr∥ ∥»(y))))] [],
+  { assume [binders (n)],
+    apply [expr le_trans (hg _).2 _],
+    calc
+      «expr ≤ »(«expr * »(C, «expr∥ ∥»(«expr ^[ ]»(h, n) y)), «expr * »(C, «expr * »(«expr ^ »(«expr / »(1, 2), n), «expr∥ ∥»(y)))) : mul_le_mul_of_nonneg_left (hnle n) C0
+      «expr = »(..., «expr * »(«expr ^ »(«expr / »(1, 2), n), «expr * »(C, «expr∥ ∥»(y)))) : by ring [] },
+  have [ident sNu] [":", expr summable (λ n, «expr∥ ∥»(u n))] [],
+  { refine [expr summable_of_nonneg_of_le (λ n, norm_nonneg _) ule _],
+    exact [expr summable.mul_right _ (summable_geometric_of_lt_1 (by norm_num [] []) (by norm_num [] []))] },
+  have [ident su] [":", expr summable u] [":=", expr summable_of_summable_norm sNu],
+  let [ident x] [] [":=", expr tsum u],
+  have [ident x_ineq] [":", expr «expr ≤ »(«expr∥ ∥»(x), «expr * »(«expr + »(«expr * »(2, C), 1), «expr∥ ∥»(y)))] [":=", expr calc
+     «expr ≤ »(«expr∥ ∥»(x), «expr∑' , »((n), «expr∥ ∥»(u n))) : norm_tsum_le_tsum_norm sNu
+     «expr ≤ »(..., «expr∑' , »((n), «expr * »(«expr ^ »(«expr / »(1, 2), n), «expr * »(C, «expr∥ ∥»(y))))) : tsum_le_tsum ule sNu (summable.mul_right _ summable_geometric_two)
+     «expr = »(..., «expr * »(«expr∑' , »((n), «expr ^ »(«expr / »(1, 2), n)), «expr * »(C, «expr∥ ∥»(y)))) : tsum_mul_right
+     «expr = »(..., «expr * »(«expr * »(2, C), «expr∥ ∥»(y))) : by rw ["[", expr tsum_geometric_two, ",", expr mul_assoc, "]"] []
+     «expr ≤ »(..., «expr + »(«expr * »(«expr * »(2, C), «expr∥ ∥»(y)), «expr∥ ∥»(y))) : le_add_of_nonneg_right (norm_nonneg y)
+     «expr = »(..., «expr * »(«expr + »(«expr * »(2, C), 1), «expr∥ ∥»(y))) : by ring []],
+  have [ident fsumeq] [":", expr ∀
+   n : exprℕ(), «expr = »(f «expr∑ in , »((i), range n, u i), «expr - »(y, «expr ^[ ]»(h, n) y))] [],
+  { assume [binders (n)],
+    induction [expr n] [] ["with", ident n, ident IH] [],
+    { simp [] [] [] ["[", expr f.map_zero, "]"] [] [] },
+    { rw ["[", expr sum_range_succ, ",", expr f.map_add, ",", expr IH, ",", expr iterate_succ', ",", expr sub_add, "]"] [] } },
+  have [] [":", expr tendsto (λ
+    n, «expr∑ in , »((i), range n, u i)) at_top (expr𝓝() x)] [":=", expr su.has_sum.tendsto_sum_nat],
+  have [ident L₁] [":", expr tendsto (λ
+    n, f «expr∑ in , »((i), range n, u i)) at_top (expr𝓝() (f x))] [":=", expr (f.continuous.tendsto _).comp this],
+  simp [] [] ["only"] ["[", expr fsumeq, "]"] [] ["at", ident L₁],
+  have [ident L₂] [":", expr tendsto (λ n, «expr - »(y, «expr ^[ ]»(h, n) y)) at_top (expr𝓝() «expr - »(y, 0))] [],
+  { refine [expr tendsto_const_nhds.sub _],
+    rw [expr tendsto_iff_norm_tendsto_zero] [],
+    simp [] [] ["only"] ["[", expr sub_zero, "]"] [] [],
+    refine [expr squeeze_zero (λ _, norm_nonneg _) hnle _],
+    rw ["[", "<-", expr zero_mul «expr∥ ∥»(y), "]"] [],
+    refine [expr (tendsto_pow_at_top_nhds_0_of_lt_1 _ _).mul tendsto_const_nhds]; norm_num [] [] },
+  have [ident feq] [":", expr «expr = »(f x, «expr - »(y, 0))] [":=", expr tendsto_nhds_unique L₁ L₂],
+  rw [expr sub_zero] ["at", ident feq],
+  exact [expr ⟨x, feq, x_ineq⟩]
+end
 
+-- error in Analysis.NormedSpace.Banach: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Banach open mapping theorem: a surjective bounded linear map between Banach spaces is
-open. -/
-theorem open_mapping (surj : surjective f) : IsOpenMap f :=
-  by 
-    intro s hs 
-    rcases exists_preimage_norm_le f surj with ⟨C, Cpos, hC⟩
-    refine' is_open_iff.2 fun y yfs => _ 
-    rcases mem_image_iff_bex.1 yfs with ⟨x, xs, fxy⟩
-    rcases is_open_iff.1 hs x xs with ⟨ε, εpos, hε⟩
-    refine' ⟨ε / C, div_pos εpos Cpos, fun z hz => _⟩
-    rcases hC (z - y) with ⟨w, wim, wnorm⟩
-    have  : f (x+w) = z
-    ·
-      ·
-        rw [f.map_add, wim, fxy, add_sub_cancel'_right]
-    rw [←this]
-    have  : (x+w) ∈ ball x ε :=
-      calc dist (x+w) x = ∥w∥ :=
-        by 
-          rw [dist_eq_norm]
-          simp 
-        _ ≤ C*∥z - y∥ := wnorm 
-        _ < C*ε / C :=
-        by 
-          apply mul_lt_mul_of_pos_left _ Cpos 
-          rwa [mem_ball, dist_eq_norm] at hz 
-        _ = ε := mul_div_cancel' _ (ne_of_gtₓ Cpos)
-        
-    exact Set.mem_image_of_mem _ (hε this)
+open. -/ theorem open_mapping (surj : surjective f) : is_open_map f :=
+begin
+  assume [binders (s hs)],
+  rcases [expr exists_preimage_norm_le f surj, "with", "⟨", ident C, ",", ident Cpos, ",", ident hC, "⟩"],
+  refine [expr is_open_iff.2 (λ y yfs, _)],
+  rcases [expr mem_image_iff_bex.1 yfs, "with", "⟨", ident x, ",", ident xs, ",", ident fxy, "⟩"],
+  rcases [expr is_open_iff.1 hs x xs, "with", "⟨", ident ε, ",", ident εpos, ",", ident hε, "⟩"],
+  refine [expr ⟨«expr / »(ε, C), div_pos εpos Cpos, λ z hz, _⟩],
+  rcases [expr hC «expr - »(z, y), "with", "⟨", ident w, ",", ident wim, ",", ident wnorm, "⟩"],
+  have [] [":", expr «expr = »(f «expr + »(x, w), z)] [],
+  by { rw ["[", expr f.map_add, ",", expr wim, ",", expr fxy, ",", expr add_sub_cancel'_right, "]"] [] },
+  rw ["<-", expr this] [],
+  have [] [":", expr «expr ∈ »(«expr + »(x, w), ball x ε)] [":=", expr calc
+     «expr = »(dist «expr + »(x, w) x, «expr∥ ∥»(w)) : by { rw [expr dist_eq_norm] [],
+       simp [] [] [] [] [] [] }
+     «expr ≤ »(..., «expr * »(C, «expr∥ ∥»(«expr - »(z, y)))) : wnorm
+     «expr < »(..., «expr * »(C, «expr / »(ε, C))) : begin
+       apply [expr mul_lt_mul_of_pos_left _ Cpos],
+       rwa ["[", expr mem_ball, ",", expr dist_eq_norm, "]"] ["at", ident hz]
+     end
+     «expr = »(..., ε) : mul_div_cancel' _ (ne_of_gt Cpos)],
+  exact [expr set.mem_image_of_mem _ (hε this)]
+end
 
 theorem open_mapping_affine {P Q : Type _} [MetricSpace P] [NormedAddTorsor E P] [MetricSpace Q] [NormedAddTorsor F Q]
   {f : P →ᵃ[𝕜] Q} (hf : Continuous f) (surj : surjective f) : IsOpenMap f :=
@@ -392,14 +372,20 @@ theorem range_eq_map_coprod_subtypeL_equiv_of_is_compl (f : E →L[𝕜] F) {G :
     rw [coprod_subtypeL_equiv_of_is_compl, _root_.coe_coe, ContinuousLinearEquiv.coe_of_bijective, coe_coprod,
       LinearMap.coprod_map_prod, Submodule.map_bot, sup_bot_eq, Submodule.map_top, range]
 
-theorem closed_complemented_range_of_is_compl_of_ker_eq_bot (f : E →L[𝕜] F) (G : Submodule 𝕜 F) (h : IsCompl f.range G)
-  (hG : IsClosed (G : Set F)) (hker : f.ker = ⊥) : IsClosed (f.range : Set F) :=
-  by 
-    haveI  : CompleteSpace G := complete_space_coe_iff_is_complete.2 hG.is_complete 
-    let g := coprod_subtypeL_equiv_of_is_compl f h hker 
-    rw [congr_argₓ coeₓ (range_eq_map_coprod_subtypeL_equiv_of_is_compl f h hker)]
-    apply g.to_homeomorph.is_closed_image.2 
-    exact is_closed_univ.prod is_closed_singleton
+-- error in Analysis.NormedSpace.Banach: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem closed_complemented_range_of_is_compl_of_ker_eq_bot
+(f : «expr →L[ ] »(E, 𝕜, F))
+(G : submodule 𝕜 F)
+(h : is_compl f.range G)
+(hG : is_closed (G : set F))
+(hker : «expr = »(f.ker, «expr⊥»())) : is_closed (f.range : set F) :=
+begin
+  haveI [] [":", expr complete_space G] [":=", expr complete_space_coe_iff_is_complete.2 hG.is_complete],
+  let [ident g] [] [":=", expr coprod_subtypeL_equiv_of_is_compl f h hker],
+  rw [expr congr_arg coe (range_eq_map_coprod_subtypeL_equiv_of_is_compl f h hker)] [],
+  apply [expr g.to_homeomorph.is_closed_image.2],
+  exact [expr is_closed_univ.prod is_closed_singleton]
+end
 
 end ContinuousLinearMap
 

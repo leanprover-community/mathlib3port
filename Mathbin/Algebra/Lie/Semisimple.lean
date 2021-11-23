@@ -59,19 +59,20 @@ class is_semisimple : Prop where
 theorem is_semisimple_iff_no_solvable_ideals : is_semisimple R L ↔ ∀ I : LieIdeal R L, is_solvable R I → I = ⊥ :=
   ⟨fun h => Sup_eq_bot.mp h.semisimple, fun h => ⟨Sup_eq_bot.mpr h⟩⟩
 
-theorem is_semisimple_iff_no_abelian_ideals : is_semisimple R L ↔ ∀ I : LieIdeal R L, IsLieAbelian I → I = ⊥ :=
-  by 
-    rw [is_semisimple_iff_no_solvable_ideals]
-    split  <;> intro h₁ I h₂
-    ·
-      haveI  : IsLieAbelian I := h₂ 
-      apply h₁ 
-      exact LieAlgebra.of_abelian_is_solvable R I
-    ·
-      haveI  : is_solvable R I := h₂ 
-      rw [←abelian_of_solvable_ideal_eq_bot_iff]
-      apply h₁ 
-      exact abelian_derived_abelian_of_ideal I
+-- error in Algebra.Lie.Semisimple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_semisimple_iff_no_abelian_ideals : «expr ↔ »(is_semisimple R L, ∀
+ I : lie_ideal R L, is_lie_abelian I → «expr = »(I, «expr⊥»())) :=
+begin
+  rw [expr is_semisimple_iff_no_solvable_ideals] [],
+  split; intros [ident h₁, ident I, ident h₂],
+  { haveI [] [":", expr is_lie_abelian I] [":=", expr h₂],
+    apply [expr h₁],
+    exact [expr lie_algebra.of_abelian_is_solvable R I] },
+  { haveI [] [":", expr is_solvable R I] [":=", expr h₂],
+    rw ["<-", expr abelian_of_solvable_ideal_eq_bot_iff] [],
+    apply [expr h₁],
+    exact [expr abelian_derived_abelian_of_ideal I] }
+end
 
 @[simp]
 theorem center_eq_bot_of_semisimple [h : is_semisimple R L] : center R L = ⊥ :=
@@ -80,19 +81,17 @@ theorem center_eq_bot_of_semisimple [h : is_semisimple R L] : center R L = ⊥ :
     apply h 
     infer_instance
 
--- error in Algebra.Lie.Semisimple: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- A simple Lie algebra is semisimple. -/
-@[priority 100]
-instance is_semisimple_of_is_simple [h : is_simple R L] : is_semisimple R L :=
-begin
-  rw [expr is_semisimple_iff_no_abelian_ideals] [],
-  intros [ident I, ident hI],
-  tactic.unfreeze_local_instances,
-  obtain ["⟨", "⟨", ident h₁, "⟩", ",", ident h₂, "⟩", ":=", expr h],
-  by_contradiction [ident contra],
-  rw ["[", expr h₁ I contra, ",", expr lie_abelian_iff_equiv_lie_abelian lie_ideal.top_equiv_self, "]"] ["at", ident hI],
-  exact [expr h₂ hI]
-end
+instance (priority := 100)is_semisimple_of_is_simple [h : is_simple R L] : is_semisimple R L :=
+  by 
+    rw [is_semisimple_iff_no_abelian_ideals]
+    intro I hI 
+    runTac 
+      tactic.unfreeze_local_instances 
+    obtain ⟨⟨h₁⟩, h₂⟩ := h 
+    byContra contra 
+    rw [h₁ I contra, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquivSelf] at hI 
+    exact h₂ hI
 
 /-- A semisimple Abelian Lie algebra is trivial. -/
 theorem subsingleton_of_semisimple_lie_abelian [is_semisimple R L] [h : IsLieAbelian L] : Subsingleton L :=

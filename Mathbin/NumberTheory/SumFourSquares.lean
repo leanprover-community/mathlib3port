@@ -107,49 +107,33 @@ open Int
 
 open_locale Classical
 
-private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ} (h : ((((a^2)+b^2)+c^2)+d^2) = 2*m) :
-  ∃ w x y z : ℤ, ((((w^2)+x^2)+y^2)+z^2) = m :=
-  have  :
-    ∀ f : Finₓ 4 → Zmod 2,
-      ((((f 0^2)+f 1^2)+f 2^2)+f 3^2) = 0 →
-        ∃ i : Finₓ 4, ((f i^2)+f (swap i 0 1)^2) = 0 ∧ ((f (swap i 0 2)^2)+f (swap i 0 3)^2) = 0 :=
-    by 
-      decide 
-  let f : Finₓ 4 → ℤ := Vector.nth (a::ᵥb::ᵥc::ᵥd::ᵥVector.nil)
-  let ⟨i, hσ⟩ :=
-    this (coeₓ ∘ f)
-      (by 
-        rw [←@zero_mul (Zmod 2) _ m, ←show ((2 : ℤ) : Zmod 2) = 0 from rfl, ←Int.cast_mul, ←h] <;>
-          simp only [Int.cast_add, Int.cast_pow] <;> rfl)
-  let σ := swap i 0
-  have h01 : 2 ∣ (f (σ 0)^2)+f (σ 1)^2 :=
-    (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1$
-      by 
-        simpa [σ] using hσ.1
-  have h23 : 2 ∣ (f (σ 2)^2)+f (σ 3)^2 :=
-    (CharP.int_cast_eq_zero_iff (Zmod 2) 2 _).1$
-      by 
-        simpa using hσ.2
-  let ⟨x, hx⟩ := h01 
-  let ⟨y, hy⟩ := h23
-  ⟨(f (σ 0) - f (σ 1)) / 2, (f (σ 0)+f (σ 1)) / 2, (f (σ 2) - f (σ 3)) / 2, (f (σ 2)+f (σ 3)) / 2,
-    by 
-      rw [←Int.sq_add_sq_of_two_mul_sq_add_sq hx.symm, add_assocₓ, ←Int.sq_add_sq_of_two_mul_sq_add_sq hy.symm,
-        ←mul_right_inj'
-          (show (2 : ℤ) ≠ 0 from
-            by 
-              decide),
-        ←h, mul_addₓ, ←hx, ←hy]
-      have  : (∑x, f (σ x)^2) = ∑x, f x^2
-      ·
-        convRHS => rw [←σ.sum_comp]
-      have fin4univ : (univ : Finset (Finₓ 4)).1 = 0 ::ₘ 1 ::ₘ 2 ::ₘ 3 ::ₘ 0 
-      exact
-        by 
-          decide 
-      simpa [Finset.sum_eq_multiset_sum, fin4univ, Multiset.sum_cons, f, add_assocₓ]⟩
+-- error in NumberTheory.SumFourSquares: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem sum_four_squares_of_two_mul_sum_four_squares
+{m a b c d : exprℤ()}
+(h : «expr = »(«expr + »(«expr + »(«expr + »(«expr ^ »(a, 2), «expr ^ »(b, 2)), «expr ^ »(c, 2)), «expr ^ »(d, 2)), «expr * »(2, m))) : «expr∃ , »((w
+  x
+  y
+  z : exprℤ()), «expr = »(«expr + »(«expr + »(«expr + »(«expr ^ »(w, 2), «expr ^ »(x, 2)), «expr ^ »(y, 2)), «expr ^ »(z, 2)), m)) :=
+have ∀
+f : fin 4 → zmod 2, «expr = »(«expr + »(«expr + »(«expr + »(«expr ^ »(f 0, 2), «expr ^ »(f 1, 2)), «expr ^ »(f 2, 2)), «expr ^ »(f 3, 2)), 0) → «expr∃ , »((i : fin 4), «expr ∧ »(«expr = »(«expr + »(«expr ^ »(f i, 2), «expr ^ »(f (swap i 0 1), 2)), 0), «expr = »(«expr + »(«expr ^ »(f (swap i 0 2), 2), «expr ^ »(f (swap i 0 3), 2)), 0))), from exprdec_trivial(),
+let f : fin 4 → exprℤ() := vector.nth «expr ::ᵥ »(a, «expr ::ᵥ »(b, «expr ::ᵥ »(c, «expr ::ᵥ »(d, vector.nil)))) in
+let ⟨i, hσ⟩ := this «expr ∘ »(coe, f) (by rw ["[", "<-", expr @zero_mul (zmod 2) _ m, ",", "<-", expr show «expr = »(((2 : exprℤ()) : zmod 2), 0), from rfl, ",", "<-", expr int.cast_mul, ",", "<-", expr h, "]"] []; simp [] [] ["only"] ["[", expr int.cast_add, ",", expr int.cast_pow, "]"] [] []; refl) in
+let σ := swap i 0 in
+have h01 : «expr ∣ »(2, «expr + »(«expr ^ »(f (σ 0), 2), «expr ^ »(f (σ 1), 2))), from «expr $ »((char_p.int_cast_eq_zero_iff (zmod 2) 2 _).1, by simpa [] [] [] ["[", expr σ, "]"] [] ["using", expr hσ.1]),
+have h23 : «expr ∣ »(2, «expr + »(«expr ^ »(f (σ 2), 2), «expr ^ »(f (σ 3), 2))), from «expr $ »((char_p.int_cast_eq_zero_iff (zmod 2) 2 _).1, by simpa [] [] [] [] [] ["using", expr hσ.2]),
+let ⟨x, hx⟩ := h01 in
+let ⟨y, hy⟩ := h23 in
+⟨«expr / »(«expr - »(f (σ 0), f (σ 1)), 2), «expr / »(«expr + »(f (σ 0), f (σ 1)), 2), «expr / »(«expr - »(f (σ 2), f (σ 3)), 2), «expr / »(«expr + »(f (σ 2), f (σ 3)), 2), begin
+   rw ["[", "<-", expr int.sq_add_sq_of_two_mul_sq_add_sq hx.symm, ",", expr add_assoc, ",", "<-", expr int.sq_add_sq_of_two_mul_sq_add_sq hy.symm, ",", "<-", expr mul_right_inj' (show «expr ≠ »((2 : exprℤ()), 0), from exprdec_trivial()), ",", "<-", expr h, ",", expr mul_add, ",", "<-", expr hx, ",", "<-", expr hy, "]"] [],
+   have [] [":", expr «expr = »(«expr∑ , »((x), «expr ^ »(f (σ x), 2)), «expr∑ , »((x), «expr ^ »(f x, 2)))] [],
+   { conv_rhs [] [] { rw ["<-", expr σ.sum_comp] } },
+   have [ident fin4univ] [":", expr «expr = »((univ : finset (fin 4)).1, «expr ::ₘ »(0, «expr ::ₘ »(1, «expr ::ₘ »(2, «expr ::ₘ »(3, 0)))))] [],
+   from [expr exprdec_trivial()],
+   simpa [] [] [] ["[", expr finset.sum_eq_multiset_sum, ",", expr fin4univ, ",", expr multiset.sum_cons, ",", expr f, ",", expr add_assoc, "]"] [] []
+ end⟩
 
--- error in NumberTheory.SumFourSquares: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exact: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in NumberTheory.SumFourSquares: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 private
 theorem prime_sum_four_squares
 (p : exprℕ())
@@ -237,7 +221,7 @@ theorem sum_four_squares : ∀ n : ℕ, ∃ a b c d : ℕ, ((((a^2)+b^2)+c^2)+d^
   have  : n / min_fac n < n := factors_lemma 
   let ⟨a, b, c, d, h₁⟩ :=
     show ∃ a b c d : ℤ, ((((a^2)+b^2)+c^2)+d^2) = min_fac n by 
-      exactI prime_sum_four_squares (min_fac (k+2))
+      exact prime_sum_four_squares (min_fac (k+2))
   let ⟨w, x, y, z, h₂⟩ := sum_four_squares (n / min_fac n)
   ⟨((((a*w) - b*x) - c*y) - d*z).natAbs, ((((a*x)+b*w)+c*z) - d*y).natAbs, ((((a*y) - b*z)+c*w)+d*x).natAbs,
     ((((a*z)+b*y) - c*x)+d*w).natAbs,

@@ -163,7 +163,7 @@ theorem mem_verts_if_mem_edge {G' : subgraph G} {e : Sym2 V} {v : V} (he : e ∈
 
 /-- The `incidence_set` is the set of edges incident to a given vertex. -/
 def incidence_set (G' : subgraph G) (v : V) : Set (Sym2 V) :=
-  { e ∈ G'.edge_set | v ∈ e }
+  { e∈G'.edge_set | v ∈ e }
 
 theorem incidence_set_subset_incidence_set (G' : subgraph G) (v : V) : G'.incidence_set v ⊆ G.incidence_set v :=
   fun e h => ⟨G'.edge_set_subset h.1, h.2⟩

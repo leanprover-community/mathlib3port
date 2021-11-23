@@ -324,27 +324,29 @@ noncomputable def sheaf_hom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ ⟶ 
           (by 
             simpa using α'.naturality f) }
 
+-- error in CategoryTheory.Sites.DenseSubsite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given an natural isomorphism `G ⋙ ℱ ≅ G ⋙ ℱ'` between presheaves of arbitrary category,
 where `G` is full and cover-dense, and `ℱ', ℱ` are sheaves,
 we may obtain a natural isomorphism between presheaves.
 -/
-@[simps]
-noncomputable def presheaf_iso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) : ℱ.val ≅ ℱ'.val :=
-  by 
-    haveI  : ∀ X : «expr ᵒᵖ» D, is_iso ((sheaf_hom H i.hom).app X)
-    ·
-      intro X 
-      apply is_iso_of_reflects_iso _ yoneda 
-      use (sheaf_yoneda_hom H i.inv).app X 
-      split  <;> ext x : 2 <;> simp only [sheaf_hom, nat_trans.comp_app, nat_trans.id_app, functor.image_preimage]
-      exact ((presheaf_iso H (iso_over i (unop x))).app X).hom_inv_id 
-      exact ((presheaf_iso H (iso_over i (unop x))).app X).inv_hom_id 
-      infer_instance 
-    haveI  : is_iso (sheaf_hom H i.hom) :=
-      by 
-        apply nat_iso.is_iso_of_is_iso_app 
-    apply as_iso (sheaf_hom H i.hom)
+@[simps #[]]
+noncomputable
+def presheaf_iso
+{ℱ ℱ' : Sheaf K A}
+(i : «expr ≅ »(«expr ⋙ »(G.op, ℱ.val), «expr ⋙ »(G.op, ℱ'.val))) : «expr ≅ »(ℱ.val, ℱ'.val) :=
+begin
+  haveI [] [":", expr ∀ X : «expr ᵒᵖ»(D), is_iso ((sheaf_hom H i.hom).app X)] [],
+  { intro [ident X],
+    apply [expr is_iso_of_reflects_iso _ yoneda],
+    use [expr (sheaf_yoneda_hom H i.inv).app X],
+    split; ext [] [ident x] [":", 2]; simp [] [] ["only"] ["[", expr sheaf_hom, ",", expr nat_trans.comp_app, ",", expr nat_trans.id_app, ",", expr functor.image_preimage, "]"] [] [],
+    exact [expr ((presheaf_iso H (iso_over i (unop x))).app X).hom_inv_id],
+    exact [expr ((presheaf_iso H (iso_over i (unop x))).app X).inv_hom_id],
+    apply_instance },
+  haveI [] [":", expr is_iso (sheaf_hom H i.hom)] [":=", expr by apply [expr nat_iso.is_iso_of_is_iso_app]],
+  apply [expr as_iso (sheaf_hom H i.hom)]
+end
 
 /--
 Given an natural isomorphism `G ⋙ ℱ ≅ G ⋙ ℱ'` between presheaves of arbitrary category,

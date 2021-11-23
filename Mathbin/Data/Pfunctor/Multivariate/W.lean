@@ -201,27 +201,32 @@ theorem W_mk_eq {α : Typevec n} (a : P.A) (f : P.last.B a → P.last.W) (g' : P
   (g : ∀ j : P.last.B a, P.W_path (f j) ⟹ α) : (P.W_mk a g' fun i => ⟨f i, g i⟩) = ⟨⟨a, f⟩, P.W_path_cases_on g' g⟩ :=
   rfl
 
-theorem W_map_W_mk {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) :
-  g <$$> P.W_mk a f' f = P.W_mk a (g ⊚ f') fun i => g <$$> f i :=
-  by 
-    show _ = P.W_mk a (g ⊚ f') (Mvfunctor.map g ∘ f)
-    have  : Mvfunctor.map g ∘ f = fun i => ⟨(f i).fst, g ⊚ (f i).snd⟩
-    ·
-      ext i : 1
-      dsimp [Function.comp]
-      cases f i 
-      rfl 
-    rw [this]
-    have  : f = fun i => ⟨(f i).fst, (f i).snd⟩
-    ·
-      ext1 
-      cases f x 
-      rfl 
-    rw [this]
-    dsimp 
-    rw [W_mk_eq, W_mk_eq]
-    have h := Mvpfunctor.map_eq P.Wp g 
-    rw [h, comp_W_path_cases_on]
+-- error in Data.Pfunctor.Multivariate.W: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem W_map_W_mk
+{α β : typevec n}
+(g : «expr ⟹ »(α, β))
+(a : P.A)
+(f' : «expr ⟹ »(P.drop.B a, α))
+(f : P.last.B a → P.W α) : «expr = »(«expr <$$> »(g, P.W_mk a f' f), P.W_mk a «expr ⊚ »(g, f') (λ
+  i, «expr <$$> »(g, f i))) :=
+begin
+  show [expr «expr = »(_, P.W_mk a «expr ⊚ »(g, f') «expr ∘ »(mvfunctor.map g, f))],
+  have [] [":", expr «expr = »(«expr ∘ »(mvfunctor.map g, f), λ i, ⟨(f i).fst, «expr ⊚ »(g, (f i).snd)⟩)] [],
+  { ext [] [ident i] [":", 1],
+    dsimp [] ["[", expr function.comp, "]"] [] [],
+    cases [expr f i] [],
+    refl },
+  rw [expr this] [],
+  have [] [":", expr «expr = »(f, λ i, ⟨(f i).fst, (f i).snd⟩)] [],
+  { ext1 [] [],
+    cases [expr f x] [],
+    refl },
+  rw [expr this] [],
+  dsimp [] [] [] [],
+  rw ["[", expr W_mk_eq, ",", expr W_mk_eq, "]"] [],
+  have [ident h] [] [":=", expr mvpfunctor.map_eq P.Wp g],
+  rw ["[", expr h, ",", expr comp_W_path_cases_on, "]"] []
+end
 
 /-- Constructor of a value of `P.obj (α ::: β)` from components.
 Useful to avoid complicated type annotation -/

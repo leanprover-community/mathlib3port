@@ -140,34 +140,29 @@ def find_aux (a : α) : List (Σa, β a) → Option (β a)
 | [] => none
 | ⟨a', b⟩ :: t => if h : a' = a then some (Eq.recOnₓ h b) else find_aux t
 
-theorem find_aux_iff {a : α} {b : β a} :
-  ∀ {l : List (Σa, β a)}, (l.map Sigma.fst).Nodup → (find_aux a l = some b ↔ Sigma.mk a b ∈ l)
-| [], nd =>
-  ⟨fun n =>
-      by 
-        injection n,
-    False.elim⟩
-| ⟨a', b'⟩ :: t, nd =>
-  by 
-    byCases' a' = a
-    ·
-      clear find_aux_iff 
-      subst h 
-      suffices  : b' = b ↔ b' = b ∨ Sigma.mk a' b ∈ t
-      ·
-        simpa [find_aux, eq_comm]
-      refine' (or_iff_left_of_imp fun m => _).symm 
-      have  : a' ∉ t.map Sigma.fst 
-      exact List.not_mem_of_nodup_cons nd 
-      exact this.elim (List.mem_map_of_memₓ Sigma.fst m)
-    ·
-      have  : Sigma.mk a b ≠ ⟨a', b'⟩
-      ·
-        intro e 
-        injection e with e 
-        exact h e.symm 
-      simp  at nd 
-      simp [find_aux, h, Ne.symm h, find_aux_iff, nd]
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem find_aux_iff
+{a : α}
+{b : β a} : ∀
+{l : list «exprΣ , »((a), β a)}, (l.map sigma.fst).nodup → «expr ↔ »(«expr = »(find_aux a l, some b), «expr ∈ »(sigma.mk a b, l))
+| «expr[ , ]»([]), nd := ⟨λ n, by injection [expr n] [], false.elim⟩
+| «expr :: »(⟨a', b'⟩, t), nd := begin
+  by_cases [expr «expr = »(a', a)],
+  { clear [ident find_aux_iff],
+    subst [expr h],
+    suffices [] [":", expr «expr ↔ »(«expr = »(b', b), «expr ∨ »(«expr = »(b', b), «expr ∈ »(sigma.mk a' b, t)))],
+    { simpa [] [] [] ["[", expr find_aux, ",", expr eq_comm, "]"] [] [] },
+    refine [expr (or_iff_left_of_imp (λ m, _)).symm],
+    have [] [":", expr «expr ∉ »(a', t.map sigma.fst)] [],
+    from [expr list.not_mem_of_nodup_cons nd],
+    exact [expr this.elim (list.mem_map_of_mem sigma.fst m)] },
+  { have [] [":", expr «expr ≠ »(sigma.mk a b, ⟨a', b'⟩)] [],
+    { intro [ident e],
+      injection [expr e] ["with", ident e],
+      exact [expr h e.symm] },
+    simp [] [] [] [] [] ["at", ident nd],
+    simp [] [] [] ["[", expr find_aux, ",", expr h, ",", expr ne.symm h, ",", expr find_aux_iff, ",", expr nd, "]"] [] [] }
+end
 
 /-- Returns `tt` if the bucket `l` contains the key `a` -/
 def contains_aux (a : α) (l : List (Σa, β a)) : Bool :=
@@ -219,29 +214,30 @@ theorem valid.idx_enum_1 {n} {bkts : BucketArray α β n} {sz : Nat} (v : valid 
   by 
     rw [e] <;> rfl
 
-theorem valid.as_list_nodup {n} {bkts : BucketArray α β n} {sz : Nat} (v : valid bkts sz) :
-  (bkts.as_list.map Sigma.fst).Nodup :=
-  by 
-    suffices  : (bkts.to_list.map (List.map Sigma.fst)).Pairwise List.Disjoint
-    ·
-      suffices  : ∀ l, Arrayₓ.Mem l bkts → (l.map Sigma.fst).Nodup
-      ·
-        simpa [BucketArray.asList, List.nodup_join, *]
-      rintro l ⟨i, rfl⟩
-      apply v.nodup 
-    rw [←List.enum_map_snd bkts.to_list, List.pairwise_map, List.pairwise_map]
-    have  : (bkts.to_list.enum.map Prod.fst).Nodup :=
-      by 
-        simp [List.nodup_range]
-    refine' List.Pairwise.imp_of_mem _ ((List.pairwise_map _).1 this)
-    rw [Prod.forall]
-    intro i l₁ 
-    rw [Prod.forall]
-    intro j l₂ me₁ me₂ ij 
-    simp [List.Disjoint]
-    intro a b ml₁ b' ml₂ 
-    apply ij 
-    rwa [←v.idx_enum_1 _ me₁ ml₁, ←v.idx_enum_1 _ me₂ ml₂]
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid.as_list_nodup
+{n}
+{bkts : bucket_array α β n}
+{sz : nat}
+(v : valid bkts sz) : (bkts.as_list.map sigma.fst).nodup :=
+begin
+  suffices [] [":", expr (bkts.to_list.map (list.map sigma.fst)).pairwise list.disjoint],
+  { suffices [] [":", expr ∀ l, array.mem l bkts → (l.map sigma.fst).nodup],
+    by simpa [] [] [] ["[", expr bucket_array.as_list, ",", expr list.nodup_join, ",", "*", "]"] [] [],
+    rintros [ident l, "⟨", ident i, ",", ident rfl, "⟩"],
+    apply [expr v.nodup] },
+  rw ["[", "<-", expr list.enum_map_snd bkts.to_list, ",", expr list.pairwise_map, ",", expr list.pairwise_map, "]"] [],
+  have [] [":", expr (bkts.to_list.enum.map prod.fst).nodup] [":=", expr by simp [] [] [] ["[", expr list.nodup_range, "]"] [] []],
+  refine [expr list.pairwise.imp_of_mem _ ((list.pairwise_map _).1 this)],
+  rw [expr prod.forall] [],
+  intros [ident i, ident l₁],
+  rw [expr prod.forall] [],
+  intros [ident j, ident l₂, ident me₁, ident me₂, ident ij],
+  simp [] [] [] ["[", expr list.disjoint, "]"] [] [],
+  intros [ident a, ident b, ident ml₁, ident b', ident ml₂],
+  apply [expr ij],
+  rwa ["[", "<-", expr v.idx_enum_1 _ me₁ ml₁, ",", "<-", expr v.idx_enum_1 _ me₂ ml₂, "]"] []
+end
 
 theorem mk_valid (n : ℕ+) : @valid n (mkArray n []) 0 :=
   ⟨by 
@@ -276,19 +272,23 @@ variable(hl : L = u ++ v1 ++ w)(hfl : f L = u ++ v2 ++ w)
 
 include hl hfl
 
-theorem append_of_modify : ∃ u' w', bkts.as_list = u' ++ v1 ++ w' ∧ bkts'.as_list = u' ++ v2 ++ w' :=
-  by 
-    unfold BucketArray.asList 
-    have h : (bidx : ℕ) < bkts.to_list.length
-    ·
-      simp only [bidx.is_lt, Arrayₓ.to_list_length]
-    refine' ⟨(bkts.to_list.take bidx).join ++ u, w ++ (bkts.to_list.drop (bidx+1)).join, _, _⟩
-    ·
-      conv  => toLHS rw [←List.take_append_drop bidx bkts.to_list, List.drop_eq_nth_le_cons h]simp [hl]
-      simp 
-    ·
-      conv  => toLHS rw [bkts', Arrayₓ.write_to_list, List.update_nth_eq_take_cons_drop _ h]simp [hfl]
-      simp 
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem append_of_modify : «expr∃ , »((u'
+  w'), «expr ∧ »(«expr = »(bkts.as_list, «expr ++ »(«expr ++ »(u', v1), w')), «expr = »(bkts'.as_list, «expr ++ »(«expr ++ »(u', v2), w')))) :=
+begin
+  unfold [ident bucket_array.as_list] [],
+  have [ident h] [":", expr «expr < »((bidx : exprℕ()), bkts.to_list.length)] [],
+  { simp [] [] ["only"] ["[", expr bidx.is_lt, ",", expr array.to_list_length, "]"] [] [] },
+  refine [expr ⟨«expr ++ »((bkts.to_list.take bidx).join, u), «expr ++ »(w, (bkts.to_list.drop «expr + »(bidx, 1)).join), _, _⟩],
+  { conv [] [] { to_lhs,
+      rw ["[", "<-", expr list.take_append_drop bidx bkts.to_list, ",", expr list.drop_eq_nth_le_cons h, "]"],
+      simp [] ["[", expr hl, "]"] [] },
+    simp [] [] [] [] [] [] },
+  { conv [] [] { to_lhs,
+      rw ["[", expr bkts', ",", expr array.write_to_list, ",", expr list.update_nth_eq_take_cons_drop _ h, "]"],
+      simp [] ["[", expr hfl, "]"] [] },
+    simp [] [] [] [] [] [] }
+end
 
 variable(hvnd :
     (v2.map
@@ -301,148 +301,146 @@ variable(hvnd :
 
 include hvnd hal djuv djwv
 
-theorem valid.modify {sz : ℕ} (v : valid bkts sz) :
-  (v1.length ≤ sz+v2.length) ∧ valid bkts' ((sz+v2.length) - v1.length) :=
-  by 
-    rcases append_of_modify u v1 v2 w hl hfl with ⟨u', w', e₁, e₂⟩
-    rw [←v.len, e₁]
-    suffices  : valid bkts' (u' ++ v2 ++ w').length
-    ·
-      simpa [Ge, add_commₓ, add_left_commₓ, Nat.le_add_rightₓ, add_tsub_cancel_left]
-    refine' ⟨congr_argₓ _ e₂, fun i a => _, fun i => _⟩
-    ·
-      byCases' bidx = i
-      ·
-        subst i 
-        rw [bkts', Arrayₓ.read_write, hfl]
-        have  := @valid.idx _ _ _ v bidx a 
-        simp only [hl, List.mem_appendₓ, or_imp_distrib, forall_and_distrib] at this⊢
-        exact ⟨⟨this.1.1, hal _⟩, this.2⟩
-      ·
-        rw [bkts', Arrayₓ.read_write_of_ne _ _ h]
-        apply v.idx
-    ·
-      byCases' bidx = i
-      ·
-        subst i 
-        rw [bkts', Arrayₓ.read_write, hfl]
-        have  := @valid.nodup _ _ _ v bidx 
-        simp [hl, List.nodup_append] at this 
-        simp [List.nodup_append, this, hvnd, djuv, djwv.symm]
-      ·
-        rw [bkts', Arrayₓ.read_write_of_ne _ _ h]
-        apply v.nodup
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid.modify
+{sz : exprℕ()}
+(v : valid bkts sz) : «expr ∧ »(«expr ≤ »(v1.length, «expr + »(sz, v2.length)), valid bkts' «expr - »(«expr + »(sz, v2.length), v1.length)) :=
+begin
+  rcases [expr append_of_modify u v1 v2 w hl hfl, "with", "⟨", ident u', ",", ident w', ",", ident e₁, ",", ident e₂, "⟩"],
+  rw ["[", "<-", expr v.len, ",", expr e₁, "]"] [],
+  suffices [] [":", expr valid bkts' «expr ++ »(«expr ++ »(u', v2), w').length],
+  { simpa [] [] [] ["[", expr ge, ",", expr add_comm, ",", expr add_left_comm, ",", expr nat.le_add_right, ",", expr add_tsub_cancel_left, "]"] [] [] },
+  refine [expr ⟨congr_arg _ e₂, λ i a, _, λ i, _⟩],
+  { by_cases [expr «expr = »(bidx, i)],
+    { subst [expr i],
+      rw ["[", expr bkts', ",", expr array.read_write, ",", expr hfl, "]"] [],
+      have [] [] [":=", expr @valid.idx _ _ _ v bidx a],
+      simp [] [] ["only"] ["[", expr hl, ",", expr list.mem_append, ",", expr or_imp_distrib, ",", expr forall_and_distrib, "]"] [] ["at", ident this, "⊢"],
+      exact [expr ⟨⟨this.1.1, hal _⟩, this.2⟩] },
+    { rw ["[", expr bkts', ",", expr array.read_write_of_ne _ _ h, "]"] [],
+      apply [expr v.idx] } },
+  { by_cases [expr «expr = »(bidx, i)],
+    { subst [expr i],
+      rw ["[", expr bkts', ",", expr array.read_write, ",", expr hfl, "]"] [],
+      have [] [] [":=", expr @valid.nodup _ _ _ v bidx],
+      simp [] [] [] ["[", expr hl, ",", expr list.nodup_append, "]"] [] ["at", ident this],
+      simp [] [] [] ["[", expr list.nodup_append, ",", expr this, ",", expr hvnd, ",", expr djuv, ",", expr djwv.symm, "]"] [] [] },
+    { rw ["[", expr bkts', ",", expr array.read_write_of_ne _ _ h, "]"] [],
+      apply [expr v.nodup] } }
+end
 
 end 
 
-theorem valid.replace_aux (a : α) (b : β a) :
-  ∀ l : List (Σa, β a),
-    a ∈ l.map Sigma.fst →
-      ∃ (u w : List (Σa, β a))(b' : _), l = u ++ [⟨a, b'⟩] ++ w ∧ replace_aux a b l = u ++ [⟨a, b⟩] ++ w
-| [] => False.elim
-| ⟨a', b'⟩ :: t =>
-  by 
-    byCases' e : a' = a
-    ·
-      subst a' 
-      suffices  :
-        ∃ (u w : List (Σa, β a))(b'' : β a),
-          Sigma.mk a b' :: t = u ++ ⟨a, b''⟩ :: w ∧ replace_aux a b (⟨a, b'⟩ :: t) = u ++ ⟨a, b⟩ :: w
-      ·
-        simpa 
-      refine' ⟨[], t, b', _⟩
-      simp [replace_aux]
-    ·
-      suffices  :
-        ∀ x : β a _ : Sigma.mk a x ∈ t,
-          ∃ (u w : _)(b'' : β a),
-            Sigma.mk a' b' :: t = u ++ ⟨a, b''⟩ :: w ∧ Sigma.mk a' b' :: replace_aux a b t = u ++ ⟨a, b⟩ :: w
-      ·
-        simpa [replace_aux, Ne.symm e, e]
-      intro x m 
-      have IH :
-        ∀ x : β a _ : Sigma.mk a x ∈ t,
-          ∃ (u w : _)(b'' : β a), t = u ++ ⟨a, b''⟩ :: w ∧ replace_aux a b t = u ++ ⟨a, b⟩ :: w
-      ·
-        simpa using valid.replace_aux t 
-      rcases IH x m with ⟨u, w, b'', hl, hfl⟩
-      exact
-        ⟨⟨a', b'⟩ :: u, w, b'',
-          by 
-            simp [hl, hfl.symm, Ne.symm e]⟩
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid.replace_aux
+(a : α)
+(b : β a) : ∀
+l : list «exprΣ , »((a), β a), «expr ∈ »(a, l.map sigma.fst) → «expr∃ , »((u w : list «exprΣ , »((a), β a))
+ (b'), «expr ∧ »(«expr = »(l, «expr ++ »(«expr ++ »(u, «expr[ , ]»([⟨a, b'⟩])), w)), «expr = »(replace_aux a b l, «expr ++ »(«expr ++ »(u, «expr[ , ]»([⟨a, b⟩])), w))))
+| «expr[ , ]»([]) := false.elim
+| «expr :: »(⟨a', b'⟩, t) := begin
+  by_cases [expr e, ":", expr «expr = »(a', a)],
+  { subst [expr a'],
+    suffices [] [":", expr «expr∃ , »((u w : list «exprΣ , »((a), β a))
+      (b'' : β a), «expr ∧ »(«expr = »(«expr :: »(sigma.mk a b', t), «expr ++ »(u, «expr :: »(⟨a, b''⟩, w))), «expr = »(replace_aux a b «expr :: »(⟨a, b'⟩, t), «expr ++ »(u, «expr :: »(⟨a, b⟩, w)))))],
+    { simpa [] [] [] [] [] [] },
+    refine [expr ⟨«expr[ , ]»([]), t, b', _⟩],
+    simp [] [] [] ["[", expr replace_aux, "]"] [] [] },
+  { suffices [] [":", expr ∀
+     (x : β a)
+     (_ : «expr ∈ »(sigma.mk a x, t)), «expr∃ , »((u w)
+      (b'' : β a), «expr ∧ »(«expr = »(«expr :: »(sigma.mk a' b', t), «expr ++ »(u, «expr :: »(⟨a, b''⟩, w))), «expr = »(«expr :: »(sigma.mk a' b', replace_aux a b t), «expr ++ »(u, «expr :: »(⟨a, b⟩, w)))))],
+    { simpa [] [] [] ["[", expr replace_aux, ",", expr ne.symm e, ",", expr e, "]"] [] [] },
+    intros [ident x, ident m],
+    have [ident IH] [":", expr ∀
+     (x : β a)
+     (_ : «expr ∈ »(sigma.mk a x, t)), «expr∃ , »((u w)
+      (b'' : β a), «expr ∧ »(«expr = »(t, «expr ++ »(u, «expr :: »(⟨a, b''⟩, w))), «expr = »(replace_aux a b t, «expr ++ »(u, «expr :: »(⟨a, b⟩, w)))))] [],
+    { simpa [] [] [] [] [] ["using", expr valid.replace_aux t] },
+    rcases [expr IH x m, "with", "⟨", ident u, ",", ident w, ",", ident b'', ",", ident hl, ",", ident hfl, "⟩"],
+    exact [expr ⟨«expr :: »(⟨a', b'⟩, u), w, b'', by simp [] [] [] ["[", expr hl, ",", expr hfl.symm, ",", expr ne.symm e, "]"] [] []⟩] }
+end
 
-theorem valid.replace {n : ℕ+} {bkts : BucketArray α β n} {sz : ℕ} (a : α) (b : β a)
-  (Hc : contains_aux a (bkts.read hash_fn a)) (v : valid bkts sz) :
-  valid (bkts.modify hash_fn a (replace_aux a b)) sz :=
-  by 
-    have nd := v.nodup (mk_idx n (hash_fn a))
-    rcases HashMap.Valid.replace_aux a b (Arrayₓ.read bkts (mk_idx n (hash_fn a))) ((contains_aux_iff nd).1 Hc) with
-      ⟨u, w, b', hl, hfl⟩
-    simp [hl, List.nodup_append] at nd 
-    refine'
-        (v.modify hash_fn u [⟨a, b'⟩] [⟨a, b⟩] w hl hfl (List.nodup_singleton _)
-            (fun a' e =>
-              by 
-                simp  at e <;> rw [e])
-            (fun a' e1 e2 => _) fun a' e1 e2 => _).2 <;>
-      ·
-        revert e1 
-        simp [-Sigma.exists] at e2 
-        subst a' 
-        simp [nd]
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid.replace
+{n : «exprℕ+»()}
+{bkts : bucket_array α β n}
+{sz : exprℕ()}
+(a : α)
+(b : β a)
+(Hc : contains_aux a (bkts.read hash_fn a))
+(v : valid bkts sz) : valid (bkts.modify hash_fn a (replace_aux a b)) sz :=
+begin
+  have [ident nd] [] [":=", expr v.nodup (mk_idx n (hash_fn a))],
+  rcases [expr hash_map.valid.replace_aux a b (array.read bkts (mk_idx n (hash_fn a))) ((contains_aux_iff nd).1 Hc), "with", "⟨", ident u, ",", ident w, ",", ident b', ",", ident hl, ",", ident hfl, "⟩"],
+  simp [] [] [] ["[", expr hl, ",", expr list.nodup_append, "]"] [] ["at", ident nd],
+  refine [expr (v.modify hash_fn u «expr[ , ]»([⟨a, b'⟩]) «expr[ , ]»([⟨a, b⟩]) w hl hfl (list.nodup_singleton _) (λ
+     a'
+     e, by simp [] [] [] [] [] ["at", ident e]; rw [expr e] []) (λ
+     a' e1 e2, _) (λ a' e1 e2, _)).2]; { revert [ident e1],
+    simp [] [] [] ["[", "-", ident sigma.exists, "]"] [] ["at", ident e2],
+    subst [expr a'],
+    simp [] [] [] ["[", expr nd, "]"] [] [] }
+end
 
-theorem valid.insert {n : ℕ+} {bkts : BucketArray α β n} {sz : ℕ} (a : α) (b : β a)
-  (Hnc : ¬contains_aux a (bkts.read hash_fn a)) (v : valid bkts sz) : valid (reinsert_aux bkts a b) (sz+1) :=
-  by 
-    have nd := v.nodup (mk_idx n (hash_fn a))
-    refine'
-      (v.modify hash_fn [] [] [⟨a, b⟩] (bkts.read hash_fn a) rfl rfl (List.nodup_singleton _)
-          (fun a' e =>
-            by 
-              simp  at e <;> rw [e])
-          (fun a' => False.elim) fun a' e1 e2 => _).2
-    simp [-Sigma.exists] at e2 
-    subst a' 
-    exact Hnc ((contains_aux_iff nd).2 e1)
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid.insert
+{n : «exprℕ+»()}
+{bkts : bucket_array α β n}
+{sz : exprℕ()}
+(a : α)
+(b : β a)
+(Hnc : «expr¬ »(contains_aux a (bkts.read hash_fn a)))
+(v : valid bkts sz) : valid (reinsert_aux bkts a b) «expr + »(sz, 1) :=
+begin
+  have [ident nd] [] [":=", expr v.nodup (mk_idx n (hash_fn a))],
+  refine [expr (v.modify hash_fn «expr[ , ]»([]) «expr[ , ]»([]) «expr[ , ]»([⟨a, b⟩]) (bkts.read hash_fn a) rfl rfl (list.nodup_singleton _) (λ
+     a' e, by simp [] [] [] [] [] ["at", ident e]; rw [expr e] []) (λ a', false.elim) (λ a' e1 e2, _)).2],
+  simp [] [] [] ["[", "-", ident sigma.exists, "]"] [] ["at", ident e2],
+  subst [expr a'],
+  exact [expr Hnc ((contains_aux_iff nd).2 e1)]
+end
 
-theorem valid.erase_aux (a : α) :
-  ∀ l : List (Σa, β a),
-    a ∈ l.map Sigma.fst → ∃ (u w : List (Σa, β a))(b : _), l = u ++ [⟨a, b⟩] ++ w ∧ erase_aux a l = u ++ [] ++ w
-| [] => False.elim
-| ⟨a', b'⟩ :: t =>
-  by 
-    byCases' e : a' = a
-    ·
-      subst a' 
-      simpa [erase_aux, and_comm] using
-        show ∃ (u w : _)(x : β a), t = u ++ w ∧ Sigma.mk a b' :: t = u ++ ⟨a, x⟩ :: w from
-          ⟨[], t, b',
-            by 
-              simp ⟩
-    ·
-      simp [erase_aux, e, Ne.symm e]
-      suffices  :
-        ∀ b : β a _ : Sigma.mk a b ∈ t,
-          ∃ (u w : _)(x : β a), Sigma.mk a' b' :: t = u ++ ⟨a, x⟩ :: w ∧ Sigma.mk a' b' :: erase_aux a t = u ++ w
-      ·
-        simpa [replace_aux, Ne.symm e, e]
-      intro b m 
-      have IH : ∀ x : β a _ : Sigma.mk a x ∈ t, ∃ (u w : _)(x : β a), t = u ++ ⟨a, x⟩ :: w ∧ erase_aux a t = u ++ w
-      ·
-        simpa using valid.erase_aux t 
-      rcases IH b m with ⟨u, w, b'', hl, hfl⟩
-      exact
-        ⟨⟨a', b'⟩ :: u, w, b'',
-          by 
-            simp [hl, hfl.symm]⟩
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid.erase_aux
+(a : α) : ∀
+l : list «exprΣ , »((a), β a), «expr ∈ »(a, l.map sigma.fst) → «expr∃ , »((u w : list «exprΣ , »((a), β a))
+ (b), «expr ∧ »(«expr = »(l, «expr ++ »(«expr ++ »(u, «expr[ , ]»([⟨a, b⟩])), w)), «expr = »(erase_aux a l, «expr ++ »(«expr ++ »(u, «expr[ , ]»([])), w))))
+| «expr[ , ]»([]) := false.elim
+| «expr :: »(⟨a', b'⟩, t) := begin
+  by_cases [expr e, ":", expr «expr = »(a', a)],
+  { subst [expr a'],
+    simpa [] [] [] ["[", expr erase_aux, ",", expr and_comm, "]"] [] ["using", expr show «expr∃ , »((u w)
+      (x : β a), «expr ∧ »(«expr = »(t, «expr ++ »(u, w)), «expr = »(«expr :: »(sigma.mk a b', t), «expr ++ »(u, «expr :: »(⟨a, x⟩, w))))), from ⟨«expr[ , ]»([]), t, b', by simp [] [] [] [] [] []⟩] },
+  { simp [] [] [] ["[", expr erase_aux, ",", expr e, ",", expr ne.symm e, "]"] [] [],
+    suffices [] [":", expr ∀
+     (b : β a)
+     (_ : «expr ∈ »(sigma.mk a b, t)), «expr∃ , »((u w)
+      (x : β a), «expr ∧ »(«expr = »(«expr :: »(sigma.mk a' b', t), «expr ++ »(u, «expr :: »(⟨a, x⟩, w))), «expr = »(«expr :: »(sigma.mk a' b', erase_aux a t), «expr ++ »(u, w))))],
+    { simpa [] [] [] ["[", expr replace_aux, ",", expr ne.symm e, ",", expr e, "]"] [] [] },
+    intros [ident b, ident m],
+    have [ident IH] [":", expr ∀
+     (x : β a)
+     (_ : «expr ∈ »(sigma.mk a x, t)), «expr∃ , »((u w)
+      (x : β a), «expr ∧ »(«expr = »(t, «expr ++ »(u, «expr :: »(⟨a, x⟩, w))), «expr = »(erase_aux a t, «expr ++ »(u, w))))] [],
+    { simpa [] [] [] [] [] ["using", expr valid.erase_aux t] },
+    rcases [expr IH b m, "with", "⟨", ident u, ",", ident w, ",", ident b'', ",", ident hl, ",", ident hfl, "⟩"],
+    exact [expr ⟨«expr :: »(⟨a', b'⟩, u), w, b'', by simp [] [] [] ["[", expr hl, ",", expr hfl.symm, "]"] [] []⟩] }
+end
 
-theorem valid.erase {n} {bkts : BucketArray α β n} {sz} (a : α) (Hc : contains_aux a (bkts.read hash_fn a))
-  (v : valid bkts sz) : valid (bkts.modify hash_fn a (erase_aux a)) (sz - 1) :=
-  by 
-    have nd := v.nodup (mk_idx n (hash_fn a))
-    rcases HashMap.Valid.erase_aux a (Arrayₓ.read bkts (mk_idx n (hash_fn a))) ((contains_aux_iff nd).1 Hc) with
-      ⟨u, w, b, hl, hfl⟩
-    refine' (v.modify hash_fn u [⟨a, b⟩] [] w hl hfl List.nodup_nil _ _ _).2 <;> simp 
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid.erase
+{n}
+{bkts : bucket_array α β n}
+{sz}
+(a : α)
+(Hc : contains_aux a (bkts.read hash_fn a))
+(v : valid bkts sz) : valid (bkts.modify hash_fn a (erase_aux a)) «expr - »(sz, 1) :=
+begin
+  have [ident nd] [] [":=", expr v.nodup (mk_idx n (hash_fn a))],
+  rcases [expr hash_map.valid.erase_aux a (array.read bkts (mk_idx n (hash_fn a))) ((contains_aux_iff nd).1 Hc), "with", "⟨", ident u, ",", ident w, ",", ident b, ",", ident hl, ",", ident hfl, "⟩"],
+  refine [expr (v.modify hash_fn u «expr[ , ]»([⟨a, b⟩]) «expr[ , ]»([]) w hl hfl list.nodup_nil _ _ _).2]; simp [] [] [] [] [] []
+end
 
 end 
 
@@ -506,73 +504,62 @@ theorem keys_empty (hash_fn : α → Nat) n : (@mkHashMap α _ β hash_fn n).key
   by 
     dsimp [keys] <;> rw [entries_empty] <;> rfl
 
-theorem find_empty (hash_fn : α → Nat) n a : (@mkHashMap α _ β hash_fn n).find a = none :=
-  by 
-    induction' h : (@mkHashMap α _ β hash_fn n).find a with  <;> [rfl,
-      ·
-        have  := (find_iff _ _ _).1 h 
-        rw [entries_empty] at this 
-        contradiction]
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem find_empty (hash_fn : α → nat) (n a) : «expr = »((@mk_hash_map α _ β hash_fn n).find a, none) :=
+by induction [expr h, ":", expr (@mk_hash_map α _ β hash_fn n).find a] [] [] []; [refl, { have [] [] [":=", expr (find_iff _ _ _).1 h],
+   rw [expr entries_empty] ["at", ident this],
+   contradiction }]
 
 theorem not_contains_empty (hash_fn : α → Nat) n a : ¬(@mkHashMap α _ β hash_fn n).contains a :=
   by 
     apply bool_iff_false.2 <;> dsimp [contains] <;> rw [find_empty] <;> rfl
 
-theorem insert_lemma (hash_fn : α → Nat) {n n'} {bkts : BucketArray α β n} {sz} (v : valid hash_fn bkts sz) :
-  valid hash_fn (bkts.foldl (mkArray _ [] : BucketArray α β n') (reinsert_aux hash_fn)) sz :=
-  by 
-    suffices  :
-      ∀ l : List (Σa, β a) t : BucketArray α β n' sz,
-        valid hash_fn t sz →
-          ((l ++ t.as_list).map Sigma.fst).Nodup →
-            valid hash_fn (l.foldl (fun r a : Σa, β a => reinsert_aux hash_fn r a.1 a.2) t) (sz+l.length)
-    ·
-      have p := this bkts.as_list _ _ (mk_valid _ _)
-      rw [mk_as_list, List.append_nil, zero_addₓ, v.len] at p 
-      rw [BucketArray.foldl_eq]
-      exact p (v.as_list_nodup _)
-    intro l 
-    induction' l with c l IH <;> intro t sz v nd
-    ·
-      exact v 
-    rw
-      [show (sz+(c :: l).length) = (sz+1)+l.length by 
-        simp [add_commₓ, add_assocₓ]]
-    rcases
-      show
-        (l.map Sigma.fst).Nodup ∧
-          ((BucketArray.asList t).map Sigma.fst).Nodup ∧
-            c.fst ∉ l.map Sigma.fst ∧
-              c.fst ∉ (BucketArray.asList t).map Sigma.fst ∧
-                (l.map Sigma.fst).Disjoint ((BucketArray.asList t).map Sigma.fst)by
-        
-        simpa [List.nodup_append, not_or_distrib, and_comm, And.left_comm] using nd with
-      ⟨nd1, nd2, nm1, nm2, dj⟩
-    have v' := v.insert _ _ c.2 fun Hc => nm2$ (v.contains_aux_iff _ c.1).1 Hc 
-    apply IH _ _ v' 
-    suffices  :
-      ∀ ⦃a : α⦄ b : β a, Sigma.mk a b ∈ l → ∀ b' : β a, Sigma.mk a b' ∈ (reinsert_aux hash_fn t c.1 c.2).asList → False
-    ·
-      simpa [List.nodup_append, nd1, v'.as_list_nodup _, List.Disjoint]
-    intro a b m1 b' m2 
-    rcases(reinsert_aux hash_fn t c.1 c.2).mem_as_list.1 m2 with ⟨i, im⟩
-    have  : Sigma.mk a b' ∉ Arrayₓ.read t i
-    ·
-      intro m3 
-      have  : a ∈ List.map Sigma.fst t.as_list := List.mem_map_of_memₓ Sigma.fst (t.mem_as_list.2 ⟨_, m3⟩)
-      exact dj (List.mem_map_of_memₓ Sigma.fst m1) this 
-    byCases' h : mk_idx n' (hash_fn c.1) = i
-    ·
-      subst h 
-      have e : Sigma.mk a b' = ⟨c.1, c.2⟩
-      ·
-        simpa [reinsert_aux, BucketArray.modify, Arrayₓ.read_write, this] using im 
-      injection e with e 
-      subst a 
-      exact nm1.elim (@List.mem_map_of_memₓ _ _ Sigma.fst _ _ m1)
-    ·
-      apply this 
-      simpa [reinsert_aux, BucketArray.modify, Arrayₓ.read_write_of_ne _ _ h] using im
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem insert_lemma
+(hash_fn : α → nat)
+{n n'}
+{bkts : bucket_array α β n}
+{sz}
+(v : valid hash_fn bkts sz) : valid hash_fn (bkts.foldl (mk_array _ «expr[ , ]»([]) : bucket_array α β n') (reinsert_aux hash_fn)) sz :=
+begin
+  suffices [] [":", expr ∀
+   (l : list «exprΣ , »((a), β a))
+   (t : bucket_array α β n')
+   (sz), valid hash_fn t sz → («expr ++ »(l, t.as_list).map sigma.fst).nodup → valid hash_fn (l.foldl (λ
+     (r)
+     (a : «exprΣ , »((a), β a)), reinsert_aux hash_fn r a.1 a.2) t) «expr + »(sz, l.length)],
+  { have [ident p] [] [":=", expr this bkts.as_list _ _ (mk_valid _ _)],
+    rw ["[", expr mk_as_list, ",", expr list.append_nil, ",", expr zero_add, ",", expr v.len, "]"] ["at", ident p],
+    rw [expr bucket_array.foldl_eq] [],
+    exact [expr p (v.as_list_nodup _)] },
+  intro [ident l],
+  induction [expr l] [] ["with", ident c, ident l, ident IH] []; intros [ident t, ident sz, ident v, ident nd],
+  { exact [expr v] },
+  rw [expr show «expr = »(«expr + »(sz, «expr :: »(c, l).length), «expr + »(«expr + »(sz, 1), l.length)), by simp [] [] [] ["[", expr add_comm, ",", expr add_assoc, "]"] [] []] [],
+  rcases [expr show «expr ∧ »((l.map sigma.fst).nodup, «expr ∧ »(((bucket_array.as_list t).map sigma.fst).nodup, «expr ∧ »(«expr ∉ »(c.fst, l.map sigma.fst), «expr ∧ »(«expr ∉ »(c.fst, (bucket_array.as_list t).map sigma.fst), (l.map sigma.fst).disjoint ((bucket_array.as_list t).map sigma.fst))))), by simpa [] [] [] ["[", expr list.nodup_append, ",", expr not_or_distrib, ",", expr and_comm, ",", expr and.left_comm, "]"] [] ["using", expr nd], "with", "⟨", ident nd1, ",", ident nd2, ",", ident nm1, ",", ident nm2, ",", ident dj, "⟩"],
+  have [ident v'] [] [":=", expr v.insert _ _ c.2 (λ Hc, «expr $ »(nm2, (v.contains_aux_iff _ c.1).1 Hc))],
+  apply [expr IH _ _ v'],
+  suffices [] [":", expr ∀
+   {{a : α}}
+   (b : β a), «expr ∈ »(sigma.mk a b, l) → ∀
+   b' : β a, «expr ∈ »(sigma.mk a b', (reinsert_aux hash_fn t c.1 c.2).as_list) → false],
+  { simpa [] [] [] ["[", expr list.nodup_append, ",", expr nd1, ",", expr v'.as_list_nodup _, ",", expr list.disjoint, "]"] [] [] },
+  intros [ident a, ident b, ident m1, ident b', ident m2],
+  rcases [expr (reinsert_aux hash_fn t c.1 c.2).mem_as_list.1 m2, "with", "⟨", ident i, ",", ident im, "⟩"],
+  have [] [":", expr «expr ∉ »(sigma.mk a b', array.read t i)] [],
+  { intro [ident m3],
+    have [] [":", expr «expr ∈ »(a, list.map sigma.fst t.as_list)] [":=", expr list.mem_map_of_mem sigma.fst (t.mem_as_list.2 ⟨_, m3⟩)],
+    exact [expr dj (list.mem_map_of_mem sigma.fst m1) this] },
+  by_cases [expr h, ":", expr «expr = »(mk_idx n' (hash_fn c.1), i)],
+  { subst [expr h],
+    have [ident e] [":", expr «expr = »(sigma.mk a b', ⟨c.1, c.2⟩)] [],
+    { simpa [] [] [] ["[", expr reinsert_aux, ",", expr bucket_array.modify, ",", expr array.read_write, ",", expr this, "]"] [] ["using", expr im] },
+    injection [expr e] ["with", ident e],
+    subst [expr a],
+    exact [expr nm1.elim (@list.mem_map_of_mem _ _ sigma.fst _ _ m1)] },
+  { apply [expr this],
+    simpa [] [] [] ["[", expr reinsert_aux, ",", expr bucket_array.modify, ",", expr array.read_write_of_ne _ _ h, "]"] [] ["using", expr im] }
+end
 
 /-- Insert a key-value pair into the map. (Modifies `m` in-place when applicable) -/
 def insert : ∀ m : HashMap α β a : α b : β a, HashMap α β
@@ -594,77 +581,64 @@ def insert : ∀ m : HashMap α β a : α b : β a, HashMap α β
       let buckets'' : BucketArray α β n' := buckets'.foldl (mkArray _ []) (reinsert_aux hash_fn)
       { hashFn, size := size', nbuckets := n', buckets := buckets'', is_valid := insert_lemma _ valid' }
 
-theorem mem_insert :
-  ∀ m : HashMap α β a b a' b',
-    (Sigma.mk a' b' : Sigma β) ∈ (m.insert a b).entries ↔ if a = a' then HEq b b' else Sigma.mk a' b' ∈ m.entries
-| ⟨hash_fn, size, n, bkts, v⟩, a, b, a', b' =>
-  by 
-    let bkt := bkts.read hash_fn a 
-    have nd : (bkt.map Sigma.fst).Nodup := v.nodup (mk_idx n (hash_fn a))
-    have lem :
-      ∀ bkts' : BucketArray α β n v1 u w hl : BucketArray.asList bkts = u ++ v1 ++ w hfl :
-        BucketArray.asList bkts' = u ++ [⟨a, b⟩] ++ w veq : v1 = [] ∧ ¬contains_aux a bkt ∨ ∃ b'', v1 = [⟨a, b''⟩],
-        Sigma.mk a' b' ∈ bkts'.as_list ↔ if a = a' then HEq b b' else Sigma.mk a' b' ∈ bkts.as_list
-    ·
-      intro bkts' v1 u w hl hfl veq 
-      rw [hl, hfl]
-      byCases' h : a = a'
-      ·
-        subst a' 
-        suffices  : b = b' ∨ Sigma.mk a b' ∈ u ∨ Sigma.mk a b' ∈ w ↔ b = b'
-        ·
-          simpa [eq_comm, Or.left_comm]
-        refine' or_iff_left_of_imp (Not.elim$ not_or_distrib.2 _)
-        rcases veq with (⟨rfl, Hnc⟩ | ⟨b'', rfl⟩)
-        ·
-          have na := (not_iff_not_of_iff$ v.contains_aux_iff _ _).1 Hnc 
-          simp [hl, not_or_distrib] at na 
-          simp [na]
-        ·
-          have nd' := v.as_list_nodup _ 
-          simp [hl, List.nodup_append] at nd' 
-          simp [nd']
-      ·
-        suffices  : Sigma.mk a' b' ∉ v1
-        ·
-          simp [h, Ne.symm h, this]
-        rcases veq with (⟨rfl, Hnc⟩ | ⟨b'', rfl⟩) <;> simp [Ne.symm h]
-    byCases' Hc : (contains_aux a bkt : Prop)
-    ·
-      rcases HashMap.Valid.replace_aux a b (Arrayₓ.read bkts (mk_idx n (hash_fn a))) ((contains_aux_iff nd).1 Hc) with
-        ⟨u', w', b'', hl', hfl'⟩
-      rcases append_of_modify u' [⟨a, b''⟩] [⟨a, b⟩] w' hl' hfl' with ⟨u, w, hl, hfl⟩
-      simpa [insert, @dif_pos (contains_aux a bkt) _ Hc] using lem _ _ u w hl hfl (Or.inr ⟨b'', rfl⟩)
-    ·
-      let size' := size+1
-      let bkts' := bkts.modify hash_fn a fun l => ⟨a, b⟩ :: l 
-      have mi : Sigma.mk a' b' ∈ bkts'.as_list ↔ if a = a' then HEq b b' else Sigma.mk a' b' ∈ bkts.as_list :=
-        let ⟨u, w, hl, hfl⟩ := append_of_modify [] [] [⟨a, b⟩] _ rfl rfl 
-        lem bkts' _ u w hl hfl$ Or.inl ⟨rfl, Hc⟩
-      simp [insert, @dif_neg (contains_aux a bkt) _ Hc]
-      byCases' h : size' ≤ n
-      ·
-        simpa [show size' ≤ n from h] using mi
-      ·
-        let n' : ℕ+ :=
-          ⟨n*2,
-            mul_pos n.2
-              (by 
-                decide)⟩
-        let bkts'' : BucketArray α β n' := bkts'.foldl (mkArray _ []) (reinsert_aux hash_fn)
-        suffices  : Sigma.mk a' b' ∈ bkts''.as_list ↔ Sigma.mk a' b' ∈ bkts'.as_list.reverse
-        ·
-          simpa [show ¬size' ≤ n from h, mi]
-        rw [show bkts'' = bkts'.as_list.foldl _ _ from bkts'.foldl_eq _ _, ←List.foldr_reverse]
-        induction' bkts'.as_list.reverse with a l IH
-        ·
-          simp [mk_as_list]
-        ·
-          cases' a with a'' b'' 
-          let B := l.foldr (fun y : Sigma β x : BucketArray α β n' => reinsert_aux hash_fn x y.1 y.2) (mkArray n' [])
-          rcases append_of_modify [] [] [⟨a'', b''⟩] _ rfl rfl with ⟨u, w, hl, hfl⟩
-          simp [IH.symm, Or.left_comm, show B.as_list = _ from hl,
-            show (reinsert_aux hash_fn B a'' b'').asList = _ from hfl]
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_insert : ∀
+(m : hash_map α β)
+(a
+ b
+ a'
+ b'), «expr ↔ »(«expr ∈ »((sigma.mk a' b' : sigma β), (m.insert a b).entries), if «expr = »(a, a') then «expr == »(b, b') else «expr ∈ »(sigma.mk a' b', m.entries))
+| ⟨hash_fn, size, n, bkts, v⟩, a, b, a', b' := begin
+  let [ident bkt] [] [":=", expr bkts.read hash_fn a],
+  have [ident nd] [":", expr (bkt.map sigma.fst).nodup] [":=", expr v.nodup (mk_idx n (hash_fn a))],
+  have [ident lem] [":", expr ∀
+   (bkts' : bucket_array α β n)
+   (v1 u w)
+   (hl : «expr = »(bucket_array.as_list bkts, «expr ++ »(«expr ++ »(u, v1), w)))
+   (hfl : «expr = »(bucket_array.as_list bkts', «expr ++ »(«expr ++ »(u, «expr[ , ]»([⟨a, b⟩])), w)))
+   (veq : «expr ∨ »(«expr ∧ »(«expr = »(v1, «expr[ , ]»([])), «expr¬ »(contains_aux a bkt)), «expr∃ , »((b''), «expr = »(v1, «expr[ , ]»([⟨a, b''⟩]))))), «expr ↔ »(«expr ∈ »(sigma.mk a' b', bkts'.as_list), if «expr = »(a, a') then «expr == »(b, b') else «expr ∈ »(sigma.mk a' b', bkts.as_list))] [],
+  { intros [ident bkts', ident v1, ident u, ident w, ident hl, ident hfl, ident veq],
+    rw ["[", expr hl, ",", expr hfl, "]"] [],
+    by_cases [expr h, ":", expr «expr = »(a, a')],
+    { subst [expr a'],
+      suffices [] [":", expr «expr ↔ »(«expr ∨ »(«expr = »(b, b'), «expr ∨ »(«expr ∈ »(sigma.mk a b', u), «expr ∈ »(sigma.mk a b', w))), «expr = »(b, b'))],
+      { simpa [] [] [] ["[", expr eq_comm, ",", expr or.left_comm, "]"] [] [] },
+      refine [expr or_iff_left_of_imp «expr $ »(not.elim, not_or_distrib.2 _)],
+      rcases [expr veq, "with", "⟨", ident rfl, ",", ident Hnc, "⟩", "|", "⟨", ident b'', ",", ident rfl, "⟩"],
+      { have [ident na] [] [":=", expr «expr $ »(not_iff_not_of_iff, v.contains_aux_iff _ _).1 Hnc],
+        simp [] [] [] ["[", expr hl, ",", expr not_or_distrib, "]"] [] ["at", ident na],
+        simp [] [] [] ["[", expr na, "]"] [] [] },
+      { have [ident nd'] [] [":=", expr v.as_list_nodup _],
+        simp [] [] [] ["[", expr hl, ",", expr list.nodup_append, "]"] [] ["at", ident nd'],
+        simp [] [] [] ["[", expr nd', "]"] [] [] } },
+    { suffices [] [":", expr «expr ∉ »(sigma.mk a' b', v1)],
+      { simp [] [] [] ["[", expr h, ",", expr ne.symm h, ",", expr this, "]"] [] [] },
+      rcases [expr veq, "with", "⟨", ident rfl, ",", ident Hnc, "⟩", "|", "⟨", ident b'', ",", ident rfl, "⟩"]; simp [] [] [] ["[", expr ne.symm h, "]"] [] [] } },
+  by_cases [expr Hc, ":", expr (contains_aux a bkt : exprProp())],
+  { rcases [expr hash_map.valid.replace_aux a b (array.read bkts (mk_idx n (hash_fn a))) ((contains_aux_iff nd).1 Hc), "with", "⟨", ident u', ",", ident w', ",", ident b'', ",", ident hl', ",", ident hfl', "⟩"],
+    rcases [expr append_of_modify u' «expr[ , ]»([⟨a, b''⟩]) «expr[ , ]»([⟨a, b⟩]) w' hl' hfl', "with", "⟨", ident u, ",", ident w, ",", ident hl, ",", ident hfl, "⟩"],
+    simpa [] [] [] ["[", expr insert, ",", expr @dif_pos (contains_aux a bkt) _ Hc, "]"] [] ["using", expr lem _ _ u w hl hfl (or.inr ⟨b'', rfl⟩)] },
+  { let [ident size'] [] [":=", expr «expr + »(size, 1)],
+    let [ident bkts'] [] [":=", expr bkts.modify hash_fn a (λ l, «expr :: »(⟨a, b⟩, l))],
+    have [ident mi] [":", expr «expr ↔ »(«expr ∈ »(sigma.mk a' b', bkts'.as_list), if «expr = »(a, a') then «expr == »(b, b') else «expr ∈ »(sigma.mk a' b', bkts.as_list))] [":=", expr let ⟨u, w, hl, hfl⟩ := append_of_modify «expr[ , ]»([]) «expr[ , ]»([]) «expr[ , ]»([⟨a, b⟩]) _ rfl rfl in
+     «expr $ »(lem bkts' _ u w hl hfl, or.inl ⟨rfl, Hc⟩)],
+    simp [] [] [] ["[", expr insert, ",", expr @dif_neg (contains_aux a bkt) _ Hc, "]"] [] [],
+    by_cases [expr h, ":", expr «expr ≤ »(size', n)],
+    { simpa [] [] [] ["[", expr show «expr ≤ »(size', n), from h, "]"] [] ["using", expr mi] },
+    { let [ident n'] [":", expr «exprℕ+»()] [":=", expr ⟨«expr * »(n, 2), mul_pos n.2 exprdec_trivial()⟩],
+      let [ident bkts''] [":", expr bucket_array α β n'] [":=", expr bkts'.foldl (mk_array _ «expr[ , ]»([])) (reinsert_aux hash_fn)],
+      suffices [] [":", expr «expr ↔ »(«expr ∈ »(sigma.mk a' b', bkts''.as_list), «expr ∈ »(sigma.mk a' b', bkts'.as_list.reverse))],
+      { simpa [] [] [] ["[", expr show «expr¬ »(«expr ≤ »(size', n)), from h, ",", expr mi, "]"] [] [] },
+      rw ["[", expr show «expr = »(bkts'', bkts'.as_list.foldl _ _), from bkts'.foldl_eq _ _, ",", "<-", expr list.foldr_reverse, "]"] [],
+      induction [expr bkts'.as_list.reverse] [] ["with", ident a, ident l, ident IH] [],
+      { simp [] [] [] ["[", expr mk_as_list, "]"] [] [] },
+      { cases [expr a] ["with", ident a'', ident b''],
+        let [ident B] [] [":=", expr l.foldr (λ
+          (y : sigma β)
+          (x : bucket_array α β n'), reinsert_aux hash_fn x y.1 y.2) (mk_array n' «expr[ , ]»([]))],
+        rcases [expr append_of_modify «expr[ , ]»([]) «expr[ , ]»([]) «expr[ , ]»([⟨a'', b''⟩]) _ rfl rfl, "with", "⟨", ident u, ",", ident w, ",", ident hl, ",", ident hfl, "⟩"],
+        simp [] [] [] ["[", expr IH.symm, ",", expr or.left_comm, ",", expr show «expr = »(B.as_list, _), from hl, ",", expr show «expr = »((reinsert_aux hash_fn B a'' b'').as_list, _), from hfl, "]"] [] [] } } }
+end
 
 theorem find_insert_eq (m : HashMap α β) (a : α) (b : β a) : (m.insert a b).find a = some b :=
   (find_iff (m.insert a b) a b).2$
@@ -711,42 +685,39 @@ def erase (m : HashMap α β) (a : α) : HashMap α β :=
         is_valid := v.erase _ a hc }
     else m
 
-theorem mem_erase :
-  ∀ m : HashMap α β a a' b', (Sigma.mk a' b' : Sigma β) ∈ (m.erase a).entries ↔ a ≠ a' ∧ Sigma.mk a' b' ∈ m.entries
-| ⟨hash_fn, size, n, bkts, v⟩, a, a', b' =>
-  by 
-    let bkt := bkts.read hash_fn a 
-    byCases' Hc : (contains_aux a bkt : Prop)
-    ·
-      let bkts' := bkts.modify hash_fn a (erase_aux a)
-      suffices  : Sigma.mk a' b' ∈ bkts'.as_list ↔ a ≠ a' ∧ Sigma.mk a' b' ∈ bkts.as_list
-      ·
-        simpa [erase, @dif_pos (contains_aux a bkt) _ Hc]
-      have nd := v.nodup (mk_idx n (hash_fn a))
-      rcases valid.erase_aux a bkt ((contains_aux_iff nd).1 Hc) with ⟨u', w', b, hl', hfl'⟩
-      rcases append_of_modify u' [⟨a, b⟩] [] _ hl' hfl' with ⟨u, w, hl, hfl⟩
-      suffices  : ∀ _ : Sigma.mk a' b' ∈ u ∨ Sigma.mk a' b' ∈ w, a ≠ a'
-      ·
-        have  :
-          Sigma.mk a' b' ∈ u ∨ Sigma.mk a' b' ∈ w ↔
-            (¬a = a' ∧ a' = a) ∧ HEq b' b ∨ ¬a = a' ∧ (Sigma.mk a' b' ∈ u ∨ Sigma.mk a' b' ∈ w)
-        ·
-          simp [eq_comm, not_and_self_iff, and_iff_right_of_imp this]
-        simpa [hl, show bkts'.as_list = _ from hfl, and_or_distrib_left, and_comm, And.left_comm, Or.left_comm]
-      intro m e 
-      subst a' 
-      revert m 
-      apply not_or_distrib.2
-      have nd' := v.as_list_nodup _ 
-      simp [hl, List.nodup_append] at nd' 
-      simp [nd']
-    ·
-      suffices  : ∀ _ : Sigma.mk a' b' ∈ BucketArray.asList bkts, a ≠ a'
-      ·
-        simp [erase, @dif_neg (contains_aux a bkt) _ Hc, entries, and_iff_right_of_imp this]
-      intro m e 
-      subst a' 
-      exact Hc ((v.contains_aux_iff _ _).2 (List.mem_map_of_memₓ Sigma.fst m))
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_erase : ∀
+(m : hash_map α β)
+(a
+ a'
+ b'), «expr ↔ »(«expr ∈ »((sigma.mk a' b' : sigma β), (m.erase a).entries), «expr ∧ »(«expr ≠ »(a, a'), «expr ∈ »(sigma.mk a' b', m.entries)))
+| ⟨hash_fn, size, n, bkts, v⟩, a, a', b' := begin
+  let [ident bkt] [] [":=", expr bkts.read hash_fn a],
+  by_cases [expr Hc, ":", expr (contains_aux a bkt : exprProp())],
+  { let [ident bkts'] [] [":=", expr bkts.modify hash_fn a (erase_aux a)],
+    suffices [] [":", expr «expr ↔ »(«expr ∈ »(sigma.mk a' b', bkts'.as_list), «expr ∧ »(«expr ≠ »(a, a'), «expr ∈ »(sigma.mk a' b', bkts.as_list)))],
+    { simpa [] [] [] ["[", expr erase, ",", expr @dif_pos (contains_aux a bkt) _ Hc, "]"] [] [] },
+    have [ident nd] [] [":=", expr v.nodup (mk_idx n (hash_fn a))],
+    rcases [expr valid.erase_aux a bkt ((contains_aux_iff nd).1 Hc), "with", "⟨", ident u', ",", ident w', ",", ident b, ",", ident hl', ",", ident hfl', "⟩"],
+    rcases [expr append_of_modify u' «expr[ , ]»([⟨a, b⟩]) «expr[ , ]»([]) _ hl' hfl', "with", "⟨", ident u, ",", ident w, ",", ident hl, ",", ident hfl, "⟩"],
+    suffices [] [":", expr ∀
+     _ : «expr ∨ »(«expr ∈ »(sigma.mk a' b', u), «expr ∈ »(sigma.mk a' b', w)), «expr ≠ »(a, a')],
+    { have [] [":", expr «expr ↔ »(«expr ∨ »(«expr ∈ »(sigma.mk a' b', u), «expr ∈ »(sigma.mk a' b', w)), «expr ∨ »(«expr ∧ »(«expr ∧ »(«expr¬ »(«expr = »(a, a')), «expr = »(a', a)), «expr == »(b', b)), «expr ∧ »(«expr¬ »(«expr = »(a, a')), «expr ∨ »(«expr ∈ »(sigma.mk a' b', u), «expr ∈ »(sigma.mk a' b', w)))))] [],
+      { simp [] [] [] ["[", expr eq_comm, ",", expr not_and_self_iff, ",", expr and_iff_right_of_imp this, "]"] [] [] },
+      simpa [] [] [] ["[", expr hl, ",", expr show «expr = »(bkts'.as_list, _), from hfl, ",", expr and_or_distrib_left, ",", expr and_comm, ",", expr and.left_comm, ",", expr or.left_comm, "]"] [] [] },
+    intros [ident m, ident e],
+    subst [expr a'],
+    revert [ident m],
+    apply [expr not_or_distrib.2],
+    have [ident nd'] [] [":=", expr v.as_list_nodup _],
+    simp [] [] [] ["[", expr hl, ",", expr list.nodup_append, "]"] [] ["at", ident nd'],
+    simp [] [] [] ["[", expr nd', "]"] [] [] },
+  { suffices [] [":", expr ∀ _ : «expr ∈ »(sigma.mk a' b', bucket_array.as_list bkts), «expr ≠ »(a, a')],
+    { simp [] [] [] ["[", expr erase, ",", expr @dif_neg (contains_aux a bkt) _ Hc, ",", expr entries, ",", expr and_iff_right_of_imp this, "]"] [] [] },
+    intros [ident m, ident e],
+    subst [expr a'],
+    exact [expr Hc ((v.contains_aux_iff _ _).2 (list.mem_map_of_mem sigma.fst m))] }
+end
 
 theorem find_erase_eq (m : HashMap α β) (a : α) : (m.erase a).find a = none :=
   by 

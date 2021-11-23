@@ -215,12 +215,12 @@ theorem mem_conjugates_of_self {a : α} : a ∈ ConjugatesOf a :=
 theorem IsConj.conjugates_of_eq {a b : α} (ab : IsConj a b) : ConjugatesOf a = ConjugatesOf b :=
   Set.ext fun g => ⟨fun ag => ab.symm.trans ag, fun bg => ab.trans bg⟩
 
-theorem is_conj_iff_conjugates_of_eq {a b : α} : IsConj a b ↔ ConjugatesOf a = ConjugatesOf b :=
-  ⟨IsConj.conjugates_of_eq,
-    fun h =>
-      by 
-        have ha := mem_conjugates_of_self 
-        rwa [←h] at ha⟩
+-- error in Algebra.Group.Conj: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_conj_iff_conjugates_of_eq {a b : α} : «expr ↔ »(is_conj a b, «expr = »(conjugates_of a, conjugates_of b)) :=
+⟨is_conj.conjugates_of_eq, λ h, begin
+   have [ident ha] [] [":=", expr mem_conjugates_of_self],
+   rwa ["<-", expr h] ["at", ident ha]
+ end⟩
 
 end Monoidₓ
 

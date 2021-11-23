@@ -28,7 +28,7 @@ class essentially_small(C : Type u)[category.{v} C] : Prop where
   equiv_small_category :
   ∃ (S : Type w)(_ : small_category S),
     by 
-      exactI Nonempty (C ≌ S)
+      exact Nonempty (C ≌ S)
 
 /-- Constructor for `essentially_small C` from an explicit small category witness. -/
 theorem essentially_small.mk' {C : Type u} [category.{v} C] {S : Type w} [small_category S] (e : C ≌ S) :
@@ -59,11 +59,11 @@ theorem essentially_small_congr {C : Type u} [category.{v} C] {D : Type u'} [cat
     fsplit
     ·
       rintro ⟨S, 𝒮, ⟨f⟩⟩
-      resetI 
+      skip 
       exact essentially_small.mk' (e.symm.trans f)
     ·
       rintro ⟨S, 𝒮, ⟨f⟩⟩
-      resetI 
+      skip 
       exact essentially_small.mk' (e.trans f)
 
 /--
@@ -185,15 +185,15 @@ theorem essentially_small_iff (C : Type u) [category.{v} C] :
       fsplit
       ·
         rcases h with ⟨S, 𝒮, ⟨e⟩⟩
-        resetI 
+        skip 
         refine' ⟨⟨skeleton S, ⟨_⟩⟩⟩
         exact e.skeleton_equiv
       ·
-        resetI 
+        skip 
         infer_instance
     ·
       rintro ⟨⟨S, ⟨e⟩⟩, L⟩
-      resetI 
+      skip 
       let e' := (shrink_homs.equivalence C).skeletonEquiv.symm 
       refine' ⟨⟨S, _, ⟨_⟩⟩⟩
       apply induced_category.category (e'.trans e).symm 

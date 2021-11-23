@@ -26,19 +26,19 @@ open Ineq Tactic Native
 When elaborated, the coefficient will be a native numeral of the same type as `e`.
 -/
 unsafe def mul_expr (n : ℕ) (e : expr) : pexpr :=
-  if n = 1 then pquote %%e else pquote (%%nat.to_pexpr n)*%%e
+  if n = 1 then pquote.1 (%%ₓe) else pquote.1 ((%%ₓnat.to_pexpr n)*%%ₓe)
 
 private unsafe def add_exprs_aux : pexpr → List pexpr → pexpr
 | p, [] => p
-| p, [a] => pquote (%%p)+%%a
-| p, h :: t => add_exprs_aux (pquote (%%p)+%%h) t
+| p, [a] => pquote.1 ((%%ₓp)+%%ₓa)
+| p, h :: t => add_exprs_aux (pquote.1 ((%%ₓp)+%%ₓh)) t
 
 /--
 `add_exprs l` creates a `pexpr` representing the sum of the elements of `l`, associated left.
 If `l` is empty, it will be the `pexpr` 0. Otherwise, it does not include 0 in the sum.
 -/
 unsafe def add_exprs : List pexpr → pexpr
-| [] => pquote 0
+| [] => pquote.1 0
 | h :: t => add_exprs_aux h t
 
 /--
@@ -102,14 +102,14 @@ unsafe def mk_neg_one_lt_zero_pf (tp : expr) : tactic expr :=
 If `e` is a proof that `t = 0`, `mk_neg_eq_zero_pf e` returns a proof that `-t = 0`.
 -/
 unsafe def mk_neg_eq_zero_pf (e : expr) : tactic expr :=
-  to_expr (pquote neg_eq_zero.mpr (%%e))
+  to_expr (pquote.1 (neg_eq_zero.mpr (%%ₓe)))
 
 /--
 `prove_eq_zero_using tac e` tries to use `tac` to construct a proof of `e = 0`.
 -/
 unsafe def prove_eq_zero_using (tac : tactic Unit) (e : expr) : tactic expr :=
   do 
-    let tgt ← to_expr (pquote (%%e) = 0)
+    let tgt ← to_expr (pquote.1 ((%%ₓe) = 0))
     Prod.snd <$> solve_aux tgt (tac >> done)
 
 /--

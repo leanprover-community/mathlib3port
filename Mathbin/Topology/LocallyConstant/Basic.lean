@@ -138,12 +138,14 @@ theorem apply_eq_of_is_preconnected {f : X → Y} (hf : IsLocallyConstant f) {s 
 theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f ↔ ∀ x y, f x = f y :=
   ⟨fun h x y => h.apply_eq_of_is_preconnected is_preconnected_univ trivialₓ trivialₓ, of_constant _⟩
 
-theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) : (Set.Range f).Finite :=
-  by 
-    letI this : TopologicalSpace Y := ⊥
-    haveI  : DiscreteTopology Y := ⟨rfl⟩
-    rw [@iff_continuous X Y ‹_› ‹_›] at hf 
-    exact finite_of_is_compact_of_discrete _ (is_compact_range hf)
+-- error in Topology.LocallyConstant.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem range_finite [compact_space X] {f : X → Y} (hf : is_locally_constant f) : (set.range f).finite :=
+begin
+  letI [] [":", expr topological_space Y] [":=", expr «expr⊥»()],
+  haveI [] [":", expr discrete_topology Y] [":=", expr ⟨rfl⟩],
+  rw [expr @iff_continuous X Y «expr‹ ›»(_) «expr‹ ›»(_)] ["at", ident hf],
+  exact [expr finite_of_is_compact_of_discrete _ (is_compact_range hf)]
+end
 
 @[toAdditive]
 theorem one [HasOne Y] : IsLocallyConstant (1 : X → Y) :=
@@ -161,24 +163,25 @@ theorem mul [Mul Y] ⦃f g : X → Y⦄ (hf : IsLocallyConstant f) (hg : IsLocal
 theorem div [Div Y] ⦃f g : X → Y⦄ (hf : IsLocallyConstant f) (hg : IsLocallyConstant g) : IsLocallyConstant (f / g) :=
   hf.comp₂ hg (· / ·)
 
+-- error in Topology.LocallyConstant.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a composition of a function `f` followed by an injection `g` is locally
 constant, then the locally constant property descends to `f`. -/
-theorem desc {α β : Type _} (f : X → α) (g : α → β) (h : IsLocallyConstant (g ∘ f)) (inj : Function.Injective g) :
-  IsLocallyConstant f :=
-  by 
-    rw [(IsLocallyConstant.tfae f).out 0 3]
-    intro a 
-    have  : f ⁻¹' {a} = (g ∘ f) ⁻¹' {g a}
-    ·
-      ext x 
-      simp only [mem_singleton_iff, Function.comp_app, mem_preimage]
-      exact
-        ⟨fun h =>
-            by 
-              rw [h],
-          fun h => inj h⟩
-    rw [this]
-    apply h
+theorem desc
+{α β : Type*}
+(f : X → α)
+(g : α → β)
+(h : is_locally_constant «expr ∘ »(g, f))
+(inj : function.injective g) : is_locally_constant f :=
+begin
+  rw [expr (is_locally_constant.tfae f).out 0 3] [],
+  intros [ident a],
+  have [] [":", expr «expr = »(«expr ⁻¹' »(f, {a}), «expr ⁻¹' »(«expr ∘ »(g, f), {g a}))] [],
+  { ext [] [ident x] [],
+    simp [] [] ["only"] ["[", expr mem_singleton_iff, ",", expr function.comp_app, ",", expr mem_preimage, "]"] [] [],
+    exact [expr ⟨λ h, by rw [expr h] [], λ h, inj h⟩] },
+  rw [expr this] [],
+  apply [expr h]
+end
 
 end IsLocallyConstant
 
@@ -302,15 +305,20 @@ theorem of_clopen_fiber_one {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x
       ite_eq_right_iff, mem_compl_eq]
     tauto
 
-theorem locally_constant_eq_of_fiber_zero_eq {X : Type _} [TopologicalSpace X] (f g : LocallyConstant X (Finₓ 2))
-  (h : f ⁻¹' ({0} : Set (Finₓ 2)) = g ⁻¹' {0}) : f = g :=
-  by 
-    simp only [Set.ext_iff, mem_singleton_iff, mem_preimage] at h 
-    ext1 x 
-    have  := h x 
-    set a := f x 
-    set b := g x 
-    finCases a <;> finCases b <;> finish
+-- error in Topology.LocallyConstant.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem locally_constant_eq_of_fiber_zero_eq
+{X : Type*}
+[topological_space X]
+(f g : locally_constant X (fin 2))
+(h : «expr = »(«expr ⁻¹' »(f, ({0} : set (fin 2))), «expr ⁻¹' »(g, {0}))) : «expr = »(f, g) :=
+begin
+  simp [] [] ["only"] ["[", expr set.ext_iff, ",", expr mem_singleton_iff, ",", expr mem_preimage, "]"] [] ["at", ident h],
+  ext1 [] [ident x],
+  have [] [] [":=", expr h x],
+  set [] [ident a] [] [":="] [expr f x] [],
+  set [] [ident b] [] [":="] [expr g x] [],
+  fin_cases [ident a] []; fin_cases [ident b] []; finish [] []
+end
 
 theorem range_finite [CompactSpace X] (f : LocallyConstant X Y) : (Set.Range f).Finite :=
   f.is_locally_constant.range_finite
@@ -363,22 +371,27 @@ functions with values in β indexed by α. -/
 def flip {X α β : Type _} [TopologicalSpace X] (f : LocallyConstant X (α → β)) (a : α) : LocallyConstant X β :=
   f.map fun f => f a
 
+-- error in Topology.LocallyConstant.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If α is finite, this constructs a locally constant function to `α → β` given a
 family of locally constant functions with values in β indexed by α. -/
-def unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α → LocallyConstant X β) :
-  LocallyConstant X (α → β) :=
-  { toFun := fun x a => f a x,
-    IsLocallyConstant :=
-      by 
-        rw [(IsLocallyConstant.tfae fun x a => f a x).out 0 3]
-        intro g 
-        have  : (fun x : X a : α => f a x) ⁻¹' {g} = ⋂a : α, f a ⁻¹' {g a}
-        ·
-          tidy 
-        rw [this]
-        apply is_open_Inter 
-        intro a 
-        apply (f a).IsLocallyConstant }
+def unflip
+{X α β : Type*}
+[fintype α]
+[topological_space X]
+(f : α → locally_constant X β) : locally_constant X (α → β) :=
+{ to_fun := λ x a, f a x,
+  is_locally_constant := begin
+    rw [expr (is_locally_constant.tfae (λ x a, f a x)).out 0 3] [],
+    intros [ident g],
+    have [] [":", expr «expr = »(«expr ⁻¹' »(λ
+       (x : X)
+       (a : α), f a x, {g}), «expr⋂ , »((a : α), «expr ⁻¹' »(f a, {g a})))] [],
+    by tidy [],
+    rw [expr this] [],
+    apply [expr is_open_Inter],
+    intros [ident a],
+    apply [expr (f a).is_locally_constant]
+  end }
 
 @[simp]
 theorem unflip_flip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : LocallyConstant X (α → β)) :
@@ -410,7 +423,7 @@ noncomputable def comap (f : X → Y) : LocallyConstant Y Z → LocallyConstant 
     by 
       byCases' H : Nonempty X
       ·
-        introI g 
+        intros g 
         exact const X (g$ f$ Classical.arbitrary X)
       ·
         intro g 

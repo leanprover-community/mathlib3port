@@ -1,4 +1,4 @@
-import Mathbin.Algebra.GroupPower.Default
+import Mathbin.Algebra.GroupPower.Lemmas
 
 /-!
 # Powers of elements of groups with an adjoined zero element

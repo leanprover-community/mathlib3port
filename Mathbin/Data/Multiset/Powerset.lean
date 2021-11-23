@@ -134,32 +134,45 @@ theorem revzip_powerset_aux' {l : List α} ⦃x⦄ (h : x ∈ revzip (powerset_a
     rcases h with ⟨l₁, l₂, h, rfl, rfl⟩
     exact Quot.sound (revzip_sublists' _ _ _ h)
 
-theorem revzip_powerset_aux_lemma [DecidableEq α] (l : List α) {l' : List (Multiset α)}
-  (H : ∀ ⦃x : _ × _⦄, x ∈ revzip l' → (x.1+x.2) = «expr↑ » l) : revzip l' = l'.map fun x => (x, «expr↑ » l - x) :=
-  by 
-    have  :
-      forall₂ (fun p : Multiset α × Multiset α s : Multiset α => p = (s, «expr↑ » l - s)) (revzip l')
-        ((revzip l').map Prod.fst)
-    ·
-      rw [forall₂_map_right_iff]
-      apply forall₂_same 
-      rintro ⟨s, t⟩ h 
-      dsimp 
-      rw [←H h, add_tsub_cancel_left]
-    rw [←forall₂_eq_eq_eq, forall₂_map_right_iff]
-    simpa
+-- error in Data.Multiset.Powerset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem revzip_powerset_aux_lemma
+[decidable_eq α]
+(l : list α)
+{l' : list (multiset α)}
+(H : ∀
+ {{x : «expr × »(_, _)}}, «expr ∈ »(x, revzip l') → «expr = »(«expr + »(x.1, x.2), «expr↑ »(l))) : «expr = »(revzip l', l'.map (λ
+  x, (x, «expr - »(«expr↑ »(l), x)))) :=
+begin
+  have [] [":", expr forall₂ (λ
+    (p : «expr × »(multiset α, multiset α))
+    (s : multiset α), «expr = »(p, (s, «expr - »(«expr↑ »(l), s)))) (revzip l') ((revzip l').map prod.fst)] [],
+  { rw [expr forall₂_map_right_iff] [],
+    apply [expr forall₂_same],
+    rintro ["⟨", ident s, ",", ident t, "⟩", ident h],
+    dsimp [] [] [] [],
+    rw ["[", "<-", expr H h, ",", expr add_tsub_cancel_left, "]"] [] },
+  rw ["[", "<-", expr forall₂_eq_eq_eq, ",", expr forall₂_map_right_iff, "]"] [],
+  simpa [] [] [] [] [] []
+end
 
-theorem revzip_powerset_aux_perm_aux' {l : List α} : revzip (powerset_aux l) ~ revzip (powerset_aux' l) :=
-  by 
-    haveI  := Classical.decEq α 
-    rw [revzip_powerset_aux_lemma l revzip_powerset_aux, revzip_powerset_aux_lemma l revzip_powerset_aux']
-    exact powerset_aux_perm_powerset_aux'.map _
+-- error in Data.Multiset.Powerset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem revzip_powerset_aux_perm_aux' {l : list α} : «expr ~ »(revzip (powerset_aux l), revzip (powerset_aux' l)) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq α],
+  rw ["[", expr revzip_powerset_aux_lemma l revzip_powerset_aux, ",", expr revzip_powerset_aux_lemma l revzip_powerset_aux', "]"] [],
+  exact [expr powerset_aux_perm_powerset_aux'.map _]
+end
 
-theorem revzip_powerset_aux_perm {l₁ l₂ : List α} (p : l₁ ~ l₂) : revzip (powerset_aux l₁) ~ revzip (powerset_aux l₂) :=
-  by 
-    haveI  := Classical.decEq α 
-    simp [fun l : List α => revzip_powerset_aux_lemma l revzip_powerset_aux, coe_eq_coe.2 p]
-    exact (powerset_aux_perm p).map _
+-- error in Data.Multiset.Powerset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem revzip_powerset_aux_perm
+{l₁ l₂ : list α}
+(p : «expr ~ »(l₁, l₂)) : «expr ~ »(revzip (powerset_aux l₁), revzip (powerset_aux l₂)) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq α],
+  simp [] [] [] ["[", expr λ
+   l : list α, revzip_powerset_aux_lemma l revzip_powerset_aux, ",", expr coe_eq_coe.2 p, "]"] [] [],
+  exact [expr (powerset_aux_perm p).map _]
+end
 
 /-! ### powerset_len -/
 

@@ -46,44 +46,42 @@ namespace List
 
 variable{α : Type _}[DecidableEq α]{l l' : List α}
 
-theorem form_perm_disjoint_iff (hl : nodup l) (hl' : nodup l') (hn : 2 ≤ l.length) (hn' : 2 ≤ l'.length) :
-  perm.disjoint (form_perm l) (form_perm l') ↔ l.disjoint l' :=
-  by 
-    rw [disjoint_iff_eq_or_eq, List.Disjoint]
-    split 
-    ·
-      rintro h x hx hx' 
-      specialize h x 
-      rw [form_perm_apply_mem_eq_self_iff _ hl _ hx, form_perm_apply_mem_eq_self_iff _ hl' _ hx'] at h 
-      rcases h with (hl | hl') <;> linarith
-    ·
-      intro h x 
-      byCases' hx : x ∈ l <;> byCases' hx' : x ∈ l'
-      ·
-        exact (h hx hx').elim 
-      all_goals 
-        have  := form_perm_eq_self_of_not_mem _ _ ‹_›
-        tauto
+-- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem form_perm_disjoint_iff
+(hl : nodup l)
+(hl' : nodup l')
+(hn : «expr ≤ »(2, l.length))
+(hn' : «expr ≤ »(2, l'.length)) : «expr ↔ »(perm.disjoint (form_perm l) (form_perm l'), l.disjoint l') :=
+begin
+  rw ["[", expr disjoint_iff_eq_or_eq, ",", expr list.disjoint, "]"] [],
+  split,
+  { rintro [ident h, ident x, ident hx, ident hx'],
+    specialize [expr h x],
+    rw ["[", expr form_perm_apply_mem_eq_self_iff _ hl _ hx, ",", expr form_perm_apply_mem_eq_self_iff _ hl' _ hx', "]"] ["at", ident h],
+    rcases [expr h, "with", ident hl, "|", ident hl']; linarith [] [] [] },
+  { intros [ident h, ident x],
+    by_cases [expr hx, ":", expr «expr ∈ »(x, l)]; by_cases [expr hx', ":", expr «expr ∈ »(x, l')],
+    { exact [expr (h hx hx').elim] },
+    all_goals { have [] [] [":=", expr form_perm_eq_self_of_not_mem _ _ «expr‹ ›»(_)],
+      tauto [] } }
+end
 
-theorem is_cycle_form_perm (hl : nodup l) (hn : 2 ≤ l.length) : is_cycle (form_perm l) :=
-  by 
-    cases' l with x l
-    ·
-      normNum  at hn 
-    induction' l with y l IH generalizing x
-    ·
-      normNum  at hn
-    ·
-      use x 
-      split 
-      ·
-        rwa [form_perm_apply_mem_ne_self_iff _ hl _ (mem_cons_self _ _)]
-      ·
-        intro w hw 
-        have  : w ∈ x :: y :: l := mem_of_form_perm_ne_self _ _ hw 
-        obtain ⟨k, hk, rfl⟩ := nth_le_of_mem this 
-        use k 
-        simp only [zpow_coe_nat, form_perm_pow_apply_head _ _ hl k, Nat.mod_eq_of_ltₓ hk]
+-- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_cycle_form_perm (hl : nodup l) (hn : «expr ≤ »(2, l.length)) : is_cycle (form_perm l) :=
+begin
+  cases [expr l] ["with", ident x, ident l],
+  { norm_num [] ["at", ident hn] },
+  induction [expr l] [] ["with", ident y, ident l, ident IH] ["generalizing", ident x],
+  { norm_num [] ["at", ident hn] },
+  { use [expr x],
+    split,
+    { rwa [expr form_perm_apply_mem_ne_self_iff _ hl _ (mem_cons_self _ _)] [] },
+    { intros [ident w, ident hw],
+      have [] [":", expr «expr ∈ »(w, [«expr :: »/«expr :: »/«expr :: »](x, [«expr :: »/«expr :: »/«expr :: »](y, l)))] [":=", expr mem_of_form_perm_ne_self _ _ hw],
+      obtain ["⟨", ident k, ",", ident hk, ",", ident rfl, "⟩", ":=", expr nth_le_of_mem this],
+      use [expr k],
+      simp [] [] ["only"] ["[", expr zpow_coe_nat, ",", expr form_perm_pow_apply_head _ _ hl k, ",", expr nat.mod_eq_of_lt hk, "]"] [] [] } }
+end
 
 theorem pairwise_same_cycle_form_perm (hl : nodup l) (hn : 2 ≤ l.length) : Pairwise l.form_perm.same_cycle l :=
   pairwise.imp_mem.mpr
@@ -270,42 +268,37 @@ theorem mem_to_list_iff {y : α} : y ∈ to_list p x ↔ same_cycle p x y ∧ x 
       rintro ⟨h, hx⟩
       simpa using same_cycle.nat_of_mem_support _ h hx
 
+-- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem nodup_to_list (p : perm α) (x : α) : nodup (to_list p x) :=
-  by 
-    byCases' hx : p x = x
-    ·
-      rw [←not_mem_support, ←to_list_eq_nil_iff] at hx 
-      simp [hx]
-    have hc : is_cycle (cycle_of p x) := is_cycle_cycle_of p hx 
-    rw [nodup_iff_nth_le_inj]
-    rintro n m hn hm 
-    rw [length_to_list, ←order_of_is_cycle hc] at hm hn 
-    rw [←cycle_of_apply_self, ←Ne.def, ←mem_support] at hx 
-    rw [nth_le_to_list, nth_le_to_list, ←cycle_of_pow_apply_self p x n, ←cycle_of_pow_apply_self p x m]
-    cases n <;> cases m
-    ·
-      simp 
-    ·
-      rw [←hc.mem_support_pos_pow_iff_of_lt_order_of m.zero_lt_succ hm, mem_support, cycle_of_pow_apply_self] at hx 
-      simp [hx.symm]
-    ·
-      rw [←hc.mem_support_pos_pow_iff_of_lt_order_of n.zero_lt_succ hn, mem_support, cycle_of_pow_apply_self] at hx 
-      simp [hx]
-    intro h 
-    have hn' : ¬orderOf (p.cycle_of x) ∣ n.succ := Nat.not_dvd_of_pos_of_lt n.zero_lt_succ hn 
-    have hm' : ¬orderOf (p.cycle_of x) ∣ m.succ := Nat.not_dvd_of_pos_of_lt m.zero_lt_succ hm 
-    rw [←hc.support_pow_eq_iff] at hn' hm' 
-    rw [←Nat.mod_eq_of_ltₓ hn, ←Nat.mod_eq_of_ltₓ hm, ←pow_inj_mod]
-    refine' support_congr _ _
-    ·
-      rw [hm', hn']
-      exact Finset.Subset.refl _
-    ·
-      rw [hm']
-      intro y hy 
-      obtain ⟨k, rfl⟩ := hc.exists_pow_eq (mem_support.mp hx) (mem_support.mp hy)
-      rw [←mul_apply, (Commute.pow_pow_self _ _ _).Eq, mul_apply, h, ←mul_apply, ←mul_apply,
-        (Commute.pow_pow_self _ _ _).Eq]
+begin
+  by_cases [expr hx, ":", expr «expr = »(p x, x)],
+  { rw ["[", "<-", expr not_mem_support, ",", "<-", expr to_list_eq_nil_iff, "]"] ["at", ident hx],
+    simp [] [] [] ["[", expr hx, "]"] [] [] },
+  have [ident hc] [":", expr is_cycle (cycle_of p x)] [":=", expr is_cycle_cycle_of p hx],
+  rw [expr nodup_iff_nth_le_inj] [],
+  rintros [ident n, ident m, ident hn, ident hm],
+  rw ["[", expr length_to_list, ",", "<-", expr order_of_is_cycle hc, "]"] ["at", ident hm, ident hn],
+  rw ["[", "<-", expr cycle_of_apply_self, ",", "<-", expr ne.def, ",", "<-", expr mem_support, "]"] ["at", ident hx],
+  rw ["[", expr nth_le_to_list, ",", expr nth_le_to_list, ",", "<-", expr cycle_of_pow_apply_self p x n, ",", "<-", expr cycle_of_pow_apply_self p x m, "]"] [],
+  cases [expr n] []; cases [expr m] [],
+  { simp [] [] [] [] [] [] },
+  { rw ["[", "<-", expr hc.mem_support_pos_pow_iff_of_lt_order_of m.zero_lt_succ hm, ",", expr mem_support, ",", expr cycle_of_pow_apply_self, "]"] ["at", ident hx],
+    simp [] [] [] ["[", expr hx.symm, "]"] [] [] },
+  { rw ["[", "<-", expr hc.mem_support_pos_pow_iff_of_lt_order_of n.zero_lt_succ hn, ",", expr mem_support, ",", expr cycle_of_pow_apply_self, "]"] ["at", ident hx],
+    simp [] [] [] ["[", expr hx, "]"] [] [] },
+  intro [ident h],
+  have [ident hn'] [":", expr «expr¬ »(«expr ∣ »(order_of (p.cycle_of x), n.succ))] [":=", expr nat.not_dvd_of_pos_of_lt n.zero_lt_succ hn],
+  have [ident hm'] [":", expr «expr¬ »(«expr ∣ »(order_of (p.cycle_of x), m.succ))] [":=", expr nat.not_dvd_of_pos_of_lt m.zero_lt_succ hm],
+  rw ["<-", expr hc.support_pow_eq_iff] ["at", ident hn', ident hm'],
+  rw ["[", "<-", expr nat.mod_eq_of_lt hn, ",", "<-", expr nat.mod_eq_of_lt hm, ",", "<-", expr pow_inj_mod, "]"] [],
+  refine [expr support_congr _ _],
+  { rw ["[", expr hm', ",", expr hn', "]"] [],
+    exact [expr finset.subset.refl _] },
+  { rw [expr hm'] [],
+    intros [ident y, ident hy],
+    obtain ["⟨", ident k, ",", ident rfl, "⟩", ":=", expr hc.exists_pow_eq (mem_support.mp hx) (mem_support.mp hy)],
+    rw ["[", "<-", expr mul_apply, ",", expr (commute.pow_pow_self _ _ _).eq, ",", expr mul_apply, ",", expr h, ",", "<-", expr mul_apply, ",", "<-", expr mul_apply, ",", expr (commute.pow_pow_self _ _ _).eq, "]"] [] }
+end
 
 theorem next_to_list_eq_apply (p : perm α) (x y : α) (hy : y ∈ to_list p x) : next (to_list p x) y hy = p y :=
   by 
@@ -359,41 +352,41 @@ theorem to_list_form_perm_singleton (x y : α) : to_list (form_perm [x]) y = [] 
   by 
     simp 
 
-theorem to_list_form_perm_nontrivial (l : List α) (hl : 2 ≤ l.length) (hn : nodup l) :
-  to_list (form_perm l) (l.nth_le 0 (zero_lt_two.trans_le hl)) = l :=
-  by 
-    have hc : l.form_perm.is_cycle := List.is_cycle_form_perm hn hl 
-    have hs : l.form_perm.support = l.to_finset
-    ·
-      refine' support_form_perm_of_nodup _ hn _ 
-      rintro _ rfl 
-      simpa [Nat.succ_le_succ_iff] using hl 
-    rw [to_list, hc.cycle_of_eq (mem_support.mp _), hs, card_to_finset, erase_dup_eq_self.mpr hn]
-    ·
-      refine'
-        List.ext_le
-          (by 
-            simp )
-          fun k hk hk' => _ 
-      simp [form_perm_pow_apply_nth_le _ hn, Nat.mod_eq_of_ltₓ hk']
-    ·
-      simpa [hs] using nth_le_mem _ _ _
+-- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem to_list_form_perm_nontrivial
+(l : list α)
+(hl : «expr ≤ »(2, l.length))
+(hn : nodup l) : «expr = »(to_list (form_perm l) (l.nth_le 0 (zero_lt_two.trans_le hl)), l) :=
+begin
+  have [ident hc] [":", expr l.form_perm.is_cycle] [":=", expr list.is_cycle_form_perm hn hl],
+  have [ident hs] [":", expr «expr = »(l.form_perm.support, l.to_finset)] [],
+  { refine [expr support_form_perm_of_nodup _ hn _],
+    rintro ["_", ident rfl],
+    simpa [] [] [] ["[", expr nat.succ_le_succ_iff, "]"] [] ["using", expr hl] },
+  rw ["[", expr to_list, ",", expr hc.cycle_of_eq (mem_support.mp _), ",", expr hs, ",", expr card_to_finset, ",", expr erase_dup_eq_self.mpr hn, "]"] [],
+  { refine [expr list.ext_le (by simp [] [] [] [] [] []) (λ k hk hk', _)],
+    simp [] [] [] ["[", expr form_perm_pow_apply_nth_le _ hn, ",", expr nat.mod_eq_of_lt hk', "]"] [] [] },
+  { simpa [] [] [] ["[", expr hs, "]"] [] ["using", expr nth_le_mem _ _ _] }
+end
 
-theorem to_list_form_perm_is_rotated_self (l : List α) (hl : 2 ≤ l.length) (hn : nodup l) (x : α) (hx : x ∈ l) :
-  to_list (form_perm l) x ~r l :=
-  by 
-    obtain ⟨k, hk, rfl⟩ := nth_le_of_mem hx 
-    have hr : l ~r l.rotate k := ⟨k, rfl⟩
-    rw [form_perm_eq_of_is_rotated hn hr]
-    rw [←nth_le_rotate' l k k]
-    simp only [Nat.mod_eq_of_ltₓ hk, tsub_add_cancel_of_le hk.le, Nat.mod_selfₓ]
-    rw [to_list_form_perm_nontrivial]
-    ·
-      simp 
-    ·
-      simpa using hl
-    ·
-      simpa using hn
+-- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem to_list_form_perm_is_rotated_self
+(l : list α)
+(hl : «expr ≤ »(2, l.length))
+(hn : nodup l)
+(x : α)
+(hx : «expr ∈ »(x, l)) : «expr ~r »(to_list (form_perm l) x, l) :=
+begin
+  obtain ["⟨", ident k, ",", ident hk, ",", ident rfl, "⟩", ":=", expr nth_le_of_mem hx],
+  have [ident hr] [":", expr «expr ~r »(l, l.rotate k)] [":=", expr ⟨k, rfl⟩],
+  rw [expr form_perm_eq_of_is_rotated hn hr] [],
+  rw ["<-", expr nth_le_rotate' l k k] [],
+  simp [] [] ["only"] ["[", expr nat.mod_eq_of_lt hk, ",", expr tsub_add_cancel_of_le hk.le, ",", expr nat.mod_self, "]"] [] [],
+  rw ["[", expr to_list_form_perm_nontrivial, "]"] [],
+  { simp [] [] [] [] [] [] },
+  { simpa [] [] [] [] [] ["using", expr hl] },
+  { simpa [] [] [] [] [] ["using", expr hn] }
+end
 
 theorem form_perm_to_list (f : perm α) (x : α) : form_perm (to_list f x) = f.cycle_of x :=
   by 
@@ -459,31 +452,34 @@ theorem is_cycle.exists_unique_cycle_nontrivial_subtype {f : perm α} (hf : is_c
       rintro ⟨t, ht, ht'⟩ ht'' 
       simpa using hs' ⟨t, ht⟩ ht''
 
+-- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given a cyclic `f : perm α`, generate the `cycle α` in the order
 of application of `f`. Implemented by finding an element `x : α`
 in the support of `f` in `finset.univ`, and iterating on using
 `equiv.perm.to_list f x`.
--/
-def to_cycle (f : perm α) (hf : is_cycle f) : Cycle α :=
-  Multiset.recOn (Finset.univ : Finset α).val (Quot.mk _ []) (fun x s l => if f x = x then l else to_list f x)
-    (by 
-      intro x y m s 
-      refine' heq_of_eq _ 
-      splitIfs with hx hy hy <;>
-        try 
-          rfl
-      ·
-        have hc : same_cycle f x y := is_cycle.same_cycle hf hx hy 
-        exact Quotientₓ.sound' hc.to_list_is_rotated)
+-/ def to_cycle (f : perm α) (hf : is_cycle f) : cycle α :=
+multiset.rec_on (finset.univ : finset α).val (quot.mk _ «expr[ , ]»([])) (λ
+ x
+ s
+ l, if «expr = »(f x, x) then l else to_list f x) (by { intros [ident x, ident y, ident m, ident s],
+   refine [expr heq_of_eq _],
+   split_ifs [] ["with", ident hx, ident hy, ident hy]; try { refl },
+   { have [ident hc] [":", expr same_cycle f x y] [":=", expr is_cycle.same_cycle hf hx hy],
+     exact [expr quotient.sound' hc.to_list_is_rotated] } })
 
-theorem to_cycle_eq_to_list (f : perm α) (hf : is_cycle f) (x : α) (hx : f x ≠ x) : to_cycle f hf = to_list f x :=
-  by 
-    have key : (Finset.univ : Finset α).val = x ::ₘ finset.univ.val.erase x
-    ·
-      simp 
-    rw [to_cycle, key]
-    simp [hx]
+-- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem to_cycle_eq_to_list
+(f : perm α)
+(hf : is_cycle f)
+(x : α)
+(hx : «expr ≠ »(f x, x)) : «expr = »(to_cycle f hf, to_list f x) :=
+begin
+  have [ident key] [":", expr «expr = »((finset.univ : finset α).val, «expr ::ₘ »(x, finset.univ.val.erase x))] [],
+  { simp [] [] [] [] [] [] },
+  rw ["[", expr to_cycle, ",", expr key, "]"] [],
+  simp [] [] [] ["[", expr hx, "]"] [] []
+end
 
 theorem nodup_to_cycle (f : perm α) (hf : is_cycle f) : (to_cycle f hf).Nodup :=
   by 
@@ -495,41 +491,27 @@ theorem nontrivial_to_cycle (f : perm α) (hf : is_cycle f) : (to_cycle f hf).No
     obtain ⟨x, hx, -⟩ := id hf 
     simp [to_cycle_eq_to_list f hf x hx, hx, Cycle.nontrivial_coe_nodup_iff (nodup_to_list _ _)]
 
+-- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Any cyclic `f : perm α` is isomorphic to the nontrivial `cycle α`
 that corresponds to repeated application of `f`.
 The forward direction is implemented by `equiv.perm.to_cycle`.
--/
-def iso_cycle : { f : perm α // is_cycle f } ≃ { s : Cycle α // s.nodup ∧ s.nontrivial } :=
-  { toFun := fun f => ⟨to_cycle (f : perm α) f.prop, nodup_to_cycle f f.prop, nontrivial_to_cycle _ f.prop⟩,
-    invFun := fun s => ⟨(s : Cycle α).formPerm s.prop.left, (s : Cycle α).is_cycle_form_perm _ s.prop.right⟩,
-    left_inv :=
-      fun f =>
-        by 
-          obtain ⟨x, hx, -⟩ := id f.prop 
-          simpa [to_cycle_eq_to_list (f : perm α) f.prop x hx, form_perm_to_list, Subtype.ext_iff] using
-            f.prop.cycle_of_eq hx,
-    right_inv :=
-      fun s =>
-        by 
-          rcases s with ⟨⟨s⟩, hn, ht⟩
-          obtain ⟨x, -, -, hx, -⟩ := id ht 
-          have hl : 2 ≤ s.length :=
-            by 
-              simpa using Cycle.length_nontrivial ht 
-          simp only [Cycle.mk_eq_coe, Cycle.nodup_coe_iff, Cycle.mem_coe_iff, Subtype.coe_mk, Cycle.form_perm_coe] at hn
-            hx⊢
-          rw [to_cycle_eq_to_list _ _ x]
-          ·
-            refine' Quotientₓ.sound' _ 
-            exact to_list_form_perm_is_rotated_self _ hl hn _ hx
-          ·
-            rw [←mem_support, support_form_perm_of_nodup _ hn]
-            ·
-              simpa using hx
-            ·
-              rintro _ rfl 
-              simpa [Nat.succ_le_succ_iff] using hl }
+-/ def iso_cycle : «expr ≃ »({f : perm α // is_cycle f}, {s : cycle α // «expr ∧ »(s.nodup, s.nontrivial)}) :=
+{ to_fun := λ f, ⟨to_cycle (f : perm α) f.prop, nodup_to_cycle f f.prop, nontrivial_to_cycle _ f.prop⟩,
+  inv_fun := λ s, ⟨(s : cycle α).form_perm s.prop.left, (s : cycle α).is_cycle_form_perm _ s.prop.right⟩,
+  left_inv := λ f, by { obtain ["⟨", ident x, ",", ident hx, ",", "-", "⟩", ":=", expr id f.prop],
+    simpa [] [] [] ["[", expr to_cycle_eq_to_list (f : perm α) f.prop x hx, ",", expr form_perm_to_list, ",", expr subtype.ext_iff, "]"] [] ["using", expr f.prop.cycle_of_eq hx] },
+  right_inv := λ s, by { rcases [expr s, "with", "⟨", "⟨", ident s, "⟩", ",", ident hn, ",", ident ht, "⟩"],
+    obtain ["⟨", ident x, ",", "-", ",", "-", ",", ident hx, ",", "-", "⟩", ":=", expr id ht],
+    have [ident hl] [":", expr «expr ≤ »(2, s.length)] [":=", expr by simpa [] [] [] [] [] ["using", expr cycle.length_nontrivial ht]],
+    simp [] [] ["only"] ["[", expr cycle.mk_eq_coe, ",", expr cycle.nodup_coe_iff, ",", expr cycle.mem_coe_iff, ",", expr subtype.coe_mk, ",", expr cycle.form_perm_coe, "]"] [] ["at", ident hn, ident hx, "⊢"],
+    rw [expr to_cycle_eq_to_list _ _ x] [],
+    { refine [expr quotient.sound' _],
+      exact [expr to_list_form_perm_is_rotated_self _ hl hn _ hx] },
+    { rw ["[", "<-", expr mem_support, ",", expr support_form_perm_of_nodup _ hn, "]"] [],
+      { simpa [] [] [] [] [] ["using", expr hx] },
+      { rintro ["_", ident rfl],
+        simpa [] [] [] ["[", expr nat.succ_le_succ_iff, "]"] [] ["using", expr hl] } } } }
 
 /--
 Any cyclic `f : perm α` is isomorphic to the nontrivial `cycle α`
@@ -552,7 +534,7 @@ def iso_cycle' : { f : perm α // is_cycle f } ≃ { s : Cycle α // s.nodup ∧
           simp [Cycle.form_perm_eq_form_perm_iff, iff_not_comm.mp hs.nontrivial_iff, iff_not_comm.mp hs'.nontrivial_iff,
             ht] }
 
--- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:1094:9: unsupported: advanced notation (l:(foldr `, ` (h t, list.cons h t) list.nil `]`))
+-- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:1096:9: unsupported: advanced notation (l:(foldr `, ` (h t, list.cons h t) list.nil `]`))
 notation
 `c[`
 l:(foldr `, ` (h t, list.cons h t) list.nil `]`) := cycle.form_perm «expr↑ »(l) (cycle.nodup_coe_iff.mpr exprdec_trivial())

@@ -37,26 +37,23 @@ from `1` is a unit.  Here we construct its `units` structure.  -/
 def one_sub (t : R) (h : ∥t∥ < 1) : Units R :=
   { val := 1 - t, inv := ∑'n : ℕ, t ^ n, val_inv := mul_neg_geom_series t h, inv_val := geom_series_mul_neg t h }
 
+-- error in Analysis.NormedSpace.Units: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a complete normed ring, a perturbation of a unit `x` by an element `t` of distance less than
 `∥x⁻¹∥⁻¹` from `x` is a unit.  Here we construct its `units` structure. -/
-@[simps coe]
-def add (x : Units R) (t : R) (h : ∥t∥ < ∥(«expr↑ » (x⁻¹) : R)∥⁻¹) : Units R :=
-  Units.copy
-    (x*Units.oneSub (-«expr↑ » (x⁻¹)*t)
-        (by 
-          nontriviality R using zero_lt_one 
-          have hpos : 0 < ∥(«expr↑ » (x⁻¹) : R)∥ := Units.norm_pos (x⁻¹)
-          calc ∥-«expr↑ » (x⁻¹)*t∥ = ∥«expr↑ » (x⁻¹)*t∥ :=
-            by 
-              rw [norm_neg]_ ≤ ∥(«expr↑ » (x⁻¹) : R)∥*∥t∥ :=
-            norm_mul_le («expr↑ » (x⁻¹)) _ _ < ∥(«expr↑ » (x⁻¹) : R)∥*∥(«expr↑ » (x⁻¹) : R)∥⁻¹ :=
-            by 
-              nlinarith only [h, hpos]_ = 1 :=
-            mul_inv_cancel (ne_of_gtₓ hpos)))
-    (x+t)
-    (by 
-      simp [mul_addₓ])
-    _ rfl
+@[simps #[ident coe]]
+def add
+(x : units R)
+(t : R)
+(h : «expr < »(«expr∥ ∥»(t), «expr ⁻¹»(«expr∥ ∥»((«expr↑ »(«expr ⁻¹»(x)) : R))))) : units R :=
+units.copy «expr * »(x, units.one_sub «expr- »(«expr * »(«expr↑ »(«expr ⁻¹»(x)), t)) (begin
+    nontriviality [expr R] ["using", "[", expr zero_lt_one, "]"],
+    have [ident hpos] [":", expr «expr < »(0, «expr∥ ∥»((«expr↑ »(«expr ⁻¹»(x)) : R)))] [":=", expr units.norm_pos «expr ⁻¹»(x)],
+    calc
+      «expr = »(«expr∥ ∥»(«expr- »(«expr * »(«expr↑ »(«expr ⁻¹»(x)), t))), «expr∥ ∥»(«expr * »(«expr↑ »(«expr ⁻¹»(x)), t))) : by { rw [expr norm_neg] [] }
+      «expr ≤ »(..., «expr * »(«expr∥ ∥»((«expr↑ »(«expr ⁻¹»(x)) : R)), «expr∥ ∥»(t))) : norm_mul_le «expr↑ »(«expr ⁻¹»(x)) _
+      «expr < »(..., «expr * »(«expr∥ ∥»((«expr↑ »(«expr ⁻¹»(x)) : R)), «expr ⁻¹»(«expr∥ ∥»((«expr↑ »(«expr ⁻¹»(x)) : R))))) : by nlinarith [] ["only"] ["[", expr h, ",", expr hpos, "]"]
+      «expr = »(..., 1) : mul_inv_cancel (ne_of_gt hpos)
+  end)) «expr + »(x, t) (by simp [] [] [] ["[", expr mul_add, "]"] [] []) _ rfl
 
 /-- In a complete normed ring, an element `y` of distance less than `∥x⁻¹∥⁻¹` from `x` is a unit.
 Here we construct its `units` structure. -/
@@ -68,7 +65,7 @@ def unit_of_nearby (x : Units R) (y : R) (h : ∥y - x∥ < ∥(«expr↑ » (x�
     _ rfl
 
 /-- The group of units of a complete normed ring is an open subset of the ring. -/
-protected theorem IsOpen : IsOpen { x : R | IsUnit x } :=
+protected theorem IsOpen : IsOpen { x:R | IsUnit x } :=
   by 
     nontriviality R 
     apply metric.is_open_iff.mpr 
@@ -78,7 +75,7 @@ protected theorem IsOpen : IsOpen { x : R | IsUnit x } :=
     rw [Metric.mem_ball, dist_eq_norm] at hy 
     exact (x.unit_of_nearby y hy).IsUnit
 
-protected theorem nhds (x : Units R) : { x : R | IsUnit x } ∈ 𝓝 (x : R) :=
+protected theorem nhds (x : Units R) : { x:R | IsUnit x } ∈ 𝓝 (x : R) :=
   IsOpen.mem_nhds Units.is_open x.is_unit
 
 end Units
@@ -93,166 +90,158 @@ theorem inverse_one_sub (t : R) (h : ∥t∥ < 1) : inverse (1 - t) = «expr↑ 
   by 
     rw [←inverse_unit (Units.oneSub t h), Units.coe_one_sub]
 
+-- error in Analysis.NormedSpace.Units: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The formula `inverse (x + t) = inverse (1 + x⁻¹ * t) * x⁻¹` holds for `t` sufficiently small. -/
-theorem inverse_add (x : Units R) : ∀ᶠt in 𝓝 0, inverse ((x : R)+t) = inverse (1+«expr↑ » (x⁻¹)*t)*«expr↑ » (x⁻¹) :=
-  by 
-    nontriviality R 
-    rw [eventually_iff, Metric.mem_nhds_iff]
-    have hinv : 0 < ∥(«expr↑ » (x⁻¹) : R)∥⁻¹
-    ·
-      cancelDenoms 
-    use ∥(«expr↑ » (x⁻¹) : R)∥⁻¹, hinv 
-    intro t ht 
-    simp only [mem_ball, dist_zero_right] at ht 
-    have ht' : ∥(-«expr↑ » (x⁻¹))*t∥ < 1
-    ·
-      refine' lt_of_le_of_ltₓ (norm_mul_le _ _) _ 
-      rw [norm_neg]
-      refine' lt_of_lt_of_leₓ (mul_lt_mul_of_pos_left ht x⁻¹.norm_pos) _ 
-      cancelDenoms 
-    have hright := inverse_one_sub ((-«expr↑ » (x⁻¹))*t) ht' 
-    have hleft := inverse_unit (x.add t ht)
-    simp only [←neg_mul_eq_neg_mul, sub_neg_eq_add] at hright 
-    simp only [Units.coe_add] at hleft 
-    simp [hleft, hright, Units.add]
+theorem inverse_add
+(x : units R) : «expr∀ᶠ in , »((t), expr𝓝() 0, «expr = »(inverse «expr + »((x : R), t), «expr * »(inverse «expr + »(1, «expr * »(«expr↑ »(«expr ⁻¹»(x)), t)), «expr↑ »(«expr ⁻¹»(x))))) :=
+begin
+  nontriviality [expr R] [],
+  rw ["[", expr eventually_iff, ",", expr metric.mem_nhds_iff, "]"] [],
+  have [ident hinv] [":", expr «expr < »(0, «expr ⁻¹»(«expr∥ ∥»((«expr↑ »(«expr ⁻¹»(x)) : R))))] [],
+  by cancel_denoms [],
+  use ["[", expr «expr ⁻¹»(«expr∥ ∥»((«expr↑ »(«expr ⁻¹»(x)) : R))), ",", expr hinv, "]"],
+  intros [ident t, ident ht],
+  simp [] [] ["only"] ["[", expr mem_ball, ",", expr dist_zero_right, "]"] [] ["at", ident ht],
+  have [ident ht'] [":", expr «expr < »(«expr∥ ∥»(«expr * »(«expr- »(«expr↑ »(«expr ⁻¹»(x))), t)), 1)] [],
+  { refine [expr lt_of_le_of_lt (norm_mul_le _ _) _],
+    rw [expr norm_neg] [],
+    refine [expr lt_of_lt_of_le (mul_lt_mul_of_pos_left ht «expr ⁻¹»(x).norm_pos) _],
+    cancel_denoms [] },
+  have [ident hright] [] [":=", expr inverse_one_sub «expr * »(«expr- »(«expr↑ »(«expr ⁻¹»(x))), t) ht'],
+  have [ident hleft] [] [":=", expr inverse_unit (x.add t ht)],
+  simp [] [] ["only"] ["[", "<-", expr neg_mul_eq_neg_mul, ",", expr sub_neg_eq_add, "]"] [] ["at", ident hright],
+  simp [] [] ["only"] ["[", expr units.coe_add, "]"] [] ["at", ident hleft],
+  simp [] [] [] ["[", expr hleft, ",", expr hright, ",", expr units.add, "]"] [] []
+end
 
-theorem inverse_one_sub_nth_order (n : ℕ) :
-  ∀ᶠt in 𝓝 0, inverse ((1 : R) - t) = (∑i in range n, t ^ i)+(t ^ n)*inverse (1 - t) :=
-  by 
-    simp only [eventually_iff, Metric.mem_nhds_iff]
-    use 1,
-      by 
-        normNum 
-    intro t ht 
-    simp only [mem_ball, dist_zero_right] at ht 
-    simp only [inverse_one_sub t ht, Set.mem_set_of_eq]
-    have h : 1 = (((range n).Sum fun i => t ^ i)*Units.oneSub t ht)+t ^ n
-    ·
-      simp only [Units.coe_one_sub]
-      rw [←geomSum, geom_sum_mul_neg]
-      simp 
-    rw [←one_mulₓ («expr↑ » (Units.oneSub t ht⁻¹)), h, add_mulₓ]
-    congr
-    ·
-      rw [mul_assocₓ, (Units.oneSub t ht).mul_inv]
-      simp 
-    ·
-      simp only [Units.coe_one_sub]
-      rw [←add_mulₓ, ←geomSum, geom_sum_mul_neg]
-      simp 
+-- error in Analysis.NormedSpace.Units: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem inverse_one_sub_nth_order
+(n : exprℕ()) : «expr∀ᶠ in , »((t), expr𝓝() 0, «expr = »(inverse «expr - »((1 : R), t), «expr + »(«expr∑ in , »((i), range n, «expr ^ »(t, i)), «expr * »(«expr ^ »(t, n), inverse «expr - »(1, t))))) :=
+begin
+  simp [] [] ["only"] ["[", expr eventually_iff, ",", expr metric.mem_nhds_iff, "]"] [] [],
+  use ["[", expr 1, ",", expr by norm_num [] [], "]"],
+  intros [ident t, ident ht],
+  simp [] [] ["only"] ["[", expr mem_ball, ",", expr dist_zero_right, "]"] [] ["at", ident ht],
+  simp [] [] ["only"] ["[", expr inverse_one_sub t ht, ",", expr set.mem_set_of_eq, "]"] [] [],
+  have [ident h] [":", expr «expr = »(1, «expr + »(«expr * »((range n).sum (λ
+       i, «expr ^ »(t, i)), units.one_sub t ht), «expr ^ »(t, n)))] [],
+  { simp [] [] ["only"] ["[", expr units.coe_one_sub, "]"] [] [],
+    rw ["[", "<-", expr geom_sum, ",", expr geom_sum_mul_neg, "]"] [],
+    simp [] [] [] [] [] [] },
+  rw ["[", "<-", expr one_mul «expr↑ »(«expr ⁻¹»(units.one_sub t ht)), ",", expr h, ",", expr add_mul, "]"] [],
+  congr,
+  { rw ["[", expr mul_assoc, ",", expr (units.one_sub t ht).mul_inv, "]"] [],
+    simp [] [] [] [] [] [] },
+  { simp [] [] ["only"] ["[", expr units.coe_one_sub, "]"] [] [],
+    rw ["[", "<-", expr add_mul, ",", "<-", expr geom_sum, ",", expr geom_sum_mul_neg, "]"] [],
+    simp [] [] [] [] [] [] }
+end
 
+-- error in Analysis.NormedSpace.Units: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The formula
 `inverse (x + t) = (∑ i in range n, (- x⁻¹ * t) ^ i) * x⁻¹ + (- x⁻¹ * t) ^ n * inverse (x + t)`
 holds for `t` sufficiently small. -/
-theorem inverse_add_nth_order (x : Units R) (n : ℕ) :
-  ∀ᶠt in 𝓝 0,
-    inverse ((x : R)+t) =
-      ((∑i in range n, ((-«expr↑ » (x⁻¹))*t) ^ i)*«expr↑ » (x⁻¹))+(((-«expr↑ » (x⁻¹))*t) ^ n)*inverse (x+t) :=
-  by 
-    refine' (inverse_add x).mp _ 
-    have hzero : tendsto (fun t : R => (-«expr↑ » (x⁻¹))*t) (𝓝 0) (𝓝 0)
-    ·
-      convert ((mul_left_continuous (-(«expr↑ » (x⁻¹) : R))).Tendsto 0).comp tendsto_id 
-      simp 
-    refine' (hzero.eventually (inverse_one_sub_nth_order n)).mp (eventually_of_forall _)
-    simp only [neg_mul_eq_neg_mul_symm, sub_neg_eq_add]
-    intro t h1 h2 
-    have h := congr_argₓ (fun a : R => a*«expr↑ » (x⁻¹)) h1 
-    dsimp  at h 
-    convert h 
-    rw [add_mulₓ, mul_assocₓ]
-    simp [h2.symm]
+theorem inverse_add_nth_order
+(x : units R)
+(n : exprℕ()) : «expr∀ᶠ in , »((t), expr𝓝() 0, «expr = »(inverse «expr + »((x : R), t), «expr + »(«expr * »(«expr∑ in , »((i), range n, «expr ^ »(«expr * »(«expr- »(«expr↑ »(«expr ⁻¹»(x))), t), i)), «expr↑ »(«expr ⁻¹»(x))), «expr * »(«expr ^ »(«expr * »(«expr- »(«expr↑ »(«expr ⁻¹»(x))), t), n), inverse «expr + »(x, t))))) :=
+begin
+  refine [expr (inverse_add x).mp _],
+  have [ident hzero] [":", expr tendsto (λ
+    t : R, «expr * »(«expr- »(«expr↑ »(«expr ⁻¹»(x))), t)) (expr𝓝() 0) (expr𝓝() 0)] [],
+  { convert [] [expr ((mul_left_continuous «expr- »((«expr↑ »(«expr ⁻¹»(x)) : R))).tendsto 0).comp tendsto_id] [],
+    simp [] [] [] [] [] [] },
+  refine [expr (hzero.eventually (inverse_one_sub_nth_order n)).mp (eventually_of_forall _)],
+  simp [] [] ["only"] ["[", expr neg_mul_eq_neg_mul_symm, ",", expr sub_neg_eq_add, "]"] [] [],
+  intros [ident t, ident h1, ident h2],
+  have [ident h] [] [":=", expr congr_arg (λ a : R, «expr * »(a, «expr↑ »(«expr ⁻¹»(x)))) h1],
+  dsimp [] [] [] ["at", ident h],
+  convert [] [expr h] [],
+  rw ["[", expr add_mul, ",", expr mul_assoc, "]"] [],
+  simp [] [] [] ["[", expr h2.symm, "]"] [] []
+end
 
-theorem inverse_one_sub_norm : is_O (fun t => inverse ((1 : R) - t)) (fun t => (1 : ℝ)) (𝓝 (0 : R)) :=
-  by 
-    simp only [is_O, is_O_with, eventually_iff, Metric.mem_nhds_iff]
-    refine'
-      ⟨∥(1 : R)∥+1, (2 : ℝ)⁻¹,
-        by 
-          normNum,
-        _⟩
-    intro t ht 
-    simp only [ball, dist_zero_right, Set.mem_set_of_eq] at ht 
-    have ht' : ∥t∥ < 1
-    ·
-      have  : (2 : ℝ)⁻¹ < 1 :=
-        by 
-          cancelDenoms 
-      linarith 
-    simp only [inverse_one_sub t ht', norm_one, mul_oneₓ, Set.mem_set_of_eq]
-    change ∥∑'n : ℕ, t ^ n∥ ≤ _ 
-    have  := NormedRing.tsum_geometric_of_norm_lt_1 t ht' 
-    have  : (1 - ∥t∥)⁻¹ ≤ 2
-    ·
-      rw [←inv_inv₀ (2 : ℝ)]
-      refine'
-        inv_le_inv_of_le
-          (by 
-            normNum)
-          _ 
-      have  : ((2 : ℝ)⁻¹+(2 : ℝ)⁻¹) = 1 :=
-        by 
-          ring 
-      linarith 
-    linarith
+-- error in Analysis.NormedSpace.Units: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem inverse_one_sub_norm : is_O (λ t, inverse «expr - »((1 : R), t)) (λ t, (1 : exprℝ())) (expr𝓝() (0 : R)) :=
+begin
+  simp [] [] ["only"] ["[", expr is_O, ",", expr is_O_with, ",", expr eventually_iff, ",", expr metric.mem_nhds_iff, "]"] [] [],
+  refine [expr ⟨«expr + »(«expr∥ ∥»((1 : R)), 1), «expr ⁻¹»((2 : exprℝ())), by norm_num [] [], _⟩],
+  intros [ident t, ident ht],
+  simp [] [] ["only"] ["[", expr ball, ",", expr dist_zero_right, ",", expr set.mem_set_of_eq, "]"] [] ["at", ident ht],
+  have [ident ht'] [":", expr «expr < »(«expr∥ ∥»(t), 1)] [],
+  { have [] [":", expr «expr < »(«expr ⁻¹»((2 : exprℝ())), 1)] [":=", expr by cancel_denoms []],
+    linarith [] [] [] },
+  simp [] [] ["only"] ["[", expr inverse_one_sub t ht', ",", expr norm_one, ",", expr mul_one, ",", expr set.mem_set_of_eq, "]"] [] [],
+  change [expr «expr ≤ »(«expr∥ ∥»(«expr∑' , »((n : exprℕ()), «expr ^ »(t, n))), _)] [] [],
+  have [] [] [":=", expr normed_ring.tsum_geometric_of_norm_lt_1 t ht'],
+  have [] [":", expr «expr ≤ »(«expr ⁻¹»(«expr - »(1, «expr∥ ∥»(t))), 2)] [],
+  { rw ["<-", expr inv_inv₀ (2 : exprℝ())] [],
+    refine [expr inv_le_inv_of_le (by norm_num [] []) _],
+    have [] [":", expr «expr = »(«expr + »(«expr ⁻¹»((2 : exprℝ())), «expr ⁻¹»((2 : exprℝ()))), 1)] [":=", expr by ring []],
+    linarith [] [] [] },
+  linarith [] [] []
+end
 
+-- error in Analysis.NormedSpace.Units: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The function `λ t, inverse (x + t)` is O(1) as `t → 0`. -/
-theorem inverse_add_norm (x : Units R) : is_O (fun t => inverse («expr↑ » x+t)) (fun t => (1 : ℝ)) (𝓝 (0 : R)) :=
-  by 
-    nontriviality R 
-    simp only [is_O_iff, norm_one, mul_oneₓ]
-    cases' is_O_iff.mp (@inverse_one_sub_norm R _ _) with C hC 
-    use C*∥((x⁻¹ : Units R) : R)∥
-    have hzero : tendsto (fun t => (-(«expr↑ » (x⁻¹) : R))*t) (𝓝 0) (𝓝 0)
-    ·
-      convert ((mul_left_continuous (-«expr↑ » (x⁻¹) : R)).Tendsto 0).comp tendsto_id 
-      simp 
-    refine' (inverse_add x).mp ((hzero.eventually hC).mp (eventually_of_forall _))
-    intro t bound iden 
-    rw [iden]
-    simp  at bound 
-    have hmul := norm_mul_le (inverse (1+«expr↑ » (x⁻¹)*t)) («expr↑ » (x⁻¹))
-    nlinarith [norm_nonneg («expr↑ » (x⁻¹) : R)]
+theorem inverse_add_norm
+(x : units R) : is_O (λ t, inverse «expr + »(«expr↑ »(x), t)) (λ t, (1 : exprℝ())) (expr𝓝() (0 : R)) :=
+begin
+  nontriviality [expr R] [],
+  simp [] [] ["only"] ["[", expr is_O_iff, ",", expr norm_one, ",", expr mul_one, "]"] [] [],
+  cases [expr is_O_iff.mp (@inverse_one_sub_norm R _ _)] ["with", ident C, ident hC],
+  use [expr «expr * »(C, «expr∥ ∥»(((«expr ⁻¹»(x) : units R) : R)))],
+  have [ident hzero] [":", expr tendsto (λ
+    t, «expr * »(«expr- »((«expr↑ »(«expr ⁻¹»(x)) : R)), t)) (expr𝓝() 0) (expr𝓝() 0)] [],
+  { convert [] [expr ((mul_left_continuous («expr- »(«expr↑ »(«expr ⁻¹»(x))) : R)).tendsto 0).comp tendsto_id] [],
+    simp [] [] [] [] [] [] },
+  refine [expr (inverse_add x).mp ((hzero.eventually hC).mp (eventually_of_forall _))],
+  intros [ident t, ident bound, ident iden],
+  rw [expr iden] [],
+  simp [] [] [] [] [] ["at", ident bound],
+  have [ident hmul] [] [":=", expr norm_mul_le (inverse «expr + »(1, «expr * »(«expr↑ »(«expr ⁻¹»(x)), t))) «expr↑ »(«expr ⁻¹»(x))],
+  nlinarith [] [] ["[", expr norm_nonneg («expr↑ »(«expr ⁻¹»(x)) : R), "]"]
+end
 
+-- error in Analysis.NormedSpace.Units: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The function
 `λ t, inverse (x + t) - (∑ i in range n, (- x⁻¹ * t) ^ i) * x⁻¹`
 is `O(t ^ n)` as `t → 0`. -/
-theorem inverse_add_norm_diff_nth_order (x : Units R) (n : ℕ) :
-  is_O (fun t : R => inverse («expr↑ » x+t) - (∑i in range n, ((-«expr↑ » (x⁻¹))*t) ^ i)*«expr↑ » (x⁻¹))
-    (fun t => ∥t∥ ^ n) (𝓝 (0 : R)) :=
-  by 
-    byCases' h : n = 0
-    ·
-      simpa [h] using inverse_add_norm x 
-    have hn : 0 < n := Nat.pos_of_ne_zeroₓ h 
-    simp [is_O_iff]
-    cases' is_O_iff.mp (inverse_add_norm x) with C hC 
-    use (C*∥(1 : ℝ)∥)*∥(«expr↑ » (x⁻¹) : R)∥ ^ n 
-    have h :
-      eventually_eq (𝓝 (0 : R))
-        (fun t => inverse («expr↑ » x+t) - (∑i in range n, ((-«expr↑ » (x⁻¹))*t) ^ i)*«expr↑ » (x⁻¹))
-        fun t => (((-«expr↑ » (x⁻¹))*t) ^ n)*inverse (x+t)
-    ·
-      refine' (inverse_add_nth_order x n).mp (eventually_of_forall _)
-      intro t ht 
-      convert congr_argₓ (fun a => a - (range n).Sum (pow ((-«expr↑ » (x⁻¹))*t))*«expr↑ » (x⁻¹)) ht 
-      simp 
-    refine' h.mp (hC.mp (eventually_of_forall _))
-    intro t _ hLHS 
-    simp only [neg_mul_eq_neg_mul_symm] at hLHS 
-    rw [hLHS]
-    refine' le_transₓ (norm_mul_le _ _) _ 
-    have h' : ∥(-«expr↑ » (x⁻¹)*t) ^ n∥ ≤ (∥(«expr↑ » (x⁻¹) : R)∥ ^ n)*∥t∥ ^ n
-    ·
-      calc ∥(-«expr↑ » (x⁻¹)*t) ^ n∥ ≤ ∥-«expr↑ » (x⁻¹)*t∥ ^ n := norm_pow_le' _ hn _ = ∥«expr↑ » (x⁻¹)*t∥ ^ n :=
-        by 
-          rw [norm_neg]_ ≤ (∥(«expr↑ » (x⁻¹) : R)∥*∥t∥) ^ n :=
-        _ _ = (∥(«expr↑ » (x⁻¹) : R)∥ ^ n)*∥t∥ ^ n := mul_powₓ _ _ n 
-      exact pow_le_pow_of_le_left (norm_nonneg _) (norm_mul_le («expr↑ » (x⁻¹)) t) n 
-    have h'' : 0 ≤ (∥(«expr↑ » (x⁻¹) : R)∥ ^ n)*∥t∥ ^ n
-    ·
-      refine' mul_nonneg _ _ <;> exact pow_nonneg (norm_nonneg _) n 
-    nlinarith [norm_nonneg (inverse («expr↑ » x+t))]
+theorem inverse_add_norm_diff_nth_order
+(x : units R)
+(n : exprℕ()) : is_O (λ
+ t : R, «expr - »(inverse «expr + »(«expr↑ »(x), t), «expr * »(«expr∑ in , »((i), range n, «expr ^ »(«expr * »(«expr- »(«expr↑ »(«expr ⁻¹»(x))), t), i)), «expr↑ »(«expr ⁻¹»(x))))) (λ
+ t, «expr ^ »(«expr∥ ∥»(t), n)) (expr𝓝() (0 : R)) :=
+begin
+  by_cases [expr h, ":", expr «expr = »(n, 0)],
+  { simpa [] [] [] ["[", expr h, "]"] [] ["using", expr inverse_add_norm x] },
+  have [ident hn] [":", expr «expr < »(0, n)] [":=", expr nat.pos_of_ne_zero h],
+  simp [] [] [] ["[", expr is_O_iff, "]"] [] [],
+  cases [expr is_O_iff.mp (inverse_add_norm x)] ["with", ident C, ident hC],
+  use [expr «expr * »(«expr * »(C, «expr∥ ∥»((1 : exprℝ()))), «expr ^ »(«expr∥ ∥»((«expr↑ »(«expr ⁻¹»(x)) : R)), n))],
+  have [ident h] [":", expr eventually_eq (expr𝓝() (0 : R)) (λ
+    t, «expr - »(inverse «expr + »(«expr↑ »(x), t), «expr * »(«expr∑ in , »((i), range n, «expr ^ »(«expr * »(«expr- »(«expr↑ »(«expr ⁻¹»(x))), t), i)), «expr↑ »(«expr ⁻¹»(x))))) (λ
+    t, «expr * »(«expr ^ »(«expr * »(«expr- »(«expr↑ »(«expr ⁻¹»(x))), t), n), inverse «expr + »(x, t)))] [],
+  { refine [expr (inverse_add_nth_order x n).mp (eventually_of_forall _)],
+    intros [ident t, ident ht],
+    convert [] [expr congr_arg (λ
+      a, «expr - »(a, «expr * »((range n).sum (pow «expr * »(«expr- »(«expr↑ »(«expr ⁻¹»(x))), t)), «expr↑ »(«expr ⁻¹»(x))))) ht] [],
+    simp [] [] [] [] [] [] },
+  refine [expr h.mp (hC.mp (eventually_of_forall _))],
+  intros [ident t, "_", ident hLHS],
+  simp [] [] ["only"] ["[", expr neg_mul_eq_neg_mul_symm, "]"] [] ["at", ident hLHS],
+  rw [expr hLHS] [],
+  refine [expr le_trans (norm_mul_le _ _) _],
+  have [ident h'] [":", expr «expr ≤ »(«expr∥ ∥»(«expr ^ »(«expr- »(«expr * »(«expr↑ »(«expr ⁻¹»(x)), t)), n)), «expr * »(«expr ^ »(«expr∥ ∥»((«expr↑ »(«expr ⁻¹»(x)) : R)), n), «expr ^ »(«expr∥ ∥»(t), n)))] [],
+  { calc
+      «expr ≤ »(«expr∥ ∥»(«expr ^ »(«expr- »(«expr * »(«expr↑ »(«expr ⁻¹»(x)), t)), n)), «expr ^ »(«expr∥ ∥»(«expr- »(«expr * »(«expr↑ »(«expr ⁻¹»(x)), t))), n)) : norm_pow_le' _ hn
+      «expr = »(..., «expr ^ »(«expr∥ ∥»(«expr * »(«expr↑ »(«expr ⁻¹»(x)), t)), n)) : by rw [expr norm_neg] []
+      «expr ≤ »(..., «expr ^ »(«expr * »(«expr∥ ∥»((«expr↑ »(«expr ⁻¹»(x)) : R)), «expr∥ ∥»(t)), n)) : _
+      «expr = »(..., «expr * »(«expr ^ »(«expr∥ ∥»((«expr↑ »(«expr ⁻¹»(x)) : R)), n), «expr ^ »(«expr∥ ∥»(t), n))) : mul_pow _ _ n,
+    exact [expr pow_le_pow_of_le_left (norm_nonneg _) (norm_mul_le «expr↑ »(«expr ⁻¹»(x)) t) n] },
+  have [ident h''] [":", expr «expr ≤ »(0, «expr * »(«expr ^ »(«expr∥ ∥»((«expr↑ »(«expr ⁻¹»(x)) : R)), n), «expr ^ »(«expr∥ ∥»(t), n)))] [],
+  { refine [expr mul_nonneg _ _]; exact [expr pow_nonneg (norm_nonneg _) n] },
+  nlinarith [] [] ["[", expr norm_nonneg (inverse «expr + »(«expr↑ »(x), t)), "]"]
+end
 
 /-- The function `λ t, inverse (x + t) - x⁻¹` is `O(t)` as `t → 0`. -/
 theorem inverse_add_norm_diff_first_order (x : Units R) :
@@ -272,53 +261,50 @@ theorem inverse_add_norm_diff_second_order (x : Units R) :
     simp only [range_succ, range_one, sum_insert, mem_singleton, sum_singleton, not_false_iff, one_ne_zero, pow_zeroₓ,
       add_mulₓ, pow_oneₓ, one_mulₓ, neg_mul_eq_neg_mul_symm, sub_add_eq_sub_sub_swap, sub_neg_eq_add]
 
+-- error in Analysis.NormedSpace.Units: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The function `inverse` is continuous at each unit of `R`. -/
-theorem inverse_continuous_at (x : Units R) : ContinuousAt inverse (x : R) :=
-  by 
-    have h_is_o : is_o (fun t : R => ∥inverse («expr↑ » x+t) - «expr↑ » (x⁻¹)∥) (fun t : R => (1 : ℝ)) (𝓝 0)
-    ·
-      refine' is_o_norm_left.mpr ((inverse_add_norm_diff_first_order x).trans_is_o _)
-      exact is_o_norm_left.mpr (is_o_id_const one_ne_zero)
-    have h_lim : tendsto (fun y : R => y - x) (𝓝 x) (𝓝 0)
-    ·
-      refine' tendsto_zero_iff_norm_tendsto_zero.mpr _ 
-      exact tendsto_iff_norm_tendsto_zero.mp tendsto_id 
-    simp only [ContinuousAt]
-    rw [tendsto_iff_norm_tendsto_zero, inverse_unit]
-    convert h_is_o.tendsto_0.comp h_lim 
-    ext 
-    simp 
+theorem inverse_continuous_at (x : units R) : continuous_at inverse (x : R) :=
+begin
+  have [ident h_is_o] [":", expr is_o (λ
+    t : R, «expr∥ ∥»(«expr - »(inverse «expr + »(«expr↑ »(x), t), «expr↑ »(«expr ⁻¹»(x))))) (λ
+    t : R, (1 : exprℝ())) (expr𝓝() 0)] [],
+  { refine [expr is_o_norm_left.mpr ((inverse_add_norm_diff_first_order x).trans_is_o _)],
+    exact [expr is_o_norm_left.mpr (is_o_id_const one_ne_zero)] },
+  have [ident h_lim] [":", expr tendsto (λ y : R, «expr - »(y, x)) (expr𝓝() x) (expr𝓝() 0)] [],
+  { refine [expr tendsto_zero_iff_norm_tendsto_zero.mpr _],
+    exact [expr tendsto_iff_norm_tendsto_zero.mp tendsto_id] },
+  simp [] [] ["only"] ["[", expr continuous_at, "]"] [] [],
+  rw ["[", expr tendsto_iff_norm_tendsto_zero, ",", expr inverse_unit, "]"] [],
+  convert [] [expr h_is_o.tendsto_0.comp h_lim] [],
+  ext [] [] [],
+  simp [] [] [] [] [] []
+end
 
 end NormedRing
 
 namespace Units
 
-open Opposite Filter NormedRing
+open MulOpposite Filter NormedRing
 
+-- error in Analysis.NormedSpace.Units: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a normed ring, the coercion from `units R` (equipped with the induced topology from the
-embedding in `R × R`) to `R` is an open map. -/
-theorem is_open_map_coe : IsOpenMap (coeₓ : Units R → R) :=
-  by 
-    rw [is_open_map_iff_nhds_le]
-    intro x s 
-    rw [mem_map, mem_nhds_induced]
-    rintro ⟨t, ht, hts⟩
-    obtain ⟨u, hu, v, hv, huvt⟩ :
-      ∃ u : Set R, u ∈ 𝓝 («expr↑ » x) ∧ ∃ v : Set («expr ᵒᵖ» R), v ∈ 𝓝 (Opposite.op («expr↑ » (x⁻¹))) ∧ u.prod v ⊆ t
-    ·
-      simpa [embedProduct, mem_nhds_prod_iff] using ht 
-    have  : u ∩ (op ∘ Ring.inverse) ⁻¹' v ∩ Set.Range (coeₓ : Units R → R) ∈ 𝓝 («expr↑ » x)
-    ·
-      refine' inter_mem (inter_mem hu _) (Units.nhds x)
-      refine' (continuous_op.continuous_at.comp (inverse_continuous_at x)).preimage_mem_nhds _ 
-      simpa using hv 
-    refine' mem_of_superset this _ 
-    rintro _ ⟨⟨huy, hvy⟩, ⟨y, rfl⟩⟩
-    have  : embedProduct R y ∈ u.prod v :=
-      ⟨huy,
-        by 
-          simpa using hvy⟩
-    simpa using hts (huvt this)
+embedding in `R × R`) to `R` is an open map. -/ theorem is_open_map_coe : is_open_map (coe : units R → R) :=
+begin
+  rw [expr is_open_map_iff_nhds_le] [],
+  intros [ident x, ident s],
+  rw ["[", expr mem_map, ",", expr mem_nhds_induced, "]"] [],
+  rintros ["⟨", ident t, ",", ident ht, ",", ident hts, "⟩"],
+  obtain ["⟨", ident u, ",", ident hu, ",", ident v, ",", ident hv, ",", ident huvt, "⟩", ":", expr «expr∃ , »((u : set R), «expr ∧ »(«expr ∈ »(u, expr𝓝() «expr↑ »(x)), «expr∃ , »((v : set «expr ᵐᵒᵖ»(R)), «expr ∧ »(«expr ∈ »(v, expr𝓝() (op «expr↑ »(«expr ⁻¹»(x)))), «expr ⊆ »(u.prod v, t)))))],
+  { simpa [] [] [] ["[", expr embed_product, ",", expr mem_nhds_prod_iff, "]"] [] ["using", expr ht] },
+  have [] [":", expr «expr ∈ »(«expr ∩ »(«expr ∩ »(u, «expr ⁻¹' »(«expr ∘ »(op, ring.inverse), v)), set.range (coe : units R → R)), expr𝓝() «expr↑ »(x))] [],
+  { refine [expr inter_mem (inter_mem hu _) (units.nhds x)],
+    refine [expr (continuous_op.continuous_at.comp (inverse_continuous_at x)).preimage_mem_nhds _],
+    simpa [] [] [] [] [] ["using", expr hv] },
+  refine [expr mem_of_superset this _],
+  rintros ["_", "⟨", "⟨", ident huy, ",", ident hvy, "⟩", ",", "⟨", ident y, ",", ident rfl, "⟩", "⟩"],
+  have [] [":", expr «expr ∈ »(embed_product R y, u.prod v)] [":=", expr ⟨huy, by simpa [] [] [] [] [] ["using", expr hvy]⟩],
+  simpa [] [] [] [] [] ["using", expr hts (huvt this)]
+end
 
 /-- In a normed ring, the coercion from `units R` (equipped with the induced topology from the
 embedding in `R × R`) to `R` is an open embedding. -/

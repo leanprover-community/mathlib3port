@@ -28,193 +28,159 @@ def primorial (n : ℕ) : ℕ :=
 
 local notation x "#" => primorial x
 
-theorem primorial_succ {n : ℕ} (n_big : 1 < n) (r : n % 2 = 1) : (n+1)# = n# :=
-  by 
-    have not_prime : ¬prime (n+1)
-    ·
-      intro is_prime 
-      cases' prime.eq_two_or_odd is_prime with _ n_even
-      ·
-        linarith
-      ·
-        exFalso 
-        rw [←not_even_iff] at n_even r 
-        have e : Even ((n+1) - n) := (even_sub (lt_add_one n).le).2 (iff_of_false n_even r)
-        simp only [add_tsub_cancel_left, not_even_one] at e 
-        exact e 
-    apply Finset.prod_congr
-    ·
-      rw [@range_succ (n+1), filter_insert, if_neg not_prime]
-    ·
-      exact fun _ _ => rfl
+-- error in NumberTheory.Primorial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem primorial_succ
+{n : exprℕ()}
+(n_big : «expr < »(1, n))
+(r : «expr = »(«expr % »(n, 2), 1)) : «expr = »(«expr #»(«expr + »(n, 1)), «expr #»(n)) :=
+begin
+  have [ident not_prime] [":", expr «expr¬ »(prime «expr + »(n, 1))] [],
+  { intros [ident is_prime],
+    cases [expr prime.eq_two_or_odd is_prime] ["with", "_", ident n_even],
+    { linarith [] [] [] },
+    { exfalso,
+      rw ["<-", expr not_even_iff] ["at", ident n_even, ident r],
+      have [ident e] [":", expr even «expr - »(«expr + »(n, 1), n)] [":=", expr (even_sub (lt_add_one n).le).2 (iff_of_false n_even r)],
+      simp [] [] ["only"] ["[", expr add_tsub_cancel_left, ",", expr not_even_one, "]"] [] ["at", ident e],
+      exact [expr e] } },
+  apply [expr finset.prod_congr],
+  { rw ["[", expr @range_succ «expr + »(n, 1), ",", expr filter_insert, ",", expr if_neg not_prime, "]"] [] },
+  { exact [expr λ _ _, rfl] }
+end
 
-theorem dvd_choose_of_middling_prime (p : ℕ) (is_prime : prime p) (m : ℕ) (p_big : (m+1) < p) (p_small : p ≤ (2*m)+1) :
-  p ∣ choose ((2*m)+1) (m+1) :=
-  by 
-    have m_size : (m+1) ≤ (2*m)+1 := le_of_ltₓ (lt_of_lt_of_leₓ p_big p_small)
-    have expanded : ((choose ((2*m)+1) (m+1)*(m+1)!)*(((2*m)+1) - m+1)!) = ((2*m)+1)! :=
-      @choose_mul_factorial_mul_factorial ((2*m)+1) (m+1) m_size 
-    have p_div_big_fact : p ∣ ((2*m)+1)! := (prime.dvd_factorial is_prime).mpr p_small 
-    rw [←expanded, mul_assocₓ] at p_div_big_fact 
-    have s : ¬p ∣ (m+1)!
-    ·
-      intro p_div_fact 
-      have p_le_succ_m : p ≤ m+1 := (prime.dvd_factorial is_prime).mp p_div_fact 
-      linarith 
-    have t : ¬p ∣ (((2*m)+1) - m+1)!
-    ·
-      intro p_div_fact 
-      have p_small : p ≤ ((2*m)+1) - m+1 := (prime.dvd_factorial is_prime).mp p_div_fact 
-      have t : (((2*m)+1) - m+1) = m
-      ·
-        normNum 
-        rw [two_mul m]
-        exact add_tsub_cancel_right m m 
-      rw [t] at p_small 
-      obtain p_lt_m | rfl | m_lt_p : _ := lt_trichotomyₓ p m
-      ·
-        have r : m < m+1 := lt_add_one m 
-        linarith
-      ·
-        linarith
-      ·
-        linarith 
-    obtain p_div_choose | p_div_facts : p ∣ choose ((2*m)+1) (m+1) ∨ p ∣ _ !*_ ! :=
-      (prime.dvd_mul is_prime).1 p_div_big_fact
-    ·
-      exact p_div_choose 
-    cases (prime.dvd_mul is_prime).1 p_div_facts 
-    cc 
-    cc
+-- error in NumberTheory.Primorial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dvd_choose_of_middling_prime
+(p : exprℕ())
+(is_prime : prime p)
+(m : exprℕ())
+(p_big : «expr < »(«expr + »(m, 1), p))
+(p_small : «expr ≤ »(p, «expr + »(«expr * »(2, m), 1))) : «expr ∣ »(p, choose «expr + »(«expr * »(2, m), 1) «expr + »(m, 1)) :=
+begin
+  have [ident m_size] [":", expr «expr ≤ »(«expr + »(m, 1), «expr + »(«expr * »(2, m), 1))] [":=", expr le_of_lt (lt_of_lt_of_le p_big p_small)],
+  have [ident expanded] [":", expr «expr = »(«expr * »(«expr * »(choose «expr + »(«expr * »(2, m), 1) «expr + »(m, 1), «expr !»(«expr + »(m, 1))), «expr !»(«expr - »(«expr + »(«expr * »(2, m), 1), «expr + »(m, 1)))), «expr !»(«expr + »(«expr * »(2, m), 1)))] [":=", expr @choose_mul_factorial_mul_factorial «expr + »(«expr * »(2, m), 1) «expr + »(m, 1) m_size],
+  have [ident p_div_big_fact] [":", expr «expr ∣ »(p, «expr !»(«expr + »(«expr * »(2, m), 1)))] [":=", expr (prime.dvd_factorial is_prime).mpr p_small],
+  rw ["[", "<-", expr expanded, ",", expr mul_assoc, "]"] ["at", ident p_div_big_fact],
+  have [ident s] [":", expr «expr¬ »(«expr ∣ »(p, «expr !»(«expr + »(m, 1))))] [],
+  { intros [ident p_div_fact],
+    have [ident p_le_succ_m] [":", expr «expr ≤ »(p, «expr + »(m, 1))] [":=", expr (prime.dvd_factorial is_prime).mp p_div_fact],
+    linarith [] [] [] },
+  have [ident t] [":", expr «expr¬ »(«expr ∣ »(p, «expr !»(«expr - »(«expr + »(«expr * »(2, m), 1), «expr + »(m, 1)))))] [],
+  { intros [ident p_div_fact],
+    have [ident p_small] [":", expr «expr ≤ »(p, «expr - »(«expr + »(«expr * »(2, m), 1), «expr + »(m, 1)))] [":=", expr (prime.dvd_factorial is_prime).mp p_div_fact],
+    have [ident t] [":", expr «expr = »(«expr - »(«expr + »(«expr * »(2, m), 1), «expr + »(m, 1)), m)] [],
+    { norm_num [] [],
+      rw [expr two_mul m] [],
+      exact [expr add_tsub_cancel_right m m] },
+    rw [expr t] ["at", ident p_small],
+    obtain [ident p_lt_m, "|", ident rfl, "|", ident m_lt_p, ":", expr _, ":=", expr lt_trichotomy p m],
+    { have [ident r] [":", expr «expr < »(m, «expr + »(m, 1))] [":=", expr lt_add_one m],
+      linarith [] [] [] },
+    { linarith [] [] [] },
+    { linarith [] [] [] } },
+  obtain [ident p_div_choose, "|", ident p_div_facts, ":", expr «expr ∨ »(«expr ∣ »(p, choose «expr + »(«expr * »(2, m), 1) «expr + »(m, 1)), «expr ∣ »(p, «expr * »(«expr !»(_), «expr !»(_)))), ":=", expr (prime.dvd_mul is_prime).1 p_div_big_fact],
+  { exact [expr p_div_choose] },
+  cases [expr (prime.dvd_mul is_prime).1 p_div_facts] [],
+  cc,
+  cc
+end
 
-theorem prod_primes_dvd {s : Finset ℕ} :
-  ∀ n : ℕ h : ∀ a _ : a ∈ s, prime a div : ∀ a _ : a ∈ s, a ∣ n, (∏p in s, p) ∣ n :=
-  by 
-    apply Finset.induction_on s
-    ·
-      simp 
-    ·
-      intro a s a_not_in_s induct n primes divs 
-      rw [Finset.prod_insert a_not_in_s]
-      obtain ⟨k, rfl⟩ : a ∣ n
-      ·
-        exact divs a (Finset.mem_insert_self a s)
-      have step : (∏p in s, p) ∣ k
-      ·
-        apply induct k
-        ·
-          intro b b_in_s 
-          exact primes b (Finset.mem_insert_of_mem b_in_s)
-        ·
-          intro b b_in_s 
-          have b_div_n
-          ·
-            exact divs b (Finset.mem_insert_of_mem b_in_s)
-          have a_prime : prime a
-          ·
-            exact primes a (Finset.mem_insert_self a s)
-          have b_prime : prime b
-          ·
-            exact primes b (Finset.mem_insert_of_mem b_in_s)
-          obtain b_div_a | b_div_k : b ∣ a ∨ b ∣ k 
-          exact (prime.dvd_mul b_prime).mp b_div_n
-          ·
-            exFalso 
-            have b_eq_a : b = a
-            ·
-              cases' (Nat.dvd_prime a_prime).1 b_div_a with b_eq_1 b_eq_a
-              ·
-                subst b_eq_1 
-                exFalso 
-                exact prime.ne_one b_prime rfl
-              ·
-                exact b_eq_a 
-            subst b_eq_a 
-            exact a_not_in_s b_in_s
-          ·
-            exact b_div_k 
-      exact mul_dvd_mul_left a step
+-- error in NumberTheory.Primorial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prod_primes_dvd
+{s : finset exprℕ()} : ∀
+(n : exprℕ())
+(h : ∀ a «expr ∈ » s, prime a)
+(div : ∀ a «expr ∈ » s, «expr ∣ »(a, n)), «expr ∣ »(«expr∏ in , »((p), s, p), n) :=
+begin
+  apply [expr finset.induction_on s],
+  { simp [] [] [] [] [] [] },
+  { intros [ident a, ident s, ident a_not_in_s, ident induct, ident n, ident primes, ident divs],
+    rw [expr finset.prod_insert a_not_in_s] [],
+    obtain ["⟨", ident k, ",", ident rfl, "⟩", ":", expr «expr ∣ »(a, n)],
+    by exact [expr divs a (finset.mem_insert_self a s)],
+    have [ident step] [":", expr «expr ∣ »(«expr∏ in , »((p), s, p), k)] [],
+    { apply [expr induct k],
+      { intros [ident b, ident b_in_s],
+        exact [expr primes b (finset.mem_insert_of_mem b_in_s)] },
+      { intros [ident b, ident b_in_s],
+        have [ident b_div_n] [] [],
+        by exact [expr divs b (finset.mem_insert_of_mem b_in_s)],
+        have [ident a_prime] [":", expr prime a] [],
+        { exact [expr primes a (finset.mem_insert_self a s)] },
+        have [ident b_prime] [":", expr prime b] [],
+        { exact [expr primes b (finset.mem_insert_of_mem b_in_s)] },
+        obtain [ident b_div_a, "|", ident b_div_k, ":", expr «expr ∨ »(«expr ∣ »(b, a), «expr ∣ »(b, k))],
+        exact [expr (prime.dvd_mul b_prime).mp b_div_n],
+        { exfalso,
+          have [ident b_eq_a] [":", expr «expr = »(b, a)] [],
+          { cases [expr (nat.dvd_prime a_prime).1 b_div_a] ["with", ident b_eq_1, ident b_eq_a],
+            { subst [expr b_eq_1],
+              exfalso,
+              exact [expr prime.ne_one b_prime rfl] },
+            { exact [expr b_eq_a] } },
+          subst [expr b_eq_a],
+          exact [expr a_not_in_s b_in_s] },
+        { exact [expr b_div_k] } } },
+    exact [expr mul_dvd_mul_left a step] }
+end
 
-theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
-| 0 => le_reflₓ _
-| 1 => le_of_inf_eq rfl
-| n+2 =>
-  match Nat.mod_two_eq_zero_or_oneₓ (n+1) with 
-  | Or.inl n_odd =>
-    match Nat.even_iff.2 n_odd with 
-    | ⟨m, twice_m⟩ =>
-      let recurse : (m+1) < n+2 :=
-        by 
-          linarith 
-      by 
-        calc (n+2)# = ∏i in filter prime (range ((2*m)+2)), i :=
-          by 
-            simpa [←twice_m]_ = ∏i in filter prime (Finset.ico (m+2) ((2*m)+2) ∪ range (m+2)), i :=
-          by 
-            rw [range_eq_Ico, Finset.union_comm, Finset.Ico_union_Ico_eq_Ico]
-            exact bot_le 
-            simp only [add_le_add_iff_right]
-            linarith _ = ∏i in filter prime (Finset.ico (m+2) ((2*m)+2)) ∪ filter prime (range (m+2)), i :=
-          by 
-            rw
-              [filter_union]_ =
-            (∏i in filter prime (Finset.ico (m+2) ((2*m)+2)), i)*∏i in filter prime (range (m+2)), i :=
-          by 
-            apply Finset.prod_union 
-            have disj : Disjoint (Finset.ico (m+2) ((2*m)+2)) (range (m+2))
-            ·
-              simp only [Finset.disjoint_left, and_imp, Finset.mem_Ico, not_ltₓ, Finset.mem_range]
-              intro _ pr _ 
-              exact pr 
-            exact Finset.disjoint_filter_filter disj _ ≤ (∏i in filter prime (Finset.ico (m+2) ((2*m)+2)), i)*4 ^ m+1 :=
-          by 
-            exact Nat.mul_le_mul_leftₓ _ (primorial_le_4_pow (m+1))_ ≤ choose ((2*m)+1) (m+1)*4 ^ m+1 :=
-          by 
-            have s : (∏i in filter prime (Finset.ico (m+2) ((2*m)+2)), i) ∣ choose ((2*m)+1) (m+1)
-            ·
-              refine' prod_primes_dvd (choose ((2*m)+1) (m+1)) _ _
-              ·
-                intro a 
-                rw [Finset.mem_filter]
-                cc
-              ·
-                intro a 
-                rw [Finset.mem_filter]
-                intro pr 
-                rcases pr with ⟨size, is_prime⟩
-                simp only [Finset.mem_Ico] at size 
-                rcases size with ⟨a_big, a_small⟩
-                exact dvd_choose_of_middling_prime a is_prime m a_big (nat.lt_succ_iff.mp a_small)
-            have r : (∏i in filter prime (Finset.ico (m+2) ((2*m)+2)), i) ≤ choose ((2*m)+1) (m+1)
-            ·
-              refine' @Nat.le_of_dvdₓ _ _ _ s 
-              exact
-                @choose_pos ((2*m)+1) (m+1)
-                  (by 
-                    linarith)
-            exact Nat.mul_le_mul_rightₓ _ r _ = choose ((2*m)+1) m*4 ^ m+1 :=
-          by 
-            rw [choose_symm_half m]_ ≤ (4 ^ m)*4 ^ m+1 :=
-          Nat.mul_le_mul_rightₓ _ (choose_middle_le_pow m)_ = 4 ^ (2*m)+1 :=
-          by 
-            ringExp _ = 4 ^ n+2 :=
-          by 
-            rw [←twice_m]
-  | Or.inr n_even =>
-    by 
-      obtain one_lt_n | n_le_one : (1 < n+1) ∨ (n+1) ≤ 1 := lt_or_leₓ 1 (n+1)
-      ·
-        rw
-          [primorial_succ
-            (by 
-              linarith)
-            n_even]
-        calc (n+1)# ≤ 4 ^ n.succ := primorial_le_4_pow (n+1)_ ≤ 4 ^ n+2 :=
-          pow_le_pow
-            (by 
-              normNum)
-            (Nat.le_succₓ _)
-      ·
-        have n_zero : n = 0 := eq_bot_iff.2 (succ_le_succ_iff.1 n_le_one)
-        normNum [n_zero, primorial, range_succ, prod_filter, not_prime_zero, prime_two]
+-- error in NumberTheory.Primorial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem primorial_le_4_pow : ∀ n : exprℕ(), «expr ≤ »(«expr #»(n), «expr ^ »(4, n))
+| 0 := le_refl _
+| 1 := le_of_inf_eq rfl
+| «expr + »(n, 2) := match nat.mod_two_eq_zero_or_one «expr + »(n, 1) with
+| or.inl n_odd := match nat.even_iff.2 n_odd with
+| ⟨m, twice_m⟩ := let recurse : «expr < »(«expr + »(m, 1), «expr + »(n, 2)) := by linarith [] [] [] in
+begin
+  calc
+    «expr = »(«expr #»(«expr + »(n, 2)), «expr∏ in , »((i), filter prime (range «expr + »(«expr * »(2, m), 2)), i)) : by simpa [] [] [] ["[", "<-", expr twice_m, "]"] [] []
+    «expr = »(..., «expr∏ in , »((i), filter prime «expr ∪ »(finset.Ico «expr + »(m, 2) «expr + »(«expr * »(2, m), 2), range «expr + »(m, 2)), i)) : begin
+      rw ["[", expr range_eq_Ico, ",", expr finset.union_comm, ",", expr finset.Ico_union_Ico_eq_Ico, "]"] [],
+      exact [expr bot_le],
+      simp [] [] ["only"] ["[", expr add_le_add_iff_right, "]"] [] [],
+      linarith [] [] []
+    end
+    «expr = »(..., «expr∏ in , »((i), «expr ∪ »(filter prime (finset.Ico «expr + »(m, 2) «expr + »(«expr * »(2, m), 2)), filter prime (range «expr + »(m, 2))), i)) : by rw [expr filter_union] []
+    «expr = »(..., «expr * »(«expr∏ in , »((i), filter prime (finset.Ico «expr + »(m, 2) «expr + »(«expr * »(2, m), 2)), i), «expr∏ in , »((i), filter prime (range «expr + »(m, 2)), i))) : begin
+      apply [expr finset.prod_union],
+      have [ident disj] [":", expr disjoint (finset.Ico «expr + »(m, 2) «expr + »(«expr * »(2, m), 2)) (range «expr + »(m, 2))] [],
+      { simp [] [] ["only"] ["[", expr finset.disjoint_left, ",", expr and_imp, ",", expr finset.mem_Ico, ",", expr not_lt, ",", expr finset.mem_range, "]"] [] [],
+        intros ["_", ident pr, "_"],
+        exact [expr pr] },
+      exact [expr finset.disjoint_filter_filter disj]
+    end
+    «expr ≤ »(..., «expr * »(«expr∏ in , »((i), filter prime (finset.Ico «expr + »(m, 2) «expr + »(«expr * »(2, m), 2)), i), «expr ^ »(4, «expr + »(m, 1)))) : by exact [expr nat.mul_le_mul_left _ (primorial_le_4_pow «expr + »(m, 1))]
+    «expr ≤ »(..., «expr * »(choose «expr + »(«expr * »(2, m), 1) «expr + »(m, 1), «expr ^ »(4, «expr + »(m, 1)))) : begin
+      have [ident s] [":", expr «expr ∣ »(«expr∏ in , »((i), filter prime (finset.Ico «expr + »(m, 2) «expr + »(«expr * »(2, m), 2)), i), choose «expr + »(«expr * »(2, m), 1) «expr + »(m, 1))] [],
+      { refine [expr prod_primes_dvd (choose «expr + »(«expr * »(2, m), 1) «expr + »(m, 1)) _ _],
+        { intros [ident a],
+          rw [expr finset.mem_filter] [],
+          cc },
+        { intros [ident a],
+          rw [expr finset.mem_filter] [],
+          intros [ident pr],
+          rcases [expr pr, "with", "⟨", ident size, ",", ident is_prime, "⟩"],
+          simp [] [] ["only"] ["[", expr finset.mem_Ico, "]"] [] ["at", ident size],
+          rcases [expr size, "with", "⟨", ident a_big, ",", ident a_small, "⟩"],
+          exact [expr dvd_choose_of_middling_prime a is_prime m a_big (nat.lt_succ_iff.mp a_small)] } },
+      have [ident r] [":", expr «expr ≤ »(«expr∏ in , »((i), filter prime (finset.Ico «expr + »(m, 2) «expr + »(«expr * »(2, m), 2)), i), choose «expr + »(«expr * »(2, m), 1) «expr + »(m, 1))] [],
+      { refine [expr @nat.le_of_dvd _ _ _ s],
+        exact [expr @choose_pos «expr + »(«expr * »(2, m), 1) «expr + »(m, 1) (by linarith [] [] [])] },
+      exact [expr nat.mul_le_mul_right _ r]
+    end
+    «expr = »(..., «expr * »(choose «expr + »(«expr * »(2, m), 1) m, «expr ^ »(4, «expr + »(m, 1)))) : by rw [expr choose_symm_half m] []
+    «expr ≤ »(..., «expr * »(«expr ^ »(4, m), «expr ^ »(4, «expr + »(m, 1)))) : nat.mul_le_mul_right _ (choose_middle_le_pow m)
+    «expr = »(..., «expr ^ »(4, «expr + »(«expr * »(2, m), 1))) : by ring_exp [] []
+    «expr = »(..., «expr ^ »(4, «expr + »(n, 2))) : by rw ["<-", expr twice_m] []
+end
+end
+| or.inr n_even := begin
+  obtain [ident one_lt_n, "|", ident n_le_one, ":", expr «expr ∨ »(«expr < »(1, «expr + »(n, 1)), «expr ≤ »(«expr + »(n, 1), 1)), ":=", expr lt_or_le 1 «expr + »(n, 1)],
+  { rw [expr primorial_succ (by linarith [] [] []) n_even] [],
+    calc
+      «expr ≤ »(«expr #»(«expr + »(n, 1)), «expr ^ »(4, n.succ)) : primorial_le_4_pow «expr + »(n, 1)
+      «expr ≤ »(..., «expr ^ »(4, «expr + »(n, 2))) : pow_le_pow (by norm_num [] []) (nat.le_succ _) },
+  { have [ident n_zero] [":", expr «expr = »(n, 0)] [":=", expr eq_bot_iff.2 (succ_le_succ_iff.1 n_le_one)],
+    norm_num ["[", expr n_zero, ",", expr primorial, ",", expr range_succ, ",", expr prod_filter, ",", expr not_prime_zero, ",", expr prime_two, "]"] [] }
+end
+end
 

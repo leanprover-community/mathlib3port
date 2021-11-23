@@ -307,6 +307,7 @@ duplicate factors, i.e. `U : ι → opens X` may not be injective.
 def pi_opens_to_first_obj : pi_opens F U ⟶ presheaf.first_obj.{v, v, u} (presieve_of_covering U) F :=
   pi.lift fun f => pi.π _ (index_of_hom U f) ≫ F.map (eq_to_hom (index_of_hom_spec U f)).op
 
+-- error in Topology.Sheaves.SheafCondition.Sites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Even though `first_obj_to_pi_opens` and `pi_opens_to_first_obj` are not inverse to each other,
 applying them both after a fork map `s.ι` does nothing. The intuition here is that a compatible
@@ -314,35 +315,31 @@ family `s : Π i : ι, F.obj (op (U i))` does not care about duplicate open sets
 If `U i = U j` the the compatible family coincides on the intersection `U i ⊓ U j = U i = U j`,
 hence `s i = s j` (module an `eq_to_hom` arrow).
 -/
-theorem fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq (s : limits.fork (left_res F U) (right_res F U)) :
-  s.ι ≫ pi_opens_to_first_obj F U ≫ first_obj_to_pi_opens F U = s.ι :=
-  by 
-    ext j 
-    dunfold first_obj_to_pi_opens pi_opens_to_first_obj 
-    rw [category.assoc, category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app]
-    have i_eq : U j ⟶ U j⊓U (index_of_hom U (hom_of_index U j))
-    ·
-      apply eq_to_hom 
-      rw [←index_of_hom_spec U]
-      exact inf_idem.symm 
-    have  :=
-      congr_argₓ
-        (fun f =>
-          f ≫ pi.π (fun p : ι × ι => F.obj (op (U p.1⊓U p.2))) (j, index_of_hom U (hom_of_index U j)) ≫ F.map i_eq.op)
-        s.condition 
-    dsimp  at this 
-    rw [category.assoc, category.assoc] at this 
-    symm 
-    convert this using 2
-    ·
-      dunfold left_res 
-      rw [limit.lift_π_assoc, fan.mk_π_app, category.assoc, ←F.map_comp]
-      erw [F.map_id]
-      rw [category.comp_id]
-    ·
-      dunfold right_res 
-      rw [limit.lift_π_assoc, fan.mk_π_app, category.assoc, ←F.map_comp]
-      congr
+theorem fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq
+(s : limits.fork (left_res F U) (right_res F U)) : «expr = »(«expr ≫ »(s.ι, «expr ≫ »(pi_opens_to_first_obj F U, first_obj_to_pi_opens F U)), s.ι) :=
+begin
+  ext [] [ident j] [],
+  dunfold [ident first_obj_to_pi_opens, ident pi_opens_to_first_obj] [],
+  rw ["[", expr category.assoc, ",", expr category.assoc, ",", expr limit.lift_π, ",", expr fan.mk_π_app, ",", expr limit.lift_π, ",", expr fan.mk_π_app, "]"] [],
+  have [ident i_eq] [":", expr «expr ⟶ »(U j, «expr ⊓ »(U j, U (index_of_hom U (hom_of_index U j))))] [],
+  { apply [expr eq_to_hom],
+    rw ["<-", expr index_of_hom_spec U] [],
+    exact [expr inf_idem.symm] },
+  have [] [] [":=", expr congr_arg (λ
+    f, «expr ≫ »(f, «expr ≫ »(pi.π (λ
+       p : «expr × »(ι, ι), F.obj (op «expr ⊓ »(U p.1, U p.2))) (j, index_of_hom U (hom_of_index U j)), F.map i_eq.op))) s.condition],
+  dsimp [] [] [] ["at", ident this],
+  rw ["[", expr category.assoc, ",", expr category.assoc, "]"] ["at", ident this],
+  symmetry,
+  convert [] [expr this] ["using", 2],
+  { dunfold [ident left_res] [],
+    rw ["[", expr limit.lift_π_assoc, ",", expr fan.mk_π_app, ",", expr category.assoc, ",", "<-", expr F.map_comp, "]"] [],
+    erw [expr F.map_id] [],
+    rw [expr category.comp_id] [] },
+  { dunfold [ident right_res] [],
+    rw ["[", expr limit.lift_π_assoc, ",", expr fan.mk_π_app, ",", expr category.assoc, ",", "<-", expr F.map_comp, "]"] [],
+    congr }
+end
 
 /--
 The canonical morphism from the second object of the spaces diagram to the second object of the

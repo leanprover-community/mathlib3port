@@ -1,8 +1,6 @@
-import Mathbin.LinearAlgebra.Dual 
-import Mathbin.LinearAlgebra.FinsuppVectorSpace 
-import Mathbin.LinearAlgebra.FiniteDimensional 
 import Mathbin.LinearAlgebra.Contraction 
-import Mathbin.LinearAlgebra.TensorProductBasis
+import Mathbin.LinearAlgebra.FiniteDimensional 
+import Mathbin.LinearAlgebra.Dual
 
 /-!
 # The coevaluation map on finite dimensional vector spaces
@@ -52,52 +50,51 @@ theorem coevaluation_apply_one :
 
 open TensorProduct
 
+-- error in LinearAlgebra.Coevaluation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- This lemma corresponds to one of the coherence laws for duals in rigid categories, see
   `category_theory.monoidal.rigid`. -/
-theorem contract_left_assoc_coevaluation :
-  (contractLeft K V).rtensor _ ∘ₗ
-      (TensorProduct.assoc K _ _ _).symm.toLinearMap ∘ₗ (coevaluation K V).ltensor (Module.Dual K V) =
-    (TensorProduct.lid K _).symm.toLinearMap ∘ₗ (TensorProduct.rid K _).toLinearMap :=
-  by 
-    letI this := Classical.decEq (Basis.OfVectorSpaceIndex K V)
-    apply TensorProduct.ext 
-    apply (Basis.ofVectorSpace K V).dualBasis.ext 
-    intro j 
-    apply LinearMap.ext_ring 
-    rw [LinearMap.compr₂_apply, LinearMap.compr₂_apply, TensorProduct.mk_apply]
-    simp only [LinearMap.coe_comp, Function.comp_app, LinearEquiv.coe_to_linear_map]
-    rw [rid_tmul, one_smul, lid_symm_apply]
-    simp only [LinearEquiv.coe_to_linear_map, LinearMap.ltensor_tmul, coevaluation_apply_one]
-    rw [TensorProduct.tmul_sum, LinearEquiv.map_sum]
-    simp only [assoc_symm_tmul]
-    rw [LinearMap.map_sum]
-    simp only [LinearMap.rtensor_tmul, contract_left_apply]
-    simp only [Basis.coe_dual_basis, Basis.coord_apply, Basis.repr_self_apply, TensorProduct.ite_tmul]
-    rw [Finset.sum_ite_eq']
-    simp only [Finset.mem_univ, if_true]
+theorem contract_left_assoc_coevaluation : «expr = »(«expr ∘ₗ »((contract_left K V).rtensor _, «expr ∘ₗ »((tensor_product.assoc K _ _ _).symm.to_linear_map, (coevaluation K V).ltensor (module.dual K V))), «expr ∘ₗ »((tensor_product.lid K _).symm.to_linear_map, (tensor_product.rid K _).to_linear_map)) :=
+begin
+  letI [] [] [":=", expr classical.dec_eq (basis.of_vector_space_index K V)],
+  apply [expr tensor_product.ext],
+  apply [expr (basis.of_vector_space K V).dual_basis.ext],
+  intro [ident j],
+  apply [expr linear_map.ext_ring],
+  rw ["[", expr linear_map.compr₂_apply, ",", expr linear_map.compr₂_apply, ",", expr tensor_product.mk_apply, "]"] [],
+  simp [] [] ["only"] ["[", expr linear_map.coe_comp, ",", expr function.comp_app, ",", expr linear_equiv.coe_to_linear_map, "]"] [] [],
+  rw ["[", expr rid_tmul, ",", expr one_smul, ",", expr lid_symm_apply, "]"] [],
+  simp [] [] ["only"] ["[", expr linear_equiv.coe_to_linear_map, ",", expr linear_map.ltensor_tmul, ",", expr coevaluation_apply_one, "]"] [] [],
+  rw ["[", expr tensor_product.tmul_sum, ",", expr linear_equiv.map_sum, "]"] [],
+  simp [] [] ["only"] ["[", expr assoc_symm_tmul, "]"] [] [],
+  rw ["[", expr linear_map.map_sum, "]"] [],
+  simp [] [] ["only"] ["[", expr linear_map.rtensor_tmul, ",", expr contract_left_apply, "]"] [] [],
+  simp [] [] ["only"] ["[", expr basis.coe_dual_basis, ",", expr basis.coord_apply, ",", expr basis.repr_self_apply, ",", expr tensor_product.ite_tmul, "]"] [] [],
+  rw ["[", expr finset.sum_ite_eq', "]"] [],
+  simp [] [] ["only"] ["[", expr finset.mem_univ, ",", expr if_true, "]"] [] []
+end
 
+-- error in LinearAlgebra.Coevaluation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- This lemma corresponds to one of the coherence laws for duals in rigid categories, see
   `category_theory.monoidal.rigid`. -/
-theorem contract_left_assoc_coevaluation' :
-  (contractLeft K V).ltensor _ ∘ₗ (TensorProduct.assoc K _ _ _).toLinearMap ∘ₗ (coevaluation K V).rtensor V =
-    (TensorProduct.rid K _).symm.toLinearMap ∘ₗ (TensorProduct.lid K _).toLinearMap :=
-  by 
-    letI this := Classical.decEq (Basis.OfVectorSpaceIndex K V)
-    apply TensorProduct.ext 
-    apply LinearMap.ext_ring 
-    apply (Basis.ofVectorSpace K V).ext 
-    intro j 
-    rw [LinearMap.compr₂_apply, LinearMap.compr₂_apply, TensorProduct.mk_apply]
-    simp only [LinearMap.coe_comp, Function.comp_app, LinearEquiv.coe_to_linear_map]
-    rw [lid_tmul, one_smul, rid_symm_apply]
-    simp only [LinearEquiv.coe_to_linear_map, LinearMap.rtensor_tmul, coevaluation_apply_one]
-    rw [TensorProduct.sum_tmul, LinearEquiv.map_sum]
-    simp only [assoc_tmul]
-    rw [LinearMap.map_sum]
-    simp only [LinearMap.ltensor_tmul, contract_left_apply]
-    simp only [Basis.coord_apply, Basis.repr_self_apply, TensorProduct.tmul_ite]
-    rw [Finset.sum_ite_eq]
-    simp only [Finset.mem_univ, if_true]
+theorem contract_left_assoc_coevaluation' : «expr = »(«expr ∘ₗ »((contract_left K V).ltensor _, «expr ∘ₗ »((tensor_product.assoc K _ _ _).to_linear_map, (coevaluation K V).rtensor V)), «expr ∘ₗ »((tensor_product.rid K _).symm.to_linear_map, (tensor_product.lid K _).to_linear_map)) :=
+begin
+  letI [] [] [":=", expr classical.dec_eq (basis.of_vector_space_index K V)],
+  apply [expr tensor_product.ext],
+  apply [expr linear_map.ext_ring],
+  apply [expr (basis.of_vector_space K V).ext],
+  intro [ident j],
+  rw ["[", expr linear_map.compr₂_apply, ",", expr linear_map.compr₂_apply, ",", expr tensor_product.mk_apply, "]"] [],
+  simp [] [] ["only"] ["[", expr linear_map.coe_comp, ",", expr function.comp_app, ",", expr linear_equiv.coe_to_linear_map, "]"] [] [],
+  rw ["[", expr lid_tmul, ",", expr one_smul, ",", expr rid_symm_apply, "]"] [],
+  simp [] [] ["only"] ["[", expr linear_equiv.coe_to_linear_map, ",", expr linear_map.rtensor_tmul, ",", expr coevaluation_apply_one, "]"] [] [],
+  rw ["[", expr tensor_product.sum_tmul, ",", expr linear_equiv.map_sum, "]"] [],
+  simp [] [] ["only"] ["[", expr assoc_tmul, "]"] [] [],
+  rw ["[", expr linear_map.map_sum, "]"] [],
+  simp [] [] ["only"] ["[", expr linear_map.ltensor_tmul, ",", expr contract_left_apply, "]"] [] [],
+  simp [] [] ["only"] ["[", expr basis.coord_apply, ",", expr basis.repr_self_apply, ",", expr tensor_product.tmul_ite, "]"] [] [],
+  rw ["[", expr finset.sum_ite_eq, "]"] [],
+  simp [] [] ["only"] ["[", expr finset.mem_univ, ",", expr if_true, "]"] [] []
+end
 
 end coevaluation
 

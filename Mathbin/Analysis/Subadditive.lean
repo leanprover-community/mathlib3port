@@ -58,59 +58,55 @@ theorem apply_mul_add_le k n r : u ((k*n)+r) ≤ (k*u n)+u r :=
       by 
         ring
 
-theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n / n < L) : ∀ᶠp in at_top, u p / p < L :=
-  by 
-    have I : ∀ i : ℕ, 0 < i → (i : ℝ) ≠ 0
-    ·
-      intro i hi 
-      simp only [hi.ne', Ne.def, Nat.cast_eq_zero, not_false_iff]
-    obtain ⟨w, nw, wL⟩ : ∃ w, u n / n < w ∧ w < L := exists_between hL 
-    obtain ⟨x, hx⟩ : ∃ x, ∀ i _ : i < n, (u i - i*w) ≤ x
-    ·
-      obtain ⟨x, hx⟩ : BddAbove («expr↑ » (Finset.image (fun i => u i - i*w) (Finset.range n))) := Finset.bdd_above _ 
-      refine' ⟨x, fun i hi => _⟩
-      simp only [UpperBounds, mem_image, and_imp, forall_exists_index, mem_set_of_eq, forall_apply_eq_imp_iff₂,
-        Finset.mem_range, Finset.mem_coe, Finset.coe_image] at hx 
-      exact hx _ hi 
-    have A : ∀ p : ℕ, u p ≤ (p*w)+x
-    ·
-      intro p 
-      let s := p / n 
-      let r := p % n 
-      have hp : p = (s*n)+r
-      ·
-        rw [mul_commₓ, Nat.div_add_mod]
-      calc u p = u ((s*n)+r) :=
-        by 
-          rw [hp]_ ≤ (s*u n)+u r :=
-        h.apply_mul_add_le _ _ _ _ = ((s*n)*u n / n)+u r :=
-        by 
-          fieldSimp [I _ hn.bot_lt]
-          ring _ ≤ ((s*n)*w)+u r :=
-        add_le_add_right (mul_le_mul_of_nonneg_left nw.le (mul_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _)))
-          _ _ = (((s*n)+r)*w)+u r - r*w :=
-        by 
-          ring _ = (p*w)+u r - r*w :=
-        by 
-          rw [hp]
-          simp only [Nat.cast_add, Nat.cast_mul]_ ≤ (p*w)+x :=
-        add_le_add_left (hx _ (Nat.mod_ltₓ _ hn.bot_lt)) _ 
-    have B : ∀ᶠp in at_top, u p / p ≤ w+x / p
-    ·
-      refine' eventually_at_top.2 ⟨1, fun p hp => _⟩
-      simp' only [I p hp, Ne.def, not_false_iff] with field_simps 
-      refine' div_le_div_of_le_of_nonneg _ (Nat.cast_nonneg _)
-      rw [mul_commₓ]
-      exact A _ 
-    have C : ∀ᶠp : ℕ in at_top, (w+x / p) < L
-    ·
-      have  : tendsto (fun p : ℕ => w+x / p) at_top (𝓝 (w+0)) :=
-        tendsto_const_nhds.add (tendsto_const_nhds.div_at_top tendsto_coe_nat_at_top_at_top)
-      rw [add_zeroₓ] at this 
-      exact (tendsto_order.1 this).2 _ wL 
-    filterUpwards [B, C]
-    intro p hp h'p 
-    exact hp.trans_lt h'p
+-- error in Analysis.Subadditive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eventually_div_lt_of_div_lt
+{L : exprℝ()}
+{n : exprℕ()}
+(hn : «expr ≠ »(n, 0))
+(hL : «expr < »(«expr / »(u n, n), L)) : «expr∀ᶠ in , »((p), at_top, «expr < »(«expr / »(u p, p), L)) :=
+begin
+  have [ident I] [":", expr ∀ i : exprℕ(), «expr < »(0, i) → «expr ≠ »((i : exprℝ()), 0)] [],
+  { assume [binders (i hi)],
+    simp [] [] ["only"] ["[", expr hi.ne', ",", expr ne.def, ",", expr nat.cast_eq_zero, ",", expr not_false_iff, "]"] [] [] },
+  obtain ["⟨", ident w, ",", ident nw, ",", ident wL, "⟩", ":", expr «expr∃ , »((w), «expr ∧ »(«expr < »(«expr / »(u n, n), w), «expr < »(w, L))), ":=", expr exists_between hL],
+  obtain ["⟨", ident x, ",", ident hx, "⟩", ":", expr «expr∃ , »((x), ∀
+    i «expr < » n, «expr ≤ »(«expr - »(u i, «expr * »(i, w)), x))],
+  { obtain ["⟨", ident x, ",", ident hx, "⟩", ":", expr bdd_above «expr↑ »(finset.image (λ
+       i, «expr - »(u i, «expr * »(i, w))) (finset.range n)), ":=", expr finset.bdd_above _],
+    refine [expr ⟨x, λ i hi, _⟩],
+    simp [] [] ["only"] ["[", expr upper_bounds, ",", expr mem_image, ",", expr and_imp, ",", expr forall_exists_index, ",", expr mem_set_of_eq, ",", expr forall_apply_eq_imp_iff₂, ",", expr finset.mem_range, ",", expr finset.mem_coe, ",", expr finset.coe_image, "]"] [] ["at", ident hx],
+    exact [expr hx _ hi] },
+  have [ident A] [":", expr ∀ p : exprℕ(), «expr ≤ »(u p, «expr + »(«expr * »(p, w), x))] [],
+  { assume [binders (p)],
+    let [ident s] [] [":=", expr «expr / »(p, n)],
+    let [ident r] [] [":=", expr «expr % »(p, n)],
+    have [ident hp] [":", expr «expr = »(p, «expr + »(«expr * »(s, n), r))] [],
+    by rw ["[", expr mul_comm, ",", expr nat.div_add_mod, "]"] [],
+    calc
+      «expr = »(u p, u «expr + »(«expr * »(s, n), r)) : by rw [expr hp] []
+      «expr ≤ »(..., «expr + »(«expr * »(s, u n), u r)) : h.apply_mul_add_le _ _ _
+      «expr = »(..., «expr + »(«expr * »(«expr * »(s, n), «expr / »(u n, n)), u r)) : by { field_simp [] ["[", expr I _ hn.bot_lt, "]"] [] [],
+        ring [] }
+      «expr ≤ »(..., «expr + »(«expr * »(«expr * »(s, n), w), u r)) : add_le_add_right (mul_le_mul_of_nonneg_left nw.le (mul_nonneg (nat.cast_nonneg _) (nat.cast_nonneg _))) _
+      «expr = »(..., «expr + »(«expr * »(«expr + »(«expr * »(s, n), r), w), «expr - »(u r, «expr * »(r, w)))) : by ring []
+      «expr = »(..., «expr + »(«expr * »(p, w), «expr - »(u r, «expr * »(r, w)))) : by { rw [expr hp] [],
+        simp [] [] ["only"] ["[", expr nat.cast_add, ",", expr nat.cast_mul, "]"] [] [] }
+      «expr ≤ »(..., «expr + »(«expr * »(p, w), x)) : add_le_add_left (hx _ (nat.mod_lt _ hn.bot_lt)) _ },
+  have [ident B] [":", expr «expr∀ᶠ in , »((p), at_top, «expr ≤ »(«expr / »(u p, p), «expr + »(w, «expr / »(x, p))))] [],
+  { refine [expr eventually_at_top.2 ⟨1, λ p hp, _⟩],
+    simp [] [] ["only"] ["[", expr I p hp, ",", expr ne.def, ",", expr not_false_iff, "]"] ["with", ident field_simps] [],
+    refine [expr div_le_div_of_le_of_nonneg _ (nat.cast_nonneg _)],
+    rw [expr mul_comm] [],
+    exact [expr A _] },
+  have [ident C] [":", expr «expr∀ᶠ in , »((p : exprℕ()), at_top, «expr < »(«expr + »(w, «expr / »(x, p)), L))] [],
+  { have [] [":", expr tendsto (λ
+      p : exprℕ(), «expr + »(w, «expr / »(x, p))) at_top (expr𝓝() «expr + »(w, 0))] [":=", expr tendsto_const_nhds.add (tendsto_const_nhds.div_at_top tendsto_coe_nat_at_top_at_top)],
+    rw [expr add_zero] ["at", ident this],
+    exact [expr (tendsto_order.1 this).2 _ wL] },
+  filter_upwards ["[", expr B, ",", expr C, "]"] [],
+  assume [binders (p hp h'p)],
+  exact [expr hp.trans_lt h'p]
+end
 
 /-- Fekete's lemma: a subadditive sequence which is bounded below converges. -/
 theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) : tendsto (fun n => u n / n) at_top (𝓝 h.lim) :=

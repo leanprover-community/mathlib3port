@@ -35,7 +35,7 @@ Generally you should just use `limit.cone F`, unless you need the actual definit
 (which is in terms of `types.limit_cone`).
 -/
 def limit_cone (F : J ⥤ Top.{u}) : cone F :=
-  { x := Top.of { u : ∀ j : J, F.obj j | ∀ {i j : J} f : i ⟶ j, F.map f (u i) = u j },
+  { x := Top.of { u:∀ j : J, F.obj j | ∀ {i j : J} f : i ⟶ j, F.map f (u i) = u j },
     π :=
       { app :=
           fun j =>
@@ -94,7 +94,7 @@ instance Top_has_limits : has_limits.{u} Top.{u} :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
+          exact { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
 
 instance forget_preserves_limits : preserves_limits (forget : Top.{u} ⥤ Type u) :=
   { PreservesLimitsOfShape :=
@@ -102,7 +102,7 @@ instance forget_preserves_limits : preserves_limits (forget : Top.{u} ⥤ Type u
         { PreservesLimit :=
             fun F =>
               by 
-                exactI
+                exact
                   preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
                     (types.limit_cone_is_limit (F ⋙ forget)) } }
 
@@ -135,7 +135,7 @@ instance Top_has_colimits : has_colimits.{u} Top.{u} :=
   { HasColimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { HasColimit :=
                 fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } } }
 
@@ -145,7 +145,7 @@ instance forget_preserves_colimits : preserves_colimits (forget : Top.{u} ⥤ Ty
         { PreservesColimit :=
             fun F =>
               by 
-                exactI
+                exact
                   preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
                     (types.colimit_cocone_is_colimit (F ⋙ forget)) } }
 
@@ -159,97 +159,97 @@ variable{J : Type u}[small_category J][is_cofiltered J](F : J ⥤ Top.{u})(C : c
 
 include hC
 
+-- error in Topology.Category.Top.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given a *compatible* collection of topological bases for the factors in a cofiltered limit
 which contain `set.univ` and are closed under intersections, the induced *naive* collection
 of sets in the limit is, in fact, a topological basis.
 -/
-theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j))) (hT : ∀ j, is_topological_basis (T j))
-  (univ : ∀ i : J, Set.Univ ∈ T i) (inter : ∀ i U1 U2 : Set (F.obj i), U1 ∈ T i → U2 ∈ T i → U1 ∩ U2 ∈ T i)
-  (compat : ∀ i j : J f : i ⟶ j V : Set (F.obj j) hV : V ∈ T j, F.map f ⁻¹' V ∈ T i) :
-  is_topological_basis { U : Set C.X | ∃ (j : _)(V : Set (F.obj j)), V ∈ T j ∧ U = C.π.app j ⁻¹' V } :=
-  by 
-    classical 
-    let D := limit_cone_infi F 
-    let E : C.X ≅ D.X := hC.cone_point_unique_up_to_iso (limit_cone_infi_is_limit _)
-    have hE : Inducing E.hom := (Top.homeoOfIso E).Inducing 
-    suffices  : is_topological_basis { U : Set D.X | ∃ (j : _)(V : Set (F.obj j)), V ∈ T j ∧ U = D.π.app j ⁻¹' V }
-    ·
-      convert this.inducing hE 
-      ext U0 
-      split 
-      ·
-        rintro ⟨j, V, hV, rfl⟩
-        refine' ⟨D.π.app j ⁻¹' V, ⟨j, V, hV, rfl⟩, rfl⟩
-      ·
-        rintro ⟨W, ⟨j, V, hV, rfl⟩, rfl⟩
-        refine' ⟨j, V, hV, rfl⟩
-    convert is_topological_basis_infi hT fun j x : D.X => D.π.app j x 
-    ext U0 
-    split 
-    ·
-      rintro ⟨j, V, hV, rfl⟩
-      let U : ∀ i, Set (F.obj i) :=
-        fun i =>
-          if h : i = j then
-            by 
-              rw [h]
-              exact V
-          else Set.Univ 
-      refine' ⟨U, {j}, _, _⟩
-      ·
-        rintro i h 
-        rw [Finset.mem_singleton] at h 
-        dsimp [U]
-        rw [dif_pos h]
-        subst h 
-        exact hV
-      ·
-        dsimp [U]
-        simp 
-    ·
-      rintro ⟨U, G, h1, h2⟩
-      obtain ⟨j, hj⟩ := is_cofiltered.inf_objs_exists G 
-      let g : ∀ e he : e ∈ G, j ⟶ e := fun _ he => (hj he).some 
-      let Vs : J → Set (F.obj j) := fun e => if h : e ∈ G then F.map (g e h) ⁻¹' U e else Set.Univ 
-      let V : Set (F.obj j) := ⋂(e : J)(he : e ∈ G), Vs e 
-      refine' ⟨j, V, _, _⟩
-      ·
-        have  :
-          ∀ S : Set (Set (F.obj j)) E : Finset J P : J → Set (F.obj j) univ : Set.Univ ∈ S inter :
-            ∀ A B : Set (F.obj j), A ∈ S → B ∈ S → A ∩ B ∈ S cond : ∀ e : J he : e ∈ E, P e ∈ S,
-            (⋂(e : _)(he : e ∈ E), P e) ∈ S
-        ·
-          intro S E 
-          apply E.induction_on
-          ·
-            intro P he hh 
-            simpa
-          ·
-            intro a E ha hh1 hh2 hh3 hh4 hh5 
-            rw [Finset.set_bInter_insert]
-            refine' hh4 _ _ (hh5 _ (Finset.mem_insert_self _ _)) (hh1 _ hh3 hh4 _)
-            intro e he 
-            exact hh5 e (Finset.mem_insert_of_mem he)
-        refine' this _ _ _ (univ _) (inter _) _ 
-        intro e he 
-        dsimp [Vs]
-        rw [dif_pos he]
-        exact compat j e (g e he) (U e) (h1 e he)
-      ·
-        rw [h2]
-        dsimp [V]
-        rw [Set.preimage_Inter]
-        congr 1 
-        ext1 e 
-        rw [Set.preimage_Inter]
-        congr 1 
-        ext1 he 
-        dsimp [Vs]
-        rw [dif_pos he, ←Set.preimage_comp]
-        congr 1
-        change _ = «expr⇑ » (D.π.app j ≫ F.map (g e he))
-        rw [D.w]
+theorem is_topological_basis_cofiltered_limit
+(T : ∀ j, set (set (F.obj j)))
+(hT : ∀ j, is_topological_basis (T j))
+(univ : ∀ i : J, «expr ∈ »(set.univ, T i))
+(inter : ∀ (i) (U1 U2 : set (F.obj i)), «expr ∈ »(U1, T i) → «expr ∈ »(U2, T i) → «expr ∈ »(«expr ∩ »(U1, U2), T i))
+(compat : ∀
+ (i j : J)
+ (f : «expr ⟶ »(i, j))
+ (V : set (F.obj j))
+ (hV : «expr ∈ »(V, T j)), «expr ∈ »(«expr ⁻¹' »(F.map f, V), T i)) : is_topological_basis {U : set C.X | «expr∃ , »((j)
+ (V : set (F.obj j)), «expr ∧ »(«expr ∈ »(V, T j), «expr = »(U, «expr ⁻¹' »(C.π.app j, V))))} :=
+begin
+  classical,
+  let [ident D] [] [":=", expr limit_cone_infi F],
+  let [ident E] [":", expr «expr ≅ »(C.X, D.X)] [":=", expr hC.cone_point_unique_up_to_iso (limit_cone_infi_is_limit _)],
+  have [ident hE] [":", expr inducing E.hom] [":=", expr (Top.homeo_of_iso E).inducing],
+  suffices [] [":", expr is_topological_basis {U : set D.X | «expr∃ , »((j)
+    (V : set (F.obj j)), «expr ∧ »(«expr ∈ »(V, T j), «expr = »(U, «expr ⁻¹' »(D.π.app j, V))))}],
+  { convert [] [expr this.inducing hE] [],
+    ext [] [ident U0] [],
+    split,
+    { rintro ["⟨", ident j, ",", ident V, ",", ident hV, ",", ident rfl, "⟩"],
+      refine [expr ⟨«expr ⁻¹' »(D.π.app j, V), ⟨j, V, hV, rfl⟩, rfl⟩] },
+    { rintro ["⟨", ident W, ",", "⟨", ident j, ",", ident V, ",", ident hV, ",", ident rfl, "⟩", ",", ident rfl, "⟩"],
+      refine [expr ⟨j, V, hV, rfl⟩] } },
+  convert [] [expr is_topological_basis_infi hT (λ (j) (x : D.X), D.π.app j x)] [],
+  ext [] [ident U0] [],
+  split,
+  { rintros ["⟨", ident j, ",", ident V, ",", ident hV, ",", ident rfl, "⟩"],
+    let [ident U] [":", expr ∀
+     i, set (F.obj i)] [":=", expr λ i, if h : «expr = »(i, j) then by { rw [expr h] [],
+       exact [expr V] } else set.univ],
+    refine [expr ⟨U, {j}, _, _⟩],
+    { rintro [ident i, ident h],
+      rw [expr finset.mem_singleton] ["at", ident h],
+      dsimp [] ["[", expr U, "]"] [] [],
+      rw [expr dif_pos h] [],
+      subst [expr h],
+      exact [expr hV] },
+    { dsimp [] ["[", expr U, "]"] [] [],
+      simp [] [] [] [] [] [] } },
+  { rintros ["⟨", ident U, ",", ident G, ",", ident h1, ",", ident h2, "⟩"],
+    obtain ["⟨", ident j, ",", ident hj, "⟩", ":=", expr is_cofiltered.inf_objs_exists G],
+    let [ident g] [":", expr ∀ (e) (he : «expr ∈ »(e, G)), «expr ⟶ »(j, e)] [":=", expr λ _ he, (hj he).some],
+    let [ident Vs] [":", expr J → set (F.obj j)] [":=", expr λ
+     e, if h : «expr ∈ »(e, G) then «expr ⁻¹' »(F.map (g e h), U e) else set.univ],
+    let [ident V] [":", expr set (F.obj j)] [":=", expr «expr⋂ , »((e : J) (he : «expr ∈ »(e, G)), Vs e)],
+    refine [expr ⟨j, V, _, _⟩],
+    { have [] [":", expr ∀
+       (S : set (set (F.obj j)))
+       (E : finset J)
+       (P : J → set (F.obj j))
+       (univ : «expr ∈ »(set.univ, S))
+       (inter : ∀ A B : set (F.obj j), «expr ∈ »(A, S) → «expr ∈ »(B, S) → «expr ∈ »(«expr ∩ »(A, B), S))
+       (cond : ∀
+        (e : J)
+        (he : «expr ∈ »(e, E)), «expr ∈ »(P e, S)), «expr ∈ »(«expr⋂ , »((e) (he : «expr ∈ »(e, E)), P e), S)] [],
+      { intros [ident S, ident E],
+        apply [expr E.induction_on],
+        { intros [ident P, ident he, ident hh],
+          simpa [] [] [] [] [] [] },
+        { intros [ident a, ident E, ident ha, ident hh1, ident hh2, ident hh3, ident hh4, ident hh5],
+          rw [expr finset.set_bInter_insert] [],
+          refine [expr hh4 _ _ (hh5 _ (finset.mem_insert_self _ _)) (hh1 _ hh3 hh4 _)],
+          intros [ident e, ident he],
+          exact [expr hh5 e (finset.mem_insert_of_mem he)] } },
+      refine [expr this _ _ _ (univ _) (inter _) _],
+      intros [ident e, ident he],
+      dsimp [] ["[", expr Vs, "]"] [] [],
+      rw [expr dif_pos he] [],
+      exact [expr compat j e (g e he) (U e) (h1 e he)] },
+    { rw [expr h2] [],
+      dsimp [] ["[", expr V, "]"] [] [],
+      rw [expr set.preimage_Inter] [],
+      congr' [1] [],
+      ext1 [] [ident e],
+      rw [expr set.preimage_Inter] [],
+      congr' [1] [],
+      ext1 [] [ident he],
+      dsimp [] ["[", expr Vs, "]"] [] [],
+      rw ["[", expr dif_pos he, ",", "<-", expr set.preimage_comp, "]"] [],
+      congr' [1] [],
+      change [expr «expr = »(_, «expr⇑ »(«expr ≫ »(D.π.app j, F.map (g e he))))] [] [],
+      rw [expr D.w] [] } }
+end
 
 end CofilteredLimit
 
@@ -307,45 +307,47 @@ theorem partial_sections.nonempty [is_cofiltered J] [h : ∀ j : J, Nonempty (F.
     dsimp only 
     rwa [dif_pos hX, dif_pos hY, ←comp_app, ←F.map_comp, @is_cofiltered.inf_to_commutes _ _ _ G H]
 
-theorem partial_sections.directed : Directed Superset fun G : finite_diagram J => partial_sections F G.2 :=
-  by 
-    classical 
-    intro A B 
-    let ιA : finite_diagram_arrow A.1 → finite_diagram_arrow (A.1⊔B.1) :=
-      fun f => ⟨f.1, f.2.1, Finset.mem_union_left _ f.2.2.1, Finset.mem_union_left _ f.2.2.2.1, f.2.2.2.2⟩
-    let ιB : finite_diagram_arrow B.1 → finite_diagram_arrow (A.1⊔B.1) :=
-      fun f => ⟨f.1, f.2.1, Finset.mem_union_right _ f.2.2.1, Finset.mem_union_right _ f.2.2.2.1, f.2.2.2.2⟩
-    refine' ⟨⟨A.1⊔B.1, A.2.Image ιA⊔B.2.Image ιB⟩, _, _⟩
-    ·
-      rintro u hu f hf 
-      have  : ιA f ∈ A.2.Image ιA⊔B.2.Image ιB
-      ·
-        apply Finset.mem_union_left 
-        rw [Finset.mem_image]
-        refine' ⟨f, hf, rfl⟩
-      exact hu this
-    ·
-      rintro u hu f hf 
-      have  : ιB f ∈ A.2.Image ιA⊔B.2.Image ιB
-      ·
-        apply Finset.mem_union_right 
-        rw [Finset.mem_image]
-        refine' ⟨f, hf, rfl⟩
-      exact hu this
+-- error in Topology.Category.Top.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem partial_sections.directed : directed superset (λ G : finite_diagram J, partial_sections F G.2) :=
+begin
+  classical,
+  intros [ident A, ident B],
+  let [ident ιA] [":", expr finite_diagram_arrow A.1 → finite_diagram_arrow «expr ⊔ »(A.1, B.1)] [":=", expr λ
+   f, ⟨f.1, f.2.1, finset.mem_union_left _ f.2.2.1, finset.mem_union_left _ f.2.2.2.1, f.2.2.2.2⟩],
+  let [ident ιB] [":", expr finite_diagram_arrow B.1 → finite_diagram_arrow «expr ⊔ »(A.1, B.1)] [":=", expr λ
+   f, ⟨f.1, f.2.1, finset.mem_union_right _ f.2.2.1, finset.mem_union_right _ f.2.2.2.1, f.2.2.2.2⟩],
+  refine [expr ⟨⟨«expr ⊔ »(A.1, B.1), «expr ⊔ »(A.2.image ιA, B.2.image ιB)⟩, _, _⟩],
+  { rintro [ident u, ident hu, ident f, ident hf],
+    have [] [":", expr «expr ∈ »(ιA f, «expr ⊔ »(A.2.image ιA, B.2.image ιB))] [],
+    { apply [expr finset.mem_union_left],
+      rw [expr finset.mem_image] [],
+      refine [expr ⟨f, hf, rfl⟩] },
+    exact [expr hu this] },
+  { rintro [ident u, ident hu, ident f, ident hf],
+    have [] [":", expr «expr ∈ »(ιB f, «expr ⊔ »(A.2.image ιA, B.2.image ιB))] [],
+    { apply [expr finset.mem_union_right],
+      rw [expr finset.mem_image] [],
+      refine [expr ⟨f, hf, rfl⟩] },
+    exact [expr hu this] }
+end
 
-theorem partial_sections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J} (H : Finset (finite_diagram_arrow G)) :
-  IsClosed (partial_sections F H) :=
-  by 
-    have  : partial_sections F H = ⋂(f : finite_diagram_arrow G)(hf : f ∈ H), { u | F.map f.2.2.2.2 (u f.1) = u f.2.1 }
-    ·
-      ext1 
-      simp only [Set.mem_Inter, Set.mem_set_of_eq]
-      rfl 
-    rw [this]
-    apply is_closed_bInter 
-    intro f hf 
-    apply is_closed_eq 
-    continuity
+-- error in Topology.Category.Top.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem partial_sections.closed
+[∀ j : J, t2_space (F.obj j)]
+{G : finset J}
+(H : finset (finite_diagram_arrow G)) : is_closed (partial_sections F H) :=
+begin
+  have [] [":", expr «expr = »(partial_sections F H, «expr⋂ , »({f : finite_diagram_arrow G}
+     (hf : «expr ∈ »(f, H)), {u | «expr = »(F.map f.2.2.2.2 (u f.1), u f.2.1)}))] [],
+  { ext1 [] [],
+    simp [] [] ["only"] ["[", expr set.mem_Inter, ",", expr set.mem_set_of_eq, "]"] [] [],
+    refl },
+  rw [expr this] [],
+  apply [expr is_closed_bInter],
+  intros [ident f, ident hf],
+  apply [expr is_closed_eq],
+  continuity [] []
+end
 
 /--
 Cofiltered limits of nonempty compact Hausdorff spaces are nonempty topological spaces.
@@ -376,36 +378,50 @@ end Top
 
 section FintypeKonig
 
+-- error in Topology.Category.Top.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- This bootstraps `nonempty_sections_of_fintype_inverse_system`. In this version,
 the `F` functor is between categories of the same universe, and it is an easy
 corollary to `Top.nonempty_limit_cone_of_compact_t2_inverse_system`. -/
-theorem NonemptySectionsOfFintypeCofilteredSystem.init {J : Type u} [small_category J] [is_cofiltered J]
-  (F : J ⥤ Type u) [hf : ∀ j : J, Fintype (F.obj j)] [hne : ∀ j : J, Nonempty (F.obj j)] : F.sections.nonempty :=
-  by 
-    let F' : J ⥤ Top := F ⋙ Top.discrete 
-    haveI  : ∀ j : J, Fintype (F'.obj j) := hf 
-    haveI  : ∀ j : J, Nonempty (F'.obj j) := hne 
-    obtain ⟨⟨u, hu⟩⟩ := Top.nonempty_limit_cone_of_compact_t2_cofiltered_system F' 
-    exact ⟨u, fun _ _ f => hu f⟩
+theorem nonempty_sections_of_fintype_cofiltered_system.init
+{J : Type u}
+[small_category J]
+[is_cofiltered J]
+(F : «expr ⥤ »(J, Type u))
+[hf : ∀ j : J, fintype (F.obj j)]
+[hne : ∀ j : J, nonempty (F.obj j)] : F.sections.nonempty :=
+begin
+  let [ident F'] [":", expr «expr ⥤ »(J, Top)] [":=", expr «expr ⋙ »(F, Top.discrete)],
+  haveI [] [":", expr ∀ j : J, fintype (F'.obj j)] [":=", expr hf],
+  haveI [] [":", expr ∀ j : J, nonempty (F'.obj j)] [":=", expr hne],
+  obtain ["⟨", "⟨", ident u, ",", ident hu, "⟩", "⟩", ":=", expr Top.nonempty_limit_cone_of_compact_t2_cofiltered_system F'],
+  exact [expr ⟨u, λ _ _ f, hu f⟩]
+end
 
+-- error in Topology.Category.Top.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The cofiltered limit of nonempty finite types is nonempty.
 
 See `nonempty_sections_of_fintype_inverse_system` for a specialization to inverse limits. -/
-theorem nonempty_sections_of_fintype_cofiltered_system {J : Type u} [category.{w} J] [is_cofiltered J] (F : J ⥤ Type v)
-  [∀ j : J, Fintype (F.obj j)] [∀ j : J, Nonempty (F.obj j)] : F.sections.nonempty :=
-  by 
-    let J' : Type max w v u := as_small.{max w v} J 
-    let down : J' ⥤ J := as_small.down 
-    let F' : J' ⥤ Type max u v w := down ⋙ F ⋙ ulift_functor.{max u w, v}
-    haveI  : ∀ i, Nonempty (F'.obj i) := fun i => ⟨⟨Classical.arbitrary (F.obj (down.obj i))⟩⟩
-    haveI  : ∀ i, Fintype (F'.obj i) := fun i => Fintype.ofEquiv (F.obj (down.obj i)) equiv.ulift.symm 
-    obtain ⟨u, hu⟩ := NonemptySectionsOfFintypeCofilteredSystem.init F' 
-    use fun j => (u ⟨j⟩).down 
-    intro j j' f 
-    have h := @hu (⟨j⟩ : J') (⟨j'⟩ : J') (Ulift.up f)
-    simp only [as_small.down, functor.comp_map, ulift_functor_map, functor.op_map] at h 
-    simpRw [←h]
-    rfl
+theorem nonempty_sections_of_fintype_cofiltered_system
+{J : Type u}
+[category.{w} J]
+[is_cofiltered J]
+(F : «expr ⥤ »(J, Type v))
+[∀ j : J, fintype (F.obj j)]
+[∀ j : J, nonempty (F.obj j)] : F.sections.nonempty :=
+begin
+  let [ident J'] [":", expr Type max w v u] [":=", expr as_small.{max w v} J],
+  let [ident down] [":", expr «expr ⥤ »(J', J)] [":=", expr as_small.down],
+  let [ident F'] [":", expr «expr ⥤ »(J', Type max u v w)] [":=", expr «expr ⋙ »(down, «expr ⋙ »(F, ulift_functor.{max u w, v}))],
+  haveI [] [":", expr ∀ i, nonempty (F'.obj i)] [":=", expr λ i, ⟨⟨classical.arbitrary (F.obj (down.obj i))⟩⟩],
+  haveI [] [":", expr ∀ i, fintype (F'.obj i)] [":=", expr λ i, fintype.of_equiv (F.obj (down.obj i)) equiv.ulift.symm],
+  obtain ["⟨", ident u, ",", ident hu, "⟩", ":=", expr nonempty_sections_of_fintype_cofiltered_system.init F'],
+  use [expr λ j, (u ⟨j⟩).down],
+  intros [ident j, ident j', ident f],
+  have [ident h] [] [":=", expr @hu (⟨j⟩ : J') (⟨j'⟩ : J') (ulift.up f)],
+  simp [] [] ["only"] ["[", expr as_small.down, ",", expr functor.comp_map, ",", expr ulift_functor_map, ",", expr functor.op_map, "]"] [] ["at", ident h],
+  simp_rw ["[", "<-", expr h, "]"] [],
+  refl
+end
 
 /-- The inverse limit of nonempty finite types is nonempty.
 

@@ -20,132 +20,121 @@ open MeasureTheory Set TopologicalSpace
 
 open_locale Classical Ennreal Nnreal
 
+-- error in MeasureTheory.Function.AeMeasurableOrder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function `f : α → β` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p < q`, then `f` is almost-everywhere
 measurable. It is even enough to have this for `p` and `q` in a countable dense set. -/
-theorem MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets {α : Type _} {m : MeasurableSpace α}
-  (μ : Measureₓ α) {β : Type _} [CompleteLinearOrder β] [DenselyOrdered β] [TopologicalSpace β] [OrderTopology β]
-  [second_countable_topology β] [MeasurableSpace β] [BorelSpace β] (s : Set β) (s_count : countable s)
-  (s_dense : Dense s) (f : α → β)
-  (h :
-    ∀ p _ : p ∈ s q _ : q ∈ s,
-      p < q → ∃ u v, MeasurableSet u ∧ MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
-  AeMeasurable f μ :=
-  by 
-    haveI  : Encodable s := s_count.to_encodable 
-    have h' :
-      ∀ p q,
-        ∃ u v,
-          MeasurableSet u ∧
-            MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ (p ∈ s → q ∈ s → p < q → μ (u ∩ v) = 0)
-    ·
-      intro p q 
-      byCases' H : p ∈ s ∧ q ∈ s ∧ p < q
-      ·
-        rcases h p H.1 q H.2.1 H.2.2 with ⟨u, v, hu, hv, h'u, h'v, hμ⟩
-        exact ⟨u, v, hu, hv, h'u, h'v, fun ps qs pq => hμ⟩
-      ·
-        refine' ⟨univ, univ, MeasurableSet.univ, MeasurableSet.univ, subset_univ _, subset_univ _, fun ps qs pq => _⟩
-        simp only [not_and] at H 
-        exact (H ps qs pq).elim 
-    choose! u v huv using h' 
-    let u' : β → Set α := fun p => ⋂(q : _)(_ : q ∈ s ∩ Ioi p), u p q 
-    have u'_meas : ∀ i, MeasurableSet (u' i)
-    ·
-      intro i 
-      exact MeasurableSet.bInter (s_count.mono (inter_subset_left _ _)) fun b hb => (huv i b).1
-    let f' : α → β := fun x => ⨅i : s, piecewise (u' i) (fun x => (i : β)) (fun x => (⊤ : β)) x 
-    have f'_meas : Measurable f'
-    ·
-      apply measurable_infi 
-      exact fun i => Measurable.piecewise (u'_meas i) measurable_const measurable_const 
-    let t := ⋃(p : s)(q : s ∩ Ioi p), u' p ∩ v p q 
-    have μt : μ t ≤ 0 :=
-      calc μ t ≤ ∑'(p : s)(q : s ∩ Ioi p), μ (u' p ∩ v p q) :=
-        by 
-          refine' (measure_Union_le _).trans _ 
-          apply Ennreal.tsum_le_tsum fun p => _ 
-          apply measure_Union_le _ 
-          exact (s_count.mono (inter_subset_left _ _)).toEncodable 
-        _ ≤ ∑'(p : s)(q : s ∩ Ioi p), μ (u p q ∩ v p q) :=
-        by 
-          apply Ennreal.tsum_le_tsum fun p => _ 
-          refine' Ennreal.tsum_le_tsum fun q => measure_mono _ 
-          exact inter_subset_inter_left _ (bInter_subset_of_mem q.2)
-        _ = ∑'(p : s)(q : s ∩ Ioi p), (0 : ℝ≥0∞) :=
-        by 
-          congr 
-          ext1 p 
-          congr 
-          ext1 q 
-          exact (huv p q).2.2.2.2 p.2 q.2.1 q.2.2
-        _ = 0 :=
-        by 
-          simp only [tsum_zero]
-        
-    have ff' : ∀ᵐx ∂μ, f x = f' x
-    ·
-      have  : ∀ᵐx ∂μ, x ∉ t
-      ·
-        have  : μ t = 0 := le_antisymmₓ μt bot_le 
-        change μ _ = 0
-        convert this 
-        ext y 
-        simp only [not_exists, exists_prop, mem_set_of_eq, mem_compl_eq, not_not_mem]
-      filterUpwards [this]
-      intro x hx 
-      apply (infi_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
-      ·
-        intro i 
-        byCases' H : x ∈ u' i 
-        swap
-        ·
-          simp only [H, le_top, not_false_iff, piecewise_eq_of_not_mem]
-        simp only [H, piecewise_eq_of_mem]
-        contrapose! hx 
-        obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (i : β) (f x) ∩ s :=
-          dense_iff_inter_open.1 s_dense (Ioo i (f x)) is_open_Ioo (nonempty_Ioo.2 hx)
-        have A : x ∈ v i r := (huv i r).2.2.2.1 rq 
-        apply mem_Union.2 ⟨i, _⟩
-        refine' mem_Union.2 ⟨⟨r, ⟨rs, xr⟩⟩, _⟩
-        exact ⟨H, A⟩
-      ·
-        intro q hq 
-        obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (f x) q ∩ s :=
-          dense_iff_inter_open.1 s_dense (Ioo (f x) q) is_open_Ioo (nonempty_Ioo.2 hq)
-        refine' ⟨⟨r, rs⟩, _⟩
-        have A : x ∈ u' r := mem_bInter fun i hi => (huv r i).2.2.1 xr 
-        simp only [A, rq, piecewise_eq_of_mem, Subtype.coe_mk]
-    exact ⟨f', f'_meas, ff'⟩
+theorem measure_theory.ae_measurable_of_exist_almost_disjoint_supersets
+{α : Type*}
+{m : measurable_space α}
+(μ : measure α)
+{β : Type*}
+[complete_linear_order β]
+[densely_ordered β]
+[topological_space β]
+[order_topology β]
+[second_countable_topology β]
+[measurable_space β]
+[borel_space β]
+(s : set β)
+(s_count : countable s)
+(s_dense : dense s)
+(f : α → β)
+(h : ∀
+ (p «expr ∈ » s)
+ (q «expr ∈ » s), «expr < »(p, q) → «expr∃ , »((u
+   v), «expr ∧ »(measurable_set u, «expr ∧ »(measurable_set v, «expr ∧ »(«expr ⊆ »({x | «expr < »(f x, p)}, u), «expr ∧ »(«expr ⊆ »({x | «expr < »(q, f x)}, v), «expr = »(μ «expr ∩ »(u, v), 0))))))) : ae_measurable f μ :=
+begin
+  haveI [] [":", expr encodable s] [":=", expr s_count.to_encodable],
+  have [ident h'] [":", expr ∀
+   p
+   q, «expr∃ , »((u
+     v), «expr ∧ »(measurable_set u, «expr ∧ »(measurable_set v, «expr ∧ »(«expr ⊆ »({x | «expr < »(f x, p)}, u), «expr ∧ »(«expr ⊆ »({x | «expr < »(q, f x)}, v), «expr ∈ »(p, s) → «expr ∈ »(q, s) → «expr < »(p, q) → «expr = »(μ «expr ∩ »(u, v), 0))))))] [],
+  { assume [binders (p q)],
+    by_cases [expr H, ":", expr «expr ∧ »(«expr ∈ »(p, s), «expr ∧ »(«expr ∈ »(q, s), «expr < »(p, q)))],
+    { rcases [expr h p H.1 q H.2.1 H.2.2, "with", "⟨", ident u, ",", ident v, ",", ident hu, ",", ident hv, ",", ident h'u, ",", ident h'v, ",", ident hμ, "⟩"],
+      exact [expr ⟨u, v, hu, hv, h'u, h'v, λ ps qs pq, hμ⟩] },
+    { refine [expr ⟨univ, univ, measurable_set.univ, measurable_set.univ, subset_univ _, subset_univ _, λ ps qs pq, _⟩],
+      simp [] [] ["only"] ["[", expr not_and, "]"] [] ["at", ident H],
+      exact [expr (H ps qs pq).elim] } },
+  choose ["!"] [ident u] [ident v, ident huv] ["using", expr h'],
+  let [ident u'] [":", expr β → set α] [":=", expr λ p, «expr⋂ , »((q «expr ∈ » «expr ∩ »(s, Ioi p)), u p q)],
+  have [ident u'_meas] [":", expr ∀ i, measurable_set (u' i)] [],
+  { assume [binders (i)],
+    exact [expr measurable_set.bInter (s_count.mono (inter_subset_left _ _)) (λ b hb, (huv i b).1)] },
+  let [ident f'] [":", expr α → β] [":=", expr λ
+   x, «expr⨅ , »((i : s), piecewise (u' i) (λ x, (i : β)) (λ x, («expr⊤»() : β)) x)],
+  have [ident f'_meas] [":", expr measurable f'] [],
+  { apply [expr measurable_infi],
+    exact [expr λ i, measurable.piecewise (u'_meas i) measurable_const measurable_const] },
+  let [ident t] [] [":=", expr «expr⋃ , »((p : s) (q : «expr ∩ »(s, Ioi p)), «expr ∩ »(u' p, v p q))],
+  have [ident μt] [":", expr «expr ≤ »(μ t, 0)] [":=", expr calc
+     «expr ≤ »(μ t, «expr∑' , »((p : s) (q : «expr ∩ »(s, Ioi p)), μ «expr ∩ »(u' p, v p q))) : begin
+       refine [expr (measure_Union_le _).trans _],
+       apply [expr ennreal.tsum_le_tsum (λ p, _)],
+       apply [expr measure_Union_le _],
+       exact [expr (s_count.mono (inter_subset_left _ _)).to_encodable]
+     end
+     «expr ≤ »(..., «expr∑' , »((p : s) (q : «expr ∩ »(s, Ioi p)), μ «expr ∩ »(u p q, v p q))) : begin
+       apply [expr ennreal.tsum_le_tsum (λ p, _)],
+       refine [expr ennreal.tsum_le_tsum (λ q, measure_mono _)],
+       exact [expr inter_subset_inter_left _ (bInter_subset_of_mem q.2)]
+     end
+     «expr = »(..., «expr∑' , »((p : s) (q : «expr ∩ »(s, Ioi p)), (0 : «exprℝ≥0∞»()))) : by { congr,
+       ext1 [] [ident p],
+       congr,
+       ext1 [] [ident q],
+       exact [expr (huv p q).2.2.2.2 p.2 q.2.1 q.2.2] }
+     «expr = »(..., 0) : by simp [] [] ["only"] ["[", expr tsum_zero, "]"] [] []],
+  have [ident ff'] [":", expr «expr∀ᵐ ∂ , »((x), μ, «expr = »(f x, f' x))] [],
+  { have [] [":", expr «expr∀ᵐ ∂ , »((x), μ, «expr ∉ »(x, t))] [],
+    { have [] [":", expr «expr = »(μ t, 0)] [":=", expr le_antisymm μt bot_le],
+      change [expr «expr = »(μ _, 0)] [] [],
+      convert [] [expr this] [],
+      ext [] [ident y] [],
+      simp [] [] ["only"] ["[", expr not_exists, ",", expr exists_prop, ",", expr mem_set_of_eq, ",", expr mem_compl_eq, ",", expr not_not_mem, "]"] [] [] },
+    filter_upwards ["[", expr this, "]"] [],
+    assume [binders (x hx)],
+    apply [expr (infi_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm],
+    { assume [binders (i)],
+      by_cases [expr H, ":", expr «expr ∈ »(x, u' i)],
+      swap,
+      { simp [] [] ["only"] ["[", expr H, ",", expr le_top, ",", expr not_false_iff, ",", expr piecewise_eq_of_not_mem, "]"] [] [] },
+      simp [] [] ["only"] ["[", expr H, ",", expr piecewise_eq_of_mem, "]"] [] [],
+      contrapose ["!"] [ident hx],
+      obtain ["⟨", ident r, ",", "⟨", ident xr, ",", ident rq, "⟩", ",", ident rs, "⟩", ":", expr «expr∃ , »((r), «expr ∈ »(r, «expr ∩ »(Ioo (i : β) (f x), s))), ":=", expr dense_iff_inter_open.1 s_dense (Ioo i (f x)) is_open_Ioo (nonempty_Ioo.2 hx)],
+      have [ident A] [":", expr «expr ∈ »(x, v i r)] [":=", expr (huv i r).2.2.2.1 rq],
+      apply [expr mem_Union.2 ⟨i, _⟩],
+      refine [expr mem_Union.2 ⟨⟨r, ⟨rs, xr⟩⟩, _⟩],
+      exact [expr ⟨H, A⟩] },
+    { assume [binders (q hq)],
+      obtain ["⟨", ident r, ",", "⟨", ident xr, ",", ident rq, "⟩", ",", ident rs, "⟩", ":", expr «expr∃ , »((r), «expr ∈ »(r, «expr ∩ »(Ioo (f x) q, s))), ":=", expr dense_iff_inter_open.1 s_dense (Ioo (f x) q) is_open_Ioo (nonempty_Ioo.2 hq)],
+      refine [expr ⟨⟨r, rs⟩, _⟩],
+      have [ident A] [":", expr «expr ∈ »(x, u' r)] [":=", expr mem_bInter (λ i hi, (huv r i).2.2.1 xr)],
+      simp [] [] ["only"] ["[", expr A, ",", expr rq, ",", expr piecewise_eq_of_mem, ",", expr subtype.coe_mk, "]"] [] [] } },
+  exact [expr ⟨f', f'_meas, ff'⟩]
+end
 
+-- error in MeasureTheory.Function.AeMeasurableOrder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function `f : α → ℝ≥0∞` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p` and `q` are finite numbers satisfying
 `p < q`, then `f` is almost-everywhere measurable. -/
-theorem Ennreal.ae_measurable_of_exist_almost_disjoint_supersets {α : Type _} {m : MeasurableSpace α} (μ : Measureₓ α)
-  (f : α → ℝ≥0∞)
-  (h :
-    ∀ p :  ℝ≥0  q :  ℝ≥0 ,
-      p < q →
-        ∃ u v, MeasurableSet u ∧ MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | (q : ℝ≥0∞) < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
-  AeMeasurable f μ :=
-  by 
-    let s : Set ℝ≥0∞ := { x | ∃ a : ℚ, x = Ennreal.ofReal a }
-    have s_count : countable s
-    ·
-      have  : s = range fun a : ℚ => Ennreal.ofReal a
-      ·
-        ·
-          ext x 
-          simp only [eq_comm, mem_range, mem_set_of_eq]
-      rw [this]
-      exact countable_range _ 
-    have s_dense : Dense s
-    ·
-      refine' dense_iff_forall_lt_exists_mem.2 fun c d hcd => _ 
-      rcases Ennreal.lt_iff_exists_rat_btwn.1 hcd with ⟨q, hq⟩
-      exact ⟨Ennreal.ofReal q, ⟨q, rfl⟩, hq.2⟩
-    apply MeasureTheory.ae_measurable_of_exist_almost_disjoint_supersets μ s s_count s_dense _ 
-    rintro _ ⟨p, rfl⟩ _ ⟨q, rfl⟩ hpq 
-    apply h 
-    simpa [Ennreal.ofReal] using hpq
+theorem ennreal.ae_measurable_of_exist_almost_disjoint_supersets
+{α : Type*}
+{m : measurable_space α}
+(μ : measure α)
+(f : α → «exprℝ≥0∞»())
+(h : ∀
+ (p : «exprℝ≥0»())
+ (q : «exprℝ≥0»()), «expr < »(p, q) → «expr∃ , »((u
+   v), «expr ∧ »(measurable_set u, «expr ∧ »(measurable_set v, «expr ∧ »(«expr ⊆ »({x | «expr < »(f x, p)}, u), «expr ∧ »(«expr ⊆ »({x | «expr < »((q : «exprℝ≥0∞»()), f x)}, v), «expr = »(μ «expr ∩ »(u, v), 0))))))) : ae_measurable f μ :=
+begin
+  obtain ["⟨", ident s, ",", ident s_count, ",", ident s_dense, ",", ident s_zero, ",", ident s_top, "⟩", ":", expr «expr∃ , »((s : set «exprℝ≥0∞»()), «expr ∧ »(countable s, «expr ∧ »(dense s, «expr ∧ »(«expr ∉ »(0, s), «expr ∉ »(«expr∞»(), s))))), ":=", expr ennreal.exists_countable_dense_no_zero_top],
+  have [ident I] [":", expr ∀ x «expr ∈ » s, «expr ≠ »(x, «expr∞»())] [":=", expr λ x xs hx, s_top «expr ▸ »(hx, xs)],
+  apply [expr measure_theory.ae_measurable_of_exist_almost_disjoint_supersets μ s s_count s_dense _],
+  rintros [ident p, ident hp, ident q, ident hq, ident hpq],
+  lift [expr p] ["to", expr «exprℝ≥0»()] ["using", expr I p hp] [],
+  lift [expr q] ["to", expr «exprℝ≥0»()] ["using", expr I q hq] [],
+  exact [expr h p q (ennreal.coe_lt_coe.1 hpq)]
+end
 

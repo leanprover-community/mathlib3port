@@ -28,7 +28,7 @@ universe u
 
 variable(K : Type u)[Field K]
 
--- error in Algebra.Category.FinVect: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in Algebra.Category.FinVect: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- Define `FinVect` as the subtype of `Module.{u} K` of finite dimensional vector spaces. -/
 @[derive #["[", expr category, ",", expr λ α, has_coe_to_sort α (Sort*), "]"]]
 def FinVect :=
@@ -45,8 +45,7 @@ instance  : Inhabited (FinVect K) :=
 instance  : Coe (FinVect.{u} K) (ModuleCat.{u} K) :=
   { coe := fun V => V.1 }
 
-protected theorem coe_comp {U V W : FinVect K} (f : U ⟶ V) (g : V ⟶ W) :
-  (f ≫ g : U → W) = ((g : V → W) ∘ (f : U → V)) :=
+protected theorem coe_comp {U V W : FinVect K} (f : U ⟶ V) (g : V ⟶ W) : (f ≫ g : U → W) = (g : V → W) ∘ (f : U → V) :=
   rfl
 
 instance monoidal_category : monoidal_category (FinVect K) :=
@@ -54,7 +53,7 @@ instance monoidal_category : monoidal_category (FinVect K) :=
     (FiniteDimensional.finite_dimensional_self K)
     fun X Y hX hY =>
       by 
-        exactI finite_dimensional_tensor_product X Y
+        exact finite_dimensional_tensor_product X Y
 
 variable(V : FinVect K)
 

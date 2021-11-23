@@ -280,9 +280,9 @@ theorem kernel_iso_of_eq_refl {h : f = f} : kernel_iso_of_eq h = iso.refl (kerne
 theorem kernel_iso_of_eq_trans {f g h : X ⟶ Y} [has_kernel f] [has_kernel g] [has_kernel h] (w₁ : f = g) (w₂ : g = h) :
   kernel_iso_of_eq w₁ ≪≫ kernel_iso_of_eq w₂ = kernel_iso_of_eq (w₁.trans w₂) :=
   by 
-    unfreezingI 
+    (
       induction w₁ 
-      induction w₂ 
+      induction w₂)
     ext 
     simp [kernel_iso_of_eq]
 
@@ -291,13 +291,13 @@ variable{f}
 theorem kernel_not_epi_of_nonzero (w : f ≠ 0) : ¬epi (kernel.ι f) :=
   fun I =>
     by 
-      exactI w (eq_zero_of_epi_kernel f)
+      exact w (eq_zero_of_epi_kernel f)
 
 theorem kernel_not_iso_of_nonzero (w : f ≠ 0) : is_iso (kernel.ι f) → False :=
   fun I =>
     kernel_not_epi_of_nonzero w$
       by 
-        resetI 
+        skip 
         infer_instance
 
 instance has_kernel_comp_mono {X Y Z : C} (f : X ⟶ Y) [has_kernel f] (g : Y ⟶ Z) [mono g] : has_kernel (f ≫ g) :=
@@ -670,9 +670,9 @@ theorem cokernel_iso_of_eq_refl {h : f = f} : cokernel_iso_of_eq h = iso.refl (c
 theorem cokernel_iso_of_eq_trans {f g h : X ⟶ Y} [has_cokernel f] [has_cokernel g] [has_cokernel h] (w₁ : f = g)
   (w₂ : g = h) : cokernel_iso_of_eq w₁ ≪≫ cokernel_iso_of_eq w₂ = cokernel_iso_of_eq (w₁.trans w₂) :=
   by 
-    unfreezingI 
+    (
       induction w₁ 
-      induction w₂ 
+      induction w₂)
     ext 
     simp [cokernel_iso_of_eq]
 
@@ -681,13 +681,13 @@ variable{f}
 theorem cokernel_not_mono_of_nonzero (w : f ≠ 0) : ¬mono (cokernel.π f) :=
   fun I =>
     by 
-      exactI w (eq_zero_of_mono_cokernel f)
+      exact w (eq_zero_of_mono_cokernel f)
 
 theorem cokernel_not_iso_of_nonzero (w : f ≠ 0) : is_iso (cokernel.π f) → False :=
   fun I =>
     cokernel_not_mono_of_nonzero w$
       by 
-        resetI 
+        skip 
         infer_instance
 
 instance has_cokernel_comp_iso {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [has_cokernel f] [is_iso g] : has_cokernel (f ≫ g) :=
@@ -794,27 +794,35 @@ end HasZeroObject
 
 section HasImage
 
+-- error in CategoryTheory.Limits.Shapes.Kernels: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The cokernel of the image inclusion of a morphism `f` is isomorphic to the cokernel of `f`.
 
 (This result requires that the factorisation through the image is an epimorphism.
 This holds in any category with equalizers.)
 -/
-@[simps]
-def cokernel_image_ι {X Y : C} (f : X ⟶ Y) [has_image f] [has_cokernel (image.ι f)] [has_cokernel f]
-  [epi (factor_thru_image f)] : cokernel (image.ι f) ≅ cokernel f :=
-  { Hom :=
-      cokernel.desc _ (cokernel.π f)
-        (by 
-          have w := cokernel.condition f 
-          conv  at w => toLHS congr rw [←image.fac f]
-          rw [←has_zero_morphisms.comp_zero (limits.factor_thru_image f), category.assoc, cancel_epi] at w 
-          exact w),
-    inv :=
-      cokernel.desc _ (cokernel.π _)
-        (by 
-          conv  => toLHS congr rw [←image.fac f]
-          rw [category.assoc, cokernel.condition, has_zero_morphisms.comp_zero]) }
+@[simps #[]]
+def cokernel_image_ι
+{X Y : C}
+(f : «expr ⟶ »(X, Y))
+[has_image f]
+[has_cokernel (image.ι f)]
+[has_cokernel f]
+[epi (factor_thru_image f)] : «expr ≅ »(cokernel (image.ι f), cokernel f) :=
+{ hom := cokernel.desc _ (cokernel.π f) (begin
+     have [ident w] [] [":=", expr cokernel.condition f],
+     conv ["at", ident w] [] { to_lhs,
+       congr,
+       rw ["<-", expr image.fac f] },
+     rw ["[", "<-", expr has_zero_morphisms.comp_zero (limits.factor_thru_image f), ",", expr category.assoc, ",", expr cancel_epi, "]"] ["at", ident w],
+     exact [expr w]
+   end),
+  inv := cokernel.desc _ (cokernel.π _) (begin
+     conv [] [] { to_lhs,
+       congr,
+       rw ["<-", expr image.fac f] },
+     rw ["[", expr category.assoc, ",", expr cokernel.condition, ",", expr has_zero_morphisms.comp_zero, "]"] []
+   end) }
 
 end HasImage
 

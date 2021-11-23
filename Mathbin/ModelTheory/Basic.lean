@@ -95,7 +95,7 @@ variable(L)(M : Type _)
   `n` to `Prop`. -/
 class Structure where 
   funMap : ∀ {n}, L.functions n → (Finₓ n → M) → M 
-  rel_map : ∀ {n}, L.relations n → (Finₓ n → M) → Prop
+  RelMap : ∀ {n}, L.relations n → (Finₓ n → M) → Prop
 
 variable(N : Type _)[L.Structure M][L.Structure N]
 
@@ -586,7 +586,7 @@ theorem not_mem_of_not_mem_closure {P : M} (hP : P ∉ closure L s) : P ∉ s :=
   fun h => hP (subset_closure h)
 
 @[simp]
-theorem closed (S : L.substructure M) : (closure L).closed (S : Set M) :=
+theorem closed (S : L.substructure M) : (closure L).Closed (S : Set M) :=
   congr rfl ((closure L).eq_of_le Set.Subset.rfl fun x xS => mem_closure.2 fun T hT => hT xS)
 
 open Set
@@ -850,7 +850,7 @@ end GaloisInsertion
 
 instance induced_Structure {S : L.substructure M} : L.Structure S :=
   { funMap := fun n f x => ⟨fun_map f fun i => x i, S.fun_mem f (fun i => x i) fun i => (x i).2⟩,
-    rel_map := fun n r x => rel_map r fun i => (x i : M) }
+    RelMap := fun n r x => rel_map r fun i => (x i : M) }
 
 /-- The natural embedding of an `L.substructure` of `M` into `M`. -/
 def Subtype (S : L.substructure M) : S ↪[L] M :=
@@ -884,7 +884,7 @@ namespace Hom
 
 open Substructure
 
--- error in ModelTheory.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in have: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in ModelTheory.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The substructure of elements `x : M` such that `f x = g x` -/
 def eq_locus (f g : «expr →[ ] »(M, L, N)) : substructure L M :=
 { carrier := {x : M | «expr = »(f x, g x)},

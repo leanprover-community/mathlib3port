@@ -51,14 +51,14 @@ variable(𝕜 :
 /-- A set `B` is exposed with respect to `A` iff it maximizes some functional over `A` (and contains
 all points maximizing it). Written `is_exposed 𝕜 A B`. -/
 def IsExposed (A B : Set E) : Prop :=
-  B.nonempty → ∃ l : E →L[𝕜] 𝕜, B = { x ∈ A | ∀ y _ : y ∈ A, l y ≤ l x }
+  B.nonempty → ∃ l : E →L[𝕜] 𝕜, B = { x∈A | ∀ y _ : y ∈ A, l y ≤ l x }
 
 variable{𝕜}
 
 /-- A useful way to build exposed sets from intersecting `A` with halfspaces (modelled by an
 inequality with a functional). -/
 def ContinuousLinearMap.ToExposed (l : E →L[𝕜] 𝕜) (A : Set E) : Set E :=
-  { x ∈ A | ∀ y _ : y ∈ A, l y ≤ l x }
+  { x∈A | ∀ y _ : y ∈ A, l y ≤ l x }
 
 theorem ContinuousLinearMap.ToExposed.is_exposed : IsExposed 𝕜 A (l.to_exposed A) :=
   fun h => ⟨l, rfl⟩
@@ -66,7 +66,7 @@ theorem ContinuousLinearMap.ToExposed.is_exposed : IsExposed 𝕜 A (l.to_expose
 theorem is_exposed_empty : IsExposed 𝕜 A ∅ :=
   fun ⟨x, hx⟩ =>
     by 
-      exFalso 
+      exfalso 
       exact hx
 
 namespace IsExposed
@@ -104,7 +104,7 @@ protected theorem mono (hC : IsExposed 𝕜 A C) (hBA : B ⊆ A) (hCB : C ⊆ B)
 /-- If `B` is an exposed subset of `A`, then `B` is the intersection of `A` with some closed
 halfspace. The converse is *not* true. It would require that the corresponding open halfspace
 doesn't intersect `A`. -/
-theorem eq_inter_halfspace (hAB : IsExposed 𝕜 A B) : ∃ l : E →L[𝕜] 𝕜, ∃ a, B = { x ∈ A | a ≤ l x } :=
+theorem eq_inter_halfspace (hAB : IsExposed 𝕜 A B) : ∃ l : E →L[𝕜] 𝕜, ∃ a, B = { x∈A | a ≤ l x } :=
   by 
     obtain hB | hB := B.eq_empty_or_nonempty
     ·
@@ -140,7 +140,7 @@ theorem sInter {F : Finset (Set E)} (hF : F.nonempty) (hAF : ∀ B _ : B ∈ F, 
     refine' Finset.induction _ _
     ·
       rintro h 
-      exFalso 
+      exfalso 
       exact empty_not_nonempty h 
     rintro C F _ hF _ hCF 
     rw [Finset.coe_insert, sInter_insert]
@@ -164,20 +164,20 @@ theorem inter_right (hC : IsExposed 𝕜 B C) (hCA : C ⊆ A) : IsExposed 𝕜 (
     rw [inter_comm]
     exact hC.inter_left hCA
 
-protected theorem IsExtreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B :=
-  by 
-    refine' ⟨hAB.subset, fun x₁ x₂ hx₁A hx₂A x hxB hx => _⟩
-    obtain ⟨l, rfl⟩ := hAB ⟨x, hxB⟩
-    have hl : ConvexOn 𝕜 univ l := l.to_linear_map.convex_on convex_univ 
-    have hlx₁ := hxB.2 x₁ hx₁A 
-    have hlx₂ := hxB.2 x₂ hx₂A 
-    refine' ⟨⟨hx₁A, fun y hy => _⟩, ⟨hx₂A, fun y hy => _⟩⟩
-    ·
-      rw [hlx₁.antisymm (hl.le_left_of_right_le (mem_univ _) (mem_univ _) hx hlx₂)]
-      exact hxB.2 y hy
-    ·
-      rw [hlx₂.antisymm (hl.le_right_of_left_le (mem_univ _) (mem_univ _) hx hlx₁)]
-      exact hxB.2 y hy
+-- error in Analysis.Convex.Exposed: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected theorem is_extreme (hAB : is_exposed 𝕜 A B) : is_extreme 𝕜 A B :=
+begin
+  refine [expr ⟨hAB.subset, λ x₁ x₂ hx₁A hx₂A x hxB hx, _⟩],
+  obtain ["⟨", ident l, ",", ident rfl, "⟩", ":=", expr hAB ⟨x, hxB⟩],
+  have [ident hl] [":", expr convex_on 𝕜 univ l] [":=", expr l.to_linear_map.convex_on convex_univ],
+  have [ident hlx₁] [] [":=", expr hxB.2 x₁ hx₁A],
+  have [ident hlx₂] [] [":=", expr hxB.2 x₂ hx₂A],
+  refine [expr ⟨⟨hx₁A, λ y hy, _⟩, ⟨hx₂A, λ y hy, _⟩⟩],
+  { rw [expr hlx₁.antisymm (hl.le_left_of_right_le (mem_univ _) (mem_univ _) hx hlx₂)] [],
+    exact [expr hxB.2 y hy] },
+  { rw [expr hlx₂.antisymm (hl.le_right_of_left_le (mem_univ _) (mem_univ _) hx hlx₁)] [],
+    exact [expr hxB.2 y hy] }
+end
 
 protected theorem Convex (hAB : IsExposed 𝕜 A B) (hA : Convex 𝕜 A) : Convex 𝕜 B :=
   by 
@@ -207,7 +207,7 @@ variable(𝕜)
 /-- A point is exposed with respect to `A` iff there exists an hyperplane whose intersection with
 `A` is exactly that point. -/
 def Set.ExposedPoints (A : Set E) : Set E :=
-  { x ∈ A | ∃ l : E →L[𝕜] 𝕜, ∀ y _ : y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) }
+  { x∈A | ∃ l : E →L[𝕜] 𝕜, ∀ y _ : y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) }
 
 variable{𝕜}
 

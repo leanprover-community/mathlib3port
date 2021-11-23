@@ -1,7 +1,9 @@
 import Mathbin.Tactic.ApplyFun 
+import Mathbin.Algebra.Field.Opposite 
 import Mathbin.Algebra.FieldPower 
 import Mathbin.Data.Equiv.RingAut 
 import Mathbin.GroupTheory.GroupAction.Units 
+import Mathbin.GroupTheory.GroupAction.Opposite 
 import Mathbin.Algebra.Ring.CompTypeclasses
 
 /-!
@@ -25,7 +27,7 @@ Our star rings are actually star semirings, but of course we can prove
 
 universe u v
 
-open Opposite
+open MulOpposite
 
 /--
 Notation typeclass (with no default notation!) for an algebraic structure with a star operation.
@@ -73,11 +75,11 @@ attribute [simp] star_mul
 theorem star_mul' [CommMonoidₓ R] [StarMonoid R] (x y : R) : star (x*y) = star x*star y :=
   (star_mul x y).trans (mul_commₓ _ _)
 
-/-- `star` as an `mul_equiv` from `R` to `Rᵒᵖ` -/
+/-- `star` as an `mul_equiv` from `R` to `Rᵐᵒᵖ` -/
 @[simps apply]
-def starMulEquiv [Monoidₓ R] [StarMonoid R] : R ≃* «expr ᵒᵖ» R :=
-  { (HasInvolutiveStar.star_involutive.toEquiv star).trans Opposite.equivToOpposite with
-    toFun := fun x => Opposite.op (star x), map_mul' := fun x y => (star_mul x y).symm ▸ Opposite.op_mul _ _ }
+def starMulEquiv [Monoidₓ R] [StarMonoid R] : R ≃* «expr ᵐᵒᵖ» R :=
+  { (HasInvolutiveStar.star_involutive.toEquiv star).trans op_equiv with toFun := fun x => MulOpposite.op (star x),
+    map_mul' := fun x y => (star_mul x y).symm ▸ MulOpposite.op_mul _ _ }
 
 /-- `star` as a `mul_aut` for commutative `R`. -/
 @[simps apply]
@@ -88,21 +90,21 @@ variable(R)
 
 @[simp]
 theorem star_one [Monoidₓ R] [StarMonoid R] : star (1 : R) = 1 :=
-  op_injective$ (starMulEquiv : R ≃* «expr ᵒᵖ» R).map_one.trans (op_one _).symm
+  op_injective$ (starMulEquiv : R ≃* «expr ᵐᵒᵖ» R).map_one.trans (op_one _).symm
 
 variable{R}
 
 @[simp]
 theorem star_pow [Monoidₓ R] [StarMonoid R] (x : R) (n : ℕ) : star (x ^ n) = star x ^ n :=
-  op_injective$ ((starMulEquiv : R ≃* «expr ᵒᵖ» R).toMonoidHom.map_pow x n).trans (op_pow (star x) n).symm
+  op_injective$ ((starMulEquiv : R ≃* «expr ᵐᵒᵖ» R).toMonoidHom.map_pow x n).trans (op_pow (star x) n).symm
 
 @[simp]
 theorem star_inv [Groupₓ R] [StarMonoid R] (x : R) : star (x⁻¹) = star x⁻¹ :=
-  op_injective$ ((starMulEquiv : R ≃* «expr ᵒᵖ» R).toMonoidHom.map_inv x).trans (op_inv (star x)).symm
+  op_injective$ ((starMulEquiv : R ≃* «expr ᵐᵒᵖ» R).toMonoidHom.map_inv x).trans (op_inv (star x)).symm
 
 @[simp]
 theorem star_zpow [Groupₓ R] [StarMonoid R] (x : R) (z : ℤ) : star (x ^ z) = star x ^ z :=
-  op_injective$ ((starMulEquiv : R ≃* «expr ᵒᵖ» R).toMonoidHom.map_zpow x z).trans (op_zpow (star x) z).symm
+  op_injective$ ((starMulEquiv : R ≃* «expr ᵐᵒᵖ» R).toMonoidHom.map_zpow x z).trans (op_zpow (star x) z).symm
 
 /-- When multiplication is commutative, `star` preserves division. -/
 @[simp]
@@ -201,11 +203,11 @@ class StarRing(R : Type u)[Semiringₓ R] extends StarMonoid R where
 instance (priority := 100)StarRing.toStarAddMonoid [Semiringₓ R] [StarRing R] : StarAddMonoid R :=
   { star_add := StarRing.star_add }
 
-/-- `star` as an `ring_equiv` from `R` to `Rᵒᵖ` -/
+/-- `star` as an `ring_equiv` from `R` to `Rᵐᵒᵖ` -/
 @[simps apply]
-def starRingEquiv [Semiringₓ R] [StarRing R] : R ≃+* «expr ᵒᵖ» R :=
-  { starAddEquiv.trans (Opposite.opAddEquiv : R ≃+ «expr ᵒᵖ» R), starMulEquiv with
-    toFun := fun x => Opposite.op (star x) }
+def starRingEquiv [Semiringₓ R] [StarRing R] : R ≃+* «expr ᵐᵒᵖ» R :=
+  { starAddEquiv.trans (MulOpposite.opAddEquiv : R ≃+ «expr ᵐᵒᵖ» R), starMulEquiv with
+    toFun := fun x => MulOpposite.op (star x) }
 
 /-- `star` as a `ring_aut` for commutative `R`. This is used to denote complex
 conjugation, and is available under the notation `conj` in the locale `complex_conjugate` -/
@@ -230,11 +232,11 @@ alias star_ring_aut_self_apply ← IsROrC.conj_conj
 
 @[simp]
 theorem star_inv' [DivisionRing R] [StarRing R] (x : R) : star (x⁻¹) = star x⁻¹ :=
-  op_injective$ ((starRingEquiv : R ≃+* «expr ᵒᵖ» R).toRingHom.map_inv x).trans (op_inv (star x)).symm
+  op_injective$ ((starRingEquiv : R ≃+* «expr ᵐᵒᵖ» R).toRingHom.map_inv x).trans (op_inv (star x)).symm
 
 @[simp]
 theorem star_zpow₀ [DivisionRing R] [StarRing R] (x : R) (z : ℤ) : star (x ^ z) = star x ^ z :=
-  op_injective$ ((starRingEquiv : R ≃+* «expr ᵒᵖ» R).toRingHom.map_zpow x z).trans (op_zpow (star x) z).symm
+  op_injective$ ((starRingEquiv : R ≃+* «expr ᵐᵒᵖ» R).toRingHom.map_zpow x z).trans (op_zpow (star x) z).symm
 
 /-- When multiplication is commutative, `star` preserves division. -/
 @[simp]
@@ -350,36 +352,36 @@ theorem Ringₓ.inverse_star [Semiringₓ R] [StarRing R] (a : R) : Ring.inverse
       rw [Ring.inverse_unit, ←Units.coe_star, Ring.inverse_unit, ←Units.coe_star_inv]
     rw [Ring.inverse_non_unit _ ha, Ring.inverse_non_unit _ (mt is_unit_star.mp ha), star_zero]
 
-namespace Opposite
+namespace MulOpposite
 
 /-- The opposite type carries the same star operation. -/
-instance  [HasStar R] : HasStar («expr ᵒᵖ» R) :=
+instance  [HasStar R] : HasStar («expr ᵐᵒᵖ» R) :=
   { star := fun r => op (star r.unop) }
 
 @[simp]
-theorem unop_star [HasStar R] (r : «expr ᵒᵖ» R) : unop (star r) = star (unop r) :=
+theorem unop_star [HasStar R] (r : «expr ᵐᵒᵖ» R) : unop (star r) = star (unop r) :=
   rfl
 
 @[simp]
 theorem op_star [HasStar R] (r : R) : op (star r) = star (op r) :=
   rfl
 
-instance  [HasInvolutiveStar R] : HasInvolutiveStar («expr ᵒᵖ» R) :=
+instance  [HasInvolutiveStar R] : HasInvolutiveStar («expr ᵐᵒᵖ» R) :=
   { star_involutive := fun r => unop_injective (star_star r.unop) }
 
-instance  [Monoidₓ R] [StarMonoid R] : StarMonoid («expr ᵒᵖ» R) :=
+instance  [Monoidₓ R] [StarMonoid R] : StarMonoid («expr ᵐᵒᵖ» R) :=
   { star_mul := fun x y => unop_injective (star_mul y.unop x.unop) }
 
-instance  [AddMonoidₓ R] [StarAddMonoid R] : StarAddMonoid («expr ᵒᵖ» R) :=
+instance  [AddMonoidₓ R] [StarAddMonoid R] : StarAddMonoid («expr ᵐᵒᵖ» R) :=
   { star_add := fun x y => unop_injective (star_add x.unop y.unop) }
 
-instance  [Semiringₓ R] [StarRing R] : StarRing («expr ᵒᵖ» R) :=
-  { Opposite.starAddMonoid with  }
+instance  [Semiringₓ R] [StarRing R] : StarRing («expr ᵐᵒᵖ» R) :=
+  { MulOpposite.starAddMonoid with  }
 
-end Opposite
+end MulOpposite
 
 /-- A commutative star monoid is a star module over its opposite via
 `monoid.to_opposite_mul_action`. -/
-instance StarMonoid.toOppositeStarModule [CommMonoidₓ R] [StarMonoid R] : StarModule («expr ᵒᵖ» R) R :=
+instance StarMonoid.toOppositeStarModule [CommMonoidₓ R] [StarMonoid R] : StarModule («expr ᵐᵒᵖ» R) R :=
   ⟨fun r s => star_mul' s r.unop⟩
 

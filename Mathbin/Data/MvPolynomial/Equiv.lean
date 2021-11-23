@@ -243,24 +243,21 @@ def sum_ring_equiv : MvPolynomial (Sum S₁ S₂) R ≃+* MvPolynomial S₁ (MvP
       ·
         rw [sum_to_iter_Xr, iter_to_sum_C_X]
 
+-- error in Data.MvPolynomial.Equiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The algebra isomorphism between multivariable polynomials in a sum of two types,
 and multivariable polynomials in one of the types,
 with coefficents in multivariable polynomials in the other type.
--/
-def sum_alg_equiv : MvPolynomial (Sum S₁ S₂) R ≃ₐ[R] MvPolynomial S₁ (MvPolynomial S₂ R) :=
-  { sum_ring_equiv R S₁ S₂ with
-    commutes' :=
-      by 
-        intro r 
-        have A : algebraMap R (MvPolynomial S₁ (MvPolynomial S₂ R)) r = (C (C r) : _)
-        ·
-          rfl 
-        have B : algebraMap R (MvPolynomial (Sum S₁ S₂) R) r = C r
-        ·
-          rfl 
-        simp only [sum_ring_equiv, sum_to_iter_C, mv_polynomial_equiv_mv_polynomial_apply, RingEquiv.to_fun_eq_coe, A,
-          B] }
+-/ def sum_alg_equiv : «expr ≃ₐ[ ] »(mv_polynomial «expr ⊕ »(S₁, S₂) R, R, mv_polynomial S₁ (mv_polynomial S₂ R)) :=
+{ commutes' := begin
+    intro [ident r],
+    have [ident A] [":", expr «expr = »(algebra_map R (mv_polynomial S₁ (mv_polynomial S₂ R)) r, (C (C r) : _))] [],
+    by refl,
+    have [ident B] [":", expr «expr = »(algebra_map R (mv_polynomial «expr ⊕ »(S₁, S₂) R) r, C r)] [],
+    by refl,
+    simp [] [] ["only"] ["[", expr sum_ring_equiv, ",", expr sum_to_iter_C, ",", expr mv_polynomial_equiv_mv_polynomial_apply, ",", expr ring_equiv.to_fun_eq_coe, ",", expr A, ",", expr B, "]"] [] []
+  end,
+  ..sum_ring_equiv R S₁ S₂ }
 
 section 
 

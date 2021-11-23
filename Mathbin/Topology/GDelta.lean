@@ -1,4 +1,5 @@
-import Mathbin.Topology.MetricSpace.EmetricSpace
+import Mathbin.Topology.UniformSpace.Basic 
+import Mathbin.Topology.Separation
 
 /-!
 # `Gδ` sets
@@ -83,12 +84,17 @@ theorem is_Gδ_Inter [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsGδ (s i)
     refine' ⟨⋃i, T i, _, countable_Union hTc, (sInter_Union _).symm⟩
     simpa [@forall_swap ι] using hTo
 
-theorem is_Gδ_bInter {s : Set ι} (hs : countable s) {t : ∀ i _ : i ∈ s, Set α} (ht : ∀ i _ : i ∈ s, IsGδ (t i ‹_›)) :
-  IsGδ (⋂(i : _)(_ : i ∈ s), t i ‹_›) :=
-  by 
-    rw [bInter_eq_Inter]
-    haveI  := hs.to_encodable 
-    exact is_Gδ_Inter fun x => ht x x.2
+-- error in Topology.GDelta: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_Gδ_bInter
+{s : set ι}
+(hs : countable s)
+{t : ∀ i «expr ∈ » s, set α}
+(ht : ∀ i «expr ∈ » s, is_Gδ (t i «expr‹ ›»(_))) : is_Gδ «expr⋂ , »((i «expr ∈ » s), t i «expr‹ ›»(_)) :=
+begin
+  rw ["[", expr bInter_eq_Inter, "]"] [],
+  haveI [] [] [":=", expr hs.to_encodable],
+  exact [expr is_Gδ_Inter (λ x, ht x x.2)]
+end
 
 /-- A countable intersection of Gδ sets is a Gδ set. -/
 theorem is_Gδ_sInter {S : Set (Set α)} (h : ∀ s _ : s ∈ S, IsGδ s) (hS : countable S) : IsGδ (⋂₀S) :=

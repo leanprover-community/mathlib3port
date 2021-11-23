@@ -277,24 +277,24 @@ theorem sigma_finsupp_equiv_dfinsupp_support [HasZero N] (f : (Σi, η i) →₀
     rw [Dfinsupp.mem_support_to_fun]
     exact (Finsupp.mem_split_support_iff_nonzero _ _).symm
 
+-- error in Data.Finsupp.ToDfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem sigma_finsupp_equiv_dfinsupp_single [HasZero N] (a : Σi, η i) (n : N) :
-  sigmaFinsuppEquivDfinsupp (Finsupp.single a n) =
-    @Dfinsupp.single _ (fun i => η i →₀ N) _ _ a.1 (Finsupp.single a.2 n) :=
-  by 
-    obtain ⟨i, a⟩ := a 
-    ext j b 
-    byCases' h : i = j
-    ·
-      subst h 
-      simp [split_apply, Finsupp.single_apply]
-    suffices  : Finsupp.single (⟨i, a⟩ : Σi, η i) n ⟨j, b⟩ = 0
-    ·
-      simp [split_apply, dif_neg h, this]
-    have H : (⟨i, a⟩ : Σi, η i) ≠ ⟨j, b⟩ :=
-      by 
-        simp [h]
-    rw [Finsupp.single_apply, if_neg H]
+theorem sigma_finsupp_equiv_dfinsupp_single
+[has_zero N]
+(a : «exprΣ , »((i), η i))
+(n : N) : «expr = »(sigma_finsupp_equiv_dfinsupp (finsupp.single a n), @dfinsupp.single _ (λ
+  i, «expr →₀ »(η i, N)) _ _ a.1 (finsupp.single a.2 n)) :=
+begin
+  obtain ["⟨", ident i, ",", ident a, "⟩", ":=", expr a],
+  ext [] [ident j, ident b] [],
+  by_cases [expr h, ":", expr «expr = »(i, j)],
+  { subst [expr h],
+    simp [] [] [] ["[", expr split_apply, ",", expr finsupp.single_apply, "]"] [] [] },
+  suffices [] [":", expr «expr = »(finsupp.single (⟨i, a⟩ : «exprΣ , »((i), η i)) n ⟨j, b⟩, 0)],
+  { simp [] [] [] ["[", expr split_apply, ",", expr dif_neg h, ",", expr this, "]"] [] [] },
+  have [ident H] [":", expr «expr ≠ »((⟨i, a⟩ : «exprΣ , »((i), η i)), ⟨j, b⟩)] [":=", expr by simp [] [] [] ["[", expr h, "]"] [] []],
+  rw ["[", expr finsupp.single_apply, ",", expr if_neg H, "]"] []
+end
 
 attribute [-instance] Finsupp.hasZero
 

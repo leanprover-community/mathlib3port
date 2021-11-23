@@ -47,12 +47,12 @@ variable(𝕜)[HasScalar 𝕜 E]
 
 /-- Segments in a vector space. -/
 def Segment (x y : E) : Set E :=
-  { z : E | ∃ (a b : 𝕜)(ha : 0 ≤ a)(hb : 0 ≤ b)(hab : (a+b) = 1), ((a • x)+b • y) = z }
+  { z:E | ∃ (a b : 𝕜)(ha : 0 ≤ a)(hb : 0 ≤ b)(hab : (a+b) = 1), ((a • x)+b • y) = z }
 
 /-- Open segment in a vector space. Note that `open_segment 𝕜 x x = {x}` instead of being `∅` when
 the base semiring has some element between `0` and `1`. -/
 def OpenSegment (x y : E) : Set E :=
-  { z : E | ∃ (a b : 𝕜)(ha : 0 < a)(hb : 0 < b)(hab : (a+b) = 1), ((a • x)+b • y) = z }
+  { z:E | ∃ (a b : 𝕜)(ha : 0 < a)(hb : 0 < b)(hab : (a+b) = 1), ((a • x)+b • y) = z }
 
 localized [Convex] notation "[" x " -[" 𝕜 "] " y "]" => Segment 𝕜 x y
 
@@ -647,12 +647,14 @@ theorem Convex.translate (hs : Convex 𝕜 s) (z : E) : Convex 𝕜 ((fun x => z
     refine' ⟨(a • x')+b • y', hs hx' hy' ha hb hab, _⟩
     rw [smul_add, smul_add, add_add_add_commₓ, ←add_smul, hab, one_smul]
 
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The translation of a convex set is also convex. -/
-theorem Convex.translate_preimage_right (hs : Convex 𝕜 s) (z : E) : Convex 𝕜 ((fun x => z+x) ⁻¹' s) :=
-  by 
-    intro x y hx hy a b ha hb hab 
-    have h := hs hx hy ha hb hab 
-    rwa [smul_add, smul_add, add_add_add_commₓ, ←add_smul, hab, one_smul] at h
+theorem convex.translate_preimage_right (hs : convex 𝕜 s) (z : E) : convex 𝕜 «expr ⁻¹' »(λ x, «expr + »(z, x), s) :=
+begin
+  intros [ident x, ident y, ident hx, ident hy, ident a, ident b, ident ha, ident hb, ident hab],
+  have [ident h] [] [":=", expr hs hx hy ha hb hab],
+  rwa ["[", expr smul_add, ",", expr smul_add, ",", expr add_add_add_comm, ",", "<-", expr add_smul, ",", expr hab, ",", expr one_smul, "]"] ["at", ident h]
+end
 
 /-- The translation of a convex set is also convex. -/
 theorem Convex.translate_preimage_left (hs : Convex 𝕜 s) (z : E) : Convex 𝕜 ((fun x => x+z) ⁻¹' s) :=
@@ -741,34 +743,34 @@ section LinearOrderedAddCommMonoid
 
 variable[LinearOrderedAddCommMonoid E][OrderedAddCommMonoid β][Module 𝕜 E][OrderedSmul 𝕜 E]{s : Set E}{f : E → β}
 
-theorem MonotoneOn.convex_le (hf : MonotoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | f x ≤ r } :=
+theorem MonotoneOn.convex_le (hf : MonotoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x∈s | f x ≤ r } :=
   fun x y hx hy a b ha hb hab =>
     ⟨hs hx.1 hy.1 ha hb hab,
       (hf (hs hx.1 hy.1 ha hb hab) (max_rec' s hx.1 hy.1) (Convex.combo_le_max x y ha hb hab)).trans
         (max_rec' _ hx.2 hy.2)⟩
 
-theorem MonotoneOn.convex_lt (hf : MonotoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | f x < r } :=
+theorem MonotoneOn.convex_lt (hf : MonotoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x∈s | f x < r } :=
   fun x y hx hy a b ha hb hab =>
     ⟨hs hx.1 hy.1 ha hb hab,
       (hf (hs hx.1 hy.1 ha hb hab) (max_rec' s hx.1 hy.1) (Convex.combo_le_max x y ha hb hab)).trans_lt
         (max_rec' _ hx.2 hy.2)⟩
 
-theorem MonotoneOn.convex_ge (hf : MonotoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | r ≤ f x } :=
+theorem MonotoneOn.convex_ge (hf : MonotoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x∈s | r ≤ f x } :=
   @MonotoneOn.convex_le 𝕜 (OrderDual E) (OrderDual β) _ _ _ _ _ _ _ hf.dual hs r
 
-theorem MonotoneOn.convex_gt (hf : MonotoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | r < f x } :=
+theorem MonotoneOn.convex_gt (hf : MonotoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x∈s | r < f x } :=
   @MonotoneOn.convex_lt 𝕜 (OrderDual E) (OrderDual β) _ _ _ _ _ _ _ hf.dual hs r
 
-theorem AntitoneOn.convex_le (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | f x ≤ r } :=
+theorem AntitoneOn.convex_le (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x∈s | f x ≤ r } :=
   @MonotoneOn.convex_ge 𝕜 E (OrderDual β) _ _ _ _ _ _ _ hf hs r
 
-theorem AntitoneOn.convex_lt (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | f x < r } :=
+theorem AntitoneOn.convex_lt (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x∈s | f x < r } :=
   @MonotoneOn.convex_gt 𝕜 E (OrderDual β) _ _ _ _ _ _ _ hf hs r
 
-theorem AntitoneOn.convex_ge (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | r ≤ f x } :=
+theorem AntitoneOn.convex_ge (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x∈s | r ≤ f x } :=
   @MonotoneOn.convex_le 𝕜 E (OrderDual β) _ _ _ _ _ _ _ hf hs r
 
-theorem AntitoneOn.convex_gt (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | r < f x } :=
+theorem AntitoneOn.convex_gt (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x∈s | r < f x } :=
   @MonotoneOn.convex_lt 𝕜 E (OrderDual β) _ _ _ _ _ _ _ hf hs r
 
 theorem Monotone.convex_le (hf : Monotone f) (r : β) : Convex 𝕜 { x | f x ≤ r } :=
@@ -856,10 +858,15 @@ theorem Convex.smul (hs : Convex 𝕜 s) (c : 𝕜) : Convex 𝕜 (c • s) :=
 theorem Convex.smul_preimage (hs : Convex 𝕜 s) (c : 𝕜) : Convex 𝕜 ((fun z => c • z) ⁻¹' s) :=
   hs.linear_preimage (LinearMap.lsmul _ _ c)
 
-theorem Convex.affinity (hs : Convex 𝕜 s) (z : E) (c : 𝕜) : Convex 𝕜 ((fun x => z+c • x) '' s) :=
-  by 
-    have h := (hs.smul c).translate z 
-    rwa [←image_smul, image_image] at h
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem convex.affinity
+(hs : convex 𝕜 s)
+(z : E)
+(c : 𝕜) : convex 𝕜 «expr '' »(λ x, «expr + »(z, «expr • »(c, x)), s) :=
+begin
+  have [ident h] [] [":=", expr (hs.smul c).translate z],
+  rwa ["[", "<-", expr image_smul, ",", expr image_image, "]"] ["at", ident h]
+end
 
 end AddCommMonoidₓ
 
@@ -873,14 +880,20 @@ section AddCommGroupₓ
 
 variable[AddCommGroupₓ E][AddCommGroupₓ F][Module 𝕜 E][Module 𝕜 F]{s : Set E}
 
-theorem Convex.add_smul_mem (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ s) (hy : (x+y) ∈ s) {t : 𝕜} (ht : t ∈ Icc (0 : 𝕜) 1) :
-  (x+t • y) ∈ s :=
-  by 
-    have h : (x+t • y) = ((1 - t) • x)+t • x+y
-    ·
-      rw [smul_add, ←add_assocₓ, ←add_smul, sub_add_cancel, one_smul]
-    rw [h]
-    exact hs hx hy (sub_nonneg_of_le ht.2) ht.1 (sub_add_cancel _ _)
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem convex.add_smul_mem
+(hs : convex 𝕜 s)
+{x y : E}
+(hx : «expr ∈ »(x, s))
+(hy : «expr ∈ »(«expr + »(x, y), s))
+{t : 𝕜}
+(ht : «expr ∈ »(t, Icc (0 : 𝕜) 1)) : «expr ∈ »(«expr + »(x, «expr • »(t, y)), s) :=
+begin
+  have [ident h] [":", expr «expr = »(«expr + »(x, «expr • »(t, y)), «expr + »(«expr • »(«expr - »(1, t), x), «expr • »(t, «expr + »(x, y))))] [],
+  { rw ["[", expr smul_add, ",", "<-", expr add_assoc, ",", "<-", expr add_smul, ",", expr sub_add_cancel, ",", expr one_smul, "]"] [] },
+  rw [expr h] [],
+  exact [expr hs hx hy (sub_nonneg_of_le ht.2) ht.1 (sub_add_cancel _ _)]
+end
 
 theorem Convex.smul_mem_of_zero_mem (hs : Convex 𝕜 s) {x : E} (zero_mem : (0 : E) ∈ s) (hx : x ∈ s) {t : 𝕜}
   (ht : t ∈ Icc (0 : 𝕜) 1) : t • x ∈ s :=
@@ -947,30 +960,29 @@ section AddCommGroupₓ
 
 variable[AddCommGroupₓ E][AddCommGroupₓ F][Module 𝕜 E][Module 𝕜 F]{s : Set E}
 
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Alternative definition of set convexity, using division. -/
-theorem convex_iff_div :
-  Convex 𝕜 s ↔
-    ∀ ⦃x y : E⦄, x ∈ s → y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → (0 < a+b) → (((a / a+b) • x)+(b / a+b) • y) ∈ s :=
-  ⟨fun h x y hx hy a b ha hb hab =>
-      by 
-        apply h hx hy
-        ·
-          have ha' 
-          exact mul_le_mul_of_nonneg_left ha (inv_pos.2 hab).le 
-          rwa [mul_zero, ←div_eq_inv_mul] at ha'
-        ·
-          have hb' 
-          exact mul_le_mul_of_nonneg_left hb (inv_pos.2 hab).le 
-          rwa [mul_zero, ←div_eq_inv_mul] at hb'
-        ·
-          rw [←add_div]
-          exact div_self hab.ne',
-    fun h x y hx hy a b ha hb hab =>
-      by 
-        have h' 
-        exact h hx hy ha hb 
-        rw [hab, div_one, div_one] at h' 
-        exact h' zero_lt_one⟩
+theorem convex_iff_div : «expr ↔ »(convex 𝕜 s, ∀
+ {{x
+   y : E}}, «expr ∈ »(x, s) → «expr ∈ »(y, s) → ∀
+ {{a
+   b : 𝕜}}, «expr ≤ »(0, a) → «expr ≤ »(0, b) → «expr < »(0, «expr + »(a, b)) → «expr ∈ »(«expr + »(«expr • »(«expr / »(a, «expr + »(a, b)), x), «expr • »(«expr / »(b, «expr + »(a, b)), y)), s)) :=
+⟨λ h x y hx hy a b ha hb hab, begin
+   apply [expr h hx hy],
+   { have [ident ha'] [] [],
+     from [expr mul_le_mul_of_nonneg_left ha (inv_pos.2 hab).le],
+     rwa ["[", expr mul_zero, ",", "<-", expr div_eq_inv_mul, "]"] ["at", ident ha'] },
+   { have [ident hb'] [] [],
+     from [expr mul_le_mul_of_nonneg_left hb (inv_pos.2 hab).le],
+     rwa ["[", expr mul_zero, ",", "<-", expr div_eq_inv_mul, "]"] ["at", ident hb'] },
+   { rw ["<-", expr add_div] [],
+     exact [expr div_self hab.ne'] }
+ end, λ h x y hx hy a b ha hb hab, begin
+   have [ident h'] [] [],
+   from [expr h hx hy ha hb],
+   rw ["[", expr hab, ",", expr div_one, ",", expr div_one, "]"] ["at", ident h'],
+   exact [expr h' zero_lt_one]
+ end⟩
 
 theorem Convex.mem_smul_of_zero_mem (h : Convex 𝕜 s) {x : E} (zero_mem : (0 : E) ∈ s) (hx : x ∈ s) {t : 𝕜}
   (ht : 1 ≤ t) : x ∈ t • s :=
@@ -978,34 +990,27 @@ theorem Convex.mem_smul_of_zero_mem (h : Convex 𝕜 s) {x : E} (zero_mem : (0 :
     rw [mem_smul_set_iff_inv_smul_mem₀ (zero_lt_one.trans_le ht).ne']
     exact h.smul_mem_of_zero_mem zero_mem hx ⟨inv_nonneg.2 (zero_le_one.trans ht), inv_le_one ht⟩
 
-theorem Convex.add_smul (h_conv : Convex 𝕜 s) {p q : 𝕜} (hp : 0 ≤ p) (hq : 0 ≤ q) : (p+q) • s = (p • s)+q • s :=
-  by 
-    obtain rfl | hs := s.eq_empty_or_nonempty
-    ·
-      simpRw [smul_set_empty, add_empty]
-    obtain rfl | hp' := hp.eq_or_lt
-    ·
-      rw [zero_addₓ, zero_smul_set hs, zero_addₓ]
-    obtain rfl | hq' := hq.eq_or_lt
-    ·
-      rw [add_zeroₓ, zero_smul_set hs, add_zeroₓ]
-    ext 
-    split 
-    ·
-      rintro ⟨v, hv, rfl⟩
-      exact ⟨p • v, q • v, smul_mem_smul_set hv, smul_mem_smul_set hv, (add_smul _ _ _).symm⟩
-    ·
-      rintro ⟨v₁, v₂, ⟨v₁₁, h₁₂, rfl⟩, ⟨v₂₁, h₂₂, rfl⟩, rfl⟩
-      have hpq := add_pos hp' hq' 
-      exact
-        mem_smul_set.2
-          ⟨_,
-            h_conv h₁₂ h₂₂ (div_pos hp' hpq).le (div_pos hq' hpq).le
-              (by 
-                rw [←div_self hpq.ne', add_div] :
-              ((p / p+q)+q / p+q) = 1),
-            by 
-              simp only [←mul_smul, smul_add, mul_div_cancel' _ hpq.ne']⟩
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem convex.add_smul
+(h_conv : convex 𝕜 s)
+{p q : 𝕜}
+(hp : «expr ≤ »(0, p))
+(hq : «expr ≤ »(0, q)) : «expr = »(«expr • »(«expr + »(p, q), s), «expr + »(«expr • »(p, s), «expr • »(q, s))) :=
+begin
+  obtain [ident rfl, "|", ident hs, ":=", expr s.eq_empty_or_nonempty],
+  { simp_rw ["[", expr smul_set_empty, ",", expr add_empty, "]"] [] },
+  obtain [ident rfl, "|", ident hp', ":=", expr hp.eq_or_lt],
+  { rw ["[", expr zero_add, ",", expr zero_smul_set hs, ",", expr zero_add, "]"] [] },
+  obtain [ident rfl, "|", ident hq', ":=", expr hq.eq_or_lt],
+  { rw ["[", expr add_zero, ",", expr zero_smul_set hs, ",", expr add_zero, "]"] [] },
+  ext [] [] [],
+  split,
+  { rintro ["⟨", ident v, ",", ident hv, ",", ident rfl, "⟩"],
+    exact [expr ⟨«expr • »(p, v), «expr • »(q, v), smul_mem_smul_set hv, smul_mem_smul_set hv, (add_smul _ _ _).symm⟩] },
+  { rintro ["⟨", ident v₁, ",", ident v₂, ",", "⟨", ident v₁₁, ",", ident h₁₂, ",", ident rfl, "⟩", ",", "⟨", ident v₂₁, ",", ident h₂₂, ",", ident rfl, "⟩", ",", ident rfl, "⟩"],
+    have [ident hpq] [] [":=", expr add_pos hp' hq'],
+    exact [expr mem_smul_set.2 ⟨_, h_conv h₁₂ h₂₂ (div_pos hp' hpq).le (div_pos hq' hpq).le (by rw ["[", "<-", expr div_self hpq.ne', ",", expr add_div, "]"] [] : «expr = »(«expr + »(«expr / »(p, «expr + »(p, q)), «expr / »(q, «expr + »(p, q))), 1)), by simp [] [] ["only"] ["[", "<-", expr mul_smul, ",", expr smul_add, ",", expr mul_div_cancel' _ hpq.ne', "]"] [] []⟩] }
+end
 
 end AddCommGroupₓ
 
@@ -1057,14 +1062,12 @@ section Submodule
 
 open Submodule
 
--- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem submodule.convex
-[ordered_semiring 𝕜]
-[add_comm_monoid E]
-[module 𝕜 E]
-(K : submodule 𝕜 E) : convex 𝕜 («expr↑ »(K) : set E) :=
-by { repeat { intro [] },
-  refine [expr add_mem _ (smul_mem _ _ _) (smul_mem _ _ _)]; assumption }
+theorem Submodule.convex [OrderedSemiring 𝕜] [AddCommMonoidₓ E] [Module 𝕜 E] (K : Submodule 𝕜 E) :
+  Convex 𝕜 («expr↑ » K : Set E) :=
+  by 
+    repeat' 
+      intro 
+    refine' add_mem _ (smul_mem _ _ _) (smul_mem _ _ _) <;> assumption
 
 theorem Subspace.convex [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] (K : Subspace 𝕜 E) :
   Convex 𝕜 («expr↑ » K : Set E) :=

@@ -27,23 +27,22 @@ theorem antidiagonal_coe (l : List α) : @antidiagonal α l = revzip (powerset_a
 theorem antidiagonal_coe' (l : List α) : @antidiagonal α l = revzip (powerset_aux' l) :=
   Quot.sound revzip_powerset_aux_perm_aux'
 
+-- error in Data.Multiset.Antidiagonal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A pair `(t₁, t₂)` of multisets is contained in `antidiagonal s`
     if and only if `t₁ + t₂ = s`. -/
 @[simp]
-theorem mem_antidiagonal {s : Multiset α} {x : Multiset α × Multiset α} : x ∈ antidiagonal s ↔ (x.1+x.2) = s :=
-  Quotientₓ.induction_on s$
-    fun l =>
-      by 
-        simp [antidiagonal_coe]
-        refine' ⟨fun h => revzip_powerset_aux h, fun h => _⟩
-        haveI  := Classical.decEq α 
-        simp [revzip_powerset_aux_lemma l revzip_powerset_aux, h.symm]
-        cases' x with x₁ x₂ 
-        dsimp only 
-        exact
-          ⟨x₁, le_add_right _ _,
-            by 
-              rw [add_tsub_cancel_left x₁ x₂]⟩
+theorem mem_antidiagonal
+{s : multiset α}
+{x : «expr × »(multiset α, multiset α)} : «expr ↔ »(«expr ∈ »(x, antidiagonal s), «expr = »(«expr + »(x.1, x.2), s)) :=
+«expr $ »(quotient.induction_on s, λ l, begin
+   simp [] [] [] ["[", expr antidiagonal_coe, "]"] [] [],
+   refine [expr ⟨λ h, revzip_powerset_aux h, λ h, _⟩],
+   haveI [] [] [":=", expr classical.dec_eq α],
+   simp [] [] [] ["[", expr revzip_powerset_aux_lemma l revzip_powerset_aux, ",", expr h.symm, "]"] [] [],
+   cases [expr x] ["with", ident x₁, ident x₂],
+   dsimp ["only"] [] [] [],
+   exact [expr ⟨x₁, le_add_right _ _, by rw [expr add_tsub_cancel_left x₁ x₂] []⟩]
+ end)
 
 @[simp]
 theorem antidiagonal_map_fst (s : Multiset α) : (antidiagonal s).map Prod.fst = powerset s :=
@@ -77,22 +76,25 @@ theorem antidiagonal_cons (a : α) s :
         ·
           simp 
 
-@[simp]
-theorem card_antidiagonal (s : Multiset α) : card (antidiagonal s) = 2 ^ card s :=
-  by 
-    have  := card_powerset s <;> rwa [←antidiagonal_map_fst, card_map] at this
+-- error in Data.Multiset.Antidiagonal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem card_antidiagonal (s : multiset α) : «expr = »(card (antidiagonal s), «expr ^ »(2, card s)) :=
+by have [] [] [":=", expr card_powerset s]; rwa ["[", "<-", expr antidiagonal_map_fst, ",", expr card_map, "]"] ["at", ident this]
 
-theorem prod_map_add [CommSemiringₓ β] {s : Multiset α} {f g : α → β} :
-  Prod (s.map fun a => f a+g a) = Sum ((antidiagonal s).map fun p => (p.1.map f).Prod*(p.2.map g).Prod) :=
-  by 
-    refine' s.induction_on _ _
-    ·
-      simp 
-    ·
-      intro a s ih 
-      have  := @sum_map_mul_left α β _ 
-      simp [ih, add_mulₓ, mul_commₓ, mul_left_commₓ (f a), mul_left_commₓ (g a), mul_assocₓ, sum_map_mul_left.symm]
-      cc
+-- error in Data.Multiset.Antidiagonal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prod_map_add
+[comm_semiring β]
+{s : multiset α}
+{f
+ g : α → β} : «expr = »(prod (s.map (λ
+   a, «expr + »(f a, g a))), sum ((antidiagonal s).map (λ p, «expr * »((p.1.map f).prod, (p.2.map g).prod)))) :=
+begin
+  refine [expr s.induction_on _ _],
+  { simp [] [] [] [] [] [] },
+  { assume [binders (a s ih)],
+    have [] [] [":=", expr @sum_map_mul_left α β _],
+    simp [] [] [] ["[", expr ih, ",", expr add_mul, ",", expr mul_comm, ",", expr mul_left_comm (f a), ",", expr mul_left_comm (g a), ",", expr mul_assoc, ",", expr sum_map_mul_left.symm, "]"] [] [],
+    cc }
+end
 
 end Multiset
 

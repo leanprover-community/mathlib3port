@@ -113,15 +113,15 @@ def is_terminal.split_mono_from {X Y : C} (t : is_terminal X) (f : X ⟶ Y) : sp
 def is_initial.split_epi_to {X Y : C} (t : is_initial X) (f : Y ⟶ X) : split_epi f :=
   ⟨t.to _, t.hom_ext _ _⟩
 
+-- error in CategoryTheory.Limits.Shapes.Terminal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any morphism from a terminal object is mono. -/
-theorem is_terminal.mono_from {X Y : C} (t : is_terminal X) (f : X ⟶ Y) : mono f :=
-  by 
-    haveI  := t.split_mono_from f <;> infer_instance
+theorem is_terminal.mono_from {X Y : C} (t : is_terminal X) (f : «expr ⟶ »(X, Y)) : mono f :=
+by haveI [] [] [":=", expr t.split_mono_from f]; apply_instance
 
+-- error in CategoryTheory.Limits.Shapes.Terminal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any morphism to an initial object is epi. -/
-theorem is_initial.epi_to {X Y : C} (t : is_initial X) (f : Y ⟶ X) : epi f :=
-  by 
-    haveI  := t.split_epi_to f <;> infer_instance
+theorem is_initial.epi_to {X Y : C} (t : is_initial X) (f : «expr ⟶ »(Y, X)) : epi f :=
+by haveI [] [] [":=", expr t.split_epi_to f]; apply_instance
 
 /-- If `T` and `T'` are terminal, they are isomorphic. -/
 @[simps]

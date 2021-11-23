@@ -49,7 +49,7 @@ def circle : Submonoid ℂ :=
 theorem mem_circle_iff_abs (z : ℂ) : z ∈ circle ↔ abs z = 1 :=
   mem_sphere_zero_iff_norm
 
-theorem circle_def : «expr↑ » circle = { z : ℂ | abs z = 1 } :=
+theorem circle_def : «expr↑ » circle = { z:ℂ | abs z = 1 } :=
   by 
     ext 
     simp 

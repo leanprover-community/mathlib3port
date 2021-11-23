@@ -1,7 +1,7 @@
 import Mathbin.Topology.Algebra.Monoid 
-import Mathbin.Algebra.Module.Prod 
-import Mathbin.Topology.Homeomorph 
-import Mathbin.GroupTheory.GroupAction.Basic
+import Mathbin.GroupTheory.GroupAction.Prod 
+import Mathbin.GroupTheory.GroupAction.Basic 
+import Mathbin.Topology.Homeomorph
 
 /-!
 # Continuous monoid action

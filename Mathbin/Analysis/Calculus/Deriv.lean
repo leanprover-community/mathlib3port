@@ -761,12 +761,13 @@ theorem deriv_pi (h : ∀ i, DifferentiableAt 𝕜 (fun x => φ x i) x) : deriv 
 
 end Pi
 
-section MulVector
+section Smul
 
 /-! ### Derivative of the multiplication of a scalar function and a vector function -/
 
 
-variable{c : 𝕜 → 𝕜}{c' : 𝕜}
+variable{𝕜' :
+    Type _}[NondiscreteNormedField 𝕜'][NormedAlgebra 𝕜 𝕜'][NormedSpace 𝕜' F][IsScalarTower 𝕜 𝕜' F]{c : 𝕜 → 𝕜'}{c' : 𝕜'}
 
 theorem HasDerivWithinAt.smul (hc : HasDerivWithinAt c c' s x) (hf : HasDerivWithinAt f f' s x) :
   HasDerivWithinAt (fun y => c y • f y) ((c x • f')+c' • f x) s x :=
@@ -793,11 +794,14 @@ theorem deriv_smul (hc : DifferentiableAt 𝕜 c x) (hf : DifferentiableAt 𝕜 
   deriv (fun y => c y • f y) x = (c x • deriv f x)+deriv c x • f x :=
   (hc.has_deriv_at.smul hf.has_deriv_at).deriv
 
-theorem HasDerivWithinAt.smul_const (hc : HasDerivWithinAt c c' s x) (f : F) :
-  HasDerivWithinAt (fun y => c y • f) (c' • f) s x :=
-  by 
-    have  := hc.smul (has_deriv_within_at_const x s f)
-    rwa [smul_zero, zero_addₓ] at this
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_deriv_within_at.smul_const
+(hc : has_deriv_within_at c c' s x)
+(f : F) : has_deriv_within_at (λ y, «expr • »(c y, f)) «expr • »(c', f) s x :=
+begin
+  have [] [] [":=", expr hc.smul (has_deriv_within_at_const x s f)],
+  rwa ["[", expr smul_zero, ",", expr zero_add, "]"] ["at", ident this]
+end
 
 theorem HasDerivAt.smul_const (hc : HasDerivAt c c' x) (f : F) : HasDerivAt (fun y => c y • f) (c' • f) x :=
   by 
@@ -811,25 +815,37 @@ theorem deriv_within_smul_const (hxs : UniqueDiffWithinAt 𝕜 s x) (hc : Differ
 theorem deriv_smul_const (hc : DifferentiableAt 𝕜 c x) (f : F) : deriv (fun y => c y • f) x = deriv c x • f :=
   (hc.has_deriv_at.smul_const f).deriv
 
-theorem HasDerivWithinAt.const_smul (c : 𝕜) (hf : HasDerivWithinAt f f' s x) :
+end Smul
+
+section ConstSmul
+
+variable{R : Type _}[Semiringₓ R][Module R F][TopologicalSpace R][SmulCommClass 𝕜 R F][HasContinuousSmul R F]
+
+theorem HasStrictDerivAt.const_smul (c : R) (hf : HasStrictDerivAt f f' x) :
+  HasStrictDerivAt (fun y => c • f y) (c • f') x :=
+  by 
+    simpa using (hf.const_smul c).HasStrictDerivAt
+
+theorem HasDerivAtFilter.const_smul (c : R) (hf : HasDerivAtFilter f f' x L) :
+  HasDerivAtFilter (fun y => c • f y) (c • f') x L :=
+  by 
+    simpa using (hf.const_smul c).HasDerivAtFilter
+
+theorem HasDerivWithinAt.const_smul (c : R) (hf : HasDerivWithinAt f f' s x) :
   HasDerivWithinAt (fun y => c • f y) (c • f') s x :=
-  by 
-    convert (has_deriv_within_at_const x s c).smul hf 
-    rw [zero_smul, add_zeroₓ]
+  hf.const_smul c
 
-theorem HasDerivAt.const_smul (c : 𝕜) (hf : HasDerivAt f f' x) : HasDerivAt (fun y => c • f y) (c • f') x :=
-  by 
-    rw [←has_deriv_within_at_univ] at *
-    exact hf.const_smul c
+theorem HasDerivAt.const_smul (c : R) (hf : HasDerivAt f f' x) : HasDerivAt (fun y => c • f y) (c • f') x :=
+  hf.const_smul c
 
-theorem deriv_within_const_smul (hxs : UniqueDiffWithinAt 𝕜 s x) (c : 𝕜) (hf : DifferentiableWithinAt 𝕜 f s x) :
+theorem deriv_within_const_smul (hxs : UniqueDiffWithinAt 𝕜 s x) (c : R) (hf : DifferentiableWithinAt 𝕜 f s x) :
   derivWithin (fun y => c • f y) s x = c • derivWithin f s x :=
   (hf.has_deriv_within_at.const_smul c).derivWithin hxs
 
-theorem deriv_const_smul (c : 𝕜) (hf : DifferentiableAt 𝕜 f x) : deriv (fun y => c • f y) x = c • deriv f x :=
+theorem deriv_const_smul (c : R) (hf : DifferentiableAt 𝕜 f x) : deriv (fun y => c • f y) x = c • deriv f x :=
   (hf.has_deriv_at.const_smul c).deriv
 
-end MulVector
+end ConstSmul
 
 section Neg
 
@@ -1171,29 +1187,59 @@ theorem deriv.comp (hh₁ : DifferentiableAt 𝕜 h₁ (h₂ x)) (hh₂ : Differ
     apply HasDerivAt.deriv 
     exact HasDerivAt.comp x hh₁.has_deriv_at hh₂.has_deriv_at
 
-protected theorem HasDerivAtFilter.iterate {f : 𝕜 → 𝕜} {f' : 𝕜} (hf : HasDerivAtFilter f f' x L) (hL : tendsto f L L)
-  (hx : f x = x) (n : ℕ) : HasDerivAtFilter (f^[n]) (f' ^ n) x L :=
-  by 
-    have  := hf.iterate hL hx n 
-    rwa [ContinuousLinearMap.smul_right_one_pow] at this
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem has_deriv_at_filter.iterate
+{f : 𝕜 → 𝕜}
+{f' : 𝕜}
+(hf : has_deriv_at_filter f f' x L)
+(hL : tendsto f L L)
+(hx : «expr = »(f x, x))
+(n : exprℕ()) : has_deriv_at_filter «expr ^[ ]»(f, n) «expr ^ »(f', n) x L :=
+begin
+  have [] [] [":=", expr hf.iterate hL hx n],
+  rwa ["[", expr continuous_linear_map.smul_right_one_pow, "]"] ["at", ident this]
+end
 
-protected theorem HasDerivAt.iterate {f : 𝕜 → 𝕜} {f' : 𝕜} (hf : HasDerivAt f f' x) (hx : f x = x) (n : ℕ) :
-  HasDerivAt (f^[n]) (f' ^ n) x :=
-  by 
-    have  := HasFderivAt.iterate hf hx n 
-    rwa [ContinuousLinearMap.smul_right_one_pow] at this
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem has_deriv_at.iterate
+{f : 𝕜 → 𝕜}
+{f' : 𝕜}
+(hf : has_deriv_at f f' x)
+(hx : «expr = »(f x, x))
+(n : exprℕ()) : has_deriv_at «expr ^[ ]»(f, n) «expr ^ »(f', n) x :=
+begin
+  have [] [] [":=", expr has_fderiv_at.iterate hf hx n],
+  rwa ["[", expr continuous_linear_map.smul_right_one_pow, "]"] ["at", ident this]
+end
 
-protected theorem HasDerivWithinAt.iterate {f : 𝕜 → 𝕜} {f' : 𝕜} (hf : HasDerivWithinAt f f' s x) (hx : f x = x)
-  (hs : maps_to f s s) (n : ℕ) : HasDerivWithinAt (f^[n]) (f' ^ n) s x :=
-  by 
-    have  := HasFderivWithinAt.iterate hf hx hs n 
-    rwa [ContinuousLinearMap.smul_right_one_pow] at this
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem has_deriv_within_at.iterate
+{f : 𝕜 → 𝕜}
+{f' : 𝕜}
+(hf : has_deriv_within_at f f' s x)
+(hx : «expr = »(f x, x))
+(hs : maps_to f s s)
+(n : exprℕ()) : has_deriv_within_at «expr ^[ ]»(f, n) «expr ^ »(f', n) s x :=
+begin
+  have [] [] [":=", expr has_fderiv_within_at.iterate hf hx hs n],
+  rwa ["[", expr continuous_linear_map.smul_right_one_pow, "]"] ["at", ident this]
+end
 
-protected theorem HasStrictDerivAt.iterate {f : 𝕜 → 𝕜} {f' : 𝕜} (hf : HasStrictDerivAt f f' x) (hx : f x = x) (n : ℕ) :
-  HasStrictDerivAt (f^[n]) (f' ^ n) x :=
-  by 
-    have  := hf.iterate hx n 
-    rwa [ContinuousLinearMap.smul_right_one_pow] at this
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem has_strict_deriv_at.iterate
+{f : 𝕜 → 𝕜}
+{f' : 𝕜}
+(hf : has_strict_deriv_at f f' x)
+(hx : «expr = »(f x, x))
+(n : exprℕ()) : has_strict_deriv_at «expr ^[ ]»(f, n) «expr ^ »(f', n) x :=
+begin
+  have [] [] [":=", expr hf.iterate hx n],
+  rwa ["[", expr continuous_linear_map.smul_right_one_pow, "]"] ["at", ident this]
+end
 
 end Composition
 
@@ -1251,13 +1297,15 @@ section Mul
 variable{𝕜' 𝔸 :
     Type _}[NormedField 𝕜'][NormedRing 𝔸][NormedAlgebra 𝕜 𝕜'][NormedAlgebra 𝕜 𝔸]{c d : 𝕜 → 𝔸}{c' d' : 𝔸}{u v : 𝕜 → 𝕜'}
 
-theorem HasDerivWithinAt.mul (hc : HasDerivWithinAt c c' s x) (hd : HasDerivWithinAt d d' s x) :
-  HasDerivWithinAt (fun y => c y*d y) ((c'*d x)+c x*d') s x :=
-  by 
-    have  := (HasFderivWithinAt.mul' hc hd).HasDerivWithinAt 
-    rwa [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_right_apply,
-      ContinuousLinearMap.smul_right_apply, ContinuousLinearMap.smul_right_apply, ContinuousLinearMap.one_apply,
-      one_smul, one_smul, add_commₓ] at this
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_deriv_within_at.mul
+(hc : has_deriv_within_at c c' s x)
+(hd : has_deriv_within_at d d' s x) : has_deriv_within_at (λ
+ y, «expr * »(c y, d y)) «expr + »(«expr * »(c', d x), «expr * »(c x, d')) s x :=
+begin
+  have [] [] [":=", expr (has_fderiv_within_at.mul' hc hd).has_deriv_within_at],
+  rwa ["[", expr continuous_linear_map.add_apply, ",", expr continuous_linear_map.smul_apply, ",", expr continuous_linear_map.smul_right_apply, ",", expr continuous_linear_map.smul_right_apply, ",", expr continuous_linear_map.smul_right_apply, ",", expr continuous_linear_map.one_apply, ",", expr one_smul, ",", expr one_smul, ",", expr add_comm, "]"] ["at", ident this]
+end
 
 theorem HasDerivAt.mul (hc : HasDerivAt c c' x) (hd : HasDerivAt d d' x) :
   HasDerivAt (fun y => c y*d y) ((c'*d x)+c x*d') x :=
@@ -1265,13 +1313,15 @@ theorem HasDerivAt.mul (hc : HasDerivAt c c' x) (hd : HasDerivAt d d' x) :
     rw [←has_deriv_within_at_univ] at *
     exact hc.mul hd
 
-theorem HasStrictDerivAt.mul (hc : HasStrictDerivAt c c' x) (hd : HasStrictDerivAt d d' x) :
-  HasStrictDerivAt (fun y => c y*d y) ((c'*d x)+c x*d') x :=
-  by 
-    have  := (HasStrictFderivAt.mul' hc hd).HasStrictDerivAt 
-    rwa [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_right_apply,
-      ContinuousLinearMap.smul_right_apply, ContinuousLinearMap.smul_right_apply, ContinuousLinearMap.one_apply,
-      one_smul, one_smul, add_commₓ] at this
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_strict_deriv_at.mul
+(hc : has_strict_deriv_at c c' x)
+(hd : has_strict_deriv_at d d' x) : has_strict_deriv_at (λ
+ y, «expr * »(c y, d y)) «expr + »(«expr * »(c', d x), «expr * »(c x, d')) x :=
+begin
+  have [] [] [":=", expr (has_strict_fderiv_at.mul' hc hd).has_strict_deriv_at],
+  rwa ["[", expr continuous_linear_map.add_apply, ",", expr continuous_linear_map.smul_apply, ",", expr continuous_linear_map.smul_right_apply, ",", expr continuous_linear_map.smul_right_apply, ",", expr continuous_linear_map.smul_right_apply, ",", expr continuous_linear_map.one_apply, ",", expr one_smul, ",", expr one_smul, ",", expr add_comm, "]"] ["at", ident this]
+end
 
 theorem deriv_within_mul (hxs : UniqueDiffWithinAt 𝕜 s x) (hc : DifferentiableWithinAt 𝕜 c s x)
   (hd : DifferentiableWithinAt 𝕜 d s x) :
@@ -1293,6 +1343,10 @@ theorem HasDerivAt.mul_const (hc : HasDerivAt c c' x) (d : 𝔸) : HasDerivAt (f
   by 
     rw [←has_deriv_within_at_univ] at *
     exact hc.mul_const d
+
+theorem has_deriv_at_mul_const (c : 𝕜) : HasDerivAt (fun x => x*c) c x :=
+  by 
+    simpa only [one_mulₓ] using (has_deriv_at_id' x).mul_const c
 
 theorem HasStrictDerivAt.mul_const (hc : HasStrictDerivAt c c' x) (d : 𝔸) :
   HasStrictDerivAt (fun y => c y*d) (c'*d) x :=
@@ -1572,19 +1626,25 @@ variable{G :
       _}[NormedGroup
       G][NormedSpace 𝕜 G]{c : 𝕜 → F →L[𝕜] G}{c' : F →L[𝕜] G}{d : 𝕜 → E →L[𝕜] F}{d' : E →L[𝕜] F}{u : 𝕜 → F}{u' : F}
 
-theorem HasStrictDerivAt.clm_comp (hc : HasStrictDerivAt c c' x) (hd : HasStrictDerivAt d d' x) :
-  HasStrictDerivAt (fun y => (c y).comp (d y)) (c'.comp (d x)+(c x).comp d') x :=
-  by 
-    have  := (hc.has_strict_fderiv_at.clm_comp hd.has_strict_fderiv_at).HasStrictDerivAt 
-    rwa [add_apply, comp_apply, comp_apply, smul_right_apply, smul_right_apply, one_apply, one_smul, one_smul,
-      add_commₓ] at this
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_strict_deriv_at.clm_comp
+(hc : has_strict_deriv_at c c' x)
+(hd : has_strict_deriv_at d d' x) : has_strict_deriv_at (λ
+ y, (c y).comp (d y)) «expr + »(c'.comp (d x), (c x).comp d') x :=
+begin
+  have [] [] [":=", expr (hc.has_strict_fderiv_at.clm_comp hd.has_strict_fderiv_at).has_strict_deriv_at],
+  rwa ["[", expr add_apply, ",", expr comp_apply, ",", expr comp_apply, ",", expr smul_right_apply, ",", expr smul_right_apply, ",", expr one_apply, ",", expr one_smul, ",", expr one_smul, ",", expr add_comm, "]"] ["at", ident this]
+end
 
-theorem HasDerivWithinAt.clm_comp (hc : HasDerivWithinAt c c' s x) (hd : HasDerivWithinAt d d' s x) :
-  HasDerivWithinAt (fun y => (c y).comp (d y)) (c'.comp (d x)+(c x).comp d') s x :=
-  by 
-    have  := (hc.has_fderiv_within_at.clm_comp hd.has_fderiv_within_at).HasDerivWithinAt 
-    rwa [add_apply, comp_apply, comp_apply, smul_right_apply, smul_right_apply, one_apply, one_smul, one_smul,
-      add_commₓ] at this
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_deriv_within_at.clm_comp
+(hc : has_deriv_within_at c c' s x)
+(hd : has_deriv_within_at d d' s x) : has_deriv_within_at (λ
+ y, (c y).comp (d y)) «expr + »(c'.comp (d x), (c x).comp d') s x :=
+begin
+  have [] [] [":=", expr (hc.has_fderiv_within_at.clm_comp hd.has_fderiv_within_at).has_deriv_within_at],
+  rwa ["[", expr add_apply, ",", expr comp_apply, ",", expr comp_apply, ",", expr smul_right_apply, ",", expr smul_right_apply, ",", expr one_apply, ",", expr one_smul, ",", expr one_smul, ",", expr add_comm, "]"] ["at", ident this]
+end
 
 theorem HasDerivAt.clm_comp (hc : HasDerivAt c c' x) (hd : HasDerivAt d d' x) :
   HasDerivAt (fun y => (c y).comp (d y)) (c'.comp (d x)+(c x).comp d') x :=
@@ -1601,26 +1661,32 @@ theorem deriv_clm_comp (hc : DifferentiableAt 𝕜 c x) (hd : DifferentiableAt �
   deriv (fun y => (c y).comp (d y)) x = (deriv c x).comp (d x)+(c x).comp (deriv d x) :=
   (hc.has_deriv_at.clm_comp hd.has_deriv_at).deriv
 
-theorem HasStrictDerivAt.clm_apply (hc : HasStrictDerivAt c c' x) (hu : HasStrictDerivAt u u' x) :
-  HasStrictDerivAt (fun y => (c y) (u y)) (c' (u x)+c x u') x :=
-  by 
-    have  := (hc.has_strict_fderiv_at.clm_apply hu.has_strict_fderiv_at).HasStrictDerivAt 
-    rwa [add_apply, comp_apply, flip_apply, smul_right_apply, smul_right_apply, one_apply, one_smul, one_smul,
-      add_commₓ] at this
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_strict_deriv_at.clm_apply
+(hc : has_strict_deriv_at c c' x)
+(hu : has_strict_deriv_at u u' x) : has_strict_deriv_at (λ y, c y (u y)) «expr + »(c' (u x), c x u') x :=
+begin
+  have [] [] [":=", expr (hc.has_strict_fderiv_at.clm_apply hu.has_strict_fderiv_at).has_strict_deriv_at],
+  rwa ["[", expr add_apply, ",", expr comp_apply, ",", expr flip_apply, ",", expr smul_right_apply, ",", expr smul_right_apply, ",", expr one_apply, ",", expr one_smul, ",", expr one_smul, ",", expr add_comm, "]"] ["at", ident this]
+end
 
-theorem HasDerivWithinAt.clm_apply (hc : HasDerivWithinAt c c' s x) (hu : HasDerivWithinAt u u' s x) :
-  HasDerivWithinAt (fun y => (c y) (u y)) (c' (u x)+c x u') s x :=
-  by 
-    have  := (hc.has_fderiv_within_at.clm_apply hu.has_fderiv_within_at).HasDerivWithinAt 
-    rwa [add_apply, comp_apply, flip_apply, smul_right_apply, smul_right_apply, one_apply, one_smul, one_smul,
-      add_commₓ] at this
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_deriv_within_at.clm_apply
+(hc : has_deriv_within_at c c' s x)
+(hu : has_deriv_within_at u u' s x) : has_deriv_within_at (λ y, c y (u y)) «expr + »(c' (u x), c x u') s x :=
+begin
+  have [] [] [":=", expr (hc.has_fderiv_within_at.clm_apply hu.has_fderiv_within_at).has_deriv_within_at],
+  rwa ["[", expr add_apply, ",", expr comp_apply, ",", expr flip_apply, ",", expr smul_right_apply, ",", expr smul_right_apply, ",", expr one_apply, ",", expr one_smul, ",", expr one_smul, ",", expr add_comm, "]"] ["at", ident this]
+end
 
-theorem HasDerivAt.clm_apply (hc : HasDerivAt c c' x) (hu : HasDerivAt u u' x) :
-  HasDerivAt (fun y => (c y) (u y)) (c' (u x)+c x u') x :=
-  by 
-    have  := (hc.has_fderiv_at.clm_apply hu.has_fderiv_at).HasDerivAt 
-    rwa [add_apply, comp_apply, flip_apply, smul_right_apply, smul_right_apply, one_apply, one_smul, one_smul,
-      add_commₓ] at this
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_deriv_at.clm_apply
+(hc : has_deriv_at c c' x)
+(hu : has_deriv_at u u' x) : has_deriv_at (λ y, c y (u y)) «expr + »(c' (u x), c x u') x :=
+begin
+  have [] [] [":=", expr (hc.has_fderiv_at.clm_apply hu.has_fderiv_at).has_deriv_at],
+  rwa ["[", expr add_apply, ",", expr comp_apply, ",", expr flip_apply, ",", expr smul_right_apply, ",", expr smul_right_apply, ",", expr one_apply, ",", expr one_smul, ",", expr one_smul, ",", expr add_comm, "]"] ["at", ident this]
+end
 
 theorem deriv_within_clm_apply (hxs : UniqueDiffWithinAt 𝕜 s x) (hc : DifferentiableWithinAt 𝕜 c s x)
   (hu : DifferentiableWithinAt 𝕜 u s x) :
@@ -1686,20 +1752,33 @@ theorem HasDerivAt.eventually_ne (h : HasDerivAt f f' x) (hf' : f' ≠ 0) : ∀�
         by 
           fieldSimp [norm_smul, mt norm_eq_zero.1 hf']⟩
 
-theorem not_differentiable_within_at_of_local_left_inverse_has_deriv_within_at_zero {f g : 𝕜 → 𝕜} {a : 𝕜} {s t : Set 𝕜}
-  (ha : a ∈ s) (hsu : UniqueDiffWithinAt 𝕜 s a) (hf : HasDerivWithinAt f 0 t (g a)) (hst : maps_to g s t)
-  (hfg : (f ∘ g) =ᶠ[𝓝[s] a] id) : ¬DifferentiableWithinAt 𝕜 g s a :=
-  by 
-    intro hg 
-    have  := (hf.comp a hg.has_deriv_within_at hst).congr_of_eventually_eq_of_mem hfg.symm ha 
-    simpa using hsu.eq_deriv _ this (has_deriv_within_at_id _ _)
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem not_differentiable_within_at_of_local_left_inverse_has_deriv_within_at_zero
+{f g : 𝕜 → 𝕜}
+{a : 𝕜}
+{s t : set 𝕜}
+(ha : «expr ∈ »(a, s))
+(hsu : unique_diff_within_at 𝕜 s a)
+(hf : has_deriv_within_at f 0 t (g a))
+(hst : maps_to g s t)
+(hfg : «expr =ᶠ[ ] »(«expr ∘ »(f, g), «expr𝓝[ ] »(s, a), id)) : «expr¬ »(differentiable_within_at 𝕜 g s a) :=
+begin
+  intro [ident hg],
+  have [] [] [":=", expr (hf.comp a hg.has_deriv_within_at hst).congr_of_eventually_eq_of_mem hfg.symm ha],
+  simpa [] [] [] [] [] ["using", expr hsu.eq_deriv _ this (has_deriv_within_at_id _ _)]
+end
 
-theorem not_differentiable_at_of_local_left_inverse_has_deriv_at_zero {f g : 𝕜 → 𝕜} {a : 𝕜} (hf : HasDerivAt f 0 (g a))
-  (hfg : (f ∘ g) =ᶠ[𝓝 a] id) : ¬DifferentiableAt 𝕜 g a :=
-  by 
-    intro hg 
-    have  := (hf.comp a hg.has_deriv_at).congr_of_eventually_eq hfg.symm 
-    simpa using this.unique (has_deriv_at_id a)
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem not_differentiable_at_of_local_left_inverse_has_deriv_at_zero
+{f g : 𝕜 → 𝕜}
+{a : 𝕜}
+(hf : has_deriv_at f 0 (g a))
+(hfg : «expr =ᶠ[ ] »(«expr ∘ »(f, g), expr𝓝() a, id)) : «expr¬ »(differentiable_at 𝕜 g a) :=
+begin
+  intro [ident hg],
+  have [] [] [":=", expr (hf.comp a hg.has_deriv_at).congr_of_eventually_eq hfg.symm],
+  simpa [] [] [] [] [] ["using", expr this.unique (has_deriv_at_id a)]
+end
 
 end 
 
@@ -1867,34 +1946,35 @@ section Zpow
 
 variable{x : 𝕜}{s : Set 𝕜}{m : ℤ}
 
-theorem has_strict_deriv_at_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) :
-  HasStrictDerivAt (fun x => x ^ m) ((m : 𝕜)*x ^ (m - 1)) x :=
-  by 
-    have  : ∀ m : ℤ, 0 < m → HasStrictDerivAt (fun x => x ^ m) ((m : 𝕜)*x ^ (m - 1)) x
-    ·
-      intro m hm 
-      lift m to ℕ using le_of_ltₓ hm 
-      simp only [zpow_coe_nat, Int.cast_coe_nat]
-      convert has_strict_deriv_at_pow _ _ using 2
-      rw [←Int.coe_nat_one, ←Int.coe_nat_subₓ, zpow_coe_nat]
-      normCast  at hm 
-      exact Nat.succ_le_of_ltₓ hm 
-    rcases lt_trichotomyₓ m 0 with (hm | hm | hm)
-    ·
-      have hx : x ≠ 0 
-      exact h.resolve_right hm.not_le 
-      have  := (has_strict_deriv_at_inv _).scomp _ (this (-m) (neg_pos.2 hm)) <;> [skip,
-        exact zpow_ne_zero_of_ne_zero hx _]
-      simp only [· ∘ ·, zpow_neg₀, one_div, inv_inv₀, smul_eq_mul] at this 
-      convert this using 1
-      rw [sq, mul_inv₀, inv_inv₀, Int.cast_neg, ←neg_mul_eq_neg_mul, neg_mul_neg, ←zpow_add₀ hx, mul_assocₓ,
-        ←zpow_add₀ hx]
-      congr 
-      abel
-    ·
-      simp only [hm, zpow_zero, Int.cast_zero, zero_mul, has_strict_deriv_at_const]
-    ·
-      exact this m hm
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_strict_deriv_at_zpow
+(m : exprℤ())
+(x : 𝕜)
+(h : «expr ∨ »(«expr ≠ »(x, 0), «expr ≤ »(0, m))) : has_strict_deriv_at (λ
+ x, «expr ^ »(x, m)) «expr * »((m : 𝕜), «expr ^ »(x, «expr - »(m, 1))) x :=
+begin
+  have [] [":", expr ∀
+   m : exprℤ(), «expr < »(0, m) → has_strict_deriv_at (λ
+    x, «expr ^ »(x, m)) «expr * »((m : 𝕜), «expr ^ »(x, «expr - »(m, 1))) x] [],
+  { assume [binders (m hm)],
+    lift [expr m] ["to", expr exprℕ()] ["using", expr le_of_lt hm] [],
+    simp [] [] ["only"] ["[", expr zpow_coe_nat, ",", expr int.cast_coe_nat, "]"] [] [],
+    convert [] [expr has_strict_deriv_at_pow _ _] ["using", 2],
+    rw ["[", "<-", expr int.coe_nat_one, ",", "<-", expr int.coe_nat_sub, ",", expr zpow_coe_nat, "]"] [],
+    norm_cast ["at", ident hm],
+    exact [expr nat.succ_le_of_lt hm] },
+  rcases [expr lt_trichotomy m 0, "with", ident hm, "|", ident hm, "|", ident hm],
+  { have [ident hx] [":", expr «expr ≠ »(x, 0)] [],
+    from [expr h.resolve_right hm.not_le],
+    have [] [] [":=", expr (has_strict_deriv_at_inv _).scomp _ (this «expr- »(m) (neg_pos.2 hm))]; [skip, exact [expr zpow_ne_zero_of_ne_zero hx _]],
+    simp [] [] ["only"] ["[", expr («expr ∘ »), ",", expr zpow_neg₀, ",", expr one_div, ",", expr inv_inv₀, ",", expr smul_eq_mul, "]"] [] ["at", ident this],
+    convert [] [expr this] ["using", 1],
+    rw ["[", expr sq, ",", expr mul_inv₀, ",", expr inv_inv₀, ",", expr int.cast_neg, ",", "<-", expr neg_mul_eq_neg_mul, ",", expr neg_mul_neg, ",", "<-", expr zpow_add₀ hx, ",", expr mul_assoc, ",", "<-", expr zpow_add₀ hx, "]"] [],
+    congr,
+    abel [] [] [] },
+  { simp [] [] ["only"] ["[", expr hm, ",", expr zpow_zero, ",", expr int.cast_zero, ",", expr zero_mul, ",", expr has_strict_deriv_at_const, "]"] [] [] },
+  { exact [expr this m hm] }
+end
 
 theorem has_deriv_at_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) : HasDerivAt (fun x => x ^ m) ((m : 𝕜)*x ^ (m - 1)) x :=
   (has_strict_deriv_at_zpow m x h).HasDerivAt
@@ -1947,17 +2027,20 @@ theorem iter_deriv_zpow (m : ℤ) (x : 𝕜) (k : ℕ) :
   (deriv^[k]) (fun y => y ^ m) x = (∏i in Finset.range k, m - i)*x ^ (m - k) :=
   congr_funₓ (iter_deriv_zpow' m k) x
 
-theorem iter_deriv_pow (n : ℕ) (x : 𝕜) (k : ℕ) :
-  (deriv^[k]) (fun x : 𝕜 => x ^ n) x = (∏i in Finset.range k, n - i)*x ^ (n - k) :=
-  by 
-    simp only [←zpow_coe_nat, iter_deriv_zpow, Int.cast_coe_nat]
-    cases' le_or_ltₓ k n with hkn hnk
-    ·
-      rw [Int.coe_nat_subₓ hkn]
-    ·
-      have  : (∏i in Finset.range k, (n - i : 𝕜)) = 0 
-      exact Finset.prod_eq_zero (Finset.mem_range.2 hnk) (sub_self _)
-      simp only [this, zero_mul]
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem iter_deriv_pow
+(n : exprℕ())
+(x : 𝕜)
+(k : exprℕ()) : «expr = »(«expr ^[ ]»(deriv, k) (λ
+  x : 𝕜, «expr ^ »(x, n)) x, «expr * »(«expr∏ in , »((i), finset.range k, «expr - »(n, i)), «expr ^ »(x, «expr - »(n, k)))) :=
+begin
+  simp [] [] ["only"] ["[", "<-", expr zpow_coe_nat, ",", expr iter_deriv_zpow, ",", expr int.cast_coe_nat, "]"] [] [],
+  cases [expr le_or_lt k n] ["with", ident hkn, ident hnk],
+  { rw [expr int.coe_nat_sub hkn] [] },
+  { have [] [":", expr «expr = »(«expr∏ in , »((i), finset.range k, («expr - »(n, i) : 𝕜)), 0)] [],
+    from [expr finset.prod_eq_zero (finset.mem_range.2 hnk) (sub_self _)],
+    simp [] [] ["only"] ["[", expr this, ",", expr zero_mul, "]"] [] [] }
+end
 
 @[simp]
 theorem iter_deriv_pow' (n k : ℕ) :
@@ -2002,28 +2085,27 @@ open Metric
 
 variable{E : Type u}[NormedGroup E][NormedSpace ℝ E]{f : ℝ → E}{f' : E}{s : Set ℝ}{x r : ℝ}
 
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` has derivative `f'` within `s` at `x`, then for any `r > ∥f'∥` the ratio
 `∥f z - f x∥ / ∥z - x∥` is less than `r` in some neighborhood of `x` within `s`.
 In other words, the limit superior of this ratio as `z` tends to `x` along `s`
 is less than or equal to `∥f'∥`. -/
-theorem HasDerivWithinAt.limsup_norm_slope_le (hf : HasDerivWithinAt f f' s x) (hr : ∥f'∥ < r) :
-  ∀ᶠz in 𝓝[s] x, (∥z - x∥⁻¹*∥f z - f x∥) < r :=
-  by 
-    have hr₀ : 0 < r 
-    exact lt_of_le_of_ltₓ (norm_nonneg f') hr 
-    have A : ∀ᶠz in 𝓝[s \ {x}] x, ∥(z - x)⁻¹ • (f z - f x)∥ ∈ Iio r 
-    exact (has_deriv_within_at_iff_tendsto_slope.1 hf).norm (IsOpen.mem_nhds is_open_Iio hr)
-    have B : ∀ᶠz in 𝓝[{x}] x, ∥(z - x)⁻¹ • (f z - f x)∥ ∈ Iio r 
-    exact
-      mem_of_superset self_mem_nhds_within
-        (singleton_subset_iff.2$
-          by 
-            simp [hr₀])
-    have C := mem_sup.2 ⟨A, B⟩
-    rw [←nhds_within_union, diff_union_self, nhds_within_union, mem_sup] at C 
-    filterUpwards [C.1]
-    simp only [norm_smul, mem_Iio, NormedField.norm_inv]
-    exact fun _ => id
+theorem has_deriv_within_at.limsup_norm_slope_le
+(hf : has_deriv_within_at f f' s x)
+(hr : «expr < »(«expr∥ ∥»(f'), r)) : «expr∀ᶠ in , »((z), «expr𝓝[ ] »(s, x), «expr < »(«expr * »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(z, x))), «expr∥ ∥»(«expr - »(f z, f x))), r)) :=
+begin
+  have [ident hr₀] [":", expr «expr < »(0, r)] [],
+  from [expr lt_of_le_of_lt (norm_nonneg f') hr],
+  have [ident A] [":", expr «expr∀ᶠ in , »((z), «expr𝓝[ ] »(«expr \ »(s, {x}), x), «expr ∈ »(«expr∥ ∥»(«expr • »(«expr ⁻¹»(«expr - »(z, x)), «expr - »(f z, f x))), Iio r))] [],
+  from [expr (has_deriv_within_at_iff_tendsto_slope.1 hf).norm (is_open.mem_nhds is_open_Iio hr)],
+  have [ident B] [":", expr «expr∀ᶠ in , »((z), «expr𝓝[ ] »({x}, x), «expr ∈ »(«expr∥ ∥»(«expr • »(«expr ⁻¹»(«expr - »(z, x)), «expr - »(f z, f x))), Iio r))] [],
+  from [expr mem_of_superset self_mem_nhds_within «expr $ »(singleton_subset_iff.2, by simp [] [] [] ["[", expr hr₀, "]"] [] [])],
+  have [ident C] [] [":=", expr mem_sup.2 ⟨A, B⟩],
+  rw ["[", "<-", expr nhds_within_union, ",", expr diff_union_self, ",", expr nhds_within_union, ",", expr mem_sup, "]"] ["at", ident C],
+  filter_upwards ["[", expr C.1, "]"] [],
+  simp [] [] ["only"] ["[", expr norm_smul, ",", expr mem_Iio, ",", expr normed_field.norm_inv, "]"] [] [],
+  exact [expr λ _, id]
+end
 
 /-- If `f` has derivative `f'` within `s` at `x`, then for any `r > ∥f'∥` the ratio
 `(∥f z∥ - ∥f x∥) / ∥z - x∥` is less than `r` in some neighborhood of `x` within `s`.
@@ -2049,6 +2131,7 @@ theorem HasDerivWithinAt.liminf_right_norm_slope_le (hf : HasDerivWithinAt f f' 
   ∃ᶠz in 𝓝[Ioi x] x, (∥z - x∥⁻¹*∥f z - f x∥) < r :=
   (hf.Ioi_of_Ici.limsup_norm_slope_le hr).Frequently
 
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` has derivative `f'` within `(x, +∞)` at `x`, then for any `r > ∥f'∥` the ratio
 `(∥f z∥ - ∥f x∥) / (z - x)` is frequently less than `r` as `z → x+0`.
 In other words, the limit inferior of this ratio as `z` tends to `x+0`
@@ -2060,13 +2143,15 @@ See also
   limit superior and any set `s`;
 * `has_deriv_within_at.liminf_right_norm_slope_le` for a stronger version using
   `∥f z - f x∥` instead of `∥f z∥ - ∥f x∥`. -/
-theorem HasDerivWithinAt.liminf_right_slope_norm_le (hf : HasDerivWithinAt f f' (Ici x) x) (hr : ∥f'∥ < r) :
-  ∃ᶠz in 𝓝[Ioi x] x, ((z - x)⁻¹*∥f z∥ - ∥f x∥) < r :=
-  by 
-    have  := (hf.Ioi_of_Ici.limsup_slope_norm_le hr).Frequently 
-    refine' this.mp (eventually.mono self_mem_nhds_within _)
-    intro z hxz hz 
-    rwa [Real.norm_eq_abs, abs_of_pos (sub_pos_of_lt hxz)] at hz
+theorem has_deriv_within_at.liminf_right_slope_norm_le
+(hf : has_deriv_within_at f f' (Ici x) x)
+(hr : «expr < »(«expr∥ ∥»(f'), r)) : «expr∃ᶠ in , »((z), «expr𝓝[ ] »(Ioi x, x), «expr < »(«expr * »(«expr ⁻¹»(«expr - »(z, x)), «expr - »(«expr∥ ∥»(f z), «expr∥ ∥»(f x))), r)) :=
+begin
+  have [] [] [":=", expr (hf.Ioi_of_Ici.limsup_slope_norm_le hr).frequently],
+  refine [expr this.mp (eventually.mono self_mem_nhds_within _)],
+  assume [binders (z hxz hz)],
+  rwa ["[", expr real.norm_eq_abs, ",", expr abs_of_pos (sub_pos_of_lt hxz), "]"] ["at", ident hz]
+end
 
 end RealSpace
 

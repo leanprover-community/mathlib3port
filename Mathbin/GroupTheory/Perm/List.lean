@@ -159,27 +159,28 @@ theorem zip_with_swap_prod_support' (l l' : List α) :
           rw [swap_apply_ne_self_iff] at hx 
           rcases hx with ⟨hyz, rfl | rfl⟩ <;> simp 
 
-theorem zip_with_swap_prod_support [Fintype α] (l l' : List α) :
-  (zip_with swap l l').Prod.support ≤ l.to_finset⊔l'.to_finset :=
-  by 
-    intro x hx 
-    have hx' : x ∈ { x | (zip_with swap l l').Prod x ≠ x } :=
-      by 
-        simpa using hx 
-    simpa using zip_with_swap_prod_support' _ _ hx'
+-- error in GroupTheory.Perm.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem zip_with_swap_prod_support
+[fintype α]
+(l l' : list α) : «expr ≤ »((zip_with swap l l').prod.support, «expr ⊔ »(l.to_finset, l'.to_finset)) :=
+begin
+  intros [ident x, ident hx],
+  have [ident hx'] [":", expr «expr ∈ »(x, {x | «expr ≠ »((zip_with swap l l').prod x, x)})] [":=", expr by simpa [] [] [] [] [] ["using", expr hx]],
+  simpa [] [] [] [] [] ["using", expr zip_with_swap_prod_support' _ _ hx']
+end
 
 theorem support_form_perm_le' : { x | form_perm l x ≠ x } ≤ l.to_finset :=
   by 
     refine' (zip_with_swap_prod_support' l l.tail).trans _ 
     simpa [Finset.subset_iff] using tail_subset l
 
-theorem support_form_perm_le [Fintype α] : support (form_perm l) ≤ l.to_finset :=
-  by 
-    intro x hx 
-    have hx' : x ∈ { x | form_perm l x ≠ x } :=
-      by 
-        simpa using hx 
-    simpa using support_form_perm_le' _ hx'
+-- error in GroupTheory.Perm.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem support_form_perm_le [fintype α] : «expr ≤ »(support (form_perm l), l.to_finset) :=
+begin
+  intros [ident x, ident hx],
+  have [ident hx'] [":", expr «expr ∈ »(x, {x | «expr ≠ »(form_perm l x, x)})] [":=", expr by simpa [] [] [] [] [] ["using", expr hx]],
+  simpa [] [] [] [] [] ["using", expr support_form_perm_le' _ hx']
+end
 
 theorem form_perm_apply_lt (xs : List α) (h : nodup xs) (n : ℕ) (hn : (n+1) < xs.length) :
   form_perm xs (xs.nth_le n ((Nat.lt_succ_selfₓ n).trans hn)) = xs.nth_le (n+1) hn :=
@@ -204,22 +205,22 @@ theorem form_perm_apply_lt (xs : List α) (h : nodup xs) (n : ℕ) (hn : (n+1) <
             rintro rfl 
             simpa [nth_le_mem _ _ _] using h
 
-theorem form_perm_apply_nth_le (xs : List α) (h : nodup xs) (n : ℕ) (hn : n < xs.length) :
-  form_perm xs (xs.nth_le n hn) = xs.nth_le ((n+1) % xs.length) (Nat.mod_ltₓ _ (n.zero_le.trans_lt hn)) :=
-  by 
-    cases' xs with x xs
-    ·
-      simp 
-    ·
-      have  : n ≤ xs.length
-      ·
-        refine' Nat.le_of_lt_succₓ _ 
-        simpa using hn 
-      rcases this.eq_or_lt with (rfl | hn')
-      ·
-        simp 
-      ·
-        simp [form_perm_apply_lt, h, Nat.mod_eq_of_ltₓ, Nat.succ_lt_succₓ hn']
+-- error in GroupTheory.Perm.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem form_perm_apply_nth_le
+(xs : list α)
+(h : nodup xs)
+(n : exprℕ())
+(hn : «expr < »(n, xs.length)) : «expr = »(form_perm xs (xs.nth_le n hn), xs.nth_le «expr % »(«expr + »(n, 1), xs.length) (nat.mod_lt _ (n.zero_le.trans_lt hn))) :=
+begin
+  cases [expr xs] ["with", ident x, ident xs],
+  { simp [] [] [] [] [] [] },
+  { have [] [":", expr «expr ≤ »(n, xs.length)] [],
+    { refine [expr nat.le_of_lt_succ _],
+      simpa [] [] [] [] [] ["using", expr hn] },
+    rcases [expr this.eq_or_lt, "with", ident rfl, "|", ident hn'],
+    { simp [] [] [] [] [] [] },
+    { simp [] [] [] ["[", expr form_perm_apply_lt, ",", expr h, ",", expr nat.mod_eq_of_lt, ",", expr nat.succ_lt_succ hn', "]"] [] [] } }
+end
 
 theorem support_form_perm_of_nodup' (l : List α) (h : nodup l) (h' : ∀ x : α, l ≠ [x]) :
   { x | form_perm l x ≠ x } = l.to_finset :=
@@ -250,31 +251,27 @@ theorem support_form_perm_of_nodup [Fintype α] (l : List α) (h : nodup l) (h' 
     convert support_form_perm_of_nodup' _ h h' 
     simp [Set.ext_iff]
 
-theorem form_perm_rotate_one (l : List α) (h : nodup l) : form_perm (l.rotate 1) = form_perm l :=
-  by 
-    have h' : nodup (l.rotate 1)
-    ·
-      simpa using h 
-    byCases' hl : ∀ x : α, l ≠ [x]
-    ·
-      have hl' : ∀ x : α, l.rotate 1 ≠ [x]
-      ·
-        intro 
-        rw [Ne.def, rotate_eq_iff]
-        simpa using hl _ 
-      ext x 
-      byCases' hx : x ∈ l.rotate 1
-      ·
-        obtain ⟨k, hk, rfl⟩ := nth_le_of_mem hx 
-        rw [form_perm_apply_nth_le _ h', nth_le_rotate l, nth_le_rotate l, form_perm_apply_nth_le _ h]
-        simp 
-      ·
-        rw [form_perm_apply_of_not_mem _ _ hx, form_perm_apply_of_not_mem]
-        simpa using hx
-    ·
-      pushNeg  at hl 
-      obtain ⟨x, rfl⟩ := hl 
-      simp 
+-- error in GroupTheory.Perm.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem form_perm_rotate_one (l : list α) (h : nodup l) : «expr = »(form_perm (l.rotate 1), form_perm l) :=
+begin
+  have [ident h'] [":", expr nodup (l.rotate 1)] [],
+  { simpa [] [] [] [] [] ["using", expr h] },
+  by_cases [expr hl, ":", expr ∀ x : α, «expr ≠ »(l, «expr[ , ]»([x]))],
+  { have [ident hl'] [":", expr ∀ x : α, «expr ≠ »(l.rotate 1, «expr[ , ]»([x]))] [],
+    { intro [],
+      rw ["[", expr ne.def, ",", expr rotate_eq_iff, "]"] [],
+      simpa [] [] [] [] [] ["using", expr hl _] },
+    ext [] [ident x] [],
+    by_cases [expr hx, ":", expr «expr ∈ »(x, l.rotate 1)],
+    { obtain ["⟨", ident k, ",", ident hk, ",", ident rfl, "⟩", ":=", expr nth_le_of_mem hx],
+      rw ["[", expr form_perm_apply_nth_le _ h', ",", expr nth_le_rotate l, ",", expr nth_le_rotate l, ",", expr form_perm_apply_nth_le _ h, "]"] [],
+      simp [] [] [] [] [] [] },
+    { rw ["[", expr form_perm_apply_of_not_mem _ _ hx, ",", expr form_perm_apply_of_not_mem, "]"] [],
+      simpa [] [] [] [] [] ["using", expr hx] } },
+  { push_neg ["at", ident hl],
+    obtain ["⟨", ident x, ",", ident rfl, "⟩", ":=", expr hl],
+    simp [] [] [] [] [] [] }
+end
 
 theorem form_perm_rotate (l : List α) (h : nodup l) (n : ℕ) : form_perm (l.rotate n) = form_perm l :=
   by 
@@ -339,56 +336,44 @@ theorem form_perm_pow_apply_head (x : α) (l : List α) (h : nodup (x :: l)) (n 
   by 
     convert form_perm_pow_apply_nth_le _ h n 0 _ <;> simp 
 
-theorem form_perm_ext_iff {x y x' y' : α} {l l' : List α} (hd : nodup (x :: y :: l)) (hd' : nodup (x' :: y' :: l')) :
-  form_perm (x :: y :: l) = form_perm (x' :: y' :: l') ↔ (x :: y :: l) ~r (x' :: y' :: l') :=
-  by 
-    refine' ⟨fun h => _, fun hr => form_perm_eq_of_is_rotated hd hr⟩
-    rw [Equiv.Perm.ext_iff] at h 
-    have hx : x' ∈ x :: y :: l
-    ·
-      have  : x' ∈ { z | form_perm (x :: y :: l) z ≠ z }
-      ·
-        rw [Set.mem_set_of_eq, h x', form_perm_apply_head _ _ _ hd']
-        simp only [mem_cons_iff, nodup_cons] at hd' 
-        pushNeg  at hd' 
-        exact hd'.left.left.symm 
-      simpa using support_form_perm_le' _ this 
-    obtain ⟨n, hn, hx'⟩ := nth_le_of_mem hx 
-    have hl : (x :: y :: l).length = (x' :: y' :: l').length
-    ·
-      rw [←erase_dup_eq_self.mpr hd, ←erase_dup_eq_self.mpr hd', ←card_to_finset, ←card_to_finset]
-      refine' congr_argₓ Finset.card _ 
-      rw [←Finset.coe_inj,
-        ←support_form_perm_of_nodup' _ hd
-          (by 
-            simp ),
-        ←support_form_perm_of_nodup' _ hd'
-          (by 
-            simp )]
-      simp only [h]
-    use n 
-    apply List.ext_le
-    ·
-      rw [length_rotate, hl]
-    ·
-      intro k hk hk' 
-      rw [nth_le_rotate]
-      induction' k with k IH
-      ·
-        simpRw [Nat.zero_add, Nat.mod_eq_of_ltₓ hn]
-        simpa
-      ·
-        have  : k.succ = (k+1) % (x' :: y' :: l').length
-        ·
-          rw [←Nat.succ_eq_add_one, Nat.mod_eq_of_ltₓ hk']
-        simpRw [this]
-        rw [←form_perm_apply_nth_le _ hd' k (k.lt_succ_self.trans hk'), ←IH (k.lt_succ_self.trans hk), ←h,
-          form_perm_apply_nth_le _ hd]
-        congr 1
-        have h1 : 1 = 1 % (x' :: y' :: l').length :=
-          by 
-            simp 
-        rw [hl, Nat.mod_eq_of_ltₓ hk', h1, ←Nat.add_modₓ, Nat.succ_add]
+-- error in GroupTheory.Perm.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem form_perm_ext_iff
+{x y x' y' : α}
+{l l' : list α}
+(hd : nodup [«expr :: »/«expr :: »/«expr :: »](x, [«expr :: »/«expr :: »/«expr :: »](y, l)))
+(hd' : nodup [«expr :: »/«expr :: »/«expr :: »](x', [«expr :: »/«expr :: »/«expr :: »](y', l'))) : «expr ↔ »(«expr = »(form_perm [«expr :: »/«expr :: »/«expr :: »](x, [«expr :: »/«expr :: »/«expr :: »](y, l)), form_perm [«expr :: »/«expr :: »/«expr :: »](x', [«expr :: »/«expr :: »/«expr :: »](y', l'))), «expr ~r »([«expr :: »/«expr :: »/«expr :: »](x, [«expr :: »/«expr :: »/«expr :: »](y, l)), [«expr :: »/«expr :: »/«expr :: »](x', [«expr :: »/«expr :: »/«expr :: »](y', l')))) :=
+begin
+  refine [expr ⟨λ h, _, λ hr, form_perm_eq_of_is_rotated hd hr⟩],
+  rw [expr equiv.perm.ext_iff] ["at", ident h],
+  have [ident hx] [":", expr «expr ∈ »(x', [«expr :: »/«expr :: »/«expr :: »](x, [«expr :: »/«expr :: »/«expr :: »](y, l)))] [],
+  { have [] [":", expr «expr ∈ »(x', {z | «expr ≠ »(form_perm [«expr :: »/«expr :: »/«expr :: »](x, [«expr :: »/«expr :: »/«expr :: »](y, l)) z, z)})] [],
+    { rw ["[", expr set.mem_set_of_eq, ",", expr h x', ",", expr form_perm_apply_head _ _ _ hd', "]"] [],
+      simp [] [] ["only"] ["[", expr mem_cons_iff, ",", expr nodup_cons, "]"] [] ["at", ident hd'],
+      push_neg ["at", ident hd'],
+      exact [expr hd'.left.left.symm] },
+    simpa [] [] [] [] [] ["using", expr support_form_perm_le' _ this] },
+  obtain ["⟨", ident n, ",", ident hn, ",", ident hx', "⟩", ":=", expr nth_le_of_mem hx],
+  have [ident hl] [":", expr «expr = »([«expr :: »/«expr :: »/«expr :: »](x, [«expr :: »/«expr :: »/«expr :: »](y, l)).length, [«expr :: »/«expr :: »/«expr :: »](x', [«expr :: »/«expr :: »/«expr :: »](y', l')).length)] [],
+  { rw ["[", "<-", expr erase_dup_eq_self.mpr hd, ",", "<-", expr erase_dup_eq_self.mpr hd', ",", "<-", expr card_to_finset, ",", "<-", expr card_to_finset, "]"] [],
+    refine [expr congr_arg finset.card _],
+    rw ["[", "<-", expr finset.coe_inj, ",", "<-", expr support_form_perm_of_nodup' _ hd (by simp [] [] [] [] [] []), ",", "<-", expr support_form_perm_of_nodup' _ hd' (by simp [] [] [] [] [] []), "]"] [],
+    simp [] [] ["only"] ["[", expr h, "]"] [] [] },
+  use [expr n],
+  apply [expr list.ext_le],
+  { rw ["[", expr length_rotate, ",", expr hl, "]"] [] },
+  { intros [ident k, ident hk, ident hk'],
+    rw [expr nth_le_rotate] [],
+    induction [expr k] [] ["with", ident k, ident IH] [],
+    { simp_rw ["[", expr nat.zero_add, ",", expr nat.mod_eq_of_lt hn, "]"] [],
+      simpa [] [] [] [] [] [] },
+    { have [] [":", expr «expr = »(k.succ, «expr % »(«expr + »(k, 1), [«expr :: »/«expr :: »/«expr :: »](x', [«expr :: »/«expr :: »/«expr :: »](y', l')).length))] [],
+      { rw ["[", "<-", expr nat.succ_eq_add_one, ",", expr nat.mod_eq_of_lt hk', "]"] [] },
+      simp_rw [expr this] [],
+      rw ["[", "<-", expr form_perm_apply_nth_le _ hd' k (k.lt_succ_self.trans hk'), ",", "<-", expr IH (k.lt_succ_self.trans hk), ",", "<-", expr h, ",", expr form_perm_apply_nth_le _ hd, "]"] [],
+      congr' [1] [],
+      have [ident h1] [":", expr «expr = »(1, «expr % »(1, [«expr :: »/«expr :: »/«expr :: »](x', [«expr :: »/«expr :: »/«expr :: »](y', l')).length))] [":=", expr by simp [] [] [] [] [] []],
+      rw ["[", expr hl, ",", expr nat.mod_eq_of_lt hk', ",", expr h1, ",", "<-", expr nat.add_mod, ",", expr nat.succ_add, "]"] [] } }
+end
 
 theorem form_perm_apply_mem_eq_self_iff (hl : nodup l) (x : α) (hx : x ∈ l) : form_perm l x = x ↔ length l ≤ 1 :=
   by 
@@ -421,7 +406,7 @@ theorem mem_of_form_perm_ne_self (l : List α) (x : α) (h : form_perm l x ≠ x
 theorem form_perm_eq_self_of_not_mem (l : List α) (x : α) (h : x ∉ l) : form_perm l x = x :=
   by_contra fun H => h$ mem_of_form_perm_ne_self _ _ H
 
--- error in GroupTheory.Perm.List: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in GroupTheory.Perm.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem form_perm_eq_one_iff (hl : nodup l) : «expr ↔ »(«expr = »(form_perm l, 1), «expr ≤ »(l.length, 1)) :=
 begin
   cases [expr l] ["with", ident hd, ident tl],
@@ -471,32 +456,35 @@ theorem form_perm_eq_form_perm_iff {l l' : List α} (hl : l.nodup) (hl' : l'.nod
       ·
         simp [-form_perm_cons_cons, form_perm_ext_iff hl hl']
 
-theorem form_perm_zpow_apply_mem_imp_mem (l : List α) (x : α) (hx : x ∈ l) (n : ℤ) : (form_perm l ^ n) x ∈ l :=
-  by 
-    byCases' h : (l.form_perm ^ n) x = x
-    ·
-      simpa [h] using hx
-    ·
-      have  : x ∈ { x | (l.form_perm ^ n) x ≠ x } := h 
-      rw [←set_support_apply_mem] at this 
-      replace this := set_support_zpow_subset _ _ this 
-      simpa using support_form_perm_le' _ this
+-- error in GroupTheory.Perm.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem form_perm_zpow_apply_mem_imp_mem
+(l : list α)
+(x : α)
+(hx : «expr ∈ »(x, l))
+(n : exprℤ()) : «expr ∈ »(«expr ^ »(form_perm l, n) x, l) :=
+begin
+  by_cases [expr h, ":", expr «expr = »(«expr ^ »(l.form_perm, n) x, x)],
+  { simpa [] [] [] ["[", expr h, "]"] [] ["using", expr hx] },
+  { have [] [":", expr «expr ∈ »(x, {x | «expr ≠ »(«expr ^ »(l.form_perm, n) x, x)})] [":=", expr h],
+    rw ["<-", expr set_support_apply_mem] ["at", ident this],
+    replace [ident this] [] [":=", expr set_support_zpow_subset _ _ this],
+    simpa [] [] [] [] [] ["using", expr support_form_perm_le' _ this] }
+end
 
-theorem form_perm_pow_length_eq_one_of_nodup (hl : nodup l) : form_perm l ^ length l = 1 :=
-  by 
-    ext x 
-    byCases' hx : x ∈ l
-    ·
-      obtain ⟨k, hk, rfl⟩ := nth_le_of_mem hx 
-      simp [form_perm_pow_apply_nth_le _ hl, Nat.mod_eq_of_ltₓ hk]
-    ·
-      have  : x ∉ { x | (l.form_perm ^ l.length) x ≠ x }
-      ·
-        intro H 
-        refine' hx _ 
-        replace H := set_support_zpow_subset l.form_perm l.length H 
-        simpa using support_form_perm_le' _ H 
-      simpa
+-- error in GroupTheory.Perm.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem form_perm_pow_length_eq_one_of_nodup (hl : nodup l) : «expr = »(«expr ^ »(form_perm l, length l), 1) :=
+begin
+  ext [] [ident x] [],
+  by_cases [expr hx, ":", expr «expr ∈ »(x, l)],
+  { obtain ["⟨", ident k, ",", ident hk, ",", ident rfl, "⟩", ":=", expr nth_le_of_mem hx],
+    simp [] [] [] ["[", expr form_perm_pow_apply_nth_le _ hl, ",", expr nat.mod_eq_of_lt hk, "]"] [] [] },
+  { have [] [":", expr «expr ∉ »(x, {x | «expr ≠ »(«expr ^ »(l.form_perm, l.length) x, x)})] [],
+    { intros [ident H],
+      refine [expr hx _],
+      replace [ident H] [] [":=", expr set_support_zpow_subset l.form_perm l.length H],
+      simpa [] [] [] [] [] ["using", expr support_form_perm_le' _ H] },
+    simpa [] [] [] [] [] [] }
+end
 
 end FormPerm
 

@@ -315,15 +315,21 @@ theorem commute_pow_left_of_commute {f : M →ₛₗ[σ₁₂] M₂} {g : Module
       rw [pow_succₓ, pow_succₓ, LinearMap.mul_eq_comp, LinearMap.comp_assoc, ih, ←LinearMap.comp_assoc, h,
         LinearMap.comp_assoc, LinearMap.mul_eq_comp]
 
-theorem submodule_pow_eq_zero_of_pow_eq_zero {N : Submodule R M} {g : Module.End R N} {G : Module.End R M}
-  (h : G.comp N.subtype = N.subtype.comp g) {k : ℕ} (hG : G ^ k = 0) : g ^ k = 0 :=
-  by 
-    ext m 
-    have hg : N.subtype.comp (g ^ k) m = 0
-    ·
-      rw [←commute_pow_left_of_commute h, hG, zero_comp, zero_apply]
-    simp only [Submodule.subtype_apply, comp_app, Submodule.coe_eq_zero, coe_comp] at hg 
-    rw [hg, LinearMap.zero_apply]
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem submodule_pow_eq_zero_of_pow_eq_zero
+{N : submodule R M}
+{g : module.End R N}
+{G : module.End R M}
+(h : «expr = »(G.comp N.subtype, N.subtype.comp g))
+{k : exprℕ()}
+(hG : «expr = »(«expr ^ »(G, k), 0)) : «expr = »(«expr ^ »(g, k), 0) :=
+begin
+  ext [] [ident m] [],
+  have [ident hg] [":", expr «expr = »(N.subtype.comp «expr ^ »(g, k) m, 0)] [],
+  { rw ["[", "<-", expr commute_pow_left_of_commute h, ",", expr hG, ",", expr zero_comp, ",", expr zero_apply, "]"] [] },
+  simp [] [] ["only"] ["[", expr submodule.subtype_apply, ",", expr comp_app, ",", expr submodule.coe_eq_zero, ",", expr coe_comp, "]"] [] ["at", ident hg],
+  rw ["[", expr hg, ",", expr linear_map.zero_apply, "]"] []
+end
 
 theorem coe_pow (f : M →ₗ[R] M) (n : ℕ) : «expr⇑ » (f ^ n) = f^[n] :=
   by 
@@ -657,9 +663,9 @@ variable{R}
 instance  [Subsingleton M] : Unique (Submodule R M) :=
   ⟨⟨⊥⟩, fun a => @Subsingleton.elimₓ _ ((subsingleton_iff R).mpr ‹_›) a _⟩
 
-instance unique' [Subsingleton R] : Unique (Submodule R M) :=
-  by 
-    haveI  := Module.subsingleton R M <;> infer_instance
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance unique' [subsingleton R] : unique (submodule R M) :=
+by haveI [] [] [":=", expr module.subsingleton R M]; apply_instance
 
 instance  [Nontrivial M] : Nontrivial (Submodule R M) :=
   (nontrivial_iff R).mpr ‹_›
@@ -944,19 +950,24 @@ theorem map_comap_subtype : map p.subtype (comap p.subtype p') = p⊓p' :=
 theorem eq_zero_of_bot_submodule : ∀ b : (⊥ : Submodule R M), b = 0
 | ⟨b', hb⟩ => Subtype.eq$ show b' = 0 from (mem_bot R).1 hb
 
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The infimum of a family of invariant submodule of an endomorphism is also an invariant
 submodule. -/
-theorem _root_.linear_map.infi_invariant {σ : R →+* R} [RingHomSurjective σ] {ι : Type _} (f : M →ₛₗ[σ] M)
-  {p : ι → Submodule R M} (hf : ∀ i, ∀ v _ : v ∈ p i, f v ∈ p i) : ∀ v _ : v ∈ infi p, f v ∈ infi p :=
-  by 
-    have  : ∀ i, (p i).map f ≤ p i
-    ·
-      rintro i - ⟨v, hv, rfl⟩
-      exact hf i v hv 
-    suffices  : (infi p).map f ≤ infi p
-    ·
-      exact fun v hv => this ⟨v, hv, rfl⟩
-    exact le_infi fun i => (Submodule.map_mono (infi_le p i)).trans (this i)
+theorem _root_.linear_map.infi_invariant
+{σ : «expr →+* »(R, R)}
+[ring_hom_surjective σ]
+{ι : Type*}
+(f : «expr →ₛₗ[ ] »(M, σ, M))
+{p : ι → submodule R M}
+(hf : ∀ i, ∀ v «expr ∈ » p i, «expr ∈ »(f v, p i)) : ∀ v «expr ∈ » infi p, «expr ∈ »(f v, infi p) :=
+begin
+  have [] [":", expr ∀ i, «expr ≤ »((p i).map f, p i)] [],
+  { rintros [ident i, "-", "⟨", ident v, ",", ident hv, ",", ident rfl, "⟩"],
+    exact [expr hf i v hv] },
+  suffices [] [":", expr «expr ≤ »((infi p).map f, infi p)],
+  { exact [expr λ v hv, this ⟨v, hv, rfl⟩] },
+  exact [expr le_infi (λ i, (submodule.map_mono (infi_le p i)).trans (this i))]
+end
 
 section 
 
@@ -1113,11 +1124,16 @@ theorem mem_supr_of_directed {ι} [Nonempty ι] (S : ι → Submodule R M) (H : 
     rw [←SetLike.mem_coe, coe_supr_of_directed S H, mem_Union]
     rfl
 
-theorem mem_Sup_of_directed {s : Set (Submodule R M)} {z} (hs : s.nonempty) (hdir : DirectedOn (· ≤ ·) s) :
-  z ∈ Sup s ↔ ∃ (y : _)(_ : y ∈ s), z ∈ y :=
-  by 
-    haveI  : Nonempty s := hs.to_subtype 
-    simp only [Sup_eq_supr', mem_supr_of_directed _ hdir.directed_coe, SetCoe.exists, Subtype.coe_mk]
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_Sup_of_directed
+{s : set (submodule R M)}
+{z}
+(hs : s.nonempty)
+(hdir : directed_on ((«expr ≤ »)) s) : «expr ↔ »(«expr ∈ »(z, Sup s), «expr∃ , »((y «expr ∈ » s), «expr ∈ »(z, y))) :=
+begin
+  haveI [] [":", expr nonempty s] [":=", expr hs.to_subtype],
+  simp [] [] ["only"] ["[", expr Sup_eq_supr', ",", expr mem_supr_of_directed _ hdir.directed_coe, ",", expr set_coe.exists, ",", expr subtype.coe_mk, "]"] [] []
+end
 
 @[normCast, simp]
 theorem coe_supr_of_chain (a : ℕ →ₘ Submodule R M) : («expr↑ » (⨆k, a k) : Set M) = ⋃k, (a k : Set M) :=
@@ -1363,18 +1379,16 @@ theorem span_singleton_le_iff_mem (m : M) (p : Submodule R M) : (R∙m) ≤ p �
   by 
     rw [span_le, singleton_subset_iff, SetLike.mem_coe]
 
-theorem singleton_span_is_compact_element (x : M) : CompleteLattice.IsCompactElement (span R {x} : Submodule R M) :=
-  by 
-    rw [CompleteLattice.is_compact_element_iff_le_of_directed_Sup_le]
-    intro d hemp hdir hsup 
-    have  : x ∈ Sup d 
-    exact (set_like.le_def.mp hsup) (mem_span_singleton_self x)
-    obtain ⟨y, ⟨hyd, hxy⟩⟩ := (mem_Sup_of_directed hemp hdir).mp this 
-    exact
-      ⟨y,
-        ⟨hyd,
-          by 
-            simpa only [span_le, singleton_subset_iff]⟩⟩
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem singleton_span_is_compact_element (x : M) : complete_lattice.is_compact_element (span R {x} : submodule R M) :=
+begin
+  rw [expr complete_lattice.is_compact_element_iff_le_of_directed_Sup_le] [],
+  intros [ident d, ident hemp, ident hdir, ident hsup],
+  have [] [":", expr «expr ∈ »(x, Sup d)] [],
+  from [expr set_like.le_def.mp hsup (mem_span_singleton_self x)],
+  obtain ["⟨", ident y, ",", "⟨", ident hyd, ",", ident hxy, "⟩", "⟩", ":=", expr (mem_Sup_of_directed hemp hdir).mp this],
+  exact [expr ⟨y, ⟨hyd, by simpa [] [] ["only"] ["[", expr span_le, ",", expr singleton_subset_iff, "]"] [] []⟩⟩]
+end
 
 instance  : IsCompactlyGenerated (Submodule R M) :=
   ⟨fun s =>
@@ -1386,7 +1400,7 @@ instance  : IsCompactlyGenerated (Submodule R M) :=
           by 
             rw [Sup_eq_supr, supr_image, ←span_eq_supr_of_singleton_spans, span_eq]⟩⟩⟩
 
--- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lt_sup_iff_not_mem
 {I : submodule R M}
 {a : M} : «expr ↔ »(«expr < »(I, «expr ⊔ »(I, «expr ∙ »(R, a))), «expr ∉ »(a, I)) :=
@@ -1602,7 +1616,7 @@ include R
 
 open Submodule
 
--- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If two linear maps are equal on a set `s`, then they are equal on `submodule.span s`.
 
 See also `linear_map.eq_on_span'` for a version using `set.eq_on`. -/
@@ -1928,14 +1942,14 @@ theorem comap_injective {f : M →ₛₗ[τ₁₂] M₂} (hf : range f = ⊤) : 
 
 end 
 
-theorem ker_eq_bot_of_injective {f : M →ₛₗ[τ₁₂] M₂} (hf : injective f) : ker f = ⊥ :=
-  by 
-    have  : Disjoint ⊤ f.ker
-    ·
-      ·
-        rw [disjoint_ker, ←map_zero f]
-        exact fun x hx H => hf H 
-    simpa [Disjoint]
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ker_eq_bot_of_injective {f : «expr →ₛₗ[ ] »(M, τ₁₂, M₂)} (hf : injective f) : «expr = »(ker f, «expr⊥»()) :=
+begin
+  have [] [":", expr disjoint «expr⊤»() f.ker] [],
+  by { rw ["[", expr disjoint_ker, ",", "<-", expr map_zero f, "]"] [],
+    exact [expr λ x hx H, hf H] },
+  simpa [] [] [] ["[", expr disjoint, "]"] [] []
+end
 
 /--
 The increasing sequence of submodules consisting of the kernels of the iterates of a linear map.
@@ -2043,33 +2057,31 @@ theorem ker_eq_bot : ker f = ⊥ ↔ injective f :=
   by 
     simpa [Disjoint] using @disjoint_ker' _ _ _ _ _ _ _ _ _ _ _ f ⊤
 
-theorem ker_le_iff [RingHomSurjective τ₁₂] {p : Submodule R M} :
-  ker f ≤ p ↔ ∃ (y : _)(_ : y ∈ range f), f ⁻¹' {y} ⊆ p :=
-  by 
-    split 
-    ·
-      intro h 
-      use 0
-      rw [←SetLike.mem_coe, f.range_coe]
-      exact ⟨⟨0, map_zero f⟩, h⟩
-    ·
-      rintro ⟨y, h₁, h₂⟩
-      rw [SetLike.le_def]
-      intro z hz 
-      simp only [mem_ker, SetLike.mem_coe] at hz 
-      rw [←SetLike.mem_coe, f.range_coe, Set.mem_range] at h₁ 
-      obtain ⟨x, hx⟩ := h₁ 
-      have hx' : x ∈ p
-      ·
-        exact h₂ hx 
-      have hxz : (z+x) ∈ p
-      ·
-        apply h₂ 
-        simp [hx, hz]
-      suffices  : (z+x) - x ∈ p
-      ·
-        simpa only [this, add_sub_cancel]
-      exact p.sub_mem hxz hx'
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ker_le_iff
+[ring_hom_surjective τ₁₂]
+{p : submodule R M} : «expr ↔ »(«expr ≤ »(ker f, p), «expr∃ , »((y «expr ∈ » range f), «expr ⊆ »(«expr ⁻¹' »(f, {y}), p))) :=
+begin
+  split,
+  { intros [ident h],
+    use [expr 0],
+    rw ["[", "<-", expr set_like.mem_coe, ",", expr f.range_coe, "]"] [],
+    exact [expr ⟨⟨0, map_zero f⟩, h⟩] },
+  { rintros ["⟨", ident y, ",", ident h₁, ",", ident h₂, "⟩"],
+    rw [expr set_like.le_def] [],
+    intros [ident z, ident hz],
+    simp [] [] ["only"] ["[", expr mem_ker, ",", expr set_like.mem_coe, "]"] [] ["at", ident hz],
+    rw ["[", "<-", expr set_like.mem_coe, ",", expr f.range_coe, ",", expr set.mem_range, "]"] ["at", ident h₁],
+    obtain ["⟨", ident x, ",", ident hx, "⟩", ":=", expr h₁],
+    have [ident hx'] [":", expr «expr ∈ »(x, p)] [],
+    { exact [expr h₂ hx] },
+    have [ident hxz] [":", expr «expr ∈ »(«expr + »(z, x), p)] [],
+    { apply [expr h₂],
+      simp [] [] [] ["[", expr hx, ",", expr hz, "]"] [] [] },
+    suffices [] [":", expr «expr ∈ »(«expr - »(«expr + »(z, x), x), p)],
+    { simpa [] [] ["only"] ["[", expr this, ",", expr add_sub_cancel, "]"] [] [] },
+    exact [expr p.sub_mem hxz hx'] }
+end
 
 end Ringₓ
 
@@ -2248,12 +2260,17 @@ variable{τ₁₂ : R →+* R₂}{τ₂₃ : R₂ →+* R₃}{τ₁₃ : R →+*
 
 variable[RingHomCompTriple τ₁₂ τ₂₃ τ₁₃]
 
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A monomorphism is injective. -/
-theorem ker_eq_bot_of_cancel {f : M →ₛₗ[τ₁₂] M₂} (h : ∀ u v : f.ker →ₗ[R] M, f.comp u = f.comp v → u = v) : f.ker = ⊥ :=
-  by 
-    have h₁ : f.comp (0 : f.ker →ₗ[R] M) = 0 := comp_zero _ 
-    rw [←Submodule.range_subtype f.ker, ←h 0 f.ker.subtype (Eq.trans h₁ (comp_ker_subtype f).symm)]
-    exact range_zero
+theorem ker_eq_bot_of_cancel
+{f : «expr →ₛₗ[ ] »(M, τ₁₂, M₂)}
+(h : ∀
+ u v : «expr →ₗ[ ] »(f.ker, R, M), «expr = »(f.comp u, f.comp v) → «expr = »(u, v)) : «expr = »(f.ker, «expr⊥»()) :=
+begin
+  have [ident h₁] [":", expr «expr = »(f.comp (0 : «expr →ₗ[ ] »(f.ker, R, M)), 0)] [":=", expr comp_zero _],
+  rw ["[", "<-", expr submodule.range_subtype f.ker, ",", "<-", expr h 0 f.ker.subtype (eq.trans h₁ (comp_ker_subtype f).symm), "]"] [],
+  exact [expr range_zero]
+end
 
 theorem range_comp_of_range_eq_top [RingHomSurjective τ₁₂] [RingHomSurjective τ₂₃] [RingHomSurjective τ₁₃]
   {f : M →ₛₗ[τ₁₂] M₂} (g : M₂ →ₛₗ[τ₂₃] M₃) (hf : range f = ⊤) : range (g.comp f : M →ₛₗ[τ₁₃] M₃) = range g :=
@@ -2909,7 +2926,7 @@ noncomputable theory
 
 open_locale Classical
 
--- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem ker_to_span_singleton {x : M} (h : «expr ≠ »(x, 0)) : «expr = »((to_span_singleton K M x).ker, «expr⊥»()) :=
 begin
   ext [] [ident c] [],
@@ -2937,12 +2954,15 @@ def to_span_nonzero_singleton (x : M) (h : x ≠ 0) : K ≃ₗ[K] K∙x :=
   LinearEquiv.trans (LinearEquiv.ofInjective (to_span_singleton K M x) (ker_eq_bot.1$ ker_to_span_singleton K M h))
     (of_eq (to_span_singleton K M x).range (K∙x) (span_singleton_eq_range K M x).symm)
 
-theorem to_span_nonzero_singleton_one (x : M) (h : x ≠ 0) :
-  to_span_nonzero_singleton K M x h 1 = (⟨x, Submodule.mem_span_singleton_self x⟩ : K∙x) :=
-  by 
-    apply set_like.coe_eq_coe.mp 
-    have  : «expr↑ » (to_span_nonzero_singleton K M x h 1) = to_span_singleton K M x 1 := rfl 
-    rw [this, to_span_singleton_one, Submodule.coe_mk]
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem to_span_nonzero_singleton_one
+(x : M)
+(h : «expr ≠ »(x, 0)) : «expr = »(to_span_nonzero_singleton K M x h 1, (⟨x, submodule.mem_span_singleton_self x⟩ : «expr ∙ »(K, x))) :=
+begin
+  apply [expr set_like.coe_eq_coe.mp],
+  have [] [":", expr «expr = »(«expr↑ »(to_span_nonzero_singleton K M x h 1), to_span_singleton K M x 1)] [":=", expr rfl],
+  rw ["[", expr this, ",", expr to_span_singleton_one, ",", expr submodule.coe_mk, "]"] []
+end
 
 /-- Given a nonzero element `x` of a vector space `M` over a field `K`, the natural map
     from the span of `x` to `K`.-/

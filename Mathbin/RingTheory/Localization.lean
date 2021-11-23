@@ -204,19 +204,22 @@ theorem sec_spec' (z : S) : algebraMap R S (IsLocalization.sec M z).1 = algebraM
 
 open_locale BigOperators
 
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- We can clear the denominators of a `finset`-indexed family of fractions. -/
-theorem exist_integer_multiples {ι : Type _} (s : Finset ι) (f : ι → S) :
-  ∃ b : M, ∀ i _ : i ∈ s, IsLocalization.IsInteger R ((b : R) • f i) :=
-  by 
-    haveI  := Classical.propDecidable 
-    refine' ⟨∏i in s, (sec M (f i)).2, fun i hi => ⟨_, _⟩⟩
-    ·
-      exact (∏j in s.erase i, (sec M (f j)).2)*(sec M (f i)).1
-    rw [RingHom.map_mul, sec_spec', ←mul_assocₓ, ←(algebraMap R S).map_mul, ←Algebra.smul_def]
-    congr 2
-    refine' trans _ ((Submonoid.subtype M).map_prod _ _).symm 
-    rw [mul_commₓ, ←Finset.prod_insert (s.not_mem_erase i), Finset.insert_erase hi]
-    rfl
+theorem exist_integer_multiples
+{ι : Type*}
+(s : finset ι)
+(f : ι → S) : «expr∃ , »((b : M), ∀ i «expr ∈ » s, is_localization.is_integer R «expr • »((b : R), f i)) :=
+begin
+  haveI [] [] [":=", expr classical.prop_decidable],
+  refine [expr ⟨«expr∏ in , »((i), s, (sec M (f i)).2), λ i hi, ⟨_, _⟩⟩],
+  { exact [expr «expr * »(«expr∏ in , »((j), s.erase i, (sec M (f j)).2), (sec M (f i)).1)] },
+  rw ["[", expr ring_hom.map_mul, ",", expr sec_spec', ",", "<-", expr mul_assoc, ",", "<-", expr (algebra_map R S).map_mul, ",", "<-", expr algebra.smul_def, "]"] [],
+  congr' [2] [],
+  refine [expr trans _ ((submonoid.subtype M).map_prod _ _).symm],
+  rw ["[", expr mul_comm, ",", "<-", expr finset.prod_insert (s.not_mem_erase i), ",", expr finset.insert_erase hi, "]"] [],
+  refl
+end
 
 /-- We can clear the denominators of a `fintype`-indexed family of fractions. -/
 theorem exist_integer_multiples_of_fintype {ι : Type _} [Fintype ι] (f : ι → S) :
@@ -297,17 +300,17 @@ theorem mk'_eq_iff_eq {x₁ x₂} {y₁ y₂ : M} :
   mk' S x₁ y₁ = mk' S x₂ y₂ ↔ algebraMap R S (x₁*y₂) = algebraMap R S (x₂*y₁) :=
   (to_localization_map M S).mk'_eq_iff_eq
 
-theorem mk'_mem_iff {x} {y : M} {I : Ideal S} : mk' S x y ∈ I ↔ algebraMap R S x ∈ I :=
-  by 
-    split  <;> intro h
-    ·
-      rw [←mk'_spec S x y, mul_commₓ]
-      exact I.mul_mem_left ((algebraMap R S) y) h
-    ·
-      rw [←mk'_spec S x y] at h 
-      obtain ⟨b, hb⟩ := is_unit_iff_exists_inv.1 (map_units S y)
-      have  := I.mul_mem_left b h 
-      rwa [mul_commₓ, mul_assocₓ, hb, mul_oneₓ] at this
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mk'_mem_iff {x} {y : M} {I : ideal S} : «expr ↔ »(«expr ∈ »(mk' S x y, I), «expr ∈ »(algebra_map R S x, I)) :=
+begin
+  split; intro [ident h],
+  { rw ["[", "<-", expr mk'_spec S x y, ",", expr mul_comm, "]"] [],
+    exact [expr I.mul_mem_left (algebra_map R S y) h] },
+  { rw ["<-", expr mk'_spec S x y] ["at", ident h],
+    obtain ["⟨", ident b, ",", ident hb, "⟩", ":=", expr is_unit_iff_exists_inv.1 (map_units S y)],
+    have [] [] [":=", expr I.mul_mem_left b h],
+    rwa ["[", expr mul_comm, ",", expr mul_assoc, ",", expr hb, ",", expr mul_one, "]"] ["at", ident this] }
+end
 
 protected theorem Eq {a₁ b₁} {a₂ b₂ : M} : mk' S a₁ a₂ = mk' S b₁ b₂ ↔ ∃ c : M, ((a₁*b₂)*c) = (b₁*a₂)*c :=
   (to_localization_map M S).Eq
@@ -966,43 +969,36 @@ protected abbrev Localization.AtPrime :=
 
 namespace IsLocalization
 
-theorem at_prime.local_ring [IsLocalization.AtPrime S I] : LocalRing S :=
-  local_of_nonunits_ideal
-    (fun hze =>
-      by 
-        rw [←(algebraMap R S).map_one, ←(algebraMap R S).map_zero] at hze 
-        obtain ⟨t, ht⟩ := (eq_iff_exists I.prime_compl S).1 hze 
-        exact
-          (show (t : R) ∉ I from t.2)
-            (have htz : (t : R) = 0 :=
-              by 
-                simpa using ht.symm 
-            htz.symm ▸ I.zero_mem))
-    (by 
-      intro x y hx hy hu 
-      cases' is_unit_iff_exists_inv.1 hu with z hxyz 
-      have  : ∀ {r : R} {s : I.prime_compl}, mk' S r s ∈ Nonunits S → r ∈ I 
-      exact
-        fun r : R s : I.prime_compl =>
-          not_imp_comm.1
-            fun nr =>
-              is_unit_iff_exists_inv.2 ⟨mk' S («expr↑ » s) (⟨r, nr⟩ : I.prime_compl), mk'_mul_mk'_eq_one' _ _ nr⟩
-      rcases mk'_surjective I.prime_compl x with ⟨rx, sx, hrx⟩
-      rcases mk'_surjective I.prime_compl y with ⟨ry, sy, hry⟩
-      rcases mk'_surjective I.prime_compl z with ⟨rz, sz, hrz⟩
-      rw [←hrx, ←hry, ←hrz, ←mk'_add, ←mk'_mul, ←mk'_self S I.prime_compl.one_mem] at hxyz 
-      rw [←hrx] at hx 
-      rw [←hry] at hy 
-      obtain ⟨t, ht⟩ := IsLocalization.eq.1 hxyz 
-      simp only [mul_oneₓ, one_mulₓ, Submonoid.coe_mul, Subtype.coe_mk] at ht 
-      rw [←sub_eq_zero, ←sub_mul] at ht 
-      have hr := (hp.mem_or_mem_of_mul_eq_zero ht).resolve_right t.2
-      rw [sub_eq_add_neg] at hr 
-      have  := I.neg_mem_iff.1 ((Ideal.add_mem_iff_right _ _).1 hr)
-      ·
-        exact not_orₓ (mt hp.mem_or_mem (not_orₓ sx.2 sy.2)) sz.2 (hp.mem_or_mem this)
-      ·
-        exact I.mul_mem_right _ (I.add_mem (I.mul_mem_right _ (this hx)) (I.mul_mem_right _ (this hy))))
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem at_prime.local_ring [is_localization.at_prime S I] : local_ring S :=
+local_of_nonunits_ideal (λ hze, begin
+   rw ["[", "<-", expr (algebra_map R S).map_one, ",", "<-", expr (algebra_map R S).map_zero, "]"] ["at", ident hze],
+   obtain ["⟨", ident t, ",", ident ht, "⟩", ":=", expr (eq_iff_exists I.prime_compl S).1 hze],
+   exact [expr (show «expr ∉ »((t : R), I), from t.2) (have htz : «expr = »((t : R), 0), by simpa [] [] [] [] [] ["using", expr ht.symm],
+     «expr ▸ »(htz.symm, I.zero_mem))]
+ end) (begin
+   intros [ident x, ident y, ident hx, ident hy, ident hu],
+   cases [expr is_unit_iff_exists_inv.1 hu] ["with", ident z, ident hxyz],
+   have [] [":", expr ∀ {r : R} {s : I.prime_compl}, «expr ∈ »(mk' S r s, nonunits S) → «expr ∈ »(r, I)] [],
+   from [expr λ
+    (r : R)
+    (s : I.prime_compl), not_imp_comm.1 (λ
+     nr, is_unit_iff_exists_inv.2 ⟨mk' S «expr↑ »(s) (⟨r, nr⟩ : I.prime_compl), mk'_mul_mk'_eq_one' _ _ nr⟩)],
+   rcases [expr mk'_surjective I.prime_compl x, "with", "⟨", ident rx, ",", ident sx, ",", ident hrx, "⟩"],
+   rcases [expr mk'_surjective I.prime_compl y, "with", "⟨", ident ry, ",", ident sy, ",", ident hry, "⟩"],
+   rcases [expr mk'_surjective I.prime_compl z, "with", "⟨", ident rz, ",", ident sz, ",", ident hrz, "⟩"],
+   rw ["[", "<-", expr hrx, ",", "<-", expr hry, ",", "<-", expr hrz, ",", "<-", expr mk'_add, ",", "<-", expr mk'_mul, ",", "<-", expr mk'_self S I.prime_compl.one_mem, "]"] ["at", ident hxyz],
+   rw ["<-", expr hrx] ["at", ident hx],
+   rw ["<-", expr hry] ["at", ident hy],
+   obtain ["⟨", ident t, ",", ident ht, "⟩", ":=", expr is_localization.eq.1 hxyz],
+   simp [] [] ["only"] ["[", expr mul_one, ",", expr one_mul, ",", expr submonoid.coe_mul, ",", expr subtype.coe_mk, "]"] [] ["at", ident ht],
+   rw ["[", "<-", expr sub_eq_zero, ",", "<-", expr sub_mul, "]"] ["at", ident ht],
+   have [ident hr] [] [":=", expr (hp.mem_or_mem_of_mul_eq_zero ht).resolve_right t.2],
+   rw [expr sub_eq_add_neg] ["at", ident hr],
+   have [] [] [":=", expr I.neg_mem_iff.1 ((ideal.add_mem_iff_right _ _).1 hr)],
+   { exact [expr not_or (mt hp.mem_or_mem (not_or sx.2 sy.2)) sz.2 (hp.mem_or_mem this)] },
+   { exact [expr I.mul_mem_right _ (I.add_mem (I.mul_mem_right _ (this hx)) (I.mul_mem_right _ (this hy)))] }
+ end)
 
 end IsLocalization
 
@@ -1031,7 +1027,7 @@ In practice, this ideal differs only in that the carrier set is defined explicit
 This definition is only meant to be used in proving `mem_map_to_map_iff`,
 and any proof that needs to refer to the explicit carrier set should use that theorem. -/
 private def map_ideal (I : Ideal R) : Ideal S :=
-  { Carrier := { z : S | ∃ x : I × M, (z*algebraMap R S x.2) = algebraMap R S x.1 },
+  { Carrier := { z:S | ∃ x : I × M, (z*algebraMap R S x.2) = algebraMap R S x.1 },
     zero_mem' :=
       ⟨⟨0, 1⟩,
         by 
@@ -1081,33 +1077,30 @@ theorem map_comap (J : Ideal S) : Ideal.map (algebraMap R S) (Ideal.comap (algeb
             (Ideal.mem_map_of_mem _
               (show (algebraMap R S) r ∈ J from mk'_spec S r s ▸ J.mul_mem_right ((algebraMap R S) s) hJ))
 
-theorem comap_map_of_is_prime_disjoint (I : Ideal R) (hI : I.is_prime) (hM : Disjoint (M : Set R) I) :
-  Ideal.comap (algebraMap R S) (Ideal.map (algebraMap R S) I) = I :=
-  by 
-    refine' le_antisymmₓ (fun a ha => _) Ideal.le_comap_map 
-    rw [Ideal.mem_comap, mem_map_algebra_map_iff M S] at ha 
-    obtain ⟨⟨b, s⟩, h⟩ := ha 
-    have  : (algebraMap R S) ((a*«expr↑ » s) - b) = 0 :=
-      by 
-        simpa [sub_eq_zero] using h 
-    rw [←(algebraMap R S).map_zero, eq_iff_exists M S] at this 
-    obtain ⟨c, hc⟩ := this 
-    have  : (a*s) ∈ I
-    ·
-      rw [zero_mul] at hc 
-      let this : (((a*«expr↑ » s) - «expr↑ » b)*«expr↑ » c) ∈ I := hc.symm ▸ I.zero_mem 
-      cases' hI.mem_or_mem this with h1 h2
-      ·
-        simpa using I.add_mem h1 b.2
-      ·
-        exFalso 
-        refine' hM ⟨c.2, h2⟩
-    cases' hI.mem_or_mem this with h1 h2
-    ·
-      exact h1
-    ·
-      exFalso 
-      refine' hM ⟨s.2, h2⟩
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem comap_map_of_is_prime_disjoint
+(I : ideal R)
+(hI : I.is_prime)
+(hM : disjoint (M : set R) I) : «expr = »(ideal.comap (algebra_map R S) (ideal.map (algebra_map R S) I), I) :=
+begin
+  refine [expr le_antisymm (λ a ha, _) ideal.le_comap_map],
+  rw ["[", expr ideal.mem_comap, ",", expr mem_map_algebra_map_iff M S, "]"] ["at", ident ha],
+  obtain ["⟨", "⟨", ident b, ",", ident s, "⟩", ",", ident h, "⟩", ":=", expr ha],
+  have [] [":", expr «expr = »(algebra_map R S «expr - »(«expr * »(a, «expr↑ »(s)), b), 0)] [":=", expr by simpa [] [] [] ["[", expr sub_eq_zero, "]"] [] ["using", expr h]],
+  rw ["[", "<-", expr (algebra_map R S).map_zero, ",", expr eq_iff_exists M S, "]"] ["at", ident this],
+  obtain ["⟨", ident c, ",", ident hc, "⟩", ":=", expr this],
+  have [] [":", expr «expr ∈ »(«expr * »(a, s), I)] [],
+  { rw [expr zero_mul] ["at", ident hc],
+    let [ident this] [":", expr «expr ∈ »(«expr * »(«expr - »(«expr * »(a, «expr↑ »(s)), «expr↑ »(b)), «expr↑ »(c)), I)] [":=", expr «expr ▸ »(hc.symm, I.zero_mem)],
+    cases [expr hI.mem_or_mem this] ["with", ident h1, ident h2],
+    { simpa [] [] [] [] [] ["using", expr I.add_mem h1 b.2] },
+    { exfalso,
+      refine [expr hM ⟨c.2, h2⟩] } },
+  cases [expr hI.mem_or_mem this] ["with", ident h1, ident h2],
+  { exact [expr h1] },
+  { exfalso,
+    refine [expr hM ⟨s.2, h2⟩] }
+end
 
 /-- If `S` is the localization of `R` at a submonoid, the ordering of ideals of `S` is
 embedded in the ordering of ideals of `R`. -/
@@ -1116,40 +1109,33 @@ def OrderEmbedding : Ideal S ↪o Ideal R :=
     map_rel_iff' :=
       fun J₁ J₂ => ⟨fun hJ => (map_comap M S) J₁ ▸ (map_comap M S) J₂ ▸ Ideal.map_mono hJ, Ideal.comap_mono⟩ }
 
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `R` is a ring, then prime ideals in the localization at `M`
 correspond to prime ideals in the original ring `R` that are disjoint from `M`.
 This lemma gives the particular case for an ideal and its comap,
 see `le_rel_iso_of_prime` for the more general relation isomorphism -/
-theorem is_prime_iff_is_prime_disjoint (J : Ideal S) :
-  J.is_prime ↔
-    (Ideal.comap (algebraMap R S) J).IsPrime ∧ Disjoint (M : Set R) («expr↑ » (Ideal.comap (algebraMap R S) J)) :=
-  by 
-    split 
-    ·
-      refine' fun h => ⟨⟨_, _⟩, fun m hm => h.ne_top (Ideal.eq_top_of_is_unit_mem _ hm.2 (map_units S ⟨m, hm.left⟩))⟩
-      ·
-        refine' fun hJ => h.ne_top _ 
-        rw [eq_top_iff, ←(OrderEmbedding M S).le_iff_le]
-        exact le_of_eqₓ hJ.symm
-      ·
-        intro x y hxy 
-        rw [Ideal.mem_comap, RingHom.map_mul] at hxy 
-        exact h.mem_or_mem hxy
-    ·
-      refine' fun h => ⟨fun hJ => h.left.ne_top (eq_top_iff.2 _), _⟩
-      ·
-        rwa [eq_top_iff, ←(OrderEmbedding M S).le_iff_le] at hJ
-      ·
-        intro x y hxy 
-        obtain ⟨a, s, ha⟩ := mk'_surjective M x 
-        obtain ⟨b, t, hb⟩ := mk'_surjective M y 
-        have  : mk' S (a*b) (s*t) ∈ J :=
-          by 
-            rwa [mk'_mul, ha, hb]
-        rw [mk'_mem_iff, ←Ideal.mem_comap] at this 
-        replace this := h.left.mem_or_mem this 
-        rw [Ideal.mem_comap, Ideal.mem_comap] at this 
-        rwa [←ha, ←hb, mk'_mem_iff, mk'_mem_iff]
+theorem is_prime_iff_is_prime_disjoint
+(J : ideal S) : «expr ↔ »(J.is_prime, «expr ∧ »((ideal.comap (algebra_map R S) J).is_prime, disjoint (M : set R) «expr↑ »(ideal.comap (algebra_map R S) J))) :=
+begin
+  split,
+  { refine [expr λ h, ⟨⟨_, _⟩, λ m hm, h.ne_top (ideal.eq_top_of_is_unit_mem _ hm.2 (map_units S ⟨m, hm.left⟩))⟩],
+    { refine [expr λ hJ, h.ne_top _],
+      rw ["[", expr eq_top_iff, ",", "<-", expr (order_embedding M S).le_iff_le, "]"] [],
+      exact [expr le_of_eq hJ.symm] },
+    { intros [ident x, ident y, ident hxy],
+      rw ["[", expr ideal.mem_comap, ",", expr ring_hom.map_mul, "]"] ["at", ident hxy],
+      exact [expr h.mem_or_mem hxy] } },
+  { refine [expr λ h, ⟨λ hJ, h.left.ne_top (eq_top_iff.2 _), _⟩],
+    { rwa ["[", expr eq_top_iff, ",", "<-", expr (order_embedding M S).le_iff_le, "]"] ["at", ident hJ] },
+    { intros [ident x, ident y, ident hxy],
+      obtain ["⟨", ident a, ",", ident s, ",", ident ha, "⟩", ":=", expr mk'_surjective M x],
+      obtain ["⟨", ident b, ",", ident t, ",", ident hb, "⟩", ":=", expr mk'_surjective M y],
+      have [] [":", expr «expr ∈ »(mk' S «expr * »(a, b) «expr * »(s, t), J)] [":=", expr by rwa ["[", expr mk'_mul, ",", expr ha, ",", expr hb, "]"] []],
+      rw ["[", expr mk'_mem_iff, ",", "<-", expr ideal.mem_comap, "]"] ["at", ident this],
+      replace [ident this] [] [":=", expr h.left.mem_or_mem this],
+      rw ["[", expr ideal.mem_comap, ",", expr ideal.mem_comap, "]"] ["at", ident this],
+      rwa ["[", "<-", expr ha, ",", "<-", expr hb, ",", expr mk'_mem_iff, ",", expr mk'_mem_iff, "]"] [] } }
+end
 
 /-- If `R` is a ring, then prime ideals in the localization at `M`
 correspond to prime ideals in the original ring `R` that are disjoint from `M`.
@@ -1174,47 +1160,39 @@ def order_iso_of_prime :
         ⟨fun h => show I.val ≤ I'.val from map_comap M S I.val ▸ map_comap M S I'.val ▸ Ideal.map_mono h,
           fun h x hx => h hx⟩ }
 
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `quotient_map` applied to maximal ideals of a localization is `surjective`.
   The quotient by a maximal ideal is a field, so inverses to elements already exist,
   and the localization necessarily maps the equivalence class of the inverse in the localization -/
-theorem surjective_quotient_map_of_maximal_of_localization {I : Ideal S} [I.is_prime] {J : Ideal R}
-  {H : J ≤ I.comap (algebraMap R S)} (hI : (I.comap (algebraMap R S)).IsMaximal) :
-  Function.Surjective (I.quotient_map (algebraMap R S) H) :=
-  by 
-    intro s 
-    obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective s 
-    obtain ⟨r, ⟨m, hm⟩, rfl⟩ := mk'_surjective M s 
-    byCases' hM : (Ideal.Quotient.mk (I.comap (algebraMap R S))) m = 0
-    ·
-      have  : I = ⊤
-      ·
-        rw [Ideal.eq_top_iff_one]
-        rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_comap] at hM 
-        convert I.mul_mem_right (mk' S (1 : R) ⟨m, hm⟩) hM 
-        rw [←mk'_eq_mul_mk'_one, mk'_self]
-      exact
-        ⟨0,
-          eq_comm.1
-            (by 
-              simp [Ideal.Quotient.eq_zero_iff_mem, this])⟩
-    ·
-      rw [Ideal.Quotient.maximal_ideal_iff_is_field_quotient] at hI 
-      obtain ⟨n, hn⟩ := hI.3 hM 
-      obtain ⟨rn, rfl⟩ := Ideal.Quotient.mk_surjective n 
-      refine' ⟨(Ideal.Quotient.mk J) (r*rn), _⟩
-      rw [←RingHom.map_mul] at hn 
-      replace hn := congr_argₓ (Ideal.quotientMap I (algebraMap R S) le_rfl) hn 
-      simp only [RingHom.map_one, Ideal.quotient_map_mk, RingHom.map_mul] at hn 
-      rw [Ideal.quotient_map_mk, ←sub_eq_zero, ←RingHom.map_sub, Ideal.Quotient.eq_zero_iff_mem,
-        ←Ideal.Quotient.eq_zero_iff_mem, RingHom.map_sub, sub_eq_zero, mk'_eq_mul_mk'_one]
-      simp only [mul_eq_mul_left_iff, RingHom.map_mul]
-      exact
-        Or.inl
-          (mul_left_cancel₀
-            (fun hn => hM (Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_comap.2 (Ideal.Quotient.eq_zero_iff_mem.1 hn))))
-            (trans hn
-              (by 
-                rw [←RingHom.map_mul, ←mk'_eq_mul_mk'_one, mk'_self, RingHom.map_one])))
+theorem surjective_quotient_map_of_maximal_of_localization
+{I : ideal S}
+[I.is_prime]
+{J : ideal R}
+{H : «expr ≤ »(J, I.comap (algebra_map R S))}
+(hI : (I.comap (algebra_map R S)).is_maximal) : function.surjective (I.quotient_map (algebra_map R S) H) :=
+begin
+  intro [ident s],
+  obtain ["⟨", ident s, ",", ident rfl, "⟩", ":=", expr ideal.quotient.mk_surjective s],
+  obtain ["⟨", ident r, ",", "⟨", ident m, ",", ident hm, "⟩", ",", ident rfl, "⟩", ":=", expr mk'_surjective M s],
+  by_cases [expr hM, ":", expr «expr = »(ideal.quotient.mk (I.comap (algebra_map R S)) m, 0)],
+  { have [] [":", expr «expr = »(I, «expr⊤»())] [],
+    { rw [expr ideal.eq_top_iff_one] [],
+      rw ["[", expr ideal.quotient.eq_zero_iff_mem, ",", expr ideal.mem_comap, "]"] ["at", ident hM],
+      convert [] [expr I.mul_mem_right (mk' S (1 : R) ⟨m, hm⟩) hM] [],
+      rw ["[", "<-", expr mk'_eq_mul_mk'_one, ",", expr mk'_self, "]"] [] },
+    exact [expr ⟨0, eq_comm.1 (by simp [] [] [] ["[", expr ideal.quotient.eq_zero_iff_mem, ",", expr this, "]"] [] [])⟩] },
+  { rw [expr ideal.quotient.maximal_ideal_iff_is_field_quotient] ["at", ident hI],
+    obtain ["⟨", ident n, ",", ident hn, "⟩", ":=", expr hI.3 hM],
+    obtain ["⟨", ident rn, ",", ident rfl, "⟩", ":=", expr ideal.quotient.mk_surjective n],
+    refine [expr ⟨ideal.quotient.mk J «expr * »(r, rn), _⟩],
+    rw ["<-", expr ring_hom.map_mul] ["at", ident hn],
+    replace [ident hn] [] [":=", expr congr_arg (ideal.quotient_map I (algebra_map R S) le_rfl) hn],
+    simp [] [] ["only"] ["[", expr ring_hom.map_one, ",", expr ideal.quotient_map_mk, ",", expr ring_hom.map_mul, "]"] [] ["at", ident hn],
+    rw ["[", expr ideal.quotient_map_mk, ",", "<-", expr sub_eq_zero, ",", "<-", expr ring_hom.map_sub, ",", expr ideal.quotient.eq_zero_iff_mem, ",", "<-", expr ideal.quotient.eq_zero_iff_mem, ",", expr ring_hom.map_sub, ",", expr sub_eq_zero, ",", expr mk'_eq_mul_mk'_one, "]"] [],
+    simp [] [] ["only"] ["[", expr mul_eq_mul_left_iff, ",", expr ring_hom.map_mul, "]"] [] [],
+    exact [expr or.inl (mul_left_cancel₀ (λ
+       hn, hM (ideal.quotient.eq_zero_iff_mem.2 (ideal.mem_comap.2 (ideal.quotient.eq_zero_iff_mem.1 hn)))) (trans hn (by rw ["[", "<-", expr ring_hom.map_mul, ",", "<-", expr mk'_eq_mul_mk'_one, ",", expr mk'_self, ",", expr ring_hom.map_one, "]"] [])))] }
+end
 
 end Ideals
 
@@ -1357,7 +1335,7 @@ by clearing the denominators -/
 noncomputable def integer_normalization (p : Polynomial S) : Polynomial R :=
   ∑i in p.support, monomial i (coeff_integer_normalization M p i)
 
--- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
 theorem integer_normalization_coeff
 (p : polynomial S)
@@ -1464,44 +1442,44 @@ theorem coe_submodule_injective (h : M ≤ nonZeroDivisors R) :
   Function.Injective (coe_submodule S : Ideal R → Submodule R S) :=
   injective_of_le_imp_le _ fun _ _ => (coe_submodule_le_coe_submodule h).mp
 
-theorem coe_submodule_is_principal {I : Ideal R} (h : M ≤ nonZeroDivisors R) :
-  (coe_submodule S I).IsPrincipal ↔ I.is_principal :=
-  by 
-    split  <;>
-      unfreezingI 
-        rintro ⟨⟨x, hx⟩⟩
-    ·
-      have x_mem : x ∈ coe_submodule S I := hx.symm ▸ Submodule.mem_span_singleton_self x 
-      obtain ⟨x, x_mem, rfl⟩ := (mem_coe_submodule _ _).mp x_mem 
-      refine' ⟨⟨x, coe_submodule_injective S h _⟩⟩
-      rw [Ideal.submodule_span_eq, hx, coe_submodule_span_singleton]
-    ·
-      refine' ⟨⟨algebraMap R S x, _⟩⟩
-      rw [hx, Ideal.submodule_span_eq, coe_submodule_span_singleton]
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem coe_submodule_is_principal
+{I : ideal R}
+(h : «expr ≤ »(M, non_zero_divisors R)) : «expr ↔ »((coe_submodule S I).is_principal, I.is_principal) :=
+begin
+  split; unfreezingI { rintros ["⟨", "⟨", ident x, ",", ident hx, "⟩", "⟩"] },
+  { have [ident x_mem] [":", expr «expr ∈ »(x, coe_submodule S I)] [":=", expr «expr ▸ »(hx.symm, submodule.mem_span_singleton_self x)],
+    obtain ["⟨", ident x, ",", ident x_mem, ",", ident rfl, "⟩", ":=", expr (mem_coe_submodule _ _).mp x_mem],
+    refine [expr ⟨⟨x, coe_submodule_injective S h _⟩⟩],
+    rw ["[", expr ideal.submodule_span_eq, ",", expr hx, ",", expr coe_submodule_span_singleton, "]"] [] },
+  { refine [expr ⟨⟨algebra_map R S x, _⟩⟩],
+    rw ["[", expr hx, ",", expr ideal.submodule_span_eq, ",", expr coe_submodule_span_singleton, "]"] [] }
+end
 
 variable{A : Type _}[CommRingₓ A][IsDomain A]
 
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A `comm_ring` `S` which is the localization of an integral domain `R` at a subset of
 non-zero elements is an integral domain.
 See note [reducible non-instances]. -/
 @[reducible]
-theorem is_domain_of_le_non_zero_divisors [Algebra A S] {M : Submonoid A} [IsLocalization M S]
-  (hM : M ≤ nonZeroDivisors A) : IsDomain S :=
-  { eq_zero_or_eq_zero_of_mul_eq_zero :=
-      by 
-        intro z w h 
-        cases' surj M z with x hx 
-        cases' surj M w with y hy 
-        have  : (((z*w)*algebraMap A S y.2)*algebraMap A S x.2) = algebraMap A S x.1*algebraMap A S y.1
-        ·
-          rw [mul_assocₓ z, hy, ←hx] <;> acRfl 
-        rw [h, zero_mul, zero_mul, ←(algebraMap A S).map_mul] at this 
-        cases' eq_zero_or_eq_zero_of_mul_eq_zero ((to_map_eq_zero_iff S hM).mp this.symm) with H H
-        ·
-          exact Or.inl (eq_zero_of_fst_eq_zero hx H)
-        ·
-          exact Or.inr (eq_zero_of_fst_eq_zero hy H),
-    exists_pair_ne := ⟨(algebraMap A S) 0, (algebraMap A S) 1, fun h => zero_ne_one (IsLocalization.injective S hM h)⟩ }
+theorem is_domain_of_le_non_zero_divisors
+[algebra A S]
+{M : submonoid A}
+[is_localization M S]
+(hM : «expr ≤ »(M, non_zero_divisors A)) : is_domain S :=
+{ eq_zero_or_eq_zero_of_mul_eq_zero := begin
+    intros [ident z, ident w, ident h],
+    cases [expr surj M z] ["with", ident x, ident hx],
+    cases [expr surj M w] ["with", ident y, ident hy],
+    have [] [":", expr «expr = »(«expr * »(«expr * »(«expr * »(z, w), algebra_map A S y.2), algebra_map A S x.2), «expr * »(algebra_map A S x.1, algebra_map A S y.1))] [],
+    by rw ["[", expr mul_assoc z, ",", expr hy, ",", "<-", expr hx, "]"] []; ac_refl,
+    rw ["[", expr h, ",", expr zero_mul, ",", expr zero_mul, ",", "<-", expr (algebra_map A S).map_mul, "]"] ["at", ident this],
+    cases [expr eq_zero_or_eq_zero_of_mul_eq_zero ((to_map_eq_zero_iff S hM).mp this.symm)] ["with", ident H, ident H],
+    { exact [expr or.inl (eq_zero_of_fst_eq_zero hx H)] },
+    { exact [expr or.inr (eq_zero_of_fst_eq_zero hy H)] }
+  end,
+  exists_pair_ne := ⟨algebra_map A S 0, algebra_map A S 1, λ h, zero_ne_one (is_localization.injective S hM h)⟩ }
 
 /-- The localization at of an integral domain to a set of non-zero elements is an integral domain.
 See note [reducible non-instances]. -/
@@ -1831,48 +1809,44 @@ noncomputable def field_equiv_of_ring_equiv [Algebra B L] [IsFractionRing B L] (
         mem_non_zero_divisors_iff_ne_zero]
       exact h.symm.map_ne_zero_iff)
 
-theorem integer_normalization_eq_zero_iff {p : Polynomial K} :
-  integer_normalization (nonZeroDivisors A) p = 0 ↔ p = 0 :=
-  by 
-    refine' polynomial.ext_iff.trans (polynomial.ext_iff.trans _).symm 
-    obtain ⟨⟨b, nonzero⟩, hb⟩ := integer_normalization_spec _ p 
-    split  <;> intro h i
-    ·
-      apply to_map_eq_zero_iff.mp 
-      rw [hb i, h i]
-      apply smul_zero 
-      assumption
-    ·
-      have hi := h i 
-      rw [Polynomial.coeff_zero, ←@to_map_eq_zero_iff A _ K, hb i, Algebra.smul_def] at hi 
-      apply Or.resolve_left (eq_zero_or_eq_zero_of_mul_eq_zero hi)
-      intro h 
-      apply mem_non_zero_divisors_iff_ne_zero.mp nonzero 
-      exact to_map_eq_zero_iff.mp h
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem integer_normalization_eq_zero_iff
+{p : polynomial K} : «expr ↔ »(«expr = »(integer_normalization (non_zero_divisors A) p, 0), «expr = »(p, 0)) :=
+begin
+  refine [expr polynomial.ext_iff.trans (polynomial.ext_iff.trans _).symm],
+  obtain ["⟨", "⟨", ident b, ",", ident nonzero, "⟩", ",", ident hb, "⟩", ":=", expr integer_normalization_spec _ p],
+  split; intros [ident h, ident i],
+  { apply [expr to_map_eq_zero_iff.mp],
+    rw ["[", expr hb i, ",", expr h i, "]"] [],
+    apply [expr smul_zero],
+    assumption },
+  { have [ident hi] [] [":=", expr h i],
+    rw ["[", expr polynomial.coeff_zero, ",", "<-", expr @to_map_eq_zero_iff A _ K, ",", expr hb i, ",", expr algebra.smul_def, "]"] ["at", ident hi],
+    apply [expr or.resolve_left (eq_zero_or_eq_zero_of_mul_eq_zero hi)],
+    intro [ident h],
+    apply [expr mem_non_zero_divisors_iff_ne_zero.mp nonzero],
+    exact [expr to_map_eq_zero_iff.mp h] }
+end
 
 variable(A K)
 
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An element of a field is algebraic over the ring `A` iff it is algebraic
 over the field of fractions of `A`.
 -/
-theorem is_algebraic_iff [Algebra A L] [Algebra K L] [IsScalarTower A K L] {x : L} :
-  IsAlgebraic A x ↔ IsAlgebraic K x :=
-  by 
-    split  <;> rintro ⟨p, hp, px⟩
-    ·
-      refine' ⟨p.map (algebraMap A K), fun h => hp (Polynomial.ext fun i => _), _⟩
-      ·
-        have  : algebraMap A K (p.coeff i) = 0 :=
-          trans (Polynomial.coeff_map _ _).symm
-            (by 
-              simp [h])
-        exact to_map_eq_zero_iff.mp this
-      ·
-        rwa [IsScalarTower.aeval_apply _ K] at px
-    ·
-      exact
-        ⟨integer_normalization _ p, mt integer_normalization_eq_zero_iff.mp hp,
-          integer_normalization_aeval_eq_zero _ p px⟩
+theorem is_algebraic_iff
+[algebra A L]
+[algebra K L]
+[is_scalar_tower A K L]
+{x : L} : «expr ↔ »(is_algebraic A x, is_algebraic K x) :=
+begin
+  split; rintros ["⟨", ident p, ",", ident hp, ",", ident px, "⟩"],
+  { refine [expr ⟨p.map (algebra_map A K), λ h, hp (polynomial.ext (λ i, _)), _⟩],
+    { have [] [":", expr «expr = »(algebra_map A K (p.coeff i), 0)] [":=", expr trans (polynomial.coeff_map _ _).symm (by simp [] [] [] ["[", expr h, "]"] [] [])],
+      exact [expr to_map_eq_zero_iff.mp this] },
+    { rwa [expr is_scalar_tower.aeval_apply _ K] ["at", ident px] } },
+  { exact [expr ⟨integer_normalization _ p, mt integer_normalization_eq_zero_iff.mp hp, integer_normalization_aeval_eq_zero _ p px⟩] }
+end
 
 variable{A K}
 
@@ -1946,16 +1920,17 @@ theorem eq_zero_of_num_eq_zero {x : K} (h : Num A x = 0) : x = 0 :=
     (by 
       rw [zero_mul, h, RingHom.map_zero])
 
-theorem is_integer_of_is_unit_denom {x : K} (h : IsUnit (denom A x : A)) : is_integer A x :=
-  by 
-    cases' h with d hd 
-    have d_ne_zero : algebraMap A K (denom A x) ≠ 0 :=
-      IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors (denom A x).2
-    use «expr↑ » (d⁻¹)*Num A x 
-    refine' trans _ (mk'_num_denom A x)
-    rw [RingHom.map_mul, RingHom.map_units_inv, hd]
-    apply mul_left_cancel₀ d_ne_zero 
-    rw [←mul_assocₓ, mul_inv_cancel d_ne_zero, one_mulₓ, mk'_spec']
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_integer_of_is_unit_denom {x : K} (h : is_unit (denom A x : A)) : is_integer A x :=
+begin
+  cases [expr h] ["with", ident d, ident hd],
+  have [ident d_ne_zero] [":", expr «expr ≠ »(algebra_map A K (denom A x), 0)] [":=", expr is_fraction_ring.to_map_ne_zero_of_mem_non_zero_divisors (denom A x).2],
+  use [expr «expr * »(«expr↑ »(«expr ⁻¹»(d)), num A x)],
+  refine [expr trans _ (mk'_num_denom A x)],
+  rw ["[", expr ring_hom.map_mul, ",", expr ring_hom.map_units_inv, ",", expr hd, "]"] [],
+  apply [expr mul_left_cancel₀ d_ne_zero],
+  rw ["[", "<-", expr mul_assoc, ",", expr mul_inv_cancel d_ne_zero, ",", expr one_mul, ",", expr mk'_spec', "]"] []
+end
 
 theorem is_unit_denom_of_num_eq_zero {x : K} (h : Num A x = 0) : IsUnit (denom A x : A) :=
   num_denom_reduced A x (h.symm ▸ dvd_zero _) dvd_rfl
@@ -2006,26 +1981,37 @@ variable{Rₘ Sₘ}
 
 open Polynomial
 
-theorem RingHom.is_integral_elem_localization_at_leading_coeff {R S : Type _} [CommRingₓ R] [CommRingₓ S] (f : R →+* S)
-  (x : S) (p : Polynomial R) (hf : p.eval₂ f x = 0) (M : Submonoid R) (hM : p.leading_coeff ∈ M) {Rₘ Sₘ : Type _}
-  [CommRingₓ Rₘ] [CommRingₓ Sₘ] [Algebra R Rₘ] [IsLocalization M Rₘ] [Algebra S Sₘ]
-  [IsLocalization (M.map f : Submonoid S) Sₘ] :
-  (map Sₘ f M.le_comap_map : Rₘ →+* _).IsIntegralElem (algebraMap S Sₘ x) :=
-  by 
-    byCases' triv : (1 : Rₘ) = 0
-    ·
-      exact ⟨0, ⟨trans leading_coeff_zero triv.symm, eval₂_zero _ _⟩⟩
-    haveI  : Nontrivial Rₘ := nontrivial_of_ne 1 0 triv 
-    obtain ⟨b, hb⟩ := is_unit_iff_exists_inv.mp (map_units Rₘ ⟨p.leading_coeff, hM⟩)
-    refine' ⟨p.map (algebraMap R Rₘ)*C b, ⟨_, _⟩⟩
-    ·
-      refine' monic_mul_C_of_leading_coeff_mul_eq_one _ 
-      rwa [leading_coeff_map_of_leading_coeff_ne_zero (algebraMap R Rₘ)]
-      refine' fun hfp => zero_ne_one (trans (zero_mul b).symm (hfp ▸ hb) : (0 : Rₘ) = 1)
-    ·
-      refine' eval₂_mul_eq_zero_of_left _ _ _ _ 
-      erw [eval₂_map, IsLocalization.map_comp, ←hom_eval₂ _ f (algebraMap S Sₘ) x]
-      exact trans (congr_argₓ (algebraMap S Sₘ) hf) (RingHom.map_zero _)
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ring_hom.is_integral_elem_localization_at_leading_coeff
+{R S : Type*}
+[comm_ring R]
+[comm_ring S]
+(f : «expr →+* »(R, S))
+(x : S)
+(p : polynomial R)
+(hf : «expr = »(p.eval₂ f x, 0))
+(M : submonoid R)
+(hM : «expr ∈ »(p.leading_coeff, M))
+{Rₘ Sₘ : Type*}
+[comm_ring Rₘ]
+[comm_ring Sₘ]
+[algebra R Rₘ]
+[is_localization M Rₘ]
+[algebra S Sₘ]
+[is_localization (M.map f : submonoid S) Sₘ] : (map Sₘ f M.le_comap_map : «expr →+* »(Rₘ, _)).is_integral_elem (algebra_map S Sₘ x) :=
+begin
+  by_cases [expr triv, ":", expr «expr = »((1 : Rₘ), 0)],
+  { exact [expr ⟨0, ⟨trans leading_coeff_zero triv.symm, eval₂_zero _ _⟩⟩] },
+  haveI [] [":", expr nontrivial Rₘ] [":=", expr nontrivial_of_ne 1 0 triv],
+  obtain ["⟨", ident b, ",", ident hb, "⟩", ":=", expr is_unit_iff_exists_inv.mp (map_units Rₘ ⟨p.leading_coeff, hM⟩)],
+  refine [expr ⟨«expr * »(p.map (algebra_map R Rₘ), C b), ⟨_, _⟩⟩],
+  { refine [expr monic_mul_C_of_leading_coeff_mul_eq_one _],
+    rwa [expr leading_coeff_map_of_leading_coeff_ne_zero (algebra_map R Rₘ)] [],
+    refine [expr λ hfp, zero_ne_one (trans (zero_mul b).symm «expr ▸ »(hfp, hb) : «expr = »((0 : Rₘ), 1))] },
+  { refine [expr eval₂_mul_eq_zero_of_left _ _ _ _],
+    erw ["[", expr eval₂_map, ",", expr is_localization.map_comp, ",", "<-", expr hom_eval₂ _ f (algebra_map S Sₘ) x, "]"] [],
+    exact [expr trans (congr_arg (algebra_map S Sₘ) hf) (ring_hom.map_zero _)] }
+end
 
 /-- Given a particular witness to an element being algebraic over an algebra `R → S`,
 We can localize to a submonoid containing the leading coefficient to make it integral.
@@ -2037,35 +2023,30 @@ theorem is_integral_localization_at_leading_coeff {x : S} (p : Polynomial R) (hp
     (algebraMap S Sₘ x) :=
   (algebraMap R S).is_integral_elem_localization_at_leading_coeff x p hp M hM
 
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `R → S` is an integral extension, `M` is a submonoid of `R`,
 `Rₘ` is the localization of `R` at `M`,
 and `Sₘ` is the localization of `S` at the image of `M` under the extension map,
 then the induced map `Rₘ → Sₘ` is also an integral extension -/
-theorem is_integral_localization (H : Algebra.IsIntegral R S) :
-  (map Sₘ (algebraMap R S) (show _ ≤ (Algebra.algebraMapSubmonoid S M).comap _ from M.le_comap_map) :
-    Rₘ →+* _).IsIntegral :=
-  by 
-    intro x 
-    byCases' triv : (1 : R) = 0
-    ·
-      have  : (1 : Rₘ) = 0 :=
-        by 
-          convert congr_argₓ (algebraMap R Rₘ) triv <;> simp 
-      exact ⟨0, ⟨trans leading_coeff_zero this.symm, eval₂_zero _ _⟩⟩
-    ·
-      haveI  : Nontrivial R := nontrivial_of_ne 1 0 triv 
-      obtain ⟨⟨s, ⟨u, hu⟩⟩, hx⟩ := surj (Algebra.algebraMapSubmonoid S M) x 
-      obtain ⟨v, hv⟩ := hu 
-      obtain ⟨v', hv'⟩ := is_unit_iff_exists_inv'.1 (map_units Rₘ ⟨v, hv.1⟩)
-      refine' @is_integral_of_is_integral_mul_unit Rₘ _ _ _ (localizationAlgebra M S) x (algebraMap S Sₘ u) v' _ _
-      ·
-        replace hv' := congr_argₓ (@algebraMap Rₘ Sₘ _ _ (localizationAlgebra M S)) hv' 
-        rw [RingHom.map_mul, RingHom.map_one, ←RingHom.comp_apply _ (algebraMap R Rₘ)] at hv' 
-        erw [IsLocalization.map_comp] at hv' 
-        exact hv.2 ▸ hv'
-      ·
-        obtain ⟨p, hp⟩ := H s 
-        exact hx.symm ▸ is_integral_localization_at_leading_coeff p hp.2 (hp.1.symm ▸ M.one_mem)
+theorem is_integral_localization
+(H : algebra.is_integral R S) : (map Sₘ (algebra_map R S) (show «expr ≤ »(_, (algebra.algebra_map_submonoid S M).comap _), from M.le_comap_map) : «expr →+* »(Rₘ, _)).is_integral :=
+begin
+  intro [ident x],
+  by_cases [expr triv, ":", expr «expr = »((1 : R), 0)],
+  { have [] [":", expr «expr = »((1 : Rₘ), 0)] [":=", expr by convert [] [expr congr_arg (algebra_map R Rₘ) triv] []; simp [] [] [] [] [] []],
+    exact [expr ⟨0, ⟨trans leading_coeff_zero this.symm, eval₂_zero _ _⟩⟩] },
+  { haveI [] [":", expr nontrivial R] [":=", expr nontrivial_of_ne 1 0 triv],
+    obtain ["⟨", "⟨", ident s, ",", "⟨", ident u, ",", ident hu, "⟩", "⟩", ",", ident hx, "⟩", ":=", expr surj (algebra.algebra_map_submonoid S M) x],
+    obtain ["⟨", ident v, ",", ident hv, "⟩", ":=", expr hu],
+    obtain ["⟨", ident v', ",", ident hv', "⟩", ":=", expr is_unit_iff_exists_inv'.1 (map_units Rₘ ⟨v, hv.1⟩)],
+    refine [expr @is_integral_of_is_integral_mul_unit Rₘ _ _ _ (localization_algebra M S) x (algebra_map S Sₘ u) v' _ _],
+    { replace [ident hv'] [] [":=", expr congr_arg (@algebra_map Rₘ Sₘ _ _ (localization_algebra M S)) hv'],
+      rw ["[", expr ring_hom.map_mul, ",", expr ring_hom.map_one, ",", "<-", expr ring_hom.comp_apply _ (algebra_map R Rₘ), "]"] ["at", ident hv'],
+      erw [expr is_localization.map_comp] ["at", ident hv'],
+      exact [expr «expr ▸ »(hv.2, hv')] },
+    { obtain ["⟨", ident p, ",", ident hp, "⟩", ":=", expr H s],
+      exact [expr «expr ▸ »(hx.symm, is_integral_localization_at_leading_coeff p hp.2 «expr ▸ »(hp.1.symm, M.one_mem))] } }
+end
 
 theorem is_integral_localization' {R S : Type _} [CommRingₓ R] [CommRingₓ S] {f : R →+* S} (hf : f.is_integral)
   (M : Submonoid R) : (map (Localization (M.map (f : R →* S))) f M.le_comap_map : Localization M →+* _).IsIntegral :=

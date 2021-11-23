@@ -232,13 +232,13 @@ instance  : CompleteLattice (Submonoid M) :=
 theorem subsingleton_iff : Subsingleton (Submonoid M) ↔ Subsingleton M :=
   ⟨fun h =>
       by 
-        exactI
+        exact
           ⟨fun x y =>
               have  : ∀ i : M, i = 1 := fun i => mem_bot.mp$ Subsingleton.elimₓ (⊤ : Submonoid M) ⊥ ▸ mem_top i
               (this x).trans (this y).symm⟩,
     fun h =>
       by 
-        exactI
+        exact
           ⟨fun x y =>
               Submonoid.ext$
                 fun i =>

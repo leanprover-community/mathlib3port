@@ -52,7 +52,7 @@ but the author cannot think of instances of `foldable` that are not also
 
 universe u v
 
-open Ulift CategoryTheory Opposite
+open Ulift CategoryTheory MulOpposite
 
 namespace Monoidₓ
 
@@ -103,7 +103,7 @@ how the monoid of endofunctions define `foldl`.
 -/
 @[reducible]
 def foldl (α : Type u) : Type u :=
-  «expr ᵒᵖ» (End α)
+  «expr ᵐᵒᵖ» (End α)
 
 def foldl.mk (f : α → α) : foldl α :=
   op f
@@ -129,7 +129,7 @@ def foldr.of_free_monoid (f : α → β → β) (xs : FreeMonoid α) : Monoidₓ
 
 @[reducible]
 def mfoldl (m : Type u → Type u) [Monadₓ m] (α : Type u) : Type u :=
-  Opposite$ End$ Kleisli.mk m α
+  MulOpposite$ End$ Kleisli.mk m α
 
 def mfoldl.mk (f : α → m α) : mfoldl m α :=
   op f
@@ -247,7 +247,7 @@ theorem fold_foldl (f : β → α → β) : IsMonoidHom (foldl.of_free_monoid f)
     map_mul :=
       by 
         intros  <;>
-          simp only [FreeMonoid.mul_def, foldl.of_free_monoid, flip, unop_op, List.foldl_append, op_inj_iff] <;> rfl }
+          simp only [FreeMonoid.mul_def, foldl.of_free_monoid, flip, unop_op, List.foldl_append, op_inj] <;> rfl }
 
 theorem foldl.unop_of_free_monoid (f : β → α → β) (xs : FreeMonoid α) (a : β) :
   unop (foldl.of_free_monoid f xs) a = List.foldlₓ f a xs :=
@@ -339,27 +339,19 @@ theorem mfoldr.of_free_monoid_comp_free_mk {m} [Monadₓ m] [IsLawfulMonad m] (f
     ext 
     simp only [· ∘ ·, mfoldr.of_free_monoid, mfoldr.mk, flip, fold_mfoldr_cons]
 
-theorem to_list_spec (xs : t α) : to_list xs = (fold_map free.mk xs : FreeMonoid _) :=
-  Eq.symm$
-    calc fold_map free.mk xs = (fold_map free.mk xs).reverse.reverse :=
-      by 
-        simp only [List.reverse_reverse]
-      _ = (List.foldr cons [] (fold_map free.mk xs).reverse).reverse :=
-      by 
-        simp only [List.foldr_eta]
-      _ = (unop (foldl.of_free_monoid (flip cons) (fold_map free.mk xs)) []).reverse :=
-      by 
-        simp only [flip, List.foldr_reverse, foldl.of_free_monoid, unop_op]
-      _ = to_list xs :=
-      by 
-        have  : IsMonoidHom (foldl.of_free_monoid (flip$ @cons α))
-        ·
-          apply fold_foldl 
-        rw [fold_map_hom_free this]
-        simp only [to_list, foldl, List.reverse_inj, foldl.get, foldl.of_free_monoid_comp_free_mk]
-        all_goals 
-          infer_instance
-      
+-- error in Control.Fold: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem to_list_spec (xs : t α) : «expr = »(to_list xs, (fold_map free.mk xs : free_monoid _)) :=
+«expr $ »(eq.symm, calc
+   «expr = »(fold_map free.mk xs, (fold_map free.mk xs).reverse.reverse) : by simp [] [] ["only"] ["[", expr list.reverse_reverse, "]"] [] []
+   «expr = »(..., (list.foldr cons «expr[ , ]»([]) (fold_map free.mk xs).reverse).reverse) : by simp [] [] ["only"] ["[", expr list.foldr_eta, "]"] [] []
+   «expr = »(..., (unop (foldl.of_free_monoid (flip cons) (fold_map free.mk xs)) «expr[ , ]»([])).reverse) : by simp [] [] ["only"] ["[", expr flip, ",", expr list.foldr_reverse, ",", expr foldl.of_free_monoid, ",", expr unop_op, "]"] [] []
+   «expr = »(..., to_list xs) : begin
+     have [] [":", expr is_monoid_hom (foldl.of_free_monoid «expr $ »(flip, @cons α))] [],
+     { apply [expr fold_foldl] },
+     rw [expr fold_map_hom_free this] [],
+     simp [] [] ["only"] ["[", expr to_list, ",", expr foldl, ",", expr list.reverse_inj, ",", expr foldl.get, ",", expr foldl.of_free_monoid_comp_free_mk, "]"] [] [],
+     all_goals { apply_instance }
+   end)
 
 theorem fold_map_map [Monoidₓ γ] (f : α → β) (g : β → γ) (xs : t α) : fold_map g (f <$> xs) = fold_map (g ∘ f) xs :=
   by 
@@ -427,17 +419,15 @@ theorem length_to_list {xs : t α} : length xs = List.length (to_list xs) :=
 
 variable{m : Type u → Type u}[Monadₓ m][IsLawfulMonad m]
 
-section 
-
-attribute [local semireducible] Opposite
-
 theorem mfoldl_to_list {f : α → β → m α} {x : α} {xs : t β} : mfoldl f x xs = List.mfoldl f x (to_list xs) :=
-  by 
-    change _ = unop (mfoldl.of_free_monoid f (to_list xs)) x 
-    simp only [mfoldl, to_list_spec, fold_map_hom_free (fold_mfoldl (fun β : Type u => m β) f),
-      mfoldl.of_free_monoid_comp_free_mk, mfoldl.get]
-
-end 
+  calc mfoldl f x xs = unop (mfoldl.of_free_monoid f (to_list xs)) x :=
+    by 
+      simp only [mfoldl, to_list_spec, fold_map_hom_free (fold_mfoldl (fun β : Type u => m β) f),
+        mfoldl.of_free_monoid_comp_free_mk, mfoldl.get]
+    _ = List.mfoldl f x (to_list xs) :=
+    by 
+      simp only [mfoldl.of_free_monoid, unop_op, flip]
+    
 
 theorem mfoldr_to_list (f : α → β → m β) (x : β) (xs : t α) : mfoldr f x xs = List.mfoldr f x (to_list xs) :=
   by 

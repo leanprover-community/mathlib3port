@@ -1,5 +1,4 @@
-import Mathbin.GroupTheory.FreeAbelianGroup 
-import Mathbin.RingTheory.Subring
+import Mathbin.GroupTheory.FreeAbelianGroup
 
 /-!
 # Free rings
@@ -25,7 +24,7 @@ free ring
 
 universe u v
 
--- error in RingTheory.FreeRing: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler ring
+-- error in RingTheory.FreeRing: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler ring
 /-- The free ring over a type `α`. -/
 @[derive #["[", expr ring, ",", expr inhabited, "]"]]
 def free_ring (α : Type u) : Type u :=

@@ -16,81 +16,75 @@ open Set Function
 
 open order_dual(toDual)
 
--- error in Data.Set.Intervals.SurjOn: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem surj_on_Ioo_of_monotone_surjective
+theorem surj_on_Ioo_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a b : α) :
+  surj_on f (Ioo a b) (Ioo (f a) (f b)) :=
+  by 
+    classical 
+    intro p hp 
+    rcases h_surj p with ⟨x, rfl⟩
+    refine' ⟨x, mem_Ioo.2 _, rfl⟩
+    byContra h 
+    cases' not_and_distrib.mp h with ha hb
+    ·
+      exact LT.lt.false (lt_of_lt_of_leₓ hp.1 (h_mono (not_lt.mp ha)))
+    ·
+      exact LT.lt.false (lt_of_le_of_ltₓ (h_mono (not_lt.mp hb)) hp.2)
+
+-- error in Data.Set.Intervals.SurjOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem surj_on_Ico_of_monotone_surjective
 (h_mono : monotone f)
 (h_surj : function.surjective f)
-(a b : α) : surj_on f (Ioo a b) (Ioo (f a) (f b)) :=
+(a b : α) : surj_on f (Ico a b) (Ico (f a) (f b)) :=
 begin
-  classical,
-  intros [ident p, ident hp],
-  rcases [expr h_surj p, "with", "⟨", ident x, ",", ident rfl, "⟩"],
-  refine [expr ⟨x, mem_Ioo.2 _, rfl⟩],
-  by_contra [ident h],
-  cases [expr not_and_distrib.mp h] ["with", ident ha, ident hb],
-  { exact [expr has_lt.lt.false (lt_of_lt_of_le hp.1 (h_mono (not_lt.mp ha)))] },
-  { exact [expr has_lt.lt.false (lt_of_le_of_lt (h_mono (not_lt.mp hb)) hp.2)] }
+  obtain [ident hab, "|", ident hab, ":=", expr lt_or_le a b],
+  { intros [ident p, ident hp],
+    rcases [expr mem_Ioo_or_eq_left_of_mem_Ico hp, "with", ident hp', "|", ident hp'],
+    { rw [expr hp'] [],
+      exact [expr ⟨a, left_mem_Ico.mpr hab, rfl⟩] },
+    { have [] [] [":=", expr surj_on_Ioo_of_monotone_surjective h_mono h_surj a b hp'],
+      cases [expr this] ["with", ident x, ident hx],
+      exact [expr ⟨x, Ioo_subset_Ico_self hx.1, hx.2⟩] } },
+  { rw [expr Ico_eq_empty (h_mono hab).not_lt] [],
+    exact [expr surj_on_empty f _] }
 end
-
-theorem surj_on_Ico_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a b : α) :
-  surj_on f (Ico a b) (Ico (f a) (f b)) :=
-  by 
-    obtain hab | hab := lt_or_leₓ a b
-    ·
-      intro p hp 
-      rcases mem_Ioo_or_eq_left_of_mem_Ico hp with (hp' | hp')
-      ·
-        rw [hp']
-        exact ⟨a, left_mem_Ico.mpr hab, rfl⟩
-      ·
-        have  := surj_on_Ioo_of_monotone_surjective h_mono h_surj a b hp' 
-        cases' this with x hx 
-        exact ⟨x, Ioo_subset_Ico_self hx.1, hx.2⟩
-    ·
-      rw [Ico_eq_empty (h_mono hab).not_lt]
-      exact surj_on_empty f _
 
 theorem surj_on_Ioc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a b : α) :
   surj_on f (Ioc a b) (Ioc (f a) (f b)) :=
   by 
     simpa using surj_on_Ico_of_monotone_surjective h_mono.dual h_surj (to_dual b) (to_dual a)
 
-theorem surj_on_Icc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) {a b : α}
-  (hab : a ≤ b) : surj_on f (Icc a b) (Icc (f a) (f b)) :=
-  by 
-    rcases lt_or_eq_of_leₓ hab with (hab | hab)
-    ·
-      intro p hp 
-      rcases mem_Ioo_or_eq_endpoints_of_mem_Icc hp with (hp' | ⟨hp' | hp'⟩)
-      ·
-        rw [hp']
-        refine' ⟨a, left_mem_Icc.mpr (le_of_ltₓ hab), rfl⟩
-      ·
-        rw [hp']
-        refine' ⟨b, right_mem_Icc.mpr (le_of_ltₓ hab), rfl⟩
-      ·
-        have  := surj_on_Ioo_of_monotone_surjective h_mono h_surj a b hp' 
-        cases' this with x hx 
-        exact ⟨x, Ioo_subset_Icc_self hx.1, hx.2⟩
-    ·
-      simp only [hab, Icc_self]
-      intro _ hp 
-      exact ⟨b, mem_singleton _, (mem_singleton_iff.mp hp).symm⟩
-
--- error in Data.Set.Intervals.SurjOn: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem surj_on_Ioi_of_monotone_surjective
+-- error in Data.Set.Intervals.SurjOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem surj_on_Icc_of_monotone_surjective
 (h_mono : monotone f)
 (h_surj : function.surjective f)
-(a : α) : surj_on f (Ioi a) (Ioi (f a)) :=
+{a b : α}
+(hab : «expr ≤ »(a, b)) : surj_on f (Icc a b) (Icc (f a) (f b)) :=
 begin
-  classical,
-  intros [ident p, ident hp],
-  rcases [expr h_surj p, "with", "⟨", ident x, ",", ident rfl, "⟩"],
-  refine [expr ⟨x, _, rfl⟩],
-  simp [] [] ["only"] ["[", expr mem_Ioi, "]"] [] [],
-  by_contra [ident h],
-  exact [expr has_lt.lt.false (lt_of_lt_of_le hp (h_mono (not_lt.mp h)))]
+  rcases [expr lt_or_eq_of_le hab, "with", ident hab, "|", ident hab],
+  { intros [ident p, ident hp],
+    rcases [expr mem_Ioo_or_eq_endpoints_of_mem_Icc hp, "with", ident hp', "|", "⟨", ident hp', "|", ident hp', "⟩"],
+    { rw [expr hp'] [],
+      refine [expr ⟨a, left_mem_Icc.mpr (le_of_lt hab), rfl⟩] },
+    { rw [expr hp'] [],
+      refine [expr ⟨b, right_mem_Icc.mpr (le_of_lt hab), rfl⟩] },
+    { have [] [] [":=", expr surj_on_Ioo_of_monotone_surjective h_mono h_surj a b hp'],
+      cases [expr this] ["with", ident x, ident hx],
+      exact [expr ⟨x, Ioo_subset_Icc_self hx.1, hx.2⟩] } },
+  { simp [] [] ["only"] ["[", expr hab, ",", expr Icc_self, "]"] [] [],
+    intros ["_", ident hp],
+    exact [expr ⟨b, mem_singleton _, (mem_singleton_iff.mp hp).symm⟩] }
 end
+
+theorem surj_on_Ioi_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
+  surj_on f (Ioi a) (Ioi (f a)) :=
+  by 
+    classical 
+    intro p hp 
+    rcases h_surj p with ⟨x, rfl⟩
+    refine' ⟨x, _, rfl⟩
+    simp only [mem_Ioi]
+    byContra h 
+    exact LT.lt.false (lt_of_lt_of_leₓ hp (h_mono (not_lt.mp h)))
 
 theorem surj_on_Iio_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a : α) :
   surj_on f (Iio a) (Iio (f a)) :=

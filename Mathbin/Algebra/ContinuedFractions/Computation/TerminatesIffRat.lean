@@ -1,6 +1,7 @@
 import Mathbin.Algebra.ContinuedFractions.Computation.Approximations 
 import Mathbin.Algebra.ContinuedFractions.Computation.CorrectnessTerminating 
-import Mathbin.Data.Rat.Default
+import Mathbin.Algebra.Order.Archimedean 
+import Mathbin.Data.Rat.Floor
 
 /-!
 # Termination of Continued Fraction Computations (`gcf.of`)
@@ -48,43 +49,36 @@ show that `v = ↑q`.
 
 variable(v : K)(n : ℕ)
 
-theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
-  ∃ conts : pair ℚ, (of v).continuantsAux n = (conts.map coeₓ : pair K) :=
-  Nat.strong_induction_onₓ n
-    (by 
-      clear n 
-      let g := of v 
-      intro n IH 
-      rcases n with (_ | _ | n)
-      ·
-        suffices  : ∃ gp : pair ℚ, pair.mk (1 : K) 0 = gp.map coeₓ
-        ·
-          simpa [continuants_aux]
-        use pair.mk 1 0
-        simp 
-      ·
-        suffices  : ∃ conts : pair ℚ, pair.mk g.h 1 = conts.map coeₓ
-        ·
-          simpa [continuants_aux]
-        use pair.mk ⌊v⌋ 1
-        simp 
-      ·
-        cases' IH (n+1)$ lt_add_one (n+1) with pred_conts pred_conts_eq 
-        cases' s_ppred_nth_eq : g.s.nth n with gp_n
-        ·
-          use pred_conts 
-          have  : g.continuants_aux (n+2) = g.continuants_aux (n+1)
-          exact continuants_aux_stable_of_terminated (n+1).le_succ s_ppred_nth_eq 
-          simp only [this, pred_conts_eq]
-        ·
-          cases' IH n$ lt_of_le_of_ltₓ n.le_succ$ lt_add_one$ n+1 with ppred_conts ppred_conts_eq 
-          obtain ⟨a_eq_one, z, b_eq_z⟩ : gp_n.a = 1 ∧ ∃ z : ℤ, gp_n.b = (z : K)
-          exact of_part_num_eq_one_and_exists_int_part_denom_eq s_ppred_nth_eq 
-          simp only [a_eq_one, b_eq_z, continuants_aux_recurrence s_ppred_nth_eq ppred_conts_eq pred_conts_eq]
-          use next_continuants 1 (z : ℚ) ppred_conts pred_conts 
-          cases ppred_conts 
-          cases pred_conts 
-          simp [next_continuants, next_numerator, next_denominator])
+-- error in Algebra.ContinuedFractions.Computation.TerminatesIffRat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_gcf_pair_rat_eq_of_nth_conts_aux : «expr∃ , »((conts : pair exprℚ()), «expr = »((of v).continuants_aux n, (conts.map coe : pair K))) :=
+nat.strong_induction_on n (begin
+   clear [ident n],
+   let [ident g] [] [":=", expr of v],
+   assume [binders (n IH)],
+   rcases [expr n, "with", "_", "|", "_", "|", ident n],
+   { suffices [] [":", expr «expr∃ , »((gp : pair exprℚ()), «expr = »(pair.mk (1 : K) 0, gp.map coe))],
+     by simpa [] [] [] ["[", expr continuants_aux, "]"] [] [],
+     use [expr pair.mk 1 0],
+     simp [] [] [] [] [] [] },
+   { suffices [] [":", expr «expr∃ , »((conts : pair exprℚ()), «expr = »(pair.mk g.h 1, conts.map coe))],
+     by simpa [] [] [] ["[", expr continuants_aux, "]"] [] [],
+     use [expr pair.mk «expr⌊ ⌋»(v) 1],
+     simp [] [] [] [] [] [] },
+   { cases [expr «expr $ »(IH «expr + »(n, 1), lt_add_one «expr + »(n, 1))] ["with", ident pred_conts, ident pred_conts_eq],
+     cases [expr s_ppred_nth_eq, ":", expr g.s.nth n] ["with", ident gp_n],
+     { use [expr pred_conts],
+       have [] [":", expr «expr = »(g.continuants_aux «expr + »(n, 2), g.continuants_aux «expr + »(n, 1))] [],
+       from [expr continuants_aux_stable_of_terminated «expr + »(n, 1).le_succ s_ppred_nth_eq],
+       simp [] [] ["only"] ["[", expr this, ",", expr pred_conts_eq, "]"] [] [] },
+     { cases [expr «expr $ »(IH n, «expr $ »(lt_of_le_of_lt n.le_succ, «expr $ »(lt_add_one, «expr + »(n, 1))))] ["with", ident ppred_conts, ident ppred_conts_eq],
+       obtain ["⟨", ident a_eq_one, ",", ident z, ",", ident b_eq_z, "⟩", ":", expr «expr ∧ »(«expr = »(gp_n.a, 1), «expr∃ , »((z : exprℤ()), «expr = »(gp_n.b, (z : K))))],
+       from [expr of_part_num_eq_one_and_exists_int_part_denom_eq s_ppred_nth_eq],
+       simp [] [] ["only"] ["[", expr a_eq_one, ",", expr b_eq_z, ",", expr continuants_aux_recurrence s_ppred_nth_eq ppred_conts_eq pred_conts_eq, "]"] [] [],
+       use [expr next_continuants 1 (z : exprℚ()) ppred_conts pred_conts],
+       cases [expr ppred_conts] [],
+       cases [expr pred_conts] [],
+       simp [] [] [] ["[", expr next_continuants, ",", expr next_numerator, ",", expr next_denominator, "]"] [] [] } }
+ end)
 
 theorem exists_gcf_pair_rat_eq_nth_conts : ∃ conts : pair ℚ, (of v).continuants n = (conts.map coeₓ : pair K) :=
   by 
@@ -113,16 +107,19 @@ theorem exists_rat_eq_nth_convergent : ∃ q : ℚ, (of v).convergents n = (q : 
 
 variable{v}
 
+-- error in Algebra.ContinuedFractions.Computation.TerminatesIffRat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Every terminating continued fraction corresponds to a rational number. -/
-theorem exists_rat_eq_of_terminates (terminates : (of v).Terminates) : ∃ q : ℚ, v = «expr↑ » q :=
-  by 
-    obtain ⟨n, v_eq_conv⟩ : ∃ n, v = (of v).convergents n 
-    exact of_correctness_of_terminates terminates 
-    obtain ⟨q, conv_eq_q⟩ : ∃ q : ℚ, (of v).convergents n = («expr↑ » q : K)
-    exact exists_rat_eq_nth_convergent v n 
-    have  : v = («expr↑ » q : K)
-    exact Eq.trans v_eq_conv conv_eq_q 
-    use q, this
+theorem exists_rat_eq_of_terminates
+(terminates : (of v).terminates) : «expr∃ , »((q : exprℚ()), «expr = »(v, «expr↑ »(q))) :=
+begin
+  obtain ["⟨", ident n, ",", ident v_eq_conv, "⟩", ":", expr «expr∃ , »((n), «expr = »(v, (of v).convergents n))],
+  from [expr of_correctness_of_terminates terminates],
+  obtain ["⟨", ident q, ",", ident conv_eq_q, "⟩", ":", expr «expr∃ , »((q : exprℚ()), «expr = »((of v).convergents n, («expr↑ »(q) : K)))],
+  from [expr exists_rat_eq_nth_convergent v n],
+  have [] [":", expr «expr = »(v, («expr↑ »(q) : K))] [],
+  from [expr eq.trans v_eq_conv conv_eq_q],
+  use ["[", expr q, ",", expr this, "]"]
+end
 
 end RatOfTerminates
 
@@ -161,33 +158,26 @@ theorem coe_of_rat_eq : ((int_fract_pair.of q).mapFr coeₓ : int_fract_pair K) 
   by 
     simp [int_fract_pair.of, v_eq_q]
 
-theorem coe_stream_nth_rat_eq :
-  ((int_fract_pair.stream q n).map (mapFr coeₓ) : Option$ int_fract_pair K) = int_fract_pair.stream v n :=
-  by 
-    induction' n with n IH 
-    case nat.zero => 
-      simp [int_fract_pair.stream, coe_of_rat_eq v_eq_q]
-    case nat.succ => 
-      rw [v_eq_q] at IH 
-      cases' stream_q_nth_eq : int_fract_pair.stream q n with ifp_n 
-      case option.none => 
-        simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq]
-      case option.some => 
-        cases' ifp_n with b fr 
-        cases' Decidable.em (fr = 0) with fr_zero fr_ne_zero
-        ·
-          simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_zero]
-        ·
-          replace IH : some (int_fract_pair.mk b («expr↑ » fr)) = int_fract_pair.stream («expr↑ » q) n
-          ·
-            rwa [stream_q_nth_eq] at IH 
-          have  : (fr : K)⁻¹ = ((fr⁻¹ : ℚ) : K)
-          ·
-            normCast 
-          have coe_of_fr := coe_of_rat_eq this 
-          simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_ne_zero]
-          unfoldCoes 
-          simpa [coe_of_fr]
+-- error in Algebra.ContinuedFractions.Computation.TerminatesIffRat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem coe_stream_nth_rat_eq : «expr = »(((int_fract_pair.stream q n).map (mapFr coe) : «expr $ »(option, int_fract_pair K)), int_fract_pair.stream v n) :=
+begin
+  induction [expr n] [] ["with", ident n, ident IH] [],
+  case [ident nat.zero, ":"] { simp [] [] [] ["[", expr int_fract_pair.stream, ",", expr coe_of_rat_eq v_eq_q, "]"] [] [] },
+  case [ident nat.succ, ":"] { rw [expr v_eq_q] ["at", ident IH],
+    cases [expr stream_q_nth_eq, ":", expr int_fract_pair.stream q n] ["with", ident ifp_n],
+    case [ident option.none, ":"] { simp [] [] [] ["[", expr int_fract_pair.stream, ",", expr IH.symm, ",", expr v_eq_q, ",", expr stream_q_nth_eq, "]"] [] [] },
+    case [ident option.some, ":"] { cases [expr ifp_n] ["with", ident b, ident fr],
+      cases [expr decidable.em «expr = »(fr, 0)] ["with", ident fr_zero, ident fr_ne_zero],
+      { simp [] [] [] ["[", expr int_fract_pair.stream, ",", expr IH.symm, ",", expr v_eq_q, ",", expr stream_q_nth_eq, ",", expr fr_zero, "]"] [] [] },
+      { replace [ident IH] [":", expr «expr = »(some (int_fract_pair.mk b «expr↑ »(fr)), int_fract_pair.stream «expr↑ »(q) n)] [],
+        by rwa ["[", expr stream_q_nth_eq, "]"] ["at", ident IH],
+        have [] [":", expr «expr = »(«expr ⁻¹»((fr : K)), ((«expr ⁻¹»(fr) : exprℚ()) : K))] [],
+        by norm_cast [],
+        have [ident coe_of_fr] [] [":=", expr coe_of_rat_eq this],
+        simp [] [] [] ["[", expr int_fract_pair.stream, ",", expr IH.symm, ",", expr v_eq_q, ",", expr stream_q_nth_eq, ",", expr fr_ne_zero, "]"] [] [],
+        unfold_coes [],
+        simpa [] [] [] ["[", expr coe_of_fr, "]"] [] [] } } }
+end
 
 theorem coe_stream_rat_eq :
   ((int_fract_pair.stream q).map (Option.map (mapFr coeₓ)) : Streamₓ$ Option$ int_fract_pair K) =
@@ -270,26 +260,27 @@ Shows that for any `q : ℚ` with `0 < q < 1`, the numerator of the fractional p
 theorem of_inv_fr_num_lt_num_of_pos (q_pos : 0 < q) : (int_fract_pair.of (q⁻¹)).fr.num < q.num :=
   Rat.fract_inv_num_lt_num_of_pos q_pos
 
+-- error in Algebra.ContinuedFractions.Computation.TerminatesIffRat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Shows that the sequence of numerators of the fractional parts of the stream is strictly
 antitone. -/
-theorem stream_succ_nth_fr_num_lt_nth_fr_num_rat {ifp_n ifp_succ_n : int_fract_pair ℚ}
-  (stream_nth_eq : int_fract_pair.stream q n = some ifp_n)
-  (stream_succ_nth_eq : int_fract_pair.stream q (n+1) = some ifp_succ_n) : ifp_succ_n.fr.num < ifp_n.fr.num :=
-  by 
-    obtain ⟨ifp_n', stream_nth_eq', ifp_n_fract_ne_zero, int_fract_pair.of_eq_ifp_succ_n⟩ :
-      ∃ ifp_n', int_fract_pair.stream q n = some ifp_n' ∧ ifp_n'.fr ≠ 0 ∧ int_fract_pair.of (ifp_n'.fr⁻¹) = ifp_succ_n 
-    exact succ_nth_stream_eq_some_iff.elim_left stream_succ_nth_eq 
-    have  : ifp_n = ifp_n'
-    ·
-      injection Eq.trans stream_nth_eq.symm stream_nth_eq' 
-    cases this 
-    rw [←int_fract_pair.of_eq_ifp_succ_n]
-    cases' nth_stream_fr_nonneg_lt_one stream_nth_eq with zero_le_ifp_n_fract ifp_n_fract_lt_one 
-    have  : 0 < ifp_n.fr 
-    exact lt_of_le_of_neₓ zero_le_ifp_n_fract$ ifp_n_fract_ne_zero.symm 
-    exact of_inv_fr_num_lt_num_of_pos this
+theorem stream_succ_nth_fr_num_lt_nth_fr_num_rat
+{ifp_n ifp_succ_n : int_fract_pair exprℚ()}
+(stream_nth_eq : «expr = »(int_fract_pair.stream q n, some ifp_n))
+(stream_succ_nth_eq : «expr = »(int_fract_pair.stream q «expr + »(n, 1), some ifp_succ_n)) : «expr < »(ifp_succ_n.fr.num, ifp_n.fr.num) :=
+begin
+  obtain ["⟨", ident ifp_n', ",", ident stream_nth_eq', ",", ident ifp_n_fract_ne_zero, ",", ident int_fract_pair.of_eq_ifp_succ_n, "⟩", ":", expr «expr∃ , »((ifp_n'), «expr ∧ »(«expr = »(int_fract_pair.stream q n, some ifp_n'), «expr ∧ »(«expr ≠ »(ifp_n'.fr, 0), «expr = »(int_fract_pair.of «expr ⁻¹»(ifp_n'.fr), ifp_succ_n))))],
+  from [expr succ_nth_stream_eq_some_iff.elim_left stream_succ_nth_eq],
+  have [] [":", expr «expr = »(ifp_n, ifp_n')] [],
+  by injection [expr eq.trans stream_nth_eq.symm stream_nth_eq'] [],
+  cases [expr this] [],
+  rw ["[", "<-", expr int_fract_pair.of_eq_ifp_succ_n, "]"] [],
+  cases [expr nth_stream_fr_nonneg_lt_one stream_nth_eq] ["with", ident zero_le_ifp_n_fract, ident ifp_n_fract_lt_one],
+  have [] [":", expr «expr < »(0, ifp_n.fr)] [],
+  from [expr «expr $ »(lt_of_le_of_ne zero_le_ifp_n_fract, ifp_n_fract_ne_zero.symm)],
+  exact [expr of_inv_fr_num_lt_num_of_pos this]
+end
 
--- error in Algebra.ContinuedFractions.Computation.TerminatesIffRat: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Algebra.ContinuedFractions.Computation.TerminatesIffRat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem stream_nth_fr_num_le_fr_num_sub_n_rat : ∀
 {ifp_n : int_fract_pair exprℚ()}, «expr = »(int_fract_pair.stream q n, some ifp_n) → «expr ≤ »(ifp_n.fr.num, «expr - »((int_fract_pair.of q).fr.num, n)) :=
 begin
@@ -310,31 +301,29 @@ begin
     exact [expr le_trans this (IH stream_nth_eq)] }
 end
 
-theorem exists_nth_stream_eq_none_of_rat (q : ℚ) : ∃ n : ℕ, int_fract_pair.stream q n = none :=
-  by 
-    let fract_q_num := (Int.fract q).num 
-    let n := fract_q_num.nat_abs+1
-    cases' stream_nth_eq : int_fract_pair.stream q n with ifp
-    ·
-      use n 
-      exact stream_nth_eq
-    ·
-      have ifp_fr_num_le_q_fr_num_sub_n : ifp.fr.num ≤ fract_q_num - n 
-      exact stream_nth_fr_num_le_fr_num_sub_n_rat stream_nth_eq 
-      have  : fract_q_num - n = -1
-      ·
-        ·
-          have  : 0 ≤ fract_q_num 
-          exact rat.num_nonneg_iff_zero_le.elim_right (Int.fract_nonneg q)
-          simp [Int.nat_abs_of_nonneg this, sub_add_eq_sub_sub_swap, sub_right_comm]
-      have  : ifp.fr.num ≤ -1
-      ·
-        rwa [this] at ifp_fr_num_le_q_fr_num_sub_n 
-      have  : 0 ≤ ifp.fr 
-      exact (nth_stream_fr_nonneg_lt_one stream_nth_eq).left 
-      have  : 0 ≤ ifp.fr.num 
-      exact rat.num_nonneg_iff_zero_le.elim_right this 
-      linarith
+-- error in Algebra.ContinuedFractions.Computation.TerminatesIffRat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_nth_stream_eq_none_of_rat
+(q : exprℚ()) : «expr∃ , »((n : exprℕ()), «expr = »(int_fract_pair.stream q n, none)) :=
+begin
+  let [ident fract_q_num] [] [":=", expr (int.fract q).num],
+  let [ident n] [] [":=", expr «expr + »(fract_q_num.nat_abs, 1)],
+  cases [expr stream_nth_eq, ":", expr int_fract_pair.stream q n] ["with", ident ifp],
+  { use [expr n],
+    exact [expr stream_nth_eq] },
+  { have [ident ifp_fr_num_le_q_fr_num_sub_n] [":", expr «expr ≤ »(ifp.fr.num, «expr - »(fract_q_num, n))] [],
+    from [expr stream_nth_fr_num_le_fr_num_sub_n_rat stream_nth_eq],
+    have [] [":", expr «expr = »(«expr - »(fract_q_num, n), «expr- »(1))] [],
+    by { have [] [":", expr «expr ≤ »(0, fract_q_num)] [],
+      from [expr rat.num_nonneg_iff_zero_le.elim_right (int.fract_nonneg q)],
+      simp [] [] [] ["[", expr int.nat_abs_of_nonneg this, ",", expr sub_add_eq_sub_sub_swap, ",", expr sub_right_comm, "]"] [] [] },
+    have [] [":", expr «expr ≤ »(ifp.fr.num, «expr- »(1))] [],
+    by rwa [expr this] ["at", ident ifp_fr_num_le_q_fr_num_sub_n],
+    have [] [":", expr «expr ≤ »(0, ifp.fr)] [],
+    from [expr (nth_stream_fr_nonneg_lt_one stream_nth_eq).left],
+    have [] [":", expr «expr ≤ »(0, ifp.fr.num)] [],
+    from [expr rat.num_nonneg_iff_zero_le.elim_right this],
+    linarith [] [] [] }
+end
 
 end IntFractPair
 

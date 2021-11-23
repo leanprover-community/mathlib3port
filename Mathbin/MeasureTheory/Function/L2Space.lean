@@ -40,41 +40,39 @@ variable{α E F 𝕜 :
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
-theorem snorm_rpow_two_norm_lt_top (f : Lp F 2 μ) : snorm (fun x => ∥f x∥^(2 : ℝ)) 1 μ < ∞ :=
-  by 
-    have h_two : Ennreal.ofReal (2 : ℝ) = 2
-    ·
-      simp [zero_le_one]
-    rw [snorm_norm_rpow f zero_lt_two, one_mulₓ, h_two]
-    exact Ennreal.rpow_lt_top_of_nonneg zero_le_two (Lp.snorm_ne_top f)
+-- error in MeasureTheory.Function.L2Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem snorm_rpow_two_norm_lt_top
+(f : Lp F 2 μ) : «expr < »(snorm (λ x, «expr ^ »(«expr∥ ∥»(f x), (2 : exprℝ()))) 1 μ, «expr∞»()) :=
+begin
+  have [ident h_two] [":", expr «expr = »(ennreal.of_real (2 : exprℝ()), 2)] [],
+  by simp [] [] [] ["[", expr zero_le_one, "]"] [] [],
+  rw ["[", expr snorm_norm_rpow f zero_lt_two, ",", expr one_mul, ",", expr h_two, "]"] [],
+  exact [expr ennreal.rpow_lt_top_of_nonneg zero_le_two (Lp.snorm_ne_top f)]
+end
 
-theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x, g x⟫) 1 μ < ∞ :=
-  by 
-    have h : ∀ x, IsROrC.abs ⟪f x, g x⟫ ≤ ∥f x∥*∥g x∥
-    exact fun x => abs_inner_le_norm _ _ 
-    have h' : ∀ x, IsROrC.abs ⟪f x, g x⟫ ≤ IsROrC.abs ((∥f x∥^2)+∥g x∥^2)
-    ·
-      refine' fun x => le_transₓ (h x) _ 
-      rw [IsROrC.abs_to_real, abs_eq_self.mpr]
-      swap
-      ·
-        exact
-          add_nonneg
-            (by 
-              simp )
-            (by 
-              simp )
-      refine' le_transₓ _ (half_le_self (add_nonneg (sq_nonneg _) (sq_nonneg _)))
-      refine' (le_div_iff (@zero_lt_two ℝ _ _)).mpr ((le_of_eqₓ _).trans (two_mul_le_add_sq _ _))
-      ring 
-    simpRw [←IsROrC.norm_eq_abs, ←Real.rpow_nat_cast]  at h' 
-    refine' (snorm_mono_ae (ae_of_all _ h')).trans_lt ((snorm_add_le _ _ le_rfl).trans_lt _)
-    ·
-      exact (Lp.ae_measurable f).norm.pow_const _
-    ·
-      exact (Lp.ae_measurable g).norm.pow_const _ 
-    simp only [Nat.cast_bit0, Ennreal.add_lt_top, Nat.cast_one]
-    exact ⟨snorm_rpow_two_norm_lt_top f, snorm_rpow_two_norm_lt_top g⟩
+-- error in MeasureTheory.Function.L2Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem snorm_inner_lt_top
+(f g : «expr →₂[ ] »(α, μ, E)) : «expr < »(snorm (λ x : α, «expr⟪ , ⟫»(f x, g x)) 1 μ, «expr∞»()) :=
+begin
+  have [ident h] [":", expr ∀
+   x, «expr ≤ »(is_R_or_C.abs «expr⟪ , ⟫»(f x, g x), «expr * »(«expr∥ ∥»(f x), «expr∥ ∥»(g x)))] [],
+  from [expr λ x, abs_inner_le_norm _ _],
+  have [ident h'] [":", expr ∀
+   x, «expr ≤ »(is_R_or_C.abs «expr⟪ , ⟫»(f x, g x), is_R_or_C.abs «expr + »(«expr ^ »(«expr∥ ∥»(f x), 2), «expr ^ »(«expr∥ ∥»(g x), 2)))] [],
+  { refine [expr λ x, le_trans (h x) _],
+    rw ["[", expr is_R_or_C.abs_to_real, ",", expr abs_eq_self.mpr, "]"] [],
+    swap,
+    { exact [expr add_nonneg (by simp [] [] [] [] [] []) (by simp [] [] [] [] [] [])] },
+    refine [expr le_trans _ (half_le_self (add_nonneg (sq_nonneg _) (sq_nonneg _)))],
+    refine [expr (le_div_iff (@zero_lt_two exprℝ() _ _)).mpr ((le_of_eq _).trans (two_mul_le_add_sq _ _))],
+    ring [] },
+  simp_rw ["[", "<-", expr is_R_or_C.norm_eq_abs, ",", "<-", expr real.rpow_nat_cast, "]"] ["at", ident h'],
+  refine [expr (snorm_mono_ae (ae_of_all _ h')).trans_lt ((snorm_add_le _ _ le_rfl).trans_lt _)],
+  { exact [expr (Lp.ae_measurable f).norm.pow_const _] },
+  { exact [expr (Lp.ae_measurable g).norm.pow_const _] },
+  simp [] [] ["only"] ["[", expr nat.cast_bit0, ",", expr ennreal.add_lt_top, ",", expr nat.cast_one, "]"] [] [],
+  exact [expr ⟨snorm_rpow_two_norm_lt_top f, snorm_rpow_two_norm_lt_top g⟩]
+end
 
 section InnerProductSpace
 
@@ -90,42 +88,38 @@ instance  : HasInner 𝕜 (α →₂[μ] E) :=
 theorem inner_def (f g : α →₂[μ] E) : inner f g = ∫a : α, ⟪f a, g a⟫ ∂μ :=
   rfl
 
-theorem integral_inner_eq_sq_snorm (f : α →₂[μ] E) :
-  (∫a, ⟪f a, f a⟫ ∂μ) = Ennreal.toReal (∫⁻a, (nnnorm (f a) : ℝ≥0∞)^(2 : ℝ) ∂μ) :=
-  by 
-    simpRw [inner_self_eq_norm_sq_to_K]
-    normCast 
-    rw [integral_eq_lintegral_of_nonneg_ae]
-    swap
-    ·
-      exact Filter.eventually_of_forall fun x => sq_nonneg _ 
-    swap
-    ·
-      exact (Lp.ae_measurable f).norm.pow_const _ 
-    congr 
-    ext1 x 
-    have h_two : (2 : ℝ) = ((2 : ℕ) : ℝ)
-    ·
-      simp 
-    rw [←Real.rpow_nat_cast _ 2, ←h_two, ←Ennreal.of_real_rpow_of_nonneg (norm_nonneg _) zero_le_two,
-      of_real_norm_eq_coe_nnnorm]
-    normCast
+-- error in MeasureTheory.Function.L2Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem integral_inner_eq_sq_snorm
+(f : «expr →₂[ ] »(α, μ, E)) : «expr = »(«expr∫ , ∂ »((a), «expr⟪ , ⟫»(f a, f a), μ), ennreal.to_real «expr∫⁻ , ∂ »((a), «expr ^ »((nnnorm (f a) : «exprℝ≥0∞»()), (2 : exprℝ())), μ)) :=
+begin
+  simp_rw [expr inner_self_eq_norm_sq_to_K] [],
+  norm_cast [],
+  rw [expr integral_eq_lintegral_of_nonneg_ae] [],
+  swap,
+  { exact [expr filter.eventually_of_forall (λ x, sq_nonneg _)] },
+  swap,
+  { exact [expr (Lp.ae_measurable f).norm.pow_const _] },
+  congr,
+  ext1 [] [ident x],
+  have [ident h_two] [":", expr «expr = »((2 : exprℝ()), ((2 : exprℕ()) : exprℝ()))] [],
+  by simp [] [] [] [] [] [],
+  rw ["[", "<-", expr real.rpow_nat_cast _ 2, ",", "<-", expr h_two, ",", "<-", expr ennreal.of_real_rpow_of_nonneg (norm_nonneg _) zero_le_two, ",", expr of_real_norm_eq_coe_nnnorm, "]"] [],
+  norm_cast []
+end
 
-private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : (∥f∥^2) = IsROrC.re (inner f f : 𝕜) :=
-  by 
-    have h_two : (2 : ℝ≥0∞).toReal = 2 :=
-      by 
-        simp 
-    rw [inner_def, integral_inner_eq_sq_snorm, norm_def, ←Ennreal.to_real_pow, IsROrC.of_real_re,
-      Ennreal.to_real_eq_to_real (Ennreal.pow_ne_top (Lp.snorm_ne_top f)) _]
-    ·
-      rw [←Ennreal.rpow_nat_cast, snorm_eq_snorm' Ennreal.two_ne_zero Ennreal.two_ne_top, snorm', ←Ennreal.rpow_mul,
-        one_div, h_two]
-      simp 
-    ·
-      refine' (lintegral_rpow_nnnorm_lt_top_of_snorm'_lt_top zero_lt_two _).Ne 
-      rw [←h_two, ←snorm_eq_snorm' Ennreal.two_ne_zero Ennreal.two_ne_top]
-      exact Lp.snorm_lt_top f
+-- error in MeasureTheory.Function.L2Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem norm_sq_eq_inner'
+(f : «expr →₂[ ] »(α, μ, E)) : «expr = »(«expr ^ »(«expr∥ ∥»(f), 2), is_R_or_C.re (inner f f : 𝕜)) :=
+begin
+  have [ident h_two] [":", expr «expr = »((2 : «exprℝ≥0∞»()).to_real, 2)] [":=", expr by simp [] [] [] [] [] []],
+  rw ["[", expr inner_def, ",", expr integral_inner_eq_sq_snorm, ",", expr norm_def, ",", "<-", expr ennreal.to_real_pow, ",", expr is_R_or_C.of_real_re, ",", expr ennreal.to_real_eq_to_real (ennreal.pow_ne_top (Lp.snorm_ne_top f)) _, "]"] [],
+  { rw ["[", "<-", expr ennreal.rpow_nat_cast, ",", expr snorm_eq_snorm' ennreal.two_ne_zero ennreal.two_ne_top, ",", expr snorm', ",", "<-", expr ennreal.rpow_mul, ",", expr one_div, ",", expr h_two, "]"] [],
+    simp [] [] [] [] [] [] },
+  { refine [expr (lintegral_rpow_nnnorm_lt_top_of_snorm'_lt_top zero_lt_two _).ne],
+    rw ["[", "<-", expr h_two, ",", "<-", expr snorm_eq_snorm' ennreal.two_ne_zero ennreal.two_ne_top, "]"] [],
+    exact [expr Lp.snorm_lt_top f] }
+end
 
 theorem mem_L1_inner (f g : α →₂[μ] E) :
   ae_eq_fun.mk (fun x => ⟪f x, g x⟫) ((Lp.ae_measurable f).inner (Lp.ae_measurable g)) ∈ Lp 𝕜 1 μ :=
@@ -168,38 +162,38 @@ variable[MeasurableSpace 𝕜][BorelSpace 𝕜]{s : Set α}
 
 variable(𝕜)
 
+-- error in MeasureTheory.Function.L2Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs c` and `f` is
 equal to the integral of the inner product over `s`: `∫ x in s, ⟪c, f x⟫ ∂μ`. -/
-theorem inner_indicator_const_Lp_eq_set_integral_inner (f : Lp E 2 μ) (hs : MeasurableSet s) (c : E) (hμs : μ s ≠ ∞) :
-  inner (indicator_const_Lp 2 hs hμs c) f = ∫x in s, ⟪c, f x⟫ ∂μ :=
-  by 
-    rw [inner_def, ←integral_add_compl hs (L2.integrable_inner _ f)]
-    have h_left : (∫x in s, ⟪(indicator_const_Lp 2 hs hμs c) x, f x⟫ ∂μ) = ∫x in s, ⟪c, f x⟫ ∂μ
-    ·
-      suffices h_ae_eq : ∀ᵐx ∂μ, x ∈ s → ⟪indicator_const_Lp 2 hs hμs c x, f x⟫ = ⟪c, f x⟫
-      exact set_integral_congr_ae hs h_ae_eq 
-      have h_indicator : ∀ᵐx : α ∂μ, x ∈ s → indicator_const_Lp 2 hs hμs c x = c 
-      exact indicator_const_Lp_coe_fn_mem 
-      refine' h_indicator.mono fun x hx hxs => _ 
-      congr 
-      exact hx hxs 
-    have h_right : (∫x in «expr ᶜ» s, ⟪(indicator_const_Lp 2 hs hμs c) x, f x⟫ ∂μ) = 0
-    ·
-      suffices h_ae_eq : ∀ᵐx ∂μ, x ∉ s → ⟪indicator_const_Lp 2 hs hμs c x, f x⟫ = 0
-      ·
-        simpRw [←Set.mem_compl_iff]  at h_ae_eq 
-        suffices h_int_zero :
-          (∫x in «expr ᶜ» s, inner (indicator_const_Lp 2 hs hμs c x) (f x) ∂μ) = ∫x in «expr ᶜ» s, (0 : 𝕜) ∂μ
-        ·
-          rw [h_int_zero]
-          simp 
-        exact set_integral_congr_ae hs.compl h_ae_eq 
-      have h_indicator : ∀ᵐx : α ∂μ, x ∉ s → indicator_const_Lp 2 hs hμs c x = 0 
-      exact indicator_const_Lp_coe_fn_nmem 
-      refine' h_indicator.mono fun x hx hxs => _ 
-      rw [hx hxs]
-      exact inner_zero_left 
-    rw [h_left, h_right, add_zeroₓ]
+theorem inner_indicator_const_Lp_eq_set_integral_inner
+(f : Lp E 2 μ)
+(hs : measurable_set s)
+(c : E)
+(hμs : «expr ≠ »(μ s, «expr∞»())) : «expr = »(inner (indicator_const_Lp 2 hs hμs c) f, «expr∫ in , ∂ »((x), s, «expr⟪ , ⟫»(c, f x), μ)) :=
+begin
+  rw ["[", expr inner_def, ",", "<-", expr integral_add_compl hs (L2.integrable_inner _ f), "]"] [],
+  have [ident h_left] [":", expr «expr = »(«expr∫ in , ∂ »((x), s, «expr⟪ , ⟫»(indicator_const_Lp 2 hs hμs c x, f x), μ), «expr∫ in , ∂ »((x), s, «expr⟪ , ⟫»(c, f x), μ))] [],
+  { suffices [ident h_ae_eq] [":", expr «expr∀ᵐ ∂ , »((x), μ, «expr ∈ »(x, s) → «expr = »(«expr⟪ , ⟫»(indicator_const_Lp 2 hs hμs c x, f x), «expr⟪ , ⟫»(c, f x)))],
+    from [expr set_integral_congr_ae hs h_ae_eq],
+    have [ident h_indicator] [":", expr «expr∀ᵐ ∂ , »((x : α), μ, «expr ∈ »(x, s) → «expr = »(indicator_const_Lp 2 hs hμs c x, c))] [],
+    from [expr indicator_const_Lp_coe_fn_mem],
+    refine [expr h_indicator.mono (λ x hx hxs, _)],
+    congr,
+    exact [expr hx hxs] },
+  have [ident h_right] [":", expr «expr = »(«expr∫ in , ∂ »((x), «expr ᶜ»(s), «expr⟪ , ⟫»(indicator_const_Lp 2 hs hμs c x, f x), μ), 0)] [],
+  { suffices [ident h_ae_eq] [":", expr «expr∀ᵐ ∂ , »((x), μ, «expr ∉ »(x, s) → «expr = »(«expr⟪ , ⟫»(indicator_const_Lp 2 hs hμs c x, f x), 0))],
+    { simp_rw ["<-", expr set.mem_compl_iff] ["at", ident h_ae_eq],
+      suffices [ident h_int_zero] [":", expr «expr = »(«expr∫ in , ∂ »((x), «expr ᶜ»(s), inner (indicator_const_Lp 2 hs hμs c x) (f x), μ), «expr∫ in , ∂ »((x), «expr ᶜ»(s), (0 : 𝕜), μ))],
+      { rw [expr h_int_zero] [],
+        simp [] [] [] [] [] [] },
+      exact [expr set_integral_congr_ae hs.compl h_ae_eq] },
+    have [ident h_indicator] [":", expr «expr∀ᵐ ∂ , »((x : α), μ, «expr ∉ »(x, s) → «expr = »(indicator_const_Lp 2 hs hμs c x, 0))] [],
+    from [expr indicator_const_Lp_coe_fn_nmem],
+    refine [expr h_indicator.mono (λ x hx hxs, _)],
+    rw [expr hx hxs] [],
+    exact [expr inner_zero_left] },
+  rw ["[", expr h_left, ",", expr h_right, ",", expr add_zero, "]"] []
+end
 
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs c` and `f` is
 equal to the inner product of the constant `c` and the integral of `f` over `s`. -/
@@ -237,33 +231,39 @@ attribute [local instance] fact_one_le_two_ennreal
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 (α →₂[μ] 𝕜) _ x y
 
+-- error in MeasureTheory.Function.L2Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For bounded continuous functions `f`, `g` on a finite-measure topological space `α`, the L^2
 inner product is the integral of their pointwise inner product. -/
-theorem bounded_continuous_function.inner_to_Lp (f g : α →ᵇ 𝕜) :
-  ⟪BoundedContinuousFunction.toLp 2 μ 𝕜 f, BoundedContinuousFunction.toLp 2 μ 𝕜 g⟫ = ∫x, conj (f x)*g x ∂μ :=
-  by 
-    apply integral_congr_ae 
-    have hf_ae := f.coe_fn_to_Lp μ 
-    have hg_ae := g.coe_fn_to_Lp μ 
-    filterUpwards [hf_ae, hg_ae]
-    intro x hf hg 
-    rw [hf, hg]
-    simp 
+theorem bounded_continuous_function.inner_to_Lp
+(f
+ g : «expr →ᵇ »(α, 𝕜)) : «expr = »(«expr⟪ , ⟫»(bounded_continuous_function.to_Lp 2 μ 𝕜 f, bounded_continuous_function.to_Lp 2 μ 𝕜 g), «expr∫ , ∂ »((x), «expr * »(exprconj() (f x), g x), μ)) :=
+begin
+  apply [expr integral_congr_ae],
+  have [ident hf_ae] [] [":=", expr f.coe_fn_to_Lp μ],
+  have [ident hg_ae] [] [":=", expr g.coe_fn_to_Lp μ],
+  filter_upwards ["[", expr hf_ae, ",", expr hg_ae, "]"] [],
+  intros [ident x, ident hf, ident hg],
+  rw ["[", expr hf, ",", expr hg, "]"] [],
+  simp [] [] [] [] [] []
+end
 
 variable[CompactSpace α]
 
+-- error in MeasureTheory.Function.L2Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For continuous functions `f`, `g` on a compact, finite-measure topological space `α`, the L^2
 inner product is the integral of their pointwise inner product. -/
-theorem continuous_map.inner_to_Lp (f g : C(α, 𝕜)) :
-  ⟪ContinuousMap.toLp 2 μ 𝕜 f, ContinuousMap.toLp 2 μ 𝕜 g⟫ = ∫x, conj (f x)*g x ∂μ :=
-  by 
-    apply integral_congr_ae 
-    have hf_ae := f.coe_fn_to_Lp μ 
-    have hg_ae := g.coe_fn_to_Lp μ 
-    filterUpwards [hf_ae, hg_ae]
-    intro x hf hg 
-    rw [hf, hg]
-    simp 
+theorem continuous_map.inner_to_Lp
+(f
+ g : «exprC( , )»(α, 𝕜)) : «expr = »(«expr⟪ , ⟫»(continuous_map.to_Lp 2 μ 𝕜 f, continuous_map.to_Lp 2 μ 𝕜 g), «expr∫ , ∂ »((x), «expr * »(exprconj() (f x), g x), μ)) :=
+begin
+  apply [expr integral_congr_ae],
+  have [ident hf_ae] [] [":=", expr f.coe_fn_to_Lp μ],
+  have [ident hg_ae] [] [":=", expr g.coe_fn_to_Lp μ],
+  filter_upwards ["[", expr hf_ae, ",", expr hg_ae, "]"] [],
+  intros [ident x, ident hf, ident hg],
+  rw ["[", expr hf, ",", expr hg, "]"] [],
+  simp [] [] [] [] [] []
+end
 
 end InnerContinuous
 

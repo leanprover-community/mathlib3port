@@ -160,7 +160,7 @@ instance (priority := 100)has_finite_products_of_has_finite_biproducts [has_fini
       fun J _ _ =>
         ⟨fun F =>
             by 
-              exactI has_limit_of_iso discrete.nat_iso_functor.symm⟩ }
+              exact has_limit_of_iso discrete.nat_iso_functor.symm⟩ }
 
 instance (priority := 100)has_finite_coproducts_of_has_finite_biproducts [has_finite_biproducts C] :
   has_finite_coproducts C :=
@@ -168,7 +168,7 @@ instance (priority := 100)has_finite_coproducts_of_has_finite_biproducts [has_fi
       fun J _ _ =>
         ⟨fun F =>
             by 
-              exactI has_colimit_of_iso discrete.nat_iso_functor⟩ }
+              exact has_colimit_of_iso discrete.nat_iso_functor⟩ }
 
 variable{J C}
 
@@ -312,7 +312,7 @@ theorem biproduct.lift_map [Fintype J] {f g : J → C} [has_finite_biproducts C]
 indexed by the same type, we obtain an isomorphism between the biproducts. -/
 @[simps]
 def biproduct.map_iso [Fintype J] {f g : J → C} [has_finite_biproducts C] (p : ∀ b, f b ≅ g b) : ⨁ f ≅ ⨁ g :=
-  { hom := biproduct.map fun b => (p b).hom, inv := biproduct.map fun b => (p b).inv }
+  { Hom := biproduct.map fun b => (p b).Hom, inv := biproduct.map fun b => (p b).inv }
 
 section 
 
@@ -802,7 +802,7 @@ we obtain an isomorphism between the binary biproducts. -/
 @[simps]
 def biprod.map_iso {W X Y Z : C} [has_binary_biproduct W X] [has_binary_biproduct Y Z] (f : W ≅ Y) (g : X ≅ Z) :
   W ⊞ X ≅ Y ⊞ Z :=
-  { hom := biprod.map f.hom g.hom, inv := biprod.map f.inv g.inv }
+  { Hom := biprod.map f.hom g.hom, inv := biprod.map f.inv g.inv }
 
 section 
 
@@ -811,7 +811,7 @@ variable[has_binary_biproducts C]
 /-- The braiding isomorphism which swaps a binary biproduct. -/
 @[simps]
 def biprod.braiding (P Q : C) : P ⊞ Q ≅ Q ⊞ P :=
-  { hom := biprod.lift biprod.snd biprod.fst, inv := biprod.lift biprod.snd biprod.fst }
+  { Hom := biprod.lift biprod.snd biprod.fst, inv := biprod.lift biprod.snd biprod.fst }
 
 /--
 An alternative formula for the braiding isomorphism which swaps a binary biproduct,
@@ -819,7 +819,7 @@ using the fact that the biproduct is a coproduct.
 -/
 @[simps]
 def biprod.braiding' (P Q : C) : P ⊞ Q ≅ Q ⊞ P :=
-  { hom := biprod.desc biprod.inr biprod.inl, inv := biprod.desc biprod.inr biprod.inl }
+  { Hom := biprod.desc biprod.inr biprod.inl, inv := biprod.desc biprod.inr biprod.inl }
 
 theorem biprod.braiding'_eq_braiding {P Q : C} : biprod.braiding' P Q = biprod.braiding P Q :=
   by 
@@ -828,13 +828,13 @@ theorem biprod.braiding'_eq_braiding {P Q : C} : biprod.braiding' P Q = biprod.b
 /-- The braiding isomorphism can be passed through a map by swapping the order. -/
 @[reassoc]
 theorem biprod.braid_natural {W X Y Z : C} (f : X ⟶ Y) (g : Z ⟶ W) :
-  biprod.map f g ≫ (biprod.braiding _ _).hom = (biprod.braiding _ _).hom ≫ biprod.map g f :=
+  biprod.map f g ≫ (biprod.braiding _ _).Hom = (biprod.braiding _ _).Hom ≫ biprod.map g f :=
   by 
     tidy
 
 @[reassoc]
 theorem biprod.braiding_map_braiding {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ Z) :
-  (biprod.braiding X W).hom ≫ biprod.map f g ≫ (biprod.braiding Y Z).hom = biprod.map g f :=
+  (biprod.braiding X W).Hom ≫ biprod.map f g ≫ (biprod.braiding Y Z).Hom = biprod.map g f :=
   by 
     tidy
 
@@ -846,7 +846,7 @@ theorem biprod.symmetry' (P Q : C) :
 
 /-- The braiding isomorphism is symmetric. -/
 @[reassoc]
-theorem biprod.symmetry (P Q : C) : (biprod.braiding P Q).hom ≫ (biprod.braiding Q P).hom = 𝟙 _ :=
+theorem biprod.symmetry (P Q : C) : (biprod.braiding P Q).Hom ≫ (biprod.braiding Q P).Hom = 𝟙 _ :=
   by 
     simp 
 
@@ -942,7 +942,7 @@ theorem has_finite_biproducts.of_has_finite_products [has_finite_products C] : h
       { HasBiproduct :=
           fun F =>
             by 
-              exactI has_biproduct.of_has_product _ }⟩
+              exact has_biproduct.of_has_product _ }⟩
 
 /-- A preadditive category with finite coproducts has finite biproducts. -/
 theorem has_finite_biproducts.of_has_finite_coproducts [has_finite_coproducts C] : has_finite_biproducts C :=
@@ -950,7 +950,7 @@ theorem has_finite_biproducts.of_has_finite_coproducts [has_finite_coproducts C]
       { HasBiproduct :=
           fun F =>
             by 
-              exactI has_biproduct.of_has_coproduct _ }⟩
+              exact has_biproduct.of_has_coproduct _ }⟩
 
 section 
 

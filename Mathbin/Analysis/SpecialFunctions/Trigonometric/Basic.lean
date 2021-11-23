@@ -545,16 +545,20 @@ theorem cos_eq_one_iff_of_lt_of_lt {x : ℝ} (hx₁ : (-2*π) < x) (hx₂ : x < 
       by 
         simp [h]⟩
 
-theorem cos_lt_cos_of_nonneg_of_le_pi_div_two {x y : ℝ} (hx₁ : 0 ≤ x) (hy₂ : y ≤ π / 2) (hxy : x < y) : cos y < cos x :=
-  by 
-    rw [←sub_lt_zero, cos_sub_cos]
-    have  : 0 < sin ((y+x) / 2)
-    ·
-      refine' sin_pos_of_pos_of_lt_pi _ _ <;> linarith 
-    have  : 0 < sin ((y - x) / 2)
-    ·
-      refine' sin_pos_of_pos_of_lt_pi _ _ <;> linarith 
-    nlinarith
+-- error in Analysis.SpecialFunctions.Trigonometric.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cos_lt_cos_of_nonneg_of_le_pi_div_two
+{x y : exprℝ()}
+(hx₁ : «expr ≤ »(0, x))
+(hy₂ : «expr ≤ »(y, «expr / »(exprπ(), 2)))
+(hxy : «expr < »(x, y)) : «expr < »(cos y, cos x) :=
+begin
+  rw ["[", "<-", expr sub_lt_zero, ",", expr cos_sub_cos, "]"] [],
+  have [] [":", expr «expr < »(0, sin «expr / »(«expr + »(y, x), 2))] [],
+  { refine [expr sin_pos_of_pos_of_lt_pi _ _]; linarith [] [] [] },
+  have [] [":", expr «expr < »(0, sin «expr / »(«expr - »(y, x), 2))] [],
+  { refine [expr sin_pos_of_pos_of_lt_pi _ _]; linarith [] [] [] },
+  nlinarith [] [] []
+end
 
 theorem cos_lt_cos_of_nonneg_of_le_pi {x y : ℝ} (hx₁ : 0 ≤ x) (hy₂ : y ≤ π) (hxy : x < y) : cos y < cos x :=
   match (le_totalₓ x (π / 2) : x ≤ π / 2 ∨ π / 2 ≤ x), le_totalₓ y (π / 2) with 
@@ -667,60 +671,62 @@ theorem range_sin_infinite : (range Real.sin).Infinite :=
         (by 
           normNum)
 
-theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x :=
-  by 
-    cases' le_or_gtₓ x 1 with h' h'
-    ·
-      have hx : |x| = x := abs_of_nonneg (le_of_ltₓ h)
-      have  : |x| ≤ 1
-      rwa [hx]
-      have  := sin_bound this 
-      rw [abs_le] at this 
-      have  := this.2
-      rw [sub_le_iff_le_add', hx] at this 
-      apply lt_of_le_of_ltₓ this 
-      rw [sub_add]
-      apply lt_of_lt_of_leₓ _ (le_of_eqₓ (sub_zero x))
-      apply sub_lt_sub_left 
-      rw [sub_pos, div_eq_mul_inv (x^3)]
-      apply mul_lt_mul'
-      ·
-        rw [pow_succₓ x 3]
-        refine' le_transₓ _ (le_of_eqₓ (one_mulₓ _))
-        rw [mul_le_mul_right]
-        exact h' 
-        apply pow_pos h 
-      normNum 
-      normNum 
-      apply pow_pos h 
-    exact lt_of_le_of_ltₓ (sin_le_one x) h'
+-- error in Analysis.SpecialFunctions.Trigonometric.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sin_lt {x : exprℝ()} (h : «expr < »(0, x)) : «expr < »(sin x, x) :=
+begin
+  cases [expr le_or_gt x 1] ["with", ident h', ident h'],
+  { have [ident hx] [":", expr «expr = »(«expr| |»(x), x)] [":=", expr abs_of_nonneg (le_of_lt h)],
+    have [] [":", expr «expr ≤ »(«expr| |»(x), 1)] [],
+    rwa ["[", expr hx, "]"] [],
+    have [] [] [":=", expr sin_bound this],
+    rw ["[", expr abs_le, "]"] ["at", ident this],
+    have [] [] [":=", expr this.2],
+    rw ["[", expr sub_le_iff_le_add', ",", expr hx, "]"] ["at", ident this],
+    apply [expr lt_of_le_of_lt this],
+    rw ["[", expr sub_add, "]"] [],
+    apply [expr lt_of_lt_of_le _ (le_of_eq (sub_zero x))],
+    apply [expr sub_lt_sub_left],
+    rw ["[", expr sub_pos, ",", expr div_eq_mul_inv «expr ^ »(x, 3), "]"] [],
+    apply [expr mul_lt_mul'],
+    { rw ["[", expr pow_succ x 3, "]"] [],
+      refine [expr le_trans _ (le_of_eq (one_mul _))],
+      rw [expr mul_le_mul_right] [],
+      exact [expr h'],
+      apply [expr pow_pos h] },
+    norm_num [] [],
+    norm_num [] [],
+    apply [expr pow_pos h] },
+  exact [expr lt_of_le_of_lt (sin_le_one x) h']
+end
 
-theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - (x^3) / 4 < sin x :=
-  by 
-    have hx : |x| = x := abs_of_nonneg (le_of_ltₓ h)
-    have  : |x| ≤ 1
-    rwa [hx]
-    have  := sin_bound this 
-    rw [abs_le] at this 
-    have  := this.1
-    rw [le_sub_iff_add_le, hx] at this 
-    refine' lt_of_lt_of_leₓ _ this 
-    rw [add_commₓ, sub_add, sub_neg_eq_add]
-    apply sub_lt_sub_left 
-    apply add_lt_of_lt_sub_left 
-    rw
-      [show (x^3) / 4 - (x^3) / 6 = (x^3)*12⁻¹by 
-        simp [div_eq_mul_inv, ←mul_sub] <;> normNum]
-    apply mul_lt_mul'
-    ·
-      rw [pow_succₓ x 3]
-      refine' le_transₓ _ (le_of_eqₓ (one_mulₓ _))
-      rw [mul_le_mul_right]
-      exact h' 
-      apply pow_pos h 
-    normNum 
-    normNum 
-    apply pow_pos h
+-- error in Analysis.SpecialFunctions.Trigonometric.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sin_gt_sub_cube
+{x : exprℝ()}
+(h : «expr < »(0, x))
+(h' : «expr ≤ »(x, 1)) : «expr < »(«expr - »(x, «expr / »(«expr ^ »(x, 3), 4)), sin x) :=
+begin
+  have [ident hx] [":", expr «expr = »(«expr| |»(x), x)] [":=", expr abs_of_nonneg (le_of_lt h)],
+  have [] [":", expr «expr ≤ »(«expr| |»(x), 1)] [],
+  rwa ["[", expr hx, "]"] [],
+  have [] [] [":=", expr sin_bound this],
+  rw ["[", expr abs_le, "]"] ["at", ident this],
+  have [] [] [":=", expr this.1],
+  rw ["[", expr le_sub_iff_add_le, ",", expr hx, "]"] ["at", ident this],
+  refine [expr lt_of_lt_of_le _ this],
+  rw ["[", expr add_comm, ",", expr sub_add, ",", expr sub_neg_eq_add, "]"] [],
+  apply [expr sub_lt_sub_left],
+  apply [expr add_lt_of_lt_sub_left],
+  rw [expr show «expr = »(«expr - »(«expr / »(«expr ^ »(x, 3), 4), «expr / »(«expr ^ »(x, 3), 6)), «expr * »(«expr ^ »(x, 3), «expr ⁻¹»(12))), by simp [] [] [] ["[", expr div_eq_mul_inv, ",", "<-", expr mul_sub, "]"] [] []; norm_num [] []] [],
+  apply [expr mul_lt_mul'],
+  { rw ["[", expr pow_succ x 3, "]"] [],
+    refine [expr le_trans _ (le_of_eq (one_mul _))],
+    rw [expr mul_le_mul_right] [],
+    exact [expr h'],
+    apply [expr pow_pos h] },
+  norm_num [] [],
+  norm_num [] [],
+  apply [expr pow_pos h]
+end
 
 section CosDivSq
 
@@ -782,46 +788,40 @@ theorem sqrt_two_add_series_monotone_left {x y : ℝ} (h : x ≤ y) :
     rw [sqrt_two_add_series, sqrt_two_add_series]
     exact sqrt_le_sqrt (add_le_add_left (sqrt_two_add_series_monotone_left _) _)
 
+-- error in Analysis.SpecialFunctions.Trigonometric.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem cos_pi_over_two_pow : ∀ n : ℕ, cos (π / (2^n+1)) = sqrt_two_add_series 0 n / 2
-| 0 =>
-  by 
-    simp 
-| n+1 =>
-  by 
-    have  : (2 : ℝ) ≠ 0 := two_ne_zero 
-    symm 
-    rw [div_eq_iff_mul_eq this]
-    symm 
-    rw [sqrt_two_add_series, sqrt_eq_iff_sq_eq, mul_powₓ, cos_sq, ←mul_div_assoc, Nat.add_succ, pow_succₓ,
-      mul_div_mul_left _ _ this, cos_pi_over_two_pow, add_mulₓ]
-    congr
-    ·
-      normNum 
-    rw [mul_commₓ, sq, mul_assocₓ, ←mul_div_assoc, mul_div_cancel_left, ←mul_div_assoc, mul_div_cancel_left] <;>
-      try 
-        exact this 
-    apply add_nonneg 
-    normNum 
-    apply sqrt_two_add_series_zero_nonneg 
-    normNum 
-    apply le_of_ltₓ 
-    apply cos_pos_of_mem_Ioo ⟨_, _⟩
-    ·
-      trans (0 : ℝ)
-      rw [neg_lt_zero]
-      apply pi_div_two_pos 
-      apply div_pos pi_pos 
-      apply pow_pos 
-      normNum 
-    apply div_lt_div' (le_reflₓ π) _ pi_pos _ 
-    refine' lt_of_le_of_ltₓ (le_of_eqₓ (pow_oneₓ _).symm) _ 
-    apply pow_lt_pow 
-    normNum 
-    apply Nat.succ_lt_succₓ 
-    apply Nat.succ_posₓ 
-    all_goals 
-      normNum
+theorem cos_pi_over_two_pow : ∀
+n : exprℕ(), «expr = »(cos «expr / »(exprπ(), «expr ^ »(2, «expr + »(n, 1))), «expr / »(sqrt_two_add_series 0 n, 2))
+| 0 := by simp [] [] [] [] [] []
+| «expr + »(n, 1) := begin
+  have [] [":", expr «expr ≠ »((2 : exprℝ()), 0)] [":=", expr two_ne_zero],
+  symmetry,
+  rw ["[", expr div_eq_iff_mul_eq this, "]"] [],
+  symmetry,
+  rw ["[", expr sqrt_two_add_series, ",", expr sqrt_eq_iff_sq_eq, ",", expr mul_pow, ",", expr cos_sq, ",", "<-", expr mul_div_assoc, ",", expr nat.add_succ, ",", expr pow_succ, ",", expr mul_div_mul_left _ _ this, ",", expr cos_pi_over_two_pow, ",", expr add_mul, "]"] [],
+  congr,
+  { norm_num [] [] },
+  rw ["[", expr mul_comm, ",", expr sq, ",", expr mul_assoc, ",", "<-", expr mul_div_assoc, ",", expr mul_div_cancel_left, ",", "<-", expr mul_div_assoc, ",", expr mul_div_cancel_left, "]"] []; try { exact [expr this] },
+  apply [expr add_nonneg],
+  norm_num [] [],
+  apply [expr sqrt_two_add_series_zero_nonneg],
+  norm_num [] [],
+  apply [expr le_of_lt],
+  apply [expr cos_pos_of_mem_Ioo ⟨_, _⟩],
+  { transitivity [expr (0 : exprℝ())],
+    rw [expr neg_lt_zero] [],
+    apply [expr pi_div_two_pos],
+    apply [expr div_pos pi_pos],
+    apply [expr pow_pos],
+    norm_num [] [] },
+  apply [expr div_lt_div' (le_refl exprπ()) _ pi_pos _],
+  refine [expr lt_of_le_of_lt (le_of_eq (pow_one _).symm) _],
+  apply [expr pow_lt_pow],
+  norm_num [] [],
+  apply [expr nat.succ_lt_succ],
+  apply [expr nat.succ_pos],
+  all_goals { norm_num [] [] }
+end
 
 theorem sin_sq_pi_over_two_pow (n : ℕ) : (sin (π / (2^n+1))^2) = 1 - (sqrt_two_add_series 0 n / 2^2) :=
   by 
@@ -937,69 +937,53 @@ theorem sin_pi_div_thirty_two : sin (π / 32) = sqrt (2 - sqrt (2+sqrt (2+sqrt 2
     normNum 
     simp 
 
+-- error in Analysis.SpecialFunctions.Trigonometric.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The cosine of `π / 3` is `1 / 2`. -/
 @[simp]
-theorem cos_pi_div_three : cos (π / 3) = 1 / 2 :=
-  by 
-    have h₁ : (((2*cos (π / 3)) - 1^2)*(2*cos (π / 3))+2) = 0
-    ·
-      have  : cos (3*π / 3) = cos π :=
-        by 
-          congr 1
-          ring 
-      linarith [cos_pi, cos_three_mul (π / 3)]
-    cases' mul_eq_zero.mp h₁ with h h
-    ·
-      linarith [pow_eq_zero h]
-    ·
-      have  : cos π < cos (π / 3)
-      ·
-        refine' cos_lt_cos_of_nonneg_of_le_pi _ rfl.ge _ <;> linarith [pi_pos]
-      linarith [cos_pi]
+theorem cos_pi_div_three : «expr = »(cos «expr / »(exprπ(), 3), «expr / »(1, 2)) :=
+begin
+  have [ident h₁] [":", expr «expr = »(«expr * »(«expr ^ »(«expr - »(«expr * »(2, cos «expr / »(exprπ(), 3)), 1), 2), «expr + »(«expr * »(2, cos «expr / »(exprπ(), 3)), 2)), 0)] [],
+  { have [] [":", expr «expr = »(cos «expr * »(3, «expr / »(exprπ(), 3)), cos exprπ())] [":=", expr by { congr' [1] [],
+       ring [] }],
+    linarith [] [] ["[", expr cos_pi, ",", expr cos_three_mul «expr / »(exprπ(), 3), "]"] },
+  cases [expr mul_eq_zero.mp h₁] ["with", ident h, ident h],
+  { linarith [] [] ["[", expr pow_eq_zero h, "]"] },
+  { have [] [":", expr «expr < »(cos exprπ(), cos «expr / »(exprπ(), 3))] [],
+    { refine [expr cos_lt_cos_of_nonneg_of_le_pi _ rfl.ge _]; linarith [] [] ["[", expr pi_pos, "]"] },
+    linarith [] [] ["[", expr cos_pi, "]"] }
+end
 
+-- error in Analysis.SpecialFunctions.Trigonometric.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The square of the cosine of `π / 6` is `3 / 4` (this is sometimes more convenient than the
 result for cosine itself). -/
-theorem sq_cos_pi_div_six : (cos (π / 6)^2) = 3 / 4 :=
-  by 
-    have h1 : (cos (π / 6)^2) = (1 / 2)+1 / 2 / 2
-    ·
-      convert cos_sq (π / 6)
-      have h2 : (2*π / 6) = π / 3 :=
-        by 
-          cancelDenoms 
-      rw [h2, cos_pi_div_three]
-    rw [←sub_eq_zero] at h1⊢
-    convert h1 using 1
-    ring
+theorem sq_cos_pi_div_six : «expr = »(«expr ^ »(cos «expr / »(exprπ(), 6), 2), «expr / »(3, 4)) :=
+begin
+  have [ident h1] [":", expr «expr = »(«expr ^ »(cos «expr / »(exprπ(), 6), 2), «expr + »(«expr / »(1, 2), «expr / »(«expr / »(1, 2), 2)))] [],
+  { convert [] [expr cos_sq «expr / »(exprπ(), 6)] [],
+    have [ident h2] [":", expr «expr = »(«expr * »(2, «expr / »(exprπ(), 6)), «expr / »(exprπ(), 3))] [":=", expr by cancel_denoms []],
+    rw ["[", expr h2, ",", expr cos_pi_div_three, "]"] [] },
+  rw ["<-", expr sub_eq_zero] ["at", ident h1, "⊢"],
+  convert [] [expr h1] ["using", 1],
+  ring []
+end
 
+-- error in Analysis.SpecialFunctions.Trigonometric.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The cosine of `π / 6` is `√3 / 2`. -/
 @[simp]
-theorem cos_pi_div_six : cos (π / 6) = sqrt 3 / 2 :=
-  by 
-    suffices  : sqrt 3 = cos (π / 6)*2
-    ·
-      fieldSimp [(by 
-          normNum :
-        0 ≠ 2)]
-      exact this.symm 
-    rw [sqrt_eq_iff_sq_eq]
-    ·
-      have h1 :=
-        (mul_right_inj'
-              (by 
-                normNum :
-              (4 : ℝ) ≠ 0)).mpr
-          sq_cos_pi_div_six 
-      rw [←sub_eq_zero] at h1⊢
-      convert h1 using 1
-      ring
-    ·
-      normNum
-    ·
-      have  : 0 < cos (π / 6) :=
-        by 
-          apply cos_pos_of_mem_Ioo <;> split  <;> linarith [pi_pos]
-      linarith
+theorem cos_pi_div_six : «expr = »(cos «expr / »(exprπ(), 6), «expr / »(sqrt 3, 2)) :=
+begin
+  suffices [] [":", expr «expr = »(sqrt 3, «expr * »(cos «expr / »(exprπ(), 6), 2))],
+  { field_simp [] ["[", expr (by norm_num [] [] : «expr ≠ »(0, 2)), "]"] [] [],
+    exact [expr this.symm] },
+  rw [expr sqrt_eq_iff_sq_eq] [],
+  { have [ident h1] [] [":=", expr (mul_right_inj' (by norm_num [] [] : «expr ≠ »((4 : exprℝ()), 0))).mpr sq_cos_pi_div_six],
+    rw ["<-", expr sub_eq_zero] ["at", ident h1, "⊢"],
+    convert [] [expr h1] ["using", 1],
+    ring [] },
+  { norm_num [] [] },
+  { have [] [":", expr «expr < »(0, cos «expr / »(exprπ(), 6))] [":=", expr by { apply [expr cos_pos_of_mem_Ioo]; split; linarith [] [] ["[", expr pi_pos, "]"] }],
+    linarith [] [] [] }
+end
 
 /-- The sine of `π / 6` is `1 / 2`. -/
 @[simp]
@@ -1038,14 +1022,13 @@ theorem coe_sin_order_iso_apply (x : Icc (-(π / 2)) (π / 2)) : (sin_order_iso 
 theorem sin_order_iso_apply (x : Icc (-(π / 2)) (π / 2)) : sin_order_iso x = ⟨sin x, sin_mem_Icc x⟩ :=
   rfl
 
-@[simp]
-theorem tan_pi_div_four : tan (π / 4) = 1 :=
-  by 
-    rw [tan_eq_sin_div_cos, cos_pi_div_four, sin_pi_div_four]
-    have h : sqrt 2 / 2 > 0 :=
-      by 
-        cancelDenoms 
-    exact div_self (ne_of_gtₓ h)
+-- error in Analysis.SpecialFunctions.Trigonometric.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem tan_pi_div_four : «expr = »(tan «expr / »(exprπ(), 4), 1) :=
+begin
+  rw ["[", expr tan_eq_sin_div_cos, ",", expr cos_pi_div_four, ",", expr sin_pi_div_four, "]"] [],
+  have [ident h] [":", expr «expr > »(«expr / »(sqrt 2, 2), 0)] [":=", expr by cancel_denoms []],
+  exact [expr div_self (ne_of_gt h)]
+end
 
 @[simp]
 theorem tan_pi_div_two : tan (π / 2) = 0 :=

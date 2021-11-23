@@ -299,42 +299,34 @@ theorem Monotone.forall_le_of_antitone {β : Type _} [Preorderₓ β] {f g : α 
     _ ≤ g n := hg le_sup_right
     
 
-theorem SemilatticeSup.ext_sup {α} {A B : SemilatticeSup α}
-  (H :
-    ∀ x y : α,
-      by 
-          haveI  := A <;> exact x ≤ y ↔
-        x ≤ y)
-  (x y : α) :
-  by 
-      haveI  := A <;> exact x⊔y =
-    x⊔y :=
-  eq_of_forall_ge_iff$
-    fun c =>
-      by 
-        simp only [sup_le_iff] <;> rw [←H, @sup_le_iff α A, H, H]
+-- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem semilattice_sup.ext_sup
+{α}
+{A B : semilattice_sup α}
+(H : ∀ x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y)))
+(x y : α) : «expr = »(by haveI [] [] [":=", expr A]; exact [expr «expr ⊔ »(x, y)], «expr ⊔ »(x, y)) :=
+«expr $ »(eq_of_forall_ge_iff, λ
+ c, by simp [] [] ["only"] ["[", expr sup_le_iff, "]"] [] []; rw ["[", "<-", expr H, ",", expr @sup_le_iff α A, ",", expr H, ",", expr H, "]"] [])
 
-theorem SemilatticeSup.ext {α} {A B : SemilatticeSup α}
-  (H :
-    ∀ x y : α,
-      by 
-          haveI  := A <;> exact x ≤ y ↔
-        x ≤ y) :
-  A = B :=
-  by 
-    have  := PartialOrderₓ.ext H 
-    have ss := funext fun x => funext$ SemilatticeSup.ext_sup H x 
-    casesI A 
-    casesI B 
-    injection this <;> congr
-
--- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem exists_lt_of_sup (α : Type*) [semilattice_sup α] [nontrivial α] : «expr∃ , »((a b : α), «expr < »(a, b)) :=
+-- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem semilattice_sup.ext
+{α}
+{A B : semilattice_sup α}
+(H : ∀
+ x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »(A, B) :=
 begin
-  rcases [expr exists_pair_ne α, "with", "⟨", ident a, ",", ident b, ",", ident hne, "⟩"],
-  rcases [expr forall_le_or_exists_lt_sup b, "with", "(", ident hb, "|", ident H, ")"],
-  exacts ["[", expr ⟨a, b, (hb a).lt_of_ne hne⟩, ",", expr ⟨b, H⟩, "]"]
+  have [] [] [":=", expr partial_order.ext H],
+  have [ident ss] [] [":=", expr funext (λ x, «expr $ »(funext, semilattice_sup.ext_sup H x))],
+  casesI [expr A] [],
+  casesI [expr B] [],
+  injection [expr this] []; congr' [] []
 end
+
+theorem exists_lt_of_sup (α : Type _) [SemilatticeSup α] [Nontrivial α] : ∃ a b : α, a < b :=
+  by 
+    rcases exists_pair_ne α with ⟨a, b, hne⟩
+    rcases forall_le_or_exists_lt_sup b with (hb | H)
+    exacts[⟨a, b, (hb a).lt_of_ne hne⟩, ⟨b, H⟩]
 
 end SemilatticeSup
 
@@ -490,34 +482,28 @@ theorem inf_inf_inf_comm (a b c d : α) : a⊓b⊓(c⊓d) = a⊓c⊓(b⊓d) :=
 theorem forall_le_or_exists_lt_inf (a : α) : (∀ b, a ≤ b) ∨ ∃ b, b < a :=
   @forall_le_or_exists_lt_sup (OrderDual α) _ a
 
-theorem SemilatticeInf.ext_inf {α} {A B : SemilatticeInf α}
-  (H :
-    ∀ x y : α,
-      by 
-          haveI  := A <;> exact x ≤ y ↔
-        x ≤ y)
-  (x y : α) :
-  by 
-      haveI  := A <;> exact x⊓y =
-    x⊓y :=
-  eq_of_forall_le_iff$
-    fun c =>
-      by 
-        simp only [le_inf_iff] <;> rw [←H, @le_inf_iff α A, H, H]
+-- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem semilattice_inf.ext_inf
+{α}
+{A B : semilattice_inf α}
+(H : ∀ x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y)))
+(x y : α) : «expr = »(by haveI [] [] [":=", expr A]; exact [expr «expr ⊓ »(x, y)], «expr ⊓ »(x, y)) :=
+«expr $ »(eq_of_forall_le_iff, λ
+ c, by simp [] [] ["only"] ["[", expr le_inf_iff, "]"] [] []; rw ["[", "<-", expr H, ",", expr @le_inf_iff α A, ",", expr H, ",", expr H, "]"] [])
 
-theorem SemilatticeInf.ext {α} {A B : SemilatticeInf α}
-  (H :
-    ∀ x y : α,
-      by 
-          haveI  := A <;> exact x ≤ y ↔
-        x ≤ y) :
-  A = B :=
-  by 
-    have  := PartialOrderₓ.ext H 
-    have ss := funext fun x => funext$ SemilatticeInf.ext_inf H x 
-    casesI A 
-    casesI B 
-    injection this <;> congr
+-- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem semilattice_inf.ext
+{α}
+{A B : semilattice_inf α}
+(H : ∀
+ x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »(A, B) :=
+begin
+  have [] [] [":=", expr partial_order.ext H],
+  have [ident ss] [] [":=", expr funext (λ x, «expr $ »(funext, semilattice_inf.ext_inf H x))],
+  casesI [expr A] [],
+  casesI [expr B] [],
+  injection [expr this] []; congr' [] []
+end
 
 theorem SemilatticeInf.dual_dual (α : Type _) [H : SemilatticeInf α] : OrderDual.semilatticeInf (OrderDual α) = H :=
   SemilatticeInf.ext$ fun _ _ => Iff.rfl
@@ -528,18 +514,24 @@ theorem exists_lt_of_inf (α : Type _) [SemilatticeInf α] [Nontrivial α] : ∃
 
 end SemilatticeInf
 
+-- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A type with a commutative, associative and idempotent binary `inf` operation has the structure of a
 meet-semilattice.
 
 The partial order is defined so that `a ≤ b` unfolds to `b ⊓ a = a`; cf. `inf_eq_right`.
 -/
-def SemilatticeInf.mk' {α : Type _} [HasInf α] (inf_comm : ∀ a b : α, a⊓b = b⊓a)
-  (inf_assoc : ∀ a b c : α, a⊓b⊓c = a⊓(b⊓c)) (inf_idem : ∀ a : α, a⊓a = a) : SemilatticeInf α :=
-  by 
-    haveI  : SemilatticeSup (OrderDual α) := SemilatticeSup.mk' inf_comm inf_assoc inf_idem 
-    haveI i := OrderDual.semilatticeInf (OrderDual α)
-    exact i
+def semilattice_inf.mk'
+{α : Type*}
+[has_inf α]
+(inf_comm : ∀ a b : α, «expr = »(«expr ⊓ »(a, b), «expr ⊓ »(b, a)))
+(inf_assoc : ∀ a b c : α, «expr = »(«expr ⊓ »(«expr ⊓ »(a, b), c), «expr ⊓ »(a, «expr ⊓ »(b, c))))
+(inf_idem : ∀ a : α, «expr = »(«expr ⊓ »(a, a), a)) : semilattice_inf α :=
+begin
+  haveI [] [":", expr semilattice_sup (order_dual α)] [":=", expr semilattice_sup.mk' inf_comm inf_assoc inf_idem],
+  haveI [ident i] [] [":=", expr order_dual.semilattice_inf (order_dual α)],
+  exact [expr i]
+end
 
 /-!
 ### Lattices
@@ -629,16 +621,17 @@ variable[Lattice α]{a b c d : α}
 theorem inf_le_sup : a⊓b ≤ a⊔b :=
   inf_le_left.trans le_sup_left
 
--- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-@[simp] theorem inf_lt_sup : «expr ↔ »(«expr < »(«expr ⊓ »(a, b), «expr ⊔ »(a, b)), «expr ≠ »(a, b)) :=
-begin
-  split,
-  { rintro [ident H, ident rfl],
-    simpa [] [] [] [] [] ["using", expr H] },
-  { refine [expr λ Hne, lt_iff_le_and_ne.2 ⟨inf_le_sup, λ Heq, Hne _⟩],
-    refine [expr le_antisymm _ _],
-    exacts ["[", expr le_sup_left.trans (Heq.symm.trans_le inf_le_right), ",", expr le_sup_right.trans (Heq.symm.trans_le inf_le_left), "]"] }
-end
+@[simp]
+theorem inf_lt_sup : a⊓b < a⊔b ↔ a ≠ b :=
+  by 
+    split 
+    ·
+      rintro H rfl 
+      simpa using H
+    ·
+      refine' fun Hne => lt_iff_le_and_ne.2 ⟨inf_le_sup, fun Heq => Hne _⟩
+      refine' le_antisymmₓ _ _ 
+      exacts[le_sup_left.trans (Heq.symm.trans_le inf_le_right), le_sup_right.trans (Heq.symm.trans_le inf_le_left)]
 
 /-!
 #### Distributivity laws
@@ -663,19 +656,19 @@ theorem sup_eq_iff_inf_eq : a⊔b = b ↔ a⊓b = a :=
   by 
     rw [sup_eq_right, ←inf_eq_left]
 
-theorem Lattice.ext {α} {A B : Lattice α}
-  (H :
-    ∀ x y : α,
-      by 
-          haveI  := A <;> exact x ≤ y ↔
-        x ≤ y) :
-  A = B :=
-  by 
-    have SS : @Lattice.toSemilatticeSup α A = @Lattice.toSemilatticeSup α B := SemilatticeSup.ext H 
-    have II := SemilatticeInf.ext H 
-    casesI A 
-    casesI B 
-    injection SS <;> injection II <;> congr
+-- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lattice.ext
+{α}
+{A B : lattice α}
+(H : ∀
+ x y : α, «expr ↔ »(by haveI [] [] [":=", expr A]; exact [expr «expr ≤ »(x, y)], «expr ≤ »(x, y))) : «expr = »(A, B) :=
+begin
+  have [ident SS] [":", expr «expr = »(@lattice.to_semilattice_sup α A, @lattice.to_semilattice_sup α B)] [":=", expr semilattice_sup.ext H],
+  have [ident II] [] [":=", expr semilattice_inf.ext H],
+  casesI [expr A] [],
+  casesI [expr B] [],
+  injection [expr SS] []; injection [expr II] []; congr' [] []
+end
 
 end Lattice
 
@@ -768,33 +761,26 @@ theorem sup_eq_max [LinearOrderₓ α] {x y : α} : x⊔y = max x y :=
 theorem inf_eq_min [LinearOrderₓ α] {x y : α} : x⊓y = min x y :=
   rfl
 
--- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- A lattice with total order is a linear order.
 
 See note [reducible non-instances]. -/
 @[reducible]
-def lattice.to_linear_order
-(α : Type u)
-[lattice α]
-[decidable_eq α]
-[decidable_rel ((«expr ≤ ») : α → α → exprProp())]
-[decidable_rel ((«expr < ») : α → α → exprProp())]
-(h : ∀ x y : α, «expr ∨ »(«expr ≤ »(x, y), «expr ≤ »(y, x))) : linear_order α :=
-{ decidable_le := «expr‹ ›»(_),
-  decidable_eq := «expr‹ ›»(_),
-  decidable_lt := «expr‹ ›»(_),
-  le_total := h,
-  max := («expr ⊔ »),
-  max_def := by { funext [ident x, ident y],
-    dunfold [ident max_default] [],
-    split_ifs [] ["with", ident h'],
-    exacts ["[", expr sup_of_le_left h', ",", expr «expr $ »(sup_of_le_right, (h x y).resolve_right h'), "]"] },
-  min := («expr ⊓ »),
-  min_def := by { funext [ident x, ident y],
-    dunfold [ident min_default] [],
-    split_ifs [] ["with", ident h'],
-    exacts ["[", expr inf_of_le_left h', ",", expr «expr $ »(inf_of_le_right, (h x y).resolve_left h'), "]"] },
-  ..«expr‹ ›»(lattice α) }
+def Lattice.toLinearOrder (α : Type u) [Lattice α] [DecidableEq α] [DecidableRel (· ≤ · : α → α → Prop)]
+  [DecidableRel (· < · : α → α → Prop)] (h : ∀ x y : α, x ≤ y ∨ y ≤ x) : LinearOrderₓ α :=
+  { ‹Lattice α› with decidableLe := ‹_›, DecidableEq := ‹_›, decidableLt := ‹_›, le_total := h, max := ·⊔·,
+    max_def :=
+      by 
+        funext x y 
+        dunfold maxDefault 
+        splitIfs with h' 
+        exacts[sup_of_le_left h', sup_of_le_right$ (h x y).resolve_right h'],
+    min := ·⊓·,
+    min_def :=
+      by 
+        funext x y 
+        dunfold minDefault 
+        splitIfs with h' 
+        exacts[inf_of_le_left h', inf_of_le_right$ (h x y).resolve_left h'] }
 
 instance (priority := 100)distribLatticeOfLinearOrder {α : Type u} [o : LinearOrderₓ α] : DistribLattice α :=
   { latticeOfLinearOrder with

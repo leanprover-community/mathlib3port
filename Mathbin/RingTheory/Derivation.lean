@@ -1,6 +1,5 @@
-import Mathbin.Algebra.Lie.OfAssociative 
 import Mathbin.RingTheory.Adjoin.Basic 
-import Mathbin.RingTheory.AlgebraTower
+import Mathbin.Algebra.Lie.OfAssociative
 
 /-!
 # Derivations
@@ -102,35 +101,31 @@ theorem map_smul : D (r • a) = r • D a :=
 theorem leibniz : D (a*b) = (a • D b)+b • D a :=
   D.leibniz' _ _
 
-@[simp]
-theorem map_one_eq_zero : D 1 = 0 :=
-  by 
-    have h : D 1 = D (1*1) :=
-      by 
-        rw [mul_oneₓ]
-    rwa [leibniz D 1 1, one_smul, self_eq_add_rightₓ] at h
+-- error in RingTheory.Derivation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem map_one_eq_zero : «expr = »(D 1, 0) :=
+begin
+  have [ident h] [":", expr «expr = »(D 1, D «expr * »(1, 1))] [":=", expr by rw [expr mul_one] []],
+  rwa ["[", expr leibniz D 1 1, ",", expr one_smul, ",", expr self_eq_add_right, "]"] ["at", ident h]
+end
 
 @[simp]
 theorem map_algebra_map : D (algebraMap R A r) = 0 :=
   by 
     rw [←mul_oneₓ r, RingHom.map_mul, RingHom.map_one, ←smul_def, map_smul, map_one_eq_zero, smul_zero]
 
+-- error in RingTheory.Derivation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem leibniz_pow (n : ℕ) : D (a^n) = n • (a^n - 1) • D a :=
-  by 
-    induction' n with n ihn
-    ·
-      rw [pow_zeroₓ, map_one_eq_zero, zero_smul]
-    ·
-      rcases(zero_le n).eq_or_lt with (rfl | hpos)
-      ·
-        rw [pow_oneₓ, one_smul, pow_zeroₓ, one_smul]
-      ·
-        have  : (a*a^n - 1) = (a^n)
-        ·
-          rw [←pow_succₓ, Nat.sub_add_cancelₓ hpos]
-        simp only [pow_succₓ, leibniz, ihn, smul_comm a n, smul_smul a, add_smul, this, Nat.succ_eq_add_one,
-          Nat.add_succ_sub_one, add_zeroₓ, one_nsmul]
+theorem leibniz_pow
+(n : exprℕ()) : «expr = »(D «expr ^ »(a, n), «expr • »(n, «expr • »(«expr ^ »(a, «expr - »(n, 1)), D a))) :=
+begin
+  induction [expr n] [] ["with", ident n, ident ihn] [],
+  { rw ["[", expr pow_zero, ",", expr map_one_eq_zero, ",", expr zero_smul, "]"] [] },
+  { rcases [expr (zero_le n).eq_or_lt, "with", "(", ident rfl, "|", ident hpos, ")"],
+    { rw ["[", expr pow_one, ",", expr one_smul, ",", expr pow_zero, ",", expr one_smul, "]"] [] },
+    { have [] [":", expr «expr = »(«expr * »(a, «expr ^ »(a, «expr - »(n, 1))), «expr ^ »(a, n))] [],
+      by rw ["[", "<-", expr pow_succ, ",", expr nat.sub_add_cancel hpos, "]"] [],
+      simp [] [] ["only"] ["[", expr pow_succ, ",", expr leibniz, ",", expr ihn, ",", expr smul_comm a n, ",", expr smul_smul a, ",", expr add_smul, ",", expr this, ",", expr nat.succ_eq_add_one, ",", expr nat.add_succ_sub_one, ",", expr add_zero, ",", expr one_nsmul, "]"] [] [] } }
+end
 
 theorem eq_on_adjoin {s : Set A} (h : Set.EqOn D1 D2 s) : Set.EqOn D1 D2 (adjoin R s) :=
   fun x hx =>

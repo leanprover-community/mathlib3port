@@ -28,20 +28,20 @@ open CategoryTheory Function
 
 namespace CompHaus
 
-instance projective_ultrafilter (X : Type _) : projective (of$ Ultrafilter X) :=
-  { factors :=
-      fun Y Z f g hg =>
-        by 
-          rw [epi_iff_surjective] at hg 
-          obtain ⟨g', hg'⟩ := hg.has_right_inverse 
-          let t : X → Y := g' ∘ f ∘ (pure : X → Ultrafilter X)
-          let h : Ultrafilter X → Y := Ultrafilter.extend t 
-          have hh : Continuous h := continuous_ultrafilter_extend _ 
-          use ⟨h, hh⟩
-          apply faithful.map_injective (forget CompHaus)
-          simp only [forget_map_eq_coe, ContinuousMap.coe_mk, coe_comp]
-          convert dense_range_pure.equalizer (g.continuous.comp hh) f.continuous _ 
-          rw [comp.assoc, ultrafilter_extend_extends, ←comp.assoc, hg'.comp_eq_id, comp.left_id] }
+-- error in Topology.Category.CompHaus.Projective: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance projective_ultrafilter (X : Type*) : projective «expr $ »(of, ultrafilter X) :=
+{ factors := λ Y Z f g hg, begin
+    rw [expr epi_iff_surjective] ["at", ident hg],
+    obtain ["⟨", ident g', ",", ident hg', "⟩", ":=", expr hg.has_right_inverse],
+    let [ident t] [":", expr X → Y] [":=", expr «expr ∘ »(g', «expr ∘ »(f, (pure : X → ultrafilter X)))],
+    let [ident h] [":", expr ultrafilter X → Y] [":=", expr ultrafilter.extend t],
+    have [ident hh] [":", expr continuous h] [":=", expr continuous_ultrafilter_extend _],
+    use [expr ⟨h, hh⟩],
+    apply [expr faithful.map_injective (forget CompHaus)],
+    simp [] [] ["only"] ["[", expr forget_map_eq_coe, ",", expr continuous_map.coe_mk, ",", expr coe_comp, "]"] [] [],
+    convert [] [expr dense_range_pure.equalizer (g.continuous.comp hh) f.continuous _] [],
+    rw ["[", expr comp.assoc, ",", expr ultrafilter_extend_extends, ",", "<-", expr comp.assoc, ",", expr hg'.comp_eq_id, ",", expr comp.left_id, "]"] []
+  end }
 
 /-- For any compact Hausdorff space `X`,
   the natural map `ultrafilter X → X` is a projective presentation. -/

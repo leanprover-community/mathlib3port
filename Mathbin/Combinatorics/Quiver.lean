@@ -273,52 +273,51 @@ def labelling (V : Type u) [Quiver V] (L : Sort _) :=
 instance  {V : Type u} [Quiver V] L [Inhabited L] : Inhabited (labelling V L) :=
   ⟨fun a b e => default L⟩
 
+-- error in Combinatorics.Quiver: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- To show that `[quiver V]` is an arborescence with root `r : V`, it suffices to
   - provide a height function `V → ℕ` such that every arrow goes from a
     lower vertex to a higher vertex,
   - show that every vertex has at most one arrow to it, and
   - show that every vertex other than `r` has an arrow to it. -/
-noncomputable def arborescence_mk {V : Type u} [Quiver V] (r : V) (height : V → ℕ)
-  (height_lt : ∀ ⦃a b⦄, (a ⟶ b) → height a < height b)
-  (unique_arrow : ∀ ⦃a b c : V⦄ e : a ⟶ c f : b ⟶ c, a = b ∧ HEq e f)
-  (root_or_arrow : ∀ b, b = r ∨ ∃ a, Nonempty (a ⟶ b)) : arborescence V :=
-  { root := r,
-    uniquePath :=
-      fun b =>
-        ⟨Classical.inhabitedOfNonempty
-            (by 
-              rcases show ∃ n, height b < n from ⟨_, lt_add_one _⟩ with ⟨n, hn⟩
-              induction' n with n ih generalizing b
-              ·
-                exact False.elim (Nat.not_lt_zeroₓ _ hn)
-              rcases root_or_arrow b with (⟨⟨⟩⟩ | ⟨a, ⟨e⟩⟩)
-              ·
-                exact ⟨path.nil⟩
-              ·
-                rcases ih a (lt_of_lt_of_leₓ (height_lt e) (nat.lt_succ_iff.mp hn)) with ⟨p⟩
-                exact ⟨p.cons e⟩),
-          by 
-            have height_le : ∀ {a b}, path a b → height a ≤ height b
-            ·
-              intro a b p 
-              induction' p with b c p e ih 
-              rfl 
-              exact le_of_ltₓ (lt_of_le_of_ltₓ ih (height_lt e))
-            suffices  : ∀ p q : path r b, p = q
-            ·
-              intro p 
-              apply this 
-            intro p q 
-            induction' p with a c p e ih <;> cases' q with b _ q f
-            ·
-              rfl
-            ·
-              exact False.elim (lt_irreflₓ _ (lt_of_le_of_ltₓ (height_le q) (height_lt f)))
-            ·
-              exact False.elim (lt_irreflₓ _ (lt_of_le_of_ltₓ (height_le p) (height_lt e)))
-            ·
-              rcases unique_arrow e f with ⟨⟨⟩, ⟨⟩⟩
-              rw [ih]⟩ }
+noncomputable
+def arborescence_mk
+{V : Type u}
+[quiver V]
+(r : V)
+(height : V → exprℕ())
+(height_lt : ∀ {{a b}}, «expr ⟶ »(a, b) → «expr < »(height a, height b))
+(unique_arrow : ∀
+ {{a b c : V}}
+ (e : «expr ⟶ »(a, c))
+ (f : «expr ⟶ »(b, c)), «expr ∧ »(«expr = »(a, b), «expr == »(e, f)))
+(root_or_arrow : ∀ b, «expr ∨ »(«expr = »(b, r), «expr∃ , »((a), nonempty «expr ⟶ »(a, b)))) : arborescence V :=
+{ root := r,
+  unique_path := λ
+  b, ⟨classical.inhabited_of_nonempty (begin
+      rcases [expr show «expr∃ , »((n), «expr < »(height b, n)), from ⟨_, lt_add_one _⟩, "with", "⟨", ident n, ",", ident hn, "⟩"],
+      induction [expr n] [] ["with", ident n, ident ih] ["generalizing", ident b],
+      { exact [expr false.elim (nat.not_lt_zero _ hn)] },
+      rcases [expr root_or_arrow b, "with", "⟨", "⟨", "⟩", "⟩", "|", "⟨", ident a, ",", "⟨", ident e, "⟩", "⟩"],
+      { exact [expr ⟨path.nil⟩] },
+      { rcases [expr ih a (lt_of_lt_of_le (height_lt e) (nat.lt_succ_iff.mp hn)), "with", "⟨", ident p, "⟩"],
+        exact [expr ⟨p.cons e⟩] }
+    end), begin
+     have [ident height_le] [":", expr ∀ {a b}, path a b → «expr ≤ »(height a, height b)] [],
+     { intros [ident a, ident b, ident p],
+       induction [expr p] [] ["with", ident b, ident c, ident p, ident e, ident ih] [],
+       refl,
+       exact [expr le_of_lt (lt_of_le_of_lt ih (height_lt e))] },
+     suffices [] [":", expr ∀ p q : path r b, «expr = »(p, q)],
+     { intro [ident p],
+       apply [expr this] },
+     intros [ident p, ident q],
+     induction [expr p] [] ["with", ident a, ident c, ident p, ident e, ident ih] []; cases [expr q] ["with", ident b, "_", ident q, ident f],
+     { refl },
+     { exact [expr false.elim (lt_irrefl _ (lt_of_le_of_lt (height_le q) (height_lt f)))] },
+     { exact [expr false.elim (lt_irrefl _ (lt_of_le_of_lt (height_le p) (height_lt e)))] },
+     { rcases [expr unique_arrow e f, "with", "⟨", "⟨", "⟩", ",", "⟨", "⟩", "⟩"],
+       rw [expr ih] [] }
+   end⟩ }
 
 /-- `rooted_connected r` means that there is a path from `r` to any other vertex. -/
 class rooted_connected{V : Type u}[Quiver V](r : V) : Prop where 
@@ -342,25 +341,19 @@ theorem shortest_path_spec {a : V} (p : path r a) : (shortest_path r a).length �
 def geodesic_subtree : WideSubquiver V :=
   fun a b => { e | ∃ p : path r a, shortest_path r b = p.cons e }
 
+-- error in Combinatorics.Quiver: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 noncomputable instance geodesic_arborescence : arborescence (geodesic_subtree r) :=
-  arborescence_mk r (fun a => (shortest_path r a).length)
-    (by 
-      rintro a b ⟨e, p, h⟩
-      rw [h, path.length_cons, Nat.lt_succ_iff]
-      apply shortest_path_spec)
-    (by 
-      rintro a b c ⟨e, p, h⟩ ⟨f, q, j⟩
-      cases h.symm.trans j 
-      split  <;> rfl)
-    (by 
-      intro b 
-      have  : ∃ p, shortest_path r b = p := ⟨_, rfl⟩
-      rcases this with ⟨p, hp⟩
-      cases' p with a _ p e
-      ·
-        exact Or.inl rfl
-      ·
-        exact Or.inr ⟨a, ⟨⟨e, p, hp⟩⟩⟩)
+arborescence_mk r (λ
+ a, (shortest_path r a).length) (by { rintros [ident a, ident b, "⟨", ident e, ",", ident p, ",", ident h, "⟩"],
+   rw ["[", expr h, ",", expr path.length_cons, ",", expr nat.lt_succ_iff, "]"] [],
+   apply [expr shortest_path_spec] }) (by { rintros [ident a, ident b, ident c, "⟨", ident e, ",", ident p, ",", ident h, "⟩", "⟨", ident f, ",", ident q, ",", ident j, "⟩"],
+   cases [expr h.symm.trans j] [],
+   split; refl }) (by { intro [ident b],
+   have [] [":", expr «expr∃ , »((p), «expr = »(shortest_path r b, p))] [":=", expr ⟨_, rfl⟩],
+   rcases [expr this, "with", "⟨", ident p, ",", ident hp, "⟩"],
+   cases [expr p] ["with", ident a, "_", ident p, ident e],
+   { exact [expr or.inl rfl] },
+   { exact [expr or.inr ⟨a, ⟨⟨e, p, hp⟩⟩⟩] } })
 
 end GeodesicSubtree
 

@@ -59,7 +59,7 @@ theorem mem_sections {s : Multiset (Multiset α)} : ∀ {a}, a ∈ sections s �
       by 
         simp [ih, rel_cons_left, -exists_and_distrib_left, exists_and_distrib_left.symm, eq_comm]
 
--- error in Data.Multiset.Sections: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Sections: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem card_sections {s : multiset (multiset α)} : «expr = »(card (sections s), prod (s.map card)) :=
 multiset.induction_on s (by simp [] [] [] [] [] []) (by simp [] [] [] [] [] [] { contextual := tt })
 

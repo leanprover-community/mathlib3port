@@ -24,7 +24,7 @@ universe u v w u₁
 
 variable(ι : Type v)[dec_ι : DecidableEq ι](β : ι → Type w)
 
--- error in Algebra.DirectSum.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler add_comm_monoid
+-- error in Algebra.DirectSum.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler add_comm_monoid
 /-- `direct_sum β` is the direct sum of a family of additive commutative monoids `β i`.
 
 Note: `open_locale direct_sum` will enable the notation `⨁ i, β i` for `direct_sum β`. -/
@@ -110,7 +110,7 @@ theorem mk_injective (s : Finset ι) : Function.Injective (mk β s) :=
 theorem of_injective (i : ι) : Function.Injective (of β i) :=
   Dfinsupp.single_injective
 
--- error in Algebra.DirectSum.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Algebra.DirectSum.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 @[elab_as_eliminator]
 protected
 theorem induction_on

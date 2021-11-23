@@ -32,7 +32,7 @@ universe u v
 
 namespace SlimCheck
 
--- error in Testing.SlimCheck.Gen: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler monad
+-- error in Testing.SlimCheck.Gen: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monad
 /-- Monad to generate random examples to test properties with.
 It has a `nat` parameter so that the caller can decide on the
 size of the examples. -/ @[reducible, derive #["[", expr monad, ",", expr is_lawful_monad, "]"]] def gen (α : Type u) :=

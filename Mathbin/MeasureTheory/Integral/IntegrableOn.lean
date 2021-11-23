@@ -67,13 +67,16 @@ namespace MeasureTheory
 
 section NormedGroup
 
-theorem has_finite_integral_restrict_of_bounded [NormedGroup E] {f : α → E} {s : Set α} {μ : Measureₓ α} {C}
-  (hs : μ s < ∞) (hf : ∀ᵐx ∂μ.restrict s, ∥f x∥ ≤ C) : has_finite_integral f (μ.restrict s) :=
-  by 
-    haveI  : is_finite_measure (μ.restrict s) :=
-        ⟨by 
-            rwa [measure.restrict_apply_univ]⟩ <;>
-      exact has_finite_integral_of_bounded hf
+-- error in MeasureTheory.Integral.IntegrableOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_finite_integral_restrict_of_bounded
+[normed_group E]
+{f : α → E}
+{s : set α}
+{μ : measure α}
+{C}
+(hs : «expr < »(μ s, «expr∞»()))
+(hf : «expr∀ᵐ ∂ , »((x), μ.restrict s, «expr ≤ »(«expr∥ ∥»(f x), C))) : has_finite_integral f (μ.restrict s) :=
+by haveI [] [":", expr is_finite_measure (μ.restrict s)] [":=", expr ⟨by rwa ["[", expr measure.restrict_apply_univ, "]"] []⟩]; exact [expr has_finite_integral_of_bounded hf]
 
 variable[NormedGroup E][MeasurableSpace E]{f g : α → E}{s t : Set α}{μ ν : Measureₓ α}
 
@@ -146,17 +149,19 @@ theorem integrable_on.union (hs : integrable_on f s μ) (ht : integrable_on f t 
 theorem integrable_on_union : integrable_on f (s ∪ t) μ ↔ integrable_on f s μ ∧ integrable_on f t μ :=
   ⟨fun h => ⟨h.left_of_union, h.right_of_union⟩, fun h => h.1.union h.2⟩
 
+-- error in MeasureTheory.Integral.IntegrableOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem integrable_on_singleton_iff {x : α} [MeasurableSingletonClass α] :
-  integrable_on f {x} μ ↔ f x = 0 ∨ μ {x} < ∞ :=
-  by 
-    have  : f =ᵐ[μ.restrict {x}] fun y => f x
-    ·
-      filterUpwards [ae_restrict_mem (measurable_set_singleton x)]
-      intro a ha 
-      simp only [mem_singleton_iff.1 ha]
-    rw [integrable_on, integrable_congr this, integrable_const_iff]
-    simp 
+theorem integrable_on_singleton_iff
+{x : α}
+[measurable_singleton_class α] : «expr ↔ »(integrable_on f {x} μ, «expr ∨ »(«expr = »(f x, 0), «expr < »(μ {x}, «expr∞»()))) :=
+begin
+  have [] [":", expr «expr =ᵐ[ ] »(f, μ.restrict {x}, λ y, f x)] [],
+  { filter_upwards ["[", expr ae_restrict_mem (measurable_set_singleton x), "]"] [],
+    assume [binders (a ha)],
+    simp [] [] ["only"] ["[", expr mem_singleton_iff.1 ha, "]"] [] [] },
+  rw ["[", expr integrable_on, ",", expr integrable_congr this, ",", expr integrable_const_iff, "]"] [],
+  simp [] [] [] [] [] []
+end
 
 @[simp]
 theorem integrable_on_finite_Union {s : Set β} (hs : finite s) {t : β → Set α} :
@@ -201,6 +206,15 @@ theorem integrable_on_map_equiv [MeasurableSpace β] (e : α ≃ᵐ β) {f : β 
   by 
     simp only [integrable_on, e.restrict_map, integrable_map_equiv e]
 
+theorem measure_preserving.integrable_on_comp_preimage [MeasurableSpace β] {e : α → β} {ν}
+  (h₁ : measure_preserving e μ ν) (h₂ : MeasurableEmbedding e) {f : β → E} {s : Set β} :
+  integrable_on (f ∘ e) (e ⁻¹' s) μ ↔ integrable_on f s ν :=
+  (h₁.restrict_preimage_emb h₂ s).integrable_comp_emb h₂
+
+theorem measure_preserving.integrable_on_image [MeasurableSpace β] {e : α → β} {ν} (h₁ : measure_preserving e μ ν)
+  (h₂ : MeasurableEmbedding e) {f : β → E} {s : Set α} : integrable_on f (e '' s) ν ↔ integrable_on (f ∘ e) s μ :=
+  ((h₁.restrict_image_emb h₂ s).integrable_comp_emb h₂).symm
+
 theorem integrable_indicator_iff (hs : MeasurableSet s) : integrable (indicator s f) μ ↔ integrable_on f s μ :=
   by 
     simp [integrable_on, integrable, has_finite_integral, nnnorm_indicator_eq_indicator_nnnorm, Ennreal.coe_indicator,
@@ -221,16 +235,25 @@ theorem integrable_indicator_const_Lp {E} [NormedGroup E] [MeasurableSpace E] [B
     right 
     simpa only [Set.univ_inter, MeasurableSet.univ, measure.restrict_apply] using hμs
 
-theorem integrable_on_Lp_of_measure_ne_top {E} [NormedGroup E] [MeasurableSpace E] [BorelSpace E]
-  [second_countable_topology E] {p : ℝ≥0∞} {s : Set α} (f : Lp E p μ) (hp : 1 ≤ p) (hμs : μ s ≠ ∞) :
-  integrable_on f s μ :=
-  by 
-    refine' mem_ℒp_one_iff_integrable.mp _ 
-    have hμ_restrict_univ : (μ.restrict s) Set.Univ < ∞
-    ·
-      simpa only [Set.univ_inter, MeasurableSet.univ, measure.restrict_apply, lt_top_iff_ne_top]
-    haveI hμ_finite : is_finite_measure (μ.restrict s) := ⟨hμ_restrict_univ⟩
-    exact ((Lp.mem_ℒp _).restrict s).mem_ℒp_of_exponent_le hp
+-- error in MeasureTheory.Integral.IntegrableOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem integrable_on_Lp_of_measure_ne_top
+{E}
+[normed_group E]
+[measurable_space E]
+[borel_space E]
+[second_countable_topology E]
+{p : «exprℝ≥0∞»()}
+{s : set α}
+(f : Lp E p μ)
+(hp : «expr ≤ »(1, p))
+(hμs : «expr ≠ »(μ s, «expr∞»())) : integrable_on f s μ :=
+begin
+  refine [expr mem_ℒp_one_iff_integrable.mp _],
+  have [ident hμ_restrict_univ] [":", expr «expr < »(μ.restrict s set.univ, «expr∞»())] [],
+  by simpa [] [] ["only"] ["[", expr set.univ_inter, ",", expr measurable_set.univ, ",", expr measure.restrict_apply, ",", expr lt_top_iff_ne_top, "]"] [] [],
+  haveI [ident hμ_finite] [":", expr is_finite_measure (μ.restrict s)] [":=", expr ⟨hμ_restrict_univ⟩],
+  exact [expr ((Lp.mem_ℒp _).restrict s).mem_ℒp_of_exponent_le hp]
+end
 
 /-- We say that a function `f` is *integrable at filter* `l` if it is integrable on some
 set `s ∈ l`. Equivalently, it is eventually integrable on `s` in `l.lift' powerset`. -/
@@ -328,28 +351,47 @@ theorem IsCompact.integrable_on_of_nhds_within [TopologicalSpace α] {μ : Measu
   {f : α → E} (hf : ∀ x _ : x ∈ s, integrable_at_filter f (𝓝[s] x) μ) : integrable_on f s μ :=
   IsCompact.induction_on hs integrable_on_empty (fun s t hst ht => ht.mono_set hst) (fun s t hs ht => hs.union ht) hf
 
+-- error in MeasureTheory.Integral.IntegrableOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A function which is continuous on a set `s` is almost everywhere measurable with respect to
 `μ.restrict s`. -/
-theorem ContinuousOn.ae_measurable [TopologicalSpace α] [OpensMeasurableSpace α] [MeasurableSpace β]
-  [TopologicalSpace β] [BorelSpace β] {f : α → β} {s : Set α} {μ : Measureₓ α} (hf : ContinuousOn f s)
-  (hs : MeasurableSet s) : AeMeasurable f (μ.restrict s) :=
-  by 
-    nontriviality α 
-    inhabit α 
-    have  : (piecewise s f fun _ => f (default α)) =ᵐ[μ.restrict s] f := piecewise_ae_eq_restrict hs 
-    refine' ⟨piecewise s f fun _ => f (default α), _, this.symm⟩
-    apply measurable_of_is_open 
-    intro t ht 
-    obtain ⟨u, u_open, hu⟩ : ∃ u : Set α, IsOpen u ∧ f ⁻¹' t ∩ s = u ∩ s := _root_.continuous_on_iff'.1 hf t ht 
-    rw [piecewise_preimage, Set.Ite, hu]
-    exact (u_open.measurable_set.inter hs).union ((measurable_const ht.measurable_set).diff hs)
+theorem continuous_on.ae_measurable
+[topological_space α]
+[opens_measurable_space α]
+[measurable_space β]
+[topological_space β]
+[borel_space β]
+{f : α → β}
+{s : set α}
+{μ : measure α}
+(hf : continuous_on f s)
+(hs : measurable_set s) : ae_measurable f (μ.restrict s) :=
+begin
+  nontriviality [expr α] [],
+  inhabit [expr α] [],
+  have [] [":", expr «expr =ᵐ[ ] »(piecewise s f (λ
+     _, f (default α)), μ.restrict s, f)] [":=", expr piecewise_ae_eq_restrict hs],
+  refine [expr ⟨piecewise s f (λ _, f (default α)), _, this.symm⟩],
+  apply [expr measurable_of_is_open],
+  assume [binders (t ht)],
+  obtain ["⟨", ident u, ",", ident u_open, ",", ident hu, "⟩", ":", expr «expr∃ , »((u : set α), «expr ∧ »(is_open u, «expr = »(«expr ∩ »(«expr ⁻¹' »(f, t), s), «expr ∩ »(u, s)))), ":=", expr _root_.continuous_on_iff'.1 hf t ht],
+  rw ["[", expr piecewise_preimage, ",", expr set.ite, ",", expr hu, "]"] [],
+  exact [expr (u_open.measurable_set.inter hs).union ((measurable_const ht.measurable_set).diff hs)]
+end
 
-theorem ContinuousOn.integrable_at_nhds_within [TopologicalSpace α] [OpensMeasurableSpace α] [BorelSpace E]
-  {μ : Measureₓ α} [is_locally_finite_measure μ] {a : α} {t : Set α} {f : α → E} (hft : ContinuousOn f t)
-  (ht : MeasurableSet t) (ha : a ∈ t) : integrable_at_filter f (𝓝[t] a) μ :=
-  by 
-    haveI  : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _ <;>
-      exact (hft a ha).IntegrableAtFilter ⟨_, self_mem_nhds_within, hft.ae_measurable ht⟩ (μ.finite_at_nhds_within _ _)
+-- error in MeasureTheory.Integral.IntegrableOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_on.integrable_at_nhds_within
+[topological_space α]
+[opens_measurable_space α]
+[borel_space E]
+{μ : measure α}
+[is_locally_finite_measure μ]
+{a : α}
+{t : set α}
+{f : α → E}
+(hft : continuous_on f t)
+(ht : measurable_set t)
+(ha : «expr ∈ »(a, t)) : integrable_at_filter f «expr𝓝[ ] »(t, a) μ :=
+by haveI [] [":", expr «expr𝓝[ ] »(t, a).is_measurably_generated] [":=", expr ht.nhds_within_is_measurably_generated _]; exact [expr (hft a ha).integrable_at_filter ⟨_, self_mem_nhds_within, hft.ae_measurable ht⟩ (μ.finite_at_nhds_within _ _)]
 
 /-- A function `f` continuous on a compact set `s` is integrable on this set with respect to any
 locally finite measure. -/
@@ -363,7 +405,7 @@ theorem ContinuousOn.integrable_on_Icc [BorelSpace E] [ConditionallyCompleteLine
   {a b : β} {f : β → E} (hf : ContinuousOn f (Icc a b)) : integrable_on f (Icc a b) μ :=
   hf.integrable_on_compact is_compact_Icc
 
--- error in MeasureTheory.Integral.IntegrableOn: ././Mathport/Syntax/Translate/Basic.lean:545:47: unsupported (impossible)
+-- error in MeasureTheory.Integral.IntegrableOn: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 theorem continuous_on.integrable_on_interval
 [borel_space E]
 [conditionally_complete_linear_order β]
@@ -395,7 +437,7 @@ theorem Continuous.integrable_on_Ioc [BorelSpace E] [ConditionallyCompleteLinear
   {a b : β} {f : β → E} (hf : Continuous f) : integrable_on f (Ioc a b) μ :=
   hf.integrable_on_Icc.mono_set Ioc_subset_Icc_self
 
--- error in MeasureTheory.Integral.IntegrableOn: ././Mathport/Syntax/Translate/Basic.lean:545:47: unsupported (impossible)
+-- error in MeasureTheory.Integral.IntegrableOn: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 theorem continuous.integrable_on_interval
 [borel_space E]
 [conditionally_complete_linear_order β]
@@ -431,18 +473,23 @@ section
 
 variable[TopologicalSpace α][OpensMeasurableSpace α]{μ : Measureₓ α}{s t : Set α}{f g : α → ℝ}
 
-theorem MeasureTheory.IntegrableOn.mul_continuous_on_of_subset (hf : integrable_on f s μ) (hg : ContinuousOn g t)
-  (hs : MeasurableSet s) (ht : IsCompact t) (hst : s ⊆ t) : integrable_on (fun x => f x*g x) s μ :=
-  by 
-    rcases IsCompact.exists_bound_of_continuous_on ht hg with ⟨C, hC⟩
-    rw [integrable_on, ←mem_ℒp_one_iff_integrable] at hf⊢
-    have  : ∀ᵐx ∂μ.restrict s, ∥f x*g x∥ ≤ C*∥f x∥
-    ·
-      filterUpwards [ae_restrict_mem hs]
-      intro x hx 
-      rw [Real.norm_eq_abs, abs_mul, mul_commₓ, Real.norm_eq_abs]
-      apply mul_le_mul_of_nonneg_right (hC x (hst hx)) (abs_nonneg _)
-    exact mem_ℒp.of_le_mul hf (hf.ae_measurable.mul ((hg.mono hst).AeMeasurable hs)) this
+-- error in MeasureTheory.Integral.IntegrableOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measure_theory.integrable_on.mul_continuous_on_of_subset
+(hf : integrable_on f s μ)
+(hg : continuous_on g t)
+(hs : measurable_set s)
+(ht : is_compact t)
+(hst : «expr ⊆ »(s, t)) : integrable_on (λ x, «expr * »(f x, g x)) s μ :=
+begin
+  rcases [expr is_compact.exists_bound_of_continuous_on ht hg, "with", "⟨", ident C, ",", ident hC, "⟩"],
+  rw ["[", expr integrable_on, ",", "<-", expr mem_ℒp_one_iff_integrable, "]"] ["at", ident hf, "⊢"],
+  have [] [":", expr «expr∀ᵐ ∂ , »((x), μ.restrict s, «expr ≤ »(«expr∥ ∥»(«expr * »(f x, g x)), «expr * »(C, «expr∥ ∥»(f x))))] [],
+  { filter_upwards ["[", expr ae_restrict_mem hs, "]"] [],
+    assume [binders (x hx)],
+    rw ["[", expr real.norm_eq_abs, ",", expr abs_mul, ",", expr mul_comm, ",", expr real.norm_eq_abs, "]"] [],
+    apply [expr mul_le_mul_of_nonneg_right (hC x (hst hx)) (abs_nonneg _)] },
+  exact [expr mem_ℒp.of_le_mul hf (hf.ae_measurable.mul ((hg.mono hst).ae_measurable hs)) this]
+end
 
 theorem MeasureTheory.IntegrableOn.mul_continuous_on [T2Space α] (hf : integrable_on f s μ) (hg : ContinuousOn g s)
   (hs : IsCompact s) : integrable_on (fun x => f x*g x) s μ :=
@@ -473,21 +520,22 @@ variable[TopologicalSpace
 
 include hs
 
-theorem MonotoneOn.integrable_on_compact (hmono : MonotoneOn f s) : integrable_on f s μ :=
-  by 
-    obtain rfl | h := s.eq_empty_or_nonempty
-    ·
-      exact integrable_on_empty 
-    have hbelow : BddBelow (f '' s) :=
-      ⟨f (Inf s), fun x ⟨y, hy, hyx⟩ => hyx ▸ hmono (hs.Inf_mem h) hy (cInf_le hs.bdd_below hy)⟩
-    have habove : BddAbove (f '' s) :=
-      ⟨f (Sup s), fun x ⟨y, hy, hyx⟩ => hyx ▸ hmono hy (hs.Sup_mem h) (le_cSup hs.bdd_above hy)⟩
-    have  : Metric.Bounded (f '' s) := Metric.bounded_of_bdd_above_of_bdd_below habove hbelow 
-    rcases bounded_iff_forall_norm_le.mp this with ⟨C, hC⟩
-    exact
-      integrable.mono' (continuous_const.integrable_on_compact hs)
-        (ae_measurable_restrict_of_monotone_on hs.measurable_set hmono)
-        ((ae_restrict_iff' hs.measurable_set).mpr$ ae_of_all _$ fun y hy => hC (f y) (mem_image_of_mem f hy))
+-- error in MeasureTheory.Integral.IntegrableOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem monotone_on.integrable_on_compact (hmono : monotone_on f s) : integrable_on f s μ :=
+begin
+  obtain [ident rfl, "|", ident h, ":=", expr s.eq_empty_or_nonempty],
+  { exact [expr integrable_on_empty] },
+  have [ident hbelow] [":", expr bdd_below «expr '' »(f, s)] [":=", expr ⟨f (Inf s), λ
+    (x)
+    ⟨y, hy, hyx⟩, «expr ▸ »(hyx, hmono (hs.Inf_mem h) hy (cInf_le hs.bdd_below hy))⟩],
+  have [ident habove] [":", expr bdd_above «expr '' »(f, s)] [":=", expr ⟨f (Sup s), λ
+    (x)
+    ⟨y, hy, hyx⟩, «expr ▸ »(hyx, hmono hy (hs.Sup_mem h) (le_cSup hs.bdd_above hy))⟩],
+  have [] [":", expr metric.bounded «expr '' »(f, s)] [":=", expr metric.bounded_of_bdd_above_of_bdd_below habove hbelow],
+  rcases [expr bounded_iff_forall_norm_le.mp this, "with", "⟨", ident C, ",", ident hC, "⟩"],
+  exact [expr integrable.mono' (continuous_const.integrable_on_compact hs) (ae_measurable_restrict_of_monotone_on hs.measurable_set hmono) «expr $ »((ae_restrict_iff' hs.measurable_set).mpr, «expr $ »(ae_of_all _, λ
+     y hy, hC (f y) (mem_image_of_mem f hy)))]
+end
 
 theorem AntitoneOn.integrable_on_compact (hanti : AntitoneOn f s) : integrable_on f s μ :=
   @MonotoneOn.integrable_on_compact α (OrderDual E) _ _ ‹_› _ _ ‹_› _ _ _ _ ‹_› _ _ _ hs _ hanti

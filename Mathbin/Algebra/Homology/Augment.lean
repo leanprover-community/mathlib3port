@@ -1,5 +1,4 @@
 import Mathbin.Algebra.Homology.Single 
-import Mathbin.Algebra.Homology.Exact 
 import Mathbin.Tactic.Linarith.Default
 
 /-!

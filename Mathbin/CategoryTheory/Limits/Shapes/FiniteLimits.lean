@@ -1,8 +1,9 @@
-import Mathbin.Data.Fintype.Basic 
 import Mathbin.CategoryTheory.FinCategory 
-import Mathbin.CategoryTheory.Limits.Shapes.Products 
+import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts 
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers 
-import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
+import Mathbin.CategoryTheory.Limits.Shapes.WidePullbacks 
+import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks 
+import Mathbin.Data.Fintype.Basic
 
 /-!
 # Categories with finite limits.
@@ -172,11 +173,13 @@ for every finite collection of morphisms
 class has_finite_wide_pullbacks : Prop where 
   out (J : Type v) [DecidableEq J] [Fintype J] : has_limits_of_shape (wide_pullback_shape J) C
 
-instance has_limits_of_shape_wide_pullback_shape (J : Type v) [Fintype J] [has_finite_wide_pullbacks C] :
-  has_limits_of_shape (wide_pullback_shape J) C :=
-  by 
-    haveI  := @has_finite_wide_pullbacks.out C _ _ J (Classical.decEq _)
-    infer_instance
+-- error in CategoryTheory.Limits.Shapes.FiniteLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance has_limits_of_shape_wide_pullback_shape
+(J : Type v)
+[fintype J]
+[has_finite_wide_pullbacks C] : has_limits_of_shape (wide_pullback_shape J) C :=
+by { haveI [] [] [":=", expr @has_finite_wide_pullbacks.out C _ _ J (classical.dec_eq _)],
+  apply_instance }
 
 /--
 `has_finite_wide_pushouts` represents a choice of wide pushout
@@ -185,11 +188,13 @@ for every finite collection of morphisms
 class has_finite_wide_pushouts : Prop where 
   out (J : Type v) [DecidableEq J] [Fintype J] : has_colimits_of_shape (wide_pushout_shape J) C
 
-instance has_colimits_of_shape_wide_pushout_shape (J : Type v) [Fintype J] [has_finite_wide_pushouts C] :
-  has_colimits_of_shape (wide_pushout_shape J) C :=
-  by 
-    haveI  := @has_finite_wide_pushouts.out C _ _ J (Classical.decEq _)
-    infer_instance
+-- error in CategoryTheory.Limits.Shapes.FiniteLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance has_colimits_of_shape_wide_pushout_shape
+(J : Type v)
+[fintype J]
+[has_finite_wide_pushouts C] : has_colimits_of_shape (wide_pushout_shape J) C :=
+by { haveI [] [] [":=", expr @has_finite_wide_pushouts.out C _ _ J (classical.dec_eq _)],
+  apply_instance }
 
 /--
 Finite wide pullbacks are finite limits, so if `C` has all finite limits,
@@ -198,7 +203,7 @@ it also has finite wide pullbacks
 theorem has_finite_wide_pullbacks_of_has_finite_limits [has_finite_limits C] : has_finite_wide_pullbacks C :=
   ⟨fun J _ _ =>
       by 
-        exactI has_finite_limits.out _⟩
+        exact has_finite_limits.out _⟩
 
 /--
 Finite wide pushouts are finite colimits, so if `C` has all finite colimits,
@@ -207,7 +212,7 @@ it also has finite wide pushouts
 theorem has_finite_wide_pushouts_of_has_finite_limits [has_finite_colimits C] : has_finite_wide_pushouts C :=
   ⟨fun J _ _ =>
       by 
-        exactI has_finite_colimits.out _⟩
+        exact has_finite_colimits.out _⟩
 
 instance fintype_walking_pair : Fintype walking_pair :=
   { elems := {walking_pair.left, walking_pair.right},

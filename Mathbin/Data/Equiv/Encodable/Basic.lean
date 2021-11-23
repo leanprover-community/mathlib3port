@@ -261,7 +261,7 @@ theorem decode_zero : decode Bool 0 = some ff :=
 theorem decode_one : decode Bool 1 = some tt :=
   rfl
 
--- error in Data.Equiv.Encodable.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Equiv.Encodable.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem decode_ge_two (n) (h : «expr ≤ »(2, n)) : «expr = »(decode bool n, none) :=
 begin
   suffices [] [":", expr «expr = »(decode_sum n, none)],
@@ -387,7 +387,7 @@ section Ulower
 
 attribute [local instance] Encodable.decidableRangeEncode
 
--- error in Data.Equiv.Encodable.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Data.Equiv.Encodable.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- `ulower α : Type` is an equivalent type in the lowest universe, given `encodable α`. -/
 @[derive #[expr decidable_eq], derive #[expr encodable]]
 def ulower (α : Type*) [encodable α] : Type :=

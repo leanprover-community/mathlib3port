@@ -152,42 +152,41 @@ variable[FiniteDimensional K V](f : End K V)
 
 variable{f}{μ : K}
 
-theorem has_eigenvalue_of_is_root (h : (minpoly K f).IsRoot μ) : f.has_eigenvalue μ :=
-  by 
-    cases' dvd_iff_is_root.2 h with p hp 
-    rw [has_eigenvalue, eigenspace]
-    intro con 
-    cases' (LinearMap.is_unit_iff _).2 Con with u hu 
-    have p_ne_0 : p ≠ 0
-    ·
-      intro con 
-      apply minpoly.ne_zero f.is_integral 
-      rw [hp, Con, mul_zero]
-    have h_deg := minpoly.degree_le_of_ne_zero K f p_ne_0 _
-    ·
-      rw [hp, degree_mul, degree_X_sub_C, Polynomial.degree_eq_nat_degree p_ne_0] at h_deg 
-      normCast  at h_deg 
-      linarith
-    ·
-      have h_aeval := minpoly.aeval K f 
-      revert h_aeval 
-      simp [hp, ←hu]
+-- error in LinearAlgebra.Eigenspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_eigenvalue_of_is_root (h : (minpoly K f).is_root μ) : f.has_eigenvalue μ :=
+begin
+  cases [expr dvd_iff_is_root.2 h] ["with", ident p, ident hp],
+  rw ["[", expr has_eigenvalue, ",", expr eigenspace, "]"] [],
+  intro [ident con],
+  cases [expr (linear_map.is_unit_iff _).2 con] ["with", ident u, ident hu],
+  have [ident p_ne_0] [":", expr «expr ≠ »(p, 0)] [],
+  { intro [ident con],
+    apply [expr minpoly.ne_zero f.is_integral],
+    rw ["[", expr hp, ",", expr con, ",", expr mul_zero, "]"] [] },
+  have [ident h_deg] [] [":=", expr minpoly.degree_le_of_ne_zero K f p_ne_0 _],
+  { rw ["[", expr hp, ",", expr degree_mul, ",", expr degree_X_sub_C, ",", expr polynomial.degree_eq_nat_degree p_ne_0, "]"] ["at", ident h_deg],
+    norm_cast ["at", ident h_deg],
+    linarith [] [] [] },
+  { have [ident h_aeval] [] [":=", expr minpoly.aeval K f],
+    revert [ident h_aeval],
+    simp [] [] [] ["[", expr hp, ",", "<-", expr hu, "]"] [] [] }
+end
 
 theorem has_eigenvalue_iff_is_root : f.has_eigenvalue μ ↔ (minpoly K f).IsRoot μ :=
   ⟨is_root_of_has_eigenvalue, has_eigenvalue_of_is_root⟩
 
+-- error in LinearAlgebra.Eigenspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An endomorphism of a finite-dimensional vector space has finitely many eigenvalues. -/
-noncomputable instance  (f : End K V) : Fintype f.eigenvalues :=
-  Set.Finite.fintype
-    (by 
-      have h : minpoly K f ≠ 0 := minpoly.ne_zero f.is_integral 
-      convert (minpoly K f).root_set_finite K 
-      ext μ 
-      have  : μ ∈ { μ : K | f.eigenspace μ = ⊥ → False } ↔ ¬f.eigenspace μ = ⊥ :=
-        by 
-          tauto 
-      convert rfl.mpr this 
-      simp [Polynomial.root_set_def, Polynomial.mem_roots h, ←has_eigenvalue_iff_is_root, has_eigenvalue])
+noncomputable
+instance (f : End K V) : fintype f.eigenvalues :=
+set.finite.fintype (begin
+   have [ident h] [":", expr «expr ≠ »(minpoly K f, 0)] [":=", expr minpoly.ne_zero f.is_integral],
+   convert [] [expr (minpoly K f).root_set_finite K] [],
+   ext [] [ident μ] [],
+   have [] [":", expr «expr ↔ »(«expr ∈ »(μ, {μ : K | «expr = »(f.eigenspace μ, «expr⊥»()) → false}), «expr¬ »(«expr = »(f.eigenspace μ, «expr⊥»())))] [":=", expr by tauto []],
+   convert [] [expr rfl.mpr this] [],
+   simp [] [] [] ["[", expr polynomial.root_set_def, ",", expr polynomial.mem_roots h, ",", "<-", expr has_eigenvalue_iff_is_root, ",", expr has_eigenvalue, "]"] [] []
+ end)
 
 end minpoly
 
@@ -205,106 +204,85 @@ noncomputable instance  [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (
   Inhabited f.eigenvalues :=
   ⟨⟨f.exists_eigenvalue.some, f.exists_eigenvalue.some_spec⟩⟩
 
+-- error in LinearAlgebra.Eigenspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The eigenspaces of a linear operator form an independent family of subspaces of `V`.  That is,
 any eigenspace has trivial intersection with the span of all the other eigenspaces. -/
-theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.eigenspace :=
-  by 
-    classical 
-    let S :
-      @LinearMap K K _ _ (RingHom.id K) (Π₀μ : K, f.eigenspace μ) V
-        (@Dfinsupp.addCommMonoid K (fun μ => f.eigenspace μ) _) _ (@Dfinsupp.module K _ (fun μ => f.eigenspace μ) _ _ _)
-        _ :=
-      @Dfinsupp.lsum K K ℕ _ V _ _ _ _ _ _ _ _ _ fun μ => (f.eigenspace μ).Subtype 
-    suffices  : ∀ l : Π₀μ, f.eigenspace μ, S l = 0 → l = 0
-    ·
-      rw [CompleteLattice.independent_iff_dfinsupp_lsum_injective]
-      change Function.Injective S 
-      rw [←@LinearMap.ker_eq_bot K K (Π₀μ, f.eigenspace μ) V _ _ (@Dfinsupp.addCommGroup K (fun μ => f.eigenspace μ) _)]
-      rw [eq_bot_iff]
-      exact this 
-    intro l hl 
-    induction' h_l_support : l.support using Finset.induction with μ₀ l_support' hμ₀ ih generalizing l
-    ·
-      exact Dfinsupp.support_eq_empty.1 h_l_support
-    ·
-      let l' := Dfinsupp.mapRange.linearMap (fun μ => (μ - μ₀) • @LinearMap.id K (f.eigenspace μ) _ _ _) l 
-      have h_l_support' : l'.support = l_support'
-      ·
-        have  : l_support' = Finset.erase l.support μ₀
-        ·
-          rw [h_l_support, Finset.erase_insert hμ₀]
-        rw [this]
-        ext a 
-        have  : ¬(a = μ₀ ∨ l a = 0) ↔ ¬a = μ₀ ∧ ¬l a = 0 :=
-          by 
-            tauto 
-        simp only [l', Dfinsupp.mapRange.linear_map_apply, Dfinsupp.map_range_apply, Dfinsupp.mem_support_iff,
-          Finset.mem_erase, id.def, LinearMap.id_coe, LinearMap.smul_apply, Ne.def, smul_eq_zero, sub_eq_zero, this]
-      have total_l' : S l' = 0
-      ·
-        let g := f - algebraMap K (End K V) μ₀ 
-        let a : Π₀μ : K, V := Dfinsupp.mapRange.linearMap (fun μ => (f.eigenspace μ).Subtype) l 
-        calc S l' = Dfinsupp.lsum ℕ (fun μ => (f.eigenspace μ).Subtype.comp ((μ - μ₀) • LinearMap.id)) l :=
-          _ _ = Dfinsupp.lsum ℕ (fun μ => g.comp (f.eigenspace μ).Subtype) l := _ _ = Dfinsupp.lsum ℕ (fun μ => g) a :=
-          _ _ = g (Dfinsupp.lsum ℕ (fun μ => (LinearMap.id : V →ₗ[K] V)) a) := _ _ = g (S l) := _ _ = 0 :=
-          by 
-            rw [hl, g.map_zero]
-        ·
-          rw [Dfinsupp.sum_map_range_index.linear_map]
-        ·
-          congr 
-          ext μ v 
-          simp only [g, eq_self_iff_true, Function.comp_app, id.def, LinearMap.coe_comp, LinearMap.id_coe,
-            LinearMap.smul_apply, LinearMap.sub_apply, Module.algebra_map_End_apply, sub_left_inj, sub_smul,
-            Submodule.coe_smul_of_tower, Submodule.coe_sub, Submodule.subtype_apply, mem_eigenspace_iff.1 v.prop]
-        ·
-          rw [Dfinsupp.sum_map_range_index.linear_map]
-        ·
-          simp only [Dfinsupp.sum_add_hom_apply, LinearMap.id_coe, LinearMap.map_dfinsupp_sum, id.def,
-            LinearMap.to_add_monoid_hom_coe, Dfinsupp.lsum_apply_apply]
-        ·
-          congr 
-          simp only [S, a, Dfinsupp.sum_map_range_index.linear_map, LinearMap.id_comp]
-      have l'_eq_0 := ih l' total_l' h_l_support' 
-      have h_smul_eq_0 : ∀ μ, (μ - μ₀) • l μ = 0
-      ·
-        intro μ 
-        calc (μ - μ₀) • l μ = l' μ :=
-          by 
-            simp only [l', LinearMap.id_coe, id.def, LinearMap.smul_apply, Dfinsupp.map_range_apply,
-              Dfinsupp.mapRange.linear_map_apply]_ = 0 :=
-          by 
-            rw [l'_eq_0]
-            rfl 
-      have h_lμ_eq_0 : ∀ μ : K, μ ≠ μ₀ → l μ = 0
-      ·
-        intro μ hμ 
-        apply or_iff_not_imp_left.1 (smul_eq_zero.1 (h_smul_eq_0 μ))
-        rwa [sub_eq_zero]
-      have h_sum_l_support'_eq_0 : (Finset.sum l_support' fun μ => (l μ : V)) = 0
-      ·
-        rw [←Finset.sum_const_zero]
-        apply Finset.sum_congr rfl 
-        intro μ hμ 
-        normCast 
-        rw [h_lμ_eq_0]
-        intro h 
-        rw [h] at hμ 
-        contradiction 
-      have  : l μ₀ = 0
-      ·
-        simp only [S, Dfinsupp.lsum_apply_apply, Dfinsupp.sum_add_hom_apply, LinearMap.to_add_monoid_hom_coe,
-          Dfinsupp.sum, h_l_support, Submodule.subtype_apply, Submodule.coe_eq_zero, Finset.sum_insert hμ₀,
-          h_sum_l_support'_eq_0, add_zeroₓ] at hl 
-        exactModCast hl 
-      show l = 0
-      ·
-        ext μ 
-        byCases' h_cases : μ = μ₀
-        ·
-          rw [h_cases]
-          exactModCast this 
-        exact congr_argₓ (coeₓ : _ → V) (h_lμ_eq_0 μ h_cases)
+theorem eigenspaces_independent (f : End K V) : complete_lattice.independent f.eigenspace :=
+begin
+  classical,
+  let [ident S] [":", expr @linear_map K K _ _ (ring_hom.id K) «exprΠ₀ , »((μ : K), f.eigenspace μ) V (@dfinsupp.add_comm_monoid K (λ
+     μ, f.eigenspace μ) _) _ (@dfinsupp.module K _ (λ
+     μ, f.eigenspace μ) _ _ _) _] [":=", expr @dfinsupp.lsum K K exprℕ() _ V _ _ _ _ _ _ _ _ _ (λ
+    μ, (f.eigenspace μ).subtype)],
+  suffices [] [":", expr ∀ l : «exprΠ₀ , »((μ), f.eigenspace μ), «expr = »(S l, 0) → «expr = »(l, 0)],
+  { rw [expr complete_lattice.independent_iff_dfinsupp_lsum_injective] [],
+    change [expr function.injective S] [] [],
+    rw ["<-", expr @linear_map.ker_eq_bot K K «exprΠ₀ , »((μ), f.eigenspace μ) V _ _ (@dfinsupp.add_comm_group K (λ
+       μ, f.eigenspace μ) _)] [],
+    rw [expr eq_bot_iff] [],
+    exact [expr this] },
+  intros [ident l, ident hl],
+  induction [expr h_l_support, ":", expr l.support] ["using", ident finset.induction] ["with", ident μ₀, ident l_support', ident hμ₀, ident ih] ["generalizing", ident l],
+  { exact [expr dfinsupp.support_eq_empty.1 h_l_support] },
+  { let [ident l'] [] [":=", expr dfinsupp.map_range.linear_map (λ
+      μ, «expr • »(«expr - »(μ, μ₀), @linear_map.id K (f.eigenspace μ) _ _ _)) l],
+    have [ident h_l_support'] [":", expr «expr = »(l'.support, l_support')] [],
+    { have [] [":", expr «expr = »(l_support', finset.erase l.support μ₀)] [],
+      { rw ["[", expr h_l_support, ",", expr finset.erase_insert hμ₀, "]"] [] },
+      rw [expr this] [],
+      ext [] [ident a] [],
+      have [] [":", expr «expr ↔ »(«expr¬ »(«expr ∨ »(«expr = »(a, μ₀), «expr = »(l a, 0))), «expr ∧ »(«expr¬ »(«expr = »(a, μ₀)), «expr¬ »(«expr = »(l a, 0))))] [":=", expr by tauto []],
+      simp [] [] ["only"] ["[", expr l', ",", expr dfinsupp.map_range.linear_map_apply, ",", expr dfinsupp.map_range_apply, ",", expr dfinsupp.mem_support_iff, ",", expr finset.mem_erase, ",", expr id.def, ",", expr linear_map.id_coe, ",", expr linear_map.smul_apply, ",", expr ne.def, ",", expr smul_eq_zero, ",", expr sub_eq_zero, ",", expr this, "]"] [] [] },
+    have [ident total_l'] [":", expr «expr = »(S l', 0)] [],
+    { let [ident g] [] [":=", expr «expr - »(f, algebra_map K (End K V) μ₀)],
+      let [ident a] [":", expr «exprΠ₀ , »((μ : K), V)] [":=", expr dfinsupp.map_range.linear_map (λ
+        μ, (f.eigenspace μ).subtype) l],
+      calc
+        «expr = »(S l', dfinsupp.lsum exprℕ() (λ
+          μ, (f.eigenspace μ).subtype.comp «expr • »(«expr - »(μ, μ₀), linear_map.id)) l) : _
+        «expr = »(..., dfinsupp.lsum exprℕ() (λ μ, g.comp (f.eigenspace μ).subtype) l) : _
+        «expr = »(..., dfinsupp.lsum exprℕ() (λ μ, g) a) : _
+        «expr = »(..., g (dfinsupp.lsum exprℕ() (λ μ, (linear_map.id : «expr →ₗ[ ] »(V, K, V))) a)) : _
+        «expr = »(..., g (S l)) : _
+        «expr = »(..., 0) : by rw ["[", expr hl, ",", expr g.map_zero, "]"] [],
+      { rw [expr dfinsupp.sum_map_range_index.linear_map] [] },
+      { congr,
+        ext [] [ident μ, ident v] [],
+        simp [] [] ["only"] ["[", expr g, ",", expr eq_self_iff_true, ",", expr function.comp_app, ",", expr id.def, ",", expr linear_map.coe_comp, ",", expr linear_map.id_coe, ",", expr linear_map.smul_apply, ",", expr linear_map.sub_apply, ",", expr module.algebra_map_End_apply, ",", expr sub_left_inj, ",", expr sub_smul, ",", expr submodule.coe_smul_of_tower, ",", expr submodule.coe_sub, ",", expr submodule.subtype_apply, ",", expr mem_eigenspace_iff.1 v.prop, "]"] [] [] },
+      { rw [expr dfinsupp.sum_map_range_index.linear_map] [] },
+      { simp [] [] ["only"] ["[", expr dfinsupp.sum_add_hom_apply, ",", expr linear_map.id_coe, ",", expr linear_map.map_dfinsupp_sum, ",", expr id.def, ",", expr linear_map.to_add_monoid_hom_coe, ",", expr dfinsupp.lsum_apply_apply, "]"] [] [] },
+      { congr,
+        simp [] [] ["only"] ["[", expr S, ",", expr a, ",", expr dfinsupp.sum_map_range_index.linear_map, ",", expr linear_map.id_comp, "]"] [] [] } },
+    have [ident l'_eq_0] [] [":=", expr ih l' total_l' h_l_support'],
+    have [ident h_smul_eq_0] [":", expr ∀ μ, «expr = »(«expr • »(«expr - »(μ, μ₀), l μ), 0)] [],
+    { intro [ident μ],
+      calc
+        «expr = »(«expr • »(«expr - »(μ, μ₀), l μ), l' μ) : by simp [] [] ["only"] ["[", expr l', ",", expr linear_map.id_coe, ",", expr id.def, ",", expr linear_map.smul_apply, ",", expr dfinsupp.map_range_apply, ",", expr dfinsupp.map_range.linear_map_apply, "]"] [] []
+        «expr = »(..., 0) : by { rw ["[", expr l'_eq_0, "]"] [],
+          refl } },
+    have [ident h_lμ_eq_0] [":", expr ∀ μ : K, «expr ≠ »(μ, μ₀) → «expr = »(l μ, 0)] [],
+    { intros [ident μ, ident hμ],
+      apply [expr or_iff_not_imp_left.1 (smul_eq_zero.1 (h_smul_eq_0 μ))],
+      rwa ["[", expr sub_eq_zero, "]"] [] },
+    have [ident h_sum_l_support'_eq_0] [":", expr «expr = »(finset.sum l_support' (λ μ, (l μ : V)), 0)] [],
+    { rw ["<-", expr finset.sum_const_zero] [],
+      apply [expr finset.sum_congr rfl],
+      intros [ident μ, ident hμ],
+      norm_cast [],
+      rw [expr h_lμ_eq_0] [],
+      intro [ident h],
+      rw [expr h] ["at", ident hμ],
+      contradiction },
+    have [] [":", expr «expr = »(l μ₀, 0)] [],
+    { simp [] [] ["only"] ["[", expr S, ",", expr dfinsupp.lsum_apply_apply, ",", expr dfinsupp.sum_add_hom_apply, ",", expr linear_map.to_add_monoid_hom_coe, ",", expr dfinsupp.sum, ",", expr h_l_support, ",", expr submodule.subtype_apply, ",", expr submodule.coe_eq_zero, ",", expr finset.sum_insert hμ₀, ",", expr h_sum_l_support'_eq_0, ",", expr add_zero, "]"] [] ["at", ident hl],
+      exact_mod_cast [expr hl] },
+    show [expr «expr = »(l, 0)],
+    { ext [] [ident μ] [],
+      by_cases [expr h_cases, ":", expr «expr = »(μ, μ₀)],
+      { rw [expr h_cases] [],
+        exact_mod_cast [expr this] },
+      exact [expr congr_arg (coe : _ → V) (h_lμ_eq_0 μ h_cases)] } }
+end
 
 /-- Eigenvectors corresponding to distinct eigenvalues of a linear operator are linearly
     independent. (Lemma 5.10 of [axler2015])
@@ -457,27 +435,22 @@ theorem eigenspace_restrict_le_eigenspace (f : End R M) {p : Submodule R M} (hfp
     simp only [SetLike.mem_coe, mem_eigenspace_iff, LinearMap.restrict_apply] at hx⊢
     exact congr_argₓ coeₓ hx
 
+-- error in LinearAlgebra.Eigenspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Generalized eigenrange and generalized eigenspace for exponent `finrank K V` are disjoint. -/
-theorem generalized_eigenvec_disjoint_range_ker [FiniteDimensional K V] (f : End K V) (μ : K) :
-  Disjoint (f.generalized_eigenrange μ (finrank K V)) (f.generalized_eigenspace μ (finrank K V)) :=
-  by 
-    have h :=
-      calc
-        Submodule.comap (f - algebraMap _ _ μ^finrank K V) (f.generalized_eigenspace μ (finrank K V)) =
-          ((f - algebraMap _ _ μ^finrank K V)*f - algebraMap K (End K V) μ^finrank K V).ker :=
-        by 
-          simpa only [generalized_eigenspace, PreorderHom.coe_fun_mk, ←LinearMap.ker_comp]
-        _ = f.generalized_eigenspace μ (finrank K V+finrank K V) :=
-        by 
-          rw [←pow_addₓ]
-          rfl 
-        _ = f.generalized_eigenspace μ (finrank K V) :=
-        by 
-          rw [generalized_eigenspace_eq_generalized_eigenspace_finrank_of_le]
-          linarith 
-        
-    rw [Disjoint, generalized_eigenrange, LinearMap.range_eq_map, Submodule.map_inf_eq_map_inf_comap, top_inf_eq, h]
-    apply Submodule.map_comap_le
+theorem generalized_eigenvec_disjoint_range_ker
+[finite_dimensional K V]
+(f : End K V)
+(μ : K) : disjoint (f.generalized_eigenrange μ (finrank K V)) (f.generalized_eigenspace μ (finrank K V)) :=
+begin
+  have [ident h] [] [":=", expr calc
+     «expr = »(submodule.comap «expr ^ »(«expr - »(f, algebra_map _ _ μ), finrank K V) (f.generalized_eigenspace μ (finrank K V)), «expr * »(«expr ^ »(«expr - »(f, algebra_map _ _ μ), finrank K V), «expr ^ »(«expr - »(f, algebra_map K (End K V) μ), finrank K V)).ker) : by { simpa [] [] ["only"] ["[", expr generalized_eigenspace, ",", expr preorder_hom.coe_fun_mk, ",", "<-", expr linear_map.ker_comp, "]"] [] [] }
+     «expr = »(..., f.generalized_eigenspace μ «expr + »(finrank K V, finrank K V)) : by { rw ["<-", expr pow_add] [],
+       refl }
+     «expr = »(..., f.generalized_eigenspace μ (finrank K V)) : by { rw [expr generalized_eigenspace_eq_generalized_eigenspace_finrank_of_le] [],
+       linarith [] [] [] }],
+  rw ["[", expr disjoint, ",", expr generalized_eigenrange, ",", expr linear_map.range_eq_map, ",", expr submodule.map_inf_eq_map_inf_comap, ",", expr top_inf_eq, ",", expr h, "]"] [],
+  apply [expr submodule.map_comap_le]
+end
 
 /-- If an invariant subspace `p` of an endomorphism `f` is disjoint from the `μ`-eigenspace of `f`,
 then the restriction of `f` to `p` has trivial `μ`-eigenspace. -/
@@ -511,65 +484,59 @@ theorem map_generalized_eigenrange_le {f : End K V} {μ : K} {n : ℕ} :
     _ ≤ f.generalized_eigenrange μ n := LinearMap.map_le_range
     
 
+-- error in LinearAlgebra.Eigenspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The generalized eigenvectors span the entire vector space (Lemma 8.21 of [axler2015]). -/
-theorem supr_generalized_eigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K V] (f : End K V) :
-  (⨆(μ : K)(k : ℕ), f.generalized_eigenspace μ k) = ⊤ :=
-  by 
-    runTac 
-      tactic.unfreeze_local_instances 
-    induction' h_dim : finrank K V using Nat.strong_induction_onₓ with n ih generalizing V 
-    cases n
-    ·
-      rw [←top_le_iff]
-      simp only [finrank_eq_zero.1 (Eq.trans finrank_top h_dim), bot_le]
-    ·
-      haveI  : Nontrivial V :=
-        finrank_pos_iff.1
-          (by 
-            rw [h_dim]
-            apply Nat.zero_lt_succₓ)
-      obtain ⟨μ₀, hμ₀⟩ : ∃ μ₀, f.has_eigenvalue μ₀ := exists_eigenvalue f 
-      let ES := f.generalized_eigenspace μ₀ (finrank K V)
-      let ER := f.generalized_eigenrange μ₀ (finrank K V)
-      have h_f_ER : ∀ x : V, x ∈ ER → f x ∈ ER 
-      exact fun x hx => map_generalized_eigenrange_le (Submodule.mem_map_of_mem hx)
-      let f' : End K ER := f.restrict h_f_ER 
-      have h_dim_ES_pos : 0 < finrank K ES
-      ·
-        dsimp only [ES]
-        rw [h_dim]
-        apply pos_finrank_generalized_eigenspace_of_has_eigenvalue hμ₀ (Nat.zero_lt_succₓ n)
-      have h_dim_add : (finrank K ER+finrank K ES) = finrank K V
-      ·
-        apply LinearMap.finrank_range_add_finrank_ker 
-      have h_dim_ER : finrank K ER < n.succ
-      ·
-        linarith 
-      have ih_ER : (⨆(μ : K)(k : ℕ), f'.generalized_eigenspace μ k) = ⊤
-      exact ih (finrank K ER) h_dim_ER f' rfl 
-      have ih_ER' : (⨆(μ : K)(k : ℕ), (f'.generalized_eigenspace μ k).map ER.subtype) = ER
-      ·
-        simp only [(Submodule.map_supr _ _).symm, ih_ER, Submodule.map_subtype_top ER]
-      have hff' : ∀ μ k, (f'.generalized_eigenspace μ k).map ER.subtype ≤ f.generalized_eigenspace μ k
-      ·
-        intros 
-        rw [generalized_eigenspace_restrict]
-        apply Submodule.map_comap_le 
-      have hER : ER ≤ ⨆(μ : K)(k : ℕ), f.generalized_eigenspace μ k
-      ·
-        rw [←ih_ER']
-        apply supr_le_supr _ 
-        exact fun μ => supr_le_supr fun k => hff' μ k 
-      have hES : ES ≤ ⨆(μ : K)(k : ℕ), f.generalized_eigenspace μ k 
-      exact
-        le_transₓ (le_supr (fun k => f.generalized_eigenspace μ₀ k) (finrank K V))
-          (le_supr (fun μ : K => ⨆k : ℕ, f.generalized_eigenspace μ k) μ₀)
-      have h_disjoint : Disjoint ER ES 
-      exact generalized_eigenvec_disjoint_range_ker f μ₀ 
-      show (⨆(μ : K)(k : ℕ), f.generalized_eigenspace μ k) = ⊤
-      ·
-        rw [←top_le_iff, ←Submodule.eq_top_of_disjoint ER ES h_dim_add h_disjoint]
-        apply sup_le hER hES
+theorem supr_generalized_eigenspace_eq_top
+[is_alg_closed K]
+[finite_dimensional K V]
+(f : End K V) : «expr = »(«expr⨆ , »((μ : K) (k : exprℕ()), f.generalized_eigenspace μ k), «expr⊤»()) :=
+begin
+  tactic.unfreeze_local_instances,
+  induction [expr h_dim, ":", expr finrank K V] ["using", ident nat.strong_induction_on] ["with", ident n, ident ih] ["generalizing", ident V],
+  cases [expr n] [],
+  { rw ["<-", expr top_le_iff] [],
+    simp [] [] ["only"] ["[", expr finrank_eq_zero.1 (eq.trans finrank_top h_dim), ",", expr bot_le, "]"] [] [] },
+  { haveI [] [":", expr nontrivial V] [":=", expr finrank_pos_iff.1 (by { rw [expr h_dim] [],
+        apply [expr nat.zero_lt_succ] })],
+    obtain ["⟨", ident μ₀, ",", ident hμ₀, "⟩", ":", expr «expr∃ , »((μ₀), f.has_eigenvalue μ₀), ":=", expr exists_eigenvalue f],
+    let [ident ES] [] [":=", expr f.generalized_eigenspace μ₀ (finrank K V)],
+    let [ident ER] [] [":=", expr f.generalized_eigenrange μ₀ (finrank K V)],
+    have [ident h_f_ER] [":", expr ∀ x : V, «expr ∈ »(x, ER) → «expr ∈ »(f x, ER)] [],
+    from [expr λ x hx, map_generalized_eigenrange_le (submodule.mem_map_of_mem hx)],
+    let [ident f'] [":", expr End K ER] [":=", expr f.restrict h_f_ER],
+    have [ident h_dim_ES_pos] [":", expr «expr < »(0, finrank K ES)] [],
+    { dsimp ["only"] ["[", expr ES, "]"] [] [],
+      rw [expr h_dim] [],
+      apply [expr pos_finrank_generalized_eigenspace_of_has_eigenvalue hμ₀ (nat.zero_lt_succ n)] },
+    have [ident h_dim_add] [":", expr «expr = »(«expr + »(finrank K ER, finrank K ES), finrank K V)] [],
+    { apply [expr linear_map.finrank_range_add_finrank_ker] },
+    have [ident h_dim_ER] [":", expr «expr < »(finrank K ER, n.succ)] [],
+    by linarith [] [] [],
+    have [ident ih_ER] [":", expr «expr = »(«expr⨆ , »((μ : K)
+       (k : exprℕ()), f'.generalized_eigenspace μ k), «expr⊤»())] [],
+    from [expr ih (finrank K ER) h_dim_ER f' rfl],
+    have [ident ih_ER'] [":", expr «expr = »(«expr⨆ , »((μ : K)
+       (k : exprℕ()), (f'.generalized_eigenspace μ k).map ER.subtype), ER)] [],
+    by simp [] [] ["only"] ["[", expr (submodule.map_supr _ _).symm, ",", expr ih_ER, ",", expr submodule.map_subtype_top ER, "]"] [] [],
+    have [ident hff'] [":", expr ∀
+     μ k, «expr ≤ »((f'.generalized_eigenspace μ k).map ER.subtype, f.generalized_eigenspace μ k)] [],
+    { intros [],
+      rw [expr generalized_eigenspace_restrict] [],
+      apply [expr submodule.map_comap_le] },
+    have [ident hER] [":", expr «expr ≤ »(ER, «expr⨆ , »((μ : K) (k : exprℕ()), f.generalized_eigenspace μ k))] [],
+    { rw ["<-", expr ih_ER'] [],
+      apply [expr supr_le_supr _],
+      exact [expr λ μ, supr_le_supr (λ k, hff' μ k)] },
+    have [ident hES] [":", expr «expr ≤ »(ES, «expr⨆ , »((μ : K) (k : exprℕ()), f.generalized_eigenspace μ k))] [],
+    from [expr le_trans (le_supr (λ
+       k, f.generalized_eigenspace μ₀ k) (finrank K V)) (le_supr (λ
+       μ : K, «expr⨆ , »((k : exprℕ()), f.generalized_eigenspace μ k)) μ₀)],
+    have [ident h_disjoint] [":", expr disjoint ER ES] [],
+    from [expr generalized_eigenvec_disjoint_range_ker f μ₀],
+    show [expr «expr = »(«expr⨆ , »((μ : K) (k : exprℕ()), f.generalized_eigenspace μ k), «expr⊤»())],
+    { rw ["[", "<-", expr top_le_iff, ",", "<-", expr submodule.eq_top_of_disjoint ER ES h_dim_add h_disjoint, "]"] [],
+      apply [expr sup_le hER hES] } }
+end
 
 end End
 

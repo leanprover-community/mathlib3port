@@ -58,7 +58,7 @@ instance  : CoeFun (P →A[R] Q) fun _ => P → Q :=
 theorem to_fun_eq_coe (f : P →A[R] Q) : f.to_fun = «expr⇑ » f :=
   rfl
 
--- error in Topology.Algebra.ContinuousAffineMap: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.Algebra.ContinuousAffineMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem coe_injective : @function.injective «expr →A[ ] »(P, R, Q) (P → Q) coe_fn :=
 begin
   rintros ["⟨", "⟨", ident f, ",", "⟨", ident f', ",", ident hf₁, ",", ident hf₂, "⟩", ",", ident hf₀, "⟩", ",", ident hf₁, "⟩", "⟨", "⟨", ident g, ",", "⟨", ident g', ",", ident hg₁, ",", ident hg₂, "⟩", ",", ident hg₀, "⟩", ",", ident hg₁, "⟩", ident h],

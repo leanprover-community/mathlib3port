@@ -401,14 +401,18 @@ theorem eq_of_le_of_finrank_le [FiniteDimensional K L] (h_le : F ≤ E) (h_finra
 theorem eq_of_le_of_finrank_eq [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank K F = finrank K E) : F = E :=
   eq_of_le_of_finrank_le h_le h_finrank.ge
 
-theorem eq_of_le_of_finrank_le' [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank F L ≤ finrank E L) :
-  F = E :=
-  by 
-    apply eq_of_le_of_finrank_le h_le 
-    have h1 := finrank_mul_finrank K F L 
-    have h2 := finrank_mul_finrank K E L 
-    have h3 : 0 < finrank E L := finrank_pos 
-    nlinarith
+-- error in FieldTheory.IntermediateField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_of_le_of_finrank_le'
+[finite_dimensional K L]
+(h_le : «expr ≤ »(F, E))
+(h_finrank : «expr ≤ »(finrank F L, finrank E L)) : «expr = »(F, E) :=
+begin
+  apply [expr eq_of_le_of_finrank_le h_le],
+  have [ident h1] [] [":=", expr finrank_mul_finrank K F L],
+  have [ident h2] [] [":=", expr finrank_mul_finrank K E L],
+  have [ident h3] [":", expr «expr < »(0, finrank E L)] [":=", expr finrank_pos],
+  nlinarith [] [] []
+end
 
 theorem eq_of_le_of_finrank_eq' [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank F L = finrank E L) :
   F = E :=

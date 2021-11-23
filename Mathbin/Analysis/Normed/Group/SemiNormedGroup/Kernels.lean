@@ -76,14 +76,14 @@ namespace SemiNormedGroupₓ
 
 section EqualizersAndKernels
 
+-- error in Analysis.Normed.Group.SemiNormedGroup.Kernels: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The equalizer cone for a parallel pair of morphisms of seminormed groups. -/
-def parallel_pair_cone {V W : SemiNormedGroupₓ.{u}} (f g : V ⟶ W) : cone (parallel_pair f g) :=
-  @fork.of_ι _ _ _ _ _ _ (of (f - g).ker) (NormedGroupHom.incl (f - g).ker)$
-    by 
-      ext v 
-      have  : v.1 ∈ (f - g).ker := v.2
-      simpa only [NormedGroupHom.incl_apply, Pi.zero_apply, coe_comp, NormedGroupHom.coe_zero, Subtype.val_eq_coe,
-        NormedGroupHom.mem_ker, NormedGroupHom.coe_sub, Pi.sub_apply, sub_eq_zero] using this
+def parallel_pair_cone {V W : SemiNormedGroup.{u}} (f g : «expr ⟶ »(V, W)) : cone (parallel_pair f g) :=
+«expr $ »(@fork.of_ι _ _ _ _ _ _ (of «expr - »(f, g).ker) (normed_group_hom.incl «expr - »(f, g).ker), begin
+   ext [] [ident v] [],
+   have [] [":", expr «expr ∈ »(v.1, «expr - »(f, g).ker)] [":=", expr v.2],
+   simpa [] [] ["only"] ["[", expr normed_group_hom.incl_apply, ",", expr pi.zero_apply, ",", expr coe_comp, ",", expr normed_group_hom.coe_zero, ",", expr subtype.val_eq_coe, ",", expr normed_group_hom.mem_ker, ",", expr normed_group_hom.coe_sub, ",", expr pi.sub_apply, ",", expr sub_eq_zero, "]"] [] ["using", expr this]
+ end)
 
 instance has_limit_parallel_pair {V W : SemiNormedGroupₓ.{u}} (f g : V ⟶ W) : has_limit (parallel_pair f g) :=
   { exists_limit :=
@@ -224,21 +224,24 @@ theorem explicit_cokernel_desc_zero {X Y Z : SemiNormedGroupₓ.{u}} {f : X ⟶ 
   explicit_cokernel_desc (show f ≫ (0 : Y ⟶ Z) = 0 from CategoryTheory.Limits.comp_zero) = 0 :=
   Eq.symm$ explicit_cokernel_desc_unique _ _ CategoryTheory.Limits.comp_zero
 
-@[ext]
-theorem explicit_cokernel_hom_ext {X Y Z : SemiNormedGroupₓ.{u}} {f : X ⟶ Y} (e₁ e₂ : explicit_cokernel f ⟶ Z)
-  (h : explicit_cokernel_π f ≫ e₁ = explicit_cokernel_π f ≫ e₂) : e₁ = e₂ :=
-  by 
-    let g : Y ⟶ Z := explicit_cokernel_π f ≫ e₂ 
-    have w : f ≫ g = 0
-    ·
-      simp 
-    have  : e₂ = explicit_cokernel_desc w
-    ·
-      apply explicit_cokernel_desc_unique 
-      rfl 
-    rw [this]
-    apply explicit_cokernel_desc_unique 
-    exact h
+-- error in Analysis.Normed.Group.SemiNormedGroup.Kernels: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[ext #[]]
+theorem explicit_cokernel_hom_ext
+{X Y Z : SemiNormedGroup.{u}}
+{f : «expr ⟶ »(X, Y)}
+(e₁ e₂ : «expr ⟶ »(explicit_cokernel f, Z))
+(h : «expr = »(«expr ≫ »(explicit_cokernel_π f, e₁), «expr ≫ »(explicit_cokernel_π f, e₂))) : «expr = »(e₁, e₂) :=
+begin
+  let [ident g] [":", expr «expr ⟶ »(Y, Z)] [":=", expr «expr ≫ »(explicit_cokernel_π f, e₂)],
+  have [ident w] [":", expr «expr = »(«expr ≫ »(f, g), 0)] [],
+  by simp [] [] [] [] [] [],
+  have [] [":", expr «expr = »(e₂, explicit_cokernel_desc w)] [],
+  { apply [expr explicit_cokernel_desc_unique],
+    refl },
+  rw [expr this] [],
+  apply [expr explicit_cokernel_desc_unique],
+  exact [expr h]
+end
 
 instance explicit_cokernel_π.epi {X Y : SemiNormedGroupₓ.{u}} {f : X ⟶ Y} : epi (explicit_cokernel_π f) :=
   by 

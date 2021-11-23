@@ -48,24 +48,19 @@ theorem binary_fan.swap_fst {P Q : C} (t : binary_fan P Q) : t.swap.fst = t.snd 
 theorem binary_fan.swap_snd {P Q : C} (t : binary_fan P Q) : t.swap.snd = t.fst :=
   rfl
 
+-- error in CategoryTheory.Monoidal.OfChosenFiniteProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If a cone `t` over `P Q` is a limit cone, then `t.swap` is a limit cone over `Q P`.
--/
-@[simps]
-def is_limit.swap_binary_fan {P Q : C} {t : binary_fan P Q} (I : is_limit t) : is_limit t.swap :=
-  { lift := fun s => I.lift (binary_fan.swap s),
-    fac' :=
-      fun s =>
-        by 
-          rintro ⟨⟩ <;> simp ,
-    uniq' :=
-      fun s m w =>
-        by 
-          have h := I.uniq (binary_fan.swap s) m 
-          rw [h]
-          intro j 
-          specialize w j.swap 
-          cases j <;> exact w }
+-/ @[simps #[]] def is_limit.swap_binary_fan {P Q : C} {t : binary_fan P Q} (I : is_limit t) : is_limit t.swap :=
+{ lift := λ s, I.lift (binary_fan.swap s),
+  fac' := λ s, by { rintro ["⟨", "⟩"]; simp [] [] [] [] [] [] },
+  uniq' := λ s m w, begin
+    have [ident h] [] [":=", expr I.uniq (binary_fan.swap s) m],
+    rw [expr h] [],
+    intro [ident j],
+    specialize [expr w j.swap],
+    cases [expr j] []; exact [expr w]
+  end }
 
 /--
 Construct `has_binary_product Q P` from `has_binary_product P Q`.
@@ -123,39 +118,41 @@ theorem binary_fan.assoc_inv_snd {X Y Z : C} {sXY : binary_fan X Y} (P : is_limi
   (s : binary_fan X sYZ.X) : (s.assoc_inv P).snd = s.snd ≫ sYZ.snd :=
   rfl
 
+-- error in CategoryTheory.Monoidal.OfChosenFiniteProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If all the binary fans involved a limit cones, `binary_fan.assoc` produces another limit cone.
 -/
-@[simps]
-def is_limit.assoc {X Y Z : C} {sXY : binary_fan X Y} (P : is_limit sXY) {sYZ : binary_fan Y Z} (Q : is_limit sYZ)
-  {s : binary_fan sXY.X Z} (R : is_limit s) : is_limit (s.assoc Q) :=
-  { lift := fun t => R.lift (binary_fan.assoc_inv P t),
-    fac' :=
-      fun t =>
-        by 
-          rintro ⟨⟩ <;> simp 
-          apply Q.hom_ext 
-          rintro ⟨⟩ <;> simp ,
-    uniq' :=
-      fun t m w =>
-        by 
-          have h := R.uniq (binary_fan.assoc_inv P t) m 
-          rw [h]
-          rintro ⟨⟩ <;> simp 
-          apply P.hom_ext 
-          rintro ⟨⟩ <;> simp 
-          ·
-            exact w walking_pair.left
-          ·
-            specialize w walking_pair.right 
-            simp  at w 
-            rw [←w]
-            simp 
-          ·
-            specialize w walking_pair.right 
-            simp  at w 
-            rw [←w]
-            simp  }
+@[simps #[]]
+def is_limit.assoc
+{X Y Z : C}
+{sXY : binary_fan X Y}
+(P : is_limit sXY)
+{sYZ : binary_fan Y Z}
+(Q : is_limit sYZ)
+{s : binary_fan sXY.X Z}
+(R : is_limit s) : is_limit (s.assoc Q) :=
+{ lift := λ t, R.lift (binary_fan.assoc_inv P t),
+  fac' := λ t, begin
+    rintro ["⟨", "⟩"]; simp [] [] [] [] [] [],
+    apply [expr Q.hom_ext],
+    rintro ["⟨", "⟩"]; simp [] [] [] [] [] []
+  end,
+  uniq' := λ t m w, begin
+    have [ident h] [] [":=", expr R.uniq (binary_fan.assoc_inv P t) m],
+    rw [expr h] [],
+    rintro ["⟨", "⟩"]; simp [] [] [] [] [] [],
+    apply [expr P.hom_ext],
+    rintro ["⟨", "⟩"]; simp [] [] [] [] [] [],
+    { exact [expr w walking_pair.left] },
+    { specialize [expr w walking_pair.right],
+      simp [] [] [] [] [] ["at", ident w],
+      rw ["[", "<-", expr w, "]"] [],
+      simp [] [] [] [] [] [] },
+    { specialize [expr w walking_pair.right],
+      simp [] [] [] [] [] ["at", ident w],
+      rw ["[", "<-", expr w, "]"] [],
+      simp [] [] [] [] [] [] }
+  end }
 
 /--
 Given two pairs of limit cones corresponding to the parenthesisations of `X × Y × Z`,
@@ -337,7 +334,7 @@ namespace MonoidalOfChosenFiniteProducts
 
 open MonoidalCategory
 
--- error in CategoryTheory.Monoidal.OfChosenFiniteProducts: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in CategoryTheory.Monoidal.OfChosenFiniteProducts: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /--
 A type synonym for `C` carrying a monoidal category structure corresponding to
 a fixed choice of limit data for the empty functor, and for `pair X Y` for every `X Y : C`.

@@ -34,12 +34,12 @@ universe v u
 
 variable(C : Type u)[category.{v} C]
 
--- error in CategoryTheory.WithTerminal: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in CategoryTheory.WithTerminal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- Formally adjoin a terminal object to a category. -/ @[derive #[expr inhabited]] inductive with_terminal : Type u
 | of : C → with_terminal
 | star : with_terminal
 
--- error in CategoryTheory.WithTerminal: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in CategoryTheory.WithTerminal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- Formally adjoin an initial object to a category. -/ @[derive #[expr inhabited]] inductive with_initial : Type u
 | of : C → with_initial
 | star : with_initial

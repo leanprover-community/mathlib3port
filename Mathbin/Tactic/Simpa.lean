@@ -41,7 +41,7 @@ unsafe def simpa (use_iota_eqn : parse$ (tk "!")?) (trace_lemmas : parse$ (tk "?
           i_to_expr e <|>
               do 
                 let ty ← target 
-                let e ← i_to_expr_strict (pquote (%%e : %%ty))
+                let e ← i_to_expr_strict (pquote.1 (%%ₓe : %%ₓty))
                 let pty ← pp ty 
                 let ptgt ← pp e 
                 fail

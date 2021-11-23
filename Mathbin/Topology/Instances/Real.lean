@@ -192,7 +192,7 @@ instance  : ProperSpace ℝ :=
 instance  : second_countable_topology ℝ :=
   second_countable_of_proper
 
--- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem real.is_topological_basis_Ioo_rat : @is_topological_basis exprℝ() _ «expr⋃ , »((a b : exprℚ())
  (h : «expr < »(a, b)), {Ioo a b}) :=
 is_topological_basis_of_open_of_nhds (by simp [] [] [] ["[", expr is_open_Ioo, "]"] [] [] { contextual := tt }) (assume
@@ -248,15 +248,15 @@ theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f
   show Continuous ((HasInv.inv ∘ @Subtype.val ℝ fun r => r ≠ 0) ∘ fun a => ⟨f a, h a⟩) from
     Real.continuous_inv.comp (continuous_subtype_mk _ hf)
 
-theorem Real.uniform_continuous_mul_const {x : ℝ} : UniformContinuous ((·*·) x) :=
-  Metric.uniform_continuous_iff.2$
-    fun ε ε0 =>
-      by 
-        cases' no_top |x| with y xy 
-        have y0 := lt_of_le_of_ltₓ (abs_nonneg _) xy 
-        refine' ⟨_, div_pos ε0 y0, fun a b h => _⟩
-        rw [Real.dist_eq, ←mul_sub, abs_mul, ←mul_div_cancel' ε (ne_of_gtₓ y0)]
-        exact mul_lt_mul' (le_of_ltₓ xy) h (abs_nonneg _) y0
+-- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem real.uniform_continuous_mul_const {x : exprℝ()} : uniform_continuous (((«expr * »)) x) :=
+«expr $ »(metric.uniform_continuous_iff.2, λ ε ε0, begin
+   cases [expr no_top «expr| |»(x)] ["with", ident y, ident xy],
+   have [ident y0] [] [":=", expr lt_of_le_of_lt (abs_nonneg _) xy],
+   refine [expr ⟨_, div_pos ε0 y0, λ a b h, _⟩],
+   rw ["[", expr real.dist_eq, ",", "<-", expr mul_sub, ",", expr abs_mul, ",", "<-", expr mul_div_cancel' ε (ne_of_gt y0), "]"] [],
+   exact [expr mul_lt_mul' (le_of_lt xy) h (abs_nonneg _) y0]
+ end)
 
 theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ}
   (H : ∀ x _ : x ∈ s, |(x : ℝ × ℝ).1| < r₁ ∧ |x.2| < r₂) : UniformContinuous fun p : s => p.1.1*p.1.2 :=
@@ -299,26 +299,30 @@ theorem Real.Ioo_eq_ball (x y : ℝ) : Ioo x y = ball ((x+y) / 2) ((y - x) / 2) 
     rw [Real.ball_eq_Ioo, ←sub_div, add_commₓ, ←sub_add, add_sub_cancel', add_self_div_two, ←add_div, add_assocₓ,
       add_sub_cancel'_right, add_self_div_two]
 
-instance  : CompleteSpace ℝ :=
-  by 
-    apply complete_of_cauchy_seq_tendsto 
-    intro u hu 
-    let c : CauSeq ℝ abs := ⟨u, Metric.cauchy_seq_iff'.1 hu⟩
-    refine' ⟨c.lim, fun s h => _⟩
-    rcases Metric.mem_nhds_iff.1 h with ⟨ε, ε0, hε⟩
-    have  := c.equiv_lim ε ε0 
-    simp only [mem_map, mem_at_top_sets, mem_set_of_eq]
-    refine' this.imp fun N hN n hn => hε (hN n hn)
+-- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance : complete_space exprℝ() :=
+begin
+  apply [expr complete_of_cauchy_seq_tendsto],
+  intros [ident u, ident hu],
+  let [ident c] [":", expr cau_seq exprℝ() abs] [":=", expr ⟨u, metric.cauchy_seq_iff'.1 hu⟩],
+  refine [expr ⟨c.lim, λ s h, _⟩],
+  rcases [expr metric.mem_nhds_iff.1 h, "with", "⟨", ident ε, ",", ident ε0, ",", ident hε, "⟩"],
+  have [] [] [":=", expr c.equiv_lim ε ε0],
+  simp [] [] ["only"] ["[", expr mem_map, ",", expr mem_at_top_sets, ",", expr mem_set_of_eq, "]"] [] [],
+  refine [expr this.imp (λ N hN n hn, hε (hN n hn))]
+end
 
 theorem Real.totally_bounded_ball (x ε : ℝ) : TotallyBounded (ball x ε) :=
   by 
     rw [Real.ball_eq_Ioo] <;> apply totally_bounded_Ioo
 
-theorem Rat.totally_bounded_Icc (a b : ℚ) : TotallyBounded (Icc a b) :=
-  by 
-    have  := totally_bounded_preimage Rat.uniform_embedding_coe_real (totally_bounded_Icc a b)
-    rwa [(Set.ext fun q => _ : Icc _ _ = _)]
-    simp 
+-- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem rat.totally_bounded_Icc (a b : exprℚ()) : totally_bounded (Icc a b) :=
+begin
+  have [] [] [":=", expr totally_bounded_preimage rat.uniform_embedding_coe_real (totally_bounded_Icc a b)],
+  rwa [expr (set.ext (λ q, _) : «expr = »(Icc _ _, _))] [],
+  simp [] [] [] [] [] []
+end
 
 section 
 
@@ -366,19 +370,12 @@ theorem periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {
     obtain ⟨z, hz, h2⟩ := hp.exists_mem_Ico₀ hc y 
     exact ⟨z, mem_Icc_of_Ico hz, h2.symm.trans h1⟩
 
--- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- A continuous, periodic function has compact range. -/
-theorem periodic.compact_of_continuous
-[topological_space α]
-{f : exprℝ() → α}
-{c : exprℝ()}
-(hp : periodic f c)
-(hc : «expr ≠ »(c, 0))
-(hf : continuous f) : is_compact (range f) :=
-begin
-  cases [expr lt_or_gt_of_ne hc] ["with", ident hneg, ident hpos],
-  exacts ["[", expr hp.neg.compact_of_continuous' (neg_pos.mpr hneg) hf, ",", expr hp.compact_of_continuous' hpos hf, "]"]
-end
+theorem periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : periodic f c) (hc : c ≠ 0)
+  (hf : Continuous f) : IsCompact (range f) :=
+  by 
+    cases' lt_or_gt_of_neₓ hc with hneg hpos 
+    exacts[hp.neg.compact_of_continuous' (neg_pos.mpr hneg) hf, hp.compact_of_continuous' hpos hf]
 
 /-- A continuous, periodic function is bounded. -/
 theorem periodic.bounded_of_continuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : periodic f c) (hc : c ≠ 0)
@@ -391,40 +388,40 @@ end Periodic
 
 section Subgroups
 
+-- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a nontrivial subgroup `G ⊆ ℝ`, if `G ∩ ℝ_{>0}` has no minimum then `G` is dense. -/
-theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_in : g₀ ∈ G) (g₀_ne : g₀ ≠ 0)
-  (H' : ¬∃ a : ℝ, IsLeast { g : ℝ | g ∈ G ∧ 0 < g } a) : Dense (G : Set ℝ) :=
-  by 
-    let G_pos := { g : ℝ | g ∈ G ∧ 0 < g }
-    pushNeg  at H' 
-    intro x 
-    suffices  : ∀ ε _ : ε > (0 : ℝ), ∃ (g : _)(_ : g ∈ G), |x - g| < ε
-    ·
-      simpa only [Real.mem_closure_iff, abs_sub_comm]
-    intro ε ε_pos 
-    obtain ⟨g₁, g₁_in, g₁_pos⟩ : ∃ g₁ : ℝ, g₁ ∈ G ∧ 0 < g₁
-    ·
-      cases' lt_or_gt_of_neₓ g₀_ne with Hg₀ Hg₀
-      ·
-        exact ⟨-g₀, G.neg_mem g₀_in, neg_pos.mpr Hg₀⟩
-      ·
-        exact ⟨g₀, g₀_in, Hg₀⟩
-    obtain ⟨a, ha⟩ : ∃ a, IsGlb G_pos a := ⟨Inf G_pos, is_glb_cInf ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_ltₓ hx.2⟩⟩
-    have a_notin : a ∉ G_pos
-    ·
-      intro H 
-      exact H' a ⟨H, ha.1⟩
-    obtain ⟨g₂, g₂_in, g₂_pos, g₂_lt⟩ : ∃ g₂ : ℝ, g₂ ∈ G ∧ 0 < g₂ ∧ g₂ < ε
-    ·
-      obtain ⟨b, hb, hb', hb''⟩ := ha.exists_between_self_add' a_notin ε_pos 
-      obtain ⟨c, hc, hc', hc''⟩ := ha.exists_between_self_add' a_notin (sub_pos.2 hb')
-      refine' ⟨b - c, G.sub_mem hb.1 hc.1, _, _⟩ <;> linarith 
-    refine' ⟨floor (x / g₂)*g₂, _, _⟩
-    ·
-      exact AddSubgroup.int_mul_mem _ g₂_in
-    ·
-      rw [abs_of_nonneg (sub_floor_div_mul_nonneg x g₂_pos)]
-      linarith [sub_floor_div_mul_lt x g₂_pos]
+theorem real.subgroup_dense_of_no_min
+{G : add_subgroup exprℝ()}
+{g₀ : exprℝ()}
+(g₀_in : «expr ∈ »(g₀, G))
+(g₀_ne : «expr ≠ »(g₀, 0))
+(H' : «expr¬ »(«expr∃ , »((a : exprℝ()), is_least {g : exprℝ() | «expr ∧ »(«expr ∈ »(g, G), «expr < »(0, g))} a))) : dense (G : set exprℝ()) :=
+begin
+  let [ident G_pos] [] [":=", expr {g : exprℝ() | «expr ∧ »(«expr ∈ »(g, G), «expr < »(0, g))}],
+  push_neg ["at", ident H'],
+  intros [ident x],
+  suffices [] [":", expr ∀
+   ε «expr > » (0 : exprℝ()), «expr∃ , »((g «expr ∈ » G), «expr < »(«expr| |»(«expr - »(x, g)), ε))],
+  by simpa [] [] ["only"] ["[", expr real.mem_closure_iff, ",", expr abs_sub_comm, "]"] [] [],
+  intros [ident ε, ident ε_pos],
+  obtain ["⟨", ident g₁, ",", ident g₁_in, ",", ident g₁_pos, "⟩", ":", expr «expr∃ , »((g₁ : exprℝ()), «expr ∧ »(«expr ∈ »(g₁, G), «expr < »(0, g₁)))],
+  { cases [expr lt_or_gt_of_ne g₀_ne] ["with", ident Hg₀, ident Hg₀],
+    { exact [expr ⟨«expr- »(g₀), G.neg_mem g₀_in, neg_pos.mpr Hg₀⟩] },
+    { exact [expr ⟨g₀, g₀_in, Hg₀⟩] } },
+  obtain ["⟨", ident a, ",", ident ha, "⟩", ":", expr «expr∃ , »((a), is_glb G_pos a), ":=", expr ⟨Inf G_pos, is_glb_cInf ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, λ
+     _ hx, le_of_lt hx.2⟩⟩],
+  have [ident a_notin] [":", expr «expr ∉ »(a, G_pos)] [],
+  { intros [ident H],
+    exact [expr H' a ⟨H, ha.1⟩] },
+  obtain ["⟨", ident g₂, ",", ident g₂_in, ",", ident g₂_pos, ",", ident g₂_lt, "⟩", ":", expr «expr∃ , »((g₂ : exprℝ()), «expr ∧ »(«expr ∈ »(g₂, G), «expr ∧ »(«expr < »(0, g₂), «expr < »(g₂, ε))))],
+  { obtain ["⟨", ident b, ",", ident hb, ",", ident hb', ",", ident hb'', "⟩", ":=", expr ha.exists_between_self_add' a_notin ε_pos],
+    obtain ["⟨", ident c, ",", ident hc, ",", ident hc', ",", ident hc'', "⟩", ":=", expr ha.exists_between_self_add' a_notin (sub_pos.2 hb')],
+    refine [expr ⟨«expr - »(b, c), G.sub_mem hb.1 hc.1, _, _⟩]; linarith [] [] [] },
+  refine [expr ⟨«expr * »(floor «expr / »(x, g₂), g₂), _, _⟩],
+  { exact [expr add_subgroup.int_mul_mem _ g₂_in] },
+  { rw [expr abs_of_nonneg (sub_floor_div_mul_nonneg x g₂_pos)] [],
+    linarith [] [] ["[", expr sub_floor_div_mul_lt x g₂_pos, "]"] }
+end
 
 /-- Subgroups of `ℝ` are either dense or cyclic. See `real.subgroup_dense_of_no_min` and
 `subgroup_cyclic_of_min` for more precise statements. -/
@@ -436,7 +433,7 @@ theorem Real.subgroup_dense_or_cyclic (G : AddSubgroup ℝ) : Dense (G : Set ℝ
       use 0
       rw [H, AddSubgroup.closure_singleton_zero]
     ·
-      let G_pos := { g : ℝ | g ∈ G ∧ 0 < g }
+      let G_pos := { g:ℝ | g ∈ G ∧ 0 < g }
       byCases' H' : ∃ a, IsLeast G_pos a
       ·
         right 

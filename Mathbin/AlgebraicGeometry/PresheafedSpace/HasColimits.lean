@@ -183,106 +183,96 @@ def colimit_cocone (F : J ⥤ PresheafedSpace C) : cocone F :=
 
 namespace ColimitCoconeIsColimit
 
+-- error in AlgebraicGeometry.PresheafedSpace.HasColimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Auxiliary definition for `PresheafedSpace.colimit_cocone_is_colimit`.
 -/
-def desc_c_app (F : J ⥤ PresheafedSpace C) (s : cocone F) (U : «expr ᵒᵖ» (opens («expr↥ » s.X.carrier))) :
-  s.X.presheaf.obj U ⟶
-    (colimit.desc (F ⋙ PresheafedSpace.forget C) ((PresheafedSpace.forget C).mapCocone s) _*
-          limit (pushforward_diagram_to_colimit F).leftOp).obj
-      U :=
-  by 
-    refine'
-      limit.lift _ { x := s.X.presheaf.obj U, π := { app := fun j => _, naturality' := fun j j' f => _ } } ≫
-        (limit_obj_iso_limit_comp_evaluation _ _).inv
-    ·
-      refine' (s.ι.app (unop j)).c.app U ≫ (F.obj (unop j)).Presheaf.map (eq_to_hom _)
-      dsimp 
-      rw [←opens.map_comp_obj]
-      simp 
-    ·
-      rw [PresheafedSpace.congr_app (s.w f.unop).symm U]
-      dsimp 
-      have w :=
-        functor.congr_obj (congr_argₓ opens.map (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j)))
-          (unop U)
-      simp only [opens.map_comp_obj_unop] at w 
-      replace w := congr_argₓ op w 
-      have w' := nat_trans.congr (F.map f.unop).c w 
-      rw [w']
-      dsimp 
-      simp 
-      dsimp 
-      simp 
+def desc_c_app
+(F : «expr ⥤ »(J, PresheafedSpace C))
+(s : cocone F)
+(U : «expr ᵒᵖ»(opens «expr↥ »(s.X.carrier))) : «expr ⟶ »(s.X.presheaf.obj U, «expr _* »(colimit.desc «expr ⋙ »(F, PresheafedSpace.forget C) ((PresheafedSpace.forget C).map_cocone s), limit (pushforward_diagram_to_colimit F).left_op).obj U) :=
+begin
+  refine [expr «expr ≫ »(limit.lift _ { X := s.X.presheaf.obj U,
+      π := { app := λ j, _, naturality' := λ j j' f, _ } }, (limit_obj_iso_limit_comp_evaluation _ _).inv)],
+  { refine [expr «expr ≫ »((s.ι.app (unop j)).c.app U, (F.obj (unop j)).presheaf.map (eq_to_hom _))],
+    dsimp [] [] [] [],
+    rw ["<-", expr opens.map_comp_obj] [],
+    simp [] [] [] [] [] [] },
+  { rw [expr PresheafedSpace.congr_app (s.w f.unop).symm U] [],
+    dsimp [] [] [] [],
+    have [ident w] [] [":=", expr functor.congr_obj (congr_arg opens.map (colimit.ι_desc ((PresheafedSpace.forget C).map_cocone s) (unop j))) (unop U)],
+    simp [] [] ["only"] ["[", expr opens.map_comp_obj_unop, "]"] [] ["at", ident w],
+    replace [ident w] [] [":=", expr congr_arg op w],
+    have [ident w'] [] [":=", expr nat_trans.congr (F.map f.unop).c w],
+    rw [expr w'] [],
+    dsimp [] [] [] [],
+    simp [] [] [] [] [] [],
+    dsimp [] [] [] [],
+    simp [] [] [] [] [] [] }
+end
 
-theorem desc_c_naturality (F : J ⥤ PresheafedSpace C) (s : cocone F) {U V : «expr ᵒᵖ» (opens («expr↥ » s.X.carrier))}
-  (i : U ⟶ V) :
-  s.X.presheaf.map i ≫ desc_c_app F s V =
-    desc_c_app F s U ≫ (colimit.desc (F ⋙ forget C) ((forget C).mapCocone s) _* (colimit_cocone F).x.Presheaf).map i :=
-  by 
-    dsimp [desc_c_app]
-    ext 
-    simp only [limit.lift_π, nat_trans.naturality, limit.lift_π_assoc, eq_to_hom_map, assoc, pushforward_obj_map,
-      nat_trans.naturality_assoc, op_map, limit_obj_iso_limit_comp_evaluation_inv_π_app_assoc,
-      limit_obj_iso_limit_comp_evaluation_inv_π_app]
-    dsimp 
-    have w :=
-      functor.congr_hom (congr_argₓ opens.map (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j)))
-        i.unop 
-    simp only [opens.map_comp_map] at w 
-    replace w := congr_argₓ Quiver.Hom.op w 
-    rw [w]
-    dsimp 
-    simp 
+-- error in AlgebraicGeometry.PresheafedSpace.HasColimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem desc_c_naturality
+(F : «expr ⥤ »(J, PresheafedSpace C))
+(s : cocone F)
+{U V : «expr ᵒᵖ»(opens «expr↥ »(s.X.carrier))}
+(i : «expr ⟶ »(U, V)) : «expr = »(«expr ≫ »(s.X.presheaf.map i, desc_c_app F s V), «expr ≫ »(desc_c_app F s U, «expr _* »(colimit.desc «expr ⋙ »(F, forget C) ((forget C).map_cocone s), (colimit_cocone F).X.presheaf).map i)) :=
+begin
+  dsimp [] ["[", expr desc_c_app, "]"] [] [],
+  ext [] [] [],
+  simp [] [] ["only"] ["[", expr limit.lift_π, ",", expr nat_trans.naturality, ",", expr limit.lift_π_assoc, ",", expr eq_to_hom_map, ",", expr assoc, ",", expr pushforward_obj_map, ",", expr nat_trans.naturality_assoc, ",", expr op_map, ",", expr limit_obj_iso_limit_comp_evaluation_inv_π_app_assoc, ",", expr limit_obj_iso_limit_comp_evaluation_inv_π_app, "]"] [] [],
+  dsimp [] [] [] [],
+  have [ident w] [] [":=", expr functor.congr_hom (congr_arg opens.map (colimit.ι_desc ((PresheafedSpace.forget C).map_cocone s) (unop j))) i.unop],
+  simp [] [] ["only"] ["[", expr opens.map_comp_map, "]"] [] ["at", ident w],
+  replace [ident w] [] [":=", expr congr_arg quiver.hom.op w],
+  rw [expr w] [],
+  dsimp [] [] [] [],
+  simp [] [] [] [] [] []
+end
 
 end ColimitCoconeIsColimit
 
 open ColimitCoconeIsColimit
 
+-- error in AlgebraicGeometry.PresheafedSpace.HasColimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Auxiliary definition for `PresheafedSpace.has_colimits`.
--/
-def colimit_cocone_is_colimit (F : J ⥤ PresheafedSpace C) : is_colimit (colimit_cocone F) :=
-  { desc :=
-      fun s =>
-        { base := colimit.desc (F ⋙ PresheafedSpace.forget C) ((PresheafedSpace.forget C).mapCocone s),
-          c := { app := fun U => desc_c_app F s U, naturality' := fun U V i => desc_c_naturality F s i } },
-    fac' :=
-      by 
-        intro s j 
-        dsimp 
-        fapply PresheafedSpace.ext
-        ·
-          simp 
-        ·
-          ext 
-          dsimp [desc_c_app]
-          simp only [eq_to_hom_op, limit.lift_π_assoc, eq_to_hom_map, assoc, pushforward.comp_inv_app,
-            limit_obj_iso_limit_comp_evaluation_inv_π_app_assoc]
-          dsimp 
-          simp ,
-    uniq' :=
-      fun s m w =>
-        by 
-          have t : m.base = colimit.desc (F ⋙ PresheafedSpace.forget C) ((PresheafedSpace.forget C).mapCocone s)
-          ·
-            ext 
-            dsimp 
-            simp only [colimit.ι_desc_apply, map_cocone_ι_app]
-            rw [←w j]
-            simp 
-          fapply PresheafedSpace.ext
-          ·
-            exact t
-          ·
-            ext U j 
-            dsimp [desc_c_app]
-            simp only [limit.lift_π, eq_to_hom_op, eq_to_hom_map, assoc, limit_obj_iso_limit_comp_evaluation_inv_π_app]
-            rw [PresheafedSpace.congr_app (w (unop j)).symm U]
-            dsimp 
-            have w := congr_argₓ op (functor.congr_obj (congr_argₓ opens.map t) (unop U))
-            rw [nat_trans.congr (limit.π (pushforward_diagram_to_colimit F).leftOp j) w]
-            simpa }
+-/ def colimit_cocone_is_colimit (F : «expr ⥤ »(J, PresheafedSpace C)) : is_colimit (colimit_cocone F) :=
+{ desc := λ
+  s, { base := colimit.desc «expr ⋙ »(F, PresheafedSpace.forget C) ((PresheafedSpace.forget C).map_cocone s),
+    c := { app := λ U, desc_c_app F s U, naturality' := λ U V i, desc_c_naturality F s i } },
+  fac' := begin
+    intros [ident s, ident j],
+    dsimp [] [] [] [],
+    fapply [expr PresheafedSpace.ext],
+    { simp [] [] [] [] [] [] },
+    { ext [] [] [],
+      dsimp [] ["[", expr desc_c_app, "]"] [] [],
+      simp [] [] ["only"] ["[", expr eq_to_hom_op, ",", expr limit.lift_π_assoc, ",", expr eq_to_hom_map, ",", expr assoc, ",", expr pushforward.comp_inv_app, ",", expr limit_obj_iso_limit_comp_evaluation_inv_π_app_assoc, "]"] [] [],
+      dsimp [] [] [] [],
+      simp [] [] [] [] [] [] }
+  end,
+  uniq' := λ s m w, begin
+    have [ident t] [":", expr «expr = »(m.base, colimit.desc «expr ⋙ »(F, PresheafedSpace.forget C) ((PresheafedSpace.forget C).map_cocone s))] [],
+    { apply [expr category_theory.limits.colimit.hom_ext],
+      intros [ident j],
+      apply [expr continuous_map.ext],
+      intros [ident x],
+      dsimp [] [] [] [],
+      simp [] [] ["only"] ["[", expr colimit.ι_desc_apply, ",", expr map_cocone_ι_app, "]"] [] [],
+      rw ["<-", expr w j] [],
+      simp [] [] [] [] [] [] },
+    fapply [expr PresheafedSpace.ext],
+    { exact [expr t] },
+    { ext [] [ident U, ident j] [],
+      dsimp [] ["[", expr desc_c_app, "]"] [] [],
+      simp [] [] ["only"] ["[", expr limit.lift_π, ",", expr eq_to_hom_op, ",", expr eq_to_hom_map, ",", expr assoc, ",", expr limit_obj_iso_limit_comp_evaluation_inv_π_app, "]"] [] [],
+      rw [expr PresheafedSpace.congr_app (w (unop j)).symm U] [],
+      dsimp [] [] [] [],
+      have [ident w] [] [":=", expr congr_arg op (functor.congr_obj (congr_arg opens.map t) (unop U))],
+      rw [expr nat_trans.congr (limit.π (pushforward_diagram_to_colimit F).left_op j) w] [],
+      simpa [] [] [] [] [] [] }
+  end }
 
 /--
 When `C` has limits, the category of presheaved spaces with values in `C` itself has colimits.
@@ -291,7 +281,7 @@ instance  : has_colimits (PresheafedSpace C) :=
   { HasColimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { HasColimit :=
                 fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } } }
 
@@ -303,7 +293,7 @@ instance forget_preserves_colimits : preserves_colimits (PresheafedSpace.forget 
   { PreservesColimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesColimit :=
                 fun F =>
                   preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)

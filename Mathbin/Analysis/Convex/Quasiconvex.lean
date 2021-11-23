@@ -46,12 +46,12 @@ variable(𝕜)[OrderedAddCommMonoid β][HasScalar 𝕜 E](s : Set E)(f : E → �
 /-- A function is quasiconvex if all its sublevels are convex.
 This means that, for all `r`, `{x ∈ s | f x ≤ r}` is `𝕜`-convex. -/
 def QuasiconvexOn : Prop :=
-  ∀ r, Convex 𝕜 { x ∈ s | f x ≤ r }
+  ∀ r, Convex 𝕜 { x∈s | f x ≤ r }
 
 /-- A function is quasiconcave if all its superlevels are convex.
 This means that, for all `r`, `{x ∈ s | r ≤ f x}` is `𝕜`-convex. -/
 def QuasiconcaveOn : Prop :=
-  ∀ r, Convex 𝕜 { x ∈ s | r ≤ f x }
+  ∀ r, Convex 𝕜 { x∈s | r ≤ f x }
 
 /-- A function is quasilinear if it is both quasiconvex and quasiconcave.
 This means that, for all `r`,
@@ -126,13 +126,15 @@ theorem quasilinear_on_iff_mem_interval :
     apply and_congr_right' 
     simpRw [←forall_and_distrib, interval, mem_Icc, and_comm]
 
-theorem QuasiconvexOn.convex_lt (hf : QuasiconvexOn 𝕜 s f) (r : β) : Convex 𝕜 { x ∈ s | f x < r } :=
-  by 
-    refine' fun x y hx hy a b ha hb hab => _ 
-    have h := hf _ ⟨hx.1, le_max_leftₓ _ _⟩ ⟨hy.1, le_max_rightₓ _ _⟩ ha hb hab 
-    exact ⟨h.1, h.2.trans_lt$ max_ltₓ hx.2 hy.2⟩
+-- error in Analysis.Convex.Quasiconvex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem quasiconvex_on.convex_lt (hf : quasiconvex_on 𝕜 s f) (r : β) : convex 𝕜 {x ∈ s | «expr < »(f x, r)} :=
+begin
+  refine [expr λ x y hx hy a b ha hb hab, _],
+  have [ident h] [] [":=", expr hf _ ⟨hx.1, le_max_left _ _⟩ ⟨hy.1, le_max_right _ _⟩ ha hb hab],
+  exact [expr ⟨h.1, «expr $ »(h.2.trans_lt, max_lt hx.2 hy.2)⟩]
+end
 
-theorem QuasiconcaveOn.convex_gt (hf : QuasiconcaveOn 𝕜 s f) (r : β) : Convex 𝕜 { x ∈ s | r < f x } :=
+theorem QuasiconcaveOn.convex_gt (hf : QuasiconcaveOn 𝕜 s f) (r : β) : Convex 𝕜 { x∈s | r < f x } :=
   hf.dual.convex_lt r
 
 end HasScalar

@@ -49,7 +49,25 @@ def piFinTwoEquiv (α : Finₓ 2 → Type u) : (∀ i, α i) ≃ α 0 × α 1 :=
   { toFun := fun f => (f 0, f 1), invFun := fun p => Finₓ.cons p.1$ Finₓ.cons p.2 finZeroElim,
     left_inv := fun f => funext$ Finₓ.forall_fin_two.2 ⟨rfl, rfl⟩, right_inv := fun ⟨x, y⟩ => rfl }
 
--- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fin.preimage_apply_01_prod
+{α : fin 2 → Type u}
+(s : set (α 0))
+(t : set (α 1)) : «expr = »(«expr ⁻¹' »(λ
+  f : ∀ i, α i, (f 0, f 1), s.prod t), set.pi set.univ «expr $ »(fin.cons s, fin.cons t fin.elim0)) :=
+begin
+  ext [] [ident f] [],
+  have [] [":", expr «expr = »((fin.cons s (fin.cons t fin.elim0) : ∀ i, set (α i)) 1, t)] [":=", expr rfl],
+  simp [] [] [] ["[", expr fin.forall_fin_two, ",", expr this, "]"] [] []
+end
+
+-- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
+theorem fin.preimage_apply_01_prod'
+{α : Type u}
+(s t : set α) : «expr = »(«expr ⁻¹' »(λ f : fin 2 → α, (f 0, f 1), s.prod t), set.pi set.univ «expr![ , ]»([s, t])) :=
+fin.preimage_apply_01_prod s t
+
+-- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- A product space `α × β` is equivalent to the space `Π i : fin 2, γ i`, where
 `γ = fin.cons α (fin.cons β fin_zero_elim)`. See also `pi_fin_two_equiv` and
 `fin_two_arrow_equiv`. -/
@@ -57,7 +75,7 @@ def piFinTwoEquiv (α : Finₓ 2 → Type u) : (∀ i, α i) ≃ α 0 × α 1 :=
 def prod_equiv_pi_fin_two (α β : Type u) : «expr ≃ »(«expr × »(α, β), ∀ i : fin 2, «expr![ , ]»([α, β]) i) :=
 (pi_fin_two_equiv (fin.cons α (fin.cons β fin_zero_elim))).symm
 
--- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- The space of functions `fin 2 → α` is equivalent to `α × α`. See also `pi_fin_two_equiv` and
 `prod_equiv_pi_fin_two`. -/
 @[simps #[expr { fully_applied := ff }]]
@@ -300,22 +318,23 @@ theorem fin_rotate_last' : finRotate (n+1) ⟨n, lt_add_one _⟩ = ⟨0, Nat.zer
 theorem fin_rotate_last : finRotate (n+1) (Finₓ.last _) = 0 :=
   fin_rotate_last'
 
-theorem Finₓ.snoc_eq_cons_rotate {α : Type _} (v : Finₓ n → α) (a : α) :
-  @Finₓ.snoc _ (fun _ => α) v a = fun i => @Finₓ.cons _ (fun _ => α) a v (finRotate _ i) :=
-  by 
-    ext ⟨i, h⟩
-    byCases' h' : i < n
-    ·
-      rw [fin_rotate_of_lt h', Finₓ.snoc, Finₓ.cons, dif_pos h']
-      rfl
-    ·
-      have h'' : n = i
-      ·
-        simp only [not_ltₓ] at h' 
-        exact (Nat.eq_of_le_of_lt_succ h' h).symm 
-      subst h'' 
-      rw [fin_rotate_last', Finₓ.snoc, Finₓ.cons, dif_neg (lt_irreflₓ _)]
-      rfl
+-- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fin.snoc_eq_cons_rotate
+{α : Type*}
+(v : fin n → α)
+(a : α) : «expr = »(@fin.snoc _ (λ _, α) v a, λ i, @fin.cons _ (λ _, α) a v (fin_rotate _ i)) :=
+begin
+  ext [] ["⟨", ident i, ",", ident h, "⟩"] [],
+  by_cases [expr h', ":", expr «expr < »(i, n)],
+  { rw ["[", expr fin_rotate_of_lt h', ",", expr fin.snoc, ",", expr fin.cons, ",", expr dif_pos h', "]"] [],
+    refl },
+  { have [ident h''] [":", expr «expr = »(n, i)] [],
+    { simp [] [] ["only"] ["[", expr not_lt, "]"] [] ["at", ident h'],
+      exact [expr (nat.eq_of_le_of_lt_succ h' h).symm] },
+    subst [expr h''],
+    rw ["[", expr fin_rotate_last', ",", expr fin.snoc, ",", expr fin.cons, ",", expr dif_neg (lt_irrefl _), "]"] [],
+    refl }
+end
 
 @[simp]
 theorem fin_rotate_zero : finRotate 0 = Equiv.refl _ :=
@@ -344,11 +363,16 @@ theorem fin_rotate_apply_zero {n : ℕ} : finRotate n.succ 0 = 1 :=
   by 
     rw [fin_rotate_succ_apply, zero_addₓ]
 
-theorem coe_fin_rotate_of_ne_last {n : ℕ} {i : Finₓ n.succ} (h : i ≠ Finₓ.last n) : (finRotate n.succ i : ℕ) = i+1 :=
-  by 
-    rw [fin_rotate_succ_apply]
-    have  : (i : ℕ) < n := lt_of_le_of_neₓ (nat.succ_le_succ_iff.mp i.2) (fin.coe_injective.ne h)
-    exact Finₓ.coe_add_one_of_lt this
+-- error in Data.Equiv.Fin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem coe_fin_rotate_of_ne_last
+{n : exprℕ()}
+{i : fin n.succ}
+(h : «expr ≠ »(i, fin.last n)) : «expr = »((fin_rotate n.succ i : exprℕ()), «expr + »(i, 1)) :=
+begin
+  rw [expr fin_rotate_succ_apply] [],
+  have [] [":", expr «expr < »((i : exprℕ()), n)] [":=", expr lt_of_le_of_ne (nat.succ_le_succ_iff.mp i.2) (fin.coe_injective.ne h)],
+  exact [expr fin.coe_add_one_of_lt this]
+end
 
 theorem coe_fin_rotate {n : ℕ} (i : Finₓ n.succ) : (finRotate n.succ i : ℕ) = if i = Finₓ.last n then 0 else i+1 :=
   by 

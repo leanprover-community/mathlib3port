@@ -1,8 +1,7 @@
-import Mathbin.Tactic.ApplyFun 
+import Mathbin.LinearAlgebra.Matrix.Adjugate 
 import Mathbin.RingTheory.MatrixAlgebra 
 import Mathbin.RingTheory.PolynomialAlgebra 
-import Mathbin.LinearAlgebra.Matrix.NonsingularInverse 
-import Mathbin.LinearAlgebra.Matrix.Reindex 
+import Mathbin.Tactic.ApplyFun 
 import Mathbin.Tactic.Squeeze
 
 /-!
@@ -88,20 +87,20 @@ theorem Matrix.charpoly_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n 
     unfold Matrix.charpoly 
     rw [charmatrix_reindex, Matrix.det_reindex_self]
 
+-- error in LinearAlgebra.Matrix.Charpoly.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The **Cayley-Hamilton Theorem**, that the characteristic polynomial of a matrix,
 applied to the matrix itself, is zero.
 
 This holds over any commutative ring.
--/
-theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 :=
-  by 
-    have h : M.charpoly • (1 : Matrix n n (Polynomial R)) = adjugate (charmatrix M)*charmatrix M :=
-      (adjugate_mul _).symm 
-    applyFun matPolyEquiv  at h 
-    simp only [mat_poly_equiv.map_mul, mat_poly_equiv_charmatrix] at h 
-    applyFun fun p => p.eval M  at h 
-    rw [eval_mul_X_sub_C] at h 
-    rw [mat_poly_equiv_smul_one, eval_map] at h 
-    exact h
+-/ theorem matrix.aeval_self_charpoly (M : matrix n n R) : «expr = »(aeval M M.charpoly, 0) :=
+begin
+  have [ident h] [":", expr «expr = »(«expr • »(M.charpoly, (1 : matrix n n (polynomial R))), «expr * »(adjugate (charmatrix M), charmatrix M))] [":=", expr (adjugate_mul _).symm],
+  apply_fun [expr mat_poly_equiv] ["at", ident h] [],
+  simp [] [] ["only"] ["[", expr mat_poly_equiv.map_mul, ",", expr mat_poly_equiv_charmatrix, "]"] [] ["at", ident h],
+  apply_fun [expr λ p, p.eval M] ["at", ident h] [],
+  rw [expr eval_mul_X_sub_C] ["at", ident h],
+  rw ["[", expr mat_poly_equiv_smul_one, ",", expr eval_map, "]"] ["at", ident h],
+  exact [expr h]
+end
 

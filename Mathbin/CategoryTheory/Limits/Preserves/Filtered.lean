@@ -1,6 +1,5 @@
 import Mathbin.CategoryTheory.Limits.Preserves.Basic 
-import Mathbin.CategoryTheory.Filtered 
-import Mathbin.CategoryTheory.Limits.Types
+import Mathbin.CategoryTheory.Filtered
 
 /-!
 # Preservation of filtered colimits and cofiltered limits.
@@ -43,7 +42,7 @@ instance comp_preserves_filtered_colimits (F : C ⥤ D) (G : D ⥤ E) [preserves
   { PreservesFilteredColimits :=
       fun J _ _ =>
         by 
-          exactI inferInstance }
+          exact inferInstance }
 
 /--
 A functor is said to preserve cofiltered limits, if it preserves all limits of shape `J`, where
@@ -63,7 +62,7 @@ instance comp_preserves_cofiltered_limits (F : C ⥤ D) (G : D ⥤ E) [preserves
   { PreservesCofilteredLimits :=
       fun J _ _ =>
         by 
-          exactI inferInstance }
+          exact inferInstance }
 
 end CategoryTheory.Limits
 

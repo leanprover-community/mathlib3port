@@ -61,15 +61,11 @@ theorem seq_pos_lt_seq_of_le_of_lt (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h�
   (hx : ∀ k _ : k < n, x (k+1) ≤ f (x k)) (hy : ∀ k _ : k < n, f (y k) < y (k+1)) : x n < y n :=
   hf.dual.seq_pos_lt_seq_of_lt_of_le hn h₀ hy hx
 
--- error in Order.Iterate: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem seq_lt_seq_of_lt_of_le
-(hf : monotone f)
-(n : exprℕ())
-(h₀ : «expr < »(x 0, y 0))
-(hx : ∀ k «expr < » n, «expr < »(x «expr + »(k, 1), f (x k)))
-(hy : ∀ k «expr < » n, «expr ≤ »(f (y k), y «expr + »(k, 1))) : «expr < »(x n, y n) :=
-by { cases [expr n] [],
-  exacts ["[", expr h₀, ",", expr hf.seq_pos_lt_seq_of_lt_of_le n.zero_lt_succ h₀.le hx hy, "]"] }
+theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0) (hx : ∀ k _ : k < n, x (k+1) < f (x k))
+  (hy : ∀ k _ : k < n, f (y k) ≤ y (k+1)) : x n < y n :=
+  by 
+    cases n 
+    exacts[h₀, hf.seq_pos_lt_seq_of_lt_of_le n.zero_lt_succ h₀.le hx hy]
 
 theorem seq_lt_seq_of_le_of_lt (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0) (hx : ∀ k _ : k < n, x (k+1) ≤ f (x k))
   (hy : ∀ k _ : k < n, f (y k) < y (k+1)) : x n < y n :=

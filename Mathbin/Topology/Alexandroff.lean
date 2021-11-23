@@ -353,25 +353,24 @@ Finally, if the original space `X` is *not* compact and is a preconnected space,
 -/
 
 
+-- error in Topology.Alexandroff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For any topological space `X`, its one point compactification is a compact space. -/
-instance  : CompactSpace (Alexandroff X) :=
-  { compact_univ :=
-      by 
-        refine' is_compact_iff_ultrafilter_le_nhds.2 fun f hf => _ 
-        clear hf 
-        byCases' hf : (f : Filter (Alexandroff X)) ≤ 𝓝 ∞
-        ·
-          exact ⟨∞, mem_univ _, hf⟩
-        ·
-          simp only [ultrafilter_le_nhds_infty, not_forall, not_not] at hf 
-          rcases hf with ⟨s, h₁, h₂, hsf⟩
-          have hf : range (coeₓ : X → Alexandroff X) ∈ f 
-          exact mem_of_superset hsf (image_subset_range _ _)
-          have hsf' : s ∈ f.comap coe_injective hf 
-          exact (f.mem_comap _ _).2 hsf 
-          rcases h₂.ultrafilter_le_nhds _ (le_principal_iff.2 hsf') with ⟨a, has, hle⟩
-          rw [Ultrafilter.coe_comap, ←comap_coe_nhds, comap_le_comap_iff hf] at hle 
-          exact ⟨a, mem_univ _, hle⟩ }
+instance : compact_space (alexandroff X) :=
+{ compact_univ := begin
+    refine [expr is_compact_iff_ultrafilter_le_nhds.2 (λ f hf, _)],
+    clear [ident hf],
+    by_cases [expr hf, ":", expr «expr ≤ »((f : filter (alexandroff X)), expr𝓝() «expr∞»())],
+    { exact [expr ⟨«expr∞»(), mem_univ _, hf⟩] },
+    { simp [] [] ["only"] ["[", expr ultrafilter_le_nhds_infty, ",", expr not_forall, ",", expr not_not, "]"] [] ["at", ident hf],
+      rcases [expr hf, "with", "⟨", ident s, ",", ident h₁, ",", ident h₂, ",", ident hsf, "⟩"],
+      have [ident hf] [":", expr «expr ∈ »(range (coe : X → alexandroff X), f)] [],
+      from [expr mem_of_superset hsf (image_subset_range _ _)],
+      have [ident hsf'] [":", expr «expr ∈ »(s, f.comap coe_injective hf)] [],
+      from [expr (f.mem_comap _ _).2 hsf],
+      rcases [expr h₂.ultrafilter_le_nhds _ (le_principal_iff.2 hsf'), "with", "⟨", ident a, ",", ident has, ",", ident hle, "⟩"],
+      rw ["[", expr ultrafilter.coe_comap, ",", "<-", expr comap_coe_nhds, ",", expr comap_le_comap_iff hf, "]"] ["at", ident hle],
+      exact [expr ⟨a, mem_univ _, hle⟩] }
+  end }
 
 /-- The one point compactification of a `t0_space` space is a `t0_space`. -/
 instance  [T0Space X] : T0Space (Alexandroff X) :=
@@ -403,31 +402,27 @@ instance  [T1Space X] : T1Space (Alexandroff X) :=
             simp only [←image_singleton, is_closed_image_coe]
             exact ⟨is_closed_singleton, is_compact_singleton⟩ }
 
+-- error in Topology.Alexandroff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The one point compactification of a locally compact Hausdorff space is a normal (hence,
 Hausdorff and regular) topological space. -/
-instance  [LocallyCompactSpace X] [T2Space X] : NormalSpace (Alexandroff X) :=
-  by 
-    have key : ∀ z : X, ∃ u v : Set (Alexandroff X), IsOpen u ∧ IsOpen v ∧ «expr↑ » z ∈ u ∧ ∞ ∈ v ∧ u ∩ v = ∅
-    ·
-      intro z 
-      rcases exists_open_with_compact_closure z with ⟨u, hu, huy', Hu⟩
-      refine'
-        ⟨coeₓ '' u, «expr ᶜ» (coeₓ '' Closure u), is_open_image_coe.2 hu,
-          is_open_compl_image_coe.2 ⟨is_closed_closure, Hu⟩, mem_image_of_mem _ huy', mem_compl infty_not_mem_image_coe,
-          _⟩
-      rw [←subset_compl_iff_disjoint, compl_compl]
-      exact image_subset _ subset_closure 
-    refine' @normal_of_compact_t2 _ _ _ ⟨fun x y hxy => _⟩
-    induction x using Alexandroff.rec <;> induction y using Alexandroff.rec
-    ·
-      exact (hxy rfl).elim
-    ·
-      rcases key y with ⟨u, v, hu, hv, hxu, hyv, huv⟩
-      exact ⟨v, u, hv, hu, hyv, hxu, inter_comm u v ▸ huv⟩
-    ·
-      exact key x
-    ·
-      exact separated_by_open_embedding open_embedding_coe (mt coe_eq_coe.mpr hxy)
+instance [locally_compact_space X] [t2_space X] : normal_space (alexandroff X) :=
+begin
+  have [ident key] [":", expr ∀
+   z : X, «expr∃ , »((u
+     v : set (alexandroff X)), «expr ∧ »(is_open u, «expr ∧ »(is_open v, «expr ∧ »(«expr ∈ »(«expr↑ »(z), u), «expr ∧ »(«expr ∈ »(«expr∞»(), v), «expr = »(«expr ∩ »(u, v), «expr∅»()))))))] [],
+  { intro [ident z],
+    rcases [expr exists_open_with_compact_closure z, "with", "⟨", ident u, ",", ident hu, ",", ident huy', ",", ident Hu, "⟩"],
+    refine [expr ⟨«expr '' »(coe, u), «expr ᶜ»(«expr '' »(coe, closure u)), is_open_image_coe.2 hu, is_open_compl_image_coe.2 ⟨is_closed_closure, Hu⟩, mem_image_of_mem _ huy', mem_compl infty_not_mem_image_coe, _⟩],
+    rw ["[", "<-", expr subset_compl_iff_disjoint, ",", expr compl_compl, "]"] [],
+    exact [expr image_subset _ subset_closure] },
+  refine [expr @normal_of_compact_t2 _ _ _ ⟨λ x y hxy, _⟩],
+  induction [expr x] ["using", ident alexandroff.rec] [] []; induction [expr y] ["using", ident alexandroff.rec] [] [],
+  { exact [expr (hxy rfl).elim] },
+  { rcases [expr key y, "with", "⟨", ident u, ",", ident v, ",", ident hu, ",", ident hv, ",", ident hxu, ",", ident hyv, ",", ident huv, "⟩"],
+    exact [expr ⟨v, u, hv, hu, hyv, hxu, «expr ▸ »(inter_comm u v, huv)⟩] },
+  { exact [expr key x] },
+  { exact [expr separated_by_open_embedding open_embedding_coe (mt coe_eq_coe.mpr hxy)] }
+end
 
 /-- If `X` is not a compact space, then `alexandroff X` is a connected space. -/
 instance  [PreconnectedSpace X] [NoncompactSpace X] : ConnectedSpace (Alexandroff X) :=

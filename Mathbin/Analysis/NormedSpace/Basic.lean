@@ -1,11 +1,10 @@
 import Mathbin.Algebra.Algebra.RestrictScalars 
 import Mathbin.Algebra.Algebra.Subalgebra 
+import Mathbin.Analysis.Normed.Group.InfiniteSum 
 import Mathbin.Data.Matrix.Basic 
-import Mathbin.Topology.Algebra.GroupCompletion 
+import Mathbin.Topology.Algebra.Module 
 import Mathbin.Topology.Instances.Ennreal 
-import Mathbin.Topology.MetricSpace.Completion 
-import Mathbin.Topology.Sequences 
-import Mathbin.Analysis.Normed.Group.InfiniteSum
+import Mathbin.Topology.Sequences
 
 /-!
 # Normed spaces
@@ -124,14 +123,19 @@ theorem List.norm_prod_le [NormOneClass α] : ∀ l : List α, ∥l.prod∥ ≤ 
     simp 
 | a :: l => List.norm_prod_le' (List.cons_ne_nil a l)
 
-theorem Finset.norm_prod_le' {α : Type _} [NormedCommRing α] (s : Finset ι) (hs : s.nonempty) (f : ι → α) :
-  ∥∏i in s, f i∥ ≤ ∏i in s, ∥f i∥ :=
-  by 
-    rcases s with ⟨⟨l⟩, hl⟩
-    have  : l.map f ≠ []
-    ·
-      simpa using hs 
-    simpa using List.norm_prod_le' this
+-- error in Analysis.NormedSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem finset.norm_prod_le'
+{α : Type*}
+[normed_comm_ring α]
+(s : finset ι)
+(hs : s.nonempty)
+(f : ι → α) : «expr ≤ »(«expr∥ ∥»(«expr∏ in , »((i), s, f i)), «expr∏ in , »((i), s, «expr∥ ∥»(f i))) :=
+begin
+  rcases [expr s, "with", "⟨", "⟨", ident l, "⟩", ",", ident hl, "⟩"],
+  have [] [":", expr «expr ≠ »(l.map f, «expr[ , ]»([]))] [],
+  by simpa [] [] [] [] [] ["using", expr hs],
+  simpa [] [] [] [] [] ["using", expr list.norm_prod_le' this]
+end
 
 theorem Finset.norm_prod_le {α : Type _} [NormedCommRing α] [NormOneClass α] (s : Finset ι) (f : ι → α) :
   ∥∏i in s, f i∥ ≤ ∏i in s, ∥f i∥ :=
@@ -226,25 +230,22 @@ def Matrix.normedGroup {n m : Type _} [Fintype n] [Fintype m] : NormedGroup (Mat
 
 end NormedRing
 
-instance (priority := 100)semi_normed_ring_top_monoid [SemiNormedRing α] : HasContinuousMul α :=
-  ⟨continuous_iff_continuous_at.2$
-      fun x =>
-        tendsto_iff_norm_tendsto_zero.2$
-          by 
-            have  : ∀ e : α × α, ∥(e.1*e.2) - x.1*x.2∥ ≤ (∥e.1∥*∥e.2 - x.2∥)+∥e.1 - x.1∥*∥x.2∥
-            ·
-              intro e 
-              calc ∥(e.1*e.2) - x.1*x.2∥ ≤ ∥(e.1*e.2 - x.2)+(e.1 - x.1)*x.2∥ :=
-                by 
-                  rw [mul_sub, sub_mul, sub_add_sub_cancel]_ ≤ (∥e.1∥*∥e.2 - x.2∥)+∥e.1 - x.1∥*∥x.2∥ :=
-                norm_add_le_of_le (norm_mul_le _ _) (norm_mul_le _ _)
-            refine' squeeze_zero (fun e => norm_nonneg _) this _ 
-            convert
-              ((continuous_fst.tendsto x).norm.mul ((continuous_snd.tendsto x).sub tendsto_const_nhds).norm).add
-                (((continuous_fst.tendsto x).sub tendsto_const_nhds).norm.mul _)
-            show tendsto _ _ _ 
-            exact tendsto_const_nhds 
-            simp ⟩
+-- error in Analysis.NormedSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[priority 100] instance semi_normed_ring_top_monoid [semi_normed_ring α] : has_continuous_mul α :=
+⟨«expr $ »(continuous_iff_continuous_at.2, λ
+  x, «expr $ »(tendsto_iff_norm_tendsto_zero.2, begin
+     have [] [":", expr ∀
+      e : «expr × »(α, α), «expr ≤ »(«expr∥ ∥»(«expr - »(«expr * »(e.1, e.2), «expr * »(x.1, x.2))), «expr + »(«expr * »(«expr∥ ∥»(e.1), «expr∥ ∥»(«expr - »(e.2, x.2))), «expr * »(«expr∥ ∥»(«expr - »(e.1, x.1)), «expr∥ ∥»(x.2))))] [],
+     { intro [ident e],
+       calc
+         «expr ≤ »(«expr∥ ∥»(«expr - »(«expr * »(e.1, e.2), «expr * »(x.1, x.2))), «expr∥ ∥»(«expr + »(«expr * »(e.1, «expr - »(e.2, x.2)), «expr * »(«expr - »(e.1, x.1), x.2)))) : by rw ["[", expr mul_sub, ",", expr sub_mul, ",", expr sub_add_sub_cancel, "]"] []
+         «expr ≤ »(..., «expr + »(«expr * »(«expr∥ ∥»(e.1), «expr∥ ∥»(«expr - »(e.2, x.2))), «expr * »(«expr∥ ∥»(«expr - »(e.1, x.1)), «expr∥ ∥»(x.2)))) : norm_add_le_of_le (norm_mul_le _ _) (norm_mul_le _ _) },
+     refine [expr squeeze_zero (λ e, norm_nonneg _) this _],
+     convert [] [expr ((continuous_fst.tendsto x).norm.mul ((continuous_snd.tendsto x).sub tendsto_const_nhds).norm).add (((continuous_fst.tendsto x).sub tendsto_const_nhds).norm.mul _)] [],
+     show [expr tendsto _ _ _],
+     from [expr tendsto_const_nhds],
+     simp [] [] [] [] [] []
+   end))⟩
 
 /-- A seminormed ring is a topological ring. -/
 instance (priority := 100)semi_normed_top_ring [SemiNormedRing α] : TopologicalRing α :=
@@ -335,23 +336,23 @@ theorem norm_zpow : ∀ a : α n : ℤ, ∥a ^ n∥ = ∥a∥ ^ n :=
 theorem nnnorm_zpow : ∀ a : α n : ℤ, ∥a ^ n∥₊ = ∥a∥₊ ^ n :=
   (nnnorm_hom : MonoidWithZeroHom α ℝ≥0 ).map_zpow
 
-instance (priority := 100) : HasContinuousInv₀ α :=
-  by 
-    refine' ⟨fun r r0 => tendsto_iff_norm_tendsto_zero.2 _⟩
-    have r0' : 0 < ∥r∥ := norm_pos_iff.2 r0 
-    rcases exists_between r0' with ⟨ε, ε0, εr⟩
-    have  : ∀ᶠe in 𝓝 r, ∥e⁻¹ - r⁻¹∥ ≤ ∥r - e∥ / ∥r∥ / ε
-    ·
-      filterUpwards [(is_open_lt continuous_const continuous_norm).eventually_mem εr]
-      intro e he 
-      have e0 : e ≠ 0 := norm_pos_iff.1 (ε0.trans he)
-      calc ∥e⁻¹ - r⁻¹∥ = ∥r - e∥ / ∥r∥ / ∥e∥ :=
-        by 
-          fieldSimp [mul_commₓ]_ ≤ ∥r - e∥ / ∥r∥ / ε :=
-        div_le_div_of_le_left (div_nonneg (norm_nonneg _) (norm_nonneg _)) ε0 he.le 
-    refine' squeeze_zero' (eventually_of_forall$ fun _ => norm_nonneg _) this _ 
-    refine' (continuous_const.sub continuous_id).norm.div_const.div_const.tendsto' _ _ _ 
-    simp 
+-- error in Analysis.NormedSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[priority 100] instance : has_continuous_inv₀ α :=
+begin
+  refine [expr ⟨λ r r0, tendsto_iff_norm_tendsto_zero.2 _⟩],
+  have [ident r0'] [":", expr «expr < »(0, «expr∥ ∥»(r))] [":=", expr norm_pos_iff.2 r0],
+  rcases [expr exists_between r0', "with", "⟨", ident ε, ",", ident ε0, ",", ident εr, "⟩"],
+  have [] [":", expr «expr∀ᶠ in , »((e), expr𝓝() r, «expr ≤ »(«expr∥ ∥»(«expr - »(«expr ⁻¹»(e), «expr ⁻¹»(r))), «expr / »(«expr / »(«expr∥ ∥»(«expr - »(r, e)), «expr∥ ∥»(r)), ε)))] [],
+  { filter_upwards ["[", expr (is_open_lt continuous_const continuous_norm).eventually_mem εr, "]"] [],
+    intros [ident e, ident he],
+    have [ident e0] [":", expr «expr ≠ »(e, 0)] [":=", expr norm_pos_iff.1 (ε0.trans he)],
+    calc
+      «expr = »(«expr∥ ∥»(«expr - »(«expr ⁻¹»(e), «expr ⁻¹»(r))), «expr / »(«expr / »(«expr∥ ∥»(«expr - »(r, e)), «expr∥ ∥»(r)), «expr∥ ∥»(e))) : by field_simp [] ["[", expr mul_comm, "]"] [] []
+      «expr ≤ »(..., «expr / »(«expr / »(«expr∥ ∥»(«expr - »(r, e)), «expr∥ ∥»(r)), ε)) : div_le_div_of_le_left (div_nonneg (norm_nonneg _) (norm_nonneg _)) ε0 he.le },
+  refine [expr squeeze_zero' «expr $ »(eventually_of_forall, λ _, norm_nonneg _) this _],
+  refine [expr (continuous_const.sub continuous_id).norm.div_const.div_const.tendsto' _ _ _],
+  simp [] [] [] [] [] []
+end
 
 end NormedField
 
@@ -400,7 +401,7 @@ theorem punctured_nhds_ne_bot (x : α) : ne_bot (𝓝[«expr ᶜ» {x}] x) :=
     rwa [dist_comm, dist_eq_norm, add_sub_cancel']
 
 @[instance]
-theorem nhds_within_is_unit_ne_bot : ne_bot (𝓝[{ x : α | IsUnit x }] 0) :=
+theorem nhds_within_is_unit_ne_bot : ne_bot (𝓝[{ x:α | IsUnit x }] 0) :=
   by 
     simpa only [is_unit_iff_ne_zero] using punctured_nhds_ne_bot (0 : α)
 
@@ -691,22 +692,24 @@ theorem eventually_nhds_norm_smul_sub_lt (c : α) (x : E) {ε : ℝ} (h : 0 < ε
         simp )
   this.eventually (gt_mem_nhds h)
 
-theorem closure_ball [SemiNormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Closure (ball x r) = closed_ball x r :=
-  by 
-    refine' Set.Subset.antisymm closure_ball_subset_closed_ball fun y hy => _ 
-    have  : ContinuousWithinAt (fun c : ℝ => (c • (y - x))+x) (Set.Ico 0 1) 1 :=
-      ((continuous_id.smul continuous_const).add continuous_const).ContinuousWithinAt 
-    convert this.mem_closure _ _
-    ·
-      rw [one_smul, sub_add_cancel]
-    ·
-      simp [closure_Ico (@zero_lt_one ℝ _ _), zero_le_one]
-    ·
-      rintro c ⟨hc0, hc1⟩
-      rw [Set.mem_preimage, mem_ball, dist_eq_norm, add_sub_cancel, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc0,
-        mul_commₓ, ←mul_oneₓ r]
-      rw [mem_closed_ball, dist_eq_norm] at hy 
-      apply mul_lt_mul' <;> assumption
+-- error in Analysis.NormedSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem closure_ball
+[semi_normed_space exprℝ() E]
+(x : E)
+{r : exprℝ()}
+(hr : «expr < »(0, r)) : «expr = »(closure (ball x r), closed_ball x r) :=
+begin
+  refine [expr set.subset.antisymm closure_ball_subset_closed_ball (λ y hy, _)],
+  have [] [":", expr continuous_within_at (λ
+    c : exprℝ(), «expr + »(«expr • »(c, «expr - »(y, x)), x)) (set.Ico 0 1) 1] [":=", expr ((continuous_id.smul continuous_const).add continuous_const).continuous_within_at],
+  convert [] [expr this.mem_closure _ _] [],
+  { rw ["[", expr one_smul, ",", expr sub_add_cancel, "]"] [] },
+  { simp [] [] [] ["[", expr closure_Ico (@zero_lt_one exprℝ() _ _), ",", expr zero_le_one, "]"] [] [] },
+  { rintros [ident c, "⟨", ident hc0, ",", ident hc1, "⟩"],
+    rw ["[", expr set.mem_preimage, ",", expr mem_ball, ",", expr dist_eq_norm, ",", expr add_sub_cancel, ",", expr norm_smul, ",", expr real.norm_eq_abs, ",", expr abs_of_nonneg hc0, ",", expr mul_comm, ",", "<-", expr mul_one r, "]"] [],
+    rw ["[", expr mem_closed_ball, ",", expr dist_eq_norm, "]"] ["at", ident hy],
+    apply [expr mul_lt_mul']; assumption }
+end
 
 theorem frontier_ball [SemiNormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Frontier (ball x r) = sphere x r :=
   by 
@@ -714,28 +717,29 @@ theorem frontier_ball [SemiNormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : F
     ext x 
     exact (@eq_iff_le_not_lt ℝ _ _ _).symm
 
-theorem interior_closed_ball [SemiNormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) :
-  Interior (closed_ball x r) = ball x r :=
-  by 
-    refine' Set.Subset.antisymm _ ball_subset_interior_closed_ball 
-    intro y hy 
-    rcases le_iff_lt_or_eqₓ.1 (mem_closed_ball.1$ interior_subset hy) with (hr | rfl)
-    ·
-      exact hr 
-    set f : ℝ → E := fun c : ℝ => (c • (y - x))+x 
-    suffices  : f ⁻¹' closed_ball x (dist y x) ⊆ Set.Icc (-1) 1
-    ·
-      have hfc : Continuous f := (continuous_id.smul continuous_const).add continuous_const 
-      have hf1 : (1 : ℝ) ∈ f ⁻¹' Interior (closed_ball x$ dist y x)
-      ·
-        simpa [f]
-      have h1 : (1 : ℝ) ∈ Interior (Set.Icc (-1 : ℝ) 1) :=
-        interior_mono this (preimage_interior_subset_interior_preimage hfc hf1)
-      contrapose h1 
-      simp 
-    intro c hc 
-    rw [Set.mem_Icc, ←abs_le, ←Real.norm_eq_abs, ←mul_le_mul_right hr]
-    simpa [f, dist_eq_norm, norm_smul] using hc
+-- error in Analysis.NormedSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem interior_closed_ball
+[semi_normed_space exprℝ() E]
+(x : E)
+{r : exprℝ()}
+(hr : «expr < »(0, r)) : «expr = »(interior (closed_ball x r), ball x r) :=
+begin
+  refine [expr set.subset.antisymm _ ball_subset_interior_closed_ball],
+  intros [ident y, ident hy],
+  rcases [expr le_iff_lt_or_eq.1 «expr $ »(mem_closed_ball.1, interior_subset hy), "with", ident hr, "|", ident rfl],
+  { exact [expr hr] },
+  set [] [ident f] [":", expr exprℝ() → E] [":="] [expr λ c : exprℝ(), «expr + »(«expr • »(c, «expr - »(y, x)), x)] [],
+  suffices [] [":", expr «expr ⊆ »(«expr ⁻¹' »(f, closed_ball x (dist y x)), set.Icc «expr- »(1) 1)],
+  { have [ident hfc] [":", expr continuous f] [":=", expr (continuous_id.smul continuous_const).add continuous_const],
+    have [ident hf1] [":", expr «expr ∈ »((1 : exprℝ()), «expr ⁻¹' »(f, interior «expr $ »(closed_ball x, dist y x)))] [],
+    by simpa [] [] [] ["[", expr f, "]"] [] [],
+    have [ident h1] [":", expr «expr ∈ »((1 : exprℝ()), interior (set.Icc («expr- »(1) : exprℝ()) 1))] [":=", expr interior_mono this (preimage_interior_subset_interior_preimage hfc hf1)],
+    contrapose [] [ident h1],
+    simp [] [] [] [] [] [] },
+  intros [ident c, ident hc],
+  rw ["[", expr set.mem_Icc, ",", "<-", expr abs_le, ",", "<-", expr real.norm_eq_abs, ",", "<-", expr mul_le_mul_right hr, "]"] [],
+  simpa [] [] [] ["[", expr f, ",", expr dist_eq_norm, ",", expr norm_smul, "]"] [] ["using", expr hc]
+end
 
 theorem frontier_closed_ball [SemiNormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) :
   Frontier (closed_ball x r) = sphere x r :=
@@ -812,40 +816,38 @@ instance Submodule.semiNormedSpace {𝕜 R : Type _} [HasScalar 𝕜 R] [NormedF
   SemiNormedSpace 𝕜 s :=
   { norm_smul_le := fun c x => le_of_eqₓ$ norm_smul c (x : E) }
 
+-- error in Analysis.NormedSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If there is a scalar `c` with `∥c∥>1`, then any element with nonzero norm can be
 moved by scalar multiplication to any shell of width `∥c∥`. Also recap information on the norm of
 the rescaling element that shows up in applications. -/
-theorem rescale_to_shell_semi_normed {c : α} (hc : 1 < ∥c∥) {ε : ℝ} (εpos : 0 < ε) {x : E} (hx : ∥x∥ ≠ 0) :
-  ∃ d : α, d ≠ 0 ∧ ∥d • x∥ < ε ∧ ε / ∥c∥ ≤ ∥d • x∥ ∧ ∥d∥⁻¹ ≤ (ε⁻¹*∥c∥)*∥x∥ :=
-  by 
-    have xεpos : 0 < ∥x∥ / ε := div_pos ((Ne.symm hx).le_iff_lt.1 (norm_nonneg x)) εpos 
-    rcases exists_mem_Ico_zpow xεpos hc with ⟨n, hn⟩
-    have cpos : 0 < ∥c∥ := lt_transₓ (zero_lt_one : (0 : ℝ) < 1) hc 
-    have cnpos : 0 < ∥c ^ n+1∥ :=
-      by 
-        rw [norm_zpow]
-        exact lt_transₓ xεpos hn.2
-    refine' ⟨(c ^ n+1)⁻¹, _, _, _, _⟩
-    show (c ^ n+1)⁻¹ ≠ 0
-    ·
-      rwa [Ne.def, inv_eq_zero, ←Ne.def, ←norm_pos_iff]
-    show ∥(c ^ n+1)⁻¹ • x∥ < ε
-    ·
-      rw [norm_smul, norm_inv, ←div_eq_inv_mul, div_lt_iff cnpos, mul_commₓ, norm_zpow]
-      exact (div_lt_iff εpos).1 hn.2
-    show ε / ∥c∥ ≤ ∥(c ^ n+1)⁻¹ • x∥
-    ·
-      rw [div_le_iff cpos, norm_smul, norm_inv, norm_zpow, zpow_add₀ (ne_of_gtₓ cpos), zpow_one, mul_inv_rev₀,
-        mul_commₓ, ←mul_assocₓ, ←mul_assocₓ, mul_inv_cancel (ne_of_gtₓ cpos), one_mulₓ, ←div_eq_inv_mul,
-        le_div_iff (zpow_pos_of_pos cpos _), mul_commₓ]
-      exact (le_div_iff εpos).1 hn.1
-    show ∥(c ^ n+1)⁻¹∥⁻¹ ≤ (ε⁻¹*∥c∥)*∥x∥
-    ·
-      have  : ((ε⁻¹*∥c∥)*∥x∥) = (ε⁻¹*∥x∥)*∥c∥
-      ·
-        ring 
-      rw [norm_inv, inv_inv₀, norm_zpow, zpow_add₀ (ne_of_gtₓ cpos), zpow_one, this, ←div_eq_inv_mul]
-      exact mul_le_mul_of_nonneg_right hn.1 (norm_nonneg _)
+theorem rescale_to_shell_semi_normed
+{c : α}
+(hc : «expr < »(1, «expr∥ ∥»(c)))
+{ε : exprℝ()}
+(εpos : «expr < »(0, ε))
+{x : E}
+(hx : «expr ≠ »(«expr∥ ∥»(x), 0)) : «expr∃ , »((d : α), «expr ∧ »(«expr ≠ »(d, 0), «expr ∧ »(«expr < »(«expr∥ ∥»(«expr • »(d, x)), ε), «expr ∧ »(«expr ≤ »(«expr / »(ε, «expr∥ ∥»(c)), «expr∥ ∥»(«expr • »(d, x))), «expr ≤ »(«expr ⁻¹»(«expr∥ ∥»(d)), «expr * »(«expr * »(«expr ⁻¹»(ε), «expr∥ ∥»(c)), «expr∥ ∥»(x))))))) :=
+begin
+  have [ident xεpos] [":", expr «expr < »(0, «expr / »(«expr∥ ∥»(x), ε))] [":=", expr div_pos ((ne.symm hx).le_iff_lt.1 (norm_nonneg x)) εpos],
+  rcases [expr exists_mem_Ico_zpow xεpos hc, "with", "⟨", ident n, ",", ident hn, "⟩"],
+  have [ident cpos] [":", expr «expr < »(0, «expr∥ ∥»(c))] [":=", expr lt_trans (zero_lt_one : «expr < »((0 : exprℝ()), 1)) hc],
+  have [ident cnpos] [":", expr «expr < »(0, «expr∥ ∥»(«expr ^ »(c, «expr + »(n, 1))))] [":=", expr by { rw [expr norm_zpow] [],
+     exact [expr lt_trans xεpos hn.2] }],
+  refine [expr ⟨«expr ⁻¹»(«expr ^ »(c, «expr + »(n, 1))), _, _, _, _⟩],
+  show [expr «expr ≠ »(«expr ⁻¹»(«expr ^ »(c, «expr + »(n, 1))), 0)],
+  by rwa ["[", expr ne.def, ",", expr inv_eq_zero, ",", "<-", expr ne.def, ",", "<-", expr norm_pos_iff, "]"] [],
+  show [expr «expr < »(«expr∥ ∥»(«expr • »(«expr ⁻¹»(«expr ^ »(c, «expr + »(n, 1))), x)), ε)],
+  { rw ["[", expr norm_smul, ",", expr norm_inv, ",", "<-", expr div_eq_inv_mul, ",", expr div_lt_iff cnpos, ",", expr mul_comm, ",", expr norm_zpow, "]"] [],
+    exact [expr (div_lt_iff εpos).1 hn.2] },
+  show [expr «expr ≤ »(«expr / »(ε, «expr∥ ∥»(c)), «expr∥ ∥»(«expr • »(«expr ⁻¹»(«expr ^ »(c, «expr + »(n, 1))), x)))],
+  { rw ["[", expr div_le_iff cpos, ",", expr norm_smul, ",", expr norm_inv, ",", expr norm_zpow, ",", expr zpow_add₀ (ne_of_gt cpos), ",", expr zpow_one, ",", expr mul_inv_rev₀, ",", expr mul_comm, ",", "<-", expr mul_assoc, ",", "<-", expr mul_assoc, ",", expr mul_inv_cancel (ne_of_gt cpos), ",", expr one_mul, ",", "<-", expr div_eq_inv_mul, ",", expr le_div_iff (zpow_pos_of_pos cpos _), ",", expr mul_comm, "]"] [],
+    exact [expr (le_div_iff εpos).1 hn.1] },
+  show [expr «expr ≤ »(«expr ⁻¹»(«expr∥ ∥»(«expr ⁻¹»(«expr ^ »(c, «expr + »(n, 1))))), «expr * »(«expr * »(«expr ⁻¹»(ε), «expr∥ ∥»(c)), «expr∥ ∥»(x)))],
+  { have [] [":", expr «expr = »(«expr * »(«expr * »(«expr ⁻¹»(ε), «expr∥ ∥»(c)), «expr∥ ∥»(x)), «expr * »(«expr * »(«expr ⁻¹»(ε), «expr∥ ∥»(x)), «expr∥ ∥»(c)))] [],
+    by ring [],
+    rw ["[", expr norm_inv, ",", expr inv_inv₀, ",", expr norm_zpow, ",", expr zpow_add₀ (ne_of_gt cpos), ",", expr zpow_one, ",", expr this, ",", "<-", expr div_eq_inv_mul, "]"] [],
+    exact [expr mul_le_mul_of_nonneg_right hn.1 (norm_nonneg _)] }
+end
 
 end SemiNormedSpace
 
@@ -1147,16 +1149,22 @@ section Nat
 
 open Finset.Nat
 
-theorem summable_norm_sum_mul_antidiagonal_of_summable_norm {f g : ℕ → α} (hf : Summable fun x => ∥f x∥)
-  (hg : Summable fun x => ∥g x∥) : Summable fun n => ∥∑kl in antidiagonal n, f kl.1*g kl.2∥ :=
-  by 
-    have  :=
-      summable_sum_mul_antidiagonal_of_summable_mul
-        (Summable.mul_of_nonneg hf hg (fun _ => norm_nonneg _) fun _ => norm_nonneg _)
-    refine' summable_of_nonneg_of_le (fun _ => norm_nonneg _) _ this 
-    intro n 
-    calc ∥∑kl in antidiagonal n, f kl.1*g kl.2∥ ≤ ∑kl in antidiagonal n, ∥f kl.1*g kl.2∥ :=
-      norm_sum_le _ _ _ ≤ ∑kl in antidiagonal n, ∥f kl.1∥*∥g kl.2∥ := sum_le_sum fun i _ => norm_mul_le _ _
+-- error in Analysis.NormedSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem summable_norm_sum_mul_antidiagonal_of_summable_norm
+{f g : exprℕ() → α}
+(hf : summable (λ x, «expr∥ ∥»(f x)))
+(hg : summable (λ
+  x, «expr∥ ∥»(g x))) : summable (λ n, «expr∥ ∥»(«expr∑ in , »((kl), antidiagonal n, «expr * »(f kl.1, g kl.2)))) :=
+begin
+  have [] [] [":=", expr summable_sum_mul_antidiagonal_of_summable_mul (summable.mul_of_nonneg hf hg (λ
+     _, norm_nonneg _) (λ _, norm_nonneg _))],
+  refine [expr summable_of_nonneg_of_le (λ _, norm_nonneg _) _ this],
+  intros [ident n],
+  calc
+    «expr ≤ »(«expr∥ ∥»(«expr∑ in , »((kl), antidiagonal n, «expr * »(f kl.1, g kl.2))), «expr∑ in , »((kl), antidiagonal n, «expr∥ ∥»(«expr * »(f kl.1, g kl.2)))) : norm_sum_le _ _
+    «expr ≤ »(..., «expr∑ in , »((kl), antidiagonal n, «expr * »(«expr∥ ∥»(f kl.1), «expr∥ ∥»(g kl.2)))) : sum_le_sum (λ
+     i _, norm_mul_le _ _)
+end
 
 /-- The Cauchy product formula for the product of two infinite sums indexed by `ℕ`,
     expressed by summing on `finset.nat.antidiagonal`.

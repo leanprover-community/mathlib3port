@@ -1,6 +1,8 @@
+import Mathbin.Order.CompleteLattice 
+import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks 
 import Mathbin.CategoryTheory.Category.Preorder 
-import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits 
-import Mathbin.Order.CompleteLattice
+import Mathbin.CategoryTheory.Limits.Shapes.Products 
+import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
 
 /-!
 # Limits in lattice categories are given by infimums and supremums.
@@ -38,12 +40,12 @@ def finite_colimit_cocone [SemilatticeSupBot α] (F : J ⥤ α) : colimit_cocone
 instance (priority := 100)has_finite_limits_of_semilattice_inf_top [SemilatticeInfTop α] : has_finite_limits α :=
   ⟨fun J 𝒥₁ 𝒥₂ =>
       by 
-        exactI { HasLimit := fun F => has_limit.mk (finite_limit_cone F) }⟩
+        exact { HasLimit := fun F => has_limit.mk (finite_limit_cone F) }⟩
 
 instance (priority := 100)has_finite_colimits_of_semilattice_sup_bot [SemilatticeSupBot α] : has_finite_colimits α :=
   ⟨fun J 𝒥₁ 𝒥₂ =>
       by 
-        exactI { HasColimit := fun F => has_colimit.mk (finite_colimit_cocone F) }⟩
+        exact { HasColimit := fun F => has_colimit.mk (finite_colimit_cocone F) }⟩
 
 /--
 The limit of a functor from a finite diagram into a `semilattice_inf_top` is the infimum of the
@@ -175,13 +177,13 @@ instance (priority := 100)has_limits_of_complete_lattice : has_limits α :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { HasLimit := fun F => has_limit.mk (limit_cone F) } }
+          exact { HasLimit := fun F => has_limit.mk (limit_cone F) } }
 
 instance (priority := 100)has_colimits_of_complete_lattice : has_colimits α :=
   { HasColimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI { HasColimit := fun F => has_colimit.mk (colimit_cocone F) } }
+          exact { HasColimit := fun F => has_colimit.mk (colimit_cocone F) } }
 
 /--
 The limit of a functor into a complete lattice is the infimum of the objects in the image.

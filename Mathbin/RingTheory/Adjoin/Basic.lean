@@ -138,42 +138,49 @@ theorem adjoin_insert_adjoin (x : A) : adjoin R (insert x («expr↑ » (adjoin 
 theorem adjoin_prod_le (s : Set A) (t : Set B) : adjoin R (Set.Prod s t) ≤ (adjoin R s).Prod (adjoin R t) :=
   adjoin_le$ Set.prod_mono subset_adjoin subset_adjoin
 
-theorem mem_adjoin_of_map_mul {s} {x : A} {f : A →ₗ[R] B} (hf : ∀ a₁ a₂, f (a₁*a₂) = f a₁*f a₂) (h : x ∈ adjoin R s) :
-  f x ∈ adjoin R (f '' (s ∪ {1})) :=
-  by 
-    refine'
-      @adjoin_induction R A _ _ _ _ (fun a => f a ∈ adjoin R (f '' (s ∪ {1}))) x h
-        (fun a ha => subset_adjoin ⟨a, ⟨Set.subset_union_left _ _ ha, rfl⟩⟩) (fun r => _)
-        (fun y z hy hz =>
-          by 
-            simpa [hy, hz] using Subalgebra.add_mem _ hy hz)
-        fun y z hy hz =>
-          by 
-            simpa [hy, hz, hf y z] using Subalgebra.mul_mem _ hy hz 
-    have  : f 1 ∈ adjoin R (f '' (s ∪ {1})) := subset_adjoin ⟨1, ⟨Set.subset_union_right _ _$ Set.mem_singleton 1, rfl⟩⟩
-    replace this := Subalgebra.smul_mem (adjoin R (f '' (s ∪ {1}))) this r 
-    convert this 
-    rw [algebra_map_eq_smul_one]
-    exact f.map_smul _ _
+-- error in RingTheory.Adjoin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_adjoin_of_map_mul
+{s}
+{x : A}
+{f : «expr →ₗ[ ] »(A, R, B)}
+(hf : ∀ a₁ a₂, «expr = »(f «expr * »(a₁, a₂), «expr * »(f a₁, f a₂)))
+(h : «expr ∈ »(x, adjoin R s)) : «expr ∈ »(f x, adjoin R «expr '' »(f, «expr ∪ »(s, {1}))) :=
+begin
+  refine [expr @adjoin_induction R A _ _ _ _ (λ
+    a, «expr ∈ »(f a, adjoin R «expr '' »(f, «expr ∪ »(s, {1})))) x h (λ
+    a
+    ha, subset_adjoin ⟨a, ⟨set.subset_union_left _ _ ha, rfl⟩⟩) (λ
+    r, _) (λ
+    y
+    z
+    hy
+    hz, by simpa [] [] [] ["[", expr hy, ",", expr hz, "]"] [] ["using", expr subalgebra.add_mem _ hy hz]) (λ
+    y
+    z
+    hy
+    hz, by simpa [] [] [] ["[", expr hy, ",", expr hz, ",", expr hf y z, "]"] [] ["using", expr subalgebra.mul_mem _ hy hz])],
+  have [] [":", expr «expr ∈ »(f 1, adjoin R «expr '' »(f, «expr ∪ »(s, {1})))] [":=", expr subset_adjoin ⟨1, ⟨«expr $ »(set.subset_union_right _ _, set.mem_singleton 1), rfl⟩⟩],
+  replace [ident this] [] [":=", expr subalgebra.smul_mem (adjoin R «expr '' »(f, «expr ∪ »(s, {1}))) this r],
+  convert [] [expr this] [],
+  rw [expr algebra_map_eq_smul_one] [],
+  exact [expr f.map_smul _ _]
+end
 
-theorem adjoin_inl_union_inr_eq_prod s t :
-  adjoin R (LinearMap.inl R A B '' (s ∪ {1}) ∪ LinearMap.inr R A B '' (t ∪ {1})) = (adjoin R s).Prod (adjoin R t) :=
-  by 
-    apply le_antisymmₓ
-    ·
-      simp only [adjoin_le_iff, Set.insert_subset, Subalgebra.zero_mem, Subalgebra.one_mem, subset_adjoin,
-        Set.union_subset_iff, LinearMap.coe_inl, Set.mk_preimage_prod_right, Set.image_subset_iff, SetLike.mem_coe,
-        Set.mk_preimage_prod_left, LinearMap.coe_inr, and_selfₓ, Set.union_singleton, Subalgebra.coe_prod]
-    ·
-      rintro ⟨a, b⟩ ⟨ha, hb⟩
-      let P := adjoin R (LinearMap.inl R A B '' (s ∪ {1}) ∪ LinearMap.inr R A B '' (t ∪ {1}))
-      have Ha : (a, (0 : B)) ∈ adjoin R (LinearMap.inl R A B '' (s ∪ {1})) :=
-        mem_adjoin_of_map_mul R LinearMap.inl_map_mul ha 
-      have Hb : ((0 : A), b) ∈ adjoin R (LinearMap.inr R A B '' (t ∪ {1})) :=
-        mem_adjoin_of_map_mul R LinearMap.inr_map_mul hb 
-      replace Ha : (a, (0 : B)) ∈ P := adjoin_mono (Set.subset_union_left _ _) Ha 
-      replace Hb : ((0 : A), b) ∈ P := adjoin_mono (Set.subset_union_right _ _) Hb 
-      simpa using Subalgebra.add_mem _ Ha Hb
+-- error in RingTheory.Adjoin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem adjoin_inl_union_inr_eq_prod
+(s)
+(t) : «expr = »(adjoin R «expr ∪ »(«expr '' »(linear_map.inl R A B, «expr ∪ »(s, {1})), «expr '' »(linear_map.inr R A B, «expr ∪ »(t, {1}))), (adjoin R s).prod (adjoin R t)) :=
+begin
+  apply [expr le_antisymm],
+  { simp [] [] ["only"] ["[", expr adjoin_le_iff, ",", expr set.insert_subset, ",", expr subalgebra.zero_mem, ",", expr subalgebra.one_mem, ",", expr subset_adjoin, ",", expr set.union_subset_iff, ",", expr linear_map.coe_inl, ",", expr set.mk_preimage_prod_right, ",", expr set.image_subset_iff, ",", expr set_like.mem_coe, ",", expr set.mk_preimage_prod_left, ",", expr linear_map.coe_inr, ",", expr and_self, ",", expr set.union_singleton, ",", expr subalgebra.coe_prod, "]"] [] [] },
+  { rintro ["⟨", ident a, ",", ident b, "⟩", "⟨", ident ha, ",", ident hb, "⟩"],
+    let [ident P] [] [":=", expr adjoin R «expr ∪ »(«expr '' »(linear_map.inl R A B, «expr ∪ »(s, {1})), «expr '' »(linear_map.inr R A B, «expr ∪ »(t, {1})))],
+    have [ident Ha] [":", expr «expr ∈ »((a, (0 : B)), adjoin R «expr '' »(linear_map.inl R A B, «expr ∪ »(s, {1})))] [":=", expr mem_adjoin_of_map_mul R linear_map.inl_map_mul ha],
+    have [ident Hb] [":", expr «expr ∈ »(((0 : A), b), adjoin R «expr '' »(linear_map.inr R A B, «expr ∪ »(t, {1})))] [":=", expr mem_adjoin_of_map_mul R linear_map.inr_map_mul hb],
+    replace [ident Ha] [":", expr «expr ∈ »((a, (0 : B)), P)] [":=", expr adjoin_mono (set.subset_union_left _ _) Ha],
+    replace [ident Hb] [":", expr «expr ∈ »(((0 : A), b), P)] [":=", expr adjoin_mono (set.subset_union_right _ _) Hb],
+    simpa [] [] [] [] [] ["using", expr subalgebra.add_mem _ Ha Hb] }
+end
 
 end Semiringₓ
 

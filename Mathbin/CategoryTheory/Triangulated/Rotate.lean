@@ -1,7 +1,6 @@
-import Mathbin.CategoryTheory.Additive.Basic 
-import Mathbin.CategoryTheory.Shift 
-import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor 
 import Mathbin.CategoryTheory.NaturalIsomorphism 
+import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor 
+import Mathbin.CategoryTheory.Shift 
 import Mathbin.CategoryTheory.Triangulated.Basic
 
 /-!
@@ -187,7 +186,7 @@ category of functors).
 -/
 @[simps]
 def rot_comp_inv_rot : 𝟭 (triangle C) ≅ rotate ⋙ inv_rotate :=
-  { hom := rot_comp_inv_rot_hom, inv := rot_comp_inv_rot_inv }
+  { Hom := rot_comp_inv_rot_hom, inv := rot_comp_inv_rot_inv }
 
 /--
 There is a natural transformation between the composition of an inverse rotation with a rotation
@@ -212,7 +211,7 @@ on triangles in `C`, and the identity functor on triangles are natural isomorphi
 -/
 @[simps]
 def inv_rot_comp_rot : inv_rotate ⋙ rotate ≅ 𝟭 (triangle C) :=
-  { hom := inv_rot_comp_rot_hom, inv := inv_rot_comp_rot_inv }
+  { Hom := inv_rot_comp_rot_hom, inv := inv_rot_comp_rot_inv }
 
 /--
 Rotating triangles gives an auto-equivalence on the category of triangles in `C`.

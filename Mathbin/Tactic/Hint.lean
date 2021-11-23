@@ -19,7 +19,7 @@ setup_tactic_parser
 
 private unsafe def add_tactic_hint (n : Name) (t : expr) : tactic Unit :=
   do 
-    add_decl$ declaration.defn n [] (quote tactic Stringₓ) t ReducibilityHints.opaque ff 
+    add_decl$ declaration.defn n [] (quote.1 (tactic Stringₓ)) t ReducibilityHints.opaque ff 
     hint_tactic_attribute n () tt
 
 /--
@@ -39,10 +39,10 @@ unsafe def add_hint_tactic (_ : parse (tk "add_hint_tactic")) : parser Unit :=
           let h := s <.> "_hint"
           let t ←
             to_expr
-                (pquote
+                (pquote.1
                   do 
-                    %%t 
-                    pure (%%n))
+                    %%ₓt 
+                    pure (%%ₓn))
           add_tactic_hint h t
 
 add_tactic_doc
@@ -70,7 +70,7 @@ add_hint_tactic fconstructor
 
 add_hint_tactic injectionsAndClear
 
--- error in Tactic.Hint: ././Mathport/Syntax/Translate/Basic.lean:1264:43: in add_hint_tactic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Tactic.Hint: ././Mathport/Syntax/Translate/Basic.lean:1266:43: in add_hint_tactic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 add_hint_tactic [expr "solve_by_elim", [expr `[solve_by_elim [] [] [] []]]]
 
 add_hint_tactic unfoldCoes

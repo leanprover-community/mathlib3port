@@ -20,8 +20,8 @@ open_locale Real TopologicalSpace
 is complex differentiable at all points but the negative real semi-axis. -/
 def exp_local_homeomorph : LocalHomeomorph ℂ ℂ :=
   LocalHomeomorph.ofContinuousOpen
-    { toFun := exp, invFun := log, Source := { z : ℂ | z.im ∈ Ioo (-π) π },
-      Target := { z : ℂ | 0 < z.re } ∪ { z : ℂ | z.im ≠ 0 },
+    { toFun := exp, invFun := log, Source := { z:ℂ | z.im ∈ Ioo (-π) π },
+      Target := { z:ℂ | 0 < z.re } ∪ { z:ℂ | z.im ≠ 0 },
       map_source' :=
         by 
           rintro ⟨x, y⟩ ⟨h₁ : -π < y, h₂ : y < π⟩

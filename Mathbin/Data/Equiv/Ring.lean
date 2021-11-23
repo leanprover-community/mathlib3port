@@ -1,5 +1,5 @@
 import Mathbin.Data.Equiv.MulAdd 
-import Mathbin.Algebra.Field 
+import Mathbin.Algebra.Field.Basic 
 import Mathbin.Algebra.Opposites 
 import Mathbin.Algebra.BigOperators.Basic
 
@@ -73,19 +73,19 @@ theorem map_mul (e : R ≃+* S) (x y : R) : e (x*y) = e x*e y :=
 theorem map_add (e : R ≃+* S) (x y : R) : e (x+y) = e x+e y :=
   e.map_add' x y
 
+-- error in Data.Equiv.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Two ring isomorphisms agree if they are defined by the
     same underlying function. -/
-@[ext]
-theorem ext {f g : R ≃+* S} (h : ∀ x, f x = g x) : f = g :=
-  by 
-    have h₁ : f.to_equiv = g.to_equiv := Equiv.ext h 
-    cases f 
-    cases g 
-    congr
-    ·
-      exact funext h
-    ·
-      exact congr_argₓ Equiv.invFun h₁
+@[ext #[]]
+theorem ext {f g : «expr ≃+* »(R, S)} (h : ∀ x, «expr = »(f x, g x)) : «expr = »(f, g) :=
+begin
+  have [ident h₁] [":", expr «expr = »(f.to_equiv, g.to_equiv)] [":=", expr equiv.ext h],
+  cases [expr f] [],
+  cases [expr g] [],
+  congr,
+  { exact [expr funext h] },
+  { exact [expr congr_arg equiv.inv_fun h₁] }
+end
 
 @[simp]
 theorem coe_mk e e' h₁ h₂ h₃ h₄ : «expr⇑ » (⟨e, e', h₁, h₂, h₃, h₄⟩ : R ≃+* S) = e :=
@@ -110,9 +110,11 @@ instance has_coe_to_mul_equiv : Coe (R ≃+* S) (R ≃* S) :=
 instance has_coe_to_add_equiv : Coe (R ≃+* S) (R ≃+ S) :=
   ⟨RingEquiv.toAddEquiv⟩
 
+@[simp]
 theorem to_add_equiv_eq_coe (f : R ≃+* S) : f.to_add_equiv = «expr↑ » f :=
   rfl
 
+@[simp]
 theorem to_mul_equiv_eq_coe (f : R ≃+* S) : f.to_mul_equiv = «expr↑ » f :=
   rfl
 
@@ -215,11 +217,11 @@ end Basic
 
 section Opposite
 
-open Opposite
+open MulOpposite
 
-/-- A ring iso `α ≃+* β` can equivalently be viewed as a ring iso `αᵒᵖ ≃+* βᵒᵖ`. -/
+/-- A ring iso `α ≃+* β` can equivalently be viewed as a ring iso `αᵐᵒᵖ ≃+* βᵐᵒᵖ`. -/
 @[simps]
-protected def op {α β} [Add α] [Mul α] [Add β] [Mul β] : α ≃+* β ≃ («expr ᵒᵖ» α ≃+* «expr ᵒᵖ» β) :=
+protected def op {α β} [Add α] [Mul α] [Add β] [Mul β] : α ≃+* β ≃ («expr ᵐᵒᵖ» α ≃+* «expr ᵐᵒᵖ» β) :=
   { toFun := fun f => { f.to_add_equiv.op, f.to_mul_equiv.op with  },
     invFun := fun f => { AddEquiv.op.symm f.to_add_equiv, MulEquiv.op.symm f.to_mul_equiv with  },
     left_inv :=
@@ -233,9 +235,9 @@ protected def op {α β} [Add α] [Mul α] [Add β] [Mul β] : α ≃+* β ≃ (
           ext 
           rfl }
 
-/-- The 'unopposite' of a ring iso `αᵒᵖ ≃+* βᵒᵖ`. Inverse to `ring_equiv.op`. -/
+/-- The 'unopposite' of a ring iso `αᵐᵒᵖ ≃+* βᵐᵒᵖ`. Inverse to `ring_equiv.op`. -/
 @[simp]
-protected def unop {α β} [Add α] [Mul α] [Add β] [Mul β] : «expr ᵒᵖ» α ≃+* «expr ᵒᵖ» β ≃ (α ≃+* β) :=
+protected def unop {α β} [Add α] [Mul α] [Add β] [Mul β] : «expr ᵐᵒᵖ» α ≃+* «expr ᵐᵒᵖ» β ≃ (α ≃+* β) :=
   RingEquiv.op.symm
 
 section CommSemiringₓ
@@ -243,15 +245,15 @@ section CommSemiringₓ
 variable(R)[CommSemiringₓ R]
 
 /-- A commutative ring is isomorphic to its opposite. -/
-def to_opposite : R ≃+* «expr ᵒᵖ» R :=
-  { equiv_to_opposite with map_add' := fun x y => rfl, map_mul' := fun x y => mul_commₓ (op y) (op x) }
+def to_opposite : R ≃+* «expr ᵐᵒᵖ» R :=
+  { MulOpposite.opEquiv with map_add' := fun x y => rfl, map_mul' := fun x y => mul_commₓ (op y) (op x) }
 
 @[simp]
 theorem to_opposite_apply (r : R) : to_opposite R r = op r :=
   rfl
 
 @[simp]
-theorem to_opposite_symm_apply (r : «expr ᵒᵖ» R) : (to_opposite R).symm r = unop r :=
+theorem to_opposite_symm_apply (r : «expr ᵐᵒᵖ» R) : (to_opposite R).symm r = unop r :=
   rfl
 
 end CommSemiringₓ
@@ -438,8 +440,8 @@ theorem map_list_sum [NonAssocSemiring R] [NonAssocSemiring S] (f : R ≃+* S) (
   f.to_ring_hom.map_list_sum l
 
 /-- An isomorphism into the opposite ring acts on the product by acting on the reversed elements -/
-theorem unop_map_list_prod [Semiringₓ R] [Semiringₓ S] (f : R ≃+* «expr ᵒᵖ» S) (l : List R) :
-  Opposite.unop (f l.prod) = (l.map (Opposite.unop ∘ f)).reverse.Prod :=
+theorem unop_map_list_prod [Semiringₓ R] [Semiringₓ S] (f : R ≃+* «expr ᵐᵒᵖ» S) (l : List R) :
+  MulOpposite.unop (f l.prod) = (l.map (MulOpposite.unop ∘ f)).reverse.Prod :=
   f.to_ring_hom.unop_map_list_prod l
 
 theorem map_multiset_prod [CommSemiringₓ R] [CommSemiringₓ S] (f : R ≃+* S) (s : Multiset R) :

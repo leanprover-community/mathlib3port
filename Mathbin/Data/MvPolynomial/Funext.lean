@@ -22,8 +22,8 @@ variable{R : Type _}[CommRingₓ R][IsDomain R][Infinite R]
 
 private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x : Finₓ n → R, eval x p = 0) : p = 0 :=
   by 
-    unfreezingI 
-      induction' n with n ih generalizing R
+    (
+      induction' n with n ih generalizing R)
     ·
       let e := MvPolynomial.isEmptyRingEquiv R (Finₓ 0)
       apply e.injective 

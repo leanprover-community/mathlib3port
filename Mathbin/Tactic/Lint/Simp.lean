@@ -19,14 +19,14 @@ private unsafe def simp_lhs_rhs : expr → tactic (expr × expr)
   do 
     let ty ← head_beta ty 
     match ty with 
-      | quote ¬%%lhs => pure (lhs, quote False)
-      | quote (%%lhs) = %%rhs => pure (lhs, rhs)
-      | quote (%%lhs) ↔ %%rhs => pure (lhs, rhs)
+      | quote.1 ¬%%ₓlhs => pure (lhs, quote.1 False)
+      | quote.1 ((%%ₓlhs) = %%ₓrhs) => pure (lhs, rhs)
+      | quote.1 ((%%ₓlhs) ↔ %%ₓrhs) => pure (lhs, rhs)
       | expr.pi n bi a b =>
         do 
           let l ← mk_local' n bi a 
           simp_lhs_rhs (b.instantiate_var l)
-      | ty => pure (ty, quote True)
+      | ty => pure (ty, quote.1 True)
 
 /-- `simp_lhs ty` returns the left-hand side of a simp lemma with type `ty`. -/
 private unsafe def simp_lhs (ty : expr) : tactic expr :=
@@ -41,9 +41,9 @@ private unsafe def simp_is_conditional_core : expr → tactic (Option expr)
   do 
     let ty ← head_beta ty 
     match ty with 
-      | quote ¬%%lhs => pure lhs
-      | quote (%%lhs) = _ => pure lhs
-      | quote (%%lhs) ↔ _ => pure lhs
+      | quote.1 ¬%%ₓlhs => pure lhs
+      | quote.1 ((%%ₓlhs) = _) => pure lhs
+      | quote.1 ((%%ₓlhs) ↔ _) => pure lhs
       | expr.pi n bi a b =>
         do 
           let l ← mk_local' n bi a 

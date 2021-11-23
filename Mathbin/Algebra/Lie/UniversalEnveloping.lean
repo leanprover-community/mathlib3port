@@ -44,12 +44,12 @@ namespace UniversalEnvelopingAlgebra
 Note that we have avoided using the more natural expression:
 | lie_compat (x y : L) : rel (ιₜ ⁅x, y⁆) ⁅ιₜ x, ιₜ y⁆
 so that our construction needs only the semiring structure of the tensor algebra. -/
-inductive Rel : TensorAlgebra R L → TensorAlgebra R L → Prop
-  | lie_compat (x y : L) : Rel (ιₜ ⁅x,y⁆+ιₜ y*ιₜ x) (ιₜ x*ιₜ y)
+inductive rel : TensorAlgebra R L → TensorAlgebra R L → Prop
+  | lie_compat (x y : L) : rel (ιₜ ⁅x,y⁆+ιₜ y*ιₜ x) (ιₜ x*ιₜ y)
 
 end UniversalEnvelopingAlgebra
 
--- error in Algebra.Lie.UniversalEnveloping: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Algebra.Lie.UniversalEnveloping: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- The universal enveloping algebra of a Lie algebra. -/
 @[derive #["[", expr inhabited, ",", expr ring, ",", expr algebra R, "]"]]
 def universal_enveloping_algebra :=
@@ -60,7 +60,7 @@ namespace UniversalEnvelopingAlgebra
 /-- The quotient map from the tensor algebra to the universal enveloping algebra as a morphism of
 associative algebras. -/
 def mk_alg_hom : TensorAlgebra R L →ₐ[R] UniversalEnvelopingAlgebra R L :=
-  RingQuot.mkAlgHom R (Rel R L)
+  RingQuot.mkAlgHom R (rel R L)
 
 variable{L}
 
@@ -107,7 +107,7 @@ theorem lift_symm_apply (F : UniversalEnvelopingAlgebra R L →ₐ[R] A) :
   rfl
 
 @[simp]
-theorem ι_comp_lift : (lift R f ∘ ι R) = f :=
+theorem ι_comp_lift : lift R f ∘ ι R = f :=
   funext$ LieHom.ext_iff.mp$ (lift R).symm_apply_apply f
 
 @[simp]
@@ -115,7 +115,7 @@ theorem lift_ι_apply (x : L) : lift R f (ι R x) = f x :=
   by 
     rw [←Function.comp_apply (lift R f) (ι R) x, ι_comp_lift]
 
-theorem lift_unique (g : UniversalEnvelopingAlgebra R L →ₐ[R] A) : (g ∘ ι R) = f ↔ g = lift R f :=
+theorem lift_unique (g : UniversalEnvelopingAlgebra R L →ₐ[R] A) : g ∘ ι R = f ↔ g = lift R f :=
   by 
     refine' Iff.trans _ (lift R).symm_apply_eq 
     split  <;>

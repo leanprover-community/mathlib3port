@@ -42,57 +42,56 @@ namespace HasDerivAt
 
 include hab
 
-theorem lhopital_zero_right_on_Ioo (hff' : ∀ x _ : x ∈ Ioo a b, HasDerivAt f (f' x) x)
-  (hgg' : ∀ x _ : x ∈ Ioo a b, HasDerivAt g (g' x) x) (hg' : ∀ x _ : x ∈ Ioo a b, g' x ≠ 0)
-  (hfa : tendsto f (𝓝[Ioi a] a) (𝓝 0)) (hga : tendsto g (𝓝[Ioi a] a) (𝓝 0))
-  (hdiv : tendsto (fun x => f' x / g' x) (𝓝[Ioi a] a) l) : tendsto (fun x => f x / g x) (𝓝[Ioi a] a) l :=
-  by 
-    have sub : ∀ x _ : x ∈ Ioo a b, Ioo a x ⊆ Ioo a b := fun x hx => Ioo_subset_Ioo (le_reflₓ a) (le_of_ltₓ hx.2)
-    have hg : ∀ x _ : x ∈ Ioo a b, g x ≠ 0
-    ·
-      intro x hx h 
-      have  : tendsto g (𝓝[Iio x] x) (𝓝 0)
-      ·
-        rw [←h, ←nhds_within_Ioo_eq_nhds_within_Iio hx.1]
-        exact ((hgg' x hx).ContinuousAt.ContinuousWithinAt.mono$ sub x hx).Tendsto 
-      obtain ⟨y, hyx, hy⟩ : ∃ (c : _)(_ : c ∈ Ioo a x), g' c = 0 
-      exact exists_has_deriv_at_eq_zero' hx.1 hga this fun y hy => hgg' y$ sub x hx hy 
-      exact hg' y (sub x hx hyx) hy 
-    have  : ∀ x _ : x ∈ Ioo a b, ∃ (c : _)(_ : c ∈ Ioo a x), (f x*g' c) = g x*f' c
-    ·
-      intro x hx 
-      rw [←sub_zero (f x), ←sub_zero (g x)]
-      exact
-        exists_ratio_has_deriv_at_eq_ratio_slope' g g' hx.1 f f' (fun y hy => hgg' y$ sub x hx hy)
-          (fun y hy => hff' y$ sub x hx hy) hga hfa
-          (tendsto_nhds_within_of_tendsto_nhds (hgg' x hx).ContinuousAt.Tendsto)
-          (tendsto_nhds_within_of_tendsto_nhds (hff' x hx).ContinuousAt.Tendsto)
-    choose! c hc using this 
-    have  : ∀ x _ : x ∈ Ioo a b, ((fun x' => f' x' / g' x') ∘ c) x = f x / g x
-    ·
-      intro x hx 
-      rcases hc x hx with ⟨h₁, h₂⟩
-      fieldSimp [hg x hx, hg' (c x) ((sub x hx) h₁)]
-      simp only [h₂]
-      rwa [mul_commₓ]
-    have cmp : ∀ x _ : x ∈ Ioo a b, a < c x ∧ c x < x 
-    exact fun x hx => (hc x hx).1
-    rw [←nhds_within_Ioo_eq_nhds_within_Ioi hab]
-    apply tendsto_nhds_within_congr this 
-    simp only 
-    apply hdiv.comp 
-    refine'
-      tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _
-        (tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds (tendsto_nhds_within_of_tendsto_nhds tendsto_id)
-          _ _)
-        _ 
-    all_goals 
-      apply eventually_nhds_with_of_forall 
-      intro x hx 
-      have  := cmp x hx 
-      try 
-        simp 
-      linarith [this]
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lhopital_zero_right_on_Ioo
+(hff' : ∀ x «expr ∈ » Ioo a b, has_deriv_at f (f' x) x)
+(hgg' : ∀ x «expr ∈ » Ioo a b, has_deriv_at g (g' x) x)
+(hg' : ∀ x «expr ∈ » Ioo a b, «expr ≠ »(g' x, 0))
+(hfa : tendsto f «expr𝓝[ ] »(Ioi a, a) (expr𝓝() 0))
+(hga : tendsto g «expr𝓝[ ] »(Ioi a, a) (expr𝓝() 0))
+(hdiv : tendsto (λ
+  x, «expr / »(f' x, g' x)) «expr𝓝[ ] »(Ioi a, a) l) : tendsto (λ x, «expr / »(f x, g x)) «expr𝓝[ ] »(Ioi a, a) l :=
+begin
+  have [ident sub] [":", expr ∀
+   x «expr ∈ » Ioo a b, «expr ⊆ »(Ioo a x, Ioo a b)] [":=", expr λ x hx, Ioo_subset_Ioo (le_refl a) (le_of_lt hx.2)],
+  have [ident hg] [":", expr ∀ x «expr ∈ » Ioo a b, «expr ≠ »(g x, 0)] [],
+  { intros [ident x, ident hx, ident h],
+    have [] [":", expr tendsto g «expr𝓝[ ] »(Iio x, x) (expr𝓝() 0)] [],
+    { rw ["[", "<-", expr h, ",", "<-", expr nhds_within_Ioo_eq_nhds_within_Iio hx.1, "]"] [],
+      exact [expr «expr $ »((hgg' x hx).continuous_at.continuous_within_at.mono, sub x hx).tendsto] },
+    obtain ["⟨", ident y, ",", ident hyx, ",", ident hy, "⟩", ":", expr «expr∃ , »((c «expr ∈ » Ioo a x), «expr = »(g' c, 0))],
+    from [expr exists_has_deriv_at_eq_zero' hx.1 hga this (λ y hy, «expr $ »(hgg' y, sub x hx hy))],
+    exact [expr hg' y (sub x hx hyx) hy] },
+  have [] [":", expr ∀
+   x «expr ∈ » Ioo a b, «expr∃ , »((c «expr ∈ » Ioo a x), «expr = »(«expr * »(f x, g' c), «expr * »(g x, f' c)))] [],
+  { intros [ident x, ident hx],
+    rw ["[", "<-", expr sub_zero (f x), ",", "<-", expr sub_zero (g x), "]"] [],
+    exact [expr exists_ratio_has_deriv_at_eq_ratio_slope' g g' hx.1 f f' (λ
+      y
+      hy, «expr $ »(hgg' y, sub x hx hy)) (λ
+      y
+      hy, «expr $ »(hff' y, sub x hx hy)) hga hfa (tendsto_nhds_within_of_tendsto_nhds (hgg' x hx).continuous_at.tendsto) (tendsto_nhds_within_of_tendsto_nhds (hff' x hx).continuous_at.tendsto)] },
+  choose ["!"] [ident c] [ident hc] ["using", expr this],
+  have [] [":", expr ∀
+   x «expr ∈ » Ioo a b, «expr = »(«expr ∘ »(λ x', «expr / »(f' x', g' x'), c) x, «expr / »(f x, g x))] [],
+  { intros [ident x, ident hx],
+    rcases [expr hc x hx, "with", "⟨", ident h₁, ",", ident h₂, "⟩"],
+    field_simp [] ["[", expr hg x hx, ",", expr hg' (c x) (sub x hx h₁), "]"] [] [],
+    simp [] [] ["only"] ["[", expr h₂, "]"] [] [],
+    rwa [expr mul_comm] [] },
+  have [ident cmp] [":", expr ∀ x «expr ∈ » Ioo a b, «expr ∧ »(«expr < »(a, c x), «expr < »(c x, x))] [],
+  from [expr λ x hx, (hc x hx).1],
+  rw ["<-", expr nhds_within_Ioo_eq_nhds_within_Ioi hab] [],
+  apply [expr tendsto_nhds_within_congr this],
+  simp [] [] ["only"] [] [] [],
+  apply [expr hdiv.comp],
+  refine [expr tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ (tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds (tendsto_nhds_within_of_tendsto_nhds tendsto_id) _ _) _],
+  all_goals { apply [expr eventually_nhds_with_of_forall],
+    intros [ident x, ident hx],
+    have [] [] [":=", expr cmp x hx],
+    try { simp [] [] [] [] [] [] },
+    linarith [] [] ["[", expr this, "]"] }
+end
 
 theorem lhopital_zero_right_on_Ico (hff' : ∀ x _ : x ∈ Ioo a b, HasDerivAt f (f' x) x)
   (hgg' : ∀ x _ : x ∈ Ioo a b, HasDerivAt g (g' x) x) (hcf : ContinuousOn f (Ico a b)) (hcg : ContinuousOn g (Ico a b))
@@ -108,35 +107,32 @@ theorem lhopital_zero_right_on_Ico (hff' : ∀ x _ : x ∈ Ioo a b, HasDerivAt f
       rw [←hga, ←nhds_within_Ioo_eq_nhds_within_Ioi hab]
       exact ((hcg a$ left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).Tendsto
 
-theorem lhopital_zero_left_on_Ioo (hff' : ∀ x _ : x ∈ Ioo a b, HasDerivAt f (f' x) x)
-  (hgg' : ∀ x _ : x ∈ Ioo a b, HasDerivAt g (g' x) x) (hg' : ∀ x _ : x ∈ Ioo a b, g' x ≠ 0)
-  (hfb : tendsto f (nhdsWithin b (Iio b)) (𝓝 0)) (hgb : tendsto g (nhdsWithin b (Iio b)) (𝓝 0))
-  (hdiv : tendsto (fun x => f' x / g' x) (nhdsWithin b (Iio b)) l) :
-  tendsto (fun x => f x / g x) (nhdsWithin b (Iio b)) l :=
-  by 
-    have hdnf : ∀ x _ : x ∈ -Ioo a b, HasDerivAt (f ∘ Neg.neg) (f' (-x)*-1) x 
-    exact fun x hx => comp x (hff' (-x) hx) (has_deriv_at_neg x)
-    have hdng : ∀ x _ : x ∈ -Ioo a b, HasDerivAt (g ∘ Neg.neg) (g' (-x)*-1) x 
-    exact fun x hx => comp x (hgg' (-x) hx) (has_deriv_at_neg x)
-    rw [preimage_neg_Ioo] at hdnf 
-    rw [preimage_neg_Ioo] at hdng 
-    have  :=
-      lhopital_zero_right_on_Ioo (neg_lt_neg hab) hdnf hdng
-        (by 
-          intro x hx h 
-          apply
-            hg' _
-              (by 
-                rw [←preimage_neg_Ioo] at hx 
-                exact hx)
-          rwa [mul_commₓ, ←neg_eq_neg_one_mul, neg_eq_zero] at h)
-        (hfb.comp tendsto_neg_nhds_within_Ioi_neg) (hgb.comp tendsto_neg_nhds_within_Ioi_neg)
-        (by 
-          simp only [neg_div_neg_eq, mul_oneₓ, mul_neg_eq_neg_mul_symm]
-          exact (tendsto_congr$ fun x => rfl).mp (hdiv.comp tendsto_neg_nhds_within_Ioi_neg))
-    have  := this.comp tendsto_neg_nhds_within_Iio 
-    unfold Function.comp  at this 
-    simpa only [neg_negₓ]
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lhopital_zero_left_on_Ioo
+(hff' : ∀ x «expr ∈ » Ioo a b, has_deriv_at f (f' x) x)
+(hgg' : ∀ x «expr ∈ » Ioo a b, has_deriv_at g (g' x) x)
+(hg' : ∀ x «expr ∈ » Ioo a b, «expr ≠ »(g' x, 0))
+(hfb : tendsto f (nhds_within b (Iio b)) (expr𝓝() 0))
+(hgb : tendsto g (nhds_within b (Iio b)) (expr𝓝() 0))
+(hdiv : tendsto (λ
+  x, «expr / »(f' x, g' x)) (nhds_within b (Iio b)) l) : tendsto (λ x, «expr / »(f x, g x)) (nhds_within b (Iio b)) l :=
+begin
+  have [ident hdnf] [":", expr ∀
+   x «expr ∈ » «expr- »(Ioo a b), has_deriv_at «expr ∘ »(f, has_neg.neg) «expr * »(f' «expr- »(x), «expr- »(1)) x] [],
+  from [expr λ x hx, comp x (hff' «expr- »(x) hx) (has_deriv_at_neg x)],
+  have [ident hdng] [":", expr ∀
+   x «expr ∈ » «expr- »(Ioo a b), has_deriv_at «expr ∘ »(g, has_neg.neg) «expr * »(g' «expr- »(x), «expr- »(1)) x] [],
+  from [expr λ x hx, comp x (hgg' «expr- »(x) hx) (has_deriv_at_neg x)],
+  rw [expr preimage_neg_Ioo] ["at", ident hdnf],
+  rw [expr preimage_neg_Ioo] ["at", ident hdng],
+  have [] [] [":=", expr lhopital_zero_right_on_Ioo (neg_lt_neg hab) hdnf hdng (by { intros [ident x, ident hx, ident h],
+      apply [expr hg' _ (by { rw ["<-", expr preimage_neg_Ioo] ["at", ident hx], exact [expr hx] })],
+      rwa ["[", expr mul_comm, ",", "<-", expr neg_eq_neg_one_mul, ",", expr neg_eq_zero, "]"] ["at", ident h] }) (hfb.comp tendsto_neg_nhds_within_Ioi_neg) (hgb.comp tendsto_neg_nhds_within_Ioi_neg) (by { simp [] [] ["only"] ["[", expr neg_div_neg_eq, ",", expr mul_one, ",", expr mul_neg_eq_neg_mul_symm, "]"] [] [],
+      exact [expr «expr $ »(tendsto_congr, λ x, rfl).mp (hdiv.comp tendsto_neg_nhds_within_Ioi_neg)] })],
+  have [] [] [":=", expr this.comp tendsto_neg_nhds_within_Iio],
+  unfold [ident function.comp] ["at", ident this],
+  simpa [] [] ["only"] ["[", expr neg_neg, "]"] [] []
+end
 
 theorem lhopital_zero_left_on_Ioc (hff' : ∀ x _ : x ∈ Ioo a b, HasDerivAt f (f' x) x)
   (hgg' : ∀ x _ : x ∈ Ioo a b, HasDerivAt g (g' x) x) (hcf : ContinuousOn f (Ioc a b)) (hcg : ContinuousOn g (Ioc a b))
@@ -154,68 +150,65 @@ theorem lhopital_zero_left_on_Ioc (hff' : ∀ x _ : x ∈ Ioo a b, HasDerivAt f 
 
 omit hab
 
-theorem lhopital_zero_at_top_on_Ioi (hff' : ∀ x _ : x ∈ Ioi a, HasDerivAt f (f' x) x)
-  (hgg' : ∀ x _ : x ∈ Ioi a, HasDerivAt g (g' x) x) (hg' : ∀ x _ : x ∈ Ioi a, g' x ≠ 0) (hftop : tendsto f at_top (𝓝 0))
-  (hgtop : tendsto g at_top (𝓝 0)) (hdiv : tendsto (fun x => f' x / g' x) at_top l) :
-  tendsto (fun x => f x / g x) at_top l :=
-  by 
-    obtain ⟨a', haa', ha'⟩ : ∃ a', a < a' ∧ 0 < a' :=
-      ⟨1+max a 0,
-        ⟨lt_of_le_of_ltₓ (le_max_leftₓ a 0) (lt_one_add _), lt_of_le_of_ltₓ (le_max_rightₓ a 0) (lt_one_add _)⟩⟩
-    have fact1 : ∀ x : ℝ, x ∈ Ioo 0 (a'⁻¹) → x ≠ 0 := fun _ hx => (ne_of_ltₓ hx.1).symm 
-    have fact2 : ∀ x _ : x ∈ Ioo 0 (a'⁻¹), a < x⁻¹
-    exact fun _ hx => lt_transₓ haa' ((lt_inv ha' hx.1).mpr hx.2)
-    have hdnf : ∀ x _ : x ∈ Ioo 0 (a'⁻¹), HasDerivAt (f ∘ HasInv.inv) (f' (x⁻¹)*-(x^2)⁻¹) x 
-    exact fun x hx => comp x (hff' (x⁻¹)$ fact2 x hx) (has_deriv_at_inv$ fact1 x hx)
-    have hdng : ∀ x _ : x ∈ Ioo 0 (a'⁻¹), HasDerivAt (g ∘ HasInv.inv) (g' (x⁻¹)*-(x^2)⁻¹) x 
-    exact fun x hx => comp x (hgg' (x⁻¹)$ fact2 x hx) (has_deriv_at_inv$ fact1 x hx)
-    have  :=
-      lhopital_zero_right_on_Ioo (inv_pos.mpr ha') hdnf hdng
-        (by 
-          intro x hx 
-          refine' mul_ne_zero _ (neg_ne_zero.mpr$ inv_ne_zero$ pow_ne_zero _$ fact1 x hx)
-          exact hg' _ (fact2 x hx))
-        (hftop.comp tendsto_inv_zero_at_top) (hgtop.comp tendsto_inv_zero_at_top)
-        (by 
-          refine' (tendsto_congr' _).mp (hdiv.comp tendsto_inv_zero_at_top)
-          rw [eventually_eq_iff_exists_mem]
-          use Ioi 0, self_mem_nhds_within 
-          intro x hx 
-          unfold Function.comp 
-          erw [mul_div_mul_right]
-          refine' neg_ne_zero.mpr (inv_ne_zero$ pow_ne_zero _$ ne_of_gtₓ hx))
-    have  := this.comp tendsto_inv_at_top_zero' 
-    unfold Function.comp  at this 
-    simpa only [inv_inv₀]
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lhopital_zero_at_top_on_Ioi
+(hff' : ∀ x «expr ∈ » Ioi a, has_deriv_at f (f' x) x)
+(hgg' : ∀ x «expr ∈ » Ioi a, has_deriv_at g (g' x) x)
+(hg' : ∀ x «expr ∈ » Ioi a, «expr ≠ »(g' x, 0))
+(hftop : tendsto f at_top (expr𝓝() 0))
+(hgtop : tendsto g at_top (expr𝓝() 0))
+(hdiv : tendsto (λ x, «expr / »(f' x, g' x)) at_top l) : tendsto (λ x, «expr / »(f x, g x)) at_top l :=
+begin
+  obtain ["⟨", ident a', ",", ident haa', ",", ident ha', "⟩", ":", expr «expr∃ , »((a'), «expr ∧ »(«expr < »(a, a'), «expr < »(0, a'))), ":=", expr ⟨«expr + »(1, max a 0), ⟨lt_of_le_of_lt (le_max_left a 0) (lt_one_add _), lt_of_le_of_lt (le_max_right a 0) (lt_one_add _)⟩⟩],
+  have [ident fact1] [":", expr ∀
+   x : exprℝ(), «expr ∈ »(x, Ioo 0 «expr ⁻¹»(a')) → «expr ≠ »(x, 0)] [":=", expr λ _ hx, (ne_of_lt hx.1).symm],
+  have [ident fact2] [":", expr ∀ x «expr ∈ » Ioo 0 «expr ⁻¹»(a'), «expr < »(a, «expr ⁻¹»(x))] [],
+  from [expr λ _ hx, lt_trans haa' ((lt_inv ha' hx.1).mpr hx.2)],
+  have [ident hdnf] [":", expr ∀
+   x «expr ∈ » Ioo 0 «expr ⁻¹»(a'), has_deriv_at «expr ∘ »(f, has_inv.inv) «expr * »(f' «expr ⁻¹»(x), «expr- »(«expr ⁻¹»(«expr ^ »(x, 2)))) x] [],
+  from [expr λ x hx, comp x «expr $ »(hff' «expr ⁻¹»(x), fact2 x hx) «expr $ »(has_deriv_at_inv, fact1 x hx)],
+  have [ident hdng] [":", expr ∀
+   x «expr ∈ » Ioo 0 «expr ⁻¹»(a'), has_deriv_at «expr ∘ »(g, has_inv.inv) «expr * »(g' «expr ⁻¹»(x), «expr- »(«expr ⁻¹»(«expr ^ »(x, 2)))) x] [],
+  from [expr λ x hx, comp x «expr $ »(hgg' «expr ⁻¹»(x), fact2 x hx) «expr $ »(has_deriv_at_inv, fact1 x hx)],
+  have [] [] [":=", expr lhopital_zero_right_on_Ioo (inv_pos.mpr ha') hdnf hdng (by { intros [ident x, ident hx],
+      refine [expr mul_ne_zero _ «expr $ »(neg_ne_zero.mpr, «expr $ »(inv_ne_zero, «expr $ »(pow_ne_zero _, fact1 x hx)))],
+      exact [expr hg' _ (fact2 x hx)] }) (hftop.comp tendsto_inv_zero_at_top) (hgtop.comp tendsto_inv_zero_at_top) (by { refine [expr (tendsto_congr' _).mp (hdiv.comp tendsto_inv_zero_at_top)],
+      rw [expr eventually_eq_iff_exists_mem] [],
+      use ["[", expr Ioi 0, ",", expr self_mem_nhds_within, "]"],
+      intros [ident x, ident hx],
+      unfold [ident function.comp] [],
+      erw [expr mul_div_mul_right] [],
+      refine [expr neg_ne_zero.mpr «expr $ »(inv_ne_zero, «expr $ »(pow_ne_zero _, ne_of_gt hx))] })],
+  have [] [] [":=", expr this.comp tendsto_inv_at_top_zero'],
+  unfold [ident function.comp] ["at", ident this],
+  simpa [] [] ["only"] ["[", expr inv_inv₀, "]"] [] []
+end
 
-theorem lhopital_zero_at_bot_on_Iio (hff' : ∀ x _ : x ∈ Iio a, HasDerivAt f (f' x) x)
-  (hgg' : ∀ x _ : x ∈ Iio a, HasDerivAt g (g' x) x) (hg' : ∀ x _ : x ∈ Iio a, g' x ≠ 0) (hfbot : tendsto f at_bot (𝓝 0))
-  (hgbot : tendsto g at_bot (𝓝 0)) (hdiv : tendsto (fun x => f' x / g' x) at_bot l) :
-  tendsto (fun x => f x / g x) at_bot l :=
-  by 
-    have hdnf : ∀ x _ : x ∈ -Iio a, HasDerivAt (f ∘ Neg.neg) (f' (-x)*-1) x 
-    exact fun x hx => comp x (hff' (-x) hx) (has_deriv_at_neg x)
-    have hdng : ∀ x _ : x ∈ -Iio a, HasDerivAt (g ∘ Neg.neg) (g' (-x)*-1) x 
-    exact fun x hx => comp x (hgg' (-x) hx) (has_deriv_at_neg x)
-    rw [preimage_neg_Iio] at hdnf 
-    rw [preimage_neg_Iio] at hdng 
-    have  :=
-      lhopital_zero_at_top_on_Ioi hdnf hdng
-        (by 
-          intro x hx h 
-          apply
-            hg' _
-              (by 
-                rw [←preimage_neg_Iio] at hx 
-                exact hx)
-          rwa [mul_commₓ, ←neg_eq_neg_one_mul, neg_eq_zero] at h)
-        (hfbot.comp tendsto_neg_at_top_at_bot) (hgbot.comp tendsto_neg_at_top_at_bot)
-        (by 
-          simp only [mul_oneₓ, mul_neg_eq_neg_mul_symm, neg_div_neg_eq]
-          exact (tendsto_congr$ fun x => rfl).mp (hdiv.comp tendsto_neg_at_top_at_bot))
-    have  := this.comp tendsto_neg_at_bot_at_top 
-    unfold Function.comp  at this 
-    simpa only [neg_negₓ]
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lhopital_zero_at_bot_on_Iio
+(hff' : ∀ x «expr ∈ » Iio a, has_deriv_at f (f' x) x)
+(hgg' : ∀ x «expr ∈ » Iio a, has_deriv_at g (g' x) x)
+(hg' : ∀ x «expr ∈ » Iio a, «expr ≠ »(g' x, 0))
+(hfbot : tendsto f at_bot (expr𝓝() 0))
+(hgbot : tendsto g at_bot (expr𝓝() 0))
+(hdiv : tendsto (λ x, «expr / »(f' x, g' x)) at_bot l) : tendsto (λ x, «expr / »(f x, g x)) at_bot l :=
+begin
+  have [ident hdnf] [":", expr ∀
+   x «expr ∈ » «expr- »(Iio a), has_deriv_at «expr ∘ »(f, has_neg.neg) «expr * »(f' «expr- »(x), «expr- »(1)) x] [],
+  from [expr λ x hx, comp x (hff' «expr- »(x) hx) (has_deriv_at_neg x)],
+  have [ident hdng] [":", expr ∀
+   x «expr ∈ » «expr- »(Iio a), has_deriv_at «expr ∘ »(g, has_neg.neg) «expr * »(g' «expr- »(x), «expr- »(1)) x] [],
+  from [expr λ x hx, comp x (hgg' «expr- »(x) hx) (has_deriv_at_neg x)],
+  rw [expr preimage_neg_Iio] ["at", ident hdnf],
+  rw [expr preimage_neg_Iio] ["at", ident hdng],
+  have [] [] [":=", expr lhopital_zero_at_top_on_Ioi hdnf hdng (by { intros [ident x, ident hx, ident h],
+      apply [expr hg' _ (by { rw ["<-", expr preimage_neg_Iio] ["at", ident hx], exact [expr hx] })],
+      rwa ["[", expr mul_comm, ",", "<-", expr neg_eq_neg_one_mul, ",", expr neg_eq_zero, "]"] ["at", ident h] }) (hfbot.comp tendsto_neg_at_top_at_bot) (hgbot.comp tendsto_neg_at_top_at_bot) (by { simp [] [] ["only"] ["[", expr mul_one, ",", expr mul_neg_eq_neg_mul_symm, ",", expr neg_div_neg_eq, "]"] [] [],
+      exact [expr «expr $ »(tendsto_congr, λ x, rfl).mp (hdiv.comp tendsto_neg_at_top_at_bot)] })],
+  have [] [] [":=", expr this.comp tendsto_neg_at_bot_at_top],
+  unfold [ident function.comp] ["at", ident this],
+  simpa [] [] ["only"] ["[", expr neg_neg, "]"] [] []
+end
 
 end HasDerivAt
 
@@ -223,17 +216,23 @@ namespace deriv
 
 include hab
 
-theorem lhopital_zero_right_on_Ioo (hdf : DifferentiableOn ℝ f (Ioo a b)) (hg' : ∀ x _ : x ∈ Ioo a b, deriv g x ≠ 0)
-  (hfa : tendsto f (𝓝[Ioi a] a) (𝓝 0)) (hga : tendsto g (𝓝[Ioi a] a) (𝓝 0))
-  (hdiv : tendsto (fun x => (deriv f) x / (deriv g) x) (𝓝[Ioi a] a) l) : tendsto (fun x => f x / g x) (𝓝[Ioi a] a) l :=
-  by 
-    have hdf : ∀ x _ : x ∈ Ioo a b, DifferentiableAt ℝ f x 
-    exact fun x hx => (hdf x hx).DifferentiableAt (Ioo_mem_nhds hx.1 hx.2)
-    have hdg : ∀ x _ : x ∈ Ioo a b, DifferentiableAt ℝ g x 
-    exact fun x hx => Classical.by_contradiction fun h => hg' x hx (deriv_zero_of_not_differentiable_at h)
-    exact
-      HasDerivAt.lhopital_zero_right_on_Ioo hab (fun x hx => (hdf x hx).HasDerivAt) (fun x hx => (hdg x hx).HasDerivAt)
-        hg' hfa hga hdiv
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lhopital_zero_right_on_Ioo
+(hdf : differentiable_on exprℝ() f (Ioo a b))
+(hg' : ∀ x «expr ∈ » Ioo a b, «expr ≠ »(deriv g x, 0))
+(hfa : tendsto f «expr𝓝[ ] »(Ioi a, a) (expr𝓝() 0))
+(hga : tendsto g «expr𝓝[ ] »(Ioi a, a) (expr𝓝() 0))
+(hdiv : tendsto (λ
+  x, «expr / »(deriv f x, deriv g x)) «expr𝓝[ ] »(Ioi a, a) l) : tendsto (λ
+ x, «expr / »(f x, g x)) «expr𝓝[ ] »(Ioi a, a) l :=
+begin
+  have [ident hdf] [":", expr ∀ x «expr ∈ » Ioo a b, differentiable_at exprℝ() f x] [],
+  from [expr λ x hx, (hdf x hx).differentiable_at (Ioo_mem_nhds hx.1 hx.2)],
+  have [ident hdg] [":", expr ∀ x «expr ∈ » Ioo a b, differentiable_at exprℝ() g x] [],
+  from [expr λ x hx, classical.by_contradiction (λ h, hg' x hx (deriv_zero_of_not_differentiable_at h))],
+  exact [expr has_deriv_at.lhopital_zero_right_on_Ioo hab (λ
+    x hx, (hdf x hx).has_deriv_at) (λ x hx, (hdg x hx).has_deriv_at) hg' hfa hga hdiv]
+end
 
 theorem lhopital_zero_right_on_Ico (hdf : DifferentiableOn ℝ f (Ioo a b)) (hcf : ContinuousOn f (Ico a b))
   (hcg : ContinuousOn g (Ico a b)) (hg' : ∀ x _ : x ∈ Ioo a b, (deriv g) x ≠ 0) (hfa : f a = 0) (hga : g a = 0)
@@ -248,44 +247,57 @@ theorem lhopital_zero_right_on_Ico (hdf : DifferentiableOn ℝ f (Ioo a b)) (hcf
       rw [←hga, ←nhds_within_Ioo_eq_nhds_within_Ioi hab]
       exact ((hcg a$ left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).Tendsto
 
-theorem lhopital_zero_left_on_Ioo (hdf : DifferentiableOn ℝ f (Ioo a b)) (hg' : ∀ x _ : x ∈ Ioo a b, (deriv g) x ≠ 0)
-  (hfb : tendsto f (nhdsWithin b (Iio b)) (𝓝 0)) (hgb : tendsto g (nhdsWithin b (Iio b)) (𝓝 0))
-  (hdiv : tendsto (fun x => (deriv f) x / (deriv g) x) (nhdsWithin b (Iio b)) l) :
-  tendsto (fun x => f x / g x) (nhdsWithin b (Iio b)) l :=
-  by 
-    have hdf : ∀ x _ : x ∈ Ioo a b, DifferentiableAt ℝ f x 
-    exact fun x hx => (hdf x hx).DifferentiableAt (Ioo_mem_nhds hx.1 hx.2)
-    have hdg : ∀ x _ : x ∈ Ioo a b, DifferentiableAt ℝ g x 
-    exact fun x hx => Classical.by_contradiction fun h => hg' x hx (deriv_zero_of_not_differentiable_at h)
-    exact
-      HasDerivAt.lhopital_zero_left_on_Ioo hab (fun x hx => (hdf x hx).HasDerivAt) (fun x hx => (hdg x hx).HasDerivAt)
-        hg' hfb hgb hdiv
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lhopital_zero_left_on_Ioo
+(hdf : differentiable_on exprℝ() f (Ioo a b))
+(hg' : ∀ x «expr ∈ » Ioo a b, «expr ≠ »(deriv g x, 0))
+(hfb : tendsto f (nhds_within b (Iio b)) (expr𝓝() 0))
+(hgb : tendsto g (nhds_within b (Iio b)) (expr𝓝() 0))
+(hdiv : tendsto (λ
+  x, «expr / »(deriv f x, deriv g x)) (nhds_within b (Iio b)) l) : tendsto (λ
+ x, «expr / »(f x, g x)) (nhds_within b (Iio b)) l :=
+begin
+  have [ident hdf] [":", expr ∀ x «expr ∈ » Ioo a b, differentiable_at exprℝ() f x] [],
+  from [expr λ x hx, (hdf x hx).differentiable_at (Ioo_mem_nhds hx.1 hx.2)],
+  have [ident hdg] [":", expr ∀ x «expr ∈ » Ioo a b, differentiable_at exprℝ() g x] [],
+  from [expr λ x hx, classical.by_contradiction (λ h, hg' x hx (deriv_zero_of_not_differentiable_at h))],
+  exact [expr has_deriv_at.lhopital_zero_left_on_Ioo hab (λ
+    x hx, (hdf x hx).has_deriv_at) (λ x hx, (hdg x hx).has_deriv_at) hg' hfb hgb hdiv]
+end
 
 omit hab
 
-theorem lhopital_zero_at_top_on_Ioi (hdf : DifferentiableOn ℝ f (Ioi a)) (hg' : ∀ x _ : x ∈ Ioi a, (deriv g) x ≠ 0)
-  (hftop : tendsto f at_top (𝓝 0)) (hgtop : tendsto g at_top (𝓝 0))
-  (hdiv : tendsto (fun x => (deriv f) x / (deriv g) x) at_top l) : tendsto (fun x => f x / g x) at_top l :=
-  by 
-    have hdf : ∀ x _ : x ∈ Ioi a, DifferentiableAt ℝ f x 
-    exact fun x hx => (hdf x hx).DifferentiableAt (Ioi_mem_nhds hx)
-    have hdg : ∀ x _ : x ∈ Ioi a, DifferentiableAt ℝ g x 
-    exact fun x hx => Classical.by_contradiction fun h => hg' x hx (deriv_zero_of_not_differentiable_at h)
-    exact
-      HasDerivAt.lhopital_zero_at_top_on_Ioi (fun x hx => (hdf x hx).HasDerivAt) (fun x hx => (hdg x hx).HasDerivAt) hg'
-        hftop hgtop hdiv
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lhopital_zero_at_top_on_Ioi
+(hdf : differentiable_on exprℝ() f (Ioi a))
+(hg' : ∀ x «expr ∈ » Ioi a, «expr ≠ »(deriv g x, 0))
+(hftop : tendsto f at_top (expr𝓝() 0))
+(hgtop : tendsto g at_top (expr𝓝() 0))
+(hdiv : tendsto (λ x, «expr / »(deriv f x, deriv g x)) at_top l) : tendsto (λ x, «expr / »(f x, g x)) at_top l :=
+begin
+  have [ident hdf] [":", expr ∀ x «expr ∈ » Ioi a, differentiable_at exprℝ() f x] [],
+  from [expr λ x hx, (hdf x hx).differentiable_at (Ioi_mem_nhds hx)],
+  have [ident hdg] [":", expr ∀ x «expr ∈ » Ioi a, differentiable_at exprℝ() g x] [],
+  from [expr λ x hx, classical.by_contradiction (λ h, hg' x hx (deriv_zero_of_not_differentiable_at h))],
+  exact [expr has_deriv_at.lhopital_zero_at_top_on_Ioi (λ
+    x hx, (hdf x hx).has_deriv_at) (λ x hx, (hdg x hx).has_deriv_at) hg' hftop hgtop hdiv]
+end
 
-theorem lhopital_zero_at_bot_on_Iio (hdf : DifferentiableOn ℝ f (Iio a)) (hg' : ∀ x _ : x ∈ Iio a, (deriv g) x ≠ 0)
-  (hfbot : tendsto f at_bot (𝓝 0)) (hgbot : tendsto g at_bot (𝓝 0))
-  (hdiv : tendsto (fun x => (deriv f) x / (deriv g) x) at_bot l) : tendsto (fun x => f x / g x) at_bot l :=
-  by 
-    have hdf : ∀ x _ : x ∈ Iio a, DifferentiableAt ℝ f x 
-    exact fun x hx => (hdf x hx).DifferentiableAt (Iio_mem_nhds hx)
-    have hdg : ∀ x _ : x ∈ Iio a, DifferentiableAt ℝ g x 
-    exact fun x hx => Classical.by_contradiction fun h => hg' x hx (deriv_zero_of_not_differentiable_at h)
-    exact
-      HasDerivAt.lhopital_zero_at_bot_on_Iio (fun x hx => (hdf x hx).HasDerivAt) (fun x hx => (hdg x hx).HasDerivAt) hg'
-        hfbot hgbot hdiv
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lhopital_zero_at_bot_on_Iio
+(hdf : differentiable_on exprℝ() f (Iio a))
+(hg' : ∀ x «expr ∈ » Iio a, «expr ≠ »(deriv g x, 0))
+(hfbot : tendsto f at_bot (expr𝓝() 0))
+(hgbot : tendsto g at_bot (expr𝓝() 0))
+(hdiv : tendsto (λ x, «expr / »(deriv f x, deriv g x)) at_bot l) : tendsto (λ x, «expr / »(f x, g x)) at_bot l :=
+begin
+  have [ident hdf] [":", expr ∀ x «expr ∈ » Iio a, differentiable_at exprℝ() f x] [],
+  from [expr λ x hx, (hdf x hx).differentiable_at (Iio_mem_nhds hx)],
+  have [ident hdg] [":", expr ∀ x «expr ∈ » Iio a, differentiable_at exprℝ() g x] [],
+  from [expr λ x hx, classical.by_contradiction (λ h, hg' x hx (deriv_zero_of_not_differentiable_at h))],
+  exact [expr has_deriv_at.lhopital_zero_at_bot_on_Iio (λ
+    x hx, (hdf x hx).has_deriv_at) (λ x hx, (hdg x hx).has_deriv_at) hg' hfbot hgbot hdiv]
+end
 
 end deriv
 
@@ -299,66 +311,70 @@ conditions holding eventually.
 
 namespace HasDerivAt
 
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- L'Hôpital's rule for approaching a real from the right, `has_deriv_at` version -/
-theorem lhopital_zero_nhds_right (hff' : ∀ᶠx in 𝓝[Ioi a] a, HasDerivAt f (f' x) x)
-  (hgg' : ∀ᶠx in 𝓝[Ioi a] a, HasDerivAt g (g' x) x) (hg' : ∀ᶠx in 𝓝[Ioi a] a, g' x ≠ 0)
-  (hfa : tendsto f (𝓝[Ioi a] a) (𝓝 0)) (hga : tendsto g (𝓝[Ioi a] a) (𝓝 0))
-  (hdiv : tendsto (fun x => f' x / g' x) (𝓝[Ioi a] a) l) : tendsto (fun x => f x / g x) (𝓝[Ioi a] a) l :=
-  by 
-    rw [eventually_iff_exists_mem] at *
-    rcases hff' with ⟨s₁, hs₁, hff'⟩
-    rcases hgg' with ⟨s₂, hs₂, hgg'⟩
-    rcases hg' with ⟨s₃, hs₃, hg'⟩
-    let s := s₁ ∩ s₂ ∩ s₃ 
-    have hs : s ∈ 𝓝[Ioi a] a := inter_mem (inter_mem hs₁ hs₂) hs₃ 
-    rw [mem_nhds_within_Ioi_iff_exists_Ioo_subset] at hs 
-    rcases hs with ⟨u, hau, hu⟩
-    refine' lhopital_zero_right_on_Ioo hau _ _ _ hfa hga hdiv <;>
-      intro x hx <;>
-        applyAssumption <;>
-          first |
-            exact (hu hx).1.1|
-            exact (hu hx).1.2|
-            exact (hu hx).2
+theorem lhopital_zero_nhds_right
+(hff' : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Ioi a, a), has_deriv_at f (f' x) x))
+(hgg' : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Ioi a, a), has_deriv_at g (g' x) x))
+(hg' : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Ioi a, a), «expr ≠ »(g' x, 0)))
+(hfa : tendsto f «expr𝓝[ ] »(Ioi a, a) (expr𝓝() 0))
+(hga : tendsto g «expr𝓝[ ] »(Ioi a, a) (expr𝓝() 0))
+(hdiv : tendsto (λ
+  x, «expr / »(f' x, g' x)) «expr𝓝[ ] »(Ioi a, a) l) : tendsto (λ x, «expr / »(f x, g x)) «expr𝓝[ ] »(Ioi a, a) l :=
+begin
+  rw [expr eventually_iff_exists_mem] ["at", "*"],
+  rcases [expr hff', "with", "⟨", ident s₁, ",", ident hs₁, ",", ident hff', "⟩"],
+  rcases [expr hgg', "with", "⟨", ident s₂, ",", ident hs₂, ",", ident hgg', "⟩"],
+  rcases [expr hg', "with", "⟨", ident s₃, ",", ident hs₃, ",", ident hg', "⟩"],
+  let [ident s] [] [":=", expr «expr ∩ »(«expr ∩ »(s₁, s₂), s₃)],
+  have [ident hs] [":", expr «expr ∈ »(s, «expr𝓝[ ] »(Ioi a, a))] [":=", expr inter_mem (inter_mem hs₁ hs₂) hs₃],
+  rw [expr mem_nhds_within_Ioi_iff_exists_Ioo_subset] ["at", ident hs],
+  rcases [expr hs, "with", "⟨", ident u, ",", ident hau, ",", ident hu, "⟩"],
+  refine [expr lhopital_zero_right_on_Ioo hau _ _ _ hfa hga hdiv]; intros [ident x, ident hx]; apply_assumption; exact [expr (hu hx).1.1] <|> exact [expr (hu hx).1.2] <|> exact [expr (hu hx).2]
+end
 
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- L'Hôpital's rule for approaching a real from the left, `has_deriv_at` version -/
-theorem lhopital_zero_nhds_left (hff' : ∀ᶠx in 𝓝[Iio a] a, HasDerivAt f (f' x) x)
-  (hgg' : ∀ᶠx in 𝓝[Iio a] a, HasDerivAt g (g' x) x) (hg' : ∀ᶠx in 𝓝[Iio a] a, g' x ≠ 0)
-  (hfa : tendsto f (𝓝[Iio a] a) (𝓝 0)) (hga : tendsto g (𝓝[Iio a] a) (𝓝 0))
-  (hdiv : tendsto (fun x => f' x / g' x) (𝓝[Iio a] a) l) : tendsto (fun x => f x / g x) (𝓝[Iio a] a) l :=
-  by 
-    rw [eventually_iff_exists_mem] at *
-    rcases hff' with ⟨s₁, hs₁, hff'⟩
-    rcases hgg' with ⟨s₂, hs₂, hgg'⟩
-    rcases hg' with ⟨s₃, hs₃, hg'⟩
-    let s := s₁ ∩ s₂ ∩ s₃ 
-    have hs : s ∈ 𝓝[Iio a] a := inter_mem (inter_mem hs₁ hs₂) hs₃ 
-    rw [mem_nhds_within_Iio_iff_exists_Ioo_subset] at hs 
-    rcases hs with ⟨l, hal, hl⟩
-    refine' lhopital_zero_left_on_Ioo hal _ _ _ hfa hga hdiv <;>
-      intro x hx <;>
-        applyAssumption <;>
-          first |
-            exact (hl hx).1.1|
-            exact (hl hx).1.2|
-            exact (hl hx).2
+theorem lhopital_zero_nhds_left
+(hff' : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Iio a, a), has_deriv_at f (f' x) x))
+(hgg' : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Iio a, a), has_deriv_at g (g' x) x))
+(hg' : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Iio a, a), «expr ≠ »(g' x, 0)))
+(hfa : tendsto f «expr𝓝[ ] »(Iio a, a) (expr𝓝() 0))
+(hga : tendsto g «expr𝓝[ ] »(Iio a, a) (expr𝓝() 0))
+(hdiv : tendsto (λ
+  x, «expr / »(f' x, g' x)) «expr𝓝[ ] »(Iio a, a) l) : tendsto (λ x, «expr / »(f x, g x)) «expr𝓝[ ] »(Iio a, a) l :=
+begin
+  rw [expr eventually_iff_exists_mem] ["at", "*"],
+  rcases [expr hff', "with", "⟨", ident s₁, ",", ident hs₁, ",", ident hff', "⟩"],
+  rcases [expr hgg', "with", "⟨", ident s₂, ",", ident hs₂, ",", ident hgg', "⟩"],
+  rcases [expr hg', "with", "⟨", ident s₃, ",", ident hs₃, ",", ident hg', "⟩"],
+  let [ident s] [] [":=", expr «expr ∩ »(«expr ∩ »(s₁, s₂), s₃)],
+  have [ident hs] [":", expr «expr ∈ »(s, «expr𝓝[ ] »(Iio a, a))] [":=", expr inter_mem (inter_mem hs₁ hs₂) hs₃],
+  rw [expr mem_nhds_within_Iio_iff_exists_Ioo_subset] ["at", ident hs],
+  rcases [expr hs, "with", "⟨", ident l, ",", ident hal, ",", ident hl, "⟩"],
+  refine [expr lhopital_zero_left_on_Ioo hal _ _ _ hfa hga hdiv]; intros [ident x, ident hx]; apply_assumption; exact [expr (hl hx).1.1] <|> exact [expr (hl hx).1.2] <|> exact [expr (hl hx).2]
+end
 
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- L'Hôpital's rule for approaching a real, `has_deriv_at` version. This
   does not require anything about the situation at `a` -/
-theorem lhopital_zero_nhds' (hff' : ∀ᶠx in 𝓝[univ \ {a}] a, HasDerivAt f (f' x) x)
-  (hgg' : ∀ᶠx in 𝓝[univ \ {a}] a, HasDerivAt g (g' x) x) (hg' : ∀ᶠx in 𝓝[univ \ {a}] a, g' x ≠ 0)
-  (hfa : tendsto f (𝓝[univ \ {a}] a) (𝓝 0)) (hga : tendsto g (𝓝[univ \ {a}] a) (𝓝 0))
-  (hdiv : tendsto (fun x => f' x / g' x) (𝓝[univ \ {a}] a) l) : tendsto (fun x => f x / g x) (𝓝[univ \ {a}] a) l :=
-  by 
-    have  : univ \ {a} = Iio a ∪ Ioi a
-    ·
-      ext 
-      rw [mem_diff_singleton, eq_true_intro$ mem_univ x, true_andₓ, ne_iff_lt_or_gtₓ]
-      rfl 
-    simp only [this, nhds_within_union, tendsto_sup, eventually_sup] at *
-    exact
-      ⟨lhopital_zero_nhds_left hff'.1 hgg'.1 hg'.1 hfa.1 hga.1 hdiv.1,
-        lhopital_zero_nhds_right hff'.2 hgg'.2 hg'.2 hfa.2 hga.2 hdiv.2⟩
+theorem lhopital_zero_nhds'
+(hff' : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(«expr \ »(univ, {a}), a), has_deriv_at f (f' x) x))
+(hgg' : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(«expr \ »(univ, {a}), a), has_deriv_at g (g' x) x))
+(hg' : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(«expr \ »(univ, {a}), a), «expr ≠ »(g' x, 0)))
+(hfa : tendsto f «expr𝓝[ ] »(«expr \ »(univ, {a}), a) (expr𝓝() 0))
+(hga : tendsto g «expr𝓝[ ] »(«expr \ »(univ, {a}), a) (expr𝓝() 0))
+(hdiv : tendsto (λ
+  x, «expr / »(f' x, g' x)) «expr𝓝[ ] »(«expr \ »(univ, {a}), a) l) : tendsto (λ
+ x, «expr / »(f x, g x)) «expr𝓝[ ] »(«expr \ »(univ, {a}), a) l :=
+begin
+  have [] [":", expr «expr = »(«expr \ »(univ, {a}), «expr ∪ »(Iio a, Ioi a))] [],
+  { ext [] [] [],
+    rw ["[", expr mem_diff_singleton, ",", expr «expr $ »(eq_true_intro, mem_univ x), ",", expr true_and, ",", expr ne_iff_lt_or_gt, "]"] [],
+    refl },
+  simp [] [] ["only"] ["[", expr this, ",", expr nhds_within_union, ",", expr tendsto_sup, ",", expr eventually_sup, "]"] [] ["at", "*"],
+  exact [expr ⟨lhopital_zero_nhds_left hff'.1 hgg'.1 hg'.1 hfa.1 hga.1 hdiv.1, lhopital_zero_nhds_right hff'.2 hgg'.2 hg'.2 hfa.2 hga.2 hdiv.2⟩]
+end
 
 /-- **L'Hôpital's rule** for approaching a real, `has_deriv_at` version -/
 theorem lhopital_zero_nhds (hff' : ∀ᶠx in 𝓝 a, HasDerivAt f (f' x) x) (hgg' : ∀ᶠx in 𝓝 a, HasDerivAt g (g' x) x)
@@ -371,99 +387,119 @@ theorem lhopital_zero_nhds (hff' : ∀ᶠx in 𝓝 a, HasDerivAt f (f' x) x) (hg
           apply tendsto_nhds_within_of_tendsto_nhds <;>
         assumption
 
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- L'Hôpital's rule for approaching +∞, `has_deriv_at` version -/
-theorem lhopital_zero_at_top (hff' : ∀ᶠx in at_top, HasDerivAt f (f' x) x) (hgg' : ∀ᶠx in at_top, HasDerivAt g (g' x) x)
-  (hg' : ∀ᶠx in at_top, g' x ≠ 0) (hftop : tendsto f at_top (𝓝 0)) (hgtop : tendsto g at_top (𝓝 0))
-  (hdiv : tendsto (fun x => f' x / g' x) at_top l) : tendsto (fun x => f x / g x) at_top l :=
-  by 
-    rw [eventually_iff_exists_mem] at *
-    rcases hff' with ⟨s₁, hs₁, hff'⟩
-    rcases hgg' with ⟨s₂, hs₂, hgg'⟩
-    rcases hg' with ⟨s₃, hs₃, hg'⟩
-    let s := s₁ ∩ s₂ ∩ s₃ 
-    have hs : s ∈ at_top := inter_mem (inter_mem hs₁ hs₂) hs₃ 
-    rw [mem_at_top_sets] at hs 
-    rcases hs with ⟨l, hl⟩
-    have hl' : Ioi l ⊆ s := fun x hx => hl x (le_of_ltₓ hx)
-    refine' lhopital_zero_at_top_on_Ioi _ _ (fun x hx => hg' x$ (hl' hx).2) hftop hgtop hdiv <;>
-      intro x hx <;>
-        applyAssumption <;>
-          first |
-            exact (hl' hx).1.1|
-            exact (hl' hx).1.2
+theorem lhopital_zero_at_top
+(hff' : «expr∀ᶠ in , »((x), at_top, has_deriv_at f (f' x) x))
+(hgg' : «expr∀ᶠ in , »((x), at_top, has_deriv_at g (g' x) x))
+(hg' : «expr∀ᶠ in , »((x), at_top, «expr ≠ »(g' x, 0)))
+(hftop : tendsto f at_top (expr𝓝() 0))
+(hgtop : tendsto g at_top (expr𝓝() 0))
+(hdiv : tendsto (λ x, «expr / »(f' x, g' x)) at_top l) : tendsto (λ x, «expr / »(f x, g x)) at_top l :=
+begin
+  rw [expr eventually_iff_exists_mem] ["at", "*"],
+  rcases [expr hff', "with", "⟨", ident s₁, ",", ident hs₁, ",", ident hff', "⟩"],
+  rcases [expr hgg', "with", "⟨", ident s₂, ",", ident hs₂, ",", ident hgg', "⟩"],
+  rcases [expr hg', "with", "⟨", ident s₃, ",", ident hs₃, ",", ident hg', "⟩"],
+  let [ident s] [] [":=", expr «expr ∩ »(«expr ∩ »(s₁, s₂), s₃)],
+  have [ident hs] [":", expr «expr ∈ »(s, at_top)] [":=", expr inter_mem (inter_mem hs₁ hs₂) hs₃],
+  rw [expr mem_at_top_sets] ["at", ident hs],
+  rcases [expr hs, "with", "⟨", ident l, ",", ident hl, "⟩"],
+  have [ident hl'] [":", expr «expr ⊆ »(Ioi l, s)] [":=", expr λ x hx, hl x (le_of_lt hx)],
+  refine [expr lhopital_zero_at_top_on_Ioi _ _ (λ
+    x
+    hx, «expr $ »(hg' x, (hl' hx).2)) hftop hgtop hdiv]; intros [ident x, ident hx]; apply_assumption; exact [expr (hl' hx).1.1] <|> exact [expr (hl' hx).1.2]
+end
 
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- L'Hôpital's rule for approaching -∞, `has_deriv_at` version -/
-theorem lhopital_zero_at_bot (hff' : ∀ᶠx in at_bot, HasDerivAt f (f' x) x) (hgg' : ∀ᶠx in at_bot, HasDerivAt g (g' x) x)
-  (hg' : ∀ᶠx in at_bot, g' x ≠ 0) (hfbot : tendsto f at_bot (𝓝 0)) (hgbot : tendsto g at_bot (𝓝 0))
-  (hdiv : tendsto (fun x => f' x / g' x) at_bot l) : tendsto (fun x => f x / g x) at_bot l :=
-  by 
-    rw [eventually_iff_exists_mem] at *
-    rcases hff' with ⟨s₁, hs₁, hff'⟩
-    rcases hgg' with ⟨s₂, hs₂, hgg'⟩
-    rcases hg' with ⟨s₃, hs₃, hg'⟩
-    let s := s₁ ∩ s₂ ∩ s₃ 
-    have hs : s ∈ at_bot := inter_mem (inter_mem hs₁ hs₂) hs₃ 
-    rw [mem_at_bot_sets] at hs 
-    rcases hs with ⟨l, hl⟩
-    have hl' : Iio l ⊆ s := fun x hx => hl x (le_of_ltₓ hx)
-    refine' lhopital_zero_at_bot_on_Iio _ _ (fun x hx => hg' x$ (hl' hx).2) hfbot hgbot hdiv <;>
-      intro x hx <;>
-        applyAssumption <;>
-          first |
-            exact (hl' hx).1.1|
-            exact (hl' hx).1.2
+theorem lhopital_zero_at_bot
+(hff' : «expr∀ᶠ in , »((x), at_bot, has_deriv_at f (f' x) x))
+(hgg' : «expr∀ᶠ in , »((x), at_bot, has_deriv_at g (g' x) x))
+(hg' : «expr∀ᶠ in , »((x), at_bot, «expr ≠ »(g' x, 0)))
+(hfbot : tendsto f at_bot (expr𝓝() 0))
+(hgbot : tendsto g at_bot (expr𝓝() 0))
+(hdiv : tendsto (λ x, «expr / »(f' x, g' x)) at_bot l) : tendsto (λ x, «expr / »(f x, g x)) at_bot l :=
+begin
+  rw [expr eventually_iff_exists_mem] ["at", "*"],
+  rcases [expr hff', "with", "⟨", ident s₁, ",", ident hs₁, ",", ident hff', "⟩"],
+  rcases [expr hgg', "with", "⟨", ident s₂, ",", ident hs₂, ",", ident hgg', "⟩"],
+  rcases [expr hg', "with", "⟨", ident s₃, ",", ident hs₃, ",", ident hg', "⟩"],
+  let [ident s] [] [":=", expr «expr ∩ »(«expr ∩ »(s₁, s₂), s₃)],
+  have [ident hs] [":", expr «expr ∈ »(s, at_bot)] [":=", expr inter_mem (inter_mem hs₁ hs₂) hs₃],
+  rw [expr mem_at_bot_sets] ["at", ident hs],
+  rcases [expr hs, "with", "⟨", ident l, ",", ident hl, "⟩"],
+  have [ident hl'] [":", expr «expr ⊆ »(Iio l, s)] [":=", expr λ x hx, hl x (le_of_lt hx)],
+  refine [expr lhopital_zero_at_bot_on_Iio _ _ (λ
+    x
+    hx, «expr $ »(hg' x, (hl' hx).2)) hfbot hgbot hdiv]; intros [ident x, ident hx]; apply_assumption; exact [expr (hl' hx).1.1] <|> exact [expr (hl' hx).1.2]
+end
 
 end HasDerivAt
 
 namespace deriv
 
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **L'Hôpital's rule** for approaching a real from the right, `deriv` version -/
-theorem lhopital_zero_nhds_right (hdf : ∀ᶠx in 𝓝[Ioi a] a, DifferentiableAt ℝ f x)
-  (hg' : ∀ᶠx in 𝓝[Ioi a] a, deriv g x ≠ 0) (hfa : tendsto f (𝓝[Ioi a] a) (𝓝 0)) (hga : tendsto g (𝓝[Ioi a] a) (𝓝 0))
-  (hdiv : tendsto (fun x => (deriv f) x / (deriv g) x) (𝓝[Ioi a] a) l) : tendsto (fun x => f x / g x) (𝓝[Ioi a] a) l :=
-  by 
-    have hdg : ∀ᶠx in 𝓝[Ioi a] a, DifferentiableAt ℝ g x 
-    exact
-      hg'.mp
-        (eventually_of_forall$
-          fun _ hg' => Classical.by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
-    have hdf' : ∀ᶠx in 𝓝[Ioi a] a, HasDerivAt f (deriv f x) x 
-    exact hdf.mp (eventually_of_forall$ fun _ => DifferentiableAt.has_deriv_at)
-    have hdg' : ∀ᶠx in 𝓝[Ioi a] a, HasDerivAt g (deriv g x) x 
-    exact hdg.mp (eventually_of_forall$ fun _ => DifferentiableAt.has_deriv_at)
-    exact HasDerivAt.lhopital_zero_nhds_right hdf' hdg' hg' hfa hga hdiv
+theorem lhopital_zero_nhds_right
+(hdf : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Ioi a, a), differentiable_at exprℝ() f x))
+(hg' : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Ioi a, a), «expr ≠ »(deriv g x, 0)))
+(hfa : tendsto f «expr𝓝[ ] »(Ioi a, a) (expr𝓝() 0))
+(hga : tendsto g «expr𝓝[ ] »(Ioi a, a) (expr𝓝() 0))
+(hdiv : tendsto (λ
+  x, «expr / »(deriv f x, deriv g x)) «expr𝓝[ ] »(Ioi a, a) l) : tendsto (λ
+ x, «expr / »(f x, g x)) «expr𝓝[ ] »(Ioi a, a) l :=
+begin
+  have [ident hdg] [":", expr «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Ioi a, a), differentiable_at exprℝ() g x)] [],
+  from [expr hg'.mp «expr $ »(eventually_of_forall, λ
+    _ hg', classical.by_contradiction (λ h, hg' (deriv_zero_of_not_differentiable_at h)))],
+  have [ident hdf'] [":", expr «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Ioi a, a), has_deriv_at f (deriv f x) x)] [],
+  from [expr hdf.mp «expr $ »(eventually_of_forall, λ _, differentiable_at.has_deriv_at)],
+  have [ident hdg'] [":", expr «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Ioi a, a), has_deriv_at g (deriv g x) x)] [],
+  from [expr hdg.mp «expr $ »(eventually_of_forall, λ _, differentiable_at.has_deriv_at)],
+  exact [expr has_deriv_at.lhopital_zero_nhds_right hdf' hdg' hg' hfa hga hdiv]
+end
 
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **L'Hôpital's rule** for approaching a real from the left, `deriv` version -/
-theorem lhopital_zero_nhds_left (hdf : ∀ᶠx in 𝓝[Iio a] a, DifferentiableAt ℝ f x)
-  (hg' : ∀ᶠx in 𝓝[Iio a] a, deriv g x ≠ 0) (hfa : tendsto f (𝓝[Iio a] a) (𝓝 0)) (hga : tendsto g (𝓝[Iio a] a) (𝓝 0))
-  (hdiv : tendsto (fun x => (deriv f) x / (deriv g) x) (𝓝[Iio a] a) l) : tendsto (fun x => f x / g x) (𝓝[Iio a] a) l :=
-  by 
-    have hdg : ∀ᶠx in 𝓝[Iio a] a, DifferentiableAt ℝ g x 
-    exact
-      hg'.mp
-        (eventually_of_forall$
-          fun _ hg' => Classical.by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
-    have hdf' : ∀ᶠx in 𝓝[Iio a] a, HasDerivAt f (deriv f x) x 
-    exact hdf.mp (eventually_of_forall$ fun _ => DifferentiableAt.has_deriv_at)
-    have hdg' : ∀ᶠx in 𝓝[Iio a] a, HasDerivAt g (deriv g x) x 
-    exact hdg.mp (eventually_of_forall$ fun _ => DifferentiableAt.has_deriv_at)
-    exact HasDerivAt.lhopital_zero_nhds_left hdf' hdg' hg' hfa hga hdiv
+theorem lhopital_zero_nhds_left
+(hdf : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Iio a, a), differentiable_at exprℝ() f x))
+(hg' : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Iio a, a), «expr ≠ »(deriv g x, 0)))
+(hfa : tendsto f «expr𝓝[ ] »(Iio a, a) (expr𝓝() 0))
+(hga : tendsto g «expr𝓝[ ] »(Iio a, a) (expr𝓝() 0))
+(hdiv : tendsto (λ
+  x, «expr / »(deriv f x, deriv g x)) «expr𝓝[ ] »(Iio a, a) l) : tendsto (λ
+ x, «expr / »(f x, g x)) «expr𝓝[ ] »(Iio a, a) l :=
+begin
+  have [ident hdg] [":", expr «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Iio a, a), differentiable_at exprℝ() g x)] [],
+  from [expr hg'.mp «expr $ »(eventually_of_forall, λ
+    _ hg', classical.by_contradiction (λ h, hg' (deriv_zero_of_not_differentiable_at h)))],
+  have [ident hdf'] [":", expr «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Iio a, a), has_deriv_at f (deriv f x) x)] [],
+  from [expr hdf.mp «expr $ »(eventually_of_forall, λ _, differentiable_at.has_deriv_at)],
+  have [ident hdg'] [":", expr «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Iio a, a), has_deriv_at g (deriv g x) x)] [],
+  from [expr hdg.mp «expr $ »(eventually_of_forall, λ _, differentiable_at.has_deriv_at)],
+  exact [expr has_deriv_at.lhopital_zero_nhds_left hdf' hdg' hg' hfa hga hdiv]
+end
 
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **L'Hôpital's rule** for approaching a real, `deriv` version. This
   does not require anything about the situation at `a` -/
-theorem lhopital_zero_nhds' (hdf : ∀ᶠx in 𝓝[univ \ {a}] a, DifferentiableAt ℝ f x)
-  (hg' : ∀ᶠx in 𝓝[univ \ {a}] a, deriv g x ≠ 0) (hfa : tendsto f (𝓝[univ \ {a}] a) (𝓝 0))
-  (hga : tendsto g (𝓝[univ \ {a}] a) (𝓝 0)) (hdiv : tendsto (fun x => (deriv f) x / (deriv g) x) (𝓝[univ \ {a}] a) l) :
-  tendsto (fun x => f x / g x) (𝓝[univ \ {a}] a) l :=
-  by 
-    have  : univ \ {a} = Iio a ∪ Ioi a
-    ·
-      ext 
-      rw [mem_diff_singleton, eq_true_intro$ mem_univ x, true_andₓ, ne_iff_lt_or_gtₓ]
-      rfl 
-    simp only [this, nhds_within_union, tendsto_sup, eventually_sup] at *
-    exact
-      ⟨lhopital_zero_nhds_left hdf.1 hg'.1 hfa.1 hga.1 hdiv.1, lhopital_zero_nhds_right hdf.2 hg'.2 hfa.2 hga.2 hdiv.2⟩
+theorem lhopital_zero_nhds'
+(hdf : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(«expr \ »(univ, {a}), a), differentiable_at exprℝ() f x))
+(hg' : «expr∀ᶠ in , »((x), «expr𝓝[ ] »(«expr \ »(univ, {a}), a), «expr ≠ »(deriv g x, 0)))
+(hfa : tendsto f «expr𝓝[ ] »(«expr \ »(univ, {a}), a) (expr𝓝() 0))
+(hga : tendsto g «expr𝓝[ ] »(«expr \ »(univ, {a}), a) (expr𝓝() 0))
+(hdiv : tendsto (λ
+  x, «expr / »(deriv f x, deriv g x)) «expr𝓝[ ] »(«expr \ »(univ, {a}), a) l) : tendsto (λ
+ x, «expr / »(f x, g x)) «expr𝓝[ ] »(«expr \ »(univ, {a}), a) l :=
+begin
+  have [] [":", expr «expr = »(«expr \ »(univ, {a}), «expr ∪ »(Iio a, Ioi a))] [],
+  { ext [] [] [],
+    rw ["[", expr mem_diff_singleton, ",", expr «expr $ »(eq_true_intro, mem_univ x), ",", expr true_and, ",", expr ne_iff_lt_or_gt, "]"] [],
+    refl },
+  simp [] [] ["only"] ["[", expr this, ",", expr nhds_within_union, ",", expr tendsto_sup, ",", expr eventually_sup, "]"] [] ["at", "*"],
+  exact [expr ⟨lhopital_zero_nhds_left hdf.1 hg'.1 hfa.1 hga.1 hdiv.1, lhopital_zero_nhds_right hdf.2 hg'.2 hfa.2 hga.2 hdiv.2⟩]
+end
 
 /-- **L'Hôpital's rule** for approaching a real, `deriv` version -/
 theorem lhopital_zero_nhds (hdf : ∀ᶠx in 𝓝 a, DifferentiableAt ℝ f x) (hg' : ∀ᶠx in 𝓝 a, deriv g x ≠ 0)
@@ -476,37 +512,43 @@ theorem lhopital_zero_nhds (hdf : ∀ᶠx in 𝓝 a, DifferentiableAt ℝ f x) (
           apply tendsto_nhds_within_of_tendsto_nhds <;>
         assumption
 
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **L'Hôpital's rule** for approaching +∞, `deriv` version -/
-theorem lhopital_zero_at_top (hdf : ∀ᶠx : ℝ in at_top, DifferentiableAt ℝ f x) (hg' : ∀ᶠx : ℝ in at_top, deriv g x ≠ 0)
-  (hftop : tendsto f at_top (𝓝 0)) (hgtop : tendsto g at_top (𝓝 0))
-  (hdiv : tendsto (fun x => (deriv f) x / (deriv g) x) at_top l) : tendsto (fun x => f x / g x) at_top l :=
-  by 
-    have hdg : ∀ᶠx in at_top, DifferentiableAt ℝ g x 
-    exact
-      hg'.mp
-        (eventually_of_forall$
-          fun _ hg' => Classical.by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
-    have hdf' : ∀ᶠx in at_top, HasDerivAt f (deriv f x) x 
-    exact hdf.mp (eventually_of_forall$ fun _ => DifferentiableAt.has_deriv_at)
-    have hdg' : ∀ᶠx in at_top, HasDerivAt g (deriv g x) x 
-    exact hdg.mp (eventually_of_forall$ fun _ => DifferentiableAt.has_deriv_at)
-    exact HasDerivAt.lhopital_zero_at_top hdf' hdg' hg' hftop hgtop hdiv
+theorem lhopital_zero_at_top
+(hdf : «expr∀ᶠ in , »((x : exprℝ()), at_top, differentiable_at exprℝ() f x))
+(hg' : «expr∀ᶠ in , »((x : exprℝ()), at_top, «expr ≠ »(deriv g x, 0)))
+(hftop : tendsto f at_top (expr𝓝() 0))
+(hgtop : tendsto g at_top (expr𝓝() 0))
+(hdiv : tendsto (λ x, «expr / »(deriv f x, deriv g x)) at_top l) : tendsto (λ x, «expr / »(f x, g x)) at_top l :=
+begin
+  have [ident hdg] [":", expr «expr∀ᶠ in , »((x), at_top, differentiable_at exprℝ() g x)] [],
+  from [expr hg'.mp «expr $ »(eventually_of_forall, λ
+    _ hg', classical.by_contradiction (λ h, hg' (deriv_zero_of_not_differentiable_at h)))],
+  have [ident hdf'] [":", expr «expr∀ᶠ in , »((x), at_top, has_deriv_at f (deriv f x) x)] [],
+  from [expr hdf.mp «expr $ »(eventually_of_forall, λ _, differentiable_at.has_deriv_at)],
+  have [ident hdg'] [":", expr «expr∀ᶠ in , »((x), at_top, has_deriv_at g (deriv g x) x)] [],
+  from [expr hdg.mp «expr $ »(eventually_of_forall, λ _, differentiable_at.has_deriv_at)],
+  exact [expr has_deriv_at.lhopital_zero_at_top hdf' hdg' hg' hftop hgtop hdiv]
+end
 
+-- error in Analysis.Calculus.Lhopital: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **L'Hôpital's rule** for approaching -∞, `deriv` version -/
-theorem lhopital_zero_at_bot (hdf : ∀ᶠx : ℝ in at_bot, DifferentiableAt ℝ f x) (hg' : ∀ᶠx : ℝ in at_bot, deriv g x ≠ 0)
-  (hfbot : tendsto f at_bot (𝓝 0)) (hgbot : tendsto g at_bot (𝓝 0))
-  (hdiv : tendsto (fun x => (deriv f) x / (deriv g) x) at_bot l) : tendsto (fun x => f x / g x) at_bot l :=
-  by 
-    have hdg : ∀ᶠx in at_bot, DifferentiableAt ℝ g x 
-    exact
-      hg'.mp
-        (eventually_of_forall$
-          fun _ hg' => Classical.by_contradiction fun h => hg' (deriv_zero_of_not_differentiable_at h))
-    have hdf' : ∀ᶠx in at_bot, HasDerivAt f (deriv f x) x 
-    exact hdf.mp (eventually_of_forall$ fun _ => DifferentiableAt.has_deriv_at)
-    have hdg' : ∀ᶠx in at_bot, HasDerivAt g (deriv g x) x 
-    exact hdg.mp (eventually_of_forall$ fun _ => DifferentiableAt.has_deriv_at)
-    exact HasDerivAt.lhopital_zero_at_bot hdf' hdg' hg' hfbot hgbot hdiv
+theorem lhopital_zero_at_bot
+(hdf : «expr∀ᶠ in , »((x : exprℝ()), at_bot, differentiable_at exprℝ() f x))
+(hg' : «expr∀ᶠ in , »((x : exprℝ()), at_bot, «expr ≠ »(deriv g x, 0)))
+(hfbot : tendsto f at_bot (expr𝓝() 0))
+(hgbot : tendsto g at_bot (expr𝓝() 0))
+(hdiv : tendsto (λ x, «expr / »(deriv f x, deriv g x)) at_bot l) : tendsto (λ x, «expr / »(f x, g x)) at_bot l :=
+begin
+  have [ident hdg] [":", expr «expr∀ᶠ in , »((x), at_bot, differentiable_at exprℝ() g x)] [],
+  from [expr hg'.mp «expr $ »(eventually_of_forall, λ
+    _ hg', classical.by_contradiction (λ h, hg' (deriv_zero_of_not_differentiable_at h)))],
+  have [ident hdf'] [":", expr «expr∀ᶠ in , »((x), at_bot, has_deriv_at f (deriv f x) x)] [],
+  from [expr hdf.mp «expr $ »(eventually_of_forall, λ _, differentiable_at.has_deriv_at)],
+  have [ident hdg'] [":", expr «expr∀ᶠ in , »((x), at_bot, has_deriv_at g (deriv g x) x)] [],
+  from [expr hdg.mp «expr $ »(eventually_of_forall, λ _, differentiable_at.has_deriv_at)],
+  exact [expr has_deriv_at.lhopital_zero_at_bot hdf' hdg' hg' hfbot hgbot hdiv]
+end
 
 end deriv
 

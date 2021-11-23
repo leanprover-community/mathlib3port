@@ -116,24 +116,24 @@ theorem sdiff_symm_diff_self : a \ a Δ b = a⊓b :=
   by 
     simp [sdiff_symm_diff]
 
-theorem symm_diff_eq_iff_sdiff_eq {a b c : α} (ha : a ≤ c) : a Δ b = c ↔ c \ a = b :=
-  by 
-    split  <;> intro h
-    ·
-      have hba : Disjoint (a⊓b) c :=
-        by 
-          rw [←h, Disjoint.comm]
-          exact disjoint_symm_diff_inf _ _ 
-      have hca : _ := congr_argₓ (· \ a) h 
-      rw [symm_diff_sdiff_left] at hca 
-      rw [←hca, sdiff_eq_self_iff_disjoint]
-      exact hba.of_disjoint_inf_of_le ha
-    ·
-      have hd : Disjoint a b :=
-        by 
-          rw [←h]
-          exact disjoint_sdiff_self_right 
-      rw [symm_diff_def, hd.sdiff_eq_left, hd.sdiff_eq_right, ←h, sup_sdiff_cancel_right ha]
+-- error in Order.SymmDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem symm_diff_eq_iff_sdiff_eq
+{a b c : α}
+(ha : «expr ≤ »(a, c)) : «expr ↔ »(«expr = »(«expr Δ »(a, b), c), «expr = »(«expr \ »(c, a), b)) :=
+begin
+  split; intro [ident h],
+  { have [ident hba] [":", expr disjoint «expr ⊓ »(a, b) c] [":=", expr begin
+       rw ["[", "<-", expr h, ",", expr disjoint.comm, "]"] [],
+       exact [expr disjoint_symm_diff_inf _ _]
+     end],
+    have [ident hca] [":", expr _] [":=", expr congr_arg ((«expr \ » a)) h],
+    rw ["[", expr symm_diff_sdiff_left, "]"] ["at", ident hca],
+    rw ["[", "<-", expr hca, ",", expr sdiff_eq_self_iff_disjoint, "]"] [],
+    exact [expr hba.of_disjoint_inf_of_le ha] },
+  { have [ident hd] [":", expr disjoint a b] [":=", expr by { rw ["<-", expr h] [],
+       exact [expr disjoint_sdiff_self_right] }],
+    rw ["[", expr symm_diff_def, ",", expr hd.sdiff_eq_left, ",", expr hd.sdiff_eq_right, ",", "<-", expr h, ",", expr sup_sdiff_cancel_right ha, "]"] [] }
+end
 
 theorem Disjoint.symm_diff_eq_sup {a b : α} (h : Disjoint a b) : a Δ b = a⊔b :=
   by 
@@ -185,15 +185,14 @@ theorem symm_diff_symm_diff_self' : a Δ b Δ a = b :=
   by 
     rw [symm_diff_comm, ←symm_diff_assoc, symm_diff_self, bot_symm_diff]
 
-@[simp]
-theorem symm_diff_right_inj : a Δ b = a Δ c ↔ b = c :=
-  by 
-    split  <;> intro h
-    ·
-      have H1 := congr_argₓ ((· Δ ·) a) h 
-      rwa [symm_diff_symm_diff_self, symm_diff_symm_diff_self] at H1
-    ·
-      rw [h]
+-- error in Order.SymmDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem symm_diff_right_inj : «expr ↔ »(«expr = »(«expr Δ »(a, b), «expr Δ »(a, c)), «expr = »(b, c)) :=
+begin
+  split; intro [ident h],
+  { have [ident H1] [] [":=", expr congr_arg (((«expr Δ »)) a) h],
+    rwa ["[", expr symm_diff_symm_diff_self, ",", expr symm_diff_symm_diff_self, "]"] ["at", ident H1] },
+  { rw [expr h] [] }
+end
 
 @[simp]
 theorem symm_diff_left_inj : a Δ b = c Δ b ↔ a = c :=

@@ -36,14 +36,14 @@ theorem integral_normalization_zero : integral_normalization (0 : Polynomial R) 
   by 
     simp [integral_normalization]
 
--- error in Data.Polynomial.IntegralNormalization: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Polynomial.IntegralNormalization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem integral_normalization_coeff
 {f : polynomial R}
 {i : exprℕ()} : «expr = »((integral_normalization f).coeff i, if «expr = »(f.degree, i) then 1 else «expr * »(coeff f i, «expr ^ »(f.leading_coeff, «expr - »(«expr - »(f.nat_degree, 1), i)))) :=
 have «expr = »(f.coeff i, 0) → «expr ≠ »(f.degree, i), from λ hc hd, coeff_ne_zero_of_eq_degree hd hc,
 by simp [] [] [] ["[", expr integral_normalization, ",", expr coeff_monomial, ",", expr this, ",", expr mem_support_iff, "]"] [] [] { contextual := tt }
 
--- error in Data.Polynomial.IntegralNormalization: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Polynomial.IntegralNormalization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem integral_normalization_support {f : polynomial R} : «expr ⊆ »((integral_normalization f).support, f.support) :=
 by { intro [],
   simp [] [] [] ["[", expr integral_normalization, ",", expr coeff_monomial, ",", expr mem_support_iff, "]"] [] [] { contextual := tt } }
@@ -97,42 +97,37 @@ variable[CommRingₓ R][IsDomain R]
 
 variable[CommRingₓ S]
 
-theorem integral_normalization_eval₂_eq_zero {p : Polynomial R} (f : R →+* S) {z : S} (hz : eval₂ f z p = 0)
-  (inj : ∀ x : R, f x = 0 → x = 0) : eval₂ f (z*f p.leading_coeff) (integral_normalization p) = 0 :=
-  calc
-    eval₂ f (z*f p.leading_coeff) (integral_normalization p) =
-      p.support.attach.sum fun i => f (coeff (integral_normalization p) i.1*p.leading_coeff ^ i.1)*z ^ i.1 :=
-    by 
-      rw [eval₂, sum_def, support_integral_normalization]
-      simp only [mul_commₓ z, mul_powₓ, mul_assocₓ, RingHom.map_pow, RingHom.map_mul]
-      exact finset.sum_attach.symm 
-    _ = p.support.attach.sum fun i => f (coeff p i.1*p.leading_coeff ^ (nat_degree p - 1))*z ^ i.1 :=
-    by 
-      byCases' hp : p = 0
-      ·
-        simp [hp]
-      have one_le_deg : 1 ≤ nat_degree p := Nat.succ_le_of_ltₓ (nat_degree_pos_of_eval₂_root hp f hz inj)
-      congr with i 
-      congr 2
-      byCases' hi : i.1 = nat_degree p
-      ·
-        rw [hi, integral_normalization_coeff_degree, one_mulₓ, leading_coeff, ←pow_succₓ,
-          tsub_add_cancel_of_le one_le_deg]
-        exact degree_eq_nat_degree hp
-      ·
-        have  : i.1 ≤ p.nat_degree - 1 :=
-          Nat.le_pred_of_lt (lt_of_le_of_neₓ (le_nat_degree_of_ne_zero (mem_support_iff.mp i.2)) hi)
-        rw [integral_normalization_coeff_ne_nat_degree hi, mul_assocₓ, ←pow_addₓ, tsub_add_cancel_of_le this]
-    _ = (f p.leading_coeff ^ (nat_degree p - 1))*eval₂ f z p :=
-    by 
-      simpRw [eval₂, sum_def, fun i => mul_commₓ (coeff p i), RingHom.map_mul, RingHom.map_pow, mul_assocₓ,
-        ←Finset.mul_sum]
-      congr 1 
-      exact @Finset.sum_attach _ _ p.support _ fun i => f (p.coeff i)*z ^ i 
-    _ = 0 :=
-    by 
-      rw [hz, _root_.mul_zero]
-    
+-- error in Data.Polynomial.IntegralNormalization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem integral_normalization_eval₂_eq_zero
+{p : polynomial R}
+(f : «expr →+* »(R, S))
+{z : S}
+(hz : «expr = »(eval₂ f z p, 0))
+(inj : ∀
+ x : R, «expr = »(f x, 0) → «expr = »(x, 0)) : «expr = »(eval₂ f «expr * »(z, f p.leading_coeff) (integral_normalization p), 0) :=
+calc
+  «expr = »(eval₂ f «expr * »(z, f p.leading_coeff) (integral_normalization p), p.support.attach.sum (λ
+    i, «expr * »(f «expr * »(coeff (integral_normalization p) i.1, «expr ^ »(p.leading_coeff, i.1)), «expr ^ »(z, i.1)))) : by { rw ["[", expr eval₂, ",", expr sum_def, ",", expr support_integral_normalization, "]"] [],
+    simp [] [] ["only"] ["[", expr mul_comm z, ",", expr mul_pow, ",", expr mul_assoc, ",", expr ring_hom.map_pow, ",", expr ring_hom.map_mul, "]"] [] [],
+    exact [expr finset.sum_attach.symm] }
+  «expr = »(..., p.support.attach.sum (λ
+    i, «expr * »(f «expr * »(coeff p i.1, «expr ^ »(p.leading_coeff, «expr - »(nat_degree p, 1))), «expr ^ »(z, i.1)))) : begin
+    by_cases [expr hp, ":", expr «expr = »(p, 0)],
+    { simp [] [] [] ["[", expr hp, "]"] [] [] },
+    have [ident one_le_deg] [":", expr «expr ≤ »(1, nat_degree p)] [":=", expr nat.succ_le_of_lt (nat_degree_pos_of_eval₂_root hp f hz inj)],
+    congr' [] ["with", ident i],
+    congr' [2] [],
+    by_cases [expr hi, ":", expr «expr = »(i.1, nat_degree p)],
+    { rw ["[", expr hi, ",", expr integral_normalization_coeff_degree, ",", expr one_mul, ",", expr leading_coeff, ",", "<-", expr pow_succ, ",", expr tsub_add_cancel_of_le one_le_deg, "]"] [],
+      exact [expr degree_eq_nat_degree hp] },
+    { have [] [":", expr «expr ≤ »(i.1, «expr - »(p.nat_degree, 1))] [":=", expr nat.le_pred_of_lt (lt_of_le_of_ne (le_nat_degree_of_ne_zero (mem_support_iff.mp i.2)) hi)],
+      rw ["[", expr integral_normalization_coeff_ne_nat_degree hi, ",", expr mul_assoc, ",", "<-", expr pow_add, ",", expr tsub_add_cancel_of_le this, "]"] [] }
+  end
+  «expr = »(..., «expr * »(«expr ^ »(f p.leading_coeff, «expr - »(nat_degree p, 1)), eval₂ f z p)) : by { simp_rw ["[", expr eval₂, ",", expr sum_def, ",", expr λ
+     i, mul_comm (coeff p i), ",", expr ring_hom.map_mul, ",", expr ring_hom.map_pow, ",", expr mul_assoc, ",", "<-", expr finset.mul_sum, "]"] [],
+    congr' [1] [],
+    exact [expr @finset.sum_attach _ _ p.support _ (λ i, «expr * »(f (p.coeff i), «expr ^ »(z, i)))] }
+  «expr = »(..., 0) : by rw ["[", expr hz, ",", expr _root_.mul_zero, "]"] []
 
 theorem integral_normalization_aeval_eq_zero [Algebra R S] {f : Polynomial R} {z : S} (hz : aeval z f = 0)
   (inj : ∀ x : R, algebraMap R S x = 0 → x = 0) :

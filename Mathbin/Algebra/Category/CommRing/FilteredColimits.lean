@@ -152,7 +152,7 @@ instance forget₂_Mon_preserves_filtered_colimits : preserves_filtered_colimits
   { PreservesFilteredColimits :=
       fun J _ _ =>
         by 
-          exactI
+          exact
             { PreservesColimit :=
                 fun F =>
                   preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
@@ -210,7 +210,7 @@ instance forget₂_SemiRing_preserves_filtered_colimits :
   { PreservesFilteredColimits :=
       fun J _ _ =>
         by 
-          exactI
+          exact
             { PreservesColimit :=
                 fun F =>
                   preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
@@ -266,7 +266,7 @@ instance forget₂_SemiRing_preserves_filtered_colimits : preserves_filtered_col
   { PreservesFilteredColimits :=
       fun J _ _ =>
         by 
-          exactI
+          exact
             { PreservesColimit :=
                 fun F =>
                   preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
@@ -323,7 +323,7 @@ instance forget₂_Ring_preserves_filtered_colimits : preserves_filtered_colimit
   { PreservesFilteredColimits :=
       fun J _ _ =>
         by 
-          exactI
+          exact
             { PreservesColimit :=
                 fun F =>
                   preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)

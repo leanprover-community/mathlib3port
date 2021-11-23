@@ -564,17 +564,18 @@ theorem mk_apply {s : Finset ι} {x : ∀ i : («expr↑ » s : Set ι), β i} {
   (mk s x : ∀ i, β i) i = if H : i ∈ s then x ⟨i, H⟩ else 0 :=
   rfl
 
-theorem mk_injective (s : Finset ι) : Function.Injective (@mk ι β _ _ s) :=
-  by 
-    intro x y H 
-    ext i 
-    have h1 : (mk s x : ∀ i, β i) i = (mk s y : ∀ i, β i) i
-    ·
-      rw [H]
-    cases' i with i hi 
-    change i ∈ s at hi 
-    dsimp only [mk_apply, Subtype.coe_mk]  at h1 
-    simpa only [dif_pos hi] using h1
+-- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mk_injective (s : finset ι) : function.injective (@mk ι β _ _ s) :=
+begin
+  intros [ident x, ident y, ident H],
+  ext [] [ident i] [],
+  have [ident h1] [":", expr «expr = »((mk s x : ∀ i, β i) i, (mk s y : ∀ i, β i) i)] [],
+  { rw [expr H] [] },
+  cases [expr i] ["with", ident i, ident hi],
+  change [expr «expr ∈ »(i, s)] [] ["at", ident hi],
+  dsimp ["only"] ["[", expr mk_apply, ",", expr subtype.coe_mk, "]"] [] ["at", ident h1],
+  simpa [] [] ["only"] ["[", expr dif_pos hi, "]"] [] ["using", expr h1]
+end
 
 omit dec
 
@@ -596,18 +597,19 @@ and all other points to `0`. -/
 def single (i : ι) (b : β i) : Π₀i, β i :=
   mk {i}$ fun j => Eq.recOnₓ (Finset.mem_singleton.1 j.prop).symm b
 
+-- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem single_apply {i i' b} : (single i b : Π₀i, β i) i' = if h : i = i' then Eq.recOnₓ h b else 0 :=
-  by 
-    dsimp only [single]
-    byCases' h : i = i'
-    ·
-      have h1 : i' ∈ ({i} : Finset ι) := Finset.mem_singleton.2 h.symm 
-      simp only [mk_apply, dif_pos h, dif_pos h1]
-      rfl
-    ·
-      have h1 : i' ∉ ({i} : Finset ι) := Finset.not_mem_singleton.2 (Ne.symm h)
-      simp only [mk_apply, dif_neg h, dif_neg h1]
+theorem single_apply
+{i i' b} : «expr = »((single i b : «exprΠ₀ , »((i), β i)) i', if h : «expr = »(i, i') then eq.rec_on h b else 0) :=
+begin
+  dsimp ["only"] ["[", expr single, "]"] [] [],
+  by_cases [expr h, ":", expr «expr = »(i, i')],
+  { have [ident h1] [":", expr «expr ∈ »(i', ({i} : finset ι))] [":=", expr finset.mem_singleton.2 h.symm],
+    simp [] [] ["only"] ["[", expr mk_apply, ",", expr dif_pos h, ",", expr dif_pos h1, "]"] [] [],
+    refl },
+  { have [ident h1] [":", expr «expr ∉ »(i', ({i} : finset ι))] [":=", expr finset.not_mem_singleton.2 (ne.symm h)],
+    simp [] [] ["only"] ["[", expr mk_apply, ",", expr dif_neg h, ",", expr dif_neg h1, "]"] [] [] }
+end
 
 theorem single_eq_pi_single {i b} : «expr⇑ » (single i b : Π₀i, β i) = Pi.single i b :=
   by 
@@ -644,32 +646,30 @@ theorem single_injective {i} : Function.Injective (single i : β i → Π₀i, �
         by 
           simp ⟩
 
+-- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Like `finsupp.single_eq_single_iff`, but with a `heq` due to dependent types -/
-theorem single_eq_single_iff (i j : ι) (xi : β i) (xj : β j) :
-  Dfinsupp.single i xi = Dfinsupp.single j xj ↔ i = j ∧ HEq xi xj ∨ xi = 0 ∧ xj = 0 :=
-  by 
-    split 
-    ·
-      intro h 
-      byCases' hij : i = j
-      ·
-        subst hij 
-        exact Or.inl ⟨rfl, heq_of_eq (Dfinsupp.single_injective h)⟩
-      ·
-        have h_coe : «expr⇑ » (Dfinsupp.single i xi) = Dfinsupp.single j xj := congr_argₓ coeFn h 
-        have hci := congr_funₓ h_coe i 
-        have hcj := congr_funₓ h_coe j 
-        rw [Dfinsupp.single_eq_same] at hci hcj 
-        rw [Dfinsupp.single_eq_of_ne (Ne.symm hij)] at hci 
-        rw [Dfinsupp.single_eq_of_ne hij] at hcj 
-        exact Or.inr ⟨hci, hcj.symm⟩
-    ·
-      rintro (⟨hi, hxi⟩ | ⟨hi, hj⟩)
-      ·
-        subst hi 
-        rw [eq_of_heq hxi]
-      ·
-        rw [hi, hj, Dfinsupp.single_zero, Dfinsupp.single_zero]
+theorem single_eq_single_iff
+(i j : ι)
+(xi : β i)
+(xj : β j) : «expr ↔ »(«expr = »(dfinsupp.single i xi, dfinsupp.single j xj), «expr ∨ »(«expr ∧ »(«expr = »(i, j), «expr == »(xi, xj)), «expr ∧ »(«expr = »(xi, 0), «expr = »(xj, 0)))) :=
+begin
+  split,
+  { intro [ident h],
+    by_cases [expr hij, ":", expr «expr = »(i, j)],
+    { subst [expr hij],
+      exact [expr or.inl ⟨rfl, heq_of_eq (dfinsupp.single_injective h)⟩] },
+    { have [ident h_coe] [":", expr «expr = »(«expr⇑ »(dfinsupp.single i xi), dfinsupp.single j xj)] [":=", expr congr_arg coe_fn h],
+      have [ident hci] [] [":=", expr congr_fun h_coe i],
+      have [ident hcj] [] [":=", expr congr_fun h_coe j],
+      rw [expr dfinsupp.single_eq_same] ["at", ident hci, ident hcj],
+      rw [expr dfinsupp.single_eq_of_ne (ne.symm hij)] ["at", ident hci],
+      rw [expr dfinsupp.single_eq_of_ne hij] ["at", ident hcj],
+      exact [expr or.inr ⟨hci, hcj.symm⟩] } },
+  { rintros ["(", "⟨", ident hi, ",", ident hxi, "⟩", "|", "⟨", ident hi, ",", ident hj, "⟩", ")"],
+    { subst [expr hi],
+      rw [expr eq_of_heq hxi] [] },
+    { rw ["[", expr hi, ",", expr hj, ",", expr dfinsupp.single_zero, ",", expr dfinsupp.single_zero, "]"] [] } }
+end
 
 @[simp]
 theorem single_eq_zero {i : ι} {xi : β i} : single i xi = 0 ↔ xi = 0 :=
@@ -677,18 +677,21 @@ theorem single_eq_zero {i : ι} {xi : β i} : single i xi = 0 ↔ xi = 0 :=
     rw [←single_zero i, single_eq_single_iff]
     simp 
 
-theorem filter_single (p : ι → Prop) [DecidablePred p] (i : ι) (x : β i) :
-  (single i x).filter p = if p i then single i x else 0 :=
-  by 
-    ext j 
-    have  := apply_ite (fun x : Π₀i, β i => x j) (p i) (single i x) 0
-    dsimp  at this 
-    rw [filter_apply, this]
-    obtain rfl | hij := Decidable.eq_or_ne i j
-    ·
-      rfl
-    ·
-      rw [single_eq_of_ne hij, if_t_t, if_t_t]
+-- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem filter_single
+(p : ι → exprProp())
+[decidable_pred p]
+(i : ι)
+(x : β i) : «expr = »((single i x).filter p, if p i then single i x else 0) :=
+begin
+  ext [] [ident j] [],
+  have [] [] [":=", expr apply_ite (λ x : «exprΠ₀ , »((i), β i), x j) (p i) (single i x) 0],
+  dsimp [] [] [] ["at", ident this],
+  rw ["[", expr filter_apply, ",", expr this, "]"] [],
+  obtain [ident rfl, "|", ident hij, ":=", expr decidable.eq_or_ne i j],
+  { refl },
+  { rw ["[", expr single_eq_of_ne hij, ",", expr if_t_t, ",", expr if_t_t, "]"] [] }
+end
 
 @[simp]
 theorem filter_single_pos {p : ι → Prop} [DecidablePred p] (i : ι) (x : β i) (h : p i) :
@@ -953,76 +956,73 @@ theorem erase_add_single (i : ι) (f : Π₀i, β i) : (f.erase i+single i (f i)
         by 
           simp only [add_apply, single_apply, erase_apply, dif_neg h, if_neg (Ne.symm h), add_zeroₓ]
 
-protected theorem induction {p : (Π₀i, β i) → Prop} (f : Π₀i, β i) (h0 : p 0)
-  (ha : ∀ i b f : Π₀i, β i, f i = 0 → b ≠ 0 → p f → p (single i b+f)) : p f :=
-  by 
-    refine' Quotientₓ.induction_on f fun x => _ 
-    cases' x with f s H 
-    revert f H 
-    apply Multiset.induction_on s
-    ·
-      intro f H 
-      convert h0 
-      ext i 
-      exact (H i).resolve_left id 
-    intro i s ih f H 
-    byCases' H1 : i ∈ s
-    ·
-      have H2 : ∀ j, j ∈ s ∨ f j = 0
-      ·
-        intro j 
-        cases' H j with H2 H2
-        ·
-          cases' Multiset.mem_cons.1 H2 with H3 H3
-          ·
-            left 
-            rw [H3]
-            exact H1
-          ·
-            left 
-            exact H3 
-        right 
-        exact H2 
-      have H3 :
-        («expr⟦ ⟧» { toFun := f, preSupport := i ::ₘ s, zero := H } : Π₀i, β i) =
-          «expr⟦ ⟧» { toFun := f, preSupport := s, zero := H2 }
-      ·
-        exact Quotientₓ.sound fun i => rfl 
-      rw [H3]
-      apply ih 
-    have H2 : p (erase i («expr⟦ ⟧» { toFun := f, preSupport := i ::ₘ s, zero := H }))
-    ·
-      dsimp only [erase, Quotientₓ.map_mk]
-      have H2 : ∀ j, j ∈ s ∨ ite (j = i) 0 (f j) = 0
-      ·
-        intro j 
-        cases' H j with H2 H2
-        ·
-          cases' Multiset.mem_cons.1 H2 with H3 H3
-          ·
-            right 
-            exact if_pos H3
-          ·
-            left 
-            exact H3 
-        right 
-        splitIfs <;> [rfl, exact H2]
-      have H3 :
-        («expr⟦ ⟧» { toFun := fun j : ι => ite (j = i) 0 (f j), preSupport := i ::ₘ s, zero := _ } : Π₀i, β i) =
-          «expr⟦ ⟧» { toFun := fun j : ι => ite (j = i) 0 (f j), preSupport := s, zero := H2 } :=
-        Quotientₓ.sound fun i => rfl 
-      rw [H3]
-      apply ih 
-    have H3 : (single i _+_) = («expr⟦ ⟧» { toFun := f, preSupport := i ::ₘ s, zero := H } : Π₀i, β i) :=
-      single_add_erase _ _ 
-    rw [←H3]
-    change p (single i (f i)+_)
-    cases' Classical.em (f i = 0) with h h
-    ·
-      rw [h, single_zero, zero_addₓ]
-      exact H2 
-    refine' ha _ _ _ _ h H2 
-    rw [erase_same]
+-- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem induction
+{p : «exprΠ₀ , »((i), β i) → exprProp()}
+(f : «exprΠ₀ , »((i), β i))
+(h0 : p 0)
+(ha : ∀
+ (i b)
+ (f : «exprΠ₀ , »((i), β i)), «expr = »(f i, 0) → «expr ≠ »(b, 0) → p f → p «expr + »(single i b, f)) : p f :=
+begin
+  refine [expr quotient.induction_on f (λ x, _)],
+  cases [expr x] ["with", ident f, ident s, ident H],
+  revert [ident f, ident H],
+  apply [expr multiset.induction_on s],
+  { intros [ident f, ident H],
+    convert [] [expr h0] [],
+    ext [] [ident i] [],
+    exact [expr (H i).resolve_left id] },
+  intros [ident i, ident s, ident ih, ident f, ident H],
+  by_cases [expr H1, ":", expr «expr ∈ »(i, s)],
+  { have [ident H2] [":", expr ∀ j, «expr ∨ »(«expr ∈ »(j, s), «expr = »(f j, 0))] [],
+    { intro [ident j],
+      cases [expr H j] ["with", ident H2, ident H2],
+      { cases [expr multiset.mem_cons.1 H2] ["with", ident H3, ident H3],
+        { left,
+          rw [expr H3] [],
+          exact [expr H1] },
+        { left,
+          exact [expr H3] } },
+      right,
+      exact [expr H2] },
+    have [ident H3] [":", expr «expr = »((«expr⟦ ⟧»({ to_fun := f,
+         pre_support := «expr ::ₘ »(i, s),
+         zero := H }) : «exprΠ₀ , »((i), β i)), «expr⟦ ⟧»({ to_fun := f, pre_support := s, zero := H2 }))] [],
+    { exact [expr quotient.sound (λ i, rfl)] },
+    rw [expr H3] [],
+    apply [expr ih] },
+  have [ident H2] [":", expr p (erase i «expr⟦ ⟧»({ to_fun := f, pre_support := «expr ::ₘ »(i, s), zero := H }))] [],
+  { dsimp ["only"] ["[", expr erase, ",", expr quotient.map_mk, "]"] [] [],
+    have [ident H2] [":", expr ∀ j, «expr ∨ »(«expr ∈ »(j, s), «expr = »(ite «expr = »(j, i) 0 (f j), 0))] [],
+    { intro [ident j],
+      cases [expr H j] ["with", ident H2, ident H2],
+      { cases [expr multiset.mem_cons.1 H2] ["with", ident H3, ident H3],
+        { right,
+          exact [expr if_pos H3] },
+        { left,
+          exact [expr H3] } },
+      right,
+      split_ifs [] []; [refl, exact [expr H2]] },
+    have [ident H3] [":", expr «expr = »((«expr⟦ ⟧»({ to_fun := λ j : ι, ite «expr = »(j, i) 0 (f j),
+         pre_support := «expr ::ₘ »(i, s),
+         zero := _ }) : «exprΠ₀ , »((i), β i)), «expr⟦ ⟧»({ to_fun := λ j : ι, ite «expr = »(j, i) 0 (f j),
+         pre_support := s,
+         zero := H2 }))] [":=", expr quotient.sound (λ i, rfl)],
+    rw [expr H3] [],
+    apply [expr ih] },
+  have [ident H3] [":", expr «expr = »(«expr + »(single i _, _), («expr⟦ ⟧»({ to_fun := f,
+       pre_support := «expr ::ₘ »(i, s),
+       zero := H }) : «exprΠ₀ , »((i), β i)))] [":=", expr single_add_erase _ _],
+  rw ["<-", expr H3] [],
+  change [expr p «expr + »(single i (f i), _)] [] [],
+  cases [expr classical.em «expr = »(f i, 0)] ["with", ident h, ident h],
+  { rw ["[", expr h, ",", expr single_zero, ",", expr zero_add, "]"] [],
+    exact [expr H2] },
+  refine [expr ha _ _ _ _ h H2],
+  rw [expr erase_same] []
+end
 
 theorem induction₂ {p : (Π₀i, β i) → Prop} (f : Π₀i, β i) (h0 : p 0)
   (ha : ∀ i b f : Π₀i, β i, f i = 0 → b ≠ 0 → p f → p (f+single i b)) : p f :=
@@ -1173,7 +1173,7 @@ theorem support_zero : (0 : Π₀i, β i).support = ∅ :=
 theorem mem_support_iff (f : Π₀i, β i) : ∀ i : ι, i ∈ f.support ↔ f i ≠ 0 :=
   f.mem_support_to_fun
 
--- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
 theorem support_eq_empty {f : «exprΠ₀ , »((i), β i)} : «expr ↔ »(«expr = »(f.support, «expr∅»()), «expr = »(f, 0)) :=
 ⟨λ
@@ -1431,7 +1431,7 @@ theorem prod_inv [∀ i, AddCommMonoidₓ (β i)] [∀ i x : β i, Decidable (x 
   {h : ∀ i, β i → γ} : (f.prod fun i b => h i b⁻¹) = f.prod h⁻¹ :=
   ((CommGroupₓ.invMonoidHom : γ →* γ).map_prod _ f.support).symm
 
--- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]]
 theorem prod_add_index
 [∀ i, add_comm_monoid (β i)]
@@ -1468,67 +1468,63 @@ theorem prod_eq_prod_fintype [Fintype ι] [∀ i, HasZero (β i)] [∀ i : ι x 
     rw [mem_support_iff, not_not] at hi 
     rw [hi, hf]
 
+-- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 When summing over an `add_monoid_hom`, the decidability assumption is not needed, and the result is
 also an `add_monoid_hom`.
 -/
-def sum_add_hom [∀ i, AddZeroClass (β i)] [AddCommMonoidₓ γ] (φ : ∀ i, β i →+ γ) : (Π₀i, β i) →+ γ :=
-  { toFun :=
-      fun f =>
-        (Quotientₓ.liftOn f fun x => ∑i in x.2.toFinset, φ i (x.1 i))$
-          fun x y H =>
-            by 
-              have H1 : x.2.toFinset ∩ y.2.toFinset ⊆ x.2.toFinset 
-              exact Finset.inter_subset_left _ _ 
-              have H2 : x.2.toFinset ∩ y.2.toFinset ⊆ y.2.toFinset 
-              exact Finset.inter_subset_right _ _ 
-              refine' (Finset.sum_subset H1 _).symm.trans ((Finset.sum_congr rfl _).trans (Finset.sum_subset H2 _))
-              ·
-                intro i H1 H2 
-                rw [Finset.mem_inter] at H2 
-                rw [H i]
-                simp only [Multiset.mem_to_finset] at H1 H2 
-                rw [(y.3 i).resolve_left (mt (And.intro H1) H2), AddMonoidHom.map_zero]
-              ·
-                intro i H1 
-                rw [H i]
-              ·
-                intro i H1 H2 
-                rw [Finset.mem_inter] at H2 
-                rw [←H i]
-                simp only [Multiset.mem_to_finset] at H1 H2 
-                rw [(x.3 i).resolve_left (mt (fun H3 => And.intro H3 H1) H2), AddMonoidHom.map_zero],
-    map_add' :=
-      fun f g =>
-        by 
-          refine' Quotientₓ.induction_on f fun x => _ 
-          refine' Quotientₓ.induction_on g fun y => _ 
-          change (∑i in _, _) = (∑i in _, _)+∑i in _, _ 
-          simp only 
-          conv  => toLHS congr skip ext rw [AddMonoidHom.map_add]
-          simp only [Finset.sum_add_distrib]
-          congr 1
-          ·
-            refine' (Finset.sum_subset _ _).symm
-            ·
-              intro i 
-              simp only [Multiset.mem_to_finset, Multiset.mem_add]
-              exact Or.inl
-            ·
-              intro i H1 H2 
-              simp only [Multiset.mem_to_finset, Multiset.mem_add] at H2 
-              rw [(x.3 i).resolve_left H2, AddMonoidHom.map_zero]
-          ·
-            refine' (Finset.sum_subset _ _).symm
-            ·
-              intro i 
-              simp only [Multiset.mem_to_finset, Multiset.mem_add]
-              exact Or.inr
-            ·
-              intro i H1 H2 
-              simp only [Multiset.mem_to_finset, Multiset.mem_add] at H2 
-              rw [(y.3 i).resolve_left H2, AddMonoidHom.map_zero],
-    map_zero' := rfl }
+def sum_add_hom
+[∀ i, add_zero_class (β i)]
+[add_comm_monoid γ]
+(φ : ∀ i, «expr →+ »(β i, γ)) : «expr →+ »(«exprΠ₀ , »((i), β i), γ) :=
+{ to_fun := λ
+  f, «expr $ »(quotient.lift_on f (λ x, «expr∑ in , »((i), x.2.to_finset, φ i (x.1 i))), λ x y H, begin
+     have [ident H1] [":", expr «expr ⊆ »(«expr ∩ »(x.2.to_finset, y.2.to_finset), x.2.to_finset)] [],
+     from [expr finset.inter_subset_left _ _],
+     have [ident H2] [":", expr «expr ⊆ »(«expr ∩ »(x.2.to_finset, y.2.to_finset), y.2.to_finset)] [],
+     from [expr finset.inter_subset_right _ _],
+     refine [expr (finset.sum_subset H1 _).symm.trans ((finset.sum_congr rfl _).trans (finset.sum_subset H2 _))],
+     { intros [ident i, ident H1, ident H2],
+       rw [expr finset.mem_inter] ["at", ident H2],
+       rw [expr H i] [],
+       simp [] [] ["only"] ["[", expr multiset.mem_to_finset, "]"] [] ["at", ident H1, ident H2],
+       rw ["[", expr (y.3 i).resolve_left (mt (and.intro H1) H2), ",", expr add_monoid_hom.map_zero, "]"] [] },
+     { intros [ident i, ident H1],
+       rw [expr H i] [] },
+     { intros [ident i, ident H1, ident H2],
+       rw [expr finset.mem_inter] ["at", ident H2],
+       rw ["<-", expr H i] [],
+       simp [] [] ["only"] ["[", expr multiset.mem_to_finset, "]"] [] ["at", ident H1, ident H2],
+       rw ["[", expr (x.3 i).resolve_left (mt (λ H3, and.intro H3 H1) H2), ",", expr add_monoid_hom.map_zero, "]"] [] }
+   end),
+  map_add' := assume f g, begin
+    refine [expr quotient.induction_on f (λ x, _)],
+    refine [expr quotient.induction_on g (λ y, _)],
+    change [expr «expr = »(«expr∑ in , »((i), _, _), «expr + »(«expr∑ in , »((i), _, _), «expr∑ in , »((i), _, _)))] [] [],
+    simp [] [] ["only"] [] [] [],
+    conv [] [] { to_lhs,
+      congr,
+      skip,
+      funext,
+      rw [expr add_monoid_hom.map_add] },
+    simp [] [] ["only"] ["[", expr finset.sum_add_distrib, "]"] [] [],
+    congr' [1] [],
+    { refine [expr (finset.sum_subset _ _).symm],
+      { intro [ident i],
+        simp [] [] ["only"] ["[", expr multiset.mem_to_finset, ",", expr multiset.mem_add, "]"] [] [],
+        exact [expr or.inl] },
+      { intros [ident i, ident H1, ident H2],
+        simp [] [] ["only"] ["[", expr multiset.mem_to_finset, ",", expr multiset.mem_add, "]"] [] ["at", ident H2],
+        rw ["[", expr (x.3 i).resolve_left H2, ",", expr add_monoid_hom.map_zero, "]"] [] } },
+    { refine [expr (finset.sum_subset _ _).symm],
+      { intro [ident i],
+        simp [] [] ["only"] ["[", expr multiset.mem_to_finset, ",", expr multiset.mem_add, "]"] [] [],
+        exact [expr or.inr] },
+      { intros [ident i, ident H1, ident H2],
+        simp [] [] ["only"] ["[", expr multiset.mem_to_finset, ",", expr multiset.mem_add, "]"] [] ["at", ident H2],
+        rw ["[", expr (y.3 i).resolve_left H2, ",", expr add_monoid_hom.map_zero, "]"] [] } }
+  end,
+  map_zero' := rfl }
 
 @[simp]
 theorem sum_add_hom_single [∀ i, AddZeroClass (β i)] [AddCommMonoidₓ γ] (φ : ∀ i, β i →+ γ) i (x : β i) :
@@ -1698,14 +1694,24 @@ theorem comp_sum_add_hom {δ : Type _} [∀ i, AddZeroClass (β i)] [AddCommMono
   (f : ∀ i, β i →+ γ) : g.comp (sum_add_hom f) = sum_add_hom fun a => g.comp (f a) :=
   comp_lift_add_hom _ _
 
-theorem sum_sub_index [∀ i, AddGroupₓ (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [AddCommGroupₓ γ] {f g : Π₀i, β i}
-  {h : ∀ i, β i → γ} (h_sub : ∀ i b₁ b₂, h i (b₁ - b₂) = h i b₁ - h i b₂) : (f - g).Sum h = f.sum h - g.sum h :=
-  by 
-    have  := (lift_add_hom fun a => AddMonoidHom.ofMapSub (h a) (h_sub a)).map_sub f g 
-    rw [lift_add_hom_apply, sum_add_hom_apply, sum_add_hom_apply, sum_add_hom_apply] at this 
-    exact this
+-- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sum_sub_index
+[∀ i, add_group (β i)]
+[∀ (i) (x : β i), decidable «expr ≠ »(x, 0)]
+[add_comm_group γ]
+{f g : «exprΠ₀ , »((i), β i)}
+{h : ∀ i, β i → γ}
+(h_sub : ∀
+ i
+ b₁
+ b₂, «expr = »(h i «expr - »(b₁, b₂), «expr - »(h i b₁, h i b₂))) : «expr = »(«expr - »(f, g).sum h, «expr - »(f.sum h, g.sum h)) :=
+begin
+  have [] [] [":=", expr (lift_add_hom (λ a, add_monoid_hom.of_map_sub (h a) (h_sub a))).map_sub f g],
+  rw ["[", expr lift_add_hom_apply, ",", expr sum_add_hom_apply, ",", expr sum_add_hom_apply, ",", expr sum_add_hom_apply, "]"] ["at", ident this],
+  exact [expr this]
+end
 
--- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]]
 theorem prod_finset_sum_index
 {γ : Type w}
@@ -1733,12 +1739,17 @@ theorem prod_sum_index {ι₁ : Type u₁} [DecidableEq ι₁] {β₁ : ι₁ �
   (h_add : ∀ i b₁ b₂, h i (b₁+b₂) = h i b₁*h i b₂) : (f.sum g).Prod h = f.prod fun i b => (g i b).Prod h :=
   (prod_finset_sum_index h_zero h_add).symm
 
+-- error in Data.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem sum_single [∀ i, AddCommMonoidₓ (β i)] [∀ i x : β i, Decidable (x ≠ 0)] {f : Π₀i, β i} : f.sum single = f :=
-  by 
-    have  := AddMonoidHom.congr_fun lift_add_hom_single_add_hom f 
-    rw [lift_add_hom_apply, sum_add_hom_apply] at this 
-    exact this
+theorem sum_single
+[∀ i, add_comm_monoid (β i)]
+[∀ (i) (x : β i), decidable «expr ≠ »(x, 0)]
+{f : «exprΠ₀ , »((i), β i)} : «expr = »(f.sum single, f) :=
+begin
+  have [] [] [":=", expr add_monoid_hom.congr_fun lift_add_hom_single_add_hom f],
+  rw ["[", expr lift_add_hom_apply, ",", expr sum_add_hom_apply, "]"] ["at", ident this],
+  exact [expr this]
+end
 
 @[toAdditive]
 theorem prod_subtype_domain_index [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ] {v : Π₀i, β i}

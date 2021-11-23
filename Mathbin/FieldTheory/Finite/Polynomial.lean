@@ -1,8 +1,8 @@
-import Mathbin.FieldTheory.Finite.Basic 
-import Mathbin.FieldTheory.MvPolynomial 
-import Mathbin.Data.MvPolynomial.Expand 
+import Mathbin.LinearAlgebra.FiniteDimensional 
 import Mathbin.LinearAlgebra.Basic 
-import Mathbin.LinearAlgebra.FiniteDimensional
+import Mathbin.RingTheory.MvPolynomial.Basic 
+import Mathbin.Data.MvPolynomial.Expand 
+import Mathbin.FieldTheory.Finite.Basic
 
 /-!
 ## Polynomials over finite fields
@@ -166,21 +166,21 @@ universe u
 
 variable(σ : Type u)(K : Type u)[Fintype σ][Field K][Fintype K]
 
--- error in FieldTheory.Finite.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler add_comm_group
+-- error in FieldTheory.Finite.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler add_comm_group
 @[derive #["[", expr add_comm_group, ",", expr module K, ",", expr inhabited, "]"]] def R : Type u :=
 restrict_degree σ K «expr - »(fintype.card K, 1)
 
-noncomputable instance decidable_restrict_degree (m : ℕ) : DecidablePred (· ∈ { n : σ →₀ ℕ | ∀ i, n i ≤ m }) :=
+noncomputable instance decidable_restrict_degree (m : ℕ) : DecidablePred (· ∈ { n:σ →₀ ℕ | ∀ i, n i ≤ m }) :=
   by 
     simp only [Set.mem_set_of_eq] <;> infer_instance
 
 theorem dim_R : Module.rank K (R σ K) = Fintype.card (σ → K) :=
-  calc Module.rank K (R σ K) = Module.rank K («expr↥ » { s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } →₀ K) :=
-    LinearEquiv.dim_eq (Finsupp.supportedEquivFinsupp { s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 })
-    _ = # { s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } :=
+  calc Module.rank K (R σ K) = Module.rank K («expr↥ » { s:σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } →₀ K) :=
+    LinearEquiv.dim_eq (Finsupp.supportedEquivFinsupp { s:σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 })
+    _ = # { s:σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } :=
     by 
       rw [Finsupp.dim_eq, dim_self, mul_oneₓ]
-    _ = # { s : σ → ℕ | ∀ n : σ, s n < Fintype.card K } :=
+    _ = # { s:σ → ℕ | ∀ n : σ, s n < Fintype.card K } :=
     by 
       refine' Quotientₓ.sound ⟨Equiv.subtypeEquiv Finsupp.equivFunOnFintype$ fun f => _⟩
       refine' forall_congrₓ fun n => le_tsub_iff_right _ 

@@ -165,7 +165,7 @@ def set_value {α β} (f : α ↪ β) (a : α) (b : β) [∀ a', Decidable (a' =
       dsimp  at h 
       splitIfs  at h <;>
         try 
-            substI b <;>
+            subst b <;>
           try 
               simp only [f.injective.eq_iff] at * <;>
             cc⟩

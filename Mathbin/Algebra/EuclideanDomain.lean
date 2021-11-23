@@ -1,5 +1,5 @@
 import Mathbin.Data.Int.Basic 
-import Mathbin.Algebra.Field
+import Mathbin.Algebra.Field.Basic
 
 /-!
 # Euclidean domains
@@ -116,15 +116,13 @@ theorem mul_right_not_lt {a : R} b (h : a ≠ 0) : ¬(a*b) ≺ b :=
     rw [mul_commₓ]
     exact mul_left_not_lt b h
 
-theorem mul_div_cancel_left {a : R} b (a0 : a ≠ 0) : (a*b) / a = b :=
-  Eq.symm$
-    eq_of_sub_eq_zero$
-      Classical.by_contradiction$
-        fun h =>
-          by 
-            have  := mul_left_not_lt a h 
-            rw [mul_sub, sub_eq_iff_eq_add'.2 (div_add_mod (a*b) a).symm] at this 
-            exact this (mod_lt _ a0)
+-- error in Algebra.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mul_div_cancel_left {a : R} (b) (a0 : «expr ≠ »(a, 0)) : «expr = »(«expr / »(«expr * »(a, b), a), b) :=
+«expr $ »(eq.symm, «expr $ »(eq_of_sub_eq_zero, «expr $ »(classical.by_contradiction, λ h, begin
+     have [] [] [":=", expr mul_left_not_lt a h],
+     rw ["[", expr mul_sub, ",", expr sub_eq_iff_eq_add'.2 (div_add_mod «expr * »(a, b) a).symm, "]"] ["at", ident this],
+     exact [expr this (mod_lt _ a0)]
+   end)))
 
 theorem mul_div_cancel a {b : R} (b0 : b ≠ 0) : (a*b) / b = a :=
   by 
@@ -136,21 +134,16 @@ theorem mod_zero (a : R) : a % 0 = a :=
   by 
     simpa only [zero_mul, zero_addₓ] using div_add_mod a 0
 
-@[simp]
-theorem mod_eq_zero {a b : R} : a % b = 0 ↔ b ∣ a :=
-  ⟨fun h =>
-      by 
-        rw [←div_add_mod a b, h, add_zeroₓ]
-        exact dvd_mul_right _ _,
-    fun ⟨c, e⟩ =>
-      by 
-        rw [e, ←add_left_cancel_iffₓ, div_add_mod, add_zeroₓ]
-        haveI  := Classical.dec 
-        byCases' b0 : b = 0
-        ·
-          simp only [b0, zero_mul]
-        ·
-          rw [mul_div_cancel_left _ b0]⟩
+-- error in Algebra.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem mod_eq_zero {a b : R} : «expr ↔ »(«expr = »(«expr % »(a, b), 0), «expr ∣ »(b, a)) :=
+⟨λ h, by { rw ["[", "<-", expr div_add_mod a b, ",", expr h, ",", expr add_zero, "]"] [],
+   exact [expr dvd_mul_right _ _] }, λ ⟨c, e⟩, begin
+   rw ["[", expr e, ",", "<-", expr add_left_cancel_iff, ",", expr div_add_mod, ",", expr add_zero, "]"] [],
+   haveI [] [] [":=", expr classical.dec],
+   by_cases [expr b0, ":", expr «expr = »(b, 0)],
+   { simp [] [] ["only"] ["[", expr b0, ",", expr zero_mul, "]"] [] [] },
+   { rw ["[", expr mul_div_cancel_left _ b0, "]"] [] }
+ end⟩
 
 @[simp]
 theorem mod_self (a : R) : a % a = 0 :=
@@ -160,14 +153,11 @@ theorem dvd_mod_iff {a b c : R} (h : c ∣ b) : c ∣ a % b ↔ c ∣ a :=
   by 
     rw [dvd_add_iff_right (h.mul_right _), div_add_mod]
 
-theorem lt_one (a : R) : a ≺ (1 : R) → a = 0 :=
-  by 
-    haveI  := Classical.dec 
-    exact
-      not_imp_not.1
-        fun h =>
-          by 
-            simpa only [one_mulₓ] using mul_left_not_lt 1 h
+-- error in Algebra.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lt_one (a : R) : «expr ≺ »(a, (1 : R)) → «expr = »(a, 0) :=
+by { haveI [] [] [":=", expr classical.dec],
+  exact [expr not_imp_not.1 (λ
+    h, by simpa [] [] ["only"] ["[", expr one_mul, "]"] [] ["using", expr mul_left_not_lt 1 h])] }
 
 theorem val_dvd_le : ∀ a b : R, b ∣ a → a ≠ 0 → ¬a ≺ b
 | _, b, ⟨d, rfl⟩, ha =>
@@ -420,29 +410,22 @@ theorem xgcd_aux_P (a b : R) {r r' : R} :
         rw [mul_sub, mul_sub, add_sub, sub_add_eq_add_sub, ←p', sub_sub, mul_commₓ _ s, ←mul_assocₓ, mul_commₓ _ t,
           ←mul_assocₓ, ←add_mulₓ, ←p, mod_eq_sub_mul_div]
 
+-- error in Algebra.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An explicit version of **Bézout's lemma** for Euclidean domains. -/
-theorem gcd_eq_gcd_ab (a b : R) : (gcd a b : R) = (a*gcd_a a b)+b*gcd_b a b :=
-  by 
-    have  :=
-      @xgcd_aux_P _ _ _ a b a b 1 0 0 1
-        (by 
-          rw [P, mul_oneₓ, mul_zero, add_zeroₓ])
-        (by 
-          rw [P, mul_oneₓ, mul_zero, zero_addₓ])
-    rwa [xgcd_aux_val, xgcd_val] at this
+theorem gcd_eq_gcd_ab
+(a b : R) : «expr = »((gcd a b : R), «expr + »(«expr * »(a, gcd_a a b), «expr * »(b, gcd_b a b))) :=
+by { have [] [] [":=", expr @xgcd_aux_P _ _ _ a b a b 1 0 0 1 (by rw ["[", expr P, ",", expr mul_one, ",", expr mul_zero, ",", expr add_zero, "]"] []) (by rw ["[", expr P, ",", expr mul_one, ",", expr mul_zero, ",", expr zero_add, "]"] [])],
+  rwa ["[", expr xgcd_aux_val, ",", expr xgcd_val, "]"] ["at", ident this] }
 
-instance (priority := 70) (R : Type _) [e : EuclideanDomain R] : IsDomain R :=
-  by 
-    haveI  := Classical.decEq R 
-    exact
-      { e with
-        eq_zero_or_eq_zero_of_mul_eq_zero :=
-          fun a b h =>
-            or_iff_not_and_not.2$
-              fun h0 =>
-                h0.1$
-                  by 
-                    rw [←mul_div_cancel a h0.2, h, zero_div] }
+-- error in Algebra.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[priority 70] instance (R : Type*) [e : euclidean_domain R] : is_domain R :=
+by { haveI [] [] [":=", expr classical.dec_eq R],
+  exact [expr { eq_zero_or_eq_zero_of_mul_eq_zero := λ
+     a
+     b
+     h, «expr $ »(or_iff_not_and_not.2, λ
+      h0, «expr $ »(h0.1, by rw ["[", "<-", expr mul_div_cancel a h0.2, ",", expr h, ",", expr zero_div, "]"] [])),
+     ..e }] }
 
 end Gcd
 

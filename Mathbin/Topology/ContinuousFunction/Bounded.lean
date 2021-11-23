@@ -148,13 +148,17 @@ theorem dist_le_iff_of_nonempty [Nonempty α] : dist f g ≤ C ↔ ∀ x, dist (
   ⟨fun h x => le_transₓ (dist_coe_le_dist x) h,
     fun w => (dist_le (le_transₓ dist_nonneg (w (Nonempty.some ‹_›)))).mpr w⟩
 
-theorem dist_lt_of_nonempty_compact [Nonempty α] [CompactSpace α] (w : ∀ x : α, dist (f x) (g x) < C) : dist f g < C :=
-  by 
-    have c : Continuous fun x => dist (f x) (g x)
-    ·
-      continuity 
-    obtain ⟨x, -, le⟩ := IsCompact.exists_forall_ge compact_univ Set.univ_nonempty (Continuous.continuous_on c)
-    exact lt_of_le_of_ltₓ (dist_le_iff_of_nonempty.mpr fun y => le y trivialₓ) (w x)
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dist_lt_of_nonempty_compact
+[nonempty α]
+[compact_space α]
+(w : ∀ x : α, «expr < »(dist (f x) (g x), C)) : «expr < »(dist f g, C) :=
+begin
+  have [ident c] [":", expr continuous (λ x, dist (f x) (g x))] [],
+  { continuity [] [] },
+  obtain ["⟨", ident x, ",", "-", ",", ident le, "⟩", ":=", expr is_compact.exists_forall_ge compact_univ set.univ_nonempty (continuous.continuous_on c)],
+  exact [expr lt_of_le_of_lt (dist_le_iff_of_nonempty.mpr (λ y, le y trivial)) (w x)]
+end
 
 theorem dist_lt_iff_of_compact [CompactSpace α] (C0 : (0 : ℝ) < C) : dist f g < C ↔ ∀ x : α, dist (f x) (g x) < C :=
   by 
@@ -165,7 +169,7 @@ theorem dist_lt_iff_of_compact [CompactSpace α] (C0 : (0 : ℝ) < C) : dist f g
     ·
       byCases' h : Nonempty α
       ·
-        resetI 
+        skip 
         exact dist_lt_of_nonempty_compact
       ·
         rintro -
@@ -241,38 +245,36 @@ theorem continuous_evalx {x : α} : Continuous fun f : α →ᵇ β => f x :=
 theorem continuous_eval : Continuous fun p : (α →ᵇ β) × α => p.1 p.2 :=
   (continuous_prod_of_continuous_lipschitz _ 1 fun f => f.continuous)$ lipschitz_evalx
 
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Bounded continuous functions taking values in a complete space form a complete space. -/
-instance  [CompleteSpace β] : CompleteSpace (α →ᵇ β) :=
-  complete_of_cauchy_seq_tendsto$
-    fun f : ℕ → α →ᵇ β hf : CauchySeq f =>
-      by 
-        rcases cauchy_seq_iff_le_tendsto_0.1 hf with ⟨b, b0, b_bound, b_lim⟩
-        have f_bdd := fun x n m N hn hm => le_transₓ (dist_coe_le_dist x) (b_bound n m N hn hm)
-        have fx_cau : ∀ x, CauchySeq fun n => f n x := fun x => cauchy_seq_iff_le_tendsto_0.2 ⟨b, b0, f_bdd x, b_lim⟩
-        choose F hF using fun x => cauchy_seq_tendsto_of_complete (fx_cau x)
-        have fF_bdd : ∀ x N, dist (f N x) (F x) ≤ b N :=
-          fun x N =>
-            le_of_tendsto (tendsto_const_nhds.dist (hF x))
-              (Filter.eventually_at_top.2 ⟨N, fun n hn => f_bdd x N n N (le_reflₓ N) hn⟩)
-        refine' ⟨⟨⟨F, _⟩, _⟩, _⟩
-        ·
-          have  : TendstoUniformly (fun n x => f n x) F at_top
-          ·
-            refine' Metric.tendsto_uniformly_iff.2 fun ε ε0 => _ 
-            refine' ((tendsto_order.1 b_lim).2 ε ε0).mono fun n hn x => _ 
-            rw [dist_comm]
-            exact lt_of_le_of_ltₓ (fF_bdd x n) hn 
-          exact this.continuous fun N => (f N).Continuous
-        ·
-          rcases(f 0).Bounded with ⟨C, hC⟩
-          refine' ⟨C+b 0+b 0, fun x y => _⟩
-          calc dist (F x) (F y) ≤ dist (f 0 x) (f 0 y)+dist (f 0 x) (F x)+dist (f 0 y) (F y) :=
-            dist_triangle4_left _ _ _ _ _ ≤ C+b 0+b 0 :=
-            by 
-              mono*
-        ·
-          refine' tendsto_iff_dist_tendsto_zero.2 (squeeze_zero (fun _ => dist_nonneg) _ b_lim)
-          exact fun N => (dist_le (b0 _)).2 fun x => fF_bdd x N
+instance [complete_space β] : complete_space «expr →ᵇ »(α, β) :=
+«expr $ »(complete_of_cauchy_seq_tendsto, λ (f : exprℕ() → «expr →ᵇ »(α, β)) (hf : cauchy_seq f), begin
+   rcases [expr cauchy_seq_iff_le_tendsto_0.1 hf, "with", "⟨", ident b, ",", ident b0, ",", ident b_bound, ",", ident b_lim, "⟩"],
+   have [ident f_bdd] [] [":=", expr λ x n m N hn hm, le_trans (dist_coe_le_dist x) (b_bound n m N hn hm)],
+   have [ident fx_cau] [":", expr ∀
+    x, cauchy_seq (λ n, f n x)] [":=", expr λ x, cauchy_seq_iff_le_tendsto_0.2 ⟨b, b0, f_bdd x, b_lim⟩],
+   choose [] [ident F] [ident hF] ["using", expr λ x, cauchy_seq_tendsto_of_complete (fx_cau x)],
+   have [ident fF_bdd] [":", expr ∀
+    x
+    N, «expr ≤ »(dist (f N x) (F x), b N)] [":=", expr λ
+    x
+    N, le_of_tendsto (tendsto_const_nhds.dist (hF x)) (filter.eventually_at_top.2 ⟨N, λ
+      n hn, f_bdd x N n N (le_refl N) hn⟩)],
+   refine [expr ⟨⟨⟨F, _⟩, _⟩, _⟩],
+   { have [] [":", expr tendsto_uniformly (λ n x, f n x) F at_top] [],
+     { refine [expr metric.tendsto_uniformly_iff.2 (λ ε ε0, _)],
+       refine [expr ((tendsto_order.1 b_lim).2 ε ε0).mono (λ n hn x, _)],
+       rw [expr dist_comm] [],
+       exact [expr lt_of_le_of_lt (fF_bdd x n) hn] },
+     exact [expr this.continuous (λ N, (f N).continuous)] },
+   { rcases [expr (f 0).bounded, "with", "⟨", ident C, ",", ident hC, "⟩"],
+     refine [expr ⟨«expr + »(C, «expr + »(b 0, b 0)), λ x y, _⟩],
+     calc
+       «expr ≤ »(dist (F x) (F y), «expr + »(dist (f 0 x) (f 0 y), «expr + »(dist (f 0 x) (F x), dist (f 0 y) (F y)))) : dist_triangle4_left _ _ _ _
+       «expr ≤ »(..., «expr + »(C, «expr + »(b 0, b 0))) : by mono ["*"] [] [] [] },
+   { refine [expr tendsto_iff_dist_tendsto_zero.2 (squeeze_zero (λ _, dist_nonneg) _ b_lim)],
+     exact [expr λ N, (dist_le (b0 _)).2 (λ x, fF_bdd x N)] }
+ end)
 
 /-- Composition of a bounded continuous function and a continuous function. -/
 @[simps (config := { fullyApplied := ff })]
@@ -336,79 +338,85 @@ variable[TopologicalSpace α][CompactSpace α][MetricSpace β]
 
 variable{f g : α →ᵇ β}{x : α}{C : ℝ}
 
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- First version, with pointwise equicontinuity and range in a compact space -/
-theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : IsClosed A)
-  (H :
-    ∀ x : α ε _ : ε > 0, ∃ (U : _)(_ : U ∈ 𝓝 x), ∀ y z _ : y ∈ U _ : z ∈ U f : α →ᵇ β, f ∈ A → dist (f y) (f z) < ε) :
-  IsCompact A :=
-  by 
-    refine' compact_of_totally_bounded_is_closed _ closed 
-    refine' totally_bounded_of_finite_discretization fun ε ε0 => _ 
-    rcases exists_between ε0 with ⟨ε₁, ε₁0, εε₁⟩
-    let ε₂ := ε₁ / 2 / 2
-    have ε₂0 : ε₂ > 0 := half_pos (half_pos ε₁0)
-    have  : ∀ x : α, ∃ U, x ∈ U ∧ IsOpen U ∧ ∀ y z _ : y ∈ U _ : z ∈ U {f : α →ᵇ β}, f ∈ A → dist (f y) (f z) < ε₂ :=
-      fun x =>
-        let ⟨U, nhdsU, hU⟩ := H x _ ε₂0 
-        let ⟨V, VU, openV, xV⟩ := _root_.mem_nhds_iff.1 nhdsU
-        ⟨V, xV, openV, fun y z hy hz f hf => hU y z (VU hy) (VU hz) f hf⟩
-    choose U hU using this 
-    rcases
-      compact_univ.elim_finite_subcover_image (fun x _ => (hU x).2.1) fun x hx => mem_bUnion (mem_univ _) (hU x).1 with
-      ⟨tα, _, ⟨_⟩, htα⟩
-    rcases@finite_cover_balls_of_compact β _ _ compact_univ _ ε₂0 with ⟨tβ, _, ⟨_⟩, htβ⟩
-    resetI 
-    choose F hF using
-      fun y =>
-        show ∃ (z : _)(_ : z ∈ tβ), dist y z < ε₂ by 
-          simpa using htβ (mem_univ y)
-    refine'
-      ⟨tα → tβ,
-        by 
-          infer_instance,
-        fun f a => ⟨F (f a), (hF (f a)).1⟩, _⟩
-    rintro ⟨f, hf⟩ ⟨g, hg⟩ f_eq_g 
-    refine' lt_of_le_of_ltₓ ((dist_le$ le_of_ltₓ ε₁0).2 fun x => _) εε₁ 
-    obtain ⟨x', x'tα, hx'⟩ : ∃ (x' : _)(_ : x' ∈ tα), x ∈ U x' := mem_bUnion_iff.1 (htα (mem_univ x))
-    calc dist (f x) (g x) ≤ (dist (f x) (f x')+dist (g x) (g x'))+dist (f x') (g x') :=
-      dist_triangle4_right _ _ _ _ _ ≤ (ε₂+ε₂)+ε₁ / 2 := le_of_ltₓ (add_lt_add (add_lt_add _ _) _)_ = ε₁ :=
-      by 
-        rw [add_halves, add_halves]
-    ·
-      exact (hU x').2.2 _ _ hx' (hU x').1 hf
-    ·
-      exact (hU x').2.2 _ _ hx' (hU x').1 hg
-    ·
-      have F_f_g : F (f x') = F (g x') := (congr_argₓ (fun f : tα → tβ => (f ⟨x', x'tα⟩ : β)) f_eq_g : _)
-      calc dist (f x') (g x') ≤ dist (f x') (F (f x'))+dist (g x') (F (f x')) :=
-        dist_triangle_right _ _ _ _ = dist (f x') (F (f x'))+dist (g x') (F (g x')) :=
-        by 
-          rw [F_f_g]_ < ε₂+ε₂ :=
-        add_lt_add (hF (f x')).2 (hF (g x')).2_ = ε₁ / 2 := add_halves _
+theorem arzela_ascoli₁
+[compact_space β]
+(A : set «expr →ᵇ »(α, β))
+(closed : is_closed A)
+(H : ∀
+ (x : α)
+ (ε «expr > » 0), «expr∃ , »((U «expr ∈ » expr𝓝() x), ∀
+  (y z «expr ∈ » U)
+  (f : «expr →ᵇ »(α, β)), «expr ∈ »(f, A) → «expr < »(dist (f y) (f z), ε))) : is_compact A :=
+begin
+  refine [expr compact_of_totally_bounded_is_closed _ closed],
+  refine [expr totally_bounded_of_finite_discretization (λ ε ε0, _)],
+  rcases [expr exists_between ε0, "with", "⟨", ident ε₁, ",", ident ε₁0, ",", ident εε₁, "⟩"],
+  let [ident ε₂] [] [":=", expr «expr / »(«expr / »(ε₁, 2), 2)],
+  have [ident ε₂0] [":", expr «expr > »(ε₂, 0)] [":=", expr half_pos (half_pos ε₁0)],
+  have [] [":", expr ∀
+   x : α, «expr∃ , »((U), «expr ∧ »(«expr ∈ »(x, U), «expr ∧ »(is_open U, ∀
+      (y z «expr ∈ » U)
+      {f : «expr →ᵇ »(α, β)}, «expr ∈ »(f, A) → «expr < »(dist (f y) (f z), ε₂))))] [":=", expr λ
+   x, let ⟨U, nhdsU, hU⟩ := H x _ ε₂0, ⟨V, VU, openV, xV⟩ := _root_.mem_nhds_iff.1 nhdsU in
+   ⟨V, xV, openV, λ y z hy hz f hf, hU y z (VU hy) (VU hz) f hf⟩],
+  choose [] [ident U] [ident hU] ["using", expr this],
+  rcases [expr compact_univ.elim_finite_subcover_image (λ
+    x
+    _, (hU x).2.1) (λ
+    x hx, mem_bUnion (mem_univ _) (hU x).1), "with", "⟨", ident tα, ",", "_", ",", "⟨", "_", "⟩", ",", ident htα, "⟩"],
+  rcases [expr @finite_cover_balls_of_compact β _ _ compact_univ _ ε₂0, "with", "⟨", ident tβ, ",", "_", ",", "⟨", "_", "⟩", ",", ident htβ, "⟩"],
+  resetI,
+  choose [] [ident F] [ident hF] ["using", expr λ
+   y, show «expr∃ , »((z «expr ∈ » tβ), «expr < »(dist y z, ε₂)), by simpa [] [] [] [] [] ["using", expr htβ (mem_univ y)]],
+  refine [expr ⟨tα → tβ, by apply_instance, λ f a, ⟨F (f a), (hF (f a)).1⟩, _⟩],
+  rintro ["⟨", ident f, ",", ident hf, "⟩", "⟨", ident g, ",", ident hg, "⟩", ident f_eq_g],
+  refine [expr lt_of_le_of_lt («expr $ »(dist_le, le_of_lt ε₁0).2 (λ x, _)) εε₁],
+  obtain ["⟨", ident x', ",", ident x'tα, ",", ident hx', "⟩", ":", expr «expr∃ , »((x' «expr ∈ » tα), «expr ∈ »(x, U x')), ":=", expr mem_bUnion_iff.1 (htα (mem_univ x))],
+  calc
+    «expr ≤ »(dist (f x) (g x), «expr + »(«expr + »(dist (f x) (f x'), dist (g x) (g x')), dist (f x') (g x'))) : dist_triangle4_right _ _ _ _
+    «expr ≤ »(..., «expr + »(«expr + »(ε₂, ε₂), «expr / »(ε₁, 2))) : le_of_lt (add_lt_add (add_lt_add _ _) _)
+    «expr = »(..., ε₁) : by rw ["[", expr add_halves, ",", expr add_halves, "]"] [],
+  { exact [expr (hU x').2.2 _ _ hx' (hU x').1 hf] },
+  { exact [expr (hU x').2.2 _ _ hx' (hU x').1 hg] },
+  { have [ident F_f_g] [":", expr «expr = »(F (f x'), F (g x'))] [":=", expr (congr_arg (λ
+      f : tα → tβ, (f ⟨x', x'tα⟩ : β)) f_eq_g : _)],
+    calc
+      «expr ≤ »(dist (f x') (g x'), «expr + »(dist (f x') (F (f x')), dist (g x') (F (f x')))) : dist_triangle_right _ _ _
+      «expr = »(..., «expr + »(dist (f x') (F (f x')), dist (g x') (F (g x')))) : by rw [expr F_f_g] []
+      «expr < »(..., «expr + »(ε₂, ε₂)) : add_lt_add (hF (f x')).2 (hF (g x')).2
+      «expr = »(..., «expr / »(ε₁, 2)) : add_halves _ }
+end
 
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Second version, with pointwise equicontinuity and range in a compact subset -/
-theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)) (closed : IsClosed A)
-  (in_s : ∀ f : α →ᵇ β x : α, f ∈ A → f x ∈ s)
-  (H :
-    ∀ x : α ε _ : ε > 0, ∃ (U : _)(_ : U ∈ 𝓝 x), ∀ y z _ : y ∈ U _ : z ∈ U f : α →ᵇ β, f ∈ A → dist (f y) (f z) < ε) :
-  IsCompact A :=
-  by 
-    have M : LipschitzWith 1 coeₓ := LipschitzWith.subtype_coe s 
-    let F : (α →ᵇ s) → α →ᵇ β := comp coeₓ M 
-    refine' compact_of_is_closed_subset ((_ : IsCompact (F ⁻¹' A)).Image (continuous_comp M)) closed fun f hf => _
-    ·
-      haveI  : CompactSpace s := is_compact_iff_compact_space.1 hs 
-      refine'
-        arzela_ascoli₁ _ (continuous_iff_is_closed.1 (continuous_comp M) _ closed)
-          fun x ε ε0 => Bex.imp_right (fun U U_nhds hU y z hy hz f hf => _) (H x ε ε0)
-      calc dist (f y) (f z) = dist (F f y) (F f z) := rfl _ < ε := hU y z hy hz (F f) hf
-    ·
-      let g := cod_restrict s f fun x => in_s f x hf 
-      rw
-        [show f = F g by 
-          ext <;> rfl] at
-        hf⊢
-      exact ⟨g, hf, rfl⟩
+theorem arzela_ascoli₂
+(s : set β)
+(hs : is_compact s)
+(A : set «expr →ᵇ »(α, β))
+(closed : is_closed A)
+(in_s : ∀ (f : «expr →ᵇ »(α, β)) (x : α), «expr ∈ »(f, A) → «expr ∈ »(f x, s))
+(H : ∀
+ (x : α)
+ (ε «expr > » 0), «expr∃ , »((U «expr ∈ » expr𝓝() x), ∀
+  (y z «expr ∈ » U)
+  (f : «expr →ᵇ »(α, β)), «expr ∈ »(f, A) → «expr < »(dist (f y) (f z), ε))) : is_compact A :=
+begin
+  have [ident M] [":", expr lipschitz_with 1 coe] [":=", expr lipschitz_with.subtype_coe s],
+  let [ident F] [":", expr «expr →ᵇ »(α, s) → «expr →ᵇ »(α, β)] [":=", expr comp coe M],
+  refine [expr compact_of_is_closed_subset ((_ : is_compact «expr ⁻¹' »(F, A)).image (continuous_comp M)) closed (λ
+    f hf, _)],
+  { haveI [] [":", expr compact_space s] [":=", expr is_compact_iff_compact_space.1 hs],
+    refine [expr arzela_ascoli₁ _ (continuous_iff_is_closed.1 (continuous_comp M) _ closed) (λ
+      x ε ε0, bex.imp_right (λ U U_nhds hU y z hy hz f hf, _) (H x ε ε0))],
+    calc
+      «expr = »(dist (f y) (f z), dist (F f y) (F f z)) : rfl
+      «expr < »(..., ε) : hU y z hy hz (F f) hf },
+  { let [ident g] [] [":=", expr cod_restrict s f (λ x, in_s f x hf)],
+    rw ["[", expr show «expr = »(f, F g), by ext [] [] []; refl, "]"] ["at", ident hf, "⊢"],
+    exact [expr ⟨g, hf, rfl⟩] }
+end
 
 /-- Third (main) version, with pointwise equicontinuity and range in a compact subset, but
 without closedness. The closure is then compact -/
@@ -433,23 +441,32 @@ theorem arzela_ascoli (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)) (
           by 
             rw [add_halves, add_halves]
 
-theorem equicontinuous_of_continuity_modulus {α : Type u} [MetricSpace α] (b : ℝ → ℝ) (b_lim : tendsto b (𝓝 0) (𝓝 0))
-  (A : Set (α →ᵇ β)) (H : ∀ x y : α f : α →ᵇ β, f ∈ A → dist (f x) (f y) ≤ b (dist x y)) (x : α) (ε : ℝ) (ε0 : 0 < ε) :
-  ∃ (U : _)(_ : U ∈ 𝓝 x), ∀ y z _ : y ∈ U _ : z ∈ U f : α →ᵇ β, f ∈ A → dist (f y) (f z) < ε :=
-  by 
-    rcases tendsto_nhds_nhds.1 b_lim ε ε0 with ⟨δ, δ0, hδ⟩
-    refine' ⟨ball x (δ / 2), ball_mem_nhds x (half_pos δ0), fun y z hy hz f hf => _⟩
-    have  : dist y z < δ :=
-      calc dist y z ≤ dist y x+dist z x := dist_triangle_right _ _ _ 
-        _ < (δ / 2)+δ / 2 := add_lt_add hy hz 
-        _ = δ := add_halves _ 
-        
-    calc dist (f y) (f z) ≤ b (dist y z) := H y z f hf _ ≤ |b (dist y z)| := le_abs_self _ _ = dist (b (dist y z)) 0 :=
-      by 
-        simp [Real.dist_eq]_ < ε :=
-      hδ
-        (by 
-          simpa [Real.dist_eq] using this)
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem equicontinuous_of_continuity_modulus
+{α : Type u}
+[metric_space α]
+(b : exprℝ() → exprℝ())
+(b_lim : tendsto b (expr𝓝() 0) (expr𝓝() 0))
+(A : set «expr →ᵇ »(α, β))
+(H : ∀ (x y : α) (f : «expr →ᵇ »(α, β)), «expr ∈ »(f, A) → «expr ≤ »(dist (f x) (f y), b (dist x y)))
+(x : α)
+(ε : exprℝ())
+(ε0 : «expr < »(0, ε)) : «expr∃ , »((U «expr ∈ » expr𝓝() x), ∀
+ (y z «expr ∈ » U)
+ (f : «expr →ᵇ »(α, β)), «expr ∈ »(f, A) → «expr < »(dist (f y) (f z), ε)) :=
+begin
+  rcases [expr tendsto_nhds_nhds.1 b_lim ε ε0, "with", "⟨", ident δ, ",", ident δ0, ",", ident hδ, "⟩"],
+  refine [expr ⟨ball x «expr / »(δ, 2), ball_mem_nhds x (half_pos δ0), λ y z hy hz f hf, _⟩],
+  have [] [":", expr «expr < »(dist y z, δ)] [":=", expr calc
+     «expr ≤ »(dist y z, «expr + »(dist y x, dist z x)) : dist_triangle_right _ _ _
+     «expr < »(..., «expr + »(«expr / »(δ, 2), «expr / »(δ, 2))) : add_lt_add hy hz
+     «expr = »(..., δ) : add_halves _],
+  calc
+    «expr ≤ »(dist (f y) (f z), b (dist y z)) : H y z f hf
+    «expr ≤ »(..., «expr| |»(b (dist y z))) : le_abs_self _
+    «expr = »(..., dist (b (dist y z)) 0) : by simp [] [] [] ["[", expr real.dist_eq, "]"] [] []
+    «expr < »(..., ε) : hδ (by simpa [] [] [] ["[", expr real.dist_eq, "]"] [] ["using", expr this])
+end
 
 end ArzelaAscoli
 
@@ -516,18 +533,18 @@ instance  : AddMonoidₓ (α →ᵇ β) :=
         by 
           ext <;> simp  }
 
-instance  : HasLipschitzAdd (α →ᵇ β) :=
-  { lipschitz_add :=
-      ⟨HasLipschitzAdd.c β,
-        by 
-          have C_nonneg := (HasLipschitzAdd.c β).coe_nonneg 
-          rw [lipschitz_with_iff_dist_le_mul]
-          rintro ⟨f₁, g₁⟩ ⟨f₂, g₂⟩
-          rw [dist_le (mul_nonneg C_nonneg dist_nonneg)]
-          intro x 
-          refine' le_transₓ (lipschitz_with_lipschitz_const_add ⟨f₁ x, g₁ x⟩ ⟨f₂ x, g₂ x⟩) _ 
-          refine' mul_le_mul_of_nonneg_left _ C_nonneg 
-          apply max_le_max <;> exact dist_coe_le_dist x⟩ }
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance : has_lipschitz_add «expr →ᵇ »(α, β) :=
+{ lipschitz_add := ⟨has_lipschitz_add.C β, begin
+     have [ident C_nonneg] [] [":=", expr (has_lipschitz_add.C β).coe_nonneg],
+     rw [expr lipschitz_with_iff_dist_le_mul] [],
+     rintros ["⟨", ident f₁, ",", ident g₁, "⟩", "⟨", ident f₂, ",", ident g₂, "⟩"],
+     rw [expr dist_le (mul_nonneg C_nonneg dist_nonneg)] [],
+     intros [ident x],
+     refine [expr le_trans (lipschitz_with_lipschitz_const_add ⟨f₁ x, g₁ x⟩ ⟨f₂ x, g₂ x⟩) _],
+     refine [expr mul_le_mul_of_nonneg_left _ C_nonneg],
+     apply [expr max_le_max]; exact [expr dist_coe_le_dist x]
+   end⟩ }
 
 /-- Coercion of a `normed_group_hom` is an `add_monoid_hom`. Similar to `add_monoid_hom.coe_fn` -/
 @[simps]
@@ -591,16 +608,16 @@ theorem norm_def : ∥f∥ = dist f 0 :=
 
 /-- The norm of a bounded continuous function is the supremum of `∥f x∥`.
 We use `Inf` to ensure that the definition works if `α` has no elements. -/
-theorem norm_eq (f : α →ᵇ β) : ∥f∥ = Inf { C : ℝ | 0 ≤ C ∧ ∀ x : α, ∥f x∥ ≤ C } :=
+theorem norm_eq (f : α →ᵇ β) : ∥f∥ = Inf { C:ℝ | 0 ≤ C ∧ ∀ x : α, ∥f x∥ ≤ C } :=
   by 
     simp [norm_def, BoundedContinuousFunction.dist_eq]
 
 /-- When the domain is non-empty, we do not need the `0 ≤ C` condition in the formula for ∥f∥ as an
 `Inf`. -/
-theorem norm_eq_of_nonempty [h : Nonempty α] : ∥f∥ = Inf { C : ℝ | ∀ x : α, ∥f x∥ ≤ C } :=
+theorem norm_eq_of_nonempty [h : Nonempty α] : ∥f∥ = Inf { C:ℝ | ∀ x : α, ∥f x∥ ≤ C } :=
   by 
-    unfreezingI 
-      obtain ⟨a⟩ := h 
+    (
+      obtain ⟨a⟩ := h)
     rw [norm_eq]
     congr 
     ext 
@@ -712,7 +729,7 @@ theorem bdd_above_range_norm_comp : BddAbove$ Set.Range$ (norm ∘ f) :=
 
 theorem norm_eq_supr_norm : ∥f∥ = ⨆x : α, ∥f x∥ :=
   by 
-    casesI is_empty_or_nonempty α with hα _
+    cases' is_empty_or_nonempty α with hα _
     ·
       suffices  : range (norm ∘ f) = ∅
       ·

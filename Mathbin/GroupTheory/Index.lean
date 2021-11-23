@@ -42,28 +42,29 @@ noncomputable def index : ℕ :=
 noncomputable def relindex : ℕ :=
   (H.subgroup_of K).index
 
-@[toAdditive]
-theorem index_comap_of_surjective {G' : Type _} [Groupₓ G'] {f : G' →* G} (hf : Function.Surjective f) :
-  (H.comap f).index = H.index :=
-  by 
-    letI this := QuotientGroup.leftRel H 
-    letI this := QuotientGroup.leftRel (H.comap f)
-    have key : ∀ x y : G', Setoidₓ.R x y ↔ Setoidₓ.R (f x) (f y) :=
-      fun x y =>
-        iff_of_eq
-          (congr_argₓ (· ∈ H)
-            (by 
-              rw [f.map_mul, f.map_inv]))
-    refine' Cardinal.to_nat_congr (Equiv.ofBijective (Quotientₓ.map' f fun x y => (key x y).mp) ⟨_, _⟩)
-    ·
-      simpRw [←Quotientₓ.eq']  at key 
-      refine' Quotientₓ.ind' fun x => _ 
-      refine' Quotientₓ.ind' fun y => _ 
-      exact (key x y).mpr
-    ·
-      refine' Quotientₓ.ind' fun x => _ 
-      obtain ⟨y, hy⟩ := hf x 
-      exact ⟨y, (Quotientₓ.map'_mk' f _ y).trans (congr_argₓ Quotientₓ.mk' hy)⟩
+-- error in GroupTheory.Index: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem index_comap_of_surjective
+{G' : Type*}
+[group G']
+{f : «expr →* »(G', G)}
+(hf : function.surjective f) : «expr = »((H.comap f).index, H.index) :=
+begin
+  letI [] [] [":=", expr quotient_group.left_rel H],
+  letI [] [] [":=", expr quotient_group.left_rel (H.comap f)],
+  have [ident key] [":", expr ∀
+   x
+   y : G', «expr ↔ »(setoid.r x y, setoid.r (f x) (f y))] [":=", expr λ
+   x y, iff_of_eq (congr_arg ((«expr ∈ » H)) (by rw ["[", expr f.map_mul, ",", expr f.map_inv, "]"] []))],
+  refine [expr cardinal.to_nat_congr (equiv.of_bijective (quotient.map' f (λ x y, (key x y).mp)) ⟨_, _⟩)],
+  { simp_rw ["[", "<-", expr quotient.eq', "]"] ["at", ident key],
+    refine [expr quotient.ind' (λ x, _)],
+    refine [expr quotient.ind' (λ y, _)],
+    exact [expr (key x y).mpr] },
+  { refine [expr quotient.ind' (λ x, _)],
+    obtain ["⟨", ident y, ",", ident hy, "⟩", ":=", expr hf x],
+    exact [expr ⟨y, (quotient.map'_mk' f _ y).trans (congr_arg quotient.mk' hy)⟩] }
+end
 
 @[toAdditive]
 theorem index_comap {G' : Type _} [Groupₓ G'] (f : G' →* G) : (H.comap f).index = H.relindex f.range :=

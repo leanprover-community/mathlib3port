@@ -1,5 +1,4 @@
-import Mathbin.CategoryTheory.Adjunction.Default 
-import Mathbin.CategoryTheory.Monad.Adjunction 
+import Mathbin.CategoryTheory.Adjunction.Basic 
 import Mathbin.CategoryTheory.Monad.Basic
 
 /-! # Kleisli category on a monad

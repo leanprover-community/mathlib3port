@@ -152,15 +152,20 @@ theorem neg_apply (f : LinearPmap R E F) x : (-f) x = -f x :=
 instance  : LE (LinearPmap R E F) :=
   ⟨fun f g => f.domain ≤ g.domain ∧ ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ h : (x : E) = y, f x = g y⟩
 
-theorem eq_of_le_of_domain_eq {f g : LinearPmap R E F} (hle : f ≤ g) (heq : f.domain = g.domain) : f = g :=
-  by 
-    rcases f with ⟨f_dom, f⟩
-    rcases g with ⟨g_dom, g⟩
-    change f_dom = g_dom at heq 
-    subst g_dom 
-    have  : f = g 
-    exact LinearMap.ext fun x => hle.2 rfl 
-    subst g
+-- error in LinearAlgebra.LinearPmap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_of_le_of_domain_eq
+{f g : linear_pmap R E F}
+(hle : «expr ≤ »(f, g))
+(heq : «expr = »(f.domain, g.domain)) : «expr = »(f, g) :=
+begin
+  rcases [expr f, "with", "⟨", ident f_dom, ",", ident f, "⟩"],
+  rcases [expr g, "with", "⟨", ident g_dom, ",", ident g, "⟩"],
+  change [expr «expr = »(f_dom, g_dom)] [] ["at", ident heq],
+  subst [expr g_dom],
+  have [] [":", expr «expr = »(f, g)] [],
+  from [expr linear_map.ext (λ x, hle.2 rfl)],
+  subst [expr g]
+end
 
 /-- Given two partial linear maps `f`, `g`, the set of points `x` such that
 both `f` and `g` are defined at `x` and `f x = g x` form a submodule. -/
@@ -242,33 +247,43 @@ theorem le_of_eq_locus_ge {f g : LinearPmap R E F} (H : f.domain ≤ f.eq_locus 
 theorem domain_mono : StrictMono (@domain R _ E _ _ F _ _) :=
   fun f g hlt => lt_of_le_of_neₓ hlt.1.1$ fun heq => ne_of_ltₓ hlt$ eq_of_le_of_domain_eq (le_of_ltₓ hlt) HEq
 
-private theorem sup_aux (f g : LinearPmap R E F) (h : ∀ x : f.domain y : g.domain, (x : E) = y → f x = g y) :
-  ∃ fg : «expr↥ » (f.domain⊔g.domain) →ₗ[R] F,
-    ∀ x : f.domain y : g.domain z, ((x : E)+y) = «expr↑ » z → fg z = f x+g y :=
-  by 
-    choose x hx y hy hxy using fun z : f.domain⊔g.domain => mem_sup.1 z.prop 
-    set fg := fun z => f ⟨x z, hx z⟩+g ⟨y z, hy z⟩
-    have fg_eq : ∀ x' : f.domain y' : g.domain z' : f.domain⊔g.domain H : ((x' : E)+y') = z', fg z' = f x'+g y'
-    ·
-      intro x' y' z' H 
-      dsimp [fg]
-      rw [add_commₓ, ←sub_eq_sub_iff_add_eq_add, eq_comm, ←map_sub, ←map_sub]
-      apply h 
-      simp only [←eq_sub_iff_add_eq] at hxy 
-      simp only [coe_sub, coe_mk, coe_mk, hxy, ←sub_add, ←sub_sub, sub_self, zero_sub, ←H]
-      apply neg_add_eq_sub 
-    refine' ⟨{ toFun := fg, .. }, fg_eq⟩
-    ·
-      rintro ⟨z₁, hz₁⟩ ⟨z₂, hz₂⟩
-      rw [←add_assocₓ, add_right_commₓ (f _), ←map_add, add_assocₓ, ←map_add]
-      apply fg_eq 
-      simp only [coe_add, coe_mk, ←add_assocₓ]
-      rw [add_right_commₓ (x _), hxy, add_assocₓ, hxy, coe_mk, coe_mk]
-    ·
-      intro c z 
-      rw [smul_add, ←map_smul, ←map_smul]
-      apply fg_eq 
-      simp only [coe_smul, coe_mk, ←smul_add, hxy, RingHom.id_apply]
+-- error in LinearAlgebra.LinearPmap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem sup_aux
+(f g : linear_pmap R E F)
+(h : ∀
+ (x : f.domain)
+ (y : g.domain), «expr = »((x : E), y) → «expr = »(f x, g y)) : «expr∃ , »((fg : «expr →ₗ[ ] »(«expr↥ »(«expr ⊔ »(f.domain, g.domain)), R, F)), ∀
+ (x : f.domain)
+ (y : g.domain)
+ (z), «expr = »(«expr + »((x : E), y), «expr↑ »(z)) → «expr = »(fg z, «expr + »(f x, g y))) :=
+begin
+  choose [] [ident x] [ident hx, ident y, ident hy, ident hxy] ["using", expr λ
+   z : «expr ⊔ »(f.domain, g.domain), mem_sup.1 z.prop],
+  set [] [ident fg] [] [":="] [expr λ z, «expr + »(f ⟨x z, hx z⟩, g ⟨y z, hy z⟩)] [],
+  have [ident fg_eq] [":", expr ∀
+   (x' : f.domain)
+   (y' : g.domain)
+   (z' : «expr ⊔ »(f.domain, g.domain))
+   (H : «expr = »(«expr + »((x' : E), y'), z')), «expr = »(fg z', «expr + »(f x', g y'))] [],
+  { intros [ident x', ident y', ident z', ident H],
+    dsimp [] ["[", expr fg, "]"] [] [],
+    rw ["[", expr add_comm, ",", "<-", expr sub_eq_sub_iff_add_eq_add, ",", expr eq_comm, ",", "<-", expr map_sub, ",", "<-", expr map_sub, "]"] [],
+    apply [expr h],
+    simp [] [] ["only"] ["[", "<-", expr eq_sub_iff_add_eq, "]"] [] ["at", ident hxy],
+    simp [] [] ["only"] ["[", expr coe_sub, ",", expr coe_mk, ",", expr coe_mk, ",", expr hxy, ",", "<-", expr sub_add, ",", "<-", expr sub_sub, ",", expr sub_self, ",", expr zero_sub, ",", "<-", expr H, "]"] [] [],
+    apply [expr neg_add_eq_sub] },
+  refine [expr ⟨{ to_fun := fg, .. }, fg_eq⟩],
+  { rintros ["⟨", ident z₁, ",", ident hz₁, "⟩", "⟨", ident z₂, ",", ident hz₂, "⟩"],
+    rw ["[", "<-", expr add_assoc, ",", expr add_right_comm (f _), ",", "<-", expr map_add, ",", expr add_assoc, ",", "<-", expr map_add, "]"] [],
+    apply [expr fg_eq],
+    simp [] [] ["only"] ["[", expr coe_add, ",", expr coe_mk, ",", "<-", expr add_assoc, "]"] [] [],
+    rw ["[", expr add_right_comm (x _), ",", expr hxy, ",", expr add_assoc, ",", expr hxy, ",", expr coe_mk, ",", expr coe_mk, "]"] [] },
+  { intros [ident c, ident z],
+    rw ["[", expr smul_add, ",", "<-", expr map_smul, ",", "<-", expr map_smul, "]"] [],
+    apply [expr fg_eq],
+    simp [] [] ["only"] ["[", expr coe_smul, ",", expr coe_mk, ",", "<-", expr smul_add, ",", expr hxy, ",", expr ring_hom.id_apply, "]"] [] [] }
+end
 
 /-- Given two partial linear maps that agree on the intersection of their domains,
 `f.sup g h` is the unique partial linear map on `f.domain ⊔ g.domain` that agrees
@@ -308,16 +323,22 @@ protected theorem sup_le {f g h : LinearPmap R E F} (H : ∀ x : f.domain y : g.
   have Hg : g ≤ f.sup g H⊓h := le_inf (f.right_le_sup g H) gh 
   le_of_eq_locus_ge$ sup_le Hf.1 Hg.1
 
+-- error in LinearAlgebra.LinearPmap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Hypothesis for `linear_pmap.sup` holds, if `f.domain` is disjoint with `g.domain`. -/
-theorem sup_h_of_disjoint (f g : LinearPmap R E F) (h : Disjoint f.domain g.domain) (x : f.domain) (y : g.domain)
-  (hxy : (x : E) = y) : f x = g y :=
-  by 
-    rw [disjoint_def] at h 
-    have hy : y = 0 
-    exact Subtype.eq (h y (hxy ▸ x.2) y.2)
-    have hx : x = 0 
-    exact Subtype.eq (hxy.trans$ congr_argₓ _ hy)
-    simp 
+theorem sup_h_of_disjoint
+(f g : linear_pmap R E F)
+(h : disjoint f.domain g.domain)
+(x : f.domain)
+(y : g.domain)
+(hxy : «expr = »((x : E), y)) : «expr = »(f x, g y) :=
+begin
+  rw ["[", expr disjoint_def, "]"] ["at", ident h],
+  have [ident hy] [":", expr «expr = »(y, 0)] [],
+  from [expr subtype.eq (h y «expr ▸ »(hxy, x.2) y.2)],
+  have [ident hx] [":", expr «expr = »(x, 0)] [],
+  from [expr subtype.eq «expr $ »(hxy.trans, congr_arg _ hy)],
+  simp [] [] [] ["[", "*", "]"] [] []
+end
 
 section 
 
@@ -347,7 +368,7 @@ theorem sup_span_singleton_apply_mk (f : LinearPmap K E F) (x : E) (y : F) (hx :
 
 end 
 
--- error in LinearAlgebra.LinearPmap: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in LinearAlgebra.LinearPmap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 private
 theorem Sup_aux
 (c : set (linear_pmap R E F))

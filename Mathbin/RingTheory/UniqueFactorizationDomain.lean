@@ -1,6 +1,6 @@
+import Mathbin.RingTheory.Noetherian 
 import Mathbin.Algebra.GcdMonoid.Basic 
-import Mathbin.RingTheory.IntegralDomain 
-import Mathbin.RingTheory.Noetherian
+import Mathbin.RingTheory.Multiplicity
 
 /-!
 
@@ -44,12 +44,14 @@ variable[CommMonoidWithZero α]
 
 open Associates Nat
 
-theorem of_wf_dvd_monoid_associates (h : WfDvdMonoid (Associates α)) : WfDvdMonoid α :=
-  ⟨by 
-      haveI  := h 
-      refine' (Surjective.well_founded_iff mk_surjective _).2 WfDvdMonoid.well_founded_dvd_not_unit 
-      intros 
-      rw [mk_dvd_not_unit_mk_iff]⟩
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_wf_dvd_monoid_associates (h : wf_dvd_monoid (associates α)) : wf_dvd_monoid α :=
+⟨begin
+   haveI [] [] [":=", expr h],
+   refine [expr (surjective.well_founded_iff mk_surjective _).2 wf_dvd_monoid.well_founded_dvd_not_unit],
+   intros [],
+   rw [expr mk_dvd_not_unit_mk_iff] []
+ end⟩
 
 variable[WfDvdMonoid α]
 
@@ -88,28 +90,19 @@ theorem exists_irreducible_factor {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : �
                     simp )⟩)
       a ha ha0)
 
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[elab_as_eliminator]
-theorem induction_on_irreducible {P : α → Prop} (a : α) (h0 : P 0) (hu : ∀ u : α, IsUnit u → P u)
-  (hi : ∀ a i : α, a ≠ 0 → Irreducible i → P a → P (i*a)) : P a :=
-  by 
-    haveI  := Classical.dec <;>
-      exact
-        WellFounded.fix WfDvdMonoid.well_founded_dvd_not_unit
-          (fun a ih =>
-            if ha0 : a = 0 then ha0.symm ▸ h0 else
-              if hau : IsUnit a then hu a hau else
-                let ⟨i, hii, ⟨b, hb⟩⟩ := exists_irreducible_factor hau ha0 
-                have hb0 : b ≠ 0 :=
-                  fun hb0 =>
-                    by 
-                      simp_all 
-                hb.symm ▸
-                  hi _ _ hb0 hii
-                    (ih _
-                      ⟨hb0, i, hii.1,
-                        by 
-                          rw [hb, mul_commₓ]⟩))
-          a
+theorem induction_on_irreducible
+{P : α → exprProp()}
+(a : α)
+(h0 : P 0)
+(hu : ∀ u : α, is_unit u → P u)
+(hi : ∀ a i : α, «expr ≠ »(a, 0) → irreducible i → P a → P «expr * »(i, a)) : P a :=
+by haveI [] [] [":=", expr classical.dec]; exact [expr well_founded.fix wf_dvd_monoid.well_founded_dvd_not_unit (λ
+  a
+  ih, if ha0 : «expr = »(a, 0) then «expr ▸ »(ha0.symm, h0) else if hau : is_unit a then hu a hau else let ⟨i, hii, ⟨b, hb⟩⟩ := exists_irreducible_factor hau ha0 in
+  have hb0 : «expr ≠ »(b, 0), from λ hb0, by simp [] [] [] ["*"] [] ["at", "*"],
+  «expr ▸ »(hb.symm, hi _ _ hb0 hii (ih _ ⟨hb0, i, hii.1, by rw ["[", expr hb, ",", expr mul_comm, "]"] []⟩))) a]
 
 theorem exists_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀ b _ : b ∈ f, Irreducible b) ∧ Associated f.prod a :=
   WfDvdMonoid.induction_on_irreducible a (fun h => (h rfl).elim)
@@ -202,100 +195,73 @@ theorem induction_on_prime {P : α → Prop} (a : α) (h₁ : P 0) (h₂ : ∀ x
     simpRw [←UniqueFactorizationMonoid.irreducible_iff_prime]  at h₃ 
     exact WfDvdMonoid.induction_on_irreducible a h₁ h₂ h₃
 
-theorem factors_unique :
-  ∀ {f g : Multiset α},
-    (∀ x _ : x ∈ f, Irreducible x) → (∀ x _ : x ∈ g, Irreducible x) → f.prod ~ᵤ g.prod → Multiset.Rel Associated f g :=
-  by 
-    haveI  := Classical.decEq α <;>
-      exact
-        fun f =>
-          Multiset.induction_on f
-            (fun g _ hg h =>
-              Multiset.rel_zero_left.2$
-                Multiset.eq_zero_of_forall_not_mem
-                  fun x hx =>
-                    have  : IsUnit g.prod :=
-                      by 
-                        simpa [associated_one_iff_is_unit] using h.symm
-                    (hg x hx).not_unit
-                      (is_unit_iff_dvd_one.2 ((Multiset.dvd_prod hx).trans (is_unit_iff_dvd_one.1 this))))
-            fun p f ih g hf hg hfg =>
-              let ⟨b, hbg, hb⟩ :=
-                (exists_associated_mem_of_dvd_prod
-                    (irreducible_iff_prime.1
-                      (hf p
-                        (by 
-                          simp )))
-                    fun q hq => irreducible_iff_prime.1 (hg _ hq))$
-                  hfg.dvd_iff_dvd_right.1
-                    (show p ∣ (p ::ₘ f).Prod by 
-                      simp )
-              by 
-                rw [←Multiset.cons_erase hbg]
-                exact
-                  Multiset.Rel.cons hb
-                    (ih
-                      (fun q hq =>
-                        hf _
-                          (by 
-                            simp [hq]))
-                      (fun q hq : q ∈ g.erase b => hg q (Multiset.mem_of_mem_erase hq))
-                      (Associated.of_mul_left
-                        (by 
-                          rwa [←Multiset.prod_cons, ←Multiset.prod_cons, Multiset.cons_erase hbg])
-                        hb
-                        (hf p
-                            (by 
-                              simp )).ne_zero))
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem factors_unique : ∀
+{f
+ g : multiset α}, ∀
+x «expr ∈ » f, irreducible x → ∀
+x «expr ∈ » g, irreducible x → «expr ~ᵤ »(f.prod, g.prod) → multiset.rel associated f g :=
+by haveI [] [] [":=", expr classical.dec_eq α]; exact [expr λ
+ f, multiset.induction_on f (λ
+  g
+  _
+  hg
+  h, «expr $ »(multiset.rel_zero_left.2, multiset.eq_zero_of_forall_not_mem (λ
+    x hx, have is_unit g.prod, by simpa [] [] [] ["[", expr associated_one_iff_is_unit, "]"] [] ["using", expr h.symm],
+    (hg x hx).not_unit (is_unit_iff_dvd_one.2 ((multiset.dvd_prod hx).trans (is_unit_iff_dvd_one.1 this)))))) (λ
+  p
+  f
+  ih
+  g
+  hf
+  hg
+  hfg, let ⟨b, hbg, hb⟩ := «expr $ »(exists_associated_mem_of_dvd_prod (irreducible_iff_prime.1 (hf p (by simp [] [] [] [] [] []))) (λ
+        q
+        hq, irreducible_iff_prime.1 (hg _ hq)), hfg.dvd_iff_dvd_right.1 (show «expr ∣ »(p, «expr ::ₘ »(p, f).prod), by simp [] [] [] [] [] [])) in
+  begin
+    rw ["<-", expr multiset.cons_erase hbg] [],
+    exact [expr multiset.rel.cons hb (ih (λ
+       q
+       hq, hf _ (by simp [] [] [] ["[", expr hq, "]"] [] [])) (λ
+       (q)
+       (hq : «expr ∈ »(q, g.erase b)), hg q (multiset.mem_of_mem_erase hq)) (associated.of_mul_left (by rwa ["[", "<-", expr multiset.prod_cons, ",", "<-", expr multiset.prod_cons, ",", expr multiset.cons_erase hbg, "]"] []) hb (hf p (by simp [] [] [] [] [] [])).ne_zero))]
+  end)]
 
 end UniqueFactorizationMonoid
 
-theorem prime_factors_unique [CommCancelMonoidWithZero α] :
-  ∀ {f g : Multiset α},
-    (∀ x _ : x ∈ f, Prime x) → (∀ x _ : x ∈ g, Prime x) → f.prod ~ᵤ g.prod → Multiset.Rel Associated f g :=
-  by 
-    haveI  := Classical.decEq α <;>
-      exact
-        fun f =>
-          Multiset.induction_on f
-            (fun g _ hg h =>
-              Multiset.rel_zero_left.2$
-                Multiset.eq_zero_of_forall_not_mem$
-                  fun x hx =>
-                    have  : IsUnit g.prod :=
-                      by 
-                        simpa [associated_one_iff_is_unit] using h.symm
-                    (hg x hx).not_unit$
-                      is_unit_iff_dvd_one.2$ (Multiset.dvd_prod hx).trans (is_unit_iff_dvd_one.1 this))
-            fun p f ih g hf hg hfg =>
-              let ⟨b, hbg, hb⟩ :=
-                (exists_associated_mem_of_dvd_prod
-                    (hf p
-                      (by 
-                        simp ))
-                    fun q hq => hg _ hq)$
-                  hfg.dvd_iff_dvd_right.1
-                    (show p ∣ (p ::ₘ f).Prod by 
-                      simp )
-              by 
-                rw [←Multiset.cons_erase hbg]
-                exact
-                  Multiset.Rel.cons hb
-                    (ih
-                      (fun q hq =>
-                        hf _
-                          (by 
-                            simp [hq]))
-                      (fun q hq : q ∈ g.erase b => hg q (Multiset.mem_of_mem_erase hq))
-                      (Associated.of_mul_left
-                        (by 
-                          rwa [←Multiset.prod_cons, ←Multiset.prod_cons, Multiset.cons_erase hbg])
-                        hb
-                        (hf p
-                            (by 
-                              simp )).ne_zero))
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prime_factors_unique
+[comm_cancel_monoid_with_zero α] : ∀
+{f
+ g : multiset α}, ∀
+x «expr ∈ » f, prime x → ∀ x «expr ∈ » g, prime x → «expr ~ᵤ »(f.prod, g.prod) → multiset.rel associated f g :=
+by haveI [] [] [":=", expr classical.dec_eq α]; exact [expr λ
+ f, multiset.induction_on f (λ
+  g
+  _
+  hg
+  h, «expr $ »(multiset.rel_zero_left.2, «expr $ »(multiset.eq_zero_of_forall_not_mem, λ
+    x hx, have is_unit g.prod, by simpa [] [] [] ["[", expr associated_one_iff_is_unit, "]"] [] ["using", expr h.symm],
+    «expr $ »((hg x hx).not_unit, «expr $ »(is_unit_iff_dvd_one.2, (multiset.dvd_prod hx).trans (is_unit_iff_dvd_one.1 this)))))) (λ
+  p
+  f
+  ih
+  g
+  hf
+  hg
+  hfg, let ⟨b, hbg, hb⟩ := «expr $ »(exists_associated_mem_of_dvd_prod (hf p (by simp [] [] [] [] [] [])) (λ
+        q
+        hq, hg _ hq), hfg.dvd_iff_dvd_right.1 (show «expr ∣ »(p, «expr ::ₘ »(p, f).prod), by simp [] [] [] [] [] [])) in
+  begin
+    rw ["<-", expr multiset.cons_erase hbg] [],
+    exact [expr multiset.rel.cons hb (ih (λ
+       q
+       hq, hf _ (by simp [] [] [] ["[", expr hq, "]"] [] [])) (λ
+       (q)
+       (hq : «expr ∈ »(q, g.erase b)), hg q (multiset.mem_of_mem_erase hq)) (associated.of_mul_left (by rwa ["[", "<-", expr multiset.prod_cons, ",", "<-", expr multiset.prod_cons, ",", expr multiset.cons_erase hbg, "]"] []) hb (hf p (by simp [] [] [] [] [] [])).ne_zero))]
+  end)]
 
--- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If an irreducible has a prime factorization,
   then it is an associate of one of its prime factors. -/
 theorem prime_factors_irreducible
@@ -332,50 +298,39 @@ variable(pf : ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b _ : b ∈ f, P
 
 include pf
 
-theorem WfDvdMonoid.of_exists_prime_factors : WfDvdMonoid α :=
-  ⟨by 
-      classical 
-      apply RelHom.well_founded (RelHom.mk _ _) (WithTop.well_founded_lt Nat.lt_wf)
-      ·
-        intro a 
-        byCases' h : a = 0
-        ·
-          exact ⊤
-        exact (Classical.some (pf a h)).card 
-      rintro a b ⟨ane0, ⟨c, hc, b_eq⟩⟩
-      rw [dif_neg ane0]
-      byCases' h : b = 0
-      ·
-        simp [h, lt_top_iff_ne_top]
-      rw [dif_neg h, WithTop.coe_lt_coe]
-      have cne0 : c ≠ 0
-      ·
-        refine' mt (fun con => _) h 
-        rw [b_eq, Con, mul_zero]
-      calc Multiset.card (Classical.some (pf a ane0)) < _+Multiset.card (Classical.some (pf c cne0)) :=
-        lt_add_of_pos_right _
-          (multiset.card_pos.mpr
-            fun con =>
-              hc
-                (associated_one_iff_is_unit.mp
-                  _))_ = Multiset.card (Classical.some (pf a ane0)+Classical.some (pf c cne0)) :=
-        (Multiset.card_add _ _).symm _ = Multiset.card (Classical.some (pf b h)) :=
-        Multiset.card_eq_card_of_rel (prime_factors_unique _ (Classical.some_spec (pf _ h)).1 _)
-      ·
-        convert (Classical.some_spec (pf c cne0)).2.symm 
-        rw [Con, Multiset.prod_zero]
-      ·
-        intro x hadd 
-        rw [Multiset.mem_add] at hadd 
-        cases hadd <;> apply (Classical.some_spec (pf _ _)).1 _ hadd
-      ·
-        rw [Multiset.prod_add]
-        trans a*c
-        ·
-          apply Associated.mul_mul <;> apply (Classical.some_spec (pf _ _)).2
-        ·
-          rw [←b_eq]
-          apply (Classical.some_spec (pf _ _)).2.symm⟩
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem wf_dvd_monoid.of_exists_prime_factors : wf_dvd_monoid α :=
+⟨begin
+   classical,
+   apply [expr rel_hom.well_founded (rel_hom.mk _ _) (with_top.well_founded_lt nat.lt_wf)],
+   { intro [ident a],
+     by_cases [expr h, ":", expr «expr = »(a, 0)],
+     { exact [expr «expr⊤»()] },
+     exact [expr (classical.some (pf a h)).card] },
+   rintros [ident a, ident b, "⟨", ident ane0, ",", "⟨", ident c, ",", ident hc, ",", ident b_eq, "⟩", "⟩"],
+   rw [expr dif_neg ane0] [],
+   by_cases [expr h, ":", expr «expr = »(b, 0)],
+   { simp [] [] [] ["[", expr h, ",", expr lt_top_iff_ne_top, "]"] [] [] },
+   rw ["[", expr dif_neg h, ",", expr with_top.coe_lt_coe, "]"] [],
+   have [ident cne0] [":", expr «expr ≠ »(c, 0)] [],
+   { refine [expr mt (λ con, _) h],
+     rw ["[", expr b_eq, ",", expr con, ",", expr mul_zero, "]"] [] },
+   calc
+     «expr < »(multiset.card (classical.some (pf a ane0)), «expr + »(_, multiset.card (classical.some (pf c cne0)))) : lt_add_of_pos_right _ (multiset.card_pos.mpr (λ
+       con, hc (associated_one_iff_is_unit.mp _)))
+     «expr = »(..., multiset.card «expr + »(classical.some (pf a ane0), classical.some (pf c cne0))) : (multiset.card_add _ _).symm
+     «expr = »(..., multiset.card (classical.some (pf b h))) : multiset.card_eq_card_of_rel (prime_factors_unique _ (classical.some_spec (pf _ h)).1 _),
+   { convert [] [expr (classical.some_spec (pf c cne0)).2.symm] [],
+     rw ["[", expr con, ",", expr multiset.prod_zero, "]"] [] },
+   { intros [ident x, ident hadd],
+     rw [expr multiset.mem_add] ["at", ident hadd],
+     cases [expr hadd] []; apply [expr (classical.some_spec (pf _ _)).1 _ hadd] },
+   { rw [expr multiset.prod_add] [],
+     transitivity [expr «expr * »(a, c)],
+     { apply [expr associated.mul_mul]; apply [expr (classical.some_spec (pf _ _)).2] },
+     { rw ["<-", expr b_eq] [],
+       apply [expr (classical.some_spec (pf _ _)).2.symm] } }
+ end⟩
 
 theorem irreducible_iff_prime_of_exists_prime_factors {p : α} : Irreducible p ↔ Prime p :=
   by 
@@ -398,56 +353,44 @@ theorem UniqueFactorizationMonoid.iff_exists_prime_factors [CommCancelMonoidWith
   UniqueFactorizationMonoid α ↔ ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b _ : b ∈ f, Prime b) ∧ f.prod ~ᵤ a :=
   ⟨fun h => @UniqueFactorizationMonoid.exists_prime_factors _ _ h, UniqueFactorizationMonoid.of_exists_prime_factors⟩
 
-theorem irreducible_iff_prime_of_exists_unique_irreducible_factors [CommCancelMonoidWithZero α]
-  (eif : ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b _ : b ∈ f, Irreducible b) ∧ f.prod ~ᵤ a)
-  (uif :
-    ∀ f g : Multiset α,
-      (∀ x _ : x ∈ f, Irreducible x) → (∀ x _ : x ∈ g, Irreducible x) → f.prod ~ᵤ g.prod → Multiset.Rel Associated f g)
-  (p : α) : Irreducible p ↔ Prime p :=
-  ⟨by 
-      letI this := Classical.decEq α <;>
-        exact
-          fun hpi =>
-            ⟨hpi.ne_zero, hpi.1,
-              fun a b ⟨x, hx⟩ =>
-                if hab0 : (a*b) = 0 then
-                  (eq_zero_or_eq_zero_of_mul_eq_zero hab0).elim
-                    (fun ha0 =>
-                      by 
-                        simp [ha0])
-                    fun hb0 =>
-                      by 
-                        simp [hb0]
-                else
-                  have hx0 : x ≠ 0 :=
-                    fun hx0 =>
-                      by 
-                        simp_all 
-                  have ha0 : a ≠ 0 := left_ne_zero_of_mul hab0 
-                  have hb0 : b ≠ 0 := right_ne_zero_of_mul hab0 
-                  by 
-                    cases' eif x hx0 with fx hfx 
-                    cases' eif a ha0 with fa hfa 
-                    cases' eif b hb0 with fb hfb 
-                    have h : Multiset.Rel Associated (p ::ₘ fx) (fa+fb)
-                    ·
-                      apply uif
-                      ·
-                        exact fun i hi => (Multiset.mem_cons.1 hi).elim (fun hip => hip.symm ▸ hpi) (hfx.1 _)
-                      ·
-                        exact fun i hi => (Multiset.mem_add.1 hi).elim (hfa.1 _) (hfb.1 _)
-                      calc Multiset.prod (p ::ₘ fx) ~ᵤ a*b :=
-                        by 
-                          rw [hx, Multiset.prod_cons] <;> exact hfx.2.mul_left _ _ ~ᵤ fa.Prod*fb.Prod :=
-                        hfa.2.symm.mul_mul hfb.2.symm _ = _ :=
-                        by 
-                          rw [Multiset.prod_add]
-                    exact
-                      let ⟨q, hqf, hq⟩ := Multiset.exists_mem_of_rel_of_mem h (Multiset.mem_cons_self p _)
-                      (Multiset.mem_add.1 hqf).elim
-                        (fun hqa => Or.inl$ hq.dvd_iff_dvd_left.2$ hfa.2.dvd_iff_dvd_right.1 (Multiset.dvd_prod hqa))
-                        fun hqb => Or.inr$ hq.dvd_iff_dvd_left.2$ hfb.2.dvd_iff_dvd_right.1 (Multiset.dvd_prod hqb)⟩,
-    Prime.irreducible⟩
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem irreducible_iff_prime_of_exists_unique_irreducible_factors
+[comm_cancel_monoid_with_zero α]
+(eif : ∀
+ a : α, «expr ≠ »(a, 0) → «expr∃ , »((f : multiset α), «expr ∧ »(∀
+   b «expr ∈ » f, irreducible b, «expr ~ᵤ »(f.prod, a))))
+(uif : ∀
+ f
+ g : multiset α, ∀
+ x «expr ∈ » f, irreducible x → ∀
+ x «expr ∈ » g, irreducible x → «expr ~ᵤ »(f.prod, g.prod) → multiset.rel associated f g)
+(p : α) : «expr ↔ »(irreducible p, prime p) :=
+⟨by letI [] [] [":=", expr classical.dec_eq α]; exact [expr λ
+  hpi, ⟨hpi.ne_zero, hpi.1, λ
+   (a b)
+   ⟨x, hx⟩, if hab0 : «expr = »(«expr * »(a, b), 0) then (eq_zero_or_eq_zero_of_mul_eq_zero hab0).elim (λ
+    ha0, by simp [] [] [] ["[", expr ha0, "]"] [] []) (λ
+    hb0, by simp [] [] [] ["[", expr hb0, "]"] [] []) else have hx0 : «expr ≠ »(x, 0), from λ
+   hx0, by simp [] [] [] ["*"] [] ["at", "*"],
+   have ha0 : «expr ≠ »(a, 0), from left_ne_zero_of_mul hab0,
+   have hb0 : «expr ≠ »(b, 0), from right_ne_zero_of_mul hab0,
+   begin
+     cases [expr eif x hx0] ["with", ident fx, ident hfx],
+     cases [expr eif a ha0] ["with", ident fa, ident hfa],
+     cases [expr eif b hb0] ["with", ident fb, ident hfb],
+     have [ident h] [":", expr multiset.rel associated «expr ::ₘ »(p, fx) «expr + »(fa, fb)] [],
+     { apply [expr uif],
+       { exact [expr λ i hi, (multiset.mem_cons.1 hi).elim (λ hip, «expr ▸ »(hip.symm, hpi)) (hfx.1 _)] },
+       { exact [expr λ i hi, (multiset.mem_add.1 hi).elim (hfa.1 _) (hfb.1 _)] },
+       calc
+         «expr ~ᵤ »(multiset.prod «expr ::ₘ »(p, fx), «expr * »(a, b)) : by rw ["[", expr hx, ",", expr multiset.prod_cons, "]"] []; exact [expr hfx.2.mul_left _]
+         «expr ~ᵤ »(..., «expr * »(fa.prod, fb.prod)) : hfa.2.symm.mul_mul hfb.2.symm
+         «expr = »(..., _) : by rw [expr multiset.prod_add] [] },
+     exact [expr let ⟨q, hqf, hq⟩ := multiset.exists_mem_of_rel_of_mem h (multiset.mem_cons_self p _) in
+      (multiset.mem_add.1 hqf).elim (λ
+       hqa, «expr $ »(or.inl, «expr $ »(hq.dvd_iff_dvd_left.2, hfa.2.dvd_iff_dvd_right.1 (multiset.dvd_prod hqa)))) (λ
+       hqb, «expr $ »(or.inr, «expr $ »(hq.dvd_iff_dvd_left.2, hfb.2.dvd_iff_dvd_right.1 (multiset.dvd_prod hqb))))]
+   end⟩], prime.irreducible⟩
 
 theorem UniqueFactorizationMonoid.of_exists_unique_irreducible_factors [CommCancelMonoidWithZero α]
   (eif : ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b _ : b ∈ f, Irreducible b) ∧ f.prod ~ᵤ a)
@@ -554,16 +497,16 @@ theorem normalize_normalized_factor {a : α} : ∀ x : α, x ∈ normalized_fact
     obtain ⟨y, hy, rfl⟩ := Multiset.mem_map.1 hx 
     apply normalize_idem
 
-theorem normalized_factors_irreducible {a : α} (ha : Irreducible a) : normalized_factors a = {normalize a} :=
-  by 
-    obtain ⟨p, a_assoc, hp⟩ :=
-      prime_factors_irreducible ha ⟨prime_of_normalized_factor, normalized_factors_prod ha.ne_zero⟩
-    have p_mem : p ∈ normalized_factors a
-    ·
-      rw [hp]
-      exact Multiset.mem_singleton_self _ 
-    convert hp 
-    rwa [←normalize_normalized_factor p p_mem, normalize_eq_normalize_iff, dvd_dvd_iff_associated]
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem normalized_factors_irreducible {a : α} (ha : irreducible a) : «expr = »(normalized_factors a, {normalize a}) :=
+begin
+  obtain ["⟨", ident p, ",", ident a_assoc, ",", ident hp, "⟩", ":=", expr prime_factors_irreducible ha ⟨prime_of_normalized_factor, normalized_factors_prod ha.ne_zero⟩],
+  have [ident p_mem] [":", expr «expr ∈ »(p, normalized_factors a)] [],
+  { rw [expr hp] [],
+    exact [expr multiset.mem_singleton_self _] },
+  convert [] [expr hp] [],
+  rwa ["[", "<-", expr normalize_normalized_factor p p_mem, ",", expr normalize_eq_normalize_iff, ",", expr dvd_dvd_iff_associated, "]"] []
+end
 
 theorem exists_mem_normalized_factors_of_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p) :
   p ∣ a → ∃ (q : _)(_ : q ∈ normalized_factors a), p ~ᵤ q :=
@@ -600,37 +543,32 @@ theorem normalized_factors_one : normalized_factors (1 : α) = 0 :=
     apply factors_unique irreducible_of_normalized_factor
     ·
       intro x hx 
-      exFalso 
+      exfalso 
       apply Multiset.not_mem_zero x hx
     ·
       simp [normalized_factors_prod (@one_ne_zero α _ _)]
     infer_instance
 
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem normalized_factors_mul {x y : α} (hx : x ≠ 0) (hy : y ≠ 0) :
-  normalized_factors (x*y) = normalized_factors x+normalized_factors y :=
-  by 
-    have h : (normalize : α → α) = (Associates.out ∘ Associates.mk)
-    ·
-      ext 
-      rw [Function.comp_apply, Associates.out_mk]
-    rw [←Multiset.map_id' (normalized_factors (x*y)), ←Multiset.map_id' (normalized_factors x),
-      ←Multiset.map_id' (normalized_factors y), ←Multiset.map_congr normalize_normalized_factor,
-      ←Multiset.map_congr normalize_normalized_factor, ←Multiset.map_congr normalize_normalized_factor,
-      ←Multiset.map_add, h, ←Multiset.map_map Associates.out, eq_comm, ←Multiset.map_map Associates.out]
-    refine' congr rfl _ 
-    apply Multiset.map_mk_eq_map_mk_of_rel 
-    apply factors_unique
-    ·
-      intro x hx 
-      rcases Multiset.mem_add.1 hx with (hx | hx) <;> exact irreducible_of_normalized_factor x hx
-    ·
-      exact irreducible_of_normalized_factor
-    ·
-      rw [Multiset.prod_add]
-      exact
-        ((normalized_factors_prod hx).mul_mul (normalized_factors_prod hy)).trans
-          (normalized_factors_prod (mul_ne_zero hx hy)).symm
+theorem normalized_factors_mul
+{x y : α}
+(hx : «expr ≠ »(x, 0))
+(hy : «expr ≠ »(y, 0)) : «expr = »(normalized_factors «expr * »(x, y), «expr + »(normalized_factors x, normalized_factors y)) :=
+begin
+  have [ident h] [":", expr «expr = »((normalize : α → α), «expr ∘ »(associates.out, associates.mk))] [],
+  { ext [] [] [],
+    rw ["[", expr function.comp_apply, ",", expr associates.out_mk, "]"] [] },
+  rw ["[", "<-", expr multiset.map_id' (normalized_factors «expr * »(x, y)), ",", "<-", expr multiset.map_id' (normalized_factors x), ",", "<-", expr multiset.map_id' (normalized_factors y), ",", "<-", expr multiset.map_congr normalize_normalized_factor, ",", "<-", expr multiset.map_congr normalize_normalized_factor, ",", "<-", expr multiset.map_congr normalize_normalized_factor, ",", "<-", expr multiset.map_add, ",", expr h, ",", "<-", expr multiset.map_map associates.out, ",", expr eq_comm, ",", "<-", expr multiset.map_map associates.out, "]"] [],
+  refine [expr congr rfl _],
+  apply [expr multiset.map_mk_eq_map_mk_of_rel],
+  apply [expr factors_unique],
+  { intros [ident x, ident hx],
+    rcases [expr multiset.mem_add.1 hx, "with", ident hx, "|", ident hx]; exact [expr irreducible_of_normalized_factor x hx] },
+  { exact [expr irreducible_of_normalized_factor] },
+  { rw [expr multiset.prod_add] [],
+    exact [expr ((normalized_factors_prod hx).mul_mul (normalized_factors_prod hy)).trans (normalized_factors_prod (mul_ne_zero hx hy)).symm] }
+end
 
 @[simp]
 theorem normalized_factors_pow {x : α} (n : ℕ) : normalized_factors (x^n) = n • normalized_factors x :=
@@ -678,40 +616,29 @@ noncomputable theory
 
 variable[CommCancelMonoidWithZero α][Nontrivial α][UniqueFactorizationMonoid α]
 
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Noncomputably defines a `normalization_monoid` structure on a `unique_factorization_monoid`. -/
-protected def NormalizationMonoid : NormalizationMonoid α :=
-  normalizationMonoidOfMonoidHomRightInverse
-    { toFun :=
-        fun a : Associates α =>
-          if a = 0 then 0 else
-            ((normalized_factors a).map (Classical.some mk_surjective.HasRightInverse : Associates α → α)).Prod,
-      map_one' :=
-        by 
-          simp ,
-      map_mul' :=
-        fun x y =>
-          by 
-            byCases' hx : x = 0
-            ·
-              simp [hx]
-            byCases' hy : y = 0
-            ·
-              simp [hy]
-            simp [hx, hy] }
-    (by 
-      intro x 
-      dsimp 
-      byCases' hx : x = 0
-      ·
-        simp [hx]
-      have h :
-        (Associates.mkMonoidHom ∘ Classical.some mk_surjective.has_right_inverse) = (id : Associates α → Associates α)
-      ·
-        ext x 
-        rw [Function.comp_apply, mk_monoid_hom_apply, Classical.some_spec mk_surjective.has_right_inverse x]
-        rfl 
-      rw [if_neg hx, ←mk_monoid_hom_apply, MonoidHom.map_multiset_prod, map_map, h, map_id, ←associated_iff_eq]
-      apply normalized_factors_prod hx)
+protected
+def normalization_monoid : normalization_monoid α :=
+normalization_monoid_of_monoid_hom_right_inverse { to_fun := λ
+  a : associates α, if «expr = »(a, 0) then 0 else ((normalized_factors a).map (classical.some mk_surjective.has_right_inverse : associates α → α)).prod,
+  map_one' := by simp [] [] [] [] [] [],
+  map_mul' := λ x y, by { by_cases [expr hx, ":", expr «expr = »(x, 0)],
+    { simp [] [] [] ["[", expr hx, "]"] [] [] },
+    by_cases [expr hy, ":", expr «expr = »(y, 0)],
+    { simp [] [] [] ["[", expr hy, "]"] [] [] },
+    simp [] [] [] ["[", expr hx, ",", expr hy, "]"] [] [] } } (begin
+   intro [ident x],
+   dsimp [] [] [] [],
+   by_cases [expr hx, ":", expr «expr = »(x, 0)],
+   { simp [] [] [] ["[", expr hx, "]"] [] [] },
+   have [ident h] [":", expr «expr = »(«expr ∘ »(associates.mk_monoid_hom, classical.some mk_surjective.has_right_inverse), (id : associates α → associates α))] [],
+   { ext [] [ident x] [],
+     rw ["[", expr function.comp_apply, ",", expr mk_monoid_hom_apply, ",", expr classical.some_spec mk_surjective.has_right_inverse x, "]"] [],
+     refl },
+   rw ["[", expr if_neg hx, ",", "<-", expr mk_monoid_hom_apply, ",", expr monoid_hom.map_multiset_prod, ",", expr map_map, ",", expr h, ",", expr map_id, ",", "<-", expr associated_iff_eq, "]"] [],
+   apply [expr normalized_factors_prod hx]
+ end)
 
 instance  : Inhabited (NormalizationMonoid α) :=
   ⟨UniqueFactorizationMonoid.normalizationMonoid⟩
@@ -733,26 +660,27 @@ theorem no_factors_of_no_prime_factors {a b : R} (ha : a ≠ 0) (h : ∀ {d}, d 
       (fun x hx _ _ => hx)
       fun d q hp hq ih dvd_a dvd_b => absurd hq (h (dvd_of_mul_right_dvd dvd_a) (dvd_of_mul_right_dvd dvd_b))
 
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Euclid's lemma: if `a ∣ b * c` and `a` and `c` have no common prime factors, `a ∣ b`.
 Compare `is_coprime.dvd_of_dvd_mul_left`. -/
-theorem dvd_of_dvd_mul_left_of_no_prime_factors {a b c : R} (ha : a ≠ 0) :
-  (∀ {d}, d ∣ a → d ∣ c → ¬Prime d) → (a ∣ b*c) → a ∣ b :=
-  by 
-    refine' induction_on_prime c _ _ _
-    ·
-      intro no_factors 
-      simp only [dvd_zero, mul_zero, forall_prop_of_true]
-      haveI  := Classical.propDecidable 
-      exact is_unit_iff_forall_dvd.mp (no_factors_of_no_prime_factors ha (@no_factors) (dvd_refl a) (dvd_zero a)) _
-    ·
-      rintro _ ⟨x, rfl⟩ _ a_dvd_bx 
-      apply units.dvd_mul_right.mp a_dvd_bx
-    ·
-      intro c p hc hp ih no_factors a_dvd_bpc 
-      apply ih fun q dvd_a dvd_c hq => no_factors dvd_a (dvd_c.mul_left _) hq 
-      rw [mul_left_commₓ] at a_dvd_bpc 
-      refine' Or.resolve_left (hp.left_dvd_or_dvd_right_of_dvd_mul a_dvd_bpc) fun h => _ 
-      exact no_factors h (dvd_mul_right p c) hp
+theorem dvd_of_dvd_mul_left_of_no_prime_factors
+{a b c : R}
+(ha : «expr ≠ »(a, 0)) : ∀
+{d}, «expr ∣ »(d, a) → «expr ∣ »(d, c) → «expr¬ »(prime d) → «expr ∣ »(a, «expr * »(b, c)) → «expr ∣ »(a, b) :=
+begin
+  refine [expr induction_on_prime c _ _ _],
+  { intro [ident no_factors],
+    simp [] [] ["only"] ["[", expr dvd_zero, ",", expr mul_zero, ",", expr forall_prop_of_true, "]"] [] [],
+    haveI [] [] [":=", expr classical.prop_decidable],
+    exact [expr is_unit_iff_forall_dvd.mp (no_factors_of_no_prime_factors ha @no_factors (dvd_refl a) (dvd_zero a)) _] },
+  { rintros ["_", "⟨", ident x, ",", ident rfl, "⟩", "_", ident a_dvd_bx],
+    apply [expr units.dvd_mul_right.mp a_dvd_bx] },
+  { intros [ident c, ident p, ident hc, ident hp, ident ih, ident no_factors, ident a_dvd_bpc],
+    apply [expr ih (λ q dvd_a dvd_c hq, no_factors dvd_a (dvd_c.mul_left _) hq)],
+    rw [expr mul_left_comm] ["at", ident a_dvd_bpc],
+    refine [expr or.resolve_left (hp.left_dvd_or_dvd_right_of_dvd_mul a_dvd_bpc) (λ h, _)],
+    exact [expr no_factors h (dvd_mul_right p c) hp] }
+end
 
 /-- Euclid's lemma: if `a ∣ b * c` and `a` and `b` have no common prime factors, `a ∣ c`.
 Compare `is_coprime.dvd_of_dvd_mul_right`. -/
@@ -761,46 +689,42 @@ theorem dvd_of_dvd_mul_right_of_no_prime_factors {a b c : R} (ha : a ≠ 0)
   by 
     simpa [mul_commₓ b c] using dvd_of_dvd_mul_left_of_no_prime_factors ha @no_factors
 
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `a ≠ 0, b` are elements of a unique factorization domain, then dividing
 out their common factor `c'` gives `a'` and `b'` with no factors in common. -/
-theorem exists_reduced_factors :
-  ∀ a _ : a ≠ (0 : R) b, ∃ a' b' c', (∀ {d}, d ∣ a' → d ∣ b' → IsUnit d) ∧ (c'*a') = a ∧ (c'*b') = b :=
-  by 
-    haveI  := Classical.propDecidable 
-    intro a 
-    refine' induction_on_prime a _ _ _
-    ·
-      intros 
-      contradiction
-    ·
-      intro a a_unit a_ne_zero b 
-      use a, b, 1
-      split 
-      ·
-        intro p p_dvd_a _ 
-        exact is_unit_of_dvd_unit p_dvd_a a_unit
-      ·
-        simp 
-    ·
-      intro a p a_ne_zero p_prime ih_a pa_ne_zero b 
-      byCases' p ∣ b
-      ·
-        rcases h with ⟨b, rfl⟩
-        obtain ⟨a', b', c', no_factor, ha', hb'⟩ := ih_a a_ne_zero b 
-        refine' ⟨a', b', p*c', @no_factor, _, _⟩
-        ·
-          rw [mul_assocₓ, ha']
-        ·
-          rw [mul_assocₓ, hb']
-      ·
-        obtain ⟨a', b', c', coprime, rfl, rfl⟩ := ih_a a_ne_zero b 
-        refine' ⟨p*a', b', c', _, mul_left_commₓ _ _ _, rfl⟩
-        intro q q_dvd_pa' q_dvd_b' 
-        cases' p_prime.left_dvd_or_dvd_right_of_dvd_mul q_dvd_pa' with p_dvd_q q_dvd_a'
-        ·
-          have  : p ∣ c'*b' := dvd_mul_of_dvd_right (p_dvd_q.trans q_dvd_b') _ 
-          contradiction 
-        exact coprime q_dvd_a' q_dvd_b'
+theorem exists_reduced_factors : ∀
+(a «expr ≠ » (0 : R))
+(b), «expr∃ , »((a'
+  b'
+  c'), «expr ∧ »(∀
+  {d}, «expr ∣ »(d, a') → «expr ∣ »(d, b') → is_unit d, «expr ∧ »(«expr = »(«expr * »(c', a'), a), «expr = »(«expr * »(c', b'), b)))) :=
+begin
+  haveI [] [] [":=", expr classical.prop_decidable],
+  intros [ident a],
+  refine [expr induction_on_prime a _ _ _],
+  { intros [],
+    contradiction },
+  { intros [ident a, ident a_unit, ident a_ne_zero, ident b],
+    use ["[", expr a, ",", expr b, ",", expr 1, "]"],
+    split,
+    { intros [ident p, ident p_dvd_a, "_"],
+      exact [expr is_unit_of_dvd_unit p_dvd_a a_unit] },
+    { simp [] [] [] [] [] [] } },
+  { intros [ident a, ident p, ident a_ne_zero, ident p_prime, ident ih_a, ident pa_ne_zero, ident b],
+    by_cases [expr «expr ∣ »(p, b)],
+    { rcases [expr h, "with", "⟨", ident b, ",", ident rfl, "⟩"],
+      obtain ["⟨", ident a', ",", ident b', ",", ident c', ",", ident no_factor, ",", ident ha', ",", ident hb', "⟩", ":=", expr ih_a a_ne_zero b],
+      refine [expr ⟨a', b', «expr * »(p, c'), @no_factor, _, _⟩],
+      { rw ["[", expr mul_assoc, ",", expr ha', "]"] [] },
+      { rw ["[", expr mul_assoc, ",", expr hb', "]"] [] } },
+    { obtain ["⟨", ident a', ",", ident b', ",", ident c', ",", ident coprime, ",", ident rfl, ",", ident rfl, "⟩", ":=", expr ih_a a_ne_zero b],
+      refine [expr ⟨«expr * »(p, a'), b', c', _, mul_left_comm _ _ _, rfl⟩],
+      intros [ident q, ident q_dvd_pa', ident q_dvd_b'],
+      cases [expr p_prime.left_dvd_or_dvd_right_of_dvd_mul q_dvd_pa'] ["with", ident p_dvd_q, ident q_dvd_a'],
+      { have [] [":", expr «expr ∣ »(p, «expr * »(c', b'))] [":=", expr dvd_mul_of_dvd_right (p_dvd_q.trans q_dvd_b') _],
+        contradiction },
+      exact [expr coprime q_dvd_a' q_dvd_b'] } }
+end
 
 theorem exists_reduced_factors' (a b : R) (hb : b ≠ 0) :
   ∃ a' b' c', (∀ {d}, d ∣ a' → d ∣ b' → IsUnit d) ∧ (c'*a') = a ∧ (c'*b') = b :=
@@ -1083,38 +1007,35 @@ theorem map_subtype_coe_factors' {a : α} : (factors' a).map coeₓ = (factors a
   by 
     simp [factors', Multiset.map_pmap, Multiset.pmap_eq_map]
 
-theorem factors'_cong {a b : α} (h : a ~ᵤ b) : factors' a = factors' b :=
-  by 
-    obtain rfl | hb := eq_or_ne b 0
-    ·
-      rw [associated_zero_iff_eq_zero] at h 
-      rw [h]
-    have ha : a ≠ 0
-    ·
-      contrapose! hb with ha 
-      rw [←associated_zero_iff_eq_zero, ←ha]
-      exact h.symm 
-    rw [←Multiset.map_eq_map Subtype.coe_injective, map_subtype_coe_factors', map_subtype_coe_factors',
-      ←rel_associated_iff_map_eq_map]
-    exact
-      factors_unique irreducible_of_factor irreducible_of_factor
-        ((factors_prod ha).trans$ h.trans$ (factors_prod hb).symm)
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem factors'_cong {a b : α} (h : «expr ~ᵤ »(a, b)) : «expr = »(factors' a, factors' b) :=
+begin
+  obtain [ident rfl, "|", ident hb, ":=", expr eq_or_ne b 0],
+  { rw [expr associated_zero_iff_eq_zero] ["at", ident h],
+    rw [expr h] [] },
+  have [ident ha] [":", expr «expr ≠ »(a, 0)] [],
+  { contrapose ["!"] [ident hb, "with", ident ha],
+    rw ["[", "<-", expr associated_zero_iff_eq_zero, ",", "<-", expr ha, "]"] [],
+    exact [expr h.symm] },
+  rw ["[", "<-", expr multiset.map_eq_map subtype.coe_injective, ",", expr map_subtype_coe_factors', ",", expr map_subtype_coe_factors', ",", "<-", expr rel_associated_iff_map_eq_map, "]"] [],
+  exact [expr factors_unique irreducible_of_factor irreducible_of_factor «expr $ »((factors_prod ha).trans, «expr $ »(h.trans, (factors_prod hb).symm))]
+end
 
 include dec'
 
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- This returns the multiset of irreducible factors of an associate as a `factor_set`,
-  a multiset of irreducible associates `with_top`. -/
-noncomputable def factors (a : Associates α) : factor_set α :=
-  by 
-    refine' if h : a = 0 then ⊤ else Quotientₓ.hrecOn a (fun x h => some$ factors' x) _ h 
-    intro a b hab 
-    apply Function.hfunext
-    ·
-      have  : a ~ᵤ 0 ↔ b ~ᵤ 0 
-      exact Iff.intro (fun ha0 => hab.symm.trans ha0) fun hb0 => hab.trans hb0 
-      simp only [associated_zero_iff_eq_zero] at this 
-      simp only [quotient_mk_eq_mk, this, mk_eq_zero]
-    exact fun ha hb eq => heq_of_eq$ congr_argₓ some$ factors'_cong hab
+  a multiset of irreducible associates `with_top`. -/ noncomputable def factors (a : associates α) : factor_set α :=
+begin
+  refine [expr if h : «expr = »(a, 0) then «expr⊤»() else quotient.hrec_on a (λ x h, «expr $ »(some, factors' x)) _ h],
+  assume [binders (a b hab)],
+  apply [expr function.hfunext],
+  { have [] [":", expr «expr ↔ »(«expr ~ᵤ »(a, 0), «expr ~ᵤ »(b, 0))] [],
+    from [expr iff.intro (assume ha0, hab.symm.trans ha0) (assume hb0, hab.trans hb0)],
+    simp [] [] ["only"] ["[", expr associated_zero_iff_eq_zero, "]"] [] ["at", ident this],
+    simp [] [] ["only"] ["[", expr quotient_mk_eq_mk, ",", expr this, ",", expr mk_eq_zero, "]"] [] [] },
+  exact [expr assume ha hb eq, «expr $ »(heq_of_eq, «expr $ »(congr_arg some, factors'_cong hab))]
+end
 
 @[simp]
 theorem factors_0 : (0 : Associates α).factors = ⊤ :=
@@ -1154,13 +1075,14 @@ theorem eq_of_factors_eq_factors {a b : Associates α} (h : a.factors = b.factor
 
 omit dec dec'
 
-theorem eq_of_prod_eq_prod [Nontrivial α] {a b : factor_set α} (h : a.prod = b.prod) : a = b :=
-  by 
-    classical 
-    have  : a.prod.factors = b.prod.factors
-    ·
-      rw [h]
-    rwa [prod_factors, prod_factors] at this
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_of_prod_eq_prod [nontrivial α] {a b : factor_set α} (h : «expr = »(a.prod, b.prod)) : «expr = »(a, b) :=
+begin
+  classical,
+  have [] [":", expr «expr = »(a.prod.factors, b.prod.factors)] [],
+  by rw [expr h] [],
+  rwa ["[", expr prod_factors, ",", expr prod_factors, "]"] ["at", ident this]
+end
 
 include dec dec'
 
@@ -1237,13 +1159,17 @@ theorem dvd_of_mem_factors {a p : Associates α} {hp : Irreducible p} (hm : p �
 
 omit dec'
 
-theorem dvd_of_mem_factors' {a : α} {p : Associates α} {hp : Irreducible p} {hz : a ≠ 0}
-  (h_mem : Subtype.mk p hp ∈ factors' a) : p ∣ Associates.mk a :=
-  by 
-    haveI  := Classical.decEq (Associates α)
-    apply @dvd_of_mem_factors _ _ _ _ _ _ _ _ hp 
-    rw [factors_mk _ hz]
-    apply mem_factor_set_some.2 h_mem
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dvd_of_mem_factors'
+{a : α}
+{p : associates α}
+{hp : irreducible p}
+{hz : «expr ≠ »(a, 0)}
+(h_mem : «expr ∈ »(subtype.mk p hp, factors' a)) : «expr ∣ »(p, associates.mk a) :=
+by { haveI [] [] [":=", expr classical.dec_eq (associates α)],
+  apply [expr @dvd_of_mem_factors _ _ _ _ _ _ _ _ hp],
+  rw [expr factors_mk _ hz] [],
+  apply [expr mem_factor_set_some.2 h_mem] }
 
 omit dec_irr
 
@@ -1288,31 +1214,32 @@ theorem mem_factors_iff_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p) :
     ·
       apply mem_factors_of_dvd ha0 hp
 
-theorem exists_prime_dvd_of_not_inf_one {a b : α} (ha : a ≠ 0) (hb : b ≠ 0) (h : Associates.mk a⊓Associates.mk b ≠ 1) :
-  ∃ p : α, Prime p ∧ p ∣ a ∧ p ∣ b :=
-  by 
-    have hz : factors (Associates.mk a)⊓factors (Associates.mk b) ≠ 0
-    ·
-      contrapose! h with hf 
-      change (factors (Associates.mk a)⊓factors (Associates.mk b)).Prod = 1
-      rw [hf]
-      exact Multiset.prod_zero 
-    rw [factors_mk a ha, factors_mk b hb, ←WithTop.coe_inf] at hz 
-    obtain ⟨⟨p0, p0_irr⟩, p0_mem⟩ := Multiset.exists_mem_of_ne_zero ((mt with_top.coe_eq_coe.mpr) hz)
-    rw [Multiset.inf_eq_inter] at p0_mem 
-    obtain ⟨p, rfl⟩ : ∃ p, Associates.mk p = p0 := Quot.exists_rep p0 
-    refine' ⟨p, _, _, _⟩
-    ·
-      rw [←irreducible_iff_prime, ←irreducible_mk]
-      exact p0_irr
-    ·
-      apply dvd_of_mk_le_mk 
-      apply dvd_of_mem_factors' (multiset.mem_inter.mp p0_mem).left 
-      apply ha
-    ·
-      apply dvd_of_mk_le_mk 
-      apply dvd_of_mem_factors' (multiset.mem_inter.mp p0_mem).right 
-      apply hb
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_prime_dvd_of_not_inf_one
+{a b : α}
+(ha : «expr ≠ »(a, 0))
+(hb : «expr ≠ »(b, 0))
+(h : «expr ≠ »(«expr ⊓ »(associates.mk a, associates.mk b), 1)) : «expr∃ , »((p : α), «expr ∧ »(prime p, «expr ∧ »(«expr ∣ »(p, a), «expr ∣ »(p, b)))) :=
+begin
+  have [ident hz] [":", expr «expr ≠ »(«expr ⊓ »(factors (associates.mk a), factors (associates.mk b)), 0)] [],
+  { contrapose ["!"] [ident h, "with", ident hf],
+    change [expr «expr = »(«expr ⊓ »(factors (associates.mk a), factors (associates.mk b)).prod, 1)] [] [],
+    rw [expr hf] [],
+    exact [expr multiset.prod_zero] },
+  rw ["[", expr factors_mk a ha, ",", expr factors_mk b hb, ",", "<-", expr with_top.coe_inf, "]"] ["at", ident hz],
+  obtain ["⟨", "⟨", ident p0, ",", ident p0_irr, "⟩", ",", ident p0_mem, "⟩", ":=", expr multiset.exists_mem_of_ne_zero (mt with_top.coe_eq_coe.mpr hz)],
+  rw [expr multiset.inf_eq_inter] ["at", ident p0_mem],
+  obtain ["⟨", ident p, ",", ident rfl, "⟩", ":", expr «expr∃ , »((p), «expr = »(associates.mk p, p0)), ":=", expr quot.exists_rep p0],
+  refine [expr ⟨p, _, _, _⟩],
+  { rw ["[", "<-", expr irreducible_iff_prime, ",", "<-", expr irreducible_mk, "]"] [],
+    exact [expr p0_irr] },
+  { apply [expr dvd_of_mk_le_mk],
+    apply [expr dvd_of_mem_factors' (multiset.mem_inter.mp p0_mem).left],
+    apply [expr ha] },
+  { apply [expr dvd_of_mk_le_mk],
+    apply [expr dvd_of_mem_factors' (multiset.mem_inter.mp p0_mem).right],
+    apply [expr hb] }
+end
 
 theorem coprime_iff_inf_one [Nontrivial α] {a b : α} (ha0 : a ≠ 0) (hb0 : b ≠ 0) :
   Associates.mk a⊓Associates.mk b = 1 ↔ ∀ {d : α}, d ∣ a → d ∣ b → ¬Prime d :=
@@ -1445,24 +1372,30 @@ theorem dvd_count_pow [Nontrivial α] {a : Associates α} (ha : a ≠ 0) {p : As
     rw [count_pow ha hp]
     apply dvd_mul_right
 
-theorem is_pow_of_dvd_count [Nontrivial α] {a : Associates α} (ha : a ≠ 0) {k : ℕ}
-  (hk : ∀ p : Associates α hp : Irreducible p, k ∣ count p a.factors) : ∃ b : Associates α, a = (b^k) :=
-  by 
-    obtain ⟨a0, hz, rfl⟩ := exists_non_zero_rep ha 
-    rw [factors_mk a0 hz] at hk 
-    have hk' : ∀ p, p ∈ factors' a0 → k ∣ (factors' a0).count p
-    ·
-      rintro p -
-      have pp : p = ⟨p.val, p.2⟩
-      ·
-        simp only [Subtype.coe_eta, Subtype.val_eq_coe]
-      rw [pp, ←count_some p.2]
-      exact hk p.val p.2
-    obtain ⟨u, hu⟩ := Multiset.exists_smul_of_dvd_count _ hk' 
-    use (u : factor_set α).Prod 
-    apply eq_of_factors_eq_factors 
-    rw [pow_factors, prod_factors, factors_mk a0 hz, ←WithTop.some_eq_coe, hu]
-    exact WithBot.coe_nsmul u k
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_pow_of_dvd_count
+[nontrivial α]
+{a : associates α}
+(ha : «expr ≠ »(a, 0))
+{k : exprℕ()}
+(hk : ∀
+ (p : associates α)
+ (hp : irreducible p), «expr ∣ »(k, count p a.factors)) : «expr∃ , »((b : associates α), «expr = »(a, «expr ^ »(b, k))) :=
+begin
+  obtain ["⟨", ident a0, ",", ident hz, ",", ident rfl, "⟩", ":=", expr exists_non_zero_rep ha],
+  rw ["[", expr factors_mk a0 hz, "]"] ["at", ident hk],
+  have [ident hk'] [":", expr ∀ p, «expr ∈ »(p, factors' a0) → «expr ∣ »(k, (factors' a0).count p)] [],
+  { rintros [ident p, "-"],
+    have [ident pp] [":", expr «expr = »(p, ⟨p.val, p.2⟩)] [],
+    { simp [] [] ["only"] ["[", expr subtype.coe_eta, ",", expr subtype.val_eq_coe, "]"] [] [] },
+    rw ["[", expr pp, ",", "<-", expr count_some p.2, "]"] [],
+    exact [expr hk p.val p.2] },
+  obtain ["⟨", ident u, ",", ident hu, "⟩", ":=", expr multiset.exists_smul_of_dvd_count _ hk'],
+  use [expr (u : factor_set α).prod],
+  apply [expr eq_of_factors_eq_factors],
+  rw ["[", expr pow_factors, ",", expr prod_factors, ",", expr factors_mk a0 hz, ",", "<-", expr with_top.some_eq_coe, ",", expr hu, "]"] [],
+  exact [expr with_bot.coe_nsmul u k]
+end
 
 omit dec
 
@@ -1499,44 +1432,40 @@ theorem Associates.quot_out {α : Type _} [CommMonoidₓ α] (a : Associates α)
   by 
     rw [←quot_mk_eq_mk, Quot.out_eq]
 
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `to_gcd_monoid` constructs a GCD monoid out of a unique factorization domain. -/
-noncomputable def UniqueFactorizationMonoid.toGcdMonoid (α : Type _) [CommCancelMonoidWithZero α] [Nontrivial α]
-  [UniqueFactorizationMonoid α] [DecidableEq (Associates α)] [DecidableEq α] : GcdMonoid α :=
-  { gcd := fun a b => Quot.out (Associates.mk a⊓Associates.mk b : Associates α),
-    lcm := fun a b => Quot.out (Associates.mk a⊔Associates.mk b : Associates α),
-    gcd_dvd_left :=
-      fun a b =>
-        by 
-          rw [←mk_dvd_mk, (Associates.mk a⊓Associates.mk b).quot_out, dvd_eq_le]
-          exact inf_le_left,
-    gcd_dvd_right :=
-      fun a b =>
-        by 
-          rw [←mk_dvd_mk, (Associates.mk a⊓Associates.mk b).quot_out, dvd_eq_le]
-          exact inf_le_right,
-    dvd_gcd :=
-      fun a b c hac hab =>
-        by 
-          rw [←mk_dvd_mk, (Associates.mk c⊓Associates.mk b).quot_out, dvd_eq_le, le_inf_iff, mk_le_mk_iff_dvd_iff,
-            mk_le_mk_iff_dvd_iff]
-          exact ⟨hac, hab⟩,
-    lcm_zero_left :=
-      fun a =>
-        by 
-          have  : Associates.mk (0 : α) = ⊤ := rfl 
-          rw [this, top_sup_eq, ←this, ←associated_zero_iff_eq_zero, ←mk_eq_mk_iff_associated, ←associated_iff_eq,
-            Associates.quot_out],
-    lcm_zero_right :=
-      fun a =>
-        by 
-          have  : Associates.mk (0 : α) = ⊤ := rfl 
-          rw [this, sup_top_eq, ←this, ←associated_zero_iff_eq_zero, ←mk_eq_mk_iff_associated, ←associated_iff_eq,
-            Associates.quot_out],
-    gcd_mul_lcm :=
-      fun a b =>
-        by 
-          rw [←mk_eq_mk_iff_associated, ←Associates.mk_mul_mk, ←associated_iff_eq, Associates.quot_out,
-            Associates.quot_out, mul_commₓ, sup_mul_inf, Associates.mk_mul_mk] }
+noncomputable
+def unique_factorization_monoid.to_gcd_monoid
+(α : Type*)
+[comm_cancel_monoid_with_zero α]
+[nontrivial α]
+[unique_factorization_monoid α]
+[decidable_eq (associates α)]
+[decidable_eq α] : gcd_monoid α :=
+{ gcd := λ a b, quot.out («expr ⊓ »(associates.mk a, associates.mk b) : associates α),
+  lcm := λ a b, quot.out («expr ⊔ »(associates.mk a, associates.mk b) : associates α),
+  gcd_dvd_left := λ
+  a
+  b, by { rw ["[", "<-", expr mk_dvd_mk, ",", expr «expr ⊓ »(associates.mk a, associates.mk b).quot_out, ",", expr dvd_eq_le, "]"] [],
+    exact [expr inf_le_left] },
+  gcd_dvd_right := λ
+  a
+  b, by { rw ["[", "<-", expr mk_dvd_mk, ",", expr «expr ⊓ »(associates.mk a, associates.mk b).quot_out, ",", expr dvd_eq_le, "]"] [],
+    exact [expr inf_le_right] },
+  dvd_gcd := λ
+  a
+  b
+  c
+  hac
+  hab, by { rw ["[", "<-", expr mk_dvd_mk, ",", expr «expr ⊓ »(associates.mk c, associates.mk b).quot_out, ",", expr dvd_eq_le, ",", expr le_inf_iff, ",", expr mk_le_mk_iff_dvd_iff, ",", expr mk_le_mk_iff_dvd_iff, "]"] [],
+    exact [expr ⟨hac, hab⟩] },
+  lcm_zero_left := λ a, by { have [] [":", expr «expr = »(associates.mk (0 : α), «expr⊤»())] [":=", expr rfl],
+    rw ["[", expr this, ",", expr top_sup_eq, ",", "<-", expr this, ",", "<-", expr associated_zero_iff_eq_zero, ",", "<-", expr mk_eq_mk_iff_associated, ",", "<-", expr associated_iff_eq, ",", expr associates.quot_out, "]"] [] },
+  lcm_zero_right := λ a, by { have [] [":", expr «expr = »(associates.mk (0 : α), «expr⊤»())] [":=", expr rfl],
+    rw ["[", expr this, ",", expr sup_top_eq, ",", "<-", expr this, ",", "<-", expr associated_zero_iff_eq_zero, ",", "<-", expr mk_eq_mk_iff_associated, ",", "<-", expr associated_iff_eq, ",", expr associates.quot_out, "]"] [] },
+  gcd_mul_lcm := λ
+  a
+  b, by { rw ["[", "<-", expr mk_eq_mk_iff_associated, ",", "<-", expr associates.mk_mul_mk, ",", "<-", expr associated_iff_eq, ",", expr associates.quot_out, ",", expr associates.quot_out, ",", expr mul_comm, ",", expr sup_mul_inf, ",", expr associates.mk_mul_mk, "]"] [] } }
 
 /-- `to_normalized_gcd_monoid` constructs a GCD monoid out of a normalization on a
   unique factorization domain. -/
@@ -1577,45 +1506,44 @@ end
 
 namespace UniqueFactorizationMonoid
 
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `y` is a nonzero element of a unique factorization monoid with finitely
 many units (e.g. `ℤ`, `ideal (ring_of_integers K)`), it has finitely many divisors. -/
-noncomputable def fintype_subtype_dvd {M : Type _} [CommCancelMonoidWithZero M] [UniqueFactorizationMonoid M]
-  [Fintype (Units M)] (y : M) (hy : y ≠ 0) : Fintype { x // x ∣ y } :=
-  by 
-    haveI  : Nontrivial M := ⟨⟨y, 0, hy⟩⟩
-    haveI  : NormalizationMonoid M := UniqueFactorizationMonoid.normalizationMonoid 
-    haveI  := Classical.decEq M 
-    haveI  := Classical.decEq (Associates M)
-    refine'
-      Fintype.ofFinset
-        (((normalized_factors y).Powerset.toFinset.product (Finset.univ : Finset (Units M))).Image
-          fun s => (s.snd : M)*s.fst.prod)
-        fun x => _ 
-    simp only [exists_prop, Finset.mem_image, Finset.mem_product, Finset.mem_univ, and_trueₓ, Multiset.mem_to_finset,
-      Multiset.mem_powerset, exists_eq_right, Multiset.mem_map]
-    split 
-    ·
-      rintro ⟨s, hs, rfl⟩
-      have prod_s_ne : s.fst.prod ≠ 0
-      ·
-        intro hz 
-        apply hy (eq_zero_of_zero_dvd _)
-        have hz := (@Multiset.prod_eq_zero_iff M _ _ _ s.fst).mp hz 
-        rw [←(normalized_factors_prod hy).dvd_iff_dvd_right]
-        exact Multiset.dvd_prod (Multiset.mem_of_le hs hz)
-      show ((s.snd : M)*s.fst.prod) ∣ y 
-      rw [(unit_associated_one.mul_right s.fst.prod).dvd_iff_dvd_left, one_mulₓ,
-        ←(normalized_factors_prod hy).dvd_iff_dvd_right]
-      exact Multiset.prod_dvd_prod hs
-    ·
-      rintro (h : x ∣ y)
-      have hx : x ≠ 0
-      ·
-        refine' mt (fun hx => _) hy 
-        rwa [hx, zero_dvd_iff] at h 
-      obtain ⟨u, hu⟩ := normalized_factors_prod hx 
-      refine' ⟨⟨normalized_factors x, u⟩, _, (mul_commₓ _ _).trans hu⟩
-      exact (dvd_iff_normalized_factors_le_normalized_factors hx hy).mp h
+noncomputable
+def fintype_subtype_dvd
+{M : Type*}
+[comm_cancel_monoid_with_zero M]
+[unique_factorization_monoid M]
+[fintype (units M)]
+(y : M)
+(hy : «expr ≠ »(y, 0)) : fintype {x // «expr ∣ »(x, y)} :=
+begin
+  haveI [] [":", expr nontrivial M] [":=", expr ⟨⟨y, 0, hy⟩⟩],
+  haveI [] [":", expr normalization_monoid M] [":=", expr unique_factorization_monoid.normalization_monoid],
+  haveI [] [] [":=", expr classical.dec_eq M],
+  haveI [] [] [":=", expr classical.dec_eq (associates M)],
+  refine [expr fintype.of_finset (((normalized_factors y).powerset.to_finset.product (finset.univ : finset (units M))).image (λ
+     s, «expr * »((s.snd : M), s.fst.prod))) (λ x, _)],
+  simp [] [] ["only"] ["[", expr exists_prop, ",", expr finset.mem_image, ",", expr finset.mem_product, ",", expr finset.mem_univ, ",", expr and_true, ",", expr multiset.mem_to_finset, ",", expr multiset.mem_powerset, ",", expr exists_eq_right, ",", expr multiset.mem_map, "]"] [] [],
+  split,
+  { rintros ["⟨", ident s, ",", ident hs, ",", ident rfl, "⟩"],
+    have [ident prod_s_ne] [":", expr «expr ≠ »(s.fst.prod, 0)] [],
+    { intro [ident hz],
+      apply [expr hy (eq_zero_of_zero_dvd _)],
+      have [ident hz] [] [":=", expr (@multiset.prod_eq_zero_iff M _ _ _ s.fst).mp hz],
+      rw ["<-", expr (normalized_factors_prod hy).dvd_iff_dvd_right] [],
+      exact [expr multiset.dvd_prod (multiset.mem_of_le hs hz)] },
+    show [expr «expr ∣ »(«expr * »((s.snd : M), s.fst.prod), y)],
+    rw ["[", expr (unit_associated_one.mul_right s.fst.prod).dvd_iff_dvd_left, ",", expr one_mul, ",", "<-", expr (normalized_factors_prod hy).dvd_iff_dvd_right, "]"] [],
+    exact [expr multiset.prod_dvd_prod hs] },
+  { rintro ["(", ident h, ":", expr «expr ∣ »(x, y), ")"],
+    have [ident hx] [":", expr «expr ≠ »(x, 0)] [],
+    { refine [expr mt (λ hx, _) hy],
+      rwa ["[", expr hx, ",", expr zero_dvd_iff, "]"] ["at", ident h] },
+    obtain ["⟨", ident u, ",", ident hu, "⟩", ":=", expr normalized_factors_prod hx],
+    refine [expr ⟨⟨normalized_factors x, u⟩, _, (mul_comm _ _).trans hu⟩],
+    exact [expr (dvd_iff_normalized_factors_le_normalized_factors hx hy).mp h] }
+end
 
 end UniqueFactorizationMonoid
 

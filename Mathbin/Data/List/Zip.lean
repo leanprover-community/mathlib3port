@@ -451,40 +451,34 @@ theorem zip_with_distrib_tail : (zip_with f l l').tail = zip_with f l.tail l'.ta
   by 
     simpRw [←drop_one, zip_with_distrib_drop]
 
-theorem zip_with_append (f : α → β → γ) (l la : List α) (l' lb : List β) (h : l.length = l'.length) :
-  zip_with f (l ++ la) (l' ++ lb) = zip_with f l l' ++ zip_with f la lb :=
-  by 
-    induction' l with hd tl hl generalizing l'
-    ·
-      have  : l' = [] :=
-        eq_nil_of_length_eq_zero
-          (by 
-            simpa using h.symm)
-      simp [this]
-    ·
-      cases l'
-      ·
-        simpa using h
-      ·
-        simp only [add_left_injₓ, length] at h 
-        simp [hl _ h]
+-- error in Data.List.Zip: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem zip_with_append
+(f : α → β → γ)
+(l la : list α)
+(l' lb : list β)
+(h : «expr = »(l.length, l'.length)) : «expr = »(zip_with f «expr ++ »(l, la) «expr ++ »(l', lb), «expr ++ »(zip_with f l l', zip_with f la lb)) :=
+begin
+  induction [expr l] [] ["with", ident hd, ident tl, ident hl] ["generalizing", ident l'],
+  { have [] [":", expr «expr = »(l', «expr[ , ]»([]))] [":=", expr eq_nil_of_length_eq_zero (by simpa [] [] [] [] [] ["using", expr h.symm])],
+    simp [] [] [] ["[", expr this, "]"] [] [] },
+  { cases [expr l'] [],
+    { simpa [] [] [] [] [] ["using", expr h] },
+    { simp [] [] ["only"] ["[", expr add_left_inj, ",", expr length, "]"] [] ["at", ident h],
+      simp [] [] [] ["[", expr hl _ h, "]"] [] [] } }
+end
 
-theorem zip_with_distrib_reverse (h : l.length = l'.length) :
-  (zip_with f l l').reverse = zip_with f l.reverse l'.reverse :=
-  by 
-    induction' l with hd tl hl generalizing l'
-    ·
-      simp 
-    ·
-      cases' l' with hd' tl'
-      ·
-        simp 
-      ·
-        simp only [add_left_injₓ, length] at h 
-        have  : tl.reverse.length = tl'.reverse.length :=
-          by 
-            simp [h]
-        simp [hl _ h, zip_with_append _ _ _ _ _ this]
+-- error in Data.List.Zip: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem zip_with_distrib_reverse
+(h : «expr = »(l.length, l'.length)) : «expr = »((zip_with f l l').reverse, zip_with f l.reverse l'.reverse) :=
+begin
+  induction [expr l] [] ["with", ident hd, ident tl, ident hl] ["generalizing", ident l'],
+  { simp [] [] [] [] [] [] },
+  { cases [expr l'] ["with", ident hd', ident tl'],
+    { simp [] [] [] [] [] [] },
+    { simp [] [] ["only"] ["[", expr add_left_inj, ",", expr length, "]"] [] ["at", ident h],
+      have [] [":", expr «expr = »(tl.reverse.length, tl'.reverse.length)] [":=", expr by simp [] [] [] ["[", expr h, "]"] [] []],
+      simp [] [] [] ["[", expr hl _ h, ",", expr zip_with_append _ _ _ _ _ this, "]"] [] [] } }
+end
 
 end Distrib
 

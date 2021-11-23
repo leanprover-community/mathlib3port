@@ -1,6 +1,5 @@
-import Mathbin.Data.Polynomial.RingDivision 
-import Mathbin.LinearAlgebra.Dimension 
-import Mathbin.Algebra.Polynomial.BigOperators
+import Mathbin.Data.Polynomial.Eval 
+import Mathbin.LinearAlgebra.Dimension
 
 /-!
 # Linear recurrence

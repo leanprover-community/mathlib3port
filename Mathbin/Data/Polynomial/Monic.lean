@@ -47,22 +47,18 @@ theorem ne_zero_of_ne_zero_of_monic (hp : p ≠ 0) (hq : monic q) : q ≠ 0 :=
     rw [←mul_oneₓ p, ←C_1, ←hq, C_0, mul_zero] at hp 
     exact hp rfl
 
-theorem monic_map [Semiringₓ S] (f : R →+* S) (hp : monic p) : monic (p.map f) :=
-  if h : (0 : S) = 1 then
-    by 
-      haveI  := subsingleton_of_zero_eq_one h <;> exact Subsingleton.elimₓ _ _
-  else
-    have  : f (leading_coeff p) ≠ 0 :=
-      by 
-        rwa [show _ = _ from hp, f.map_one, Ne.def, eq_comm]
-    by 
-      rw [monic, leading_coeff, coeff_map]
-      suffices  : p.coeff (map f p).natDegree = 1
-      simp [this]
-      suffices  : (map f p).natDegree = p.nat_degree 
-      rw [this]
-      exact hp 
-      rwa [nat_degree_eq_of_degree_eq (degree_map_eq_of_leading_coeff_ne_zero f _)]
+-- error in Data.Polynomial.Monic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem monic_map [semiring S] (f : «expr →+* »(R, S)) (hp : monic p) : monic (p.map f) :=
+if h : «expr = »((0 : S), 1) then by haveI [] [] [":=", expr subsingleton_of_zero_eq_one h]; exact [expr subsingleton.elim _ _] else have «expr ≠ »(f (leading_coeff p), 0), by rwa ["[", expr show «expr = »(_, _), from hp, ",", expr f.map_one, ",", expr ne.def, ",", expr eq_comm, "]"] [],
+by begin
+  rw ["[", expr monic, ",", expr leading_coeff, ",", expr coeff_map, "]"] [],
+  suffices [] [":", expr «expr = »(p.coeff (map f p).nat_degree, 1)],
+  simp [] [] [] ["[", expr this, "]"] [] [],
+  suffices [] [":", expr «expr = »((map f p).nat_degree, p.nat_degree)],
+  rw [expr this] [],
+  exact [expr hp],
+  rwa [expr nat_degree_eq_of_degree_eq (degree_map_eq_of_leading_coeff_ne_zero f _)] []
+end
 
 theorem monic_C_mul_of_mul_leading_coeff_eq_one [Nontrivial R] {b : R} (hp : (b*p.leading_coeff) = 1) : monic (C b*p) :=
   by 
@@ -87,16 +83,10 @@ theorem monic_X_pow_add {n : ℕ} (H : degree p ≤ n) : monic ((X ^ n+1)+p) :=
 theorem monic_X_add_C (x : R) : monic (X+C x) :=
   pow_oneₓ (X : Polynomial R) ▸ monic_X_pow_add degree_C_le
 
-theorem monic_mul (hp : monic p) (hq : monic q) : monic (p*q) :=
-  if h0 : (0 : R) = 1 then
-    by 
-      haveI  := subsingleton_of_zero_eq_one h0 <;> exact Subsingleton.elimₓ _ _
-  else
-    have  : (leading_coeff p*leading_coeff q) ≠ 0 :=
-      by 
-        simp [monic.def.1 hp, monic.def.1 hq, Ne.symm h0]
-    by 
-      rw [monic.def, leading_coeff_mul' this, monic.def.1 hp, monic.def.1 hq, one_mulₓ]
+-- error in Data.Polynomial.Monic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem monic_mul (hp : monic p) (hq : monic q) : monic «expr * »(p, q) :=
+if h0 : «expr = »((0 : R), 1) then by haveI [] [] [":=", expr subsingleton_of_zero_eq_one h0]; exact [expr subsingleton.elim _ _] else have «expr ≠ »(«expr * »(leading_coeff p, leading_coeff q), 0), by simp [] [] [] ["[", expr monic.def.1 hp, ",", expr monic.def.1 hq, ",", expr ne.symm h0, "]"] [] [],
+by rw ["[", expr monic.def, ",", expr leading_coeff_mul' this, ",", expr monic.def.1 hp, ",", expr monic.def.1 hq, ",", expr one_mul, "]"] []
 
 theorem monic_pow (hp : monic p) : ∀ n : ℕ, monic (p ^ n)
 | 0 => monic_one
@@ -115,22 +105,24 @@ theorem monic_add_of_right {p q : Polynomial R} (hq : monic q) (hpq : degree p <
 
 namespace Monic
 
+-- error in Data.Polynomial.Monic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem nat_degree_eq_zero_iff_eq_one {p : Polynomial R} (hp : p.monic) : p.nat_degree = 0 ↔ p = 1 :=
-  by 
-    split  <;> intro h 
-    swap
-    ·
-      rw [h]
-      exact nat_degree_one 
-    have  : p = C (p.coeff 0)
-    ·
-      rw [←Polynomial.degree_le_zero_iff]
-      rwa [Polynomial.nat_degree_eq_zero_iff_degree_le_zero] at h 
-    rw [this]
-    convert C_1 
-    rw [←h]
-    apply hp
+theorem nat_degree_eq_zero_iff_eq_one
+{p : polynomial R}
+(hp : p.monic) : «expr ↔ »(«expr = »(p.nat_degree, 0), «expr = »(p, 1)) :=
+begin
+  split; intro [ident h],
+  swap,
+  { rw [expr h] [],
+    exact [expr nat_degree_one] },
+  have [] [":", expr «expr = »(p, C (p.coeff 0))] [],
+  { rw ["<-", expr polynomial.degree_le_zero_iff] [],
+    rwa [expr polynomial.nat_degree_eq_zero_iff_degree_le_zero] ["at", ident h] },
+  rw [expr this] [],
+  convert [] [expr C_1] [],
+  rw ["<-", expr h] [],
+  apply [expr hp]
+end
 
 @[simp]
 theorem degree_le_zero_iff_eq_one {p : Polynomial R} (hp : p.monic) : p.degree ≤ 0 ↔ p = 1 :=
@@ -176,19 +168,24 @@ theorem next_coeff_mul {p q : Polynomial R} (hp : monic p) (hq : monic q) :
     simp only [←coeff_one_reverse]
     rw [reverse_mul] <;> simp [coeff_mul, nat.antidiagonal, hp.leading_coeff, hq.leading_coeff, add_commₓ]
 
-theorem eq_one_of_map_eq_one {S : Type _} [Semiringₓ S] [Nontrivial S] (f : R →+* S) (hp : p.monic)
-  (map_eq : p.map f = 1) : p = 1 :=
-  by 
-    nontriviality R 
-    have hdeg : p.degree = 0
-    ·
-      rw [←degree_map_eq_of_leading_coeff_ne_zero f _, map_eq, degree_one]
-      ·
-        rw [hp.leading_coeff, f.map_one]
-        exact one_ne_zero 
-    have hndeg : p.nat_degree = 0 := with_bot.coe_eq_coe.mp ((degree_eq_nat_degree hp.ne_zero).symm.trans hdeg)
-    convert eq_C_of_degree_eq_zero hdeg 
-    rw [←hndeg, ←Polynomial.leadingCoeff, hp.leading_coeff, C.map_one]
+-- error in Data.Polynomial.Monic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_one_of_map_eq_one
+{S : Type*}
+[semiring S]
+[nontrivial S]
+(f : «expr →+* »(R, S))
+(hp : p.monic)
+(map_eq : «expr = »(p.map f, 1)) : «expr = »(p, 1) :=
+begin
+  nontriviality [expr R] [],
+  have [ident hdeg] [":", expr «expr = »(p.degree, 0)] [],
+  { rw ["[", "<-", expr degree_map_eq_of_leading_coeff_ne_zero f _, ",", expr map_eq, ",", expr degree_one, "]"] [],
+    { rw ["[", expr hp.leading_coeff, ",", expr f.map_one, "]"] [],
+      exact [expr one_ne_zero] } },
+  have [ident hndeg] [":", expr «expr = »(p.nat_degree, 0)] [":=", expr with_bot.coe_eq_coe.mp ((degree_eq_nat_degree hp.ne_zero).symm.trans hdeg)],
+  convert [] [expr eq_C_of_degree_eq_zero hdeg] [],
+  rw ["[", "<-", expr hndeg, ",", "<-", expr polynomial.leading_coeff, ",", expr hp.leading_coeff, ",", expr C.map_one, "]"] []
+end
 
 end Monic
 
@@ -250,23 +247,20 @@ theorem eq_one_of_is_unit_of_monic (hm : monic p) (hpu : IsUnit p) : p = 1 :=
     rw [eq_C_of_degree_le_zero this, ←nat_degree_eq_zero_iff_degree_le_zero.2 this, ←leading_coeff, hm.leading_coeff,
       C_1]
 
--- error in Data.Polynomial.Monic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem monic.next_coeff_multiset_prod
-(t : multiset ι)
-(f : ι → polynomial R)
-(h : ∀ i «expr ∈ » t, monic (f i)) : «expr = »(next_coeff (t.map f).prod, (t.map (λ i, next_coeff (f i))).sum) :=
-begin
-  revert [ident h],
-  refine [expr multiset.induction_on t _ (λ a t ih ht, _)],
-  { simp [] [] ["only"] ["[", expr multiset.not_mem_zero, ",", expr forall_prop_of_true, ",", expr forall_prop_of_false, ",", expr multiset.map_zero, ",", expr multiset.prod_zero, ",", expr multiset.sum_zero, ",", expr not_false_iff, ",", expr forall_true_iff, "]"] [] [],
-    rw ["<-", expr C_1] [],
-    rw [expr next_coeff_C_eq_zero] [] },
-  { rw ["[", expr multiset.map_cons, ",", expr multiset.prod_cons, ",", expr multiset.map_cons, ",", expr multiset.sum_cons, ",", expr monic.next_coeff_mul, ",", expr ih, "]"] [],
-    exacts ["[", expr λ
-     i
-     hi, ht i (multiset.mem_cons_of_mem hi), ",", expr ht a (multiset.mem_cons_self _ _), ",", expr monic_multiset_prod_of_monic _ _ (λ
-      b bs, ht _ (multiset.mem_cons_of_mem bs)), "]"] }
-end
+theorem monic.next_coeff_multiset_prod (t : Multiset ι) (f : ι → Polynomial R) (h : ∀ i _ : i ∈ t, monic (f i)) :
+  next_coeff (t.map f).Prod = (t.map fun i => next_coeff (f i)).Sum :=
+  by 
+    revert h 
+    refine' Multiset.induction_on t _ fun a t ih ht => _
+    ·
+      simp only [Multiset.not_mem_zero, forall_prop_of_true, forall_prop_of_false, Multiset.map_zero,
+        Multiset.prod_zero, Multiset.sum_zero, not_false_iff, forall_true_iff]
+      rw [←C_1]
+      rw [next_coeff_C_eq_zero]
+    ·
+      rw [Multiset.map_cons, Multiset.prod_cons, Multiset.map_cons, Multiset.sum_cons, monic.next_coeff_mul, ih]
+      exacts[fun i hi => ht i (Multiset.mem_cons_of_mem hi), ht a (Multiset.mem_cons_self _ _),
+        monic_multiset_prod_of_monic _ _ fun b bs => ht _ (Multiset.mem_cons_of_mem bs)]
 
 theorem monic.next_coeff_prod (s : Finset ι) (f : ι → Polynomial R) (h : ∀ i _ : i ∈ s, monic (f i)) :
   next_coeff (∏i in s, f i) = ∑i in s, next_coeff (f i) :=
@@ -480,24 +474,24 @@ theorem monic_of_is_unit_leading_coeff_inv_smul (h : IsUnit p.leading_coeff) : m
     simp only [←hk, smul_eq_mul, ←Units.coe_mul, Units.coe_eq_one, inv_mul_eq_iff_eq_mul]
     simp [Units.ext_iff, IsUnit.unit_spec]
 
-theorem is_unit_leading_coeff_mul_right_eq_zero_iff (h : IsUnit p.leading_coeff) {q : Polynomial R} :
-  (p*q) = 0 ↔ q = 0 :=
-  by 
-    split 
-    ·
-      intro hp 
-      rw [←smul_eq_zero_iff_eq (h.unit⁻¹)] at hp 
-      have  : (h.unit⁻¹ • p*q) = (h.unit⁻¹ • p)*q
-      ·
-        ext 
-        simp only [Units.smul_def, coeff_smul, coeff_mul, smul_eq_mul, mul_sum]
-        refine' sum_congr rfl fun x hx => _ 
-        rw [←mul_assocₓ]
-      rwa [this, monic.mul_right_eq_zero_iff] at hp 
-      exact monic_of_is_unit_leading_coeff_inv_smul _
-    ·
-      rintro rfl 
-      simp 
+-- error in Data.Polynomial.Monic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_unit_leading_coeff_mul_right_eq_zero_iff
+(h : is_unit p.leading_coeff)
+{q : polynomial R} : «expr ↔ »(«expr = »(«expr * »(p, q), 0), «expr = »(q, 0)) :=
+begin
+  split,
+  { intro [ident hp],
+    rw ["<-", expr smul_eq_zero_iff_eq «expr ⁻¹»(h.unit)] ["at", ident hp],
+    have [] [":", expr «expr = »(«expr • »(«expr ⁻¹»(h.unit), «expr * »(p, q)), «expr * »(«expr • »(«expr ⁻¹»(h.unit), p), q))] [],
+    { ext [] [] [],
+      simp [] [] ["only"] ["[", expr units.smul_def, ",", expr coeff_smul, ",", expr coeff_mul, ",", expr smul_eq_mul, ",", expr mul_sum, "]"] [] [],
+      refine [expr sum_congr rfl (λ x hx, _)],
+      rw ["<-", expr mul_assoc] [] },
+    rwa ["[", expr this, ",", expr monic.mul_right_eq_zero_iff, "]"] ["at", ident hp],
+    exact [expr monic_of_is_unit_leading_coeff_inv_smul _] },
+  { rintro [ident rfl],
+    simp [] [] [] [] [] [] }
+end
 
 theorem is_unit_leading_coeff_mul_left_eq_zero_iff (h : IsUnit p.leading_coeff) {q : Polynomial R} :
   (q*p) = 0 ↔ q = 0 :=

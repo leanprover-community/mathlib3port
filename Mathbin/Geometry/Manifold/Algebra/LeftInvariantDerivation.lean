@@ -242,21 +242,22 @@ theorem comp_L : (X f).comp (𝑳 I g) = X (f.comp (𝑳 I g)) :=
       rw [TimesContMdiffMap.comp_apply, L_apply, ←eval_at_apply, eval_at_mul, apply_hfdifferential, apply_fdifferential,
         eval_at_apply]
 
-instance  : HasBracket (LeftInvariantDerivation I G) (LeftInvariantDerivation I G) :=
-  { bracket :=
-      fun X Y =>
-        ⟨⁅(X : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯),Y⁆,
-          fun g =>
-            by 
-              ext f 
-              have hX := Derivation.congr_fun (left_invariant' g X) (Y f)
-              have hY := Derivation.congr_fun (left_invariant' g Y) (X f)
-              rw [apply_hfdifferential, apply_fdifferential, Derivation.eval_at_apply] at hX hY⊢
-              rw [comp_L] at hX hY 
-              rw [Derivation.commutator_apply, SmoothMap.coe_sub, Pi.sub_apply, coe_derivation]
-              rw [coe_derivation] at hX hY⊢
-              rw [hX, hY]
-              rfl⟩ }
+-- error in Geometry.Manifold.Algebra.LeftInvariantDerivation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance : has_bracket (left_invariant_derivation I G) (left_invariant_derivation I G) :=
+{ bracket := λ
+  X
+  Y, ⟨«expr⁅ , ⁆»((X : derivation 𝕜 «exprC^ ⟮ , ; ⟯»(«expr∞»(), I, G, 𝕜) «exprC^ ⟮ , ; ⟯»(«expr∞»(), I, G, 𝕜)), Y), λ
+   g, begin
+     ext [] [ident f] [],
+     have [ident hX] [] [":=", expr derivation.congr_fun (left_invariant' g X) (Y f)],
+     have [ident hY] [] [":=", expr derivation.congr_fun (left_invariant' g Y) (X f)],
+     rw ["[", expr apply_hfdifferential, ",", expr apply_fdifferential, ",", expr derivation.eval_at_apply, "]"] ["at", ident hX, ident hY, "⊢"],
+     rw [expr comp_L] ["at", ident hX, ident hY],
+     rw ["[", expr derivation.commutator_apply, ",", expr smooth_map.coe_sub, ",", expr pi.sub_apply, ",", expr coe_derivation, "]"] [],
+     rw [expr coe_derivation] ["at", ident hX, ident hY, "⊢"],
+     rw ["[", expr hX, ",", expr hY, "]"] [],
+     refl
+   end⟩ }
 
 @[simp]
 theorem commutator_coe_derivation :

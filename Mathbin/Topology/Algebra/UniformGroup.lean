@@ -77,7 +77,7 @@ theorem uniformity_translate (a : α) : ((𝓤 α).map fun x : α × α => (x.1+
       Filter.map_mono (uniform_continuous_id.add uniform_continuous_const)
       )
 
--- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem uniform_embedding_translate (a : α) : uniform_embedding (λ x : α, «expr + »(x, a)) :=
 { comap_uniformity := begin
     rw ["[", "<-", expr uniformity_translate a, ",", expr comap_map, "]"] [] { occs := occurrences.pos «expr[ , ]»([1]) },
@@ -115,14 +115,21 @@ theorem group_separation_rel (x y : α) : (x, y) ∈ SeparationRel α ↔ x - y 
     rw [this.closure_eq_preimage_closure_image, uniformity_eq_comap_nhds_zero α, sInter_comap_sets]
     simp [mem_closure_iff_nhds, inter_singleton_nonempty, sub_eq_add_neg, add_assocₓ]
 
-theorem uniform_continuous_of_tendsto_zero [UniformSpace β] [AddGroupₓ β] [UniformAddGroup β] {f : α →+ β}
-  (h : tendsto f (𝓝 0) (𝓝 0)) : UniformContinuous f :=
-  by 
-    have  : ((fun x : β × β => x.2 - x.1) ∘ fun x : α × α => (f x.1, f x.2)) = fun x : α × α => f (x.2 - x.1)
-    ·
-      simp only [f.map_sub]
-    rw [UniformContinuous, uniformity_eq_comap_nhds_zero α, uniformity_eq_comap_nhds_zero β, tendsto_comap_iff, this]
-    exact tendsto.comp h tendsto_comap
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem uniform_continuous_of_tendsto_zero
+[uniform_space β]
+[add_group β]
+[uniform_add_group β]
+{f : «expr →+ »(α, β)}
+(h : tendsto f (expr𝓝() 0) (expr𝓝() 0)) : uniform_continuous f :=
+begin
+  have [] [":", expr «expr = »(«expr ∘ »(λ
+     x : «expr × »(β, β), «expr - »(x.2, x.1), λ
+     x : «expr × »(α, α), (f x.1, f x.2)), λ x : «expr × »(α, α), f «expr - »(x.2, x.1))] [],
+  { simp [] [] ["only"] ["[", expr f.map_sub, "]"] [] [] },
+  rw ["[", expr uniform_continuous, ",", expr uniformity_eq_comap_nhds_zero α, ",", expr uniformity_eq_comap_nhds_zero β, ",", expr tendsto_comap_iff, ",", expr this, "]"] [],
+  exact [expr tendsto.comp h tendsto_comap]
+end
 
 theorem AddMonoidHom.uniform_continuous_of_continuous_at_zero [UniformSpace β] [AddGroupₓ β] [UniformAddGroup β]
   (f : α →+ β) (hf : ContinuousAt f 0) : UniformContinuous f :=
@@ -153,7 +160,7 @@ variable{G : Type u}[AddCommGroupₓ G][TopologicalSpace G][TopologicalAddGroup 
 
 variable(G)
 
--- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The right uniformity on a topological group. -/ def topological_add_group.to_uniform_space : uniform_space G :=
 { uniformity := comap (λ p : «expr × »(G, G), «expr - »(p.2, p.1)) (expr𝓝() 0),
   refl := by refine [expr map_le_iff_le_comap.1 (le_trans _ (pure_le_nhds 0))]; simp [] [] [] ["[", expr set.subset_def, "]"] [] [] { contextual := tt },
@@ -230,44 +237,43 @@ attribute [local instance] topological_add_group_is_uniform
 
 open Set
 
-theorem TopologicalAddGroup.separated_iff_zero_closed : SeparatedSpace G ↔ IsClosed ({0} : Set G) :=
-  by 
-    rw [separated_space_iff, ←closure_eq_iff_is_closed]
-    split  <;> intro h
-    ·
-      apply subset.antisymm
-      ·
-        intro x x_in 
-        have  := group_separation_rel x 0
-        rw [sub_zero] at this 
-        rw [←this, h] at x_in 
-        change x = 0 at x_in 
-        simp [x_in]
-      ·
-        exact subset_closure
-    ·
-      ext p 
-      cases' p with x y 
-      rw [group_separation_rel x, h, mem_singleton_iff, sub_eq_zero]
-      rfl
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem topological_add_group.separated_iff_zero_closed : «expr ↔ »(separated_space G, is_closed ({0} : set G)) :=
+begin
+  rw ["[", expr separated_space_iff, ",", "<-", expr closure_eq_iff_is_closed, "]"] [],
+  split; intro [ident h],
+  { apply [expr subset.antisymm],
+    { intros [ident x, ident x_in],
+      have [] [] [":=", expr group_separation_rel x 0],
+      rw [expr sub_zero] ["at", ident this],
+      rw ["[", "<-", expr this, ",", expr h, "]"] ["at", ident x_in],
+      change [expr «expr = »(x, 0)] [] ["at", ident x_in],
+      simp [] [] [] ["[", expr x_in, "]"] [] [] },
+    { exact [expr subset_closure] } },
+  { ext [] [ident p] [],
+    cases [expr p] ["with", ident x, ident y],
+    rw ["[", expr group_separation_rel x, ",", expr h, ",", expr mem_singleton_iff, ",", expr sub_eq_zero, "]"] [],
+    refl }
+end
 
-theorem TopologicalAddGroup.separated_of_zero_sep (H : ∀ x : G, x ≠ 0 → ∃ (U : _)(_ : U ∈ nhds (0 : G)), x ∉ U) :
-  SeparatedSpace G :=
-  by 
-    rw [TopologicalAddGroup.separated_iff_zero_closed, ←is_open_compl_iff, is_open_iff_mem_nhds]
-    intro x x_not 
-    have  : x ≠ 0 
-    exact mem_compl_singleton_iff.mp x_not 
-    rcases H x this with ⟨U, U_in, xU⟩
-    rw [←nhds_zero_symm G] at U_in 
-    rcases U_in with ⟨W, W_in, UW⟩
-    rw [←nhds_translation_add_neg]
-    use W, W_in 
-    rw [subset_compl_comm]
-    suffices  : -x ∉ W
-    ·
-      simpa 
-    exact fun h => xU (UW h)
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem topological_add_group.separated_of_zero_sep
+(H : ∀ x : G, «expr ≠ »(x, 0) → «expr∃ , »((U «expr ∈ » nhds (0 : G)), «expr ∉ »(x, U))) : separated_space G :=
+begin
+  rw ["[", expr topological_add_group.separated_iff_zero_closed, ",", "<-", expr is_open_compl_iff, ",", expr is_open_iff_mem_nhds, "]"] [],
+  intros [ident x, ident x_not],
+  have [] [":", expr «expr ≠ »(x, 0)] [],
+  from [expr mem_compl_singleton_iff.mp x_not],
+  rcases [expr H x this, "with", "⟨", ident U, ",", ident U_in, ",", ident xU, "⟩"],
+  rw ["<-", expr nhds_zero_symm G] ["at", ident U_in],
+  rcases [expr U_in, "with", "⟨", ident W, ",", ident W_in, ",", ident UW, "⟩"],
+  rw ["<-", expr nhds_translation_add_neg] [],
+  use ["[", expr W, ",", expr W_in, "]"],
+  rw [expr subset_compl_comm] [],
+  suffices [] [":", expr «expr ∉ »(«expr- »(x), W)],
+  by simpa [] [] [] [] [] [],
+  exact [expr λ h, xU (UW h)]
+end
 
 end 
 
@@ -294,18 +300,23 @@ variable{e : β →+ α}(de : DenseInducing e)
 
 include de
 
-theorem tendsto_sub_comap_self (x₀ : α) :
-  tendsto (fun t : β × β => t.2 - t.1) ((comap fun p : β × β => (e p.1, e p.2))$ 𝓝 (x₀, x₀)) (𝓝 0) :=
-  by 
-    have comm : ((fun x : α × α => x.2 - x.1) ∘ fun t : β × β => (e t.1, e t.2)) = (e ∘ fun t : β × β => t.2 - t.1)
-    ·
-      ext t 
-      change e t.2 - e t.1 = e (t.2 - t.1)
-      rwa [←e.map_sub t.2 t.1]
-    have lim : tendsto (fun x : α × α => x.2 - x.1) (𝓝 (x₀, x₀)) (𝓝 (e 0))
-    ·
-      simpa using (continuous_sub.comp (@continuous_swap α α _ _)).Tendsto (x₀, x₀)
-    simpa using de.tendsto_comap_nhds_nhds limₓ comm
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_sub_comap_self
+(x₀ : α) : tendsto (λ
+ t : «expr × »(β, β), «expr - »(t.2, t.1)) «expr $ »(comap (λ
+  p : «expr × »(β, β), (e p.1, e p.2)), expr𝓝() (x₀, x₀)) (expr𝓝() 0) :=
+begin
+  have [ident comm] [":", expr «expr = »(«expr ∘ »(λ
+     x : «expr × »(α, α), «expr - »(x.2, x.1), λ
+     t : «expr × »(β, β), (e t.1, e t.2)), «expr ∘ »(e, λ t : «expr × »(β, β), «expr - »(t.2, t.1)))] [],
+  { ext [] [ident t] [],
+    change [expr «expr = »(«expr - »(e t.2, e t.1), e «expr - »(t.2, t.1))] [] [],
+    rwa ["<-", expr e.map_sub t.2 t.1] [] },
+  have [ident lim] [":", expr tendsto (λ
+    x : «expr × »(α, α), «expr - »(x.2, x.1)) (expr𝓝() (x₀, x₀)) (expr𝓝() (e 0))] [],
+  { simpa [] [] [] [] [] ["using", expr (continuous_sub.comp (@continuous_swap α α _ _)).tendsto (x₀, x₀)] },
+  simpa [] [] [] [] [] ["using", expr de.tendsto_comap_nhds_nhds lim comm]
+end
 
 end 
 
@@ -341,26 +352,29 @@ variable{W' : Set G}(W'_nhd : W' ∈ 𝓝 (0 : G))
 
 include W'_nhd
 
-private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
-  ∃ (U₂ : _)(_ : U₂ ∈ comap e (𝓝 x₀)), ∀ x x' _ : x ∈ U₂ _ : x' ∈ U₂, Φ (x' - x, y₁) ∈ W' :=
-  by 
-    let Nx := 𝓝 x₀ 
-    let ee := fun u : β × β => (e u.1, e u.2)
-    have lim1 : tendsto (fun a : β × β => (a.2 - a.1, y₁)) (comap e Nx ×ᶠ comap e Nx) (𝓝 (0, y₁))
-    ·
-      have  :=
-        tendsto.prod_mk (tendsto_sub_comap_self de x₀)
-          (tendsto_const_nhds : tendsto (fun p : β × β => y₁) (comap ee$ 𝓝 (x₀, x₀)) (𝓝 y₁))
-      rw [nhds_prod_eq, prod_comap_comap_eq, ←nhds_prod_eq]
-      exact (this : _)
-    have lim2 : tendsto Φ (𝓝 (0, y₁)) (𝓝 0)
-    ·
-      simpa using hφ.tendsto (0, y₁)
-    have lim := lim2.comp lim1 
-    rw [tendsto_prod_self_iff] at lim 
-    exact limₓ W' W'_nhd
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem extend_Z_bilin_aux
+(x₀ : α)
+(y₁ : δ) : «expr∃ , »((U₂ «expr ∈ » comap e (expr𝓝() x₀)), ∀
+ x x' «expr ∈ » U₂, «expr ∈ »(exprΦ() («expr - »(x', x), y₁), W')) :=
+begin
+  let [ident Nx] [] [":=", expr expr𝓝() x₀],
+  let [ident ee] [] [":=", expr λ u : «expr × »(β, β), (e u.1, e u.2)],
+  have [ident lim1] [":", expr tendsto (λ
+    a : «expr × »(β, β), («expr - »(a.2, a.1), y₁)) «expr ×ᶠ »(comap e Nx, comap e Nx) (expr𝓝() (0, y₁))] [],
+  { have [] [] [":=", expr tendsto.prod_mk (tendsto_sub_comap_self de x₀) (tendsto_const_nhds : tendsto (λ
+      p : «expr × »(β, β), y₁) «expr $ »(comap ee, expr𝓝() (x₀, x₀)) (expr𝓝() y₁))],
+    rw ["[", expr nhds_prod_eq, ",", expr prod_comap_comap_eq, ",", "<-", expr nhds_prod_eq, "]"] [],
+    exact [expr (this : _)] },
+  have [ident lim2] [":", expr tendsto exprΦ() (expr𝓝() (0, y₁)) (expr𝓝() 0)] [],
+  by simpa [] [] [] [] [] ["using", expr hφ.tendsto (0, y₁)],
+  have [ident lim] [] [":=", expr lim2.comp lim1],
+  rw [expr tendsto_prod_self_iff] ["at", ident lim],
+  exact [expr lim W' W'_nhd]
+end
 
--- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 private
 theorem extend_Z_bilin_key
 (x₀ : α)
@@ -419,51 +433,46 @@ omit W'_nhd
 
 open DenseInducing
 
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Bourbaki GT III.6.5 Theorem I:
 ℤ-bilinear continuous maps from dense images into a complete Hausdorff group extend by continuity.
 Note: Bourbaki assumes that α and β are also complete Hausdorff, but this is not necessary. -/
-theorem extend_Z_bilin : Continuous (extend (de.prod df) Φ) :=
-  by 
-    refine' continuous_extend_of_cauchy _ _ 
-    rintro ⟨x₀, y₀⟩
-    split 
-    ·
-      apply ne_bot.map 
-      apply comap_ne_bot 
-      intro U h 
-      rcases mem_closure_iff_nhds.1 ((de.prod df).dense (x₀, y₀)) U h with ⟨x, x_in, ⟨z, z_x⟩⟩
-      exists z 
-      cc
-    ·
-      suffices  :
-        map (fun p : (β × δ) × β × δ => Φ p.2 - Φ p.1)
-            (comap (fun p : (β × δ) × β × δ => ((e p.1.1, f p.1.2), (e p.2.1, f p.2.2))) (𝓝 (x₀, y₀) ×ᶠ 𝓝 (x₀, y₀))) ≤
-          𝓝 0
-      ·
-        rwa [uniformity_eq_comap_nhds_zero G, prod_map_map_eq, ←map_le_iff_le_comap, Filter.map_map,
-          prod_comap_comap_eq]
-      intro W' W'_nhd 
-      have key := extend_Z_bilin_key de df hφ W'_nhd x₀ y₀ 
-      rcases key with ⟨U, U_nhd, V, V_nhd, h⟩
-      rw [mem_comap] at U_nhd 
-      rcases U_nhd with ⟨U', U'_nhd, U'_sub⟩
-      rw [mem_comap] at V_nhd 
-      rcases V_nhd with ⟨V', V'_nhd, V'_sub⟩
-      rw [mem_map, mem_comap, nhds_prod_eq]
-      exists Set.Prod (Set.Prod U' V') (Set.Prod U' V')
-      rw [mem_prod_same_iff]
-      simp only [exists_prop]
-      split 
-      ·
-        change U' ∈ 𝓝 x₀ at U'_nhd 
-        change V' ∈ 𝓝 y₀ at V'_nhd 
-        have  := prod_mem_prod U'_nhd V'_nhd 
-        tauto
-      ·
-        intro p h' 
-        simp only [Set.mem_preimage, Set.prod_mk_mem_set_prod_eq] at h' 
-        rcases p with ⟨⟨x, y⟩, ⟨x', y'⟩⟩
-        apply h <;> tauto
+theorem extend_Z_bilin : continuous (extend (de.prod df) exprΦ()) :=
+begin
+  refine [expr continuous_extend_of_cauchy _ _],
+  rintro ["⟨", ident x₀, ",", ident y₀, "⟩"],
+  split,
+  { apply [expr ne_bot.map],
+    apply [expr comap_ne_bot],
+    intros [ident U, ident h],
+    rcases [expr mem_closure_iff_nhds.1 ((de.prod df).dense (x₀, y₀)) U h, "with", "⟨", ident x, ",", ident x_in, ",", "⟨", ident z, ",", ident z_x, "⟩", "⟩"],
+    existsi [expr z],
+    cc },
+  { suffices [] [":", expr «expr ≤ »(map (λ
+       p : «expr × »(«expr × »(β, δ), «expr × »(β, δ)), «expr - »(exprΦ() p.2, exprΦ() p.1)) (comap (λ
+        p : «expr × »(«expr × »(β, δ), «expr × »(β, δ)), ((e p.1.1, f p.1.2), (e p.2.1, f p.2.2))) «expr ×ᶠ »(expr𝓝() (x₀, y₀), expr𝓝() (x₀, y₀))), expr𝓝() 0)],
+    by rwa ["[", expr uniformity_eq_comap_nhds_zero G, ",", expr prod_map_map_eq, ",", "<-", expr map_le_iff_le_comap, ",", expr filter.map_map, ",", expr prod_comap_comap_eq, "]"] [],
+    intros [ident W', ident W'_nhd],
+    have [ident key] [] [":=", expr extend_Z_bilin_key de df hφ W'_nhd x₀ y₀],
+    rcases [expr key, "with", "⟨", ident U, ",", ident U_nhd, ",", ident V, ",", ident V_nhd, ",", ident h, "⟩"],
+    rw [expr mem_comap] ["at", ident U_nhd],
+    rcases [expr U_nhd, "with", "⟨", ident U', ",", ident U'_nhd, ",", ident U'_sub, "⟩"],
+    rw [expr mem_comap] ["at", ident V_nhd],
+    rcases [expr V_nhd, "with", "⟨", ident V', ",", ident V'_nhd, ",", ident V'_sub, "⟩"],
+    rw ["[", expr mem_map, ",", expr mem_comap, ",", expr nhds_prod_eq, "]"] [],
+    existsi [expr set.prod (set.prod U' V') (set.prod U' V')],
+    rw [expr mem_prod_same_iff] [],
+    simp [] [] ["only"] ["[", expr exists_prop, "]"] [] [],
+    split,
+    { change [expr «expr ∈ »(U', expr𝓝() x₀)] [] ["at", ident U'_nhd],
+      change [expr «expr ∈ »(V', expr𝓝() y₀)] [] ["at", ident V'_nhd],
+      have [] [] [":=", expr prod_mem_prod U'_nhd V'_nhd],
+      tauto [] },
+    { intros [ident p, ident h'],
+      simp [] [] ["only"] ["[", expr set.mem_preimage, ",", expr set.prod_mk_mem_set_prod_eq, "]"] [] ["at", ident h'],
+      rcases [expr p, "with", "⟨", "⟨", ident x, ",", ident y, "⟩", ",", "⟨", ident x', ",", ident y', "⟩", "⟩"],
+      apply [expr h]; tauto [] } }
+end
 
 end DenseInducing
 

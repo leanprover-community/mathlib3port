@@ -55,7 +55,7 @@ variable{K}
 def hatInv : hat K → hat K :=
   dense_inducing_coe.extend fun x : K => (coeₓ (x⁻¹) : hat K)
 
--- error in Topology.Algebra.UniformField: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.Algebra.UniformField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem continuous_hat_inv
 [completable_top_field K]
 {x : exprhat() K}
@@ -111,39 +111,38 @@ theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) :=
 
 variable[UniformAddGroup K][TopologicalRing K]
 
-theorem mul_hat_inv_cancel {x : hat K} (x_ne : x ≠ 0) : (x*hatInv x) = 1 :=
-  by 
-    haveI  : T1Space (hat K) := T2Space.t1_space 
-    let f := fun x : hat K => x*hatInv x 
-    let c := (coeₓ : K → hat K)
-    change f x = 1
-    have cont : ContinuousAt f x
-    ·
-      letI this : TopologicalSpace (hat K × hat K) := Prod.topologicalSpace 
-      have  : ContinuousAt (fun y : hat K => ((y, hatInv y) : hat K × hat K)) x 
-      exact continuous_id.continuous_at.prod (continuous_hat_inv x_ne)
-      exact (_root_.continuous_mul.continuous_at.comp this : _)
-    have clo : x ∈ Closure (c '' «expr ᶜ» {0})
-    ·
-      have  := dense_inducing_coe.dense x 
-      rw [←image_univ, show (univ : Set K) = {0} ∪ «expr ᶜ» {0} from (union_compl_self _).symm, image_union] at this 
-      apply mem_closure_of_mem_closure_union this 
-      rw [image_singleton]
-      exact compl_singleton_mem_nhds x_ne 
-    have fxclo : f x ∈ Closure (f '' (c '' «expr ᶜ» {0})) := mem_closure_image cont clo 
-    have  : f '' (c '' «expr ᶜ» {0}) ⊆ {1}
-    ·
-      rw [image_image]
-      rintro _ ⟨z, z_ne, rfl⟩
-      rw [mem_singleton_iff]
-      rw [mem_compl_singleton_iff] at z_ne 
-      dsimp [c, f]
-      rw [hat_inv_extends z_ne]
-      normCast 
-      rw [mul_inv_cancel z_ne]
-      normCast 
-    replace fxclo := closure_mono this fxclo 
-    rwa [closure_singleton, mem_singleton_iff] at fxclo
+-- error in Topology.Algebra.UniformField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mul_hat_inv_cancel {x : exprhat() K} (x_ne : «expr ≠ »(x, 0)) : «expr = »(«expr * »(x, hat_inv x), 1) :=
+begin
+  haveI [] [":", expr t1_space (exprhat() K)] [":=", expr t2_space.t1_space],
+  let [ident f] [] [":=", expr λ x : exprhat() K, «expr * »(x, hat_inv x)],
+  let [ident c] [] [":=", expr (coe : K → exprhat() K)],
+  change [expr «expr = »(f x, 1)] [] [],
+  have [ident cont] [":", expr continuous_at f x] [],
+  { letI [] [":", expr topological_space «expr × »(exprhat() K, exprhat() K)] [":=", expr prod.topological_space],
+    have [] [":", expr continuous_at (λ y : exprhat() K, ((y, hat_inv y) : «expr × »(exprhat() K, exprhat() K))) x] [],
+    from [expr continuous_id.continuous_at.prod (continuous_hat_inv x_ne)],
+    exact [expr (_root_.continuous_mul.continuous_at.comp this : _)] },
+  have [ident clo] [":", expr «expr ∈ »(x, closure «expr '' »(c, «expr ᶜ»({0})))] [],
+  { have [] [] [":=", expr dense_inducing_coe.dense x],
+    rw ["[", "<-", expr image_univ, ",", expr show «expr = »((univ : set K), «expr ∪ »({0}, «expr ᶜ»({0}))), from (union_compl_self _).symm, ",", expr image_union, "]"] ["at", ident this],
+    apply [expr mem_closure_of_mem_closure_union this],
+    rw [expr image_singleton] [],
+    exact [expr compl_singleton_mem_nhds x_ne] },
+  have [ident fxclo] [":", expr «expr ∈ »(f x, closure «expr '' »(f, «expr '' »(c, «expr ᶜ»({0}))))] [":=", expr mem_closure_image cont clo],
+  have [] [":", expr «expr ⊆ »(«expr '' »(f, «expr '' »(c, «expr ᶜ»({0}))), {1})] [],
+  { rw [expr image_image] [],
+    rintros ["_", "⟨", ident z, ",", ident z_ne, ",", ident rfl, "⟩"],
+    rw [expr mem_singleton_iff] [],
+    rw [expr mem_compl_singleton_iff] ["at", ident z_ne],
+    dsimp [] ["[", expr c, ",", expr f, "]"] [] [],
+    rw [expr hat_inv_extends z_ne] [],
+    norm_cast [],
+    rw [expr mul_inv_cancel z_ne] [],
+    norm_cast [] },
+  replace [ident fxclo] [] [":=", expr closure_mono this fxclo],
+  rwa ["[", expr closure_singleton, ",", expr mem_singleton_iff, "]"] ["at", ident fxclo]
+end
 
 instance fieldCompletion : Field (hat K) :=
   { Completion.hasInv,
@@ -160,19 +159,18 @@ instance fieldCompletion : Field (hat K) :=
       show ((0 : K) : hat K)⁻¹ = ((0 : K) : hat K)by 
         rw [coe_inv, inv_zero] }
 
-instance topological_division_ring_completion : TopologicalDivisionRing (hat K) :=
-  { completion.top_ring_compl with
-    continuous_inv :=
-      by 
-        intro x x_ne 
-        have  : { y | hatInv y = y⁻¹ } ∈ 𝓝 x
-        ·
-          have  : «expr ᶜ» {(0 : hat K)} ⊆ { y : hat K | hatInv y = y⁻¹ }
-          ·
-            intro y y_ne 
-            rw [mem_compl_singleton_iff] at y_ne 
-            dsimp [HasInv.inv]
-            rw [if_neg y_ne]
-          exact mem_of_superset (compl_singleton_mem_nhds x_ne) this 
-        exact ContinuousAt.congr (continuous_hat_inv x_ne) this }
+-- error in Topology.Algebra.UniformField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance topological_division_ring_completion : topological_division_ring (exprhat() K) :=
+{ continuous_inv := begin
+    intros [ident x, ident x_ne],
+    have [] [":", expr «expr ∈ »({y | «expr = »(hat_inv y, «expr ⁻¹»(y))}, expr𝓝() x)] [],
+    { have [] [":", expr «expr ⊆ »(«expr ᶜ»({(0 : exprhat() K)}), {y : exprhat() K | «expr = »(hat_inv y, «expr ⁻¹»(y))})] [],
+      { intros [ident y, ident y_ne],
+        rw [expr mem_compl_singleton_iff] ["at", ident y_ne],
+        dsimp [] ["[", expr has_inv.inv, "]"] [] [],
+        rw [expr if_neg y_ne] [] },
+      exact [expr mem_of_superset (compl_singleton_mem_nhds x_ne) this] },
+    exact [expr continuous_at.congr (continuous_hat_inv x_ne) this]
+  end,
+  ..completion.top_ring_compl }
 

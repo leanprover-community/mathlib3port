@@ -63,25 +63,29 @@ theorem solution_set_condition_of_is_right_adjoint [is_right_adjoint G] : soluti
     refine' ⟨PUnit.unit, ((adjunction.of_right_adjoint G).homEquiv _ _).symm h, _⟩
     rw [←adjunction.hom_equiv_unit, Equiv.apply_symm_apply]
 
+-- error in CategoryTheory.Adjunction.AdjointFunctorTheorems: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The general adjoint functor theorem says that if `G : D ⥤ C` preserves limits and `D` has them,
 if `G` satisfies the solution set condition then `G` is a right adjoint.
 -/
-noncomputable def is_right_adjoint_of_preserves_limits_of_solution_set_condition [has_limits D] [preserves_limits G]
-  (hG : solution_set_condition G) : is_right_adjoint G :=
-  by 
-    apply is_right_adjoint_of_structured_arrow_initials _ 
-    intro A 
-    specialize hG A 
-    choose ι B f g using hG 
-    let B' : ι → structured_arrow A G := fun i => structured_arrow.mk (f i)
-    have hB' : ∀ A' : structured_arrow A G, ∃ i, Nonempty (B' i ⟶ A')
-    ·
-      intro A' 
-      obtain ⟨i, _, t⟩ := g _ A'.hom 
-      exact ⟨i, ⟨structured_arrow.hom_mk _ t⟩⟩
-    obtain ⟨T, hT⟩ := has_weakly_initial_of_weakly_initial_set_and_has_products hB' 
-    apply has_initial_of_weakly_initial_and_has_wide_equalizers hT
+noncomputable
+def is_right_adjoint_of_preserves_limits_of_solution_set_condition
+[has_limits D]
+[preserves_limits G]
+(hG : solution_set_condition G) : is_right_adjoint G :=
+begin
+  apply [expr is_right_adjoint_of_structured_arrow_initials _],
+  intro [ident A],
+  specialize [expr hG A],
+  choose [] [ident ι] [ident B, ident f, ident g] ["using", expr hG],
+  let [ident B'] [":", expr ι → structured_arrow A G] [":=", expr λ i, structured_arrow.mk (f i)],
+  have [ident hB'] [":", expr ∀ A' : structured_arrow A G, «expr∃ , »((i), nonempty «expr ⟶ »(B' i, A'))] [],
+  { intros [ident A'],
+    obtain ["⟨", ident i, ",", "_", ",", ident t, "⟩", ":=", expr g _ A'.hom],
+    exact [expr ⟨i, ⟨structured_arrow.hom_mk _ t⟩⟩] },
+  obtain ["⟨", ident T, ",", ident hT, "⟩", ":=", expr has_weakly_initial_of_weakly_initial_set_and_has_products hB'],
+  apply [expr has_initial_of_weakly_initial_and_has_wide_equalizers hT]
+end
 
 end GeneralAdjointFunctorTheorem
 

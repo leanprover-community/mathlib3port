@@ -95,8 +95,8 @@ namespace UnfoldCases
   (e.g. `whnf` or `dsimp`).
 -/
 unsafe def find_splitting_expr : expr → tactic expr
-| quote @ite _ (%%cond) (%%dec_inst) _ _ = _ => pure (quote @Decidable.em (%%cond) (%%dec_inst))
-| quote (%%app x y) = _ => pure y
+| quote.1 (@ite _ (%%ₓcond) (%%ₓdec_inst) _ _ = _) => pure (quote.1 (@Decidable.em (%%ₓcond) (%%ₓdec_inst)))
+| quote.1 ((%%ₓapp x y) = _) => pure y
 | e =>
   throwError "expected an expression of the form: f x = y. Got:
     { ← e}"
@@ -130,7 +130,7 @@ unsafe def unfold_cases_core (inner : interactive.itactic) : tactic Unit :=
   Given a target of the form `⊢ f x₁ ... xₙ = y`, unfolds `f` using a delta reduction.
 -/
 unsafe def unfold_tgt : expr → tactic Unit
-| quote (%%l@(app _ _)) = %%r =>
+| quote.1 ((%%ₓl@(app _ _)) = %%ₓr) =>
   match l.get_app_fn with 
   | const n ls => delta_target [n]
   | e =>

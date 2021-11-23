@@ -267,27 +267,13 @@ theorem sumsq_nonneg x : ∀ l, 0 ≤ sumsq l x
   by 
     rw [sumsq] <;> simp [-add_commₓ] <;> exact add_nonneg (mul_self_nonneg _) (sumsq_nonneg ps)
 
-theorem sumsq_eq_zero x : ∀ l, sumsq l x = 0 ↔ ListAll (fun a : Poly α => a x = 0) l
-| [] => eq_self_iff_true _
-| p :: ps =>
-  by 
-    rw [list_all_cons, ←sumsq_eq_zero ps] <;>
-      rw [sumsq] <;>
-        simp [-add_commₓ] <;>
-          exact
-            ⟨fun h : ((p x*p x)+sumsq ps x) = 0 =>
-                have  : p x = 0 :=
-                  eq_zero_of_mul_self_eq_zero$
-                    le_antisymmₓ
-                      (by 
-                        rw [←h] <;> have t := add_le_add_left (sumsq_nonneg x ps) (p x*p x) <;> rwa [add_zeroₓ] at t)
-                      (mul_self_nonneg _)
-                ⟨this,
-                  by 
-                    simp [this] at h <;> exact h⟩,
-              fun ⟨h1, h2⟩ =>
-                by 
-                  rw [h1, h2] <;> rfl⟩
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sumsq_eq_zero (x) : ∀ l, «expr ↔ »(«expr = »(sumsq l x, 0), list_all (λ a : poly α, «expr = »(a x, 0)) l)
+| «expr[ , ]»([]) := eq_self_iff_true _
+| [«expr :: »/«expr :: »/«expr :: »/«expr :: »](p, ps) := by rw ["[", expr list_all_cons, ",", "<-", expr sumsq_eq_zero ps, "]"] []; rw [expr sumsq] []; simp [] [] [] ["[", "-", ident add_comm, "]"] [] []; exact [expr ⟨λ
+  h : «expr = »(«expr + »(«expr * »(p x, p x), sumsq ps x), 0), have «expr = »(p x, 0), from «expr $ »(eq_zero_of_mul_self_eq_zero, le_antisymm (by rw ["<-", expr h] []; have [ident t] [] [":=", expr add_le_add_left (sumsq_nonneg x ps) «expr * »(p x, p x)]; rwa ["[", expr add_zero, "]"] ["at", ident t]) (mul_self_nonneg _)),
+  ⟨this, by simp [] [] [] ["[", expr this, "]"] [] ["at", ident h]; exact [expr h]⟩, λ
+  ⟨h1, h2⟩, by rw ["[", expr h1, ",", expr h2, "]"] []; refl⟩]
 
 end 
 
@@ -316,11 +302,11 @@ end Poly
 
 namespace Sum
 
--- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- combine two functions into a function on the disjoint union -/
-def join {α β γ} (f : α → γ) (g : β → γ) : «expr ⊕ »(α, β) → γ :=
-by { refine [expr sum.rec _ _],
-  exacts ["[", expr f, ",", expr g, "]"] }
+def join {α β γ} (f : α → γ) (g : β → γ) : Sum α β → γ :=
+  by 
+    refine' Sum.rec _ _ 
+    exacts[f, g]
 
 end Sum
 
@@ -330,11 +316,11 @@ open Sum
 
 namespace Option
 
--- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Functions from `option` can be combined similarly to `vector.cons` -/
-def cons {α β} (a : β) (v : α → β) : option α → β :=
-by { refine [expr option.rec _ _],
-  exacts ["[", expr a, ",", expr v, "]"] }
+def cons {α β} (a : β) (v : α → β) : Option α → β :=
+  by 
+    refine' Option.rec _ _ 
+    exacts[a, v]
 
 @[simp]
 theorem cons_head_tail {α β} (v : Option α → β) : v none :: (v ∘ some) = v :=
@@ -371,35 +357,23 @@ theorem of_no_dummies (S : Set (α → ℕ)) (p : Poly α) (h : ∀ v : α → �
             by 
               simp  at ht <;> rwa [show (v ⊗ t ∘ inl) = v from rfl] at ht⟩⟩
 
-theorem inject_dummies_lem (f : β → γ) (g : γ → Option β) (inv : ∀ x, g (f x) = some x) (p : Poly (Sum α β))
-  (v : α → ℕ) : (∃ t, p (v ⊗ t) = 0) ↔ ∃ t, p.remap (inl ⊗ (inr ∘ f)) (v ⊗ t) = 0 :=
-  by 
-    simp 
-    refine' ⟨fun t => _, fun t => _⟩ <;> cases' t with t ht
-    ·
-      have  : (v ⊗ (0 :: t ∘ g) ∘ inl ⊗ (inr ∘ f)) = v ⊗ t :=
-        funext
-          fun s =>
-            by 
-              cases' s with a b <;>
-                dsimp [join, · ∘ ·] <;>
-                  try 
-                      rw [inv] <;>
-                    rfl 
-      exact
-        ⟨0 :: t ∘ g,
-          by 
-            rwa [this]⟩
-    ·
-      have  : v ⊗ (t ∘ f) = (v ⊗ t ∘ inl ⊗ (inr ∘ f)) :=
-        funext
-          fun s =>
-            by 
-              cases' s with a b <;> rfl 
-      exact
-        ⟨t ∘ f,
-          by 
-            rwa [this]⟩
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem inject_dummies_lem
+(f : β → γ)
+(g : γ → option β)
+(inv : ∀ x, «expr = »(g (f x), some x))
+(p : poly «expr ⊕ »(α, β))
+(v : α → exprℕ()) : «expr ↔ »(«expr∃ , »((t), «expr = »(p «expr ⊗ »(v, t), 0)), «expr∃ , »((t), «expr = »(p.remap «expr ⊗ »(inl, «expr ∘ »(inr, f)) «expr ⊗ »(v, t), 0))) :=
+begin
+  simp [] [] [] [] [] [],
+  refine [expr ⟨λ t, _, λ t, _⟩]; cases [expr t] ["with", ident t, ident ht],
+  { have [] [":", expr «expr = »(«expr ∘ »(«expr ⊗ »(v, «expr ∘ »([«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](0, t), g)), «expr ⊗ »(inl, «expr ∘ »(inr, f))), «expr ⊗ »(v, t))] [":=", expr funext (λ
+      s, by cases [expr s] ["with", ident a, ident b]; dsimp [] ["[", expr join, ",", expr («expr ∘ »), "]"] [] []; try { rw [expr inv] [] }; refl)],
+    exact [expr ⟨«expr ∘ »([«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](0, t), g), by rwa [expr this] []⟩] },
+  { have [] [":", expr «expr = »(«expr ⊗ »(v, «expr ∘ »(t, f)), «expr ∘ »(«expr ⊗ »(v, t), «expr ⊗ »(inl, «expr ∘ »(inr, f))))] [":=", expr funext (λ
+      s, by cases [expr s] ["with", ident a, ident b]; refl)],
+    exact [expr ⟨«expr ∘ »(t, f), by rwa [expr this] []⟩] }
+end
 
 theorem inject_dummies {S : Set (α → ℕ)} (f : β → γ) (g : γ → Option β) (inv : ∀ x, g (f x) = some x)
   (p : Poly (Sum α β)) (h : ∀ v : α → ℕ, S v ↔ ∃ t, p (v ⊗ t) = 0) :
@@ -717,7 +691,7 @@ localized [Dioph] notation:35 x " D∨ " y => Dioph.or_dioph x y
 
 localized [Dioph] notation:30 "D∃" => Dioph.vec_ex1_dioph
 
--- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:1264:43: in localized: ././Mathport/Syntax/Translate/Basic.lean:264:9: unsupported: advanced prec syntax
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:1266:43: in localized: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 localized [expr "prefix `&`:max := of_nat'", [command <some 4>], "in", ident dioph]
 
 theorem proj_dioph_of_nat {n : ℕ} (m : ℕ) [is_lt m n] : dioph_fn fun v : Vector3 ℕ n => v («expr& » m) :=
@@ -882,7 +856,7 @@ theorem pell_dioph :
       ∃ h : 1 < v («expr& » 0), xn h (v («expr& » 1)) = v («expr& » 2) ∧ yn h (v («expr& » 1)) = v («expr& » 3) :=
   have  :
     Dioph
-      { v : Vector3 ℕ 4 |
+      { v:Vector3 ℕ 4 |
         1 < v («expr& » 0) ∧
           v («expr& » 1) ≤ v («expr& » 3) ∧
             (v («expr& » 2) = 1 ∧ v («expr& » 3) = 0 ∨
@@ -930,7 +904,7 @@ include df dg
 theorem pow_dioph : dioph_fn fun v => f v ^ g v :=
   have  :
     Dioph
-      { v : Vector3 ℕ 3 |
+      { v:Vector3 ℕ 3 |
         v («expr& » 2) = 0 ∧ v («expr& » 0) = 1 ∨
           0 < v («expr& » 2) ∧
             (v («expr& » 1) = 0 ∧ v («expr& » 0) = 0 ∨

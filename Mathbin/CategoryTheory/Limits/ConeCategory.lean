@@ -29,7 +29,7 @@ def cone.is_limit_equiv_is_terminal {F : J ⥤ C} (c : cone F) : is_limit c ≃ 
     { toFun :=
         fun h =>
           by 
-            exactI is_terminal.of_unique _,
+            exact is_terminal.of_unique _,
       invFun := fun h s => ⟨⟨is_terminal.from h s⟩, fun a => is_terminal.hom_ext h a _⟩,
       left_inv :=
         by 
@@ -63,7 +63,7 @@ def cocone.is_colimit_equiv_is_initial {F : J ⥤ C} (c : cocone F) : is_colimit
     { toFun :=
         fun h =>
           by 
-            exactI is_initial.of_unique _,
+            exact is_initial.of_unique _,
       invFun := fun h s => ⟨⟨is_initial.to h s⟩, fun a => is_initial.hom_ext h a _⟩,
       left_inv :=
         by 

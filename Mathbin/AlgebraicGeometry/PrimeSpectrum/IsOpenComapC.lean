@@ -23,7 +23,7 @@ of the coefficients of `f` does not vanish.  Lemma `image_of_Df_eq_comap_C_compl
 proves that `image_of_Df` is the image of `(zero_locus {f})ᶜ` under the morphism
 `comap C : Spec R[x] → Spec R`. -/
 def image_of_Df f : Set (PrimeSpectrum R) :=
-  { p : PrimeSpectrum R | ∃ i : ℕ, coeff f i ∉ p.as_ideal }
+  { p:PrimeSpectrum R | ∃ i : ℕ, coeff f i ∉ p.as_ideal }
 
 theorem is_open_image_of_Df : IsOpen (image_of_Df f) :=
   by 

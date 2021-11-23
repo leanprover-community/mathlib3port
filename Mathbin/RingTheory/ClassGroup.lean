@@ -78,7 +78,7 @@ section
 
 variable(R K)
 
--- error in RingTheory.ClassGroup: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler comm_group
+-- error in RingTheory.ClassGroup: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler comm_group
 /-- The ideal class group of `R` in a field of fractions `K`
 is the group of invertible fractional ideals modulo the principal ideals. -/
 @[derive #[expr comm_group]]
@@ -142,107 +142,93 @@ theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J
       simpa only [FractionalIdeal.mk0_apply, Units.coe_mk0, mul_commₓ, coe_to_principal_ideal, coe_coe,
         Units.coe_mul] using eq_J
 
-theorem ClassGroup.mk0_eq_mk0_iff [IsDedekindDomain R] {I J : (Ideal R)⁰} :
-  ClassGroup.mk0 K I = ClassGroup.mk0 K J ↔
-    ∃ (x y : R)(hx : x ≠ 0)(hy : y ≠ 0), (Ideal.span {x}*(I : Ideal R)) = Ideal.span {y}*J :=
-  by 
-    refine' class_group.mk0_eq_mk0_iff_exists_fraction_ring.trans ⟨_, _⟩
-    ·
-      rintro ⟨z, hz, h⟩
-      obtain ⟨x, ⟨y, hy⟩, rfl⟩ := IsLocalization.mk'_surjective R⁰ z 
-      refine' ⟨x, y, _, mem_non_zero_divisors_iff_ne_zero.mp hy, _⟩
-      ·
-        rintro hx 
-        apply hz 
-        rw [hx, IsFractionRing.mk'_eq_div, (algebraMap R K).map_zero, zero_div]
-      ·
-        exact (FractionalIdeal.mk'_mul_coe_ideal_eq_coe_ideal K hy).mp h
-    ·
-      rintro ⟨x, y, hx, hy, h⟩
-      have hy' : y ∈ R⁰ := mem_non_zero_divisors_iff_ne_zero.mpr hy 
-      refine' ⟨IsLocalization.mk' K x ⟨y, hy'⟩, _, _⟩
-      ·
-        contrapose! hx 
-        rwa [IsLocalization.mk'_eq_iff_eq_mul, zero_mul, ←(algebraMap R K).map_zero,
-          (IsFractionRing.injective R K).eq_iff] at hx
-      ·
-        exact (FractionalIdeal.mk'_mul_coe_ideal_eq_coe_ideal K hy').mpr h
+-- error in RingTheory.ClassGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem class_group.mk0_eq_mk0_iff
+[is_dedekind_domain R]
+{I
+ J : «expr ⁰»(ideal R)} : «expr ↔ »(«expr = »(class_group.mk0 K I, class_group.mk0 K J), «expr∃ , »((x y : R)
+  (hx : «expr ≠ »(x, 0))
+  (hy : «expr ≠ »(y, 0)), «expr = »(«expr * »(ideal.span {x}, (I : ideal R)), «expr * »(ideal.span {y}, J)))) :=
+begin
+  refine [expr class_group.mk0_eq_mk0_iff_exists_fraction_ring.trans ⟨_, _⟩],
+  { rintros ["⟨", ident z, ",", ident hz, ",", ident h, "⟩"],
+    obtain ["⟨", ident x, ",", "⟨", ident y, ",", ident hy, "⟩", ",", ident rfl, "⟩", ":=", expr is_localization.mk'_surjective «expr ⁰»(R) z],
+    refine [expr ⟨x, y, _, mem_non_zero_divisors_iff_ne_zero.mp hy, _⟩],
+    { rintro [ident hx],
+      apply [expr hz],
+      rw ["[", expr hx, ",", expr is_fraction_ring.mk'_eq_div, ",", expr (algebra_map R K).map_zero, ",", expr zero_div, "]"] [] },
+    { exact [expr (fractional_ideal.mk'_mul_coe_ideal_eq_coe_ideal K hy).mp h] } },
+  { rintros ["⟨", ident x, ",", ident y, ",", ident hx, ",", ident hy, ",", ident h, "⟩"],
+    have [ident hy'] [":", expr «expr ∈ »(y, «expr ⁰»(R))] [":=", expr mem_non_zero_divisors_iff_ne_zero.mpr hy],
+    refine [expr ⟨is_localization.mk' K x ⟨y, hy'⟩, _, _⟩],
+    { contrapose ["!"] [ident hx],
+      rwa ["[", expr is_localization.mk'_eq_iff_eq_mul, ",", expr zero_mul, ",", "<-", expr (algebra_map R K).map_zero, ",", expr (is_fraction_ring.injective R K).eq_iff, "]"] ["at", ident hx] },
+    { exact [expr (fractional_ideal.mk'_mul_coe_ideal_eq_coe_ideal K hy').mpr h] } }
+end
 
-theorem ClassGroup.mk0_surjective [IsDedekindDomain R] :
-  Function.Surjective (ClassGroup.mk0 K : (Ideal R)⁰ → ClassGroup R K) :=
-  by 
-    rintro ⟨I⟩
-    obtain ⟨a, a_ne_zero', ha⟩ := I.1.2
-    have a_ne_zero := mem_non_zero_divisors_iff_ne_zero.mp a_ne_zero' 
-    have fa_ne_zero : (algebraMap R K) a ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors a_ne_zero' 
-    refine' ⟨⟨{ Carrier := { x | (algebraMap R K a⁻¹*algebraMap R K x) ∈ I.1 }, .. }, _⟩, _⟩
-    ·
-      simp only [RingHom.map_zero, Set.mem_set_of_eq, mul_zero, RingHom.map_mul]
-      exact Submodule.zero_mem I
-    ·
-      simp only [RingHom.map_add, Set.mem_set_of_eq, mul_zero, RingHom.map_mul, mul_addₓ]
-      exact fun _ _ ha hb => Submodule.add_mem I ha hb
-    ·
-      intro c _ hb 
-      simp only [smul_eq_mul, Set.mem_set_of_eq, mul_zero, RingHom.map_mul, mul_addₓ,
-        mul_left_commₓ ((algebraMap R K) a⁻¹)]
-      rw [←Algebra.smul_def c]
-      exact Submodule.smul_mem I c hb
-    ·
-      rw [mem_non_zero_divisors_iff_ne_zero, Submodule.zero_eq_bot, Submodule.ne_bot_iff]
-      obtain ⟨x, x_ne, x_mem⟩ := exists_ne_zero_mem_is_integer I.ne_zero 
-      refine' ⟨a*x, _, mul_ne_zero a_ne_zero x_ne⟩
-      change ((algebraMap R K) a⁻¹*(algebraMap R K) (a*x)) ∈ I.1
-      rwa [RingHom.map_mul, ←mul_assocₓ, inv_mul_cancel fa_ne_zero, one_mulₓ]
-    ·
-      symm 
-      apply Quotientₓ.sound 
-      refine' ⟨Units.mk0 (algebraMap R K a) fa_ne_zero, _⟩
-      apply @mul_left_cancelₓ _ _ I 
-      rw [←mul_assocₓ, mul_right_invₓ, one_mulₓ, eq_comm, mul_commₓ I]
-      apply Units.ext 
-      simp only [MonoidHom.coe_mk, Subtype.coe_mk, RingHom.map_mul, coe_coe, Units.coe_mul, coe_to_principal_ideal,
-        coe_mk0, FractionalIdeal.eq_span_singleton_mul]
-      split 
-      ·
-        intro zJ' hzJ' 
-        obtain ⟨zJ, hzJ : (algebraMap R K a⁻¹*algebraMap R K zJ) ∈ «expr↑ » I, rfl⟩ := (mem_coe_ideal R⁰).mp hzJ' 
-        refine' ⟨_, hzJ, _⟩
-        rw [←mul_assocₓ, mul_inv_cancel fa_ne_zero, one_mulₓ]
-      ·
-        intro zI' hzI' 
-        obtain ⟨y, hy⟩ := ha zI' hzI' 
-        rw [←Algebra.smul_def, FractionalIdeal.mk0_apply, coe_mk0, coe_coe, mem_coe_ideal]
-        refine' ⟨y, _, hy⟩
-        show (algebraMap R K a⁻¹*algebraMap R K y) ∈ (I : FractionalIdeal R⁰ K)
-        rwa [hy, Algebra.smul_def, ←mul_assocₓ, inv_mul_cancel fa_ne_zero, one_mulₓ]
+-- error in RingTheory.ClassGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem class_group.mk0_surjective
+[is_dedekind_domain R] : function.surjective (class_group.mk0 K : «expr ⁰»(ideal R) → class_group R K) :=
+begin
+  rintros ["⟨", ident I, "⟩"],
+  obtain ["⟨", ident a, ",", ident a_ne_zero', ",", ident ha, "⟩", ":=", expr I.1.2],
+  have [ident a_ne_zero] [] [":=", expr mem_non_zero_divisors_iff_ne_zero.mp a_ne_zero'],
+  have [ident fa_ne_zero] [":", expr «expr ≠ »(algebra_map R K a, 0)] [":=", expr is_fraction_ring.to_map_ne_zero_of_mem_non_zero_divisors a_ne_zero'],
+  refine [expr ⟨⟨{ carrier := {x | «expr ∈ »(«expr * »(«expr ⁻¹»(algebra_map R K a), algebra_map R K x), I.1)},
+       .. }, _⟩, _⟩],
+  { simp [] [] ["only"] ["[", expr ring_hom.map_zero, ",", expr set.mem_set_of_eq, ",", expr mul_zero, ",", expr ring_hom.map_mul, "]"] [] [],
+    exact [expr submodule.zero_mem I] },
+  { simp [] [] ["only"] ["[", expr ring_hom.map_add, ",", expr set.mem_set_of_eq, ",", expr mul_zero, ",", expr ring_hom.map_mul, ",", expr mul_add, "]"] [] [],
+    exact [expr λ _ _ ha hb, submodule.add_mem I ha hb] },
+  { intros [ident c, "_", ident hb],
+    simp [] [] ["only"] ["[", expr smul_eq_mul, ",", expr set.mem_set_of_eq, ",", expr mul_zero, ",", expr ring_hom.map_mul, ",", expr mul_add, ",", expr mul_left_comm «expr ⁻¹»(algebra_map R K a), "]"] [] [],
+    rw ["<-", expr algebra.smul_def c] [],
+    exact [expr submodule.smul_mem I c hb] },
+  { rw ["[", expr mem_non_zero_divisors_iff_ne_zero, ",", expr submodule.zero_eq_bot, ",", expr submodule.ne_bot_iff, "]"] [],
+    obtain ["⟨", ident x, ",", ident x_ne, ",", ident x_mem, "⟩", ":=", expr exists_ne_zero_mem_is_integer I.ne_zero],
+    refine [expr ⟨«expr * »(a, x), _, mul_ne_zero a_ne_zero x_ne⟩],
+    change [expr «expr ∈ »(«expr * »(«expr ⁻¹»(algebra_map R K a), algebra_map R K «expr * »(a, x)), I.1)] [] [],
+    rwa ["[", expr ring_hom.map_mul, ",", "<-", expr mul_assoc, ",", expr inv_mul_cancel fa_ne_zero, ",", expr one_mul, "]"] [] },
+  { symmetry,
+    apply [expr quotient.sound],
+    refine [expr ⟨units.mk0 (algebra_map R K a) fa_ne_zero, _⟩],
+    apply [expr @mul_left_cancel _ _ I],
+    rw ["[", "<-", expr mul_assoc, ",", expr mul_right_inv, ",", expr one_mul, ",", expr eq_comm, ",", expr mul_comm I, "]"] [],
+    apply [expr units.ext],
+    simp [] [] ["only"] ["[", expr monoid_hom.coe_mk, ",", expr subtype.coe_mk, ",", expr ring_hom.map_mul, ",", expr coe_coe, ",", expr units.coe_mul, ",", expr coe_to_principal_ideal, ",", expr coe_mk0, ",", expr fractional_ideal.eq_span_singleton_mul, "]"] [] [],
+    split,
+    { intros [ident zJ', ident hzJ'],
+      obtain ["⟨", ident zJ, ",", ident hzJ, ":", expr «expr ∈ »(«expr * »(«expr ⁻¹»(algebra_map R K a), algebra_map R K zJ), «expr↑ »(I)), ",", ident rfl, "⟩", ":=", expr (mem_coe_ideal «expr ⁰»(R)).mp hzJ'],
+      refine [expr ⟨_, hzJ, _⟩],
+      rw ["[", "<-", expr mul_assoc, ",", expr mul_inv_cancel fa_ne_zero, ",", expr one_mul, "]"] [] },
+    { intros [ident zI', ident hzI'],
+      obtain ["⟨", ident y, ",", ident hy, "⟩", ":=", expr ha zI' hzI'],
+      rw ["[", "<-", expr algebra.smul_def, ",", expr fractional_ideal.mk0_apply, ",", expr coe_mk0, ",", expr coe_coe, ",", expr mem_coe_ideal, "]"] [],
+      refine [expr ⟨y, _, hy⟩],
+      show [expr «expr ∈ »(«expr * »(«expr ⁻¹»(algebra_map R K a), algebra_map R K y), (I : fractional_ideal «expr ⁰»(R) K))],
+      rwa ["[", expr hy, ",", expr algebra.smul_def, ",", "<-", expr mul_assoc, ",", expr inv_mul_cancel fa_ne_zero, ",", expr one_mul, "]"] [] } }
+end
 
 end 
 
-theorem ClassGroup.mk_eq_one_iff {I : Units (FractionalIdeal R⁰ K)} :
-  QuotientGroup.mk' (toPrincipalIdeal R K).range I = 1 ↔ (I : Submodule R K).IsPrincipal :=
-  by 
-    rw [←(QuotientGroup.mk' _).map_one, eq_comm, QuotientGroup.mk'_eq_mk']
-    simp only [exists_prop, one_mulₓ, exists_eq_right, to_principal_ideal_eq_iff, MonoidHom.mem_range, coe_coe]
-    refine'
-      ⟨fun ⟨x, hx⟩ =>
-          ⟨⟨x,
-              by 
-                rw [←hx, coe_span_singleton]⟩⟩,
-        _⟩
-    unfreezingI 
-      intro hI 
-    obtain ⟨x, hx⟩ := @Submodule.IsPrincipal.principal _ _ _ _ _ _ hI 
-    have hx' : (I : FractionalIdeal R⁰ K) = span_singleton R⁰ x
-    ·
-      apply Subtype.coe_injective 
-      rw [hx, coe_span_singleton]
-    refine' ⟨Units.mk0 x _, _⟩
-    ·
-      intro x_eq 
-      apply Units.ne_zero I 
-      simp [hx', x_eq]
-    simp [hx']
+-- error in RingTheory.ClassGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem class_group.mk_eq_one_iff
+{I : units (fractional_ideal «expr ⁰»(R) K)} : «expr ↔ »(«expr = »(quotient_group.mk' (to_principal_ideal R K).range I, 1), (I : submodule R K).is_principal) :=
+begin
+  rw ["[", "<-", expr (quotient_group.mk' _).map_one, ",", expr eq_comm, ",", expr quotient_group.mk'_eq_mk', "]"] [],
+  simp [] [] ["only"] ["[", expr exists_prop, ",", expr one_mul, ",", expr exists_eq_right, ",", expr to_principal_ideal_eq_iff, ",", expr monoid_hom.mem_range, ",", expr coe_coe, "]"] [] [],
+  refine [expr ⟨λ ⟨x, hx⟩, ⟨⟨x, by rw ["[", "<-", expr hx, ",", expr coe_span_singleton, "]"] []⟩⟩, _⟩],
+  unfreezingI { intros [ident hI] },
+  obtain ["⟨", ident x, ",", ident hx, "⟩", ":=", expr @submodule.is_principal.principal _ _ _ _ _ _ hI],
+  have [ident hx'] [":", expr «expr = »((I : fractional_ideal «expr ⁰»(R) K), span_singleton «expr ⁰»(R) x)] [],
+  { apply [expr subtype.coe_injective],
+    rw ["[", expr hx, ",", expr coe_span_singleton, "]"] [] },
+  refine [expr ⟨units.mk0 x _, _⟩],
+  { intro [ident x_eq],
+    apply [expr units.ne_zero I],
+    simp [] [] [] ["[", expr hx', ",", expr x_eq, "]"] [] [] },
+  simp [] [] [] ["[", expr hx', "]"] [] []
+end
 
 variable[IsDomain R]
 
@@ -268,24 +254,25 @@ theorem card_class_group_eq_one [IsPrincipalIdealRing R] : Fintype.card (ClassGr
     rintro ⟨I⟩
     exact class_group.mk_eq_one_iff.mpr (I : FractionalIdeal R⁰ K).IsPrincipal
 
+-- error in RingTheory.ClassGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The class number is `1` iff the ring of integers is a principal ideal domain. -/
-theorem card_class_group_eq_one_iff [IsDedekindDomain R] [Fintype (ClassGroup R K)] :
-  Fintype.card (ClassGroup R K) = 1 ↔ IsPrincipalIdealRing R :=
-  by 
-    split 
-    swap
-    ·
-      introsI 
-      convert card_class_group_eq_one 
-      assumption 
-      assumption 
-    rw [Fintype.card_eq_one_iff]
-    rintro ⟨I, hI⟩
-    have eq_one : ∀ J : ClassGroup R K, J = 1 := fun J => trans (hI J) (hI 1).symm 
-    refine' ⟨fun I => _⟩
-    byCases' hI : I = ⊥
-    ·
-      rw [hI]
-      exact bot_is_principal 
-    exact (ClassGroup.mk0_eq_one_iff (mem_non_zero_divisors_iff_ne_zero.mpr hI)).mp (eq_one _)
+theorem card_class_group_eq_one_iff
+[is_dedekind_domain R]
+[fintype (class_group R K)] : «expr ↔ »(«expr = »(fintype.card (class_group R K), 1), is_principal_ideal_ring R) :=
+begin
+  split,
+  swap,
+  { introsI [],
+    convert [] [expr card_class_group_eq_one] [],
+    assumption,
+    assumption },
+  rw [expr fintype.card_eq_one_iff] [],
+  rintros ["⟨", ident I, ",", ident hI, "⟩"],
+  have [ident eq_one] [":", expr ∀ J : class_group R K, «expr = »(J, 1)] [":=", expr λ J, trans (hI J) (hI 1).symm],
+  refine [expr ⟨λ I, _⟩],
+  by_cases [expr hI, ":", expr «expr = »(I, «expr⊥»())],
+  { rw [expr hI] [],
+    exact [expr bot_is_principal] },
+  exact [expr (class_group.mk0_eq_one_iff (mem_non_zero_divisors_iff_ne_zero.mpr hI)).mp (eq_one _)]
+end
 

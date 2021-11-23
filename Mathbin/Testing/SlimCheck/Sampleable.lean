@@ -142,7 +142,7 @@ export Sampleable(sample shrink)
 /-- This function helps infer the proxy representation and
 interpretation in `sampleable_ext` instances. -/
 unsafe def sampleable.mk_trivial_interp : tactic Unit :=
-  tactic.refine (pquote id)
+  tactic.refine (pquote.1 id)
 
 /-- `sampleable_ext` generalizes the behavior of `sampleable`
 and makes it possible to express instances for types that
@@ -253,7 +253,7 @@ def nat.shrink (n : ℕ) : List { m : ℕ // HasWellFounded.R m n } :=
 
 open Gen
 
--- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 /--
 Transport a `sampleable` instance from a type `α` to a type `β` using
 functions between the two, going in both directions.
@@ -398,7 +398,7 @@ instance prod.sampleable : sampleable_bifunctor.{u, v} Prod :=
 instance sigma.sampleable {α β} [sampleable α] [sampleable β] : sampleable (Σ_ : α, β) :=
   (sampleable.lift (α × β) (fun ⟨x, y⟩ => ⟨x, y⟩) fun ⟨x, y⟩ => ⟨x, y⟩)$ fun ⟨x, y⟩ => le_reflₓ _
 
--- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 /-- shrinking function for sum types -/
 def sum.shrink
 {α β}
@@ -471,7 +471,7 @@ section ListShrink
 
 variable[SizeOf α](shr : ∀ x : α, LazyList { y : α // sizeof_lt y x })
 
--- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem list.sizeof_drop_lt_sizeof_of_lt_length
 {xs : list α}
 {k}
@@ -518,7 +518,7 @@ theorem list.one_le_sizeof (xs : List α) : 1 ≤ sizeof xs :=
   by 
     cases xs <;> unfoldWf <;> linarith
 
--- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 /--
 `list.shrink_removes` shrinks a list by removing chunks of size `k` in
 the middle of the list.
@@ -652,34 +652,21 @@ theorem rec_shrink_with_eq [SizeOf α]
     ext ⟨y, h⟩
     rfl
 
+-- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `tree.shrink_with shrink_f t` shrinks `xs` by using the empty tree,
 each subtrees, and by shrinking the subtree to recombine them.
 
 This strategy is taken directly from Haskell's QuickCheck -/
-def tree.shrink_with [SizeOf α] (shrink_a : shrink_fn α) : shrink_fn (Tree α) :=
-  rec_shrink_with$
-    fun t =>
-      match t with 
-      | Tree.nil => fun f_rec => []
-      | Tree.node x t₀ t₁ =>
-        fun f_rec =>
-          have h₂ : sizeof_lt Tree.nil (Tree.node x t₀ t₁) :=
-            by 
-              clear _match <;>
-                have  := tree.one_le_sizeof t₀ <;>
-                  dsimp [sizeof_lt, sizeof, SizeOf.sizeof]  at * <;> unfoldWf <;> linarith 
-          have h₀ : sizeof_lt t₀ (Tree.node x t₀ t₁) :=
-            by 
-              dsimp [sizeof_lt] <;> unfoldWf <;> linarith 
-          have h₁ : sizeof_lt t₁ (Tree.node x t₀ t₁) :=
-            by 
-              dsimp [sizeof_lt] <;> unfoldWf <;> linarith
-          [LazyList.ofList [⟨Tree.nil, h₂⟩, ⟨t₀, h₀⟩, ⟨t₁, h₁⟩],
-            (prod.shrink shrink_a (prod.shrink f_rec f_rec) (x, ⟨t₀, h₀⟩, ⟨t₁, h₁⟩)).map$
-              fun ⟨⟨y, ⟨t'₀, _⟩, ⟨t'₁, _⟩⟩, hy⟩ =>
-                ⟨Tree.node y t'₀ t'₁,
-                  by 
-                    revert hy <;> dsimp [sizeof_lt] <;> unfoldWf <;> intro  <;> linarith⟩]
+def tree.shrink_with [has_sizeof α] (shrink_a : shrink_fn α) : shrink_fn (tree α) :=
+«expr $ »(rec_shrink_with, λ t, match t with
+ | tree.nil := λ f_rec, «expr[ , ]»([])
+ | tree.node x t₀ t₁ := λ
+ f_rec, have h₂ : sizeof_lt tree.nil (tree.node x t₀ t₁), by clear [ident _match]; have [] [] [":=", expr tree.one_le_sizeof t₀]; dsimp [] ["[", expr sizeof_lt, ",", expr sizeof, ",", expr has_sizeof.sizeof, "]"] [] ["at", "*"]; unfold_wf; linarith [] [] [],
+ have h₀ : sizeof_lt t₀ (tree.node x t₀ t₁), by dsimp [] ["[", expr sizeof_lt, "]"] [] []; unfold_wf; linarith [] [] [],
+ have h₁ : sizeof_lt t₁ (tree.node x t₀ t₁), by dsimp [] ["[", expr sizeof_lt, "]"] [] []; unfold_wf; linarith [] [] [],
+ «expr[ , ]»([lazy_list.of_list «expr[ , ]»([⟨tree.nil, h₂⟩, ⟨t₀, h₀⟩, ⟨t₁, h₁⟩]), «expr $ »((prod.shrink shrink_a (prod.shrink f_rec f_rec) (x, ⟨t₀, h₀⟩, ⟨t₁, h₁⟩)).map, λ
+    ⟨⟨y, ⟨t'₀, _⟩, ⟨t'₁, _⟩⟩, hy⟩, ⟨tree.node y t'₀ t'₁, by revert [ident hy]; dsimp [] ["[", expr sizeof_lt, "]"] [] []; unfold_wf; intro []; linarith [] [] []⟩)])
+ end)
 
 instance sampleable_tree : sampleable_functor Tree :=
   { wf := _, sample := fun α sam_α => sized$ tree.sample sam_α,
@@ -882,13 +869,13 @@ unsafe def mk_generator (e : expr) : tactic (expr × expr) :=
   do 
     let t ← infer_type e 
     match t with 
-      | quote gen (%%t) =>
+      | quote.1 (gen (%%ₓt)) =>
         do 
           let repr_inst ← mk_app `` HasRepr [t] >>= mk_instance 
           pure (repr_inst, e)
       | _ =>
         do 
-          let samp_inst ← to_expr (pquote sampleable_ext (%%e)) >>= mk_instance 
+          let samp_inst ← to_expr (pquote.1 (sampleable_ext (%%ₓe))) >>= mk_instance 
           let repr_inst ← mk_mapp `` sampleable_ext.p_repr [e, samp_inst]
           let gen ← mk_mapp `` sampleable_ext.sample [none, samp_inst]
           pure (repr_inst, gen)

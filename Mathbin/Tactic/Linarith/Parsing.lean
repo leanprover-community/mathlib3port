@@ -113,26 +113,26 @@ Because it matches up to definitional equality, this function must be in the `ta
 and forces some functions that call it into `tactic` as well.
 -/
 unsafe def linear_form_of_expr (red : transparency) : exmap → expr → tactic (exmap × Sum)
-| m, e@(quote (%%e1)*%%e2) =>
+| m, e@(quote.1 ((%%ₓe1)*%%ₓe2)) =>
   do 
     let (m', comp1) ← linear_form_of_expr m e1 
     let (m', comp2) ← linear_form_of_expr m' e2 
     return (m', comp1.mul comp2)
-| m, quote (%%e1)+%%e2 =>
+| m, quote.1 ((%%ₓe1)+%%ₓe2) =>
   do 
     let (m', comp1) ← linear_form_of_expr m e1 
     let (m', comp2) ← linear_form_of_expr m' e2 
     return (m', comp1.add comp2)
-| m, quote (%%e1) - %%e2 =>
+| m, quote.1 ((%%ₓe1) - %%ₓe2) =>
   do 
     let (m', comp1) ← linear_form_of_expr m e1 
     let (m', comp2) ← linear_form_of_expr m' e2 
     return (m', comp1.add (comp2.scale (-1)))
-| m, quote -%%e =>
+| m, quote.1 (-%%ₓe) =>
   do 
     let (m', comp) ← linear_form_of_expr m e 
     return (m', comp.scale (-1))
-| m, p@(quote @Pow.pow _ ℕ _ (%%e) (%%n)) =>
+| m, p@(quote.1 (@Pow.pow _ ℕ _ (%%ₓe) (%%ₓn))) =>
   match n.to_nat with 
   | some k =>
     do 

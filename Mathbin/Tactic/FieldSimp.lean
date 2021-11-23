@@ -16,7 +16,7 @@ unsafe def field_simp.ne_zero : tactic Unit :=
   do 
     let goal ← tactic.target 
     match goal with 
-      | quote (%%e) ≠ 0 =>
+      | quote.1 ((%%ₓe) ≠ 0) =>
         assumption <|>
           do 
             let n ← e.to_rat 

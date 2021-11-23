@@ -1,7 +1,7 @@
 import Lake
 open Lake DSL System
 
-def tag : String := "nightly-2021-11-17"
+def tag : String := "nightly-2021-11-23"
 def releaseRepo : String := "leanprover-community/mathport"
 def oleanTarName : String := "mathlib3-binport.tar.gz"
 def leanTarName : String := "mathlib3-synport.tar.gz"
@@ -35,7 +35,6 @@ def fetchOleans (dir : FilePath) : OpaqueTarget := { info := (), task := fetch }
 
 def fetchLeans (dir : FilePath) : OpaqueTarget := { info := (), task := fetch } where
   fetch := async do
-    -- IO.FS.removeDirAll (srcDir / "Mathbin")
     IO.FS.createDirAll srcDir
     let oldTrace := Hash.ofString (← Git.headRevision dir)
     buildFileUnlessUpToDate (srcDir / leanTarName) oldTrace do

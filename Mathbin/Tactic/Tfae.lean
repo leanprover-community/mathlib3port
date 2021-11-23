@@ -15,16 +15,16 @@ export List(Tfae)
 
 namespace Tfae
 
--- error in Tactic.Tfae: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Tfae: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 @[derive #[expr has_reflect], derive #[expr inhabited]] inductive arrow : Type
 | right : arrow
 | left_right : arrow
 | left : arrow
 
 unsafe def mk_implication : ∀ re : arrow e₁ e₂ : expr, pexpr
-| arrow.right, e₁, e₂ => pquote (%%e₁) → %%e₂
-| arrow.left_right, e₁, e₂ => pquote (%%e₁) ↔ %%e₂
-| arrow.left, e₁, e₂ => pquote (%%e₂) → %%e₁
+| arrow.right, e₁, e₂ => pquote.1 ((%%ₓe₁) → %%ₓe₂)
+| arrow.left_right, e₁, e₂ => pquote.1 ((%%ₓe₁) ↔ %%ₓe₂)
+| arrow.left, e₁, e₂ => pquote.1 ((%%ₓe₂) → %%ₓe₁)
 
 unsafe def mk_name : ∀ re : arrow i₁ i₂ : Nat, Name
 | arrow.right, i₁, i₂ => ("tfae_" ++ toString i₁ ++ "_to_" ++ toString i₂ : Stringₓ)
@@ -40,8 +40,8 @@ setup_tactic_parser
 open Tactic.Tfae List
 
 unsafe def parse_list : expr → Option (List expr)
-| quote [] => pure []
-| quote (%%e) :: %%es => (· :: ·) e <$> parse_list es
+| quote.1 [] => pure []
+| quote.1 ((%%ₓe) :: %%ₓes) => (· :: ·) e <$> parse_list es
 | _ => none
 
 /-- In a goal of the form `tfae [a₀, a₁, a₂]`,
@@ -56,7 +56,7 @@ unsafe def tfae_have (h : parse$ optionalₓ ident <* tk ":") (i₁ : parse (wit
         (tk "↔" <|> tk "<->") *> return arrow.left_right <|> (tk "←" <|> tk "<-") *> return arrow.left))
   (i₂ : parse (with_desc "j" small_nat)) : tactic Unit :=
   do 
-    let quote tfae (%%l) ← target 
+    let quote.1 (tfae (%%ₓl)) ← target 
     let l ← parse_list l 
     let e₁ ← List.nth l (i₁ - 1) <|> fail f! "index {i₁ } is not between 1 and {l.length }"
     let e₂ ← List.nth l (i₂ - 1) <|> fail f! "index {i₂ } is not between 1 and {l.length }"
@@ -74,10 +74,10 @@ unsafe def tfae_finish : tactic Unit :=
       fun cl =>
         do 
           impl_graph.mk_scc cl 
-          let quote tfae (%%l) ← target 
+          let quote.1 (tfae (%%ₓl)) ← target 
           let l ← parse_list l 
           let (_, r, _) ← cl.root l.head 
-          refine (pquote tfae_of_forall (%%r) _ _)
+          refine (pquote.1 (tfae_of_forall (%%ₓr) _ _))
           let thm ← mk_const `` forall_mem_cons 
           l.mmap'
               fun e =>

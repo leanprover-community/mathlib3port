@@ -1,6 +1,6 @@
+import Mathbin.CategoryTheory.Limits.Creates 
 import Mathbin.CategoryTheory.Over 
-import Mathbin.CategoryTheory.Limits.Connected 
-import Mathbin.CategoryTheory.Limits.Creates
+import Mathbin.CategoryTheory.IsConnected
 
 /-!
 # Connected limits in the over category

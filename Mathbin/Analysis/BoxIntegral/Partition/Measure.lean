@@ -35,11 +35,13 @@ namespace Box
 
 variable(I : box ι)
 
-theorem measurable_set_coe [Fintype ι] (I : box ι) : MeasurableSet (I : Set (ι → ℝ)) :=
-  by 
-    rw [coe_eq_pi]
-    haveI  := Fintype.encodable ι 
-    exact MeasurableSet.univ_pi fun i => measurable_set_Ioc
+-- error in Analysis.BoxIntegral.Partition.Measure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measurable_set_coe [fintype ι] (I : box ι) : measurable_set (I : set (ι → exprℝ())) :=
+begin
+  rw ["[", expr coe_eq_pi, "]"] [],
+  haveI [] [] [":=", expr fintype.encodable ι],
+  exact [expr measurable_set.univ_pi (λ i, measurable_set_Ioc)]
+end
 
 theorem measurable_set_Icc [Fintype ι] (I : box ι) : MeasurableSet I.Icc :=
   measurable_set_Icc
@@ -52,17 +54,11 @@ theorem measure_coe_lt_top (μ : Measureₓ (ι → ℝ)) [is_locally_finite_mea
 
 end Box
 
--- error in Analysis.BoxIntegral.Partition.Measure: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem prepartition.measure_Union_to_real
-[fintype ι]
-{I : box ι}
-(π : prepartition I)
-(μ : measure (ι → exprℝ()))
-[is_locally_finite_measure μ] : «expr = »((μ π.Union).to_real, «expr∑ in , »((J), π.boxes, (μ J).to_real)) :=
-begin
-  erw ["[", "<-", expr ennreal.to_real_sum, ",", expr π.Union_def, ",", expr measure_bUnion_finset π.pairwise_disjoint, "]"] [],
-  exacts ["[", expr λ J hJ, J.measurable_set_coe, ",", expr λ J hJ, (J.measure_coe_lt_top μ).ne, "]"]
-end
+theorem prepartition.measure_Union_to_real [Fintype ι] {I : box ι} (π : prepartition I) (μ : Measureₓ (ι → ℝ))
+  [is_locally_finite_measure μ] : (μ π.Union).toReal = ∑J in π.boxes, (μ J).toReal :=
+  by 
+    erw [←Ennreal.to_real_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
+    exacts[fun J hJ => J.measurable_set_coe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
 
 end BoxIntegral
 

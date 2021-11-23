@@ -31,7 +31,7 @@ open Nat
 
 namespace Pnat
 
--- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- A term of xgcd_type is a system of six naturals.  They should
  be thought of as representing the matrix
  [[w, x], [y, z]] = [[wp + 1, x], [y, zp + 1]]
@@ -93,9 +93,13 @@ def v : ℕ × ℕ :=
 def succ₂ (t : ℕ × ℕ) : ℕ × ℕ :=
   ⟨t.1.succ, t.2.succ⟩
 
--- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem v_eq_succ_vp : «expr = »(u.v, succ₂ u.vp) :=
-by { ext [] [] []; dsimp [] ["[", expr v, ",", expr vp, ",", expr w, ",", expr z, ",", expr a, ",", expr b, ",", expr succ₂, "]"] [] []; repeat { rw ["[", expr nat.succ_eq_add_one, "]"] [] }; ring [] }
+theorem v_eq_succ_vp : u.v = succ₂ u.vp :=
+  by 
+    ext <;>
+      dsimp [v, vp, w, z, a, b, succ₂] <;>
+        repeat' 
+            rw [Nat.succ_eq_add_one] <;>
+          ring
 
 /-- is_special holds if the matrix has determinant one. -/
 def is_special : Prop :=
@@ -104,24 +108,27 @@ def is_special : Prop :=
 def is_special' : Prop :=
   (u.w*u.z) = succ_pnat (u.x*u.y)
 
--- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem is_special_iff : «expr ↔ »(u.is_special, u.is_special') :=
-begin
-  dsimp [] ["[", expr is_special, ",", expr is_special', "]"] [] [],
-  split; intro [ident h],
-  { apply [expr eq],
-    dsimp [] ["[", expr w, ",", expr z, ",", expr succ_pnat, "]"] [] [],
-    rw ["[", "<-", expr h, "]"] [],
-    repeat { rw ["[", expr nat.succ_eq_add_one, "]"] [] },
-    ring [] },
-  { apply [expr nat.succ.inj],
-    replace [ident h] [] [":=", expr congr_arg (coe : «exprℕ+»() → exprℕ()) h],
-    rw ["[", expr mul_coe, ",", expr w, ",", expr z, "]"] ["at", ident h],
-    repeat { rw ["[", expr succ_pnat_coe, ",", expr nat.succ_eq_add_one, "]"] ["at", ident h] },
-    repeat { rw ["[", expr nat.succ_eq_add_one, "]"] [] },
-    rw ["[", "<-", expr h, "]"] [],
-    ring [] }
-end
+theorem is_special_iff : u.is_special ↔ u.is_special' :=
+  by 
+    dsimp [is_special, is_special']
+    split  <;> intro h
+    ·
+      apply Eq 
+      dsimp [w, z, succ_pnat]
+      rw [←h]
+      repeat' 
+        rw [Nat.succ_eq_add_one]
+      ring
+    ·
+      apply Nat.succ.injₓ 
+      replace h := congr_argₓ (coeₓ : ℕ+ → ℕ) h 
+      rw [mul_coe, w, z] at h 
+      repeat' 
+        rw [succ_pnat_coe, Nat.succ_eq_add_one] at h 
+      repeat' 
+        rw [Nat.succ_eq_add_one]
+      rw [←h]
+      ring
 
 /-- is_reduced holds if the two entries in the vector are the
  same.  The reduction algorithm will produce a system with this
@@ -232,35 +239,37 @@ theorem finish_is_special (hs : u.is_special) : u.finish.is_special :=
     rw [add_mulₓ _ _ u.y, add_commₓ _ (u.x*u.y), ←hs]
     ring
 
-theorem finish_v (hr : u.r = 0) : u.finish.v = u.v :=
-  by 
-    let ha : (u.r+u.b*u.q) = u.a := u.rq_eq 
-    rw [hr, zero_addₓ] at ha 
-    ext
-    ·
-      change (((u.wp+1)*u.b)+(((u.wp+1)*u.qp)+u.x)*u.b) = (u.w*u.a)+u.x*u.b 
-      have  : (u.wp+1) = u.w := rfl 
-      rw [this, ←ha, u.qp_eq hr]
-      ring
-    ·
-      change ((u.y*u.b)+((u.y*u.qp)+u.z)*u.b) = (u.y*u.a)+u.z*u.b 
-      rw [←ha, u.qp_eq hr]
-      ring
+-- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem finish_v (hr : «expr = »(u.r, 0)) : «expr = »(u.finish.v, u.v) :=
+begin
+  let [ident ha] [":", expr «expr = »(«expr + »(u.r, «expr * »(u.b, u.q)), u.a)] [":=", expr u.rq_eq],
+  rw ["[", expr hr, ",", expr zero_add, "]"] ["at", ident ha],
+  ext [] [] [],
+  { change [expr «expr = »(«expr + »(«expr * »(«expr + »(u.wp, 1), u.b), «expr * »(«expr + »(«expr * »(«expr + »(u.wp, 1), u.qp), u.x), u.b)), «expr + »(«expr * »(u.w, u.a), «expr * »(u.x, u.b)))] [] [],
+    have [] [":", expr «expr = »(«expr + »(u.wp, 1), u.w)] [":=", expr rfl],
+    rw ["[", expr this, ",", "<-", expr ha, ",", expr u.qp_eq hr, "]"] [],
+    ring [] },
+  { change [expr «expr = »(«expr + »(«expr * »(u.y, u.b), «expr * »(«expr + »(«expr * »(u.y, u.qp), u.z), u.b)), «expr + »(«expr * »(u.y, u.a), «expr * »(u.z, u.b)))] [] [],
+    rw ["[", "<-", expr ha, ",", expr u.qp_eq hr, "]"] [],
+    ring [] }
+end
 
 /-- This is the main reduction step, which is used when u.r ≠ 0, or
  equivalently b does not divide a. -/
 def step : xgcd_type :=
   xgcd_type.mk ((u.y*u.q)+u.zp) u.y (((u.wp+1)*u.q)+u.x) u.wp u.bp (u.r - 1)
 
+-- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- We will apply the above step recursively.  The following result
  is used to ensure that the process terminates. -/
-theorem step_wf (hr : u.r ≠ 0) : sizeof u.step < sizeof u :=
-  by 
-    change u.r - 1 < u.bp 
-    have h₀ : ((u.r - 1)+1) = u.r := Nat.succ_pred_eq_of_posₓ (Nat.pos_of_ne_zeroₓ hr)
-    have h₁ : u.r < u.bp+1 := Nat.mod_ltₓ (u.ap+1) u.bp.succ_pos 
-    rw [←h₀] at h₁ 
-    exact lt_of_succ_lt_succ h₁
+theorem step_wf (hr : «expr ≠ »(u.r, 0)) : «expr < »(sizeof u.step, sizeof u) :=
+begin
+  change [expr «expr < »(«expr - »(u.r, 1), u.bp)] [] [],
+  have [ident h₀] [":", expr «expr = »(«expr + »(«expr - »(u.r, 1), 1), u.r)] [":=", expr nat.succ_pred_eq_of_pos (nat.pos_of_ne_zero hr)],
+  have [ident h₁] [":", expr «expr < »(u.r, «expr + »(u.bp, 1))] [":=", expr nat.mod_lt «expr + »(u.ap, 1) u.bp.succ_pos],
+  rw ["[", "<-", expr h₀, "]"] ["at", ident h₁],
+  exact [expr lt_of_succ_lt_succ h₁]
+end
 
 theorem step_is_special (hs : u.is_special) : u.step.is_special :=
   by 
@@ -392,7 +401,7 @@ theorem gcd_b'_coe : (gcd_b' a b : ℕ) = gcd_y a b+gcd_z a b :=
     dsimp [gcd_b', gcd_y, gcd_z, xgcd_type.z]
     rw [Nat.succ_eq_add_one, Nat.succ_eq_add_one, add_assocₓ]
 
--- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem gcd_props : let d := gcd_d a b,
     w := gcd_w a b,
     x := gcd_x a b,
@@ -440,20 +449,20 @@ begin
   split; ring []
 end
 
-theorem gcd_eq : gcd_d a b = gcd a b :=
-  by 
-    rcases gcd_props a b with ⟨h₀, h₁, h₂, h₃, h₄, h₅, h₆⟩
-    apply dvd_antisymm
-    ·
-      apply dvd_gcd 
-      exact Dvd.intro (gcd_a' a b) (h₁.trans (mul_commₓ _ _)).symm 
-      exact Dvd.intro (gcd_b' a b) (h₂.trans (mul_commₓ _ _)).symm
-    ·
-      have h₇ : (gcd a b : ℕ) ∣ gcd_z a b*a := (Nat.gcd_dvd_leftₓ a b).trans (dvd_mul_left _ _)
-      have h₈ : (gcd a b : ℕ) ∣ gcd_x a b*b := (Nat.gcd_dvd_rightₓ a b).trans (dvd_mul_left _ _)
-      rw [h₅] at h₇ 
-      rw [dvd_iff]
-      exact (Nat.dvd_add_iff_right h₈).mpr h₇
+-- error in Data.Pnat.Xgcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem gcd_eq : «expr = »(gcd_d a b, gcd a b) :=
+begin
+  rcases [expr gcd_props a b, "with", "⟨", ident h₀, ",", ident h₁, ",", ident h₂, ",", ident h₃, ",", ident h₄, ",", ident h₅, ",", ident h₆, "⟩"],
+  apply [expr dvd_antisymm],
+  { apply [expr dvd_gcd],
+    exact [expr dvd.intro (gcd_a' a b) (h₁.trans (mul_comm _ _)).symm],
+    exact [expr dvd.intro (gcd_b' a b) (h₂.trans (mul_comm _ _)).symm] },
+  { have [ident h₇] [":", expr «expr ∣ »((gcd a b : exprℕ()), «expr * »(gcd_z a b, a))] [":=", expr (nat.gcd_dvd_left a b).trans (dvd_mul_left _ _)],
+    have [ident h₈] [":", expr «expr ∣ »((gcd a b : exprℕ()), «expr * »(gcd_x a b, b))] [":=", expr (nat.gcd_dvd_right a b).trans (dvd_mul_left _ _)],
+    rw ["[", expr h₅, "]"] ["at", ident h₇],
+    rw [expr dvd_iff] [],
+    exact [expr (nat.dvd_add_iff_right h₈).mpr h₇] }
+end
 
 theorem gcd_det_eq : (gcd_w a b*gcd_z a b) = succ_pnat (gcd_x a b*gcd_y a b) :=
   (gcd_props a b).1

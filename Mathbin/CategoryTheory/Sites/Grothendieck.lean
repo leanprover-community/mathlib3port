@@ -378,7 +378,7 @@ def atomic (hro : right_ore_condition C) : grothendieck_topology C :=
         rcases h hf with ⟨Z, g, hg⟩
         exact ⟨_, _, hg⟩ }
 
--- error in CategoryTheory.Sites.Grothendieck: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler preorder
+-- error in CategoryTheory.Sites.Grothendieck: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler preorder
 /-- `J.cover X` denotes the poset of covers of `X` with respect to the
 Grothendieck topology `J`. -/ @[derive #[expr preorder]] def cover (X : C) :=
 {S : sieve X // «expr ∈ »(S, J X)}

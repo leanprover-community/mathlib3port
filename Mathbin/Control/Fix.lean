@@ -1,6 +1,6 @@
-import Mathbin.Data.Nat.Upto 
-import Mathbin.Data.Stream.Basic 
-import Mathbin.Data.Pfun
+import Mathbin.Data.Stream.Init 
+import Mathbin.Data.Part 
+import Mathbin.Data.Nat.Upto
 
 /-!
 # Fixed point
@@ -56,43 +56,45 @@ it satisfies the equations:
 protected def fix (x : α) : Part$ β x :=
   Part.assert (∃ i, (fix.approx f i x).Dom)$ fun h => WellFounded.fix.{1} (Nat.Upto.wf h) (fix_aux f) Nat.Upto.zero x
 
-protected theorem fix_def {x : α} (h' : ∃ i, (fix.approx f i x).Dom) :
-  Part.fix f x = fix.approx f (Nat.succ$ Nat.findₓ h') x :=
-  by 
-    let p := fun i : ℕ => (fix.approx f i x).Dom 
-    have  : p (Nat.findₓ h') := Nat.find_specₓ h' 
-    generalize hk : Nat.findₓ h' = k 
-    replace hk : Nat.findₓ h' = k+(@upto.zero p).val := hk 
-    rw [hk] at this 
-    revert hk 
-    dsimp [Part.fix]
-    rw [assert_pos h']
-    revert this 
-    generalize upto.zero = z 
-    intros 
-    suffices  : ∀ x', WellFounded.fix (fix._proof_1 f x h') (fix_aux f) z x' = fix.approx f (succ k) x' 
-    exact this _ 
-    induction k generalizing z <;> intro 
-    ·
-      rw [fix.approx, WellFounded.fix_eq, fix_aux]
-      congr 
-      ext : 1
-      rw [assert_neg]
-      rfl 
-      rw [Nat.zero_add] at this 
-      simpa only [not_not, Subtype.val_eq_coe]
-    ·
-      rw [fix.approx, WellFounded.fix_eq, fix_aux]
-      congr 
-      ext : 1
-      have hh : ¬(fix.approx f z.val x).Dom
-      ·
-        apply Nat.find_minₓ h' 
-        rw [hk, Nat.succ_add, ←Nat.add_succ]
-        apply Nat.lt_of_succ_leₓ 
-        apply Nat.le_add_leftₓ 
-      rw [succ_add_eq_succ_add] at this hk 
-      rw [assert_pos hh, k_ih (upto.succ z hh) this hk]
+-- error in Control.Fix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem fix_def
+{x : α}
+(h' : «expr∃ , »((i), (fix.approx f i x).dom)) : «expr = »(part.fix f x, fix.approx f «expr $ »(nat.succ, nat.find h') x) :=
+begin
+  let [ident p] [] [":=", expr λ i : exprℕ(), (fix.approx f i x).dom],
+  have [] [":", expr p (nat.find h')] [":=", expr nat.find_spec h'],
+  generalize [ident hk] [":"] [expr «expr = »(nat.find h', k)],
+  replace [ident hk] [":", expr «expr = »(nat.find h', «expr + »(k, (@upto.zero p).val))] [":=", expr hk],
+  rw [expr hk] ["at", ident this],
+  revert [ident hk],
+  dsimp [] ["[", expr part.fix, "]"] [] [],
+  rw [expr assert_pos h'] [],
+  revert [ident this],
+  generalize [] [":"] [expr «expr = »(upto.zero, z)],
+  intros [],
+  suffices [] [":", expr ∀
+   x', «expr = »(well_founded.fix (fix._proof_1 f x h') (fix_aux f) z x', fix.approx f (succ k) x')],
+  from [expr this _],
+  induction [expr k] [] [] ["generalizing", ident z]; intro [],
+  { rw ["[", expr fix.approx, ",", expr well_founded.fix_eq, ",", expr fix_aux, "]"] [],
+    congr,
+    ext [] [] [":", 1],
+    rw [expr assert_neg] [],
+    refl,
+    rw [expr nat.zero_add] ["at", ident this],
+    simpa [] [] ["only"] ["[", expr not_not, ",", expr subtype.val_eq_coe, "]"] [] [] },
+  { rw ["[", expr fix.approx, ",", expr well_founded.fix_eq, ",", expr fix_aux, "]"] [],
+    congr,
+    ext [] [] [":", 1],
+    have [ident hh] [":", expr «expr¬ »((fix.approx f z.val x).dom)] [],
+    { apply [expr nat.find_min h'],
+      rw ["[", expr hk, ",", expr nat.succ_add, ",", "<-", expr nat.add_succ, "]"] [],
+      apply [expr nat.lt_of_succ_le],
+      apply [expr nat.le_add_left] },
+    rw [expr succ_add_eq_succ_add] ["at", ident this, ident hk],
+    rw ["[", expr assert_pos hh, ",", expr k_ih (upto.succ z hh) this hk, "]"] [] }
+end
 
 theorem fix_def' {x : α} (h' : ¬∃ i, (fix.approx f i x).Dom) : Part.fix f x = none :=
   by 

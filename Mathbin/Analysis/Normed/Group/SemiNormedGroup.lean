@@ -24,7 +24,7 @@ namespace SemiNormedGroupₓ
 instance bundled_hom : bundled_hom @NormedGroupHom :=
   ⟨@NormedGroupHom.toFun, @NormedGroupHom.id, @NormedGroupHom.comp, @NormedGroupHom.coe_inj⟩
 
--- error in Analysis.Normed.Group.SemiNormedGroup: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Analysis.Normed.Group.SemiNormedGroup: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] SemiNormedGroup
 
 instance  : CoeSort SemiNormedGroupₓ (Type u) :=

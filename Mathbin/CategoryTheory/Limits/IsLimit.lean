@@ -65,7 +65,7 @@ restate_axiom is_limit.uniq'
 
 namespace IsLimit
 
--- error in CategoryTheory.Limits.IsLimit: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in CategoryTheory.Limits.IsLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 instance subsingleton {t : cone F} : subsingleton (is_limit t) :=
 ⟨by intros [ident P, ident Q]; cases [expr P] []; cases [expr Q] []; congr; ext [] [] []; solve_by_elim [] [] [] []⟩
 
@@ -178,17 +178,17 @@ theorem equiv_iso_limit_symm_apply {r t : cone F} (i : r ≅ t) (P : is_limit t)
   (equiv_iso_limit i).symm P = P.of_iso_limit i.symm :=
   rfl
 
+-- error in CategoryTheory.Limits.IsLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If the canonical morphism from a cone point to a limiting cone point is an iso, then the
 first cone was limiting also.
--/
-def of_point_iso {r t : cone F} (P : is_limit r) [i : is_iso (P.lift t)] : is_limit t :=
-  of_iso_limit P
-    (by 
-      haveI  : is_iso (P.lift_cone_morphism t).Hom := i 
-      haveI  : is_iso (P.lift_cone_morphism t) := cones.cone_iso_of_hom_iso _ 
-      symm 
-      apply as_iso (P.lift_cone_morphism t))
+-/ def of_point_iso {r t : cone F} (P : is_limit r) [i : is_iso (P.lift t)] : is_limit t :=
+of_iso_limit P (begin
+   haveI [] [":", expr is_iso (P.lift_cone_morphism t).hom] [":=", expr i],
+   haveI [] [":", expr is_iso (P.lift_cone_morphism t)] [":=", expr cones.cone_iso_of_hom_iso _],
+   symmetry,
+   apply [expr as_iso (P.lift_cone_morphism t)]
+ end)
 
 variable{t : cone F}
 
@@ -446,17 +446,19 @@ will be a limit cone. -/
 def limit_cone : cone F :=
   cone_of_hom h (𝟙 X)
 
+-- error in CategoryTheory.Limits.IsLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `F.cones` is represented by `X`, the cone corresponding to a morphism `f : Y ⟶ X` is
 the limit cone extended by `f`. -/
-theorem cone_of_hom_fac {Y : C} (f : Y ⟶ X) : cone_of_hom h f = (limit_cone h).extend f :=
-  by 
-    dsimp [cone_of_hom, limit_cone, cone.extend]
-    congr with j 
-    have t := congr_funₓ (h.hom.naturality f.op) (𝟙 X)
-    dsimp  at t 
-    simp only [comp_id] at t 
-    rw [congr_funₓ (congr_argₓ nat_trans.app t) j]
-    rfl
+theorem cone_of_hom_fac {Y : C} (f : «expr ⟶ »(Y, X)) : «expr = »(cone_of_hom h f, (limit_cone h).extend f) :=
+begin
+  dsimp [] ["[", expr cone_of_hom, ",", expr limit_cone, ",", expr cone.extend, "]"] [] [],
+  congr' [] ["with", ident j],
+  have [ident t] [] [":=", expr congr_fun (h.hom.naturality f.op) («expr𝟙»() X)],
+  dsimp [] [] [] ["at", ident t],
+  simp [] [] ["only"] ["[", expr comp_id, "]"] [] ["at", ident t],
+  rw [expr congr_fun (congr_arg nat_trans.app t) j] [],
+  refl
+end
 
 /-- If `F.cones` is represented by `X`, any cone is the extension of the limit cone by the
 corresponding morphism. -/
@@ -472,31 +474,29 @@ section
 
 open OfNatIso
 
+-- error in CategoryTheory.Limits.IsLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `F.cones` is representable, then the cone corresponding to the identity morphism on
 the representing object is a limit cone.
--/
-def of_nat_iso {X : C} (h : yoneda.obj X ≅ F.cones) : is_limit (limit_cone h) :=
-  { lift := fun s => hom_of_cone h s,
-    fac' :=
-      fun s j =>
-        by 
-          have h := cone_fac h s 
-          cases s 
-          injection h with h₁ h₂ 
-          simp only [heq_iff_eq] at h₂ 
-          convRHS => rw [←h₂]
-          rfl,
-    uniq' :=
-      fun s m w =>
-        by 
-          rw [←hom_of_cone_of_hom h m]
-          congr 
-          rw [cone_of_hom_fac]
-          dsimp [cone.extend]
-          cases s 
-          congr with j 
-          exact w j }
+-/ def of_nat_iso {X : C} (h : «expr ≅ »(yoneda.obj X, F.cones)) : is_limit (limit_cone h) :=
+{ lift := λ s, hom_of_cone h s,
+  fac' := λ s j, begin
+    have [ident h] [] [":=", expr cone_fac h s],
+    cases [expr s] [],
+    injection [expr h] ["with", ident h₁, ident h₂],
+    simp [] [] ["only"] ["[", expr heq_iff_eq, "]"] [] ["at", ident h₂],
+    conv_rhs [] [] { rw ["<-", expr h₂] },
+    refl
+  end,
+  uniq' := λ s m w, begin
+    rw ["<-", expr hom_of_cone_of_hom h m] [],
+    congr,
+    rw [expr cone_of_hom_fac] [],
+    dsimp [] ["[", expr cone.extend, "]"] [] [],
+    cases [expr s] [],
+    congr' [] ["with", ident j],
+    exact [expr w j]
+  end }
 
 end 
 
@@ -526,7 +526,7 @@ restate_axiom is_colimit.uniq'
 
 namespace IsColimit
 
--- error in CategoryTheory.Limits.IsLimit: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in CategoryTheory.Limits.IsLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 instance subsingleton {t : cocone F} : subsingleton (is_colimit t) :=
 ⟨by intros [ident P, ident Q]; cases [expr P] []; cases [expr Q] []; congr; ext [] [] []; solve_by_elim [] [] [] []⟩
 
@@ -641,16 +641,16 @@ theorem equiv_iso_colimit_symm_apply {r t : cocone F} (i : r ≅ t) (P : is_coli
   (equiv_iso_colimit i).symm P = P.of_iso_colimit i.symm :=
   rfl
 
+-- error in CategoryTheory.Limits.IsLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If the canonical morphism to a cocone point from a colimiting cocone point is an iso, then the
 first cocone was colimiting also.
--/
-def of_point_iso {r t : cocone F} (P : is_colimit r) [i : is_iso (P.desc t)] : is_colimit t :=
-  of_iso_colimit P
-    (by 
-      haveI  : is_iso (P.desc_cocone_morphism t).Hom := i 
-      haveI  : is_iso (P.desc_cocone_morphism t) := cocones.cocone_iso_of_hom_iso _ 
-      apply as_iso (P.desc_cocone_morphism t))
+-/ def of_point_iso {r t : cocone F} (P : is_colimit r) [i : is_iso (P.desc t)] : is_colimit t :=
+of_iso_colimit P (begin
+   haveI [] [":", expr is_iso (P.desc_cocone_morphism t).hom] [":=", expr i],
+   haveI [] [":", expr is_iso (P.desc_cocone_morphism t)] [":=", expr cocones.cocone_iso_of_hom_iso _],
+   apply [expr as_iso (P.desc_cocone_morphism t)]
+ end)
 
 variable{t : cocone F}
 
@@ -920,17 +920,19 @@ will be a colimit cocone. -/
 def colimit_cocone : cocone F :=
   cocone_of_hom h (𝟙 X)
 
+-- error in CategoryTheory.Limits.IsLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `F.cocones` is corepresented by `X`, the cocone corresponding to a morphism `f : Y ⟶ X` is
 the colimit cocone extended by `f`. -/
-theorem cocone_of_hom_fac {Y : C} (f : X ⟶ Y) : cocone_of_hom h f = (colimit_cocone h).extend f :=
-  by 
-    dsimp [cocone_of_hom, colimit_cocone, cocone.extend]
-    congr with j 
-    have t := congr_funₓ (h.hom.naturality f) (𝟙 X)
-    dsimp  at t 
-    simp only [id_comp] at t 
-    rw [congr_funₓ (congr_argₓ nat_trans.app t) j]
-    rfl
+theorem cocone_of_hom_fac {Y : C} (f : «expr ⟶ »(X, Y)) : «expr = »(cocone_of_hom h f, (colimit_cocone h).extend f) :=
+begin
+  dsimp [] ["[", expr cocone_of_hom, ",", expr colimit_cocone, ",", expr cocone.extend, "]"] [] [],
+  congr' [] ["with", ident j],
+  have [ident t] [] [":=", expr congr_fun (h.hom.naturality f) («expr𝟙»() X)],
+  dsimp [] [] [] ["at", ident t],
+  simp [] [] ["only"] ["[", expr id_comp, "]"] [] ["at", ident t],
+  rw [expr congr_fun (congr_arg nat_trans.app t) j] [],
+  refl
+end
 
 /-- If `F.cocones` is corepresented by `X`, any cocone is the extension of the colimit cocone by the
 corresponding morphism. -/
@@ -946,31 +948,29 @@ section
 
 open OfNatIso
 
+-- error in CategoryTheory.Limits.IsLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `F.cocones` is corepresentable, then the cocone corresponding to the identity morphism on
 the representing object is a colimit cocone.
--/
-def of_nat_iso {X : C} (h : coyoneda.obj (op X) ≅ F.cocones) : is_colimit (colimit_cocone h) :=
-  { desc := fun s => hom_of_cocone h s,
-    fac' :=
-      fun s j =>
-        by 
-          have h := cocone_fac h s 
-          cases s 
-          injection h with h₁ h₂ 
-          simp only [heq_iff_eq] at h₂ 
-          convRHS => rw [←h₂]
-          rfl,
-    uniq' :=
-      fun s m w =>
-        by 
-          rw [←hom_of_cocone_of_hom h m]
-          congr 
-          rw [cocone_of_hom_fac]
-          dsimp [cocone.extend]
-          cases s 
-          congr with j 
-          exact w j }
+-/ def of_nat_iso {X : C} (h : «expr ≅ »(coyoneda.obj (op X), F.cocones)) : is_colimit (colimit_cocone h) :=
+{ desc := λ s, hom_of_cocone h s,
+  fac' := λ s j, begin
+    have [ident h] [] [":=", expr cocone_fac h s],
+    cases [expr s] [],
+    injection [expr h] ["with", ident h₁, ident h₂],
+    simp [] [] ["only"] ["[", expr heq_iff_eq, "]"] [] ["at", ident h₂],
+    conv_rhs [] [] { rw ["<-", expr h₂] },
+    refl
+  end,
+  uniq' := λ s m w, begin
+    rw ["<-", expr hom_of_cocone_of_hom h m] [],
+    congr,
+    rw [expr cocone_of_hom_fac] [],
+    dsimp [] ["[", expr cocone.extend, "]"] [] [],
+    cases [expr s] [],
+    congr' [] ["with", ident j],
+    exact [expr w j]
+  end }
 
 end 
 

@@ -1,11 +1,10 @@
 import Mathbin.Algebra.Associated 
 import Mathbin.Algebra.Regular.Basic 
-import Mathbin.Data.Matrix.Notation 
-import Mathbin.LinearAlgebra.Matrix.Polynomial 
 import Mathbin.LinearAlgebra.Matrix.MvPolynomial 
+import Mathbin.LinearAlgebra.Matrix.Polynomial 
+import Mathbin.RingTheory.Polynomial.Basic 
 import Mathbin.Tactic.Linarith.Default 
-import Mathbin.Tactic.RingExp 
-import Mathbin.RingTheory.Polynomial.Basic
+import Mathbin.Tactic.RingExp
 
 /-!
 # Cramer's rule and adjugate matrices
@@ -189,51 +188,51 @@ theorem adjugate_apply (A : Matrix n n α) (i j : n) : adjugate A i j = (A.updat
     simp only 
     rw [cramer_apply, update_column_transpose, det_transpose]
 
-theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate (A)ᵀ :=
-  by 
-    ext i j 
-    rw [transpose_apply, adjugate_apply, adjugate_apply, update_row_transpose, det_transpose]
-    rw [det_apply', det_apply']
-    apply Finset.sum_congr rfl 
-    intro σ _ 
-    congr 1
-    byCases' i = σ j
-    ·
-      congr <;> ext j' 
-      subst h 
-      have  : σ j' = σ j ↔ j' = j := σ.injective.eq_iff 
-      rw [update_row_apply, update_column_apply]
-      simpRw [this]
-      rw [←dite_eq_ite, ←dite_eq_ite]
-      congr 1 with rfl 
-      rw [Pi.single_eq_same, Pi.single_eq_same]
-    ·
-      have  : (∏j' : n, update_column A j (Pi.single i 1) (σ j') j') = 0
-      ·
-        apply prod_eq_zero (mem_univ j)
-        rw [update_column_self, Pi.single_eq_of_ne' h]
-      rw [this]
-      apply prod_eq_zero (mem_univ ((σ⁻¹) i))
-      erw [apply_symm_apply σ i, update_row_self]
-      apply Pi.single_eq_of_ne 
-      intro h' 
-      exact h ((symm_apply_eq σ).mp h')
+-- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem adjugate_transpose (A : matrix n n α) : «expr = »(«expr ᵀ»(adjugate A), adjugate «expr ᵀ»(A)) :=
+begin
+  ext [] [ident i, ident j] [],
+  rw ["[", expr transpose_apply, ",", expr adjugate_apply, ",", expr adjugate_apply, ",", expr update_row_transpose, ",", expr det_transpose, "]"] [],
+  rw ["[", expr det_apply', ",", expr det_apply', "]"] [],
+  apply [expr finset.sum_congr rfl],
+  intros [ident σ, "_"],
+  congr' [1] [],
+  by_cases [expr «expr = »(i, σ j)],
+  { congr; ext [] [ident j'] [],
+    subst [expr h],
+    have [] [":", expr «expr ↔ »(«expr = »(σ j', σ j), «expr = »(j', j))] [":=", expr σ.injective.eq_iff],
+    rw ["[", expr update_row_apply, ",", expr update_column_apply, "]"] [],
+    simp_rw [expr this] [],
+    rw ["[", "<-", expr dite_eq_ite, ",", "<-", expr dite_eq_ite, "]"] [],
+    congr' [1] ["with", ident rfl],
+    rw ["[", expr pi.single_eq_same, ",", expr pi.single_eq_same, "]"] [] },
+  { have [] [":", expr «expr = »(«expr∏ , »((j' : n), update_column A j (pi.single i 1) (σ j') j'), 0)] [],
+    { apply [expr prod_eq_zero (mem_univ j)],
+      rw ["[", expr update_column_self, ",", expr pi.single_eq_of_ne' h, "]"] [] },
+    rw [expr this] [],
+    apply [expr prod_eq_zero (mem_univ («expr ⁻¹»(σ) i))],
+    erw ["[", expr apply_symm_apply σ i, ",", expr update_row_self, "]"] [],
+    apply [expr pi.single_eq_of_ne],
+    intro [ident h'],
+    exact [expr h ((symm_apply_eq σ).mp h')] }
+end
 
+-- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Since the map `b ↦ cramer A b` is linear in `b`, it must be multiplication by some matrix. This
 matrix is `A.adjugate`. -/
-theorem cramer_eq_adjugate_mul_vec (A : Matrix n n α) (b : n → α) : cramer A b = A.adjugate.mul_vec b :=
-  by 
-    nthRw 1[←A.transpose_transpose]
-    rw [←adjugate_transpose, adjugate_def]
-    have  : b = ∑i, b i • Pi.single i 1
-    ·
-      refine' (pi_eq_sum_univ b).trans _ 
-      congr with j 
-      simp [Pi.single_apply, eq_comm]
-      congr 
-    nthRw 0[this]
-    ext k 
-    simp [mul_vec, dot_product, mul_commₓ]
+theorem cramer_eq_adjugate_mul_vec (A : matrix n n α) (b : n → α) : «expr = »(cramer A b, A.adjugate.mul_vec b) :=
+begin
+  nth_rewrite [1] ["<-", expr A.transpose_transpose] [],
+  rw ["[", "<-", expr adjugate_transpose, ",", expr adjugate_def, "]"] [],
+  have [] [":", expr «expr = »(b, «expr∑ , »((i), «expr • »(b i, pi.single i 1)))] [],
+  { refine [expr (pi_eq_sum_univ b).trans _],
+    congr' [] ["with", ident j],
+    simp [] [] [] ["[", expr pi.single_apply, ",", expr eq_comm, "]"] [] [],
+    congr },
+  nth_rewrite [0] [expr this] [],
+  ext [] [ident k] [],
+  simp [] [] [] ["[", expr mul_vec, ",", expr dot_product, ",", expr mul_comm, "]"] [] []
+end
 
 theorem mul_adjugate_apply (A : Matrix n n α) i j k : (A i k*adjugate A k j) = cramer (A)ᵀ (Pi.single k (A i k)) j :=
   by 
@@ -272,10 +271,14 @@ theorem adjugate_subsingleton [Subsingleton n] (A : Matrix n n α) : adjugate A 
     ext i j 
     simp [Subsingleton.elimₓ i j, adjugate_apply, det_eq_elem_of_subsingleton _ i]
 
-theorem adjugate_eq_one_of_card_eq_one {A : Matrix n n α} (h : Fintype.card n = 1) : adjugate A = 1 :=
-  by 
-    haveI  : Subsingleton n := fintype.card_le_one_iff_subsingleton.mp h.le 
-    exact adjugate_subsingleton _
+-- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem adjugate_eq_one_of_card_eq_one
+{A : matrix n n α}
+(h : «expr = »(fintype.card n, 1)) : «expr = »(adjugate A, 1) :=
+begin
+  haveI [] [":", expr subsingleton n] [":=", expr fintype.card_le_one_iff_subsingleton.mp h.le],
+  exact [expr adjugate_subsingleton _]
+end
 
 @[simp]
 theorem adjugate_zero [Nontrivial n] : adjugate (0 : Matrix n n α) = 0 :=
@@ -292,39 +295,41 @@ theorem adjugate_one : adjugate (1 : Matrix n n α) = 1 :=
     ext 
     simp [adjugate_def, Matrix.one_apply, Pi.single_apply, eq_comm]
 
-theorem _root_.ring_hom.map_adjugate {R S : Type _} [CommRingₓ R] [CommRingₓ S] (f : R →+* S) (M : Matrix n n R) :
-  f.map_matrix M.adjugate = Matrix.adjugate (f.map_matrix M) :=
-  by 
-    ext i k 
-    have  : Pi.single i (1 : S) = (f ∘ Pi.single i 1)
-    ·
-      rw [←f.map_one]
-      exact Pi.single_op (fun i => f) (fun i => f.map_zero) i (1 : R)
-    rw [adjugate_apply, RingHom.map_matrix_apply, map_apply, RingHom.map_matrix_apply, this, ←map_update_row,
-      ←RingHom.map_matrix_apply, ←RingHom.map_det, ←adjugate_apply]
+-- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem _root_.ring_hom.map_adjugate
+{R S : Type*}
+[comm_ring R]
+[comm_ring S]
+(f : «expr →+* »(R, S))
+(M : matrix n n R) : «expr = »(f.map_matrix M.adjugate, matrix.adjugate (f.map_matrix M)) :=
+begin
+  ext [] [ident i, ident k] [],
+  have [] [":", expr «expr = »(pi.single i (1 : S), «expr ∘ »(f, pi.single i 1))] [],
+  { rw ["<-", expr f.map_one] [],
+    exact [expr pi.single_op (λ i, f) (λ i, f.map_zero) i (1 : R)] },
+  rw ["[", expr adjugate_apply, ",", expr ring_hom.map_matrix_apply, ",", expr map_apply, ",", expr ring_hom.map_matrix_apply, ",", expr this, ",", "<-", expr map_update_row, ",", "<-", expr ring_hom.map_matrix_apply, ",", "<-", expr ring_hom.map_det, ",", "<-", expr adjugate_apply, "]"] []
+end
 
 theorem _root_.alg_hom.map_adjugate {R A B : Type _} [CommSemiringₓ R] [CommRingₓ A] [CommRingₓ B] [Algebra R A]
   [Algebra R B] (f : A →ₐ[R] B) (M : Matrix n n A) : f.map_matrix M.adjugate = Matrix.adjugate (f.map_matrix M) :=
   f.to_ring_hom.map_adjugate _
 
-theorem det_adjugate (A : Matrix n n α) : (adjugate A).det = (A.det^Fintype.card n - 1) :=
-  by 
-    cases' (Fintype.card n).eq_zero_or_pos with h_card h_card
-    ·
-      haveI  : IsEmpty n := fintype.card_eq_zero_iff.mp h_card 
-      rw [h_card, Nat.zero_sub, pow_zeroₓ, adjugate_subsingleton, det_one]
-    replace h_card := tsub_add_cancel_of_le h_card.nat_succ_le 
-    let A' := mv_polynomial_X n n ℤ 
-    suffices  : A'.adjugate.det = (A'.det^Fintype.card n - 1)
-    ·
-      rw [←mv_polynomial_X_map_matrix_aeval ℤ A, ←AlgHom.map_adjugate, ←AlgHom.map_det, ←AlgHom.map_det,
-        ←AlgHom.map_pow, this]
-    apply mul_left_cancel₀ (show A'.det ≠ 0 from det_mv_polynomial_X_ne_zero n ℤ)
-    calc (A'.det*A'.adjugate.det) = (A' ⬝ adjugate A').det := (det_mul _ _).symm _ = (A'.det^Fintype.card n) :=
-      by 
-        rw [mul_adjugate, det_smul, det_one, mul_oneₓ]_ = A'.det*A'.det^Fintype.card n - 1 :=
-      by 
-        rw [←pow_succₓ, h_card]
+-- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem det_adjugate (A : matrix n n α) : «expr = »((adjugate A).det, «expr ^ »(A.det, «expr - »(fintype.card n, 1))) :=
+begin
+  cases [expr (fintype.card n).eq_zero_or_pos] ["with", ident h_card, ident h_card],
+  { haveI [] [":", expr is_empty n] [":=", expr fintype.card_eq_zero_iff.mp h_card],
+    rw ["[", expr h_card, ",", expr nat.zero_sub, ",", expr pow_zero, ",", expr adjugate_subsingleton, ",", expr det_one, "]"] [] },
+  replace [ident h_card] [] [":=", expr tsub_add_cancel_of_le h_card.nat_succ_le],
+  let [ident A'] [] [":=", expr mv_polynomial_X n n exprℤ()],
+  suffices [] [":", expr «expr = »(A'.adjugate.det, «expr ^ »(A'.det, «expr - »(fintype.card n, 1)))],
+  { rw ["[", "<-", expr mv_polynomial_X_map_matrix_aeval exprℤ() A, ",", "<-", expr alg_hom.map_adjugate, ",", "<-", expr alg_hom.map_det, ",", "<-", expr alg_hom.map_det, ",", "<-", expr alg_hom.map_pow, ",", expr this, "]"] [] },
+  apply [expr mul_left_cancel₀ (show «expr ≠ »(A'.det, 0), from det_mv_polynomial_X_ne_zero n exprℤ())],
+  calc
+    «expr = »(«expr * »(A'.det, A'.adjugate.det), «expr ⬝ »(A', adjugate A').det) : (det_mul _ _).symm
+    «expr = »(..., «expr ^ »(A'.det, fintype.card n)) : by rw ["[", expr mul_adjugate, ",", expr det_smul, ",", expr det_one, ",", expr mul_one, "]"] []
+    «expr = »(..., «expr * »(A'.det, «expr ^ »(A'.det, «expr - »(fintype.card n, 1)))) : by rw ["[", "<-", expr pow_succ, ",", expr h_card, "]"] []
+end
 
 @[simp]
 theorem adjugate_fin_zero (A : Matrix (Finₓ 0) (Finₓ 0) α) : adjugate A = 0 :=
@@ -334,7 +339,7 @@ theorem adjugate_fin_zero (A : Matrix (Finₓ 0) (Finₓ 0) α) : adjugate A = 0
 theorem adjugate_fin_one (A : Matrix (Finₓ 1) (Finₓ 1) α) : adjugate A = 1 :=
   adjugate_subsingleton A
 
--- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 theorem adjugate_fin_two
 (A : matrix (fin 2) (fin 2) α) : «expr = »(adjugate A, «expr![ , ]»([«expr![ , ]»([A 1 1, «expr- »(A 0 1)]), «expr![ , ]»([«expr- »(A 1 0), A 0 0])])) :=
 begin
@@ -343,7 +348,7 @@ begin
   fin_cases [ident i] ["with", expr «expr[ , ]»([0, 1])]; fin_cases [ident j] ["with", expr «expr[ , ]»([0, 1])]; simp [] [] ["only"] ["[", expr nat.one_ne_zero, ",", expr one_mul, ",", expr fin.one_eq_zero_iff, ",", expr pi.single_eq_same, ",", expr zero_mul, ",", expr fin.zero_eq_one_iff, ",", expr sub_zero, ",", expr pi.single_eq_of_ne, ",", expr ne.def, ",", expr not_false_iff, ",", expr update_row_self, ",", expr update_row_ne, ",", expr cons_val_zero, ",", expr mul_zero, ",", expr mul_one, ",", expr zero_sub, ",", expr cons_val_one, ",", expr head_cons, "]"] [] []
 end
 
--- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem adjugate_fin_two'
 (a
@@ -352,11 +357,15 @@ theorem adjugate_fin_two'
  d : α) : «expr = »(adjugate «expr![ , ]»([«expr![ , ]»([a, b]), «expr![ , ]»([c, d])]), «expr![ , ]»([«expr![ , ]»([d, «expr- »(b)]), «expr![ , ]»([«expr- »(c), a])])) :=
 adjugate_fin_two _
 
-theorem adjugate_conj_transpose [StarRing α] (A : Matrix n n α) : (A.adjugate)ᴴ = adjugate (A)ᴴ :=
-  by 
-    dsimp only [conj_transpose]
-    have  : (A)ᵀ.adjugate.map star = adjugate ((A)ᵀ.map star) := (starRingAut : α ≃+* α).toRingHom.map_adjugate (A)ᵀ
-    rw [A.adjugate_transpose, this]
+-- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem adjugate_conj_transpose
+[star_ring α]
+(A : matrix n n α) : «expr = »(«expr ᴴ»(A.adjugate), adjugate «expr ᴴ»(A)) :=
+begin
+  dsimp ["only"] ["[", expr conj_transpose, "]"] [] [],
+  have [] [":", expr «expr = »(«expr ᵀ»(A).adjugate.map star, adjugate («expr ᵀ»(A).map star))] [":=", expr (star_ring_aut : «expr ≃+* »(α, α)).to_ring_hom.map_adjugate «expr ᵀ»(A)],
+  rw ["[", expr A.adjugate_transpose, ",", expr this, "]"] []
+end
 
 theorem is_regular_of_is_left_regular_det {A : Matrix n n α} (hA : IsLeftRegular A.det) : IsRegular A :=
   by 
@@ -373,48 +382,47 @@ theorem is_regular_of_is_left_regular_det {A : Matrix n n α} (hA : IsLeftRegula
       rw [←Matrix.mul_one B, ←Matrix.mul_one C, ←Matrix.mul_smul, ←Matrix.mul_smul, ←mul_adjugate, ←Matrix.mul_assoc,
         ←Matrix.mul_assoc, h]
 
-theorem adjugate_mul_distrib_aux (A B : Matrix n n α) (hA : IsLeftRegular A.det) (hB : IsLeftRegular B.det) :
-  adjugate (A ⬝ B) = adjugate B ⬝ adjugate A :=
-  by 
-    have hAB : IsLeftRegular (A ⬝ B).det
-    ·
-      rw [det_mul]
-      exact hA.mul hB 
-    refine' (is_regular_of_is_left_regular_det hAB).left _ 
-    rw [mul_eq_mul, mul_adjugate, mul_eq_mul, Matrix.mul_assoc, ←Matrix.mul_assoc B, mul_adjugate, smul_mul,
-      Matrix.one_mul, mul_smul, mul_adjugate, smul_smul, mul_commₓ, ←det_mul]
+-- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem adjugate_mul_distrib_aux
+(A B : matrix n n α)
+(hA : is_left_regular A.det)
+(hB : is_left_regular B.det) : «expr = »(adjugate «expr ⬝ »(A, B), «expr ⬝ »(adjugate B, adjugate A)) :=
+begin
+  have [ident hAB] [":", expr is_left_regular «expr ⬝ »(A, B).det] [],
+  { rw ["[", expr det_mul, "]"] [],
+    exact [expr hA.mul hB] },
+  refine [expr (is_regular_of_is_left_regular_det hAB).left _],
+  rw ["[", expr mul_eq_mul, ",", expr mul_adjugate, ",", expr mul_eq_mul, ",", expr matrix.mul_assoc, ",", "<-", expr matrix.mul_assoc B, ",", expr mul_adjugate, ",", expr smul_mul, ",", expr matrix.one_mul, ",", expr mul_smul, ",", expr mul_adjugate, ",", expr smul_smul, ",", expr mul_comm, ",", "<-", expr det_mul, "]"] []
+end
 
+-- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Proof follows from "The trace Cayley-Hamilton theorem" by Darij Grinberg, Section 5.3
 -/
-theorem adjugate_mul_distrib (A B : Matrix n n α) : adjugate (A ⬝ B) = adjugate B ⬝ adjugate A :=
-  by 
-    casesI subsingleton_or_nontrivial α
-    ·
-      simp 
-    let g : Matrix n n α → Matrix n n (Polynomial α) := fun M => M.map Polynomial.c+(Polynomial.x : Polynomial α) • 1
-    let f' : Matrix n n (Polynomial α) →+* Matrix n n α := (Polynomial.evalRingHom 0).mapMatrix 
-    have f'_inv : ∀ M, f' (g M) = M
-    ·
-      intro 
-      ext 
-      simp [f', g]
-    have f'_adj : ∀ M : Matrix n n α, f' (adjugate (g M)) = adjugate M
-    ·
-      intro 
-      rw [RingHom.map_adjugate, f'_inv]
-    have f'_g_mul : ∀ M N : Matrix n n α, f' (g M ⬝ g N) = M ⬝ N
-    ·
-      intros 
-      rw [←mul_eq_mul, RingHom.map_mul, f'_inv, f'_inv, mul_eq_mul]
-    have hu : ∀ M : Matrix n n α, IsRegular (g M).det
-    ·
-      intro M 
-      refine' Polynomial.Monic.is_regular _ 
-      simp only [g, Polynomial.Monic.def, ←Polynomial.leading_coeff_det_X_one_add_C M, add_commₓ]
-    rw [←f'_adj, ←f'_adj, ←f'_adj, ←mul_eq_mul (f' (adjugate (g B))), ←f'.map_mul, mul_eq_mul,
-      ←adjugate_mul_distrib_aux _ _ (hu A).left (hu B).left, RingHom.map_adjugate, RingHom.map_adjugate, f'_inv,
-      f'_g_mul]
+theorem adjugate_mul_distrib
+(A B : matrix n n α) : «expr = »(adjugate «expr ⬝ »(A, B), «expr ⬝ »(adjugate B, adjugate A)) :=
+begin
+  casesI [expr subsingleton_or_nontrivial α] [],
+  { simp [] [] [] [] [] [] },
+  let [ident g] [":", expr matrix n n α → matrix n n (polynomial α)] [":=", expr λ
+   M, «expr + »(M.map polynomial.C, «expr • »((polynomial.X : polynomial α), 1))],
+  let [ident f'] [":", expr «expr →+* »(matrix n n (polynomial α), matrix n n α)] [":=", expr (polynomial.eval_ring_hom 0).map_matrix],
+  have [ident f'_inv] [":", expr ∀ M, «expr = »(f' (g M), M)] [],
+  { intro [],
+    ext [] [] [],
+    simp [] [] [] ["[", expr f', ",", expr g, "]"] [] [] },
+  have [ident f'_adj] [":", expr ∀ M : matrix n n α, «expr = »(f' (adjugate (g M)), adjugate M)] [],
+  { intro [],
+    rw ["[", expr ring_hom.map_adjugate, ",", expr f'_inv, "]"] [] },
+  have [ident f'_g_mul] [":", expr ∀ M N : matrix n n α, «expr = »(f' «expr ⬝ »(g M, g N), «expr ⬝ »(M, N))] [],
+  { intros [],
+    rw ["[", "<-", expr mul_eq_mul, ",", expr ring_hom.map_mul, ",", expr f'_inv, ",", expr f'_inv, ",", expr mul_eq_mul, "]"] [] },
+  have [ident hu] [":", expr ∀ M : matrix n n α, is_regular (g M).det] [],
+  { intros [ident M],
+    refine [expr polynomial.monic.is_regular _],
+    simp [] [] ["only"] ["[", expr g, ",", expr polynomial.monic.def, ",", "<-", expr polynomial.leading_coeff_det_X_one_add_C M, ",", expr add_comm, "]"] [] [] },
+  rw ["[", "<-", expr f'_adj, ",", "<-", expr f'_adj, ",", "<-", expr f'_adj, ",", "<-", expr mul_eq_mul (f' (adjugate (g B))), ",", "<-", expr f'.map_mul, ",", expr mul_eq_mul, ",", "<-", expr adjugate_mul_distrib_aux _ _ (hu A).left (hu B).left, ",", expr ring_hom.map_adjugate, ",", expr ring_hom.map_adjugate, ",", expr f'_inv, ",", expr f'_g_mul, "]"] []
+end
 
 @[simp]
 theorem adjugate_pow (A : Matrix n n α) (k : ℕ) : adjugate (A^k) = (adjugate A^k) :=
@@ -425,41 +433,40 @@ theorem adjugate_pow (A : Matrix n n α) (k : ℕ) : adjugate (A^k) = (adjugate 
     ·
       rw [pow_succ'ₓ, mul_eq_mul, adjugate_mul_distrib, IH, ←mul_eq_mul, pow_succₓ]
 
-theorem det_smul_adjugate_adjugate (A : Matrix n n α) :
-  det A • adjugate (adjugate A) = (det A^Fintype.card n - 1) • A :=
-  by 
-    have  : A ⬝ (A.adjugate ⬝ A.adjugate.adjugate) = A ⬝ ((A.det^Fintype.card n - 1) • 1)
-    ·
-      rw [←adjugate_mul_distrib, adjugate_mul, adjugate_smul, adjugate_one]
-    rwa [←Matrix.mul_assoc, mul_adjugate, Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul, Matrix.one_mul] at this
+-- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem det_smul_adjugate_adjugate
+(A : matrix n n α) : «expr = »(«expr • »(det A, adjugate (adjugate A)), «expr • »(«expr ^ »(det A, «expr - »(fintype.card n, 1)), A)) :=
+begin
+  have [] [":", expr «expr = »(«expr ⬝ »(A, «expr ⬝ »(A.adjugate, A.adjugate.adjugate)), «expr ⬝ »(A, «expr • »(«expr ^ »(A.det, «expr - »(fintype.card n, 1)), 1)))] [],
+  { rw ["[", "<-", expr adjugate_mul_distrib, ",", expr adjugate_mul, ",", expr adjugate_smul, ",", expr adjugate_one, "]"] [] },
+  rwa ["[", "<-", expr matrix.mul_assoc, ",", expr mul_adjugate, ",", expr matrix.mul_smul, ",", expr matrix.mul_one, ",", expr matrix.smul_mul, ",", expr matrix.one_mul, "]"] ["at", ident this]
+end
 
+-- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Note that this is not true for `fintype.card n = 1` since `1 - 2 = 0` and not `-1`. -/
-theorem adjugate_adjugate (A : Matrix n n α) (h : Fintype.card n ≠ 1) :
-  adjugate (adjugate A) = (det A^Fintype.card n - 2) • A :=
-  by 
-    cases' h_card : Fintype.card n with n'
-    ·
-      haveI  : IsEmpty n := fintype.card_eq_zero_iff.mp h_card 
-      exact @Subsingleton.elimₓ _ Matrix.subsingleton_of_empty_left _ _ 
-    cases n'
-    ·
-      exact (h h_card).elim 
-    rw [←h_card]
-    let A' := mv_polynomial_X n n ℤ 
-    suffices  : adjugate (adjugate A') = (det A'^Fintype.card n - 2) • A'
-    ·
-      rw [←mv_polynomial_X_map_matrix_aeval ℤ A, ←AlgHom.map_adjugate, ←AlgHom.map_adjugate, this, ←AlgHom.map_det,
-        ←AlgHom.map_pow]
-      ext i j 
-      dsimp [-mv_polynomial_X]
-      rw [←AlgHom.map_mul]
-    have h_card' : ((Fintype.card n - 2)+1) = Fintype.card n - 1
-    ·
-      simp [h_card]
-    have is_reg : IsSmulRegular (MvPolynomial (n × n) ℤ) (det A') :=
-      fun x y => mul_left_cancel₀ (det_mv_polynomial_X_ne_zero n ℤ)
-    apply is_reg.matrix 
-    rw [smul_smul, ←pow_succₓ, h_card', det_smul_adjugate_adjugate]
+theorem adjugate_adjugate
+(A : matrix n n α)
+(h : «expr ≠ »(fintype.card n, 1)) : «expr = »(adjugate (adjugate A), «expr • »(«expr ^ »(det A, «expr - »(fintype.card n, 2)), A)) :=
+begin
+  cases [expr h_card, ":", expr fintype.card n] ["with", ident n'],
+  { haveI [] [":", expr is_empty n] [":=", expr fintype.card_eq_zero_iff.mp h_card],
+    exact [expr @subsingleton.elim _ matrix.subsingleton_of_empty_left _ _] },
+  cases [expr n'] [],
+  { exact [expr (h h_card).elim] },
+  rw ["<-", expr h_card] [],
+  let [ident A'] [] [":=", expr mv_polynomial_X n n exprℤ()],
+  suffices [] [":", expr «expr = »(adjugate (adjugate A'), «expr • »(«expr ^ »(det A', «expr - »(fintype.card n, 2)), A'))],
+  { rw ["[", "<-", expr mv_polynomial_X_map_matrix_aeval exprℤ() A, ",", "<-", expr alg_hom.map_adjugate, ",", "<-", expr alg_hom.map_adjugate, ",", expr this, ",", "<-", expr alg_hom.map_det, ",", "<-", expr alg_hom.map_pow, "]"] [],
+    ext [] [ident i, ident j] [],
+    dsimp [] ["[", "-", ident mv_polynomial_X, "]"] [] [],
+    rw ["[", "<-", expr alg_hom.map_mul, "]"] [] },
+  have [ident h_card'] [":", expr «expr = »(«expr + »(«expr - »(fintype.card n, 2), 1), «expr - »(fintype.card n, 1))] [],
+  { simp [] [] [] ["[", expr h_card, "]"] [] [] },
+  have [ident is_reg] [":", expr is_smul_regular (mv_polynomial «expr × »(n, n) exprℤ()) (det A')] [":=", expr λ
+   x y, mul_left_cancel₀ (det_mv_polynomial_X_ne_zero n exprℤ())],
+  apply [expr is_reg.matrix],
+  rw ["[", expr smul_smul, ",", "<-", expr pow_succ, ",", expr h_card', ",", expr det_smul_adjugate_adjugate, "]"] []
+end
 
 /-- A weaker version of `matrix.adjugate_adjugate` that uses `nontrivial`. -/
 theorem adjugate_adjugate' (A : Matrix n n α) [Nontrivial n] : adjugate (adjugate A) = (det A^Fintype.card n - 2) • A :=

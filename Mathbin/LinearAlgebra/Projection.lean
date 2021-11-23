@@ -295,16 +295,18 @@ def of_is_compl_prod_equiv {p q : Submodule R₁ E} (h : IsCompl p q) : ((p →�
 
 end 
 
+-- error in LinearAlgebra.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem linear_proj_of_is_compl_of_proj (f : E →ₗ[R] p) (hf : ∀ x : p, f x = x) :
-  p.linear_proj_of_is_compl f.ker (is_compl_of_proj hf) = f :=
-  by 
-    ext x 
-    have  : x ∈ p⊔f.ker
-    ·
-      simp only [(is_compl_of_proj hf).sup_eq_top, mem_top]
-    rcases mem_sup'.1 this with ⟨x, y, rfl⟩
-    simp [hf]
+theorem linear_proj_of_is_compl_of_proj
+(f : «expr →ₗ[ ] »(E, R, p))
+(hf : ∀ x : p, «expr = »(f x, x)) : «expr = »(p.linear_proj_of_is_compl f.ker (is_compl_of_proj hf), f) :=
+begin
+  ext [] [ident x] [],
+  have [] [":", expr «expr ∈ »(x, «expr ⊔ »(p, f.ker))] [],
+  { simp [] [] ["only"] ["[", expr (is_compl_of_proj hf).sup_eq_top, ",", expr mem_top, "]"] [] [] },
+  rcases [expr mem_sup'.1 this, "with", "⟨", ident x, ",", ident y, ",", ident rfl, "⟩"],
+  simp [] [] [] ["[", expr hf, "]"] [] []
+end
 
 /-- If `f : E →ₗ[R] F` and `g : E →ₗ[R] G` are two surjective linear maps and
 their kernels are complement of each other, then `x ↦ (f x, g x)` defines

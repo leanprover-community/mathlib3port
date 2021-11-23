@@ -149,46 +149,41 @@ variable{𝕜 :
 instance  : Inhabited (BasicSmoothBundleCore I M F) :=
   ⟨trivialBasicSmoothBundleCore I M F⟩
 
+-- error in Geometry.Manifold.BasicSmoothBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Fiber bundle core associated to a basic smooth bundle core -/
-def to_topological_fiber_bundle_core : TopologicalFiberBundleCore (atlas H M) M F :=
-  { BaseSet := fun i => i.1.Source, is_open_base_set := fun i => i.1.open_source,
-    indexAt := fun x => ⟨chart_at H x, chart_mem_atlas H x⟩, mem_base_set_at := fun x => mem_chart_source H x,
-    coordChange := fun i j x v => Z.coord_change i j (i.1 x) v,
-    coord_change_self := fun i x hx v => Z.coord_change_self i (i.1 x) (i.1.map_source hx) v,
-    coord_change_comp :=
-      fun i j k x ⟨⟨hx1, hx2⟩, hx3⟩ v =>
-        by 
-          have  := Z.coord_change_comp i j k (i.1 x) _ v 
-          convert this using 2
-          ·
-            simp' only [hx1] with mfld_simps
-          ·
-            simp' only [hx1, hx2, hx3] with mfld_simps,
-    coord_change_continuous :=
-      fun i j =>
-        by 
-          have A :
-            ContinuousOn (fun p : E × F => Z.coord_change i j (I.symm p.1) p.2)
-              ((I '' (i.1.symm.trans j.1).Source).Prod (univ : Set F)) :=
-            (Z.coord_change_smooth i j).ContinuousOn 
-          have B : ContinuousOn (fun x : M => I (i.1 x)) i.1.Source := I.continuous.comp_continuous_on i.1.ContinuousOn 
-          have C : ContinuousOn (fun p : M × F => (⟨I (i.1 p.1), p.2⟩ : E × F)) (i.1.Source.Prod univ)
-          ·
-            apply ContinuousOn.prod _ continuous_snd.continuous_on 
-            exact B.comp continuous_fst.continuous_on (prod_subset_preimage_fst _ _)
-          have C' :
-            ContinuousOn (fun p : M × F => (⟨I (i.1 p.1), p.2⟩ : E × F)) ((i.1.Source ∩ j.1.Source).Prod univ) :=
-            ContinuousOn.mono C (prod_mono (inter_subset_left _ _) (subset.refl _))
-          have D :
-            (i.1.Source ∩ j.1.Source).Prod univ ⊆
-              (fun p : M × F => (I (i.1 p.1), p.2)) ⁻¹' (I '' (i.1.symm.trans j.1).Source).Prod univ
-          ·
-            rintro ⟨x, v⟩ hx 
-            simp' only with mfld_simps  at hx 
-            simp' only [hx] with mfld_simps 
-          convert ContinuousOn.comp A C' D 
-          ext p 
-          simp' only with mfld_simps }
+def to_topological_fiber_bundle_core : topological_fiber_bundle_core (atlas H M) M F :=
+{ base_set := λ i, i.1.source,
+  is_open_base_set := λ i, i.1.open_source,
+  index_at := λ x, ⟨chart_at H x, chart_mem_atlas H x⟩,
+  mem_base_set_at := λ x, mem_chart_source H x,
+  coord_change := λ i j x v, Z.coord_change i j (i.1 x) v,
+  coord_change_self := λ i x hx v, Z.coord_change_self i (i.1 x) (i.1.map_source hx) v,
+  coord_change_comp := λ (i j k x) ⟨⟨hx1, hx2⟩, hx3⟩ (v), begin
+    have [] [] [":=", expr Z.coord_change_comp i j k (i.1 x) _ v],
+    convert [] [expr this] ["using", 2],
+    { simp [] [] ["only"] ["[", expr hx1, "]"] ["with", ident mfld_simps] [] },
+    { simp [] [] ["only"] ["[", expr hx1, ",", expr hx2, ",", expr hx3, "]"] ["with", ident mfld_simps] [] }
+  end,
+  coord_change_continuous := λ i j, begin
+    have [ident A] [":", expr continuous_on (λ
+      p : «expr × »(E, F), Z.coord_change i j (I.symm p.1) p.2) («expr '' »(I, (i.1.symm.trans j.1).source).prod (univ : set F))] [":=", expr (Z.coord_change_smooth i j).continuous_on],
+    have [ident B] [":", expr continuous_on (λ
+      x : M, I (i.1 x)) i.1.source] [":=", expr I.continuous.comp_continuous_on i.1.continuous_on],
+    have [ident C] [":", expr continuous_on (λ
+      p : «expr × »(M, F), (⟨I (i.1 p.1), p.2⟩ : «expr × »(E, F))) (i.1.source.prod univ)] [],
+    { apply [expr continuous_on.prod _ continuous_snd.continuous_on],
+      exact [expr B.comp continuous_fst.continuous_on (prod_subset_preimage_fst _ _)] },
+    have [ident C'] [":", expr continuous_on (λ
+      p : «expr × »(M, F), (⟨I (i.1 p.1), p.2⟩ : «expr × »(E, F))) («expr ∩ »(i.1.source, j.1.source).prod univ)] [":=", expr continuous_on.mono C (prod_mono (inter_subset_left _ _) (subset.refl _))],
+    have [ident D] [":", expr «expr ⊆ »(«expr ∩ »(i.1.source, j.1.source).prod univ, «expr ⁻¹' »(λ
+       p : «expr × »(M, F), (I (i.1 p.1), p.2), «expr '' »(I, (i.1.symm.trans j.1).source).prod univ))] [],
+    { rintros ["⟨", ident x, ",", ident v, "⟩", ident hx],
+      simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident hx],
+      simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [] },
+    convert [] [expr continuous_on.comp A C' D] [],
+    ext [] [ident p] [],
+    simp [] [] ["only"] [] ["with", ident mfld_simps] []
+  end }
 
 @[simp, mfld_simps]
 theorem base_set (i : atlas H M) : (Z.to_topological_fiber_bundle_core.local_triv i).BaseSet = i.1.Source :=
@@ -256,62 +251,47 @@ theorem coe_chart_at_symm_fst (p : H × F) (q : Z.to_topological_fiber_bundle_co
   ((chart_at (ModelProd H F) q).symm p).1 = ((chart_at H q.1).symm : H → M) p.1 :=
   rfl
 
+-- error in Geometry.Manifold.BasicSmoothBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Smooth manifold structure on the total space of a basic smooth bundle -/
-instance to_smooth_manifold :
-  SmoothManifoldWithCorners (I.prod 𝓘(𝕜, F)) Z.to_topological_fiber_bundle_core.total_space :=
-  by 
-    let J := ModelWithCorners.toLocalEquiv (I.prod 𝓘(𝕜, F))
-    have A :
-      ∀ e e' : LocalHomeomorph M H he : e ∈ atlas H M he' : e' ∈ atlas H M,
-        TimesContDiffOn 𝕜 ∞ (J ∘ (Z.chart he).symm.trans (Z.chart he') ∘ J.symm)
-          (J.symm ⁻¹' ((Z.chart he).symm.trans (Z.chart he')).Source ∩ range J)
-    ·
-      intro e e' he he' 
-      have  :
-        J.symm ⁻¹' ((chart Z he).symm.trans (chart Z he')).Source ∩ range J =
-          (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I).Prod univ
-      ·
-        ·
-          simp only [J, chart, ModelWithCorners.prod]
-          mfldSetTac 
-      rw [this]
-      apply TimesContDiffOn.prod 
-      show
-        TimesContDiffOn 𝕜 ∞ (fun p : E × F => (I ∘ e' ∘ e.symm ∘ I.symm) p.1)
-          ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I).Prod (univ : Set F))
-      ·
-        have A : TimesContDiffOn 𝕜 ∞ (I ∘ e.symm.trans e' ∘ I.symm) (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) :=
-          (HasGroupoid.compatible (timesContDiffGroupoid ∞ I) he he').1
-        have B :
-          TimesContDiffOn 𝕜 ∞ (fun p : E × F => p.1) ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I).Prod univ) :=
-          times_cont_diff_fst.times_cont_diff_on 
-        exact TimesContDiffOn.comp A B (prod_subset_preimage_fst _ _)
-      show
-        TimesContDiffOn 𝕜 ∞
-          (fun p : E × F =>
-            Z.coord_change ⟨chart_at H (e.symm (I.symm p.1)), _⟩ ⟨e', he'⟩
-              ((chart_at H (e.symm (I.symm p.1)) : M → H) (e.symm (I.symm p.1)))
-              (Z.coord_change ⟨e, he⟩ ⟨chart_at H (e.symm (I.symm p.1)), _⟩ (e (e.symm (I.symm p.1))) p.2))
-          ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I).Prod (univ : Set F))
-      ·
-        have  := Z.coord_change_smooth ⟨e, he⟩ ⟨e', he'⟩
-        rw [I.image_eq] at this 
-        apply TimesContDiffOn.congr this 
-        rintro ⟨x, v⟩ hx 
-        simp' only with mfld_simps  at hx 
-        let f := chart_at H (e.symm (I.symm x))
-        have A : I.symm x ∈ ((e.symm.trans f).trans (f.symm.trans e')).Source
-        ·
-          simp' only [hx.1.1, hx.1.2] with mfld_simps 
-        rw [e.right_inv hx.1.1]
-        have  := Z.coord_change_comp ⟨e, he⟩ ⟨f, chart_mem_atlas _ _⟩ ⟨e', he'⟩ (I.symm x) A v 
-        simpa only using this 
-    refine' @SmoothManifoldWithCorners.mk _ _ _ _ _ _ _ _ _ _ _ ⟨_⟩
-    intro e₀ e₀' he₀ he₀' 
-    rcases(Z.mem_atlas_iff _).1 he₀ with ⟨e, he, rfl⟩
-    rcases(Z.mem_atlas_iff _).1 he₀' with ⟨e', he', rfl⟩
-    rw [timesContDiffGroupoid, mem_groupoid_of_pregroupoid]
-    exact ⟨A e e' he he', A e' e he' he⟩
+instance to_smooth_manifold : smooth_manifold_with_corners (I.prod «expr𝓘( , )»(𝕜, F)) Z.to_topological_fiber_bundle_core.total_space :=
+begin
+  let [ident J] [] [":=", expr model_with_corners.to_local_equiv (I.prod «expr𝓘( , )»(𝕜, F))],
+  have [ident A] [":", expr ∀
+   (e e' : local_homeomorph M H)
+   (he : «expr ∈ »(e, atlas H M))
+   (he' : «expr ∈ »(e', atlas H M)), times_cont_diff_on 𝕜 «expr∞»() «expr ∘ »(J, «expr ∘ »((Z.chart he).symm.trans (Z.chart he'), J.symm)) «expr ∩ »(«expr ⁻¹' »(J.symm, ((Z.chart he).symm.trans (Z.chart he')).source), range J)] [],
+  { assume [binders (e e' he he')],
+    have [] [":", expr «expr = »(«expr ∩ »(«expr ⁻¹' »(J.symm, ((chart Z he).symm.trans (chart Z he')).source), range J), «expr ∩ »(«expr ⁻¹' »(I.symm, (e.symm.trans e').source), range I).prod univ)] [],
+    by { simp [] [] ["only"] ["[", expr J, ",", expr chart, ",", expr model_with_corners.prod, "]"] [] [],
+      mfld_set_tac },
+    rw [expr this] [],
+    apply [expr times_cont_diff_on.prod],
+    show [expr times_cont_diff_on 𝕜 «expr∞»() (λ
+      p : «expr × »(E, F), «expr ∘ »(I, «expr ∘ »(e', «expr ∘ »(e.symm, I.symm))) p.1) («expr ∩ »(«expr ⁻¹' »(I.symm, (e.symm.trans e').source), range I).prod (univ : set F))],
+    { have [ident A] [":", expr times_cont_diff_on 𝕜 «expr∞»() «expr ∘ »(I, «expr ∘ »(e.symm.trans e', I.symm)) «expr ∩ »(«expr ⁻¹' »(I.symm, (e.symm.trans e').source), range I)] [":=", expr (has_groupoid.compatible (times_cont_diff_groupoid «expr∞»() I) he he').1],
+      have [ident B] [":", expr times_cont_diff_on 𝕜 «expr∞»() (λ
+        p : «expr × »(E, F), p.1) («expr ∩ »(«expr ⁻¹' »(I.symm, (e.symm.trans e').source), range I).prod univ)] [":=", expr times_cont_diff_fst.times_cont_diff_on],
+      exact [expr times_cont_diff_on.comp A B (prod_subset_preimage_fst _ _)] },
+    show [expr times_cont_diff_on 𝕜 «expr∞»() (λ
+      p : «expr × »(E, F), Z.coord_change ⟨chart_at H (e.symm (I.symm p.1)), _⟩ ⟨e', he'⟩ ((chart_at H (e.symm (I.symm p.1)) : M → H) (e.symm (I.symm p.1))) (Z.coord_change ⟨e, he⟩ ⟨chart_at H (e.symm (I.symm p.1)), _⟩ (e (e.symm (I.symm p.1))) p.2)) («expr ∩ »(«expr ⁻¹' »(I.symm, (e.symm.trans e').source), range I).prod (univ : set F))],
+    { have [] [] [":=", expr Z.coord_change_smooth ⟨e, he⟩ ⟨e', he'⟩],
+      rw [expr I.image_eq] ["at", ident this],
+      apply [expr times_cont_diff_on.congr this],
+      rintros ["⟨", ident x, ",", ident v, "⟩", ident hx],
+      simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident hx],
+      let [ident f] [] [":=", expr chart_at H (e.symm (I.symm x))],
+      have [ident A] [":", expr «expr ∈ »(I.symm x, ((e.symm.trans f).trans (f.symm.trans e')).source)] [],
+      by simp [] [] ["only"] ["[", expr hx.1.1, ",", expr hx.1.2, "]"] ["with", ident mfld_simps] [],
+      rw [expr e.right_inv hx.1.1] [],
+      have [] [] [":=", expr Z.coord_change_comp ⟨e, he⟩ ⟨f, chart_mem_atlas _ _⟩ ⟨e', he'⟩ (I.symm x) A v],
+      simpa [] [] ["only"] ["[", "]"] [] ["using", expr this] } },
+  refine [expr @smooth_manifold_with_corners.mk _ _ _ _ _ _ _ _ _ _ _ ⟨_⟩],
+  assume [binders (e₀ e₀' he₀ he₀')],
+  rcases [expr (Z.mem_atlas_iff _).1 he₀, "with", "⟨", ident e, ",", ident he, ",", ident rfl, "⟩"],
+  rcases [expr (Z.mem_atlas_iff _).1 he₀', "with", "⟨", ident e', ",", ident he', ",", ident rfl, "⟩"],
+  rw ["[", expr times_cont_diff_groupoid, ",", expr mem_groupoid_of_pregroupoid, "]"] [],
+  exact [expr ⟨A e e' he he', A e' e he' he⟩]
+end
 
 end BasicSmoothBundleCore
 
@@ -329,182 +309,107 @@ variable{𝕜 :
       _}[TopologicalSpace
       H](I : ModelWithCorners 𝕜 E H)(M : Type _)[TopologicalSpace M][ChartedSpace H M][SmoothManifoldWithCorners I M]
 
+-- error in Geometry.Manifold.BasicSmoothBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Basic smooth bundle core version of the tangent bundle of a smooth manifold `M` modelled over a
 model with corners `I` on `(E, H)`. The fibers are equal to `E`, and the coordinate change in the
 fiber corresponds to the derivative of the coordinate change in `M`. -/
-def tangentBundleCore : BasicSmoothBundleCore I M E :=
-  { coordChange := fun i j x v => (fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (range I) (I x) : E → E) v,
-    coord_change_smooth :=
-      fun i j =>
-        by 
-          rw [I.image_eq]
-          have A :
-            TimesContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) :=
-            (HasGroupoid.compatible (timesContDiffGroupoid ∞ I) i.2 j.2).1
-          have B : UniqueDiffOn 𝕜 (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) := I.unique_diff_preimage_source 
-          have C :
-            TimesContDiffOn 𝕜 ∞
-              (fun p : E × E =>
-                (fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) p.1 :
-                  E → E)
-                  p.2)
-              ((I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I).Prod univ) :=
-            times_cont_diff_on_fderiv_within_apply A B le_top 
-          have D :
-            ∀ x _ : x ∈ I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I,
-              fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (range I) x =
-                fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) x
-          ·
-            intro x hx 
-            have N : I.symm ⁻¹' (i.1.symm.trans j.1).Source ∈ nhds x :=
-              I.continuous_symm.continuous_at.preimage_mem_nhds (IsOpen.mem_nhds (LocalHomeomorph.open_source _) hx.1)
-            symm 
-            rw [inter_comm]
-            exact fderiv_within_inter N (I.unique_diff _ hx.2)
-          apply TimesContDiffOn.congr C 
-          rintro ⟨x, v⟩ hx 
-          have E : x ∈ I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I
-          ·
-            simpa only [prod_mk_mem_set_prod_eq, and_trueₓ, mem_univ] using hx 
-          have  : I (I.symm x) = x
-          ·
-            simp [E.2]
-          dsimp [-Subtype.val_eq_coe]
-          rw [this, D x E]
-          rfl,
-    coord_change_self :=
-      fun i x hx v =>
-        by 
-          have A : I.symm ⁻¹' (i.1.symm.trans i.1).Source ∩ range I ∈ 𝓝[range I] I x
-          ·
-            rw [inter_comm]
-            apply inter_mem_nhds_within 
-            apply I.continuous_symm.continuous_at.preimage_mem_nhds (IsOpen.mem_nhds (LocalHomeomorph.open_source _) _)
-            simp' only [hx, i.1.map_target] with mfld_simps 
-          have B : ∀ᶠy in 𝓝[range I] I x, (I ∘ i.1 ∘ i.1.symm ∘ I.symm) y = (id : E → E) y
-          ·
-            filterUpwards [A]
-            intro y hy 
-            rw [←I.image_eq] at hy 
-            rcases hy with ⟨z, hz⟩
-            simp' only with mfld_simps  at hz 
-            simp' only [hz.2.symm, hz.1] with mfld_simps 
-          have C :
-            fderivWithin 𝕜 (I ∘ i.1 ∘ i.1.symm ∘ I.symm) (range I) (I x) =
-              fderivWithin 𝕜 (id : E → E) (range I) (I x) :=
-            Filter.EventuallyEq.fderiv_within_eq I.unique_diff_at_image B
-              (by 
-                simp' only [hx] with mfld_simps)
-          rw [fderiv_within_id I.unique_diff_at_image] at C 
-          rw [C]
-          rfl,
-    coord_change_comp :=
-      fun i j u x hx =>
-        by 
-          have M : I x ∈ I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I :=
-            ⟨by 
-                simpa only [mem_preimage, ModelWithCorners.left_inv] using hx,
-              mem_range_self _⟩
-          have U :
-            UniqueDiffWithinAt 𝕜 (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I)
-              (I x) :=
-            I.unique_diff_preimage_source _ M 
-          have A :
-            fderivWithin 𝕜 ((I ∘ u.1 ∘ j.1.symm ∘ I.symm) ∘ I ∘ j.1 ∘ i.1.symm ∘ I.symm)
-                (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x) =
-              (fderivWithin 𝕜 (I ∘ u.1 ∘ j.1.symm ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).Source ∩ range I)
-                    ((I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I x))).comp
-                (fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm)
-                  (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x))
-          ·
-            apply fderivWithin.comp _ _ _ _ U 
-            show
-              DifferentiableWithinAt 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm)
-                (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x)
-            ·
-              have A :
-                TimesContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm)
-                  (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) :=
-                (HasGroupoid.compatible (timesContDiffGroupoid ∞ I) i.2 j.2).1
-              have B :
-                DifferentiableOn 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm)
-                  (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I)
-              ·
-                apply (A.differentiable_on le_top).mono 
-                have  : ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ⊆ (i.1.symm.trans j.1).Source :=
-                  inter_subset_left _ _ 
-                exact inter_subset_inter (preimage_mono this) (subset.refl (range I))
-              apply B 
-              simpa only with mfld_simps using hx 
-            show
-              DifferentiableWithinAt 𝕜 (I ∘ u.1 ∘ j.1.symm ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).Source ∩ range I)
-                ((I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I x))
-            ·
-              have A :
-                TimesContDiffOn 𝕜 ∞ (I ∘ j.1.symm.trans u.1 ∘ I.symm)
-                  (I.symm ⁻¹' (j.1.symm.trans u.1).Source ∩ range I) :=
-                (HasGroupoid.compatible (timesContDiffGroupoid ∞ I) j.2 u.2).1
-              apply A.differentiable_on le_top 
-              rw [LocalHomeomorph.trans_source] at hx 
-              simp' only with mfld_simps 
-              exact hx.2
-            show
-              I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I ⊆
-                (I ∘ j.1 ∘ i.1.symm ∘ I.symm) ⁻¹' (I.symm ⁻¹' (j.1.symm.trans u.1).Source ∩ range I)
-            ·
-              intro y hy 
-              simp' only with mfld_simps  at hy 
-              rw [LocalHomeomorph.left_inv] at hy
-              ·
-                simp' only [hy] with mfld_simps
-              ·
-                exact hy.1.1.2
-          have B :
-            fderivWithin 𝕜 ((I ∘ u.1 ∘ j.1.symm ∘ I.symm) ∘ I ∘ j.1 ∘ i.1.symm ∘ I.symm)
-                (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x) =
-              fderivWithin 𝕜 (I ∘ u.1 ∘ i.1.symm ∘ I.symm)
-                (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x)
-          ·
-            have E :
-              ∀ y _ : y ∈ I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I,
-                ((I ∘ u.1 ∘ j.1.symm ∘ I.symm) ∘ I ∘ j.1 ∘ i.1.symm ∘ I.symm) y = (I ∘ u.1 ∘ i.1.symm ∘ I.symm) y
-            ·
-              intro y hy 
-              simp only [Function.comp_app, ModelWithCorners.left_inv]
-              rw [j.1.left_inv]
-              exact hy.1.1.2 
-            exact fderiv_within_congr U E (E _ M)
-          have C :
-            fderivWithin 𝕜 (I ∘ u.1 ∘ i.1.symm ∘ I.symm)
-                (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x) =
-              fderivWithin 𝕜 (I ∘ u.1 ∘ i.1.symm ∘ I.symm) (range I) (I x)
-          ·
-            rw [inter_comm]
-            apply fderiv_within_inter _ I.unique_diff_at_image 
-            apply I.continuous_symm.continuous_at.preimage_mem_nhds (IsOpen.mem_nhds (LocalHomeomorph.open_source _) _)
-            simpa only [ModelWithCorners.left_inv] using hx 
-          have D :
-            fderivWithin 𝕜 (I ∘ u.1 ∘ j.1.symm ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).Source ∩ range I)
-                ((I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I x)) =
-              fderivWithin 𝕜 (I ∘ u.1 ∘ j.1.symm ∘ I.symm) (range I) ((I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I x))
-          ·
-            rw [inter_comm]
-            apply fderiv_within_inter _ I.unique_diff_at_image 
-            apply I.continuous_symm.continuous_at.preimage_mem_nhds (IsOpen.mem_nhds (LocalHomeomorph.open_source _) _)
-            rw [LocalHomeomorph.trans_source] at hx 
-            simp' only with mfld_simps 
-            exact hx.2
-          have E :
-            fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm)
-                (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x) =
-              fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (range I) (I x)
-          ·
-            rw [inter_comm]
-            apply fderiv_within_inter _ I.unique_diff_at_image 
-            apply I.continuous_symm.continuous_at.preimage_mem_nhds (IsOpen.mem_nhds (LocalHomeomorph.open_source _) _)
-            simpa only [ModelWithCorners.left_inv] using hx 
-          rw [B, C, D, E] at A 
-          simp' only [A, ContinuousLinearMap.coe_comp'] with mfld_simps }
+def tangent_bundle_core : basic_smooth_bundle_core I M E :=
+{ coord_change := λ
+  i j x v, (fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))) (range I) (I x) : E → E) v,
+  coord_change_smooth := λ i j, begin
+    rw [expr I.image_eq] [],
+    have [ident A] [":", expr times_cont_diff_on 𝕜 «expr∞»() «expr ∘ »(I, «expr ∘ »(i.1.symm.trans j.1, I.symm)) «expr ∩ »(«expr ⁻¹' »(I.symm, (i.1.symm.trans j.1).source), range I)] [":=", expr (has_groupoid.compatible (times_cont_diff_groupoid «expr∞»() I) i.2 j.2).1],
+    have [ident B] [":", expr unique_diff_on 𝕜 «expr ∩ »(«expr ⁻¹' »(I.symm, (i.1.symm.trans j.1).source), range I)] [":=", expr I.unique_diff_preimage_source],
+    have [ident C] [":", expr times_cont_diff_on 𝕜 «expr∞»() (λ
+      p : «expr × »(E, E), (fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))) «expr ∩ »(«expr ⁻¹' »(I.symm, (i.1.symm.trans j.1).source), range I) p.1 : E → E) p.2) («expr ∩ »(«expr ⁻¹' »(I.symm, (i.1.symm.trans j.1).source), range I).prod univ)] [":=", expr times_cont_diff_on_fderiv_within_apply A B le_top],
+    have [ident D] [":", expr ∀
+     x «expr ∈ » «expr ∩ »(«expr ⁻¹' »(I.symm, (i.1.symm.trans j.1).source), range I), «expr = »(fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))) (range I) x, fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))) «expr ∩ »(«expr ⁻¹' »(I.symm, (i.1.symm.trans j.1).source), range I) x)] [],
+    { assume [binders (x hx)],
+      have [ident N] [":", expr «expr ∈ »(«expr ⁻¹' »(I.symm, (i.1.symm.trans j.1).source), nhds x)] [":=", expr I.continuous_symm.continuous_at.preimage_mem_nhds (is_open.mem_nhds (local_homeomorph.open_source _) hx.1)],
+      symmetry,
+      rw [expr inter_comm] [],
+      exact [expr fderiv_within_inter N (I.unique_diff _ hx.2)] },
+    apply [expr times_cont_diff_on.congr C],
+    rintros ["⟨", ident x, ",", ident v, "⟩", ident hx],
+    have [ident E] [":", expr «expr ∈ »(x, «expr ∩ »(«expr ⁻¹' »(I.symm, (i.1.symm.trans j.1).source), range I))] [],
+    by simpa [] [] ["only"] ["[", expr prod_mk_mem_set_prod_eq, ",", expr and_true, ",", expr mem_univ, "]"] [] ["using", expr hx],
+    have [] [":", expr «expr = »(I (I.symm x), x)] [],
+    by simp [] [] [] ["[", expr E.2, "]"] [] [],
+    dsimp [] ["[", "-", ident subtype.val_eq_coe, "]"] [] [],
+    rw ["[", expr this, ",", expr D x E, "]"] [],
+    refl
+  end,
+  coord_change_self := λ i x hx v, begin
+    have [ident A] [":", expr «expr ∈ »(«expr ∩ »(«expr ⁻¹' »(I.symm, (i.1.symm.trans i.1).source), range I), «expr𝓝[ ] »(range I, I x))] [],
+    { rw [expr inter_comm] [],
+      apply [expr inter_mem_nhds_within],
+      apply [expr I.continuous_symm.continuous_at.preimage_mem_nhds (is_open.mem_nhds (local_homeomorph.open_source _) _)],
+      simp [] [] ["only"] ["[", expr hx, ",", expr i.1.map_target, "]"] ["with", ident mfld_simps] [] },
+    have [ident B] [":", expr «expr∀ᶠ in , »((y), «expr𝓝[ ] »(range I, I x), «expr = »(«expr ∘ »(I, «expr ∘ »(i.1, «expr ∘ »(i.1.symm, I.symm))) y, (id : E → E) y))] [],
+    { filter_upwards ["[", expr A, "]"] [],
+      assume [binders (y hy)],
+      rw ["<-", expr I.image_eq] ["at", ident hy],
+      rcases [expr hy, "with", "⟨", ident z, ",", ident hz, "⟩"],
+      simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident hz],
+      simp [] [] ["only"] ["[", expr hz.2.symm, ",", expr hz.1, "]"] ["with", ident mfld_simps] [] },
+    have [ident C] [":", expr «expr = »(fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(i.1, «expr ∘ »(i.1.symm, I.symm))) (range I) (I x), fderiv_within 𝕜 (id : E → E) (range I) (I x))] [":=", expr filter.eventually_eq.fderiv_within_eq I.unique_diff_at_image B (by simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [])],
+    rw [expr fderiv_within_id I.unique_diff_at_image] ["at", ident C],
+    rw [expr C] [],
+    refl
+  end,
+  coord_change_comp := λ i j u x hx, begin
+    have [ident M] [":", expr «expr ∈ »(I x, «expr ∩ »(«expr ⁻¹' »(I.symm, ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source), range I))] [":=", expr ⟨by simpa [] [] ["only"] ["[", expr mem_preimage, ",", expr model_with_corners.left_inv, "]"] [] ["using", expr hx], mem_range_self _⟩],
+    have [ident U] [":", expr unique_diff_within_at 𝕜 «expr ∩ »(«expr ⁻¹' »(I.symm, ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source), range I) (I x)] [":=", expr I.unique_diff_preimage_source _ M],
+    have [ident A] [":", expr «expr = »(fderiv_within 𝕜 «expr ∘ »(«expr ∘ »(I, «expr ∘ »(u.1, «expr ∘ »(j.1.symm, I.symm))), «expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm)))) «expr ∩ »(«expr ⁻¹' »(I.symm, ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source), range I) (I x), (fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(u.1, «expr ∘ »(j.1.symm, I.symm))) «expr ∩ »(«expr ⁻¹' »(I.symm, (j.1.symm.trans u.1).source), range I) («expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))) (I x))).comp (fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))) «expr ∩ »(«expr ⁻¹' »(I.symm, ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source), range I) (I x)))] [],
+    { apply [expr fderiv_within.comp _ _ _ _ U],
+      show [expr differentiable_within_at 𝕜 «expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))) «expr ∩ »(«expr ⁻¹' »(I.symm, ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source), range I) (I x)],
+      { have [ident A] [":", expr times_cont_diff_on 𝕜 «expr∞»() «expr ∘ »(I, «expr ∘ »(i.1.symm.trans j.1, I.symm)) «expr ∩ »(«expr ⁻¹' »(I.symm, (i.1.symm.trans j.1).source), range I)] [":=", expr (has_groupoid.compatible (times_cont_diff_groupoid «expr∞»() I) i.2 j.2).1],
+        have [ident B] [":", expr differentiable_on 𝕜 «expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))) «expr ∩ »(«expr ⁻¹' »(I.symm, ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source), range I)] [],
+        { apply [expr (A.differentiable_on le_top).mono],
+          have [] [":", expr «expr ⊆ »(((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source, (i.1.symm.trans j.1).source)] [":=", expr inter_subset_left _ _],
+          exact [expr inter_subset_inter (preimage_mono this) (subset.refl (range I))] },
+        apply [expr B],
+        simpa [] [] ["only"] ["[", "]"] ["with", ident mfld_simps] ["using", expr hx] },
+      show [expr differentiable_within_at 𝕜 «expr ∘ »(I, «expr ∘ »(u.1, «expr ∘ »(j.1.symm, I.symm))) «expr ∩ »(«expr ⁻¹' »(I.symm, (j.1.symm.trans u.1).source), range I) («expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))) (I x))],
+      { have [ident A] [":", expr times_cont_diff_on 𝕜 «expr∞»() «expr ∘ »(I, «expr ∘ »(j.1.symm.trans u.1, I.symm)) «expr ∩ »(«expr ⁻¹' »(I.symm, (j.1.symm.trans u.1).source), range I)] [":=", expr (has_groupoid.compatible (times_cont_diff_groupoid «expr∞»() I) j.2 u.2).1],
+        apply [expr A.differentiable_on le_top],
+        rw ["[", expr local_homeomorph.trans_source, "]"] ["at", ident hx],
+        simp [] [] ["only"] [] ["with", ident mfld_simps] [],
+        exact [expr hx.2] },
+      show [expr «expr ⊆ »(«expr ∩ »(«expr ⁻¹' »(I.symm, ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source), range I), «expr ⁻¹' »(«expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))), «expr ∩ »(«expr ⁻¹' »(I.symm, (j.1.symm.trans u.1).source), range I)))],
+      { assume [binders (y hy)],
+        simp [] [] ["only"] [] ["with", ident mfld_simps] ["at", ident hy],
+        rw ["[", expr local_homeomorph.left_inv, "]"] ["at", ident hy],
+        { simp [] [] ["only"] ["[", expr hy, "]"] ["with", ident mfld_simps] [] },
+        { exact [expr hy.1.1.2] } } },
+    have [ident B] [":", expr «expr = »(fderiv_within 𝕜 «expr ∘ »(«expr ∘ »(I, «expr ∘ »(u.1, «expr ∘ »(j.1.symm, I.symm))), «expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm)))) «expr ∩ »(«expr ⁻¹' »(I.symm, ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source), range I) (I x), fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(u.1, «expr ∘ »(i.1.symm, I.symm))) «expr ∩ »(«expr ⁻¹' »(I.symm, ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source), range I) (I x))] [],
+    { have [ident E] [":", expr ∀
+       y «expr ∈ » «expr ∩ »(«expr ⁻¹' »(I.symm, ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source), range I), «expr = »(«expr ∘ »(«expr ∘ »(I, «expr ∘ »(u.1, «expr ∘ »(j.1.symm, I.symm))), «expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm)))) y, «expr ∘ »(I, «expr ∘ »(u.1, «expr ∘ »(i.1.symm, I.symm))) y)] [],
+      { assume [binders (y hy)],
+        simp [] [] ["only"] ["[", expr function.comp_app, ",", expr model_with_corners.left_inv, "]"] [] [],
+        rw ["[", expr j.1.left_inv, "]"] [],
+        exact [expr hy.1.1.2] },
+      exact [expr fderiv_within_congr U E (E _ M)] },
+    have [ident C] [":", expr «expr = »(fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(u.1, «expr ∘ »(i.1.symm, I.symm))) «expr ∩ »(«expr ⁻¹' »(I.symm, ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source), range I) (I x), fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(u.1, «expr ∘ »(i.1.symm, I.symm))) (range I) (I x))] [],
+    { rw [expr inter_comm] [],
+      apply [expr fderiv_within_inter _ I.unique_diff_at_image],
+      apply [expr I.continuous_symm.continuous_at.preimage_mem_nhds (is_open.mem_nhds (local_homeomorph.open_source _) _)],
+      simpa [] [] ["only"] ["[", expr model_with_corners.left_inv, "]"] [] ["using", expr hx] },
+    have [ident D] [":", expr «expr = »(fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(u.1, «expr ∘ »(j.1.symm, I.symm))) «expr ∩ »(«expr ⁻¹' »(I.symm, (j.1.symm.trans u.1).source), range I) («expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))) (I x)), fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(u.1, «expr ∘ »(j.1.symm, I.symm))) (range I) («expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))) (I x)))] [],
+    { rw [expr inter_comm] [],
+      apply [expr fderiv_within_inter _ I.unique_diff_at_image],
+      apply [expr I.continuous_symm.continuous_at.preimage_mem_nhds (is_open.mem_nhds (local_homeomorph.open_source _) _)],
+      rw ["[", expr local_homeomorph.trans_source, "]"] ["at", ident hx],
+      simp [] [] ["only"] [] ["with", ident mfld_simps] [],
+      exact [expr hx.2] },
+    have [ident E] [":", expr «expr = »(fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))) «expr ∩ »(«expr ⁻¹' »(I.symm, ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).source), range I) (I x), fderiv_within 𝕜 «expr ∘ »(I, «expr ∘ »(j.1, «expr ∘ »(i.1.symm, I.symm))) (range I) (I x))] [],
+    { rw [expr inter_comm] [],
+      apply [expr fderiv_within_inter _ I.unique_diff_at_image],
+      apply [expr I.continuous_symm.continuous_at.preimage_mem_nhds (is_open.mem_nhds (local_homeomorph.open_source _) _)],
+      simpa [] [] ["only"] ["[", expr model_with_corners.left_inv, "]"] [] ["using", expr hx] },
+    rw ["[", expr B, ",", expr C, ",", expr D, ",", expr E, "]"] ["at", ident A],
+    simp [] [] ["only"] ["[", expr A, ",", expr continuous_linear_map.coe_comp', "]"] ["with", ident mfld_simps] []
+  end }
 
 variable{M}
 
@@ -594,38 +499,30 @@ theorem tangent_bundle_proj_continuous : Continuous (TangentBundle.proj I M) :=
 theorem tangent_bundle_proj_open : IsOpenMap (TangentBundle.proj I M) :=
   TopologicalFiberBundleCore.is_open_map_proj _
 
+-- error in Geometry.Manifold.BasicSmoothBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In the tangent bundle to the model space, the charts are just the canonical identification
 between a product type and a sigma type, a.k.a. `equiv.sigma_equiv_prod`. -/
-@[simp, mfld_simps]
-theorem tangent_bundle_model_space_chart_at (p : TangentBundle I H) :
-  (chart_at (ModelProd H E) p).toLocalEquiv = (Equiv.sigmaEquivProd H E).toLocalEquiv :=
-  by 
-    have A : ∀ x_fst, fderivWithin 𝕜 (I ∘ I.symm) (range I) (I x_fst) = ContinuousLinearMap.id 𝕜 E
-    ·
-      intro x_fst 
-      have  : fderivWithin 𝕜 (I ∘ I.symm) (range I) (I x_fst) = fderivWithin 𝕜 id (range I) (I x_fst)
-      ·
-        refine'
-          fderiv_within_congr I.unique_diff_at_image (fun y hy => _)
-            (by 
-              simp )
-        exact ModelWithCorners.right_inv _ hy 
-      rwa [fderiv_within_id I.unique_diff_at_image] at this 
-    ext x : 1
-    show (chart_at (ModelProd H E) p : TangentBundle I H → ModelProd H E) x = (Equiv.sigmaEquivProd H E) x
-    ·
-      cases x 
-      simp' only [chart_at, BasicSmoothBundleCore.chart, tangentBundleCore,
-        BasicSmoothBundleCore.toTopologicalFiberBundleCore, A, Prod.mk.inj_iffₓ, ContinuousLinearMap.coe_id'] with
-        mfld_simps 
-    show ∀ x, (chart_at (ModelProd H E) p).toLocalEquiv.symm x = (Equiv.sigmaEquivProd H E).symm x
-    ·
-      rintro ⟨x_fst, x_snd⟩
-      simp' only [chart_at, BasicSmoothBundleCore.chart, tangentBundleCore, ContinuousLinearMap.coe_id',
-        BasicSmoothBundleCore.toTopologicalFiberBundleCore, A] with mfld_simps 
-    show (chart_at (ModelProd H E) p).toLocalEquiv.Source = univ
-    ·
-      simp' only [chart_at] with mfld_simps
+@[simp, mfld_simps #[]]
+theorem tangent_bundle_model_space_chart_at
+(p : tangent_bundle I H) : «expr = »((chart_at (model_prod H E) p).to_local_equiv, (equiv.sigma_equiv_prod H E).to_local_equiv) :=
+begin
+  have [ident A] [":", expr ∀
+   x_fst, «expr = »(fderiv_within 𝕜 «expr ∘ »(I, I.symm) (range I) (I x_fst), continuous_linear_map.id 𝕜 E)] [],
+  { assume [binders (x_fst)],
+    have [] [":", expr «expr = »(fderiv_within 𝕜 «expr ∘ »(I, I.symm) (range I) (I x_fst), fderiv_within 𝕜 id (range I) (I x_fst))] [],
+    { refine [expr fderiv_within_congr I.unique_diff_at_image (λ y hy, _) (by simp [] [] [] [] [] [])],
+      exact [expr model_with_corners.right_inv _ hy] },
+    rwa [expr fderiv_within_id I.unique_diff_at_image] ["at", ident this] },
+  ext [] [ident x] [":", 1],
+  show [expr «expr = »((chart_at (model_prod H E) p : tangent_bundle I H → model_prod H E) x, equiv.sigma_equiv_prod H E x)],
+  { cases [expr x] [],
+    simp [] [] ["only"] ["[", expr chart_at, ",", expr basic_smooth_bundle_core.chart, ",", expr tangent_bundle_core, ",", expr basic_smooth_bundle_core.to_topological_fiber_bundle_core, ",", expr A, ",", expr prod.mk.inj_iff, ",", expr continuous_linear_map.coe_id', "]"] ["with", ident mfld_simps] [] },
+  show [expr ∀ x, «expr = »((chart_at (model_prod H E) p).to_local_equiv.symm x, (equiv.sigma_equiv_prod H E).symm x)],
+  { rintros ["⟨", ident x_fst, ",", ident x_snd, "⟩"],
+    simp [] [] ["only"] ["[", expr chart_at, ",", expr basic_smooth_bundle_core.chart, ",", expr tangent_bundle_core, ",", expr continuous_linear_map.coe_id', ",", expr basic_smooth_bundle_core.to_topological_fiber_bundle_core, ",", expr A, "]"] ["with", ident mfld_simps] [] },
+  show [expr «expr = »((chart_at (model_prod H E) p).to_local_equiv.source, univ)],
+  by simp [] [] ["only"] ["[", expr chart_at, "]"] ["with", ident mfld_simps] []
+end
 
 @[simp, mfld_simps]
 theorem tangent_bundle_model_space_coe_chart_at (p : TangentBundle I H) :
@@ -643,28 +540,26 @@ theorem tangent_bundle_model_space_coe_chart_at_symm (p : TangentBundle I H) :
 
 variable(H)
 
+-- error in Geometry.Manifold.BasicSmoothBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The canonical identification between the tangent bundle to the model space and the product,
-as a homeomorphism -/
-def tangentBundleModelSpaceHomeomorph : TangentBundle I H ≃ₜ ModelProd H E :=
-  { Equiv.sigmaEquivProd H E with
-    continuous_to_fun :=
-      by 
-        let p : TangentBundle I H := ⟨I.symm (0 : E), (0 : E)⟩
-        have  : Continuous (chart_at (ModelProd H E) p)
-        ·
-          rw [continuous_iff_continuous_on_univ]
-          convert LocalHomeomorph.continuous_on _ 
-          simp' only with mfld_simps 
-        simpa only with mfld_simps using this,
-    continuous_inv_fun :=
-      by 
-        let p : TangentBundle I H := ⟨I.symm (0 : E), (0 : E)⟩
-        have  : Continuous (chart_at (ModelProd H E) p).symm
-        ·
-          rw [continuous_iff_continuous_on_univ]
-          convert LocalHomeomorph.continuous_on _ 
-          simp' only with mfld_simps 
-        simpa only with mfld_simps using this }
+as a homeomorphism -/ def tangent_bundle_model_space_homeomorph : «expr ≃ₜ »(tangent_bundle I H, model_prod H E) :=
+{ continuous_to_fun := begin
+    let [ident p] [":", expr tangent_bundle I H] [":=", expr ⟨I.symm (0 : E), (0 : E)⟩],
+    have [] [":", expr continuous (chart_at (model_prod H E) p)] [],
+    { rw [expr continuous_iff_continuous_on_univ] [],
+      convert [] [expr local_homeomorph.continuous_on _] [],
+      simp [] [] ["only"] [] ["with", ident mfld_simps] [] },
+    simpa [] [] ["only"] [] ["with", ident mfld_simps] ["using", expr this]
+  end,
+  continuous_inv_fun := begin
+    let [ident p] [":", expr tangent_bundle I H] [":=", expr ⟨I.symm (0 : E), (0 : E)⟩],
+    have [] [":", expr continuous (chart_at (model_prod H E) p).symm] [],
+    { rw [expr continuous_iff_continuous_on_univ] [],
+      convert [] [expr local_homeomorph.continuous_on _] [],
+      simp [] [] ["only"] [] ["with", ident mfld_simps] [] },
+    simpa [] [] ["only"] [] ["with", ident mfld_simps] ["using", expr this]
+  end,
+  ..equiv.sigma_equiv_prod H E }
 
 @[simp, mfld_simps]
 theorem tangent_bundle_model_space_homeomorph_coe :

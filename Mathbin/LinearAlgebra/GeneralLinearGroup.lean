@@ -1,7 +1,5 @@
-import Mathbin.LinearAlgebra.Matrix.Default 
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse 
-import Mathbin.LinearAlgebra.SpecialLinearGroup 
-import Mathbin.LinearAlgebra.Determinant
+import Mathbin.LinearAlgebra.SpecialLinearGroup
 
 /-!
 # The General Linear group $GL(n, R)$
@@ -87,10 +85,12 @@ theorem coe_mul : «expr↑ » (A*B) = («expr↑ » A : Matrix n n R) ⬝ («ex
 theorem coe_one : «expr↑ » (1 : GL n R) = (1 : Matrix n n R) :=
   rfl
 
-theorem coe_inv : «expr↑ » (A⁻¹) = («expr↑ » A : Matrix n n R)⁻¹ :=
-  by 
-    letI this := A.invertible 
-    exact inv_of_eq_nonsing_inv («expr↑ » A : Matrix n n R)
+-- error in LinearAlgebra.GeneralLinearGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem coe_inv : «expr = »(«expr↑ »(«expr ⁻¹»(A)), «expr ⁻¹»((«expr↑ »(A) : matrix n n R))) :=
+begin
+  letI [] [] [":=", expr A.invertible],
+  exact [expr inv_of_eq_nonsing_inv («expr↑ »(A) : matrix n n R)]
+end
 
 end CoeLemmas
 
@@ -130,20 +130,20 @@ section Neg
 
 variable{n : Type u}{R : Type v}[DecidableEq n][Fintype n][LinearOrderedCommRing R][Fact (Even (Fintype.card n))]
 
+-- error in LinearAlgebra.GeneralLinearGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Formal operation of negation on general linear group on even cardinality `n` given by negating
-each element. -/
-instance  : Neg (GL_pos n R) :=
-  ⟨fun g =>
-      ⟨-g,
-        by 
-          simp only [mem_GL_pos, general_linear_group.coe_det_apply, Units.coe_neg]
-          have  := det_smul g (-1)
-          simp only [general_linear_group.coe_fn_eq_coe, one_smul, coe_fn_coe_base', neg_smul] at this 
-          rw [this]
-          simp [Nat.neg_one_pow_of_even (Fact.out (Even (Fintype.card n)))]
-          have gdet := g.property 
-          simp only [mem_GL_pos, general_linear_group.coe_det_apply, Subtype.val_eq_coe] at gdet 
-          exact gdet⟩⟩
+each element. -/ instance : has_neg (GL_pos n R) :=
+⟨λ
+ g, ⟨«expr- »(g), begin
+    simp [] [] ["only"] ["[", expr mem_GL_pos, ",", expr general_linear_group.coe_det_apply, ",", expr units.coe_neg, "]"] [] [],
+    have [] [] [":=", expr det_smul g «expr- »(1)],
+    simp [] [] ["only"] ["[", expr general_linear_group.coe_fn_eq_coe, ",", expr one_smul, ",", expr coe_fn_coe_base', ",", expr neg_smul, "]"] [] ["at", ident this],
+    rw [expr this] [],
+    simp [] [] [] ["[", expr nat.neg_one_pow_of_even (fact.out (even (fintype.card n))), "]"] [] [],
+    have [ident gdet] [] [":=", expr g.property],
+    simp [] [] ["only"] ["[", expr mem_GL_pos, ",", expr general_linear_group.coe_det_apply, ",", expr subtype.val_eq_coe, "]"] [] ["at", ident gdet],
+    exact [expr gdet]
+  end⟩⟩
 
 @[simp]
 theorem GL_pos_coe_neg (g : GL_pos n R) : «expr↑ » (-g) = -(«expr↑ » g : Matrix n n R) :=

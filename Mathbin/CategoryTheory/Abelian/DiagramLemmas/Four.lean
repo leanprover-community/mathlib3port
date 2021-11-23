@@ -214,7 +214,7 @@ theorem epi_of_epi_of_epi_of_mono (hα : epi α) (hγ : epi γ) (hδ : mono δ) 
               rw [reassoc_of comm₃]
             
       suffices (r ≫ y) ≫ v = 0 by 
-        exactI zero_of_comp_mono _ (zero_of_comp_mono _ this)
+        exact zero_of_comp_mono _ (zero_of_comp_mono _ this)
       calc (r ≫ y) ≫ v = g' ≫ z ≫ v :=
         by 
           rw [pushout.condition, category.assoc]
@@ -256,7 +256,7 @@ theorem is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso : is_iso γ :=
     by 
       apply epi_of_epi_of_epi_of_mono comm₂ comm₃ comm₄ <;> infer_instance 
   by 
-    exactI is_iso_of_mono_of_epi _
+    exact is_iso_of_mono_of_epi _
 
 end Five
 

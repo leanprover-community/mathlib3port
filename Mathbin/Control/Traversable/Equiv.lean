@@ -58,17 +58,22 @@ protected theorem comp_map {α β γ : Type u} (g : α → β) (h : β → γ) (
 protected theorem IsLawfulFunctor : @IsLawfulFunctor _ Equiv.functor :=
   { id_map := @Equiv.id_map _ _, comp_map := @Equiv.comp_map _ _ }
 
-protected theorem is_lawful_functor' [F : _root_.functor t']
-  (h₀ : ∀ {α β} f : α → β, _root_.functor.map f = Equiv.map f)
-  (h₁ : ∀ {α β} f : β, _root_.functor.map_const f = (Equiv.map ∘ Function.const α) f) : _root_.is_lawful_functor t' :=
-  by 
-    have  : F = Equiv.functor
-    ·
-      casesI F 
-      dsimp [Equiv.functor]
-      congr <;> ext <;> [rw [←h₀], rw [←h₁]]
-    substI this 
-    exact Equiv.is_lawful_functor
+-- error in Control.Traversable.Equiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem is_lawful_functor'
+[F : _root_.functor t']
+(h₀ : ∀ {α β} (f : α → β), «expr = »(_root_.functor.map f, equiv.map f))
+(h₁ : ∀
+ {α β}
+ (f : β), «expr = »(_root_.functor.map_const f, «expr ∘ »(equiv.map, function.const α) f)) : _root_.is_lawful_functor t' :=
+begin
+  have [] [":", expr «expr = »(F, equiv.functor)] [],
+  { casesI [expr F] [],
+    dsimp [] ["[", expr equiv.functor, "]"] [] [],
+    congr; ext [] [] []; [rw ["<-", expr h₀] [], rw ["<-", expr h₁] []] },
+  substI [expr this],
+  exact [expr equiv.is_lawful_functor]
+end
 
 end Functor
 
@@ -151,10 +156,10 @@ protected def is_lawful_traversable' [_i : Traversable t'] (h₀ : ∀ {α β} f
   (h₂ :
     ∀ {F : Type u → Type u} [Applicativeₓ F],
       by 
-        exactI ∀ [IsLawfulApplicative F] {α β} f : α → F β, traverse f = Equiv.traverse eqv f) :
+        exact ∀ [IsLawfulApplicative F] {α β} f : α → F β, traverse f = Equiv.traverse eqv f) :
   _root_.is_lawful_traversable t' :=
   by 
-    refine' { to_is_lawful_functor := Equiv.is_lawful_functor' eqv @h₀ @h₁, .. } <;> introsI
+    refine' { to_is_lawful_functor := Equiv.is_lawful_functor' eqv @h₀ @h₁, .. } <;> intros 
     ·
       rw [h₂, Equiv.id_traverse]
       infer_instance

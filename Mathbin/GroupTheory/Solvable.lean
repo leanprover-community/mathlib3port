@@ -46,7 +46,7 @@ theorem derived_series_normal (n : ℕ) : (derivedSeries G n).Normal :=
     ·
       exact (⊤ : Subgroup G).normal_of_characteristic
     ·
-      exactI general_commutator_normal (derivedSeries G n) (derivedSeries G n)
+      exact general_commutator_normal (derivedSeries G n) (derivedSeries G n)
 
 @[simp]
 theorem general_commutator_eq_commutator : ⁅(⊤ : Subgroup G),(⊤ : Subgroup G)⁆ = commutator G :=
@@ -58,7 +58,7 @@ theorem general_commutator_eq_commutator : ⁅(⊤ : Subgroup G),(⊤ : Subgroup
     ·
       exact fun x ⟨p, q, h⟩ => ⟨p, mem_top p, q, mem_top q, h⟩
 
-theorem commutator_def' : commutator G = Subgroup.closure { x : G | ∃ p q, (((p*q)*p⁻¹)*q⁻¹) = x } :=
+theorem commutator_def' : commutator G = Subgroup.closure { x:G | ∃ p q, (((p*q)*p⁻¹)*q⁻¹) = x } :=
   by 
     rw [←general_commutator_eq_commutator, generalCommutator]
     apply le_antisymmₓ <;> apply closure_mono
@@ -147,13 +147,17 @@ instance (priority := 100)CommGroupₓ.is_solvable {G : Type _} [CommGroupₓ G]
     rw [eq_bot_iff, derived_series_one]
     calc commutator G ≤ (MonoidHom.id G).ker := Abelianization.commutator_subset_ker (MonoidHom.id G)_ = ⊥ := rfl
 
-theorem is_solvable_of_comm {G : Type _} [hG : Groupₓ G] (h : ∀ a b : G, (a*b) = b*a) : IsSolvable G :=
-  by 
-    letI hG' : CommGroupₓ G := { hG with mul_comm := h }
-    runTac 
-      tactic.unfreeze_local_instances 
-    cases hG 
-    exact CommGroupₓ.is_solvable
+-- error in GroupTheory.Solvable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_solvable_of_comm
+{G : Type*}
+[hG : group G]
+(h : ∀ a b : G, «expr = »(«expr * »(a, b), «expr * »(b, a))) : is_solvable G :=
+begin
+  letI [ident hG'] [":", expr comm_group G] [":=", expr { mul_comm := h, ..hG }],
+  tactic.unfreeze_local_instances,
+  cases [expr hG] [],
+  exact [expr comm_group.is_solvable]
+end
 
 theorem is_solvable_of_top_eq_bot (h : (⊤ : Subgroup G) = ⊥) : IsSolvable G :=
   ⟨⟨0, h⟩⟩
@@ -260,7 +264,7 @@ theorem not_solvable_of_mem_derived_series {g : G} (h1 : g ≠ 1) (h2 : ∀ n : 
   mt (is_solvable_def _).mp
     (not_exists_of_forall_not fun n h => h1 (Subgroup.mem_bot.mp ((congr_argₓ (HasMem.Mem g) h).mp (h2 n))))
 
--- error in GroupTheory.Solvable: ././Mathport/Syntax/Translate/Basic.lean:340:40: in let: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in GroupTheory.Solvable: ././Mathport/Syntax/Translate/Basic.lean:341:40: in let: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 theorem equiv.perm.fin_5_not_solvable : «expr¬ »(is_solvable (equiv.perm (fin 5))) :=
 begin
   let [ident x] [":", expr equiv.perm (fin 5)] [":=", expr ⟨«expr![ , ]»([1, 2, 0, 3, 4]), «expr![ , ]»([2, 0, 1, 3, 4]), exprdec_trivial(), exprdec_trivial()⟩],
@@ -279,16 +283,14 @@ begin
     exact [expr (derived_series_normal _ _).conj_mem _ (general_commutator_containment _ _ ih ((derived_series_normal _ _).conj_mem _ ih _)) _] }
 end
 
-theorem Equiv.Perm.not_solvable (X : Type _) (hX : 5 ≤ Cardinal.mk X) : ¬IsSolvable (Equiv.Perm X) :=
-  by 
-    introI h 
-    have key : Nonempty (Finₓ 5 ↪ X)
-    ·
-      rwa [←Cardinal.lift_mk_le, Cardinal.mk_fin, Cardinal.lift_nat_cast, Nat.cast_bit1, Nat.cast_bit0, Nat.cast_one,
-        Cardinal.lift_id]
-    exact
-      Equiv.Perm.fin_5_not_solvable
-        (solvable_of_solvable_injective (Equiv.Perm.via_embedding_hom_injective (Nonempty.some key)))
+-- error in GroupTheory.Solvable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem equiv.perm.not_solvable (X : Type*) (hX : «expr ≤ »(5, cardinal.mk X)) : «expr¬ »(is_solvable (equiv.perm X)) :=
+begin
+  introI [ident h],
+  have [ident key] [":", expr nonempty «expr ↪ »(fin 5, X)] [],
+  { rwa ["[", "<-", expr cardinal.lift_mk_le, ",", expr cardinal.mk_fin, ",", expr cardinal.lift_nat_cast, ",", expr nat.cast_bit1, ",", expr nat.cast_bit0, ",", expr nat.cast_one, ",", expr cardinal.lift_id, "]"] [] },
+  exact [expr equiv.perm.fin_5_not_solvable (solvable_of_solvable_injective (equiv.perm.via_embedding_hom_injective (nonempty.some key)))]
+end
 
 end PermNotSolvable
 

@@ -1,6 +1,5 @@
-import Mathbin.CategoryTheory.Limits.Preserves.Limits 
 import Mathbin.CategoryTheory.Currying 
-import Mathbin.CategoryTheory.Products.Default
+import Mathbin.CategoryTheory.Limits.Preserves.Limits
 
 /-!
 # (Co)limits in functor categories.
@@ -271,18 +270,21 @@ instance evaluation_preserves_limits [has_limits C] (k : K) : preserves_limits (
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          resetI <;> infer_instance }
+          skip <;> infer_instance }
 
+-- error in CategoryTheory.Limits.FunctorCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `F : D ⥤ K ⥤ C` preserves the limit of some `G : J ⥤ D` if it does for each `k : K`. -/
-def preserves_limit_of_evaluation (F : D ⥤ K ⥤ C) (G : J ⥤ D)
-  (H : ∀ k : K, preserves_limit G (F ⋙ (evaluation K C).obj k : D ⥤ C)) : preserves_limit G F :=
-  ⟨fun c hc =>
-      by 
-        apply evaluation_jointly_reflects_limits 
-        intro X 
-        haveI  := H X 
-        change is_limit ((F ⋙ (evaluation K C).obj X).mapCone c)
-        exact preserves_limit.preserves hc⟩
+def preserves_limit_of_evaluation
+(F : «expr ⥤ »(D, «expr ⥤ »(K, C)))
+(G : «expr ⥤ »(J, D))
+(H : ∀ k : K, preserves_limit G («expr ⋙ »(F, (evaluation K C).obj k) : «expr ⥤ »(D, C))) : preserves_limit G F :=
+⟨λ c hc, begin
+   apply [expr evaluation_jointly_reflects_limits],
+   intro [ident X],
+   haveI [] [] [":=", expr H X],
+   change [expr is_limit («expr ⋙ »(F, (evaluation K C).obj X).map_cone c)] [] [],
+   exact [expr preserves_limit.preserves hc]
+ end⟩
 
 /-- `F : D ⥤ K ⥤ C` preserves limits of shape `J` if it does for each `k : K`. -/
 def preserves_limits_of_shape_of_evaluation (F : D ⥤ K ⥤ C) (J : Type v) [small_category J]
@@ -294,24 +296,27 @@ def preserves_limits_of_evaluation (F : D ⥤ K ⥤ C) (H : ∀ k : K, preserves
   preserves_limits F :=
   ⟨fun L hL =>
       by 
-        exactI preserves_limits_of_shape_of_evaluation F L fun k => preserves_limits.preserves_limits_of_shape⟩
+        exact preserves_limits_of_shape_of_evaluation F L fun k => preserves_limits.preserves_limits_of_shape⟩
 
 instance evaluation_preserves_colimits [has_colimits C] (k : K) : preserves_colimits ((evaluation K C).obj k) :=
   { PreservesColimitsOfShape :=
       fun J 𝒥 =>
         by 
-          resetI <;> infer_instance }
+          skip <;> infer_instance }
 
+-- error in CategoryTheory.Limits.FunctorCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `F : D ⥤ K ⥤ C` preserves the colimit of some `G : J ⥤ D` if it does for each `k : K`. -/
-def preserves_colimit_of_evaluation (F : D ⥤ K ⥤ C) (G : J ⥤ D)
-  (H : ∀ k, preserves_colimit G (F ⋙ (evaluation K C).obj k)) : preserves_colimit G F :=
-  ⟨fun c hc =>
-      by 
-        apply evaluation_jointly_reflects_colimits 
-        intro X 
-        haveI  := H X 
-        change is_colimit ((F ⋙ (evaluation K C).obj X).mapCocone c)
-        exact preserves_colimit.preserves hc⟩
+def preserves_colimit_of_evaluation
+(F : «expr ⥤ »(D, «expr ⥤ »(K, C)))
+(G : «expr ⥤ »(J, D))
+(H : ∀ k, preserves_colimit G «expr ⋙ »(F, (evaluation K C).obj k)) : preserves_colimit G F :=
+⟨λ c hc, begin
+   apply [expr evaluation_jointly_reflects_colimits],
+   intro [ident X],
+   haveI [] [] [":=", expr H X],
+   change [expr is_colimit («expr ⋙ »(F, (evaluation K C).obj X).map_cocone c)] [] [],
+   exact [expr preserves_colimit.preserves hc]
+ end⟩
 
 /-- `F : D ⥤ K ⥤ C` preserves all colimits of shape `J` if it does for each `k : K`. -/
 def preserves_colimits_of_shape_of_evaluation (F : D ⥤ K ⥤ C) (J : Type v) [small_category J]
@@ -323,7 +328,7 @@ def preserves_colimits_of_evaluation (F : D ⥤ K ⥤ C) (H : ∀ k : K, preserv
   preserves_colimits F :=
   ⟨fun L hL =>
       by 
-        exactI preserves_colimits_of_shape_of_evaluation F L fun k => preserves_colimits.preserves_colimits_of_shape⟩
+        exact preserves_colimits_of_shape_of_evaluation F L fun k => preserves_colimits.preserves_colimits_of_shape⟩
 
 open CategoryTheory.prod
 

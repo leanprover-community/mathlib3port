@@ -40,7 +40,7 @@ Show that `quaternion_group 2 ≃* units (quaternion ℤ)`.
 -/
 
 
--- error in GroupTheory.SpecificGroups.Quaternion: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in GroupTheory.SpecificGroups.Quaternion: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /--
 The (generalised) quaternion group `quaternion_group n` of order `4n`. It can be defined by the
 presentation $\langle a, x | a^{2n} = 1, x^2 = a^n, x^{-1}ax=a^{-1}\rangle$. We write `a i` for
@@ -242,25 +242,25 @@ theorem xa_pow_four (i : Zmod (2*n)) : xa i ^ 4 = 1 :=
     rw [←two_mul]
     simp [one_def]
 
+-- error in GroupTheory.SpecificGroups.Quaternion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `0 < n`, then `xa i` has order 4.
 -/
 @[simp]
-theorem order_of_xa [hpos : Fact (0 < n)] (i : Zmod (2*n)) : orderOf (xa i) = 4 :=
-  by 
-    change _ = 2 ^ 2
-    haveI  : Fact (Nat.Prime 2) := Fact.mk Nat.prime_two 
-    apply order_of_eq_prime_pow
-    ·
-      intro h 
-      simp only [pow_oneₓ, xa_sq] at h 
-      injection h with h' 
-      applyFun Zmod.val  at h' 
-      applyFun · / n  at h' 
-      simp only [Zmod.val_nat_cast, Zmod.val_zero, Nat.zero_divₓ, Nat.mod_mul_left_div_self, Nat.div_selfₓ hpos.1] at h' 
-      normNum  at h'
-    ·
-      normNum
+theorem order_of_xa [hpos : fact «expr < »(0, n)] (i : zmod «expr * »(2, n)) : «expr = »(order_of (xa i), 4) :=
+begin
+  change [expr «expr = »(_, «expr ^ »(2, 2))] [] [],
+  haveI [] [":", expr fact (nat.prime 2)] [":=", expr fact.mk nat.prime_two],
+  apply [expr order_of_eq_prime_pow],
+  { intro [ident h],
+    simp [] [] ["only"] ["[", expr pow_one, ",", expr xa_sq, "]"] [] ["at", ident h],
+    injection [expr h] ["with", ident h'],
+    apply_fun [expr zmod.val] ["at", ident h'] [],
+    apply_fun [expr («expr / » n)] ["at", ident h'] [],
+    simp [] [] ["only"] ["[", expr zmod.val_nat_cast, ",", expr zmod.val_zero, ",", expr nat.zero_div, ",", expr nat.mod_mul_left_div_self, ",", expr nat.div_self hpos.1, "]"] [] ["at", ident h'],
+    norm_num [] ["at", ident h'] },
+  { norm_num [] [] }
+end
 
 /-- In the special case `n = 1`, `quaternion 1` is a cyclic group (of order `4`). -/
 theorem quaternion_group_one_is_cyclic : IsCyclic (QuaternionGroup 1) :=
@@ -269,21 +269,21 @@ theorem quaternion_group_one_is_cyclic : IsCyclic (QuaternionGroup 1) :=
     rw [card, mul_oneₓ]
     exact order_of_xa 0
 
+-- error in GroupTheory.SpecificGroups.Quaternion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `0 < n`, then `a 1` has order `2 * n`.
 -/
 @[simp]
-theorem order_of_a_one [hn : Fact (0 < n)] : orderOf (a 1 : QuaternionGroup n) = 2*n :=
-  by 
-    cases' (Nat.le_of_dvdₓ (Nat.succ_mul_pos _ hn.1) (order_of_dvd_of_pow_eq_one (@a_one_pow_n n))).lt_or_eq with h h
-    ·
-      have h1 : (a 1 : QuaternionGroup n) ^ orderOf (a 1) = 1 := pow_order_of_eq_one _ 
-      rw [a_one_pow] at h1 
-      injection h1 with h2 
-      rw [←Zmod.val_eq_zero, Zmod.val_nat_cast, Nat.mod_eq_of_ltₓ h] at h2 
-      exact absurd h2.symm (order_of_pos _).Ne
-    ·
-      exact h
+theorem order_of_a_one [hn : fact «expr < »(0, n)] : «expr = »(order_of (a 1 : quaternion_group n), «expr * »(2, n)) :=
+begin
+  cases [expr (nat.le_of_dvd (nat.succ_mul_pos _ hn.1) (order_of_dvd_of_pow_eq_one (@a_one_pow_n n))).lt_or_eq] ["with", ident h, ident h],
+  { have [ident h1] [":", expr «expr = »(«expr ^ »((a 1 : quaternion_group n), order_of (a 1)), 1)] [":=", expr pow_order_of_eq_one _],
+    rw [expr a_one_pow] ["at", ident h1],
+    injection [expr h1] ["with", ident h2],
+    rw ["[", "<-", expr zmod.val_eq_zero, ",", expr zmod.val_nat_cast, ",", expr nat.mod_eq_of_lt h, "]"] ["at", ident h2],
+    exact [expr absurd h2.symm (order_of_pos _).ne] },
+  { exact [expr h] }
+end
 
 /--
 If `0 < n`, then `a i` has order `(2 * n) / gcd (2 * n) i`.

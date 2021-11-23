@@ -90,30 +90,36 @@ theorem lintegral_rpow_fun_mul_inv_snorm_eq_one {p : ℝ} (hp0_lt : 0 < p) {f : 
     simpRw [fun_mul_inv_snorm_rpow hp0_lt]
     rw [lintegral_mul_const'' _ (hf.pow_const p), mul_inv_cancel hf_nonzero hf_top]
 
+-- error in MeasureTheory.Integral.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Hölder's inequality in case of finite non-zero integrals -/
-theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top {p q : ℝ} (hpq : p.is_conjugate_exponent q) {f g : α → ℝ≥0∞}
-  (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) (hf_nontop : (∫⁻a, f a^p ∂μ) ≠ ⊤) (hg_nontop : (∫⁻a, g a^q ∂μ) ≠ ⊤)
-  (hf_nonzero : (∫⁻a, f a^p ∂μ) ≠ 0) (hg_nonzero : (∫⁻a, g a^q ∂μ) ≠ 0) :
-  (∫⁻a, (f*g) a ∂μ) ≤ ((∫⁻a, f a^p ∂μ)^1 / p)*(∫⁻a, g a^q ∂μ)^1 / q :=
-  by 
-    let npf := (∫⁻c : α, f c^p ∂μ)^1 / p 
-    let nqg := (∫⁻c : α, g c^q ∂μ)^1 / q 
-    calc (∫⁻a : α, (f*g) a ∂μ) = ∫⁻a : α, (fun_mul_inv_snorm f p μ*fun_mul_inv_snorm g q μ) a*npf*nqg ∂μ :=
-      by 
-        refine' lintegral_congr fun a => _ 
-        rw [Pi.mul_apply, fun_eq_fun_mul_inv_snorm_mul_snorm f hf_nonzero hf_nontop,
-          fun_eq_fun_mul_inv_snorm_mul_snorm g hg_nonzero hg_nontop, Pi.mul_apply]
-        ring _ ≤ npf*nqg :=
-      by 
-        rw
-          [lintegral_mul_const' (npf*nqg) _
-            (by 
-              simp [hf_nontop, hg_nontop, hf_nonzero, hg_nonzero])]
-        nthRw 1[←one_mulₓ (npf*nqg)]
-        refine' mul_le_mul _ (le_reflₓ (npf*nqg))
-        have hf1 := lintegral_rpow_fun_mul_inv_snorm_eq_one hpq.pos hf hf_nonzero hf_nontop 
-        have hg1 := lintegral_rpow_fun_mul_inv_snorm_eq_one hpq.symm.pos hg hg_nonzero hg_nontop 
-        exact lintegral_mul_le_one_of_lintegral_rpow_eq_one hpq (hf.mul_const _) (hg.mul_const _) hf1 hg1
+theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top
+{p q : exprℝ()}
+(hpq : p.is_conjugate_exponent q)
+{f g : α → «exprℝ≥0∞»()}
+(hf : ae_measurable f μ)
+(hg : ae_measurable g μ)
+(hf_nontop : «expr ≠ »(«expr∫⁻ , ∂ »((a), «expr ^ »(f a, p), μ), «expr⊤»()))
+(hg_nontop : «expr ≠ »(«expr∫⁻ , ∂ »((a), «expr ^ »(g a, q), μ), «expr⊤»()))
+(hf_nonzero : «expr ≠ »(«expr∫⁻ , ∂ »((a), «expr ^ »(f a, p), μ), 0))
+(hg_nonzero : «expr ≠ »(«expr∫⁻ , ∂ »((a), «expr ^ »(g a, q), μ), 0)) : «expr ≤ »(«expr∫⁻ , ∂ »((a), «expr * »(f, g) a, μ), «expr * »(«expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(f a, p), μ), «expr / »(1, p)), «expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(g a, q), μ), «expr / »(1, q)))) :=
+begin
+  let [ident npf] [] [":=", expr «expr ^ »(«expr∫⁻ , ∂ »((c : α), «expr ^ »(f c, p), μ), «expr / »(1, p))],
+  let [ident nqg] [] [":=", expr «expr ^ »(«expr∫⁻ , ∂ »((c : α), «expr ^ »(g c, q), μ), «expr / »(1, q))],
+  calc
+    «expr = »(«expr∫⁻ , ∂ »((a : α), «expr * »(f, g) a, μ), «expr∫⁻ , ∂ »((a : α), «expr * »(«expr * »(fun_mul_inv_snorm f p μ, fun_mul_inv_snorm g q μ) a, «expr * »(npf, nqg)), μ)) : begin
+      refine [expr lintegral_congr (λ a, _)],
+      rw ["[", expr pi.mul_apply, ",", expr fun_eq_fun_mul_inv_snorm_mul_snorm f hf_nonzero hf_nontop, ",", expr fun_eq_fun_mul_inv_snorm_mul_snorm g hg_nonzero hg_nontop, ",", expr pi.mul_apply, "]"] [],
+      ring []
+    end
+    «expr ≤ »(..., «expr * »(npf, nqg)) : begin
+      rw [expr lintegral_mul_const' «expr * »(npf, nqg) _ (by simp [] [] [] ["[", expr hf_nontop, ",", expr hg_nontop, ",", expr hf_nonzero, ",", expr hg_nonzero, "]"] [] [])] [],
+      nth_rewrite [1] ["<-", expr one_mul «expr * »(npf, nqg)] [],
+      refine [expr mul_le_mul _ (le_refl «expr * »(npf, nqg))],
+      have [ident hf1] [] [":=", expr lintegral_rpow_fun_mul_inv_snorm_eq_one hpq.pos hf hf_nonzero hf_nontop],
+      have [ident hg1] [] [":=", expr lintegral_rpow_fun_mul_inv_snorm_eq_one hpq.symm.pos hg hg_nonzero hg_nontop],
+      exact [expr lintegral_mul_le_one_of_lintegral_rpow_eq_one hpq (hf.mul_const _) (hg.mul_const _) hf1 hg1]
+    end
+end
 
 theorem ae_eq_zero_of_lintegral_rpow_eq_zero {p : ℝ} (hp0_lt : 0 < p) {f : α → ℝ≥0∞} (hf : AeMeasurable f μ)
   (hf_zero : (∫⁻a, f a^p ∂μ) = 0) : f =ᵐ[μ] 0 :=
@@ -127,31 +133,41 @@ theorem ae_eq_zero_of_lintegral_rpow_eq_zero {p : ℝ} (hp0_lt : 0 < p) {f : α 
     ·
       exact hx.left
     ·
-      exFalso 
+      exfalso 
       linarith
 
-theorem lintegral_mul_eq_zero_of_lintegral_rpow_eq_zero {p : ℝ} (hp0_lt : 0 < p) {f g : α → ℝ≥0∞}
-  (hf : AeMeasurable f μ) (hf_zero : (∫⁻a, f a^p ∂μ) = 0) : (∫⁻a, (f*g) a ∂μ) = 0 :=
-  by 
-    rw [←@lintegral_zero_fun α _ μ]
-    refine' lintegral_congr_ae _ 
-    suffices h_mul_zero : (f*g) =ᵐ[μ] 0*g
-    ·
-      rwa [zero_mul] at h_mul_zero 
-    have hf_eq_zero : f =ᵐ[μ] 0 
-    exact ae_eq_zero_of_lintegral_rpow_eq_zero hp0_lt hf hf_zero 
-    exact Filter.EventuallyEq.mul hf_eq_zero (ae_eq_refl g)
+-- error in MeasureTheory.Integral.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lintegral_mul_eq_zero_of_lintegral_rpow_eq_zero
+{p : exprℝ()}
+(hp0_lt : «expr < »(0, p))
+{f g : α → «exprℝ≥0∞»()}
+(hf : ae_measurable f μ)
+(hf_zero : «expr = »(«expr∫⁻ , ∂ »((a), «expr ^ »(f a, p), μ), 0)) : «expr = »(«expr∫⁻ , ∂ »((a), «expr * »(f, g) a, μ), 0) :=
+begin
+  rw ["<-", expr @lintegral_zero_fun α _ μ] [],
+  refine [expr lintegral_congr_ae _],
+  suffices [ident h_mul_zero] [":", expr «expr =ᵐ[ ] »(«expr * »(f, g), μ, «expr * »(0, g))],
+  by rwa [expr zero_mul] ["at", ident h_mul_zero],
+  have [ident hf_eq_zero] [":", expr «expr =ᵐ[ ] »(f, μ, 0)] [],
+  from [expr ae_eq_zero_of_lintegral_rpow_eq_zero hp0_lt hf hf_zero],
+  exact [expr filter.eventually_eq.mul hf_eq_zero (ae_eq_refl g)]
+end
 
-theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_eq_top {p q : ℝ} (hp0_lt : 0 < p) (hq0 : 0 ≤ q) {f g : α → ℝ≥0∞}
-  (hf_top : (∫⁻a, f a^p ∂μ) = ⊤) (hg_nonzero : (∫⁻a, g a^q ∂μ) ≠ 0) :
-  (∫⁻a, (f*g) a ∂μ) ≤ ((∫⁻a, f a^p ∂μ)^1 / p)*(∫⁻a, g a^q ∂μ)^1 / q :=
-  by 
-    refine' le_transₓ le_top (le_of_eqₓ _)
-    have hp0_inv_lt : 0 < 1 / p
-    ·
-      simp [hp0_lt]
-    rw [hf_top, Ennreal.top_rpow_of_pos hp0_inv_lt]
-    simp [hq0, hg_nonzero]
+-- error in MeasureTheory.Integral.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_eq_top
+{p q : exprℝ()}
+(hp0_lt : «expr < »(0, p))
+(hq0 : «expr ≤ »(0, q))
+{f g : α → «exprℝ≥0∞»()}
+(hf_top : «expr = »(«expr∫⁻ , ∂ »((a), «expr ^ »(f a, p), μ), «expr⊤»()))
+(hg_nonzero : «expr ≠ »(«expr∫⁻ , ∂ »((a), «expr ^ »(g a, q), μ), 0)) : «expr ≤ »(«expr∫⁻ , ∂ »((a), «expr * »(f, g) a, μ), «expr * »(«expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(f a, p), μ), «expr / »(1, p)), «expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(g a, q), μ), «expr / »(1, q)))) :=
+begin
+  refine [expr le_trans le_top (le_of_eq _)],
+  have [ident hp0_inv_lt] [":", expr «expr < »(0, «expr / »(1, p))] [],
+  by simp [] [] [] ["[", expr hp0_lt, "]"] [] [],
+  rw ["[", expr hf_top, ",", expr ennreal.top_rpow_of_pos hp0_inv_lt, "]"] [],
+  simp [] [] [] ["[", expr hq0, ",", expr hg_nonzero, "]"] [] []
+end
 
 /-- Hölder's inequality for functions `α → ℝ≥0∞`. The integral of the product of two functions
 is bounded by the product of their `ℒp` and `ℒq` seminorms when `p` and `q` are conjugate
@@ -177,7 +193,7 @@ theorem lintegral_mul_le_Lp_mul_Lq (μ : Measureₓ α) {p q : ℝ} (hpq : p.is_
       exact lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_eq_top hpq.symm.pos hpq.nonneg hg_top hf_zero 
     exact Ennreal.lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top hpq hf hg hf_top hg_top hf_zero hg_zero
 
--- error in MeasureTheory.Integral.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Integral.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top
 {p : exprℝ()}
 {f g : α → «exprℝ≥0∞»()}
@@ -220,65 +236,58 @@ begin
     end
 end
 
-theorem lintegral_Lp_mul_le_Lq_mul_Lr {α} [MeasurableSpace α] {p q r : ℝ} (hp0_lt : 0 < p) (hpq : p < q)
-  (hpqr : 1 / p = (1 / q)+1 / r) (μ : Measureₓ α) {f g : α → ℝ≥0∞} (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
-  ((∫⁻a, (f*g) a^p ∂μ)^1 / p) ≤ ((∫⁻a, f a^q ∂μ)^1 / q)*(∫⁻a, g a^r ∂μ)^1 / r :=
-  by 
-    have hp0_ne : p ≠ 0 
-    exact (ne_of_ltₓ hp0_lt).symm 
-    have hp0 : 0 ≤ p 
-    exact le_of_ltₓ hp0_lt 
-    have hq0_lt : 0 < q 
-    exact lt_of_le_of_ltₓ hp0 hpq 
-    have hq0_ne : q ≠ 0 
-    exact (ne_of_ltₓ hq0_lt).symm 
-    have h_one_div_r : 1 / r = 1 / p - 1 / q
-    ·
-      simp [hpqr]
-    have hr0_ne : r ≠ 0
-    ·
-      have hr_inv_pos : 0 < 1 / r
-      ·
-        rwa [h_one_div_r, sub_pos, one_div_lt_one_div hq0_lt hp0_lt]
-      rw [one_div, _root_.inv_pos] at hr_inv_pos 
-      exact (ne_of_ltₓ hr_inv_pos).symm 
-    let p2 := q / p 
-    let q2 := p2.conjugate_exponent 
-    have hp2q2 : p2.is_conjugate_exponent q2 
-    exact
-      Real.is_conjugate_exponent_conjugate_exponent
-        (by 
-          simp [lt_div_iff, hpq, hp0_lt])
-    calc ((∫⁻a : α, (f*g) a^p ∂μ)^1 / p) = ((∫⁻a : α, (f a^p)*g a^p ∂μ)^1 / p) :=
-      by 
-        simpRw [Pi.mul_apply,
-          Ennreal.mul_rpow_of_nonneg _ _ hp0]_ ≤ ((((∫⁻a, f a^p*p2 ∂μ)^1 / p2)*(∫⁻a, g a^p*q2 ∂μ)^1 / q2)^1 / p) :=
-      by 
-        refine'
-          Ennreal.rpow_le_rpow _
-            (by 
-              simp [hp0])
-        simpRw [Ennreal.rpow_mul]
-        exact
-          Ennreal.lintegral_mul_le_Lp_mul_Lq μ hp2q2 (hf.pow_const _)
-            (hg.pow_const _)_ = ((∫⁻a : α, f a^q ∂μ)^1 / q)*(∫⁻a : α, g a^r ∂μ)^1 / r :=
-      by 
-        rw
-          [@Ennreal.mul_rpow_of_nonneg _ _ (1 / p)
-            (by 
-              simp [hp0]),
-          ←Ennreal.rpow_mul, ←Ennreal.rpow_mul]
-        have hpp2 : (p*p2) = q
-        ·
-          symm 
-          rw [mul_commₓ, ←div_eq_iff hp0_ne]
-        have hpq2 : (p*q2) = r
-        ·
-          rw [←inv_inv₀ r, ←one_div, ←one_div, h_one_div_r]
-          fieldSimp [q2, Real.conjugateExponent, p2, hp0_ne, hq0_ne]
-        simpRw [div_mul_div, mul_oneₓ, mul_commₓ p2, mul_commₓ q2, hpp2, hpq2]
+-- error in MeasureTheory.Integral.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lintegral_Lp_mul_le_Lq_mul_Lr
+{α}
+[measurable_space α]
+{p q r : exprℝ()}
+(hp0_lt : «expr < »(0, p))
+(hpq : «expr < »(p, q))
+(hpqr : «expr = »(«expr / »(1, p), «expr + »(«expr / »(1, q), «expr / »(1, r))))
+(μ : measure α)
+{f g : α → «exprℝ≥0∞»()}
+(hf : ae_measurable f μ)
+(hg : ae_measurable g μ) : «expr ≤ »(«expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(«expr * »(f, g) a, p), μ), «expr / »(1, p)), «expr * »(«expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(f a, q), μ), «expr / »(1, q)), «expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(g a, r), μ), «expr / »(1, r)))) :=
+begin
+  have [ident hp0_ne] [":", expr «expr ≠ »(p, 0)] [],
+  from [expr (ne_of_lt hp0_lt).symm],
+  have [ident hp0] [":", expr «expr ≤ »(0, p)] [],
+  from [expr le_of_lt hp0_lt],
+  have [ident hq0_lt] [":", expr «expr < »(0, q)] [],
+  from [expr lt_of_le_of_lt hp0 hpq],
+  have [ident hq0_ne] [":", expr «expr ≠ »(q, 0)] [],
+  from [expr (ne_of_lt hq0_lt).symm],
+  have [ident h_one_div_r] [":", expr «expr = »(«expr / »(1, r), «expr - »(«expr / »(1, p), «expr / »(1, q)))] [],
+  by simp [] [] [] ["[", expr hpqr, "]"] [] [],
+  have [ident hr0_ne] [":", expr «expr ≠ »(r, 0)] [],
+  { have [ident hr_inv_pos] [":", expr «expr < »(0, «expr / »(1, r))] [],
+    by rwa ["[", expr h_one_div_r, ",", expr sub_pos, ",", expr one_div_lt_one_div hq0_lt hp0_lt, "]"] [],
+    rw ["[", expr one_div, ",", expr _root_.inv_pos, "]"] ["at", ident hr_inv_pos],
+    exact [expr (ne_of_lt hr_inv_pos).symm] },
+  let [ident p2] [] [":=", expr «expr / »(q, p)],
+  let [ident q2] [] [":=", expr p2.conjugate_exponent],
+  have [ident hp2q2] [":", expr p2.is_conjugate_exponent q2] [],
+  from [expr real.is_conjugate_exponent_conjugate_exponent (by simp [] [] [] ["[", expr lt_div_iff, ",", expr hpq, ",", expr hp0_lt, "]"] [] [])],
+  calc
+    «expr = »(«expr ^ »(«expr∫⁻ , ∂ »((a : α), «expr ^ »(«expr * »(f, g) a, p), μ), «expr / »(1, p)), «expr ^ »(«expr∫⁻ , ∂ »((a : α), «expr * »(«expr ^ »(f a, p), «expr ^ »(g a, p)), μ), «expr / »(1, p))) : by simp_rw ["[", expr pi.mul_apply, ",", expr ennreal.mul_rpow_of_nonneg _ _ hp0, "]"] []
+    «expr ≤ »(..., «expr ^ »(«expr * »(«expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(f a, «expr * »(p, p2)), μ), «expr / »(1, p2)), «expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(g a, «expr * »(p, q2)), μ), «expr / »(1, q2))), «expr / »(1, p))) : begin
+      refine [expr ennreal.rpow_le_rpow _ (by simp [] [] [] ["[", expr hp0, "]"] [] [])],
+      simp_rw [expr ennreal.rpow_mul] [],
+      exact [expr ennreal.lintegral_mul_le_Lp_mul_Lq μ hp2q2 (hf.pow_const _) (hg.pow_const _)]
+    end
+    «expr = »(..., «expr * »(«expr ^ »(«expr∫⁻ , ∂ »((a : α), «expr ^ »(f a, q), μ), «expr / »(1, q)), «expr ^ »(«expr∫⁻ , ∂ »((a : α), «expr ^ »(g a, r), μ), «expr / »(1, r)))) : begin
+      rw ["[", expr @ennreal.mul_rpow_of_nonneg _ _ «expr / »(1, p) (by simp [] [] [] ["[", expr hp0, "]"] [] []), ",", "<-", expr ennreal.rpow_mul, ",", "<-", expr ennreal.rpow_mul, "]"] [],
+      have [ident hpp2] [":", expr «expr = »(«expr * »(p, p2), q)] [],
+      { symmetry,
+        rw ["[", expr mul_comm, ",", "<-", expr div_eq_iff hp0_ne, "]"] [] },
+      have [ident hpq2] [":", expr «expr = »(«expr * »(p, q2), r)] [],
+      { rw ["[", "<-", expr inv_inv₀ r, ",", "<-", expr one_div, ",", "<-", expr one_div, ",", expr h_one_div_r, "]"] [],
+        field_simp [] ["[", expr q2, ",", expr real.conjugate_exponent, ",", expr p2, ",", expr hp0_ne, ",", expr hq0_ne, "]"] [] [] },
+      simp_rw ["[", expr div_mul_div, ",", expr mul_one, ",", expr mul_comm p2, ",", expr mul_comm q2, ",", expr hpp2, ",", expr hpq2, "]"] []
+    end
+end
 
--- error in MeasureTheory.Integral.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Integral.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow
 {p q : exprℝ()}
 (hpq : p.is_conjugate_exponent q)
@@ -303,43 +312,45 @@ begin
   rw ["[", "<-", expr ennreal.rpow_mul, ",", expr hpq.sub_one_mul_conj, "]"] []
 end
 
-theorem lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add {p q : ℝ} (hpq : p.is_conjugate_exponent q)
-  {f g : α → ℝ≥0∞} (hf : AeMeasurable f μ) (hf_top : (∫⁻a, f a^p ∂μ) ≠ ⊤) (hg : AeMeasurable g μ)
-  (hg_top : (∫⁻a, g a^p ∂μ) ≠ ⊤) :
-  (∫⁻a, (f+g) a^p ∂μ) ≤ (((∫⁻a, f a^p ∂μ)^1 / p)+(∫⁻a, g a^p ∂μ)^1 / p)*(∫⁻a, (f a+g a)^p ∂μ)^1 / q :=
-  by 
-    calc (∫⁻a, (f+g) a^p ∂μ) ≤ ∫⁻a, (f+g) a*(f+g) a^p - 1 ∂μ :=
-      by 
-        refine' lintegral_mono fun a => _ 
-        dsimp only 
-        byCases' h_zero : (f+g) a = 0
-        ·
-          rw [h_zero, Ennreal.zero_rpow_of_pos hpq.pos]
-          exact zero_le _ 
-        byCases' h_top : (f+g) a = ⊤
-        ·
-          rw [h_top, Ennreal.top_rpow_of_pos hpq.sub_one_pos, Ennreal.top_mul_top]
-          exact le_top 
-        refine' le_of_eqₓ _ 
-        nthRw 1[←Ennreal.rpow_one ((f+g) a)]
-        rw [←Ennreal.rpow_add _ _ h_zero h_top,
-          add_sub_cancel'_right]_ = (∫⁻a : α, f a*(f+g) a^p - 1 ∂μ)+∫⁻a : α, g a*(f+g) a^p - 1 ∂μ :=
-      by 
-        have h_add_m : AeMeasurable (fun a : α => (f+g) a^p - 1) μ 
-        exact (hf.add hg).pow_const _ 
-        have h_add_apply : (∫⁻a : α, (f+g) a*(f+g) a^p - 1 ∂μ) = ∫⁻a : α, (f a+g a)*(f+g) a^p - 1 ∂μ 
-        exact rfl 
-        simpRw [h_add_apply, add_mulₓ]
-        rw
-          [lintegral_add' (hf.mul h_add_m)
-            (hg.mul h_add_m)]_ ≤ (((∫⁻a, f a^p ∂μ)^1 / p)+(∫⁻a, g a^p ∂μ)^1 / p)*(∫⁻a, (f a+g a)^p ∂μ)^1 / q :=
-      by 
-        rw [add_mulₓ]
-        exact
-          add_le_add (lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow hpq hf (hf.add hg) hf_top)
-            (lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow hpq hg (hf.add hg) hg_top)
+-- error in MeasureTheory.Integral.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add
+{p q : exprℝ()}
+(hpq : p.is_conjugate_exponent q)
+{f g : α → «exprℝ≥0∞»()}
+(hf : ae_measurable f μ)
+(hf_top : «expr ≠ »(«expr∫⁻ , ∂ »((a), «expr ^ »(f a, p), μ), «expr⊤»()))
+(hg : ae_measurable g μ)
+(hg_top : «expr ≠ »(«expr∫⁻ , ∂ »((a), «expr ^ »(g a, p), μ), «expr⊤»())) : «expr ≤ »(«expr∫⁻ , ∂ »((a), «expr ^ »(«expr + »(f, g) a, p), μ), «expr * »(«expr + »(«expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(f a, p), μ), «expr / »(1, p)), «expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(g a, p), μ), «expr / »(1, p))), «expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(«expr + »(f a, g a), p), μ), «expr / »(1, q)))) :=
+begin
+  calc
+    «expr ≤ »(«expr∫⁻ , ∂ »((a), «expr ^ »(«expr + »(f, g) a, p), μ), «expr∫⁻ , ∂ »((a), «expr * »(«expr + »(f, g) a, «expr ^ »(«expr + »(f, g) a, «expr - »(p, 1))), μ)) : begin
+      refine [expr lintegral_mono (λ a, _)],
+      dsimp ["only"] [] [] [],
+      by_cases [expr h_zero, ":", expr «expr = »(«expr + »(f, g) a, 0)],
+      { rw ["[", expr h_zero, ",", expr ennreal.zero_rpow_of_pos hpq.pos, "]"] [],
+        exact [expr zero_le _] },
+      by_cases [expr h_top, ":", expr «expr = »(«expr + »(f, g) a, «expr⊤»())],
+      { rw ["[", expr h_top, ",", expr ennreal.top_rpow_of_pos hpq.sub_one_pos, ",", expr ennreal.top_mul_top, "]"] [],
+        exact [expr le_top] },
+      refine [expr le_of_eq _],
+      nth_rewrite [1] ["<-", expr ennreal.rpow_one («expr + »(f, g) a)] [],
+      rw ["[", "<-", expr ennreal.rpow_add _ _ h_zero h_top, ",", expr add_sub_cancel'_right, "]"] []
+    end
+    «expr = »(..., «expr + »(«expr∫⁻ , ∂ »((a : α), «expr * »(f a, «expr ^ »(«expr + »(f, g) a, «expr - »(p, 1))), μ), «expr∫⁻ , ∂ »((a : α), «expr * »(g a, «expr ^ »(«expr + »(f, g) a, «expr - »(p, 1))), μ))) : begin
+      have [ident h_add_m] [":", expr ae_measurable (λ a : α, «expr ^ »(«expr + »(f, g) a, «expr - »(p, 1))) μ] [],
+      from [expr (hf.add hg).pow_const _],
+      have [ident h_add_apply] [":", expr «expr = »(«expr∫⁻ , ∂ »((a : α), «expr * »(«expr + »(f, g) a, «expr ^ »(«expr + »(f, g) a, «expr - »(p, 1))), μ), «expr∫⁻ , ∂ »((a : α), «expr * »(«expr + »(f a, g a), «expr ^ »(«expr + »(f, g) a, «expr - »(p, 1))), μ))] [],
+      from [expr rfl],
+      simp_rw ["[", expr h_add_apply, ",", expr add_mul, "]"] [],
+      rw [expr lintegral_add' (hf.mul h_add_m) (hg.mul h_add_m)] []
+    end
+    «expr ≤ »(..., «expr * »(«expr + »(«expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(f a, p), μ), «expr / »(1, p)), «expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(g a, p), μ), «expr / »(1, p))), «expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(«expr + »(f a, g a), p), μ), «expr / »(1, q)))) : begin
+      rw [expr add_mul] [],
+      exact [expr add_le_add (lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow hpq hf (hf.add hg) hf_top) (lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow hpq hg (hf.add hg) hg_top)]
+    end
+end
 
--- error in MeasureTheory.Integral.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Integral.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 private
 theorem lintegral_Lp_add_le_aux
 {p q : exprℝ()}
@@ -372,44 +383,40 @@ begin
   rwa ["[", "<-", expr mul_assoc, ",", expr ennreal.mul_le_mul_right h_add_zero h_add_top, ",", expr mul_comm, "]"] ["at", ident h]
 end
 
+-- error in MeasureTheory.Integral.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Minkowski's inequality for functions `α → ℝ≥0∞`: the `ℒp` seminorm of the sum of two
 functions is bounded by the sum of their `ℒp` seminorms. -/
-theorem lintegral_Lp_add_le {p : ℝ} {f g : α → ℝ≥0∞} (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) (hp1 : 1 ≤ p) :
-  ((∫⁻a, (f+g) a^p ∂μ)^1 / p) ≤ ((∫⁻a, f a^p ∂μ)^1 / p)+(∫⁻a, g a^p ∂μ)^1 / p :=
-  by 
-    have hp_pos : 0 < p 
-    exact lt_of_lt_of_leₓ zero_lt_one hp1 
-    byCases' hf_top : (∫⁻a, f a^p ∂μ) = ⊤
-    ·
-      simp [hf_top, hp_pos]
-    byCases' hg_top : (∫⁻a, g a^p ∂μ) = ⊤
-    ·
-      simp [hg_top, hp_pos]
-    byCases' h1 : p = 1
-    ·
-      refine' le_of_eqₓ _ 
-      simpRw [h1, one_div_one, Ennreal.rpow_one]
-      exact lintegral_add' hf hg 
-    have hp1_lt : 1 < p
-    ·
-      ·
-        refine' lt_of_le_of_neₓ hp1 _ 
-        symm 
-        exact h1 
-    have hpq := Real.is_conjugate_exponent_conjugate_exponent hp1_lt 
-    byCases' h0 : (∫⁻a, (f+g) a^p ∂μ) = 0
-    ·
-      rw [h0,
-        @Ennreal.zero_rpow_of_pos (1 / p)
-          (by 
-            simp [lt_of_lt_of_leₓ zero_lt_one hp1])]
-      exact zero_le _ 
-    have htop : (∫⁻a, (f+g) a^p ∂μ) ≠ ⊤
-    ·
-      rw [←Ne.def] at hf_top hg_top 
-      rw [←lt_top_iff_ne_top] at hf_top hg_top⊢
-      exact lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top hf hf_top hg hg_top hp1 
-    exact lintegral_Lp_add_le_aux hpq hf hf_top hg hg_top h0 htop
+theorem lintegral_Lp_add_le
+{p : exprℝ()}
+{f g : α → «exprℝ≥0∞»()}
+(hf : ae_measurable f μ)
+(hg : ae_measurable g μ)
+(hp1 : «expr ≤ »(1, p)) : «expr ≤ »(«expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(«expr + »(f, g) a, p), μ), «expr / »(1, p)), «expr + »(«expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(f a, p), μ), «expr / »(1, p)), «expr ^ »(«expr∫⁻ , ∂ »((a), «expr ^ »(g a, p), μ), «expr / »(1, p)))) :=
+begin
+  have [ident hp_pos] [":", expr «expr < »(0, p)] [],
+  from [expr lt_of_lt_of_le zero_lt_one hp1],
+  by_cases [expr hf_top, ":", expr «expr = »(«expr∫⁻ , ∂ »((a), «expr ^ »(f a, p), μ), «expr⊤»())],
+  { simp [] [] [] ["[", expr hf_top, ",", expr hp_pos, "]"] [] [] },
+  by_cases [expr hg_top, ":", expr «expr = »(«expr∫⁻ , ∂ »((a), «expr ^ »(g a, p), μ), «expr⊤»())],
+  { simp [] [] [] ["[", expr hg_top, ",", expr hp_pos, "]"] [] [] },
+  by_cases [expr h1, ":", expr «expr = »(p, 1)],
+  { refine [expr le_of_eq _],
+    simp_rw ["[", expr h1, ",", expr one_div_one, ",", expr ennreal.rpow_one, "]"] [],
+    exact [expr lintegral_add' hf hg] },
+  have [ident hp1_lt] [":", expr «expr < »(1, p)] [],
+  by { refine [expr lt_of_le_of_ne hp1 _],
+    symmetry,
+    exact [expr h1] },
+  have [ident hpq] [] [":=", expr real.is_conjugate_exponent_conjugate_exponent hp1_lt],
+  by_cases [expr h0, ":", expr «expr = »(«expr∫⁻ , ∂ »((a), «expr ^ »(«expr + »(f, g) a, p), μ), 0)],
+  { rw ["[", expr h0, ",", expr @ennreal.zero_rpow_of_pos «expr / »(1, p) (by simp [] [] [] ["[", expr lt_of_lt_of_le zero_lt_one hp1, "]"] [] []), "]"] [],
+    exact [expr zero_le _] },
+  have [ident htop] [":", expr «expr ≠ »(«expr∫⁻ , ∂ »((a), «expr ^ »(«expr + »(f, g) a, p), μ), «expr⊤»())] [],
+  { rw ["<-", expr ne.def] ["at", ident hf_top, ident hg_top],
+    rw ["<-", expr lt_top_iff_ne_top] ["at", ident hf_top, ident hg_top, "⊢"],
+    exact [expr lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top hf hf_top hg hg_top hp1] },
+  exact [expr lintegral_Lp_add_le_aux hpq hf hf_top hg hg_top h0 htop]
+end
 
 end Ennreal
 

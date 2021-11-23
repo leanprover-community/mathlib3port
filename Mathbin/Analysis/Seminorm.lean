@@ -1,7 +1,6 @@
 import Mathbin.Analysis.Convex.Function 
 import Mathbin.Analysis.NormedSpace.Ordered 
-import Mathbin.Data.Real.Pointwise 
-import Mathbin.Data.Set.Intervals.Default
+import Mathbin.Data.Real.Pointwise
 
 /-!
 # Seminorms and Local Convexity
@@ -180,47 +179,47 @@ Properties of balanced and absorbent sets in a topological vector space:
 
 variable[TopologicalSpace E][HasContinuousSmul 𝕜 E]
 
+-- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Every neighbourhood of the origin is absorbent. -/
-theorem absorbent_nhds_zero (hA : A ∈ 𝓝 (0 : E)) : Absorbent 𝕜 A :=
-  by 
-    intro x 
-    rcases mem_nhds_iff.mp hA with ⟨w, hw₁, hw₂, hw₃⟩
-    have hc : Continuous fun t : 𝕜 => t • x 
-    exact continuous_id.smul continuous_const 
-    rcases
-      metric.is_open_iff.mp (hw₂.preimage hc) 0
-        (by 
-          rwa [mem_preimage, zero_smul]) with
-      ⟨r, hr₁, hr₂⟩
-    have hr₃ 
-    exact inv_pos.mpr (half_pos hr₁)
-    use (r / 2)⁻¹, hr₃ 
-    intro a ha₁ 
-    have ha₂ : 0 < ∥a∥ := hr₃.trans_le ha₁ 
-    have ha₃ : a⁻¹ • x ∈ w
-    ·
-      apply hr₂ 
-      rw [Metric.mem_ball, dist_zero_right, norm_inv]
-      calc ∥a∥⁻¹ ≤ r / 2 := (inv_le (half_pos hr₁) ha₂).mp ha₁ _ < r := half_lt_self hr₁ 
-    rw [mem_smul_set_iff_inv_smul_mem₀ (norm_pos_iff.mp ha₂)]
-    exact hw₁ ha₃
+theorem absorbent_nhds_zero (hA : «expr ∈ »(A, expr𝓝() (0 : E))) : absorbent 𝕜 A :=
+begin
+  intro [ident x],
+  rcases [expr mem_nhds_iff.mp hA, "with", "⟨", ident w, ",", ident hw₁, ",", ident hw₂, ",", ident hw₃, "⟩"],
+  have [ident hc] [":", expr continuous (λ t : 𝕜, «expr • »(t, x))] [],
+  from [expr continuous_id.smul continuous_const],
+  rcases [expr metric.is_open_iff.mp (hw₂.preimage hc) 0 (by rwa ["[", expr mem_preimage, ",", expr zero_smul, "]"] []), "with", "⟨", ident r, ",", ident hr₁, ",", ident hr₂, "⟩"],
+  have [ident hr₃] [] [],
+  from [expr inv_pos.mpr (half_pos hr₁)],
+  use ["[", expr «expr ⁻¹»(«expr / »(r, 2)), ",", expr hr₃, "]"],
+  intros [ident a, ident ha₁],
+  have [ident ha₂] [":", expr «expr < »(0, «expr∥ ∥»(a))] [":=", expr hr₃.trans_le ha₁],
+  have [ident ha₃] [":", expr «expr ∈ »(«expr • »(«expr ⁻¹»(a), x), w)] [],
+  { apply [expr hr₂],
+    rw ["[", expr metric.mem_ball, ",", expr dist_zero_right, ",", expr norm_inv, "]"] [],
+    calc
+      «expr ≤ »(«expr ⁻¹»(«expr∥ ∥»(a)), «expr / »(r, 2)) : (inv_le (half_pos hr₁) ha₂).mp ha₁
+      «expr < »(..., r) : half_lt_self hr₁ },
+  rw ["[", expr mem_smul_set_iff_inv_smul_mem₀ (norm_pos_iff.mp ha₂), "]"] [],
+  exact [expr hw₁ ha₃]
+end
 
--- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- The union of `{0}` with the interior of a balanced set
     is balanced. -/
-theorem balanced_zero_union_interior (hA : balanced 𝕜 A) : balanced 𝕜 «expr ∪ »({(0 : E)}, interior A) :=
-begin
-  intros [ident a, ident ha],
-  by_cases [expr «expr = »(a, 0)],
-  { rw ["[", expr h, ",", expr zero_smul_set, "]"] [],
-    exacts ["[", expr subset_union_left _ _, ",", expr ⟨0, or.inl rfl⟩, "]"] },
-  { rw ["[", "<-", expr image_smul, ",", expr image_union, "]"] [],
-    apply [expr union_subset_union],
-    { rw ["[", expr image_singleton, ",", expr smul_zero, "]"] [] },
-    { calc
-        «expr ⊆ »(«expr • »(a, interior A), interior «expr • »(a, A)) : (is_open_map_smul₀ h).image_interior_subset A
-        «expr ⊆ »(..., interior A) : interior_mono (hA _ ha) } }
-end
+theorem balanced_zero_union_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ({(0 : E)} ∪ Interior A) :=
+  by 
+    intro a ha 
+    byCases' a = 0
+    ·
+      rw [h, zero_smul_set]
+      exacts[subset_union_left _ _, ⟨0, Or.inl rfl⟩]
+    ·
+      rw [←image_smul, image_union]
+      apply union_subset_union
+      ·
+        rw [image_singleton, smul_zero]
+      ·
+        calc a • Interior A ⊆ Interior (a • A) := (is_open_map_smul₀ h).image_interior_subset A _ ⊆ Interior A :=
+          interior_mono (hA _ ha)
 
 /-- The interior of a balanced set is balanced if it contains the origin. -/
 theorem Balanced.interior (hA : Balanced 𝕜 A) (h : (0 : E) ∈ Interior A) : Balanced 𝕜 (Interior A) :=
@@ -267,13 +266,14 @@ instance  : Inhabited (Seminorm 𝕜 E) :=
 instance  : CoeFun (Seminorm 𝕜 E) fun _ => E → ℝ :=
   ⟨fun p => p.to_fun⟩
 
-@[ext]
-theorem ext {p q : Seminorm 𝕜 E} (h : (p : E → ℝ) = q) : p = q :=
-  by 
-    cases p 
-    cases q 
-    have  : p_to_fun = q_to_fun := h 
-    simpRw [this]
+-- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[ext #[]] theorem ext {p q : seminorm 𝕜 E} (h : «expr = »((p : E → exprℝ()), q)) : «expr = »(p, q) :=
+begin
+  cases [expr p] [],
+  cases [expr q] [],
+  have [] [":", expr «expr = »(p_to_fun, q_to_fun)] [":=", expr h],
+  simp_rw [expr this] []
+end
 
 variable(p : Seminorm 𝕜 E)(c : 𝕜)(x y : E)(r : ℝ)
 
@@ -332,7 +332,7 @@ theorem sub_rev : p (x - y) = p (y - x) :=
 /-- The ball of radius `r` at `x` with respect to seminorm `p`
     is the set of elements `y` with `p (y - x) < `r`. -/
 def ball (p : Seminorm 𝕜 E) (x : E) (r : ℝ) :=
-  { y : E | p (y - x) < r }
+  { y:E | p (y - x) < r }
 
 theorem mem_ball : y ∈ ball p x r ↔ p (y - x) < r :=
   Iff.rfl
@@ -341,7 +341,7 @@ theorem mem_ball_zero : y ∈ ball p 0 r ↔ p y < r :=
   by 
     rw [mem_ball, sub_zero]
 
-theorem ball_zero_eq : ball p 0 r = { y : E | p y < r } :=
+theorem ball_zero_eq : ball p 0 r = { y:E | p y < r } :=
   Set.ext$
     fun x =>
       by 
@@ -357,16 +357,18 @@ theorem balanced_ball_zero : Balanced 𝕜 (ball p 0 r) :=
       by 
         rwa [mem_ball_zero] at hy
 
+-- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Seminorm-balls at the origin are absorbent. -/
-theorem absorbent_ball_zero {r : ℝ} (hr : 0 < r) : Absorbent 𝕜 (ball p (0 : E) r) :=
-  by 
-    rw [absorbent_iff_nonneg_lt]
-    rintro x 
-    have hxr : 0 ≤ p x / r := div_nonneg (p.nonneg _) hr.le 
-    refine' ⟨p x / r, hxr, fun a ha => _⟩
-    have ha₀ : 0 < ∥a∥ := hxr.trans_lt ha 
-    refine' ⟨a⁻¹ • x, _, smul_inv_smul₀ (norm_pos_iff.1 ha₀) x⟩
-    rwa [mem_ball_zero, p.smul, norm_inv, inv_mul_lt_iff ha₀, ←div_lt_iff hr]
+theorem absorbent_ball_zero {r : exprℝ()} (hr : «expr < »(0, r)) : absorbent 𝕜 (ball p (0 : E) r) :=
+begin
+  rw [expr absorbent_iff_nonneg_lt] [],
+  rintro [ident x],
+  have [ident hxr] [":", expr «expr ≤ »(0, «expr / »(p x, r))] [":=", expr div_nonneg (p.nonneg _) hr.le],
+  refine [expr ⟨«expr / »(p x, r), hxr, λ a ha, _⟩],
+  have [ident ha₀] [":", expr «expr < »(0, «expr∥ ∥»(a))] [":=", expr hxr.trans_lt ha],
+  refine [expr ⟨«expr • »(«expr ⁻¹»(a), x), _, smul_inv_smul₀ (norm_pos_iff.1 ha₀) x⟩],
+  rwa ["[", expr mem_ball_zero, ",", expr p.smul, ",", expr norm_inv, ",", expr inv_mul_lt_iff ha₀, ",", "<-", expr div_lt_iff hr, "]"] []
+end
 
 /-- Seminorm-balls containing the origin are absorbent. -/
 theorem absorbent_ball (hpr : p x < r) : Absorbent 𝕜 (ball p x r) :=
@@ -432,28 +434,28 @@ variable[AddCommGroupₓ E][Module ℝ E]
 /--The Minkowski functional. Given a set `s` in a real vector space, `gauge s` is the functional
 which sends `x : E` to the smallest `r : ℝ` such that `x` is in `s` scaled by `r`. -/
 def gauge (s : Set E) (x : E) : ℝ :=
-  Inf { r : ℝ | 0 < r ∧ x ∈ r • s }
+  Inf { r:ℝ | 0 < r ∧ x ∈ r • s }
 
 variable{s : Set E}{x : E}
 
-theorem gauge_def : gauge s x = Inf { r ∈ Set.Ioi 0 | x ∈ r • s } :=
+theorem gauge_def : gauge s x = Inf { r∈Set.Ioi 0 | x ∈ r • s } :=
   rfl
 
 /-- An alternative definition of the gauge using scalar multiplication on the element rather than on
 the set. -/
-theorem gauge_def' : gauge s x = Inf { r ∈ Set.Ioi 0 | r⁻¹ • x ∈ s } :=
+theorem gauge_def' : gauge s x = Inf { r∈Set.Ioi 0 | r⁻¹ • x ∈ s } :=
   by 
     unfold gauge 
     congr 1 
     ext r 
     exact and_congr_right fun hr => mem_smul_set_iff_inv_smul_mem₀ hr.ne' _ _
 
-private theorem gauge_set_bdd_below : BddBelow { r : ℝ | 0 < r ∧ x ∈ r • s } :=
+private theorem gauge_set_bdd_below : BddBelow { r:ℝ | 0 < r ∧ x ∈ r • s } :=
   ⟨0, fun r hr => hr.1.le⟩
 
 /-- If the given subset is `absorbent` then the set we take an infimum over in `gauge` is nonempty,
 which is useful for proving many properties about the gauge.  -/
-theorem Absorbent.gauge_set_nonempty (absorbs : Absorbent ℝ s) : { r : ℝ | 0 < r ∧ x ∈ r • s }.Nonempty :=
+theorem Absorbent.gauge_set_nonempty (absorbs : Absorbent ℝ s) : { r:ℝ | 0 < r ∧ x ∈ r • s }.Nonempty :=
   let ⟨r, hr₁, hr₂⟩ := Absorbs x
   ⟨r, hr₁, hr₂ r (Real.norm_of_nonneg hr₁.le).Ge⟩
 
@@ -479,16 +481,17 @@ theorem gauge_zero : gauge s 0 = 0 :=
 theorem gauge_nonneg (x : E) : 0 ≤ gauge s x :=
   Real.Inf_nonneg _$ fun x hx => hx.1.le
 
-theorem gauge_neg (symmetric : ∀ x _ : x ∈ s, -x ∈ s) (x : E) : gauge s (-x) = gauge s x :=
-  by 
-    have  : ∀ x, -x ∈ s ↔ x ∈ s :=
-      fun x =>
-        ⟨fun h =>
-            by 
-              simpa using Symmetric _ h,
-          Symmetric x⟩
-    rw [gauge_def', gauge_def']
-    simpRw [smul_neg, this]
+-- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem gauge_neg
+(symmetric : ∀ x «expr ∈ » s, «expr ∈ »(«expr- »(x), s))
+(x : E) : «expr = »(gauge s «expr- »(x), gauge s x) :=
+begin
+  have [] [":", expr ∀
+   x, «expr ↔ »(«expr ∈ »(«expr- »(x), s), «expr ∈ »(x, s))] [":=", expr λ
+   x, ⟨λ h, by simpa [] [] [] [] [] ["using", expr symmetric _ h], symmetric x⟩],
+  rw ["[", expr gauge_def', ",", expr gauge_def', "]"] [],
+  simp_rw ["[", expr smul_neg, ",", expr this, "]"] []
+end
 
 theorem gauge_le_of_mem {r : ℝ} (hr : 0 ≤ r) {x : E} (hx : x ∈ r • s) : gauge s x ≤ r :=
   by 
@@ -498,28 +501,30 @@ theorem gauge_le_of_mem {r : ℝ} (hr : 0 ≤ r) {x : E} (hx : x ∈ r • s) : 
     ·
       exact cInf_le gauge_set_bdd_below ⟨hr', hx⟩
 
-theorem gauge_le_one_eq' (hs : Convex ℝ s) (zero_mem : (0 : E) ∈ s) (absorbs : Absorbent ℝ s) :
-  { x | gauge s x ≤ 1 } = ⋂(r : ℝ)(H : 1 < r), r • s :=
-  by 
-    ext 
-    simpRw [Set.mem_Inter, Set.mem_set_of_eq]
-    split 
-    ·
-      intro h r hr 
-      have hr' := zero_lt_one.trans hr 
-      rw [mem_smul_set_iff_inv_smul_mem₀ hr'.ne']
-      obtain ⟨δ, δ_pos, hδr, hδ⟩ := exists_lt_of_gauge_lt Absorbs (h.trans_lt hr)
-      suffices  : (r⁻¹*δ) • δ⁻¹ • x ∈ s
-      ·
-        rwa [smul_smul, mul_inv_cancel_right₀ δ_pos.ne'] at this 
-      rw [mem_smul_set_iff_inv_smul_mem₀ δ_pos.ne'] at hδ 
-      refine' hs.smul_mem_of_zero_mem zero_mem hδ ⟨mul_nonneg (inv_nonneg.2 hr'.le) δ_pos.le, _⟩
-      rw [inv_mul_le_iff hr', mul_oneₓ]
-      exact hδr.le
-    ·
-      refine' fun h => le_of_forall_pos_lt_add fun ε hε => _ 
-      have hε' := (lt_add_iff_pos_right 1).2 (half_pos hε)
-      exact (gauge_le_of_mem (zero_le_one.trans hε'.le)$ h _ hε').trans_lt (add_lt_add_left (half_lt_self hε) _)
+-- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem gauge_le_one_eq'
+(hs : convex exprℝ() s)
+(zero_mem : «expr ∈ »((0 : E), s))
+(absorbs : absorbent exprℝ() s) : «expr = »({x | «expr ≤ »(gauge s x, 1)}, «expr⋂ , »((r : exprℝ())
+  (H : «expr < »(1, r)), «expr • »(r, s))) :=
+begin
+  ext [] [] [],
+  simp_rw ["[", expr set.mem_Inter, ",", expr set.mem_set_of_eq, "]"] [],
+  split,
+  { intros [ident h, ident r, ident hr],
+    have [ident hr'] [] [":=", expr zero_lt_one.trans hr],
+    rw [expr mem_smul_set_iff_inv_smul_mem₀ hr'.ne'] [],
+    obtain ["⟨", ident δ, ",", ident δ_pos, ",", ident hδr, ",", ident hδ, "⟩", ":=", expr exists_lt_of_gauge_lt absorbs (h.trans_lt hr)],
+    suffices [] [":", expr «expr ∈ »(«expr • »(«expr * »(«expr ⁻¹»(r), δ), «expr • »(«expr ⁻¹»(δ), x)), s)],
+    { rwa ["[", expr smul_smul, ",", expr mul_inv_cancel_right₀ δ_pos.ne', "]"] ["at", ident this] },
+    rw [expr mem_smul_set_iff_inv_smul_mem₀ δ_pos.ne'] ["at", ident hδ],
+    refine [expr hs.smul_mem_of_zero_mem zero_mem hδ ⟨mul_nonneg (inv_nonneg.2 hr'.le) δ_pos.le, _⟩],
+    rw ["[", expr inv_mul_le_iff hr', ",", expr mul_one, "]"] [],
+    exact [expr hδr.le] },
+  { refine [expr λ h, le_of_forall_pos_lt_add (λ ε hε, _)],
+    have [ident hε'] [] [":=", expr (lt_add_iff_pos_right 1).2 (half_pos hε)],
+    exact [expr «expr $ »(gauge_le_of_mem (zero_le_one.trans hε'.le), h _ hε').trans_lt (add_lt_add_left (half_lt_self hε) _)] }
+end
 
 theorem gauge_le_one_eq (hs : Convex ℝ s) (zero_mem : (0 : E) ∈ s) (absorbs : Absorbent ℝ s) :
   { x | gauge s x ≤ 1 } = ⋂(r : _)(_ : r ∈ Set.Ioi (1 : ℝ)), r • s :=
@@ -576,29 +581,28 @@ section TopologicalSpace
 
 variable[TopologicalSpace E][HasContinuousSmul ℝ E]
 
-theorem interior_subset_gauge_lt_one (s : Set E) : Interior s ⊆ { x | gauge s x < 1 } :=
-  by 
-    intro x hx 
-    let f : ℝ → E := fun t => t • x 
-    have hf : Continuous f
-    ·
-      continuity 
-    let s' := f ⁻¹' Interior s 
-    have hs' : IsOpen s' := hf.is_open_preimage _ is_open_interior 
-    have one_mem : (1 : ℝ) ∈ s'
-    ·
-      simpa only [s', f, Set.mem_preimage, one_smul]
-    obtain ⟨ε, hε₀, hε⟩ := (Metric.nhds_basis_closed_ball.1 _).1 (is_open_iff_mem_nhds.1 hs' 1 one_mem)
-    rw [Real.closed_ball_eq] at hε 
-    have hε₁ : 0 < 1+ε := hε₀.trans (lt_one_add ε)
-    have  : (1+ε)⁻¹ < 1
-    ·
-      rw [inv_lt_one_iff]
-      right 
-      linarith 
-    refine' (gauge_le_of_mem (inv_nonneg.2 hε₁.le) _).trans_lt this 
-    rw [mem_inv_smul_set_iff₀ hε₁.ne']
-    exact interior_subset (hε ⟨(sub_le_self _ hε₀.le).trans ((le_add_iff_nonneg_right _).2 hε₀.le), le_rfl⟩)
+-- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem interior_subset_gauge_lt_one (s : set E) : «expr ⊆ »(interior s, {x | «expr < »(gauge s x, 1)}) :=
+begin
+  intros [ident x, ident hx],
+  let [ident f] [":", expr exprℝ() → E] [":=", expr λ t, «expr • »(t, x)],
+  have [ident hf] [":", expr continuous f] [],
+  { continuity [] [] },
+  let [ident s'] [] [":=", expr «expr ⁻¹' »(f, interior s)],
+  have [ident hs'] [":", expr is_open s'] [":=", expr hf.is_open_preimage _ is_open_interior],
+  have [ident one_mem] [":", expr «expr ∈ »((1 : exprℝ()), s')] [],
+  { simpa [] [] ["only"] ["[", expr s', ",", expr f, ",", expr set.mem_preimage, ",", expr one_smul, "]"] [] [] },
+  obtain ["⟨", ident ε, ",", ident hε₀, ",", ident hε, "⟩", ":=", expr (metric.nhds_basis_closed_ball.1 _).1 (is_open_iff_mem_nhds.1 hs' 1 one_mem)],
+  rw [expr real.closed_ball_eq] ["at", ident hε],
+  have [ident hε₁] [":", expr «expr < »(0, «expr + »(1, ε))] [":=", expr hε₀.trans (lt_one_add ε)],
+  have [] [":", expr «expr < »(«expr ⁻¹»(«expr + »(1, ε)), 1)] [],
+  { rw [expr inv_lt_one_iff] [],
+    right,
+    linarith [] [] [] },
+  refine [expr (gauge_le_of_mem (inv_nonneg.2 hε₁.le) _).trans_lt this],
+  rw [expr mem_inv_smul_set_iff₀ hε₁.ne'] [],
+  exact [expr interior_subset (hε ⟨(sub_le_self _ hε₀.le).trans ((le_add_iff_nonneg_right _).2 hε₀.le), le_rfl⟩)]
+end
 
 theorem gauge_lt_one_eq_self_of_open {s : Set E} (hs : Convex ℝ s) (zero_mem : (0 : E) ∈ s) (hs₂ : IsOpen s) :
   { x | gauge s x < 1 } = s :=
@@ -622,40 +626,40 @@ end TopologicalSpace
 
 variable{α : Type _}[LinearOrderedField α][MulActionWithZero α ℝ][OrderedSmul α ℝ]
 
-theorem gauge_smul_of_nonneg [MulActionWithZero α E] [IsScalarTower α ℝ (Set E)] {s : Set E} {r : α} (hr : 0 ≤ r)
-  (x : E) : gauge s (r • x) = r • gauge s x :=
-  by 
-    obtain rfl | hr' := hr.eq_or_lt
-    ·
-      rw [zero_smul, gauge_zero, zero_smul]
-    rw [gauge_def', gauge_def', ←Real.Inf_smul_of_nonneg hr]
-    congr 1 
-    ext β 
-    simpRw [Set.mem_smul_set, Set.mem_sep_eq]
-    split 
-    ·
-      rintro ⟨hβ, hx⟩
-      simpRw [mem_Ioi]  at hβ⊢
-      have  := smul_pos (inv_pos.2 hr') hβ 
-      refine' ⟨r⁻¹ • β, ⟨this, _⟩, smul_inv_smul₀ hr'.ne' _⟩
-      rw [←mem_smul_set_iff_inv_smul_mem₀] at hx⊢
-      rwa [smul_assoc, mem_smul_set_iff_inv_smul_mem₀ (inv_ne_zero hr'.ne'), inv_inv₀]
-      ·
-        exact this.ne'
-      ·
-        exact hβ.ne'
-    ·
-      rintro ⟨β, ⟨hβ, hx⟩, rfl⟩
-      rw [mem_Ioi] at hβ⊢
-      have  := smul_pos hr' hβ 
-      refine' ⟨this, _⟩
-      rw [←mem_smul_set_iff_inv_smul_mem₀] at hx⊢
-      rw [smul_assoc]
-      exact smul_mem_smul_set hx
-      ·
-        exact this.ne'
-      ·
-        exact hβ.ne'
+-- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem gauge_smul_of_nonneg
+[mul_action_with_zero α E]
+[is_scalar_tower α exprℝ() (set E)]
+{s : set E}
+{r : α}
+(hr : «expr ≤ »(0, r))
+(x : E) : «expr = »(gauge s «expr • »(r, x), «expr • »(r, gauge s x)) :=
+begin
+  obtain [ident rfl, "|", ident hr', ":=", expr hr.eq_or_lt],
+  { rw ["[", expr zero_smul, ",", expr gauge_zero, ",", expr zero_smul, "]"] [] },
+  rw ["[", expr gauge_def', ",", expr gauge_def', ",", "<-", expr real.Inf_smul_of_nonneg hr, "]"] [],
+  congr' [1] [],
+  ext [] [ident β] [],
+  simp_rw ["[", expr set.mem_smul_set, ",", expr set.mem_sep_eq, "]"] [],
+  split,
+  { rintro ["⟨", ident hβ, ",", ident hx, "⟩"],
+    simp_rw ["[", expr mem_Ioi, "]"] ["at", "⊢", ident hβ],
+    have [] [] [":=", expr smul_pos (inv_pos.2 hr') hβ],
+    refine [expr ⟨«expr • »(«expr ⁻¹»(r), β), ⟨this, _⟩, smul_inv_smul₀ hr'.ne' _⟩],
+    rw ["<-", expr mem_smul_set_iff_inv_smul_mem₀] ["at", "⊢", ident hx],
+    rwa ["[", expr smul_assoc, ",", expr mem_smul_set_iff_inv_smul_mem₀ (inv_ne_zero hr'.ne'), ",", expr inv_inv₀, "]"] [],
+    { exact [expr this.ne'] },
+    { exact [expr hβ.ne'] } },
+  { rintro ["⟨", ident β, ",", "⟨", ident hβ, ",", ident hx, "⟩", ",", ident rfl, "⟩"],
+    rw [expr mem_Ioi] ["at", "⊢", ident hβ],
+    have [] [] [":=", expr smul_pos hr' hβ],
+    refine [expr ⟨this, _⟩],
+    rw ["<-", expr mem_smul_set_iff_inv_smul_mem₀] ["at", "⊢", ident hx],
+    rw [expr smul_assoc] [],
+    exact [expr smul_mem_smul_set hx],
+    { exact [expr this.ne'] },
+    { exact [expr hβ.ne'] } }
+end
 
 /-- In textbooks, this is the homogeneity of the Minkowksi functional. -/
 theorem gauge_smul [Module α E] [IsScalarTower α ℝ (Set E)] {s : Set E} (symmetric : ∀ x _ : x ∈ s, -x ∈ s) (r : α)
@@ -670,21 +674,24 @@ theorem gauge_smul [Module α E] [IsScalarTower α ℝ (Set E)] {s : Set E} (sym
     ·
       infer_instance
 
-theorem gauge_add_le (hs : Convex ℝ s) (absorbs : Absorbent ℝ s) (x y : E) : gauge s (x+y) ≤ gauge s x+gauge s y :=
-  by 
-    refine' le_of_forall_pos_lt_add fun ε hε => _ 
-    obtain ⟨a, ha, ha', hx⟩ := exists_lt_of_gauge_lt Absorbs (lt_add_of_pos_right (gauge s x) (half_pos hε))
-    obtain ⟨b, hb, hb', hy⟩ := exists_lt_of_gauge_lt Absorbs (lt_add_of_pos_right (gauge s y) (half_pos hε))
-    rw [mem_smul_set_iff_inv_smul_mem₀ ha.ne'] at hx 
-    rw [mem_smul_set_iff_inv_smul_mem₀ hb.ne'] at hy 
-    suffices  : gauge s (x+y) ≤ a+b
-    ·
-      linarith 
-    have hab : 0 < a+b := add_pos ha hb 
-    apply gauge_le_of_mem hab.le 
-    have  := convex_iff_div.1 hs hx hy ha.le hb.le hab 
-    rwa [smul_smul, smul_smul, mul_comm_div', mul_comm_div', ←mul_div_assoc, ←mul_div_assoc, mul_inv_cancel ha.ne',
-      mul_inv_cancel hb.ne', ←smul_add, one_div, ←mem_smul_set_iff_inv_smul_mem₀ hab.ne'] at this
+-- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem gauge_add_le
+(hs : convex exprℝ() s)
+(absorbs : absorbent exprℝ() s)
+(x y : E) : «expr ≤ »(gauge s «expr + »(x, y), «expr + »(gauge s x, gauge s y)) :=
+begin
+  refine [expr le_of_forall_pos_lt_add (λ ε hε, _)],
+  obtain ["⟨", ident a, ",", ident ha, ",", ident ha', ",", ident hx, "⟩", ":=", expr exists_lt_of_gauge_lt absorbs (lt_add_of_pos_right (gauge s x) (half_pos hε))],
+  obtain ["⟨", ident b, ",", ident hb, ",", ident hb', ",", ident hy, "⟩", ":=", expr exists_lt_of_gauge_lt absorbs (lt_add_of_pos_right (gauge s y) (half_pos hε))],
+  rw [expr mem_smul_set_iff_inv_smul_mem₀ ha.ne'] ["at", ident hx],
+  rw [expr mem_smul_set_iff_inv_smul_mem₀ hb.ne'] ["at", ident hy],
+  suffices [] [":", expr «expr ≤ »(gauge s «expr + »(x, y), «expr + »(a, b))],
+  { linarith [] [] [] },
+  have [ident hab] [":", expr «expr < »(0, «expr + »(a, b))] [":=", expr add_pos ha hb],
+  apply [expr gauge_le_of_mem hab.le],
+  have [] [] [":=", expr convex_iff_div.1 hs hx hy ha.le hb.le hab],
+  rwa ["[", expr smul_smul, ",", expr smul_smul, ",", expr mul_comm_div', ",", expr mul_comm_div', ",", "<-", expr mul_div_assoc, ",", "<-", expr mul_div_assoc, ",", expr mul_inv_cancel ha.ne', ",", expr mul_inv_cancel hb.ne', ",", "<-", expr smul_add, ",", expr one_div, ",", "<-", expr mem_smul_set_iff_inv_smul_mem₀ hab.ne', "]"] ["at", ident this]
+end
 
 /-- `gauge s` as a seminorm when `s` is symmetric, convex and absorbent. -/
 @[simps]
@@ -696,7 +703,7 @@ def gaugeSeminorm (symmetric : ∀ x _ : x ∈ s, -x ∈ s) (hs : Convex ℝ s) 
           rw [gauge_smul Symmetric, Real.norm_eq_abs, smul_eq_mul] <;> infer_instance,
     triangle' := gauge_add_le hs hs' }
 
--- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any seminorm arises a the gauge of its unit ball. -/
 theorem seminorm.gauge_ball (p : seminorm exprℝ() E) : «expr = »(gauge (p.ball 0 1), p) :=
 begin

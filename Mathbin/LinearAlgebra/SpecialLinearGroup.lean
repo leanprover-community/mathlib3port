@@ -1,4 +1,4 @@
-import Mathbin.LinearAlgebra.Matrix.NonsingularInverse 
+import Mathbin.LinearAlgebra.Matrix.Adjugate 
 import Mathbin.LinearAlgebra.Matrix.ToLin
 
 /-!

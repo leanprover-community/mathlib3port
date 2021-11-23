@@ -1,4 +1,4 @@
-import Mathbin.Data.String.Basic
+import Mathbin.Tactic.Basic
 
 open Tactic Expr Name List
 
@@ -24,8 +24,8 @@ unsafe def derive_field_subtype : tactic Unit :=
           applyc field; assumption
       else
         do 
-          let s ← find_local (pquote Set _)
-          let quote Set (%%α) ← infer_type s 
+          let s ← find_local (pquote.1 (Set _))
+          let quote.1 (Set (%%ₓα)) ← infer_type s 
           let e ← mk_const field 
           let expl_arity ← get_expl_arity$ e α 
           let xs ← (iota expl_arity).mmap$ fun _ => intro1 
@@ -42,8 +42,8 @@ unsafe def derive_field_subtype : tactic Unit :=
                       return n 
           let mem_field ← resolve_constant$ mk_mem_name subname field 
           let val_mem ← mk_app mem_field hyps 
-          let quote coeSortₓ (%%s) ← target >>= instantiate_mvars 
-          tactic.refine (pquote @Subtype.mk _ (%%s) (%%val) (%%val_mem))
+          let quote.1 (coeSortₓ (%%ₓs)) ← target >>= instantiate_mvars 
+          tactic.refine (pquote.1 (@Subtype.mk _ (%%ₓs) (%%ₓval) (%%ₓval_mem)))
 
 namespace Interactive
 

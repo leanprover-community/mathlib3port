@@ -35,7 +35,7 @@ unsafe def replacer (ntac : Name) {α : Type} [reflected α] (F : Type → Type)
 unsafe def mk_replacer₁ : expr → Nat → expr × expr
 | expr.pi n bi d b, i =>
   let (e₁, e₂) := mk_replacer₁ b (i+1)
-  (expr.pi n bi d e₁, (quote expr.pi n bi d : expr) e₂)
+  (expr.pi n bi d e₁, (quote.1 (expr.pi n bi d) : expr) e₂)
 | _, i => (expr.var i, expr.var 0)
 
 unsafe def mk_replacer₂ (ntac : Name) (v : expr × expr) : expr → Nat → Option expr
@@ -43,13 +43,13 @@ unsafe def mk_replacer₂ (ntac : Name) (v : expr × expr) : expr → Nat → Op
   do 
     let b' ← mk_replacer₂ b (i+1)
     some (expr.lam n bi d b')
-| quote tactic (%%β), i =>
+| quote.1 (tactic (%%ₓβ)), i =>
   some$
     (expr.const `` replacer []).mk_app
-      [reflect ntac, β, reflect β, expr.lam `γ BinderInfo.default (quote Type) v.1,
-        expr.lam `γ BinderInfo.default (quote Type)$
-          expr.lam `eγ BinderInfo.inst_implicit ((quote @reflected Type : expr) β) v.2,
-        expr.lam `γ BinderInfo.default (quote Type)$
+      [reflect ntac, β, reflect β, expr.lam `γ BinderInfo.default (quote.1 Type) v.1,
+        expr.lam `γ BinderInfo.default (quote.1 Type)$
+          expr.lam `eγ BinderInfo.inst_implicit ((quote.1 (@reflected Type) : expr) β) v.2,
+        expr.lam `γ BinderInfo.default (quote.1 Type)$
           expr.lam `f BinderInfo.default v.1$ (List.range i).foldr (fun i e' => e' (expr.var (i+2))) (expr.var 0)]
 | _, i => none
 
@@ -58,9 +58,9 @@ unsafe def mk_replacer (ntac : Name) (e : expr) : tactic expr :=
 
 unsafe def valid_types : expr → List expr
 | expr.pi n bi d b => expr.pi n bi d <$> valid_types b
-| quote tactic (%%β) =>
-  [quote tactic.{0} (%%β), quote tactic.{0} (%%β) → tactic.{0} (%%β),
-    quote Option (tactic.{0} (%%β)) → tactic.{0} (%%β)]
+| quote.1 (tactic (%%ₓβ)) =>
+  [quote.1 (tactic.{0} (%%ₓβ)), quote.1 (tactic.{0} (%%ₓβ) → tactic.{0} (%%ₓβ)),
+    quote.1 (Option (tactic.{0} (%%ₓβ)) → tactic.{0} (%%ₓβ))]
 | _ => []
 
 unsafe def replacer_attr (ntac : Name) : user_attribute :=
@@ -85,7 +85,7 @@ unsafe def replacer_attr (ntac : Name) : user_attribute :=
 unsafe def def_replacer (ntac : Name) (ty : expr) : tactic Unit :=
   let nattr := ntac <.> "attr"
   do 
-    add_meta_definition nattr [] (quote user_attribute) (quote replacer_attr (%%reflect ntac))
+    add_meta_definition nattr [] (quote.1 user_attribute) (quote.1 (replacer_attr (%%ₓreflect ntac)))
     set_basic_attribute `user_attribute nattr tt 
     let v ← mk_replacer ntac ty 
     add_meta_definition ntac [] ty v 
@@ -124,7 +124,7 @@ unsafe def def_replacer_cmd (_ : parse$ tk "def_replacer") : lean.parser Unit :=
         do 
           let t ← to_expr p 
           def_replacer ntac t
-      | none => def_replacer ntac (quote tactic Unit)
+      | none => def_replacer ntac (quote.1 (tactic Unit))
 
 add_tactic_doc
   { Name := "def_replacer", category := DocCategory.cmd, declNames := [`tactic.def_replacer_cmd],

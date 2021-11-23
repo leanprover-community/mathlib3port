@@ -1,3 +1,4 @@
+import Mathbin.Logic.Function.Basic 
 import Mathbin.Tactic.Ext 
 import Mathbin.Tactic.Lint.Default 
 import Mathbin.Tactic.Simps
@@ -116,13 +117,18 @@ theorem restrict_def {α β} (f : α → β) (p : α → Prop) : restrict f p = 
 theorem restrict_injective {α β} {f : α → β} (p : α → Prop) (h : injective f) : injective (restrict f p) :=
   h.comp coe_injective
 
-theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β a)] (p : α → Prop) :
-  surjective fun f : ∀ x, β x => restrict f p :=
-  by 
-    letI this := Classical.decPred p 
-    refine' fun f => ⟨fun x => if h : p x then f ⟨x, h⟩ else Nonempty.some (Ne x), funext$ _⟩
-    rintro ⟨x, hx⟩
-    exact dif_pos hx
+-- error in Data.Subtype: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem surjective_restrict
+{α}
+{β : α → Type*}
+[ne : ∀ a, nonempty (β a)]
+(p : α → exprProp()) : surjective (λ f : ∀ x, β x, restrict f p) :=
+begin
+  letI [] [] [":=", expr classical.dec_pred p],
+  refine [expr λ f, ⟨λ x, if h : p x then f ⟨x, h⟩ else nonempty.some (ne x), «expr $ »(funext, _)⟩],
+  rintro ["⟨", ident x, ",", ident hx, "⟩"],
+  exact [expr dif_pos hx]
+end
 
 /-- Defining a map into a subtype, this can be seen as an "coinduction principle" of `subtype`-/
 @[simps]

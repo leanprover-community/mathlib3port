@@ -10,7 +10,7 @@ initialize
 
 namespace Tactic.RewriteSearch
 
--- error in Tactic.RewriteSearch.Types: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.RewriteSearch.Types: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /--
 `side` represents the side of an equation, either the left or the right.
 -/ @[derive #[expr decidable_eq], derive #[expr inhabited]] inductive side

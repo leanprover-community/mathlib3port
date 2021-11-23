@@ -124,26 +124,29 @@ theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} :
   by 
     apply holds_nonneg_consts_core h1
 
-theorem exists_clause_holds {v : Nat → Nat} {p : preform} :
-  p.neg_free → p.sub_free → p.holds v → ∃ (c : _)(_ : c ∈ dnf p), clause.holds (fun x => «expr↑ » (v x)) c :=
-  by 
-    intro h1 h2 h3 
-    rcases exists_clause_holds_core h1 h2 h3 with ⟨c, h4, h5⟩
-    exists nonnegate c 
-    have h6 : nonnegate c ∈ dnf p
-    ·
-      simp only [dnf]
-      rw [List.mem_mapₓ]
-      refine' ⟨c, h4, rfl⟩
-    refine' ⟨h6, _⟩
-    cases' c with eqs les 
-    simp only [nonnegate, clause.holds]
-    constructor 
-    apply h5.left 
-    rw [List.forall_mem_appendₓ]
-    apply And.intro (holds_nonneg_consts _) h5.right 
-    intro x 
-    apply Int.coe_nat_nonneg
+-- error in Tactic.Omega.Nat.Dnf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_clause_holds
+{v : nat → nat}
+{p : preform} : p.neg_free → p.sub_free → p.holds v → «expr∃ , »((c «expr ∈ » dnf p), clause.holds (λ
+  x, «expr↑ »(v x)) c) :=
+begin
+  intros [ident h1, ident h2, ident h3],
+  rcases [expr exists_clause_holds_core h1 h2 h3, "with", "⟨", ident c, ",", ident h4, ",", ident h5, "⟩"],
+  existsi [expr nonnegate c],
+  have [ident h6] [":", expr «expr ∈ »(nonnegate c, dnf p)] [],
+  { simp [] [] ["only"] ["[", expr dnf, "]"] [] [],
+    rw [expr list.mem_map] [],
+    refine [expr ⟨c, h4, rfl⟩] },
+  refine [expr ⟨h6, _⟩],
+  cases [expr c] ["with", ident eqs, ident les],
+  simp [] [] ["only"] ["[", expr nonnegate, ",", expr clause.holds, "]"] [] [],
+  constructor,
+  apply [expr h5.left],
+  rw [expr list.forall_mem_append] [],
+  apply [expr and.intro (holds_nonneg_consts _) h5.right],
+  assume [binders (x)],
+  apply [expr int.coe_nat_nonneg]
+end
 
 theorem exists_clause_sat {p : preform} : p.neg_free → p.sub_free → p.sat → ∃ (c : _)(_ : c ∈ dnf p), clause.sat c :=
   by 

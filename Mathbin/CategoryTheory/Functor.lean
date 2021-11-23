@@ -1,5 +1,6 @@
 import Mathbin.Tactic.ReassocAxiom 
-import Mathbin.Tactic.Monotonicity.Default
+import Mathbin.Tactic.Monotonicity.Default 
+import Mathbin.CategoryTheory.Category.Basic
 
 /-!
 # Functors

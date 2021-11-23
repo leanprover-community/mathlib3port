@@ -49,7 +49,7 @@ structure Finmap(β : α → Type v) : Type max u v where
 def Alist.toFinmap (s : Alist β) : Finmap β :=
   ⟨s.entries, s.nodupkeys⟩
 
--- error in Data.Finmap: ././Mathport/Syntax/Translate/Basic.lean:264:9: unsupported: advanced prec syntax
+-- error in Data.Finmap: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 local notation `⟦`:max a `⟧`:0 := alist.to_finmap a
 
 theorem Alist.to_finmap_eq {s₁ s₂ : Alist β} : «expr⟦ ⟧» s₁ = «expr⟦ ⟧» s₂ ↔ s₁.entries ~ s₂.entries :=
@@ -72,25 +72,22 @@ open Alist
 /-! ### lifting from alist -/
 
 
+-- error in Data.Finmap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Lift a permutation-respecting function on `alist` to `finmap`. -/
 @[elab_as_eliminator]
-def lift_on {γ} (s : Finmap β) (f : Alist β → γ) (H : ∀ a b : Alist β, a.entries ~ b.entries → f a = f b) : γ :=
-  by 
-    refine'
-      (Quotientₓ.liftOn s.1 (fun l => (⟨_, fun nd => f ⟨l, nd⟩⟩ : Part γ))
-            fun l₁ l₂ p => Part.ext' (perm_nodupkeys p) _ :
-          Part γ).get
-        _
-    ·
-      exact
-        fun h₁ h₂ =>
-          H _ _
-            (by 
-              exact p)
-    ·
-      have  := s.nodupkeys 
-      rcases s.entries with ⟨l⟩
-      exact id
+def lift_on
+{γ}
+(s : finmap β)
+(f : alist β → γ)
+(H : ∀ a b : alist β, «expr ~ »(a.entries, b.entries) → «expr = »(f a, f b)) : γ :=
+begin
+  refine [expr (quotient.lift_on s.1 (λ
+    l, (⟨_, λ nd, f ⟨l, nd⟩⟩ : part γ)) (λ l₁ l₂ p, part.ext' (perm_nodupkeys p) _) : part γ).get _],
+  { exact [expr λ h₁ h₂, H _ _ (by exact [expr p])] },
+  { have [] [] [":=", expr s.nodupkeys],
+    rcases [expr s.entries, "with", "⟨", ident l, "⟩"],
+    exact [expr id] }
+end
 
 @[simp]
 theorem lift_on_to_finmap {γ} (s : Alist β) (f : Alist β → γ) H : lift_on («expr⟦ ⟧» s) f H = f s :=
@@ -560,20 +557,18 @@ theorem union_empty {s₁ : Finmap β} : s₁ ∪ ∅ = s₁ :=
       by 
         rw [←empty_to_finmap] <;> simp [-empty_to_finmap, Alist.to_finmap_eq, union_to_finmap, Alist.union_assoc]
 
-theorem erase_union_singleton (a : α) (b : β a) (s : Finmap β) (h : s.lookup a = some b) :
-  s.erase a ∪ singleton a b = s :=
-  ext_lookup
-    fun x =>
-      by 
-        byCases' h' : x = a
-        ·
-          subst a 
-          rw [lookup_union_right not_mem_erase_self, lookup_singleton_eq, h]
-        ·
-          have  : x ∉ singleton a b
-          ·
-            rwa [mem_singleton]
-          rw [lookup_union_left_of_not_in this, lookup_erase_ne h']
+-- error in Data.Finmap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem erase_union_singleton
+(a : α)
+(b : β a)
+(s : finmap β)
+(h : «expr = »(s.lookup a, some b)) : «expr = »(«expr ∪ »(s.erase a, singleton a b), s) :=
+ext_lookup (λ x, by { by_cases [expr h', ":", expr «expr = »(x, a)],
+   { subst [expr a],
+     rw ["[", expr lookup_union_right not_mem_erase_self, ",", expr lookup_singleton_eq, ",", expr h, "]"] [] },
+   { have [] [":", expr «expr ∉ »(x, singleton a b)] [],
+     { rwa [expr mem_singleton] [] },
+     rw ["[", expr lookup_union_left_of_not_in this, ",", expr lookup_erase_ne h', "]"] [] } })
 
 end 
 
@@ -618,23 +613,22 @@ theorem union_comm_of_disjoint {s₁ s₂ : Finmap β} : Disjoint s₁ s₂ → 
         intro h 
         simp only [Alist.to_finmap_eq, union_to_finmap, Alist.union_comm_of_disjoint h]
 
-theorem union_cancel {s₁ s₂ s₃ : Finmap β} (h : Disjoint s₁ s₃) (h' : Disjoint s₂ s₃) : s₁ ∪ s₃ = s₂ ∪ s₃ ↔ s₁ = s₂ :=
-  ⟨fun h'' =>
-      by 
-        apply ext_lookup 
-        intro x 
-        have  : (s₁ ∪ s₃).lookup x = (s₂ ∪ s₃).lookup x 
-        exact h'' ▸ rfl 
-        byCases' hs₁ : x ∈ s₁
-        ·
-          rwa [lookup_union_left hs₁, lookup_union_left_of_not_in (h _ hs₁)] at this
-        ·
-          byCases' hs₂ : x ∈ s₂
-          ·
-            rwa [lookup_union_left_of_not_in (h' _ hs₂), lookup_union_left hs₂] at this
-          ·
-            rw [lookup_eq_none.mpr hs₁, lookup_eq_none.mpr hs₂],
-    fun h => h ▸ rfl⟩
+-- error in Data.Finmap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem union_cancel
+{s₁ s₂ s₃ : finmap β}
+(h : disjoint s₁ s₃)
+(h' : disjoint s₂ s₃) : «expr ↔ »(«expr = »(«expr ∪ »(s₁, s₃), «expr ∪ »(s₂, s₃)), «expr = »(s₁, s₂)) :=
+⟨λ h'', begin
+   apply [expr ext_lookup],
+   intro [ident x],
+   have [] [":", expr «expr = »(«expr ∪ »(s₁, s₃).lookup x, «expr ∪ »(s₂, s₃).lookup x)] [],
+   from [expr «expr ▸ »(h'', rfl)],
+   by_cases [expr hs₁, ":", expr «expr ∈ »(x, s₁)],
+   { rwa ["[", expr lookup_union_left hs₁, ",", expr lookup_union_left_of_not_in (h _ hs₁), "]"] ["at", ident this] },
+   { by_cases [expr hs₂, ":", expr «expr ∈ »(x, s₂)],
+     { rwa ["[", expr lookup_union_left_of_not_in (h' _ hs₂), ",", expr lookup_union_left hs₂, "]"] ["at", ident this] },
+     { rw ["[", expr lookup_eq_none.mpr hs₁, ",", expr lookup_eq_none.mpr hs₂, "]"] [] } }
+ end, λ h, «expr ▸ »(h, rfl)⟩
 
 end 
 

@@ -30,7 +30,7 @@ variable(R : Type _)[CommRingₓ R][Nontrivial R]
 
 open Polynomial Function Finₓ LinearMap
 
--- error in LinearAlgebra.FreeModule.StrongRankCondition: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in LinearAlgebra.FreeModule.StrongRankCondition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any commutative ring satisfies the `strong_rank_condition`. -/
 @[priority 100]
 instance comm_ring_strong_rank_condition : strong_rank_condition R :=

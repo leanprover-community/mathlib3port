@@ -1,4 +1,5 @@
 import Mathbin.Algebra.Category.Group.Basic 
+import Mathbin.CategoryTheory.ConcreteCategory.ReflectsIsomorphisms 
 import Mathbin.Data.Equiv.Ring
 
 /-!
@@ -31,18 +32,18 @@ abbrev assoc_ring_hom (M N : Type _) [Semiringₓ M] [Semiringₓ N] :=
 instance bundled_hom : bundled_hom assoc_ring_hom :=
   ⟨fun M N [Semiringₓ M] [Semiringₓ N] =>
       by 
-        exactI @RingHom.toFun M N _ _,
+        exact @RingHom.toFun M N _ _,
     fun M [Semiringₓ M] =>
       by 
-        exactI @RingHom.id M _,
+        exact @RingHom.id M _,
     fun M N P [Semiringₓ M] [Semiringₓ N] [Semiringₓ P] =>
       by 
-        exactI @RingHom.comp M N P _ _ _,
+        exact @RingHom.comp M N P _ _ _,
     fun M N [Semiringₓ M] [Semiringₓ N] =>
       by 
-        exactI @RingHom.coe_inj M N _ _⟩
+        exact @RingHom.coe_inj M N _ _⟩
 
--- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] SemiRing
 
 instance  : CoeSort SemiRing (Type _) :=
@@ -84,7 +85,7 @@ namespace Ringₓₓ
 instance  : bundled_hom.parent_projection @Ringₓ.toSemiring :=
   ⟨⟩
 
--- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler λ Ring, has_coe_to_sort Ring (Type*)
+-- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler λ Ring, has_coe_to_sort Ring (Type*)
 attribute [derive #["[", expr λ Ring, has_coe_to_sort Ring (Type*), ",", expr large_category, ",",
    expr concrete_category, "]"]] Ring
 
@@ -123,7 +124,7 @@ namespace CommSemiRing
 instance  : bundled_hom.parent_projection @CommSemiringₓ.toSemiring :=
   ⟨⟩
 
--- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] CommSemiRing
 
 instance  : CoeSort CommSemiRing (Type _) :=
@@ -167,7 +168,7 @@ namespace CommRingₓₓ
 instance  : bundled_hom.parent_projection @CommRingₓ.toRing :=
   ⟨⟩
 
--- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] CommRing
 
 instance  : CoeSort CommRingₓₓ (Type _) :=
@@ -274,7 +275,7 @@ instance Ringₓₓ.forget_reflects_isos : reflects_isomorphisms (forget Ringₓ
   { reflects :=
       fun X Y f _ =>
         by 
-          resetI 
+          skip 
           let i := as_iso ((forget Ringₓₓ).map f)
           let e : X ≃+* Y := { f, i.to_equiv with  }
           exact ⟨(is_iso.of_iso e.to_Ring_iso).1⟩ }
@@ -283,7 +284,7 @@ instance CommRingₓₓ.forget_reflects_isos : reflects_isomorphisms (forget Com
   { reflects :=
       fun X Y f _ =>
         by 
-          resetI 
+          skip 
           let i := as_iso ((forget CommRingₓₓ).map f)
           let e : X ≃+* Y := { f, i.to_equiv with  }
           exact ⟨(is_iso.of_iso e.to_CommRing_iso).1⟩ }

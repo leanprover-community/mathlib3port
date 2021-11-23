@@ -37,36 +37,41 @@ open Complex
 
 variable{e : ℂ → ℂ}{e' : ℂ}{z : ℝ}
 
+-- error in Analysis.Complex.RealDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a complex function is differentiable at a real point, then the induced real function is also
 differentiable at this point, with a derivative equal to the real part of the complex derivative. -/
-theorem HasStrictDerivAt.real_of_complex (h : HasStrictDerivAt e e' z) :
-  HasStrictDerivAt (fun x : ℝ => (e x).re) e'.re z :=
-  by 
-    have A : HasStrictFderivAt (coeₓ : ℝ → ℂ) of_real_clm z := of_real_clm.has_strict_fderiv_at 
-    have B : HasStrictFderivAt e ((ContinuousLinearMap.smulRight 1 e' : ℂ →L[ℂ] ℂ).restrictScalars ℝ) (of_real_clm z) :=
-      h.has_strict_fderiv_at.restrict_scalars ℝ 
-    have C : HasStrictFderivAt re re_clm (e (of_real_clm z)) := re_clm.has_strict_fderiv_at 
-    simpa using (C.comp z (B.comp z A)).HasStrictDerivAt
+theorem has_strict_deriv_at.real_of_complex
+(h : has_strict_deriv_at e e' z) : has_strict_deriv_at (λ x : exprℝ(), (e x).re) e'.re z :=
+begin
+  have [ident A] [":", expr has_strict_fderiv_at (coe : exprℝ() → exprℂ()) of_real_clm z] [":=", expr of_real_clm.has_strict_fderiv_at],
+  have [ident B] [":", expr has_strict_fderiv_at e ((continuous_linear_map.smul_right 1 e' : «expr →L[ ] »(exprℂ(), exprℂ(), exprℂ())).restrict_scalars exprℝ()) (of_real_clm z)] [":=", expr h.has_strict_fderiv_at.restrict_scalars exprℝ()],
+  have [ident C] [":", expr has_strict_fderiv_at re re_clm (e (of_real_clm z))] [":=", expr re_clm.has_strict_fderiv_at],
+  simpa [] [] [] [] [] ["using", expr (C.comp z (B.comp z A)).has_strict_deriv_at]
+end
 
+-- error in Analysis.Complex.RealDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a complex function is differentiable at a real point, then the induced real function is also
 differentiable at this point, with a derivative equal to the real part of the complex derivative. -/
-theorem HasDerivAt.real_of_complex (h : HasDerivAt e e' z) : HasDerivAt (fun x : ℝ => (e x).re) e'.re z :=
-  by 
-    have A : HasFderivAt (coeₓ : ℝ → ℂ) of_real_clm z := of_real_clm.has_fderiv_at 
-    have B : HasFderivAt e ((ContinuousLinearMap.smulRight 1 e' : ℂ →L[ℂ] ℂ).restrictScalars ℝ) (of_real_clm z) :=
-      h.has_fderiv_at.restrict_scalars ℝ 
-    have C : HasFderivAt re re_clm (e (of_real_clm z)) := re_clm.has_fderiv_at 
-    simpa using (C.comp z (B.comp z A)).HasDerivAt
+theorem has_deriv_at.real_of_complex (h : has_deriv_at e e' z) : has_deriv_at (λ x : exprℝ(), (e x).re) e'.re z :=
+begin
+  have [ident A] [":", expr has_fderiv_at (coe : exprℝ() → exprℂ()) of_real_clm z] [":=", expr of_real_clm.has_fderiv_at],
+  have [ident B] [":", expr has_fderiv_at e ((continuous_linear_map.smul_right 1 e' : «expr →L[ ] »(exprℂ(), exprℂ(), exprℂ())).restrict_scalars exprℝ()) (of_real_clm z)] [":=", expr h.has_fderiv_at.restrict_scalars exprℝ()],
+  have [ident C] [":", expr has_fderiv_at re re_clm (e (of_real_clm z))] [":=", expr re_clm.has_fderiv_at],
+  simpa [] [] [] [] [] ["using", expr (C.comp z (B.comp z A)).has_deriv_at]
+end
 
-theorem TimesContDiffAt.real_of_complex {n : WithTop ℕ} (h : TimesContDiffAt ℂ n e z) :
-  TimesContDiffAt ℝ n (fun x : ℝ => (e x).re) z :=
-  by 
-    have A : TimesContDiffAt ℝ n (coeₓ : ℝ → ℂ) z 
-    exact of_real_clm.times_cont_diff.times_cont_diff_at 
-    have B : TimesContDiffAt ℝ n e z := h.restrict_scalars ℝ 
-    have C : TimesContDiffAt ℝ n re (e z)
-    exact re_clm.times_cont_diff.times_cont_diff_at 
-    exact C.comp z (B.comp z A)
+-- error in Analysis.Complex.RealDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem times_cont_diff_at.real_of_complex
+{n : with_top exprℕ()}
+(h : times_cont_diff_at exprℂ() n e z) : times_cont_diff_at exprℝ() n (λ x : exprℝ(), (e x).re) z :=
+begin
+  have [ident A] [":", expr times_cont_diff_at exprℝ() n (coe : exprℝ() → exprℂ()) z] [],
+  from [expr of_real_clm.times_cont_diff.times_cont_diff_at],
+  have [ident B] [":", expr times_cont_diff_at exprℝ() n e z] [":=", expr h.restrict_scalars exprℝ()],
+  have [ident C] [":", expr times_cont_diff_at exprℝ() n re (e z)] [],
+  from [expr re_clm.times_cont_diff.times_cont_diff_at],
+  exact [expr C.comp z (B.comp z A)]
+end
 
 theorem TimesContDiff.real_of_complex {n : WithTop ℕ} (h : TimesContDiff ℂ n e) :
   TimesContDiff ℝ n fun x : ℝ => (e x).re :=
@@ -129,24 +134,26 @@ theorem DifferentiableAt.conformal_at {E : Type _} [NormedGroup E] [NormedSpace 
     contrapose! hf' with w 
     simp [w]
 
+-- error in Analysis.Complex.RealDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A complex function is conformal if and only if the function is holomorphic or antiholomorphic
     with a nonvanishing differential. -/
-theorem conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj {f : ℂ → ℂ} {z : ℂ} :
-  ConformalAt f z ↔ (DifferentiableAt ℂ f z ∨ DifferentiableAt ℂ (f ∘ conj) (conj z)) ∧ fderiv ℝ f z ≠ 0 :=
-  by 
-    rw [conformal_at_iff_is_conformal_map_fderiv]
-    rw [is_conformal_map_iff_is_complex_or_conj_linear]
-    apply and_congr_left 
-    intro h 
-    have h_diff := h.imp_symm fderiv_zero_of_not_differentiable_at 
-    apply or_congr
-    ·
-      rw [differentiable_at_iff_restrict_scalars ℝ h_diff]
-    rw [←conj_conj z] at h_diff 
-    rw [differentiable_at_iff_restrict_scalars ℝ (h_diff.comp _ conj_cle.differentiable_at)]
-    refine' exists_congr fun g => rfl.congr _ 
-    have  : fderiv ℝ conj (conj z) = _ := conj_cle.fderiv 
-    simp [fderiv.comp _ h_diff conj_cle.differentiable_at, this, conj_conj]
+theorem conformal_at_iff_differentiable_at_or_differentiable_at_comp_conj
+{f : exprℂ() → exprℂ()}
+{z : exprℂ()} : «expr ↔ »(conformal_at f z, «expr ∧ »(«expr ∨ »(differentiable_at exprℂ() f z, differentiable_at exprℂ() «expr ∘ »(f, exprconj()) (exprconj() z)), «expr ≠ »(fderiv exprℝ() f z, 0))) :=
+begin
+  rw [expr conformal_at_iff_is_conformal_map_fderiv] [],
+  rw [expr is_conformal_map_iff_is_complex_or_conj_linear] [],
+  apply [expr and_congr_left],
+  intros [ident h],
+  have [ident h_diff] [] [":=", expr h.imp_symm fderiv_zero_of_not_differentiable_at],
+  apply [expr or_congr],
+  { rw [expr differentiable_at_iff_restrict_scalars exprℝ() h_diff] [] },
+  rw ["<-", expr conj_conj z] ["at", ident h_diff],
+  rw [expr differentiable_at_iff_restrict_scalars exprℝ() (h_diff.comp _ conj_cle.differentiable_at)] [],
+  refine [expr exists_congr (λ g, rfl.congr _)],
+  have [] [":", expr «expr = »(fderiv exprℝ() exprconj() (exprconj() z), _)] [":=", expr conj_cle.fderiv],
+  simp [] [] [] ["[", expr fderiv.comp _ h_diff conj_cle.differentiable_at, ",", expr this, ",", expr conj_conj, "]"] [] []
+end
 
 end Conformality
 

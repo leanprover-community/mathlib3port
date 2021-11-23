@@ -1,6 +1,7 @@
 import Mathbin.FieldTheory.PrimitiveElement 
-import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff 
 import Mathbin.LinearAlgebra.Determinant 
+import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff 
+import Mathbin.LinearAlgebra.Matrix.ToLinearEquiv 
 import Mathbin.RingTheory.PowerBasis
 
 /-!
@@ -77,17 +78,19 @@ theorem norm_eq_matrix_det [DecidableEq ι] (b : Basis ι R S) (s : S) :
   by 
     rw [norm_apply, ←LinearMap.det_to_matrix b, to_matrix_lmul_eq]
 
+-- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `x` is in the base field `K`, then the norm is `x ^ [L : K]`. -/
-theorem norm_algebra_map_of_basis (b : Basis ι R S) (x : R) : norm R (algebraMap R S x) = (x^Fintype.card ι) :=
-  by 
-    haveI  := Classical.decEq ι 
-    rw [norm_apply, ←det_to_matrix b, lmul_algebra_map]
-    convert @det_diagonal _ _ _ _ _ fun i : ι => x
-    ·
-      ext i j 
-      rw [to_matrix_lsmul, Matrix.diagonalₓ]
-    ·
-      rw [Finset.prod_const, Finset.card_univ]
+theorem norm_algebra_map_of_basis
+(b : basis ι R S)
+(x : R) : «expr = »(norm R (algebra_map R S x), «expr ^ »(x, fintype.card ι)) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq ι],
+  rw ["[", expr norm_apply, ",", "<-", expr det_to_matrix b, ",", expr lmul_algebra_map, "]"] [],
+  convert [] [expr @det_diagonal _ _ _ _ _ (λ i : ι, x)] [],
+  { ext [] [ident i, ident j] [],
+    rw ["[", expr to_matrix_lsmul, ",", expr matrix.diagonal, "]"] [] },
+  { rw ["[", expr finset.prod_const, ",", expr finset.card_univ, "]"] [] }
+end
 
 /-- If `x` is in the base field `K`, then the norm is `x ^ [L : K]`.
 
@@ -125,27 +128,28 @@ end EqProdRoots
 
 section EqZeroIff
 
-theorem norm_eq_zero_iff_of_basis [IsDomain S] (b : Basis ι R S) {x : S} : Algebra.norm R x = 0 ↔ x = 0 :=
-  by 
-    have hι : Nonempty ι := b.index_nonempty 
-    letI this := Classical.decEq ι 
-    rw [Algebra.norm_eq_matrix_det b]
-    split 
-    ·
-      rw [←Matrix.exists_mul_vec_eq_zero_iff]
-      rintro ⟨v, v_ne, hv⟩
-      rw [←b.equiv_fun.apply_symm_apply v, b.equiv_fun_symm_apply, b.equiv_fun_apply,
-        Algebra.left_mul_matrix_mul_vec_repr] at hv 
-      refine' (mul_eq_zero.mp (b.ext_elem$ fun i => _)).resolve_right (show (∑i, v i • b i) ≠ 0 from _)
-      ·
-        simpa only [LinearEquiv.map_zero, Pi.zero_apply] using congr_funₓ hv i
-      ·
-        contrapose! v_ne with sum_eq 
-        apply b.equiv_fun.symm.injective 
-        rw [b.equiv_fun_symm_apply, sum_eq, LinearEquiv.map_zero]
-    ·
-      rintro rfl 
-      rw [AlgHom.map_zero, Matrix.det_zero hι]
+-- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem norm_eq_zero_iff_of_basis
+[is_domain S]
+(b : basis ι R S)
+{x : S} : «expr ↔ »(«expr = »(algebra.norm R x, 0), «expr = »(x, 0)) :=
+begin
+  have [ident hι] [":", expr nonempty ι] [":=", expr b.index_nonempty],
+  letI [] [] [":=", expr classical.dec_eq ι],
+  rw [expr algebra.norm_eq_matrix_det b] [],
+  split,
+  { rw ["<-", expr matrix.exists_mul_vec_eq_zero_iff] [],
+    rintros ["⟨", ident v, ",", ident v_ne, ",", ident hv, "⟩"],
+    rw ["[", "<-", expr b.equiv_fun.apply_symm_apply v, ",", expr b.equiv_fun_symm_apply, ",", expr b.equiv_fun_apply, ",", expr algebra.left_mul_matrix_mul_vec_repr, "]"] ["at", ident hv],
+    refine [expr (mul_eq_zero.mp «expr $ »(b.ext_elem, λ
+       i, _)).resolve_right (show «expr ≠ »(«expr∑ , »((i), «expr • »(v i, b i)), 0), from _)],
+    { simpa [] [] ["only"] ["[", expr linear_equiv.map_zero, ",", expr pi.zero_apply, "]"] [] ["using", expr congr_fun hv i] },
+    { contrapose ["!"] [ident v_ne, "with", ident sum_eq],
+      apply [expr b.equiv_fun.symm.injective],
+      rw ["[", expr b.equiv_fun_symm_apply, ",", expr sum_eq, ",", expr linear_equiv.map_zero, "]"] [] } },
+  { rintro [ident rfl],
+    rw ["[", expr alg_hom.map_zero, ",", expr matrix.det_zero hι, "]"] [] }
+end
 
 theorem norm_ne_zero_iff_of_basis [IsDomain S] (b : Basis ι R S) {x : S} : Algebra.norm R x ≠ 0 ↔ x ≠ 0 :=
   not_iff_not.mpr (Algebra.norm_eq_zero_iff_of_basis b)
@@ -166,7 +170,7 @@ open IntermediateField
 
 variable(K)
 
--- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:340:40: in letI: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:341:40: in letI: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem norm_eq_norm_adjoin
 [finite_dimensional K L]
 [is_separable K L]
@@ -189,47 +193,51 @@ open IntermediateField IntermediateField.AdjoinSimple Polynomial
 
 variable(E : Type _)[Field E][Algebra K E][IsScalarTower K L F]
 
-theorem norm_eq_prod_embeddings_gen (pb : PowerBasis K L) (hE : (minpoly K pb.gen).Splits (algebraMap K E))
-  (hfx : (minpoly K pb.gen).Separable) :
-  algebraMap K E (norm K pb.gen) = (@Finset.univ (PowerBasis.AlgHom.fintype pb)).Prod fun σ => σ pb.gen :=
-  by 
-    letI this := Classical.decEq E 
-    rw [norm_gen_eq_prod_roots pb hE, Fintype.prod_equiv pb.lift_equiv', Finset.prod_mem_multiset,
-      Finset.prod_eq_multiset_prod, Multiset.to_finset_val,
-      multiset.erase_dup_eq_self.mpr (nodup_roots ((separable_map _).mpr hfx)), Multiset.map_id]
-    ·
-      intro x 
-      rfl
-    ·
-      intro σ 
-      rw [PowerBasis.lift_equiv'_apply_coe, id.def]
+-- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem norm_eq_prod_embeddings_gen
+(pb : power_basis K L)
+(hE : (minpoly K pb.gen).splits (algebra_map K E))
+(hfx : (minpoly K pb.gen).separable) : «expr = »(algebra_map K E (norm K pb.gen), (@@finset.univ (power_basis.alg_hom.fintype pb)).prod (λ
+  σ, σ pb.gen)) :=
+begin
+  letI [] [] [":=", expr classical.dec_eq E],
+  rw ["[", expr norm_gen_eq_prod_roots pb hE, ",", expr fintype.prod_equiv pb.lift_equiv', ",", expr finset.prod_mem_multiset, ",", expr finset.prod_eq_multiset_prod, ",", expr multiset.to_finset_val, ",", expr multiset.erase_dup_eq_self.mpr (nodup_roots ((separable_map _).mpr hfx)), ",", expr multiset.map_id, "]"] [],
+  { intro [ident x],
+    refl },
+  { intro [ident σ],
+    rw ["[", expr power_basis.lift_equiv'_apply_coe, ",", expr id.def, "]"] [] }
+end
 
 variable(F)
 
-theorem prod_embeddings_eq_finrank_pow [IsAlgClosed E] [IsSeparable K F] [FiniteDimensional K F] (pb : PowerBasis K L) :
-  (∏σ : F →ₐ[K] E, σ (algebraMap L F pb.gen)) =
-    (((@Finset.univ (PowerBasis.AlgHom.fintype pb)).Prod fun σ : L →ₐ[K] E => σ pb.gen)^finrank L F) :=
-  by 
-    haveI  : FiniteDimensional L F := FiniteDimensional.right K L F 
-    haveI  : IsSeparable L F := is_separable_tower_top_of_is_separable K L F 
-    letI this : Fintype (L →ₐ[K] E) := PowerBasis.AlgHom.fintype pb 
-    letI this : ∀ f : L →ₐ[K] E, Fintype (@AlgHom L F E _ _ _ _ f.to_ring_hom.to_algebra) := _ 
-    rw [Fintype.prod_equiv algHomEquivSigma (fun σ : F →ₐ[K] E => _) fun σ => σ.1 pb.gen, ←Finset.univ_sigma_univ,
-      Finset.prod_sigma, ←Finset.prod_pow]
-    refine' Finset.prod_congr rfl fun σ _ => _
-    ·
-      letI this : Algebra L E := σ.to_ring_hom.to_algebra 
-      simp only [Finset.prod_const, Finset.card_univ]
-      congr 
-      rw [AlgHom.card L F E]
-    ·
-      intro σ 
-      simp only [algHomEquivSigma, Equiv.coe_fn_mk, AlgHom.restrictDomain, AlgHom.comp_apply,
-        IsScalarTower.coe_to_alg_hom']
+-- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prod_embeddings_eq_finrank_pow
+[is_alg_closed E]
+[is_separable K F]
+[finite_dimensional K F]
+(pb : power_basis K L) : «expr = »(«expr∏ , »((σ : «expr →ₐ[ ] »(F, K, E)), σ (algebra_map L F pb.gen)), «expr ^ »((@@finset.univ (power_basis.alg_hom.fintype pb)).prod (λ
+   σ : «expr →ₐ[ ] »(L, K, E), σ pb.gen), finrank L F)) :=
+begin
+  haveI [] [":", expr finite_dimensional L F] [":=", expr finite_dimensional.right K L F],
+  haveI [] [":", expr is_separable L F] [":=", expr is_separable_tower_top_of_is_separable K L F],
+  letI [] [":", expr fintype «expr →ₐ[ ] »(L, K, E)] [":=", expr power_basis.alg_hom.fintype pb],
+  letI [] [":", expr ∀
+   f : «expr →ₐ[ ] »(L, K, E), fintype (@@alg_hom L F E _ _ _ _ f.to_ring_hom.to_algebra)] [":=", expr _],
+  rw ["[", expr fintype.prod_equiv alg_hom_equiv_sigma (λ
+    σ : «expr →ₐ[ ] »(F, K, E), _) (λ
+    σ, σ.1 pb.gen), ",", "<-", expr finset.univ_sigma_univ, ",", expr finset.prod_sigma, ",", "<-", expr finset.prod_pow, "]"] [],
+  refine [expr finset.prod_congr rfl (λ σ _, _)],
+  { letI [] [":", expr algebra L E] [":=", expr σ.to_ring_hom.to_algebra],
+    simp [] [] ["only"] ["[", expr finset.prod_const, ",", expr finset.card_univ, "]"] [] [],
+    congr,
+    rw [expr alg_hom.card L F E] [] },
+  { intros [ident σ],
+    simp [] [] ["only"] ["[", expr alg_hom_equiv_sigma, ",", expr equiv.coe_fn_mk, ",", expr alg_hom.restrict_domain, ",", expr alg_hom.comp_apply, ",", expr is_scalar_tower.coe_to_alg_hom', "]"] [] [] }
+end
 
 variable(K)
 
--- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:340:40: in haveI: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:341:40: in haveI: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 /-- For `L/K` a finite separable extension of fields and `E` an algebraically closed extension
 of `K`, the norm (down to `K`) of an element `x` of `L` is equal to the product of the images
 of `x` over all the `K`-embeddings `σ`  of `L` into `E`. -/

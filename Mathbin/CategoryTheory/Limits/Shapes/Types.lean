@@ -155,19 +155,17 @@ def product_limit_cone {J : Type u} (F : J → Type u) : limits.limit_cone (disc
       { lift := fun s x j => s.π.app j x,
         uniq' := fun s m w => funext$ fun x => funext$ fun j => (congr_funₓ (w j) x : _) } }
 
+-- error in CategoryTheory.Limits.Shapes.Types: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The category of types has `Σ j, f j` as the coproduct of a type family `f : J → Type`.
--/
-def coproduct_colimit_cocone {J : Type u} (F : J → Type u) : limits.colimit_cocone (discrete.functor F) :=
-  { Cocone := { x := Σj, F j, ι := { app := fun j x => ⟨j, x⟩ } },
-    IsColimit :=
-      { desc := fun s x => s.ι.app x.1 x.2,
-        uniq' :=
-          fun s m w =>
-            by 
-              ext ⟨j, x⟩
-              have  := congr_funₓ (w j) x 
-              exact this } }
+-/ def coproduct_colimit_cocone {J : Type u} (F : J → Type u) : limits.colimit_cocone (discrete.functor F) :=
+{ cocone := { X := «exprΣ , »((j), F j), ι := { app := λ j x, ⟨j, x⟩ } },
+  is_colimit := { desc := λ s x, s.ι.app x.1 x.2,
+    uniq' := λ s m w, begin
+      ext [] ["⟨", ident j, ",", ident x, "⟩"] [],
+      have [] [] [":=", expr congr_fun (w j) x],
+      exact [expr this]
+    end } }
 
 section Fork
 
@@ -195,18 +193,23 @@ noncomputable def type_equalizer_of_unique (t : ∀ y : Y, g y = h y → ∃!x :
           apply (Classical.some_spec (t (s.ι i) _)).2
           apply congr_funₓ hm i
 
+-- error in CategoryTheory.Limits.Shapes.Types: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The converse of `type_equalizer_of_unique`. -/
-theorem unique_of_type_equalizer (t : is_limit (fork.of_ι _ w)) (y : Y) (hy : g y = h y) : ∃!x : X, f x = y :=
-  by 
-    let y' : PUnit ⟶ Y := fun _ => y 
-    have hy' : y' ≫ g = y' ≫ h := funext fun _ => hy 
-    refine' ⟨(fork.is_limit.lift' t _ hy').1 ⟨⟩, congr_funₓ (fork.is_limit.lift' t y' _).2 ⟨⟩, _⟩
-    intro x' hx' 
-    suffices  : (fun _ : PUnit => x') = (fork.is_limit.lift' t y' hy').1
-    rw [←this]
-    apply fork.is_limit.hom_ext t 
-    ext ⟨⟩
-    apply hx'.trans (congr_funₓ (fork.is_limit.lift' t _ hy').2 ⟨⟩).symm
+theorem unique_of_type_equalizer
+(t : is_limit (fork.of_ι _ w))
+(y : Y)
+(hy : «expr = »(g y, h y)) : «expr∃! , »((x : X), «expr = »(f x, y)) :=
+begin
+  let [ident y'] [":", expr «expr ⟶ »(punit, Y)] [":=", expr λ _, y],
+  have [ident hy'] [":", expr «expr = »(«expr ≫ »(y', g), «expr ≫ »(y', h))] [":=", expr funext (λ _, hy)],
+  refine [expr ⟨(fork.is_limit.lift' t _ hy').1 ⟨⟩, congr_fun (fork.is_limit.lift' t y' _).2 ⟨⟩, _⟩],
+  intros [ident x', ident hx'],
+  suffices [] [":", expr «expr = »(λ _ : punit, x', (fork.is_limit.lift' t y' hy').1)],
+  rw ["<-", expr this] [],
+  apply [expr fork.is_limit.hom_ext t],
+  ext [] ["⟨", "⟩"] [],
+  apply [expr hx'.trans (congr_fun (fork.is_limit.lift' t _ hy').2 ⟨⟩).symm]
+end
 
 theorem type_equalizer_iff_unique : Nonempty (is_limit (fork.of_ι _ w)) ↔ ∀ y : Y, g y = h y → ∃!x : X, f x = y :=
   ⟨fun i => unique_of_type_equalizer _ _ (Classical.choice i), fun k => ⟨type_equalizer_of_unique f w k⟩⟩

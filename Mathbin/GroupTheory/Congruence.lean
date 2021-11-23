@@ -1,8 +1,7 @@
-import Mathbin.Data.Setoid.Basic 
-import Mathbin.Algebra.Group.Pi 
-import Mathbin.Algebra.Group.Prod 
+import Mathbin.GroupTheory.Submonoid.Operations 
 import Mathbin.Data.Equiv.MulAdd 
-import Mathbin.GroupTheory.Submonoid.Operations
+import Mathbin.Data.Setoid.Basic 
+import Mathbin.Algebra.Group.Prod
 
 /-!
 # Congruence relations
@@ -402,7 +401,7 @@ theorem inf_iff_and {c d : Con M} {x y} : (c⊓d) x y ↔ c x y ∧ d x y :=
     the infimum of the set of congruence relations containing `r`. -/
 @[toAdditive add_con_gen_eq
       "The inductively defined smallest additive congruence relation\ncontaining a binary relation `r` equals the infimum of the set of additive congruence relations\ncontaining `r`."]
-theorem con_gen_eq (r : M → M → Prop) : conGen r = Inf { s : Con M | ∀ x y, r x y → s x y } :=
+theorem con_gen_eq (r : M → M → Prop) : conGen r = Inf { s:Con M | ∀ x y, r x y → s x y } :=
   le_antisymmₓ
     (fun x y H =>
       (ConGen.Rel.rec_on H (fun _ _ h _ hs => hs _ _ h) (Con.refl _) (fun _ _ _ => Con.symm _)

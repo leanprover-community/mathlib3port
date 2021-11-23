@@ -1,4 +1,5 @@
 import Mathbin.MeasureTheory.Measure.Complex 
+import Mathbin.MeasureTheory.Decomposition.Jordan 
 import Mathbin.MeasureTheory.Measure.WithDensityVectorMeasure 
 import Mathbin.MeasureTheory.Function.AeEqOfIntegral
 
@@ -113,7 +114,7 @@ theorem measurable_rn_deriv (μ ν : Measureₓ α) : Measurable$ μ.rn_deriv ν
   by 
     byCases' h : have_lebesgue_decomposition μ ν
     ·
-      exactI (have_lebesgue_decomposition_spec μ ν).1
+      exact (have_lebesgue_decomposition_spec μ ν).1
     ·
       rw [rn_deriv, dif_neg h]
       exact measurable_zero
@@ -122,7 +123,7 @@ theorem mutually_singular_singular_part (μ ν : Measureₓ α) : μ.singular_pa
   by 
     byCases' h : have_lebesgue_decomposition μ ν
     ·
-      exactI (have_lebesgue_decomposition_spec μ ν).2.1
+      exact (have_lebesgue_decomposition_spec μ ν).2.1
     ·
       rw [singular_part, dif_neg h]
       exact mutually_singular.zero_left
@@ -131,7 +132,7 @@ theorem singular_part_le (μ ν : Measureₓ α) : μ.singular_part ν ≤ μ :=
   by 
     byCases' hl : have_lebesgue_decomposition μ ν
     ·
-      casesI (have_lebesgue_decomposition_spec μ ν).2 with _ h 
+      cases' (have_lebesgue_decomposition_spec μ ν).2 with _ h 
       convRHS => rw [h]
       exact measure.le_add_right (le_reflₓ _)
     ·
@@ -142,7 +143,7 @@ theorem with_density_rn_deriv_le (μ ν : Measureₓ α) : ν.with_density (μ.r
   by 
     byCases' hl : have_lebesgue_decomposition μ ν
     ·
-      casesI (have_lebesgue_decomposition_spec μ ν).2 with _ h 
+      cases' (have_lebesgue_decomposition_spec μ ν).2 with _ h 
       convRHS => rw [h]
       exact measure.le_add_left (le_reflₓ _)
     ·
@@ -168,26 +169,25 @@ instance  [TopologicalSpace α] [is_locally_finite_measure μ] :
   is_locally_finite_measure (ν.with_density$ μ.rn_deriv ν) :=
   is_locally_finite_measure_of_le$ with_density_rn_deriv_le μ ν
 
-theorem lintegral_rn_deriv_lt_top_of_measure_ne_top {μ : Measureₓ α} (ν : Measureₓ α) {s : Set α} (hs : μ s ≠ ∞) :
-  (∫⁻x in s, μ.rn_deriv ν x ∂ν) < ∞ :=
-  by 
-    byCases' hl : have_lebesgue_decomposition μ ν
-    ·
-      haveI  := hl 
-      obtain ⟨-, -, hadd⟩ := have_lebesgue_decomposition_spec μ ν 
-      suffices  : (∫⁻x in to_measurable μ s, μ.rn_deriv ν x ∂ν) < ∞
-      exact lt_of_le_of_ltₓ (lintegral_mono_set (subset_to_measurable _ _)) this 
-      rw [←with_density_apply _ (measurable_set_to_measurable _ _)]
-      refine'
-        lt_of_le_of_ltₓ
-          (le_add_left (le_reflₓ _) :
-          _ ≤ μ.singular_part ν (to_measurable μ s)+ν.with_density (μ.rn_deriv ν) (to_measurable μ s))
-          _ 
-      rw [←measure.add_apply, ←hadd, measure_to_measurable]
-      exact hs.lt_top
-    ·
-      erw [measure.rn_deriv, dif_neg hl, lintegral_zero]
-      exact WithTop.zero_lt_top
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lintegral_rn_deriv_lt_top_of_measure_ne_top
+{μ : measure α}
+(ν : measure α)
+{s : set α}
+(hs : «expr ≠ »(μ s, «expr∞»())) : «expr < »(«expr∫⁻ in , ∂ »((x), s, μ.rn_deriv ν x, ν), «expr∞»()) :=
+begin
+  by_cases [expr hl, ":", expr have_lebesgue_decomposition μ ν],
+  { haveI [] [] [":=", expr hl],
+    obtain ["⟨", "-", ",", "-", ",", ident hadd, "⟩", ":=", expr have_lebesgue_decomposition_spec μ ν],
+    suffices [] [":", expr «expr < »(«expr∫⁻ in , ∂ »((x), to_measurable μ s, μ.rn_deriv ν x, ν), «expr∞»())],
+    from [expr lt_of_le_of_lt (lintegral_mono_set (subset_to_measurable _ _)) this],
+    rw ["[", "<-", expr with_density_apply _ (measurable_set_to_measurable _ _), "]"] [],
+    refine [expr lt_of_le_of_lt (le_add_left (le_refl _) : «expr ≤ »(_, «expr + »(μ.singular_part ν (to_measurable μ s), ν.with_density (μ.rn_deriv ν) (to_measurable μ s)))) _],
+    rw ["[", "<-", expr measure.add_apply, ",", "<-", expr hadd, ",", expr measure_to_measurable, "]"] [],
+    exact [expr hs.lt_top] },
+  { erw ["[", expr measure.rn_deriv, ",", expr dif_neg hl, ",", expr lintegral_zero, "]"] [],
+    exact [expr with_top.zero_lt_top] }
+end
 
 theorem lintegral_rn_deriv_lt_top (μ ν : Measureₓ α) [is_finite_measure μ] : (∫⁻x, μ.rn_deriv ν x ∂ν) < ∞ :=
   by 
@@ -209,93 +209,81 @@ theorem rn_deriv_lt_top (μ ν : Measureₓ α) [sigma_finite μ] : ∀ᵐx ∂�
     refine' (lintegral_rn_deriv_lt_top_of_measure_ne_top _ _).Ne 
     exact (measure_spanning_sets_lt_top _ _).Ne
 
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given measures `μ` and `ν`, if `s` is a measure mutually singular to `ν` and `f` is a
 measurable function such that `μ = s + fν`, then `s = μ.singular_part μ`.
 
 This theorem provides the uniqueness of the `singular_part` in the Lebesgue decomposition theorem,
 while `measure_theory.measure.eq_rn_deriv` provides the uniqueness of the
 `rn_deriv`. -/
-theorem eq_singular_part {s : Measureₓ α} {f : α → ℝ≥0∞} (hf : Measurable f) (hs : s ⊥ₘ ν)
-  (hadd : μ = s+ν.with_density f) : s = μ.singular_part ν :=
-  by 
-    haveI  : have_lebesgue_decomposition μ ν := ⟨⟨⟨s, f⟩, hf, hs, hadd⟩⟩
-    obtain ⟨hmeas, hsing, hadd'⟩ := have_lebesgue_decomposition_spec μ ν 
-    obtain ⟨⟨S, hS₁, hS₂, hS₃⟩, ⟨T, hT₁, hT₂, hT₃⟩⟩ := hs, hsing 
-    rw [hadd'] at hadd 
-    have hνinter : ν («expr ᶜ» (S ∩ T)) = 0
-    ·
-      rw [Set.compl_inter]
-      refine' nonpos_iff_eq_zero.1 (le_transₓ (measure_union_le _ _) _)
-      rw [hT₃, hS₃, add_zeroₓ]
-      exact le_reflₓ _ 
-    have heq : s.restrict («expr ᶜ» (S ∩ T)) = (μ.singular_part ν).restrict («expr ᶜ» (S ∩ T))
-    ·
-      ext1 A hA 
-      have hf : ν.with_density f (A ∩ «expr ᶜ» (S ∩ T)) = 0
-      ·
-        refine' with_density_absolutely_continuous ν _ _ 
-        rw [←nonpos_iff_eq_zero]
-        exact hνinter ▸ measure_mono (Set.inter_subset_right _ _)
-      have hrn : ν.with_density (μ.rn_deriv ν) (A ∩ «expr ᶜ» (S ∩ T)) = 0
-      ·
-        refine' with_density_absolutely_continuous ν _ _ 
-        rw [←nonpos_iff_eq_zero]
-        exact hνinter ▸ measure_mono (Set.inter_subset_right _ _)
-      rw [restrict_apply hA, restrict_apply hA, ←add_zeroₓ (s (A ∩ «expr ᶜ» (S ∩ T))), ←hf, ←add_apply, ←hadd,
-        add_apply, hrn, add_zeroₓ]
-    have heq' : ∀ A : Set α, MeasurableSet A → s A = s.restrict («expr ᶜ» (S ∩ T)) A
-    ·
-      intro A hA 
-      have hsinter : s (A ∩ (S ∩ T)) = 0
-      ·
-        rw [←nonpos_iff_eq_zero]
-        exact hS₂ ▸ measure_mono (Set.Subset.trans (Set.inter_subset_right _ _) (Set.inter_subset_left _ _))
-      rw [restrict_apply hA, ←add_zeroₓ (s (A ∩ «expr ᶜ» (S ∩ T))), ←hsinter, ←measure_union,
-        ←Set.inter_union_distrib_left, Set.compl_union_self, Set.inter_univ]
-      ·
-        exact Disjoint.inter_left' _ (Disjoint.inter_right' _ disjoint_compl_left)
-      ·
-        measurability
-      ·
-        measurability 
-    ext1 A hA 
-    have hμinter : μ.singular_part ν (A ∩ (S ∩ T)) = 0
-    ·
-      rw [←nonpos_iff_eq_zero]
-      exact hT₂ ▸ measure_mono (Set.Subset.trans (Set.inter_subset_right _ _) (Set.inter_subset_right _ _))
-    rw [heq' A hA, HEq, ←add_zeroₓ ((μ.singular_part ν).restrict («expr ᶜ» (S ∩ T)) A), ←hμinter, restrict_apply hA,
-      ←measure_union, ←Set.inter_union_distrib_left, Set.compl_union_self, Set.inter_univ]
-    ·
-      exact Disjoint.inter_left' _ (Disjoint.inter_right' _ disjoint_compl_left)
-    ·
-      measurability
-    ·
-      measurability
+theorem eq_singular_part
+{s : measure α}
+{f : α → «exprℝ≥0∞»()}
+(hf : measurable f)
+(hs : «expr ⊥ₘ »(s, ν))
+(hadd : «expr = »(μ, «expr + »(s, ν.with_density f))) : «expr = »(s, μ.singular_part ν) :=
+begin
+  haveI [] [":", expr have_lebesgue_decomposition μ ν] [":=", expr ⟨⟨⟨s, f⟩, hf, hs, hadd⟩⟩],
+  obtain ["⟨", ident hmeas, ",", ident hsing, ",", ident hadd', "⟩", ":=", expr have_lebesgue_decomposition_spec μ ν],
+  obtain ["⟨", "⟨", ident S, ",", ident hS₁, ",", ident hS₂, ",", ident hS₃, "⟩", ",", "⟨", ident T, ",", ident hT₁, ",", ident hT₂, ",", ident hT₃, "⟩", "⟩", ":=", "⟨", expr hs, ",", expr hsing, "⟩"],
+  rw [expr hadd'] ["at", ident hadd],
+  have [ident hνinter] [":", expr «expr = »(ν «expr ᶜ»(«expr ∩ »(S, T)), 0)] [],
+  { rw [expr set.compl_inter] [],
+    refine [expr nonpos_iff_eq_zero.1 (le_trans (measure_union_le _ _) _)],
+    rw ["[", expr hT₃, ",", expr hS₃, ",", expr add_zero, "]"] [],
+    exact [expr le_refl _] },
+  have [ident heq] [":", expr «expr = »(s.restrict «expr ᶜ»(«expr ∩ »(S, T)), (μ.singular_part ν).restrict «expr ᶜ»(«expr ∩ »(S, T)))] [],
+  { ext1 [] [ident A, ident hA],
+    have [ident hf] [":", expr «expr = »(ν.with_density f «expr ∩ »(A, «expr ᶜ»(«expr ∩ »(S, T))), 0)] [],
+    { refine [expr with_density_absolutely_continuous ν _ _],
+      rw ["<-", expr nonpos_iff_eq_zero] [],
+      exact [expr «expr ▸ »(hνinter, measure_mono (set.inter_subset_right _ _))] },
+    have [ident hrn] [":", expr «expr = »(ν.with_density (μ.rn_deriv ν) «expr ∩ »(A, «expr ᶜ»(«expr ∩ »(S, T))), 0)] [],
+    { refine [expr with_density_absolutely_continuous ν _ _],
+      rw ["<-", expr nonpos_iff_eq_zero] [],
+      exact [expr «expr ▸ »(hνinter, measure_mono (set.inter_subset_right _ _))] },
+    rw ["[", expr restrict_apply hA, ",", expr restrict_apply hA, ",", "<-", expr add_zero (s «expr ∩ »(A, «expr ᶜ»(«expr ∩ »(S, T)))), ",", "<-", expr hf, ",", "<-", expr add_apply, ",", "<-", expr hadd, ",", expr add_apply, ",", expr hrn, ",", expr add_zero, "]"] [] },
+  have [ident heq'] [":", expr ∀
+   A : set α, measurable_set A → «expr = »(s A, s.restrict «expr ᶜ»(«expr ∩ »(S, T)) A)] [],
+  { intros [ident A, ident hA],
+    have [ident hsinter] [":", expr «expr = »(s «expr ∩ »(A, «expr ∩ »(S, T)), 0)] [],
+    { rw ["<-", expr nonpos_iff_eq_zero] [],
+      exact [expr «expr ▸ »(hS₂, measure_mono (set.subset.trans (set.inter_subset_right _ _) (set.inter_subset_left _ _)))] },
+    rw ["[", expr restrict_apply hA, ",", "<-", expr add_zero (s «expr ∩ »(A, «expr ᶜ»(«expr ∩ »(S, T)))), ",", "<-", expr hsinter, ",", "<-", expr measure_union, ",", "<-", expr set.inter_union_distrib_left, ",", expr set.compl_union_self, ",", expr set.inter_univ, "]"] [],
+    { exact [expr disjoint.inter_left' _ (disjoint.inter_right' _ disjoint_compl_left)] },
+    { measurability [] [] },
+    { measurability [] [] } },
+  ext1 [] [ident A, ident hA],
+  have [ident hμinter] [":", expr «expr = »(μ.singular_part ν «expr ∩ »(A, «expr ∩ »(S, T)), 0)] [],
+  { rw ["<-", expr nonpos_iff_eq_zero] [],
+    exact [expr «expr ▸ »(hT₂, measure_mono (set.subset.trans (set.inter_subset_right _ _) (set.inter_subset_right _ _)))] },
+  rw ["[", expr heq' A hA, ",", expr heq, ",", "<-", expr add_zero ((μ.singular_part ν).restrict «expr ᶜ»(«expr ∩ »(S, T)) A), ",", "<-", expr hμinter, ",", expr restrict_apply hA, ",", "<-", expr measure_union, ",", "<-", expr set.inter_union_distrib_left, ",", expr set.compl_union_self, ",", expr set.inter_univ, "]"] [],
+  { exact [expr disjoint.inter_left' _ (disjoint.inter_right' _ disjoint_compl_left)] },
+  { measurability [] [] },
+  { measurability [] [] }
+end
 
 theorem singular_part_zero (ν : Measureₓ α) : (0 : Measureₓ α).singularPart ν = 0 :=
   by 
     refine' (eq_singular_part measurable_zero mutually_singular.zero_left _).symm 
     rw [zero_addₓ, with_density_zero]
 
-theorem singular_part_smul (μ ν : Measureₓ α) (r :  ℝ≥0 ) : (r • μ).singularPart ν = r • μ.singular_part ν :=
-  by 
-    byCases' hr : r = 0
-    ·
-      rw [hr, zero_smul, zero_smul, singular_part_zero]
-    byCases' hl : have_lebesgue_decomposition μ ν
-    ·
-      haveI  := hl 
-      refine'
-        (eq_singular_part ((measurable_rn_deriv μ ν).const_smul (r : ℝ≥0∞))
-            (mutually_singular.smul r (have_lebesgue_decomposition_spec _ _).2.1) _).symm
-          
-      rw [with_density_smul _ (measurable_rn_deriv _ _), ←smul_add, ←have_lebesgue_decomposition_add μ ν,
-        Ennreal.smul_def]
-    ·
-      rw [singular_part, singular_part, dif_neg hl, dif_neg, smul_zero]
-      refine' fun hl' => hl _ 
-      rw [←inv_smul_smul₀ hr μ]
-      exact @measure.have_lebesgue_decomposition_smul _ _ _ _ hl' _
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem singular_part_smul
+(μ ν : measure α)
+(r : «exprℝ≥0»()) : «expr = »(«expr • »(r, μ).singular_part ν, «expr • »(r, μ.singular_part ν)) :=
+begin
+  by_cases [expr hr, ":", expr «expr = »(r, 0)],
+  { rw ["[", expr hr, ",", expr zero_smul, ",", expr zero_smul, ",", expr singular_part_zero, "]"] [] },
+  by_cases [expr hl, ":", expr have_lebesgue_decomposition μ ν],
+  { haveI [] [] [":=", expr hl],
+    refine [expr (eq_singular_part ((measurable_rn_deriv μ ν).const_smul (r : «exprℝ≥0∞»())) (mutually_singular.smul r (have_lebesgue_decomposition_spec _ _).2.1) _).symm],
+    rw ["[", expr with_density_smul _ (measurable_rn_deriv _ _), ",", "<-", expr smul_add, ",", "<-", expr have_lebesgue_decomposition_add μ ν, ",", expr ennreal.smul_def, "]"] [] },
+  { rw ["[", expr singular_part, ",", expr singular_part, ",", expr dif_neg hl, ",", expr dif_neg, ",", expr smul_zero, "]"] [],
+    refine [expr λ hl', hl _],
+    rw ["<-", expr inv_smul_smul₀ hr μ] [],
+    exact [expr @measure.have_lebesgue_decomposition_smul _ _ _ _ hl' _] }
+end
 
 theorem singular_part_add (μ₁ μ₂ ν : Measureₓ α) [have_lebesgue_decomposition μ₁ ν] [have_lebesgue_decomposition μ₂ ν] :
   (μ₁+μ₂).singularPart ν = μ₁.singular_part ν+μ₂.singular_part ν :=
@@ -309,14 +297,18 @@ theorem singular_part_add (μ₁ μ₂ ν : Measureₓ α) [have_lebesgue_decomp
     rw [←have_lebesgue_decomposition_add μ₁ ν, add_assocₓ, add_commₓ (ν.with_density (μ₂.rn_deriv ν)),
       ←have_lebesgue_decomposition_add μ₂ ν]
 
-theorem singular_part_with_density (ν : Measureₓ α) {f : α → ℝ≥0∞} (hf : Measurable f) :
-  (ν.with_density f).singularPart ν = 0 :=
-  by 
-    have  : ν.with_density f = 0+ν.with_density f
-    ·
-      rw [zero_addₓ]
-    exact (eq_singular_part hf mutually_singular.zero_left this).symm
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem singular_part_with_density
+(ν : measure α)
+{f : α → «exprℝ≥0∞»()}
+(hf : measurable f) : «expr = »((ν.with_density f).singular_part ν, 0) :=
+begin
+  have [] [":", expr «expr = »(ν.with_density f, «expr + »(0, ν.with_density f))] [],
+  by rw [expr zero_add] [],
+  exact [expr (eq_singular_part hf mutually_singular.zero_left this).symm]
+end
 
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given measures `μ` and `ν`, if `s` is a measure mutually singular to `ν` and `f` is a
 measurable function such that `μ = s + fν`, then `f = μ.rn_deriv ν`.
 
@@ -324,60 +316,50 @@ This theorem provides the uniqueness of the `rn_deriv` in the Lebesgue decomposi
 theorem, while `measure_theory.measure.eq_singular_part` provides the uniqueness of the
 `singular_part`. Here, the uniqueness is given in terms of the measures, while the uniqueness in
 terms of the functions is given in `eq_rn_deriv`. -/
-theorem eq_with_density_rn_deriv {s : Measureₓ α} {f : α → ℝ≥0∞} (hf : Measurable f) (hs : s ⊥ₘ ν)
-  (hadd : μ = s+ν.with_density f) : ν.with_density f = ν.with_density (μ.rn_deriv ν) :=
-  by 
-    haveI  : have_lebesgue_decomposition μ ν := ⟨⟨⟨s, f⟩, hf, hs, hadd⟩⟩
-    obtain ⟨hmeas, hsing, hadd'⟩ := have_lebesgue_decomposition_spec μ ν 
-    obtain ⟨⟨S, hS₁, hS₂, hS₃⟩, ⟨T, hT₁, hT₂, hT₃⟩⟩ := hs, hsing 
-    rw [hadd'] at hadd 
-    have hνinter : ν («expr ᶜ» (S ∩ T)) = 0
-    ·
-      rw [Set.compl_inter]
-      refine' nonpos_iff_eq_zero.1 (le_transₓ (measure_union_le _ _) _)
-      rw [hT₃, hS₃, add_zeroₓ]
-      exact le_reflₓ _ 
-    have heq : (ν.with_density f).restrict (S ∩ T) = (ν.with_density (μ.rn_deriv ν)).restrict (S ∩ T)
-    ·
-      ext1 A hA 
-      have hs : s (A ∩ (S ∩ T)) = 0
-      ·
-        rw [←nonpos_iff_eq_zero]
-        exact hS₂ ▸ measure_mono (Set.Subset.trans (Set.inter_subset_right _ _) (Set.inter_subset_left _ _))
-      have hsing : μ.singular_part ν (A ∩ (S ∩ T)) = 0
-      ·
-        rw [←nonpos_iff_eq_zero]
-        exact hT₂ ▸ measure_mono (Set.Subset.trans (Set.inter_subset_right _ _) (Set.inter_subset_right _ _))
-      rw [restrict_apply hA, restrict_apply hA, ←add_zeroₓ (ν.with_density f (A ∩ (S ∩ T))), ←hs, ←add_apply, add_commₓ,
-        ←hadd, add_apply, hsing, zero_addₓ]
-    have heq' : ∀ A : Set α, MeasurableSet A → ν.with_density f A = (ν.with_density f).restrict (S ∩ T) A
-    ·
-      intro A hA 
-      have hνfinter : ν.with_density f (A ∩ «expr ᶜ» (S ∩ T)) = 0
-      ·
-        rw [←nonpos_iff_eq_zero]
-        exact with_density_absolutely_continuous ν f hνinter ▸ measure_mono (Set.inter_subset_right _ _)
-      rw [restrict_apply hA, ←add_zeroₓ (ν.with_density f (A ∩ (S ∩ T))), ←hνfinter, ←measure_union,
-        ←Set.inter_union_distrib_left, Set.union_compl_self, Set.inter_univ]
-      ·
-        exact Disjoint.inter_left' _ (Disjoint.inter_right' _ disjoint_compl_right)
-      ·
-        measurability
-      ·
-        measurability 
-    ext1 A hA 
-    have hνrn : ν.with_density (μ.rn_deriv ν) (A ∩ «expr ᶜ» (S ∩ T)) = 0
-    ·
-      rw [←nonpos_iff_eq_zero]
-      exact with_density_absolutely_continuous ν (μ.rn_deriv ν) hνinter ▸ measure_mono (Set.inter_subset_right _ _)
-    rw [heq' A hA, HEq, ←add_zeroₓ ((ν.with_density (μ.rn_deriv ν)).restrict (S ∩ T) A), ←hνrn, restrict_apply hA,
-      ←measure_union, ←Set.inter_union_distrib_left, Set.union_compl_self, Set.inter_univ]
-    ·
-      exact Disjoint.inter_left' _ (Disjoint.inter_right' _ disjoint_compl_right)
-    ·
-      measurability
-    ·
-      measurability
+theorem eq_with_density_rn_deriv
+{s : measure α}
+{f : α → «exprℝ≥0∞»()}
+(hf : measurable f)
+(hs : «expr ⊥ₘ »(s, ν))
+(hadd : «expr = »(μ, «expr + »(s, ν.with_density f))) : «expr = »(ν.with_density f, ν.with_density (μ.rn_deriv ν)) :=
+begin
+  haveI [] [":", expr have_lebesgue_decomposition μ ν] [":=", expr ⟨⟨⟨s, f⟩, hf, hs, hadd⟩⟩],
+  obtain ["⟨", ident hmeas, ",", ident hsing, ",", ident hadd', "⟩", ":=", expr have_lebesgue_decomposition_spec μ ν],
+  obtain ["⟨", "⟨", ident S, ",", ident hS₁, ",", ident hS₂, ",", ident hS₃, "⟩", ",", "⟨", ident T, ",", ident hT₁, ",", ident hT₂, ",", ident hT₃, "⟩", "⟩", ":=", "⟨", expr hs, ",", expr hsing, "⟩"],
+  rw [expr hadd'] ["at", ident hadd],
+  have [ident hνinter] [":", expr «expr = »(ν «expr ᶜ»(«expr ∩ »(S, T)), 0)] [],
+  { rw [expr set.compl_inter] [],
+    refine [expr nonpos_iff_eq_zero.1 (le_trans (measure_union_le _ _) _)],
+    rw ["[", expr hT₃, ",", expr hS₃, ",", expr add_zero, "]"] [],
+    exact [expr le_refl _] },
+  have [ident heq] [":", expr «expr = »((ν.with_density f).restrict «expr ∩ »(S, T), (ν.with_density (μ.rn_deriv ν)).restrict «expr ∩ »(S, T))] [],
+  { ext1 [] [ident A, ident hA],
+    have [ident hs] [":", expr «expr = »(s «expr ∩ »(A, «expr ∩ »(S, T)), 0)] [],
+    { rw ["<-", expr nonpos_iff_eq_zero] [],
+      exact [expr «expr ▸ »(hS₂, measure_mono (set.subset.trans (set.inter_subset_right _ _) (set.inter_subset_left _ _)))] },
+    have [ident hsing] [":", expr «expr = »(μ.singular_part ν «expr ∩ »(A, «expr ∩ »(S, T)), 0)] [],
+    { rw ["<-", expr nonpos_iff_eq_zero] [],
+      exact [expr «expr ▸ »(hT₂, measure_mono (set.subset.trans (set.inter_subset_right _ _) (set.inter_subset_right _ _)))] },
+    rw ["[", expr restrict_apply hA, ",", expr restrict_apply hA, ",", "<-", expr add_zero (ν.with_density f «expr ∩ »(A, «expr ∩ »(S, T))), ",", "<-", expr hs, ",", "<-", expr add_apply, ",", expr add_comm, ",", "<-", expr hadd, ",", expr add_apply, ",", expr hsing, ",", expr zero_add, "]"] [] },
+  have [ident heq'] [":", expr ∀
+   A : set α, measurable_set A → «expr = »(ν.with_density f A, (ν.with_density f).restrict «expr ∩ »(S, T) A)] [],
+  { intros [ident A, ident hA],
+    have [ident hνfinter] [":", expr «expr = »(ν.with_density f «expr ∩ »(A, «expr ᶜ»(«expr ∩ »(S, T))), 0)] [],
+    { rw ["<-", expr nonpos_iff_eq_zero] [],
+      exact [expr «expr ▸ »(with_density_absolutely_continuous ν f hνinter, measure_mono (set.inter_subset_right _ _))] },
+    rw ["[", expr restrict_apply hA, ",", "<-", expr add_zero (ν.with_density f «expr ∩ »(A, «expr ∩ »(S, T))), ",", "<-", expr hνfinter, ",", "<-", expr measure_union, ",", "<-", expr set.inter_union_distrib_left, ",", expr set.union_compl_self, ",", expr set.inter_univ, "]"] [],
+    { exact [expr disjoint.inter_left' _ (disjoint.inter_right' _ disjoint_compl_right)] },
+    { measurability [] [] },
+    { measurability [] [] } },
+  ext1 [] [ident A, ident hA],
+  have [ident hνrn] [":", expr «expr = »(ν.with_density (μ.rn_deriv ν) «expr ∩ »(A, «expr ᶜ»(«expr ∩ »(S, T))), 0)] [],
+  { rw ["<-", expr nonpos_iff_eq_zero] [],
+    exact [expr «expr ▸ »(with_density_absolutely_continuous ν (μ.rn_deriv ν) hνinter, measure_mono (set.inter_subset_right _ _))] },
+  rw ["[", expr heq' A hA, ",", expr heq, ",", "<-", expr add_zero ((ν.with_density (μ.rn_deriv ν)).restrict «expr ∩ »(S, T) A), ",", "<-", expr hνrn, ",", expr restrict_apply hA, ",", "<-", expr measure_union, ",", "<-", expr set.inter_union_distrib_left, ",", expr set.union_compl_self, ",", expr set.inter_univ, "]"] [],
+  { exact [expr disjoint.inter_left' _ (disjoint.inter_right' _ disjoint_compl_right)] },
+  { measurability [] [] },
+  { measurability [] [] }
+end
 
 /-- Given measures `μ` and `ν`, if `s` is a measure mutually singular to `ν` and `f` is a
 measurable function such that `μ = s + fν`, then `f = μ.rn_deriv ν`.
@@ -397,18 +379,22 @@ theorem eq_rn_deriv [sigma_finite ν] {s : Measureₓ α} {f : α → ℝ≥0∞
         rw [eq_with_density_rn_deriv hf hs hadd]_ = ∫⁻x : α in a, μ.rn_deriv ν x ∂ν :=
       with_density_apply _ ha
 
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Radon-Nikodym derivative of `f ν` with respect to `ν` is `f`. -/
-theorem rn_deriv_with_density (ν : Measureₓ α) [sigma_finite ν] {f : α → ℝ≥0∞} (hf : Measurable f) :
-  (ν.with_density f).rnDeriv ν =ᵐ[ν] f :=
-  by 
-    have  : ν.with_density f = 0+ν.with_density f
-    ·
-      rw [zero_addₓ]
-    exact (eq_rn_deriv hf mutually_singular.zero_left this).symm
+theorem rn_deriv_with_density
+(ν : measure α)
+[sigma_finite ν]
+{f : α → «exprℝ≥0∞»()}
+(hf : measurable f) : «expr =ᵐ[ ] »((ν.with_density f).rn_deriv ν, ν, f) :=
+begin
+  have [] [":", expr «expr = »(ν.with_density f, «expr + »(0, ν.with_density f))] [],
+  by rw [expr zero_add] [],
+  exact [expr (eq_rn_deriv hf mutually_singular.zero_left this).symm]
+end
 
 open VectorMeasure SignedMeasure
 
--- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If two finite measures `μ` and `ν` are not mutually singular, there exists some `ε > 0` and
 a measurable set `E`, such that `ν(E) > 0` and `E` is positive with respect to `μ - εν`.
 
@@ -531,77 +517,82 @@ theorem max_measurable_le (f g : α → ℝ≥0∞) (hf : f ∈ measurable_le μ
     ·
       exact hA.inter (measurable_set_lt hg.1 hf.1)
 
-theorem sup_mem_measurable_le {f g : α → ℝ≥0∞} (hf : f ∈ measurable_le μ ν) (hg : g ∈ measurable_le μ ν) :
-  (fun a => f a⊔g a) ∈ measurable_le μ ν :=
-  by 
-    simpRw [Ennreal.sup_eq_max]
-    refine' ⟨Measurable.max hf.1 hg.1, fun A hA => _⟩
-    have h₁ := hA.inter (measurable_set_le hf.1 hg.1)
-    have h₂ := hA.inter (measurable_set_lt hg.1 hf.1)
-    refine' le_transₓ (max_measurable_le f g hf hg A hA) _ 
-    refine' le_transₓ (add_le_add (hg.2 _ h₁) (hf.2 _ h₂)) _
-    ·
-      rw [←measure_union _ h₁ h₂]
-      ·
-        refine' le_of_eqₓ _ 
-        congr 
-        convert Set.inter_union_compl A _ 
-        ext a 
-        simpa 
-      rintro x ⟨⟨-, hx₁⟩, -, hx₂⟩
-      exact (not_leₓ.2 hx₂) hx₁
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sup_mem_measurable_le
+{f g : α → «exprℝ≥0∞»()}
+(hf : «expr ∈ »(f, measurable_le μ ν))
+(hg : «expr ∈ »(g, measurable_le μ ν)) : «expr ∈ »(λ a, «expr ⊔ »(f a, g a), measurable_le μ ν) :=
+begin
+  simp_rw [expr ennreal.sup_eq_max] [],
+  refine [expr ⟨measurable.max hf.1 hg.1, λ A hA, _⟩],
+  have [ident h₁] [] [":=", expr hA.inter (measurable_set_le hf.1 hg.1)],
+  have [ident h₂] [] [":=", expr hA.inter (measurable_set_lt hg.1 hf.1)],
+  refine [expr le_trans (max_measurable_le f g hf hg A hA) _],
+  refine [expr le_trans (add_le_add (hg.2 _ h₁) (hf.2 _ h₂)) _],
+  { rw ["[", "<-", expr measure_union _ h₁ h₂, "]"] [],
+    { refine [expr le_of_eq _],
+      congr,
+      convert [] [expr set.inter_union_compl A _] [],
+      ext [] [ident a] [],
+      simpa [] [] [] [] [] [] },
+    rintro [ident x, "⟨", "⟨", "-", ",", ident hx₁, "⟩", ",", "-", ",", ident hx₂, "⟩"],
+    exact [expr not_le.2 hx₂ hx₁] }
+end
 
-theorem supr_succ_eq_sup {α} (f : ℕ → α → ℝ≥0∞) (m : ℕ) (a : α) :
-  (⨆(k : ℕ)(hk : k ≤ m+1), f k a) = f m.succ a⊔⨆(k : ℕ)(hk : k ≤ m), f k a :=
-  by 
-    ext x 
-    simp only [Option.mem_def, Ennreal.some_eq_coe]
-    split  <;> intro h <;> rw [←h]
-    symm 
-    all_goals 
-      set c := ⨆(k : ℕ)(hk : k ≤ m+1), f k a with hc 
-      set d := f m.succ a⊔⨆(k : ℕ)(hk : k ≤ m), f k a with hd 
-      suffices  : c ≤ d ∧ d ≤ c
-      ·
-        change c = d 
-        exact le_antisymmₓ this.1 this.2
-      rw [hc, hd]
-      refine' ⟨_, _⟩
-      ·
-        refine' bsupr_le fun n hn => _ 
-        rcases Nat.of_le_succ hn with (h | h)
-        ·
-          exact le_sup_of_le_right (le_bsupr n h)
-        ·
-          exact h ▸ le_sup_left
-      ·
-        refine' sup_le _ _
-        ·
-          convert @le_bsupr _ _ _ (fun i => i ≤ m+1) _ m.succ (le_reflₓ _)
-          rfl
-        ·
-          refine' bsupr_le fun n hn => _ 
-          have  := le_transₓ hn (Nat.le_succₓ m)
-          exact le_bsupr n this
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem supr_succ_eq_sup
+{α}
+(f : exprℕ() → α → «exprℝ≥0∞»())
+(m : exprℕ())
+(a : α) : «expr = »(«expr⨆ , »((k : exprℕ())
+  (hk : «expr ≤ »(k, «expr + »(m, 1))), f k a), «expr ⊔ »(f m.succ a, «expr⨆ , »((k : exprℕ())
+   (hk : «expr ≤ »(k, m)), f k a))) :=
+begin
+  ext [] [ident x] [],
+  simp [] [] ["only"] ["[", expr option.mem_def, ",", expr ennreal.some_eq_coe, "]"] [] [],
+  split; intro [ident h]; rw ["<-", expr h] [],
+  symmetry,
+  all_goals { set [] [ident c] [] [":="] [expr «expr⨆ , »((k : exprℕ())
+      (hk : «expr ≤ »(k, «expr + »(m, 1))), f k a)] ["with", ident hc],
+    set [] [ident d] [] [":="] [expr «expr ⊔ »(f m.succ a, «expr⨆ , »((k : exprℕ())
+       (hk : «expr ≤ »(k, m)), f k a))] ["with", ident hd],
+    suffices [] [":", expr «expr ∧ »(«expr ≤ »(c, d), «expr ≤ »(d, c))],
+    { change [expr «expr = »(c, d)] [] [],
+      exact [expr le_antisymm this.1 this.2] },
+    rw ["[", expr hc, ",", expr hd, "]"] [],
+    refine [expr ⟨_, _⟩],
+    { refine [expr bsupr_le (λ n hn, _)],
+      rcases [expr nat.of_le_succ hn, "with", "(", ident h, "|", ident h, ")"],
+      { exact [expr le_sup_of_le_right (le_bsupr n h)] },
+      { exact [expr «expr ▸ »(h, le_sup_left)] } },
+    { refine [expr sup_le _ _],
+      { convert [] [expr @le_bsupr _ _ _ (λ i, «expr ≤ »(i, «expr + »(m, 1))) _ m.succ (le_refl _)] [],
+        refl },
+      { refine [expr bsupr_le (λ n hn, _)],
+        have [] [] [":=", expr le_trans hn (nat.le_succ m)],
+        exact [expr le_bsupr n this] } } }
+end
 
-theorem supr_mem_measurable_le (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n ∈ measurable_le μ ν) (n : ℕ) :
-  (fun x => ⨆(k : _)(hk : k ≤ n), f k x) ∈ measurable_le μ ν :=
-  by 
-    induction' n with m hm
-    ·
-      refine' ⟨_, _⟩
-      ·
-        simp [(hf 0).1]
-      ·
-        intro A hA 
-        simp [(hf 0).2 A hA]
-    ·
-      have  : (fun a : α => ⨆(k : ℕ)(hk : k ≤ m+1), f k a) = fun a => f m.succ a⊔⨆(k : ℕ)(hk : k ≤ m), f k a
-      ·
-        exact funext fun _ => supr_succ_eq_sup _ _ _ 
-      refine' ⟨measurable_supr fun n => Measurable.supr_Prop _ (hf n).1, fun A hA => _⟩
-      rw [this]
-      exact (sup_mem_measurable_le (hf m.succ) hm).2 A hA
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem supr_mem_measurable_le
+(f : exprℕ() → α → «exprℝ≥0∞»())
+(hf : ∀ n, «expr ∈ »(f n, measurable_le μ ν))
+(n : exprℕ()) : «expr ∈ »(λ x, «expr⨆ , »((k) (hk : «expr ≤ »(k, n)), f k x), measurable_le μ ν) :=
+begin
+  induction [expr n] [] ["with", ident m, ident hm] [],
+  { refine [expr ⟨_, _⟩],
+    { simp [] [] [] ["[", expr (hf 0).1, "]"] [] [] },
+    { intros [ident A, ident hA],
+      simp [] [] [] ["[", expr (hf 0).2 A hA, "]"] [] [] } },
+  { have [] [":", expr «expr = »(λ
+      a : α, «expr⨆ , »((k : exprℕ())
+       (hk : «expr ≤ »(k, «expr + »(m, 1))), f k a), λ
+      a, «expr ⊔ »(f m.succ a, «expr⨆ , »((k : exprℕ()) (hk : «expr ≤ »(k, m)), f k a)))] [],
+    { exact [expr funext (λ _, supr_succ_eq_sup _ _ _)] },
+    refine [expr ⟨measurable_supr (λ n, measurable.supr_Prop _ (hf n).1), λ A hA, _⟩],
+    rw [expr this] [],
+    exact [expr (sup_mem_measurable_le (hf m.succ) hm).2 A hA] }
+end
 
 theorem supr_mem_measurable_le' (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n ∈ measurable_le μ ν) (n : ℕ) :
   (⨆(k : _)(hk : k ≤ n), f k) ∈ measurable_le μ ν :=
@@ -614,13 +605,17 @@ section SuprLemmas
 
 omit m
 
-theorem supr_monotone {α : Type _} (f : ℕ → α → ℝ≥0∞) : Monotone fun n x => ⨆(k : _)(hk : k ≤ n), f k x :=
-  by 
-    intro n m hnm x 
-    simp only 
-    refine' bsupr_le fun k hk => _ 
-    have  : k ≤ m := le_transₓ hk hnm 
-    exact le_bsupr k this
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem supr_monotone
+{α : Type*}
+(f : exprℕ() → α → «exprℝ≥0∞»()) : monotone (λ n x, «expr⨆ , »((k) (hk : «expr ≤ »(k, n)), f k x)) :=
+begin
+  intros [ident n, ident m, ident hnm, ident x],
+  simp [] [] ["only"] [] [] [],
+  refine [expr bsupr_le (λ k hk, _)],
+  have [] [":", expr «expr ≤ »(k, m)] [":=", expr le_trans hk hnm],
+  exact [expr le_bsupr k this]
+end
 
 theorem supr_monotone' {α : Type _} (f : ℕ → α → ℝ≥0∞) (x : α) : Monotone fun n => ⨆(k : _)(hk : k ≤ n), f k x :=
   fun n m hnm => supr_monotone f hnm x
@@ -639,7 +634,7 @@ end LebesgueDecomposition
 
 open LebesgueDecomposition
 
--- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any pair of finite measures `μ` and `ν`, `have_lebesgue_decomposition`. That is to say,
 there exist a measure `ξ` and a measurable function `f`, such that `ξ` is mutually singular
 with respect to `ν` and `μ = ξ + ν.with_density f`.
@@ -741,13 +736,13 @@ theorem have_lebesgue_decomposition_of_finite_measure
 
 attribute [local instance] have_lebesgue_decomposition_of_finite_measure
 
-instance  {S : μ.finite_spanning_sets_in { s : Set α | MeasurableSet s }} (n : ℕ) :
+instance  {S : μ.finite_spanning_sets_in { s:Set α | MeasurableSet s }} (n : ℕ) :
   is_finite_measure (μ.restrict$ S.set n) :=
   ⟨by 
       rw [restrict_apply MeasurableSet.univ, Set.univ_inter]
       exact S.finite _⟩
 
--- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **The Lebesgue decomposition theorem**: Any pair of σ-finite measures `μ` and `ν`
 `have_lebesgue_decomposition`. That is to say, there exist a measure `ξ` and a measurable function
 `f`, such that `ξ` is mutually singular with respect to `ν` and `μ = ξ + ν.with_density f` -/
@@ -909,41 +904,37 @@ def singular_part (s : signed_measure α) (μ : Measureₓ α) : signed_measure 
 
 section 
 
-theorem singular_part_mutually_singular (s : signed_measure α) (μ : Measureₓ α) :
-  s.to_jordan_decomposition.pos_part.singular_part μ ⊥ₘ s.to_jordan_decomposition.neg_part.singular_part μ :=
-  by 
-    byCases' hl : s.have_lebesgue_decomposition μ
-    ·
-      haveI  := hl 
-      obtain ⟨i, hi, hpos, hneg⟩ := s.to_jordan_decomposition.mutually_singular 
-      rw [s.to_jordan_decomposition.pos_part.have_lebesgue_decomposition_add μ] at hpos 
-      rw [s.to_jordan_decomposition.neg_part.have_lebesgue_decomposition_add μ] at hneg 
-      rw [add_apply, add_eq_zero_iff] at hpos hneg 
-      exact ⟨i, hi, hpos.1, hneg.1⟩
-    ·
-      rw [not_have_lebesgue_decomposition_iff] at hl 
-      cases' hl with hp hn
-      ·
-        rw [measure.singular_part, dif_neg hp]
-        exact mutually_singular.zero_left
-      ·
-        rw [measure.singular_part, measure.singular_part, dif_neg hn]
-        exact mutually_singular.zero_right
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem singular_part_mutually_singular
+(s : signed_measure α)
+(μ : measure α) : «expr ⊥ₘ »(s.to_jordan_decomposition.pos_part.singular_part μ, s.to_jordan_decomposition.neg_part.singular_part μ) :=
+begin
+  by_cases [expr hl, ":", expr s.have_lebesgue_decomposition μ],
+  { haveI [] [] [":=", expr hl],
+    obtain ["⟨", ident i, ",", ident hi, ",", ident hpos, ",", ident hneg, "⟩", ":=", expr s.to_jordan_decomposition.mutually_singular],
+    rw [expr s.to_jordan_decomposition.pos_part.have_lebesgue_decomposition_add μ] ["at", ident hpos],
+    rw [expr s.to_jordan_decomposition.neg_part.have_lebesgue_decomposition_add μ] ["at", ident hneg],
+    rw ["[", expr add_apply, ",", expr add_eq_zero_iff, "]"] ["at", ident hpos, ident hneg],
+    exact [expr ⟨i, hi, hpos.1, hneg.1⟩] },
+  { rw [expr not_have_lebesgue_decomposition_iff] ["at", ident hl],
+    cases [expr hl] ["with", ident hp, ident hn],
+    { rw ["[", expr measure.singular_part, ",", expr dif_neg hp, "]"] [],
+      exact [expr mutually_singular.zero_left] },
+    { rw ["[", expr measure.singular_part, ",", expr measure.singular_part, ",", expr dif_neg hn, "]"] [],
+      exact [expr mutually_singular.zero_right] } }
+end
 
-theorem singular_part_total_variation (s : signed_measure α) (μ : Measureₓ α) :
-  (s.singular_part μ).totalVariation =
-    s.to_jordan_decomposition.pos_part.singular_part μ+s.to_jordan_decomposition.neg_part.singular_part μ :=
-  by 
-    have  :
-      (s.singular_part μ).toJordanDecomposition =
-        ⟨s.to_jordan_decomposition.pos_part.singular_part μ, s.to_jordan_decomposition.neg_part.singular_part μ,
-          singular_part_mutually_singular s μ⟩
-    ·
-      refine' jordan_decomposition.to_signed_measure_injective _ 
-      rw [to_signed_measure_to_jordan_decomposition]
-      rfl
-    ·
-      rw [total_variation, this]
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem singular_part_total_variation
+(s : signed_measure α)
+(μ : measure α) : «expr = »((s.singular_part μ).total_variation, «expr + »(s.to_jordan_decomposition.pos_part.singular_part μ, s.to_jordan_decomposition.neg_part.singular_part μ)) :=
+begin
+  have [] [":", expr «expr = »((s.singular_part μ).to_jordan_decomposition, ⟨s.to_jordan_decomposition.pos_part.singular_part μ, s.to_jordan_decomposition.neg_part.singular_part μ, singular_part_mutually_singular s μ⟩)] [],
+  { refine [expr jordan_decomposition.to_signed_measure_injective _],
+    rw [expr to_signed_measure_to_jordan_decomposition] [],
+    refl },
+  { rw ["[", expr total_variation, ",", expr this, "]"] [] }
+end
 
 theorem mutually_singular_singular_part (s : signed_measure α) (μ : Measureₓ α) :
   singular_part s μ ⊥ᵥ μ.to_ennreal_vector_measure :=
@@ -1024,50 +1015,47 @@ theorem jordan_decomposition_add_with_density_mutually_singular {f : α → ℝ}
         ((htμ.2.symm.mono_ac (with_density_absolutely_continuous _ _) (refl _)).add_right
           (with_density_of_real_mutually_singular hf))
 
-theorem to_jordan_decomposition_eq_of_eq_add_with_density {f : α → ℝ} (hf : Measurable f) (hfi : integrable f μ)
-  (htμ : t ⊥ᵥ μ.to_ennreal_vector_measure) (hadd : s = t+μ.with_densityᵥ f) :
-  s.to_jordan_decomposition =
-    @jordan_decomposition.mk α _ (t.to_jordan_decomposition.pos_part+μ.with_density fun x => Ennreal.ofReal (f x))
-      (t.to_jordan_decomposition.neg_part+μ.with_density fun x => Ennreal.ofReal (-f x))
-      (by 
-        haveI  := is_finite_measure_with_density_of_real hfi.2
-        infer_instance)
-      (by 
-        haveI  := is_finite_measure_with_density_of_real hfi.neg.2
-        infer_instance)
-      (jordan_decomposition_add_with_density_mutually_singular hf htμ) :=
-  by 
-    haveI  := is_finite_measure_with_density_of_real hfi.2
-    haveI  := is_finite_measure_with_density_of_real hfi.neg.2
-    refine' to_jordan_decomposition_eq _ 
-    simpRw [jordan_decomposition.to_signed_measure, hadd]
-    ext i hi 
-    rw [vector_measure.sub_apply, to_signed_measure_apply_measurable hi, to_signed_measure_apply_measurable hi,
-        add_apply, add_apply, Ennreal.to_real_add, Ennreal.to_real_add, add_sub_comm,
-        ←to_signed_measure_apply_measurable hi, ←to_signed_measure_apply_measurable hi, ←vector_measure.sub_apply,
-        ←jordan_decomposition.to_signed_measure, to_signed_measure_to_jordan_decomposition, vector_measure.add_apply,
-        ←to_signed_measure_apply_measurable hi, ←to_signed_measure_apply_measurable hi,
-        with_densityᵥ_eq_with_density_pos_part_sub_with_density_neg_part hfi, vector_measure.sub_apply] <;>
-      exact (measure_lt_top _ _).Ne
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem to_jordan_decomposition_eq_of_eq_add_with_density
+{f : α → exprℝ()}
+(hf : measurable f)
+(hfi : integrable f μ)
+(htμ : «expr ⊥ᵥ »(t, μ.to_ennreal_vector_measure))
+(hadd : «expr = »(s, «expr + »(t, μ.with_densityᵥ f))) : «expr = »(s.to_jordan_decomposition, @jordan_decomposition.mk α _ «expr + »(t.to_jordan_decomposition.pos_part, μ.with_density (λ
+   x, ennreal.of_real (f x))) «expr + »(t.to_jordan_decomposition.neg_part, μ.with_density (λ
+   x, ennreal.of_real «expr- »(f x))) (by { haveI [] [] [":=", expr is_finite_measure_with_density_of_real hfi.2],
+    apply_instance }) (by { haveI [] [] [":=", expr is_finite_measure_with_density_of_real hfi.neg.2],
+    apply_instance }) (jordan_decomposition_add_with_density_mutually_singular hf htμ)) :=
+begin
+  haveI [] [] [":=", expr is_finite_measure_with_density_of_real hfi.2],
+  haveI [] [] [":=", expr is_finite_measure_with_density_of_real hfi.neg.2],
+  refine [expr to_jordan_decomposition_eq _],
+  simp_rw ["[", expr jordan_decomposition.to_signed_measure, ",", expr hadd, "]"] [],
+  ext [] [ident i, ident hi] [],
+  rw ["[", expr vector_measure.sub_apply, ",", expr to_signed_measure_apply_measurable hi, ",", expr to_signed_measure_apply_measurable hi, ",", expr add_apply, ",", expr add_apply, ",", expr ennreal.to_real_add, ",", expr ennreal.to_real_add, ",", expr add_sub_comm, ",", "<-", expr to_signed_measure_apply_measurable hi, ",", "<-", expr to_signed_measure_apply_measurable hi, ",", "<-", expr vector_measure.sub_apply, ",", "<-", expr jordan_decomposition.to_signed_measure, ",", expr to_signed_measure_to_jordan_decomposition, ",", expr vector_measure.add_apply, ",", "<-", expr to_signed_measure_apply_measurable hi, ",", "<-", expr to_signed_measure_apply_measurable hi, ",", expr with_densityᵥ_eq_with_density_pos_part_sub_with_density_neg_part hfi, ",", expr vector_measure.sub_apply, "]"] []; exact [expr (measure_lt_top _ _).ne]
+end
 
-private theorem have_lebesgue_decomposition_mk' (μ : Measureₓ α) {f : α → ℝ} (hf : Measurable f) (hfi : integrable f μ)
-  (htμ : t ⊥ᵥ μ.to_ennreal_vector_measure) (hadd : s = t+μ.with_densityᵥ f) : s.have_lebesgue_decomposition μ :=
-  by 
-    have htμ' := htμ 
-    rw [mutually_singular_ennreal_iff] at htμ 
-    change _ ⊥ₘ vector_measure.equiv_measure.to_fun (vector_measure.equiv_measure.inv_fun μ) at htμ 
-    rw [vector_measure.equiv_measure.right_inv, total_variation_mutually_singular_iff] at htμ 
-    refine'
-      { posPart :=
-          by 
-            use ⟨t.to_jordan_decomposition.pos_part, fun x => Ennreal.ofReal (f x)⟩
-            refine' ⟨hf.ennreal_of_real, htμ.1, _⟩
-            rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd],
-        negPart :=
-          by 
-            use ⟨t.to_jordan_decomposition.neg_part, fun x => Ennreal.ofReal (-f x)⟩
-            refine' ⟨hf.neg.ennreal_of_real, htμ.2, _⟩
-            rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd] }
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem have_lebesgue_decomposition_mk'
+(μ : measure α)
+{f : α → exprℝ()}
+(hf : measurable f)
+(hfi : integrable f μ)
+(htμ : «expr ⊥ᵥ »(t, μ.to_ennreal_vector_measure))
+(hadd : «expr = »(s, «expr + »(t, μ.with_densityᵥ f))) : s.have_lebesgue_decomposition μ :=
+begin
+  have [ident htμ'] [] [":=", expr htμ],
+  rw [expr mutually_singular_ennreal_iff] ["at", ident htμ],
+  change [expr «expr ⊥ₘ »(_, vector_measure.equiv_measure.to_fun (vector_measure.equiv_measure.inv_fun μ))] [] ["at", ident htμ],
+  rw ["[", expr vector_measure.equiv_measure.right_inv, ",", expr total_variation_mutually_singular_iff, "]"] ["at", ident htμ],
+  refine [expr { pos_part := by { use [expr ⟨t.to_jordan_decomposition.pos_part, λ x, ennreal.of_real (f x)⟩],
+       refine [expr ⟨hf.ennreal_of_real, htμ.1, _⟩],
+       rw [expr to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd] [] },
+     neg_part := by { use [expr ⟨t.to_jordan_decomposition.neg_part, λ x, ennreal.of_real «expr- »(f x)⟩],
+       refine [expr ⟨hf.neg.ennreal_of_real, htμ.2, _⟩],
+       rw [expr to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd] [] } }]
+end
 
 theorem have_lebesgue_decomposition_mk (μ : Measureₓ α) {f : α → ℝ} (hf : Measurable f)
   (htμ : t ⊥ᵥ μ.to_ennreal_vector_measure) (hadd : s = t+μ.with_densityᵥ f) : s.have_lebesgue_decomposition μ :=
@@ -1080,31 +1068,31 @@ theorem have_lebesgue_decomposition_mk (μ : Measureₓ α) {f : α → ℝ} (hf
       refine' have_lebesgue_decomposition_mk' μ measurable_zero (integrable_zero _ _ μ) htμ _ 
       rwa [with_densityᵥ_zero, add_zeroₓ]
 
-private theorem eq_singular_part' (t : signed_measure α) {f : α → ℝ} (hf : Measurable f) (hfi : integrable f μ)
-  (htμ : t ⊥ᵥ μ.to_ennreal_vector_measure) (hadd : s = t+μ.with_densityᵥ f) : t = s.singular_part μ :=
-  by 
-    have htμ' := htμ 
-    rw [mutually_singular_ennreal_iff, total_variation_mutually_singular_iff] at htμ 
-    change
-      _ ⊥ₘ vector_measure.equiv_measure.to_fun (vector_measure.equiv_measure.inv_fun μ) ∧
-        _ ⊥ₘ vector_measure.equiv_measure.to_fun (vector_measure.equiv_measure.inv_fun μ) at
-      htμ 
-    rw [vector_measure.equiv_measure.right_inv] at htμ
-    ·
-      rw [singular_part, ←t.to_signed_measure_to_jordan_decomposition, jordan_decomposition.to_signed_measure]
-      congr
-      ·
-        have hfpos : Measurable fun x => Ennreal.ofReal (f x)
-        ·
-          measurability 
-        refine' eq_singular_part hfpos htμ.1 _ 
-        rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd]
-      ·
-        have hfneg : Measurable fun x => Ennreal.ofReal (-f x)
-        ·
-          measurability 
-        refine' eq_singular_part hfneg htμ.2 _ 
-        rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd]
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem eq_singular_part'
+(t : signed_measure α)
+{f : α → exprℝ()}
+(hf : measurable f)
+(hfi : integrable f μ)
+(htμ : «expr ⊥ᵥ »(t, μ.to_ennreal_vector_measure))
+(hadd : «expr = »(s, «expr + »(t, μ.with_densityᵥ f))) : «expr = »(t, s.singular_part μ) :=
+begin
+  have [ident htμ'] [] [":=", expr htμ],
+  rw ["[", expr mutually_singular_ennreal_iff, ",", expr total_variation_mutually_singular_iff, "]"] ["at", ident htμ],
+  change [expr «expr ∧ »(«expr ⊥ₘ »(_, vector_measure.equiv_measure.to_fun (vector_measure.equiv_measure.inv_fun μ)), «expr ⊥ₘ »(_, vector_measure.equiv_measure.to_fun (vector_measure.equiv_measure.inv_fun μ)))] [] ["at", ident htμ],
+  rw ["[", expr vector_measure.equiv_measure.right_inv, "]"] ["at", ident htμ],
+  { rw ["[", expr singular_part, ",", "<-", expr t.to_signed_measure_to_jordan_decomposition, ",", expr jordan_decomposition.to_signed_measure, "]"] [],
+    congr,
+    { have [ident hfpos] [":", expr measurable (λ x, ennreal.of_real (f x))] [],
+      { measurability [] [] },
+      refine [expr eq_singular_part hfpos htμ.1 _],
+      rw [expr to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd] [] },
+    { have [ident hfneg] [":", expr measurable (λ x, ennreal.of_real «expr- »(f x))] [],
+      { measurability [] [] },
+      refine [expr eq_singular_part hfneg htμ.2 _],
+      rw [expr to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd] [] } }
+end
 
 /-- Given a measure `μ`, signed measures `s` and `t`, and a function `f` such that `t` is
 mutually singular with respect to `μ` and `s = t + μ.with_densityᵥ f`, we have
@@ -1128,21 +1116,19 @@ theorem singular_part_zero (μ : Measureₓ α) : (0 : signed_measure α).singul
     refine' (eq_singular_part 0 0 vector_measure.mutually_singular.zero_left _).symm 
     rw [zero_addₓ, with_densityᵥ_zero]
 
-theorem singular_part_neg (s : signed_measure α) (μ : Measureₓ α) : (-s).singularPart μ = -s.singular_part μ :=
-  by 
-    have h₁ :
-      ((-s).toJordanDecomposition.posPart.singularPart μ).toSignedMeasure =
-        (s.to_jordan_decomposition.neg_part.singular_part μ).toSignedMeasure
-    ·
-      refine' to_signed_measure_congr _ 
-      rw [to_jordan_decomposition_neg, jordan_decomposition.neg_pos_part]
-    have h₂ :
-      ((-s).toJordanDecomposition.negPart.singularPart μ).toSignedMeasure =
-        (s.to_jordan_decomposition.pos_part.singular_part μ).toSignedMeasure
-    ·
-      refine' to_signed_measure_congr _ 
-      rw [to_jordan_decomposition_neg, jordan_decomposition.neg_neg_part]
-    rw [singular_part, singular_part, neg_sub, h₁, h₂]
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem singular_part_neg
+(s : signed_measure α)
+(μ : measure α) : «expr = »(«expr- »(s).singular_part μ, «expr- »(s.singular_part μ)) :=
+begin
+  have [ident h₁] [":", expr «expr = »((«expr- »(s).to_jordan_decomposition.pos_part.singular_part μ).to_signed_measure, (s.to_jordan_decomposition.neg_part.singular_part μ).to_signed_measure)] [],
+  { refine [expr to_signed_measure_congr _],
+    rw ["[", expr to_jordan_decomposition_neg, ",", expr jordan_decomposition.neg_pos_part, "]"] [] },
+  have [ident h₂] [":", expr «expr = »((«expr- »(s).to_jordan_decomposition.neg_part.singular_part μ).to_signed_measure, (s.to_jordan_decomposition.pos_part.singular_part μ).to_signed_measure)] [],
+  { refine [expr to_signed_measure_congr _],
+    rw ["[", expr to_jordan_decomposition_neg, ",", expr jordan_decomposition.neg_neg_part, "]"] [] },
+  rw ["[", expr singular_part, ",", expr singular_part, ",", expr neg_sub, ",", expr h₁, ",", expr h₂, "]"] []
+end
 
 theorem singular_part_smul_nnreal (s : signed_measure α) (μ : Measureₓ α) (r :  ℝ≥0 ) :
   (r • s).singularPart μ = r • s.singular_part μ :=
@@ -1192,20 +1178,25 @@ theorem singular_part_sub (s t : signed_measure α) (μ : Measureₓ α) [s.have
   by 
     rw [sub_eq_add_neg, sub_eq_add_neg, singular_part_add, singular_part_neg]
 
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a measure `μ`, signed measures `s` and `t`, and a function `f` such that `t` is
 mutually singular with respect to `μ` and `s = t + μ.with_densityᵥ f`, we have
 `f = rn_deriv s μ`, i.e. `f` is the Radon-Nikodym derivative of `s` and `μ`. -/
-theorem eq_rn_deriv (t : signed_measure α) (f : α → ℝ) (hfi : integrable f μ) (htμ : t ⊥ᵥ μ.to_ennreal_vector_measure)
-  (hadd : s = t+μ.with_densityᵥ f) : f =ᵐ[μ] s.rn_deriv μ :=
-  by 
-    set f' := hfi.1.mk f 
-    have hadd' : s = t+μ.with_densityᵥ f'
-    ·
-      convert hadd using 2 
-      exact with_densityᵥ_eq.congr_ae hfi.1.ae_eq_mk.symm 
-    haveI  := have_lebesgue_decomposition_mk μ hfi.1.measurable_mk htμ hadd' 
-    refine' (integrable.ae_eq_of_with_densityᵥ_eq (integrable_rn_deriv _ _) hfi _).symm 
-    rw [←add_right_injₓ t, ←hadd, eq_singular_part _ f htμ hadd, singular_part_add_with_density_rn_deriv_eq]
+theorem eq_rn_deriv
+(t : signed_measure α)
+(f : α → exprℝ())
+(hfi : integrable f μ)
+(htμ : «expr ⊥ᵥ »(t, μ.to_ennreal_vector_measure))
+(hadd : «expr = »(s, «expr + »(t, μ.with_densityᵥ f))) : «expr =ᵐ[ ] »(f, μ, s.rn_deriv μ) :=
+begin
+  set [] [ident f'] [] [":="] [expr hfi.1.mk f] [],
+  have [ident hadd'] [":", expr «expr = »(s, «expr + »(t, μ.with_densityᵥ f'))] [],
+  { convert [] [expr hadd] ["using", 2],
+    exact [expr with_densityᵥ_eq.congr_ae hfi.1.ae_eq_mk.symm] },
+  haveI [] [] [":=", expr have_lebesgue_decomposition_mk μ hfi.1.measurable_mk htμ hadd'],
+  refine [expr (integrable.ae_eq_of_with_densityᵥ_eq (integrable_rn_deriv _ _) hfi _).symm],
+  rw ["[", "<-", expr add_right_inj t, ",", "<-", expr hadd, ",", expr eq_singular_part _ f htμ hadd, ",", expr singular_part_add_with_density_rn_deriv_eq, "]"] []
+end
 
 theorem rn_deriv_neg (s : signed_measure α) (μ : Measureₓ α) [s.have_lebesgue_decomposition μ] :
   (-s).rnDeriv μ =ᵐ[μ] -s.rn_deriv μ :=
@@ -1242,7 +1233,7 @@ theorem rn_deriv_sub (s t : signed_measure α) (μ : Measureₓ α) [s.have_lebe
   by 
     rw [sub_eq_add_neg] at hst 
     rw [sub_eq_add_neg, sub_eq_add_neg]
-    exactI ae_eq_trans (rn_deriv_add _ _ _) (Filter.EventuallyEq.add (ae_eq_refl _) (rn_deriv_neg _ _))
+    exact ae_eq_trans (rn_deriv_add _ _ _) (Filter.EventuallyEq.add (ae_eq_refl _) (rn_deriv_neg _ _))
 
 end SignedMeasure
 

@@ -121,8 +121,8 @@ theorem RingHom.map_list_sum [NonAssocSemiring β] [NonAssocSemiring γ] (f : β
   f.to_add_monoid_hom.map_list_sum l
 
 /-- A morphism into the opposite ring acts on the product by acting on the reversed elements -/
-theorem RingHom.unop_map_list_prod [Semiringₓ β] [Semiringₓ γ] (f : β →+* «expr ᵒᵖ» γ) (l : List β) :
-  Opposite.unop (f l.prod) = (l.map (Opposite.unop ∘ f)).reverse.Prod :=
+theorem RingHom.unop_map_list_prod [Semiringₓ β] [Semiringₓ γ] (f : β →+* «expr ᵐᵒᵖ» γ) (l : List β) :
+  MulOpposite.unop (f l.prod) = (l.map (MulOpposite.unop ∘ f)).reverse.Prod :=
   f.to_monoid_hom.unop_map_list_prod l
 
 theorem RingHom.map_multiset_prod [CommSemiringₓ β] [CommSemiringₓ γ] (f : β →+* γ) (s : Multiset β) :
@@ -234,12 +234,19 @@ theorem prod_union [DecidableEq α] (h : Disjoint s₁ s₂) : (∏x in s₁ ∪
   by 
     rw [←prod_union_inter, disjoint_iff_inter_eq_empty.mp h] <;> exact (mul_oneₓ _).symm
 
-@[toAdditive]
-theorem prod_filter_mul_prod_filter_not (s : Finset α) (p : α → Prop) [DecidablePred p] [DecidablePred fun x => ¬p x]
-  (f : α → β) : ((∏x in s.filter p, f x)*∏x in s.filter fun x => ¬p x, f x) = ∏x in s, f x :=
-  by 
-    haveI  := Classical.decEq α 
-    rw [←prod_union (filter_inter_filter_neg_eq p s).le, filter_union_filter_neg_eq]
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_filter_mul_prod_filter_not
+(s : finset α)
+(p : α → exprProp())
+[decidable_pred p]
+[decidable_pred (λ x, «expr¬ »(p x))]
+(f : α → β) : «expr = »(«expr * »(«expr∏ in , »((x), s.filter p, f x), «expr∏ in , »((x), s.filter (λ
+    x, «expr¬ »(p x)), f x)), «expr∏ in , »((x), s, f x)) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq α],
+  rw ["[", "<-", expr prod_union (filter_inter_filter_neg_eq p s).le, ",", expr filter_union_filter_neg_eq, "]"] []
+end
 
 end CommMonoidₓ
 
@@ -296,37 +303,42 @@ theorem prod_sum_elim [DecidableEq (Sum α γ)] (s : Finset α) (t : Finset γ) 
       rintro _ ⟨i, hi, rfl⟩ ⟨j, hj, H⟩
       cases H
 
-@[toAdditive]
-theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs : Set.PairwiseDisjoint («expr↑ » s) t) :
-  (∏x in s.bUnion t, f x) = ∏x in s, ∏i in t x, f i :=
-  by 
-    haveI  := Classical.decEq γ 
-    induction' s using Finset.induction_on with x s hxs ih hd
-    ·
-      simpRw [bUnion_empty, prod_empty]
-    ·
-      simpRw [coe_insert, Set.pairwise_disjoint_insert, mem_coe]  at hs 
-      have  : Disjoint (t x) (Finset.bUnion s t)
-      ·
-        exact (disjoint_bUnion_right _ _ _).mpr fun y hy => hs.2 y hy$ fun H => hxs$ H.substr hy 
-      rw [bUnion_insert, prod_insert hxs, prod_union this, ih hs.1]
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_bUnion
+[decidable_eq α]
+{s : finset γ}
+{t : γ → finset α}
+(hs : set.pairwise_disjoint «expr↑ »(s) t) : «expr = »(«expr∏ in , »((x), s.bUnion t, f x), «expr∏ in , »((x), s, «expr∏ in , »((i), t x, f i))) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq γ],
+  induction [expr s] ["using", ident finset.induction_on] ["with", ident x, ident s, ident hxs, ident ih, ident hd] [],
+  { simp_rw ["[", expr bUnion_empty, ",", expr prod_empty, "]"] [] },
+  { simp_rw ["[", expr coe_insert, ",", expr set.pairwise_disjoint_insert, ",", expr mem_coe, "]"] ["at", ident hs],
+    have [] [":", expr disjoint (t x) (finset.bUnion s t)] [],
+    { exact [expr (disjoint_bUnion_right _ _ _).mpr (λ y hy, «expr $ »(hs.2 y hy, λ H, «expr $ »(hxs, H.substr hy)))] },
+    rw ["[", expr bUnion_insert, ",", expr prod_insert hxs, ",", expr prod_union this, ",", expr ih hs.1, "]"] [] }
+end
 
-@[toAdditive]
-theorem prod_product {s : Finset γ} {t : Finset α} {f : γ × α → β} :
-  (∏x in s.product t, f x) = ∏x in s, ∏y in t, f (x, y) :=
-  by 
-    haveI  := Classical.decEq α 
-    haveI  := Classical.decEq γ 
-    rw [product_eq_bUnion, prod_bUnion]
-    ·
-      congr 
-      funext 
-      exact prod_image fun _ _ _ _ H => (Prod.mk.inj H).2
-    simp only [disjoint_iff_ne, mem_image]
-    rintro x _ y _ h ⟨i, z⟩ hz 
-    rw [inf_eq_inter, mem_inter, mem_image, mem_image] at hz 
-    obtain ⟨⟨_, _, rfl, _⟩, _, _, rfl, _⟩ := hz 
-    exact h rfl
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_product
+{s : finset γ}
+{t : finset α}
+{f : «expr × »(γ, α) → β} : «expr = »(«expr∏ in , »((x), s.product t, f x), «expr∏ in , »((x), s, «expr∏ in , »((y), t, f (x, y)))) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq α],
+  haveI [] [] [":=", expr classical.dec_eq γ],
+  rw ["[", expr product_eq_bUnion, ",", expr prod_bUnion, "]"] [],
+  { congr,
+    funext [],
+    exact [expr prod_image (λ _ _ _ _ H, (prod.mk.inj H).2)] },
+  simp [] [] ["only"] ["[", expr disjoint_iff_ne, ",", expr mem_image, "]"] [] [],
+  rintro [ident x, "_", ident y, "_", ident h, "⟨", ident i, ",", ident z, "⟩", ident hz],
+  rw ["[", expr inf_eq_inter, ",", expr mem_inter, ",", expr mem_image, ",", expr mem_image, "]"] ["at", ident hz],
+  obtain ["⟨", "⟨", "_", ",", "_", ",", ident rfl, ",", "_", "⟩", ",", "_", ",", "_", ",", ident rfl, ",", "_", "⟩", ":=", expr hz],
+  exact [expr h rfl]
+end
 
 /-- An uncurried version of `finset.prod_product`. -/
 @[toAdditive "An uncurried version of `finset.sum_product`"]
@@ -358,16 +370,24 @@ theorem prod_sigma' {σ : α → Type _} (s : Finset α) (t : ∀ a, Finset (σ 
   (∏a in s, ∏s in t a, f a s) = ∏x in s.sigma t, f x.1 x.2 :=
   Eq.symm$ prod_sigma s t fun x => f x.1 x.2
 
-@[toAdditive]
-theorem prod_fiberwise_of_maps_to [DecidableEq γ] {s : Finset α} {t : Finset γ} {g : α → γ} (h : ∀ x _ : x ∈ s, g x ∈ t)
-  (f : α → β) : (∏y in t, ∏x in s.filter fun x => g x = y, f x) = ∏x in s, f x :=
-  by 
-    letI this := Classical.decEq α 
-    rw [←bUnion_filter_eq_of_maps_to h]
-    refine' (prod_bUnion$ fun x' hx y' hy hne => _).symm 
-    rw [Function.onFun, disjoint_filter]
-    rintro x hx rfl 
-    exact hne
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_fiberwise_of_maps_to
+[decidable_eq γ]
+{s : finset α}
+{t : finset γ}
+{g : α → γ}
+(h : ∀ x «expr ∈ » s, «expr ∈ »(g x, t))
+(f : α → β) : «expr = »(«expr∏ in , »((y), t, «expr∏ in , »((x), s.filter (λ
+    x, «expr = »(g x, y)), f x)), «expr∏ in , »((x), s, f x)) :=
+begin
+  letI [] [] [":=", expr classical.dec_eq α],
+  rw ["[", "<-", expr bUnion_filter_eq_of_maps_to h, "]"] [] { occs := occurrences.pos «expr[ , ]»([2]) },
+  refine [expr «expr $ »(prod_bUnion, λ x' hx y' hy hne, _).symm],
+  rw ["[", expr function.on_fun, ",", expr disjoint_filter, "]"] [],
+  rintros [ident x, ident hx, ident rfl],
+  exact [expr hne]
+end
 
 @[toAdditive]
 theorem prod_image' [DecidableEq α] {s : Finset γ} {g : γ → α} (h : γ → β)
@@ -430,15 +450,14 @@ theorem prod_subset_one_on_sdiff [DecidableEq α] (h : s₁ ⊆ s₂) (hg : ∀ 
     rw [←prod_sdiff h, prod_eq_one hg, one_mulₓ]
     exact prod_congr rfl hfg
 
-@[toAdditive]
-theorem prod_subset (h : s₁ ⊆ s₂) (hf : ∀ x _ : x ∈ s₂, x ∉ s₁ → f x = 1) : (∏x in s₁, f x) = ∏x in s₂, f x :=
-  by 
-    haveI  := Classical.decEq α <;>
-      exact
-        prod_subset_one_on_sdiff h
-          (by 
-            simpa)
-          fun _ _ => rfl
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_subset
+(h : «expr ⊆ »(s₁, s₂))
+(hf : ∀
+ x «expr ∈ » s₂, «expr ∉ »(x, s₁) → «expr = »(f x, 1)) : «expr = »(«expr∏ in , »((x), s₁, f x), «expr∏ in , »((x), s₂, f x)) :=
+by haveI [] [] [":=", expr classical.dec_eq α]; exact [expr prod_subset_one_on_sdiff h (by simpa [] [] [] [] [] []) (λ
+  _ _, rfl)]
 
 @[toAdditive]
 theorem prod_filter_of_ne {p : α → Prop} [DecidablePred p] (hp : ∀ x _ : x ∈ s, f x ≠ 1 → p x) :
@@ -469,92 +488,98 @@ theorem prod_filter (p : α → Prop) [DecidablePred p] (f : α → β) :
       exact if_neg (h hs)
     
 
-@[toAdditive]
-theorem prod_eq_single_of_mem {s : Finset α} {f : α → β} (a : α) (h : a ∈ s) (h₀ : ∀ b _ : b ∈ s, b ≠ a → f b = 1) :
-  (∏x in s, f x) = f a :=
-  by 
-    haveI  := Classical.decEq α 
-    calc (∏x in s, f x) = ∏x in {a}, f x :=
-      by 
-        refine' (prod_subset _ _).symm
-        ·
-          intro _ H 
-          rwa [mem_singleton.1 H]
-        ·
-          simpa only [mem_singleton]_ = f a :=
-      prod_singleton
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_eq_single_of_mem
+{s : finset α}
+{f : α → β}
+(a : α)
+(h : «expr ∈ »(a, s))
+(h₀ : ∀ b «expr ∈ » s, «expr ≠ »(b, a) → «expr = »(f b, 1)) : «expr = »(«expr∏ in , »((x), s, f x), f a) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq α],
+  calc
+    «expr = »(«expr∏ in , »((x), s, f x), «expr∏ in , »((x), {a}, f x)) : begin
+      refine [expr (prod_subset _ _).symm],
+      { intros ["_", ident H],
+        rwa [expr mem_singleton.1 H] [] },
+      { simpa [] [] ["only"] ["[", expr mem_singleton, "]"] [] [] }
+    end
+    «expr = »(..., f a) : prod_singleton
+end
 
-@[toAdditive]
-theorem prod_eq_single {s : Finset α} {f : α → β} (a : α) (h₀ : ∀ b _ : b ∈ s, b ≠ a → f b = 1) (h₁ : a ∉ s → f a = 1) :
-  (∏x in s, f x) = f a :=
-  by 
-    haveI  := Classical.decEq α <;>
-      exact
-        Classical.by_cases (fun this : a ∈ s => prod_eq_single_of_mem a this h₀)
-          fun this : a ∉ s =>
-            (prod_congr rfl$
-                  fun b hb =>
-                    h₀ b hb$
-                      by 
-                        rintro rfl <;> cc).trans$
-              prod_const_one.trans (h₁ this).symm
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_eq_single
+{s : finset α}
+{f : α → β}
+(a : α)
+(h₀ : ∀ b «expr ∈ » s, «expr ≠ »(b, a) → «expr = »(f b, 1))
+(h₁ : «expr ∉ »(a, s) → «expr = »(f a, 1)) : «expr = »(«expr∏ in , »((x), s, f x), f a) :=
+by haveI [] [] [":=", expr classical.dec_eq α]; from [expr classical.by_cases (assume: «expr ∈ »(a, s), prod_eq_single_of_mem a this h₀) (assume: «expr ∉ »(a, s), «expr $ »(«expr $ »(prod_congr rfl, λ
+    b hb, «expr $ »(h₀ b hb, by rintro [ident rfl]; cc)).trans, prod_const_one.trans (h₁ this).symm))]
 
-@[toAdditive]
-theorem prod_eq_mul_of_mem {s : Finset α} {f : α → β} (a b : α) (ha : a ∈ s) (hb : b ∈ s) (hn : a ≠ b)
-  (h₀ : ∀ c _ : c ∈ s, c ≠ a ∧ c ≠ b → f c = 1) : (∏x in s, f x) = f a*f b :=
-  by 
-    haveI  := Classical.decEq α <;> let s' := ({a, b} : Finset α)
-    have hu : s' ⊆ s
-    ·
-      refine' insert_subset.mpr _ 
-      apply And.intro ha 
-      apply singleton_subset_iff.mpr hb 
-    have hf : ∀ c _ : c ∈ s, c ∉ s' → f c = 1
-    ·
-      intro c hc hcs 
-      apply h₀ c hc 
-      apply not_or_distrib.mp 
-      intro hab 
-      apply hcs 
-      apply mem_insert.mpr 
-      rw [mem_singleton]
-      exact hab 
-    rw [←prod_subset hu hf]
-    exact Finset.prod_pair hn
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_eq_mul_of_mem
+{s : finset α}
+{f : α → β}
+(a b : α)
+(ha : «expr ∈ »(a, s))
+(hb : «expr ∈ »(b, s))
+(hn : «expr ≠ »(a, b))
+(h₀ : ∀
+ c «expr ∈ » s, «expr ∧ »(«expr ≠ »(c, a), «expr ≠ »(c, b)) → «expr = »(f c, 1)) : «expr = »(«expr∏ in , »((x), s, f x), «expr * »(f a, f b)) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq α]; let [ident s'] [] [":=", expr ({a, b} : finset α)],
+  have [ident hu] [":", expr «expr ⊆ »(s', s)] [],
+  { refine [expr insert_subset.mpr _],
+    apply [expr and.intro ha],
+    apply [expr singleton_subset_iff.mpr hb] },
+  have [ident hf] [":", expr ∀ c «expr ∈ » s, «expr ∉ »(c, s') → «expr = »(f c, 1)] [],
+  { intros [ident c, ident hc, ident hcs],
+    apply [expr h₀ c hc],
+    apply [expr not_or_distrib.mp],
+    intro [ident hab],
+    apply [expr hcs],
+    apply [expr mem_insert.mpr],
+    rw [expr mem_singleton] [],
+    exact [expr hab] },
+  rw ["<-", expr prod_subset hu hf] [],
+  exact [expr finset.prod_pair hn]
+end
 
-@[toAdditive]
-theorem prod_eq_mul {s : Finset α} {f : α → β} (a b : α) (hn : a ≠ b) (h₀ : ∀ c _ : c ∈ s, c ≠ a ∧ c ≠ b → f c = 1)
-  (ha : a ∉ s → f a = 1) (hb : b ∉ s → f b = 1) : (∏x in s, f x) = f a*f b :=
-  by 
-    haveI  := Classical.decEq α <;> byCases' h₁ : a ∈ s <;> byCases' h₂ : b ∈ s
-    ·
-      exact prod_eq_mul_of_mem a b h₁ h₂ hn h₀
-    ·
-      rw [hb h₂, mul_oneₓ]
-      apply prod_eq_single_of_mem a h₁ 
-      exact fun c hc hca => h₀ c hc ⟨hca, ne_of_mem_of_not_mem hc h₂⟩
-    ·
-      rw [ha h₁, one_mulₓ]
-      apply prod_eq_single_of_mem b h₂ 
-      exact fun c hc hcb => h₀ c hc ⟨ne_of_mem_of_not_mem hc h₁, hcb⟩
-    ·
-      rw [ha h₁, hb h₂, mul_oneₓ]
-      exact
-        trans (prod_congr rfl fun c hc => h₀ c hc ⟨ne_of_mem_of_not_mem hc h₁, ne_of_mem_of_not_mem hc h₂⟩)
-          prod_const_one
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_eq_mul
+{s : finset α}
+{f : α → β}
+(a b : α)
+(hn : «expr ≠ »(a, b))
+(h₀ : ∀ c «expr ∈ » s, «expr ∧ »(«expr ≠ »(c, a), «expr ≠ »(c, b)) → «expr = »(f c, 1))
+(ha : «expr ∉ »(a, s) → «expr = »(f a, 1))
+(hb : «expr ∉ »(b, s) → «expr = »(f b, 1)) : «expr = »(«expr∏ in , »((x), s, f x), «expr * »(f a, f b)) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq α]; by_cases [expr h₁, ":", expr «expr ∈ »(a, s)]; by_cases [expr h₂, ":", expr «expr ∈ »(b, s)],
+  { exact [expr prod_eq_mul_of_mem a b h₁ h₂ hn h₀] },
+  { rw ["[", expr hb h₂, ",", expr mul_one, "]"] [],
+    apply [expr prod_eq_single_of_mem a h₁],
+    exact [expr λ c hc hca, h₀ c hc ⟨hca, ne_of_mem_of_not_mem hc h₂⟩] },
+  { rw ["[", expr ha h₁, ",", expr one_mul, "]"] [],
+    apply [expr prod_eq_single_of_mem b h₂],
+    exact [expr λ c hc hcb, h₀ c hc ⟨ne_of_mem_of_not_mem hc h₁, hcb⟩] },
+  { rw ["[", expr ha h₁, ",", expr hb h₂, ",", expr mul_one, "]"] [],
+    exact [expr trans (prod_congr rfl (λ
+       c hc, h₀ c hc ⟨ne_of_mem_of_not_mem hc h₁, ne_of_mem_of_not_mem hc h₂⟩)) prod_const_one] }
+end
 
-@[toAdditive]
-theorem prod_attach {f : α → β} : (∏x in s.attach, f x) = ∏x in s, f x :=
-  by 
-    haveI  := Classical.decEq α <;>
-      exact
-        calc (∏x in s.attach, f x.val) = ∏x in s.attach.Image Subtype.val, f x :=
-          by 
-            rw [prod_image] <;> exact fun x _ y _ => Subtype.eq 
-          _ = _ :=
-          by 
-            rw [attach_image_val]
-          
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_attach {f : α → β} : «expr = »(«expr∏ in , »((x), s.attach, f x), «expr∏ in , »((x), s, f x)) :=
+by haveI [] [] [":=", expr classical.dec_eq α]; exact [expr calc
+   «expr = »(«expr∏ in , »((x), s.attach, f x.val), «expr∏ in , »((x), s.attach.image subtype.val, f x)) : by rw ["[", expr prod_image, "]"] []; exact [expr assume
+    x _ y _, subtype.eq]
+   «expr = »(..., _) : by rw ["[", expr attach_image_val, "]"] []]
 
 /-- A product over `s.subtype p` equals one over `s.filter p`. -/
 @[simp, toAdditive "A sum over `s.subtype p` equals one over `s.filter p`."]
@@ -593,7 +618,7 @@ theorem prod_subtype {p : α → Prop} {F : Fintype (Subtype p)} (s : Finset α)
   (∏a in s, f a) = ∏a : Subtype p, f a :=
   have  : (· ∈ s) = p := Set.ext h 
   by 
-    substI p 
+    subst p 
     rw [←prod_finset_coe]
     congr
 
@@ -1023,36 +1048,37 @@ theorem prod_range_div' {M : Type _} [CommGroupₓ M] (f : ℕ → M) (n : ℕ) 
   by 
     simpa only [←div_eq_mul_inv] using @sum_range_sub' (Additive M) _ f n
 
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A telescoping sum along `{0, ..., n-1}` of an `ℕ`-valued function
 reduces to the difference of the last and first terms
 when the function we are summing is monotone.
 -/
-theorem sum_range_sub_of_monotone {f : ℕ → ℕ} (h : Monotone f) (n : ℕ) : (∑i in range n, f (i+1) - f i) = f n - f 0 :=
-  by 
-    refine' sum_range_induction _ _ (tsub_self _) (fun n => _) _ 
-    have h₁ : f n ≤ f (n+1) := h (Nat.le_succₓ _)
-    have h₂ : f 0 ≤ f n := h (Nat.zero_leₓ _)
-    rw [tsub_add_eq_add_tsub h₂, add_tsub_cancel_of_le h₁]
+theorem sum_range_sub_of_monotone
+{f : exprℕ() → exprℕ()}
+(h : monotone f)
+(n : exprℕ()) : «expr = »(«expr∑ in , »((i), range n, «expr - »(f «expr + »(i, 1), f i)), «expr - »(f n, f 0)) :=
+begin
+  refine [expr sum_range_induction _ _ (tsub_self _) (λ n, _) _],
+  have [ident h₁] [":", expr «expr ≤ »(f n, f «expr + »(n, 1))] [":=", expr h (nat.le_succ _)],
+  have [ident h₂] [":", expr «expr ≤ »(f 0, f n)] [":=", expr h (nat.zero_le _)],
+  rw ["[", expr tsub_add_eq_add_tsub h₂, ",", expr add_tsub_cancel_of_le h₁, "]"] []
+end
 
-@[simp, toAdditive]
-theorem prod_const (b : β) : (∏x in s, b) = b ^ s.card :=
-  by 
-    haveI  := Classical.decEq α <;>
-      exact
-        Finset.induction_on s
-          (by 
-            simp )
-          fun a s has ih =>
-            by 
-              rw [prod_insert has, card_insert_of_not_mem has, pow_succₓ, ih]
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp, to_additive #[]] theorem prod_const (b : β) : «expr = »(«expr∏ in , »((x), s, b), «expr ^ »(b, s.card)) :=
+by haveI [] [] [":=", expr classical.dec_eq α]; exact [expr finset.induction_on s (by simp [] [] [] [] [] []) (λ
+  a
+  s
+  has
+  ih, by rw ["[", expr prod_insert has, ",", expr card_insert_of_not_mem has, ",", expr pow_succ, ",", expr ih, "]"] [])]
 
 @[toAdditive]
 theorem pow_eq_prod_const (b : β) : ∀ n, b ^ n = ∏k in range n, b :=
   by 
     simp 
 
--- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[ident sum_nsmul]]
 theorem prod_pow
 (s : finset α)
@@ -1070,60 +1096,60 @@ theorem prod_flip {n : ℕ} (f : ℕ → β) : (∏r in range (n+1), f (n - r)) 
       rw [prod_range_succ', prod_range_succ _ (Nat.succ n)]
       simp [←ih]
 
-@[toAdditive]
-theorem prod_involution {s : Finset α} {f : α → β} :
-  ∀ g : ∀ a _ : a ∈ s, α h : ∀ a ha, (f a*f (g a ha)) = 1 g_ne : ∀ a ha, f a ≠ 1 → g a ha ≠ a g_mem : ∀ a ha, g a ha ∈ s
-    g_inv : ∀ a ha, g (g a ha) (g_mem a ha) = a, (∏x in s, f x) = 1 :=
-  by 
-    haveI  := Classical.decEq α <;>
-      haveI  := Classical.decEq β <;>
-        exact
-          Finset.strongInductionOn s
-            fun s ih g h g_ne g_mem g_inv =>
-              s.eq_empty_or_nonempty.elim (fun hs => hs.symm ▸ rfl)
-                fun ⟨x, hx⟩ =>
-                  have hmem : ∀ y _ : y ∈ (s.erase x).erase (g x hx), y ∈ s :=
-                    fun y hy => mem_of_mem_erase (mem_of_mem_erase hy)
-                  have g_inj : ∀ {x hx y hy}, g x hx = g y hy → x = y :=
-                    fun x hx y hy h =>
-                      by 
-                        rw [←g_inv x hx, ←g_inv y hy] <;> simp [h]
-                  have ih' : (∏y in erase (erase s x) (g x hx), f y) = (1 : β) :=
-                    ih ((s.erase x).erase (g x hx))
-                      ⟨subset.trans (erase_subset _ _) (erase_subset _ _),
-                        fun h => not_mem_erase (g x hx) (s.erase x) (h (g_mem x hx))⟩
-                      (fun y hy => g y (hmem y hy)) (fun y hy => h y (hmem y hy)) (fun y hy => g_ne y (hmem y hy))
-                      (fun y hy =>
-                        mem_erase.2
-                          ⟨fun h : g y _ = g x hx =>
-                              by 
-                                simpa [g_inj h] using hy,
-                            mem_erase.2
-                              ⟨fun h : g y _ = x =>
-                                  have  : y = g x hx :=
-                                    g_inv y (hmem y hy) ▸
-                                      by 
-                                        simp [h]
-                                  by 
-                                    simpa [this] using hy,
-                                g_mem y (hmem y hy)⟩⟩)
-                      fun y hy => g_inv y (hmem y hy)
-                  if hx1 : f x = 1 then
-                    ih' ▸
-                      Eq.symm
-                        (prod_subset hmem
-                          fun y hy hy₁ =>
-                            have  : y = x ∨ y = g x hx :=
-                              by 
-                                simp [hy] at hy₁ <;> tauto 
-                            this.elim (fun hy => hy.symm ▸ hx1) fun hy => h x hx ▸ hy ▸ hx1.symm ▸ (one_mulₓ _).symm)
-                  else
-                    by 
-                      rw [←insert_erase hx, prod_insert (not_mem_erase _ _),
-                        ←insert_erase (mem_erase.2 ⟨g_ne x hx hx1, g_mem x hx⟩), prod_insert (not_mem_erase _ _), ih',
-                        mul_oneₓ, h x hx]
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_involution
+{s : finset α}
+{f : α → β} : ∀
+(g : ∀ a «expr ∈ » s, α)
+(h : ∀ a ha, «expr = »(«expr * »(f a, f (g a ha)), 1))
+(g_ne : ∀ a ha, «expr ≠ »(f a, 1) → «expr ≠ »(g a ha, a))
+(g_mem : ∀ a ha, «expr ∈ »(g a ha, s))
+(g_inv : ∀ a ha, «expr = »(g (g a ha) (g_mem a ha), a)), «expr = »(«expr∏ in , »((x), s, f x), 1) :=
+by haveI [] [] [":=", expr classical.dec_eq α]; haveI [] [] [":=", expr classical.dec_eq β]; exact [expr finset.strong_induction_on s (λ
+  s
+  ih
+  g
+  h
+  g_ne
+  g_mem
+  g_inv, s.eq_empty_or_nonempty.elim (λ
+   hs, «expr ▸ »(hs.symm, rfl)) (λ
+   ⟨x, hx⟩, have hmem : ∀
+   y «expr ∈ » (s.erase x).erase (g x hx), «expr ∈ »(y, s), from λ y hy, mem_of_mem_erase (mem_of_mem_erase hy),
+   have g_inj : ∀
+   {x
+    hx
+    y
+    hy}, «expr = »(g x hx, g y hy) → «expr = »(x, y), from λ
+   x
+   hx
+   y
+   hy
+   h, by rw ["[", "<-", expr g_inv x hx, ",", "<-", expr g_inv y hy, "]"] []; simp [] [] [] ["[", expr h, "]"] [] [],
+   have ih' : «expr = »(«expr∏ in , »((y), erase (erase s x) (g x hx), f y), (1 : β)) := ih ((s.erase x).erase (g x hx)) ⟨subset.trans (erase_subset _ _) (erase_subset _ _), λ
+    h, not_mem_erase (g x hx) (s.erase x) (h (g_mem x hx))⟩ (λ
+    y
+    hy, g y (hmem y hy)) (λ
+    y
+    hy, h y (hmem y hy)) (λ
+    y
+    hy, g_ne y (hmem y hy)) (λ
+    y
+    hy, mem_erase.2 ⟨λ
+     h : «expr = »(g y _, g x hx), by simpa [] [] [] ["[", expr g_inj h, "]"] [] ["using", expr hy], mem_erase.2 ⟨λ
+      h : «expr = »(g y _, x), have «expr = »(y, g x hx), from «expr ▸ »(g_inv y (hmem y hy), by simp [] [] [] ["[", expr h, "]"] [] []),
+      by simpa [] [] [] ["[", expr this, "]"] [] ["using", expr hy], g_mem y (hmem y hy)⟩⟩) (λ
+    y hy, g_inv y (hmem y hy)),
+   if hx1 : «expr = »(f x, 1) then «expr ▸ »(ih', eq.symm (prod_subset hmem (λ
+      y
+      hy
+      hy₁, have «expr ∨ »(«expr = »(y, x), «expr = »(y, g x hx)), by simp [] [] [] ["[", expr hy, "]"] [] ["at", ident hy₁]; tauto [],
+      this.elim (λ
+       hy, «expr ▸ »(hy.symm, hx1)) (λ
+       hy, «expr ▸ »(h x hx, «expr ▸ »(hy, «expr ▸ »(hx1.symm, (one_mul _).symm))))))) else by rw ["[", "<-", expr insert_erase hx, ",", expr prod_insert (not_mem_erase _ _), ",", "<-", expr insert_erase (mem_erase.2 ⟨g_ne x hx hx1, g_mem x hx⟩), ",", expr prod_insert (not_mem_erase _ _), ",", expr ih', ",", expr mul_one, ",", expr h x hx, "]"] []))]
 
--- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of the composition of functions `f` and `g`, is the product
 over `b ∈ s.image g` of `f b` to the power of the cardinality of the fibre of `b`. See also
 `finset.prod_image`. -/
@@ -1206,18 +1232,23 @@ theorem prod_cancels_of_partition_cancels (R : Setoidₓ α) [DecidableRel R.r]
     rw [←xbar_eq_x, filter_congr fun y _ => @Quotientₓ.eq _ R y x]
     apply h x x_in_s
 
-@[toAdditive]
-theorem prod_update_of_not_mem [DecidableEq α] {s : Finset α} {i : α} (h : i ∉ s) (f : α → β) (b : β) :
-  (∏x in s, Function.update f i b x) = ∏x in s, f x :=
-  by 
-    apply prod_congr rfl fun j hj => _ 
-    have  : j ≠ i
-    ·
-      ·
-        intro eq 
-        rw [Eq] at hj 
-        exact h hj 
-    simp [this]
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_update_of_not_mem
+[decidable_eq α]
+{s : finset α}
+{i : α}
+(h : «expr ∉ »(i, s))
+(f : α → β)
+(b : β) : «expr = »(«expr∏ in , »((x), s, function.update f i b x), «expr∏ in , »((x), s, f x)) :=
+begin
+  apply [expr prod_congr rfl (λ j hj, _)],
+  have [] [":", expr «expr ≠ »(j, i)] [],
+  by { assume [binders (eq)],
+    rw [expr eq] ["at", ident hj],
+    exact [expr h hj] },
+  simp [] [] [] ["[", expr this, "]"] [] []
+end
 
 @[toAdditive]
 theorem prod_update_of_mem [DecidableEq α] {s : Finset α} {i : α} (h : i ∈ s) (f : α → β) (b : β) :
@@ -1226,26 +1257,30 @@ theorem prod_update_of_mem [DecidableEq α] {s : Finset α} {i : α} (h : i ∈ 
     rw [update_eq_piecewise, prod_piecewise]
     simp [h]
 
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a product of a `finset` of size at most 1 has a given value, so
 do the terms in that product. -/
-@[toAdditive eq_of_card_le_one_of_sum_eq
-      "If a sum of a `finset` of size at most 1 has a given\nvalue, so do the terms in that sum."]
-theorem eq_of_card_le_one_of_prod_eq {s : Finset α} (hc : s.card ≤ 1) {f : α → β} {b : β} (h : (∏x in s, f x) = b) :
-  ∀ x _ : x ∈ s, f x = b :=
-  by 
-    intro x hx 
-    byCases' hc0 : s.card = 0
-    ·
-      exact False.elim (card_ne_zero_of_mem hx hc0)
-    ·
-      have h1 : s.card = 1 := le_antisymmₓ hc (Nat.one_le_of_lt (Nat.pos_of_ne_zeroₓ hc0))
-      rw [card_eq_one] at h1 
-      cases' h1 with x2 hx2 
-      rw [hx2, mem_singleton] at hx 
-      simpRw [hx2]  at h 
-      rw [hx]
-      rw [prod_singleton] at h 
-      exact h
+@[to_additive #[ident eq_of_card_le_one_of_sum_eq,
+   expr "If a sum of a `finset` of size at most 1 has a given\nvalue, so do the terms in that sum."]]
+theorem eq_of_card_le_one_of_prod_eq
+{s : finset α}
+(hc : «expr ≤ »(s.card, 1))
+{f : α → β}
+{b : β}
+(h : «expr = »(«expr∏ in , »((x), s, f x), b)) : ∀ x «expr ∈ » s, «expr = »(f x, b) :=
+begin
+  intros [ident x, ident hx],
+  by_cases [expr hc0, ":", expr «expr = »(s.card, 0)],
+  { exact [expr false.elim (card_ne_zero_of_mem hx hc0)] },
+  { have [ident h1] [":", expr «expr = »(s.card, 1)] [":=", expr le_antisymm hc (nat.one_le_of_lt (nat.pos_of_ne_zero hc0))],
+    rw [expr card_eq_one] ["at", ident h1],
+    cases [expr h1] ["with", ident x2, ident hx2],
+    rw ["[", expr hx2, ",", expr mem_singleton, "]"] ["at", ident hx],
+    simp_rw [expr hx2] ["at", ident h],
+    rw [expr hx] [],
+    rw [expr prod_singleton] ["at", ident h],
+    exact [expr h] }
+end
 
 /-- Taking a product over `s : finset α` is the same as multiplying the value on a single element
 `f a` by the product of `s.erase a`. -/
@@ -1346,16 +1381,16 @@ theorem eq_sum_range_sub' [AddCommGroupₓ β] (f : ℕ → β) (n : ℕ) :
 
 section Opposite
 
-open Opposite
+open MulOpposite
 
 /-- Moving to the opposite additive commutative monoid commutes with summing. -/
 @[simp]
 theorem op_sum [AddCommMonoidₓ β] {s : Finset α} (f : α → β) : op (∑x in s, f x) = ∑x in s, op (f x) :=
-  (op_add_equiv : β ≃+ «expr ᵒᵖ» β).map_sum _ _
+  (op_add_equiv : β ≃+ «expr ᵐᵒᵖ» β).map_sum _ _
 
 @[simp]
-theorem unop_sum [AddCommMonoidₓ β] {s : Finset α} (f : α → «expr ᵒᵖ» β) : unop (∑x in s, f x) = ∑x in s, unop (f x) :=
-  (op_add_equiv : β ≃+ «expr ᵒᵖ» β).symm.map_sum _ _
+theorem unop_sum [AddCommMonoidₓ β] {s : Finset α} (f : α → «expr ᵐᵒᵖ» β) : unop (∑x in s, f x) = ∑x in s, unop (f x) :=
+  (op_add_equiv : β ≃+ «expr ᵐᵒᵖ» β).symm.map_sum _ _
 
 end Opposite
 
@@ -1388,21 +1423,15 @@ theorem card_bUnion [DecidableEq β] {s : Finset α} {t : α → Finset β}
       simp 
     
 
-theorem card_bUnion_le [DecidableEq β] {s : Finset α} {t : α → Finset β} : (s.bUnion t).card ≤ ∑a in s, (t a).card :=
-  by 
-    haveI  := Classical.decEq α <;>
-      exact
-        Finset.induction_on s
-          (by 
-            simp )
-          fun a s has ih =>
-            calc ((insert a s).bUnion t).card ≤ (t a).card+(s.bUnion t).card :=
-              by 
-                rw [bUnion_insert] <;> exact Finset.card_union_le _ _ 
-              _ ≤ ∑a in insert a s, card (t a) :=
-              by 
-                rw [sum_insert has] <;> exact add_le_add_left ih _
-              
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem card_bUnion_le
+[decidable_eq β]
+{s : finset α}
+{t : α → finset β} : «expr ≤ »((s.bUnion t).card, «expr∑ in , »((a), s, (t a).card)) :=
+by haveI [] [] [":=", expr classical.dec_eq α]; exact [expr finset.induction_on s (by simp [] [] [] [] [] []) (λ
+  a s has ih, calc
+    «expr ≤ »(((insert a s).bUnion t).card, «expr + »((t a).card, (s.bUnion t).card)) : by rw [expr bUnion_insert] []; exact [expr finset.card_union_le _ _]
+    «expr ≤ »(..., «expr∑ in , »((a), insert a s, card (t a))) : by rw [expr sum_insert has] []; exact [expr add_le_add_left ih _])]
 
 theorem card_eq_sum_card_fiberwise [DecidableEq β] {f : α → β} {s : Finset α} {t : Finset β}
   (H : ∀ x _ : x ∈ s, f x ∈ t) : s.card = ∑a in t, (s.filter fun x => f x = a).card :=
@@ -1422,10 +1451,10 @@ section ProdEqZero
 
 variable[CommMonoidWithZero β]
 
-theorem prod_eq_zero (ha : a ∈ s) (h : f a = 0) : (∏x in s, f x) = 0 :=
-  by 
-    haveI  := Classical.decEq α 
-    rw [←prod_erase_mul _ _ ha, h, mul_zero]
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prod_eq_zero (ha : «expr ∈ »(a, s)) (h : «expr = »(f a, 0)) : «expr = »(«expr∏ in , »((x), s, f x), 0) :=
+by { haveI [] [] [":=", expr classical.dec_eq α],
+  rw ["[", "<-", expr prod_erase_mul _ _ ha, ",", expr h, ",", expr mul_zero, "]"] [] }
 
 theorem prod_boole {s : Finset α} {p : α → Prop} [DecidablePred p] :
   (∏i in s, ite (p i) (1 : β) (0 : β)) = ite (∀ i _ : i ∈ s, p i) 1 0 :=
@@ -1462,32 +1491,39 @@ section CommGroupWithZero
 
 variable[CommGroupWithZero β]
 
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem prod_inv_distrib' : (∏x in s, f x⁻¹) = (∏x in s, f x)⁻¹ :=
-  by 
-    classical 
-    byCases' h : ∃ (x : _)(_ : x ∈ s), f x = 0
-    ·
-      simpa [prod_eq_zero_iff.mpr h, prod_eq_zero_iff] using h
-    ·
-      pushNeg  at h 
-      have h' := prod_ne_zero_iff.mpr h 
-      have hf : ∀ x _ : x ∈ s, (f x⁻¹*f x) = 1 := fun x hx => inv_mul_cancel (h x hx)
-      apply mul_right_cancel₀ h' 
-      simp [h, h', ←Finset.prod_mul_distrib, prod_congr rfl hf]
+theorem prod_inv_distrib' : «expr = »(«expr∏ in , »((x), s, «expr ⁻¹»(f x)), «expr ⁻¹»(«expr∏ in , »((x), s, f x))) :=
+begin
+  classical,
+  by_cases [expr h, ":", expr «expr∃ , »((x «expr ∈ » s), «expr = »(f x, 0))],
+  { simpa [] [] [] ["[", expr prod_eq_zero_iff.mpr h, ",", expr prod_eq_zero_iff, "]"] [] ["using", expr h] },
+  { push_neg ["at", ident h],
+    have [ident h'] [] [":=", expr prod_ne_zero_iff.mpr h],
+    have [ident hf] [":", expr ∀
+     x «expr ∈ » s, «expr = »(«expr * »(«expr ⁻¹»(f x), f x), 1)] [":=", expr λ x hx, inv_mul_cancel (h x hx)],
+    apply [expr mul_right_cancel₀ h'],
+    simp [] [] [] ["[", expr h, ",", expr h', ",", "<-", expr finset.prod_mul_distrib, ",", expr prod_congr rfl hf, "]"] [] [] }
+end
 
 end CommGroupWithZero
 
-@[toAdditive]
-theorem prod_unique_nonempty {α β : Type _} [CommMonoidₓ β] [Unique α] (s : Finset α) (f : α → β) (h : s.nonempty) :
-  (∏x in s, f x) = f (default α) :=
-  by 
-    obtain ⟨a, ha⟩ := h 
-    have  : s = {a}
-    ·
-      ext b 
-      simpa [Subsingleton.elimₓ a b] using ha 
-    rw [this, Finset.prod_singleton, Subsingleton.elimₓ a (default α)]
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_unique_nonempty
+{α β : Type*}
+[comm_monoid β]
+[unique α]
+(s : finset α)
+(f : α → β)
+(h : s.nonempty) : «expr = »(«expr∏ in , »((x), s, f x), f (default α)) :=
+begin
+  obtain ["⟨", ident a, ",", ident ha, "⟩", ":=", expr h],
+  have [] [":", expr «expr = »(s, {a})] [],
+  { ext [] [ident b] [],
+    simpa [] [] [] ["[", expr subsingleton.elim a b, "]"] [] ["using", expr ha] },
+  rw ["[", expr this, ",", expr finset.prod_singleton, ",", expr subsingleton.elim a (default α), "]"] []
+end
 
 end Finset
 
@@ -1530,11 +1566,18 @@ theorem prod_empty {α β : Type _} [CommMonoidₓ β] [IsEmpty α] (f : α → 
   by 
     rw [eq_empty_of_is_empty (univ : Finset α), Finset.prod_empty]
 
-@[toAdditive]
-theorem prod_subsingleton {α β : Type _} [CommMonoidₓ β] [Subsingleton α] (f : α → β) (a : α) : (∏x : α, f x) = f a :=
-  by 
-    haveI  : Unique α := uniqueOfSubsingleton a 
-    convert prod_unique f
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem prod_subsingleton
+{α β : Type*}
+[comm_monoid β]
+[subsingleton α]
+(f : α → β)
+(a : α) : «expr = »(«expr∏ , »((x : α), f x), f a) :=
+begin
+  haveI [] [":", expr unique α] [":=", expr unique_of_subsingleton a],
+  convert [] [expr prod_unique f] []
+end
 
 @[toAdditive]
 theorem prod_subtype_mul_prod_subtype {α β : Type _} [Fintype α] [CommMonoidₓ β] (p : α → Prop) (f : α → β)
@@ -1571,78 +1614,66 @@ namespace Multiset
 
 variable[DecidableEq α]
 
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem to_finset_sum_count_eq (s : Multiset α) : (∑a in s.to_finset, s.count a) = s.card :=
-  Multiset.induction_on s rfl
-    fun a s ih =>
-      calc
-        (∑x in to_finset (a ::ₘ s), count x (a ::ₘ s)) =
-          ∑x in to_finset (a ::ₘ s), (if x = a then 1 else 0)+count x s :=
-        Finset.sum_congr rfl$
-          fun _ _ =>
-            by 
-              splitIfs <;> [simp only [h, count_cons_self, Nat.one_add], simp only [count_cons_of_ne h, zero_addₓ]]
-        _ = card (a ::ₘ s) :=
-        by 
-          byCases' a ∈ s.to_finset
-          ·
-            have  : (∑x in s.to_finset, ite (x = a) 1 0) = ∑x in {a}, ite (x = a) 1 0
-            ·
-              rw [Finset.sum_ite_eq', if_pos h, Finset.sum_singleton, if_pos rfl]
-            rw [to_finset_cons, Finset.insert_eq_of_mem h, Finset.sum_add_distrib, ih, this, Finset.sum_singleton,
-              if_pos rfl, add_commₓ, card_cons]
-          ·
-            have ha : a ∉ s
-            ·
-              rwa [mem_to_finset] at h 
-            have  : (∑x in to_finset s, ite (x = a) 1 0) = ∑x in to_finset s, 0 
-            exact
-              Finset.sum_congr rfl
-                fun x hx =>
-                  if_neg$
-                    by 
-                      rintro rfl <;> cc 
-            rw [to_finset_cons, Finset.sum_insert h, if_pos rfl, Finset.sum_add_distrib, this, Finset.sum_const_zero,
-              ih, count_eq_zero_of_not_mem ha, zero_addₓ, add_commₓ, card_cons]
-        
+theorem to_finset_sum_count_eq (s : multiset α) : «expr = »(«expr∑ in , »((a), s.to_finset, s.count a), s.card) :=
+multiset.induction_on s rfl (assume a s ih, calc
+   «expr = »(«expr∑ in , »((x), to_finset «expr ::ₘ »(a, s), count x «expr ::ₘ »(a, s)), «expr∑ in , »((x), to_finset «expr ::ₘ »(a, s), «expr + »(if «expr = »(x, a) then 1 else 0, count x s))) : «expr $ »(finset.sum_congr rfl, λ
+    _
+    _, by split_ifs [] []; [simp [] [] ["only"] ["[", expr h, ",", expr count_cons_self, ",", expr nat.one_add, "]"] [] [], simp [] [] ["only"] ["[", expr count_cons_of_ne h, ",", expr zero_add, "]"] [] []])
+   «expr = »(..., card «expr ::ₘ »(a, s)) : begin
+     by_cases [expr «expr ∈ »(a, s.to_finset)],
+     { have [] [":", expr «expr = »(«expr∑ in , »((x), s.to_finset, ite «expr = »(x, a) 1 0), «expr∑ in , »((x), {a}, ite «expr = »(x, a) 1 0))] [],
+       { rw ["[", expr finset.sum_ite_eq', ",", expr if_pos h, ",", expr finset.sum_singleton, ",", expr if_pos rfl, "]"] [] },
+       rw ["[", expr to_finset_cons, ",", expr finset.insert_eq_of_mem h, ",", expr finset.sum_add_distrib, ",", expr ih, ",", expr this, ",", expr finset.sum_singleton, ",", expr if_pos rfl, ",", expr add_comm, ",", expr card_cons, "]"] [] },
+     { have [ident ha] [":", expr «expr ∉ »(a, s)] [],
+       by rwa [expr mem_to_finset] ["at", ident h],
+       have [] [":", expr «expr = »(«expr∑ in , »((x), to_finset s, ite «expr = »(x, a) 1 0), «expr∑ in , »((x), to_finset s, 0))] [],
+       from [expr finset.sum_congr rfl (λ x hx, «expr $ »(if_neg, by rintro [ident rfl]; cc))],
+       rw ["[", expr to_finset_cons, ",", expr finset.sum_insert h, ",", expr if_pos rfl, ",", expr finset.sum_add_distrib, ",", expr this, ",", expr finset.sum_const_zero, ",", expr ih, ",", expr count_eq_zero_of_not_mem ha, ",", expr zero_add, ",", expr add_comm, ",", expr card_cons, "]"] [] }
+   end)
 
 theorem count_sum' {s : Finset β} {a : α} {f : β → Multiset α} : count a (∑x in s, f x) = ∑x in s, count a (f x) :=
   by 
     dunfold Finset.sum 
     rw [count_sum]
 
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem to_finset_sum_count_nsmul_eq (s : Multiset α) : (∑a in s.to_finset, s.count a • {a}) = s :=
-  by 
-    apply ext' 
-    intro b 
-    rw [count_sum']
-    have h : count b s = count b (count b s • {b})
-    ·
-      rw [count_nsmul, count_singleton_self, mul_oneₓ]
-    rw [h]
-    clear h 
-    apply Finset.sum_eq_single b
-    ·
-      intro c h hcb 
-      rw [count_nsmul]
-      convert mul_zero (count c s)
-      apply count_eq_zero.mpr 
-      exact finset.not_mem_singleton.mpr (Ne.symm hcb)
-    ·
-      intro hb 
-      rw [count_eq_zero_of_not_mem (mt mem_to_finset.2 hb), count_nsmul, zero_mul]
+theorem to_finset_sum_count_nsmul_eq
+(s : multiset α) : «expr = »(«expr∑ in , »((a), s.to_finset, «expr • »(s.count a, {a})), s) :=
+begin
+  apply [expr ext'],
+  intro [ident b],
+  rw [expr count_sum'] [],
+  have [ident h] [":", expr «expr = »(count b s, count b «expr • »(count b s, {b}))] [],
+  { rw ["[", expr count_nsmul, ",", expr count_singleton_self, ",", expr mul_one, "]"] [] },
+  rw [expr h] [],
+  clear [ident h],
+  apply [expr finset.sum_eq_single b],
+  { intros [ident c, ident h, ident hcb],
+    rw [expr count_nsmul] [],
+    convert [] [expr mul_zero (count c s)] [],
+    apply [expr count_eq_zero.mpr],
+    exact [expr finset.not_mem_singleton.mpr (ne.symm hcb)] },
+  { intro [ident hb],
+    rw ["[", expr count_eq_zero_of_not_mem (mt mem_to_finset.2 hb), ",", expr count_nsmul, ",", expr zero_mul, "]"] [] }
+end
 
-theorem exists_smul_of_dvd_count (s : Multiset α) {k : ℕ} (h : ∀ a : α, a ∈ s → k ∣ Multiset.count a s) :
-  ∃ u : Multiset α, s = k • u :=
-  by 
-    use ∑a in s.to_finset, (s.count a / k) • {a}
-    have h₂ : (∑x : α in s.to_finset, k • (count x s / k) • ({x} : Multiset α)) = ∑x : α in s.to_finset, count x s • {x}
-    ·
-      apply Finset.sum_congr rfl 
-      intro x hx 
-      rw [←mul_nsmul, Nat.mul_div_cancel'ₓ (h x (mem_to_finset.mp hx))]
-    rw [←Finset.sum_nsmul, h₂, to_finset_sum_count_nsmul_eq]
+-- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_smul_of_dvd_count
+(s : multiset α)
+{k : exprℕ()}
+(h : ∀
+ a : α, «expr ∈ »(a, s) → «expr ∣ »(k, multiset.count a s)) : «expr∃ , »((u : multiset α), «expr = »(s, «expr • »(k, u))) :=
+begin
+  use [expr «expr∑ in , »((a), s.to_finset, «expr • »(«expr / »(s.count a, k), {a}))],
+  have [ident h₂] [":", expr «expr = »(«expr∑ in , »((x : α), s.to_finset, «expr • »(k, «expr • »(«expr / »(count x s, k), ({x} : multiset α)))), «expr∑ in , »((x : α), s.to_finset, «expr • »(count x s, {x})))] [],
+  { apply [expr finset.sum_congr rfl],
+    intros [ident x, ident hx],
+    rw ["[", "<-", expr mul_nsmul, ",", expr nat.mul_div_cancel' (h x (mem_to_finset.mp hx)), "]"] [] },
+  rw ["[", "<-", expr finset.sum_nsmul, ",", expr h₂, ",", expr to_finset_sum_count_nsmul_eq, "]"] []
+end
 
 end Multiset
 

@@ -57,19 +57,21 @@ theorem cycle_type_eq' {σ : perm α} (s : Finset (perm α)) (h1 : ∀ f : perm 
     rw [cycle_factors_finset_eq_finset]
     exact ⟨h1, h2, h0⟩
 
-theorem cycle_type_eq {σ : perm α} (l : List (perm α)) (h0 : l.prod = σ) (h1 : ∀ σ : perm α, σ ∈ l → σ.is_cycle)
-  (h2 : l.pairwise Disjoint) : σ.cycle_type = l.map (Finset.card ∘ support) :=
-  by 
-    have hl : l.nodup := nodup_of_pairwise_disjoint_cycles h1 h2 
-    rw [cycle_type_eq' l.to_finset]
-    ·
-      simp [list.erase_dup_eq_self.mpr hl]
-    ·
-      simpa using h1
-    ·
-      simpa [hl] using h0
-    ·
-      simpa [list.erase_dup_eq_self.mpr hl] using List.forall_of_pairwise disjoint.symmetric h2
+-- error in GroupTheory.Perm.CycleType: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cycle_type_eq
+{σ : perm α}
+(l : list (perm α))
+(h0 : «expr = »(l.prod, σ))
+(h1 : ∀ σ : perm α, «expr ∈ »(σ, l) → σ.is_cycle)
+(h2 : l.pairwise disjoint) : «expr = »(σ.cycle_type, l.map «expr ∘ »(finset.card, support)) :=
+begin
+  have [ident hl] [":", expr l.nodup] [":=", expr nodup_of_pairwise_disjoint_cycles h1 h2],
+  rw [expr cycle_type_eq' l.to_finset] [],
+  { simp [] [] [] ["[", expr list.erase_dup_eq_self.mpr hl, "]"] [] [] },
+  { simpa [] [] [] [] [] ["using", expr h1] },
+  { simpa [] [] [] ["[", expr hl, "]"] [] ["using", expr h0] },
+  { simpa [] [] [] ["[", expr list.erase_dup_eq_self.mpr hl, "]"] [] ["using", expr list.forall_of_pairwise disjoint.symmetric h2] }
+end
 
 theorem cycle_type_one : (1 : perm α).cycleType = 0 :=
   cycle_type_eq [] rfl (fun _ => False.elim) pairwise.nil
@@ -250,46 +252,39 @@ theorem cycle_type_mul_mem_cycle_factors_finset_eq_sub {f g : perm α} (hf : f �
     simp [←(disjoint_mul_inv_of_mem_cycle_factors_finset hf).cycleType,
       tsub_add_cancel_of_le (cycle_type_le_of_mem_cycle_factors_finset hf)]
 
-theorem is_conj_of_cycle_type_eq {σ τ : perm α} (h : cycle_type σ = cycle_type τ) : IsConj σ τ :=
-  by 
-    revert τ 
-    apply cycle_induction_on _ σ
-    ·
-      intro τ h 
-      rw [cycle_type_one, eq_comm, cycle_type_eq_zero] at h 
-      rw [h]
-    ·
-      intro σ hσ τ hστ 
-      have hτ := card_cycle_type_eq_one.2 hσ 
-      rw [hστ, card_cycle_type_eq_one] at hτ 
-      apply hσ.is_conj hτ 
-      rw [hσ.cycle_type, hτ.cycle_type, coe_eq_coe, singleton_perm] at hστ 
-      simp only [and_trueₓ, eq_self_iff_true] at hστ 
-      exact hστ
-    ·
-      intro σ τ hστ hσ h1 h2 π hπ 
-      rw [hστ.cycle_type] at hπ
-      ·
-        have h : σ.support.card ∈ map (Finset.card ∘ perm.support) π.cycle_factors_finset.val
-        ·
-          simp [←cycle_type_def, ←hπ, hσ.cycle_type]
-        obtain ⟨σ', hσ'l, hσ'⟩ := multiset.mem_map.mp h 
-        have key : IsConj (σ'*π*σ'⁻¹) π
-        ·
-          rw [is_conj_iff]
-          use σ'⁻¹
-          simp [mul_assocₓ]
-        refine' IsConj.trans _ key 
-        have hs : σ.cycle_type = σ'.cycle_type
-        ·
-          rw [←Finset.mem_def, mem_cycle_factors_finset_iff] at hσ'l 
-          rw [hσ.cycle_type, ←hσ', hσ'l.left.cycle_type]
-        refine' hστ.is_conj_mul (h1 hs) (h2 _) _
-        ·
-          rw [cycle_type_mul_mem_cycle_factors_finset_eq_sub, ←hπ, add_commₓ, hs, add_tsub_cancel_right]
-          rwa [Finset.mem_def]
-        ·
-          exact (disjoint_mul_inv_of_mem_cycle_factors_finset hσ'l).symm
+-- error in GroupTheory.Perm.CycleType: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_conj_of_cycle_type_eq {σ τ : perm α} (h : «expr = »(cycle_type σ, cycle_type τ)) : is_conj σ τ :=
+begin
+  revert [ident τ],
+  apply [expr cycle_induction_on _ σ],
+  { intros [ident τ, ident h],
+    rw ["[", expr cycle_type_one, ",", expr eq_comm, ",", expr cycle_type_eq_zero, "]"] ["at", ident h],
+    rw [expr h] [] },
+  { intros [ident σ, ident hσ, ident τ, ident hστ],
+    have [ident hτ] [] [":=", expr card_cycle_type_eq_one.2 hσ],
+    rw ["[", expr hστ, ",", expr card_cycle_type_eq_one, "]"] ["at", ident hτ],
+    apply [expr hσ.is_conj hτ],
+    rw ["[", expr hσ.cycle_type, ",", expr hτ.cycle_type, ",", expr coe_eq_coe, ",", expr singleton_perm, "]"] ["at", ident hστ],
+    simp [] [] ["only"] ["[", expr and_true, ",", expr eq_self_iff_true, "]"] [] ["at", ident hστ],
+    exact [expr hστ] },
+  { intros [ident σ, ident τ, ident hστ, ident hσ, ident h1, ident h2, ident π, ident hπ],
+    rw ["[", expr hστ.cycle_type, "]"] ["at", ident hπ],
+    { have [ident h] [":", expr «expr ∈ »(σ.support.card, map «expr ∘ »(finset.card, perm.support) π.cycle_factors_finset.val)] [],
+      { simp [] [] [] ["[", "<-", expr cycle_type_def, ",", "<-", expr hπ, ",", expr hσ.cycle_type, "]"] [] [] },
+      obtain ["⟨", ident σ', ",", ident hσ'l, ",", ident hσ', "⟩", ":=", expr multiset.mem_map.mp h],
+      have [ident key] [":", expr is_conj «expr * »(σ', «expr * »(π, «expr ⁻¹»(σ'))) π] [],
+      { rw [expr is_conj_iff] [],
+        use [expr «expr ⁻¹»(σ')],
+        simp [] [] [] ["[", expr mul_assoc, "]"] [] [] },
+      refine [expr is_conj.trans _ key],
+      have [ident hs] [":", expr «expr = »(σ.cycle_type, σ'.cycle_type)] [],
+      { rw ["[", "<-", expr finset.mem_def, ",", expr mem_cycle_factors_finset_iff, "]"] ["at", ident hσ'l],
+        rw ["[", expr hσ.cycle_type, ",", "<-", expr hσ', ",", expr hσ'l.left.cycle_type, "]"] [] },
+      refine [expr hστ.is_conj_mul (h1 hs) (h2 _) _],
+      { rw ["[", expr cycle_type_mul_mem_cycle_factors_finset_eq_sub, ",", "<-", expr hπ, ",", expr add_comm, ",", expr hs, ",", expr add_tsub_cancel_right, "]"] [],
+        rwa [expr finset.mem_def] [] },
+      { exact [expr (disjoint_mul_inv_of_mem_cycle_factors_finset hσ'l).symm] } } }
+end
 
 theorem is_conj_iff_cycle_type_eq {σ τ : perm α} : IsConj σ τ ↔ σ.cycle_type = τ.cycle_type :=
   ⟨fun h =>
@@ -377,21 +372,23 @@ theorem exists_fixed_point_of_prime {p n : ℕ} [hp : Fact p.prime] (hα : ¬p �
         ((congr_argₓ _ (finset.card_eq_zero.mpr (compl_eq_bot.mpr (finset.eq_univ_iff_forall.mpr hα)))).mp
           (card_compl_support_modeq hσ).symm)
 
-theorem exists_fixed_point_of_prime' {p n : ℕ} [hp : Fact p.prime] (hα : p ∣ Fintype.card α) {σ : perm α}
-  (hσ : (σ^p^n) = 1) {a : α} (ha : σ a = a) : ∃ b : α, σ b = b ∧ b ≠ a :=
-  by 
-    classical 
-    have h : ∀ b : α, b ∈ «expr ᶜ» σ.support ↔ σ b = b :=
-      fun b =>
-        by 
-          rw [Finset.mem_compl, mem_support, not_not]
-    obtain ⟨b, hb1, hb2⟩ :=
-      Finset.exists_ne_of_one_lt_card
-        (lt_of_lt_of_leₓ hp.out.one_lt
-          (Nat.le_of_dvdₓ (finset.card_pos.mpr ⟨a, (h a).mpr ha⟩)
-            (nat.modeq_zero_iff_dvd.mp ((card_compl_support_modeq hσ).trans (nat.modeq_zero_iff_dvd.mpr hα)))))
-        a 
-    exact ⟨b, (h b).mp hb1, hb2⟩
+-- error in GroupTheory.Perm.CycleType: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_fixed_point_of_prime'
+{p n : exprℕ()}
+[hp : fact p.prime]
+(hα : «expr ∣ »(p, fintype.card α))
+{σ : perm α}
+(hσ : «expr = »(«expr ^ »(σ, «expr ^ »(p, n)), 1))
+{a : α}
+(ha : «expr = »(σ a, a)) : «expr∃ , »((b : α), «expr ∧ »(«expr = »(σ b, b), «expr ≠ »(b, a))) :=
+begin
+  classical,
+  have [ident h] [":", expr ∀
+   b : α, «expr ↔ »(«expr ∈ »(b, «expr ᶜ»(σ.support)), «expr = »(σ b, b))] [":=", expr λ
+   b, by rw ["[", expr finset.mem_compl, ",", expr mem_support, ",", expr not_not, "]"] []],
+  obtain ["⟨", ident b, ",", ident hb1, ",", ident hb2, "⟩", ":=", expr finset.exists_ne_of_one_lt_card (lt_of_lt_of_le hp.out.one_lt (nat.le_of_dvd (finset.card_pos.mpr ⟨a, (h a).mpr ha⟩) (nat.modeq_zero_iff_dvd.mp ((card_compl_support_modeq hσ).trans (nat.modeq_zero_iff_dvd.mpr hα))))) a],
+  exact [expr ⟨b, (h b).mp hb1, hb2⟩]
+end
 
 theorem is_cycle_of_prime_order' {σ : perm α} (h1 : (orderOf σ).Prime) (h2 : Fintype.card α < 2*orderOf σ) :
   σ.is_cycle :=
@@ -494,66 +491,68 @@ theorem rotate_length : rotate v n = v :=
 
 end VectorsProdEqOne
 
-theorem exists_prime_order_of_dvd_card {G : Type _} [Groupₓ G] [Fintype G] (p : ℕ) [hp : Fact p.prime]
-  (hdvd : p ∣ Fintype.card G) : ∃ x : G, orderOf x = p :=
-  by 
-    have hp' : p - 1 ≠ 0 := mt tsub_eq_zero_iff_le.mp (not_le_of_lt hp.out.one_lt)
-    have Scard :=
-      calc p ∣ (Fintype.card G^p - 1) := hdvd.trans (dvd_pow (dvd_refl _) hp')
-        _ = Fintype.card (vectors_prod_eq_one G p) := (vectors_prod_eq_one.card G p).symm 
-        
-    let f : ℕ → vectors_prod_eq_one G p → vectors_prod_eq_one G p := fun k v => vectors_prod_eq_one.rotate v k 
-    have hf1 : ∀ v, f 0 v = v := vectors_prod_eq_one.rotate_zero 
-    have hf2 : ∀ j k v, f k (f j v) = f (j+k) v := fun j k v => vectors_prod_eq_one.rotate_rotate v j k 
-    have hf3 : ∀ v, f p v = v := vectors_prod_eq_one.rotate_length 
-    let σ :=
-      Equiv.mk (f 1) (f (p - 1))
-        (fun s =>
-          by 
-            rw [hf2, add_tsub_cancel_of_le hp.out.one_lt.le, hf3])
-        fun s =>
-          by 
-            rw [hf2, tsub_add_cancel_of_le hp.out.one_lt.le, hf3]
-    have hσ : ∀ k v, (σ^k) v = f k v :=
-      fun k v =>
-        Nat.rec (hf1 v).symm
-          (fun k hk =>
-            Eq.trans
-              (by 
-                exact congr_argₓ σ hk)
-              (hf2 k 1 v))
-          k 
-    replace hσ : (σ^p^1) = 1 :=
-      perm.ext
-        fun v =>
-          by 
-            rw [pow_oneₓ, hσ, hf3, one_apply]
-    let v₀ : vectors_prod_eq_one G p := ⟨Vector.repeat 1 p, (List.prod_repeat 1 p).trans (one_pow p)⟩
-    have hv₀ : σ v₀ = v₀ := Subtype.ext (Subtype.ext (List.rotate_repeat (1 : G) p 1))
-    obtain ⟨v, hv1, hv2⟩ := exists_fixed_point_of_prime' Scard hσ hv₀ 
-    refine'
-      exists_imp_exists (fun g hg => order_of_eq_prime _ fun hg' => hv2 _)
-        (list.rotate_one_eq_self_iff_eq_repeat.mp (subtype.ext_iff.mp (subtype.ext_iff.mp hv1)))
-    ·
-      rw [←List.prod_repeat, ←v.1.2, ←hg, show v.val.val.prod = 1 from v.2]
-    ·
-      rw [Subtype.ext_iff_val, Subtype.ext_iff_val, hg, hg', v.1.2]
-      rfl
+-- error in GroupTheory.Perm.CycleType: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_prime_order_of_dvd_card
+{G : Type*}
+[group G]
+[fintype G]
+(p : exprℕ())
+[hp : fact p.prime]
+(hdvd : «expr ∣ »(p, fintype.card G)) : «expr∃ , »((x : G), «expr = »(order_of x, p)) :=
+begin
+  have [ident hp'] [":", expr «expr ≠ »(«expr - »(p, 1), 0)] [":=", expr mt tsub_eq_zero_iff_le.mp (not_le_of_lt hp.out.one_lt)],
+  have [ident Scard] [] [":=", expr calc
+     «expr ∣ »(p, «expr ^ »(fintype.card G, «expr - »(p, 1))) : hdvd.trans (dvd_pow (dvd_refl _) hp')
+     «expr = »(..., fintype.card (vectors_prod_eq_one G p)) : (vectors_prod_eq_one.card G p).symm],
+  let [ident f] [":", expr exprℕ() → vectors_prod_eq_one G p → vectors_prod_eq_one G p] [":=", expr λ
+   k v, vectors_prod_eq_one.rotate v k],
+  have [ident hf1] [":", expr ∀ v, «expr = »(f 0 v, v)] [":=", expr vectors_prod_eq_one.rotate_zero],
+  have [ident hf2] [":", expr ∀
+   j k v, «expr = »(f k (f j v), f «expr + »(j, k) v)] [":=", expr λ j k v, vectors_prod_eq_one.rotate_rotate v j k],
+  have [ident hf3] [":", expr ∀ v, «expr = »(f p v, v)] [":=", expr vectors_prod_eq_one.rotate_length],
+  let [ident σ] [] [":=", expr equiv.mk (f 1) (f «expr - »(p, 1)) (λ
+    s, by rw ["[", expr hf2, ",", expr add_tsub_cancel_of_le hp.out.one_lt.le, ",", expr hf3, "]"] []) (λ
+    s, by rw ["[", expr hf2, ",", expr tsub_add_cancel_of_le hp.out.one_lt.le, ",", expr hf3, "]"] [])],
+  have [ident hσ] [":", expr ∀
+   k
+   v, «expr = »(«expr ^ »(σ, k) v, f k v)] [":=", expr λ
+   k v, nat.rec (hf1 v).symm (λ k hk, eq.trans (by exact [expr congr_arg σ hk]) (hf2 k 1 v)) k],
+  replace [ident hσ] [":", expr «expr = »(«expr ^ »(σ, «expr ^ »(p, 1)), 1)] [":=", expr perm.ext (λ
+    v, by rw ["[", expr pow_one, ",", expr hσ, ",", expr hf3, ",", expr one_apply, "]"] [])],
+  let [ident v₀] [":", expr vectors_prod_eq_one G p] [":=", expr ⟨vector.repeat 1 p, (list.prod_repeat 1 p).trans (one_pow p)⟩],
+  have [ident hv₀] [":", expr «expr = »(σ v₀, v₀)] [":=", expr subtype.ext (subtype.ext (list.rotate_repeat (1 : G) p 1))],
+  obtain ["⟨", ident v, ",", ident hv1, ",", ident hv2, "⟩", ":=", expr exists_fixed_point_of_prime' Scard hσ hv₀],
+  refine [expr exists_imp_exists (λ
+    g
+    hg, order_of_eq_prime _ (λ
+     hg', hv2 _)) (list.rotate_one_eq_self_iff_eq_repeat.mp (subtype.ext_iff.mp (subtype.ext_iff.mp hv1)))],
+  { rw ["[", "<-", expr list.prod_repeat, ",", "<-", expr v.1.2, ",", "<-", expr hg, ",", expr show «expr = »(v.val.val.prod, 1), from v.2, "]"] [] },
+  { rw ["[", expr subtype.ext_iff_val, ",", expr subtype.ext_iff_val, ",", expr hg, ",", expr hg', ",", expr v.1.2, "]"] [],
+    refl }
+end
 
 end Cauchy
 
-theorem subgroup_eq_top_of_swap_mem [DecidableEq α] {H : Subgroup (perm α)} [d : DecidablePred (· ∈ H)] {τ : perm α}
-  (h0 : (Fintype.card α).Prime) (h1 : Fintype.card α ∣ Fintype.card H) (h2 : τ ∈ H) (h3 : is_swap τ) : H = ⊤ :=
-  by 
-    haveI  : Fact (Fintype.card α).Prime := ⟨h0⟩
-    obtain ⟨σ, hσ⟩ := exists_prime_order_of_dvd_card (Fintype.card α) h1 
-    have hσ1 : orderOf (σ : perm α) = Fintype.card α := (order_of_subgroup σ).trans hσ 
-    have hσ2 : is_cycle («expr↑ » σ) := is_cycle_of_prime_order'' h0 hσ1 
-    have hσ3 : (σ : perm α).support = ⊤ :=
-      Finset.eq_univ_of_card (σ : perm α).support ((order_of_is_cycle hσ2).symm.trans hσ1)
-    have hσ4 : Subgroup.closure {«expr↑ » σ, τ} = ⊤ := closure_prime_cycle_swap h0 hσ2 hσ3 h3 
-    rw [eq_top_iff, ←hσ4, Subgroup.closure_le, Set.insert_subset, Set.singleton_subset_iff]
-    exact ⟨Subtype.mem σ, h2⟩
+-- error in GroupTheory.Perm.CycleType: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem subgroup_eq_top_of_swap_mem
+[decidable_eq α]
+{H : subgroup (perm α)}
+[d : decidable_pred ((«expr ∈ » H))]
+{τ : perm α}
+(h0 : (fintype.card α).prime)
+(h1 : «expr ∣ »(fintype.card α, fintype.card H))
+(h2 : «expr ∈ »(τ, H))
+(h3 : is_swap τ) : «expr = »(H, «expr⊤»()) :=
+begin
+  haveI [] [":", expr fact (fintype.card α).prime] [":=", expr ⟨h0⟩],
+  obtain ["⟨", ident σ, ",", ident hσ, "⟩", ":=", expr exists_prime_order_of_dvd_card (fintype.card α) h1],
+  have [ident hσ1] [":", expr «expr = »(order_of (σ : perm α), fintype.card α)] [":=", expr (order_of_subgroup σ).trans hσ],
+  have [ident hσ2] [":", expr is_cycle «expr↑ »(σ)] [":=", expr is_cycle_of_prime_order'' h0 hσ1],
+  have [ident hσ3] [":", expr «expr = »((σ : perm α).support, «expr⊤»())] [":=", expr finset.eq_univ_of_card (σ : perm α).support ((order_of_is_cycle hσ2).symm.trans hσ1)],
+  have [ident hσ4] [":", expr «expr = »(subgroup.closure {«expr↑ »(σ), τ}, «expr⊤»())] [":=", expr closure_prime_cycle_swap h0 hσ2 hσ3 h3],
+  rw ["[", expr eq_top_iff, ",", "<-", expr hσ4, ",", expr subgroup.closure_le, ",", expr set.insert_subset, ",", expr set.singleton_subset_iff, "]"] [],
+  exact [expr ⟨subtype.mem σ, h2⟩]
+end
 
 section Partition
 
@@ -697,7 +696,7 @@ theorem is_three_cycle_swap_mul_swap_same {a b c : α} (ab : a ≠ b) (ac : a �
 open Subgroup
 
 theorem swap_mul_swap_same_mem_closure_three_cycles {a b c : α} (ab : a ≠ b) (ac : a ≠ c) :
-  (swap a b*swap a c) ∈ closure { σ : perm α | is_three_cycle σ } :=
+  (swap a b*swap a c) ∈ closure { σ:perm α | is_three_cycle σ } :=
   by 
     byCases' bc : b = c
     ·
@@ -705,22 +704,22 @@ theorem swap_mul_swap_same_mem_closure_three_cycles {a b c : α} (ab : a ≠ b) 
       simp [one_mem]
     exact subset_closure (is_three_cycle_swap_mul_swap_same ab ac bc)
 
-theorem is_swap.mul_mem_closure_three_cycles {σ τ : perm α} (hσ : is_swap σ) (hτ : is_swap τ) :
-  (σ*τ) ∈ closure { σ : perm α | is_three_cycle σ } :=
-  by 
-    obtain ⟨a, b, ab, rfl⟩ := hσ 
-    obtain ⟨c, d, cd, rfl⟩ := hτ 
-    byCases' ac : a = c
-    ·
-      subst ac 
-      exact swap_mul_swap_same_mem_closure_three_cycles ab cd 
-    have h' : (swap a b*swap c d) = (swap a b*swap a c)*swap c a*swap c d
-    ·
-      simp [swap_comm c a, mul_assocₓ]
-    rw [h']
-    exact
-      mul_mem _ (swap_mul_swap_same_mem_closure_three_cycles ab ac)
-        (swap_mul_swap_same_mem_closure_three_cycles (Ne.symm ac) cd)
+-- error in GroupTheory.Perm.CycleType: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_swap.mul_mem_closure_three_cycles
+{σ τ : perm α}
+(hσ : is_swap σ)
+(hτ : is_swap τ) : «expr ∈ »(«expr * »(σ, τ), closure {σ : perm α | is_three_cycle σ}) :=
+begin
+  obtain ["⟨", ident a, ",", ident b, ",", ident ab, ",", ident rfl, "⟩", ":=", expr hσ],
+  obtain ["⟨", ident c, ",", ident d, ",", ident cd, ",", ident rfl, "⟩", ":=", expr hτ],
+  by_cases [expr ac, ":", expr «expr = »(a, c)],
+  { subst [expr ac],
+    exact [expr swap_mul_swap_same_mem_closure_three_cycles ab cd] },
+  have [ident h'] [":", expr «expr = »(«expr * »(swap a b, swap c d), «expr * »(«expr * »(swap a b, swap a c), «expr * »(swap c a, swap c d)))] [],
+  { simp [] [] [] ["[", expr swap_comm c a, ",", expr mul_assoc, "]"] [] [] },
+  rw [expr h'] [],
+  exact [expr mul_mem _ (swap_mul_swap_same_mem_closure_three_cycles ab ac) (swap_mul_swap_same_mem_closure_three_cycles (ne.symm ac) cd)]
+end
 
 end 
 

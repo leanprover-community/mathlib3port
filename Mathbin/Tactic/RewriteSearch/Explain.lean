@@ -12,7 +12,7 @@ namespace Tactic.RewriteSearch
 
 universe u
 
--- error in Tactic.RewriteSearch.Explain: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Tactic.RewriteSearch.Explain: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /--
 A `dir_pair` is a pair of items designed to be accessed according to
 `dir`, a "direction" defined in the `expr_lens` library.
@@ -87,7 +87,7 @@ private unsafe def app_addr.to_string : app_addr → Stringₓ
 | node c => "(node " ++ ((c.to_list.filter_map id).map app_addr.to_string).toString ++ ")"
 | rw rws => "(rw " ++ rws.to_string ++ ")"
 
--- error in Tactic.RewriteSearch.Explain: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Tactic.RewriteSearch.Explain: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /--
 A data structure for the result of a splice operation.
 obstructed:  There was more of the addr to be added left, but we hit a rw

@@ -72,18 +72,25 @@ instance smul_comm_class'' {g : I → Type _} {h : I → Type _} [∀ i, HasScal
   [∀ i, SmulCommClass (f i) (g i) (h i)] : SmulCommClass (∀ i, f i) (∀ i, g i) (∀ i, h i) :=
   ⟨fun x y z => funext$ fun i => smul_comm (x i) (y i) (z i)⟩
 
+-- error in Algebra.Module.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f i` has a faithful scalar action for a given `i`, then so does `Π i, f i`. This is
 not an instance as `i` cannot be inferred. -/
-@[toAdditive Pi.has_faithful_vadd_at]
-theorem has_faithful_scalar_at {α : Type _} [∀ i, HasScalar α$ f i] [∀ i, Nonempty (f i)] (i : I)
-  [HasFaithfulScalar α (f i)] : HasFaithfulScalar α (∀ i, f i) :=
-  ⟨fun x y h =>
-      eq_of_smul_eq_smul$
-        fun a : f i =>
-          by 
-            classical 
-            have  := congr_funₓ (h$ Function.update (fun j => Classical.choice (‹∀ i, Nonempty (f i)› j)) i a) i 
-            simpa using this⟩
+@[to_additive #[ident pi.has_faithful_vadd_at]]
+theorem has_faithful_scalar_at
+{α : Type*}
+[∀ i, «expr $ »(has_scalar α, f i)]
+[∀ i, nonempty (f i)]
+(i : I)
+[has_faithful_scalar α (f i)] : has_faithful_scalar α (∀ i, f i) :=
+⟨λ
+ x
+ y
+ h, «expr $ »(eq_of_smul_eq_smul, λ a : f i, begin
+    classical,
+    have [] [] [":=", expr congr_fun «expr $ »(h, function.update (λ
+       j, classical.choice («expr‹ ›»(∀ i, nonempty (f i)) j)) i a) i],
+    simpa [] [] [] [] [] ["using", expr this]
+  end)⟩
 
 @[toAdditive Pi.has_faithful_vadd]
 instance HasFaithfulScalar {α : Type _} [Nonempty I] [∀ i, HasScalar α$ f i] [∀ i, Nonempty (f i)]

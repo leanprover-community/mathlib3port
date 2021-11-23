@@ -63,8 +63,8 @@ unsafe def unify_heterogeneous : unification_step :=
   fun equ lhs_type rhs_type lhs rhs _ _ _ =>
     (do 
         is_def_eq lhs_type rhs_type 
-        let p ← to_expr (pquote @eq_of_heq (%%lhs_type) (%%lhs) (%%rhs) (%%equ))
-        let t ← to_expr (pquote @Eq (%%lhs_type) (%%lhs) (%%rhs))
+        let p ← to_expr (pquote.1 (@eq_of_heq (%%ₓlhs_type) (%%ₓlhs) (%%ₓrhs) (%%ₓequ)))
+        let t ← to_expr (pquote.1 (@Eq (%%ₓlhs_type) (%%ₓlhs) (%%ₓrhs)))
         let equ' ← note equ.local_pp_name t p 
         clear equ 
         pure$ simplified [equ'.local_pp_name]) <|>
@@ -126,7 +126,7 @@ private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (off
             next.mfilter$
                 fun h =>
                   do 
-                    let quote True ← infer_type h | pure tt 
+                    let quote.1 True ← infer_type h | pure tt 
                     clear h >> pure ff <|> pure tt 
           pure (some next, ns)
       else
@@ -183,7 +183,7 @@ unsafe def match_n_plus_m md : ℕ → expr → tactic (ℕ × expr) :=
     do 
       let e ← whnf e md 
       match e with 
-        | quote Nat.succ (%%e) => match_n_plus_m (n+1) e
+        | quote.1 (Nat.succ (%%ₓe)) => match_n_plus_m (n+1) e
         | _ => pure (n, e)
 
 /--
@@ -206,13 +206,13 @@ unsafe def contradict_n_eq_n_plus_m (md : transparency) (equ lhs rhs : expr) : t
     let ⟨equ, lhs_n, rhs_n⟩ ←
       if lhs_n > rhs_n then pure (equ, lhs_n, rhs_n) else
           do 
-            let equ ← to_expr (pquote Eq.symm (%%equ))
+            let equ ← to_expr (pquote.1 (Eq.symm (%%ₓequ)))
             pure (equ, rhs_n, lhs_n)
     let diff := lhs_n - rhs_n 
     let rhs_n_expr := reflect rhs_n 
-    let n ← to_expr (pquote (%%common)+%%rhs_n_expr)
+    let n ← to_expr (pquote.1 ((%%ₓcommon)+%%ₓrhs_n_expr))
     let m := reflect (diff - 1)
-    pure (quote add_add_one_ne (%%n) (%%m) (%%equ))
+    pure (quote.1 (add_add_one_ne (%%ₓn) (%%ₓm) (%%ₓequ)))
 
 /--
 Given `equ : t = u` with `t, u : I` and `I.sizeof t ≠ I.sizeof u`, we solve the
@@ -222,10 +222,10 @@ unsafe def unify_cyclic : unification_step :=
   fun equ type _ _ _ lhs_whnf rhs_whnf _ =>
     (do 
         let sizeof ← get_sizeof type 
-        let hyp_lhs ← to_expr (pquote (%%sizeof) (%%lhs_whnf))
-        let hyp_rhs ← to_expr (pquote (%%sizeof) (%%rhs_whnf))
-        let hyp_type ← to_expr (pquote @Eq ℕ (%%hyp_lhs) (%%hyp_rhs))
-        let hyp_proof ← to_expr (pquote @congr_argₓ (%%type) ℕ (%%lhs_whnf) (%%rhs_whnf) (%%sizeof) (%%equ))
+        let hyp_lhs ← to_expr (pquote.1 ((%%ₓsizeof) (%%ₓlhs_whnf)))
+        let hyp_rhs ← to_expr (pquote.1 ((%%ₓsizeof) (%%ₓrhs_whnf)))
+        let hyp_type ← to_expr (pquote.1 (@Eq ℕ (%%ₓhyp_lhs) (%%ₓhyp_rhs)))
+        let hyp_proof ← to_expr (pquote.1 (@congr_argₓ (%%ₓtype) ℕ (%%ₓlhs_whnf) (%%ₓrhs_whnf) (%%ₓsizeof) (%%ₓequ)))
         let hyp_name ← mk_fresh_name 
         let hyp ← note hyp_name hyp_type hyp_proof 
         let falso ← contradict_n_eq_n_plus_m semireducible hyp hyp_lhs hyp_rhs 

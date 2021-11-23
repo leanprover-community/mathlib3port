@@ -33,7 +33,7 @@ unsafe def mk_assoc (fn : expr) : List expr → tactic expr
 | x₀ :: x₁ :: xs => mk_assoc (fn x₀ x₁ :: xs)
 
 unsafe def chain_eq_trans : List expr → tactic expr
-| [] => to_expr (pquote rfl)
+| [] => to_expr (pquote.1 rfl)
 | [e] => pure e
 | e :: es => chain_eq_trans es >>= mk_eq_trans e
 

@@ -1,5 +1,4 @@
 import Mathbin.Algebra.BigOperators.Basic 
-import Mathbin.Data.Fintype.Card 
 import Mathbin.Data.Sym.Sym2
 
 /-!
@@ -51,27 +50,28 @@ theorem card_image_diag (s : Finset α) : (s.diag.image Quotientₓ.mk).card = s
       simp only [mem_coe, mem_diag] at hx 
       rw [hx.2]
 
-theorem two_mul_card_image_off_diag (s : Finset α) : (2*(s.off_diag.image Quotientₓ.mk).card) = s.off_diag.card :=
-  by 
-    rw
-      [card_eq_sum_card_fiberwise
-        (fun x => mem_image_of_mem _ : ∀ x _ : x ∈ s.off_diag, Quotientₓ.mk x ∈ s.off_diag.image Quotientₓ.mk),
-      sum_const_nat (Quotientₓ.ind _), mul_commₓ]
-    rintro ⟨x, y⟩ hxy 
-    simpRw [mem_image, exists_prop, mem_off_diag, Quotientₓ.eq]  at hxy 
-    obtain ⟨a, ⟨ha₁, ha₂, ha⟩, h⟩ := hxy 
-    obtain ⟨hx, hy, hxy⟩ : x ∈ s ∧ y ∈ s ∧ x ≠ y
-    ·
-      cases h <;> have  := ha.symm <;> exact ⟨‹_›, ‹_›, ‹_›⟩
-    have hxy' : y ≠ x := hxy.symm 
-    have  : (s.off_diag.filter fun z => «expr⟦ ⟧» z = «expr⟦ ⟧» (x, y)) = ({(x, y), (y, x)} : Finset _)
-    ·
-      ext ⟨x₁, y₁⟩
-      rw [mem_filter, mem_insert, mem_singleton, Sym2.eq_iff, Prod.mk.inj_iffₓ, Prod.mk.inj_iffₓ, and_iff_right_iff_imp]
-      rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> rw [mem_off_diag] <;> exact ⟨‹_›, ‹_›, ‹_›⟩
-    rw [this, card_insert_of_not_mem, card_singleton]
-    simp only [not_and, Prod.mk.inj_iffₓ, mem_singleton]
-    exact fun _ => hxy'
+-- error in Data.Sym.Card: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem two_mul_card_image_off_diag
+(s : finset α) : «expr = »(«expr * »(2, (s.off_diag.image quotient.mk).card), s.off_diag.card) :=
+begin
+  rw ["[", expr card_eq_sum_card_fiberwise (λ
+   x, mem_image_of_mem _ : ∀
+   x «expr ∈ » s.off_diag, «expr ∈ »(quotient.mk x, s.off_diag.image quotient.mk)), ",", expr sum_const_nat (quotient.ind _), ",", expr mul_comm, "]"] [],
+  rintro ["⟨", ident x, ",", ident y, "⟩", ident hxy],
+  simp_rw ["[", expr mem_image, ",", expr exists_prop, ",", expr mem_off_diag, ",", expr quotient.eq, "]"] ["at", ident hxy],
+  obtain ["⟨", ident a, ",", "⟨", ident ha₁, ",", ident ha₂, ",", ident ha, "⟩", ",", ident h, "⟩", ":=", expr hxy],
+  obtain ["⟨", ident hx, ",", ident hy, ",", ident hxy, "⟩", ":", expr «expr ∧ »(«expr ∈ »(x, s), «expr ∧ »(«expr ∈ »(y, s), «expr ≠ »(x, y)))],
+  { cases [expr h] []; have [] [] [":=", expr ha.symm]; exact [expr ⟨«expr‹ ›»(_), «expr‹ ›»(_), «expr‹ ›»(_)⟩] },
+  have [ident hxy'] [":", expr «expr ≠ »(y, x)] [":=", expr hxy.symm],
+  have [] [":", expr «expr = »(s.off_diag.filter (λ
+     z, «expr = »(«expr⟦ ⟧»(z), «expr⟦ ⟧»((x, y)))), ({(x, y), (y, x)} : finset _))] [],
+  { ext [] ["⟨", ident x₁, ",", ident y₁, "⟩"] [],
+    rw ["[", expr mem_filter, ",", expr mem_insert, ",", expr mem_singleton, ",", expr sym2.eq_iff, ",", expr prod.mk.inj_iff, ",", expr prod.mk.inj_iff, ",", expr and_iff_right_iff_imp, "]"] [],
+    rintro ["(", "⟨", ident rfl, ",", ident rfl, "⟩", "|", "⟨", ident rfl, ",", ident rfl, "⟩", ")"]; rw [expr mem_off_diag] []; exact [expr ⟨«expr‹ ›»(_), «expr‹ ›»(_), «expr‹ ›»(_)⟩] },
+  rw ["[", expr this, ",", expr card_insert_of_not_mem, ",", expr card_singleton, "]"] [],
+  simp [] [] ["only"] ["[", expr not_and, ",", expr prod.mk.inj_iff, ",", expr mem_singleton, "]"] [] [],
+  exact [expr λ _, hxy']
+end
 
 /-- The `off_diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.off_diag.card / 2`.
 This is because every element `⟦(x, y)⟧` of `sym2 α` not on the diagonal comes from exactly two

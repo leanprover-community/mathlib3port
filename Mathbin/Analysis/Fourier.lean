@@ -192,34 +192,35 @@ theorem span_fourier_Lp_closure_eq_top {p : ℝ≥0∞} [Fact (1 ≤ p)] (hp : p
     rw [map_span, range_comp]
     simp 
 
+-- error in Analysis.Fourier: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For `n ≠ 0`, a rotation by `n⁻¹ * real.pi` negates the monomial `z ^ n`. -/
-theorem fourier_add_half_inv_index {n : ℤ} (hn : n ≠ 0) (z : circle) :
-  fourier n (expMapCircle (n⁻¹*Real.pi)*z) = -fourier n z :=
-  by 
-    have  : («expr↑ » n*(«expr↑ » n⁻¹*«expr↑ » Real.pi)*Complex.i) = «expr↑ » Real.pi*Complex.i
-    ·
-      have  : (n : ℂ) ≠ 0 :=
-        by 
-          exactModCast hn 
-      fieldSimp 
-      ring 
-    simp [mul_zpow₀, ←Complex.exp_int_mul, Complex.exp_pi_mul_I, this]
+theorem fourier_add_half_inv_index
+{n : exprℤ()}
+(hn : «expr ≠ »(n, 0))
+(z : circle) : «expr = »(fourier n «expr * »(exp_map_circle «expr * »(«expr ⁻¹»(n), real.pi), z), «expr- »(fourier n z)) :=
+begin
+  have [] [":", expr «expr = »(«expr * »(«expr↑ »(n), «expr * »(«expr * »(«expr ⁻¹»(«expr↑ »(n)), «expr↑ »(real.pi)), complex.I)), «expr * »(«expr↑ »(real.pi), complex.I))] [],
+  { have [] [":", expr «expr ≠ »((n : exprℂ()), 0)] [":=", expr by exact_mod_cast [expr hn]],
+    field_simp [] [] [] [],
+    ring [] },
+  simp [] [] [] ["[", expr mul_zpow₀, ",", "<-", expr complex.exp_int_mul, ",", expr complex.exp_pi_mul_I, ",", expr this, "]"] [] []
+end
 
+-- error in Analysis.Fourier: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The monomials `z ^ n` are an orthonormal set with respect to Haar measure on the circle. -/
-theorem orthonormal_fourier : Orthonormal ℂ (fourierLp 2) :=
-  by 
-    rw [orthonormal_iff_ite]
-    intro i j 
-    rw [continuous_map.inner_to_Lp haarCircle (fourier i) (fourier j)]
-    splitIfs
-    ·
-      simp [h, is_probability_measure.measure_univ, ←fourier_neg, ←fourier_add, -fourier_to_fun]
-    simp only [←fourier_add, ←fourier_neg]
-    have hij : ((-i)+j) ≠ 0
-    ·
-      rw [add_commₓ]
-      exact sub_ne_zero.mpr (Ne.symm h)
-    exact integral_zero_of_mul_left_eq_neg (is_mul_left_invariant_haar_measure _) (fourier_add_half_inv_index hij)
+theorem orthonormal_fourier : orthonormal exprℂ() (fourier_Lp 2) :=
+begin
+  rw [expr orthonormal_iff_ite] [],
+  intros [ident i, ident j],
+  rw [expr continuous_map.inner_to_Lp haar_circle (fourier i) (fourier j)] [],
+  split_ifs [] [],
+  { simp [] [] [] ["[", expr h, ",", expr is_probability_measure.measure_univ, ",", "<-", expr fourier_neg, ",", "<-", expr fourier_add, ",", "-", ident fourier_to_fun, "]"] [] [] },
+  simp [] [] ["only"] ["[", "<-", expr fourier_add, ",", "<-", expr fourier_neg, "]"] [] [],
+  have [ident hij] [":", expr «expr ≠ »(«expr + »(«expr- »(i), j), 0)] [],
+  { rw [expr add_comm] [],
+    exact [expr sub_ne_zero.mpr (ne.symm h)] },
+  exact [expr integral_zero_of_mul_left_eq_neg (is_mul_left_invariant_haar_measure _) (fourier_add_half_inv_index hij)]
+end
 
 end fourier
 

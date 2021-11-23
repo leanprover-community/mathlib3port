@@ -31,7 +31,7 @@ structure encoding(α : Type) where
 structure fin_encoding(α : Type) extends encoding α where 
   ΓFin : Fintype Γ
 
--- error in Computability.Encoding: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Computability.Encoding: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- A standard Turing machine alphabet, consisting of blank,bit0,bit1,bra,ket,comma. -/
 @[derive #["[", expr decidable_eq, ",", expr fintype, "]"]]
 inductive Γ'

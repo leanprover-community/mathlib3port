@@ -79,7 +79,7 @@ theorem finrank_mul_finrank [FiniteDimensional F K] : (finrank F K*finrank K A) 
   by 
     byCases' hA : FiniteDimensional K A
     ·
-      resetI 
+      skip 
       let b := Basis.ofVectorSpace F K 
       let c := Basis.ofVectorSpace K A 
       rw [finrank_eq_card_basis b, finrank_eq_card_basis c, finrank_eq_card_basis (b.smul c), Fintype.card_prod]

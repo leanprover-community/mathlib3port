@@ -1,5 +1,5 @@
+import Mathbin.Algebra.Order.Floor 
 import Mathbin.Algebra.ContinuedFractions.Basic 
-import Mathbin.Algebra.Order.Archimedean 
 import Mathbin.Algebra.Order.Field
 
 /-!

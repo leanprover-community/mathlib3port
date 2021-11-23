@@ -79,7 +79,7 @@ theorem nodup_iff_nth_le_inj {l : List α} : nodup l ↔ ∀ i j h₁ h₂, nth_
         ((lt_trichotomyₓ _ _).resolve_left fun h' => H _ _ h₂ h' h).resolve_right fun h' => H _ _ h₁ h' h.symm,
       fun H i j h₁ h₂ h => ne_of_ltₓ h₂ (H _ _ _ _ h)⟩
 
--- error in Data.List.Nodup: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.List.Nodup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem nodup.nth_le_inj_iff
 {α : Type*}
 {l : list α}
@@ -89,27 +89,25 @@ theorem nodup.nth_le_inj_iff
 (hj : «expr < »(j, l.length)) : «expr ↔ »(«expr = »(l.nth_le i hi, l.nth_le j hj), «expr = »(i, j)) :=
 ⟨nodup_iff_nth_le_inj.mp h _ _ _ _, by simp [] [] [] [] [] [] { contextual := tt }⟩
 
-theorem nodup.ne_singleton_iff {l : List α} (h : nodup l) (x : α) : l ≠ [x] ↔ l = [] ∨ ∃ (y : _)(_ : y ∈ l), y ≠ x :=
-  by 
-    induction' l with hd tl hl
-    ·
-      simp 
-    ·
-      specialize hl (nodup_of_nodup_cons h)
-      byCases' hx : tl = [x]
-      ·
-        simpa [hx, And.comm, and_or_distrib_left] using h
-      ·
-        rw [←Ne.def, hl] at hx 
-        rcases hx with (rfl | ⟨y, hy, hx⟩)
-        ·
-          simp 
-        ·
-          have  : tl ≠ [] := ne_nil_of_mem hy 
-          suffices  : ∃ (y : α)(H : y ∈ hd :: tl), y ≠ x
-          ·
-            simpa [ne_nil_of_mem hy]
-          exact ⟨y, mem_cons_of_mem _ hy, hx⟩
+-- error in Data.List.Nodup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nodup.ne_singleton_iff
+{l : list α}
+(h : nodup l)
+(x : α) : «expr ↔ »(«expr ≠ »(l, «expr[ , ]»([x])), «expr ∨ »(«expr = »(l, «expr[ , ]»([])), «expr∃ , »((y «expr ∈ » l), «expr ≠ »(y, x)))) :=
+begin
+  induction [expr l] [] ["with", ident hd, ident tl, ident hl] [],
+  { simp [] [] [] [] [] [] },
+  { specialize [expr hl (nodup_of_nodup_cons h)],
+    by_cases [expr hx, ":", expr «expr = »(tl, «expr[ , ]»([x]))],
+    { simpa [] [] [] ["[", expr hx, ",", expr and.comm, ",", expr and_or_distrib_left, "]"] [] ["using", expr h] },
+    { rw ["[", "<-", expr ne.def, ",", expr hl, "]"] ["at", ident hx],
+      rcases [expr hx, "with", ident rfl, "|", "⟨", ident y, ",", ident hy, ",", ident hx, "⟩"],
+      { simp [] [] [] [] [] [] },
+      { have [] [":", expr «expr ≠ »(tl, «expr[ , ]»([]))] [":=", expr ne_nil_of_mem hy],
+        suffices [] [":", expr «expr∃ , »((y : α) (H : «expr ∈ »(y, «expr :: »(hd, tl))), «expr ≠ »(y, x))],
+        { simpa [] [] [] ["[", expr ne_nil_of_mem hy, "]"] [] [] },
+        exact [expr ⟨y, mem_cons_of_mem _ hy, hx⟩] } } }
+end
 
 theorem nth_le_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.length) (hm : m < xs.length)
   (h : xs.nth_le n hn = xs.nth_le m hm) (hne : n ≠ m) : ¬nodup xs :=

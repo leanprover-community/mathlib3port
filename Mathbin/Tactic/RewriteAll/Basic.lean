@@ -1,9 +1,8 @@
-import Mathbin.Data.Mllist 
 import Mathbin.Tactic.Core
 
 open Tactic
 
--- error in Tactic.RewriteAll.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.RewriteAll.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 @[derive #[expr decidable_eq], derive #[expr inhabited]] inductive side
 | L
 | R
@@ -46,20 +45,20 @@ unsafe def replace_target (rw : tracked_rewrite) : tactic Unit :=
 private unsafe def replace_target_side (new_target lam : pexpr) (prf : expr) : tactic Unit :=
   do 
     let new_target ← to_expr new_target tt ff 
-    let prf' ← to_expr (pquote congr_argₓ (%%lam) (%%prf)) tt ff 
+    let prf' ← to_expr (pquote.1 (congr_argₓ (%%ₓlam) (%%ₓprf))) tt ff 
     tactic.replace_target new_target prf'
 
 unsafe def replace_target_lhs (rw : tracked_rewrite) : tactic Unit :=
   do 
     let (new_lhs, prf) ← rw.eval 
-    let quote (%%_) = %%rhs ← target 
-    replace_target_side (pquote (%%new_lhs) = %%rhs) (pquote fun L => L = %%rhs) prf
+    let quote.1 ((%%ₓ_) = %%ₓrhs) ← target 
+    replace_target_side (pquote.1 ((%%ₓnew_lhs) = %%ₓrhs)) (pquote.1 fun L => L = %%ₓrhs) prf
 
 unsafe def replace_target_rhs (rw : tracked_rewrite) : tactic Unit :=
   do 
     let (new_rhs, prf) ← rw.eval 
-    let quote (%%lhs) = %%_ ← target 
-    replace_target_side (pquote (%%lhs) = %%new_rhs) (pquote fun R => (%%lhs) = R) prf
+    let quote.1 ((%%ₓlhs) = %%ₓ_) ← target 
+    replace_target_side (pquote.1 ((%%ₓlhs) = %%ₓnew_rhs)) (pquote.1 fun R => (%%ₓlhs) = R) prf
 
 end TrackedRewrite
 

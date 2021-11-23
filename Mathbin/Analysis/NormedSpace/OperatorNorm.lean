@@ -151,25 +151,29 @@ theorem norm_image_of_norm_zero {f : E →ₗ[𝕜] F} (hf : Continuous f) {x : 
     rw [LinearMap.map_zero, sub_zero] at hδ 
     rwa [zero_addₓ]
 
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A continuous linear map between seminormed spaces is bounded when the field is nondiscrete. The
 continuity ensures boundedness on a ball of some radius `ε`. The nondiscreteness is then used to
 rescale any element into an element of norm in `[ε/C, ε]`, whose image has a controlled norm. The
 norm control for the original element follows by rescaling. -/
-theorem LinearMap.bound_of_continuous (f : E →ₗ[𝕜] F) (hf : Continuous f) : ∃ C, 0 < C ∧ ∀ x : E, ∥f x∥ ≤ C*∥x∥ :=
-  by 
-    rcases NormedGroup.tendsto_nhds_nhds.1 (hf.tendsto 0) 1 zero_lt_one with ⟨ε, ε_pos, hε⟩
-    simp only [sub_zero, f.map_zero] at hε 
-    rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
-    have  : 0 < ∥c∥ / ε 
-    exact div_pos (zero_lt_one.trans hc) ε_pos 
-    refine' ⟨∥c∥ / ε, this, fun x => _⟩
-    byCases' hx : ∥x∥ = 0
-    ·
-      rw [hx, mul_zero]
-      exact le_of_eqₓ (norm_image_of_norm_zero hf hx)
-    refine' f.bound_of_shell_semi_normed ε_pos hc (fun x hle hlt => _) hx 
-    refine' (hε _ hlt).le.trans _ 
-    rwa [←div_le_iff' this, one_div_div]
+theorem linear_map.bound_of_continuous
+(f : «expr →ₗ[ ] »(E, 𝕜, F))
+(hf : continuous f) : «expr∃ , »((C), «expr ∧ »(«expr < »(0, C), ∀
+  x : E, «expr ≤ »(«expr∥ ∥»(f x), «expr * »(C, «expr∥ ∥»(x))))) :=
+begin
+  rcases [expr normed_group.tendsto_nhds_nhds.1 (hf.tendsto 0) 1 zero_lt_one, "with", "⟨", ident ε, ",", ident ε_pos, ",", ident hε, "⟩"],
+  simp [] [] ["only"] ["[", expr sub_zero, ",", expr f.map_zero, "]"] [] ["at", ident hε],
+  rcases [expr normed_field.exists_one_lt_norm 𝕜, "with", "⟨", ident c, ",", ident hc, "⟩"],
+  have [] [":", expr «expr < »(0, «expr / »(«expr∥ ∥»(c), ε))] [],
+  from [expr div_pos (zero_lt_one.trans hc) ε_pos],
+  refine [expr ⟨«expr / »(«expr∥ ∥»(c), ε), this, λ x, _⟩],
+  by_cases [expr hx, ":", expr «expr = »(«expr∥ ∥»(x), 0)],
+  { rw ["[", expr hx, ",", expr mul_zero, "]"] [],
+    exact [expr le_of_eq (norm_image_of_norm_zero hf hx)] },
+  refine [expr f.bound_of_shell_semi_normed ε_pos hc (λ x hle hlt, _) hx],
+  refine [expr (hε _ hlt).le.trans _],
+  rwa ["[", "<-", expr div_le_iff' this, ",", expr one_div_div, "]"] []
+end
 
 namespace ContinuousLinearMap
 
@@ -244,22 +248,19 @@ theorem bounds_bdd_below {f : E →L[𝕜] F} : BddBelow { c | 0 ≤ c ∧ ∀ x
 theorem op_norm_nonneg : 0 ≤ ∥f∥ :=
   le_cInf bounds_nonempty fun _ ⟨hx, _⟩ => hx
 
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The fundamental property of the operator norm: `∥f x∥ ≤ ∥f∥ * ∥x∥`. -/
-theorem le_op_norm : ∥f x∥ ≤ ∥f∥*∥x∥ :=
-  by 
-    obtain ⟨C, Cpos, hC⟩ := f.bound 
-    replace hC := hC x 
-    byCases' h : ∥x∥ = 0
-    ·
-      rwa [h, mul_zero] at hC⊢
-    have hlt : 0 < ∥x∥ := lt_of_le_of_neₓ (norm_nonneg x) (Ne.symm h)
-    exact
-      (div_le_iff hlt).mp
-        (le_cInf bounds_nonempty
-          fun c ⟨_, hc⟩ =>
-            (div_le_iff hlt).mpr$
-              by 
-                apply hc)
+theorem le_op_norm : «expr ≤ »(«expr∥ ∥»(f x), «expr * »(«expr∥ ∥»(f), «expr∥ ∥»(x))) :=
+begin
+  obtain ["⟨", ident C, ",", ident Cpos, ",", ident hC, "⟩", ":=", expr f.bound],
+  replace [ident hC] [] [":=", expr hC x],
+  by_cases [expr h, ":", expr «expr = »(«expr∥ ∥»(x), 0)],
+  { rwa ["[", expr h, ",", expr mul_zero, "]"] ["at", "⊢", ident hC] },
+  have [ident hlt] [":", expr «expr < »(0, «expr∥ ∥»(x))] [":=", expr lt_of_le_of_ne (norm_nonneg x) (ne.symm h)],
+  exact [expr (div_le_iff hlt).mp (le_cInf bounds_nonempty (λ
+     (c)
+     ⟨_, hc⟩, «expr $ »((div_le_iff hlt).mpr, by { apply [expr hc] })))]
+end
 
 theorem le_op_norm_of_le {c : ℝ} {x} (h : ∥x∥ ≤ c) : ∥f x∥ ≤ ∥f∥*c :=
   le_transₓ (f.le_op_norm x) (mul_le_mul_of_nonneg_left h f.op_norm_nonneg)
@@ -850,24 +851,23 @@ protected theorem ContinuousLinearEquiv.summable {f : ι → M} (e : M ≃L[R] M
   (Summable fun b : ι => e (f b)) ↔ Summable f :=
   ⟨fun hf => (e.has_sum.1 hf.has_sum).Summable, (e : M →L[R] M₂).Summable⟩
 
-theorem ContinuousLinearEquiv.tsum_eq_iff [T2Space M] [T2Space M₂] {f : ι → M} (e : M ≃L[R] M₂) {y : M₂} :
-  (∑'z, e (f z)) = y ↔ (∑'z, f z) = e.symm y :=
-  by 
-    byCases' hf : Summable f
-    ·
-      exact
-        ⟨fun h => (e.has_sum.mp ((e.summable.mpr hf).has_sum_iff.mpr h)).tsum_eq,
-          fun h => (e.has_sum.mpr (hf.has_sum_iff.mpr h)).tsum_eq⟩
-    ·
-      have hf' : ¬Summable fun z => e (f z) := fun h => hf (e.summable.mp h)
-      rw [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable hf']
-      exact
-        ⟨by 
-            rintro rfl 
-            simp ,
-          fun H =>
-            by 
-              simpa using congr_argₓ (fun z => e z) H⟩
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_linear_equiv.tsum_eq_iff
+[t2_space M]
+[t2_space M₂]
+{f : ι → M}
+(e : «expr ≃L[ ] »(M, R, M₂))
+{y : M₂} : «expr ↔ »(«expr = »(«expr∑' , »((z), e (f z)), y), «expr = »(«expr∑' , »((z), f z), e.symm y)) :=
+begin
+  by_cases [expr hf, ":", expr summable f],
+  { exact [expr ⟨λ
+      h, (e.has_sum.mp ((e.summable.mpr hf).has_sum_iff.mpr h)).tsum_eq, λ
+      h, (e.has_sum.mpr (hf.has_sum_iff.mpr h)).tsum_eq⟩] },
+  { have [ident hf'] [":", expr «expr¬ »(summable (λ z, e (f z)))] [":=", expr λ h, hf (e.summable.mp h)],
+    rw ["[", expr tsum_eq_zero_of_not_summable hf, ",", expr tsum_eq_zero_of_not_summable hf', "]"] [],
+    exact [expr ⟨by { rintro [ident rfl],
+        simp [] [] [] [] [] [] }, λ H, by simpa [] [] [] [] [] ["using", expr congr_arg (λ z, e z) H]⟩] }
+end
 
 protected theorem ContinuousLinearEquiv.map_tsum [T2Space M] [T2Space M₂] {f : ι → M} (e : M ≃L[R] M₂) :
   e (∑'z, f z) = ∑'z, e (f z) :=
@@ -975,88 +975,64 @@ section NormedField
 
 variable[NormedField 𝕜][NormedSpace 𝕜 E][NormedSpace 𝕜 F](f : E →ₗ[𝕜] F)
 
-theorem LinearMap.continuous_iff_is_closed_ker {f : E →ₗ[𝕜] 𝕜} : Continuous f ↔ IsClosed (f.ker : Set E) :=
-  by 
-    refine' ⟨fun h => (T1Space.t1 (0 : 𝕜)).Preimage h, fun h => _⟩
-    byCases' hf : ∀ x, x ∈ f.ker
-    ·
-      have  : (f : E → 𝕜) = fun x => 0
-      ·
-        ·
-          ext x 
-          simpa using hf x 
-      rw [this]
-      exact continuous_const
-    ·
-      pushNeg  at hf 
-      let r : ℝ := (2 : ℝ)⁻¹
-      have  : 0 ≤ r
-      ·
-        normNum [r]
-      have  : r < 1
-      ·
-        normNum [r]
-      obtain ⟨x₀, x₀ker, h₀⟩ : ∃ x₀ : E, x₀ ∉ f.ker ∧ ∀ y _ : y ∈ LinearMap.ker f, (r*∥x₀∥) ≤ ∥x₀ - y∥
-      exact riesz_lemma h hf this 
-      have  : x₀ ≠ 0
-      ·
-        intro h 
-        have  : x₀ ∈ f.ker
-        ·
-          ·
-            rw [h]
-            exact (LinearMap.ker f).zero_mem 
-        exact x₀ker this 
-      have rx₀_ne_zero : (r*∥x₀∥) ≠ 0
-      ·
-        ·
-          simp [norm_eq_zero, this]
-      have  : ∀ x, ∥f x∥ ≤ ((r*∥x₀∥)⁻¹*∥f x₀∥)*∥x∥
-      ·
-        intro x 
-        byCases' hx : f x = 0
-        ·
-          rw [hx, norm_zero]
-          applyRules [mul_nonneg, norm_nonneg, inv_nonneg.2]
-        ·
-          let y := x₀ - (f x₀*f x⁻¹) • x 
-          have fy_zero : f y = 0
-          ·
-            calc f y = f x₀ - (f x₀*f x⁻¹)*f x :=
-              by 
-                simp [y]_ = 0 :=
-              by 
-                rw [mul_assocₓ, inv_mul_cancel hx, mul_oneₓ, sub_eq_zero_of_eq]
-                rfl 
-          have A : (r*∥x₀∥) ≤ (∥f x₀∥*∥f x∥⁻¹)*∥x∥
-          exact
-            calc (r*∥x₀∥) ≤ ∥x₀ - y∥ := h₀ _ (LinearMap.mem_ker.2 fy_zero)
-              _ = ∥(f x₀*f x⁻¹) • x∥ :=
-              by 
-                dsimp [y]
-                congr 
-                abel 
-              _ = (∥f x₀∥*∥f x∥⁻¹)*∥x∥ :=
-              by 
-                rw [norm_smul, NormedField.norm_mul, NormedField.norm_inv]
-              
-          calc ∥f x∥ = ((r*∥x₀∥)⁻¹*r*∥x₀∥)*∥f x∥ :=
-            by 
-              rwa [inv_mul_cancel, one_mulₓ]_ ≤ ((r*∥x₀∥)⁻¹*(∥f x₀∥*∥f x∥⁻¹)*∥x∥)*∥f x∥ :=
-            by 
-              apply mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left A _) (norm_nonneg _)
-              exact
-                inv_nonneg.2
-                  (mul_nonneg
-                    (by 
-                      normNum)
-                    (norm_nonneg _))_ = ((∥f x∥⁻¹*∥f x∥)*(r*∥x₀∥)⁻¹*∥f x₀∥)*∥x∥ :=
-            by 
-              ring _ = ((r*∥x₀∥)⁻¹*∥f x₀∥)*∥x∥ :=
-            by 
-              rw [inv_mul_cancel, one_mulₓ]
-              simp [norm_eq_zero, hx]
-      exact LinearMap.continuous_of_bound f _ this
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem linear_map.continuous_iff_is_closed_ker
+{f : «expr →ₗ[ ] »(E, 𝕜, 𝕜)} : «expr ↔ »(continuous f, is_closed (f.ker : set E)) :=
+begin
+  refine [expr ⟨λ h, (t1_space.t1 (0 : 𝕜)).preimage h, λ h, _⟩],
+  by_cases [expr hf, ":", expr ∀ x, «expr ∈ »(x, f.ker)],
+  { have [] [":", expr «expr = »((f : E → 𝕜), λ x, 0)] [],
+    by { ext [] [ident x] [],
+      simpa [] [] [] [] [] ["using", expr hf x] },
+    rw [expr this] [],
+    exact [expr continuous_const] },
+  { push_neg ["at", ident hf],
+    let [ident r] [":", expr exprℝ()] [":=", expr «expr ⁻¹»((2 : exprℝ()))],
+    have [] [":", expr «expr ≤ »(0, r)] [],
+    by norm_num ["[", expr r, "]"] [],
+    have [] [":", expr «expr < »(r, 1)] [],
+    by norm_num ["[", expr r, "]"] [],
+    obtain ["⟨", ident x₀, ",", ident x₀ker, ",", ident h₀, "⟩", ":", expr «expr∃ , »((x₀ : E), «expr ∧ »(«expr ∉ »(x₀, f.ker), ∀
+       y «expr ∈ » linear_map.ker f, «expr ≤ »(«expr * »(r, «expr∥ ∥»(x₀)), «expr∥ ∥»(«expr - »(x₀, y)))))],
+    from [expr riesz_lemma h hf this],
+    have [] [":", expr «expr ≠ »(x₀, 0)] [],
+    { assume [binders (h)],
+      have [] [":", expr «expr ∈ »(x₀, f.ker)] [],
+      by { rw [expr h] [],
+        exact [expr (linear_map.ker f).zero_mem] },
+      exact [expr x₀ker this] },
+    have [ident rx₀_ne_zero] [":", expr «expr ≠ »(«expr * »(r, «expr∥ ∥»(x₀)), 0)] [],
+    by { simp [] [] [] ["[", expr norm_eq_zero, ",", expr this, "]"] [] [] },
+    have [] [":", expr ∀
+     x, «expr ≤ »(«expr∥ ∥»(f x), «expr * »(«expr * »(«expr ⁻¹»(«expr * »(r, «expr∥ ∥»(x₀))), «expr∥ ∥»(f x₀)), «expr∥ ∥»(x)))] [],
+    { assume [binders (x)],
+      by_cases [expr hx, ":", expr «expr = »(f x, 0)],
+      { rw ["[", expr hx, ",", expr norm_zero, "]"] [],
+        apply_rules ["[", expr mul_nonneg, ",", expr norm_nonneg, ",", expr inv_nonneg.2, "]"] },
+      { let [ident y] [] [":=", expr «expr - »(x₀, «expr • »(«expr * »(f x₀, «expr ⁻¹»(f x)), x))],
+        have [ident fy_zero] [":", expr «expr = »(f y, 0)] [],
+        by calc
+          «expr = »(f y, «expr - »(f x₀, «expr * »(«expr * »(f x₀, «expr ⁻¹»(f x)), f x))) : by simp [] [] [] ["[", expr y, "]"] [] []
+          «expr = »(..., 0) : by { rw ["[", expr mul_assoc, ",", expr inv_mul_cancel hx, ",", expr mul_one, ",", expr sub_eq_zero_of_eq, "]"] [],
+            refl },
+        have [ident A] [":", expr «expr ≤ »(«expr * »(r, «expr∥ ∥»(x₀)), «expr * »(«expr * »(«expr∥ ∥»(f x₀), «expr ⁻¹»(«expr∥ ∥»(f x))), «expr∥ ∥»(x)))] [],
+        from [expr calc
+           «expr ≤ »(«expr * »(r, «expr∥ ∥»(x₀)), «expr∥ ∥»(«expr - »(x₀, y))) : h₀ _ (linear_map.mem_ker.2 fy_zero)
+           «expr = »(..., «expr∥ ∥»(«expr • »(«expr * »(f x₀, «expr ⁻¹»(f x)), x))) : by { dsimp [] ["[", expr y, "]"] [] [],
+             congr,
+             abel [] [] [] }
+           «expr = »(..., «expr * »(«expr * »(«expr∥ ∥»(f x₀), «expr ⁻¹»(«expr∥ ∥»(f x))), «expr∥ ∥»(x))) : by rw ["[", expr norm_smul, ",", expr normed_field.norm_mul, ",", expr normed_field.norm_inv, "]"] []],
+        calc
+          «expr = »(«expr∥ ∥»(f x), «expr * »(«expr * »(«expr ⁻¹»(«expr * »(r, «expr∥ ∥»(x₀))), «expr * »(r, «expr∥ ∥»(x₀))), «expr∥ ∥»(f x))) : by rwa ["[", expr inv_mul_cancel, ",", expr one_mul, "]"] []
+          «expr ≤ »(..., «expr * »(«expr * »(«expr ⁻¹»(«expr * »(r, «expr∥ ∥»(x₀))), «expr * »(«expr * »(«expr∥ ∥»(f x₀), «expr ⁻¹»(«expr∥ ∥»(f x))), «expr∥ ∥»(x))), «expr∥ ∥»(f x))) : begin
+            apply [expr mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left A _) (norm_nonneg _)],
+            exact [expr inv_nonneg.2 (mul_nonneg (by norm_num [] []) (norm_nonneg _))]
+          end
+          «expr = »(..., «expr * »(«expr * »(«expr * »(«expr ⁻¹»(«expr∥ ∥»(f x)), «expr∥ ∥»(f x)), «expr * »(«expr ⁻¹»(«expr * »(r, «expr∥ ∥»(x₀))), «expr∥ ∥»(f x₀))), «expr∥ ∥»(x))) : by ring []
+          «expr = »(..., «expr * »(«expr * »(«expr ⁻¹»(«expr * »(r, «expr∥ ∥»(x₀))), «expr∥ ∥»(f x₀)), «expr∥ ∥»(x))) : by { rw ["[", expr inv_mul_cancel, ",", expr one_mul, "]"] [],
+            simp [] [] [] ["[", expr norm_eq_zero, ",", expr hx, "]"] [] [] } } },
+    exact [expr linear_map.continuous_of_bound f _ this] }
+end
 
 end NormedField
 
@@ -1138,15 +1114,20 @@ instance to_normed_algebra [Nontrivial E] : NormedAlgebra 𝕜 (E →L[𝕜] E) 
 
 variable{f}
 
-theorem homothety_norm [Nontrivial E] (f : E →L[𝕜] F) {a : ℝ} (hf : ∀ x, ∥f x∥ = a*∥x∥) : ∥f∥ = a :=
-  by 
-    obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne 0
-    rw [←norm_pos_iff] at hx 
-    have ha : 0 ≤ a
-    ·
-      simpa only [hf, hx, zero_le_mul_right] using norm_nonneg (f x)
-    apply le_antisymmₓ (f.op_norm_le_bound ha fun y => le_of_eqₓ (hf y))
-    simpa only [hf, hx, mul_le_mul_right] using f.le_op_norm x
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem homothety_norm
+[nontrivial E]
+(f : «expr →L[ ] »(E, 𝕜, F))
+{a : exprℝ()}
+(hf : ∀ x, «expr = »(«expr∥ ∥»(f x), «expr * »(a, «expr∥ ∥»(x)))) : «expr = »(«expr∥ ∥»(f), a) :=
+begin
+  obtain ["⟨", ident x, ",", ident hx, "⟩", ":", expr «expr∃ , »((x : E), «expr ≠ »(x, 0)), ":=", expr exists_ne 0],
+  rw ["<-", expr norm_pos_iff] ["at", ident hx],
+  have [ident ha] [":", expr «expr ≤ »(0, a)] [],
+  by simpa [] [] ["only"] ["[", expr hf, ",", expr hx, ",", expr zero_le_mul_right, "]"] [] ["using", expr norm_nonneg (f x)],
+  apply [expr le_antisymm (f.op_norm_le_bound ha (λ y, le_of_eq (hf y)))],
+  simpa [] [] ["only"] ["[", expr hf, ",", expr hx, ",", expr mul_le_mul_right, "]"] [] ["using", expr f.le_op_norm x]
+end
 
 theorem to_span_singleton_norm (x : E) : ∥to_span_singleton 𝕜 x∥ = ∥x∥ :=
   homothety_norm _ (to_span_singleton_homothety 𝕜 x)
@@ -1156,44 +1137,39 @@ variable(f)
 theorem uniform_embedding_of_bound {K :  ℝ≥0 } (hf : ∀ x, ∥x∥ ≤ K*∥f x∥) : UniformEmbedding f :=
   (f.to_linear_map.antilipschitz_of_bound hf).UniformEmbedding f.uniform_continuous
 
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a continuous linear map is a uniform embedding, then it is expands the distances
 by a positive factor.-/
-theorem antilipschitz_of_uniform_embedding (hf : UniformEmbedding f) : ∃ K, AntilipschitzWith K f :=
-  by 
-    obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), ∀ {x y : E}, dist (f x) (f y) < ε → dist x y < 1 
-    exact (uniform_embedding_iff.1 hf).2.2 1 zero_lt_one 
-    let δ := ε / 2
-    have δ_pos : δ > 0 := half_pos εpos 
-    have H : ∀ {x}, ∥f x∥ ≤ δ → ∥x∥ ≤ 1
-    ·
-      intro x hx 
-      have  : dist x 0 ≤ 1
-      ·
-        refine' (hε _).le 
-        rw [f.map_zero, dist_zero_right]
-        exact hx.trans_lt (half_lt_self εpos)
-      simpa using this 
-    rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
-    refine' ⟨⟨δ⁻¹, _⟩*nnnorm c, f.to_linear_map.antilipschitz_of_bound$ fun x => _⟩
-    exact inv_nonneg.2 (le_of_ltₓ δ_pos)
-    byCases' hx : f x = 0
-    ·
-      have  : f x = f 0
-      ·
-        ·
-          simp [hx]
-      have  : x = 0 := (uniform_embedding_iff.1 hf).1 this 
-      simp [this]
-    ·
-      rcases rescale_to_shell hc δ_pos hx with ⟨d, hd, dxlt, ledx, dinv⟩
-      rw [←f.map_smul d] at dxlt 
-      have  : ∥d • x∥ ≤ 1 := H dxlt.le 
-      calc ∥x∥ = ∥d∥⁻¹*∥d • x∥ :=
-        by 
-          rwa [←NormedField.norm_inv, ←norm_smul, ←mul_smul, inv_mul_cancel, one_smul]_ ≤ ∥d∥⁻¹*1 :=
-        mul_le_mul_of_nonneg_left this (inv_nonneg.2 (norm_nonneg _))_ ≤ (δ⁻¹*∥c∥)*∥f x∥ :=
-        by 
-          rwa [mul_oneₓ]
+theorem antilipschitz_of_uniform_embedding (hf : uniform_embedding f) : «expr∃ , »((K), antilipschitz_with K f) :=
+begin
+  obtain ["⟨", ident ε, ",", ident εpos, ",", ident hε, "⟩", ":", expr «expr∃ , »((ε : exprℝ())
+    (H : «expr > »(ε, 0)), ∀ {x y : E}, «expr < »(dist (f x) (f y), ε) → «expr < »(dist x y, 1))],
+  from [expr (uniform_embedding_iff.1 hf).2.2 1 zero_lt_one],
+  let [ident δ] [] [":=", expr «expr / »(ε, 2)],
+  have [ident δ_pos] [":", expr «expr > »(δ, 0)] [":=", expr half_pos εpos],
+  have [ident H] [":", expr ∀ {x}, «expr ≤ »(«expr∥ ∥»(f x), δ) → «expr ≤ »(«expr∥ ∥»(x), 1)] [],
+  { assume [binders (x hx)],
+    have [] [":", expr «expr ≤ »(dist x 0, 1)] [],
+    { refine [expr (hε _).le],
+      rw ["[", expr f.map_zero, ",", expr dist_zero_right, "]"] [],
+      exact [expr hx.trans_lt (half_lt_self εpos)] },
+    simpa [] [] [] [] [] ["using", expr this] },
+  rcases [expr normed_field.exists_one_lt_norm 𝕜, "with", "⟨", ident c, ",", ident hc, "⟩"],
+  refine [expr ⟨«expr * »(⟨«expr ⁻¹»(δ), _⟩, nnnorm c), «expr $ »(f.to_linear_map.antilipschitz_of_bound, λ x, _)⟩],
+  exact [expr inv_nonneg.2 (le_of_lt δ_pos)],
+  by_cases [expr hx, ":", expr «expr = »(f x, 0)],
+  { have [] [":", expr «expr = »(f x, f 0)] [],
+    by { simp [] [] [] ["[", expr hx, "]"] [] [] },
+    have [] [":", expr «expr = »(x, 0)] [":=", expr (uniform_embedding_iff.1 hf).1 this],
+    simp [] [] [] ["[", expr this, "]"] [] [] },
+  { rcases [expr rescale_to_shell hc δ_pos hx, "with", "⟨", ident d, ",", ident hd, ",", ident dxlt, ",", ident ledx, ",", ident dinv, "⟩"],
+    rw ["[", "<-", expr f.map_smul d, "]"] ["at", ident dxlt],
+    have [] [":", expr «expr ≤ »(«expr∥ ∥»(«expr • »(d, x)), 1)] [":=", expr H dxlt.le],
+    calc
+      «expr = »(«expr∥ ∥»(x), «expr * »(«expr ⁻¹»(«expr∥ ∥»(d)), «expr∥ ∥»(«expr • »(d, x)))) : by rwa ["[", "<-", expr normed_field.norm_inv, ",", "<-", expr norm_smul, ",", "<-", expr mul_smul, ",", expr inv_mul_cancel, ",", expr one_smul, "]"] []
+      «expr ≤ »(..., «expr * »(«expr ⁻¹»(«expr∥ ∥»(d)), 1)) : mul_le_mul_of_nonneg_left this (inv_nonneg.2 (norm_nonneg _))
+      «expr ≤ »(..., «expr * »(«expr * »(«expr ⁻¹»(δ), «expr∥ ∥»(c)), «expr∥ ∥»(f x))) : by rwa ["[", expr mul_one, "]"] [] }
+end
 
 section Completeness
 
@@ -1201,76 +1177,73 @@ open_locale TopologicalSpace
 
 open Filter
 
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the target space is complete, the space of continuous linear maps with its norm is also
 complete. This works also if the source space is seminormed. -/
-instance  {E : Type _} [SemiNormedGroup E] [SemiNormedSpace 𝕜 E] [CompleteSpace F] : CompleteSpace (E →L[𝕜] F) :=
-  by 
-    refine' Metric.complete_of_cauchy_seq_tendsto fun f hf => _ 
-    rcases cauchy_seq_iff_le_tendsto_0.1 hf with ⟨b, b0, b_bound, b_lim⟩
-    clear hf 
-    have cau : ∀ v, CauchySeq fun n => f n v
-    ·
-      intro v 
-      apply cauchy_seq_iff_le_tendsto_0.2 ⟨fun n => b n*∥v∥, fun n => _, _, _⟩
-      ·
-        exact mul_nonneg (b0 n) (norm_nonneg _)
-      ·
-        intro n m N hn hm 
-        rw [dist_eq_norm]
-        apply le_transₓ ((f n - f m).le_op_norm v) _ 
-        exact mul_le_mul_of_nonneg_right (b_bound n m N hn hm) (norm_nonneg v)
-      ·
-        simpa using b_lim.mul tendsto_const_nhds 
-    choose G hG using fun v => cauchy_seq_tendsto_of_complete (cau v)
-    let Glin : E →ₗ[𝕜] F :=
-      { toFun := G,
-        map_add' :=
-          fun v w =>
-            by 
-              have A := hG (v+w)
-              have B := (hG v).add (hG w)
-              simp only [map_add] at A B 
-              exact tendsto_nhds_unique A B,
-        map_smul' :=
-          fun c v =>
-            by 
-              have A := hG (c • v)
-              have B := Filter.Tendsto.smul (@tendsto_const_nhds _ ℕ _ c _) (hG v)
-              simp only [map_smul] at A B 
-              exact tendsto_nhds_unique A B }
-    have Gnorm : ∀ v, ∥G v∥ ≤ (b 0+∥f 0∥)*∥v∥
-    ·
-      intro v 
-      have A : ∀ n, ∥f n v∥ ≤ (b 0+∥f 0∥)*∥v∥
-      ·
-        intro n 
-        apply le_transₓ ((f n).le_op_norm _) _ 
-        apply mul_le_mul_of_nonneg_right _ (norm_nonneg v)
-        calc ∥f n∥ = ∥(f n - f 0)+f 0∥ :=
-          by 
-            congr 1
-            abel _ ≤ ∥f n - f 0∥+∥f 0∥ :=
-          norm_add_le _ _ _ ≤ b 0+∥f 0∥ :=
-          by 
-            apply add_le_add_right 
-            simpa [dist_eq_norm] using b_bound n 0 0 (zero_le _) (zero_le _)
-      exact le_of_tendsto (hG v).norm (eventually_of_forall A)
-    let Gcont := Glin.mk_continuous _ Gnorm 
-    use Gcont 
-    have  : ∀ n, ∥f n - Gcont∥ ≤ b n
-    ·
-      intro n 
-      apply op_norm_le_bound _ (b0 n) fun v => _ 
-      have A : ∀ᶠm in at_top, ∥(f n - f m) v∥ ≤ b n*∥v∥
-      ·
-        refine' eventually_at_top.2 ⟨n, fun m hm => _⟩
-        apply le_transₓ ((f n - f m).le_op_norm _) _ 
-        exact mul_le_mul_of_nonneg_right (b_bound n m n (le_reflₓ _) hm) (norm_nonneg v)
-      have B : tendsto (fun m => ∥(f n - f m) v∥) at_top (𝓝 ∥(f n - Gcont) v∥) :=
-        tendsto.norm (tendsto_const_nhds.sub (hG v))
-      exact le_of_tendsto B A 
-    erw [tendsto_iff_norm_tendsto_zero]
-    exact squeeze_zero (fun n => norm_nonneg _) this b_lim
+instance
+{E : Type*}
+[semi_normed_group E]
+[semi_normed_space 𝕜 E]
+[complete_space F] : complete_space «expr →L[ ] »(E, 𝕜, F) :=
+begin
+  refine [expr metric.complete_of_cauchy_seq_tendsto (λ f hf, _)],
+  rcases [expr cauchy_seq_iff_le_tendsto_0.1 hf, "with", "⟨", ident b, ",", ident b0, ",", ident b_bound, ",", ident b_lim, "⟩"],
+  clear [ident hf],
+  have [ident cau] [":", expr ∀ v, cauchy_seq (λ n, f n v)] [],
+  { assume [binders (v)],
+    apply [expr cauchy_seq_iff_le_tendsto_0.2 ⟨λ n, «expr * »(b n, «expr∥ ∥»(v)), λ n, _, _, _⟩],
+    { exact [expr mul_nonneg (b0 n) (norm_nonneg _)] },
+    { assume [binders (n m N hn hm)],
+      rw [expr dist_eq_norm] [],
+      apply [expr le_trans («expr - »(f n, f m).le_op_norm v) _],
+      exact [expr mul_le_mul_of_nonneg_right (b_bound n m N hn hm) (norm_nonneg v)] },
+    { simpa [] [] [] [] [] ["using", expr b_lim.mul tendsto_const_nhds] } },
+  choose [] [ident G] [ident hG] ["using", expr λ v, cauchy_seq_tendsto_of_complete (cau v)],
+  let [ident Glin] [":", expr «expr →ₗ[ ] »(E, 𝕜, F)] [":=", expr { to_fun := G,
+     map_add' := λ v w, begin
+       have [ident A] [] [":=", expr hG «expr + »(v, w)],
+       have [ident B] [] [":=", expr (hG v).add (hG w)],
+       simp [] [] ["only"] ["[", expr map_add, "]"] [] ["at", ident A, ident B],
+       exact [expr tendsto_nhds_unique A B]
+     end,
+     map_smul' := λ c v, begin
+       have [ident A] [] [":=", expr hG «expr • »(c, v)],
+       have [ident B] [] [":=", expr filter.tendsto.smul (@tendsto_const_nhds _ exprℕ() _ c _) (hG v)],
+       simp [] [] ["only"] ["[", expr map_smul, "]"] [] ["at", ident A, ident B],
+       exact [expr tendsto_nhds_unique A B]
+     end }],
+  have [ident Gnorm] [":", expr ∀
+   v, «expr ≤ »(«expr∥ ∥»(G v), «expr * »(«expr + »(b 0, «expr∥ ∥»(f 0)), «expr∥ ∥»(v)))] [],
+  { assume [binders (v)],
+    have [ident A] [":", expr ∀
+     n, «expr ≤ »(«expr∥ ∥»(f n v), «expr * »(«expr + »(b 0, «expr∥ ∥»(f 0)), «expr∥ ∥»(v)))] [],
+    { assume [binders (n)],
+      apply [expr le_trans ((f n).le_op_norm _) _],
+      apply [expr mul_le_mul_of_nonneg_right _ (norm_nonneg v)],
+      calc
+        «expr = »(«expr∥ ∥»(f n), «expr∥ ∥»(«expr + »(«expr - »(f n, f 0), f 0))) : by { congr' [1] [],
+          abel [] [] [] }
+        «expr ≤ »(..., «expr + »(«expr∥ ∥»(«expr - »(f n, f 0)), «expr∥ ∥»(f 0))) : norm_add_le _ _
+        «expr ≤ »(..., «expr + »(b 0, «expr∥ ∥»(f 0))) : begin
+          apply [expr add_le_add_right],
+          simpa [] [] [] ["[", expr dist_eq_norm, "]"] [] ["using", expr b_bound n 0 0 (zero_le _) (zero_le _)]
+        end },
+    exact [expr le_of_tendsto (hG v).norm (eventually_of_forall A)] },
+  let [ident Gcont] [] [":=", expr Glin.mk_continuous _ Gnorm],
+  use [expr Gcont],
+  have [] [":", expr ∀ n, «expr ≤ »(«expr∥ ∥»(«expr - »(f n, Gcont)), b n)] [],
+  { assume [binders (n)],
+    apply [expr op_norm_le_bound _ (b0 n) (λ v, _)],
+    have [ident A] [":", expr «expr∀ᶠ in , »((m), at_top, «expr ≤ »(«expr∥ ∥»(«expr - »(f n, f m) v), «expr * »(b n, «expr∥ ∥»(v))))] [],
+    { refine [expr eventually_at_top.2 ⟨n, λ m hm, _⟩],
+      apply [expr le_trans («expr - »(f n, f m).le_op_norm _) _],
+      exact [expr mul_le_mul_of_nonneg_right (b_bound n m n (le_refl _) hm) (norm_nonneg v)] },
+    have [ident B] [":", expr tendsto (λ
+      m, «expr∥ ∥»(«expr - »(f n, f m) v)) at_top (expr𝓝() «expr∥ ∥»(«expr - »(f n, Gcont) v))] [":=", expr tendsto.norm (tendsto_const_nhds.sub (hG v))],
+    exact [expr le_of_tendsto B A] },
+  erw [expr tendsto_iff_norm_tendsto_zero] [],
+  exact [expr squeeze_zero (λ n, norm_nonneg _) this b_lim]
+end
 
 end Completeness
 
@@ -1328,44 +1301,38 @@ variable{N :  ℝ≥0 }(h_e : ∀ x, ∥x∥ ≤ N*∥e x∥)
 
 local notation "ψ" => f.extend e h_dense (uniform_embedding_of_bound _ h_e).to_uniform_inducing
 
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a dense embedding `e : E →L[𝕜] G` expands the norm by a constant factor `N⁻¹`, then the
 norm of the extension of `f` along `e` is bounded by `N * ∥f∥`. -/
-theorem op_norm_extend_le : ∥ψ∥ ≤ N*∥f∥ :=
-  by 
-    have uni : UniformInducing e := (uniform_embedding_of_bound _ h_e).to_uniform_inducing 
-    have eq : ∀ x, ψ (e x) = f x := uniformly_extend_of_ind uni h_dense f.uniform_continuous 
-    byCases' N0 : 0 ≤ N
-    ·
-      refine' op_norm_le_bound ψ _ (is_closed_property h_dense (is_closed_le _ _) _)
-      ·
-        exact mul_nonneg N0 (norm_nonneg _)
-      ·
-        exact continuous_norm.comp (cont ψ)
-      ·
-        exact continuous_const.mul continuous_norm
-      ·
-        intro x 
-        rw [Eq]
-        calc ∥f x∥ ≤ ∥f∥*∥x∥ := le_op_norm _ _ _ ≤ ∥f∥*N*∥e x∥ :=
-          mul_le_mul_of_nonneg_left (h_e x) (norm_nonneg _)_ ≤ (N*∥f∥)*∥e x∥ :=
-          by 
-            rw [mul_commₓ («expr↑ » N) ∥f∥, mul_assocₓ]
-    ·
-      have he : ∀ x : E, x = 0
-      ·
-        intro x 
-        have N0 : N ≤ 0 := le_of_ltₓ (lt_of_not_geₓ N0)
-        rw [←norm_le_zero_iff]
-        exact le_transₓ (h_e x) (mul_nonpos_of_nonpos_of_nonneg N0 (norm_nonneg _))
-      have hf : f = 0
-      ·
-        ext 
-        simp only [he x, zero_apply, map_zero]
-      have hψ : ψ = 0
-      ·
-        rw [hf]
-        apply extend_zero 
-      rw [hψ, hf, norm_zero, norm_zero, mul_zero]
+theorem op_norm_extend_le : «expr ≤ »(«expr∥ ∥»(exprψ()), «expr * »(N, «expr∥ ∥»(f))) :=
+begin
+  have [ident uni] [":", expr uniform_inducing e] [":=", expr (uniform_embedding_of_bound _ h_e).to_uniform_inducing],
+  have [ident eq] [":", expr ∀
+   x, «expr = »(exprψ() (e x), f x)] [":=", expr uniformly_extend_of_ind uni h_dense f.uniform_continuous],
+  by_cases [expr N0, ":", expr «expr ≤ »(0, N)],
+  { refine [expr op_norm_le_bound exprψ() _ (is_closed_property h_dense (is_closed_le _ _) _)],
+    { exact [expr mul_nonneg N0 (norm_nonneg _)] },
+    { exact [expr continuous_norm.comp (cont exprψ())] },
+    { exact [expr continuous_const.mul continuous_norm] },
+    { assume [binders (x)],
+      rw [expr eq] [],
+      calc
+        «expr ≤ »(«expr∥ ∥»(f x), «expr * »(«expr∥ ∥»(f), «expr∥ ∥»(x))) : le_op_norm _ _
+        «expr ≤ »(..., «expr * »(«expr∥ ∥»(f), «expr * »(N, «expr∥ ∥»(e x)))) : mul_le_mul_of_nonneg_left (h_e x) (norm_nonneg _)
+        «expr ≤ »(..., «expr * »(«expr * »(N, «expr∥ ∥»(f)), «expr∥ ∥»(e x))) : by rw ["[", expr mul_comm «expr↑ »(N) «expr∥ ∥»(f), ",", expr mul_assoc, "]"] [] } },
+  { have [ident he] [":", expr ∀ x : E, «expr = »(x, 0)] [],
+    { assume [binders (x)],
+      have [ident N0] [":", expr «expr ≤ »(N, 0)] [":=", expr le_of_lt (lt_of_not_ge N0)],
+      rw ["<-", expr norm_le_zero_iff] [],
+      exact [expr le_trans (h_e x) (mul_nonpos_of_nonpos_of_nonneg N0 (norm_nonneg _))] },
+    have [ident hf] [":", expr «expr = »(f, 0)] [],
+    { ext [] [] [],
+      simp [] [] ["only"] ["[", expr he x, ",", expr zero_apply, ",", expr map_zero, "]"] [] [] },
+    have [ident hψ] [":", expr «expr = »(exprψ(), 0)] [],
+    { rw [expr hf] [],
+      apply [expr extend_zero] },
+    rw ["[", expr hψ, ",", expr hf, ",", expr norm_zero, ",", expr norm_zero, ",", expr mul_zero, "]"] [] }
+end
 
 end 
 
@@ -1387,51 +1354,53 @@ end LinearIsometry
 
 namespace ContinuousLinearMap
 
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Precomposition with a linear isometry preserves the operator norm. -/
-theorem op_norm_comp_linear_isometry_equiv {G : Type _} [SemiNormedGroup G] [SemiNormedSpace 𝕜 G] (f : F →L[𝕜] G)
-  (g : E ≃ₗᵢ[𝕜] F) : ∥f.comp g.to_linear_isometry.to_continuous_linear_map∥ = ∥f∥ :=
-  by 
-    casesI subsingleton_or_nontrivial E
-    ·
-      haveI  := g.symm.to_linear_equiv.to_equiv.subsingleton 
-      simp 
-    refine' le_antisymmₓ _ _
-    ·
-      convert f.op_norm_comp_le g.to_linear_isometry.to_continuous_linear_map 
-      simp [g.to_linear_isometry.norm_to_continuous_linear_map]
-    ·
-      convert
-        (f.comp g.to_linear_isometry.to_continuous_linear_map).op_norm_comp_le
-          g.symm.to_linear_isometry.to_continuous_linear_map
-      ·
-        ext 
-        simp 
-      haveI  := g.symm.surjective.nontrivial 
-      simp [g.symm.to_linear_isometry.norm_to_continuous_linear_map]
+theorem op_norm_comp_linear_isometry_equiv
+{G : Type*}
+[semi_normed_group G]
+[semi_normed_space 𝕜 G]
+(f : «expr →L[ ] »(F, 𝕜, G))
+(g : «expr ≃ₗᵢ[ ] »(E, 𝕜, F)) : «expr = »(«expr∥ ∥»(f.comp g.to_linear_isometry.to_continuous_linear_map), «expr∥ ∥»(f)) :=
+begin
+  casesI [expr subsingleton_or_nontrivial E] [],
+  { haveI [] [] [":=", expr g.symm.to_linear_equiv.to_equiv.subsingleton],
+    simp [] [] [] [] [] [] },
+  refine [expr le_antisymm _ _],
+  { convert [] [expr f.op_norm_comp_le g.to_linear_isometry.to_continuous_linear_map] [],
+    simp [] [] [] ["[", expr g.to_linear_isometry.norm_to_continuous_linear_map, "]"] [] [] },
+  { convert [] [expr (f.comp g.to_linear_isometry.to_continuous_linear_map).op_norm_comp_le g.symm.to_linear_isometry.to_continuous_linear_map] [],
+    { ext [] [] [],
+      simp [] [] [] [] [] [] },
+    haveI [] [] [":=", expr g.symm.surjective.nontrivial],
+    simp [] [] [] ["[", expr g.symm.to_linear_isometry.norm_to_continuous_linear_map, "]"] [] [] }
+end
 
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The norm of the tensor product of a scalar linear map and of an element of a normed space
 is the product of the norms. -/
 @[simp]
-theorem norm_smul_right_apply (c : E →L[𝕜] 𝕜) (f : F) : ∥smul_right c f∥ = ∥c∥*∥f∥ :=
-  by 
-    refine' le_antisymmₓ _ _
-    ·
-      apply op_norm_le_bound _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) fun x => _ 
-      calc ∥c x • f∥ = ∥c x∥*∥f∥ := norm_smul _ _ _ ≤ (∥c∥*∥x∥)*∥f∥ :=
-        mul_le_mul_of_nonneg_right (le_op_norm _ _) (norm_nonneg _)_ = (∥c∥*∥f∥)*∥x∥ :=
-        by 
-          ring
-    ·
-      byCases' h : f = 0
-      ·
-        simp [h]
-      ·
-        have  : 0 < ∥f∥ := norm_pos_iff.2 h 
-        rw [←le_div_iff this]
-        apply op_norm_le_bound _ (div_nonneg (norm_nonneg _) (norm_nonneg f)) fun x => _ 
-        rw [div_mul_eq_mul_div, le_div_iff this]
-        calc (∥c x∥*∥f∥) = ∥c x • f∥ := (norm_smul _ _).symm _ = ∥smul_right c f x∥ := rfl _ ≤ ∥smul_right c f∥*∥x∥ :=
-          le_op_norm _ _
+theorem norm_smul_right_apply
+(c : «expr →L[ ] »(E, 𝕜, 𝕜))
+(f : F) : «expr = »(«expr∥ ∥»(smul_right c f), «expr * »(«expr∥ ∥»(c), «expr∥ ∥»(f))) :=
+begin
+  refine [expr le_antisymm _ _],
+  { apply [expr op_norm_le_bound _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) (λ x, _)],
+    calc
+      «expr = »(«expr∥ ∥»(«expr • »(c x, f)), «expr * »(«expr∥ ∥»(c x), «expr∥ ∥»(f))) : norm_smul _ _
+      «expr ≤ »(..., «expr * »(«expr * »(«expr∥ ∥»(c), «expr∥ ∥»(x)), «expr∥ ∥»(f))) : mul_le_mul_of_nonneg_right (le_op_norm _ _) (norm_nonneg _)
+      «expr = »(..., «expr * »(«expr * »(«expr∥ ∥»(c), «expr∥ ∥»(f)), «expr∥ ∥»(x))) : by ring [] },
+  { by_cases [expr h, ":", expr «expr = »(f, 0)],
+    { simp [] [] [] ["[", expr h, "]"] [] [] },
+    { have [] [":", expr «expr < »(0, «expr∥ ∥»(f))] [":=", expr norm_pos_iff.2 h],
+      rw ["<-", expr le_div_iff this] [],
+      apply [expr op_norm_le_bound _ (div_nonneg (norm_nonneg _) (norm_nonneg f)) (λ x, _)],
+      rw ["[", expr div_mul_eq_mul_div, ",", expr le_div_iff this, "]"] [],
+      calc
+        «expr = »(«expr * »(«expr∥ ∥»(c x), «expr∥ ∥»(f)), «expr∥ ∥»(«expr • »(c x, f))) : (norm_smul _ _).symm
+        «expr = »(..., «expr∥ ∥»(smul_right c f x)) : rfl
+        «expr ≤ »(..., «expr * »(«expr∥ ∥»(smul_right c f), «expr∥ ∥»(x))) : le_op_norm _ _ } }
+end
 
 /-- The non-negative norm of the tensor product of a scalar linear map and of an element of a normed
 space is the product of the non-negative norms. -/
@@ -1473,10 +1442,9 @@ theorem norm_smul_rightL (c : E →L[𝕜] 𝕜) [Nontrivial F] : ∥smul_rightL
 
 variable(𝕜)(𝕜' : Type _)[NormedRing 𝕜'][NormedAlgebra 𝕜 𝕜']
 
-@[simp]
-theorem op_norm_lmul : ∥lmul 𝕜 𝕜'∥ = 1 :=
-  by 
-    haveI  := NormedAlgebra.nontrivial 𝕜 𝕜' <;> exact (lmulₗᵢ 𝕜 𝕜').norm_to_continuous_linear_map
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem op_norm_lmul : «expr = »(«expr∥ ∥»(lmul 𝕜 𝕜'), 1) :=
+by haveI [] [] [":=", expr normed_algebra.nontrivial 𝕜 𝕜']; exact [expr (lmulₗᵢ 𝕜 𝕜').norm_to_continuous_linear_map]
 
 @[simp]
 theorem op_norm_lmul_right : ∥lmul_right 𝕜 𝕜'∥ = 1 :=
@@ -1519,7 +1487,7 @@ theorem nnnorm_symm_pos [Nontrivial E] : 0 < nnnorm (e.symm : F →L[𝕜] E) :=
 
 theorem subsingleton_or_norm_symm_pos : Subsingleton E ∨ 0 < ∥(e.symm : F →L[𝕜] E)∥ :=
   by 
-    rcases subsingleton_or_nontrivial E with (_i | _i) <;> resetI
+    rcases subsingleton_or_nontrivial E with (_i | _i) <;> skip
     ·
       left 
       infer_instance
@@ -1558,14 +1526,14 @@ theorem to_span_nonzero_singleton_coord {x : E} (h : x ≠ 0) (y : 𝕜∙x) :
   to_span_nonzero_singleton 𝕜 x h (coord 𝕜 x h y) = y :=
   (to_span_nonzero_singleton 𝕜 x h).apply_symm_apply y
 
-@[simp]
-theorem coord_norm (x : E) (h : x ≠ 0) : ∥coord 𝕜 x h∥ = ∥x∥⁻¹ :=
-  by 
-    have hx : 0 < ∥x∥ := norm_pos_iff.mpr h 
-    haveI  : Nontrivial (𝕜∙x) := Submodule.nontrivial_span_singleton h 
-    exact
-      ContinuousLinearMap.homothety_norm _
-        fun y => homothety_inverse _ hx _ (to_span_nonzero_singleton_homothety 𝕜 x h) _
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem coord_norm (x : E) (h : «expr ≠ »(x, 0)) : «expr = »(«expr∥ ∥»(coord 𝕜 x h), «expr ⁻¹»(«expr∥ ∥»(x))) :=
+begin
+  have [ident hx] [":", expr «expr < »(0, «expr∥ ∥»(x))] [":=", expr norm_pos_iff.mpr h],
+  haveI [] [":", expr nontrivial «expr ∙ »(𝕜, x)] [":=", expr submodule.nontrivial_span_singleton h],
+  exact [expr continuous_linear_map.homothety_norm _ (λ
+    y, homothety_inverse _ hx _ (to_span_nonzero_singleton_homothety 𝕜 x h) _)]
+end
 
 @[simp]
 theorem coord_self (x : E) (h : x ≠ 0) : (coord 𝕜 x h) (⟨x, Submodule.mem_span_singleton_self x⟩ : 𝕜∙x) = 1 :=

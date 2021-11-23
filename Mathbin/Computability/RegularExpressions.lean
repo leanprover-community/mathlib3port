@@ -1,5 +1,3 @@
-import Mathbin.Data.Fintype.Basic 
-import Mathbin.Data.Finset.Basic 
 import Mathbin.Tactic.Rcases 
 import Mathbin.Computability.Language
 
@@ -152,150 +150,151 @@ theorem char_rmatch_iff (a : α) (x : List α) : rmatch (Charₓ a) x ↔ x = [a
     rw [zero_rmatch]
     tauto
 
--- error in Computability.RegularExpressions: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem add_rmatch_iff
-(P Q : regular_expression α)
-(x : list α) : «expr ↔ »(«expr + »(P, Q).rmatch x, «expr ∨ »(P.rmatch x, Q.rmatch x)) :=
-begin
-  induction [expr x] [] ["with", "_", "_", ident ih] ["generalizing", ident P, ident Q],
-  { repeat { rw [expr rmatch] [] },
-    rw [expr match_epsilon] [],
-    finish [] [] },
-  { repeat { rw [expr rmatch] [] },
-    rw [expr deriv] [],
-    exact [expr ih _ _] }
-end
-
--- error in Computability.RegularExpressions: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem mul_rmatch_iff
-(P Q : regular_expression α)
-(x : list α) : «expr ↔ »(«expr * »(P, Q).rmatch x, «expr∃ , »((t
-   u : list α), «expr ∧ »(«expr = »(x, «expr ++ »(t, u)), «expr ∧ »(P.rmatch t, Q.rmatch u)))) :=
-begin
-  induction [expr x] [] ["with", ident a, ident x, ident ih] ["generalizing", ident P, ident Q],
-  { rw ["[", expr rmatch, ",", expr match_epsilon, "]"] [],
-    split,
-    { intro [ident h],
-      refine [expr ⟨«expr[ , ]»([]), «expr[ , ]»([]), rfl, _⟩],
-      rw ["[", expr rmatch, ",", expr rmatch, "]"] [],
-      rwa [expr band_coe_iff] ["at", ident h] },
-    { rintro ["⟨", ident t, ",", ident u, ",", ident h₁, ",", ident h₂, "⟩"],
-      cases [expr list.append_eq_nil.1 h₁.symm] ["with", ident ht, ident hu],
-      subst [expr ht],
-      subst [expr hu],
-      repeat { rw [expr rmatch] ["at", ident h₂] },
-      finish [] [] } },
-  { rw ["[", expr rmatch, ",", expr deriv, "]"] [],
-    split_ifs [] ["with", ident hepsilon],
-    { rw ["[", expr add_rmatch_iff, ",", expr ih, "]"] [],
-      split,
-      { rintro ["(", "⟨", ident t, ",", ident u, ",", "_", "⟩", "|", ident h, ")"],
-        { exact [expr ⟨[«expr :: »/«expr :: »/«expr :: »](a, t), u, by tauto []⟩] },
-        { exact [expr ⟨«expr[ , ]»([]), [«expr :: »/«expr :: »/«expr :: »](a, x), rfl, hepsilon, h⟩] } },
-      { rintro ["⟨", ident t, ",", ident u, ",", ident h, ",", ident hP, ",", ident hQ, "⟩"],
-        cases [expr t] ["with", ident b, ident t],
-        { right,
-          rw [expr list.nil_append] ["at", ident h],
-          rw ["<-", expr h] ["at", ident hQ],
-          exact [expr hQ] },
-        { left,
-          refine [expr ⟨t, u, by finish [] [], _, hQ⟩],
-          rw [expr rmatch] ["at", ident hP],
-          convert [] [expr hP] [],
-          finish [] [] } } },
-    { rw [expr ih] [],
-      split; rintro ["⟨", ident t, ",", ident u, ",", ident h, ",", ident hP, ",", ident hQ, "⟩"],
-      { exact [expr ⟨[«expr :: »/«expr :: »/«expr :: »](a, t), u, by tauto []⟩] },
-      { cases [expr t] ["with", ident b, ident t],
-        { contradiction },
-        { refine [expr ⟨t, u, by finish [] [], _, hQ⟩],
-          rw [expr rmatch] ["at", ident hP],
-          convert [] [expr hP] [],
-          finish [] [] } } } }
-end
-
-theorem star_rmatch_iff (P : RegularExpression α) :
-  ∀ x : List α, (star P).rmatch x ↔ ∃ S : List (List α), x = S.join ∧ ∀ t _ : t ∈ S, t ≠ [] ∧ P.rmatch t
-| x =>
+theorem add_rmatch_iff (P Q : RegularExpression α) (x : List α) : (P+Q).rmatch x ↔ P.rmatch x ∨ Q.rmatch x :=
   by 
-    have A : ∀ m n : ℕ, n < (m+n)+1
+    induction' x with _ _ ih generalizing P Q
     ·
-      intro m n 
-      convert add_lt_add_of_le_of_lt (add_le_add (zero_le m) (le_reflₓ n)) zero_lt_one 
-      simp 
-    have IH := fun t h : List.length t < List.length x => star_rmatch_iff t 
-    clear star_rmatch_iff 
-    split 
+      repeat' 
+        rw [rmatch]
+      rw [match_epsilon]
+      finish
     ·
-      cases' x with a x
+      repeat' 
+        rw [rmatch]
+      rw [deriv]
+      exact ih _ _
+
+theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
+  (P*Q).rmatch x ↔ ∃ t u : List α, x = t ++ u ∧ P.rmatch t ∧ Q.rmatch u :=
+  by 
+    induction' x with a x ih generalizing P Q
+    ·
+      rw [rmatch, match_epsilon]
+      split 
       ·
-        intro 
-        fconstructor 
-        exact []
-        tauto
+        intro h 
+        refine' ⟨[], [], rfl, _⟩
+        rw [rmatch, rmatch]
+        rwa [band_coe_iff] at h
       ·
-        rw [rmatch, deriv, mul_rmatch_iff]
-        rintro ⟨t, u, hs, ht, hu⟩
-        have hwf : u.length < (List.cons a x).length
-        ·
-          rw [hs, List.length_cons, List.length_append]
-          apply A 
-        rw [IH _ hwf] at hu 
-        rcases hu with ⟨S', hsum, helem⟩
-        use (a :: t) :: S' 
+        rintro ⟨t, u, h₁, h₂⟩
+        cases' List.append_eq_nil.1 h₁.symm with ht hu 
+        subst ht 
+        subst hu 
+        repeat' 
+          rw [rmatch] at h₂ 
+        finish
+    ·
+      rw [rmatch, deriv]
+      splitIfs with hepsilon
+      ·
+        rw [add_rmatch_iff, ih]
         split 
         ·
-          finish
-        ·
-          intro t' ht' 
-          cases' ht' with ht' ht'
+          rintro (⟨t, u, _⟩ | h)
           ·
-            rw [ht']
             exact
-              ⟨by 
-                  decide,
-                ht⟩
+              ⟨a :: t, u,
+                by 
+                  tauto⟩
           ·
-            exact helem _ ht'
-    ·
-      rintro ⟨S, hsum, helem⟩
-      cases' x with a x
+            exact ⟨[], a :: x, rfl, hepsilon, h⟩
+        ·
+          rintro ⟨t, u, h, hP, hQ⟩
+          cases' t with b t
+          ·
+            right 
+            rw [List.nil_append] at h 
+            rw [←h] at hQ 
+            exact hQ
+          ·
+            left 
+            refine'
+              ⟨t, u,
+                by 
+                  finish,
+                _, hQ⟩
+            rw [rmatch] at hP 
+            convert hP 
+            finish
       ·
-        decide
-      ·
-        rw [rmatch, deriv, mul_rmatch_iff]
-        cases' S with t' U
+        rw [ih]
+        split  <;> rintro ⟨t, u, h, hP, hQ⟩
         ·
           exact
-            ⟨[], [],
+            ⟨a :: t, u,
               by 
                 tauto⟩
         ·
-          cases' t' with b t
+          cases' t with b t
           ·
-            finish 
-          refine'
-            ⟨t, U.join,
-              by 
-                finish,
-              _, _⟩
+            contradiction
           ·
-            specialize helem (b :: t) _
-            ·
-              finish 
-            rw [rmatch] at helem 
-            convert helem.2
+            refine'
+              ⟨t, u,
+                by 
+                  finish,
+                _, hQ⟩
+            rw [rmatch] at hP 
+            convert hP 
             finish
-          ·
-            have hwf : U.join.length < (List.cons a x).length
-            ·
-              rw [hsum]
-              simp only [List.join, List.length_append, List.cons_append, List.length_join, List.length]
-              apply A 
-            rw [IH _ hwf]
-            refine' ⟨U, rfl, fun t h => helem t _⟩
-            right 
-            assumption
+
+-- error in Computability.RegularExpressions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem star_rmatch_iff
+(P : regular_expression α) : ∀
+x : list α, «expr ↔ »((star P).rmatch x, «expr∃ , »((S : list (list α)), «expr ∧ »(«expr = »(x, S.join), ∀
+   t «expr ∈ » S, «expr ∧ »(«expr ≠ »(t, «expr[ , ]»([])), P.rmatch t))))
+| x := begin
+  have [ident A] [":", expr ∀ m n : exprℕ(), «expr < »(n, «expr + »(«expr + »(m, n), 1))] [],
+  { assume [binders (m n)],
+    convert [] [expr add_lt_add_of_le_of_lt (add_le_add (zero_le m) (le_refl n)) zero_lt_one] [],
+    simp [] [] [] [] [] [] },
+  have [ident IH] [] [":=", expr λ (t) (h : «expr < »(list.length t, list.length x)), star_rmatch_iff t],
+  clear [ident star_rmatch_iff],
+  split,
+  { cases [expr x] ["with", ident a, ident x],
+    { intro [],
+      fconstructor,
+      exact [expr «expr[ , ]»([])],
+      tauto [] },
+    { rw ["[", expr rmatch, ",", expr deriv, ",", expr mul_rmatch_iff, "]"] [],
+      rintro ["⟨", ident t, ",", ident u, ",", ident hs, ",", ident ht, ",", ident hu, "⟩"],
+      have [ident hwf] [":", expr «expr < »(u.length, (list.cons a x).length)] [],
+      { rw ["[", expr hs, ",", expr list.length_cons, ",", expr list.length_append, "]"] [],
+        apply [expr A] },
+      rw [expr IH _ hwf] ["at", ident hu],
+      rcases [expr hu, "with", "⟨", ident S', ",", ident hsum, ",", ident helem, "⟩"],
+      use [expr «expr :: »(«expr :: »(a, t), S')],
+      split,
+      { finish [] [] },
+      { intros [ident t', ident ht'],
+        cases [expr ht'] ["with", ident ht', ident ht'],
+        { rw [expr ht'] [],
+          exact [expr ⟨exprdec_trivial(), ht⟩] },
+        { exact [expr helem _ ht'] } } } },
+  { rintro ["⟨", ident S, ",", ident hsum, ",", ident helem, "⟩"],
+    cases [expr x] ["with", ident a, ident x],
+    { dec_trivial [] },
+    { rw ["[", expr rmatch, ",", expr deriv, ",", expr mul_rmatch_iff, "]"] [],
+      cases [expr S] ["with", ident t', ident U],
+      { exact [expr ⟨«expr[ , ]»([]), «expr[ , ]»([]), by tauto []⟩] },
+      { cases [expr t'] ["with", ident b, ident t],
+        { finish [] [] },
+        refine [expr ⟨t, U.join, by finish [] [], _, _⟩],
+        { specialize [expr helem «expr :: »(b, t) _],
+          { finish [] [] },
+          rw [expr rmatch] ["at", ident helem],
+          convert [] [expr helem.2] [],
+          finish [] [] },
+        { have [ident hwf] [":", expr «expr < »(U.join.length, (list.cons a x).length)] [],
+          { rw [expr hsum] [],
+            simp [] [] ["only"] ["[", expr list.join, ",", expr list.length_append, ",", expr list.cons_append, ",", expr list.length_join, ",", expr list.length, "]"] [] [],
+            apply [expr A] },
+          rw [expr IH _ hwf] [],
+          refine [expr ⟨U, rfl, λ t h, helem t _⟩],
+          right,
+          assumption } } } }
+end
 
 @[simp]
 theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatch x ↔ x ∈ P.matches :=

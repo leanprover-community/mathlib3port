@@ -211,34 +211,33 @@ theorem trans_apply {f₀ f₁ f₂ : C(X, Y)} (F : homotopy f₀ f₁) (G : hom
         rw [extend, ContinuousMap.coe_Icc_extend, Set.Icc_extend_of_mem]
         rfl
 
-theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : homotopy f₀ f₁) (G : homotopy f₁ f₂) :
-  (F.trans G).symm = G.symm.trans F.symm :=
-  by 
-    ext x 
-    simp only [symm_apply, trans_apply]
-    splitIfs with h₁ h₂
-    ·
-      change (x.1 : ℝ) ≤ _ at h₂ 
-      change (1 : ℝ) - x.1 ≤ _ at h₁ 
-      have ht : (x.1 : ℝ) = 1 / 2
-      ·
-        linarith 
-      normNum [ht]
-    ·
-      congr 2
-      apply Subtype.ext 
-      simp only [UnitInterval.coe_symm_eq, Subtype.coe_mk]
-      linarith
-    ·
-      congr 2
-      apply Subtype.ext 
-      simp only [UnitInterval.coe_symm_eq, Subtype.coe_mk]
-      linarith
-    ·
-      change ¬(x.1 : ℝ) ≤ _ at h 
-      change ¬(1 : ℝ) - x.1 ≤ _ at h₁ 
-      exFalso 
-      linarith
+-- error in Topology.Homotopy.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem symm_trans
+{f₀ f₁ f₂ : «exprC( , )»(X, Y)}
+(F : homotopy f₀ f₁)
+(G : homotopy f₁ f₂) : «expr = »((F.trans G).symm, G.symm.trans F.symm) :=
+begin
+  ext [] [ident x] [],
+  simp [] [] ["only"] ["[", expr symm_apply, ",", expr trans_apply, "]"] [] [],
+  split_ifs [] ["with", ident h₁, ident h₂],
+  { change [expr «expr ≤ »((x.1 : exprℝ()), _)] [] ["at", ident h₂],
+    change [expr «expr ≤ »(«expr - »((1 : exprℝ()), x.1), _)] [] ["at", ident h₁],
+    have [ident ht] [":", expr «expr = »((x.1 : exprℝ()), «expr / »(1, 2))] [],
+    { linarith [] [] [] },
+    norm_num ["[", expr ht, "]"] [] },
+  { congr' [2] [],
+    apply [expr subtype.ext],
+    simp [] [] ["only"] ["[", expr unit_interval.coe_symm_eq, ",", expr subtype.coe_mk, "]"] [] [],
+    linarith [] [] [] },
+  { congr' [2] [],
+    apply [expr subtype.ext],
+    simp [] [] ["only"] ["[", expr unit_interval.coe_symm_eq, ",", expr subtype.coe_mk, "]"] [] [],
+    linarith [] [] [] },
+  { change [expr «expr¬ »(«expr ≤ »((x.1 : exprℝ()), _))] [] ["at", ident h],
+    change [expr «expr¬ »(«expr ≤ »(«expr - »((1 : exprℝ()), x.1), _))] [] ["at", ident h₁],
+    exfalso,
+    linarith [] [] [] }
+end
 
 /--
 Casting a `homotopy f₀ f₁` to a `homotopy g₀ g₁` where `f₀ = g₀` and `f₁ = g₁`.

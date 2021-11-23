@@ -1,7 +1,7 @@
+import Mathbin.Data.Nat.Prime 
 import Mathbin.Dynamics.FixedPoints.Basic 
-import Mathbin.Data.Set.Lattice 
 import Mathbin.Data.Pnat.Basic 
-import Mathbin.Data.Int.Gcd
+import Mathbin.Data.Set.Lattice
 
 /-!
 # Periodic points
@@ -147,7 +147,7 @@ end IsPeriodicPt
 
 /-- The set of periodic points of a given (possibly non-minimal) period. -/
 def pts_of_period (f : α → α) (n : ℕ) : Set α :=
-  { x : α | is_periodic_pt f n x }
+  { x:α | is_periodic_pt f n x }
 
 @[simp]
 theorem mem_pts_of_period : x ∈ pts_of_period f n ↔ is_periodic_pt f n x :=
@@ -169,7 +169,7 @@ theorem directed_pts_of_period_pnat (f : α → α) : Directed (· ⊆ ·) fun n
 
 /-- The set of periodic points of a map `f : α → α`. -/
 def periodic_pts (f : α → α) : Set α :=
-  { x : α | ∃ (n : _)(_ : n > 0), is_periodic_pt f n x }
+  { x:α | ∃ (n : _)(_ : n > 0), is_periodic_pt f n x }
 
 theorem mk_mem_periodic_pts (hn : 0 < n) (hx : is_periodic_pt f n x) : x ∈ periodic_pts f :=
   ⟨n, hn, hx⟩

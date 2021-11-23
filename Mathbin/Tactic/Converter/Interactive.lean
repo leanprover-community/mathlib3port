@@ -112,7 +112,7 @@ We use this tactic for writing tests.
 -/
 unsafe def guard_target (p : parse texpr) : conv Unit :=
   do 
-    let quote (%%t) = _ ← target 
+    let quote.1 ((%%ₓt) = _) ← target 
     tactic.interactive.guard_expr_eq t p
 
 end Interactive

@@ -95,7 +95,7 @@ unsafe def parse_config : Option pexpr → tactic (simp_config_ext × format)
 | none => pure ({  }, "")
 | some cfg =>
   do 
-    let e ← to_expr (pquote (%%cfg : simp_config_ext))
+    let e ← to_expr (pquote.1 (%%ₓcfg : simp_config_ext))
     let fmt ← has_to_tactic_format.to_tactic_format cfg 
     Prod.mk <$> eval_expr simp_config_ext e <*> struct.to_tactic_format cfg
 
@@ -104,7 +104,7 @@ unsafe def parse_dsimp_config : Option pexpr → tactic (dsimp_config × format)
 | none => pure ({  }, "")
 | some cfg =>
   do 
-    let e ← to_expr (pquote (%%cfg : simp_config_ext))
+    let e ← to_expr (pquote.1 (%%ₓcfg : simp_config_ext))
     let fmt ← has_to_tactic_format.to_tactic_format cfg 
     Prod.mk <$> eval_expr dsimp_config e <*> struct.to_tactic_format cfg
 
@@ -189,7 +189,7 @@ unsafe def squeeze_simp_core (slow no_dflt : Bool) (args : List simp_arg_type)
 
 namespace Interactive
 
--- error in Tactic.Squeeze: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.Squeeze: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 attribute [derive #[expr decidable_eq]] simp_arg_type
 
 /-- Turn a `simp_arg_type` into a string. -/

@@ -123,69 +123,55 @@ theorem squash_seq_nth_of_lt {m : ℕ} (m_lt_n : m < n) : (squash_seq s n).nth m
       exact s.ge_stable (le_of_ltₓ m_lt_n) s_nth_eq 
       simp [squash_seq, Seqₓₓ.zip_with_nth_some (Seqₓₓ.nats_nth m) s_mth_eq _, ne_of_ltₓ m_lt_n]
 
+-- error in Algebra.ContinuedFractions.ConvergentsEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Squashing at position `n + 1` and taking the tail is the same as squashing the tail of the
 sequence at position `n`. -/
-theorem squash_seq_succ_n_tail_eq_squash_seq_tail_n : (squash_seq s (n+1)).tail = squash_seq s.tail n :=
-  by 
-    cases' s_succ_succ_nth_eq : s.nth (n+2) with gp_succ_succ_n 
-    case option.none => 
-      have  : squash_seq s (n+1) = s 
-      exact squash_seq_eq_self_of_terminated s_succ_succ_nth_eq 
-      cases s_succ_nth_eq : s.nth (n+1) <;> simp only [squash_seq, Seqₓₓ.nth_tail, s_succ_nth_eq, s_succ_succ_nth_eq]
-    case option.some => 
-      obtain ⟨gp_succ_n, s_succ_nth_eq⟩ : ∃ gp_succ_n, s.nth (n+1) = some gp_succ_n 
-      exact s.ge_stable (n+1).le_succ s_succ_succ_nth_eq 
-      ext m 
-      cases' Decidable.em (m = n) with m_eq_n m_ne_n
-      ·
-        have  : s.tail.nth n = some gp_succ_n 
-        exact (s.nth_tail n).trans s_succ_nth_eq 
-        simp [squash_seq, Seqₓₓ.nth_tail, Seqₓₓ.zip_with_nth_some (Seqₓₓ.nats_nth n) this,
-          Seqₓₓ.zip_with_nth_some (Seqₓₓ.nats_nth (n+1)) s_succ_nth_eq]
-      ·
-        have  : s.tail.nth m = s.nth (m+1)
-        exact s.nth_tail m 
-        cases s_succ_mth_eq : s.nth (m+1)
-        all_goals 
-          have s_tail_mth_eq 
-          exact this.trans s_succ_mth_eq
-        ·
-          simp only [squash_seq, Seqₓₓ.nth_tail, Seqₓₓ.zip_with_nth_none' s_succ_mth_eq,
-            Seqₓₓ.zip_with_nth_none' s_tail_mth_eq]
-        ·
-          simp [squash_seq, Seqₓₓ.nth_tail, Seqₓₓ.zip_with_nth_some (Seqₓₓ.nats_nth (m+1)) s_succ_mth_eq,
-            Seqₓₓ.zip_with_nth_some (Seqₓₓ.nats_nth m) s_tail_mth_eq]
+theorem squash_seq_succ_n_tail_eq_squash_seq_tail_n : «expr = »((squash_seq s «expr + »(n, 1)).tail, squash_seq s.tail n) :=
+begin
+  cases [expr s_succ_succ_nth_eq, ":", expr s.nth «expr + »(n, 2)] ["with", ident gp_succ_succ_n],
+  case [ident option.none] { have [] [":", expr «expr = »(squash_seq s «expr + »(n, 1), s)] [],
+    from [expr squash_seq_eq_self_of_terminated s_succ_succ_nth_eq],
+    cases [expr s_succ_nth_eq, ":", expr s.nth «expr + »(n, 1)] []; simp [] [] ["only"] ["[", expr squash_seq, ",", expr seq.nth_tail, ",", expr s_succ_nth_eq, ",", expr s_succ_succ_nth_eq, "]"] [] [] },
+  case [ident option.some] { obtain ["⟨", ident gp_succ_n, ",", ident s_succ_nth_eq, "⟩", ":", expr «expr∃ , »((gp_succ_n), «expr = »(s.nth «expr + »(n, 1), some gp_succ_n))],
+    from [expr s.ge_stable «expr + »(n, 1).le_succ s_succ_succ_nth_eq],
+    ext [] [ident m] [],
+    cases [expr decidable.em «expr = »(m, n)] ["with", ident m_eq_n, ident m_ne_n],
+    { have [] [":", expr «expr = »(s.tail.nth n, some gp_succ_n)] [],
+      from [expr (s.nth_tail n).trans s_succ_nth_eq],
+      simp [] [] [] ["[", "*", ",", expr squash_seq, ",", expr seq.nth_tail, ",", expr seq.zip_with_nth_some (seq.nats_nth n) this, ",", expr seq.zip_with_nth_some (seq.nats_nth «expr + »(n, 1)) s_succ_nth_eq, "]"] [] [] },
+    { have [] [":", expr «expr = »(s.tail.nth m, s.nth «expr + »(m, 1))] [],
+      from [expr s.nth_tail m],
+      cases [expr s_succ_mth_eq, ":", expr s.nth «expr + »(m, 1)] [],
+      all_goals { have [ident s_tail_mth_eq] [] [],
+        from [expr this.trans s_succ_mth_eq] },
+      { simp [] [] ["only"] ["[", "*", ",", expr squash_seq, ",", expr seq.nth_tail, ",", expr seq.zip_with_nth_none' s_succ_mth_eq, ",", expr seq.zip_with_nth_none' s_tail_mth_eq, "]"] [] [] },
+      { simp [] [] [] ["[", "*", ",", expr squash_seq, ",", expr seq.nth_tail, ",", expr seq.zip_with_nth_some (seq.nats_nth «expr + »(m, 1)) s_succ_mth_eq, ",", expr seq.zip_with_nth_some (seq.nats_nth m) s_tail_mth_eq, "]"] [] [] } } }
+end
 
+-- error in Algebra.ContinuedFractions.ConvergentsEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The auxiliary function `convergents'_aux` returns the same value for a sequence and the
 corresponding squashed sequence at the squashed position. -/
-theorem succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squash_seq :
-  convergents'_aux s (n+2) = convergents'_aux (squash_seq s n) (n+1) :=
-  by 
-    cases' s_succ_nth_eq : s.nth$ n+1 with gp_succ_n 
-    case option.none => 
-      rw [squash_seq_eq_self_of_terminated s_succ_nth_eq, convergents'_aux_stable_step_of_terminated s_succ_nth_eq]
-    case option.some => 
-      induction' n with m IH generalizing s gp_succ_n 
-      case nat.zero => 
-        obtain ⟨gp_head, s_head_eq⟩ : ∃ gp_head, s.head = some gp_head 
-        exact s.ge_stable zero_le_one s_succ_nth_eq 
-        have  : (squash_seq s 0).head = some ⟨gp_head.a, gp_head.b+gp_succ_n.a / gp_succ_n.b⟩
-        exact squash_seq_nth_of_not_terminated s_head_eq s_succ_nth_eq 
-        simp [convergents'_aux, Seqₓₓ.head, Seqₓₓ.nth_tail]
-      case nat.succ => 
-        obtain ⟨gp_head, s_head_eq⟩ : ∃ gp_head, s.head = some gp_head 
-        exact s.ge_stable (m+2).zero_le s_succ_nth_eq 
-        suffices  : (gp_head.a / gp_head.b+convergents'_aux s.tail (m+2)) = convergents'_aux (squash_seq s (m+1)) (m+2)
-        ·
-          simpa only [convergents'_aux, s_head_eq]
-        have  : convergents'_aux s.tail (m+2) = convergents'_aux (squash_seq s.tail m) (m+1)
-        ·
-          ·
-            refine' IH gp_succ_n _ 
-            simpa [Seqₓₓ.nth_tail] using s_succ_nth_eq 
-        have  : (squash_seq s (m+1)).head = some gp_head 
-        exact (squash_seq_nth_of_lt m.succ_pos).trans s_head_eq 
-        simp only [convergents'_aux, squash_seq_succ_n_tail_eq_squash_seq_tail_n]
+theorem succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squash_seq : «expr = »(convergents'_aux s «expr + »(n, 2), convergents'_aux (squash_seq s n) «expr + »(n, 1)) :=
+begin
+  cases [expr s_succ_nth_eq, ":", expr «expr $ »(s.nth, «expr + »(n, 1))] ["with", ident gp_succ_n],
+  case [ident option.none] { rw ["[", expr squash_seq_eq_self_of_terminated s_succ_nth_eq, ",", expr convergents'_aux_stable_step_of_terminated s_succ_nth_eq, "]"] [] },
+  case [ident option.some] { induction [expr n] [] ["with", ident m, ident IH] ["generalizing", ident s, ident gp_succ_n],
+    case [ident nat.zero] { obtain ["⟨", ident gp_head, ",", ident s_head_eq, "⟩", ":", expr «expr∃ , »((gp_head), «expr = »(s.head, some gp_head))],
+      from [expr s.ge_stable zero_le_one s_succ_nth_eq],
+      have [] [":", expr «expr = »((squash_seq s 0).head, some ⟨gp_head.a, «expr + »(gp_head.b, «expr / »(gp_succ_n.a, gp_succ_n.b))⟩)] [],
+      from [expr squash_seq_nth_of_not_terminated s_head_eq s_succ_nth_eq],
+      simp [] [] [] ["[", "*", ",", expr convergents'_aux, ",", expr seq.head, ",", expr seq.nth_tail, "]"] [] [] },
+    case [ident nat.succ] { obtain ["⟨", ident gp_head, ",", ident s_head_eq, "⟩", ":", expr «expr∃ , »((gp_head), «expr = »(s.head, some gp_head))],
+      from [expr s.ge_stable «expr + »(m, 2).zero_le s_succ_nth_eq],
+      suffices [] [":", expr «expr = »(«expr / »(gp_head.a, «expr + »(gp_head.b, convergents'_aux s.tail «expr + »(m, 2))), convergents'_aux (squash_seq s «expr + »(m, 1)) «expr + »(m, 2))],
+      by simpa [] [] ["only"] ["[", expr convergents'_aux, ",", expr s_head_eq, "]"] [] [],
+      have [] [":", expr «expr = »(convergents'_aux s.tail «expr + »(m, 2), convergents'_aux (squash_seq s.tail m) «expr + »(m, 1))] [],
+      by { refine [expr IH gp_succ_n _],
+        simpa [] [] [] ["[", expr seq.nth_tail, "]"] [] ["using", expr s_succ_nth_eq] },
+      have [] [":", expr «expr = »((squash_seq s «expr + »(m, 1)).head, some gp_head)] [],
+      from [expr (squash_seq_nth_of_lt m.succ_pos).trans s_head_eq],
+      simp [] [] ["only"] ["[", "*", ",", expr convergents'_aux, ",", expr squash_seq_succ_n_tail_eq_squash_seq_tail_n, "]"] [] [] } }
+end
 
 /-! Let us now lift the squashing operation to gcfs. -/
 
@@ -232,103 +218,86 @@ theorem succ_nth_convergent'_eq_squash_gcf_nth_convergent' : g.convergents' (n+1
     case nat.succ => 
       simp only [succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squash_seq, convergents', squash_gcf]
 
+-- error in Algebra.ContinuedFractions.ConvergentsEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The auxiliary continuants before the squashed position stay the same. -/
-theorem continuants_aux_eq_continuants_aux_squash_gcf_of_le {m : ℕ} :
-  m ≤ n → continuants_aux g m = (squash_gcf g n).continuantsAux m :=
-  Nat.strong_induction_onₓ m
-    (by 
-      clear m 
-      intro m IH m_le_n 
-      cases' m with m'
-      ·
-        rfl
-      ·
-        cases' n with n'
-        ·
-          exact (m'.not_succ_le_zero m_le_n).elim
-        ·
-          cases' m' with m''
-          ·
-            rfl
-          ·
-            have m'_lt_n : (m''+1) < n'+1 := m_le_n 
-            have succ_m''th_conts_aux_eq := IH (m''+1) (lt_add_one (m''+1)) m'_lt_n.le 
-            have  : m'' < m''+2 := lt_add_of_pos_right m'' zero_lt_two 
-            have m''th_conts_aux_eq := IH m'' this (le_transₓ this.le m_le_n)
-            have  : (squash_gcf g (n'+1)).s.nth m'' = g.s.nth m'' 
-            exact squash_gcf_nth_of_lt (nat.succ_lt_succ_iff.mp m'_lt_n)
-            simp [continuants_aux, succ_m''th_conts_aux_eq, m''th_conts_aux_eq, this])
+theorem continuants_aux_eq_continuants_aux_squash_gcf_of_le
+{m : exprℕ()} : «expr ≤ »(m, n) → «expr = »(continuants_aux g m, (squash_gcf g n).continuants_aux m) :=
+nat.strong_induction_on m (begin
+   clear [ident m],
+   assume [binders (m IH m_le_n)],
+   cases [expr m] ["with", ident m'],
+   { refl },
+   { cases [expr n] ["with", ident n'],
+     { exact [expr (m'.not_succ_le_zero m_le_n).elim] },
+     { cases [expr m'] ["with", ident m''],
+       { refl },
+       { have [ident m'_lt_n] [":", expr «expr < »(«expr + »(m'', 1), «expr + »(n', 1))] [":=", expr m_le_n],
+         have [ident succ_m''th_conts_aux_eq] [] [":=", expr IH «expr + »(m'', 1) (lt_add_one «expr + »(m'', 1)) m'_lt_n.le],
+         have [] [":", expr «expr < »(m'', «expr + »(m'', 2))] [":=", expr lt_add_of_pos_right m'' zero_lt_two],
+         have [ident m''th_conts_aux_eq] [] [":=", expr IH m'' this (le_trans this.le m_le_n)],
+         have [] [":", expr «expr = »((squash_gcf g «expr + »(n', 1)).s.nth m'', g.s.nth m'')] [],
+         from [expr squash_gcf_nth_of_lt (nat.succ_lt_succ_iff.mp m'_lt_n)],
+         simp [] [] [] ["[", expr continuants_aux, ",", expr succ_m''th_conts_aux_eq, ",", expr m''th_conts_aux_eq, ",", expr this, "]"] [] [] } } }
+ end)
 
 end WithDivisionRing
 
+-- error in Algebra.ContinuedFractions.ConvergentsEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The convergents coincide in the expected way at the squashed position if the partial denominator
 at the squashed position is not zero. -/
-theorem succ_nth_convergent_eq_squash_gcf_nth_convergent [Field K]
-  (nth_part_denom_ne_zero : ∀ {b : K}, g.partial_denominators.nth n = some b → b ≠ 0) :
-  g.convergents (n+1) = (squash_gcf g n).convergents n :=
-  by 
-    cases' Decidable.em (g.terminated_at n) with terminated_at_n not_terminated_at_n
-    ·
-      have  : squash_gcf g n = g 
-      exact squash_gcf_eq_self_of_terminated terminated_at_n 
-      simp only [this, convergents_stable_of_terminated n.le_succ terminated_at_n]
-    ·
-      obtain ⟨⟨a, b⟩, s_nth_eq⟩ : ∃ gp_n, g.s.nth n = some gp_n 
-      exact option.ne_none_iff_exists'.mp not_terminated_at_n 
-      have b_ne_zero : b ≠ 0 
-      exact nth_part_denom_ne_zero (part_denom_eq_s_b s_nth_eq)
-      cases' n with n' 
-      case nat.zero => 
-        suffices  : ((b*g.h)+a) / b = g.h+a / b
-        ·
-          simpa [squash_gcf, s_nth_eq, convergent_eq_conts_a_div_conts_b,
-            continuants_recurrence_aux s_nth_eq zeroth_continuant_aux_eq_one_zero first_continuant_aux_eq_h_one]
-        calc ((b*g.h)+a) / b = ((b*g.h) / b)+a / b :=
-          by 
-            ring _ = g.h+a / b :=
-          by 
-            rw [mul_div_cancel_left _ b_ne_zero]
-      case nat.succ => 
-        obtain ⟨⟨pa, pb⟩, s_n'th_eq⟩ : ∃ gp_n', g.s.nth n' = some gp_n' := g.s.ge_stable n'.le_succ s_nth_eq 
-        let g' := squash_gcf g (n'+1)
-        set pred_conts := g.continuants_aux (n'+1) with succ_n'th_conts_aux_eq 
-        set ppred_conts := g.continuants_aux n' with n'th_conts_aux_eq 
-        let pA := pred_conts.a 
-        let pB := pred_conts.b 
-        let ppA := ppred_conts.a 
-        let ppB := ppred_conts.b 
-        set pred_conts' := g'.continuants_aux (n'+1) with succ_n'th_conts_aux_eq' 
-        set ppred_conts' := g'.continuants_aux n' with n'th_conts_aux_eq' 
-        let pA' := pred_conts'.a 
-        let pB' := pred_conts'.b 
-        let ppA' := ppred_conts'.a 
-        let ppB' := ppred_conts'.b 
-        have  : g'.convergents (n'+1) = (((pb+a / b)*pA')+pa*ppA') / ((pb+a / b)*pB')+pa*ppB'
-        ·
-          have  : g'.s.nth n' = some ⟨pa, pb+a / b⟩ := squash_seq_nth_of_not_terminated s_n'th_eq s_nth_eq 
-          rw [convergent_eq_conts_a_div_conts_b,
-            continuants_recurrence_aux this n'th_conts_aux_eq'.symm succ_n'th_conts_aux_eq'.symm]
-        rw [this]
-        have  : g.convergents (n'+2) = ((b*(pb*pA)+pa*ppA)+a*pA) / (b*(pb*pB)+pa*ppB)+a*pB
-        ·
-          have  : g.continuants_aux (n'+2) = ⟨(pb*pA)+pa*ppA, (pb*pB)+pa*ppB⟩ :=
-            continuants_aux_recurrence s_n'th_eq n'th_conts_aux_eq.symm succ_n'th_conts_aux_eq.symm 
-          rw [convergent_eq_conts_a_div_conts_b, continuants_recurrence_aux s_nth_eq succ_n'th_conts_aux_eq.symm this]
-        rw [this]
-        suffices  :
-          ((((pb+a / b)*pA)+pa*ppA) / ((pb+a / b)*pB)+pa*ppB) = ((b*(pb*pA)+pa*ppA)+a*pA) / (b*(pb*pB)+pa*ppB)+a*pB
-        ·
-          obtain ⟨eq1, eq2, eq3, eq4⟩ : pA' = pA ∧ pB' = pB ∧ ppA' = ppA ∧ ppB' = ppB
-          ·
-            simp [(continuants_aux_eq_continuants_aux_squash_gcf_of_le$ le_reflₓ$ n'+1).symm,
-              (continuants_aux_eq_continuants_aux_squash_gcf_of_le n'.le_succ).symm]
-          symm 
-          simpa only [eq1, eq2, eq3, eq4, mul_div_cancel _ b_ne_zero]
-        fieldSimp 
-        congr 1 <;> ring
+theorem succ_nth_convergent_eq_squash_gcf_nth_convergent
+[field K]
+(nth_part_denom_ne_zero : ∀
+ {b : K}, «expr = »(g.partial_denominators.nth n, some b) → «expr ≠ »(b, 0)) : «expr = »(g.convergents «expr + »(n, 1), (squash_gcf g n).convergents n) :=
+begin
+  cases [expr decidable.em (g.terminated_at n)] ["with", ident terminated_at_n, ident not_terminated_at_n],
+  { have [] [":", expr «expr = »(squash_gcf g n, g)] [],
+    from [expr squash_gcf_eq_self_of_terminated terminated_at_n],
+    simp [] [] ["only"] ["[", expr this, ",", expr convergents_stable_of_terminated n.le_succ terminated_at_n, "]"] [] [] },
+  { obtain ["⟨", "⟨", ident a, ",", ident b, "⟩", ",", ident s_nth_eq, "⟩", ":", expr «expr∃ , »((gp_n), «expr = »(g.s.nth n, some gp_n))],
+    from [expr option.ne_none_iff_exists'.mp not_terminated_at_n],
+    have [ident b_ne_zero] [":", expr «expr ≠ »(b, 0)] [],
+    from [expr nth_part_denom_ne_zero (part_denom_eq_s_b s_nth_eq)],
+    cases [expr n] ["with", ident n'],
+    case [ident nat.zero] { suffices [] [":", expr «expr = »(«expr / »(«expr + »(«expr * »(b, g.h), a), b), «expr + »(g.h, «expr / »(a, b)))],
+      by simpa [] [] [] ["[", expr squash_gcf, ",", expr s_nth_eq, ",", expr convergent_eq_conts_a_div_conts_b, ",", expr continuants_recurrence_aux s_nth_eq zeroth_continuant_aux_eq_one_zero first_continuant_aux_eq_h_one, "]"] [] [],
+      calc
+        «expr = »(«expr / »(«expr + »(«expr * »(b, g.h), a), b), «expr + »(«expr / »(«expr * »(b, g.h), b), «expr / »(a, b))) : by ring []
+        «expr = »(..., «expr + »(g.h, «expr / »(a, b))) : by rw [expr mul_div_cancel_left _ b_ne_zero] [] },
+    case [ident nat.succ] { obtain ["⟨", "⟨", ident pa, ",", ident pb, "⟩", ",", ident s_n'th_eq, "⟩", ":", expr «expr∃ , »((gp_n'), «expr = »(g.s.nth n', some gp_n')), ":=", expr g.s.ge_stable n'.le_succ s_nth_eq],
+      let [ident g'] [] [":=", expr squash_gcf g «expr + »(n', 1)],
+      set [] [ident pred_conts] [] [":="] [expr g.continuants_aux «expr + »(n', 1)] ["with", ident succ_n'th_conts_aux_eq],
+      set [] [ident ppred_conts] [] [":="] [expr g.continuants_aux n'] ["with", ident n'th_conts_aux_eq],
+      let [ident pA] [] [":=", expr pred_conts.a],
+      let [ident pB] [] [":=", expr pred_conts.b],
+      let [ident ppA] [] [":=", expr ppred_conts.a],
+      let [ident ppB] [] [":=", expr ppred_conts.b],
+      set [] [ident pred_conts'] [] [":="] [expr g'.continuants_aux «expr + »(n', 1)] ["with", ident succ_n'th_conts_aux_eq'],
+      set [] [ident ppred_conts'] [] [":="] [expr g'.continuants_aux n'] ["with", ident n'th_conts_aux_eq'],
+      let [ident pA'] [] [":=", expr pred_conts'.a],
+      let [ident pB'] [] [":=", expr pred_conts'.b],
+      let [ident ppA'] [] [":=", expr ppred_conts'.a],
+      let [ident ppB'] [] [":=", expr ppred_conts'.b],
+      have [] [":", expr «expr = »(g'.convergents «expr + »(n', 1), «expr / »(«expr + »(«expr * »(«expr + »(pb, «expr / »(a, b)), pA'), «expr * »(pa, ppA')), «expr + »(«expr * »(«expr + »(pb, «expr / »(a, b)), pB'), «expr * »(pa, ppB'))))] [],
+      { have [] [":", expr «expr = »(g'.s.nth n', some ⟨pa, «expr + »(pb, «expr / »(a, b))⟩)] [":=", expr squash_seq_nth_of_not_terminated s_n'th_eq s_nth_eq],
+        rw ["[", expr convergent_eq_conts_a_div_conts_b, ",", expr continuants_recurrence_aux this n'th_conts_aux_eq'.symm succ_n'th_conts_aux_eq'.symm, "]"] [] },
+      rw [expr this] [],
+      have [] [":", expr «expr = »(g.convergents «expr + »(n', 2), «expr / »(«expr + »(«expr * »(b, «expr + »(«expr * »(pb, pA), «expr * »(pa, ppA))), «expr * »(a, pA)), «expr + »(«expr * »(b, «expr + »(«expr * »(pb, pB), «expr * »(pa, ppB))), «expr * »(a, pB))))] [],
+      { have [] [":", expr «expr = »(g.continuants_aux «expr + »(n', 2), ⟨«expr + »(«expr * »(pb, pA), «expr * »(pa, ppA)), «expr + »(«expr * »(pb, pB), «expr * »(pa, ppB))⟩)] [":=", expr continuants_aux_recurrence s_n'th_eq n'th_conts_aux_eq.symm succ_n'th_conts_aux_eq.symm],
+        rw ["[", expr convergent_eq_conts_a_div_conts_b, ",", expr continuants_recurrence_aux s_nth_eq succ_n'th_conts_aux_eq.symm this, "]"] [] },
+      rw [expr this] [],
+      suffices [] [":", expr «expr = »(«expr / »(«expr + »(«expr * »(«expr + »(pb, «expr / »(a, b)), pA), «expr * »(pa, ppA)), «expr + »(«expr * »(«expr + »(pb, «expr / »(a, b)), pB), «expr * »(pa, ppB))), «expr / »(«expr + »(«expr * »(b, «expr + »(«expr * »(pb, pA), «expr * »(pa, ppA))), «expr * »(a, pA)), «expr + »(«expr * »(b, «expr + »(«expr * »(pb, pB), «expr * »(pa, ppB))), «expr * »(a, pB))))],
+      { obtain ["⟨", ident eq1, ",", ident eq2, ",", ident eq3, ",", ident eq4, "⟩", ":", expr «expr ∧ »(«expr = »(pA', pA), «expr ∧ »(«expr = »(pB', pB), «expr ∧ »(«expr = »(ppA', ppA), «expr = »(ppB', ppB))))],
+        { simp [] [] [] ["[", "*", ",", expr «expr $ »(continuants_aux_eq_continuants_aux_squash_gcf_of_le, «expr $ »(le_refl, «expr + »(n', 1))).symm, ",", expr (continuants_aux_eq_continuants_aux_squash_gcf_of_le n'.le_succ).symm, "]"] [] [] },
+        symmetry,
+        simpa [] [] ["only"] ["[", expr eq1, ",", expr eq2, ",", expr eq3, ",", expr eq4, ",", expr mul_div_cancel _ b_ne_zero, "]"] [] [] },
+      field_simp [] [] [] [],
+      congr' [1] []; ring [] } }
+end
 
 end Squash
 
+-- error in Algebra.ContinuedFractions.ConvergentsEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Shows that the recurrence relation (`convergents`) and direct evaluation (`convergents'`) of the
 gcf coincide at position `n` if the sequence of fractions contains strictly positive values only.
 Requiring positivity of all values is just one possible condition to obtain this result.
@@ -338,61 +307,50 @@ In practice, one most commonly deals with (regular) continued fractions, which s
 positivity criterion required here. The analogous result for them
 (see `continued_fractions.convergents_eq_convergents`) hence follows directly from this theorem.
 -/
-theorem convergents_eq_convergents' [LinearOrderedField K]
-  (s_pos : ∀ {gp : pair K} {m : ℕ}, m < n → g.s.nth m = some gp → 0 < gp.a ∧ 0 < gp.b) :
-  g.convergents n = g.convergents' n :=
-  by 
-    induction' n with n IH generalizing g 
-    case nat.zero => 
-      simp 
-    case nat.succ => 
-      let g' := squash_gcf g n 
-      suffices  : g.convergents (n+1) = g'.convergents' n
-      ·
-        rwa [succ_nth_convergent'_eq_squash_gcf_nth_convergent']
-      cases' Decidable.em (terminated_at g n) with terminated_at_n not_terminated_at_n
-      ·
-        have g'_eq_g : g' = g 
-        exact squash_gcf_eq_self_of_terminated terminated_at_n 
-        rw [convergents_stable_of_terminated n.le_succ terminated_at_n, g'_eq_g, IH _]
-        intro _ _ m_lt_n s_mth_eq 
-        exact s_pos (Nat.Lt.step m_lt_n) s_mth_eq
-      ·
-        suffices  : g.convergents (n+1) = g'.convergents n
-        ·
-          ·
-            rwa [←IH]
-            intro gp' m m_lt_n s_mth_eq' 
-            cases' m_lt_n with n succ_m_lt_n
-            ·
-              obtain ⟨gp_succ_m, s_succ_mth_eq⟩ : ∃ gp_succ_m, g.s.nth (m+1) = some gp_succ_m 
-              exact option.ne_none_iff_exists'.mp not_terminated_at_n 
-              obtain ⟨gp_m, mth_s_eq⟩ : ∃ gp_m, g.s.nth m = some gp_m 
-              exact g.s.ge_stable m.le_succ s_succ_mth_eq 
-              suffices  : 0 < gp_m.a ∧ 0 < gp_m.b+gp_succ_m.a / gp_succ_m.b
-              ·
-                ·
-                  have ot : g'.s.nth m = some ⟨gp_m.a, gp_m.b+gp_succ_m.a / gp_succ_m.b⟩
-                  exact squash_seq_nth_of_not_terminated mth_s_eq s_succ_mth_eq 
-                  have  : gp' = ⟨gp_m.a, gp_m.b+gp_succ_m.a / gp_succ_m.b⟩
-                  ·
-                    cc 
-                  rwa [this]
-              refine' ⟨(s_pos (Nat.Lt.step m_lt_n) mth_s_eq).left, _⟩
-              refine' add_pos (s_pos (Nat.Lt.step m_lt_n) mth_s_eq).right _ 
-              have  : 0 < gp_succ_m.a ∧ 0 < gp_succ_m.b := s_pos (lt_add_one$ m+1) s_succ_mth_eq 
-              exact div_pos this.left this.right
-            ·
-              refine' s_pos (Nat.Lt.step$ Nat.Lt.step succ_m_lt_n) _ 
-              exact Eq.trans (squash_gcf_nth_of_lt succ_m_lt_n).symm s_mth_eq' 
-        have  : ∀ ⦃b⦄, g.partial_denominators.nth n = some b → b ≠ 0
-        ·
-          ·
-            intro b nth_part_denom_eq 
-            obtain ⟨gp, s_nth_eq, ⟨refl⟩⟩ : ∃ gp, g.s.nth n = some gp ∧ gp.b = b 
-            exact exists_s_b_of_part_denom nth_part_denom_eq 
-            exact (ne_of_ltₓ (s_pos (lt_add_one n) s_nth_eq).right).symm 
-        exact succ_nth_convergent_eq_squash_gcf_nth_convergent this
+theorem convergents_eq_convergents'
+[linear_ordered_field K]
+(s_pos : ∀
+ {gp : pair K}
+ {m : exprℕ()}, «expr < »(m, n) → «expr = »(g.s.nth m, some gp) → «expr ∧ »(«expr < »(0, gp.a), «expr < »(0, gp.b))) : «expr = »(g.convergents n, g.convergents' n) :=
+begin
+  induction [expr n] [] ["with", ident n, ident IH] ["generalizing", ident g],
+  case [ident nat.zero] { simp [] [] [] [] [] [] },
+  case [ident nat.succ] { let [ident g'] [] [":=", expr squash_gcf g n],
+    suffices [] [":", expr «expr = »(g.convergents «expr + »(n, 1), g'.convergents' n)],
+    by rwa ["[", expr succ_nth_convergent'_eq_squash_gcf_nth_convergent', "]"] [],
+    cases [expr decidable.em (terminated_at g n)] ["with", ident terminated_at_n, ident not_terminated_at_n],
+    { have [ident g'_eq_g] [":", expr «expr = »(g', g)] [],
+      from [expr squash_gcf_eq_self_of_terminated terminated_at_n],
+      rw ["[", expr convergents_stable_of_terminated n.le_succ terminated_at_n, ",", expr g'_eq_g, ",", expr IH _, "]"] [],
+      assume [binders (_ _ m_lt_n s_mth_eq)],
+      exact [expr s_pos (nat.lt.step m_lt_n) s_mth_eq] },
+    { suffices [] [":", expr «expr = »(g.convergents «expr + »(n, 1), g'.convergents n)],
+      by { rwa ["<-", expr IH] [],
+        assume [binders (gp' m m_lt_n s_mth_eq')],
+        cases [expr m_lt_n] ["with", ident n, ident succ_m_lt_n],
+        { obtain ["⟨", ident gp_succ_m, ",", ident s_succ_mth_eq, "⟩", ":", expr «expr∃ , »((gp_succ_m), «expr = »(g.s.nth «expr + »(m, 1), some gp_succ_m))],
+          from [expr option.ne_none_iff_exists'.mp not_terminated_at_n],
+          obtain ["⟨", ident gp_m, ",", ident mth_s_eq, "⟩", ":", expr «expr∃ , »((gp_m), «expr = »(g.s.nth m, some gp_m))],
+          from [expr g.s.ge_stable m.le_succ s_succ_mth_eq],
+          suffices [] [":", expr «expr ∧ »(«expr < »(0, gp_m.a), «expr < »(0, «expr + »(gp_m.b, «expr / »(gp_succ_m.a, gp_succ_m.b))))],
+          by { have [ident ot] [":", expr «expr = »(g'.s.nth m, some ⟨gp_m.a, «expr + »(gp_m.b, «expr / »(gp_succ_m.a, gp_succ_m.b))⟩)] [],
+            from [expr squash_seq_nth_of_not_terminated mth_s_eq s_succ_mth_eq],
+            have [] [":", expr «expr = »(gp', ⟨gp_m.a, «expr + »(gp_m.b, «expr / »(gp_succ_m.a, gp_succ_m.b))⟩)] [],
+            by cc,
+            rwa [expr this] [] },
+          refine [expr ⟨(s_pos (nat.lt.step m_lt_n) mth_s_eq).left, _⟩],
+          refine [expr add_pos (s_pos (nat.lt.step m_lt_n) mth_s_eq).right _],
+          have [] [":", expr «expr ∧ »(«expr < »(0, gp_succ_m.a), «expr < »(0, gp_succ_m.b))] [":=", expr s_pos «expr $ »(lt_add_one, «expr + »(m, 1)) s_succ_mth_eq],
+          exact [expr div_pos this.left this.right] },
+        { refine [expr s_pos «expr $ »(nat.lt.step, nat.lt.step succ_m_lt_n) _],
+          exact [expr eq.trans (squash_gcf_nth_of_lt succ_m_lt_n).symm s_mth_eq'] } },
+      have [] [":", expr ∀ {{b}}, «expr = »(g.partial_denominators.nth n, some b) → «expr ≠ »(b, 0)] [],
+      by { assume [binders (b nth_part_denom_eq)],
+        obtain ["⟨", ident gp, ",", ident s_nth_eq, ",", "⟨", ident refl, "⟩", "⟩", ":", expr «expr∃ , »((gp), «expr ∧ »(«expr = »(g.s.nth n, some gp), «expr = »(gp.b, b)))],
+        from [expr exists_s_b_of_part_denom nth_part_denom_eq],
+        exact [expr (ne_of_lt (s_pos (lt_add_one n) s_nth_eq).right).symm] },
+      exact [expr succ_nth_convergent_eq_squash_gcf_nth_convergent this] } }
+end
 
 end GeneralizedContinuedFraction
 

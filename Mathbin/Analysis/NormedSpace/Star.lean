@@ -1,3 +1,4 @@
+import Mathbin.Analysis.NormedSpace.Basic 
 import Mathbin.Analysis.NormedSpace.LinearIsometry
 
 /-!
@@ -41,28 +42,28 @@ variable{𝕜 E : Type _}
 
 open CstarRing
 
+-- error in Analysis.NormedSpace.Star: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a C*-ring, star preserves the norm. -/
-instance (priority := 100)CstarRing.toNormedStarMonoid {E : Type _} [NormedRing E] [StarRing E] [CstarRing E] :
-  NormedStarMonoid E :=
-  ⟨by 
-      intro x 
-      byCases' htriv : x = 0
-      ·
-        simp only [htriv, star_zero]
-      ·
-        have hnt : 0 < ∥x∥ := norm_pos_iff.mpr htriv 
-        have hnt_star : 0 < ∥x⋆∥ := norm_pos_iff.mpr ((AddEquiv.map_ne_zero_iff starAddEquiv).mpr htriv)
-        have h₁ :=
-          calc (∥x∥*∥x∥) = ∥x⋆*x∥ := norm_star_mul_self.symm 
-            _ ≤ ∥x⋆∥*∥x∥ := norm_mul_le _ _ 
-            
-        have h₂ :=
-          calc (∥x⋆∥*∥x⋆∥) = ∥x*x⋆∥ :=
-            by 
-              rw [←norm_star_mul_self, star_star]
-            _ ≤ ∥x∥*∥x⋆∥ := norm_mul_le _ _ 
-            
-        exact le_antisymmₓ (le_of_mul_le_mul_right h₂ hnt_star) (le_of_mul_le_mul_right h₁ hnt)⟩
+@[priority 100]
+instance cstar_ring.to_normed_star_monoid
+{E : Type*}
+[normed_ring E]
+[star_ring E]
+[cstar_ring E] : normed_star_monoid E :=
+⟨begin
+   intro [ident x],
+   by_cases [expr htriv, ":", expr «expr = »(x, 0)],
+   { simp [] [] ["only"] ["[", expr htriv, ",", expr star_zero, "]"] [] [] },
+   { have [ident hnt] [":", expr «expr < »(0, «expr∥ ∥»(x))] [":=", expr norm_pos_iff.mpr htriv],
+     have [ident hnt_star] [":", expr «expr < »(0, «expr∥ ∥»(«expr ⋆»(x)))] [":=", expr norm_pos_iff.mpr ((add_equiv.map_ne_zero_iff star_add_equiv).mpr htriv)],
+     have [ident h₁] [] [":=", expr calc
+        «expr = »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(x)), «expr∥ ∥»(«expr * »(«expr ⋆»(x), x))) : norm_star_mul_self.symm
+        «expr ≤ »(..., «expr * »(«expr∥ ∥»(«expr ⋆»(x)), «expr∥ ∥»(x))) : norm_mul_le _ _],
+     have [ident h₂] [] [":=", expr calc
+        «expr = »(«expr * »(«expr∥ ∥»(«expr ⋆»(x)), «expr∥ ∥»(«expr ⋆»(x))), «expr∥ ∥»(«expr * »(x, «expr ⋆»(x)))) : by rw ["[", "<-", expr norm_star_mul_self, ",", expr star_star, "]"] []
+        «expr ≤ »(..., «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(«expr ⋆»(x)))) : norm_mul_le _ _],
+     exact [expr le_antisymm (le_of_mul_le_mul_right h₂ hnt_star) (le_of_mul_le_mul_right h₁ hnt)] }
+ end⟩
 
 theorem CstarRing.norm_self_mul_star [NormedRing E] [StarRing E] [CstarRing E] {x : E} : ∥x*x⋆∥ = ∥x∥*∥x∥ :=
   by 

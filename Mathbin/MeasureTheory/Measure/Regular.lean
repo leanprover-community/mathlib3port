@@ -273,16 +273,25 @@ theorem _root_.measurable_set.exists_is_open_diff_lt [OpensMeasurableSpace α] [
     use U, hAU, hUo, hU.trans_le le_top 
     exact measure_diff_lt_of_lt_add hA hUo.measurable_set hAU hA' hU
 
-protected theorem map [OpensMeasurableSpace α] [MeasurableSpace β] [TopologicalSpace β] [BorelSpace β] (f : α ≃ₜ β)
-  (μ : Measureₓ α) [outer_regular μ] : (measure.map f μ).OuterRegular :=
-  by 
-    refine' ⟨fun A hA r hr => _⟩
-    rw [map_apply f.measurable hA, ←f.image_symm] at hr 
-    rcases Set.exists_is_open_lt_of_lt _ r hr with ⟨U, hAU, hUo, hU⟩
-    have  : IsOpen (f.symm ⁻¹' U)
-    exact hUo.preimage f.symm.continuous 
-    refine' ⟨f.symm ⁻¹' U, image_subset_iff.1 hAU, this, _⟩
-    rwa [map_apply f.measurable this.measurable_set, f.preimage_symm, f.preimage_image]
+-- error in MeasureTheory.Measure.Regular: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem map
+[opens_measurable_space α]
+[measurable_space β]
+[topological_space β]
+[borel_space β]
+(f : «expr ≃ₜ »(α, β))
+(μ : measure α)
+[outer_regular μ] : (measure.map f μ).outer_regular :=
+begin
+  refine [expr ⟨λ A hA r hr, _⟩],
+  rw ["[", expr map_apply f.measurable hA, ",", "<-", expr f.image_symm, "]"] ["at", ident hr],
+  rcases [expr set.exists_is_open_lt_of_lt _ r hr, "with", "⟨", ident U, ",", ident hAU, ",", ident hUo, ",", ident hU, "⟩"],
+  have [] [":", expr is_open «expr ⁻¹' »(f.symm, U)] [],
+  from [expr hUo.preimage f.symm.continuous],
+  refine [expr ⟨«expr ⁻¹' »(f.symm, U), image_subset_iff.1 hAU, this, _⟩],
+  rwa ["[", expr map_apply f.measurable this.measurable_set, ",", expr f.preimage_symm, ",", expr f.preimage_image, "]"] []
+end
 
 protected theorem smul (μ : Measureₓ α) [outer_regular μ] {x : ℝ≥0∞} (hx : x ≠ ∞) : (x • μ).OuterRegular :=
   by 
@@ -297,81 +306,80 @@ protected theorem smul (μ : Measureₓ α) [outer_regular μ] {x : ℝ≥0∞} 
 
 end OuterRegular
 
+-- error in MeasureTheory.Measure.Regular: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a measure `μ` admits finite spanning open sets such that the restriction of `μ` to each set
 is outer regular, then the original measure is outer regular as well. -/
-protected theorem finite_spanning_sets_in.outer_regular [OpensMeasurableSpace α] {μ : Measureₓ α}
-  (s : μ.finite_spanning_sets_in { U | IsOpen U ∧ outer_regular (μ.restrict U) }) : outer_regular μ :=
-  by 
-    refine' ⟨fun A hA r hr => _⟩
-    have hm : ∀ n, MeasurableSet (s.set n)
-    exact fun n => (s.set_mem n).1.MeasurableSet 
-    haveI  : ∀ n, outer_regular (μ.restrict (s.set n)) := fun n => (s.set_mem n).2
-    obtain ⟨A, hAm, hAs, hAd, rfl⟩ :
-      ∃ A' : ℕ → Set α, (∀ n, MeasurableSet (A' n)) ∧ (∀ n, A' n ⊆ s.set n) ∧ Pairwise (Disjoint on A') ∧ A = ⋃n, A' n
-    ·
-      refine'
-        ⟨fun n => A ∩ disjointed s.set n, fun n => hA.inter (MeasurableSet.disjointed hm _),
-          fun n => (inter_subset_right _ _).trans (disjointed_subset _ _),
-          (disjoint_disjointed s.set).mono fun k l hkl => hkl.mono inf_le_right inf_le_right, _⟩
-      rw [←inter_Union, Union_disjointed, s.spanning, inter_univ]
-    rcases Ennreal.exists_pos_sum_of_encodable' (tsub_pos_iff_lt.2 hr).ne' ℕ with ⟨δ, δ0, hδε⟩
-    rw [lt_tsub_iff_right, add_commₓ] at hδε 
-    have  : ∀ n, ∃ (U : _)(_ : U ⊇ A n), IsOpen U ∧ μ U < μ (A n)+δ n
-    ·
-      intro n 
-      have H₁ : ∀ t, μ.restrict (s.set n) t = μ (t ∩ s.set n)
-      exact fun t => restrict_apply' (hm n)
-      have Ht : μ.restrict (s.set n) (A n) ≠ ⊤
-      ·
-        rw [H₁]
-        exact ((measure_mono$ inter_subset_right _ _).trans_lt (s.finite n)).Ne 
-      rcases(A n).exists_is_open_lt_add Ht (δ0 n).ne' with ⟨U, hAU, hUo, hU⟩
-      rw [H₁, H₁, inter_eq_self_of_subset_left (hAs _)] at hU 
-      exact ⟨U ∩ s.set n, subset_inter hAU (hAs _), hUo.inter (s.set_mem n).1, hU⟩
-    choose U hAU hUo hU 
-    refine' ⟨⋃n, U n, Union_subset_Union hAU, is_open_Union hUo, _⟩
-    calc μ (⋃n, U n) ≤ ∑'n, μ (U n) := measure_Union_le _ _ ≤ ∑'n, μ (A n)+δ n :=
-      Ennreal.tsum_le_tsum fun n => (hU n).le _ = (∑'n, μ (A n))+∑'n, δ n :=
-      Ennreal.tsum_add _ = μ (⋃n, A n)+∑'n, δ n := congr_arg2 (·+·) (measure_Union hAd hAm).symm rfl _ < r := hδε
+protected
+theorem finite_spanning_sets_in.outer_regular
+[opens_measurable_space α]
+{μ : measure α}
+(s : μ.finite_spanning_sets_in {U | «expr ∧ »(is_open U, outer_regular (μ.restrict U))}) : outer_regular μ :=
+begin
+  refine [expr ⟨λ A hA r hr, _⟩],
+  have [ident hm] [":", expr ∀ n, measurable_set (s.set n)] [],
+  from [expr λ n, (s.set_mem n).1.measurable_set],
+  haveI [] [":", expr ∀ n, outer_regular (μ.restrict (s.set n))] [":=", expr λ n, (s.set_mem n).2],
+  obtain ["⟨", ident A, ",", ident hAm, ",", ident hAs, ",", ident hAd, ",", ident rfl, "⟩", ":", expr «expr∃ , »((A' : exprℕ() → set α), «expr ∧ »(∀
+     n, measurable_set (A' n), «expr ∧ »(∀
+      n, «expr ⊆ »(A' n, s.set n), «expr ∧ »(pairwise «expr on »(disjoint, A'), «expr = »(A, «expr⋃ , »((n), A' n))))))],
+  { refine [expr ⟨λ
+      n, «expr ∩ »(A, disjointed s.set n), λ
+      n, hA.inter (measurable_set.disjointed hm _), λ
+      n, (inter_subset_right _ _).trans (disjointed_subset _ _), (disjoint_disjointed s.set).mono (λ
+       k l hkl, hkl.mono inf_le_right inf_le_right), _⟩],
+    rw ["[", "<-", expr inter_Union, ",", expr Union_disjointed, ",", expr s.spanning, ",", expr inter_univ, "]"] [] },
+  rcases [expr ennreal.exists_pos_sum_of_encodable' (tsub_pos_iff_lt.2 hr).ne' exprℕ(), "with", "⟨", ident δ, ",", ident δ0, ",", ident hδε, "⟩"],
+  rw ["[", expr lt_tsub_iff_right, ",", expr add_comm, "]"] ["at", ident hδε],
+  have [] [":", expr ∀
+   n, «expr∃ , »((U «expr ⊇ » A n), «expr ∧ »(is_open U, «expr < »(μ U, «expr + »(μ (A n), δ n))))] [],
+  { intro [ident n],
+    have [ident H₁] [":", expr ∀ t, «expr = »(μ.restrict (s.set n) t, μ «expr ∩ »(t, s.set n))] [],
+    from [expr λ t, restrict_apply' (hm n)],
+    have [ident Ht] [":", expr «expr ≠ »(μ.restrict (s.set n) (A n), «expr⊤»())] [],
+    { rw [expr H₁] [],
+      exact [expr («expr $ »(measure_mono, inter_subset_right _ _).trans_lt (s.finite n)).ne] },
+    rcases [expr (A n).exists_is_open_lt_add Ht (δ0 n).ne', "with", "⟨", ident U, ",", ident hAU, ",", ident hUo, ",", ident hU, "⟩"],
+    rw ["[", expr H₁, ",", expr H₁, ",", expr inter_eq_self_of_subset_left (hAs _), "]"] ["at", ident hU],
+    exact [expr ⟨«expr ∩ »(U, s.set n), subset_inter hAU (hAs _), hUo.inter (s.set_mem n).1, hU⟩] },
+  choose [] [ident U] [ident hAU, ident hUo, ident hU] [],
+  refine [expr ⟨«expr⋃ , »((n), U n), Union_subset_Union hAU, is_open_Union hUo, _⟩],
+  calc
+    «expr ≤ »(μ «expr⋃ , »((n), U n), «expr∑' , »((n), μ (U n))) : measure_Union_le _
+    «expr ≤ »(..., «expr∑' , »((n), «expr + »(μ (A n), δ n))) : ennreal.tsum_le_tsum (λ n, (hU n).le)
+    «expr = »(..., «expr + »(«expr∑' , »((n), μ (A n)), «expr∑' , »((n), δ n))) : ennreal.tsum_add
+    «expr = »(..., «expr + »(μ «expr⋃ , »((n), A n), «expr∑' , »((n), δ n))) : congr_arg2 ((«expr + »)) (measure_Union hAd hAm).symm rfl
+    «expr < »(..., r) : hδε
+end
 
 namespace InnerRegular
 
 variable{p q : Set α → Prop}{U s : Set α}{ε r : ℝ≥0∞}
 
--- error in MeasureTheory.Measure.Regular: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If a measure is inner regular (using closed or compact sets), then every measurable set of
 finite measure can by approximated by a (closed or compact) subset. -/
-theorem measurable_set_of_open
-[opens_measurable_space α]
-[outer_regular μ]
-(H : inner_regular μ p is_open)
-(h0 : p «expr∅»())
-(hd : ∀
- {{s
-   U}}, p s → is_open U → p «expr \ »(s, U)) : inner_regular μ p (λ
- s, «expr ∧ »(measurable_set s, «expr ≠ »(μ s, «expr∞»()))) :=
-begin
-  rintros [ident s, "⟨", ident hs, ",", ident hμs, "⟩", ident r, ident hr],
-  obtain ["⟨", ident ε, ",", ident hε, ",", ident hεs, ",", ident rfl, "⟩", ":", expr «expr∃ , »((ε «expr ≠ » 0), «expr ∧ »(«expr ≤ »(«expr + »(ε, ε), μ s), «expr = »(r, «expr - »(μ s, «expr + »(ε, ε)))))],
-  { use [expr «expr / »(«expr - »(μ s, r), 2)],
-    simp [] [] [] ["[", "*", ",", expr hr.le, ",", expr ennreal.add_halves, ",", expr ennreal.sub_sub_cancel, ",", expr le_add_right, "]"] [] [] },
-  rcases [expr hs.exists_is_open_diff_lt hμs hε, "with", "⟨", ident U, ",", ident hsU, ",", ident hUo, ",", ident hUt, ",", ident hμU, "⟩"],
-  rcases [expr «expr \ »(U, s).exists_is_open_lt_of_lt _ hμU, "with", "⟨", ident U', ",", ident hsU', ",", ident hU'o, ",", ident hμU', "⟩"],
-  replace [ident hsU'] [] [":=", expr diff_subset_comm.1 hsU'],
-  rcases [expr H.exists_subset_lt_add h0 hUo hUt.ne hε, "with", "⟨", ident K, ",", ident hKU, ",", ident hKc, ",", ident hKr, "⟩"],
-  refine [expr ⟨«expr \ »(K, U'), λ x hx, hsU' ⟨hKU hx.1, hx.2⟩, hd hKc hU'o, ennreal.sub_lt_of_lt_add hεs _⟩],
-  calc
-    «expr ≤ »(μ s, μ U) : μ.mono hsU
-    «expr < »(..., «expr + »(μ K, ε)) : hKr
-    «expr ≤ »(..., «expr + »(«expr + »(μ «expr \ »(K, U'), μ U'), ε)) : add_le_add_right (tsub_le_iff_right.1 le_measure_diff) _
-    «expr ≤ »(..., «expr + »(«expr + »(μ «expr \ »(K, U'), ε), ε)) : by { mono ["*"] [] [] [],
-      exacts ["[", expr hμU'.le, ",", expr le_rfl, "]"] }
-    «expr = »(..., «expr + »(μ «expr \ »(K, U'), «expr + »(ε, ε))) : add_assoc _ _ _
-end
+theorem measurable_set_of_open [OpensMeasurableSpace α] [outer_regular μ] (H : inner_regular μ p IsOpen) (h0 : p ∅)
+  (hd : ∀ ⦃s U⦄, p s → IsOpen U → p (s \ U)) : inner_regular μ p fun s => MeasurableSet s ∧ μ s ≠ ∞ :=
+  by 
+    rintro s ⟨hs, hμs⟩ r hr 
+    obtain ⟨ε, hε, hεs, rfl⟩ : ∃ (ε : _)(_ : ε ≠ 0), (ε+ε) ≤ μ s ∧ r = μ s - ε+ε
+    ·
+      use (μ s - r) / 2
+      simp [hr.le, Ennreal.add_halves, Ennreal.sub_sub_cancel, le_add_right]
+    rcases hs.exists_is_open_diff_lt hμs hε with ⟨U, hsU, hUo, hUt, hμU⟩
+    rcases(U \ s).exists_is_open_lt_of_lt _ hμU with ⟨U', hsU', hU'o, hμU'⟩
+    replace hsU' := diff_subset_comm.1 hsU' 
+    rcases H.exists_subset_lt_add h0 hUo hUt.ne hε with ⟨K, hKU, hKc, hKr⟩
+    refine' ⟨K \ U', fun x hx => hsU' ⟨hKU hx.1, hx.2⟩, hd hKc hU'o, Ennreal.sub_lt_of_lt_add hεs _⟩
+    calc μ s ≤ μ U := μ.mono hsU _ < μ K+ε := hKr _ ≤ (μ (K \ U')+μ U')+ε :=
+      add_le_add_right (tsub_le_iff_right.1 le_measure_diff) _ _ ≤ (μ (K \ U')+ε)+ε :=
+      by 
+        mono*
+        exacts[hμU'.le, le_rfl]_ = μ (K \ U')+ε+ε :=
+      add_assocₓ _ _ _
 
 open Finset
 
--- error in MeasureTheory.Measure.Regular: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Measure.Regular: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a finite measure space, assume that any open set can be approximated from inside by closed
 sets. Then the measure is weakly regular. -/
 theorem weakly_regular_of_finite
@@ -440,7 +448,7 @@ theorem of_pseudo_emetric_space {X : Type _} [PseudoEmetricSpace X] [MeasurableS
     rcases lt_supr_iff.1 hr with ⟨n, hn⟩
     exact ⟨F n, subset_Union _ _, F_closed n, hn⟩
 
--- error in MeasureTheory.Measure.Regular: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Measure.Regular: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a `σ`-compact space, any closed set can be approximated by a compact subset. -/
 theorem is_compact_is_closed
 {X : Type*}
@@ -524,25 +532,35 @@ theorem _root_.measurable_set.measure_eq_supr_is_compact_of_ne_top [OpensMeasura
   (hA : MeasurableSet A) (h'A : μ A ≠ ∞) : μ A = ⨆(K : _)(_ : K ⊆ A)(h : IsCompact K), μ K :=
   regular.inner_regular_measurable.measure_eq_supr ⟨hA, h'A⟩
 
-protected theorem map [OpensMeasurableSpace α] [MeasurableSpace β] [TopologicalSpace β] [T2Space β] [BorelSpace β]
-  [regular μ] (f : α ≃ₜ β) : (measure.map f μ).regular :=
-  by 
-    haveI  := outer_regular.map f μ 
-    split 
-    ·
-      intro K hK 
-      rw [map_apply f.measurable hK.measurable_set]
-      apply regular.lt_top_of_is_compact 
-      rwa [f.compact_preimage]
-    ·
-      exact
-        regular.inner_regular.map f.to_equiv f.measurable (fun U hU => hU.preimage f.continuous)
-          (fun K hK => hK.image f.continuous) (fun K hK => hK.measurable_set) fun U hU => hU.measurable_set
+-- error in MeasureTheory.Measure.Regular: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem map
+[opens_measurable_space α]
+[measurable_space β]
+[topological_space β]
+[t2_space β]
+[borel_space β]
+[regular μ]
+(f : «expr ≃ₜ »(α, β)) : (measure.map f μ).regular :=
+begin
+  haveI [] [] [":=", expr outer_regular.map f μ],
+  split,
+  { intros [ident K, ident hK],
+    rw ["[", expr map_apply f.measurable hK.measurable_set, "]"] [],
+    apply [expr regular.lt_top_of_is_compact],
+    rwa [expr f.compact_preimage] [] },
+  { exact [expr regular.inner_regular.map f.to_equiv f.measurable (λ
+      U
+      hU, hU.preimage f.continuous) (λ
+      K hK, hK.image f.continuous) (λ K hK, hK.measurable_set) (λ U hU, hU.measurable_set)] }
+end
 
-protected theorem smul [regular μ] {x : ℝ≥0∞} (hx : x ≠ ∞) : (x • μ).regular :=
-  by 
-    haveI  := outer_regular.smul μ hx 
-    exact ⟨fun K hK => Ennreal.mul_lt_top hx (regular.lt_top_of_is_compact hK).Ne, regular.inner_regular.smul x⟩
+-- error in MeasureTheory.Measure.Regular: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected theorem smul [regular μ] {x : «exprℝ≥0∞»()} (hx : «expr ≠ »(x, «expr∞»())) : «expr • »(x, μ).regular :=
+begin
+  haveI [] [] [":=", expr outer_regular.smul μ hx],
+  exact [expr ⟨λ K hK, ennreal.mul_lt_top hx (regular.lt_top_of_is_compact hK).ne, regular.inner_regular.smul x⟩]
+end
 
 /-- A regular measure in a σ-compact space is σ-finite. -/
 instance (priority := 100)sigma_finite [SigmaCompactSpace α] [regular μ] : sigma_finite μ :=
@@ -593,39 +611,52 @@ theorem _root_.measurable_set.measure_eq_supr_is_closed_of_ne_top [OpensMeasurab
   ⦃A : Set α⦄ (hA : MeasurableSet A) (h'A : μ A ≠ ∞) : μ A = ⨆(K : _)(_ : K ⊆ A)(h : IsClosed K), μ K :=
   inner_regular_measurable.measure_eq_supr ⟨hA, h'A⟩
 
+-- error in MeasureTheory.Measure.Regular: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The restriction of a weakly regular measure to a measurable set of finite measure is
 weakly regular. -/
-theorem restrict_of_measurable_set [BorelSpace α] [weakly_regular μ] (A : Set α) (hA : MeasurableSet A)
-  (h'A : μ A ≠ ∞) : weakly_regular (μ.restrict A) :=
-  by 
-    haveI  : Fact (μ A < ∞) := ⟨h'A.lt_top⟩
-    refine' inner_regular.weakly_regular_of_finite _ fun V V_open => _ 
-    simp only [restrict_apply' hA]
-    intro r hr 
-    have  : μ (V ∩ A) ≠ ∞
-    exact ne_top_of_le_ne_top h'A (measure_mono$ inter_subset_right _ _)
-    rcases(V_open.measurable_set.inter hA).exists_lt_is_closed_of_ne_top this hr with ⟨F, hFVA, hFc, hF⟩
-    refine' ⟨F, hFVA.trans (inter_subset_left _ _), hFc, _⟩
-    rwa [inter_eq_self_of_subset_left (hFVA.trans$ inter_subset_right _ _)]
+theorem restrict_of_measurable_set
+[borel_space α]
+[weakly_regular μ]
+(A : set α)
+(hA : measurable_set A)
+(h'A : «expr ≠ »(μ A, «expr∞»())) : weakly_regular (μ.restrict A) :=
+begin
+  haveI [] [":", expr fact «expr < »(μ A, «expr∞»())] [":=", expr ⟨h'A.lt_top⟩],
+  refine [expr inner_regular.weakly_regular_of_finite _ (λ V V_open, _)],
+  simp [] [] ["only"] ["[", expr restrict_apply' hA, "]"] [] [],
+  intros [ident r, ident hr],
+  have [] [":", expr «expr ≠ »(μ «expr ∩ »(V, A), «expr∞»())] [],
+  from [expr ne_top_of_le_ne_top h'A «expr $ »(measure_mono, inter_subset_right _ _)],
+  rcases [expr (V_open.measurable_set.inter hA).exists_lt_is_closed_of_ne_top this hr, "with", "⟨", ident F, ",", ident hFVA, ",", ident hFc, ",", ident hF, "⟩"],
+  refine [expr ⟨F, hFVA.trans (inter_subset_left _ _), hFc, _⟩],
+  rwa [expr inter_eq_self_of_subset_left «expr $ »(hFVA.trans, inter_subset_right _ _)] []
+end
 
 /-- Any finite measure on a metric space (or even a pseudo emetric space) is weakly regular. -/
 instance (priority := 100)of_pseudo_emetric_space_of_is_finite_measure {X : Type _} [PseudoEmetricSpace X]
   [MeasurableSpace X] [BorelSpace X] (μ : Measureₓ X) [is_finite_measure μ] : weakly_regular μ :=
   (inner_regular.of_pseudo_emetric_space μ).weakly_regular_of_finite μ
 
+-- error in MeasureTheory.Measure.Regular: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any locally finite measure on a `σ`-compact metric space (or even a pseudo emetric space) is
 weakly regular. -/
-instance (priority := 100)of_pseudo_emetric_sigma_compact_space_of_locally_finite {X : Type _} [PseudoEmetricSpace X]
-  [SigmaCompactSpace X] [MeasurableSpace X] [BorelSpace X] (μ : Measureₓ X) [is_locally_finite_measure μ] :
-  weakly_regular μ :=
-  by 
-    haveI  : outer_regular μ
-    ·
-      refine' (μ.finite_spanning_sets_in_open.mono'$ fun U hU => _).OuterRegular 
-      haveI  : Fact (μ U < ∞)
-      exact ⟨hU.2⟩
-      exact ⟨hU.1, inferInstance⟩
-    exact ⟨inner_regular.of_pseudo_emetric_space μ⟩
+@[priority 100]
+instance of_pseudo_emetric_sigma_compact_space_of_locally_finite
+{X : Type*}
+[pseudo_emetric_space X]
+[sigma_compact_space X]
+[measurable_space X]
+[borel_space X]
+(μ : measure X)
+[is_locally_finite_measure μ] : weakly_regular μ :=
+begin
+  haveI [] [":", expr outer_regular μ] [],
+  { refine [expr «expr $ »(μ.finite_spanning_sets_in_open.mono', λ U hU, _).outer_regular],
+    haveI [] [":", expr fact «expr < »(μ U, «expr∞»())] [],
+    from [expr ⟨hU.2⟩],
+    exact [expr ⟨hU.1, infer_instance⟩] },
+  exact [expr ⟨inner_regular.of_pseudo_emetric_space μ⟩]
+end
 
 end WeaklyRegular
 

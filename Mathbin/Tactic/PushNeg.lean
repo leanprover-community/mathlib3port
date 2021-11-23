@@ -59,33 +59,33 @@ private unsafe def transform_negation_step (e : expr) : tactic (Option (expr × 
   do 
     let e ← whnf_reducible e 
     match e with 
-      | quote ¬%%Ne =>
+      | quote.1 ¬%%ₓNe =>
         do 
           let ne ← whnf_reducible Ne 
           match Ne with 
-            | quote ¬%%a =>
+            | quote.1 ¬%%ₓa =>
               do 
                 let pr ← mk_app `` not_not_eq [a]
                 return (some (a, pr))
-            | quote (%%a) ∧ %%b =>
+            | quote.1 ((%%ₓa) ∧ %%ₓb) =>
               do 
                 let pr ← mk_app `` not_and_eq [a, b]
-                return (some (quote (%%a : Prop) → ¬%%b, pr))
-            | quote (%%a) ∨ %%b =>
+                return (some (quote.1 ((%%ₓa : Prop) → ¬%%ₓb), pr))
+            | quote.1 ((%%ₓa) ∨ %%ₓb) =>
               do 
                 let pr ← mk_app `` not_or_eq [a, b]
-                return (some (quote (¬%%a) ∧ ¬%%b, pr))
-            | quote (%%a) ≤ %%b =>
+                return (some (quote.1 ((¬%%ₓa) ∧ ¬%%ₓb), pr))
+            | quote.1 ((%%ₓa) ≤ %%ₓb) =>
               do 
-                let e ← to_expr (pquote (%%b) < %%a)
+                let e ← to_expr (pquote.1 ((%%ₓb) < %%ₓa))
                 let pr ← mk_app `` not_le_eq [a, b]
                 return (some (e, pr))
-            | quote (%%a) < %%b =>
+            | quote.1 ((%%ₓa) < %%ₓb) =>
               do 
-                let e ← to_expr (pquote (%%b) ≤ %%a)
+                let e ← to_expr (pquote.1 ((%%ₓb) ≤ %%ₓa))
                 let pr ← mk_app `` not_lt_eq [a, b]
                 return (some (e, pr))
-            | quote Exists (%%p) =>
+            | quote.1 (Exists (%%ₓp)) =>
               do 
                 let pr ← mk_app `` not_exists_eq [p]
                 let e ←
@@ -106,7 +106,7 @@ private unsafe def transform_negation_step (e : expr) : tactic (Option (expr × 
               else
                 do 
                   let pr ← mk_app `` not_implies_eq [d, p]
-                  let quote (%%_) = %%e' ← infer_type pr 
+                  let quote.1 ((%%ₓ_) = %%ₓe') ← infer_type pr 
                   return (some (e', pr))
             | _ => return none
       | _ => return none
@@ -197,7 +197,7 @@ unsafe def tactic.interactive.push_neg : parse location → tactic Unit
         do 
           push_neg_at_hyp h 
           try$
-              interactive.simp_core { eta := ff } failed tt [simp_arg_type.expr (pquote PushNeg.not_eq)] []
+              interactive.simp_core { eta := ff } failed tt [simp_arg_type.expr (pquote.1 PushNeg.not_eq)] []
                 (Interactive.Loc.ns [some h])
       | none =>
         do 
@@ -233,7 +233,7 @@ unsafe def tactic.interactive.contrapose (push : parse (tk "!")?) : parse (name_
 | some (h, h') => get_local h >>= revert >> tactic.interactive.contrapose none >> intro (h'.get_or_else h) >> skip
 | none =>
   do 
-    let quote (%%P) → %%Q ← target | fail "The goal is not an implication, and you didn't specify an assumption"
+    let quote.1 ((%%ₓP) → %%ₓQ) ← target | fail "The goal is not an implication, and you didn't specify an assumption"
     let cp ←
       mk_mapp `` imp_of_not_imp_not [P, Q] <|> fail "contrapose only applies to nondependent arrows between props"
     apply cp 

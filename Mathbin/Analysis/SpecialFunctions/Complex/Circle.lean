@@ -27,7 +27,7 @@ end circle
 
 theorem arg_exp_map_circle {x : ℝ} (h₁ : -π < x) (h₂ : x ≤ π) : arg (expMapCircle x) = x :=
   by 
-    rw [exp_map_circle_apply, exp_mul_I, arg_cos_add_sin_mul_I h₁ h₂]
+    rw [exp_map_circle_apply, exp_mul_I, arg_cos_add_sin_mul_I ⟨h₁, h₂⟩]
 
 @[simp]
 theorem exp_map_circle_arg (z : circle) : expMapCircle (arg z) = z :=

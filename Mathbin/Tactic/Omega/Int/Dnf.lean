@@ -245,15 +245,17 @@ theorem clauses_sat_dnf_core {p : preform} : neg_free p → p.sat → clauses.sa
     rcases exists_clause_holds h1 h2 with ⟨c, h3, h4⟩
     refine' ⟨c, h3, v, h4⟩
 
+-- error in Tactic.Omega.Int.Dnf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem unsat_of_clauses_unsat {p : preform} : clauses.unsat (dnf p) → p.unsat :=
-  by 
-    intro h1 h2 
-    apply h1 
-    apply clauses_sat_dnf_core 
-    apply neg_free_neg_elim _ (is_nnf_nnf _)
-    apply preform.sat_of_implies_of_sat implies_neg_elim 
-    have hrw := exists_congr (@nnf_equiv p)
-    apply hrw.elim_right h2
+begin
+  intros [ident h1, ident h2],
+  apply [expr h1],
+  apply [expr clauses_sat_dnf_core],
+  apply [expr neg_free_neg_elim _ (is_nnf_nnf _)],
+  apply [expr preform.sat_of_implies_of_sat implies_neg_elim],
+  have [ident hrw] [] [":=", expr exists_congr (@nnf_equiv p)],
+  apply [expr hrw.elim_right h2]
+end
 
 end Int
 

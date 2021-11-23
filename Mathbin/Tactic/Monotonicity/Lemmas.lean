@@ -1,7 +1,8 @@
-import Mathbin.Tactic.Monotonicity.Basic 
 import Mathbin.Algebra.Order.Ring 
+import Mathbin.Data.Nat.Basic 
 import Mathbin.Data.Set.Lattice 
-import Mathbin.Order.Bounds
+import Mathbin.Order.Directed 
+import Mathbin.Tactic.Monotonicity.Basic
 
 variable{α : Type _}
 
@@ -24,23 +25,17 @@ theorem lt_of_mul_lt_mul_neg_right {a b c : α} [LinearOrderedRing α] (h : (a*c
       
   lt_of_mul_lt_mul_right h3 nhc
 
--- error in Tactic.Monotonicity.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-@[mono #[]]
-theorem mul_mono_nonpos
-{x y z : α}
-[linear_ordered_ring α]
-(h' : «expr ≤ »(z, 0))
-(h : «expr ≤ »(y, x)) : «expr ≤ »(«expr * »(x, z), «expr * »(y, z)) :=
-begin
-  classical,
-  by_contradiction [ident h''],
-  revert [ident h],
-  apply [expr not_le_of_lt],
-  apply [expr lt_of_mul_lt_mul_neg_right _ h'],
-  apply [expr lt_of_not_ge h'']
-end
+@[mono]
+theorem mul_mono_nonpos {x y z : α} [LinearOrderedRing α] (h' : z ≤ 0) (h : y ≤ x) : (x*z) ≤ y*z :=
+  by 
+    classical 
+    byContra h'' 
+    revert h 
+    apply not_le_of_lt 
+    apply lt_of_mul_lt_mul_neg_right _ h' 
+    apply lt_of_not_geₓ h''
 
--- error in Tactic.Monotonicity.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Tactic.Monotonicity.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 @[mono #[]]
 theorem nat.sub_mono_left_strict
 {x y z : exprℕ()}
@@ -55,19 +50,23 @@ begin
   rw ["[", expr add_tsub_cancel_of_le, ",", expr add_tsub_cancel_of_le, "]"] []; solve_by_elim [] [] [] []
 end
 
-@[mono]
-theorem Nat.sub_mono_right_strict {x y z : ℕ} (h' : x ≤ z) (h : y < x) : z - x < z - y :=
-  by 
-    have h'' : y ≤ z
-    ·
-      trans 
-      apply le_of_ltₓ h 
-      assumption 
-    apply @Nat.lt_of_add_lt_add_rightₓ _ x 
-    rw [tsub_add_cancel_of_le h']
-    apply @lt_of_le_of_ltₓ _ _ _ ((z - y)+y)
-    rw [tsub_add_cancel_of_le h'']
-    apply Nat.add_lt_add_leftₓ h
+-- error in Tactic.Monotonicity.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[mono #[]]
+theorem nat.sub_mono_right_strict
+{x y z : exprℕ()}
+(h' : «expr ≤ »(x, z))
+(h : «expr < »(y, x)) : «expr < »(«expr - »(z, x), «expr - »(z, y)) :=
+begin
+  have [ident h''] [":", expr «expr ≤ »(y, z)] [],
+  { transitivity [],
+    apply [expr le_of_lt h],
+    assumption },
+  apply [expr @nat.lt_of_add_lt_add_right _ x],
+  rw ["[", expr tsub_add_cancel_of_le h', "]"] [],
+  apply [expr @lt_of_le_of_lt _ _ _ «expr + »(«expr - »(z, y), y)],
+  rw ["[", expr tsub_add_cancel_of_le h'', "]"] [],
+  apply [expr nat.add_lt_add_left h]
+end
 
 open Set
 

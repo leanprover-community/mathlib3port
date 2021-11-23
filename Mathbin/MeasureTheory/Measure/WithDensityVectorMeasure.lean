@@ -156,19 +156,20 @@ theorem integrable.ae_eq_of_with_densityᵥ_eq {f g : α → E} (hf : integrable
     refine' hf.ae_eq_of_forall_set_integral_eq f g hg fun i hi _ => _ 
     rw [←with_densityᵥ_apply hf hi, hfg, with_densityᵥ_apply hg hi]
 
-theorem with_densityᵥ_eq.congr_ae {f g : α → E} (h : f =ᵐ[μ] g) : μ.with_densityᵥ f = μ.with_densityᵥ g :=
-  by 
-    byCases' hf : integrable f μ
-    ·
-      ext i hi 
-      rw [with_densityᵥ_apply hf hi, with_densityᵥ_apply (hf.congr h) hi]
-      exact integral_congr_ae (ae_restrict_of_ae h)
-    ·
-      have hg : ¬integrable g μ
-      ·
-        intro hg 
-        exact hf (hg.congr h.symm)
-      rw [with_densityᵥ, with_densityᵥ, dif_neg hf, dif_neg hg]
+-- error in MeasureTheory.Measure.WithDensityVectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem with_densityᵥ_eq.congr_ae
+{f g : α → E}
+(h : «expr =ᵐ[ ] »(f, μ, g)) : «expr = »(μ.with_densityᵥ f, μ.with_densityᵥ g) :=
+begin
+  by_cases [expr hf, ":", expr integrable f μ],
+  { ext [] [ident i, ident hi] [],
+    rw ["[", expr with_densityᵥ_apply hf hi, ",", expr with_densityᵥ_apply (hf.congr h) hi, "]"] [],
+    exact [expr integral_congr_ae (ae_restrict_of_ae h)] },
+  { have [ident hg] [":", expr «expr¬ »(integrable g μ)] [],
+    { intro [ident hg],
+      exact [expr hf (hg.congr h.symm)] },
+    rw ["[", expr with_densityᵥ, ",", expr with_densityᵥ, ",", expr dif_neg hf, ",", expr dif_neg hg, "]"] [] }
+end
 
 theorem integrable.with_densityᵥ_eq_iff {f g : α → E} (hf : integrable f μ) (hg : integrable g μ) :
   μ.with_densityᵥ f = μ.with_densityᵥ g ↔ f =ᵐ[μ] g :=
@@ -176,17 +177,20 @@ theorem integrable.with_densityᵥ_eq_iff {f g : α → E} (hf : integrable f μ
 
 section SignedMeasure
 
-theorem with_densityᵥ_to_real {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) (hf : (∫⁻x, f x ∂μ) ≠ ∞) :
-  (μ.with_densityᵥ fun x => (f x).toReal) =
-    @to_signed_measure α _ (μ.with_density f) (is_finite_measure_with_density hf) :=
-  by 
-    have hfi := integrable_to_real_of_lintegral_ne_top hfm hf 
-    ext i hi 
-    rw [with_densityᵥ_apply hfi hi, to_signed_measure_apply_measurable hi, with_density_apply _ hi,
-      integral_to_real hfm.restrict]
-    refine' ae_lt_top' hfm.restrict (ne_top_of_le_ne_top hf _)
-    convRHS => rw [←set_lintegral_univ]
-    exact lintegral_mono_set (Set.subset_univ _)
+-- error in MeasureTheory.Measure.WithDensityVectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem with_densityᵥ_to_real
+{f : α → «exprℝ≥0∞»()}
+(hfm : ae_measurable f μ)
+(hf : «expr ≠ »(«expr∫⁻ , ∂ »((x), f x, μ), «expr∞»())) : «expr = »(μ.with_densityᵥ (λ
+  x, (f x).to_real), @to_signed_measure α _ (μ.with_density f) (is_finite_measure_with_density hf)) :=
+begin
+  have [ident hfi] [] [":=", expr integrable_to_real_of_lintegral_ne_top hfm hf],
+  ext [] [ident i, ident hi] [],
+  rw ["[", expr with_densityᵥ_apply hfi hi, ",", expr to_signed_measure_apply_measurable hi, ",", expr with_density_apply _ hi, ",", expr integral_to_real hfm.restrict, "]"] [],
+  refine [expr ae_lt_top' hfm.restrict (ne_top_of_le_ne_top hf _)],
+  conv_rhs [] [] { rw ["<-", expr set_lintegral_univ] },
+  exact [expr lintegral_mono_set (set.subset_univ _)]
+end
 
 theorem with_densityᵥ_eq_with_density_pos_part_sub_with_density_neg_part {f : α → ℝ} (hfi : integrable f μ) :
   μ.with_densityᵥ f =

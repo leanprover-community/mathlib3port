@@ -254,7 +254,7 @@ theorem top_factors {A B : C} (f : A ⟶ B) : (⊤ : subobject B).Factors f :=
 theorem is_iso_iff_mk_eq_top {X Y : C} (f : X ⟶ Y) [mono f] : is_iso f ↔ mk f = ⊤ :=
   ⟨fun _ =>
       by 
-        exactI mk_eq_mk_of_comm _ _ (as_iso f) (category.comp_id _),
+        exact mk_eq_mk_of_comm _ _ (as_iso f) (category.comp_id _),
     fun h =>
       by 
         rw [←of_mk_le_mk_comp h.le, category.comp_id]

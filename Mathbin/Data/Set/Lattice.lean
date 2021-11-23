@@ -97,8 +97,7 @@ theorem mem_Union {x : β} {s : ι → Set β} : x ∈ Union s ↔ ∃ i, x ∈ 
 
 @[simp]
 theorem mem_Inter {x : β} {s : ι → Set β} : x ∈ Inter s ↔ ∀ i, x ∈ s i :=
-  ⟨fun h : ∀ a _ : a ∈ { a : Set β | ∃ i, s i = a }, x ∈ a a => h (s a) ⟨a, rfl⟩,
-    fun h t ⟨a, (Eq : s a = t)⟩ => Eq ▸ h a⟩
+  ⟨fun h : ∀ a _ : a ∈ { a:Set β | ∃ i, s i = a }, x ∈ a a => h (s a) ⟨a, rfl⟩, fun h t ⟨a, (Eq : s a = t)⟩ => Eq ▸ h a⟩
 
 theorem mem_sUnion {x : α} {S : Set (Set α)} : x ∈ ⋃₀S ↔ ∃ (t : _)(_ : t ∈ S), x ∈ t :=
   Iff.rfl
@@ -185,11 +184,17 @@ theorem Inter_eq_if {p : Prop} [Decidable p] (s : Set α) : (⋂h : p, s) = if p
 theorem Infi_eq_dif {p : Prop} [Decidable p] (s : p → Set α) : (⋂h : p, s h) = if h : p then s h else univ :=
   infi_eq_dif _
 
-theorem exists_set_mem_of_union_eq_top {ι : Type _} (t : Set ι) (s : ι → Set β) (w : (⋃(i : _)(_ : i ∈ t), s i) = ⊤)
-  (x : β) : ∃ (i : _)(_ : i ∈ t), x ∈ s i :=
-  by 
-    have p : x ∈ ⊤ := Set.mem_univ x 
-    simpa only [←w, Set.mem_Union] using p
+-- error in Data.Set.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_set_mem_of_union_eq_top
+{ι : Type*}
+(t : set ι)
+(s : ι → set β)
+(w : «expr = »(«expr⋃ , »((i «expr ∈ » t), s i), «expr⊤»()))
+(x : β) : «expr∃ , »((i «expr ∈ » t), «expr ∈ »(x, s i)) :=
+begin
+  have [ident p] [":", expr «expr ∈ »(x, «expr⊤»())] [":=", expr set.mem_univ x],
+  simpa [] [] ["only"] ["[", "<-", expr w, ",", expr set.mem_Union, "]"] [] ["using", expr p]
+end
 
 theorem nonempty_of_union_eq_top_of_nonempty {ι : Type _} (t : Set ι) (s : ι → Set α) (H : Nonempty α)
   (w : (⋃(i : _)(_ : i ∈ t), s i) = ⊤) : t.nonempty :=
@@ -243,7 +248,7 @@ theorem Inter_subset_Inter2 {s : ι → Set α} {t : ι' → Set α} (h : ∀ j,
       let ⟨i, hi⟩ := h j 
       Inter_subset_of_subset i hi
 
-theorem Inter_set_of (P : ι → α → Prop) : (⋂i, { x : α | P i x }) = { x : α | ∀ i, P i x } :=
+theorem Inter_set_of (P : ι → α → Prop) : (⋂i, { x:α | P i x }) = { x:α | ∀ i, P i x } :=
   by 
     ext 
     simp 
@@ -653,11 +658,17 @@ theorem bInter_pair (a b : α) (s : α → Set β) : (⋂(x : _)(_ : x ∈ ({a, 
   by 
     rw [bInter_insert, bInter_singleton]
 
-theorem bInter_inter {ι α : Type _} {s : Set ι} (hs : s.nonempty) (f : ι → Set α) (t : Set α) :
-  (⋂(i : _)(_ : i ∈ s), f i ∩ t) = (⋂(i : _)(_ : i ∈ s), f i) ∩ t :=
-  by 
-    haveI  : Nonempty s := hs.to_subtype 
-    simp [bInter_eq_Inter, ←Inter_inter]
+-- error in Data.Set.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem bInter_inter
+{ι α : Type*}
+{s : set ι}
+(hs : s.nonempty)
+(f : ι → set α)
+(t : set α) : «expr = »(«expr⋂ , »((i «expr ∈ » s), «expr ∩ »(f i, t)), «expr ∩ »(«expr⋂ , »((i «expr ∈ » s), f i), t)) :=
+begin
+  haveI [] [":", expr nonempty s] [":=", expr hs.to_subtype],
+  simp [] [] [] ["[", expr bInter_eq_Inter, ",", "<-", expr Inter_inter, "]"] [] []
+end
 
 theorem inter_bInter {ι α : Type _} {s : Set ι} (hs : s.nonempty) (f : ι → Set α) (t : Set α) :
   (⋂(i : _)(_ : i ∈ s), t ∩ f i) = t ∩ ⋂(i : _)(_ : i ∈ s), f i :=
@@ -1141,13 +1152,20 @@ theorem inj_on.image_Inter_eq [Nonempty ι] {s : ι → Set α} {f : α → β} 
     apply h (hx _) (hx _)
     simp only [hy]
 
-theorem inj_on.image_bInter_eq {p : ι → Prop} {s : ∀ i hi : p i, Set α} (hp : ∃ i, p i) {f : α → β}
-  (h : inj_on f (⋃i hi, s i hi)) : (f '' ⋂i hi, s i hi) = ⋂i hi, f '' s i hi :=
-  by 
-    simp only [Inter, infi_subtype']
-    haveI  : Nonempty { i // p i } := nonempty_subtype.2 hp 
-    apply inj_on.image_Inter_eq 
-    simpa only [Union, supr_subtype'] using h
+-- error in Data.Set.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem inj_on.image_bInter_eq
+{p : ι → exprProp()}
+{s : ∀ (i) (hi : p i), set α}
+(hp : «expr∃ , »((i), p i))
+{f : α → β}
+(h : inj_on f «expr⋃ , »((i
+   hi), s i hi)) : «expr = »(«expr '' »(f, «expr⋂ , »((i hi), s i hi)), «expr⋂ , »((i hi), «expr '' »(f, s i hi))) :=
+begin
+  simp [] [] ["only"] ["[", expr Inter, ",", expr infi_subtype', "]"] [] [],
+  haveI [] [":", expr nonempty {i // p i}] [":=", expr nonempty_subtype.2 hp],
+  apply [expr inj_on.image_Inter_eq],
+  simpa [] [] ["only"] ["[", expr Union, ",", expr supr_subtype', "]"] [] ["using", expr h]
+end
 
 theorem inj_on_Union_of_directed {s : ι → Set α} (hs : Directed (· ⊆ ·) s) {f : α → β} (hf : ∀ i, inj_on f (s i)) :
   inj_on f (⋃i, s i) :=

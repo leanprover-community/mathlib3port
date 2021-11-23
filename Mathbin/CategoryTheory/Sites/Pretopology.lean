@@ -120,7 +120,7 @@ def of_grothendieck (J : grothendieck_topology C) : pretopology C :=
     has_isos :=
       fun X Y f i =>
         by 
-          exactI
+          exact
             J.covering_of_eq_top
               (by 
                 simp ),
@@ -175,7 +175,7 @@ def trivialₓ : pretopology C :=
           rintro ⟨Z, g, i, rfl⟩
           refine' ⟨pullback g f, pullback.snd, _, _⟩
           ·
-            resetI 
+            skip 
             refine'
               ⟨⟨pullback.lift (f ≫ inv g) (𝟙 _)
                     (by 
@@ -197,7 +197,7 @@ def trivialₓ : pretopology C :=
         rcases hS g (singleton_self g) with ⟨Y, f, i, hTi⟩
         refine' ⟨_, f ≫ g, _, _⟩
         ·
-          resetI 
+          skip 
           infer_instance 
         ext W k 
         split 
@@ -218,7 +218,7 @@ instance  : OrderBot (pretopology C) :=
       fun K X R =>
         by 
           rintro ⟨Y, f, hf, rfl⟩
-          exactI K.has_isos f }
+          exact K.has_isos f }
 
 /-- The trivial pretopology induces the trivial grothendieck topology. -/
 theorem to_grothendieck_bot : to_grothendieck C ⊥ = ⊥ :=

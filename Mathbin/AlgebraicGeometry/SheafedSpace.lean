@@ -69,7 +69,7 @@ instance  : category (SheafedSpace C) :=
   show category (induced_category (PresheafedSpace C) SheafedSpace.to_PresheafedSpace)by 
     infer_instance
 
--- error in AlgebraicGeometry.SheafedSpace: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler full
+-- error in AlgebraicGeometry.SheafedSpace: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
 /-- Forgetting the sheaf condition is a functor from `SheafedSpace C` to `PresheafedSpace C`. -/
 @[derive #["[", expr full, ",", expr faithful, "]"]]
 def forget_to_PresheafedSpace : «expr ⥤ »(SheafedSpace C, PresheafedSpace C) :=

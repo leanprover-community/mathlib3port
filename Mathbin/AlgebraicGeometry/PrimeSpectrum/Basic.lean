@@ -142,7 +142,7 @@ def vanishing_ideal (t : Set (PrimeSpectrum R)) : Ideal R :=
   ⨅(x : PrimeSpectrum R)(h : x ∈ t), x.as_ideal
 
 theorem coe_vanishing_ideal (t : Set (PrimeSpectrum R)) :
-  (vanishing_ideal t : Set R) = { f : R | ∀ x : PrimeSpectrum R, x ∈ t → f ∈ x.as_ideal } :=
+  (vanishing_ideal t : Set R) = { f:R | ∀ x : PrimeSpectrum R, x ∈ t → f ∈ x.as_ideal } :=
   by 
     ext f 
     rw [vanishing_ideal, SetLike.mem_coe, Submodule.mem_infi]
@@ -249,19 +249,18 @@ theorem vanishing_ideal_univ : vanishing_ideal (∅ : Set (PrimeSpectrum R)) = �
   by 
     simpa using (gc R).u_top
 
-theorem zero_locus_empty_of_one_mem {s : Set R} (h : (1 : R) ∈ s) : zero_locus s = ∅ :=
-  by 
-    rw [Set.eq_empty_iff_forall_not_mem]
-    intro x hx 
-    rw [mem_zero_locus] at hx 
-    have x_prime : x.as_ideal.is_prime :=
-      by 
-        infer_instance 
-    have eq_top : x.as_ideal = ⊤
-    ·
-      rw [Ideal.eq_top_iff_one]
-      exact hx h 
-    apply x_prime.ne_top eq_top
+-- error in AlgebraicGeometry.PrimeSpectrum.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem zero_locus_empty_of_one_mem {s : set R} (h : «expr ∈ »((1 : R), s)) : «expr = »(zero_locus s, «expr∅»()) :=
+begin
+  rw [expr set.eq_empty_iff_forall_not_mem] [],
+  intros [ident x, ident hx],
+  rw [expr mem_zero_locus] ["at", ident hx],
+  have [ident x_prime] [":", expr x.as_ideal.is_prime] [":=", expr by apply_instance],
+  have [ident eq_top] [":", expr «expr = »(x.as_ideal, «expr⊤»())] [],
+  { rw [expr ideal.eq_top_iff_one] [],
+    exact [expr hx h] },
+  apply [expr x_prime.ne_top eq_top]
+end
 
 @[simp]
 theorem zero_locus_singleton_one : zero_locus ({1} : Set R) = ∅ :=
@@ -346,7 +345,7 @@ theorem zero_locus_singleton_pow (f : R) (n : ℕ) (hn : 0 < n) : zero_locus ({f
       by 
         simpa using x.2.pow_mem_iff_mem n hn
 
--- error in AlgebraicGeometry.PrimeSpectrum.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in AlgebraicGeometry.PrimeSpectrum.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem sup_vanishing_ideal_le
 (t
  t' : set (prime_spectrum R)) : «expr ≤ »(«expr ⊔ »(vanishing_ideal t, vanishing_ideal t'), vanishing_ideal «expr ∩ »(t, t')) :=
@@ -363,24 +362,21 @@ theorem mem_compl_zero_locus_iff_not_mem {f : R} {I : PrimeSpectrum R} :
   by 
     rw [Set.mem_compl_eq, mem_zero_locus, Set.singleton_subset_iff] <;> rfl
 
+-- error in AlgebraicGeometry.PrimeSpectrum.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Zariski topology on the prime spectrum of a commutative ring
 is defined via the closed sets of the topology:
 they are exactly those sets that are the zero locus of a subset of the ring. -/
-instance zariski_topology : TopologicalSpace (PrimeSpectrum R) :=
-  TopologicalSpace.ofClosed (Set.Range PrimeSpectrum.ZeroLocus)
-    ⟨Set.Univ,
-      by 
-        simp ⟩
-    (by 
-      intro Zs h 
-      rw [Set.sInter_eq_Inter]
-      let f : Zs → Set R := fun i => Classical.some (h i.2)
-      have hf : ∀ i : Zs, «expr↑ » i = zero_locus (f i) := fun i => (Classical.some_spec (h i.2)).symm 
-      simp only [hf]
-      exact ⟨_, zero_locus_Union _⟩)
-    (by 
-      rintro _ _ ⟨s, rfl⟩ ⟨t, rfl⟩
-      exact ⟨_, (union_zero_locus s t).symm⟩)
+instance zariski_topology : topological_space (prime_spectrum R) :=
+topological_space.of_closed (set.range prime_spectrum.zero_locus) ⟨set.univ, by simp [] [] [] [] [] []⟩ (begin
+   intros [ident Zs, ident h],
+   rw [expr set.sInter_eq_Inter] [],
+   let [ident f] [":", expr Zs → set R] [":=", expr λ i, classical.some (h i.2)],
+   have [ident hf] [":", expr ∀
+    i : Zs, «expr = »(«expr↑ »(i), zero_locus (f i))] [":=", expr λ i, (classical.some_spec (h i.2)).symm],
+   simp [] [] ["only"] ["[", expr hf, "]"] [] [],
+   exact [expr ⟨_, zero_locus_Union _⟩]
+ end) (by { rintro ["_", "_", "⟨", ident s, ",", ident rfl, "⟩", "⟨", ident t, ",", ident rfl, "⟩"],
+   exact [expr ⟨_, (union_zero_locus s t).symm⟩] })
 
 theorem is_open_iff (U : Set (PrimeSpectrum R)) : IsOpen U ↔ ∃ s, «expr ᶜ» U = zero_locus s :=
   by 
@@ -431,25 +427,18 @@ theorem zero_locus_vanishing_ideal_eq_closure (t : Set (PrimeSpectrum R)) :
 theorem vanishing_ideal_closure (t : Set (PrimeSpectrum R)) : vanishing_ideal (Closure t) = vanishing_ideal t :=
   zero_locus_vanishing_ideal_eq_closure t ▸ (gc R).u_l_u_eq_u t
 
-theorem t1_space_iff_is_field [IsDomain R] : T1Space (PrimeSpectrum R) ↔ IsField R :=
-  by 
-    refine' ⟨_, fun h => _⟩
-    ·
-      introI h 
-      have hbot : Ideal.IsPrime (⊥ : Ideal R) := Ideal.bot_prime 
-      exact
-        not_not.1
-          (mt
-            (Ringₓ.ne_bot_of_is_maximal_of_not_is_field$
-              (is_closed_singleton_iff_is_maximal _).1 (T1Space.t1 ⟨⊥, hbot⟩))
-            (not_not.2 rfl))
-    ·
-      refine' ⟨fun x => (is_closed_singleton_iff_is_maximal x).2 _⟩
-      byCases' hx : x.as_ideal = ⊥
-      ·
-        exact hx.symm ▸ @Ideal.bot_is_maximal R (@Field.toDivisionRing _$ IsField.toField R h)
-      ·
-        exact absurd h (Ringₓ.not_is_field_iff_exists_prime.2 ⟨x.as_ideal, ⟨hx, x.2⟩⟩)
+-- error in AlgebraicGeometry.PrimeSpectrum.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem t1_space_iff_is_field [is_domain R] : «expr ↔ »(t1_space (prime_spectrum R), is_field R) :=
+begin
+  refine [expr ⟨_, λ h, _⟩],
+  { introI [ident h],
+    have [ident hbot] [":", expr ideal.is_prime («expr⊥»() : ideal R)] [":=", expr ideal.bot_prime],
+    exact [expr not_not.1 (mt «expr $ »(ring.ne_bot_of_is_maximal_of_not_is_field, (is_closed_singleton_iff_is_maximal _).1 (t1_space.t1 ⟨«expr⊥»(), hbot⟩)) (not_not.2 rfl))] },
+  { refine [expr ⟨λ x, (is_closed_singleton_iff_is_maximal x).2 _⟩],
+    by_cases [expr hx, ":", expr «expr = »(x.as_ideal, «expr⊥»())],
+    { exact [expr «expr ▸ »(hx.symm, @ideal.bot_is_maximal R «expr $ »(@field.to_division_ring _, is_field.to_field R h))] },
+    { exact [expr absurd h (ring.not_is_field_iff_exists_prime.2 ⟨x.as_ideal, ⟨hx, x.2⟩⟩)] } }
+end
 
 section Comap
 
@@ -494,11 +483,16 @@ theorem comap_continuous (f : R →+* S) : Continuous (comap f) :=
     rintro _ ⟨s, rfl⟩
     exact ⟨_, preimage_comap_zero_locus f s⟩
 
-theorem comap_singleton_is_closed_of_surjective (f : R →+* S) (hf : Function.Surjective f) (x : PrimeSpectrum S)
-  (hx : IsClosed ({x} : Set (PrimeSpectrum S))) : IsClosed ({comap f x} : Set (PrimeSpectrum R)) :=
-  by 
-    haveI  : x.as_ideal.is_maximal := (is_closed_singleton_iff_is_maximal x).1 hx 
-    exact (is_closed_singleton_iff_is_maximal _).2 (Ideal.comap_is_maximal_of_surjective f hf)
+-- error in AlgebraicGeometry.PrimeSpectrum.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem comap_singleton_is_closed_of_surjective
+(f : «expr →+* »(R, S))
+(hf : function.surjective f)
+(x : prime_spectrum S)
+(hx : is_closed ({x} : set (prime_spectrum S))) : is_closed ({comap f x} : set (prime_spectrum R)) :=
+begin
+  haveI [] [":", expr x.as_ideal.is_maximal] [":=", expr (is_closed_singleton_iff_is_maximal x).1 hx],
+  exact [expr (is_closed_singleton_iff_is_maximal _).2 (ideal.comap_is_maximal_of_surjective f hf)]
+end
 
 theorem comap_singleton_is_closed_of_is_integral (f : R →+* S) (hf : f.is_integral) (x : PrimeSpectrum S)
   (hx : IsClosed ({x} : Set (PrimeSpectrum S))) : IsClosed ({comap f x} : Set (PrimeSpectrum R)) :=
@@ -588,29 +582,26 @@ theorem is_basis_basic_opens : TopologicalSpace.Opens.IsBasis (Set.Range (@basic
     convert is_topological_basis_basic_opens 
     rw [←Set.range_comp]
 
-theorem is_compact_basic_open (f : R) : IsCompact (basic_open f : Set (PrimeSpectrum R)) :=
-  is_compact_of_finite_subfamily_closed$
-    fun ι Z hZc hZ =>
-      by 
-        let I : ι → Ideal R := fun i => vanishing_ideal (Z i)
-        have hI : ∀ i, Z i = zero_locus (I i) :=
-          fun i =>
-            by 
-              simpa only [zero_locus_vanishing_ideal_eq_closure] using (hZc i).closure_eq.symm 
-        rw [basic_open_eq_zero_locus_compl f, Set.inter_comm, ←Set.diff_eq, Set.diff_eq_empty, funext hI,
-          ←zero_locus_supr] at hZ 
-        obtain ⟨n, hn⟩ : f ∈ (⨆i : ι, I i).radical
-        ·
-          rw [←vanishing_ideal_zero_locus_eq_radical]
-          apply vanishing_ideal_anti_mono hZ 
-          exact subset_vanishing_ideal_zero_locus {f} (Set.mem_singleton f)
-        rcases Submodule.exists_finset_of_mem_supr I hn with ⟨s, hs⟩
-        use s 
-        simpRw [basic_open_eq_zero_locus_compl f, Set.inter_comm, ←Set.diff_eq, Set.diff_eq_empty, hI, ←zero_locus_supr]
-        rw [←zero_locus_radical]
-        apply zero_locus_anti_mono 
-        rw [Set.singleton_subset_iff]
-        exact ⟨n, hs⟩
+-- error in AlgebraicGeometry.PrimeSpectrum.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_compact_basic_open (f : R) : is_compact (basic_open f : set (prime_spectrum R)) :=
+«expr $ »(is_compact_of_finite_subfamily_closed, λ ι Z hZc hZ, begin
+   let [ident I] [":", expr ι → ideal R] [":=", expr λ i, vanishing_ideal (Z i)],
+   have [ident hI] [":", expr ∀
+    i, «expr = »(Z i, zero_locus (I i))] [":=", expr λ
+    i, by simpa [] [] ["only"] ["[", expr zero_locus_vanishing_ideal_eq_closure, "]"] [] ["using", expr (hZc i).closure_eq.symm]],
+   rw ["[", expr basic_open_eq_zero_locus_compl f, ",", expr set.inter_comm, ",", "<-", expr set.diff_eq, ",", expr set.diff_eq_empty, ",", expr funext hI, ",", "<-", expr zero_locus_supr, "]"] ["at", ident hZ],
+   obtain ["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr ∈ »(f, «expr⨆ , »((i : ι), I i).radical)],
+   { rw ["<-", expr vanishing_ideal_zero_locus_eq_radical] [],
+     apply [expr vanishing_ideal_anti_mono hZ],
+     exact [expr subset_vanishing_ideal_zero_locus {f} (set.mem_singleton f)] },
+   rcases [expr submodule.exists_finset_of_mem_supr I hn, "with", "⟨", ident s, ",", ident hs, "⟩"],
+   use [expr s],
+   simp_rw ["[", expr basic_open_eq_zero_locus_compl f, ",", expr set.inter_comm, ",", "<-", expr set.diff_eq, ",", expr set.diff_eq_empty, ",", expr hI, ",", "<-", expr zero_locus_supr, "]"] [],
+   rw ["<-", expr zero_locus_radical] [],
+   apply [expr zero_locus_anti_mono],
+   rw [expr set.singleton_subset_iff] [],
+   exact [expr ⟨n, hs⟩]
+ end)
 
 end BasicOpen
 

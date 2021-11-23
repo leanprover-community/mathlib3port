@@ -1,4 +1,3 @@
-import Mathbin.Algebra.GroupPower.Order 
 import Mathbin.Data.List.Join 
 import Mathbin.Data.Set.Lattice
 
@@ -16,7 +15,7 @@ universe u v
 
 variable{α : Type u}
 
--- error in Computability.Language: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_mem (list α)
+-- error in Computability.Language: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_mem (list α)
 /-- A language is a set of strings over an alphabet. -/
 @[derive #["[", expr has_mem (list α), ",", expr has_singleton (list α), ",", expr has_insert (list α), ",",
    expr complete_boolean_algebra, "]"]]

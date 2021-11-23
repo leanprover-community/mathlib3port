@@ -625,15 +625,17 @@ theorem transnum_aux_seq_zero : f.transnum_aux_seq 0 = f 0 :=
   by 
     simp [transnum_aux_seq]
 
-theorem transnum_aux_seq_dist_lt (n : ℕ) : dist (f.transnum_aux_seq n) (f.transnum_aux_seq (n+1)) < 1 / 2 / 2 ^ n :=
-  by 
-    have  : 0 < (2 ^ n+1 : ℝ) := pow_pos zero_lt_two _ 
-    rw [div_div_eq_div_mul, ←pow_succₓ, ←abs_of_pos this]
-    replace  := abs_pos.2 (ne_of_gtₓ this)
-    convert (div_lt_div_right this).2 ((f ^ 2 ^ n).dist_map_map_zero_lt (f ^ 2 ^ n))
-    simpRw [transnum_aux_seq, Real.dist_eq]
-    rw [←abs_div, sub_div, pow_succ'ₓ, pow_succₓ, ←two_mul, mul_div_mul_left _ _ (@two_ne_zero ℝ _ _), pow_mulₓ, sq,
-      mul_apply]
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem transnum_aux_seq_dist_lt
+(n : exprℕ()) : «expr < »(dist (f.transnum_aux_seq n) (f.transnum_aux_seq «expr + »(n, 1)), «expr / »(«expr / »(1, 2), «expr ^ »(2, n))) :=
+begin
+  have [] [":", expr «expr < »(0, («expr ^ »(2, «expr + »(n, 1)) : exprℝ()))] [":=", expr pow_pos zero_lt_two _],
+  rw ["[", expr div_div_eq_div_mul, ",", "<-", expr pow_succ, ",", "<-", expr abs_of_pos this, "]"] [],
+  replace [] [] [":=", expr abs_pos.2 (ne_of_gt this)],
+  convert [] [expr (div_lt_div_right this).2 («expr ^ »(f, «expr ^ »(2, n)).dist_map_map_zero_lt «expr ^ »(f, «expr ^ »(2, n)))] [],
+  simp_rw ["[", expr transnum_aux_seq, ",", expr real.dist_eq, "]"] [],
+  rw ["[", "<-", expr abs_div, ",", expr sub_div, ",", expr pow_succ', ",", expr pow_succ, ",", "<-", expr two_mul, ",", expr mul_div_mul_left _ _ (@two_ne_zero exprℝ() _ _), ",", expr pow_mul, ",", expr sq, ",", expr mul_apply, "]"] []
+end
 
 theorem tendsto_translation_number_aux : tendsto f.transnum_aux_seq at_top (𝓝$ τ f) :=
   (cauchy_seq_of_le_geometric_two 1 fun n => le_of_ltₓ$ f.transnum_aux_seq_dist_lt n).tendsto_lim
@@ -643,21 +645,22 @@ theorem dist_map_zero_translation_number_le : dist (f 0) (τ f) ≤ 1 :=
     dist_le_of_le_geometric_two_of_tendsto₀ 1 (fun n => le_of_ltₓ$ f.transnum_aux_seq_dist_lt n)
       f.tendsto_translation_number_aux
 
-theorem tendsto_translation_number_of_dist_bounded_aux (x : ℕ → ℝ) (C : ℝ) (H : ∀ n : ℕ, dist ((f ^ n) 0) (x n) ≤ C) :
-  tendsto (fun n : ℕ => x (2 ^ n) / 2 ^ n) at_top (𝓝$ τ f) :=
-  by 
-    refine' f.tendsto_translation_number_aux.congr_dist (squeeze_zero (fun _ => dist_nonneg) _ _)
-    ·
-      exact fun n => C / 2 ^ n
-    ·
-      intro n 
-      have  : 0 < (2 ^ n : ℝ) := pow_pos zero_lt_two _ 
-      convert (div_le_div_right this).2 (H (2 ^ n))
-      rw [transnum_aux_seq, Real.dist_eq, ←sub_div, abs_div, abs_of_pos this, Real.dist_eq]
-    ·
-      exact
-        mul_zero C ▸
-          tendsto_const_nhds.mul (tendsto_inv_at_top_zero.comp$ tendsto_pow_at_top_at_top_of_one_lt one_lt_two)
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_translation_number_of_dist_bounded_aux
+(x : exprℕ() → exprℝ())
+(C : exprℝ())
+(H : ∀
+ n : exprℕ(), «expr ≤ »(dist («expr ^ »(f, n) 0) (x n), C)) : tendsto (λ
+ n : exprℕ(), «expr / »(x «expr ^ »(2, n), «expr ^ »(2, n))) at_top «expr $ »(expr𝓝(), exprτ() f) :=
+begin
+  refine [expr f.tendsto_translation_number_aux.congr_dist (squeeze_zero (λ _, dist_nonneg) _ _)],
+  { exact [expr λ n, «expr / »(C, «expr ^ »(2, n))] },
+  { intro [ident n],
+    have [] [":", expr «expr < »(0, («expr ^ »(2, n) : exprℝ()))] [":=", expr pow_pos zero_lt_two _],
+    convert [] [expr (div_le_div_right this).2 (H «expr ^ »(2, n))] [],
+    rw ["[", expr transnum_aux_seq, ",", expr real.dist_eq, ",", "<-", expr sub_div, ",", expr abs_div, ",", expr abs_of_pos this, ",", expr real.dist_eq, "]"] [] },
+  { exact [expr «expr ▸ »(mul_zero C, tendsto_const_nhds.mul «expr $ »(tendsto_inv_at_top_zero.comp, tendsto_pow_at_top_at_top_of_one_lt one_lt_two))] }
+end
 
 theorem translation_number_eq_of_dist_bounded {f g : CircleDeg1Lift} (C : ℝ)
   (H : ∀ n : ℕ, dist ((f ^ n) 0) ((g ^ n) 0) ≤ C) : τ f = τ g :=
@@ -675,14 +678,19 @@ theorem translation_number_eq_of_semiconj_by {f g₁ g₂ : CircleDeg1Lift} (H :
 theorem translation_number_eq_of_semiconj {f g₁ g₂ : CircleDeg1Lift} (H : Function.Semiconj f g₁ g₂) : τ g₁ = τ g₂ :=
   translation_number_eq_of_semiconj_by$ semiconj_by_iff_semiconj.2 H
 
-theorem translation_number_mul_of_commute {f g : CircleDeg1Lift} (h : Commute f g) : τ (f*g) = τ f+τ g :=
-  by 
-    have  : tendsto (fun n : ℕ => (fun k => (f ^ k) 0+(g ^ k) 0) (2 ^ n) / 2 ^ n) at_top (𝓝$ τ f+τ g) :=
-      (f.tendsto_translation_number_aux.add g.tendsto_translation_number_aux).congr$
-        fun n => (add_div ((f ^ 2 ^ n) 0) ((g ^ 2 ^ n) 0) ((2 : ℝ) ^ n)).symm 
-    refine' tendsto_nhds_unique ((f*g).tendsto_translation_number_of_dist_bounded_aux _ 1 fun n => _) this 
-    rw [h.mul_pow, dist_comm]
-    exact le_of_ltₓ ((f ^ n).dist_map_map_zero_lt (g ^ n))
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem translation_number_mul_of_commute
+{f g : circle_deg1_lift}
+(h : commute f g) : «expr = »(exprτ() «expr * »(f, g), «expr + »(exprτ() f, exprτ() g)) :=
+begin
+  have [] [":", expr tendsto (λ
+    n : exprℕ(), «expr / »(λ
+     k, «expr + »(«expr ^ »(f, k) 0, «expr ^ »(g, k) 0) «expr ^ »(2, n), «expr ^ »(2, n))) at_top «expr $ »(expr𝓝(), «expr + »(exprτ() f, exprτ() g))] [":=", expr «expr $ »((f.tendsto_translation_number_aux.add g.tendsto_translation_number_aux).congr, λ
+    n, (add_div («expr ^ »(f, «expr ^ »(2, n)) 0) («expr ^ »(g, «expr ^ »(2, n)) 0) «expr ^ »((2 : exprℝ()), n)).symm)],
+  refine [expr tendsto_nhds_unique («expr * »(f, g).tendsto_translation_number_of_dist_bounded_aux _ 1 (λ n, _)) this],
+  rw ["[", expr h.mul_pow, ",", expr dist_comm, "]"] [],
+  exact [expr le_of_lt («expr ^ »(f, n).dist_map_map_zero_lt «expr ^ »(g, n))]
+end
 
 @[simp]
 theorem translation_number_units_inv (f : Units CircleDeg1Lift) : τ («expr↑ » (f⁻¹)) = -τ f :=
@@ -722,17 +730,17 @@ theorem translation_number_conj_eq' (f : Units CircleDeg1Lift) (g : CircleDeg1Li
 theorem dist_pow_map_zero_mul_translation_number_le (n : ℕ) : dist ((f ^ n) 0) (n*f.translation_number) ≤ 1 :=
   f.translation_number_pow n ▸ (f ^ n).dist_map_zero_translation_number_le
 
-theorem tendsto_translation_number₀' : tendsto (fun n : ℕ => (f ^ n+1) 0 / n+1) at_top (𝓝$ τ f) :=
-  by 
-    refine'
-      tendsto_iff_dist_tendsto_zero.2$
-        squeeze_zero (fun _ => dist_nonneg) (fun n => _)
-          ((tendsto_const_div_at_top_nhds_0_nat 1).comp (tendsto_add_at_top_nat 1))
-    dsimp 
-    have  : (0 : ℝ) < n+1 := n.cast_add_one_pos 
-    rw [Real.dist_eq, div_sub' _ _ _ (ne_of_gtₓ this), abs_div, ←Real.dist_eq, abs_of_pos this, div_le_div_right this,
-      ←Nat.cast_add_one]
-    apply dist_pow_map_zero_mul_translation_number_le
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_translation_number₀' : tendsto (λ
+ n : exprℕ(), «expr / »(«expr ^ »(f, «expr + »(n, 1)) 0, «expr + »(n, 1))) at_top «expr $ »(expr𝓝(), exprτ() f) :=
+begin
+  refine [expr «expr $ »(tendsto_iff_dist_tendsto_zero.2, squeeze_zero (λ
+     _, dist_nonneg) (λ n, _) ((tendsto_const_div_at_top_nhds_0_nat 1).comp (tendsto_add_at_top_nat 1)))],
+  dsimp [] [] [] [],
+  have [] [":", expr «expr < »((0 : exprℝ()), «expr + »(n, 1))] [":=", expr n.cast_add_one_pos],
+  rw ["[", expr real.dist_eq, ",", expr div_sub' _ _ _ (ne_of_gt this), ",", expr abs_div, ",", "<-", expr real.dist_eq, ",", expr abs_of_pos this, ",", expr div_le_div_right this, ",", "<-", expr nat.cast_add_one, "]"] [],
+  apply [expr dist_pow_map_zero_mul_translation_number_le]
+end
 
 theorem tendsto_translation_number₀ : tendsto (fun n : ℕ => (f ^ n) 0 / n) at_top (𝓝$ τ f) :=
   (tendsto_add_at_top_iff_nat 1).1 f.tendsto_translation_number₀'
@@ -825,15 +833,21 @@ theorem lt_map_of_int_lt_translation_number {n : ℤ} (h : «expr↑ » n < τ f
 theorem lt_map_of_nat_lt_translation_number {n : ℕ} (h : «expr↑ » n < τ f) (x : ℝ) : (x+n) < f x :=
   @lt_map_of_int_lt_translation_number f n h x
 
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f^n x - x`, `n > 0`, is an integer number `m` for some point `x`, then
 `τ f = m / n`. On the circle this means that a map with a periodic orbit has
 a rational rotation number. -/
-theorem translation_number_of_map_pow_eq_add_int {x : ℝ} {n : ℕ} {m : ℤ} (h : (f ^ n) x = x+m) (hn : 0 < n) :
-  τ f = m / n :=
-  by 
-    have  := (f ^ n).translation_number_of_eq_add_int h 
-    rwa [translation_number_pow, mul_commₓ, ←eq_div_iff] at this 
-    exact Nat.cast_ne_zero.2 (ne_of_gtₓ hn)
+theorem translation_number_of_map_pow_eq_add_int
+{x : exprℝ()}
+{n : exprℕ()}
+{m : exprℤ()}
+(h : «expr = »(«expr ^ »(f, n) x, «expr + »(x, m)))
+(hn : «expr < »(0, n)) : «expr = »(exprτ() f, «expr / »(m, n)) :=
+begin
+  have [] [] [":=", expr «expr ^ »(f, n).translation_number_of_eq_add_int h],
+  rwa ["[", expr translation_number_pow, ",", expr mul_comm, ",", "<-", expr eq_div_iff, "]"] ["at", ident this],
+  exact [expr nat.cast_ne_zero.2 (ne_of_gt hn)]
+end
 
 /-- If a predicate depends only on `f x - x` and holds for all `0 ≤ x ≤ 1`,
 then it holds for all `x`. -/
@@ -858,22 +872,21 @@ theorem lt_translation_number_of_forall_add_lt (hf : Continuous f) {z : ℝ} (hz
     simp only [←le_sub_iff_add_le']
     exact f.forall_map_sub_of_Icc _ hx
 
--- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If `f` is a continuous monotone map `ℝ → ℝ`, `f (x + 1) = f x + 1`, then there exists `x`
 such that `f x = x + τ f`. -/
-theorem exists_eq_add_translation_number
-(hf : continuous f) : «expr∃ , »((x), «expr = »(f x, «expr + »(x, exprτ() f))) :=
-begin
-  obtain ["⟨", ident a, ",", ident ha, "⟩", ":", expr «expr∃ , »((x), «expr ≤ »(f x, «expr + »(x, f.translation_number)))],
-  { by_contradiction [ident H],
-    push_neg ["at", ident H],
-    exact [expr lt_irrefl _ (f.lt_translation_number_of_forall_add_lt hf H)] },
-  obtain ["⟨", ident b, ",", ident hb, "⟩", ":", expr «expr∃ , »((x), «expr ≤ »(«expr + »(x, exprτ() f), f x))],
-  { by_contradiction [ident H],
-    push_neg ["at", ident H],
-    exact [expr lt_irrefl _ (f.translation_number_lt_of_forall_lt_add hf H)] },
-  exact [expr intermediate_value_univ₂ hf (continuous_id.add continuous_const) ha hb]
-end
+theorem exists_eq_add_translation_number (hf : Continuous f) : ∃ x, f x = x+τ f :=
+  by 
+    obtain ⟨a, ha⟩ : ∃ x, f x ≤ x+f.translation_number
+    ·
+      byContra H 
+      pushNeg  at H 
+      exact lt_irreflₓ _ (f.lt_translation_number_of_forall_add_lt hf H)
+    obtain ⟨b, hb⟩ : ∃ x, (x+τ f) ≤ f x
+    ·
+      byContra H 
+      pushNeg  at H 
+      exact lt_irreflₓ _ (f.translation_number_lt_of_forall_lt_add hf H)
+    exact intermediate_value_univ₂ hf (continuous_id.add continuous_const) ha hb
 
 theorem translation_number_eq_int_iff (hf : Continuous f) {m : ℤ} : τ f = m ↔ ∃ x, f x = x+m :=
   by 
@@ -892,6 +905,7 @@ theorem translation_number_eq_rat_iff (hf : Continuous f) {m : ℤ} {n : ℕ} (h
     rw [eq_div_iff, mul_commₓ, ←translation_number_pow] <;> [skip, exact ne_of_gtₓ (Nat.cast_pos.2 hn)]
     exact (f ^ n).translation_number_eq_int_iff (f.continuous_pow hf n)
 
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Consider two actions `f₁ f₂ : G →* circle_deg1_lift` of a group on the real line by lifts of
 orientation preserving circle homeomorphisms. Suppose that for each `g : G` the homeomorphisms
 `f₁ g` and `f₂ g` have equal rotation numbers. Then there exists `F : circle_deg1_lift`  such that
@@ -899,57 +913,57 @@ orientation preserving circle homeomorphisms. Suppose that for each `g : G` the 
 
 This is a version of Proposition 5.4 from [Étienne Ghys, Groupes d'homeomorphismes du cercle et
 cohomologie bornee][ghys87:groupes]. -/
-theorem semiconj_of_group_action_of_forall_translation_number_eq {G : Type _} [Groupₓ G] (f₁ f₂ : G →* CircleDeg1Lift)
-  (h : ∀ g, τ (f₁ g) = τ (f₂ g)) : ∃ F : CircleDeg1Lift, ∀ g, semiconj F (f₁ g) (f₂ g) :=
-  by 
-    have  : ∀ x, BddAbove (range$ fun g => f₂ (g⁻¹) (f₁ g x))
-    ·
-      refine' fun x => ⟨x+2, _⟩
-      rintro _ ⟨g, rfl⟩
-      have  : τ (f₂ (g⁻¹)) = -τ (f₂ g)
-      ·
-        rw [←MonoidHom.coe_to_hom_units, MonoidHom.map_inv, translation_number_units_inv, MonoidHom.coe_to_hom_units]
-      calc f₂ (g⁻¹) (f₁ g x) ≤ f₂ (g⁻¹) ((x+τ (f₁ g))+1) :=
-        mono _ (map_lt_add_translation_number_add_one _ _).le _ = f₂ (g⁻¹) (x+τ (f₂ g))+1 :=
-        by 
-          rw [h, map_add_one]_ ≤ (((x+τ (f₂ g))+τ (f₂ (g⁻¹)))+1)+1 :=
-        by 
-          mono 
-          exact (map_lt_add_translation_number_add_one _ _).le _ = x+2 :=
-        by 
-          simp [this, bit0, add_assocₓ]
-    set F₁ := to_order_iso.comp f₁.to_hom_units 
-    set F₂ := to_order_iso.comp f₂.to_hom_units 
-    have hF₁ : ∀ g, «expr⇑ » (F₁ g) = f₁ g := fun _ => rfl 
-    have hF₂ : ∀ g, «expr⇑ » (F₂ g) = f₂ g := fun _ => rfl 
-    simp only [←hF₁, ←hF₂]
-    refine' ⟨⟨_, fun x y hxy => _, fun x => _⟩, cSup_div_semiconj F₂ F₁ fun x => _⟩ <;>
-      simp only [hF₁, hF₂, ←MonoidHom.map_inv, coe_mk]
-    ·
-      refine' csupr_le_csupr (this y) fun g => _ 
-      exact mono _ (mono _ hxy)
-    ·
-      simp only [map_add_one]
-      exact
-        (map_csupr_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const)
-            (monotone_id.add_const (1 : ℝ)) (this x)).symm
-    ·
-      exact this x
+theorem semiconj_of_group_action_of_forall_translation_number_eq
+{G : Type*}
+[group G]
+(f₁ f₂ : «expr →* »(G, circle_deg1_lift))
+(h : ∀
+ g, «expr = »(exprτ() (f₁ g), exprτ() (f₂ g))) : «expr∃ , »((F : circle_deg1_lift), ∀ g, semiconj F (f₁ g) (f₂ g)) :=
+begin
+  have [] [":", expr ∀ x, bdd_above «expr $ »(range, λ g, f₂ «expr ⁻¹»(g) (f₁ g x))] [],
+  { refine [expr λ x, ⟨«expr + »(x, 2), _⟩],
+    rintro ["_", "⟨", ident g, ",", ident rfl, "⟩"],
+    have [] [":", expr «expr = »(exprτ() (f₂ «expr ⁻¹»(g)), «expr- »(exprτ() (f₂ g)))] [],
+    by rw ["[", "<-", expr monoid_hom.coe_to_hom_units, ",", expr monoid_hom.map_inv, ",", expr translation_number_units_inv, ",", expr monoid_hom.coe_to_hom_units, "]"] [],
+    calc
+      «expr ≤ »(f₂ «expr ⁻¹»(g) (f₁ g x), f₂ «expr ⁻¹»(g) «expr + »(«expr + »(x, exprτ() (f₁ g)), 1)) : mono _ (map_lt_add_translation_number_add_one _ _).le
+      «expr = »(..., «expr + »(f₂ «expr ⁻¹»(g) «expr + »(x, exprτ() (f₂ g)), 1)) : by rw ["[", expr h, ",", expr map_add_one, "]"] []
+      «expr ≤ »(..., «expr + »(«expr + »(«expr + »(«expr + »(x, exprτ() (f₂ g)), exprτ() (f₂ «expr ⁻¹»(g))), 1), 1)) : by { mono [] [] [] [],
+        exact [expr (map_lt_add_translation_number_add_one _ _).le] }
+      «expr = »(..., «expr + »(x, 2)) : by simp [] [] [] ["[", expr this, ",", expr bit0, ",", expr add_assoc, "]"] [] [] },
+  set [] [ident F₁] [] [":="] [expr to_order_iso.comp f₁.to_hom_units] [],
+  set [] [ident F₂] [] [":="] [expr to_order_iso.comp f₂.to_hom_units] [],
+  have [ident hF₁] [":", expr ∀ g, «expr = »(«expr⇑ »(F₁ g), f₁ g)] [":=", expr λ _, rfl],
+  have [ident hF₂] [":", expr ∀ g, «expr = »(«expr⇑ »(F₂ g), f₂ g)] [":=", expr λ _, rfl],
+  simp [] [] ["only"] ["[", "<-", expr hF₁, ",", "<-", expr hF₂, "]"] [] [],
+  refine [expr ⟨⟨_, λ
+     x
+     y
+     hxy, _, λ
+     x, _⟩, cSup_div_semiconj F₂ F₁ (λ
+     x, _)⟩]; simp [] [] ["only"] ["[", expr hF₁, ",", expr hF₂, ",", "<-", expr monoid_hom.map_inv, ",", expr coe_mk, "]"] [] [],
+  { refine [expr csupr_le_csupr (this y) (λ g, _)],
+    exact [expr mono _ (mono _ hxy)] },
+  { simp [] [] ["only"] ["[", expr map_add_one, "]"] [] [],
+    exact [expr (map_csupr_of_continuous_at_of_monotone (continuous_at_id.add continuous_at_const) (monotone_id.add_const (1 : exprℝ())) (this x)).symm] },
+  { exact [expr this x] }
+end
 
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If two lifts of circle homeomorphisms have the same translation number, then they are
 semiconjugate by a `circle_deg1_lift`. This version uses arguments `f₁ f₂ : units circle_deg1_lift`
 to assume that `f₁` and `f₂` are homeomorphisms. -/
-theorem units_semiconj_of_translation_number_eq {f₁ f₂ : Units CircleDeg1Lift} (h : τ f₁ = τ f₂) :
-  ∃ F : CircleDeg1Lift, semiconj F f₁ f₂ :=
-  by 
-    have  :
-      ∀ n : Multiplicative ℤ,
-        τ ((Units.coeHom _).comp (zpowersHom _ f₁) n) = τ ((Units.coeHom _).comp (zpowersHom _ f₂) n)
-    ·
-      intro n 
-      simp [h]
-    exact
-      (semiconj_of_group_action_of_forall_translation_number_eq _ _ this).imp fun F hF => hF (Multiplicative.ofAdd 1)
+theorem units_semiconj_of_translation_number_eq
+{f₁ f₂ : units circle_deg1_lift}
+(h : «expr = »(exprτ() f₁, exprτ() f₂)) : «expr∃ , »((F : circle_deg1_lift), semiconj F f₁ f₂) :=
+begin
+  have [] [":", expr ∀
+   n : multiplicative exprℤ(), «expr = »(exprτ() ((units.coe_hom _).comp (zpowers_hom _ f₁) n), exprτ() ((units.coe_hom _).comp (zpowers_hom _ f₂) n))] [],
+  { intro [ident n],
+    simp [] [] [] ["[", expr h, "]"] [] [] },
+  exact [expr (semiconj_of_group_action_of_forall_translation_number_eq _ _ this).imp (λ
+    F hF, hF (multiplicative.of_add 1))]
+end
 
 /-- If two lifts of circle homeomorphisms have the same translation number, then they are
 semiconjugate by a `circle_deg1_lift`. This version uses assumptions `is_unit f₁` and `is_unit f₂`

@@ -46,6 +46,7 @@ section
 
 variable[has_zero_morphisms.{v} C][has_binary_biproducts.{v} C]
 
+-- error in CategoryTheory.Preadditive.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If
 ```
@@ -54,20 +55,25 @@ If
 ```
 is invertible, then `f` is invertible.
 -/
-theorem is_iso_left_of_is_iso_biprod_map {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ Z) [is_iso (biprod.map f g)] : is_iso f :=
-  ⟨⟨biprod.inl ≫ inv (biprod.map f g) ≫ biprod.fst,
-      ⟨by 
-          have t :=
-            congr_argₓ (fun p : W ⊞ X ⟶ W ⊞ X => biprod.inl ≫ p ≫ biprod.fst) (is_iso.hom_inv_id (biprod.map f g))
-          simp only [category.id_comp, category.assoc, biprod.inl_map_assoc] at t 
-          simp [t],
-        by 
-          have t :=
-            congr_argₓ (fun p : Y ⊞ Z ⟶ Y ⊞ Z => biprod.inl ≫ p ≫ biprod.fst) (is_iso.inv_hom_id (biprod.map f g))
-          simp only [category.id_comp, category.assoc, biprod.map_fst] at t 
-          simp only [category.assoc]
-          simp [t]⟩⟩⟩
+theorem is_iso_left_of_is_iso_biprod_map
+{W X Y Z : C}
+(f : «expr ⟶ »(W, Y))
+(g : «expr ⟶ »(X, Z))
+[is_iso (biprod.map f g)] : is_iso f :=
+⟨⟨«expr ≫ »(biprod.inl, «expr ≫ »(inv (biprod.map f g), biprod.fst)), ⟨begin
+     have [ident t] [] [":=", expr congr_arg (λ
+       p : «expr ⟶ »(«expr ⊞ »(W, X), «expr ⊞ »(W, X)), «expr ≫ »(biprod.inl, «expr ≫ »(p, biprod.fst))) (is_iso.hom_inv_id (biprod.map f g))],
+     simp [] [] ["only"] ["[", expr category.id_comp, ",", expr category.assoc, ",", expr biprod.inl_map_assoc, "]"] [] ["at", ident t],
+     simp [] [] [] ["[", expr t, "]"] [] []
+   end, begin
+     have [ident t] [] [":=", expr congr_arg (λ
+       p : «expr ⟶ »(«expr ⊞ »(Y, Z), «expr ⊞ »(Y, Z)), «expr ≫ »(biprod.inl, «expr ≫ »(p, biprod.fst))) (is_iso.inv_hom_id (biprod.map f g))],
+     simp [] [] ["only"] ["[", expr category.id_comp, ",", expr category.assoc, ",", expr biprod.map_fst, "]"] [] ["at", ident t],
+     simp [] [] ["only"] ["[", expr category.assoc, "]"] [] [],
+     simp [] [] [] ["[", expr t, "]"] [] []
+   end⟩⟩⟩
 
+-- error in CategoryTheory.Preadditive.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If
 ```
@@ -76,13 +82,16 @@ If
 ```
 is invertible, then `g` is invertible.
 -/
-theorem is_iso_right_of_is_iso_biprod_map {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ Z) [is_iso (biprod.map f g)] : is_iso g :=
-  by 
-    letI this : is_iso (biprod.map g f) :=
-      by 
-        rw [←biprod.braiding_map_braiding]
-        infer_instance 
-    exact is_iso_left_of_is_iso_biprod_map g f
+theorem is_iso_right_of_is_iso_biprod_map
+{W X Y Z : C}
+(f : «expr ⟶ »(W, Y))
+(g : «expr ⟶ »(X, Z))
+[is_iso (biprod.map f g)] : is_iso g :=
+begin
+  letI [] [":", expr is_iso (biprod.map g f)] [":=", expr by { rw ["[", "<-", expr biprod.braiding_map_braiding, "]"] [],
+     apply_instance }],
+  exact [expr is_iso_left_of_is_iso_biprod_map g f]
+end
 
 end 
 
@@ -201,38 +210,33 @@ def biprod.gaussian (f : X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂) [is_iso (biprod.inl �
         (biprod.inr ≫ f ≫ biprod.snd)
     simpa [biprod.of_components_eq]
 
+-- error in CategoryTheory.Preadditive.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `X₁ ⊞ X₂ ≅ Y₁ ⊞ Y₂` via a two-by-two matrix whose `X₁ ⟶ Y₁` entry is an isomorphism,
 then we can construct an isomorphism `X₂ ≅ Y₂`, via Gaussian elimination.
--/
-def biprod.iso_elim' [is_iso f₁₁] [is_iso (biprod.of_components f₁₁ f₁₂ f₂₁ f₂₂)] : X₂ ≅ Y₂ :=
-  by 
-    obtain ⟨L, R, g, w⟩ := biprod.gaussian' f₁₁ f₁₂ f₂₁ f₂₂ 
-    letI this : is_iso (biprod.map f₁₁ g) :=
-      by 
-        rw [←w]
-        infer_instance 
-    letI this : is_iso g := is_iso_right_of_is_iso_biprod_map f₁₁ g 
-    exact as_iso g
+-/ def biprod.iso_elim' [is_iso f₁₁] [is_iso (biprod.of_components f₁₁ f₁₂ f₂₁ f₂₂)] : «expr ≅ »(X₂, Y₂) :=
+begin
+  obtain ["⟨", ident L, ",", ident R, ",", ident g, ",", ident w, "⟩", ":=", expr biprod.gaussian' f₁₁ f₁₂ f₂₁ f₂₂],
+  letI [] [":", expr is_iso (biprod.map f₁₁ g)] [":=", expr by { rw ["<-", expr w] [], apply_instance }],
+  letI [] [":", expr is_iso g] [":=", expr is_iso_right_of_is_iso_biprod_map f₁₁ g],
+  exact [expr as_iso g]
+end
 
+-- error in CategoryTheory.Preadditive.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `f` is an isomorphism `X₁ ⊞ X₂ ≅ Y₁ ⊞ Y₂` whose `X₁ ⟶ Y₁` entry is an isomorphism,
 then we can construct an isomorphism `X₂ ≅ Y₂`, via Gaussian elimination.
 -/
-def biprod.iso_elim (f : X₁ ⊞ X₂ ≅ Y₁ ⊞ Y₂) [is_iso (biprod.inl ≫ f.hom ≫ biprod.fst)] : X₂ ≅ Y₂ :=
-  by 
-    letI this :
-      is_iso
-        (biprod.of_components (biprod.inl ≫ f.hom ≫ biprod.fst) (biprod.inl ≫ f.hom ≫ biprod.snd)
-          (biprod.inr ≫ f.hom ≫ biprod.fst) (biprod.inr ≫ f.hom ≫ biprod.snd)) :=
-      by 
-        simp only [biprod.of_components_eq]
-        infer_instance 
-    exact
-      biprod.iso_elim' (biprod.inl ≫ f.hom ≫ biprod.fst) (biprod.inl ≫ f.hom ≫ biprod.snd)
-        (biprod.inr ≫ f.hom ≫ biprod.fst) (biprod.inr ≫ f.hom ≫ biprod.snd)
+def biprod.iso_elim
+(f : «expr ≅ »(«expr ⊞ »(X₁, X₂), «expr ⊞ »(Y₁, Y₂)))
+[is_iso «expr ≫ »(biprod.inl, «expr ≫ »(f.hom, biprod.fst))] : «expr ≅ »(X₂, Y₂) :=
+begin
+  letI [] [":", expr is_iso (biprod.of_components «expr ≫ »(biprod.inl, «expr ≫ »(f.hom, biprod.fst)) «expr ≫ »(biprod.inl, «expr ≫ »(f.hom, biprod.snd)) «expr ≫ »(biprod.inr, «expr ≫ »(f.hom, biprod.fst)) «expr ≫ »(biprod.inr, «expr ≫ »(f.hom, biprod.snd)))] [":=", expr by { simp [] [] ["only"] ["[", expr biprod.of_components_eq, "]"] [] [],
+     apply_instance }],
+  exact [expr biprod.iso_elim' «expr ≫ »(biprod.inl, «expr ≫ »(f.hom, biprod.fst)) «expr ≫ »(biprod.inl, «expr ≫ »(f.hom, biprod.snd)) «expr ≫ »(biprod.inr, «expr ≫ »(f.hom, biprod.fst)) «expr ≫ »(biprod.inr, «expr ≫ »(f.hom, biprod.snd))]
+end
 
--- error in CategoryTheory.Preadditive.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in CategoryTheory.Preadditive.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem biprod.column_nonzero_of_iso
 {W X Y Z : C}
 (f : «expr ⟶ »(«expr ⊞ »(W, X), «expr ⊞ »(Y, Z)))
@@ -266,25 +270,38 @@ end
 
 variable[preadditive.{v} C]
 
-theorem biproduct.column_nonzero_of_iso' {σ τ : Type v} [DecidableEq σ] [DecidableEq τ] [Fintype τ] {S : σ → C}
-  [has_biproduct.{v} S] {T : τ → C} [has_biproduct.{v} T] (s : σ) (f : ⨁ S ⟶ ⨁ T) [is_iso f] :
-  (∀ t : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t = 0) → 𝟙 (S s) = 0 :=
-  by 
-    intro z 
-    set x := biproduct.ι S s ≫ f ≫ inv f ≫ biproduct.π S s 
-    have h₁ : x = 𝟙 (S s)
-    ·
-      simp [x]
-    have h₀ : x = 0
-    ·
-      dsimp [x]
-      rw [←category.id_comp (inv f), category.assoc, ←biproduct.total]
-      simp only [comp_sum_assoc]
-      convLHS => congr applyCongr skip simp only [reassoc_of z]
-      simp 
-    exact h₁.symm.trans h₀
+-- error in CategoryTheory.Preadditive.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem biproduct.column_nonzero_of_iso'
+{σ τ : Type v}
+[decidable_eq σ]
+[decidable_eq τ]
+[fintype τ]
+{S : σ → C}
+[has_biproduct.{v} S]
+{T : τ → C}
+[has_biproduct.{v} T]
+(s : σ)
+(f : «expr ⟶ »(«expr⨁ »(S), «expr⨁ »(T)))
+[is_iso f] : ∀
+t : τ, «expr = »(«expr ≫ »(biproduct.ι S s, «expr ≫ »(f, biproduct.π T t)), 0) → «expr = »(«expr𝟙»() (S s), 0) :=
+begin
+  intro [ident z],
+  set [] [ident x] [] [":="] [expr «expr ≫ »(biproduct.ι S s, «expr ≫ »(f, «expr ≫ »(inv f, biproduct.π S s)))] [],
+  have [ident h₁] [":", expr «expr = »(x, «expr𝟙»() (S s))] [],
+  by simp [] [] [] ["[", expr x, "]"] [] [],
+  have [ident h₀] [":", expr «expr = »(x, 0)] [],
+  { dsimp [] ["[", expr x, "]"] [] [],
+    rw ["[", "<-", expr category.id_comp (inv f), ",", expr category.assoc, ",", "<-", expr biproduct.total, "]"] [],
+    simp [] [] ["only"] ["[", expr comp_sum_assoc, "]"] [] [],
+    conv_lhs [] [] { congr,
+      apply_congr [],
+      skip,
+      simp ["only"] ["[", expr reassoc_of z, "]"] [] },
+    simp [] [] [] [] [] [] },
+  exact [expr h₁.symm.trans h₀]
+end
 
--- error in CategoryTheory.Preadditive.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in CategoryTheory.Preadditive.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `f : ⨁ S ⟶ ⨁ T` is an isomorphism, and `s` is a non-trivial summand of the source,
 then there is some `t` in the target so that the `s, t` matrix entry of `f` is nonzero.

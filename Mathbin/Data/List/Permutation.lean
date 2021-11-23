@@ -121,7 +121,7 @@ theorem map_map_permutations'_aux (f : α → β) (t : α) (ts : List α) :
         simp [←ih]
         rfl]
 
--- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem permutations'_aux_eq_permutations_aux2
 (t : α)
 (ts : list α) : «expr = »(permutations'_aux t ts, (permutations_aux2 t «expr[ , ]»([]) «expr[ , ]»([«expr ++ »(ts, «expr[ , ]»([t]))]) ts id).2) :=
@@ -133,7 +133,7 @@ begin
   simp [] [] [] ["[", expr map_permutations_aux2, "]"] [] []
 end
 
--- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mem_permutations_aux2
 {t : α}
 {ts : list α}
@@ -197,17 +197,24 @@ theorem length_foldr_permutations_aux2 (t : α) (ts : List α) (r L : List (List
   by 
     simp [foldr_permutations_aux2, · ∘ ·, length_permutations_aux2]
 
-theorem length_foldr_permutations_aux2' (t : α) (ts : List α) (r L : List (List α)) n
-  (H : ∀ l _ : l ∈ L, length l = n) :
-  length (foldr (fun y r => (permutations_aux2 t ts r y id).2) r L) = (n*length L)+length r :=
-  by 
-    rw [length_foldr_permutations_aux2, (_ : Sum (map length L) = n*length L)]
-    induction' L with l L ih
-    ·
-      simp 
-    have sum_map : Sum (map length L) = n*length L := ih fun l m => H l (mem_cons_of_mem _ m)
-    have length_l : length l = n := H _ (mem_cons_self _ _)
-    simp [sum_map, length_l, mul_addₓ, add_commₓ]
+-- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem length_foldr_permutations_aux2'
+(t : α)
+(ts : list α)
+(r L : list (list α))
+(n)
+(H : ∀
+ l «expr ∈ » L, «expr = »(length l, n)) : «expr = »(length (foldr (λ
+   y r, (permutations_aux2 t ts r y id).2) r L), «expr + »(«expr * »(n, length L), length r)) :=
+begin
+  rw ["[", expr length_foldr_permutations_aux2, ",", expr (_ : «expr = »(sum (map length L), «expr * »(n, length L))), "]"] [],
+  induction [expr L] [] ["with", ident l, ident L, ident ih] [],
+  { simp [] [] [] [] [] [] },
+  have [ident sum_map] [":", expr «expr = »(sum (map length L), «expr * »(n, length L))] [":=", expr ih (λ
+    l m, H l (mem_cons_of_mem _ m))],
+  have [ident length_l] [":", expr «expr = »(length l, n)] [":=", expr H _ (mem_cons_self _ _)],
+  simp [] [] [] ["[", expr sum_map, ",", expr length_l, ",", expr mul_add, ",", expr add_comm, "]"] [] []
+end
 
 @[simp]
 theorem permutations_aux_nil (is : List α) : permutations_aux [] is = [] :=
@@ -226,7 +233,7 @@ theorem permutations_nil : permutations ([] : List α) = [[]] :=
   by 
     rw [permutations, permutations_aux_nil]
 
--- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
 theorem map_permutations_aux
 (f : α → β) : ∀
 ts is : list α, «expr = »(map (map f) (permutations_aux ts is), permutations_aux (map f ts) (map f is)) :=
@@ -245,7 +252,7 @@ theorem map_permutations' (f : α → β) (ts : List α) : map (map f) (permutat
   by 
     induction' ts with t ts ih <;> [rfl, simp [←ih, map_bind, ←map_map_permutations'_aux, bind_map]]
 
--- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem permutations_aux_append
 (is
  is'

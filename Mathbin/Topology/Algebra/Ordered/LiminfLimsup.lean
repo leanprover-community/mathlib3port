@@ -81,9 +81,9 @@ theorem le_nhds_of_Limsup_eq_Liminf {f : Filter α} {a : α} (hl : f.is_bounded 
 
 theorem Limsup_nhds (a : α) : Limsup (𝓝 a) = a :=
   cInf_eq_of_forall_ge_of_forall_gt_exists_lt (is_bounded_le_nhds a)
-    (fun a' h : { n : α | n ≤ a' } ∈ 𝓝 a => show a ≤ a' from @mem_of_mem_nhds α _ a _ h)
+    (fun a' h : { n:α | n ≤ a' } ∈ 𝓝 a => show a ≤ a' from @mem_of_mem_nhds α _ a _ h)
     fun b hba : a < b =>
-      show ∃ (c : _)(h : { n : α | n ≤ c } ∈ 𝓝 a), c < b from
+      show ∃ (c : _)(h : { n:α | n ≤ c } ∈ 𝓝 a), c < b from
         match dense_or_discrete a b with 
         | Or.inl ⟨c, hac, hcb⟩ => ⟨c, ge_mem_nhds hac, hcb⟩
         | Or.inr ⟨_, h⟩ => ⟨a, (𝓝 a).sets_of_superset (gt_mem_nhds hba) h, hba⟩
@@ -130,25 +130,20 @@ theorem tendsto_of_liminf_eq_limsup {f : Filter β} {u : β → α} {a : α} (hi
   tendsto u f (𝓝 a) :=
   le_nhds_of_Limsup_eq_Liminf h h' hsup hinf
 
+-- error in Topology.Algebra.Ordered.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a number `a` is less than or equal to the `liminf` of a function `f` at some filter
 and is greater than or equal to the `limsup` of `f`, then `f` tends to `a` along this filter. -/
-theorem tendsto_of_le_liminf_of_limsup_le {f : Filter β} {u : β → α} {a : α} (hinf : a ≤ liminf f u)
-  (hsup : limsup f u ≤ a)
-  (h : f.is_bounded_under (· ≤ ·) u :=  by 
-    runTac 
-      is_bounded_default)
-  (h' : f.is_bounded_under (· ≥ ·) u :=  by 
-    runTac 
-      is_bounded_default) :
-  tendsto u f (𝓝 a) :=
-  if hf : f = ⊥ then hf.symm ▸ tendsto_bot else
-    by 
-      haveI  : ne_bot f := ⟨hf⟩ <;>
-        exact
-          tendsto_of_liminf_eq_limsup (le_antisymmₓ (le_transₓ (liminf_le_limsup h h') hsup) hinf)
-            (le_antisymmₓ hsup (le_transₓ hinf (liminf_le_limsup h h'))) h h'
+theorem tendsto_of_le_liminf_of_limsup_le
+{f : filter β}
+{u : β → α}
+{a : α}
+(hinf : «expr ≤ »(a, liminf f u))
+(hsup : «expr ≤ »(limsup f u, a))
+(h : f.is_bounded_under ((«expr ≤ »)) u . is_bounded_default)
+(h' : f.is_bounded_under ((«expr ≥ »)) u . is_bounded_default) : tendsto u f (expr𝓝() a) :=
+if hf : «expr = »(f, «expr⊥»()) then «expr ▸ »(hf.symm, tendsto_bot) else by haveI [] [":", expr ne_bot f] [":=", expr ⟨hf⟩]; exact [expr tendsto_of_liminf_eq_limsup (le_antisymm (le_trans (liminf_le_limsup h h') hsup) hinf) (le_antisymm hsup (le_trans hinf (liminf_le_limsup h h'))) h h']
 
--- error in Topology.Algebra.Ordered.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.Algebra.Ordered.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Assume that, for any `a < b`, a sequence can not be infinitely many times below `a` and
 above `b`. If it is also ultimately bounded above and below, then it has to converge. This even
 works if `a` and `b` are restricted to a dense subset.

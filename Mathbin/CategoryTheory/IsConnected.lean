@@ -134,24 +134,26 @@ theorem induct_on_objects [is_preconnected J] (p : Set J) {j₀ : J} (h0 : j₀ 
     dsimp 
     exact congr_argₓ Ulift.up (propext (h1 f))
 
+-- error in CategoryTheory.IsConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If any maximal connected component containing some element j₀ of J is all of J, then J is connected.
 
 The converse of `induct_on_objects`.
 -/
-theorem is_connected.of_induct [Nonempty J] {j₀ : J}
-  (h : ∀ p : Set J, j₀ ∈ p → (∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, j₁ ∈ p ↔ j₂ ∈ p) → ∀ j : J, j ∈ p) : is_connected J :=
-  is_connected.of_constant_of_preserves_morphisms
-    fun α F a =>
-      by 
-        have w :=
-          h { j | F j = F j₀ } rfl
-            fun _ _ f =>
-              by 
-                simp [a f]
-        dsimp  at w 
-        intro j j' 
-        rw [w j, w j']
+theorem is_connected.of_induct
+[nonempty J]
+{j₀ : J}
+(h : ∀
+ p : set J, «expr ∈ »(j₀, p) → ∀
+ {j₁ j₂ : J}
+ (f : «expr ⟶ »(j₁, j₂)), «expr ↔ »(«expr ∈ »(j₁, p), «expr ∈ »(j₂, p)) → ∀ j : J, «expr ∈ »(j, p)) : is_connected J :=
+is_connected.of_constant_of_preserves_morphisms (λ α F a, begin
+   have [ident w] [] [":=", expr h {j | «expr = »(F j, F j₀)} rfl (λ
+     _ _ f, by simp [] [] [] ["[", expr a f, "]"] [] [])],
+   dsimp [] [] [] ["at", ident w],
+   intros [ident j, ident j'],
+   rw ["[", expr w j, ",", expr w j', "]"] []
+ end)
 
 /--
 Another induction principle for `is_preconnected J`:
@@ -255,21 +257,27 @@ theorem zigzag_obj_of_zigzag (F : J ⥤ K) {j₁ j₂ : J} (h : zigzag j₁ j₂
 theorem zag_of_zag_obj (F : J ⥤ K) [full F] {j₁ j₂ : J} (h : zag (F.obj j₁) (F.obj j₂)) : zag j₁ j₂ :=
   Or.imp (Nonempty.map F.preimage) (Nonempty.map F.preimage) h
 
+-- error in CategoryTheory.IsConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any equivalence relation containing (⟶) holds for all pairs of a connected category. -/
-theorem equiv_relation [is_connected J] (r : J → J → Prop) (hr : _root_.equivalence r)
-  (h : ∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, r j₁ j₂) : ∀ j₁ j₂ : J, r j₁ j₂ :=
-  by 
-    have z : ∀ j : J, r (Classical.arbitrary J) j :=
-      induct_on_objects (fun k => r (Classical.arbitrary J) k) (hr.1 (Classical.arbitrary J))
-        fun _ _ f => ⟨fun t => hr.2.2 t (h f), fun t => hr.2.2 t (hr.2.1 (h f))⟩
-    intros 
-    apply hr.2.2 (hr.2.1 (z _)) (z _)
+theorem equiv_relation
+[is_connected J]
+(r : J → J → exprProp())
+(hr : _root_.equivalence r)
+(h : ∀ {j₁ j₂ : J} (f : «expr ⟶ »(j₁, j₂)), r j₁ j₂) : ∀ j₁ j₂ : J, r j₁ j₂ :=
+begin
+  have [ident z] [":", expr ∀
+   j : J, r (classical.arbitrary J) j] [":=", expr induct_on_objects (λ
+    k, r (classical.arbitrary J) k) (hr.1 (classical.arbitrary J)) (λ
+    _ _ f, ⟨λ t, hr.2.2 t (h f), λ t, hr.2.2 t (hr.2.1 (h f))⟩)],
+  intros [],
+  apply [expr hr.2.2 (hr.2.1 (z _)) (z _)]
+end
 
 /-- In a connected category, any two objects are related by `zigzag`. -/
 theorem is_connected_zigzag [is_connected J] (j₁ j₂ : J) : zigzag j₁ j₂ :=
   equiv_relation _ zigzag_equivalence (fun _ _ f => Relation.ReflTransGen.single (Or.inl (Nonempty.intro f))) _ _
 
--- error in CategoryTheory.IsConnected: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in CategoryTheory.IsConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If any two objects in an nonempty category are related by `zigzag`, the category is connected.
 -/ theorem zigzag_is_connected [nonempty J] (h : ∀ j₁ j₂ : J, zigzag j₁ j₂) : is_connected J :=
@@ -316,19 +324,21 @@ def discrete_is_connected_equiv_punit {α : Type u₁} [is_connected (discrete �
 
 variable{C : Type u₂}[category.{u₁} C]
 
+-- error in CategoryTheory.IsConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 For objects `X Y : C`, any natural transformation `α : const X ⟶ const Y` from a connected
 category must be constant.
 This is the key property of connected categories which we use to establish properties about limits.
 -/
-theorem nat_trans_from_is_connected [is_preconnected J] {X Y : C}
-  (α : (Functor.Const J).obj X ⟶ (Functor.Const J).obj Y) : ∀ j j' : J, α.app j = (α.app j' : X ⟶ Y) :=
-  @constant_of_preserves_morphisms _ _ _ (X ⟶ Y) (fun j => α.app j)
-    fun _ _ f =>
-      by 
-        have  := α.naturality f 
-        erw [id_comp, comp_id] at this 
-        exact this.symm
+theorem nat_trans_from_is_connected
+[is_preconnected J]
+{X Y : C}
+(α : «expr ⟶ »((functor.const J).obj X, (functor.const J).obj Y)) : ∀
+j j' : J, «expr = »(α.app j, (α.app j' : «expr ⟶ »(X, Y))) :=
+@constant_of_preserves_morphisms _ _ _ «expr ⟶ »(X, Y) (λ
+ j, α.app j) (λ _ _ f, by { have [] [] [":=", expr α.naturality f],
+   erw ["[", expr id_comp, ",", expr comp_id, "]"] ["at", ident this],
+   exact [expr this.symm] })
 
 instance  [is_connected J] : full (Functor.Const J : C ⥤ J ⥤ C) :=
   { Preimage := fun X Y f => f.app (Classical.arbitrary J),

@@ -1,5 +1,5 @@
 import Mathbin.Data.Polynomial.AlgebraMap 
-import Mathbin.Data.Polynomial.Div
+import Mathbin.Data.Polynomial.Monic
 
 /-!
 # Polynomials that lift
@@ -122,7 +122,7 @@ theorem erase_mem_lifts {p : Polynomial S} (n : ℕ) (h : p ∈ lifts f) : p.era
 
 section LiftDeg
 
--- error in Data.Polynomial.Lifts: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Polynomial.Lifts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem monomial_mem_lifts_and_degree_eq
 {s : S}
 {n : exprℕ()}
@@ -148,54 +148,47 @@ begin
   simp [] [] ["only"] ["[", expr hzero, ",", expr hqzero, ",", expr ne.def, ",", expr not_false_iff, ",", expr degree_C_mul_X_pow, "]"] [] []
 end
 
+-- error in Data.Polynomial.Lifts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A polynomial lifts if and only if it can be lifted to a polynomial of the same degree. -/
-theorem mem_lifts_and_degree_eq {p : Polynomial S} (hlifts : p ∈ lifts f) :
-  ∃ q : Polynomial R, map f q = p ∧ q.degree = p.degree :=
-  by 
-    generalize hd : p.nat_degree = d 
-    revert hd p 
-    apply Nat.strong_induction_onₓ d 
-    intro n hn p hlifts hdeg 
-    byCases' erase_zero : p.erase_lead = 0
-    ·
-      rw [←erase_lead_add_monomial_nat_degree_leading_coeff p, erase_zero, zero_addₓ, leading_coeff]
-      exact
-        monomial_mem_lifts_and_degree_eq
-          (monomial_mem_lifts p.nat_degree ((lifts_iff_coeff_lifts p).1 hlifts p.nat_degree))
-    have deg_erase := Or.resolve_right (erase_lead_nat_degree_lt_or_erase_lead_eq_zero p) erase_zero 
-    have pzero : p ≠ 0
-    ·
-      intro habs 
-      exFalso 
-      rw [habs, erase_lead_zero, eq_self_iff_true, not_true] at erase_zero 
-      exact erase_zero 
-    have lead_zero : p.coeff p.nat_degree ≠ 0
-    ·
-      rw [←leading_coeff, Ne.def, leading_coeff_eq_zero] <;> exact pzero 
-    obtain ⟨lead, hlead⟩ :=
-      monomial_mem_lifts_and_degree_eq
-        (monomial_mem_lifts p.nat_degree ((lifts_iff_coeff_lifts p).1 hlifts p.nat_degree))
-    have deg_lead : lead.degree = p.nat_degree
-    ·
-      rw [hlead.2, monomial_eq_C_mul_X, degree_C_mul_X_pow p.nat_degree lead_zero]
-    rw [hdeg] at deg_erase 
-    obtain ⟨erase, herase⟩ :=
-      hn p.erase_lead.nat_degree deg_erase (erase_mem_lifts p.nat_degree hlifts) (refl p.erase_lead.nat_degree)
-    use erase+lead 
-    split 
-    ·
-      simp only [hlead, herase, map_add]
-      nthRw 0[erase_lead_add_monomial_nat_degree_leading_coeff p]
-    rw [←hdeg, erase_lead] at deg_erase 
-    replace deg_erase := lt_of_le_of_ltₓ degree_le_nat_degree (WithBot.coe_lt_coe.2 deg_erase)
-    rw [←deg_lead, ←herase.2] at deg_erase 
-    rw [degree_add_eq_right_of_degree_lt deg_erase, deg_lead, degree_eq_nat_degree pzero]
+theorem mem_lifts_and_degree_eq
+{p : polynomial S}
+(hlifts : «expr ∈ »(p, lifts f)) : «expr∃ , »((q : polynomial R), «expr ∧ »(«expr = »(map f q, p), «expr = »(q.degree, p.degree))) :=
+begin
+  generalize' [ident hd] [":"] [expr «expr = »(p.nat_degree, d)],
+  revert [ident hd, ident p],
+  apply [expr nat.strong_induction_on d],
+  intros [ident n, ident hn, ident p, ident hlifts, ident hdeg],
+  by_cases [expr erase_zero, ":", expr «expr = »(p.erase_lead, 0)],
+  { rw ["[", "<-", expr erase_lead_add_monomial_nat_degree_leading_coeff p, ",", expr erase_zero, ",", expr zero_add, ",", expr leading_coeff, "]"] [],
+    exact [expr monomial_mem_lifts_and_degree_eq (monomial_mem_lifts p.nat_degree ((lifts_iff_coeff_lifts p).1 hlifts p.nat_degree))] },
+  have [ident deg_erase] [] [":=", expr or.resolve_right (erase_lead_nat_degree_lt_or_erase_lead_eq_zero p) erase_zero],
+  have [ident pzero] [":", expr «expr ≠ »(p, 0)] [],
+  { intro [ident habs],
+    exfalso,
+    rw ["[", expr habs, ",", expr erase_lead_zero, ",", expr eq_self_iff_true, ",", expr not_true, "]"] ["at", ident erase_zero],
+    exact [expr erase_zero] },
+  have [ident lead_zero] [":", expr «expr ≠ »(p.coeff p.nat_degree, 0)] [],
+  { rw ["[", "<-", expr leading_coeff, ",", expr ne.def, ",", expr leading_coeff_eq_zero, "]"] []; exact [expr pzero] },
+  obtain ["⟨", ident lead, ",", ident hlead, "⟩", ":=", expr monomial_mem_lifts_and_degree_eq (monomial_mem_lifts p.nat_degree ((lifts_iff_coeff_lifts p).1 hlifts p.nat_degree))],
+  have [ident deg_lead] [":", expr «expr = »(lead.degree, p.nat_degree)] [],
+  { rw ["[", expr hlead.2, ",", expr monomial_eq_C_mul_X, ",", expr degree_C_mul_X_pow p.nat_degree lead_zero, "]"] [] },
+  rw [expr hdeg] ["at", ident deg_erase],
+  obtain ["⟨", ident erase, ",", ident herase, "⟩", ":=", expr hn p.erase_lead.nat_degree deg_erase (erase_mem_lifts p.nat_degree hlifts) (refl p.erase_lead.nat_degree)],
+  use [expr «expr + »(erase, lead)],
+  split,
+  { simp [] [] ["only"] ["[", expr hlead, ",", expr herase, ",", expr map_add, "]"] [] [],
+    nth_rewrite [0] [expr erase_lead_add_monomial_nat_degree_leading_coeff p] [] },
+  rw ["[", "<-", expr hdeg, ",", expr erase_lead, "]"] ["at", ident deg_erase],
+  replace [ident deg_erase] [] [":=", expr lt_of_le_of_lt degree_le_nat_degree (with_bot.coe_lt_coe.2 deg_erase)],
+  rw ["[", "<-", expr deg_lead, ",", "<-", expr herase.2, "]"] ["at", ident deg_erase],
+  rw ["[", expr degree_add_eq_right_of_degree_lt deg_erase, ",", expr deg_lead, ",", expr degree_eq_nat_degree pzero, "]"] []
+end
 
 end LiftDeg
 
 section Monic
 
--- error in Data.Polynomial.Lifts: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Polynomial.Lifts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A monic polynomial lifts if and only if it can be lifted to a monic polynomial
 of the same degree. -/
 theorem lifts_and_degree_eq_and_monic

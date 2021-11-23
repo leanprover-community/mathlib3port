@@ -74,17 +74,21 @@ theorem is_least_lfp_le : IsLeast { a | f a ≤ a } (lfp f) :=
 theorem is_least_lfp : IsLeast (fixed_points f) (lfp f) :=
   ⟨f.is_fixed_pt_lfp, fun a => f.lfp_le_fixed⟩
 
-theorem lfp_induction {p : α → Prop} (step : ∀ a, p a → a ≤ lfp f → p (f a))
-  (hSup : ∀ s, (∀ a _ : a ∈ s, p a) → p (Sup s)) : p (lfp f) :=
-  by 
-    set s := { a | a ≤ lfp f ∧ p a }
-    specialize hSup s fun a => And.right 
-    suffices  : Sup s = lfp f 
-    exact this ▸ hSup 
-    have h : Sup s ≤ lfp f := Sup_le fun b => And.left 
-    have hmem : f (Sup s) ∈ s 
-    exact ⟨f.map_le_lfp h, step _ hSup h⟩
-    exact h.antisymm (f.lfp_le$ le_Sup hmem)
+-- error in Order.FixedPoints: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lfp_induction
+{p : α → exprProp()}
+(step : ∀ a, p a → «expr ≤ »(a, lfp f) → p (f a))
+(hSup : ∀ s, ∀ a «expr ∈ » s, p a → p (Sup s)) : p (lfp f) :=
+begin
+  set [] [ident s] [] [":="] [expr {a | «expr ∧ »(«expr ≤ »(a, lfp f), p a)}] [],
+  specialize [expr hSup s (λ a, and.right)],
+  suffices [] [":", expr «expr = »(Sup s, lfp f)],
+  from [expr «expr ▸ »(this, hSup)],
+  have [ident h] [":", expr «expr ≤ »(Sup s, lfp f)] [":=", expr Sup_le (λ b, and.left)],
+  have [ident hmem] [":", expr «expr ∈ »(f (Sup s), s)] [],
+  from [expr ⟨f.map_le_lfp h, step _ hSup h⟩],
+  exact [expr h.antisymm «expr $ »(f.lfp_le, le_Sup hmem)]
+end
 
 theorem le_gfp {a : α} (h : a ≤ f a) : a ≤ gfp f :=
   le_Sup h
@@ -128,14 +132,18 @@ theorem map_lfp_comp : f (lfp (g.comp f)) = lfp (f.comp g) :=
 theorem map_gfp_comp : f (g.comp f).gfp = (f.comp g).gfp :=
   f.dual.map_lfp_comp g.dual
 
-theorem lfp_lfp (h : α →ₘ α →ₘ α) : lfp (lfp.comp h) = lfp h.on_diag :=
-  by 
-    let a := lfp (lfp.comp h)
-    refine' (lfp_le _ _).antisymm (lfp_le _ (Eq.le _))
-    ·
-      exact lfp_le _ h.on_diag.map_lfp.le 
-    have ha : (lfp ∘ h) a = a := (lfp.comp h).map_lfp 
-    calc h a a = h a (lfp (h a)) := congr_argₓ (h a) ha.symm _ = lfp (h a) := (h a).map_lfp _ = a := ha
+-- error in Order.FixedPoints: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lfp_lfp (h : «expr →ₘ »(α, «expr →ₘ »(α, α))) : «expr = »(lfp (lfp.comp h), lfp h.on_diag) :=
+begin
+  let [ident a] [] [":=", expr lfp (lfp.comp h)],
+  refine [expr (lfp_le _ _).antisymm (lfp_le _ (eq.le _))],
+  { exact [expr lfp_le _ h.on_diag.map_lfp.le] },
+  have [ident ha] [":", expr «expr = »(«expr ∘ »(lfp, h) a, a)] [":=", expr (lfp.comp h).map_lfp],
+  calc
+    «expr = »(h a a, h a (lfp (h a))) : congr_arg (h a) ha.symm
+    «expr = »(..., lfp (h a)) : (h a).map_lfp
+    «expr = »(..., a) : ha
+end
 
 theorem gfp_gfp (h : α →ₘ α →ₘ α) : gfp (gfp.comp h) = gfp h.on_diag :=
   @lfp_lfp (OrderDual α) _$

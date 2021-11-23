@@ -1,5 +1,5 @@
-import Mathbin.CategoryTheory.Monad.Algebra 
-import Mathbin.CategoryTheory.Adjunction.Default
+import Mathbin.CategoryTheory.Adjunction.Reflective 
+import Mathbin.CategoryTheory.Monad.Algebra
 
 namespace CategoryTheory
 

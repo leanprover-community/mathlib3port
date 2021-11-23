@@ -62,48 +62,24 @@ theorem div_X_add : div_X (p+q) = div_X p+div_X q :=
     by 
       simp 
 
-theorem degree_div_X_lt (hp0 : p ≠ 0) : (div_X p).degree < p.degree :=
-  by 
-    haveI  := nontrivial.of_polynomial_ne hp0 <;>
-      calc (div_X p).degree < ((div_X p*X)+C (p.coeff 0)).degree :=
-        if h : degree p ≤ 0 then
-          by 
-            have h' : C (p.coeff 0) ≠ 0
-            ·
-              rwa [←eq_C_of_degree_le_zero h]
-            rw [eq_C_of_degree_le_zero h, div_X_C, degree_zero, zero_mul, zero_addₓ]
-            exact
-              lt_of_le_of_neₓ bot_le
-                (Ne.symm
-                  (mt degree_eq_bot.1$
-                    by 
-                      simp [h']))
-        else
-          have hXp0 : div_X p ≠ 0 :=
-            by 
-              simpa [div_X_eq_zero_iff, -not_leₓ, degree_le_zero_iff] using h 
-          have  : (leading_coeff (div_X p)*leading_coeff X) ≠ 0 :=
-            by 
-              simpa 
-          have  : degree (C (p.coeff 0)) < degree (div_X p*X) :=
-            calc degree (C (p.coeff 0)) ≤ 0 := degree_C_le 
-              _ < 1 :=
-              by 
-                decide 
-              _ = degree (X : Polynomial R) := degree_X.symm 
-              _ ≤ degree (div_X p*X) :=
-              by 
-                rw [←zero_addₓ (degree X), degree_mul' this] <;>
-                  exact
-                    add_le_add
-                      (by 
-                        rw [zero_le_degree_iff, Ne.def, div_X_eq_zero_iff] <;>
-                          exact fun h0 => h (h0.symm ▸ degree_C_le))
-                      (le_reflₓ _)
-              
-          by 
-            rw [degree_add_eq_left_of_degree_lt this] <;> exact degree_lt_degree_mul_X hXp0 _ = p.degree :=
-        congr_argₓ _ (div_X_mul_X_add _)
+-- error in Data.Polynomial.Inductions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem degree_div_X_lt (hp0 : «expr ≠ »(p, 0)) : «expr < »((div_X p).degree, p.degree) :=
+by haveI [] [] [":=", expr nontrivial.of_polynomial_ne hp0]; calc
+  «expr < »((div_X p).degree, «expr + »(«expr * »(div_X p, X), C (p.coeff 0)).degree) : if h : «expr ≤ »(degree p, 0) then begin
+    have [ident h'] [":", expr «expr ≠ »(C (p.coeff 0), 0)] [],
+    by rwa ["[", "<-", expr eq_C_of_degree_le_zero h, "]"] [],
+    rw ["[", expr eq_C_of_degree_le_zero h, ",", expr div_X_C, ",", expr degree_zero, ",", expr zero_mul, ",", expr zero_add, "]"] [],
+    exact [expr lt_of_le_of_ne bot_le (ne.symm «expr $ »(mt degree_eq_bot.1, by simp [] [] [] ["[", expr h', "]"] [] []))]
+  end else have hXp0 : «expr ≠ »(div_X p, 0), by simpa [] [] [] ["[", expr div_X_eq_zero_iff, ",", "-", ident not_le, ",", expr degree_le_zero_iff, "]"] [] ["using", expr h],
+  have «expr ≠ »(«expr * »(leading_coeff (div_X p), leading_coeff X), 0), by simpa [] [] [] [] [] [],
+  have «expr < »(degree (C (p.coeff 0)), degree «expr * »(div_X p, X)), from calc
+    «expr ≤ »(degree (C (p.coeff 0)), 0) : degree_C_le
+    «expr < »(..., 1) : exprdec_trivial()
+    «expr = »(..., degree (X : polynomial R)) : degree_X.symm
+    «expr ≤ »(..., degree «expr * »(div_X p, X)) : by rw ["[", "<-", expr zero_add (degree X), ",", expr degree_mul' this, "]"] []; exact [expr add_le_add (by rw ["[", expr zero_le_degree_iff, ",", expr ne.def, ",", expr div_X_eq_zero_iff, "]"] []; exact [expr λ
+       h0, h «expr ▸ »(h0.symm, degree_C_le)]) (le_refl _)],
+  by rw ["[", expr degree_add_eq_left_of_degree_lt this, "]"] []; exact [expr degree_lt_degree_mul_X hXp0]
+  «expr = »(..., p.degree) : congr_arg _ (div_X_mul_X_add _)
 
 /-- An induction principle for polynomials, valued in Sort* instead of Prop. -/
 @[elab_as_eliminator]

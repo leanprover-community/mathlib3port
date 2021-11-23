@@ -44,138 +44,177 @@ instance lexHasLe [LT α] [LE β] : LE (Lex α β) :=
 instance lexHasLt [LT α] [LT β] : LT (Lex α β) :=
   { lt := Prod.Lex (· < ·) (· < ·) }
 
--- error in Order.Lexicographic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Dictionary / lexicographic preorder for pairs. -/
-instance lex_preorder [preorder α] [preorder β] : preorder (lex α β) :=
-{ le_refl := λ ⟨l, r⟩, by { right,
-    apply [expr le_refl] },
-  le_trans := begin
-    rintros ["⟨", ident a₁, ",", ident b₁, "⟩", "⟨", ident a₂, ",", ident b₂, "⟩", "⟨", ident a₃, ",", ident b₃, "⟩", "⟨", ident h₁l, ",", ident h₁r, "⟩", "⟨", ident h₂l, ",", ident h₂r, "⟩"],
-    { left,
-      apply [expr lt_trans],
-      repeat { assumption } },
-    { left,
-      assumption },
-    { left,
-      assumption },
-    { right,
-      apply [expr le_trans],
-      repeat { assumption } }
-  end,
-  lt_iff_le_not_le := begin
-    rintros ["⟨", ident a₁, ",", ident b₁, "⟩", "⟨", ident a₂, ",", ident b₂, "⟩"],
-    split,
-    { rintros ["(", "⟨", "_", ",", "_", ",", "_", ",", "_", ",", ident hlt, "⟩", "|", "⟨", "_", ",", "_", ",", "_", ",", ident hlt, "⟩", ")"],
-      { split,
-        { left,
-          assumption },
-        { rintro ["⟨", ident l, ",", ident r, "⟩"],
-          { apply [expr lt_asymm hlt],
-            assumption },
-          { apply [expr lt_irrefl _ hlt] } } },
-      { split,
-        { right,
-          rw [expr lt_iff_le_not_le] ["at", ident hlt],
-          exact [expr hlt.1] },
-        { rintro ["⟨", ident l, ",", ident r, "⟩"],
-          { apply [expr lt_irrefl a₁],
-            assumption },
-          { rw [expr lt_iff_le_not_le] ["at", ident hlt],
-            apply [expr hlt.2],
-            assumption } } } },
-    { rintros ["⟨", "⟨", ident h₁ll, ",", ident h₁lr, "⟩", ",", ident h₂r, "⟩"],
-      { left,
-        assumption },
-      { right,
-        rw [expr lt_iff_le_not_le] [],
-        split,
-        { assumption },
-        { intro [ident h],
-          apply [expr h₂r],
-          right,
-          exact [expr h] } } }
-  end,
-  ..lex_has_le,
-  ..lex_has_lt }
-
-/-- Dictionary / lexicographic partial_order for pairs. -/
-instance lexPartialOrder [PartialOrderₓ α] [PartialOrderₓ β] : PartialOrderₓ (Lex α β) :=
-  { lexPreorder with
-    le_antisymm :=
+instance lexPreorder [Preorderₓ α] [Preorderₓ β] : Preorderₓ (Lex α β) :=
+  { lexHasLe, lexHasLt with
+    le_refl :=
+      fun ⟨l, r⟩ =>
+        by 
+          right 
+          apply le_reflₓ,
+    le_trans :=
       by 
-        rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨_, _, _, _, hlt₁⟩ | ⟨_, _, _, hlt₁⟩) (⟨_, _, _, _, hlt₂⟩ | ⟨_, _, _, hlt₂⟩)
+        rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨a₃, b₃⟩ ⟨h₁l, h₁r⟩ ⟨h₂l, h₂r⟩
         ·
-          exFalso 
-          exact lt_irreflₓ a₁ (lt_transₓ hlt₁ hlt₂)
+          left 
+          apply lt_transₓ 
+          repeat' 
+            assumption
         ·
-          exFalso 
-          exact lt_irreflₓ a₁ hlt₁
+          left 
+          assumption
         ·
-          exFalso 
-          exact lt_irreflₓ a₁ hlt₂
+          left 
+          assumption
         ·
-          have  := le_antisymmₓ hlt₁ hlt₂ 
-          simp [this] }
+          right 
+          apply le_transₓ 
+          repeat' 
+            assumption,
+    lt_iff_le_not_le :=
+      by 
+        rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩
+        split 
+        ·
+          rintro (⟨_, _, _, _, hlt⟩ | ⟨_, _, _, hlt⟩)
+          ·
+            split 
+            ·
+              left 
+              assumption
+            ·
+              rintro ⟨l, r⟩
+              ·
+                apply lt_asymmₓ hlt 
+                assumption
+              ·
+                apply lt_irreflₓ _ hlt
+          ·
+            split 
+            ·
+              right 
+              rw [lt_iff_le_not_leₓ] at hlt 
+              exact hlt.1
+            ·
+              rintro ⟨l, r⟩
+              ·
+                apply lt_irreflₓ a₁ 
+                assumption
+              ·
+                rw [lt_iff_le_not_leₓ] at hlt 
+                apply hlt.2
+                assumption
+        ·
+          rintro ⟨⟨h₁ll, h₁lr⟩, h₂r⟩
+          ·
+            left 
+            assumption
+          ·
+            right 
+            rw [lt_iff_le_not_leₓ]
+            split 
+            ·
+              assumption
+            ·
+              intro h 
+              apply h₂r 
+              right 
+              exact h }
 
--- error in Order.Lexicographic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Order.Lexicographic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- Dictionary / lexicographic partial_order for pairs. -/
+instance lex_partial_order [partial_order α] [partial_order β] : partial_order (lex α β) :=
+{ le_antisymm := begin
+    rintros ["⟨", ident a₁, ",", ident b₁, "⟩", "⟨", ident a₂, ",", ident b₂, "⟩", "(", "⟨", "_", ",", "_", ",", "_", ",", "_", ",", ident hlt₁, "⟩", "|", "⟨", "_", ",", "_", ",", "_", ",", ident hlt₁, "⟩", ")", "(", "⟨", "_", ",", "_", ",", "_", ",", "_", ",", ident hlt₂, "⟩", "|", "⟨", "_", ",", "_", ",", "_", ",", ident hlt₂, "⟩", ")"],
+    { exfalso,
+      exact [expr lt_irrefl a₁ (lt_trans hlt₁ hlt₂)] },
+    { exfalso,
+      exact [expr lt_irrefl a₁ hlt₁] },
+    { exfalso,
+      exact [expr lt_irrefl a₁ hlt₂] },
+    { have [] [] [":=", expr le_antisymm hlt₁ hlt₂],
+      simp [] [] [] ["[", expr this, "]"] [] [] }
+  end,
+  ..lex_preorder }
+
 /-- Dictionary / lexicographic linear_order for pairs. -/
-instance lex_linear_order [linear_order α] [linear_order β] : linear_order (lex α β) :=
-{ le_total := begin
-    rintros ["⟨", ident a₁, ",", ident b₁, "⟩", "⟨", ident a₂, ",", ident b₂, "⟩"],
-    obtain [ident ha, "|", ident ha, ":=", expr le_total a₁ a₂]; cases [expr lt_or_eq_of_le ha] ["with", ident a_lt, ident a_eq],
-    { left,
-      left,
-      exact [expr a_lt] },
-    swap,
-    { right,
-      left,
-      exact [expr a_lt] },
-    all_goals { subst [expr a_eq],
-      obtain [ident hb, "|", ident hb, ":=", expr le_total b₁ b₂] },
-    { left,
-      right,
-      exact [expr hb] },
-    { right,
-      right,
-      exact [expr hb] },
-    { left,
-      right,
-      exact [expr hb] },
-    { right,
-      right,
-      exact [expr hb] }
-  end,
-  decidable_le := begin
-    rintros ["⟨", ident a₁, ",", ident b₁, "⟩", "⟨", ident a₂, ",", ident b₂, "⟩"],
-    obtain [ident a_lt, "|", ident a_le, ":=", expr linear_order.decidable_le a₁ a₂],
-    { left,
-      rw [expr not_le] ["at", ident a_lt],
-      rintro ["⟨", ident l, ",", ident r, "⟩"],
-      { apply [expr lt_irrefl a₂],
-        apply [expr lt_trans],
-        repeat { assumption } },
-      { apply [expr lt_irrefl a₁],
-        assumption } },
-    { by_cases [expr h, ":", expr «expr = »(a₁, a₂)],
-      { rw [expr h] [],
-        obtain [ident b_lt, "|", ident b_le, ":=", expr linear_order.decidable_le b₁ b₂],
-        { left,
-          rw [expr not_le] ["at", ident b_lt],
-          rintro ["⟨", ident l, ",", ident r, "⟩"],
-          { apply [expr lt_irrefl a₂],
-            assumption },
-          { apply [expr lt_irrefl b₂],
-            apply [expr lt_of_lt_of_le],
-            repeat { assumption } } },
-        { right,
-          right,
-          assumption } },
-      { right,
-        left,
-        apply [expr lt_of_le_of_ne],
-        repeat { assumption } } }
-  end,
-  ..lex_partial_order }
+instance lexLinearOrder [LinearOrderₓ α] [LinearOrderₓ β] : LinearOrderₓ (Lex α β) :=
+  { lexPartialOrder with
+    le_total :=
+      by 
+        rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩
+        obtain ha | ha := le_totalₓ a₁ a₂ <;> cases' lt_or_eq_of_leₓ ha with a_lt a_eq
+        ·
+          left 
+          left 
+          exact a_lt 
+        swap
+        ·
+          right 
+          left 
+          exact a_lt 
+        all_goals 
+          subst a_eq 
+          obtain hb | hb := le_totalₓ b₁ b₂
+        ·
+          left 
+          right 
+          exact hb
+        ·
+          right 
+          right 
+          exact hb
+        ·
+          left 
+          right 
+          exact hb
+        ·
+          right 
+          right 
+          exact hb,
+    decidableLe :=
+      by 
+        rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩
+        obtain a_lt | a_le := LinearOrderₓ.decidableLe a₁ a₂
+        ·
+          left 
+          rw [not_leₓ] at a_lt 
+          rintro ⟨l, r⟩
+          ·
+            apply lt_irreflₓ a₂ 
+            apply lt_transₓ 
+            repeat' 
+              assumption
+          ·
+            apply lt_irreflₓ a₁ 
+            assumption
+        ·
+          byCases' h : a₁ = a₂
+          ·
+            rw [h]
+            obtain b_lt | b_le := LinearOrderₓ.decidableLe b₁ b₂
+            ·
+              left 
+              rw [not_leₓ] at b_lt 
+              rintro ⟨l, r⟩
+              ·
+                apply lt_irreflₓ a₂ 
+                assumption
+              ·
+                apply lt_irreflₓ b₂ 
+                apply lt_of_lt_of_leₓ 
+                repeat' 
+                  assumption
+            ·
+              right 
+              right 
+              assumption
+          ·
+            right 
+            left 
+            apply lt_of_le_of_neₓ 
+            repeat' 
+              assumption }
 
 variable{Z : α → Type v}
 
@@ -192,136 +231,175 @@ instance dlexHasLe [Preorderₓ α] [∀ a, Preorderₓ (Z a)] : LE (Σ'a, Z a) 
 instance dlexHasLt [Preorderₓ α] [∀ a, Preorderₓ (Z a)] : LT (Σ'a, Z a) :=
   { lt := Psigma.Lex (· < ·) fun a => · < · }
 
--- error in Order.Lexicographic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Dictionary / lexicographic preorder on dependent pairs. -/
-instance dlex_preorder [preorder α] [∀ a, preorder (Z a)] : preorder «exprΣ' , »((a), Z a) :=
-{ le_refl := λ ⟨l, r⟩, by { right,
-    apply [expr le_refl] },
-  le_trans := begin
-    rintros ["⟨", ident a₁, ",", ident b₁, "⟩", "⟨", ident a₂, ",", ident b₂, "⟩", "⟨", ident a₃, ",", ident b₃, "⟩", "⟨", ident h₁l, ",", ident h₁r, "⟩", "⟨", ident h₂l, ",", ident h₂r, "⟩"],
-    { left,
-      apply [expr lt_trans],
-      repeat { assumption } },
-    { left,
-      assumption },
-    { left,
-      assumption },
-    { right,
-      apply [expr le_trans],
-      repeat { assumption } }
-  end,
-  lt_iff_le_not_le := begin
-    rintros ["⟨", ident a₁, ",", ident b₁, "⟩", "⟨", ident a₂, ",", ident b₂, "⟩"],
-    split,
-    { rintros ["(", "⟨", "_", ",", "_", ",", "_", ",", "_", ",", ident hlt, "⟩", "|", "⟨", "_", ",", "_", ",", "_", ",", ident hlt, "⟩", ")"],
-      { split,
-        { left,
-          assumption },
-        { rintro ["⟨", ident l, ",", ident r, "⟩"],
-          { apply [expr lt_asymm hlt],
-            assumption },
-          { apply [expr lt_irrefl _ hlt] } } },
-      { split,
-        { right,
-          rw [expr lt_iff_le_not_le] ["at", ident hlt],
-          exact [expr hlt.1] },
-        { rintro ["⟨", ident l, ",", ident r, "⟩"],
-          { apply [expr lt_irrefl a₁],
-            assumption },
-          { rw [expr lt_iff_le_not_le] ["at", ident hlt],
-            apply [expr hlt.2],
-            assumption } } } },
-    { rintros ["⟨", "⟨", ident h₁ll, ",", ident h₁lr, "⟩", ",", ident h₂r, "⟩"],
-      { left,
-        assumption },
-      { right,
-        rw [expr lt_iff_le_not_le] [],
-        split,
-        { assumption },
-        { intro [ident h],
-          apply [expr h₂r],
-          right,
-          exact [expr h] } } }
-  end,
-  ..dlex_has_le,
-  ..dlex_has_lt }
-
-/-- Dictionary / lexicographic partial_order for dependent pairs. -/
-instance dlexPartialOrder [PartialOrderₓ α] [∀ a, PartialOrderₓ (Z a)] : PartialOrderₓ (Σ'a, Z a) :=
-  { dlexPreorder with
-    le_antisymm :=
+instance dlexPreorder [Preorderₓ α] [∀ a, Preorderₓ (Z a)] : Preorderₓ (Σ'a, Z a) :=
+  { dlexHasLe, dlexHasLt with
+    le_refl :=
+      fun ⟨l, r⟩ =>
+        by 
+          right 
+          apply le_reflₓ,
+    le_trans :=
       by 
-        rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨_, _, _, _, hlt₁⟩ | ⟨_, _, _, hlt₁⟩) (⟨_, _, _, _, hlt₂⟩ | ⟨_, _, _, hlt₂⟩)
+        rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨a₃, b₃⟩ ⟨h₁l, h₁r⟩ ⟨h₂l, h₂r⟩
         ·
-          exFalso 
-          exact lt_irreflₓ a₁ (lt_transₓ hlt₁ hlt₂)
+          left 
+          apply lt_transₓ 
+          repeat' 
+            assumption
         ·
-          exFalso 
-          exact lt_irreflₓ a₁ hlt₁
+          left 
+          assumption
         ·
-          exFalso 
-          exact lt_irreflₓ a₁ hlt₂
+          left 
+          assumption
         ·
-          have  := le_antisymmₓ hlt₁ hlt₂ 
-          simp [this] }
+          right 
+          apply le_transₓ 
+          repeat' 
+            assumption,
+    lt_iff_le_not_le :=
+      by 
+        rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩
+        split 
+        ·
+          rintro (⟨_, _, _, _, hlt⟩ | ⟨_, _, _, hlt⟩)
+          ·
+            split 
+            ·
+              left 
+              assumption
+            ·
+              rintro ⟨l, r⟩
+              ·
+                apply lt_asymmₓ hlt 
+                assumption
+              ·
+                apply lt_irreflₓ _ hlt
+          ·
+            split 
+            ·
+              right 
+              rw [lt_iff_le_not_leₓ] at hlt 
+              exact hlt.1
+            ·
+              rintro ⟨l, r⟩
+              ·
+                apply lt_irreflₓ a₁ 
+                assumption
+              ·
+                rw [lt_iff_le_not_leₓ] at hlt 
+                apply hlt.2
+                assumption
+        ·
+          rintro ⟨⟨h₁ll, h₁lr⟩, h₂r⟩
+          ·
+            left 
+            assumption
+          ·
+            right 
+            rw [lt_iff_le_not_leₓ]
+            split 
+            ·
+              assumption
+            ·
+              intro h 
+              apply h₂r 
+              right 
+              exact h }
 
--- error in Order.Lexicographic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Order.Lexicographic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- Dictionary / lexicographic partial_order for dependent pairs. -/
+instance dlex_partial_order [partial_order α] [∀ a, partial_order (Z a)] : partial_order «exprΣ' , »((a), Z a) :=
+{ le_antisymm := begin
+    rintros ["⟨", ident a₁, ",", ident b₁, "⟩", "⟨", ident a₂, ",", ident b₂, "⟩", "(", "⟨", "_", ",", "_", ",", "_", ",", "_", ",", ident hlt₁, "⟩", "|", "⟨", "_", ",", "_", ",", "_", ",", ident hlt₁, "⟩", ")", "(", "⟨", "_", ",", "_", ",", "_", ",", "_", ",", ident hlt₂, "⟩", "|", "⟨", "_", ",", "_", ",", "_", ",", ident hlt₂, "⟩", ")"],
+    { exfalso,
+      exact [expr lt_irrefl a₁ (lt_trans hlt₁ hlt₂)] },
+    { exfalso,
+      exact [expr lt_irrefl a₁ hlt₁] },
+    { exfalso,
+      exact [expr lt_irrefl a₁ hlt₂] },
+    { have [] [] [":=", expr le_antisymm hlt₁ hlt₂],
+      simp [] [] [] ["[", expr this, "]"] [] [] }
+  end,
+  ..dlex_preorder }
+
 /-- Dictionary / lexicographic linear_order for pairs. -/
-instance dlex_linear_order [linear_order α] [∀ a, linear_order (Z a)] : linear_order «exprΣ' , »((a), Z a) :=
-{ le_total := begin
-    rintros ["⟨", ident a₁, ",", ident b₁, "⟩", "⟨", ident a₂, ",", ident b₂, "⟩"],
-    obtain [ident ha, "|", ident ha, ":=", expr le_total a₁ a₂]; cases [expr lt_or_eq_of_le ha] ["with", ident a_lt, ident a_eq],
-    { left,
-      left,
-      exact [expr a_lt] },
-    swap,
-    { right,
-      left,
-      exact [expr a_lt] },
-    all_goals { subst [expr a_eq],
-      obtain [ident hb, "|", ident hb, ":=", expr le_total b₁ b₂] },
-    { left,
-      right,
-      exact [expr hb] },
-    { right,
-      right,
-      exact [expr hb] },
-    { left,
-      right,
-      exact [expr hb] },
-    { right,
-      right,
-      exact [expr hb] }
-  end,
-  decidable_le := begin
-    rintros ["⟨", ident a₁, ",", ident b₁, "⟩", "⟨", ident a₂, ",", ident b₂, "⟩"],
-    obtain [ident a_lt, "|", ident a_le, ":=", expr linear_order.decidable_le a₁ a₂],
-    { left,
-      rw [expr not_le] ["at", ident a_lt],
-      rintro ["⟨", ident l, ",", ident r, "⟩"],
-      { apply [expr lt_irrefl a₂],
-        apply [expr lt_trans],
-        repeat { assumption } },
-      { apply [expr lt_irrefl a₁],
-        assumption } },
-    { by_cases [expr h, ":", expr «expr = »(a₁, a₂)],
-      { subst [expr h],
-        obtain [ident b_lt, "|", ident b_le, ":=", expr linear_order.decidable_le b₁ b₂],
-        { left,
-          rw [expr not_le] ["at", ident b_lt],
-          rintro ["⟨", ident l, ",", ident r, "⟩"],
-          { apply [expr lt_irrefl a₁],
-            assumption },
-          { apply [expr lt_irrefl b₂],
-            apply [expr lt_of_lt_of_le],
-            repeat { assumption } } },
-        { right,
-          right,
-          assumption } },
-      { right,
-        left,
-        apply [expr lt_of_le_of_ne],
-        repeat { assumption } } }
-  end,
-  ..dlex_partial_order }
+instance dlexLinearOrder [LinearOrderₓ α] [∀ a, LinearOrderₓ (Z a)] : LinearOrderₓ (Σ'a, Z a) :=
+  { dlexPartialOrder with
+    le_total :=
+      by 
+        rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩
+        obtain ha | ha := le_totalₓ a₁ a₂ <;> cases' lt_or_eq_of_leₓ ha with a_lt a_eq
+        ·
+          left 
+          left 
+          exact a_lt 
+        swap
+        ·
+          right 
+          left 
+          exact a_lt 
+        all_goals 
+          subst a_eq 
+          obtain hb | hb := le_totalₓ b₁ b₂
+        ·
+          left 
+          right 
+          exact hb
+        ·
+          right 
+          right 
+          exact hb
+        ·
+          left 
+          right 
+          exact hb
+        ·
+          right 
+          right 
+          exact hb,
+    decidableLe :=
+      by 
+        rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩
+        obtain a_lt | a_le := LinearOrderₓ.decidableLe a₁ a₂
+        ·
+          left 
+          rw [not_leₓ] at a_lt 
+          rintro ⟨l, r⟩
+          ·
+            apply lt_irreflₓ a₂ 
+            apply lt_transₓ 
+            repeat' 
+              assumption
+          ·
+            apply lt_irreflₓ a₁ 
+            assumption
+        ·
+          byCases' h : a₁ = a₂
+          ·
+            subst h 
+            obtain b_lt | b_le := LinearOrderₓ.decidableLe b₁ b₂
+            ·
+              left 
+              rw [not_leₓ] at b_lt 
+              rintro ⟨l, r⟩
+              ·
+                apply lt_irreflₓ a₁ 
+                assumption
+              ·
+                apply lt_irreflₓ b₂ 
+                apply lt_of_lt_of_leₓ 
+                repeat' 
+                  assumption
+            ·
+              right 
+              right 
+              assumption
+          ·
+            right 
+            left 
+            apply lt_of_le_of_neₓ 
+            repeat' 
+              assumption }
 

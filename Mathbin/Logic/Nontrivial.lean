@@ -1,8 +1,7 @@
-import Mathbin.Data.Pi 
 import Mathbin.Data.Prod 
 import Mathbin.Data.Subtype 
-import Mathbin.Logic.Unique 
-import Mathbin.Logic.Function.Basic
+import Mathbin.Logic.Function.Basic 
+import Mathbin.Logic.Unique
 
 /-!
 # Nontrivial types
@@ -87,7 +86,7 @@ noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] : Psum (Nont
 
 theorem subsingleton_iff : Subsingleton α ↔ ∀ x y : α, x = y :=
   ⟨by 
-      introI h 
+      intros h 
       exact Subsingleton.elimₓ,
     fun h => ⟨h⟩⟩
 
@@ -121,19 +120,19 @@ protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β} 
   let ⟨x, y, h⟩ := exists_pair_ne α
   ⟨⟨f x, f y, hf.ne h⟩⟩
 
+-- error in Logic.Nontrivial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Pullback a `nontrivial` instance along a surjective function. -/
-protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β} (hf : Function.Surjective f) :
-  Nontrivial α :=
-  by 
-    rcases exists_pair_ne β with ⟨x, y, h⟩
-    rcases hf x with ⟨x', hx'⟩
-    rcases hf y with ⟨y', hy'⟩
-    have  : x' ≠ y'
-    ·
-      ·
-        contrapose! h 
-        rw [←hx', ←hy', h]
-    exact ⟨⟨x', y', this⟩⟩
+protected
+theorem function.surjective.nontrivial [nontrivial β] {f : α → β} (hf : function.surjective f) : nontrivial α :=
+begin
+  rcases [expr exists_pair_ne β, "with", "⟨", ident x, ",", ident y, ",", ident h, "⟩"],
+  rcases [expr hf x, "with", "⟨", ident x', ",", ident hx', "⟩"],
+  rcases [expr hf y, "with", "⟨", ident y', ",", ident hy', "⟩"],
+  have [] [":", expr «expr ≠ »(x', y')] [],
+  by { contrapose ["!"] [ident h],
+    rw ["[", "<-", expr hx', ",", "<-", expr hy', ",", expr h, "]"] [] },
+  exact [expr ⟨⟨x', y', this⟩⟩]
+end
 
 /-- An injective function from a nontrivial type has an argument at
 which it does not take a given value. -/
@@ -193,7 +192,7 @@ including `subsingleton.le` and `eq_iff_true_of_subsingleton`.
 -/
 unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_list) : tactic Unit :=
   do 
-    let alternative ← to_expr (pquote subsingleton_or_nontrivial (%%α))
+    let alternative ← to_expr (pquote.1 (subsingleton_or_nontrivial (%%ₓα)))
     let n ← get_unused_name "_inst"
     tactic.cases Alternativeₓ [n, n]
     (solve1$
@@ -210,7 +209,7 @@ and local hypotheses.
 unsafe def nontriviality_by_assumption (α : expr) : tactic Unit :=
   do 
     let n ← get_unused_name "_inst"
-    to_expr (pquote Nontrivial (%%α)) >>= assert n 
+    to_expr (pquote.1 (Nontrivial (%%ₓα))) >>= assert n 
     apply_instance <|> sorry 
     reset_instance_cache
 
@@ -281,22 +280,22 @@ unsafe def nontriviality (t : parse (texpr)?) (lems : parse (tk "using" *> simp_
         | none =>
           (do 
               let t ← mk_mvar 
-              let e ← to_expr (pquote @Eq (%%t) _ _)
+              let e ← to_expr (pquote.1 (@Eq (%%ₓt) _ _))
               target >>= unify e 
               return t) <|>
             (do 
                 let t ← mk_mvar 
-                let e ← to_expr (pquote @LE.le (%%t) _ _ _)
+                let e ← to_expr (pquote.1 (@LE.le (%%ₓt) _ _ _))
                 target >>= unify e 
                 return t) <|>
               (do 
                   let t ← mk_mvar 
-                  let e ← to_expr (pquote @Ne (%%t) _ _)
+                  let e ← to_expr (pquote.1 (@Ne (%%ₓt) _ _))
                   target >>= unify e 
                   return t) <|>
                 (do 
                     let t ← mk_mvar 
-                    let e ← to_expr (pquote @LT.lt (%%t) _ _ _)
+                    let e ← to_expr (pquote.1 (@LT.lt (%%ₓt) _ _ _))
                     target >>= unify e 
                     return t) <|>
                   fail

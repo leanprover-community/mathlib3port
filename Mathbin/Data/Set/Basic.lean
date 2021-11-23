@@ -1,5 +1,4 @@
 import Mathbin.Logic.Unique 
-import Mathbin.Logic.Relation 
 import Mathbin.Order.BooleanAlgebra
 
 /-!
@@ -223,7 +222,7 @@ theorem mem_of_mem_of_subset {x : α} {s t : Set α} (hx : x ∈ s) (h : s ⊆ t
 theorem mem_set_of_eq {a : α} {p : α → Prop} : (a ∈ { a | p a }) = p a :=
   rfl
 
-theorem nmem_set_of_eq {a : α} {P : α → Prop} : (a ∉ { a : α | P a }) = ¬P a :=
+theorem nmem_set_of_eq {a : α} {P : α → Prop} : (a ∉ { a:α | P a }) = ¬P a :=
   rfl
 
 @[simp]
@@ -247,7 +246,7 @@ theorem set_of_subset_set_of {p q : α → Prop} : { a | p a } ⊆ { a | q a } �
   Iff.rfl
 
 @[simp]
-theorem sep_set_of {p q : α → Prop} : { a ∈ { a | p a } | q a } = { a | p a ∧ q a } :=
+theorem sep_set_of {p q : α → Prop} : { a∈{ a | p a } | q a } = { a | p a ∧ q a } :=
   rfl
 
 theorem set_of_and {p q : α → Prop} : { a | p a ∧ q a } = { a | p a } ∩ { a | q a } :=
@@ -440,7 +439,7 @@ theorem mem_empty_eq (x : α) : (x ∈ (∅ : Set α)) = False :=
   rfl
 
 @[simp]
-theorem set_of_false : { a : α | False } = ∅ :=
+theorem set_of_false : { a:α | False } = ∅ :=
   rfl
 
 @[simp]
@@ -496,7 +495,7 @@ Mathematically it is the same as `α` but it has a different type.
 
 
 @[simp]
-theorem set_of_true : { x : α | True } = univ :=
+theorem set_of_true : { x:α | True } = univ :=
   rfl
 
 @[simp]
@@ -845,14 +844,11 @@ theorem insert_subset : insert a s ⊆ t ↔ a ∈ t ∧ s ⊆ t :=
 theorem insert_subset_insert (h : s ⊆ t) : insert a s ⊆ insert a t :=
   fun x => Or.imp_rightₓ (@h _)
 
--- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem insert_subset_insert_iff
-(ha : «expr ∉ »(a, s)) : «expr ↔ »(«expr ⊆ »(insert a s, insert a t), «expr ⊆ »(s, t)) :=
-begin
-  refine [expr ⟨λ h x hx, _, insert_subset_insert⟩],
-  rcases [expr h (subset_insert _ _ hx), "with", "(", ident rfl, "|", ident hxt, ")"],
-  exacts ["[", expr (ha hx).elim, ",", expr hxt, "]"]
-end
+theorem insert_subset_insert_iff (ha : a ∉ s) : insert a s ⊆ insert a t ↔ s ⊆ t :=
+  by 
+    refine' ⟨fun h x hx => _, insert_subset_insert⟩
+    rcases h (subset_insert _ _ hx) with (rfl | hxt)
+    exacts[(ha hx).elim, hxt]
 
 theorem ssubset_iff_insert {s t : Set α} : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t :=
   by 
@@ -1006,47 +1002,47 @@ theorem default_coe_singleton (x : α) : default ({x} : Set α) = ⟨x, rfl⟩ :
 /-! ### Lemmas about sets defined as `{x ∈ s | p x}`. -/
 
 
-theorem mem_sep {s : Set α} {p : α → Prop} {x : α} (xs : x ∈ s) (px : p x) : x ∈ { x ∈ s | p x } :=
+theorem mem_sep {s : Set α} {p : α → Prop} {x : α} (xs : x ∈ s) (px : p x) : x ∈ { x∈s | p x } :=
   ⟨xs, px⟩
 
 @[simp]
-theorem sep_mem_eq {s t : Set α} : { x ∈ s | x ∈ t } = s ∩ t :=
+theorem sep_mem_eq {s t : Set α} : { x∈s | x ∈ t } = s ∩ t :=
   rfl
 
 @[simp]
-theorem mem_sep_eq {s : Set α} {p : α → Prop} {x : α} : (x ∈ { x ∈ s | p x }) = (x ∈ s ∧ p x) :=
+theorem mem_sep_eq {s : Set α} {p : α → Prop} {x : α} : (x ∈ { x∈s | p x }) = (x ∈ s ∧ p x) :=
   rfl
 
-theorem mem_sep_iff {s : Set α} {p : α → Prop} {x : α} : x ∈ { x ∈ s | p x } ↔ x ∈ s ∧ p x :=
+theorem mem_sep_iff {s : Set α} {p : α → Prop} {x : α} : x ∈ { x∈s | p x } ↔ x ∈ s ∧ p x :=
   Iff.rfl
 
-theorem eq_sep_of_subset {s t : Set α} (h : s ⊆ t) : s = { x ∈ t | x ∈ s } :=
+theorem eq_sep_of_subset {s t : Set α} (h : s ⊆ t) : s = { x∈t | x ∈ s } :=
   (inter_eq_self_of_subset_right h).symm
 
 @[simp]
-theorem sep_subset (s : Set α) (p : α → Prop) : { x ∈ s | p x } ⊆ s :=
+theorem sep_subset (s : Set α) (p : α → Prop) : { x∈s | p x } ⊆ s :=
   fun x => And.left
 
-theorem forall_not_of_sep_empty {s : Set α} {p : α → Prop} (H : { x ∈ s | p x } = ∅) x : x ∈ s → ¬p x :=
+theorem forall_not_of_sep_empty {s : Set α} {p : α → Prop} (H : { x∈s | p x } = ∅) x : x ∈ s → ¬p x :=
   not_and.1 (eq_empty_iff_forall_not_mem.1 H x : _)
 
 @[simp]
-theorem sep_univ {α} {p : α → Prop} : { a ∈ (univ : Set α) | p a } = { a | p a } :=
+theorem sep_univ {α} {p : α → Prop} : { a∈(univ : Set α) | p a } = { a | p a } :=
   univ_inter _
 
 @[simp]
-theorem sep_true : { a ∈ s | True } = s :=
+theorem sep_true : { a∈s | True } = s :=
   by 
     ext 
     simp 
 
 @[simp]
-theorem sep_false : { a ∈ s | False } = ∅ :=
+theorem sep_false : { a∈s | False } = ∅ :=
   by 
     ext 
     simp 
 
-theorem sep_inter_sep {p q : α → Prop} : { x ∈ s | p x } ∩ { x ∈ s | q x } = { x ∈ s | p x ∧ q x } :=
+theorem sep_inter_sep {p q : α → Prop} : { x∈s | p x } ∩ { x∈s | q x } = { x∈s | p x ∧ q x } :=
   by 
     ext 
     simpRw [mem_inter_iff, mem_sep_iff]
@@ -1332,25 +1328,26 @@ theorem diff_compl : s \ «expr ᶜ» t = s ∩ t :=
 theorem diff_diff_right {s t u : Set α} : s \ (t \ u) = s \ t ∪ s ∩ u :=
   sdiff_sdiff_right'
 
--- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp] theorem insert_diff_of_mem (s) (h : «expr ∈ »(a, t)) : «expr = »(«expr \ »(insert a s, t), «expr \ »(s, t)) :=
 by { ext [] [] [],
   split; simp [] [] [] ["[", expr or_imp_distrib, ",", expr h, "]"] [] [] { contextual := tt } }
 
-theorem insert_diff_of_not_mem s (h : a ∉ t) : insert a s \ t = insert a (s \ t) :=
-  by 
-    classical 
-    ext x 
-    byCases' h' : x ∈ t
-    ·
-      have  : x ≠ a
-      ·
-        intro H 
-        rw [H] at h' 
-        exact h h' 
-      simp [h, h', this]
-    ·
-      simp [h, h']
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem insert_diff_of_not_mem
+(s)
+(h : «expr ∉ »(a, t)) : «expr = »(«expr \ »(insert a s, t), insert a «expr \ »(s, t)) :=
+begin
+  classical,
+  ext [] [ident x] [],
+  by_cases [expr h', ":", expr «expr ∈ »(x, t)],
+  { have [] [":", expr «expr ≠ »(x, a)] [],
+    { assume [binders (H)],
+      rw [expr H] ["at", ident h'],
+      exact [expr h h'] },
+    simp [] [] [] ["[", expr h, ",", expr h', ",", expr this, "]"] [] [] },
+  { simp [] [] [] ["[", expr h, ",", expr h', "]"] [] [] }
+end
 
 theorem insert_diff_self_of_not_mem {a : α} {s : Set α} (h : a ∉ s) : insert a s \ {a} = s :=
   by 
@@ -1619,13 +1616,10 @@ theorem preimage_const_of_mem {b : β} {s : Set β} (h : b ∈ s) : (fun x : α 
 theorem preimage_const_of_not_mem {b : β} {s : Set β} (h : b ∉ s) : (fun x : α => b) ⁻¹' s = ∅ :=
   eq_empty_of_subset_empty$ fun x hx => h hx
 
--- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem preimage_const
-(b : β)
-(s : set β)
-[decidable «expr ∈ »(b, s)] : «expr = »(«expr ⁻¹' »(λ x : α, b, s), if «expr ∈ »(b, s) then univ else «expr∅»()) :=
-by { split_ifs [] ["with", ident hb, ident hb],
-  exacts ["[", expr preimage_const_of_mem hb, ",", expr preimage_const_of_not_mem hb, "]"] }
+theorem preimage_const (b : β) (s : Set β) [Decidable (b ∈ s)] : (fun x : α => b) ⁻¹' s = if b ∈ s then univ else ∅ :=
+  by 
+    splitIfs with hb hb 
+    exacts[preimage_const_of_mem hb, preimage_const_of_not_mem hb]
 
 theorem preimage_comp {s : Set γ} : g ∘ f ⁻¹' s = f ⁻¹' (g ⁻¹' s) :=
   rfl
@@ -1954,7 +1948,7 @@ theorem image_subset_image_iff {f : α → β} (hf : injective f) : f '' s ⊆ f
 
 theorem prod_quotient_preimage_eq_image [s : Setoidₓ α] (g : Quotientₓ s → β) {h : α → β} (Hh : h = g ∘ Quotientₓ.mk)
   (r : Set (β × β)) :
-  { x : Quotientₓ s × Quotientₓ s | (g x.1, g x.2) ∈ r } =
+  { x:Quotientₓ s × Quotientₓ s | (g x.1, g x.2) ∈ r } =
     (fun a : α × α => («expr⟦ ⟧» a.1, «expr⟦ ⟧» a.2)) '' ((fun a : α × α => (h a.1, h a.2)) ⁻¹' r) :=
   Hh.symm ▸
     Set.ext
@@ -2007,14 +2001,10 @@ theorem subsingleton_iff_singleton {x} (hx : x ∈ s) : s.subsingleton ↔ s = {
 theorem subsingleton.eq_empty_or_singleton (hs : s.subsingleton) : s = ∅ ∨ ∃ x, s = {x} :=
   s.eq_empty_or_nonempty.elim Or.inl fun ⟨x, hx⟩ => Or.inr ⟨x, hs.eq_singleton_of_mem hx⟩
 
--- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem subsingleton.induction_on
-{p : set α → exprProp()}
-(hs : s.subsingleton)
-(he : p «expr∅»())
-(h₁ : ∀ x, p {x}) : p s :=
-by { rcases [expr hs.eq_empty_or_singleton, "with", ident rfl, "|", "⟨", ident x, ",", ident rfl, "⟩"],
-  exacts ["[", expr he, ",", expr h₁ _, "]"] }
+theorem subsingleton.induction_on {p : Set α → Prop} (hs : s.subsingleton) (he : p ∅) (h₁ : ∀ x, p {x}) : p s :=
+  by 
+    rcases hs.eq_empty_or_singleton with (rfl | ⟨x, rfl⟩)
+    exacts[he, h₁ _]
 
 theorem subsingleton_univ [Subsingleton α] : (univ : Set α).Subsingleton :=
   fun x hx y hy => Subsingleton.elimₓ x y
@@ -2029,10 +2019,10 @@ theorem subsingleton_univ_iff : (univ : Set α).Subsingleton ↔ Subsingleton α
 theorem subsingleton_of_subsingleton [Subsingleton α] {s : Set α} : Set.Subsingleton s :=
   subsingleton.mono subsingleton_univ (subset_univ s)
 
-theorem subsingleton_is_top (α : Type _) [PartialOrderₓ α] : Set.Subsingleton { x : α | IsTop x } :=
+theorem subsingleton_is_top (α : Type _) [PartialOrderₓ α] : Set.Subsingleton { x:α | IsTop x } :=
   fun x hx y hy => hx.unique (hy x)
 
-theorem subsingleton_is_bot (α : Type _) [PartialOrderₓ α] : Set.Subsingleton { x : α | IsBot x } :=
+theorem subsingleton_is_bot (α : Type _) [PartialOrderₓ α] : Set.Subsingleton { x:α | IsBot x } :=
   fun x hx y hy => hx.unique (hy x)
 
 /-- `s`, coerced to a type, is a subsingleton type if and only if `s`
@@ -2535,16 +2525,13 @@ end Function
 
 open Function
 
--- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem option.injective_iff
-{α β}
-{f : option α → β} : «expr ↔ »(injective f, «expr ∧ »(injective «expr ∘ »(f, some), «expr ∉ »(f none, range «expr ∘ »(f, some)))) :=
-begin
-  simp [] [] ["only"] ["[", expr mem_range, ",", expr not_exists, ",", expr («expr ∘ »), "]"] [] [],
-  refine [expr ⟨λ hf, ⟨hf.comp (option.some_injective _), λ x, «expr $ »(hf.ne, option.some_ne_none _)⟩, _⟩],
-  rintro ["⟨", ident h_some, ",", ident h_none, "⟩", "(", "_", "|", ident a, ")", "(", "_", "|", ident b, ")", ident hab],
-  exacts ["[", expr rfl, ",", expr (h_none _ hab.symm).elim, ",", expr (h_none _ hab).elim, ",", expr congr_arg some (h_some hab), "]"]
-end
+theorem Option.injective_iff {α β} {f : Option α → β} :
+  injective f ↔ injective (f ∘ some) ∧ f none ∉ range (f ∘ some) :=
+  by 
+    simp only [mem_range, not_exists, · ∘ ·]
+    refine' ⟨fun hf => ⟨hf.comp (Option.some_injective _), fun x => hf.ne$ Option.some_ne_none _⟩, _⟩
+    rintro ⟨h_some, h_none⟩ (_ | a) (_ | b) hab 
+    exacts[rfl, (h_none _ hab.symm).elim, (h_none _ hab).elim, congr_argₓ some (h_some hab)]
 
 /-! ### Image and preimage on subtypes -/
 
@@ -2557,7 +2544,7 @@ theorem coe_image {p : α → Prop} {s : Set (Subtype p)} : coeₓ '' s = { x | 
   Set.ext$ fun a => ⟨fun ⟨⟨a', ha'⟩, in_s, h_eq⟩ => h_eq ▸ ⟨ha', in_s⟩, fun ⟨ha, in_s⟩ => ⟨⟨a, ha⟩, in_s, rfl⟩⟩
 
 @[simp]
-theorem coe_image_of_subset {s t : Set α} (h : t ⊆ s) : coeₓ '' { x : «expr↥ » s | «expr↑ » x ∈ t } = t :=
+theorem coe_image_of_subset {s t : Set α} (h : t ⊆ s) : coeₓ '' { x:«expr↥ » s | «expr↑ » x ∈ t } = t :=
   by 
     ext x 
     rw [Set.mem_image]
@@ -2757,12 +2744,12 @@ theorem prod_inter_prod : s₁.prod t₁ ∩ s₂.prod t₂ = (s₁ ∩ s₂).Pr
     ext ⟨x, y⟩
     simp [and_assoc, And.left_comm]
 
--- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem insert_prod {a : α} : «expr = »((insert a s).prod t, «expr ∪ »(«expr '' »(prod.mk a, t), s.prod t)) :=
 by { ext [] ["⟨", ident x, ",", ident y, "⟩"] [],
   simp [] [] [] ["[", expr image, ",", expr iff_def, ",", expr or_imp_distrib, ",", expr imp.swap, "]"] [] [] { contextual := tt } }
 
--- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem prod_insert {b : β} : «expr = »(s.prod (insert b t), «expr ∪ »(«expr '' »(λ a, (a, b), s), s.prod t)) :=
 by { ext [] ["⟨", ident x, ",", ident y, "⟩"] [],
   simp [] [] [] ["[", expr image, ",", expr iff_def, ",", expr or_imp_distrib, ",", expr imp.swap, "]"] [] [] { contextual := tt } }
@@ -2828,7 +2815,7 @@ theorem mk_preimage_prod_right_fn_eq_if {x : α} [DecidablePred (· ∈ s)] (g :
     rw [←mk_preimage_prod_right_eq_if, prod_preimage_right, preimage_preimage]
 
 theorem image_swap_eq_preimage_swap : image (@Prod.swap α β) = preimage Prod.swap :=
-  image_eq_preimage_of_inverse Prod.swap_left_inverseₓ Prod.swap_right_inverseₓ
+  image_eq_preimage_of_inverse Prod.swap_left_inverse Prod.swap_right_inverseₓ
 
 theorem preimage_swap_prod {s : Set α} {t : Set β} : Prod.swap ⁻¹' t.prod s = s.prod t :=
   by 
@@ -2927,35 +2914,30 @@ theorem prod_diff_prod : s.prod t \ s₁.prod t₁ = s.prod (t \ t₁) ∪ (s \ 
     ext x 
     byCases' h₁ : x.1 ∈ s₁ <;> byCases' h₂ : x.2 ∈ t₁ <;> simp 
 
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A product set is included in a product set if and only factors are included, or a factor of the
 first set is empty. -/
-theorem prod_subset_prod_iff : s.prod t ⊆ s₁.prod t₁ ↔ s ⊆ s₁ ∧ t ⊆ t₁ ∨ s = ∅ ∨ t = ∅ :=
-  by 
-    classical 
-    cases' (s.prod t).eq_empty_or_nonempty with h h
-    ·
-      simp [h, prod_eq_empty_iff.1 h]
-    ·
-      have st : s.nonempty ∧ t.nonempty
-      ·
-        rwa [prod_nonempty_iff] at h 
-      split 
-      ·
-        intro (H : s.prod t ⊆ s₁.prod t₁)
-        have h' : s₁.nonempty ∧ t₁.nonempty := prod_nonempty_iff.1 (h.mono H)
-        refine' Or.inl ⟨_, _⟩
-        show s ⊆ s₁
-        ·
-          have  := image_subset (Prod.fst : α × β → α) H 
-          rwa [fst_image_prod _ st.2, fst_image_prod _ h'.2] at this 
-        show t ⊆ t₁
-        ·
-          have  := image_subset (Prod.snd : α × β → β) H 
-          rwa [snd_image_prod st.1, snd_image_prod h'.1] at this
-      ·
-        intro H 
-        simp only [st.1.ne_empty, st.2.ne_empty, or_falseₓ] at H 
-        exact prod_mono H.1 H.2
+theorem prod_subset_prod_iff : «expr ↔ »(«expr ⊆ »(s.prod t, s₁.prod t₁), «expr ∨ »(«expr ∧ »(«expr ⊆ »(s, s₁), «expr ⊆ »(t, t₁)), «expr ∨ »(«expr = »(s, «expr∅»()), «expr = »(t, «expr∅»())))) :=
+begin
+  classical,
+  cases [expr (s.prod t).eq_empty_or_nonempty] ["with", ident h, ident h],
+  { simp [] [] [] ["[", expr h, ",", expr prod_eq_empty_iff.1 h, "]"] [] [] },
+  { have [ident st] [":", expr «expr ∧ »(s.nonempty, t.nonempty)] [],
+    by rwa ["[", expr prod_nonempty_iff, "]"] ["at", ident h],
+    split,
+    { assume [binders (H : «expr ⊆ »(s.prod t, s₁.prod t₁))],
+      have [ident h'] [":", expr «expr ∧ »(s₁.nonempty, t₁.nonempty)] [":=", expr prod_nonempty_iff.1 (h.mono H)],
+      refine [expr or.inl ⟨_, _⟩],
+      show [expr «expr ⊆ »(s, s₁)],
+      { have [] [] [":=", expr image_subset (prod.fst : «expr × »(α, β) → α) H],
+        rwa ["[", expr fst_image_prod _ st.2, ",", expr fst_image_prod _ h'.2, "]"] ["at", ident this] },
+      show [expr «expr ⊆ »(t, t₁)],
+      { have [] [] [":=", expr image_subset (prod.snd : «expr × »(α, β) → β) H],
+        rwa ["[", expr snd_image_prod st.1, ",", expr snd_image_prod h'.1, "]"] ["at", ident this] } },
+    { assume [binders (H)],
+      simp [] [] ["only"] ["[", expr st.1.ne_empty, ",", expr st.2.ne_empty, ",", expr or_false, "]"] [] ["at", ident H],
+      exact [expr prod_mono H.1 H.2] } }
+end
 
 end Prod
 
@@ -3045,7 +3027,7 @@ theorem pi_eq_empty_iff : s.pi t = ∅ ↔ ∃ i, (α i → False) ∨ i ∈ s �
         exact Or.inl fun x => hα ⟨x⟩
     ·
       rintro (h | h) x 
-      exFalso 
+      exfalso 
       exact h x 
       simp [h]
 
@@ -3086,7 +3068,7 @@ theorem singleton_pi' (i : ι) (t : ∀ i, Set (α i)) : pi {i} t = { x | x i �
   singleton_pi i t
 
 theorem pi_if {p : ι → Prop} [h : DecidablePred p] (s : Set ι) (t₁ t₂ : ∀ i, Set (α i)) :
-  (pi s fun i => if p i then t₁ i else t₂ i) = pi { i ∈ s | p i } t₁ ∩ pi { i ∈ s | ¬p i } t₂ :=
+  (pi s fun i => if p i then t₁ i else t₂ i) = pi { i∈s | p i } t₁ ∩ pi { i∈s | ¬p i } t₂ :=
   by 
     ext f 
     split 
@@ -3254,7 +3236,7 @@ theorem inclusion_injective {s t : Set α} (h : s ⊆ t) : Function.Injective (i
 | ⟨_, _⟩, ⟨_, _⟩ => Subtype.ext_iff_val.2 ∘ Subtype.ext_iff_val.1
 
 @[simp]
-theorem range_inclusion {s t : Set α} (h : s ⊆ t) : range (inclusion h) = { x : t | (x : α) ∈ s } :=
+theorem range_inclusion {s t : Set α} (h : s ⊆ t) : range (inclusion h) = { x:t | (x : α) ∈ s } :=
   by 
     ext ⟨x, hx⟩
     simp [inclusion]
@@ -3283,23 +3265,25 @@ theorem preimage_injective : injective (preimage f) ↔ surjective f :=
       apply singleton_nonempty 
     exact ⟨x, hx⟩
 
-@[simp]
-theorem preimage_surjective : surjective (preimage f) ↔ injective f :=
-  by 
-    refine' ⟨fun h x x' hx => _, injective.preimage_surjective⟩
-    cases' h {x} with s hs 
-    have  := mem_singleton x 
-    rwa [←hs, mem_preimage, hx, ←mem_preimage, hs, mem_singleton_iff, eq_comm] at this
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem preimage_surjective : «expr ↔ »(surjective (preimage f), injective f) :=
+begin
+  refine [expr ⟨λ h x x' hx, _, injective.preimage_surjective⟩],
+  cases [expr h {x}] ["with", ident s, ident hs],
+  have [] [] [":=", expr mem_singleton x],
+  rwa ["[", "<-", expr hs, ",", expr mem_preimage, ",", expr hx, ",", "<-", expr mem_preimage, ",", expr hs, ",", expr mem_singleton_iff, ",", expr eq_comm, "]"] ["at", ident this]
+end
 
-@[simp]
-theorem image_surjective : surjective (image f) ↔ surjective f :=
-  by 
-    refine' ⟨fun h y => _, surjective.image_surjective⟩
-    cases' h {y} with s hs 
-    have  := mem_singleton y 
-    rw [←hs] at this 
-    rcases this with ⟨x, h1x, h2x⟩
-    exact ⟨x, h2x⟩
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem image_surjective : «expr ↔ »(surjective (image f), surjective f) :=
+begin
+  refine [expr ⟨λ h y, _, surjective.image_surjective⟩],
+  cases [expr h {y}] ["with", ident s, ident hs],
+  have [] [] [":=", expr mem_singleton y],
+  rw ["[", "<-", expr hs, "]"] ["at", ident this],
+  rcases [expr this, "with", "⟨", ident x, ",", ident h1x, ",", ident h2x, "⟩"],
+  exact [expr ⟨x, h2x⟩]
+end
 
 @[simp]
 theorem image_injective : injective (image f) ↔ injective f :=

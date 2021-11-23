@@ -175,7 +175,7 @@ def balanced : Ordnode α → Prop
 instance balanced.dec : DecidablePred (@balanced α)
 | t =>
   by 
-    induction t <;> unfold balanced <;> resetI <;> infer_instance
+    induction t <;> unfold balanced <;> skip <;> infer_instance
 
 theorem balanced_sz.symm {l r : ℕ} : balanced_sz l r → balanced_sz r l :=
   Or.imp
@@ -183,7 +183,7 @@ theorem balanced_sz.symm {l r : ℕ} : balanced_sz l r → balanced_sz r l :=
       rw [add_commₓ] <;> exact id)
     And.symm
 
--- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem balanced_sz_zero {l : exprℕ()} : «expr ↔ »(balanced_sz l 0, «expr ≤ »(l, 1)) :=
 by simp [] [] [] ["[", expr balanced_sz, "]"] [] [] { contextual := tt }
 
@@ -301,28 +301,38 @@ theorem dual_balance' (l : Ordnode α) (x : α) (r : Ordnode α) : dual (balance
     splitIfs <;> simp [dual_node', dual_rotate_l, dual_rotate_r]
     cases delta_lt_false h_1 h_2
 
--- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem dual_balance_l
-(l : ordnode α)
-(x : α)
-(r : ordnode α) : «expr = »(dual (balance_l l x r), balance_r (dual r) x (dual l)) :=
-begin
-  unfold [ident balance_l, ident balance_r] [],
-  cases [expr r] ["with", ident rs, ident rl, ident rx, ident rr],
-  { cases [expr l] ["with", ident ls, ident ll, ident lx, ident lr],
-    { refl },
-    cases [expr ll] ["with", ident lls, ident lll, ident llx, ident llr]; cases [expr lr] ["with", ident lrs, ident lrl, ident lrx, ident lrr]; dsimp ["only"] ["[", expr dual, "]"] [] []; try { refl },
-    split_ifs [] []; repeat { simp [] [] [] ["[", expr h, ",", expr add_comm, "]"] [] [] } },
-  { cases [expr l] ["with", ident ls, ident ll, ident lx, ident lr],
-    { refl },
-    dsimp ["only"] ["[", expr dual, "]"] [] [],
-    split_ifs [] [],
-    swap,
-    { simp [] [] [] ["[", expr add_comm, "]"] [] [] },
-    cases [expr ll] ["with", ident lls, ident lll, ident llx, ident llr]; cases [expr lr] ["with", ident lrs, ident lrl, ident lrx, ident lrr]; try { refl },
-    dsimp ["only"] ["[", expr dual, "]"] [] [],
-    split_ifs [] []; simp [] [] [] ["[", expr h, ",", expr add_comm, "]"] [] [] }
-end
+theorem dual_balance_l (l : Ordnode α) (x : α) (r : Ordnode α) :
+  dual (balance_l l x r) = balance_r (dual r) x (dual l) :=
+  by 
+    unfold balance_l balance_r 
+    cases' r with rs rl rx rr
+    ·
+      cases' l with ls ll lx lr
+      ·
+        rfl 
+      cases' ll with lls lll llx llr <;>
+        cases' lr with lrs lrl lrx lrr <;>
+          dsimp only [dual] <;>
+            try 
+              rfl 
+      splitIfs <;>
+        repeat' 
+          simp [h, add_commₓ]
+    ·
+      cases' l with ls ll lx lr
+      ·
+        rfl 
+      dsimp only [dual]
+      splitIfs 
+      swap
+      ·
+        simp [add_commₓ]
+      cases' ll with lls lll llx llr <;>
+        cases' lr with lrs lrl lrx lrr <;>
+          try 
+            rfl 
+      dsimp only [dual]
+      splitIfs <;> simp [h, add_commₓ]
 
 theorem dual_balance_r (l : Ordnode α) (x : α) (r : Ordnode α) :
   dual (balance_r l x r) = balance_l (dual r) x (dual l) :=
@@ -638,203 +648,132 @@ theorem dual_insert [Preorderₓ α] [IsTotal α (· ≤ ·)] [@DecidableRel α 
 /-! ### `balance` properties -/
 
 
-theorem balance_eq_balance' {l x r} (hl : balanced l) (hr : balanced r) (sl : sized l) (sr : sized r) :
-  @balance α l x r = balance' l x r :=
-  by 
-    cases' l with ls ll lx lr
-    ·
-      cases' r with rs rl rx rr
-      ·
-        rfl
-      ·
-        rw [sr.eq_node'] at hr⊢
-        cases' rl with rls rll rlx rlr <;> cases' rr with rrs rrl rrx rrr <;> dsimp [balance, balance']
-        ·
-          rfl
-        ·
-          have  : size rrl = 0 ∧ size rrr = 0
-          ·
-            have  := balanced_sz_zero.1 hr.1.symm 
-            rwa [size, sr.2.2.1, Nat.succ_le_succ_iff, Nat.le_zero_iff, add_eq_zero_iff] at this 
-          cases sr.2.2.2.1.size_eq_zero.1 this.1
-          cases sr.2.2.2.2.size_eq_zero.1 this.2
-          have  : rrs = 1 := sr.2.2.1
-          subst rrs 
-          rw [if_neg, if_pos, rotate_l, if_pos]
-          ·
-            rfl 
-          all_goals 
-            exact
-              by 
-                decide
-        ·
-          have  : size rll = 0 ∧ size rlr = 0
-          ·
-            have  := balanced_sz_zero.1 hr.1
-            rwa [size, sr.2.1.1, Nat.succ_le_succ_iff, Nat.le_zero_iff, add_eq_zero_iff] at this 
-          cases sr.2.1.2.1.size_eq_zero.1 this.1
-          cases sr.2.1.2.2.size_eq_zero.1 this.2
-          have  : rls = 1 := sr.2.1.1
-          subst rls 
-          rw [if_neg, if_pos, rotate_l, if_neg]
-          ·
-            rfl 
-          all_goals 
-            exact
-              by 
-                decide
-        ·
-          symm 
-          rw [zero_addₓ, if_neg, if_pos, rotate_l]
-          ·
-            splitIfs
-            ·
-              simp [node3_l, node', add_commₓ, add_left_commₓ]
-            ·
-              simp [node4_l, node', sr.2.1.1, add_commₓ, add_left_commₓ]
-          ·
-            exact
-              by 
-                decide
-          ·
-            exact not_le_of_gtₓ (Nat.succ_lt_succₓ (add_pos sr.2.1.Pos sr.2.2.Pos))
-    ·
-      cases' r with rs rl rx rr
-      ·
-        rw [sl.eq_node'] at hl⊢
-        cases' ll with lls lll llx llr <;> cases' lr with lrs lrl lrx lrr <;> dsimp [balance, balance']
-        ·
-          rfl
-        ·
-          have  : size lrl = 0 ∧ size lrr = 0
-          ·
-            have  := balanced_sz_zero.1 hl.1.symm 
-            rwa [size, sl.2.2.1, Nat.succ_le_succ_iff, Nat.le_zero_iff, add_eq_zero_iff] at this 
-          cases sl.2.2.2.1.size_eq_zero.1 this.1
-          cases sl.2.2.2.2.size_eq_zero.1 this.2
-          have  : lrs = 1 := sl.2.2.1
-          subst lrs 
-          rw [if_neg, if_neg, if_pos, rotate_r, if_neg]
-          ·
-            rfl 
-          all_goals 
-            exact
-              by 
-                decide
-        ·
-          have  : size lll = 0 ∧ size llr = 0
-          ·
-            have  := balanced_sz_zero.1 hl.1
-            rwa [size, sl.2.1.1, Nat.succ_le_succ_iff, Nat.le_zero_iff, add_eq_zero_iff] at this 
-          cases sl.2.1.2.1.size_eq_zero.1 this.1
-          cases sl.2.1.2.2.size_eq_zero.1 this.2
-          have  : lls = 1 := sl.2.1.1
-          subst lls 
-          rw [if_neg, if_neg, if_pos, rotate_r, if_pos]
-          ·
-            rfl 
-          all_goals 
-            exact
-              by 
-                decide
-        ·
-          symm 
-          rw [if_neg, if_neg, if_pos, rotate_r]
-          ·
-            splitIfs
-            ·
-              simp [node3_r, node', add_commₓ, add_left_commₓ]
-            ·
-              simp [node4_r, node', sl.2.2.1, add_commₓ, add_left_commₓ]
-          ·
-            exact
-              by 
-                decide
-          ·
-            exact
-              by 
-                decide
-          ·
-            exact not_le_of_gtₓ (Nat.succ_lt_succₓ (add_pos sl.2.1.Pos sl.2.2.Pos))
-      ·
-        simp [balance, balance']
-        symm 
-        rw [if_neg]
-        ·
-          splitIfs
-          ·
-            have rd : delta ≤ size rl+size rr
-            ·
-              have  := lt_of_le_of_ltₓ (Nat.mul_le_mul_leftₓ _ sl.pos) h 
-              rwa [sr.1, Nat.lt_succ_iff] at this 
-            cases' rl with rls rll rlx rlr
-            ·
-              rw [size, zero_addₓ] at rd 
-              exact
-                absurd (le_transₓ rd (balanced_sz_zero.1 hr.1.symm))
-                  (by 
-                    decide)
-            cases' rr with rrs rrl rrx rrr
-            ·
-              exact
-                absurd (le_transₓ rd (balanced_sz_zero.1 hr.1))
-                  (by 
-                    decide)
-            dsimp [rotate_l]
-            splitIfs
-            ·
-              simp [node3_l, node', sr.1, add_commₓ, add_left_commₓ]
-            ·
-              simp [node4_l, node', sr.1, sr.2.1.1, add_commₓ, add_left_commₓ]
-          ·
-            have ld : delta ≤ size ll+size lr
-            ·
-              have  := lt_of_le_of_ltₓ (Nat.mul_le_mul_leftₓ _ sr.pos) h_1 
-              rwa [sl.1, Nat.lt_succ_iff] at this 
-            cases' ll with lls lll llx llr
-            ·
-              rw [size, zero_addₓ] at ld 
-              exact
-                absurd (le_transₓ ld (balanced_sz_zero.1 hl.1.symm))
-                  (by 
-                    decide)
-            cases' lr with lrs lrl lrx lrr
-            ·
-              exact
-                absurd (le_transₓ ld (balanced_sz_zero.1 hl.1))
-                  (by 
-                    decide)
-            dsimp [rotate_r]
-            splitIfs
-            ·
-              simp [node3_r, node', sl.1, add_commₓ, add_left_commₓ]
-            ·
-              simp [node4_r, node', sl.1, sl.2.2.1, add_commₓ, add_left_commₓ]
-          ·
-            simp [node']
-        ·
-          exact not_le_of_gtₓ (add_le_add sl.pos sr.pos : 2 ≤ ls+rs)
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem balance_eq_balance'
+{l x r}
+(hl : balanced l)
+(hr : balanced r)
+(sl : sized l)
+(sr : sized r) : «expr = »(@balance α l x r, balance' l x r) :=
+begin
+  cases [expr l] ["with", ident ls, ident ll, ident lx, ident lr],
+  { cases [expr r] ["with", ident rs, ident rl, ident rx, ident rr],
+    { refl },
+    { rw [expr sr.eq_node'] ["at", ident hr, "⊢"],
+      cases [expr rl] ["with", ident rls, ident rll, ident rlx, ident rlr]; cases [expr rr] ["with", ident rrs, ident rrl, ident rrx, ident rrr]; dsimp [] ["[", expr balance, ",", expr balance', "]"] [] [],
+      { refl },
+      { have [] [":", expr «expr ∧ »(«expr = »(size rrl, 0), «expr = »(size rrr, 0))] [],
+        { have [] [] [":=", expr balanced_sz_zero.1 hr.1.symm],
+          rwa ["[", expr size, ",", expr sr.2.2.1, ",", expr nat.succ_le_succ_iff, ",", expr nat.le_zero_iff, ",", expr add_eq_zero_iff, "]"] ["at", ident this] },
+        cases [expr sr.2.2.2.1.size_eq_zero.1 this.1] [],
+        cases [expr sr.2.2.2.2.size_eq_zero.1 this.2] [],
+        have [] [":", expr «expr = »(rrs, 1)] [":=", expr sr.2.2.1],
+        subst [expr rrs],
+        rw ["[", expr if_neg, ",", expr if_pos, ",", expr rotate_l, ",", expr if_pos, "]"] [],
+        { refl },
+        all_goals { exact [expr exprdec_trivial()] } },
+      { have [] [":", expr «expr ∧ »(«expr = »(size rll, 0), «expr = »(size rlr, 0))] [],
+        { have [] [] [":=", expr balanced_sz_zero.1 hr.1],
+          rwa ["[", expr size, ",", expr sr.2.1.1, ",", expr nat.succ_le_succ_iff, ",", expr nat.le_zero_iff, ",", expr add_eq_zero_iff, "]"] ["at", ident this] },
+        cases [expr sr.2.1.2.1.size_eq_zero.1 this.1] [],
+        cases [expr sr.2.1.2.2.size_eq_zero.1 this.2] [],
+        have [] [":", expr «expr = »(rls, 1)] [":=", expr sr.2.1.1],
+        subst [expr rls],
+        rw ["[", expr if_neg, ",", expr if_pos, ",", expr rotate_l, ",", expr if_neg, "]"] [],
+        { refl },
+        all_goals { exact [expr exprdec_trivial()] } },
+      { symmetry,
+        rw ["[", expr zero_add, ",", expr if_neg, ",", expr if_pos, ",", expr rotate_l, "]"] [],
+        { split_ifs [] [],
+          { simp [] [] [] ["[", expr node3_l, ",", expr node', ",", expr add_comm, ",", expr add_left_comm, "]"] [] [] },
+          { simp [] [] [] ["[", expr node4_l, ",", expr node', ",", expr sr.2.1.1, ",", expr add_comm, ",", expr add_left_comm, "]"] [] [] } },
+        { exact [expr exprdec_trivial()] },
+        { exact [expr not_le_of_gt (nat.succ_lt_succ (add_pos sr.2.1.pos sr.2.2.pos))] } } } },
+  { cases [expr r] ["with", ident rs, ident rl, ident rx, ident rr],
+    { rw [expr sl.eq_node'] ["at", ident hl, "⊢"],
+      cases [expr ll] ["with", ident lls, ident lll, ident llx, ident llr]; cases [expr lr] ["with", ident lrs, ident lrl, ident lrx, ident lrr]; dsimp [] ["[", expr balance, ",", expr balance', "]"] [] [],
+      { refl },
+      { have [] [":", expr «expr ∧ »(«expr = »(size lrl, 0), «expr = »(size lrr, 0))] [],
+        { have [] [] [":=", expr balanced_sz_zero.1 hl.1.symm],
+          rwa ["[", expr size, ",", expr sl.2.2.1, ",", expr nat.succ_le_succ_iff, ",", expr nat.le_zero_iff, ",", expr add_eq_zero_iff, "]"] ["at", ident this] },
+        cases [expr sl.2.2.2.1.size_eq_zero.1 this.1] [],
+        cases [expr sl.2.2.2.2.size_eq_zero.1 this.2] [],
+        have [] [":", expr «expr = »(lrs, 1)] [":=", expr sl.2.2.1],
+        subst [expr lrs],
+        rw ["[", expr if_neg, ",", expr if_neg, ",", expr if_pos, ",", expr rotate_r, ",", expr if_neg, "]"] [],
+        { refl },
+        all_goals { exact [expr exprdec_trivial()] } },
+      { have [] [":", expr «expr ∧ »(«expr = »(size lll, 0), «expr = »(size llr, 0))] [],
+        { have [] [] [":=", expr balanced_sz_zero.1 hl.1],
+          rwa ["[", expr size, ",", expr sl.2.1.1, ",", expr nat.succ_le_succ_iff, ",", expr nat.le_zero_iff, ",", expr add_eq_zero_iff, "]"] ["at", ident this] },
+        cases [expr sl.2.1.2.1.size_eq_zero.1 this.1] [],
+        cases [expr sl.2.1.2.2.size_eq_zero.1 this.2] [],
+        have [] [":", expr «expr = »(lls, 1)] [":=", expr sl.2.1.1],
+        subst [expr lls],
+        rw ["[", expr if_neg, ",", expr if_neg, ",", expr if_pos, ",", expr rotate_r, ",", expr if_pos, "]"] [],
+        { refl },
+        all_goals { exact [expr exprdec_trivial()] } },
+      { symmetry,
+        rw ["[", expr if_neg, ",", expr if_neg, ",", expr if_pos, ",", expr rotate_r, "]"] [],
+        { split_ifs [] [],
+          { simp [] [] [] ["[", expr node3_r, ",", expr node', ",", expr add_comm, ",", expr add_left_comm, "]"] [] [] },
+          { simp [] [] [] ["[", expr node4_r, ",", expr node', ",", expr sl.2.2.1, ",", expr add_comm, ",", expr add_left_comm, "]"] [] [] } },
+        { exact [expr exprdec_trivial()] },
+        { exact [expr exprdec_trivial()] },
+        { exact [expr not_le_of_gt (nat.succ_lt_succ (add_pos sl.2.1.pos sl.2.2.pos))] } } },
+    { simp [] [] [] ["[", expr balance, ",", expr balance', "]"] [] [],
+      symmetry,
+      rw ["[", expr if_neg, "]"] [],
+      { split_ifs [] [],
+        { have [ident rd] [":", expr «expr ≤ »(delta, «expr + »(size rl, size rr))] [],
+          { have [] [] [":=", expr lt_of_le_of_lt (nat.mul_le_mul_left _ sl.pos) h],
+            rwa ["[", expr sr.1, ",", expr nat.lt_succ_iff, "]"] ["at", ident this] },
+          cases [expr rl] ["with", ident rls, ident rll, ident rlx, ident rlr],
+          { rw ["[", expr size, ",", expr zero_add, "]"] ["at", ident rd],
+            exact [expr absurd (le_trans rd (balanced_sz_zero.1 hr.1.symm)) exprdec_trivial()] },
+          cases [expr rr] ["with", ident rrs, ident rrl, ident rrx, ident rrr],
+          { exact [expr absurd (le_trans rd (balanced_sz_zero.1 hr.1)) exprdec_trivial()] },
+          dsimp [] ["[", expr rotate_l, "]"] [] [],
+          split_ifs [] [],
+          { simp [] [] [] ["[", expr node3_l, ",", expr node', ",", expr sr.1, ",", expr add_comm, ",", expr add_left_comm, "]"] [] [] },
+          { simp [] [] [] ["[", expr node4_l, ",", expr node', ",", expr sr.1, ",", expr sr.2.1.1, ",", expr add_comm, ",", expr add_left_comm, "]"] [] [] } },
+        { have [ident ld] [":", expr «expr ≤ »(delta, «expr + »(size ll, size lr))] [],
+          { have [] [] [":=", expr lt_of_le_of_lt (nat.mul_le_mul_left _ sr.pos) h_1],
+            rwa ["[", expr sl.1, ",", expr nat.lt_succ_iff, "]"] ["at", ident this] },
+          cases [expr ll] ["with", ident lls, ident lll, ident llx, ident llr],
+          { rw ["[", expr size, ",", expr zero_add, "]"] ["at", ident ld],
+            exact [expr absurd (le_trans ld (balanced_sz_zero.1 hl.1.symm)) exprdec_trivial()] },
+          cases [expr lr] ["with", ident lrs, ident lrl, ident lrx, ident lrr],
+          { exact [expr absurd (le_trans ld (balanced_sz_zero.1 hl.1)) exprdec_trivial()] },
+          dsimp [] ["[", expr rotate_r, "]"] [] [],
+          split_ifs [] [],
+          { simp [] [] [] ["[", expr node3_r, ",", expr node', ",", expr sl.1, ",", expr add_comm, ",", expr add_left_comm, "]"] [] [] },
+          { simp [] [] [] ["[", expr node4_r, ",", expr node', ",", expr sl.1, ",", expr sl.2.2.1, ",", expr add_comm, ",", expr add_left_comm, "]"] [] [] } },
+        { simp [] [] [] ["[", expr node', "]"] [] [] } },
+      { exact [expr not_le_of_gt (add_le_add sl.pos sr.pos : «expr ≤ »(2, «expr + »(ls, rs)))] } } }
+end
 
-theorem balance_l_eq_balance {l x r} (sl : sized l) (sr : sized r) (H1 : size l = 0 → size r ≤ 1)
-  (H2 : 1 ≤ size l → 1 ≤ size r → size r ≤ delta*size l) : @balance_l α l x r = balance l x r :=
-  by 
-    cases' r with rs rl rx rr
-    ·
-      rfl
-    ·
-      cases' l with ls ll lx lr
-      ·
-        have  : size rl = 0 ∧ size rr = 0
-        ·
-          have  := H1 rfl 
-          rwa [size, sr.1, Nat.succ_le_succ_iff, Nat.le_zero_iff, add_eq_zero_iff] at this 
-        cases sr.2.1.size_eq_zero.1 this.1
-        cases sr.2.2.size_eq_zero.1 this.2
-        rw [sr.eq_node']
-        rfl
-      ·
-        replace H2 : ¬rs > delta*ls := not_lt_of_le (H2 sl.pos sr.pos)
-        simp [balance_l, balance, H2] <;> splitIfs <;> simp [add_commₓ]
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem balance_l_eq_balance
+{l x r}
+(sl : sized l)
+(sr : sized r)
+(H1 : «expr = »(size l, 0) → «expr ≤ »(size r, 1))
+(H2 : «expr ≤ »(1, size l) → «expr ≤ »(1, size r) → «expr ≤ »(size r, «expr * »(delta, size l))) : «expr = »(@balance_l α l x r, balance l x r) :=
+begin
+  cases [expr r] ["with", ident rs, ident rl, ident rx, ident rr],
+  { refl },
+  { cases [expr l] ["with", ident ls, ident ll, ident lx, ident lr],
+    { have [] [":", expr «expr ∧ »(«expr = »(size rl, 0), «expr = »(size rr, 0))] [],
+      { have [] [] [":=", expr H1 rfl],
+        rwa ["[", expr size, ",", expr sr.1, ",", expr nat.succ_le_succ_iff, ",", expr nat.le_zero_iff, ",", expr add_eq_zero_iff, "]"] ["at", ident this] },
+      cases [expr sr.2.1.size_eq_zero.1 this.1] [],
+      cases [expr sr.2.2.size_eq_zero.1 this.2] [],
+      rw [expr sr.eq_node'] [],
+      refl },
+    { replace [ident H2] [":", expr «expr¬ »(«expr > »(rs, «expr * »(delta, ls)))] [":=", expr not_lt_of_le (H2 sl.pos sr.pos)],
+      simp [] [] [] ["[", expr balance_l, ",", expr balance, ",", expr H2, "]"] [] []; split_ifs [] []; simp [] [] [] ["[", expr add_comm, "]"] [] [] } }
+end
 
 /-- `raised n m` means `m` is either equal or one up from `n`. -/
 def raised (n m : ℕ) : Prop :=
@@ -986,11 +925,12 @@ theorem bounded.dual : ∀ {t : Ordnode α} {o₁ o₂} h : Bounded t o₁ o₂,
           exact h
 | node s l x r, _, _, ⟨ol, Or⟩ => ⟨or.dual, ol.dual⟩
 
-theorem bounded.dual_iff {t : Ordnode α} {o₁ o₂} : Bounded t o₁ o₂ ↔ @Bounded (OrderDual α) _ (dual t) o₂ o₁ :=
-  ⟨bounded.dual,
-    fun h =>
-      by 
-        have  := bounded.dual h <;> rwa [dual_dual, OrderDual.preorder.dual_dual] at this⟩
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem bounded.dual_iff
+{t : ordnode α}
+{o₁ o₂} : «expr ↔ »(bounded t o₁ o₂, @bounded (order_dual α) _ (dual t) o₂ o₁) :=
+⟨bounded.dual, λ
+ h, by have [] [] [":=", expr bounded.dual h]; rwa ["[", expr dual_dual, ",", expr order_dual.preorder.dual_dual, "]"] ["at", ident this]⟩
 
 theorem bounded.weak_left : ∀ {t : Ordnode α} {o₁ o₂}, Bounded t o₁ o₂ → Bounded t ⊥ o₂
 | nil, o₁, o₂, h =>
@@ -1139,11 +1079,10 @@ theorem valid'.dual : ∀ {t : Ordnode α} {o₁ o₂} h : valid' o₁ t o₂, @
         rw [size_dual, size_dual] <;> exact b.symm,
       br', bl'⟩⟩
 
-theorem valid'.dual_iff {t : Ordnode α} {o₁ o₂} : valid' o₁ t o₂ ↔ @valid' (OrderDual α) _ o₂ (dual t) o₁ :=
-  ⟨valid'.dual,
-    fun h =>
-      by 
-        have  := valid'.dual h <;> rwa [dual_dual, OrderDual.preorder.dual_dual] at this⟩
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid'.dual_iff {t : ordnode α} {o₁ o₂} : «expr ↔ »(valid' o₁ t o₂, @valid' (order_dual α) _ o₂ (dual t) o₁) :=
+⟨valid'.dual, λ
+ h, by have [] [] [":=", expr valid'.dual h]; rwa ["[", expr dual_dual, ",", expr order_dual.preorder.dual_dual, "]"] ["at", ident this]⟩
 
 theorem valid.dual {t : Ordnode α} : valid t → @valid (OrderDual α) _ (dual t) :=
   valid'.dual
@@ -1210,125 +1149,67 @@ theorem valid'.node4_l_lemma₅ {a b c d : ℕ} (lr₂ : (3*((b+c)+1)+d) ≤ (16
   by 
     linarith
 
-theorem valid'.node4_l {l x m y r o₁ o₂} (hl : valid' o₁ l («expr↑ » x)) (hm : valid' («expr↑ » x) m («expr↑ » y))
-  (hr : valid' («expr↑ » y) r o₂) (Hm : 0 < size m)
-  (H :
-    size l = 0 ∧ size m = 1 ∧ size r ≤ 1 ∨
-      0 < size l ∧
-        (ratio*size r) ≤ size m ∧
-          ((delta*size l) ≤ size m+size r) ∧ ((3*size m+size r) ≤ (16*size l)+9) ∧ size m ≤ delta*size r) :
-  valid' o₁ (@node4_l α l x m y r) o₂ :=
-  by 
-    cases' m with s ml z mr
-    ·
-      cases Hm 
-    suffices  :
-      balanced_sz (size l) (size ml) ∧
-        balanced_sz (size mr) (size r) ∧ balanced_sz ((size l+size ml)+1) ((size mr+size r)+1)
-    exact valid'.node' (hl.node' hm.left this.1) (hm.right.node' hr this.2.1) this.2.2
-    rcases H with (⟨l0, m1, r0⟩ | ⟨l0, mr₁, lr₁, lr₂, mr₂⟩)
-    ·
-      rw [hm.2.size_eq, Nat.succ_inj', add_eq_zero_iff] at m1 
-      rw [l0, m1.1, m1.2]
-      rcases size r with (_ | _ | _) <;>
-        exact
-          by 
-            decide
-    ·
-      cases' Nat.eq_zero_or_posₓ (size r) with r0 r0
-      ·
-        rw [r0] at mr₂ 
-        cases not_le_of_lt Hm mr₂ 
-      rw [hm.2.size_eq] at lr₁ lr₂ mr₁ mr₂ 
-      byCases' mm : (size ml+size mr) ≤ 1
-      ·
-        have r1 :=
-          le_antisymmₓ
-            ((mul_le_mul_left
-                  (by 
-                    decide)).1
-              (le_transₓ mr₁ (Nat.succ_le_succₓ mm) : _ ≤ ratio*1))
-            r0 
-        rw [r1, add_assocₓ] at lr₁ 
-        have l1 :=
-          le_antisymmₓ
-            ((mul_le_mul_left
-                  (by 
-                    decide)).1
-              (le_transₓ lr₁ (add_le_add_right mm 2) : _ ≤ delta*1))
-            l0 
-        rw [l1, r1]
-        cases size ml <;> cases size mr
-        ·
-          exact
-            by 
-              decide
-        ·
-          rw [zero_addₓ] at mm 
-          rcases mm with (_ | ⟨_, ⟨⟩⟩)
-          exact
-            by 
-              decide
-        ·
-          rcases mm with (_ | ⟨_, ⟨⟩⟩)
-          exact
-            by 
-              decide
-        ·
-          rw [Nat.succ_add] at mm 
-          rcases mm with (_ | ⟨_, ⟨⟩⟩)
-      rcases hm.3.1.resolve_left mm with ⟨mm₁, mm₂⟩
-      cases' Nat.eq_zero_or_posₓ (size ml) with ml0 ml0
-      ·
-        rw [ml0, mul_zero, Nat.le_zero_iff] at mm₂ 
-        rw [ml0, mm₂] at mm 
-        cases
-          mm
-            (by 
-              decide)
-      cases' Nat.eq_zero_or_posₓ (size mr) with mr0 mr0
-      ·
-        rw [mr0, mul_zero, Nat.le_zero_iff] at mm₁ 
-        rw [mr0, mm₁] at mm 
-        cases
-          mm
-            (by 
-              decide)
-      have  : (2*size l) ≤ (size ml+size mr)+1
-      ·
-        have  := Nat.mul_le_mul_leftₓ _ lr₁ 
-        rw [mul_left_commₓ, mul_addₓ] at this 
-        have  := le_transₓ this (add_le_add_left mr₁ _)
-        rw [←Nat.succ_mul] at this 
-        exact
-          (mul_le_mul_left
-                (by 
-                  decide)).1
-            this 
-      refine' ⟨Or.inr ⟨_, _⟩, Or.inr ⟨_, _⟩, Or.inr ⟨_, _⟩⟩
-      ·
-        refine'
-          (mul_le_mul_left
-                (by 
-                  decide)).1
-            (le_transₓ this _)
-        rw [two_mul, Nat.succ_le_iff]
-        refine' add_lt_add_of_lt_of_le _ mm₂ 
-        simpa using
-          (mul_lt_mul_right ml0).2
-            (by 
-              decide :
-            1 < 3)
-      ·
-        exact Nat.le_of_lt_succₓ (valid'.node4_l_lemma₁ lr₂ mr₂ mm₁)
-      ·
-        exact valid'.node4_l_lemma₂ mr₂
-      ·
-        exact valid'.node4_l_lemma₃ mr₁ mm₁
-      ·
-        exact valid'.node4_l_lemma₄ lr₁ mr₂ mm₁
-      ·
-        exact valid'.node4_l_lemma₅ lr₂ mr₁ mm₂
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid'.node4_l
+{l x m y r o₁ o₂}
+(hl : valid' o₁ l «expr↑ »(x))
+(hm : valid' «expr↑ »(x) m «expr↑ »(y))
+(hr : valid' «expr↑ »(y) r o₂)
+(Hm : «expr < »(0, size m))
+(H : «expr ∨ »(«expr ∧ »(«expr = »(size l, 0), «expr ∧ »(«expr = »(size m, 1), «expr ≤ »(size r, 1))), «expr ∧ »(«expr < »(0, size l), «expr ∧ »(«expr ≤ »(«expr * »(ratio, size r), size m), «expr ∧ »(«expr ≤ »(«expr * »(delta, size l), «expr + »(size m, size r)), «expr ∧ »(«expr ≤ »(«expr * »(3, «expr + »(size m, size r)), «expr + »(«expr * »(16, size l), 9)), «expr ≤ »(size m, «expr * »(delta, size r)))))))) : valid' o₁ (@node4_l α l x m y r) o₂ :=
+begin
+  cases [expr m] ["with", ident s, ident ml, ident z, ident mr],
+  { cases [expr Hm] [] },
+  suffices [] [":", expr «expr ∧ »(balanced_sz (size l) (size ml), «expr ∧ »(balanced_sz (size mr) (size r), balanced_sz «expr + »(«expr + »(size l, size ml), 1) «expr + »(«expr + »(size mr, size r), 1)))],
+  from [expr valid'.node' (hl.node' hm.left this.1) (hm.right.node' hr this.2.1) this.2.2],
+  rcases [expr H, "with", "⟨", ident l0, ",", ident m1, ",", ident r0, "⟩", "|", "⟨", ident l0, ",", ident mr₁, ",", ident lr₁, ",", ident lr₂, ",", ident mr₂, "⟩"],
+  { rw ["[", expr hm.2.size_eq, ",", expr nat.succ_inj', ",", expr add_eq_zero_iff, "]"] ["at", ident m1],
+    rw ["[", expr l0, ",", expr m1.1, ",", expr m1.2, "]"] [],
+    rcases [expr size r, "with", "_", "|", "_", "|", "_"]; exact [expr exprdec_trivial()] },
+  { cases [expr nat.eq_zero_or_pos (size r)] ["with", ident r0, ident r0],
+    { rw [expr r0] ["at", ident mr₂],
+      cases [expr not_le_of_lt Hm mr₂] [] },
+    rw ["[", expr hm.2.size_eq, "]"] ["at", ident lr₁, ident lr₂, ident mr₁, ident mr₂],
+    by_cases [expr mm, ":", expr «expr ≤ »(«expr + »(size ml, size mr), 1)],
+    { have [ident r1] [] [":=", expr le_antisymm ((mul_le_mul_left exprdec_trivial()).1 (le_trans mr₁ (nat.succ_le_succ mm) : «expr ≤ »(_, «expr * »(ratio, 1)))) r0],
+      rw ["[", expr r1, ",", expr add_assoc, "]"] ["at", ident lr₁],
+      have [ident l1] [] [":=", expr le_antisymm ((mul_le_mul_left exprdec_trivial()).1 (le_trans lr₁ (add_le_add_right mm 2) : «expr ≤ »(_, «expr * »(delta, 1)))) l0],
+      rw ["[", expr l1, ",", expr r1, "]"] [],
+      cases [expr size ml] []; cases [expr size mr] [],
+      { exact [expr exprdec_trivial()] },
+      { rw [expr zero_add] ["at", ident mm],
+        rcases [expr mm, "with", "_", "|", "⟨", "_", ",", "⟨", "⟩", "⟩"],
+        exact [expr exprdec_trivial()] },
+      { rcases [expr mm, "with", "_", "|", "⟨", "_", ",", "⟨", "⟩", "⟩"],
+        exact [expr exprdec_trivial()] },
+      { rw [expr nat.succ_add] ["at", ident mm],
+        rcases [expr mm, "with", "_", "|", "⟨", "_", ",", "⟨", "⟩", "⟩"] } },
+    rcases [expr hm.3.1.resolve_left mm, "with", "⟨", ident mm₁, ",", ident mm₂, "⟩"],
+    cases [expr nat.eq_zero_or_pos (size ml)] ["with", ident ml0, ident ml0],
+    { rw ["[", expr ml0, ",", expr mul_zero, ",", expr nat.le_zero_iff, "]"] ["at", ident mm₂],
+      rw ["[", expr ml0, ",", expr mm₂, "]"] ["at", ident mm],
+      cases [expr mm exprdec_trivial()] [] },
+    cases [expr nat.eq_zero_or_pos (size mr)] ["with", ident mr0, ident mr0],
+    { rw ["[", expr mr0, ",", expr mul_zero, ",", expr nat.le_zero_iff, "]"] ["at", ident mm₁],
+      rw ["[", expr mr0, ",", expr mm₁, "]"] ["at", ident mm],
+      cases [expr mm exprdec_trivial()] [] },
+    have [] [":", expr «expr ≤ »(«expr * »(2, size l), «expr + »(«expr + »(size ml, size mr), 1))] [],
+    { have [] [] [":=", expr nat.mul_le_mul_left _ lr₁],
+      rw ["[", expr mul_left_comm, ",", expr mul_add, "]"] ["at", ident this],
+      have [] [] [":=", expr le_trans this (add_le_add_left mr₁ _)],
+      rw ["[", "<-", expr nat.succ_mul, "]"] ["at", ident this],
+      exact [expr (mul_le_mul_left exprdec_trivial()).1 this] },
+    refine [expr ⟨or.inr ⟨_, _⟩, or.inr ⟨_, _⟩, or.inr ⟨_, _⟩⟩],
+    { refine [expr (mul_le_mul_left exprdec_trivial()).1 (le_trans this _)],
+      rw ["[", expr two_mul, ",", expr nat.succ_le_iff, "]"] [],
+      refine [expr add_lt_add_of_lt_of_le _ mm₂],
+      simpa [] [] [] [] [] ["using", expr (mul_lt_mul_right ml0).2 (exprdec_trivial() : «expr < »(1, 3))] },
+    { exact [expr nat.le_of_lt_succ (valid'.node4_l_lemma₁ lr₂ mr₂ mm₁)] },
+    { exact [expr valid'.node4_l_lemma₂ mr₂] },
+    { exact [expr valid'.node4_l_lemma₃ mr₁ mm₁] },
+    { exact [expr valid'.node4_l_lemma₄ lr₁ mr₂ mm₁] },
+    { exact [expr valid'.node4_l_lemma₅ lr₂ mr₁ mm₂] } }
+end
 
 theorem valid'.rotate_l_lemma₁ {a b c : ℕ} (H2 : (3*a) ≤ b+c) (hb₂ : c ≤ 3*b) : a ≤ 3*b :=
   by 
@@ -1346,138 +1227,81 @@ theorem valid'.rotate_l_lemma₄ {a b : ℕ} (H3 : (2*b) ≤ (9*a)+3) : (3*b) �
   by 
     linarith
 
-theorem valid'.rotate_l {l x r o₁ o₂} (hl : valid' o₁ l («expr↑ » x)) (hr : valid' («expr↑ » x) r o₂)
-  (H1 : ¬(size l+size r) ≤ 1) (H2 : (delta*size l) < size r) (H3 : ((2*size r) ≤ (9*size l)+5) ∨ size r ≤ 3) :
-  valid' o₁ (@rotate_l α l x r) o₂ :=
-  by 
-    cases' r with rs rl rx rr
-    ·
-      cases H2 
-    rw [hr.2.size_eq, Nat.lt_succ_iff] at H2 
-    rw [hr.2.size_eq] at H3 
-    replace H3 : ((2*size rl+size rr) ≤ (9*size l)+3) ∨ (size rl+size rr) ≤ 2 :=
-      H3.imp (@Nat.le_of_add_le_add_rightₓ 2 _ _) Nat.le_of_succ_le_succₓ 
-    have H3_0 : size l = 0 → (size rl+size rr) ≤ 2
-    ·
-      intro l0 
-      rw [l0] at H3 
-      exact
-        (or_iff_right_of_imp$
-              by 
-                exact
-                  fun h =>
-                    (mul_le_mul_left
-                          (by 
-                            decide)).1
-                      (le_transₓ h
-                        (by 
-                          decide))).1
-          H3 
-    have H3p : size l > 0 → (2*size rl+size rr) ≤ (9*size l)+3 :=
-      fun l0 : 1 ≤ size l =>
-        (or_iff_left_of_imp$
-              by 
-                intro  <;> linarith).1
-          H3 
-    have ablem : ∀ {a b : ℕ}, 1 ≤ a → (a+b) ≤ 2 → b ≤ 1
-    ·
-      intros 
-      linarith 
-    have hlp : size l > 0 → ¬(size rl+size rr) ≤ 1 :=
-      fun l0 hb =>
-        absurd (le_transₓ (le_transₓ (Nat.mul_le_mul_leftₓ _ l0) H2) hb)
-          (by 
-            decide)
-    rw [rotate_l]
-    splitIfs
-    ·
-      have rr0 : size rr > 0 :=
-        (mul_lt_mul_left
-              (by 
-                decide)).1
-          (lt_of_le_of_ltₓ (Nat.zero_leₓ _) h : (ratio*0) < _)
-      suffices  : balanced_sz (size l) (size rl) ∧ balanced_sz ((size l+size rl)+1) (size rr)
-      ·
-        exact hl.node3_l hr.left hr.right this.1 this.2
-      cases' Nat.eq_zero_or_posₓ (size l) with l0 l0
-      ·
-        rw [l0]
-        replace H3 := H3_0 l0 
-        have  := hr.3.1
-        cases' Nat.eq_zero_or_posₓ (size rl) with rl0 rl0
-        ·
-          rw [rl0] at this⊢
-          rw [le_antisymmₓ (balanced_sz_zero.1 this.symm) rr0]
-          exact
-            by 
-              decide 
-        have rr1 : size rr = 1 := le_antisymmₓ (ablem rl0 H3) rr0 
-        rw [add_commₓ] at H3 
-        rw [rr1, show size rl = 1 from le_antisymmₓ (ablem rr0 H3) rl0]
-        exact
-          by 
-            decide 
-      replace H3 := H3p l0 
-      rcases hr.3.1.resolve_left (hlp l0) with ⟨hb₁, hb₂⟩
-      cases' Nat.eq_zero_or_posₓ (size rl) with rl0 rl0
-      ·
-        rw [rl0] at hb₂ 
-        cases not_le_of_gtₓ rr0 hb₂ 
-      cases' eq_or_lt_of_le (show 1 ≤ size rr from rr0) with rr1 rr1
-      ·
-        rw [←rr1] at h H2⊢
-        have  : size rl = 1 := le_antisymmₓ (Nat.lt_succ_iff.1 h) rl0 
-        rw [this] at H2 
-        exact
-          absurd (le_transₓ (Nat.mul_le_mul_leftₓ _ l0) H2)
-            (by 
-              decide)
-      refine' ⟨Or.inr ⟨_, _⟩, Or.inr ⟨_, _⟩⟩
-      ·
-        exact valid'.rotate_l_lemma₁ H2 hb₂
-      ·
-        exact Nat.le_of_lt_succₓ (valid'.rotate_l_lemma₂ H3 h)
-      ·
-        exact valid'.rotate_l_lemma₃ H2 h
-      ·
-        exact le_transₓ hb₂ (Nat.mul_le_mul_leftₓ _$ le_transₓ (Nat.le_add_leftₓ _ _) (Nat.le_add_rightₓ _ _))
-    ·
-      cases' Nat.eq_zero_or_posₓ (size rl) with rl0 rl0
-      ·
-        rw [rl0, not_ltₓ, Nat.le_zero_iff, Nat.mul_eq_zero] at h 
-        replace h :=
-          h.resolve_left
-            (by 
-              decide)
-        rw [rl0, h, Nat.le_zero_iff, Nat.mul_eq_zero] at H2 
-        rw [hr.2.size_eq, rl0, h,
-          H2.resolve_left
-            (by 
-              decide)] at
-          H1 
-        cases
-          H1
-            (by 
-              decide)
-      refine' hl.node4_l hr.left hr.right rl0 _ 
-      cases' Nat.eq_zero_or_posₓ (size l) with l0 l0
-      ·
-        replace H3 := H3_0 l0 
-        cases' Nat.eq_zero_or_posₓ (size rr) with rr0 rr0
-        ·
-          have  := hr.3.1
-          rw [rr0] at this 
-          exact Or.inl ⟨l0, le_antisymmₓ (balanced_sz_zero.1 this) rl0, rr0.symm ▸ zero_le_one⟩
-        exact
-          Or.inl
-            ⟨l0,
-              le_antisymmₓ
-                (ablem rr0$
-                  by 
-                    rwa [add_commₓ])
-                rl0,
-              ablem rl0 H3⟩
-      exact Or.inr ⟨l0, not_ltₓ.1 h, H2, valid'.rotate_l_lemma₄ (H3p l0), (hr.3.1.resolve_left (hlp l0)).1⟩
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid'.rotate_l
+{l x r o₁ o₂}
+(hl : valid' o₁ l «expr↑ »(x))
+(hr : valid' «expr↑ »(x) r o₂)
+(H1 : «expr¬ »(«expr ≤ »(«expr + »(size l, size r), 1)))
+(H2 : «expr < »(«expr * »(delta, size l), size r))
+(H3 : «expr ∨ »(«expr ≤ »(«expr * »(2, size r), «expr + »(«expr * »(9, size l), 5)), «expr ≤ »(size r, 3))) : valid' o₁ (@rotate_l α l x r) o₂ :=
+begin
+  cases [expr r] ["with", ident rs, ident rl, ident rx, ident rr],
+  { cases [expr H2] [] },
+  rw ["[", expr hr.2.size_eq, ",", expr nat.lt_succ_iff, "]"] ["at", ident H2],
+  rw ["[", expr hr.2.size_eq, "]"] ["at", ident H3],
+  replace [ident H3] [":", expr «expr ∨ »(«expr ≤ »(«expr * »(2, «expr + »(size rl, size rr)), «expr + »(«expr * »(9, size l), 3)), «expr ≤ »(«expr + »(size rl, size rr), 2))] [":=", expr H3.imp (@nat.le_of_add_le_add_right 2 _ _) nat.le_of_succ_le_succ],
+  have [ident H3_0] [":", expr «expr = »(size l, 0) → «expr ≤ »(«expr + »(size rl, size rr), 2)] [],
+  { intro [ident l0],
+    rw [expr l0] ["at", ident H3],
+    exact [expr «expr $ »(or_iff_right_of_imp, by exact [expr λ
+       h, (mul_le_mul_left exprdec_trivial()).1 (le_trans h exprdec_trivial())]).1 H3] },
+  have [ident H3p] [":", expr «expr > »(size l, 0) → «expr ≤ »(«expr * »(2, «expr + »(size rl, size rr)), «expr + »(«expr * »(9, size l), 3))] [":=", expr λ
+   l0 : «expr ≤ »(1, size l), «expr $ »(or_iff_left_of_imp, by intro []; linarith [] [] []).1 H3],
+  have [ident ablem] [":", expr ∀
+   {a b : exprℕ()}, «expr ≤ »(1, a) → «expr ≤ »(«expr + »(a, b), 2) → «expr ≤ »(b, 1)] [],
+  { intros [],
+    linarith [] [] [] },
+  have [ident hlp] [":", expr «expr > »(size l, 0) → «expr¬ »(«expr ≤ »(«expr + »(size rl, size rr), 1))] [":=", expr λ
+   l0 hb, absurd (le_trans (le_trans (nat.mul_le_mul_left _ l0) H2) hb) exprdec_trivial()],
+  rw [expr rotate_l] [],
+  split_ifs [] [],
+  { have [ident rr0] [":", expr «expr > »(size rr, 0)] [":=", expr (mul_lt_mul_left exprdec_trivial()).1 (lt_of_le_of_lt (nat.zero_le _) h : «expr < »(«expr * »(ratio, 0), _))],
+    suffices [] [":", expr «expr ∧ »(balanced_sz (size l) (size rl), balanced_sz «expr + »(«expr + »(size l, size rl), 1) (size rr))],
+    { exact [expr hl.node3_l hr.left hr.right this.1 this.2] },
+    cases [expr nat.eq_zero_or_pos (size l)] ["with", ident l0, ident l0],
+    { rw [expr l0] [],
+      replace [ident H3] [] [":=", expr H3_0 l0],
+      have [] [] [":=", expr hr.3.1],
+      cases [expr nat.eq_zero_or_pos (size rl)] ["with", ident rl0, ident rl0],
+      { rw [expr rl0] ["at", ident this, "⊢"],
+        rw [expr le_antisymm (balanced_sz_zero.1 this.symm) rr0] [],
+        exact [expr exprdec_trivial()] },
+      have [ident rr1] [":", expr «expr = »(size rr, 1)] [":=", expr le_antisymm (ablem rl0 H3) rr0],
+      rw [expr add_comm] ["at", ident H3],
+      rw ["[", expr rr1, ",", expr show «expr = »(size rl, 1), from le_antisymm (ablem rr0 H3) rl0, "]"] [],
+      exact [expr exprdec_trivial()] },
+    replace [ident H3] [] [":=", expr H3p l0],
+    rcases [expr hr.3.1.resolve_left (hlp l0), "with", "⟨", ident hb₁, ",", ident hb₂, "⟩"],
+    cases [expr nat.eq_zero_or_pos (size rl)] ["with", ident rl0, ident rl0],
+    { rw [expr rl0] ["at", ident hb₂],
+      cases [expr not_le_of_gt rr0 hb₂] [] },
+    cases [expr eq_or_lt_of_le (show «expr ≤ »(1, size rr), from rr0)] ["with", ident rr1, ident rr1],
+    { rw ["[", "<-", expr rr1, "]"] ["at", ident h, ident H2, "⊢"],
+      have [] [":", expr «expr = »(size rl, 1)] [":=", expr le_antisymm (nat.lt_succ_iff.1 h) rl0],
+      rw [expr this] ["at", ident H2],
+      exact [expr absurd (le_trans (nat.mul_le_mul_left _ l0) H2) exprdec_trivial()] },
+    refine [expr ⟨or.inr ⟨_, _⟩, or.inr ⟨_, _⟩⟩],
+    { exact [expr valid'.rotate_l_lemma₁ H2 hb₂] },
+    { exact [expr nat.le_of_lt_succ (valid'.rotate_l_lemma₂ H3 h)] },
+    { exact [expr valid'.rotate_l_lemma₃ H2 h] },
+    { exact [expr le_trans hb₂ «expr $ »(nat.mul_le_mul_left _, le_trans (nat.le_add_left _ _) (nat.le_add_right _ _))] } },
+  { cases [expr nat.eq_zero_or_pos (size rl)] ["with", ident rl0, ident rl0],
+    { rw ["[", expr rl0, ",", expr not_lt, ",", expr nat.le_zero_iff, ",", expr nat.mul_eq_zero, "]"] ["at", ident h],
+      replace [ident h] [] [":=", expr h.resolve_left exprdec_trivial()],
+      rw ["[", expr rl0, ",", expr h, ",", expr nat.le_zero_iff, ",", expr nat.mul_eq_zero, "]"] ["at", ident H2],
+      rw ["[", expr hr.2.size_eq, ",", expr rl0, ",", expr h, ",", expr H2.resolve_left exprdec_trivial(), "]"] ["at", ident H1],
+      cases [expr H1 exprdec_trivial()] [] },
+    refine [expr hl.node4_l hr.left hr.right rl0 _],
+    cases [expr nat.eq_zero_or_pos (size l)] ["with", ident l0, ident l0],
+    { replace [ident H3] [] [":=", expr H3_0 l0],
+      cases [expr nat.eq_zero_or_pos (size rr)] ["with", ident rr0, ident rr0],
+      { have [] [] [":=", expr hr.3.1],
+        rw [expr rr0] ["at", ident this],
+        exact [expr or.inl ⟨l0, le_antisymm (balanced_sz_zero.1 this) rl0, «expr ▸ »(rr0.symm, zero_le_one)⟩] },
+      exact [expr or.inl ⟨l0, le_antisymm «expr $ »(ablem rr0, by rwa [expr add_comm] []) rl0, ablem rl0 H3⟩] },
+    exact [expr or.inr ⟨l0, not_lt.1 h, H2, valid'.rotate_l_lemma₄ (H3p l0), (hr.3.1.resolve_left (hlp l0)).1⟩] }
+end
 
 theorem valid'.rotate_r {l x r o₁ o₂} (hl : valid' o₁ l («expr↑ » x)) (hr : valid' («expr↑ » x) r o₂)
   (H1 : ¬(size l+size r) ≤ 1) (H2 : (delta*size r) < size l) (H3 : ((2*size l) ≤ (9*size r)+5) ∨ size l ≤ 3) :
@@ -1585,14 +1409,20 @@ theorem valid'.balance_l {l x r o₁ o₂} (hl : valid' o₁ l («expr↑ » x))
     ·
       exact ⟨_, _, H, Or.inr ⟨e.dist_le, rfl⟩⟩
 
-theorem valid'.balance_r_aux {l x r o₁ o₂} (hl : valid' o₁ l («expr↑ » x)) (hr : valid' («expr↑ » x) r o₂)
-  (H₁ : size r = 0 → size l ≤ 1) (H₂ : 1 ≤ size r → 1 ≤ size l → size l ≤ delta*size r)
-  (H₃ : ((2*@size α r) ≤ (9*size l)+5) ∨ size r ≤ 3) : valid' o₁ (@balance_r α l x r) o₂ :=
-  by 
-    rw [valid'.dual_iff, dual_balance_r]
-    have  := hr.dual.balance_l_aux hl.dual 
-    rw [size_dual, size_dual] at this 
-    exact this H₁ H₂ H₃
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid'.balance_r_aux
+{l x r o₁ o₂}
+(hl : valid' o₁ l «expr↑ »(x))
+(hr : valid' «expr↑ »(x) r o₂)
+(H₁ : «expr = »(size r, 0) → «expr ≤ »(size l, 1))
+(H₂ : «expr ≤ »(1, size r) → «expr ≤ »(1, size l) → «expr ≤ »(size l, «expr * »(delta, size r)))
+(H₃ : «expr ∨ »(«expr ≤ »(«expr * »(2, @size α r), «expr + »(«expr * »(9, size l), 5)), «expr ≤ »(size r, 3))) : valid' o₁ (@balance_r α l x r) o₂ :=
+begin
+  rw ["[", expr valid'.dual_iff, ",", expr dual_balance_r, "]"] [],
+  have [] [] [":=", expr hr.dual.balance_l_aux hl.dual],
+  rw ["[", expr size_dual, ",", expr size_dual, "]"] ["at", ident this],
+  exact [expr this H₁ H₂ H₃]
+end
 
 theorem valid'.balance_r {l x r o₁ o₂} (hl : valid' o₁ l («expr↑ » x)) (hr : valid' («expr↑ » x) r o₂)
   (H : (∃ l', raised (size l) l' ∧ balanced_sz l' (size r)) ∨ ∃ r', raised r' (size r) ∧ balanced_sz (size l) r') :
@@ -1600,30 +1430,30 @@ theorem valid'.balance_r {l x r o₁ o₂} (hl : valid' o₁ l («expr↑ » x))
   by 
     rw [valid'.dual_iff, dual_balance_r] <;> exact hr.dual.balance_l hl.dual (balance_sz_dual H)
 
-theorem valid'.erase_max_aux {s l x r o₁ o₂} (H : valid' o₁ (node s l x r) o₂) :
-  valid' o₁ (@erase_max α (node' l x r)) («expr↑ » (find_max' x r)) ∧
-    size (node' l x r) = size (erase_max (node' l x r))+1 :=
-  by 
-    have  := H.2.eq_node' 
-    rw [this] at H 
-    clear this 
-    induction' r with rs rl rx rr IHrl IHrr generalizing l x o₁
-    ·
-      exact ⟨H.left, rfl⟩
-    have  := H.2.2.2.eq_node' 
-    rw [this] at H⊢
-    rcases IHrr H.right with ⟨h, e⟩
-    refine' ⟨valid'.balance_l H.left h (Or.inr ⟨_, Or.inr e, H.3.1⟩), _⟩
-    rw [erase_max, size_balance_l H.3.2.1 h.3 H.2.2.1 h.2 (Or.inr ⟨_, Or.inr e, H.3.1⟩)]
-    rw [size, e]
-    rfl
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid'.erase_max_aux
+{s l x r o₁ o₂}
+(H : valid' o₁ (node s l x r) o₂) : «expr ∧ »(valid' o₁ (@erase_max α (node' l x r)) «expr↑ »(find_max' x r), «expr = »(size (node' l x r), «expr + »(size (erase_max (node' l x r)), 1))) :=
+begin
+  have [] [] [":=", expr H.2.eq_node'],
+  rw [expr this] ["at", ident H],
+  clear [ident this],
+  induction [expr r] [] ["with", ident rs, ident rl, ident rx, ident rr, ident IHrl, ident IHrr] ["generalizing", ident l, ident x, ident o₁],
+  { exact [expr ⟨H.left, rfl⟩] },
+  have [] [] [":=", expr H.2.2.2.eq_node'],
+  rw [expr this] ["at", ident H, "⊢"],
+  rcases [expr IHrr H.right, "with", "⟨", ident h, ",", ident e, "⟩"],
+  refine [expr ⟨valid'.balance_l H.left h (or.inr ⟨_, or.inr e, H.3.1⟩), _⟩],
+  rw ["[", expr erase_max, ",", expr size_balance_l H.3.2.1 h.3 H.2.2.1 h.2 (or.inr ⟨_, or.inr e, H.3.1⟩), "]"] [],
+  rw ["[", expr size, ",", expr e, "]"] [],
+  refl
+end
 
-theorem valid'.erase_min_aux {s l x r o₁ o₂} (H : valid' o₁ (node s l x r) o₂) :
-  valid' («expr↑ » (find_min' l x)) (@erase_min α (node' l x r)) o₂ ∧
-    size (node' l x r) = size (erase_min (node' l x r))+1 :=
-  by 
-    have  := H.dual.erase_max_aux <;>
-      rwa [←dual_node', size_dual, ←dual_erase_min, size_dual, ←valid'.dual_iff, find_max'_dual] at this
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid'.erase_min_aux
+{s l x r o₁ o₂}
+(H : valid' o₁ (node s l x r) o₂) : «expr ∧ »(valid' «expr↑ »(find_min' l x) (@erase_min α (node' l x r)) o₂, «expr = »(size (node' l x r), «expr + »(size (erase_min (node' l x r)), 1))) :=
+by have [] [] [":=", expr H.dual.erase_max_aux]; rwa ["[", "<-", expr dual_node', ",", expr size_dual, ",", "<-", expr dual_erase_min, ",", expr size_dual, ",", "<-", expr valid'.dual_iff, ",", expr find_max'_dual, "]"] ["at", ident this]
 
 theorem erase_min.valid : ∀ {t} h : @valid α _ t, valid (erase_min t)
 | nil, _ => valid_nil
@@ -1719,66 +1549,67 @@ theorem valid'.merge_aux₁ {o₁ o₂ ls ll lx lr rs rl rx rr t} (hl : valid' o
       unfold delta  at hr₂⊢
       linarith
 
-theorem valid'.merge_aux {l r o₁ o₂} (hl : valid' o₁ l o₂) (hr : valid' o₁ r o₂)
-  (sep : l.all fun x => r.all fun y => x < y) : valid' o₁ (@merge α l r) o₂ ∧ size (merge l r) = size l+size r :=
-  by 
-    induction' l with ls ll lx lr IHll IHlr generalizing o₁ o₂ r
-    ·
-      exact ⟨hr, (zero_addₓ _).symm⟩
-    induction' r with rs rl rx rr IHrl IHrr generalizing o₁ o₂
-    ·
-      exact ⟨hl, rfl⟩
-    rw [merge_node]
-    splitIfs
-    ·
-      cases' IHrl (sep.imp$ fun x h => h.1) (hl.of_lt hr.1.1.to_nil$ sep.imp$ fun x h => h.2.1) hr.left with v e 
-      exact valid'.merge_aux₁ hl hr h v e
-    ·
-      cases' IHlr hl.right (hr.of_gt hl.1.2.to_nil sep.2.1) sep.2.2 with v e 
-      have  := valid'.merge_aux₁ hr.dual hl.dual h_1 v.dual 
-      rw [size_dual, add_commₓ, size_dual, ←dual_balance_r, ←valid'.dual_iff, size_dual, add_commₓ rs] at this 
-      exact this e
-    ·
-      refine' valid'.glue_aux hl hr sep (Or.inr ⟨not_ltₓ.1 h_1, not_ltₓ.1 h⟩)
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem valid'.merge_aux
+{l r o₁ o₂}
+(hl : valid' o₁ l o₂)
+(hr : valid' o₁ r o₂)
+(sep : l.all (λ
+  x, r.all (λ
+   y, «expr < »(x, y)))) : «expr ∧ »(valid' o₁ (@merge α l r) o₂, «expr = »(size (merge l r), «expr + »(size l, size r))) :=
+begin
+  induction [expr l] [] ["with", ident ls, ident ll, ident lx, ident lr, ident IHll, ident IHlr] ["generalizing", ident o₁, ident o₂, ident r],
+  { exact [expr ⟨hr, (zero_add _).symm⟩] },
+  induction [expr r] [] ["with", ident rs, ident rl, ident rx, ident rr, ident IHrl, ident IHrr] ["generalizing", ident o₁, ident o₂],
+  { exact [expr ⟨hl, rfl⟩] },
+  rw ["[", expr merge_node, "]"] [],
+  split_ifs [] [],
+  { cases [expr IHrl «expr $ »(sep.imp, λ
+      x h, h.1) «expr $ »(hl.of_lt hr.1.1.to_nil, «expr $ »(sep.imp, λ x h, h.2.1)) hr.left] ["with", ident v, ident e],
+    exact [expr valid'.merge_aux₁ hl hr h v e] },
+  { cases [expr IHlr hl.right (hr.of_gt hl.1.2.to_nil sep.2.1) sep.2.2] ["with", ident v, ident e],
+    have [] [] [":=", expr valid'.merge_aux₁ hr.dual hl.dual h_1 v.dual],
+    rw ["[", expr size_dual, ",", expr add_comm, ",", expr size_dual, ",", "<-", expr dual_balance_r, ",", "<-", expr valid'.dual_iff, ",", expr size_dual, ",", expr add_comm rs, "]"] ["at", ident this],
+    exact [expr this e] },
+  { refine [expr valid'.glue_aux hl hr sep (or.inr ⟨not_lt.1 h_1, not_lt.1 h⟩)] }
+end
 
 theorem valid.merge {l r} (hl : valid l) (hr : valid r) (sep : l.all fun x => r.all fun y => x < y) :
   valid (@merge α l r) :=
   (valid'.merge_aux hl hr sep).1
 
-theorem insert_with.valid_aux [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (f : α → α) (x : α)
-  (hf : ∀ y, x ≤ y ∧ y ≤ x → x ≤ f y ∧ f y ≤ x) :
-  ∀ {t o₁ o₂},
-    valid' o₁ t o₂ →
-      Bounded nil o₁ («expr↑ » x) →
-        Bounded nil («expr↑ » x) o₂ → valid' o₁ (insert_with f x t) o₂ ∧ raised (size t) (size (insert_with f x t))
-| nil, o₁, o₂, _, bl, br => ⟨valid'_singleton bl br, Or.inr rfl⟩
-| node sz l y r, o₁, o₂, h, bl, br =>
-  by 
-    rw [insert_with, cmpLe]
-    splitIfs <;> rw [insert_with]
-    ·
-      rcases h with ⟨⟨lx, xr⟩, hs, hb⟩
-      rcases hf _ ⟨h_1, h_2⟩ with ⟨xf, fx⟩
-      refine' ⟨⟨⟨lx.mono_right (le_transₓ h_2 xf), xr.mono_left (le_transₓ fx h_1)⟩, hs, hb⟩, Or.inl rfl⟩
-    ·
-      rcases insert_with.valid_aux h.left bl (lt_of_le_not_leₓ h_1 h_2) with ⟨vl, e⟩
-      suffices H
-      ·
-        refine' ⟨vl.balance_l h.right H, _⟩
-        rw [size_balance_l vl.3 h.3.2.2 vl.2 h.2.2.2 H, h.2.size_eq]
-        refine' (e.add_right _).add_right _
-      ·
-        exact Or.inl ⟨_, e, h.3.1⟩
-    ·
-      have  : y < x := lt_of_le_not_leₓ ((total_of (· ≤ ·) _ _).resolve_left h_1) h_1 
-      rcases insert_with.valid_aux h.right this br with ⟨vr, e⟩
-      suffices H
-      ·
-        refine' ⟨h.left.balance_r vr H, _⟩
-        rw [size_balance_r h.3.2.1 vr.3 h.2.2.1 vr.2 H, h.2.size_eq]
-        refine' (e.add_left _).add_right _
-      ·
-        exact Or.inr ⟨_, e, h.3.1⟩
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem insert_with.valid_aux
+[is_total α ((«expr ≤ »))]
+[@decidable_rel α ((«expr ≤ »))]
+(f : α → α)
+(x : α)
+(hf : ∀
+ y, «expr ∧ »(«expr ≤ »(x, y), «expr ≤ »(y, x)) → «expr ∧ »(«expr ≤ »(x, f y), «expr ≤ »(f y, x))) : ∀
+{t
+ o₁
+ o₂}, valid' o₁ t o₂ → bounded nil o₁ «expr↑ »(x) → bounded nil «expr↑ »(x) o₂ → «expr ∧ »(valid' o₁ (insert_with f x t) o₂, raised (size t) (size (insert_with f x t)))
+| nil, o₁, o₂, _, bl, br := ⟨valid'_singleton bl br, or.inr rfl⟩
+| node sz l y r, o₁, o₂, h, bl, br := begin
+  rw ["[", expr insert_with, ",", expr cmp_le, "]"] [],
+  split_ifs [] []; rw ["[", expr insert_with, "]"] [],
+  { rcases [expr h, "with", "⟨", "⟨", ident lx, ",", ident xr, "⟩", ",", ident hs, ",", ident hb, "⟩"],
+    rcases [expr hf _ ⟨h_1, h_2⟩, "with", "⟨", ident xf, ",", ident fx, "⟩"],
+    refine [expr ⟨⟨⟨lx.mono_right (le_trans h_2 xf), xr.mono_left (le_trans fx h_1)⟩, hs, hb⟩, or.inl rfl⟩] },
+  { rcases [expr insert_with.valid_aux h.left bl (lt_of_le_not_le h_1 h_2), "with", "⟨", ident vl, ",", ident e, "⟩"],
+    suffices [ident H] [],
+    { refine [expr ⟨vl.balance_l h.right H, _⟩],
+      rw ["[", expr size_balance_l vl.3 h.3.2.2 vl.2 h.2.2.2 H, ",", expr h.2.size_eq, "]"] [],
+      refine [expr (e.add_right _).add_right _] },
+    { exact [expr or.inl ⟨_, e, h.3.1⟩] } },
+  { have [] [":", expr «expr < »(y, x)] [":=", expr lt_of_le_not_le ((total_of ((«expr ≤ »)) _ _).resolve_left h_1) h_1],
+    rcases [expr insert_with.valid_aux h.right this br, "with", "⟨", ident vr, ",", ident e, "⟩"],
+    suffices [ident H] [],
+    { refine [expr ⟨h.left.balance_r vr H, _⟩],
+      rw ["[", expr size_balance_r h.3.2.1 vr.3 h.2.2.1 vr.2 H, ",", expr h.2.size_eq, "]"] [],
+      refine [expr (e.add_left _).add_right _] },
+    { exact [expr or.inr ⟨_, e, h.3.1⟩] } }
+end
 
 theorem insert_with.valid [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (f : α → α) (x : α)
   (hf : ∀ y, x ≤ y ∧ y ≤ x → x ≤ f y ∧ f y ≤ x) {t} (h : valid t) : valid (insert_with f x t) :=
@@ -1806,7 +1637,7 @@ theorem insert'.valid [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (x
   by 
     rw [insert'_eq_insert_with] <;> exact insert_with.valid _ _ (fun _ => id) h
 
--- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem valid'.map_aux
 {β}
 [preorder β]
@@ -1847,7 +1678,7 @@ end
 theorem map.valid {β} [Preorderₓ β] {f : α → β} (f_strict_mono : StrictMono f) {t} (h : valid t) : valid (map f t) :=
   (valid'.map_aux f_strict_mono h).1
 
--- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem valid'.erase_aux
 [@decidable_rel α ((«expr ≤ »))]
 (x : α)
@@ -1894,50 +1725,45 @@ end
 theorem erase.valid [@DecidableRel α (· ≤ ·)] (x : α) {t} (h : valid t) : valid (erase x t) :=
   (valid'.erase_aux x h).1
 
-theorem size_erase_of_mem [@DecidableRel α (· ≤ ·)] {x : α} {t a₁ a₂} (h : valid' a₁ t a₂) (h_mem : x ∈ t) :
-  size (erase x t) = size t - 1 :=
-  by 
-    induction t generalizing a₁ a₂ h h_mem
-    ·
-      contradiction
-    ·
-      have t_ih_l' := t_ih_l h.left 
-      have t_ih_r' := t_ih_r h.right 
-      clear t_ih_l t_ih_r 
-      unfold HasMem.Mem mem  at h_mem 
-      unfold erase 
-      cases cmpLe x t_x <;> simp [mem._match_1] at h_mem <;> simp [erase._match_1]
-      ·
-        have t_ih_l := t_ih_l' h_mem 
-        clear t_ih_l' t_ih_r' 
-        have t_l_h := valid'.erase_aux x h.left 
-        cases' t_l_h with t_l_valid t_l_size 
-        rw
-          [size_balance_r t_l_valid.bal h.right.bal t_l_valid.sz h.right.sz
-            (Or.inl (Exists.introₓ t_l.size (And.intro t_l_size h.bal.1)))]
-        rw [t_ih_l, h.sz.1]
-        have h_pos_t_l_size := pos_size_of_mem h.left.sz h_mem 
-        cases' t_l.size with t_l_size
-        ·
-          cases h_pos_t_l_size 
-        simp [Nat.succ_add]
-      ·
-        rw [(valid'.glue h.left h.right h.bal.1).2, h.sz.1]
-        rfl
-      ·
-        have t_ih_r := t_ih_r' h_mem 
-        clear t_ih_l' t_ih_r' 
-        have t_r_h := valid'.erase_aux x h.right 
-        cases' t_r_h with t_r_valid t_r_size 
-        rw
-          [size_balance_l h.left.bal t_r_valid.bal h.left.sz t_r_valid.sz
-            (Or.inr (Exists.introₓ t_r.size (And.intro t_r_size h.bal.1)))]
-        rw [t_ih_r, h.sz.1]
-        have h_pos_t_r_size := pos_size_of_mem h.right.sz h_mem 
-        cases' t_r.size with t_r_size
-        ·
-          cases h_pos_t_r_size 
-        simp [Nat.succ_add, Nat.add_succ]
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem size_erase_of_mem
+[@decidable_rel α ((«expr ≤ »))]
+{x : α}
+{t a₁ a₂}
+(h : valid' a₁ t a₂)
+(h_mem : «expr ∈ »(x, t)) : «expr = »(size (erase x t), «expr - »(size t, 1)) :=
+begin
+  induction [expr t] [] [] ["generalizing", ident a₁, ident a₂, ident h, ident h_mem],
+  { contradiction },
+  { have [ident t_ih_l'] [] [":=", expr t_ih_l h.left],
+    have [ident t_ih_r'] [] [":=", expr t_ih_r h.right],
+    clear [ident t_ih_l, ident t_ih_r],
+    unfold [ident has_mem.mem, ident mem] ["at", ident h_mem],
+    unfold [ident erase] [],
+    cases [expr cmp_le x t_x] []; simp [] [] [] ["[", expr mem._match_1, "]"] [] ["at", ident h_mem]; simp [] [] [] ["[", expr erase._match_1, "]"] [] [],
+    { have [ident t_ih_l] [] [":=", expr t_ih_l' h_mem],
+      clear [ident t_ih_l', ident t_ih_r'],
+      have [ident t_l_h] [] [":=", expr valid'.erase_aux x h.left],
+      cases [expr t_l_h] ["with", ident t_l_valid, ident t_l_size],
+      rw [expr size_balance_r t_l_valid.bal h.right.bal t_l_valid.sz h.right.sz (or.inl (exists.intro t_l.size (and.intro t_l_size h.bal.1)))] [],
+      rw ["[", expr t_ih_l, ",", expr h.sz.1, "]"] [],
+      have [ident h_pos_t_l_size] [] [":=", expr pos_size_of_mem h.left.sz h_mem],
+      cases [expr t_l.size] ["with", ident t_l_size],
+      { cases [expr h_pos_t_l_size] [] },
+      simp [] [] [] ["[", expr nat.succ_add, "]"] [] [] },
+    { rw ["[", expr (valid'.glue h.left h.right h.bal.1).2, ",", expr h.sz.1, "]"] [],
+      refl },
+    { have [ident t_ih_r] [] [":=", expr t_ih_r' h_mem],
+      clear [ident t_ih_l', ident t_ih_r'],
+      have [ident t_r_h] [] [":=", expr valid'.erase_aux x h.right],
+      cases [expr t_r_h] ["with", ident t_r_valid, ident t_r_size],
+      rw [expr size_balance_l h.left.bal t_r_valid.bal h.left.sz t_r_valid.sz (or.inr (exists.intro t_r.size (and.intro t_r_size h.bal.1)))] [],
+      rw ["[", expr t_ih_r, ",", expr h.sz.1, "]"] [],
+      have [ident h_pos_t_r_size] [] [":=", expr pos_size_of_mem h.right.sz h_mem],
+      cases [expr t_r.size] ["with", ident t_r_size],
+      { cases [expr h_pos_t_r_size] [] },
+      simp [] [] [] ["[", expr nat.succ_add, ",", expr nat.add_succ, "]"] [] [] } }
+end
 
 end 
 

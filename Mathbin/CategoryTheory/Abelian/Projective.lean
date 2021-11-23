@@ -1,6 +1,5 @@
 import Mathbin.CategoryTheory.Abelian.Exact 
-import Mathbin.CategoryTheory.Preadditive.ProjectiveResolution 
-import Mathbin.Algebra.Homology.Augment
+import Mathbin.CategoryTheory.Preadditive.ProjectiveResolution
 
 /-!
 # Abelian categories with enough projectives have projective resolutions

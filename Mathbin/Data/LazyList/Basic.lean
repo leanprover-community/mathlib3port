@@ -93,7 +93,7 @@ instance  : Traversable LazyList :=
 
 instance  : IsLawfulTraversable LazyList :=
   by 
-    apply Equiv.isLawfulTraversable' list_equiv_lazy_list <;> intros  <;> resetI <;> ext
+    apply Equiv.isLawfulTraversable' list_equiv_lazy_list <;> intros  <;> skip <;> ext
     ·
       induction x 
       rfl 

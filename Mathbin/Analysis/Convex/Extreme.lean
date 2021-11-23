@@ -54,7 +54,7 @@ def IsExtreme (A B : Set E) : Prop :=
 /-- A point `x` is an extreme point of a set `A` if `x` belongs to no open segment with ends in
 `A`, except for the obvious `open_segment x x`. -/
 def Set.ExtremePoints (A : Set E) : Set E :=
-  { x ∈ A | ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x }
+  { x∈A | ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x }
 
 @[refl]
 protected theorem IsExtreme.refl (A : Set E) : IsExtreme 𝕜 A A :=
@@ -90,33 +90,46 @@ theorem IsExtreme.inter (hAB : IsExtreme 𝕜 A B) (hAC : IsExtreme 𝕜 A C) : 
 protected theorem IsExtreme.mono (hAC : IsExtreme 𝕜 A C) (hBA : B ⊆ A) (hCB : C ⊆ B) : IsExtreme 𝕜 B C :=
   ⟨hCB, fun x₁ x₂ hx₁B hx₂B x hxC hx => hAC.2 x₁ x₂ (hBA hx₁B) (hBA hx₂B) x hxC hx⟩
 
-theorem is_extreme_Inter {ι : Type _} [Nonempty ι] {F : ι → Set E} (hAF : ∀ i : ι, IsExtreme 𝕜 A (F i)) :
-  IsExtreme 𝕜 A (⋂i : ι, F i) :=
-  by 
-    obtain i := Classical.arbitrary ι 
-    use Inter_subset_of_subset i (hAF i).1
-    rintro x₁ x₂ hx₁A hx₂A x hxF hx 
-    simpRw [mem_Inter]  at hxF⊢
-    have h := fun i => (hAF i).2 x₁ x₂ hx₁A hx₂A x (hxF i) hx 
-    exact ⟨fun i => (h i).1, fun i => (h i).2⟩
+-- error in Analysis.Convex.Extreme: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_extreme_Inter
+{ι : Type*}
+[nonempty ι]
+{F : ι → set E}
+(hAF : ∀ i : ι, is_extreme 𝕜 A (F i)) : is_extreme 𝕜 A «expr⋂ , »((i : ι), F i) :=
+begin
+  obtain [ident i, ":=", expr classical.arbitrary ι],
+  use [expr Inter_subset_of_subset i (hAF i).1],
+  rintro [ident x₁, ident x₂, ident hx₁A, ident hx₂A, ident x, ident hxF, ident hx],
+  simp_rw [expr mem_Inter] ["at", "⊢", ident hxF],
+  have [ident h] [] [":=", expr λ i, (hAF i).2 x₁ x₂ hx₁A hx₂A x (hxF i) hx],
+  exact [expr ⟨λ i, (h i).1, λ i, (h i).2⟩]
+end
 
-theorem is_extreme_bInter {F : Set (Set E)} (hF : F.nonempty) (hAF : ∀ B _ : B ∈ F, IsExtreme 𝕜 A B) :
-  IsExtreme 𝕜 A (⋂(B : _)(_ : B ∈ F), B) :=
-  by 
-    obtain ⟨B, hB⟩ := hF 
-    refine' ⟨(bInter_subset_of_mem hB).trans (hAF B hB).1, fun x₁ x₂ hx₁A hx₂A x hxF hx => _⟩
-    simpRw [mem_bInter_iff]  at hxF⊢
-    have h := fun B hB => (hAF B hB).2 x₁ x₂ hx₁A hx₂A x (hxF B hB) hx 
-    exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
+-- error in Analysis.Convex.Extreme: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_extreme_bInter
+{F : set (set E)}
+(hF : F.nonempty)
+(hAF : ∀ B «expr ∈ » F, is_extreme 𝕜 A B) : is_extreme 𝕜 A «expr⋂ , »((B «expr ∈ » F), B) :=
+begin
+  obtain ["⟨", ident B, ",", ident hB, "⟩", ":=", expr hF],
+  refine [expr ⟨(bInter_subset_of_mem hB).trans (hAF B hB).1, λ x₁ x₂ hx₁A hx₂A x hxF hx, _⟩],
+  simp_rw [expr mem_bInter_iff] ["at", "⊢", ident hxF],
+  have [ident h] [] [":=", expr λ B hB, (hAF B hB).2 x₁ x₂ hx₁A hx₂A x (hxF B hB) hx],
+  exact [expr ⟨λ B hB, (h B hB).1, λ B hB, (h B hB).2⟩]
+end
 
-theorem is_extreme_sInter {F : Set (Set E)} (hF : F.nonempty) (hAF : ∀ B _ : B ∈ F, IsExtreme 𝕜 A B) :
-  IsExtreme 𝕜 A (⋂₀F) :=
-  by 
-    obtain ⟨B, hB⟩ := hF 
-    refine' ⟨(sInter_subset_of_mem hB).trans (hAF B hB).1, fun x₁ x₂ hx₁A hx₂A x hxF hx => _⟩
-    simpRw [mem_sInter]  at hxF⊢
-    have h := fun B hB => (hAF B hB).2 x₁ x₂ hx₁A hx₂A x (hxF B hB) hx 
-    exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
+-- error in Analysis.Convex.Extreme: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_extreme_sInter
+{F : set (set E)}
+(hF : F.nonempty)
+(hAF : ∀ B «expr ∈ » F, is_extreme 𝕜 A B) : is_extreme 𝕜 A «expr⋂₀ »(F) :=
+begin
+  obtain ["⟨", ident B, ",", ident hB, "⟩", ":=", expr hF],
+  refine [expr ⟨(sInter_subset_of_mem hB).trans (hAF B hB).1, λ x₁ x₂ hx₁A hx₂A x hxF hx, _⟩],
+  simp_rw [expr mem_sInter] ["at", "⊢", ident hxF],
+  have [ident h] [] [":=", expr λ B hB, (hAF B hB).2 x₁ x₂ hx₁A hx₂A x (hxF B hB) hx],
+  exact [expr ⟨λ B hB, (h B hB).1, λ B hB, (h B hB).2⟩]
+end
 
 theorem extreme_points_def :
   x ∈ A.extreme_points 𝕜 ↔ x ∈ A ∧ ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x :=
@@ -171,54 +184,49 @@ section LinearOrderedField
 
 variable{𝕜}[LinearOrderedField 𝕜][AddCommGroupₓ E][Module 𝕜 E]{A B : Set E}{x : E}
 
--- error in Analysis.Convex.Extreme: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/
-theorem mem_extreme_points_iff_forall_segment
-[no_zero_smul_divisors 𝕜 E] : «expr ↔ »(«expr ∈ »(x, A.extreme_points 𝕜), «expr ∧ »(«expr ∈ »(x, A), ∀
-  x₁ x₂ «expr ∈ » A, «expr ∈ »(x, segment 𝕜 x₁ x₂) → «expr ∨ »(«expr = »(x₁, x), «expr = »(x₂, x)))) :=
-begin
-  split,
-  { rintro ["⟨", ident hxA, ",", ident hAx, "⟩"],
-    use [expr hxA],
-    rintro [ident x₁, ident x₂, ident hx₁, ident hx₂, ident hx],
-    by_contra [],
-    push_neg ["at", ident h],
-    exact [expr h.1 (hAx _ _ hx₁ hx₂ (mem_open_segment_of_ne_left_right 𝕜 h.1 h.2 hx)).1] },
-  rintro ["⟨", ident hxA, ",", ident hAx, "⟩"],
-  use [expr hxA],
-  rintro [ident x₁, ident x₂, ident hx₁, ident hx₂, ident hx],
-  obtain [ident rfl, "|", ident rfl, ":=", expr hAx x₁ x₂ hx₁ hx₂ (open_segment_subset_segment 𝕜 _ _ hx)],
-  { exact [expr ⟨rfl, (left_mem_open_segment_iff.1 hx).symm⟩] },
-  exact [expr ⟨right_mem_open_segment_iff.1 hx, rfl⟩]
-end
+theorem mem_extreme_points_iff_forall_segment [NoZeroSmulDivisors 𝕜 E] :
+  x ∈ A.extreme_points 𝕜 ↔ x ∈ A ∧ ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, x ∈ Segment 𝕜 x₁ x₂ → x₁ = x ∨ x₂ = x :=
+  by 
+    split 
+    ·
+      rintro ⟨hxA, hAx⟩
+      use hxA 
+      rintro x₁ x₂ hx₁ hx₂ hx 
+      byContra 
+      pushNeg  at h 
+      exact h.1 (hAx _ _ hx₁ hx₂ (mem_open_segment_of_ne_left_right 𝕜 h.1 h.2 hx)).1
+    rintro ⟨hxA, hAx⟩
+    use hxA 
+    rintro x₁ x₂ hx₁ hx₂ hx 
+    obtain rfl | rfl := hAx x₁ x₂ hx₁ hx₂ (open_segment_subset_segment 𝕜 _ _ hx)
+    ·
+      exact ⟨rfl, (left_mem_open_segment_iff.1 hx).symm⟩
+    exact ⟨right_mem_open_segment_iff.1 hx, rfl⟩
 
--- error in Analysis.Convex.Extreme: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem convex.mem_extreme_points_iff_convex_diff
-(hA : convex 𝕜 A) : «expr ↔ »(«expr ∈ »(x, A.extreme_points 𝕜), «expr ∧ »(«expr ∈ »(x, A), convex 𝕜 «expr \ »(A, {x}))) :=
-begin
-  use [expr λ hx, ⟨hx.1, (mem_extreme_points_iff_extreme_singleton.1 hx).convex_diff hA⟩],
-  rintro ["⟨", ident hxA, ",", ident hAx, "⟩"],
-  refine [expr mem_extreme_points_iff_forall_segment.2 ⟨hxA, λ x₁ x₂ hx₁ hx₂ hx, _⟩],
-  rw [expr convex_iff_segment_subset] ["at", ident hAx],
-  by_contra [],
-  push_neg ["at", ident h],
-  exact [expr (hAx ⟨hx₁, λ hx₁, h.1 (mem_singleton_iff.2 hx₁)⟩ ⟨hx₂, λ hx₂, h.2 (mem_singleton_iff.2 hx₂)⟩ hx).2 rfl]
-end
+theorem Convex.mem_extreme_points_iff_convex_diff (hA : Convex 𝕜 A) :
+  x ∈ A.extreme_points 𝕜 ↔ x ∈ A ∧ Convex 𝕜 (A \ {x}) :=
+  by 
+    use fun hx => ⟨hx.1, (mem_extreme_points_iff_extreme_singleton.1 hx).convex_diff hA⟩
+    rintro ⟨hxA, hAx⟩
+    refine' mem_extreme_points_iff_forall_segment.2 ⟨hxA, fun x₁ x₂ hx₁ hx₂ hx => _⟩
+    rw [convex_iff_segment_subset] at hAx 
+    byContra 
+    pushNeg  at h 
+    exact (hAx ⟨hx₁, fun hx₁ => h.1 (mem_singleton_iff.2 hx₁)⟩ ⟨hx₂, fun hx₂ => h.2 (mem_singleton_iff.2 hx₂)⟩ hx).2 rfl
 
 theorem Convex.mem_extreme_points_iff_mem_diff_convex_hull_diff (hA : Convex 𝕜 A) :
   x ∈ A.extreme_points 𝕜 ↔ x ∈ A \ convexHull 𝕜 (A \ {x}) :=
   by 
     rw [hA.mem_extreme_points_iff_convex_diff, hA.convex_remove_iff_not_mem_convex_hull_remove, mem_diff]
 
--- error in Analysis.Convex.Extreme: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem extreme_points_convex_hull_subset : «expr ⊆ »((convex_hull 𝕜 A).extreme_points 𝕜, A) :=
-begin
-  rintro [ident x, ident hx],
-  rw [expr (convex_convex_hull 𝕜 _).mem_extreme_points_iff_convex_diff] ["at", ident hx],
-  by_contra [],
-  exact [expr (convex_hull_min (subset_diff.2 ⟨subset_convex_hull 𝕜 _, disjoint_singleton_right.2 h⟩) hx.2 hx.1).2 rfl]
-end
+theorem extreme_points_convex_hull_subset : (convexHull 𝕜 A).ExtremePoints 𝕜 ⊆ A :=
+  by 
+    rintro x hx 
+    rw [(convex_convex_hull 𝕜 _).mem_extreme_points_iff_convex_diff] at hx 
+    byContra 
+    exact (convex_hull_min (subset_diff.2 ⟨subset_convex_hull 𝕜 _, disjoint_singleton_right.2 h⟩) hx.2 hx.1).2 rfl
 
 end LinearOrderedField
 

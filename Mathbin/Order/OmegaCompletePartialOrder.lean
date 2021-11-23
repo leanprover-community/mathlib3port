@@ -1,7 +1,8 @@
-import Mathbin.Data.Pfun 
+import Mathbin.Control.Monad.Basic 
+import Mathbin.Data.Part 
 import Mathbin.Order.PreorderHom 
-import Mathbin.Tactic.Wlog 
-import Mathbin.Tactic.Monotonicity.Default
+import Mathbin.Tactic.Monotonicity.Default 
+import Mathbin.Tactic.Wlog
 
 /-!
 # Omega Complete Partial Orders
@@ -300,16 +301,22 @@ variable{α : Type u}{β : Type v}{γ : Type _}
 
 open OmegaCompletePartialOrder
 
-theorem eq_of_chain {c : chain (Part α)} {a b : α} (ha : some a ∈ c) (hb : some b ∈ c) : a = b :=
-  by 
-    cases' ha with i ha 
-    replace ha := ha.symm 
-    cases' hb with j hb 
-    replace hb := hb.symm 
-    wlog h : i ≤ j := le_totalₓ i j using a b i j, b a j i 
-    rw [eq_some_iff] at ha hb 
-    have  := c.monotone h _ ha 
-    apply mem_unique this hb
+-- error in Order.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_of_chain
+{c : chain (part α)}
+{a b : α}
+(ha : «expr ∈ »(some a, c))
+(hb : «expr ∈ »(some b, c)) : «expr = »(a, b) :=
+begin
+  cases [expr ha] ["with", ident i, ident ha],
+  replace [ident ha] [] [":=", expr ha.symm],
+  cases [expr hb] ["with", ident j, ident hb],
+  replace [ident hb] [] [":=", expr hb.symm],
+  wlog [ident h] [":", expr «expr ≤ »(i, j)] [":=", expr le_total i j] ["using", "[", ident a, ident b, ident i, ident j, ",", ident b, ident a, ident j, ident i, "]"],
+  rw ["[", expr eq_some_iff, "]"] ["at", ident ha, ident hb],
+  have [] [] [":=", expr c.monotone h _ ha],
+  apply [expr mem_unique this hb]
+end
 
 /-- The (noncomputable) `ωSup` definition for the `ω`-CPO structure on `part α`. -/
 protected noncomputable def ωSup (c : chain (Part α)) : Part α :=
@@ -325,17 +332,17 @@ theorem ωSup_eq_some {c : chain (Part α)} {a : α} (h : some a ∈ c) : Part.�
 theorem ωSup_eq_none {c : chain (Part α)} (h : ¬∃ a, some a ∈ c) : Part.ωSup c = none :=
   dif_neg h
 
-theorem mem_chain_of_mem_ωSup {c : chain (Part α)} {a : α} (h : a ∈ Part.ωSup c) : some a ∈ c :=
-  by 
-    simp [Part.ωSup] at h 
-    splitIfs  at h
-    ·
-      have h' := Classical.some_spec h_1 
-      rw [←eq_some_iff] at h 
-      rw [←h]
-      exact h'
-    ·
-      rcases h with ⟨⟨⟩⟩
+-- error in Order.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_chain_of_mem_ωSup {c : chain (part α)} {a : α} (h : «expr ∈ »(a, part.ωSup c)) : «expr ∈ »(some a, c) :=
+begin
+  simp [] [] [] ["[", expr part.ωSup, "]"] [] ["at", ident h],
+  split_ifs ["at", ident h] [],
+  { have [ident h'] [] [":=", expr classical.some_spec h_1],
+    rw ["<-", expr eq_some_iff] ["at", ident h],
+    rw ["<-", expr h] [],
+    exact [expr h'] },
+  { rcases [expr h, "with", "⟨", "⟨", "⟩", "⟩"] }
+end
 
 noncomputable instance OmegaCompletePartialOrder : OmegaCompletePartialOrder (Part α) :=
   { ωSup := Part.ωSup,
@@ -358,26 +365,26 @@ noncomputable instance OmegaCompletePartialOrder : OmegaCompletePartialOrder (Pa
 
 section Inst
 
-theorem mem_ωSup (x : α) (c : chain (Part α)) : x ∈ ωSup c ↔ some x ∈ c :=
-  by 
-    simp [OmegaCompletePartialOrder.ωSup, Part.ωSup]
-    split 
-    ·
-      splitIfs 
-      swap 
-      rintro ⟨⟨⟩⟩
-      intro h' 
-      have hh := Classical.some_spec h 
-      simp  at h' 
-      subst x 
-      exact hh
-    ·
-      intro h 
-      have h' : ∃ a : α, some a ∈ c := ⟨_, h⟩
-      rw [dif_pos h']
-      have hh := Classical.some_spec h' 
-      rw [eq_of_chain hh h]
-      simp 
+-- error in Order.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_ωSup (x : α) (c : chain (part α)) : «expr ↔ »(«expr ∈ »(x, ωSup c), «expr ∈ »(some x, c)) :=
+begin
+  simp [] [] [] ["[", expr omega_complete_partial_order.ωSup, ",", expr part.ωSup, "]"] [] [],
+  split,
+  { split_ifs [] [],
+    swap,
+    rintro ["⟨", "⟨", "⟩", "⟩"],
+    intro [ident h'],
+    have [ident hh] [] [":=", expr classical.some_spec h],
+    simp [] [] [] [] [] ["at", ident h'],
+    subst [expr x],
+    exact [expr hh] },
+  { intro [ident h],
+    have [ident h'] [":", expr «expr∃ , »((a : α), «expr ∈ »(some a, c))] [":=", expr ⟨_, h⟩],
+    rw [expr dif_pos h'] [],
+    have [ident hh] [] [":=", expr classical.some_spec h'],
+    rw [expr eq_of_chain hh h] [],
+    simp [] [] [] [] [] [] }
+end
 
 end Inst
 
@@ -462,7 +469,7 @@ variable{α}{β : Type v}[OmegaCompletePartialOrder α][CompleteLattice β]
 
 open OmegaCompletePartialOrder
 
--- error in Order.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Order.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
 theorem inf_continuous
 [is_total β ((«expr ≤ »))]
 (f g : «expr →ₘ »(α, β))
@@ -739,7 +746,7 @@ end Prod
 def to_mono : (α →𝒄 β) →ₘ α →ₘ β :=
   { toFun := fun f => f, monotone' := fun x y h => h }
 
--- error in Order.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Order.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
 /-- When proving that a chain of applications is below a bound `z`, it suffices to consider the
 functions and values being selected from the same index in the chains.
 

@@ -122,17 +122,18 @@ def of_iso (f : r ≃r s) : r ≼i s :=
 protected def refl (r : α → α → Prop) : r ≼i r :=
   ⟨RelEmbedding.refl _, fun a b h => ⟨_, rfl⟩⟩
 
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Composition of functions shows that `≼i` is transitive -/
 @[trans]
-protected def trans (f : r ≼i s) (g : s ≼i t) : r ≼i t :=
-  ⟨f.1.trans g.1,
-    fun a c h =>
-      by 
-        simp  at h⊢
-        rcases g.2 _ _ h with ⟨b, rfl⟩
-        have h := g.1.map_rel_iff.1 h 
-        rcases f.2 _ _ h with ⟨a', rfl⟩
-        exact ⟨a', rfl⟩⟩
+protected
+def trans (f : «expr ≼i »(r, s)) (g : «expr ≼i »(s, t)) : «expr ≼i »(r, t) :=
+⟨f.1.trans g.1, λ a c h, begin
+   simp [] [] [] [] [] ["at", ident h, "⊢"],
+   rcases [expr g.2 _ _ h, "with", "⟨", ident b, ",", ident rfl, "⟩"],
+   have [ident h] [] [":=", expr g.1.map_rel_iff.1 h],
+   rcases [expr f.2 _ _ h, "with", "⟨", ident a', ",", ident rfl, "⟩"],
+   exact [expr ⟨a', rfl⟩]
+ end⟩
 
 @[simp]
 theorem refl_apply (x : α) : InitialSeg.refl r x = x :=
@@ -142,28 +143,25 @@ theorem refl_apply (x : α) : InitialSeg.refl r x = x :=
 theorem trans_apply (f : r ≼i s) (g : s ≼i t) (a : α) : (f.trans g) a = g (f a) :=
   rfl
 
-theorem unique_of_extensional [IsExtensional β s] : WellFounded r → Subsingleton (r ≼i s)
-| ⟨h⟩ =>
-  ⟨fun f g =>
-      by 
-        suffices  : (f : α → β) = g
-        ·
-          cases f 
-          cases g 
-          congr 
-          exact RelEmbedding.coe_fn_injective this 
-        funext a 
-        have  := h a 
-        induction' this with a H IH 
-        refine' @IsExtensional.ext _ s _ _ _ fun x => ⟨fun h => _, fun h => _⟩
-        ·
-          rcases f.init_iff.1 h with ⟨y, rfl, h'⟩
-          rw [IH _ h']
-          exact (g : r ↪r s).map_rel_iff.2 h'
-        ·
-          rcases g.init_iff.1 h with ⟨y, rfl, h'⟩
-          rw [←IH _ h']
-          exact (f : r ↪r s).map_rel_iff.2 h'⟩
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem unique_of_extensional [is_extensional β s] : well_founded r → subsingleton «expr ≼i »(r, s)
+| ⟨h⟩ := ⟨λ f g, begin
+   suffices [] [":", expr «expr = »((f : α → β), g)],
+   { cases [expr f] [],
+     cases [expr g] [],
+     congr,
+     exact [expr rel_embedding.coe_fn_injective this] },
+   funext [ident a],
+   have [] [] [":=", expr h a],
+   induction [expr this] [] ["with", ident a, ident H, ident IH] [],
+   refine [expr @is_extensional.ext _ s _ _ _ (λ x, ⟨λ h, _, λ h, _⟩)],
+   { rcases [expr f.init_iff.1 h, "with", "⟨", ident y, ",", ident rfl, ",", ident h', "⟩"],
+     rw [expr IH _ h'] [],
+     exact [expr (g : «expr ↪r »(r, s)).map_rel_iff.2 h'] },
+   { rcases [expr g.init_iff.1 h, "with", "⟨", ident y, ",", ident rfl, ",", ident h', "⟩"],
+     rw ["<-", expr IH _ h'] [],
+     exact [expr (f : «expr ↪r »(r, s)).map_rel_iff.2 h'] }
+ end⟩
 
 instance  [IsWellOrder β s] : Subsingleton (r ≼i s) :=
   ⟨fun a => @Subsingleton.elimₓ _ (unique_of_extensional (@RelEmbedding.well_founded _ _ r s a IsWellOrder.wf)) a⟩
@@ -175,11 +173,11 @@ protected theorem Eq [IsWellOrder β s] (f g : r ≼i s) a : f a = g a :=
 theorem antisymm.aux [IsWellOrder α r] (f : r ≼i s) (g : s ≼i r) : left_inverse g f :=
   InitialSeg.eq (f.trans g) (InitialSeg.refl _)
 
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If we have order embeddings between `α` and `β` whose images are initial segments, and `β`
 is a well-order then `α` and `β` are order-isomorphic. -/
-def antisymm [IsWellOrder β s] (f : r ≼i s) (g : s ≼i r) : r ≃r s :=
-  by 
-    haveI  := f.to_rel_embedding.is_well_order <;> exact ⟨⟨f, g, antisymm.aux f g, antisymm.aux g f⟩, f.map_rel_iff'⟩
+def antisymm [is_well_order β s] (f : «expr ≼i »(r, s)) (g : «expr ≼i »(s, r)) : «expr ≃r »(r, s) :=
+by haveI [] [] [":=", expr f.to_rel_embedding.is_well_order]; exact [expr ⟨⟨f, g, antisymm.aux f g, antisymm.aux g f⟩, f.map_rel_iff'⟩]
 
 @[simp]
 theorem antisymm_to_fun [IsWellOrder β s] (f : r ≼i s) (g : s ≼i r) : (antisymm f g : α → β) = f :=
@@ -292,11 +290,13 @@ theorem coe_coe_fn' [IsTrans β s] (f : r ≺i s) : ((f : r ≼i s) : α → β)
 theorem init_iff [IsTrans β s] (f : r ≺i s) {a : α} {b : β} : s b (f a) ↔ ∃ a', f a' = b ∧ r a' a :=
   @InitialSeg.init_iff α β r s f a b
 
-theorem irrefl (r : α → α → Prop) [IsWellOrder α r] (f : r ≺i r) : False :=
-  by 
-    have  := f.lt_top f.top 
-    rw [show f f.top = f.top from InitialSeg.eq («expr↑ » f) (InitialSeg.refl r) f.top] at this 
-    exact irrefl _ this
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem irrefl (r : α → α → exprProp()) [is_well_order α r] (f : «expr ≺i »(r, r)) : false :=
+begin
+  have [] [] [":=", expr f.lt_top f.top],
+  rw ["[", expr show «expr = »(f f.top, f.top), from initial_seg.eq «expr↑ »(f) (initial_seg.refl r) f.top, "]"] ["at", ident this],
+  exact [expr irrefl _ this]
+end
 
 /-- Composition of a principal segment with an initial segment, as a principal segment -/
 def lt_le (f : r ≺i s) (g : s ≼i t) : r ≺i t :=
@@ -358,22 +358,21 @@ theorem equiv_lt_apply (f : r ≃r s) (g : s ≺i t) (a : α) : (equiv_lt f g) a
 theorem equiv_lt_top (f : r ≃r s) (g : s ≺i t) : (equiv_lt f g).top = g.top :=
   rfl
 
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a well order `s`, there is a most one principal segment embedding of `r` into `s`. -/
-instance  [IsWellOrder β s] : Subsingleton (r ≺i s) :=
-  ⟨fun f g =>
-      by 
-        have ef : (f : α → β) = g
-        ·
-          show ((f : r ≼i s) : α → β) = g 
-          rw [@Subsingleton.elimₓ _ _ (f : r ≼i s) g]
-          rfl 
-        have et : f.top = g.top
-        ·
-          refine' @IsExtensional.ext _ s _ _ _ fun x => _ 
-          simp only [f.down, g.down, ef, coe_fn_to_rel_embedding]
-        cases f 
-        cases g 
-        have  := RelEmbedding.coe_fn_injective ef <;> congr⟩
+instance [is_well_order β s] : subsingleton «expr ≺i »(r, s) :=
+⟨λ f g, begin
+   have [ident ef] [":", expr «expr = »((f : α → β), g)] [],
+   { show [expr «expr = »(((f : «expr ≼i »(r, s)) : α → β), g)],
+     rw [expr @subsingleton.elim _ _ (f : «expr ≼i »(r, s)) g] [],
+     refl },
+   have [ident et] [":", expr «expr = »(f.top, g.top)] [],
+   { refine [expr @is_extensional.ext _ s _ _ _ (λ x, _)],
+     simp [] [] ["only"] ["[", expr f.down, ",", expr g.down, ",", expr ef, ",", expr coe_fn_to_rel_embedding, "]"] [] [] },
+   cases [expr f] [],
+   cases [expr g] [],
+   have [] [] [":=", expr rel_embedding.coe_fn_injective ef]; congr' [] []
+ end⟩
 
 theorem top_eq [IsWellOrder γ t] (e : r ≃r s) (f : r ≺i t) (g : s ≺i t) : f.top = g.top :=
   by 
@@ -448,20 +447,21 @@ theorem InitialSeg.le_lt_apply [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) 
 
 namespace RelEmbedding
 
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given an order embedding into a well order, collapse the order embedding by filling the
 gaps, to obtain an initial segment. Here, we construct the collapsed order embedding pointwise,
 but the proof of the fact that it is an initial segment will be given in `collapse`. -/
-def collapse_F [IsWellOrder β s] (f : r ↪r s) : ∀ a, { b // ¬s (f a) b } :=
-  (RelEmbedding.well_founded f$ IsWellOrder.wf).fix$
-    fun a IH =>
-      by 
-        let S := { b | ∀ a h, s (IH a h).1 b }
-        have  : f a ∈ S 
-        exact
-          fun a' h =>
-            ((trichotomous _ _).resolve_left$ fun h' => (IH a' h).2$ trans (f.map_rel_iff.2 h) h').resolve_left$
-              fun h' => (IH a' h).2$ h' ▸ f.map_rel_iff.2 h 
-        exact ⟨is_well_order.wf.min S ⟨_, this⟩, is_well_order.wf.not_lt_min _ _ this⟩
+def collapse_F [is_well_order β s] (f : «expr ↪r »(r, s)) : ∀ a, {b // «expr¬ »(s (f a) b)} :=
+«expr $ »(«expr $ »(rel_embedding.well_founded f, is_well_order.wf).fix, λ a IH, begin
+   let [ident S] [] [":=", expr {b | ∀ a h, s (IH a h).1 b}],
+   have [] [":", expr «expr ∈ »(f a, S)] [],
+   from [expr λ
+    a'
+    h, «expr $ »(«expr $ »((trichotomous _ _).resolve_left, λ
+      h', «expr $ »((IH a' h).2, trans (f.map_rel_iff.2 h) h')).resolve_left, λ
+     h', «expr $ »((IH a' h).2, «expr ▸ »(h', f.map_rel_iff.2 h)))],
+   exact [expr ⟨is_well_order.wf.min S ⟨_, this⟩, is_well_order.wf.not_lt_min _ _ this⟩]
+ end)
 
 theorem collapse_F.lt [IsWellOrder β s] (f : r ↪r s) {a : α} :
   ∀ {a'}, r a' a → s (collapse_F f a').1 (collapse_F f a).1 :=
@@ -477,7 +477,7 @@ theorem collapse_F.not_lt [IsWellOrder β s] (f : r ↪r s) (a : α) {b} (h : �
     rw [WellFounded.fix_eq]
     exact WellFounded.not_lt_min _ _ _ (show b ∈ { b | ∀ a' h : r a' a, s (collapse_F f a').1 b } from h)
 
--- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exact: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct an initial segment from an order embedding into a well order, by collapsing it
 to fill the gaps. -/ def collapse [is_well_order β s] (f : «expr ↪r »(r, s)) : «expr ≼i »(r, s) :=
 by haveI [] [] [":=", expr rel_embedding.is_well_order f]; exact [expr ⟨rel_embedding.of_monotone (λ
@@ -603,7 +603,7 @@ theorem induction_on {C : Ordinal → Prop} (o : Ordinal)
   (H :
     ∀ α r [IsWellOrder α r],
       by 
-        exactI C (type r)) :
+        exact C (type r)) :
   C o :=
   Quot.induction_on o$ fun ⟨α, r, wo⟩ => @H α r wo
 
@@ -638,7 +638,7 @@ def lt (a b : Ordinal) : Prop :=
   (Quotientₓ.liftOn₂ a b fun ⟨α, r, wo⟩ ⟨β, s, wo'⟩ => Nonempty (r ≺i s))$
     fun ⟨α₁, r₁, o₁⟩ ⟨α₂, r₂, o₂⟩ ⟨β₁, s₁, p₁⟩ ⟨β₂, s₂, p₂⟩ ⟨f⟩ ⟨g⟩ =>
       by 
-        exactI
+        exact
           propext
             ⟨fun ⟨h⟩ => ⟨PrincipalSeg.equivLt f.symm$ h.lt_le (InitialSeg.ofIso g)⟩,
               fun ⟨h⟩ => ⟨PrincipalSeg.equivLt f$ h.lt_le (InitialSeg.ofIso g.symm)⟩⟩
@@ -663,7 +663,7 @@ instance  : PartialOrderₓ Ordinal :=
         Quotientₓ.induction_on₂ a b$
           fun ⟨α, r, _⟩ ⟨β, s, _⟩ =>
             by 
-              exactI
+              exact
                 ⟨fun ⟨f⟩ => ⟨⟨f⟩, fun ⟨g⟩ => (f.lt_le g).irrefl _⟩,
                   fun ⟨⟨f⟩, h⟩ => Sum.recOn f.lt_or_eq (fun g => ⟨g⟩) fun g => (h ⟨InitialSeg.ofIso g.symm⟩).elim⟩,
     le_antisymm :=
@@ -672,7 +672,7 @@ instance  : PartialOrderₓ Ordinal :=
           Quotientₓ.induction_on₂ x b$
             fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨h₁⟩ ⟨h₂⟩ =>
               by 
-                exactI Quot.sound ⟨InitialSeg.antisymm h₁ h₂⟩ }
+                exact Quot.sound ⟨InitialSeg.antisymm h₁ h₂⟩ }
 
 /-- Given two ordinals `α ≤ β`, then `initial_seg_out α β` is the initial segment embedding
 of `α` to `β`, as map from a model type for `α` to a model type for `β`. -/
@@ -732,27 +732,28 @@ theorem typein_apply {α β} {r : α → α → Prop} {s : β → β → Prop} [
               rcases f.init' h with ⟨a, rfl⟩ <;>
                 exact ⟨⟨a, f.to_rel_embedding.map_rel_iff.1 h⟩, Subtype.eq$ RelEmbedding.trans_apply _ _ _⟩⟩
 
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem typein_lt_typein (r : α → α → Prop) [IsWellOrder α r] {a b : α} : typein r a < typein r b ↔ r a b :=
-  ⟨fun ⟨f⟩ =>
-      by 
-        have  : f.top.1 = a
-        ·
-          let f' := PrincipalSeg.ofElement r a 
-          let g' := f.trans (PrincipalSeg.ofElement r b)
-          have  : g'.top = f'.top
-          ·
-            rw [Subsingleton.elimₓ f' g']
-          exact this 
-        rw [←this]
-        exact f.top.2,
-    fun h => ⟨PrincipalSeg.codRestrict _ (PrincipalSeg.ofElement r a) (fun x => @trans _ r _ _ _ _ x.2 h) h⟩⟩
+theorem typein_lt_typein
+(r : α → α → exprProp())
+[is_well_order α r]
+{a b : α} : «expr ↔ »(«expr < »(typein r a, typein r b), r a b) :=
+⟨λ ⟨f⟩, begin
+   have [] [":", expr «expr = »(f.top.1, a)] [],
+   { let [ident f'] [] [":=", expr principal_seg.of_element r a],
+     let [ident g'] [] [":=", expr f.trans (principal_seg.of_element r b)],
+     have [] [":", expr «expr = »(g'.top, f'.top)] [],
+     { rw [expr subsingleton.elim f' g'] [] },
+     exact [expr this] },
+   rw ["<-", expr this] [],
+   exact [expr f.top.2]
+ end, λ h, ⟨principal_seg.cod_restrict _ (principal_seg.of_element r a) (λ x, @trans _ r _ _ _ _ x.2 h) h⟩⟩
 
 theorem typein_surj (r : α → α → Prop) [IsWellOrder α r] {o} (h : o < type r) : ∃ a, typein r a = o :=
   induction_on o
     (fun β s _ ⟨f⟩ =>
       by 
-        exactI ⟨f.top, typein_top _⟩)
+        exact ⟨f.top, typein_top _⟩)
     h
 
 theorem typein_injective (r : α → α → Prop) [IsWellOrder α r] : injective (typein r) :=
@@ -764,26 +765,25 @@ theorem typein_inj (r : α → α → Prop) [IsWellOrder α r] {a b} : typein r 
 /-! ### Enumerating elements in a well-order with ordinals. -/
 
 
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `enum r o h` is the `o`-th element of `α` ordered by `r`.
   That is, `enum` maps an initial segment of the ordinals, those
   less than the order type of `r`, to the elements of `α`. -/
-def enum (r : α → α → Prop) [IsWellOrder α r] o : o < type r → α :=
-  (Quot.recOnₓ o fun ⟨β, s, _⟩ h => (Classical.choice h).top)$
-    fun ⟨β, s, _⟩ ⟨γ, t, _⟩ ⟨h⟩ =>
-      by 
-        resetI 
-        refine' funext fun H₂ : type t < type r => _ 
-        have H₁ : type s < type r
-        ·
-          rwa [type_eq.2 ⟨h⟩]
-        have  :
-          ∀ {o e} H : o < type r,
-            @Eq.ndrec (fun o : Ordinal => o < type r → α) (fun h : type s < type r => (Classical.choice h).top) e H =
-              (Classical.choice H₁).top
-        ·
-          intros 
-          subst e 
-        exact (this H₂).trans (PrincipalSeg.top_eq h (Classical.choice H₁) (Classical.choice H₂))
+def enum (r : α → α → exprProp()) [is_well_order α r] (o) : «expr < »(o, type r) → α :=
+«expr $ »(quot.rec_on o (λ ⟨β, s, _⟩ (h), (classical.choice h).top), λ ⟨β, s, _⟩ ⟨γ, t, _⟩ ⟨h⟩, begin
+   resetI,
+   refine [expr funext (λ H₂ : «expr < »(type t, type r), _)],
+   have [ident H₁] [":", expr «expr < »(type s, type r)] [],
+   { rwa [expr type_eq.2 ⟨h⟩] [] },
+   have [] [":", expr ∀
+    {o e}
+    (H : «expr < »(o, type r)), «expr = »(@@eq.rec (λ
+      o : ordinal, «expr < »(o, type r) → α) (λ
+      h : «expr < »(type s, type r), (classical.choice h).top) e H, (classical.choice H₁).top)] [],
+   { intros [],
+     subst [expr e] },
+   exact [expr (this H₂).trans (principal_seg.top_eq h (classical.choice H₁) (classical.choice H₂))]
+ end)
 
 theorem enum_type {α β} {r : α → α → Prop} {s : β → β → Prop} [IsWellOrder α r] [IsWellOrder β s] (f : s ≺i r)
   {h : type s < type r} : enum r (type s) h = f.top :=
@@ -817,7 +817,7 @@ theorem rel_iso_enum' {α β : Type u} {r : α → α → Prop} {s : β → β �
   by 
     refine' induction_on o _ 
     rintro γ t wo ⟨g⟩ ⟨h⟩
-    resetI 
+    skip 
     rw [enum_type g, enum_type (PrincipalSeg.ltEquiv g f)]
     rfl
 
@@ -836,7 +836,7 @@ theorem wf : @WellFounded Ordinal (· < ·) :=
       induction_on a$
         fun α r wo =>
           by 
-            exactI
+            exact
               suffices ∀ a, Acc (· < ·) (typein r a) from
                 ⟨_,
                   fun o h =>
@@ -983,22 +983,16 @@ theorem lift_type_eq {α : Type u} {β : Type v} {r s} [IsWellOrder α r] [IsWel
     ⟨fun ⟨f⟩ => ⟨(RelIso.preimage Equiv.ulift r).symm.trans$ f.trans (RelIso.preimage Equiv.ulift s)⟩,
       fun ⟨f⟩ => ⟨(RelIso.preimage Equiv.ulift r).trans$ f.trans (RelIso.preimage Equiv.ulift s).symm⟩⟩
 
-theorem lift_type_lt {α : Type u} {β : Type v} {r s} [IsWellOrder α r] [IsWellOrder β s] :
-  lift.{max v w} (type r) < lift.{max u w} (type s) ↔ Nonempty (r ≺i s) :=
-  by 
-    haveI  :=
-        @RelEmbedding.is_well_order _ _ (@Equiv.ulift.{max v w} α ⁻¹'o r) r (RelIso.preimage Equiv.ulift.{max v w} r)
-          _ <;>
-      haveI  :=
-          @RelEmbedding.is_well_order _ _ (@Equiv.ulift.{max u w} β ⁻¹'o s) s (RelIso.preimage Equiv.ulift.{max u w} s)
-            _ <;>
-        exact
-          ⟨fun ⟨f⟩ =>
-              ⟨(f.equiv_lt (RelIso.preimage Equiv.ulift r).symm).ltLe
-                  (InitialSeg.ofIso (RelIso.preimage Equiv.ulift s))⟩,
-            fun ⟨f⟩ =>
-              ⟨(f.equiv_lt (RelIso.preimage Equiv.ulift r)).ltLe
-                  (InitialSeg.ofIso (RelIso.preimage Equiv.ulift s).symm)⟩⟩
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lift_type_lt
+{α : Type u}
+{β : Type v}
+{r s}
+[is_well_order α r]
+[is_well_order β s] : «expr ↔ »(«expr < »(lift.{max v w} (type r), lift.{max u w} (type s)), nonempty «expr ≺i »(r, s)) :=
+by haveI [] [] [":=", expr @rel_embedding.is_well_order _ _ «expr ⁻¹'o »(@equiv.ulift.{max v w} α, r) r (rel_iso.preimage equiv.ulift.{max v w} r) _]; haveI [] [] [":=", expr @rel_embedding.is_well_order _ _ «expr ⁻¹'o »(@equiv.ulift.{max u w} β, s) s (rel_iso.preimage equiv.ulift.{max u w} s) _]; exact [expr ⟨λ
+  ⟨f⟩, ⟨(f.equiv_lt (rel_iso.preimage equiv.ulift r).symm).lt_le (initial_seg.of_iso (rel_iso.preimage equiv.ulift s))⟩, λ
+  ⟨f⟩, ⟨(f.equiv_lt (rel_iso.preimage equiv.ulift r)).lt_le (initial_seg.of_iso (rel_iso.preimage equiv.ulift s).symm)⟩⟩]
 
 @[simp]
 theorem lift_le {a b : Ordinal} : lift.{u, v} a ≤ lift b ↔ a ≤ b :=
@@ -1007,7 +1001,7 @@ theorem lift_le {a b : Ordinal} : lift.{u, v} a ≤ lift b ↔ a ≤ b :=
       induction_on b$
         fun β s _ =>
           by 
-            rw [←lift_umax] <;> exactI lift_type_le
+            rw [←lift_umax] <;> exact lift_type_le
 
 @[simp]
 theorem lift_inj {a b : Ordinal} : lift a = lift b ↔ a = b :=
@@ -1039,23 +1033,23 @@ theorem one_eq_lift_type_unit : 1 = lift.{u} (@type Unit EmptyRelation _) :=
 theorem lift_card a : (card a).lift = card (lift a) :=
   induction_on a$ fun α r _ => rfl
 
-theorem lift_down' {a : Cardinal.{u}} {b : Ordinal.{max u v}} (h : card b ≤ a.lift) : ∃ a', lift a' = b :=
-  let ⟨c, e⟩ := Cardinal.lift_down h 
-  Cardinal.induction_on c
-    (fun α =>
-      induction_on b$
-        fun β s _ e' =>
-          by 
-            resetI 
-            rw [card_type, ←Cardinal.lift_id'.{max u v, u} (# β), ←Cardinal.lift_umax.{u, v},
-              lift_mk_eq.{u, max u v, max u v}] at e' 
-            cases' e' with f 
-            have g := RelIso.preimage f s 
-            haveI  := (g : «expr⇑ » f ⁻¹'o s ↪r s).IsWellOrder 
-            have  := lift_type_eq.{u, max u v, max u v}.2 ⟨g⟩
-            rw [lift_id, lift_umax.{u, v}] at this 
-            exact ⟨_, this⟩)
-    e
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lift_down'
+{a : cardinal.{u}}
+{b : ordinal.{max u v}}
+(h : «expr ≤ »(card b, a.lift)) : «expr∃ , »((a'), «expr = »(lift a', b)) :=
+let ⟨c, e⟩ := cardinal.lift_down h in
+cardinal.induction_on c (λ
+ α, «expr $ »(induction_on b, λ β s _ e', begin
+    resetI,
+    rw ["[", expr card_type, ",", "<-", expr cardinal.lift_id'.{max u v, u} («expr#»() β), ",", "<-", expr cardinal.lift_umax.{u, v}, ",", expr lift_mk_eq.{u, max u v, max u v}, "]"] ["at", ident e'],
+    cases [expr e'] ["with", ident f],
+    have [ident g] [] [":=", expr rel_iso.preimage f s],
+    haveI [] [] [":=", expr (g : «expr ↪r »(«expr ⁻¹'o »(«expr⇑ »(f), s), s)).is_well_order],
+    have [] [] [":=", expr lift_type_eq.{u, max u v, max u v}.2 ⟨g⟩],
+    rw ["[", expr lift_id, ",", expr lift_umax.{u, v}, "]"] ["at", ident this],
+    exact [expr ⟨_, this⟩]
+  end)) e
 
 theorem lift_down {a : Ordinal.{u}} {b : Ordinal.{max u v}} (h : b ≤ lift a) : ∃ a', lift a' = b :=
   @lift_down' (card a) _
@@ -1118,7 +1112,7 @@ instance  : Add Ordinal.{u} :=
             «expr⟦ ⟧»
               ⟨Sum α β, Sum.Lex r s,
                 by 
-                  exactI Sum.Lex.is_well_order⟩ :
+                  exact Sum.Lex.is_well_order⟩ :
           WellOrder → WellOrder → Ordinal)$
         fun ⟨α₁, r₁, o₁⟩ ⟨α₂, r₂, o₂⟩ ⟨β₁, s₁, p₁⟩ ⟨β₂, s₂, p₂⟩ ⟨f⟩ ⟨g⟩ => Quot.sound ⟨RelIso.sumLexCongr f g⟩⟩
 
@@ -1225,44 +1219,32 @@ theorem lt_succ_self (o : Ordinal.{u}) : o < succ o :=
             Sum.recOn b (fun x => ⟨fun _ => ⟨x, rfl⟩, fun _ => Sum.Lex.sep _ _⟩)
               fun x => Sum.lex_inr_inr.trans ⟨False.elim, fun ⟨x, H⟩ => Sum.inl_ne_inr H⟩⟩⟩
 
-theorem succ_le {a b : Ordinal} : succ a ≤ b ↔ a < b :=
-  ⟨lt_of_lt_of_leₓ (lt_succ_self _),
-    induction_on a$
-      fun α r hr =>
-        induction_on b$
-          fun β s hs ⟨⟨f, t, hf⟩⟩ =>
-            by 
-              refine'
-                ⟨⟨@RelEmbedding.ofMonotone (Sum α PUnit) β _ _ (@Sum.Lex.is_well_order _ _ _ _ hr _).1.1
-                      (@is_asymm_of_is_trans_of_is_irrefl _ _ hs.1.2.2 hs.1.2.1) (Sum.rec _ _) fun a b => _,
-                    fun a b => _⟩⟩
-              ·
-                exact f
-              ·
-                exact fun _ => t
-              ·
-                rcases a with (a | _) <;> rcases b with (b | _)
-                ·
-                  simpa only [Sum.lex_inl_inl] using f.map_rel_iff.2
-                ·
-                  intro 
-                  rw [hf]
-                  exact ⟨_, rfl⟩
-                ·
-                  exact False.elim ∘ Sum.lex_inr_inl
-                ·
-                  exact False.elim ∘ Sum.lex_inr_inr.1
-              ·
-                rcases a with (a | _)
-                ·
-                  intro h 
-                  have  := @PrincipalSeg.init _ _ _ _ hs.1.2.2 ⟨f, t, hf⟩ _ _ h 
-                  cases' this with w h 
-                  exact ⟨Sum.inl w, h⟩
-                ·
-                  intro h 
-                  cases' (hf b).1 h with w h 
-                  exact ⟨Sum.inl w, h⟩⟩
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem succ_le {a b : ordinal} : «expr ↔ »(«expr ≤ »(succ a, b), «expr < »(a, b)) :=
+⟨lt_of_lt_of_le (lt_succ_self _), «expr $ »(induction_on a, λ
+  α
+  r
+  hr, «expr $ »(induction_on b, λ (β s hs) ⟨⟨f, t, hf⟩⟩, begin
+     refine [expr ⟨⟨@rel_embedding.of_monotone «expr ⊕ »(α, punit) β _ _ (@sum.lex.is_well_order _ _ _ _ hr _).1.1 (@is_asymm_of_is_trans_of_is_irrefl _ _ hs.1.2.2 hs.1.2.1) (sum.rec _ _) (λ
+         a b, _), λ a b, _⟩⟩],
+     { exact [expr f] },
+     { exact [expr λ _, t] },
+     { rcases [expr a, "with", ident a, "|", "_"]; rcases [expr b, "with", ident b, "|", "_"],
+       { simpa [] [] ["only"] ["[", expr sum.lex_inl_inl, "]"] [] ["using", expr f.map_rel_iff.2] },
+       { intro ["_"],
+         rw [expr hf] [],
+         exact [expr ⟨_, rfl⟩] },
+       { exact [expr «expr ∘ »(false.elim, sum.lex_inr_inl)] },
+       { exact [expr «expr ∘ »(false.elim, sum.lex_inr_inr.1)] } },
+     { rcases [expr a, "with", ident a, "|", "_"],
+       { intro [ident h],
+         have [] [] [":=", expr @principal_seg.init _ _ _ _ hs.1.2.2 ⟨f, t, hf⟩ _ _ h],
+         cases [expr this] ["with", ident w, ident h],
+         exact [expr ⟨sum.inl w, h⟩] },
+       { intro [ident h],
+         cases [expr (hf b).1 h] ["with", ident w, ident h],
+         exact [expr ⟨sum.inl w, h⟩] } }
+   end))⟩
 
 theorem le_totalₓ (a b : Ordinal) : a ≤ b ∨ b ≤ a :=
   match lt_or_eq_of_leₓ (le_add_left b a), lt_or_eq_of_leₓ (le_add_right a b) with 
@@ -1278,7 +1260,7 @@ theorem le_totalₓ (a b : Ordinal) : a ≤ b ∨ b ≤ a :=
         induction_on b$
           fun α₂ r₂ _ ⟨f⟩ ⟨g⟩ =>
             by 
-              resetI 
+              skip 
               rw [←typein_top f, ←typein_top g, le_iff_lt_or_eqₓ, le_iff_lt_or_eqₓ, typein_lt_typein, typein_lt_typein]
               rcases trichotomous_of (Sum.Lex r₁ r₂) g.top f.top with (h | h | h) <;> [exact Or.inl (Or.inl h),
                 ·
@@ -1326,7 +1308,7 @@ def lift.principal_seg : @PrincipalSeg Ordinal.{u} Ordinal.{max (u + 1) v} (· <
   ⟨«expr↑ » lift.initial_seg.{u, max (u + 1) v}, univ.{u, v},
     by 
       refine' fun b => induction_on b _ 
-      introI β s _ 
+      intros β s _ 
       rw [univ, ←lift_umax]
       split  <;> intro h
       ·
@@ -1336,7 +1318,7 @@ def lift.principal_seg : @PrincipalSeg Ordinal.{u} Ordinal.{max (u + 1) v} (· <
         exists a 
         revert hf 
         apply induction_on a 
-        introI α r _ hf 
+        intros α r _ hf 
         refine'
           lift_type_eq.{u, max (u + 1) v, max (u + 1) v}.2 ⟨(RelIso.ofSurjective (RelEmbedding.ofMonotone _ _) _).symm⟩
         ·
@@ -1355,7 +1337,7 @@ def lift.principal_seg : @PrincipalSeg Ordinal.{u} Ordinal.{max (u + 1) v} (· <
         cases' h with a e 
         rw [←e]
         apply induction_on a 
-        introI α r _ 
+        intros α r _ 
         exact lift_type_lt.{u, u + 1, max (u + 1) v}.2 ⟨typein.principal_seg r⟩⟩
 
 @[simp]
@@ -1409,19 +1391,12 @@ theorem le_omin {S H a} : a ≤ omin S H ↔ ∀ i _ : i ∈ S, a ≤ i :=
 theorem omin_le {S H i} (h : i ∈ S) : omin S H ≤ i :=
   le_omin.1 (le_reflₓ _) _ h
 
-@[simp]
-theorem lift_min {ι} I (f : ι → Ordinal) : lift (min I f) = min I (lift ∘ f) :=
-  le_antisymmₓ (le_minₓ.2$ fun a => lift_le.2$ min_le _ a)$
-    let ⟨i, e⟩ := min_eq I (lift ∘ f)
-    by 
-      rw [e] <;>
-        exact
-          lift_le.2
-            (le_minₓ.2$
-              fun j =>
-                lift_le.1$
-                  by 
-                    have  := min_le (lift ∘ f) j <;> rwa [e] at this)
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem lift_min {ι} (I) (f : ι → ordinal) : «expr = »(lift (min I f), min I «expr ∘ »(lift, f)) :=
+«expr $ »(le_antisymm «expr $ »(le_min.2, λ
+  a, «expr $ »(lift_le.2, min_le _ a)), let ⟨i, e⟩ := min_eq I «expr ∘ »(lift, f) in
+ by rw [expr e] []; exact [expr lift_le.2 «expr $ »(le_min.2, λ
+   j, «expr $ »(lift_le.1, by have [] [] [":=", expr min_le «expr ∘ »(lift, f) j]; rwa [expr e] ["at", ident this]))])
 
 instance  : ConditionallyCompleteLinearOrderBot Ordinal :=
   wf.conditionallyCompleteLinearOrderWithBot 0$
@@ -1455,26 +1430,24 @@ namespace Cardinal
 
 open Ordinal
 
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The ordinal corresponding to a cardinal `c` is the least ordinal
   whose cardinal is `c`. For the order-embedding version, see `ord.order_embedding`. -/
-def ord (c : Cardinal) : Ordinal :=
-  by 
-    let ι := fun α => { r // IsWellOrder α r }
-    have  : ∀ α, ι α :=
-      fun α =>
-        ⟨WellOrderingRel,
-          by 
-            infer_instance⟩
-    let F := fun α => Ordinal.min ⟨this _⟩ fun i : ι α => «expr⟦ ⟧» ⟨α, i.1, i.2⟩
-    refine' Quot.liftOn c F _ 
-    suffices  : ∀ {α β}, α ≈ β → F α ≤ F β 
-    exact fun α β h => le_antisymmₓ (this h) (this (Setoidₓ.symm h))
-    intro α β h 
-    cases' h with f 
-    refine' Ordinal.le_min.2 fun i => _ 
-    haveI  := @RelEmbedding.is_well_order _ _ (f ⁻¹'o i.1) _ («expr↑ » (RelIso.preimage f i.1)) i.2
-    rw [←show type (f ⁻¹'o i.1) = «expr⟦ ⟧» ⟨β, i.1, i.2⟩ from Quot.sound ⟨RelIso.preimage f i.1⟩]
-    exact Ordinal.min_le (fun i : ι α => «expr⟦ ⟧» ⟨α, i.1, i.2⟩) ⟨_, _⟩
+def ord (c : cardinal) : ordinal :=
+begin
+  let [ident ι] [] [":=", expr λ α, {r // is_well_order α r}],
+  have [] [":", expr ∀ α, ι α] [":=", expr λ α, ⟨well_ordering_rel, by apply_instance⟩],
+  let [ident F] [] [":=", expr λ α, ordinal.min ⟨this _⟩ (λ i : ι α, «expr⟦ ⟧»(⟨α, i.1, i.2⟩))],
+  refine [expr quot.lift_on c F _],
+  suffices [] [":", expr ∀ {α β}, «expr ≈ »(α, β) → «expr ≤ »(F α, F β)],
+  from [expr λ α β h, le_antisymm (this h) (this (setoid.symm h))],
+  intros [ident α, ident β, ident h],
+  cases [expr h] ["with", ident f],
+  refine [expr ordinal.le_min.2 (λ i, _)],
+  haveI [] [] [":=", expr @rel_embedding.is_well_order _ _ «expr ⁻¹'o »(f, i.1) _ «expr↑ »(rel_iso.preimage f i.1) i.2],
+  rw ["<-", expr show «expr = »(type «expr ⁻¹'o »(f, i.1), «expr⟦ ⟧»(⟨β, i.1, i.2⟩)), from quot.sound ⟨rel_iso.preimage f i.1⟩] [],
+  exact [expr ordinal.min_le (λ i : ι α, «expr⟦ ⟧»(⟨α, i.1, i.2⟩)) ⟨_, _⟩]
+end
 
 theorem ord_eq_min (α : Type u) :
   ord (# α) =
@@ -1501,26 +1474,21 @@ theorem ord_le_type (r : α → α → Prop) [IsWellOrder α r] : ord (# α) ≤
           infer_instance⟩⟩
     (fun i : { r // IsWellOrder α r } => «expr⟦ ⟧» ⟨α, i.1, i.2⟩) ⟨r, _⟩
 
-theorem ord_le {c o} : ord c ≤ o ↔ c ≤ o.card :=
-  induction_on c$
-    fun α =>
-      Ordinal.induction_on o$
-        fun β s _ =>
-          let ⟨r, _, e⟩ := ord_eq α 
-          by 
-            resetI 
-            simp only [card_type]
-            split  <;> intro h
-            ·
-              rw [e] at h 
-              exact
-                let ⟨f⟩ := h
-                ⟨f.to_embedding⟩
-            ·
-              cases' h with f 
-              have g := RelEmbedding.preimage f s 
-              haveI  := RelEmbedding.is_well_order g 
-              exact le_transₓ (ord_le_type _) (type_le'.2 ⟨g⟩)
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ord_le {c o} : «expr ↔ »(«expr ≤ »(ord c, o), «expr ≤ »(c, o.card)) :=
+«expr $ »(induction_on c, λ
+ α, «expr $ »(ordinal.induction_on o, λ β s _, let ⟨r, _, e⟩ := ord_eq α in
+  begin
+    resetI,
+    simp [] [] ["only"] ["[", expr card_type, "]"] [] [],
+    split; intro [ident h],
+    { rw [expr e] ["at", ident h],
+      exact [expr let ⟨f⟩ := h in ⟨f.to_embedding⟩] },
+    { cases [expr h] ["with", ident f],
+      have [ident g] [] [":=", expr rel_embedding.preimage f s],
+      haveI [] [] [":=", expr rel_embedding.is_well_order g],
+      exact [expr le_trans (ord_le_type _) (type_le'.2 ⟨g⟩)] }
+  end))
 
 theorem lt_ord {c o} : o < ord c ↔ o.card < c :=
   by 
@@ -1658,20 +1626,16 @@ theorem ord_univ : ord univ.{u, v} = Ordinal.univ.{u, v} :=
             rw [←lift_card]
             apply lift_lt_univ')
 
-theorem lt_univ {c} : c < univ.{u, u + 1} ↔ ∃ c', c = lift.{u + 1, u} c' :=
-  ⟨fun h =>
-      by 
-        have  := ord_lt_ord.2 h 
-        rw [ord_univ] at this 
-        cases'
-          lift.principal_seg.{u, u + 1}.down'.1
-            (by 
-              simpa only [lift.principal_seg_top]) with
-          o e 
-        have  := card_ord c 
-        rw [←e, lift.principal_seg_coe, ←lift_card] at this 
-        exact ⟨_, this.symm⟩,
-    fun ⟨c', e⟩ => e.symm ▸ lift_lt_univ _⟩
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lt_univ {c} : «expr ↔ »(«expr < »(c, univ.{u, u+1}), «expr∃ , »((c'), «expr = »(c, lift.{u+1, u} c'))) :=
+⟨λ h, begin
+   have [] [] [":=", expr ord_lt_ord.2 h],
+   rw [expr ord_univ] ["at", ident this],
+   cases [expr lift.principal_seg.{u, u+1}.down'.1 (by simpa [] [] ["only"] ["[", expr lift.principal_seg_top, "]"] [] [])] ["with", ident o, ident e],
+   have [] [] [":=", expr card_ord c],
+   rw ["[", "<-", expr e, ",", expr lift.principal_seg_coe, ",", "<-", expr lift_card, "]"] ["at", ident this],
+   exact [expr ⟨_, this.symm⟩]
+ end, λ ⟨c', e⟩, «expr ▸ »(e.symm, lift_lt_univ _)⟩
 
 theorem lt_univ' {c} : c < univ.{u, v} ↔ ∃ c', c = lift.{max (u + 1) v, u} c' :=
   ⟨fun h =>

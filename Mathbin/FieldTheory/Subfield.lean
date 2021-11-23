@@ -631,11 +631,16 @@ theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (h
       by 
         simp [mem_supr_of_directed hS]
 
-theorem mem_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) {x : K} :
-  x ∈ Sup S ↔ ∃ (s : _)(_ : s ∈ S), x ∈ s :=
-  by 
-    haveI  : Nonempty S := Sne.to_subtype 
-    simp only [Sup_eq_supr', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
+-- error in FieldTheory.Subfield: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_Sup_of_directed_on
+{S : set (subfield K)}
+(Sne : S.nonempty)
+(hS : directed_on ((«expr ≤ »)) S)
+{x : K} : «expr ↔ »(«expr ∈ »(x, Sup S), «expr∃ , »((s «expr ∈ » S), «expr ∈ »(x, s))) :=
+begin
+  haveI [] [":", expr nonempty S] [":=", expr Sne.to_subtype],
+  simp [] [] ["only"] ["[", expr Sup_eq_supr', ",", expr mem_supr_of_directed hS.directed_coe, ",", expr set_coe.exists, ",", expr subtype.coe_mk, "]"] [] []
+end
 
 theorem coe_Sup_of_directed_on {S : Set (Subfield K)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) :
   («expr↑ » (Sup S) : Set K) = ⋃(s : _)(_ : s ∈ S), «expr↑ » s :=

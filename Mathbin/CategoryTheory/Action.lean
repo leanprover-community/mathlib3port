@@ -31,7 +31,7 @@ def action_as_functor : single_obj M ⥤ Type u :=
   { obj := fun _ => X, map := fun _ _ => · • ·, map_id' := fun _ => funext$ MulAction.one_smul,
     map_comp' := fun _ _ _ f g => funext$ fun x => (smul_smul g f x).symm }
 
--- error in CategoryTheory.Action: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in CategoryTheory.Action: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- A multiplicative action M ↻ X induces a category strucure on X, where a morphism
  from x to y is a scalar taking x to y. Due to implementation details, the object type
  of this category is not equal to X, but is in bijection with X. -/ @[derive #[expr category]] def action_category :=

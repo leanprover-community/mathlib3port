@@ -143,18 +143,18 @@ def to_complex : CliffordAlgebra Q →ₐ[ℝ] ℂ :=
 theorem to_complex_ι (r : ℝ) : to_complex (ι Q r) = r • Complex.i :=
   CliffordAlgebra.lift_ι_apply _ _ r
 
+-- error in LinearAlgebra.CliffordAlgebra.Equivs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `clifford_algebra.involute` is analogous to `complex.conj`. -/
 @[simp]
-theorem to_complex_involute (c : CliffordAlgebra Q) : to_complex c.involute = conj (to_complex c) :=
-  by 
-    have  : to_complex (involute (ι Q 1)) = conj (to_complex (ι Q 1))
-    ·
-      simp only [involute_ι, to_complex_ι, AlgHom.map_neg, one_smul, Complex.conj_I]
-    suffices  : to_complex.comp involute = complex.conj_ae.to_alg_hom.comp to_complex
-    ·
-      exact AlgHom.congr_fun this c 
-    ext : 2 
-    exact this
+theorem to_complex_involute (c : clifford_algebra Q) : «expr = »(to_complex c.involute, exprconj() (to_complex c)) :=
+begin
+  have [] [":", expr «expr = »(to_complex (involute (ι Q 1)), exprconj() (to_complex (ι Q 1)))] [],
+  { simp [] [] ["only"] ["[", expr involute_ι, ",", expr to_complex_ι, ",", expr alg_hom.map_neg, ",", expr one_smul, ",", expr complex.conj_I, "]"] [] [] },
+  suffices [] [":", expr «expr = »(to_complex.comp involute, complex.conj_ae.to_alg_hom.comp to_complex)],
+  { exact [expr alg_hom.congr_fun this c] },
+  ext [] [] [":", 2],
+  exact [expr this]
+end
 
 /-- Intermediate result for `clifford_algebra_complex.equiv`: `ℂ` can be converted to
 `clifford_algebra_complex.Q` above can be converted to. -/

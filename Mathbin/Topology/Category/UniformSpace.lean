@@ -1,6 +1,9 @@
+import Mathbin.CategoryTheory.Adjunction.Reflective 
+import Mathbin.CategoryTheory.ConcreteCategory.UnbundledHom 
 import Mathbin.CategoryTheory.Monad.Limits 
-import Mathbin.Topology.UniformSpace.Completion 
-import Mathbin.Topology.Category.Top.Basic
+import Mathbin.CategoryTheory.Limits.HasLimits 
+import Mathbin.Topology.Category.Top.Basic 
+import Mathbin.Topology.UniformSpace.Completion
 
 /-!
 # The category of uniform spaces
@@ -26,7 +29,7 @@ namespace UniformSpaceₓ
 instance  : unbundled_hom @UniformContinuous :=
   ⟨@uniform_continuous_id, @UniformContinuous.comp⟩
 
--- error in Topology.Category.UniformSpace: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Topology.Category.UniformSpace: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] UniformSpace
 
 instance  : CoeSort UniformSpaceₓ (Type _) :=
@@ -104,13 +107,12 @@ def of (X : Type u) [UniformSpace X] [CompleteSpace X] [SeparatedSpace X] : Cplt
 theorem coe_of (X : Type u) [UniformSpace X] [CompleteSpace X] [SeparatedSpace X] : (of X : Type u) = X :=
   rfl
 
-instance  : Inhabited CpltSepUniformSpace :=
-  by 
-    haveI  : SeparatedSpace Empty :=
-      separated_iff_t2.mpr
-        (by 
-          infer_instance)
-    exact ⟨CpltSepUniformSpace.of Empty⟩
+-- error in Topology.Category.UniformSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance : inhabited CpltSepUniformSpace :=
+begin
+  haveI [] [":", expr separated_space empty] [":=", expr separated_iff_t2.mpr (by apply_instance)],
+  exact [expr ⟨CpltSepUniformSpace.of empty⟩]
+end
 
 /-- The category instance on `CpltSepUniformSpace`. -/
 instance category : large_category CpltSepUniformSpace :=

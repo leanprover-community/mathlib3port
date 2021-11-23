@@ -1,5 +1,4 @@
-import Mathbin.CategoryTheory.NaturalIsomorphism 
-import Mathbin.CategoryTheory.EqToHom
+import Mathbin.CategoryTheory.NaturalIsomorphism
 
 /-!
 # Categories of indexed families of objects.

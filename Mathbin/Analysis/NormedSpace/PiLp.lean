@@ -126,69 +126,71 @@ def pseudo_emetric_aux : PseudoEmetricSpace (PiLp p β) :=
           Ennreal.Lp_add_le _ _ _ fact_one_le_p.out
            }
 
+-- error in Analysis.NormedSpace.PiLp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Endowing the space `pi_Lp p α` with the `L^p` edistance. This definition is not satisfactory,
 as it does not register the fact that the topology and the uniform structure coincide with the
 product one. Therefore, we do not register it as an instance. Using this as a temporary emetric
 space instance, we will show that the uniform structure is equal (but not defeq) to the product
 one, and then register an instance in which we replace the uniform structure by the product one
-using this emetric space and `emetric_space.replace_uniformity`. -/
-def emetric_aux : EmetricSpace (PiLp p α) :=
-  { pseudo_emetric_aux p α with
-    eq_of_edist_eq_zero :=
-      fun f g hfg =>
-        by 
-          have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out 
-          letI h := pseudo_emetric_aux p α 
-          have h : edist f g = ((∑i : ι, edist (f i) (g i)^p)^1 / p) := rfl 
-          simp [h, Ennreal.rpow_eq_zero_iff, Pos, asymm Pos, Finset.sum_eq_zero_iff_of_nonneg] at hfg 
-          exact funext hfg }
+using this emetric space and `emetric_space.replace_uniformity`. -/ def emetric_aux : emetric_space (pi_Lp p α) :=
+{ eq_of_edist_eq_zero := λ f g hfg, begin
+    have [ident pos] [":", expr «expr < »(0, p)] [":=", expr lt_of_lt_of_le zero_lt_one fact_one_le_p.out],
+    letI [ident h] [] [":=", expr pseudo_emetric_aux p α],
+    have [ident h] [":", expr «expr = »(edist f g, «expr ^ »(«expr∑ , »((i : ι), «expr ^ »(edist (f i) (g i), p)), «expr / »(1, p)))] [":=", expr rfl],
+    simp [] [] [] ["[", expr h, ",", expr ennreal.rpow_eq_zero_iff, ",", expr pos, ",", expr asymm pos, ",", expr finset.sum_eq_zero_iff_of_nonneg, "]"] [] ["at", ident hfg],
+    exact [expr funext hfg]
+  end,
+  ..pseudo_emetric_aux p α }
 
 attribute [local instance] PiLp.emetricAux PiLp.pseudoEmetricAux
 
-theorem lipschitz_with_equiv : LipschitzWith 1 (PiLp.equiv p β) :=
-  by 
-    have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out 
-    have cancel : (p*1 / p) = 1 := mul_div_cancel' 1 (ne_of_gtₓ Pos)
-    intro x y 
-    simp only [edist, forall_prop_of_true, one_mulₓ, Finset.mem_univ, Finset.sup_le_iff, Ennreal.coe_one]
-    intro i 
-    calc edist (x i) (y i) = ((edist (x i) (y i)^p)^1 / p) :=
-      by 
-        simp [←Ennreal.rpow_mul, cancel, -one_div]_ ≤ ((∑i : ι, edist (x i) (y i)^p)^1 / p) :=
-      by 
-        apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2$ le_of_ltₓ Pos)
-        exact Finset.single_le_sum (fun i hi => (bot_le : (0 : ℝ≥0∞) ≤ _)) (Finset.mem_univ i)
+-- error in Analysis.NormedSpace.PiLp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lipschitz_with_equiv : lipschitz_with 1 (pi_Lp.equiv p β) :=
+begin
+  have [ident pos] [":", expr «expr < »(0, p)] [":=", expr lt_of_lt_of_le zero_lt_one fact_one_le_p.out],
+  have [ident cancel] [":", expr «expr = »(«expr * »(p, «expr / »(1, p)), 1)] [":=", expr mul_div_cancel' 1 (ne_of_gt pos)],
+  assume [binders (x y)],
+  simp [] [] ["only"] ["[", expr edist, ",", expr forall_prop_of_true, ",", expr one_mul, ",", expr finset.mem_univ, ",", expr finset.sup_le_iff, ",", expr ennreal.coe_one, "]"] [] [],
+  assume [binders (i)],
+  calc
+    «expr = »(edist (x i) (y i), «expr ^ »(«expr ^ »(edist (x i) (y i), p), «expr / »(1, p))) : by simp [] [] [] ["[", "<-", expr ennreal.rpow_mul, ",", expr cancel, ",", "-", ident one_div, "]"] [] []
+    «expr ≤ »(..., «expr ^ »(«expr∑ , »((i : ι), «expr ^ »(edist (x i) (y i), p)), «expr / »(1, p))) : begin
+      apply [expr ennreal.rpow_le_rpow _ «expr $ »(one_div_nonneg.2, le_of_lt pos)],
+      exact [expr finset.single_le_sum (λ i hi, (bot_le : «expr ≤ »((0 : «exprℝ≥0∞»()), _))) (finset.mem_univ i)]
+    end
+end
 
-theorem antilipschitz_with_equiv : AntilipschitzWith ((Fintype.card ι :  ℝ≥0 )^1 / p) (PiLp.equiv p β) :=
-  by 
-    have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out 
-    have nonneg : 0 ≤ 1 / p := one_div_nonneg.2 (le_of_ltₓ Pos)
-    have cancel : (p*1 / p) = 1 := mul_div_cancel' 1 (ne_of_gtₓ Pos)
-    intro x y 
-    simp [edist, -one_div]
-    calc ((∑i : ι, edist (x i) (y i)^p)^1 / p) ≤ ((∑i : ι, edist (PiLp.equiv p β x) (PiLp.equiv p β y)^p)^1 / p) :=
-      by 
-        apply Ennreal.rpow_le_rpow _ nonneg 
-        apply Finset.sum_le_sum fun i hi => _ 
-        apply Ennreal.rpow_le_rpow _ (le_of_ltₓ Pos)
-        exact
-          Finset.le_sup
-            (Finset.mem_univ
-              i)_ = ((Fintype.card ι :  ℝ≥0 )^1 / p :  ℝ≥0 )*edist (PiLp.equiv p β x) (PiLp.equiv p β y) :=
-      by 
-        simp only [nsmul_eq_mul, Finset.card_univ, Ennreal.rpow_one, Finset.sum_const,
-          Ennreal.mul_rpow_of_nonneg _ _ nonneg, ←Ennreal.rpow_mul, cancel]
-        have  : (Fintype.card ι : ℝ≥0∞) = (Fintype.card ι :  ℝ≥0 ) := (Ennreal.coe_nat (Fintype.card ι)).symm 
-        rw [this, Ennreal.coe_rpow_of_nonneg _ nonneg]
+-- error in Analysis.NormedSpace.PiLp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem antilipschitz_with_equiv : antilipschitz_with «expr ^ »((fintype.card ι : «exprℝ≥0»()), «expr / »(1, p)) (pi_Lp.equiv p β) :=
+begin
+  have [ident pos] [":", expr «expr < »(0, p)] [":=", expr lt_of_lt_of_le zero_lt_one fact_one_le_p.out],
+  have [ident nonneg] [":", expr «expr ≤ »(0, «expr / »(1, p))] [":=", expr one_div_nonneg.2 (le_of_lt pos)],
+  have [ident cancel] [":", expr «expr = »(«expr * »(p, «expr / »(1, p)), 1)] [":=", expr mul_div_cancel' 1 (ne_of_gt pos)],
+  assume [binders (x y)],
+  simp [] [] [] ["[", expr edist, ",", "-", ident one_div, "]"] [] [],
+  calc
+    «expr ≤ »(«expr ^ »(«expr∑ , »((i : ι), «expr ^ »(edist (x i) (y i), p)), «expr / »(1, p)), «expr ^ »(«expr∑ , »((i : ι), «expr ^ »(edist (pi_Lp.equiv p β x) (pi_Lp.equiv p β y), p)), «expr / »(1, p))) : begin
+      apply [expr ennreal.rpow_le_rpow _ nonneg],
+      apply [expr finset.sum_le_sum (λ i hi, _)],
+      apply [expr ennreal.rpow_le_rpow _ (le_of_lt pos)],
+      exact [expr finset.le_sup (finset.mem_univ i)]
+    end
+    «expr = »(..., «expr * »((«expr ^ »((fintype.card ι : «exprℝ≥0»()), «expr / »(1, p)) : «exprℝ≥0»()), edist (pi_Lp.equiv p β x) (pi_Lp.equiv p β y))) : begin
+      simp [] [] ["only"] ["[", expr nsmul_eq_mul, ",", expr finset.card_univ, ",", expr ennreal.rpow_one, ",", expr finset.sum_const, ",", expr ennreal.mul_rpow_of_nonneg _ _ nonneg, ",", "<-", expr ennreal.rpow_mul, ",", expr cancel, "]"] [] [],
+      have [] [":", expr «expr = »((fintype.card ι : «exprℝ≥0∞»()), (fintype.card ι : «exprℝ≥0»()))] [":=", expr (ennreal.coe_nat (fintype.card ι)).symm],
+      rw ["[", expr this, ",", expr ennreal.coe_rpow_of_nonneg _ nonneg, "]"] []
+    end
+end
 
-theorem aux_uniformity_eq : 𝓤 (PiLp p β) = @uniformity _ (Pi.uniformSpace _) :=
-  by 
-    have A : UniformInducing (PiLp.equiv p β) :=
-      (antilipschitz_with_equiv p β).UniformInducing (lipschitz_with_equiv p β).UniformContinuous 
-    have  : (fun x : PiLp p β × PiLp p β => ((PiLp.equiv p β) x.fst, (PiLp.equiv p β) x.snd)) = id
-    ·
-      ext i <;> rfl 
-    rw [←A.comap_uniformity, this, comap_id]
+-- error in Analysis.NormedSpace.PiLp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem aux_uniformity_eq : «expr = »(expr𝓤() (pi_Lp p β), @uniformity _ (Pi.uniform_space _)) :=
+begin
+  have [ident A] [":", expr uniform_inducing (pi_Lp.equiv p β)] [":=", expr (antilipschitz_with_equiv p β).uniform_inducing (lipschitz_with_equiv p β).uniform_continuous],
+  have [] [":", expr «expr = »(λ
+    x : «expr × »(pi_Lp p β, pi_Lp p β), (pi_Lp.equiv p β x.fst, pi_Lp.equiv p β x.snd), id)] [],
+  by ext [] [ident i] []; refl,
+  rw ["[", "<-", expr A.comap_uniformity, ",", expr this, ",", expr comap_id, "]"] []
+end
 
 end 
 
@@ -220,37 +222,34 @@ protected theorem edist {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, 
 
 include fact_one_le_p
 
+-- error in Analysis.NormedSpace.PiLp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- pseudometric space instance on the product of finitely many psuedometric spaces, using the
 `L^p` distance, and having as uniformity the product uniformity. -/
-instance  [∀ i, PseudoMetricSpace (β i)] : PseudoMetricSpace (PiLp p β) :=
-  by 
-    have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out 
-    refine'
-      PseudoEmetricSpace.toPseudoMetricSpaceOfDist (fun f g => (∑i : ι, dist (f i) (g i)^p)^1 / p) (fun f g => _)
-        fun f g => _
-    ·
-      simp [PiLp.edist, Ennreal.rpow_eq_top_iff, asymm Pos, Pos, Ennreal.sum_eq_top_iff, edist_ne_top]
-    ·
-      have A : ∀ i : ι, i ∈ (Finset.univ : Finset ι) → (edist (f i) (g i)^p) ≠ ⊤ :=
-        fun i hi =>
-          by 
-            simp [lt_top_iff_ne_top, edist_ne_top, le_of_ltₓ Pos]
-      simp [dist, -one_div, PiLp.edist, ←Ennreal.to_real_rpow, Ennreal.to_real_sum A, dist_edist]
+instance [∀ i, pseudo_metric_space (β i)] : pseudo_metric_space (pi_Lp p β) :=
+begin
+  have [ident pos] [":", expr «expr < »(0, p)] [":=", expr lt_of_lt_of_le zero_lt_one fact_one_le_p.out],
+  refine [expr pseudo_emetric_space.to_pseudo_metric_space_of_dist (λ
+    f g, «expr ^ »(«expr∑ , »((i : ι), «expr ^ »(dist (f i) (g i), p)), «expr / »(1, p))) (λ f g, _) (λ f g, _)],
+  { simp [] [] [] ["[", expr pi_Lp.edist, ",", expr ennreal.rpow_eq_top_iff, ",", expr asymm pos, ",", expr pos, ",", expr ennreal.sum_eq_top_iff, ",", expr edist_ne_top, "]"] [] [] },
+  { have [ident A] [":", expr ∀
+     i : ι, «expr ∈ »(i, (finset.univ : finset ι)) → «expr ≠ »(«expr ^ »(edist (f i) (g i), p), «expr⊤»())] [":=", expr λ
+     i hi, by simp [] [] [] ["[", expr lt_top_iff_ne_top, ",", expr edist_ne_top, ",", expr le_of_lt pos, "]"] [] []],
+    simp [] [] [] ["[", expr dist, ",", "-", ident one_div, ",", expr pi_Lp.edist, ",", "<-", expr ennreal.to_real_rpow, ",", expr ennreal.to_real_sum A, ",", expr dist_edist, "]"] [] [] }
+end
 
+-- error in Analysis.NormedSpace.PiLp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- metric space instance on the product of finitely many metric spaces, using the `L^p` distance,
-and having as uniformity the product uniformity. -/
-instance  [∀ i, MetricSpace (α i)] : MetricSpace (PiLp p α) :=
-  by 
-    have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out 
-    refine' EmetricSpace.toMetricSpaceOfDist (fun f g => (∑i : ι, dist (f i) (g i)^p)^1 / p) (fun f g => _) fun f g => _
-    ·
-      simp [PiLp.edist, Ennreal.rpow_eq_top_iff, asymm Pos, Pos, Ennreal.sum_eq_top_iff, edist_ne_top]
-    ·
-      have A : ∀ i : ι, i ∈ (Finset.univ : Finset ι) → (edist (f i) (g i)^p) ≠ ⊤ :=
-        fun i hi =>
-          by 
-            simp [edist_ne_top, pos.le]
-      simp [dist, -one_div, PiLp.edist, ←Ennreal.to_real_rpow, Ennreal.to_real_sum A, dist_edist]
+and having as uniformity the product uniformity. -/ instance [∀ i, metric_space (α i)] : metric_space (pi_Lp p α) :=
+begin
+  have [ident pos] [":", expr «expr < »(0, p)] [":=", expr lt_of_lt_of_le zero_lt_one fact_one_le_p.out],
+  refine [expr emetric_space.to_metric_space_of_dist (λ
+    f g, «expr ^ »(«expr∑ , »((i : ι), «expr ^ »(dist (f i) (g i), p)), «expr / »(1, p))) (λ f g, _) (λ f g, _)],
+  { simp [] [] [] ["[", expr pi_Lp.edist, ",", expr ennreal.rpow_eq_top_iff, ",", expr asymm pos, ",", expr pos, ",", expr ennreal.sum_eq_top_iff, ",", expr edist_ne_top, "]"] [] [] },
+  { have [ident A] [":", expr ∀
+     i : ι, «expr ∈ »(i, (finset.univ : finset ι)) → «expr ≠ »(«expr ^ »(edist (f i) (g i), p), «expr⊤»())] [":=", expr λ
+     i hi, by simp [] [] [] ["[", expr edist_ne_top, ",", expr pos.le, "]"] [] []],
+    simp [] [] [] ["[", expr dist, ",", "-", ident one_div, ",", expr pi_Lp.edist, ",", "<-", expr ennreal.to_real_rpow, ",", expr ennreal.to_real_sum A, ",", expr dist_edist, "]"] [] [] }
+end
 
 omit fact_one_le_p
 
@@ -288,16 +287,19 @@ include fact_one_le_p
 
 variable(𝕜 : Type _)[NormedField 𝕜]
 
+-- error in Analysis.NormedSpace.PiLp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of finitely many seminormed spaces is a seminormed space, with the `L^p` norm. -/
-instance SemiNormedSpace [∀ i, SemiNormedGroup (β i)] [∀ i, SemiNormedSpace 𝕜 (β i)] : SemiNormedSpace 𝕜 (PiLp p β) :=
-  { Pi.module ι β 𝕜 with
-    norm_smul_le :=
-      by 
-        intro c f 
-        have  : (p*1 / p) = 1 := mul_div_cancel' 1 (lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out).ne' 
-        simp only [PiLp.norm_eq, norm_smul, mul_rpow, norm_nonneg, ←Finset.mul_sum, Pi.smul_apply]
-        rw [mul_rpow (rpow_nonneg_of_nonneg (norm_nonneg _) _), ←rpow_mul (norm_nonneg _), this, rpow_one]
-        exact Finset.sum_nonneg fun i hi => rpow_nonneg_of_nonneg (norm_nonneg _) _ }
+instance semi_normed_space
+[∀ i, semi_normed_group (β i)]
+[∀ i, semi_normed_space 𝕜 (β i)] : semi_normed_space 𝕜 (pi_Lp p β) :=
+{ norm_smul_le := begin
+    assume [binders (c f)],
+    have [] [":", expr «expr = »(«expr * »(p, «expr / »(1, p)), 1)] [":=", expr mul_div_cancel' 1 (lt_of_lt_of_le zero_lt_one fact_one_le_p.out).ne'],
+    simp [] [] ["only"] ["[", expr pi_Lp.norm_eq, ",", expr norm_smul, ",", expr mul_rpow, ",", expr norm_nonneg, ",", "<-", expr finset.mul_sum, ",", expr pi.smul_apply, "]"] [] [],
+    rw ["[", expr mul_rpow (rpow_nonneg_of_nonneg (norm_nonneg _) _), ",", "<-", expr rpow_mul (norm_nonneg _), ",", expr this, ",", expr rpow_one, "]"] [],
+    exact [expr finset.sum_nonneg (λ i hi, rpow_nonneg_of_nonneg (norm_nonneg _) _)]
+  end,
+  ..pi.module ι β 𝕜 }
 
 /-- The product of finitely many normed spaces is a normed space, with the `L^p` norm. -/
 instance NormedSpace [∀ i, NormedGroup (α i)] [∀ i, NormedSpace 𝕜 (α i)] : NormedSpace 𝕜 (PiLp p α) :=

@@ -149,7 +149,7 @@ instance id_preserves_limits : preserves_limits (𝟭 C) :=
         { PreservesLimit :=
             fun K =>
               by 
-                exactI
+                exact
                   ⟨fun c h =>
                       ⟨fun s => h.lift ⟨s.X, fun j => s.π.app j, fun j j' f => s.π.naturality f⟩,
                         by 
@@ -165,7 +165,7 @@ instance id_preserves_colimits : preserves_colimits (𝟭 C) :=
         { PreservesColimit :=
             fun K =>
               by 
-                exactI
+                exact
                   ⟨fun c h =>
                       ⟨fun s => h.desc ⟨s.X, fun j => s.ι.app j, fun j j' f => s.ι.naturality f⟩,
                         by 
@@ -211,20 +211,19 @@ def preserves_limit_of_preserves_limit_cone {F : C ⥤ D} {t : cone K} (h : is_l
   preserves_limit K F :=
   ⟨fun t' h' => is_limit.of_iso_limit hF (functor.map_iso _ (is_limit.unique_up_to_iso h h'))⟩
 
+-- error in CategoryTheory.Limits.Preserves.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Transfer preservation of limits along a natural isomorphism in the diagram. -/
-def preserves_limit_of_iso_diagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K₂) [preserves_limit K₁ F] :
-  preserves_limit K₂ F :=
-  { preserves :=
-      fun c t =>
-        by 
-          apply is_limit.postcompose_inv_equiv (iso_whisker_right h F : _) _ _ 
-          have  := (is_limit.postcompose_inv_equiv h c).symm t 
-          apply is_limit.of_iso_limit (is_limit_of_preserves F this)
-          refine'
-            cones.ext (iso.refl _)
-              fun j =>
-                by 
-                  tidy }
+def preserves_limit_of_iso_diagram
+{K₁ K₂ : «expr ⥤ »(J, C)}
+(F : «expr ⥤ »(C, D))
+(h : «expr ≅ »(K₁, K₂))
+[preserves_limit K₁ F] : preserves_limit K₂ F :=
+{ preserves := λ c t, begin
+    apply [expr is_limit.postcompose_inv_equiv (iso_whisker_right h F : _) _ _],
+    have [] [] [":=", expr (is_limit.postcompose_inv_equiv h c).symm t],
+    apply [expr is_limit.of_iso_limit (is_limit_of_preserves F this)],
+    refine [expr cones.ext (iso.refl _) (λ j, by tidy [])]
+  end }
 
 /-- Transfer preservation of a limit along a natural isomorphism in the functor. -/
 def preserves_limit_of_nat_iso (K : J ⥤ C) {F G : C ⥤ D} (h : F ≅ G) [preserves_limit K F] : preserves_limit K G :=
@@ -240,23 +239,25 @@ def preserves_limits_of_nat_iso {F G : C ⥤ D} (h : F ≅ G) [preserves_limits 
   { PreservesLimitsOfShape :=
       fun J 𝒥₁ =>
         by 
-          exactI preserves_limits_of_shape_of_nat_iso h }
+          exact preserves_limits_of_shape_of_nat_iso h }
 
+-- error in CategoryTheory.Limits.Preserves.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Transfer preservation of limits along a equivalence in the shape. -/
-def preserves_limits_of_shape_of_equiv {J' : Type v} [small_category J'] (e : J ≌ J') (F : C ⥤ D)
-  [preserves_limits_of_shape J F] : preserves_limits_of_shape J' F :=
-  { PreservesLimit :=
-      fun K =>
-        { preserves :=
-            fun c t =>
-              by 
-                let equ := e.inv_fun_id_assoc (K ⋙ F)
-                have  := (is_limit_of_preserves F (t.whisker_equivalence e)).whiskerEquivalence e.symm 
-                apply ((is_limit.postcompose_hom_equiv equ _).symm this).ofIsoLimit 
-                refine' cones.ext (iso.refl _) fun j => _
-                ·
-                  dsimp 
-                  simp [←functor.map_comp] } }
+def preserves_limits_of_shape_of_equiv
+{J' : Type v}
+[small_category J']
+(e : «expr ≌ »(J, J'))
+(F : «expr ⥤ »(C, D))
+[preserves_limits_of_shape J F] : preserves_limits_of_shape J' F :=
+{ preserves_limit := λ
+  K, { preserves := λ c t, begin
+      let [ident equ] [] [":=", expr e.inv_fun_id_assoc «expr ⋙ »(K, F)],
+      have [] [] [":=", expr (is_limit_of_preserves F (t.whisker_equivalence e)).whisker_equivalence e.symm],
+      apply [expr ((is_limit.postcompose_hom_equiv equ _).symm this).of_iso_limit],
+      refine [expr cones.ext (iso.refl _) (λ j, _)],
+      { dsimp [] [] [] [],
+        simp [] [] [] ["[", "<-", expr functor.map_comp, "]"] [] [] }
+    end } }
 
 /-- If F preserves one colimit cocone for the diagram K,
   then it preserves any colimit cocone for K. -/
@@ -264,20 +265,19 @@ def preserves_colimit_of_preserves_colimit_cocone {F : C ⥤ D} {t : cocone K} (
   (hF : is_colimit (F.map_cocone t)) : preserves_colimit K F :=
   ⟨fun t' h' => is_colimit.of_iso_colimit hF (functor.map_iso _ (is_colimit.unique_up_to_iso h h'))⟩
 
+-- error in CategoryTheory.Limits.Preserves.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Transfer preservation of colimits along a natural isomorphism in the shape. -/
-def preserves_colimit_of_iso_diagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K₂) [preserves_colimit K₁ F] :
-  preserves_colimit K₂ F :=
-  { preserves :=
-      fun c t =>
-        by 
-          apply is_colimit.precompose_hom_equiv (iso_whisker_right h F : _) _ _ 
-          have  := (is_colimit.precompose_hom_equiv h c).symm t 
-          apply is_colimit.of_iso_colimit (is_colimit_of_preserves F this)
-          refine'
-            cocones.ext (iso.refl _)
-              fun j =>
-                by 
-                  tidy }
+def preserves_colimit_of_iso_diagram
+{K₁ K₂ : «expr ⥤ »(J, C)}
+(F : «expr ⥤ »(C, D))
+(h : «expr ≅ »(K₁, K₂))
+[preserves_colimit K₁ F] : preserves_colimit K₂ F :=
+{ preserves := λ c t, begin
+    apply [expr is_colimit.precompose_hom_equiv (iso_whisker_right h F : _) _ _],
+    have [] [] [":=", expr (is_colimit.precompose_hom_equiv h c).symm t],
+    apply [expr is_colimit.of_iso_colimit (is_colimit_of_preserves F this)],
+    refine [expr cocones.ext (iso.refl _) (λ j, by tidy [])]
+  end }
 
 /-- Transfer preservation of a colimit along a natural isomorphism in the functor. -/
 def preserves_colimit_of_nat_iso (K : J ⥤ C) {F G : C ⥤ D} (h : F ≅ G) [preserves_colimit K F] :
@@ -294,23 +294,25 @@ def preserves_colimits_of_nat_iso {F G : C ⥤ D} (h : F ≅ G) [preserves_colim
   { PreservesColimitsOfShape :=
       fun J 𝒥₁ =>
         by 
-          exactI preserves_colimits_of_shape_of_nat_iso h }
+          exact preserves_colimits_of_shape_of_nat_iso h }
 
+-- error in CategoryTheory.Limits.Preserves.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Transfer preservation of colimits along a equivalence in the shape. -/
-def preserves_colimits_of_shape_of_equiv {J' : Type v} [small_category J'] (e : J ≌ J') (F : C ⥤ D)
-  [preserves_colimits_of_shape J F] : preserves_colimits_of_shape J' F :=
-  { PreservesColimit :=
-      fun K =>
-        { preserves :=
-            fun c t =>
-              by 
-                let equ := e.inv_fun_id_assoc (K ⋙ F)
-                have  := (is_colimit_of_preserves F (t.whisker_equivalence e)).whiskerEquivalence e.symm 
-                apply ((is_colimit.precompose_inv_equiv equ _).symm this).ofIsoColimit 
-                refine' cocones.ext (iso.refl _) fun j => _
-                ·
-                  dsimp 
-                  simp [←functor.map_comp] } }
+def preserves_colimits_of_shape_of_equiv
+{J' : Type v}
+[small_category J']
+(e : «expr ≌ »(J, J'))
+(F : «expr ⥤ »(C, D))
+[preserves_colimits_of_shape J F] : preserves_colimits_of_shape J' F :=
+{ preserves_colimit := λ
+  K, { preserves := λ c t, begin
+      let [ident equ] [] [":=", expr e.inv_fun_id_assoc «expr ⋙ »(K, F)],
+      have [] [] [":=", expr (is_colimit_of_preserves F (t.whisker_equivalence e)).whisker_equivalence e.symm],
+      apply [expr ((is_colimit.precompose_inv_equiv equ _).symm this).of_iso_colimit],
+      refine [expr cocones.ext (iso.refl _) (λ j, _)],
+      { dsimp [] [] [] [],
+        simp [] [] [] ["[", "<-", expr functor.map_comp, "]"] [] [] }
+    end } }
 
 /--
 A functor `F : C ⥤ D` reflects limits for `K : J ⥤ C` if
@@ -453,7 +455,7 @@ instance id_reflects_limits : reflects_limits (𝟭 C) :=
         { ReflectsLimit :=
             fun K =>
               by 
-                exactI
+                exact
                   ⟨fun c h =>
                       ⟨fun s => h.lift ⟨s.X, fun j => s.π.app j, fun j j' f => s.π.naturality f⟩,
                         by 
@@ -469,7 +471,7 @@ instance id_reflects_colimits : reflects_colimits (𝟭 C) :=
         { ReflectsColimit :=
             fun K =>
               by 
-                exactI
+                exact
                   ⟨fun c h =>
                       ⟨fun s => h.desc ⟨s.X, fun j => s.ι.app j, fun j j' f => s.ι.naturality f⟩,
                         by 
@@ -527,7 +529,7 @@ def preserves_limits_of_reflects_of_preserves [preserves_limits (F ⋙ G)] [refl
   { PreservesLimitsOfShape :=
       fun J 𝒥₁ =>
         by 
-          exactI preserves_limits_of_shape_of_reflects_of_preserves F G }
+          exact preserves_limits_of_shape_of_reflects_of_preserves F G }
 
 /-- Transfer reflection of limits along a natural isomorphism in the diagram. -/
 def reflects_limit_of_iso_diagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K₂) [reflects_limit K₁ F] :
@@ -556,7 +558,7 @@ def reflects_limits_of_nat_iso {F G : C ⥤ D} (h : F ≅ G) [reflects_limits F]
   { ReflectsLimitsOfShape :=
       fun J 𝒥₁ =>
         by 
-          exactI reflects_limits_of_shape_of_nat_iso h }
+          exact reflects_limits_of_shape_of_nat_iso h }
 
 /--
 If the limit of `F` exists and `G` preserves it, then if `G` reflects isomorphisms then it
@@ -590,7 +592,7 @@ def reflects_limits_of_reflects_isomorphisms {G : C ⥤ D} [reflects_isomorphism
   { ReflectsLimitsOfShape :=
       fun J 𝒥₁ =>
         by 
-          exactI reflects_limits_of_shape_of_reflects_isomorphisms }
+          exact reflects_limits_of_shape_of_reflects_isomorphisms }
 
 /-- If `F ⋙ G` preserves colimits for `K`, and `G` reflects colimits for `K ⋙ F`,
 then `F` preserves colimits for `K`. -/
@@ -615,7 +617,7 @@ def preserves_colimits_of_reflects_of_preserves [preserves_colimits (F ⋙ G)] [
   { PreservesColimitsOfShape :=
       fun J 𝒥₁ =>
         by 
-          exactI preserves_colimits_of_shape_of_reflects_of_preserves F G }
+          exact preserves_colimits_of_shape_of_reflects_of_preserves F G }
 
 /-- Transfer reflection of colimits along a natural isomorphism in the diagram. -/
 def reflects_colimit_of_iso_diagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K₂) [reflects_colimit K₁ F] :
@@ -644,7 +646,7 @@ def reflects_colimits_of_nat_iso {F G : C ⥤ D} (h : F ≅ G) [reflects_colimit
   { ReflectsColimitsOfShape :=
       fun J 𝒥₁ =>
         by 
-          exactI reflects_colimits_of_shape_of_nat_iso h }
+          exact reflects_colimits_of_shape_of_nat_iso h }
 
 /--
 If the colimit of `F` exists and `G` preserves it, then if `G` reflects isomorphisms then it
@@ -678,7 +680,7 @@ def reflects_colimits_of_reflects_isomorphisms {G : C ⥤ D} [reflects_isomorphi
   { ReflectsColimitsOfShape :=
       fun J 𝒥₁ =>
         by 
-          exactI reflects_colimits_of_shape_of_reflects_isomorphisms }
+          exact reflects_colimits_of_shape_of_reflects_isomorphisms }
 
 end 
 
@@ -689,7 +691,7 @@ def fully_faithful_reflects_limits [full F] [faithful F] : reflects_limits F :=
   { ReflectsLimitsOfShape :=
       fun J 𝒥₁ =>
         by 
-          exactI
+          exact
             { ReflectsLimit :=
                 fun K =>
                   { reflects :=
@@ -706,7 +708,7 @@ def fully_faithful_reflects_colimits [full F] [faithful F] : reflects_colimits F
   { ReflectsColimitsOfShape :=
       fun J 𝒥₁ =>
         by 
-          exactI
+          exact
             { ReflectsColimit :=
                 fun K =>
                   { reflects :=

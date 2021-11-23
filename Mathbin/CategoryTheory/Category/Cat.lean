@@ -1,6 +1,7 @@
-import Mathbin.CategoryTheory.ConcreteCategory.Default 
+import Mathbin.CategoryTheory.ConcreteCategory.Bundled 
 import Mathbin.CategoryTheory.DiscreteCategory 
-import Mathbin.CategoryTheory.EqToHom
+import Mathbin.CategoryTheory.EqToHom 
+import Mathbin.CategoryTheory.Types
 
 /-!
 # Category of categories

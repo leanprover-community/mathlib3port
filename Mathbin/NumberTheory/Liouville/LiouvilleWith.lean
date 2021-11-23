@@ -42,22 +42,21 @@ exponent. -/
 def LiouvilleWith (p x : ℝ) : Prop :=
   ∃ C, ∃ᶠn : ℕ in at_top, ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < C / (n^p)
 
+-- error in NumberTheory.Liouville.LiouvilleWith: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For `p = 1` (hence, for any `p ≤ 1`), the condition `liouville_with p x` is trivial. -/
-theorem liouville_with_one (x : ℝ) : LiouvilleWith 1 x :=
-  by 
-    use 2
-    refine' ((eventually_gt_at_top 0).mono$ fun n hn => _).Frequently 
-    have hn' : (0 : ℝ) < n
-    ·
-      simpa 
-    have  : x < «expr↑ » (⌊x*«expr↑ » n⌋+1) / «expr↑ » n
-    ·
-      rw [lt_div_iff hn', Int.cast_add, Int.cast_one]
-      exact Int.lt_floor_add_one _ 
-    refine' ⟨⌊x*n⌋+1, this.ne, _⟩
-    rw [abs_sub_comm, abs_of_pos (sub_pos.2 this), rpow_one, sub_lt_iff_lt_add', add_div_eq_mul_add_div _ _ hn'.ne',
-      div_lt_div_right hn']
-    simpa [bit0, ←add_assocₓ] using (Int.floor_le (x*n)).trans_lt (lt_add_one _)
+theorem liouville_with_one (x : exprℝ()) : liouville_with 1 x :=
+begin
+  use [expr 2],
+  refine [expr «expr $ »((eventually_gt_at_top 0).mono, λ n hn, _).frequently],
+  have [ident hn'] [":", expr «expr < »((0 : exprℝ()), n)] [],
+  by simpa [] [] [] [] [] [],
+  have [] [":", expr «expr < »(x, «expr / »(«expr↑ »(«expr + »(«expr⌊ ⌋»(«expr * »(x, «expr↑ »(n))), 1)), «expr↑ »(n)))] [],
+  { rw ["[", expr lt_div_iff hn', ",", expr int.cast_add, ",", expr int.cast_one, "]"] [],
+    exact [expr int.lt_floor_add_one _] },
+  refine [expr ⟨«expr + »(«expr⌊ ⌋»(«expr * »(x, n)), 1), this.ne, _⟩],
+  rw ["[", expr abs_sub_comm, ",", expr abs_of_pos (sub_pos.2 this), ",", expr rpow_one, ",", expr sub_lt_iff_lt_add', ",", expr add_div_eq_mul_add_div _ _ hn'.ne', ",", expr div_lt_div_right hn', "]"] [],
+  simpa [] [] [] ["[", expr bit0, ",", "<-", expr add_assoc, "]"] [] ["using", expr (int.floor_le «expr * »(x, n)).trans_lt (lt_add_one _)]
+end
 
 namespace LiouvilleWith
 
@@ -76,34 +75,33 @@ theorem exists_pos (h : LiouvilleWith p x) :
     refine' ⟨hle, m, hne, hlt.trans_le _⟩
     exact div_le_div_of_le (rpow_nonneg_of_nonneg n.cast_nonneg _) (le_max_leftₓ _ _)
 
--- error in NumberTheory.Liouville.LiouvilleWith: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If a number is Liouville with exponent `p`, then it is Liouville with any smaller exponent. -/
-theorem mono (h : liouville_with p x) (hle : «expr ≤ »(q, p)) : liouville_with q x :=
-begin
-  rcases [expr h.exists_pos, "with", "⟨", ident C, ",", ident hC₀, ",", ident hC, "⟩"],
-  refine [expr ⟨C, hC.mono _⟩],
-  rintro [ident n, "⟨", ident hn, ",", ident m, ",", ident hne, ",", ident hlt, "⟩"],
-  refine [expr ⟨m, hne, «expr $ »(hlt.trans_le, div_le_div_of_le_left hC₀.le _ _)⟩],
-  exacts ["[", expr rpow_pos_of_pos (nat.cast_pos.2 hn) _, ",", expr rpow_le_rpow_of_exponent_le (nat.one_le_cast.2 hn) hle, "]"]
-end
-
-/-- If `x` satisfies Liouville condition with exponent `p` and `q < p`, then `x`
-satisfies Liouville condition with exponent `q` and constant `1`. -/
-theorem frequently_lt_rpow_neg (h : LiouvilleWith p x) (hlt : q < p) :
-  ∃ᶠn : ℕ in at_top, ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < (n^-q) :=
+theorem mono (h : LiouvilleWith p x) (hle : q ≤ p) : LiouvilleWith q x :=
   by 
     rcases h.exists_pos with ⟨C, hC₀, hC⟩
-    have  : ∀ᶠn : ℕ in at_top, C < (n^p - q)
-    ·
-      simpa only [· ∘ ·, neg_sub, one_div] using
-        ((tendsto_rpow_at_top (sub_pos.2 hlt)).comp tendsto_coe_nat_at_top_at_top).Eventually (eventually_gt_at_top C)
-    refine' (this.and_frequently hC).mono _ 
-    rintro n ⟨hnC, hn, m, hne, hlt⟩
-    replace hn : (0 : ℝ) < n := Nat.cast_pos.2 hn 
-    refine' ⟨m, hne, hlt.trans$ (div_lt_iff$ rpow_pos_of_pos hn _).2 _⟩
-    rwa [mul_commₓ, ←rpow_add hn, ←sub_eq_add_neg]
+    refine' ⟨C, hC.mono _⟩
+    rintro n ⟨hn, m, hne, hlt⟩
+    refine' ⟨m, hne, hlt.trans_le$ div_le_div_of_le_left hC₀.le _ _⟩
+    exacts[rpow_pos_of_pos (Nat.cast_pos.2 hn) _, rpow_le_rpow_of_exponent_le (Nat.one_le_cast.2 hn) hle]
 
--- error in NumberTheory.Liouville.LiouvilleWith: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in NumberTheory.Liouville.LiouvilleWith: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- If `x` satisfies Liouville condition with exponent `p` and `q < p`, then `x`
+satisfies Liouville condition with exponent `q` and constant `1`. -/
+theorem frequently_lt_rpow_neg
+(h : liouville_with p x)
+(hlt : «expr < »(q, p)) : «expr∃ᶠ in , »((n : exprℕ()), at_top, «expr∃ , »((m : exprℤ()), «expr ∧ »(«expr ≠ »(x, «expr / »(m, n)), «expr < »(«expr| |»(«expr - »(x, «expr / »(m, n))), «expr ^ »(n, «expr- »(q)))))) :=
+begin
+  rcases [expr h.exists_pos, "with", "⟨", ident C, ",", ident hC₀, ",", ident hC, "⟩"],
+  have [] [":", expr «expr∀ᶠ in , »((n : exprℕ()), at_top, «expr < »(C, «expr ^ »(n, «expr - »(p, q))))] [],
+  by simpa [] [] ["only"] ["[", expr («expr ∘ »), ",", expr neg_sub, ",", expr one_div, "]"] [] ["using", expr ((tendsto_rpow_at_top (sub_pos.2 hlt)).comp tendsto_coe_nat_at_top_at_top).eventually (eventually_gt_at_top C)],
+  refine [expr (this.and_frequently hC).mono _],
+  rintro [ident n, "⟨", ident hnC, ",", ident hn, ",", ident m, ",", ident hne, ",", ident hlt, "⟩"],
+  replace [ident hn] [":", expr «expr < »((0 : exprℝ()), n)] [":=", expr nat.cast_pos.2 hn],
+  refine [expr ⟨m, hne, «expr $ »(hlt.trans, «expr $ »(div_lt_iff, rpow_pos_of_pos hn _).2 _)⟩],
+  rwa ["[", expr mul_comm, ",", "<-", expr rpow_add hn, ",", "<-", expr sub_eq_add_neg, "]"] []
+end
+
+-- error in NumberTheory.Liouville.LiouvilleWith: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of a Liouville number and a nonzero rational number is again a Liouville number.  -/
 theorem mul_rat (h : liouville_with p x) (hr : «expr ≠ »(r, 0)) : liouville_with p «expr * »(x, r) :=
 begin
@@ -170,27 +168,25 @@ theorem nat_mul (h : LiouvilleWith p x) (hn : n ≠ 0) : LiouvilleWith p (n*x) :
     rw [mul_commₓ]
     exact h.mul_nat hn
 
-theorem add_rat (h : LiouvilleWith p x) (r : ℚ) : LiouvilleWith p (x+r) :=
-  by 
-    rcases h.exists_pos with ⟨C, hC₀, hC⟩
-    refine' ⟨(r.denom^p)*C, (tendsto_id.nsmul_at_top r.pos).Frequently (hC.mono _)⟩
-    rintro n ⟨hn, m, hne, hlt⟩
-    have hr : (0 : ℝ) < r.denom 
-    exact Nat.cast_pos.2 r.pos 
-    have hn' : (n : ℝ) ≠ 0 
-    exact Nat.cast_ne_zero.2 (zero_lt_one.trans_le hn).ne' 
-    have  : («expr↑ » ((r.denom*m)+r.num*n : ℤ) / «expr↑ » (r.denom • id n) : ℝ) = (m / n)+r
-    ·
-      simp [add_div, hr.ne', mul_div_mul_left, mul_div_mul_right, hn', ←Rat.cast_def]
-    refine' ⟨(r.denom*m)+r.num*n, _⟩
-    rw [this, add_sub_add_right_eq_sub]
-    refine'
-      ⟨by 
-          simpa,
-        hlt.trans_le (le_of_eqₓ _)⟩
-    have  : (r.denom^p : ℝ) ≠ 0 
-    exact (rpow_pos_of_pos hr _).ne' 
-    simp [mul_rpow, Nat.cast_nonneg, mul_div_mul_left, this]
+-- error in NumberTheory.Liouville.LiouvilleWith: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem add_rat (h : liouville_with p x) (r : exprℚ()) : liouville_with p «expr + »(x, r) :=
+begin
+  rcases [expr h.exists_pos, "with", "⟨", ident C, ",", ident hC₀, ",", ident hC, "⟩"],
+  refine [expr ⟨«expr * »(«expr ^ »(r.denom, p), C), (tendsto_id.nsmul_at_top r.pos).frequently (hC.mono _)⟩],
+  rintro [ident n, "⟨", ident hn, ",", ident m, ",", ident hne, ",", ident hlt, "⟩"],
+  have [ident hr] [":", expr «expr < »((0 : exprℝ()), r.denom)] [],
+  from [expr nat.cast_pos.2 r.pos],
+  have [ident hn'] [":", expr «expr ≠ »((n : exprℝ()), 0)] [],
+  from [expr nat.cast_ne_zero.2 (zero_lt_one.trans_le hn).ne'],
+  have [] [":", expr «expr = »((«expr / »(«expr↑ »((«expr + »(«expr * »(r.denom, m), «expr * »(r.num, n)) : exprℤ())), «expr↑ »(«expr • »(r.denom, id n))) : exprℝ()), «expr + »(«expr / »(m, n), r))] [],
+  by simp [] [] [] ["[", expr add_div, ",", expr hr.ne', ",", expr mul_div_mul_left, ",", expr mul_div_mul_right, ",", expr hn', ",", "<-", expr rat.cast_def, "]"] [] [],
+  refine [expr ⟨«expr + »(«expr * »(r.denom, m), «expr * »(r.num, n)), _⟩],
+  rw ["[", expr this, ",", expr add_sub_add_right_eq_sub, "]"] [],
+  refine [expr ⟨by simpa [] [] [] [] [] [], hlt.trans_le (le_of_eq _)⟩],
+  have [] [":", expr «expr ≠ »((«expr ^ »(r.denom, p) : exprℝ()), 0)] [],
+  from [expr (rpow_pos_of_pos hr _).ne'],
+  simp [] [] [] ["[", expr mul_rpow, ",", expr nat.cast_nonneg, ",", expr mul_div_mul_left, ",", expr this, "]"] [] []
+end
 
 @[simp]
 theorem add_rat_iff : LiouvilleWith p (x+r) ↔ LiouvilleWith p x :=
@@ -299,21 +295,21 @@ theorem nat_sub_iff : LiouvilleWith p (n - x) ↔ LiouvilleWith p x :=
 theorem nat_sub (h : LiouvilleWith p x) (n : ℕ) : LiouvilleWith p (n - x) :=
   nat_sub_iff.2 h
 
-theorem ne_cast_int (h : LiouvilleWith p x) (hp : 1 < p) (m : ℤ) : x ≠ m :=
-  by 
-    rintro rfl 
-    rename' m => M 
-    rcases((eventually_gt_at_top 0).and_frequently (h.frequently_lt_rpow_neg hp)).exists with
-      ⟨n : ℕ, hn : 0 < n, m : ℤ, hne : (M : ℝ) ≠ m / n, hlt : |(M - m / n : ℝ)| < (n^(-1 : ℝ))⟩
-    refine' hlt.not_le _ 
-    have hn' : (0 : ℝ) < n
-    ·
-      simpa 
-    rw [rpow_neg_one, ←one_div, sub_div' _ _ _ hn'.ne', abs_div, Nat.abs_cast, div_le_div_right hn']
-    normCast 
-    rw [←zero_addₓ (1 : ℤ), Int.add_one_le_iff, abs_pos, sub_ne_zero]
-    rw [Ne.def, eq_div_iff hn'.ne'] at hne 
-    exactModCast hne
+-- error in NumberTheory.Liouville.LiouvilleWith: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ne_cast_int (h : liouville_with p x) (hp : «expr < »(1, p)) (m : exprℤ()) : «expr ≠ »(x, m) :=
+begin
+  rintro [ident rfl],
+  rename [ident m, ident M],
+  rcases [expr ((eventually_gt_at_top 0).and_frequently (h.frequently_lt_rpow_neg hp)).exists, "with", "⟨", ident n, ":", expr exprℕ(), ",", ident hn, ":", expr «expr < »(0, n), ",", ident m, ":", expr exprℤ(), ",", ident hne, ":", expr «expr ≠ »((M : exprℝ()), «expr / »(m, n)), ",", ident hlt, ":", expr «expr < »(«expr| |»((«expr - »(M, «expr / »(m, n)) : exprℝ())), «expr ^ »(n, («expr- »(1) : exprℝ()))), "⟩"],
+  refine [expr hlt.not_le _],
+  have [ident hn'] [":", expr «expr < »((0 : exprℝ()), n)] [],
+  by simpa [] [] [] [] [] [],
+  rw ["[", expr rpow_neg_one, ",", "<-", expr one_div, ",", expr sub_div' _ _ _ hn'.ne', ",", expr abs_div, ",", expr nat.abs_cast, ",", expr div_le_div_right hn', "]"] [],
+  norm_cast [],
+  rw ["[", "<-", expr zero_add (1 : exprℤ()), ",", expr int.add_one_le_iff, ",", expr abs_pos, ",", expr sub_ne_zero, "]"] [],
+  rw ["[", expr ne.def, ",", expr eq_div_iff hn'.ne', "]"] ["at", ident hne],
+  exact_mod_cast [expr hne]
+end
 
 /-- A number satisfying the Liouville condition with exponent `p > 1` is an irrational number. -/
 protected theorem Irrational (h : LiouvilleWith p x) (hp : 1 < p) : Irrational x :=
@@ -333,41 +329,44 @@ namespace Liouville
 
 variable{x : ℝ}
 
+-- error in NumberTheory.Liouville.LiouvilleWith: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `x` is a Liouville number, then for any `n`, for infinitely many denominators `b` there
 exists a numerator `a` such that `x ≠ a / b` and `|x - a / b| < 1 / b ^ n`. -/
-theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
-  ∃ᶠb : ℕ in at_top, ∃ a : ℤ, x ≠ a / b ∧ |x - a / b| < 1 / (b^n) :=
-  by 
-    refine' not_not.1 fun H => _ 
-    simp only [Liouville, not_forall, not_exists, not_frequently, not_and, not_ltₓ, eventually_at_top] at H 
-    rcases H with ⟨N, hN⟩
-    have  : ∀ b _ : b > (1 : ℕ), ∀ᶠm : ℕ in at_top, ∀ a : ℤ, (1 / (b^m) : ℝ) ≤ |x - a / b|
-    ·
-      intro b hb 
-      have hb0' : (b : ℚ) ≠ 0 := (zero_lt_one.trans (Nat.one_lt_cast.2 hb)).ne' 
-      replace hb : (1 : ℝ) < b := Nat.one_lt_cast.2 hb 
-      have hb0 : (0 : ℝ) < b := zero_lt_one.trans hb 
-      have H : tendsto (fun m => 1 / (b^m) : ℕ → ℝ) at_top (𝓝 0)
-      ·
-        simp only [one_div]
-        exact tendsto_inv_at_top_zero.comp (tendsto_pow_at_top_at_top_of_one_lt hb)
-      refine' (H.eventually (hx.irrational.eventually_forall_le_dist_cast_div b)).mono _ 
-      exact fun m hm a => hm a 
-    have  : ∀ᶠm : ℕ in at_top, ∀ b _ : b < N, 1 < b → ∀ a : ℤ, (1 / (b^m) : ℝ) ≤ |x - a / b|
-    exact (finite_lt_nat N).eventually_all.2 fun b hb => eventually_imp_distrib_left.2 (this b)
-    rcases(this.and (eventually_ge_at_top n)).exists with ⟨m, hm, hnm⟩
-    rcases hx m with ⟨a, b, hb, hne, hlt⟩
-    lift b to ℕ using zero_le_one.trans hb.le 
-    normCast  at hb 
-    pushCast  at hne hlt 
-    cases le_or_ltₓ N b
-    ·
-      refine' (hN b h a hne).not_lt (hlt.trans_le _)
-      replace hb : (1 : ℝ) < b := Nat.one_lt_cast.2 hb 
-      have hb0 : (0 : ℝ) < b := zero_lt_one.trans hb 
-      exact one_div_le_one_div_of_le (pow_pos hb0 _) (pow_le_pow hb.le hnm)
-    ·
-      exact (hm b h hb _).not_lt hlt
+theorem frequently_exists_num
+(hx : liouville x)
+(n : exprℕ()) : «expr∃ᶠ in , »((b : exprℕ()), at_top, «expr∃ , »((a : exprℤ()), «expr ∧ »(«expr ≠ »(x, «expr / »(a, b)), «expr < »(«expr| |»(«expr - »(x, «expr / »(a, b))), «expr / »(1, «expr ^ »(b, n)))))) :=
+begin
+  refine [expr not_not.1 (λ H, _)],
+  simp [] [] ["only"] ["[", expr liouville, ",", expr not_forall, ",", expr not_exists, ",", expr not_frequently, ",", expr not_and, ",", expr not_lt, ",", expr eventually_at_top, "]"] [] ["at", ident H],
+  rcases [expr H, "with", "⟨", ident N, ",", ident hN, "⟩"],
+  have [] [":", expr ∀
+   b «expr > » (1 : exprℕ()), «expr∀ᶠ in , »((m : exprℕ()), at_top, ∀
+    a : exprℤ(), «expr ≤ »((«expr / »(1, «expr ^ »(b, m)) : exprℝ()), «expr| |»(«expr - »(x, «expr / »(a, b)))))] [],
+  { intros [ident b, ident hb],
+    have [ident hb0'] [":", expr «expr ≠ »((b : exprℚ()), 0)] [":=", expr (zero_lt_one.trans (nat.one_lt_cast.2 hb)).ne'],
+    replace [ident hb] [":", expr «expr < »((1 : exprℝ()), b)] [":=", expr nat.one_lt_cast.2 hb],
+    have [ident hb0] [":", expr «expr < »((0 : exprℝ()), b)] [":=", expr zero_lt_one.trans hb],
+    have [ident H] [":", expr tendsto (λ m, «expr / »(1, «expr ^ »(b, m)) : exprℕ() → exprℝ()) at_top (expr𝓝() 0)] [],
+    { simp [] [] ["only"] ["[", expr one_div, "]"] [] [],
+      exact [expr tendsto_inv_at_top_zero.comp (tendsto_pow_at_top_at_top_of_one_lt hb)] },
+    refine [expr (H.eventually (hx.irrational.eventually_forall_le_dist_cast_div b)).mono _],
+    exact [expr λ m hm a, hm a] },
+  have [] [":", expr «expr∀ᶠ in , »((m : exprℕ()), at_top, ∀
+    b «expr < » N, «expr < »(1, b) → ∀
+    a : exprℤ(), «expr ≤ »((«expr / »(1, «expr ^ »(b, m)) : exprℝ()), «expr| |»(«expr - »(x, «expr / »(a, b)))))] [],
+  from [expr (finite_lt_nat N).eventually_all.2 (λ b hb, eventually_imp_distrib_left.2 (this b))],
+  rcases [expr (this.and (eventually_ge_at_top n)).exists, "with", "⟨", ident m, ",", ident hm, ",", ident hnm, "⟩"],
+  rcases [expr hx m, "with", "⟨", ident a, ",", ident b, ",", ident hb, ",", ident hne, ",", ident hlt, "⟩"],
+  lift [expr b] ["to", expr exprℕ()] ["using", expr zero_le_one.trans hb.le] [],
+  norm_cast ["at", ident hb],
+  push_cast [] ["at", ident hne, ident hlt],
+  cases [expr le_or_lt N b] [],
+  { refine [expr (hN b h a hne).not_lt (hlt.trans_le _)],
+    replace [ident hb] [":", expr «expr < »((1 : exprℝ()), b)] [":=", expr nat.one_lt_cast.2 hb],
+    have [ident hb0] [":", expr «expr < »((0 : exprℝ()), b)] [":=", expr zero_lt_one.trans hb],
+    exact [expr one_div_le_one_div_of_le (pow_pos hb0 _) (pow_le_pow hb.le hnm)] },
+  { exact [expr (hm b h hb _).not_lt hlt] }
+end
 
 /-- A Liouville number is a Liouville number with any real exponent. -/
 protected theorem LiouvilleWith (hx : Liouville x) (p : ℝ) : LiouvilleWith p x :=

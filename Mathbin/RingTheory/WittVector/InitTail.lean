@@ -50,7 +50,7 @@ unsafe def init_ring (assert : parse (tk "using" >> parser.pexpr)?) : tactic Uni
       | some e =>
         do 
           sorry 
-          tactic.replace `h (ppquote (%%e) p _ h)
+          tactic.replace `h (ppquote.1 ((%%ₓe) p _ h))
           sorry
 
 end Interactive
@@ -96,7 +96,7 @@ theorem select_is_poly (P : ℕ → Prop) :
   is_poly p
     fun R _Rcr x =>
       by 
-        exactI select P x :=
+        exact select P x :=
   by 
     use select_poly P 
     rintro R _Rcr x 
@@ -128,41 +128,36 @@ theorem select_add_select_not : ∀ x : 𝕎 R, (select P x+select (fun i => ¬P
     ·
       rwa [if_neg Pm, if_pos, zero_addₓ]
 
-theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coeff n = 0) :
-  (x+y).coeff n = x.coeff n+y.coeff n :=
-  by 
-    let P : ℕ → Prop := fun n => y.coeff n = 0
-    haveI  : DecidablePred P := Classical.decPred P 
-    set z := mk p fun n => if P n then x.coeff n else y.coeff n with hz 
-    have hx : select P z = x
-    ·
-      ext1 n 
-      rw [select, coeff_mk, coeff_mk]
-      splitIfs with hn
-      ·
-        rfl
-      ·
-        rw [(h n).resolve_right hn]
-    have hy : select (fun i => ¬P i) z = y
-    ·
-      ext1 n 
-      rw [select, coeff_mk, coeff_mk]
-      splitIfs with hn
-      ·
-        exact hn.symm
-      ·
-        rfl 
-    calc (x+y).coeff n = z.coeff n :=
-      by 
-        rw [←hx, ←hy, select_add_select_not P z]_ = x.coeff n+y.coeff n :=
-      _ 
-    dsimp [z]
-    splitIfs with hn
-    ·
-      dsimp [P]  at hn 
-      rw [hn, add_zeroₓ]
-    ·
-      rw [(h n).resolve_right hn, zero_addₓ]
+-- error in RingTheory.WittVector.InitTail: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem coeff_add_of_disjoint
+(x y : expr𝕎() R)
+(h : ∀
+ n, «expr ∨ »(«expr = »(x.coeff n, 0), «expr = »(y.coeff n, 0))) : «expr = »(«expr + »(x, y).coeff n, «expr + »(x.coeff n, y.coeff n)) :=
+begin
+  let [ident P] [":", expr exprℕ() → exprProp()] [":=", expr λ n, «expr = »(y.coeff n, 0)],
+  haveI [] [":", expr decidable_pred P] [":=", expr classical.dec_pred P],
+  set [] [ident z] [] [":="] [expr mk p (λ n, if P n then x.coeff n else y.coeff n)] ["with", ident hz],
+  have [ident hx] [":", expr «expr = »(select P z, x)] [],
+  { ext1 [] [ident n],
+    rw ["[", expr select, ",", expr coeff_mk, ",", expr coeff_mk, "]"] [],
+    split_ifs [] ["with", ident hn],
+    { refl },
+    { rw [expr (h n).resolve_right hn] [] } },
+  have [ident hy] [":", expr «expr = »(select (λ i, «expr¬ »(P i)) z, y)] [],
+  { ext1 [] [ident n],
+    rw ["[", expr select, ",", expr coeff_mk, ",", expr coeff_mk, "]"] [],
+    split_ifs [] ["with", ident hn],
+    { exact [expr hn.symm] },
+    { refl } },
+  calc
+    «expr = »(«expr + »(x, y).coeff n, z.coeff n) : by rw ["[", "<-", expr hx, ",", "<-", expr hy, ",", expr select_add_select_not P z, "]"] []
+    «expr = »(..., «expr + »(x.coeff n, y.coeff n)) : _,
+  dsimp [] ["[", expr z, "]"] [] [],
+  split_ifs [] ["with", ident hn],
+  { dsimp [] ["[", expr P, "]"] [] ["at", ident hn],
+    rw ["[", expr hn, ",", expr add_zero, "]"] [] },
+  { rw ["[", expr (h n).resolve_right hn, ",", expr zero_add, "]"] [] }
+end
 
 end Select
 
@@ -224,7 +219,7 @@ theorem init_is_poly (n : ℕ) :
   is_poly p
     fun R _Rcr =>
       by 
-        exactI init n :=
+        exact init n :=
   select_is_poly fun i => i < n
 
 end 

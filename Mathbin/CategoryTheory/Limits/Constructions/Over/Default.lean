@@ -1,3 +1,4 @@
+import Mathbin.CategoryTheory.Limits.Connected 
 import Mathbin.CategoryTheory.Limits.Constructions.Over.Products 
 import Mathbin.CategoryTheory.Limits.Constructions.Over.Connected 
 import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers 
@@ -33,35 +34,27 @@ example  {B : C} [has_equalizers C] : has_equalizers (over B) :=
   by 
     infer_instance
 
+-- error in CategoryTheory.Limits.Constructions.Over.Default: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance has_finite_limits {B : C} [has_finite_wide_pullbacks C] : has_finite_limits (over B) :=
-  by 
-    apply @finite_limits_from_equalizers_and_finite_products _ _ _ _
-    ·
-      exact construct_products.over_finite_products_of_finite_wide_pullbacks
-    ·
-      apply @has_equalizers_of_pullbacks_and_binary_products _ _ _ _
-      ·
-        haveI  : has_pullbacks C :=
-          ⟨by 
-              infer_instance⟩
-        exact construct_products.over_binary_product_of_pullback
-      ·
-        infer_instance
+begin
+  apply [expr @finite_limits_from_equalizers_and_finite_products _ _ _ _],
+  { exact [expr construct_products.over_finite_products_of_finite_wide_pullbacks] },
+  { apply [expr @has_equalizers_of_pullbacks_and_binary_products _ _ _ _],
+    { haveI [] [":", expr has_pullbacks C] [":=", expr ⟨by apply_instance⟩],
+      exact [expr construct_products.over_binary_product_of_pullback] },
+    { apply_instance } }
+end
 
+-- error in CategoryTheory.Limits.Constructions.Over.Default: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance has_limits {B : C} [has_wide_pullbacks C] : has_limits (over B) :=
-  by 
-    apply @limits_from_equalizers_and_products _ _ _ _
-    ·
-      exact construct_products.over_products_of_wide_pullbacks
-    ·
-      apply @has_equalizers_of_pullbacks_and_binary_products _ _ _ _
-      ·
-        haveI  : has_pullbacks C :=
-          ⟨by 
-              infer_instance⟩
-        exact construct_products.over_binary_product_of_pullback
-      ·
-        infer_instance
+begin
+  apply [expr @limits_from_equalizers_and_products _ _ _ _],
+  { exact [expr construct_products.over_products_of_wide_pullbacks] },
+  { apply [expr @has_equalizers_of_pullbacks_and_binary_products _ _ _ _],
+    { haveI [] [":", expr has_pullbacks C] [":=", expr ⟨by apply_instance⟩],
+      exact [expr construct_products.over_binary_product_of_pullback] },
+    { apply_instance } }
+end
 
 end CategoryTheory.Over
 

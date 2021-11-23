@@ -1,6 +1,5 @@
-import Mathbin.Tactic.NthRewrite.Basic 
 import Mathbin.Tactic.Core 
-import Mathbin.Data.Mllist
+import Mathbin.Tactic.NthRewrite.Basic
 
 namespace Tactic
 
@@ -27,9 +26,9 @@ unsafe def rewrite_without_new_mvars (r : expr) (e : expr) (cfg : nth_rewrite.cf
 This is a bit of a hack: we manually inspect the proof that `rewrite_core` produced, and deduce from
 that whether or not the entire expression was rewritten.-/
 unsafe def rewrite_is_of_entire : expr → Bool
-| quote @Eq.ndrec _ (%%term) (%%C) (%%p) _ _ =>
+| quote.1 (@Eq.ndrec _ (%%ₓterm) (%%ₓC) (%%ₓp) _ _) =>
   match C with 
-  | quote fun p => _ = p => tt
+  | quote.1 fun p => _ = p => tt
   | _ => ff
 | _ => ff
 

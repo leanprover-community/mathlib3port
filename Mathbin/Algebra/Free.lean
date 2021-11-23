@@ -21,12 +21,12 @@ import Mathbin.Algebra.Group.Hom
 
 universe u v l
 
--- error in Algebra.Free: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Algebra.Free: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- Free magma over a given alphabet. -/ @[derive #[expr decidable_eq]] inductive free_magma (α : Type u) : Type u
 | of : α → free_magma
 | mul : free_magma → free_magma → free_magma
 
--- error in Algebra.Free: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Algebra.Free: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- Free nonabelian additive magma over a given alphabet. -/
 @[derive #[expr decidable_eq]]
 inductive free_add_magma (α : Type u) : Type u
@@ -260,10 +260,10 @@ instance  : IsLawfulTraversable FreeMagma.{u} :=
         FreeMagma.recOnPure x
           (fun x =>
             by 
-              resetI <;> simp' only [traverse_pure, traverse_pure'] with functor_norm)
+              skip <;> simp' only [traverse_pure, traverse_pure'] with functor_norm)
           fun x y ih1 ih2 =>
             by 
-              resetI <;> rw [traverse_mul, ih1, ih2, traverse_mul] <;> simp' only [traverse_mul'] with functor_norm,
+              skip <;> rw [traverse_mul, ih1, ih2, traverse_mul] <;> simp' only [traverse_mul'] with functor_norm,
     naturality :=
       fun F G hf1 hg1 hf2 hg2 η α β f x =>
         FreeMagma.recOnPure x
@@ -657,10 +657,10 @@ instance  : IsLawfulTraversable FreeSemigroup.{u} :=
         rec_on_pure x
           (fun x =>
             by 
-              resetI <;> simp' only [traverse_pure, traverse_pure'] with functor_norm)
+              skip <;> simp' only [traverse_pure, traverse_pure'] with functor_norm)
           fun x y ih1 ih2 =>
             by 
-              resetI <;> rw [traverse_mul, ih1, ih2, traverse_mul] <;> simp' only [traverse_mul'] with functor_norm,
+              skip <;> rw [traverse_mul, ih1, ih2, traverse_mul] <;> simp' only [traverse_mul'] with functor_norm,
     naturality :=
       fun F G hf1 hg1 hf2 hg2 η α β f x =>
         rec_on_pure x
@@ -669,7 +669,7 @@ instance  : IsLawfulTraversable FreeSemigroup.{u} :=
               simp' only [traverse_pure] with functor_norm)
           fun x y ih1 ih2 =>
             by 
-              resetI <;> simp' only [traverse_mul] with functor_norm <;> rw [ih1, ih2],
+              skip <;> simp' only [traverse_mul] with functor_norm <;> rw [ih1, ih2],
     traverse_eq_map_id :=
       fun α β f x =>
         FreeSemigroup.recOn x (fun _ => rfl)

@@ -90,45 +90,39 @@ theorem is_cyclic_of_order_of_eq_card [Fintype α] (x : α) (hx : orderOf x = Fi
     apply Set.eq_of_subset_of_card_le (Set.subset_univ _)
     rw [Fintype.card_congr (Equiv.Set.univ α), ←hx, order_eq_card_zpowers]
 
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A finite group of prime order is cyclic. -/
-theorem is_cyclic_of_prime_card {α : Type u} [Groupₓ α] [Fintype α] {p : ℕ} [hp : Fact p.prime]
-  (h : Fintype.card α = p) : IsCyclic α :=
-  ⟨by 
-      obtain ⟨g, hg⟩ : ∃ g : α, g ≠ 1 
-      exact
-        Fintype.exists_ne_of_one_lt_card
-          (by 
-            rw [h]
-            exact hp.1.one_lt)
-          1
-      classical 
-      have  : Fintype.card (Subgroup.zpowers g) ∣ p
-      ·
-        rw [←h]
-        apply card_subgroup_dvd_card 
-      rw [Nat.dvd_prime hp.1] at this 
-      cases this
-      ·
-        rw [Fintype.card_eq_one_iff] at this 
-        cases' this with t ht 
-        suffices  : g = 1
-        ·
-          contradiction 
-        have hgt :=
-          ht
-            ⟨g,
-              by 
-                change g ∈ Subgroup.zpowers g 
-                exact Subgroup.mem_zpowers g⟩
-        rw [←ht 1] at hgt 
-        change (⟨_, _⟩ : Subgroup.zpowers g) = ⟨_, _⟩ at hgt 
-        simpa using hgt
-      ·
-        use g 
-        intro x 
-        rw [←h] at this 
-        rw [Subgroup.eq_top_of_card_eq _ this]
-        exact Subgroup.mem_top _⟩
+theorem is_cyclic_of_prime_card
+{α : Type u}
+[group α]
+[fintype α]
+{p : exprℕ()}
+[hp : fact p.prime]
+(h : «expr = »(fintype.card α, p)) : is_cyclic α :=
+⟨begin
+   obtain ["⟨", ident g, ",", ident hg, "⟩", ":", expr «expr∃ , »((g : α), «expr ≠ »(g, 1))],
+   from [expr fintype.exists_ne_of_one_lt_card (by { rw [expr h] [], exact [expr hp.1.one_lt] }) 1],
+   classical,
+   have [] [":", expr «expr ∣ »(fintype.card (subgroup.zpowers g), p)] [],
+   { rw ["<-", expr h] [],
+     apply [expr card_subgroup_dvd_card] },
+   rw [expr nat.dvd_prime hp.1] ["at", ident this],
+   cases [expr this] [],
+   { rw [expr fintype.card_eq_one_iff] ["at", ident this],
+     cases [expr this] ["with", ident t, ident ht],
+     suffices [] [":", expr «expr = »(g, 1)],
+     { contradiction },
+     have [ident hgt] [] [":=", expr ht ⟨g, by { change [expr «expr ∈ »(g, subgroup.zpowers g)] [] [],
+         exact [expr subgroup.mem_zpowers g] }⟩],
+     rw ["[", "<-", expr ht 1, "]"] ["at", ident hgt],
+     change [expr «expr = »((⟨_, _⟩ : subgroup.zpowers g), ⟨_, _⟩)] [] ["at", ident hgt],
+     simpa [] [] [] [] [] ["using", expr hgt] },
+   { use [expr g],
+     intro [ident x],
+     rw ["[", "<-", expr h, "]"] ["at", ident this],
+     rw [expr subgroup.eq_top_of_card_eq _ this] [],
+     exact [expr subgroup.mem_top _] }
+ end⟩
 
 theorem order_of_eq_card_of_forall_mem_zpowers [Fintype α] {g : α} (hx : ∀ x, x ∈ zpowers g) :
   orderOf g = Fintype.card α :=
@@ -144,77 +138,35 @@ theorem order_of_eq_card_of_forall_mem_zpowers [Fintype α] {g : α} (hx : ∀ x
 instance Bot.is_cyclic {α : Type u} [Groupₓ α] : IsCyclic (⊥ : Subgroup α) :=
   ⟨⟨1, fun x => ⟨0, Subtype.eq$ Eq.symm (Subgroup.mem_bot.1 x.2)⟩⟩⟩
 
-instance Subgroup.is_cyclic {α : Type u} [Groupₓ α] [IsCyclic α] (H : Subgroup α) : IsCyclic H :=
-  by 
-    haveI  := Classical.propDecidable <;>
-      exact
-        let ⟨g, hg⟩ := IsCyclic.exists_generator α 
-        if hx : ∃ x : α, x ∈ H ∧ x ≠ (1 : α) then
-          let ⟨x, hx₁, hx₂⟩ := hx 
-          let ⟨k, hk⟩ := hg x 
-          have hex : ∃ n : ℕ, 0 < n ∧ g ^ n ∈ H :=
-            ⟨k.nat_abs,
-              Nat.pos_of_ne_zeroₓ
-                fun h =>
-                  hx₂$
-                    by 
-                      rw [←hk, Int.eq_zero_of_nat_abs_eq_zero h, zpow_zero],
-              match k, hk with 
-              | (k : ℕ), hk =>
-                by 
-                  rw [Int.nat_abs_of_nat, ←zpow_coe_nat, hk] <;> exact hx₁
-              | -[1+ k], hk =>
-                by 
-                  rw [Int.nat_abs_of_neg_succ_of_nat, ←Subgroup.inv_mem_iff H] <;> simp_all ⟩
-          ⟨⟨⟨g ^ Nat.findₓ hex, (Nat.find_specₓ hex).2⟩,
-              fun ⟨x, hx⟩ =>
-                let ⟨k, hk⟩ := hg x 
-                have hk₁ : (g ^ (Nat.findₓ hex : ℤ)*k / Nat.findₓ hex) ∈ zpowers (g ^ Nat.findₓ hex) :=
-                  ⟨k / Nat.findₓ hex,
-                    by 
-                      rw [←zpow_coe_nat, zpow_mul]⟩
-                have hk₂ : (g ^ (Nat.findₓ hex : ℤ)*k / Nat.findₓ hex) ∈ H :=
-                  by 
-                    rw [zpow_mul]
-                    apply H.zpow_mem 
-                    exactModCast (Nat.find_specₓ hex).2
-                have hk₃ : g ^ (k % Nat.findₓ hex) ∈ H :=
-                  (Subgroup.mul_mem_cancel_right H hk₂).1$
-                    by 
-                      rw [←zpow_add, Int.mod_add_div, hk] <;> exact hx 
-                have hk₄ : k % Nat.findₓ hex = (k % Nat.findₓ hex).natAbs :=
-                  by 
-                    rw [Int.nat_abs_of_nonneg (Int.mod_nonneg _ (Int.coe_nat_ne_zero_iff_pos.2 (Nat.find_specₓ hex).1))]
-                have hk₅ : g ^ (k % Nat.findₓ hex).natAbs ∈ H :=
-                  by 
-                    rwa [←zpow_coe_nat, ←hk₄]
-                have hk₆ : (k % (Nat.findₓ hex : ℤ)).natAbs = 0 :=
-                  by_contradiction
-                    fun h =>
-                      Nat.find_minₓ hex
-                        (Int.coe_nat_lt.1$
-                          by 
-                            rw [←hk₄] <;> exact Int.mod_lt_of_pos _ (Int.coe_nat_pos.2 (Nat.find_specₓ hex).1))
-                        ⟨Nat.pos_of_ne_zeroₓ h, hk₅⟩
-                ⟨k / (Nat.findₓ hex : ℤ),
-                  Subtype.ext_iff_val.2
-                    (by 
-                      suffices  : (g ^ (Nat.findₓ hex : ℤ)*k / Nat.findₓ hex) = x
-                      ·
-                        simpa [zpow_mul]
-                      rw [Int.mul_div_cancel' (Int.dvd_of_mod_eq_zero (Int.eq_zero_of_nat_abs_eq_zero hk₆)), hk])⟩⟩⟩
-        else
-          have  : H = (⊥ : Subgroup α) :=
-            Subgroup.ext$
-              fun x =>
-                ⟨fun h =>
-                    by 
-                      simp  at * <;> tauto,
-                  fun h =>
-                    by 
-                      rw [Subgroup.mem_bot.1 h] <;> exact H.one_mem⟩
-          by 
-            clear _let_match <;> substI this <;> infer_instance
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance subgroup.is_cyclic {α : Type u} [group α] [is_cyclic α] (H : subgroup α) : is_cyclic H :=
+by haveI [] [] [":=", expr classical.prop_decidable]; exact [expr let ⟨g, hg⟩ := is_cyclic.exists_generator α in
+ if hx : «expr∃ , »((x : α), «expr ∧ »(«expr ∈ »(x, H), «expr ≠ »(x, (1 : α)))) then let ⟨x, hx₁, hx₂⟩ := hx in
+ let ⟨k, hk⟩ := hg x in
+ have hex : «expr∃ , »((n : exprℕ()), «expr ∧ »(«expr < »(0, n), «expr ∈ »(«expr ^ »(g, n), H))), from ⟨k.nat_abs, nat.pos_of_ne_zero (λ
+   h, «expr $ »(hx₂, by rw ["[", "<-", expr hk, ",", expr int.eq_zero_of_nat_abs_eq_zero h, ",", expr zpow_zero, "]"] [])), match k, hk with
+  | (k : exprℕ()), hk := by rw ["[", expr int.nat_abs_of_nat, ",", "<-", expr zpow_coe_nat, ",", expr hk, "]"] []; exact [expr hx₁]
+  | «expr-[1+ ]»(k), hk := by rw ["[", expr int.nat_abs_of_neg_succ_of_nat, ",", "<-", expr subgroup.inv_mem_iff H, "]"] []; simp [] [] [] ["*"] [] ["at", "*"]
+  end⟩,
+ ⟨⟨⟨«expr ^ »(g, nat.find hex), (nat.find_spec hex).2⟩, λ ⟨x, hx⟩, let ⟨k, hk⟩ := hg x in
+   have hk₁ : «expr ∈ »(«expr ^ »(g, «expr * »((nat.find hex : exprℤ()), «expr / »(k, nat.find hex))), zpowers «expr ^ »(g, nat.find hex)), from ⟨«expr / »(k, nat.find hex), by rw ["[", "<-", expr zpow_coe_nat, ",", expr zpow_mul, "]"] []⟩,
+   have hk₂ : «expr ∈ »(«expr ^ »(g, «expr * »((nat.find hex : exprℤ()), «expr / »(k, nat.find hex))), H), by { rw [expr zpow_mul] [],
+     apply [expr H.zpow_mem],
+     exact_mod_cast [expr (nat.find_spec hex).2] },
+   have hk₃ : «expr ∈ »(«expr ^ »(g, «expr % »(k, nat.find hex)), H), from «expr $ »((subgroup.mul_mem_cancel_right H hk₂).1, by rw ["[", "<-", expr zpow_add, ",", expr int.mod_add_div, ",", expr hk, "]"] []; exact [expr hx]),
+   have hk₄ : «expr = »(«expr % »(k, nat.find hex), «expr % »(k, nat.find hex).nat_abs), by rw [expr int.nat_abs_of_nonneg (int.mod_nonneg _ (int.coe_nat_ne_zero_iff_pos.2 (nat.find_spec hex).1))] [],
+   have hk₅ : «expr ∈ »(«expr ^ »(g, «expr % »(k, nat.find hex).nat_abs), H), by rwa ["[", "<-", expr zpow_coe_nat, ",", "<-", expr hk₄, "]"] [],
+   have hk₆ : «expr = »(«expr % »(k, (nat.find hex : exprℤ())).nat_abs, 0), from by_contradiction (λ
+    h, nat.find_min hex «expr $ »(int.coe_nat_lt.1, by rw ["[", "<-", expr hk₄, "]"] []; exact [expr int.mod_lt_of_pos _ (int.coe_nat_pos.2 (nat.find_spec hex).1)]) ⟨nat.pos_of_ne_zero h, hk₅⟩),
+   ⟨«expr / »(k, (nat.find hex : exprℤ())), subtype.ext_iff_val.2 (begin
+       suffices [] [":", expr «expr = »(«expr ^ »(g, «expr * »((nat.find hex : exprℤ()), «expr / »(k, nat.find hex))), x)],
+       { simpa [] [] [] ["[", expr zpow_mul, "]"] [] [] },
+       rw ["[", expr int.mul_div_cancel' (int.dvd_of_mod_eq_zero (int.eq_zero_of_nat_abs_eq_zero hk₆)), ",", expr hk, "]"] []
+     end)⟩⟩⟩ else have «expr = »(H, («expr⊥»() : subgroup α)), from «expr $ »(subgroup.ext, λ
+  x, ⟨λ
+   h, by simp [] [] [] [] [] ["at", "*"]; tauto [], λ
+   h, by rw ["[", expr subgroup.mem_bot.1 h, "]"] []; exact [expr H.one_mem]⟩),
+ by clear [ident _let_match]; substI [expr this]; apply_instance]
 
 open Finset Nat
 
@@ -311,7 +263,7 @@ theorem card_pow_eq_one_eq_order_of_aux (a : α) :
 
 open_locale Nat
 
--- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 private
 theorem card_order_of_eq_totient_aux₁ : ∀
 {d : exprℕ()}, «expr ∣ »(d, fintype.card α) → «expr < »(0, (univ.filter (λ
@@ -410,25 +362,29 @@ theorem IsCyclic.card_order_of_eq_totient [IsCyclic α] [Fintype α] {d : ℕ} (
     classical 
     apply card_order_of_eq_totient_aux₂ (fun n => IsCyclic.card_pow_eq_one_le) hd
 
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A finite group of prime order is simple. -/
-theorem is_simple_group_of_prime_card {α : Type u} [Groupₓ α] [Fintype α] {p : ℕ} [hp : Fact p.prime]
-  (h : Fintype.card α = p) : IsSimpleGroup α :=
-  ⟨by 
-      have h' := Nat.Prime.one_lt (Fact.out p.prime)
-      rw [←h] at h' 
-      haveI  := Fintype.one_lt_card_iff_nontrivial.1 h' 
-      apply exists_pair_ne α,
-    fun H Hn =>
-      by 
-        classical 
-        have hcard := card_subgroup_dvd_card H 
-        rw [h, dvd_prime (Fact.out p.prime)] at hcard 
-        refine' hcard.imp (fun h1 => _) fun hp => _
-        ·
-          haveI  := Fintype.card_le_one_iff_subsingleton.1 (le_of_eqₓ h1)
-          apply eq_bot_of_subsingleton
-        ·
-          exact eq_top_of_card_eq _ (hp.trans h.symm)⟩
+theorem is_simple_group_of_prime_card
+{α : Type u}
+[group α]
+[fintype α]
+{p : exprℕ()}
+[hp : fact p.prime]
+(h : «expr = »(fintype.card α, p)) : is_simple_group α :=
+⟨begin
+   have [ident h'] [] [":=", expr nat.prime.one_lt (fact.out p.prime)],
+   rw ["<-", expr h] ["at", ident h'],
+   haveI [] [] [":=", expr fintype.one_lt_card_iff_nontrivial.1 h'],
+   apply [expr exists_pair_ne α]
+ end, λ H Hn, begin
+   classical,
+   have [ident hcard] [] [":=", expr card_subgroup_dvd_card H],
+   rw ["[", expr h, ",", expr dvd_prime (fact.out p.prime), "]"] ["at", ident hcard],
+   refine [expr hcard.imp (λ h1, _) (λ hp, _)],
+   { haveI [] [] [":=", expr fintype.card_le_one_iff_subsingleton.1 (le_of_eq h1)],
+     apply [expr eq_bot_of_subsingleton] },
+   { exact [expr eq_top_of_card_eq _ (hp.trans h.symm)] }
+ end⟩
 
 end Cyclic
 
@@ -490,66 +446,58 @@ section CommGroupₓ
 
 variable[CommGroupₓ α][IsSimpleGroup α]
 
-instance (priority := 100) : IsCyclic α :=
-  by 
-    cases' subsingleton_or_nontrivial α with hi hi <;> haveI  := hi
-    ·
-      apply is_cyclic_of_subsingleton
-    ·
-      obtain ⟨g, hg⟩ := exists_ne (1 : α)
-      refine' ⟨⟨g, fun x => _⟩⟩
-      cases' IsSimpleLattice.eq_bot_or_eq_top (Subgroup.zpowers g) with hb ht
-      ·
-        exFalso 
-        apply hg 
-        rw [←Subgroup.mem_bot, ←hb]
-        apply Subgroup.mem_zpowers
-      ·
-        rw [ht]
-        apply Subgroup.mem_top
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[priority 100] instance : is_cyclic α :=
+begin
+  cases [expr subsingleton_or_nontrivial α] ["with", ident hi, ident hi]; haveI [] [] [":=", expr hi],
+  { apply [expr is_cyclic_of_subsingleton] },
+  { obtain ["⟨", ident g, ",", ident hg, "⟩", ":=", expr exists_ne (1 : α)],
+    refine [expr ⟨⟨g, λ x, _⟩⟩],
+    cases [expr is_simple_lattice.eq_bot_or_eq_top (subgroup.zpowers g)] ["with", ident hb, ident ht],
+    { exfalso,
+      apply [expr hg],
+      rw ["[", "<-", expr subgroup.mem_bot, ",", "<-", expr hb, "]"] [],
+      apply [expr subgroup.mem_zpowers] },
+    { rw [expr ht] [],
+      apply [expr subgroup.mem_top] } }
+end
 
-theorem prime_card [Fintype α] : (Fintype.card α).Prime :=
-  by 
-    have h0 : 0 < Fintype.card α :=
-      Fintype.card_pos_iff.2
-        (by 
-          infer_instance)
-    obtain ⟨g, hg⟩ := IsCyclic.exists_generator α 
-    refine' ⟨Fintype.one_lt_card_iff_nontrivial.2 inferInstance, fun n hn => _⟩
-    refine' (IsSimpleLattice.eq_bot_or_eq_top (Subgroup.zpowers (g ^ n))).symm.imp _ _
-    ·
-      intro h 
-      have hgo := order_of_pow g 
-      rw [order_of_eq_card_of_forall_mem_zpowers hg, Nat.gcd_eq_right_iff_dvdₓ.1 hn,
-        order_of_eq_card_of_forall_mem_zpowers, eq_comm,
-        Nat.div_eq_iff_eq_mul_left (Nat.pos_of_dvd_of_posₓ hn h0) hn] at hgo
-      ·
-        exact (mul_left_cancel₀ (ne_of_gtₓ h0) ((mul_oneₓ (Fintype.card α)).trans hgo)).symm
-      ·
-        intro x 
-        rw [h]
-        exact Subgroup.mem_top _
-    ·
-      intro h 
-      apply le_antisymmₓ (Nat.le_of_dvdₓ h0 hn)
-      rw [←order_of_eq_card_of_forall_mem_zpowers hg]
-      apply order_of_le_of_pow_eq_one (Nat.pos_of_dvd_of_posₓ hn h0)
-      rw [←Subgroup.mem_bot, ←h]
-      exact Subgroup.mem_zpowers _
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prime_card [fintype α] : (fintype.card α).prime :=
+begin
+  have [ident h0] [":", expr «expr < »(0, fintype.card α)] [":=", expr fintype.card_pos_iff.2 (by apply_instance)],
+  obtain ["⟨", ident g, ",", ident hg, "⟩", ":=", expr is_cyclic.exists_generator α],
+  refine [expr ⟨fintype.one_lt_card_iff_nontrivial.2 infer_instance, λ n hn, _⟩],
+  refine [expr (is_simple_lattice.eq_bot_or_eq_top (subgroup.zpowers «expr ^ »(g, n))).symm.imp _ _],
+  { intro [ident h],
+    have [ident hgo] [] [":=", expr order_of_pow g],
+    rw ["[", expr order_of_eq_card_of_forall_mem_zpowers hg, ",", expr nat.gcd_eq_right_iff_dvd.1 hn, ",", expr order_of_eq_card_of_forall_mem_zpowers, ",", expr eq_comm, ",", expr nat.div_eq_iff_eq_mul_left (nat.pos_of_dvd_of_pos hn h0) hn, "]"] ["at", ident hgo],
+    { exact [expr (mul_left_cancel₀ (ne_of_gt h0) ((mul_one (fintype.card α)).trans hgo)).symm] },
+    { intro [ident x],
+      rw [expr h] [],
+      exact [expr subgroup.mem_top _] } },
+  { intro [ident h],
+    apply [expr le_antisymm (nat.le_of_dvd h0 hn)],
+    rw ["<-", expr order_of_eq_card_of_forall_mem_zpowers hg] [],
+    apply [expr order_of_le_of_pow_eq_one (nat.pos_of_dvd_of_pos hn h0)],
+    rw ["[", "<-", expr subgroup.mem_bot, ",", "<-", expr h, "]"] [],
+    exact [expr subgroup.mem_zpowers _] }
+end
 
 end CommGroupₓ
 
 end IsSimpleGroup
 
-theorem CommGroupₓ.is_simple_iff_is_cyclic_and_prime_card [Fintype α] [CommGroupₓ α] :
-  IsSimpleGroup α ↔ IsCyclic α ∧ (Fintype.card α).Prime :=
-  by 
-    split 
-    ·
-      introI h 
-      exact ⟨IsSimpleGroup.is_cyclic, IsSimpleGroup.prime_card⟩
-    ·
-      rintro ⟨hc, hp⟩
-      haveI  : Fact (Fintype.card α).Prime := ⟨hp⟩
-      exact is_simple_group_of_prime_card rfl
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem comm_group.is_simple_iff_is_cyclic_and_prime_card
+[fintype α]
+[comm_group α] : «expr ↔ »(is_simple_group α, «expr ∧ »(is_cyclic α, (fintype.card α).prime)) :=
+begin
+  split,
+  { introI [ident h],
+    exact [expr ⟨is_simple_group.is_cyclic, is_simple_group.prime_card⟩] },
+  { rintro ["⟨", ident hc, ",", ident hp, "⟩"],
+    haveI [] [":", expr fact (fintype.card α).prime] [":=", expr ⟨hp⟩],
+    exact [expr is_simple_group_of_prime_card rfl] }
+end
 

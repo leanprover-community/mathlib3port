@@ -1,5 +1,4 @@
-import Mathbin.CategoryTheory.Monoidal.Functor 
-import Mathbin.CategoryTheory.Groupoid
+import Mathbin.CategoryTheory.Monoidal.Functor
 
 /-!
 # The free monoidal category over a type
@@ -31,7 +30,7 @@ section
 
 variable(C)
 
--- error in CategoryTheory.Monoidal.Free.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in CategoryTheory.Monoidal.Free.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /--
 Given a type `C`, the free monoidal category over `C` has as objects formal expressions built from
 (formal) tensor products of terms of `C` and a formal unit. Its morphisms are compositions and

@@ -52,20 +52,18 @@ theorem mirror_C (a : R) : (C a).mirror = C a :=
 theorem mirror_X : X.mirror = (X : Polynomial R) :=
   mirror_monomial 1 (1 : R)
 
-theorem mirror_nat_degree : p.mirror.nat_degree = p.nat_degree :=
-  by 
-    byCases' hp : p = 0
-    ·
-      rw [hp, mirror_zero]
-    byCases' hR : Nontrivial R
-    ·
-      haveI  := hR 
-      rw [mirror, nat_degree_mul', reverse_nat_degree, nat_degree_X_pow,
-        tsub_add_cancel_of_le p.nat_trailing_degree_le_nat_degree]
-      rwa [leading_coeff_X_pow, mul_oneₓ, reverse_leading_coeff, Ne, trailing_coeff_eq_zero]
-    ·
-      haveI  := not_nontrivial_iff_subsingleton.mp hR 
-      exact congr_argₓ nat_degree (Subsingleton.elimₓ p.mirror p)
+-- error in Data.Polynomial.Mirror: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mirror_nat_degree : «expr = »(p.mirror.nat_degree, p.nat_degree) :=
+begin
+  by_cases [expr hp, ":", expr «expr = »(p, 0)],
+  { rw ["[", expr hp, ",", expr mirror_zero, "]"] [] },
+  by_cases [expr hR, ":", expr nontrivial R],
+  { haveI [] [] [":=", expr hR],
+    rw ["[", expr mirror, ",", expr nat_degree_mul', ",", expr reverse_nat_degree, ",", expr nat_degree_X_pow, ",", expr tsub_add_cancel_of_le p.nat_trailing_degree_le_nat_degree, "]"] [],
+    rwa ["[", expr leading_coeff_X_pow, ",", expr mul_one, ",", expr reverse_leading_coeff, ",", expr ne, ",", expr trailing_coeff_eq_zero, "]"] [] },
+  { haveI [] [] [":=", expr not_nontrivial_iff_subsingleton.mp hR],
+    exact [expr congr_arg nat_degree (subsingleton.elim p.mirror p)] }
+end
 
 theorem mirror_nat_trailing_degree : p.mirror.nat_trailing_degree = p.nat_trailing_degree :=
   by 
@@ -157,25 +155,20 @@ theorem mirror_leading_coeff : p.mirror.leading_coeff = p.trailing_coeff :=
   by 
     rw [←p.mirror_mirror, mirror_trailing_coeff, p.mirror_mirror]
 
--- error in Data.Polynomial.Mirror: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem mirror_mul_of_domain
-{R : Type*}
-[ring R]
-[is_domain R]
-(p q : polynomial R) : «expr = »(«expr * »(p, q).mirror, «expr * »(p.mirror, q.mirror)) :=
-begin
-  by_cases [expr hp, ":", expr «expr = »(p, 0)],
-  { rw ["[", expr hp, ",", expr zero_mul, ",", expr mirror_zero, ",", expr zero_mul, "]"] [] },
-  by_cases [expr hq, ":", expr «expr = »(q, 0)],
-  { rw ["[", expr hq, ",", expr mul_zero, ",", expr mirror_zero, ",", expr mul_zero, "]"] [] },
-  rw ["[", expr mirror, ",", expr mirror, ",", expr mirror, ",", expr reverse_mul_of_domain, ",", expr nat_trailing_degree_mul hp hq, ",", expr pow_add, "]"] [],
-  rw ["[", expr mul_assoc, ",", "<-", expr mul_assoc q.reverse, "]"] [],
-  conv_lhs [] [] { congr,
-    skip,
-    congr,
-    rw ["[", "<-", expr X_pow_mul, "]"] },
-  repeat { rw ["[", expr mul_assoc, "]"] [] }
-end
+theorem mirror_mul_of_domain {R : Type _} [Ringₓ R] [IsDomain R] (p q : Polynomial R) :
+  (p*q).mirror = p.mirror*q.mirror :=
+  by 
+    byCases' hp : p = 0
+    ·
+      rw [hp, zero_mul, mirror_zero, zero_mul]
+    byCases' hq : q = 0
+    ·
+      rw [hq, mul_zero, mirror_zero, mul_zero]
+    rw [mirror, mirror, mirror, reverse_mul_of_domain, nat_trailing_degree_mul hp hq, pow_addₓ]
+    rw [mul_assocₓ, ←mul_assocₓ q.reverse]
+    convLHS => congr skip congr rw [←X_pow_mul]
+    repeat' 
+      rw [mul_assocₓ]
 
 theorem mirror_smul {R : Type _} [Ringₓ R] [IsDomain R] (p : Polynomial R) (a : R) : (a • p).mirror = a • p.mirror :=
   by 
@@ -185,61 +178,41 @@ theorem mirror_neg {R : Type _} [Ringₓ R] (p : Polynomial R) : (-p).mirror = -
   by 
     rw [mirror, mirror, reverse_neg, nat_trailing_degree_neg, neg_mul_eq_neg_mul]
 
-theorem irreducible_of_mirror {R : Type _} [CommRingₓ R] [IsDomain R] {f : Polynomial R} (h1 : ¬IsUnit f)
-  (h2 : ∀ k, ((f*f.mirror) = k*k.mirror) → k = f ∨ k = -f ∨ k = f.mirror ∨ k = -f.mirror)
-  (h3 : ∀ g, g ∣ f → g ∣ f.mirror → IsUnit g) : Irreducible f :=
-  by 
-    split 
-    ·
-      exact h1
-    ·
-      intro g h fgh 
-      let k := g*h.mirror 
-      have key : (f*f.mirror) = k*k.mirror
-      ·
-        rw [fgh, mirror_mul_of_domain, mirror_mul_of_domain, mirror_mirror, mul_assocₓ, mul_commₓ h, mul_commₓ g.mirror,
-          mul_assocₓ, ←mul_assocₓ]
-      have g_dvd_f : g ∣ f
-      ·
-        rw [fgh]
-        exact dvd_mul_right g h 
-      have h_dvd_f : h ∣ f
-      ·
-        rw [fgh]
-        exact dvd_mul_left h g 
-      have g_dvd_k : g ∣ k
-      ·
-        exact dvd_mul_right g h.mirror 
-      have h_dvd_k_rev : h ∣ k.mirror
-      ·
-        rw [mirror_mul_of_domain, mirror_mirror]
-        exact dvd_mul_left h g.mirror 
-      have hk := h2 k key 
-      rcases hk with (hk | hk | hk | hk)
-      ·
-        exact
-          Or.inr
-            (h3 h h_dvd_f
-              (by 
-                rwa [←hk]))
-      ·
-        exact
-          Or.inr
-            (h3 h h_dvd_f
-              (by 
-                rwa [eq_neg_iff_eq_neg.mp hk, mirror_neg, dvd_neg]))
-      ·
-        exact
-          Or.inl
-            (h3 g g_dvd_f
-              (by 
-                rwa [←hk]))
-      ·
-        exact
-          Or.inl
-            (h3 g g_dvd_f
-              (by 
-                rwa [eq_neg_iff_eq_neg.mp hk, dvd_neg]))
+-- error in Data.Polynomial.Mirror: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem irreducible_of_mirror
+{R : Type*}
+[comm_ring R]
+[is_domain R]
+{f : polynomial R}
+(h1 : «expr¬ »(is_unit f))
+(h2 : ∀
+ k, «expr = »(«expr * »(f, f.mirror), «expr * »(k, k.mirror)) → «expr ∨ »(«expr = »(k, f), «expr ∨ »(«expr = »(k, «expr- »(f)), «expr ∨ »(«expr = »(k, f.mirror), «expr = »(k, «expr- »(f.mirror))))))
+(h3 : ∀ g, «expr ∣ »(g, f) → «expr ∣ »(g, f.mirror) → is_unit g) : irreducible f :=
+begin
+  split,
+  { exact [expr h1] },
+  { intros [ident g, ident h, ident fgh],
+    let [ident k] [] [":=", expr «expr * »(g, h.mirror)],
+    have [ident key] [":", expr «expr = »(«expr * »(f, f.mirror), «expr * »(k, k.mirror))] [],
+    { rw ["[", expr fgh, ",", expr mirror_mul_of_domain, ",", expr mirror_mul_of_domain, ",", expr mirror_mirror, ",", expr mul_assoc, ",", expr mul_comm h, ",", expr mul_comm g.mirror, ",", expr mul_assoc, ",", "<-", expr mul_assoc, "]"] [] },
+    have [ident g_dvd_f] [":", expr «expr ∣ »(g, f)] [],
+    { rw [expr fgh] [],
+      exact [expr dvd_mul_right g h] },
+    have [ident h_dvd_f] [":", expr «expr ∣ »(h, f)] [],
+    { rw [expr fgh] [],
+      exact [expr dvd_mul_left h g] },
+    have [ident g_dvd_k] [":", expr «expr ∣ »(g, k)] [],
+    { exact [expr dvd_mul_right g h.mirror] },
+    have [ident h_dvd_k_rev] [":", expr «expr ∣ »(h, k.mirror)] [],
+    { rw ["[", expr mirror_mul_of_domain, ",", expr mirror_mirror, "]"] [],
+      exact [expr dvd_mul_left h g.mirror] },
+    have [ident hk] [] [":=", expr h2 k key],
+    rcases [expr hk, "with", ident hk, "|", ident hk, "|", ident hk, "|", ident hk],
+    { exact [expr or.inr (h3 h h_dvd_f (by rwa ["<-", expr hk] []))] },
+    { exact [expr or.inr (h3 h h_dvd_f (by rwa ["[", expr eq_neg_iff_eq_neg.mp hk, ",", expr mirror_neg, ",", expr dvd_neg, "]"] []))] },
+    { exact [expr or.inl (h3 g g_dvd_f (by rwa ["<-", expr hk] []))] },
+    { exact [expr or.inl (h3 g g_dvd_f (by rwa ["[", expr eq_neg_iff_eq_neg.mp hk, ",", expr dvd_neg, "]"] []))] } }
+end
 
 end Mirror
 

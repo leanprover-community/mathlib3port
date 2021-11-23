@@ -371,29 +371,37 @@ theorem edist_lt_of_edist_lt_div (hf : LipschitzOnWith K f s) {x y : α} (hx : x
 
 end LipschitzOnWith
 
+-- error in Topology.MetricSpace.Lipschitz: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Consider a function `f : α × β → γ`. Suppose that it is continuous on each “vertical fiber”
 `{a} × t`, `a ∈ s`, and is Lipschitz continuous on each “horizontal fiber” `s × {b}`, `b ∈ t`
 with the same Lipschitz constant `K`. Then it is continuous on `s × t`.
 
 The actual statement uses (Lipschitz) continuity of `λ y, f (a, y)` and `λ x, f (x, b)` instead
 of continuity of `f` on subsets of the product space. -/
-theorem continuous_on_prod_of_continuous_on_lipschitz_on [PseudoEmetricSpace α] [TopologicalSpace β]
-  [PseudoEmetricSpace γ] (f : α × β → γ) {s : Set α} {t : Set β} (K :  ℝ≥0 )
-  (ha : ∀ a _ : a ∈ s, ContinuousOn (fun y => f (a, y)) t)
-  (hb : ∀ b _ : b ∈ t, LipschitzOnWith K (fun x => f (x, b)) s) : ContinuousOn f (s.prod t) :=
-  by 
-    rintro ⟨x, y⟩ ⟨hx : x ∈ s, hy : y ∈ t⟩
-    refine' Emetric.tendsto_nhds.2 fun ε ε0 : 0 < ε => _ 
-    replace ε0 : 0 < ε / 2 := Ennreal.half_pos (ne_of_gtₓ ε0)
-    have εK : 0 < ε / 2 / K := Ennreal.div_pos_iff.2 ⟨ε0.ne', Ennreal.coe_ne_top⟩
-    have A : s ∩ Emetric.Ball x (ε / 2 / K) ∈ 𝓝[s] x := inter_mem_nhds_within _ (Emetric.ball_mem_nhds _ εK)
-    have B : { b : β | b ∈ t ∧ edist (f (x, b)) (f (x, y)) < ε / 2 } ∈ 𝓝[t] y :=
-      inter_mem self_mem_nhds_within (ha x hx y hy (Emetric.ball_mem_nhds _ ε0))
-    filterUpwards [nhds_within_prod A B]
-    rintro ⟨a, b⟩ ⟨⟨has : a ∈ s, hax : edist a x < ε / 2 / K⟩, hbt : b ∈ t, hby : edist (f (x, b)) (f (x, y)) < ε / 2⟩
-    calc edist (f (a, b)) (f (x, y)) ≤ edist (f (a, b)) (f (x, b))+edist (f (x, b)) (f (x, y)) :=
-      edist_triangle _ _ _ _ < (ε / 2)+ε / 2 :=
-      Ennreal.add_lt_add ((hb _ hbt).edist_lt_of_edist_lt_div has hx hax) hby _ = ε := Ennreal.add_halves ε
+theorem continuous_on_prod_of_continuous_on_lipschitz_on
+[pseudo_emetric_space α]
+[topological_space β]
+[pseudo_emetric_space γ]
+(f : «expr × »(α, β) → γ)
+{s : set α}
+{t : set β}
+(K : «exprℝ≥0»())
+(ha : ∀ a «expr ∈ » s, continuous_on (λ y, f (a, y)) t)
+(hb : ∀ b «expr ∈ » t, lipschitz_on_with K (λ x, f (x, b)) s) : continuous_on f (s.prod t) :=
+begin
+  rintro ["⟨", ident x, ",", ident y, "⟩", "⟨", ident hx, ":", expr «expr ∈ »(x, s), ",", ident hy, ":", expr «expr ∈ »(y, t), "⟩"],
+  refine [expr emetric.tendsto_nhds.2 (λ (ε) (ε0 : «expr < »(0, ε)), _)],
+  replace [ident ε0] [":", expr «expr < »(0, «expr / »(ε, 2))] [":=", expr ennreal.half_pos (ne_of_gt ε0)],
+  have [ident εK] [":", expr «expr < »(0, «expr / »(«expr / »(ε, 2), K))] [":=", expr ennreal.div_pos_iff.2 ⟨ε0.ne', ennreal.coe_ne_top⟩],
+  have [ident A] [":", expr «expr ∈ »(«expr ∩ »(s, emetric.ball x «expr / »(«expr / »(ε, 2), K)), «expr𝓝[ ] »(s, x))] [":=", expr inter_mem_nhds_within _ (emetric.ball_mem_nhds _ εK)],
+  have [ident B] [":", expr «expr ∈ »({b : β | «expr ∧ »(«expr ∈ »(b, t), «expr < »(edist (f (x, b)) (f (x, y)), «expr / »(ε, 2)))}, «expr𝓝[ ] »(t, y))] [":=", expr inter_mem self_mem_nhds_within (ha x hx y hy (emetric.ball_mem_nhds _ ε0))],
+  filter_upwards ["[", expr nhds_within_prod A B, "]"] [],
+  rintro ["⟨", ident a, ",", ident b, "⟩", "⟨", "⟨", ident has, ":", expr «expr ∈ »(a, s), ",", ident hax, ":", expr «expr < »(edist a x, «expr / »(«expr / »(ε, 2), K)), "⟩", ",", ident hbt, ":", expr «expr ∈ »(b, t), ",", ident hby, ":", expr «expr < »(edist (f (x, b)) (f (x, y)), «expr / »(ε, 2)), "⟩"],
+  calc
+    «expr ≤ »(edist (f (a, b)) (f (x, y)), «expr + »(edist (f (a, b)) (f (x, b)), edist (f (x, b)) (f (x, y)))) : edist_triangle _ _ _
+    «expr < »(..., «expr + »(«expr / »(ε, 2), «expr / »(ε, 2))) : ennreal.add_lt_add ((hb _ hbt).edist_lt_of_edist_lt_div has hx hax) hby
+    «expr = »(..., ε) : ennreal.add_halves ε
+end
 
 /-- Consider a function `f : α × β → γ`. Suppose that it is continuous on each “vertical section”
 `{a} × univ`, `a : α`, and is Lipschitz continuous on each “horizontal section”

@@ -67,13 +67,13 @@ theorem interval_integrable.mul_const (h : IntervalIntegrable f ν a b) : Interv
 theorem interval_integrable.div (h : IntervalIntegrable f ν a b) : IntervalIntegrable (fun x => f x / c) ν a b :=
   interval_integrable.mul_const (c⁻¹) h
 
--- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:545:47: unsupported (impossible)
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 theorem interval_integrable_one_div
 (h : ∀ x : exprℝ(), «expr ∈ »(x, «expr[ , ]»(a, b)) → «expr ≠ »(f x, 0))
 (hf : continuous_on f «expr[ , ]»(a, b)) : interval_integrable (λ x, «expr / »(1, f x)) μ a b :=
 (continuous_on_const.div hf h).interval_integrable
 
--- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:545:47: unsupported (impossible)
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 @[simp]
 theorem interval_integrable_inv
 (h : ∀ x : exprℝ(), «expr ∈ »(x, «expr[ , ]»(a, b)) → «expr ≠ »(f x, 0))
@@ -84,14 +84,14 @@ by simpa [] [] ["only"] ["[", expr one_div, "]"] [] ["using", expr interval_inte
 theorem interval_integrable_exp : IntervalIntegrable exp μ a b :=
   continuous_exp.IntervalIntegrable a b
 
--- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:545:47: unsupported (impossible)
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 @[simp]
 theorem interval_integrable.log
 (hf : continuous_on f «expr[ , ]»(a, b))
 (h : ∀ x : exprℝ(), «expr ∈ »(x, «expr[ , ]»(a, b)) → «expr ≠ »(f x, 0)) : interval_integrable (λ x, log (f x)) μ a b :=
 (continuous_on.log hf h).interval_integrable
 
--- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:545:47: unsupported (impossible)
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 @[simp]
 theorem interval_integrable_log (h : «expr ∉ »((0 : exprℝ()), «expr[ , ]»(a, b))) : interval_integrable log μ a b :=
 «expr $ »(interval_integrable.log continuous_on_id, λ x hx, ne_of_mem_of_not_mem hx h)
@@ -187,17 +187,17 @@ open intervalIntegral
 /-! ### Integrals of simple functions -/
 
 
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem integral_pow : (∫x in a..b, x^n) = ((b^n+1) - (a^n+1)) / n+1 :=
-  by 
-    have hderiv : (deriv fun x : ℝ => (x^n+1) / n+1) = fun x => x^n
-    ·
-      ext 
-      have hne : (n+1 : ℝ) ≠ 0 :=
-        by 
-          exactModCast succ_ne_zero n 
-      simp [mul_div_assoc, mul_div_cancel' _ hne]
-    rw [integral_deriv_eq_sub' _ hderiv] <;> normNum [div_sub_div_same, continuous_on_pow]
+theorem integral_pow : «expr = »(«expr∫ in .. , »((x), a, b, «expr ^ »(x, n)), «expr / »(«expr - »(«expr ^ »(b, «expr + »(n, 1)), «expr ^ »(a, «expr + »(n, 1))), «expr + »(n, 1))) :=
+begin
+  have [ident hderiv] [":", expr «expr = »(deriv (λ
+     x : exprℝ(), «expr / »(«expr ^ »(x, «expr + »(n, 1)), «expr + »(n, 1))), λ x, «expr ^ »(x, n))] [],
+  { ext [] [] [],
+    have [ident hne] [":", expr «expr ≠ »((«expr + »(n, 1) : exprℝ()), 0)] [":=", expr by exact_mod_cast [expr succ_ne_zero n]],
+    simp [] [] [] ["[", expr mul_div_assoc, ",", expr mul_div_cancel' _ hne, "]"] [] [] },
+  rw [expr integral_deriv_eq_sub' _ hderiv] []; norm_num ["[", expr div_sub_div_same, ",", expr continuous_on_pow, "]"] []
+end
 
 /-- Integral of `|x - a| ^ n` over `Ι a b`. This integral appears in the proof of the
 Picard-Lindelöf/Cauchy-Lipschitz theorem. -/
@@ -237,7 +237,7 @@ theorem integral_one : (∫x in a..b, (1 : ℝ)) = b - a :=
   by 
     simp only [mul_oneₓ, smul_eq_mul, integral_const]
 
--- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:545:47: unsupported (impossible)
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 @[simp]
 theorem integral_inv
 (h : «expr ∉ »((0 : exprℝ()), «expr[ , ]»(a, b))) : «expr = »(«expr∫ in .. , »((x), a, b, «expr ⁻¹»(x)), log «expr / »(b, a)) :=
@@ -256,7 +256,7 @@ theorem integral_inv_of_pos (ha : 0 < a) (hb : 0 < b) : (∫x in a..b, x⁻¹) =
 theorem integral_inv_of_neg (ha : a < 0) (hb : b < 0) : (∫x in a..b, x⁻¹) = log (b / a) :=
   integral_inv$ not_mem_interval_of_gt ha hb
 
--- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:545:47: unsupported (impossible)
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 theorem integral_one_div
 (h : «expr ∉ »((0 : exprℝ()), «expr[ , ]»(a, b))) : «expr = »(«expr∫ in .. , »((x : exprℝ()), a, b, «expr / »(1, x)), log «expr / »(b, a)) :=
 by simp [] [] ["only"] ["[", expr one_div, ",", expr integral_inv h, "]"] [] []
@@ -274,7 +274,7 @@ theorem integral_exp : (∫x in a..b, exp x) = exp b - exp a :=
   by 
     rw [integral_deriv_eq_sub'] <;> normNum [continuous_on_exp]
 
--- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:545:47: unsupported (impossible)
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 @[simp]
 theorem integral_log
 (h : «expr ∉ »((0 : exprℝ()), «expr[ , ]»(a, b))) : «expr = »(«expr∫ in .. , »((x), a, b, log x), «expr + »(«expr - »(«expr - »(«expr * »(b, log b), «expr * »(a, log a)), b), a)) :=
@@ -333,7 +333,7 @@ theorem integral_one_div_one_add_sq : (∫x : ℝ in a..b, 1 / 1+x^2) = arctan b
 /-! ### Integral of `sin x ^ n` -/
 
 
--- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:340:40: in have: ././Mathport/Syntax/Translate/Basic.lean:545:47: unsupported (impossible)
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:341:40: in have: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 theorem integral_sin_pow_aux : «expr = »(«expr∫ in .. , »((x), a, b, «expr ^ »(sin x, «expr + »(n, 2))), «expr - »(«expr + »(«expr - »(«expr * »(«expr ^ »(sin a, «expr + »(n, 1)), cos a), «expr * »(«expr ^ »(sin b, «expr + »(n, 1)), cos b)), «expr * »(«expr + »(n, 1), «expr∫ in .. , »((x), a, b, «expr ^ »(sin x, n)))), «expr * »(«expr + »(n, 1), «expr∫ in .. , »((x), a, b, «expr ^ »(sin x, «expr + »(n, 2)))))) :=
 begin
   let [ident C] [] [":=", expr «expr - »(«expr * »(«expr ^ »(sin a, «expr + »(n, 1)), cos a), «expr * »(«expr ^ »(sin b, «expr + »(n, 1)), cos b))],
@@ -359,16 +359,15 @@ begin
     continuity [] [] }
 end
 
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The reduction formula for the integral of `sin x ^ n` for any natural `n ≥ 2`. -/
-theorem integral_sin_pow :
-  (∫x in a..b, sin x^n+2) = ((((sin a^n+1)*cos a) - (sin b^n+1)*cos b) / n+2)+((n+1) / n+2)*∫x in a..b, sin x^n :=
-  by 
-    have  : ((n : ℝ)+2) ≠ 0 :=
-      by 
-        exactModCast succ_ne_zero n.succ 
-    fieldSimp 
-    convert eq_sub_iff_add_eq.mp (integral_sin_pow_aux n)
-    ring
+theorem integral_sin_pow : «expr = »(«expr∫ in .. , »((x), a, b, «expr ^ »(sin x, «expr + »(n, 2))), «expr + »(«expr / »(«expr - »(«expr * »(«expr ^ »(sin a, «expr + »(n, 1)), cos a), «expr * »(«expr ^ »(sin b, «expr + »(n, 1)), cos b)), «expr + »(n, 2)), «expr * »(«expr / »(«expr + »(n, 1), «expr + »(n, 2)), «expr∫ in .. , »((x), a, b, «expr ^ »(sin x, n))))) :=
+begin
+  have [] [":", expr «expr ≠ »(«expr + »((n : exprℝ()), 2), 0)] [":=", expr by exact_mod_cast [expr succ_ne_zero n.succ]],
+  field_simp [] [] [] [],
+  convert [] [expr eq_sub_iff_add_eq.mp (integral_sin_pow_aux n)] [],
+  ring []
+end
 
 @[simp]
 theorem integral_sin_sq : (∫x in a..b, sin x^2) = ((((sin a*cos a) - sin b*cos b)+b) - a) / 2 :=
@@ -415,7 +414,7 @@ theorem integral_sin_pow_antitone : Antitone fun n : ℕ => ∫x in 0 ..π, sin 
 /-! ### Integral of `cos x ^ n` -/
 
 
--- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:340:40: in have: ././Mathport/Syntax/Translate/Basic.lean:545:47: unsupported (impossible)
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:341:40: in have: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 theorem integral_cos_pow_aux : «expr = »(«expr∫ in .. , »((x), a, b, «expr ^ »(cos x, «expr + »(n, 2))), «expr - »(«expr + »(«expr - »(«expr * »(«expr ^ »(cos b, «expr + »(n, 1)), sin b), «expr * »(«expr ^ »(cos a, «expr + »(n, 1)), sin a)), «expr * »(«expr + »(n, 1), «expr∫ in .. , »((x), a, b, «expr ^ »(cos x, n)))), «expr * »(«expr + »(n, 1), «expr∫ in .. , »((x), a, b, «expr ^ »(cos x, «expr + »(n, 2)))))) :=
 begin
   let [ident C] [] [":=", expr «expr - »(«expr * »(«expr ^ »(cos b, «expr + »(n, 1)), sin b), «expr * »(«expr ^ »(cos a, «expr + »(n, 1)), sin a))],
@@ -441,16 +440,15 @@ begin
     continuity [] [] }
 end
 
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The reduction formula for the integral of `cos x ^ n` for any natural `n ≥ 2`. -/
-theorem integral_cos_pow :
-  (∫x in a..b, cos x^n+2) = ((((cos b^n+1)*sin b) - (cos a^n+1)*sin a) / n+2)+((n+1) / n+2)*∫x in a..b, cos x^n :=
-  by 
-    have  : ((n : ℝ)+2) ≠ 0 :=
-      by 
-        exactModCast succ_ne_zero n.succ 
-    fieldSimp 
-    convert eq_sub_iff_add_eq.mp (integral_cos_pow_aux n)
-    ring
+theorem integral_cos_pow : «expr = »(«expr∫ in .. , »((x), a, b, «expr ^ »(cos x, «expr + »(n, 2))), «expr + »(«expr / »(«expr - »(«expr * »(«expr ^ »(cos b, «expr + »(n, 1)), sin b), «expr * »(«expr ^ »(cos a, «expr + »(n, 1)), sin a)), «expr + »(n, 2)), «expr * »(«expr / »(«expr + »(n, 1), «expr + »(n, 2)), «expr∫ in .. , »((x), a, b, «expr ^ »(cos x, n))))) :=
+begin
+  have [] [":", expr «expr ≠ »(«expr + »((n : exprℝ()), 2), 0)] [":=", expr by exact_mod_cast [expr succ_ne_zero n.succ]],
+  field_simp [] [] [] [],
+  convert [] [expr eq_sub_iff_add_eq.mp (integral_cos_pow_aux n)] [],
+  ring []
+end
 
 @[simp]
 theorem integral_cos_sq : (∫x in a..b, cos x^2) = ((((cos b*sin b) - cos a*sin a)+b) - a) / 2 :=
@@ -536,26 +534,23 @@ theorem integral_sin_pow_even_mul_cos_pow_even (m n : ℕ) :
         ring :
       (2 : ℝ) - 1 = 1)]
 
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem integral_sin_sq_mul_cos_sq : (∫x in a..b, (sin x^2)*cos x^2) = (b - a) / 8 - (sin (4*b) - sin (4*a)) / 32 :=
-  by 
-    convert integral_sin_pow_even_mul_cos_pow_even 1 1 using 1
-    have h1 : ∀ c : ℝ, (((1 - c) / 2)*(1+c) / 2) = (1 - (c^2)) / 4 :=
-      fun c =>
-        by 
-          ring 
-    have h2 : Continuous fun x => cos (2*x)^2 :=
-      by 
-        continuity 
-    have h3 : ∀ x, (cos x*sin x) = sin (2*x) / 2
-    ·
-      intro 
-      rw [sin_two_mul]
-      ring 
-    have h4 : ∀ d : ℝ, (2*2*d) = 4*d :=
-      fun d =>
-        by 
-          ring 
-    simp [h1, h2.interval_integrable, integral_comp_mul_left fun x => cos x^2, h3, h4]
-    ring
+theorem integral_sin_sq_mul_cos_sq : «expr = »(«expr∫ in .. , »((x), a, b, «expr * »(«expr ^ »(sin x, 2), «expr ^ »(cos x, 2))), «expr - »(«expr / »(«expr - »(b, a), 8), «expr / »(«expr - »(sin «expr * »(4, b), sin «expr * »(4, a)), 32))) :=
+begin
+  convert [] [expr integral_sin_pow_even_mul_cos_pow_even 1 1] ["using", 1],
+  have [ident h1] [":", expr ∀
+   c : exprℝ(), «expr = »(«expr * »(«expr / »(«expr - »(1, c), 2), «expr / »(«expr + »(1, c), 2)), «expr / »(«expr - »(1, «expr ^ »(c, 2)), 4))] [":=", expr λ
+   c, by ring []],
+  have [ident h2] [":", expr continuous (λ x, «expr ^ »(cos «expr * »(2, x), 2))] [":=", expr by continuity [] []],
+  have [ident h3] [":", expr ∀ x, «expr = »(«expr * »(cos x, sin x), «expr / »(sin «expr * »(2, x), 2))] [],
+  { intro [],
+    rw [expr sin_two_mul] [],
+    ring [] },
+  have [ident h4] [":", expr ∀
+   d : exprℝ(), «expr = »(«expr * »(2, «expr * »(2, d)), «expr * »(4, d))] [":=", expr λ d, by ring []],
+  simp [] [] [] ["[", expr h1, ",", expr h2.interval_integrable, ",", expr integral_comp_mul_left (λ
+    x, «expr ^ »(cos x, 2)), ",", expr h3, ",", expr h4, "]"] [] [],
+  ring []
+end
 

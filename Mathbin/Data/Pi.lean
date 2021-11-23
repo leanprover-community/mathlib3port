@@ -182,9 +182,9 @@ end
 
 end Pi
 
-section Extend
-
 namespace Function
+
+section Extend
 
 @[toAdditive]
 theorem extend_one [HasOne γ] (f : α → β) : Function.extendₓ f (1 : α → γ) (1 : β → γ) = 1 :=
@@ -217,9 +217,21 @@ theorem extend_div [Div γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ :
       by 
         convert (apply_dite2 (· / ·) _ _ _ _ _).symm
 
-end Function
-
 end Extend
+
+theorem surjective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, surjective (F i)) :
+  surjective fun x : ∀ i, f i => fun i => F i (x i) :=
+  fun y => ⟨fun i => (hF i (y i)).some, funext$ fun i => (hF i (y i)).some_spec⟩
+
+theorem injective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, injective (F i)) :
+  injective fun x : ∀ i, f i => fun i => F i (x i) :=
+  fun x y h => funext$ fun i => hF i$ (congr_funₓ h i : _)
+
+theorem bijective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, bijective (F i)) :
+  bijective fun x : ∀ i, f i => fun i => F i (x i) :=
+  ⟨injective_pi_map fun i => (hF i).Injective, surjective_pi_map fun i => (hF i).Surjective⟩
+
+end Function
 
 theorem Subsingleton.pi_single_eq {α : Type _} [DecidableEq I] [Subsingleton I] [HasZero α] (i : I) (x : α) :
   Pi.single i x = fun _ => x :=

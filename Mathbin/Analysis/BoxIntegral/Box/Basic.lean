@@ -1,4 +1,4 @@
-import Mathbin.Topology.Instances.Real
+import Mathbin.Topology.MetricSpace.Basic
 
 /-!
 # Rectangular boxes in `ℝⁿ`
@@ -149,14 +149,12 @@ theorem coe_subset_coe : (I : Set (ι → ℝ)) ⊆ J ↔ I ≤ J :=
 theorem le_iff_bounds : I ≤ J ↔ J.lower ≤ I.lower ∧ I.upper ≤ J.upper :=
   (le_tfae I J).out 0 3
 
--- error in Analysis.BoxIntegral.Box.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem injective_coe : injective (coe : box ι → set (ι → exprℝ())) :=
-begin
-  rintros ["⟨", ident l₁, ",", ident u₁, ",", ident h₁, "⟩", "⟨", ident l₂, ",", ident u₂, ",", ident h₂, "⟩", ident h],
-  simp [] [] ["only"] ["[", expr subset.antisymm_iff, ",", expr coe_subset_coe, ",", expr le_iff_bounds, "]"] [] ["at", ident h],
-  congr,
-  exacts ["[", expr le_antisymm h.2.1 h.1.1, ",", expr le_antisymm h.1.2 h.2.2, "]"]
-end
+theorem injective_coe : injective (coeₓ : box ι → Set (ι → ℝ)) :=
+  by 
+    rintro ⟨l₁, u₁, h₁⟩ ⟨l₂, u₂, h₂⟩ h 
+    simp only [subset.antisymm_iff, coe_subset_coe, le_iff_bounds] at h 
+    congr 
+    exacts[le_antisymmₓ h.2.1 h.1.1, le_antisymmₓ h.1.2 h.2.2]
 
 @[simp, normCast]
 theorem coe_inj : (I : Set (ι → ℝ)) = J ↔ I = J :=
@@ -411,7 +409,7 @@ It is defined as the maximum of the ratios
 def distortion (I : box ι) :  ℝ≥0  :=
   Finset.univ.sup$ fun i : ι => nndist I.lower I.upper / nndist (I.lower i) (I.upper i)
 
--- error in Analysis.BoxIntegral.Box.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.BoxIntegral.Box.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem distortion_eq_of_sub_eq_div
 {I J : box ι}
 {r : exprℝ()}

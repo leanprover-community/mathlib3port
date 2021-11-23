@@ -53,7 +53,7 @@ private unsafe def mono_aux (ns : List Name) (hs : List expr) : tactic Unit :=
   do 
     intros
     (do 
-          let quote Implies (%%p) (%%q) ← target
+          let quote.1 (Implies (%%ₓp) (%%ₓq)) ← target
           (do 
                 is_def_eq p q 
                 eapplyc `monotone.const) <|>
@@ -89,7 +89,7 @@ unsafe def mono (e : expr) (hs : List expr) : tactic Unit :=
     let t ← target 
     let t' ← infer_type e 
     let ns ← attribute.get_instances `monotonicity 
-    let ((), p) ← solve_aux (quote Implies (%%t') (%%t)) (mono_aux ns hs)
+    let ((), p) ← solve_aux (quote.1 (Implies (%%ₓt') (%%ₓt))) (mono_aux ns hs)
     exact (p e)
 
 end Tactic
@@ -206,7 +206,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
           fun ⟨c, is⟩ =>
             do 
               let (ls, t) ← open_pis c.local_type 
-              is_def_eq t (quote Prop) <|>
+              is_def_eq t (quote.1 Prop) <|>
                   fail
                     ((f! "Type of {c.local_pp_name} is not Prop. Currently only ") ++
                       "coinductive predicates are supported.")

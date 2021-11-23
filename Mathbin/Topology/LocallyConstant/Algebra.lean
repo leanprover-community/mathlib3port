@@ -1,6 +1,5 @@
-import Mathbin.Topology.LocallyConstant.Basic 
-import Mathbin.Topology.ContinuousFunction.Algebra 
-import Mathbin.Algebra.Algebra.Basic
+import Mathbin.Algebra.Algebra.Basic 
+import Mathbin.Topology.LocallyConstant.Basic
 
 /-!
 # Algebraic structure on locally constant functions

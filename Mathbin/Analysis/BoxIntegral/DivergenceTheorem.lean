@@ -58,76 +58,68 @@ variable[CompleteSpace E](I : box (Finₓ (n+1))){i : Finₓ (n+1)}
 
 open MeasureTheory
 
+-- error in Analysis.BoxIntegral.DivergenceTheorem: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Auxiliary lemma for the divergence theorem. -/
-theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ → E} {f' : ℝⁿ⁺¹ →L[ℝ] E}
-  (hfc : ContinuousOn f I.Icc) {x : ℝⁿ⁺¹} (hxI : x ∈ I.Icc) {a : E} {ε : ℝ} (h0 : 0 < ε)
-  (hε : ∀ y _ : y ∈ I.Icc, ∥f y - a - f' (y - x)∥ ≤ ε*∥y - x∥) {c :  ℝ≥0 } (hc : I.distortion ≤ c) :
-  ∥(∏j, I.upper j - I.lower j) • f' (Pi.single i 1) -
-        (integral (I.face i) ⊥ (f ∘ i.insert_nth (I.upper i)) box_additive_map.volume -
-          integral (I.face i) ⊥ (f ∘ i.insert_nth (I.lower i)) box_additive_map.volume)∥ ≤
-    ((2*ε)*c)*∏j, I.upper j - I.lower j :=
-  by 
-    have Hl : I.lower i ∈ Icc (I.lower i) (I.upper i) := Set.left_mem_Icc.2 (I.lower_le_upper i)
-    have Hu : I.upper i ∈ Icc (I.lower i) (I.upper i) := Set.right_mem_Icc.2 (I.lower_le_upper i)
-    have Hi :
-      ∀ x _ : x ∈ Icc (I.lower i) (I.upper i),
-        integrable.{0, u, u} (I.face i) ⊥ (f ∘ i.insert_nth x) box_additive_map.volume 
-    exact fun x hx => integrable_of_continuous_on _ (box.continuous_on_face_Icc hfc hx) volume 
-    have  :
-      ∀ y _ : y ∈ (I.face i).Icc,
-        ∥f' (Pi.single i (I.upper i - I.lower i)) - (f (i.insert_nth (I.upper i) y) - f (i.insert_nth (I.lower i) y))∥ ≤
-          (2*ε)*diam I.Icc
-    ·
-      intro y hy 
-      set g := fun y => f y - a - f' (y - x) with hg 
-      change ∀ y _ : y ∈ I.Icc, ∥g y∥ ≤ ε*∥y - x∥ at hε 
-      clearValue g 
-      obtain rfl : f = fun y => (a+f' (y - x))+g y
-      ·
-        simp [hg]
-      convertTo ∥g (i.insert_nth (I.lower i) y) - g (i.insert_nth (I.upper i) y)∥ ≤ _
-      ·
-        congr 1
-        have  := Finₓ.insert_nth_sub_same i (I.upper i) (I.lower i) y 
-        simp only [←this, f'.map_sub]
-        abel
-      ·
-        have  : ∀ z _ : z ∈ Icc (I.lower i) (I.upper i), i.insert_nth z y ∈ I.Icc 
-        exact fun z hz => I.maps_to_insert_nth_face_Icc hz hy 
-        replace hε : ∀ y _ : y ∈ I.Icc, ∥g y∥ ≤ ε*diam I.Icc
-        ·
-          intro y hy 
-          refine' (hε y hy).trans (mul_le_mul_of_nonneg_left _ h0.le)
-          rw [←dist_eq_norm]
-          exact dist_le_diam_of_mem I.is_compact_Icc.bounded hy hxI 
-        rw [two_mul, add_mulₓ]
-        exact norm_sub_le_of_le (hε _ (this _ Hl)) (hε _ (this _ Hu))
-    calc
-      ∥(∏j, I.upper j - I.lower j) • f' (Pi.single i 1) -
-            (integral (I.face i) ⊥ (f ∘ i.insert_nth (I.upper i)) box_additive_map.volume -
-              integral (I.face i) ⊥ (f ∘ i.insert_nth (I.lower i)) box_additive_map.volume)∥ =
-        ∥integral.{0, u, u} (I.face i) ⊥
-            (fun x : Finₓ n → ℝ =>
-              f' (Pi.single i (I.upper i - I.lower i)) -
-                (f (i.insert_nth (I.upper i) x) - f (i.insert_nth (I.lower i) x)))
-            box_additive_map.volume∥ :=
-      by 
-        rw [←integral_sub (Hi _ Hu) (Hi _ Hl), ←box.volume_face_mul i, mul_smul, ←box.volume_apply,
-          ←box_additive_map.to_smul_apply, ←integral_const, ←box_additive_map.volume,
-          ←integral_sub (integrable_const _) ((Hi _ Hu).sub (Hi _ Hl))]
-        simp only [· ∘ ·, Pi.sub_def, ←f'.map_smul, ←Pi.single_smul', smul_eq_mul,
-          mul_oneₓ]_ ≤ (volume (I.face i : Set ℝⁿ)).toReal*((2*ε)*c)*I.upper i - I.lower i :=
-      by 
-        refine' norm_integral_le_of_le_const (fun y hy => (this y hy).trans _) volume 
-        rw [mul_assocₓ (2*ε)]
-        exact
-          mul_le_mul_of_nonneg_left (I.diam_Icc_le_of_distortion_le i hc)
-            (mul_nonneg zero_le_two h0.le)_ = ((2*ε)*c)*∏j, I.upper j - I.lower j :=
-      by 
-        rw [←measure.to_box_additive_apply, box.volume_apply, ←I.volume_face_mul i]
-        acRfl
+theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le
+{f : «exprℝⁿ⁺¹»() → E}
+{f' : «expr →L[ ] »(«exprℝⁿ⁺¹»(), exprℝ(), E)}
+(hfc : continuous_on f I.Icc)
+{x : «exprℝⁿ⁺¹»()}
+(hxI : «expr ∈ »(x, I.Icc))
+{a : E}
+{ε : exprℝ()}
+(h0 : «expr < »(0, ε))
+(hε : ∀
+ y «expr ∈ » I.Icc, «expr ≤ »(«expr∥ ∥»(«expr - »(«expr - »(f y, a), f' «expr - »(y, x))), «expr * »(ε, «expr∥ ∥»(«expr - »(y, x)))))
+{c : «exprℝ≥0»()}
+(hc : «expr ≤ »(I.distortion, c)) : «expr ≤ »(«expr∥ ∥»(«expr - »(«expr • »(«expr∏ , »((j), «expr - »(I.upper j, I.lower j)), f' (pi.single i 1)), «expr - »(integral (I.face i) «expr⊥»() «expr ∘ »(f, i.insert_nth (I.upper i)) box_additive_map.volume, integral (I.face i) «expr⊥»() «expr ∘ »(f, i.insert_nth (I.lower i)) box_additive_map.volume))), «expr * »(«expr * »(«expr * »(2, ε), c), «expr∏ , »((j), «expr - »(I.upper j, I.lower j)))) :=
+begin
+  have [ident Hl] [":", expr «expr ∈ »(I.lower i, Icc (I.lower i) (I.upper i))] [":=", expr set.left_mem_Icc.2 (I.lower_le_upper i)],
+  have [ident Hu] [":", expr «expr ∈ »(I.upper i, Icc (I.lower i) (I.upper i))] [":=", expr set.right_mem_Icc.2 (I.lower_le_upper i)],
+  have [ident Hi] [":", expr ∀
+   x «expr ∈ » Icc (I.lower i) (I.upper i), integrable.{0, u, u} (I.face i) «expr⊥»() «expr ∘ »(f, i.insert_nth x) box_additive_map.volume] [],
+  from [expr λ x hx, integrable_of_continuous_on _ (box.continuous_on_face_Icc hfc hx) volume],
+  have [] [":", expr ∀
+   y «expr ∈ » (I.face i).Icc, «expr ≤ »(«expr∥ ∥»(«expr - »(f' (pi.single i «expr - »(I.upper i, I.lower i)), «expr - »(f (i.insert_nth (I.upper i) y), f (i.insert_nth (I.lower i) y)))), «expr * »(«expr * »(2, ε), diam I.Icc))] [],
+  { intros [ident y, ident hy],
+    set [] [ident g] [] [":="] [expr λ y, «expr - »(«expr - »(f y, a), f' «expr - »(y, x))] ["with", ident hg],
+    change [expr ∀
+     y «expr ∈ » I.Icc, «expr ≤ »(«expr∥ ∥»(g y), «expr * »(ε, «expr∥ ∥»(«expr - »(y, x))))] [] ["at", ident hε],
+    clear_value [ident g],
+    obtain [ident rfl, ":", expr «expr = »(f, λ y, «expr + »(«expr + »(a, f' «expr - »(y, x)), g y))],
+    by simp [] [] [] ["[", expr hg, "]"] [] [],
+    convert_to [expr «expr ≤ »(«expr∥ ∥»(«expr - »(g (i.insert_nth (I.lower i) y), g (i.insert_nth (I.upper i) y))), _)] [],
+    { congr' [1] [],
+      have [] [] [":=", expr fin.insert_nth_sub_same i (I.upper i) (I.lower i) y],
+      simp [] [] ["only"] ["[", "<-", expr this, ",", expr f'.map_sub, "]"] [] [],
+      abel [] [] [] },
+    { have [] [":", expr ∀ z «expr ∈ » Icc (I.lower i) (I.upper i), «expr ∈ »(i.insert_nth z y, I.Icc)] [],
+      from [expr λ z hz, I.maps_to_insert_nth_face_Icc hz hy],
+      replace [ident hε] [":", expr ∀ y «expr ∈ » I.Icc, «expr ≤ »(«expr∥ ∥»(g y), «expr * »(ε, diam I.Icc))] [],
+      { intros [ident y, ident hy],
+        refine [expr (hε y hy).trans (mul_le_mul_of_nonneg_left _ h0.le)],
+        rw ["<-", expr dist_eq_norm] [],
+        exact [expr dist_le_diam_of_mem I.is_compact_Icc.bounded hy hxI] },
+      rw ["[", expr two_mul, ",", expr add_mul, "]"] [],
+      exact [expr norm_sub_le_of_le (hε _ (this _ Hl)) (hε _ (this _ Hu))] } },
+  calc
+    «expr = »(«expr∥ ∥»(«expr - »(«expr • »(«expr∏ , »((j), «expr - »(I.upper j, I.lower j)), f' (pi.single i 1)), «expr - »(integral (I.face i) «expr⊥»() «expr ∘ »(f, i.insert_nth (I.upper i)) box_additive_map.volume, integral (I.face i) «expr⊥»() «expr ∘ »(f, i.insert_nth (I.lower i)) box_additive_map.volume))), «expr∥ ∥»(integral.{0, u, u} (I.face i) «expr⊥»() (λ
+       x : fin n → exprℝ(), «expr - »(f' (pi.single i «expr - »(I.upper i, I.lower i)), «expr - »(f (i.insert_nth (I.upper i) x), f (i.insert_nth (I.lower i) x)))) box_additive_map.volume)) : begin
+      rw ["[", "<-", expr integral_sub (Hi _ Hu) (Hi _ Hl), ",", "<-", expr box.volume_face_mul i, ",", expr mul_smul, ",", "<-", expr box.volume_apply, ",", "<-", expr box_additive_map.to_smul_apply, ",", "<-", expr integral_const, ",", "<-", expr box_additive_map.volume, ",", "<-", expr integral_sub (integrable_const _) ((Hi _ Hu).sub (Hi _ Hl)), "]"] [],
+      simp [] [] ["only"] ["[", expr («expr ∘ »), ",", expr pi.sub_def, ",", "<-", expr f'.map_smul, ",", "<-", expr pi.single_smul', ",", expr smul_eq_mul, ",", expr mul_one, "]"] [] []
+    end
+    «expr ≤ »(..., «expr * »((volume (I.face i : set «exprℝⁿ»())).to_real, «expr * »(«expr * »(«expr * »(2, ε), c), «expr - »(I.upper i, I.lower i)))) : begin
+      refine [expr norm_integral_le_of_le_const (λ y hy, (this y hy).trans _) volume],
+      rw [expr mul_assoc «expr * »(2, ε)] [],
+      exact [expr mul_le_mul_of_nonneg_left (I.diam_Icc_le_of_distortion_le i hc) (mul_nonneg zero_le_two h0.le)]
+    end
+    «expr = »(..., «expr * »(«expr * »(«expr * »(2, ε), c), «expr∏ , »((j), «expr - »(I.upper j, I.lower j)))) : begin
+      rw ["[", "<-", expr measure.to_box_additive_apply, ",", expr box.volume_apply, ",", "<-", expr I.volume_face_mul i, "]"] [],
+      ac_refl
+    end
+end
 
--- error in Analysis.BoxIntegral.DivergenceTheorem: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.BoxIntegral.DivergenceTheorem: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f : ℝⁿ⁺¹ → E` is differentiable on a closed rectangular box `I` with derivative `f'`, then
 the partial derivative `λ x, f' x (pi.single i 1)` is Henstock-Kurzweil integrable with integral
 equal to the difference of integrals of `f` over the faces `x i = I.upper i` and `x i = I.lower i`.

@@ -38,6 +38,7 @@ theorem polynomial_functions_closure_eq_top' : (polynomialFunctions I).topologic
     dsimp [bernstein, polynomialFunctions]
     simp 
 
+-- error in Topology.ContinuousFunction.Weierstrass: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The **Weierstrass Approximation Theorem**:
 polynomials functions on `[a, b] ⊆ ℝ` are dense in `C([a,b],ℝ)`
@@ -46,24 +47,24 @@ polynomials functions on `[a, b] ⊆ ℝ` are dense in `C([a,b],ℝ)`
 our proof of that relies on the fact that `abs` is in the closure of polynomials on `[-M, M]`,
 so we may as well get this done first.)
 -/
-theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (Set.Icc a b)).topologicalClosure = ⊤ :=
-  by 
-    byCases' h : a < b
-    ·
-      let W : C(Set.Icc a b, ℝ) →ₐ[ℝ] C(I, ℝ) := comp_right_alg_hom ℝ (iccHomeoI a b h).symm.toContinuousMap 
-      let W' : C(Set.Icc a b, ℝ) ≃ₜ C(I, ℝ) := comp_right_homeomorph ℝ (iccHomeoI a b h).symm 
-      have w : (W : C(Set.Icc a b, ℝ) → C(I, ℝ)) = W' := rfl 
-      have p := polynomial_functions_closure_eq_top' 
-      applyFun fun s => s.comap' W  at p 
-      simp only [Algebra.comap_top] at p 
-      rw [Subalgebra.topological_closure_comap'_homeomorph _ W W' w] at p 
-      rw [polynomialFunctions.comap'_comp_right_alg_hom_Icc_homeo_I] at p 
-      exact p
-    ·
-      haveI  : Subsingleton (Set.Icc a b) :=
-        ⟨fun x y => le_antisymmₓ ((x.2.2.trans (not_lt.mp h)).trans y.2.1) ((y.2.2.trans (not_lt.mp h)).trans x.2.1)⟩
-      haveI  := ContinuousMap.subsingleton_subalgebra (Set.Icc a b) ℝ 
-      apply Subsingleton.elimₓ
+theorem polynomial_functions_closure_eq_top
+(a b : exprℝ()) : «expr = »((polynomial_functions (set.Icc a b)).topological_closure, «expr⊤»()) :=
+begin
+  by_cases [expr h, ":", expr «expr < »(a, b)],
+  { let [ident W] [":", expr «expr →ₐ[ ] »(«exprC( , )»(set.Icc a b, exprℝ()), exprℝ(), «exprC( , )»(exprI(), exprℝ()))] [":=", expr comp_right_alg_hom exprℝ() (Icc_homeo_I a b h).symm.to_continuous_map],
+    let [ident W'] [":", expr «expr ≃ₜ »(«exprC( , )»(set.Icc a b, exprℝ()), «exprC( , )»(exprI(), exprℝ()))] [":=", expr comp_right_homeomorph exprℝ() (Icc_homeo_I a b h).symm],
+    have [ident w] [":", expr «expr = »((W : «exprC( , )»(set.Icc a b, exprℝ()) → «exprC( , )»(exprI(), exprℝ())), W')] [":=", expr rfl],
+    have [ident p] [] [":=", expr polynomial_functions_closure_eq_top'],
+    apply_fun [expr λ s, s.comap' W] ["at", ident p] [],
+    simp [] [] ["only"] ["[", expr algebra.comap_top, "]"] [] ["at", ident p],
+    rw [expr subalgebra.topological_closure_comap'_homeomorph _ W W' w] ["at", ident p],
+    rw [expr polynomial_functions.comap'_comp_right_alg_hom_Icc_homeo_I] ["at", ident p],
+    exact [expr p] },
+  { haveI [] [":", expr subsingleton (set.Icc a b)] [":=", expr ⟨λ
+      x y, le_antisymm ((x.2.2.trans (not_lt.mp h)).trans y.2.1) ((y.2.2.trans (not_lt.mp h)).trans x.2.1)⟩],
+    haveI [] [] [":=", expr continuous_map.subsingleton_subalgebra (set.Icc a b) exprℝ()],
+    apply [expr subsingleton.elim] }
+end
 
 /--
 An alternative statement of Weierstrass' theorem.
@@ -76,20 +77,25 @@ theorem continuous_map_mem_polynomial_functions_closure (a b : ℝ) (f : C(Set.I
     rw [polynomial_functions_closure_eq_top _ _]
     simp 
 
+-- error in Topology.ContinuousFunction.Weierstrass: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 An alternative statement of Weierstrass' theorem,
 for those who like their epsilons.
 
 Every real-valued continuous function on `[a,b]` is within any `ε > 0` of some polynomial.
 -/
-theorem exists_polynomial_near_continuous_map (a b : ℝ) (f : C(Set.Icc a b, ℝ)) (ε : ℝ) (pos : 0 < ε) :
-  ∃ p : Polynomial ℝ, ∥p.to_continuous_map_on _ - f∥ < ε :=
-  by 
-    have w := mem_closure_iff_frequently.mp (continuous_map_mem_polynomial_functions_closure _ _ f)
-    rw [metric.nhds_basis_ball.frequently_iff] at w 
-    obtain ⟨-, H, ⟨m, ⟨-, rfl⟩⟩⟩ := w ε Pos 
-    rw [Metric.mem_ball, dist_eq_norm] at H 
-    exact ⟨m, H⟩
+theorem exists_polynomial_near_continuous_map
+(a b : exprℝ())
+(f : «exprC( , )»(set.Icc a b, exprℝ()))
+(ε : exprℝ())
+(pos : «expr < »(0, ε)) : «expr∃ , »((p : polynomial exprℝ()), «expr < »(«expr∥ ∥»(«expr - »(p.to_continuous_map_on _, f)), ε)) :=
+begin
+  have [ident w] [] [":=", expr mem_closure_iff_frequently.mp (continuous_map_mem_polynomial_functions_closure _ _ f)],
+  rw [expr metric.nhds_basis_ball.frequently_iff] ["at", ident w],
+  obtain ["⟨", "-", ",", ident H, ",", "⟨", ident m, ",", "⟨", "-", ",", ident rfl, "⟩", "⟩", "⟩", ":=", expr w ε pos],
+  rw ["[", expr metric.mem_ball, ",", expr dist_eq_norm, "]"] ["at", ident H],
+  exact [expr ⟨m, H⟩]
+end
 
 /--
 Another alternative statement of Weierstrass's theorem,

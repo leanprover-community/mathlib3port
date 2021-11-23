@@ -1,5 +1,7 @@
+import Mathbin.CategoryTheory.ConcreteCategory.Basic 
 import Mathbin.Tactic.FreshNames 
-import Mathbin.CategoryTheory.ConcreteCategory.Default
+import Mathbin.Tactic.ReassocAxiom 
+import Mathbin.Tactic.Slice
 
 /-!
 # Tools to reformulate category-theoretic lemmas in concrete categories
@@ -48,7 +50,7 @@ where `f g : X ⟶ Y` for some objects `X Y : V` with `[S : category V]`,
 extract the expression for `S`.
 -/
 unsafe def extract_category : expr → tactic expr
-| quote @Eq (@Quiver.Hom _ (@category_struct.to_quiver _ (@category.to_category_struct _ (%%S))) _ _) _ _ => pure S
+| quote.1 (@Eq (@Quiver.Hom _ (@category_struct.to_quiver _ (@category.to_category_struct _ (%%ₓS))) _ _) _ _) => pure S
 | _ => failed
 
 /-- (internals for `@[elementwise]`)
@@ -67,9 +69,9 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
     let (vs, t) ← infer_type h >>= open_pis 
     let (f, g) ← match_eq t 
     let S ← extract_category t <|> fail "no morphism equation found in statement"
-    let quote @Quiver.Hom _ (%%H) (%%X) (%%Y) ← infer_type f 
+    let quote.1 (@Quiver.Hom _ (%%ₓH) (%%ₓX) (%%ₓY)) ← infer_type f 
     let C ← infer_type X 
-    let CC_type ← to_expr (pquote @concrete_category (%%C) (%%S))
+    let CC_type ← to_expr (pquote.1 (@concrete_category (%%ₓC) (%%ₓS)))
     let (CC, CC_found) ←
       (do 
             let CC ← mk_instance CC_type 
@@ -79,15 +81,16 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
             pure (CC, ff)
     let CC_type ← instantiate_mvars CC_type 
     let x_type ←
-      to_expr (pquote @coeSortₓ (%%C) _ (@CategoryTheory.ConcreteCategory.hasCoeToSort (%%C) (%%S) (%%CC)) (%%X))
+      to_expr
+          (pquote.1 (@coeSortₓ (%%ₓC) _ (@CategoryTheory.ConcreteCategory.hasCoeToSort (%%ₓC) (%%ₓS) (%%ₓCC)) (%%ₓX)))
     let x ← mk_local_def `x x_type 
     let t' ←
       to_expr
-          (pquote
-            @coeFn (@Quiver.Hom (%%C) (%%H) (%%X) (%%Y)) _
-                (@CategoryTheory.ConcreteCategory.hasCoeToFun (%%C) (%%S) (%%CC) (%%X) (%%Y)) (%%f) (%%x) =
-              @coeFn (@Quiver.Hom (%%C) (%%H) (%%X) (%%Y)) _
-                (@CategoryTheory.ConcreteCategory.hasCoeToFun (%%C) (%%S) (%%CC) (%%X) (%%Y)) (%%g) (%%x))
+          (pquote.1
+            (@coeFn (@Quiver.Hom (%%ₓC) (%%ₓH) (%%ₓX) (%%ₓY)) _
+                (@CategoryTheory.ConcreteCategory.hasCoeToFun (%%ₓC) (%%ₓS) (%%ₓCC) (%%ₓX) (%%ₓY)) (%%ₓf) (%%ₓx) =
+              @coeFn (@Quiver.Hom (%%ₓC) (%%ₓH) (%%ₓX) (%%ₓY)) _
+                (@CategoryTheory.ConcreteCategory.hasCoeToFun (%%ₓC) (%%ₓS) (%%ₓCC) (%%ₓX) (%%ₓY)) (%%ₓg) (%%ₓx)))
     let c' := h.mk_app vs 
     let (_, pr) ← solve_aux t' (rewrite_target c'; reflexivity)
     let [w, _, _] ← pure CC_type.get_app_fn.univ_levels 
@@ -197,7 +200,7 @@ end Interactive
 /-- Auxiliary definition for `category_theory.elementwise_of`. -/
 unsafe def derive_elementwise_proof : tactic Unit :=
   do 
-    let quote calculated_Prop (%%v) (%%h) ← target 
+    let quote.1 (calculated_Prop (%%ₓv) (%%ₓh)) ← target 
     let (t, pr, n) ← prove_elementwise h 
     unify v t 
     exact pr

@@ -38,17 +38,21 @@ theorem ord_connected_iff : ord_connected s ↔ ∀ x _ : x ∈ s y _ : y ∈ s,
   ord_connected_def.trans
     ⟨fun hs x hx y hy hxy => hs hx hy, fun H x hx y hy z hz => H x hx y hy (le_transₓ hz.1 hz.2) hz⟩
 
-theorem ord_connected_of_Ioo {α : Type _} [PartialOrderₓ α] {s : Set α}
-  (hs : ∀ x _ : x ∈ s y _ : y ∈ s, x < y → Ioo x y ⊆ s) : ord_connected s :=
-  by 
-    rw [ord_connected_iff]
-    intro x hx y hy hxy 
-    rcases eq_or_lt_of_le hxy with (rfl | hxy')
-    ·
-      simpa 
-    have  := hs x hx y hy hxy' 
-    rw [←union_diff_cancel Ioo_subset_Icc_self]
-    simp [insert_subset]
+-- error in Data.Set.Intervals.OrdConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ord_connected_of_Ioo
+{α : Type*}
+[partial_order α]
+{s : set α}
+(hs : ∀ (x «expr ∈ » s) (y «expr ∈ » s), «expr < »(x, y) → «expr ⊆ »(Ioo x y, s)) : ord_connected s :=
+begin
+  rw [expr ord_connected_iff] [],
+  intros [ident x, ident hx, ident y, ident hy, ident hxy],
+  rcases [expr eq_or_lt_of_le hxy, "with", ident rfl, "|", ident hxy'],
+  { simpa [] [] [] [] [] [] },
+  have [] [] [":=", expr hs x hx y hy hxy'],
+  rw ["[", "<-", expr union_diff_cancel Ioo_subset_Icc_self, "]"] [],
+  simp [] [] [] ["[", "*", ",", expr insert_subset, "]"] [] []
+end
 
 protected theorem Icc_subset (s : Set α) [hs : ord_connected s] {x y} (hx : x ∈ s) (hy : y ∈ s) : Icc x y ⊆ s :=
   hs.out hx hy
@@ -135,14 +139,16 @@ theorem ord_connected_empty : ord_connected (∅ : Set α) :=
 theorem ord_connected_univ : ord_connected (univ : Set α) :=
   ⟨fun _ _ _ _ => subset_univ _⟩
 
+-- error in Data.Set.Intervals.OrdConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a dense order `α`, the subtype from an `ord_connected` set is also densely ordered. -/
-instance  [DenselyOrdered α] {s : Set α} [hs : ord_connected s] : DenselyOrdered s :=
-  ⟨by 
-      intro a₁ a₂ ha 
-      have ha' : «expr↑ » a₁ < «expr↑ » a₂ := ha 
-      obtain ⟨x, ha₁x, hxa₂⟩ := exists_between ha' 
-      refine' ⟨⟨x, _⟩, ⟨ha₁x, hxa₂⟩⟩
-      exact (hs.out a₁.2 a₂.2) (Ioo_subset_Icc_self ⟨ha₁x, hxa₂⟩)⟩
+instance [densely_ordered α] {s : set α} [hs : ord_connected s] : densely_ordered s :=
+⟨begin
+   intros [ident a₁, ident a₂, ident ha],
+   have [ident ha'] [":", expr «expr < »(«expr↑ »(a₁), «expr↑ »(a₂))] [":=", expr ha],
+   obtain ["⟨", ident x, ",", ident ha₁x, ",", ident hxa₂, "⟩", ":=", expr exists_between ha'],
+   refine [expr ⟨⟨x, _⟩, ⟨ha₁x, hxa₂⟩⟩],
+   exact [expr hs.out a₁.2 a₂.2 (Ioo_subset_Icc_self ⟨ha₁x, hxa₂⟩)]
+ end⟩
 
 variable{β : Type _}[LinearOrderₓ β]
 

@@ -119,12 +119,17 @@ theorem coe_supr_of_directed {ι} [Nonempty ι] {S : ι → Submonoid M} (hS : D
       by 
         simp [mem_supr_of_directed hS]
 
-@[toAdditive]
-theorem mem_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) {x : M} :
-  x ∈ Sup S ↔ ∃ (s : _)(_ : s ∈ S), x ∈ s :=
-  by 
-    haveI  : Nonempty S := Sne.to_subtype 
-    simp only [Sup_eq_supr', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
+-- error in GroupTheory.Submonoid.Membership: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem mem_Sup_of_directed_on
+{S : set (submonoid M)}
+(Sne : S.nonempty)
+(hS : directed_on ((«expr ≤ »)) S)
+{x : M} : «expr ↔ »(«expr ∈ »(x, Sup S), «expr∃ , »((s «expr ∈ » S), «expr ∈ »(x, s))) :=
+begin
+  haveI [] [":", expr nonempty S] [":=", expr Sne.to_subtype],
+  simp [] [] ["only"] ["[", expr Sup_eq_supr', ",", expr mem_supr_of_directed hS.directed_coe, ",", expr set_coe.exists, ",", expr subtype.coe_mk, "]"] [] []
+end
 
 @[toAdditive]
 theorem coe_Sup_of_directed_on {S : Set (Submonoid M)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) :

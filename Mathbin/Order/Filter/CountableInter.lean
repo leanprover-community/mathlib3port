@@ -31,12 +31,18 @@ theorem countable_sInter_mem_sets {S : Set (Set α)} (hSc : countable S) : ⋂�
 theorem countable_Inter_mem_sets [Encodable ι] {s : ι → Set α} : (⋂i, s i) ∈ l ↔ ∀ i, s i ∈ l :=
   sInter_range s ▸ (countable_sInter_mem_sets (countable_range _)).trans forall_range_iff
 
-theorem countable_bInter_mem {S : Set ι} (hS : countable S) {s : ∀ i _ : i ∈ S, Set α} :
-  (⋂(i : _)(_ : i ∈ S), s i ‹_›) ∈ l ↔ ∀ i _ : i ∈ S, s i ‹_› ∈ l :=
-  by 
-    rw [bInter_eq_Inter]
-    haveI  := hS.to_encodable 
-    exact countable_Inter_mem_sets.trans Subtype.forall
+-- error in Order.Filter.CountableInter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem countable_bInter_mem
+{S : set ι}
+(hS : countable S)
+{s : ∀
+ i «expr ∈ » S, set α} : «expr ↔ »(«expr ∈ »(«expr⋂ , »((i «expr ∈ » S), s i «expr‹ ›»(_)), l), ∀
+ i «expr ∈ » S, «expr ∈ »(s i «expr‹ ›»(_), l)) :=
+begin
+  rw ["[", expr bInter_eq_Inter, "]"] [],
+  haveI [] [] [":=", expr hS.to_encodable],
+  exact [expr countable_Inter_mem_sets.trans subtype.forall]
+end
 
 theorem eventually_countable_forall [Encodable ι] {p : α → ι → Prop} : (∀ᶠx in l, ∀ i, p x i) ↔ ∀ i, ∀ᶠx in l, p x i :=
   by 
@@ -55,12 +61,18 @@ theorem EventuallyEq.countable_Union [Encodable ι] {s t : ι → Set α} (h : �
   (⋃i, s i) =ᶠ[l] ⋃i, t i :=
   (EventuallyLe.countable_Union fun i => (h i).le).antisymm (EventuallyLe.countable_Union fun i => (h i).symm.le)
 
-theorem EventuallyLe.countable_bUnion {S : Set ι} (hS : countable S) {s t : ∀ i _ : i ∈ S, Set α}
-  (h : ∀ i _ : i ∈ S, s i ‹_› ≤ᶠ[l] t i ‹_›) : (⋃(i : _)(_ : i ∈ S), s i ‹_›) ≤ᶠ[l] ⋃(i : _)(_ : i ∈ S), t i ‹_› :=
-  by 
-    simp only [bUnion_eq_Union]
-    haveI  := hS.to_encodable 
-    exact EventuallyLe.countable_Union fun i => h i i.2
+-- error in Order.Filter.CountableInter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eventually_le.countable_bUnion
+{S : set ι}
+(hS : countable S)
+{s t : ∀ i «expr ∈ » S, set α}
+(h : ∀
+ i «expr ∈ » S, «expr ≤ᶠ[ ] »(s i «expr‹ ›»(_), l, t i «expr‹ ›»(_))) : «expr ≤ᶠ[ ] »(«expr⋃ , »((i «expr ∈ » S), s i «expr‹ ›»(_)), l, «expr⋃ , »((i «expr ∈ » S), t i «expr‹ ›»(_))) :=
+begin
+  simp [] [] ["only"] ["[", expr bUnion_eq_Union, "]"] [] [],
+  haveI [] [] [":=", expr hS.to_encodable],
+  exact [expr eventually_le.countable_Union (λ i, h i i.2)]
+end
 
 theorem EventuallyEq.countable_bUnion {S : Set ι} (hS : countable S) {s t : ∀ i _ : i ∈ S, Set α}
   (h : ∀ i _ : i ∈ S, s i ‹_› =ᶠ[l] t i ‹_›) : (⋃(i : _)(_ : i ∈ S), s i ‹_›) =ᶠ[l] ⋃(i : _)(_ : i ∈ S), t i ‹_› :=
@@ -75,12 +87,18 @@ theorem EventuallyEq.countable_Inter [Encodable ι] {s t : ι → Set α} (h : �
   (⋂i, s i) =ᶠ[l] ⋂i, t i :=
   (EventuallyLe.countable_Inter fun i => (h i).le).antisymm (EventuallyLe.countable_Inter fun i => (h i).symm.le)
 
-theorem EventuallyLe.countable_bInter {S : Set ι} (hS : countable S) {s t : ∀ i _ : i ∈ S, Set α}
-  (h : ∀ i _ : i ∈ S, s i ‹_› ≤ᶠ[l] t i ‹_›) : (⋂(i : _)(_ : i ∈ S), s i ‹_›) ≤ᶠ[l] ⋂(i : _)(_ : i ∈ S), t i ‹_› :=
-  by 
-    simp only [bInter_eq_Inter]
-    haveI  := hS.to_encodable 
-    exact EventuallyLe.countable_Inter fun i => h i i.2
+-- error in Order.Filter.CountableInter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eventually_le.countable_bInter
+{S : set ι}
+(hS : countable S)
+{s t : ∀ i «expr ∈ » S, set α}
+(h : ∀
+ i «expr ∈ » S, «expr ≤ᶠ[ ] »(s i «expr‹ ›»(_), l, t i «expr‹ ›»(_))) : «expr ≤ᶠ[ ] »(«expr⋂ , »((i «expr ∈ » S), s i «expr‹ ›»(_)), l, «expr⋂ , »((i «expr ∈ » S), t i «expr‹ ›»(_))) :=
+begin
+  simp [] [] ["only"] ["[", expr bInter_eq_Inter, "]"] [] [],
+  haveI [] [] [":=", expr hS.to_encodable],
+  exact [expr eventually_le.countable_Inter (λ i, h i i.2)]
+end
 
 theorem EventuallyEq.countable_bInter {S : Set ι} (hS : countable S) {s t : ∀ i _ : i ∈ S, Set α}
   (h : ∀ i _ : i ∈ S, s i ‹_› =ᶠ[l] t i ‹_›) : (⋂(i : _)(_ : i ∈ S), s i ‹_›) =ᶠ[l] ⋂(i : _)(_ : i ∈ S), t i ‹_› :=
@@ -113,14 +131,10 @@ instance countable_Inter_filter_inf (l₁ l₂ : Filter α) [CountableInterFilte
     rw [hst i hi]
     apply inter_subset_inter <;> exact Inter_subset_of_subset i (Inter_subset _ _)
 
--- error in Order.Filter.CountableInter: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Supremum of two `countable_Inter_filter`s is a `countable_Inter_filter`. -/
-instance countable_Inter_filter_sup
-(l₁ l₂ : filter α)
-[countable_Inter_filter l₁]
-[countable_Inter_filter l₂] : countable_Inter_filter «expr ⊔ »(l₁, l₂) :=
-begin
-  refine [expr ⟨λ S hSc hS, ⟨_, _⟩⟩]; refine [expr (countable_sInter_mem_sets hSc).2 (λ s hs, _)],
-  exacts ["[", expr (hS s hs).1, ",", expr (hS s hs).2, "]"]
-end
+instance countable_Inter_filter_sup (l₁ l₂ : Filter α) [CountableInterFilter l₁] [CountableInterFilter l₂] :
+  CountableInterFilter (l₁⊔l₂) :=
+  by 
+    refine' ⟨fun S hSc hS => ⟨_, _⟩⟩ <;> refine' (countable_sInter_mem_sets hSc).2 fun s hs => _ 
+    exacts[(hS s hs).1, (hS s hs).2]
 

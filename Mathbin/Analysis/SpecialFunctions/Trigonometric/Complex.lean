@@ -18,19 +18,20 @@ open Set Filter
 
 open_locale Real
 
-theorem cos_eq_zero_iff {θ : ℂ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (((2*k)+1)*π) / 2 :=
-  by 
-    have h : (exp (θ*I)+exp ((-θ)*I)) / 2 = 0 ↔ exp ((2*θ)*I) = -1
-    ·
-      rw [@div_eq_iff _ _ (exp (θ*I)+exp ((-θ)*I)) 2 0 two_ne_zero', zero_mul, add_eq_zero_iff_eq_neg,
-        neg_eq_neg_one_mul, ←div_eq_iff (exp_ne_zero _), ←exp_sub]
-      fieldSimp only 
-      congr 3
-      ring 
-    rw [cos, h, ←exp_pi_mul_I, exp_eq_exp_iff_exists_int, mul_right_commₓ]
-    refine' exists_congr fun x => _ 
-    refine' (iff_of_eq$ congr_argₓ _ _).trans (mul_right_inj'$ mul_ne_zero two_ne_zero' I_ne_zero)
-    ring
+-- error in Analysis.SpecialFunctions.Trigonometric.Complex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cos_eq_zero_iff
+{θ : exprℂ()} : «expr ↔ »(«expr = »(cos θ, 0), «expr∃ , »((k : exprℤ()), «expr = »(θ, «expr / »(«expr * »(«expr + »(«expr * »(2, k), 1), exprπ()), 2)))) :=
+begin
+  have [ident h] [":", expr «expr ↔ »(«expr = »(«expr / »(«expr + »(exp «expr * »(θ, I), exp «expr * »(«expr- »(θ), I)), 2), 0), «expr = »(exp «expr * »(«expr * »(2, θ), I), «expr- »(1)))] [],
+  { rw ["[", expr @div_eq_iff _ _ «expr + »(exp «expr * »(θ, I), exp «expr * »(«expr- »(θ), I)) 2 0 two_ne_zero', ",", expr zero_mul, ",", expr add_eq_zero_iff_eq_neg, ",", expr neg_eq_neg_one_mul, ",", "<-", expr div_eq_iff (exp_ne_zero _), ",", "<-", expr exp_sub, "]"] [],
+    field_simp ["only"] [] [] [],
+    congr' [3] [],
+    ring [] },
+  rw ["[", expr cos, ",", expr h, ",", "<-", expr exp_pi_mul_I, ",", expr exp_eq_exp_iff_exists_int, ",", expr mul_right_comm, "]"] [],
+  refine [expr exists_congr (λ x, _)],
+  refine [expr «expr $ »(iff_of_eq, congr_arg _ _).trans «expr $ »(mul_right_inj', mul_ne_zero two_ne_zero' I_ne_zero)],
+  ring []
+end
 
 theorem cos_ne_zero_iff {θ : ℂ} : cos θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (((2*k)+1)*π) / 2 :=
   by 
@@ -55,13 +56,15 @@ theorem sin_ne_zero_iff {θ : ℂ} : sin θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k*π :
   by 
     rw [←not_exists, not_iff_not, sin_eq_zero_iff]
 
-theorem tan_eq_zero_iff {θ : ℂ} : tan θ = 0 ↔ ∃ k : ℤ, θ = (k*π) / 2 :=
-  by 
-    have h := (sin_two_mul θ).symm 
-    rw [mul_assocₓ] at h 
-    rw [tan, div_eq_zero_iff, ←mul_eq_zero, ←zero_mul (1 / 2 : ℂ), mul_one_div,
-      CancelFactors.cancel_factors_eq_div h two_ne_zero', mul_commₓ]
-    simpa only [zero_div, zero_mul, Ne.def, not_false_iff] with field_simps using sin_eq_zero_iff
+-- error in Analysis.SpecialFunctions.Trigonometric.Complex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tan_eq_zero_iff
+{θ : exprℂ()} : «expr ↔ »(«expr = »(tan θ, 0), «expr∃ , »((k : exprℤ()), «expr = »(θ, «expr / »(«expr * »(k, exprπ()), 2)))) :=
+begin
+  have [ident h] [] [":=", expr (sin_two_mul θ).symm],
+  rw [expr mul_assoc] ["at", ident h],
+  rw ["[", expr tan, ",", expr div_eq_zero_iff, ",", "<-", expr mul_eq_zero, ",", "<-", expr zero_mul («expr / »(1, 2) : exprℂ()), ",", expr mul_one_div, ",", expr cancel_factors.cancel_factors_eq_div h two_ne_zero', ",", expr mul_comm, "]"] [],
+  simpa [] [] ["only"] ["[", expr zero_div, ",", expr zero_mul, ",", expr ne.def, ",", expr not_false_iff, "]"] ["with", ident field_simps] ["using", expr sin_eq_zero_iff]
+end
 
 theorem tan_ne_zero_iff {θ : ℂ} : tan θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (k*π) / 2 :=
   by 

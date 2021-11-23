@@ -37,11 +37,11 @@ theorem ultrafilter_basis_is_basis : TopologicalSpace.IsTopologicalBasis (Ultraf
     eq_univ_of_univ_subset$ subset_sUnion_of_mem$ ⟨univ, eq_univ_of_forall fun u => univ_mem⟩, rfl⟩
 
 /-- The basic open sets for the topology on ultrafilters are open. -/
-theorem ultrafilter_is_open_basic (s : Set α) : IsOpen { u : Ultrafilter α | s ∈ u } :=
+theorem ultrafilter_is_open_basic (s : Set α) : IsOpen { u:Ultrafilter α | s ∈ u } :=
   ultrafilter_basis_is_basis.IsOpen ⟨s, rfl⟩
 
 /-- The basic open sets for the topology on ultrafilters are also closed. -/
-theorem ultrafilter_is_closed_basic (s : Set α) : IsClosed { u : Ultrafilter α | s ∈ u } :=
+theorem ultrafilter_is_closed_basic (s : Set α) : IsClosed { u:Ultrafilter α | s ∈ u } :=
   by 
     rw [←is_open_compl_iff]
     convert ultrafilter_is_open_basic («expr ᶜ» s)
@@ -54,7 +54,7 @@ theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultraf
   «expr↑ » u ≤ 𝓝 x ↔ x = mjoin u :=
   by 
     rw [eq_comm, ←Ultrafilter.coe_le_coe]
-    change «expr↑ » u ≤ 𝓝 x ↔ ∀ s _ : s ∈ x, { v : Ultrafilter α | s ∈ v } ∈ u 
+    change «expr↑ » u ≤ 𝓝 x ↔ ∀ s _ : s ∈ x, { v:Ultrafilter α | s ∈ v } ∈ u 
     simp only [TopologicalSpace.nhds_generate_from, le_infi_iff, UltrafilterBasis, le_principal_iff, mem_set_of_eq]
     split 
     ·
@@ -74,18 +74,20 @@ instance Ultrafilter.t2_space : T2Space (Ultrafilter α) :=
       have hy : y = mjoin f := ultrafilter_converges_iff.mp fy 
       hx.trans hy.symm
 
-instance  : TotallyDisconnectedSpace (Ultrafilter α) :=
-  by 
-    rw [totally_disconnected_space_iff_connected_component_singleton]
-    intro A 
-    simp only [Set.eq_singleton_iff_unique_mem, mem_connected_component, true_andₓ]
-    intro B hB 
-    rw [←Ultrafilter.coe_le_coe]
-    intro s hs 
-    rw [connected_component_eq_Inter_clopen, Set.mem_Inter] at hB 
-    let Z := { F : Ultrafilter α | s ∈ F }
-    have hZ : IsClopen Z := ⟨ultrafilter_is_open_basic s, ultrafilter_is_closed_basic s⟩
-    exact hB ⟨Z, hZ, hs⟩
+-- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance : totally_disconnected_space (ultrafilter α) :=
+begin
+  rw [expr totally_disconnected_space_iff_connected_component_singleton] [],
+  intro [ident A],
+  simp [] [] ["only"] ["[", expr set.eq_singleton_iff_unique_mem, ",", expr mem_connected_component, ",", expr true_and, "]"] [] [],
+  intros [ident B, ident hB],
+  rw ["<-", expr ultrafilter.coe_le_coe] [],
+  intros [ident s, ident hs],
+  rw ["[", expr connected_component_eq_Inter_clopen, ",", expr set.mem_Inter, "]"] ["at", ident hB],
+  let [ident Z] [] [":=", expr {F : ultrafilter α | «expr ∈ »(s, F)}],
+  have [ident hZ] [":", expr is_clopen Z] [":=", expr ⟨ultrafilter_is_open_basic s, ultrafilter_is_closed_basic s⟩],
+  exact [expr hB ⟨Z, hZ, hs⟩]
+end
 
 theorem ultrafilter_comap_pure_nhds (b : Ultrafilter α) : comap pure (𝓝 b) ≤ b :=
   by 
@@ -99,12 +101,14 @@ theorem ultrafilter_comap_pure_nhds (b : Ultrafilter α) : comap pure (𝓝 b) �
 
 section Embedding
 
-theorem ultrafilter_pure_injective : Function.Injective (pure : α → Ultrafilter α) :=
-  by 
-    intro x y h 
-    have  : {x} ∈ (pure x : Ultrafilter α) := singleton_mem_pure 
-    rw [h] at this 
-    exact (mem_singleton_iff.mp (mem_pure.mp this)).symm
+-- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ultrafilter_pure_injective : function.injective (pure : α → ultrafilter α) :=
+begin
+  intros [ident x, ident y, ident h],
+  have [] [":", expr «expr ∈ »({x}, (pure x : ultrafilter α))] [":=", expr singleton_mem_pure],
+  rw [expr h] ["at", ident this],
+  exact [expr (mem_singleton_iff.mp (mem_pure.mp this)).symm]
+end
 
 open TopologicalSpace
 
@@ -118,18 +122,19 @@ theorem induced_topology_pure : TopologicalSpace.induced (pure : α → Ultrafil
   by 
     apply eq_bot_of_singletons_open 
     intro x 
-    use { u : Ultrafilter α | {x} ∈ u }, ultrafilter_is_open_basic _ 
+    use { u:Ultrafilter α | {x} ∈ u }, ultrafilter_is_open_basic _ 
     simp 
 
+-- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `pure : α → ultrafilter α` defines a dense inducing of `α` in `ultrafilter α`. -/
-theorem dense_inducing_pure : @DenseInducing _ _ ⊥ _ (pure : α → Ultrafilter α) :=
-  by 
-    letI this : TopologicalSpace α := ⊥ <;> exact ⟨⟨induced_topology_pure.symm⟩, dense_range_pure⟩
+theorem dense_inducing_pure : @dense_inducing _ _ «expr⊥»() _ (pure : α → ultrafilter α) :=
+by letI [] [":", expr topological_space α] [":=", expr «expr⊥»()]; exact [expr ⟨⟨induced_topology_pure.symm⟩, dense_range_pure⟩]
 
+-- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `pure : α → ultrafilter α` defines a dense embedding of `α` in `ultrafilter α`. -/
-theorem dense_embedding_pure : @DenseEmbedding _ _ ⊥ _ (pure : α → Ultrafilter α) :=
-  by 
-    letI this : TopologicalSpace α := ⊥ <;> exact { dense_inducing_pure with inj := ultrafilter_pure_injective }
+theorem dense_embedding_pure : @dense_embedding _ _ «expr⊥»() _ (pure : α → ultrafilter α) :=
+by letI [] [":", expr topological_space α] [":=", expr «expr⊥»()]; exact [expr { inj := ultrafilter_pure_injective,
+   ..dense_inducing_pure }]
 
 end Embedding
 
@@ -137,54 +142,55 @@ section Extension
 
 variable{γ : Type _}[TopologicalSpace γ]
 
+-- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The extension of a function `α → γ` to a function `ultrafilter α → γ`.
   When `γ` is a compact Hausdorff space it will be continuous. -/
-def Ultrafilter.extend (f : α → γ) : Ultrafilter α → γ :=
-  by 
-    letI this : TopologicalSpace α := ⊥ <;> exact dense_inducing_pure.extend f
+def ultrafilter.extend (f : α → γ) : ultrafilter α → γ :=
+by letI [] [":", expr topological_space α] [":=", expr «expr⊥»()]; exact [expr dense_inducing_pure.extend f]
 
 variable[T2Space γ]
 
-theorem ultrafilter_extend_extends (f : α → γ) : (Ultrafilter.extend f ∘ pure) = f :=
-  by 
-    letI this : TopologicalSpace α := ⊥
-    haveI  : DiscreteTopology α := ⟨rfl⟩
-    exact funext (dense_inducing_pure.extend_eq continuous_of_discrete_topology)
+-- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ultrafilter_extend_extends (f : α → γ) : «expr = »(«expr ∘ »(ultrafilter.extend f, pure), f) :=
+begin
+  letI [] [":", expr topological_space α] [":=", expr «expr⊥»()],
+  haveI [] [":", expr discrete_topology α] [":=", expr ⟨rfl⟩],
+  exact [expr funext (dense_inducing_pure.extend_eq continuous_of_discrete_topology)]
+end
 
 variable[CompactSpace γ]
 
-theorem continuous_ultrafilter_extend (f : α → γ) : Continuous (Ultrafilter.extend f) :=
-  have  : ∀ b : Ultrafilter α, ∃ c, tendsto f (comap pure (𝓝 b)) (𝓝 c) :=
-    fun b =>
-      let ⟨c, _, h⟩ :=
-        compact_univ.ultrafilter_le_nhds (b.map f)
-          (by 
-            rw [le_principal_iff] <;> exact univ_mem)
-      ⟨c, le_transₓ (map_mono (ultrafilter_comap_pure_nhds _)) h⟩
-  by 
-    letI this : TopologicalSpace α := ⊥
-    haveI  : NormalSpace γ := normal_of_compact_t2 
-    exact dense_inducing_pure.continuous_extend this
+-- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_ultrafilter_extend (f : α → γ) : continuous (ultrafilter.extend f) :=
+have ∀
+b : ultrafilter α, «expr∃ , »((c), tendsto f (comap pure (expr𝓝() b)) (expr𝓝() c)) := assume
+b, let ⟨c, _, h⟩ := compact_univ.ultrafilter_le_nhds (b.map f) (by rw ["[", expr le_principal_iff, "]"] []; exact [expr univ_mem]) in
+⟨c, le_trans (map_mono (ultrafilter_comap_pure_nhds _)) h⟩,
+begin
+  letI [] [":", expr topological_space α] [":=", expr «expr⊥»()],
+  haveI [] [":", expr normal_space γ] [":=", expr normal_of_compact_t2],
+  exact [expr dense_inducing_pure.continuous_extend this]
+end
 
+-- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The value of `ultrafilter.extend f` on an ultrafilter `b` is the
   unique limit of the ultrafilter `b.map f` in `γ`. -/
-theorem ultrafilter_extend_eq_iff {f : α → γ} {b : Ultrafilter α} {c : γ} :
-  Ultrafilter.extend f b = c ↔ «expr↑ » (b.map f) ≤ 𝓝 c :=
-  ⟨fun h =>
-      by 
-        let b' : Ultrafilter (Ultrafilter α) := b.map pure 
-        have t : «expr↑ » b' ≤ 𝓝 b 
-        exact ultrafilter_converges_iff.mpr (bind_pureₓ _).symm 
-        rw [←h]
-        have  := (continuous_ultrafilter_extend f).Tendsto b 
-        refine' le_transₓ _ (le_transₓ (map_mono t) this)
-        change _ ≤ map (Ultrafilter.extend f ∘ pure) («expr↑ » b)
-        rw [ultrafilter_extend_extends]
-        exact le_reflₓ _,
-    fun h =>
-      by 
-        letI this : TopologicalSpace α := ⊥ <;>
-          exact dense_inducing_pure.extend_eq_of_tendsto (le_transₓ (map_mono (ultrafilter_comap_pure_nhds _)) h)⟩
+theorem ultrafilter_extend_eq_iff
+{f : α → γ}
+{b : ultrafilter α}
+{c : γ} : «expr ↔ »(«expr = »(ultrafilter.extend f b, c), «expr ≤ »(«expr↑ »(b.map f), expr𝓝() c)) :=
+⟨assume h, begin
+   let [ident b'] [":", expr ultrafilter (ultrafilter α)] [":=", expr b.map pure],
+   have [ident t] [":", expr «expr ≤ »(«expr↑ »(b'), expr𝓝() b)] [],
+   from [expr ultrafilter_converges_iff.mpr (bind_pure _).symm],
+   rw ["<-", expr h] [],
+   have [] [] [":=", expr (continuous_ultrafilter_extend f).tendsto b],
+   refine [expr le_trans _ (le_trans (map_mono t) this)],
+   change [expr «expr ≤ »(_, map «expr ∘ »(ultrafilter.extend f, pure) «expr↑ »(b))] [] [],
+   rw [expr ultrafilter_extend_extends] [],
+   exact [expr le_refl _]
+ end, assume
+ h, by letI [] [":", expr topological_space α] [":=", expr «expr⊥»()]; exact [expr dense_inducing_pure.extend_eq_of_tendsto (le_trans (map_mono (ultrafilter_comap_pure_nhds _)) h)]⟩
 
 end Extension
 
@@ -199,17 +205,17 @@ instance stoneCechSetoid : Setoidₓ (Ultrafilter α) :=
       fun x y =>
         ∀ γ : Type u [TopologicalSpace γ],
           by 
-            exactI
+            exact
               ∀ [T2Space γ] [CompactSpace γ] f : α → γ hf : Continuous f,
                 Ultrafilter.extend f x = Ultrafilter.extend f y,
     iseqv :=
       ⟨fun x γ tγ h₁ h₂ f hf => rfl,
         fun x y xy γ tγ h₁ h₂ f hf =>
           by 
-            exactI (xy γ f hf).symm,
+            exact (xy γ f hf).symm,
         fun x y z xy yz γ tγ h₁ h₂ f hf =>
           by 
-            exactI (xy γ f hf).trans (yz γ f hf)⟩ }
+            exact (xy γ f hf).trans (yz γ f hf)⟩ }
 
 /-- The Stone-Čech compactification of a topological space. -/
 def StoneCech : Type u :=
@@ -258,7 +264,7 @@ end Extension
 theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : «expr↑ » u ≤ 𝓝 x) : u ≈ pure x :=
   fun γ tγ h₁ h₂ f hf =>
     by 
-      resetI 
+      skip 
       trans f x 
       swap 
       symm 
@@ -280,19 +286,21 @@ theorem continuous_stone_cech_unit : Continuous (stoneCechUnit : α → StoneCec
       by 
         rwa [show «expr⟦ ⟧» g = «expr⟦ ⟧» (pure x) from Quotientₓ.sound$ convergent_eqv_pure gx] at this
 
-instance StoneCech.t2_space : T2Space (StoneCech α) :=
-  by 
-    rw [t2_iff_ultrafilter]
-    rintro ⟨x⟩ ⟨y⟩ g gx gy 
-    apply Quotientₓ.sound 
-    intro γ tγ h₁ h₂ f hf 
-    resetI 
-    let ff := stoneCechExtend hf 
-    change ff («expr⟦ ⟧» x) = ff («expr⟦ ⟧» y)
-    have lim :=
-      fun z : Ultrafilter α gz : (g : Filter (StoneCech α)) ≤ 𝓝 («expr⟦ ⟧» z) =>
-        ((continuous_stone_cech_extend hf).Tendsto _).mono_left gz 
-    exact tendsto_nhds_unique (limₓ x gx) (limₓ y gy)
+-- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance stone_cech.t2_space : t2_space (stone_cech α) :=
+begin
+  rw [expr t2_iff_ultrafilter] [],
+  rintros ["⟨", ident x, "⟩", "⟨", ident y, "⟩", ident g, ident gx, ident gy],
+  apply [expr quotient.sound],
+  intros [ident γ, ident tγ, ident h₁, ident h₂, ident f, ident hf],
+  resetI,
+  let [ident ff] [] [":=", expr stone_cech_extend hf],
+  change [expr «expr = »(ff «expr⟦ ⟧»(x), ff «expr⟦ ⟧»(y))] [] [],
+  have [ident lim] [] [":=", expr λ
+   (z : ultrafilter α)
+   (gz : «expr ≤ »((g : filter (stone_cech α)), expr𝓝() «expr⟦ ⟧»(z))), ((continuous_stone_cech_extend hf).tendsto _).mono_left gz],
+  exact [expr tendsto_nhds_unique (lim x gx) (lim y gy)]
+end
 
 instance StoneCech.compact_space : CompactSpace (StoneCech α) :=
   Quotientₓ.compact_space

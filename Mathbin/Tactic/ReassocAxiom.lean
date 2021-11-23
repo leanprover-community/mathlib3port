@@ -49,7 +49,7 @@ open CategoryTheory
 
 /-- From an expression `f ≫ g`, extract the expression representing the category instance. -/
 unsafe def get_cat_inst : expr → tactic expr
-| quote @category_struct.comp _ (%%struct_inst) _ _ _ _ _ => pure struct_inst
+| quote.1 (@category_struct.comp _ (%%ₓstruct_inst) _ _ _ _ _) => pure struct_inst
 | _ => failed
 
 /-- (internals for `@[reassoc]`)
@@ -61,16 +61,16 @@ unsafe def prove_reassoc (h : expr) : tactic (expr × expr) :=
     let (vs, t) ← infer_type h >>= open_pis 
     let (lhs, rhs) ← match_eq t 
     let struct_inst ← get_cat_inst lhs <|> get_cat_inst rhs <|> fail "no composition found in statement"
-    let quote @Quiver.Hom _ (%%hom_inst) (%%X) (%%Y) ← infer_type lhs 
+    let quote.1 (@Quiver.Hom _ (%%ₓhom_inst) (%%ₓX) (%%ₓY)) ← infer_type lhs 
     let C ← infer_type X 
     let X' ← mk_local' `X' BinderInfo.implicit C 
-    let ft ← to_expr (pquote @Quiver.Hom _ (%%hom_inst) (%%Y) (%%X'))
+    let ft ← to_expr (pquote.1 (@Quiver.Hom _ (%%ₓhom_inst) (%%ₓY) (%%ₓX')))
     let f' ← mk_local_def `f' ft 
     let t' ←
       to_expr
-          (pquote
-            @category_struct.comp _ (%%struct_inst) _ _ _ (%%lhs) (%%f') =
-              @category_struct.comp _ (%%struct_inst) _ _ _ (%%rhs) (%%f'))
+          (pquote.1
+            (@category_struct.comp _ (%%ₓstruct_inst) _ _ _ (%%ₓlhs) (%%ₓf') =
+              @category_struct.comp _ (%%ₓstruct_inst) _ _ _ (%%ₓrhs) (%%ₓf')))
     let c' := h.mk_app vs 
     let (_, pr) ← solve_aux t' (rewrite_target c'; reflexivity)
     let pr ← instantiate_mvars pr 
@@ -195,7 +195,7 @@ def calculated_Prop {α} (β : Prop) (hh : α) :=
 
 unsafe def derive_reassoc_proof : tactic Unit :=
   do 
-    let quote calculated_Prop (%%v) (%%h) ← target 
+    let quote.1 (calculated_Prop (%%ₓv) (%%ₓh)) ← target 
     let (t, pr) ← prove_reassoc h 
     unify v t 
     exact pr

@@ -325,51 +325,47 @@ See note [reducible non-instances]. -/
 def LT.toHasSbtw (α : Type _) [LT α] : HasSbtw α :=
   { Sbtw := fun a b c => a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b }
 
+-- error in Order.Circular: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The circular preorder obtained from "looping around" a preorder.
 See note [reducible non-instances]. -/
 @[reducible]
-def Preorderₓ.toCircularPreorder (α : Type _) [Preorderₓ α] : CircularPreorder α :=
-  { Btw := fun a b c => a ≤ b ∧ b ≤ c ∨ b ≤ c ∧ c ≤ a ∨ c ≤ a ∧ a ≤ b,
-    Sbtw := fun a b c => a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b, btw_refl := fun a => Or.inl ⟨le_rfl, le_rfl⟩,
-    btw_cyclic_left :=
-      fun a b c h =>
-        by 
-          unfold btw  at h⊢
-          rwa [←Or.assoc, or_comm],
-    sbtw_trans_left :=
-      fun a b c d =>
-        by 
-          rintro (⟨hab, hbc⟩ | ⟨hbc, hca⟩ | ⟨hca, hab⟩) (⟨hbd, hdc⟩ | ⟨hdc, hcb⟩ | ⟨hcb, hbd⟩)
-          ·
-            exact Or.inl ⟨hab.trans hbd, hdc⟩
-          ·
-            exact (hbc.not_lt hcb).elim
-          ·
-            exact (hbc.not_lt hcb).elim
-          ·
-            exact Or.inr (Or.inl ⟨hdc, hca⟩)
-          ·
-            exact Or.inr (Or.inl ⟨hdc, hca⟩)
-          ·
-            exact (hbc.not_lt hcb).elim
-          ·
-            exact Or.inr (Or.inl ⟨hdc, hca⟩)
-          ·
-            exact Or.inr (Or.inl ⟨hdc, hca⟩)
-          ·
-            exact Or.inr (Or.inr ⟨hca, hab.trans hbd⟩),
-    sbtw_iff_btw_not_btw :=
-      fun a b c =>
-        by 
-          simpRw [lt_iff_le_not_leₓ]
-          set x₀ := a ≤ b 
-          set x₁ := b ≤ c 
-          set x₂ := c ≤ a 
-          have  : x₀ → x₁ → a ≤ c := le_transₓ 
-          have  : x₁ → x₂ → b ≤ a := le_transₓ 
-          have  : x₂ → x₀ → c ≤ b := le_transₓ 
-          clearValue x₀ x₁ x₂ 
-          tauto! }
+def preorder.to_circular_preorder (α : Type*) [preorder α] : circular_preorder α :=
+{ btw := λ
+  a
+  b
+  c, «expr ∨ »(«expr ∧ »(«expr ≤ »(a, b), «expr ≤ »(b, c)), «expr ∨ »(«expr ∧ »(«expr ≤ »(b, c), «expr ≤ »(c, a)), «expr ∧ »(«expr ≤ »(c, a), «expr ≤ »(a, b)))),
+  sbtw := λ
+  a
+  b
+  c, «expr ∨ »(«expr ∧ »(«expr < »(a, b), «expr < »(b, c)), «expr ∨ »(«expr ∧ »(«expr < »(b, c), «expr < »(c, a)), «expr ∧ »(«expr < »(c, a), «expr < »(a, b)))),
+  btw_refl := λ a, or.inl ⟨le_rfl, le_rfl⟩,
+  btw_cyclic_left := λ a b c h, begin
+    unfold [ident btw] ["at", "⊢", ident h],
+    rwa ["[", "<-", expr or.assoc, ",", expr or_comm, "]"] []
+  end,
+  sbtw_trans_left := λ a b c d, begin
+    rintro ["(", "⟨", ident hab, ",", ident hbc, "⟩", "|", "⟨", ident hbc, ",", ident hca, "⟩", "|", "⟨", ident hca, ",", ident hab, "⟩", ")", "(", "⟨", ident hbd, ",", ident hdc, "⟩", "|", "⟨", ident hdc, ",", ident hcb, "⟩", "|", "⟨", ident hcb, ",", ident hbd, "⟩", ")"],
+    { exact [expr or.inl ⟨hab.trans hbd, hdc⟩] },
+    { exact [expr (hbc.not_lt hcb).elim] },
+    { exact [expr (hbc.not_lt hcb).elim] },
+    { exact [expr or.inr (or.inl ⟨hdc, hca⟩)] },
+    { exact [expr or.inr (or.inl ⟨hdc, hca⟩)] },
+    { exact [expr (hbc.not_lt hcb).elim] },
+    { exact [expr or.inr (or.inl ⟨hdc, hca⟩)] },
+    { exact [expr or.inr (or.inl ⟨hdc, hca⟩)] },
+    { exact [expr or.inr (or.inr ⟨hca, hab.trans hbd⟩)] }
+  end,
+  sbtw_iff_btw_not_btw := λ a b c, begin
+    simp_rw [expr lt_iff_le_not_le] [],
+    set [] [ident x₀] [] [":="] [expr «expr ≤ »(a, b)] [],
+    set [] [ident x₁] [] [":="] [expr «expr ≤ »(b, c)] [],
+    set [] [ident x₂] [] [":="] [expr «expr ≤ »(c, a)] [],
+    have [] [":", expr x₀ → x₁ → «expr ≤ »(a, c)] [":=", expr le_trans],
+    have [] [":", expr x₁ → x₂ → «expr ≤ »(b, a)] [":=", expr le_trans],
+    have [] [":", expr x₂ → x₀ → «expr ≤ »(c, b)] [":=", expr le_trans],
+    clear_value [ident x₀, ident x₁, ident x₂],
+    tauto ["!"]
+  end }
 
 /-- The circular partial order obtained from "looping around" a partial order.
 See note [reducible non-instances]. -/

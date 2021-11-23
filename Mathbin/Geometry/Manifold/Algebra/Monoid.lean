@@ -324,18 +324,23 @@ theorem smooth_finset_prod {ι} {s : Finset ι} {f : ι → M → G} (h : ∀ i 
 
 open Function Filter
 
-@[toAdditive]
-theorem smooth_finprod {ι} {f : ι → M → G} (h : ∀ i, Smooth I' I (f i))
-  (hfin : LocallyFinite fun i => mul_support (f i)) : Smooth I' I fun x => ∏ᶠi, f i x :=
-  by 
-    intro x 
-    rcases hfin x with ⟨U, hxU, hUf⟩
-    have  : SmoothAt I' I (fun x => ∏i in hUf.to_finset, f i x) x 
-    exact smooth_finset_prod (fun i hi => h i) x 
-    refine' this.congr_of_eventually_eq (mem_of_superset hxU$ fun y hy => _)
-    refine' finprod_eq_prod_of_mul_support_subset _ fun i hi => _ 
-    rw [hUf.coe_to_finset]
-    exact ⟨y, hi, hy⟩
+-- error in Geometry.Manifold.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem smooth_finprod
+{ι}
+{f : ι → M → G}
+(h : ∀ i, smooth I' I (f i))
+(hfin : locally_finite (λ i, mul_support (f i))) : smooth I' I (λ x, «expr∏ᶠ , »((i), f i x)) :=
+begin
+  intro [ident x],
+  rcases [expr hfin x, "with", "⟨", ident U, ",", ident hxU, ",", ident hUf, "⟩"],
+  have [] [":", expr smooth_at I' I (λ x, «expr∏ in , »((i), hUf.to_finset, f i x)) x] [],
+  from [expr smooth_finset_prod (λ i hi, h i) x],
+  refine [expr this.congr_of_eventually_eq «expr $ »(mem_of_superset hxU, λ y hy, _)],
+  refine [expr finprod_eq_prod_of_mul_support_subset _ (λ i hi, _)],
+  rw ["[", expr hUf.coe_to_finset, "]"] [],
+  exact [expr ⟨y, hi, hy⟩]
+end
 
 @[toAdditive]
 theorem smooth_finprod_cond {ι} {f : ι → M → G} {p : ι → Prop} (hc : ∀ i, p i → Smooth I' I (f i))

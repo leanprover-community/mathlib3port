@@ -1,6 +1,7 @@
-import Mathbin.Topology.UniformSpace.Basic 
 import Mathbin.Tactic.ApplyFun 
-import Mathbin.Data.Set.Pairwise
+import Mathbin.Data.Set.Pairwise 
+import Mathbin.Topology.UniformSpace.Basic 
+import Mathbin.Topology.Separation
 
 /-!
 # Hausdorff properties of uniform spaces. Separation quotient.
@@ -176,7 +177,7 @@ theorem is_closed_separation_rel : IsClosed (𝓢 α) :=
 theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α :=
   by 
     classical 
-    split  <;> introI h
+    split  <;> intro h
     ·
       rw [t2_iff_is_closed_diagonal, ←show 𝓢 α = diagonal α from h.1]
       exact is_closed_separation_rel
@@ -187,57 +188,49 @@ theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α :=
       rcases is_open_iff_ball_subset.1 uo x hx with ⟨r, hrU, hr⟩
       exact ⟨r, hrU, fun H => disjoint_iff.2 h ⟨hr H, hy⟩⟩
 
-instance (priority := 100)separated_regular [SeparatedSpace α] : RegularSpace α :=
-  { @T2Space.t1_space _ _ (separated_iff_t2.mp ‹_›) with
-    t0 :=
-      by 
-        haveI  := separated_iff_t2.mp ‹_›
-        exact t1_space.t0_space.t0,
-    regular :=
-      fun s a hs ha =>
-        have  : «expr ᶜ» s ∈ 𝓝 a := IsOpen.mem_nhds hs.is_open_compl ha 
-        have  : { p : α × α | p.1 = a → p.2 ∈ «expr ᶜ» s } ∈ 𝓤 α := mem_nhds_uniformity_iff_right.mp this 
-        let ⟨d, hd, h⟩ := comp_mem_uniformity_sets this 
-        let e := { y : α | (a, y) ∈ d }
-        have hae : a ∈ Closure e := subset_closure$ refl_mem_uniformity hd 
-        have  : Set.Prod (Closure e) (Closure e) ⊆ CompRel d (CompRel (Set.Prod e e) d) :=
-          by 
-            rw [←closure_prod_eq, closure_eq_inter_uniformity]
-            change (⨅(d' : _)(_ : d' ∈ 𝓤 α), _) ≤ CompRel d (CompRel _ d)
-            exact infi_le_of_le d$ infi_le_of_le hd$ le_reflₓ _ 
-        have e_subset : Closure e ⊆ «expr ᶜ» s :=
-          fun a' ha' =>
-            let ⟨x, (hx : (a, x) ∈ d), y, ⟨hx₁, hx₂⟩, (hy : (y, _) ∈ d)⟩ := @this ⟨a, a'⟩ ⟨hae, ha'⟩
-            have  : (a, a') ∈ CompRel d d := ⟨y, hx₂, hy⟩
-            h this rfl 
-        have  : Closure e ∈ 𝓝 a := (𝓝 a).sets_of_superset (mem_nhds_left a hd) subset_closure 
-        have  : 𝓝 a⊓𝓟 («expr ᶜ» (Closure e)) = ⊥ :=
-          (is_compl_principal (Closure e)).inf_right_eq_bot_iff.2 (le_principal_iff.2 this)
-        ⟨«expr ᶜ» (Closure e), is_closed_closure.is_open_compl, fun x h₁ h₂ => @e_subset x h₂ h₁, this⟩ }
+-- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[priority 100] instance separated_regular [separated_space α] : regular_space α :=
+{ t0 := by { haveI [] [] [":=", expr separated_iff_t2.mp «expr‹ ›»(_)],
+    exact [expr t1_space.t0_space.t0] },
+  regular := λ s a hs ha, have «expr ∈ »(«expr ᶜ»(s), expr𝓝() a), from is_open.mem_nhds hs.is_open_compl ha,
+  have «expr ∈ »({p : «expr × »(α, α) | «expr = »(p.1, a) → «expr ∈ »(p.2, «expr ᶜ»(s))}, expr𝓤() α), from mem_nhds_uniformity_iff_right.mp this,
+  let ⟨d, hd, h⟩ := comp_mem_uniformity_sets this in
+  let e := {y : α | «expr ∈ »((a, y), d)} in
+  have hae : «expr ∈ »(a, closure e), from «expr $ »(subset_closure, refl_mem_uniformity hd),
+  have «expr ⊆ »(set.prod (closure e) (closure e), comp_rel d (comp_rel (set.prod e e) d)), begin
+    rw ["[", "<-", expr closure_prod_eq, ",", expr closure_eq_inter_uniformity, "]"] [],
+    change [expr «expr ≤ »(«expr⨅ , »((d' «expr ∈ » expr𝓤() α), _), comp_rel d (comp_rel _ d))] [] [],
+    exact [expr «expr $ »(infi_le_of_le d, «expr $ »(infi_le_of_le hd, le_refl _))]
+  end,
+  have e_subset : «expr ⊆ »(closure e, «expr ᶜ»(s)), from assume
+  a'
+  ha', let ⟨x, (hx : «expr ∈ »((a, x), d)), y, ⟨hx₁, hx₂⟩, (hy : «expr ∈ »((y, _), d))⟩ := @this ⟨a, a'⟩ ⟨hae, ha'⟩ in
+  have «expr ∈ »((a, a'), comp_rel d d), from ⟨y, hx₂, hy⟩,
+  h this rfl,
+  have «expr ∈ »(closure e, expr𝓝() a), from (expr𝓝() a).sets_of_superset (mem_nhds_left a hd) subset_closure,
+  have «expr = »(«expr ⊓ »(expr𝓝() a, expr𝓟() «expr ᶜ»(closure e)), «expr⊥»()), from (is_compl_principal (closure e)).inf_right_eq_bot_iff.2 (le_principal_iff.2 this),
+  ⟨«expr ᶜ»(closure e), is_closed_closure.is_open_compl, assume x h₁ h₂, @e_subset x h₂ h₁, this⟩,
+  ..@t2_space.t1_space _ _ (separated_iff_t2.mp «expr‹ ›»(_)) }
 
--- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem is_closed_of_spaced_out
-[separated_space α]
-{V₀ : set «expr × »(α, α)}
-(V₀_in : «expr ∈ »(V₀, expr𝓤() α))
-{s : set α}
-(hs : s.pairwise (λ x y, «expr ∉ »((x, y), V₀))) : is_closed s :=
-begin
-  rcases [expr comp_symm_mem_uniformity_sets V₀_in, "with", "⟨", ident V₁, ",", ident V₁_in, ",", ident V₁_symm, ",", ident h_comp, "⟩"],
-  apply [expr is_closed_of_closure_subset],
-  intros [ident x, ident hx],
-  rw [expr mem_closure_iff_ball] ["at", ident hx],
-  rcases [expr hx V₁_in, "with", "⟨", ident y, ",", ident hy, ",", ident hy', "⟩"],
-  suffices [] [":", expr «expr = »(x, y)],
-  by rwa [expr this] [],
-  apply [expr eq_of_forall_symmetric],
-  intros [ident V, ident V_in, ident V_symm],
-  rcases [expr hx (inter_mem V₁_in V_in), "with", "⟨", ident z, ",", ident hz, ",", ident hz', "⟩"],
-  obtain [ident rfl, ":", expr «expr = »(z, y)],
-  { by_contra [ident hzy],
-    exact [expr hs z hz' y hy' hzy «expr $ »(h_comp, mem_comp_of_mem_ball V₁_symm (ball_inter_left x _ _ hz) hy)] },
-  exact [expr ball_inter_right x _ _ hz]
-end
+theorem is_closed_of_spaced_out [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in : V₀ ∈ 𝓤 α) {s : Set α}
+  (hs : s.pairwise fun x y => (x, y) ∉ V₀) : IsClosed s :=
+  by 
+    rcases comp_symm_mem_uniformity_sets V₀_in with ⟨V₁, V₁_in, V₁_symm, h_comp⟩
+    apply is_closed_of_closure_subset 
+    intro x hx 
+    rw [mem_closure_iff_ball] at hx 
+    rcases hx V₁_in with ⟨y, hy, hy'⟩
+    suffices  : x = y
+    ·
+      rwa [this]
+    apply eq_of_forall_symmetric 
+    intro V V_in V_symm 
+    rcases hx (inter_mem V₁_in V_in) with ⟨z, hz, hz'⟩
+    obtain rfl : z = y
+    ·
+      byContra hzy 
+      exact hs z hz' y hy' hzy (h_comp$ mem_comp_of_mem_ball V₁_symm (ball_inter_left x _ _ hz) hy)
+    exact ball_inter_right x _ _ hz
 
 theorem is_closed_range_of_spaced_out {ι} [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in : V₀ ∈ 𝓤 α) {f : ι → α}
   (hf : Pairwise fun x y => (f x, f y) ∉ V₀) : IsClosed (range f) :=
@@ -290,42 +283,43 @@ theorem is_separated_of_separated_space [SeparatedSpace α] (s : Set α) : IsSep
     rw [IsSeparated, SeparatedSpace.out]
     tauto
 
-theorem is_separated_iff_induced {s : Set α} : IsSeparated s ↔ SeparatedSpace s :=
-  by 
-    rw [separated_space_iff]
-    change _ ↔ 𝓢 { x // x ∈ s } = _ 
-    rw [separation_rel_comap rfl, is_separated_def']
-    split  <;> intro h
-    ·
-      ext ⟨⟨x, x_in⟩, ⟨y, y_in⟩⟩
-      suffices  : (x, y) ∈ 𝓢 α ↔ x = y
-      ·
-        simpa only [mem_id_rel]
-      refine' ⟨fun H => h ⟨mk_mem_prod x_in y_in, H⟩, _⟩
-      rintro rfl 
-      exact id_rel_sub_separation_relation α rfl
-    ·
-      rintro ⟨x, y⟩ ⟨⟨x_in, y_in⟩, hS⟩
-      have A : (⟨⟨x, x_in⟩, ⟨y, y_in⟩⟩ : «expr↥ » s × «expr↥ » s) ∈ Prod.mapₓ (coeₓ : s → α) (coeₓ : s → α) ⁻¹' 𝓢 α 
-      exact hS 
-      simpa using h.subset A
+-- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_separated_iff_induced {s : set α} : «expr ↔ »(is_separated s, separated_space s) :=
+begin
+  rw [expr separated_space_iff] [],
+  change [expr «expr ↔ »(_, «expr = »(expr𝓢() {x // «expr ∈ »(x, s)}, _))] [] [],
+  rw ["[", expr separation_rel_comap rfl, ",", expr is_separated_def', "]"] [],
+  split; intro [ident h],
+  { ext [] ["⟨", "⟨", ident x, ",", ident x_in, "⟩", ",", "⟨", ident y, ",", ident y_in, "⟩", "⟩"] [],
+    suffices [] [":", expr «expr ↔ »(«expr ∈ »((x, y), expr𝓢() α), «expr = »(x, y))],
+    by simpa [] [] ["only"] ["[", expr mem_id_rel, "]"] [] [],
+    refine [expr ⟨λ H, h ⟨mk_mem_prod x_in y_in, H⟩, _⟩],
+    rintro [ident rfl],
+    exact [expr id_rel_sub_separation_relation α rfl] },
+  { rintros ["⟨", ident x, ",", ident y, "⟩", "⟨", "⟨", ident x_in, ",", ident y_in, "⟩", ",", ident hS, "⟩"],
+    have [ident A] [":", expr «expr ∈ »((⟨⟨x, x_in⟩, ⟨y, y_in⟩⟩ : «expr × »(«expr↥ »(s), «expr↥ »(s))), «expr ⁻¹' »(prod.map (coe : s → α) (coe : s → α), expr𝓢() α))] [],
+    from [expr hS],
+    simpa [] [] [] [] [] ["using", expr h.subset A] }
+end
 
-theorem eq_of_uniformity_inf_nhds_of_is_separated {s : Set α} (hs : IsSeparated s) :
-  ∀ {x y : α}, x ∈ s → y ∈ s → ClusterPt (x, y) (𝓤 α) → x = y :=
-  by 
-    intro x y x_in y_in H 
-    have  : ∀ V _ : V ∈ 𝓤 α, (x, y) ∈ Closure V
-    ·
-      intro V V_in 
-      rw [mem_closure_iff_cluster_pt]
-      have  : 𝓤 α ≤ 𝓟 V
-      ·
-        rwa [le_principal_iff]
-      exact H.mono this 
-    apply hs x y x_in y_in 
-    simpa [separation_rel_eq_inter_closure]
+-- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_of_uniformity_inf_nhds_of_is_separated
+{s : set α}
+(hs : is_separated s) : ∀
+{x y : α}, «expr ∈ »(x, s) → «expr ∈ »(y, s) → cluster_pt (x, y) (expr𝓤() α) → «expr = »(x, y) :=
+begin
+  intros [ident x, ident y, ident x_in, ident y_in, ident H],
+  have [] [":", expr ∀ V «expr ∈ » expr𝓤() α, «expr ∈ »((x, y), closure V)] [],
+  { intros [ident V, ident V_in],
+    rw [expr mem_closure_iff_cluster_pt] [],
+    have [] [":", expr «expr ≤ »(expr𝓤() α, expr𝓟() V)] [],
+    by rwa [expr le_principal_iff] [],
+    exact [expr H.mono this] },
+  apply [expr hs x y x_in y_in],
+  simpa [] [] [] ["[", expr separation_rel_eq_inter_closure, "]"] [] []
+end
 
--- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem eq_of_uniformity_inf_nhds [separated_space α] : ∀ {x y : α}, cluster_pt (x, y) (expr𝓤() α) → «expr = »(x, y) :=
 begin
   have [] [":", expr is_separated (univ : set α)] [],
@@ -348,7 +342,7 @@ def separation_setoid (α : Type u) [UniformSpace α] : Setoidₓ α :=
 
 attribute [local instance] separation_setoid
 
--- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance separation_setoid.uniform_space
 {α : Type u}
 [u : uniform_space α] : uniform_space (quotient (separation_setoid α)) :=
@@ -539,27 +533,25 @@ theorem map_comp {f : α → β} {g : β → γ} (hf : UniformContinuous f) (hg 
 
 end SeparationQuotient
 
-theorem separation_prod {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) ≈ (a₂, b₂) ↔ a₁ ≈ a₂ ∧ b₁ ≈ b₂ :=
-  by 
-    split 
-    ·
-      intro h 
-      exact
-        ⟨separated_of_uniform_continuous uniform_continuous_fst h,
-          separated_of_uniform_continuous uniform_continuous_snd h⟩
-    ·
-      rintro ⟨eqv_α, eqv_β⟩ r r_in 
-      rw [uniformity_prod] at r_in 
-      rcases r_in with ⟨t_α, ⟨r_α, r_α_in, h_α⟩, t_β, ⟨r_β, r_β_in, h_β⟩, rfl⟩
-      let p_α := fun p : (α × β) × α × β => (p.1.1, p.2.1)
-      let p_β := fun p : (α × β) × α × β => (p.1.2, p.2.2)
-      have key_α : p_α ((a₁, b₁), (a₂, b₂)) ∈ r_α
-      ·
-        simp [p_α, eqv_α r_α r_α_in]
-      have key_β : p_β ((a₁, b₁), (a₂, b₂)) ∈ r_β
-      ·
-        simp [p_β, eqv_β r_β r_β_in]
-      exact ⟨h_α key_α, h_β key_β⟩
+-- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem separation_prod
+{a₁ a₂ : α}
+{b₁ b₂ : β} : «expr ↔ »(«expr ≈ »((a₁, b₁), (a₂, b₂)), «expr ∧ »(«expr ≈ »(a₁, a₂), «expr ≈ »(b₁, b₂))) :=
+begin
+  split,
+  { assume [binders (h)],
+    exact [expr ⟨separated_of_uniform_continuous uniform_continuous_fst h, separated_of_uniform_continuous uniform_continuous_snd h⟩] },
+  { rintros ["⟨", ident eqv_α, ",", ident eqv_β, "⟩", ident r, ident r_in],
+    rw [expr uniformity_prod] ["at", ident r_in],
+    rcases [expr r_in, "with", "⟨", ident t_α, ",", "⟨", ident r_α, ",", ident r_α_in, ",", ident h_α, "⟩", ",", ident t_β, ",", "⟨", ident r_β, ",", ident r_β_in, ",", ident h_β, "⟩", ",", ident rfl, "⟩"],
+    let [ident p_α] [] [":=", expr λ p : «expr × »(«expr × »(α, β), «expr × »(α, β)), (p.1.1, p.2.1)],
+    let [ident p_β] [] [":=", expr λ p : «expr × »(«expr × »(α, β), «expr × »(α, β)), (p.1.2, p.2.2)],
+    have [ident key_α] [":", expr «expr ∈ »(p_α ((a₁, b₁), (a₂, b₂)), r_α)] [],
+    { simp [] [] [] ["[", expr p_α, ",", expr eqv_α r_α r_α_in, "]"] [] [] },
+    have [ident key_β] [":", expr «expr ∈ »(p_β ((a₁, b₁), (a₂, b₂)), r_β)] [],
+    { simp [] [] [] ["[", expr p_β, ",", expr eqv_β r_β r_β_in, "]"] [] [] },
+    exact [expr ⟨h_α key_α, h_β key_β⟩] }
+end
 
 instance separated.prod [SeparatedSpace α] [SeparatedSpace β] : SeparatedSpace (α × β) :=
   separated_def.2$

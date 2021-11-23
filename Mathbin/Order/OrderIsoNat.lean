@@ -40,10 +40,12 @@ def nat_lt (f : ℕ → α) (H : ∀ n : ℕ, r (f n) (f (n+1))) : (· < · : �
 theorem nat_lt_apply {f : ℕ → α} {H : ∀ n : ℕ, r (f n) (f (n+1))} {n : ℕ} : nat_lt f H n = f n :=
   rfl
 
+-- error in Order.OrderIsoNat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a strictly `r`-decreasing sequence, then this returns `f` as an order embedding. -/
-def nat_gt (f : ℕ → α) (H : ∀ n : ℕ, r (f (n+1)) (f n)) : (· > · : ℕ → ℕ → Prop) ↪r r :=
-  by 
-    haveI  := IsStrictOrder.swap r <;> exact RelEmbedding.swap (nat_lt f H)
+def nat_gt
+(f : exprℕ() → α)
+(H : ∀ n : exprℕ(), r (f «expr + »(n, 1)) (f n)) : «expr ↪r »(((«expr > ») : exprℕ() → exprℕ() → exprProp()), r) :=
+by haveI [] [] [":=", expr is_strict_order.swap r]; exact [expr rel_embedding.swap (nat_lt f H)]
 
 theorem well_founded_iff_no_descending_seq : WellFounded r ↔ IsEmpty ((· > · : ℕ → ℕ → Prop) ↪r r) :=
   ⟨fun ⟨h⟩ =>
@@ -121,45 +123,45 @@ theorem order_embedding_of_set_range : Set.Range (Nat.orderEmbeddingOfSet s) = s
 
 end Nat
 
-theorem exists_increasing_or_nonincreasing_subseq' {α : Type _} (r : α → α → Prop) (f : ℕ → α) :
-  ∃ g : ℕ ↪o ℕ, (∀ n : ℕ, r (f (g n)) (f (g (n+1)))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) :=
-  by 
-    classical 
-    let bad : Set ℕ := { m | ∀ n, m < n → ¬r (f m) (f n) }
-    byCases' hbad : Infinite bad
-    ·
-      haveI  := hbad 
-      refine' ⟨Nat.orderEmbeddingOfSet bad, Or.intro_rightₓ _ fun m n mn => _⟩
-      have h := Set.mem_range_self m 
-      rw [Nat.order_embedding_of_set_range bad] at h 
-      exact h _ ((OrderEmbedding.lt_iff_lt _).2 mn)
-    ·
-      rw [Set.infinite_coe_iff, Set.Infinite, not_not] at hbad 
-      obtain ⟨m, hm⟩ : ∃ m, ∀ n, m ≤ n → ¬n ∈ bad
-      ·
-        byCases' he : hbad.to_finset.nonempty
-        ·
-          refine'
-            ⟨(hbad.to_finset.max' he).succ,
-              fun n hn nbad =>
-                Nat.not_succ_le_selfₓ _ (hn.trans (hbad.to_finset.le_max' n (hbad.mem_to_finset.2 nbad)))⟩
-        ·
-          exact ⟨0, fun n hn nbad => he ⟨n, hbad.mem_to_finset.2 nbad⟩⟩
-      have h : ∀ n : ℕ, ∃ n' : ℕ, n < n' ∧ r (f (n+m)) (f (n'+m))
-      ·
-        intro n 
-        have h := hm _ (le_add_of_nonneg_left n.zero_le)
-        simp only [exists_prop, not_not, Set.mem_set_of_eq, not_forall] at h 
-        obtain ⟨n', hn1, hn2⟩ := h 
-        obtain ⟨x, hpos, rfl⟩ := exists_pos_add_of_lt hn1 
-        refine' ⟨n+x, add_lt_add_left hpos n, _⟩
-        rw [add_assocₓ, add_commₓ x m, ←add_assocₓ]
-        exact hn2 
-      let g' : ℕ → ℕ := @Nat.rec (fun _ => ℕ) m fun n gn => Nat.findₓ (h gn)
-      exact
-        ⟨(RelEmbedding.natLt (fun n => g' n+m)
-              fun n => Nat.add_lt_add_rightₓ (Nat.find_specₓ (h (g' n))).1 m).orderEmbeddingOfLtEmbedding,
-          Or.intro_left _ fun n => (Nat.find_specₓ (h (g' n))).2⟩
+-- error in Order.OrderIsoNat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_increasing_or_nonincreasing_subseq'
+{α : Type*}
+(r : α → α → exprProp())
+(f : exprℕ() → α) : «expr∃ , »((g : «expr ↪o »(exprℕ(), exprℕ())), «expr ∨ »(∀
+  n : exprℕ(), r (f (g n)) (f (g «expr + »(n, 1))), ∀
+  m n : exprℕ(), «expr < »(m, n) → «expr¬ »(r (f (g m)) (f (g n))))) :=
+begin
+  classical,
+  let [ident bad] [":", expr set exprℕ()] [":=", expr {m | ∀ n, «expr < »(m, n) → «expr¬ »(r (f m) (f n))}],
+  by_cases [expr hbad, ":", expr infinite bad],
+  { haveI [] [] [":=", expr hbad],
+    refine [expr ⟨nat.order_embedding_of_set bad, or.intro_right _ (λ m n mn, _)⟩],
+    have [ident h] [] [":=", expr set.mem_range_self m],
+    rw [expr nat.order_embedding_of_set_range bad] ["at", ident h],
+    exact [expr h _ ((order_embedding.lt_iff_lt _).2 mn)] },
+  { rw ["[", expr set.infinite_coe_iff, ",", expr set.infinite, ",", expr not_not, "]"] ["at", ident hbad],
+    obtain ["⟨", ident m, ",", ident hm, "⟩", ":", expr «expr∃ , »((m), ∀
+      n, «expr ≤ »(m, n) → «expr¬ »(«expr ∈ »(n, bad)))],
+    { by_cases [expr he, ":", expr hbad.to_finset.nonempty],
+      { refine [expr ⟨(hbad.to_finset.max' he).succ, λ
+          n hn nbad, nat.not_succ_le_self _ (hn.trans (hbad.to_finset.le_max' n (hbad.mem_to_finset.2 nbad)))⟩] },
+      { exact [expr ⟨0, λ n hn nbad, he ⟨n, hbad.mem_to_finset.2 nbad⟩⟩] } },
+    have [ident h] [":", expr ∀
+     n : exprℕ(), «expr∃ , »((n' : exprℕ()), «expr ∧ »(«expr < »(n, n'), r (f «expr + »(n, m)) (f «expr + »(n', m))))] [],
+    { intro [ident n],
+      have [ident h] [] [":=", expr hm _ (le_add_of_nonneg_left n.zero_le)],
+      simp [] [] ["only"] ["[", expr exists_prop, ",", expr not_not, ",", expr set.mem_set_of_eq, ",", expr not_forall, "]"] [] ["at", ident h],
+      obtain ["⟨", ident n', ",", ident hn1, ",", ident hn2, "⟩", ":=", expr h],
+      obtain ["⟨", ident x, ",", ident hpos, ",", ident rfl, "⟩", ":=", expr exists_pos_add_of_lt hn1],
+      refine [expr ⟨«expr + »(n, x), add_lt_add_left hpos n, _⟩],
+      rw ["[", expr add_assoc, ",", expr add_comm x m, ",", "<-", expr add_assoc, "]"] [],
+      exact [expr hn2] },
+    let [ident g'] [":", expr exprℕ() → exprℕ()] [":=", expr @nat.rec (λ _, exprℕ()) m (λ n gn, nat.find (h gn))],
+    exact [expr ⟨(rel_embedding.nat_lt (λ
+        n, «expr + »(g' n, m)) (λ
+        n, nat.add_lt_add_right (nat.find_spec (h (g' n))).1 m)).order_embedding_of_lt_embedding, or.intro_left _ (λ
+       n, (nat.find_spec (h (g' n))).2)⟩] }
+end
 
 theorem exists_increasing_or_nonincreasing_subseq {α : Type _} (r : α → α → Prop) [IsTrans α r] (f : ℕ → α) :
   ∃ g : ℕ ↪o ℕ, (∀ m n : ℕ, m < n → r (f (g m)) (f (g n))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) :=
@@ -177,29 +179,30 @@ theorem exists_increasing_or_nonincreasing_subseq {α : Type _} (r : α → α �
     ·
       exact ⟨g, Or.intro_rightₓ _ hnr⟩
 
+-- error in Order.OrderIsoNat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/
-theorem WellFounded.monotone_chain_condition (α : Type _) [PartialOrderₓ α] :
-  WellFounded (· > · : α → α → Prop) ↔ ∀ a : ℕ →ₘ α, ∃ n, ∀ m, n ≤ m → a n = a m :=
-  by 
-    split  <;> intro h
-    ·
-      rw [WellFounded.well_founded_iff_has_max'] at h 
-      intro a 
-      have hne : (Set.Range a).Nonempty
-      ·
-        use a 0
-        simp 
-      obtain ⟨x, ⟨n, hn⟩, range_bounded⟩ := h _ hne 
-      use n 
-      intro m hm 
-      rw [←hn] at range_bounded 
-      symm 
-      apply range_bounded (a m) (Set.mem_range_self _) (a.monotone hm)
-    ·
-      rw [RelEmbedding.well_founded_iff_no_descending_seq]
-      refine' ⟨fun a => _⟩
-      obtain ⟨n, hn⟩ := h (a.swap : (· < · : ℕ → ℕ → Prop) →r (· < · : α → α → Prop)).toPreorderHom 
-      exact n.succ_ne_self.symm (RelEmbedding.to_preorder_hom_injective _ (hn _ n.le_succ))
+theorem well_founded.monotone_chain_condition
+(α : Type*)
+[partial_order α] : «expr ↔ »(well_founded ((«expr > ») : α → α → exprProp()), ∀
+ a : «expr →ₘ »(exprℕ(), α), «expr∃ , »((n), ∀ m, «expr ≤ »(n, m) → «expr = »(a n, a m))) :=
+begin
+  split; intros [ident h],
+  { rw [expr well_founded.well_founded_iff_has_max'] ["at", ident h],
+    intros [ident a],
+    have [ident hne] [":", expr (set.range a).nonempty] [],
+    { use [expr a 0],
+      simp [] [] [] [] [] [] },
+    obtain ["⟨", ident x, ",", "⟨", ident n, ",", ident hn, "⟩", ",", ident range_bounded, "⟩", ":=", expr h _ hne],
+    use [expr n],
+    intros [ident m, ident hm],
+    rw ["<-", expr hn] ["at", ident range_bounded],
+    symmetry,
+    apply [expr range_bounded (a m) (set.mem_range_self _) (a.monotone hm)] },
+  { rw [expr rel_embedding.well_founded_iff_no_descending_seq] [],
+    refine [expr ⟨λ a, _⟩],
+    obtain ["⟨", ident n, ",", ident hn, "⟩", ":=", expr h (a.swap : «expr →r »(((«expr < ») : exprℕ() → exprℕ() → exprProp()), ((«expr < ») : α → α → exprProp()))).to_preorder_hom],
+    exact [expr n.succ_ne_self.symm (rel_embedding.to_preorder_hom_injective _ (hn _ n.le_succ))] }
+end
 
 /-- Given an eventually-constant monotone sequence `a₀ ≤ a₁ ≤ a₂ ≤ ...` in a partially-ordered
 type, `monotonic_sequence_limit_index a` is the least natural number `n` for which `aₙ` reaches the
@@ -213,26 +216,27 @@ partially-ordered type. -/
 noncomputable def monotonicSequenceLimit {α : Type _} [PartialOrderₓ α] (a : ℕ →ₘ α) :=
   a (monotonicSequenceLimitIndex a)
 
-theorem WellFounded.supr_eq_monotonic_sequence_limit {α : Type _} [CompleteLattice α]
-  (h : WellFounded (· > · : α → α → Prop)) (a : ℕ →ₘ α) : (⨆m, a m) = monotonicSequenceLimit a :=
-  by 
-    suffices  : (⨆m : ℕ, a m) ≤ monotonicSequenceLimit a
-    ·
-      exact le_antisymmₓ this (le_supr a _)
-    apply supr_le 
-    intro m 
-    byCases' hm : m ≤ monotonicSequenceLimitIndex a
-    ·
-      exact a.monotone hm
-    ·
-      replace hm := le_of_not_leₓ hm 
-      let S := { n | ∀ m, n ≤ m → a n = a m }
-      have hInf : Inf S ∈ S
-      ·
-        refine' Nat.Inf_mem _ 
-        rw [WellFounded.monotone_chain_condition] at h 
-        exact h a 
-      change Inf S ≤ m at hm 
-      change a m ≤ a (Inf S)
-      rw [hInf m hm]
+-- error in Order.OrderIsoNat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem well_founded.supr_eq_monotonic_sequence_limit
+{α : Type*}
+[complete_lattice α]
+(h : well_founded ((«expr > ») : α → α → exprProp()))
+(a : «expr →ₘ »(exprℕ(), α)) : «expr = »(«expr⨆ , »((m), a m), monotonic_sequence_limit a) :=
+begin
+  suffices [] [":", expr «expr ≤ »(«expr⨆ , »((m : exprℕ()), a m), monotonic_sequence_limit a)],
+  { exact [expr le_antisymm this (le_supr a _)] },
+  apply [expr supr_le],
+  intros [ident m],
+  by_cases [expr hm, ":", expr «expr ≤ »(m, monotonic_sequence_limit_index a)],
+  { exact [expr a.monotone hm] },
+  { replace [ident hm] [] [":=", expr le_of_not_le hm],
+    let [ident S] [] [":=", expr {n | ∀ m, «expr ≤ »(n, m) → «expr = »(a n, a m)}],
+    have [ident hInf] [":", expr «expr ∈ »(Inf S, S)] [],
+    { refine [expr nat.Inf_mem _],
+      rw [expr well_founded.monotone_chain_condition] ["at", ident h],
+      exact [expr h a] },
+    change [expr «expr ≤ »(Inf S, m)] [] ["at", ident hm],
+    change [expr «expr ≤ »(a m, a (Inf S))] [] [],
+    rw [expr hInf m hm] [] }
+end
 

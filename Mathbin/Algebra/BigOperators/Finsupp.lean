@@ -1,6 +1,6 @@
+import Mathbin.Data.Finsupp.Basic 
 import Mathbin.Algebra.BigOperators.Pi 
-import Mathbin.Algebra.BigOperators.Ring 
-import Mathbin.Data.Finsupp.Default
+import Mathbin.Algebra.BigOperators.Ring
 
 /-!
 # Big operators for finsupps

@@ -25,43 +25,38 @@ section
 
 variable{α : Type _}{β : Type _}[Ringₓ β][LinearOrderedField α][Archimedean α]{abv : β → α}[IsAbsoluteValue abv]
 
-theorem is_cau_of_decreasing_bounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n _ : n ≥ m, |f n| ≤ a)
-  (hnm : ∀ n _ : n ≥ m, f n.succ ≤ f n) : IsCauSeq abs f :=
-  fun ε ε0 =>
-    let ⟨k, hk⟩ := Archimedean.arch a ε0 
-    have h : ∃ l, ∀ n _ : n ≥ m, a - l • ε < f n :=
-      ⟨(k+k)+1,
-        fun n hnm =>
-          lt_of_lt_of_leₓ
-            (show a - (k+k+1) • ε < -|f n| from
-              lt_neg.1$
-                lt_of_le_of_ltₓ (ham n hnm)
-                  (by 
-                    rw [neg_sub, lt_sub_iff_add_lt, add_nsmul, add_nsmul, one_nsmul]
-                    exact add_lt_add_of_le_of_lt hk (lt_of_le_of_ltₓ hk (lt_add_of_pos_right _ ε0))))
-            (neg_le.2$ abs_neg (f n) ▸ le_abs_self _)⟩
-    let l := Nat.findₓ h 
-    have hl : ∀ n : ℕ, n ≥ m → f n > a - l • ε := Nat.find_specₓ h 
-    have hl0 : l ≠ 0 :=
-      fun hl0 =>
-        not_lt_of_geₓ (ham m (le_reflₓ _))
-          (lt_of_lt_of_leₓ
-            (by 
-              have  := hl m (le_reflₓ m) <;> simpa [hl0] using this)
-            (le_abs_self (f m)))
-    by 
-      cases' not_forall.1 (Nat.find_minₓ h (Nat.pred_ltₓ hl0)) with i hi 
-      rw [not_imp, not_ltₓ] at hi 
-      exists i 
-      intro j hj 
-      have hfij : f j ≤ f i := forall_ge_le_of_forall_le_succ f hnm hi.1 hj 
-      rw [abs_of_nonpos (sub_nonpos.2 hfij), neg_sub, sub_lt_iff_lt_add']
-      calc f i ≤ a - Nat.pred l • ε := hi.2_ = (a - l • ε)+ε :=
-        by 
-          conv  =>
-            toRHS
-              rw [←Nat.succ_pred_eq_of_posₓ (Nat.pos_of_ne_zeroₓ hl0), succ_nsmul', sub_add, add_sub_cancel]_ < f j+ε :=
-        add_lt_add_right (hl j (le_transₓ hi.1 hj)) _
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_cau_of_decreasing_bounded
+(f : exprℕ() → α)
+{a : α}
+{m : exprℕ()}
+(ham : ∀ n «expr ≥ » m, «expr ≤ »(«expr| |»(f n), a))
+(hnm : ∀ n «expr ≥ » m, «expr ≤ »(f n.succ, f n)) : is_cau_seq abs f :=
+λ ε ε0, let ⟨k, hk⟩ := archimedean.arch a ε0 in
+have h : «expr∃ , »((l), ∀
+ n «expr ≥ » m, «expr < »(«expr - »(a, «expr • »(l, ε)), f n)) := ⟨«expr + »(«expr + »(k, k), 1), λ
+ n
+ hnm, lt_of_lt_of_le (show «expr < »(«expr - »(a, «expr • »(«expr + »(k, «expr + »(k, 1)), ε)), «expr- »(«expr| |»(f n))), from «expr $ »(lt_neg.1, lt_of_le_of_lt (ham n hnm) (begin
+      rw ["[", expr neg_sub, ",", expr lt_sub_iff_add_lt, ",", expr add_nsmul, ",", expr add_nsmul, ",", expr one_nsmul, "]"] [],
+      exact [expr add_lt_add_of_le_of_lt hk (lt_of_le_of_lt hk (lt_add_of_pos_right _ ε0))]
+    end))) «expr $ »(neg_le.2, «expr ▸ »(abs_neg (f n), le_abs_self _))⟩,
+let l := nat.find h in
+have hl : ∀ n : exprℕ(), «expr ≥ »(n, m) → «expr > »(f n, «expr - »(a, «expr • »(l, ε))) := nat.find_spec h,
+have hl0 : «expr ≠ »(l, 0) := λ
+hl0, not_lt_of_ge (ham m (le_refl _)) (lt_of_lt_of_le (by have [] [] [":=", expr hl m (le_refl m)]; simpa [] [] [] ["[", expr hl0, "]"] [] ["using", expr this]) (le_abs_self (f m))),
+begin
+  cases [expr not_forall.1 (nat.find_min h (nat.pred_lt hl0))] ["with", ident i, ident hi],
+  rw ["[", expr not_imp, ",", expr not_lt, "]"] ["at", ident hi],
+  existsi [expr i],
+  assume [binders (j hj)],
+  have [ident hfij] [":", expr «expr ≤ »(f j, f i)] [":=", expr forall_ge_le_of_forall_le_succ f hnm hi.1 hj],
+  rw ["[", expr abs_of_nonpos (sub_nonpos.2 hfij), ",", expr neg_sub, ",", expr sub_lt_iff_lt_add', "]"] [],
+  calc
+    «expr ≤ »(f i, «expr - »(a, «expr • »(nat.pred l, ε))) : hi.2
+    «expr = »(..., «expr + »(«expr - »(a, «expr • »(l, ε)), ε)) : by conv [] [] { to_rhs,
+      rw ["[", "<-", expr nat.succ_pred_eq_of_pos (nat.pos_of_ne_zero hl0), ",", expr succ_nsmul', ",", expr sub_add, ",", expr add_sub_cancel, "]"] }
+    «expr < »(..., «expr + »(f j, ε)) : add_lt_add_right (hl j (le_trans hi.1 hj)) _
+end
 
 theorem is_cau_of_mono_bounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n _ : n ≥ m, |f n| ≤ a)
   (hnm : ∀ n _ : n ≥ m, f n ≤ f n.succ) : IsCauSeq abs f :=
@@ -85,38 +80,36 @@ section NoArchimedean
 
 variable{α : Type _}{β : Type _}[Ringₓ β][LinearOrderedField α]{abv : β → α}[IsAbsoluteValue abv]
 
-theorem is_cau_series_of_abv_le_cau {f : ℕ → β} {g : ℕ → α} (n : ℕ) :
-  (∀ m, n ≤ m → abv (f m) ≤ g m) →
-    (IsCauSeq abs fun n => ∑i in range n, g i) → IsCauSeq abv fun n => ∑i in range n, f i :=
-  by 
-    intro hm hg ε ε0 
-    cases'
-      hg (ε / 2)
-        (div_pos ε0
-          (by 
-            normNum)) with
-      i hi 
-    exists max n i 
-    intro j ji 
-    have hi₁ := hi j (le_transₓ (le_max_rightₓ n i) ji)
-    have hi₂ := hi (max n i) (le_max_rightₓ n i)
-    have sub_le := abs_sub_le (∑k in range j, g k) (∑k in range i, g k) (∑k in range (max n i), g k)
-    have  := add_lt_add hi₁ hi₂ 
-    rw [abs_sub_comm (∑k in range (max n i), g k), add_halves ε] at this 
-    refine' lt_of_le_of_ltₓ (le_transₓ (le_transₓ _ (le_abs_self _)) sub_le) this 
-    generalize hk : j - max n i = k 
-    clear this hi₂ hi₁ hi ε0 ε hg sub_le 
-    rw [tsub_eq_iff_eq_add_of_le ji] at hk 
-    rw [hk]
-    clear hk ji j 
-    induction' k with k' hi
-    ·
-      simp [abv_zero abv]
-    ·
-      simp only [Nat.succ_add, sum_range_succ_comm, sub_eq_add_neg, add_assocₓ]
-      refine' le_transₓ (abv_add _ _ _) _ 
-      simp only [sub_eq_add_neg] at hi 
-      exact add_le_add (hm _ (le_add_of_nonneg_of_le (Nat.zero_leₓ _) (le_max_leftₓ _ _))) hi
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_cau_series_of_abv_le_cau
+{f : exprℕ() → β}
+{g : exprℕ() → α}
+(n : exprℕ()) : ∀
+m, «expr ≤ »(n, m) → «expr ≤ »(abv (f m), g m) → is_cau_seq abs (λ
+ n, «expr∑ in , »((i), range n, g i)) → is_cau_seq abv (λ n, «expr∑ in , »((i), range n, f i)) :=
+begin
+  assume [binders (hm hg ε ε0)],
+  cases [expr hg «expr / »(ε, 2) (div_pos ε0 (by norm_num [] []))] ["with", ident i, ident hi],
+  existsi [expr max n i],
+  assume [binders (j ji)],
+  have [ident hi₁] [] [":=", expr hi j (le_trans (le_max_right n i) ji)],
+  have [ident hi₂] [] [":=", expr hi (max n i) (le_max_right n i)],
+  have [ident sub_le] [] [":=", expr abs_sub_le «expr∑ in , »((k), range j, g k) «expr∑ in , »((k), range i, g k) «expr∑ in , »((k), range (max n i), g k)],
+  have [] [] [":=", expr add_lt_add hi₁ hi₂],
+  rw ["[", expr abs_sub_comm «expr∑ in , »((k), range (max n i), g k), ",", expr add_halves ε, "]"] ["at", ident this],
+  refine [expr lt_of_le_of_lt (le_trans (le_trans _ (le_abs_self _)) sub_le) this],
+  generalize [ident hk] [":"] [expr «expr = »(«expr - »(j, max n i), k)],
+  clear [ident this, ident hi₂, ident hi₁, ident hi, ident ε0, ident ε, ident hg, ident sub_le],
+  rw [expr tsub_eq_iff_eq_add_of_le ji] ["at", ident hk],
+  rw [expr hk] [],
+  clear [ident hk, ident ji, ident j],
+  induction [expr k] [] ["with", ident k', ident hi] [],
+  { simp [] [] [] ["[", expr abv_zero abv, "]"] [] [] },
+  { simp [] [] ["only"] ["[", expr nat.succ_add, ",", expr sum_range_succ_comm, ",", expr sub_eq_add_neg, ",", expr add_assoc, "]"] [] [],
+    refine [expr le_trans (abv_add _ _ _) _],
+    simp [] [] ["only"] ["[", expr sub_eq_add_neg, "]"] [] ["at", ident hi],
+    exact [expr add_le_add (hm _ (le_add_of_nonneg_of_le (nat.zero_le _) (le_max_left _ _))) hi] }
+end
 
 theorem is_cau_series_of_abv_cau {f : ℕ → β} :
   (IsCauSeq abs fun m => ∑n in range m, abv (f n)) → IsCauSeq abv fun m => ∑n in range m, f n :=
@@ -128,7 +121,7 @@ section
 
 variable{α : Type _}{β : Type _}[Ringₓ β][LinearOrderedField α][Archimedean α]{abv : β → α}[IsAbsoluteValue abv]
 
--- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_cau_geo_series
 {β : Type*}
 [field β]
@@ -165,44 +158,35 @@ theorem is_cau_geo_series_const (a : α) {x : α} (hx1 : |x| < 1) : IsCauSeq abs
   by 
     simpa only [mul_sum]
 
-theorem series_ratio_test {f : ℕ → β} (n : ℕ) (r : α) (hr0 : 0 ≤ r) (hr1 : r < 1)
-  (h : ∀ m, n ≤ m → abv (f m.succ) ≤ r*abv (f m)) : IsCauSeq abv fun m => ∑n in range m, f n :=
-  have har1 : |r| < 1 :=
-    by 
-      rwa [abs_of_nonneg hr0]
-  by 
-    refine' is_cau_series_of_abv_le_cau n.succ _ (is_cau_geo_series_const (abv (f n.succ)*r⁻¹ ^ n.succ) har1)
-    intro m hmn 
-    cases' Classical.em (r = 0) with r_zero r_ne_zero
-    ·
-      have m_pos := lt_of_lt_of_leₓ (Nat.succ_posₓ n) hmn 
-      have  :=
-        h m.pred
-          (Nat.le_of_succ_le_succₓ
-            (by 
-              rwa [Nat.succ_pred_eq_of_posₓ m_pos]))
-      simpa [r_zero, Nat.succ_pred_eq_of_posₓ m_pos, pow_succₓ]
-    generalize hk : m - n.succ = k 
-    have r_pos : 0 < r := lt_of_le_of_neₓ hr0 (Ne.symm r_ne_zero)
-    replace hk : m = k+n.succ := (tsub_eq_iff_eq_add_of_le hmn).1 hk 
-    induction' k with k ih generalizing m n
-    ·
-      rw [hk, zero_addₓ, mul_right_commₓ, inv_pow₀ _ _, ←div_eq_mul_inv, mul_div_cancel]
-      exact (ne_of_ltₓ (pow_pos r_pos _)).symm
-    ·
-      have kn : (k+n.succ) ≥ n.succ
-      ·
-        rw [←zero_addₓ n.succ] <;>
-          exact
-            add_le_add (zero_le _)
-              (by 
-                simp )
-      rw [hk, Nat.succ_add, pow_succ'ₓ r, ←mul_assocₓ]
-      exact
-        le_transₓ
-          (by 
-            rw [mul_commₓ] <;> exact h _ (Nat.le_of_succ_leₓ kn))
-          (mul_le_mul_of_nonneg_right (ih (k+n.succ) n h kn rfl) hr0)
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem series_ratio_test
+{f : exprℕ() → β}
+(n : exprℕ())
+(r : α)
+(hr0 : «expr ≤ »(0, r))
+(hr1 : «expr < »(r, 1))
+(h : ∀
+ m, «expr ≤ »(n, m) → «expr ≤ »(abv (f m.succ), «expr * »(r, abv (f m)))) : is_cau_seq abv (λ
+ m, «expr∑ in , »((n), range m, f n)) :=
+have har1 : «expr < »(«expr| |»(r), 1), by rwa [expr abs_of_nonneg hr0] [],
+begin
+  refine [expr is_cau_series_of_abv_le_cau n.succ _ (is_cau_geo_series_const «expr * »(abv (f n.succ), «expr ^ »(«expr ⁻¹»(r), n.succ)) har1)],
+  assume [binders (m hmn)],
+  cases [expr classical.em «expr = »(r, 0)] ["with", ident r_zero, ident r_ne_zero],
+  { have [ident m_pos] [] [":=", expr lt_of_lt_of_le (nat.succ_pos n) hmn],
+    have [] [] [":=", expr h m.pred (nat.le_of_succ_le_succ (by rwa ["[", expr nat.succ_pred_eq_of_pos m_pos, "]"] []))],
+    simpa [] [] [] ["[", expr r_zero, ",", expr nat.succ_pred_eq_of_pos m_pos, ",", expr pow_succ, "]"] [] [] },
+  generalize [ident hk] [":"] [expr «expr = »(«expr - »(m, n.succ), k)],
+  have [ident r_pos] [":", expr «expr < »(0, r)] [":=", expr lt_of_le_of_ne hr0 (ne.symm r_ne_zero)],
+  replace [ident hk] [":", expr «expr = »(m, «expr + »(k, n.succ))] [":=", expr (tsub_eq_iff_eq_add_of_le hmn).1 hk],
+  induction [expr k] [] ["with", ident k, ident ih] ["generalizing", ident m, ident n],
+  { rw ["[", expr hk, ",", expr zero_add, ",", expr mul_right_comm, ",", expr inv_pow₀ _ _, ",", "<-", expr div_eq_mul_inv, ",", expr mul_div_cancel, "]"] [],
+    exact [expr (ne_of_lt (pow_pos r_pos _)).symm] },
+  { have [ident kn] [":", expr «expr ≥ »(«expr + »(k, n.succ), n.succ)] [],
+    by rw ["<-", expr zero_add n.succ] []; exact [expr add_le_add (zero_le _) (by simp [] [] [] [] [] [])],
+    rw ["[", expr hk, ",", expr nat.succ_add, ",", expr pow_succ' r, ",", "<-", expr mul_assoc, "]"] [],
+    exact [expr le_trans (by rw [expr mul_comm] []; exact [expr h _ (nat.le_of_succ_le kn)]) (mul_le_mul_of_nonneg_right (ih «expr + »(k, n.succ) n h kn rfl) hr0)] }
+end
 
 theorem sum_range_diag_flip {α : Type _} [AddCommMonoidₓ α] (n : ℕ) (f : ℕ → ℕ → α) :
   (∑m in range n, ∑k in range (m+1), f k (m - k)) = ∑m in range n, ∑k in range (n - m), f m k :=
@@ -256,16 +240,16 @@ section NoArchimedean
 
 variable{α : Type _}{β : Type _}[Ringₓ β][LinearOrderedField α]{abv : β → α}[IsAbsoluteValue abv]
 
-theorem abv_sum_le_sum_abv {γ : Type _} (f : γ → β) (s : Finset γ) : abv (∑k in s, f k) ≤ ∑k in s, abv (f k) :=
-  by 
-    haveI  := Classical.decEq γ <;>
-      exact
-        Finset.induction_on s
-          (by 
-            simp [abv_zero abv])
-          fun a s has ih =>
-            by 
-              rw [sum_insert has, sum_insert has] <;> exact le_transₓ (abv_add abv _ _) (add_le_add_left ih _)
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem abv_sum_le_sum_abv
+{γ : Type*}
+(f : γ → β)
+(s : finset γ) : «expr ≤ »(abv «expr∑ in , »((k), s, f k), «expr∑ in , »((k), s, abv (f k))) :=
+by haveI [] [] [":=", expr classical.dec_eq γ]; exact [expr finset.induction_on s (by simp [] [] [] ["[", expr abv_zero abv, "]"] [] []) (λ
+  a
+  s
+  has
+  ih, by rw ["[", expr sum_insert has, ",", expr sum_insert has, "]"] []; exact [expr le_trans (abv_add abv _ _) (add_le_add_left ih _)])]
 
 theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑n in range m, abv (a n))
   (hb : IsCauSeq abv fun m => ∑n in range m, b n) (ε : α) (ε0 : 0 < ε) :
@@ -539,34 +523,21 @@ theorem exp_zero : exp 0 = 1 :=
                 simp only [sum_range_succ, pow_succₓ]
                 simp ⟩
 
-theorem exp_add : exp (x+y) = exp x*exp y :=
-  show
-    limₓ (⟨_, is_cau_exp (x+y)⟩ : CauSeq ℂ abs) =
-      limₓ (show CauSeq ℂ abs from ⟨_, is_cau_exp x⟩)*limₓ (show CauSeq ℂ abs from ⟨_, is_cau_exp y⟩) from
-    have hj :
-      ∀ j : ℕ,
-        (∑m in range j, (x+y) ^ m / m !) = ∑i in range j, ∑k in range (i+1), (x ^ k / k !)*y ^ (i - k) / (i - k)! :=
-      fun j =>
-        Finset.sum_congr rfl
-          fun m hm =>
-            by 
-              rw [add_pow, div_eq_mul_inv, sum_mul]
-              refine' Finset.sum_congr rfl fun i hi => _ 
-              have h₁ : (m.choose i : ℂ) ≠ 0 :=
-                Nat.cast_ne_zero.2 (pos_iff_ne_zero.1 (Nat.choose_pos (Nat.le_of_lt_succₓ (mem_range.1 hi))))
-              have h₂ := Nat.choose_mul_factorial_mul_factorial (Nat.le_of_lt_succₓ$ Finset.mem_range.1 hi)
-              rw [←h₂, Nat.cast_mul, Nat.cast_mul, mul_inv₀, mul_inv₀]
-              simp only [mul_left_commₓ (m.choose i : ℂ), mul_assocₓ, mul_left_commₓ ((m.choose i : ℂ)⁻¹),
-                mul_commₓ (m.choose i : ℂ)]
-              rw [inv_mul_cancel h₁]
-              simp [div_eq_mul_inv, mul_commₓ, mul_assocₓ, mul_left_commₓ]
-    by 
-      rw [lim_mul_lim] <;>
-        exact
-          Eq.symm
-            (lim_eq_lim_of_equiv
-              (by 
-                dsimp <;> simp only [hj] <;> exact cauchy_product (is_cau_abs_exp x) (is_cau_exp y)))
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exp_add : «expr = »(exp «expr + »(x, y), «expr * »(exp x, exp y)) :=
+show «expr = »(lim (⟨_, is_cau_exp «expr + »(x, y)⟩ : cau_seq exprℂ() abs), «expr * »(lim (show cau_seq exprℂ() abs, from ⟨_, is_cau_exp x⟩), lim (show cau_seq exprℂ() abs, from ⟨_, is_cau_exp y⟩))), from have hj : ∀
+j : exprℕ(), «expr = »(«expr∑ in , »((m), range j, «expr / »(«expr ^ »(«expr + »(x, y), m), «expr !»(m))), «expr∑ in , »((i), range j, «expr∑ in , »((k), range «expr + »(i, 1), «expr * »(«expr / »(«expr ^ »(x, k), «expr !»(k)), «expr / »(«expr ^ »(y, «expr - »(i, k)), «expr !»(«expr - »(i, k))))))), from assume
+j, finset.sum_congr rfl (λ m hm, begin
+   rw ["[", expr add_pow, ",", expr div_eq_mul_inv, ",", expr sum_mul, "]"] [],
+   refine [expr finset.sum_congr rfl (λ i hi, _)],
+   have [ident h₁] [":", expr «expr ≠ »((m.choose i : exprℂ()), 0)] [":=", expr nat.cast_ne_zero.2 (pos_iff_ne_zero.1 (nat.choose_pos (nat.le_of_lt_succ (mem_range.1 hi))))],
+   have [ident h₂] [] [":=", expr nat.choose_mul_factorial_mul_factorial «expr $ »(nat.le_of_lt_succ, finset.mem_range.1 hi)],
+   rw ["[", "<-", expr h₂, ",", expr nat.cast_mul, ",", expr nat.cast_mul, ",", expr mul_inv₀, ",", expr mul_inv₀, "]"] [],
+   simp [] [] ["only"] ["[", expr mul_left_comm (m.choose i : exprℂ()), ",", expr mul_assoc, ",", expr mul_left_comm «expr ⁻¹»((m.choose i : exprℂ())), ",", expr mul_comm (m.choose i : exprℂ()), "]"] [] [],
+   rw [expr inv_mul_cancel h₁] [],
+   simp [] [] [] ["[", expr div_eq_mul_inv, ",", expr mul_comm, ",", expr mul_assoc, ",", expr mul_left_comm, "]"] [] []
+ end),
+by rw [expr lim_mul_lim] []; exact [expr eq.symm (lim_eq_lim_of_equiv (by dsimp [] [] [] []; simp [] [] ["only"] ["[", expr hj, "]"] [] []; exact [expr cauchy_product (is_cau_abs_exp x) (is_cau_exp y)]))]
 
 attribute [irreducible] Complex.exp
 
@@ -810,31 +781,31 @@ theorem sinh_two_mul : sinh (2*x) = (2*sinh x)*cosh x :=
     rw [two_mul, sinh_add]
     ring
 
-theorem cosh_three_mul : cosh (3*x) = (4*cosh x ^ 3) - 3*cosh x :=
-  by 
-    have h1 : (x+2*x) = 3*x
-    ·
-      ring 
-    rw [←h1, cosh_add x (2*x)]
-    simp only [cosh_two_mul, sinh_two_mul]
-    have h2 : (sinh x*(2*sinh x)*cosh x) = (2*cosh x)*sinh x ^ 2
-    ·
-      ring 
-    rw [h2, sinh_sq]
-    ring
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cosh_three_mul : «expr = »(cosh «expr * »(3, x), «expr - »(«expr * »(4, «expr ^ »(cosh x, 3)), «expr * »(3, cosh x))) :=
+begin
+  have [ident h1] [":", expr «expr = »(«expr + »(x, «expr * »(2, x)), «expr * »(3, x))] [],
+  by ring [],
+  rw ["[", "<-", expr h1, ",", expr cosh_add x «expr * »(2, x), "]"] [],
+  simp [] [] ["only"] ["[", expr cosh_two_mul, ",", expr sinh_two_mul, "]"] [] [],
+  have [ident h2] [":", expr «expr = »(«expr * »(sinh x, «expr * »(«expr * »(2, sinh x), cosh x)), «expr * »(«expr * »(2, cosh x), «expr ^ »(sinh x, 2)))] [],
+  by ring [],
+  rw ["[", expr h2, ",", expr sinh_sq, "]"] [],
+  ring []
+end
 
-theorem sinh_three_mul : sinh (3*x) = (4*sinh x ^ 3)+3*sinh x :=
-  by 
-    have h1 : (x+2*x) = 3*x
-    ·
-      ring 
-    rw [←h1, sinh_add x (2*x)]
-    simp only [cosh_two_mul, sinh_two_mul]
-    have h2 : (cosh x*(2*sinh x)*cosh x) = (2*sinh x)*cosh x ^ 2
-    ·
-      ring 
-    rw [h2, cosh_sq]
-    ring
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sinh_three_mul : «expr = »(sinh «expr * »(3, x), «expr + »(«expr * »(4, «expr ^ »(sinh x, 3)), «expr * »(3, sinh x))) :=
+begin
+  have [ident h1] [":", expr «expr = »(«expr + »(x, «expr * »(2, x)), «expr * »(3, x))] [],
+  by ring [],
+  rw ["[", "<-", expr h1, ",", expr sinh_add x «expr * »(2, x), "]"] [],
+  simp [] [] ["only"] ["[", expr cosh_two_mul, ",", expr sinh_two_mul, "]"] [] [],
+  have [ident h2] [":", expr «expr = »(«expr * »(cosh x, «expr * »(«expr * »(2, sinh x), cosh x)), «expr * »(«expr * »(2, sinh x), «expr ^ »(cosh x, 2)))] [],
+  by ring [],
+  rw ["[", expr h2, ",", expr cosh_sq, "]"] [],
+  ring []
+end
 
 @[simp]
 theorem sin_zero : sin 0 = 0 :=
@@ -930,40 +901,40 @@ theorem cos_eq (z : ℂ) : cos z = (cos z.re*cosh z.im) - (sin z.re*sinh z.im)*I
   by 
     convert cos_add_mul_I z.re z.im <;> exact (re_add_im z).symm
 
-theorem sin_sub_sin : sin x - sin y = (2*sin ((x - y) / 2))*cos ((x+y) / 2) :=
-  by 
-    have s1 := sin_add ((x+y) / 2) ((x - y) / 2)
-    have s2 := sin_sub ((x+y) / 2) ((x - y) / 2)
-    rw [div_add_div_same, add_sub, add_right_commₓ, add_sub_cancel, half_add_self] at s1 
-    rw [div_sub_div_same, ←sub_add, add_sub_cancel', half_add_self] at s2 
-    rw [s1, s2]
-    ring
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sin_sub_sin : «expr = »(«expr - »(sin x, sin y), «expr * »(«expr * »(2, sin «expr / »(«expr - »(x, y), 2)), cos «expr / »(«expr + »(x, y), 2))) :=
+begin
+  have [ident s1] [] [":=", expr sin_add «expr / »(«expr + »(x, y), 2) «expr / »(«expr - »(x, y), 2)],
+  have [ident s2] [] [":=", expr sin_sub «expr / »(«expr + »(x, y), 2) «expr / »(«expr - »(x, y), 2)],
+  rw ["[", expr div_add_div_same, ",", expr add_sub, ",", expr add_right_comm, ",", expr add_sub_cancel, ",", expr half_add_self, "]"] ["at", ident s1],
+  rw ["[", expr div_sub_div_same, ",", "<-", expr sub_add, ",", expr add_sub_cancel', ",", expr half_add_self, "]"] ["at", ident s2],
+  rw ["[", expr s1, ",", expr s2, "]"] [],
+  ring []
+end
 
-theorem cos_sub_cos : cos x - cos y = ((-2)*sin ((x+y) / 2))*sin ((x - y) / 2) :=
-  by 
-    have s1 := cos_add ((x+y) / 2) ((x - y) / 2)
-    have s2 := cos_sub ((x+y) / 2) ((x - y) / 2)
-    rw [div_add_div_same, add_sub, add_right_commₓ, add_sub_cancel, half_add_self] at s1 
-    rw [div_sub_div_same, ←sub_add, add_sub_cancel', half_add_self] at s2 
-    rw [s1, s2]
-    ring
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cos_sub_cos : «expr = »(«expr - »(cos x, cos y), «expr * »(«expr * »(«expr- »(2), sin «expr / »(«expr + »(x, y), 2)), sin «expr / »(«expr - »(x, y), 2))) :=
+begin
+  have [ident s1] [] [":=", expr cos_add «expr / »(«expr + »(x, y), 2) «expr / »(«expr - »(x, y), 2)],
+  have [ident s2] [] [":=", expr cos_sub «expr / »(«expr + »(x, y), 2) «expr / »(«expr - »(x, y), 2)],
+  rw ["[", expr div_add_div_same, ",", expr add_sub, ",", expr add_right_comm, ",", expr add_sub_cancel, ",", expr half_add_self, "]"] ["at", ident s1],
+  rw ["[", expr div_sub_div_same, ",", "<-", expr sub_add, ",", expr add_sub_cancel', ",", expr half_add_self, "]"] ["at", ident s2],
+  rw ["[", expr s1, ",", expr s2, "]"] [],
+  ring []
+end
 
-theorem cos_add_cos : (cos x+cos y) = (2*cos ((x+y) / 2))*cos ((x - y) / 2) :=
-  by 
-    have h2 : (2 : ℂ) ≠ 0 :=
-      by 
-        normNum 
-    calc (cos x+cos y) = cos (((x+y) / 2)+(x - y) / 2)+cos ((x+y) / 2 - (x - y) / 2) :=
-      _
-        _ =
-        ((cos ((x+y) / 2)*cos ((x - y) / 2)) -
-            sin ((x+y) / 2)*sin ((x - y) / 2))+(cos ((x+y) / 2)*cos ((x - y) / 2))+sin ((x+y) / 2)*sin ((x - y) / 2) :=
-      _ _ = (2*cos ((x+y) / 2))*cos ((x - y) / 2) := _
-    ·
-      congr <;> fieldSimp [h2] <;> ring
-    ·
-      rw [cos_add, cos_sub]
-    ring
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cos_add_cos : «expr = »(«expr + »(cos x, cos y), «expr * »(«expr * »(2, cos «expr / »(«expr + »(x, y), 2)), cos «expr / »(«expr - »(x, y), 2))) :=
+begin
+  have [ident h2] [":", expr «expr ≠ »((2 : exprℂ()), 0)] [":=", expr by norm_num [] []],
+  calc
+    «expr = »(«expr + »(cos x, cos y), «expr + »(cos «expr + »(«expr / »(«expr + »(x, y), 2), «expr / »(«expr - »(x, y), 2)), cos «expr - »(«expr / »(«expr + »(x, y), 2), «expr / »(«expr - »(x, y), 2)))) : _
+    «expr = »(..., «expr + »(«expr - »(«expr * »(cos «expr / »(«expr + »(x, y), 2), cos «expr / »(«expr - »(x, y), 2)), «expr * »(sin «expr / »(«expr + »(x, y), 2), sin «expr / »(«expr - »(x, y), 2))), «expr + »(«expr * »(cos «expr / »(«expr + »(x, y), 2), cos «expr / »(«expr - »(x, y), 2)), «expr * »(sin «expr / »(«expr + »(x, y), 2), sin «expr / »(«expr - »(x, y), 2))))) : _
+    «expr = »(..., «expr * »(«expr * »(2, cos «expr / »(«expr + »(x, y), 2)), cos «expr / »(«expr - »(x, y), 2))) : _,
+  { congr; field_simp [] ["[", expr h2, "]"] [] []; ring [] },
+  { rw ["[", expr cos_add, ",", expr cos_sub, "]"] [] },
+  ring []
+end
 
 theorem sin_conj : sin (conj x) = conj (sin x) :=
   by 
@@ -1103,31 +1074,31 @@ theorem tan_sq_div_one_add_tan_sq {x : ℂ} (hx : cos x ≠ 0) : (tan x ^ 2 / 1+
   by 
     simp only [←tan_mul_cos hx, mul_powₓ, ←inv_one_add_tan_sq hx, div_eq_mul_inv, one_mulₓ]
 
-theorem cos_three_mul : cos (3*x) = (4*cos x ^ 3) - 3*cos x :=
-  by 
-    have h1 : (x+2*x) = 3*x
-    ·
-      ring 
-    rw [←h1, cos_add x (2*x)]
-    simp only [cos_two_mul, sin_two_mul, mul_addₓ, mul_sub, mul_oneₓ, sq]
-    have h2 : (4*cos x ^ 3) = (((2*cos x)*cos x)*cos x)+(2*cos x)*cos x ^ 2
-    ·
-      ring 
-    rw [h2, cos_sq']
-    ring
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cos_three_mul : «expr = »(cos «expr * »(3, x), «expr - »(«expr * »(4, «expr ^ »(cos x, 3)), «expr * »(3, cos x))) :=
+begin
+  have [ident h1] [":", expr «expr = »(«expr + »(x, «expr * »(2, x)), «expr * »(3, x))] [],
+  by ring [],
+  rw ["[", "<-", expr h1, ",", expr cos_add x «expr * »(2, x), "]"] [],
+  simp [] [] ["only"] ["[", expr cos_two_mul, ",", expr sin_two_mul, ",", expr mul_add, ",", expr mul_sub, ",", expr mul_one, ",", expr sq, "]"] [] [],
+  have [ident h2] [":", expr «expr = »(«expr * »(4, «expr ^ »(cos x, 3)), «expr + »(«expr * »(«expr * »(«expr * »(2, cos x), cos x), cos x), «expr * »(«expr * »(2, cos x), «expr ^ »(cos x, 2))))] [],
+  by ring [],
+  rw ["[", expr h2, ",", expr cos_sq', "]"] [],
+  ring []
+end
 
-theorem sin_three_mul : sin (3*x) = (3*sin x) - 4*sin x ^ 3 :=
-  by 
-    have h1 : (x+2*x) = 3*x
-    ·
-      ring 
-    rw [←h1, sin_add x (2*x)]
-    simp only [cos_two_mul, sin_two_mul, cos_sq']
-    have h2 : (cos x*(2*sin x)*cos x) = (2*sin x)*cos x ^ 2
-    ·
-      ring 
-    rw [h2, cos_sq']
-    ring
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sin_three_mul : «expr = »(sin «expr * »(3, x), «expr - »(«expr * »(3, sin x), «expr * »(4, «expr ^ »(sin x, 3)))) :=
+begin
+  have [ident h1] [":", expr «expr = »(«expr + »(x, «expr * »(2, x)), «expr * »(3, x))] [],
+  by ring [],
+  rw ["[", "<-", expr h1, ",", expr sin_add x «expr * »(2, x), "]"] [],
+  simp [] [] ["only"] ["[", expr cos_two_mul, ",", expr sin_two_mul, ",", expr cos_sq', "]"] [] [],
+  have [ident h2] [":", expr «expr = »(«expr * »(cos x, «expr * »(«expr * »(2, sin x), cos x)), «expr * »(«expr * »(2, sin x), «expr ^ »(cos x, 2)))] [],
+  by ring [],
+  rw ["[", expr h2, ",", expr cos_sq', "]"] [],
+  ring []
+end
 
 theorem exp_mul_I : exp (x*I) = cos x+sin x*I :=
   (cos_add_sin_I _).symm
@@ -1687,50 +1658,42 @@ theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
         simp [abs_mul, abv_pow abs, abs_div, mul_sum.symm]_ ≤ (abs x ^ n)*n.succ*(n !*n)⁻¹ :=
       mul_le_mul_of_nonneg_left (sum_div_factorial_le _ _ hn) (pow_nonneg (abs_nonneg _) _)
 
-theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
-  abs (exp x - ∑m in range n, x ^ m / m !) ≤ (abs x ^ n / n !)*2 :=
-  by 
-    rw [←lim_const (∑m in range n, _), exp, sub_eq_add_neg, ←lim_neg, lim_add, ←lim_abs]
-    refine' lim_le (CauSeq.le_of_exists ⟨n, fun j hj => _⟩)
-    simpRw [←sub_eq_add_neg]
-    show abs ((∑m in range j, x ^ m / m !) - ∑m in range n, x ^ m / m !) ≤ (abs x ^ n / n !)*2
-    let k := j - n 
-    have hj : j = n+k := (add_tsub_cancel_of_le hj).symm 
-    rw [hj, sum_range_add_sub_sum_range]
-    calc abs (∑i : ℕ in range k, (x ^ n+i) / ((n+i)! : ℂ)) ≤ ∑i : ℕ in range k, abs ((x ^ n+i) / ((n+i)! : ℂ)) :=
-      abv_sum_le_sum_abv _ _ _ ≤ ∑i : ℕ in range k, (abs x ^ n+i) / (n+i)! :=
-      by 
-        simp only [Complex.abs_cast_nat, Complex.abs_div,
-          abv_pow abs]_ ≤ ∑i : ℕ in range k, (abs x ^ n+i) / n !*n.succ ^ i :=
-      _ _ = ∑i : ℕ in range k, (abs x ^ n / n !)*abs x ^ i / n.succ ^ i := _ _ ≤ (abs x ^ n / «expr↑ » n !)*2 := _
-    ·
-      refine' sum_le_sum fun m hm => div_le_div (pow_nonneg (abs_nonneg x) (n+m)) (le_reflₓ _) _ _
-      ·
-        exactModCast mul_pos n.factorial_pos (pow_pos n.succ_pos _)
-      ·
-        exactModCast Nat.factorial_mul_pow_le_factorial
-    ·
-      refine' Finset.sum_congr rfl fun _ _ => _ 
-      simp only [pow_addₓ, div_eq_inv_mul, mul_inv₀, mul_left_commₓ, mul_assocₓ]
-    ·
-      rw [←mul_sum]
-      apply mul_le_mul_of_nonneg_left
-      ·
-        simpRw [←div_pow]
-        rw [←geom_sum_def, geom_sum_eq, div_le_iff_of_neg]
-        ·
-          trans (-1 : ℝ)
-          ·
-            linarith
-          ·
-            simp only [neg_le_sub_iff_le_add, div_pow, Nat.cast_succ, le_add_iff_nonneg_left]
-            exact div_nonneg (pow_nonneg (abs_nonneg x) k) (pow_nonneg (n+1).cast_nonneg k)
-        ·
-          linarith
-        ·
-          linarith
-      ·
-        exact div_nonneg (pow_nonneg (abs_nonneg x) n) (Nat.cast_nonneg n !)
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exp_bound'
+{x : exprℂ()}
+{n : exprℕ()}
+(hx : «expr ≤ »(«expr / »(abs x, n.succ), «expr / »(1, 2))) : «expr ≤ »(abs «expr - »(exp x, «expr∑ in , »((m), range n, «expr / »(«expr ^ »(x, m), «expr !»(m)))), «expr * »(«expr / »(«expr ^ »(abs x, n), «expr !»(n)), 2)) :=
+begin
+  rw ["[", "<-", expr lim_const «expr∑ in , »((m), range n, _), ",", expr exp, ",", expr sub_eq_add_neg, ",", "<-", expr lim_neg, ",", expr lim_add, ",", "<-", expr lim_abs, "]"] [],
+  refine [expr lim_le (cau_seq.le_of_exists ⟨n, λ j hj, _⟩)],
+  simp_rw ["[", "<-", expr sub_eq_add_neg, "]"] [],
+  show [expr «expr ≤ »(abs «expr - »(«expr∑ in , »((m), range j, «expr / »(«expr ^ »(x, m), «expr !»(m))), «expr∑ in , »((m), range n, «expr / »(«expr ^ »(x, m), «expr !»(m)))), «expr * »(«expr / »(«expr ^ »(abs x, n), «expr !»(n)), 2))],
+  let [ident k] [] [":=", expr «expr - »(j, n)],
+  have [ident hj] [":", expr «expr = »(j, «expr + »(n, k))] [":=", expr (add_tsub_cancel_of_le hj).symm],
+  rw ["[", expr hj, ",", expr sum_range_add_sub_sum_range, "]"] [],
+  calc
+    «expr ≤ »(abs «expr∑ in , »((i : exprℕ()), range k, «expr / »(«expr ^ »(x, «expr + »(n, i)), («expr !»(«expr + »(n, i)) : exprℂ()))), «expr∑ in , »((i : exprℕ()), range k, abs «expr / »(«expr ^ »(x, «expr + »(n, i)), («expr !»(«expr + »(n, i)) : exprℂ())))) : abv_sum_le_sum_abv _ _
+    «expr ≤ »(..., «expr∑ in , »((i : exprℕ()), range k, «expr / »(«expr ^ »(abs x, «expr + »(n, i)), «expr !»(«expr + »(n, i))))) : by simp [] [] ["only"] ["[", expr complex.abs_cast_nat, ",", expr complex.abs_div, ",", expr abv_pow abs, "]"] [] []
+    «expr ≤ »(..., «expr∑ in , »((i : exprℕ()), range k, «expr / »(«expr ^ »(abs x, «expr + »(n, i)), «expr * »(«expr !»(n), «expr ^ »(n.succ, i))))) : _
+    «expr = »(..., «expr∑ in , »((i : exprℕ()), range k, «expr * »(«expr / »(«expr ^ »(abs x, n), «expr !»(n)), «expr / »(«expr ^ »(abs x, i), «expr ^ »(n.succ, i))))) : _
+    «expr ≤ »(..., «expr * »(«expr / »(«expr ^ »(abs x, n), «expr↑ »(«expr !»(n))), 2)) : _,
+  { refine [expr sum_le_sum (λ m hm, div_le_div (pow_nonneg (abs_nonneg x) «expr + »(n, m)) (le_refl _) _ _)],
+    { exact_mod_cast [expr mul_pos n.factorial_pos (pow_pos n.succ_pos _)] },
+    { exact_mod_cast [expr nat.factorial_mul_pow_le_factorial] } },
+  { refine [expr finset.sum_congr rfl (λ _ _, _)],
+    simp [] [] ["only"] ["[", expr pow_add, ",", expr div_eq_inv_mul, ",", expr mul_inv₀, ",", expr mul_left_comm, ",", expr mul_assoc, "]"] [] [] },
+  { rw ["[", "<-", expr mul_sum, "]"] [],
+    apply [expr mul_le_mul_of_nonneg_left],
+    { simp_rw ["[", "<-", expr div_pow, "]"] [],
+      rw ["[", "<-", expr geom_sum_def, ",", expr geom_sum_eq, ",", expr div_le_iff_of_neg, "]"] [],
+      { transitivity [expr («expr- »(1) : exprℝ())],
+        { linarith [] [] [] },
+        { simp [] [] ["only"] ["[", expr neg_le_sub_iff_le_add, ",", expr div_pow, ",", expr nat.cast_succ, ",", expr le_add_iff_nonneg_left, "]"] [] [],
+          exact [expr div_nonneg (pow_nonneg (abs_nonneg x) k) (pow_nonneg «expr + »(n, 1).cast_nonneg k)] } },
+      { linarith [] [] [] },
+      { linarith [] [] [] } },
+    { exact [expr div_nonneg (pow_nonneg (abs_nonneg x) n) (nat.cast_nonneg «expr !»(n))] } }
+end
 
 theorem abs_exp_sub_one_le {x : ℂ} (hx : abs x ≤ 1) : abs (exp x - 1) ≤ 2*abs x :=
   calc abs (exp x - 1) = abs (exp x - ∑m in range 1, x ^ m / m !) :=
@@ -1769,13 +1732,17 @@ namespace Real
 
 open Complex Finset
 
-theorem exp_bound {x : ℝ} (hx : |x| ≤ 1) {n : ℕ} (hn : 0 < n) :
-  |exp x - ∑m in range n, x ^ m / m !| ≤ (|x| ^ n)*n.succ / n !*n :=
-  by 
-    have hxc : Complex.abs x ≤ 1
-    ·
-      exactModCast hx 
-    convert exp_bound hxc hn <;> normCast
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exp_bound
+{x : exprℝ()}
+(hx : «expr ≤ »(«expr| |»(x), 1))
+{n : exprℕ()}
+(hn : «expr < »(0, n)) : «expr ≤ »(«expr| |»(«expr - »(exp x, «expr∑ in , »((m), range n, «expr / »(«expr ^ »(x, m), «expr !»(m))))), «expr * »(«expr ^ »(«expr| |»(x), n), «expr / »(n.succ, «expr * »(«expr !»(n), n)))) :=
+begin
+  have [ident hxc] [":", expr «expr ≤ »(complex.abs x, 1)] [],
+  by exact_mod_cast [expr hx],
+  convert [] [expr exp_bound hxc hn] []; norm_cast []
+end
 
 /-- A finite initial segment of the exponential series, followed by an arbitrary tail.
 For fixed `n` this is just a linear map wrt `r`, and each map is a simple linear function

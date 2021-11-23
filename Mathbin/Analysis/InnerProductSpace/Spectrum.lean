@@ -56,14 +56,17 @@ variable{T : E →ₗ[𝕜] E}(hT : IsSelfAdjoint T)
 
 include hT
 
+-- error in Analysis.InnerProductSpace.Spectrum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A self-adjoint operator preserves orthogonal complements of its eigenspaces. -/
-theorem invariant_orthogonal_eigenspace (μ : 𝕜) (v : E) (hv : v ∈ (eigenspace T μ)ᗮ) : T v ∈ (eigenspace T μ)ᗮ :=
-  by 
-    intro w hw 
-    have  : T w = (μ : 𝕜) • w :=
-      by 
-        rwa [mem_eigenspace_iff] at hw 
-    simp [←hT w, this, inner_smul_left, hv w hw]
+theorem invariant_orthogonal_eigenspace
+(μ : 𝕜)
+(v : E)
+(hv : «expr ∈ »(v, «expr ᗮ»(eigenspace T μ))) : «expr ∈ »(T v, «expr ᗮ»(eigenspace T μ)) :=
+begin
+  intros [ident w, ident hw],
+  have [] [":", expr «expr = »(T w, «expr • »((μ : 𝕜), w))] [":=", expr by rwa [expr mem_eigenspace_iff] ["at", ident hw]],
+  simp [] [] [] ["[", "<-", expr hT w, ",", expr this, ",", expr inner_smul_left, ",", expr hv w hw, "]"] [] []
+end
 
 /-- The eigenvalues of a self-adjoint operator are real. -/
 theorem conj_eigenvalue_eq_self {μ : 𝕜} (hμ : has_eigenvalue T μ) : conj μ = μ :=
@@ -72,17 +75,18 @@ theorem conj_eigenvalue_eq_self {μ : 𝕜} (hμ : has_eigenvalue T μ) : conj �
     rw [mem_eigenspace_iff] at hv₁ 
     simpa [hv₂, inner_smul_left, inner_smul_right, hv₁] using hT v v
 
+-- error in Analysis.InnerProductSpace.Spectrum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The eigenspaces of a self-adjoint operator are mutually orthogonal. -/
-theorem orthogonal_family_eigenspaces : OrthogonalFamily 𝕜 (eigenspace T) :=
-  by 
-    intro μ ν hμν v hv w hw 
-    byCases' hv' : v = 0
-    ·
-      simp [hv']
-    have H := hT.conj_eigenvalue_eq_self (has_eigenvalue_of_has_eigenvector ⟨hv, hv'⟩)
-    rw [mem_eigenspace_iff] at hv hw 
-    refine' Or.resolve_left _ hμν.symm 
-    simpa [inner_smul_left, inner_smul_right, hv, hw, H] using (hT v w).symm
+theorem orthogonal_family_eigenspaces : orthogonal_family 𝕜 (eigenspace T) :=
+begin
+  intros [ident μ, ident ν, ident hμν, ident v, ident hv, ident w, ident hw],
+  by_cases [expr hv', ":", expr «expr = »(v, 0)],
+  { simp [] [] [] ["[", expr hv', "]"] [] [] },
+  have [ident H] [] [":=", expr hT.conj_eigenvalue_eq_self (has_eigenvalue_of_has_eigenvector ⟨hv, hv'⟩)],
+  rw [expr mem_eigenspace_iff] ["at", ident hv, ident hw],
+  refine [expr or.resolve_left _ hμν.symm],
+  simpa [] [] [] ["[", expr inner_smul_left, ",", expr inner_smul_right, ",", expr hv, ",", expr hw, ",", expr H, "]"] [] ["using", expr (hT v w).symm]
+end
 
 theorem orthogonal_family_eigenspaces' : OrthogonalFamily 𝕜 fun μ : eigenvalues T => eigenspace T μ :=
   hT.orthogonal_family_eigenspaces.comp Subtype.coe_injective
@@ -94,27 +98,32 @@ theorem orthogonal_supr_eigenspaces_invariant ⦃v : E⦄ (hv : v ∈ (⨆μ, ei
     rw [←Submodule.infi_orthogonal] at hv⊢
     exact T.infi_invariant hT.invariant_orthogonal_eigenspace v hv
 
+-- error in Analysis.InnerProductSpace.Spectrum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The mutual orthogonal complement of the eigenspaces of a self-adjoint operator on an inner
 product space has no eigenvalues. -/
-theorem orthogonal_supr_eigenspaces (μ : 𝕜) : eigenspace (T.restrict hT.orthogonal_supr_eigenspaces_invariant) μ = ⊥ :=
-  by 
-    set p : Submodule 𝕜 E := (⨆μ, eigenspace T μ)ᗮ
-    refine' eigenspace_restrict_eq_bot hT.orthogonal_supr_eigenspaces_invariant _ 
-    have H₂ : p ≤ (eigenspace T μ)ᗮ := Submodule.orthogonal_le (le_supr _ _)
-    exact (eigenspace T μ).orthogonal_disjoint.mono_right H₂
+theorem orthogonal_supr_eigenspaces
+(μ : 𝕜) : «expr = »(eigenspace (T.restrict hT.orthogonal_supr_eigenspaces_invariant) μ, «expr⊥»()) :=
+begin
+  set [] [ident p] [":", expr submodule 𝕜 E] [":="] [expr «expr ᗮ»(«expr⨆ , »((μ), eigenspace T μ))] [],
+  refine [expr eigenspace_restrict_eq_bot hT.orthogonal_supr_eigenspaces_invariant _],
+  have [ident H₂] [":", expr «expr ≤ »(p, «expr ᗮ»(eigenspace T μ))] [":=", expr submodule.orthogonal_le (le_supr _ _)],
+  exact [expr (eigenspace T μ).orthogonal_disjoint.mono_right H₂]
+end
 
 /-! ### Finite-dimensional theory -/
 
 
 variable[FiniteDimensional 𝕜 E]
 
+-- error in Analysis.InnerProductSpace.Spectrum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The mutual orthogonal complement of the eigenspaces of a self-adjoint operator on a
 finite-dimensional inner product space is trivial. -/
-theorem orthogonal_supr_eigenspaces_eq_bot : (⨆μ, eigenspace T μ)ᗮ = ⊥ :=
-  by 
-    have hT' : IsSelfAdjoint _ := hT.restrict_invariant hT.orthogonal_supr_eigenspaces_invariant 
-    haveI  := hT'.subsingleton_of_no_eigenvalue_finite_dimensional hT.orthogonal_supr_eigenspaces 
-    exact Submodule.eq_bot_of_subsingleton _
+theorem orthogonal_supr_eigenspaces_eq_bot : «expr = »(«expr ᗮ»(«expr⨆ , »((μ), eigenspace T μ)), «expr⊥»()) :=
+begin
+  have [ident hT'] [":", expr is_self_adjoint _] [":=", expr hT.restrict_invariant hT.orthogonal_supr_eigenspaces_invariant],
+  haveI [] [] [":=", expr hT'.subsingleton_of_no_eigenvalue_finite_dimensional hT.orthogonal_supr_eigenspaces],
+  exact [expr submodule.eq_bot_of_subsingleton _]
+end
 
 theorem orthogonal_supr_eigenspaces_eq_bot' : (⨆μ : eigenvalues T, eigenspace T μ)ᗮ = ⊥ :=
   show (⨆μ : { μ // eigenspace T μ ≠ ⊥ }, eigenspace T μ)ᗮ = ⊥by 
@@ -139,24 +148,26 @@ theorem diagonalization_symm_apply (w : PiLp 2 fun μ : eigenvalues T => eigensp
   hT.diagonalization.symm w = ∑μ, w μ :=
   hT.direct_sum_submodule_is_internal.isometry_L2_of_orthogonal_family_symm_apply hT.orthogonal_family_eigenspaces' w
 
+-- error in Analysis.InnerProductSpace.Spectrum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- *Diagonalization theorem*, *spectral theorem*; version 1: A self-adjoint operator `T` on a
 finite-dimensional inner product space `E` acts diagonally on the decomposition of `E` into the
 direct sum of the eigenspaces of `T`. -/
-theorem diagonalization_apply_self_apply (v : E) (μ : eigenvalues T) :
-  hT.diagonalization (T v) μ = (μ : 𝕜) • hT.diagonalization v μ :=
-  by 
-    suffices  :
-      ∀ w : PiLp 2 fun μ : eigenvalues T => eigenspace T μ,
-        T (hT.diagonalization.symm w) = hT.diagonalization.symm fun μ => (μ : 𝕜) • w μ
-    ·
-      simpa [LinearIsometryEquiv.symm_apply_apply, -IsSelfAdjoint.diagonalization_symm_apply] using
-        congr_argₓ (fun w => hT.diagonalization w μ) (this (hT.diagonalization v))
-    intro w 
-    have hwT : ∀ μ : eigenvalues T, T (w μ) = (μ : 𝕜) • w μ
-    ·
-      intro μ 
-      simpa [mem_eigenspace_iff] using (w μ).Prop 
-    simp [hwT]
+theorem diagonalization_apply_self_apply
+(v : E)
+(μ : eigenvalues T) : «expr = »(hT.diagonalization (T v) μ, «expr • »((μ : 𝕜), hT.diagonalization v μ)) :=
+begin
+  suffices [] [":", expr ∀
+   w : pi_Lp 2 (λ
+    μ : eigenvalues T, eigenspace T μ), «expr = »(T (hT.diagonalization.symm w), hT.diagonalization.symm (λ
+     μ, «expr • »((μ : 𝕜), w μ)))],
+  { simpa [] [] [] ["[", expr linear_isometry_equiv.symm_apply_apply, ",", "-", ident is_self_adjoint.diagonalization_symm_apply, "]"] [] ["using", expr congr_arg (λ
+      w, hT.diagonalization w μ) (this (hT.diagonalization v))] },
+  intros [ident w],
+  have [ident hwT] [":", expr ∀ μ : eigenvalues T, «expr = »(T (w μ), «expr • »((μ : 𝕜), w μ))] [],
+  { intros [ident μ],
+    simpa [] [] [] ["[", expr mem_eigenspace_iff, "]"] [] ["using", expr (w μ).prop] },
+  simp [] [] [] ["[", expr hwT, "]"] [] []
+end
 
 end Version1
 
@@ -182,24 +193,23 @@ TODO Postcompose with a permutation so that these eigenvalues are listed in incr
 noncomputable def eigenvalues (i : Finₓ n) : ℝ :=
   @IsROrC.re 𝕜 _$ hT.direct_sum_submodule_is_internal.subordinate_orthonormal_basis_index hn i
 
-theorem has_eigenvector_eigenvector_basis (i : Finₓ n) :
-  has_eigenvector T (hT.eigenvalues hn i) (hT.eigenvector_basis hn i) :=
-  by 
-    let v : E := hT.eigenvector_basis hn i 
-    let μ : 𝕜 := hT.direct_sum_submodule_is_internal.subordinate_orthonormal_basis_index hn i 
-    change has_eigenvector T (IsROrC.re μ) v 
-    have key : has_eigenvector T μ v
-    ·
-      have H₁ : v ∈ eigenspace T μ
-      ·
-        exact hT.direct_sum_submodule_is_internal.subordinate_orthonormal_basis_subordinate hn i 
-      have H₂ : v ≠ 0 := (hT.eigenvector_basis_orthonormal hn).ne_zero i 
-      exact ⟨H₁, H₂⟩
-    have re_μ : «expr↑ » (IsROrC.re μ) = μ
-    ·
-      rw [←IsROrC.eq_conj_iff_re]
-      exact hT.conj_eigenvalue_eq_self (has_eigenvalue_of_has_eigenvector key)
-    simpa [re_μ] using key
+-- error in Analysis.InnerProductSpace.Spectrum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_eigenvector_eigenvector_basis
+(i : fin n) : has_eigenvector T (hT.eigenvalues hn i) (hT.eigenvector_basis hn i) :=
+begin
+  let [ident v] [":", expr E] [":=", expr hT.eigenvector_basis hn i],
+  let [ident μ] [":", expr 𝕜] [":=", expr hT.direct_sum_submodule_is_internal.subordinate_orthonormal_basis_index hn i],
+  change [expr has_eigenvector T (is_R_or_C.re μ) v] [] [],
+  have [ident key] [":", expr has_eigenvector T μ v] [],
+  { have [ident H₁] [":", expr «expr ∈ »(v, eigenspace T μ)] [],
+    { exact [expr hT.direct_sum_submodule_is_internal.subordinate_orthonormal_basis_subordinate hn i] },
+    have [ident H₂] [":", expr «expr ≠ »(v, 0)] [":=", expr (hT.eigenvector_basis_orthonormal hn).ne_zero i],
+    exact [expr ⟨H₁, H₂⟩] },
+  have [ident re_μ] [":", expr «expr = »(«expr↑ »(is_R_or_C.re μ), μ)] [],
+  { rw ["<-", expr is_R_or_C.eq_conj_iff_re] [],
+    exact [expr hT.conj_eigenvalue_eq_self (has_eigenvalue_of_has_eigenvector key)] },
+  simpa [] [] [] ["[", expr re_μ, "]"] [] ["using", expr key]
+end
 
 attribute [irreducible] eigenvector_basis eigenvalues
 

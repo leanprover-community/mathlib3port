@@ -184,7 +184,7 @@ theorem eval_rename_prodmk (g : σ × τ → R) (i : σ) (p : MvPolynomial τ R)
 
 end 
 
--- error in Data.MvPolynomial.Rename: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.MvPolynomial.Rename: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Every polynomial is a polynomial in finitely many variables. -/
 theorem exists_finset_rename
 (p : mv_polynomial σ R) : «expr∃ , »((s : finset σ)

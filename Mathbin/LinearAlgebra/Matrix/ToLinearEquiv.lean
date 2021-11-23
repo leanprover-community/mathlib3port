@@ -96,67 +96,69 @@ section Nondegenerate
 
 open_locale Matrix
 
+-- error in LinearAlgebra.Matrix.ToLinearEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- This holds for all integral domains (see `matrix.exists_mul_vec_eq_zero_iff`),
 not just fields, but it's easier to prove it for the field of fractions first. -/
-theorem exists_mul_vec_eq_zero_iff_aux {K : Type _} [DecidableEq n] [Field K] {M : Matrix n n K} :
-  (∃ (v : _)(_ : v ≠ 0), M.mul_vec v = 0) ↔ M.det = 0 :=
-  by 
-    split 
-    ·
-      rintro ⟨v, hv, mul_eq⟩
-      contrapose! hv 
-      exact eq_zero_of_mul_vec_eq_zero hv mul_eq
-    ·
-      contrapose! 
-      intro h 
-      have  : Function.Injective M.to_lin'
-      ·
-        simpa only [←LinearMap.ker_eq_bot, ker_to_lin'_eq_bot_iff, not_imp_not] using h 
-      have  : M ⬝ LinearMap.toMatrix' ((LinearEquiv.ofInjectiveEndo M.to_lin' this).symm : (n → K) →ₗ[K] n → K) = 1
-      ·
-        refine' matrix.to_lin'.injective (LinearMap.ext$ fun v => _)
-        rw [Matrix.to_lin'_mul, Matrix.to_lin'_one, Matrix.to_lin'_to_matrix', LinearMap.comp_apply]
-        exact (LinearEquiv.ofInjectiveEndo M.to_lin' this).apply_symm_apply v 
-      exact Matrix.det_ne_zero_of_right_inverse this
+theorem exists_mul_vec_eq_zero_iff_aux
+{K : Type*}
+[decidable_eq n]
+[field K]
+{M : matrix n n K} : «expr ↔ »(«expr∃ , »((v «expr ≠ » 0), «expr = »(M.mul_vec v, 0)), «expr = »(M.det, 0)) :=
+begin
+  split,
+  { rintros ["⟨", ident v, ",", ident hv, ",", ident mul_eq, "⟩"],
+    contrapose ["!"] [ident hv],
+    exact [expr eq_zero_of_mul_vec_eq_zero hv mul_eq] },
+  { contrapose ["!"] [],
+    intros [ident h],
+    have [] [":", expr function.injective M.to_lin'] [],
+    { simpa [] [] ["only"] ["[", "<-", expr linear_map.ker_eq_bot, ",", expr ker_to_lin'_eq_bot_iff, ",", expr not_imp_not, "]"] [] ["using", expr h] },
+    have [] [":", expr «expr = »(«expr ⬝ »(M, linear_map.to_matrix' ((linear_equiv.of_injective_endo M.to_lin' this).symm : «expr →ₗ[ ] »(n → K, K, n → K))), 1)] [],
+    { refine [expr matrix.to_lin'.injective «expr $ »(linear_map.ext, λ v, _)],
+      rw ["[", expr matrix.to_lin'_mul, ",", expr matrix.to_lin'_one, ",", expr matrix.to_lin'_to_matrix', ",", expr linear_map.comp_apply, "]"] [],
+      exact [expr (linear_equiv.of_injective_endo M.to_lin' this).apply_symm_apply v] },
+    exact [expr matrix.det_ne_zero_of_right_inverse this] }
+end
 
-theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [CommRingₓ A] [IsDomain A] [Field K]
-  [Algebra A K] [IsFractionRing A K] {M : Matrix n n A} : (∃ (v : _)(_ : v ≠ 0), M.mul_vec v = 0) ↔ M.det = 0 :=
-  by 
-    have  : (∃ (v : _)(_ : v ≠ 0), mul_vec ((algebraMap A K).mapMatrix M) v = 0) ↔ _ := exists_mul_vec_eq_zero_iff_aux 
-    rw [←RingHom.map_det, IsFractionRing.to_map_eq_zero_iff] at this 
-    refine' Iff.trans _ this 
-    split  <;> rintro ⟨v, hv, mul_eq⟩
-    ·
-      refine' ⟨fun i => algebraMap _ _ (v i), mt (fun h => funext$ fun i => _) hv, _⟩
-      ·
-        exact is_fraction_ring.to_map_eq_zero_iff.mp (congr_funₓ h i)
-      ·
-        ext i 
-        refine' (RingHom.map_mul_vec _ _ _ i).symm.trans _ 
-        rw [mul_eq, Pi.zero_apply, RingHom.map_zero, Pi.zero_apply]
-    ·
-      letI this := Classical.decEq K 
-      obtain ⟨⟨b, hb⟩, ba_eq⟩ :=
-        IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors A) (finset.univ.image v)
-      choose f hf using ba_eq 
-      refine' ⟨fun i => f _ (finset.mem_image.mpr ⟨i, Finset.mem_univ i, rfl⟩), mt (fun h => funext$ fun i => _) hv, _⟩
-      ·
-        have  := congr_argₓ (algebraMap A K) (congr_funₓ h i)
-        rw [hf, Subtype.coe_mk, Pi.zero_apply, RingHom.map_zero, Algebra.smul_def, mul_eq_zero,
-          IsFractionRing.to_map_eq_zero_iff] at this 
-        exact this.resolve_left (mem_non_zero_divisors_iff_ne_zero.mp hb)
-      ·
-        ext i 
-        refine' IsFractionRing.injective A K _ 
-        calc
-          algebraMap A K (M.mul_vec (fun i : n => f (v i) _) i) =
-            ((algebraMap A K).mapMatrix M).mulVec (algebraMap _ K b • v) i :=
-          _ _ = 0 := _ _ = algebraMap A K 0 := (RingHom.map_zero _).symm
-        ·
-          simpRw [RingHom.map_mul_vec, mul_vec, dot_product, Function.comp_app, hf, Subtype.coe_mk,
-            RingHom.map_matrix_apply, Pi.smul_apply, smul_eq_mul, Algebra.smul_def]
-        ·
-          rw [mul_vec_smul, mul_eq, Pi.smul_apply, Pi.zero_apply, smul_zero]
+-- error in LinearAlgebra.Matrix.ToLinearEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_mul_vec_eq_zero_iff'
+{A : Type*}
+(K : Type*)
+[decidable_eq n]
+[comm_ring A]
+[is_domain A]
+[field K]
+[algebra A K]
+[is_fraction_ring A K]
+{M : matrix n n A} : «expr ↔ »(«expr∃ , »((v «expr ≠ » 0), «expr = »(M.mul_vec v, 0)), «expr = »(M.det, 0)) :=
+begin
+  have [] [":", expr «expr ↔ »(«expr∃ , »((v «expr ≠ » 0), «expr = »(mul_vec ((algebra_map A K).map_matrix M) v, 0)), _)] [":=", expr exists_mul_vec_eq_zero_iff_aux],
+  rw ["[", "<-", expr ring_hom.map_det, ",", expr is_fraction_ring.to_map_eq_zero_iff, "]"] ["at", ident this],
+  refine [expr iff.trans _ this],
+  split; rintro ["⟨", ident v, ",", ident hv, ",", ident mul_eq, "⟩"],
+  { refine [expr ⟨λ i, algebra_map _ _ (v i), mt (λ h, «expr $ »(funext, λ i, _)) hv, _⟩],
+    { exact [expr is_fraction_ring.to_map_eq_zero_iff.mp (congr_fun h i)] },
+    { ext [] [ident i] [],
+      refine [expr (ring_hom.map_mul_vec _ _ _ i).symm.trans _],
+      rw ["[", expr mul_eq, ",", expr pi.zero_apply, ",", expr ring_hom.map_zero, ",", expr pi.zero_apply, "]"] [] } },
+  { letI [] [] [":=", expr classical.dec_eq K],
+    obtain ["⟨", "⟨", ident b, ",", ident hb, "⟩", ",", ident ba_eq, "⟩", ":=", expr is_localization.exist_integer_multiples_of_finset (non_zero_divisors A) (finset.univ.image v)],
+    choose [] [ident f] [ident hf] ["using", expr ba_eq],
+    refine [expr ⟨λ
+      i, f _ (finset.mem_image.mpr ⟨i, finset.mem_univ i, rfl⟩), mt (λ h, «expr $ »(funext, λ i, _)) hv, _⟩],
+    { have [] [] [":=", expr congr_arg (algebra_map A K) (congr_fun h i)],
+      rw ["[", expr hf, ",", expr subtype.coe_mk, ",", expr pi.zero_apply, ",", expr ring_hom.map_zero, ",", expr algebra.smul_def, ",", expr mul_eq_zero, ",", expr is_fraction_ring.to_map_eq_zero_iff, "]"] ["at", ident this],
+      exact [expr this.resolve_left (mem_non_zero_divisors_iff_ne_zero.mp hb)] },
+    { ext [] [ident i] [],
+      refine [expr is_fraction_ring.injective A K _],
+      calc
+        «expr = »(algebra_map A K (M.mul_vec (λ
+           i : n, f (v i) _) i), ((algebra_map A K).map_matrix M).mul_vec «expr • »(algebra_map _ K b, v) i) : _
+        «expr = »(..., 0) : _
+        «expr = »(..., algebra_map A K 0) : (ring_hom.map_zero _).symm,
+      { simp_rw ["[", expr ring_hom.map_mul_vec, ",", expr mul_vec, ",", expr dot_product, ",", expr function.comp_app, ",", expr hf, ",", expr subtype.coe_mk, ",", expr ring_hom.map_matrix_apply, ",", expr pi.smul_apply, ",", expr smul_eq_mul, ",", expr algebra.smul_def, "]"] [] },
+      { rw ["[", expr mul_vec_smul, ",", expr mul_eq, ",", expr pi.smul_apply, ",", expr pi.zero_apply, ",", expr smul_zero, "]"] [] } } }
+end
 
 theorem exists_mul_vec_eq_zero_iff {A : Type _} [DecidableEq n] [CommRingₓ A] [IsDomain A] {M : Matrix n n A} :
   (∃ (v : _)(_ : v ≠ 0), M.mul_vec v = 0) ↔ M.det = 0 :=

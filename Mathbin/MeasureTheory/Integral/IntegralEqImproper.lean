@@ -202,18 +202,22 @@ private theorem lintegral_tendsto_of_monotone_of_nat {φ : ℕ → Set α} (hφ 
   have key₃ : ∀ᵐx : α ∂μ, tendsto (fun n => F n x) at_top (𝓝 (f x)) := hφ.ae_tendsto_indicator
   (lintegral_tendsto_of_tendsto_of_monotone key₁ key₂ key₃).congr fun n => lintegral_indicator f (hφ.measurable n)
 
-theorem ae_cover.lintegral_tendsto_of_nat {φ : ℕ → Set α} (hφ : ae_cover μ at_top φ) {f : α → ℝ≥0∞}
-  (hfm : AeMeasurable f μ) : tendsto (fun i => ∫⁻x in φ i, f x ∂μ) at_top (𝓝$ ∫⁻x, f x ∂μ) :=
-  by 
-    have lim₁ :=
-      lintegral_tendsto_of_monotone_of_nat hφ.bInter_Ici_ae_cover
-        (fun i j hij => bInter_subset_bInter_left (Ici_subset_Ici.mpr hij)) hfm 
-    have lim₂ :=
-      lintegral_tendsto_of_monotone_of_nat hφ.bUnion_Iic_ae_cover
-        (fun i j hij => bUnion_subset_bUnion_left (Iic_subset_Iic.mpr hij)) hfm 
-    have le₁ := fun n => lintegral_mono_set (bInter_subset_of_mem left_mem_Ici)
-    have le₂ := fun n => lintegral_mono_set (subset_bUnion_of_mem right_mem_Iic)
-    exact tendsto_of_tendsto_of_tendsto_of_le_of_le lim₁ lim₂ le₁ le₂
+-- error in MeasureTheory.Integral.IntegralEqImproper: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ae_cover.lintegral_tendsto_of_nat
+{φ : exprℕ() → set α}
+(hφ : ae_cover μ at_top φ)
+{f : α → «exprℝ≥0∞»()}
+(hfm : ae_measurable f μ) : tendsto (λ
+ i, «expr∫⁻ in , ∂ »((x), φ i, f x, μ)) at_top «expr $ »(expr𝓝(), «expr∫⁻ , ∂ »((x), f x, μ)) :=
+begin
+  have [ident lim₁] [] [":=", expr lintegral_tendsto_of_monotone_of_nat hφ.bInter_Ici_ae_cover (λ
+    i j hij, bInter_subset_bInter_left (Ici_subset_Ici.mpr hij)) hfm],
+  have [ident lim₂] [] [":=", expr lintegral_tendsto_of_monotone_of_nat hφ.bUnion_Iic_ae_cover (λ
+    i j hij, bUnion_subset_bUnion_left (Iic_subset_Iic.mpr hij)) hfm],
+  have [ident le₁] [] [":=", expr λ n, lintegral_mono_set (bInter_subset_of_mem left_mem_Ici)],
+  have [ident le₂] [] [":=", expr λ n, lintegral_mono_set (subset_bUnion_of_mem right_mem_Iic)],
+  exact [expr tendsto_of_tendsto_of_tendsto_of_le_of_le lim₁ lim₂ le₁ le₂]
+end
 
 theorem ae_cover.lintegral_tendsto_of_countably_generated [l.is_countably_generated] {φ : ι → Set α}
   (hφ : ae_cover μ l φ) {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) :
@@ -225,17 +229,23 @@ theorem ae_cover.lintegral_eq_of_tendsto [l.ne_bot] [l.is_countably_generated] {
   (∫⁻x, f x ∂μ) = I :=
   tendsto_nhds_unique (hφ.lintegral_tendsto_of_countably_generated hfm) htendsto
 
-theorem ae_cover.supr_lintegral_eq_of_countably_generated [Nonempty ι] [l.ne_bot] [l.is_countably_generated]
-  {φ : ι → Set α} (hφ : ae_cover μ l φ) {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) :
-  (⨆i : ι, ∫⁻x in φ i, f x ∂μ) = ∫⁻x, f x ∂μ :=
-  by 
-    have  := hφ.lintegral_tendsto_of_countably_generated hfm 
-    refine'
-      csupr_eq_of_forall_le_of_forall_lt_exists_gt (fun i => lintegral_mono' measure.restrict_le_self (le_reflₓ _))
-        fun w hw => _ 
-    rcases exists_between hw with ⟨m, hm₁, hm₂⟩
-    rcases(eventually_ge_of_tendsto_gt hm₂ this).exists with ⟨i, hi⟩
-    exact ⟨i, lt_of_lt_of_leₓ hm₁ hi⟩
+-- error in MeasureTheory.Integral.IntegralEqImproper: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ae_cover.supr_lintegral_eq_of_countably_generated
+[nonempty ι]
+[l.ne_bot]
+[l.is_countably_generated]
+{φ : ι → set α}
+(hφ : ae_cover μ l φ)
+{f : α → «exprℝ≥0∞»()}
+(hfm : ae_measurable f μ) : «expr = »(«expr⨆ , »((i : ι), «expr∫⁻ in , ∂ »((x), φ i, f x, μ)), «expr∫⁻ , ∂ »((x), f x, μ)) :=
+begin
+  have [] [] [":=", expr hφ.lintegral_tendsto_of_countably_generated hfm],
+  refine [expr csupr_eq_of_forall_le_of_forall_lt_exists_gt (λ
+    i, lintegral_mono' measure.restrict_le_self (le_refl _)) (λ w hw, _)],
+  rcases [expr exists_between hw, "with", "⟨", ident m, ",", ident hm₁, ",", ident hm₂, "⟩"],
+  rcases [expr (eventually_ge_of_tendsto_gt hm₂ this).exists, "with", "⟨", ident i, ",", ident hi, "⟩"],
+  exact [expr ⟨i, lt_of_lt_of_le hm₁ hi⟩]
+end
 
 end Lintegral
 
@@ -335,50 +345,69 @@ variable{α ι E :
 
 include hfm
 
-theorem integrable_of_interval_integral_norm_tendsto [NoBotOrder α] [Nonempty α] (I : ℝ)
-  (hfi : ∀ i, integrable_on f (Ioc (a i) (b i)) μ) (ha : tendsto a l at_bot) (hb : tendsto b l at_top)
-  (h : tendsto (fun i => ∫x in a i..b i, ∥f x∥ ∂μ) l (𝓝$ I)) : integrable f μ :=
-  by 
-    let φ := fun n => Ioc (a n) (b n)
-    let c : α := Classical.choice ‹_›
-    have hφ : ae_cover μ l φ := ae_cover_Ioc ha hb 
-    refine' hφ.integrable_of_integral_norm_tendsto _ hfm hfi (h.congr' _)
-    filterUpwards [ha.eventually (eventually_le_at_bot c), hb.eventually (eventually_ge_at_top c)]
-    intro i hai hbi 
-    exact intervalIntegral.integral_of_le (hai.trans hbi)
+-- error in MeasureTheory.Integral.IntegralEqImproper: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem integrable_of_interval_integral_norm_tendsto
+[no_bot_order α]
+[nonempty α]
+(I : exprℝ())
+(hfi : ∀ i, integrable_on f (Ioc (a i) (b i)) μ)
+(ha : tendsto a l at_bot)
+(hb : tendsto b l at_top)
+(h : tendsto (λ i, «expr∫ in .. , ∂ »((x), a i, b i, «expr∥ ∥»(f x), μ)) l «expr $ »(expr𝓝(), I)) : integrable f μ :=
+begin
+  let [ident φ] [] [":=", expr λ n, Ioc (a n) (b n)],
+  let [ident c] [":", expr α] [":=", expr classical.choice «expr‹ ›»(_)],
+  have [ident hφ] [":", expr ae_cover μ l φ] [":=", expr ae_cover_Ioc ha hb],
+  refine [expr hφ.integrable_of_integral_norm_tendsto _ hfm hfi (h.congr' _)],
+  filter_upwards ["[", expr ha.eventually (eventually_le_at_bot c), ",", expr hb.eventually (eventually_ge_at_top c), "]"] [],
+  intros [ident i, ident hai, ident hbi],
+  exact [expr interval_integral.integral_of_le (hai.trans hbi)]
+end
 
-theorem integrable_on_Iic_of_interval_integral_norm_tendsto [NoBotOrder α] (I : ℝ) (b : α)
-  (hfi : ∀ i, integrable_on f (Ioc (a i) b) μ) (ha : tendsto a l at_bot)
-  (h : tendsto (fun i => ∫x in a i..b, ∥f x∥ ∂μ) l (𝓝$ I)) : integrable_on f (Iic b) μ :=
-  by 
-    let φ := fun i => Ioi (a i)
-    have hφ : ae_cover (μ.restrict$ Iic b) l φ := ae_cover_Ioi ha 
-    have hfi : ∀ i, integrable_on f (φ i) (μ.restrict$ Iic b)
-    ·
-      intro i 
-      rw [integrable_on, measure.restrict_restrict (hφ.measurable i)]
-      exact hfi i 
-    refine' hφ.integrable_of_integral_norm_tendsto _ hfm.restrict hfi (h.congr' _)
-    filterUpwards [ha.eventually (eventually_le_at_bot b)]
-    intro i hai 
-    rw [intervalIntegral.integral_of_le hai, measure.restrict_restrict (hφ.measurable i)]
-    rfl
+-- error in MeasureTheory.Integral.IntegralEqImproper: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem integrable_on_Iic_of_interval_integral_norm_tendsto
+[no_bot_order α]
+(I : exprℝ())
+(b : α)
+(hfi : ∀ i, integrable_on f (Ioc (a i) b) μ)
+(ha : tendsto a l at_bot)
+(h : tendsto (λ
+  i, «expr∫ in .. , ∂ »((x), a i, b, «expr∥ ∥»(f x), μ)) l «expr $ »(expr𝓝(), I)) : integrable_on f (Iic b) μ :=
+begin
+  let [ident φ] [] [":=", expr λ i, Ioi (a i)],
+  have [ident hφ] [":", expr ae_cover «expr $ »(μ.restrict, Iic b) l φ] [":=", expr ae_cover_Ioi ha],
+  have [ident hfi] [":", expr ∀ i, integrable_on f (φ i) «expr $ »(μ.restrict, Iic b)] [],
+  { intro [ident i],
+    rw ["[", expr integrable_on, ",", expr measure.restrict_restrict (hφ.measurable i), "]"] [],
+    exact [expr hfi i] },
+  refine [expr hφ.integrable_of_integral_norm_tendsto _ hfm.restrict hfi (h.congr' _)],
+  filter_upwards ["[", expr ha.eventually (eventually_le_at_bot b), "]"] [],
+  intros [ident i, ident hai],
+  rw ["[", expr interval_integral.integral_of_le hai, ",", expr measure.restrict_restrict (hφ.measurable i), "]"] [],
+  refl
+end
 
-theorem integrable_on_Ioi_of_interval_integral_norm_tendsto (I : ℝ) (a : α) (hfi : ∀ i, integrable_on f (Ioc a (b i)) μ)
-  (hb : tendsto b l at_top) (h : tendsto (fun i => ∫x in a..b i, ∥f x∥ ∂μ) l (𝓝$ I)) : integrable_on f (Ioi a) μ :=
-  by 
-    let φ := fun i => Iic (b i)
-    have hφ : ae_cover (μ.restrict$ Ioi a) l φ := ae_cover_Iic hb 
-    have hfi : ∀ i, integrable_on f (φ i) (μ.restrict$ Ioi a)
-    ·
-      intro i 
-      rw [integrable_on, measure.restrict_restrict (hφ.measurable i), inter_comm]
-      exact hfi i 
-    refine' hφ.integrable_of_integral_norm_tendsto _ hfm.restrict hfi (h.congr' _)
-    filterUpwards [hb.eventually (eventually_ge_at_top$ a)]
-    intro i hbi 
-    rw [intervalIntegral.integral_of_le hbi, measure.restrict_restrict (hφ.measurable i), inter_comm]
-    rfl
+-- error in MeasureTheory.Integral.IntegralEqImproper: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem integrable_on_Ioi_of_interval_integral_norm_tendsto
+(I : exprℝ())
+(a : α)
+(hfi : ∀ i, integrable_on f (Ioc a (b i)) μ)
+(hb : tendsto b l at_top)
+(h : tendsto (λ
+  i, «expr∫ in .. , ∂ »((x), a, b i, «expr∥ ∥»(f x), μ)) l «expr $ »(expr𝓝(), I)) : integrable_on f (Ioi a) μ :=
+begin
+  let [ident φ] [] [":=", expr λ i, Iic (b i)],
+  have [ident hφ] [":", expr ae_cover «expr $ »(μ.restrict, Ioi a) l φ] [":=", expr ae_cover_Iic hb],
+  have [ident hfi] [":", expr ∀ i, integrable_on f (φ i) «expr $ »(μ.restrict, Ioi a)] [],
+  { intro [ident i],
+    rw ["[", expr integrable_on, ",", expr measure.restrict_restrict (hφ.measurable i), ",", expr inter_comm, "]"] [],
+    exact [expr hfi i] },
+  refine [expr hφ.integrable_of_integral_norm_tendsto _ hfm.restrict hfi (h.congr' _)],
+  filter_upwards ["[", expr hb.eventually «expr $ »(eventually_ge_at_top, a), "]"] [],
+  intros [ident i, ident hbi],
+  rw ["[", expr interval_integral.integral_of_le hbi, ",", expr measure.restrict_restrict (hφ.measurable i), ",", expr inter_comm, "]"] [],
+  refl
+end
 
 end IntegrableOfIntervalIntegral
 
@@ -400,38 +429,56 @@ variable{α ι E :
       E][NormedGroup
       E][NormedSpace ℝ E][BorelSpace E][CompleteSpace E][second_countable_topology E]{a b : ι → α}{f : α → E}
 
-theorem interval_integral_tendsto_integral [NoBotOrder α] [Nonempty α] (hfi : integrable f μ) (ha : tendsto a l at_bot)
-  (hb : tendsto b l at_top) : tendsto (fun i => ∫x in a i..b i, f x ∂μ) l (𝓝$ ∫x, f x ∂μ) :=
-  by 
-    let φ := fun i => Ioc (a i) (b i)
-    let c : α := Classical.choice ‹_›
-    have hφ : ae_cover μ l φ := ae_cover_Ioc ha hb 
-    refine' (hφ.integral_tendsto_of_countably_generated hfi).congr' _ 
-    filterUpwards [ha.eventually (eventually_le_at_bot c), hb.eventually (eventually_ge_at_top c)]
-    intro i hai hbi 
-    exact (intervalIntegral.integral_of_le (hai.trans hbi)).symm
+-- error in MeasureTheory.Integral.IntegralEqImproper: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem interval_integral_tendsto_integral
+[no_bot_order α]
+[nonempty α]
+(hfi : integrable f μ)
+(ha : tendsto a l at_bot)
+(hb : tendsto b l at_top) : tendsto (λ
+ i, «expr∫ in .. , ∂ »((x), a i, b i, f x, μ)) l «expr $ »(expr𝓝(), «expr∫ , ∂ »((x), f x, μ)) :=
+begin
+  let [ident φ] [] [":=", expr λ i, Ioc (a i) (b i)],
+  let [ident c] [":", expr α] [":=", expr classical.choice «expr‹ ›»(_)],
+  have [ident hφ] [":", expr ae_cover μ l φ] [":=", expr ae_cover_Ioc ha hb],
+  refine [expr (hφ.integral_tendsto_of_countably_generated hfi).congr' _],
+  filter_upwards ["[", expr ha.eventually (eventually_le_at_bot c), ",", expr hb.eventually (eventually_ge_at_top c), "]"] [],
+  intros [ident i, ident hai, ident hbi],
+  exact [expr (interval_integral.integral_of_le (hai.trans hbi)).symm]
+end
 
-theorem interval_integral_tendsto_integral_Iic [NoBotOrder α] (b : α) (hfi : integrable_on f (Iic b) μ)
-  (ha : tendsto a l at_bot) : tendsto (fun i => ∫x in a i..b, f x ∂μ) l (𝓝$ ∫x in Iic b, f x ∂μ) :=
-  by 
-    let φ := fun i => Ioi (a i)
-    have hφ : ae_cover (μ.restrict$ Iic b) l φ := ae_cover_Ioi ha 
-    refine' (hφ.integral_tendsto_of_countably_generated hfi).congr' _ 
-    filterUpwards [ha.eventually (eventually_le_at_bot$ b)]
-    intro i hai 
-    rw [intervalIntegral.integral_of_le hai, measure.restrict_restrict (hφ.measurable i)]
-    rfl
+-- error in MeasureTheory.Integral.IntegralEqImproper: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem interval_integral_tendsto_integral_Iic
+[no_bot_order α]
+(b : α)
+(hfi : integrable_on f (Iic b) μ)
+(ha : tendsto a l at_bot) : tendsto (λ
+ i, «expr∫ in .. , ∂ »((x), a i, b, f x, μ)) l «expr $ »(expr𝓝(), «expr∫ in , ∂ »((x), Iic b, f x, μ)) :=
+begin
+  let [ident φ] [] [":=", expr λ i, Ioi (a i)],
+  have [ident hφ] [":", expr ae_cover «expr $ »(μ.restrict, Iic b) l φ] [":=", expr ae_cover_Ioi ha],
+  refine [expr (hφ.integral_tendsto_of_countably_generated hfi).congr' _],
+  filter_upwards ["[", expr ha.eventually «expr $ »(eventually_le_at_bot, b), "]"] [],
+  intros [ident i, ident hai],
+  rw ["[", expr interval_integral.integral_of_le hai, ",", expr measure.restrict_restrict (hφ.measurable i), "]"] [],
+  refl
+end
 
-theorem interval_integral_tendsto_integral_Ioi (a : α) (hfi : integrable_on f (Ioi a) μ) (hb : tendsto b l at_top) :
-  tendsto (fun i => ∫x in a..b i, f x ∂μ) l (𝓝$ ∫x in Ioi a, f x ∂μ) :=
-  by 
-    let φ := fun i => Iic (b i)
-    have hφ : ae_cover (μ.restrict$ Ioi a) l φ := ae_cover_Iic hb 
-    refine' (hφ.integral_tendsto_of_countably_generated hfi).congr' _ 
-    filterUpwards [hb.eventually (eventually_ge_at_top$ a)]
-    intro i hbi 
-    rw [intervalIntegral.integral_of_le hbi, measure.restrict_restrict (hφ.measurable i), inter_comm]
-    rfl
+-- error in MeasureTheory.Integral.IntegralEqImproper: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem interval_integral_tendsto_integral_Ioi
+(a : α)
+(hfi : integrable_on f (Ioi a) μ)
+(hb : tendsto b l at_top) : tendsto (λ
+ i, «expr∫ in .. , ∂ »((x), a, b i, f x, μ)) l «expr $ »(expr𝓝(), «expr∫ in , ∂ »((x), Ioi a, f x, μ)) :=
+begin
+  let [ident φ] [] [":=", expr λ i, Iic (b i)],
+  have [ident hφ] [":", expr ae_cover «expr $ »(μ.restrict, Ioi a) l φ] [":=", expr ae_cover_Iic hb],
+  refine [expr (hφ.integral_tendsto_of_countably_generated hfi).congr' _],
+  filter_upwards ["[", expr hb.eventually «expr $ »(eventually_ge_at_top, a), "]"] [],
+  intros [ident i, ident hbi],
+  rw ["[", expr interval_integral.integral_of_le hbi, ",", expr measure.restrict_restrict (hφ.measurable i), ",", expr inter_comm, "]"] [],
+  refl
+end
 
 end IntegralOfIntervalIntegral
 

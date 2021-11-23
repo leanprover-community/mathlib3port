@@ -1,7 +1,6 @@
-import Mathbin.CategoryTheory.Shift 
-import Mathbin.CategoryTheory.ConcreteCategory.Default 
+import Mathbin.Algebra.Group.Basic 
 import Mathbin.CategoryTheory.Pi.Basic 
-import Mathbin.Algebra.Group.Basic
+import Mathbin.CategoryTheory.Shift
 
 /-!
 # The category of graded objects

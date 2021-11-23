@@ -1,7 +1,8 @@
 import Mathbin.Data.List.Sigma 
+import Mathbin.Data.Int.Range 
+import Mathbin.Tactic.PrettyCases 
 import Mathbin.Testing.SlimCheck.Sampleable 
-import Mathbin.Testing.SlimCheck.Testable 
-import Mathbin.Tactic.PrettyCases
+import Mathbin.Testing.SlimCheck.Testable
 
 /-!
 ## `slim_check`: generators for functions
@@ -198,7 +199,7 @@ open _root_.prod(toSigma)
 
 open _Root_.Nat
 
--- error in Testing.SlimCheck.Functions: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Testing.SlimCheck.Functions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem list.apply_id_zip_eq
 [decidable_eq α]
 {xs ys : list α}
@@ -226,47 +227,46 @@ begin
           apply [expr nth_mem h₂] } } } }
 end
 
-theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys) (x : α) :
-  list.apply_id.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs :=
-  by 
-    simp only [list.apply_id]
-    cases h₃ : lookup x (map Prod.toSigma (xs.zip ys))
-    ·
-      dsimp [Option.getOrElse]
-      rw [h₁.mem_iff]
-    ·
-      have h₂ : ys.nodup := h₁.nodup_iff.1 h₀ 
-      replace h₁ : xs.length = ys.length := h₁.length_eq 
-      dsimp 
-      induction xs generalizing ys 
-      case list.nil ys h₃ h₂ h₁ => 
-        contradiction 
-      case list.cons x' xs xs_ih ys h₃ h₂ h₁ => 
-        cases' ys with y ys
-        ·
-          cases h₃ 
-        dsimp [lookup]  at h₃ 
-        splitIfs  at h₃
-        ·
-          subst x' 
-          subst val 
-          simp only [mem_cons_iff, true_orₓ, eq_self_iff_true]
-        ·
-          cases' h₀ with _ _ h₀ h₅ 
-          cases' h₂ with _ _ h₂ h₄ 
-          have h₆ := Nat.succ.injₓ h₁ 
-          specialize xs_ih h₅ ys h₃ h₄ h₆ 
-          simp only [Ne.symm h, xs_ih, mem_cons_iff, false_orₓ]
-          suffices  : val ∈ ys 
-          tauto! 
-          erw [←Option.mem_def, mem_lookup_iff] at h₃ 
-          simp only [to_sigma, mem_map, heq_iff_eq, Prod.exists] at h₃ 
-          rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
-          subst a 
-          subst b 
-          apply (mem_zip h₃).2
-          simp only [nodupkeys, keys, comp, Prod.fst_to_sigma, map_map]
-          rwa [map_fst_zip _ _ (le_of_eqₓ h₆)]
+-- error in Testing.SlimCheck.Functions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem apply_id_mem_iff
+[decidable_eq α]
+{xs ys : list α}
+(h₀ : list.nodup xs)
+(h₁ : «expr ~ »(xs, ys))
+(x : α) : «expr ↔ »(«expr ∈ »(list.apply_id.{u} (xs.zip ys) x, ys), «expr ∈ »(x, xs)) :=
+begin
+  simp [] [] ["only"] ["[", expr list.apply_id, "]"] [] [],
+  cases [expr h₃, ":", expr lookup x (map prod.to_sigma (xs.zip ys))] [],
+  { dsimp [] ["[", expr option.get_or_else, "]"] [] [],
+    rw [expr h₁.mem_iff] [] },
+  { have [ident h₂] [":", expr ys.nodup] [":=", expr h₁.nodup_iff.1 h₀],
+    replace [ident h₁] [":", expr «expr = »(xs.length, ys.length)] [":=", expr h₁.length_eq],
+    dsimp [] [] [] [],
+    induction [expr xs] [] [] ["generalizing", ident ys],
+    case [ident list.nil, ":", ident ys, ident h₃, ident h₂, ident h₁] { contradiction },
+    case [ident list.cons, ":", ident x', ident xs, ident xs_ih, ident ys, ident h₃, ident h₂, ident h₁] { cases [expr ys] ["with", ident y, ident ys],
+      { cases [expr h₃] [] },
+      dsimp [] ["[", expr lookup, "]"] [] ["at", ident h₃],
+      split_ifs ["at", ident h₃] [],
+      { subst [expr x'],
+        subst [expr val],
+        simp [] [] ["only"] ["[", expr mem_cons_iff, ",", expr true_or, ",", expr eq_self_iff_true, "]"] [] [] },
+      { cases [expr h₀] ["with", "_", "_", ident h₀, ident h₅],
+        cases [expr h₂] ["with", "_", "_", ident h₂, ident h₄],
+        have [ident h₆] [] [":=", expr nat.succ.inj h₁],
+        specialize [expr @xs_ih h₅ ys h₃ h₄ h₆],
+        simp [] [] ["only"] ["[", expr ne.symm h, ",", expr xs_ih, ",", expr mem_cons_iff, ",", expr false_or, "]"] [] [],
+        suffices [] [":", expr «expr ∈ »(val, ys)],
+        tauto ["!"],
+        erw ["[", "<-", expr option.mem_def, ",", expr mem_lookup_iff, "]"] ["at", ident h₃],
+        simp [] [] ["only"] ["[", expr to_sigma, ",", expr mem_map, ",", expr heq_iff_eq, ",", expr prod.exists, "]"] [] ["at", ident h₃],
+        rcases [expr h₃, "with", "⟨", ident a, ",", ident b, ",", ident h₃, ",", ident h₄, ",", ident h₅, "⟩"],
+        subst [expr a],
+        subst [expr b],
+        apply [expr (mem_zip h₃).2],
+        simp [] [] ["only"] ["[", expr nodupkeys, ",", expr keys, ",", expr comp, ",", expr prod.fst_to_sigma, ",", expr map_map, "]"] [] [],
+        rwa [expr map_fst_zip _ _ (le_of_eq h₆)] [] } } }
+end
 
 theorem list.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) : x ∉ xs → list.apply_id.{u} (xs.zip ys) x = x :=
   by 
@@ -279,42 +279,40 @@ theorem list.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) : x �
     intro y hy 
     exact h (mem_zip hy).1
 
-theorem apply_id_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys) :
-  injective.{u + 1, u + 1} (list.apply_id (xs.zip ys)) :=
-  by 
-    intro x y h 
-    byCases' hx : x ∈ xs <;> byCases' hy : y ∈ xs
-    ·
-      rw [mem_iff_nth] at hx hy 
-      cases' hx with i hx 
-      cases' hy with j hy 
-      suffices  : some x = some y
-      ·
-        injection this 
-      have h₂ := h₁.length_eq 
-      rw [list.apply_id_zip_eq h₀ h₂ _ _ _ hx] at h 
-      rw [←hx, ←hy]
-      congr 
-      apply nth_injective _ (h₁.nodup_iff.1 h₀)
-      ·
-        symm 
-        rw [h]
-        rw [←list.apply_id_zip_eq] <;> assumption
-      ·
-        rw [←h₁.length_eq]
-        rw [nth_eq_some] at hx 
-        cases' hx with hx hx' 
-        exact hx
-    ·
-      rw [←apply_id_mem_iff h₀ h₁] at hx hy 
-      rw [h] at hx 
-      contradiction
-    ·
-      rw [←apply_id_mem_iff h₀ h₁] at hx hy 
-      rw [h] at hx 
-      contradiction
-    ·
-      rwa [list.apply_id_eq_self, list.apply_id_eq_self] at h <;> assumption
+-- error in Testing.SlimCheck.Functions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem apply_id_injective
+[decidable_eq α]
+{xs ys : list α}
+(h₀ : list.nodup xs)
+(h₁ : «expr ~ »(xs, ys)) : injective.{u+1, u+1} (list.apply_id (xs.zip ys)) :=
+begin
+  intros [ident x, ident y, ident h],
+  by_cases [expr hx, ":", expr «expr ∈ »(x, xs)]; by_cases [expr hy, ":", expr «expr ∈ »(y, xs)],
+  { rw [expr mem_iff_nth] ["at", ident hx, ident hy],
+    cases [expr hx] ["with", ident i, ident hx],
+    cases [expr hy] ["with", ident j, ident hy],
+    suffices [] [":", expr «expr = »(some x, some y)],
+    { injection [expr this] [] },
+    have [ident h₂] [] [":=", expr h₁.length_eq],
+    rw ["[", expr list.apply_id_zip_eq h₀ h₂ _ _ _ hx, "]"] ["at", ident h],
+    rw ["[", "<-", expr hx, ",", "<-", expr hy, "]"] [],
+    congr,
+    apply [expr nth_injective _ (h₁.nodup_iff.1 h₀)],
+    { symmetry,
+      rw [expr h] [],
+      rw ["<-", expr list.apply_id_zip_eq] []; assumption },
+    { rw ["<-", expr h₁.length_eq] [],
+      rw [expr nth_eq_some] ["at", ident hx],
+      cases [expr hx] ["with", ident hx, ident hx'],
+      exact [expr hx] } },
+  { rw ["<-", expr apply_id_mem_iff h₀ h₁] ["at", ident hx, ident hy],
+    rw [expr h] ["at", ident hx],
+    contradiction },
+  { rw ["<-", expr apply_id_mem_iff h₀ h₁] ["at", ident hx, ident hy],
+    rw [expr h] ["at", ident hx],
+    contradiction },
+  { rwa ["[", expr list.apply_id_eq_self, ",", expr list.apply_id_eq_self, "]"] ["at", ident h]; assumption }
+end
 
 open total_function(list.to_finmap')
 
@@ -407,30 +405,28 @@ protected def mk (xs ys : List α) (h : xs ~ ys) (h' : ys.nodup) : injective_fun
     (by 
       simp only [list.to_finmap', comp, map_snd_zip, Prod.snd_to_sigma, map_map])
 
-protected theorem injective [DecidableEq α] (f : injective_function α) : injective (apply f) :=
-  by 
-    cases' f with xs hperm hnodup 
-    generalize h₀ : map Sigma.fst xs = xs₀ 
-    generalize h₁ : xs.map (@id ((Σ_ : α, α) → α)$ @Sigma.snd α fun _ : α => α) = xs₁ 
-    dsimp [id]  at h₁ 
-    have hxs : xs = total_function.list.to_finmap' (xs₀.zip xs₁)
-    ·
-      rw [←h₀, ←h₁, list.to_finmap']
-      clear h₀ h₁ xs₀ xs₁ hperm hnodup 
-      induction xs 
-      case list.nil => 
-        simp only [zip_nil_right, map_nil]
-      case list.cons xs_hd xs_tl xs_ih => 
-        simp only [true_andₓ, to_sigma, eq_self_iff_true, Sigma.eta, zip_cons_cons, List.map]
-        exact xs_ih 
-    revert hperm hnodup 
-    rw [hxs]
-    intros 
-    apply apply_id_injective
-    ·
-      rwa [←h₀, hxs, hperm.nodup_iff]
-    ·
-      rwa [←hxs, h₀, h₁] at hperm
+-- error in Testing.SlimCheck.Functions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected theorem injective [decidable_eq α] (f : injective_function α) : injective (apply f) :=
+begin
+  cases [expr f] ["with", ident xs, ident hperm, ident hnodup],
+  generalize [ident h₀] [":"] [expr «expr = »(map sigma.fst xs, xs₀)],
+  generalize [ident h₁] [":"] [expr «expr = »(xs.map «expr $ »(@id («exprΣ , »((_ : α), α) → α), @sigma.snd α (λ
+      _ : α, α)), xs₁)],
+  dsimp [] ["[", expr id, "]"] [] ["at", ident h₁],
+  have [ident hxs] [":", expr «expr = »(xs, total_function.list.to_finmap' (xs₀.zip xs₁))] [],
+  { rw ["[", "<-", expr h₀, ",", "<-", expr h₁, ",", expr list.to_finmap', "]"] [],
+    clear [ident h₀, ident h₁, ident xs₀, ident xs₁, ident hperm, ident hnodup],
+    induction [expr xs] [] [] [],
+    case [ident list.nil] { simp [] [] ["only"] ["[", expr zip_nil_right, ",", expr map_nil, "]"] [] [] },
+    case [ident list.cons, ":", ident xs_hd, ident xs_tl, ident xs_ih] { simp [] [] ["only"] ["[", expr true_and, ",", expr to_sigma, ",", expr eq_self_iff_true, ",", expr sigma.eta, ",", expr zip_cons_cons, ",", expr list.map, "]"] [] [],
+      exact [expr xs_ih] } },
+  revert [ident hperm, ident hnodup],
+  rw [expr hxs] [],
+  intros [],
+  apply [expr apply_id_injective],
+  { rwa ["[", "<-", expr h₀, ",", expr hxs, ",", expr hperm.nodup_iff, "]"] [] },
+  { rwa ["[", "<-", expr hxs, ",", expr h₀, ",", expr h₁, "]"] ["at", ident hperm] }
+end
 
 instance pi_injective.sampleable_ext : sampleable_ext { f : ℤ → ℤ // Function.Injective f } :=
   { ProxyRepr := injective_function ℤ, interp := fun f => ⟨apply f, f.injective⟩,

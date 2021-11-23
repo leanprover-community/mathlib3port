@@ -35,14 +35,16 @@ class IsFreeGroup(G : Type u)[Groupₓ G] : Type (u + 1) where
   of : generators → G 
   unique_lift' : ∀ {X : Type u} [Groupₓ X] f : generators → X, ∃!F : G →* X, ∀ a, F (of a) = f a
 
-instance freeGroupIsFreeGroup {A} : IsFreeGroup (FreeGroup A) :=
-  { Generators := A, of := FreeGroup.of,
-    unique_lift' :=
-      by 
-        introI X _ f 
-        have  := free_group.lift.symm.bijective.exists_unique f 
-        simpRw [Function.funext_iffₓ]  at this 
-        exact this }
+-- error in GroupTheory.IsFreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance free_group_is_free_group {A} : is_free_group (free_group A) :=
+{ generators := A,
+  of := free_group.of,
+  unique_lift' := begin
+    introsI [ident X, "_", ident f],
+    have [] [] [":=", expr free_group.lift.symm.bijective.exists_unique f],
+    simp_rw [expr function.funext_iff] ["at", ident this],
+    exact [expr this]
+  end }
 
 namespace IsFreeGroup
 
@@ -81,7 +83,7 @@ def of_mul_equiv (h : G ≃* H) : IsFreeGroup H :=
   { Generators := generators G, of := h ∘ of,
     unique_lift' :=
       by 
-        introI X _ f 
+        intros X _ f 
         refine' ⟨(lift' f).comp h.symm.to_monoid_hom, _, _⟩
         ·
           simp 
@@ -168,12 +170,17 @@ theorem lift_eq_free_group_lift {A : Type u} : @lift (FreeGroup A) H _ _ _ = Fre
     ext 
     rfl
 
+-- error in GroupTheory.IsFreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A universe-polymorphic version of `unique_lift`. -/
-theorem unique_lift {X : Type w} [Groupₓ X] (f : generators G → X) : ∃!F : G →* X, ∀ a, F (of a) = f a :=
-  by 
-    have  := lift.symm.bijective.exists_unique f 
-    simpRw [Function.funext_iffₓ]  at this 
-    exact this
+theorem unique_lift
+{X : Type w}
+[group X]
+(f : generators G → X) : «expr∃! , »((F : «expr →* »(G, X)), ∀ a, «expr = »(F (of a), f a)) :=
+begin
+  have [] [] [":=", expr lift.symm.bijective.exists_unique f],
+  simp_rw [expr function.funext_iff] ["at", ident this],
+  exact [expr this]
+end
 
 end IsFreeGroup
 

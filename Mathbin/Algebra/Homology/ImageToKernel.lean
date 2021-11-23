@@ -34,7 +34,7 @@ theorem image_le_kernel (w : f ≫ g = 0) : image_subobject f ≤ kernel_subobje
     (by 
       simp )
 
--- error in Algebra.Homology.ImageToKernel: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler mono
+-- error in Algebra.Homology.ImageToKernel: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
 /--
 The canonical morphism `image_subobject f ⟶ kernel_subobject g` when `f ≫ g = 0`.
 -/
@@ -154,20 +154,20 @@ instance image_to_kernel_epi_of_zero_of_mono [has_kernels V] [has_zero_object V]
         simp )) :=
   epi_of_target_iso_zero _ (kernel_subobject_iso g ≪≫ kernel.of_mono g)
 
+-- error in Algebra.Homology.ImageToKernel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 `image_to_kernel` for `A --f--> B --0--> C`, where `g` is an epi is itself an epi
 (i.e. the sequence is exact at `B`).
 -/
-instance image_to_kernel_epi_of_epi_of_zero [has_images V] [epi f] :
-  epi
-    (imageToKernel f (0 : B ⟶ C)
-      (by 
-        simp )) :=
-  by 
-    simp only [image_to_kernel_zero_right]
-    haveI  := epi_image_of_epi f 
-    rw [←image_subobject_arrow]
-    refine' @epi_comp _ _ _ _ _ _ (epi_comp _ _) _ _
+instance image_to_kernel_epi_of_epi_of_zero
+[has_images V]
+[epi f] : epi (image_to_kernel f (0 : «expr ⟶ »(B, C)) (by simp [] [] [] [] [] [])) :=
+begin
+  simp [] [] ["only"] ["[", expr image_to_kernel_zero_right, "]"] [] [],
+  haveI [] [] [":=", expr epi_image_of_epi f],
+  rw ["<-", expr image_subobject_arrow] [],
+  refine [expr @epi_comp _ _ _ _ _ _ (epi_comp _ _) _ _]
+end
 
 end 
 
@@ -504,17 +504,19 @@ def homologyIsoCokernelImageToKernel' (w : f ≫ g = 0) : homology f g w ≅ cok
 
 variable[has_equalizers V]
 
+-- error in Algebra.Homology.ImageToKernel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 `homology f g w` can be computed as the cokernel of `kernel.lift g f w`.
 -/
-def homologyIsoCokernelLift (w : f ≫ g = 0) : homology f g w ≅ cokernel (kernel.lift g f w) :=
-  by 
-    refine' homologyIsoCokernelImageToKernel' f g w ≪≫ _ 
-    have p : factor_thru_image f ≫ imageToKernel' f g w = kernel.lift g f w
-    ·
-      ext 
-      simp [imageToKernel']
-    exact (cokernel_epi_comp _ _).symm ≪≫ cokernel_iso_of_eq p
+def homology_iso_cokernel_lift
+(w : «expr = »(«expr ≫ »(f, g), 0)) : «expr ≅ »(homology f g w, cokernel (kernel.lift g f w)) :=
+begin
+  refine [expr «expr ≪≫ »(homology_iso_cokernel_image_to_kernel' f g w, _)],
+  have [ident p] [":", expr «expr = »(«expr ≫ »(factor_thru_image f, image_to_kernel' f g w), kernel.lift g f w)] [],
+  { ext [] [] [],
+    simp [] [] [] ["[", expr image_to_kernel', "]"] [] [] },
+  exact [expr «expr ≪≫ »((cokernel_epi_comp _ _).symm, cokernel_iso_of_eq p)]
+end
 
 end imageToKernel'
 

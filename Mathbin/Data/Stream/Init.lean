@@ -280,23 +280,18 @@ theorem eq_of_bisim (bisim : is_bisimulation R) : ∀ {s₁ s₂}, s₁ ~ s₂ �
 
 end Bisim
 
--- error in Data.Stream.Init: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem bisim_simple
-(s₁
- s₂ : stream α) : «expr = »(head s₁, head s₂) → «expr = »(s₁, tail s₁) → «expr = »(s₂, tail s₂) → «expr = »(s₁, s₂) :=
-assume
-hh
-ht₁
-ht₂, eq_of_bisim (λ
- s₁
- s₂, «expr ∧ »(«expr = »(head s₁, head s₂), «expr ∧ »(«expr = »(s₁, tail s₁), «expr = »(s₂, tail s₂)))) (λ
- (s₁ s₂)
- ⟨h₁, h₂, h₃⟩, begin
-   constructor,
-   exact [expr h₁],
-   rw ["[", "<-", expr h₂, ",", "<-", expr h₃, "]"] [],
-   repeat { constructor }; assumption
- end) (and.intro hh (and.intro ht₁ ht₂))
+theorem bisim_simple (s₁ s₂ : Streamₓ α) : head s₁ = head s₂ → s₁ = tail s₁ → s₂ = tail s₂ → s₁ = s₂ :=
+  fun hh ht₁ ht₂ =>
+    eq_of_bisim (fun s₁ s₂ => head s₁ = head s₂ ∧ s₁ = tail s₁ ∧ s₂ = tail s₂)
+      (fun s₁ s₂ ⟨h₁, h₂, h₃⟩ =>
+        by 
+          constructor 
+          exact h₁ 
+          rw [←h₂, ←h₃]
+          repeat' 
+              constructor <;>
+            assumption)
+      (And.intro hh (And.intro ht₁ ht₂))
 
 theorem coinduction {s₁ s₂ : Streamₓ α} :
   head s₁ = head s₂ → (∀ β : Type u fr : Streamₓ α → β, fr s₁ = fr s₂ → fr (tail s₁) = fr (tail s₂)) → s₁ = s₂ :=
@@ -599,21 +594,20 @@ theorem append_approx_drop : ∀ n : Nat s : Streamₓ α, append_stream (approx
       intro s 
       rw [approx_succ, drop_succ, cons_append_stream, ih (tail s), Streamₓ.eta]
 
-theorem take_theorem (s₁ s₂ : Streamₓ α) : (∀ n : Nat, approx n s₁ = approx n s₂) → s₁ = s₂ :=
-  by 
-    intro h 
-    apply Streamₓ.ext 
-    intro n 
-    induction' n with n ih
-    ·
-      have aux := h 1
-      simp [approx] at aux 
-      exact aux
-    ·
-      have h₁ : some (nth (succ n) s₁) = some (nth (succ n) s₂)
-      ·
-        rw [←nth_approx, ←nth_approx, h (succ (succ n))]
-      injection h₁
+-- error in Data.Stream.Init: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem take_theorem (s₁ s₂ : stream α) : ∀ n : nat, «expr = »(approx n s₁, approx n s₂) → «expr = »(s₁, s₂) :=
+begin
+  intro [ident h],
+  apply [expr stream.ext],
+  intro [ident n],
+  induction [expr n] [] ["with", ident n, ident ih] [],
+  { have [ident aux] [] [":=", expr h 1],
+    simp [] [] [] ["[", expr approx, "]"] [] ["at", ident aux],
+    exact [expr aux] },
+  { have [ident h₁] [":", expr «expr = »(some (nth (succ n) s₁), some (nth (succ n) s₂))] [],
+    { rw ["[", "<-", expr nth_approx, ",", "<-", expr nth_approx, ",", expr h (succ (succ n)), "]"] [] },
+    injection [expr h₁] [] }
+end
 
 private def cycle_f : α × List α × α × List α → α
 | (v, _, _, _) => v

@@ -1,6 +1,7 @@
-import Mathbin.Algebra.Order.EuclideanAbsoluteValue 
-import Mathbin.Analysis.SpecialFunctions.Pow 
-import Mathbin.Combinatorics.Pigeonhole
+import Mathbin.Data.Fin.Tuple 
+import Mathbin.Data.Real.Basic 
+import Mathbin.Combinatorics.Pigeonhole 
+import Mathbin.Algebra.Order.EuclideanAbsoluteValue
 
 /-!
 # Admissible absolute values
@@ -57,59 +58,62 @@ theorem exists_partition {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b
     refine' ⟨t ∘ e, fun i₀ i₁ h => _⟩
     convert ht (e i₀) (e i₁) h <;> simp only [e.symm_apply_apply]
 
+-- error in NumberTheory.ClassNumber.AdmissibleAbsoluteValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any large enough family of vectors in `R^n` has a pair of elements
 whose remainders are close together, pointwise. -/
-theorem exists_approx_aux (n : ℕ) (h : abv.is_admissible) :
-  ∀ {ε : ℝ} hε : 0 < ε {b : R} hb : b ≠ 0 A : Finₓ (h.card ε^n).succ → Finₓ n → R,
-    ∃ i₀ i₁, i₀ ≠ i₁ ∧ ∀ k, (abv (A i₁ k % b - A i₀ k % b) : ℝ) < abv b • ε :=
-  by 
-    haveI  := Classical.decEq R 
-    induction' n with n ih
-    ·
-      intro ε hε b hb A 
-      refine' ⟨0, 1, _, _⟩
-      ·
-        simp 
-      rintro ⟨i, ⟨⟩⟩
-    intro ε hε b hb A 
-    set M := h.card ε with hM 
-    obtain ⟨s, s_inj, hs⟩ :
-      ∃ s : Finₓ (M^n).succ → Finₓ (M^n.succ).succ,
-        Function.Injective s ∧ ∀ i₀ i₁, (abv (A (s i₁) 0 % b - A (s i₀) 0 % b) : ℝ) < abv b • ε
-    ·
-      obtain ⟨t, ht⟩ :
-        ∃ t : Finₓ (M^n.succ).succ → Finₓ M, ∀ i₀ i₁, t i₀ = t i₁ → (abv (A i₁ 0 % b - A i₀ 0 % b) : ℝ) < abv b • ε :=
-        h.exists_partition hε hb fun x => A x 0 
-      obtain ⟨s, hs⟩ :=
-        @Fintype.exists_lt_card_fiber_of_mul_lt_card _ _ _ _ _ t (M^n)
-          (by 
-            simpa only [Fintype.card_fin, pow_succₓ] using Nat.lt_succ_selfₓ (M^n.succ))
-      refine' ⟨fun i => (finset.univ.filter fun x => t x = s).toList.nthLe i _, _, fun i₀ i₁ => ht _ _ _⟩
-      ·
-        refine' i.2.trans_le _ 
-        rwa [Finset.length_to_list]
-      ·
-        intro i j h 
-        ext 
-        exact list.nodup_iff_nth_le_inj.mp (Finset.nodup_to_list _) _ _ _ _ h 
-      have  : ∀ i h, (finset.univ.filter fun x => t x = s).toList.nthLe i h ∈ finset.univ.filter fun x => t x = s
-      ·
-        intro i h 
-        exact (Finset.mem_to_list _).mp (List.nth_le_mem _ _ _)
-      obtain ⟨_, h₀⟩ := finset.mem_filter.mp (this i₀ _)
-      obtain ⟨_, h₁⟩ := finset.mem_filter.mp (this i₁ _)
-      exact h₀.trans h₁.symm 
-    obtain ⟨k₀, k₁, hk, h⟩ := ih hε hb fun x => Finₓ.tail (A (s x))
-    refine' ⟨s k₀, s k₁, fun h => hk (s_inj h), fun i => Finₓ.cases _ (fun i => _) i⟩
-    ·
-      exact hs k₀ k₁
-    ·
-      exact h i
+theorem exists_approx_aux
+(n : exprℕ())
+(h : abv.is_admissible) : ∀
+{ε : exprℝ()}
+(hε : «expr < »(0, ε))
+{b : R}
+(hb : «expr ≠ »(b, 0))
+(A : fin «expr ^ »(h.card ε, n).succ → fin n → R), «expr∃ , »((i₀
+  i₁), «expr ∧ »(«expr ≠ »(i₀, i₁), ∀
+  k, «expr < »((abv «expr - »(«expr % »(A i₁ k, b), «expr % »(A i₀ k, b)) : exprℝ()), «expr • »(abv b, ε)))) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq R],
+  induction [expr n] [] ["with", ident n, ident ih] [],
+  { intros [ident ε, ident hε, ident b, ident hb, ident A],
+    refine [expr ⟨0, 1, _, _⟩],
+    { simp [] [] [] [] [] [] },
+    rintros ["⟨", ident i, ",", "⟨", "⟩", "⟩"] },
+  intros [ident ε, ident hε, ident b, ident hb, ident A],
+  set [] [ident M] [] [":="] [expr h.card ε] ["with", ident hM],
+  obtain ["⟨", ident s, ",", ident s_inj, ",", ident hs, "⟩", ":", expr «expr∃ , »((s : fin «expr ^ »(M, n).succ → fin «expr ^ »(M, n.succ).succ), «expr ∧ »(function.injective s, ∀
+     i₀
+     i₁, «expr < »((abv «expr - »(«expr % »(A (s i₁) 0, b), «expr % »(A (s i₀) 0, b)) : exprℝ()), «expr • »(abv b, ε))))],
+  { obtain ["⟨", ident t, ",", ident ht, "⟩", ":", expr «expr∃ , »((t : fin «expr ^ »(M, n.succ).succ → fin M), ∀
+      i₀
+      i₁, «expr = »(t i₀, t i₁) → «expr < »((abv «expr - »(«expr % »(A i₁ 0, b), «expr % »(A i₀ 0, b)) : exprℝ()), «expr • »(abv b, ε))), ":=", expr h.exists_partition hε hb (λ
+      x, A x 0)],
+    obtain ["⟨", ident s, ",", ident hs, "⟩", ":=", expr @fintype.exists_lt_card_fiber_of_mul_lt_card _ _ _ _ _ t «expr ^ »(M, n) (by simpa [] [] ["only"] ["[", expr fintype.card_fin, ",", expr pow_succ, "]"] [] ["using", expr nat.lt_succ_self «expr ^ »(M, n.succ)])],
+    refine [expr ⟨λ i, (finset.univ.filter (λ x, «expr = »(t x, s))).to_list.nth_le i _, _, λ i₀ i₁, ht _ _ _⟩],
+    { refine [expr i.2.trans_le _],
+      rwa [expr finset.length_to_list] [] },
+    { intros [ident i, ident j, ident h],
+      ext [] [] [],
+      exact [expr list.nodup_iff_nth_le_inj.mp (finset.nodup_to_list _) _ _ _ _ h] },
+    have [] [":", expr ∀
+     i
+     h, «expr ∈ »((finset.univ.filter (λ
+        x, «expr = »(t x, s))).to_list.nth_le i h, finset.univ.filter (λ x, «expr = »(t x, s)))] [],
+    { intros [ident i, ident h],
+      exact [expr (finset.mem_to_list _).mp (list.nth_le_mem _ _ _)] },
+    obtain ["⟨", "_", ",", ident h₀, "⟩", ":=", expr finset.mem_filter.mp (this i₀ _)],
+    obtain ["⟨", "_", ",", ident h₁, "⟩", ":=", expr finset.mem_filter.mp (this i₁ _)],
+    exact [expr h₀.trans h₁.symm] },
+  obtain ["⟨", ident k₀, ",", ident k₁, ",", ident hk, ",", ident h, "⟩", ":=", expr ih hε hb (λ
+    x, fin.tail (A (s x)))],
+  refine [expr ⟨s k₀, s k₁, λ h, hk (s_inj h), λ i, fin.cases _ (λ i, _) i⟩],
+  { exact [expr hs k₀ k₁] },
+  { exact [expr h i] }
+end
 
 /-- Any large enough family of vectors in `R^ι` has a pair of elements
 whose remainders are close together, pointwise. -/
 theorem exists_approx {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (h : abv.is_admissible)
-  (A : Finₓ (h.card ε^Fintype.card ι).succ → ι → R) :
+  (A : Finₓ (h.card ε ^ Fintype.card ι).succ → ι → R) :
   ∃ i₀ i₁, i₀ ≠ i₁ ∧ ∀ k, (abv (A i₁ k % b - A i₀ k % b) : ℝ) < abv b • ε :=
   by 
     let e := Fintype.equivFin ι 

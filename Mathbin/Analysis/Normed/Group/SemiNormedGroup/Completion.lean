@@ -30,7 +30,7 @@ noncomputable theory
 
 universe u
 
-open UniformSpace Opposite CategoryTheory NormedGroupHom
+open UniformSpace MulOpposite CategoryTheory NormedGroupHom
 
 namespace SemiNormedGroupₓ
 

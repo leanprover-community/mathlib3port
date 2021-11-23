@@ -33,60 +33,53 @@ def unpair (n : ℕ) : ℕ × ℕ :=
   let s := sqrt n 
   if (n - s*s) < s then (n - s*s, s) else (s, (n - s*s) - s)
 
-@[simp]
-theorem mkpair_unpair (n : ℕ) : mkpair (unpair n).1 (unpair n).2 = n :=
-  by 
-    dsimp only [unpair]
-    set s := sqrt n 
-    have sm : ((s*s)+n - s*s) = n := add_tsub_cancel_of_le (sqrt_le _)
-    splitIfs
-    ·
-      simp [mkpair, h, sm]
-    ·
-      have hl : (n - s*s) - s ≤ s :=
-        tsub_le_iff_left.mpr
-          (tsub_le_iff_left.mpr$
-            by 
-              rw [←add_assocₓ] <;> apply sqrt_le_add)
-      simp [mkpair, hl.not_lt, add_assocₓ, add_tsub_cancel_of_le (le_of_not_gtₓ h), sm]
+-- error in Data.Nat.Pairing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem mkpair_unpair (n : exprℕ()) : «expr = »(mkpair (unpair n).1 (unpair n).2, n) :=
+begin
+  dsimp ["only"] ["[", expr unpair, "]"] [] [],
+  set [] [ident s] [] [":="] [expr sqrt n] [],
+  have [ident sm] [":", expr «expr = »(«expr + »(«expr * »(s, s), «expr - »(n, «expr * »(s, s))), n)] [":=", expr add_tsub_cancel_of_le (sqrt_le _)],
+  split_ifs [] [],
+  { simp [] [] [] ["[", expr mkpair, ",", expr h, ",", expr sm, "]"] [] [] },
+  { have [ident hl] [":", expr «expr ≤ »(«expr - »(«expr - »(n, «expr * »(s, s)), s), s)] [":=", expr tsub_le_iff_left.mpr «expr $ »(tsub_le_iff_left.mpr, by rw ["<-", expr add_assoc] []; apply [expr sqrt_le_add])],
+    simp [] [] [] ["[", expr mkpair, ",", expr hl.not_lt, ",", expr add_assoc, ",", expr add_tsub_cancel_of_le (le_of_not_gt h), ",", expr sm, "]"] [] [] }
+end
 
 theorem mkpair_unpair' {n a b} (H : unpair n = (a, b)) : mkpair a b = n :=
   by 
     simpa [H] using mkpair_unpair n
 
-@[simp]
-theorem unpair_mkpair (a b : ℕ) : unpair (mkpair a b) = (a, b) :=
-  by 
-    dunfold mkpair 
-    splitIfs
-    ·
-      show unpair ((b*b)+a) = (a, b)
-      have be : sqrt ((b*b)+a) = b 
-      exact sqrt_add_eq _ (le_transₓ (le_of_ltₓ h) (Nat.le_add_leftₓ _ _))
-      simp [unpair, be, add_tsub_cancel_right, h]
-    ·
-      show unpair (((a*a)+a)+b) = (a, b)
-      have ae : sqrt ((a*a)+a+b) = a
-      ·
-        rw [sqrt_add_eq]
-        exact add_le_add_left (le_of_not_gtₓ h) _ 
-      simp [unpair, ae, Nat.not_lt_zeroₓ, add_assocₓ]
+-- error in Data.Nat.Pairing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem unpair_mkpair (a b : exprℕ()) : «expr = »(unpair (mkpair a b), (a, b)) :=
+begin
+  dunfold [ident mkpair] [],
+  split_ifs [] [],
+  { show [expr «expr = »(unpair «expr + »(«expr * »(b, b), a), (a, b))],
+    have [ident be] [":", expr «expr = »(sqrt «expr + »(«expr * »(b, b), a), b)] [],
+    from [expr sqrt_add_eq _ (le_trans (le_of_lt h) (nat.le_add_left _ _))],
+    simp [] [] [] ["[", expr unpair, ",", expr be, ",", expr add_tsub_cancel_right, ",", expr h, "]"] [] [] },
+  { show [expr «expr = »(unpair «expr + »(«expr + »(«expr * »(a, a), a), b), (a, b))],
+    have [ident ae] [":", expr «expr = »(sqrt «expr + »(«expr * »(a, a), «expr + »(a, b)), a)] [],
+    { rw [expr sqrt_add_eq] [],
+      exact [expr add_le_add_left (le_of_not_gt h) _] },
+    simp [] [] [] ["[", expr unpair, ",", expr ae, ",", expr nat.not_lt_zero, ",", expr add_assoc, "]"] [] [] }
+end
 
 theorem surjective_unpair : surjective unpair :=
   fun ⟨m, n⟩ => ⟨mkpair m n, unpair_mkpair m n⟩
 
-theorem unpair_lt {n : ℕ} (n1 : 1 ≤ n) : (unpair n).1 < n :=
-  let s := sqrt n 
-  by 
-    simp [unpair]
-    change sqrt n with s 
-    byCases' h : (n - s*s) < s <;> simp [h]
-    ·
-      exact lt_of_lt_of_leₓ h (sqrt_le_self _)
-    ·
-      simp  at h 
-      have s0 : 0 < s := sqrt_pos.2 n1 
-      exact lt_of_le_of_ltₓ h (tsub_lt_self n1 (mul_pos s0 s0))
+-- error in Data.Nat.Pairing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem unpair_lt {n : exprℕ()} (n1 : «expr ≤ »(1, n)) : «expr < »((unpair n).1, n) :=
+let s := sqrt n in
+begin
+  simp [] [] [] ["[", expr unpair, "]"] [] [],
+  change [expr sqrt n] ["with", expr s] [],
+  by_cases [expr h, ":", expr «expr < »(«expr - »(n, «expr * »(s, s)), s)]; simp [] [] [] ["[", expr h, "]"] [] [],
+  { exact [expr lt_of_lt_of_le h (sqrt_le_self _)] },
+  { simp [] [] [] [] [] ["at", ident h],
+    have [ident s0] [":", expr «expr < »(0, s)] [":=", expr sqrt_pos.2 n1],
+    exact [expr lt_of_le_of_lt h (tsub_lt_self n1 (mul_pos s0 s0))] }
+end
 
 @[simp]
 theorem unpair_zero : unpair 0 = 0 :=

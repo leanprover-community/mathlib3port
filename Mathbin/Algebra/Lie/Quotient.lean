@@ -103,61 +103,84 @@ instance lie_quotient_lie_module : LieModule R L N.quotient :=
           simp only [LinearMap.map_smul]
           rfl }
 
-instance lie_quotient_has_bracket : HasBracket (Quotientₓ I) (Quotientₓ I) :=
-  ⟨by 
-      intro x y 
-      apply Quotientₓ.liftOn₂' x y fun x' y' => mk ⁅x',y'⁆
-      intro x₁ x₂ y₁ y₂ h₁ h₂ 
-      apply (Submodule.Quotient.eq I.to_submodule).2
-      have h : ⁅x₁,x₂⁆ - ⁅y₁,y₂⁆ = ⁅x₁,x₂ - y₂⁆+⁅x₁ - y₁,y₂⁆
-      ·
-        simp [-lie_skew, sub_eq_add_neg, add_assocₓ]
-      rw [h]
-      apply Submodule.add_mem
-      ·
-        apply lie_mem_right R L I x₁ (x₂ - y₂) h₂
-      ·
-        apply lie_mem_left R L I (x₁ - y₁) y₂ h₁⟩
+-- error in Algebra.Lie.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance lie_quotient_has_bracket : has_bracket (quotient I) (quotient I) :=
+⟨begin
+   intros [ident x, ident y],
+   apply [expr quotient.lift_on₂' x y (λ x' y', mk «expr⁅ , ⁆»(x', y'))],
+   intros [ident x₁, ident x₂, ident y₁, ident y₂, ident h₁, ident h₂],
+   apply [expr (submodule.quotient.eq I.to_submodule).2],
+   have [ident h] [":", expr «expr = »(«expr - »(«expr⁅ , ⁆»(x₁, x₂), «expr⁅ , ⁆»(y₁, y₂)), «expr + »(«expr⁅ , ⁆»(x₁, «expr - »(x₂, y₂)), «expr⁅ , ⁆»(«expr - »(x₁, y₁), y₂)))] [],
+   by simp [] [] [] ["[", "-", ident lie_skew, ",", expr sub_eq_add_neg, ",", expr add_assoc, "]"] [] [],
+   rw [expr h] [],
+   apply [expr submodule.add_mem],
+   { apply [expr lie_mem_right R L I x₁ «expr - »(x₂, y₂) h₂] },
+   { apply [expr lie_mem_left R L I «expr - »(x₁, y₁) y₂ h₁] }
+ end⟩
 
 @[simp]
 theorem mk_bracket (x y : L) : mk ⁅x,y⁆ = ⁅(mk x : Quotientₓ I),(mk y : Quotientₓ I)⁆ :=
   rfl
 
--- error in Algebra.Lie.Quotient: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-instance lie_quotient_lie_ring : lie_ring (quotient I) :=
-{ add_lie := by { intros [ident x', ident y', ident z'],
-    apply [expr quotient.induction_on₃' x' y' z'],
-    intros [ident x, ident y, ident z],
-    repeat { rw [expr is_quotient_mk] [] <|> rw ["<-", expr mk_bracket] [] <|> rw ["<-", expr submodule.quotient.mk_add] [] },
-    apply [expr congr_arg],
-    apply [expr add_lie] },
-  lie_add := by { intros [ident x', ident y', ident z'],
-    apply [expr quotient.induction_on₃' x' y' z'],
-    intros [ident x, ident y, ident z],
-    repeat { rw [expr is_quotient_mk] [] <|> rw ["<-", expr mk_bracket] [] <|> rw ["<-", expr submodule.quotient.mk_add] [] },
-    apply [expr congr_arg],
-    apply [expr lie_add] },
-  lie_self := by { intros [ident x'],
-    apply [expr quotient.induction_on' x'],
-    intros [ident x],
-    rw ["[", expr is_quotient_mk, ",", "<-", expr mk_bracket, "]"] [],
-    apply [expr congr_arg],
-    apply [expr lie_self] },
-  leibniz_lie := by { intros [ident x', ident y', ident z'],
-    apply [expr quotient.induction_on₃' x' y' z'],
-    intros [ident x, ident y, ident z],
-    repeat { rw [expr is_quotient_mk] [] <|> rw ["<-", expr mk_bracket] [] <|> rw ["<-", expr submodule.quotient.mk_add] [] },
-    apply [expr congr_arg],
-    apply [expr leibniz_lie] } }
+instance lie_quotient_lie_ring : LieRing (Quotientₓ I) :=
+  { add_lie :=
+      by 
+        intro x' y' z' 
+        apply Quotientₓ.induction_on₃' x' y' z' 
+        intro x y z 
+        repeat' 
+          first |
+            rw [is_quotient_mk]|
+            rw [←mk_bracket]|
+            rw [←Submodule.Quotient.mk_add]
+        apply congr_argₓ 
+        apply add_lie,
+    lie_add :=
+      by 
+        intro x' y' z' 
+        apply Quotientₓ.induction_on₃' x' y' z' 
+        intro x y z 
+        repeat' 
+          first |
+            rw [is_quotient_mk]|
+            rw [←mk_bracket]|
+            rw [←Submodule.Quotient.mk_add]
+        apply congr_argₓ 
+        apply lie_add,
+    lie_self :=
+      by 
+        intro x' 
+        apply Quotientₓ.induction_on' x' 
+        intro x 
+        rw [is_quotient_mk, ←mk_bracket]
+        apply congr_argₓ 
+        apply lie_self,
+    leibniz_lie :=
+      by 
+        intro x' y' z' 
+        apply Quotientₓ.induction_on₃' x' y' z' 
+        intro x y z 
+        repeat' 
+          first |
+            rw [is_quotient_mk]|
+            rw [←mk_bracket]|
+            rw [←Submodule.Quotient.mk_add]
+        apply congr_argₓ 
+        apply leibniz_lie }
 
--- error in Algebra.Lie.Quotient: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-instance lie_quotient_lie_algebra : lie_algebra R (quotient I) :=
-{ lie_smul := by { intros [ident t, ident x', ident y'],
-    apply [expr quotient.induction_on₂' x' y'],
-    intros [ident x, ident y],
-    repeat { rw [expr is_quotient_mk] [] <|> rw ["<-", expr mk_bracket] [] <|> rw ["<-", expr submodule.quotient.mk_smul] [] },
-    apply [expr congr_arg],
-    apply [expr lie_smul] } }
+instance lie_quotient_lie_algebra : LieAlgebra R (Quotientₓ I) :=
+  { lie_smul :=
+      by 
+        intro t x' y' 
+        apply Quotientₓ.induction_on₂' x' y' 
+        intro x y 
+        repeat' 
+          first |
+            rw [is_quotient_mk]|
+            rw [←mk_bracket]|
+            rw [←Submodule.Quotient.mk_smul]
+        apply congr_argₓ 
+        apply lie_smul }
 
 /-- `lie_submodule.quotient.mk` as a `lie_module_hom`. -/
 @[simps]

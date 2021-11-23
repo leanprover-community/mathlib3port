@@ -80,45 +80,49 @@ section
 
 variable{R : Type _}[Ringₓ R][TopologicalSpace R]
 
-theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
-  (hmul : tendsto (uncurry (·*· : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0)$ 𝓝 0)
-  (hmul_left : ∀ x₀ : R, tendsto (fun x : R => x₀*x) (𝓝 0)$ 𝓝 0)
-  (hmul_right : ∀ x₀ : R, tendsto (fun x : R => x*x₀) (𝓝 0)$ 𝓝 0) : TopologicalRing R :=
-  by 
-    refine' { ‹TopologicalAddGroup R› with .. }
-    have hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀+x) (𝓝 0)
-    ·
-      simp 
-    have hadd : tendsto (uncurry (·+· : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) (𝓝 0)
-    ·
-      rw [←nhds_prod_eq]
-      convert continuous_add.tendsto ((0 : R), (0 : R))
-      rw [zero_addₓ]
-    rw [continuous_iff_continuous_at]
-    rintro ⟨x₀, y₀⟩
-    rw [ContinuousAt, nhds_prod_eq, hleft x₀, hleft y₀, hleft (x₀*y₀), Filter.prod_map_map_eq, tendsto_map'_iff]
-    suffices  :
-      tendsto ((fun x : R => x+x₀*y₀) ∘ (fun p : R × R => p.1+p.2) ∘ fun p : R × R => ((p.1*y₀)+x₀*p.2, p.1*p.2))
-        (𝓝 0 ×ᶠ 𝓝 0) ((map fun x : R => x+x₀*y₀)$ 𝓝 0)
-    ·
-      convert this using 1
-      ·
-        ext 
-        simp only [comp_app, mul_addₓ, add_mulₓ]
-        abel
-      ·
-        simp only [add_commₓ]
-    refine' tendsto_map.comp (hadd.comp (tendsto.prod_mk _ hmul))
-    exact hadd.comp (((hmul_right y₀).comp tendsto_fst).prod_mk ((hmul_left x₀).comp tendsto_snd))
+-- error in Topology.Algebra.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem topological_ring.of_add_group_of_nhds_zero
+[topological_add_group R]
+(hmul : «expr $ »(tendsto (uncurry ((«expr * ») : R → R → R)) «expr ×ᶠ »(expr𝓝() 0, expr𝓝() 0), expr𝓝() 0))
+(hmul_left : ∀ x₀ : R, «expr $ »(tendsto (λ x : R, «expr * »(x₀, x)) (expr𝓝() 0), expr𝓝() 0))
+(hmul_right : ∀ x₀ : R, «expr $ »(tendsto (λ x : R, «expr * »(x, x₀)) (expr𝓝() 0), expr𝓝() 0)) : topological_ring R :=
+begin
+  refine [expr { ..«expr‹ ›»(topological_add_group R), .. }],
+  have [ident hleft] [":", expr ∀ x₀ : R, «expr = »(expr𝓝() x₀, map (λ x, «expr + »(x₀, x)) (expr𝓝() 0))] [],
+  by simp [] [] [] [] [] [],
+  have [ident hadd] [":", expr tendsto (uncurry ((«expr + ») : R → R → R)) «expr ×ᶠ »(expr𝓝() 0, expr𝓝() 0) (expr𝓝() 0)] [],
+  { rw ["<-", expr nhds_prod_eq] [],
+    convert [] [expr continuous_add.tendsto ((0 : R), (0 : R))] [],
+    rw [expr zero_add] [] },
+  rw [expr continuous_iff_continuous_at] [],
+  rintro ["⟨", ident x₀, ",", ident y₀, "⟩"],
+  rw ["[", expr continuous_at, ",", expr nhds_prod_eq, ",", expr hleft x₀, ",", expr hleft y₀, ",", expr hleft «expr * »(x₀, y₀), ",", expr filter.prod_map_map_eq, ",", expr tendsto_map'_iff, "]"] [],
+  suffices [] [":", expr tendsto «expr ∘ »(λ
+    x : R, «expr + »(x, «expr * »(x₀, y₀)), «expr ∘ »(λ
+     p : «expr × »(R, R), «expr + »(p.1, p.2), λ
+     p : «expr × »(R, R), («expr + »(«expr * »(p.1, y₀), «expr * »(x₀, p.2)), «expr * »(p.1, p.2)))) «expr ×ᶠ »(expr𝓝() 0, expr𝓝() 0) «expr $ »(map (λ
+     x : R, «expr + »(x, «expr * »(x₀, y₀))), expr𝓝() 0)],
+  { convert [] [expr this] ["using", 1],
+    { ext [] [] [],
+      simp [] [] ["only"] ["[", expr comp_app, ",", expr mul_add, ",", expr add_mul, "]"] [] [],
+      abel [] [] [] },
+    { simp [] [] ["only"] ["[", expr add_comm, "]"] [] [] } },
+  refine [expr tendsto_map.comp (hadd.comp (tendsto.prod_mk _ hmul))],
+  exact [expr hadd.comp (((hmul_right y₀).comp tendsto_fst).prod_mk ((hmul_left x₀).comp tendsto_snd))]
+end
 
-theorem TopologicalRing.of_nhds_zero (hadd : tendsto (uncurry (·+· : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0)$ 𝓝 0)
-  (hneg : tendsto (fun x => -x : R → R) (𝓝 0) (𝓝 0)) (hmul : tendsto (uncurry (·*· : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0)$ 𝓝 0)
-  (hmul_left : ∀ x₀ : R, tendsto (fun x : R => x₀*x) (𝓝 0)$ 𝓝 0)
-  (hmul_right : ∀ x₀ : R, tendsto (fun x : R => x*x₀) (𝓝 0)$ 𝓝 0) (hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀+x) (𝓝 0)) :
-  TopologicalRing R :=
-  by 
-    haveI  := TopologicalAddGroup.of_comm_of_nhds_zero hadd hneg hleft 
-    exact TopologicalRing.of_add_group_of_nhds_zero hmul hmul_left hmul_right
+-- error in Topology.Algebra.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem topological_ring.of_nhds_zero
+(hadd : «expr $ »(tendsto (uncurry ((«expr + ») : R → R → R)) «expr ×ᶠ »(expr𝓝() 0, expr𝓝() 0), expr𝓝() 0))
+(hneg : tendsto (λ x, «expr- »(x) : R → R) (expr𝓝() 0) (expr𝓝() 0))
+(hmul : «expr $ »(tendsto (uncurry ((«expr * ») : R → R → R)) «expr ×ᶠ »(expr𝓝() 0, expr𝓝() 0), expr𝓝() 0))
+(hmul_left : ∀ x₀ : R, «expr $ »(tendsto (λ x : R, «expr * »(x₀, x)) (expr𝓝() 0), expr𝓝() 0))
+(hmul_right : ∀ x₀ : R, «expr $ »(tendsto (λ x : R, «expr * »(x, x₀)) (expr𝓝() 0), expr𝓝() 0))
+(hleft : ∀ x₀ : R, «expr = »(expr𝓝() x₀, map (λ x, «expr + »(x₀, x)) (expr𝓝() 0))) : topological_ring R :=
+begin
+  haveI [] [] [":=", expr topological_add_group.of_comm_of_nhds_zero hadd hneg hleft],
+  exact [expr topological_ring.of_add_group_of_nhds_zero hmul hmul_left hmul_right]
+end
 
 end 
 
@@ -248,27 +252,30 @@ instance  : PartialOrderₓ (RingTopology α) :=
 
 local notation "cont" => @Continuous _ _
 
-private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
-  let Inf_S' := Inf (to_topological_space '' S)
-  { toTopologicalSpace := Inf_S',
-    continuous_add :=
-      by 
-        apply continuous_Inf_rng 
-        rintro _ ⟨⟨t, tr⟩, haS, rfl⟩
-        resetI 
-        have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id 
-        have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h 
-        have h_continuous_add : cont (id _) t fun p : α × α => p.fst+p.snd := continuous_add 
-        exact @Continuous.comp _ _ _ (id _) (id _) t _ _ h_continuous_add h_continuous_id,
-    continuous_mul :=
-      by 
-        apply continuous_Inf_rng 
-        rintro _ ⟨⟨t, tr⟩, haS, rfl⟩
-        resetI 
-        have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id 
-        have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h 
-        have h_continuous_mul : cont (id _) t fun p : α × α => p.fst*p.snd := continuous_mul 
-        exact @Continuous.comp _ _ _ (id _) (id _) t _ _ h_continuous_mul h_continuous_id }
+-- error in Topology.Algebra.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private def def_Inf (S : set (ring_topology α)) : ring_topology α :=
+let Inf_S' := Inf «expr '' »(to_topological_space, S) in
+{ to_topological_space := Inf_S',
+  continuous_add := begin
+    apply [expr continuous_Inf_rng],
+    rintros ["_", "⟨", "⟨", ident t, ",", ident tr, "⟩", ",", ident haS, ",", ident rfl, "⟩"],
+    resetI,
+    have [ident h] [] [":=", expr continuous_Inf_dom (set.mem_image_of_mem to_topological_space haS) continuous_id],
+    have [ident h_continuous_id] [] [":=", expr @continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h],
+    have [ident h_continuous_add] [":", expr exprcont() (id _) t (λ
+      p : «expr × »(α, α), «expr + »(p.fst, p.snd))] [":=", expr continuous_add],
+    exact [expr @continuous.comp _ _ _ (id _) (id _) t _ _ h_continuous_add h_continuous_id]
+  end,
+  continuous_mul := begin
+    apply [expr continuous_Inf_rng],
+    rintros ["_", "⟨", "⟨", ident t, ",", ident tr, "⟩", ",", ident haS, ",", ident rfl, "⟩"],
+    resetI,
+    have [ident h] [] [":=", expr continuous_Inf_dom (set.mem_image_of_mem to_topological_space haS) continuous_id],
+    have [ident h_continuous_id] [] [":=", expr @continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h],
+    have [ident h_continuous_mul] [":", expr exprcont() (id _) t (λ
+      p : «expr × »(α, α), «expr * »(p.fst, p.snd))] [":=", expr continuous_mul],
+    exact [expr @continuous.comp _ _ _ (id _) (id _) t _ _ h_continuous_mul h_continuous_id]
+  end }
 
 /-- Ring topologies on `α` form a complete lattice, with `⊥` the discrete topology and `⊤` the
 indiscrete topology.
@@ -298,7 +305,7 @@ instance  : CompleteLattice (RingTopology α) :=
 /--  Given `f : α → β` and a topology on `α`, the coinduced ring topology on `β` is the finest
 topology such that `f` is continuous and `β` is a topological ring. -/
 def coinduced {α β : Type _} [t : TopologicalSpace α] [Ringₓ β] (f : α → β) : RingTopology β :=
-  Inf { b : RingTopology β | TopologicalSpace.coinduced f t ≤ b.to_topological_space }
+  Inf { b:RingTopology β | TopologicalSpace.coinduced f t ≤ b.to_topological_space }
 
 theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Ringₓ β] (f : α → β) :
   cont t (coinduced f).toTopologicalSpace f :=

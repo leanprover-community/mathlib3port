@@ -27,8 +27,8 @@ basis vectors. -/
 theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Finₓ n → Type _} (e : ∀ i, Basis (ι₁ i) R (M i))
   (h : ∀ v : ∀ i, ι₁ i, (f fun i => e i (v i)) = g fun i => e i (v i)) : f = g :=
   by 
-    unfreezingI 
-      induction' n with m hm
+    (
+      induction' n with m hm)
     ·
       ext x 
       convert h finZeroElim

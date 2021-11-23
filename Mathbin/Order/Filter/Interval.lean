@@ -194,12 +194,12 @@ section LinearOrderₓ
 
 variable[LinearOrderₓ α]
 
--- error in Order.Filter.Interval: ././Mathport/Syntax/Translate/Basic.lean:545:47: unsupported (impossible)
+-- error in Order.Filter.Interval: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 instance tendsto_Icc_interval_interval
 {a b : α} : tendsto_Ixx_class Icc (expr𝓟() «expr[ , ]»(a, b)) (expr𝓟() «expr[ , ]»(a, b)) :=
 filter.tendsto_Icc_Icc_icc
 
--- error in Order.Filter.Interval: ././Mathport/Syntax/Translate/Basic.lean:545:47: unsupported (impossible)
+-- error in Order.Filter.Interval: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 instance tendsto_Ioc_interval_interval
 {a b : α} : tendsto_Ixx_class Ioc (expr𝓟() «expr[ , ]»(a, b)) (expr𝓟() «expr[ , ]»(a, b)) :=
 «expr $ »(tendsto_Ixx_class_of_subset, λ _ _, Ioc_subset_Icc_self)

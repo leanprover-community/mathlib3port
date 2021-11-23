@@ -31,7 +31,7 @@ functor, applicative, monad, simp
 -/
 
 
--- error in Control.Monad.Basic: ././Mathport/Syntax/Translate/Basic.lean:1264:43: in mk_simp_attribute: ././Mathport/Syntax/Translate/Tactic/Mathlib.lean:269:9: unsupported: weird string
+-- error in Control.Monad.Basic: ././Mathport/Syntax/Translate/Basic.lean:1266:43: in mk_simp_attribute: ././Mathport/Syntax/Translate/Tactic/Mathlib.lean:251:9: unsupported: weird string
 mk_simp_attribute [ident monad_norm, expr none, "with", ident functor_norm]
 
 attribute [ext] ReaderTₓ.ext StateTₓ.ext ExceptTₓ.ext OptionTₓ.ext

@@ -17,7 +17,7 @@ open_locale TopologicalSpace Classical
 
 variable{β : Type v}
 
--- error in Topology.MetricSpace.CauSeqFilter: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Topology.MetricSpace.CauSeqFilter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem cau_seq.tendsto_limit
 [normed_ring β]
 [hn : is_absolute_value (norm : β → exprℝ())]
@@ -45,7 +45,7 @@ instance NormedField.is_absolute_value : IsAbsoluteValue (norm : β → ℝ) :=
 
 open Metric
 
--- error in Topology.MetricSpace.CauSeqFilter: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Topology.MetricSpace.CauSeqFilter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem cauchy_seq.is_cau_seq {f : exprℕ() → β} (hf : cauchy_seq f) : is_cau_seq norm f :=
 begin
   cases [expr cauchy_iff.1 hf] ["with", ident hf1, ident hf2],
@@ -89,17 +89,20 @@ theorem CauSeq.cauchy_seq (f : CauSeq β norm) : CauchySeq f :=
 theorem cau_seq_iff_cauchy_seq {α : Type u} [NormedField α] {u : ℕ → α} : IsCauSeq norm u ↔ CauchySeq u :=
   ⟨fun h => CauSeq.cauchy_seq ⟨u, h⟩, fun h => h.is_cau_seq⟩
 
+-- error in Topology.MetricSpace.CauSeqFilter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A complete normed field is complete as a metric space, as Cauchy sequences converge by
 assumption and this suffices to characterize completeness. -/
-instance (priority := 100)complete_space_of_cau_seq_complete [CauSeq.IsComplete β norm] : CompleteSpace β :=
-  by 
-    apply complete_of_cauchy_seq_tendsto 
-    intro u hu 
-    have C : IsCauSeq norm u := cau_seq_iff_cauchy_seq.2 hu 
-    exists CauSeq.lim ⟨u, C⟩
-    rw [Metric.tendsto_at_top]
-    intro ε εpos 
-    cases' (CauSeq.equiv_lim ⟨u, C⟩) _ εpos with N hN 
-    exists N 
-    simpa [dist_eq_norm] using hN
+@[priority 100]
+instance complete_space_of_cau_seq_complete [cau_seq.is_complete β norm] : complete_space β :=
+begin
+  apply [expr complete_of_cauchy_seq_tendsto],
+  assume [binders (u hu)],
+  have [ident C] [":", expr is_cau_seq norm u] [":=", expr cau_seq_iff_cauchy_seq.2 hu],
+  existsi [expr cau_seq.lim ⟨u, C⟩],
+  rw [expr metric.tendsto_at_top] [],
+  assume [binders (ε εpos)],
+  cases [expr cau_seq.equiv_lim ⟨u, C⟩ _ εpos] ["with", ident N, ident hN],
+  existsi [expr N],
+  simpa [] [] [] ["[", expr dist_eq_norm, "]"] [] ["using", expr hN]
+end
 

@@ -1,5 +1,6 @@
-import Mathbin.Algebra.DirectSum.Ring 
-import Mathbin.Algebra.DirectSum.Module
+import Mathbin.Algebra.Algebra.Basic 
+import Mathbin.Algebra.DirectSum.Module 
+import Mathbin.Algebra.DirectSum.Ring
 
 /-! # Additively-graded algebra structures on `⨁ i, A i`
 

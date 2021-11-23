@@ -95,22 +95,23 @@ theorem mul_indicator_eq_one : (mul_indicator s f = fun x => 1) ↔ Disjoint (mu
 theorem mul_indicator_eq_one' : mul_indicator s f = 1 ↔ Disjoint (mul_support f) s :=
   mul_indicator_eq_one
 
--- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-@[to_additive #[]]
-theorem mul_indicator_eq_one_iff
-(a : α) : «expr ↔ »(«expr ≠ »(s.mul_indicator f a, 1), «expr ∈ »(a, «expr ∩ »(s, mul_support f))) :=
-begin
-  split; intro [ident h],
-  { by_contra [ident hmem],
-    simp [] [] ["only"] ["[", expr set.mem_inter_eq, ",", expr not_and, ",", expr not_not, ",", expr function.mem_mul_support, "]"] [] ["at", ident hmem],
-    refine [expr h _],
-    by_cases [expr «expr ∈ »(a, s)],
-    { simp_rw ["[", expr set.mul_indicator, ",", expr if_pos h, "]"] [],
-      exact [expr hmem h] },
-    { simp_rw ["[", expr set.mul_indicator, ",", expr if_neg h, "]"] [] } },
-  { simp_rw ["[", expr set.mul_indicator, ",", expr if_pos h.1, "]"] [],
-    exact [expr h.2] }
-end
+@[toAdditive]
+theorem mul_indicator_eq_one_iff (a : α) : s.mul_indicator f a ≠ 1 ↔ a ∈ s ∩ mul_support f :=
+  by 
+    split  <;> intro h
+    ·
+      byContra hmem 
+      simp only [Set.mem_inter_eq, not_and, not_not, Function.mem_mul_support] at hmem 
+      refine' h _ 
+      byCases' a ∈ s
+      ·
+        simpRw [Set.mulIndicator, if_pos h]
+        exact hmem h
+      ·
+        simpRw [Set.mulIndicator, if_neg h]
+    ·
+      simpRw [Set.mulIndicator, if_pos h.1]
+      exact h.2
 
 @[simp, toAdditive]
 theorem mul_support_mul_indicator : Function.MulSupport (s.mul_indicator f) = s ∩ Function.MulSupport f :=
@@ -178,7 +179,7 @@ theorem mul_indicator_one' {s : Set α} : s.mul_indicator (1 : α → M) = 1 :=
 
 variable{M}
 
--- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]]
 theorem mul_indicator_mul_indicator
 (s t : set α)
@@ -234,15 +235,13 @@ theorem mem_range_mul_indicator {r : M} {s : Set α} {f : α → M} :
   by 
     simp [mul_indicator, ite_eq_iff, exists_or_distrib, eq_univ_iff_forall, and_comm, or_comm, @eq_comm _ r 1]
 
--- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-@[to_additive #[]]
-theorem mul_indicator_rel_mul_indicator
-{r : M → M → exprProp()}
-(h1 : r 1 1)
-(ha : «expr ∈ »(a, s) → r (f a) (g a)) : r (mul_indicator s f a) (mul_indicator s g a) :=
-by { simp [] [] ["only"] ["[", expr mul_indicator, "]"] [] [],
-  split_ifs [] ["with", ident has, ident has],
-  exacts ["[", expr ha has, ",", expr h1, "]"] }
+@[toAdditive]
+theorem mul_indicator_rel_mul_indicator {r : M → M → Prop} (h1 : r 1 1) (ha : a ∈ s → r (f a) (g a)) :
+  r (mul_indicator s f a) (mul_indicator s g a) :=
+  by 
+    simp only [mul_indicator]
+    splitIfs with has has 
+    exacts[ha has, h1]
 
 end HasOne
 
@@ -313,23 +312,29 @@ theorem mul_indicator_self_mul_compl_apply (s : Set α) (f : α → M) (a : α) 
 theorem mul_indicator_self_mul_compl (s : Set α) (f : α → M) : (mul_indicator s f*mul_indicator («expr ᶜ» s) f) = f :=
   funext$ mul_indicator_self_mul_compl_apply s f
 
-@[toAdditive]
-theorem mul_indicator_mul_eq_left {f g : α → M} (h : Disjoint (mul_support f) (mul_support g)) :
-  (mul_support f).mulIndicator (f*g) = f :=
-  by 
-    refine' (mul_indicator_congr$ fun x hx => _).trans mul_indicator_mul_support 
-    have  : g x = 1 
-    exact nmem_mul_support.1 (disjoint_left.1 h hx)
-    rw [Pi.mul_apply, this, mul_oneₓ]
+-- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem mul_indicator_mul_eq_left
+{f g : α → M}
+(h : disjoint (mul_support f) (mul_support g)) : «expr = »((mul_support f).mul_indicator «expr * »(f, g), f) :=
+begin
+  refine [expr «expr $ »(mul_indicator_congr, λ x hx, _).trans mul_indicator_mul_support],
+  have [] [":", expr «expr = »(g x, 1)] [],
+  from [expr nmem_mul_support.1 (disjoint_left.1 h hx)],
+  rw ["[", expr pi.mul_apply, ",", expr this, ",", expr mul_one, "]"] []
+end
 
-@[toAdditive]
-theorem mul_indicator_mul_eq_right {f g : α → M} (h : Disjoint (mul_support f) (mul_support g)) :
-  (mul_support g).mulIndicator (f*g) = g :=
-  by 
-    refine' (mul_indicator_congr$ fun x hx => _).trans mul_indicator_mul_support 
-    have  : f x = 1 
-    exact nmem_mul_support.1 (disjoint_right.1 h hx)
-    rw [Pi.mul_apply, this, one_mulₓ]
+-- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem mul_indicator_mul_eq_right
+{f g : α → M}
+(h : disjoint (mul_support f) (mul_support g)) : «expr = »((mul_support g).mul_indicator «expr * »(f, g), g) :=
+begin
+  refine [expr «expr $ »(mul_indicator_congr, λ x hx, _).trans mul_indicator_mul_support],
+  have [] [":", expr «expr = »(f x, 1)] [],
+  from [expr nmem_mul_support.1 (disjoint_right.1 h hx)],
+  rw ["[", expr pi.mul_apply, ",", expr this, ",", expr one_mul, "]"] []
+end
 
 /-- `set.mul_indicator` as a `monoid_hom`. -/
 @[toAdditive "`set.indicator` as an `add_monoid_hom`."]
@@ -342,15 +347,12 @@ section DistribMulAction
 
 variable{A : Type _}[AddMonoidₓ A][Monoidₓ M][DistribMulAction M A]
 
--- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem indicator_smul_apply
-(s : set α)
-(r : M)
-(f : α → A)
-(x : α) : «expr = »(indicator s (λ x, «expr • »(r, f x)) x, «expr • »(r, indicator s f x)) :=
-by { dunfold [ident indicator] [],
-  split_ifs [] [],
-  exacts ["[", expr rfl, ",", expr (smul_zero r).symm, "]"] }
+theorem indicator_smul_apply (s : Set α) (r : M) (f : α → A) (x : α) :
+  indicator s (fun x => r • f x) x = r • indicator s f x :=
+  by 
+    dunfold indicator 
+    splitIfs 
+    exacts[rfl, (smul_zero r).symm]
 
 theorem indicator_smul (s : Set α) (r : M) (f : α → A) :
   (indicator s fun x : α => r • f x) = fun x : α => r • indicator s f x :=

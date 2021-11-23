@@ -1,4 +1,5 @@
 import Mathbin.GroupTheory.Complement 
+import Mathbin.GroupTheory.GroupAction.Basic 
 import Mathbin.GroupTheory.Index
 
 /-!
@@ -169,23 +170,28 @@ theorem smul_left_injective [H.normal] (α : H.quotient_diff) (hH : Nat.Coprime 
       rw [smul_diff, ←diff_inv, smul_diff, diff_self, mul_oneₓ, mul_inv_eq_one] at hα 
       exact (powCoprime hH).Injective hα
 
-theorem is_complement'_stabilizer_of_coprime [Fintype G] [H.normal] {α : H.quotient_diff}
-  (hH : Nat.Coprime (Fintype.card H) H.index) : is_complement' H (MulAction.stabilizer G α) :=
-  by 
-    classical 
-    let ϕ : H ≃ MulAction.Orbit G α :=
-      Equiv.ofBijective (fun h => ⟨h • α, h, rfl⟩)
-        ⟨fun h₁ h₂ hh => smul_left_injective α hH (subtype.ext_iff.mp hh),
-          fun β => exists_imp_exists (fun h hh => Subtype.ext hh) (exists_smul_eq α β hH)⟩
-    have key := card_eq_card_quotient_mul_card_subgroup (MulAction.stabilizer G α)
-    rw [←Fintype.card_congr (ϕ.trans (MulAction.orbitEquivQuotientStabilizer G α))] at key 
-    apply is_complement'_of_coprime key.symm 
-    rw [card_eq_card_quotient_mul_card_subgroup H, mul_commₓ, mul_right_inj'] at key
-    ·
-      rwa [←key, ←index_eq_card]
-    ·
-      rw [←pos_iff_ne_zero, Fintype.card_pos_iff]
-      infer_instance
+-- error in GroupTheory.SchurZassenhaus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_complement'_stabilizer_of_coprime
+[fintype G]
+[H.normal]
+{α : H.quotient_diff}
+(hH : nat.coprime (fintype.card H) H.index) : is_complement' H (mul_action.stabilizer G α) :=
+begin
+  classical,
+  let [ident ϕ] [":", expr «expr ≃ »(H, mul_action.orbit G α)] [":=", expr equiv.of_bijective (λ
+    h, ⟨«expr • »(h, α), h, rfl⟩) ⟨λ
+    h₁
+    h₂
+    hh, smul_left_injective α hH (subtype.ext_iff.mp hh), λ
+    β, exists_imp_exists (λ h hh, subtype.ext hh) (exists_smul_eq α β hH)⟩],
+  have [ident key] [] [":=", expr card_eq_card_quotient_mul_card_subgroup (mul_action.stabilizer G α)],
+  rw ["<-", expr fintype.card_congr (ϕ.trans (mul_action.orbit_equiv_quotient_stabilizer G α))] ["at", ident key],
+  apply [expr is_complement'_of_coprime key.symm],
+  rw ["[", expr card_eq_card_quotient_mul_card_subgroup H, ",", expr mul_comm, ",", expr mul_right_inj', "]"] ["at", ident key],
+  { rwa ["[", "<-", expr key, ",", "<-", expr index_eq_card, "]"] [] },
+  { rw ["[", "<-", expr pos_iff_ne_zero, ",", expr fintype.card_pos_iff, "]"] [],
+    apply_instance }
+end
 
 /-- **Schur-Zassenhaus** for abelian normal subgroups:
   If `H : subgroup G` is abelian, normal, and has order coprime to its index, then there exists

@@ -704,81 +704,68 @@ def relabelling.neg_congr : ∀ {x y : Pgame}, x.relabelling y → (-x).Relabell
         (by 
           simpa using L_relabelling (L_equiv.symm i))⟩
 
-theorem le_iff_neg_ge : ∀ {x y : Pgame}, x ≤ y ↔ -y ≤ -x
-| mk xl xr xL xR, mk yl yr yL yR =>
-  by 
-    rw [le_def]
-    rw [le_def]
-    dsimp [neg]
-    split 
-    ·
-      intro h 
-      split 
-      ·
-        intro i 
-        have t := h.right i 
-        cases t
-        ·
-          right 
-          cases t 
-          use (@right_moves_neg (yR i)).symm t_w 
-          convert le_iff_neg_ge.1 t_h 
-          simp 
-        ·
-          left 
-          cases t 
-          use t_w 
-          exact le_iff_neg_ge.1 t_h
-      ·
-        intro j 
-        have t := h.left j 
-        cases t
-        ·
-          right 
-          cases t 
-          use t_w 
-          exact le_iff_neg_ge.1 t_h
-        ·
-          left 
-          cases t 
-          use (@left_moves_neg (xL j)).symm t_w 
-          convert le_iff_neg_ge.1 t_h 
-          simp 
-    ·
-      intro h 
-      split 
-      ·
-        intro i 
-        have t := h.right i 
-        cases t
-        ·
-          right 
-          cases t 
-          use (@left_moves_neg (xL i)) t_w 
-          convert le_iff_neg_ge.2 _ 
-          convert t_h 
-          simp 
-        ·
-          left 
-          cases t 
-          use t_w 
-          exact le_iff_neg_ge.2 t_h
-      ·
-        intro j 
-        have t := h.left j 
-        cases t
-        ·
-          right 
-          cases t 
-          use t_w 
-          exact le_iff_neg_ge.2 t_h
-        ·
-          left 
-          cases t 
-          use (@right_moves_neg (yR j)) t_w 
-          convert le_iff_neg_ge.2 _ 
-          convert t_h 
-          simp 
+-- error in SetTheory.Pgame: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem le_iff_neg_ge : ∀ {x y : pgame}, «expr ↔ »(«expr ≤ »(x, y), «expr ≤ »(«expr- »(y), «expr- »(x)))
+| mk xl xr xL xR, mk yl yr yL yR := begin
+  rw ["[", expr le_def, "]"] [],
+  rw ["[", expr le_def, "]"] [],
+  dsimp [] ["[", expr neg, "]"] [] [],
+  split,
+  { intro [ident h],
+    split,
+    { intro [ident i],
+      have [ident t] [] [":=", expr h.right i],
+      cases [expr t] [],
+      { right,
+        cases [expr t] [],
+        use [expr (@right_moves_neg (yR i)).symm t_w],
+        convert [] [expr le_iff_neg_ge.1 t_h] [],
+        simp [] [] [] [] [] [] },
+      { left,
+        cases [expr t] [],
+        use [expr t_w],
+        exact [expr le_iff_neg_ge.1 t_h] } },
+    { intro [ident j],
+      have [ident t] [] [":=", expr h.left j],
+      cases [expr t] [],
+      { right,
+        cases [expr t] [],
+        use [expr t_w],
+        exact [expr le_iff_neg_ge.1 t_h] },
+      { left,
+        cases [expr t] [],
+        use [expr (@left_moves_neg (xL j)).symm t_w],
+        convert [] [expr le_iff_neg_ge.1 t_h] [],
+        simp [] [] [] [] [] [] } } },
+  { intro [ident h],
+    split,
+    { intro [ident i],
+      have [ident t] [] [":=", expr h.right i],
+      cases [expr t] [],
+      { right,
+        cases [expr t] [],
+        use [expr @left_moves_neg (xL i) t_w],
+        convert [] [expr le_iff_neg_ge.2 _] [],
+        convert [] [expr t_h] [],
+        simp [] [] [] [] [] [] },
+      { left,
+        cases [expr t] [],
+        use [expr t_w],
+        exact [expr le_iff_neg_ge.2 t_h] } },
+    { intro [ident j],
+      have [ident t] [] [":=", expr h.left j],
+      cases [expr t] [],
+      { right,
+        cases [expr t] [],
+        use [expr t_w],
+        exact [expr le_iff_neg_ge.2 t_h] },
+      { left,
+        cases [expr t] [],
+        use [expr @right_moves_neg (yR j) t_w],
+        convert [] [expr le_iff_neg_ge.2 _] [],
+        convert [] [expr t_h] [],
+        simp [] [] [] [] [] [] } } }
+end
 
 theorem neg_congr {x y : Pgame} (h : x ≈ y) : -x ≈ -y :=
   ⟨le_iff_neg_ge.1 h.2, le_iff_neg_ge.1 h.1⟩
@@ -800,21 +787,19 @@ theorem le_zero_iff_zero_le_neg {x : Pgame} : x ≤ 0 ↔ 0 ≤ -x :=
     convert le_iff_neg_ge 
     rw [neg_zero]
 
+-- error in SetTheory.Pgame: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
-def add (x y : Pgame) : Pgame :=
-  by 
-    induction' x with xl xr xL xR IHxl IHxr generalizing y 
-    induction' y with yl yr yL yR IHyl IHyr 
-    have y := mk yl yr yL yR 
-    refine' ⟨Sum xl yl, Sum xr yr, Sum.rec _ _, Sum.rec _ _⟩
-    ·
-      exact fun i => IHxl i y
-    ·
-      exact fun i => IHyl i
-    ·
-      exact fun i => IHxr i y
-    ·
-      exact fun i => IHyr i
+def add (x y : pgame) : pgame :=
+begin
+  induction [expr x] [] ["with", ident xl, ident xr, ident xL, ident xR, ident IHxl, ident IHxr] ["generalizing", ident y],
+  induction [expr y] [] ["with", ident yl, ident yr, ident yL, ident yR, ident IHyl, ident IHyr] [],
+  have [ident y] [] [":=", expr mk yl yr yL yR],
+  refine [expr ⟨«expr ⊕ »(xl, yl), «expr ⊕ »(xr, yr), sum.rec _ _, sum.rec _ _⟩],
+  { exact [expr λ i, IHxl i y] },
+  { exact [expr λ i, IHyl i] },
+  { exact [expr λ i, IHxr i y] },
+  { exact [expr λ i, IHyr i] }
+end
 
 instance  : Add Pgame :=
   ⟨add⟩
@@ -1007,56 +992,47 @@ def add_assoc_relabelling : ∀ x y z : Pgame.{u}, relabelling ((x+y)+z) (x+y+z)
 theorem add_assoc_equiv {x y z : Pgame} : ((x+y)+z) ≈ x+y+z :=
   (add_assoc_relabelling x y z).Equiv
 
-theorem add_le_add_right : ∀ {x y z : Pgame} h : x ≤ y, (x+z) ≤ y+z
-| mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR =>
-  by 
-    intro h 
-    rw [le_def]
-    split 
-    ·
-      intro i 
-      change Sum xl zl at i 
-      cases i
-      ·
-        rw [le_def] at h 
-        cases h 
-        have t := h_left i 
-        rcases t with (⟨i', ih⟩ | ⟨j, jh⟩)
-        ·
-          left 
-          refine' ⟨(left_moves_add _ _).invFun (Sum.inl i'), _⟩
-          exact add_le_add_right ih
-        ·
-          right 
-          refine' ⟨(right_moves_add _ _).invFun (Sum.inl j), _⟩
-          convert add_le_add_right jh 
-          apply add_move_right_inl
-      ·
-        left 
-        refine' ⟨(left_moves_add _ _).invFun (Sum.inr i), _⟩
-        exact add_le_add_right h
-    ·
-      intro j 
-      change Sum yr zr at j 
-      cases j
-      ·
-        rw [le_def] at h 
-        cases h 
-        have t := h_right j 
-        rcases t with (⟨i, ih⟩ | ⟨j', jh⟩)
-        ·
-          left 
-          refine' ⟨(left_moves_add _ _).invFun (Sum.inl i), _⟩
-          convert add_le_add_right ih 
-          apply add_move_left_inl
-        ·
-          right 
-          refine' ⟨(right_moves_add _ _).invFun (Sum.inl j'), _⟩
-          exact add_le_add_right jh
-      ·
-        right 
-        refine' ⟨(right_moves_add _ _).invFun (Sum.inr j), _⟩
-        exact add_le_add_right h
+-- error in SetTheory.Pgame: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem add_le_add_right : ∀ {x y z : pgame} (h : «expr ≤ »(x, y)), «expr ≤ »(«expr + »(x, z), «expr + »(y, z))
+| mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR := begin
+  intros [ident h],
+  rw [expr le_def] [],
+  split,
+  { intros [ident i],
+    change [expr «expr ⊕ »(xl, zl)] [] ["at", ident i],
+    cases [expr i] [],
+    { rw [expr le_def] ["at", ident h],
+      cases [expr h] [],
+      have [ident t] [] [":=", expr h_left i],
+      rcases [expr t, "with", "⟨", ident i', ",", ident ih, "⟩", "|", "⟨", ident j, ",", ident jh, "⟩"],
+      { left,
+        refine [expr ⟨(left_moves_add _ _).inv_fun (sum.inl i'), _⟩],
+        exact [expr add_le_add_right ih] },
+      { right,
+        refine [expr ⟨(right_moves_add _ _).inv_fun (sum.inl j), _⟩],
+        convert [] [expr add_le_add_right jh] [],
+        apply [expr add_move_right_inl] } },
+    { left,
+      refine [expr ⟨(left_moves_add _ _).inv_fun (sum.inr i), _⟩],
+      exact [expr add_le_add_right h] } },
+  { intros [ident j],
+    change [expr «expr ⊕ »(yr, zr)] [] ["at", ident j],
+    cases [expr j] [],
+    { rw [expr le_def] ["at", ident h],
+      cases [expr h] [],
+      have [ident t] [] [":=", expr h_right j],
+      rcases [expr t, "with", "⟨", ident i, ",", ident ih, "⟩", "|", "⟨", ident j', ",", ident jh, "⟩"],
+      { left,
+        refine [expr ⟨(left_moves_add _ _).inv_fun (sum.inl i), _⟩],
+        convert [] [expr add_le_add_right ih] [],
+        apply [expr add_move_left_inl] },
+      { right,
+        refine [expr ⟨(right_moves_add _ _).inv_fun (sum.inl j'), _⟩],
+        exact [expr add_le_add_right jh] } },
+    { right,
+      refine [expr ⟨(right_moves_add _ _).inv_fun (sum.inr j), _⟩],
+      exact [expr add_le_add_right h] } }
+end
 
 theorem add_le_add_left {x y z : Pgame} (h : y ≤ z) : (x+y) ≤ x+z :=
   calc (x+y) ≤ y+x := add_comm_le 

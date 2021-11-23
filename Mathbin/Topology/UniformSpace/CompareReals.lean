@@ -92,7 +92,7 @@ noncomputable def rationalCauSeqPkg : @AbstractCompletion ℚ$ IsAbsoluteValue.u
 
 namespace CompareReals
 
--- error in Topology.UniformSpace.CompareReals: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler comm_ring
+-- error in Topology.UniformSpace.CompareReals: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler comm_ring
 /-- Type wrapper around ℚ to make sure the absolute value uniform space instance is picked up
 instead of the metric space one. We proved in rat.uniform_space_eq that they are equal,
 but they are not definitionaly equal, so it would confuse the type class system (and probably
@@ -102,7 +102,7 @@ exprℚ()
 instance  : UniformSpace Q :=
   IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ)
 
--- error in Topology.UniformSpace.CompareReals: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Topology.UniformSpace.CompareReals: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- Real numbers constructed as in Bourbaki. -/ @[derive #[expr inhabited]] def Bourbakiℝ : Type := completion Q
 
 instance bourbaki.uniform_space : UniformSpace Bourbakiℝ :=

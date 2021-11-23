@@ -1,6 +1,5 @@
-import Mathbin.Algebra.Order.Pi 
-import Mathbin.Algebra.SmulWithZero 
-import Mathbin.GroupTheory.GroupAction.Group
+import Mathbin.GroupTheory.GroupAction.Group 
+import Mathbin.Algebra.SmulWithZero
 
 /-!
 # Ordered scalar product
@@ -135,24 +134,34 @@ theorem strict_mono_smul_left (hc : 0 < c) : StrictMono (HasScalar.smul c : M �
 
 end OrderedSmul
 
+-- error in Algebra.Order.Smul: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `R` is a linear ordered semifield, then it suffices to verify only the first axiom of
 `ordered_smul`. Moreover, it suffices to verify that `a < b` and `0 < c` imply
 `c • a ≤ c • b`. We have no semifields in `mathlib`, so we use the assumption `∀ c ≠ 0, is_unit c`
 instead. -/
-theorem OrderedSmul.mk'' {R M : Type _} [LinearOrderedSemiring R] [OrderedAddCommMonoid M] [MulActionWithZero R M]
-  (hR : ∀ {c : R}, c ≠ 0 → IsUnit c) (hlt : ∀ ⦃a b : M⦄ ⦃c : R⦄, a < b → 0 < c → c • a ≤ c • b) : OrderedSmul R M :=
-  by 
-    have hlt' : ∀ ⦃a b : M⦄ ⦃c : R⦄, a < b → 0 < c → c • a < c • b
-    ·
-      refine' fun a b c hab hc => (hlt hab hc).lt_of_ne _ 
-      rw [Ne.def, (hR hc.ne').smul_left_cancel]
-      exact hab.ne 
-    refine' { smul_lt_smul_of_pos := hlt', .. }
-    intro a b c h hc 
-    rcases hR hc.ne' with ⟨c, rfl⟩
-    rw [←inv_smul_smul c a, ←inv_smul_smul c b]
-    refine' hlt' h (pos_of_mul_pos_left _ hc.le)
-    simp only [c.mul_inv, zero_lt_one]
+theorem ordered_smul.mk''
+{R M : Type*}
+[linear_ordered_semiring R]
+[ordered_add_comm_monoid M]
+[mul_action_with_zero R M]
+(hR : ∀ {c : R}, «expr ≠ »(c, 0) → is_unit c)
+(hlt : ∀
+ {{a b : M}}
+ {{c : R}}, «expr < »(a, b) → «expr < »(0, c) → «expr ≤ »(«expr • »(c, a), «expr • »(c, b))) : ordered_smul R M :=
+begin
+  have [ident hlt'] [":", expr ∀
+   {{a b : M}}
+   {{c : R}}, «expr < »(a, b) → «expr < »(0, c) → «expr < »(«expr • »(c, a), «expr • »(c, b))] [],
+  { refine [expr λ a b c hab hc, (hlt hab hc).lt_of_ne _],
+    rw ["[", expr ne.def, ",", expr (hR hc.ne').smul_left_cancel, "]"] [],
+    exact [expr hab.ne] },
+  refine [expr { smul_lt_smul_of_pos := hlt', .. }],
+  intros [ident a, ident b, ident c, ident h, ident hc],
+  rcases [expr hR hc.ne', "with", "⟨", ident c, ",", ident rfl, "⟩"],
+  rw ["[", "<-", expr inv_smul_smul c a, ",", "<-", expr inv_smul_smul c b, "]"] [],
+  refine [expr hlt' h (pos_of_mul_pos_left _ hc.le)],
+  simp [] [] ["only"] ["[", expr c.mul_inv, ",", expr zero_lt_one, "]"] [] []
+end
 
 /-- If `R` is a linear ordered field, then it suffices to verify only the first axiom of
 `ordered_smul`. -/

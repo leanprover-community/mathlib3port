@@ -1,3 +1,4 @@
+import Mathbin.LinearAlgebra.DirectSum.Finsupp 
 import Mathbin.LinearAlgebra.FinsuppVectorSpace
 
 /-!

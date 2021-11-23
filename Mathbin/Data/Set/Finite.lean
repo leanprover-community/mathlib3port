@@ -82,7 +82,7 @@ theorem finite_to_finset_eq_empty_iff {s : Set α} {h : finite s} : h.to_finset 
 theorem finite.exists_finset {s : Set α} : finite s → ∃ s' : Finset α, ∀ a : α, a ∈ s' ↔ a ∈ s
 | ⟨h⟩ =>
   by 
-    exactI ⟨to_finset s, fun _ => mem_to_finset⟩
+    exact ⟨to_finset s, fun _ => mem_to_finset⟩
 
 theorem finite.exists_finset_coe {s : Set α} (hs : finite s) : ∃ s' : Finset α, «expr↑ » s' = s :=
   ⟨hs.to_finset, hs.coe_to_finset⟩
@@ -162,19 +162,20 @@ theorem card_insert {a : α} (s : Set α) [Fintype s] (h : a ∉ s) {d : Fintype
   by 
     rw [←card_fintype_insert' s h] <;> congr
 
-theorem card_image_of_inj_on {s : Set α} [Fintype s] {f : α → β} [Fintype (f '' s)]
-  (H : ∀ x _ : x ∈ s, ∀ y _ : y ∈ s, f x = f y → x = y) : Fintype.card (f '' s) = Fintype.card s :=
-  by 
-    haveI  := Classical.propDecidable <;>
-      exact
-        calc Fintype.card (f '' s) = (s.to_finset.image f).card :=
-          Fintype.card_of_finset' _
-            (by 
-              simp )
-          _ = s.to_finset.card :=
-          Finset.card_image_of_inj_on fun x hx y hy hxy => H x (mem_to_finset.1 hx) y (mem_to_finset.1 hy) hxy 
-          _ = Fintype.card s := (Fintype.card_of_finset' _ fun a => mem_to_finset).symm
-          
+-- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem card_image_of_inj_on
+{s : set α}
+[fintype s]
+{f : α → β}
+[fintype «expr '' »(f, s)]
+(H : ∀
+ x «expr ∈ » s, ∀
+ y «expr ∈ » s, «expr = »(f x, f y) → «expr = »(x, y)) : «expr = »(fintype.card «expr '' »(f, s), fintype.card s) :=
+by haveI [] [] [":=", expr classical.prop_decidable]; exact [expr calc
+   «expr = »(fintype.card «expr '' »(f, s), (s.to_finset.image f).card) : fintype.card_of_finset' _ (by simp [] [] [] [] [] [])
+   «expr = »(..., s.to_finset.card) : finset.card_image_of_inj_on (λ
+    x hx y hy hxy, H x (mem_to_finset.1 hx) y (mem_to_finset.1 hy) hxy)
+   «expr = »(..., fintype.card s) : (fintype.card_of_finset' _ (λ a, mem_to_finset)).symm]
 
 theorem card_image_of_injective (s : Set α) [Fintype s] {f : α → β} [Fintype (f '' s)] (H : Function.Injective f) :
   Fintype.card (f '' s) = Fintype.card s :=
@@ -213,7 +214,7 @@ theorem finite.induction_on {C : Set α → Prop} {s : Set α} (h : finite s) (H
   (H1 : ∀ {a s}, a ∉ s → finite s → C s → C (insert a s)) : C s :=
   let ⟨t⟩ := h 
   by 
-    exactI
+    exact
       match s.to_finset, @mem_to_finset _ s _ with 
       | ⟨l, nd⟩, al =>
         by 
@@ -258,10 +259,10 @@ theorem finite_singleton (a : α) : finite ({a} : Set α) :=
 theorem subsingleton.finite {s : Set α} (h : s.subsingleton) : finite s :=
   h.induction_on finite_empty finite_singleton
 
-theorem finite_is_top (α : Type _) [PartialOrderₓ α] : finite { x : α | IsTop x } :=
+theorem finite_is_top (α : Type _) [PartialOrderₓ α] : finite { x:α | IsTop x } :=
   (subsingleton_is_top α).Finite
 
-theorem finite_is_bot (α : Type _) [PartialOrderₓ α] : finite { x : α | IsBot x } :=
+theorem finite_is_bot (α : Type _) [PartialOrderₓ α] : finite { x:α | IsBot x } :=
   (subsingleton_is_bot α).Finite
 
 instance fintype_pure : ∀ a : α, Fintype (pure a : Set α) :=
@@ -288,7 +289,7 @@ theorem univ_finite_iff_nonempty_fintype : (univ : Set α).Finite ↔ Nonempty (
       exact ⟨fintype_of_univ_finite h⟩
     ·
       rintro ⟨_i⟩
-      exactI finite_univ
+      exact finite_univ
 
 theorem infinite_univ_iff : (@univ α).Infinite ↔ _root_.infinite α :=
   ⟨fun h₁ => ⟨fun h₂ => h₁$ @finite_univ α h₂⟩, fun ⟨h₁⟩ h₂ => h₁ (fintype_of_univ_finite h₂)⟩
@@ -302,11 +303,12 @@ theorem infinite_coe_iff {s : Set α} : _root_.infinite s ↔ Infinite s :=
 theorem infinite.to_subtype {s : Set α} (h : Infinite s) : _root_.infinite s :=
   infinite_coe_iff.2 h
 
+-- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Embedding of `ℕ` into an infinite set. -/
-noncomputable def Infinite.natEmbedding (s : Set α) (h : Infinite s) : ℕ ↪ s :=
-  by 
-    haveI  := h.to_subtype 
-    exact Infinite.natEmbedding s
+noncomputable
+def infinite.nat_embedding (s : set α) (h : infinite s) : «expr ↪ »(exprℕ(), s) :=
+by { haveI [] [] [":=", expr h.to_subtype],
+  exact [expr infinite.nat_embedding s] }
 
 theorem Infinite.exists_subset_card_eq {s : Set α} (hs : Infinite s) (n : ℕ) :
   ∃ t : Finset α, «expr↑ » t ⊆ s ∧ t.card = n :=
@@ -341,7 +343,7 @@ theorem finite.infinite_compl [_root_.infinite α] {s : Set α} (hs : s.finite) 
       (by 
         simpa using hs.union h)
 
-instance fintype_sep (s : Set α) (p : α → Prop) [Fintype s] [DecidablePred p] : Fintype ({ a ∈ s | p a } : Set α) :=
+instance fintype_sep (s : Set α) (p : α → Prop) [Fintype s] [DecidablePred p] : Fintype ({ a∈s | p a } : Set α) :=
   Fintype.ofFinset (s.to_finset.filter p)$
     by 
       simp 
@@ -393,12 +395,9 @@ instance fintype_range [DecidableEq α] (f : ι → α) [Fintype (Plift ι)] : F
     by 
       simp [(@Equiv.plift ι).exists_congr_left]
 
-theorem finite_range (f : ι → α) [Fintype (Plift ι)] : finite (range f) :=
-  by 
-    haveI  := Classical.decEq α <;>
-      exact
-        ⟨by 
-            infer_instance⟩
+-- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem finite_range (f : ι → α) [fintype (plift ι)] : finite (range f) :=
+by haveI [] [] [":=", expr classical.dec_eq α]; exact [expr ⟨by apply_instance⟩]
 
 theorem finite.image {s : Set α} (f : α → β) : finite s → finite (f '' s)
 | ⟨h⟩ => ⟨@Set.fintypeImage _ _ (Classical.decEq β) _ _ h⟩
@@ -406,12 +405,16 @@ theorem finite.image {s : Set α} (f : α → β) : finite s → finite (f '' s)
 theorem infinite_of_infinite_image (f : α → β) {s : Set α} (hs : (f '' s).Infinite) : s.infinite :=
   mt (finite.image f) hs
 
-theorem finite.dependent_image {s : Set α} (hs : finite s) (F : ∀ i _ : i ∈ s, β) :
-  finite { y : β | ∃ (x : _)(hx : x ∈ s), y = F x hx } :=
-  by 
-    letI this : Fintype s := hs.fintype 
-    convert finite_range fun x : s => F x x.2
-    simp only [SetCoe.exists, Subtype.coe_mk, eq_comm]
+-- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem finite.dependent_image
+{s : set α}
+(hs : finite s)
+(F : ∀ i «expr ∈ » s, β) : finite {y : β | «expr∃ , »((x) (hx : «expr ∈ »(x, s)), «expr = »(y, F x hx))} :=
+begin
+  letI [] [":", expr fintype s] [":=", expr hs.fintype],
+  convert [] [expr finite_range (λ x : s, F x x.2)] [],
+  simp [] [] ["only"] ["[", expr set_coe.exists, ",", expr subtype.coe_mk, ",", expr eq_comm, "]"] [] []
+end
 
 theorem finite.of_preimage {f : α → β} {s : Set β} (h : finite (f ⁻¹' s)) (hf : surjective f) : finite s :=
   hf.image_preimage s ▸ h.image _
@@ -481,7 +484,7 @@ theorem finite.preimage {s : Set β} {f : α → β} (I : Set.InjOn f (f ⁻¹' 
 theorem finite.preimage_embedding {s : Set β} (f : α ↪ β) (h : s.finite) : (f ⁻¹' s).Finite :=
   finite.preimage (fun _ _ _ _ h' => f.injective h') h
 
-theorem finite_option {s : Set (Option α)} : finite s ↔ finite { x : α | some x ∈ s } :=
+theorem finite_option {s : Set (Option α)} : finite s ↔ finite { x:α | some x ∈ s } :=
   ⟨fun h => h.preimage_embedding embedding.some,
     fun h =>
       ((h.image some).insert none).Subset$
@@ -510,15 +513,15 @@ instance fintype_bUnion' [DecidableEq α] {ι : Type _} {s : Set ι} [Fintype s]
   Fintype (⋃(i : _)(_ : i ∈ s), f i) :=
   fintype_bUnion _ fun i _ => H i
 
-theorem finite.sUnion {s : Set (Set α)} (h : finite s) (H : ∀ t _ : t ∈ s, finite t) : finite (⋃₀s) :=
-  by 
-    rw [sUnion_eq_Union] <;> haveI  := finite.fintype h <;> apply finite_Union <;> simpa using H
+-- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem finite.sUnion {s : set (set α)} (h : finite s) (H : ∀ t «expr ∈ » s, finite t) : finite «expr⋃₀ »(s) :=
+by rw [expr sUnion_eq_Union] []; haveI [] [] [":=", expr finite.fintype h]; apply [expr finite_Union]; simpa [] [] [] [] [] ["using", expr H]
 
 theorem finite.bUnion {α} {ι : Type _} {s : Set ι} {f : ∀ i _ : i ∈ s, Set α} :
   finite s → (∀ i _ : i ∈ s, finite (f i ‹_›)) → finite (⋃(i : _)(_ : i ∈ s), f i ‹_›)
 | ⟨hs⟩, h =>
   by 
-    rw [bUnion_eq_Union] <;> exactI finite_Union fun i => h _ _
+    rw [bUnion_eq_Union] <;> exact finite_Union fun i => h _ _
 
 instance fintype_lt_nat (n : ℕ) : Fintype { i | i < n } :=
   Fintype.ofFinset (Finset.range n)$
@@ -549,7 +552,7 @@ instance fintype_prod (s : Set α) (t : Set β) [Fintype s] [Fintype t] : Fintyp
 theorem finite.prod {s : Set α} {t : Set β} : finite s → finite t → finite (Set.Prod s t)
 | ⟨hs⟩, ⟨ht⟩ =>
   by 
-    exactI ⟨Set.fintypeProd s t⟩
+    exact ⟨Set.fintypeProd s t⟩
 
 /-- `image2 f s t` is finitype if `s` and `t` are. -/
 instance fintype_image2 [DecidableEq γ] (f : α → β → γ) (s : Set α) (t : Set β) [hs : Fintype s] [ht : Fintype t] :
@@ -666,10 +669,10 @@ namespace Set
 theorem finite.pi {δ : Type _} [Fintype δ] {κ : δ → Type _} {t : ∀ d, Set (κ d)} (ht : ∀ d, (t d).Finite) :
   (pi univ t).Finite :=
   by 
+    lift t to ∀ d, Finset (κ d) using ht 
     classical 
-    convert (Fintype.piFinset fun d => (ht d).toFinset).finite_to_set 
-    ext 
-    simp 
+    rw [←Fintype.coe_pi_finset]
+    exact (Fintype.piFinset t).finite_to_set
 
 /-- A finite union of finsets is finite. -/
 theorem union_finset_finite_of_range_finite (f : α → Finset β) (h : (range f).Finite) : (⋃a, (f a : Set β)).Finite :=
@@ -680,7 +683,7 @@ theorem union_finset_finite_of_range_finite (f : α → Finset β) (h : (range f
 theorem finite_subset_Union {s : Set α} (hs : finite s) {ι} {t : ι → Set α} (h : s ⊆ ⋃i, t i) :
   ∃ I : Set ι, finite I ∧ s ⊆ ⋃(i : _)(_ : i ∈ I), t i :=
   by 
-    casesI hs 
+    cases' hs 
     choose f hf using
       show ∀ x : s, ∃ i, x.1 ∈ t i by 
         simpa [subset_def] using h 
@@ -867,17 +870,20 @@ theorem to_finset_union {α : Type _} [DecidableEq α] (s t : Set α) [Fintype (
   by 
     ext <;> simp 
 
-theorem to_finset_ne_eq_erase {α : Type _} [DecidableEq α] [Fintype α] (a : α) [Fintype { x : α | x ≠ a }] :
-  { x : α | x ≠ a }.toFinset = Finset.univ.erase a :=
+theorem to_finset_ne_eq_erase {α : Type _} [DecidableEq α] [Fintype α] (a : α) [Fintype { x:α | x ≠ a }] :
+  { x:α | x ≠ a }.toFinset = Finset.univ.erase a :=
   by 
     ext <;> simp 
 
-theorem card_ne_eq [Fintype α] (a : α) [Fintype { x : α | x ≠ a }] :
-  Fintype.card { x : α | x ≠ a } = Fintype.card α - 1 :=
-  by 
-    haveI  := Classical.decEq α 
-    rw [←to_finset_card, to_finset_ne_eq_erase, Finset.card_erase_of_mem (Finset.mem_univ _), Finset.card_univ,
-      Nat.pred_eq_sub_one]
+-- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem card_ne_eq
+[fintype α]
+(a : α)
+[fintype {x : α | «expr ≠ »(x, a)}] : «expr = »(fintype.card {x : α | «expr ≠ »(x, a)}, «expr - »(fintype.card α, 1)) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq α],
+  rw ["[", "<-", expr to_finset_card, ",", expr to_finset_ne_eq_erase, ",", expr finset.card_erase_of_mem (finset.mem_univ _), ",", expr finset.card_univ, ",", expr nat.pred_eq_sub_one, "]"] []
+end
 
 end DecidableEq
 
@@ -950,7 +956,7 @@ theorem card_compl_eq_card_compl (h : Fintype.card { x // p x } = Fintype.card {
 
 end Fintype
 
--- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If a set `s` does not contain any elements between any pair of elements `x, z ∈ s` with `x ≤ z`
 (i.e if given `x, y, z ∈ s` such that `x ≤ y ≤ z`, then `y` is either `x` or `z`), then `s` is

@@ -1,5 +1,4 @@
 import Mathbin.Data.Fin.VecNotation 
-import Mathbin.FieldTheory.MvPolynomial 
 import Mathbin.FieldTheory.Finite.Polynomial 
 import Mathbin.NumberTheory.Basic 
 import Mathbin.RingTheory.WittVector.WittPolynomial
@@ -153,19 +152,24 @@ theorem witt_structure_rat_exists_unique (Φ : MvPolynomial idx ℚ) :
       rw [bind₁_bind₁]
       exact eval₂_hom_congr (RingHom.ext_rat _ _) (funext H) rfl
 
-theorem witt_structure_rat_rec_aux (Φ : MvPolynomial idx ℚ) (n : ℕ) :
-  (wittStructureRat p Φ n*C (p^n : ℚ)) =
-    bind₁ (fun b => rename (fun i => (b, i)) (W_ ℚ n)) Φ - ∑i in range n, C (p^i : ℚ)*wittStructureRat p Φ i^p^n - i :=
-  by 
-    have  := X_in_terms_of_W_aux p ℚ n 
-    replace  := congr_argₓ (bind₁ fun k : ℕ => bind₁ (fun i => rename (Prod.mk i) (W_ ℚ k)) Φ) this 
-    rw [AlgHom.map_mul, bind₁_C_right] at this 
-    rw [wittStructureRat, this]
-    clear this 
-    convLHS => simp only [AlgHom.map_sub, bind₁_X_right]
-    rw [sub_right_inj]
-    simp only [AlgHom.map_sum, AlgHom.map_mul, bind₁_C_right, AlgHom.map_pow]
-    rfl
+-- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem witt_structure_rat_rec_aux
+(Φ : mv_polynomial idx exprℚ())
+(n : exprℕ()) : «expr = »(«expr * »(witt_structure_rat p Φ n, C («expr ^ »(p, n) : exprℚ())), «expr - »(bind₁ (λ
+   b, rename (λ
+    i, (b, i)) (exprW_() exprℚ() n)) Φ, «expr∑ in , »((i), range n, «expr * »(C («expr ^ »(p, i) : exprℚ()), «expr ^ »(witt_structure_rat p Φ i, «expr ^ »(p, «expr - »(n, i))))))) :=
+begin
+  have [] [] [":=", expr X_in_terms_of_W_aux p exprℚ() n],
+  replace [] [] [":=", expr congr_arg (bind₁ (λ
+     k : exprℕ(), bind₁ (λ i, rename (prod.mk i) (exprW_() exprℚ() k)) Φ)) this],
+  rw ["[", expr alg_hom.map_mul, ",", expr bind₁_C_right, "]"] ["at", ident this],
+  rw ["[", expr witt_structure_rat, ",", expr this, "]"] [],
+  clear [ident this],
+  conv_lhs [] [] { simp ["only"] ["[", expr alg_hom.map_sub, ",", expr bind₁_X_right, "]"] [] },
+  rw [expr sub_right_inj] [],
+  simp [] [] ["only"] ["[", expr alg_hom.map_sum, ",", expr alg_hom.map_mul, ",", expr bind₁_C_right, ",", expr alg_hom.map_pow, "]"] [] [],
+  refl
+end
 
 /-- Write `witt_structure_rat p φ n` in terms of `witt_structure_rat p φ i` for `i < n`. -/
 theorem witt_structure_rat_rec (Φ : MvPolynomial idx ℚ) (n : ℕ) :
@@ -198,107 +202,105 @@ noncomputable def wittStructureInt (Φ : MvPolynomial idx ℤ) (n : ℕ) : MvPol
 
 variable{p}
 
-theorem bind₁_rename_expand_witt_polynomial (Φ : MvPolynomial idx ℤ) (n : ℕ)
-  (IH :
-    ∀ m : ℕ,
-      (m < n+1) → map (Int.castRingHom ℚ) (wittStructureInt p Φ m) = wittStructureRat p (map (Int.castRingHom ℚ) Φ) m) :
-  bind₁ (fun b => rename (fun i => (b, i)) (expand p (W_ ℤ n))) Φ =
-    bind₁ (fun i => expand p (wittStructureInt p Φ i)) (W_ ℤ n) :=
-  by 
-    apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective 
-    simp only [map_bind₁, map_rename, map_expand, rename_expand, map_witt_polynomial]
-    have key := (witt_structure_rat_prop p (map (Int.castRingHom ℚ) Φ) n).symm 
-    applyFun expand p  at key 
-    simp only [expand_bind₁] at key 
-    rw [key]
-    clear key 
-    apply eval₂_hom_congr' rfl _ rfl 
-    rintro i hi -
-    rw [witt_polynomial_vars, Finset.mem_range] at hi 
-    simp only [IH i hi]
+-- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem bind₁_rename_expand_witt_polynomial
+(Φ : mv_polynomial idx exprℤ())
+(n : exprℕ())
+(IH : ∀
+ m : exprℕ(), «expr < »(m, «expr + »(n, 1)) → «expr = »(map (int.cast_ring_hom exprℚ()) (witt_structure_int p Φ m), witt_structure_rat p (map (int.cast_ring_hom exprℚ()) Φ) m)) : «expr = »(bind₁ (λ
+  b, rename (λ
+   i, (b, i)) (expand p (exprW_() exprℤ() n))) Φ, bind₁ (λ
+  i, expand p (witt_structure_int p Φ i)) (exprW_() exprℤ() n)) :=
+begin
+  apply [expr mv_polynomial.map_injective (int.cast_ring_hom exprℚ()) int.cast_injective],
+  simp [] [] ["only"] ["[", expr map_bind₁, ",", expr map_rename, ",", expr map_expand, ",", expr rename_expand, ",", expr map_witt_polynomial, "]"] [] [],
+  have [ident key] [] [":=", expr (witt_structure_rat_prop p (map (int.cast_ring_hom exprℚ()) Φ) n).symm],
+  apply_fun [expr expand p] ["at", ident key] [],
+  simp [] [] ["only"] ["[", expr expand_bind₁, "]"] [] ["at", ident key],
+  rw [expr key] [],
+  clear [ident key],
+  apply [expr eval₂_hom_congr' rfl _ rfl],
+  rintro [ident i, ident hi, "-"],
+  rw ["[", expr witt_polynomial_vars, ",", expr finset.mem_range, "]"] ["at", ident hi],
+  simp [] [] ["only"] ["[", expr IH i hi, "]"] [] []
+end
 
-theorem C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum (Φ : MvPolynomial idx ℤ) (n : ℕ)
-  (IH :
-    ∀ m : ℕ,
-      m < n → map (Int.castRingHom ℚ) (wittStructureInt p Φ m) = wittStructureRat p (map (Int.castRingHom ℚ) Φ) m) :
-  C («expr↑ » (p^n)) ∣
-    bind₁ (fun b : idx => rename (fun i => (b, i)) (wittPolynomial p ℤ n)) Φ -
-      ∑i in range n, C («expr↑ » p^i)*wittStructureInt p Φ i^p^n - i :=
-  by 
-    cases n
-    ·
-      simp only [is_unit_one, Int.coe_nat_zero, Int.coe_nat_succ, zero_addₓ, pow_zeroₓ, C_1, IsUnit.dvd]
-    have key := bind₁_rename_expand_witt_polynomial Φ n IH 
-    applyFun map (Int.castRingHom (Zmod (p^n+1)))  at key 
-    convLHS at key => simp only [map_bind₁, map_rename, map_expand, map_witt_polynomial]
-    rw [Nat.succ_eq_add_one, C_dvd_iff_zmod, RingHom.map_sub, sub_eq_zero, map_bind₁]
-    simp only [map_rename, map_witt_polynomial, witt_polynomial_zmod_self]
-    rw [key]
-    clear key IH 
-    rw [bind₁, aeval_witt_polynomial, RingHom.map_sum, RingHom.map_sum, Finset.sum_congr rfl]
-    intro k hk 
-    rw [Finset.mem_range, Nat.lt_succ_iff] at hk 
-    simp only [←sub_eq_zero, ←RingHom.map_sub, ←C_dvd_iff_zmod, C_eq_coe_nat, ←mul_sub, ←Int.nat_cast_eq_coe_nat,
-      ←Nat.cast_pow]
-    rw
-      [show (p^n+1) = (p^k)*p^(n - k)+1by 
-        rw [←pow_addₓ, ←add_assocₓ]
-        congr 2
-        rw [add_commₓ, ←tsub_eq_iff_eq_add_of_le hk]]
-    rw [Nat.cast_mul, Nat.cast_pow, Nat.cast_pow]
-    apply mul_dvd_mul_left 
-    rw
-      [show (p^(n+1) - k) = p*p^n - k by 
-        rw [←pow_succₓ, ←tsub_add_eq_add_tsub hk]]
-    rw [pow_mulₓ]
-    apply dvd_sub_pow_of_dvd_sub 
-    rw [←C_eq_coe_nat, Int.nat_cast_eq_coe_nat, C_dvd_iff_zmod, RingHom.map_sub, sub_eq_zero, map_expand,
-      RingHom.map_pow, MvPolynomial.expand_zmod]
+-- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum
+(Φ : mv_polynomial idx exprℤ())
+(n : exprℕ())
+(IH : ∀
+ m : exprℕ(), «expr < »(m, n) → «expr = »(map (int.cast_ring_hom exprℚ()) (witt_structure_int p Φ m), witt_structure_rat p (map (int.cast_ring_hom exprℚ()) Φ) m)) : «expr ∣ »(C «expr↑ »(«expr ^ »(p, n)), «expr - »(bind₁ (λ
+   b : idx, rename (λ
+    i, (b, i)) (witt_polynomial p exprℤ() n)) Φ, «expr∑ in , »((i), range n, «expr * »(C «expr ^ »(«expr↑ »(p), i), «expr ^ »(witt_structure_int p Φ i, «expr ^ »(p, «expr - »(n, i))))))) :=
+begin
+  cases [expr n] [],
+  { simp [] [] ["only"] ["[", expr is_unit_one, ",", expr int.coe_nat_zero, ",", expr int.coe_nat_succ, ",", expr zero_add, ",", expr pow_zero, ",", expr C_1, ",", expr is_unit.dvd, "]"] [] [] },
+  have [ident key] [] [":=", expr bind₁_rename_expand_witt_polynomial Φ n IH],
+  apply_fun [expr map (int.cast_ring_hom (zmod «expr ^ »(p, «expr + »(n, 1))))] ["at", ident key] [],
+  conv_lhs ["at", ident key] [] { simp ["only"] ["[", expr map_bind₁, ",", expr map_rename, ",", expr map_expand, ",", expr map_witt_polynomial, "]"] [] },
+  rw ["[", expr nat.succ_eq_add_one, ",", expr C_dvd_iff_zmod, ",", expr ring_hom.map_sub, ",", expr sub_eq_zero, ",", expr map_bind₁, "]"] [],
+  simp [] [] ["only"] ["[", expr map_rename, ",", expr map_witt_polynomial, ",", expr witt_polynomial_zmod_self, "]"] [] [],
+  rw [expr key] [],
+  clear [ident key, ident IH],
+  rw ["[", expr bind₁, ",", expr aeval_witt_polynomial, ",", expr ring_hom.map_sum, ",", expr ring_hom.map_sum, ",", expr finset.sum_congr rfl, "]"] [],
+  intros [ident k, ident hk],
+  rw ["[", expr finset.mem_range, ",", expr nat.lt_succ_iff, "]"] ["at", ident hk],
+  simp [] [] ["only"] ["[", "<-", expr sub_eq_zero, ",", "<-", expr ring_hom.map_sub, ",", "<-", expr C_dvd_iff_zmod, ",", expr C_eq_coe_nat, ",", "<-", expr mul_sub, ",", "<-", expr int.nat_cast_eq_coe_nat, ",", "<-", expr nat.cast_pow, "]"] [] [],
+  rw [expr show «expr = »(«expr ^ »(p, «expr + »(n, 1)), «expr * »(«expr ^ »(p, k), «expr ^ »(p, «expr + »(«expr - »(n, k), 1)))), { rw ["[", "<-", expr pow_add, ",", "<-", expr add_assoc, "]"] [],
+     congr' [2] [],
+     rw ["[", expr add_comm, ",", "<-", expr tsub_eq_iff_eq_add_of_le hk, "]"] [] }] [],
+  rw ["[", expr nat.cast_mul, ",", expr nat.cast_pow, ",", expr nat.cast_pow, "]"] [],
+  apply [expr mul_dvd_mul_left],
+  rw [expr show «expr = »(«expr ^ »(p, «expr - »(«expr + »(n, 1), k)), «expr * »(p, «expr ^ »(p, «expr - »(n, k)))), { rw ["[", "<-", expr pow_succ, ",", "<-", expr tsub_add_eq_add_tsub hk, "]"] [] }] [],
+  rw ["[", expr pow_mul, "]"] [],
+  apply [expr dvd_sub_pow_of_dvd_sub],
+  rw ["[", "<-", expr C_eq_coe_nat, ",", expr int.nat_cast_eq_coe_nat, ",", expr C_dvd_iff_zmod, ",", expr ring_hom.map_sub, ",", expr sub_eq_zero, ",", expr map_expand, ",", expr ring_hom.map_pow, ",", expr mv_polynomial.expand_zmod, "]"] []
+end
 
 variable(p)
 
+-- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem map_witt_structure_int (Φ : MvPolynomial idx ℤ) (n : ℕ) :
-  map (Int.castRingHom ℚ) (wittStructureInt p Φ n) = wittStructureRat p (map (Int.castRingHom ℚ) Φ) n :=
-  by 
-    apply Nat.strong_induction_onₓ n 
-    clear n 
-    intro n IH 
-    rw [wittStructureInt, map_map_range_eq_iff, Int.coe_cast_ring_hom]
-    intro c 
-    rw [witt_structure_rat_rec, coeff_C_mul, mul_commₓ, mul_div_assoc', mul_oneₓ]
-    have sum_induction_steps :
-      map (Int.castRingHom ℚ) (∑i in range n, C (p^i : ℤ)*wittStructureInt p Φ i^p^n - i) =
-        ∑i in range n, C (p^i : ℚ)*wittStructureRat p (map (Int.castRingHom ℚ) Φ) i^p^n - i
-    ·
-      rw [RingHom.map_sum]
-      apply Finset.sum_congr rfl 
-      intro i hi 
-      rw [Finset.mem_range] at hi 
-      simp only [IH i hi, RingHom.map_mul, RingHom.map_pow, map_C]
-      rfl 
-    simp only [←sum_induction_steps, ←map_witt_polynomial p (Int.castRingHom ℚ), ←map_rename, ←map_bind₁,
-      ←RingHom.map_sub, coeff_map]
-    rw
-      [show ((p : ℚ)^n) = ((p^n : ℕ) : ℤ)by 
-        normCast]
-    rw [←Rat.denom_eq_one_iff, RingHom.eq_int_cast, Rat.denom_div_cast_eq_one_iff]
-    swap
-    ·
-      exactModCast pow_ne_zero n hp.1.ne_zero 
-    revert c 
-    rw [←C_dvd_iff_dvd_coeff]
-    exact C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum Φ n IH
+theorem map_witt_structure_int
+(Φ : mv_polynomial idx exprℤ())
+(n : exprℕ()) : «expr = »(map (int.cast_ring_hom exprℚ()) (witt_structure_int p Φ n), witt_structure_rat p (map (int.cast_ring_hom exprℚ()) Φ) n) :=
+begin
+  apply [expr nat.strong_induction_on n],
+  clear [ident n],
+  intros [ident n, ident IH],
+  rw ["[", expr witt_structure_int, ",", expr map_map_range_eq_iff, ",", expr int.coe_cast_ring_hom, "]"] [],
+  intro [ident c],
+  rw ["[", expr witt_structure_rat_rec, ",", expr coeff_C_mul, ",", expr mul_comm, ",", expr mul_div_assoc', ",", expr mul_one, "]"] [],
+  have [ident sum_induction_steps] [":", expr «expr = »(map (int.cast_ring_hom exprℚ()) «expr∑ in , »((i), range n, «expr * »(C («expr ^ »(p, i) : exprℤ()), «expr ^ »(witt_structure_int p Φ i, «expr ^ »(p, «expr - »(n, i))))), «expr∑ in , »((i), range n, «expr * »(C («expr ^ »(p, i) : exprℚ()), «expr ^ »(witt_structure_rat p (map (int.cast_ring_hom exprℚ()) Φ) i, «expr ^ »(p, «expr - »(n, i))))))] [],
+  { rw ["[", expr ring_hom.map_sum, "]"] [],
+    apply [expr finset.sum_congr rfl],
+    intros [ident i, ident hi],
+    rw [expr finset.mem_range] ["at", ident hi],
+    simp [] [] ["only"] ["[", expr IH i hi, ",", expr ring_hom.map_mul, ",", expr ring_hom.map_pow, ",", expr map_C, "]"] [] [],
+    refl },
+  simp [] [] ["only"] ["[", "<-", expr sum_induction_steps, ",", "<-", expr map_witt_polynomial p (int.cast_ring_hom exprℚ()), ",", "<-", expr map_rename, ",", "<-", expr map_bind₁, ",", "<-", expr ring_hom.map_sub, ",", expr coeff_map, "]"] [] [],
+  rw [expr show «expr = »(«expr ^ »((p : exprℚ()), n), ((«expr ^ »(p, n) : exprℕ()) : exprℤ())), by norm_cast []] [],
+  rw ["[", "<-", expr rat.denom_eq_one_iff, ",", expr ring_hom.eq_int_cast, ",", expr rat.denom_div_cast_eq_one_iff, "]"] [],
+  swap,
+  { exact_mod_cast [expr pow_ne_zero n hp.1.ne_zero] },
+  revert [ident c],
+  rw ["[", "<-", expr C_dvd_iff_dvd_coeff, "]"] [],
+  exact [expr C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum Φ n IH]
+end
 
 variable(p)
 
-theorem witt_structure_int_prop (Φ : MvPolynomial idx ℤ) n :
-  bind₁ (wittStructureInt p Φ) (wittPolynomial p ℤ n) = bind₁ (fun i => rename (Prod.mk i) (W_ ℤ n)) Φ :=
-  by 
-    apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective 
-    have  := witt_structure_rat_prop p (map (Int.castRingHom ℚ) Φ) n 
-    simpa only [map_bind₁, ←eval₂_hom_map_hom, eval₂_hom_C_left, map_rename, map_witt_polynomial,
-      AlgHom.coe_to_ring_hom, map_witt_structure_int]
+-- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem witt_structure_int_prop
+(Φ : mv_polynomial idx exprℤ())
+(n) : «expr = »(bind₁ (witt_structure_int p Φ) (witt_polynomial p exprℤ() n), bind₁ (λ
+  i, rename (prod.mk i) (exprW_() exprℤ() n)) Φ) :=
+begin
+  apply [expr mv_polynomial.map_injective (int.cast_ring_hom exprℚ()) int.cast_injective],
+  have [] [] [":=", expr witt_structure_rat_prop p (map (int.cast_ring_hom exprℚ()) Φ) n],
+  simpa [] [] ["only"] ["[", expr map_bind₁, ",", "<-", expr eval₂_hom_map_hom, ",", expr eval₂_hom_C_left, ",", expr map_rename, ",", expr map_witt_polynomial, ",", expr alg_hom.coe_to_ring_hom, ",", expr map_witt_structure_int, "]"] [] []
+end
 
 theorem eq_witt_structure_int (Φ : MvPolynomial idx ℤ) (φ : ℕ → MvPolynomial (idx × ℕ) ℤ)
   (h : ∀ n, bind₁ φ (wittPolynomial p ℤ n) = bind₁ (fun i => rename (Prod.mk i) (W_ ℤ n)) Φ) :
@@ -355,27 +357,31 @@ theorem constant_coeff_witt_structure_rat (Φ : MvPolynomial idx ℚ) (h : const
     simp only [wittStructureRat, eval₂_hom_zero', h, bind₁, map_aeval, constant_coeff_rename,
       constant_coeff_witt_polynomial, constant_coeff_comp_algebra_map, RingHom.id_apply, constant_coeff_X_in_terms_of_W]
 
+-- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem constant_coeff_witt_structure_int_zero (Φ : MvPolynomial idx ℤ) :
-  constant_coeff (wittStructureInt p Φ 0) = constant_coeff Φ :=
-  by 
-    have inj : Function.Injective (Int.castRingHom ℚ)
-    ·
-      intro m n 
-      exact int.cast_inj.mp 
-    apply inj 
-    rw [←constant_coeff_map, map_witt_structure_int, constant_coeff_witt_structure_rat_zero, constant_coeff_map]
+theorem constant_coeff_witt_structure_int_zero
+(Φ : mv_polynomial idx exprℤ()) : «expr = »(constant_coeff (witt_structure_int p Φ 0), constant_coeff Φ) :=
+begin
+  have [ident inj] [":", expr function.injective (int.cast_ring_hom exprℚ())] [],
+  { intros [ident m, ident n],
+    exact [expr int.cast_inj.mp] },
+  apply [expr inj],
+  rw ["[", "<-", expr constant_coeff_map, ",", expr map_witt_structure_int, ",", expr constant_coeff_witt_structure_rat_zero, ",", expr constant_coeff_map, "]"] []
+end
 
-theorem constant_coeff_witt_structure_int (Φ : MvPolynomial idx ℤ) (h : constant_coeff Φ = 0) (n : ℕ) :
-  constant_coeff (wittStructureInt p Φ n) = 0 :=
-  by 
-    have inj : Function.Injective (Int.castRingHom ℚ)
-    ·
-      intro m n 
-      exact int.cast_inj.mp 
-    apply inj 
-    rw [←constant_coeff_map, map_witt_structure_int, constant_coeff_witt_structure_rat, RingHom.map_zero]
-    rw [constant_coeff_map, h, RingHom.map_zero]
+-- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem constant_coeff_witt_structure_int
+(Φ : mv_polynomial idx exprℤ())
+(h : «expr = »(constant_coeff Φ, 0))
+(n : exprℕ()) : «expr = »(constant_coeff (witt_structure_int p Φ n), 0) :=
+begin
+  have [ident inj] [":", expr function.injective (int.cast_ring_hom exprℚ())] [],
+  { intros [ident m, ident n],
+    exact [expr int.cast_inj.mp] },
+  apply [expr inj],
+  rw ["[", "<-", expr constant_coeff_map, ",", expr map_witt_structure_int, ",", expr constant_coeff_witt_structure_rat, ",", expr ring_hom.map_zero, "]"] [],
+  rw ["[", expr constant_coeff_map, ",", expr h, ",", expr ring_hom.map_zero, "]"] []
+end
 
 variable(R)
 
@@ -393,12 +399,16 @@ theorem witt_structure_rat_vars [Fintype idx] (Φ : MvPolynomial idx ℚ) (n : �
     rw [Finset.mem_range] at hk 
     exact lt_of_lt_of_leₓ hj hk
 
-theorem witt_structure_int_vars [Fintype idx] (Φ : MvPolynomial idx ℤ) (n : ℕ) :
-  (wittStructureInt p Φ n).vars ⊆ Finset.univ.product (Finset.range (n+1)) :=
-  by 
-    have  : Function.Injective (Int.castRingHom ℚ) := Int.cast_injective 
-    rw [←vars_map_of_injective _ this, map_witt_structure_int]
-    apply witt_structure_rat_vars
+-- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem witt_structure_int_vars
+[fintype idx]
+(Φ : mv_polynomial idx exprℤ())
+(n : exprℕ()) : «expr ⊆ »((witt_structure_int p Φ n).vars, finset.univ.product (finset.range «expr + »(n, 1))) :=
+begin
+  have [] [":", expr function.injective (int.cast_ring_hom exprℚ())] [":=", expr int.cast_injective],
+  rw ["[", "<-", expr vars_map_of_injective _ this, ",", expr map_witt_structure_int, "]"] [],
+  apply [expr witt_structure_rat_vars]
+end
 
 end PPrime
 

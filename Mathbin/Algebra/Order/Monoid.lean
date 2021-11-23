@@ -360,19 +360,25 @@ theorem coe_add_eq_top_iff [Add α] {x : α} {y : WithTop α} : («expr↑ » x+
   by 
     induction y using WithTop.recTopCoe <;> simp [←coe_add, -WithZero.coe_add]
 
--- error in Algebra.Order.Monoid: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-instance [add_semigroup α] : add_semigroup (with_top α) :=
-{ add_assoc := begin
-    repeat { refine [expr with_top.rec_top_coe _ _]; try { intro [] } }; simp [] [] [] ["[", "<-", expr with_top.coe_add, ",", expr add_assoc, "]"] [] []
-  end,
-  ..with_top.has_add }
+instance  [AddSemigroupₓ α] : AddSemigroupₓ (WithTop α) :=
+  { WithTop.hasAdd with
+    add_assoc :=
+      by 
+        repeat' 
+            refine' WithTop.recTopCoe _ _ <;>
+              try 
+                intro  <;>
+          simp [←WithTop.coe_add, add_assocₓ] }
 
--- error in Algebra.Order.Monoid: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-instance [add_comm_semigroup α] : add_comm_semigroup (with_top α) :=
-{ add_comm := begin
-    repeat { refine [expr with_top.rec_top_coe _ _]; try { intro [] } }; simp [] [] [] ["[", "<-", expr with_top.coe_add, ",", expr add_comm, "]"] [] []
-  end,
-  ..with_top.add_semigroup }
+instance  [AddCommSemigroupₓ α] : AddCommSemigroupₓ (WithTop α) :=
+  { WithTop.addSemigroup with
+    add_comm :=
+      by 
+        repeat' 
+            refine' WithTop.recTopCoe _ _ <;>
+              try 
+                intro  <;>
+          simp [←WithTop.coe_add, add_commₓ] }
 
 instance  [AddMonoidₓ α] : AddMonoidₓ (WithTop α) :=
   { WithTop.hasZero, WithTop.addSemigroup with

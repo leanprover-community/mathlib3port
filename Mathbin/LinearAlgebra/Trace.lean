@@ -90,12 +90,10 @@ theorem trace_eq_matrix_trace_of_finset {s : Finset M} (b : Basis s R M) (f : M 
     congr 1
     apply trace_aux_eq
 
-theorem trace_eq_matrix_trace (f : M →ₗ[R] M) : trace R M f = Matrix.trace ι R R (LinearMap.toMatrix b b f) :=
-  if hR : Nontrivial R then
-    by 
-      haveI  := hR <;>
-        rw [trace_eq_matrix_trace_of_finset R b.reindex_finset_range, ←trace_aux_def, ←trace_aux_def, trace_aux_eq R b]
-  else @Subsingleton.elimₓ _ (not_nontrivial_iff_subsingleton.mp hR) _ _
+-- error in LinearAlgebra.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem trace_eq_matrix_trace
+(f : «expr →ₗ[ ] »(M, R, M)) : «expr = »(trace R M f, matrix.trace ι R R (linear_map.to_matrix b b f)) :=
+if hR : nontrivial R then by haveI [] [] [":=", expr hR]; rw ["[", expr trace_eq_matrix_trace_of_finset R b.reindex_finset_range, ",", "<-", expr trace_aux_def, ",", "<-", expr trace_aux_def, ",", expr trace_aux_eq R b, "]"] [] else @subsingleton.elim _ (not_nontrivial_iff_subsingleton.mp hR) _ _
 
 theorem trace_mul_comm (f g : M →ₗ[R] M) : trace R M (f*g) = trace R M (g*f) :=
   if H : ∃ s : Finset M, Nonempty (Basis s R M) then

@@ -1,4 +1,5 @@
-import Mathbin.CategoryTheory.NaturalIsomorphism
+import Mathbin.CategoryTheory.Isomorphism 
+import Mathbin.CategoryTheory.FunctorCategory
 
 /-!
 # Whiskering

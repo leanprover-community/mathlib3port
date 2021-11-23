@@ -14,7 +14,7 @@ namespace PartialOrderₓₓ
 instance  : bundled_hom.parent_projection @PartialOrderₓ.toPreorder :=
   ⟨⟩
 
--- error in Order.Category.PartialOrder: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Order.Category.PartialOrder: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] PartialOrder
 
 instance  : CoeSort PartialOrderₓₓ (Type _) :=

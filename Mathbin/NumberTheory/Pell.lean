@@ -131,10 +131,9 @@ def az : ℤ :=
 
 end 
 
-theorem asq_pos : 0 < a*a :=
-  le_transₓ (le_of_ltₓ a1)
-    (by 
-      have  := @Nat.mul_le_mul_leftₓ 1 a a (le_of_ltₓ a1) <;> rwa [mul_oneₓ] at this)
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem asq_pos : «expr < »(0, «expr * »(a, a)) :=
+le_trans (le_of_lt a1) (by have [] [] [":=", expr @nat.mul_le_mul_left 1 a a (le_of_lt a1)]; rwa [expr mul_one] ["at", ident this])
 
 theorem dz_val : «expr↑ » d = (az*az) - 1 :=
   have  : 1 ≤ a*a := asq_pos 
@@ -210,13 +209,18 @@ theorem is_pell_pell_zd : ∀ n : ℕ, is_pell (pell_zd n)
 theorem pell_eqz (n : ℕ) : ((xz n*xz n) - (d*yz n)*yz n) = 1 :=
   is_pell_pell_zd n
 
--- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 @[simp]
-theorem pell_eq (n : exprℕ()) : «expr = »(«expr - »(«expr * »(xn n, xn n), «expr * »(«expr * »(d, yn n), yn n)), 1) :=
-let pn := pell_eqz n in
-have h : «expr = »(«expr - »((«expr↑ »(«expr * »(xn n, xn n)) : exprℤ()), «expr↑ »(«expr * »(«expr * »(d, yn n), yn n))), 1), by repeat { rw [expr int.coe_nat_mul] [] }; exact [expr pn],
-have hl : «expr ≤ »(«expr * »(«expr * »(d, yn n), yn n), «expr * »(xn n, xn n)), from «expr $ »(int.le_of_coe_nat_le_coe_nat, «expr $ »(int.le.intro, «expr $ »(add_eq_of_eq_sub', eq.symm h))),
-int.coe_nat_inj (by rw [expr int.coe_nat_sub hl] []; exact [expr h])
+theorem pell_eq (n : ℕ) : ((xn n*xn n) - (d*yn n)*yn n) = 1 :=
+  let pn := pell_eqz n 
+  have h : («expr↑ » (xn n*xn n) : ℤ) - «expr↑ » ((d*yn n)*yn n) = 1 :=
+    by 
+      repeat' 
+          rw [Int.coe_nat_mul] <;>
+        exact pn 
+  have hl : ((d*yn n)*yn n) ≤ xn n*xn n := Int.le_of_coe_nat_le_coe_nat$ Int.Le.intro$ add_eq_of_eq_sub'$ Eq.symm h 
+  Int.coe_nat_inj
+    (by 
+      rw [Int.coe_nat_subₓ hl] <;> exact h)
 
 instance dnsq : Zsqrtd.Nonsquare d :=
   ⟨fun n h =>
@@ -244,18 +248,18 @@ theorem xn_ge_a_pow : ∀ n : ℕ, a ^ n ≤ xn n
   by 
     simp [pow_succ'ₓ] <;> exact le_transₓ (Nat.mul_le_mul_rightₓ _ (xn_ge_a_pow n)) (Nat.le_add_rightₓ _ _)
 
-theorem n_lt_a_pow : ∀ n : ℕ, n < a ^ n
-| 0 => Nat.le_reflₓ 1
-| n+1 =>
-  by 
-    have IH := n_lt_a_pow n 
-    have  : ((a ^ n)+a ^ n) ≤ (a ^ n)*a
-    ·
-      rw [←mul_two]
-      exact Nat.mul_le_mul_leftₓ _ a1 
-    simp [pow_succ'ₓ]
-    refine' lt_of_lt_of_leₓ _ this 
-    exact add_lt_add_of_lt_of_le IH (lt_of_le_of_ltₓ (Nat.zero_leₓ _) IH)
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem n_lt_a_pow : ∀ n : exprℕ(), «expr < »(n, «expr ^ »(a, n))
+| 0 := nat.le_refl 1
+| «expr + »(n, 1) := begin
+  have [ident IH] [] [":=", expr n_lt_a_pow n],
+  have [] [":", expr «expr ≤ »(«expr + »(«expr ^ »(a, n), «expr ^ »(a, n)), «expr * »(«expr ^ »(a, n), a))] [],
+  { rw ["<-", expr mul_two] [],
+    exact [expr nat.mul_le_mul_left _ a1] },
+  simp [] [] [] ["[", expr pow_succ', "]"] [] [],
+  refine [expr lt_of_lt_of_le _ this],
+  exact [expr add_lt_add_of_lt_of_le IH (lt_of_le_of_lt (nat.zero_le _) IH)]
+end
 
 theorem n_lt_xn n : n < xn n :=
   lt_of_lt_of_leₓ (n_lt_a_pow n) (xn_ge_a_pow n)
@@ -263,64 +267,27 @@ theorem n_lt_xn n : n < xn n :=
 theorem x_pos n : 0 < xn n :=
   lt_of_le_of_ltₓ (Nat.zero_leₓ n) (n_lt_xn n)
 
-theorem eq_pell_lem : ∀ n b : ℤ√d, 1 ≤ b → is_pell b → b ≤ pell_zd n → ∃ n, b = pell_zd n
-| 0, b => fun h1 hp hl => ⟨0, @Zsqrtd.le_antisymm _ dnsq _ _ hl h1⟩
-| n+1, b =>
-  fun h1 hp h =>
-    have a1p : (0 : ℤ√d) ≤ ⟨a, 1⟩ := trivialₓ 
-    have am1p : (0 : ℤ√d) ≤ ⟨a, -1⟩ :=
-      show (_ : Nat) ≤ _ by 
-        simp  <;> exact Nat.pred_leₓ _ 
-    have a1m : (⟨a, 1⟩*⟨a, -1⟩ : ℤ√d) = 1 := is_pell_norm.1 is_pell_one 
-    if ha : (⟨«expr↑ » a, 1⟩ : ℤ√d) ≤ b then
-      let ⟨m, e⟩ :=
-        eq_pell_lem n (b*⟨a, -1⟩)
-          (by 
-            rw [←a1m] <;> exact mul_le_mul_of_nonneg_right ha am1p)
-          (is_pell_mul hp (is_pell_conj.1 is_pell_one))
-          (by 
-            have t := mul_le_mul_of_nonneg_right h am1p <;> rwa [pell_zd_succ, mul_assocₓ, a1m, mul_oneₓ] at t)
-      ⟨m+1,
-        by 
-          rw
-            [show b = (b*⟨a, -1⟩)*⟨a, 1⟩by 
-              rw [mul_assocₓ, Eq.trans (mul_commₓ _ _) a1m] <;> simp ,
-            pell_zd_succ, e]⟩
-    else
-      suffices ¬1 < b from ⟨0, show b = 1 from (Or.resolve_left (lt_or_eq_of_leₓ h1) this).symm⟩
-      fun h1l =>
-        by 
-          cases' b with x y <;>
-            exact
-              have bm : (_*⟨_, _⟩ : ℤ√d a1) = 1 := Pell.is_pell_norm.1 hp 
-              have y0l : (0 : ℤ√d a1) < ⟨x - x, y - -y⟩ :=
-                sub_lt_sub h1l$
-                  fun hn : (1 : ℤ√d a1) ≤ ⟨x, -y⟩ =>
-                    by 
-                      have t := mul_le_mul_of_nonneg_left hn (le_transₓ zero_le_one h1) <;>
-                        rw [bm, mul_oneₓ] at t <;> exact h1l t 
-              have yl2 : (⟨_, _⟩ : ℤ√_) < ⟨_, _⟩ :=
-                show (⟨x, y⟩ - ⟨x, -y⟩ : ℤ√d a1) < ⟨a, 1⟩ - ⟨a, -1⟩ from
-                  sub_lt_sub
-                      (by 
-                        exact ha)$
-                    fun hn : (⟨x, -y⟩ : ℤ√d a1) ≤ ⟨a, -1⟩ =>
-                      by 
-                        have t :=
-                            mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hn (le_transₓ zero_le_one h1)) a1p <;>
-                          rw [bm, one_mulₓ, mul_assocₓ, Eq.trans (mul_commₓ _ _) a1m, mul_oneₓ] at t <;> exact ha t 
-              by 
-                simp  at y0l <;>
-                  simp  at yl2 <;>
-                    exact
-                      match y, y0l, (yl2 : (⟨_, _⟩ : ℤ√_) < ⟨_, _⟩) with 
-                      | 0, y0l, yl2 => y0l (le_reflₓ 0)
-                      | (y+1 : ℕ), y0l, yl2 =>
-                        yl2
-                          (Zsqrtd.le_of_le_le (le_reflₓ 0)
-                            (let t := Int.coe_nat_le_coe_nat_of_le (Nat.succ_posₓ y)
-                            add_le_add t t))
-                      | -[1+ y], y0l, yl2 => y0l trivialₓ
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_pell_lem : ∀
+(n)
+(b : «exprℤ√ »(d)), «expr ≤ »(1, b) → is_pell b → «expr ≤ »(b, pell_zd n) → «expr∃ , »((n), «expr = »(b, pell_zd n))
+| 0, b := λ h1 hp hl, ⟨0, @zsqrtd.le_antisymm _ dnsq _ _ hl h1⟩
+| «expr + »(n, 1), b := λ h1 hp h, have a1p : «expr ≤ »((0 : «exprℤ√ »(d)), ⟨a, 1⟩), from trivial,
+have am1p : «expr ≤ »((0 : «exprℤ√ »(d)), ⟨a, «expr- »(1)⟩), from show «expr ≤ »((_ : nat), _), by simp [] [] [] [] [] []; exact [expr nat.pred_le _],
+have a1m : «expr = »((«expr * »(⟨a, 1⟩, ⟨a, «expr- »(1)⟩) : «exprℤ√ »(d)), 1), from is_pell_norm.1 is_pell_one,
+if ha : «expr ≤ »((⟨«expr↑ »(a), 1⟩ : «exprℤ√ »(d)), b) then let ⟨m, e⟩ := eq_pell_lem n «expr * »(b, ⟨a, «expr- »(1)⟩) (by rw ["<-", expr a1m] []; exact [expr mul_le_mul_of_nonneg_right ha am1p]) (is_pell_mul hp (is_pell_conj.1 is_pell_one)) (by have [ident t] [] [":=", expr mul_le_mul_of_nonneg_right h am1p]; rwa ["[", expr pell_zd_succ, ",", expr mul_assoc, ",", expr a1m, ",", expr mul_one, "]"] ["at", ident t]) in
+⟨«expr + »(m, 1), by rw ["[", expr show «expr = »(b, «expr * »(«expr * »(b, ⟨a, «expr- »(1)⟩), ⟨a, 1⟩)), by rw ["[", expr mul_assoc, ",", expr eq.trans (mul_comm _ _) a1m, "]"] []; simp [] [] [] [] [] [], ",", expr pell_zd_succ, ",", expr e, "]"] []⟩ else suffices «expr¬ »(«expr < »(1, b)), from ⟨0, show «expr = »(b, 1), from (or.resolve_left (lt_or_eq_of_le h1) this).symm⟩,
+λ
+h1l, by cases [expr b] ["with", ident x, ident y]; exact [expr have bm : «expr = »((«expr * »(_, ⟨_, _⟩) : «exprℤ√ »(d a1)), 1), from pell.is_pell_norm.1 hp,
+ have y0l : «expr < »((0 : «exprℤ√ »(d a1)), ⟨«expr - »(x, x), «expr - »(y, «expr- »(y))⟩), from «expr $ »(sub_lt_sub h1l, λ
+  hn : «expr ≤ »((1 : «exprℤ√ »(d a1)), ⟨x, «expr- »(y)⟩), by have [ident t] [] [":=", expr mul_le_mul_of_nonneg_left hn (le_trans zero_le_one h1)]; rw ["[", expr bm, ",", expr mul_one, "]"] ["at", ident t]; exact [expr h1l t]),
+ have yl2 : «expr < »((⟨_, _⟩ : «exprℤ√ »(_)), ⟨_, _⟩), from show «expr < »((«expr - »(⟨x, y⟩, ⟨x, «expr- »(y)⟩) : «exprℤ√ »(d a1)), «expr - »(⟨a, 1⟩, ⟨a, «expr- »(1)⟩)), from «expr $ »(sub_lt_sub (by exact [expr ha]), λ
+  hn : «expr ≤ »((⟨x, «expr- »(y)⟩ : «exprℤ√ »(d a1)), ⟨a, «expr- »(1)⟩), by have [ident t] [] [":=", expr mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hn (le_trans zero_le_one h1)) a1p]; rw ["[", expr bm, ",", expr one_mul, ",", expr mul_assoc, ",", expr eq.trans (mul_comm _ _) a1m, ",", expr mul_one, "]"] ["at", ident t]; exact [expr ha t]),
+ by simp [] [] [] [] [] ["at", ident y0l]; simp [] [] [] [] [] ["at", ident yl2]; exact [expr match y, y0l, (yl2 : «expr < »((⟨_, _⟩ : «exprℤ√ »(_)), ⟨_, _⟩)) with
+  | 0, y0l, yl2 := y0l (le_refl 0)
+  | («expr + »(y, 1) : exprℕ()), y0l, yl2 := yl2 (zsqrtd.le_of_le_le (le_refl 0) (let t := int.coe_nat_le_coe_nat_of_le (nat.succ_pos y) in
+    add_le_add t t))
+  | «expr-[1+ ]»(y), y0l, yl2 := y0l trivial end]]
 
 theorem eq_pell_zd (b : ℤ√d) (b1 : 1 ≤ b) (hp : is_pell b) : ∃ n, b = pell_zd n :=
   let ⟨n, h⟩ := @Zsqrtd.le_arch d b 
@@ -350,14 +317,23 @@ theorem pell_zd_add m : ∀ n, pell_zd (m+n) = pell_zd m*pell_zd n
   by 
     rw [←add_assocₓ, pell_zd_succ, pell_zd_succ, pell_zd_add n, ←mul_assocₓ]
 
--- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem xn_add
-(m n) : «expr = »(xn «expr + »(m, n), «expr + »(«expr * »(xn m, xn n), «expr * »(«expr * »(d, yn m), yn n))) :=
-by injection [expr pell_zd_add _ m n] ["with", ident h, "_"]; repeat { rw ["<-", expr int.coe_nat_add] ["at", ident h] <|> rw ["<-", expr int.coe_nat_mul] ["at", ident h] }; exact [expr int.coe_nat_inj h]
+theorem xn_add m n : xn (m+n) = (xn m*xn n)+(d*yn m)*yn n :=
+  by 
+    injection pell_zd_add _ m n with h _ <;>
+      repeat' 
+          first |
+            rw [←Int.coe_nat_add] at h|
+            rw [←Int.coe_nat_mul] at h <;>
+        exact Int.coe_nat_inj h
 
--- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem yn_add (m n) : «expr = »(yn «expr + »(m, n), «expr + »(«expr * »(xn m, yn n), «expr * »(yn m, xn n))) :=
-by injection [expr pell_zd_add _ m n] ["with", "_", ident h]; repeat { rw ["<-", expr int.coe_nat_add] ["at", ident h] <|> rw ["<-", expr int.coe_nat_mul] ["at", ident h] }; exact [expr int.coe_nat_inj h]
+theorem yn_add m n : yn (m+n) = (xn m*yn n)+yn m*xn n :=
+  by 
+    injection pell_zd_add _ m n with _ h <;>
+      repeat' 
+          first |
+            rw [←Int.coe_nat_add] at h|
+            rw [←Int.coe_nat_mul] at h <;>
+        exact Int.coe_nat_inj h
 
 theorem pell_zd_sub {m n} (h : n ≤ m) : pell_zd (m - n) = pell_zd m*(pell_zd n).conj :=
   let t := pell_zd_add n (m - n)
@@ -365,17 +341,19 @@ theorem pell_zd_sub {m n} (h : n ≤ m) : pell_zd (m - n) = pell_zd m*(pell_zd n
     rw [add_tsub_cancel_of_le h] at t <;>
       rw [t, mul_commₓ (pell_zd _ n) _, mul_assocₓ, (is_pell_norm _).1 (is_pell_pell_zd _ _), mul_oneₓ]
 
--- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem xz_sub
-{m n}
-(h : «expr ≤ »(n, m)) : «expr = »(xz «expr - »(m, n), «expr - »(«expr * »(xz m, xz n), «expr * »(«expr * »(d, yz m), yz n))) :=
-by injection [expr pell_zd_sub _ h] ["with", ident h, "_"]; repeat { rw ["<-", expr neg_mul_eq_mul_neg] ["at", ident h] }; exact [expr h]
+theorem xz_sub {m n} (h : n ≤ m) : xz (m - n) = (xz m*xz n) - (d*yz m)*yz n :=
+  by 
+    injection pell_zd_sub _ h with h _ <;>
+      repeat' 
+          rw [←neg_mul_eq_mul_neg] at h <;>
+        exact h
 
--- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem yz_sub
-{m n}
-(h : «expr ≤ »(n, m)) : «expr = »(yz «expr - »(m, n), «expr - »(«expr * »(xz n, yz m), «expr * »(xz m, yz n))) :=
-by injection [expr pell_zd_sub a1 h] ["with", "_", ident h]; repeat { rw ["<-", expr neg_mul_eq_mul_neg] ["at", ident h] }; rw ["[", expr add_comm, ",", expr mul_comm, "]"] ["at", ident h]; exact [expr h]
+theorem yz_sub {m n} (h : n ≤ m) : yz (m - n) = (xz n*yz m) - xz m*yz n :=
+  by 
+    injection pell_zd_sub a1 h with _ h <;>
+      repeat' 
+          rw [←neg_mul_eq_mul_neg] at h <;>
+        rw [add_commₓ, mul_commₓ] at h <;> exact h
 
 theorem xy_coprime n : (xn n).Coprime (yn n) :=
   Nat.coprime_of_dvd'$
@@ -397,18 +375,12 @@ theorem strict_mono_y : StrictMono yn
       refine' lt_of_le_of_ltₓ _ (Nat.lt_add_of_pos_leftₓ$ x_pos a1 n) <;>
         rw [←mul_oneₓ (yn a1 m)] <;> exact mul_le_mul this (le_of_ltₓ a1) (Nat.zero_leₓ _) (Nat.zero_leₓ _)
 
-theorem strict_mono_x : StrictMono xn
-| m, 0, h => absurd h$ Nat.not_lt_zeroₓ _
-| m, n+1, h =>
-  have  : xn m ≤ xn n :=
-    Or.elim (lt_or_eq_of_leₓ$ Nat.le_of_succ_le_succₓ h) (fun hl => le_of_ltₓ$ strict_mono_x hl)
-      fun e =>
-        by 
-          rw [e]
-  by 
-    simp  <;>
-      refine' lt_of_lt_of_leₓ (lt_of_le_of_ltₓ this _) (Nat.le_add_rightₓ _ _) <;>
-        have t := Nat.mul_lt_mul_of_pos_leftₓ a1 (x_pos a1 n) <;> rwa [mul_oneₓ] at t
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem strict_mono_x : strict_mono xn
+| m, 0, h := «expr $ »(absurd h, nat.not_lt_zero _)
+| m, «expr + »(n, 1), h := have «expr ≤ »(xn m, xn n), from or.elim «expr $ »(lt_or_eq_of_le, nat.le_of_succ_le_succ h) (λ
+ hl, «expr $ »(le_of_lt, strict_mono_x hl)) (λ e, by rw [expr e] []),
+by simp [] [] [] [] [] []; refine [expr lt_of_lt_of_le (lt_of_le_of_lt this _) (nat.le_add_right _ _)]; have [ident t] [] [":=", expr nat.mul_lt_mul_of_pos_left a1 (x_pos a1 n)]; rwa [expr mul_one] ["at", ident t]
 
 theorem yn_ge_n : ∀ n, n ≤ yn n
 | 0 => Nat.zero_leₓ _
@@ -491,27 +463,13 @@ theorem ysq_dvd_yy n : (yn n*yn n) ∣ yn (n*yn n) :=
         by 
           simp [mul_dvd_mul_left, mul_assocₓ])
 
-theorem dvd_of_ysq_dvd {n t} (h : (yn n*yn n) ∣ yn t) : yn n ∣ t :=
-  have nt : n ∣ t := (y_dvd_iff n t).1$ dvd_of_mul_left_dvd h
-  (n.eq_zero_or_pos.elim
-      fun n0 =>
-        by 
-          rwa [n0] at nt⊢)$
-    fun n0l : 0 < n =>
-      let ⟨k, ke⟩ := nt 
-      have  : yn n ∣ k*xn n ^ (k - 1) :=
-        Nat.dvd_of_mul_dvd_mul_rightₓ (strict_mono_y n0l)$
-          modeq_zero_iff_dvd.1$
-            by 
-              have xm := (xy_modeq_yn a1 n k).right <;>
-                rw [←ke] at xm <;>
-                  exact
-                    (xm.modeq_of_dvd$
-                            by 
-                              simp [pow_succₓ]).symm.trans
-                      h.modeq_zero_nat 
-      by 
-        rw [ke] <;> exact dvd_mul_of_dvd_right (((xy_coprime _ _).pow_left _).symm.dvd_of_dvd_mul_right this) _
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dvd_of_ysq_dvd {n t} (h : «expr ∣ »(«expr * »(yn n, yn n), yn t)) : «expr ∣ »(yn n, t) :=
+have nt : «expr ∣ »(n, t), from «expr $ »((y_dvd_iff n t).1, dvd_of_mul_left_dvd h),
+«expr $ »(n.eq_zero_or_pos.elim (λ
+  n0, by rwa [expr n0] ["at", "⊢", ident nt]), λ n0l : «expr < »(0, n), let ⟨k, ke⟩ := nt in
+ have «expr ∣ »(yn n, «expr * »(k, «expr ^ »(xn n, «expr - »(k, 1)))), from «expr $ »(nat.dvd_of_mul_dvd_mul_right (strict_mono_y n0l), «expr $ »(modeq_zero_iff_dvd.1, by have [ident xm] [] [":=", expr (xy_modeq_yn a1 n k).right]; rw ["<-", expr ke] ["at", ident xm]; exact [expr «expr $ »(xm.modeq_of_dvd, by simp [] [] [] ["[", expr pow_succ, "]"] [] []).symm.trans h.modeq_zero_nat])),
+ by rw [expr ke] []; exact [expr dvd_mul_of_dvd_right (((xy_coprime _ _).pow_left _).symm.dvd_of_dvd_mul_right this) _])
 
 theorem pell_zd_succ_succ n : (pell_zd (n+2)+pell_zd n) = (2*a : ℕ)*pell_zd (n+1) :=
   have  : ((1 : ℤ√d)+⟨a, 1⟩*⟨a, 1⟩) = ⟨a, 1⟩*2*a :=
@@ -526,13 +484,16 @@ theorem pell_zd_succ_succ n : (pell_zd (n+2)+pell_zd n) = (2*a : ℕ)*pell_zd (n
   by 
     simpa [mul_addₓ, mul_commₓ, mul_left_commₓ, add_commₓ] using congr_argₓ (·*pell_zd a1 n) this
 
-theorem xy_succ_succ n : ((xn (n+2)+xn n) = (2*a)*xn (n+1)) ∧ (yn (n+2)+yn n) = (2*a)*yn (n+1) :=
-  by 
-    have  := pell_zd_succ_succ a1 n 
-    unfold pell_zd  at this 
-    rw [←Int.cast_coe_nat, Zsqrtd.smul_val] at this 
-    injection this with h₁ h₂ 
-    split  <;> apply Int.coe_nat_inj <;> [simpa using h₁, simpa using h₂]
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem xy_succ_succ
+(n) : «expr ∧ »(«expr = »(«expr + »(xn «expr + »(n, 2), xn n), «expr * »(«expr * »(2, a), xn «expr + »(n, 1))), «expr = »(«expr + »(yn «expr + »(n, 2), yn n), «expr * »(«expr * »(2, a), yn «expr + »(n, 1)))) :=
+begin
+  have [] [] [":=", expr pell_zd_succ_succ a1 n],
+  unfold [ident pell_zd] ["at", ident this],
+  rw ["[", "<-", expr int.cast_coe_nat, ",", expr zsqrtd.smul_val, "]"] ["at", ident this],
+  injection [expr this] ["with", ident h₁, ident h₂],
+  split; apply [expr int.coe_nat_inj]; [simpa [] [] [] [] [] ["using", expr h₁], simpa [] [] [] [] [] ["using", expr h₂]]
+end
 
 theorem xn_succ_succ n : (xn (n+2)+xn n) = (2*a)*xn (n+1) :=
   (xy_succ_succ n).1
@@ -610,12 +571,20 @@ theorem x_sub_y_dvd_pow (y : ℕ) : ∀ n, ((((2*a)*y) - y*y) - 1 : ℤ) ∣ ((y
     rw [xz_succ_succ, yz_succ_succ, x_sub_y_dvd_pow_lem («expr↑ » (y ^ n+2)) («expr↑ » (y ^ n+1)) («expr↑ » (y ^ n))]
     exact dvd_sub (dvd_add this$ (x_sub_y_dvd_pow (n+1)).mul_left _) (x_sub_y_dvd_pow n)
 
--- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem xn_modeq_x2n_add_lem
-(n j) : «expr ∣ »(xn n, «expr + »(«expr * »(«expr * »(d, yn n), «expr * »(yn n, xn j)), xn j)) :=
-have h1 : «expr = »(«expr + »(«expr * »(«expr * »(d, yn n), «expr * »(yn n, xn j)), xn j), «expr * »(«expr + »(«expr * »(«expr * »(d, yn n), yn n), 1), xn j)), by simp [] [] [] ["[", expr add_mul, ",", expr mul_assoc, "]"] [] [],
-have h2 : «expr = »(«expr + »(«expr * »(«expr * »(d, yn n), yn n), 1), «expr * »(xn n, xn n)), by apply [expr int.coe_nat_inj]; repeat { rw [expr int.coe_nat_add] [] <|> rw [expr int.coe_nat_mul] [] }; exact [expr add_eq_of_eq_sub' «expr $ »(eq.symm, pell_eqz _ _)],
-by rw [expr h2] ["at", ident h1]; rw ["[", expr h1, ",", expr mul_assoc, "]"] []; exact [expr dvd_mul_right _ _]
+theorem xn_modeq_x2n_add_lem n j : xn n ∣ ((d*yn n)*yn n*xn j)+xn j :=
+  have h1 : (((d*yn n)*yn n*xn j)+xn j) = (((d*yn n)*yn n)+1)*xn j :=
+    by 
+      simp [add_mulₓ, mul_assocₓ]
+  have h2 : (((d*yn n)*yn n)+1) = xn n*xn n :=
+    by 
+      apply Int.coe_nat_inj <;>
+        repeat' 
+            first |
+              rw [Int.coe_nat_add]|
+              rw [Int.coe_nat_mul] <;>
+          exact add_eq_of_eq_sub' (Eq.symm$ pell_eqz _ _)
+  by 
+    rw [h2] at h1 <;> rw [h1, mul_assocₓ] <;> exact dvd_mul_right _ _
 
 theorem xn_modeq_x2n_add n j : (xn ((2*n)+j)+xn j) ≡ 0 [MOD xn n] :=
   by 
@@ -624,15 +593,28 @@ theorem xn_modeq_x2n_add n j : (xn ((2*n)+j)+xn j) ≡ 0 [MOD xn n] :=
     rw [yn_add, left_distrib, add_assocₓ, ←zero_addₓ 0]
     exact ((dvd_mul_right _ _).mul_left _).modeq_zero_nat.add (xn_modeq_x2n_add_lem _ _ _).modeq_zero_nat
 
--- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exact: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem xn_modeq_x2n_sub_lem
-{n j}
-(h : «expr ≤ »(j, n)) : «expr ≡ [MOD ]»(«expr + »(xn «expr - »(«expr * »(2, n), j), xn j), 0, xn n) :=
-have h1 : «expr ∣ »(xz n, «expr + »(«expr * »(«expr * »(«expr↑ »(d), yz n), yz «expr - »(n, j)), xz j)), by rw ["[", expr yz_sub _ h, ",", expr mul_sub_left_distrib, ",", expr sub_add_eq_add_sub, "]"] []; exact [expr dvd_sub (by delta [ident xz] []; delta [ident yz] []; repeat { rw ["<-", expr int.coe_nat_add] [] <|> rw ["<-", expr int.coe_nat_mul] [] }; rw [expr mul_comm (xn a1 j) (yn a1 n)] []; exact [expr int.coe_nat_dvd.2 (xn_modeq_x2n_add_lem _ _ _)]) ((dvd_mul_right _ _).mul_left _)],
-begin
-  rw ["[", expr two_mul, ",", expr add_tsub_assoc_of_le h, ",", expr xn_add, ",", expr add_assoc, ",", "<-", expr zero_add 0, "]"] [],
-  exact [expr (dvd_mul_right _ _).modeq_zero_nat.add «expr $ »(int.coe_nat_dvd.1, by simpa [] [] [] ["[", expr xz, ",", expr yz, "]"] [] ["using", expr h1]).modeq_zero_nat]
-end
+theorem xn_modeq_x2n_sub_lem {n j} (h : j ≤ n) : (xn ((2*n) - j)+xn j) ≡ 0 [MOD xn n] :=
+  have h1 : xz n ∣ ((«expr↑ » d*yz n)*yz (n - j))+xz j :=
+    by 
+      rw [yz_sub _ h, mul_sub_left_distrib, sub_add_eq_add_sub] <;>
+        exact
+          dvd_sub
+            (by 
+              delta' xz <;>
+                delta' yz <;>
+                  repeat' 
+                      first |
+                        rw [←Int.coe_nat_add]|
+                        rw [←Int.coe_nat_mul] <;>
+                    rw [mul_commₓ (xn a1 j) (yn a1 n)] <;> exact Int.coe_nat_dvd.2 (xn_modeq_x2n_add_lem _ _ _))
+            ((dvd_mul_right _ _).mul_left _)
+  by 
+    rw [two_mul, add_tsub_assoc_of_le h, xn_add, add_assocₓ, ←zero_addₓ 0]
+    exact
+      (dvd_mul_right _ _).modeq_zero_nat.add
+        (Int.coe_nat_dvd.1$
+            by 
+              simpa [xz, yz] using h1).modeq_zero_nat
 
 theorem xn_modeq_x2n_sub {n j} (h : j ≤ 2*n) : (xn ((2*n) - j)+xn j) ≡ 0 [MOD xn n] :=
   (le_totalₓ j n).elim xn_modeq_x2n_sub_lem
@@ -692,129 +674,81 @@ theorem eq_of_xn_modeq_lem2 {n} (h : (2*xn n) = xn (n+1)) : a = 2 ∧ n = 0 :=
         by 
           cases this <;> simp  at h <;> exact ⟨h.symm, rfl⟩
 
-theorem eq_of_xn_modeq_lem3 {i n} (npos : 0 < n) :
-  ∀ {j}, i < j → (j ≤ 2*n) → j ≠ n → ¬(a = 2 ∧ n = 1 ∧ i = 0 ∧ j = 2) → xn i % xn n < xn j % xn n
-| 0, ij, _, _, _ => absurd ij (Nat.not_lt_zeroₓ _)
-| j+1, ij, j2n, jnn, ntriv =>
-  have lem2 : ∀ k _ : k > n, (k ≤ 2*n) → («expr↑ » (xn k % xn n) : ℤ) = xn n - xn ((2*n) - k) :=
-    fun k kn k2n =>
-      let k2nl :=
-        lt_of_add_lt_add_right$
-          show (((2*n) - k)+k) < n+k by 
-            rw [tsub_add_cancel_of_le]
-            rw [two_mul] <;> exact add_lt_add_left kn n 
-            exact k2n 
-      have xle : xn ((2*n) - k) ≤ xn n := le_of_ltₓ$ strict_mono_x k2nl 
-      suffices xn k % xn n = xn n - xn ((2*n) - k)by 
-        rw [this, Int.coe_nat_subₓ xle]
-      by 
-        rw [←Nat.mod_eq_of_ltₓ (Nat.sub_ltₓ (x_pos a1 n) (x_pos a1 ((2*n) - k)))]
-        apply modeq.add_right_cancel' (xn a1 ((2*n) - k))
-        rw [tsub_add_cancel_of_le xle]
-        have t := xn_modeq_x2n_sub_lem a1 k2nl.le 
-        rw [tsub_tsub_cancel_of_le k2n] at t 
-        exact t.trans dvd_rfl.zero_modeq_nat
-  ((lt_trichotomyₓ j n).elim fun jn : j < n => eq_of_xn_modeq_lem1 ij (lt_of_le_of_neₓ jn jnn))$
-    fun o =>
-      o.elim
-        (fun jn : j = n =>
-          by 
-            cases jn 
-            apply Int.lt_of_coe_nat_lt_coe_nat 
-            rw [lem2 (n+1) (Nat.lt_succ_selfₓ _) j2n,
-              show ((2*n) - n+1) = n - 1by 
-                rw [two_mul, tsub_add_eq_tsub_tsub, add_tsub_cancel_right]]
-            refine' lt_sub_left_of_add_lt (Int.coe_nat_lt_coe_nat_of_lt _)
-            cases' lt_or_eq_of_leₓ$ Nat.le_of_succ_le_succₓ ij with lin ein
-            ·
-              rw [Nat.mod_eq_of_ltₓ (strict_mono_x _ lin)]
-              have ll : (xn a1 (n - 1)+xn a1 (n - 1)) ≤ xn a1 n
-              ·
-                rw [←two_mul, mul_commₓ,
-                  show xn a1 n = xn a1 ((n - 1)+1)by 
-                    rw [tsub_add_cancel_of_le (succ_le_of_lt npos)],
-                  xn_succ]
-                exact le_transₓ (Nat.mul_le_mul_leftₓ _ a1) (Nat.le_add_rightₓ _ _)
-              have npm : (n - 1).succ = n := Nat.succ_pred_eq_of_posₓ npos 
-              have il : i ≤ n - 1
-              ·
-                apply Nat.le_of_succ_le_succₓ 
-                rw [npm]
-                exact lin 
-              cases' lt_or_eq_of_leₓ il with ill ile
-              ·
-                exact lt_of_lt_of_leₓ (Nat.add_lt_add_leftₓ (strict_mono_x a1 ill) _) ll
-              ·
-                rw [ile]
-                apply lt_of_le_of_neₓ ll 
-                rw [←two_mul]
-                exact
-                  fun e =>
-                    ntriv$
-                      let ⟨a2, s1⟩ :=
-                        @eq_of_xn_modeq_lem2 _ a1 (n - 1)
-                          (by 
-                            rwa [tsub_add_cancel_of_le (succ_le_of_lt npos)])
-                      have n1 : n = 1 := le_antisymmₓ (tsub_eq_zero_iff_le.mp s1) npos 
-                      by 
-                        rw [ile, a2, n1] <;> exact ⟨rfl, rfl, rfl, rfl⟩
-            ·
-              rw [ein, Nat.mod_selfₓ, add_zeroₓ]
-              exact strict_mono_x _ (Nat.pred_ltₓ npos.ne'))
-        fun jn : j > n =>
-          have lem1 : j ≠ n → xn j % xn n < xn (j+1) % xn n → xn i % xn n < xn (j+1) % xn n :=
-            fun jn s =>
-              (lt_or_eq_of_leₓ (Nat.le_of_succ_le_succₓ ij)).elim
-                (fun h =>
-                  lt_transₓ
-                    (eq_of_xn_modeq_lem3 h (le_of_ltₓ j2n) jn$
-                      fun ⟨a1, n1, i0, j2⟩ =>
-                        by 
-                          rw [n1, j2] at j2n <;>
-                            exact
-                              absurd j2n
-                                (by 
-                                  decide))
-                    s)
-                fun h =>
-                  by 
-                    rw [h] <;> exact s 
-          lem1 (ne_of_gtₓ jn)$
-            Int.lt_of_coe_nat_lt_coe_nat$
-              by 
-                rw [lem2 j jn (le_of_ltₓ j2n), lem2 (j+1) (Nat.le_succ_of_leₓ jn) j2n]
-                refine' sub_lt_sub_left (Int.coe_nat_lt_coe_nat_of_lt$ strict_mono_x _ _) _ 
-                rw [Nat.sub_succ]
-                exact Nat.pred_ltₓ (ne_of_gtₓ$ tsub_pos_of_lt j2n)
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_of_xn_modeq_lem3
+{i n}
+(npos : «expr < »(0, n)) : ∀
+{j}, «expr < »(i, j) → «expr ≤ »(j, «expr * »(2, n)) → «expr ≠ »(j, n) → «expr¬ »(«expr ∧ »(«expr = »(a, 2), «expr ∧ »(«expr = »(n, 1), «expr ∧ »(«expr = »(i, 0), «expr = »(j, 2))))) → «expr < »(«expr % »(xn i, xn n), «expr % »(xn j, xn n))
+| 0, ij, _, _, _ := absurd ij (nat.not_lt_zero _)
+| «expr + »(j, 1), ij, j2n, jnn, ntriv := have lem2 : ∀
+k «expr > » n, «expr ≤ »(k, «expr * »(2, n)) → «expr = »((«expr↑ »(«expr % »(xn k, xn n)) : exprℤ()), «expr - »(xn n, xn «expr - »(«expr * »(2, n), k))), from λ
+k
+kn
+k2n, let k2nl := «expr $ »(lt_of_add_lt_add_right, show «expr < »(«expr + »(«expr - »(«expr * »(2, n), k), k), «expr + »(n, k)), by { rw [expr tsub_add_cancel_of_le] [],
+       rw [expr two_mul] []; exact [expr add_lt_add_left kn n],
+       exact [expr k2n] }) in
+have xle : «expr ≤ »(xn «expr - »(«expr * »(2, n), k), xn n), from «expr $ »(le_of_lt, strict_mono_x k2nl),
+suffices «expr = »(«expr % »(xn k, xn n), «expr - »(xn n, xn «expr - »(«expr * »(2, n), k))), by rw ["[", expr this, ",", expr int.coe_nat_sub xle, "]"] [],
+by { rw ["<-", expr nat.mod_eq_of_lt (nat.sub_lt (x_pos a1 n) (x_pos a1 «expr - »(«expr * »(2, n), k)))] [],
+  apply [expr modeq.add_right_cancel' (xn a1 «expr - »(«expr * »(2, n), k))],
+  rw ["[", expr tsub_add_cancel_of_le xle, "]"] [],
+  have [ident t] [] [":=", expr xn_modeq_x2n_sub_lem a1 k2nl.le],
+  rw [expr tsub_tsub_cancel_of_le k2n] ["at", ident t],
+  exact [expr t.trans dvd_rfl.zero_modeq_nat] },
+«expr $ »((lt_trichotomy j n).elim (λ
+  jn : «expr < »(j, n), eq_of_xn_modeq_lem1 ij (lt_of_le_of_ne jn jnn)), λ
+ o, o.elim (λ jn : «expr = »(j, n), by { cases [expr jn] [],
+    apply [expr int.lt_of_coe_nat_lt_coe_nat],
+    rw ["[", expr lem2 «expr + »(n, 1) (nat.lt_succ_self _) j2n, ",", expr show «expr = »(«expr - »(«expr * »(2, n), «expr + »(n, 1)), «expr - »(n, 1)), by rw ["[", expr two_mul, ",", expr tsub_add_eq_tsub_tsub, ",", expr add_tsub_cancel_right, "]"] [], "]"] [],
+    refine [expr lt_sub_left_of_add_lt (int.coe_nat_lt_coe_nat_of_lt _)],
+    cases [expr «expr $ »(lt_or_eq_of_le, nat.le_of_succ_le_succ ij)] ["with", ident lin, ident ein],
+    { rw [expr nat.mod_eq_of_lt (strict_mono_x _ lin)] [],
+      have [ident ll] [":", expr «expr ≤ »(«expr + »(xn a1 «expr - »(n, 1), xn a1 «expr - »(n, 1)), xn a1 n)] [],
+      { rw ["[", "<-", expr two_mul, ",", expr mul_comm, ",", expr show «expr = »(xn a1 n, xn a1 «expr + »(«expr - »(n, 1), 1)), by rw ["[", expr tsub_add_cancel_of_le (succ_le_of_lt npos), "]"] [], ",", expr xn_succ, "]"] [],
+        exact [expr le_trans (nat.mul_le_mul_left _ a1) (nat.le_add_right _ _)] },
+      have [ident npm] [":", expr «expr = »(«expr - »(n, 1).succ, n)] [":=", expr nat.succ_pred_eq_of_pos npos],
+      have [ident il] [":", expr «expr ≤ »(i, «expr - »(n, 1))] [],
+      { apply [expr nat.le_of_succ_le_succ],
+        rw [expr npm] [],
+        exact [expr lin] },
+      cases [expr lt_or_eq_of_le il] ["with", ident ill, ident ile],
+      { exact [expr lt_of_lt_of_le (nat.add_lt_add_left (strict_mono_x a1 ill) _) ll] },
+      { rw [expr ile] [],
+        apply [expr lt_of_le_of_ne ll],
+        rw ["<-", expr two_mul] [],
+        exact [expr λ
+         e, «expr $ »(ntriv, let ⟨a2, s1⟩ := @eq_of_xn_modeq_lem2 _ a1 «expr - »(n, 1) (by rwa ["[", expr tsub_add_cancel_of_le (succ_le_of_lt npos), "]"] []) in
+          have n1 : «expr = »(n, 1), from le_antisymm (tsub_eq_zero_iff_le.mp s1) npos,
+          by rw ["[", expr ile, ",", expr a2, ",", expr n1, "]"] []; exact [expr ⟨rfl, rfl, rfl, rfl⟩])] } },
+    { rw ["[", expr ein, ",", expr nat.mod_self, ",", expr add_zero, "]"] [],
+      exact [expr strict_mono_x _ (nat.pred_lt npos.ne')] } }) (λ
+  jn : «expr > »(j, n), have lem1 : «expr ≠ »(j, n) → «expr < »(«expr % »(xn j, xn n), «expr % »(xn «expr + »(j, 1), xn n)) → «expr < »(«expr % »(xn i, xn n), «expr % »(xn «expr + »(j, 1), xn n)), from λ
+  jn
+  s, (lt_or_eq_of_le (nat.le_of_succ_le_succ ij)).elim (λ
+   h, lt_trans «expr $ »(eq_of_xn_modeq_lem3 h (le_of_lt j2n) jn, λ
+    ⟨a1, n1, i0, j2⟩, by rw ["[", expr n1, ",", expr j2, "]"] ["at", ident j2n]; exact [expr absurd j2n exprdec_trivial()]) s) (λ
+   h, by rw [expr h] []; exact [expr s]),
+  «expr $ »(lem1 (ne_of_gt jn), «expr $ »(int.lt_of_coe_nat_lt_coe_nat, by { rw ["[", expr lem2 j jn (le_of_lt j2n), ",", expr lem2 «expr + »(j, 1) (nat.le_succ_of_le jn) j2n, "]"] [],
+      refine [expr sub_lt_sub_left «expr $ »(int.coe_nat_lt_coe_nat_of_lt, strict_mono_x _ _) _],
+      rw ["[", expr nat.sub_succ, "]"] [],
+      exact [expr nat.pred_lt «expr $ »(ne_of_gt, tsub_pos_of_lt j2n)] }))))
 
-theorem eq_of_xn_modeq_le {i j n} (npos : 0 < n) (ij : i ≤ j) (j2n : j ≤ 2*n) (h : xn i ≡ xn j [MOD xn n])
-  (ntriv : ¬(a = 2 ∧ n = 1 ∧ i = 0 ∧ j = 2)) : i = j :=
-  (lt_or_eq_of_leₓ ij).resolve_left$
-    fun ij' =>
-      if jn : j = n then
-        by 
-          refine' ne_of_gtₓ _ h 
-          rw [jn, Nat.mod_selfₓ]
-          have x0 : 0 < xn a1 0 % xn a1 n :=
-            by 
-              rw [Nat.mod_eq_of_ltₓ (strict_mono_x a1 npos)] <;>
-                exact
-                  by 
-                    decide 
-          cases' i with i 
-          exact x0 
-          rw [jn] at ij' 
-          exact
-            x0.trans
-              (eq_of_xn_modeq_lem3 _ npos (Nat.succ_posₓ _) (le_transₓ ij j2n) (ne_of_ltₓ ij')$
-                fun ⟨a1, n1, _, i2⟩ =>
-                  by 
-                    rw [n1, i2] at ij' <;>
-                      exact
-                        absurd ij'
-                          (by 
-                            decide))
-      else ne_of_ltₓ (eq_of_xn_modeq_lem3 npos ij' j2n jn ntriv) h
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_of_xn_modeq_le
+{i j n}
+(npos : «expr < »(0, n))
+(ij : «expr ≤ »(i, j))
+(j2n : «expr ≤ »(j, «expr * »(2, n)))
+(h : «expr ≡ [MOD ]»(xn i, xn j, xn n))
+(ntriv : «expr¬ »(«expr ∧ »(«expr = »(a, 2), «expr ∧ »(«expr = »(n, 1), «expr ∧ »(«expr = »(i, 0), «expr = »(j, 2)))))) : «expr = »(i, j) :=
+«expr $ »((lt_or_eq_of_le ij).resolve_left, λ ij', if jn : «expr = »(j, n) then by { refine [expr ne_of_gt _ h],
+   rw ["[", expr jn, ",", expr nat.mod_self, "]"] [],
+   have [ident x0] [":", expr «expr < »(0, «expr % »(xn a1 0, xn a1 n))] [":=", expr by rw ["[", expr nat.mod_eq_of_lt (strict_mono_x a1 npos), "]"] []; exact [expr exprdec_trivial()]],
+   cases [expr i] ["with", ident i],
+   exact [expr x0],
+   rw [expr jn] ["at", ident ij'],
+   exact [expr x0.trans «expr $ »(eq_of_xn_modeq_lem3 _ npos (nat.succ_pos _) (le_trans ij j2n) (ne_of_lt ij'), λ
+     ⟨a1, n1, _, i2⟩, by rw ["[", expr n1, ",", expr i2, "]"] ["at", ident ij']; exact [expr absurd ij' exprdec_trivial()])] } else ne_of_lt (eq_of_xn_modeq_lem3 npos ij' j2n jn ntriv) h)
 
 theorem eq_of_xn_modeq {i j n} (npos : 0 < n) (i2n : i ≤ 2*n) (j2n : j ≤ 2*n) (h : xn i ≡ xn j [MOD xn n])
   (ntriv : a = 2 → n = 1 → (i = 0 → j ≠ 2) ∧ (i = 2 → j ≠ 0)) : i = j :=
@@ -917,148 +851,86 @@ theorem xy_modeq_of_modeq {a b c} (a1 : 1 < a) (b1 : 1 < b) (h : a ≡ b [MOD c]
         rw [yn_succ_succ a1, yn_succ_succ b1]
         exact (h.mul_left _).mul (xy_modeq_of_modeq (n+1)).right⟩
 
-theorem matiyasevic {a k x y} :
-  (∃ a1 : 1 < a, xn a1 k = x ∧ yn a1 k = y) ↔
-    1 < a ∧
-      k ≤ y ∧
-        (x = 1 ∧ y = 0 ∨
-          ∃ u v s t b : ℕ,
-            ((x*x) - (((a*a) - 1)*y)*y) = 1 ∧
-              ((u*u) - (((a*a) - 1)*v)*v) = 1 ∧
-                ((s*s) - (((b*b) - 1)*t)*t) = 1 ∧
-                  1 < b ∧ b ≡ 1 [MOD 4*y] ∧ b ≡ a [MOD u] ∧ 0 < v ∧ (y*y) ∣ v ∧ s ≡ x [MOD u] ∧ t ≡ k [MOD 4*y]) :=
-  ⟨fun ⟨a1, hx, hy⟩ =>
-      by 
-        rw [←hx, ←hy] <;>
-          refine'
-              ⟨a1,
-                (Nat.eq_zero_or_posₓ k).elim
-                  (fun k0 =>
-                    by 
-                      rw [k0] <;> exact ⟨le_rfl, Or.inl ⟨rfl, rfl⟩⟩)
-                  fun kpos => _⟩ <;>
-            exact
-              let x := xn a1 k 
-              let y := yn a1 k 
-              let m := 2*k*y 
-              let u := xn a1 m 
-              let v := yn a1 m 
-              have ky : k ≤ y := yn_ge_n a1 k 
-              have yv : (y*y) ∣ v := (ysq_dvd_yy a1 k).trans$ (y_dvd_iff _ _ _).2$ dvd_mul_left _ _ 
-              have uco : Nat.Coprime u (4*y) :=
-                have  : 2 ∣ v := modeq_zero_iff_dvd.1$ (yn_modeq_two _ _).trans (dvd_mul_right _ _).modeq_zero_nat 
-                have  : Nat.Coprime u 2 := (xy_coprime a1 m).coprime_dvd_right this
-                (this.mul_right this).mul_right$ (xy_coprime _ _).coprime_dvd_right (dvd_of_mul_left_dvd yv)
-              let ⟨b, ba, bm1⟩ := chinese_remainder uco a 1
-              have m1 : 1 < m :=
-                have  : 0 < k*y := mul_pos kpos (strict_mono_y a1 kpos)
-                Nat.mul_le_mul_leftₓ 2 this 
-              have vp : 0 < v := strict_mono_y a1 (lt_transₓ zero_lt_one m1)
-              have b1 : 1 < b :=
-                have  : xn a1 1 < u := strict_mono_x a1 m1 
-                have  : a < u :=
-                  by 
-                    simp  at this <;> exact this 
-                lt_of_lt_of_leₓ a1$
-                  by 
-                    delta' modeq  at ba <;> rw [Nat.mod_eq_of_ltₓ this] at ba <;> rw [←ba] <;> apply Nat.mod_leₓ 
-              let s := xn b1 k 
-              let t := yn b1 k 
-              have sx : s ≡ x [MOD u] := (xy_modeq_of_modeq b1 a1 ba k).left 
-              have tk : t ≡ k [MOD 4*y] :=
-                have  : (4*y) ∣ b - 1 :=
-                  Int.coe_nat_dvd.1$
-                    by 
-                      rw [Int.coe_nat_subₓ (le_of_ltₓ b1)] <;> exact bm1.symm.dvd
-                (yn_modeq_a_sub_one _ _).modeq_of_dvd this
-              ⟨ky, Or.inr ⟨u, v, s, t, b, pell_eq _ _, pell_eq _ _, pell_eq _ _, b1, bm1, ba, vp, yv, sx, tk⟩⟩,
-    fun ⟨a1, ky, o⟩ =>
-      ⟨a1,
-        match o with 
-        | Or.inl ⟨x1, y0⟩ =>
-          by 
-            rw [y0] at ky <;> rw [Nat.eq_zero_of_le_zeroₓ ky, x1, y0] <;> exact ⟨rfl, rfl⟩
-        | Or.inr ⟨u, v, s, t, b, xy, uv, st, b1, rem⟩ =>
-          match x, y, eq_pell a1 xy, u, v, eq_pell a1 uv, s, t, eq_pell b1 st, rem, ky with 
-          | _, _, ⟨i, rfl, rfl⟩, _, _, ⟨n, rfl, rfl⟩, _, _, ⟨j, rfl, rfl⟩,
-            ⟨(bm1 : b ≡ 1 [MOD 4*yn a1 i]), (ba : b ≡ a [MOD xn a1 n]), (vp : 0 < yn a1 n),
-              (yv : (yn a1 i*yn a1 i) ∣ yn a1 n), (sx : xn b1 j ≡ xn a1 i [MOD xn a1 n]),
-              (tk : yn b1 j ≡ k [MOD 4*yn a1 i])⟩,
-            (ky : k ≤ yn a1 i) =>
-            ((Nat.eq_zero_or_posₓ i).elim
-                fun i0 =>
-                  by 
-                    simp [i0] at ky <;> rw [i0, ky] <;> exact ⟨rfl, rfl⟩)$
-              fun ipos =>
-                suffices i = k by 
-                  rw [this] <;> exact ⟨rfl, rfl⟩
-                by 
-                  clear _x o rem xy uv st _match _match _fun_match <;>
-                    exact
-                      have iln : i ≤ n :=
-                        le_of_not_gtₓ$
-                          fun hin => not_lt_of_geₓ (Nat.le_of_dvdₓ vp (dvd_of_mul_left_dvd yv)) (strict_mono_y a1 hin)
-                      have yd : (4*yn a1 i) ∣ 4*n := mul_dvd_mul_left _$ dvd_of_ysq_dvd a1 yv 
-                      have jk : j ≡ k [MOD 4*yn a1 i] :=
-                        have  : (4*yn a1 i) ∣ b - 1 :=
-                          Int.coe_nat_dvd.1$
-                            by 
-                              rw [Int.coe_nat_subₓ (le_of_ltₓ b1)] <;> exact bm1.symm.dvd
-                        ((yn_modeq_a_sub_one b1 _).modeq_of_dvd this).symm.trans tk 
-                      have ki : (k+i) < 4*yn a1 i :=
-                        lt_of_le_of_ltₓ (add_le_add ky (yn_ge_n a1 i))$
-                          by 
-                            rw [←two_mul] <;>
-                              exact
-                                Nat.mul_lt_mul_of_pos_rightₓ
-                                  (by 
-                                    decide)
-                                  (strict_mono_y a1 ipos)
-                      have ji : j ≡ i [MOD 4*n] :=
-                        have  : xn a1 j ≡ xn a1 i [MOD xn a1 n] := (xy_modeq_of_modeq b1 a1 ba j).left.symm.trans sx
-                        (modeq_of_xn_modeq a1 ipos iln this).resolve_right$
-                          fun ji : (j+i) ≡ 0 [MOD 4*n] =>
-                            not_le_of_gtₓ ki$
-                              Nat.le_of_dvdₓ (lt_of_lt_of_leₓ ipos$ Nat.le_add_leftₓ _ _)$
-                                modeq_zero_iff_dvd.1$ (jk.symm.add_right i).trans$ ji.modeq_of_dvd yd 
-                      by 
-                        have  : (i % 4*yn a1 i) = k % 4*yn a1 i := (ji.modeq_of_dvd yd).symm.trans jk <;>
-                          rwa [Nat.mod_eq_of_ltₓ (lt_of_le_of_ltₓ (Nat.le_add_leftₓ _ _) ki),
-                            Nat.mod_eq_of_ltₓ (lt_of_le_of_ltₓ (Nat.le_add_rightₓ _ _) ki)] at this⟩⟩
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem matiyasevic
+{a
+ k
+ x
+ y} : «expr ↔ »(«expr∃ , »((a1 : «expr < »(1, a)), «expr ∧ »(«expr = »(xn a1 k, x), «expr = »(yn a1 k, y))), «expr ∧ »(«expr < »(1, a), «expr ∧ »(«expr ≤ »(k, y), «expr ∨ »(«expr ∧ »(«expr = »(x, 1), «expr = »(y, 0)), «expr∃ , »((u
+      v
+      s
+      t
+      b : exprℕ()), «expr ∧ »(«expr = »(«expr - »(«expr * »(x, x), «expr * »(«expr * »(«expr - »(«expr * »(a, a), 1), y), y)), 1), «expr ∧ »(«expr = »(«expr - »(«expr * »(u, u), «expr * »(«expr * »(«expr - »(«expr * »(a, a), 1), v), v)), 1), «expr ∧ »(«expr = »(«expr - »(«expr * »(s, s), «expr * »(«expr * »(«expr - »(«expr * »(b, b), 1), t), t)), 1), «expr ∧ »(«expr < »(1, b), «expr ∧ »(«expr ≡ [MOD ]»(b, 1, «expr * »(4, y)), «expr ∧ »(«expr ≡ [MOD ]»(b, a, u), «expr ∧ »(«expr < »(0, v), «expr ∧ »(«expr ∣ »(«expr * »(y, y), v), «expr ∧ »(«expr ≡ [MOD ]»(s, x, u), «expr ≡ [MOD ]»(t, k, «expr * »(4, y)))))))))))))))) :=
+⟨λ
+ ⟨a1, hx, hy⟩, by rw ["[", "<-", expr hx, ",", "<-", expr hy, "]"] []; refine [expr ⟨a1, (nat.eq_zero_or_pos k).elim (λ
+    k0, by rw [expr k0] []; exact [expr ⟨le_rfl, or.inl ⟨rfl, rfl⟩⟩]) (λ
+    kpos, _)⟩]; exact [expr let x := xn a1 k,
+      y := yn a1 k,
+      m := «expr * »(2, «expr * »(k, y)),
+      u := xn a1 m,
+      v := yn a1 m in
+  have ky : «expr ≤ »(k, y), from yn_ge_n a1 k,
+  have yv : «expr ∣ »(«expr * »(y, y), v), from «expr $ »((ysq_dvd_yy a1 k).trans, «expr $ »((y_dvd_iff _ _ _).2, dvd_mul_left _ _)),
+  have uco : nat.coprime u «expr * »(4, y), from have «expr ∣ »(2, v), from «expr $ »(modeq_zero_iff_dvd.1, (yn_modeq_two _ _).trans (dvd_mul_right _ _).modeq_zero_nat),
+  have nat.coprime u 2, from (xy_coprime a1 m).coprime_dvd_right this,
+  «expr $ »((this.mul_right this).mul_right, (xy_coprime _ _).coprime_dvd_right (dvd_of_mul_left_dvd yv)),
+  let ⟨b, ba, bm1⟩ := chinese_remainder uco a 1 in
+  have m1 : «expr < »(1, m), from have «expr < »(0, «expr * »(k, y)), from mul_pos kpos (strict_mono_y a1 kpos),
+  nat.mul_le_mul_left 2 this,
+  have vp : «expr < »(0, v), from strict_mono_y a1 (lt_trans zero_lt_one m1),
+  have b1 : «expr < »(1, b), from have «expr < »(xn a1 1, u), from strict_mono_x a1 m1,
+  have «expr < »(a, u), by simp [] [] [] [] [] ["at", ident this]; exact [expr this],
+  «expr $ »(lt_of_lt_of_le a1, by delta [ident modeq] ["at", ident ba]; rw [expr nat.mod_eq_of_lt this] ["at", ident ba]; rw ["<-", expr ba] []; apply [expr nat.mod_le]),
+  let s := xn b1 k, t := yn b1 k in
+  have sx : «expr ≡ [MOD ]»(s, x, u), from (xy_modeq_of_modeq b1 a1 ba k).left,
+  have tk : «expr ≡ [MOD ]»(t, k, «expr * »(4, y)), from have «expr ∣ »(«expr * »(4, y), «expr - »(b, 1)), from «expr $ »(int.coe_nat_dvd.1, by rw [expr int.coe_nat_sub (le_of_lt b1)] []; exact [expr bm1.symm.dvd]),
+  (yn_modeq_a_sub_one _ _).modeq_of_dvd this,
+  ⟨ky, or.inr ⟨u, v, s, t, b, pell_eq _ _, pell_eq _ _, pell_eq _ _, b1, bm1, ba, vp, yv, sx, tk⟩⟩], λ
+ ⟨a1, ky, o⟩, ⟨a1, match o with
+  | or.inl ⟨x1, y0⟩ := by rw [expr y0] ["at", ident ky]; rw ["[", expr nat.eq_zero_of_le_zero ky, ",", expr x1, ",", expr y0, "]"] []; exact [expr ⟨rfl, rfl⟩]
+  | or.inr ⟨u, v, s, t, b, xy, uv, st, b1, rem⟩ := match x, y, eq_pell a1 xy, u, v, eq_pell a1 uv, s, t, eq_pell b1 st, rem, ky with
+  | ._, ._, ⟨i, rfl, rfl⟩, ._, ._, ⟨n, rfl, rfl⟩, ._, ._, ⟨j, rfl, rfl⟩, ⟨(bm1 : «expr ≡ [MOD ]»(b, 1, «expr * »(4, yn a1 i))), (ba : «expr ≡ [MOD ]»(b, a, xn a1 n)), (vp : «expr < »(0, yn a1 n)), (yv : «expr ∣ »(«expr * »(yn a1 i, yn a1 i), yn a1 n)), (sx : «expr ≡ [MOD ]»(xn b1 j, xn a1 i, xn a1 n)), (tk : «expr ≡ [MOD ]»(yn b1 j, k, «expr * »(4, yn a1 i)))⟩, (ky : «expr ≤ »(k, yn a1 i)) := «expr $ »((nat.eq_zero_or_pos i).elim (λ
+    i0, by simp [] [] [] ["[", expr i0, "]"] [] ["at", ident ky]; rw ["[", expr i0, ",", expr ky, "]"] []; exact [expr ⟨rfl, rfl⟩]), λ
+   ipos, suffices «expr = »(i, k), by rw [expr this] []; exact [expr ⟨rfl, rfl⟩],
+   by clear [ident _x, ident o, ident rem, ident xy, ident uv, ident st, ident _match, ident _match, ident _fun_match]; exact [expr have iln : «expr ≤ »(i, n), from «expr $ »(le_of_not_gt, λ
+     hin, not_lt_of_ge (nat.le_of_dvd vp (dvd_of_mul_left_dvd yv)) (strict_mono_y a1 hin)),
+    have yd : «expr ∣ »(«expr * »(4, yn a1 i), «expr * »(4, n)), from «expr $ »(mul_dvd_mul_left _, dvd_of_ysq_dvd a1 yv),
+    have jk : «expr ≡ [MOD ]»(j, k, «expr * »(4, yn a1 i)), from have «expr ∣ »(«expr * »(4, yn a1 i), «expr - »(b, 1)), from «expr $ »(int.coe_nat_dvd.1, by rw [expr int.coe_nat_sub (le_of_lt b1)] []; exact [expr bm1.symm.dvd]),
+    ((yn_modeq_a_sub_one b1 _).modeq_of_dvd this).symm.trans tk,
+    have ki : «expr < »(«expr + »(k, i), «expr * »(4, yn a1 i)), from «expr $ »(lt_of_le_of_lt (add_le_add ky (yn_ge_n a1 i)), by rw ["<-", expr two_mul] []; exact [expr nat.mul_lt_mul_of_pos_right exprdec_trivial() (strict_mono_y a1 ipos)]),
+    have ji : «expr ≡ [MOD ]»(j, i, «expr * »(4, n)), from have «expr ≡ [MOD ]»(xn a1 j, xn a1 i, xn a1 n), from (xy_modeq_of_modeq b1 a1 ba j).left.symm.trans sx,
+    «expr $ »((modeq_of_xn_modeq a1 ipos iln this).resolve_right, λ
+     ji : «expr ≡ [MOD ]»(«expr + »(j, i), 0, «expr * »(4, n)), «expr $ »(not_le_of_gt ki, «expr $ »(nat.le_of_dvd «expr $ »(lt_of_lt_of_le ipos, nat.le_add_left _ _), «expr $ »(modeq_zero_iff_dvd.1, «expr $ »((jk.symm.add_right i).trans, ji.modeq_of_dvd yd))))),
+    by have [] [":", expr «expr = »(«expr % »(i, «expr * »(4, yn a1 i)), «expr % »(k, «expr * »(4, yn a1 i)))] [":=", expr (ji.modeq_of_dvd yd).symm.trans jk]; rwa ["[", expr nat.mod_eq_of_lt (lt_of_le_of_lt (nat.le_add_left _ _) ki), ",", expr nat.mod_eq_of_lt (lt_of_le_of_lt (nat.le_add_right _ _) ki), "]"] ["at", ident this]])
+  end
+  end⟩⟩
 
-theorem eq_pow_of_pell_lem {a y k} (a1 : 1 < a) (ypos : 0 < y) :
-  0 < k → y ^ k < a → («expr↑ » (y ^ k) : ℤ) < (((2*a)*y) - y*y) - 1 :=
-  have  : y < a → (a+(y*y)+1) ≤ (2*a)*y :=
-    by 
-      intro ya 
-      induction' y with y IH 
-      exact absurd ypos (lt_irreflₓ _)
-      cases' Nat.eq_zero_or_posₓ y with y0 ypos
-      ·
-        rw [y0]
-        simpa [two_mul]
-      ·
-        rw [Nat.mul_succ, Nat.mul_succ, Nat.succ_mul y]
-        have  : (y+Nat.succ y) ≤ 2*a
-        ·
-          change (y+y) < 2*a 
-          rw [←two_mul]
-          exact
-            mul_lt_mul_of_pos_left (Nat.lt_of_succ_ltₓ ya)
-              (by 
-                decide)
-        have  := add_le_add (IH ypos (Nat.lt_of_succ_ltₓ ya)) this 
-        convert this using 1
-        ring 
-  fun k0 yak =>
-    lt_of_lt_of_leₓ (Int.coe_nat_lt_coe_nat_of_lt yak)$
-      by 
-        rw [sub_sub] <;>
-          apply le_sub_right_of_add_le <;>
-            apply Int.coe_nat_le_coe_nat_of_le <;>
-              have y1 := Nat.pow_le_pow_of_le_rightₓ ypos k0 <;> simp  at y1 <;> exact this (lt_of_le_of_ltₓ y1 yak)
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_pow_of_pell_lem
+{a y k}
+(a1 : «expr < »(1, a))
+(ypos : «expr < »(0, y)) : «expr < »(0, k) → «expr < »(«expr ^ »(y, k), a) → «expr < »((«expr↑ »(«expr ^ »(y, k)) : exprℤ()), «expr - »(«expr - »(«expr * »(«expr * »(2, a), y), «expr * »(y, y)), 1)) :=
+have «expr < »(y, a) → «expr ≤ »(«expr + »(a, «expr + »(«expr * »(y, y), 1)), «expr * »(«expr * »(2, a), y)), begin
+  intro [ident ya],
+  induction [expr y] [] ["with", ident y, ident IH] [],
+  exact [expr absurd ypos (lt_irrefl _)],
+  cases [expr nat.eq_zero_or_pos y] ["with", ident y0, ident ypos],
+  { rw [expr y0] [],
+    simpa [] [] [] ["[", expr two_mul, "]"] [] [] },
+  { rw ["[", expr nat.mul_succ, ",", expr nat.mul_succ, ",", expr nat.succ_mul y, "]"] [],
+    have [] [":", expr «expr ≤ »(«expr + »(y, nat.succ y), «expr * »(2, a))] [],
+    { change [expr «expr < »(«expr + »(y, y), «expr * »(2, a))] [] [],
+      rw ["<-", expr two_mul] [],
+      exact [expr mul_lt_mul_of_pos_left (nat.lt_of_succ_lt ya) exprdec_trivial()] },
+    have [] [] [":=", expr add_le_add (IH ypos (nat.lt_of_succ_lt ya)) this],
+    convert [] [expr this] ["using", 1],
+    ring [] }
+end,
+λ
+k0
+yak, «expr $ »(lt_of_lt_of_le (int.coe_nat_lt_coe_nat_of_lt yak), by rw [expr sub_sub] []; apply [expr le_sub_right_of_add_le]; apply [expr int.coe_nat_le_coe_nat_of_le]; have [ident y1] [] [":=", expr nat.pow_le_pow_of_le_right ypos k0]; simp [] [] [] [] [] ["at", ident y1]; exact [expr this (lt_of_le_of_lt y1 yak)])
 
--- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exact: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem eq_pow_of_pell
 {m
  n

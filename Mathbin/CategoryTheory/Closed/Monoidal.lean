@@ -24,7 +24,7 @@ class closed{C : Type u}[category.{v} C][monoidal_category.{v} C](X : C) where
 
 /-- A monoidal category `C` is (right) monoidal closed if every object is (right) closed. -/
 class monoidal_closed(C : Type u)[category.{v} C][monoidal_category.{v} C] where 
-  closed : ∀ X : C, closed X
+  Closed : ∀ X : C, closed X
 
 attribute [instance] monoidal_closed.closed
 

@@ -199,84 +199,62 @@ instance StructureGroupoid.partialOrder : PartialOrderₓ (StructureGroupoid H) 
 theorem StructureGroupoid.le_iff {G₁ G₂ : StructureGroupoid H} : G₁ ≤ G₂ ↔ ∀ e, e ∈ G₁ → e ∈ G₂ :=
   Iff.rfl
 
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The trivial groupoid, containing only the identity (and maps with empty source, as this is
-necessary from the definition) -/
-def idGroupoid (H : Type u) [TopologicalSpace H] : StructureGroupoid H :=
-  { Members := {LocalHomeomorph.refl H} ∪ { e : LocalHomeomorph H H | e.source = ∅ },
-    trans' :=
-      fun e e' he he' =>
-        by 
-          cases he <;> simp  at he he'
-          ·
-            simpa only [he, refl_trans]
-          ·
-            have  : (e ≫ₕ e').Source ⊆ e.source := sep_subset _ _ 
-            rw [he] at this 
-            have  : e ≫ₕ e' ∈ { e : LocalHomeomorph H H | e.source = ∅ } := disjoint_iff.1 this 
-            exact (mem_union _ _ _).2 (Or.inr this),
-    symm' :=
-      fun e he =>
-        by 
-          cases' (mem_union _ _ _).1 he with E E
-          ·
-            finish
-          ·
-            right 
-            simpa only [e.to_local_equiv.image_source_eq_target.symm] with mfld_simps using E,
-    id_mem' := mem_union_left _ rfl,
-    locality' :=
-      fun e he =>
-        by 
-          cases' e.source.eq_empty_or_nonempty with h h
-          ·
-            right 
-            exact h
-          ·
-            left 
-            rcases h with ⟨x, hx⟩
-            rcases he x hx with ⟨s, open_s, xs, hs⟩
-            have x's : x ∈ (e.restr s).Source
-            ·
-              rw [restr_source, open_s.interior_eq]
-              exact ⟨hx, xs⟩
-            cases hs
-            ·
-              replace hs : LocalHomeomorph.restr e s = LocalHomeomorph.refl H
-              ·
-                simpa only using hs 
-              have  : (e.restr s).Source = univ
-              ·
-                ·
-                  rw [hs]
-                  simp 
-              change e.to_local_equiv.Source ∩ Interior s = univ at this 
-              have  : univ ⊆ Interior s
-              ·
-                ·
-                  rw [←this]
-                  exact inter_subset_right _ _ 
-              have  : s = univ
-              ·
-                rwa [open_s.interior_eq, univ_subset_iff] at this 
-              simpa only [this, restr_univ] using hs
-            ·
-              exFalso 
-              rw [mem_set_of_eq] at hs 
-              rwa [hs] at x's,
-    eq_on_source' :=
-      fun e e' he he'e =>
-        by 
-          cases he
-          ·
-            left 
-            have  : e = e'
-            ·
-              refine' eq_of_eq_on_source_univ (Setoidₓ.symm he'e) _ _ <;> rw [Set.mem_singleton_iff.1 he] <;> rfl 
-            rwa [←this]
-          ·
-            right 
-            change e.to_local_equiv.Source = ∅ at he 
-            rwa [Set.mem_set_of_eq, he'e.source_eq] }
+necessary from the definition) -/ def id_groupoid (H : Type u) [topological_space H] : structure_groupoid H :=
+{ members := «expr ∪ »({local_homeomorph.refl H}, {e : local_homeomorph H H | «expr = »(e.source, «expr∅»())}),
+  trans' := λ e e' he he', begin
+    cases [expr he] []; simp [] [] [] [] [] ["at", ident he, ident he'],
+    { simpa [] [] ["only"] ["[", expr he, ",", expr refl_trans, "]"] [] [] },
+    { have [] [":", expr «expr ⊆ »(«expr ≫ₕ »(e, e').source, e.source)] [":=", expr sep_subset _ _],
+      rw [expr he] ["at", ident this],
+      have [] [":", expr «expr ∈ »(«expr ≫ₕ »(e, e'), {e : local_homeomorph H H | «expr = »(e.source, «expr∅»())})] [":=", expr disjoint_iff.1 this],
+      exact [expr (mem_union _ _ _).2 (or.inr this)] }
+  end,
+  symm' := λ e he, begin
+    cases [expr (mem_union _ _ _).1 he] ["with", ident E, ident E],
+    { finish [] [] },
+    { right,
+      simpa [] [] ["only"] ["[", expr e.to_local_equiv.image_source_eq_target.symm, "]"] ["with", ident mfld_simps] ["using", expr E] }
+  end,
+  id_mem' := mem_union_left _ rfl,
+  locality' := λ e he, begin
+    cases [expr e.source.eq_empty_or_nonempty] ["with", ident h, ident h],
+    { right,
+      exact [expr h] },
+    { left,
+      rcases [expr h, "with", "⟨", ident x, ",", ident hx, "⟩"],
+      rcases [expr he x hx, "with", "⟨", ident s, ",", ident open_s, ",", ident xs, ",", ident hs, "⟩"],
+      have [ident x's] [":", expr «expr ∈ »(x, (e.restr s).source)] [],
+      { rw ["[", expr restr_source, ",", expr open_s.interior_eq, "]"] [],
+        exact [expr ⟨hx, xs⟩] },
+      cases [expr hs] [],
+      { replace [ident hs] [":", expr «expr = »(local_homeomorph.restr e s, local_homeomorph.refl H)] [],
+        by simpa [] [] ["only"] [] [] ["using", expr hs],
+        have [] [":", expr «expr = »((e.restr s).source, univ)] [],
+        by { rw [expr hs] [],
+          simp [] [] [] [] [] [] },
+        change [expr «expr = »(«expr ∩ »(e.to_local_equiv.source, interior s), univ)] [] ["at", ident this],
+        have [] [":", expr «expr ⊆ »(univ, interior s)] [],
+        by { rw ["<-", expr this] [],
+          exact [expr inter_subset_right _ _] },
+        have [] [":", expr «expr = »(s, univ)] [],
+        by rwa ["[", expr open_s.interior_eq, ",", expr univ_subset_iff, "]"] ["at", ident this],
+        simpa [] [] ["only"] ["[", expr this, ",", expr restr_univ, "]"] [] ["using", expr hs] },
+      { exfalso,
+        rw [expr mem_set_of_eq] ["at", ident hs],
+        rwa [expr hs] ["at", ident x's] } }
+  end,
+  eq_on_source' := λ e e' he he'e, begin
+    cases [expr he] [],
+    { left,
+      have [] [":", expr «expr = »(e, e')] [],
+      { refine [expr eq_of_eq_on_source_univ (setoid.symm he'e) _ _]; rw [expr set.mem_singleton_iff.1 he] []; refl },
+      rwa ["<-", expr this] [] },
+    { right,
+      change [expr «expr = »(e.to_local_equiv.source, «expr∅»())] [] ["at", ident he],
+      rwa ["[", expr set.mem_set_of_eq, ",", expr he'e.source_eq, "]"] [] }
+  end }
 
 /-- Every structure groupoid contains the identity groupoid -/
 instance  : OrderBot (StructureGroupoid H) :=
@@ -284,7 +262,7 @@ instance  : OrderBot (StructureGroupoid H) :=
     bot_le :=
       by 
         intro u f hf 
-        change f ∈ {LocalHomeomorph.refl H} ∪ { e : LocalHomeomorph H H | e.source = ∅ } at hf 
+        change f ∈ {LocalHomeomorph.refl H} ∪ { e:LocalHomeomorph H H | e.source = ∅ } at hf 
         simp only [singleton_union, mem_set_of_eq, mem_insert_iff] at hf 
         cases hf
         ·
@@ -311,56 +289,47 @@ structure Pregroupoid(H : Type _)[TopologicalSpace H] where
   locality : ∀ {f u}, IsOpen u → (∀ x _ : x ∈ u, ∃ v, IsOpen v ∧ x ∈ v ∧ property f (u ∩ v)) → property f u 
   congr : ∀ {f g : H → H} {u}, IsOpen u → (∀ x _ : x ∈ u, g x = f x) → property f u → property g u
 
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct a groupoid of local homeos for which the map and its inverse have some property,
 from a pregroupoid asserting that this property is stable under composition. -/
-def Pregroupoid.groupoid (PG : Pregroupoid H) : StructureGroupoid H :=
-  { Members := { e : LocalHomeomorph H H | PG.property e e.source ∧ PG.property e.symm e.target },
-    trans' :=
-      fun e e' he he' =>
-        by 
-          split 
-          ·
-            apply PG.comp he.1 he'.1 e.open_source e'.open_source 
-            apply e.continuous_to_fun.preimage_open_of_open e.open_source e'.open_source
-          ·
-            apply PG.comp he'.2 he.2 e'.open_target e.open_target 
-            apply e'.continuous_inv_fun.preimage_open_of_open e'.open_target e.open_target,
-    symm' := fun e he => ⟨he.2, he.1⟩, id_mem' := ⟨PG.id_mem, PG.id_mem⟩,
-    locality' :=
-      fun e he =>
-        by 
-          split 
-          ·
-            apply PG.locality e.open_source fun x xu => _ 
-            rcases he x xu with ⟨s, s_open, xs, hs⟩
-            refine' ⟨s, s_open, xs, _⟩
-            convert hs.1 using 1
-            dsimp [LocalHomeomorph.restr]
-            rw [s_open.interior_eq]
-          ·
-            apply PG.locality e.open_target fun x xu => _ 
-            rcases he (e.symm x) (e.map_target xu) with ⟨s, s_open, xs, hs⟩
-            refine' ⟨e.target ∩ e.symm ⁻¹' s, _, ⟨xu, xs⟩, _⟩
-            ·
-              exact ContinuousOn.preimage_open_of_open e.continuous_inv_fun e.open_target s_open
-            ·
-              rw [←inter_assoc, inter_self]
-              convert hs.2 using 1
-              dsimp [LocalHomeomorph.restr]
-              rw [s_open.interior_eq],
-    eq_on_source' :=
-      fun e e' he ee' =>
-        by 
-          split 
-          ·
-            apply PG.congr e'.open_source ee'.2
-            simp only [ee'.1, he.1]
-          ·
-            have A := ee'.symm' 
-            apply PG.congr e'.symm.open_source A.2
-            convert he.2
-            rw [A.1]
-            rfl }
+def pregroupoid.groupoid (PG : pregroupoid H) : structure_groupoid H :=
+{ members := {e : local_homeomorph H H | «expr ∧ »(PG.property e e.source, PG.property e.symm e.target)},
+  trans' := λ e e' he he', begin
+    split,
+    { apply [expr PG.comp he.1 he'.1 e.open_source e'.open_source],
+      apply [expr e.continuous_to_fun.preimage_open_of_open e.open_source e'.open_source] },
+    { apply [expr PG.comp he'.2 he.2 e'.open_target e.open_target],
+      apply [expr e'.continuous_inv_fun.preimage_open_of_open e'.open_target e.open_target] }
+  end,
+  symm' := λ e he, ⟨he.2, he.1⟩,
+  id_mem' := ⟨PG.id_mem, PG.id_mem⟩,
+  locality' := λ e he, begin
+    split,
+    { apply [expr PG.locality e.open_source (λ x xu, _)],
+      rcases [expr he x xu, "with", "⟨", ident s, ",", ident s_open, ",", ident xs, ",", ident hs, "⟩"],
+      refine [expr ⟨s, s_open, xs, _⟩],
+      convert [] [expr hs.1] ["using", 1],
+      dsimp [] ["[", expr local_homeomorph.restr, "]"] [] [],
+      rw [expr s_open.interior_eq] [] },
+    { apply [expr PG.locality e.open_target (λ x xu, _)],
+      rcases [expr he (e.symm x) (e.map_target xu), "with", "⟨", ident s, ",", ident s_open, ",", ident xs, ",", ident hs, "⟩"],
+      refine [expr ⟨«expr ∩ »(e.target, «expr ⁻¹' »(e.symm, s)), _, ⟨xu, xs⟩, _⟩],
+      { exact [expr continuous_on.preimage_open_of_open e.continuous_inv_fun e.open_target s_open] },
+      { rw ["[", "<-", expr inter_assoc, ",", expr inter_self, "]"] [],
+        convert [] [expr hs.2] ["using", 1],
+        dsimp [] ["[", expr local_homeomorph.restr, "]"] [] [],
+        rw [expr s_open.interior_eq] [] } }
+  end,
+  eq_on_source' := λ e e' he ee', begin
+    split,
+    { apply [expr PG.congr e'.open_source ee'.2],
+      simp [] [] ["only"] ["[", expr ee'.1, ",", expr he.1, "]"] [] [] },
+    { have [ident A] [] [":=", expr ee'.symm'],
+      apply [expr PG.congr e'.symm.open_source A.2],
+      convert [] [expr he.2] [],
+      rw [expr A.1] [],
+      refl }
+  end }
 
 theorem mem_groupoid_of_pregroupoid {PG : Pregroupoid H} {e : LocalHomeomorph H H} :
   e ∈ PG.groupoid ↔ PG.property e e.source ∧ PG.property e.symm e.target :=
@@ -412,47 +381,39 @@ theorem closed_under_restriction' {G : StructureGroupoid H} [ClosedUnderRestrict
   (he : e ∈ G) {s : Set H} (hs : IsOpen s) : e.restr s ∈ G :=
   ClosedUnderRestriction.closed_under_restriction he s hs
 
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The trivial restriction-closed groupoid, containing only local homeomorphisms equivalent to the
-restriction of the identity to the various open subsets. -/
-def idRestrGroupoid : StructureGroupoid H :=
-  { Members := { e | ∃ (s : Set H)(h : IsOpen s), e ≈ LocalHomeomorph.ofSet s h },
-    trans' :=
-      by 
-        rintro e e' ⟨s, hs, hse⟩ ⟨s', hs', hse'⟩
-        refine' ⟨s ∩ s', IsOpen.inter hs hs', _⟩
-        have  := LocalHomeomorph.EqOnSource.trans' hse hse' 
-        rwa [LocalHomeomorph.of_set_trans_of_set] at this,
-    symm' :=
-      by 
-        rintro e ⟨s, hs, hse⟩
-        refine' ⟨s, hs, _⟩
-        rw [←of_set_symm]
-        exact LocalHomeomorph.EqOnSource.symm' hse,
-    id_mem' :=
-      ⟨univ, is_open_univ,
-        by 
-          simp' only with mfld_simps⟩,
-    locality' :=
-      by 
-        intro e h 
-        refine'
-          ⟨e.source, e.open_source,
-            by 
-              simp' only with mfld_simps,
-            _⟩
-        intro x hx 
-        rcases h x hx with ⟨s, hs, hxs, s', hs', hes'⟩
-        have hes : x ∈ (e.restr s).Source
-        ·
-          rw [e.restr_source]
-          refine' ⟨hx, _⟩
-          rw [hs.interior_eq]
-          exact hxs 
-        simpa only with mfld_simps using LocalHomeomorph.EqOnSource.eq_on hes' hes,
-    eq_on_source' :=
-      by 
-        rintro e e' ⟨s, hs, hse⟩ hee' 
-        exact ⟨s, hs, Setoidₓ.trans hee' hse⟩ }
+restriction of the identity to the various open subsets. -/ def id_restr_groupoid : structure_groupoid H :=
+{ members := {e | «expr∃ , »({s : set H} (h : is_open s), «expr ≈ »(e, local_homeomorph.of_set s h))},
+  trans' := begin
+    rintros [ident e, ident e', "⟨", ident s, ",", ident hs, ",", ident hse, "⟩", "⟨", ident s', ",", ident hs', ",", ident hse', "⟩"],
+    refine [expr ⟨«expr ∩ »(s, s'), is_open.inter hs hs', _⟩],
+    have [] [] [":=", expr local_homeomorph.eq_on_source.trans' hse hse'],
+    rwa [expr local_homeomorph.of_set_trans_of_set] ["at", ident this]
+  end,
+  symm' := begin
+    rintros [ident e, "⟨", ident s, ",", ident hs, ",", ident hse, "⟩"],
+    refine [expr ⟨s, hs, _⟩],
+    rw ["[", "<-", expr of_set_symm, "]"] [],
+    exact [expr local_homeomorph.eq_on_source.symm' hse]
+  end,
+  id_mem' := ⟨univ, is_open_univ, by simp [] [] ["only"] [] ["with", ident mfld_simps] []⟩,
+  locality' := begin
+    intros [ident e, ident h],
+    refine [expr ⟨e.source, e.open_source, by simp [] [] ["only"] [] ["with", ident mfld_simps] [], _⟩],
+    intros [ident x, ident hx],
+    rcases [expr h x hx, "with", "⟨", ident s, ",", ident hs, ",", ident hxs, ",", ident s', ",", ident hs', ",", ident hes', "⟩"],
+    have [ident hes] [":", expr «expr ∈ »(x, (e.restr s).source)] [],
+    { rw [expr e.restr_source] [],
+      refine [expr ⟨hx, _⟩],
+      rw [expr hs.interior_eq] [],
+      exact [expr hxs] },
+    simpa [] [] ["only"] [] ["with", ident mfld_simps] ["using", expr local_homeomorph.eq_on_source.eq_on hes' hes]
+  end,
+  eq_on_source' := begin
+    rintros [ident e, ident e', "⟨", ident s, ",", ident hs, ",", ident hse, "⟩", ident hee'],
+    exact [expr ⟨s, hs, setoid.trans hee' hse⟩]
+  end }
 
 theorem id_restr_groupoid_mem {s : Set H} (hs : IsOpen s) : of_set s hs ∈ @idRestrGroupoid H _ :=
   ⟨s, hs,
@@ -477,7 +438,7 @@ theorem closed_under_restriction_iff_id_le (G : StructureGroupoid H) : ClosedUnd
   by 
     split 
     ·
-      introI _i 
+      intros _i 
       apply structure_groupoid.le_iff.mpr 
       rintro e ⟨s, hs, hes⟩
       refine' G.eq_on_source _ hes 
@@ -552,35 +513,38 @@ variable(H)[TopologicalSpace H][TopologicalSpace M][ChartedSpace H M]
 theorem mem_chart_target (x : M) : chart_at H x x ∈ (chart_at H x).Target :=
   (chart_at H x).map_source (mem_chart_source _ _)
 
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a topological space admits an atlas with locally compact charts, then the space itself
-is locally compact. -/
-theorem ChartedSpace.locally_compact [LocallyCompactSpace H] : LocallyCompactSpace M :=
-  by 
-    have  :
-      ∀ x : M,
-        (𝓝 x).HasBasis (fun s => s ∈ 𝓝 (chart_at H x x) ∧ IsCompact s ∧ s ⊆ (chart_at H x).Target)
-          fun s => (chart_at H x).symm '' s
-    ·
-      intro x 
-      rw [←(chart_at H x).symm_map_nhds_eq (mem_chart_source H x)]
-      exact
-        ((compact_basis_nhds (chart_at H x x)).has_basis_self_subset
-              (IsOpen.mem_nhds (chart_at H x).open_target (mem_chart_target H x))).map
-          _ 
-    refine' locally_compact_space_of_has_basis this _ 
-    rintro x s ⟨h₁, h₂, h₃⟩
-    exact h₂.image_of_continuous_on ((chart_at H x).continuous_on_symm.mono h₃)
+is locally compact. -/ theorem charted_space.locally_compact [locally_compact_space H] : locally_compact_space M :=
+begin
+  have [] [":", expr ∀
+   x : M, (expr𝓝() x).has_basis (λ
+    s, «expr ∧ »(«expr ∈ »(s, expr𝓝() (chart_at H x x)), «expr ∧ »(is_compact s, «expr ⊆ »(s, (chart_at H x).target)))) (λ
+    s, «expr '' »((chart_at H x).symm, s))] [],
+  { intro [ident x],
+    rw ["[", "<-", expr (chart_at H x).symm_map_nhds_eq (mem_chart_source H x), "]"] [],
+    exact [expr ((compact_basis_nhds (chart_at H x x)).has_basis_self_subset (is_open.mem_nhds (chart_at H x).open_target (mem_chart_target H x))).map _] },
+  refine [expr locally_compact_space_of_has_basis this _],
+  rintro [ident x, ident s, "⟨", ident h₁, ",", ident h₂, ",", ident h₃, "⟩"],
+  exact [expr h₂.image_of_continuous_on ((chart_at H x).continuous_on_symm.mono h₃)]
+end
 
 open TopologicalSpace
 
-theorem ChartedSpace.second_countable_of_countable_cover [second_countable_topology H] {s : Set M}
-  (hs : (⋃(x : _)(hx : x ∈ s), (chart_at H x).Source) = univ) (hsc : countable s) : second_countable_topology M :=
-  by 
-    haveI  : ∀ x : M, second_countable_topology (chart_at H x).Source :=
-      fun x => (chart_at H x).second_countable_topology_source 
-    haveI  := hsc.to_encodable 
-    rw [bUnion_eq_Union] at hs 
-    exact second_countable_topology_of_countable_cover (fun x : s => (chart_at H (x : M)).open_source) hs
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem charted_space.second_countable_of_countable_cover
+[second_countable_topology H]
+{s : set M}
+(hs : «expr = »(«expr⋃ , »((x) (hx : «expr ∈ »(x, s)), (chart_at H x).source), univ))
+(hsc : countable s) : second_countable_topology M :=
+begin
+  haveI [] [":", expr ∀
+   x : M, second_countable_topology (chart_at H x).source] [":=", expr λ
+   x, (chart_at H x).second_countable_topology_source],
+  haveI [] [] [":=", expr hsc.to_encodable],
+  rw [expr bUnion_eq_Union] ["at", ident hs],
+  exact [expr second_countable_topology_of_countable_cover (λ x : s, (chart_at H (x : M)).open_source) hs]
+end
 
 theorem ChartedSpace.second_countable_of_sigma_compact [second_countable_topology H] [SigmaCompactSpace M] :
   second_countable_topology M :=
@@ -719,54 +683,50 @@ theorem open_source' (he : e ∈ c.atlas) : @IsOpen M c.to_topological_space e.s
     refine' ⟨e, he, univ, is_open_univ, _⟩
     simp only [Set.univ_inter, Set.preimage_univ]
 
-theorem open_target (he : e ∈ c.atlas) : IsOpen e.target :=
-  by 
-    have E : e.target ∩ e.symm ⁻¹' e.source = e.target :=
-      subset.antisymm (inter_subset_left _ _) fun x hx => ⟨hx, LocalEquiv.target_subset_preimage_source _ hx⟩
-    simpa [LocalEquiv.trans_source, E] using c.open_source e e he he
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem open_target (he : «expr ∈ »(e, c.atlas)) : is_open e.target :=
+begin
+  have [ident E] [":", expr «expr = »(«expr ∩ »(e.target, «expr ⁻¹' »(e.symm, e.source)), e.target)] [":=", expr subset.antisymm (inter_subset_left _ _) (λ
+    x hx, ⟨hx, local_equiv.target_subset_preimage_source _ hx⟩)],
+  simpa [] [] [] ["[", expr local_equiv.trans_source, ",", expr E, "]"] [] ["using", expr c.open_source e e he he]
+end
 
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An element of the atlas in a charted space without topology becomes a local homeomorphism
 for the topology constructed from this atlas. The `local_homeomorph` version is given in this
 definition. -/
-protected def LocalHomeomorph (e : LocalEquiv M H) (he : e ∈ c.atlas) : @LocalHomeomorph M H c.to_topological_space _ :=
-  { e with
-    open_source :=
-      by 
-        convert c.open_source' he,
-    open_target :=
-      by 
-        convert c.open_target he,
-    continuous_to_fun :=
-      by 
-        letI this : TopologicalSpace M := c.to_topological_space 
-        rw [continuous_on_open_iff (c.open_source' he)]
-        intro s s_open 
-        rw [inter_comm]
-        apply TopologicalSpace.GenerateOpen.basic 
-        simp only [exists_prop, mem_Union, mem_singleton_iff]
-        exact ⟨e, he, ⟨s, s_open, rfl⟩⟩,
-    continuous_inv_fun :=
-      by 
-        letI this : TopologicalSpace M := c.to_topological_space 
-        apply continuous_on_open_of_generate_from (c.open_target he)
-        intro t ht 
-        simp only [exists_prop, mem_Union, mem_singleton_iff] at ht 
-        rcases ht with ⟨e', e'_atlas, s, s_open, ts⟩
-        rw [ts]
-        let f := e.symm.trans e' 
-        have  : IsOpen (f ⁻¹' s ∩ f.source)
-        ·
-          simpa [inter_comm] using
-            (continuous_on_open_iff (c.open_source e e' he e'_atlas)).1 (c.continuous_to_fun e e' he e'_atlas) s s_open 
-        have A :
-          (e' ∘ e.symm) ⁻¹' s ∩ (e.target ∩ e.symm ⁻¹' e'.source) =
-            e.target ∩ ((e' ∘ e.symm) ⁻¹' s ∩ e.symm ⁻¹' e'.source)
-        ·
-          ·
-            rw [←inter_assoc, ←inter_assoc]
-            congr 1 
-            exact inter_comm _ _ 
-        simpa [LocalEquiv.trans_source, preimage_inter, preimage_comp.symm, A] using this }
+protected
+def local_homeomorph
+(e : local_equiv M H)
+(he : «expr ∈ »(e, c.atlas)) : @local_homeomorph M H c.to_topological_space _ :=
+{ open_source := by convert [] [expr c.open_source' he] [],
+  open_target := by convert [] [expr c.open_target he] [],
+  continuous_to_fun := begin
+    letI [] [":", expr topological_space M] [":=", expr c.to_topological_space],
+    rw [expr continuous_on_open_iff (c.open_source' he)] [],
+    assume [binders (s s_open)],
+    rw [expr inter_comm] [],
+    apply [expr topological_space.generate_open.basic],
+    simp [] [] ["only"] ["[", expr exists_prop, ",", expr mem_Union, ",", expr mem_singleton_iff, "]"] [] [],
+    exact [expr ⟨e, he, ⟨s, s_open, rfl⟩⟩]
+  end,
+  continuous_inv_fun := begin
+    letI [] [":", expr topological_space M] [":=", expr c.to_topological_space],
+    apply [expr continuous_on_open_of_generate_from (c.open_target he)],
+    assume [binders (t ht)],
+    simp [] [] ["only"] ["[", expr exists_prop, ",", expr mem_Union, ",", expr mem_singleton_iff, "]"] [] ["at", ident ht],
+    rcases [expr ht, "with", "⟨", ident e', ",", ident e'_atlas, ",", ident s, ",", ident s_open, ",", ident ts, "⟩"],
+    rw [expr ts] [],
+    let [ident f] [] [":=", expr e.symm.trans e'],
+    have [] [":", expr is_open «expr ∩ »(«expr ⁻¹' »(f, s), f.source)] [],
+    by simpa [] [] [] ["[", expr inter_comm, "]"] [] ["using", expr (continuous_on_open_iff (c.open_source e e' he e'_atlas)).1 (c.continuous_to_fun e e' he e'_atlas) s s_open],
+    have [ident A] [":", expr «expr = »(«expr ∩ »(«expr ⁻¹' »(«expr ∘ »(e', e.symm), s), «expr ∩ »(e.target, «expr ⁻¹' »(e.symm, e'.source))), «expr ∩ »(e.target, «expr ∩ »(«expr ⁻¹' »(«expr ∘ »(e', e.symm), s), «expr ⁻¹' »(e.symm, e'.source))))] [],
+    by { rw ["[", "<-", expr inter_assoc, ",", "<-", expr inter_assoc, "]"] [],
+      congr' [1] [],
+      exact [expr inter_comm _ _] },
+    simpa [] [] [] ["[", expr local_equiv.trans_source, ",", expr preimage_inter, ",", expr preimage_comp.symm, ",", expr A, "]"] [] ["using", expr this]
+  end,
+  ..e }
 
 /-- Given a charted space without topology, endow it with a genuine charted space structure with
 respect to the topology constructed from the atlas. -/
@@ -857,44 +817,34 @@ theorem mem_maximal_atlas_iff {e : LocalHomeomorph M H} :
   e ∈ G.maximal_atlas M ↔ ∀ e' _ : e' ∈ atlas H M, e.symm ≫ₕ e' ∈ G ∧ e'.symm ≫ₕ e ∈ G :=
   Iff.rfl
 
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Changing coordinates between two elements of the maximal atlas gives rise to an element
 of the structure groupoid. -/
-theorem StructureGroupoid.compatible_of_mem_maximal_atlas {e e' : LocalHomeomorph M H} (he : e ∈ G.maximal_atlas M)
-  (he' : e' ∈ G.maximal_atlas M) : e.symm ≫ₕ e' ∈ G :=
-  by 
-    apply G.locality fun x hx => _ 
-    set f := chart_at H (e.symm x) with hf 
-    let s := e.target ∩ e.symm ⁻¹' f.source 
-    have hs : IsOpen s
-    ·
-      apply e.symm.continuous_to_fun.preimage_open_of_open <;> apply open_source 
-    have xs : x ∈ s
-    ·
-      ·
-        dsimp  at hx 
-        simp [s, hx]
-    refine' ⟨s, hs, xs, _⟩
-    have A : e.symm ≫ₕ f ∈ G := (mem_maximal_atlas_iff.1 he f (chart_mem_atlas _ _)).1
-    have B : f.symm ≫ₕ e' ∈ G := (mem_maximal_atlas_iff.1 he' f (chart_mem_atlas _ _)).2
-    have C : (e.symm ≫ₕ f) ≫ₕ f.symm ≫ₕ e' ∈ G := G.trans A B 
-    have D : (e.symm ≫ₕ f) ≫ₕ f.symm ≫ₕ e' ≈ (e.symm ≫ₕ e').restr s :=
-      calc (e.symm ≫ₕ f) ≫ₕ f.symm ≫ₕ e' = e.symm ≫ₕ (f ≫ₕ f.symm) ≫ₕ e' :=
-        by 
-          simp [trans_assoc]
-        _ ≈ e.symm ≫ₕ of_set f.source f.open_source ≫ₕ e' :=
-        by 
-          simp [eq_on_source.trans', trans_self_symm]
-        _ ≈ (e.symm ≫ₕ of_set f.source f.open_source) ≫ₕ e' :=
-        by 
-          simp [trans_assoc]
-        _ ≈ e.symm.restr s ≫ₕ e' :=
-        by 
-          simp [s, trans_of_set']
-        _ ≈ (e.symm ≫ₕ e').restr s :=
-        by 
-          simp [restr_trans]
-        
-    exact G.eq_on_source C (Setoidₓ.symm D)
+theorem structure_groupoid.compatible_of_mem_maximal_atlas
+{e e' : local_homeomorph M H}
+(he : «expr ∈ »(e, G.maximal_atlas M))
+(he' : «expr ∈ »(e', G.maximal_atlas M)) : «expr ∈ »(«expr ≫ₕ »(e.symm, e'), G) :=
+begin
+  apply [expr G.locality (λ x hx, _)],
+  set [] [ident f] [] [":="] [expr chart_at H (e.symm x)] ["with", ident hf],
+  let [ident s] [] [":=", expr «expr ∩ »(e.target, «expr ⁻¹' »(e.symm, f.source))],
+  have [ident hs] [":", expr is_open s] [],
+  { apply [expr e.symm.continuous_to_fun.preimage_open_of_open]; apply [expr open_source] },
+  have [ident xs] [":", expr «expr ∈ »(x, s)] [],
+  by { dsimp [] [] [] ["at", ident hx],
+    simp [] [] [] ["[", expr s, ",", expr hx, "]"] [] [] },
+  refine [expr ⟨s, hs, xs, _⟩],
+  have [ident A] [":", expr «expr ∈ »(«expr ≫ₕ »(e.symm, f), G)] [":=", expr (mem_maximal_atlas_iff.1 he f (chart_mem_atlas _ _)).1],
+  have [ident B] [":", expr «expr ∈ »(«expr ≫ₕ »(f.symm, e'), G)] [":=", expr (mem_maximal_atlas_iff.1 he' f (chart_mem_atlas _ _)).2],
+  have [ident C] [":", expr «expr ∈ »(«expr ≫ₕ »(«expr ≫ₕ »(e.symm, f), «expr ≫ₕ »(f.symm, e')), G)] [":=", expr G.trans A B],
+  have [ident D] [":", expr «expr ≈ »(«expr ≫ₕ »(«expr ≫ₕ »(e.symm, f), «expr ≫ₕ »(f.symm, e')), «expr ≫ₕ »(e.symm, e').restr s)] [":=", expr calc
+     «expr = »(«expr ≫ₕ »(«expr ≫ₕ »(e.symm, f), «expr ≫ₕ »(f.symm, e')), «expr ≫ₕ »(e.symm, «expr ≫ₕ »(«expr ≫ₕ »(f, f.symm), e'))) : by simp [] [] [] ["[", expr trans_assoc, "]"] [] []
+     «expr ≈ »(..., «expr ≫ₕ »(e.symm, «expr ≫ₕ »(of_set f.source f.open_source, e'))) : by simp [] [] [] ["[", expr eq_on_source.trans', ",", expr trans_self_symm, "]"] [] []
+     «expr ≈ »(..., «expr ≫ₕ »(«expr ≫ₕ »(e.symm, of_set f.source f.open_source), e')) : by simp [] [] [] ["[", expr trans_assoc, "]"] [] []
+     «expr ≈ »(..., «expr ≫ₕ »(e.symm.restr s, e')) : by simp [] [] [] ["[", expr s, ",", expr trans_of_set', "]"] [] []
+     «expr ≈ »(..., «expr ≫ₕ »(e.symm, e').restr s) : by simp [] [] [] ["[", expr restr_trans, "]"] [] []],
+  exact [expr G.eq_on_source C (setoid.symm D)]
+end
 
 variable(G)
 
@@ -942,22 +892,22 @@ theorem singleton_charted_space_mem_atlas_eq (h : e.source = Set.Univ) (e' : Loc
   (h' : e' ∈ (e.singleton_charted_space h).Atlas) : e' = e :=
   h'
 
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a local homeomorphism `e` from a space `α` into `H`, if its source covers the whole
 space `α`, then the induced charted space structure on `α` is `has_groupoid G` for any structure
 groupoid `G` which is closed under restrictions. -/
-theorem singleton_has_groupoid (h : e.source = Set.Univ) (G : StructureGroupoid H) [ClosedUnderRestriction G] :
-  @HasGroupoid _ _ _ _ (e.singleton_charted_space h) G :=
-  { compatible :=
-      by 
-        intro e' e'' he' he'' 
-        rw [e.singleton_charted_space_mem_atlas_eq h e' he']
-        rw [e.singleton_charted_space_mem_atlas_eq h e'' he'']
-        refine' G.eq_on_source _ e.trans_symm_self 
-        have hle : idRestrGroupoid ≤ G :=
-          (closed_under_restriction_iff_id_le G).mp
-            (by 
-              assumption)
-        exact structure_groupoid.le_iff.mp hle _ (id_restr_groupoid_mem _) }
+theorem singleton_has_groupoid
+(h : «expr = »(e.source, set.univ))
+(G : structure_groupoid H)
+[closed_under_restriction G] : @has_groupoid _ _ _ _ (e.singleton_charted_space h) G :=
+{ compatible := begin
+    intros [ident e', ident e'', ident he', ident he''],
+    rw [expr e.singleton_charted_space_mem_atlas_eq h e' he'] [],
+    rw [expr e.singleton_charted_space_mem_atlas_eq h e'' he''] [],
+    refine [expr G.eq_on_source _ e.trans_symm_self],
+    have [ident hle] [":", expr «expr ≤ »(id_restr_groupoid, G)] [":=", expr (closed_under_restriction_iff_id_le G).mp (by assumption)],
+    exact [expr structure_groupoid.le_iff.mp hle _ (id_restr_groupoid_mem _)]
+  end }
 
 end LocalHomeomorph
 
@@ -1010,22 +960,20 @@ instance  : ChartedSpace H s :=
           simp only [mem_Union, mem_singleton_iff]
           use x }
 
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a groupoid `G` is `closed_under_restriction`, then an open subset of a space which is
-`has_groupoid G` is naturally `has_groupoid G`. -/
-instance  [ClosedUnderRestriction G] : HasGroupoid s G :=
-  { compatible :=
-      by 
-        rintro e e' ⟨_, ⟨x, hc⟩, he⟩ ⟨_, ⟨x', hc'⟩, he'⟩
-        haveI  : Nonempty s := ⟨x⟩
-        simp only [hc.symm, mem_singleton_iff, Subtype.val_eq_coe] at he 
-        simp only [hc'.symm, mem_singleton_iff, Subtype.val_eq_coe] at he' 
-        rw [he, he']
-        convert G.eq_on_source _ (subtype_restr_symm_trans_subtype_restr s (chart_at H x) (chart_at H x'))
-        apply closed_under_restriction'
-        ·
-          exact G.compatible (chart_mem_atlas H x) (chart_mem_atlas H x')
-        ·
-          exact preimage_open_of_open_symm (chart_at H x) s.2 }
+`has_groupoid G` is naturally `has_groupoid G`. -/ instance [closed_under_restriction G] : has_groupoid s G :=
+{ compatible := begin
+    rintros [ident e, ident e', "⟨", "_", ",", "⟨", ident x, ",", ident hc, "⟩", ",", ident he, "⟩", "⟨", "_", ",", "⟨", ident x', ",", ident hc', "⟩", ",", ident he', "⟩"],
+    haveI [] [":", expr nonempty s] [":=", expr ⟨x⟩],
+    simp [] [] ["only"] ["[", expr hc.symm, ",", expr mem_singleton_iff, ",", expr subtype.val_eq_coe, "]"] [] ["at", ident he],
+    simp [] [] ["only"] ["[", expr hc'.symm, ",", expr mem_singleton_iff, ",", expr subtype.val_eq_coe, "]"] [] ["at", ident he'],
+    rw ["[", expr he, ",", expr he', "]"] [],
+    convert [] [expr G.eq_on_source _ (subtype_restr_symm_trans_subtype_restr s (chart_at H x) (chart_at H x'))] [],
+    apply [expr closed_under_restriction'],
+    { exact [expr G.compatible (chart_mem_atlas H x) (chart_mem_atlas H x')] },
+    { exact [expr preimage_open_of_open_symm (chart_at H x) s.2] }
+  end }
 
 end TopologicalSpace.Opens
 
@@ -1057,72 +1005,55 @@ def Structomorph.refl (M : Type _) [TopologicalSpace M] [ChartedSpace H M] [HasG
           rw [LocalHomeomorph.refl_trans]
           exact HasGroupoid.compatible G hc hc' }
 
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inverse of a structomorphism is a structomorphism -/
-def Structomorph.symm (e : Structomorph G M M') : Structomorph G M' M :=
-  { e.to_homeomorph.symm with
-    mem_groupoid :=
-      by 
-        intro c c' hc hc' 
-        have  : (c'.symm ≫ₕ e.to_homeomorph.to_local_homeomorph ≫ₕ c).symm ∈ G := G.symm (e.mem_groupoid c' c hc' hc)
-        rwa [trans_symm_eq_symm_trans_symm, trans_symm_eq_symm_trans_symm, symm_symm, trans_assoc] at this }
+def structomorph.symm (e : structomorph G M M') : structomorph G M' M :=
+{ mem_groupoid := begin
+    assume [binders (c c' hc hc')],
+    have [] [":", expr «expr ∈ »(«expr ≫ₕ »(c'.symm, «expr ≫ₕ »(e.to_homeomorph.to_local_homeomorph, c)).symm, G)] [":=", expr G.symm (e.mem_groupoid c' c hc' hc)],
+    rwa ["[", expr trans_symm_eq_symm_trans_symm, ",", expr trans_symm_eq_symm_trans_symm, ",", expr symm_symm, ",", expr trans_assoc, "]"] ["at", ident this]
+  end,
+  ..e.to_homeomorph.symm }
 
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The composition of structomorphisms is a structomorphism -/
-def Structomorph.trans (e : Structomorph G M M') (e' : Structomorph G M' M'') : Structomorph G M M'' :=
-  { Homeomorph.trans e.to_homeomorph e'.to_homeomorph with
-    mem_groupoid :=
-      by 
-        intro c c' hc hc' 
-        refine' G.locality fun x hx => _ 
-        let f₁ := e.to_homeomorph.to_local_homeomorph 
-        let f₂ := e'.to_homeomorph.to_local_homeomorph 
-        let f := (e.to_homeomorph.trans e'.to_homeomorph).toLocalHomeomorph 
-        have feq : f = f₁ ≫ₕ f₂ := Homeomorph.trans_to_local_homeomorph _ _ 
-        let y := (c.symm ≫ₕ f₁) x 
-        let g := chart_at H y 
-        have hg₁ := chart_mem_atlas H y 
-        have hg₂ := mem_chart_source H y 
-        let s := (c.symm ≫ₕ f₁).Source ∩ c.symm ≫ₕ f₁ ⁻¹' g.source 
-        have open_s : IsOpen s
-        ·
-          apply (c.symm ≫ₕ f₁).continuous_to_fun.preimage_open_of_open <;> apply open_source 
-        have  : x ∈ s
-        ·
-          split 
-          ·
-            simp only [trans_source, preimage_univ, inter_univ, Homeomorph.to_local_homeomorph_source]
-            rw [trans_source] at hx 
-            exact hx.1
-          ·
-            exact hg₂ 
-        refine' ⟨s, open_s, this, _⟩
-        let F₁ := (c.symm ≫ₕ f₁ ≫ₕ g) ≫ₕ g.symm ≫ₕ f₂ ≫ₕ c' 
-        have A : F₁ ∈ G := G.trans (e.mem_groupoid c g hc hg₁) (e'.mem_groupoid g c' hg₁ hc')
-        let F₂ := (c.symm ≫ₕ f ≫ₕ c').restr s 
-        have  : F₁ ≈ F₂ :=
-          calc F₁ ≈ c.symm ≫ₕ f₁ ≫ₕ (g ≫ₕ g.symm) ≫ₕ f₂ ≫ₕ c' :=
-            by 
-              simp [F₁, trans_assoc]
-            _ ≈ c.symm ≫ₕ f₁ ≫ₕ of_set g.source g.open_source ≫ₕ f₂ ≫ₕ c' :=
-            by 
-              simp [eq_on_source.trans', trans_self_symm g]
-            _ ≈ ((c.symm ≫ₕ f₁) ≫ₕ of_set g.source g.open_source) ≫ₕ f₂ ≫ₕ c' :=
-            by 
-              simp [trans_assoc]
-            _ ≈ (c.symm ≫ₕ f₁).restr s ≫ₕ f₂ ≫ₕ c' :=
-            by 
-              simp [s, trans_of_set']
-            _ ≈ ((c.symm ≫ₕ f₁) ≫ₕ f₂ ≫ₕ c').restr s :=
-            by 
-              simp [restr_trans]
-            _ ≈ (c.symm ≫ₕ (f₁ ≫ₕ f₂) ≫ₕ c').restr s :=
-            by 
-              simp [eq_on_source.restr, trans_assoc]
-            _ ≈ F₂ :=
-            by 
-              simp [F₂, feq]
-            
-        have  : F₂ ∈ G := G.eq_on_source A (Setoidₓ.symm this)
-        exact this }
+def structomorph.trans (e : structomorph G M M') (e' : structomorph G M' M'') : structomorph G M M'' :=
+{ mem_groupoid := begin
+    assume [binders (c c' hc hc')],
+    refine [expr G.locality (λ x hx, _)],
+    let [ident f₁] [] [":=", expr e.to_homeomorph.to_local_homeomorph],
+    let [ident f₂] [] [":=", expr e'.to_homeomorph.to_local_homeomorph],
+    let [ident f] [] [":=", expr (e.to_homeomorph.trans e'.to_homeomorph).to_local_homeomorph],
+    have [ident feq] [":", expr «expr = »(f, «expr ≫ₕ »(f₁, f₂))] [":=", expr homeomorph.trans_to_local_homeomorph _ _],
+    let [ident y] [] [":=", expr «expr ≫ₕ »(c.symm, f₁) x],
+    let [ident g] [] [":=", expr chart_at H y],
+    have [ident hg₁] [] [":=", expr chart_mem_atlas H y],
+    have [ident hg₂] [] [":=", expr mem_chart_source H y],
+    let [ident s] [] [":=", expr «expr ∩ »(«expr ≫ₕ »(c.symm, f₁).source, «expr ⁻¹' »(«expr ≫ₕ »(c.symm, f₁), g.source))],
+    have [ident open_s] [":", expr is_open s] [],
+    by apply [expr «expr ≫ₕ »(c.symm, f₁).continuous_to_fun.preimage_open_of_open]; apply [expr open_source],
+    have [] [":", expr «expr ∈ »(x, s)] [],
+    { split,
+      { simp [] [] ["only"] ["[", expr trans_source, ",", expr preimage_univ, ",", expr inter_univ, ",", expr homeomorph.to_local_homeomorph_source, "]"] [] [],
+        rw [expr trans_source] ["at", ident hx],
+        exact [expr hx.1] },
+      { exact [expr hg₂] } },
+    refine [expr ⟨s, open_s, this, _⟩],
+    let [ident F₁] [] [":=", expr «expr ≫ₕ »(«expr ≫ₕ »(c.symm, «expr ≫ₕ »(f₁, g)), «expr ≫ₕ »(g.symm, «expr ≫ₕ »(f₂, c')))],
+    have [ident A] [":", expr «expr ∈ »(F₁, G)] [":=", expr G.trans (e.mem_groupoid c g hc hg₁) (e'.mem_groupoid g c' hg₁ hc')],
+    let [ident F₂] [] [":=", expr «expr ≫ₕ »(c.symm, «expr ≫ₕ »(f, c')).restr s],
+    have [] [":", expr «expr ≈ »(F₁, F₂)] [":=", expr calc
+       «expr ≈ »(F₁, «expr ≫ₕ »(c.symm, «expr ≫ₕ »(f₁, «expr ≫ₕ »(«expr ≫ₕ »(g, g.symm), «expr ≫ₕ »(f₂, c'))))) : by simp [] [] [] ["[", expr F₁, ",", expr trans_assoc, "]"] [] []
+       «expr ≈ »(..., «expr ≫ₕ »(c.symm, «expr ≫ₕ »(f₁, «expr ≫ₕ »(of_set g.source g.open_source, «expr ≫ₕ »(f₂, c'))))) : by simp [] [] [] ["[", expr eq_on_source.trans', ",", expr trans_self_symm g, "]"] [] []
+       «expr ≈ »(..., «expr ≫ₕ »(«expr ≫ₕ »(«expr ≫ₕ »(c.symm, f₁), of_set g.source g.open_source), «expr ≫ₕ »(f₂, c'))) : by simp [] [] [] ["[", expr trans_assoc, "]"] [] []
+       «expr ≈ »(..., «expr ≫ₕ »(«expr ≫ₕ »(c.symm, f₁).restr s, «expr ≫ₕ »(f₂, c'))) : by simp [] [] [] ["[", expr s, ",", expr trans_of_set', "]"] [] []
+       «expr ≈ »(..., «expr ≫ₕ »(«expr ≫ₕ »(c.symm, f₁), «expr ≫ₕ »(f₂, c')).restr s) : by simp [] [] [] ["[", expr restr_trans, "]"] [] []
+       «expr ≈ »(..., «expr ≫ₕ »(c.symm, «expr ≫ₕ »(«expr ≫ₕ »(f₁, f₂), c')).restr s) : by simp [] [] [] ["[", expr eq_on_source.restr, ",", expr trans_assoc, "]"] [] []
+       «expr ≈ »(..., F₂) : by simp [] [] [] ["[", expr F₂, ",", expr feq, "]"] [] []],
+    have [] [":", expr «expr ∈ »(F₂, G)] [":=", expr G.eq_on_source A (setoid.symm this)],
+    exact [expr this]
+  end,
+  ..homeomorph.trans e.to_homeomorph e'.to_homeomorph }
 
 end HasGroupoid
 

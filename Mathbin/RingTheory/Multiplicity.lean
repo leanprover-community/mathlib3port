@@ -46,19 +46,21 @@ theorem finite_iff_dom [DecidableRel (· ∣ · : α → α → Prop)] {a b : α
 theorem finite_def {a b : α} : finite a b ↔ ∃ n : ℕ, ¬(a ^ n+1) ∣ b :=
   Iff.rfl
 
--- error in RingTheory.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-@[norm_cast #[]]
-theorem int.coe_nat_multiplicity
-(a b : exprℕ()) : «expr = »(multiplicity (a : exprℤ()) (b : exprℤ()), multiplicity a b) :=
-begin
-  apply [expr part.ext'],
-  { repeat { rw ["[", "<-", expr finite_iff_dom, ",", expr finite_def, "]"] [] },
-    norm_cast [] },
-  { intros [ident h1, ident h2],
-    apply [expr _root_.le_antisymm]; { apply [expr nat.find_mono],
-      norm_cast [],
-      simp [] [] [] [] [] [] } }
-end
+@[normCast]
+theorem int.coe_nat_multiplicity (a b : ℕ) : multiplicity (a : ℤ) (b : ℤ) = multiplicity a b :=
+  by 
+    apply Part.ext'
+    ·
+      repeat' 
+        rw [←finite_iff_dom, finite_def]
+      normCast
+    ·
+      intro h1 h2 
+      apply _root_.le_antisymm <;>
+        ·
+          apply Nat.find_mono 
+          normCast 
+          simp 
 
 theorem not_finite_iff_forall {a b : α} : ¬finite a b ↔ ∀ n : ℕ, a ^ n ∣ b :=
   ⟨fun h n =>
@@ -604,15 +606,20 @@ section Nat
 
 open multiplicity
 
-theorem multiplicity_eq_zero_of_coprime {p a b : ℕ} (hp : p ≠ 1) (hle : multiplicity p a ≤ multiplicity p b)
-  (hab : Nat.Coprime a b) : multiplicity p a = 0 :=
-  by 
-    rw [multiplicity_le_multiplicity_iff] at hle 
-    rw [←nonpos_iff_eq_zero, ←not_ltₓ, Enat.pos_iff_one_le, ←Nat.cast_one, ←pow_dvd_iff_le_multiplicity]
-    intro h 
-    have  := Nat.dvd_gcdₓ h (hle _ h)
-    rw [coprime.gcd_eq_one hab, Nat.dvd_one, pow_oneₓ] at this 
-    exact hp this
+-- error in RingTheory.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem multiplicity_eq_zero_of_coprime
+{p a b : exprℕ()}
+(hp : «expr ≠ »(p, 1))
+(hle : «expr ≤ »(multiplicity p a, multiplicity p b))
+(hab : nat.coprime a b) : «expr = »(multiplicity p a, 0) :=
+begin
+  rw ["[", expr multiplicity_le_multiplicity_iff, "]"] ["at", ident hle],
+  rw ["[", "<-", expr nonpos_iff_eq_zero, ",", "<-", expr not_lt, ",", expr enat.pos_iff_one_le, ",", "<-", expr nat.cast_one, ",", "<-", expr pow_dvd_iff_le_multiplicity, "]"] [],
+  assume [binders (h)],
+  have [] [] [":=", expr nat.dvd_gcd h (hle _ h)],
+  rw ["[", expr coprime.gcd_eq_one hab, ",", expr nat.dvd_one, ",", expr pow_one, "]"] ["at", ident this],
+  exact [expr hp this]
+end
 
 end Nat
 

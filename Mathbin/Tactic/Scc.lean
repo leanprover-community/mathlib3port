@@ -1,5 +1,4 @@
-import Mathbin.Tactic.Tauto 
-import Mathbin.Data.Sum
+import Mathbin.Tactic.Tauto
 
 /-!
 # Strongly Connected Components
@@ -144,7 +143,7 @@ a vertex that originated the current search, that vertex will be the root of
 the corresponding tree. -/
 unsafe def merge (cl : closure) (p : expr) : tactic Unit :=
   do 
-    let quote (%%e₀) ↔ %%e₁ ← infer_type p >>= instantiate_mvars 
+    let quote.1 ((%%ₓe₀) ↔ %%ₓe₁) ← infer_type p >>= instantiate_mvars 
     let (n₂, e₂, p₂) ← root cl e₀ 
     let (n₃, e₃, p₃) ← root cl e₁ 
     if e₂ ≠ e₃ then
@@ -202,7 +201,7 @@ unsafe def add_edge (g : impl_graph) : expr → tactic Unit
   do 
     let t ← infer_type p 
     match t with 
-      | quote (%%v₀) → %%v₁ =>
+      | quote.1 ((%%ₓv₀) → %%ₓv₁) =>
         do 
           is_prop v₀ >>= guardb 
           is_prop v₁ >>= guardb 
@@ -210,7 +209,7 @@ unsafe def add_edge (g : impl_graph) : expr → tactic Unit
           let xs := (m.find v₀).getOrElse []
           let xs' := (m.find v₁).getOrElse []
           modify_ref g$ fun m => (m.insert v₀ ((v₁, p) :: xs)).insert v₁ xs'
-      | quote (%%v₀) ↔ %%v₁ =>
+      | quote.1 ((%%ₓv₀) ↔ %%ₓv₁) =>
         do 
           let p₀ ← mk_mapp `` Iff.mp [none, none, p]
           let p₁ ← mk_mapp `` Iff.mpr [none, none, p]
@@ -308,7 +307,7 @@ end ImplGraph
 
 unsafe def prove_eqv_target (cl : closure) : tactic Unit :=
   do 
-    let quote (%%p) ↔ %%q ← target >>= whnf 
+    let quote.1 ((%%ₓp) ↔ %%ₓq) ← target >>= whnf 
     cl.prove_eqv p q >>= exact
 
 /--
@@ -325,7 +324,7 @@ unsafe def interactive.scc : tactic Unit :=
     fun cl =>
       do 
         impl_graph.mk_scc cl 
-        let quote (%%p) ↔ %%q ← target 
+        let quote.1 ((%%ₓp) ↔ %%ₓq) ← target 
         cl.prove_eqv p q >>= exact
 
 /-- Collect all the available equivalences and implications and

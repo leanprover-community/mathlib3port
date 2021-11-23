@@ -1,4 +1,3 @@
-import Mathbin.CategoryTheory.Types 
 import Mathbin.CategoryTheory.Equivalence
 
 /-!
@@ -282,19 +281,18 @@ protected def unop {F G : «expr ᵒᵖ» C ⥤ «expr ᵒᵖ» D} (α : F ⟶ G
 theorem unop_id (F : «expr ᵒᵖ» C ⥤ «expr ᵒᵖ» D) : nat_trans.unop (𝟙 F) = 𝟙 F.unop :=
   rfl
 
+-- error in CategoryTheory.Opposites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given a natural transformation `α : F.op ⟶ G.op`,
 we can take the "unopposite" of each component obtaining a natural transformation `G ⟶ F`.
--/
-@[simps]
-protected def remove_op (α : F.op ⟶ G.op) : G ⟶ F :=
-  { app := fun X => (α.app (op X)).unop,
-    naturality' :=
-      by 
-        intro X Y f 
-        have  := congr_argₓ Quiver.Hom.unop (α.naturality f.op)
-        dsimp  at this 
-        rw [this] }
+-/ @[simps #[]] protected def remove_op (α : «expr ⟶ »(F.op, G.op)) : «expr ⟶ »(G, F) :=
+{ app := λ X, (α.app (op X)).unop,
+  naturality' := begin
+    intros [ident X, ident Y, ident f],
+    have [] [] [":=", expr congr_arg quiver.hom.unop (α.naturality f.op)],
+    dsimp [] [] [] ["at", ident this],
+    rw [expr this] []
+  end }
 
 @[simp]
 theorem remove_op_id (F : C ⥤ D) : nat_trans.remove_op (𝟙 F.op) = 𝟙 F :=
@@ -327,19 +325,18 @@ theorem left_op_id : (𝟙 F : F ⟶ F).leftOp = 𝟙 F.left_op :=
 theorem left_op_comp (α : F ⟶ G) (β : G ⟶ H) : (α ≫ β).leftOp = β.left_op ≫ α.left_op :=
   rfl
 
+-- error in CategoryTheory.Opposites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given a natural transformation `α : F.left_op ⟶ G.left_op`, for `F G : C ⥤ Dᵒᵖ`,
 taking `op` of each component gives a natural transformation `G ⟶ F`.
--/
-@[simps]
-protected def remove_left_op (α : F.left_op ⟶ G.left_op) : G ⟶ F :=
-  { app := fun X => (α.app (op X)).op,
-    naturality' :=
-      by 
-        intro X Y f 
-        have  := congr_argₓ Quiver.Hom.op (α.naturality f.op)
-        dsimp  at this 
-        erw [this] }
+-/ @[simps #[]] protected def remove_left_op (α : «expr ⟶ »(F.left_op, G.left_op)) : «expr ⟶ »(G, F) :=
+{ app := λ X, (α.app (op X)).op,
+  naturality' := begin
+    intros [ident X, ident Y, ident f],
+    have [] [] [":=", expr congr_arg quiver.hom.op (α.naturality f.op)],
+    dsimp [] [] [] ["at", ident this],
+    erw [expr this] []
+  end }
 
 end 
 
@@ -368,19 +365,18 @@ theorem right_op_id : (𝟙 F : F ⟶ F).rightOp = 𝟙 F.right_op :=
 theorem right_op_comp (α : F ⟶ G) (β : G ⟶ H) : (α ≫ β).rightOp = β.right_op ≫ α.right_op :=
   rfl
 
+-- error in CategoryTheory.Opposites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given a natural transformation `α : F.right_op ⟶ G.right_op`, for `F G : Cᵒᵖ ⥤ D`,
 taking `unop` of each component gives a natural transformation `G ⟶ F`.
--/
-@[simps]
-protected def remove_right_op (α : F.right_op ⟶ G.right_op) : G ⟶ F :=
-  { app := fun X => (α.app X.unop).unop,
-    naturality' :=
-      by 
-        intro X Y f 
-        have  := congr_argₓ Quiver.Hom.unop (α.naturality f.unop)
-        dsimp  at this 
-        erw [this] }
+-/ @[simps #[]] protected def remove_right_op (α : «expr ⟶ »(F.right_op, G.right_op)) : «expr ⟶ »(G, F) :=
+{ app := λ X, (α.app X.unop).unop,
+  naturality' := begin
+    intros [ident X, ident Y, ident f],
+    have [] [] [":=", expr congr_arg quiver.hom.unop (α.naturality f.unop)],
+    dsimp [] [] [] ["at", ident this],
+    erw [expr this] []
+  end }
 
 end 
 

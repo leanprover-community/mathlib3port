@@ -208,7 +208,7 @@ unsafe def transitivity' (q : parse (texpr)?) : tactic Unit :=
       do 
         let (r, lhs, rhs) ← target_lhs_rhs 
         let t ← infer_type lhs 
-        i_to_expr (pquote (%%q : %%t)) >>= unify rhs
+        i_to_expr (pquote.1 (%%ₓq : %%ₓt)) >>= unify rhs
 
 end Interactive
 

@@ -88,7 +88,7 @@ unsafe def get_lift_prf (h : Option pexpr) (old_tp new_tp inst e : expr) (s : si
     let expected_prf_ty ← mk_app `can_lift.cond [old_tp, new_tp, inst, e]
     let expected_prf_ty ← s.dsimplify to_unfold expected_prf_ty 
     if h_some : h.is_some then
-        decorate_error "lift tactic failed."$ i_to_expr (pquote (%%Option.get h_some : %%expected_prf_ty)) else
+        decorate_error "lift tactic failed."$ i_to_expr (pquote.1 (%%ₓOption.get h_some : %%ₓexpected_prf_ty)) else
         do 
           let prf_nm ← get_unused_name 
           let prf ← assert prf_nm expected_prf_ty 
@@ -104,7 +104,7 @@ unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tac
     propositional_goal <|> fail "lift tactic failed. Tactic is only applicable when the target is a proposition."
     let e ← i_to_expr p 
     let old_tp ← infer_type e 
-    let new_tp ← i_to_expr (pquote (%%t : Sort _))
+    let new_tp ← i_to_expr (pquote.1 (%%ₓt : Sort _))
     let inst_type ← mk_app `` CanLift [old_tp, new_tp]
     let inst ←
       mk_instance inst_type <|>

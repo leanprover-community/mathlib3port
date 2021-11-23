@@ -35,11 +35,11 @@ theorem IsLeftRegular.is_smul_regular [Mul R] {c : R} (h : IsLeftRegular c) : Is
 theorem is_left_regular_iff [Mul R] {a : R} : IsLeftRegular a ↔ IsSmulRegular R a :=
   Iff.rfl
 
-theorem IsRightRegular.is_smul_regular [Mul R] {c : R} (h : IsRightRegular c) : IsSmulRegular R (Opposite.op c) :=
+theorem IsRightRegular.is_smul_regular [Mul R] {c : R} (h : IsRightRegular c) : IsSmulRegular R (MulOpposite.op c) :=
   h
 
-/-- Right-regular multiplication on `R` is equivalent to `Rᵒᵖ`-regularity of `R` itself. -/
-theorem is_right_regular_iff [Mul R] {a : R} : IsRightRegular a ↔ IsSmulRegular R (Opposite.op a) :=
+/-- Right-regular multiplication on `R` is equivalent to `Rᵐᵒᵖ`-regularity of `R` itself. -/
+theorem is_right_regular_iff [Mul R] {a : R} : IsRightRegular a ↔ IsSmulRegular R (MulOpposite.op a) :=
   Iff.rfl
 
 namespace IsSmulRegular
@@ -72,7 +72,7 @@ theorem smul_iff (b : S) (ha : IsSmulRegular M a) : IsSmulRegular M (a • b) �
 theorem IsLeftRegular [Mul R] {a : R} (h : IsSmulRegular R a) : IsLeftRegular a :=
   h
 
-theorem IsRightRegular [Mul R] {a : R} (h : IsSmulRegular R (Opposite.op a)) : IsRightRegular a :=
+theorem IsRightRegular [Mul R] {a : R} (h : IsSmulRegular R (MulOpposite.op a)) : IsRightRegular a :=
   h
 
 end HasScalar
@@ -141,11 +141,13 @@ variable[MonoidWithZeroₓ
       R][MonoidWithZeroₓ
       S][HasZero M][MulActionWithZero R M][MulActionWithZero R S][MulActionWithZero S M][IsScalarTower R S M]
 
--- error in Algebra.Regular.Smul: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- The element `0` is `M`-regular if and only if `M` is trivial. -/
-protected
-theorem subsingleton (h : is_smul_regular M (0 : R)) : subsingleton M :=
-⟨λ a b, h (by repeat { rw [expr mul_action_with_zero.zero_smul] [] })⟩
+protected theorem Subsingleton (h : IsSmulRegular M (0 : R)) : Subsingleton M :=
+  ⟨fun a b =>
+      h
+        (by 
+          repeat' 
+            rw [MulActionWithZero.zero_smul])⟩
 
 /-- The element `0` is `M`-regular if and only if `M` is trivial. -/
 theorem zero_iff_subsingleton : IsSmulRegular M (0 : R) ↔ Subsingleton M :=

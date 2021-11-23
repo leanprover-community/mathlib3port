@@ -1,5 +1,4 @@
 import Mathbin.Testing.SlimCheck.Testable 
-import Mathbin.Testing.SlimCheck.Functions 
 import Mathbin.Data.List.Sort
 
 /-!
@@ -133,7 +132,7 @@ unsafe def summarize_instance : expr → tactic instance_tree
     summarize_instance$ b.instantiate_var v
 | e@(app f x) =>
   do 
-    let quote testable (%%p) ← infer_type e 
+    let quote.1 (testable (%%ₓp)) ← infer_type e 
     let xs ← e.get_app_args.mmap_filter (try_core ∘ summarize_instance)
     pure$ instance_tree.node e.get_app_fn.const_name p xs
 | e =>
@@ -232,7 +231,7 @@ unsafe def slim_check (cfg : slim_check_cfg := {  }) : tactic Unit :=
             Try this:
             set_option trace.class_instances true
             #check (by apply_instance : slim_check.testable ({ ← tgt' }))"
-    let e ← mk_mapp `` testable.check [tgt, quote cfg, tgt', inst]
+    let e ← mk_mapp `` testable.check [tgt, quote.1 cfg, tgt', inst]
     when_tracing `slim_check.decoration
         ( ←
           do 

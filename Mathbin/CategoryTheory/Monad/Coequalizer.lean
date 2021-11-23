@@ -1,7 +1,6 @@
 import Mathbin.CategoryTheory.Limits.Shapes.Reflexive 
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Equalizers 
-import Mathbin.CategoryTheory.Limits.Preserves.Limits 
-import Mathbin.CategoryTheory.Monad.Adjunction
+import Mathbin.CategoryTheory.Limits.Shapes.SplitCoequalizer 
+import Mathbin.CategoryTheory.Monad.Algebra
 
 /-!
 # Special coequalizers associated to a monad
@@ -73,30 +72,25 @@ coequalizer.
 def beck_algebra_cofork : cofork (free_coequalizer.top_map X) (free_coequalizer.bottom_map X) :=
   cofork.of_π _ (free_coequalizer.condition X)
 
+-- error in CategoryTheory.Monad.Coequalizer: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The cofork constructed is a colimit. This shows that any algebra is a (reflexive) coequalizer of
 free algebras.
--/
-def beck_algebra_coequalizer : is_colimit (beck_algebra_cofork X) :=
-  cofork.is_colimit.mk' _$
-    fun s =>
-      by 
-        have h₁ : (T : C ⥤ C).map X.a ≫ s.π.f = T.μ.app X.A ≫ s.π.f := congr_argₓ monad.algebra.hom.f s.condition 
-        have h₂ : (T : C ⥤ C).map s.π.f ≫ s.X.a = T.μ.app X.A ≫ s.π.f := s.π.h 
-        refine' ⟨⟨T.η.app _ ≫ s.π.f, _⟩, _, _⟩
-        ·
-          dsimp 
-          rw [functor.map_comp, category.assoc, h₂, monad.right_unit_assoc,
-            show X.a ≫ _ ≫ _ = _ from T.η.naturality_assoc _ _, h₁, monad.left_unit_assoc]
-        ·
-          ext 
-          simpa [←T.η.naturality_assoc, T.left_unit_assoc] using T.η.app ((T : C ⥤ C).obj X.A) ≫= h₁
-        ·
-          intro m hm 
-          ext 
-          dsimp only 
-          rw [←hm]
-          apply (X.unit_assoc _).symm
+-/ def beck_algebra_coequalizer : is_colimit (beck_algebra_cofork X) :=
+«expr $ »(cofork.is_colimit.mk' _, λ s, begin
+   have [ident h₁] [":", expr «expr = »(«expr ≫ »((T : «expr ⥤ »(C, C)).map X.a, s.π.f), «expr ≫ »(T.μ.app X.A, s.π.f))] [":=", expr congr_arg monad.algebra.hom.f s.condition],
+   have [ident h₂] [":", expr «expr = »(«expr ≫ »((T : «expr ⥤ »(C, C)).map s.π.f, s.X.a), «expr ≫ »(T.μ.app X.A, s.π.f))] [":=", expr s.π.h],
+   refine [expr ⟨⟨«expr ≫ »(T.η.app _, s.π.f), _⟩, _, _⟩],
+   { dsimp [] [] [] [],
+     rw ["[", expr functor.map_comp, ",", expr category.assoc, ",", expr h₂, ",", expr monad.right_unit_assoc, ",", expr show «expr = »(«expr ≫ »(X.a, «expr ≫ »(_, _)), _), from T.η.naturality_assoc _ _, ",", expr h₁, ",", expr monad.left_unit_assoc, "]"] [] },
+   { ext [] [] [],
+     simpa [] [] [] ["[", "<-", expr T.η.naturality_assoc, ",", expr T.left_unit_assoc, "]"] [] ["using", expr «expr ≫= »(T.η.app ((T : «expr ⥤ »(C, C)).obj X.A), h₁)] },
+   { intros [ident m, ident hm],
+     ext [] [] [],
+     dsimp ["only"] [] [] [],
+     rw ["<-", expr hm] [],
+     apply [expr (X.unit_assoc _).symm] }
+ end)
 
 /-- The Beck cofork is a split coequalizer. -/
 def beck_split_coequalizer : is_split_coequalizer (T.map X.a) (T.μ.app _) X.a :=

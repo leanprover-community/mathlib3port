@@ -69,24 +69,28 @@ theorem Monotone.tendsto_indicator {ι} [Preorderₓ ι] [HasZero β] (s : ι �
       apply indicator_of_not_mem 
       simpa only [not_exists, mem_Union]
 
-theorem Antitone.tendsto_indicator {ι} [Preorderₓ ι] [HasZero β] (s : ι → Set α) (hs : Antitone s) (f : α → β) (a : α) :
-  tendsto (fun i => indicator (s i) f a) at_top (pure$ indicator (⋂i, s i) f a) :=
-  by 
-    byCases' h : ∃ i, a ∉ s i
-    ·
-      rcases h with ⟨i, hi⟩
-      refine' tendsto_pure.2 ((eventually_ge_at_top i).mono$ fun n hn => _)
-      rw [indicator_of_not_mem _ _, indicator_of_not_mem _ _]
-      ·
-        simp only [mem_Inter, not_forall]
-        exact ⟨i, hi⟩
-      ·
-        intro h 
-        have  := hs hn h 
-        contradiction
-    ·
-      pushNeg  at h 
-      simp only [indicator_of_mem, h, mem_Inter.2 h, tendsto_const_pure]
+-- error in Order.Filter.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem antitone.tendsto_indicator
+{ι}
+[preorder ι]
+[has_zero β]
+(s : ι → set α)
+(hs : antitone s)
+(f : α → β)
+(a : α) : tendsto (λ i, indicator (s i) f a) at_top «expr $ »(pure, indicator «expr⋂ , »((i), s i) f a) :=
+begin
+  by_cases [expr h, ":", expr «expr∃ , »((i), «expr ∉ »(a, s i))],
+  { rcases [expr h, "with", "⟨", ident i, ",", ident hi, "⟩"],
+    refine [expr tendsto_pure.2 «expr $ »((eventually_ge_at_top i).mono, assume n hn, _)],
+    rw ["[", expr indicator_of_not_mem _ _, ",", expr indicator_of_not_mem _ _, "]"] [],
+    { simp [] [] ["only"] ["[", expr mem_Inter, ",", expr not_forall, "]"] [] [],
+      exact [expr ⟨i, hi⟩] },
+    { assume [binders (h)],
+      have [] [] [":=", expr hs hn h],
+      contradiction } },
+  { push_neg ["at", ident h],
+    simp [] [] ["only"] ["[", expr indicator_of_mem, ",", expr h, ",", expr mem_Inter.2 h, ",", expr tendsto_const_pure, "]"] [] [] }
+end
 
 theorem tendsto_indicator_bUnion_finset {ι} [HasZero β] (s : ι → Set α) (f : α → β) (a : α) :
   tendsto (fun n : Finset ι => indicator (⋃(i : _)(_ : i ∈ n), s i) f a) at_top (pure$ indicator (Union s) f a) :=

@@ -31,7 +31,7 @@ namespace Groupₓₓ
 instance  : bundled_hom.parent_projection Groupₓ.toMonoid :=
   ⟨⟩
 
--- error in Algebra.Category.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Algebra.Category.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Group
 
 attribute [toAdditive] Groupₓₓ.largeCategory Groupₓₓ.concreteCategory
@@ -115,7 +115,7 @@ namespace CommGroupₓₓ
 instance  : bundled_hom.parent_projection CommGroupₓ.toGroup :=
   ⟨⟩
 
--- error in Algebra.Category.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Algebra.Category.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] CommGroup
 
 attribute [toAdditive] CommGroupₓₓ.largeCategory CommGroupₓₓ.concreteCategory
@@ -210,15 +210,16 @@ theorem as_hom_injective {G : AddCommGroupₓₓ.{0}} : Function.Injective (@as_
 theorem int_hom_ext {G : AddCommGroupₓₓ.{0}} (f g : AddCommGroupₓₓ.of ℤ ⟶ G) (w : f (1 : ℤ) = g (1 : ℤ)) : f = g :=
   AddMonoidHom.ext_int w
 
-theorem injective_of_mono {G H : AddCommGroupₓₓ.{0}} (f : G ⟶ H) [mono f] : Function.Injective f :=
-  fun g₁ g₂ h =>
-    by 
-      have t0 : as_hom g₁ ≫ f = as_hom g₂ ≫ f :=
-        by 
-          ext 
-          simpa [as_hom_apply] using h 
-      have t1 : as_hom g₁ = as_hom g₂ := (cancel_mono _).1 t0 
-      apply as_hom_injective t1
+-- error in Algebra.Category.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem injective_of_mono {G H : AddCommGroup.{0}} (f : «expr ⟶ »(G, H)) [mono f] : function.injective f :=
+λ g₁ g₂ h, begin
+  have [ident t0] [":", expr «expr = »(«expr ≫ »(as_hom g₁, f), «expr ≫ »(as_hom g₂, f))] [":=", expr begin
+     ext [] [] [],
+     simpa [] [] [] ["[", expr as_hom_apply, "]"] [] ["using", expr h]
+   end],
+  have [ident t1] [":", expr «expr = »(as_hom g₁, as_hom g₂)] [":=", expr (cancel_mono _).1 t0],
+  apply [expr as_hom_injective t1]
+end
 
 end AddCommGroupₓₓ
 
@@ -301,7 +302,7 @@ instance Groupₓₓ.forget_reflects_isos : reflects_isomorphisms (forget Group�
   { reflects :=
       fun X Y f _ =>
         by 
-          resetI 
+          skip 
           let i := as_iso ((forget Groupₓₓ).map f)
           let e : X ≃* Y := { f, i.to_equiv with  }
           exact ⟨(is_iso.of_iso e.to_Group_iso).1⟩ }
@@ -311,7 +312,7 @@ instance CommGroupₓₓ.forget_reflects_isos : reflects_isomorphisms (forget Co
   { reflects :=
       fun X Y f _ =>
         by 
-          resetI 
+          skip 
           let i := as_iso ((forget CommGroupₓₓ).map f)
           let e : X ≃* Y := { f, i.to_equiv with  }
           exact ⟨(is_iso.of_iso e.to_CommGroup_iso).1⟩ }

@@ -1,6 +1,5 @@
-import Mathbin.Data.Equiv.Encodable.Basic 
-import Mathbin.Data.Sigma.Default 
 import Mathbin.Data.Fintype.Basic 
+import Mathbin.Data.Equiv.Encodable.Basic 
 import Mathbin.Data.List.MinMax
 
 /-!
@@ -338,14 +337,14 @@ namespace Denumerable
 
 open Encodable
 
+-- error in Data.Equiv.Denumerable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An infinite encodable type is denumerable. -/
-def of_encodable_of_infinite (α : Type _) [Encodable α] [Infinite α] : Denumerable α :=
-  by 
-    letI this := @decidable_range_encode α _ <;>
-      letI this : Infinite (Set.Range (@encode α _)) :=
-        Infinite.of_injective _ (Equiv.ofInjective _ encode_injective).Injective 
-    letI this := Nat.Subtype.denumerable (Set.Range (@encode α _))
-    exact Denumerable.ofEquiv (Set.Range (@encode α _)) (equiv_range_encode α)
+def of_encodable_of_infinite (α : Type*) [encodable α] [infinite α] : denumerable α :=
+begin
+  letI [] [] [":=", expr @decidable_range_encode α _]; letI [] [":", expr infinite (set.range (@encode α _))] [":=", expr infinite.of_injective _ (equiv.of_injective _ encode_injective).injective],
+  letI [] [] [":=", expr nat.subtype.denumerable (set.range (@encode α _))],
+  exact [expr denumerable.of_equiv (set.range (@encode α _)) (equiv_range_encode α)]
+end
 
 end Denumerable
 

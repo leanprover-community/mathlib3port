@@ -25,7 +25,7 @@ theorem forall₂_cons {R : α → β → Prop} {a b l₁ l₂} : forall₂ R (a
         cases' h with h₁ h₂ <;> split  <;> assumption,
     fun ⟨h₁, h₂⟩ => forall₂.cons h₁ h₂⟩
 
--- error in Data.List.Forall2: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Data.List.Forall2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem forall₂.imp
 {R S : α → β → exprProp()}
 (H : ∀ a b, R a b → S a b)
@@ -245,22 +245,23 @@ theorem rel_foldr : ((r⇒p⇒p)⇒p⇒forall₂ r⇒p) foldr foldr
 | f, g, hfg, _, _, h, _, _, forall₂.nil => h
 | f, g, hfg, x, y, hxy, _, _, forall₂.cons hab hs => hfg hab (rel_foldr (@hfg) hxy hs)
 
-theorem rel_filter {p : α → Prop} {q : β → Prop} [DecidablePred p] [DecidablePred q] (hpq : (r⇒(· ↔ ·)) p q) :
-  (forall₂ r⇒forall₂ r) (filter p) (filter q)
-| _, _, forall₂.nil => forall₂.nil
-| a :: as, b :: bs, forall₂.cons h₁ h₂ =>
-  by 
-    byCases' p a
-    ·
-      have  : q b
-      ·
-        rwa [←hpq h₁]
-      simp only [filter_cons_of_pos _ h, filter_cons_of_pos _ this, forall₂_cons, h₁, rel_filter h₂, and_trueₓ]
-    ·
-      have  : ¬q b
-      ·
-        rwa [←hpq h₁]
-      simp only [filter_cons_of_neg _ h, filter_cons_of_neg _ this, rel_filter h₂]
+-- error in Data.List.Forall2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem rel_filter
+{p : α → exprProp()}
+{q : β → exprProp()}
+[decidable_pred p]
+[decidable_pred q]
+(hpq : «expr ⇒ »(r, («expr ↔ »)) p q) : «expr ⇒ »(forall₂ r, forall₂ r) (filter p) (filter q)
+| _, _, forall₂.nil := forall₂.nil
+| «expr :: »(a, as), «expr :: »(b, bs), forall₂.cons h₁ h₂ := begin
+  by_cases [expr p a],
+  { have [] [":", expr q b] [],
+    { rwa ["[", "<-", expr hpq h₁, "]"] [] },
+    simp [] [] ["only"] ["[", expr filter_cons_of_pos _ h, ",", expr filter_cons_of_pos _ this, ",", expr forall₂_cons, ",", expr h₁, ",", expr rel_filter h₂, ",", expr and_true, "]"] [] [] },
+  { have [] [":", expr «expr¬ »(q b)] [],
+    { rwa ["[", "<-", expr hpq h₁, "]"] [] },
+    simp [] [] ["only"] ["[", expr filter_cons_of_neg _ h, ",", expr filter_cons_of_neg _ this, ",", expr rel_filter h₂, "]"] [] [] }
+end
 
 theorem rel_filter_map : ((r⇒Option.Rel p)⇒forall₂ r⇒forall₂ p) filter_map filter_map
 | f, g, hfg, _, _, forall₂.nil => forall₂.nil

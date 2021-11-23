@@ -2,6 +2,7 @@ import Mathbin.LinearAlgebra.Dual
 import Mathbin.LinearAlgebra.Matrix.Basis 
 import Mathbin.LinearAlgebra.Matrix.Nondegenerate 
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse 
+import Mathbin.LinearAlgebra.Matrix.ToLinearEquiv 
 import Mathbin.LinearAlgebra.TensorProduct
 
 /-!
@@ -805,24 +806,29 @@ theorem is_ortho_smul_right {x y : M₄} {a : R₄} (ha : a ≠ 0) : is_ortho G 
     ·
       rw [smul_right, H, mul_zero]
 
+-- error in LinearAlgebra.BilinearForm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A set of orthogonal vectors `v` with respect to some bilinear form `B` is linearly independent
   if for all `i`, `B (v i) (v i) ≠ 0`. -/
-theorem linear_independent_of_is_Ortho {n : Type w} {B : BilinForm K V} {v : n → V} (hv₁ : B.is_Ortho v)
-  (hv₂ : ∀ i, ¬B.is_ortho (v i) (v i)) : LinearIndependent K v :=
-  by 
-    classical 
-    rw [linear_independent_iff']
-    intro s w hs i hi 
-    have  : B (s.sum$ fun i : n => w i • v i) (v i) = 0
-    ·
-      rw [hs, zero_left]
-    have hsum : (s.sum fun j : n => w j*B (v j) (v i)) = w i*B (v i) (v i)
-    ·
-      apply Finset.sum_eq_single_of_mem i hi 
-      intro j hj hij 
-      rw [is_Ortho_def.1 hv₁ _ _ hij, mul_zero]
-    simpRw [sum_left, smul_left, hsum]  at this 
-    exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
+theorem linear_independent_of_is_Ortho
+{n : Type w}
+{B : bilin_form K V}
+{v : n → V}
+(hv₁ : B.is_Ortho v)
+(hv₂ : ∀ i, «expr¬ »(B.is_ortho (v i) (v i))) : linear_independent K v :=
+begin
+  classical,
+  rw [expr linear_independent_iff'] [],
+  intros [ident s, ident w, ident hs, ident i, ident hi],
+  have [] [":", expr «expr = »(B «expr $ »(s.sum, λ i : n, «expr • »(w i, v i)) (v i), 0)] [],
+  { rw ["[", expr hs, ",", expr zero_left, "]"] [] },
+  have [ident hsum] [":", expr «expr = »(s.sum (λ
+     j : n, «expr * »(w j, B (v j) (v i))), «expr * »(w i, B (v i) (v i)))] [],
+  { apply [expr finset.sum_eq_single_of_mem i hi],
+    intros [ident j, ident hj, ident hij],
+    rw ["[", expr is_Ortho_def.1 hv₁ _ _ hij, ",", expr mul_zero, "]"] [] },
+  simp_rw ["[", expr sum_left, ",", expr smul_left, ",", expr hsum, "]"] ["at", ident this],
+  exact [expr eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this]
+end
 
 end 
 
@@ -877,30 +883,30 @@ def Matrix.toBilin'Aux [Fintype n] (M : Matrix n n R₂) : BilinForm R₂ (n →
         by 
           simp only [Pi.smul_apply, smul_eq_mul, mul_assocₓ, mul_left_commₓ, mul_sum] }
 
-theorem Matrix.to_bilin'_aux_std_basis [Fintype n] [DecidableEq n] (M : Matrix n n R₂) (i j : n) :
-  M.to_bilin'_aux (std_basis R₂ (fun _ => R₂) i 1) (std_basis R₂ (fun _ => R₂) j 1) = M i j :=
-  by 
-    rw [Matrix.toBilin'Aux, coe_fn_mk, sum_eq_single i, sum_eq_single j]
-    ·
-      simp only [std_basis_same, std_basis_same, one_mulₓ, mul_oneₓ]
-    ·
-      rintro j' - hj' 
-      apply mul_eq_zero_of_right 
-      exact std_basis_ne R₂ (fun _ => R₂) _ _ hj' 1
-    ·
-      intros 
-      have  := Finset.mem_univ j 
-      contradiction
-    ·
-      rintro i' - hi' 
-      refine' Finset.sum_eq_zero fun j _ => _ 
-      apply mul_eq_zero_of_left 
-      apply mul_eq_zero_of_left 
-      exact std_basis_ne R₂ (fun _ => R₂) _ _ hi' 1
-    ·
-      intros 
-      have  := Finset.mem_univ i 
-      contradiction
+-- error in LinearAlgebra.BilinearForm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem matrix.to_bilin'_aux_std_basis
+[fintype n]
+[decidable_eq n]
+(M : matrix n n R₂)
+(i j : n) : «expr = »(M.to_bilin'_aux (std_basis R₂ (λ _, R₂) i 1) (std_basis R₂ (λ _, R₂) j 1), M i j) :=
+begin
+  rw ["[", expr matrix.to_bilin'_aux, ",", expr coe_fn_mk, ",", expr sum_eq_single i, ",", expr sum_eq_single j, "]"] [],
+  { simp [] [] ["only"] ["[", expr std_basis_same, ",", expr std_basis_same, ",", expr one_mul, ",", expr mul_one, "]"] [] [] },
+  { rintros [ident j', "-", ident hj'],
+    apply [expr mul_eq_zero_of_right],
+    exact [expr std_basis_ne R₂ (λ _, R₂) _ _ hj' 1] },
+  { intros [],
+    have [] [] [":=", expr finset.mem_univ j],
+    contradiction },
+  { rintros [ident i', "-", ident hi'],
+    refine [expr finset.sum_eq_zero (λ j _, _)],
+    apply [expr mul_eq_zero_of_left],
+    apply [expr mul_eq_zero_of_left],
+    exact [expr std_basis_ne R₂ (λ _, R₂) _ _ hi' 1] },
+  { intros [],
+    have [] [] [":=", expr finset.mem_univ i],
+    contradiction }
+end
 
 /-- The linear map from bilinear forms to `matrix n n R` given an `n`-indexed basis.
 
@@ -1068,19 +1074,18 @@ noncomputable def BilinForm.toMatrix : BilinForm R₃ M₃ ≃ₗ[R₃] Matrix n
 noncomputable def Matrix.toBilin : Matrix n n R₃ ≃ₗ[R₃] BilinForm R₃ M₃ :=
   (BilinForm.toMatrix b).symm
 
+-- error in LinearAlgebra.BilinearForm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem Basis.equiv_fun_symm_std_basis (i : n) : b.equiv_fun.symm (std_basis R₃ (fun _ => R₃) i 1) = b i :=
-  by 
-    rw [b.equiv_fun_symm_apply, Finset.sum_eq_single i]
-    ·
-      rw [std_basis_same, one_smul]
-    ·
-      rintro j - hj 
-      rw [std_basis_ne _ _ _ _ hj, zero_smul]
-    ·
-      intro 
-      have  := mem_univ i 
-      contradiction
+theorem basis.equiv_fun_symm_std_basis (i : n) : «expr = »(b.equiv_fun.symm (std_basis R₃ (λ _, R₃) i 1), b i) :=
+begin
+  rw ["[", expr b.equiv_fun_symm_apply, ",", expr finset.sum_eq_single i, "]"] [],
+  { rw ["[", expr std_basis_same, ",", expr one_smul, "]"] [] },
+  { rintros [ident j, "-", ident hj],
+    rw ["[", expr std_basis_ne _ _ _ _ hj, ",", expr zero_smul, "]"] [] },
+  { intro [],
+    have [] [] [":=", expr mem_univ i],
+    contradiction }
+end
 
 @[simp]
 theorem BilinForm.to_matrix_apply (B : BilinForm R₃ M₃) (i j : n) : BilinForm.toMatrix b B i j = B (b i) (b j) :=
@@ -1256,14 +1261,14 @@ namespace IsAlt
 theorem self_eq_zero (H : B.is_alt) (x : M) : B x x = 0 :=
   H x
 
-theorem neg (H : B₁.is_alt) (x y : M₁) : -B₁ x y = B₁ y x :=
-  by 
-    have H1 : B₁ (x+y) (x+y) = 0
-    ·
-      exact self_eq_zero H (x+y)
-    rw [add_left, add_right, add_right, self_eq_zero H, self_eq_zero H, Ringₓ.zero_add, Ringₓ.add_zero,
-      add_eq_zero_iff_neg_eq] at H1 
-    exact H1
+-- error in LinearAlgebra.BilinearForm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem neg (H : B₁.is_alt) (x y : M₁) : «expr = »(«expr- »(B₁ x y), B₁ y x) :=
+begin
+  have [ident H1] [":", expr «expr = »(B₁ «expr + »(x, y) «expr + »(x, y), 0)] [],
+  { exact [expr self_eq_zero H «expr + »(x, y)] },
+  rw ["[", expr add_left, ",", expr add_right, ",", expr add_right, ",", expr self_eq_zero H, ",", expr self_eq_zero H, ",", expr ring.zero_add, ",", expr ring.add_zero, ",", expr add_eq_zero_iff_neg_eq, "]"] ["at", ident H1],
+  exact [expr H1]
+end
 
 theorem IsRefl (H : B₁.is_alt) : B₁.is_refl :=
   by 
@@ -1379,25 +1384,19 @@ variable{M₃' : Type _}[AddCommGroupₓ M₃'][Module R₃ M₃']
 
 variable(B₃ F₃ : BilinForm R₃ M₃)
 
-theorem is_pair_self_adjoint_equiv (e : M₃' ≃ₗ[R₃] M₃) (f : Module.End R₃ M₃) :
-  is_pair_self_adjoint B₃ F₃ f ↔
-    is_pair_self_adjoint (B₃.comp («expr↑ » e) («expr↑ » e)) (F₃.comp («expr↑ » e) («expr↑ » e)) (e.symm.conj f) :=
-  by 
-    have hₗ :
-      (F₃.comp («expr↑ » e) («expr↑ » e)).compLeft (e.symm.conj f) = (F₃.comp_left f).comp («expr↑ » e) («expr↑ » e) :=
-      by 
-        ext 
-        simp [LinearEquiv.symm_conj_apply]
-    have hᵣ :
-      (B₃.comp («expr↑ » e) («expr↑ » e)).compRight (e.symm.conj f) =
-        (B₃.comp_right f).comp («expr↑ » e) («expr↑ » e) :=
-      by 
-        ext 
-        simp [LinearEquiv.conj_apply]
-    have he : Function.Surjective («expr⇑ » («expr↑ » e : M₃' →ₗ[R₃] M₃) : M₃' → M₃) := e.surjective 
-    show BilinForm.IsAdjointPair _ _ _ _ ↔ BilinForm.IsAdjointPair _ _ _ _ 
-    rw [is_adjoint_pair_iff_comp_left_eq_comp_right, is_adjoint_pair_iff_comp_left_eq_comp_right, hᵣ, hₗ,
-      comp_injective _ _ he he]
+-- error in LinearAlgebra.BilinearForm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_pair_self_adjoint_equiv
+(e : «expr ≃ₗ[ ] »(M₃', R₃, M₃))
+(f : module.End R₃ M₃) : «expr ↔ »(is_pair_self_adjoint B₃ F₃ f, is_pair_self_adjoint (B₃.comp «expr↑ »(e) «expr↑ »(e)) (F₃.comp «expr↑ »(e) «expr↑ »(e)) (e.symm.conj f)) :=
+begin
+  have [ident hₗ] [":", expr «expr = »((F₃.comp «expr↑ »(e) «expr↑ »(e)).comp_left (e.symm.conj f), (F₃.comp_left f).comp «expr↑ »(e) «expr↑ »(e))] [":=", expr by { ext [] [] [],
+     simp [] [] [] ["[", expr linear_equiv.symm_conj_apply, "]"] [] [] }],
+  have [ident hᵣ] [":", expr «expr = »((B₃.comp «expr↑ »(e) «expr↑ »(e)).comp_right (e.symm.conj f), (B₃.comp_right f).comp «expr↑ »(e) «expr↑ »(e))] [":=", expr by { ext [] [] [],
+     simp [] [] [] ["[", expr linear_equiv.conj_apply, "]"] [] [] }],
+  have [ident he] [":", expr function.surjective («expr⇑ »((«expr↑ »(e) : «expr →ₗ[ ] »(M₃', R₃, M₃))) : M₃' → M₃)] [":=", expr e.surjective],
+  show [expr «expr ↔ »(bilin_form.is_adjoint_pair _ _ _ _, bilin_form.is_adjoint_pair _ _ _ _)],
+  rw ["[", expr is_adjoint_pair_iff_comp_left_eq_comp_right, ",", expr is_adjoint_pair_iff_comp_left_eq_comp_right, ",", expr hᵣ, ",", expr hₗ, ",", expr comp_injective _ _ he he, "]"] []
+end
 
 /-- An endomorphism of a module is self-adjoint with respect to a bilinear form if it serves as an
 adjoint for itself. -/
@@ -1463,43 +1462,41 @@ def Matrix.IsSelfAdjoint :=
 def Matrix.IsSkewAdjoint :=
   Matrix.IsAdjointPair J J A (-A)
 
+-- error in LinearAlgebra.BilinearForm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem is_adjoint_pair_to_bilin' [DecidableEq n] :
-  BilinForm.IsAdjointPair (Matrix.toBilin' J) (Matrix.toBilin' J₃) (Matrix.toLin' A) (Matrix.toLin' A') ↔
-    Matrix.IsAdjointPair J J₃ A A' :=
-  by 
-    rw [BilinForm.is_adjoint_pair_iff_comp_left_eq_comp_right]
-    have h : ∀ B B' : BilinForm R₃ (n → R₃), B = B' ↔ BilinForm.toMatrix' B = BilinForm.toMatrix' B'
-    ·
-      intro B B' 
-      split  <;> intro h
-      ·
-        rw [h]
-      ·
-        exact bilin_form.to_matrix'.injective h 
-    rw [h, BilinForm.to_matrix'_comp_left, BilinForm.to_matrix'_comp_right, LinearMap.to_matrix'_to_lin',
-      LinearMap.to_matrix'_to_lin', BilinForm.to_matrix'_to_bilin', BilinForm.to_matrix'_to_bilin']
-    rfl
+theorem is_adjoint_pair_to_bilin'
+[decidable_eq n] : «expr ↔ »(bilin_form.is_adjoint_pair (matrix.to_bilin' J) (matrix.to_bilin' J₃) (matrix.to_lin' A) (matrix.to_lin' A'), matrix.is_adjoint_pair J J₃ A A') :=
+begin
+  rw [expr bilin_form.is_adjoint_pair_iff_comp_left_eq_comp_right] [],
+  have [ident h] [":", expr ∀
+   B
+   B' : bilin_form R₃ (n → R₃), «expr ↔ »(«expr = »(B, B'), «expr = »(bilin_form.to_matrix' B, bilin_form.to_matrix' B'))] [],
+  { intros [ident B, ident B'],
+    split; intros [ident h],
+    { rw [expr h] [] },
+    { exact [expr bilin_form.to_matrix'.injective h] } },
+  rw ["[", expr h, ",", expr bilin_form.to_matrix'_comp_left, ",", expr bilin_form.to_matrix'_comp_right, ",", expr linear_map.to_matrix'_to_lin', ",", expr linear_map.to_matrix'_to_lin', ",", expr bilin_form.to_matrix'_to_bilin', ",", expr bilin_form.to_matrix'_to_bilin', "]"] [],
+  refl
+end
 
+-- error in LinearAlgebra.BilinearForm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem is_adjoint_pair_to_bilin [DecidableEq n] :
-  BilinForm.IsAdjointPair (Matrix.toBilin b J) (Matrix.toBilin b J₃) (Matrix.toLin b b A) (Matrix.toLin b b A') ↔
-    Matrix.IsAdjointPair J J₃ A A' :=
-  by 
-    rw [BilinForm.is_adjoint_pair_iff_comp_left_eq_comp_right]
-    have h : ∀ B B' : BilinForm R₃ M₃, B = B' ↔ BilinForm.toMatrix b B = BilinForm.toMatrix b B'
-    ·
-      intro B B' 
-      split  <;> intro h
-      ·
-        rw [h]
-      ·
-        exact (BilinForm.toMatrix b).Injective h 
-    rw [h, BilinForm.to_matrix_comp_left, BilinForm.to_matrix_comp_right, LinearMap.to_matrix_to_lin,
-      LinearMap.to_matrix_to_lin, BilinForm.to_matrix_to_bilin, BilinForm.to_matrix_to_bilin]
-    rfl
+theorem is_adjoint_pair_to_bilin
+[decidable_eq n] : «expr ↔ »(bilin_form.is_adjoint_pair (matrix.to_bilin b J) (matrix.to_bilin b J₃) (matrix.to_lin b b A) (matrix.to_lin b b A'), matrix.is_adjoint_pair J J₃ A A') :=
+begin
+  rw [expr bilin_form.is_adjoint_pair_iff_comp_left_eq_comp_right] [],
+  have [ident h] [":", expr ∀
+   B
+   B' : bilin_form R₃ M₃, «expr ↔ »(«expr = »(B, B'), «expr = »(bilin_form.to_matrix b B, bilin_form.to_matrix b B'))] [],
+  { intros [ident B, ident B'],
+    split; intros [ident h],
+    { rw [expr h] [] },
+    { exact [expr (bilin_form.to_matrix b).injective h] } },
+  rw ["[", expr h, ",", expr bilin_form.to_matrix_comp_left, ",", expr bilin_form.to_matrix_comp_right, ",", expr linear_map.to_matrix_to_lin, ",", expr linear_map.to_matrix_to_lin, ",", expr bilin_form.to_matrix_to_bilin, ",", expr bilin_form.to_matrix_to_bilin, "]"] [],
+  refl
+end
 
--- error in LinearAlgebra.BilinearForm: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in LinearAlgebra.BilinearForm: ././Mathport/Syntax/Translate/Basic.lean:341:40: in conv_rhs: ././Mathport/Syntax/Translate/Basic.lean:385:40: in conv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 theorem matrix.is_adjoint_pair_equiv
 [decidable_eq n]
 (P : matrix n n R₃)
@@ -1539,25 +1536,21 @@ def pairSelfAdjointMatricesSubmodule : Submodule R₃ (Matrix n n R₃) :=
     ((LinearMap.toMatrix' : ((n → R₃) →ₗ[R₃] n → R₃) ≃ₗ[R₃] Matrix n n R₃) :
     ((n → R₃) →ₗ[R₃] n → R₃) →ₗ[R₃] Matrix n n R₃)
 
+-- error in LinearAlgebra.BilinearForm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mem_pair_self_adjoint_matrices_submodule :
-  A ∈ pairSelfAdjointMatricesSubmodule J J₃ ↔ Matrix.IsAdjointPair J J₃ A A :=
-  by 
-    simp only [pairSelfAdjointMatricesSubmodule, LinearEquiv.coe_coe, LinearMap.to_matrix'_apply, Submodule.mem_map,
-      BilinForm.mem_is_pair_self_adjoint_submodule]
-    split 
-    ·
-      rintro ⟨f, hf, hA⟩
-      have hf' : f = A.to_lin' :=
-        by 
-          rw [←hA, Matrix.to_lin'_to_matrix']
-      rw [hf'] at hf 
-      rw [←is_adjoint_pair_to_bilin']
-      exact hf
-    ·
-      intro h 
-      refine' ⟨A.to_lin', _, LinearMap.to_matrix'_to_lin' _⟩
-      exact (is_adjoint_pair_to_bilin' _ _ _ _).mpr h
+theorem mem_pair_self_adjoint_matrices_submodule : «expr ↔ »(«expr ∈ »(A, pair_self_adjoint_matrices_submodule J J₃), matrix.is_adjoint_pair J J₃ A A) :=
+begin
+  simp [] [] ["only"] ["[", expr pair_self_adjoint_matrices_submodule, ",", expr linear_equiv.coe_coe, ",", expr linear_map.to_matrix'_apply, ",", expr submodule.mem_map, ",", expr bilin_form.mem_is_pair_self_adjoint_submodule, "]"] [] [],
+  split,
+  { rintros ["⟨", ident f, ",", ident hf, ",", ident hA, "⟩"],
+    have [ident hf'] [":", expr «expr = »(f, A.to_lin')] [":=", expr by rw ["[", "<-", expr hA, ",", expr matrix.to_lin'_to_matrix', "]"] []],
+    rw [expr hf'] ["at", ident hf],
+    rw ["<-", expr is_adjoint_pair_to_bilin'] [],
+    exact [expr hf] },
+  { intros [ident h],
+    refine [expr ⟨A.to_lin', _, linear_map.to_matrix'_to_lin' _⟩],
+    exact [expr (is_adjoint_pair_to_bilin' _ _ _ _).mpr h] }
+end
 
 /-- The submodule of self-adjoint matrices with respect to the bilinear form corresponding to
 the matrix `J`. -/
@@ -1625,23 +1618,24 @@ theorem orthogonal_le (h : N ≤ L) : B.orthogonal L ≤ B.orthogonal N :=
 theorem le_orthogonal_orthogonal (b : B.is_refl) : N ≤ B.orthogonal (B.orthogonal N) :=
   fun n hn m hm => b _ _ (hm n hn)
 
-theorem span_singleton_inf_orthogonal_eq_bot {B : BilinForm K V} {x : V} (hx : ¬B.is_ortho x x) :
-  (K∙x)⊓B.orthogonal (K∙x) = ⊥ :=
-  by 
-    rw [←Finset.coe_singleton]
-    refine' eq_bot_iff.2 fun y h => _ 
-    rcases mem_span_finset.1 h.1 with ⟨μ, rfl⟩
-    have  := h.2 x _
-    ·
-      rw [Finset.sum_singleton] at this⊢
-      suffices hμzero : μ x = 0
-      ·
-        rw [hμzero, zero_smul, Submodule.mem_bot]
-      change B x (μ x • x) = 0 at this 
-      rw [smul_right] at this 
-      exact Or.elim (zero_eq_mul.mp this.symm) id fun hfalse => False.elim$ hx hfalse
-    ·
-      rw [Submodule.mem_span] <;> exact fun _ hp => hp$ Finset.mem_singleton_self _
+-- error in LinearAlgebra.BilinearForm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem span_singleton_inf_orthogonal_eq_bot
+{B : bilin_form K V}
+{x : V}
+(hx : «expr¬ »(B.is_ortho x x)) : «expr = »(«expr ⊓ »(«expr ∙ »(K, x), B.orthogonal «expr ∙ »(K, x)), «expr⊥»()) :=
+begin
+  rw ["<-", expr finset.coe_singleton] [],
+  refine [expr eq_bot_iff.2 (λ y h, _)],
+  rcases [expr mem_span_finset.1 h.1, "with", "⟨", ident μ, ",", ident rfl, "⟩"],
+  have [] [] [":=", expr h.2 x _],
+  { rw [expr finset.sum_singleton] ["at", ident this, "⊢"],
+    suffices [ident hμzero] [":", expr «expr = »(μ x, 0)],
+    { rw ["[", expr hμzero, ",", expr zero_smul, ",", expr submodule.mem_bot, "]"] [] },
+    change [expr «expr = »(B x «expr • »(μ x, x), 0)] [] ["at", ident this],
+    rw ["[", expr smul_right, "]"] ["at", ident this],
+    exact [expr or.elim (zero_eq_mul.mp this.symm) id (λ hfalse, «expr $ »(false.elim, hx hfalse))] },
+  { rw [expr submodule.mem_span] []; exact [expr λ _ hp, «expr $ »(hp, finset.mem_singleton_self _)] }
+end
 
 theorem orthogonal_span_singleton_eq_to_lin_ker {B : BilinForm K V} (x : V) :
   B.orthogonal (K∙x) = (BilinForm.toLin B x).ker :=
@@ -1852,28 +1846,31 @@ theorem finrank_add_finrank_orthogonal {B : BilinForm K V} {W : Subspace K V} (b
         add_commₓ, ←add_assocₓ, add_commₓ (finrank K («expr↥ » (B.to_lin.dom_restrict W).ker)),
         LinearMap.finrank_range_add_finrank_ker]
 
+-- error in LinearAlgebra.BilinearForm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A subspace is complement to its orthogonal complement with respect to some
 bilinear form if that bilinear form restricted on to the subspace is nondegenerate. -/
-theorem restrict_nondegenerate_of_is_compl_orthogonal {B : BilinForm K V} {W : Subspace K V} (b₁ : B.is_symm)
-  (b₂ : (B.restrict W).Nondegenerate) : IsCompl W (B.orthogonal W) :=
-  by 
-    have  : W⊓B.orthogonal W = ⊥
-    ·
-      rw [eq_bot_iff]
-      intro x hx 
-      obtain ⟨hx₁, hx₂⟩ := Submodule.mem_inf.1 hx 
-      refine' Subtype.mk_eq_mk.1 (b₂ ⟨x, hx₁⟩ _)
-      rintro ⟨n, hn⟩
-      rw [restrict_apply, Submodule.coe_mk, Submodule.coe_mk, b₁]
-      exact hx₂ n hn 
-    refine' ⟨this ▸ le_reflₓ _, _⟩
-    ·
-      rw [top_le_iff]
-      refine' eq_top_of_finrank_eq _ 
-      refine' le_antisymmₓ (Submodule.finrank_le _) _ 
-      convRHS => rw [←add_zeroₓ (finrank K _)]
-      rw [←finrank_bot K V, ←this, Submodule.dim_sup_add_dim_inf_eq, finrank_add_finrank_orthogonal b₁]
-      exact Nat.Le.intro rfl
+theorem restrict_nondegenerate_of_is_compl_orthogonal
+{B : bilin_form K V}
+{W : subspace K V}
+(b₁ : B.is_symm)
+(b₂ : (B.restrict W).nondegenerate) : is_compl W (B.orthogonal W) :=
+begin
+  have [] [":", expr «expr = »(«expr ⊓ »(W, B.orthogonal W), «expr⊥»())] [],
+  { rw [expr eq_bot_iff] [],
+    intros [ident x, ident hx],
+    obtain ["⟨", ident hx₁, ",", ident hx₂, "⟩", ":=", expr submodule.mem_inf.1 hx],
+    refine [expr subtype.mk_eq_mk.1 (b₂ ⟨x, hx₁⟩ _)],
+    rintro ["⟨", ident n, ",", ident hn, "⟩"],
+    rw ["[", expr restrict_apply, ",", expr submodule.coe_mk, ",", expr submodule.coe_mk, ",", expr b₁, "]"] [],
+    exact [expr hx₂ n hn] },
+  refine [expr ⟨«expr ▸ »(this, le_refl _), _⟩],
+  { rw [expr top_le_iff] [],
+    refine [expr eq_top_of_finrank_eq _],
+    refine [expr le_antisymm (submodule.finrank_le _) _],
+    conv_rhs [] [] { rw ["<-", expr add_zero (finrank K _)] },
+    rw ["[", "<-", expr finrank_bot K V, ",", "<-", expr this, ",", expr submodule.dim_sup_add_dim_inf_eq, ",", expr finrank_add_finrank_orthogonal b₁, "]"] [],
+    exact [expr nat.le.intro rfl] }
+end
 
 /-- A subspace is complement to its orthogonal complement with respect to some bilinear form
 if and only if that bilinear form restricted on to the subspace is nondegenerate. -/
@@ -1928,20 +1925,23 @@ lemma below since the below lemma does not require `V` to be finite dimensional.
 on the whole space. -/
 
 
+-- error in LinearAlgebra.BilinearForm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The restriction of a symmetric, non-degenerate bilinear form on the orthogonal complement of
 the span of a singleton is also non-degenerate. -/
-theorem restrict_orthogonal_span_singleton_nondegenerate (B : BilinForm K V) (b₁ : B.nondegenerate) (b₂ : B.is_symm)
-  {x : V} (hx : ¬B.is_ortho x x) : nondegenerate$ B.restrict$ B.orthogonal (K∙x) :=
-  by 
-    refine' fun m hm => Submodule.coe_eq_zero.1 (b₁ m.1 fun n => _)
-    have  : n ∈ (K∙x)⊔B.orthogonal (K∙x) := (span_singleton_sup_orthogonal_eq_top hx).symm ▸ Submodule.mem_top 
-    rcases Submodule.mem_sup.1 this with ⟨y, hy, z, hz, rfl⟩
-    specialize hm ⟨z, hz⟩
-    rw [restrict] at hm 
-    erw [add_right,
-      show B m.1 y = 0 by 
-        rw [b₂] <;> exact m.2 y hy,
-      hm, add_zeroₓ]
+theorem restrict_orthogonal_span_singleton_nondegenerate
+(B : bilin_form K V)
+(b₁ : B.nondegenerate)
+(b₂ : B.is_symm)
+{x : V}
+(hx : «expr¬ »(B.is_ortho x x)) : «expr $ »(nondegenerate, «expr $ »(B.restrict, B.orthogonal «expr ∙ »(K, x))) :=
+begin
+  refine [expr λ m hm, submodule.coe_eq_zero.1 (b₁ m.1 (λ n, _))],
+  have [] [":", expr «expr ∈ »(n, «expr ⊔ »(«expr ∙ »(K, x), B.orthogonal «expr ∙ »(K, x)))] [":=", expr «expr ▸ »((span_singleton_sup_orthogonal_eq_top hx).symm, submodule.mem_top)],
+  rcases [expr submodule.mem_sup.1 this, "with", "⟨", ident y, ",", ident hy, ",", ident z, ",", ident hz, ",", ident rfl, "⟩"],
+  specialize [expr hm ⟨z, hz⟩],
+  rw [expr restrict] ["at", ident hm],
+  erw ["[", expr add_right, ",", expr show «expr = »(B m.1 y, 0), by rw [expr b₂] []; exact [expr m.2 y hy], ",", expr hm, ",", expr add_zero, "]"] []
+end
 
 section LinearAdjoints
 
@@ -2007,23 +2007,61 @@ variable{A : Type _}[CommRingₓ A][IsDomain A][Module A M₃](B₃ : BilinForm 
 
 variable{ι : Type _}[DecidableEq ι][Fintype ι]
 
-theorem _root_.matrix.nondegenerate.to_bilin' {M : Matrix ι ι R₃} (h : M.nondegenerate) : (to_bilin' M).Nondegenerate :=
+theorem _root_.matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin {M : Matrix ι ι R₃} (b : Basis ι R₃ M₃) :
+  M.to_bilin'.nondegenerate ↔ (Matrix.toBilin b M).Nondegenerate :=
+  (nondegenerate_congr_iff b.equiv_fun.symm).symm
+
+theorem _root_.matrix.nondegenerate.to_bilin' {M : Matrix ι ι R₃} (h : M.nondegenerate) : M.to_bilin'.nondegenerate :=
   fun x hx =>
     h.eq_zero_of_ortho$
       fun y =>
         by 
           simpa only [to_bilin'_apply'] using hx y
 
+@[simp]
+theorem _root_.matrix.nondegenerate_to_bilin'_iff {M : Matrix ι ι R₃} : M.to_bilin'.nondegenerate ↔ M.nondegenerate :=
+  ⟨fun h v hv => h v$ fun w => (M.to_bilin'_apply' _ _).trans$ hv w, Matrix.Nondegenerate.to_bilin'⟩
+
 theorem _root_.matrix.nondegenerate.to_bilin {M : Matrix ι ι R₃} (h : M.nondegenerate) (b : Basis ι R₃ M₃) :
   (to_bilin b M).Nondegenerate :=
-  by 
-    convert h.to_bilin'.congr b.equiv_fun.symm using 1
+  (Matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin b).mp h.to_bilin'
 
-theorem nondegenerate_of_det_ne_zero' (M : Matrix ι ι A) (h : M.det ≠ 0) : (to_bilin' M).Nondegenerate :=
-  (Matrix.nondegenerate_of_det_ne_zero h).toBilin'
+@[simp]
+theorem _root_.matrix.nondegenerate_to_bilin_iff {M : Matrix ι ι R₃} (b : Basis ι R₃ M₃) :
+  (to_bilin b M).Nondegenerate ↔ M.nondegenerate :=
+  by 
+    rw [←Matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin, Matrix.nondegenerate_to_bilin'_iff]
+
+@[simp]
+theorem nondegenerate_to_matrix'_iff {B : BilinForm R₃ (ι → R₃)} : B.to_matrix'.nondegenerate ↔ B.nondegenerate :=
+  Matrix.nondegenerate_to_bilin'_iff.symm.trans$ (Matrix.to_bilin'_to_matrix' B).symm ▸ Iff.rfl
+
+theorem nondegenerate.to_matrix' {B : BilinForm R₃ (ι → R₃)} (h : B.nondegenerate) : B.to_matrix'.nondegenerate :=
+  nondegenerate_to_matrix'_iff.mpr h
+
+@[simp]
+theorem nondegenerate_to_matrix_iff {B : BilinForm R₃ M₃} (b : Basis ι R₃ M₃) :
+  (to_matrix b B).Nondegenerate ↔ B.nondegenerate :=
+  (Matrix.nondegenerate_to_bilin_iff b).symm.trans$ (Matrix.to_bilin_to_matrix b B).symm ▸ Iff.rfl
+
+theorem nondegenerate.to_matrix {B : BilinForm R₃ M₃} (h : B.nondegenerate) (b : Basis ι R₃ M₃) :
+  (to_matrix b B).Nondegenerate :=
+  (nondegenerate_to_matrix_iff b).mpr h
+
+theorem nondegenerate_to_bilin'_iff_det_ne_zero {M : Matrix ι ι A} : M.to_bilin'.nondegenerate ↔ M.det ≠ 0 :=
+  by 
+    rw [Matrix.nondegenerate_to_bilin'_iff, Matrix.nondegenerate_iff_det_ne_zero]
+
+theorem nondegenerate_to_bilin'_of_det_ne_zero' (M : Matrix ι ι A) (h : M.det ≠ 0) : M.to_bilin'.nondegenerate :=
+  nondegenerate_to_bilin'_iff_det_ne_zero.mpr h
+
+theorem nondegenerate_iff_det_ne_zero {B : BilinForm A M₃} (b : Basis ι A M₃) :
+  B.nondegenerate ↔ (to_matrix b B).det ≠ 0 :=
+  by 
+    rw [←Matrix.nondegenerate_iff_det_ne_zero, nondegenerate_to_matrix_iff]
 
 theorem nondegenerate_of_det_ne_zero (b : Basis ι A M₃) (h : (to_matrix b B₃).det ≠ 0) : B₃.nondegenerate :=
-  to_bilin_to_matrix b B₃ ▸ (Matrix.nondegenerate_of_det_ne_zero h).toBilin b
+  (nondegenerate_iff_det_ne_zero b).mpr h
 
 end Det
 

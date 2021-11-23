@@ -1,8 +1,7 @@
-import Mathbin.CategoryTheory.Sites.SheafOfTypes 
-import Mathbin.CategoryTheory.Limits.Yoneda 
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Equalizers 
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products 
-import Mathbin.CategoryTheory.ConcreteCategory.Default
+import Mathbin.CategoryTheory.Limits.Yoneda 
+import Mathbin.CategoryTheory.Sites.SheafOfTypes
 
 /-!
 # Sheaves taking values in a category
@@ -96,13 +95,13 @@ variable(J : grothendieck_topology C)
 
 variable(A : Type u₂)[category.{v₂} A]
 
--- error in CategoryTheory.Sites.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in CategoryTheory.Sites.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- The category of sheaves taking values in `A` on a grothendieck topology. -/
 @[derive #[expr category]]
 def Sheaf : Type* :=
 {P : «expr ⥤ »(«expr ᵒᵖ»(C), A) // presheaf.is_sheaf J P}
 
--- error in CategoryTheory.Sites.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler full
+-- error in CategoryTheory.Sites.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
 /-- The inclusion functor from sheaves to presheaves. -/
 @[simps #[expr { rhs_md := semireducible }], derive #["[", expr full, ",", expr faithful, "]"]]
 def Sheaf_to_presheaf : «expr ⥤ »(Sheaf J A, «expr ⥤ »(«expr ᵒᵖ»(C), A)) :=
@@ -247,7 +246,7 @@ theorem is_sheaf_iff_multiequalizer [∀ X : C S : J.cover X, has_multiequalizer
       let e : P.obj (op X) ≅ multiequalizer (S.index P) := h.cone_point_unique_up_to_iso (limit.is_limit _)
       exact (inferInstance : is_iso e.hom)
     ·
-      introI h 
+      intros h 
       refine' ⟨is_limit.of_iso_limit (limit.is_limit _) (cones.ext _ _)⟩
       ·
         apply (@as_iso _ _ _ _ _ h).symm
@@ -346,28 +345,28 @@ def is_sheaf_for_is_sheaf_for' (P : «expr ᵒᵖ» C ⥤ A) (s : A ⥤ Type max
       dsimp [equalizer.fork_map, fork_map]
       simp 
 
+-- error in CategoryTheory.Sites.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The equalizer definition of a sheaf given by `is_sheaf'` is equivalent to `is_sheaf`. -/
-theorem is_sheaf_iff_is_sheaf' : is_sheaf J P ↔ is_sheaf' J P :=
-  by 
-    split 
-    ·
-      intro h U R hR 
-      refine' ⟨_⟩
-      apply coyoneda_jointly_reflects_limits 
-      intro X 
-      have q : presieve.is_sheaf_for (P ⋙ coyoneda.obj X) _ := h X.unop _ hR 
-      rw [←presieve.is_sheaf_for_iff_generate] at q 
-      rw [equalizer.presieve.sheaf_condition] at q 
-      replace q := Classical.choice q 
-      apply (is_sheaf_for_is_sheaf_for' _ _ _ _).symm q
-    ·
-      intro h U X S hS 
-      rw [equalizer.presieve.sheaf_condition]
-      refine' ⟨_⟩
-      refine' is_sheaf_for_is_sheaf_for' _ _ _ _ _ 
-      apply is_limit_of_preserves 
-      apply Classical.choice (h _ S _)
-      simpa
+theorem is_sheaf_iff_is_sheaf' : «expr ↔ »(is_sheaf J P, is_sheaf' J P) :=
+begin
+  split,
+  { intros [ident h, ident U, ident R, ident hR],
+    refine [expr ⟨_⟩],
+    apply [expr coyoneda_jointly_reflects_limits],
+    intro [ident X],
+    have [ident q] [":", expr presieve.is_sheaf_for «expr ⋙ »(P, coyoneda.obj X) _] [":=", expr h X.unop _ hR],
+    rw ["<-", expr presieve.is_sheaf_for_iff_generate] ["at", ident q],
+    rw [expr equalizer.presieve.sheaf_condition] ["at", ident q],
+    replace [ident q] [] [":=", expr classical.choice q],
+    apply [expr (is_sheaf_for_is_sheaf_for' _ _ _ _).symm q] },
+  { intros [ident h, ident U, ident X, ident S, ident hS],
+    rw [expr equalizer.presieve.sheaf_condition] [],
+    refine [expr ⟨_⟩],
+    refine [expr is_sheaf_for_is_sheaf_for' _ _ _ _ _],
+    apply [expr is_limit_of_preserves],
+    apply [expr classical.choice (h _ S _)],
+    simpa [] [] [] [] [] [] }
+end
 
 end 
 
@@ -375,6 +374,7 @@ section Concrete
 
 variable[has_pullbacks C]
 
+-- error in CategoryTheory.Sites.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 For a concrete category `(A, s)` where the forgetful functor `s : A ⥤ Type v` preserves limits and
 reflects isomorphisms, and `A` has limits, an `A`-valued presheaf `P : Cᵒᵖ ⥤ A` is a sheaf iff its
@@ -384,21 +384,22 @@ Note this lemma applies for "algebraic" categories, eg groups, abelian groups an
 for the category of topological spaces, topological rings, etc since reflecting isomorphisms doesn't
 hold.
 -/
-theorem is_sheaf_iff_is_sheaf_forget (s : A ⥤ Type max v₁ u₁) [has_limits A] [preserves_limits s]
-  [reflects_isomorphisms s] : is_sheaf J P ↔ is_sheaf J (P ⋙ s) :=
-  by 
-    rw [is_sheaf_iff_is_sheaf', is_sheaf_iff_is_sheaf']
-    apply forall_congrₓ fun U => _ 
-    apply ball_congr fun R hR => _ 
-    letI this : reflects_limits s := reflects_limits_of_reflects_isomorphisms 
-    have  : is_limit (s.map_cone (fork.of_ι _ (w R P))) ≃ is_limit (fork.of_ι _ (w R (P ⋙ s))) :=
-      is_sheaf_for_is_sheaf_for' P s U R 
-    rw [←Equiv.nonempty_congr this]
-    split 
-    ·
-      exact Nonempty.map fun t => is_limit_of_preserves s t
-    ·
-      exact Nonempty.map fun t => is_limit_of_reflects s t
+theorem is_sheaf_iff_is_sheaf_forget
+(s : «expr ⥤ »(A, Type max v₁ u₁))
+[has_limits A]
+[preserves_limits s]
+[reflects_isomorphisms s] : «expr ↔ »(is_sheaf J P, is_sheaf J «expr ⋙ »(P, s)) :=
+begin
+  rw ["[", expr is_sheaf_iff_is_sheaf', ",", expr is_sheaf_iff_is_sheaf', "]"] [],
+  apply [expr forall_congr (λ U, _)],
+  apply [expr ball_congr (λ R hR, _)],
+  letI [] [":", expr reflects_limits s] [":=", expr reflects_limits_of_reflects_isomorphisms],
+  have [] [":", expr «expr ≃ »(is_limit (s.map_cone (fork.of_ι _ (w R P))), is_limit (fork.of_ι _ (w R «expr ⋙ »(P, s))))] [":=", expr is_sheaf_for_is_sheaf_for' P s U R],
+  rw ["<-", expr equiv.nonempty_congr this] [],
+  split,
+  { exact [expr nonempty.map (λ t, is_limit_of_preserves s t)] },
+  { exact [expr nonempty.map (λ t, is_limit_of_reflects s t)] }
+end
 
 end Concrete
 

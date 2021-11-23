@@ -1,5 +1,6 @@
 import Mathbin.Topology.Sheaves.SheafCondition.EqualizerProducts 
-import Mathbin.CategoryTheory.FullSubcategory
+import Mathbin.CategoryTheory.FullSubcategory 
+import Mathbin.CategoryTheory.Limits.Punit
 
 /-!
 # Sheaves
@@ -86,7 +87,7 @@ end Presheaf
 
 variable(C X)
 
--- error in Topology.Sheaves.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in Topology.Sheaves.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /--
 A `sheaf C X` is a presheaf of objects from `C` over a (bundled) topological space `X`,
 satisfying the sheaf condition.
@@ -98,7 +99,7 @@ instance sheaf_inhabited : Inhabited (sheaf (CategoryTheory.Discrete PUnit) X) :
 
 namespace Sheaf
 
--- error in Topology.Sheaves.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler full
+-- error in Topology.Sheaves.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
 /--
 The forgetful functor from sheaves to presheaves.
 -/ @[derive #["[", expr full, ",", expr faithful, "]"]] def forget : «expr ⥤ »(Top.sheaf C X, Top.presheaf C X) :=

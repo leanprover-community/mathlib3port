@@ -1,6 +1,5 @@
 import Mathbin.Algebra.Associated 
-import Mathbin.Algebra.GroupPower.Lemmas 
-import Mathbin.Data.Nat.Gcd
+import Mathbin.Algebra.GroupPower.Lemmas
 
 /-!
 # Monoids with normalization functions, `gcd`, and `lcm`
@@ -457,19 +456,21 @@ theorem exists_dvd_and_dvd_of_dvd_mul [GcdMonoid α] {m n k : α} (H : k ∣ m*n
       rw [←ha]
       exact dvd_gcd_mul_of_dvd_mul H
 
-theorem gcd_mul_dvd_mul_gcd [GcdMonoid α] (k m n : α) : gcd k (m*n) ∣ gcd k m*gcd k n :=
-  by 
-    obtain ⟨m', hm', n', hn', h⟩ := exists_dvd_and_dvd_of_dvd_mul$ gcd_dvd_right k (m*n)
-    replace h : gcd k (m*n) = m'*n' := h 
-    rw [h]
-    have hm'n' : (m'*n') ∣ k := h ▸ gcd_dvd_left _ _ 
-    apply mul_dvd_mul
-    ·
-      have hm'k : m' ∣ k := (dvd_mul_right m' n').trans hm'n' 
-      exact dvd_gcd hm'k hm'
-    ·
-      have hn'k : n' ∣ k := (dvd_mul_left n' m').trans hm'n' 
-      exact dvd_gcd hn'k hn'
+-- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem gcd_mul_dvd_mul_gcd
+[gcd_monoid α]
+(k m n : α) : «expr ∣ »(gcd k «expr * »(m, n), «expr * »(gcd k m, gcd k n)) :=
+begin
+  obtain ["⟨", ident m', ",", ident hm', ",", ident n', ",", ident hn', ",", ident h, "⟩", ":=", expr «expr $ »(exists_dvd_and_dvd_of_dvd_mul, gcd_dvd_right k «expr * »(m, n))],
+  replace [ident h] [":", expr «expr = »(gcd k «expr * »(m, n), «expr * »(m', n'))] [":=", expr h],
+  rw [expr h] [],
+  have [ident hm'n'] [":", expr «expr ∣ »(«expr * »(m', n'), k)] [":=", expr «expr ▸ »(h, gcd_dvd_left _ _)],
+  apply [expr mul_dvd_mul],
+  { have [ident hm'k] [":", expr «expr ∣ »(m', k)] [":=", expr (dvd_mul_right m' n').trans hm'n'],
+    exact [expr dvd_gcd hm'k hm'] },
+  { have [ident hn'k] [":", expr «expr ∣ »(n', k)] [":=", expr (dvd_mul_left n' m').trans hm'n'],
+    exact [expr dvd_gcd hn'k hn'] }
+end
 
 theorem gcd_pow_right_dvd_pow_gcd [GcdMonoid α] {a b : α} {k : ℕ} : gcd a (b ^ k) ∣ gcd a b ^ k :=
   by 
@@ -494,96 +495,97 @@ theorem gcd_pow_left_dvd_pow_gcd [GcdMonoid α] {a b : α} {k : ℕ} : gcd (a ^ 
     _ ∣ gcd a b ^ k := pow_dvd_pow_of_dvd (gcd_comm' _ _).Dvd _
     
 
-theorem pow_dvd_of_mul_eq_pow [GcdMonoid α] {a b c d₁ d₂ : α} (ha : a ≠ 0) (hab : IsUnit (gcd a b)) {k : ℕ}
-  (h : (a*b) = c ^ k) (hc : c = d₁*d₂) (hd₁ : d₁ ∣ a) : d₁ ^ k ≠ 0 ∧ d₁ ^ k ∣ a :=
-  by 
-    have h1 : IsUnit (gcd (d₁ ^ k) b)
-    ·
-      apply is_unit_of_dvd_one 
-      trans gcd d₁ b ^ k
-      ·
-        exact gcd_pow_left_dvd_pow_gcd
-      ·
-        apply IsUnit.dvd 
-        apply IsUnit.pow 
-        apply is_unit_of_dvd_one 
-        apply dvd_trans _ hab.dvd 
-        apply gcd_dvd_gcd hd₁ (dvd_refl b)
-    have h2 : d₁ ^ k ∣ a*b
-    ·
-      use d₂ ^ k 
-      rw [h, hc]
-      exact mul_powₓ d₁ d₂ k 
-    rw [mul_commₓ] at h2 
-    have h3 : d₁ ^ k ∣ a
-    ·
-      apply (dvd_gcd_mul_of_dvd_mul h2).trans 
-      rw [IsUnit.mul_left_dvd _ _ _ h1]
-    have h4 : d₁ ^ k ≠ 0
-    ·
-      intro hdk 
-      rw [hdk] at h3 
-      apply absurd (zero_dvd_iff.mp h3) ha 
-    exact ⟨h4, h3⟩
+-- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pow_dvd_of_mul_eq_pow
+[gcd_monoid α]
+{a b c d₁ d₂ : α}
+(ha : «expr ≠ »(a, 0))
+(hab : is_unit (gcd a b))
+{k : exprℕ()}
+(h : «expr = »(«expr * »(a, b), «expr ^ »(c, k)))
+(hc : «expr = »(c, «expr * »(d₁, d₂)))
+(hd₁ : «expr ∣ »(d₁, a)) : «expr ∧ »(«expr ≠ »(«expr ^ »(d₁, k), 0), «expr ∣ »(«expr ^ »(d₁, k), a)) :=
+begin
+  have [ident h1] [":", expr is_unit (gcd «expr ^ »(d₁, k) b)] [],
+  { apply [expr is_unit_of_dvd_one],
+    transitivity [expr «expr ^ »(gcd d₁ b, k)],
+    { exact [expr gcd_pow_left_dvd_pow_gcd] },
+    { apply [expr is_unit.dvd],
+      apply [expr is_unit.pow],
+      apply [expr is_unit_of_dvd_one],
+      apply [expr dvd_trans _ hab.dvd],
+      apply [expr gcd_dvd_gcd hd₁ (dvd_refl b)] } },
+  have [ident h2] [":", expr «expr ∣ »(«expr ^ »(d₁, k), «expr * »(a, b))] [],
+  { use [expr «expr ^ »(d₂, k)],
+    rw ["[", expr h, ",", expr hc, "]"] [],
+    exact [expr mul_pow d₁ d₂ k] },
+  rw [expr mul_comm] ["at", ident h2],
+  have [ident h3] [":", expr «expr ∣ »(«expr ^ »(d₁, k), a)] [],
+  { apply [expr (dvd_gcd_mul_of_dvd_mul h2).trans],
+    rw [expr is_unit.mul_left_dvd _ _ _ h1] [] },
+  have [ident h4] [":", expr «expr ≠ »(«expr ^ »(d₁, k), 0)] [],
+  { intro [ident hdk],
+    rw [expr hdk] ["at", ident h3],
+    apply [expr absurd (zero_dvd_iff.mp h3) ha] },
+  exact [expr ⟨h4, h3⟩]
+end
 
-theorem exists_associated_pow_of_mul_eq_pow [GcdMonoid α] {a b c : α} (hab : IsUnit (gcd a b)) {k : ℕ}
-  (h : (a*b) = c ^ k) : ∃ d : α, Associated (d ^ k) a :=
-  by 
-    casesI subsingleton_or_nontrivial α
-    ·
-      use 0
-      rw [Subsingleton.elimₓ a (0 ^ k)]
-    byCases' ha : a = 0
-    ·
-      use 0
-      rw [ha]
-      obtain rfl | hk := k.eq_zero_or_pos
-      ·
-        exFalso 
-        revert h 
-        rw [ha, zero_mul, pow_zeroₓ]
-        apply zero_ne_one
-      ·
-        rw [zero_pow hk]
-    byCases' hb : b = 0
-    ·
-      use 1
-      rw [one_pow]
-      apply (associated_one_iff_is_unit.mpr hab).symm.trans 
-      rw [hb]
-      exact gcd_zero_right' a 
-    obtain rfl | hk := k.eq_zero_or_pos
-    ·
-      use 1
-      rw [pow_zeroₓ] at h⊢
-      use Units.mkOfMulEqOne _ _ h 
-      rw [Units.coe_mk_of_mul_eq_one, one_mulₓ]
-    have hc : c ∣ a*b
-    ·
-      rw [h]
-      exact dvd_pow_self _ hk.ne' 
-    obtain ⟨d₁, hd₁, d₂, hd₂, hc⟩ := exists_dvd_and_dvd_of_dvd_mul hc 
-    use d₁ 
-    obtain ⟨h0₁, ⟨a', ha'⟩⟩ := pow_dvd_of_mul_eq_pow ha hab h hc hd₁ 
-    rw [mul_commₓ] at h hc 
-    rw [(gcd_comm' a b).is_unit_iff] at hab 
-    obtain ⟨h0₂, ⟨b', hb'⟩⟩ := pow_dvd_of_mul_eq_pow hb hab h hc hd₂ 
-    rw [ha', hb', hc, mul_powₓ] at h 
-    have h' : (a'*b') = 1
-    ·
-      apply (mul_right_inj' h0₁).mp 
-      rw [mul_oneₓ]
-      apply (mul_right_inj' h0₂).mp 
-      rw [←h]
-      rw [mul_assocₓ, mul_commₓ a', ←mul_assocₓ _ b', ←mul_assocₓ b', mul_commₓ b']
-    use Units.mkOfMulEqOne _ _ h' 
-    rw [Units.coe_mk_of_mul_eq_one, ha']
+-- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_associated_pow_of_mul_eq_pow
+[gcd_monoid α]
+{a b c : α}
+(hab : is_unit (gcd a b))
+{k : exprℕ()}
+(h : «expr = »(«expr * »(a, b), «expr ^ »(c, k))) : «expr∃ , »((d : α), associated «expr ^ »(d, k) a) :=
+begin
+  casesI [expr subsingleton_or_nontrivial α] [],
+  { use [expr 0],
+    rw ["[", expr subsingleton.elim a «expr ^ »(0, k), "]"] [] },
+  by_cases [expr ha, ":", expr «expr = »(a, 0)],
+  { use [expr 0],
+    rw [expr ha] [],
+    obtain ["(", ident rfl, "|", ident hk, ")", ":=", expr k.eq_zero_or_pos],
+    { exfalso,
+      revert [ident h],
+      rw ["[", expr ha, ",", expr zero_mul, ",", expr pow_zero, "]"] [],
+      apply [expr zero_ne_one] },
+    { rw [expr zero_pow hk] [] } },
+  by_cases [expr hb, ":", expr «expr = »(b, 0)],
+  { use [expr 1],
+    rw ["[", expr one_pow, "]"] [],
+    apply [expr (associated_one_iff_is_unit.mpr hab).symm.trans],
+    rw [expr hb] [],
+    exact [expr gcd_zero_right' a] },
+  obtain ["(", ident rfl, "|", ident hk, ")", ":=", expr k.eq_zero_or_pos],
+  { use [expr 1],
+    rw [expr pow_zero] ["at", ident h, "⊢"],
+    use [expr units.mk_of_mul_eq_one _ _ h],
+    rw ["[", expr units.coe_mk_of_mul_eq_one, ",", expr one_mul, "]"] [] },
+  have [ident hc] [":", expr «expr ∣ »(c, «expr * »(a, b))] [],
+  { rw [expr h] [],
+    exact [expr dvd_pow_self _ hk.ne'] },
+  obtain ["⟨", ident d₁, ",", ident hd₁, ",", ident d₂, ",", ident hd₂, ",", ident hc, "⟩", ":=", expr exists_dvd_and_dvd_of_dvd_mul hc],
+  use [expr d₁],
+  obtain ["⟨", ident h0₁, ",", "⟨", ident a', ",", ident ha', "⟩", "⟩", ":=", expr pow_dvd_of_mul_eq_pow ha hab h hc hd₁],
+  rw ["[", expr mul_comm, "]"] ["at", ident h, ident hc],
+  rw [expr (gcd_comm' a b).is_unit_iff] ["at", ident hab],
+  obtain ["⟨", ident h0₂, ",", "⟨", ident b', ",", ident hb', "⟩", "⟩", ":=", expr pow_dvd_of_mul_eq_pow hb hab h hc hd₂],
+  rw ["[", expr ha', ",", expr hb', ",", expr hc, ",", expr mul_pow, "]"] ["at", ident h],
+  have [ident h'] [":", expr «expr = »(«expr * »(a', b'), 1)] [],
+  { apply [expr (mul_right_inj' h0₁).mp],
+    rw [expr mul_one] [],
+    apply [expr (mul_right_inj' h0₂).mp],
+    rw ["<-", expr h] [],
+    rw ["[", expr mul_assoc, ",", expr mul_comm a', ",", "<-", expr mul_assoc _ b', ",", "<-", expr mul_assoc b', ",", expr mul_comm b', "]"] [] },
+  use [expr units.mk_of_mul_eq_one _ _ h'],
+  rw ["[", expr units.coe_mk_of_mul_eq_one, ",", expr ha', "]"] []
+end
 
 end Gcd
 
 section Lcm
 
--- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lcm_dvd_iff
 [gcd_monoid α]
 {a b c : α} : «expr ↔ »(«expr ∣ »(lcm a b, c), «expr ∧ »(«expr ∣ »(a, c), «expr ∣ »(b, c))) :=
@@ -848,273 +850,223 @@ def normalizationMonoidOfMonoidHomRightInverse [DecidableEq α] (f : Associates 
             Associates.mk_eq_mk_iff_associated.2 (associated_one_iff_is_unit.2 ⟨u, rfl⟩), Associates.mk_one,
             MonoidHom.map_one] }
 
+-- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Define `gcd_monoid` on a structure just from the `gcd` and its properties. -/
-noncomputable def gcdMonoidOfGcd [DecidableEq α] (gcd : α → α → α) (gcd_dvd_left : ∀ a b, gcd a b ∣ a)
-  (gcd_dvd_right : ∀ a b, gcd a b ∣ b) (dvd_gcd : ∀ {a b c}, a ∣ c → a ∣ b → a ∣ gcd c b) : GcdMonoid α :=
-  { gcd, gcd_dvd_left, gcd_dvd_right, dvd_gcd := fun a b c => dvd_gcd,
-    lcm := fun a b => if a = 0 then 0 else Classical.some ((gcd_dvd_left a b).trans (Dvd.intro b rfl)),
-    gcd_mul_lcm :=
-      fun a b =>
-        by 
-          splitIfs with a0
-          ·
-            rw [mul_zero, a0, zero_mul]
-          ·
-            rw [←Classical.some_spec ((gcd_dvd_left a b).trans (Dvd.intro b rfl))],
-    lcm_zero_left := fun a => if_pos rfl,
-    lcm_zero_right :=
-      fun a =>
-        by 
-          splitIfs with a0
-          ·
-            rfl 
-          have h := (Classical.some_spec ((gcd_dvd_left a 0).trans (Dvd.intro 0 rfl))).symm 
-          have a0' : gcd a 0 ≠ 0
-          ·
-            contrapose! a0 
-            rw [←associated_zero_iff_eq_zero, ←a0]
-            exact associated_of_dvd_dvd (dvd_gcd (dvd_refl a) (dvd_zero a)) (gcd_dvd_left _ _)
-          apply Or.resolve_left (mul_eq_zero.1 _) a0' 
-          rw [h, mul_zero] }
+noncomputable
+def gcd_monoid_of_gcd
+[decidable_eq α]
+(gcd : α → α → α)
+(gcd_dvd_left : ∀ a b, «expr ∣ »(gcd a b, a))
+(gcd_dvd_right : ∀ a b, «expr ∣ »(gcd a b, b))
+(dvd_gcd : ∀ {a b c}, «expr ∣ »(a, c) → «expr ∣ »(a, b) → «expr ∣ »(a, gcd c b)) : gcd_monoid α :=
+{ gcd := gcd,
+  gcd_dvd_left := gcd_dvd_left,
+  gcd_dvd_right := gcd_dvd_right,
+  dvd_gcd := λ a b c, dvd_gcd,
+  lcm := λ a b, if «expr = »(a, 0) then 0 else classical.some ((gcd_dvd_left a b).trans (dvd.intro b rfl)),
+  gcd_mul_lcm := λ a b, by { split_ifs [] ["with", ident a0],
+    { rw ["[", expr mul_zero, ",", expr a0, ",", expr zero_mul, "]"] [] },
+    { rw ["<-", expr classical.some_spec ((gcd_dvd_left a b).trans (dvd.intro b rfl))] [] } },
+  lcm_zero_left := λ a, if_pos rfl,
+  lcm_zero_right := λ a, by { split_ifs [] ["with", ident a0],
+    { refl },
+    have [ident h] [] [":=", expr (classical.some_spec ((gcd_dvd_left a 0).trans (dvd.intro 0 rfl))).symm],
+    have [ident a0'] [":", expr «expr ≠ »(gcd a 0, 0)] [],
+    { contrapose ["!"] [ident a0],
+      rw ["[", "<-", expr associated_zero_iff_eq_zero, ",", "<-", expr a0, "]"] [],
+      exact [expr associated_of_dvd_dvd (dvd_gcd (dvd_refl a) (dvd_zero a)) (gcd_dvd_left _ _)] },
+    apply [expr or.resolve_left (mul_eq_zero.1 _) a0'],
+    rw ["[", expr h, ",", expr mul_zero, "]"] [] } }
 
+-- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Define `normalized_gcd_monoid` on a structure just from the `gcd` and its properties. -/
-noncomputable def normalizedGcdMonoidOfGcd [NormalizationMonoid α] [DecidableEq α] (gcd : α → α → α)
-  (gcd_dvd_left : ∀ a b, gcd a b ∣ a) (gcd_dvd_right : ∀ a b, gcd a b ∣ b)
-  (dvd_gcd : ∀ {a b c}, a ∣ c → a ∣ b → a ∣ gcd c b) (normalize_gcd : ∀ a b, normalize (gcd a b) = gcd a b) :
-  NormalizedGcdMonoid α :=
-  { (inferInstance : NormalizationMonoid α) with gcd, gcd_dvd_left, gcd_dvd_right, dvd_gcd := fun a b c => dvd_gcd,
-    normalize_gcd,
-    lcm :=
-      fun a b => if a = 0 then 0 else Classical.some (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (Dvd.intro b rfl))),
-    normalize_lcm :=
-      fun a b =>
-        by 
-          dsimp [normalize]
-          splitIfs with a0
-          ·
-            exact @normalize_zero α _ _
-          ·
-            have  := (Classical.some_spec (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (Dvd.intro b rfl)))).symm 
-            set l := Classical.some (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (Dvd.intro b rfl)))
-            obtain rfl | hb := eq_or_ne b 0
-            ·
-              simp only [normalize_zero, mul_zero, mul_eq_zero] at this 
-              obtain ha | hl := this
-              ·
-                apply (a0 _).elim 
-                rw [←zero_dvd_iff, ←ha]
-                exact gcd_dvd_left _ _
-              ·
-                convert @normalize_zero α _ _ 
-            have h1 : gcd a b ≠ 0
-            ·
-              have hab : (a*b) ≠ 0 := mul_ne_zero a0 hb 
-              contrapose! hab 
-              rw [←normalize_eq_zero, ←this, hab, zero_mul]
-            have h2 : normalize (gcd a b*l) = gcd a b*l
-            ·
-              rw [this, normalize_idem]
-            rw [←normalize_gcd] at this 
-            rwa [normalize.map_mul, normalize_gcd, mul_right_inj' h1] at h2,
-    gcd_mul_lcm :=
-      fun a b =>
-        by 
-          splitIfs with a0
-          ·
-            rw [mul_zero, a0, zero_mul]
-          ·
-            rw [←Classical.some_spec (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (Dvd.intro b rfl)))]
-            exact normalize_associated (a*b),
-    lcm_zero_left := fun a => if_pos rfl,
-    lcm_zero_right :=
-      fun a =>
-        by 
-          splitIfs with a0
-          ·
-            rfl 
-          rw [←normalize_eq_zero] at a0 
-          have h := (Classical.some_spec (dvd_normalize_iff.2 ((gcd_dvd_left a 0).trans (Dvd.intro 0 rfl)))).symm 
-          have gcd0 : gcd a 0 = normalize a
-          ·
-            rw [←normalize_gcd]
-            exact normalize_eq_normalize (gcd_dvd_left _ _) (dvd_gcd (dvd_refl a) (dvd_zero a))
-          rw [←gcd0] at a0 
-          apply Or.resolve_left (mul_eq_zero.1 _) a0 
-          rw [h, mul_zero, normalize_zero] }
+noncomputable
+def normalized_gcd_monoid_of_gcd
+[normalization_monoid α]
+[decidable_eq α]
+(gcd : α → α → α)
+(gcd_dvd_left : ∀ a b, «expr ∣ »(gcd a b, a))
+(gcd_dvd_right : ∀ a b, «expr ∣ »(gcd a b, b))
+(dvd_gcd : ∀ {a b c}, «expr ∣ »(a, c) → «expr ∣ »(a, b) → «expr ∣ »(a, gcd c b))
+(normalize_gcd : ∀ a b, «expr = »(normalize (gcd a b), gcd a b)) : normalized_gcd_monoid α :=
+{ gcd := gcd,
+  gcd_dvd_left := gcd_dvd_left,
+  gcd_dvd_right := gcd_dvd_right,
+  dvd_gcd := λ a b c, dvd_gcd,
+  normalize_gcd := normalize_gcd,
+  lcm := λ
+  a b, if «expr = »(a, 0) then 0 else classical.some (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (dvd.intro b rfl))),
+  normalize_lcm := λ a b, by { dsimp [] ["[", expr normalize, "]"] [] [],
+    split_ifs [] ["with", ident a0],
+    { exact [expr @normalize_zero α _ _] },
+    { have [] [] [":=", expr (classical.some_spec (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (dvd.intro b rfl)))).symm],
+      set [] [ident l] [] [":="] [expr classical.some (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (dvd.intro b rfl)))] [],
+      obtain [ident rfl, "|", ident hb, ":=", expr eq_or_ne b 0],
+      { simp [] [] ["only"] ["[", expr normalize_zero, ",", expr mul_zero, ",", expr mul_eq_zero, "]"] [] ["at", ident this],
+        obtain [ident ha, "|", ident hl, ":=", expr this],
+        { apply [expr (a0 _).elim],
+          rw ["[", "<-", expr zero_dvd_iff, ",", "<-", expr ha, "]"] [],
+          exact [expr gcd_dvd_left _ _] },
+        { convert [] [expr @normalize_zero α _ _] [] } },
+      have [ident h1] [":", expr «expr ≠ »(gcd a b, 0)] [],
+      { have [ident hab] [":", expr «expr ≠ »(«expr * »(a, b), 0)] [":=", expr mul_ne_zero a0 hb],
+        contrapose ["!"] [ident hab],
+        rw ["[", "<-", expr normalize_eq_zero, ",", "<-", expr this, ",", expr hab, ",", expr zero_mul, "]"] [] },
+      have [ident h2] [":", expr «expr = »(normalize «expr * »(gcd a b, l), «expr * »(gcd a b, l))] [],
+      { rw ["[", expr this, ",", expr normalize_idem, "]"] [] },
+      rw ["<-", expr normalize_gcd] ["at", ident this],
+      rwa ["[", expr normalize.map_mul, ",", expr normalize_gcd, ",", expr mul_right_inj' h1, "]"] ["at", ident h2] } },
+  gcd_mul_lcm := λ a b, by { split_ifs [] ["with", ident a0],
+    { rw ["[", expr mul_zero, ",", expr a0, ",", expr zero_mul, "]"] [] },
+    { rw ["<-", expr classical.some_spec (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (dvd.intro b rfl)))] [],
+      exact [expr normalize_associated «expr * »(a, b)] } },
+  lcm_zero_left := λ a, if_pos rfl,
+  lcm_zero_right := λ a, by { split_ifs [] ["with", ident a0],
+    { refl },
+    rw ["<-", expr normalize_eq_zero] ["at", ident a0],
+    have [ident h] [] [":=", expr (classical.some_spec (dvd_normalize_iff.2 ((gcd_dvd_left a 0).trans (dvd.intro 0 rfl)))).symm],
+    have [ident gcd0] [":", expr «expr = »(gcd a 0, normalize a)] [],
+    { rw ["<-", expr normalize_gcd] [],
+      exact [expr normalize_eq_normalize (gcd_dvd_left _ _) (dvd_gcd (dvd_refl a) (dvd_zero a))] },
+    rw ["<-", expr gcd0] ["at", ident a0],
+    apply [expr or.resolve_left (mul_eq_zero.1 _) a0],
+    rw ["[", expr h, ",", expr mul_zero, ",", expr normalize_zero, "]"] [] },
+  ..(infer_instance : normalization_monoid α) }
 
+-- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Define `gcd_monoid` on a structure just from the `lcm` and its properties. -/
-noncomputable def gcdMonoidOfLcm [DecidableEq α] (lcm : α → α → α) (dvd_lcm_left : ∀ a b, a ∣ lcm a b)
-  (dvd_lcm_right : ∀ a b, b ∣ lcm a b) (lcm_dvd : ∀ {a b c}, c ∣ a → b ∣ a → lcm c b ∣ a) : GcdMonoid α :=
-  let exists_gcd := fun a b => lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-  { lcm, gcd := fun a b => if a = 0 then b else if b = 0 then a else Classical.some (exists_gcd a b),
-    gcd_mul_lcm :=
-      fun a b =>
-        by 
-          splitIfs
-          ·
-            rw [h, zero_dvd_iff.1 (dvd_lcm_left _ _), mul_zero, zero_mul]
-          ·
-            rw [h_1, zero_dvd_iff.1 (dvd_lcm_right _ _), mul_zero]
-          rw [mul_commₓ, ←Classical.some_spec (exists_gcd a b)],
-    lcm_zero_left := fun a => zero_dvd_iff.1 (dvd_lcm_left _ _),
-    lcm_zero_right := fun a => zero_dvd_iff.1 (dvd_lcm_right _ _),
-    gcd_dvd_left :=
-      fun a b =>
-        by 
-          splitIfs with h h_1
-          ·
-            rw [h]
-            apply dvd_zero
-          ·
-            exact dvd_rfl 
-          have h0 : lcm a b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          rw [←mul_dvd_mul_iff_left h0, ←Classical.some_spec (exists_gcd a b), mul_commₓ, mul_dvd_mul_iff_right h]
-          apply dvd_lcm_right,
-    gcd_dvd_right :=
-      fun a b =>
-        by 
-          splitIfs with h h_1
-          ·
-            exact dvd_rfl
-          ·
-            rw [h_1]
-            apply dvd_zero 
-          have h0 : lcm a b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          rw [←mul_dvd_mul_iff_left h0, ←Classical.some_spec (exists_gcd a b), mul_dvd_mul_iff_right h_1]
-          apply dvd_lcm_left,
-    dvd_gcd :=
-      fun a b c ac ab =>
-        by 
-          splitIfs
-          ·
-            exact ab
-          ·
-            exact ac 
-          have h0 : lcm c b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left c rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          rw [←mul_dvd_mul_iff_left h0, ←Classical.some_spec (exists_gcd c b)]
-          rcases ab with ⟨d, rfl⟩
-          rw [mul_eq_zero] at h_1 
-          pushNeg  at h_1 
-          rw [mul_commₓ a, ←mul_assocₓ, mul_dvd_mul_iff_right h_1.1]
-          apply lcm_dvd (Dvd.intro d rfl)
-          rw [mul_commₓ, mul_dvd_mul_iff_right h_1.2]
-          apply ac }
+noncomputable
+def gcd_monoid_of_lcm
+[decidable_eq α]
+(lcm : α → α → α)
+(dvd_lcm_left : ∀ a b, «expr ∣ »(a, lcm a b))
+(dvd_lcm_right : ∀ a b, «expr ∣ »(b, lcm a b))
+(lcm_dvd : ∀ {a b c}, «expr ∣ »(c, a) → «expr ∣ »(b, a) → «expr ∣ »(lcm c b, a)) : gcd_monoid α :=
+let exists_gcd := λ a b, lcm_dvd (dvd.intro b rfl) (dvd.intro_left a rfl) in
+{ lcm := lcm,
+  gcd := λ a b, if «expr = »(a, 0) then b else if «expr = »(b, 0) then a else classical.some (exists_gcd a b),
+  gcd_mul_lcm := λ a b, by { split_ifs [] [],
+    { rw ["[", expr h, ",", expr zero_dvd_iff.1 (dvd_lcm_left _ _), ",", expr mul_zero, ",", expr zero_mul, "]"] [] },
+    { rw ["[", expr h_1, ",", expr zero_dvd_iff.1 (dvd_lcm_right _ _), ",", expr mul_zero, "]"] [] },
+    rw ["[", expr mul_comm, ",", "<-", expr classical.some_spec (exists_gcd a b), "]"] [] },
+  lcm_zero_left := λ a, zero_dvd_iff.1 (dvd_lcm_left _ _),
+  lcm_zero_right := λ a, zero_dvd_iff.1 (dvd_lcm_right _ _),
+  gcd_dvd_left := λ a b, by { split_ifs [] ["with", ident h, ident h_1],
+    { rw [expr h] [],
+      apply [expr dvd_zero] },
+    { exact [expr dvd_rfl] },
+    have [ident h0] [":", expr «expr ≠ »(lcm a b, 0)] [],
+    { intro [ident con],
+      have [ident h] [] [":=", expr lcm_dvd (dvd.intro b rfl) (dvd.intro_left a rfl)],
+      rw ["[", expr con, ",", expr zero_dvd_iff, ",", expr mul_eq_zero, "]"] ["at", ident h],
+      cases [expr h] []; tauto [] },
+    rw ["[", "<-", expr mul_dvd_mul_iff_left h0, ",", "<-", expr classical.some_spec (exists_gcd a b), ",", expr mul_comm, ",", expr mul_dvd_mul_iff_right h, "]"] [],
+    apply [expr dvd_lcm_right] },
+  gcd_dvd_right := λ a b, by { split_ifs [] ["with", ident h, ident h_1],
+    { exact [expr dvd_rfl] },
+    { rw [expr h_1] [],
+      apply [expr dvd_zero] },
+    have [ident h0] [":", expr «expr ≠ »(lcm a b, 0)] [],
+    { intro [ident con],
+      have [ident h] [] [":=", expr lcm_dvd (dvd.intro b rfl) (dvd.intro_left a rfl)],
+      rw ["[", expr con, ",", expr zero_dvd_iff, ",", expr mul_eq_zero, "]"] ["at", ident h],
+      cases [expr h] []; tauto [] },
+    rw ["[", "<-", expr mul_dvd_mul_iff_left h0, ",", "<-", expr classical.some_spec (exists_gcd a b), ",", expr mul_dvd_mul_iff_right h_1, "]"] [],
+    apply [expr dvd_lcm_left] },
+  dvd_gcd := λ a b c ac ab, by { split_ifs [] [],
+    { exact [expr ab] },
+    { exact [expr ac] },
+    have [ident h0] [":", expr «expr ≠ »(lcm c b, 0)] [],
+    { intro [ident con],
+      have [ident h] [] [":=", expr lcm_dvd (dvd.intro b rfl) (dvd.intro_left c rfl)],
+      rw ["[", expr con, ",", expr zero_dvd_iff, ",", expr mul_eq_zero, "]"] ["at", ident h],
+      cases [expr h] []; tauto [] },
+    rw ["[", "<-", expr mul_dvd_mul_iff_left h0, ",", "<-", expr classical.some_spec (exists_gcd c b), "]"] [],
+    rcases [expr ab, "with", "⟨", ident d, ",", ident rfl, "⟩"],
+    rw [expr mul_eq_zero] ["at", ident h_1],
+    push_neg ["at", ident h_1],
+    rw ["[", expr mul_comm a, ",", "<-", expr mul_assoc, ",", expr mul_dvd_mul_iff_right h_1.1, "]"] [],
+    apply [expr lcm_dvd (dvd.intro d rfl)],
+    rw ["[", expr mul_comm, ",", expr mul_dvd_mul_iff_right h_1.2, "]"] [],
+    apply [expr ac] } }
 
+-- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Define `normalized_gcd_monoid` on a structure just from the `lcm` and its properties. -/
-noncomputable def normalizedGcdMonoidOfLcm [NormalizationMonoid α] [DecidableEq α] (lcm : α → α → α)
-  (dvd_lcm_left : ∀ a b, a ∣ lcm a b) (dvd_lcm_right : ∀ a b, b ∣ lcm a b)
-  (lcm_dvd : ∀ {a b c}, c ∣ a → b ∣ a → lcm c b ∣ a) (normalize_lcm : ∀ a b, normalize (lcm a b) = lcm a b) :
-  NormalizedGcdMonoid α :=
-  let exists_gcd := fun a b => dvd_normalize_iff.2 (lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl))
-  { (inferInstance : NormalizationMonoid α) with lcm,
-    gcd := fun a b => if a = 0 then normalize b else if b = 0 then normalize a else Classical.some (exists_gcd a b),
-    gcd_mul_lcm :=
-      fun a b =>
-        by 
-          splitIfs with h h_1
-          ·
-            rw [h, zero_dvd_iff.1 (dvd_lcm_left _ _), mul_zero, zero_mul]
-          ·
-            rw [h_1, zero_dvd_iff.1 (dvd_lcm_right _ _), mul_zero, mul_zero]
-          rw [mul_commₓ, ←Classical.some_spec (exists_gcd a b)]
-          exact normalize_associated (a*b),
-    normalize_lcm,
-    normalize_gcd :=
-      fun a b =>
-        by 
-          dsimp [normalize]
-          splitIfs with h h_1
-          ·
-            apply normalize_idem
-          ·
-            apply normalize_idem 
-          have h0 : lcm a b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          apply mul_left_cancel₀ h0 
-          refine' trans _ (Classical.some_spec (exists_gcd a b))
-          convLHS => congr rw [←normalize_lcm a b]
-          erw [←normalize.map_mul, ←Classical.some_spec (exists_gcd a b), normalize_idem],
-    lcm_zero_left := fun a => zero_dvd_iff.1 (dvd_lcm_left _ _),
-    lcm_zero_right := fun a => zero_dvd_iff.1 (dvd_lcm_right _ _),
-    gcd_dvd_left :=
-      fun a b =>
-        by 
-          splitIfs
-          ·
-            rw [h]
-            apply dvd_zero
-          ·
-            exact (normalize_associated _).Dvd 
-          have h0 : lcm a b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          rw [←mul_dvd_mul_iff_left h0, ←Classical.some_spec (exists_gcd a b), normalize_dvd_iff, mul_commₓ,
-            mul_dvd_mul_iff_right h]
-          apply dvd_lcm_right,
-    gcd_dvd_right :=
-      fun a b =>
-        by 
-          splitIfs
-          ·
-            exact (normalize_associated _).Dvd
-          ·
-            rw [h_1]
-            apply dvd_zero 
-          have h0 : lcm a b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left a rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          rw [←mul_dvd_mul_iff_left h0, ←Classical.some_spec (exists_gcd a b), normalize_dvd_iff,
-            mul_dvd_mul_iff_right h_1]
-          apply dvd_lcm_left,
-    dvd_gcd :=
-      fun a b c ac ab =>
-        by 
-          splitIfs
-          ·
-            apply dvd_normalize_iff.2 ab
-          ·
-            apply dvd_normalize_iff.2 ac 
-          have h0 : lcm c b ≠ 0
-          ·
-            intro con 
-            have h := lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left c rfl)
-            rw [con, zero_dvd_iff, mul_eq_zero] at h 
-            cases h <;> tauto 
-          rw [←mul_dvd_mul_iff_left h0,
-            ←Classical.some_spec (dvd_normalize_iff.2 (lcm_dvd (Dvd.intro b rfl) (Dvd.intro_left c rfl))),
-            dvd_normalize_iff]
-          rcases ab with ⟨d, rfl⟩
-          rw [mul_eq_zero] at h_1 
-          pushNeg  at h_1 
-          rw [mul_commₓ a, ←mul_assocₓ, mul_dvd_mul_iff_right h_1.1]
-          apply lcm_dvd (Dvd.intro d rfl)
-          rw [mul_commₓ, mul_dvd_mul_iff_right h_1.2]
-          apply ac }
+noncomputable
+def normalized_gcd_monoid_of_lcm
+[normalization_monoid α]
+[decidable_eq α]
+(lcm : α → α → α)
+(dvd_lcm_left : ∀ a b, «expr ∣ »(a, lcm a b))
+(dvd_lcm_right : ∀ a b, «expr ∣ »(b, lcm a b))
+(lcm_dvd : ∀ {a b c}, «expr ∣ »(c, a) → «expr ∣ »(b, a) → «expr ∣ »(lcm c b, a))
+(normalize_lcm : ∀ a b, «expr = »(normalize (lcm a b), lcm a b)) : normalized_gcd_monoid α :=
+let exists_gcd := λ a b, dvd_normalize_iff.2 (lcm_dvd (dvd.intro b rfl) (dvd.intro_left a rfl)) in
+{ lcm := lcm,
+  gcd := λ
+  a
+  b, if «expr = »(a, 0) then normalize b else if «expr = »(b, 0) then normalize a else classical.some (exists_gcd a b),
+  gcd_mul_lcm := λ a b, by { split_ifs [] ["with", ident h, ident h_1],
+    { rw ["[", expr h, ",", expr zero_dvd_iff.1 (dvd_lcm_left _ _), ",", expr mul_zero, ",", expr zero_mul, "]"] [] },
+    { rw ["[", expr h_1, ",", expr zero_dvd_iff.1 (dvd_lcm_right _ _), ",", expr mul_zero, ",", expr mul_zero, "]"] [] },
+    rw ["[", expr mul_comm, ",", "<-", expr classical.some_spec (exists_gcd a b), "]"] [],
+    exact [expr normalize_associated «expr * »(a, b)] },
+  normalize_lcm := normalize_lcm,
+  normalize_gcd := λ a b, by { dsimp [] ["[", expr normalize, "]"] [] [],
+    split_ifs [] ["with", ident h, ident h_1],
+    { apply [expr normalize_idem] },
+    { apply [expr normalize_idem] },
+    have [ident h0] [":", expr «expr ≠ »(lcm a b, 0)] [],
+    { intro [ident con],
+      have [ident h] [] [":=", expr lcm_dvd (dvd.intro b rfl) (dvd.intro_left a rfl)],
+      rw ["[", expr con, ",", expr zero_dvd_iff, ",", expr mul_eq_zero, "]"] ["at", ident h],
+      cases [expr h] []; tauto [] },
+    apply [expr mul_left_cancel₀ h0],
+    refine [expr trans _ (classical.some_spec (exists_gcd a b))],
+    conv_lhs [] [] { congr,
+      rw ["[", "<-", expr normalize_lcm a b, "]"] },
+    erw ["[", "<-", expr normalize.map_mul, ",", "<-", expr classical.some_spec (exists_gcd a b), ",", expr normalize_idem, "]"] [] },
+  lcm_zero_left := λ a, zero_dvd_iff.1 (dvd_lcm_left _ _),
+  lcm_zero_right := λ a, zero_dvd_iff.1 (dvd_lcm_right _ _),
+  gcd_dvd_left := λ a b, by { split_ifs [] [],
+    { rw [expr h] [],
+      apply [expr dvd_zero] },
+    { exact [expr (normalize_associated _).dvd] },
+    have [ident h0] [":", expr «expr ≠ »(lcm a b, 0)] [],
+    { intro [ident con],
+      have [ident h] [] [":=", expr lcm_dvd (dvd.intro b rfl) (dvd.intro_left a rfl)],
+      rw ["[", expr con, ",", expr zero_dvd_iff, ",", expr mul_eq_zero, "]"] ["at", ident h],
+      cases [expr h] []; tauto [] },
+    rw ["[", "<-", expr mul_dvd_mul_iff_left h0, ",", "<-", expr classical.some_spec (exists_gcd a b), ",", expr normalize_dvd_iff, ",", expr mul_comm, ",", expr mul_dvd_mul_iff_right h, "]"] [],
+    apply [expr dvd_lcm_right] },
+  gcd_dvd_right := λ a b, by { split_ifs [] [],
+    { exact [expr (normalize_associated _).dvd] },
+    { rw [expr h_1] [],
+      apply [expr dvd_zero] },
+    have [ident h0] [":", expr «expr ≠ »(lcm a b, 0)] [],
+    { intro [ident con],
+      have [ident h] [] [":=", expr lcm_dvd (dvd.intro b rfl) (dvd.intro_left a rfl)],
+      rw ["[", expr con, ",", expr zero_dvd_iff, ",", expr mul_eq_zero, "]"] ["at", ident h],
+      cases [expr h] []; tauto [] },
+    rw ["[", "<-", expr mul_dvd_mul_iff_left h0, ",", "<-", expr classical.some_spec (exists_gcd a b), ",", expr normalize_dvd_iff, ",", expr mul_dvd_mul_iff_right h_1, "]"] [],
+    apply [expr dvd_lcm_left] },
+  dvd_gcd := λ a b c ac ab, by { split_ifs [] [],
+    { apply [expr dvd_normalize_iff.2 ab] },
+    { apply [expr dvd_normalize_iff.2 ac] },
+    have [ident h0] [":", expr «expr ≠ »(lcm c b, 0)] [],
+    { intro [ident con],
+      have [ident h] [] [":=", expr lcm_dvd (dvd.intro b rfl) (dvd.intro_left c rfl)],
+      rw ["[", expr con, ",", expr zero_dvd_iff, ",", expr mul_eq_zero, "]"] ["at", ident h],
+      cases [expr h] []; tauto [] },
+    rw ["[", "<-", expr mul_dvd_mul_iff_left h0, ",", "<-", expr classical.some_spec (dvd_normalize_iff.2 (lcm_dvd (dvd.intro b rfl) (dvd.intro_left c rfl))), ",", expr dvd_normalize_iff, "]"] [],
+    rcases [expr ab, "with", "⟨", ident d, ",", ident rfl, "⟩"],
+    rw [expr mul_eq_zero] ["at", ident h_1],
+    push_neg ["at", ident h_1],
+    rw ["[", expr mul_comm a, ",", "<-", expr mul_assoc, ",", expr mul_dvd_mul_iff_right h_1.1, "]"] [],
+    apply [expr lcm_dvd (dvd.intro d rfl)],
+    rw ["[", expr mul_comm, ",", expr mul_dvd_mul_iff_right h_1.2, "]"] [],
+    apply [expr ac] },
+  ..(infer_instance : normalization_monoid α) }
 
 /-- Define a `gcd_monoid` structure on a monoid just from the existence of a `gcd`. -/
 noncomputable def gcdMonoidOfExistsGcd [DecidableEq α] (h : ∀ a b : α, ∃ c : α, ∀ d : α, d ∣ a ∧ d ∣ b ↔ d ∣ c) :

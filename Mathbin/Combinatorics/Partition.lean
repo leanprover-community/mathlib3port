@@ -42,7 +42,7 @@ open_locale BigOperators
 
 namespace Nat
 
--- error in Combinatorics.Partition: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Combinatorics.Partition: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- A partition of `n` is a multiset of positive integers summing to `n`. -/
 @[ext #[], derive #[expr decidable_eq]]
 structure partition
@@ -67,26 +67,21 @@ theorem of_composition_surj {n : ℕ} : Function.Surjective (of_composition n) :
     refine' ⟨⟨b, fun i hi => hb₁ hi, _⟩, partition.ext _ _ rfl⟩
     simpa using hb₂
 
+-- error in Combinatorics.Partition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Given a multiset which sums to `n`, construct a partition of `n` with the same multiset, but
 without the zeros.
--/
-def of_sums (n : ℕ) (l : Multiset ℕ) (hl : l.sum = n) : partition n :=
-  { parts := l.filter (· ≠ 0),
-    parts_pos :=
-      fun i hi =>
-        Nat.pos_of_ne_zeroₓ$
-          by 
-            apply of_mem_filter hi,
-    parts_sum :=
-      by 
-        have lt : (l.filter (· = 0)+l.filter (· ≠ 0)) = l := filter_add_not _ l 
-        applyFun Multiset.sum  at lt 
-        have lz : (l.filter (· = 0)).Sum = 0
-        ·
-          rw [Multiset.sum_eq_zero_iff]
-          simp 
-        simpa [lz, hl] using lt }
+-/ def of_sums (n : exprℕ()) (l : multiset exprℕ()) (hl : «expr = »(l.sum, n)) : partition n :=
+{ parts := l.filter ((«expr ≠ » 0)),
+  parts_pos := λ i hi, «expr $ »(nat.pos_of_ne_zero, by apply [expr of_mem_filter hi]),
+  parts_sum := begin
+    have [ident lt] [":", expr «expr = »(«expr + »(l.filter ((«expr = » 0)), l.filter ((«expr ≠ » 0))), l)] [":=", expr filter_add_not _ l],
+    apply_fun [expr multiset.sum] ["at", ident lt] [],
+    have [ident lz] [":", expr «expr = »((l.filter ((«expr = » 0))).sum, 0)] [],
+    { rw [expr multiset.sum_eq_zero_iff] [],
+      simp [] [] [] [] [] [] },
+    simpa [] [] [] ["[", expr lz, ",", expr hl, "]"] [] ["using", expr lt]
+  end }
 
 /-- A `multiset ℕ` induces a partition on its sum. -/
 def of_multiset (l : Multiset ℕ) : partition l.sum :=

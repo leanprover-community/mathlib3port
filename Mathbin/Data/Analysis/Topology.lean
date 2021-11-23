@@ -62,13 +62,17 @@ end
 def to_topsp (F : Ctop α σ) : TopologicalSpace α :=
   TopologicalSpace.generateFrom (Set.Range F.f)
 
-theorem to_topsp_is_topological_basis (F : Ctop α σ) :
-  @TopologicalSpace.IsTopologicalBasis _ F.to_topsp (Set.Range F.f) :=
-  by 
-    letI this := F.to_topsp <;>
-      exact
-        ⟨fun u ⟨a, e₁⟩ v ⟨b, e₂⟩ => e₁ ▸ e₂ ▸ fun x h => ⟨_, ⟨_, rfl⟩, F.inter_mem a b x h, F.inter_sub a b x h⟩,
-          eq_univ_iff_forall.2$ fun x => ⟨_, ⟨_, rfl⟩, F.top_mem x⟩, rfl⟩
+-- error in Data.Analysis.Topology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem to_topsp_is_topological_basis
+(F : ctop α σ) : @topological_space.is_topological_basis _ F.to_topsp (set.range F.f) :=
+by letI [] [] [":=", expr F.to_topsp]; exact [expr ⟨λ
+  (u)
+  ⟨a, e₁⟩
+  (v)
+  ⟨b, e₂⟩, «expr ▸ »(e₁, «expr ▸ »(e₂, λ
+    x
+    h, ⟨_, ⟨_, rfl⟩, F.inter_mem a b x h, F.inter_sub a b x h⟩)), «expr $ »(eq_univ_iff_forall.2, λ
+   x, ⟨_, ⟨_, rfl⟩, F.top_mem x⟩), rfl⟩]
 
 @[simp]
 theorem mem_nhds_to_topsp (F : Ctop α σ) {s : Set α} {a : α} : s ∈ @nhds _ F.to_topsp a ↔ ∃ b, a ∈ F b ∧ F b ⊆ s :=
@@ -91,28 +95,35 @@ protected def Ctop.toRealizer (F : Ctop α σ) : @Ctop.Realizer _ F.to_topsp :=
 
 namespace Ctop.Realizer
 
-protected theorem is_basis [T : TopologicalSpace α] (F : realizer α) :
-  TopologicalSpace.IsTopologicalBasis (Set.Range F.F.f) :=
-  by 
-    have  := to_topsp_is_topological_basis F.F <;> rwa [F.eq] at this
+-- error in Data.Analysis.Topology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem is_basis
+[T : topological_space α]
+(F : realizer α) : topological_space.is_topological_basis (set.range F.F.f) :=
+by have [] [] [":=", expr to_topsp_is_topological_basis F.F]; rwa [expr F.eq] ["at", ident this]
 
-protected theorem mem_nhds [T : TopologicalSpace α] (F : realizer α) {s : Set α} {a : α} :
-  s ∈ 𝓝 a ↔ ∃ b, a ∈ F.F b ∧ F.F b ⊆ s :=
-  by 
-    have  := mem_nhds_to_topsp F.F <;> rwa [F.eq] at this
+-- error in Data.Analysis.Topology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem mem_nhds
+[T : topological_space α]
+(F : realizer α)
+{s : set α}
+{a : α} : «expr ↔ »(«expr ∈ »(s, expr𝓝() a), «expr∃ , »((b), «expr ∧ »(«expr ∈ »(a, F.F b), «expr ⊆ »(F.F b, s)))) :=
+by have [] [] [":=", expr mem_nhds_to_topsp F.F]; rwa [expr F.eq] ["at", ident this]
 
 theorem is_open_iff [TopologicalSpace α] (F : realizer α) {s : Set α} :
   IsOpen s ↔ ∀ a _ : a ∈ s, ∃ b, a ∈ F.F b ∧ F.F b ⊆ s :=
   is_open_iff_mem_nhds.trans$ ball_congr$ fun a h => F.mem_nhds
 
-theorem is_closed_iff [TopologicalSpace α] (F : realizer α) {s : Set α} :
-  IsClosed s ↔ ∀ a, (∀ b, a ∈ F.F b → ∃ z, z ∈ F.F b ∩ s) → a ∈ s :=
-  is_open_compl_iff.symm.trans$
-    F.is_open_iff.trans$
-      forall_congrₓ$
-        fun a =>
-          show (a ∉ s → ∃ b : F.σ, a ∈ F.F b ∧ ∀ z _ : z ∈ F.F b, z ∉ s) ↔ _ by 
-            haveI  := Classical.propDecidable <;> rw [not_imp_comm] <;> simp [not_exists, not_and, not_forall, and_comm]
+-- error in Data.Analysis.Topology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_closed_iff
+[topological_space α]
+(F : realizer α)
+{s : set α} : «expr ↔ »(is_closed s, ∀
+ a, ∀ b, «expr ∈ »(a, F.F b) → «expr∃ , »((z), «expr ∈ »(z, «expr ∩ »(F.F b, s))) → «expr ∈ »(a, s)) :=
+«expr $ »(is_open_compl_iff.symm.trans, «expr $ »(F.is_open_iff.trans, «expr $ »(forall_congr, λ
+   a, show «expr ↔ »(«expr ∉ »(a, s) → «expr∃ , »((b : F.σ), «expr ∧ »(«expr ∈ »(a, F.F b), ∀
+      z «expr ∈ » F.F b, «expr ∉ »(z, s))), _), by haveI [] [] [":=", expr classical.prop_decidable]; rw ["[", expr not_imp_comm, "]"] []; simp [] [] [] ["[", expr not_exists, ",", expr not_and, ",", expr not_forall, ",", expr and_comm, "]"] [] [])))
 
 theorem mem_interior_iff [TopologicalSpace α] (F : realizer α) {s : Set α} {a : α} :
   a ∈ Interior s ↔ ∃ b, a ∈ F.F b ∧ F.F b ⊆ s :=

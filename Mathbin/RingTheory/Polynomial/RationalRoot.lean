@@ -53,32 +53,30 @@ variable[Algebra A K][IsFractionRing A K]
 
 open IsFractionRing IsLocalization Polynomial UniqueFactorizationMonoid
 
+-- error in RingTheory.Polynomial.RationalRoot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Rational root theorem part 1:
 if `r : f.codomain` is a root of a polynomial over the ufd `A`,
 then the numerator of `r` divides the constant coefficient -/
-theorem num_dvd_of_is_root {p : Polynomial A} {r : K} (hr : aeval r p = 0) : Num A r ∣ p.coeff 0 :=
-  by 
-    suffices  : Num A r ∣ (scaleRoots p (denom A r)).coeff 0
-    ·
-      simp only [coeff_scale_roots, tsub_zero] at this 
-      haveI  := Classical.propDecidable 
-      byCases' hr : Num A r = 0
-      ·
-        obtain ⟨u, hu⟩ := (is_unit_denom_of_num_eq_zero hr).pow p.nat_degree 
-        rw [←hu] at this 
-        exact units.dvd_mul_right.mp this
-      ·
-        refine' dvd_of_dvd_mul_left_of_no_prime_factors hr _ this 
-        intro q dvd_num dvd_denom_pow hq 
-        apply hq.not_unit 
-        exact num_denom_reduced A r dvd_num (hq.dvd_of_dvd_pow dvd_denom_pow)
-    convert dvd_term_of_is_root_of_dvd_terms 0 (num_is_root_scale_roots_of_aeval_eq_zero hr) _
-    ·
-      rw [pow_zeroₓ, mul_oneₓ]
-    intro j hj 
-    apply dvd_mul_of_dvd_right 
-    convert pow_dvd_pow (Num A r) (Nat.succ_le_of_ltₓ (bot_lt_iff_ne_bot.mpr hj))
-    exact (pow_oneₓ _).symm
+theorem num_dvd_of_is_root {p : polynomial A} {r : K} (hr : «expr = »(aeval r p, 0)) : «expr ∣ »(num A r, p.coeff 0) :=
+begin
+  suffices [] [":", expr «expr ∣ »(num A r, (scale_roots p (denom A r)).coeff 0)],
+  { simp [] [] ["only"] ["[", expr coeff_scale_roots, ",", expr tsub_zero, "]"] [] ["at", ident this],
+    haveI [] [] [":=", expr classical.prop_decidable],
+    by_cases [expr hr, ":", expr «expr = »(num A r, 0)],
+    { obtain ["⟨", ident u, ",", ident hu, "⟩", ":=", expr (is_unit_denom_of_num_eq_zero hr).pow p.nat_degree],
+      rw ["<-", expr hu] ["at", ident this],
+      exact [expr units.dvd_mul_right.mp this] },
+    { refine [expr dvd_of_dvd_mul_left_of_no_prime_factors hr _ this],
+      intros [ident q, ident dvd_num, ident dvd_denom_pow, ident hq],
+      apply [expr hq.not_unit],
+      exact [expr num_denom_reduced A r dvd_num (hq.dvd_of_dvd_pow dvd_denom_pow)] } },
+  convert [] [expr dvd_term_of_is_root_of_dvd_terms 0 (num_is_root_scale_roots_of_aeval_eq_zero hr) _] [],
+  { rw ["[", expr pow_zero, ",", expr mul_one, "]"] [] },
+  intros [ident j, ident hj],
+  apply [expr dvd_mul_of_dvd_right],
+  convert [] [expr pow_dvd_pow (num A r) (nat.succ_le_of_lt (bot_lt_iff_ne_bot.mpr hj))] [],
+  exact [expr (pow_one _).symm]
+end
 
 /-- Rational root theorem part 2:
 if `r : f.codomain` is a root of a polynomial over the ufd `A`,

@@ -276,10 +276,9 @@ instance  : HasZero (PerfectClosure K p) :=
 theorem zero_def : (0 : PerfectClosure K p) = mk K p (0, 0) :=
   rfl
 
-theorem mk_zero (n : ℕ) : mk K p (n, 0) = 0 :=
-  by 
-    induction' n with n ih <;> [rfl, rw [←ih]] <;>
-      symm <;> apply Quot.sound <;> have  := r.intro n (0 : K) <;> rwa [frobenius_zero K p] at this
+-- error in FieldTheory.PerfectClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mk_zero (n : exprℕ()) : «expr = »(mk K p (n, 0), 0) :=
+by induction [expr n] [] ["with", ident n, ident ih] []; [refl, rw ["<-", expr ih] []]; symmetry; apply [expr quot.sound]; have [] [] [":=", expr r.intro n (0 : K)]; rwa ["[", expr frobenius_zero K p, "]"] ["at", ident this]
 
 theorem r.sound (m n : ℕ) (x y : K) (H : (frobenius K p^[m]) x = y) : mk K p (n, x) = mk K p (m+n, y) :=
   by 
@@ -528,44 +527,39 @@ theorem eq_pth_root (x : ℕ × K) : mk K p x = (pthRoot (PerfectClosure K p) p^
       rfl 
     rw [iterate_succ_apply', ←ih] <;> rfl
 
+-- error in FieldTheory.PerfectClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a field `K` of characteristic `p` and a perfect ring `L` of the same characteristic,
 any homomorphism `K →+* L` can be lifted to `perfect_closure K p`. -/
-def lift (L : Type v) [CommSemiringₓ L] [CharP L p] [PerfectRing L p] : (K →+* L) ≃ (PerfectClosure K p →+* L) :=
-  by 
-    have  := left_inverse_pth_root_frobenius.iterate 
-    refineStruct { .. }
-    field to_fun => 
-      intro f 
-      refineStruct { .. }
-      field to_fun => 
-        refine' fun e => lift_on e (fun x => (pthRoot L p^[x.1]) (f x.2)) _ 
-        rintro a b ⟨n⟩
-        simp only [f.map_frobenius, iterate_succ_apply, pth_root_frobenius]
-      field map_one' => 
-        exact f.map_one 
-      field map_zero' => 
-        exact f.map_zero 
-      field map_mul' => 
-        rintro ⟨x⟩ ⟨y⟩
-        simp only [quot_mk_eq_mk, lift_on_mk, mk_mul_mk, RingHom.map_iterate_frobenius, RingHom.iterate_map_mul,
-          RingHom.map_mul]
-        rw [iterate_add_apply, this _ _, add_commₓ, iterate_add_apply, this _ _]
-      field map_add' => 
-        rintro ⟨x⟩ ⟨y⟩
-        simp only [quot_mk_eq_mk, lift_on_mk, mk_add_mk, RingHom.map_iterate_frobenius, RingHom.iterate_map_add,
-          RingHom.map_add]
-        rw [iterate_add_apply, this _ _, add_commₓ x.1, iterate_add_apply, this _ _]
-    field inv_fun => 
-      exact fun f => f.comp (of K p)
-    field left_inv => 
-      intro f 
-      ext x 
-      rfl 
-    field right_inv => 
-      intro f 
-      ext ⟨x⟩
-      simp only [RingHom.coe_mk, quot_mk_eq_mk, RingHom.comp_apply, lift_on_mk]
-      rw [eq_pth_root, RingHom.map_iterate_pth_root]
+def lift
+(L : Type v)
+[comm_semiring L]
+[char_p L p]
+[perfect_ring L p] : «expr ≃ »(«expr →+* »(K, L), «expr →+* »(perfect_closure K p, L)) :=
+begin
+  have [] [] [":=", expr left_inverse_pth_root_frobenius.iterate],
+  refine_struct [expr { .. }],
+  field [ident to_fun] { intro [ident f],
+    refine_struct [expr { .. }],
+    field [ident to_fun] { refine [expr λ e, lift_on e (λ x, «expr ^[ ]»(pth_root L p, x.1) (f x.2)) _],
+      rintro [ident a, ident b, "⟨", ident n, "⟩"],
+      simp [] [] ["only"] ["[", expr f.map_frobenius, ",", expr iterate_succ_apply, ",", expr pth_root_frobenius, "]"] [] [] },
+    field [ident map_one'] { exact [expr f.map_one] },
+    field [ident map_zero'] { exact [expr f.map_zero] },
+    field [ident map_mul'] { rintro ["⟨", ident x, "⟩", "⟨", ident y, "⟩"],
+      simp [] [] ["only"] ["[", expr quot_mk_eq_mk, ",", expr lift_on_mk, ",", expr mk_mul_mk, ",", expr ring_hom.map_iterate_frobenius, ",", expr ring_hom.iterate_map_mul, ",", expr ring_hom.map_mul, "]"] [] [],
+      rw ["[", expr iterate_add_apply, ",", expr this _ _, ",", expr add_comm, ",", expr iterate_add_apply, ",", expr this _ _, "]"] [] },
+    field [ident map_add'] { rintro ["⟨", ident x, "⟩", "⟨", ident y, "⟩"],
+      simp [] [] ["only"] ["[", expr quot_mk_eq_mk, ",", expr lift_on_mk, ",", expr mk_add_mk, ",", expr ring_hom.map_iterate_frobenius, ",", expr ring_hom.iterate_map_add, ",", expr ring_hom.map_add, "]"] [] [],
+      rw ["[", expr iterate_add_apply, ",", expr this _ _, ",", expr add_comm x.1, ",", expr iterate_add_apply, ",", expr this _ _, "]"] [] } },
+  field [ident inv_fun] { exact [expr λ f, f.comp (of K p)] },
+  field [ident left_inv] { intro [ident f],
+    ext [] [ident x] [],
+    refl },
+  field [ident right_inv] { intro [ident f],
+    ext [] ["⟨", ident x, "⟩"] [],
+    simp [] [] ["only"] ["[", expr ring_hom.coe_mk, ",", expr quot_mk_eq_mk, ",", expr ring_hom.comp_apply, ",", expr lift_on_mk, "]"] [] [],
+    rw ["[", expr eq_pth_root, ",", expr ring_hom.map_iterate_pth_root, "]"] [] }
+end
 
 end Field
 

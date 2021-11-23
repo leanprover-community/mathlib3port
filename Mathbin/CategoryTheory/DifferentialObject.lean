@@ -1,5 +1,4 @@
-import Mathbin.CategoryTheory.Shift 
-import Mathbin.CategoryTheory.ConcreteCategory.Default
+import Mathbin.CategoryTheory.Shift
 
 /-!
 # Differential objects in a category.

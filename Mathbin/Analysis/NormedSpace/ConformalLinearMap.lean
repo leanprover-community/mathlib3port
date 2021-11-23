@@ -1,3 +1,4 @@
+import Mathbin.Analysis.NormedSpace.Basic 
 import Mathbin.Analysis.NormedSpace.LinearIsometry
 
 /-!
@@ -69,7 +70,7 @@ theorem LinearIsometry.is_conformal_map (f' : M →ₗᵢ[R] N) : IsConformalMap
       ext 
       simp ⟩
 
--- error in Analysis.NormedSpace.ConformalLinearMap: ././Mathport/Syntax/Translate/Basic.lean:340:40: in have: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.NormedSpace.ConformalLinearMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_conformal_map_of_subsingleton [h : subsingleton M] (f' : «expr →L[ ] »(M, R, N)) : is_conformal_map f' :=
 begin
   rw [expr subsingleton_iff] ["at", ident h],
@@ -100,14 +101,15 @@ theorem injective {f' : M' →L[R] N} (h : IsConformalMap f') : Function.Injecti
   by 
     simp only [hf', Pi.smul_def] <;> exact (smul_right_injective _ hc).comp li.injective
 
-theorem ne_zero [Nontrivial M'] {f' : M' →L[R] N} (hf' : IsConformalMap f') : f' ≠ 0 :=
-  by 
-    intro w 
-    rcases exists_ne (0 : M') with ⟨a, ha⟩
-    have  : f' a = f' 0
-    ·
-      simpRw [w, ContinuousLinearMap.zero_apply]
-    exact ha (hf'.injective this)
+-- error in Analysis.NormedSpace.ConformalLinearMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ne_zero [nontrivial M'] {f' : «expr →L[ ] »(M', R, N)} (hf' : is_conformal_map f') : «expr ≠ »(f', 0) :=
+begin
+  intros [ident w],
+  rcases [expr exists_ne (0 : M'), "with", "⟨", ident a, ",", ident ha, "⟩"],
+  have [] [":", expr «expr = »(f' a, f' 0)] [],
+  { simp_rw ["[", expr w, ",", expr continuous_linear_map.zero_apply, "]"] [] },
+  exact [expr ha (hf'.injective this)]
+end
 
 end IsConformalMap
 

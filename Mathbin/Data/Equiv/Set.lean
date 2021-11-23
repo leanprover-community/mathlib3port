@@ -349,24 +349,26 @@ theorem sum_diff_subset_symm_apply_of_not_mem {α} {s t : Set α} (h : s ⊆ t) 
     simp only [apply_symm_apply, sum_diff_subset_apply_inr]
     exact Subtype.eq rfl
 
--- error in Data.Equiv.Set: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If `s` is a set with decidable membership, then the sum of `s ∪ t` and `s ∩ t` is equivalent
 to `s ⊕ t`. -/
-protected
-def union_sum_inter
-{α : Type u}
-(s t : set α)
-[decidable_pred ((«expr ∈ » s))] : «expr ≃ »(«expr ⊕ »((«expr ∪ »(s, t) : set α), («expr ∩ »(s, t) : set α)), «expr ⊕ »(s, t)) :=
-calc
-  «expr ≃ »(«expr ⊕ »((«expr ∪ »(s, t) : set α), («expr ∩ »(s, t) : set α)), «expr ⊕ »((«expr ∪ »(s, «expr \ »(t, s)) : set α), («expr ∩ »(s, t) : set α))) : by rw ["[", expr union_diff_self, "]"] []
-  «expr ≃ »(..., «expr ⊕ »(«expr ⊕ »(s, («expr \ »(t, s) : set α)), («expr ∩ »(s, t) : set α))) : sum_congr «expr $ »(set.union, subset_empty_iff.2 (inter_diff_self _ _)) (equiv.refl _)
-  «expr ≃ »(..., «expr ⊕ »(s, «expr ⊕ »((«expr \ »(t, s) : set α), («expr ∩ »(s, t) : set α)))) : sum_assoc _ _ _
-  «expr ≃ »(..., «expr ⊕ »(s, («expr ∪ »(«expr \ »(t, s), «expr ∩ »(s, t)) : set α))) : sum_congr (equiv.refl _) (begin
-     refine [expr (set.union' ((«expr ∉ » s)) _ _).symm],
-     exacts ["[", expr λ x hx, hx.2, ",", expr λ x hx, not_not_intro hx.1, "]"]
-   end)
-  «expr ≃ »(..., «expr ⊕ »(s, t)) : by { rw [expr (_ : «expr = »(«expr ∪ »(«expr \ »(t, s), «expr ∩ »(s, t)), t))] [],
-    rw ["[", expr union_comm, ",", expr inter_comm, ",", expr inter_union_diff, "]"] [] }
+protected def union_sum_inter {α : Type u} (s t : Set α) [DecidablePred (· ∈ s)] :
+  Sum (s ∪ t : Set α) (s ∩ t : Set α) ≃ Sum s t :=
+  calc Sum (s ∪ t : Set α) (s ∩ t : Set α) ≃ Sum (s ∪ t \ s : Set α) (s ∩ t : Set α) :=
+    by 
+      rw [union_diff_self]
+    _ ≃ Sum (Sum s (t \ s : Set α)) (s ∩ t : Set α) :=
+    sum_congr (Set.Union$ subset_empty_iff.2 (inter_diff_self _ _)) (Equiv.refl _)
+    _ ≃ Sum s (Sum (t \ s : Set α) (s ∩ t : Set α)) := sum_assoc _ _ _ 
+    _ ≃ Sum s (t \ s ∪ s ∩ t : Set α) :=
+    sum_congr (Equiv.refl _)
+      (by 
+        refine' (set.union' (· ∉ s) _ _).symm 
+        exacts[fun x hx => hx.2, fun x hx => not_not_intro hx.1])
+    _ ≃ Sum s t :=
+    by 
+      rw [(_ : t \ s ∪ s ∩ t = t)]
+      rw [union_comm, inter_comm, inter_union_diff]
+    
 
 /-- Given an equivalence `e₀` between sets `s : set α` and `t : set β`, the set of equivalences
 `e : α ≃ β` such that `e ↑x = ↑(e₀ x)` for each `x : s` is equivalent to the set of equivalences
@@ -434,12 +436,21 @@ protected theorem image_symm_apply {α β} (f : α → β) (s : Set α) (H : inj
     apply (Set.Image f s H).Injective 
     simp [(Set.Image f s H).apply_symm_apply]
 
-theorem image_symm_preimage {α β} {f : α → β} (hf : injective f) (u s : Set α) :
-  (fun x => (Set.Image f s hf).symm x : f '' s → α) ⁻¹' u = coeₓ ⁻¹' (f '' u) :=
-  by 
-    ext ⟨b, a, has, rfl⟩
-    have  : ∀ h : ∃ a', a' ∈ s ∧ a' = a, Classical.some h = a := fun h => (Classical.some_spec h).2
-    simp [Equiv.Set.image, Equiv.Set.imageOfInjOn, hf.eq_iff, this]
+-- error in Data.Equiv.Set: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem image_symm_preimage
+{α β}
+{f : α → β}
+(hf : injective f)
+(u
+ s : set α) : «expr = »(«expr ⁻¹' »((λ
+  x, (set.image f s hf).symm x : «expr '' »(f, s) → α), u), «expr ⁻¹' »(coe, «expr '' »(f, u))) :=
+begin
+  ext [] ["⟨", ident b, ",", ident a, ",", ident has, ",", ident rfl, "⟩"] [],
+  have [] [":", expr ∀
+   h : «expr∃ , »((a'), «expr ∧ »(«expr ∈ »(a', s), «expr = »(a', a))), «expr = »(classical.some h, a)] [":=", expr λ
+   h, (classical.some_spec h).2],
+  simp [] [] [] ["[", expr equiv.set.image, ",", expr equiv.set.image_of_inj_on, ",", expr hf.eq_iff, ",", expr this, "]"] [] []
+end
 
 /-- If `α` is equivalent to `β`, then `set α` is equivalent to `set β`. -/
 @[simps]
@@ -447,7 +458,7 @@ protected def congr {α β : Type _} (e : α ≃ β) : Set α ≃ Set β :=
   ⟨fun s => e '' s, fun t => e.symm '' t, symm_image_image e, symm_image_image e.symm⟩
 
 /-- The set `{x ∈ s | t x}` is equivalent to the set of `x : s` such that `t x`. -/
-protected def sep {α : Type u} (s : Set α) (t : α → Prop) : ({ x ∈ s | t x } : Set α) ≃ { x : s | t x } :=
+protected def sep {α : Type u} (s : Set α) (t : α → Prop) : ({ x∈s | t x } : Set α) ≃ { x:s | t x } :=
   (Equiv.subtypeSubtypeEquivSubtypeInter s t).symm
 
 /-- The set `𝒫 S := {x | x ⊆ S}` is equivalent to the type `set S`. -/
@@ -529,10 +540,10 @@ noncomputable def of_injective {α β} (f : α → β) (hf : injective f) : α �
   Equiv.ofLeftInverse f
     (fun h =>
       by 
-        exactI Function.invFun f)
+        exact Function.invFun f)
     fun h =>
       by 
-        exactI Function.left_inverse_inv_fun hf
+        exact Function.left_inverse_inv_fun hf
 
 theorem apply_of_injective_symm {α β} (f : α → β) (hf : injective f) (b : Set.Range f) :
   f ((of_injective f hf).symm b) = b :=
@@ -556,18 +567,18 @@ theorem coe_of_injective_symm {α β} (f : α → β) (hf : injective f) :
 theorem self_comp_of_injective_symm {α β} (f : α → β) (hf : injective f) : f ∘ (of_injective f hf).symm = coeₓ :=
   funext fun x => apply_of_injective_symm f hf x
 
-theorem of_left_inverse_eq_of_injective {α β : Type _} (f : α → β) (f_inv : Nonempty α → β → α)
-  (hf : ∀ h : Nonempty α, left_inverse (f_inv h) f) :
-  of_left_inverse f f_inv hf =
-    of_injective f
-      ((em (Nonempty α)).elim (fun h => (hf h).Injective)
-        fun h _ _ _ =>
-          by 
-            haveI  : Subsingleton α := subsingleton_of_not_nonempty h 
-            simp ) :=
-  by 
-    ext 
-    simp 
+-- error in Data.Equiv.Set: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_left_inverse_eq_of_injective
+{α β : Type*}
+(f : α → β)
+(f_inv : nonempty α → β → α)
+(hf : ∀
+ h : nonempty α, left_inverse (f_inv h) f) : «expr = »(of_left_inverse f f_inv hf, of_injective f ((em (nonempty α)).elim (λ
+   h, (hf h).injective) (λ
+   h _ _ _, by { haveI [] [":", expr subsingleton α] [":=", expr subsingleton_of_not_nonempty h],
+     simp [] [] [] [] [] [] }))) :=
+by { ext [] [] [],
+  simp [] [] [] [] [] [] }
 
 theorem of_left_inverse'_eq_of_injective {α β : Type _} (f : α → β) (f_inv : β → α) (hf : left_inverse f_inv f) :
   of_left_inverse' f f_inv hf = of_injective f hf.injective :=
@@ -592,30 +603,36 @@ noncomputable def Set.BijOn.equiv {α : Type _} {β : Type _} {s : Set α} {t : 
   s ≃ t :=
   Equiv.ofBijective _ h.bijective
 
+-- error in Data.Equiv.Set: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The composition of an updated function with an equiv on a subset can be expressed as an
 updated function. -/
-theorem dite_comp_equiv_update {α : Type _} {β : Sort _} {γ : Sort _} {s : Set α} (e : β ≃ s) (v : β → γ) (w : α → γ)
-  (j : β) (x : γ) [DecidableEq β] [DecidableEq α] [∀ j, Decidable (j ∈ s)] :
-  (fun i : α => if h : i ∈ s then (Function.update v j x) (e.symm ⟨i, h⟩) else w i) =
-    Function.update (fun i : α => if h : i ∈ s then v (e.symm ⟨i, h⟩) else w i) (e j) x :=
-  by 
-    ext i 
-    byCases' h : i ∈ s
-    ·
-      rw [dif_pos h, Function.update_apply_equiv_apply, Equiv.symm_symm, Function.comp, Function.update_apply,
-        Function.update_apply, dif_pos h]
-      have h_coe : (⟨i, h⟩ : s) = e j ↔ i = e j :=
-        subtype.ext_iff.trans
-          (by 
-            rw [Subtype.coe_mk])
-      simpRw [h_coe]
-      congr
-    ·
-      have  : i ≠ e j
-      ·
-        ·
-          contrapose! h 
-          have  : (e j : α) ∈ s := (e j).2
-          rwa [←h] at this 
-      simp [h, this]
+theorem dite_comp_equiv_update
+{α : Type*}
+{β : Sort*}
+{γ : Sort*}
+{s : set α}
+(e : «expr ≃ »(β, s))
+(v : β → γ)
+(w : α → γ)
+(j : β)
+(x : γ)
+[decidable_eq β]
+[decidable_eq α]
+[∀
+ j, decidable «expr ∈ »(j, s)] : «expr = »(λ
+ i : α, if h : «expr ∈ »(i, s) then function.update v j x (e.symm ⟨i, h⟩) else w i, function.update (λ
+  i : α, if h : «expr ∈ »(i, s) then v (e.symm ⟨i, h⟩) else w i) (e j) x) :=
+begin
+  ext [] [ident i] [],
+  by_cases [expr h, ":", expr «expr ∈ »(i, s)],
+  { rw ["[", expr dif_pos h, ",", expr function.update_apply_equiv_apply, ",", expr equiv.symm_symm, ",", expr function.comp, ",", expr function.update_apply, ",", expr function.update_apply, ",", expr dif_pos h, "]"] [],
+    have [ident h_coe] [":", expr «expr ↔ »(«expr = »((⟨i, h⟩ : s), e j), «expr = »(i, e j))] [":=", expr subtype.ext_iff.trans (by rw [expr subtype.coe_mk] [])],
+    simp_rw [expr h_coe] [],
+    congr },
+  { have [] [":", expr «expr ≠ »(i, e j)] [],
+    by { contrapose ["!"] [ident h],
+      have [] [":", expr «expr ∈ »((e j : α), s)] [":=", expr (e j).2],
+      rwa ["<-", expr h] ["at", ident this] },
+    simp [] [] [] ["[", expr h, ",", expr this, "]"] [] [] }
+end
 

@@ -17,7 +17,8 @@ This file gives the basic definition of Vitali families. More interesting develo
 notion are deferred to other files:
 * constructions of specific Vitali families are provided by the Besicovitch covering theorem, in
 `besicovitch.vitali_family`, and by the Vitali covering theorem, in `vitali.vitali_family`.
-* TODO: prove the main theorem on differentiation of measures along a Vitali family.
+* The main theorem on differentiation of measures along a Vitali family is proved in
+`vitali_family.ae_tendsto_rn_deriv`.
 
 ## Main definitions
 
@@ -165,7 +166,7 @@ include v
 that contain all sets of `v.sets_at x` of a sufficiently small diameter. This filter makes it
 possible to express limiting behavior when sets in `v.sets_at x` shrink to `x`. -/
 def filter_at (x : α) : Filter (Set α) :=
-  ⨅(ε : _)(_ : ε ∈ Ioi (0 : ℝ)), 𝓟 { a ∈ v.sets_at x | a ⊆ closed_ball x ε }
+  ⨅(ε : _)(_ : ε ∈ Ioi (0 : ℝ)), 𝓟 { a∈v.sets_at x | a ⊆ closed_ball x ε }
 
 theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
   s ∈ v.filter_at x ↔ ∃ (ε : _)(_ : ε > (0 : ℝ)), ∀ a _ : a ∈ v.sets_at x, a ⊆ closed_ball x ε → a ∈ s :=
@@ -195,7 +196,7 @@ theorem eventually_filter_at_iff {x : α} {P : Set α → Prop} :
   (∀ᶠa in v.filter_at x, P a) ↔ ∃ (ε : _)(_ : ε > (0 : ℝ)), ∀ a _ : a ∈ v.sets_at x, a ⊆ closed_ball x ε → P a :=
   v.mem_filter_at_iff
 
--- error in MeasureTheory.Covering.VitaliFamily: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Covering.VitaliFamily: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem eventually_filter_at_mem_sets (x : α) : «expr∀ᶠ in , »((a), v.filter_at x, «expr ∈ »(a, v.sets_at x)) :=
 begin
   simp [] [] ["only"] ["[", expr eventually_filter_at_iff, ",", expr exists_prop, ",", expr and_true, ",", expr gt_iff_lt, ",", expr implies_true_iff, "]"] [] [] { contextual := tt },

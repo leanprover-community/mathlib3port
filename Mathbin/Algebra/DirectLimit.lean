@@ -204,7 +204,7 @@ theorem of.zero_exact_aux [Nonempty ι] {x : DirectSum ι G} (H : Submodule.Quot
                   rwa [hi] at hik
                 ·
                   rwa [hj] at hjk 
-                exFalso 
+                exfalso 
                 apply hi0 
                 rw [sub_zero]
               simp [LinearMap.map_sub, totalize_apply, hik, hjk, DirectedSystem.map_map f, DirectSum.apply_eq_component,
@@ -223,25 +223,15 @@ theorem of.zero_exact_aux [Nonempty ι] {x : DirectSum ι G} (H : Submodule.Quot
             by 
               simp [LinearMap.map_smul, hxi]⟩
 
+-- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
-theorem of.zero_exact {i x} (H : of R ι G f i x = 0) : ∃ j hij, f i j hij x = (0 : G j) :=
-  by 
-    haveI  : Nonempty ι := ⟨i⟩ <;>
-      exact
-        let ⟨j, hj, hxj⟩ := of.zero_exact_aux H 
-        if hx0 : x = 0 then
-          ⟨i, le_reflₓ _,
-            by 
-              simp [hx0]⟩
-        else
-          have hij : i ≤ j :=
-            hj _$
-              by 
-                simp [DirectSum.apply_eq_component, hx0]
-          ⟨j, hij,
-            by 
-              simpa [totalize_apply, hij] using hxj⟩
+theorem of.zero_exact
+{i x}
+(H : «expr = »(of R ι G f i x, 0)) : «expr∃ , »((j hij), «expr = »(f i j hij x, (0 : G j))) :=
+by haveI [] [":", expr nonempty ι] [":=", expr ⟨i⟩]; exact [expr let ⟨j, hj, hxj⟩ := of.zero_exact_aux H in
+ if hx0 : «expr = »(x, 0) then ⟨i, le_refl _, by simp [] [] [] ["[", expr hx0, "]"] [] []⟩ else have hij : «expr ≤ »(i, j), from «expr $ »(hj _, by simp [] [] [] ["[", expr direct_sum.apply_eq_component, ",", expr hx0, "]"] [] []),
+ ⟨j, hij, by simpa [] [] [] ["[", expr totalize_apply, ",", expr hij, "]"] [] ["using", expr hxj]⟩]
 
 end DirectLimit
 
@@ -452,36 +442,36 @@ variable[DirectedSystem G fun i j h => f' i j h]
 
 variable(G f)
 
-theorem of.zero_exact_aux2 {x : FreeCommRing (Σi, G i)} {s t} (hxs : is_supported x s) {j k}
-  (hj : ∀ z : Σi, G i, z ∈ s → z.1 ≤ j) (hk : ∀ z : Σi, G i, z ∈ t → z.1 ≤ k) (hjk : j ≤ k) (hst : s ⊆ t) :
-  f' j k hjk (lift (fun ix : s => f' ix.1.1 j (hj ix ix.2) ix.1.2) (restriction s x)) =
-    lift (fun ix : t => f' ix.1.1 k (hk ix ix.2) ix.1.2) (restriction t x) :=
-  by 
-    refine' Subring.InClosure.rec_on hxs _ _ _ _
-    ·
-      rw [(restriction _).map_one, (FreeCommRing.lift _).map_one, (f' j k hjk).map_one, (restriction _).map_one,
-        (FreeCommRing.lift _).map_one]
-    ·
-      rw [(restriction _).map_neg, (restriction _).map_one, (FreeCommRing.lift _).map_neg,
-        (FreeCommRing.lift _).map_one, (f' j k hjk).map_neg, (f' j k hjk).map_one, (restriction _).map_neg,
-        (restriction _).map_one, (FreeCommRing.lift _).map_neg, (FreeCommRing.lift _).map_one]
-    ·
-      rintro _ ⟨p, hps, rfl⟩ n ih 
-      rw [(restriction _).map_mul, (FreeCommRing.lift _).map_mul, (f' j k hjk).map_mul, ih, (restriction _).map_mul,
-        (FreeCommRing.lift _).map_mul, restriction_of, dif_pos hps, lift_of, restriction_of, dif_pos (hst hps), lift_of]
-      dsimp only 
-      have  := DirectedSystem.map_map fun i j h => f' i j h 
-      dsimp only  at this 
-      rw [this]
-      rfl
-    ·
-      rintro x y ihx ihy 
-      rw [(restriction _).map_add, (FreeCommRing.lift _).map_add, (f' j k hjk).map_add, ihx, ihy,
-        (restriction _).map_add, (FreeCommRing.lift _).map_add]
+-- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of.zero_exact_aux2
+{x : free_comm_ring «exprΣ , »((i), G i)}
+{s t}
+(hxs : is_supported x s)
+{j k}
+(hj : ∀ z : «exprΣ , »((i), G i), «expr ∈ »(z, s) → «expr ≤ »(z.1, j))
+(hk : ∀ z : «exprΣ , »((i), G i), «expr ∈ »(z, t) → «expr ≤ »(z.1, k))
+(hjk : «expr ≤ »(j, k))
+(hst : «expr ⊆ »(s, t)) : «expr = »(f' j k hjk (lift (λ
+   ix : s, f' ix.1.1 j (hj ix ix.2) ix.1.2) (restriction s x)), lift (λ
+  ix : t, f' ix.1.1 k (hk ix ix.2) ix.1.2) (restriction t x)) :=
+begin
+  refine [expr subring.in_closure.rec_on hxs _ _ _ _],
+  { rw ["[", expr (restriction _).map_one, ",", expr (free_comm_ring.lift _).map_one, ",", expr (f' j k hjk).map_one, ",", expr (restriction _).map_one, ",", expr (free_comm_ring.lift _).map_one, "]"] [] },
+  { rw ["[", expr (restriction _).map_neg, ",", expr (restriction _).map_one, ",", expr (free_comm_ring.lift _).map_neg, ",", expr (free_comm_ring.lift _).map_one, ",", expr (f' j k hjk).map_neg, ",", expr (f' j k hjk).map_one, ",", expr (restriction _).map_neg, ",", expr (restriction _).map_one, ",", expr (free_comm_ring.lift _).map_neg, ",", expr (free_comm_ring.lift _).map_one, "]"] [] },
+  { rintros ["_", "⟨", ident p, ",", ident hps, ",", ident rfl, "⟩", ident n, ident ih],
+    rw ["[", expr (restriction _).map_mul, ",", expr (free_comm_ring.lift _).map_mul, ",", expr (f' j k hjk).map_mul, ",", expr ih, ",", expr (restriction _).map_mul, ",", expr (free_comm_ring.lift _).map_mul, ",", expr restriction_of, ",", expr dif_pos hps, ",", expr lift_of, ",", expr restriction_of, ",", expr dif_pos (hst hps), ",", expr lift_of, "]"] [],
+    dsimp ["only"] [] [] [],
+    have [] [] [":=", expr directed_system.map_map (λ i j h, f' i j h)],
+    dsimp ["only"] [] [] ["at", ident this],
+    rw [expr this] [],
+    refl },
+  { rintros [ident x, ident y, ident ihx, ident ihy],
+    rw ["[", expr (restriction _).map_add, ",", expr (free_comm_ring.lift _).map_add, ",", expr (f' j k hjk).map_add, ",", expr ihx, ",", expr ihy, ",", expr (restriction _).map_add, ",", expr (free_comm_ring.lift _).map_add, "]"] [] }
+end
 
 variable{G f f'}
 
--- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem of.zero_exact_aux
 [nonempty ι]
 {x : free_comm_ring «exprΣ , »((i), G i)}
@@ -549,17 +539,16 @@ begin
     rw ["[", expr (restriction _).map_mul, ",", expr (free_comm_ring.lift _).map_mul, ",", "<-", expr of.zero_exact_aux2 G f' hyt hj this hjk (set.subset_union_right «expr↑ »(s) t), ",", expr iht, ",", expr (f' j k hjk).map_zero, ",", expr mul_zero, "]"] [] }
 end
 
+-- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
-theorem of.zero_exact {i x} (hix : of G (fun i j h => f' i j h) i x = 0) : ∃ (j : _)(hij : i ≤ j), f' i j hij x = 0 :=
-  by 
-    haveI  : Nonempty ι := ⟨i⟩ <;>
-      exact
-        let ⟨j, s, H, hxs, hx⟩ := of.zero_exact_aux hix 
-        have hixs : (⟨i, x⟩ : Σi, G i) ∈ s := is_supported_of.1 hxs
-        ⟨j, H ⟨i, x⟩ hixs,
-          by 
-            rw [restriction_of, dif_pos hixs, lift_of] at hx <;> exact hx⟩
+theorem of.zero_exact
+{i x}
+(hix : «expr = »(of G (λ
+   i j h, f' i j h) i x, 0)) : «expr∃ , »((j) (hij : «expr ≤ »(i, j)), «expr = »(f' i j hij x, 0)) :=
+by haveI [] [":", expr nonempty ι] [":=", expr ⟨i⟩]; exact [expr let ⟨j, s, H, hxs, hx⟩ := of.zero_exact_aux hix in
+ have hixs : «expr ∈ »((⟨i, x⟩ : «exprΣ , »((i), G i)), s), from is_supported_of.1 hxs,
+ ⟨j, H ⟨i, x⟩ hixs, by rw ["[", expr restriction_of, ",", expr dif_pos hixs, ",", expr lift_of, "]"] ["at", ident hx]; exact [expr hx]⟩]
 
 end OfZeroExact
 

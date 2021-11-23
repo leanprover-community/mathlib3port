@@ -40,7 +40,7 @@ variable{C : Type u₁}[category.{v₁} C]{X Y Z : C}
 
 variable{D : Type u₂}[category.{v₂} D]
 
--- error in CategoryTheory.Subobject.MonoOver: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in CategoryTheory.Subobject.MonoOver: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /--
 The category of monomorphisms into `X` as a full subcategory of the over category.
 This isn't skeletal, so it's not a partial order.

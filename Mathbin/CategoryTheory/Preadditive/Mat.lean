@@ -1,10 +1,9 @@
-import Mathbin.CategoryTheory.Preadditive.Default 
-import Mathbin.CategoryTheory.Preadditive.SingleObj 
-import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor 
-import Mathbin.CategoryTheory.Limits.Shapes.Biproducts 
-import Mathbin.CategoryTheory.Fintype 
 import Mathbin.Algebra.BigOperators.Basic 
-import Mathbin.Data.Matrix.Notation
+import Mathbin.Algebra.BigOperators.Pi 
+import Mathbin.CategoryTheory.Limits.Shapes.Biproducts 
+import Mathbin.CategoryTheory.Preadditive.Default 
+import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor 
+import Mathbin.Data.Matrix.Dmatrix
 
 /-!
 # Matrices over a category.
@@ -89,7 +88,7 @@ section
 attribute [local simp] hom.id hom.comp
 
 instance  : category.{v₁} (Mat_ C) :=
-  { Hom := hom, id := hom.id, comp := fun M N K f g => f.comp g,
+  { hom := hom, id := hom.id, comp := fun M N K f g => f.comp g,
     id_comp' :=
       fun M N f =>
         by 
@@ -169,7 +168,7 @@ instance has_finite_biproducts : has_finite_biproducts (Mat_ C) :=
   { HasBiproductsOfShape :=
       fun J 𝒟 ℱ =>
         by 
-          exactI
+          exact
             { HasBiproduct :=
                 fun f =>
                   has_biproduct_of_total
@@ -339,7 +338,7 @@ Every object in `Mat_ C` is isomorphic to the biproduct of its summands.
 -/
 @[simps]
 def iso_biproduct_embedding (M : Mat_ C) : M ≅ ⨁ fun i => (embedding C).obj (M.X i) :=
-  { Hom := biproduct.lift fun i j k => if h : j = i then eq_to_hom (congr_argₓ M.X h) else 0,
+  { hom := biproduct.lift fun i j k => if h : j = i then eq_to_hom (congr_argₓ M.X h) else 0,
     inv := biproduct.desc fun i j k => if h : i = k then eq_to_hom (congr_argₓ M.X h) else 0,
     hom_inv_id' :=
       by 
@@ -385,8 +384,8 @@ variable[has_finite_biproducts D]
 
 @[reassoc]
 theorem additive_obj_iso_biproduct_naturality (F : Mat_ C ⥤ D) [functor.additive F] {M N : Mat_ C} (f : M ⟶ N) :
-  F.map f ≫ (additive_obj_iso_biproduct F N).Hom =
-    (additive_obj_iso_biproduct F M).Hom ≫ biproduct.matrix fun i j => F.map ((embedding C).map (f i j)) :=
+  F.map f ≫ (additive_obj_iso_biproduct F N).hom =
+    (additive_obj_iso_biproduct F M).hom ≫ biproduct.matrix fun i j => F.map ((embedding C).map (f i j)) :=
   by 
     ext 
     dsimp [embedding]
@@ -437,7 +436,7 @@ instance lift_additive (F : C ⥤ D) [functor.additive F] : functor.additive (li
 @[simps]
 def embedding_lift_iso (F : C ⥤ D) [functor.additive F] : embedding C ⋙ lift F ≅ F :=
   nat_iso.of_components
-    (fun X => { Hom := biproduct.desc fun P => 𝟙 (F.obj X), inv := biproduct.lift fun P => 𝟙 (F.obj X) })
+    (fun X => { hom := biproduct.desc fun P => 𝟙 (F.obj X), inv := biproduct.lift fun P => 𝟙 (F.obj X) })
     fun X Y f =>
       by 
         dsimp 

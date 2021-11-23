@@ -73,20 +73,21 @@ theorem finrank [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional.finrank 
   by 
     rw [FiniteDimensional.finrank_eq_card_basis pb.basis, Fintype.card_fin]
 
-theorem mem_span_pow' {x y : S} {d : ℕ} :
-  y ∈ Submodule.span R (Set.Range fun i : Finₓ d => x^(i : ℕ)) ↔ ∃ f : Polynomial R, f.degree < d ∧ y = aeval x f :=
-  by 
-    have  : (Set.Range fun i : Finₓ d => x^(i : ℕ)) = (fun i : ℕ => x^i) '' «expr↑ » (Finset.range d)
-    ·
-      ext n 
-      simpRw [Set.mem_range, Set.mem_image, Finset.mem_coe, Finset.mem_range]
-      exact ⟨fun ⟨⟨i, hi⟩, hy⟩ => ⟨i, hi, hy⟩, fun ⟨i, hi, hy⟩ => ⟨⟨i, hi⟩, hy⟩⟩
-    simp only [this, Finsupp.mem_span_image_iff_total, degree_lt_iff_coeff_zero, exists_iff_exists_finsupp, coeff,
-      aeval, eval₂_ring_hom', eval₂_eq_sum, Polynomial.sum, support, Finsupp.mem_supported', Finsupp.total, Finsupp.sum,
-      Algebra.smul_def, eval₂_zero, exists_prop, LinearMap.id_coe, eval₂_one, id.def, not_ltₓ, Finsupp.coe_lsum,
-      LinearMap.coe_smul_right, Finset.mem_range, AlgHom.coe_mk, Finset.mem_coe]
-    simpRw [@eq_comm _ y]
-    exact Iff.rfl
+-- error in RingTheory.PowerBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_span_pow'
+{x y : S}
+{d : exprℕ()} : «expr ↔ »(«expr ∈ »(y, submodule.span R (set.range (λ
+    i : fin d, «expr ^ »(x, (i : exprℕ()))))), «expr∃ , »((f : polynomial R), «expr ∧ »(«expr < »(f.degree, d), «expr = »(y, aeval x f)))) :=
+begin
+  have [] [":", expr «expr = »(set.range (λ
+     i : fin d, «expr ^ »(x, (i : exprℕ()))), «expr '' »(λ i : exprℕ(), «expr ^ »(x, i), «expr↑ »(finset.range d)))] [],
+  { ext [] [ident n] [],
+    simp_rw ["[", expr set.mem_range, ",", expr set.mem_image, ",", expr finset.mem_coe, ",", expr finset.mem_range, "]"] [],
+    exact [expr ⟨λ ⟨⟨i, hi⟩, hy⟩, ⟨i, hi, hy⟩, λ ⟨i, hi, hy⟩, ⟨⟨i, hi⟩, hy⟩⟩] },
+  simp [] [] ["only"] ["[", expr this, ",", expr finsupp.mem_span_image_iff_total, ",", expr degree_lt_iff_coeff_zero, ",", expr exists_iff_exists_finsupp, ",", expr coeff, ",", expr aeval, ",", expr eval₂_ring_hom', ",", expr eval₂_eq_sum, ",", expr polynomial.sum, ",", expr support, ",", expr finsupp.mem_supported', ",", expr finsupp.total, ",", expr finsupp.sum, ",", expr algebra.smul_def, ",", expr eval₂_zero, ",", expr exists_prop, ",", expr linear_map.id_coe, ",", expr eval₂_one, ",", expr id.def, ",", expr not_lt, ",", expr finsupp.coe_lsum, ",", expr linear_map.coe_smul_right, ",", expr finset.mem_range, ",", expr alg_hom.coe_mk, ",", expr finset.mem_coe, "]"] [] [],
+  simp_rw ["[", expr @eq_comm _ y, "]"] [],
+  exact [expr iff.rfl]
+end
 
 theorem mem_span_pow {x y : S} {d : ℕ} (hd : d ≠ 0) :
   y ∈ Submodule.span R (Set.Range fun i : Finₓ d => x^(i : ℕ)) ↔ ∃ f : Polynomial R, f.nat_degree < d ∧ y = aeval x f :=
@@ -224,37 +225,42 @@ section Equiv
 
 variable[Algebra A S]{S' : Type _}[CommRingₓ S'][Algebra A S']
 
-theorem nat_degree_lt_nat_degree {p q : Polynomial R} (hp : p ≠ 0) (hpq : p.degree < q.degree) :
-  p.nat_degree < q.nat_degree :=
-  by 
-    byCases' hq : q = 0
-    ·
-      rw [hq, degree_zero] at hpq 
-      have  := not_lt_bot hpq 
-      contradiction 
-    rwa [degree_eq_nat_degree hp, degree_eq_nat_degree hq, WithBot.coe_lt_coe] at hpq
+-- error in RingTheory.PowerBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nat_degree_lt_nat_degree
+{p q : polynomial R}
+(hp : «expr ≠ »(p, 0))
+(hpq : «expr < »(p.degree, q.degree)) : «expr < »(p.nat_degree, q.nat_degree) :=
+begin
+  by_cases [expr hq, ":", expr «expr = »(q, 0)],
+  { rw ["[", expr hq, ",", expr degree_zero, "]"] ["at", ident hpq],
+    have [] [] [":=", expr not_lt_bot hpq],
+    contradiction },
+  rwa ["[", expr degree_eq_nat_degree hp, ",", expr degree_eq_nat_degree hq, ",", expr with_bot.coe_lt_coe, "]"] ["at", ident hpq]
+end
 
 variable[IsDomain A]
 
-theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0) (f : Polynomial A) :
-  pb.basis.constr A (fun i => y^(i : ℕ)) (aeval pb.gen f) = aeval y f :=
-  by 
-    rw [←aeval_mod_by_monic_eq_self_of_root (minpoly.monic pb.is_integral_gen) (minpoly.aeval _ _),
-      ←@aeval_mod_by_monic_eq_self_of_root _ _ _ _ _ f _ (minpoly.monic pb.is_integral_gen) y hy]
-    byCases' hf : f %ₘ minpoly A pb.gen = 0
-    ·
-      simp only [hf, AlgHom.map_zero, LinearMap.map_zero]
-    have  : (f %ₘ minpoly A pb.gen).natDegree < pb.dim
-    ·
-      rw [←pb.nat_degree_minpoly]
-      apply nat_degree_lt_nat_degree hf 
-      exact degree_mod_by_monic_lt _ (minpoly.monic pb.is_integral_gen)
-    rw [aeval_eq_sum_range' this, aeval_eq_sum_range' this, LinearMap.map_sum]
-    refine' Finset.sum_congr rfl fun i hi : i ∈ Finset.range pb.dim => _ 
-    rw [Finset.mem_range] at hi 
-    rw [LinearMap.map_smul]
-    congr 
-    rw [←Finₓ.coe_mk hi, ←pb.basis_eq_pow ⟨i, hi⟩, Basis.constr_basis]
+-- error in RingTheory.PowerBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem constr_pow_aeval
+(pb : power_basis A S)
+{y : S'}
+(hy : «expr = »(aeval y (minpoly A pb.gen), 0))
+(f : polynomial A) : «expr = »(pb.basis.constr A (λ i, «expr ^ »(y, (i : exprℕ()))) (aeval pb.gen f), aeval y f) :=
+begin
+  rw ["[", "<-", expr aeval_mod_by_monic_eq_self_of_root (minpoly.monic pb.is_integral_gen) (minpoly.aeval _ _), ",", "<-", expr @aeval_mod_by_monic_eq_self_of_root _ _ _ _ _ f _ (minpoly.monic pb.is_integral_gen) y hy, "]"] [],
+  by_cases [expr hf, ":", expr «expr = »(«expr %ₘ »(f, minpoly A pb.gen), 0)],
+  { simp [] [] ["only"] ["[", expr hf, ",", expr alg_hom.map_zero, ",", expr linear_map.map_zero, "]"] [] [] },
+  have [] [":", expr «expr < »(«expr %ₘ »(f, minpoly A pb.gen).nat_degree, pb.dim)] [],
+  { rw ["<-", expr pb.nat_degree_minpoly] [],
+    apply [expr nat_degree_lt_nat_degree hf],
+    exact [expr degree_mod_by_monic_lt _ (minpoly.monic pb.is_integral_gen)] },
+  rw ["[", expr aeval_eq_sum_range' this, ",", expr aeval_eq_sum_range' this, ",", expr linear_map.map_sum, "]"] [],
+  refine [expr finset.sum_congr rfl (λ (i) (hi : «expr ∈ »(i, finset.range pb.dim)), _)],
+  rw [expr finset.mem_range] ["at", ident hi],
+  rw [expr linear_map.map_smul] [],
+  congr,
+  rw ["[", "<-", expr fin.coe_mk hi, ",", "<-", expr pb.basis_eq_pow ⟨i, hi⟩, ",", expr basis.constr_basis, "]"] []
+end
 
 theorem constr_pow_gen (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0) :
   pb.basis.constr A (fun i => y^(i : ℕ)) pb.gen = y :=
@@ -327,11 +333,12 @@ noncomputable def lift_equiv' (pb : PowerBasis A S) :
           rw [mem_roots, is_root.def, Equiv.refl_apply, ←eval₂_eq_eval_map, ←aeval_def]
           exact map_monic_ne_zero (minpoly.monic pb.is_integral_gen))
 
+-- error in RingTheory.PowerBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- There are finitely many algebra homomorphisms `S →ₐ[A] B` if `S` is of the form `A[x]`
 and `B` is an integral domain. -/
-noncomputable def alg_hom.fintype (pb : PowerBasis A S) : Fintype (S →ₐ[A] B) :=
-  by 
-    letI this := Classical.decEq B <;> exact Fintype.ofEquiv _ pb.lift_equiv'.symm
+noncomputable
+def alg_hom.fintype (pb : power_basis A S) : fintype «expr →ₐ[ ] »(S, A, B) :=
+by letI [] [] [":=", expr classical.dec_eq B]; exact [expr fintype.of_equiv _ pb.lift_equiv'.symm]
 
 attribute [local irreducible] PowerBasis.lift
 
@@ -400,73 +407,72 @@ end PowerBasis
 
 open PowerBasis
 
+-- error in RingTheory.PowerBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Useful lemma to show `x` generates a power basis:
 the powers of `x` less than the degree of `x`'s minimal polynomial are linearly independent. -/
-theorem IsIntegral.linear_independent_pow [Algebra K S] {x : S} (hx : IsIntegral K x) :
-  LinearIndependent K fun i : Finₓ (minpoly K x).natDegree => x^(i : ℕ) :=
-  by 
-    rw [linear_independent_iff]
-    intro p hp 
-    set f : Polynomial K := p.sum fun i => monomial i with hf0 
-    have f_def : ∀ i : Finₓ _, f.coeff i = p i
-    ·
-      intro i 
-      simp only [f, Finsupp.sum, coeff_monomial, finset_sum_coeff]
-      rw [Finset.sum_eq_single, if_pos rfl]
-      ·
-        intro b _ hb 
-        rw [if_neg (mt (fun h => _) hb)]
-        exact Finₓ.coe_injective h
-      ·
-        intro hi 
-        splitIfs <;>
-          ·
-            exact finsupp.not_mem_support_iff.mp hi 
-    have f_def' : ∀ i, f.coeff i = if hi : i < _ then p ⟨i, hi⟩ else 0
-    ·
-      intro i 
-      splitIfs with hi
-      ·
-        exact f_def ⟨i, hi⟩
-      simp only [f, Finsupp.sum, coeff_monomial, finset_sum_coeff]
-      apply Finset.sum_eq_zero 
-      rintro ⟨j, hj⟩ -
-      apply if_neg (mt _ hi)
-      rintro rfl 
-      exact hj 
-    suffices  : f = 0
-    ·
-      ext i 
-      rw [←f_def, this, coeff_zero, Finsupp.zero_apply]
-    contrapose hp with hf 
-    intro h 
-    have  : (minpoly K x).degree ≤ f.degree
-    ·
-      apply minpoly.degree_le_of_ne_zero K x hf 
-      convert h 
-      simpRw [Finsupp.total_apply, aeval_def, hf0, Finsupp.sum, eval₂_finset_sum]
-      apply Finset.sum_congr rfl 
-      rintro i -
-      simp only [Algebra.smul_def, eval₂_monomial]
-    have  : ¬(minpoly K x).degree ≤ f.degree
-    ·
-      apply not_le_of_lt 
-      rw [degree_eq_nat_degree (minpoly.ne_zero hx), degree_lt_iff_coeff_zero]
-      intro i hi 
-      rw [f_def' i, dif_neg]
-      exact hi.not_lt 
-    contradiction
+theorem is_integral.linear_independent_pow
+[algebra K S]
+{x : S}
+(hx : is_integral K x) : linear_independent K (λ i : fin (minpoly K x).nat_degree, «expr ^ »(x, (i : exprℕ()))) :=
+begin
+  rw [expr linear_independent_iff] [],
+  intros [ident p, ident hp],
+  set [] [ident f] [":", expr polynomial K] [":="] [expr p.sum (λ i, monomial i)] ["with", ident hf0],
+  have [ident f_def] [":", expr ∀ i : fin _, «expr = »(f.coeff i, p i)] [],
+  { intro [ident i],
+    simp [] [] ["only"] ["[", expr f, ",", expr finsupp.sum, ",", expr coeff_monomial, ",", expr finset_sum_coeff, "]"] [] [],
+    rw ["[", expr finset.sum_eq_single, ",", expr if_pos rfl, "]"] [],
+    { intros [ident b, "_", ident hb],
+      rw [expr if_neg (mt (λ h, _) hb)] [],
+      exact [expr fin.coe_injective h] },
+    { intro [ident hi],
+      split_ifs [] []; { exact [expr finsupp.not_mem_support_iff.mp hi] } } },
+  have [ident f_def'] [":", expr ∀ i, «expr = »(f.coeff i, if hi : «expr < »(i, _) then p ⟨i, hi⟩ else 0)] [],
+  { intro [ident i],
+    split_ifs [] ["with", ident hi],
+    { exact [expr f_def ⟨i, hi⟩] },
+    simp [] [] ["only"] ["[", expr f, ",", expr finsupp.sum, ",", expr coeff_monomial, ",", expr finset_sum_coeff, "]"] [] [],
+    apply [expr finset.sum_eq_zero],
+    rintro ["⟨", ident j, ",", ident hj, "⟩", "-"],
+    apply [expr if_neg (mt _ hi)],
+    rintro [ident rfl],
+    exact [expr hj] },
+  suffices [] [":", expr «expr = »(f, 0)],
+  { ext [] [ident i] [],
+    rw ["[", "<-", expr f_def, ",", expr this, ",", expr coeff_zero, ",", expr finsupp.zero_apply, "]"] [] },
+  contrapose [] [ident hp, "with", ident hf],
+  intro [ident h],
+  have [] [":", expr «expr ≤ »((minpoly K x).degree, f.degree)] [],
+  { apply [expr minpoly.degree_le_of_ne_zero K x hf],
+    convert [] [expr h] [],
+    simp_rw ["[", expr finsupp.total_apply, ",", expr aeval_def, ",", expr hf0, ",", expr finsupp.sum, ",", expr eval₂_finset_sum, "]"] [],
+    apply [expr finset.sum_congr rfl],
+    rintro [ident i, "-"],
+    simp [] [] ["only"] ["[", expr algebra.smul_def, ",", expr eval₂_monomial, "]"] [] [] },
+  have [] [":", expr «expr¬ »(«expr ≤ »((minpoly K x).degree, f.degree))] [],
+  { apply [expr not_le_of_lt],
+    rw ["[", expr degree_eq_nat_degree (minpoly.ne_zero hx), ",", expr degree_lt_iff_coeff_zero, "]"] [],
+    intros [ident i, ident hi],
+    rw ["[", expr f_def' i, ",", expr dif_neg, "]"] [],
+    exact [expr hi.not_lt] },
+  contradiction
+end
 
-theorem IsIntegral.mem_span_pow [Nontrivial R] {x y : S} (hx : IsIntegral R x)
-  (hy : ∃ f : Polynomial R, y = aeval x f) :
-  y ∈ Submodule.span R (Set.Range fun i : Finₓ (minpoly R x).natDegree => x^(i : ℕ)) :=
-  by 
-    obtain ⟨f, rfl⟩ := hy 
-    apply mem_span_pow'.mpr _ 
-    have  := minpoly.monic hx 
-    refine' ⟨f.mod_by_monic (minpoly R x), lt_of_lt_of_leₓ (degree_mod_by_monic_lt _ this) degree_le_nat_degree, _⟩
-    convLHS => rw [←mod_by_monic_add_div f this]
-    simp only [add_zeroₓ, zero_mul, minpoly.aeval, aeval_add, AlgHom.map_mul]
+-- error in RingTheory.PowerBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_integral.mem_span_pow
+[nontrivial R]
+{x y : S}
+(hx : is_integral R x)
+(hy : «expr∃ , »((f : polynomial R), «expr = »(y, aeval x f))) : «expr ∈ »(y, submodule.span R (set.range (λ
+   i : fin (minpoly R x).nat_degree, «expr ^ »(x, (i : exprℕ()))))) :=
+begin
+  obtain ["⟨", ident f, ",", ident rfl, "⟩", ":=", expr hy],
+  apply [expr mem_span_pow'.mpr _],
+  have [] [] [":=", expr minpoly.monic hx],
+  refine [expr ⟨f.mod_by_monic (minpoly R x), lt_of_lt_of_le (degree_mod_by_monic_lt _ this) degree_le_nat_degree, _⟩],
+  conv_lhs [] [] { rw ["<-", expr mod_by_monic_add_div f this] },
+  simp [] [] ["only"] ["[", expr add_zero, ",", expr zero_mul, ",", expr minpoly.aeval, ",", expr aeval_add, ",", expr alg_hom.map_mul, "]"] [] []
+end
 
 namespace PowerBasis
 

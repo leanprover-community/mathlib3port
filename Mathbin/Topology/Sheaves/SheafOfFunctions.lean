@@ -1,7 +1,6 @@
-import Mathbin.Topology.Sheaves.PresheafOfFunctions 
-import Mathbin.Topology.Sheaves.SheafCondition.UniqueGluing 
 import Mathbin.CategoryTheory.Limits.Shapes.Types 
-import Mathbin.Topology.LocalHomeomorph
+import Mathbin.Topology.Sheaves.PresheafOfFunctions 
+import Mathbin.Topology.Sheaves.SheafCondition.UniqueGluing
 
 /-!
 # Sheaf conditions for presheaves of (continuous) functions.

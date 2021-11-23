@@ -116,12 +116,14 @@ theorem finprod_eq_prod_plift_of_mul_support_subset {f : α → M} {s : Finset (
         rw [finite.mem_to_finset] at hx 
         exact hs hx
 
-@[simp, toAdditive]
-theorem finprod_one : (∏ᶠi : α, (1 : M)) = 1 :=
-  by 
-    have  : (mul_support fun x : Plift α => (fun _ => 1 : α → M) x.down) ⊆ (∅ : Finset (Plift α))
-    exact fun x h => h rfl 
-    rw [finprod_eq_prod_plift_of_mul_support_subset this, Finset.prod_empty]
+-- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp, to_additive #[]] theorem finprod_one : «expr = »(«expr∏ᶠ , »((i : α), (1 : M)), 1) :=
+begin
+  have [] [":", expr «expr ⊆ »(mul_support (λ
+     x : plift α, (λ _, 1 : α → M) x.down), («expr∅»() : finset (plift α)))] [],
+  from [expr λ x h, h rfl],
+  rw ["[", expr finprod_eq_prod_plift_of_mul_support_subset this, ",", expr finset.prod_empty, "]"] []
+end
 
 @[toAdditive]
 theorem finprod_of_is_empty [IsEmpty α] (f : α → M) : (∏ᶠi, f i) = 1 :=
@@ -133,15 +135,19 @@ theorem finprod_of_is_empty [IsEmpty α] (f : α → M) : (∏ᶠi, f i) = 1 :=
 theorem finprod_false (f : False → M) : (∏ᶠi, f i) = 1 :=
   finprod_of_is_empty _
 
-@[toAdditive]
-theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ x _ : x ≠ a, f x = 1) : (∏ᶠx, f x) = f a :=
-  by 
-    have  : mul_support (f ∘ Plift.down) ⊆ ({Plift.up a} : Finset (Plift α))
-    ·
-      intro x 
-      contrapose 
-      simpa [Plift.eq_up_iff_down_eq] using ha x.down 
-    rw [finprod_eq_prod_plift_of_mul_support_subset this, Finset.prod_singleton]
+-- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem finprod_eq_single
+(f : α → M)
+(a : α)
+(ha : ∀ x «expr ≠ » a, «expr = »(f x, 1)) : «expr = »(«expr∏ᶠ , »((x), f x), f a) :=
+begin
+  have [] [":", expr «expr ⊆ »(mul_support «expr ∘ »(f, plift.down), ({plift.up a} : finset (plift α)))] [],
+  { intro [ident x],
+    contrapose [] [],
+    simpa [] [] [] ["[", expr plift.eq_up_iff_down_eq, "]"] [] ["using", expr ha x.down] },
+  rw ["[", expr finprod_eq_prod_plift_of_mul_support_subset this, ",", expr finset.prod_singleton, "]"] []
+end
 
 @[toAdditive]
 theorem finprod_unique [Unique α] (f : α → M) : (∏ᶠi, f i) = f (default α) :=
@@ -151,16 +157,19 @@ theorem finprod_unique [Unique α] (f : α → M) : (∏ᶠi, f i) = f (default 
 theorem finprod_true (f : True → M) : (∏ᶠi, f i) = f trivialₓ :=
   @finprod_unique M True _ ⟨⟨trivialₓ⟩, fun _ => rfl⟩ f
 
-@[toAdditive]
-theorem finprod_eq_dif {p : Prop} [Decidable p] (f : p → M) : (∏ᶠi, f i) = if h : p then f h else 1 :=
-  by 
-    splitIfs
-    ·
-      haveI  : Unique p := ⟨⟨h⟩, fun _ => rfl⟩
-      exact finprod_unique f
-    ·
-      haveI  : IsEmpty p := ⟨h⟩
-      exact finprod_of_is_empty f
+-- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem finprod_eq_dif
+{p : exprProp()}
+[decidable p]
+(f : p → M) : «expr = »(«expr∏ᶠ , »((i), f i), if h : p then f h else 1) :=
+begin
+  split_ifs [] [],
+  { haveI [] [":", expr unique p] [":=", expr ⟨⟨h⟩, λ _, rfl⟩],
+    exact [expr finprod_unique f] },
+  { haveI [] [":", expr is_empty p] [":=", expr ⟨h⟩],
+    exact [expr finprod_of_is_empty f] }
+end
 
 @[toAdditive]
 theorem finprod_eq_if {p : Prop} [Decidable p] {x : M} : (∏ᶠi : p, x) = if p then x else 1 :=
@@ -179,21 +188,15 @@ theorem finprod_congr_Prop {p q : Prop} {f : p → M} {g : q → M} (hpq : p = q
 
 attribute [congr] finsum_congr_Prop
 
--- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- To prove a property of a finite product, it suffices to prove that the property is
 multiplicative and holds on multipliers. -/
-@[to_additive #[]]
-theorem finprod_induction
-{f : α → M}
-(p : M → exprProp())
-(hp₀ : p 1)
-(hp₁ : ∀ x y, p x → p y → p «expr * »(x, y))
-(hp₂ : ∀ i, p (f i)) : p «expr∏ᶠ , »((i), f i) :=
-begin
-  rw [expr finprod] [],
-  split_ifs [] [],
-  exacts ["[", expr finset.prod_induction _ _ hp₁ hp₀ (λ i hi, hp₂ _), ",", expr hp₀, "]"]
-end
+@[toAdditive]
+theorem finprod_induction {f : α → M} (p : M → Prop) (hp₀ : p 1) (hp₁ : ∀ x y, p x → p y → p (x*y))
+  (hp₂ : ∀ i, p (f i)) : p (∏ᶠi, f i) :=
+  by 
+    rw [finprod]
+    splitIfs 
+    exacts[Finset.prod_induction _ _ hp₁ hp₀ fun i hi => hp₂ _, hp₀]
 
 /-- To prove a property of a finite sum, it suffices to prove that the property is
 additive and holds on summands. -/
@@ -219,18 +222,15 @@ theorem MonoidHom.map_finprod_plift (f : M →* N) (g : α → M) (h : finite (m
 theorem MonoidHom.map_finprod_Prop {p : Prop} (f : M →* N) (g : p → M) : f (∏ᶠx, g x) = ∏ᶠx, f (g x) :=
   f.map_finprod_plift g (finite.of_fintype _)
 
--- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-@[to_additive #[]]
-theorem monoid_hom.map_finprod_of_preimage_one
-(f : «expr →* »(M, N))
-(hf : ∀ x, «expr = »(f x, 1) → «expr = »(x, 1))
-(g : α → M) : «expr = »(f «expr∏ᶠ , »((i), g i), «expr∏ᶠ , »((i), f (g i))) :=
-begin
-  by_cases [expr hg, ":", expr «expr $ »(mul_support, «expr ∘ »(g, plift.down)).finite],
-  { exact [expr f.map_finprod_plift g hg] },
-  rw ["[", expr finprod, ",", expr dif_neg, ",", expr f.map_one, ",", expr finprod, ",", expr dif_neg, "]"] [],
-  exacts ["[", expr infinite.mono (λ x hx, mt (hf (g x.down)) hx) hg, ",", expr hg, "]"]
-end
+@[toAdditive]
+theorem MonoidHom.map_finprod_of_preimage_one (f : M →* N) (hf : ∀ x, f x = 1 → x = 1) (g : α → M) :
+  f (∏ᶠi, g i) = ∏ᶠi, f (g i) :=
+  by 
+    byCases' hg : (mul_support$ g ∘ Plift.down).Finite
+    ·
+      exact f.map_finprod_plift g hg 
+    rw [finprod, dif_neg, f.map_one, finprod, dif_neg]
+    exacts[infinite.mono (fun x hx => mt (hf (g x.down)) hx) hg, hg]
 
 @[toAdditive]
 theorem MonoidHom.map_finprod_of_injective (g : M →* N) (hg : injective g) (f : α → M) : g (∏ᶠi, f i) = ∏ᶠi, g (f i) :=
@@ -282,20 +282,22 @@ theorem finprod_mem_mul_support (f : α → M) (a : α) : (∏ᶠh : f a ≠ 1, 
 theorem finprod_mem_def (s : Set α) (f : α → M) : (∏ᶠ(a : _)(_ : a ∈ s), f a) = ∏ᶠa, mul_indicator s f a :=
   finprod_congr$ finprod_eq_mul_indicator_apply s f
 
-@[toAdditive]
-theorem finprod_eq_prod_of_mul_support_subset (f : α → M) {s : Finset α} (h : mul_support f ⊆ s) :
-  (∏ᶠi, f i) = ∏i in s, f i :=
-  by 
-    have A : mul_support (f ∘ Plift.down) = equiv.plift.symm '' mul_support f
-    ·
-      rw [mul_support_comp_eq_preimage]
-      exact (equiv.plift.symm.image_eq_preimage _).symm 
-    have  : mul_support (f ∘ Plift.down) ⊆ s.map equiv.plift.symm.to_embedding
-    ·
-      rw [A, Finset.coe_map]
-      exact image_subset _ h 
-    rw [finprod_eq_prod_plift_of_mul_support_subset this]
-    simp 
+-- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem finprod_eq_prod_of_mul_support_subset
+(f : α → M)
+{s : finset α}
+(h : «expr ⊆ »(mul_support f, s)) : «expr = »(«expr∏ᶠ , »((i), f i), «expr∏ in , »((i), s, f i)) :=
+begin
+  have [ident A] [":", expr «expr = »(mul_support «expr ∘ »(f, plift.down), «expr '' »(equiv.plift.symm, mul_support f))] [],
+  { rw [expr mul_support_comp_eq_preimage] [],
+    exact [expr (equiv.plift.symm.image_eq_preimage _).symm] },
+  have [] [":", expr «expr ⊆ »(mul_support «expr ∘ »(f, plift.down), s.map equiv.plift.symm.to_embedding)] [],
+  { rw ["[", expr A, ",", expr finset.coe_map, "]"] [],
+    exact [expr image_subset _ h] },
+  rw ["[", expr finprod_eq_prod_plift_of_mul_support_subset this, "]"] [],
+  simp [] [] [] [] [] []
+end
 
 @[toAdditive]
 theorem finprod_eq_prod_of_mul_support_to_finset_subset (f : α → M) (hf : finite (mul_support f)) {s : Finset α}
@@ -330,20 +332,26 @@ theorem finprod_eq_prod (f : α → M) (hf : (mul_support f).Finite) : (∏ᶠi 
 theorem finprod_eq_prod_of_fintype [Fintype α] (f : α → M) : (∏ᶠi : α, f i) = ∏i, f i :=
   finprod_eq_prod_of_mul_support_to_finset_subset _ (finite.of_fintype _)$ Finset.subset_univ _
 
-@[toAdditive]
-theorem finprod_cond_eq_prod_of_cond_iff (f : α → M) {p : α → Prop} {t : Finset α}
-  (h : ∀ {x}, f x ≠ 1 → (p x ↔ x ∈ t)) : (∏ᶠ(i : _)(hi : p i), f i) = ∏i in t, f i :=
-  by 
-    set s := { x | p x }
-    have  : mul_support (s.mul_indicator f) ⊆ t
-    ·
-      rw [Set.mul_support_mul_indicator]
-      intro x hx 
-      exact (h hx.2).1 hx.1 
-    erw [finprod_mem_def, finprod_eq_prod_of_mul_support_subset _ this]
-    refine' Finset.prod_congr rfl fun x hx => mul_indicator_apply_eq_self.2$ fun hxs => _ 
-    contrapose! hxs 
-    exact (h hxs).2 hx
+-- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem finprod_cond_eq_prod_of_cond_iff
+(f : α → M)
+{p : α → exprProp()}
+{t : finset α}
+(h : ∀
+ {x}, «expr ≠ »(f x, 1) → «expr ↔ »(p x, «expr ∈ »(x, t))) : «expr = »(«expr∏ᶠ , »((i)
+  (hi : p i), f i), «expr∏ in , »((i), t, f i)) :=
+begin
+  set [] [ident s] [] [":="] [expr {x | p x}] [],
+  have [] [":", expr «expr ⊆ »(mul_support (s.mul_indicator f), t)] [],
+  { rw ["[", expr set.mul_support_mul_indicator, "]"] [],
+    intros [ident x, ident hx],
+    exact [expr (h hx.2).1 hx.1] },
+  erw ["[", expr finprod_mem_def, ",", expr finprod_eq_prod_of_mul_support_subset _ this, "]"] [],
+  refine [expr finset.prod_congr rfl (λ x hx, «expr $ »(mul_indicator_apply_eq_self.2, λ hxs, _))],
+  contrapose ["!"] [ident hxs],
+  exact [expr (h hxs).2 hx]
+end
 
 @[toAdditive]
 theorem finprod_mem_eq_prod_of_inter_mul_support_eq (f : α → M) {s : Set α} {t : Finset α}
@@ -471,17 +479,14 @@ theorem finprod_mem_of_eq_on_one (hf : eq_on f 1 s) : (∏ᶠ(i : _)(_ : i ∈ s
     rw [←finprod_mem_one s]
     exact finprod_mem_congr rfl hf
 
--- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If the product of `f i` over `i ∈ s` is not equal to one, then there is some `x ∈ s`
 such that `f x ≠ 1`. -/
-@[to_additive #[]]
-theorem exists_ne_one_of_finprod_mem_ne_one
-(h : «expr ≠ »(«expr∏ᶠ , »((i «expr ∈ » s), f i), 1)) : «expr∃ , »((x «expr ∈ » s), «expr ≠ »(f x, 1)) :=
-begin
-  by_contra [ident h'],
-  push_neg ["at", ident h'],
-  exact [expr h (finprod_mem_of_eq_on_one h')]
-end
+@[toAdditive]
+theorem exists_ne_one_of_finprod_mem_ne_one (h : (∏ᶠ(i : _)(_ : i ∈ s), f i) ≠ 1) : ∃ (x : _)(_ : x ∈ s), f x ≠ 1 :=
+  by 
+    byContra h' 
+    pushNeg  at h' 
+    exact h (finprod_mem_of_eq_on_one h')
 
 /-- Given a finite set `s`, the product of `f i * g i` over `i ∈ s` equals the product of `f i`
 over `i ∈ s` times the product of `g i` over `i ∈ s`. -/
@@ -614,17 +619,15 @@ theorem finprod_mem_insert (f : α → M) (h : a ∉ s) (hs : s.finite) :
   (∏ᶠ(i : _)(_ : i ∈ insert a s), f i) = f a*∏ᶠ(i : _)(_ : i ∈ s), f i :=
   finprod_mem_insert' f h$ hs.inter_of_left _
 
--- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If `f a = 1` for all `a ∉ s`, then the product of `f i` over `i ∈ insert a s` equals the
 product of `f i` over `i ∈ s`. -/
-@[to_additive #[]]
-theorem finprod_mem_insert_of_eq_one_if_not_mem
-(h : «expr ∉ »(a, s) → «expr = »(f a, 1)) : «expr = »(«expr∏ᶠ , »((i «expr ∈ » insert a s), f i), «expr∏ᶠ , »((i «expr ∈ » s), f i)) :=
-begin
-  refine [expr finprod_mem_inter_mul_support_eq' _ _ _ (λ x hx, ⟨_, or.inr⟩)],
-  rintro ["(", ident rfl, "|", ident hxs, ")"],
-  exacts ["[", expr not_imp_comm.1 h hx, ",", expr hxs, "]"]
-end
+@[toAdditive]
+theorem finprod_mem_insert_of_eq_one_if_not_mem (h : a ∉ s → f a = 1) :
+  (∏ᶠ(i : _)(_ : i ∈ insert a s), f i) = ∏ᶠ(i : _)(_ : i ∈ s), f i :=
+  by 
+    refine' finprod_mem_inter_mul_support_eq' _ _ _ fun x hx => ⟨_, Or.inr⟩
+    rintro (rfl | hxs)
+    exacts[not_imp_comm.1 h hx, hxs]
 
 /-- If `f a = 1`, then the product of `f i` over `i ∈ insert a s` equals the product of `f i` over
 `i ∈ s`. -/
@@ -644,32 +647,34 @@ theorem finprod_mem_dvd {f : α → N} (a : α) (hf : finite (mul_support f)) : 
       rw [nmem_mul_support.mp ha]
       exact one_dvd (finprod f)
 
--- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- The product of `f i` over `i ∈ {a, b}`, `a ≠ b`, is equal to `f a * f b`. -/
-@[to_additive #[]]
-theorem finprod_mem_pair
-(h : «expr ≠ »(a, b)) : «expr = »(«expr∏ᶠ , »((i «expr ∈ » ({a, b} : set α)), f i), «expr * »(f a, f b)) :=
-by { rw ["[", expr finprod_mem_insert, ",", expr finprod_mem_singleton, "]"] [],
-  exacts ["[", expr h, ",", expr finite_singleton b, "]"] }
+@[toAdditive]
+theorem finprod_mem_pair (h : a ≠ b) : (∏ᶠ(i : _)(_ : i ∈ ({a, b} : Set α)), f i) = f a*f b :=
+  by 
+    rw [finprod_mem_insert, finprod_mem_singleton]
+    exacts[h, finite_singleton b]
 
+-- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of `f y` over `y ∈ g '' s` equals the product of `f (g i)` over `s`
 provided that `g` is injective on `s ∩ mul_support (f ∘ g)`. -/
-@[toAdditive]
-theorem finprod_mem_image' {s : Set β} {g : β → α} (hg : Set.InjOn g (s ∩ mul_support (f ∘ g))) :
-  (∏ᶠ(i : _)(_ : i ∈ g '' s), f i) = ∏ᶠ(j : _)(_ : j ∈ s), f (g j) :=
-  by 
-    classical 
-    byCases' hs : finite (s ∩ mul_support (f ∘ g))
-    ·
-      have hg : ∀ x _ : x ∈ hs.to_finset y _ : y ∈ hs.to_finset, g x = g y → x = y
-      ·
-        simpa only [hs.mem_to_finset]
-      rw [finprod_mem_eq_prod _ hs, ←Finset.prod_image hg]
-      refine' finprod_mem_eq_prod_of_inter_mul_support_eq f _ 
-      rw [Finset.coe_image, hs.coe_to_finset, ←image_inter_mul_support_eq, inter_assoc, inter_self]
-    ·
-      rw [finprod_mem_eq_one_of_infinite hs, finprod_mem_eq_one_of_infinite]
-      rwa [image_inter_mul_support_eq, infinite_image_iff hg]
+@[to_additive #[]]
+theorem finprod_mem_image'
+{s : set β}
+{g : β → α}
+(hg : set.inj_on g «expr ∩ »(s, mul_support «expr ∘ »(f, g))) : «expr = »(«expr∏ᶠ , »((i «expr ∈ » «expr '' »(g, s)), f i), «expr∏ᶠ , »((j «expr ∈ » s), f (g j))) :=
+begin
+  classical,
+  by_cases [expr hs, ":", expr finite «expr ∩ »(s, mul_support «expr ∘ »(f, g))],
+  { have [ident hg] [":", expr ∀
+     (x «expr ∈ » hs.to_finset)
+     (y «expr ∈ » hs.to_finset), «expr = »(g x, g y) → «expr = »(x, y)] [],
+    by simpa [] [] ["only"] ["[", expr hs.mem_to_finset, "]"] [] [],
+    rw ["[", expr finprod_mem_eq_prod _ hs, ",", "<-", expr finset.prod_image hg, "]"] [],
+    refine [expr finprod_mem_eq_prod_of_inter_mul_support_eq f _],
+    rw ["[", expr finset.coe_image, ",", expr hs.coe_to_finset, ",", "<-", expr image_inter_mul_support_eq, ",", expr inter_assoc, ",", expr inter_self, "]"] [] },
+  { rw ["[", expr finprod_mem_eq_one_of_infinite hs, ",", expr finprod_mem_eq_one_of_infinite, "]"] [],
+    rwa ["[", expr image_inter_mul_support_eq, ",", expr infinite_image_iff hg, "]"] [] }
+end
 
 /-- The product of `f y` over `y ∈ g '' s` equals the product of `f (g i)` over `s`
 provided that `g` is injective on `s`. -/
@@ -730,16 +735,12 @@ theorem finprod_set_coe_eq_finprod_mem (s : Set α) : (∏ᶠj : s, f j) = ∏�
 theorem finprod_subtype_eq_finprod_cond (p : α → Prop) : (∏ᶠj : Subtype p, f j) = ∏ᶠ(i : _)(hi : p i), f i :=
   finprod_set_coe_eq_finprod_mem { i | p i }
 
--- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-@[to_additive #[]]
-theorem finprod_mem_inter_mul_diff'
-(t : set α)
-(h : «expr ∩ »(s, mul_support f).finite) : «expr = »(«expr * »(«expr∏ᶠ , »((i «expr ∈ » «expr ∩ »(s, t)), f i), «expr∏ᶠ , »((i «expr ∈ » «expr \ »(s, t)), f i)), «expr∏ᶠ , »((i «expr ∈ » s), f i)) :=
-begin
-  rw ["[", "<-", expr finprod_mem_union', ",", expr inter_union_diff, "]"] [],
-  exacts ["[", expr λ
-   x hx, hx.2.2 hx.1.2, ",", expr h.subset (λ x hx, ⟨hx.1.1, hx.2⟩), ",", expr h.subset (λ x hx, ⟨hx.1.1, hx.2⟩), "]"]
-end
+@[toAdditive]
+theorem finprod_mem_inter_mul_diff' (t : Set α) (h : (s ∩ mul_support f).Finite) :
+  ((∏ᶠ(i : _)(_ : i ∈ s ∩ t), f i)*∏ᶠ(i : _)(_ : i ∈ s \ t), f i) = ∏ᶠ(i : _)(_ : i ∈ s), f i :=
+  by 
+    rw [←finprod_mem_union', inter_union_diff]
+    exacts[fun x hx => hx.2.2 hx.1.2, h.subset fun x hx => ⟨hx.1.1, hx.2⟩, h.subset fun x hx => ⟨hx.1.1, hx.2⟩]
 
 @[toAdditive]
 theorem finprod_mem_inter_mul_diff (t : Set α) (h : s.finite) :
@@ -776,7 +777,7 @@ theorem finprod_mem_Union [Fintype ι] {t : ι → Set α} (h : Pairwise (Disjoi
     ·
       exact fun x _ y _ hxy => Finset.disjoint_iff_disjoint_coe.2 (h x y hxy)
 
--- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a family of sets `t : ι → set α`, a finite set `I` in the index type such that all
 sets `t i`, `i ∈ I`, are finite, if all `t i`, `i ∈ I`, are pairwise disjoint, then
 the product of `f a` over `a ∈ ⋃ i ∈ I, t i` is equal to the product over `i ∈ I`
@@ -843,23 +844,28 @@ theorem finprod_eq_zero {M₀ : Type _} [CommMonoidWithZero M₀] (f : α → M�
     refine' Finset.prod_eq_zero (hf.mem_to_finset.2 _) hx 
     simp [hx]
 
-@[toAdditive]
-theorem finprod_prod_comm (s : Finset β) (f : α → β → M) (h : ∀ b _ : b ∈ s, (mul_support fun a => f a b).Finite) :
-  (∏ᶠa : α, ∏b in s, f a b) = ∏b in s, ∏ᶠa : α, f a b :=
-  by 
-    have hU :
-      (mul_support fun a => ∏b in s, f a b) ⊆ (s.finite_to_set.bUnion fun b hb => h b (Finset.mem_coe.1 hb)).toFinset
-    ·
-      rw [finite.coe_to_finset]
-      intro x hx 
-      simp only [exists_prop, mem_Union, Ne.def, mem_mul_support, Finset.mem_coe]
-      contrapose! hx 
-      rw [mem_mul_support, not_not, Finset.prod_congr rfl hx, Finset.prod_const_one]
-    rw [finprod_eq_prod_of_mul_support_subset _ hU, Finset.prod_comm]
-    refine' Finset.prod_congr rfl fun b hb => (finprod_eq_prod_of_mul_support_subset _ _).symm 
-    intro a ha 
-    simp only [finite.coe_to_finset, mem_Union]
-    exact ⟨b, hb, ha⟩
+-- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem finprod_prod_comm
+(s : finset β)
+(f : α → β → M)
+(h : ∀
+ b «expr ∈ » s, (mul_support (λ
+   a, f a b)).finite) : «expr = »(«expr∏ᶠ , »((a : α), «expr∏ in , »((b), s, f a b)), «expr∏ in , »((b), s, «expr∏ᶠ , »((a : α), f a b))) :=
+begin
+  have [ident hU] [":", expr «expr ⊆ »(mul_support (λ
+     a, «expr∏ in , »((b), s, f a b)), (s.finite_to_set.bUnion (λ b hb, h b (finset.mem_coe.1 hb))).to_finset)] [],
+  { rw [expr finite.coe_to_finset] [],
+    intros [ident x, ident hx],
+    simp [] [] ["only"] ["[", expr exists_prop, ",", expr mem_Union, ",", expr ne.def, ",", expr mem_mul_support, ",", expr finset.mem_coe, "]"] [] [],
+    contrapose ["!"] [ident hx],
+    rw ["[", expr mem_mul_support, ",", expr not_not, ",", expr finset.prod_congr rfl hx, ",", expr finset.prod_const_one, "]"] [] },
+  rw ["[", expr finprod_eq_prod_of_mul_support_subset _ hU, ",", expr finset.prod_comm, "]"] [],
+  refine [expr finset.prod_congr rfl (λ b hb, (finprod_eq_prod_of_mul_support_subset _ _).symm)],
+  intros [ident a, ident ha],
+  simp [] [] ["only"] ["[", expr finite.coe_to_finset, ",", expr mem_Union, "]"] [] [],
+  exact [expr ⟨b, hb, ha⟩]
+end
 
 @[toAdditive]
 theorem prod_finprod_comm (s : Finset α) (f : α → β → M) (h : ∀ a _ : a ∈ s, (mul_support (f a)).Finite) :
@@ -885,25 +891,30 @@ theorem Finset.mul_support_of_fiberwise_prod_subset_image [DecidableEq β] (s : 
       simpa only [s.fiber_nonempty_iff_mem_image g b, Finset.mem_image, exists_prop]
     exact Finset.nonempty_of_prod_ne_one h
 
+-- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Note that `b ∈ (s.filter (λ ab, prod.fst ab = a)).image prod.snd` iff `(a, b) ∈ s` so we can
 simplify the right hand side of this lemma. However the form stated here is more useful for
 iterating this lemma, e.g., if we have `f : α × β × γ → M`. -/
-@[toAdditive]
-theorem finprod_mem_finset_product' [DecidableEq α] [DecidableEq β] (s : Finset (α × β)) (f : α × β → M) :
-  (∏ᶠ(ab : _)(h : ab ∈ s), f ab) = ∏ᶠ(a b : _)(h : b ∈ (s.filter fun ab => Prod.fst ab = a).Image Prod.snd), f (a, b) :=
-  by 
-    have  :
-      ∀ a,
-        (∏i : β in (s.filter fun ab => Prod.fst ab = a).Image Prod.snd, f (a, i)) =
-          (Finset.filter (fun ab => Prod.fst ab = a) s).Prod f
-    ·
-      intro a 
-      apply Finset.prod_bij fun b _ => (a, b) <;> finish 
-    rw [finprod_mem_finset_eq_prod]
-    simpRw [finprod_mem_finset_eq_prod, this]
-    rw [finprod_eq_prod_of_mul_support_subset _ (s.mul_support_of_fiberwise_prod_subset_image f Prod.fst),
-      ←Finset.prod_fiberwise_of_maps_to _ f]
-    finish
+@[to_additive #[]]
+theorem finprod_mem_finset_product'
+[decidable_eq α]
+[decidable_eq β]
+(s : finset «expr × »(α, β))
+(f : «expr × »(α, β) → M) : «expr = »(«expr∏ᶠ , »((ab)
+  (h : «expr ∈ »(ab, s)), f ab), «expr∏ᶠ , »((a b)
+  (h : «expr ∈ »(b, (s.filter (λ ab, «expr = »(prod.fst ab, a))).image prod.snd)), f (a, b))) :=
+begin
+  have [] [":", expr ∀
+   a, «expr = »(«expr∏ in , »((i : β), (s.filter (λ
+       ab, «expr = »(prod.fst ab, a))).image prod.snd, f (a, i)), (finset.filter (λ
+      ab, «expr = »(prod.fst ab, a)) s).prod f)] [],
+  { intros [ident a],
+    apply [expr finset.prod_bij (λ b _, (a, b))]; finish [] [] },
+  rw [expr finprod_mem_finset_eq_prod] [],
+  simp_rw ["[", expr finprod_mem_finset_eq_prod, ",", expr this, "]"] [],
+  rw ["[", expr finprod_eq_prod_of_mul_support_subset _ (s.mul_support_of_fiberwise_prod_subset_image f prod.fst), ",", "<-", expr finset.prod_fiberwise_of_maps_to _ f, "]"] [],
+  finish [] []
+end
 
 /-- See also `finprod_mem_finset_product'`. -/
 @[toAdditive]
@@ -923,16 +934,19 @@ theorem finprod_mem_finset_product₃ {γ : Type _} (s : Finset (α × β × γ)
     simpRw [finprod_mem_finset_product']
     simp 
 
-@[toAdditive]
-theorem finprod_curry (f : α × β → M) (hf : (mul_support f).Finite) : (∏ᶠab, f ab) = ∏ᶠa b, f (a, b) :=
-  by 
-    have h₁ : ∀ a, (∏ᶠh : a ∈ hf.to_finset, f a) = f a
-    ·
-      simp 
-    have h₂ : (∏ᶠa, f a) = ∏ᶠ(a : _)(h : a ∈ hf.to_finset), f a
-    ·
-      simp 
-    simpRw [h₂, finprod_mem_finset_product, h₁]
+-- error in Algebra.BigOperators.Finprod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem finprod_curry
+(f : «expr × »(α, β) → M)
+(hf : (mul_support f).finite) : «expr = »(«expr∏ᶠ , »((ab), f ab), «expr∏ᶠ , »((a b), f (a, b))) :=
+begin
+  have [ident h₁] [":", expr ∀ a, «expr = »(«expr∏ᶠ , »((h : «expr ∈ »(a, hf.to_finset)), f a), f a)] [],
+  { simp [] [] [] [] [] [] },
+  have [ident h₂] [":", expr «expr = »(«expr∏ᶠ , »((a), f a), «expr∏ᶠ , »((a)
+     (h : «expr ∈ »(a, hf.to_finset)), f a))] [],
+  { simp [] [] [] [] [] [] },
+  simp_rw ["[", expr h₂, ",", expr finprod_mem_finset_product, ",", expr h₁, "]"] []
+end
 
 @[toAdditive]
 theorem finprod_curry₃ {γ : Type _} (f : α × β × γ → M) (h : (mul_support f).Finite) :

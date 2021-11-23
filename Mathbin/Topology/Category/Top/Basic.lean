@@ -1,6 +1,5 @@
-import Mathbin.CategoryTheory.ConcreteCategory.UnbundledHom 
-import Mathbin.Topology.ContinuousFunction.Basic 
-import Mathbin.Topology.Opens
+import Mathbin.CategoryTheory.ConcreteCategory.BundledHom 
+import Mathbin.Topology.ContinuousFunction.Basic
 
 /-!
 # Category instance for topological spaces
@@ -27,7 +26,7 @@ namespace Top
 instance bundled_hom : bundled_hom @ContinuousMap :=
   ⟨@ContinuousMap.toFun, @ContinuousMap.id, @ContinuousMap.comp, @ContinuousMap.coe_inj⟩
 
--- error in Topology.Category.Top.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Topology.Category.Top.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Top
 
 instance  : CoeSort Top (Type _) :=

@@ -30,6 +30,14 @@ theorem exists' {p : α → β → Prop} : (∃ x : α × β, p x.1 x.2) ↔ ∃
   Prod.exists
 
 @[simp]
+theorem snd_comp_mk (x : α) : Prod.snd ∘ (Prod.mk x : β → α × β) = id :=
+  rfl
+
+@[simp]
+theorem fst_comp_mk (x : α) : Prod.fst ∘ (Prod.mk x : β → α × β) = Function.const β x :=
+  rfl
+
+@[simp]
 theorem map_mk (f : α → γ) (g : β → δ) (a : α) (b : β) : map f g (a, b) = (f a, g b) :=
   rfl
 

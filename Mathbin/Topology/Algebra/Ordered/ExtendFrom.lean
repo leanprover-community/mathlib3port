@@ -73,11 +73,23 @@ theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrderₓ 
       ·
         use f x, hf x h
 
-theorem continuous_on_Ioc_extend_from_Ioo [TopologicalSpace α] [LinearOrderₓ α] [DenselyOrdered α] [OrderTopology α]
-  [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {lb : β} (hab : a < b) (hf : ContinuousOn f (Ioo a b))
-  (hb : tendsto f (𝓝[Iio b] b) (𝓝 lb)) : ContinuousOn (extendFrom (Ioo a b) f) (Ioc a b) :=
-  by 
-    have  := @continuous_on_Ico_extend_from_Ioo (OrderDual α) _ _ _ _ _ _ _ f _ _ _ hab 
-    erw [dual_Ico, dual_Ioi, dual_Ioo] at this 
-    exact this hf hb
+-- error in Topology.Algebra.Ordered.ExtendFrom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_on_Ioc_extend_from_Ioo
+[topological_space α]
+[linear_order α]
+[densely_ordered α]
+[order_topology α]
+[topological_space β]
+[regular_space β]
+{f : α → β}
+{a b : α}
+{lb : β}
+(hab : «expr < »(a, b))
+(hf : continuous_on f (Ioo a b))
+(hb : tendsto f «expr𝓝[ ] »(Iio b, b) (expr𝓝() lb)) : continuous_on (extend_from (Ioo a b) f) (Ioc a b) :=
+begin
+  have [] [] [":=", expr @continuous_on_Ico_extend_from_Ioo (order_dual α) _ _ _ _ _ _ _ f _ _ _ hab],
+  erw ["[", expr dual_Ico, ",", expr dual_Ioi, ",", expr dual_Ioo, "]"] ["at", ident this],
+  exact [expr this hf hb]
+end
 

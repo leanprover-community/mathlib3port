@@ -178,16 +178,11 @@ theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → _root_.
       rintro X O' nm ⟨S', w'⟩
       use max X S' 
       rintro Y mY 
-      byCases' h : X = Y
+      obtain rfl | h := eq_or_ne Y X
       ·
-        subst h 
         exact ⟨left_to_max _ _⟩
       ·
-        exact
-          ⟨(w'
-                  (by 
-                    finish)).some ≫
-              right_to_max _ _⟩
+        exact ⟨(w' (Finset.mem_of_mem_insert_of_ne mY h)).some ≫ right_to_max _ _⟩
 
 variable(O : Finset C)(H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 
@@ -586,16 +581,11 @@ theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → _root_.
       rintro X O' nm ⟨S', w'⟩
       use min X S' 
       rintro Y mY 
-      byCases' h : X = Y
+      obtain rfl | h := eq_or_ne Y X
       ·
-        subst h 
         exact ⟨min_to_left _ _⟩
       ·
-        exact
-          ⟨min_to_right _ _ ≫
-              (w'
-                  (by 
-                    finish)).some⟩
+        exact ⟨min_to_right _ _ ≫ (w' (Finset.mem_of_mem_insert_of_ne mY h)).some⟩
 
 variable(O : Finset C)(H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 

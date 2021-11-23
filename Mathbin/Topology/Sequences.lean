@@ -234,7 +234,7 @@ open UniformSpace Prod
 
 variable[UniformSpace β]{s : Set β}
 
--- error in Topology.Sequences: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.Sequences: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lebesgue_number_lemma_seq
 {ι : Type*}
 [is_countably_generated (expr𝓤() β)]
@@ -292,63 +292,68 @@ begin
     «expr ⊆ »(..., c i₀) : hn₀
 end
 
-theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s :=
-  by 
-    classical 
-    apply totally_bounded_of_forall_symm 
-    unfold IsSeqCompact  at h 
-    contrapose! h 
-    rcases h with ⟨V, V_in, V_symm, h⟩
-    simpRw [not_subset]  at h 
-    have  : ∀ t : Set β, finite t → ∃ a, a ∈ s ∧ a ∉ ⋃(y : _)(_ : y ∈ t), ball y V
-    ·
-      intro t ht 
-      obtain ⟨a, a_in, H⟩ : ∃ (a : _)(_ : a ∈ s), ∀ x : β, x ∈ t → (x, a) ∉ V
-      ·
-        simpa [ht] using h t 
-      use a, a_in 
-      intro H' 
-      obtain ⟨x, x_in, hx⟩ := mem_bUnion_iff.mp H' 
-      exact H x x_in hx 
-    cases' seq_of_forall_finite_exists this with u hu 
-    clear h this 
-    simp [forall_and_distrib] at hu 
-    cases' hu with u_in hu 
-    use u, u_in 
-    clear u_in 
-    intro x x_in φ 
-    intro hφ huφ 
-    obtain ⟨N, hN⟩ : ∃ N, ∀ p q, p ≥ N → q ≥ N → (u (φ p), u (φ q)) ∈ V 
-    exact huφ.cauchy_seq.mem_entourage V_in 
-    specialize hN N (N+1) (le_reflₓ N) (Nat.le_succₓ N)
-    specialize hu (φ$ N+1) (φ N) (hφ$ lt_add_one N)
-    exact hu hN
+-- error in Topology.Sequences: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_seq_compact.totally_bounded (h : is_seq_compact s) : totally_bounded s :=
+begin
+  classical,
+  apply [expr totally_bounded_of_forall_symm],
+  unfold [ident is_seq_compact] ["at", ident h],
+  contrapose ["!"] [ident h],
+  rcases [expr h, "with", "⟨", ident V, ",", ident V_in, ",", ident V_symm, ",", ident h, "⟩"],
+  simp_rw ["[", expr not_subset, "]"] ["at", ident h],
+  have [] [":", expr ∀
+   t : set β, finite t → «expr∃ , »((a), «expr ∧ »(«expr ∈ »(a, s), «expr ∉ »(a, «expr⋃ , »((y «expr ∈ » t), ball y V))))] [],
+  { intros [ident t, ident ht],
+    obtain ["⟨", ident a, ",", ident a_in, ",", ident H, "⟩", ":", expr «expr∃ , »((a «expr ∈ » s), ∀
+      x : β, «expr ∈ »(x, t) → «expr ∉ »((x, a), V))],
+    by simpa [] [] [] ["[", expr ht, "]"] [] ["using", expr h t],
+    use ["[", expr a, ",", expr a_in, "]"],
+    intro [ident H'],
+    obtain ["⟨", ident x, ",", ident x_in, ",", ident hx, "⟩", ":=", expr mem_bUnion_iff.mp H'],
+    exact [expr H x x_in hx] },
+  cases [expr seq_of_forall_finite_exists this] ["with", ident u, ident hu],
+  clear [ident h, ident this],
+  simp [] [] [] ["[", expr forall_and_distrib, "]"] [] ["at", ident hu],
+  cases [expr hu] ["with", ident u_in, ident hu],
+  use ["[", expr u, ",", expr u_in, "]"],
+  clear [ident u_in],
+  intros [ident x, ident x_in, ident φ],
+  intros [ident hφ, ident huφ],
+  obtain ["⟨", ident N, ",", ident hN, "⟩", ":", expr «expr∃ , »((N), ∀
+    p q, «expr ≥ »(p, N) → «expr ≥ »(q, N) → «expr ∈ »((u (φ p), u (φ q)), V))],
+  from [expr huφ.cauchy_seq.mem_entourage V_in],
+  specialize [expr hN N «expr + »(N, 1) (le_refl N) (nat.le_succ N)],
+  specialize [expr hu «expr $ »(φ, «expr + »(N, 1)) (φ N) «expr $ »(hφ, lt_add_one N)],
+  exact [expr hu hN]
+end
 
-protected theorem IsSeqCompact.is_compact [is_countably_generated$ 𝓤 β] (hs : IsSeqCompact s) : IsCompact s :=
-  by 
-    classical 
-    rw [is_compact_iff_finite_subcover]
-    intro ι U Uop s_sub 
-    rcases lebesgue_number_lemma_seq hs Uop s_sub with ⟨V, V_in, Vsymm, H⟩
-    rcases totally_bounded_iff_subset.mp hs.totally_bounded V V_in with ⟨t, t_sub, tfin, ht⟩
-    have  : ∀ x : t, ∃ i : ι, ball x.val V ⊆ U i
-    ·
-      rintro ⟨x, x_in⟩
-      exact H x (t_sub x_in)
-    choose i hi using this 
-    haveI  : Fintype t := tfin.fintype 
-    use Finset.image i Finset.univ 
-    trans ⋃(y : _)(_ : y ∈ t), ball y V
-    ·
-      intro x x_in 
-      specialize ht x_in 
-      rw [mem_bUnion_iff] at *
-      simpRw [ball_eq_of_symmetry Vsymm]
-      exact ht
-    ·
-      apply bUnion_subset_bUnion 
-      intro x x_in 
-      exact ⟨i ⟨x, x_in⟩, Finset.mem_image_of_mem _ (Finset.mem_univ _), hi ⟨x, x_in⟩⟩
+-- error in Topology.Sequences: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem is_seq_compact.is_compact
+[«expr $ »(is_countably_generated, expr𝓤() β)]
+(hs : is_seq_compact s) : is_compact s :=
+begin
+  classical,
+  rw [expr is_compact_iff_finite_subcover] [],
+  intros [ident ι, ident U, ident Uop, ident s_sub],
+  rcases [expr lebesgue_number_lemma_seq hs Uop s_sub, "with", "⟨", ident V, ",", ident V_in, ",", ident Vsymm, ",", ident H, "⟩"],
+  rcases [expr totally_bounded_iff_subset.mp hs.totally_bounded V V_in, "with", "⟨", ident t, ",", ident t_sub, ",", ident tfin, ",", ident ht, "⟩"],
+  have [] [":", expr ∀ x : t, «expr∃ , »((i : ι), «expr ⊆ »(ball x.val V, U i))] [],
+  { rintros ["⟨", ident x, ",", ident x_in, "⟩"],
+    exact [expr H x (t_sub x_in)] },
+  choose [] [ident i] [ident hi] ["using", expr this],
+  haveI [] [":", expr fintype t] [":=", expr tfin.fintype],
+  use [expr finset.image i finset.univ],
+  transitivity [expr «expr⋃ , »((y «expr ∈ » t), ball y V)],
+  { intros [ident x, ident x_in],
+    specialize [expr ht x_in],
+    rw [expr mem_bUnion_iff] ["at", "*"],
+    simp_rw [expr ball_eq_of_symmetry Vsymm] [],
+    exact [expr ht] },
+  { apply [expr bUnion_subset_bUnion],
+    intros [ident x, ident x_in],
+    exact [expr ⟨i ⟨x, x_in⟩, finset.mem_image_of_mem _ (finset.mem_univ _), hi ⟨x, x_in⟩⟩] }
+end
 
 /-- A version of Bolzano-Weistrass: in a uniform space with countably generated uniformity filter
 (e.g., in a metric space), a set is compact if and only if it is sequentially compact. -/
@@ -368,23 +373,25 @@ variable[MetricSpace β]{s : Set β}
 
 open Metric
 
+-- error in Topology.Sequences: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A version of Bolzano-Weistrass: in a proper metric space (eg. $ℝ^n$),
 every bounded sequence has a converging subsequence. This version assumes only
 that the sequence is frequently in some bounded set. -/
-theorem tendsto_subseq_of_frequently_bounded [ProperSpace β] (hs : Bounded s) {u : ℕ → β}
-  (hu : ∃ᶠn in at_top, u n ∈ s) :
-  ∃ (b : _)(_ : b ∈ Closure s), ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto (u ∘ φ) at_top (𝓝 b) :=
-  by 
-    have hcs : IsCompact (Closure s) :=
-      compact_iff_closed_bounded.mpr ⟨is_closed_closure, bounded_closure_of_bounded hs⟩
-    replace hcs : IsSeqCompact (Closure s)
-    exact uniform_space.compact_iff_seq_compact.mp hcs 
-    have hu' : ∃ᶠn in at_top, u n ∈ Closure s
-    ·
-      apply frequently.mono hu 
-      intro n 
-      apply subset_closure 
-    exact hcs.subseq_of_frequently_in hu'
+theorem tendsto_subseq_of_frequently_bounded
+[proper_space β]
+(hs : bounded s)
+{u : exprℕ() → β}
+(hu : «expr∃ᶠ in , »((n), at_top, «expr ∈ »(u n, s))) : «expr∃ , »((b «expr ∈ » closure s), «expr∃ , »((φ : exprℕ() → exprℕ()), «expr ∧ »(strict_mono φ, tendsto «expr ∘ »(u, φ) at_top (expr𝓝() b)))) :=
+begin
+  have [ident hcs] [":", expr is_compact (closure s)] [":=", expr compact_iff_closed_bounded.mpr ⟨is_closed_closure, bounded_closure_of_bounded hs⟩],
+  replace [ident hcs] [":", expr is_seq_compact (closure s)] [],
+  from [expr uniform_space.compact_iff_seq_compact.mp hcs],
+  have [ident hu'] [":", expr «expr∃ᶠ in , »((n), at_top, «expr ∈ »(u n, closure s))] [],
+  { apply [expr frequently.mono hu],
+    intro [ident n],
+    apply [expr subset_closure] },
+  exact [expr hcs.subseq_of_frequently_in hu']
+end
 
 /-- A version of Bolzano-Weistrass: in a proper metric space (eg. $ℝ^n$),
 every bounded sequence has a converging subsequence. -/
@@ -392,18 +399,25 @@ theorem tendsto_subseq_of_bounded [ProperSpace β] (hs : Bounded s) {u : ℕ →
   ∃ (b : _)(_ : b ∈ Closure s), ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto (u ∘ φ) at_top (𝓝 b) :=
   tendsto_subseq_of_frequently_bounded hs$ frequently_of_forall hu
 
-theorem SeqCompact.lebesgue_number_lemma_of_metric {ι : Type _} {c : ι → Set β} (hs : IsSeqCompact s)
-  (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃i, c i) : ∃ (δ : _)(_ : δ > 0), ∀ x _ : x ∈ s, ∃ i, ball x δ ⊆ c i :=
-  by 
-    rcases lebesgue_number_lemma_seq hs hc₁ hc₂ with ⟨V, V_in, _, hV⟩
-    rcases uniformity_basis_dist.mem_iff.mp V_in with ⟨δ, δ_pos, h⟩
-    use δ, δ_pos 
-    intro x x_in 
-    rcases hV x x_in with ⟨i, hi⟩
-    use i 
-    have  := ball_mono h x 
-    rw [ball_eq_ball'] at this 
-    exact subset.trans this hi
+-- error in Topology.Sequences: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem seq_compact.lebesgue_number_lemma_of_metric
+{ι : Type*}
+{c : ι → set β}
+(hs : is_seq_compact s)
+(hc₁ : ∀ i, is_open (c i))
+(hc₂ : «expr ⊆ »(s, «expr⋃ , »((i), c i))) : «expr∃ , »((δ «expr > » 0), ∀
+ x «expr ∈ » s, «expr∃ , »((i), «expr ⊆ »(ball x δ, c i))) :=
+begin
+  rcases [expr lebesgue_number_lemma_seq hs hc₁ hc₂, "with", "⟨", ident V, ",", ident V_in, ",", "_", ",", ident hV, "⟩"],
+  rcases [expr uniformity_basis_dist.mem_iff.mp V_in, "with", "⟨", ident δ, ",", ident δ_pos, ",", ident h, "⟩"],
+  use ["[", expr δ, ",", expr δ_pos, "]"],
+  intros [ident x, ident x_in],
+  rcases [expr hV x x_in, "with", "⟨", ident i, ",", ident hi, "⟩"],
+  use [expr i],
+  have [] [] [":=", expr ball_mono h x],
+  rw [expr ball_eq_ball'] ["at", ident this],
+  exact [expr subset.trans this hi]
+end
 
 end MetricSeqCompact
 

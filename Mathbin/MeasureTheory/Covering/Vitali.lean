@@ -37,7 +37,7 @@ open_locale Nnreal Classical Ennreal TopologicalSpace
 
 namespace Vitali
 
--- error in MeasureTheory.Covering.Vitali: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Covering.Vitali: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Vitali covering theorem: given a set `t` of subsets of a type, one may extract a disjoint
 subfamily `u` such that the `τ`-enlargment of this family covers all elements of `t`, where `τ > 1`
 is any fixed number.
@@ -125,86 +125,73 @@ begin
         exact [expr (hcb (H _ H')).elim] } } }
 end
 
+-- error in MeasureTheory.Covering.Vitali: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Vitali covering theorem, closed balls version: given a family `t` of closed balls, one can
 extract a disjoint subfamily `u ⊆ t` so that all balls in `t` are covered by the 5-times
 dilations of balls in `u`. -/
-theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace α] (t : Set (Set α)) (R : ℝ)
-  (ht : ∀ s _ : s ∈ t, ∃ x r, s = closed_ball x r ∧ r ≤ R) :
-  ∃ (u : _)(_ : u ⊆ t), u.pairwise_disjoint id ∧ ∀ a _ : a ∈ t, ∃ x r, closed_ball x r ∈ u ∧ a ⊆ closed_ball x (5*r) :=
-  by 
-    rcases eq_empty_or_nonempty t with (rfl | tnonempty)
-    ·
-      exact
-        ⟨∅, subset.refl _, pairwise_disjoint_empty,
-          by 
-            simp ⟩
-    haveI  : Inhabited α
-    ·
-      choose s hst using tnonempty 
-      choose x r hxr using ht s hst 
-      exact ⟨x⟩
-    rcases eq_or_ne t {∅} with (rfl | t_ne_empty)
-    ·
-      refine' ⟨{∅}, subset.refl _, _⟩
-      simp only [true_andₓ, closed_ball_eq_empty, mem_singleton_iff, and_trueₓ, empty_subset, forall_eq,
-        pairwise_disjoint_singleton, exists_const]
-      exact
-        ⟨-1,
-          by 
-            simp only [Right.neg_neg_iff, zero_lt_one]⟩
-    choose! x r hxr using ht 
-    have r_nonneg : ∀ a : Set α, a ∈ t → a.nonempty → 0 ≤ r a
-    ·
-      intro a hat a_nonempty 
-      rw [(hxr a hat).1] at a_nonempty 
-      simpa only [nonempty_closed_ball] using a_nonempty 
-    let t' := { a ∈ t | 0 ≤ r a }
-    obtain ⟨u', u't', u'_disj, hu'⟩ :
-      ∃ (u' : _)(_ : u' ⊆ t'),
-        u'.pairwise_disjoint id ∧ ∀ a _ : a ∈ t', ∃ (b : _)(_ : b ∈ u'), Set.Nonempty (a ∩ b) ∧ r a ≤ 2*r b
-    ·
-      refine'
-        exists_disjoint_subfamily_covering_enlargment t' r 2 one_lt_two (fun a ha => ha.2) R
-          (fun a ha => (hxr a ha.1).2) fun a ha => _ 
-      rw [(hxr a ha.1).1]
-      simp only [ha.2, nonempty_closed_ball]
-    have u'_nonempty : u'.nonempty
-    ·
-      have  : ∃ (a : _)(_ : a ∈ t), a ≠ ∅
-      ·
-        contrapose! t_ne_empty 
-        apply subset.antisymm
-        ·
-          simpa only using t_ne_empty
-        ·
-          rcases tnonempty with ⟨a, hat⟩
-          have  := t_ne_empty a hat 
-          simpa only [this, singleton_subset_iff] using hat 
-      rcases this with ⟨a, hat, a_nonempty⟩
-      have ranonneg : 0 ≤ r a := r_nonneg a hat (ne_empty_iff_nonempty.1 a_nonempty)
-      rcases hu' a ⟨hat, ranonneg⟩ with ⟨b, bu', hb⟩
-      exact ⟨b, bu'⟩
-    refine' ⟨u', fun a ha => (u't' ha).1, u'_disj, fun a hat => _⟩
-    rcases eq_empty_or_nonempty a with (rfl | a_nonempty)
-    ·
-      rcases u'_nonempty with ⟨b, hb⟩
-      refine' ⟨x b, r b, _, empty_subset _⟩
-      rwa [←(hxr b (u't' hb).1).1]
-    ·
-      have hat' : a ∈ t' := ⟨hat, r_nonneg a hat a_nonempty⟩
-      obtain ⟨a', a'u', aa', raa'⟩ : ∃ (a' : Set α)(H : a' ∈ u'), (a ∩ a').Nonempty ∧ r a ≤ 2*r a' := hu' a hat' 
-      refine' ⟨x a', r a', _, _⟩
-      ·
-        convert a'u' 
-        exact (hxr a' (u't' a'u').1).1.symm
-      ·
-        rw [(hxr a hat'.1).1] at aa'⊢
-        rw [(hxr a' (u't' a'u').1).1] at aa' 
-        have  : dist (x a) (x a') ≤ r a+r a' := dist_le_add_of_nonempty_closed_ball_inter_closed_ball aa' 
-        apply closed_ball_subset_closed_ball' 
-        linarith
+theorem exists_disjoint_subfamily_covering_enlargment_closed_ball
+[metric_space α]
+(t : set (set α))
+(R : exprℝ())
+(ht : ∀
+ s «expr ∈ » t, «expr∃ , »((x
+   r), «expr ∧ »(«expr = »(s, closed_ball x r), «expr ≤ »(r, R)))) : «expr∃ , »((u «expr ⊆ » t), «expr ∧ »(u.pairwise_disjoint id, ∀
+  a «expr ∈ » t, «expr∃ , »((x
+    r), «expr ∧ »(«expr ∈ »(closed_ball x r, u), «expr ⊆ »(a, closed_ball x «expr * »(5, r)))))) :=
+begin
+  rcases [expr eq_empty_or_nonempty t, "with", ident rfl, "|", ident tnonempty],
+  { exact [expr ⟨«expr∅»(), subset.refl _, pairwise_disjoint_empty, by simp [] [] [] [] [] []⟩] },
+  haveI [] [":", expr inhabited α] [],
+  { choose [] [ident s] [ident hst] ["using", expr tnonempty],
+    choose [] [ident x] [ident r, ident hxr] ["using", expr ht s hst],
+    exact [expr ⟨x⟩] },
+  rcases [expr eq_or_ne t {«expr∅»()}, "with", ident rfl, "|", ident t_ne_empty],
+  { refine [expr ⟨{«expr∅»()}, subset.refl _, _⟩],
+    simp [] [] ["only"] ["[", expr true_and, ",", expr closed_ball_eq_empty, ",", expr mem_singleton_iff, ",", expr and_true, ",", expr empty_subset, ",", expr forall_eq, ",", expr pairwise_disjoint_singleton, ",", expr exists_const, "]"] [] [],
+    exact [expr ⟨«expr- »(1), by simp [] [] ["only"] ["[", expr right.neg_neg_iff, ",", expr zero_lt_one, "]"] [] []⟩] },
+  choose ["!"] [ident x] [ident r, ident hxr] ["using", expr ht],
+  have [ident r_nonneg] [":", expr ∀ a : set α, «expr ∈ »(a, t) → a.nonempty → «expr ≤ »(0, r a)] [],
+  { assume [binders (a hat a_nonempty)],
+    rw [expr (hxr a hat).1] ["at", ident a_nonempty],
+    simpa [] [] ["only"] ["[", expr nonempty_closed_ball, "]"] [] ["using", expr a_nonempty] },
+  let [ident t'] [] [":=", expr {a ∈ t | «expr ≤ »(0, r a)}],
+  obtain ["⟨", ident u', ",", ident u't', ",", ident u'_disj, ",", ident hu', "⟩", ":", expr «expr∃ , »((u' «expr ⊆ » t'), «expr ∧ »(u'.pairwise_disjoint id, ∀
+     a «expr ∈ » t', «expr∃ , »((b «expr ∈ » u'), «expr ∧ »(set.nonempty «expr ∩ »(a, b), «expr ≤ »(r a, «expr * »(2, r b))))))],
+  { refine [expr exists_disjoint_subfamily_covering_enlargment t' r 2 one_lt_two (λ
+      a ha, ha.2) R (λ a ha, (hxr a ha.1).2) (λ a ha, _)],
+    rw ["[", expr (hxr a ha.1).1, "]"] [],
+    simp [] [] ["only"] ["[", expr ha.2, ",", expr nonempty_closed_ball, "]"] [] [] },
+  have [ident u'_nonempty] [":", expr u'.nonempty] [],
+  { have [] [":", expr «expr∃ , »((a «expr ∈ » t), «expr ≠ »(a, «expr∅»()))] [],
+    { contrapose ["!"] [ident t_ne_empty],
+      apply [expr subset.antisymm],
+      { simpa [] [] ["only"] [] [] ["using", expr t_ne_empty] },
+      { rcases [expr tnonempty, "with", "⟨", ident a, ",", ident hat, "⟩"],
+        have [] [] [":=", expr t_ne_empty a hat],
+        simpa [] [] ["only"] ["[", expr this, ",", expr singleton_subset_iff, "]"] [] ["using", expr hat] } },
+    rcases [expr this, "with", "⟨", ident a, ",", ident hat, ",", ident a_nonempty, "⟩"],
+    have [ident ranonneg] [":", expr «expr ≤ »(0, r a)] [":=", expr r_nonneg a hat (ne_empty_iff_nonempty.1 a_nonempty)],
+    rcases [expr hu' a ⟨hat, ranonneg⟩, "with", "⟨", ident b, ",", ident bu', ",", ident hb, "⟩"],
+    exact [expr ⟨b, bu'⟩] },
+  refine [expr ⟨u', λ a ha, (u't' ha).1, u'_disj, λ a hat, _⟩],
+  rcases [expr eq_empty_or_nonempty a, "with", ident rfl, "|", ident a_nonempty],
+  { rcases [expr u'_nonempty, "with", "⟨", ident b, ",", ident hb, "⟩"],
+    refine [expr ⟨x b, r b, _, empty_subset _⟩],
+    rwa ["<-", expr (hxr b (u't' hb).1).1] [] },
+  { have [ident hat'] [":", expr «expr ∈ »(a, t')] [":=", expr ⟨hat, r_nonneg a hat a_nonempty⟩],
+    obtain ["⟨", ident a', ",", ident a'u', ",", ident aa', ",", ident raa', "⟩", ":", expr «expr∃ , »((a' : set α)
+      (H : «expr ∈ »(a', u')), «expr ∧ »(«expr ∩ »(a, a').nonempty, «expr ≤ »(r a, «expr * »(2, r a')))), ":=", expr hu' a hat'],
+    refine [expr ⟨x a', r a', _, _⟩],
+    { convert [] [expr a'u'] [],
+      exact [expr (hxr a' (u't' a'u').1).1.symm] },
+    { rw [expr (hxr a hat'.1).1] ["at", ident aa', "⊢"],
+      rw [expr (hxr a' (u't' a'u').1).1] ["at", ident aa'],
+      have [] [":", expr «expr ≤ »(dist (x a) (x a'), «expr + »(r a, r a'))] [":=", expr dist_le_add_of_nonempty_closed_ball_inter_closed_ball aa'],
+      apply [expr closed_ball_subset_closed_ball'],
+      linarith [] [] [] } }
+end
 
--- error in MeasureTheory.Covering.Vitali: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Covering.Vitali: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The measurable Vitali covering theorem. Assume one is given a family `t` of closed sets with
 nonempty interior, such that each `a ∈ t` is included in a ball `B (x, r)` and covers a definite
 proportion of the ball `B (x, 6 r)` for a given measure `μ` (think of the situation where `μ` is
@@ -382,101 +369,92 @@ begin
     «expr ≤ »(..., ε) : ennreal.mul_div_le
 end
 
+-- error in MeasureTheory.Covering.Vitali: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Assume that around every point there are arbitrarily small scales at which the measure is
 doubling. Then the set of closed sets `a` with nonempty interior covering a fixed proportion `1/C`
 of the ball `closed_ball x (3 * diam a)` forms a Vitali family. This is essentially a restatement
 of the measurable Vitali theorem. -/
-protected def VitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α] [second_countable_topology α]
-  (μ : Measureₓ α) [is_locally_finite_measure μ] (C :  ℝ≥0 )
-  (h : ∀ x ε _ : ε > 0, ∃ (r : _)(_ : r ∈ Ioc (0 : ℝ) ε), μ (closed_ball x (6*r)) ≤ C*μ (closed_ball x r)) :
-  VitaliFamily μ :=
-  { SetsAt := fun x => { a | x ∈ a ∧ IsClosed a ∧ (Interior a).Nonempty ∧ μ (closed_ball x (3*diam a)) ≤ C*μ a },
-    MeasurableSet' := fun x a ha => ha.2.1.MeasurableSet, nonempty_interior := fun x a ha => ha.2.2.1,
-    Nontrivial :=
-      fun x ε εpos =>
-        by 
-          obtain ⟨r, ⟨rpos, rε⟩, μr⟩ :
-            ∃ (r : _)(_ : r ∈ Ioc (0 : ℝ) ε), μ (closed_ball x (6*r)) ≤ C*μ (closed_ball x r) := h x ε εpos 
-          refine' ⟨closed_ball x r, ⟨_, is_closed_ball, _, _⟩, closed_ball_subset_closed_ball rε⟩
-          ·
-            simp only [rpos.le, mem_closed_ball, dist_self]
-          ·
-            exact (nonempty_ball.2 rpos).mono ball_subset_interior_closed_ball
-          ·
-            apply le_transₓ (measure_mono (closed_ball_subset_closed_ball _)) μr 
-            have  : diam (closed_ball x r) ≤ 2*r := diam_closed_ball rpos.le 
-            linarith,
-    covering :=
-      by 
-        intro s f fsubset ffine 
-        rcases eq_empty_or_nonempty s with (rfl | H)
-        ·
-          exact
-            ⟨∅, fun _ => ∅,
-              by 
-                simp ,
-              by 
-                simp ⟩
-        haveI  : Inhabited α
-        ·
-          choose x hx using H 
-          exact ⟨x⟩
-        let t := ⋃(x : _)(_ : x ∈ s), f x 
-        have A₁ : ∀ x _ : x ∈ s, ∀ ε : ℝ, 0 < ε → ∃ (a : _)(_ : a ∈ t), x ∈ a ∧ a ⊆ closed_ball x ε
-        ·
-          intro x xs ε εpos 
-          rcases ffine x xs ε εpos with ⟨a, xa, hax⟩
-          exact ⟨a, mem_bUnion xs xa, (fsubset x xs xa).1, hax⟩
-        have A₂ : ∀ a _ : a ∈ t, (Interior a).Nonempty
-        ·
-          rintro a ha 
-          rcases mem_bUnion_iff.1 ha with ⟨x, xs, xa⟩
-          exact (fsubset x xs xa).2.2.1
-        have A₃ : ∀ a _ : a ∈ t, IsClosed a
-        ·
-          rintro a ha 
-          rcases mem_bUnion_iff.1 ha with ⟨x, xs, xa⟩
-          exact (fsubset x xs xa).2.1
-        have A₄ : ∀ a _ : a ∈ t, ∃ (x : _)(_ : x ∈ a), μ (closed_ball x (3*diam a)) ≤ C*μ a
-        ·
-          rintro a ha 
-          rcases mem_bUnion_iff.1 ha with ⟨x, xs, xa⟩
-          exact ⟨x, (fsubset x xs xa).1, (fsubset x xs xa).2.2.2⟩
-        obtain ⟨u, ut, u_count, u_disj, μu⟩ :
-          ∃ (u : _)(_ : u ⊆ t), u.countable ∧ u.pairwise Disjoint ∧ μ (s \ ⋃(a : _)(_ : a ∈ u), a) = 0 :=
-          exists_disjoint_covering_ae μ s t A₁ A₂ A₃ C A₄ 
-        have  : ∀ a _ : a ∈ u, ∃ (x : _)(_ : x ∈ s), a ∈ f x := fun a ha => mem_bUnion_iff.1 (ut ha)
-        choose! x hx using this 
-        have inj_on_x : inj_on x u
-        ·
-          intro a ha b hb hab 
-          have A : (a ∩ b).Nonempty
-          ·
-            refine' ⟨x a, mem_inter (fsubset _ (hx a ha).1 (hx a ha).2).1 _⟩
-            rw [hab]
-            exact (fsubset _ (hx b hb).1 (hx b hb).2).1
-          contrapose A 
-          have  : Disjoint a b := u_disj a ha b hb A 
-          simpa only [←not_disjoint_iff_nonempty_inter]
-        refine' ⟨x '' u, Function.invFunOn x u, _, _, _, _⟩
-        ·
-          intro y hy 
-          rcases(mem_image _ _ _).1 hy with ⟨a, au, rfl⟩
-          exact (hx a au).1
-        ·
-          rw [inj_on_x.pairwise_disjoint_image]
-          intro a ha b hb hab 
-          simp only [Function.onFun, Function.inv_fun_on_eq' inj_on_x, ha, hb, · ∘ ·]
-          exact u_disj a ha b hb hab
-        ·
-          intro y hy 
-          rcases(mem_image _ _ _).1 hy with ⟨a, ha, rfl⟩
-          rw [Function.inv_fun_on_eq' inj_on_x ha]
-          exact (hx a ha).2
-        ·
-          rw [bUnion_image]
-          convert μu using 3 
-          exact bUnion_congr fun a ha => Function.inv_fun_on_eq' inj_on_x ha }
+protected
+def vitali_family
+[metric_space α]
+[measurable_space α]
+[opens_measurable_space α]
+[second_countable_topology α]
+(μ : measure α)
+[is_locally_finite_measure μ]
+(C : «exprℝ≥0»())
+(h : ∀
+ (x)
+ (ε «expr > » 0), «expr∃ , »((r «expr ∈ » Ioc (0 : exprℝ()) ε), «expr ≤ »(μ (closed_ball x «expr * »(6, r)), «expr * »(C, μ (closed_ball x r))))) : vitali_family μ :=
+{ sets_at := λ
+  x, {a | «expr ∧ »(«expr ∈ »(x, a), «expr ∧ »(is_closed a, «expr ∧ »((interior a).nonempty, «expr ≤ »(μ (closed_ball x «expr * »(3, diam a)), «expr * »(C, μ a)))))},
+  measurable_set' := λ x a ha, ha.2.1.measurable_set,
+  nonempty_interior := λ x a ha, ha.2.2.1,
+  nontrivial := λ x ε εpos, begin
+    obtain ["⟨", ident r, ",", "⟨", ident rpos, ",", ident rε, "⟩", ",", ident μr, "⟩", ":", expr «expr∃ , »((r «expr ∈ » Ioc (0 : exprℝ()) ε), «expr ≤ »(μ (closed_ball x «expr * »(6, r)), «expr * »(C, μ (closed_ball x r)))), ":=", expr h x ε εpos],
+    refine [expr ⟨closed_ball x r, ⟨_, is_closed_ball, _, _⟩, closed_ball_subset_closed_ball rε⟩],
+    { simp [] [] ["only"] ["[", expr rpos.le, ",", expr mem_closed_ball, ",", expr dist_self, "]"] [] [] },
+    { exact [expr (nonempty_ball.2 rpos).mono ball_subset_interior_closed_ball] },
+    { apply [expr le_trans (measure_mono (closed_ball_subset_closed_ball _)) μr],
+      have [] [":", expr «expr ≤ »(diam (closed_ball x r), «expr * »(2, r))] [":=", expr diam_closed_ball rpos.le],
+      linarith [] [] [] }
+  end,
+  covering := begin
+    assume [binders (s f fsubset ffine)],
+    rcases [expr eq_empty_or_nonempty s, "with", ident rfl, "|", ident H],
+    { exact [expr ⟨«expr∅»(), λ _, «expr∅»(), by simp [] [] [] [] [] [], by simp [] [] [] [] [] []⟩] },
+    haveI [] [":", expr inhabited α] [],
+    { choose [] [ident x] [ident hx] ["using", expr H],
+      exact [expr ⟨x⟩] },
+    let [ident t] [] [":=", expr «expr⋃ , »((x «expr ∈ » s), f x)],
+    have [ident A₁] [":", expr ∀
+     x «expr ∈ » s, ∀
+     ε : exprℝ(), «expr < »(0, ε) → «expr∃ , »((a «expr ∈ » t), «expr ∧ »(«expr ∈ »(x, a), «expr ⊆ »(a, closed_ball x ε)))] [],
+    { assume [binders (x xs ε εpos)],
+      rcases [expr ffine x xs ε εpos, "with", "⟨", ident a, ",", ident xa, ",", ident hax, "⟩"],
+      exact [expr ⟨a, mem_bUnion xs xa, (fsubset x xs xa).1, hax⟩] },
+    have [ident A₂] [":", expr ∀ a «expr ∈ » t, (interior a).nonempty] [],
+    { rintros [ident a, ident ha],
+      rcases [expr mem_bUnion_iff.1 ha, "with", "⟨", ident x, ",", ident xs, ",", ident xa, "⟩"],
+      exact [expr (fsubset x xs xa).2.2.1] },
+    have [ident A₃] [":", expr ∀ a «expr ∈ » t, is_closed a] [],
+    { rintros [ident a, ident ha],
+      rcases [expr mem_bUnion_iff.1 ha, "with", "⟨", ident x, ",", ident xs, ",", ident xa, "⟩"],
+      exact [expr (fsubset x xs xa).2.1] },
+    have [ident A₄] [":", expr ∀
+     a «expr ∈ » t, «expr∃ , »((x «expr ∈ » a), «expr ≤ »(μ (closed_ball x «expr * »(3, diam a)), «expr * »(C, μ a)))] [],
+    { rintros [ident a, ident ha],
+      rcases [expr mem_bUnion_iff.1 ha, "with", "⟨", ident x, ",", ident xs, ",", ident xa, "⟩"],
+      exact [expr ⟨x, (fsubset x xs xa).1, (fsubset x xs xa).2.2.2⟩] },
+    obtain ["⟨", ident u, ",", ident ut, ",", ident u_count, ",", ident u_disj, ",", ident μu, "⟩", ":", expr «expr∃ , »((u «expr ⊆ » t), «expr ∧ »(u.countable, «expr ∧ »(u.pairwise disjoint, «expr = »(μ «expr \ »(s, «expr⋃ , »((a «expr ∈ » u), a)), 0)))), ":=", expr exists_disjoint_covering_ae μ s t A₁ A₂ A₃ C A₄],
+    have [] [":", expr ∀
+     a «expr ∈ » u, «expr∃ , »((x «expr ∈ » s), «expr ∈ »(a, f x))] [":=", expr λ a ha, mem_bUnion_iff.1 (ut ha)],
+    choose ["!"] [ident x] [ident hx] ["using", expr this],
+    have [ident inj_on_x] [":", expr inj_on x u] [],
+    { assume [binders (a ha b hb hab)],
+      have [ident A] [":", expr «expr ∩ »(a, b).nonempty] [],
+      { refine [expr ⟨x a, mem_inter (fsubset _ (hx a ha).1 (hx a ha).2).1 _⟩],
+        rw [expr hab] [],
+        exact [expr (fsubset _ (hx b hb).1 (hx b hb).2).1] },
+      contrapose [] [ident A],
+      have [] [":", expr disjoint a b] [":=", expr u_disj a ha b hb A],
+      simpa [] [] ["only"] ["[", "<-", expr not_disjoint_iff_nonempty_inter, "]"] [] [] },
+    refine [expr ⟨«expr '' »(x, u), function.inv_fun_on x u, _, _, _, _⟩],
+    { assume [binders (y hy)],
+      rcases [expr (mem_image _ _ _).1 hy, "with", "⟨", ident a, ",", ident au, ",", ident rfl, "⟩"],
+      exact [expr (hx a au).1] },
+    { rw ["[", expr inj_on_x.pairwise_disjoint_image, "]"] [],
+      assume [binders (a ha b hb hab)],
+      simp [] [] ["only"] ["[", expr function.on_fun, ",", expr function.inv_fun_on_eq' inj_on_x, ",", expr ha, ",", expr hb, ",", expr («expr ∘ »), "]"] [] [],
+      exact [expr u_disj a ha b hb hab] },
+    { assume [binders (y hy)],
+      rcases [expr (mem_image _ _ _).1 hy, "with", "⟨", ident a, ",", ident ha, ",", ident rfl, "⟩"],
+      rw [expr function.inv_fun_on_eq' inj_on_x ha] [],
+      exact [expr (hx a ha).2] },
+    { rw ["[", expr bUnion_image, "]"] [],
+      convert [] [expr μu] ["using", 3],
+      exact [expr bUnion_congr (λ a ha, function.inv_fun_on_eq' inj_on_x ha)] }
+  end }
 
 end Vitali
 

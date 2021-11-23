@@ -1,9 +1,6 @@
 import Mathbin.CategoryTheory.Adjunction.Basic 
-import Mathbin.CategoryTheory.Limits.Constructions.WeaklyInitial 
-import Mathbin.CategoryTheory.Limits.Preserves.Basic 
-import Mathbin.CategoryTheory.Limits.Creates 
-import Mathbin.CategoryTheory.Limits.Comma 
-import Mathbin.CategoryTheory.Punit
+import Mathbin.CategoryTheory.Punit 
+import Mathbin.CategoryTheory.StructuredArrow
 
 /-!
 # Properties of comma categories relating to adjunctions
@@ -33,32 +30,31 @@ section OfInitials
 
 variable[∀ A, has_initial (structured_arrow A G)]
 
+-- error in CategoryTheory.Adjunction.Comma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Implementation: If each structured arrow category on `G` has an initial object, an equivalence
 which is helpful for constructing a left adjoint to `G`.
 -/
-@[simps]
-def left_adjoint_of_structured_arrow_initials_aux (A : C) (B : D) :
-  ((⊥_ structured_arrow A G).right ⟶ B) ≃ (A ⟶ G.obj B) :=
-  { toFun := fun g => (⊥_ structured_arrow A G).Hom ≫ G.map g,
-    invFun := fun f => comma_morphism.right (initial.to (structured_arrow.mk f)),
-    left_inv :=
-      fun g =>
-        by 
-          let B' : structured_arrow A G := structured_arrow.mk ((⊥_ structured_arrow A G).Hom ≫ G.map g)
-          let g' : ⊥_ structured_arrow A G ⟶ B' := structured_arrow.hom_mk g rfl 
-          have  : initial.to _ = g'
-          ·
-            apply colimit.hom_ext 
-            rintro ⟨⟩
-          change comma_morphism.right (initial.to B') = _ 
-          rw [this]
-          rfl,
-    right_inv :=
-      fun f =>
-        by 
-          let B' : structured_arrow A G := { right := B, Hom := f }
-          apply (comma_morphism.w (initial.to B')).symm.trans (category.id_comp _) }
+@[simps #[]]
+def left_adjoint_of_structured_arrow_initials_aux
+(A : C)
+(B : D) : «expr ≃ »(«expr ⟶ »(«expr⊥_ »(structured_arrow A G).right, B), «expr ⟶ »(A, G.obj B)) :=
+{ to_fun := λ g, «expr ≫ »(«expr⊥_ »(structured_arrow A G).hom, G.map g),
+  inv_fun := λ f, comma_morphism.right (initial.to (structured_arrow.mk f)),
+  left_inv := λ g, begin
+    let [ident B'] [":", expr structured_arrow A G] [":=", expr structured_arrow.mk «expr ≫ »(«expr⊥_ »(structured_arrow A G).hom, G.map g)],
+    let [ident g'] [":", expr «expr ⟶ »(«expr⊥_ »(structured_arrow A G), B')] [":=", expr structured_arrow.hom_mk g rfl],
+    have [] [":", expr «expr = »(initial.to _, g')] [],
+    { apply [expr colimit.hom_ext],
+      rintro ["⟨", "⟩"] },
+    change [expr «expr = »(comma_morphism.right (initial.to B'), _)] [] [],
+    rw [expr this] [],
+    refl
+  end,
+  right_inv := λ f, begin
+    let [ident B'] [":", expr structured_arrow A G] [":=", expr { right := B, hom := f }],
+    apply [expr (comma_morphism.w (initial.to B')).symm.trans (category.id_comp _)]
+  end }
 
 /--
 If each structured arrow category on `G` has an initial object, construct a left adjoint to `G`. It
@@ -87,30 +83,28 @@ section OfTerminals
 
 variable[∀ A, has_terminal (costructured_arrow G A)]
 
+-- error in CategoryTheory.Adjunction.Comma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Implementation: If each costructured arrow category on `G` has a terminal object, an equivalence
 which is helpful for constructing a right adjoint to `G`.
 -/
-@[simps]
-def right_adjoint_of_costructured_arrow_terminals_aux (B : D) (A : C) :
-  (G.obj B ⟶ A) ≃ (B ⟶ (⊤_ costructured_arrow G A).left) :=
-  { toFun := fun g => comma_morphism.left (terminal.from (costructured_arrow.mk g)),
-    invFun := fun g => G.map g ≫ (⊤_ costructured_arrow G A).Hom,
-    left_inv :=
-      by 
-        tidy,
-    right_inv :=
-      fun g =>
-        by 
-          let B' : costructured_arrow G A := costructured_arrow.mk (G.map g ≫ (⊤_ costructured_arrow G A).Hom)
-          let g' : B' ⟶ ⊤_ costructured_arrow G A := costructured_arrow.hom_mk g rfl 
-          have  : terminal.from _ = g'
-          ·
-            apply limit.hom_ext 
-            rintro ⟨⟩
-          change comma_morphism.left (terminal.from B') = _ 
-          rw [this]
-          rfl }
+@[simps #[]]
+def right_adjoint_of_costructured_arrow_terminals_aux
+(B : D)
+(A : C) : «expr ≃ »(«expr ⟶ »(G.obj B, A), «expr ⟶ »(B, «expr⊤_ »(costructured_arrow G A).left)) :=
+{ to_fun := λ g, comma_morphism.left (terminal.from (costructured_arrow.mk g)),
+  inv_fun := λ g, «expr ≫ »(G.map g, «expr⊤_ »(costructured_arrow G A).hom),
+  left_inv := by tidy [],
+  right_inv := λ g, begin
+    let [ident B'] [":", expr costructured_arrow G A] [":=", expr costructured_arrow.mk «expr ≫ »(G.map g, «expr⊤_ »(costructured_arrow G A).hom)],
+    let [ident g'] [":", expr «expr ⟶ »(B', «expr⊤_ »(costructured_arrow G A))] [":=", expr costructured_arrow.hom_mk g rfl],
+    have [] [":", expr «expr = »(terminal.from _, g')] [],
+    { apply [expr limit.hom_ext],
+      rintro ["⟨", "⟩"] },
+    change [expr «expr = »(comma_morphism.left (terminal.from B'), _)] [] [],
+    rw [expr this] [],
+    refl
+  end }
 
 /--
 If each costructured arrow category on `G` has a terminal object, construct a right adjoint to `G`.

@@ -1,9 +1,10 @@
-import Mathbin.Data.Multiset.FinsetOps 
 import Mathbin.GroupTheory.Finiteness 
-import Mathbin.LinearAlgebra.LinearIndependent 
-import Mathbin.Order.CompactlyGenerated 
+import Mathbin.Data.Multiset.FinsetOps 
+import Mathbin.Algebra.Algebra.Tower 
 import Mathbin.Order.OrderIsoNat 
-import Mathbin.RingTheory.Ideal.Operations
+import Mathbin.RingTheory.Ideal.Operations 
+import Mathbin.Order.CompactlyGenerated 
+import Mathbin.LinearAlgebra.LinearIndependent
 
 /-!
 # Noetherian rings and modules
@@ -105,74 +106,74 @@ theorem fg_iff_exists_fin_generating_family {N : Submodule R M} :
       rintro ⟨n, s, hs⟩
       refine' ⟨range s, finite_range s, hs⟩
 
+-- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Nakayama's Lemma**. Atiyah-Macdonald 2.5, Eisenbud 4.7, Matsumura 2.2,
 [Stacks 00DV](https://stacks.math.columbia.edu/tag/00DV) -/
-theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul {R : Type _} [CommRingₓ R] {M : Type _} [AddCommGroupₓ M]
-  [Module R M] (I : Ideal R) (N : Submodule R M) (hn : N.fg) (hin : N ≤ I • N) :
-  ∃ r : R, r - 1 ∈ I ∧ ∀ n _ : n ∈ N, r • n = (0 : M) :=
-  by 
-    rw [fg_def] at hn 
-    rcases hn with ⟨s, hfs, hs⟩
-    have  : ∃ r : R, r - 1 ∈ I ∧ N ≤ (I • span R s).comap (LinearMap.lsmul R M r) ∧ s ⊆ N
-    ·
-      refine' ⟨1, _, _, _⟩
-      ·
-        rw [sub_self]
-        exact I.zero_mem
-      ·
-        rw [hs]
-        intro n hn 
-        rw [mem_comap]
-        change (1 : R) • n ∈ I • N 
-        rw [one_smul]
-        exact hin hn
-      ·
-        rw [←span_le, hs]
-        exact le_reflₓ N 
-    clear hin hs 
-    revert this 
-    refine' Set.Finite.dinduction_on hfs (fun H => _) fun i s his hfs ih H => _
-    ·
-      rcases H with ⟨r, hr1, hrn, hs⟩
-      refine' ⟨r, hr1, fun n hn => _⟩
-      specialize hrn hn 
-      rwa [mem_comap, span_empty, smul_bot, mem_bot] at hrn 
-    apply ih 
-    rcases H with ⟨r, hr1, hrn, hs⟩
-    rw [←Set.singleton_union, span_union, smul_sup] at hrn 
-    rw [Set.insert_subset] at hs 
-    have  : ∃ c : R, c - 1 ∈ I ∧ c • i ∈ I • span R s
-    ·
-      specialize hrn hs.1
-      rw [mem_comap, mem_sup] at hrn 
-      rcases hrn with ⟨y, hy, z, hz, hyz⟩
-      change (y+z) = r • i at hyz 
-      rw [mem_smul_span_singleton] at hy 
-      rcases hy with ⟨c, hci, rfl⟩
-      use r - c 
-      split 
-      ·
-        rw [sub_right_comm]
-        exact I.sub_mem hr1 hci
-      ·
-        rw [sub_smul, ←hyz, add_sub_cancel']
-        exact hz 
-    rcases this with ⟨c, hc1, hci⟩
-    refine' ⟨c*r, _, _, hs.2⟩
-    ·
-      rw [←Ideal.Quotient.eq, RingHom.map_one] at hr1 hc1⊢
-      rw [RingHom.map_mul, hc1, hr1, mul_oneₓ]
-    ·
-      intro n hn 
-      specialize hrn hn 
-      rw [mem_comap, mem_sup] at hrn 
-      rcases hrn with ⟨y, hy, z, hz, hyz⟩
-      change (y+z) = r • n at hyz 
-      rw [mem_smul_span_singleton] at hy 
-      rcases hy with ⟨d, hdi, rfl⟩
-      change _ • _ ∈ I • span R s 
-      rw [mul_smul, ←hyz, smul_add, smul_smul, mul_commₓ, mul_smul]
-      exact add_mem _ (smul_mem _ _ hci) (smul_mem _ _ hz)
+theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul
+{R : Type*}
+[comm_ring R]
+{M : Type*}
+[add_comm_group M]
+[module R M]
+(I : ideal R)
+(N : submodule R M)
+(hn : N.fg)
+(hin : «expr ≤ »(N, «expr • »(I, N))) : «expr∃ , »((r : R), «expr ∧ »(«expr ∈ »(«expr - »(r, 1), I), ∀
+  n «expr ∈ » N, «expr = »(«expr • »(r, n), (0 : M)))) :=
+begin
+  rw [expr fg_def] ["at", ident hn],
+  rcases [expr hn, "with", "⟨", ident s, ",", ident hfs, ",", ident hs, "⟩"],
+  have [] [":", expr «expr∃ , »((r : R), «expr ∧ »(«expr ∈ »(«expr - »(r, 1), I), «expr ∧ »(«expr ≤ »(N, «expr • »(I, span R s).comap (linear_map.lsmul R M r)), «expr ⊆ »(s, N))))] [],
+  { refine [expr ⟨1, _, _, _⟩],
+    { rw [expr sub_self] [],
+      exact [expr I.zero_mem] },
+    { rw ["[", expr hs, "]"] [],
+      intros [ident n, ident hn],
+      rw ["[", expr mem_comap, "]"] [],
+      change [expr «expr ∈ »(«expr • »((1 : R), n), «expr • »(I, N))] [] [],
+      rw [expr one_smul] [],
+      exact [expr hin hn] },
+    { rw ["[", "<-", expr span_le, ",", expr hs, "]"] [],
+      exact [expr le_refl N] } },
+  clear [ident hin, ident hs],
+  revert [ident this],
+  refine [expr set.finite.dinduction_on hfs (λ H, _) (λ i s his hfs ih H, _)],
+  { rcases [expr H, "with", "⟨", ident r, ",", ident hr1, ",", ident hrn, ",", ident hs, "⟩"],
+    refine [expr ⟨r, hr1, λ n hn, _⟩],
+    specialize [expr hrn hn],
+    rwa ["[", expr mem_comap, ",", expr span_empty, ",", expr smul_bot, ",", expr mem_bot, "]"] ["at", ident hrn] },
+  apply [expr ih],
+  rcases [expr H, "with", "⟨", ident r, ",", ident hr1, ",", ident hrn, ",", ident hs, "⟩"],
+  rw ["[", "<-", expr set.singleton_union, ",", expr span_union, ",", expr smul_sup, "]"] ["at", ident hrn],
+  rw ["[", expr set.insert_subset, "]"] ["at", ident hs],
+  have [] [":", expr «expr∃ , »((c : R), «expr ∧ »(«expr ∈ »(«expr - »(c, 1), I), «expr ∈ »(«expr • »(c, i), «expr • »(I, span R s))))] [],
+  { specialize [expr hrn hs.1],
+    rw ["[", expr mem_comap, ",", expr mem_sup, "]"] ["at", ident hrn],
+    rcases [expr hrn, "with", "⟨", ident y, ",", ident hy, ",", ident z, ",", ident hz, ",", ident hyz, "⟩"],
+    change [expr «expr = »(«expr + »(y, z), «expr • »(r, i))] [] ["at", ident hyz],
+    rw [expr mem_smul_span_singleton] ["at", ident hy],
+    rcases [expr hy, "with", "⟨", ident c, ",", ident hci, ",", ident rfl, "⟩"],
+    use [expr «expr - »(r, c)],
+    split,
+    { rw ["[", expr sub_right_comm, "]"] [],
+      exact [expr I.sub_mem hr1 hci] },
+    { rw ["[", expr sub_smul, ",", "<-", expr hyz, ",", expr add_sub_cancel', "]"] [],
+      exact [expr hz] } },
+  rcases [expr this, "with", "⟨", ident c, ",", ident hc1, ",", ident hci, "⟩"],
+  refine [expr ⟨«expr * »(c, r), _, _, hs.2⟩],
+  { rw ["[", "<-", expr ideal.quotient.eq, ",", expr ring_hom.map_one, "]"] ["at", ident hr1, ident hc1, "⊢"],
+    rw ["[", expr ring_hom.map_mul, ",", expr hc1, ",", expr hr1, ",", expr mul_one, "]"] [] },
+  { intros [ident n, ident hn],
+    specialize [expr hrn hn],
+    rw ["[", expr mem_comap, ",", expr mem_sup, "]"] ["at", ident hrn],
+    rcases [expr hrn, "with", "⟨", ident y, ",", ident hy, ",", ident z, ",", ident hz, ",", ident hyz, "⟩"],
+    change [expr «expr = »(«expr + »(y, z), «expr • »(r, n))] [] ["at", ident hyz],
+    rw [expr mem_smul_span_singleton] ["at", ident hy],
+    rcases [expr hy, "with", "⟨", ident d, ",", ident hdi, ",", ident rfl, "⟩"],
+    change [expr «expr ∈ »(«expr • »(_, _), «expr • »(I, span R s))] [] [],
+    rw ["[", expr mul_smul, ",", "<-", expr hyz, ",", expr smul_add, ",", expr smul_smul, ",", expr mul_comm, ",", expr mul_smul, "]"] [],
+    exact [expr add_mem _ (smul_mem _ _ hci) (smul_mem _ _ hz)] }
+end
 
 theorem fg_bot : (⊥ : Submodule R M).Fg :=
   ⟨∅,
@@ -238,95 +239,86 @@ theorem fg_prod {sb : Submodule R M} {sc : Submodule R P} (hsb : sb.fg) (hsc : s
       by 
         rw [LinearMap.span_inl_union_inr, htb.2, htc.2]⟩
 
+-- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If 0 → M' → M → M'' → 0 is exact and M' and M'' are
 finitely generated then so is M. -/
-theorem fg_of_fg_map_of_fg_inf_ker {R M P : Type _} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [AddCommGroupₓ P]
-  [Module R P] (f : M →ₗ[R] P) {s : Submodule R M} (hs1 : (s.map f).Fg) (hs2 : (s⊓f.ker).Fg) : s.fg :=
-  by 
-    haveI  := Classical.decEq R 
-    haveI  := Classical.decEq M 
-    haveI  := Classical.decEq P 
-    cases' hs1 with t1 ht1 
-    cases' hs2 with t2 ht2 
-    have  : ∀ y _ : y ∈ t1, ∃ (x : _)(_ : x ∈ s), f x = y
-    ·
-      intro y hy 
-      have  : y ∈ map f s
-      ·
-        rw [←ht1]
-        exact subset_span hy 
-      rcases mem_map.1 this with ⟨x, hx1, hx2⟩
-      exact ⟨x, hx1, hx2⟩
-    have  : ∃ g : P → M, ∀ y _ : y ∈ t1, g y ∈ s ∧ f (g y) = y
-    ·
-      choose g hg1 hg2 
-      exists fun y => if H : y ∈ t1 then g y H else 0
-      intro y H 
-      split 
-      ·
-        simp only [dif_pos H]
-        apply hg1
-      ·
-        simp only [dif_pos H]
-        apply hg2 
-    cases' this with g hg 
-    clear this 
-    exists t1.image g ∪ t2 
-    rw [Finset.coe_union, span_union, Finset.coe_image]
-    apply le_antisymmₓ
-    ·
-      refine' sup_le (span_le.2$ image_subset_iff.2 _) (span_le.2 _)
-      ·
-        intro y hy 
-        exact (hg y hy).1
-      ·
-        intro x hx 
-        have  := subset_span hx 
-        rw [ht2] at this 
-        exact this.1
-    intro x hx 
-    have  : f x ∈ map f s
-    ·
-      rw [mem_map]
-      exact ⟨x, hx, rfl⟩
-    rw [←ht1, ←Set.image_id («expr↑ » t1), Finsupp.mem_span_image_iff_total] at this 
-    rcases this with ⟨l, hl1, hl2⟩
-    refine'
-      mem_sup.2
-        ⟨(Finsupp.total M M R id).toFun ((Finsupp.lmapDomain R R g : (P →₀ R) → M →₀ R) l), _,
-          x - Finsupp.total M M R id ((Finsupp.lmapDomain R R g : (P →₀ R) → M →₀ R) l), _, add_sub_cancel'_right _ _⟩
-    ·
-      rw [←Set.image_id (g '' «expr↑ » t1), Finsupp.mem_span_image_iff_total]
-      refine' ⟨_, _, rfl⟩
-      haveI  : Inhabited P := ⟨0⟩
-      rw [←Finsupp.lmap_domain_supported _ _ g, mem_map]
-      refine' ⟨l, hl1, _⟩
-      rfl 
-    rw [ht2, mem_inf]
-    split 
-    ·
-      apply s.sub_mem hx 
-      rw [Finsupp.total_apply, Finsupp.lmap_domain_apply, Finsupp.sum_map_domain_index]
-      refine' s.sum_mem _
-      ·
-        intro y hy 
-        exact s.smul_mem _ (hg y (hl1 hy)).1
-      ·
-        exact zero_smul _
-      ·
-        exact fun _ _ _ => add_smul _ _ _
-    ·
-      rw [LinearMap.mem_ker, f.map_sub, ←hl2]
-      rw [Finsupp.total_apply, Finsupp.total_apply, Finsupp.lmap_domain_apply]
-      rw [Finsupp.sum_map_domain_index, Finsupp.sum, Finsupp.sum, f.map_sum]
-      rw [sub_eq_zero]
-      refine' Finset.sum_congr rfl fun y hy => _ 
-      unfold id 
-      rw [f.map_smul, (hg y (hl1 hy)).2]
-      ·
-        exact zero_smul _
-      ·
-        exact fun _ _ _ => add_smul _ _ _
+theorem fg_of_fg_map_of_fg_inf_ker
+{R M P : Type*}
+[ring R]
+[add_comm_group M]
+[module R M]
+[add_comm_group P]
+[module R P]
+(f : «expr →ₗ[ ] »(M, R, P))
+{s : submodule R M}
+(hs1 : (s.map f).fg)
+(hs2 : «expr ⊓ »(s, f.ker).fg) : s.fg :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq R],
+  haveI [] [] [":=", expr classical.dec_eq M],
+  haveI [] [] [":=", expr classical.dec_eq P],
+  cases [expr hs1] ["with", ident t1, ident ht1],
+  cases [expr hs2] ["with", ident t2, ident ht2],
+  have [] [":", expr ∀ y «expr ∈ » t1, «expr∃ , »((x «expr ∈ » s), «expr = »(f x, y))] [],
+  { intros [ident y, ident hy],
+    have [] [":", expr «expr ∈ »(y, map f s)] [],
+    { rw ["<-", expr ht1] [],
+      exact [expr subset_span hy] },
+    rcases [expr mem_map.1 this, "with", "⟨", ident x, ",", ident hx1, ",", ident hx2, "⟩"],
+    exact [expr ⟨x, hx1, hx2⟩] },
+  have [] [":", expr «expr∃ , »((g : P → M), ∀ y «expr ∈ » t1, «expr ∧ »(«expr ∈ »(g y, s), «expr = »(f (g y), y)))] [],
+  { choose [] [ident g] [ident hg1, ident hg2] [],
+    existsi [expr λ y, if H : «expr ∈ »(y, t1) then g y H else 0],
+    intros [ident y, ident H],
+    split,
+    { simp [] [] ["only"] ["[", expr dif_pos H, "]"] [] [],
+      apply [expr hg1] },
+    { simp [] [] ["only"] ["[", expr dif_pos H, "]"] [] [],
+      apply [expr hg2] } },
+  cases [expr this] ["with", ident g, ident hg],
+  clear [ident this],
+  existsi [expr «expr ∪ »(t1.image g, t2)],
+  rw ["[", expr finset.coe_union, ",", expr span_union, ",", expr finset.coe_image, "]"] [],
+  apply [expr le_antisymm],
+  { refine [expr sup_le «expr $ »(span_le.2, image_subset_iff.2 _) (span_le.2 _)],
+    { intros [ident y, ident hy],
+      exact [expr (hg y hy).1] },
+    { intros [ident x, ident hx],
+      have [] [] [":=", expr subset_span hx],
+      rw [expr ht2] ["at", ident this],
+      exact [expr this.1] } },
+  intros [ident x, ident hx],
+  have [] [":", expr «expr ∈ »(f x, map f s)] [],
+  { rw [expr mem_map] [],
+    exact [expr ⟨x, hx, rfl⟩] },
+  rw ["[", "<-", expr ht1, ",", "<-", expr set.image_id «expr↑ »(t1), ",", expr finsupp.mem_span_image_iff_total, "]"] ["at", ident this],
+  rcases [expr this, "with", "⟨", ident l, ",", ident hl1, ",", ident hl2, "⟩"],
+  refine [expr mem_sup.2 ⟨(finsupp.total M M R id).to_fun ((finsupp.lmap_domain R R g : «expr →₀ »(P, R) → «expr →₀ »(M, R)) l), _, «expr - »(x, finsupp.total M M R id ((finsupp.lmap_domain R R g : «expr →₀ »(P, R) → «expr →₀ »(M, R)) l)), _, add_sub_cancel'_right _ _⟩],
+  { rw ["[", "<-", expr set.image_id «expr '' »(g, «expr↑ »(t1)), ",", expr finsupp.mem_span_image_iff_total, "]"] [],
+    refine [expr ⟨_, _, rfl⟩],
+    haveI [] [":", expr inhabited P] [":=", expr ⟨0⟩],
+    rw ["[", "<-", expr finsupp.lmap_domain_supported _ _ g, ",", expr mem_map, "]"] [],
+    refine [expr ⟨l, hl1, _⟩],
+    refl },
+  rw ["[", expr ht2, ",", expr mem_inf, "]"] [],
+  split,
+  { apply [expr s.sub_mem hx],
+    rw ["[", expr finsupp.total_apply, ",", expr finsupp.lmap_domain_apply, ",", expr finsupp.sum_map_domain_index, "]"] [],
+    refine [expr s.sum_mem _],
+    { intros [ident y, ident hy],
+      exact [expr s.smul_mem _ (hg y (hl1 hy)).1] },
+    { exact [expr zero_smul _] },
+    { exact [expr λ _ _ _, add_smul _ _ _] } },
+  { rw ["[", expr linear_map.mem_ker, ",", expr f.map_sub, ",", "<-", expr hl2, "]"] [],
+    rw ["[", expr finsupp.total_apply, ",", expr finsupp.total_apply, ",", expr finsupp.lmap_domain_apply, "]"] [],
+    rw ["[", expr finsupp.sum_map_domain_index, ",", expr finsupp.sum, ",", expr finsupp.sum, ",", expr f.map_sum, "]"] [],
+    rw [expr sub_eq_zero] [],
+    refine [expr finset.sum_congr rfl (λ y hy, _)],
+    unfold [ident id] [],
+    rw ["[", expr f.map_smul, ",", expr (hg y (hl1 hy)).2, "]"] [],
+    { exact [expr zero_smul _] },
+    { exact [expr λ _ _ _, add_smul _ _ _] } }
+end
 
 /-- The image of a finitely generated ideal is finitely generated.
 
@@ -359,49 +351,54 @@ theorem fg_restrict_scalars {R S M : Type _} [CommRingₓ R] [CommRingₓ S] [Al
     use X 
     exact Submodule.span_eq_restrict_scalars R S M X h
 
-theorem fg_ker_ring_hom_comp {R S A : Type _} [CommRingₓ R] [CommRingₓ S] [CommRingₓ A] (f : R →+* S) (g : S →+* A)
-  (hf : f.ker.fg) (hg : g.ker.fg) (hsur : Function.Surjective f) : (g.comp f).ker.Fg :=
-  by 
-    letI this : Algebra R S := RingHom.toAlgebra f 
-    letI this : Algebra R A := RingHom.toAlgebra (g.comp f)
-    letI this : Algebra S A := RingHom.toAlgebra g 
-    letI this : IsScalarTower R S A := IsScalarTower.of_algebra_map_eq fun _ => rfl 
-    let f₁ := Algebra.linearMap R S 
-    let g₁ := (IsScalarTower.toAlgHom R S A).toLinearMap 
-    exact fg_ker_comp f₁ g₁ hf (fg_restrict_scalars g.ker hg hsur) hsur
+-- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fg_ker_ring_hom_comp
+{R S A : Type*}
+[comm_ring R]
+[comm_ring S]
+[comm_ring A]
+(f : «expr →+* »(R, S))
+(g : «expr →+* »(S, A))
+(hf : f.ker.fg)
+(hg : g.ker.fg)
+(hsur : function.surjective f) : (g.comp f).ker.fg :=
+begin
+  letI [] [":", expr algebra R S] [":=", expr ring_hom.to_algebra f],
+  letI [] [":", expr algebra R A] [":=", expr ring_hom.to_algebra (g.comp f)],
+  letI [] [":", expr algebra S A] [":=", expr ring_hom.to_algebra g],
+  letI [] [":", expr is_scalar_tower R S A] [":=", expr is_scalar_tower.of_algebra_map_eq (λ _, rfl)],
+  let [ident f₁] [] [":=", expr algebra.linear_map R S],
+  let [ident g₁] [] [":=", expr (is_scalar_tower.to_alg_hom R S A).to_linear_map],
+  exact [expr fg_ker_comp f₁ g₁ hf (fg_restrict_scalars g.ker hg hsur) hsur]
+end
 
+-- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Finitely generated submodules are precisely compact elements in the submodule lattice. -/
-theorem fg_iff_compact (s : Submodule R M) : s.fg ↔ CompleteLattice.IsCompactElement s :=
-  by 
-    classical 
-    let sp : M → Submodule R M := fun a => span R {a}
-    have supr_rw : ∀ t : Finset M, (⨆(x : _)(_ : x ∈ t), sp x) = ⨆(x : _)(_ : x ∈ («expr↑ » t : Set M)), sp x 
-    exact
-      fun t =>
-        by 
-          rfl 
-    split 
-    ·
-      rintro ⟨t, rfl⟩
-      rw [span_eq_supr_of_singleton_spans, ←supr_rw, ←Finset.sup_eq_supr t sp]
-      apply CompleteLattice.finset_sup_compact_of_compact 
-      exact fun n _ => singleton_span_is_compact_element n
-    ·
-      intro h 
-      have sSup : s = Sup (sp '' «expr↑ » s)
-      ·
-        rw [Sup_eq_supr, supr_image, ←span_eq_supr_of_singleton_spans, eq_comm, span_eq]
-      obtain ⟨u, ⟨huspan, husup⟩⟩ := h (sp '' «expr↑ » s) (le_of_eqₓ sSup)
-      have ssup : s = u.sup id
-      ·
-        suffices  : u.sup id ≤ s 
-        exact le_antisymmₓ husup this 
-        rw [sSup, Finset.sup_id_eq_Sup]
-        exact Sup_le_Sup huspan 
-      obtain ⟨t, ⟨hts, rfl⟩⟩ := finset.subset_image_iff.mp huspan 
-      rw [Finset.sup_finset_image, Function.comp.left_id, Finset.sup_eq_supr, supr_rw, ←span_eq_supr_of_singleton_spans,
-        eq_comm] at ssup 
-      exact ⟨t, ssup⟩
+theorem fg_iff_compact (s : submodule R M) : «expr ↔ »(s.fg, complete_lattice.is_compact_element s) :=
+begin
+  classical,
+  let [ident sp] [":", expr M → submodule R M] [":=", expr λ a, span R {a}],
+  have [ident supr_rw] [":", expr ∀
+   t : finset M, «expr = »(«expr⨆ , »((x «expr ∈ » t), sp x), «expr⨆ , »((x «expr ∈ » («expr↑ »(t) : set M)), sp x))] [],
+  from [expr λ t, by refl],
+  split,
+  { rintro ["⟨", ident t, ",", ident rfl, "⟩"],
+    rw ["[", expr span_eq_supr_of_singleton_spans, ",", "<-", expr supr_rw, ",", "<-", expr finset.sup_eq_supr t sp, "]"] [],
+    apply [expr complete_lattice.finset_sup_compact_of_compact],
+    exact [expr λ n _, singleton_span_is_compact_element n] },
+  { intro [ident h],
+    have [ident sSup] [":", expr «expr = »(s, Sup «expr '' »(sp, «expr↑ »(s)))] [],
+    by rw ["[", expr Sup_eq_supr, ",", expr supr_image, ",", "<-", expr span_eq_supr_of_singleton_spans, ",", expr eq_comm, ",", expr span_eq, "]"] [],
+    obtain ["⟨", ident u, ",", "⟨", ident huspan, ",", ident husup, "⟩", "⟩", ":=", expr h «expr '' »(sp, «expr↑ »(s)) (le_of_eq sSup)],
+    have [ident ssup] [":", expr «expr = »(s, u.sup id)] [],
+    { suffices [] [":", expr «expr ≤ »(u.sup id, s)],
+      from [expr le_antisymm husup this],
+      rw ["[", expr sSup, ",", expr finset.sup_id_eq_Sup, "]"] [],
+      exact [expr Sup_le_Sup huspan] },
+    obtain ["⟨", ident t, ",", "⟨", ident hts, ",", ident rfl, "⟩", "⟩", ":=", expr finset.subset_image_iff.mp huspan],
+    rw ["[", expr finset.sup_finset_image, ",", expr function.comp.left_id, ",", expr finset.sup_eq_supr, ",", expr supr_rw, ",", "<-", expr span_eq_supr_of_singleton_spans, ",", expr eq_comm, "]"] ["at", ident ssup],
+    exact [expr ⟨t, ssup⟩] }
+end
 
 end Submodule
 
@@ -428,21 +425,18 @@ include R
 theorem is_noetherian_def : IsNoetherian R M ↔ ∀ s : Submodule R M, s.fg :=
   ⟨fun h => h.noetherian, IsNoetherian.mk⟩
 
-theorem is_noetherian_submodule {N : Submodule R M} : IsNoetherian R N ↔ ∀ s : Submodule R M, s ≤ N → s.fg :=
-  by 
-    refine'
-      ⟨fun ⟨hn⟩ =>
-          fun s hs =>
-            have  : s ≤ N.subtype.range := N.range_subtype.symm ▸ hs 
-            Submodule.map_comap_eq_self this ▸ Submodule.fg_map (hn _),
-        fun h => ⟨fun s => _⟩⟩
-    have f := (Submodule.equivMapOfInjective N.subtype Subtype.val_injective s).symm 
-    have h₁ := h (s.map N.subtype) (Submodule.map_subtype_le N s)
-    have h₂ : (⊤ : Submodule R (s.map N.subtype)).map («expr↑ » f : _ →ₗ[R] s) = ⊤ :=
-      by 
-        simp 
-    have h₃ := @Submodule.fg_map _ _ _ _ _ _ _ _ («expr↑ » f : _ →ₗ[R] s) _ ((Submodule.fg_top _).2 h₁)
-    exact (Submodule.fg_top _).1 (h₂ ▸ h₃)
+-- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_noetherian_submodule
+{N : submodule R M} : «expr ↔ »(is_noetherian R N, ∀ s : submodule R M, «expr ≤ »(s, N) → s.fg) :=
+begin
+  refine [expr ⟨λ ⟨hn⟩, λ s hs, have «expr ≤ »(s, N.subtype.range), from «expr ▸ »(N.range_subtype.symm, hs),
+    «expr ▸ »(submodule.map_comap_eq_self this, submodule.fg_map (hn _)), λ h, ⟨λ s, _⟩⟩],
+  have [ident f] [] [":=", expr (submodule.equiv_map_of_injective N.subtype subtype.val_injective s).symm],
+  have [ident h₁] [] [":=", expr h (s.map N.subtype) (submodule.map_subtype_le N s)],
+  have [ident h₂] [":", expr «expr = »((«expr⊤»() : submodule R (s.map N.subtype)).map («expr↑ »(f) : «expr →ₗ[ ] »(_, R, s)), «expr⊤»())] [":=", expr by simp [] [] [] [] [] []],
+  have [ident h₃] [] [":=", expr @submodule.fg_map _ _ _ _ _ _ _ _ («expr↑ »(f) : «expr →ₗ[ ] »(_, R, s)) _ ((submodule.fg_top _).2 h₁)],
+  exact [expr (submodule.fg_top _).1 «expr ▸ »(h₂, h₃)]
+end
 
 theorem is_noetherian_submodule_left {N : Submodule R M} : IsNoetherian R N ↔ ∀ s : Submodule R M, (N⊓s).Fg :=
   is_noetherian_submodule.trans ⟨fun H s => H _ inf_le_left, fun H s hs => inf_of_le_right hs ▸ H _⟩
@@ -470,8 +464,8 @@ theorem is_noetherian_of_linear_equiv (f : M ≃ₗ[R] P) [IsNoetherian R M] : I
 
 theorem is_noetherian_top_iff : IsNoetherian R (⊤ : Submodule R M) ↔ IsNoetherian R M :=
   by 
-    unfreezingI 
-      split  <;> intro h
+    (
+      split  <;> intro h)
     ·
       exact is_noetherian_of_linear_equiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl)
     ·
@@ -510,97 +504,86 @@ instance is_noetherian_prod [IsNoetherian R M] [IsNoetherian R P] : IsNoetherian
           fun x ⟨hx1, hx2⟩ => ⟨x.1, Prod.extₓ rfl$ Eq.symm$ LinearMap.mem_ker.1 hx2⟩
         Submodule.map_comap_eq_self this ▸ Submodule.fg_map (noetherian _)⟩
 
-instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ringₓ R] [∀ i, AddCommGroupₓ (M i)] [∀ i, Module R (M i)]
-  [Fintype ι] [∀ i, IsNoetherian R (M i)] : IsNoetherian R (∀ i, M i) :=
-  by 
-    haveI  := Classical.decEq ι 
-    suffices on_finset : ∀ s : Finset ι, IsNoetherian R (∀ i : s, M i)
-    ·
-      let coe_e := Equiv.subtypeUnivEquiv Finset.mem_univ 
-      letI this : IsNoetherian R (∀ i : Finset.univ, M (coe_e i)) := on_finset Finset.univ 
-      exact is_noetherian_of_linear_equiv (LinearEquiv.piCongrLeft R M coe_e)
-    intro s 
-    induction' s using Finset.induction with a s has ih
-    ·
-      split 
-      intro s 
-      convert Submodule.fg_bot 
-      apply eq_bot_iff.2
-      intro x hx 
-      refine' (Submodule.mem_bot R).2 _ 
-      ext i 
-      cases i.2
-    refine' @is_noetherian_of_linear_equiv _ _ _ _ _ _ _ _ _ (@is_noetherian_prod _ (M a) _ _ _ _ _ _ _ ih)
-    fconstructor
-    ·
-      exact
-        fun f i =>
-          Or.byCases (Finset.mem_insert.1 i.2) (fun h : i.1 = a => show M i.1 from Eq.recOnₓ h.symm f.1)
-            fun h : i.1 ∈ s => show M i.1 from f.2 ⟨i.1, h⟩
-    ·
-      intro f g 
-      ext i 
-      unfold Or.byCases 
-      cases' i with i hi 
-      rcases Finset.mem_insert.1 hi with (rfl | h)
-      ·
-        change _ = _+_ 
-        simp only [dif_pos]
-        rfl
-      ·
-        change _ = _+_ 
-        have  : ¬i = a
-        ·
-          rintro rfl 
-          exact has h 
-        simp only [dif_neg this, dif_pos h]
-        rfl
-    ·
-      intro c f 
-      ext i 
-      unfold Or.byCases 
-      cases' i with i hi 
-      rcases Finset.mem_insert.1 hi with (rfl | h)
-      ·
-        change _ = c • _ 
-        simp only [dif_pos]
-        rfl
-      ·
-        change _ = c • _ 
-        have  : ¬i = a
-        ·
-          rintro rfl 
-          exact has h 
-        simp only [dif_neg this, dif_pos h]
-        rfl
-    ·
-      exact fun f => (f ⟨a, Finset.mem_insert_self _ _⟩, fun i => f ⟨i.1, Finset.mem_insert_of_mem i.2⟩)
-    ·
-      intro f 
-      apply Prod.extₓ
-      ·
-        simp only [Or.byCases, dif_pos]
-      ·
-        ext ⟨i, his⟩
-        have  : ¬i = a
-        ·
-          rintro rfl 
-          exact has his 
-        dsimp only [Or.byCases]
-        change i ∈ s at his 
-        rw [dif_neg this, dif_pos his]
-    ·
-      intro f 
-      ext ⟨i, hi⟩
-      rcases Finset.mem_insert.1 hi with (rfl | h)
-      ·
-        simp only [Or.byCases, dif_pos]
-      ·
-        have  : ¬i = a
-        ·
-          rintro rfl 
-          exact has h 
-        simp only [Or.byCases, dif_neg this, dif_pos h]
+-- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance is_noetherian_pi
+{R ι : Type*}
+{M : ι → Type*}
+[ring R]
+[∀ i, add_comm_group (M i)]
+[∀ i, module R (M i)]
+[fintype ι]
+[∀ i, is_noetherian R (M i)] : is_noetherian R (∀ i, M i) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq ι],
+  suffices [ident on_finset] [":", expr ∀ s : finset ι, is_noetherian R (∀ i : s, M i)],
+  { let [ident coe_e] [] [":=", expr equiv.subtype_univ_equiv finset.mem_univ],
+    letI [] [":", expr is_noetherian R (∀ i : finset.univ, M (coe_e i))] [":=", expr on_finset finset.univ],
+    exact [expr is_noetherian_of_linear_equiv (linear_equiv.Pi_congr_left R M coe_e)] },
+  intro [ident s],
+  induction [expr s] ["using", ident finset.induction] ["with", ident a, ident s, ident has, ident ih] [],
+  { split,
+    intro [ident s],
+    convert [] [expr submodule.fg_bot] [],
+    apply [expr eq_bot_iff.2],
+    intros [ident x, ident hx],
+    refine [expr (submodule.mem_bot R).2 _],
+    ext [] [ident i] [],
+    cases [expr i.2] [] },
+  refine [expr @is_noetherian_of_linear_equiv _ _ _ _ _ _ _ _ _ (@is_noetherian_prod _ (M a) _ _ _ _ _ _ _ ih)],
+  fconstructor,
+  { exact [expr λ
+     f
+     i, or.by_cases (finset.mem_insert.1 i.2) (λ
+      h : «expr = »(i.1, a), show M i.1, from eq.rec_on h.symm f.1) (λ
+      h : «expr ∈ »(i.1, s), show M i.1, from f.2 ⟨i.1, h⟩)] },
+  { intros [ident f, ident g],
+    ext [] [ident i] [],
+    unfold [ident or.by_cases] [],
+    cases [expr i] ["with", ident i, ident hi],
+    rcases [expr finset.mem_insert.1 hi, "with", ident rfl, "|", ident h],
+    { change [expr «expr = »(_, «expr + »(_, _))] [] [],
+      simp [] [] ["only"] ["[", expr dif_pos, "]"] [] [],
+      refl },
+    { change [expr «expr = »(_, «expr + »(_, _))] [] [],
+      have [] [":", expr «expr¬ »(«expr = »(i, a))] [],
+      { rintro [ident rfl],
+        exact [expr has h] },
+      simp [] [] ["only"] ["[", expr dif_neg this, ",", expr dif_pos h, "]"] [] [],
+      refl } },
+  { intros [ident c, ident f],
+    ext [] [ident i] [],
+    unfold [ident or.by_cases] [],
+    cases [expr i] ["with", ident i, ident hi],
+    rcases [expr finset.mem_insert.1 hi, "with", ident rfl, "|", ident h],
+    { change [expr «expr = »(_, «expr • »(c, _))] [] [],
+      simp [] [] ["only"] ["[", expr dif_pos, "]"] [] [],
+      refl },
+    { change [expr «expr = »(_, «expr • »(c, _))] [] [],
+      have [] [":", expr «expr¬ »(«expr = »(i, a))] [],
+      { rintro [ident rfl],
+        exact [expr has h] },
+      simp [] [] ["only"] ["[", expr dif_neg this, ",", expr dif_pos h, "]"] [] [],
+      refl } },
+  { exact [expr λ f, (f ⟨a, finset.mem_insert_self _ _⟩, λ i, f ⟨i.1, finset.mem_insert_of_mem i.2⟩)] },
+  { intro [ident f],
+    apply [expr prod.ext],
+    { simp [] [] ["only"] ["[", expr or.by_cases, ",", expr dif_pos, "]"] [] [] },
+    { ext [] ["⟨", ident i, ",", ident his, "⟩"] [],
+      have [] [":", expr «expr¬ »(«expr = »(i, a))] [],
+      { rintro [ident rfl],
+        exact [expr has his] },
+      dsimp ["only"] ["[", expr or.by_cases, "]"] [] [],
+      change [expr «expr ∈ »(i, s)] [] ["at", ident his],
+      rw ["[", expr dif_neg this, ",", expr dif_pos his, "]"] [] } },
+  { intro [ident f],
+    ext [] ["⟨", ident i, ",", ident hi, "⟩"] [],
+    rcases [expr finset.mem_insert.1 hi, "with", ident rfl, "|", ident h],
+    { simp [] [] ["only"] ["[", expr or.by_cases, ",", expr dif_pos, "]"] [] [] },
+    { have [] [":", expr «expr¬ »(«expr = »(i, a))] [],
+      { rintro [ident rfl],
+        exact [expr has h] },
+      simp [] [] ["only"] ["[", expr or.by_cases, ",", expr dif_neg this, ",", expr dif_pos h, "]"] [] [] } }
+end
 
 /-- A version of `is_noetherian_pi` for non-dependent functions. We need this instance because
 sometimes Lean fails to apply the dependent version in non-dependent settings (e.g., it fails to
@@ -663,7 +646,7 @@ universe w
 variable{R M P :
     Type _}{N : Type w}[Ringₓ R][AddCommGroupₓ M][Module R M][AddCommGroupₓ N][Module R N][AddCommGroupₓ P][Module R P]
 
--- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem finite_of_linear_independent
 [nontrivial R]
 [is_noetherian R M]
@@ -795,20 +778,20 @@ theorem is_noetherian_ring_iff {R} [Semiringₓ R] : IsNoetherianRing R ↔ IsNo
 theorem is_noetherian_ring_iff_ideal_fg (R : Type _) [CommSemiringₓ R] : IsNoetherianRing R ↔ ∀ I : Ideal R, I.fg :=
   is_noetherian_ring_iff.trans is_noetherian_def
 
-instance (priority := 80)Ringₓ.is_noetherian_of_fintype R M [Fintype M] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
-  IsNoetherian R M :=
-  by 
-    letI this := Classical.dec <;>
-      exact
-        ⟨fun s =>
-            ⟨to_finset s,
-              by 
-                rw [Set.coe_to_finset, Submodule.span_eq]⟩⟩
+-- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[priority 80]
+instance ring.is_noetherian_of_fintype
+(R M)
+[fintype M]
+[semiring R]
+[add_comm_monoid M]
+[module R M] : is_noetherian R M :=
+by letI [] [] [":=", expr classical.dec]; exact [expr ⟨assume
+  s, ⟨to_finset s, by rw ["[", expr set.coe_to_finset, ",", expr submodule.span_eq, "]"] []⟩⟩]
 
-theorem Ringₓ.is_noetherian_of_zero_eq_one {R} [Semiringₓ R] (h01 : (0 : R) = 1) : IsNoetherianRing R :=
-  by 
-    haveI  := subsingleton_of_zero_eq_one h01 <;>
-      haveI  := Fintype.ofSubsingleton (0 : R) <;> exact is_noetherian_ring_iff.2 (Ringₓ.is_noetherian_of_fintype R R)
+-- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ring.is_noetherian_of_zero_eq_one {R} [semiring R] (h01 : «expr = »((0 : R), 1)) : is_noetherian_ring R :=
+by haveI [] [] [":=", expr subsingleton_of_zero_eq_one h01]; haveI [] [] [":=", expr fintype.of_subsingleton (0 : R)]; exact [expr is_noetherian_ring_iff.2 (ring.is_noetherian_of_fintype R R)]
 
 theorem is_noetherian_of_submodule_of_noetherian R M [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (N : Submodule R M)
   (h : IsNoetherian R M) : IsNoetherian R N :=
@@ -834,50 +817,55 @@ instance Ideal.Quotient.is_noetherian_ring {R : Type _} [CommRingₓ R] [h : IsN
   IsNoetherianRing I.quotient :=
   is_noetherian_ring_iff.mpr$ is_noetherian_of_tower R$ Submodule.Quotient.is_noetherian _
 
-theorem is_noetherian_of_fg_of_noetherian {R M} [Ringₓ R] [AddCommGroupₓ M] [Module R M] (N : Submodule R M)
-  [IsNoetherianRing R] (hN : N.fg) : IsNoetherian R N :=
-  let ⟨s, hs⟩ := hN 
-  by 
-    haveI  := Classical.decEq M 
-    haveI  := Classical.decEq R 
-    letI this : IsNoetherian R R :=
-      by 
-        infer_instance 
-    have  : ∀ x _ : x ∈ s, x ∈ N 
-    exact fun x hx => hs ▸ Submodule.subset_span hx 
-    refine' @is_noetherian_of_surjective ((«expr↑ » s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ is_noetherian_pi
-    ·
-      fapply LinearMap.mk
-      ·
-        exact fun f => ⟨∑i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _$ this _ c.2⟩
-      ·
-        intro f g 
-        apply Subtype.eq 
-        change (∑i in s.attach, (f i+g i) • _) = _ 
-        simp only [add_smul, Finset.sum_add_distrib]
-        rfl
-      ·
-        intro c f 
-        apply Subtype.eq 
-        change (∑i in s.attach, (c • f i) • _) = _ 
-        simp only [smul_eq_mul, mul_smul]
-        exact finset.smul_sum.symm 
-    rw [LinearMap.range_eq_top]
-    rintro ⟨n, hn⟩
-    change n ∈ N at hn 
-    rw [←hs, ←Set.image_id («expr↑ » s), Finsupp.mem_span_image_iff_total] at hn 
-    rcases hn with ⟨l, hl1, hl2⟩
-    refine' ⟨fun x => l x, Subtype.ext _⟩
-    change (∑i in s.attach, l i • (i : M)) = n 
-    rw [@Finset.sum_attach M M s _ fun i => l i • i, ←hl2, Finsupp.total_apply, Finsupp.sum, eq_comm]
-    refine' Finset.sum_subset hl1 fun x _ hx => _ 
-    rw [Finsupp.not_mem_support_iff.1 hx, zero_smul]
+-- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_noetherian_of_fg_of_noetherian
+{R M}
+[ring R]
+[add_comm_group M]
+[module R M]
+(N : submodule R M)
+[is_noetherian_ring R]
+(hN : N.fg) : is_noetherian R N :=
+let ⟨s, hs⟩ := hN in
+begin
+  haveI [] [] [":=", expr classical.dec_eq M],
+  haveI [] [] [":=", expr classical.dec_eq R],
+  letI [] [":", expr is_noetherian R R] [":=", expr by apply_instance],
+  have [] [":", expr ∀ x «expr ∈ » s, «expr ∈ »(x, N)] [],
+  from [expr λ x hx, «expr ▸ »(hs, submodule.subset_span hx)],
+  refine [expr @@is_noetherian_of_surjective ((«expr↑ »(s) : set M) → R) _ _ _ (pi.module _ _ _) _ _ _ is_noetherian_pi],
+  { fapply [expr linear_map.mk],
+    { exact [expr λ
+       f, ⟨«expr∑ in , »((i), s.attach, «expr • »(f i, i.1)), N.sum_mem (λ
+         c _, «expr $ »(N.smul_mem _, this _ c.2))⟩] },
+    { intros [ident f, ident g],
+      apply [expr subtype.eq],
+      change [expr «expr = »(«expr∑ in , »((i), s.attach, «expr • »(«expr + »(f i, g i), _)), _)] [] [],
+      simp [] [] ["only"] ["[", expr add_smul, ",", expr finset.sum_add_distrib, "]"] [] [],
+      refl },
+    { intros [ident c, ident f],
+      apply [expr subtype.eq],
+      change [expr «expr = »(«expr∑ in , »((i), s.attach, «expr • »(«expr • »(c, f i), _)), _)] [] [],
+      simp [] [] ["only"] ["[", expr smul_eq_mul, ",", expr mul_smul, "]"] [] [],
+      exact [expr finset.smul_sum.symm] } },
+  rw [expr linear_map.range_eq_top] [],
+  rintro ["⟨", ident n, ",", ident hn, "⟩"],
+  change [expr «expr ∈ »(n, N)] [] ["at", ident hn],
+  rw ["[", "<-", expr hs, ",", "<-", expr set.image_id «expr↑ »(s), ",", expr finsupp.mem_span_image_iff_total, "]"] ["at", ident hn],
+  rcases [expr hn, "with", "⟨", ident l, ",", ident hl1, ",", ident hl2, "⟩"],
+  refine [expr ⟨λ x, l x, subtype.ext _⟩],
+  change [expr «expr = »(«expr∑ in , »((i), s.attach, «expr • »(l i, (i : M))), n)] [] [],
+  rw ["[", expr @finset.sum_attach M M s _ (λ
+    i, «expr • »(l i, i)), ",", "<-", expr hl2, ",", expr finsupp.total_apply, ",", expr finsupp.sum, ",", expr eq_comm, "]"] [],
+  refine [expr finset.sum_subset hl1 (λ x _ hx, _)],
+  rw ["[", expr finsupp.not_mem_support_iff.1 hx, ",", expr zero_smul, "]"] []
+end
 
 theorem is_noetherian_of_fg_of_noetherian' {R M} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [IsNoetherianRing R]
   (h : (⊤ : Submodule R M).Fg) : IsNoetherian R M :=
   have  : IsNoetherian R (⊤ : Submodule R M) := is_noetherian_of_fg_of_noetherian _ h 
   by 
-    exactI is_noetherian_of_linear_equiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl)
+    exact is_noetherian_of_linear_equiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl)
 
 /-- In a module over a noetherian ring, the submodule generated by finitely many vectors is
 noetherian. -/

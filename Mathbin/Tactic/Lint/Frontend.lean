@@ -1,3 +1,4 @@
+import Mathbin.Meta.RbMap 
 import Mathbin.Tactic.Lint.Basic
 
 /-!
@@ -47,7 +48,7 @@ open Tactic Expr Native
 
 setup_tactic_parser
 
--- error in Tactic.Lint.Frontend: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.Lint.Frontend: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /--
 Verbosity for the linter output.
 * `low`: only print failing checks, print nothing on success.
@@ -302,7 +303,7 @@ unsafe def list_linters (_ : parse$ tk "#list_linters") : parser Unit :=
     let env ← get_env 
     let ns :=
       env.decl_filter_map$
-        fun dcl => if dcl.to_name.get_prefix = `linter && dcl.type = quote linter then some dcl.to_name else none 
+        fun dcl => if dcl.to_name.get_prefix = `linter && dcl.type = quote.1 linter then some dcl.to_name else none 
     trace "Available linters:\n  linters marked with (*) are in the default lint set\n"
     ns.mmap'$
         fun n =>

@@ -38,7 +38,7 @@ The next step is to define ZFA sets as lists quotiented by `lists.equiv`.
 
 variable{α : Type _}
 
--- error in SetTheory.Lists: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in SetTheory.Lists: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- Prelists, helper type to define `lists`. `lists' α ff` are the "atoms", a copy of `α`.
 `lists' α tt` are the "proper" ZFA prelists, inductively defined from the empty ZFA prelist and from
 appending a ZFA prelist to a proper ZFA prelist. It is made so that you can't append anything to an
@@ -181,19 +181,14 @@ theorem subset_nil {l : Lists' α tt} : l ⊆ Lists'.nil → l = Lists'.nil :=
       rfl 
     rcases cons_subset.1 h with ⟨⟨_, ⟨⟩, _⟩, _⟩
 
--- error in SetTheory.Lists: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem mem_of_subset'
-{a}
-{l₁ l₂ : lists' α tt}
-(s : «expr ⊆ »(l₁, l₂))
-(h : «expr ∈ »(a, l₁.to_list)) : «expr ∈ »(a, l₂) :=
-begin
-  induction [expr s] [] ["with", "_", ident a, ident a', ident l, ident l', ident e, ident m, ident s, ident IH] [],
-  { cases [expr h] [] },
-  simp [] [] [] [] [] ["at", ident h],
-  rcases [expr h, "with", ident rfl, "|", ident h],
-  exacts ["[", expr ⟨_, m, e⟩, ",", expr IH h, "]"]
-end
+theorem mem_of_subset' {a} {l₁ l₂ : Lists' α tt} (s : l₁ ⊆ l₂) (h : a ∈ l₁.to_list) : a ∈ l₂ :=
+  by 
+    induction' s with _ a a' l l' e m s IH
+    ·
+      cases h 
+    simp  at h 
+    rcases h with (rfl | h)
+    exacts[⟨_, m, e⟩, IH h]
 
 theorem subset_def {l₁ l₂ : Lists' α tt} : l₁ ⊆ l₂ ↔ ∀ a _ : a ∈ l₁.to_list, a ∈ l₂ :=
   ⟨fun H a => mem_of_subset' H,
@@ -379,77 +374,38 @@ theorem lt_sizeof_cons' {b} (a : Lists' α b) l : sizeof (⟨b, a⟩ : Lists α)
       unfold_sizeof 
     apply sizeof_pos
 
-mutual 
-  @[instance]
-  def equiv.decidable [DecidableEq α] : ∀ l₁ l₂ : Lists α, Decidable (l₁ ~ l₂)
-  | ⟨ff, l₁⟩, ⟨ff, l₂⟩ =>
-    decidableOfIff' (l₁ = l₂)$
-      by 
-        cases l₁ <;>
-          refine'
-            equiv_atom.trans
-              (by 
-                simp [atom])
-  | ⟨ff, l₁⟩, ⟨tt, l₂⟩ =>
-    is_false$
-      by 
-        rintro ⟨⟩
-  | ⟨tt, l₁⟩, ⟨ff, l₂⟩ =>
-    is_false$
-      by 
-        rintro ⟨⟩
-  | ⟨tt, l₁⟩, ⟨tt, l₂⟩ =>
-    by 
-      haveI  :=
-        have  : (sizeof l₁+sizeof l₂) < sizeof (⟨tt, l₁⟩ : Lists α)+sizeof (⟨tt, l₂⟩ : Lists α) :=
-          by 
-            runTac 
-              default_dec_tac 
-        subset.decidable l₁ l₂ 
-      haveI  :=
-        have  : (sizeof l₂+sizeof l₁) < sizeof (⟨tt, l₁⟩ : Lists α)+sizeof (⟨tt, l₂⟩ : Lists α) :=
-          by 
-            runTac 
-              default_dec_tac 
-        subset.decidable l₂ l₁ 
-      exact decidableOfIff' _ equiv.antisymm_iff
-  @[instance]
-  def subset.decidable [DecidableEq α] : ∀ l₁ l₂ : Lists' α tt, Decidable (l₁ ⊆ l₂)
-  | Lists'.nil, l₂ => is_true subset.nil
-  | @Lists'.cons' _ b a l₁, l₂ =>
-    by 
-      haveI  :=
-        have  : (sizeof (⟨b, a⟩ : Lists α)+sizeof l₂) < sizeof (Lists'.cons' a l₁)+sizeof l₂ :=
-          add_lt_add_right (lt_sizeof_cons' _ _) _ 
-        mem.decidable ⟨b, a⟩ l₂ 
-      haveI  :=
-        have  : (sizeof l₁+sizeof l₂) < sizeof (Lists'.cons' a l₁)+sizeof l₂ :=
-          by 
-            runTac 
-              default_dec_tac 
-        subset.decidable l₁ l₂ 
-      exact decidableOfIff' _ (@Lists'.cons_subset _ ⟨_, _⟩ _ _)
-  @[instance]
-  def mem.decidable [DecidableEq α] : ∀ a : Lists α l : Lists' α tt, Decidable (a ∈ l)
-  | a, Lists'.nil =>
-    is_false$
-      by 
-        rintro ⟨_, ⟨⟩, _⟩
-  | a, Lists'.cons' b l₂ =>
-    by 
-      haveI  :=
-        have  : (sizeof a+sizeof (⟨_, b⟩ : Lists α)) < sizeof a+sizeof (Lists'.cons' b l₂) :=
-          add_lt_add_left (lt_sizeof_cons' _ _) _ 
-        equiv.decidable a ⟨_, b⟩
-      haveI  :=
-        have  : (sizeof a+sizeof l₂) < sizeof a+sizeof (Lists'.cons' b l₂) :=
-          by 
-            runTac 
-              default_dec_tac 
-        mem.decidable a l₂ 
-      refine' decidableOfIff' (a ~ ⟨_, b⟩ ∨ a ∈ l₂) _ 
-      rw [←Lists'.mem_cons]
-      rfl 
+-- error in SetTheory.Lists: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[instance]
+mutual
+def equiv.decidable, subset.decidable, mem.decidable
+[decidable_eq α]with [] equiv.decidable : ∀ l₁ l₂ : lists α, decidable «expr ~ »(l₁, l₂)
+| ⟨ff, l₁⟩, ⟨ff, l₂⟩ := «expr $ »(decidable_of_iff' «expr = »(l₁, l₂), by cases [expr l₁] []; refine [expr equiv_atom.trans (by simp [] [] [] ["[", expr atom, "]"] [] [])])
+| ⟨ff, l₁⟩, ⟨tt, l₂⟩ := «expr $ »(is_false, by rintro ["⟨", "⟩"])
+| ⟨tt, l₁⟩, ⟨ff, l₂⟩ := «expr $ »(is_false, by rintro ["⟨", "⟩"])
+| ⟨tt, l₁⟩, ⟨tt, l₂⟩ := begin
+  haveI [] [] [":=", expr have «expr < »(«expr + »(sizeof l₁, sizeof l₂), «expr + »(sizeof (⟨tt, l₁⟩ : lists α), sizeof (⟨tt, l₂⟩ : lists α))), by default_dec_tac,
+   subset.decidable l₁ l₂],
+  haveI [] [] [":=", expr have «expr < »(«expr + »(sizeof l₂, sizeof l₁), «expr + »(sizeof (⟨tt, l₁⟩ : lists α), sizeof (⟨tt, l₂⟩ : lists α))), by default_dec_tac,
+   subset.decidable l₂ l₁],
+  exact [expr decidable_of_iff' _ equiv.antisymm_iff]
+endwith [] subset.decidable : ∀ l₁ l₂ : lists' α tt, decidable «expr ⊆ »(l₁, l₂)
+| lists'.nil, l₂ := is_true subset.nil
+| @lists'.cons' _ b a l₁, l₂ := begin
+  haveI [] [] [":=", expr have «expr < »(«expr + »(sizeof (⟨b, a⟩ : lists α), sizeof l₂), «expr + »(sizeof (lists'.cons' a l₁), sizeof l₂)), from add_lt_add_right (lt_sizeof_cons' _ _) _,
+   mem.decidable ⟨b, a⟩ l₂],
+  haveI [] [] [":=", expr have «expr < »(«expr + »(sizeof l₁, sizeof l₂), «expr + »(sizeof (lists'.cons' a l₁), sizeof l₂)), by default_dec_tac,
+   subset.decidable l₁ l₂],
+  exact [expr decidable_of_iff' _ (@lists'.cons_subset _ ⟨_, _⟩ _ _)]
+endwith [] mem.decidable : ∀ (a : lists α) (l : lists' α tt), decidable «expr ∈ »(a, l)
+| a, lists'.nil := «expr $ »(is_false, by rintro ["⟨", "_", ",", "⟨", "⟩", ",", "_", "⟩"])
+| a, lists'.cons' b l₂ := begin
+  haveI [] [] [":=", expr have «expr < »(«expr + »(sizeof a, sizeof (⟨_, b⟩ : lists α)), «expr + »(sizeof a, sizeof (lists'.cons' b l₂))), from add_lt_add_left (lt_sizeof_cons' _ _) _,
+   equiv.decidable a ⟨_, b⟩],
+  haveI [] [] [":=", expr have «expr < »(«expr + »(sizeof a, sizeof l₂), «expr + »(sizeof a, sizeof (lists'.cons' b l₂))), by default_dec_tac,
+   mem.decidable a l₂],
+  refine [expr decidable_of_iff' «expr ∨ »(«expr ~ »(a, ⟨_, b⟩), «expr ∈ »(a, l₂)) _],
+  rw ["<-", expr lists'.mem_cons] [],
+  refl
 end
 
 end Decidable

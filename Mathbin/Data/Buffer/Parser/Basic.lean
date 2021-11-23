@@ -130,12 +130,12 @@ theorem bounded.of_done [p.bounded] (h : p cb n = done n' a) : n < cb.size :=
     obtain ⟨np, err, hp⟩ := bounded.exists p h 
     simp [hp]
 
-theorem static.iff : static p ↔ ∀ cb : CharBuffer n n' : ℕ a : α, p cb n = done n' a → n = n' :=
-  ⟨fun h _ _ _ _ hp =>
-      by 
-        haveI  := h 
-        exact static.of_done hp,
-    fun h => ⟨h⟩⟩
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem static.iff : «expr ↔ »(static p, ∀
+ (cb : char_buffer)
+ (n n' : exprℕ())
+ (a : α), «expr = »(p cb n, done n' a) → «expr = »(n, n')) :=
+⟨λ h _ _ _ _ hp, by { haveI [] [] [":=", expr h], exact [expr static.of_done hp] }, λ h, ⟨h⟩⟩
 
 theorem exists_done (p : Parser α) [p.unfailing] (cb : CharBuffer) (n : ℕ) : ∃ (n' : ℕ)(a : α), p cb n = done n' a :=
   unfailing.ex' cb n
@@ -347,26 +347,22 @@ theorem orelse_eq_fail_not_mono_lt (hn : n' < n) :
       ·
         simp [hp, h, ←orelse_eq_orelse, Parser.orelse]
 
-theorem orelse_eq_fail_of_mono_ne [q.mono] (hn : n ≠ n') : (p <|> q) cb n = fail n' err ↔ p cb n = fail n' err :=
-  by 
-    cases' hp : p cb n with np resp np errp
-    ·
-      simp [hp, ←orelse_eq_orelse, Parser.orelse]
-    ·
-      byCases' h : np = n
-      ·
-        cases' hq : q cb n with nq resq nq errq
-        ·
-          simp [hp, h, hn, hq, hn, ←orelse_eq_orelse, Parser.orelse]
-        ·
-          have  : n ≤ nq := mono.of_fail hq 
-          rcases eq_or_lt_of_le this with (rfl | H)
-          ·
-            simp [hp, hq, h, hn, lt_irreflₓ, ←orelse_eq_orelse, Parser.orelse]
-          ·
-            simp [hp, hq, h, hn, H, ←orelse_eq_orelse, Parser.orelse]
-      ·
-        simp [hp, h, ←orelse_eq_orelse, Parser.orelse]
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem orelse_eq_fail_of_mono_ne
+[q.mono]
+(hn : «expr ≠ »(n, n')) : «expr ↔ »(«expr = »(«expr <|> »(p, q) cb n, fail n' err), «expr = »(p cb n, fail n' err)) :=
+begin
+  cases [expr hp, ":", expr p cb n] ["with", ident np, ident resp, ident np, ident errp],
+  { simp [] [] [] ["[", expr hp, ",", "<-", expr orelse_eq_orelse, ",", expr parser.orelse, "]"] [] [] },
+  { by_cases [expr h, ":", expr «expr = »(np, n)],
+    { cases [expr hq, ":", expr q cb n] ["with", ident nq, ident resq, ident nq, ident errq],
+      { simp [] [] [] ["[", expr hp, ",", expr h, ",", expr hn, ",", expr hq, ",", expr hn, ",", "<-", expr orelse_eq_orelse, ",", expr parser.orelse, "]"] [] [] },
+      { have [] [":", expr «expr ≤ »(n, nq)] [":=", expr mono.of_fail hq],
+        rcases [expr eq_or_lt_of_le this, "with", ident rfl, "|", ident H],
+        { simp [] [] [] ["[", expr hp, ",", expr hq, ",", expr h, ",", expr hn, ",", expr lt_irrefl, ",", "<-", expr orelse_eq_orelse, ",", expr parser.orelse, "]"] [] [] },
+        { simp [] [] [] ["[", expr hp, ",", expr hq, ",", expr h, ",", expr hn, ",", expr H, ",", "<-", expr orelse_eq_orelse, ",", expr parser.orelse, "]"] [] [] } } },
+    { simp [] [] [] ["[", expr hp, ",", expr h, ",", "<-", expr orelse_eq_orelse, ",", expr parser.orelse, "]"] [] [] } }
+end
 
 @[simp]
 theorem failure_eq_failure : @Parser.failure α = failure :=
@@ -395,12 +391,19 @@ theorem seq_eq_fail {f : Parser (α → β)} {p : Parser α} :
   by 
     simp [seq_eq_bind_mapₓ]
 
-theorem seq_left_eq_done {p : Parser α} {q : Parser β} :
-  (p <* q) cb n = done n' a ↔ ∃ (np : ℕ)(b : β), p cb n = done np a ∧ q cb np = done n' b :=
-  by 
-    have  : ∀ p q : ℕ → α → Prop, (∃ (np : ℕ)(x : α), p np x ∧ q np x ∧ x = a) ↔ ∃ np : ℕ, p np a ∧ q np a :=
-      fun _ _ => ⟨fun ⟨np, x, hp, hq, rfl⟩ => ⟨np, hp, hq⟩, fun ⟨np, hp, hq⟩ => ⟨np, a, hp, hq, rfl⟩⟩
-    simp [seq_left_eq, seq_eq_done, map_eq_done, this]
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem seq_left_eq_done
+{p : parser α}
+{q : parser β} : «expr ↔ »(«expr = »(«expr <* »(p, q) cb n, done n' a), «expr∃ , »((np : exprℕ())
+  (b : β), «expr ∧ »(«expr = »(p cb n, done np a), «expr = »(q cb np, done n' b)))) :=
+begin
+  have [] [":", expr ∀
+   p
+   q : exprℕ() → α → exprProp(), «expr ↔ »(«expr∃ , »((np : exprℕ())
+     (x : α), «expr ∧ »(p np x, «expr ∧ »(q np x, «expr = »(x, a)))), «expr∃ , »((np : exprℕ()), «expr ∧ »(p np a, q np a)))] [":=", expr λ
+   _ _, ⟨λ ⟨np, x, hp, hq, rfl⟩, ⟨np, hp, hq⟩, λ ⟨np, hp, hq⟩, ⟨np, a, hp, hq, rfl⟩⟩],
+  simp [] [] [] ["[", expr seq_left_eq, ",", expr seq_eq_done, ",", expr map_eq_done, ",", expr this, "]"] [] []
+end
 
 theorem seq_left_eq_fail {p : Parser α} {q : Parser β} :
   (p <* q) cb n = fail n' err ↔ p cb n = fail n' err ∨ ∃ (np : ℕ)(a : α), p cb n = done np a ∧ q cb np = fail n' err :=
@@ -709,40 +712,29 @@ theorem ch_eq_done : ch c cb n = done n' u ↔ ∃ hn : n < cb.size, (n' = n+1) 
   by 
     simp [ch, eps_eq_done, sat_eq_done, And.comm, @eq_comm _ n']
 
-theorem char_buf_eq_done {cb' : CharBuffer} :
-  char_buf cb' cb n = done n' u ↔ (n+cb'.size) = n' ∧ cb'.to_list <+: cb.to_list.drop n :=
-  by 
-    simp only [char_buf, decorate_error_eq_done, Ne.def, ←Buffer.length_to_list]
-    induction' cb'.to_list with hd tl hl generalizing cb n n'
-    ·
-      simp [pure_eq_done, mmap'_eq_done, -Buffer.length_to_list, List.nil_prefix]
-    ·
-      simp only [ch_eq_done, And.comm, And.assoc, And.left_comm, hl, mmap', and_then_eq_bind, bind_eq_done, List.length,
-        exists_and_distrib_left, exists_const]
-      split 
-      ·
-        rintro ⟨np, h, rfl, rfl, hn, rfl⟩
-        simp only [add_commₓ, add_left_commₓ, h, true_andₓ, eq_self_iff_true, and_trueₓ]
-        have  : n < cb.to_list.length :=
-          by 
-            simpa using hn 
-        rwa [←Buffer.nth_le_to_list _ this, ←List.cons_nth_le_drop_succ this, List.prefix_cons_inj]
-      ·
-        rintro ⟨h, rfl⟩
-        byCases' hn : n < cb.size
-        ·
-          have  : n < cb.to_list.length :=
-            by 
-              simpa using hn 
-          rw [←List.cons_nth_le_drop_succ this, List.cons_prefix_iff] at h 
-          use n+1, h.right 
-          simpa [Buffer.nth_le_to_list, add_commₓ, add_left_commₓ, add_assocₓ, hn] using h.left.symm
-        ·
-          have  : cb.to_list.length ≤ n :=
-            by 
-              simpa using hn 
-          rw [List.drop_eq_nil_of_leₓ this] at h 
-          simpa using h
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem char_buf_eq_done
+{cb' : char_buffer} : «expr ↔ »(«expr = »(char_buf cb' cb n, done n' u), «expr ∧ »(«expr = »(«expr + »(n, cb'.size), n'), «expr <+: »(cb'.to_list, cb.to_list.drop n))) :=
+begin
+  simp [] [] ["only"] ["[", expr char_buf, ",", expr decorate_error_eq_done, ",", expr ne.def, ",", "<-", expr buffer.length_to_list, "]"] [] [],
+  induction [expr cb'.to_list] [] ["with", ident hd, ident tl, ident hl] ["generalizing", ident cb, ident n, ident n'],
+  { simp [] [] [] ["[", expr pure_eq_done, ",", expr mmap'_eq_done, ",", "-", ident buffer.length_to_list, ",", expr list.nil_prefix, "]"] [] [] },
+  { simp [] [] ["only"] ["[", expr ch_eq_done, ",", expr and.comm, ",", expr and.assoc, ",", expr and.left_comm, ",", expr hl, ",", expr mmap', ",", expr and_then_eq_bind, ",", expr bind_eq_done, ",", expr list.length, ",", expr exists_and_distrib_left, ",", expr exists_const, "]"] [] [],
+    split,
+    { rintro ["⟨", ident np, ",", ident h, ",", ident rfl, ",", ident rfl, ",", ident hn, ",", ident rfl, "⟩"],
+      simp [] [] ["only"] ["[", expr add_comm, ",", expr add_left_comm, ",", expr h, ",", expr true_and, ",", expr eq_self_iff_true, ",", expr and_true, "]"] [] [],
+      have [] [":", expr «expr < »(n, cb.to_list.length)] [":=", expr by simpa [] [] [] [] [] ["using", expr hn]],
+      rwa ["[", "<-", expr buffer.nth_le_to_list _ this, ",", "<-", expr list.cons_nth_le_drop_succ this, ",", expr list.prefix_cons_inj, "]"] [] },
+    { rintro ["⟨", ident h, ",", ident rfl, "⟩"],
+      by_cases [expr hn, ":", expr «expr < »(n, cb.size)],
+      { have [] [":", expr «expr < »(n, cb.to_list.length)] [":=", expr by simpa [] [] [] [] [] ["using", expr hn]],
+        rw ["[", "<-", expr list.cons_nth_le_drop_succ this, ",", expr list.cons_prefix_iff, "]"] ["at", ident h],
+        use ["[", expr «expr + »(n, 1), ",", expr h.right, "]"],
+        simpa [] [] [] ["[", expr buffer.nth_le_to_list, ",", expr add_comm, ",", expr add_left_comm, ",", expr add_assoc, ",", expr hn, "]"] [] ["using", expr h.left.symm] },
+      { have [] [":", expr «expr ≤ »(cb.to_list.length, n)] [":=", expr by simpa [] [] [] [] [] ["using", expr hn]],
+        rw [expr list.drop_eq_nil_of_le this] ["at", ident h],
+        simpa [] [] [] [] [] ["using", expr h] } } }
+end
 
 theorem one_of_eq_done {cs : List Charₓ} :
   one_of cs cb n = done n' c ↔ ∃ hn : n < cb.size, c ∈ cs ∧ (n' = n+1) ∧ cb.read ⟨n, hn⟩ = c :=
@@ -827,17 +819,20 @@ theorem foldr_eq_done {f : α → β → β} {p : Parser α} {b' : β} :
   by 
     simp [foldr, foldr_core_eq_done]
 
-theorem foldr_eq_fail_iff_mono_at_end {f : α → β → β} {p : Parser α} {err : Dlist Stringₓ} [p.mono] (hc : cb.size ≤ n) :
-  foldr f p b cb n = fail n' err ↔ n < n' ∧ (p cb n = fail n' err ∨ ∃ a : α, p cb n = done n' a ∧ err = Dlist.empty) :=
-  by 
-    have  : cb.size - n = 0 := tsub_eq_zero_iff_le.mpr hc 
-    simp only [foldr, foldr_core_succ_eq_fail, this, And.left_comm, foldr_core_zero_eq_fail, ne_iff_lt_iff_le,
-      exists_and_distrib_right, exists_eq_left, And.congr_left_iff, exists_and_distrib_left]
-    rintro (h | ⟨⟨a, h⟩, rfl⟩)
-    ·
-      exact mono.of_fail h
-    ·
-      exact mono.of_done h
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem foldr_eq_fail_iff_mono_at_end
+{f : α → β → β}
+{p : parser α}
+{err : dlist string}
+[p.mono]
+(hc : «expr ≤ »(cb.size, n)) : «expr ↔ »(«expr = »(foldr f p b cb n, fail n' err), «expr ∧ »(«expr < »(n, n'), «expr ∨ »(«expr = »(p cb n, fail n' err), «expr∃ , »((a : α), «expr ∧ »(«expr = »(p cb n, done n' a), «expr = »(err, dlist.empty)))))) :=
+begin
+  have [] [":", expr «expr = »(«expr - »(cb.size, n), 0)] [":=", expr tsub_eq_zero_iff_le.mpr hc],
+  simp [] [] ["only"] ["[", expr foldr, ",", expr foldr_core_succ_eq_fail, ",", expr this, ",", expr and.left_comm, ",", expr foldr_core_zero_eq_fail, ",", expr ne_iff_lt_iff_le, ",", expr exists_and_distrib_right, ",", expr exists_eq_left, ",", expr and.congr_left_iff, ",", expr exists_and_distrib_left, "]"] [] [],
+  rintro ["(", ident h, "|", "⟨", "⟨", ident a, ",", ident h, "⟩", ",", ident rfl, "⟩", ")"],
+  { exact [expr mono.of_fail h] },
+  { exact [expr mono.of_done h] }
+end
 
 theorem foldr_eq_fail {f : α → β → β} {p : Parser α} {err : Dlist Stringₓ} :
   foldr f p b cb n = fail n' err ↔
@@ -897,17 +892,20 @@ theorem foldl_eq_fail {f : β → α → β} {p : Parser α} {err : Dlist String
   by 
     simp [foldl, foldl_core_succ_eq_fail]
 
-theorem foldl_eq_fail_iff_mono_at_end {f : β → α → β} {p : Parser α} {err : Dlist Stringₓ} [p.mono] (hc : cb.size ≤ n) :
-  foldl f b p cb n = fail n' err ↔ n < n' ∧ (p cb n = fail n' err ∨ ∃ a : α, p cb n = done n' a ∧ err = Dlist.empty) :=
-  by 
-    have  : cb.size - n = 0 := tsub_eq_zero_iff_le.mpr hc 
-    simp only [foldl, foldl_core_succ_eq_fail, this, And.left_comm, ne_iff_lt_iff_le, exists_eq_left,
-      exists_and_distrib_right, And.congr_left_iff, exists_and_distrib_left, foldl_core_zero_eq_fail]
-    rintro (h | ⟨⟨a, h⟩, rfl⟩)
-    ·
-      exact mono.of_fail h
-    ·
-      exact mono.of_done h
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem foldl_eq_fail_iff_mono_at_end
+{f : β → α → β}
+{p : parser α}
+{err : dlist string}
+[p.mono]
+(hc : «expr ≤ »(cb.size, n)) : «expr ↔ »(«expr = »(foldl f b p cb n, fail n' err), «expr ∧ »(«expr < »(n, n'), «expr ∨ »(«expr = »(p cb n, fail n' err), «expr∃ , »((a : α), «expr ∧ »(«expr = »(p cb n, done n' a), «expr = »(err, dlist.empty)))))) :=
+begin
+  have [] [":", expr «expr = »(«expr - »(cb.size, n), 0)] [":=", expr tsub_eq_zero_iff_le.mpr hc],
+  simp [] [] ["only"] ["[", expr foldl, ",", expr foldl_core_succ_eq_fail, ",", expr this, ",", expr and.left_comm, ",", expr ne_iff_lt_iff_le, ",", expr exists_eq_left, ",", expr exists_and_distrib_right, ",", expr and.congr_left_iff, ",", expr exists_and_distrib_left, ",", expr foldl_core_zero_eq_fail, "]"] [] [],
+  rintro ["(", ident h, "|", "⟨", "⟨", ident a, ",", ident h, "⟩", ",", ident rfl, "⟩", ")"],
+  { exact [expr mono.of_fail h] },
+  { exact [expr mono.of_done h] }
+end
 
 theorem many_eq_done_nil {p : Parser α} :
   many p cb n = done n' (@List.nil α) ↔
@@ -954,32 +952,24 @@ theorem many_char_eq_many_of_to_list {p : Parser Charₓ} {s : Stringₓ} :
   by 
     simp [many_char, List.as_string_eq]
 
-theorem many'_eq_done {p : Parser α} :
-  many' p cb n = done n' u ↔
-    many p cb n = done n' [] ∨
-      ∃ (np : ℕ)(a : α)(l : List α),
-        many p cb n = done n' (a :: l) ∧
-          p cb n = done np a ∧ foldr_core List.cons p [] (Buffer.size cb - n) cb np = done n' l :=
-  by 
-    simp only [many', eps_eq_done, many, foldr, and_then_eq_bind, exists_and_distrib_right, bind_eq_done,
-      exists_eq_right]
-    split 
-    ·
-      rintro ⟨_ | ⟨hd, tl⟩, hl⟩
-      ·
-        exact Or.inl hl
-      ·
-        have hl2 := hl 
-        simp only [foldr_core_eq_done, or_falseₓ, exists_and_distrib_left, and_falseₓ, false_andₓ,
-          exists_eq_right_right] at hl 
-        obtain ⟨np, hp, h⟩ := hl 
-        refine' Or.inr ⟨np, _, _, hl2, hp, h⟩
-    ·
-      rintro (h | ⟨np, a, l, hp, h⟩)
-      ·
-        exact ⟨[], h⟩
-      ·
-        refine' ⟨a :: l, hp⟩
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem many'_eq_done
+{p : parser α} : «expr ↔ »(«expr = »(many' p cb n, done n' u), «expr ∨ »(«expr = »(many p cb n, done n' «expr[ , ]»([])), «expr∃ , »((np : exprℕ())
+   (a : α)
+   (l : list α), «expr ∧ »(«expr = »(many p cb n, done n' [«expr :: »/«expr :: »/«expr :: »](a, l)), «expr ∧ »(«expr = »(p cb n, done np a), «expr = »(foldr_core list.cons p «expr[ , ]»([]) «expr - »(buffer.size cb, n) cb np, done n' l)))))) :=
+begin
+  simp [] [] ["only"] ["[", expr many', ",", expr eps_eq_done, ",", expr many, ",", expr foldr, ",", expr and_then_eq_bind, ",", expr exists_and_distrib_right, ",", expr bind_eq_done, ",", expr exists_eq_right, "]"] [] [],
+  split,
+  { rintro ["⟨", "_", "|", "⟨", ident hd, ",", ident tl, "⟩", ",", ident hl, "⟩"],
+    { exact [expr or.inl hl] },
+    { have [ident hl2] [] [":=", expr hl],
+      simp [] [] ["only"] ["[", expr foldr_core_eq_done, ",", expr or_false, ",", expr exists_and_distrib_left, ",", expr and_false, ",", expr false_and, ",", expr exists_eq_right_right, "]"] [] ["at", ident hl],
+      obtain ["⟨", ident np, ",", ident hp, ",", ident h, "⟩", ":=", expr hl],
+      refine [expr or.inr ⟨np, _, _, hl2, hp, h⟩] } },
+  { rintro ["(", ident h, "|", "⟨", ident np, ",", ident a, ",", ident l, ",", ident hp, ",", ident h, "⟩", ")"],
+    { exact [expr ⟨«expr[ , ]»([]), h⟩] },
+    { refine [expr ⟨[«expr :: »/«expr :: »/«expr :: »](a, l), hp⟩] } }
+end
 
 @[simp]
 theorem many1_ne_done_nil {p : Parser α} : many1 p cb n ≠ done n' [] :=
@@ -1032,27 +1022,23 @@ theorem fix_core_eq_done {F : Parser α → Parser α} {max_depth : ℕ} :
   by 
     simp [fix_core]
 
-theorem digit_eq_done {k : ℕ} :
-  digit cb n = done n' k ↔
-    ∃ hn : n < cb.size,
-      (n' = n+1) ∧ k ≤ 9 ∧ (cb.read ⟨n, hn⟩).toNat - '0'.toNat = k ∧ '0' ≤ cb.read ⟨n, hn⟩ ∧ cb.read ⟨n, hn⟩ ≤ '9' :=
-  by 
-    have c9 : '9'.toNat - '0'.toNat = 9 := rfl 
-    have l09 : '0'.toNat ≤ '9'.toNat :=
-      by 
-        decide 
-    have le_iff_le : ∀ {c c' : Charₓ}, c ≤ c' ↔ c.to_nat ≤ c'.to_nat := fun _ _ => Iff.rfl 
-    split 
-    ·
-      simp only [digit, sat_eq_done, pure_eq_done, decorate_error_eq_done, bind_eq_done, ←c9]
-      rintro ⟨np, c, ⟨hn, ⟨ge0, le9⟩, rfl, rfl⟩, rfl, rfl⟩
-      simpa [hn, ge0, le9, true_andₓ, and_trueₓ, eq_self_iff_true, exists_prop_of_true, tsub_le_tsub_iff_right,
-        l09] using le_iff_le.mp le9
-    ·
-      simp only [digit, sat_eq_done, pure_eq_done, decorate_error_eq_done, bind_eq_done, ←c9, le_iff_le]
-      rintro ⟨hn, rfl, -, rfl, ge0, le9⟩
-      use n+1, cb.read ⟨n, hn⟩
-      simp [hn, ge0, le9]
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem digit_eq_done
+{k : exprℕ()} : «expr ↔ »(«expr = »(digit cb n, done n' k), «expr∃ , »((hn : «expr < »(n, cb.size)), «expr ∧ »(«expr = »(n', «expr + »(n, 1)), «expr ∧ »(«expr ≤ »(k, 9), «expr ∧ »(«expr = »(«expr - »((cb.read ⟨n, hn⟩).to_nat, '0'.to_nat), k), «expr ∧ »(«expr ≤ »('0', cb.read ⟨n, hn⟩), «expr ≤ »(cb.read ⟨n, hn⟩, '9'))))))) :=
+begin
+  have [ident c9] [":", expr «expr = »(«expr - »('9'.to_nat, '0'.to_nat), 9)] [":=", expr rfl],
+  have [ident l09] [":", expr «expr ≤ »('0'.to_nat, '9'.to_nat)] [":=", expr exprdec_trivial()],
+  have [ident le_iff_le] [":", expr ∀
+   {c c' : char}, «expr ↔ »(«expr ≤ »(c, c'), «expr ≤ »(c.to_nat, c'.to_nat))] [":=", expr λ _ _, iff.rfl],
+  split,
+  { simp [] [] ["only"] ["[", expr digit, ",", expr sat_eq_done, ",", expr pure_eq_done, ",", expr decorate_error_eq_done, ",", expr bind_eq_done, ",", "<-", expr c9, "]"] [] [],
+    rintro ["⟨", ident np, ",", ident c, ",", "⟨", ident hn, ",", "⟨", ident ge0, ",", ident le9, "⟩", ",", ident rfl, ",", ident rfl, "⟩", ",", ident rfl, ",", ident rfl, "⟩"],
+    simpa [] [] [] ["[", expr hn, ",", expr ge0, ",", expr le9, ",", expr true_and, ",", expr and_true, ",", expr eq_self_iff_true, ",", expr exists_prop_of_true, ",", expr tsub_le_tsub_iff_right, ",", expr l09, "]"] [] ["using", expr le_iff_le.mp le9] },
+  { simp [] [] ["only"] ["[", expr digit, ",", expr sat_eq_done, ",", expr pure_eq_done, ",", expr decorate_error_eq_done, ",", expr bind_eq_done, ",", "<-", expr c9, ",", expr le_iff_le, "]"] [] [],
+    rintro ["⟨", ident hn, ",", ident rfl, ",", "-", ",", ident rfl, ",", ident ge0, ",", ident le9, "⟩"],
+    use ["[", expr «expr + »(n, 1), ",", expr cb.read ⟨n, hn⟩, "]"],
+    simp [] [] [] ["[", expr hn, ",", expr ge0, ",", expr le9, "]"] [] [] }
+end
 
 theorem digit_eq_fail :
   digit cb n = fail n' err ↔
@@ -1074,7 +1060,7 @@ variable{α β :
 
 theorem not_of_ne (h : p cb n = done n' a) (hne : n ≠ n') : ¬static p :=
   by 
-    introI 
+    intro 
     exact hne (of_done h)
 
 instance pure : static (pure a) :=
@@ -1156,32 +1142,28 @@ instance decorate_errors [p.static] : (@decorate_errors α msgs p).Static :=
 instance decorate_error [p.static] : (@decorate_error α msg p).Static :=
   static.decorate_errors
 
-theorem any_char : ¬static any_char :=
-  by 
-    have  : any_char "s".toCharBuffer 0 = done 1 's'
-    ·
-      have  : 0 < "s".toCharBuffer.size :=
-        by 
-          decide 
-      simpa [any_char_eq_done, this]
-    exact not_of_ne this zero_ne_one
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem any_char : «expr¬ »(static any_char) :=
+begin
+  have [] [":", expr «expr = »(any_char "s".to_char_buffer 0, done 1 's')] [],
+  { have [] [":", expr «expr < »(0, "s".to_char_buffer.size)] [":=", expr exprdec_trivial()],
+    simpa [] [] [] ["[", expr any_char_eq_done, ",", expr this, "]"] [] [] },
+  exact [expr not_of_ne this zero_ne_one]
+end
 
-theorem sat_iff {p : Charₓ → Prop} [DecidablePred p] : static (sat p) ↔ ∀ c, ¬p c :=
-  by 
-    split 
-    ·
-      introI 
-      intro c hc 
-      have  : sat p [c].toBuffer 0 = done 1 c :=
-        by 
-          simp [sat_eq_done, hc]
-      exact zero_ne_one (of_done this)
-    ·
-      contrapose! 
-      simp only [Iff, sat_eq_done, and_imp, exists_prop, exists_and_distrib_right, exists_and_distrib_left,
-        exists_imp_distrib, not_forall]
-      rintro _ _ _ a h hne rfl hp -
-      exact ⟨a, hp⟩
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sat_iff {p : char → exprProp()} [decidable_pred p] : «expr ↔ »(static (sat p), ∀ c, «expr¬ »(p c)) :=
+begin
+  split,
+  { introI [],
+    intros [ident c, ident hc],
+    have [] [":", expr «expr = »(sat p «expr[ , ]»([c]).to_buffer 0, done 1 c)] [":=", expr by simp [] [] [] ["[", expr sat_eq_done, ",", expr hc, "]"] [] []],
+    exact [expr zero_ne_one (of_done this)] },
+  { contrapose ["!"] [],
+    simp [] [] ["only"] ["[", expr iff, ",", expr sat_eq_done, ",", expr and_imp, ",", expr exists_prop, ",", expr exists_and_distrib_right, ",", expr exists_and_distrib_left, ",", expr exists_imp_distrib, ",", expr not_forall, "]"] [] [],
+    rintros ["_", "_", "_", ident a, ident h, ident hne, ident rfl, ident hp, "-"],
+    exact [expr ⟨a, hp⟩] }
+end
 
 instance sat : static (sat fun _ => False) :=
   by 
@@ -1191,59 +1173,51 @@ instance sat : static (sat fun _ => False) :=
 instance eps : static eps :=
   static.pure
 
-theorem ch (c : Charₓ) : ¬static (ch c) :=
-  by 
-    have  : ch c [c].toBuffer 0 = done 1 ()
-    ·
-      have  : 0 < [c].toBuffer.size :=
-        by 
-          decide 
-      simp [ch_eq_done, this]
-    exact not_of_ne this zero_ne_one
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ch (c : char) : «expr¬ »(static (ch c)) :=
+begin
+  have [] [":", expr «expr = »(ch c «expr[ , ]»([c]).to_buffer 0, done 1 ())] [],
+  { have [] [":", expr «expr < »(0, «expr[ , ]»([c]).to_buffer.size)] [":=", expr exprdec_trivial()],
+    simp [] [] [] ["[", expr ch_eq_done, ",", expr this, "]"] [] [] },
+  exact [expr not_of_ne this zero_ne_one]
+end
 
-theorem char_buf_iff {cb' : CharBuffer} : static (char_buf cb') ↔ cb' = Buffer.nil :=
-  by 
-    rw [←Buffer.size_eq_zero_iff]
-    have  : char_buf cb' cb' 0 = done cb'.size () :=
-      by 
-        simp [char_buf_eq_done]
-    cases' hc : cb'.size with n
-    ·
-      simp only [eq_self_iff_true, iff_trueₓ]
-      exact
-        ⟨fun _ _ _ _ h =>
-            by 
-              simpa [hc] using (char_buf_eq_done.mp h).left⟩
-    ·
-      rw [hc] at this 
-      simpa [Nat.succ_ne_zero] using not_of_ne this (Nat.succ_ne_zero n).symm
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem char_buf_iff {cb' : char_buffer} : «expr ↔ »(static (char_buf cb'), «expr = »(cb', buffer.nil)) :=
+begin
+  rw ["<-", expr buffer.size_eq_zero_iff] [],
+  have [] [":", expr «expr = »(char_buf cb' cb' 0, done cb'.size ())] [":=", expr by simp [] [] [] ["[", expr char_buf_eq_done, "]"] [] []],
+  cases [expr hc, ":", expr cb'.size] ["with", ident n],
+  { simp [] [] ["only"] ["[", expr eq_self_iff_true, ",", expr iff_true, "]"] [] [],
+    exact [expr ⟨λ _ _ _ _ h, by simpa [] [] [] ["[", expr hc, "]"] [] ["using", expr (char_buf_eq_done.mp h).left]⟩] },
+  { rw [expr hc] ["at", ident this],
+    simpa [] [] [] ["[", expr nat.succ_ne_zero, "]"] [] ["using", expr not_of_ne this (nat.succ_ne_zero n).symm] }
+end
 
-theorem one_of_iff {cs : List Charₓ} : static (one_of cs) ↔ cs = [] :=
-  by 
-    cases' cs with hd tl
-    ·
-      simp [one_of, static.decorate_errors]
-    ·
-      have  : one_of (hd :: tl) (hd :: tl).toBuffer 0 = done 1 hd
-      ·
-        simp [one_of_eq_done]
-      simpa using not_of_ne this zero_ne_one
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem one_of_iff {cs : list char} : «expr ↔ »(static (one_of cs), «expr = »(cs, «expr[ , ]»([]))) :=
+begin
+  cases [expr cs] ["with", ident hd, ident tl],
+  { simp [] [] [] ["[", expr one_of, ",", expr static.decorate_errors, "]"] [] [] },
+  { have [] [":", expr «expr = »(one_of [«expr :: »/«expr :: »/«expr :: »](hd, tl) [«expr :: »/«expr :: »/«expr :: »](hd, tl).to_buffer 0, done 1 hd)] [],
+    { simp [] [] [] ["[", expr one_of_eq_done, "]"] [] [] },
+    simpa [] [] [] [] [] ["using", expr not_of_ne this zero_ne_one] }
+end
 
 instance one_of : static (one_of []) :=
   by 
     apply one_of_iff.mpr 
     rfl
 
-theorem one_of'_iff {cs : List Charₓ} : static (one_of' cs) ↔ cs = [] :=
-  by 
-    cases' cs with hd tl
-    ·
-      simp [one_of', static.bind]
-    ·
-      have  : one_of' (hd :: tl) (hd :: tl).toBuffer 0 = done 1 ()
-      ·
-        simp [one_of'_eq_done]
-      simpa using not_of_ne this zero_ne_one
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem one_of'_iff {cs : list char} : «expr ↔ »(static (one_of' cs), «expr = »(cs, «expr[ , ]»([]))) :=
+begin
+  cases [expr cs] ["with", ident hd, ident tl],
+  { simp [] [] [] ["[", expr one_of', ",", expr static.bind, "]"] [] [] },
+  { have [] [":", expr «expr = »(one_of' [«expr :: »/«expr :: »/«expr :: »](hd, tl) [«expr :: »/«expr :: »/«expr :: »](hd, tl).to_buffer 0, done 1 ())] [],
+    { simp [] [] [] ["[", expr one_of'_eq_done, "]"] [] [] },
+    simpa [] [] [] [] [] ["using", expr not_of_ne this zero_ne_one] }
+end
 
 instance one_of' : static (one_of []) :=
   by 
@@ -1332,32 +1306,29 @@ theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.static
 | 0 => static.failure
 | max_depth+1 => hF _ (fix_core _)
 
-theorem digit : ¬digit.Static :=
-  by 
-    have  : digit "1".toCharBuffer 0 = done 1 1
-    ·
-      have  : 0 < "s".toCharBuffer.size :=
-        by 
-          decide 
-      simpa [this]
-    exact not_of_ne this zero_ne_one
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem digit : «expr¬ »(digit.static) :=
+begin
+  have [] [":", expr «expr = »(digit "1".to_char_buffer 0, done 1 1)] [],
+  { have [] [":", expr «expr < »(0, "s".to_char_buffer.size)] [":=", expr exprdec_trivial()],
+    simpa [] [] [] ["[", expr this, "]"] [] [] },
+  exact [expr not_of_ne this zero_ne_one]
+end
 
-theorem Nat : ¬Nat.Static :=
-  by 
-    have  : Nat "1".toCharBuffer 0 = done 1 1
-    ·
-      have  : 0 < "s".toCharBuffer.size :=
-        by 
-          decide 
-      simpa [this]
-    exact not_of_ne this zero_ne_one
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nat : «expr¬ »(nat.static) :=
+begin
+  have [] [":", expr «expr = »(nat "1".to_char_buffer 0, done 1 1)] [],
+  { have [] [":", expr «expr < »(0, "s".to_char_buffer.size)] [":=", expr exprdec_trivial()],
+    simpa [] [] [] ["[", expr this, "]"] [] [] },
+  exact [expr not_of_ne this zero_ne_one]
+end
 
-theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.static → (F p).Static) : static (fix F) :=
-  ⟨fun cb n _ _ h =>
-      by 
-        haveI  := fix_core hF ((cb.size - n)+1)
-        dsimp [fix]  at h 
-        exact static.of_done h⟩
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fix {F : parser α → parser α} (hF : ∀ p : parser α, p.static → (F p).static) : static (fix F) :=
+⟨λ cb n _ _ h, by { haveI [] [] [":=", expr fix_core hF «expr + »(«expr - »(cb.size, n), 1)],
+   dsimp [] ["[", expr fix, "]"] [] ["at", ident h],
+   exact [expr static.of_done h] }⟩
 
 end Static
 
@@ -1380,13 +1351,13 @@ theorem done_of_unbounded (h : ¬p.bounded) : ∃ (cb : CharBuffer)(n n' : ℕ)(
     ·
       simp [hp]
 
-theorem pure : ¬Bounded (pure a) :=
-  by 
-    introI 
-    have  : (pure a : Parser α) Buffer.nil 0 = done 0 a :=
-      by 
-        simp [pure_eq_done]
-    exact absurd (bounded.of_done this) (lt_irreflₓ _)
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pure : «expr¬ »(bounded (pure a)) :=
+begin
+  introI [],
+  have [] [":", expr «expr = »((pure a : parser α) buffer.nil 0, done 0 a)] [":=", expr by simp [] [] [] ["[", expr pure_eq_done, "]"] [] []],
+  exact [expr absurd (bounded.of_done this) (lt_irrefl _)]
+end
 
 instance bind {f : α → Parser β} [p.bounded] : (p >>= f).Bounded :=
   by 
@@ -1438,14 +1409,14 @@ theorem decorate_errors_iff : (@Parser.decorateErrors α msgs p).Bounded ↔ p.b
   by 
     split 
     ·
-      introI 
+      intro 
       constructor 
       intro _ _ hn 
       obtain ⟨_, _, h⟩ := bounded.exists (@Parser.decorateErrors α msgs p) hn 
       simp [decorate_errors_eq_fail] at h 
       exact h.right.right
     ·
-      introI 
+      intro 
       constructor 
       intro _ _ hn 
       obtain ⟨_, _, h⟩ := bounded.exists p hn 
@@ -1473,23 +1444,18 @@ theorem eps : ¬Bounded eps :=
 instance ch {c : Charₓ} : Bounded (ch c) :=
   bounded.decorate_error
 
-theorem char_buf_iff {cb' : CharBuffer} : Bounded (char_buf cb') ↔ cb' ≠ Buffer.nil :=
-  by 
-    have  : cb' ≠ Buffer.nil ↔ cb'.to_list ≠ [] :=
-      not_iff_not_of_iff
-        ⟨fun h =>
-            by 
-              simp [h],
-          fun h =>
-            by 
-              simpa using congr_argₓ List.toBuffer h⟩
-    rw [char_buf, decorate_error_iff, this]
-    cases cb'.to_list
-    ·
-      simp [pure, ch]
-    ·
-      simp only [iff_trueₓ, Ne.def, not_false_iff]
-      infer_instance
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem char_buf_iff {cb' : char_buffer} : «expr ↔ »(bounded (char_buf cb'), «expr ≠ »(cb', buffer.nil)) :=
+begin
+  have [] [":", expr «expr ↔ »(«expr ≠ »(cb', buffer.nil), «expr ≠ »(cb'.to_list, «expr[ , ]»([])))] [":=", expr not_iff_not_of_iff ⟨λ
+    h, by simp [] [] [] ["[", expr h, "]"] [] [], λ
+    h, by simpa [] [] [] [] [] ["using", expr congr_arg list.to_buffer h]⟩],
+  rw ["[", expr char_buf, ",", expr decorate_error_iff, ",", expr this, "]"] [],
+  cases [expr cb'.to_list] [],
+  { simp [] [] [] ["[", expr pure, ",", expr ch, "]"] [] [] },
+  { simp [] [] ["only"] ["[", expr iff_true, ",", expr ne.def, ",", expr not_false_iff, "]"] [] [],
+    apply_instance }
+end
 
 instance one_of {cs : List Charₓ} : (one_of cs).Bounded :=
   bounded.decorate_errors
@@ -1497,40 +1463,38 @@ instance one_of {cs : List Charₓ} : (one_of cs).Bounded :=
 instance one_of' {cs : List Charₓ} : (one_of' cs).Bounded :=
   bounded.and_then
 
-theorem str_iff {s : Stringₓ} : (str s).Bounded ↔ s ≠ "" :=
-  by 
-    rw [str, decorate_error_iff]
-    cases hs : s.to_list
-    ·
-      have  : s = ""
-      ·
-        cases s 
-        rw [Stringₓ.toList] at hs 
-        simpa [hs]
-      simp [pure, this]
-    ·
-      have  : s ≠ ""
-      ·
-        intro H 
-        simpa [H] using hs 
-      simp only [this, iff_trueₓ, Ne.def, not_false_iff]
-      infer_instance
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem str_iff {s : string} : «expr ↔ »((str s).bounded, «expr ≠ »(s, "")) :=
+begin
+  rw ["[", expr str, ",", expr decorate_error_iff, "]"] [],
+  cases [expr hs, ":", expr s.to_list] [],
+  { have [] [":", expr «expr = »(s, "")] [],
+    { cases [expr s] [],
+      rw ["[", expr string.to_list, "]"] ["at", ident hs],
+      simpa [] [] [] ["[", expr hs, "]"] [] [] },
+    simp [] [] [] ["[", expr pure, ",", expr this, "]"] [] [] },
+  { have [] [":", expr «expr ≠ »(s, "")] [],
+    { intro [ident H],
+      simpa [] [] [] ["[", expr H, "]"] [] ["using", expr hs] },
+    simp [] [] ["only"] ["[", expr this, ",", expr iff_true, ",", expr ne.def, ",", expr not_false_iff, "]"] [] [],
+    apply_instance }
+end
 
-theorem remaining : ¬remaining.Bounded :=
-  by 
-    introI 
-    have  : remaining Buffer.nil 0 = done 0 0 :=
-      by 
-        simp [remaining_eq_done]
-    exact absurd (bounded.of_done this) (lt_irreflₓ _)
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem remaining : «expr¬ »(remaining.bounded) :=
+begin
+  introI [],
+  have [] [":", expr «expr = »(remaining buffer.nil 0, done 0 0)] [":=", expr by simp [] [] [] ["[", expr remaining_eq_done, "]"] [] []],
+  exact [expr absurd (bounded.of_done this) (lt_irrefl _)]
+end
 
-theorem eof : ¬eof.Bounded :=
-  by 
-    introI 
-    have  : eof Buffer.nil 0 = done 0 () :=
-      by 
-        simp [eof_eq_done]
-    exact absurd (bounded.of_done this) (lt_irreflₓ _)
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eof : «expr¬ »(eof.bounded) :=
+begin
+  introI [],
+  have [] [":", expr «expr = »(eof buffer.nil 0, done 0 ())] [":=", expr by simp [] [] [] ["[", expr eof_eq_done, "]"] [] []],
+  exact [expr absurd (bounded.of_done this) (lt_irrefl _)]
+end
 
 section Fold
 
@@ -1554,13 +1518,15 @@ theorem foldr_core {f : α → β → β} : (foldr_core f p b reps).Bounded :=
     obtain ⟨np, errp, hp⟩ := bounded.exists p hn 
     simpa [foldr_core_succ_eq_fail, hp] using he cb n np errp
 
-theorem foldr {f : α → β → β} : Bounded (foldr f p b) :=
-  by 
-    constructor 
-    intro cb n hn 
-    haveI  : (Parser.foldrCore f p b ((cb.size - n)+1)).Bounded := foldr_core he 
-    obtain ⟨np, errp, hp⟩ := bounded.exists (Parser.foldrCore f p b ((cb.size - n)+1)) hn 
-    simp [foldr, hp]
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem foldr {f : α → β → β} : bounded (foldr f p b) :=
+begin
+  constructor,
+  intros [ident cb, ident n, ident hn],
+  haveI [] [":", expr (parser.foldr_core f p b «expr + »(«expr - »(cb.size, n), 1)).bounded] [":=", expr foldr_core he],
+  obtain ["⟨", ident np, ",", ident errp, ",", ident hp, "⟩", ":=", expr bounded.exists (parser.foldr_core f p b «expr + »(«expr - »(cb.size, n), 1)) hn],
+  simp [] [] [] ["[", expr foldr, ",", expr hp, "]"] [] []
+end
 
 theorem foldl_core {f : β → α → β} : (foldl_core f b p reps).Bounded :=
   by 
@@ -1572,13 +1538,15 @@ theorem foldl_core {f : β → α → β} : (foldl_core f b p reps).Bounded :=
     obtain ⟨np, errp, hp⟩ := bounded.exists p hn 
     simpa [foldl_core_succ_eq_fail, hp] using he cb n np errp
 
-theorem foldl {f : β → α → β} : Bounded (foldl f b p) :=
-  by 
-    constructor 
-    intro cb n hn 
-    haveI  : (Parser.foldlCore f b p ((cb.size - n)+1)).Bounded := foldl_core he 
-    obtain ⟨np, errp, hp⟩ := bounded.exists (Parser.foldlCore f b p ((cb.size - n)+1)) hn 
-    simp [foldl, hp]
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem foldl {f : β → α → β} : bounded (foldl f b p) :=
+begin
+  constructor,
+  intros [ident cb, ident n, ident hn],
+  haveI [] [":", expr (parser.foldl_core f b p «expr + »(«expr - »(cb.size, n), 1)).bounded] [":=", expr foldl_core he],
+  obtain ["⟨", ident np, ",", ident errp, ",", ident hp, "⟩", ":=", expr bounded.exists (parser.foldl_core f b p «expr + »(«expr - »(cb.size, n), 1)) hn],
+  simp [] [] [] ["[", expr foldl, ",", expr hp, "]"] [] []
+end
 
 theorem many : p.many.bounded :=
   foldr he
@@ -1620,13 +1588,15 @@ instance digit : digit.Bounded :=
 instance Nat : Nat.Bounded :=
   bounded.decorate_error
 
-theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.bounded → (F p).Bounded) : Bounded (fix F) :=
-  by 
-    constructor 
-    intro cb n hn 
-    haveI  : (Parser.fixCore F ((cb.size - n)+1)).Bounded := fix_core hF _ 
-    obtain ⟨np, errp, hp⟩ := bounded.exists (Parser.fixCore F ((cb.size - n)+1)) hn 
-    simp [fix, hp]
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fix {F : parser α → parser α} (hF : ∀ p : parser α, p.bounded → (F p).bounded) : bounded (fix F) :=
+begin
+  constructor,
+  intros [ident cb, ident n, ident hn],
+  haveI [] [":", expr (parser.fix_core F «expr + »(«expr - »(cb.size, n), 1)).bounded] [":=", expr fix_core hF _],
+  obtain ["⟨", ident np, ",", ident errp, ",", ident hp, "⟩", ":=", expr bounded.exists (parser.fix_core F «expr + »(«expr - »(cb.size, n), 1)) hn],
+  simp [] [] [] ["[", expr fix, ",", expr hp, "]"] [] []
+end
 
 end Bounded
 
@@ -1642,7 +1612,7 @@ variable{α β :
 
 theorem of_bounded [p.bounded] : ¬unfailing p :=
   by 
-    introI 
+    intro 
     cases h : p Buffer.nil 0
     ·
       simpa [lt_irreflₓ] using bounded.of_done h
@@ -1695,13 +1665,13 @@ instance mmap' {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] : (
       obtain ⟨n', b, hf⟩ := hl cb np 
       simp [hp, hf, And.comm, And.left_comm, And.assoc, pure_eq_done]
 
-theorem failure : ¬@Parser.Unfailing α failure :=
-  by 
-    introI h 
-    have  : (failure : Parser α) Buffer.nil 0 = fail 0 Dlist.empty :=
-      by 
-        simp 
-    exact of_fail this
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem failure : «expr¬ »(@parser.unfailing α failure) :=
+begin
+  introI [ident h],
+  have [] [":", expr «expr = »((failure : parser α) buffer.nil 0, fail 0 dlist.empty)] [":=", expr by simp [] [] [] [] [] []],
+  exact [expr of_fail this]
+end
 
 instance guard_true : unfailing (guardₓ True) :=
   unfailing.pure
@@ -1745,28 +1715,32 @@ instance remaining : remaining.Unfailing :=
 theorem foldr_core_zero {f : α → β → β} {b : β} : ¬(foldr_core f p b 0).Unfailing :=
   unfailing.failure
 
-instance foldr_core_of_static {f : α → β → β} {b : β} {reps : ℕ} [p.static] [p.unfailing] :
-  (foldr_core f p b (reps+1)).Unfailing :=
-  by 
-    induction' reps with reps hr
-    ·
-      constructor 
-      intro cb n 
-      obtain ⟨np, a, h⟩ := p.exists_done cb n 
-      simpa [foldr_core_eq_done, h] using (static.of_done h).symm
-    ·
-      constructor 
-      haveI  := hr 
-      intro cb n 
-      obtain ⟨np, a, h⟩ := p.exists_done cb n 
-      have  : n = np := static.of_done h 
-      subst this 
-      obtain ⟨np, b', hf⟩ := exists_done (foldr_core f p b (reps+1)) cb n 
-      have  : n = np := static.of_done hf 
-      subst this 
-      refine' ⟨n, f a b', _⟩
-      rw [foldr_core_eq_done]
-      simp [h, hf, And.comm, And.left_comm, And.assoc]
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance foldr_core_of_static
+{f : α → β → β}
+{b : β}
+{reps : exprℕ()}
+[p.static]
+[p.unfailing] : (foldr_core f p b «expr + »(reps, 1)).unfailing :=
+begin
+  induction [expr reps] [] ["with", ident reps, ident hr] [],
+  { constructor,
+    intros [ident cb, ident n],
+    obtain ["⟨", ident np, ",", ident a, ",", ident h, "⟩", ":=", expr p.exists_done cb n],
+    simpa [] [] [] ["[", expr foldr_core_eq_done, ",", expr h, "]"] [] ["using", expr (static.of_done h).symm] },
+  { constructor,
+    haveI [] [] [":=", expr hr],
+    intros [ident cb, ident n],
+    obtain ["⟨", ident np, ",", ident a, ",", ident h, "⟩", ":=", expr p.exists_done cb n],
+    have [] [":", expr «expr = »(n, np)] [":=", expr static.of_done h],
+    subst [expr this],
+    obtain ["⟨", ident np, ",", ident b', ",", ident hf, "⟩", ":=", expr exists_done (foldr_core f p b «expr + »(reps, 1)) cb n],
+    have [] [":", expr «expr = »(n, np)] [":=", expr static.of_done hf],
+    subst [expr this],
+    refine [expr ⟨n, f a b', _⟩],
+    rw [expr foldr_core_eq_done] [],
+    simp [] [] [] ["[", expr h, ",", expr hf, ",", expr and.comm, ",", expr and.left_comm, ",", expr and.assoc, "]"] [] [] }
+end
 
 instance foldr_core_one_of_err_static {f : α → β → β} {b : β} [p.static] [p.err_static] :
   (foldr_core f p b 1).Unfailing :=
@@ -1799,7 +1773,7 @@ variable{α β :
 
 theorem not_of_ne (h : p cb n = fail n' err) (hne : n ≠ n') : ¬err_static p :=
   by 
-    introI 
+    intro 
     exact hne (of_fail h)
 
 instance pure : err_static (pure a) :=
@@ -1985,12 +1959,11 @@ instance digit : digit.ErrStatic :=
 instance Nat : Nat.ErrStatic :=
   err_static.decorate_error
 
-theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.err_static → (F p).ErrStatic) : err_static (fix F) :=
-  ⟨fun cb n _ _ h =>
-      by 
-        haveI  := fix_core hF ((cb.size - n)+1)
-        dsimp [fix]  at h 
-        exact err_static.of_fail h⟩
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fix {F : parser α → parser α} (hF : ∀ p : parser α, p.err_static → (F p).err_static) : err_static (fix F) :=
+⟨λ cb n _ _ h, by { haveI [] [] [":=", expr fix_core hF «expr + »(«expr - »(cb.size, n), 1)],
+   dsimp [] ["[", expr fix, "]"] [] ["at", ident h],
+   exact [expr err_static.of_fail h] }⟩
 
 end ErrStatic
 
@@ -2004,12 +1977,16 @@ variable{α β :
       (List
         Stringₓ)}{msg : Thunkₓ Stringₓ}{cb : CharBuffer}{n' n : ℕ}{err : Dlist Stringₓ}{a : α}{b : β}{sep : Parser Unit}
 
-theorem not_step_of_static_done [static p] (h : ∃ cb n n' a, p cb n = done n' a) : ¬step p :=
-  by 
-    introI 
-    rcases h with ⟨cb, n, n', a, h⟩
-    have hs := static.of_done h 
-    simpa [←hs] using of_done h
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem not_step_of_static_done
+[static p]
+(h : «expr∃ , »((cb n n' a), «expr = »(p cb n, done n' a))) : «expr¬ »(step p) :=
+begin
+  introI [],
+  rcases [expr h, "with", "⟨", ident cb, ",", ident n, ",", ident n', ",", ident a, ",", ident h, "⟩"],
+  have [ident hs] [] [":=", expr static.of_done h],
+  simpa [] [] [] ["[", "<-", expr hs, "]"] [] ["using", expr of_done h]
+end
 
 theorem pure (a : α) : ¬step (pure a) :=
   by 
@@ -2088,23 +2065,21 @@ instance orelse [p.step] [q.step] : (p <|> q).step :=
         simpRw [orelse_eq_done]
         rintro (h | ⟨h, -⟩) <;> exact of_done h⟩
 
-theorem decorate_errors_iff : (@Parser.decorateErrors α msgs p).step ↔ p.step :=
-  by 
-    split 
-    ·
-      introI 
-      constructor 
-      intro cb n n' a h 
-      have  : (@Parser.decorateErrors α msgs p) cb n = done n' a :=
-        by 
-          simpa using h 
-      exact of_done this
-    ·
-      introI 
-      constructor 
-      intro _ _ _ _ h 
-      rw [decorate_errors_eq_done] at h 
-      exact of_done h
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem decorate_errors_iff : «expr ↔ »((@parser.decorate_errors α msgs p).step, p.step) :=
+begin
+  split,
+  { introI [],
+    constructor,
+    intros [ident cb, ident n, ident n', ident a, ident h],
+    have [] [":", expr «expr = »(@parser.decorate_errors α msgs p cb n, done n' a)] [":=", expr by simpa [] [] [] [] [] ["using", expr h]],
+    exact [expr of_done this] },
+  { introI [],
+    constructor,
+    intros ["_", "_", "_", "_", ident h],
+    rw [expr decorate_errors_eq_done] ["at", ident h],
+    exact [expr of_done h] }
+end
 
 instance decorate_errors [p.step] : (@decorate_errors α msgs p).step :=
   ⟨fun _ _ _ _ =>
@@ -2140,22 +2115,20 @@ theorem eps : ¬step eps :=
 instance ch {c : Charₓ} : step (ch c) :=
   step.decorate_error
 
-theorem char_buf_iff {cb' : CharBuffer} : (char_buf cb').step ↔ cb'.size = 1 :=
-  by 
-    have  : char_buf cb' cb' 0 = done cb'.size () :=
-      by 
-        simp [char_buf_eq_done]
-    split 
-    ·
-      introI 
-      simpa using of_done this
-    ·
-      intro h 
-      constructor 
-      intro cb n n' _ 
-      rw [char_buf_eq_done, h]
-      rintro ⟨rfl, -⟩
-      rfl
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem char_buf_iff {cb' : char_buffer} : «expr ↔ »((char_buf cb').step, «expr = »(cb'.size, 1)) :=
+begin
+  have [] [":", expr «expr = »(char_buf cb' cb' 0, done cb'.size ())] [":=", expr by simp [] [] [] ["[", expr char_buf_eq_done, "]"] [] []],
+  split,
+  { introI [],
+    simpa [] [] [] [] [] ["using", expr of_done this] },
+  { intro [ident h],
+    constructor,
+    intros [ident cb, ident n, ident n', "_"],
+    rw ["[", expr char_buf_eq_done, ",", expr h, "]"] [],
+    rintro ["⟨", ident rfl, ",", "-", "⟩"],
+    refl }
+end
 
 instance one_of {cs : List Charₓ} : (one_of cs).step :=
   step.decorate_errors
@@ -2187,12 +2160,11 @@ theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.step �
 instance digit : digit.step :=
   step.decorate_error
 
-theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.step → (F p).step) : step (fix F) :=
-  ⟨fun cb n _ _ h =>
-      by 
-        haveI  := fix_core hF ((cb.size - n)+1)
-        dsimp [fix]  at h 
-        exact of_done h⟩
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fix {F : parser α → parser α} (hF : ∀ p : parser α, p.step → (F p).step) : step (fix F) :=
+⟨λ cb n _ _ h, by { haveI [] [] [":=", expr fix_core hF «expr + »(«expr - »(cb.size, n), 1)],
+   dsimp [] ["[", expr fix, "]"] [] ["at", ident h],
+   exact [expr of_done h] }⟩
 
 end Step
 
@@ -2206,62 +2178,57 @@ variable{α β :
       (List
         Stringₓ)}{msg : Thunkₓ Stringₓ}{cb : CharBuffer}{n' n : ℕ}{err : Dlist Stringₓ}{a : α}{b : β}{sep : Parser Unit}
 
-theorem many1_eq_done_iff_many_eq_done [p.step] [p.bounded] {x : α} {xs : List α} :
-  many1 p cb n = done n' (x :: xs) ↔ many p cb n = done n' (x :: xs) :=
-  by 
-    induction' hx : x :: xs with hd tl IH generalizing x xs n n'
-    ·
-      simpa using hx 
-    split 
-    ·
-      simp only [many1_eq_done, and_imp, exists_imp_distrib]
-      intro np hp hm 
-      have  : np = n+1 := step.of_done hp 
-      have hn : n < cb.size := bounded.of_done hp 
-      subst this 
-      obtain ⟨k, hk⟩ : ∃ k, cb.size - n = k+1 := Nat.exists_eq_succ_of_ne_zero (ne_of_gtₓ (tsub_pos_of_lt hn))
-      cases k
-      ·
-        cases tl <;> simpa [many_eq_done_nil, Nat.sub_succ, hk, many_eq_done, hp, foldr_core_eq_done] using hm 
-      cases' tl with hd' tl'
-      ·
-        simpa [many_eq_done_nil, Nat.sub_succ, hk, many_eq_done, hp, foldr_core_eq_done] using hm
-      ·
-        rw [←@IH hd' tl'] at hm 
-        swap 
-        rfl 
-        simp only [many1_eq_done, many, foldr] at hm 
-        obtain ⟨np, hp', hf⟩ := hm 
-        have  : np = (n+1)+1 := step.of_done hp' 
-        subst this 
-        simpa [Nat.sub_succ, many_eq_done, hp, hk, foldr_core_eq_done, hp'] using hf
-    ·
-      simp only [many_eq_done, many1_eq_done, and_imp, exists_imp_distrib]
-      intro np hp hm 
-      have  : np = n+1 := step.of_done hp 
-      have hn : n < cb.size := bounded.of_done hp 
-      subst this 
-      obtain ⟨k, hk⟩ : ∃ k, cb.size - n = k+1 := Nat.exists_eq_succ_of_ne_zero (ne_of_gtₓ (tsub_pos_of_lt hn))
-      cases k
-      ·
-        cases tl <;> simpa [many_eq_done_nil, Nat.sub_succ, hk, many_eq_done, hp, foldr_core_eq_done] using hm 
-      cases' tl with hd' tl'
-      ·
-        simpa [many_eq_done_nil, Nat.sub_succ, hk, many_eq_done, hp, foldr_core_eq_done] using hm
-      ·
-        simp [hp]
-        rw [←@IH hd' tl' (n+1) n']
-        swap 
-        rfl 
-        rw [hk, foldr_core_eq_done, Or.comm] at hm 
-        obtain hm | ⟨np, hd', tl', hp', hf, hm⟩ := hm
-        ·
-          simpa using hm 
-        simp only  at hm 
-        obtain ⟨rfl, rfl⟩ := hm 
-        have  : np = (n+1)+1 := step.of_done hp' 
-        subst this 
-        simp [Nat.sub_succ, many, many1_eq_done, hp, hk, foldr_core_eq_done, hp', ←hf, foldr]
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem many1_eq_done_iff_many_eq_done
+[p.step]
+[p.bounded]
+{x : α}
+{xs : list α} : «expr ↔ »(«expr = »(many1 p cb n, done n' [«expr :: »/«expr :: »/«expr :: »](x, xs)), «expr = »(many p cb n, done n' [«expr :: »/«expr :: »/«expr :: »](x, xs))) :=
+begin
+  induction [expr hx, ":", expr [«expr :: »/«expr :: »/«expr :: »](x, xs)] [] ["with", ident hd, ident tl, ident IH] ["generalizing", ident x, ident xs, ident n, ident n'],
+  { simpa [] [] [] [] [] ["using", expr hx] },
+  split,
+  { simp [] [] ["only"] ["[", expr many1_eq_done, ",", expr and_imp, ",", expr exists_imp_distrib, "]"] [] [],
+    intros [ident np, ident hp, ident hm],
+    have [] [":", expr «expr = »(np, «expr + »(n, 1))] [":=", expr step.of_done hp],
+    have [ident hn] [":", expr «expr < »(n, cb.size)] [":=", expr bounded.of_done hp],
+    subst [expr this],
+    obtain ["⟨", ident k, ",", ident hk, "⟩", ":", expr «expr∃ , »((k), «expr = »(«expr - »(cb.size, n), «expr + »(k, 1))), ":=", expr nat.exists_eq_succ_of_ne_zero (ne_of_gt (tsub_pos_of_lt hn))],
+    cases [expr k] [],
+    { cases [expr tl] []; simpa [] [] [] ["[", expr many_eq_done_nil, ",", expr nat.sub_succ, ",", expr hk, ",", expr many_eq_done, ",", expr hp, ",", expr foldr_core_eq_done, "]"] [] ["using", expr hm] },
+    cases [expr tl] ["with", ident hd', ident tl'],
+    { simpa [] [] [] ["[", expr many_eq_done_nil, ",", expr nat.sub_succ, ",", expr hk, ",", expr many_eq_done, ",", expr hp, ",", expr foldr_core_eq_done, "]"] [] ["using", expr hm] },
+    { rw ["<-", expr @IH hd' tl'] ["at", ident hm],
+      swap,
+      refl,
+      simp [] [] ["only"] ["[", expr many1_eq_done, ",", expr many, ",", expr foldr, "]"] [] ["at", ident hm],
+      obtain ["⟨", ident np, ",", ident hp', ",", ident hf, "⟩", ":=", expr hm],
+      have [] [":", expr «expr = »(np, «expr + »(«expr + »(n, 1), 1))] [":=", expr step.of_done hp'],
+      subst [expr this],
+      simpa [] [] [] ["[", expr nat.sub_succ, ",", expr many_eq_done, ",", expr hp, ",", expr hk, ",", expr foldr_core_eq_done, ",", expr hp', "]"] [] ["using", expr hf] } },
+  { simp [] [] ["only"] ["[", expr many_eq_done, ",", expr many1_eq_done, ",", expr and_imp, ",", expr exists_imp_distrib, "]"] [] [],
+    intros [ident np, ident hp, ident hm],
+    have [] [":", expr «expr = »(np, «expr + »(n, 1))] [":=", expr step.of_done hp],
+    have [ident hn] [":", expr «expr < »(n, cb.size)] [":=", expr bounded.of_done hp],
+    subst [expr this],
+    obtain ["⟨", ident k, ",", ident hk, "⟩", ":", expr «expr∃ , »((k), «expr = »(«expr - »(cb.size, n), «expr + »(k, 1))), ":=", expr nat.exists_eq_succ_of_ne_zero (ne_of_gt (tsub_pos_of_lt hn))],
+    cases [expr k] [],
+    { cases [expr tl] []; simpa [] [] [] ["[", expr many_eq_done_nil, ",", expr nat.sub_succ, ",", expr hk, ",", expr many_eq_done, ",", expr hp, ",", expr foldr_core_eq_done, "]"] [] ["using", expr hm] },
+    cases [expr tl] ["with", ident hd', ident tl'],
+    { simpa [] [] [] ["[", expr many_eq_done_nil, ",", expr nat.sub_succ, ",", expr hk, ",", expr many_eq_done, ",", expr hp, ",", expr foldr_core_eq_done, "]"] [] ["using", expr hm] },
+    { simp [] [] [] ["[", expr hp, "]"] [] [],
+      rw ["<-", expr @IH hd' tl' «expr + »(n, 1) n'] [],
+      swap,
+      refl,
+      rw ["[", expr hk, ",", expr foldr_core_eq_done, ",", expr or.comm, "]"] ["at", ident hm],
+      obtain ["(", ident hm, "|", "⟨", ident np, ",", ident hd', ",", ident tl', ",", ident hp', ",", ident hf, ",", ident hm, "⟩", ")", ":=", expr hm],
+      { simpa [] [] [] [] [] ["using", expr hm] },
+      simp [] [] ["only"] [] [] ["at", ident hm],
+      obtain ["⟨", ident rfl, ",", ident rfl, "⟩", ":=", expr hm],
+      have [] [":", expr «expr = »(np, «expr + »(«expr + »(n, 1), 1))] [":=", expr step.of_done hp'],
+      subst [expr this],
+      simp [] [] [] ["[", expr nat.sub_succ, ",", expr many, ",", expr many1_eq_done, ",", expr hp, ",", expr hk, ",", expr foldr_core_eq_done, ",", expr hp', ",", "<-", expr hf, ",", expr foldr, "]"] [] [] } }
+end
 
 end Step
 
@@ -2281,14 +2248,14 @@ instance (priority := 100)of_step [step p] : prog p :=
         rw [step.of_done h]
         exact Nat.lt_succ_selfₓ _⟩
 
-theorem pure (a : α) : ¬prog (pure a) :=
-  by 
-    introI h 
-    have  : (pure a : Parser α) Buffer.nil 0 = done 0 a :=
-      by 
-        simp [pure_eq_done]
-    replace this : 0 < 0 := prog.of_done this 
-    exact (lt_irreflₓ _) this
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pure (a : α) : «expr¬ »(prog (pure a)) :=
+begin
+  introI [ident h],
+  have [] [":", expr «expr = »((pure a : parser α) buffer.nil 0, done 0 a)] [":=", expr by simp [] [] [] ["[", expr pure_eq_done, "]"] [] []],
+  replace [ident this] [":", expr «expr < »(0, 0)] [":=", expr prog.of_done this],
+  exact [expr lt_irrefl _ this]
+end
 
 instance bind {f : α → Parser β} [p.prog] [∀ a, (f a).mono] : (p >>= f).Prog :=
   ⟨fun _ _ _ _ =>
@@ -2339,23 +2306,21 @@ instance orelse [p.prog] [q.prog] : (p <|> q).Prog :=
         simpRw [orelse_eq_done]
         rintro (h | ⟨h, -⟩) <;> exact of_done h⟩
 
-theorem decorate_errors_iff : (@Parser.decorateErrors α msgs p).Prog ↔ p.prog :=
-  by 
-    split 
-    ·
-      introI 
-      constructor 
-      intro cb n n' a h 
-      have  : (@Parser.decorateErrors α msgs p) cb n = done n' a :=
-        by 
-          simpa using h 
-      exact of_done this
-    ·
-      introI 
-      constructor 
-      intro _ _ _ _ h 
-      rw [decorate_errors_eq_done] at h 
-      exact of_done h
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem decorate_errors_iff : «expr ↔ »((@parser.decorate_errors α msgs p).prog, p.prog) :=
+begin
+  split,
+  { introI [],
+    constructor,
+    intros [ident cb, ident n, ident n', ident a, ident h],
+    have [] [":", expr «expr = »(@parser.decorate_errors α msgs p cb n, done n' a)] [":=", expr by simpa [] [] [] [] [] ["using", expr h]],
+    exact [expr of_done this] },
+  { introI [],
+    constructor,
+    intros ["_", "_", "_", "_", ident h],
+    rw [expr decorate_errors_eq_done] ["at", ident h],
+    exact [expr of_done h] }
+end
 
 instance decorate_errors [p.prog] : (@decorate_errors α msgs p).Prog :=
   ⟨fun _ _ _ _ =>
@@ -2381,23 +2346,18 @@ theorem eps : ¬prog eps :=
 instance ch {c : Charₓ} : prog (ch c) :=
   prog.of_step
 
-theorem char_buf_iff {cb' : CharBuffer} : (char_buf cb').Prog ↔ cb' ≠ Buffer.nil :=
-  by 
-    have  : cb' ≠ Buffer.nil ↔ cb'.to_list ≠ [] :=
-      not_iff_not_of_iff
-        ⟨fun h =>
-            by 
-              simp [h],
-          fun h =>
-            by 
-              simpa using congr_argₓ List.toBuffer h⟩
-    rw [char_buf, this, decorate_error_iff]
-    cases cb'.to_list
-    ·
-      simp [pure]
-    ·
-      simp only [iff_trueₓ, Ne.def, not_false_iff]
-      infer_instance
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem char_buf_iff {cb' : char_buffer} : «expr ↔ »((char_buf cb').prog, «expr ≠ »(cb', buffer.nil)) :=
+begin
+  have [] [":", expr «expr ↔ »(«expr ≠ »(cb', buffer.nil), «expr ≠ »(cb'.to_list, «expr[ , ]»([])))] [":=", expr not_iff_not_of_iff ⟨λ
+    h, by simp [] [] [] ["[", expr h, "]"] [] [], λ
+    h, by simpa [] [] [] [] [] ["using", expr congr_arg list.to_buffer h]⟩],
+  rw ["[", expr char_buf, ",", expr this, ",", expr decorate_error_iff, "]"] [],
+  cases [expr cb'.to_list] [],
+  { simp [] [] [] ["[", expr pure, "]"] [] [] },
+  { simp [] [] ["only"] ["[", expr iff_true, ",", expr ne.def, ",", expr not_false_iff, "]"] [] [],
+    apply_instance }
+end
 
 instance one_of {cs : List Charₓ} : (one_of cs).Prog :=
   prog.decorate_errors
@@ -2409,23 +2369,23 @@ theorem str_iff {s : Stringₓ} : (str s).Prog ↔ s ≠ "" :=
   by 
     simp [str_eq_char_buf, char_buf_iff, ←Stringₓ.to_list_inj, Buffer.ext_iff]
 
-theorem remaining : ¬remaining.Prog :=
-  by 
-    introI h 
-    have  : remaining Buffer.nil 0 = done 0 0 :=
-      by 
-        simp [remaining_eq_done]
-    replace this : 0 < 0 := prog.of_done this 
-    exact (lt_irreflₓ _) this
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem remaining : «expr¬ »(remaining.prog) :=
+begin
+  introI [ident h],
+  have [] [":", expr «expr = »(remaining buffer.nil 0, done 0 0)] [":=", expr by simp [] [] [] ["[", expr remaining_eq_done, "]"] [] []],
+  replace [ident this] [":", expr «expr < »(0, 0)] [":=", expr prog.of_done this],
+  exact [expr lt_irrefl _ this]
+end
 
-theorem eof : ¬eof.Prog :=
-  by 
-    introI h 
-    have  : eof Buffer.nil 0 = done 0 () :=
-      by 
-        simpa [remaining_eq_done]
-    replace this : 0 < 0 := prog.of_done this 
-    exact (lt_irreflₓ _) this
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eof : «expr¬ »(eof.prog) :=
+begin
+  introI [ident h],
+  have [] [":", expr «expr = »(eof buffer.nil 0, done 0 ())] [":=", expr by simpa [] [] [] ["[", expr remaining_eq_done, "]"] [] []],
+  replace [ident this] [":", expr «expr < »(0, 0)] [":=", expr prog.of_done this],
+  exact [expr lt_irrefl _ this]
+end
 
 instance many1 [p.mono] [p.prog] : p.many1.prog :=
   by 
@@ -2449,12 +2409,11 @@ instance digit : digit.Prog :=
 instance Nat : Nat.Prog :=
   prog.decorate_error
 
-theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.prog → (F p).Prog) : prog (fix F) :=
-  ⟨fun cb n _ _ h =>
-      by 
-        haveI  := fix_core hF ((cb.size - n)+1)
-        dsimp [fix]  at h 
-        exact of_done h⟩
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fix {F : parser α → parser α} (hF : ∀ p : parser α, p.prog → (F p).prog) : prog (fix F) :=
+⟨λ cb n _ _ h, by { haveI [] [] [":=", expr fix_core hF «expr + »(«expr - »(cb.size, n), 1)],
+   dsimp [] ["[", expr fix, "]"] [] ["at", ident h],
+   exact [expr of_done h] }⟩
 
 end Prog
 
@@ -2512,50 +2471,56 @@ theorem many_eq_nil_of_out_of_bound [p.bounded] {l : List α} (h : p.many cb n =
       obtain ⟨np, hp, -⟩ := h 
       exact absurd (bounded.of_done hp) hn.not_lt
 
-theorem many1_length_of_done [p.mono] [p.step] [p.bounded] {l : List α} (h : many1 p cb n = done n' l) :
-  l.length = n' - n :=
-  by 
-    induction' l with hd tl hl generalizing n n'
-    ·
-      simpa using h
-    ·
-      obtain ⟨k, hk⟩ : ∃ k, n' = (n+k)+1 := Nat.exists_eq_add_of_lt (prog.of_done h)
-      subst hk 
-      simp only [many1_eq_done] at h 
-      obtain ⟨_, hp, h⟩ := h 
-      have  := step.of_done hp 
-      subst this 
-      cases tl
-      ·
-        simp only [many_eq_done_nil, add_left_injₓ, exists_and_distrib_right, self_eq_add_rightₓ] at h 
-        rcases h with ⟨rfl, -⟩
-        simp 
-      rw [←many1_eq_done_iff_many_eq_done] at h 
-      specialize hl h 
-      simp [hl, add_commₓ, add_assocₓ, Nat.sub_succ]
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem many1_length_of_done
+[p.mono]
+[p.step]
+[p.bounded]
+{l : list α}
+(h : «expr = »(many1 p cb n, done n' l)) : «expr = »(l.length, «expr - »(n', n)) :=
+begin
+  induction [expr l] [] ["with", ident hd, ident tl, ident hl] ["generalizing", ident n, ident n'],
+  { simpa [] [] [] [] [] ["using", expr h] },
+  { obtain ["⟨", ident k, ",", ident hk, "⟩", ":", expr «expr∃ , »((k), «expr = »(n', «expr + »(«expr + »(n, k), 1))), ":=", expr nat.exists_eq_add_of_lt (prog.of_done h)],
+    subst [expr hk],
+    simp [] [] ["only"] ["[", expr many1_eq_done, "]"] [] ["at", ident h],
+    obtain ["⟨", "_", ",", ident hp, ",", ident h, "⟩", ":=", expr h],
+    have [] [] [":=", expr step.of_done hp],
+    subst [expr this],
+    cases [expr tl] [],
+    { simp [] [] ["only"] ["[", expr many_eq_done_nil, ",", expr add_left_inj, ",", expr exists_and_distrib_right, ",", expr self_eq_add_right, "]"] [] ["at", ident h],
+      rcases [expr h, "with", "⟨", ident rfl, ",", "-", "⟩"],
+      simp [] [] [] [] [] [] },
+    rw ["<-", expr many1_eq_done_iff_many_eq_done] ["at", ident h],
+    specialize [expr hl h],
+    simp [] [] [] ["[", expr hl, ",", expr add_comm, ",", expr add_assoc, ",", expr nat.sub_succ, "]"] [] [] }
+end
 
-theorem many1_bounded_of_done [p.step] [p.bounded] {l : List α} (h : many1 p cb n = done n' l) : n' ≤ cb.size :=
-  by 
-    induction' l with hd tl hl generalizing n n'
-    ·
-      simpa using h
-    ·
-      simp only [many1_eq_done] at h 
-      obtain ⟨np, hp, h⟩ := h 
-      have  := step.of_done hp 
-      subst this 
-      cases tl
-      ·
-        simp only [many_eq_done_nil, exists_and_distrib_right] at h 
-        simpa [←h.left] using bounded.of_done hp
-      ·
-        rw [←many1_eq_done_iff_many_eq_done] at h 
-        exact hl h
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem many1_bounded_of_done
+[p.step]
+[p.bounded]
+{l : list α}
+(h : «expr = »(many1 p cb n, done n' l)) : «expr ≤ »(n', cb.size) :=
+begin
+  induction [expr l] [] ["with", ident hd, ident tl, ident hl] ["generalizing", ident n, ident n'],
+  { simpa [] [] [] [] [] ["using", expr h] },
+  { simp [] [] ["only"] ["[", expr many1_eq_done, "]"] [] ["at", ident h],
+    obtain ["⟨", ident np, ",", ident hp, ",", ident h, "⟩", ":=", expr h],
+    have [] [] [":=", expr step.of_done hp],
+    subst [expr this],
+    cases [expr tl] [],
+    { simp [] [] ["only"] ["[", expr many_eq_done_nil, ",", expr exists_and_distrib_right, "]"] [] ["at", ident h],
+      simpa [] [] [] ["[", "<-", expr h.left, "]"] [] ["using", expr bounded.of_done hp] },
+    { rw ["<-", expr many1_eq_done_iff_many_eq_done] ["at", ident h],
+      exact [expr hl h] } }
+end
 
 end Many
 
 section Nat
 
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The `val : ℕ` produced by a successful parse of a `cb : char_buffer` is the numerical value
 represented by the string of decimal digits (possibly padded with 0s on the left)
@@ -2564,95 +2529,77 @@ of characters parsed in is necessarily `n' - n`.
 
 This is one of the directions of `nat_eq_done`.
 -/
-theorem nat_of_done {val : ℕ} (h : Nat cb n = done n' val) :
-  val = Nat.ofDigits 10 (((cb.to_list.drop n).take (n' - n)).reverse.map fun c => c.to_nat - '0'.toNat) :=
-  by 
-    have natm : nat._match_1 = fun d : ℕ p => ⟨p.1+d*p.2, p.2*10⟩
-    ·
-      ext1 
-      ext1 ⟨⟩
-      rfl 
-    have hpow :
-      ∀ l, (List.foldr (fun digit : ℕ x : ℕ × ℕ => (x.fst+digit*x.snd, x.snd*10)) (0, 1) l).snd = 10 ^ l.length
-    ·
-      intro l 
-      induction' l with hd tl hl
-      ·
-        simp 
-      ·
-        simp [hl, pow_succₓ, mul_commₓ]
-    simp only [Nat, pure_eq_done, natm, decorate_error_eq_done, bind_eq_done] at h 
-    obtain ⟨n', l, hp, rfl, rfl⟩ := h 
-    induction' l with lhd ltl IH generalizing n n' cb
-    ·
-      simpa using hp 
-    cases' hx : List.dropₓ n (Buffer.toList cb) with chd ctl
-    ·
-      have  : cb.size ≤ n :=
-        by 
-          simpa using list.drop_eq_nil_iff_le.mp hx 
-      exact absurd (bounded.of_done hp) this.not_lt 
-    have chdh : chd.to_nat - '0'.toNat = lhd
-    ·
-      simp only [many1_eq_done] at hp 
-      obtain ⟨_, hp, -⟩ := hp 
-      have  := step.of_done hp 
-      subst this 
-      simp only [digit_eq_done, Buffer.read_eq_nth_le_to_list, hx, Buffer.length_to_list, true_andₓ, add_left_injₓ,
-        List.length, List.nthLe, eq_self_iff_true, exists_and_distrib_left, Finₓ.coe_mk] at hp 
-      rcases hp with ⟨_, hn, rfl, _, _⟩
-      have hn' : n < cb.to_list.length :=
-        by 
-          simpa using hn 
-      rw [←List.cons_nth_le_drop_succ hn'] at hx 
-      simp only  at hx 
-      simp [hx]
-    obtain ⟨k, hk⟩ : ∃ k, n' = (n+k)+1 := Nat.exists_eq_add_of_lt (prog.of_done hp)
-    have hdm : ltl = [] ∨ digit.many1 cb (n+1) = done n' ltl
-    ·
-      cases ltl
-      ·
-        simp 
-      ·
-        rw [many1_eq_done] at hp 
-        obtain ⟨_, hp, hp'⟩ := hp 
-        simpa [step.of_done hp, many1_eq_done_iff_many_eq_done] using hp' 
-    rcases hdm with (rfl | hdm)
-    ·
-      simp only [many1_eq_done, many_eq_done_nil, exists_and_distrib_right] at hp 
-      obtain ⟨_, hp, rfl, hp'⟩ := hp 
-      have  := step.of_done hp 
-      subst this 
-      simp [chdh]
-    have rearr : List.takeₓ ((n+k+1) - n+1) (List.dropₓ (n+1) (Buffer.toList cb)) = ctl.take k
-    ·
-      simp [←List.tail_drop, hx, Nat.sub_succ, hk]
-    have ltll : min k ctl.length = ltl.length
-    ·
-      have  : (ctl.take k).length = min k ctl.length :=
-        by 
-          simp 
-      rw [←this, ←rearr, many1_length_of_done hdm]
-      have  : k = n' - n - 1
-      ·
-        simp [hk, add_assocₓ]
-      subst this 
-      simp only [Nat.sub_succ, add_commₓ, ←Nat.pred_sub, Buffer.length_to_list, Nat.pred_one_add, min_eq_left_iff,
-        List.length_drop, add_tsub_cancel_left, List.length_take, tsub_zero]
-      rw [tsub_le_tsub_iff_right, Nat.pred_le_iff]
-      ·
-        convert many1_bounded_of_done hp 
-        cases hc : cb.size
-        ·
-          have  := bounded.of_done hp 
-          rw [hc] at this 
-          exact absurd n.zero_le this.not_le
-        ·
-          simp 
-      ·
-        exact Nat.le_pred_of_lt (bounded.of_done hp)
-    simp [IH _ hdm, hx, hk, rearr, ←chdh, ←ltll, hpow, add_assocₓ, Nat.of_digits_append, mul_commₓ]
+theorem nat_of_done
+{val : exprℕ()}
+(h : «expr = »(nat cb n, done n' val)) : «expr = »(val, nat.of_digits 10 (((cb.to_list.drop n).take «expr - »(n', n)).reverse.map (λ
+   c, «expr - »(c.to_nat, '0'.to_nat)))) :=
+begin
+  have [ident natm] [":", expr «expr = »(nat._match_1, λ
+    (d : exprℕ())
+    (p), ⟨«expr + »(p.1, «expr * »(d, p.2)), «expr * »(p.2, 10)⟩)] [],
+  { ext1 [] [],
+    ext1 [] ["⟨", "⟩"],
+    refl },
+  have [ident hpow] [":", expr ∀
+   l, «expr = »((list.foldr (λ
+      (digit : exprℕ())
+      (x : «expr × »(exprℕ(), exprℕ())), («expr + »(x.fst, «expr * »(digit, x.snd)), «expr * »(x.snd, 10))) (0, 1) l).snd, «expr ^ »(10, l.length))] [],
+  { intro [ident l],
+    induction [expr l] [] ["with", ident hd, ident tl, ident hl] [],
+    { simp [] [] [] [] [] [] },
+    { simp [] [] [] ["[", expr hl, ",", expr pow_succ, ",", expr mul_comm, "]"] [] [] } },
+  simp [] [] ["only"] ["[", expr nat, ",", expr pure_eq_done, ",", expr natm, ",", expr decorate_error_eq_done, ",", expr bind_eq_done, "]"] [] ["at", ident h],
+  obtain ["⟨", ident n', ",", ident l, ",", ident hp, ",", ident rfl, ",", ident rfl, "⟩", ":=", expr h],
+  induction [expr l] [] ["with", ident lhd, ident ltl, ident IH] ["generalizing", ident n, ident n', ident cb],
+  { simpa [] [] [] [] [] ["using", expr hp] },
+  cases [expr hx, ":", expr list.drop n (buffer.to_list cb)] ["with", ident chd, ident ctl],
+  { have [] [":", expr «expr ≤ »(cb.size, n)] [":=", expr by simpa [] [] [] [] [] ["using", expr list.drop_eq_nil_iff_le.mp hx]],
+    exact [expr absurd (bounded.of_done hp) this.not_lt] },
+  have [ident chdh] [":", expr «expr = »(«expr - »(chd.to_nat, '0'.to_nat), lhd)] [],
+  { simp [] [] ["only"] ["[", expr many1_eq_done, "]"] [] ["at", ident hp],
+    obtain ["⟨", "_", ",", ident hp, ",", "-", "⟩", ":=", expr hp],
+    have [] [] [":=", expr step.of_done hp],
+    subst [expr this],
+    simp [] [] ["only"] ["[", expr digit_eq_done, ",", expr buffer.read_eq_nth_le_to_list, ",", expr hx, ",", expr buffer.length_to_list, ",", expr true_and, ",", expr add_left_inj, ",", expr list.length, ",", expr list.nth_le, ",", expr eq_self_iff_true, ",", expr exists_and_distrib_left, ",", expr fin.coe_mk, "]"] [] ["at", ident hp],
+    rcases [expr hp, "with", "⟨", "_", ",", ident hn, ",", ident rfl, ",", "_", ",", "_", "⟩"],
+    have [ident hn'] [":", expr «expr < »(n, cb.to_list.length)] [":=", expr by simpa [] [] [] [] [] ["using", expr hn]],
+    rw ["<-", expr list.cons_nth_le_drop_succ hn'] ["at", ident hx],
+    simp [] [] ["only"] [] [] ["at", ident hx],
+    simp [] [] [] ["[", expr hx, "]"] [] [] },
+  obtain ["⟨", ident k, ",", ident hk, "⟩", ":", expr «expr∃ , »((k), «expr = »(n', «expr + »(«expr + »(n, k), 1))), ":=", expr nat.exists_eq_add_of_lt (prog.of_done hp)],
+  have [ident hdm] [":", expr «expr ∨ »(«expr = »(ltl, «expr[ , ]»([])), «expr = »(digit.many1 cb «expr + »(n, 1), done n' ltl))] [],
+  { cases [expr ltl] [],
+    { simp [] [] [] [] [] [] },
+    { rw [expr many1_eq_done] ["at", ident hp],
+      obtain ["⟨", "_", ",", ident hp, ",", ident hp', "⟩", ":=", expr hp],
+      simpa [] [] [] ["[", expr step.of_done hp, ",", expr many1_eq_done_iff_many_eq_done, "]"] [] ["using", expr hp'] } },
+  rcases [expr hdm, "with", ident rfl, "|", ident hdm],
+  { simp [] [] ["only"] ["[", expr many1_eq_done, ",", expr many_eq_done_nil, ",", expr exists_and_distrib_right, "]"] [] ["at", ident hp],
+    obtain ["⟨", "_", ",", ident hp, ",", ident rfl, ",", ident hp', "⟩", ":=", expr hp],
+    have [] [] [":=", expr step.of_done hp],
+    subst [expr this],
+    simp [] [] [] ["[", expr chdh, "]"] [] [] },
+  have [ident rearr] [":", expr «expr = »(list.take «expr - »(«expr + »(n, «expr + »(k, 1)), «expr + »(n, 1)) (list.drop «expr + »(n, 1) (buffer.to_list cb)), ctl.take k)] [],
+  { simp [] [] [] ["[", "<-", expr list.tail_drop, ",", expr hx, ",", expr nat.sub_succ, ",", expr hk, "]"] [] [] },
+  have [ident ltll] [":", expr «expr = »(min k ctl.length, ltl.length)] [],
+  { have [] [":", expr «expr = »((ctl.take k).length, min k ctl.length)] [":=", expr by simp [] [] [] [] [] []],
+    rw ["[", "<-", expr this, ",", "<-", expr rearr, ",", expr many1_length_of_done hdm, "]"] [],
+    have [] [":", expr «expr = »(k, «expr - »(«expr - »(n', n), 1))] [],
+    { simp [] [] [] ["[", expr hk, ",", expr add_assoc, "]"] [] [] },
+    subst [expr this],
+    simp [] [] ["only"] ["[", expr nat.sub_succ, ",", expr add_comm, ",", "<-", expr nat.pred_sub, ",", expr buffer.length_to_list, ",", expr nat.pred_one_add, ",", expr min_eq_left_iff, ",", expr list.length_drop, ",", expr add_tsub_cancel_left, ",", expr list.length_take, ",", expr tsub_zero, "]"] [] [],
+    rw ["[", expr tsub_le_tsub_iff_right, ",", expr nat.pred_le_iff, "]"] [],
+    { convert [] [expr many1_bounded_of_done hp] [],
+      cases [expr hc, ":", expr cb.size] [],
+      { have [] [] [":=", expr bounded.of_done hp],
+        rw [expr hc] ["at", ident this],
+        exact [expr absurd n.zero_le this.not_le] },
+      { simp [] [] [] [] [] [] } },
+    { exact [expr nat.le_pred_of_lt (bounded.of_done hp)] } },
+  simp [] [] [] ["[", expr IH _ hdm, ",", expr hx, ",", expr hk, ",", expr rearr, ",", "<-", expr chdh, ",", "<-", expr ltll, ",", expr hpow, ",", expr add_assoc, ",", expr nat.of_digits_append, ",", expr mul_comm, "]"] [] []
+end
 
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If we know that `parser.nat` was successful, starting at position `n` and ending at position `n'`,
 then it must be the case that for all `k : ℕ`, `n ≤ k`, `k < n'`, the character at the `k`th
@@ -2660,34 +2607,33 @@ position in `cb : char_buffer` is "numeric", that is, is between `'0'` and `'9'`
 
 This is a necessary part of proving one of the directions of `nat_eq_done`.
 -/
-theorem nat_of_done_as_digit {val : ℕ} (h : Nat cb n = done n' val) :
-  ∀ hn : n' ≤ cb.size k hk : k < n', n ≤ k → '0' ≤ cb.read ⟨k, hk.trans_le hn⟩ ∧ cb.read ⟨k, hk.trans_le hn⟩ ≤ '9' :=
-  by 
-    simp only [Nat, pure_eq_done, And.left_comm, decorate_error_eq_done, bind_eq_done, exists_eq_left,
-      exists_and_distrib_left] at h 
-    obtain ⟨xs, h, -⟩ := h 
-    induction' xs with hd tl hl generalizing n n'
-    ·
-      simpa using h 
-    rw [many1_eq_done] at h 
-    obtain ⟨_, hp, h⟩ := h 
-    simp only [digit_eq_done, And.comm, And.left_comm, digit_eq_fail, true_andₓ, exists_eq_left, eq_self_iff_true,
-      exists_and_distrib_left, exists_and_distrib_left] at hp 
-    obtain ⟨rfl, -, hn, ge0, le9, rfl⟩ := hp 
-    intro hn k hk hk' 
-    rcases hk'.eq_or_lt with (rfl | hk')
-    ·
-      exact ⟨ge0, le9⟩
-    cases tl
-    ·
-      simp only [many_eq_done_nil, exists_and_distrib_right] at h 
-      obtain ⟨rfl, -⟩ := h 
-      have  : k < k := hk.trans_le (Nat.succ_le_of_ltₓ hk')
-      exact absurd this (lt_irreflₓ _)
-    ·
-      rw [←many1_eq_done_iff_many_eq_done] at h 
-      apply hl h 
-      exact Nat.succ_le_of_ltₓ hk'
+theorem nat_of_done_as_digit
+{val : exprℕ()}
+(h : «expr = »(nat cb n, done n' val)) : ∀
+(hn : «expr ≤ »(n', cb.size))
+(k)
+(hk : «expr < »(k, n')), «expr ≤ »(n, k) → «expr ∧ »(«expr ≤ »('0', cb.read ⟨k, hk.trans_le hn⟩), «expr ≤ »(cb.read ⟨k, hk.trans_le hn⟩, '9')) :=
+begin
+  simp [] [] ["only"] ["[", expr nat, ",", expr pure_eq_done, ",", expr and.left_comm, ",", expr decorate_error_eq_done, ",", expr bind_eq_done, ",", expr exists_eq_left, ",", expr exists_and_distrib_left, "]"] [] ["at", ident h],
+  obtain ["⟨", ident xs, ",", ident h, ",", "-", "⟩", ":=", expr h],
+  induction [expr xs] [] ["with", ident hd, ident tl, ident hl] ["generalizing", ident n, ident n'],
+  { simpa [] [] [] [] [] ["using", expr h] },
+  rw [expr many1_eq_done] ["at", ident h],
+  obtain ["⟨", "_", ",", ident hp, ",", ident h, "⟩", ":=", expr h],
+  simp [] [] ["only"] ["[", expr digit_eq_done, ",", expr and.comm, ",", expr and.left_comm, ",", expr digit_eq_fail, ",", expr true_and, ",", expr exists_eq_left, ",", expr eq_self_iff_true, ",", expr exists_and_distrib_left, ",", expr exists_and_distrib_left, "]"] [] ["at", ident hp],
+  obtain ["⟨", ident rfl, ",", "-", ",", ident hn, ",", ident ge0, ",", ident le9, ",", ident rfl, "⟩", ":=", expr hp],
+  intros [ident hn, ident k, ident hk, ident hk'],
+  rcases [expr hk'.eq_or_lt, "with", ident rfl, "|", ident hk'],
+  { exact [expr ⟨ge0, le9⟩] },
+  cases [expr tl] [],
+  { simp [] [] ["only"] ["[", expr many_eq_done_nil, ",", expr exists_and_distrib_right, "]"] [] ["at", ident h],
+    obtain ["⟨", ident rfl, ",", "-", "⟩", ":=", expr h],
+    have [] [":", expr «expr < »(k, k)] [":=", expr hk.trans_le (nat.succ_le_of_lt hk')],
+    exact [expr absurd this (lt_irrefl _)] },
+  { rw ["<-", expr many1_eq_done_iff_many_eq_done] ["at", ident h],
+    apply [expr hl h],
+    exact [expr nat.succ_le_of_lt hk'] }
+end
 
 /--
 If we know that `parser.nat` was successful, starting at position `n` and ending at position `n'`,
@@ -2725,6 +2671,7 @@ theorem nat_of_done_bounded {val : ℕ} (h : Nat cb n = done n' val) :
       rw [←many1_eq_done_iff_many_eq_done] at h 
       exact hl h
 
+-- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The `val : ℕ` produced by a successful parse of a `cb : char_buffer` is the numerical value
 represented by the string of decimal digits (possibly padded with 0s on the left)
@@ -2734,105 +2681,77 @@ starting at position `n` (inclusive) up to position `n'` (exclusive) are "numeri
 are between `'0'` and `'9'` inclusive. Such a `char_buffer` would produce the `ℕ` value encoded
 by its decimal characters.
 -/
-theorem nat_eq_done {val : ℕ} :
-  Nat cb n = done n' val ↔
-    ∃ hn : n < n',
-      val = Nat.ofDigits 10 (((cb.to_list.drop n).take (n' - n)).reverse.map fun c => c.to_nat - '0'.toNat) ∧
-        (∀ hn' : n' < cb.size, '0' ≤ cb.read ⟨n', hn'⟩ → '9' < cb.read ⟨n', hn'⟩) ∧
-          ∃ hn'' : n' ≤ cb.size,
-            ∀ k hk : k < n', n ≤ k → '0' ≤ cb.read ⟨k, hk.trans_le hn''⟩ ∧ cb.read ⟨k, hk.trans_le hn''⟩ ≤ '9' :=
-  by 
-    refine' ⟨fun h => ⟨prog.of_done h, nat_of_done h, nat_of_done_bounded h, _⟩, _⟩
-    ·
-      have H := h 
-      rw [Nat] at h 
-      simp only [decorate_error_eq_done, bind_eq_done, pure_eq_done, And.left_comm, exists_eq_left,
-        exists_and_distrib_left] at h 
-      obtain ⟨_, h, -⟩ := h 
-      replace h := many1_bounded_of_done h 
-      exact ⟨h, nat_of_done_as_digit H h⟩
-    rintro ⟨hn, hv, hb, hn', ho⟩
-    rw [Nat]
-    simp only [And.left_comm, pure_eq_done, hv, decorate_error_eq_done, List.map_reverse, bind_eq_done, exists_eq_left,
-      exists_and_distrib_left]
-    clear hv val 
-    have natm : nat._match_1 = fun d : ℕ p => ⟨p.1+d*p.2, p.2*10⟩
-    ·
-      ext1 
-      ext1 ⟨⟩
-      rfl 
-    induction' H : cb.to_list.drop n with hd tl IH generalizing n
-    ·
-      rw [List.drop_eq_nil_iff_le] at H 
-      refine' absurd ((lt_of_le_of_ltₓ H hn).trans_le hn') _ 
-      simp 
-    ·
-      specialize IH (n+1)
-      simp only
-        [←List.cons_nth_le_drop_succ
-          (show n < cb.to_list.length by 
-            simpa using hn.trans_le hn')] at
-        H 
-      have hdigit : digit cb n = done (n+1) (hd.to_nat - '0'.toNat)
-      ·
-        specialize ho n hn (le_reflₓ _)
-        have  : (Buffer.read cb ⟨n, hn.trans_le hn'⟩).toNat - '0'.toNat ≤ 9
-        ·
-          rw
-            [show 9 = '9'.toNat - '0'.toNat from
-              by 
-                decide,
-            tsub_le_tsub_iff_right]
-          ·
-            exact ho.right
-          ·
-            decide 
-        simp [digit_eq_done, this, ←H.left, Buffer.nth_le_to_list, hn.trans_le hn', ho]
-      cases' lt_or_geₓ (n+1) n' with hn'' hn''
-      ·
-        specialize IH hn'' _ H.right
-        ·
-          intro k hk hk' 
-          apply ho 
-          exact Nat.le_of_succ_leₓ hk' 
-        obtain ⟨l, hdl, hvl⟩ := IH 
-        use (hd.to_nat - '0'.toNat) :: l 
-        cases' l with lhd ltl
-        ·
-          simpa using hdl 
-        simp only [natm, List.foldr] at hvl 
-        simp only [natm, hvl, many1_eq_done, hdigit, many1_eq_done_iff_many_eq_done.mp hdl, true_andₓ, and_trueₓ,
-          eq_self_iff_true, List.foldr, exists_eq_left']
-        obtain ⟨m, rfl⟩ : ∃ m, n' = (n+m)+1 := Nat.exists_eq_add_of_lt hn 
-        have  : ((n+m)+1) - n = m+1
-        ·
-          rw [add_assocₓ, tsub_eq_iff_eq_add_of_le, add_commₓ]
-          exact Nat.le_add_rightₓ _ _ 
-        have hpow :
-          ∀ l, (List.foldr (fun digit : ℕ x : ℕ × ℕ => (x.fst+digit*x.snd, x.snd*10)) (0, 1) l).snd = 10 ^ l.length
-        ·
-          intro l 
-          induction' l with hd tl hl
-          ·
-            simp 
-          ·
-            simp [hl, pow_succₓ, mul_commₓ]
-        have hml : (ltl.length+1) = m :=
-          by 
-            simpa using many1_length_of_done hdl 
-        have ltll : min m tl.length = m
-        ·
-          simpa [←H.right, le_tsub_iff_right (hn''.trans_le hn').le, add_commₓ, add_assocₓ, add_left_commₓ] using hn' 
-        simp [this, hpow, Nat.of_digits_append, mul_commₓ, ←pow_succₓ 10, hml, ltll]
-      ·
-        have  : n' = n+1 := le_antisymmₓ hn'' (Nat.succ_le_of_ltₓ hn)
-        subst this 
-        use [hd.to_nat - '0'.toNat]
-        simp only [many1_eq_done, many_eq_done_nil, digit_eq_fail, natm, And.comm, And.left_comm, hdigit, true_andₓ,
-          mul_oneₓ, Nat.of_digits_singleton, List.takeₓ, exists_eq_left, exists_and_distrib_right, add_tsub_cancel_left,
-          eq_self_iff_true, List.reverse_singleton, zero_addₓ, List.foldr, List.map]
-        refine' ⟨_, Or.inl ⟨rfl, _⟩⟩
-        simpa using hb
+theorem nat_eq_done
+{val : exprℕ()} : «expr ↔ »(«expr = »(nat cb n, done n' val), «expr∃ , »((hn : «expr < »(n, n')), «expr ∧ »(«expr = »(val, nat.of_digits 10 (((cb.to_list.drop n).take «expr - »(n', n)).reverse.map (λ
+      c, «expr - »(c.to_nat, '0'.to_nat)))), «expr ∧ »(∀
+    hn' : «expr < »(n', cb.size), «expr ≤ »('0', cb.read ⟨n', hn'⟩) → «expr < »('9', cb.read ⟨n', hn'⟩), «expr∃ , »((hn'' : «expr ≤ »(n', cb.size)), ∀
+     (k)
+     (hk : «expr < »(k, n')), «expr ≤ »(n, k) → «expr ∧ »(«expr ≤ »('0', cb.read ⟨k, hk.trans_le hn''⟩), «expr ≤ »(cb.read ⟨k, hk.trans_le hn''⟩, '9'))))))) :=
+begin
+  refine [expr ⟨λ h, ⟨prog.of_done h, nat_of_done h, nat_of_done_bounded h, _⟩, _⟩],
+  { have [ident H] [] [":=", expr h],
+    rw ["[", expr nat, "]"] ["at", ident h],
+    simp [] [] ["only"] ["[", expr decorate_error_eq_done, ",", expr bind_eq_done, ",", expr pure_eq_done, ",", expr and.left_comm, ",", expr exists_eq_left, ",", expr exists_and_distrib_left, "]"] [] ["at", ident h],
+    obtain ["⟨", "_", ",", ident h, ",", "-", "⟩", ":=", expr h],
+    replace [ident h] [] [":=", expr many1_bounded_of_done h],
+    exact [expr ⟨h, nat_of_done_as_digit H h⟩] },
+  rintro ["⟨", ident hn, ",", ident hv, ",", ident hb, ",", ident hn', ",", ident ho, "⟩"],
+  rw [expr nat] [],
+  simp [] [] ["only"] ["[", expr and.left_comm, ",", expr pure_eq_done, ",", expr hv, ",", expr decorate_error_eq_done, ",", expr list.map_reverse, ",", expr bind_eq_done, ",", expr exists_eq_left, ",", expr exists_and_distrib_left, "]"] [] [],
+  clear [ident hv, ident val],
+  have [ident natm] [":", expr «expr = »(nat._match_1, λ
+    (d : exprℕ())
+    (p), ⟨«expr + »(p.1, «expr * »(d, p.2)), «expr * »(p.2, 10)⟩)] [],
+  { ext1 [] [],
+    ext1 [] ["⟨", "⟩"],
+    refl },
+  induction [expr H, ":", expr cb.to_list.drop n] [] ["with", ident hd, ident tl, ident IH] ["generalizing", ident n],
+  { rw [expr list.drop_eq_nil_iff_le] ["at", ident H],
+    refine [expr absurd ((lt_of_le_of_lt H hn).trans_le hn') _],
+    simp [] [] [] [] [] [] },
+  { specialize [expr @IH «expr + »(n, 1)],
+    simp [] [] ["only"] ["[", "<-", expr list.cons_nth_le_drop_succ (show «expr < »(n, cb.to_list.length), by simpa [] [] [] [] [] ["using", expr hn.trans_le hn']), "]"] [] ["at", ident H],
+    have [ident hdigit] [":", expr «expr = »(digit cb n, done «expr + »(n, 1) «expr - »(hd.to_nat, '0'.to_nat))] [],
+    { specialize [expr ho n hn (le_refl _)],
+      have [] [":", expr «expr ≤ »(«expr - »((buffer.read cb ⟨n, hn.trans_le hn'⟩).to_nat, '0'.to_nat), 9)] [],
+      { rw ["[", expr show «expr = »(9, «expr - »('9'.to_nat, '0'.to_nat)), from exprdec_trivial(), ",", expr tsub_le_tsub_iff_right, "]"] [],
+        { exact [expr ho.right] },
+        { dec_trivial [] } },
+      simp [] [] [] ["[", expr digit_eq_done, ",", expr this, ",", "<-", expr H.left, ",", expr buffer.nth_le_to_list, ",", expr hn.trans_le hn', ",", expr ho, "]"] [] [] },
+    cases [expr lt_or_ge «expr + »(n, 1) n'] ["with", ident hn'', ident hn''],
+    { specialize [expr IH hn'' _ H.right],
+      { intros [ident k, ident hk, ident hk'],
+        apply [expr ho],
+        exact [expr nat.le_of_succ_le hk'] },
+      obtain ["⟨", ident l, ",", ident hdl, ",", ident hvl, "⟩", ":=", expr IH],
+      use [expr [«expr :: »/«expr :: »/«expr :: »](«expr - »(hd.to_nat, '0'.to_nat), l)],
+      cases [expr l] ["with", ident lhd, ident ltl],
+      { simpa [] [] [] [] [] ["using", expr hdl] },
+      simp [] [] ["only"] ["[", expr natm, ",", expr list.foldr, "]"] [] ["at", ident hvl],
+      simp [] [] ["only"] ["[", expr natm, ",", expr hvl, ",", expr many1_eq_done, ",", expr hdigit, ",", expr many1_eq_done_iff_many_eq_done.mp hdl, ",", expr true_and, ",", expr and_true, ",", expr eq_self_iff_true, ",", expr list.foldr, ",", expr exists_eq_left', "]"] [] [],
+      obtain ["⟨", ident m, ",", ident rfl, "⟩", ":", expr «expr∃ , »((m), «expr = »(n', «expr + »(«expr + »(n, m), 1))), ":=", expr nat.exists_eq_add_of_lt hn],
+      have [] [":", expr «expr = »(«expr - »(«expr + »(«expr + »(n, m), 1), n), «expr + »(m, 1))] [],
+      { rw ["[", expr add_assoc, ",", expr tsub_eq_iff_eq_add_of_le, ",", expr add_comm, "]"] [],
+        exact [expr nat.le_add_right _ _] },
+      have [ident hpow] [":", expr ∀
+       l, «expr = »((list.foldr (λ
+          (digit : exprℕ())
+          (x : «expr × »(exprℕ(), exprℕ())), («expr + »(x.fst, «expr * »(digit, x.snd)), «expr * »(x.snd, 10))) (0, 1) l).snd, «expr ^ »(10, l.length))] [],
+      { intro [ident l],
+        induction [expr l] [] ["with", ident hd, ident tl, ident hl] [],
+        { simp [] [] [] [] [] [] },
+        { simp [] [] [] ["[", expr hl, ",", expr pow_succ, ",", expr mul_comm, "]"] [] [] } },
+      have [ident hml] [":", expr «expr = »(«expr + »(ltl.length, 1), m)] [":=", expr by simpa [] [] [] [] [] ["using", expr many1_length_of_done hdl]],
+      have [ident ltll] [":", expr «expr = »(min m tl.length, m)] [],
+      { simpa [] [] [] ["[", "<-", expr H.right, ",", expr le_tsub_iff_right (hn''.trans_le hn').le, ",", expr add_comm, ",", expr add_assoc, ",", expr add_left_comm, "]"] [] ["using", expr hn'] },
+      simp [] [] [] ["[", expr this, ",", expr hpow, ",", expr nat.of_digits_append, ",", expr mul_comm, ",", "<-", expr pow_succ 10, ",", expr hml, ",", expr ltll, "]"] [] [] },
+    { have [] [":", expr «expr = »(n', «expr + »(n, 1))] [":=", expr le_antisymm hn'' (nat.succ_le_of_lt hn)],
+      subst [expr this],
+      use ["[", expr «expr[ , ]»([«expr - »(hd.to_nat, '0'.to_nat)]), "]"],
+      simp [] [] ["only"] ["[", expr many1_eq_done, ",", expr many_eq_done_nil, ",", expr digit_eq_fail, ",", expr natm, ",", expr and.comm, ",", expr and.left_comm, ",", expr hdigit, ",", expr true_and, ",", expr mul_one, ",", expr nat.of_digits_singleton, ",", expr list.take, ",", expr exists_eq_left, ",", expr exists_and_distrib_right, ",", expr add_tsub_cancel_left, ",", expr eq_self_iff_true, ",", expr list.reverse_singleton, ",", expr zero_add, ",", expr list.foldr, ",", expr list.map, "]"] [] [],
+      refine [expr ⟨_, or.inl ⟨rfl, _⟩⟩],
+      simpa [] [] [] [] [] ["using", expr hb] } }
+end
 
 end Nat
 

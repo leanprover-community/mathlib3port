@@ -52,7 +52,7 @@ variable{G}
 contained in some edge of matching `M`
 -/
 def matching.support (M : G.matching) : Set V :=
-  { v : V | ∃ (x : _)(_ : x ∈ M.edges), v ∈ x }
+  { v:V | ∃ (x : _)(_ : x ∈ M.edges), v ∈ x }
 
 /--
 A perfect matching `M` on graph `G` is a matching such that

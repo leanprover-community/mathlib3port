@@ -23,9 +23,9 @@ unsafe def guard_mem_fin (e : expr) : tactic expr :=
   do 
     let t ← infer_type e 
     let α ← mk_mvar 
-    to_expr (pquote _ ∈ (_ : Finset (%%α))) tt ff >>= unify t <|>
-        to_expr (pquote _ ∈ (_ : Multiset (%%α))) tt ff >>= unify t <|>
-          to_expr (pquote _ ∈ (_ : List (%%α))) tt ff >>= unify t 
+    to_expr (pquote.1 (_ ∈ (_ : Finset (%%ₓα)))) tt ff >>= unify t <|>
+        to_expr (pquote.1 (_ ∈ (_ : Multiset (%%ₓα)))) tt ff >>= unify t <|>
+          to_expr (pquote.1 (_ ∈ (_ : List (%%ₓα)))) tt ff >>= unify t 
     instantiate_mvars α
 
 /--
@@ -35,8 +35,8 @@ to a list of `expr`s each with type `α`.
 TODO: this should be moved, and possibly duplicates an existing definition.
 -/
 unsafe def expr_list_to_list_expr : ∀ e : expr, tactic (List expr)
-| quote List.cons (%%h) (%%t) => List.cons h <$> expr_list_to_list_expr t
-| quote [] => return []
+| quote.1 (List.cons (%%ₓh) (%%ₓt)) => List.cons h <$> expr_list_to_list_expr t
+| quote.1 [] => return []
 | _ => failed
 
 private unsafe def fin_cases_at_aux : ∀ with_list : List expr e : expr, tactic Unit
@@ -54,7 +54,8 @@ private unsafe def fin_cases_at_aux : ∀ with_list : List expr e : expr, tactic
               try$
                 tactic.interactive.conv (some sn) none$
                   to_rhs >>
-                    conv.interactive.norm_num [simp_arg_type.expr (pquote max_def), simp_arg_type.expr (pquote min_def)]
+                    conv.interactive.norm_num
+                      [simp_arg_type.expr (pquote.1 max_def), simp_arg_type.expr (pquote.1 min_def)]
           let s ← get_local sn 
           try sorry 
           let ng' ← num_goals 
@@ -77,9 +78,9 @@ unsafe def fin_cases_at : ∀ with_list : Option pexpr e : expr, tactic Unit
       | none =>
         do 
           let ty ← infer_type e 
-          let i ← to_expr (pquote Fintype (%%ty)) >>= mk_instance <|> fail "Failed to find `fintype` instance."
-          let t ← to_expr (pquote (%%e) ∈ @Fintype.elems (%%ty) (%%i))
-          let v ← to_expr (pquote @Fintype.complete (%%ty) (%%i) (%%e))
+          let i ← to_expr (pquote.1 (Fintype (%%ₓty))) >>= mk_instance <|> fail "Failed to find `fintype` instance."
+          let t ← to_expr (pquote.1 ((%%ₓe) ∈ @Fintype.elems (%%ₓty) (%%ₓi)))
+          let v ← to_expr (pquote.1 (@Fintype.complete (%%ₓty) (%%ₓi) (%%ₓe)))
           let h ← assertv `h t v 
           fin_cases_at with_list h
       | some ty =>
@@ -88,7 +89,7 @@ unsafe def fin_cases_at : ∀ with_list : Option pexpr e : expr, tactic Unit
             match with_list with 
               | some e =>
                 do 
-                  let e ← to_expr (pquote (%%e : List (%%ty)))
+                  let e ← to_expr (pquote.1 (%%ₓe : List (%%ₓty)))
                   expr_list_to_list_expr e
               | none => return []
           fin_cases_at_aux with_list e

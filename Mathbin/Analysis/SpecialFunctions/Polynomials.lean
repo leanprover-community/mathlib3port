@@ -56,15 +56,17 @@ theorem tendsto_at_top_of_leading_coeff_nonneg (hdeg : 1 ≤ P.degree) (hnng : 0
     (tendsto_const_mul_pow_at_top (le_nat_degree_of_coe_le_degree hdeg)
       (lt_of_le_of_neₓ hnng$ Ne.symm$ mt leading_coeff_eq_zero.mp$ ne_zero_of_coe_le_degree hdeg))
 
-theorem tendsto_at_top_iff_leading_coeff_nonneg :
-  tendsto (fun x => eval x P) at_top at_top ↔ 1 ≤ P.degree ∧ 0 ≤ P.leading_coeff :=
-  by 
-    refine' ⟨fun h => _, fun h => tendsto_at_top_of_leading_coeff_nonneg P h.1 h.2⟩
-    have  : tendsto (fun x => P.leading_coeff*x ^ P.nat_degree) at_top at_top :=
-      is_equivalent.tendsto_at_top (is_equivalent_at_top_lead P) h 
-    rw [tendsto_const_mul_pow_at_top_iff P.leading_coeff P.nat_degree] at this 
-    rw [degree_eq_nat_degree (leading_coeff_ne_zero.mp (ne_of_ltₓ this.2).symm), ←Nat.cast_one]
-    refine' ⟨with_bot.coe_le_coe.mpr this.1, le_of_ltₓ this.2⟩
+-- error in Analysis.SpecialFunctions.Polynomials: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_at_top_iff_leading_coeff_nonneg : «expr ↔ »(tendsto (λ
+  x, eval x P) at_top at_top, «expr ∧ »(«expr ≤ »(1, P.degree), «expr ≤ »(0, P.leading_coeff))) :=
+begin
+  refine [expr ⟨λ h, _, λ h, tendsto_at_top_of_leading_coeff_nonneg P h.1 h.2⟩],
+  have [] [":", expr tendsto (λ
+    x, «expr * »(P.leading_coeff, «expr ^ »(x, P.nat_degree))) at_top at_top] [":=", expr is_equivalent.tendsto_at_top (is_equivalent_at_top_lead P) h],
+  rw [expr tendsto_const_mul_pow_at_top_iff P.leading_coeff P.nat_degree] ["at", ident this],
+  rw ["[", expr degree_eq_nat_degree (leading_coeff_ne_zero.mp (ne_of_lt this.2).symm), ",", "<-", expr nat.cast_one, "]"] [],
+  refine [expr ⟨with_bot.coe_le_coe.mpr this.1, le_of_lt this.2⟩]
+end
 
 theorem tendsto_at_bot_of_leading_coeff_nonpos (hdeg : 1 ≤ P.degree) (hnps : P.leading_coeff ≤ 0) :
   tendsto (fun x => eval x P) at_top at_bot :=
@@ -72,15 +74,17 @@ theorem tendsto_at_bot_of_leading_coeff_nonpos (hdeg : 1 ≤ P.degree) (hnps : P
     (tendsto_neg_const_mul_pow_at_top (le_nat_degree_of_coe_le_degree hdeg)
       (lt_of_le_of_neₓ hnps$ mt leading_coeff_eq_zero.mp$ ne_zero_of_coe_le_degree hdeg))
 
-theorem tendsto_at_bot_iff_leading_coeff_nonpos :
-  tendsto (fun x => eval x P) at_top at_bot ↔ 1 ≤ P.degree ∧ P.leading_coeff ≤ 0 :=
-  by 
-    refine' ⟨fun h => _, fun h => tendsto_at_bot_of_leading_coeff_nonpos P h.1 h.2⟩
-    have  : tendsto (fun x => P.leading_coeff*x ^ P.nat_degree) at_top at_bot :=
-      is_equivalent.tendsto_at_bot (is_equivalent_at_top_lead P) h 
-    rw [tendsto_neg_const_mul_pow_at_top_iff P.leading_coeff P.nat_degree] at this 
-    rw [degree_eq_nat_degree (leading_coeff_ne_zero.mp (ne_of_ltₓ this.2)), ←Nat.cast_one]
-    refine' ⟨with_bot.coe_le_coe.mpr this.1, le_of_ltₓ this.2⟩
+-- error in Analysis.SpecialFunctions.Polynomials: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_at_bot_iff_leading_coeff_nonpos : «expr ↔ »(tendsto (λ
+  x, eval x P) at_top at_bot, «expr ∧ »(«expr ≤ »(1, P.degree), «expr ≤ »(P.leading_coeff, 0))) :=
+begin
+  refine [expr ⟨λ h, _, λ h, tendsto_at_bot_of_leading_coeff_nonpos P h.1 h.2⟩],
+  have [] [":", expr tendsto (λ
+    x, «expr * »(P.leading_coeff, «expr ^ »(x, P.nat_degree))) at_top at_bot] [":=", expr is_equivalent.tendsto_at_bot (is_equivalent_at_top_lead P) h],
+  rw [expr tendsto_neg_const_mul_pow_at_top_iff P.leading_coeff P.nat_degree] ["at", ident this],
+  rw ["[", expr degree_eq_nat_degree (leading_coeff_ne_zero.mp (ne_of_lt this.2)), ",", "<-", expr nat.cast_one, "]"] [],
+  refine [expr ⟨with_bot.coe_le_coe.mpr this.1, le_of_lt this.2⟩]
+end
 
 theorem abs_tendsto_at_top (hdeg : 1 ≤ P.degree) : tendsto (fun x => abs$ eval x P) at_top at_top :=
   by 
@@ -110,26 +114,23 @@ theorem abs_tendsto_at_top_iff : tendsto (fun x => abs$ eval x P) at_top at_top 
         (not_leₓ.mp ((mt (abs_is_bounded_under_iff P).mpr) (not_is_bounded_under_of_tendsto_at_top h))),
     abs_tendsto_at_top P⟩
 
-theorem tendsto_nhds_iff {c : 𝕜} : tendsto (fun x => eval x P) at_top (𝓝 c) ↔ P.leading_coeff = c ∧ P.degree ≤ 0 :=
-  by 
-    refine' ⟨fun h => _, fun h => _⟩
-    ·
-      have  := P.is_equivalent_at_top_lead.tendsto_nhds h 
-      byCases' hP : P.leading_coeff = 0
-      ·
-        simp only [hP, zero_mul, tendsto_const_nhds_iff] at this 
-        refine'
-          ⟨trans hP this,
-            by 
-              simp [leading_coeff_eq_zero.1 hP]⟩
-      ·
-        rw [tendsto_const_mul_pow_nhds_iff hP, nat_degree_eq_zero_iff_degree_le_zero] at this 
-        exact this.symm
-    ·
-      refine' P.is_equivalent_at_top_lead.symm.tendsto_nhds _ 
-      have  : P.nat_degree = 0 := nat_degree_eq_zero_iff_degree_le_zero.2 h.2
-      simp only [h.1, this, pow_zeroₓ, mul_oneₓ]
-      exact tendsto_const_nhds
+-- error in Analysis.SpecialFunctions.Polynomials: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_nhds_iff
+{c : 𝕜} : «expr ↔ »(tendsto (λ
+  x, eval x P) at_top (expr𝓝() c), «expr ∧ »(«expr = »(P.leading_coeff, c), «expr ≤ »(P.degree, 0))) :=
+begin
+  refine [expr ⟨λ h, _, λ h, _⟩],
+  { have [] [] [":=", expr P.is_equivalent_at_top_lead.tendsto_nhds h],
+    by_cases [expr hP, ":", expr «expr = »(P.leading_coeff, 0)],
+    { simp [] [] ["only"] ["[", expr hP, ",", expr zero_mul, ",", expr tendsto_const_nhds_iff, "]"] [] ["at", ident this],
+      refine [expr ⟨trans hP this, by simp [] [] [] ["[", expr leading_coeff_eq_zero.1 hP, "]"] [] []⟩] },
+    { rw ["[", expr tendsto_const_mul_pow_nhds_iff hP, ",", expr nat_degree_eq_zero_iff_degree_le_zero, "]"] ["at", ident this],
+      exact [expr this.symm] } },
+  { refine [expr P.is_equivalent_at_top_lead.symm.tendsto_nhds _],
+    have [] [":", expr «expr = »(P.nat_degree, 0)] [":=", expr nat_degree_eq_zero_iff_degree_le_zero.2 h.2],
+    simp [] [] ["only"] ["[", expr h.1, ",", expr this, ",", expr pow_zero, ",", expr mul_one, "]"] [] [],
+    exact [expr tendsto_const_nhds] }
+end
 
 end PolynomialAtTop
 
@@ -162,28 +163,25 @@ theorem div_tendsto_zero_of_degree_lt (hdeg : P.degree < Q.degree) :
     refine' (tendsto_zpow_at_top_zero _).const_mul _ 
     linarith
 
-theorem div_tendsto_zero_iff_degree_lt (hQ : Q ≠ 0) :
-  tendsto (fun x => eval x P / eval x Q) at_top (𝓝 0) ↔ P.degree < Q.degree :=
-  by 
-    refine' ⟨fun h => _, div_tendsto_zero_of_degree_lt P Q⟩
-    byCases' hPQ : P.leading_coeff / Q.leading_coeff = 0
-    ·
-      simp only [div_eq_mul_inv, inv_eq_zero, mul_eq_zero] at hPQ 
-      cases' hPQ with hP0 hQ0
-      ·
-        rw [leading_coeff_eq_zero.1 hP0, degree_zero]
-        exact bot_lt_iff_ne_bot.2 fun hQ' => hQ (degree_eq_bot.1 hQ')
-      ·
-        exact absurd (leading_coeff_eq_zero.1 hQ0) hQ
-    ·
-      have  := (is_equivalent_at_top_div P Q).tendsto_nhds h 
-      rw [tendsto_const_mul_zpow_at_top_zero_iff hPQ] at this 
-      cases' this with h h
-      ·
-        exact absurd h.2 hPQ
-      ·
-        rw [sub_lt_iff_lt_add, zero_addₓ, Int.coe_nat_lt] at h 
-        exact degree_lt_degree h.1
+-- error in Analysis.SpecialFunctions.Polynomials: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem div_tendsto_zero_iff_degree_lt
+(hQ : «expr ≠ »(Q, 0)) : «expr ↔ »(tendsto (λ
+  x, «expr / »(eval x P, eval x Q)) at_top (expr𝓝() 0), «expr < »(P.degree, Q.degree)) :=
+begin
+  refine [expr ⟨λ h, _, div_tendsto_zero_of_degree_lt P Q⟩],
+  by_cases [expr hPQ, ":", expr «expr = »(«expr / »(P.leading_coeff, Q.leading_coeff), 0)],
+  { simp [] [] ["only"] ["[", expr div_eq_mul_inv, ",", expr inv_eq_zero, ",", expr mul_eq_zero, "]"] [] ["at", ident hPQ],
+    cases [expr hPQ] ["with", ident hP0, ident hQ0],
+    { rw ["[", expr leading_coeff_eq_zero.1 hP0, ",", expr degree_zero, "]"] [],
+      exact [expr bot_lt_iff_ne_bot.2 (λ hQ', hQ (degree_eq_bot.1 hQ'))] },
+    { exact [expr absurd (leading_coeff_eq_zero.1 hQ0) hQ] } },
+  { have [] [] [":=", expr (is_equivalent_at_top_div P Q).tendsto_nhds h],
+    rw [expr tendsto_const_mul_zpow_at_top_zero_iff hPQ] ["at", ident this],
+    cases [expr this] ["with", ident h, ident h],
+    { exact [expr absurd h.2 hPQ] },
+    { rw ["[", expr sub_lt_iff_lt_add, ",", expr zero_add, ",", expr int.coe_nat_lt, "]"] ["at", ident h],
+      exact [expr degree_lt_degree h.1] } }
+end
 
 theorem div_tendsto_leading_coeff_div_of_degree_eq (hdeg : P.degree = Q.degree) :
   tendsto (fun x => eval x P / eval x Q) at_top (𝓝$ P.leading_coeff / Q.leading_coeff) :=
@@ -194,19 +192,21 @@ theorem div_tendsto_leading_coeff_div_of_degree_eq (hdeg : P.degree = Q.degree) 
         simp [hdeg, nat_degree]]
     simp [tendsto_const_nhds]
 
-theorem div_tendsto_at_top_of_degree_gt' (hdeg : Q.degree < P.degree) (hpos : 0 < P.leading_coeff / Q.leading_coeff) :
-  tendsto (fun x => eval x P / eval x Q) at_top at_top :=
-  by 
-    have hQ : Q ≠ 0 :=
-      fun h =>
-        by 
-          simp only [h, div_zero, leading_coeff_zero] at hpos 
-          linarith 
-    rw [←nat_degree_lt_nat_degree_iff hQ] at hdeg 
-    refine' (is_equivalent_at_top_div P Q).symm.tendsto_at_top _ 
-    apply tendsto.const_mul_at_top hpos 
-    apply tendsto_zpow_at_top_at_top 
-    linarith
+-- error in Analysis.SpecialFunctions.Polynomials: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem div_tendsto_at_top_of_degree_gt'
+(hdeg : «expr < »(Q.degree, P.degree))
+(hpos : «expr < »(0, «expr / »(P.leading_coeff, Q.leading_coeff))) : tendsto (λ
+ x, «expr / »(eval x P, eval x Q)) at_top at_top :=
+begin
+  have [ident hQ] [":", expr «expr ≠ »(Q, 0)] [":=", expr λ
+   h, by { simp [] [] ["only"] ["[", expr h, ",", expr div_zero, ",", expr leading_coeff_zero, "]"] [] ["at", ident hpos],
+     linarith [] [] [] }],
+  rw ["<-", expr nat_degree_lt_nat_degree_iff hQ] ["at", ident hdeg],
+  refine [expr (is_equivalent_at_top_div P Q).symm.tendsto_at_top _],
+  apply [expr tendsto.const_mul_at_top hpos],
+  apply [expr tendsto_zpow_at_top_at_top],
+  linarith [] [] []
+end
 
 theorem div_tendsto_at_top_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q ≠ 0)
   (hnng : 0 ≤ P.leading_coeff / Q.leading_coeff) : tendsto (fun x => eval x P / eval x Q) at_top at_top :=
@@ -217,19 +217,21 @@ theorem div_tendsto_at_top_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q ≠
         
   div_tendsto_at_top_of_degree_gt' P Q hdeg ratio_pos
 
-theorem div_tendsto_at_bot_of_degree_gt' (hdeg : Q.degree < P.degree) (hneg : P.leading_coeff / Q.leading_coeff < 0) :
-  tendsto (fun x => eval x P / eval x Q) at_top at_bot :=
-  by 
-    have hQ : Q ≠ 0 :=
-      fun h =>
-        by 
-          simp only [h, div_zero, leading_coeff_zero] at hneg 
-          linarith 
-    rw [←nat_degree_lt_nat_degree_iff hQ] at hdeg 
-    refine' (is_equivalent_at_top_div P Q).symm.tendsto_at_bot _ 
-    apply tendsto.neg_const_mul_at_top hneg 
-    apply tendsto_zpow_at_top_at_top 
-    linarith
+-- error in Analysis.SpecialFunctions.Polynomials: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem div_tendsto_at_bot_of_degree_gt'
+(hdeg : «expr < »(Q.degree, P.degree))
+(hneg : «expr < »(«expr / »(P.leading_coeff, Q.leading_coeff), 0)) : tendsto (λ
+ x, «expr / »(eval x P, eval x Q)) at_top at_bot :=
+begin
+  have [ident hQ] [":", expr «expr ≠ »(Q, 0)] [":=", expr λ
+   h, by { simp [] [] ["only"] ["[", expr h, ",", expr div_zero, ",", expr leading_coeff_zero, "]"] [] ["at", ident hneg],
+     linarith [] [] [] }],
+  rw ["<-", expr nat_degree_lt_nat_degree_iff hQ] ["at", ident hdeg],
+  refine [expr (is_equivalent_at_top_div P Q).symm.tendsto_at_bot _],
+  apply [expr tendsto.neg_const_mul_at_top hneg],
+  apply [expr tendsto_zpow_at_top_at_top],
+  linarith [] [] []
+end
 
 theorem div_tendsto_at_bot_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q ≠ 0)
   (hnps : P.leading_coeff / Q.leading_coeff ≤ 0) : tendsto (fun x => eval x P / eval x Q) at_top at_bot :=
@@ -251,20 +253,18 @@ theorem abs_div_tendsto_at_top_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q
 
 end PolynomialDivAtTop
 
-theorem is_O_of_degree_le (h : P.degree ≤ Q.degree) : is_O (fun x => eval x P) (fun x => eval x Q) Filter.atTop :=
-  by 
-    byCases' hp : P = 0
-    ·
-      simpa [hp] using is_O_zero (fun x => eval x Q) Filter.atTop
-    ·
-      have hq : Q ≠ 0 := ne_zero_of_degree_ge_degree h hp 
-      have hPQ : ∀ᶠx : 𝕜 in at_top, eval x Q = 0 → eval x P = 0 :=
-        Filter.mem_of_superset (Polynomial.eventually_no_roots Q hq) fun x h h' => absurd h' h 
-      cases' le_iff_lt_or_eq.mp h with h h
-      ·
-        exact is_O_of_div_tendsto_nhds hPQ 0 (div_tendsto_zero_of_degree_lt P Q h)
-      ·
-        exact is_O_of_div_tendsto_nhds hPQ _ (div_tendsto_leading_coeff_div_of_degree_eq P Q h)
+-- error in Analysis.SpecialFunctions.Polynomials: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_O_of_degree_le (h : «expr ≤ »(P.degree, Q.degree)) : is_O (λ x, eval x P) (λ x, eval x Q) filter.at_top :=
+begin
+  by_cases [expr hp, ":", expr «expr = »(P, 0)],
+  { simpa [] [] [] ["[", expr hp, "]"] [] ["using", expr is_O_zero (λ x, eval x Q) filter.at_top] },
+  { have [ident hq] [":", expr «expr ≠ »(Q, 0)] [":=", expr ne_zero_of_degree_ge_degree h hp],
+    have [ident hPQ] [":", expr «expr∀ᶠ in , »((x : 𝕜), at_top, «expr = »(eval x Q, 0) → «expr = »(eval x P, 0))] [":=", expr filter.mem_of_superset (polynomial.eventually_no_roots Q hq) (λ
+      x h h', absurd h' h)],
+    cases [expr le_iff_lt_or_eq.mp h] ["with", ident h, ident h],
+    { exact [expr is_O_of_div_tendsto_nhds hPQ 0 (div_tendsto_zero_of_degree_lt P Q h)] },
+    { exact [expr is_O_of_div_tendsto_nhds hPQ _ (div_tendsto_leading_coeff_div_of_degree_eq P Q h)] } }
+end
 
 end Polynomial
 

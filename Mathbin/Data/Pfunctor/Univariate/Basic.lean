@@ -160,19 +160,18 @@ theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.obj α) : liftp p x ↔
     rw [xeq]
     rfl
 
--- error in Data.Pfunctor.Univariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem liftp_iff'
-{α : Type u}
-(p : α → exprProp())
-(a : P.A)
-(f : P.B a → α) : «expr ↔ »(@liftp.{u} P.obj _ α p ⟨a, f⟩, ∀ i, p (f i)) :=
-begin
-  simp [] [] ["only"] ["[", expr liftp_iff, ",", expr sigma.mk.inj_iff, "]"] [] []; split; intro [],
-  { casesm ["*"] ["[", expr Exists _, ",", expr «expr ∧ »(_, _), "]"],
-    subst_vars,
-    assumption },
-  repeat { constructor <|> assumption }
-end
+theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) :
+  @liftp.{u} P.obj _ α p ⟨a, f⟩ ↔ ∀ i, p (f i) :=
+  by 
+    simp only [liftp_iff, Sigma.mk.inj_iff] <;> split  <;> intro 
+    ·
+      casesM* Exists _, _ ∧ _ 
+      substVars 
+      assumption 
+    repeat' 
+      first |
+        constructor|
+        assumption
 
 theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.obj α) :
   liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) :=

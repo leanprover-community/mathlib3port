@@ -62,7 +62,7 @@ unsafe def alias_direct (d : declaration) (doc : Stringₓ) (al : Name) : tactic
 
 unsafe def mk_iff_mp_app (iffmp : Name) : expr → (ℕ → expr) → tactic expr
 | expr.pi n bi e t, f => expr.lam n bi e <$> mk_iff_mp_app t fun n => f (n+1) (expr.var n)
-| quote (%%a) ↔ %%b, f => pure$ @expr.const tt iffmp [] a b (f 0)
+| quote.1 ((%%ₓa) ↔ %%ₓb), f => pure$ @expr.const tt iffmp [] a b (f 0)
 | _, f => fail "Target theorem must have the form `Π x y z, a ↔ b`"
 
 unsafe def alias_iff (d : declaration) (doc : Stringₓ) (al : Name) (iffmp : Name) : tactic Unit :=

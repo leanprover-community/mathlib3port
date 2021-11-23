@@ -135,34 +135,32 @@ def comp_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [mono f₂] (small_k : is_ker
             rwa [(pullback_cone.is_limit.lift' small_k.is_limit s.fst s.snd _).2.1]
             rwa [(pullback_cone.is_limit.lift' small_k.is_limit s.fst s.snd _).2.2] }
 
+-- error in CategoryTheory.Limits.Shapes.KernelPair: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `(a,b)` is the kernel pair of `f`, and `f` is a coequalizer morphism for some parallel pair, then
 `f` is a coequalizer morphism of `a` and `b`.
--/
-def to_coequalizer (k : is_kernel_pair f a b) [r : regular_epi f] : is_colimit (cofork.of_π f k.comm) :=
-  by 
-    let t := k.is_limit.lift (pullback_cone.mk _ _ r.w)
-    have ht : t ≫ a = r.left := k.is_limit.fac _ walking_cospan.left 
-    have kt : t ≫ b = r.right := k.is_limit.fac _ walking_cospan.right 
-    apply cofork.is_colimit.mk _ _ _ _
-    ·
-      intro s 
-      apply (cofork.is_colimit.desc' r.is_colimit s.π _).1
-      rw [←ht, assoc, s.condition, reassoc_of kt]
-    ·
-      intro s 
-      apply (cofork.is_colimit.desc' r.is_colimit s.π _).2
-    ·
-      intro s m w 
-      apply r.is_colimit.hom_ext 
-      rintro ⟨⟩
-      change (r.left ≫ f) ≫ m = (r.left ≫ f) ≫ _ 
-      rw [assoc, assoc]
-      congr 1 
-      erw [(cofork.is_colimit.desc' r.is_colimit s.π _).2]
-      apply w walking_parallel_pair.one 
-      erw [(cofork.is_colimit.desc' r.is_colimit s.π _).2]
-      apply w walking_parallel_pair.one
+-/ def to_coequalizer (k : is_kernel_pair f a b) [r : regular_epi f] : is_colimit (cofork.of_π f k.comm) :=
+begin
+  let [ident t] [] [":=", expr k.is_limit.lift (pullback_cone.mk _ _ r.w)],
+  have [ident ht] [":", expr «expr = »(«expr ≫ »(t, a), r.left)] [":=", expr k.is_limit.fac _ walking_cospan.left],
+  have [ident kt] [":", expr «expr = »(«expr ≫ »(t, b), r.right)] [":=", expr k.is_limit.fac _ walking_cospan.right],
+  apply [expr cofork.is_colimit.mk _ _ _ _],
+  { intro [ident s],
+    apply [expr (cofork.is_colimit.desc' r.is_colimit s.π _).1],
+    rw ["[", "<-", expr ht, ",", expr assoc, ",", expr s.condition, ",", expr reassoc_of kt, "]"] [] },
+  { intro [ident s],
+    apply [expr (cofork.is_colimit.desc' r.is_colimit s.π _).2] },
+  { intros [ident s, ident m, ident w],
+    apply [expr r.is_colimit.hom_ext],
+    rintro ["⟨", "⟩"],
+    change [expr «expr = »(«expr ≫ »(«expr ≫ »(r.left, f), m), «expr ≫ »(«expr ≫ »(r.left, f), _))] [] [],
+    rw ["[", expr assoc, ",", expr assoc, "]"] [],
+    congr' [1] [],
+    erw [expr (cofork.is_colimit.desc' r.is_colimit s.π _).2] [],
+    apply [expr w walking_parallel_pair.one],
+    erw [expr (cofork.is_colimit.desc' r.is_colimit s.π _).2] [],
+    apply [expr w walking_parallel_pair.one] }
+end
 
 end IsKernelPair
 

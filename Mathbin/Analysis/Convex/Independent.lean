@@ -52,13 +52,14 @@ def ConvexIndependent (p : ι → E) : Prop :=
 
 variable{𝕜}
 
+-- error in Analysis.Convex.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A family with at most one point is convex independent. -/
-theorem Subsingleton.convex_independent [Subsingleton ι] (p : ι → E) : ConvexIndependent 𝕜 p :=
-  fun s x hx =>
-    by 
-      have  : (convexHull 𝕜 (p '' s)).Nonempty := ⟨p x, hx⟩
-      rw [convex_hull_nonempty_iff, Set.nonempty_image_iff] at this 
-      rwa [Subsingleton.mem_iff_nonempty]
+theorem subsingleton.convex_independent [subsingleton ι] (p : ι → E) : convex_independent 𝕜 p :=
+λ s x hx, begin
+  have [] [":", expr (convex_hull 𝕜 «expr '' »(p, s)).nonempty] [":=", expr ⟨p x, hx⟩],
+  rw ["[", expr convex_hull_nonempty_iff, ",", expr set.nonempty_image_iff, "]"] ["at", ident this],
+  rwa [expr subsingleton.mem_iff_nonempty] []
+end
 
 /-- A convex independent family is injective. -/
 protected theorem ConvexIndependent.injective {p : ι → E} (hc : ConvexIndependent 𝕜 p) : Function.Injective p :=
@@ -85,16 +86,21 @@ protected theorem ConvexIndependent.subtype {p : ι → E} (hc : ConvexIndepende
   ConvexIndependent 𝕜 fun i : s => p i :=
   hc.comp_embedding (embedding.subtype _)
 
+-- error in Analysis.Convex.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If an indexed family of points is convex independent, so is the corresponding set of points. -/
-protected theorem ConvexIndependent.range {p : ι → E} (hc : ConvexIndependent 𝕜 p) :
-  ConvexIndependent 𝕜 (fun x => x : Set.Range p → E) :=
-  by 
-    let f : Set.Range p → ι := fun x => x.property.some 
-    have hf : ∀ x, p (f x) = x := fun x => x.property.some_spec 
-    let fe : Set.Range p ↪ ι := ⟨f, fun x₁ x₂ he => Subtype.ext (hf x₁ ▸ hf x₂ ▸ he ▸ rfl)⟩
-    convert hc.comp_embedding fe 
-    ext 
-    rw [embedding.coe_fn_mk, comp_app, hf]
+protected
+theorem convex_independent.range
+{p : ι → E}
+(hc : convex_independent 𝕜 p) : convex_independent 𝕜 (λ x, x : set.range p → E) :=
+begin
+  let [ident f] [":", expr set.range p → ι] [":=", expr λ x, x.property.some],
+  have [ident hf] [":", expr ∀ x, «expr = »(p (f x), x)] [":=", expr λ x, x.property.some_spec],
+  let [ident fe] [":", expr «expr ↪ »(set.range p, ι)] [":=", expr ⟨f, λ
+    x₁ x₂ he, subtype.ext «expr ▸ »(hf x₁, «expr ▸ »(hf x₂, «expr ▸ »(he, rfl)))⟩],
+  convert [] [expr hc.comp_embedding fe] [],
+  ext [] [] [],
+  rw ["[", expr embedding.coe_fn_mk, ",", expr comp_app, ",", expr hf, "]"] []
+end
 
 /-- A subset of a convex independent set of points is convex independent as well. -/
 protected theorem ConvexIndependent.mono {s t : Set E} (hc : ConvexIndependent 𝕜 (fun x => x : t → E)) (hs : s ⊆ t) :
@@ -116,21 +122,20 @@ protected theorem ConvexIndependent.mem_convex_hull_iff {p : ι → E} (hc : Con
   p i ∈ convexHull 𝕜 (p '' s) ↔ i ∈ s :=
   ⟨hc _ _, fun hi => subset_convex_hull 𝕜 _ (Set.mem_image_of_mem p hi)⟩
 
--- error in Analysis.Convex.Independent: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If a family is convex independent, a point in the family is not in the convex hull of the other
 points. See `convex_independent_set_iff_not_mem_convex_hull_diff` for the `set` version.  -/
-theorem convex_independent_iff_not_mem_convex_hull_diff
-{p : ι → E} : «expr ↔ »(convex_independent 𝕜 p, ∀
- i s, «expr ∉ »(p i, convex_hull 𝕜 «expr '' »(p, «expr \ »(s, {i})))) :=
-begin
-  refine [expr ⟨λ hc i s h, _, λ h s i hi, _⟩],
-  { rw [expr hc.mem_convex_hull_iff] ["at", ident h],
-    exact [expr h.2 (set.mem_singleton _)] },
-  { by_contra [ident H],
-    refine [expr h i s _],
-    rw [expr set.diff_singleton_eq_self H] [],
-    exact [expr hi] }
-end
+theorem convex_independent_iff_not_mem_convex_hull_diff {p : ι → E} :
+  ConvexIndependent 𝕜 p ↔ ∀ i s, p i ∉ convexHull 𝕜 (p '' (s \ {i})) :=
+  by 
+    refine' ⟨fun hc i s h => _, fun h s i hi => _⟩
+    ·
+      rw [hc.mem_convex_hull_iff] at h 
+      exact h.2 (Set.mem_singleton _)
+    ·
+      byContra H 
+      refine' h i s _ 
+      rw [Set.diff_singleton_eq_self H]
+      exact hi
 
 theorem convex_independent_set_iff_inter_convex_hull_subset {s : Set E} :
   ConvexIndependent 𝕜 (fun x => x : s → E) ↔ ∀ t, t ⊆ s → s ∩ convexHull 𝕜 t ⊆ t :=
@@ -146,21 +151,20 @@ theorem convex_independent_set_iff_inter_convex_hull_subset {s : Set E} :
       rw [←subtype.coe_injective.mem_set_image]
       exact hc (t.image coeₓ) (Subtype.coe_image_subset s t) ⟨x.prop, h⟩
 
--- error in Analysis.Convex.Independent: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If a set is convex independent, a point in the set is not in the convex hull of the other
 points. See `convex_independent_iff_not_mem_convex_hull_diff` for the indexed family version.  -/
-theorem convex_independent_set_iff_not_mem_convex_hull_diff
-{s : set E} : «expr ↔ »(convex_independent 𝕜 (λ
- x, x : s → E), ∀ x «expr ∈ » s, «expr ∉ »(x, convex_hull 𝕜 «expr \ »(s, {x}))) :=
-begin
-  rw [expr convex_independent_set_iff_inter_convex_hull_subset] [],
-  split,
-  { rintro [ident hs, ident x, ident hxs, ident hx],
-    exact [expr (hs _ (set.diff_subset _ _) ⟨hxs, hx⟩).2 (set.mem_singleton _)] },
-  { rintro [ident hs, ident t, ident ht, ident x, "⟨", ident hxs, ",", ident hxt, "⟩"],
-    by_contra [ident h],
-    exact [expr hs _ hxs (convex_hull_mono (set.subset_diff_singleton ht h) hxt)] }
-end
+theorem convex_independent_set_iff_not_mem_convex_hull_diff {s : Set E} :
+  ConvexIndependent 𝕜 (fun x => x : s → E) ↔ ∀ x _ : x ∈ s, x ∉ convexHull 𝕜 (s \ {x}) :=
+  by 
+    rw [convex_independent_set_iff_inter_convex_hull_subset]
+    split 
+    ·
+      rintro hs x hxs hx 
+      exact (hs _ (Set.diff_subset _ _) ⟨hxs, hx⟩).2 (Set.mem_singleton _)
+    ·
+      rintro hs t ht x ⟨hxs, hxt⟩
+      byContra h 
+      exact hs _ hxs (convex_hull_mono (Set.subset_diff_singleton ht h) hxt)
 
 end OrderedSemiring
 
@@ -168,32 +172,32 @@ section LinearOrderedField
 
 variable[LinearOrderedField 𝕜][AddCommGroupₓ E][Module 𝕜 E]{s : Set E}
 
+-- error in Analysis.Convex.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- To check convex independence, one only has to check finsets thanks to Carathéodory's theorem. -/
-theorem convex_independent_iff_finset {p : ι → E} :
-  ConvexIndependent 𝕜 p ↔ ∀ s : Finset ι x : ι, p x ∈ convexHull 𝕜 (s.image p : Set E) → x ∈ s :=
-  by 
-    refine' ⟨fun hc s x hx => hc s x _, fun h s x hx => _⟩
-    ·
-      rwa [Finset.coe_image] at hx 
-    have hp : injective p
-    ·
-      rintro a b hab 
-      rw [←mem_singleton]
-      refine' h {b} a _ 
-      rw [hab, image_singleton, coe_singleton, convex_hull_singleton]
-      exact Set.mem_singleton _ 
-    rw [convex_hull_eq_union_convex_hull_finite_subsets] at hx 
-    simpRw [Set.mem_Union]  at hx 
-    obtain ⟨t, ht, hx⟩ := hx 
-    rw [←hp.mem_set_image]
-    refine' ht _ 
-    suffices  : x ∈ t.preimage p (hp.inj_on _)
-    ·
-      rwa [mem_preimage, ←mem_coe] at this 
-    refine' h _ x _ 
-    rwa [t.image_preimage p (hp.inj_on _), filter_true_of_mem]
-    ·
-      exact fun y hy => s.image_subset_range p (ht$ mem_coe.2 hy)
+theorem convex_independent_iff_finset
+{p : ι → E} : «expr ↔ »(convex_independent 𝕜 p, ∀
+ (s : finset ι)
+ (x : ι), «expr ∈ »(p x, convex_hull 𝕜 (s.image p : set E)) → «expr ∈ »(x, s)) :=
+begin
+  refine [expr ⟨λ hc s x hx, hc s x _, λ h s x hx, _⟩],
+  { rwa [expr finset.coe_image] ["at", ident hx] },
+  have [ident hp] [":", expr injective p] [],
+  { rintro [ident a, ident b, ident hab],
+    rw ["<-", expr mem_singleton] [],
+    refine [expr h {b} a _],
+    rw ["[", expr hab, ",", expr image_singleton, ",", expr coe_singleton, ",", expr convex_hull_singleton, "]"] [],
+    exact [expr set.mem_singleton _] },
+  rw [expr convex_hull_eq_union_convex_hull_finite_subsets] ["at", ident hx],
+  simp_rw [expr set.mem_Union] ["at", ident hx],
+  obtain ["⟨", ident t, ",", ident ht, ",", ident hx, "⟩", ":=", expr hx],
+  rw ["<-", expr hp.mem_set_image] [],
+  refine [expr ht _],
+  suffices [] [":", expr «expr ∈ »(x, t.preimage p (hp.inj_on _))],
+  { rwa ["[", expr mem_preimage, ",", "<-", expr mem_coe, "]"] ["at", ident this] },
+  refine [expr h _ x _],
+  rwa ["[", expr t.image_preimage p (hp.inj_on _), ",", expr filter_true_of_mem, "]"] [],
+  { exact [expr λ y hy, s.image_subset_range p «expr $ »(ht, mem_coe.2 hy)] }
+end
 
 /-! ### Extreme points -/
 

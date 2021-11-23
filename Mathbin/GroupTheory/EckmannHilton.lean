@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Group.Basic
+import Mathbin.Algebra.Group.Defs
 
 /-!
 # Eckmann-Hilton argument

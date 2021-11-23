@@ -1,7 +1,6 @@
 import Mathbin.Algebra.Regular.Smul 
-import Mathbin.Data.Matrix.Notation 
-import Mathbin.LinearAlgebra.Matrix.Polynomial 
-import Mathbin.LinearAlgebra.Matrix.Adjugate
+import Mathbin.LinearAlgebra.Matrix.Adjugate 
+import Mathbin.LinearAlgebra.Matrix.Polynomial
 
 /-!
 # Nonsingular inverses
@@ -80,10 +79,10 @@ def invertible_of_det_invertible [Invertible A.det] : Invertible A :=
       by 
         rw [smul_mul_assoc, Matrix.mul_eq_mul, adjugate_mul, smul_smul, inv_of_mul_self, one_smul] }
 
-theorem inv_of_eq [Invertible A.det] [Invertible A] : ⅟ A = ⅟ A.det • A.adjugate :=
-  by 
-    letI this := invertible_of_det_invertible A 
-    convert (rfl : ⅟ A = _)
+-- error in LinearAlgebra.Matrix.NonsingularInverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem inv_of_eq [invertible A.det] [invertible A] : «expr = »(«expr⅟»() A, «expr • »(«expr⅟»() A.det, A.adjugate)) :=
+by { letI [] [] [":=", expr invertible_of_det_invertible A],
+  convert [] [expr (rfl : «expr = »(«expr⅟»() A, _))] [] }
 
 /-- `A.det` is invertible if `A` has a left inverse. -/
 def det_invertible_of_left_inverse (h : B ⬝ A = 1) : Invertible A.det :=
@@ -109,10 +108,10 @@ def det_invertible_of_right_inverse (h : A ⬝ B = 1) : Invertible A.det :=
 def det_invertible_of_invertible [Invertible A] : Invertible A.det :=
   det_invertible_of_left_inverse A (⅟ A) (inv_of_mul_self _)
 
-theorem det_inv_of [Invertible A] [Invertible A.det] : (⅟ A).det = ⅟ A.det :=
-  by 
-    letI this := det_invertible_of_invertible A 
-    convert (rfl : _ = ⅟ A.det)
+-- error in LinearAlgebra.Matrix.NonsingularInverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem det_inv_of [invertible A] [invertible A.det] : «expr = »((«expr⅟»() A).det, «expr⅟»() A.det) :=
+by { letI [] [] [":=", expr det_invertible_of_invertible A],
+  convert [] [expr (rfl : «expr = »(_, «expr⅟»() A.det))] [] }
 
 /-- Together `matrix.det_invertible_of_invertible` and `matrix.invertible_of_det_invertible` form an
 equivalence, although both sides of the equiv are subsingleton anyway. -/
@@ -123,20 +122,18 @@ def invertible_equiv_det_invertible : Invertible A ≃ Invertible A.det :=
 
 variable{A B}
 
-theorem mul_eq_one_comm : A ⬝ B = 1 ↔ B ⬝ A = 1 :=
-  suffices ∀ A B, A ⬝ B = 1 → B ⬝ A = 1 from ⟨this A B, this B A⟩
-  fun A B h =>
-    by 
-      letI this : Invertible B.det := det_invertible_of_left_inverse _ _ h 
-      letI this : Invertible B := invertible_of_det_invertible B 
-      calc B ⬝ A = B ⬝ A ⬝ (B ⬝ ⅟ B) :=
-        by 
-          rw [Matrix.mul_inv_of_self, Matrix.mul_one]_ = B ⬝ (A ⬝ B ⬝ ⅟ B) :=
-        by 
-          simp only [Matrix.mul_assoc]_ = B ⬝ ⅟ B :=
-        by 
-          rw [h, Matrix.one_mul]_ = 1 :=
-        Matrix.mul_inv_of_self B
+-- error in LinearAlgebra.Matrix.NonsingularInverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mul_eq_one_comm : «expr ↔ »(«expr = »(«expr ⬝ »(A, B), 1), «expr = »(«expr ⬝ »(B, A), 1)) :=
+suffices ∀ A B, «expr = »(«expr ⬝ »(A, B), 1) → «expr = »(«expr ⬝ »(B, A), 1), from ⟨this A B, this B A⟩,
+assume A B h, begin
+  letI [] [":", expr invertible B.det] [":=", expr det_invertible_of_left_inverse _ _ h],
+  letI [] [":", expr invertible B] [":=", expr invertible_of_det_invertible B],
+  calc
+    «expr = »(«expr ⬝ »(B, A), «expr ⬝ »(«expr ⬝ »(B, A), «expr ⬝ »(B, «expr⅟»() B))) : by rw ["[", expr matrix.mul_inv_of_self, ",", expr matrix.mul_one, "]"] []
+    «expr = »(..., «expr ⬝ »(B, «expr ⬝ »(«expr ⬝ »(A, B), «expr⅟»() B))) : by simp [] [] ["only"] ["[", expr matrix.mul_assoc, "]"] [] []
+    «expr = »(..., «expr ⬝ »(B, «expr⅟»() B)) : by rw ["[", expr h, ",", expr matrix.one_mul, "]"] []
+    «expr = »(..., 1) : matrix.mul_inv_of_self B
+end
 
 variable(A B)
 
@@ -152,16 +149,16 @@ def invertible_of_right_inverse (h : A ⬝ B = 1) : Invertible A :=
 def unit_of_det_invertible [Invertible A.det] : Units (Matrix n n α) :=
   @unitOfInvertible _ _ A (invertible_of_det_invertible A)
 
+-- error in LinearAlgebra.Matrix.NonsingularInverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- When lowered to a prop, `matrix.invertible_equiv_det_invertible` forms an `iff`. -/
-theorem is_unit_iff_is_unit_det : IsUnit A ↔ IsUnit A.det :=
-  by 
-    split  <;> rintro ⟨x, hx⟩ <;> refine' @is_unit_of_invertible _ _ _ (id _)
-    ·
-      haveI  : Invertible A := hx.rec x.invertible 
-      apply det_invertible_of_invertible
-    ·
-      haveI  : Invertible A.det := hx.rec x.invertible 
-      apply invertible_of_det_invertible
+theorem is_unit_iff_is_unit_det : «expr ↔ »(is_unit A, is_unit A.det) :=
+begin
+  split; rintros ["⟨", ident x, ",", ident hx, "⟩"]; refine [expr @is_unit_of_invertible _ _ _ (id _)],
+  { haveI [] [":", expr invertible A] [":=", expr hx.rec x.invertible],
+    apply [expr det_invertible_of_invertible] },
+  { haveI [] [":", expr invertible A.det] [":=", expr hx.rec x.invertible],
+    apply [expr invertible_of_det_invertible] }
+end
 
 /-! #### Variants of the statements above with `is_unit`-/
 
@@ -210,23 +207,25 @@ theorem nonsing_inv_apply (h : IsUnit A.det) : A⁻¹ = («expr↑ » (h.unit⁻
   by 
     rw [inv_def, ←Ring.inverse_unit h.unit, IsUnit.unit_spec]
 
+-- error in LinearAlgebra.Matrix.NonsingularInverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The nonsingular inverse is the same as `inv_of` when `A` is invertible. -/
 @[simp]
-theorem inv_of_eq_nonsing_inv [Invertible A] : ⅟ A = A⁻¹ :=
-  by 
-    letI this := det_invertible_of_invertible A 
-    rw [inv_def, Ringₓ.inverse_invertible, inv_of_eq]
+theorem inv_of_eq_nonsing_inv [invertible A] : «expr = »(«expr⅟»() A, «expr ⁻¹»(A)) :=
+begin
+  letI [] [] [":=", expr det_invertible_of_invertible A],
+  rw ["[", expr inv_def, ",", expr ring.inverse_invertible, ",", expr inv_of_eq, "]"] []
+end
 
+-- error in LinearAlgebra.Matrix.NonsingularInverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The nonsingular inverse is the same as the general `ring.inverse`. -/
-theorem nonsing_inv_eq_ring_inverse : A⁻¹ = Ring.inverse A :=
-  by 
-    byCases' h_det : IsUnit A.det
-    ·
-      casesI (A.is_unit_iff_is_unit_det.mpr h_det).nonempty_invertible 
-      rw [←inv_of_eq_nonsing_inv, Ringₓ.inverse_invertible]
-    ·
-      have h := mt A.is_unit_iff_is_unit_det.mp h_det 
-      rw [Ring.inverse_non_unit _ h, nonsing_inv_apply_not_is_unit A h_det]
+theorem nonsing_inv_eq_ring_inverse : «expr = »(«expr ⁻¹»(A), ring.inverse A) :=
+begin
+  by_cases [expr h_det, ":", expr is_unit A.det],
+  { casesI [expr (A.is_unit_iff_is_unit_det.mpr h_det).nonempty_invertible] [],
+    rw ["[", "<-", expr inv_of_eq_nonsing_inv, ",", expr ring.inverse_invertible, "]"] [] },
+  { have [ident h] [] [":=", expr mt A.is_unit_iff_is_unit_det.mp h_det],
+    rw ["[", expr ring.inverse_non_unit _ h, ",", expr nonsing_inv_apply_not_is_unit A h_det, "]"] [] }
+end
 
 theorem transpose_nonsing_inv : (A⁻¹)ᵀ = (A)ᵀ⁻¹ :=
   by 
@@ -240,14 +239,14 @@ theorem conj_transpose_nonsing_inv [StarRing α] : (A⁻¹)ᴴ = (A)ᴴ⁻¹ :=
 @[simp]
 theorem mul_nonsing_inv (h : IsUnit A.det) : A ⬝ A⁻¹ = 1 :=
   by 
-    casesI (A.is_unit_iff_is_unit_det.mpr h).nonempty_invertible 
+    cases' (A.is_unit_iff_is_unit_det.mpr h).nonempty_invertible 
     rw [←inv_of_eq_nonsing_inv, Matrix.mul_inv_of_self]
 
 /-- The `nonsing_inv` of `A` is a left inverse. -/
 @[simp]
 theorem nonsing_inv_mul (h : IsUnit A.det) : A⁻¹ ⬝ A = 1 :=
   by 
-    casesI (A.is_unit_iff_is_unit_det.mpr h).nonempty_invertible 
+    cases' (A.is_unit_iff_is_unit_det.mpr h).nonempty_invertible 
     rw [←inv_of_eq_nonsing_inv, Matrix.inv_of_mul_self]
 
 @[simp]
@@ -270,19 +269,17 @@ theorem det_nonsing_inv_mul_det (h : IsUnit A.det) : (A⁻¹.det*A.det) = 1 :=
   by 
     rw [←det_mul, A.nonsing_inv_mul h, det_one]
 
-@[simp]
-theorem det_nonsing_inv : A⁻¹.det = Ring.inverse A.det :=
-  by 
-    byCases' h : IsUnit A.det
-    ·
-      casesI h.nonempty_invertible 
-      letI this := invertible_of_det_invertible A 
-      rw [Ringₓ.inverse_invertible, ←inv_of_eq_nonsing_inv, det_inv_of]
-    casesI is_empty_or_nonempty n
-    ·
-      rw [det_is_empty, det_is_empty, Ring.inverse_one]
-    ·
-      rw [Ring.inverse_non_unit _ h, nonsing_inv_apply_not_is_unit _ h, det_zero ‹_›]
+-- error in LinearAlgebra.Matrix.NonsingularInverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem det_nonsing_inv : «expr = »(«expr ⁻¹»(A).det, ring.inverse A.det) :=
+begin
+  by_cases [expr h, ":", expr is_unit A.det],
+  { casesI [expr h.nonempty_invertible] [],
+    letI [] [] [":=", expr invertible_of_det_invertible A],
+    rw ["[", expr ring.inverse_invertible, ",", "<-", expr inv_of_eq_nonsing_inv, ",", expr det_inv_of, "]"] [] },
+  casesI [expr is_empty_or_nonempty n] [],
+  { rw ["[", expr det_is_empty, ",", expr det_is_empty, ",", expr ring.inverse_one, "]"] [] },
+  { rw ["[", expr ring.inverse_non_unit _ h, ",", expr nonsing_inv_apply_not_is_unit _ h, ",", expr det_zero «expr‹ ›»(_), "]"] [] }
+end
 
 theorem is_unit_nonsing_inv_det (h : IsUnit A.det) : IsUnit A⁻¹.det :=
   is_unit_of_mul_eq_one _ _ (A.det_nonsing_inv_mul_det h)
@@ -322,11 +319,13 @@ theorem unit_of_det_invertible_eq_nonsing_inv_unit [Invertible A.det] :
 
 variable{A}{B}
 
+-- error in LinearAlgebra.Matrix.NonsingularInverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If matrix A is left invertible, then its inverse equals its left inverse. -/
-theorem inv_eq_left_inv (h : B ⬝ A = 1) : A⁻¹ = B :=
-  by 
-    letI this := invertible_of_left_inverse _ _ h 
-    exact inv_of_eq_nonsing_inv A ▸ inv_of_eq_left_inv h
+theorem inv_eq_left_inv (h : «expr = »(«expr ⬝ »(B, A), 1)) : «expr = »(«expr ⁻¹»(A), B) :=
+begin
+  letI [] [] [":=", expr invertible_of_left_inverse _ _ h],
+  exact [expr «expr ▸ »(inv_of_eq_nonsing_inv A, inv_of_eq_left_inv h)]
+end
 
 /-- If matrix A is right invertible, then its inverse equals its right inverse. -/
 theorem inv_eq_right_inv (h : A ⬝ B = 1) : A⁻¹ = B :=
@@ -362,22 +361,20 @@ end InvEqInv
 
 variable(A)
 
-@[simp]
-theorem inv_zero : (0 : Matrix n n α)⁻¹ = 0 :=
-  by 
-    casesI subsingleton_or_nontrivial α with ht ht
-    ·
-      simp 
-    cases' (Fintype.card n).zero_le.eq_or_lt with hc hc
-    ·
-      rw [eq_comm, Fintype.card_eq_zero_iff] at hc 
-      haveI  := hc 
-      ext i 
-      exact (IsEmpty.false i).elim
-    ·
-      have hn : Nonempty n := fintype.card_pos_iff.mp hc 
-      refine' nonsing_inv_apply_not_is_unit _ _ 
-      simp [hn]
+-- error in LinearAlgebra.Matrix.NonsingularInverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem inv_zero : «expr = »(«expr ⁻¹»((0 : matrix n n α)), 0) :=
+begin
+  casesI [expr subsingleton_or_nontrivial α] ["with", ident ht, ident ht],
+  { simp [] [] [] [] [] [] },
+  cases [expr (fintype.card n).zero_le.eq_or_lt] ["with", ident hc, ident hc],
+  { rw ["[", expr eq_comm, ",", expr fintype.card_eq_zero_iff, "]"] ["at", ident hc],
+    haveI [] [] [":=", expr hc],
+    ext [] [ident i] [],
+    exact [expr (is_empty.false i).elim] },
+  { have [ident hn] [":", expr nonempty n] [":=", expr fintype.card_pos_iff.mp hc],
+    refine [expr nonsing_inv_apply_not_is_unit _ _],
+    simp [] [] [] ["[", expr hn, "]"] [] [] }
+end
 
 @[simp]
 theorem inv_one : (1 : Matrix n n α)⁻¹ = 1 :=

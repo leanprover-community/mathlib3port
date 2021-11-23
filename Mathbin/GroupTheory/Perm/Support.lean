@@ -1,4 +1,3 @@
-import Mathbin.Data.Finset.Sort 
 import Mathbin.Data.Fintype.Basic 
 import Mathbin.GroupTheory.Perm.Basic
 
@@ -380,16 +379,17 @@ theorem disjoint.support_mul (h : Disjoint f g) : (f*g).support = f.support ∪ 
       (h a).elim (fun hf h => ⟨hf, f.apply_eq_iff_eq.mp (h.trans hf.symm)⟩)
         fun hg h => ⟨(congr_argₓ f hg).symm.trans h, hg⟩
 
-theorem support_prod_of_pairwise_disjoint (l : List (perm α)) (h : l.pairwise Disjoint) :
-  l.prod.support = (l.map support).foldr (·⊔·) ⊥ :=
-  by 
-    induction' l with hd tl hl
-    ·
-      simp 
-    ·
-      rw [List.pairwise_consₓ] at h 
-      have  : Disjoint hd tl.prod := disjoint_prod_right _ h.left 
-      simp [this.support_mul, hl h.right]
+-- error in GroupTheory.Perm.Support: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem support_prod_of_pairwise_disjoint
+(l : list (perm α))
+(h : l.pairwise disjoint) : «expr = »(l.prod.support, (l.map support).foldr ((«expr ⊔ »)) «expr⊥»()) :=
+begin
+  induction [expr l] [] ["with", ident hd, ident tl, ident hl] [],
+  { simp [] [] [] [] [] [] },
+  { rw ["[", expr list.pairwise_cons, "]"] ["at", ident h],
+    have [] [":", expr disjoint hd tl.prod] [":=", expr disjoint_prod_right _ h.left],
+    simp [] [] [] ["[", expr this.support_mul, ",", expr hl h.right, "]"] [] [] }
+end
 
 theorem support_prod_le (l : List (perm α)) : l.prod.support ≤ (l.map support).foldr (·⊔·) ⊥ :=
   by 
@@ -414,16 +414,17 @@ theorem support_swap {x y : α} (h : x ≠ y) : support (swap x y) = {x, y} :=
     ·
       simp [swap_apply_of_ne_of_ne, hx, hy]
 
-theorem support_swap_iff (x y : α) : support (swap x y) = {x, y} ↔ x ≠ y :=
-  by 
-    refine' ⟨fun h H => _, support_swap⟩
-    subst H 
-    simp only [swap_self, support_refl, insert_singleton_self_eq] at h 
-    have  : x ∈ ∅
-    ·
-      rw [h]
-      exact mem_singleton.mpr rfl 
-    simpa
+-- error in GroupTheory.Perm.Support: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem support_swap_iff (x y : α) : «expr ↔ »(«expr = »(support (swap x y), {x, y}), «expr ≠ »(x, y)) :=
+begin
+  refine [expr ⟨λ h H, _, support_swap⟩],
+  subst [expr H],
+  simp [] [] ["only"] ["[", expr swap_self, ",", expr support_refl, ",", expr insert_singleton_self_eq, "]"] [] ["at", ident h],
+  have [] [":", expr «expr ∈ »(x, «expr∅»())] [],
+  { rw [expr h] [],
+    exact [expr mem_singleton.mpr rfl] },
+  simpa [] [] [] [] [] []
+end
 
 theorem support_swap_mul_swap {x y z : α} (h : List.Nodup [x, y, z]) : support (swap x y*swap y z) = {x, y, z} :=
   by 
@@ -609,34 +610,28 @@ theorem card_support_swap {x y : α} (hxy : x ≠ y) : (swap x y).support.card =
       by 
         simp [support_swap hxy, Finset.ext_iff]
 
-@[simp]
-theorem card_support_eq_two {f : perm α} : f.support.card = 2 ↔ is_swap f :=
-  by 
-    split  <;> intro h
-    ·
-      obtain ⟨x, t, hmem, hins, ht⟩ := card_eq_succ.1 h 
-      obtain ⟨y, rfl⟩ := card_eq_one.1 ht 
-      rw [mem_singleton] at hmem 
-      refine' ⟨x, y, hmem, _⟩
-      ext a 
-      have key : ∀ b, f b ≠ b ↔ _ :=
-        fun b =>
-          by 
-            rw [←mem_support, ←hins, mem_insert, mem_singleton]
-      byCases' ha : f a = a
-      ·
-        have ha' := not_or_distrib.mp (mt (key a).mpr (not_not.mpr ha))
-        rw [ha, swap_apply_of_ne_of_ne ha'.1 ha'.2]
-      ·
-        have ha' := (key (f a)).mp (mt f.apply_eq_iff_eq.mp ha)
-        obtain rfl | rfl := (key a).mp ha
-        ·
-          rw [Or.resolve_left ha' ha, swap_apply_left]
-        ·
-          rw [Or.resolve_right ha' ha, swap_apply_right]
-    ·
-      obtain ⟨x, y, hxy, rfl⟩ := h 
-      exact card_support_swap hxy
+-- error in GroupTheory.Perm.Support: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem card_support_eq_two {f : perm α} : «expr ↔ »(«expr = »(f.support.card, 2), is_swap f) :=
+begin
+  split; intro [ident h],
+  { obtain ["⟨", ident x, ",", ident t, ",", ident hmem, ",", ident hins, ",", ident ht, "⟩", ":=", expr card_eq_succ.1 h],
+    obtain ["⟨", ident y, ",", ident rfl, "⟩", ":=", expr card_eq_one.1 ht],
+    rw [expr mem_singleton] ["at", ident hmem],
+    refine [expr ⟨x, y, hmem, _⟩],
+    ext [] [ident a] [],
+    have [ident key] [":", expr ∀
+     b, «expr ↔ »(«expr ≠ »(f b, b), _)] [":=", expr λ
+     b, by rw ["[", "<-", expr mem_support, ",", "<-", expr hins, ",", expr mem_insert, ",", expr mem_singleton, "]"] []],
+    by_cases [expr ha, ":", expr «expr = »(f a, a)],
+    { have [ident ha'] [] [":=", expr not_or_distrib.mp (mt (key a).mpr (not_not.mpr ha))],
+      rw ["[", expr ha, ",", expr swap_apply_of_ne_of_ne ha'.1 ha'.2, "]"] [] },
+    { have [ident ha'] [] [":=", expr (key (f a)).mp (mt f.apply_eq_iff_eq.mp ha)],
+      obtain [ident rfl, "|", ident rfl, ":=", expr (key a).mp ha],
+      { rw ["[", expr or.resolve_left ha' ha, ",", expr swap_apply_left, "]"] [] },
+      { rw ["[", expr or.resolve_right ha' ha, ",", expr swap_apply_right, "]"] [] } } },
+  { obtain ["⟨", ident x, ",", ident y, ",", ident hxy, ",", ident rfl, "⟩", ":=", expr h],
+    exact [expr card_support_swap hxy] }
+end
 
 theorem disjoint.card_support_mul (h : Disjoint f g) : (f*g).support.card = f.support.card+g.support.card :=
   by 

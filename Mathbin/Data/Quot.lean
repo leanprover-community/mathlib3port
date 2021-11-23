@@ -27,7 +27,7 @@ namespace Quot
 
 variable{ra : α → α → Prop}{rb : β → β → Prop}{φ : Quot ra → Quot rb → Sort _}
 
--- error in Data.Quot: ././Mathport/Syntax/Translate/Basic.lean:264:9: unsupported: advanced prec syntax
+-- error in Data.Quot: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 local notation `⟦`:max a `⟧` := quot.mk _ a
 
 instance  [Inhabited α] : Inhabited (Quot ra) :=

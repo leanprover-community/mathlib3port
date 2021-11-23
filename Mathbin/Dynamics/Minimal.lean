@@ -83,19 +83,14 @@ theorem eq_empty_or_univ_of_smul_invariant_closed [is_minimal M α] {s : Set α}
   (hsmul : ∀ c : M, c • s ⊆ s) : s = ∅ ∨ s = univ :=
   s.eq_empty_or_nonempty.imp_right$ fun hne => hs.closure_eq ▸ (dense_of_nonempty_smul_invariant M hne hsmul).closure_eq
 
--- error in Dynamics.Minimal: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-@[to_additive #[]]
-theorem is_minimal_iff_closed_smul_invariant
-[topological_space M]
-[has_continuous_smul M α] : «expr ↔ »(is_minimal M α, ∀
- s : set α, is_closed s → ∀
- c : M, «expr ⊆ »(«expr • »(c, s), s) → «expr ∨ »(«expr = »(s, «expr∅»()), «expr = »(s, univ))) :=
-begin
-  split,
-  { introsI [ident h, ident s],
-    exact [expr eq_empty_or_univ_of_smul_invariant_closed M] },
-  refine [expr λ H, ⟨λ x, «expr $ »(dense_iff_closure_eq.2, (H _ _ _).resolve_left _)⟩],
-  exacts ["[", expr is_closed_closure, ",", expr λ
-   c, smul_closure_orbit_subset _ _, ",", expr (orbit_nonempty _).closure.ne_empty, "]"]
-end
+@[toAdditive]
+theorem is_minimal_iff_closed_smul_invariant [TopologicalSpace M] [HasContinuousSmul M α] :
+  is_minimal M α ↔ ∀ s : Set α, IsClosed s → (∀ c : M, c • s ⊆ s) → s = ∅ ∨ s = univ :=
+  by 
+    split 
+    ·
+      intros h s 
+      exact eq_empty_or_univ_of_smul_invariant_closed M 
+    refine' fun H => ⟨fun x => dense_iff_closure_eq.2$ (H _ _ _).resolve_left _⟩
+    exacts[is_closed_closure, fun c => smul_closure_orbit_subset _ _, (orbit_nonempty _).closure.ne_empty]
 

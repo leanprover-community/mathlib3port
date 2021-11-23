@@ -1,5 +1,4 @@
 import Mathbin.Tactic.Rcases 
-import Mathbin.Data.Sum 
 import Mathbin.Logic.Function.Basic
 
 universe u₁ u₂
@@ -60,7 +59,7 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name :=
               let a := @expr.const tt (n ++ f)$ d.univ_params.map level.param 
               let t ← infer_type a 
               let s ← infer_type t 
-              if s ≠ quote Prop then
+              if s ≠ quote.1 Prop then
                   do 
                     let x := a.mk_app args_x 
                     let y := a.mk_app args_y 
@@ -114,13 +113,13 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name :=
                           let h ← intro1 
                           let hs ← injection h 
                           subst_vars 
-                          repeat (refine (pquote And.intro _ _) >> reflexivity)
+                          repeat (refine (pquote.1 (And.intro _ _)) >> reflexivity)
                           done <|> reflexivity 
                     solve1$
                         do 
                           repeat
                               do 
-                                refine (pquote and_imp.mpr _)
+                                refine (pquote.1 (and_imp.mpr _))
                                 let h ← intro1 
                                 cases h 
                                 skip 
@@ -213,7 +212,7 @@ attribute [local semireducible] reflected
 
 @[local instance]
 private unsafe def hacky_name_reflect : has_reflect Name :=
-  fun n => quote (id (%%expr.const n []) : Name)
+  fun n => quote.1 (id (%%ₓexpr.const n []) : Name)
 
 @[user_attribute]
 private unsafe def ext_attr_core : user_attribute (name_map Name) Name :=

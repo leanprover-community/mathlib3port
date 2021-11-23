@@ -33,13 +33,14 @@ abbrev IsSimpleModule :=
 abbrev IsSemisimpleModule :=
   IsComplemented (Submodule R M)
 
-theorem IsSimpleModule.nontrivial [IsSimpleModule R M] : Nontrivial M :=
-  ⟨⟨0,
-      by 
-        have h : (⊥ : Submodule R M) ≠ ⊤ := bot_ne_top 
-        contrapose! h 
-        ext 
-        simp [Submodule.mem_bot, Submodule.mem_top, h x]⟩⟩
+-- error in RingTheory.SimpleModule: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_simple_module.nontrivial [is_simple_module R M] : nontrivial M :=
+⟨⟨0, begin
+    have [ident h] [":", expr «expr ≠ »((«expr⊥»() : submodule R M), «expr⊤»())] [":=", expr bot_ne_top],
+    contrapose ["!"] [ident h],
+    ext [] [] [],
+    simp [] [] [] ["[", expr submodule.mem_bot, ",", expr submodule.mem_top, ",", expr h x, "]"] [] []
+  end⟩⟩
 
 variable{R}{M}{m : Submodule R M}{N : Type _}[AddCommGroupₓ N][Module R N]
 
@@ -59,7 +60,7 @@ theorem IsAtom : IsAtom m :=
 
 end IsSimpleModule
 
-theorem is_semisimple_of_Sup_simples_eq_top (h : Sup { m : Submodule R M | IsSimpleModule R m } = ⊤) :
+theorem is_semisimple_of_Sup_simples_eq_top (h : Sup { m:Submodule R M | IsSimpleModule R m } = ⊤) :
   IsSemisimpleModule R M :=
   is_complemented_of_Sup_atoms_eq_top
     (by 
@@ -69,23 +70,25 @@ namespace IsSemisimpleModule
 
 variable[IsSemisimpleModule R M]
 
-theorem Sup_simples_eq_top : Sup { m : Submodule R M | IsSimpleModule R m } = ⊤ :=
+theorem Sup_simples_eq_top : Sup { m:Submodule R M | IsSimpleModule R m } = ⊤ :=
   by 
     simpRw [is_simple_module_iff_is_atom]
     exact Sup_atoms_eq_top
 
-instance is_semisimple_submodule {m : Submodule R M} : IsSemisimpleModule R m :=
-  by 
-    have f : Submodule R m ≃o Set.Iic m := Submodule.MapSubtype.relIso m 
-    exact f.is_complemented_iff.2 IsModularLattice.is_complemented_Iic
+-- error in RingTheory.SimpleModule: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance is_semisimple_submodule {m : submodule R M} : is_semisimple_module R m :=
+begin
+  have [ident f] [":", expr «expr ≃o »(submodule R m, set.Iic m)] [":=", expr submodule.map_subtype.rel_iso m],
+  exact [expr f.is_complemented_iff.2 is_modular_lattice.is_complemented_Iic]
+end
 
 end IsSemisimpleModule
 
 theorem is_semisimple_iff_top_eq_Sup_simples :
-  Sup { m : Submodule R M | IsSimpleModule R m } = ⊤ ↔ IsSemisimpleModule R M :=
+  Sup { m:Submodule R M | IsSimpleModule R m } = ⊤ ↔ IsSemisimpleModule R M :=
   ⟨is_semisimple_of_Sup_simples_eq_top,
     by 
-      introI 
+      intro 
       exact IsSemisimpleModule.Sup_simples_eq_top⟩
 
 namespace LinearMap
@@ -119,33 +122,31 @@ theorem bijective_of_ne_zero [IsSimpleModule R M] [IsSimpleModule R N] {f : M �
   Function.Bijective f :=
   f.bijective_or_eq_zero.resolve_right h
 
+-- error in RingTheory.SimpleModule: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Schur's Lemma makes the endomorphism ring of a simple module a division ring. -/
-noncomputable instance _root_.module.End.division_ring [DecidableEq (Module.End R M)] [IsSimpleModule R M] :
-  DivisionRing (Module.End R M) :=
-  { (Module.End.ring : Ringₓ (Module.End R M)) with
-    inv :=
-      fun f =>
-        if h : f = 0 then 0 else
-          LinearMap.inverse f (Equiv.ofBijective _ (bijective_of_ne_zero h)).invFun
-            (Equiv.ofBijective _ (bijective_of_ne_zero h)).left_inv
-            (Equiv.ofBijective _ (bijective_of_ne_zero h)).right_inv,
-    exists_pair_ne :=
-      ⟨0, 1,
-        by 
-          haveI  := IsSimpleModule.nontrivial R M 
-          have h := exists_pair_ne M 
-          contrapose! h 
-          intro x y 
-          simpRw [ext_iff, one_apply, zero_apply]  at h 
-          rw [←h x, h y]⟩,
-    mul_inv_cancel :=
-      by 
-        intro a a0 
-        change (a*dite _ _ _) = 1 
-        ext 
-        rw [dif_neg a0, mul_eq_comp, one_apply, comp_apply]
-        exact (Equiv.ofBijective _ (bijective_of_ne_zero a0)).right_inv x,
-    inv_zero := dif_pos rfl }
+noncomputable
+instance _root_.module.End.division_ring
+[decidable_eq (module.End R M)]
+[is_simple_module R M] : division_ring (module.End R M) :=
+{ inv := λ
+  f, if h : «expr = »(f, 0) then 0 else linear_map.inverse f (equiv.of_bijective _ (bijective_of_ne_zero h)).inv_fun (equiv.of_bijective _ (bijective_of_ne_zero h)).left_inv (equiv.of_bijective _ (bijective_of_ne_zero h)).right_inv,
+  exists_pair_ne := ⟨0, 1, begin
+     haveI [] [] [":=", expr is_simple_module.nontrivial R M],
+     have [ident h] [] [":=", expr exists_pair_ne M],
+     contrapose ["!"] [ident h],
+     intros [ident x, ident y],
+     simp_rw ["[", expr ext_iff, ",", expr one_apply, ",", expr zero_apply, "]"] ["at", ident h],
+     rw ["[", "<-", expr h x, ",", expr h y, "]"] []
+   end⟩,
+  mul_inv_cancel := begin
+    intros [ident a, ident a0],
+    change [expr «expr = »(«expr * »(a, dite _ _ _), 1)] [] [],
+    ext [] [] [],
+    rw ["[", expr dif_neg a0, ",", expr mul_eq_comp, ",", expr one_apply, ",", expr comp_apply, "]"] [],
+    exact [expr (equiv.of_bijective _ (bijective_of_ne_zero a0)).right_inv x]
+  end,
+  inv_zero := dif_pos rfl,
+  ..(module.End.ring : ring (module.End R M)) }
 
 end LinearMap
 

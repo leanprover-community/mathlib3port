@@ -165,7 +165,7 @@ theorem mul_same (k : n) (d : α) : std_basis_matrix i j c ⬝ std_basis_matrix 
 theorem mul_of_ne {k l : n} (h : j ≠ k) (d : α) : std_basis_matrix i j c ⬝ std_basis_matrix k l d = 0 :=
   by 
     ext a b 
-    simp only [mul_apply, Dmatrix.zero_apply, boole_mul, std_basis_matrix]
+    simp only [mul_apply, boole_mul, std_basis_matrix]
     byCases' h₁ : i = a <;> simp [h₁, h, h.symm]
 
 end 

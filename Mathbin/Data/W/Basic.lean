@@ -78,25 +78,22 @@ theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) (fγ
 instance  [hα : IsEmpty α] : IsEmpty (WType β) :=
   ⟨fun w => WType.recOn w (IsEmpty.elim hα)⟩
 
-theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he : IsEmpty (β b)] : Infinite (WType β) :=
-  ⟨by 
-      introI hf 
-      have hba : b ≠ a 
-      exact fun h => ha.elim (IsEmpty.elim' (show IsEmpty (β a) from h ▸ he))
-      refine'
-        not_injective_infinite_fintype
-          (fun n : ℕ => show WType β from Nat.recOn n ⟨b, IsEmpty.elim' he⟩ fun n ih => ⟨a, fun _ => ih⟩) _ 
-      intro n m h 
-      induction' n with n ih generalizing m h
-      ·
-        cases' m with m <;> simp_all 
-      ·
-        cases' m with m
-        ·
-          simp_all 
-        ·
-          refine' congr_argₓ Nat.succ (ih _)
-          simp_all [Function.funext_iffₓ]⟩
+-- error in Data.W.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : nonempty (β a)] [he : is_empty (β b)] : infinite (W_type β) :=
+⟨begin
+   introsI [ident hf],
+   have [ident hba] [":", expr «expr ≠ »(b, a)] [],
+   from [expr λ h, ha.elim (is_empty.elim' (show is_empty (β a), from «expr ▸ »(h, he)))],
+   refine [expr not_injective_infinite_fintype (λ
+     n : exprℕ(), show W_type β, from nat.rec_on n ⟨b, is_empty.elim' he⟩ (λ n ih, ⟨a, λ _, ih⟩)) _],
+   intros [ident n, ident m, ident h],
+   induction [expr n] [] ["with", ident n, ident ih] ["generalizing", ident m, ident h],
+   { cases [expr m] ["with", ident m]; simp [] [] [] ["*"] [] ["at", "*"] },
+   { cases [expr m] ["with", ident m],
+     { simp [] [] [] ["*"] [] ["at", "*"] },
+     { refine [expr congr_arg nat.succ (ih _)],
+       simp [] [] [] ["[", expr function.funext_iff, ",", "*", "]"] [] ["at", "*"] } }
+ end⟩
 
 variable[∀ a : α, Fintype (β a)]
 
@@ -131,13 +128,14 @@ private def encodable_zero : Encodable (W_type' β 0) :=
   have  : ∀ x, finv (f x) = x := fun ⟨x, h⟩ => False.elim$ not_lt_of_geₓ h (WType.depth_pos _)
   Encodable.ofLeftInverse f finv this
 
-private def f (n : ℕ) : W_type' β (n+1) → Σa : α, β a → W_type' β n
-| ⟨t, h⟩ =>
-  by 
-    cases' t with a f 
-    have h₀ : ∀ i : β a, WType.depth (f i) ≤ n 
-    exact fun i => Nat.le_of_lt_succₓ (lt_of_lt_of_leₓ (WType.depth_lt_depth_mk a f i) h)
-    exact ⟨a, fun i : β a => ⟨f i, h₀ i⟩⟩
+-- error in Data.W.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private def f (n : exprℕ()) : W_type' β «expr + »(n, 1) → «exprΣ , »((a : α), β a → W_type' β n)
+| ⟨t, h⟩ := begin
+  cases [expr t] ["with", ident a, ident f],
+  have [ident h₀] [":", expr ∀ i : β a, «expr ≤ »(W_type.depth (f i), n)] [],
+  from [expr λ i, nat.le_of_lt_succ (lt_of_lt_of_le (W_type.depth_lt_depth_mk a f i) h)],
+  exact [expr ⟨a, λ i : β a, ⟨f i, h₀ i⟩⟩]
+end
 
 private def finv (n : ℕ) : (Σa : α, β a → W_type' β n) → W_type' β (n+1)
 | ⟨a, f⟩ =>
@@ -153,16 +151,18 @@ private def encodable_succ (n : Nat) (h : Encodable (W_type' β n)) : Encodable 
       rintro ⟨⟨_, _⟩, _⟩
       rfl)
 
+-- error in Data.W.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `W_type` is encodable when `α` is an encodable fintype and for every `a : α`, `β a` is
-encodable. -/
-instance  : Encodable (WType β) :=
-  by 
-    haveI h' : ∀ n, Encodable (W_type' β n) := fun n => Nat.recOn n encodable_zero encodable_succ 
-    let f : WType β → Σn, W_type' β n := fun t => ⟨t.depth, ⟨t, le_reflₓ _⟩⟩
-    let finv : (Σn, W_type' β n) → WType β := fun p => p.2.1
-    have  : ∀ t, finv (f t) = t 
-    exact fun t => rfl 
-    exact Encodable.ofLeftInverse f finv this
+encodable. -/ instance : encodable (W_type β) :=
+begin
+  haveI [ident h'] [":", expr ∀
+   n, encodable (W_type' β n)] [":=", expr λ n, nat.rec_on n encodable_zero encodable_succ],
+  let [ident f] [":", expr W_type β → «exprΣ , »((n), W_type' β n)] [":=", expr λ t, ⟨t.depth, ⟨t, le_refl _⟩⟩],
+  let [ident finv] [":", expr «exprΣ , »((n), W_type' β n) → W_type β] [":=", expr λ p, p.2.1],
+  have [] [":", expr ∀ t, «expr = »(finv (f t), t)] [],
+  from [expr λ t, rfl],
+  exact [expr encodable.of_left_inverse f finv this]
+end
 
 end Encodable
 

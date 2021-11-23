@@ -229,17 +229,26 @@ theorem of_line_mem {f : ℝ → X} (hf : ContinuousOn f I) (h₀ : f 0 = x) (h�
 
 attribute [local simp] Iic_def
 
--- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Concatenation of two paths from `x` to `y` and from `y` to `z`, putting the first
-path on `[0, 1/2]` and the second one on `[1/2, 1]`. -/ @[trans] def trans (γ : path x y) (γ' : path y z) : path x z :=
-{ to_fun := «expr ∘ »(λ
-   t : exprℝ(), if «expr ≤ »(t, «expr / »(1, 2)) then γ.extend «expr * »(2, t) else γ'.extend «expr - »(«expr * »(2, t), 1), coe),
-  continuous_to_fun := begin
-    refine [expr (continuous.if_le _ _ continuous_id continuous_const (by norm_num [] [])).comp continuous_subtype_coe],
-    exacts ["[", expr γ.continuous_extend.comp (continuous_const.mul continuous_id), ",", expr γ'.continuous_extend.comp ((continuous_const.mul continuous_id).sub continuous_const), "]"]
-  end,
-  source' := by norm_num [] [],
-  target' := by norm_num [] [] }
+path on `[0, 1/2]` and the second one on `[1/2, 1]`. -/
+@[trans]
+def trans (γ : Path x y) (γ' : Path y z) : Path x z :=
+  { toFun := (fun t : ℝ => if t ≤ 1 / 2 then γ.extend (2*t) else γ'.extend ((2*t) - 1)) ∘ coeₓ,
+    continuous_to_fun :=
+      by 
+        refine'
+          (Continuous.if_le _ _ continuous_id continuous_const
+                (by 
+                  normNum)).comp
+            continuous_subtype_coe 
+        exacts[γ.continuous_extend.comp (continuous_const.mul continuous_id),
+          γ'.continuous_extend.comp ((continuous_const.mul continuous_id).sub continuous_const)],
+    source' :=
+      by 
+        normNum,
+    target' :=
+      by 
+        normNum }
 
 theorem trans_apply (γ : Path x y) (γ' : Path y z) (t : I) :
   (γ.trans γ') t =
@@ -248,29 +257,24 @@ theorem trans_apply (γ : Path x y) (γ' : Path y z) (t : I) :
   show ite _ _ _ = _ by 
     splitIfs <;> rw [extend_extends]
 
-@[simp]
-theorem trans_symm (γ : Path x y) (γ' : Path y z) : (γ.trans γ').symm = γ'.symm.trans γ.symm :=
-  by 
-    ext t 
-    simp only [trans_apply, one_div, symm_apply, not_leₓ, comp_app]
-    splitIfs with h h₁ h₂ h₃ h₄ <;> rw [coe_symm_eq] at h
-    ·
-      have ht : (t : ℝ) = 1 / 2
-      ·
-        linarith [UnitInterval.nonneg t, UnitInterval.le_one t]
-      normNum [ht]
-    ·
-      refine' congr_argₓ _ (Subtype.ext _)
-      normNum [sub_sub_assoc_swap, mul_sub]
-    ·
-      refine' congr_argₓ _ (Subtype.ext _)
-      have h : (2 - 2*(t : ℝ)) - 1 = 1 - 2*t
-      ·
-        linarith 
-      normNum [mul_sub, h]
-    ·
-      exFalso 
-      linarith [UnitInterval.nonneg t, UnitInterval.le_one t]
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem trans_symm (γ : path x y) (γ' : path y z) : «expr = »((γ.trans γ').symm, γ'.symm.trans γ.symm) :=
+begin
+  ext [] [ident t] [],
+  simp [] [] ["only"] ["[", expr trans_apply, ",", expr one_div, ",", expr symm_apply, ",", expr not_le, ",", expr comp_app, "]"] [] [],
+  split_ifs [] ["with", ident h, ident h₁, ident h₂, ident h₃, ident h₄]; rw ["[", expr coe_symm_eq, "]"] ["at", ident h],
+  { have [ident ht] [":", expr «expr = »((t : exprℝ()), «expr / »(1, 2))] [],
+    { linarith [] [] ["[", expr unit_interval.nonneg t, ",", expr unit_interval.le_one t, "]"] },
+    norm_num ["[", expr ht, "]"] [] },
+  { refine [expr congr_arg _ (subtype.ext _)],
+    norm_num ["[", expr sub_sub_assoc_swap, ",", expr mul_sub, "]"] [] },
+  { refine [expr congr_arg _ (subtype.ext _)],
+    have [ident h] [":", expr «expr = »(«expr - »(«expr - »(2, «expr * »(2, (t : exprℝ()))), 1), «expr - »(1, «expr * »(2, t)))] [],
+    by linarith [] [] [],
+    norm_num ["[", expr mul_sub, ",", expr h, "]"] [] },
+  { exfalso,
+    linarith [] [] ["[", expr unit_interval.nonneg t, ",", expr unit_interval.le_one t, "]"] }
+end
 
 @[simp]
 theorem refl_trans_refl {X : Type _} [TopologicalSpace X] {a : X} : (Path.refl a).trans (Path.refl a) = Path.refl a :=
@@ -279,82 +283,53 @@ theorem refl_trans_refl {X : Type _} [TopologicalSpace X] {a : X} : (Path.refl a
     simp only [Path.trans, if_t_t, one_div, Path.refl_extend]
     rfl
 
-theorem trans_range {X : Type _} [TopologicalSpace X] {a b c : X} (γ₁ : Path a b) (γ₂ : Path b c) :
-  range (γ₁.trans γ₂) = range γ₁ ∪ range γ₂ :=
-  by 
-    rw [Path.trans]
-    apply eq_of_subset_of_subset
-    ·
-      rintro x ⟨⟨t, ht0, ht1⟩, hxt⟩
-      byCases' h : t ≤ 1 / 2
-      ·
-        left 
-        use 2*t,
-          ⟨by 
-              linarith,
-            by 
-              linarith⟩
-        rw [←γ₁.extend_extends]
-        unfoldCoes  at hxt 
-        simp only [h, comp_app, if_true] at hxt 
-        exact hxt
-      ·
-        right 
-        use (2*t) - 1,
-          ⟨by 
-              linarith,
-            by 
-              linarith⟩
-        rw [←γ₂.extend_extends]
-        unfoldCoes  at hxt 
-        simp only [h, comp_app, if_false] at hxt 
-        exact hxt
-    ·
-      rintro x (⟨⟨t, ht0, ht1⟩, hxt⟩ | ⟨⟨t, ht0, ht1⟩, hxt⟩)
-      ·
-        use
-          ⟨t / 2,
-            ⟨by 
-                linarith,
-              by 
-                linarith⟩⟩
-        unfoldCoes 
-        have  : t / 2 ≤ 1 / 2 :=
-          by 
-            linarith 
-        simp only [this, comp_app, if_true]
-        ringNF 
-        rwa [γ₁.extend_extends]
-      ·
-        byCases' h : t = 0
-        ·
-          use
-            ⟨1 / 2,
-              ⟨by 
-                  linarith,
-                by 
-                  linarith⟩⟩
-          unfoldCoes 
-          simp only [h, comp_app, if_true, le_reflₓ, mul_one_div_cancel (@two_ne_zero ℝ _ _)]
-          rw [γ₁.extend_one]
-          rwa [←γ₂.extend_extends, h, γ₂.extend_zero] at hxt
-        ·
-          use
-            ⟨(t+1) / 2,
-              ⟨by 
-                  linarith,
-                by 
-                  linarith⟩⟩
-          unfoldCoes 
-          change t ≠ 0 at h 
-          have ht0 := lt_of_le_of_neₓ ht0 h.symm 
-          have  : ¬(t+1) / 2 ≤ 1 / 2 :=
-            by 
-              rw [not_leₓ]
-              linarith 
-          simp only [comp_app, if_false, this]
-          ringNF 
-          rwa [γ₂.extend_extends]
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem trans_range
+{X : Type*}
+[topological_space X]
+{a b c : X}
+(γ₁ : path a b)
+(γ₂ : path b c) : «expr = »(range (γ₁.trans γ₂), «expr ∪ »(range γ₁, range γ₂)) :=
+begin
+  rw [expr path.trans] [],
+  apply [expr eq_of_subset_of_subset],
+  { rintros [ident x, "⟨", "⟨", ident t, ",", ident ht0, ",", ident ht1, "⟩", ",", ident hxt, "⟩"],
+    by_cases [expr h, ":", expr «expr ≤ »(t, «expr / »(1, 2))],
+    { left,
+      use ["[", expr «expr * »(2, t), ",", expr ⟨by linarith [] [] [], by linarith [] [] []⟩, "]"],
+      rw ["<-", expr γ₁.extend_extends] [],
+      unfold_coes ["at", ident hxt],
+      simp [] [] ["only"] ["[", expr h, ",", expr comp_app, ",", expr if_true, "]"] [] ["at", ident hxt],
+      exact [expr hxt] },
+    { right,
+      use ["[", expr «expr - »(«expr * »(2, t), 1), ",", expr ⟨by linarith [] [] [], by linarith [] [] []⟩, "]"],
+      rw ["<-", expr γ₂.extend_extends] [],
+      unfold_coes ["at", ident hxt],
+      simp [] [] ["only"] ["[", expr h, ",", expr comp_app, ",", expr if_false, "]"] [] ["at", ident hxt],
+      exact [expr hxt] } },
+  { rintros [ident x, "(", "⟨", "⟨", ident t, ",", ident ht0, ",", ident ht1, "⟩", ",", ident hxt, "⟩", "|", "⟨", "⟨", ident t, ",", ident ht0, ",", ident ht1, "⟩", ",", ident hxt, "⟩", ")"],
+    { use [expr ⟨«expr / »(t, 2), ⟨by linarith [] [] [], by linarith [] [] []⟩⟩],
+      unfold_coes [],
+      have [] [":", expr «expr ≤ »(«expr / »(t, 2), «expr / »(1, 2))] [":=", expr by linarith [] [] []],
+      simp [] [] ["only"] ["[", expr this, ",", expr comp_app, ",", expr if_true, "]"] [] [],
+      ring_nf [] [] [],
+      rwa [expr γ₁.extend_extends] [] },
+    { by_cases [expr h, ":", expr «expr = »(t, 0)],
+      { use [expr ⟨«expr / »(1, 2), ⟨by linarith [] [] [], by linarith [] [] []⟩⟩],
+        unfold_coes [],
+        simp [] [] ["only"] ["[", expr h, ",", expr comp_app, ",", expr if_true, ",", expr le_refl, ",", expr mul_one_div_cancel (@two_ne_zero exprℝ() _ _), "]"] [] [],
+        rw [expr γ₁.extend_one] [],
+        rwa ["[", "<-", expr γ₂.extend_extends, ",", expr h, ",", expr γ₂.extend_zero, "]"] ["at", ident hxt] },
+      { use [expr ⟨«expr / »(«expr + »(t, 1), 2), ⟨by linarith [] [] [], by linarith [] [] []⟩⟩],
+        unfold_coes [],
+        change [expr «expr ≠ »(t, 0)] [] ["at", ident h],
+        have [ident ht0] [] [":=", expr lt_of_le_of_ne ht0 h.symm],
+        have [] [":", expr «expr¬ »(«expr ≤ »(«expr / »(«expr + »(t, 1), 2), «expr / »(1, 2)))] [":=", expr by { rw [expr not_le] [],
+           linarith [] [] [] }],
+        simp [] [] ["only"] ["[", expr comp_app, ",", expr if_false, ",", expr this, "]"] [] [],
+        ring_nf [] [] [],
+        rwa [expr γ₂.extend_extends] [] } } }
+end
 
 /-- Image of a path from `x` to `y` by a continuous map -/
 def map (γ : Path x y) {Y : Type _} [TopologicalSpace Y] {f : X → Y} (h : Continuous f) : Path (f x) (f y) :=
@@ -437,69 +412,68 @@ theorem continuous_uncurry_extend_of_continuous_family {X ι : Type _} [Topologi
   Continuous («expr↿ » fun t => (γ t).extend) :=
   h.comp (continuous_id.prod_map continuous_proj_Icc)
 
-@[continuity]
-theorem trans_continuous_family {X ι : Type _} [TopologicalSpace X] [TopologicalSpace ι] {a b c : ι → X}
-  (γ₁ : ∀ t : ι, Path (a t) (b t)) (h₁ : Continuous («expr↿ » γ₁)) (γ₂ : ∀ t : ι, Path (b t) (c t))
-  (h₂ : Continuous («expr↿ » γ₂)) : Continuous («expr↿ » fun t => (γ₁ t).trans (γ₂ t)) :=
-  by 
-    have h₁' := Path.continuous_uncurry_extend_of_continuous_family γ₁ h₁ 
-    have h₂' := Path.continuous_uncurry_extend_of_continuous_family γ₂ h₂ 
-    simp only [has_uncurry.uncurry, CoeFun.coe, coeFn, Path.trans, · ∘ ·]
-    refine' Continuous.if_le _ _ (continuous_subtype_coe.comp continuous_snd) continuous_const _
-    ·
-      change Continuous ((fun p : ι × ℝ => (γ₁ p.1).extend p.2) ∘ Prod.mapₓ id (fun x => 2*x : I → ℝ))
-      exact h₁'.comp (continuous_id.prod_map$ continuous_const.mul continuous_subtype_coe)
-    ·
-      change Continuous ((fun p : ι × ℝ => (γ₂ p.1).extend p.2) ∘ Prod.mapₓ id (fun x => (2*x) - 1 : I → ℝ))
-      exact h₂'.comp (continuous_id.prod_map$ (continuous_const.mul continuous_subtype_coe).sub continuous_const)
-    ·
-      rintro st hst 
-      simp [hst, mul_inv_cancel (@two_ne_zero ℝ _ _)]
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[continuity #[]]
+theorem trans_continuous_family
+{X ι : Type*}
+[topological_space X]
+[topological_space ι]
+{a b c : ι → X}
+(γ₁ : ∀ t : ι, path (a t) (b t))
+(h₁ : continuous «expr↿ »(γ₁))
+(γ₂ : ∀ t : ι, path (b t) (c t))
+(h₂ : continuous «expr↿ »(γ₂)) : continuous «expr↿ »(λ t, (γ₁ t).trans (γ₂ t)) :=
+begin
+  have [ident h₁'] [] [":=", expr path.continuous_uncurry_extend_of_continuous_family γ₁ h₁],
+  have [ident h₂'] [] [":=", expr path.continuous_uncurry_extend_of_continuous_family γ₂ h₂],
+  simp [] [] ["only"] ["[", expr has_uncurry.uncurry, ",", expr has_coe_to_fun.coe, ",", expr coe_fn, ",", expr path.trans, ",", expr («expr ∘ »), "]"] [] [],
+  refine [expr continuous.if_le _ _ (continuous_subtype_coe.comp continuous_snd) continuous_const _],
+  { change [expr continuous «expr ∘ »(λ
+      p : «expr × »(ι, exprℝ()), (γ₁ p.1).extend p.2, prod.map id (λ x, «expr * »(2, x) : exprI() → exprℝ()))] [] [],
+    exact [expr h₁'.comp «expr $ »(continuous_id.prod_map, continuous_const.mul continuous_subtype_coe)] },
+  { change [expr continuous «expr ∘ »(λ
+      p : «expr × »(ι, exprℝ()), (γ₂ p.1).extend p.2, prod.map id (λ
+      x, «expr - »(«expr * »(2, x), 1) : exprI() → exprℝ()))] [] [],
+    exact [expr h₂'.comp «expr $ »(continuous_id.prod_map, (continuous_const.mul continuous_subtype_coe).sub continuous_const)] },
+  { rintros [ident st, ident hst],
+    simp [] [] [] ["[", expr hst, ",", expr mul_inv_cancel (@two_ne_zero exprℝ() _ _), "]"] [] [] }
+end
 
 /-! #### Truncating a path -/
 
 
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `γ.truncate t₀ t₁` is the path which follows the path `γ` on the
   time interval `[t₀, t₁]` and stays still otherwise. -/
-def truncate {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) (t₀ t₁ : ℝ) :
-  Path (γ.extend$ min t₀ t₁) (γ.extend t₁) :=
-  { toFun := fun s => γ.extend (min (max s t₀) t₁),
-    continuous_to_fun := γ.continuous_extend.comp ((continuous_subtype_coe.max continuous_const).min continuous_const),
-    source' :=
-      by 
-        simp only [min_def, max_def]
-        normCast 
-        splitIfs with h₁ h₂ h₃ h₄
-        ·
-          simp [γ.extend_of_le_zero h₁]
-        ·
-          congr 
-          linarith
-        ·
-          have h₄ : t₁ ≤ 0 :=
-            le_of_ltₓ
-              (by 
-                simpa using h₂)
-          simp [γ.extend_of_le_zero h₄, γ.extend_of_le_zero h₁]
-        all_goals 
-          rfl,
-    target' :=
-      by 
-        simp only [min_def, max_def]
-        normCast 
-        splitIfs with h₁ h₂ h₃
-        ·
-          simp [γ.extend_of_one_le h₂]
-        ·
-          rfl
-        ·
-          have h₄ : 1 ≤ t₀ :=
-            le_of_ltₓ
-              (by 
-                simpa using h₁)
-          simp [γ.extend_of_one_le h₄, γ.extend_of_one_le (h₄.trans h₃)]
-        ·
-          rfl }
+def truncate
+{X : Type*}
+[topological_space X]
+{a b : X}
+(γ : path a b)
+(t₀ t₁ : exprℝ()) : path «expr $ »(γ.extend, min t₀ t₁) (γ.extend t₁) :=
+{ to_fun := λ s, γ.extend (min (max s t₀) t₁),
+  continuous_to_fun := γ.continuous_extend.comp ((continuous_subtype_coe.max continuous_const).min continuous_const),
+  source' := begin
+    simp [] [] ["only"] ["[", expr min_def, ",", expr max_def, "]"] [] [],
+    norm_cast [],
+    split_ifs [] ["with", ident h₁, ident h₂, ident h₃, ident h₄],
+    { simp [] [] [] ["[", expr γ.extend_of_le_zero h₁, "]"] [] [] },
+    { congr,
+      linarith [] [] [] },
+    { have [ident h₄] [":", expr «expr ≤ »(t₁, 0)] [":=", expr le_of_lt (by simpa [] [] [] [] [] ["using", expr h₂])],
+      simp [] [] [] ["[", expr γ.extend_of_le_zero h₄, ",", expr γ.extend_of_le_zero h₁, "]"] [] [] },
+    all_goals { refl }
+  end,
+  target' := begin
+    simp [] [] ["only"] ["[", expr min_def, ",", expr max_def, "]"] [] [],
+    norm_cast [],
+    split_ifs [] ["with", ident h₁, ident h₂, ident h₃],
+    { simp [] [] [] ["[", expr γ.extend_of_one_le h₂, "]"] [] [] },
+    { refl },
+    { have [ident h₄] [":", expr «expr ≤ »(1, t₀)] [":=", expr le_of_lt (by simpa [] [] [] [] [] ["using", expr h₁])],
+      simp [] [] [] ["[", expr γ.extend_of_one_le h₄, ",", expr γ.extend_of_one_le (h₄.trans h₃), "]"] [] [] },
+    { refl }
+  end }
 
 /-- `γ.truncate_of_le t₀ t₁ h`, where `h : t₀ ≤ t₁` is `γ.truncate t₀ t₁`
   casted as a path from `γ.extend t₀` to `γ.extend t₁`. -/
@@ -568,19 +542,19 @@ theorem truncate_one_one {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path 
   by 
     convert γ.truncate_self 1 <;> exact γ.extend_one.symm
 
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem truncate_zero_one {X : Type _} [TopologicalSpace X] {a b : X} (γ : Path a b) :
-  γ.truncate 0 1 =
-    γ.cast
-      (by 
-        simp [zero_le_one, extend_zero])
-      (by 
-        simp ) :=
-  by 
-    ext x 
-    rw [cast_coe]
-    have  : «expr↑ » x ∈ (Icc 0 1 : Set ℝ) := x.2
-    rw [truncate, coe_mk, max_eq_leftₓ this.1, min_eq_leftₓ this.2, extend_extends']
+theorem truncate_zero_one
+{X : Type*}
+[topological_space X]
+{a b : X}
+(γ : path a b) : «expr = »(γ.truncate 0 1, γ.cast (by simp [] [] [] ["[", expr zero_le_one, ",", expr extend_zero, "]"] [] []) (by simp [] [] [] [] [] [])) :=
+begin
+  ext [] [ident x] [],
+  rw [expr cast_coe] [],
+  have [] [":", expr «expr ∈ »(«expr↑ »(x), (Icc 0 1 : set exprℝ()))] [":=", expr x.2],
+  rw ["[", expr truncate, ",", expr coe_mk, ",", expr max_eq_left this.1, ",", expr min_eq_left this.2, ",", expr extend_extends', "]"] []
+end
 
 /-! #### Reparametrising a path -/
 
@@ -612,26 +586,29 @@ theorem reparam_id (γ : Path x y) : γ.reparam id continuous_id rfl rfl = γ :=
     ext 
     rfl
 
-theorem range_reparam (γ : Path x y) {f : I → I} (hfcont : Continuous f) (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
-  range («expr⇑ » (γ.reparam f hfcont hf₀ hf₁)) = range γ :=
-  by 
-    change range (γ ∘ f) = range γ 
-    have  : range f = univ
-    ·
-      rw [range_iff_surjective]
-      intro t 
-      have h₁ : Continuous (Icc_extend (@zero_le_one ℝ _) f)
-      ·
-        continuity 
-      have  := intermediate_value_Icc (@zero_le_one ℝ _) h₁.continuous_on
-      ·
-        rw [Icc_extend_left, Icc_extend_right] at this 
-        change Icc (f 0) (f 1) ⊆ _ at this 
-        rw [hf₀, hf₁] at this 
-        rcases this t.2 with ⟨w, hw₁, hw₂⟩
-        rw [Icc_extend_of_mem _ _ hw₁] at hw₂ 
-        use ⟨w, hw₁⟩, hw₂ 
-    rw [range_comp, this, image_univ]
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem range_reparam
+(γ : path x y)
+{f : exprI() → exprI()}
+(hfcont : continuous f)
+(hf₀ : «expr = »(f 0, 0))
+(hf₁ : «expr = »(f 1, 1)) : «expr = »(range «expr⇑ »(γ.reparam f hfcont hf₀ hf₁), range γ) :=
+begin
+  change [expr «expr = »(range «expr ∘ »(γ, f), range γ)] [] [],
+  have [] [":", expr «expr = »(range f, univ)] [],
+  { rw [expr range_iff_surjective] [],
+    intro [ident t],
+    have [ident h₁] [":", expr continuous (Icc_extend (@zero_le_one exprℝ() _) f)] [],
+    { continuity [] [] },
+    have [] [] [":=", expr intermediate_value_Icc (@zero_le_one exprℝ() _) h₁.continuous_on],
+    { rw ["[", expr Icc_extend_left, ",", expr Icc_extend_right, "]"] ["at", ident this],
+      change [expr «expr ⊆ »(Icc (f 0) (f 1), _)] [] ["at", ident this],
+      rw ["[", expr hf₀, ",", expr hf₁, "]"] ["at", ident this],
+      rcases [expr this t.2, "with", "⟨", ident w, ",", ident hw₁, ",", ident hw₂, "⟩"],
+      rw [expr Icc_extend_of_mem _ _ hw₁] ["at", ident hw₂],
+      use ["[", expr ⟨w, hw₁⟩, ",", expr hw₂, "]"] } },
+  rw ["[", expr range_comp, ",", expr this, ",", expr image_univ, "]"] []
+end
 
 theorem refl_reparam {f : I → I} (hfcont : Continuous f) (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
   (refl x).reparam f hfcont hf₀ hf₁ = refl x :=
@@ -689,14 +666,14 @@ def JoinedIn (F : Set X) (x y : X) : Prop :=
 
 variable{F : Set X}
 
-theorem JoinedIn.mem (h : JoinedIn F x y) : x ∈ F ∧ y ∈ F :=
-  by 
-    rcases h with ⟨γ, γ_in⟩
-    have  : γ 0 ∈ F ∧ γ 1 ∈ F
-    ·
-      ·
-        split  <;> apply γ_in 
-    simpa using this
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem joined_in.mem (h : joined_in F x y) : «expr ∧ »(«expr ∈ »(x, F), «expr ∈ »(y, F)) :=
+begin
+  rcases [expr h, "with", "⟨", ident γ, ",", ident γ_in, "⟩"],
+  have [] [":", expr «expr ∧ »(«expr ∈ »(γ 0, F), «expr ∈ »(γ 1, F))] [],
+  by { split; apply [expr γ_in] },
+  simpa [] [] [] [] [] ["using", expr this]
+end
 
 theorem JoinedIn.source_mem (h : JoinedIn F x y) : x ∈ F :=
   h.mem.1
@@ -889,77 +866,74 @@ theorem IsPathConnected.preimage_coe {U W : Set X} (hW : IsPathConnected W) (hWU
         by 
           simp ⟩
 
-theorem IsPathConnected.exists_path_through_family {X : Type _} [TopologicalSpace X] {n : ℕ} {s : Set X}
-  (h : IsPathConnected s) (p : Finₓ (n+1) → X) (hp : ∀ i, p i ∈ s) :
-  ∃ γ : Path (p 0) (p n), range γ ⊆ s ∧ ∀ i, p i ∈ range γ :=
-  by 
-    let p' : ℕ → X := fun k => if h : k < n+1 then p ⟨k, h⟩ else p ⟨0, n.zero_lt_succ⟩
-    obtain ⟨γ, hγ⟩ : ∃ γ : Path (p' 0) (p' n), (∀ i _ : i ≤ n, p' i ∈ range γ) ∧ range γ ⊆ s
-    ·
-      have hp' : ∀ i _ : i ≤ n, p' i ∈ s
-      ·
-        intro i hi 
-        simp [p', Nat.lt_succ_of_leₓ hi, hp]
-      clearValue p' 
-      clear hp p 
-      induction' n with n hn
-      ·
-        use Path.refl (p' 0)
-        ·
-          split 
-          ·
-            rintro i hi 
-            rw [nat.le_zero_iff.mp hi]
-            exact ⟨0, rfl⟩
-          ·
-            rw [range_subset_iff]
-            rintro x 
-            exact hp' 0 (le_reflₓ _)
-      ·
-        rcases hn fun i hi => hp' i$ Nat.le_succ_of_leₓ hi with ⟨γ₀, hγ₀⟩
-        rcases h.joined_in (p' n) (p'$ n+1) (hp' n n.le_succ) (hp' (n+1)$ le_reflₓ _) with ⟨γ₁, hγ₁⟩
-        let γ : Path (p' 0) (p'$ n+1) := γ₀.trans γ₁ 
-        use γ 
-        have range_eq : range γ = range γ₀ ∪ range γ₁ := γ₀.trans_range γ₁ 
-        split 
-        ·
-          rintro i hi 
-          byCases' hi' : i ≤ n
-          ·
-            rw [range_eq]
-            left 
-            exact hγ₀.1 i hi'
-          ·
-            rw [not_leₓ, ←Nat.succ_le_iff] at hi' 
-            have  : i = n.succ :=
-              by 
-                linarith 
-            rw [this]
-            use 1 
-            exact γ.target
-        ·
-          rw [range_eq]
-          apply union_subset hγ₀.2
-          rw [range_subset_iff]
-          exact hγ₁ 
-    have hpp' : ∀ k _ : k < n+1, p k = p' k
-    ·
-      intro k hk 
-      simp only [p', hk, dif_pos]
-      congr 
-      ext 
-      rw [Finₓ.coe_coe_of_lt hk]
-      normCast 
-    use γ.cast (hpp' 0 n.zero_lt_succ) (hpp' n n.lt_succ_self)
-    simp only [γ.cast_coe]
-    refine' And.intro hγ.2 _ 
-    rintro ⟨i, hi⟩
-    convert hγ.1 i (Nat.le_of_lt_succₓ hi)
-    rw [←hpp' i hi]
-    congr 
-    ext 
-    rw [Finₓ.coe_coe_of_lt hi]
-    normCast
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_path_connected.exists_path_through_family
+{X : Type*}
+[topological_space X]
+{n : exprℕ()}
+{s : set X}
+(h : is_path_connected s)
+(p : fin «expr + »(n, 1) → X)
+(hp : ∀
+ i, «expr ∈ »(p i, s)) : «expr∃ , »((γ : path (p 0) (p n)), «expr ∧ »(«expr ⊆ »(range γ, s), ∀
+  i, «expr ∈ »(p i, range γ))) :=
+begin
+  let [ident p'] [":", expr exprℕ() → X] [":=", expr λ
+   k, if h : «expr < »(k, «expr + »(n, 1)) then p ⟨k, h⟩ else p ⟨0, n.zero_lt_succ⟩],
+  obtain ["⟨", ident γ, ",", ident hγ, "⟩", ":", expr «expr∃ , »((γ : path (p' 0) (p' n)), «expr ∧ »(∀
+     i «expr ≤ » n, «expr ∈ »(p' i, range γ), «expr ⊆ »(range γ, s)))],
+  { have [ident hp'] [":", expr ∀ i «expr ≤ » n, «expr ∈ »(p' i, s)] [],
+    { intros [ident i, ident hi],
+      simp [] [] [] ["[", expr p', ",", expr nat.lt_succ_of_le hi, ",", expr hp, "]"] [] [] },
+    clear_value [ident p'],
+    clear [ident hp, ident p],
+    induction [expr n] [] ["with", ident n, ident hn] [],
+    { use [expr path.refl (p' 0)],
+      { split,
+        { rintros [ident i, ident hi],
+          rw [expr nat.le_zero_iff.mp hi] [],
+          exact [expr ⟨0, rfl⟩] },
+        { rw [expr range_subset_iff] [],
+          rintros [ident x],
+          exact [expr hp' 0 (le_refl _)] } } },
+    { rcases [expr hn (λ i hi, «expr $ »(hp' i, nat.le_succ_of_le hi)), "with", "⟨", ident γ₀, ",", ident hγ₀, "⟩"],
+      rcases [expr h.joined_in (p' n) «expr $ »(p', «expr + »(n, 1)) (hp' n n.le_succ) «expr $ »(hp' «expr + »(n, 1), le_refl _), "with", "⟨", ident γ₁, ",", ident hγ₁, "⟩"],
+      let [ident γ] [":", expr path (p' 0) «expr $ »(p', «expr + »(n, 1))] [":=", expr γ₀.trans γ₁],
+      use [expr γ],
+      have [ident range_eq] [":", expr «expr = »(range γ, «expr ∪ »(range γ₀, range γ₁))] [":=", expr γ₀.trans_range γ₁],
+      split,
+      { rintros [ident i, ident hi],
+        by_cases [expr hi', ":", expr «expr ≤ »(i, n)],
+        { rw [expr range_eq] [],
+          left,
+          exact [expr hγ₀.1 i hi'] },
+        { rw ["[", expr not_le, ",", "<-", expr nat.succ_le_iff, "]"] ["at", ident hi'],
+          have [] [":", expr «expr = »(i, n.succ)] [":=", expr by linarith [] [] []],
+          rw [expr this] [],
+          use [expr 1],
+          exact [expr γ.target] } },
+      { rw [expr range_eq] [],
+        apply [expr union_subset hγ₀.2],
+        rw [expr range_subset_iff] [],
+        exact [expr hγ₁] } } },
+  have [ident hpp'] [":", expr ∀ k «expr < » «expr + »(n, 1), «expr = »(p k, p' k)] [],
+  { intros [ident k, ident hk],
+    simp [] [] ["only"] ["[", expr p', ",", expr hk, ",", expr dif_pos, "]"] [] [],
+    congr,
+    ext [] [] [],
+    rw [expr fin.coe_coe_of_lt hk] [],
+    norm_cast [] },
+  use [expr γ.cast (hpp' 0 n.zero_lt_succ) (hpp' n n.lt_succ_self)],
+  simp [] [] ["only"] ["[", expr γ.cast_coe, "]"] [] [],
+  refine [expr and.intro hγ.2 _],
+  rintros ["⟨", ident i, ",", ident hi, "⟩"],
+  convert [] [expr hγ.1 i (nat.le_of_lt_succ hi)] [],
+  rw ["<-", expr hpp' i hi] [],
+  congr,
+  ext [] [] [],
+  rw [expr fin.coe_coe_of_lt hi] [],
+  norm_cast []
+end
 
 theorem IsPathConnected.exists_path_through_family' {X : Type _} [TopologicalSpace X] {n : ℕ} {s : Set X}
   (h : IsPathConnected s) (p : Finₓ (n+1) → X) (hp : ∀ i, p i ∈ s) :
@@ -983,21 +957,21 @@ class PathConnectedSpace(X : Type _)[TopologicalSpace X] : Prop where
 
 attribute [instance] PathConnectedSpace.nonempty
 
-theorem path_connected_space_iff_zeroth_homotopy :
-  PathConnectedSpace X ↔ Nonempty (ZerothHomotopy X) ∧ Subsingleton (ZerothHomotopy X) :=
-  by 
-    letI this := pathSetoid X 
-    split 
-    ·
-      introI h 
-      refine' ⟨(nonempty_quotient_iff _).mpr h.1, ⟨_⟩⟩
-      rintro ⟨x⟩ ⟨y⟩
-      exact Quotientₓ.sound (PathConnectedSpace.joined x y)
-    ·
-      unfold ZerothHomotopy 
-      rintro ⟨h, h'⟩
-      resetI 
-      exact ⟨(nonempty_quotient_iff _).mp h, fun x y => Quotientₓ.exact$ Subsingleton.elimₓ («expr⟦ ⟧» x) («expr⟦ ⟧» y)⟩
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem path_connected_space_iff_zeroth_homotopy : «expr ↔ »(path_connected_space X, «expr ∧ »(nonempty (zeroth_homotopy X), subsingleton (zeroth_homotopy X))) :=
+begin
+  letI [] [] [":=", expr path_setoid X],
+  split,
+  { introI [ident h],
+    refine [expr ⟨(nonempty_quotient_iff _).mpr h.1, ⟨_⟩⟩],
+    rintros ["⟨", ident x, "⟩", "⟨", ident y, "⟩"],
+    exact [expr quotient.sound (path_connected_space.joined x y)] },
+  { unfold [ident zeroth_homotopy] [],
+    rintros ["⟨", ident h, ",", ident h', "⟩"],
+    resetI,
+    exact [expr ⟨(nonempty_quotient_iff _).mp h, λ
+      x y, «expr $ »(quotient.exact, subsingleton.elim «expr⟦ ⟧»(x) «expr⟦ ⟧»(y))⟩] }
+end
 
 namespace PathConnectedSpace
 
@@ -1009,38 +983,35 @@ def some_path (x y : X) : Path x y :=
 
 end PathConnectedSpace
 
-theorem is_path_connected_iff_path_connected_space : IsPathConnected F ↔ PathConnectedSpace F :=
-  by 
-    rw [is_path_connected_iff]
-    split 
-    ·
-      rintro ⟨⟨x, x_in⟩, h⟩
-      refine' ⟨⟨⟨x, x_in⟩⟩, _⟩
-      rintro ⟨y, y_in⟩ ⟨z, z_in⟩
-      have H := h y z y_in z_in 
-      rwa [joined_in_iff_joined y_in z_in] at H
-    ·
-      rintro ⟨⟨x, x_in⟩, H⟩
-      refine' ⟨⟨x, x_in⟩, fun y z y_in z_in => _⟩
-      rw [joined_in_iff_joined y_in z_in]
-      apply H
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_path_connected_iff_path_connected_space : «expr ↔ »(is_path_connected F, path_connected_space F) :=
+begin
+  rw [expr is_path_connected_iff] [],
+  split,
+  { rintro ["⟨", "⟨", ident x, ",", ident x_in, "⟩", ",", ident h, "⟩"],
+    refine [expr ⟨⟨⟨x, x_in⟩⟩, _⟩],
+    rintros ["⟨", ident y, ",", ident y_in, "⟩", "⟨", ident z, ",", ident z_in, "⟩"],
+    have [ident H] [] [":=", expr h y z y_in z_in],
+    rwa [expr joined_in_iff_joined y_in z_in] ["at", ident H] },
+  { rintros ["⟨", "⟨", ident x, ",", ident x_in, "⟩", ",", ident H, "⟩"],
+    refine [expr ⟨⟨x, x_in⟩, λ y z y_in z_in, _⟩],
+    rw [expr joined_in_iff_joined y_in z_in] [],
+    apply [expr H] }
+end
 
-theorem path_connected_space_iff_univ : PathConnectedSpace X ↔ IsPathConnected (univ : Set X) :=
-  by 
-    split 
-    ·
-      introI h 
-      inhabit X 
-      refine' ⟨default X, mem_univ _, _⟩
-      simpa using PathConnectedSpace.joined (default X)
-    ·
-      intro h 
-      have h' := h.joined_in 
-      cases' h with x h 
-      exact
-        ⟨⟨x⟩,
-          by 
-            simpa using h'⟩
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem path_connected_space_iff_univ : «expr ↔ »(path_connected_space X, is_path_connected (univ : set X)) :=
+begin
+  split,
+  { introI [ident h],
+    inhabit [expr X] [],
+    refine [expr ⟨default X, mem_univ _, _⟩],
+    simpa [] [] [] [] [] ["using", expr path_connected_space.joined (default X)] },
+  { intro [ident h],
+    have [ident h'] [] [":=", expr h.joined_in],
+    cases [expr h] ["with", ident x, ident h],
+    exact [expr ⟨⟨x⟩, by simpa [] [] [] [] [] ["using", expr h']⟩] }
+end
 
 theorem path_connected_space_iff_eq : PathConnectedSpace X ↔ ∃ x : X, PathComponent x = univ :=
   by 
@@ -1062,24 +1033,27 @@ namespace PathConnectedSpace
 
 variable[PathConnectedSpace X]
 
-theorem exists_path_through_family {n : ℕ} (p : Finₓ (n+1) → X) : ∃ γ : Path (p 0) (p n), ∀ i, p i ∈ range γ :=
-  by 
-    have  : IsPathConnected (univ : Set X) :=
-      path_connected_space_iff_univ.mp
-        (by 
-          infer_instance)
-    rcases this.exists_path_through_family p fun i => True.intro with ⟨γ, -, h⟩
-    exact ⟨γ, h⟩
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_path_through_family
+{n : exprℕ()}
+(p : fin «expr + »(n, 1) → X) : «expr∃ , »((γ : path (p 0) (p n)), ∀ i, «expr ∈ »(p i, range γ)) :=
+begin
+  have [] [":", expr is_path_connected (univ : set X)] [":=", expr path_connected_space_iff_univ.mp (by apply_instance)],
+  rcases [expr this.exists_path_through_family p (λ i, true.intro), "with", "⟨", ident γ, ",", "-", ",", ident h, "⟩"],
+  exact [expr ⟨γ, h⟩]
+end
 
-theorem exists_path_through_family' {n : ℕ} (p : Finₓ (n+1) → X) :
-  ∃ (γ : Path (p 0) (p n))(t : Finₓ (n+1) → I), ∀ i, γ (t i) = p i :=
-  by 
-    have  : IsPathConnected (univ : Set X) :=
-      path_connected_space_iff_univ.mp
-        (by 
-          infer_instance)
-    rcases this.exists_path_through_family' p fun i => True.intro with ⟨γ, t, -, h⟩
-    exact ⟨γ, t, h⟩
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_path_through_family'
+{n : exprℕ()}
+(p : fin «expr + »(n, 1) → X) : «expr∃ , »((γ : path (p 0) (p n))
+ (t : fin «expr + »(n, 1) → exprI()), ∀ i, «expr = »(γ (t i), p i)) :=
+begin
+  have [] [":", expr is_path_connected (univ : set X)] [":=", expr path_connected_space_iff_univ.mp (by apply_instance)],
+  rcases [expr this.exists_path_through_family' p (λ
+    i, true.intro), "with", "⟨", ident γ, ",", ident t, ",", "-", ",", ident h, "⟩"],
+  exact [expr ⟨γ, t, h⟩]
+end
 
 end PathConnectedSpace
 
@@ -1114,10 +1088,10 @@ theorem path_connected_space_iff_connected_space [LocPathConnectedSpace X] : Pat
   by 
     split 
     ·
-      introI h 
+      intro h 
       infer_instance
     ·
-      introI hX 
+      intro hX 
       inhabit X 
       let x₀ := default X 
       rw [path_connected_space_iff_eq]
@@ -1167,10 +1141,14 @@ theorem loc_path_connected_of_is_open [LocPathConnectedSpace X] {U : Set X} (h :
         rw [←Subtype.coe_injective hy]
         tauto⟩
 
-theorem IsOpen.is_connected_iff_is_path_connected [LocPathConnectedSpace X] {U : Set X} (U_op : IsOpen U) :
-  IsPathConnected U ↔ IsConnected U :=
-  by 
-    rw [is_connected_iff_connected_space, is_path_connected_iff_path_connected_space]
-    haveI  := loc_path_connected_of_is_open U_op 
-    exact path_connected_space_iff_connected_space
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_open.is_connected_iff_is_path_connected
+[loc_path_connected_space X]
+{U : set X}
+(U_op : is_open U) : «expr ↔ »(is_path_connected U, is_connected U) :=
+begin
+  rw ["[", expr is_connected_iff_connected_space, ",", expr is_path_connected_iff_path_connected_space, "]"] [],
+  haveI [] [] [":=", expr loc_path_connected_of_is_open U_op],
+  exact [expr path_connected_space_iff_connected_space]
+end
 

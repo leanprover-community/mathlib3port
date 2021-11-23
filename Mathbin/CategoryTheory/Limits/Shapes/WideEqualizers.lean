@@ -66,7 +66,7 @@ instance  : DecidableEq (walking_parallel_family J)
 instance  : Inhabited (walking_parallel_family J) :=
   ⟨zero⟩
 
--- error in CategoryTheory.Limits.Shapes.WideEqualizers: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in CategoryTheory.Limits.Shapes.WideEqualizers: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- The type family of morphisms for the diagram indexing a wide (co)equalizer. -/
 @[derive #[expr decidable_eq]]
 inductive walking_parallel_family.hom (J : Type v) : walking_parallel_family J → walking_parallel_family J → Type v

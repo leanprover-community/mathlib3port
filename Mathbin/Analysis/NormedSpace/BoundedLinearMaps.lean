@@ -339,43 +339,40 @@ theorem IsBoundedBilinearMap.map_sub_right (h : IsBoundedBilinearMap 𝕜 f) {x 
       simp [sub_eq_add_neg]
     
 
-theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Continuous f :=
-  by 
-    have one_ne : (1 : ℝ) ≠ 0 :=
-      by 
-        simp 
-    obtain ⟨C, Cpos : 0 < C, hC⟩ := h.bound 
-    rw [continuous_iff_continuous_at]
-    intro x 
-    have H : ∀ a : E b : F, ∥f (a, b)∥ ≤ C*∥∥a∥*∥b∥∥
-    ·
-      intro a b 
-      simpa [mul_assocₓ] using hC a b 
-    have h₁ : Asymptotics.IsOₓ (fun e : E × F => f (e.1 - x.1, e.2)) (fun e => (1 : ℝ)) (𝓝 x)
-    ·
-      refine' (Asymptotics.is_O_of_le' (𝓝 x) fun e => H (e.1 - x.1) e.2).trans_is_o _ 
-      rw [Asymptotics.is_o_const_iff one_ne]
-      convert ((continuous_fst.sub continuous_const).norm.mul continuous_snd.norm).ContinuousAt
-      ·
-        simp 
-      infer_instance 
-    have h₂ : Asymptotics.IsOₓ (fun e : E × F => f (x.1, e.2 - x.2)) (fun e => (1 : ℝ)) (𝓝 x)
-    ·
-      refine' (Asymptotics.is_O_of_le' (𝓝 x) fun e => H x.1 (e.2 - x.2)).trans_is_o _ 
-      rw [Asymptotics.is_o_const_iff one_ne]
-      convert (continuous_const.mul (continuous_snd.sub continuous_const).norm).ContinuousAt
-      ·
-        simp 
-      infer_instance 
-    have  := h₁.add h₂ 
-    rw [Asymptotics.is_o_const_iff one_ne] at this 
-    change tendsto _ _ _ 
-    convert this.add_const (f x)
-    ·
-      ext e 
-      simp [h.map_sub_left, h.map_sub_right]
-    ·
-      simp 
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_bounded_bilinear_map.continuous (h : is_bounded_bilinear_map 𝕜 f) : continuous f :=
+begin
+  have [ident one_ne] [":", expr «expr ≠ »((1 : exprℝ()), 0)] [":=", expr by simp [] [] [] [] [] []],
+  obtain ["⟨", ident C, ",", "(", ident Cpos, ":", expr «expr < »(0, C), ")", ",", ident hC, "⟩", ":=", expr h.bound],
+  rw [expr continuous_iff_continuous_at] [],
+  intros [ident x],
+  have [ident H] [":", expr ∀
+   (a : E)
+   (b : F), «expr ≤ »(«expr∥ ∥»(f (a, b)), «expr * »(C, «expr∥ ∥»(«expr * »(«expr∥ ∥»(a), «expr∥ ∥»(b)))))] [],
+  { intros [ident a, ident b],
+    simpa [] [] [] ["[", expr mul_assoc, "]"] [] ["using", expr hC a b] },
+  have [ident h₁] [":", expr asymptotics.is_o (λ
+    e : «expr × »(E, F), f («expr - »(e.1, x.1), e.2)) (λ e, (1 : exprℝ())) (expr𝓝() x)] [],
+  { refine [expr (asymptotics.is_O_of_le' (expr𝓝() x) (λ e, H «expr - »(e.1, x.1) e.2)).trans_is_o _],
+    rw [expr asymptotics.is_o_const_iff one_ne] [],
+    convert [] [expr ((continuous_fst.sub continuous_const).norm.mul continuous_snd.norm).continuous_at] [],
+    { simp [] [] [] [] [] [] },
+    apply_instance },
+  have [ident h₂] [":", expr asymptotics.is_o (λ
+    e : «expr × »(E, F), f (x.1, «expr - »(e.2, x.2))) (λ e, (1 : exprℝ())) (expr𝓝() x)] [],
+  { refine [expr (asymptotics.is_O_of_le' (expr𝓝() x) (λ e, H x.1 «expr - »(e.2, x.2))).trans_is_o _],
+    rw [expr asymptotics.is_o_const_iff one_ne] [],
+    convert [] [expr (continuous_const.mul (continuous_snd.sub continuous_const).norm).continuous_at] [],
+    { simp [] [] [] [] [] [] },
+    apply_instance },
+  have [] [] [":=", expr h₁.add h₂],
+  rw [expr asymptotics.is_o_const_iff one_ne] ["at", ident this],
+  change [expr tendsto _ _ _] [] [],
+  convert [] [expr this.add_const (f x)] [],
+  { ext [] [ident e] [],
+    simp [] [] [] ["[", expr h.map_sub_left, ",", expr h.map_sub_right, "]"] [] [] },
+  { simp [] [] [] [] [] [] }
+end
 
 theorem IsBoundedBilinearMap.continuous_left (h : IsBoundedBilinearMap 𝕜 f) {e₂ : F} :
   Continuous fun e₁ => f (e₁, e₂) :=
@@ -385,47 +382,40 @@ theorem IsBoundedBilinearMap.continuous_right (h : IsBoundedBilinearMap 𝕜 f) 
   Continuous fun e₂ => f (e₁, e₂) :=
   h.continuous.comp (continuous_const.prod_mk continuous_id)
 
-theorem IsBoundedBilinearMap.is_bounded_linear_map_left (h : IsBoundedBilinearMap 𝕜 f) (y : F) :
-  IsBoundedLinearMap 𝕜 fun x => f (x, y) :=
-  { map_add := fun x x' => h.add_left _ _ _, map_smul := fun c x => h.smul_left _ _ _,
-    bound :=
-      by 
-        rcases h.bound with ⟨C, C_pos, hC⟩
-        refine'
-          ⟨C*∥y∥+1,
-            mul_pos C_pos
-              (lt_of_lt_of_leₓ zero_lt_one
-                (by 
-                  simp )),
-            fun x => _⟩
-        have  : ∥y∥ ≤ ∥y∥+1
-        ·
-          simp [zero_le_one]
-        calc ∥f (x, y)∥ ≤ (C*∥x∥)*∥y∥ := hC x y _ ≤ (C*∥x∥)*∥y∥+1 :=
-          by 
-            applyRules [norm_nonneg, mul_le_mul_of_nonneg_left, le_of_ltₓ C_pos, mul_nonneg]_ = (C*∥y∥+1)*∥x∥ :=
-          by 
-            ring }
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_bounded_bilinear_map.is_bounded_linear_map_left
+(h : is_bounded_bilinear_map 𝕜 f)
+(y : F) : is_bounded_linear_map 𝕜 (λ x, f (x, y)) :=
+{ map_add := λ x x', h.add_left _ _ _,
+  map_smul := λ c x, h.smul_left _ _ _,
+  bound := begin
+    rcases [expr h.bound, "with", "⟨", ident C, ",", ident C_pos, ",", ident hC, "⟩"],
+    refine [expr ⟨«expr * »(C, «expr + »(«expr∥ ∥»(y), 1)), mul_pos C_pos (lt_of_lt_of_le zero_lt_one (by simp [] [] [] [] [] [])), λ
+      x, _⟩],
+    have [] [":", expr «expr ≤ »(«expr∥ ∥»(y), «expr + »(«expr∥ ∥»(y), 1))] [],
+    by simp [] [] [] ["[", expr zero_le_one, "]"] [] [],
+    calc
+      «expr ≤ »(«expr∥ ∥»(f (x, y)), «expr * »(«expr * »(C, «expr∥ ∥»(x)), «expr∥ ∥»(y))) : hC x y
+      «expr ≤ »(..., «expr * »(«expr * »(C, «expr∥ ∥»(x)), «expr + »(«expr∥ ∥»(y), 1))) : by apply_rules ["[", expr norm_nonneg, ",", expr mul_le_mul_of_nonneg_left, ",", expr le_of_lt C_pos, ",", expr mul_nonneg, "]"]
+      «expr = »(..., «expr * »(«expr * »(C, «expr + »(«expr∥ ∥»(y), 1)), «expr∥ ∥»(x))) : by ring []
+  end }
 
-theorem IsBoundedBilinearMap.is_bounded_linear_map_right (h : IsBoundedBilinearMap 𝕜 f) (x : E) :
-  IsBoundedLinearMap 𝕜 fun y => f (x, y) :=
-  { map_add := fun y y' => h.add_right _ _ _, map_smul := fun c y => h.smul_right _ _ _,
-    bound :=
-      by 
-        rcases h.bound with ⟨C, C_pos, hC⟩
-        refine'
-          ⟨C*∥x∥+1,
-            mul_pos C_pos
-              (lt_of_lt_of_leₓ zero_lt_one
-                (by 
-                  simp )),
-            fun y => _⟩
-        have  : ∥x∥ ≤ ∥x∥+1
-        ·
-          simp [zero_le_one]
-        calc ∥f (x, y)∥ ≤ (C*∥x∥)*∥y∥ := hC x y _ ≤ (C*∥x∥+1)*∥y∥ :=
-          by 
-            applyRules [mul_le_mul_of_nonneg_right, norm_nonneg, mul_le_mul_of_nonneg_left, le_of_ltₓ C_pos] }
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_bounded_bilinear_map.is_bounded_linear_map_right
+(h : is_bounded_bilinear_map 𝕜 f)
+(x : E) : is_bounded_linear_map 𝕜 (λ y, f (x, y)) :=
+{ map_add := λ y y', h.add_right _ _ _,
+  map_smul := λ c y, h.smul_right _ _ _,
+  bound := begin
+    rcases [expr h.bound, "with", "⟨", ident C, ",", ident C_pos, ",", ident hC, "⟩"],
+    refine [expr ⟨«expr * »(C, «expr + »(«expr∥ ∥»(x), 1)), mul_pos C_pos (lt_of_lt_of_le zero_lt_one (by simp [] [] [] [] [] [])), λ
+      y, _⟩],
+    have [] [":", expr «expr ≤ »(«expr∥ ∥»(x), «expr + »(«expr∥ ∥»(x), 1))] [],
+    by simp [] [] [] ["[", expr zero_le_one, "]"] [] [],
+    calc
+      «expr ≤ »(«expr∥ ∥»(f (x, y)), «expr * »(«expr * »(C, «expr∥ ∥»(x)), «expr∥ ∥»(y))) : hC x y
+      «expr ≤ »(..., «expr * »(«expr * »(C, «expr + »(«expr∥ ∥»(x), 1)), «expr∥ ∥»(y))) : by apply_rules ["[", expr mul_le_mul_of_nonneg_right, ",", expr norm_nonneg, ",", expr mul_le_mul_of_nonneg_left, ",", expr le_of_lt C_pos, "]"]
+  end }
 
 theorem is_bounded_bilinear_map_smul {𝕜' : Type _} [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] {E : Type _} [NormedGroup E]
   [NormedSpace 𝕜 E] [NormedSpace 𝕜' E] [IsScalarTower 𝕜 𝕜' E] : IsBoundedBilinearMap 𝕜 fun p : 𝕜' × E => p.1 • p.2 :=
@@ -653,24 +643,26 @@ spaces is an open subset of the space of linear maps between them.
 -/
 
 
-protected theorem IsOpen [CompleteSpace E] : IsOpen (range (coeₓ : (E ≃L[𝕜] F) → E →L[𝕜] F)) :=
-  by 
-    nontriviality E 
-    rw [is_open_iff_mem_nhds, forall_range_iff]
-    refine' fun e => IsOpen.mem_nhds _ (mem_range_self _)
-    let O : (E →L[𝕜] F) → E →L[𝕜] E := fun f => (e.symm : F →L[𝕜] E).comp f 
-    have h_O : Continuous O := is_bounded_bilinear_map_comp.continuous_left 
-    convert units.is_open.preimage h_O using 1 
-    ext f' 
-    split 
-    ·
-      rintro ⟨e', rfl⟩
-      exact ⟨(e'.trans e.symm).toUnit, rfl⟩
-    ·
-      rintro ⟨w, hw⟩
-      use (units_equiv 𝕜 E w).trans e 
-      ext x 
-      simp [coe_fn_coe_base' w, hw]
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem is_open [complete_space E] : is_open (range (coe : «expr ≃L[ ] »(E, 𝕜, F) → «expr →L[ ] »(E, 𝕜, F))) :=
+begin
+  nontriviality [expr E] [],
+  rw ["[", expr is_open_iff_mem_nhds, ",", expr forall_range_iff, "]"] [],
+  refine [expr λ e, is_open.mem_nhds _ (mem_range_self _)],
+  let [ident O] [":", expr «expr →L[ ] »(E, 𝕜, F) → «expr →L[ ] »(E, 𝕜, E)] [":=", expr λ
+   f, (e.symm : «expr →L[ ] »(F, 𝕜, E)).comp f],
+  have [ident h_O] [":", expr continuous O] [":=", expr is_bounded_bilinear_map_comp.continuous_left],
+  convert [] [expr units.is_open.preimage h_O] ["using", 1],
+  ext [] [ident f'] [],
+  split,
+  { rintros ["⟨", ident e', ",", ident rfl, "⟩"],
+    exact [expr ⟨(e'.trans e.symm).to_unit, rfl⟩] },
+  { rintros ["⟨", ident w, ",", ident hw, "⟩"],
+    use [expr (units_equiv 𝕜 E w).trans e],
+    ext [] [ident x] [],
+    simp [] [] [] ["[", expr coe_fn_coe_base' w, ",", expr hw, "]"] [] [] }
+end
 
 protected theorem nhds [CompleteSpace E] (e : E ≃L[𝕜] F) : range (coeₓ : (E ≃L[𝕜] F) → E →L[𝕜] F) ∈ 𝓝 (e : E →L[𝕜] F) :=
   IsOpen.mem_nhds ContinuousLinearEquiv.is_open

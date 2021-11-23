@@ -69,20 +69,20 @@ def gen (s : Set (α × α)) : Set (Cauchyₓ α × Cauchyₓ α) :=
 theorem monotone_gen : Monotone gen :=
   monotone_set_of$ fun p => @monotone_mem (α × α) (p.1.val ×ᶠ p.2.val)
 
-private theorem symm_gen : map Prod.swap ((𝓤 α).lift' gen) ≤ (𝓤 α).lift' gen :=
-  calc map Prod.swap ((𝓤 α).lift' gen) = (𝓤 α).lift' fun s : Set (α × α) => { p | s ∈ p.2.val ×ᶠ p.1.val } :=
-    by 
-      delta' gen 
-      simp [map_lift'_eq, monotone_set_of, monotone_mem, Function.comp, image_swap_eq_preimage_swap,
-        -Subtype.val_eq_coe]
-    _ ≤ (𝓤 α).lift' gen :=
-    uniformity_lift_le_swap
-      (monotone_principal.comp (monotone_set_of$ fun p => @monotone_mem (α × α) (p.2.val ×ᶠ p.1.val)))
-      (by 
-        have h := fun p : Cauchyₓ α × Cauchyₓ α => @Filter.prod_comm _ _ p.2.val p.1.val 
-        simp [Function.comp, h, -Subtype.val_eq_coe, mem_map']
-        exact le_reflₓ _)
-    
+-- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private theorem symm_gen : «expr ≤ »(map prod.swap ((expr𝓤() α).lift' gen), (expr𝓤() α).lift' gen) :=
+calc
+  «expr = »(map prod.swap ((expr𝓤() α).lift' gen), (expr𝓤() α).lift' (λ
+    s : set «expr × »(α, α), {p | «expr ∈ »(s, «expr ×ᶠ »(p.2.val, p.1.val))})) : begin
+    delta [ident gen] [],
+    simp [] [] [] ["[", expr map_lift'_eq, ",", expr monotone_set_of, ",", expr monotone_mem, ",", expr function.comp, ",", expr image_swap_eq_preimage_swap, ",", "-", ident subtype.val_eq_coe, "]"] [] []
+  end
+  «expr ≤ »(..., (expr𝓤() α).lift' gen) : uniformity_lift_le_swap (monotone_principal.comp «expr $ »(monotone_set_of, assume
+    p, @monotone_mem «expr × »(α, α) «expr ×ᶠ »(p.2.val, p.1.val))) (begin
+     have [ident h] [] [":=", expr λ p : «expr × »(Cauchy α, Cauchy α), @filter.prod_comm _ _ p.2.val p.1.val],
+     simp [] [] [] ["[", expr function.comp, ",", expr h, ",", "-", ident subtype.val_eq_coe, ",", expr mem_map', "]"] [] [],
+     exact [expr le_refl _]
+   end)
 
 private theorem comp_rel_gen_gen_subset_gen_comp_rel {s t : Set (α × α)} :
   CompRel (gen s) (gen t) ⊆ (gen (CompRel s t) : Set (Cauchyₓ α × Cauchyₓ α)) :=
@@ -158,7 +158,7 @@ theorem dense_range_pure_cauchy : DenseRange pure_cauchy :=
         let ⟨x, (hx : x ∈ t)⟩ := f.property.left.nonempty_of_mem ht 
         have  : t'' ∈ f.val ×ᶠ pure x :=
           mem_prod_iff.mpr
-            ⟨t, ht, { y : α | (x, y) ∈ t' }, h$ mk_mem_prod hx hx,
+            ⟨t, ht, { y:α | (x, y) ∈ t' }, h$ mk_mem_prod hx hx,
               fun ⟨a, b⟩ ⟨(h₁ : a ∈ t), (h₂ : (x, b) ∈ t')⟩ => ht'₂$ prod_mk_mem_comp_rel (@h (a, x) ⟨h₁, hx⟩) h₂⟩
         ⟨x,
           ht''₂$
@@ -171,7 +171,7 @@ theorem dense_range_pure_cauchy : DenseRange pure_cauchy :=
         (lift'_ne_bot_iff$ monotone_inter monotone_const monotone_preimage).mpr
           fun s hs =>
             let ⟨y, hy⟩ := h_ex s hs 
-            have  : pure_cauchy y ∈ range pure_cauchy ∩ { y : Cauchyₓ α | (f, y) ∈ s } := ⟨mem_range_self y, hy⟩
+            have  : pure_cauchy y ∈ range pure_cauchy ∩ { y:Cauchyₓ α | (f, y) ∈ s } := ⟨mem_range_self y, hy⟩
             ⟨_, this⟩
 
 theorem dense_inducing_pure_cauchy : DenseInducing pure_cauchy :=
@@ -180,15 +180,15 @@ theorem dense_inducing_pure_cauchy : DenseInducing pure_cauchy :=
 theorem dense_embedding_pure_cauchy : DenseEmbedding pure_cauchy :=
   uniform_embedding_pure_cauchy.dense_embedding dense_range_pure_cauchy
 
-theorem nonempty_Cauchy_iff : Nonempty (Cauchyₓ α) ↔ Nonempty α :=
-  by 
-    split  <;> rintro ⟨c⟩
-    ·
-      have  := eq_univ_iff_forall.1 dense_embedding_pure_cauchy.to_dense_inducing.closure_range c 
-      obtain ⟨_, ⟨_, a, _⟩⟩ := mem_closure_iff.1 this _ is_open_univ trivialₓ 
-      exact ⟨a⟩
-    ·
-      exact ⟨pure_cauchy c⟩
+-- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nonempty_Cauchy_iff : «expr ↔ »(nonempty (Cauchy α), nonempty α) :=
+begin
+  split; rintro ["⟨", ident c, "⟩"],
+  { have [] [] [":=", expr eq_univ_iff_forall.1 dense_embedding_pure_cauchy.to_dense_inducing.closure_range c],
+    obtain ["⟨", "_", ",", "⟨", "_", ",", ident a, ",", "_", "⟩", "⟩", ":=", expr mem_closure_iff.1 this _ is_open_univ trivial],
+    exact [expr ⟨a⟩] },
+  { exact [expr ⟨pure_cauchy c⟩] }
+end
 
 section 
 
@@ -203,7 +203,7 @@ instance  : CompleteSpace (Cauchyₓ α) :=
           fun s hs =>
             let ⟨t, ht₁, (ht₂ : gen t ⊆ s)⟩ := (mem_lift'_sets monotone_gen).mp hs 
             let ⟨t', ht', (h : Set.Prod t' t' ⊆ t)⟩ := mem_prod_same_iff.mp (hf.right ht₁)
-            have  : t' ⊆ { y : α | (f', pure_cauchy y) ∈ gen t } :=
+            have  : t' ⊆ { y:α | (f', pure_cauchy y) ∈ gen t } :=
               fun x hx => (f ×ᶠ pure x).sets_of_superset (prod_mem_prod ht' hx) h 
             f.sets_of_superset ht'$ subset.trans this (preimage_mono ht₂)
       ⟨f',
@@ -251,41 +251,39 @@ end Extend
 
 end 
 
-theorem Cauchy_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace α] [SeparatedSpace α] {f g : Cauchyₓ α} :
-  lim f.1 = lim g.1 ↔ (f, g) ∈ SeparationRel (Cauchyₓ α) :=
-  by 
-    split 
-    ·
-      intro e s hs 
-      rcases Cauchyₓ.mem_uniformity'.1 hs with ⟨t, tu, ts⟩
-      apply ts 
-      rcases comp_mem_uniformity_sets tu with ⟨d, du, dt⟩
-      refine'
-        mem_prod_iff.2
-          ⟨_, f.2.le_nhds_Lim (mem_nhds_right (lim f.1) du), _, g.2.le_nhds_Lim (mem_nhds_left (lim g.1) du),
-            fun x h => _⟩
-      cases' x with a b 
-      cases' h with h₁ h₂ 
-      rw [←e] at h₂ 
-      exact dt ⟨_, h₁, h₂⟩
-    ·
-      intro H 
-      refine'
-        separated_def.1
-          (by 
-            infer_instance)
-          _ _ fun t tu => _ 
-      rcases mem_uniformity_is_closed tu with ⟨d, du, dc, dt⟩
-      refine' H { p | (lim p.1.1, lim p.2.1) ∈ t } (Cauchyₓ.mem_uniformity'.2 ⟨d, du, fun f g h => _⟩)
-      rcases mem_prod_iff.1 h with ⟨x, xf, y, yg, h⟩
-      have limc : ∀ f : Cauchyₓ α x _ : x ∈ f.1, lim f.1 ∈ Closure x
-      ·
-        intro f x xf 
-        rw [closure_eq_cluster_pts]
-        exact f.2.1.mono (le_inf f.2.le_nhds_Lim (le_principal_iff.2 xf))
-      have  := dc.closure_subset_iff.2 h 
-      rw [closure_prod_eq] at this 
-      refine' dt (this ⟨_, _⟩) <;> dsimp <;> apply limc <;> assumption
+-- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem Cauchy_eq
+{α : Type*}
+[inhabited α]
+[uniform_space α]
+[complete_space α]
+[separated_space α]
+{f g : Cauchy α} : «expr ↔ »(«expr = »(Lim f.1, Lim g.1), «expr ∈ »((f, g), separation_rel (Cauchy α))) :=
+begin
+  split,
+  { intros [ident e, ident s, ident hs],
+    rcases [expr Cauchy.mem_uniformity'.1 hs, "with", "⟨", ident t, ",", ident tu, ",", ident ts, "⟩"],
+    apply [expr ts],
+    rcases [expr comp_mem_uniformity_sets tu, "with", "⟨", ident d, ",", ident du, ",", ident dt, "⟩"],
+    refine [expr mem_prod_iff.2 ⟨_, f.2.le_nhds_Lim (mem_nhds_right (Lim f.1) du), _, g.2.le_nhds_Lim (mem_nhds_left (Lim g.1) du), λ
+      x h, _⟩],
+    cases [expr x] ["with", ident a, ident b],
+    cases [expr h] ["with", ident h₁, ident h₂],
+    rw ["<-", expr e] ["at", ident h₂],
+    exact [expr dt ⟨_, h₁, h₂⟩] },
+  { intros [ident H],
+    refine [expr separated_def.1 (by apply_instance) _ _ (λ t tu, _)],
+    rcases [expr mem_uniformity_is_closed tu, "with", "⟨", ident d, ",", ident du, ",", ident dc, ",", ident dt, "⟩"],
+    refine [expr H {p | «expr ∈ »((Lim p.1.1, Lim p.2.1), t)} (Cauchy.mem_uniformity'.2 ⟨d, du, λ f g h, _⟩)],
+    rcases [expr mem_prod_iff.1 h, "with", "⟨", ident x, ",", ident xf, ",", ident y, ",", ident yg, ",", ident h, "⟩"],
+    have [ident limc] [":", expr ∀ (f : Cauchy α) (x «expr ∈ » f.1), «expr ∈ »(Lim f.1, closure x)] [],
+    { intros [ident f, ident x, ident xf],
+      rw [expr closure_eq_cluster_pts] [],
+      exact [expr f.2.1.mono (le_inf f.2.le_nhds_Lim (le_principal_iff.2 xf))] },
+    have [] [] [":=", expr dc.closure_subset_iff.2 h],
+    rw [expr closure_prod_eq] ["at", ident this],
+    refine [expr dt (this ⟨_, _⟩)]; dsimp [] [] [] []; apply [expr limc]; assumption }
+end
 
 section 
 
@@ -362,17 +360,19 @@ instance  : CoeTₓ α (completion α) :=
 protected theorem coe_eq : (coeₓ : α → completion α) = (Quotientₓ.mk ∘ pure_cauchy) :=
   rfl
 
-theorem comap_coe_eq_uniformity : ((𝓤 _).comap fun p : α × α => ((p.1 : completion α), (p.2 : completion α))) = 𝓤 α :=
-  by 
-    have  :
-      (fun x : α × α => ((x.1 : completion α), (x.2 : completion α))) =
-        ((fun x : Cauchyₓ α × Cauchyₓ α => («expr⟦ ⟧» x.1, «expr⟦ ⟧» x.2)) ∘
-          fun x : α × α => (pure_cauchy x.1, pure_cauchy x.2))
-    ·
-      ext ⟨a, b⟩ <;> simp  <;> rfl 
-    rw [this, ←Filter.comap_comap]
-    change Filter.comap _ (Filter.comap _ (𝓤$ Quotientₓ$ separation_setoid$ Cauchyₓ α)) = 𝓤 α 
-    rw [comap_quotient_eq_uniformity, uniform_embedding_pure_cauchy.comap_uniformity]
+-- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem comap_coe_eq_uniformity : «expr = »((expr𝓤() _).comap (λ
+  p : «expr × »(α, α), ((p.1 : completion α), (p.2 : completion α))), expr𝓤() α) :=
+begin
+  have [] [":", expr «expr = »(λ
+    x : «expr × »(α, α), ((x.1 : completion α), (x.2 : completion α)), «expr ∘ »(λ
+     x : «expr × »(Cauchy α, Cauchy α), («expr⟦ ⟧»(x.1), «expr⟦ ⟧»(x.2)), λ
+     x : «expr × »(α, α), (pure_cauchy x.1, pure_cauchy x.2)))] [],
+  { ext [] ["⟨", ident a, ",", ident b, "⟩"] []; simp [] [] [] [] [] []; refl },
+  rw ["[", expr this, ",", "<-", expr filter.comap_comap, "]"] [],
+  change [expr «expr = »(filter.comap _ (filter.comap _ «expr $ »(expr𝓤(), «expr $ »(quotient, «expr $ »(separation_setoid, Cauchy α)))), expr𝓤() α)] [] [],
+  rw ["[", expr comap_quotient_eq_uniformity, ",", expr uniform_embedding_pure_cauchy.comap_uniformity, "]"] []
+end
 
 theorem uniform_inducing_coe : UniformInducing (coeₓ : α → completion α) :=
   ⟨comap_coe_eq_uniformity α⟩
@@ -441,13 +441,13 @@ theorem induction_on {p : completion α → Prop} (a : completion α) (hp : IsCl
 
 @[elab_as_eliminator]
 theorem induction_on₂ {p : completion α → completion β → Prop} (a : completion α) (b : completion β)
-  (hp : IsClosed { x : completion α × completion β | p x.1 x.2 }) (ih : ∀ a : α b : β, p a b) : p a b :=
+  (hp : IsClosed { x:completion α × completion β | p x.1 x.2 }) (ih : ∀ a : α b : β, p a b) : p a b :=
   have  : ∀ x : completion α × completion β, p x.1 x.2 := is_closed_property dense_range_coe₂ hp$ fun ⟨a, b⟩ => ih a b 
   this (a, b)
 
 @[elab_as_eliminator]
 theorem induction_on₃ {p : completion α → completion β → completion γ → Prop} (a : completion α) (b : completion β)
-  (c : completion γ) (hp : IsClosed { x : completion α × completion β × completion γ | p x.1 x.2.1 x.2.2 })
+  (c : completion γ) (hp : IsClosed { x:completion α × completion β × completion γ | p x.1 x.2.1 x.2.2 })
   (ih : ∀ a : α b : β c : γ, p a b c) : p a b c :=
   have  : ∀ x : completion α × completion β × completion γ, p x.1 x.2.1 x.2.2 :=
     is_closed_property dense_range_coe₃ hp$ fun ⟨a, b, c⟩ => ih a b c 

@@ -1,4 +1,3 @@
-import Mathbin.RingTheory.RingInvo 
 import Mathbin.Algebra.Module.LinearMap 
 import Mathbin.Tactic.Abel
 
@@ -33,7 +32,7 @@ open_locale BigOperators
 universe u v w
 
 /-- A sesquilinear form over a module  -/
-structure SesqForm(R : Type u)(M : Type v)[Ringₓ R](I : R ≃+* «expr ᵒᵖ» R)[AddCommGroupₓ M][Module R M] where 
+structure SesqForm(R : Type u)(M : Type v)[Ringₓ R](I : R ≃+* «expr ᵐᵒᵖ» R)[AddCommGroupₓ M][Module R M] where 
   sesq : M → M → R 
   sesq_add_left : ∀ x y z : M, sesq (x+y) z = sesq x z+sesq y z 
   sesq_smul_left : ∀ a : R x y : M, sesq (a • x) y = a*sesq x y 
@@ -46,7 +45,7 @@ section GeneralRing
 
 variable{R : Type u}{M : Type v}[Ringₓ R][AddCommGroupₓ M][Module R M]
 
-variable{I : R ≃+* «expr ᵒᵖ» R}{S : SesqForm R M I}
+variable{I : R ≃+* «expr ᵐᵒᵖ» R}{S : SesqForm R M I}
 
 instance  : CoeFun (SesqForm R M I) fun _ => M → M → R :=
   ⟨sesq⟩
@@ -282,7 +281,7 @@ end GeneralRing
 section CommRingₓ
 
 variable{R :
-    Type _}[CommRingₓ R]{M : Type v}[AddCommGroupₓ M][Module R M]{J : R ≃+* «expr ᵒᵖ» R}(F : SesqForm R M J)(f : M → M)
+    Type _}[CommRingₓ R]{M : Type v}[AddCommGroupₓ M][Module R M]{J : R ≃+* «expr ᵐᵒᵖ» R}(F : SesqForm R M J)(f : M → M)
 
 instance to_module : Module R (SesqForm R M J) :=
   { smul :=
@@ -351,7 +350,7 @@ end CommRingₓ
 section IsDomain
 
 variable{R :
-    Type _}[Ringₓ R][IsDomain R]{M : Type v}[AddCommGroupₓ M][Module R M]{K : R ≃+* «expr ᵒᵖ» R}{G : SesqForm R M K}
+    Type _}[Ringₓ R][IsDomain R]{M : Type v}[AddCommGroupₓ M][Module R M]{K : R ≃+* «expr ᵐᵒᵖ» R}{G : SesqForm R M K}
 
 theorem ortho_smul_left {x y : M} {a : R} (ha : a ≠ 0) : is_ortho G x y ↔ is_ortho G (a • x) y :=
   by 
@@ -377,8 +376,8 @@ theorem ortho_smul_right {x y : M} {a : R} (ha : a ≠ 0) : is_ortho G x y ↔ i
       rw [smul_right, mul_eq_zero] at H 
       cases H
       ·
-        exFalso 
-        simp only [Opposite.unop_eq_zero_iff] at H 
+        exfalso 
+        simp only [MulOpposite.unop_eq_zero_iff] at H 
         exact ha (K.map_eq_zero_iff.mp H)
       ·
         exact H
@@ -387,7 +386,7 @@ end IsDomain
 
 variable{R : Type _}{M : Type _}[Ringₓ R][AddCommGroupₓ M][Module R M]
 
-variable{I : R ≃+* «expr ᵒᵖ» R}{S : SesqForm R M I}
+variable{I : R ≃+* «expr ᵐᵒᵖ» R}{S : SesqForm R M I}
 
 /-- The proposition that a sesquilinear form is reflexive -/
 def IsRefl (S : SesqForm R M I) : Prop :=
@@ -442,14 +441,14 @@ include H
 theorem self_eq_zero (x : M) : S x x = 0 :=
   H x
 
-theorem neg (x y : M) : -S x y = S y x :=
-  by 
-    have H1 : S (x+y) (x+y) = 0
-    ·
-      exact self_eq_zero H (x+y)
-    rw [add_left, add_right, add_right, self_eq_zero H, self_eq_zero H, Ringₓ.zero_add, Ringₓ.add_zero,
-      add_eq_zero_iff_neg_eq] at H1 
-    exact H1
+-- error in LinearAlgebra.SesquilinearForm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem neg (x y : M) : «expr = »(«expr- »(S x y), S y x) :=
+begin
+  have [ident H1] [":", expr «expr = »(S «expr + »(x, y) «expr + »(x, y), 0)] [],
+  { exact [expr self_eq_zero H «expr + »(x, y)] },
+  rw ["[", expr add_left, ",", expr add_right, ",", expr add_right, ",", expr self_eq_zero H, ",", expr self_eq_zero H, ",", expr ring.zero_add, ",", expr ring.add_zero, ",", expr add_eq_zero_iff_neg_eq, "]"] ["at", ident H1],
+  exact [expr H1]
+end
 
 theorem IsRefl : S.is_refl :=
   by 

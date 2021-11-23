@@ -145,15 +145,22 @@ theorem smul_tprod_coeff_aux (z : R) (f : ∀ i, s i) (i : ι) (r : R) :
   tprod_coeff R z (update f i (r • f i)) = tprod_coeff R (r*z) f :=
   Quotientₓ.sound'$ AddConGen.Rel.of _ _$ eqv.of_smul _ _ _ _
 
-theorem smul_tprod_coeff (z : R) (f : ∀ i, s i) (i : ι) (r : R₁) [HasScalar R₁ R] [IsScalarTower R₁ R R]
-  [HasScalar R₁ (s i)] [IsScalarTower R₁ R (s i)] : tprod_coeff R z (update f i (r • f i)) = tprod_coeff R (r • z) f :=
-  by 
-    have h₁ : r • z = (r • (1 : R))*z :=
-      by 
-        rw [smul_mul_assoc, one_mulₓ]
-    have h₂ : r • f i = (r • (1 : R)) • f i := (smul_one_smul _ _ _).symm 
-    rw [h₁, h₂]
-    exact smul_tprod_coeff_aux z f i _
+-- error in LinearAlgebra.PiTensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem smul_tprod_coeff
+(z : R)
+(f : ∀ i, s i)
+(i : ι)
+(r : R₁)
+[has_scalar R₁ R]
+[is_scalar_tower R₁ R R]
+[has_scalar R₁ (s i)]
+[is_scalar_tower R₁ R (s i)] : «expr = »(tprod_coeff R z (update f i «expr • »(r, f i)), tprod_coeff R «expr • »(r, z) f) :=
+begin
+  have [ident h₁] [":", expr «expr = »(«expr • »(r, z), «expr * »(«expr • »(r, (1 : R)), z))] [":=", expr by rw ["[", expr smul_mul_assoc, ",", expr one_mul, "]"] []],
+  have [ident h₂] [":", expr «expr = »(«expr • »(r, f i), «expr • »(«expr • »(r, (1 : R)), f i))] [":=", expr (smul_one_smul _ _ _).symm],
+  rw ["[", expr h₁, ",", expr h₂, "]"] [],
+  exact [expr smul_tprod_coeff_aux z f i _]
+end
 
 /-- Construct an `add_monoid_hom` from `(⨂[R] i, s i)` to some space `F` from a function
 `φ : (R × Π i, s i) → F` with the appropriate properties. -/
@@ -192,19 +199,24 @@ def lift_add_hom (φ : (R × ∀ i, s i) → F) (C0 : ∀ r : R f : ∀ i, s i i
             by 
               simpRw [AddMonoidHom.map_add, add_commₓ]
 
+-- error in LinearAlgebra.PiTensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[elab_as_eliminator]
-protected theorem induction_on' {C : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s i)
-  (C1 : ∀ {r : R} {f : ∀ i, s i}, C (tprod_coeff R r f)) (Cp : ∀ {x y}, C x → C y → C (x+y)) : C z :=
-  by 
-    have C0 : C 0
-    ·
-      have h₁ := @C1 0 0
-      rwa [zero_tprod_coeff] at h₁ 
-    refine' AddCon.induction_on z fun x => FreeAddMonoid.recOn x C0 _ 
-    simpRw [AddCon.coe_add]
-    refine' fun f y ih => Cp _ ih 
-    convert @C1 f.1 f.2
-    simp only [Prod.mk.eta]
+protected
+theorem induction_on'
+{C : «expr⨂[ ] , »(R, (i), s i) → exprProp()}
+(z : «expr⨂[ ] , »(R, (i), s i))
+(C1 : ∀ {r : R} {f : ∀ i, s i}, C (tprod_coeff R r f))
+(Cp : ∀ {x y}, C x → C y → C «expr + »(x, y)) : C z :=
+begin
+  have [ident C0] [":", expr C 0] [],
+  { have [ident h₁] [] [":=", expr @C1 0 0],
+    rwa ["[", expr zero_tprod_coeff, "]"] ["at", ident h₁] },
+  refine [expr add_con.induction_on z (λ x, free_add_monoid.rec_on x C0 _)],
+  simp_rw [expr add_con.coe_add] [],
+  refine [expr λ f y ih, Cp _ ih],
+  convert [] [expr @C1 f.1 f.2] [],
+  simp [] [] ["only"] ["[", expr prod.mk.eta, "]"] [] []
+end
 
 section DistribMulAction
 
@@ -331,15 +343,15 @@ variable{R}
 
 notation3 :100 "⨂ₜ[" R "] " (...) ", " r:(scoped f => tprod R f) => r
 
+-- error in LinearAlgebra.PiTensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem tprod_coeff_eq_smul_tprod (z : R) (f : ∀ i, s i) : tprod_coeff R z f = z • tprod R f :=
-  by 
-    have  : z = z • (1 : R) :=
-      by 
-        simp only [mul_oneₓ, Algebra.id.smul_eq_mul]
-    convLHS => rw [this]
-    rw [←smul_tprod_coeff']
-    rfl
+theorem tprod_coeff_eq_smul_tprod (z : R) (f : ∀ i, s i) : «expr = »(tprod_coeff R z f, «expr • »(z, tprod R f)) :=
+begin
+  have [] [":", expr «expr = »(z, «expr • »(z, (1 : R)))] [":=", expr by simp [] [] ["only"] ["[", expr mul_one, ",", expr algebra.id.smul_eq_mul, "]"] [] []],
+  conv_lhs [] [] { rw [expr this] },
+  rw ["<-", expr smul_tprod_coeff'] [],
+  refl
+end
 
 @[elab_as_eliminator]
 protected theorem induction_on {C : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s i)
@@ -533,28 +545,23 @@ theorem reindex_refl : reindex R M (Equiv.refl ι) = LinearEquiv.refl R _ :=
 
 variable(ι)
 
+-- error in LinearAlgebra.PiTensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The tensor product over an empty index type `ι` is isomorphic to the base ring. -/
-@[simps symmApply]
-def is_empty_equiv [IsEmpty ι] : (⨂[R] i : ι, M) ≃ₗ[R] R :=
-  { toFun := lift (const_of_is_empty R 1), invFun := fun r => r • tprod R (@isEmptyElim _ _ _),
-    left_inv :=
-      fun x =>
-        by 
-          apply x.induction_on
-          ·
-            intro r f 
-            have  := Subsingleton.elimₓ f isEmptyElim 
-            simp [this]
-          ·
-            simp only 
-            intro x y hx hy 
-            simp [add_smul, hx, hy],
-    right_inv :=
-      fun t =>
-        by 
-          simp only [mul_oneₓ, Algebra.id.smul_eq_mul, const_of_is_empty_apply, LinearMap.map_smul,
-            PiTensorProduct.lift.tprod],
-    map_add' := LinearMap.map_add _, map_smul' := LinearMap.map_smul _ }
+@[simps #[ident symm_apply]]
+def is_empty_equiv [is_empty ι] : «expr ≃ₗ[ ] »(«expr⨂[ ] , »(R, (i : ι), M), R, R) :=
+{ to_fun := lift (const_of_is_empty R 1),
+  inv_fun := λ r, «expr • »(r, tprod R (@is_empty_elim _ _ _)),
+  left_inv := λ x, by { apply [expr x.induction_on],
+    { intros [ident r, ident f],
+      have [] [] [":=", expr subsingleton.elim f is_empty_elim],
+      simp [] [] [] ["[", expr this, "]"] [] [] },
+    { simp [] [] ["only"] [] [] [],
+      intros [ident x, ident y, ident hx, ident hy],
+      simp [] [] [] ["[", expr add_smul, ",", expr hx, ",", expr hy, "]"] [] [] } },
+  right_inv := λ
+  t, by simp [] [] ["only"] ["[", expr mul_one, ",", expr algebra.id.smul_eq_mul, ",", expr const_of_is_empty_apply, ",", expr linear_map.map_smul, ",", expr pi_tensor_product.lift.tprod, "]"] [] [],
+  map_add' := linear_map.map_add _,
+  map_smul' := linear_map.map_smul _ }
 
 @[simp]
 theorem is_empty_equiv_apply_tprod [IsEmpty ι] (f : ι → M) : is_empty_equiv ι (tprod R f) = 1 :=
@@ -562,32 +569,26 @@ theorem is_empty_equiv_apply_tprod [IsEmpty ι] (f : ι → M) : is_empty_equiv 
 
 variable{ι}
 
+-- error in LinearAlgebra.PiTensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The tensor product over an single index is isomorphic to the module -/
-@[simps symmApply]
-def subsingleton_equiv [Subsingleton ι] (i₀ : ι) : (⨂[R] i : ι, M) ≃ₗ[R] M :=
-  { toFun := lift (MultilinearMap.ofSubsingleton R M i₀), invFun := fun m => tprod R fun v => m,
-    left_inv :=
-      fun x =>
-        by 
-          dsimp only 
-          have  : ∀ f : ι → M z : M, (fun i : ι => z) = update f i₀ z
-          ·
-            intro f z 
-            ext i 
-            rw [Subsingleton.elimₓ i i₀, Function.update_same]
-          apply x.induction_on
-          ·
-            intro r f 
-            simp only [LinearMap.map_smul, lift.tprod, of_subsingleton_apply, Function.eval, this f, map_smul,
-              update_eq_self]
-          ·
-            intro x y hx hy 
-            simp only [LinearMap.map_add, this 0 (_+_), map_add, ←this 0 (lift _ _), hx, hy],
-    right_inv :=
-      fun t =>
-        by 
-          simp only [of_subsingleton_apply, lift.tprod, Function.eval_applyₓ],
-    map_add' := LinearMap.map_add _, map_smul' := LinearMap.map_smul _ }
+@[simps #[ident symm_apply]]
+def subsingleton_equiv [subsingleton ι] (i₀ : ι) : «expr ≃ₗ[ ] »(«expr⨂[ ] , »(R, (i : ι), M), R, M) :=
+{ to_fun := lift (multilinear_map.of_subsingleton R M i₀),
+  inv_fun := λ m, tprod R (λ v, m),
+  left_inv := λ x, by { dsimp ["only"] [] [] [],
+    have [] [":", expr ∀ (f : ι → M) (z : M), «expr = »(λ i : ι, z, update f i₀ z)] [],
+    { intros [ident f, ident z],
+      ext [] [ident i] [],
+      rw ["[", expr subsingleton.elim i i₀, ",", expr function.update_same, "]"] [] },
+    apply [expr x.induction_on],
+    { intros [ident r, ident f],
+      simp [] [] ["only"] ["[", expr linear_map.map_smul, ",", expr lift.tprod, ",", expr of_subsingleton_apply, ",", expr function.eval, ",", expr this f, ",", expr map_smul, ",", expr update_eq_self, "]"] [] [] },
+    { intros [ident x, ident y, ident hx, ident hy],
+      simp [] [] ["only"] ["[", expr linear_map.map_add, ",", expr this 0 «expr + »(_, _), ",", expr map_add, ",", "<-", expr this 0 (lift _ _), ",", expr hx, ",", expr hy, "]"] [] [] } },
+  right_inv := λ
+  t, by simp [] [] ["only"] ["[", expr of_subsingleton_apply, ",", expr lift.tprod, ",", expr function.eval_apply, "]"] [] [],
+  map_add' := linear_map.map_add _,
+  map_smul' := linear_map.map_smul _ }
 
 @[simp]
 theorem subsingleton_equiv_apply_tprod [Subsingleton ι] (i : ι) (f : ι → M) : subsingleton_equiv i (tprod R f) = f i :=

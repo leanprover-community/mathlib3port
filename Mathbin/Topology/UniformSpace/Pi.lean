@@ -39,20 +39,21 @@ variable(α)
 theorem Pi.uniform_continuous_proj (i : ι) : UniformContinuous fun a : ∀ i : ι, α i => a i :=
   uniform_continuous_pi.1 uniform_continuous_id i
 
-instance Pi.complete [∀ i, CompleteSpace (α i)] : CompleteSpace (∀ i, α i) :=
-  ⟨by 
-      intro f hf 
-      haveI  := hf.1
-      have  : ∀ i, ∃ x : α i, Filter.map (fun a : ∀ i, α i => a i) f ≤ 𝓝 x
-      ·
-        intro i 
-        have key : Cauchy (map (fun a : ∀ i : ι, α i => a i) f)
-        exact hf.map (Pi.uniform_continuous_proj α i)
-        exact cauchy_iff_exists_le_nhds.1 key 
-      choose x hx using this 
-      use x 
-      rw [nhds_pi, le_infi_iff]
-      exact fun i => map_le_iff_le_comap.mp (hx i)⟩
+-- error in Topology.UniformSpace.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance Pi.complete [∀ i, complete_space (α i)] : complete_space (∀ i, α i) :=
+⟨begin
+   intros [ident f, ident hf],
+   haveI [] [] [":=", expr hf.1],
+   have [] [":", expr ∀ i, «expr∃ , »((x : α i), «expr ≤ »(filter.map (λ a : ∀ i, α i, a i) f, expr𝓝() x))] [],
+   { intro [ident i],
+     have [ident key] [":", expr cauchy (map (λ a : ∀ i : ι, α i, a i) f)] [],
+     from [expr hf.map (Pi.uniform_continuous_proj α i)],
+     exact [expr cauchy_iff_exists_le_nhds.1 key] },
+   choose [] [ident x] [ident hx] ["using", expr this],
+   use [expr x],
+   rw ["[", expr nhds_pi, ",", expr le_infi_iff, "]"] [],
+   exact [expr λ i, map_le_iff_le_comap.mp (hx i)]
+ end⟩
 
 instance Pi.separated [∀ i, SeparatedSpace (α i)] : SeparatedSpace (∀ i, α i) :=
   separated_def.2$

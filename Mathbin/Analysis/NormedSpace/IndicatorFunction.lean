@@ -1,5 +1,5 @@
-import Mathbin.Algebra.IndicatorFunction 
-import Mathbin.Analysis.NormedSpace.Basic
+import Mathbin.Analysis.Normed.Group.Basic 
+import Mathbin.Algebra.IndicatorFunction
 
 /-!
 # Indicator function and norm

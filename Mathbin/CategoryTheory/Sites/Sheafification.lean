@@ -242,52 +242,48 @@ theorem eq_mk_iff_exists {X : C} {P : «expr ᵒᵖ» C ⥤ D} {S T : J.cover X}
         cases i 
         rfl
 
+-- error in CategoryTheory.Sites.Sheafification: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `P⁺` is always separated. -/
-theorem sep {X : C} (P : «expr ᵒᵖ» C ⥤ D) (S : J.cover X) (x y : (J.plus_obj P).obj (op X))
-  (h : ∀ I : S.arrow, (J.plus_obj P).map I.f.op x = (J.plus_obj P).map I.f.op y) : x = y :=
-  by 
-    obtain ⟨Sx, x, rfl⟩ := exists_rep x 
-    obtain ⟨Sy, y, rfl⟩ := exists_rep y 
-    simp only [res_mk_eq_mk_pullback] at h 
-    choose W h1 h2 hh using fun I : S.arrow => (eq_mk_iff_exists _ _).mp (h I)
-    rw [eq_mk_iff_exists]
-    let B : J.cover X := S.bind W 
-    use B 
-    let ex : B ⟶ Sx :=
-      hom_of_le
-        (by 
-          rintro Y f ⟨Z, e1, e2, he2, he1, hee⟩
-          rw [←hee]
-          apply le_of_hom (h1 ⟨_, _, he2⟩)
-          exact he1)
-    let ey : B ⟶ Sy :=
-      hom_of_le
-        (by 
-          rintro Y f ⟨Z, e1, e2, he2, he1, hee⟩
-          rw [←hee]
-          apply le_of_hom (h2 ⟨_, _, he2⟩)
-          exact he1)
-    use ex, ey 
-    ext1 I 
-    let IS : S.arrow := I.from_middle 
-    specialize hh IS 
-    let IW : (W IS).arrow := I.to_middle 
-    applyFun fun e => e IW  at hh 
-    convert hh
-    ·
-      let Rx : Sx.relation :=
-        ⟨I.Y, I.Y, I.Y, 𝟙 _, 𝟙 _, I.f, I.to_middle_hom ≫ I.from_middle_hom, _, _,
-          by 
-            simp [I.middle_spec]⟩
-      have  := x.condition Rx 
-      simpa using this
-    ·
-      let Ry : Sy.relation :=
-        ⟨I.Y, I.Y, I.Y, 𝟙 _, 𝟙 _, I.f, I.to_middle_hom ≫ I.from_middle_hom, _, _,
-          by 
-            simp [I.middle_spec]⟩
-      have  := y.condition Ry 
-      simpa using this
+theorem sep
+{X : C}
+(P : «expr ⥤ »(«expr ᵒᵖ»(C), D))
+(S : J.cover X)
+(x y : (J.plus_obj P).obj (op X))
+(h : ∀ I : S.arrow, «expr = »((J.plus_obj P).map I.f.op x, (J.plus_obj P).map I.f.op y)) : «expr = »(x, y) :=
+begin
+  obtain ["⟨", ident Sx, ",", ident x, ",", ident rfl, "⟩", ":=", expr exists_rep x],
+  obtain ["⟨", ident Sy, ",", ident y, ",", ident rfl, "⟩", ":=", expr exists_rep y],
+  simp [] [] ["only"] ["[", expr res_mk_eq_mk_pullback, "]"] [] ["at", ident h],
+  choose [] [ident W] [ident h1, ident h2, ident hh] ["using", expr λ I : S.arrow, (eq_mk_iff_exists _ _).mp (h I)],
+  rw [expr eq_mk_iff_exists] [],
+  let [ident B] [":", expr J.cover X] [":=", expr S.bind W],
+  use [expr B],
+  let [ident ex] [":", expr «expr ⟶ »(B, Sx)] [":=", expr hom_of_le (begin
+      rintros [ident Y, ident f, "⟨", ident Z, ",", ident e1, ",", ident e2, ",", ident he2, ",", ident he1, ",", ident hee, "⟩"],
+      rw ["<-", expr hee] [],
+      apply [expr le_of_hom (h1 ⟨_, _, he2⟩)],
+      exact [expr he1]
+    end)],
+  let [ident ey] [":", expr «expr ⟶ »(B, Sy)] [":=", expr hom_of_le (begin
+      rintros [ident Y, ident f, "⟨", ident Z, ",", ident e1, ",", ident e2, ",", ident he2, ",", ident he1, ",", ident hee, "⟩"],
+      rw ["<-", expr hee] [],
+      apply [expr le_of_hom (h2 ⟨_, _, he2⟩)],
+      exact [expr he1]
+    end)],
+  use ["[", expr ex, ",", expr ey, "]"],
+  ext1 [] [ident I],
+  let [ident IS] [":", expr S.arrow] [":=", expr I.from_middle],
+  specialize [expr hh IS],
+  let [ident IW] [":", expr (W IS).arrow] [":=", expr I.to_middle],
+  apply_fun [expr λ e, e IW] ["at", ident hh] [],
+  convert [] [expr hh] [],
+  { let [ident Rx] [":", expr Sx.relation] [":=", expr ⟨I.Y, I.Y, I.Y, «expr𝟙»() _, «expr𝟙»() _, I.f, «expr ≫ »(I.to_middle_hom, I.from_middle_hom), _, _, by simp [] [] [] ["[", expr I.middle_spec, "]"] [] []⟩],
+    have [] [] [":=", expr x.condition Rx],
+    simpa [] [] [] [] [] ["using", expr this] },
+  { let [ident Ry] [":", expr Sy.relation] [":=", expr ⟨I.Y, I.Y, I.Y, «expr𝟙»() _, «expr𝟙»() _, I.f, «expr ≫ »(I.to_middle_hom, I.from_middle_hom), _, _, by simp [] [] [] ["[", expr I.middle_spec, "]"] [] []⟩],
+    have [] [] [":=", expr y.condition Ry],
+    simpa [] [] [] [] [] ["using", expr this] }
+end
 
 theorem inj_of_sep (P : «expr ᵒᵖ» C ⥤ D)
   (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) (X : C) :
@@ -330,51 +326,56 @@ def meq_of_sep (P : «expr ᵒᵖ» C ⥤ D)
           apply II.w 
         exact s.condition IR }
 
-theorem exists_of_sep (P : «expr ᵒᵖ» C ⥤ D)
-  (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) (X : C)
-  (S : J.cover X) (s : meq (J.plus_obj P) S) : ∃ t : (J.plus_obj P).obj (op X), meq.mk S t = s :=
-  by 
-    have inj : ∀ X : C, Function.Injective ((J.to_plus P).app (op X)) := inj_of_sep _ hsep 
-    choose T t ht using fun I => exists_rep (s I)
-    let B : J.cover X := S.bind T 
-    choose Z e1 e2 he2 he1 hee using fun I : B.arrow => I.hf 
-    let w : meq P B := meq_of_sep P hsep X S s T t ht 
-    use mk w 
-    ext I 
-    erw [ht, res_mk_eq_mk_pullback]
-    apply sep P (T I)
-    intro II 
-    simp only [res_mk_eq_mk_pullback, eq_mk_iff_exists]
-    use (J.pullback II.f).obj (T I)
-    let e0 : (J.pullback II.f).obj (T I) ⟶ (J.pullback II.f).obj ((J.pullback I.f).obj B) :=
-      hom_of_le
-        (by 
-          intro Y f hf 
-          apply sieve.le_pullback_bind _ _ _ I.hf
-          ·
-            cases I 
-            exact hf)
-    use e0, 𝟙 _ 
-    ext IV 
-    dsimp only [meq.refine_apply, meq.pullback_apply, w]
-    let IA : B.arrow := ⟨_, (IV.f ≫ II.f) ≫ I.f, _⟩
-    swap
-    ·
-      refine' ⟨I.Y, _, _, I.hf, _, rfl⟩
-      apply sieve.downward_closed 
-      convert II.hf 
-      cases I 
-      rfl 
-    let IB : S.arrow := IA.from_middle 
-    let IC : (T IB).arrow := IA.to_middle 
-    let ID : (T I).arrow := ⟨IV.Y, IV.f ≫ II.f, sieve.downward_closed (T I) II.hf IV.f⟩
-    change t IB IC = t I ID 
-    apply inj IV.Y 
-    erw [to_plus_apply (T I) (t I) ID, to_plus_apply (T IB) (t IB) IC, ←ht, ←ht]
-    let IR : S.relation := ⟨_, _, IV.Y, IC.f, ID.f, IB.f, I.f, _, I.hf, IA.middle_spec⟩
-    convert s.condition IR 
-    cases I 
-    rfl
+-- error in CategoryTheory.Sites.Sheafification: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_of_sep
+(P : «expr ⥤ »(«expr ᵒᵖ»(C), D))
+(hsep : ∀
+ (X : C)
+ (S : J.cover X)
+ (x y : P.obj (op X)), ∀ I : S.arrow, «expr = »(P.map I.f.op x, P.map I.f.op y) → «expr = »(x, y))
+(X : C)
+(S : J.cover X)
+(s : meq (J.plus_obj P) S) : «expr∃ , »((t : (J.plus_obj P).obj (op X)), «expr = »(meq.mk S t, s)) :=
+begin
+  have [ident inj] [":", expr ∀ X : C, function.injective ((J.to_plus P).app (op X))] [":=", expr inj_of_sep _ hsep],
+  choose [] [ident T] [ident t, ident ht] ["using", expr λ I, exists_rep (s I)],
+  let [ident B] [":", expr J.cover X] [":=", expr S.bind T],
+  choose [] [ident Z] [ident e1, ident e2, ident he2, ident he1, ident hee] ["using", expr λ I : B.arrow, I.hf],
+  let [ident w] [":", expr meq P B] [":=", expr meq_of_sep P hsep X S s T t ht],
+  use [expr mk w],
+  ext [] [ident I] [],
+  erw ["[", expr ht, ",", expr res_mk_eq_mk_pullback, "]"] [],
+  apply [expr sep P (T I)],
+  intros [ident II],
+  simp [] [] ["only"] ["[", expr res_mk_eq_mk_pullback, ",", expr eq_mk_iff_exists, "]"] [] [],
+  use [expr (J.pullback II.f).obj (T I)],
+  let [ident e0] [":", expr «expr ⟶ »((J.pullback II.f).obj (T I), (J.pullback II.f).obj ((J.pullback I.f).obj B))] [":=", expr hom_of_le (begin
+      intros [ident Y, ident f, ident hf],
+      apply [expr sieve.le_pullback_bind _ _ _ I.hf],
+      { cases [expr I] [],
+        exact [expr hf] }
+    end)],
+  use ["[", expr e0, ",", expr «expr𝟙»() _, "]"],
+  ext [] [ident IV] [],
+  dsimp ["only"] ["[", expr meq.refine_apply, ",", expr meq.pullback_apply, ",", expr w, "]"] [] [],
+  let [ident IA] [":", expr B.arrow] [":=", expr ⟨_, «expr ≫ »(«expr ≫ »(IV.f, II.f), I.f), _⟩],
+  swap,
+  { refine [expr ⟨I.Y, _, _, I.hf, _, rfl⟩],
+    apply [expr sieve.downward_closed],
+    convert [] [expr II.hf] [],
+    cases [expr I] [],
+    refl },
+  let [ident IB] [":", expr S.arrow] [":=", expr IA.from_middle],
+  let [ident IC] [":", expr (T IB).arrow] [":=", expr IA.to_middle],
+  let [ident ID] [":", expr (T I).arrow] [":=", expr ⟨IV.Y, «expr ≫ »(IV.f, II.f), sieve.downward_closed (T I) II.hf IV.f⟩],
+  change [expr «expr = »(t IB IC, t I ID)] [] [],
+  apply [expr inj IV.Y],
+  erw ["[", expr to_plus_apply (T I) (t I) ID, ",", expr to_plus_apply (T IB) (t IB) IC, ",", "<-", expr ht, ",", "<-", expr ht, "]"] [],
+  let [ident IR] [":", expr S.relation] [":=", expr ⟨_, _, IV.Y, IC.f, ID.f, IB.f, I.f, _, I.hf, IA.middle_spec⟩],
+  convert [] [expr s.condition IR] [],
+  cases [expr I] [],
+  refl
+end
 
 variable[reflects_isomorphisms (forget D)]
 
@@ -463,21 +464,19 @@ theorem to_sheafification_app (P : «expr ᵒᵖ» C ⥤ D) : (J.to_sheafificati
 
 variable{D}
 
-theorem is_iso_to_sheafify {P : «expr ᵒᵖ» C ⥤ D} (hP : presheaf.is_sheaf J P) : is_iso (J.to_sheafify P) :=
-  by 
-    dsimp [to_sheafify]
-    haveI  : is_iso (J.to_plus P) :=
-      by 
-        apply is_iso_to_plus_of_is_sheaf J P hP 
-    haveI  : is_iso ((J.plus_functor D).map (J.to_plus P)) :=
-      by 
-        apply functor.map_is_iso 
-    exact @is_iso.comp_is_iso _ _ _ _ _ (J.to_plus P) ((J.plus_functor D).map (J.to_plus P)) _ _
+-- error in CategoryTheory.Sites.Sheafification: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_iso_to_sheafify {P : «expr ⥤ »(«expr ᵒᵖ»(C), D)} (hP : presheaf.is_sheaf J P) : is_iso (J.to_sheafify P) :=
+begin
+  dsimp [] ["[", expr to_sheafify, "]"] [] [],
+  haveI [] [":", expr is_iso (J.to_plus P)] [":=", expr by { apply [expr is_iso_to_plus_of_is_sheaf J P hP] }],
+  haveI [] [":", expr is_iso ((J.plus_functor D).map (J.to_plus P))] [":=", expr by { apply [expr functor.map_is_iso] }],
+  exact [expr @is_iso.comp_is_iso _ _ _ _ _ (J.to_plus P) ((J.plus_functor D).map (J.to_plus P)) _ _]
+end
 
+-- error in CategoryTheory.Sites.Sheafification: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `P` is a sheaf, then `P` is isomorphic to `J.sheafify P`. -/
-def iso_sheafify {P : «expr ᵒᵖ» C ⥤ D} (hP : presheaf.is_sheaf J P) : P ≅ J.sheafify P :=
-  by 
-    letI this := is_iso_to_sheafify J hP <;> exactI as_iso (J.to_sheafify P)
+def iso_sheafify {P : «expr ⥤ »(«expr ᵒᵖ»(C), D)} (hP : presheaf.is_sheaf J P) : «expr ≅ »(P, J.sheafify P) :=
+by letI [] [] [":=", expr is_iso_to_sheafify J hP]; exactI [expr as_iso (J.to_sheafify P)]
 
 /-- Given a sheaf `Q` and a morphism `P ⟶ Q`, construct a morphism from
 `J.sheafifcation P` to `Q`. -/

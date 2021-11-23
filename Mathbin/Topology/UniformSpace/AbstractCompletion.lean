@@ -211,14 +211,16 @@ theorem uniform_continuous_compare : UniformContinuous (pkg.compare pkg') :=
 theorem compare_coe (a : α) : pkg.compare pkg' (pkg.coe a) = pkg'.coe a :=
   pkg.extend_coe pkg'.uniform_continuous_coe a
 
-theorem inverse_compare : (pkg.compare pkg' ∘ pkg'.compare pkg) = id :=
-  by 
-    have uc := pkg.uniform_continuous_compare pkg' 
-    have uc' := pkg'.uniform_continuous_compare pkg 
-    apply pkg'.funext (uc.comp uc').Continuous continuous_id 
-    intro a 
-    rw [comp_app, pkg'.compare_coe pkg, pkg.compare_coe pkg']
-    rfl
+-- error in Topology.UniformSpace.AbstractCompletion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem inverse_compare : «expr = »(«expr ∘ »(pkg.compare pkg', pkg'.compare pkg), id) :=
+begin
+  have [ident uc] [] [":=", expr pkg.uniform_continuous_compare pkg'],
+  have [ident uc'] [] [":=", expr pkg'.uniform_continuous_compare pkg],
+  apply [expr pkg'.funext (uc.comp uc').continuous continuous_id],
+  intro [ident a],
+  rw ["[", expr comp_app, ",", expr pkg'.compare_coe pkg, ",", expr pkg.compare_coe pkg', "]"] [],
+  refl
+end
 
 /-- The bijection between two completions of the same uniform space. -/
 def compare_equiv : pkg.space ≃ pkg'.space :=

@@ -4,12 +4,12 @@ import Mathbin.Algebra.Opposites
 /-!
 # Ring involutions
 
-This file defines a ring involution as a structure extending `R ≃+* Rᵒᵖ`,
+This file defines a ring involution as a structure extending `R ≃+* Rᵐᵒᵖ`,
 with the additional fact `f.involution : (f (f x).unop).unop = x`.
 
 ## Notations
 
-We provide a coercion to a function `R → Rᵒᵖ`.
+We provide a coercion to a function `R → Rᵐᵒᵖ`.
 
 ## References
 
@@ -24,7 +24,7 @@ Ring involution
 variable(R : Type _)
 
 /-- A ring involution -/
-structure RingInvo[Semiringₓ R] extends R ≃+* «expr ᵒᵖ» R where 
+structure RingInvo[Semiringₓ R] extends R ≃+* «expr ᵐᵒᵖ» R where 
   involution' : ∀ x, (to_fun (to_fun x).unop).unop = x
 
 namespace RingInvo
@@ -32,11 +32,11 @@ namespace RingInvo
 variable{R}[Semiringₓ R]
 
 /-- Construct a ring involution from a ring homomorphism. -/
-def mk' (f : R →+* «expr ᵒᵖ» R) (involution : ∀ r, (f (f r).unop).unop = r) : RingInvo R :=
+def mk' (f : R →+* «expr ᵐᵒᵖ» R) (involution : ∀ r, (f (f r).unop).unop = r) : RingInvo R :=
   { f with invFun := fun r => (f r.unop).unop, left_inv := fun r => involution r,
-    right_inv := fun r => congr_argₓ Opposite.op (involution r.unop), involution' := involution }
+    right_inv := fun r => MulOpposite.unop_injective$ involution _, involution' := involution }
 
-instance  : CoeFun (RingInvo R) fun _ => R → «expr ᵒᵖ» R :=
+instance  : CoeFun (RingInvo R) fun _ => R → «expr ᵐᵒᵖ» R :=
   ⟨fun f => f.to_ring_equiv.to_fun⟩
 
 @[simp]
@@ -47,11 +47,11 @@ theorem to_fun_eq_coe (f : RingInvo R) : f.to_fun = f :=
 theorem involution (f : RingInvo R) (x : R) : (f (f x).unop).unop = x :=
   f.involution' x
 
-instance has_coe_to_ring_equiv : Coe (RingInvo R) (R ≃+* «expr ᵒᵖ» R) :=
+instance has_coe_to_ring_equiv : Coe (RingInvo R) (R ≃+* «expr ᵐᵒᵖ» R) :=
   ⟨RingInvo.toRingEquiv⟩
 
 @[normCast]
-theorem coe_ring_equiv (f : RingInvo R) (a : R) : (f : R ≃+* «expr ᵒᵖ» R) a = f a :=
+theorem coe_ring_equiv (f : RingInvo R) (a : R) : (f : R ≃+* «expr ᵐᵒᵖ» R) a = f a :=
   rfl
 
 @[simp]

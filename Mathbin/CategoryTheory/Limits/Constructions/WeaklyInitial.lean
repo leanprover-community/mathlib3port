@@ -30,34 +30,36 @@ theorem has_weakly_initial_of_weakly_initial_set_and_has_products [has_products 
   (hB : ∀ A : C, ∃ i, Nonempty (B i ⟶ A)) : ∃ T : C, ∀ X, Nonempty (T ⟶ X) :=
   ⟨∏ B, fun X => ⟨pi.π _ _ ≫ (hB X).some_spec.some⟩⟩
 
+-- error in CategoryTheory.Limits.Constructions.WeaklyInitial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `C` has (small) wide equalizers and a weakly initial object, then it has an initial object.
 
 The initial object is constructed as the wide equalizer of all endomorphisms on the given weakly
 initial object.
 -/
-theorem has_initial_of_weakly_initial_and_has_wide_equalizers [has_wide_equalizers C] {T : C}
-  (hT : ∀ X, Nonempty (T ⟶ X)) : has_initial C :=
-  by 
-    let endos := T ⟶ T 
-    let i := wide_equalizer.ι (id : endos → endos)
-    haveI  : Nonempty endos := ⟨𝟙 _⟩
-    have  : ∀ X : C, Unique (wide_equalizer (id : endos → endos) ⟶ X)
-    ·
-      intro X 
-      refine' ⟨⟨i ≫ Classical.choice (hT X)⟩, fun a => _⟩
-      let E := equalizer a (i ≫ Classical.choice (hT _))
-      let e : E ⟶ wide_equalizer id := equalizer.ι _ _ 
-      let h : T ⟶ E := Classical.choice (hT E)
-      have  : ((i ≫ h) ≫ e) ≫ i = i ≫ 𝟙 _
-      ·
-        rw [category.assoc, category.assoc]
-        apply wide_equalizer.condition (id : endos → endos) (h ≫ e ≫ i)
-      rw [category.comp_id, cancel_mono_id i] at this 
-      haveI  : split_epi e := ⟨i ≫ h, this⟩
-      rw [←cancel_epi e]
-      apply equalizer.condition 
-    exactI has_initial_of_unique (wide_equalizer (id : endos → endos))
+theorem has_initial_of_weakly_initial_and_has_wide_equalizers
+[has_wide_equalizers C]
+{T : C}
+(hT : ∀ X, nonempty «expr ⟶ »(T, X)) : has_initial C :=
+begin
+  let [ident endos] [] [":=", expr «expr ⟶ »(T, T)],
+  let [ident i] [] [":=", expr wide_equalizer.ι (id : endos → endos)],
+  haveI [] [":", expr nonempty endos] [":=", expr ⟨«expr𝟙»() _⟩],
+  have [] [":", expr ∀ X : C, unique «expr ⟶ »(wide_equalizer (id : endos → endos), X)] [],
+  { intro [ident X],
+    refine [expr ⟨⟨«expr ≫ »(i, classical.choice (hT X))⟩, λ a, _⟩],
+    let [ident E] [] [":=", expr equalizer a «expr ≫ »(i, classical.choice (hT _))],
+    let [ident e] [":", expr «expr ⟶ »(E, wide_equalizer id)] [":=", expr equalizer.ι _ _],
+    let [ident h] [":", expr «expr ⟶ »(T, E)] [":=", expr classical.choice (hT E)],
+    have [] [":", expr «expr = »(«expr ≫ »(«expr ≫ »(«expr ≫ »(i, h), e), i), «expr ≫ »(i, «expr𝟙»() _))] [],
+    { rw ["[", expr category.assoc, ",", expr category.assoc, "]"] [],
+      apply [expr wide_equalizer.condition (id : endos → endos) «expr ≫ »(h, «expr ≫ »(e, i))] },
+    rw ["[", expr category.comp_id, ",", expr cancel_mono_id i, "]"] ["at", ident this],
+    haveI [] [":", expr split_epi e] [":=", expr ⟨«expr ≫ »(i, h), this⟩],
+    rw ["<-", expr cancel_epi e] [],
+    apply [expr equalizer.condition] },
+  exactI [expr has_initial_of_unique (wide_equalizer (id : endos → endos))]
+end
 
 end CategoryTheory
 

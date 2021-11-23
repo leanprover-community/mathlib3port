@@ -36,7 +36,7 @@ they are not shared with other components of `linarith`.
 -/
 
 
--- error in Tactic.Linarith.Elimination: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Tactic.Linarith.Elimination: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /--
 `comp_source` tracks the source of a comparison.
 The atomic source of a comparison is an assumption, indexed by a natural number.
@@ -233,7 +233,7 @@ unsafe structure linarith_structure : Type where
   max_var : ℕ 
   comps : rb_set pcomp
 
--- error in Tactic.Linarith.Elimination: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler monad
+-- error in Tactic.Linarith.Elimination: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monad
 /--
 The linarith monad extends an exceptional monad with a `linarith_structure` state.
 An exception produces a contradictory `pcomp`.

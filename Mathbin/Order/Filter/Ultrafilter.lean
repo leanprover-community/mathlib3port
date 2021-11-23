@@ -1,4 +1,5 @@
-import Mathbin.Order.Filter.Cofinite
+import Mathbin.Order.Filter.Cofinite 
+import Mathbin.Order.Zorn
 
 /-!
 # Ultrafilters
@@ -115,7 +116,7 @@ def of_compl_not_mem_iff (f : Filter α) (h : ∀ s, «expr ᶜ» s ∉ f ↔ s 
         (h s).1$
           fun hsc =>
             by 
-              exactI compl_not_mem hs (hgf hsc) }
+              exact compl_not_mem hs (hgf hsc) }
 
 theorem nonempty_of_mem (hs : s ∈ f) : s.nonempty :=
   nonempty_of_mem hs
@@ -179,7 +180,7 @@ def comap {m : α → β} (u : Ultrafilter β) (inj : injective m) (large : Set.
     le_of_le :=
       fun g hg hgu =>
         by 
-          resetI 
+          skip 
           simp only [←u.unique (map_le_iff_le_comap.2 hgu), comap_map inj, le_rfl] }
 
 @[simp]
@@ -235,27 +236,29 @@ instance ultrafilter.is_lawful_monad : IsLawfulMonad Ultrafilter :=
 
 end 
 
+-- error in Order.Filter.Ultrafilter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The ultrafilter lemma: Any proper filter is contained in an ultrafilter. -/
-theorem exists_le (f : Filter α) [h : ne_bot f] : ∃ u : Ultrafilter α, «expr↑ » u ≤ f :=
-  by 
-    let τ := { f' // ne_bot f' ∧ f' ≤ f }
-    let r : τ → τ → Prop := fun t₁ t₂ => t₂.val ≤ t₁.val 
-    haveI  := nonempty_of_ne_bot f 
-    let top : τ := ⟨f, h, le_reflₓ f⟩
-    let sup : ∀ c : Set τ, chain r c → τ :=
-      fun c hc =>
-        ⟨⨅a : { a : τ // a ∈ insert top c }, a.1,
-          infi_ne_bot_of_directed (directed_of_chain$ chain_insert hc$ fun ⟨b, _, hb⟩ _ _ => Or.inl hb)
-            fun ⟨⟨a, ha, _⟩, _⟩ => ha,
-          infi_le_of_le ⟨top, mem_insert _ _⟩ (le_reflₓ _)⟩
-    have  : ∀ c hc : chain r c a ha : a ∈ c, r a (sup c hc)
-    exact fun c hc a ha => infi_le_of_le ⟨a, mem_insert_of_mem _ ha⟩ (le_reflₓ _)
-    have  : ∃ u : τ, ∀ a : τ, r u a → r a u 
-    exact exists_maximal_of_chains_bounded (fun c hc => ⟨sup c hc, this c hc⟩) fun f₁ f₂ f₃ h₁ h₂ => le_transₓ h₂ h₁ 
-    cases' this with uτ hmin 
-    exact
-      ⟨⟨uτ.val, uτ.property.left, fun g hg₁ hg₂ => hmin ⟨g, hg₁, le_transₓ hg₂ uτ.property.right⟩ hg₂⟩,
-        uτ.property.right⟩
+theorem exists_le (f : filter α) [h : ne_bot f] : «expr∃ , »((u : ultrafilter α), «expr ≤ »(«expr↑ »(u), f)) :=
+begin
+  let [ident τ] [] [":=", expr {f' // «expr ∧ »(ne_bot f', «expr ≤ »(f', f))}],
+  let [ident r] [":", expr τ → τ → exprProp()] [":=", expr λ t₁ t₂, «expr ≤ »(t₂.val, t₁.val)],
+  haveI [] [] [":=", expr nonempty_of_ne_bot f],
+  let [ident top] [":", expr τ] [":=", expr ⟨f, h, le_refl f⟩],
+  let [ident sup] [":", expr ∀
+   c : set τ, chain r c → τ] [":=", expr λ
+   c
+   hc, ⟨«expr⨅ , »((a : {a : τ // «expr ∈ »(a, insert top c)}), a.1), infi_ne_bot_of_directed «expr $ »(directed_of_chain, «expr $ »(chain_insert hc, λ
+      ⟨b, _, hb⟩
+      (_ _), or.inl hb)) (assume ⟨⟨a, ha, _⟩, _⟩, ha), infi_le_of_le ⟨top, mem_insert _ _⟩ (le_refl _)⟩],
+  have [] [":", expr ∀ (c) (hc : chain r c) (a) (ha : «expr ∈ »(a, c)), r a (sup c hc)] [],
+  from [expr assume c hc a ha, infi_le_of_le ⟨a, mem_insert_of_mem _ ha⟩ (le_refl _)],
+  have [] [":", expr «expr∃ , »((u : τ), ∀ a : τ, r u a → r a u)] [],
+  from [expr exists_maximal_of_chains_bounded (assume
+    c hc, ⟨sup c hc, this c hc⟩) (assume f₁ f₂ f₃ h₁ h₂, le_trans h₂ h₁)],
+  cases [expr this] ["with", ident uτ, ident hmin],
+  exact [expr ⟨⟨uτ.val, uτ.property.left, assume
+     g hg₁ hg₂, hmin ⟨g, hg₁, le_trans hg₂ uτ.property.right⟩ hg₂⟩, uτ.property.right⟩]
+end
 
 alias exists_le ← Filter.exists_ultrafilter_le
 
@@ -278,7 +281,7 @@ theorem exists_ultrafilter_of_finite_inter_nonempty (S : Set (Set α))
     suffices  : ∃ F : Filter α, ne_bot F ∧ S ⊆ F.sets
     ·
       rcases this with ⟨F, cond, hF⟩
-      resetI 
+      skip 
       obtain ⟨G : Ultrafilter α, h1 : «expr↑ » G ≤ F⟩ := exists_le F 
       exact ⟨G, fun T hT => h1 (hF hT)⟩
     use Filter.generate S 
@@ -300,15 +303,16 @@ namespace Filter
 
 open Ultrafilter
 
-theorem mem_iff_ultrafilter {s : Set α} {f : Filter α} : s ∈ f ↔ ∀ g : Ultrafilter α, «expr↑ » g ≤ f → s ∈ g :=
-  by 
-    refine' ⟨fun hf g hg => hg hf, fun H => by_contra$ fun hf => _⟩
-    set g : Filter («expr↥ » («expr ᶜ» s)) := comap coeₓ f 
-    haveI  : ne_bot g :=
-      comap_ne_bot_iff_compl_range.2
-        (by 
-          simpa [compl_set_of])
-    simpa using H ((of g).map coeₓ) (map_le_iff_le_comap.mpr (of_le g))
+-- error in Order.Filter.Ultrafilter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_iff_ultrafilter
+{s : set α}
+{f : filter α} : «expr ↔ »(«expr ∈ »(s, f), ∀ g : ultrafilter α, «expr ≤ »(«expr↑ »(g), f) → «expr ∈ »(s, g)) :=
+begin
+  refine [expr ⟨λ hf g hg, hg hf, λ H, «expr $ »(by_contra, λ hf, _)⟩],
+  set [] [ident g] [":", expr filter «expr↥ »(«expr ᶜ»(s))] [":="] [expr comap coe f] [],
+  haveI [] [":", expr ne_bot g] [":=", expr comap_ne_bot_iff_compl_range.2 (by simpa [] [] [] ["[", expr compl_set_of, "]"] [] [])],
+  simpa [] [] [] [] [] ["using", expr H ((of g).map coe) (map_le_iff_le_comap.mpr (of_le g))]
+end
 
 theorem le_iff_ultrafilter {f₁ f₂ : Filter α} : f₁ ≤ f₂ ↔ ∀ g : Ultrafilter α, «expr↑ » g ≤ f₁ → «expr↑ » g ≤ f₂ :=
   ⟨fun h g h₁ => h₁.trans h, fun h s hs => mem_iff_ultrafilter.2$ fun g hg => h g hg hs⟩
@@ -333,7 +337,7 @@ theorem forall_ne_bot_le_iff {g : Filter α} {p : Filter α → Prop} (hp : Mono
   (∀ f : Filter α, ne_bot f → f ≤ g → p f) ↔ ∀ f : Ultrafilter α, «expr↑ » f ≤ g → p f :=
   by 
     refine' ⟨fun H f hf => H f f.ne_bot hf, _⟩
-    introI H f hf hfg 
+    intros H f hf hfg 
     exact hp (of_le f) (H _ ((of_le f).trans hfg))
 
 section Hyperfilter

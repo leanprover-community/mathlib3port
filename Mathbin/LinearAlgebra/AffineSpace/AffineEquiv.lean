@@ -127,14 +127,12 @@ theorem coe_coe (e : P₁ ≃ᵃ[k] P₂) : ((e : P₁ →ᵃ[k] P₂) : P₁ �
 theorem linear_to_affine_map (e : P₁ ≃ᵃ[k] P₂) : e.to_affine_map.linear = e.linear :=
   rfl
 
--- error in LinearAlgebra.AffineSpace.AffineEquiv: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem to_affine_map_injective : injective (to_affine_map : «expr ≃ᵃ[ ] »(P₁, k, P₂) → «expr →ᵃ[ ] »(P₁, k, P₂)) :=
-begin
-  rintros ["⟨", ident e, ",", ident el, ",", ident h, "⟩", "⟨", ident e', ",", ident el', ",", ident h', "⟩", ident H],
-  simp [] [] ["only"] ["[", expr to_affine_map_mk, ",", expr equiv.coe_inj, ",", expr linear_equiv.to_linear_map_inj, "]"] [] ["at", ident H],
-  congr,
-  exacts ["[", expr H.1, ",", expr H.2, "]"]
-end
+theorem to_affine_map_injective : injective (to_affine_map : (P₁ ≃ᵃ[k] P₂) → P₁ →ᵃ[k] P₂) :=
+  by 
+    rintro ⟨e, el, h⟩ ⟨e', el', h'⟩ H 
+    simp only [to_affine_map_mk, Equiv.coe_inj, LinearEquiv.to_linear_map_inj] at H 
+    congr 
+    exacts[H.1, H.2]
 
 @[simp]
 theorem to_affine_map_inj {e e' : P₁ ≃ᵃ[k] P₂} : e.to_affine_map = e'.to_affine_map ↔ e = e' :=
@@ -254,7 +252,7 @@ def trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : P₁ ≃ᵃ[k] 
           simp only [LinearEquiv.trans_apply, coe_to_equiv, · ∘ ·, Equiv.coe_trans, map_vadd] }
 
 @[simp]
-theorem coeTransₓ (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : «expr⇑ » (e.trans e') = (e' ∘ e) :=
+theorem coeTransₓ (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : «expr⇑ » (e.trans e') = e' ∘ e :=
   rfl
 
 theorem trans_apply (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) (p : P₁) : e.trans e' p = e' (e p) :=
@@ -306,7 +304,7 @@ theorem mul_def (e e' : P₁ ≃ᵃ[k] P₁) : (e*e') = e'.trans e :=
   rfl
 
 @[simp]
-theorem coe_mul (e e' : P₁ ≃ᵃ[k] P₁) : «expr⇑ » (e*e') = (e ∘ e') :=
+theorem coe_mul (e e' : P₁ ≃ᵃ[k] P₁) : «expr⇑ » (e*e') = e ∘ e' :=
   rfl
 
 theorem inv_def (e : P₁ ≃ᵃ[k] P₁) : e⁻¹ = e.symm :=
@@ -424,7 +422,7 @@ theorem coe_homothety_units_mul_hom_apply_symm (p : P) (t : Units R) :
 
 @[simp]
 theorem coe_homothety_units_mul_hom_eq_homothety_hom_coe (p : P) :
-  ((coeₓ : (P ≃ᵃ[R] P) → P →ᵃ[R] P) ∘ homothety_units_mul_hom p) = (AffineMap.homothetyHom p ∘ (coeₓ : Units R → R)) :=
+  (coeₓ : (P ≃ᵃ[R] P) → P →ᵃ[R] P) ∘ homothety_units_mul_hom p = AffineMap.homothetyHom p ∘ (coeₓ : Units R → R) :=
   by 
     ext 
     simp 

@@ -1,5 +1,5 @@
-import Mathbin.Data.Pfunctor.Univariate.Default 
-import Mathbin.Data.Pfunctor.Multivariate.Basic
+import Mathbin.Data.Pfunctor.Multivariate.Basic 
+import Mathbin.Data.Pfunctor.Univariate.M
 
 /-!
 # The M construction as a multivariate polynomial functor.
@@ -187,39 +187,46 @@ theorem M.bisim_lemma {α : Typevec n} {a₁ : (Mp P).A} {f₁ : (Mp P).B a₁ �
     cases e₁ 
     exact ⟨_, e₁', split_fun_inj ef⟩
 
-theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
-  (h :
-    ∀ x y,
-      R x y → ∃ a f f₁ f₂, M.dest P x = ⟨a, split_fun f f₁⟩ ∧ M.dest P y = ⟨a, split_fun f f₂⟩ ∧ ∀ i, R (f₁ i) (f₂ i))
-  x y (r : R x y) : x = y :=
-  by 
-    cases' x with a₁ f₁ 
-    cases' y with a₂ f₂ 
-    dsimp [Mp]  at *
-    have  : a₁ = a₂
-    ·
-      refine' Pfunctor.M.bisim (fun a₁ a₂ => ∃ x y, R x y ∧ x.1 = a₁ ∧ y.1 = a₂) _ _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
-      rintro _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
-      rcases h _ _ r with ⟨a', f', f₁', f₂', e₁, e₂, h'⟩
-      rcases M.bisim_lemma P e₁ with ⟨g₁', e₁', rfl, rfl⟩
-      rcases M.bisim_lemma P e₂ with ⟨g₂', e₂', _, rfl⟩
-      rw [e₁', e₂']
-      exact ⟨_, _, _, rfl, rfl, fun b => ⟨_, _, h' b, rfl, rfl⟩⟩
-    subst this 
-    congr with i p 
-    induction' p with x a f h' i c x a f h' i c p IH generalizing f₁ f₂ <;>
-      try 
-        rcases h _ _ r with ⟨a', f', f₁', f₂', e₁, e₂, h''⟩
-        rcases M.bisim_lemma P e₁ with ⟨g₁', e₁', rfl, rfl⟩
-        rcases M.bisim_lemma P e₂ with ⟨g₂', e₂', e₃, rfl⟩
-        cases h'.symm.trans e₁' 
-        cases h'.symm.trans e₂'
-    ·
-      exact (congr_funₓ (congr_funₓ e₃ i) c : _)
-    ·
-      exact IH _ _ (h'' _)
+-- error in Data.Pfunctor.Multivariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem M.bisim
+{α : typevec n}
+(R : P.M α → P.M α → exprProp())
+(h : ∀
+ x
+ y, R x y → «expr∃ , »((a
+   f
+   f₁
+   f₂), «expr ∧ »(«expr = »(M.dest P x, ⟨a, split_fun f f₁⟩), «expr ∧ »(«expr = »(M.dest P y, ⟨a, split_fun f f₂⟩), ∀
+    i, R (f₁ i) (f₂ i)))))
+(x y)
+(r : R x y) : «expr = »(x, y) :=
+begin
+  cases [expr x] ["with", ident a₁, ident f₁],
+  cases [expr y] ["with", ident a₂, ident f₂],
+  dsimp [] ["[", expr Mp, "]"] [] ["at", "*"],
+  have [] [":", expr «expr = »(a₁, a₂)] [],
+  { refine [expr pfunctor.M.bisim (λ
+      a₁
+      a₂, «expr∃ , »((x
+        y), «expr ∧ »(R x y, «expr ∧ »(«expr = »(x.1, a₁), «expr = »(y.1, a₂))))) _ _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩],
+    rintro ["_", "_", "⟨", "⟨", ident a₁, ",", ident f₁, "⟩", ",", "⟨", ident a₂, ",", ident f₂, "⟩", ",", ident r, ",", ident rfl, ",", ident rfl, "⟩"],
+    rcases [expr h _ _ r, "with", "⟨", ident a', ",", ident f', ",", ident f₁', ",", ident f₂', ",", ident e₁, ",", ident e₂, ",", ident h', "⟩"],
+    rcases [expr M.bisim_lemma P e₁, "with", "⟨", ident g₁', ",", ident e₁', ",", ident rfl, ",", ident rfl, "⟩"],
+    rcases [expr M.bisim_lemma P e₂, "with", "⟨", ident g₂', ",", ident e₂', ",", "_", ",", ident rfl, "⟩"],
+    rw ["[", expr e₁', ",", expr e₂', "]"] [],
+    exact [expr ⟨_, _, _, rfl, rfl, λ b, ⟨_, _, h' b, rfl, rfl⟩⟩] },
+  subst [expr this],
+  congr' [] ["with", ident i, ident p],
+  induction [expr p] [] ["with", ident x, ident a, ident f, ident h', ident i, ident c, ident x, ident a, ident f, ident h', ident i, ident c, ident p, ident IH] ["generalizing", ident f₁, ident f₂]; try { rcases [expr h _ _ r, "with", "⟨", ident a', ",", ident f', ",", ident f₁', ",", ident f₂', ",", ident e₁, ",", ident e₂, ",", ident h'', "⟩"],
+    rcases [expr M.bisim_lemma P e₁, "with", "⟨", ident g₁', ",", ident e₁', ",", ident rfl, ",", ident rfl, "⟩"],
+    rcases [expr M.bisim_lemma P e₂, "with", "⟨", ident g₂', ",", ident e₂', ",", ident e₃, ",", ident rfl, "⟩"],
+    cases [expr h'.symm.trans e₁'] [],
+    cases [expr h'.symm.trans e₂'] [] },
+  { exact [expr (congr_fun (congr_fun e₃ i) c : _)] },
+  { exact [expr IH _ _ (h'' _)] }
+end
 
--- error in Data.Pfunctor.Multivariate.M: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Pfunctor.Multivariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem M.bisim₀
 {α : typevec n}
 (R : P.M α → P.M α → exprProp())
@@ -257,7 +264,7 @@ begin
   exact [expr h₁]
 end
 
--- error in Data.Pfunctor.Multivariate.M: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Pfunctor.Multivariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem M.bisim'
 {α : typevec n}
 (R : P.M α → P.M α → exprProp())

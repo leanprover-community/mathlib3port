@@ -33,7 +33,7 @@ include hp
 
 variable(p)
 
--- error in RingTheory.WittVector.MulP: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in RingTheory.WittVector.MulP: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- `witt_mul_n p n` is the family of polynomials that computes
 the coefficients of `x * n` in terms of the coefficients of the Witt vector `x`. -/
 noncomputable
@@ -66,12 +66,12 @@ theorem mul_n_is_poly (n : ℕ) :
   is_poly p
     fun R _Rcr x =>
       by 
-        exactI x*n :=
+        exact x*n :=
   ⟨⟨witt_mul_n p n,
       fun R _Rcr x =>
         by 
           funext k 
-          exactI mul_n_coeff n x k⟩⟩
+          exact mul_n_coeff n x k⟩⟩
 
 @[simp]
 theorem bind₁_witt_mul_n_witt_polynomial (n k : ℕ) :

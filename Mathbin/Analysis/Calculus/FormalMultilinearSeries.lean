@@ -32,7 +32,7 @@ variable{𝕜 :
       _}[NormedGroup
       E][NormedSpace 𝕜 E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]{G : Type _}[NormedGroup G][NormedSpace 𝕜 G]
 
--- error in Analysis.Calculus.FormalMultilinearSeries: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler add_comm_group
+-- error in Analysis.Calculus.FormalMultilinearSeries: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler add_comm_group
 /-- A formal multilinear series over a field `𝕜`, from `E` to `F`, is given by a family of
 multilinear maps from `E^n` to `F` for all `n`. -/
 @[derive #[expr add_comm_group]]
@@ -54,13 +54,13 @@ section Module
 
 attribute [local reducible] FormalMultilinearSeries
 
-instance  : Module 𝕜 (FormalMultilinearSeries 𝕜 E F) :=
-  by 
-    letI this : ∀ n, Module 𝕜 (ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => E) F) :=
-      fun n =>
-        by 
-          infer_instance 
-    infer_instance
+-- error in Analysis.Calculus.FormalMultilinearSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance : module 𝕜 (formal_multilinear_series 𝕜 E F) :=
+begin
+  letI [] [":", expr ∀
+   n, module 𝕜 (continuous_multilinear_map 𝕜 (λ i : fin n, E) F)] [":=", expr λ n, by apply_instance],
+  apply_instance
+end
 
 end Module
 

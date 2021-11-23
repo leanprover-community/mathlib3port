@@ -213,22 +213,19 @@ theorem bounds_bdd_below {f : NormedGroupHom V₁ V₂} : BddBelow { c | 0 ≤ c
 theorem op_norm_nonneg : 0 ≤ ∥f∥ :=
   le_cInf bounds_nonempty fun _ ⟨hx, _⟩ => hx
 
+-- error in Analysis.Normed.Group.Hom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The fundamental property of the operator norm: `∥f x∥ ≤ ∥f∥ * ∥x∥`. -/
-theorem le_op_norm (x : V₁) : ∥f x∥ ≤ ∥f∥*∥x∥ :=
-  by 
-    obtain ⟨C, Cpos, hC⟩ := f.bound 
-    replace hC := hC x 
-    byCases' h : ∥x∥ = 0
-    ·
-      rwa [h, mul_zero] at hC⊢
-    have hlt : 0 < ∥x∥ := lt_of_le_of_neₓ (norm_nonneg x) (Ne.symm h)
-    exact
-      (div_le_iff hlt).mp
-        (le_cInf bounds_nonempty
-          fun c ⟨_, hc⟩ =>
-            (div_le_iff hlt).mpr$
-              by 
-                apply hc)
+theorem le_op_norm (x : V₁) : «expr ≤ »(«expr∥ ∥»(f x), «expr * »(«expr∥ ∥»(f), «expr∥ ∥»(x))) :=
+begin
+  obtain ["⟨", ident C, ",", ident Cpos, ",", ident hC, "⟩", ":=", expr f.bound],
+  replace [ident hC] [] [":=", expr hC x],
+  by_cases [expr h, ":", expr «expr = »(«expr∥ ∥»(x), 0)],
+  { rwa ["[", expr h, ",", expr mul_zero, "]"] ["at", "⊢", ident hC] },
+  have [ident hlt] [":", expr «expr < »(0, «expr∥ ∥»(x))] [":=", expr lt_of_le_of_ne (norm_nonneg x) (ne.symm h)],
+  exact [expr (div_le_iff hlt).mp (le_cInf bounds_nonempty (λ
+     (c)
+     ⟨_, hc⟩, «expr $ »((div_le_iff hlt).mpr, by { apply [expr hc] })))]
+end
 
 theorem le_op_norm_of_le {c : ℝ} {x} (h : ∥x∥ ≤ c) : ∥f x∥ ≤ ∥f∥*c :=
   le_transₓ (f.le_op_norm x) (mul_le_mul_of_nonneg_left h f.op_norm_nonneg)
@@ -879,96 +876,81 @@ variable{G : Type _}[NormedGroup G][CompleteSpace G]
 
 variable{H : Type _}[NormedGroup H]
 
+-- error in Analysis.Normed.Group.Hom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given `f : normed_group_hom G H` for some complete `G` and a subgroup `K` of `H`, if every
 element `x` of `K` has a preimage under `f` whose norm is at most `C*∥x∥` then the same holds for
 elements of the (topological) closure of `K` with constant `C+ε` instead of `C`, for any
 positive `ε`.
 -/
-theorem controlled_closure_of_complete {f : NormedGroupHom G H} {K : AddSubgroup H} {C ε : ℝ} (hC : 0 < C) (hε : 0 < ε)
-  (hyp : f.surjective_on_with K C) : f.surjective_on_with K.topological_closure (C+ε) :=
-  by 
-    rintro (h : H) (h_in : h ∈ K.topological_closure)
-    byCases' hyp_h : h = 0
-    ·
-      rw [hyp_h]
-      use 0
-      simp 
-    set b : ℕ → ℝ := fun i => (((1 / 2) ^ i)*(ε*∥h∥) / 2) / C 
-    have b_pos : ∀ i, 0 < b i
-    ·
-      intro i 
-      fieldSimp [b, hC]
-      exact
-        div_pos (mul_pos hε (norm_pos_iff.mpr hyp_h))
-          (mul_pos
-            (by 
-              normNum :
-            (0 : ℝ) < (2 ^ i)*2)
-            hC)
-    obtain
-      ⟨v : ℕ → H, lim_v : tendsto (fun n : ℕ => ∑k in range (n+1), v k) at_top (𝓝 h), v_in : ∀ n, v n ∈ K, hv₀ :
-        ∥v 0 - h∥ < b 0, hv : ∀ n _ : n > 0, ∥v n∥ < b n⟩ :=
-      controlled_sum_of_mem_closure h_in b_pos 
-    have  : ∀ n, ∃ m' : G, f m' = v n ∧ ∥m'∥ ≤ C*∥v n∥ := fun n : ℕ => hyp (v n) (v_in n)
-    choose u hu hnorm_u using this 
-    set s : ℕ → G := fun n => ∑k in range (n+1), u k 
-    have  : CauchySeq s
-    ·
-      apply
-        NormedGroup.cauchy_series_of_le_geometric''
-          (by 
-            normNum)
-          one_half_lt_one 
-      rintro n (hn : n ≥ 1)
-      calc ∥u n∥ ≤ C*∥v n∥ := hnorm_u n _ ≤ C*b n :=
-        mul_le_mul_of_nonneg_left (hv _$ nat.succ_le_iff.mp hn).le hC.le _ = ((1 / 2) ^ n)*(ε*∥h∥) / 2 :=
-        by 
-          simp [b, mul_div_cancel' _ hC.ne.symm]_ = ((ε*∥h∥) / 2)*(1 / 2) ^ n :=
-        mul_commₓ _ _ 
-    obtain ⟨g : G, hg⟩ := cauchy_seq_tendsto_of_complete this 
-    refine' ⟨g, _, _⟩
-    ·
-      have  : (f ∘ s) = fun n => ∑k in range (n+1), v k
-      ·
-        ext n 
-        simp [f.map_sum, hu]
-      rw [←this] at lim_v 
-      exact tendsto_nhds_unique ((f.continuous.tendsto g).comp hg) lim_v
-    ·
-      suffices  : ∀ n, ∥s n∥ ≤ (C+ε)*∥h∥
-      exact le_of_tendsto' (continuous_norm.continuous_at.tendsto.comp hg) this 
-      intro n 
-      have hnorm₀ : ∥u 0∥ ≤ (C*b 0)+C*∥h∥
-      ·
-        have  :=
-          calc ∥v 0∥ ≤ ∥h∥+∥v 0 - h∥ := norm_le_insert' _ _ 
-            _ ≤ ∥h∥+b 0 :=
-            by 
-              apply add_le_add_left hv₀.le 
-            
-        calc ∥u 0∥ ≤ C*∥v 0∥ := hnorm_u 0_ ≤ C*∥h∥+b 0 := mul_le_mul_of_nonneg_left this hC.le _ = (C*b 0)+C*∥h∥ :=
-          by 
-            rw [add_commₓ, mul_addₓ]
-      have  : (∑k in range (n+1), C*b k) ≤ ε*∥h∥ :=
-        calc (∑k in range (n+1), C*b k) = (∑k in range (n+1), (1 / 2) ^ k)*(ε*∥h∥) / 2 :=
-          by 
-            simp only [b, mul_div_cancel' _ hC.ne.symm, ←sum_mul]
-          _ ≤ 2*(ε*∥h∥) / 2 :=
-          mul_le_mul_of_nonneg_right (sum_geometric_two_le _)
-            (by 
-              nlinarith [hε, norm_nonneg h])
-          _ = ε*∥h∥ := mul_div_cancel' _ two_ne_zero 
-          
-      calc ∥s n∥ ≤ ∑k in range (n+1), ∥u k∥ := norm_sum_le _ _ _ = (∑k in range n, ∥u (k+1)∥)+∥u 0∥ :=
-        sum_range_succ' _ _ _ ≤ (∑k in range n, C*∥v (k+1)∥)+∥u 0∥ :=
-        add_le_add_right (sum_le_sum fun _ _ => hnorm_u _) _ _ ≤ (∑k in range n, C*b (k+1))+(C*b 0)+C*∥h∥ :=
-        add_le_add (sum_le_sum fun k _ => mul_le_mul_of_nonneg_left (hv _ k.succ_pos).le hC.le)
-          hnorm₀ _ = (∑k in range (n+1), C*b k)+C*∥h∥ :=
-        by 
-          rw [←add_assocₓ, sum_range_succ']_ ≤ (C+ε)*∥h∥ :=
-        by 
-          rw [add_commₓ, add_mulₓ]
-          apply add_le_add_left this
+theorem controlled_closure_of_complete
+{f : normed_group_hom G H}
+{K : add_subgroup H}
+{C ε : exprℝ()}
+(hC : «expr < »(0, C))
+(hε : «expr < »(0, ε))
+(hyp : f.surjective_on_with K C) : f.surjective_on_with K.topological_closure «expr + »(C, ε) :=
+begin
+  rintros ["(", ident h, ":", expr H, ")", "(", ident h_in, ":", expr «expr ∈ »(h, K.topological_closure), ")"],
+  by_cases [expr hyp_h, ":", expr «expr = »(h, 0)],
+  { rw [expr hyp_h] [],
+    use [expr 0],
+    simp [] [] [] [] [] [] },
+  set [] [ident b] [":", expr exprℕ() → exprℝ()] [":="] [expr λ
+   i, «expr / »(«expr * »(«expr ^ »(«expr / »(1, 2), i), «expr / »(«expr * »(ε, «expr∥ ∥»(h)), 2)), C)] [],
+  have [ident b_pos] [":", expr ∀ i, «expr < »(0, b i)] [],
+  { intro [ident i],
+    field_simp [] ["[", expr b, ",", expr hC, "]"] [] [],
+    exact [expr div_pos (mul_pos hε (norm_pos_iff.mpr hyp_h)) (mul_pos (by norm_num [] [] : «expr < »((0 : exprℝ()), «expr * »(«expr ^ »(2, i), 2))) hC)] },
+  obtain ["⟨", ident v, ":", expr exprℕ() → H, ",", ident lim_v, ":", expr tendsto (λ
+    n : exprℕ(), «expr∑ in , »((k), range «expr + »(n, 1), v k)) at_top (expr𝓝() h), ",", ident v_in, ":", expr ∀
+   n, «expr ∈ »(v n, K), ",", ident hv₀, ":", expr «expr < »(«expr∥ ∥»(«expr - »(v 0, h)), b 0), ",", ident hv, ":", expr ∀
+   n «expr > » 0, «expr < »(«expr∥ ∥»(v n), b n), "⟩", ":=", expr controlled_sum_of_mem_closure h_in b_pos],
+  have [] [":", expr ∀
+   n, «expr∃ , »((m' : G), «expr ∧ »(«expr = »(f m', v n), «expr ≤ »(«expr∥ ∥»(m'), «expr * »(C, «expr∥ ∥»(v n)))))] [":=", expr λ
+   n : exprℕ(), hyp (v n) (v_in n)],
+  choose [] [ident u] [ident hu, ident hnorm_u] ["using", expr this],
+  set [] [ident s] [":", expr exprℕ() → G] [":="] [expr λ n, «expr∑ in , »((k), range «expr + »(n, 1), u k)] [],
+  have [] [":", expr cauchy_seq s] [],
+  { apply [expr normed_group.cauchy_series_of_le_geometric'' (by norm_num [] []) one_half_lt_one],
+    rintro [ident n, "(", ident hn, ":", expr «expr ≥ »(n, 1), ")"],
+    calc
+      «expr ≤ »(«expr∥ ∥»(u n), «expr * »(C, «expr∥ ∥»(v n))) : hnorm_u n
+      «expr ≤ »(..., «expr * »(C, b n)) : mul_le_mul_of_nonneg_left «expr $ »(hv _, nat.succ_le_iff.mp hn).le hC.le
+      «expr = »(..., «expr * »(«expr ^ »(«expr / »(1, 2), n), «expr / »(«expr * »(ε, «expr∥ ∥»(h)), 2))) : by simp [] [] [] ["[", expr b, ",", expr mul_div_cancel' _ hC.ne.symm, "]"] [] []
+      «expr = »(..., «expr * »(«expr / »(«expr * »(ε, «expr∥ ∥»(h)), 2), «expr ^ »(«expr / »(1, 2), n))) : mul_comm _ _ },
+  obtain ["⟨", ident g, ":", expr G, ",", ident hg, "⟩", ":=", expr cauchy_seq_tendsto_of_complete this],
+  refine [expr ⟨g, _, _⟩],
+  { have [] [":", expr «expr = »(«expr ∘ »(f, s), λ n, «expr∑ in , »((k), range «expr + »(n, 1), v k))] [],
+    { ext [] [ident n] [],
+      simp [] [] [] ["[", expr f.map_sum, ",", expr hu, "]"] [] [] },
+    rw ["<-", expr this] ["at", ident lim_v],
+    exact [expr tendsto_nhds_unique ((f.continuous.tendsto g).comp hg) lim_v] },
+  { suffices [] [":", expr ∀ n, «expr ≤ »(«expr∥ ∥»(s n), «expr * »(«expr + »(C, ε), «expr∥ ∥»(h)))],
+    from [expr le_of_tendsto' (continuous_norm.continuous_at.tendsto.comp hg) this],
+    intros [ident n],
+    have [ident hnorm₀] [":", expr «expr ≤ »(«expr∥ ∥»(u 0), «expr + »(«expr * »(C, b 0), «expr * »(C, «expr∥ ∥»(h))))] [],
+    { have [] [] [":=", expr calc
+         «expr ≤ »(«expr∥ ∥»(v 0), «expr + »(«expr∥ ∥»(h), «expr∥ ∥»(«expr - »(v 0, h)))) : norm_le_insert' _ _
+         «expr ≤ »(..., «expr + »(«expr∥ ∥»(h), b 0)) : by apply [expr add_le_add_left hv₀.le]],
+      calc
+        «expr ≤ »(«expr∥ ∥»(u 0), «expr * »(C, «expr∥ ∥»(v 0))) : hnorm_u 0
+        «expr ≤ »(..., «expr * »(C, «expr + »(«expr∥ ∥»(h), b 0))) : mul_le_mul_of_nonneg_left this hC.le
+        «expr = »(..., «expr + »(«expr * »(C, b 0), «expr * »(C, «expr∥ ∥»(h)))) : by rw ["[", expr add_comm, ",", expr mul_add, "]"] [] },
+    have [] [":", expr «expr ≤ »(«expr∑ in , »((k), range «expr + »(n, 1), «expr * »(C, b k)), «expr * »(ε, «expr∥ ∥»(h)))] [":=", expr calc
+       «expr = »(«expr∑ in , »((k), range «expr + »(n, 1), «expr * »(C, b k)), «expr * »(«expr∑ in , »((k), range «expr + »(n, 1), «expr ^ »(«expr / »(1, 2), k)), «expr / »(«expr * »(ε, «expr∥ ∥»(h)), 2))) : by simp [] [] ["only"] ["[", expr b, ",", expr mul_div_cancel' _ hC.ne.symm, ",", "<-", expr sum_mul, "]"] [] []
+       «expr ≤ »(..., «expr * »(2, «expr / »(«expr * »(ε, «expr∥ ∥»(h)), 2))) : mul_le_mul_of_nonneg_right (sum_geometric_two_le _) (by nlinarith [] [] ["[", expr hε, ",", expr norm_nonneg h, "]"])
+       «expr = »(..., «expr * »(ε, «expr∥ ∥»(h))) : mul_div_cancel' _ two_ne_zero],
+    calc
+      «expr ≤ »(«expr∥ ∥»(s n), «expr∑ in , »((k), range «expr + »(n, 1), «expr∥ ∥»(u k))) : norm_sum_le _ _
+      «expr = »(..., «expr + »(«expr∑ in , »((k), range n, «expr∥ ∥»(u «expr + »(k, 1))), «expr∥ ∥»(u 0))) : sum_range_succ' _ _
+      «expr ≤ »(..., «expr + »(«expr∑ in , »((k), range n, «expr * »(C, «expr∥ ∥»(v «expr + »(k, 1)))), «expr∥ ∥»(u 0))) : add_le_add_right (sum_le_sum (λ
+        _ _, hnorm_u _)) _
+      «expr ≤ »(..., «expr + »(«expr∑ in , »((k), range n, «expr * »(C, b «expr + »(k, 1))), «expr + »(«expr * »(C, b 0), «expr * »(C, «expr∥ ∥»(h))))) : add_le_add (sum_le_sum (λ
+        k _, mul_le_mul_of_nonneg_left (hv _ k.succ_pos).le hC.le)) hnorm₀
+      «expr = »(..., «expr + »(«expr∑ in , »((k), range «expr + »(n, 1), «expr * »(C, b k)), «expr * »(C, «expr∥ ∥»(h)))) : by rw ["[", "<-", expr add_assoc, ",", expr sum_range_succ', "]"] []
+      «expr ≤ »(..., «expr * »(«expr + »(C, ε), «expr∥ ∥»(h))) : by { rw ["[", expr add_comm, ",", expr add_mul, "]"] [],
+        apply [expr add_le_add_left this] } }
+end
 
 /-- Given `f : normed_group_hom G H` for some complete `G`, if every element `x` of the image of
 an isometric immersion `j : normed_group_hom K H` has a preimage under `f` whose norm is at most

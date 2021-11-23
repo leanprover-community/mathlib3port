@@ -422,7 +422,7 @@ end
 variable(R M N)
 
 /-- The simple (aka pure) elements span the tensor product. -/
-theorem span_tmul_eq_top : Submodule.span R { t : M ⊗[R] N | ∃ m n, m ⊗ₜ n = t } = ⊤ :=
+theorem span_tmul_eq_top : Submodule.span R { t:M ⊗[R] N | ∃ m n, m ⊗ₜ n = t } = ⊤ :=
   by 
     ext t 
     simp only [Submodule.mem_top, iff_trueₓ]
@@ -707,19 +707,24 @@ section
 
 variable(R M N P)
 
--- error in LinearAlgebra.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- The associator for tensor product of R-modules, as a linear equivalence. -/
-protected
-def assoc : «expr ≃ₗ[ ] »(«expr ⊗[ ] »(«expr ⊗[ ] »(M, R, N), R, P), R, «expr ⊗[ ] »(M, R, «expr ⊗[ ] »(N, R, P))) :=
-begin
-  refine [expr linear_equiv.of_linear «expr $ »(lift, «expr $ »(lift, «expr $ »(comp (lcurry R _ _ _), mk _ _ _))) «expr $ »(lift, «expr $ »(comp (uncurry R _ _ _), «expr $ »(curry, mk _ _ _))) «expr $ »(ext, «expr $ »(linear_map.ext, λ
-     m, «expr $ »(ext', λ
-      n
-      p, _))) «expr $ »(ext, «expr $ »(flip_inj, «expr $ »(linear_map.ext, λ
-      p, «expr $ »(ext', λ
-       m
-       n, _))))]; repeat { rw [expr lift.tmul] [] <|> rw [expr compr₂_apply] [] <|> rw [expr comp_apply] [] <|> rw [expr mk_apply] [] <|> rw [expr flip_apply] [] <|> rw [expr lcurry_apply] [] <|> rw [expr uncurry_apply] [] <|> rw [expr curry_apply] [] <|> rw [expr id_apply] [] }
-end
+protected def assoc : (M ⊗[R] N) ⊗[R] P ≃ₗ[R] M ⊗[R] N ⊗[R] P :=
+  by 
+    refine'
+        LinearEquiv.ofLinear (lift$ lift$ comp (lcurry R _ _ _)$ mk _ _ _)
+          (lift$ comp (uncurry R _ _ _)$ curry$ mk _ _ _) (ext$ LinearMap.ext$ fun m => ext'$ fun n p => _)
+          (ext$ flip_inj$ LinearMap.ext$ fun p => ext'$ fun m n => _) <;>
+      repeat' 
+        first |
+          rw [lift.tmul]|
+          rw [compr₂_apply]|
+          rw [comp_apply]|
+          rw [mk_apply]|
+          rw [flip_apply]|
+          rw [lcurry_apply]|
+          rw [uncurry_apply]|
+          rw [curry_apply]|
+          rw [id_apply]
 
 end 
 
@@ -1033,17 +1038,21 @@ theorem ltensor_comp_map (g' : Q →ₗ[R] S) (f : M →ₗ[R] P) (g : N →ₗ[
 
 variable{M}
 
+-- error in LinearAlgebra.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem rtensor_pow (f : M →ₗ[R] M) (n : ℕ) : f.rtensor N ^ n = (f ^ n).rtensor N :=
-  by 
-    have h := map_pow f (id : N →ₗ[R] N) n 
-    rwa [id_pow] at h
+theorem rtensor_pow
+(f : «expr →ₗ[ ] »(M, R, M))
+(n : exprℕ()) : «expr = »(«expr ^ »(f.rtensor N, n), «expr ^ »(f, n).rtensor N) :=
+by { have [ident h] [] [":=", expr map_pow f (id : «expr →ₗ[ ] »(N, R, N)) n],
+  rwa [expr id_pow] ["at", ident h] }
 
+-- error in LinearAlgebra.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem ltensor_pow (f : N →ₗ[R] N) (n : ℕ) : f.ltensor M ^ n = (f ^ n).ltensor M :=
-  by 
-    have h := map_pow (id : M →ₗ[R] M) f n 
-    rwa [id_pow] at h
+theorem ltensor_pow
+(f : «expr →ₗ[ ] »(N, R, N))
+(n : exprℕ()) : «expr = »(«expr ^ »(f.ltensor M, n), «expr ^ »(f, n).ltensor M) :=
+by { have [ident h] [] [":=", expr map_pow (id : «expr →ₗ[ ] »(M, R, M)) f n],
+  rwa [expr id_pow] ["at", ident h] }
 
 end LinearMap
 

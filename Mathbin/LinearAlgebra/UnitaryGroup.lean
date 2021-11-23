@@ -1,6 +1,5 @@
-import Mathbin.LinearAlgebra.Matrix.NonsingularInverse 
 import Mathbin.LinearAlgebra.Matrix.ToLin 
-import Mathbin.Data.Complex.Basic
+import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
 
 /-!
 # The Unitary Group
@@ -64,7 +63,7 @@ variable(n : Type u)[DecidableEq n][Fintype n]
 
 variable(α : Type v)[CommRingₓ α][StarRing α]
 
--- error in LinearAlgebra.UnitaryGroup: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler monoid
+-- error in LinearAlgebra.UnitaryGroup: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monoid
 /--
 `unitary_group n` is the group of `n` by `n` matrices where the star-transpose is the inverse.
 -/ @[derive #[expr monoid]] def unitary_group : Type* :=

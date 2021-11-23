@@ -406,23 +406,23 @@ namespace Classical
 
 open PSet
 
+-- error in SetTheory.Zfc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- All functions are classically definable. -/
-noncomputable def all_definable : ∀ {n} F : Arity Setₓ.{u} n, definable n F
-| 0, F =>
-  let p := @Quotientₓ.exists_rep PSet _ F 
-  definable.eq_mk ⟨some p, equiv.rfl⟩ (some_spec p)
-| n+1, (F : Arity Setₓ.{u} (n+1)) =>
-  by 
-    have I := fun x => all_definable (F x)
-    refine' definable.eq_mk ⟨fun x : PSet => (@definable.resp _ _ (I («expr⟦ ⟧» x))).1, _⟩ _
-    ·
-      dsimp [arity.equiv]
-      introI x y h 
-      rw [@Quotientₓ.sound PSet _ _ _ h]
-      exact (definable.resp (F («expr⟦ ⟧» y))).2
-    refine' funext fun q => Quotientₓ.induction_on q$ fun x => _ 
-    simpRw [resp.eval_val, resp.f, Subtype.val_eq_coe, Subtype.coe_eta]
-    exact @definable.eq _ (F («expr⟦ ⟧» x)) (I («expr⟦ ⟧» x))
+noncomputable
+def all_definable : ∀ {n} (F : arity Set.{u} n), definable n F
+| 0, F := let p := @quotient.exists_rep pSet _ F in
+definable.eq_mk ⟨some p, equiv.rfl⟩ (some_spec p)
+| «expr + »(n, 1), (F : arity Set.{u} «expr + »(n, 1)) := begin
+  have [ident I] [] [":=", expr λ x, all_definable (F x)],
+  refine [expr definable.eq_mk ⟨λ x : pSet, (@definable.resp _ _ (I «expr⟦ ⟧»(x))).1, _⟩ _],
+  { dsimp [] ["[", expr arity.equiv, "]"] [] [],
+    introsI [ident x, ident y, ident h],
+    rw [expr @quotient.sound pSet _ _ _ h] [],
+    exact [expr (definable.resp (F «expr⟦ ⟧»(y))).2] },
+  refine [expr funext (λ q, «expr $ »(quotient.induction_on q, λ x, _))],
+  simp_rw ["[", expr resp.eval_val, ",", expr resp.f, ",", expr subtype.val_eq_coe, ",", expr subtype.coe_eta, "]"] [],
+  exact [expr @definable.eq _ (F «expr⟦ ⟧»(x)) (I «expr⟦ ⟧»(x))]
+end
 
 end Classical
 
@@ -588,7 +588,7 @@ instance  : HasSep Setₓ Setₓ :=
   ⟨Setₓ.sep⟩
 
 @[simp]
-theorem mem_sep {p : Setₓ.{u} → Prop} {x y : Setₓ.{u}} : y ∈ { y ∈ x | p y } ↔ y ∈ x ∧ p y :=
+theorem mem_sep {p : Setₓ.{u} → Prop} {x y : Setₓ.{u}} : y ∈ { y∈x | p y } ↔ y ∈ x ∧ p y :=
   Quotientₓ.induction_on₂ x y
     fun ⟨α, A⟩ y =>
       ⟨fun ⟨⟨a, pa⟩, h⟩ =>
@@ -683,11 +683,11 @@ protected def union (x y : Setₓ.{u}) : Setₓ.{u} :=
 
 /-- The binary intersection operation -/
 protected def inter (x y : Setₓ.{u}) : Setₓ.{u} :=
-  { z ∈ x | z ∈ y }
+  { z∈x | z ∈ y }
 
 /-- The set difference operation -/
 protected def diff (x y : Setₓ.{u}) : Setₓ.{u} :=
-  { z ∈ x | z ∉ y }
+  { z∈x | z ∉ y }
 
 instance  : HasUnion Setₓ :=
   ⟨Setₓ.unionₓ⟩
@@ -788,7 +788,7 @@ def pair (x y : Setₓ.{u}) : Setₓ.{u} :=
 
 /-- A subset of pairs `{(a, b) ∈ x × y | p a b}` -/
 def pair_sep (p : Setₓ.{u} → Setₓ.{u} → Prop) (x y : Setₓ.{u}) : Setₓ.{u} :=
-  { z ∈ powerset (powerset (x ∪ y)) | ∃ (a : _)(_ : a ∈ x), ∃ (b : _)(_ : b ∈ y), z = pair a b ∧ p a b }
+  { z∈powerset (powerset (x ∪ y)) | ∃ (a : _)(_ : a ∈ x), ∃ (b : _)(_ : b ∈ y), z = pair a b ∧ p a b }
 
 @[simp]
 theorem mem_pair_sep {p} {x y z : Setₓ.{u}} :
@@ -804,69 +804,42 @@ theorem mem_pair_sep {p} {x y z : Setₓ.{u}} :
     ·
       rintro (rfl | rfl) <;> [left, right] <;> assumption
 
-theorem pair_inj {x y x' y' : Setₓ.{u}} (H : pair x y = pair x' y') : x = x' ∧ y = y' :=
-  by 
-    have ae := ext_iff.2 H 
-    simp [pair] at ae 
-    have  : x = x'
-    ·
-      cases'
-        (ae {x}).1
-          (by 
-            simp ) with
-        h h
-      ·
-        exact singleton_inj h
-      ·
-        have m : x' ∈ ({x} : Setₓ)
-        ·
-          rw [h]
-          simp 
-        simp  at m 
-        simp 
-    subst x' 
-    have he : y = x → y = y'
-    ·
-      intro yx 
-      subst y 
-      cases'
-        (ae {x, y'}).2
-          (by 
-            simp only [eq_self_iff_true, or_trueₓ]) with
-        xy'x xy'xx
-      ·
-        rw [eq_comm, ←mem_singleton, ←xy'x, mem_pair]
-        exact Or.inr rfl
-      ·
-        have yxx :=
-          (ext_iff.2 xy'xx y').1
-            (by 
-              simp )
-        simp  at yxx 
-        subst y' 
-    have xyxy' :=
-      (ae {x, y}).1
-        (by 
-          simp )
-    cases' xyxy' with xyx xyy'
-    ·
-      have yx :=
-        (ext_iff.2 xyx y).1
-          (by 
-            simp )
-      simp  at yx 
-      simp [he yx]
-    ·
-      have yxy' :=
-        (ext_iff.2 xyy' y).1
-          (by 
-            simp )
-      simp  at yxy' 
-      cases' yxy' with yx yy'
-      ·
-        simp [he yx]
-      ·
-        simp [yy']
+-- error in SetTheory.Zfc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pair_inj
+{x y x' y' : Set.{u}}
+(H : «expr = »(pair x y, pair x' y')) : «expr ∧ »(«expr = »(x, x'), «expr = »(y, y')) :=
+begin
+  have [ident ae] [] [":=", expr ext_iff.2 H],
+  simp [] [] [] ["[", expr pair, "]"] [] ["at", ident ae],
+  have [] [":", expr «expr = »(x, x')] [],
+  { cases [expr (ae {x}).1 (by simp [] [] [] [] [] [])] ["with", ident h, ident h],
+    { exact [expr singleton_inj h] },
+    { have [ident m] [":", expr «expr ∈ »(x', ({x} : Set))] [],
+      { rw [expr h] [],
+        simp [] [] [] [] [] [] },
+      simp [] [] [] [] [] ["at", ident m],
+      simp [] [] [] ["[", "*", "]"] [] [] } },
+  subst [expr x'],
+  have [ident he] [":", expr «expr = »(y, x) → «expr = »(y, y')] [],
+  { intro [ident yx],
+    subst [expr y],
+    cases [expr (ae {x, y'}).2 (by simp [] [] ["only"] ["[", expr eq_self_iff_true, ",", expr or_true, "]"] [] [])] ["with", ident xy'x, ident xy'xx],
+    { rw ["[", expr eq_comm, ",", "<-", expr mem_singleton, ",", "<-", expr xy'x, ",", expr mem_pair, "]"] [],
+      exact [expr or.inr rfl] },
+    { have [ident yxx] [] [":=", expr (ext_iff.2 xy'xx y').1 (by simp [] [] [] [] [] [])],
+      simp [] [] [] [] [] ["at", ident yxx],
+      subst [expr y'] } },
+  have [ident xyxy'] [] [":=", expr (ae {x, y}).1 (by simp [] [] [] [] [] [])],
+  cases [expr xyxy'] ["with", ident xyx, ident xyy'],
+  { have [ident yx] [] [":=", expr (ext_iff.2 xyx y).1 (by simp [] [] [] [] [] [])],
+    simp [] [] [] [] [] ["at", ident yx],
+    simp [] [] [] ["[", expr he yx, "]"] [] [] },
+  { have [ident yxy'] [] [":=", expr (ext_iff.2 xyy' y).1 (by simp [] [] [] [] [] [])],
+    simp [] [] [] [] [] ["at", ident yxy'],
+    cases [expr yxy'] ["with", ident yx, ident yy'],
+    { simp [] [] [] ["[", expr he yx, "]"] [] [] },
+    { simp [] [] [] ["[", expr yy', "]"] [] [] } }
+end
 
 /-- The cartesian product, `{(a, b) | a ∈ x, b ∈ y}` -/
 def Prod : Setₓ.{u} → Setₓ.{u} → Setₓ.{u} :=
@@ -892,7 +865,7 @@ def is_func (x y f : Setₓ.{u}) : Prop :=
 
 /-- `funs x y` is `y ^ x`, the set of all set functions `x → y` -/
 def funs (x y : Setₓ.{u}) : Setₓ.{u} :=
-  { f ∈ powerset (Prod x y) | is_func x y f }
+  { f∈powerset (Prod x y) | is_func x y f }
 
 @[simp]
 theorem mem_funs {x y f : Setₓ.{u}} : f ∈ funs x y ↔ is_func x y f :=
@@ -1037,7 +1010,7 @@ theorem subset_hom (x y : Setₓ.{u}) : (x : Class.{u}) ⊆ y ↔ x ⊆ y :=
   Iff.rfl
 
 @[simp]
-theorem sep_hom (p : Setₓ.{u} → Prop) (x : Setₓ.{u}) : («expr↑ » { y ∈ x | p y } : Class.{u}) = { y ∈ x | p y } :=
+theorem sep_hom (p : Setₓ.{u} → Prop) (x : Setₓ.{u}) : («expr↑ » { y∈x | p y } : Class.{u}) = { y∈x | p y } :=
   Set.ext$ fun y => Setₓ.mem_sep
 
 @[simp]

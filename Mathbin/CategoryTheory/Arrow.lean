@@ -26,7 +26,7 @@ section
 
 variable(T)
 
--- error in CategoryTheory.Arrow: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in CategoryTheory.Arrow: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- The arrow category of `T` has as objects all morphisms in `T` and as morphisms commutative
      squares in `T`. -/ @[derive #[expr category]] def arrow :=
 comma.{v, v, v} («expr𝟭»() T) («expr𝟭»() T)
@@ -309,19 +309,20 @@ universe v₁ v₂ u₁ u₂
 
 variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]
 
+-- error in CategoryTheory.Arrow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A functor `C ⥤ D` induces a functor between the corresponding arrow categories. -/
-@[simps]
-def map_arrow (F : C ⥤ D) : arrow C ⥤ arrow D :=
-  { obj := fun a => { left := F.obj a.left, right := F.obj a.right, Hom := F.map a.hom },
-    map :=
-      fun a b f =>
-        { left := F.map f.left, right := F.map f.right,
-          w' :=
-            by 
-              have w := f.w 
-              simp only [id_map] at w 
-              dsimp 
-              simp only [←F.map_comp, w] } }
+@[simps #[]]
+def map_arrow (F : «expr ⥤ »(C, D)) : «expr ⥤ »(arrow C, arrow D) :=
+{ obj := λ a, { left := F.obj a.left, right := F.obj a.right, hom := F.map a.hom },
+  map := λ
+  a
+  b
+  f, { left := F.map f.left,
+    right := F.map f.right,
+    w' := by { have [ident w] [] [":=", expr f.w],
+      simp [] [] ["only"] ["[", expr id_map, "]"] [] ["at", ident w],
+      dsimp [] [] [] [],
+      simp [] [] ["only"] ["[", "<-", expr F.map_comp, ",", expr w, "]"] [] [] } } }
 
 end Functor
 

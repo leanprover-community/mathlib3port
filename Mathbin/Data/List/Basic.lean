@@ -1,4 +1,3 @@
-import Mathbin.Control.Monad.Basic 
 import Mathbin.Data.Nat.Basic
 
 /-!
@@ -115,24 +114,25 @@ theorem not_mem_cons_of_ne_of_not_mem {a y : α} {l : List α} : a ≠ y → a �
 theorem ne_and_not_mem_of_not_mem_cons {a y : α} {l : List α} : a ∉ y :: l → a ≠ y ∧ a ∉ l :=
   fun p => And.intro (ne_of_not_mem_cons p) (not_mem_of_not_mem_cons p)
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 @[simp]
-theorem mem_map
-{f : α → β}
-{b : β}
-{l : list α} : «expr ↔ »(«expr ∈ »(b, map f l), «expr∃ , »((a), «expr ∧ »(«expr ∈ »(a, l), «expr = »(f a, b)))) :=
-begin
-  induction [expr l] [] ["with", ident a, ident l, ident ihl] [],
-  { split,
-    { rintro ["⟨", "_", "⟩"] },
-    { rintro ["⟨", ident a, ",", "⟨", "_", "⟩", ",", "_", "⟩"] } },
-  { refine [expr (or_congr eq_comm ihl).trans _],
-    split,
-    { rintro ["(", ident h, "|", "⟨", ident c, ",", ident hcl, ",", ident h, "⟩", ")"],
-      exacts ["[", expr ⟨a, or.inl rfl, h⟩, ",", expr ⟨c, or.inr hcl, h⟩, "]"] },
-    { rintro ["⟨", ident c, ",", "(", ident hc, "|", ident hc, ")", ",", ident h, "⟩"],
-      exacts ["[", expr «expr $ »(or.inl, (congr_arg f hc.symm).trans h), ",", expr or.inr ⟨c, hc, h⟩, "]"] } }
-end
+theorem mem_map {f : α → β} {b : β} {l : List α} : b ∈ map f l ↔ ∃ a, a ∈ l ∧ f a = b :=
+  by 
+    induction' l with a l ihl
+    ·
+      split 
+      ·
+        rintro ⟨_⟩
+      ·
+        rintro ⟨a, ⟨_⟩, _⟩
+    ·
+      refine' (or_congr eq_comm ihl).trans _ 
+      split 
+      ·
+        rintro (h | ⟨c, hcl, h⟩)
+        exacts[⟨a, Or.inl rfl, h⟩, ⟨c, Or.inr hcl, h⟩]
+      ·
+        rintro ⟨c, hc | hc, h⟩
+        exacts[Or.inl$ (congr_argₓ f hc.symm).trans h, Or.inr ⟨c, hc, h⟩]
 
 alias mem_map ↔ List.exists_of_mem_mapₓ _
 
@@ -279,7 +279,7 @@ theorem length_injective_iff : injective (List.length : List α → ℕ) ↔ Sub
       ·
         cases hl 
       congr 
-      exactI Subsingleton.elimₓ _ _ 
+      exact Subsingleton.elimₓ _ _ 
       apply l1_ih 
       simpa using hl
 
@@ -543,16 +543,22 @@ theorem append_left_injective (t : List α) : Function.Injective fun s => s ++ t
 theorem append_left_inj {s₁ s₂ : List α} t : s₁ ++ t = s₂ ++ t ↔ s₁ = s₂ :=
   (append_left_injective t).eq_iff
 
-theorem map_eq_append_split {f : α → β} {l : List α} {s₁ s₂ : List β} (h : map f l = s₁ ++ s₂) :
-  ∃ l₁ l₂, l = l₁ ++ l₂ ∧ map f l₁ = s₁ ∧ map f l₂ = s₂ :=
-  by 
-    have  := h 
-    rw [←take_append_drop (length s₁) l] at this⊢
-    rw [map_append] at this 
-    refine' ⟨_, _, rfl, append_inj this _⟩
-    rw [length_map, length_take, min_eq_leftₓ]
-    rw [←length_map f l, h, length_append]
-    apply Nat.le_add_rightₓ
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_eq_append_split
+{f : α → β}
+{l : list α}
+{s₁ s₂ : list β}
+(h : «expr = »(map f l, «expr ++ »(s₁, s₂))) : «expr∃ , »((l₁
+  l₂), «expr ∧ »(«expr = »(l, «expr ++ »(l₁, l₂)), «expr ∧ »(«expr = »(map f l₁, s₁), «expr = »(map f l₂, s₂)))) :=
+begin
+  have [] [] [":=", expr h],
+  rw ["[", "<-", expr take_append_drop (length s₁) l, "]"] ["at", ident this, "⊢"],
+  rw [expr map_append] ["at", ident this],
+  refine [expr ⟨_, _, rfl, append_inj this _⟩],
+  rw ["[", expr length_map, ",", expr length_take, ",", expr min_eq_left, "]"] [],
+  rw ["[", "<-", expr length_map f l, ",", expr h, ",", expr length_append, "]"] [],
+  apply [expr nat.le_add_right]
+end
 
 /-! ### repeat -/
 
@@ -1060,10 +1066,12 @@ theorem head_mem_head' [Inhabited α] : ∀ {l : List α} h : l ≠ [], head l �
 theorem cons_head_tail [Inhabited α] {l : List α} (h : l ≠ []) : head l :: tail l = l :=
   cons_head'_tail (head_mem_head' h)
 
-theorem head_mem_self [Inhabited α] {l : List α} (h : l ≠ nil) : l.head ∈ l :=
-  by 
-    have h' := mem_cons_self l.head l.tail 
-    rwa [cons_head_tail h] at h'
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem head_mem_self [inhabited α] {l : list α} (h : «expr ≠ »(l, nil)) : «expr ∈ »(l.head, l) :=
+begin
+  have [ident h'] [] [":=", expr mem_cons_self l.head l.tail],
+  rwa [expr cons_head_tail h] ["at", ident h']
+end
 
 @[simp]
 theorem head'_map (f : α → β) l : head' (map f l) = (head' l).map f :=
@@ -1108,26 +1116,27 @@ def reverse_rec_on {C : List α → Sort _} (l : List α) (H0 : C []) (H1 : ∀ 
       rw [reverse_cons]
       exact H1 _ _ ih
 
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Bidirectional induction principle for lists: if a property holds for the empty list, the
 singleton list, and `a :: (l ++ [b])` from `l`, then it holds for all lists. This can be used to
 prove statements about palindromes. The principle is given for a `Sort`-valued predicate, i.e., it
 can also be used to construct data. -/
-def bidirectional_rec {C : List α → Sort _} (H0 : C []) (H1 : ∀ a : α, C [a])
-  (Hn : ∀ a : α l : List α b : α, C l → C (a :: (l ++ [b]))) : ∀ l, C l
-| [] => H0
-| [a] => H1 a
-| a :: b :: l =>
-  let l' := init (b :: l)
-  let b' := last (b :: l) (cons_ne_nil _ _)
-  have  : length l' < length (a :: b :: l) :=
-    by 
-      change _ < length l+2
-      simp 
-  by 
-    rw [←init_append_last (cons_ne_nil b l)]
-    have  : C l' 
-    exact bidirectional_rec l' 
-    exact Hn a l' b' ‹C l'›
+def bidirectional_rec
+{C : list α → Sort*}
+(H0 : C «expr[ , ]»([]))
+(H1 : ∀ a : α, C «expr[ , ]»([a]))
+(Hn : ∀ (a : α) (l : list α) (b : α), C l → C «expr :: »(a, «expr ++ »(l, «expr[ , ]»([b])))) : ∀ l, C l
+| «expr[ , ]»([]) := H0
+| «expr[ , ]»([a]) := H1 a
+| «expr :: »(a, «expr :: »(b, l)) := let l' := init «expr :: »(b, l), b' := last «expr :: »(b, l) (cons_ne_nil _ _) in
+have «expr < »(length l', length «expr :: »(a, «expr :: »(b, l))), by { change [expr «expr < »(_, «expr + »(length l, 2))] [] [],
+  simp [] [] [] [] [] [] },
+begin
+  rw ["<-", expr init_append_last (cons_ne_nil b l)] [],
+  have [] [":", expr C l'] [],
+  from [expr bidirectional_rec l'],
+  exact [expr Hn a l' b' «expr‹ ›»(C l')]
+end
 
 /-- Like `bidirectional_rec`, but with the list parameter placed first. -/
 @[elab_as_eliminator]
@@ -1416,7 +1425,7 @@ theorem nth_eq_some {l : List α} {n a} : nth l n = some a ↔ ∃ h, nth_le l n
           rw [nth_le_nth h] at e <;> injection e with e <;> apply nth_le_mem⟩,
     fun ⟨h, e⟩ => e ▸ nth_le_nth _⟩
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 @[simp] theorem nth_eq_none_iff : ∀ {l : list α} {n}, «expr ↔ »(«expr = »(nth l n, none), «expr ≤ »(length l, n)) :=
 begin
   intros [],
@@ -1453,7 +1462,7 @@ theorem nth_zero (l : List α) : l.nth 0 = l.head' :=
   by 
     cases l <;> rfl
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem nth_injective
 {α : Type u}
 {xs : list α}
@@ -1590,19 +1599,13 @@ theorem nth_le_cons_length (x : α) (xs : List α) (n : ℕ) (h : n = xs.length)
     congr 
     simp [h]
 
-@[ext]
-theorem ext : ∀ {l₁ l₂ : List α}, (∀ n, nth l₁ n = nth l₂ n) → l₁ = l₂
-| [], [], h => rfl
-| a :: l₁, [], h =>
-  by 
-    have h0 := h 0 <;> contradiction
-| [], a' :: l₂, h =>
-  by 
-    have h0 := h 0 <;> contradiction
-| a :: l₁, a' :: l₂, h =>
-  by 
-    have h0 : some a = some a' := h 0 <;>
-      injection h0 with aa <;> simp only [aa, ext fun n => h (n+1)] <;> split  <;> rfl
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[ext #[]] theorem ext : ∀ {l₁ l₂ : list α}, ∀ n, «expr = »(nth l₁ n, nth l₂ n) → «expr = »(l₁, l₂)
+| «expr[ , ]»([]), «expr[ , ]»([]), h := rfl
+| «expr :: »(a, l₁), «expr[ , ]»([]), h := by have [ident h0] [] [":=", expr h 0]; contradiction
+| «expr[ , ]»([]), «expr :: »(a', l₂), h := by have [ident h0] [] [":=", expr h 0]; contradiction
+| «expr :: »(a, l₁), «expr :: »(a', l₂), h := by have [ident h0] [":", expr «expr = »(some a, some a')] [":=", expr h 0]; injection [expr h0] ["with", ident aa]; simp [] [] ["only"] ["[", expr aa, ",", expr ext (λ
+  n, h «expr + »(n, 1)), "]"] [] []; split; refl
 
 theorem ext_le {l₁ l₂ : List α} (hl : length l₁ = length l₂) (h : ∀ n h₁ h₂, nth_le l₁ n h₁ = nth_le l₂ n h₂) :
   l₁ = l₂ :=
@@ -1650,27 +1653,26 @@ theorem index_of_inj [DecidableEq α] {l : List α} {x y : α} (hx : x ∈ l) (h
       by 
         subst h⟩
 
-theorem nth_le_reverse_aux2 :
-  ∀ l r : List α i : Nat h1 h2, nth_le (reverse_core l r) (length l - 1 - i) h1 = nth_le l i h2
-| [], r, i, h1, h2 => absurd h2 (Nat.not_lt_zeroₓ _)
-| a :: l, r, 0, h1, h2 =>
-  by 
-    have aux := nth_le_reverse_aux1 l (a :: r) 0
-    rw [zero_addₓ] at aux 
-    exact aux _ (zero_lt_succ _)
-| a :: l, r, i+1, h1, h2 =>
-  by 
-    have aux := nth_le_reverse_aux2 l (a :: r) i 
-    have heq :=
-      calc (length (a :: l) - 1 - i+1) = length l - 1+i :=
-        by 
-          rw [add_commₓ] <;> rfl 
-        _ = length l - 1 - i :=
-        by 
-          rw [←tsub_add_eq_tsub_tsub]
-        
-    rw [←HEq] at aux 
-    apply aux
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nth_le_reverse_aux2 : ∀
+(l r : list α)
+(i : nat)
+(h1)
+(h2), «expr = »(nth_le (reverse_core l r) «expr - »(«expr - »(length l, 1), i) h1, nth_le l i h2)
+| «expr[ , ]»([]), r, i, h1, h2 := absurd h2 (nat.not_lt_zero _)
+| «expr :: »(a, l), r, 0, h1, h2 := begin
+  have [ident aux] [] [":=", expr nth_le_reverse_aux1 l «expr :: »(a, r) 0],
+  rw [expr zero_add] ["at", ident aux],
+  exact [expr aux _ (zero_lt_succ _)]
+end
+| «expr :: »(a, l), r, «expr + »(i, 1), h1, h2 := begin
+  have [ident aux] [] [":=", expr nth_le_reverse_aux2 l «expr :: »(a, r) i],
+  have [ident heq] [] [":=", expr calc
+     «expr = »(«expr - »(«expr - »(length «expr :: »(a, l), 1), «expr + »(i, 1)), «expr - »(length l, «expr + »(1, i))) : by rw [expr add_comm] []; refl
+     «expr = »(..., «expr - »(«expr - »(length l, 1), i)) : by rw ["<-", expr tsub_add_eq_tsub_tsub] []],
+  rw ["[", "<-", expr heq, "]"] ["at", ident aux],
+  apply [expr aux]
+end
 
 @[simp]
 theorem nth_le_reverse (l : List α) (i : Nat) h1 h2 : nth_le (reverse l) (length l - 1 - i) h1 = nth_le l i h2 :=
@@ -2040,17 +2042,14 @@ theorem nth_le_insert_nth_add_succ (l : List α) (x : α) (n k : ℕ) (hk' : (n+
       ·
         simpa [succ_add] using IH _ _ _
 
-theorem insert_nth_injective (n : ℕ) (x : α) : Function.Injective (insert_nth n x) :=
-  by 
-    induction' n with n IH
-    ·
-      have  : insert_nth 0 x = cons x := funext fun _ => rfl 
-      simp [this]
-    ·
-      rintro (_ | ⟨a, as⟩) (_ | ⟨b, bs⟩) h <;>
-        first |
-          simpa [IH.eq_iff] using h|
-          rfl
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem insert_nth_injective (n : exprℕ()) (x : α) : function.injective (insert_nth n x) :=
+begin
+  induction [expr n] [] ["with", ident n, ident IH] [],
+  { have [] [":", expr «expr = »(insert_nth 0 x, cons x)] [":=", expr funext (λ _, rfl)],
+    simp [] [] [] ["[", expr this, "]"] [] [] },
+  { rintros ["(", "_", "|", "⟨", ident a, ",", ident as, "⟩", ")", "(", "_", "|", "⟨", ident b, ",", ident bs, "⟩", ")", ident h]; simpa [] [] [] ["[", expr IH.eq_iff, "]"] [] ["using", expr h] <|> refl }
+end
 
 end InsertNth
 
@@ -2492,20 +2491,22 @@ theorem drop_append {l₁ l₂ : List α} (i : ℕ) : drop (l₁.length+i) (l₁
   by 
     simp [drop_append_eq_append_drop, take_all_of_le le_self_add]
 
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The `i + j`-th element of a list coincides with the `j`-th element of the list obtained by
 dropping the first `i` elements. Version designed to rewrite from the big list to the small list. -/
-theorem nth_le_drop (L : List α) {i j : ℕ} (h : (i+j) < L.length) :
-  nth_le L (i+j) h =
-    nth_le (L.drop i) j
-      (by 
-        have A : i < L.length := lt_of_le_of_ltₓ (Nat.Le.intro rfl) h 
-        rw [(take_append_drop i L).symm] at h 
-        simpa only [le_of_ltₓ A, min_eq_leftₓ, add_lt_add_iff_left, length_take, length_append] using h) :=
-  by 
-    have A : length (take i L) = i
-    ·
-      simp [le_of_ltₓ (lt_of_le_of_ltₓ (Nat.Le.intro rfl) h)]
-    rw [nth_le_of_eq (take_append_drop i L).symm h, nth_le_append_right] <;> simp [A]
+theorem nth_le_drop
+(L : list α)
+{i j : exprℕ()}
+(h : «expr < »(«expr + »(i, j), L.length)) : «expr = »(nth_le L «expr + »(i, j) h, nth_le (L.drop i) j (begin
+    have [ident A] [":", expr «expr < »(i, L.length)] [":=", expr lt_of_le_of_lt (nat.le.intro rfl) h],
+    rw [expr (take_append_drop i L).symm] ["at", ident h],
+    simpa [] [] ["only"] ["[", expr le_of_lt A, ",", expr min_eq_left, ",", expr add_lt_add_iff_left, ",", expr length_take, ",", expr length_append, "]"] [] ["using", expr h]
+  end)) :=
+begin
+  have [ident A] [":", expr «expr = »(length (take i L), i)] [],
+  by simp [] [] [] ["[", expr le_of_lt (lt_of_le_of_lt (nat.le.intro rfl) h), "]"] [] [],
+  rw ["[", expr nth_le_of_eq (take_append_drop i L).symm h, ",", expr nth_le_append_right, "]"] []; simp [] [] [] ["[", expr A, "]"] [] []
+end
 
 /--  The `i + j`-th element of a list coincides with the `j`-th element of the list obtained by
 dropping the first `i` elements. Version designed to rewrite from the small list to the big list. -/
@@ -3271,17 +3272,10 @@ theorem attach_map_val (l : List α) : l.attach.map Subtype.val = l :=
   by 
     rw [attach, map_pmap] <;> exact (pmap_eq_map _ _ _ _).trans (map_id l)
 
-@[simp]
-theorem mem_attach (l : List α) : ∀ x, x ∈ l.attach
-| ⟨a, h⟩ =>
-  by 
-    have  :=
-        mem_map.1
-          (by 
-            rw [attach_map_val] <;> exact h) <;>
-      ·
-        rcases this with ⟨⟨_, _⟩, m, rfl⟩
-        exact m
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem mem_attach (l : list α) : ∀ x, «expr ∈ »(x, l.attach)
+| ⟨a, h⟩ := by have [] [] [":=", expr mem_map.1 (by rw ["[", expr attach_map_val, "]"] []; exact [expr h])]; { rcases [expr this, "with", "⟨", "⟨", "_", ",", "_", "⟩", ",", ident m, ",", ident rfl, "⟩"],
+  exact [expr m] }
 
 @[simp]
 theorem mem_pmap {p : α → Prop} {f : ∀ a, p a → β} {l H b} : b ∈ pmap f l H ↔ ∃ (a : _)(h : a ∈ l), f a (H a h) = b :=
@@ -3578,37 +3572,31 @@ theorem filter_map_some (l : List α) : filter_map some l = l :=
   by 
     rw [filter_map_eq_map] <;> apply map_id
 
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mem_filter_map (f : α → Option β) (l : List α) {b : β} : b ∈ filter_map f l ↔ ∃ a, a ∈ l ∧ f a = some b :=
-  by 
-    induction' l with a l IH
-    ·
-      split 
-      ·
-        intro H 
-        cases H
-      ·
-        rintro ⟨_, H, _⟩
-        cases H 
-    cases' h : f a with b'
-    ·
-      have  : f a ≠ some b
-      ·
-        rw [h]
-        intro 
-        contradiction 
-      simp only [filter_map_cons_none _ _ h, IH, mem_cons_iff, or_and_distrib_right, exists_or_distrib, exists_eq_left,
-        this, false_orₓ]
-    ·
-      have  : f a = some b ↔ b = b'
-      ·
-        split  <;> intro t
-        ·
-          rw [t] at h <;> injection h
-        ·
-          exact t.symm ▸ h 
-      simp only [filter_map_cons_some _ _ _ h, IH, mem_cons_iff, or_and_distrib_right, exists_or_distrib, this,
-        exists_eq_left]
+theorem mem_filter_map
+(f : α → option β)
+(l : list α)
+{b : β} : «expr ↔ »(«expr ∈ »(b, filter_map f l), «expr∃ , »((a), «expr ∧ »(«expr ∈ »(a, l), «expr = »(f a, some b)))) :=
+begin
+  induction [expr l] [] ["with", ident a, ident l, ident IH] [],
+  { split,
+    { intro [ident H],
+      cases [expr H] [] },
+    { rintro ["⟨", "_", ",", ident H, ",", "_", "⟩"],
+      cases [expr H] [] } },
+  cases [expr h, ":", expr f a] ["with", ident b'],
+  { have [] [":", expr «expr ≠ »(f a, some b)] [],
+    { rw [expr h] [],
+      intro [],
+      contradiction },
+    simp [] [] ["only"] ["[", expr filter_map_cons_none _ _ h, ",", expr IH, ",", expr mem_cons_iff, ",", expr or_and_distrib_right, ",", expr exists_or_distrib, ",", expr exists_eq_left, ",", expr this, ",", expr false_or, "]"] [] [] },
+  { have [] [":", expr «expr ↔ »(«expr = »(f a, some b), «expr = »(b, b'))] [],
+    { split; intro [ident t],
+      { rw [expr t] ["at", ident h]; injection [expr h] [] },
+      { exact [expr «expr ▸ »(t.symm, h)] } },
+    simp [] [] ["only"] ["[", expr filter_map_cons_some _ _ _ h, ",", expr IH, ",", expr mem_cons_iff, ",", expr or_and_distrib_right, ",", expr exists_or_distrib, ",", expr this, ",", expr exists_eq_left, "]"] [] [] }
+end
 
 theorem map_filter_map_of_inv (f : α → Option β) (g : β → α) (H : ∀ x : α, (f x).map g = some x) (l : List α) :
   map g (filter_map f l) = l :=
@@ -3665,25 +3653,20 @@ theorem reduce_option_length_le (l : List (Option α)) : l.reduce_option.length 
       ·
         simpa only [length, add_le_add_iff_right, reduce_option_cons_of_some] using hl
 
-theorem reduce_option_length_eq_iff {l : List (Option α)} :
-  l.reduce_option.length = l.length ↔ ∀ x _ : x ∈ l, Option.isSome x :=
-  by 
-    induction' l with hd tl hl
-    ·
-      simp only [forall_const, reduce_option_nil, not_mem_nil, forall_prop_of_false, eq_self_iff_true, length,
-        not_false_iff]
-    ·
-      cases hd
-      ·
-        simp only [mem_cons_iff, forall_eq_or_imp, Bool.coe_sort_ff, false_andₓ, reduce_option_cons_of_none, length,
-          Option.is_some_none, iff_falseₓ]
-        intro H 
-        have  := reduce_option_length_le tl 
-        rw [H] at this 
-        exact absurd (Nat.lt_succ_selfₓ _) (not_lt_of_le this)
-      ·
-        simp only [hl, true_andₓ, mem_cons_iff, forall_eq_or_imp, add_left_injₓ, Bool.coe_sort_tt, length,
-          Option.is_some_some, reduce_option_cons_of_some]
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem reduce_option_length_eq_iff
+{l : list (option α)} : «expr ↔ »(«expr = »(l.reduce_option.length, l.length), ∀ x «expr ∈ » l, option.is_some x) :=
+begin
+  induction [expr l] [] ["with", ident hd, ident tl, ident hl] [],
+  { simp [] [] ["only"] ["[", expr forall_const, ",", expr reduce_option_nil, ",", expr not_mem_nil, ",", expr forall_prop_of_false, ",", expr eq_self_iff_true, ",", expr length, ",", expr not_false_iff, "]"] [] [] },
+  { cases [expr hd] [],
+    { simp [] [] ["only"] ["[", expr mem_cons_iff, ",", expr forall_eq_or_imp, ",", expr bool.coe_sort_ff, ",", expr false_and, ",", expr reduce_option_cons_of_none, ",", expr length, ",", expr option.is_some_none, ",", expr iff_false, "]"] [] [],
+      intro [ident H],
+      have [] [] [":=", expr reduce_option_length_le tl],
+      rw [expr H] ["at", ident this],
+      exact [expr absurd (nat.lt_succ_self _) (not_lt_of_le this)] },
+    { simp [] [] ["only"] ["[", expr hl, ",", expr true_and, ",", expr mem_cons_iff, ",", expr forall_eq_or_imp, ",", expr add_left_inj, ",", expr bool.coe_sort_tt, ",", expr length, ",", expr option.is_some_some, ",", expr reduce_option_cons_of_some, "]"] [] [] } }
+end
 
 theorem reduce_option_length_lt_iff {l : List (Option α)} : l.reduce_option.length < l.length ↔ none ∈ l :=
   by 
@@ -3787,22 +3770,21 @@ theorem monotone_filter_left (p : α → Prop) [DecidablePred p] ⦃l l' : List 
     rw [mem_filter] at hx⊢
     exact ⟨h hx.left, hx.right⟩
 
-theorem filter_eq_self {l} : filter p l = l ↔ ∀ a _ : a ∈ l, p a :=
-  by 
-    induction' l with a l ih
-    ·
-      exact iff_of_true rfl (forall_mem_nil _)
-    rw [forall_mem_cons]
-    byCases' p a
-    ·
-      rw [filter_cons_of_pos _ h, cons_inj, ih, and_iff_right h]
-    ·
-      rw [filter_cons_of_neg _ h]
-      refine' iff_of_false _ (mt And.left h)
-      intro e 
-      have  := filter_sublist l 
-      rw [e] at this 
-      exact not_lt_of_geₓ (length_le_of_sublist this) (lt_succ_self _)
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem filter_eq_self {l} : «expr ↔ »(«expr = »(filter p l, l), ∀ a «expr ∈ » l, p a) :=
+begin
+  induction [expr l] [] ["with", ident a, ident l, ident ih] [],
+  { exact [expr iff_of_true rfl (forall_mem_nil _)] },
+  rw [expr forall_mem_cons] [],
+  by_cases [expr p a],
+  { rw ["[", expr filter_cons_of_pos _ h, ",", expr cons_inj, ",", expr ih, ",", expr and_iff_right h, "]"] [] },
+  { rw ["[", expr filter_cons_of_neg _ h, "]"] [],
+    refine [expr iff_of_false _ (mt and.left h)],
+    intro [ident e],
+    have [] [] [":=", expr filter_sublist l],
+    rw [expr e] ["at", ident this],
+    exact [expr not_lt_of_ge (length_le_of_sublist this) (lt_succ_self _)] }
+end
 
 theorem filter_eq_nil {l} : filter p l = [] ↔ ∀ a _ : a ∈ l, ¬p a :=
   by 
@@ -4602,36 +4584,37 @@ theorem erasep_sublist (l : List α) : l.erasep p <+ l :=
 theorem erasep_subset (l : List α) : l.erasep p ⊆ l :=
   (erasep_sublist l).Subset
 
--- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in case: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem sublist.erasep {l₁ l₂ : list α} (s : «expr <+ »(l₁, l₂)) : «expr <+ »(l₁.erasep p, l₂.erasep p) :=
-begin
-  induction [expr s] [] [] [],
-  case [ident list.sublist.slnil] { refl },
-  case [ident list.sublist.cons, ":", ident l₁, ident l₂, ident a, ident s, ident IH] { by_cases [expr h, ":", expr p a]; simp [] [] [] ["[", expr h, "]"] [] [],
-    exacts ["[", expr IH.trans (erasep_sublist _), ",", expr IH.cons _ _ _, "]"] },
-  case [ident list.sublist.cons2, ":", ident l₁, ident l₂, ident a, ident s, ident IH] { by_cases [expr h, ":", expr p a]; simp [] [] [] ["[", expr h, "]"] [] [],
-    exacts ["[", expr s, ",", expr IH.cons2 _ _ _, "]"] }
-end
+theorem sublist.erasep {l₁ l₂ : List α} (s : l₁ <+ l₂) : l₁.erasep p <+ l₂.erasep p :=
+  by 
+    induction s 
+    case list.sublist.slnil => 
+      rfl 
+    case list.sublist.cons l₁ l₂ a s IH => 
+      byCases' h : p a <;> simp [h]
+      exacts[IH.trans (erasep_sublist _), IH.cons _ _ _]
+    case list.sublist.cons2 l₁ l₂ a s IH => 
+      byCases' h : p a <;> simp [h]
+      exacts[s, IH.cons2 _ _ _]
 
 theorem mem_of_mem_erasep {a : α} {l : List α} : a ∈ l.erasep p → a ∈ l :=
   @erasep_subset _ _ _ _ _
 
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mem_erasep_of_neg {a : α} {l : List α} (pa : ¬p a) : a ∈ l.erasep p ↔ a ∈ l :=
-  ⟨mem_of_mem_erasep,
-    fun al =>
-      by 
-        rcases exists_or_eq_self_of_erasep p l with (h | ⟨c, l₁, l₂, h₁, h₂, h₃, h₄⟩)
-        ·
-          rwa [h]
-        ·
-          rw [h₄]
-          rw [h₃] at al 
-          have  : a ≠ c
-          ·
-            rintro rfl 
-            exact pa.elim h₂ 
-          simpa [this] using al⟩
+theorem mem_erasep_of_neg
+{a : α}
+{l : list α}
+(pa : «expr¬ »(p a)) : «expr ↔ »(«expr ∈ »(a, l.erasep p), «expr ∈ »(a, l)) :=
+⟨mem_of_mem_erasep, λ al, begin
+   rcases [expr exists_or_eq_self_of_erasep p l, "with", ident h, "|", "⟨", ident c, ",", ident l₁, ",", ident l₂, ",", ident h₁, ",", ident h₂, ",", ident h₃, ",", ident h₄, "⟩"],
+   { rwa [expr h] [] },
+   { rw [expr h₄] [],
+     rw [expr h₃] ["at", ident al],
+     have [] [":", expr «expr ≠ »(a, c)] [],
+     { rintro [ident rfl],
+       exact [expr pa.elim h₂] },
+     simpa [] [] [] ["[", expr this, "]"] [] ["using", expr al] }
+ end⟩
 
 theorem erasep_map (f : β → α) : ∀ l : List β, (map f l).erasep p = map f (l.erasep (p ∘ f))
 | [] => rfl
@@ -5092,10 +5075,13 @@ theorem map₂_right_eq_map₂_right' : map₂_right f as bs = (map₂_right' f 
   by 
     simp only [map₂_right, map₂_right', map₂_left_eq_map₂_left']
 
-theorem map₂_right_eq_map₂ (h : length bs ≤ length as) : map₂_right f as bs = map₂ (fun a b => f (some a) b) as bs :=
-  by 
-    have  : (fun a b => flip f a (some b)) = flip fun a b => f (some a) b := rfl 
-    simp only [map₂_right, map₂_left_eq_map₂, map₂_flip]
+-- error in Data.List.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map₂_right_eq_map₂
+(h : «expr ≤ »(length bs, length as)) : «expr = »(map₂_right f as bs, map₂ (λ a b, f (some a) b) as bs) :=
+begin
+  have [] [":", expr «expr = »(λ a b, flip f a (some b), flip (λ a b, f (some a) b))] [":=", expr rfl],
+  simp [] [] ["only"] ["[", expr map₂_right, ",", expr map₂_left_eq_map₂, ",", expr map₂_flip, ",", "*", "]"] [] []
+end
 
 end Map₂Right
 

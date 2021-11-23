@@ -142,28 +142,32 @@ theorem cpow_int_cast (x : ℂ) : ∀ n : ℤ, (x^(n : ℂ)) = (x^n)
       simp only [Int.neg_succ_of_nat_coe, Int.cast_neg, Complex.cpow_neg, inv_eq_one_div, Int.cast_coe_nat,
         cpow_nat_cast]
 
-theorem cpow_nat_inv_pow (x : ℂ) {n : ℕ} (hn : 0 < n) : ((x^(n⁻¹ : ℂ))^n) = x :=
-  by 
-    suffices  : im (log x*n⁻¹) ∈ Set.Ioc (-π) π
-    ·
-      rw [←cpow_nat_cast, ←cpow_mul _ this.1 this.2, inv_mul_cancel, cpow_one]
-      exactModCast hn.ne' 
-    rw [mul_commₓ, ←of_real_nat_cast, ←of_real_inv, of_real_mul_im, ←div_eq_inv_mul]
-    have hn' : 0 < (n : ℝ)
-    ·
-      assumptionModCast 
-    have hn1 : 1 ≤ (n : ℝ)
-    ·
-      exactModCast Nat.succ_le_iff.2 hn 
-    split 
-    ·
-      rw [lt_div_iff hn']
-      calc ((-π)*n) ≤ (-π)*1 := mul_le_mul_of_nonpos_left hn1 (neg_nonpos.2 real.pi_pos.le)_ = -π :=
-        mul_oneₓ _ _ < im (log x) := neg_pi_lt_log_im _
-    ·
-      rw [div_le_iff hn']
-      calc im (log x) ≤ π := log_im_le_pi _ _ = π*1 := (mul_oneₓ π).symm _ ≤ π*n :=
-        mul_le_mul_of_nonneg_left hn1 real.pi_pos.le
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cpow_nat_inv_pow
+(x : exprℂ())
+{n : exprℕ()}
+(hn : «expr < »(0, n)) : «expr = »(«expr ^ »(«expr ^ »(x, («expr ⁻¹»(n) : exprℂ())), n), x) :=
+begin
+  suffices [] [":", expr «expr ∈ »(im «expr * »(log x, «expr ⁻¹»(n)), set.Ioc «expr- »(exprπ()) exprπ())],
+  { rw ["[", "<-", expr cpow_nat_cast, ",", "<-", expr cpow_mul _ this.1 this.2, ",", expr inv_mul_cancel, ",", expr cpow_one, "]"] [],
+    exact_mod_cast [expr hn.ne'] },
+  rw ["[", expr mul_comm, ",", "<-", expr of_real_nat_cast, ",", "<-", expr of_real_inv, ",", expr of_real_mul_im, ",", "<-", expr div_eq_inv_mul, "]"] [],
+  have [ident hn'] [":", expr «expr < »(0, (n : exprℝ()))] [],
+  by assumption_mod_cast,
+  have [ident hn1] [":", expr «expr ≤ »(1, (n : exprℝ()))] [],
+  by exact_mod_cast [expr nat.succ_le_iff.2 hn],
+  split,
+  { rw [expr lt_div_iff hn'] [],
+    calc
+      «expr ≤ »(«expr * »(«expr- »(exprπ()), n), «expr * »(«expr- »(exprπ()), 1)) : mul_le_mul_of_nonpos_left hn1 (neg_nonpos.2 real.pi_pos.le)
+      «expr = »(..., «expr- »(exprπ())) : mul_one _
+      «expr < »(..., im (log x)) : neg_pi_lt_log_im _ },
+  { rw [expr div_le_iff hn'] [],
+    calc
+      «expr ≤ »(im (log x), exprπ()) : log_im_le_pi _
+      «expr = »(..., «expr * »(exprπ(), 1)) : (mul_one exprπ()).symm
+      «expr ≤ »(..., «expr * »(exprπ(), n)) : mul_le_mul_of_nonneg_left hn1 real.pi_pos.le }
+end
 
 end Complex
 
@@ -204,19 +208,19 @@ theorem cpow_eq_nhds' {p : ℂ × ℂ} (hp_fst : p.fst ≠ 0) : (fun x => x.1^x.
             dsimp only 
             rw [cpow_def_of_ne_zero hx]
     refine' IsOpen.eventually_mem _ hp_fst 
-    change IsOpen («expr ᶜ» { x : ℂ × ℂ | x.1 = 0 })
+    change IsOpen («expr ᶜ» { x:ℂ × ℂ | x.1 = 0 })
     rw [is_open_compl_iff]
     exact is_closed_eq continuous_fst continuous_const
 
-theorem continuous_at_const_cpow {a b : ℂ} (ha : a ≠ 0) : ContinuousAt (cpow a) b :=
-  by 
-    have cpow_eq : cpow a = fun b => exp (log a*b)
-    ·
-      ·
-        ext1 b 
-        rw [cpow_eq_pow, cpow_def_of_ne_zero ha]
-    rw [cpow_eq]
-    exact continuous_exp.continuous_at.comp (ContinuousAt.mul continuous_at_const continuous_at_id)
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_at_const_cpow {a b : exprℂ()} (ha : «expr ≠ »(a, 0)) : continuous_at (cpow a) b :=
+begin
+  have [ident cpow_eq] [":", expr «expr = »(cpow a, λ b, exp «expr * »(log a, b))] [],
+  by { ext1 [] [ident b],
+    rw ["[", expr cpow_eq_pow, ",", expr cpow_def_of_ne_zero ha, "]"] [] },
+  rw [expr cpow_eq] [],
+  exact [expr continuous_exp.continuous_at.comp (continuous_at.mul continuous_at_const continuous_at_id)]
+end
 
 theorem continuous_at_const_cpow' {a b : ℂ} (h : b ≠ 0) : ContinuousAt (cpow a) b :=
   by 
@@ -227,35 +231,35 @@ theorem continuous_at_const_cpow' {a b : ℂ} (h : b ≠ 0) : ContinuousAt (cpow
     ·
       exact continuous_at_const_cpow ha
 
-theorem continuous_at_cpow_const {a b : ℂ} (ha : 0 < a.re ∨ a.im ≠ 0) : ContinuousAt (fun x => cpow x b) a :=
-  by 
-    have ha_ne_zero : a ≠ 0
-    ·
-      ·
-        intro h 
-        cases ha <;>
-          ·
-            rw [h] at ha 
-            simpa using ha 
-    rw [continuous_at_congr (cpow_eq_nhds ha_ne_zero)]
-    refine' continuous_exp.continuous_at.comp _ 
-    exact ContinuousAt.mul (continuous_at_clog ha) continuous_at_const
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_at_cpow_const
+{a b : exprℂ()}
+(ha : «expr ∨ »(«expr < »(0, a.re), «expr ≠ »(a.im, 0))) : continuous_at (λ x, cpow x b) a :=
+begin
+  have [ident ha_ne_zero] [":", expr «expr ≠ »(a, 0)] [],
+  by { intro [ident h],
+    cases [expr ha] []; { rw [expr h] ["at", ident ha],
+      simpa [] [] [] [] [] ["using", expr ha] } },
+  rw [expr continuous_at_congr (cpow_eq_nhds ha_ne_zero)] [],
+  refine [expr continuous_exp.continuous_at.comp _],
+  exact [expr continuous_at.mul (continuous_at_clog ha) continuous_at_const]
+end
 
-theorem continuous_at_cpow {p : ℂ × ℂ} (hp_fst : 0 < p.fst.re ∨ p.fst.im ≠ 0) :
-  ContinuousAt (fun x : ℂ × ℂ => x.1^x.2) p :=
-  by 
-    have hp_fst_ne_zero : p.fst ≠ 0
-    ·
-      ·
-        intro h 
-        cases hp_fst <;>
-          ·
-            rw [h] at hp_fst 
-            simpa using hp_fst 
-    rw [continuous_at_congr (cpow_eq_nhds' hp_fst_ne_zero)]
-    refine' continuous_exp.continuous_at.comp _ 
-    refine' ContinuousAt.mul (ContinuousAt.comp _ continuous_fst.continuous_at) continuous_snd.continuous_at 
-    exact continuous_at_clog hp_fst
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_at_cpow
+{p : «expr × »(exprℂ(), exprℂ())}
+(hp_fst : «expr ∨ »(«expr < »(0, p.fst.re), «expr ≠ »(p.fst.im, 0))) : continuous_at (λ
+ x : «expr × »(exprℂ(), exprℂ()), «expr ^ »(x.1, x.2)) p :=
+begin
+  have [ident hp_fst_ne_zero] [":", expr «expr ≠ »(p.fst, 0)] [],
+  by { intro [ident h],
+    cases [expr hp_fst] []; { rw [expr h] ["at", ident hp_fst],
+      simpa [] [] [] [] [] ["using", expr hp_fst] } },
+  rw [expr continuous_at_congr (cpow_eq_nhds' hp_fst_ne_zero)] [],
+  refine [expr continuous_exp.continuous_at.comp _],
+  refine [expr continuous_at.mul (continuous_at.comp _ continuous_fst.continuous_at) continuous_snd.continuous_at],
+  exact [expr continuous_at_clog hp_fst]
+end
 
 theorem Filter.Tendsto.cpow {l : Filter α} {f g : α → ℂ} {a b : ℂ} (hf : tendsto f l (𝓝 a)) (hg : tendsto g l (𝓝 b))
   (ha : 0 < a.re ∨ a.im ≠ 0) : tendsto (fun x => f x^g x) l (𝓝 (a^b)) :=
@@ -347,21 +351,21 @@ theorem rpow_eq_zero_iff_of_nonneg {x y : ℝ} (hx : 0 ≤ x) : (x^y) = 0 ↔ x 
 
 open_locale Real
 
-theorem rpow_def_of_neg {x : ℝ} (hx : x < 0) (y : ℝ) : (x^y) = exp (log x*y)*cos (y*π) :=
-  by 
-    rw [rpow_def, Complex.cpow_def, if_neg]
-    have  : (Complex.log x*y) = «expr↑ » (log (-x)*y)+«expr↑ » (y*π)*Complex.i
-    ·
-      simp only [Complex.log, abs_of_neg hx, Complex.arg_of_real_of_neg hx, Complex.abs_of_real, Complex.of_real_mul]
-      ring
-    ·
-      rw [this, Complex.exp_add_mul_I, ←Complex.of_real_exp, ←Complex.of_real_cos, ←Complex.of_real_sin, mul_addₓ,
-        ←Complex.of_real_mul, ←mul_assocₓ, ←Complex.of_real_mul, Complex.add_re, Complex.of_real_re, Complex.mul_re,
-        Complex.I_re, Complex.of_real_im, Real.log_neg_eq_log]
-      ring
-    ·
-      rw [Complex.of_real_eq_zero]
-      exact ne_of_ltₓ hx
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem rpow_def_of_neg
+{x : exprℝ()}
+(hx : «expr < »(x, 0))
+(y : exprℝ()) : «expr = »(«expr ^ »(x, y), «expr * »(exp «expr * »(log x, y), cos «expr * »(y, exprπ()))) :=
+begin
+  rw ["[", expr rpow_def, ",", expr complex.cpow_def, ",", expr if_neg, "]"] [],
+  have [] [":", expr «expr = »(«expr * »(complex.log x, y), «expr + »(«expr↑ »(«expr * »(log «expr- »(x), y)), «expr * »(«expr↑ »(«expr * »(y, exprπ())), complex.I)))] [],
+  { simp [] [] ["only"] ["[", expr complex.log, ",", expr abs_of_neg hx, ",", expr complex.arg_of_real_of_neg hx, ",", expr complex.abs_of_real, ",", expr complex.of_real_mul, "]"] [] [],
+    ring [] },
+  { rw ["[", expr this, ",", expr complex.exp_add_mul_I, ",", "<-", expr complex.of_real_exp, ",", "<-", expr complex.of_real_cos, ",", "<-", expr complex.of_real_sin, ",", expr mul_add, ",", "<-", expr complex.of_real_mul, ",", "<-", expr mul_assoc, ",", "<-", expr complex.of_real_mul, ",", expr complex.add_re, ",", expr complex.of_real_re, ",", expr complex.mul_re, ",", expr complex.I_re, ",", expr complex.of_real_im, ",", expr real.log_neg_eq_log, "]"] [],
+    ring [] },
+  { rw [expr complex.of_real_eq_zero] [],
+    exact [expr ne_of_lt hx] }
+end
 
 theorem rpow_def_of_nonpos {x : ℝ} (hx : x ≤ 0) (y : ℝ) :
   (x^y) = if x = 0 then if y = 0 then 1 else 0 else exp (log x*y)*cos (y*π) :=
@@ -450,11 +454,15 @@ theorem abs_rpow_le_exp_log_mul (x y : ℝ) : |x^y| ≤ exp (log x*y) :=
     ·
       rw [rpow_def_of_pos (abs_pos.2 hx), log_abs]
 
-theorem abs_rpow_of_nonneg {x y : ℝ} (hx_nonneg : 0 ≤ x) : |x^y| = (|x|^y) :=
-  by 
-    have h_rpow_nonneg : 0 ≤ (x^y)
-    exact Real.rpow_nonneg_of_nonneg hx_nonneg _ 
-    rw [abs_eq_self.mpr hx_nonneg, abs_eq_self.mpr h_rpow_nonneg]
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem abs_rpow_of_nonneg
+{x y : exprℝ()}
+(hx_nonneg : «expr ≤ »(0, x)) : «expr = »(«expr| |»(«expr ^ »(x, y)), «expr ^ »(«expr| |»(x), y)) :=
+begin
+  have [ident h_rpow_nonneg] [":", expr «expr ≤ »(0, «expr ^ »(x, y))] [],
+  from [expr real.rpow_nonneg_of_nonneg hx_nonneg _],
+  rw ["[", expr abs_eq_self.mpr hx_nonneg, ",", expr abs_eq_self.mpr h_rpow_nonneg, "]"] []
+end
 
 theorem norm_rpow_of_nonneg {x y : ℝ} (hx_nonneg : 0 ≤ x) : ∥x^y∥ = (∥x∥^y) :=
   by 
@@ -492,16 +500,20 @@ theorem rpow_add {x : ℝ} (hx : 0 < x) (y z : ℝ) : (x^y+z) = (x^y)*x^z :=
   by 
     simp only [rpow_def_of_pos hx, mul_addₓ, exp_add]
 
-theorem rpow_add' {x : ℝ} (hx : 0 ≤ x) {y z : ℝ} (h : (y+z) ≠ 0) : (x^y+z) = (x^y)*x^z :=
-  by 
-    rcases hx.eq_or_lt with (rfl | pos)
-    ·
-      rw [zero_rpow h, zero_eq_mul]
-      have  : y ≠ 0 ∨ z ≠ 0 
-      exact not_and_distrib.1 fun ⟨hy, hz⟩ => h$ hy.symm ▸ hz.symm ▸ zero_addₓ 0 
-      exact this.imp zero_rpow zero_rpow
-    ·
-      exact rpow_add Pos _ _
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem rpow_add'
+{x : exprℝ()}
+(hx : «expr ≤ »(0, x))
+{y z : exprℝ()}
+(h : «expr ≠ »(«expr + »(y, z), 0)) : «expr = »(«expr ^ »(x, «expr + »(y, z)), «expr * »(«expr ^ »(x, y), «expr ^ »(x, z))) :=
+begin
+  rcases [expr hx.eq_or_lt, "with", ident rfl, "|", ident pos],
+  { rw ["[", expr zero_rpow h, ",", expr zero_eq_mul, "]"] [],
+    have [] [":", expr «expr ∨ »(«expr ≠ »(y, 0), «expr ≠ »(z, 0))] [],
+    from [expr not_and_distrib.1 (λ ⟨hy, hz⟩, «expr $ »(h, «expr ▸ »(hy.symm, «expr ▸ »(hz.symm, zero_add 0))))],
+    exact [expr this.imp zero_rpow zero_rpow] },
+  { exact [expr rpow_add pos _ _] }
+end
 
 /-- For `0 ≤ x`, the only problematic case in the equality `x ^ y * x ^ z = x ^ (y + z)` is for
 `x = 0` and `y + z = 0`, where the right hand side is `1` while the left hand side can vanish.
@@ -581,35 +593,31 @@ theorem rpow_neg_one (x : ℝ) : (x^(-1 : ℝ)) = x⁻¹ :=
       exactModCast H 
     simp only [rpow_int_cast, zpow_one, zpow_neg₀]
 
-theorem mul_rpow {x y z : ℝ} (h : 0 ≤ x) (h₁ : 0 ≤ y) : ((x*y)^z) = (x^z)*y^z :=
-  by 
-    iterate 3
-      rw [Real.rpow_def_of_nonneg]
-    splitIfs <;> simp_all 
-    ·
-      have hx : 0 < x
-      ·
-        cases' lt_or_eq_of_leₓ h with h₂ h₂
-        ·
-          exact h₂ 
-        exFalso 
-        apply h_2 
-        exact Eq.symm h₂ 
-      have hy : 0 < y
-      ·
-        cases' lt_or_eq_of_leₓ h₁ with h₂ h₂
-        ·
-          exact h₂ 
-        exFalso 
-        apply h_3 
-        exact Eq.symm h₂ 
-      rw [log_mul (ne_of_gtₓ hx) (ne_of_gtₓ hy), add_mulₓ, exp_add]
-    ·
-      exact h₁
-    ·
-      exact h
-    ·
-      exact mul_nonneg h h₁
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mul_rpow
+{x y z : exprℝ()}
+(h : «expr ≤ »(0, x))
+(h₁ : «expr ≤ »(0, y)) : «expr = »(«expr ^ »(«expr * »(x, y), z), «expr * »(«expr ^ »(x, z), «expr ^ »(y, z))) :=
+begin
+  iterate [3] { rw [expr real.rpow_def_of_nonneg] [] },
+  split_ifs [] []; simp [] [] [] ["*"] [] ["at", "*"],
+  { have [ident hx] [":", expr «expr < »(0, x)] [],
+    { cases [expr lt_or_eq_of_le h] ["with", ident h₂, ident h₂],
+      { exact [expr h₂] },
+      exfalso,
+      apply [expr h_2],
+      exact [expr eq.symm h₂] },
+    have [ident hy] [":", expr «expr < »(0, y)] [],
+    { cases [expr lt_or_eq_of_le h₁] ["with", ident h₂, ident h₂],
+      { exact [expr h₂] },
+      exfalso,
+      apply [expr h_3],
+      exact [expr eq.symm h₂] },
+    rw ["[", expr log_mul (ne_of_gt hx) (ne_of_gt hy), ",", expr add_mul, ",", expr exp_add, "]"] [] },
+  { exact [expr h₁] },
+  { exact [expr h] },
+  { exact [expr mul_nonneg h h₁] }
+end
 
 theorem inv_rpow (hx : 0 ≤ x) (y : ℝ) : (x⁻¹^y) = (x^y)⁻¹ :=
   by 
@@ -654,47 +662,33 @@ theorem rpow_lt_rpow_iff (hx : 0 ≤ x) (hy : 0 ≤ y) (hz : 0 < z) : (x^z) < (y
 theorem rpow_le_rpow_iff (hx : 0 ≤ x) (hy : 0 ≤ y) (hz : 0 < z) : (x^z) ≤ (y^z) ↔ x ≤ y :=
   le_iff_le_iff_lt_iff_lt.2$ rpow_lt_rpow_iff hy hx hz
 
--- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem rpow_lt_rpow_of_exponent_lt
-(hx : «expr < »(1, x))
-(hyz : «expr < »(y, z)) : «expr < »(«expr ^ »(x, y), «expr ^ »(x, z)) :=
-begin
-  repeat { rw ["[", expr rpow_def_of_pos (lt_trans zero_lt_one hx), "]"] [] },
-  rw [expr exp_lt_exp] [],
-  exact [expr mul_lt_mul_of_pos_left hyz (log_pos hx)]
-end
+theorem rpow_lt_rpow_of_exponent_lt (hx : 1 < x) (hyz : y < z) : (x^y) < (x^z) :=
+  by 
+    repeat' 
+      rw [rpow_def_of_pos (lt_transₓ zero_lt_one hx)]
+    rw [exp_lt_exp]
+    exact mul_lt_mul_of_pos_left hyz (log_pos hx)
 
--- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem rpow_le_rpow_of_exponent_le
-(hx : «expr ≤ »(1, x))
-(hyz : «expr ≤ »(y, z)) : «expr ≤ »(«expr ^ »(x, y), «expr ^ »(x, z)) :=
-begin
-  repeat { rw ["[", expr rpow_def_of_pos (lt_of_lt_of_le zero_lt_one hx), "]"] [] },
-  rw [expr exp_le_exp] [],
-  exact [expr mul_le_mul_of_nonneg_left hyz (log_nonneg hx)]
-end
+theorem rpow_le_rpow_of_exponent_le (hx : 1 ≤ x) (hyz : y ≤ z) : (x^y) ≤ (x^z) :=
+  by 
+    repeat' 
+      rw [rpow_def_of_pos (lt_of_lt_of_leₓ zero_lt_one hx)]
+    rw [exp_le_exp]
+    exact mul_le_mul_of_nonneg_left hyz (log_nonneg hx)
 
--- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem rpow_lt_rpow_of_exponent_gt
-(hx0 : «expr < »(0, x))
-(hx1 : «expr < »(x, 1))
-(hyz : «expr < »(z, y)) : «expr < »(«expr ^ »(x, y), «expr ^ »(x, z)) :=
-begin
-  repeat { rw ["[", expr rpow_def_of_pos hx0, "]"] [] },
-  rw [expr exp_lt_exp] [],
-  exact [expr mul_lt_mul_of_neg_left hyz (log_neg hx0 hx1)]
-end
+theorem rpow_lt_rpow_of_exponent_gt (hx0 : 0 < x) (hx1 : x < 1) (hyz : z < y) : (x^y) < (x^z) :=
+  by 
+    repeat' 
+      rw [rpow_def_of_pos hx0]
+    rw [exp_lt_exp]
+    exact mul_lt_mul_of_neg_left hyz (log_neg hx0 hx1)
 
--- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem rpow_le_rpow_of_exponent_ge
-(hx0 : «expr < »(0, x))
-(hx1 : «expr ≤ »(x, 1))
-(hyz : «expr ≤ »(z, y)) : «expr ≤ »(«expr ^ »(x, y), «expr ^ »(x, z)) :=
-begin
-  repeat { rw ["[", expr rpow_def_of_pos hx0, "]"] [] },
-  rw [expr exp_le_exp] [],
-  exact [expr mul_le_mul_of_nonpos_left hyz (log_nonpos (le_of_lt hx0) hx1)]
-end
+theorem rpow_le_rpow_of_exponent_ge (hx0 : 0 < x) (hx1 : x ≤ 1) (hyz : z ≤ y) : (x^y) ≤ (x^z) :=
+  by 
+    repeat' 
+      rw [rpow_def_of_pos hx0]
+    rw [exp_le_exp]
+    exact mul_le_mul_of_nonpos_left hyz (log_nonpos (le_of_ltₓ hx0) hx1)
 
 theorem rpow_lt_one {x z : ℝ} (hx1 : 0 ≤ x) (hx2 : x < 1) (hz : 0 < z) : (x^z) < 1 :=
   by 
@@ -800,31 +794,31 @@ theorem rpow_nat_inv_pow_nat {x : ℝ} (hx : 0 ≤ x) {n : ℕ} (hn : 0 < n) : (
   by 
     rw [←rpow_nat_cast, ←rpow_mul hx, inv_mul_cancel hn0, rpow_one]
 
-theorem continuous_at_const_rpow {a b : ℝ} (h : a ≠ 0) : ContinuousAt (rpow a) b :=
-  by 
-    have  : rpow a = fun x : ℝ => ((a : ℂ)^(x : ℂ)).re
-    ·
-      ·
-        ext1 x 
-        rw [rpow_eq_pow, rpow_def]
-    rw [this]
-    refine' complex.continuous_re.continuous_at.comp _ 
-    refine' (continuous_at_const_cpow _).comp complex.continuous_of_real.continuous_at 
-    normCast 
-    exact h
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_at_const_rpow {a b : exprℝ()} (h : «expr ≠ »(a, 0)) : continuous_at (rpow a) b :=
+begin
+  have [] [":", expr «expr = »(rpow a, λ x : exprℝ(), «expr ^ »((a : exprℂ()), (x : exprℂ())).re)] [],
+  by { ext1 [] [ident x],
+    rw ["[", expr rpow_eq_pow, ",", expr rpow_def, "]"] [] },
+  rw [expr this] [],
+  refine [expr complex.continuous_re.continuous_at.comp _],
+  refine [expr (continuous_at_const_cpow _).comp complex.continuous_of_real.continuous_at],
+  norm_cast [],
+  exact [expr h]
+end
 
-theorem continuous_at_const_rpow' {a b : ℝ} (h : b ≠ 0) : ContinuousAt (rpow a) b :=
-  by 
-    have  : rpow a = fun x : ℝ => ((a : ℂ)^(x : ℂ)).re
-    ·
-      ·
-        ext1 x 
-        rw [rpow_eq_pow, rpow_def]
-    rw [this]
-    refine' complex.continuous_re.continuous_at.comp _ 
-    refine' (continuous_at_const_cpow' _).comp complex.continuous_of_real.continuous_at 
-    normCast 
-    exact h
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_at_const_rpow' {a b : exprℝ()} (h : «expr ≠ »(b, 0)) : continuous_at (rpow a) b :=
+begin
+  have [] [":", expr «expr = »(rpow a, λ x : exprℝ(), «expr ^ »((a : exprℂ()), (x : exprℂ())).re)] [],
+  by { ext1 [] [ident x],
+    rw ["[", expr rpow_eq_pow, ",", expr rpow_def, "]"] [] },
+  rw [expr this] [],
+  refine [expr complex.continuous_re.continuous_at.comp _],
+  refine [expr (continuous_at_const_cpow' _).comp complex.continuous_of_real.continuous_at],
+  norm_cast [],
+  exact [expr h]
+end
 
 theorem rpow_eq_nhds_of_neg {p : ℝ × ℝ} (hp_fst : p.fst < 0) :
   (fun x : ℝ × ℝ => x.1^x.2) =ᶠ[𝓝 p] fun x => exp (log x.1*x.2)*cos (x.2*π) :=
@@ -869,22 +863,25 @@ theorem continuous_at_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) : ContinuousA
       refine' (continuous_at_log _).comp continuous_fst.continuous_at 
       exact hp.lt.ne.symm
 
-theorem continuous_at_rpow_of_pos (p : ℝ × ℝ) (hp : 0 < p.2) : ContinuousAt (fun p : ℝ × ℝ => p.1^p.2) p :=
-  by 
-    cases' p with x y 
-    obtain hx | rfl := ne_or_eq x 0
-    ·
-      exact continuous_at_rpow_of_ne (x, y) hx 
-    have A : tendsto (fun p : ℝ × ℝ => exp (log p.1*p.2)) (𝓝[«expr ᶜ» {0}] 0 ×ᶠ 𝓝 y) (𝓝 0) :=
-      tendsto_exp_at_bot.comp ((tendsto_log_nhds_within_zero.comp tendsto_fst).at_bot_mul hp tendsto_snd)
-    have B : tendsto (fun p : ℝ × ℝ => p.1^p.2) (𝓝[«expr ᶜ» {0}] 0 ×ᶠ 𝓝 y) (𝓝 0) :=
-      squeeze_zero_norm (fun p => abs_rpow_le_exp_log_mul p.1 p.2) A 
-    have C : tendsto (fun p : ℝ × ℝ => p.1^p.2) (𝓝[{0}] 0 ×ᶠ 𝓝 y) (pure 0)
-    ·
-      rw [nhds_within_singleton, tendsto_pure, pure_prod, eventually_map]
-      exact (lt_mem_nhds hp).mono fun y hy => zero_rpow hy.ne' 
-    simpa only [←sup_prod, ←nhds_within_union, Set.compl_union_self, nhds_within_univ, nhds_prod_eq, ContinuousAt,
-      zero_rpow hp.ne'] using B.sup (C.mono_right (pure_le_nhds _))
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_at_rpow_of_pos
+(p : «expr × »(exprℝ(), exprℝ()))
+(hp : «expr < »(0, p.2)) : continuous_at (λ p : «expr × »(exprℝ(), exprℝ()), «expr ^ »(p.1, p.2)) p :=
+begin
+  cases [expr p] ["with", ident x, ident y],
+  obtain [ident hx, "|", ident rfl, ":=", expr ne_or_eq x 0],
+  { exact [expr continuous_at_rpow_of_ne (x, y) hx] },
+  have [ident A] [":", expr tendsto (λ
+    p : «expr × »(exprℝ(), exprℝ()), exp «expr * »(log p.1, p.2)) «expr ×ᶠ »(«expr𝓝[ ] »(«expr ᶜ»({0}), 0), expr𝓝() y) (expr𝓝() 0)] [":=", expr tendsto_exp_at_bot.comp ((tendsto_log_nhds_within_zero.comp tendsto_fst).at_bot_mul hp tendsto_snd)],
+  have [ident B] [":", expr tendsto (λ
+    p : «expr × »(exprℝ(), exprℝ()), «expr ^ »(p.1, p.2)) «expr ×ᶠ »(«expr𝓝[ ] »(«expr ᶜ»({0}), 0), expr𝓝() y) (expr𝓝() 0)] [":=", expr squeeze_zero_norm (λ
+    p, abs_rpow_le_exp_log_mul p.1 p.2) A],
+  have [ident C] [":", expr tendsto (λ
+    p : «expr × »(exprℝ(), exprℝ()), «expr ^ »(p.1, p.2)) «expr ×ᶠ »(«expr𝓝[ ] »({0}, 0), expr𝓝() y) (pure 0)] [],
+  { rw ["[", expr nhds_within_singleton, ",", expr tendsto_pure, ",", expr pure_prod, ",", expr eventually_map, "]"] [],
+    exact [expr (lt_mem_nhds hp).mono (λ y hy, zero_rpow hy.ne')] },
+  simpa [] [] ["only"] ["[", "<-", expr sup_prod, ",", "<-", expr nhds_within_union, ",", expr set.compl_union_self, ",", expr nhds_within_univ, ",", expr nhds_prod_eq, ",", expr continuous_at, ",", expr zero_rpow hp.ne', "]"] [] ["using", expr B.sup (C.mono_right (pure_le_nhds _))]
+end
 
 theorem continuous_at_rpow (p : ℝ × ℝ) (h : p.1 ≠ 0 ∨ 0 < p.2) : ContinuousAt (fun p : ℝ × ℝ => p.1^p.2) p :=
   h.elim (fun h => continuous_at_rpow_of_ne p h) fun h => continuous_at_rpow_of_pos p h
@@ -947,17 +944,16 @@ variable{z x y : ℝ}
 
 section Sqrt
 
-theorem sqrt_eq_rpow (x : ℝ) : sqrt x = (x^1 / (2 : ℝ)) :=
-  by 
-    obtain h | h := le_or_ltₓ 0 x
-    ·
-      rw [←mul_self_inj_of_nonneg (sqrt_nonneg _) (rpow_nonneg_of_nonneg h _), mul_self_sqrt h, ←sq, ←rpow_nat_cast,
-        ←rpow_mul h]
-      normNum
-    ·
-      have  : ((1 / (2 : ℝ))*π) = π / (2 : ℝ)
-      ring 
-      rw [sqrt_eq_zero_of_nonpos h.le, rpow_def_of_neg h, this, cos_pi_div_two, mul_zero]
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sqrt_eq_rpow (x : exprℝ()) : «expr = »(sqrt x, «expr ^ »(x, «expr / »(1, (2 : exprℝ())))) :=
+begin
+  obtain [ident h, "|", ident h, ":=", expr le_or_lt 0 x],
+  { rw ["[", "<-", expr mul_self_inj_of_nonneg (sqrt_nonneg _) (rpow_nonneg_of_nonneg h _), ",", expr mul_self_sqrt h, ",", "<-", expr sq, ",", "<-", expr rpow_nat_cast, ",", "<-", expr rpow_mul h, "]"] [],
+    norm_num [] [] },
+  { have [] [":", expr «expr = »(«expr * »(«expr / »(1, (2 : exprℝ())), exprπ()), «expr / »(exprπ(), (2 : exprℝ())))] [],
+    ring [],
+    rw ["[", expr sqrt_eq_zero_of_nonpos h.le, ",", expr rpow_def_of_neg h, ",", expr this, ",", expr cos_pi_div_two, ",", expr mul_zero, "]"] [] }
+end
 
 end Sqrt
 
@@ -1162,24 +1158,27 @@ theorem rpow_nat_inv_pow_nat (x :  ℝ≥0 ) {n : ℕ} (hn : 0 < n) : ((x^(n⁻�
     rw [←Nnreal.coe_eq, Nnreal.coe_pow, coe_rpow]
     exact Real.rpow_nat_inv_pow_nat x.2 hn
 
-theorem continuous_at_rpow {x :  ℝ≥0 } {y : ℝ} (h : x ≠ 0 ∨ 0 < y) :
-  ContinuousAt (fun p :  ℝ≥0  × ℝ => p.1^p.2) (x, y) :=
-  by 
-    have  :
-      (fun p :  ℝ≥0  × ℝ => p.1^p.2) = (Real.toNnreal ∘ (fun p : ℝ × ℝ => p.1^p.2) ∘ fun p :  ℝ≥0  × ℝ => (p.1.1, p.2))
-    ·
-      ext p 
-      rw [coe_rpow, Real.coe_to_nnreal _ (Real.rpow_nonneg_of_nonneg p.1.2 _)]
-      rfl 
-    rw [this]
-    refine' nnreal.continuous_of_real.continuous_at.comp (ContinuousAt.comp _ _)
-    ·
-      apply Real.continuous_at_rpow 
-      simp  at h 
-      rw [←Nnreal.coe_eq_zero x] at h 
-      exact h
-    ·
-      exact ((continuous_subtype_val.comp continuous_fst).prod_mk continuous_snd).ContinuousAt
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_at_rpow
+{x : «exprℝ≥0»()}
+{y : exprℝ()}
+(h : «expr ∨ »(«expr ≠ »(x, 0), «expr < »(0, y))) : continuous_at (λ
+ p : «expr × »(«exprℝ≥0»(), exprℝ()), «expr ^ »(p.1, p.2)) (x, y) :=
+begin
+  have [] [":", expr «expr = »(λ
+    p : «expr × »(«exprℝ≥0»(), exprℝ()), «expr ^ »(p.1, p.2), «expr ∘ »(real.to_nnreal, «expr ∘ »(λ
+      p : «expr × »(exprℝ(), exprℝ()), «expr ^ »(p.1, p.2), λ p : «expr × »(«exprℝ≥0»(), exprℝ()), (p.1.1, p.2))))] [],
+  { ext [] [ident p] [],
+    rw ["[", expr coe_rpow, ",", expr real.coe_to_nnreal _ (real.rpow_nonneg_of_nonneg p.1.2 _), "]"] [],
+    refl },
+  rw [expr this] [],
+  refine [expr nnreal.continuous_of_real.continuous_at.comp (continuous_at.comp _ _)],
+  { apply [expr real.continuous_at_rpow],
+    simp [] [] [] [] [] ["at", ident h],
+    rw ["<-", expr nnreal.coe_eq_zero x] ["at", ident h],
+    exact [expr h] },
+  { exact [expr ((continuous_subtype_val.comp continuous_fst).prod_mk continuous_snd).continuous_at] }
+end
 
 theorem _root_.real.to_nnreal_rpow_of_nonneg {x y : ℝ} (hx : 0 ≤ x) : Real.toNnreal (x^y) = (Real.toNnreal x^y) :=
   by 
@@ -1282,13 +1281,12 @@ theorem zero_rpow_def (y : ℝ) : ((0 : ℝ≥0∞)^y) = if 0 < y then 0 else if
     ·
       simp [H, asymm H, ne_of_ltₓ, zero_rpow_of_neg]
 
--- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 @[simp]
-theorem zero_rpow_mul_self
-(y : exprℝ()) : «expr = »(«expr * »(«expr ^ »((0 : «exprℝ≥0∞»()), y), «expr ^ »(0, y)), «expr ^ »(0, y)) :=
-by { rw [expr zero_rpow_def] [],
-  split_ifs [] [],
-  exacts ["[", expr zero_mul _, ",", expr one_mul _, ",", expr top_mul_top, "]"] }
+theorem zero_rpow_mul_self (y : ℝ) : (((0 : ℝ≥0∞)^y)*0^y) = (0^y) :=
+  by 
+    rw [zero_rpow_def]
+    splitIfs 
+    exacts[zero_mul _, one_mulₓ _, top_mul_top]
 
 @[normCast]
 theorem coe_rpow_of_ne_zero {x :  ℝ≥0 } (h : x ≠ 0) (y : ℝ) : ((x : ℝ≥0∞)^y) = (x^y :  ℝ≥0 ) :=
@@ -1360,7 +1358,7 @@ theorem rpow_eq_top_of_nonneg (x : ℝ≥0∞) {y : ℝ} (hy0 : 0 ≤ y) : (x^y)
     intro h 
     cases h
     ·
-      exFalso 
+      exfalso 
       rw [lt_iff_not_geₓ] at h 
       exact h.right hy0
     ·
@@ -1372,31 +1370,30 @@ theorem rpow_ne_top_of_nonneg {x : ℝ≥0∞} {y : ℝ} (hy0 : 0 ≤ y) (h : x 
 theorem rpow_lt_top_of_nonneg {x : ℝ≥0∞} {y : ℝ} (hy0 : 0 ≤ y) (h : x ≠ ⊤) : (x^y) < ⊤ :=
   lt_top_iff_ne_top.mpr (Ennreal.rpow_ne_top_of_nonneg hy0 h)
 
-theorem rpow_add {x : ℝ≥0∞} (y z : ℝ) (hx : x ≠ 0) (h'x : x ≠ ⊤) : (x^y+z) = (x^y)*x^z :=
-  by 
-    cases x
-    ·
-      exact (h'x rfl).elim 
-    have  : x ≠ 0 :=
-      fun h =>
-        by 
-          simpa [h] using hx 
-    simp [coe_rpow_of_ne_zero this, Nnreal.rpow_add this]
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem rpow_add
+{x : «exprℝ≥0∞»()}
+(y z : exprℝ())
+(hx : «expr ≠ »(x, 0))
+(h'x : «expr ≠ »(x, «expr⊤»())) : «expr = »(«expr ^ »(x, «expr + »(y, z)), «expr * »(«expr ^ »(x, y), «expr ^ »(x, z))) :=
+begin
+  cases [expr x] [],
+  { exact [expr (h'x rfl).elim] },
+  have [] [":", expr «expr ≠ »(x, 0)] [":=", expr λ h, by simpa [] [] [] ["[", expr h, "]"] [] ["using", expr hx]],
+  simp [] [] [] ["[", expr coe_rpow_of_ne_zero this, ",", expr nnreal.rpow_add this, "]"] [] []
+end
 
-theorem rpow_neg (x : ℝ≥0∞) (y : ℝ) : (x^-y) = (x^y)⁻¹ :=
-  by 
-    cases x
-    ·
-      rcases lt_trichotomyₓ y 0 with (H | H | H) <;> simp [top_rpow_of_pos, top_rpow_of_neg, H, neg_pos.mpr]
-    ·
-      byCases' h : x = 0
-      ·
-        rcases lt_trichotomyₓ y 0 with (H | H | H) <;> simp [h, zero_rpow_of_pos, zero_rpow_of_neg, H, neg_pos.mpr]
-      ·
-        have A : (x^y) ≠ 0
-        ·
-          simp [h]
-        simp [coe_rpow_of_ne_zero h, ←coe_inv A, Nnreal.rpow_neg]
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem rpow_neg (x : «exprℝ≥0∞»()) (y : exprℝ()) : «expr = »(«expr ^ »(x, «expr- »(y)), «expr ⁻¹»(«expr ^ »(x, y))) :=
+begin
+  cases [expr x] [],
+  { rcases [expr lt_trichotomy y 0, "with", ident H, "|", ident H, "|", ident H]; simp [] [] [] ["[", expr top_rpow_of_pos, ",", expr top_rpow_of_neg, ",", expr H, ",", expr neg_pos.mpr, "]"] [] [] },
+  { by_cases [expr h, ":", expr «expr = »(x, 0)],
+    { rcases [expr lt_trichotomy y 0, "with", ident H, "|", ident H, "|", ident H]; simp [] [] [] ["[", expr h, ",", expr zero_rpow_of_pos, ",", expr zero_rpow_of_neg, ",", expr H, ",", expr neg_pos.mpr, "]"] [] [] },
+    { have [ident A] [":", expr «expr ≠ »(«expr ^ »(x, y), 0)] [],
+      by simp [] [] [] ["[", expr h, "]"] [] [],
+      simp [] [] [] ["[", expr coe_rpow_of_ne_zero h, ",", "<-", expr coe_inv A, ",", expr nnreal.rpow_neg, "]"] [] [] } }
+end
 
 theorem rpow_sub {x : ℝ≥0∞} (y z : ℝ) (hx : x ≠ 0) (h'x : x ≠ ⊤) : (x^y - z) = (x^y) / (x^z) :=
   by 
@@ -1406,26 +1403,19 @@ theorem rpow_neg_one (x : ℝ≥0∞) : (x^(-1 : ℝ)) = x⁻¹ :=
   by 
     simp [rpow_neg]
 
-theorem rpow_mul (x : ℝ≥0∞) (y z : ℝ) : (x^y*z) = ((x^y)^z) :=
-  by 
-    cases x
-    ·
-      rcases lt_trichotomyₓ y 0 with (Hy | Hy | Hy) <;>
-        rcases lt_trichotomyₓ z 0 with (Hz | Hz | Hz) <;>
-          simp [Hy, Hz, zero_rpow_of_neg, zero_rpow_of_pos, top_rpow_of_neg, top_rpow_of_pos, mul_pos_of_neg_of_neg,
-            mul_neg_of_neg_of_pos, mul_neg_of_pos_of_neg]
-    ·
-      byCases' h : x = 0
-      ·
-        rcases lt_trichotomyₓ y 0 with (Hy | Hy | Hy) <;>
-          rcases lt_trichotomyₓ z 0 with (Hz | Hz | Hz) <;>
-            simp [h, Hy, Hz, zero_rpow_of_neg, zero_rpow_of_pos, top_rpow_of_neg, top_rpow_of_pos,
-              mul_pos_of_neg_of_neg, mul_neg_of_neg_of_pos, mul_neg_of_pos_of_neg]
-      ·
-        have  : (x^y) ≠ 0
-        ·
-          simp [h]
-        simp [coe_rpow_of_ne_zero h, coe_rpow_of_ne_zero this, Nnreal.rpow_mul]
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem rpow_mul
+(x : «exprℝ≥0∞»())
+(y z : exprℝ()) : «expr = »(«expr ^ »(x, «expr * »(y, z)), «expr ^ »(«expr ^ »(x, y), z)) :=
+begin
+  cases [expr x] [],
+  { rcases [expr lt_trichotomy y 0, "with", ident Hy, "|", ident Hy, "|", ident Hy]; rcases [expr lt_trichotomy z 0, "with", ident Hz, "|", ident Hz, "|", ident Hz]; simp [] [] [] ["[", expr Hy, ",", expr Hz, ",", expr zero_rpow_of_neg, ",", expr zero_rpow_of_pos, ",", expr top_rpow_of_neg, ",", expr top_rpow_of_pos, ",", expr mul_pos_of_neg_of_neg, ",", expr mul_neg_of_neg_of_pos, ",", expr mul_neg_of_pos_of_neg, "]"] [] [] },
+  { by_cases [expr h, ":", expr «expr = »(x, 0)],
+    { rcases [expr lt_trichotomy y 0, "with", ident Hy, "|", ident Hy, "|", ident Hy]; rcases [expr lt_trichotomy z 0, "with", ident Hz, "|", ident Hz, "|", ident Hz]; simp [] [] [] ["[", expr h, ",", expr Hy, ",", expr Hz, ",", expr zero_rpow_of_neg, ",", expr zero_rpow_of_pos, ",", expr top_rpow_of_neg, ",", expr top_rpow_of_pos, ",", expr mul_pos_of_neg_of_neg, ",", expr mul_neg_of_neg_of_pos, ",", expr mul_neg_of_pos_of_neg, "]"] [] [] },
+    { have [] [":", expr «expr ≠ »(«expr ^ »(x, y), 0)] [],
+      by simp [] [] [] ["[", expr h, "]"] [] [],
+      simp [] [] [] ["[", expr coe_rpow_of_ne_zero h, ",", expr coe_rpow_of_ne_zero this, ",", expr nnreal.rpow_mul, "]"] [] [] } }
+end
 
 @[simp, normCast]
 theorem rpow_nat_cast (x : ℝ≥0∞) (n : ℕ) : (x^(n : ℝ)) = (x^n) :=
@@ -1592,16 +1582,20 @@ theorem le_rpow_self_of_one_le {x : ℝ≥0∞} {z : ℝ} (hx : 1 ≤ x) (h_one_
     nthRw 0[←Ennreal.rpow_one x]
     exact Ennreal.rpow_le_rpow_of_exponent_le hx h_one_le
 
-theorem rpow_pos_of_nonneg {p : ℝ} {x : ℝ≥0∞} (hx_pos : 0 < x) (hp_nonneg : 0 ≤ p) : 0 < (x^p) :=
-  by 
-    byCases' hp_zero : p = 0
-    ·
-      simp [hp_zero, Ennreal.zero_lt_one]
-    ·
-      rw [←Ne.def] at hp_zero 
-      have hp_pos := lt_of_le_of_neₓ hp_nonneg hp_zero.symm 
-      rw [←zero_rpow_of_pos hp_pos]
-      exact rpow_lt_rpow hx_pos hp_pos
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem rpow_pos_of_nonneg
+{p : exprℝ()}
+{x : «exprℝ≥0∞»()}
+(hx_pos : «expr < »(0, x))
+(hp_nonneg : «expr ≤ »(0, p)) : «expr < »(0, «expr ^ »(x, p)) :=
+begin
+  by_cases [expr hp_zero, ":", expr «expr = »(p, 0)],
+  { simp [] [] [] ["[", expr hp_zero, ",", expr ennreal.zero_lt_one, "]"] [] [] },
+  { rw ["<-", expr ne.def] ["at", ident hp_zero],
+    have [ident hp_pos] [] [":=", expr lt_of_le_of_ne hp_nonneg hp_zero.symm],
+    rw ["<-", expr zero_rpow_of_pos hp_pos] [],
+    exact [expr rpow_lt_rpow hx_pos hp_pos] }
+end
 
 theorem rpow_pos {p : ℝ} {x : ℝ≥0∞} (hx_pos : 0 < x) (hx_ne_top : x ≠ ⊤) : 0 < (x^p) :=
   by 
@@ -1707,19 +1701,21 @@ theorem of_real_rpow_of_pos {x p : ℝ} (hx_pos : 0 < x) : (Ennreal.ofReal x^p) 
     rw [coe_rpow_of_ne_zero, coe_eq_coe, Real.to_nnreal_rpow_of_nonneg hx_pos.le]
     simp [hx_pos]
 
-theorem of_real_rpow_of_nonneg {x p : ℝ} (hx_nonneg : 0 ≤ x) (hp_nonneg : 0 ≤ p) :
-  (Ennreal.ofReal x^p) = Ennreal.ofReal (x^p) :=
-  by 
-    byCases' hp0 : p = 0
-    ·
-      simp [hp0]
-    byCases' hx0 : x = 0
-    ·
-      rw [←Ne.def] at hp0 
-      have hp_pos : 0 < p := lt_of_le_of_neₓ hp_nonneg hp0.symm 
-      simp [hx0, hp_pos, hp_pos.ne.symm]
-    rw [←Ne.def] at hx0 
-    exact of_real_rpow_of_pos (hx_nonneg.lt_of_ne hx0.symm)
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_real_rpow_of_nonneg
+{x p : exprℝ()}
+(hx_nonneg : «expr ≤ »(0, x))
+(hp_nonneg : «expr ≤ »(0, p)) : «expr = »(«expr ^ »(ennreal.of_real x, p), ennreal.of_real «expr ^ »(x, p)) :=
+begin
+  by_cases [expr hp0, ":", expr «expr = »(p, 0)],
+  { simp [] [] [] ["[", expr hp0, "]"] [] [] },
+  by_cases [expr hx0, ":", expr «expr = »(x, 0)],
+  { rw ["<-", expr ne.def] ["at", ident hp0],
+    have [ident hp_pos] [":", expr «expr < »(0, p)] [":=", expr lt_of_le_of_ne hp_nonneg hp0.symm],
+    simp [] [] [] ["[", expr hx0, ",", expr hp_pos, ",", expr hp_pos.ne.symm, "]"] [] [] },
+  rw ["<-", expr ne.def] ["at", ident hx0],
+  exact [expr of_real_rpow_of_pos (hx_nonneg.lt_of_ne hx0.symm)]
+end
 
 theorem rpow_left_injective {x : ℝ} (hx : x ≠ 0) : Function.Injective fun y : ℝ≥0∞ => y^x :=
   by 
@@ -1742,24 +1738,24 @@ theorem rpow_left_monotone_of_nonneg {x : ℝ} (hx : 0 ≤ x) : Monotone fun y :
 theorem rpow_left_strict_mono_of_pos {x : ℝ} (hx : 0 < x) : StrictMono fun y : ℝ≥0∞ => y^x :=
   fun y z hyz => rpow_lt_rpow hyz hx
 
-theorem tendsto_rpow_at_top {y : ℝ} (hy : 0 < y) : tendsto (fun x : ℝ≥0∞ => x^y) (𝓝 ⊤) (𝓝 ⊤) :=
-  by 
-    rw [tendsto_nhds_top_iff_nnreal]
-    intro x 
-    obtain ⟨c, _, hc⟩ := (at_top_basis_Ioi.tendsto_iff at_top_basis_Ioi).mp (Nnreal.tendsto_rpow_at_top hy) x trivialₓ 
-    have hc' : Set.Ioi («expr↑ » c) ∈ 𝓝 (⊤ : ℝ≥0∞) := Ioi_mem_nhds coe_lt_top 
-    refine' eventually_of_mem hc' _ 
-    intro a ha 
-    byCases' ha' : a = ⊤
-    ·
-      simp [ha', hy]
-    lift a to  ℝ≥0  using ha' 
-    change «expr↑ » c < «expr↑ » a at ha 
-    rw [coe_rpow_of_nonneg _ hy.le]
-    exactModCast
-      hc a
-        (by 
-          exactModCast ha)
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_rpow_at_top
+{y : exprℝ()}
+(hy : «expr < »(0, y)) : tendsto (λ x : «exprℝ≥0∞»(), «expr ^ »(x, y)) (expr𝓝() «expr⊤»()) (expr𝓝() «expr⊤»()) :=
+begin
+  rw [expr tendsto_nhds_top_iff_nnreal] [],
+  intros [ident x],
+  obtain ["⟨", ident c, ",", "_", ",", ident hc, "⟩", ":=", expr (at_top_basis_Ioi.tendsto_iff at_top_basis_Ioi).mp (nnreal.tendsto_rpow_at_top hy) x trivial],
+  have [ident hc'] [":", expr «expr ∈ »(set.Ioi «expr↑ »(c), expr𝓝() («expr⊤»() : «exprℝ≥0∞»()))] [":=", expr Ioi_mem_nhds coe_lt_top],
+  refine [expr eventually_of_mem hc' _],
+  intros [ident a, ident ha],
+  by_cases [expr ha', ":", expr «expr = »(a, «expr⊤»())],
+  { simp [] [] [] ["[", expr ha', ",", expr hy, "]"] [] [] },
+  lift [expr a] ["to", expr «exprℝ≥0»()] ["using", expr ha'] [],
+  change [expr «expr < »(«expr↑ »(c), «expr↑ »(a))] [] ["at", ident ha],
+  rw [expr coe_rpow_of_nonneg _ hy.le] [],
+  exact_mod_cast [expr hc a (by exact_mod_cast [expr ha])]
+end
 
 private theorem continuous_at_rpow_const_of_pos {x : ℝ≥0∞} {y : ℝ} (h : 0 < y) :
   ContinuousAt (fun a : Ennreal => a^y) x :=
@@ -1775,23 +1771,20 @@ private theorem continuous_at_rpow_const_of_pos {x : ℝ≥0∞} {y : ℝ} (h : 
     ext1 x 
     simp [coe_rpow_of_nonneg _ h.le]
 
-@[continuity]
-theorem continuous_rpow_const {y : ℝ} : Continuous fun a : Ennreal => a^y :=
-  by 
-    apply continuous_iff_continuous_at.2 fun x => _ 
-    rcases lt_trichotomyₓ 0 y with (hy | rfl | hy)
-    ·
-      exact continuous_at_rpow_const_of_pos hy
-    ·
-      simp 
-      exact continuous_at_const
-    ·
-      obtain ⟨z, hz⟩ : ∃ z, y = -z := ⟨-y, (neg_negₓ _).symm⟩
-      have z_pos : 0 < z
-      ·
-        simpa [hz] using hy 
-      simpRw [hz, rpow_neg]
-      exact ennreal.continuous_inv.continuous_at.comp (continuous_at_rpow_const_of_pos z_pos)
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[continuity #[]] theorem continuous_rpow_const {y : exprℝ()} : continuous (λ a : ennreal, «expr ^ »(a, y)) :=
+begin
+  apply [expr continuous_iff_continuous_at.2 (λ x, _)],
+  rcases [expr lt_trichotomy 0 y, "with", ident hy, "|", ident rfl, "|", ident hy],
+  { exact [expr continuous_at_rpow_const_of_pos hy] },
+  { simp [] [] [] [] [] [],
+    exact [expr continuous_at_const] },
+  { obtain ["⟨", ident z, ",", ident hz, "⟩", ":", expr «expr∃ , »((z), «expr = »(y, «expr- »(z))), ":=", expr ⟨«expr- »(y), (neg_neg _).symm⟩],
+    have [ident z_pos] [":", expr «expr < »(0, z)] [],
+    by simpa [] [] [] ["[", expr hz, "]"] [] ["using", expr hy],
+    simp_rw ["[", expr hz, ",", expr rpow_neg, "]"] [],
+    exact [expr ennreal.continuous_inv.continuous_at.comp (continuous_at_rpow_const_of_pos z_pos)] }
+end
 
 theorem tendsto_const_mul_rpow_nhds_zero_of_pos {c : ℝ≥0∞} (hc : c ≠ ∞) {y : ℝ} (hy : 0 < y) :
   tendsto (fun x : ℝ≥0∞ => c*x^y) (𝓝 0) (𝓝 0) :=

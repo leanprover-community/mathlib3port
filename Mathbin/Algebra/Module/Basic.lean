@@ -202,42 +202,42 @@ structure Module.Core extends HasScalar R M where
 
 variable{R M}
 
+-- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Define `module` without proving `zero_smul` and `smul_zero` by using an auxiliary
 structure `module.core`, when the underlying space is an `add_comm_group`. -/
-def Module.ofCore (H : Module.Core R M) : Module R M :=
-  by 
-    letI this := H.to_has_scalar <;>
-      exact
-        { H with zero_smul := fun x => (AddMonoidHom.mk' (fun r : R => r • x) fun r s => H.add_smul r s x).map_zero,
-          smul_zero := fun r => (AddMonoidHom.mk' ((· • ·) r) (H.smul_add r)).map_zero }
+def module.of_core (H : module.core R M) : module R M :=
+by letI [] [] [":=", expr H.to_has_scalar]; exact [expr { zero_smul := λ
+   x, (add_monoid_hom.mk' (λ r : R, «expr • »(r, x)) (λ r s, H.add_smul r s x)).map_zero,
+   smul_zero := λ r, (add_monoid_hom.mk' (((«expr • »)) r) (H.smul_add r)).map_zero,
+   ..H }]
 
 end AddCommGroupₓ
 
+-- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 To prove two module structures on a fixed `add_comm_monoid` agree,
 it suffices to check the scalar multiplications agree.
 -/
-@[ext]
-theorem module_ext {R : Type _} [Semiringₓ R] {M : Type _} [AddCommMonoidₓ M] (P Q : Module R M)
-  (w :
-    ∀ r : R m : M,
-      by 
-          haveI  := P 
-          exact r • m =
-        by 
-          haveI  := Q 
-          exact r • m) :
-  P = Q :=
-  by 
-    unfreezingI 
-      rcases P with ⟨⟨⟨⟨P⟩⟩⟩⟩
-      rcases Q with ⟨⟨⟨⟨Q⟩⟩⟩⟩
-    obtain rfl : P = Q
-    ·
-      ·
-        funext r m 
-        exact w r m 
-    congr
+@[ext #[]]
+theorem module_ext
+{R : Type*}
+[semiring R]
+{M : Type*}
+[add_comm_monoid M]
+(P Q : module R M)
+(w : ∀
+ (r : R)
+ (m : M), «expr = »(by { haveI [] [] [":=", expr P],
+    exact [expr «expr • »(r, m)] }, by { haveI [] [] [":=", expr Q],
+    exact [expr «expr • »(r, m)] })) : «expr = »(P, Q) :=
+begin
+  unfreezingI { rcases [expr P, "with", "⟨", "⟨", "⟨", "⟨", ident P, "⟩", "⟩", "⟩", "⟩"],
+    rcases [expr Q, "with", "⟨", "⟨", "⟨", "⟨", ident Q, "⟩", "⟩", "⟩", "⟩"] },
+  obtain [ident rfl, ":", expr «expr = »(P, Q)],
+  by { funext [ident r, ident m],
+    exact [expr w r m] },
+  congr
+end
 
 section Module
 
@@ -285,7 +285,7 @@ instance (priority := 910)Semiringₓ.toModule [Semiringₓ R] : Module R R :=
   { smul_add := mul_addₓ, add_smul := add_mulₓ, zero_smul := zero_mul, smul_zero := mul_zero }
 
 /-- Like `semiring.to_module`, but multiplies on the right. -/
-instance (priority := 910)Semiringₓ.toOppositeModule [Semiringₓ R] : Module («expr ᵒᵖ» R) R :=
+instance (priority := 910)Semiringₓ.toOppositeModule [Semiringₓ R] : Module («expr ᵐᵒᵖ» R) R :=
   { MonoidWithZeroₓ.toOppositeMulActionWithZero R with smul_add := fun r x y => add_mulₓ _ _ _,
     add_smul := fun r x y => mul_addₓ _ _ _ }
 
@@ -570,13 +570,9 @@ theorem Nat.no_zero_smul_divisors : NoZeroSmulDivisors ℕ M :=
 
 variable{M}
 
-theorem eq_zero_of_smul_two_eq_zero {v : M} (hv : 2 • v = 0) : v = 0 :=
-  by 
-    haveI  := Nat.no_zero_smul_divisors R M <;>
-      exact
-        (smul_eq_zero.mp hv).resolve_left
-          (by 
-            normNum)
+-- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_zero_of_smul_two_eq_zero {v : M} (hv : «expr = »(«expr • »(2, v), 0)) : «expr = »(v, 0) :=
+by haveI [] [] [":=", expr nat.no_zero_smul_divisors R M]; exact [expr (smul_eq_zero.mp hv).resolve_left (by norm_num [] [])]
 
 end Nat
 
@@ -607,12 +603,14 @@ variable(R)[NoZeroSmulDivisors R M][CharZero R]
 
 include R
 
-theorem eq_zero_of_eq_neg {v : M} (hv : v = -v) : v = 0 :=
-  by 
-    haveI  := Nat.no_zero_smul_divisors R M 
-    refine' eq_zero_of_smul_two_eq_zero R _ 
-    rw [two_smul]
-    exact add_eq_zero_iff_eq_neg.mpr hv
+-- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_zero_of_eq_neg {v : M} (hv : «expr = »(v, «expr- »(v))) : «expr = »(v, 0) :=
+begin
+  haveI [] [] [":=", expr nat.no_zero_smul_divisors R M],
+  refine [expr eq_zero_of_smul_two_eq_zero R _],
+  rw [expr two_smul] [],
+  exact [expr add_eq_zero_iff_eq_neg.mpr hv]
+end
 
 end Nat
 

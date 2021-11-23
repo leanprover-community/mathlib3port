@@ -1,4 +1,4 @@
-import Mathbin.Order.Default
+import Mathbin.Order.CompleteLattice
 
 namespace OldConv
 
@@ -101,7 +101,7 @@ unsafe structure binder_eq_elim where
   apply_elim_eq : old_conv Unit
 
 unsafe def binder_eq_elim.check_eq (b : binder_eq_elim) (x : expr) : expr → tactic Unit
-| quote @Eq (%%β) (%%l) (%%r) => guardₓ (l = x ∧ ¬x.occurs r ∨ r = x ∧ ¬x.occurs l)
+| quote.1 (@Eq (%%ₓβ) (%%ₓl) (%%ₓr)) => guardₓ (l = x ∧ ¬x.occurs r ∨ r = x ∧ ¬x.occurs l)
 | _ => fail "no match"
 
 unsafe def binder_eq_elim.pull (b : binder_eq_elim) (x : expr) : old_conv Unit :=
@@ -158,7 +158,7 @@ unsafe def exists_eq_elim : binder_eq_elim :=
   { match_binder :=
       fun e =>
         do 
-          let quote @Exists (%%β) (%%f) ← return e 
+          let quote.1 (@Exists (%%ₓβ) (%%ₓf)) ← return e 
           return (β, f),
     adapt_rel := propext', apply_comm := applyc `` exists_comm, apply_congr := congr_binder `` exists_congr,
     apply_elim_eq := apply' `` exists_elim_eq_left <|> apply' `` exists_elim_eq_right }
@@ -193,7 +193,7 @@ unsafe def supr_eq_elim : binder_eq_elim :=
   { match_binder :=
       fun e =>
         do 
-          let quote @supr (%%α) (%%cl) (%%β) (%%f) ← return e 
+          let quote.1 (@supr (%%ₓα) (%%ₓcl) (%%ₓβ) (%%ₓf)) ← return e 
           return (β, f),
     adapt_rel :=
       fun c =>
@@ -208,7 +208,7 @@ unsafe def infi_eq_elim : binder_eq_elim :=
   { match_binder :=
       fun e =>
         do 
-          let quote @infi (%%α) (%%cl) (%%β) (%%f) ← return e 
+          let quote.1 (@infi (%%ₓα) (%%ₓcl) (%%ₓβ) (%%ₓf)) ← return e 
           return (β, f),
     adapt_rel :=
       fun c =>

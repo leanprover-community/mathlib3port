@@ -33,38 +33,47 @@ theorem Applicativeₓ.pure_seq_eq_map' (f : α → β) : (· <*> ·) (pure f : 
   by 
     ext <;> simp' with functor_norm
 
-theorem Applicativeₓ.ext {F} :
-  ∀ {A1 : Applicativeₓ F} {A2 : Applicativeₓ F} [@IsLawfulApplicative F A1] [@IsLawfulApplicative F A2] H1 :
-    ∀ {α : Type u} x : α, @Pure.pure _ A1.to_has_pure _ x = @Pure.pure _ A2.to_has_pure _ x H2 :
-    ∀ {α β : Type u} f : F (α → β) x : F α, @Seqₓ.seq _ A1.to_has_seq _ _ f x = @Seqₓ.seq _ A2.to_has_seq _ _ f x,
-    A1 = A2
-| { toFunctor := F1, seq := s1, pure := p1, seqLeft := sl1, seqRight := sr1 },
-  { toFunctor := F2, seq := s2, pure := p2, seqLeft := sl2, seqRight := sr2 }, L1, L2, H1, H2 =>
-  by 
-    have  : @p1 = @p2
-    ·
-      funext α x 
-      apply H1 
-    subst this 
-    have  : @s1 = @s2
-    ·
-      funext α β f x 
-      apply H2 
-    subst this 
-    cases L1 
-    cases L2 
-    have  : F1 = F2
-    ·
-      resetI 
-      apply Functor.ext 
-      intros 
-      exact (L1_pure_seq_eq_map _ _).symm.trans (L2_pure_seq_eq_map _ _)
-    subst this 
-    congr <;> funext α β x y
-    ·
-      exact (L1_seq_left_eq _ _).trans (L2_seq_left_eq _ _).symm
-    ·
-      exact (L1_seq_right_eq _ _).trans (L2_seq_right_eq _ _).symm
+-- error in Control.Applicative: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem applicative.ext
+{F} : ∀
+{A1 : applicative F}
+{A2 : applicative F}
+[@is_lawful_applicative F A1]
+[@is_lawful_applicative F A2]
+(H1 : ∀ {α : Type u} (x : α), «expr = »(@has_pure.pure _ A1.to_has_pure _ x, @has_pure.pure _ A2.to_has_pure _ x))
+(H2 : ∀
+ {α β : Type u}
+ (f : F (α → β))
+ (x : F α), «expr = »(@has_seq.seq _ A1.to_has_seq _ _ f x, @has_seq.seq _ A2.to_has_seq _ _ f x)), «expr = »(A1, A2)
+| { to_functor := F1,
+  seq := s1,
+  pure := p1,
+  seq_left := sl1,
+  seq_right := sr1 }, { to_functor := F2,
+  seq := s2,
+  pure := p2,
+  seq_left := sl2,
+  seq_right := sr2 }, L1, L2, H1, H2 := begin
+  have [] [":", expr «expr = »(@p1, @p2)] [],
+  { funext [ident α, ident x],
+    apply [expr H1] },
+  subst [expr this],
+  have [] [":", expr «expr = »(@s1, @s2)] [],
+  { funext [ident α, ident β, ident f, ident x],
+    apply [expr H2] },
+  subst [expr this],
+  cases [expr L1] [],
+  cases [expr L2] [],
+  have [] [":", expr «expr = »(F1, F2)] [],
+  { resetI,
+    apply [expr functor.ext],
+    intros [],
+    exact [expr (L1_pure_seq_eq_map _ _).symm.trans (L2_pure_seq_eq_map _ _)] },
+  subst [expr this],
+  congr; funext [ident α, ident β, ident x, ident y],
+  { exact [expr (L1_seq_left_eq _ _).trans (L2_seq_left_eq _ _).symm] },
+  { exact [expr (L1_seq_right_eq _ _).trans (L2_seq_right_eq _ _).symm] }
+end
 
 end Lemmas
 

@@ -316,28 +316,28 @@ theorem eq_zero_iff_abs_lt_one {a : ℤ} : |a| < 1 ↔ a = 0 :=
         hn,
     fun a0 => (abs_eq_zero.mpr a0).le.trans_lt zero_lt_one⟩
 
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[elab_as_eliminator]
-protected theorem induction_on {p : ℤ → Prop} (i : ℤ) (hz : p 0) (hp : ∀ i : ℕ, p i → p (i+1))
-  (hn : ∀ i : ℕ, p (-i) → p (-i - 1)) : p i :=
-  by 
-    induction i
-    ·
-      induction i
-      ·
-        exact hz
-      ·
-        exact hp _ i_ih
-    ·
-      have  : ∀ n : ℕ, p (-n)
-      ·
-        intro n 
-        induction n
-        ·
-          simp [hz]
-        ·
-          convert hn _ n_ih using 1
-          simp [sub_eq_neg_add]
-      exact this (i+1)
+protected
+theorem induction_on
+{p : exprℤ() → exprProp()}
+(i : exprℤ())
+(hz : p 0)
+(hp : ∀ i : exprℕ(), p i → p «expr + »(i, 1))
+(hn : ∀ i : exprℕ(), p «expr- »(i) → p «expr - »(«expr- »(i), 1)) : p i :=
+begin
+  induction [expr i] [] [] [],
+  { induction [expr i] [] [] [],
+    { exact [expr hz] },
+    { exact [expr hp _ i_ih] } },
+  { have [] [":", expr ∀ n : exprℕ(), p «expr- »(n)] [],
+    { intro [ident n],
+      induction [expr n] [] [] [],
+      { simp [] [] [] ["[", expr hz, "]"] [] [] },
+      { convert [] [expr hn _ n_ih] ["using", 1],
+        simp [] [] [] ["[", expr sub_eq_neg_add, "]"] [] [] } },
+    exact [expr this «expr + »(i, 1)] }
+end
 
 /-- Inductively define a function on `ℤ` by defining it at `b`, for the `succ` of a number greater
   than `b`, and the `pred` of a number less than `b`. -/
@@ -367,27 +367,24 @@ protected def induction_on' {C : ℤ → Sort _} (z : ℤ) (b : ℤ) :
 
 attribute [simp] nat_abs nat_abs_of_nat nat_abs_zero nat_abs_one
 
-theorem nat_abs_add_le (a b : ℤ) : nat_abs (a+b) ≤ nat_abs a+nat_abs b :=
-  by 
-    have  : ∀ a b : ℕ, nat_abs (sub_nat_nat a (Nat.succ b)) ≤ Nat.succ (a+b)
-    ·
-      refine' fun a b : ℕ => sub_nat_nat_elim a b.succ (fun m n i => n = b.succ → nat_abs i ≤ (m+b).succ) _ _ rfl <;>
-        intro i n e
-      ·
-        subst e 
-        rw [add_commₓ _ i, add_assocₓ]
-        exact Nat.le_add_rightₓ i (b.succ+b).succ
-      ·
-        apply succ_le_succ 
-        rw [←succ.inj e, ←add_assocₓ, add_commₓ]
-        apply Nat.le_add_rightₓ 
-    cases a <;>
-      cases' b with b b <;>
-        simp [nat_abs, Nat.succ_add] <;>
-          try 
-                rfl <;>
-              [skip, rw [add_commₓ a b]] <;>
-            apply this
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nat_abs_add_le (a b : exprℤ()) : «expr ≤ »(nat_abs «expr + »(a, b), «expr + »(nat_abs a, nat_abs b)) :=
+begin
+  have [] [":", expr ∀ a b : exprℕ(), «expr ≤ »(nat_abs (sub_nat_nat a (nat.succ b)), nat.succ «expr + »(a, b))] [],
+  { refine [expr λ
+     a
+     b : exprℕ(), sub_nat_nat_elim a b.succ (λ
+      m
+      n
+      i, «expr = »(n, b.succ) → «expr ≤ »(nat_abs i, «expr + »(m, b).succ)) _ _ rfl]; intros [ident i, ident n, ident e],
+    { subst [expr e],
+      rw ["[", expr add_comm _ i, ",", expr add_assoc, "]"] [],
+      exact [expr nat.le_add_right i «expr + »(b.succ, b).succ] },
+    { apply [expr succ_le_succ],
+      rw ["[", "<-", expr succ.inj e, ",", "<-", expr add_assoc, ",", expr add_comm, "]"] [],
+      apply [expr nat.le_add_right] } },
+  cases [expr a] []; cases [expr b] ["with", ident b, ident b]; simp [] [] [] ["[", expr nat_abs, ",", expr nat.succ_add, "]"] [] []; try { refl }; [skip, rw [expr add_comm a b] []]; apply [expr this]
+end
 
 theorem nat_abs_sub_le (a b : ℤ) : nat_abs (a - b) ≤ nat_abs a+nat_abs b :=
   by 
@@ -622,20 +619,23 @@ protected theorem add_div_of_dvd_left {a b c : ℤ} (H : c ∣ a) : (a+b) / c = 
   by 
     rw [add_commₓ, Int.add_div_of_dvd_right H, add_commₓ]
 
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-protected theorem mul_div_cancel (a : ℤ) {b : ℤ} (H : b ≠ 0) : (a*b) / b = a :=
-  by 
-    have  := Int.add_mul_div_right 0 a H <;> rwa [zero_addₓ, Int.zero_div, zero_addₓ] at this
+protected
+theorem mul_div_cancel
+(a : exprℤ())
+{b : exprℤ()}
+(H : «expr ≠ »(b, 0)) : «expr = »(«expr / »(«expr * »(a, b), b), a) :=
+by have [] [] [":=", expr int.add_mul_div_right 0 a H]; rwa ["[", expr zero_add, ",", expr int.zero_div, ",", expr zero_add, "]"] ["at", ident this]
 
 @[simp]
 protected theorem mul_div_cancel_left {a : ℤ} (b : ℤ) (H : a ≠ 0) : (a*b) / a = b :=
   by 
     rw [mul_commₓ, Int.mul_div_cancel _ H]
 
-@[simp]
-protected theorem div_self {a : ℤ} (H : a ≠ 0) : a / a = 1 :=
-  by 
-    have  := Int.mul_div_cancel 1 H <;> rwa [one_mulₓ] at this
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] protected theorem div_self {a : exprℤ()} (H : «expr ≠ »(a, 0)) : «expr = »(«expr / »(a, a), 1) :=
+by have [] [] [":=", expr int.mul_div_cancel 1 H]; rwa [expr one_mul] ["at", ident this]
 
 /-! ### mod -/
 
@@ -748,20 +748,20 @@ theorem add_mul_mod_self_left (a b c : ℤ) : (a+b*c) % b = a % b :=
   by 
     rw [mul_commₓ, add_mul_mod_self]
 
-@[simp]
-theorem add_mod_self {a b : ℤ} : (a+b) % b = a % b :=
-  by 
-    have  := add_mul_mod_self_left a b 1 <;> rwa [mul_oneₓ] at this
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem add_mod_self {a b : exprℤ()} : «expr = »(«expr % »(«expr + »(a, b), b), «expr % »(a, b)) :=
+by have [] [] [":=", expr add_mul_mod_self_left a b 1]; rwa [expr mul_one] ["at", ident this]
 
 @[simp]
 theorem add_mod_self_left {a b : ℤ} : (a+b) % a = b % a :=
   by 
     rw [add_commₓ, add_mod_self]
 
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mod_add_mod (m n k : ℤ) : ((m % n)+k) % n = (m+k) % n :=
-  by 
-    have  := (add_mul_mod_self_left ((m % n)+k) n (m / n)).symm <;> rwa [add_right_commₓ, mod_add_div] at this
+theorem mod_add_mod
+(m n k : exprℤ()) : «expr = »(«expr % »(«expr + »(«expr % »(m, n), k), n), «expr % »(«expr + »(m, k), n)) :=
+by have [] [] [":=", expr (add_mul_mod_self_left «expr + »(«expr % »(m, n), k) n «expr / »(m, n)).symm]; rwa ["[", expr add_right_comm, ",", expr mod_add_div, "]"] ["at", ident this]
 
 @[simp]
 theorem add_mod_mod (m n k : ℤ) : (m+n % k) % k = (m+n) % k :=
@@ -780,11 +780,12 @@ theorem add_mod_eq_add_mod_left {m n k : ℤ} (i : ℤ) (H : m % n = k % n) : (i
   by 
     rw [add_commₓ, add_mod_eq_add_mod_right _ H, add_commₓ]
 
-theorem mod_add_cancel_right {m n k : ℤ} i : (m+i) % n = (k+i) % n ↔ m % n = k % n :=
-  ⟨fun H =>
-      by 
-        have  := add_mod_eq_add_mod_right (-i) H <;> rwa [add_neg_cancel_rightₓ, add_neg_cancel_rightₓ] at this,
-    add_mod_eq_add_mod_right _⟩
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mod_add_cancel_right
+{m n k : exprℤ()}
+(i) : «expr ↔ »(«expr = »(«expr % »(«expr + »(m, i), n), «expr % »(«expr + »(k, i), n)), «expr = »(«expr % »(m, n), «expr % »(k, n))) :=
+⟨λ
+ H, by have [] [] [":=", expr add_mod_eq_add_mod_right «expr- »(i) H]; rwa ["[", expr add_neg_cancel_right, ",", expr add_neg_cancel_right, "]"] ["at", ident this], add_mod_eq_add_mod_right _⟩
 
 theorem mod_add_cancel_left {m n k i : ℤ} : (i+m) % n = (i+k) % n ↔ m % n = k % n :=
   by 
@@ -821,10 +822,9 @@ theorem neg_mod_two (i : ℤ) : -i % 2 = i % 2 :=
     convert Int.mul_mod_right 2 (-i)
     simp only [two_mul, sub_eq_add_neg]
 
-@[local simp]
-theorem mod_self {a : ℤ} : a % a = 0 :=
-  by 
-    have  := mul_mod_left 1 a <;> rwa [one_mulₓ] at this
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+local attribute [simp] theorem mod_self {a : exprℤ()} : «expr = »(«expr % »(a, a), 0) :=
+by have [] [] [":=", expr mul_mod_left 1 a]; rwa [expr one_mul] ["at", ident this]
 
 @[simp]
 theorem mod_mod_of_dvd (n : ℤ) {m k : ℤ} (h : m ∣ k) : n % k % m = n % m :=
@@ -908,13 +908,15 @@ theorem abs_div_le_abs : ∀ a b : ℤ, |a / b| ≤ |a| :=
             | -[1+ m], 0 => Nat.zero_leₓ _
             | -[1+ m], n+1 => Nat.succ_le_succₓ (Nat.div_le_selfₓ _ _))
 
-theorem div_le_self {a : ℤ} (b : ℤ) (Ha : 0 ≤ a) : a / b ≤ a :=
-  by 
-    have  := le_transₓ (le_abs_self _) (abs_div_le_abs a b) <;> rwa [abs_of_nonneg Ha] at this
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem div_le_self {a : exprℤ()} (b : exprℤ()) (Ha : «expr ≤ »(0, a)) : «expr ≤ »(«expr / »(a, b), a) :=
+by have [] [] [":=", expr le_trans (le_abs_self _) (abs_div_le_abs a b)]; rwa ["[", expr abs_of_nonneg Ha, "]"] ["at", ident this]
 
-theorem mul_div_cancel_of_mod_eq_zero {a b : ℤ} (H : a % b = 0) : (b*a / b) = a :=
-  by 
-    have  := mod_add_div a b <;> rwa [H, zero_addₓ] at this
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mul_div_cancel_of_mod_eq_zero
+{a b : exprℤ()}
+(H : «expr = »(«expr % »(a, b), 0)) : «expr = »(«expr * »(b, «expr / »(a, b)), a) :=
+by have [] [] [":=", expr mod_add_div a b]; rwa ["[", expr H, ",", expr zero_add, "]"] ["at", ident this]
 
 theorem div_mul_cancel_of_mod_eq_zero {a b : ℤ} (H : a % b = 0) : ((a / b)*b) = a :=
   by 
@@ -997,14 +999,15 @@ theorem mod_eq_zero_of_dvd : ∀ {a b : ℤ}, a ∣ b → b % a = 0
 theorem dvd_iff_mod_eq_zero (a b : ℤ) : a ∣ b ↔ b % a = 0 :=
   ⟨mod_eq_zero_of_dvd, dvd_of_mod_eq_zero⟩
 
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `a % b = c` then `b` divides `a - c`. -/
-theorem dvd_sub_of_mod_eq {a b c : ℤ} (h : a % b = c) : b ∣ a - c :=
-  by 
-    have hx : a % b % b = c % b
-    ·
-      rw [h]
-    rw [mod_mod, ←mod_sub_cancel_right c, sub_self, zero_mod] at hx 
-    exact dvd_of_mod_eq_zero hx
+theorem dvd_sub_of_mod_eq {a b c : exprℤ()} (h : «expr = »(«expr % »(a, b), c)) : «expr ∣ »(b, «expr - »(a, c)) :=
+begin
+  have [ident hx] [":", expr «expr = »(«expr % »(«expr % »(a, b), b), «expr % »(c, b))] [],
+  { rw [expr h] [] },
+  rw ["[", expr mod_mod, ",", "<-", expr mod_sub_cancel_right c, ",", expr sub_self, ",", expr zero_mod, "]"] ["at", ident hx],
+  exact [expr dvd_of_mod_eq_zero hx]
+end
 
 theorem nat_abs_dvd {a b : ℤ} : (a.nat_abs : ℤ) ∣ b ↔ a ∣ b :=
   (nat_abs_eq a).elim
@@ -1203,7 +1206,7 @@ theorem dvd_of_pow_dvd {p k : ℕ} {m : ℤ} (hk : 1 ≤ k) (hpk : «expr↑ » 
   by 
     rw [←pow_oneₓ p] <;> exact pow_dvd_of_le_of_pow_dvd hk hpk
 
--- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `n > 0` then `m` is not divisible by `n` iff it is between `n * k` and `n * (k + 1)`
   for some `k`. -/
 theorem exists_lt_and_lt_iff_not_dvd
@@ -1307,20 +1310,28 @@ theorem eq_of_mod_eq_of_nat_abs_sub_lt_nat_abs {a b c : ℤ} (h1 : a % b = c) (h
   a = c :=
   eq_of_sub_eq_zero (eq_zero_of_dvd_of_nat_abs_lt_nat_abs (dvd_sub_of_mod_eq h1) h2)
 
-theorem of_nat_add_neg_succ_of_nat_of_lt {m n : ℕ} (h : m < n.succ) : (of_nat m+-[1+ n]) = -[1+ n - m] :=
-  by 
-    change sub_nat_nat _ _ = _ 
-    have h' : n.succ - m = (n - m).succ 
-    apply succ_sub 
-    apply le_of_lt_succ h 
-    simp [sub_nat_nat]
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_nat_add_neg_succ_of_nat_of_lt
+{m n : exprℕ()}
+(h : «expr < »(m, n.succ)) : «expr = »(«expr + »(of_nat m, «expr-[1+ ]»(n)), «expr-[1+ ]»(«expr - »(n, m))) :=
+begin
+  change [expr «expr = »(sub_nat_nat _ _, _)] [] [],
+  have [ident h'] [":", expr «expr = »(«expr - »(n.succ, m), «expr - »(n, m).succ)] [],
+  apply [expr succ_sub],
+  apply [expr le_of_lt_succ h],
+  simp [] [] [] ["[", "*", ",", expr sub_nat_nat, "]"] [] []
+end
 
-theorem of_nat_add_neg_succ_of_nat_of_ge {m n : ℕ} (h : n.succ ≤ m) : (of_nat m+-[1+ n]) = of_nat (m - n.succ) :=
-  by 
-    change sub_nat_nat _ _ = _ 
-    have h' : n.succ - m = 0
-    apply tsub_eq_zero_iff_le.mpr h 
-    simp [sub_nat_nat]
+-- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_nat_add_neg_succ_of_nat_of_ge
+{m n : exprℕ()}
+(h : «expr ≤ »(n.succ, m)) : «expr = »(«expr + »(of_nat m, «expr-[1+ ]»(n)), of_nat «expr - »(m, n.succ)) :=
+begin
+  change [expr «expr = »(sub_nat_nat _ _, _)] [] [],
+  have [ident h'] [":", expr «expr = »(«expr - »(n.succ, m), 0)] [],
+  apply [expr tsub_eq_zero_iff_le.mpr h],
+  simp [] [] [] ["[", "*", ",", expr sub_nat_nat, "]"] [] []
+end
 
 @[simp]
 theorem neg_add_neg (m n : ℕ) : (-[1+ m]+-[1+ n]) = -[1+ Nat.succ (m+n)] :=
@@ -1682,18 +1693,28 @@ theorem bitwise_xor : bitwise bxor = lxor :=
     runTac 
       bitwise_tac
 
--- error in Data.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 @[simp]
-theorem bitwise_bit
-(f : bool → bool → bool)
-(a m b n) : «expr = »(bitwise f (bit a m) (bit b n), bit (f a b) (bitwise f m n)) :=
-begin
-  cases [expr m] ["with", ident m, ident m]; cases [expr n] ["with", ident n, ident n]; repeat { rw ["[", "<-", expr int.coe_nat_eq, "]"] [] <|> rw [expr bit_coe_nat] [] <|> rw [expr bit_neg_succ] [] }; unfold [ident bitwise, ident nat_bitwise, ident bnot] []; [induction [expr h, ":", expr f ff ff] [] [] [], induction [expr h, ":", expr f ff tt] [] [] [], induction [expr h, ":", expr f tt ff] [] [] [], induction [expr h, ":", expr f tt tt] [] [] []],
-  all_goals { unfold [ident cond] [],
-    rw [expr nat.bitwise_bit] [],
-    repeat { rw [expr bit_coe_nat] [] <|> rw [expr bit_neg_succ] [] <|> rw [expr bnot_bnot] [] } },
-  all_goals { unfold [ident bnot] [] { fail_if_unchanged := ff }; rw [expr h] []; refl }
-end
+theorem bitwise_bit (f : Bool → Bool → Bool) a m b n : bitwise f (bit a m) (bit b n) = bit (f a b) (bitwise f m n) :=
+  by 
+    cases' m with m m <;>
+      cases' n with n n <;>
+        repeat' 
+            first |
+              rw [←Int.coe_nat_eq]|
+              rw [bit_coe_nat]|
+              rw [bit_neg_succ] <;>
+          unfold bitwise nat_bitwise bnot <;> [induction' h : f ff ff with , induction' h : f ff tt with ,
+            induction' h : f tt ff with , induction' h : f tt tt with ]
+    all_goals 
+      unfold cond 
+      rw [Nat.bitwise_bit]
+      repeat' 
+        first |
+          rw [bit_coe_nat]|
+          rw [bit_neg_succ]|
+          rw [bnot_bnot]
+    all_goals 
+      unfold bnot <;> rw [h] <;> rfl
 
 @[simp]
 theorem lor_bit a m b n : lor (bit a m) (bit b n) = bit (a || b) (lor m n) :=

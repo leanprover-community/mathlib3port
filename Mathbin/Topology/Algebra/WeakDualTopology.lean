@@ -83,7 +83,7 @@ variable(𝕜 : Type _)[TopologicalSpace 𝕜][Semiringₓ 𝕜]
 
 variable(E : Type _)[TopologicalSpace E][AddCommMonoidₓ E][Module 𝕜 E]
 
--- error in Topology.Algebra.WeakDualTopology: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Topology.Algebra.WeakDualTopology: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- The weak dual of a topological module `E` over a topological semiring `𝕜` consists of
 continuous linear functionals from `E` to scalars `𝕜`. It is a type synonym with the usual dual
 (when the latter is defined), but will be equipped with a different topology. -/
@@ -125,30 +125,40 @@ theorem tendsto_iff_forall_eval_tendsto {γ : Type u} {F : Filter γ} {ψs : γ 
       intro h_lim_forall 
       rwa [nhds_induced, tendsto_comap_iff]
 
+-- error in Topology.Algebra.WeakDualTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Addition in `weak_dual 𝕜 E` is continuous. -/
-instance  [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakDual 𝕜 E) :=
-  { continuous_add :=
-      by 
-        apply continuous_of_continuous_eval 
-        intro z 
-        have h : Continuous fun p : 𝕜 × 𝕜 => p.1+p.2 := continuous_add 
-        exact h.comp ((eval_continuous 𝕜 E z).prod_map (eval_continuous 𝕜 E z)) }
+instance [has_continuous_add 𝕜] : has_continuous_add (weak_dual 𝕜 E) :=
+{ continuous_add := begin
+    apply [expr continuous_of_continuous_eval],
+    intros [ident z],
+    have [ident h] [":", expr continuous (λ p : «expr × »(𝕜, 𝕜), «expr + »(p.1, p.2))] [":=", expr continuous_add],
+    exact [expr h.comp ((eval_continuous 𝕜 E z).prod_map (eval_continuous 𝕜 E z))]
+  end }
 
 /-- If the scalars `𝕜` are a commutative semiring, then `weak_dual 𝕜 E` is a module over `𝕜`. -/
 instance  (𝕜 : Type u) [TopologicalSpace 𝕜] [CommSemiringₓ 𝕜] [HasContinuousAdd 𝕜] [HasContinuousMul 𝕜] (E : Type _)
   [TopologicalSpace E] [AddCommGroupₓ E] [Module 𝕜 E] : Module 𝕜 (WeakDual 𝕜 E) :=
   ContinuousLinearMap.module
 
+-- error in Topology.Algebra.WeakDualTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Scalar multiplication in `weak_dual 𝕜 E` is continuous (when `𝕜` is a commutative
 semiring). -/
-instance  (𝕜 : Type u) [TopologicalSpace 𝕜] [CommSemiringₓ 𝕜] [HasContinuousAdd 𝕜] [HasContinuousMul 𝕜] (E : Type _)
-  [TopologicalSpace E] [AddCommGroupₓ E] [Module 𝕜 E] : HasContinuousSmul 𝕜 (WeakDual 𝕜 E) :=
-  { continuous_smul :=
-      by 
-        apply continuous_of_continuous_eval 
-        intro z 
-        have h : Continuous fun p : 𝕜 × 𝕜 => p.1*p.2 := continuous_mul 
-        exact h.comp (continuous_id'.prod_map (eval_continuous 𝕜 E z)) }
+instance
+(𝕜 : Type u)
+[topological_space 𝕜]
+[comm_semiring 𝕜]
+[has_continuous_add 𝕜]
+[has_continuous_mul 𝕜]
+(E : Type*)
+[topological_space E]
+[add_comm_group E]
+[module 𝕜 E] : has_continuous_smul 𝕜 (weak_dual 𝕜 E) :=
+{ continuous_smul := begin
+    apply [expr continuous_of_continuous_eval],
+    intros [ident z],
+    have [ident h] [":", expr continuous (λ p : «expr × »(𝕜, 𝕜), «expr * »(p.1, p.2))] [":=", expr continuous_mul],
+    exact [expr h.comp (continuous_id'.prod_map (eval_continuous 𝕜 E z))]
+  end }
 
 end WeakDual
 

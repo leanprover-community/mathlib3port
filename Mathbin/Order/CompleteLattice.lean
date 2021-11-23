@@ -113,7 +113,7 @@ theorem Sup_le_iff : Sup s ≤ a ↔ ∀ b _ : b ∈ s, b ≤ a :=
 theorem le_Sup_iff : a ≤ Sup s ↔ ∀ b, (∀ x _ : x ∈ s, x ≤ b) → a ≤ b :=
   ⟨fun h b hb => le_transₓ h (Sup_le hb), fun hb => hb _ fun x => le_Sup⟩
 
--- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem Sup_le_Sup_of_forall_exists_le
 (h : ∀ x «expr ∈ » s, «expr∃ , »((y «expr ∈ » t), «expr ≤ »(x, y))) : «expr ≤ »(Sup s, Sup t) :=
 le_of_forall_le' (begin
@@ -168,7 +168,7 @@ theorem le_Inf_iff : a ≤ Inf s ↔ ∀ b _ : b ∈ s, a ≤ b :=
 theorem Inf_le_iff : Inf s ≤ a ↔ ∀ b, (∀ x _ : x ∈ s, b ≤ x) → b ≤ a :=
   ⟨fun h b hb => le_transₓ (le_Inf hb) h, fun hb => hb _ fun x => Inf_le⟩
 
--- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem Inf_le_Inf_of_forall_exists_le
 (h : ∀ x «expr ∈ » s, «expr∃ , »((y «expr ∈ » t), «expr ≤ »(y, x))) : «expr ≤ »(Inf t, Inf s) :=
 le_of_forall_le (begin
@@ -562,14 +562,22 @@ theorem supr_congr {α : Type _} [HasSupₓ α] {f : ι → α} {g : ι₂ → �
     convert h1.supr_comp g 
     exact (funext h2).symm
 
+-- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[congr]
-theorem supr_congr_Prop {α : Type _} [HasSupₓ α] {p q : Prop} {f₁ : p → α} {f₂ : q → α} (pq : p ↔ q)
-  (f : ∀ x, f₁ (pq.mpr x) = f₂ x) : supr f₁ = supr f₂ :=
-  by 
-    have  := propext pq 
-    subst this 
-    congr with x 
-    apply f
+theorem supr_congr_Prop
+{α : Type*}
+[has_Sup α]
+{p q : exprProp()}
+{f₁ : p → α}
+{f₂ : q → α}
+(pq : «expr ↔ »(p, q))
+(f : ∀ x, «expr = »(f₁ (pq.mpr x), f₂ x)) : «expr = »(supr f₁, supr f₂) :=
+begin
+  have [] [] [":=", expr propext pq],
+  subst [expr this],
+  congr' [] ["with", ident x],
+  apply [expr f]
+end
 
 theorem infi_le (s : ι → α) (i : ι) : infi s ≤ s i :=
   Inf_le ⟨i, rfl⟩
@@ -784,13 +792,15 @@ theorem inf_infi [Nonempty ι] {f : ι → α} {a : α} : (a⊓⨅x, f x) = ⨅x
   by 
     rw [inf_comm, infi_inf] <;> simp [inf_comm]
 
-theorem binfi_inf {p : ι → Prop} {f : ∀ i hi : p i, α} {a : α} (h : ∃ i, p i) :
-  (⨅(i : _)(h : p i), f i h)⊓a = ⨅(i : _)(h : p i), f i h⊓a :=
-  by 
-    haveI  : Nonempty { i // p i } :=
-        let ⟨i, hi⟩ := h
-        ⟨⟨i, hi⟩⟩ <;>
-      rw [infi_subtype', infi_subtype', infi_inf]
+-- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem binfi_inf
+{p : ι → exprProp()}
+{f : ∀ (i) (hi : p i), α}
+{a : α}
+(h : «expr∃ , »((i), p i)) : «expr = »(«expr ⊓ »(«expr⨅ , »((i)
+   (h : p i), f i h), a), «expr⨅ , »((i) (h : p i), «expr ⊓ »(f i h, a))) :=
+by haveI [] [":", expr nonempty {i // p i}] [":=", expr let ⟨i, hi⟩ := h in
+ ⟨⟨i, hi⟩⟩]; rw ["[", expr infi_subtype', ",", expr infi_subtype', ",", expr infi_inf, "]"] []
 
 theorem inf_binfi {p : ι → Prop} {f : ∀ i hi : p i, α} {a : α} (h : ∃ i, p i) :
   (a⊓⨅(i : _)(h : p i), f i h) = ⨅(i : _)(h : p i), a⊓f i h :=
@@ -1139,25 +1149,25 @@ theorem Monotone.supr_nat_add {f : ℕ → α} (hf : Monotone f) (k : ℕ) : (�
   le_antisymmₓ (supr_le fun i => (le_reflₓ _).trans (le_supr _ (i+k)))
     (supr_le_supr fun i => hf (Nat.le_add_rightₓ i k))
 
+-- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem supr_infi_ge_nat_add (f : ℕ → α) (k : ℕ) : (⨆n, ⨅(i : _)(_ : i ≥ n), f (i+k)) = ⨆n, ⨅(i : _)(_ : i ≥ n), f i :=
-  by 
-    have hf : Monotone fun n => ⨅(i : _)(_ : i ≥ n), f i 
-    exact fun n m hnm => le_infi fun i => (infi_le _ i).trans (le_infi fun h => infi_le _ (hnm.trans h))
-    rw [←Monotone.supr_nat_add hf k]
-    ·
-      simpRw [infi_ge_eq_infi_nat_add, ←Nat.add_assoc]
-
--- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem sup_supr_nat_succ
-(u : exprℕ() → α) : «expr = »(«expr ⊔ »(u 0, «expr⨆ , »((i), u «expr + »(i, 1))), «expr⨆ , »((i), u i)) :=
+theorem supr_infi_ge_nat_add
+(f : exprℕ() → α)
+(k : exprℕ()) : «expr = »(«expr⨆ , »((n), «expr⨅ , »((i «expr ≥ » n), f «expr + »(i, k))), «expr⨆ , »((n), «expr⨅ , »((i «expr ≥ » n), f i))) :=
 begin
-  refine [expr eq_of_forall_ge_iff (λ c, _)],
-  simp [] [] ["only"] ["[", expr sup_le_iff, ",", expr supr_le_iff, "]"] [] [],
-  refine [expr ⟨λ h, _, λ h, ⟨h _, λ i, h _⟩⟩],
-  rintro ["(", "_", "|", ident i, ")"],
-  exacts ["[", expr h.1, ",", expr h.2 i, "]"]
+  have [ident hf] [":", expr monotone (λ n, «expr⨅ , »((i «expr ≥ » n), f i))] [],
+  from [expr λ n m hnm, le_infi (λ i, (infi_le _ i).trans (le_infi (λ h, infi_le _ (hnm.trans h))))],
+  rw ["<-", expr monotone.supr_nat_add hf k] [],
+  { simp_rw ["[", expr infi_ge_eq_infi_nat_add, ",", "<-", expr nat.add_assoc, "]"] [] }
 end
+
+theorem sup_supr_nat_succ (u : ℕ → α) : (u 0⊔⨆i, u (i+1)) = ⨆i, u i :=
+  by 
+    refine' eq_of_forall_ge_iff fun c => _ 
+    simp only [sup_le_iff, supr_le_iff]
+    refine' ⟨fun h => _, fun h => ⟨h _, fun i => h _⟩⟩
+    rintro (_ | i)
+    exacts[h.1, h.2 i]
 
 theorem inf_infi_nat_succ (u : ℕ → α) : (u 0⊓⨅i, u (i+1)) = ⨅i, u i :=
   @sup_supr_nat_succ (OrderDual α) _ u
@@ -1337,13 +1347,20 @@ theorem set_independent.disjoint {x y : α} (hx : x ∈ s) (hy : y ∈ s) (h : x
 
 include hs
 
+-- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the elements of a set are independent, then any element is disjoint from the `Sup` of some
 subset of the rest. -/
-theorem set_independent.disjoint_Sup {x : α} {y : Set α} (hx : x ∈ s) (hy : y ⊆ s) (hxy : x ∉ y) : Disjoint x (Sup y) :=
-  by 
-    have  := (hs.mono$ insert_subset.mpr ⟨hx, hy⟩) (mem_insert x _)
-    rw [insert_diff_of_mem _ (mem_singleton _), diff_singleton_eq_self hxy] at this 
-    exact this
+theorem set_independent.disjoint_Sup
+{x : α}
+{y : set α}
+(hx : «expr ∈ »(x, s))
+(hy : «expr ⊆ »(y, s))
+(hxy : «expr ∉ »(x, y)) : disjoint x (Sup y) :=
+begin
+  have [] [] [":=", expr «expr $ »(hs.mono, insert_subset.mpr ⟨hx, hy⟩) (mem_insert x _)],
+  rw ["[", expr insert_diff_of_mem _ (mem_singleton _), ",", expr diff_singleton_eq_self hxy, "]"] ["at", ident this],
+  exact [expr this]
+end
 
 omit hs
 

@@ -80,46 +80,39 @@ open IsROrC
 
 variable{𝕜 : Type _}[IsROrC 𝕜]{F : Type _}[SemiNormedGroup F][SemiNormedSpace 𝕜 F]
 
+-- error in Analysis.NormedSpace.HahnBanach: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Hahn-Banach theorem for continuous linear functions over `𝕜` satisyfing `is_R_or_C 𝕜`. -/
-theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
-  ∃ g : F →L[𝕜] 𝕜, (∀ x : p, g x = f x) ∧ ∥g∥ = ∥f∥ :=
-  by 
-    letI this : Module ℝ F := RestrictScalars.module ℝ 𝕜 F 
-    letI this : IsScalarTower ℝ 𝕜 F := RestrictScalars.is_scalar_tower _ _ _ 
-    letI this : SemiNormedSpace ℝ F := SemiNormedSpace.restrictScalars _ 𝕜 _ 
-    let fr := re_clm.comp (f.restrict_scalars ℝ)
-    have fr_apply : ∀ x, fr x = re (f x)
-    ·
-      ·
-        intro x 
-        rfl 
-    rcases Real.exists_extension_norm_eq (p.restrict_scalars ℝ) fr with ⟨g, ⟨hextends, hnormeq⟩⟩
-    refine' ⟨g.extend_to_𝕜, _⟩
-    have h : ∀ x : p, g.extend_to_𝕜 x = f x
-    ·
-      intro x 
-      rw [ContinuousLinearMap.extend_to_𝕜_apply, ←Submodule.coe_smul, hextends, hextends]
-      have  : ((fr x : 𝕜) - I*«expr↑ » (fr (I • x))) = (re (f x) : 𝕜) - (I : 𝕜)*re (f ((I : 𝕜) • x))
-      ·
-        rfl 
-      rw [this]
-      apply ext
-      ·
-        simp only [add_zeroₓ, Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im', zero_mul,
-          of_real_re, eq_self_iff_true, sub_zero, mul_neg_eq_neg_mul_symm, of_real_neg, mul_re, mul_zero,
-          sub_neg_eq_add, ContinuousLinearMap.map_smul]
-      ·
-        simp only [Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im', zero_mul,
-          of_real_re, mul_neg_eq_neg_mul_symm, mul_im, zero_addₓ, of_real_neg, mul_re, sub_neg_eq_add,
-          ContinuousLinearMap.map_smul]
-    refine' ⟨h, le_antisymmₓ _ _⟩
-    ·
-      calc ∥g.extend_to_𝕜∥ ≤ ∥g∥ := g.extend_to_𝕜.op_norm_le_bound g.op_norm_nonneg (norm_bound _)_ = ∥fr∥ :=
-        hnormeq _ ≤ ∥re_clm∥*∥f∥ := ContinuousLinearMap.op_norm_comp_le _ _ _ = ∥f∥ :=
-        by 
-          rw [re_clm_norm, one_mulₓ]
-    ·
-      exact f.op_norm_le_bound g.extend_to_𝕜.op_norm_nonneg fun x => h x ▸ g.extend_to_𝕜.le_op_norm x
+theorem exists_extension_norm_eq
+(p : subspace 𝕜 F)
+(f : «expr →L[ ] »(p, 𝕜, 𝕜)) : «expr∃ , »((g : «expr →L[ ] »(F, 𝕜, 𝕜)), «expr ∧ »(∀
+  x : p, «expr = »(g x, f x), «expr = »(«expr∥ ∥»(g), «expr∥ ∥»(f)))) :=
+begin
+  letI [] [":", expr module exprℝ() F] [":=", expr restrict_scalars.module exprℝ() 𝕜 F],
+  letI [] [":", expr is_scalar_tower exprℝ() 𝕜 F] [":=", expr restrict_scalars.is_scalar_tower _ _ _],
+  letI [] [":", expr semi_normed_space exprℝ() F] [":=", expr semi_normed_space.restrict_scalars _ 𝕜 _],
+  let [ident fr] [] [":=", expr re_clm.comp (f.restrict_scalars exprℝ())],
+  have [ident fr_apply] [":", expr ∀ x, «expr = »(fr x, re (f x))] [],
+  by { assume [binders (x)],
+    refl },
+  rcases [expr real.exists_extension_norm_eq (p.restrict_scalars exprℝ()) fr, "with", "⟨", ident g, ",", "⟨", ident hextends, ",", ident hnormeq, "⟩", "⟩"],
+  refine [expr ⟨g.extend_to_𝕜, _⟩],
+  have [ident h] [":", expr ∀ x : p, «expr = »(g.extend_to_𝕜 x, f x)] [],
+  { assume [binders (x)],
+    rw ["[", expr continuous_linear_map.extend_to_𝕜_apply, ",", "<-", expr submodule.coe_smul, ",", expr hextends, ",", expr hextends, "]"] [],
+    have [] [":", expr «expr = »(«expr - »((fr x : 𝕜), «expr * »(I, «expr↑ »(fr «expr • »(I, x)))), «expr - »((re (f x) : 𝕜), «expr * »((I : 𝕜), re (f «expr • »((I : 𝕜), x)))))] [],
+    by refl,
+    rw [expr this] [],
+    apply [expr ext],
+    { simp [] [] ["only"] ["[", expr add_zero, ",", expr algebra.id.smul_eq_mul, ",", expr I_re, ",", expr of_real_im, ",", expr add_monoid_hom.map_add, ",", expr zero_sub, ",", expr I_im', ",", expr zero_mul, ",", expr of_real_re, ",", expr eq_self_iff_true, ",", expr sub_zero, ",", expr mul_neg_eq_neg_mul_symm, ",", expr of_real_neg, ",", expr mul_re, ",", expr mul_zero, ",", expr sub_neg_eq_add, ",", expr continuous_linear_map.map_smul, "]"] [] [] },
+    { simp [] [] ["only"] ["[", expr algebra.id.smul_eq_mul, ",", expr I_re, ",", expr of_real_im, ",", expr add_monoid_hom.map_add, ",", expr zero_sub, ",", expr I_im', ",", expr zero_mul, ",", expr of_real_re, ",", expr mul_neg_eq_neg_mul_symm, ",", expr mul_im, ",", expr zero_add, ",", expr of_real_neg, ",", expr mul_re, ",", expr sub_neg_eq_add, ",", expr continuous_linear_map.map_smul, "]"] [] [] } },
+  refine [expr ⟨h, le_antisymm _ _⟩],
+  { calc
+      «expr ≤ »(«expr∥ ∥»(g.extend_to_𝕜), «expr∥ ∥»(g)) : g.extend_to_𝕜.op_norm_le_bound g.op_norm_nonneg (norm_bound _)
+      «expr = »(..., «expr∥ ∥»(fr)) : hnormeq
+      «expr ≤ »(..., «expr * »(«expr∥ ∥»(re_clm), «expr∥ ∥»(f))) : continuous_linear_map.op_norm_comp_le _ _
+      «expr = »(..., «expr∥ ∥»(f)) : by rw ["[", expr re_clm_norm, ",", expr one_mul, "]"] [] },
+  { exact [expr f.op_norm_le_bound g.extend_to_𝕜.op_norm_nonneg (λ x, «expr ▸ »(h x, g.extend_to_𝕜.le_op_norm x))] }
+end
 
 end IsROrC
 

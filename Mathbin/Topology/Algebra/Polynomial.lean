@@ -1,6 +1,6 @@
+import Mathbin.Analysis.NormedSpace.Basic 
 import Mathbin.Data.Polynomial.AlgebraMap 
-import Mathbin.Data.Polynomial.Div 
-import Mathbin.Topology.MetricSpace.CauSeqFilter
+import Mathbin.Data.Polynomial.Inductions
 
 /-!
 # Polynomials and limits

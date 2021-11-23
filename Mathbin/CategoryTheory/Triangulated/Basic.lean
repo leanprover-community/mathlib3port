@@ -1,6 +1,4 @@
-import Mathbin.CategoryTheory.Additive.Basic 
-import Mathbin.CategoryTheory.Shift 
-import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
+import Mathbin.CategoryTheory.Shift
 
 /-!
 # Triangles
@@ -130,7 +128,7 @@ Triangles with triangle morphisms form a category.
 -/
 @[simps]
 instance triangle_category : category (triangle C) :=
-  { hom := fun A B => triangle_morphism A B, id := fun A => triangle_morphism_id A, comp := fun A B C f g => f.comp g }
+  { Hom := fun A B => triangle_morphism A B, id := fun A => triangle_morphism_id A, comp := fun A B C f g => f.comp g }
 
 end CategoryTheory.Triangulated
 

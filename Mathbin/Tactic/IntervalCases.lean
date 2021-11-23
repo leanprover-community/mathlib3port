@@ -1,7 +1,7 @@
+import Mathbin.Tactic.FinCases 
 import Mathbin.Data.Fin.Interval 
 import Mathbin.Data.Int.Interval 
-import Mathbin.Data.Pnat.Interval 
-import Mathbin.Tactic.FinCases
+import Mathbin.Data.Pnat.Interval
 
 /-!
 # Case bash on variables in finite intervals
@@ -43,35 +43,35 @@ unsafe def gives_upper_bound (n e : expr) : tactic expr :=
   do 
     let t ← infer_type e 
     match t with 
-      | quote (%%n') < %%b =>
+      | quote.1 ((%%ₓn') < %%ₓb) =>
         do 
           guardₓ (n = n')
           let b ← b.to_rat 
           return e
-      | quote (%%b) > %%n' =>
+      | quote.1 ((%%ₓb) > %%ₓn') =>
         do 
           guardₓ (n = n')
           let b ← b.to_rat 
           return e
-      | quote (%%n') ≤ %%b =>
+      | quote.1 ((%%ₓn') ≤ %%ₓb) =>
         do 
           guardₓ (n = n')
           let b ← b.to_rat 
           let tn ← infer_type n 
           match tn with 
-            | quote ℕ => to_expr (pquote Nat.lt_add_one_iff.mpr (%%e))
-            | quote ℕ+ => to_expr (pquote Pnat.lt_add_one_iff.mpr (%%e))
-            | quote ℤ => to_expr (pquote Int.lt_add_one_iff.mpr (%%e))
+            | quote.1 ℕ => to_expr (pquote.1 (Nat.lt_add_one_iff.mpr (%%ₓe)))
+            | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.lt_add_one_iff.mpr (%%ₓe)))
+            | quote.1 ℤ => to_expr (pquote.1 (Int.lt_add_one_iff.mpr (%%ₓe)))
             | _ => failed
-      | quote (%%b) ≥ %%n' =>
+      | quote.1 ((%%ₓb) ≥ %%ₓn') =>
         do 
           guardₓ (n = n')
           let b ← b.to_rat 
           let tn ← infer_type n 
           match tn with 
-            | quote ℕ => to_expr (pquote Nat.lt_add_one_iff.mpr (%%e))
-            | quote ℕ+ => to_expr (pquote Pnat.lt_add_one_iff.mpr (%%e))
-            | quote ℤ => to_expr (pquote Int.lt_add_one_iff.mpr (%%e))
+            | quote.1 ℕ => to_expr (pquote.1 (Nat.lt_add_one_iff.mpr (%%ₓe)))
+            | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.lt_add_one_iff.mpr (%%ₓe)))
+            | quote.1 ℤ => to_expr (pquote.1 (Int.lt_add_one_iff.mpr (%%ₓe)))
             | _ => failed
       | _ => failed
 
@@ -84,35 +84,35 @@ unsafe def gives_lower_bound (n e : expr) : tactic expr :=
   do 
     let t ← infer_type e 
     match t with 
-      | quote (%%n') ≥ %%b =>
+      | quote.1 ((%%ₓn') ≥ %%ₓb) =>
         do 
           guardₓ (n = n')
           let b ← b.to_rat 
           return e
-      | quote (%%b) ≤ %%n' =>
+      | quote.1 ((%%ₓb) ≤ %%ₓn') =>
         do 
           guardₓ (n = n')
           let b ← b.to_rat 
           return e
-      | quote (%%n') > %%b =>
+      | quote.1 ((%%ₓn') > %%ₓb) =>
         do 
           guardₓ (n = n')
           let b ← b.to_rat 
           let tn ← infer_type n 
           match tn with 
-            | quote ℕ => to_expr (pquote Nat.add_one_le_iff.mpr (%%e))
-            | quote ℕ+ => to_expr (pquote Pnat.add_one_le_iff.mpr (%%e))
-            | quote ℤ => to_expr (pquote Int.add_one_le_iff.mpr (%%e))
+            | quote.1 ℕ => to_expr (pquote.1 (Nat.add_one_le_iff.mpr (%%ₓe)))
+            | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.add_one_le_iff.mpr (%%ₓe)))
+            | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓe)))
             | _ => failed
-      | quote (%%b) < %%n' =>
+      | quote.1 ((%%ₓb) < %%ₓn') =>
         do 
           guardₓ (n = n')
           let b ← b.to_rat 
           let tn ← infer_type n 
           match tn with 
-            | quote ℕ => to_expr (pquote Nat.add_one_le_iff.mpr (%%e))
-            | quote ℕ+ => to_expr (pquote Pnat.add_one_le_iff.mpr (%%e))
-            | quote ℤ => to_expr (pquote Int.add_one_le_iff.mpr (%%e))
+            | quote.1 ℕ => to_expr (pquote.1 (Nat.add_one_le_iff.mpr (%%ₓe)))
+            | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.add_one_le_iff.mpr (%%ₓe)))
+            | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓe)))
             | _ => failed
       | _ => failed
 
@@ -123,7 +123,7 @@ unsafe def combine_upper_bounds : Option expr → Option expr → tactic (Option
 | none, some prf => return$ some prf
 | some prf₁, some prf₂ =>
   do 
-    Option.some <$> to_expr (pquote lt_minₓ (%%prf₁) (%%prf₂))
+    Option.some <$> to_expr (pquote.1 (lt_minₓ (%%ₓprf₁) (%%ₓprf₂)))
 
 /-- Combine two lower bounds. -/
 unsafe def combine_lower_bounds : Option expr → Option expr → tactic (Option expr)
@@ -132,7 +132,7 @@ unsafe def combine_lower_bounds : Option expr → Option expr → tactic (Option
 | none, some prf => return$ some prf
 | some prf₁, some prf₂ =>
   do 
-    Option.some <$> to_expr (pquote max_leₓ (%%prf₂) (%%prf₁))
+    Option.some <$> to_expr (pquote.1 (max_leₓ (%%ₓprf₂) (%%ₓprf₁)))
 
 /-- Inspect a given expression, using it to update a set of upper and lower bounds on `n`. -/
 unsafe def update_bounds (n : expr) (bounds : Option expr × Option expr) (e : expr) :
@@ -149,10 +149,10 @@ Attempt to find a lower bound for the variable `n`, by evaluating `bot_le n`.
 -/
 unsafe def initial_lower_bound (n : expr) : tactic expr :=
   do 
-    let e ← to_expr (pquote @bot_le _ _ _ (%%n))
+    let e ← to_expr (pquote.1 (@bot_le _ _ _ (%%ₓn)))
     let t ← infer_type e 
     match t with 
-      | quote (%%b) ≤ %%n =>
+      | quote.1 ((%%ₓb) ≤ %%ₓn) =>
         do 
           return e
       | _ => failed
@@ -162,16 +162,16 @@ Attempt to find an upper bound for the variable `n`, by evaluating `le_top n`.
 -/
 unsafe def initial_upper_bound (n : expr) : tactic expr :=
   do 
-    let e ← to_expr (pquote @le_top _ _ _ (%%n))
+    let e ← to_expr (pquote.1 (@le_top _ _ _ (%%ₓn)))
     match e with 
-      | quote (%%n) ≤ %%b =>
+      | quote.1 ((%%ₓn) ≤ %%ₓb) =>
         do 
           let tn ← infer_type n 
           let e ←
             match tn with 
-              | quote ℕ => to_expr (pquote Nat.add_one_le_iff.mpr (%%e))
-              | quote ℕ+ => to_expr (pquote Pnat.add_one_le_iff.mpr (%%e))
-              | quote ℤ => to_expr (pquote Int.add_one_le_iff.mpr (%%e))
+              | quote.1 ℕ => to_expr (pquote.1 (Nat.add_one_le_iff.mpr (%%ₓe)))
+              | quote.1 ℕ+ => to_expr (pquote.1 (Pnat.add_one_le_iff.mpr (%%ₓe)))
+              | quote.1 ℤ => to_expr (pquote.1 (Int.add_one_le_iff.mpr (%%ₓe)))
               | _ => failed 
           return e
       | _ => failed
@@ -210,7 +210,7 @@ By default `interval_cases_using` automatically generates a name for the new hyp
 can be specified via the optional argument `n`.
 -/
 unsafe def interval_cases_using (hl hu : expr) (n : Option Name) : tactic Unit :=
-  (to_expr (pquote mem_set_elems (Ico _ _) ⟨%%hl, %%hu⟩) >>=
+  (to_expr (pquote.1 (mem_set_elems (Ico _ _) ⟨%%ₓhl, %%ₓhu⟩)) >>=
       if hn : n.is_some then note (Option.get hn) else note_anon none) >>=
     fin_cases_at none
 

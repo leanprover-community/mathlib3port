@@ -92,122 +92,104 @@ theorem angle_sub_eq_angle_sub_rev_of_norm_eq {x y : V} (h : ∥x∥ = ∥y∥) 
     rw [cos_angle, cos_angle, h, ←neg_sub, norm_neg, neg_sub, inner_sub_right, inner_sub_right,
       real_inner_self_eq_norm_mul_norm, real_inner_self_eq_norm_mul_norm, h, real_inner_comm x y]
 
--- error in Geometry.Euclidean.Triangle: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Converse of pons asinorum, vector angle form. -/
-theorem norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi
-{x y : V}
-(h : «expr = »(angle x «expr - »(x, y), angle y «expr - »(y, x)))
-(hpi : «expr ≠ »(angle x y, exprπ())) : «expr = »(«expr∥ ∥»(x), «expr∥ ∥»(y)) :=
-begin
-  replace [ident h] [] [":=", expr real.arccos_inj_on (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x «expr - »(x, y))) (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one y «expr - »(y, x))) h],
-  by_cases [expr hxy, ":", expr «expr = »(x, y)],
-  { rw [expr hxy] [] },
-  { rw ["[", "<-", expr norm_neg «expr - »(y, x), ",", expr neg_sub, ",", expr mul_comm, ",", expr mul_comm «expr∥ ∥»(y), ",", expr div_eq_mul_inv, ",", expr div_eq_mul_inv, ",", expr mul_inv_rev₀, ",", expr mul_inv_rev₀, ",", "<-", expr mul_assoc, ",", "<-", expr mul_assoc, "]"] ["at", ident h],
-    replace [ident h] [] [":=", expr mul_right_cancel₀ (inv_ne_zero (λ
-       hz, hxy (eq_of_sub_eq_zero (norm_eq_zero.1 hz)))) h],
-    rw ["[", expr inner_sub_right, ",", expr inner_sub_right, ",", expr real_inner_comm x y, ",", expr real_inner_self_eq_norm_mul_norm, ",", expr real_inner_self_eq_norm_mul_norm, ",", expr mul_sub_right_distrib, ",", expr mul_sub_right_distrib, ",", expr mul_self_mul_inv, ",", expr mul_self_mul_inv, ",", expr sub_eq_sub_iff_sub_eq_sub, ",", "<-", expr mul_sub_left_distrib, "]"] ["at", ident h],
-    by_cases [expr hx0, ":", expr «expr = »(x, 0)],
-    { rw ["[", expr hx0, ",", expr norm_zero, ",", expr inner_zero_left, ",", expr zero_mul, ",", expr zero_sub, ",", expr neg_eq_zero, "]"] ["at", ident h],
-      rw ["[", expr hx0, ",", expr norm_zero, ",", expr h, "]"] [] },
-    { by_cases [expr hy0, ":", expr «expr = »(y, 0)],
-      { rw ["[", expr hy0, ",", expr norm_zero, ",", expr inner_zero_right, ",", expr zero_mul, ",", expr sub_zero, "]"] ["at", ident h],
-        rw ["[", expr hy0, ",", expr norm_zero, ",", expr h, "]"] [] },
-      { rw ["[", expr inv_sub_inv (λ
-          hz, hx0 (norm_eq_zero.1 hz)) (λ
-          hz, hy0 (norm_eq_zero.1 hz)), ",", "<-", expr neg_sub, ",", "<-", expr mul_div_assoc, ",", expr mul_comm, ",", expr mul_div_assoc, ",", "<-", expr mul_neg_one, "]"] ["at", ident h],
-        symmetry,
-        by_contradiction [ident hyx],
-        replace [ident h] [] [":=", expr (mul_left_cancel₀ (sub_ne_zero_of_ne hyx) h).symm],
-        rw ["[", expr real_inner_div_norm_mul_norm_eq_neg_one_iff, ",", "<-", expr angle_eq_pi_iff, "]"] ["at", ident h],
-        exact [expr hpi h] } } }
-end
+theorem norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi {x y : V} (h : angle x (x - y) = angle y (y - x))
+  (hpi : angle x y ≠ π) : ∥x∥ = ∥y∥ :=
+  by 
+    replace h :=
+      Real.arccos_inj_on (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x (x - y)))
+        (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one y (y - x))) h 
+    byCases' hxy : x = y
+    ·
+      rw [hxy]
+    ·
+      rw [←norm_neg (y - x), neg_sub, mul_commₓ, mul_commₓ ∥y∥, div_eq_mul_inv, div_eq_mul_inv, mul_inv_rev₀,
+        mul_inv_rev₀, ←mul_assocₓ, ←mul_assocₓ] at h 
+      replace h := mul_right_cancel₀ (inv_ne_zero fun hz => hxy (eq_of_sub_eq_zero (norm_eq_zero.1 hz))) h 
+      rw [inner_sub_right, inner_sub_right, real_inner_comm x y, real_inner_self_eq_norm_mul_norm,
+        real_inner_self_eq_norm_mul_norm, mul_sub_right_distrib, mul_sub_right_distrib, mul_self_mul_inv,
+        mul_self_mul_inv, sub_eq_sub_iff_sub_eq_sub, ←mul_sub_left_distrib] at h 
+      byCases' hx0 : x = 0
+      ·
+        rw [hx0, norm_zero, inner_zero_left, zero_mul, zero_sub, neg_eq_zero] at h 
+        rw [hx0, norm_zero, h]
+      ·
+        byCases' hy0 : y = 0
+        ·
+          rw [hy0, norm_zero, inner_zero_right, zero_mul, sub_zero] at h 
+          rw [hy0, norm_zero, h]
+        ·
+          rw [inv_sub_inv (fun hz => hx0 (norm_eq_zero.1 hz)) fun hz => hy0 (norm_eq_zero.1 hz), ←neg_sub,
+            ←mul_div_assoc, mul_commₓ, mul_div_assoc, ←mul_neg_one] at h 
+          symm 
+          byContra hyx 
+          replace h := (mul_left_cancel₀ (sub_ne_zero_of_ne hyx) h).symm 
+          rw [real_inner_div_norm_mul_norm_eq_neg_one_iff, ←angle_eq_pi_iff] at h 
+          exact hpi h
 
+-- error in Geometry.Euclidean.Triangle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The cosine of the sum of two angles in a possibly degenerate
 triangle (where two given sides are nonzero), vector angle form. -/
-theorem cos_angle_sub_add_angle_sub_rev_eq_neg_cos_angle {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
-  Real.cos (angle x (x - y)+angle y (y - x)) = -Real.cos (angle x y) :=
-  by 
-    byCases' hxy : x = y
-    ·
-      rw [hxy, angle_self hy]
-      simp 
-    ·
-      rw [Real.cos_add, cos_angle, cos_angle, cos_angle]
-      have hxn : ∥x∥ ≠ 0 := fun h => hx (norm_eq_zero.1 h)
-      have hyn : ∥y∥ ≠ 0 := fun h => hy (norm_eq_zero.1 h)
-      have hxyn : ∥x - y∥ ≠ 0 := fun h => hxy (eq_of_sub_eq_zero (norm_eq_zero.1 h))
-      apply mul_right_cancel₀ hxn 
-      apply mul_right_cancel₀ hyn 
-      apply mul_right_cancel₀ hxyn 
-      apply mul_right_cancel₀ hxyn 
-      have H1 :
-        (((((Real.sin (angle x (x - y))*Real.sin (angle y (y - x)))*∥x∥)*∥y∥)*∥x - y∥)*∥x - y∥) =
-          (Real.sin (angle x (x - y))*∥x∥*∥x - y∥)*Real.sin (angle y (y - x))*∥y∥*∥x - y∥
-      ·
-        ring 
-      have H2 :
-        ((⟪x, x⟫*inner x x - inner x y - (inner x y - inner y y)) - (inner x x - inner x y)*inner x x - inner x y) =
-          (inner x x*inner y y) - inner x y*inner x y
-      ·
-        ring 
-      have H3 :
-        ((⟪y, y⟫*inner y y - inner x y - (inner x y - inner x x)) - (inner y y - inner x y)*inner y y - inner x y) =
-          (inner x x*inner y y) - inner x y*inner x y
-      ·
-        ring 
-      rw [mul_sub_right_distrib, mul_sub_right_distrib, mul_sub_right_distrib, mul_sub_right_distrib, H1,
-        sin_angle_mul_norm_mul_norm, norm_sub_rev x y, sin_angle_mul_norm_mul_norm, norm_sub_rev y x, inner_sub_left,
-        inner_sub_left, inner_sub_right, inner_sub_right, inner_sub_right, inner_sub_right, real_inner_comm x y, H2, H3,
-        Real.mul_self_sqrt (sub_nonneg_of_le (real_inner_mul_inner_self_le x y)), real_inner_self_eq_norm_mul_norm,
-        real_inner_self_eq_norm_mul_norm, real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two]
-      fieldSimp [hxn, hyn, hxyn]
-      ring
+theorem cos_angle_sub_add_angle_sub_rev_eq_neg_cos_angle
+{x y : V}
+(hx : «expr ≠ »(x, 0))
+(hy : «expr ≠ »(y, 0)) : «expr = »(real.cos «expr + »(angle x «expr - »(x, y), angle y «expr - »(y, x)), «expr- »(real.cos (angle x y))) :=
+begin
+  by_cases [expr hxy, ":", expr «expr = »(x, y)],
+  { rw ["[", expr hxy, ",", expr angle_self hy, "]"] [],
+    simp [] [] [] [] [] [] },
+  { rw ["[", expr real.cos_add, ",", expr cos_angle, ",", expr cos_angle, ",", expr cos_angle, "]"] [],
+    have [ident hxn] [":", expr «expr ≠ »(«expr∥ ∥»(x), 0)] [":=", expr λ h, hx (norm_eq_zero.1 h)],
+    have [ident hyn] [":", expr «expr ≠ »(«expr∥ ∥»(y), 0)] [":=", expr λ h, hy (norm_eq_zero.1 h)],
+    have [ident hxyn] [":", expr «expr ≠ »(«expr∥ ∥»(«expr - »(x, y)), 0)] [":=", expr λ
+     h, hxy (eq_of_sub_eq_zero (norm_eq_zero.1 h))],
+    apply [expr mul_right_cancel₀ hxn],
+    apply [expr mul_right_cancel₀ hyn],
+    apply [expr mul_right_cancel₀ hxyn],
+    apply [expr mul_right_cancel₀ hxyn],
+    have [ident H1] [":", expr «expr = »(«expr * »(«expr * »(«expr * »(«expr * »(«expr * »(real.sin (angle x «expr - »(x, y)), real.sin (angle y «expr - »(y, x))), «expr∥ ∥»(x)), «expr∥ ∥»(y)), «expr∥ ∥»(«expr - »(x, y))), «expr∥ ∥»(«expr - »(x, y))), «expr * »(«expr * »(real.sin (angle x «expr - »(x, y)), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(«expr - »(x, y)))), «expr * »(real.sin (angle y «expr - »(y, x)), «expr * »(«expr∥ ∥»(y), «expr∥ ∥»(«expr - »(x, y))))))] [],
+    { ring [] },
+    have [ident H2] [":", expr «expr = »(«expr - »(«expr * »(«expr⟪ , ⟫»(x, x), «expr - »(«expr - »(inner x x, inner x y), «expr - »(inner x y, inner y y))), «expr * »(«expr - »(inner x x, inner x y), «expr - »(inner x x, inner x y))), «expr - »(«expr * »(inner x x, inner y y), «expr * »(inner x y, inner x y)))] [],
+    { ring [] },
+    have [ident H3] [":", expr «expr = »(«expr - »(«expr * »(«expr⟪ , ⟫»(y, y), «expr - »(«expr - »(inner y y, inner x y), «expr - »(inner x y, inner x x))), «expr * »(«expr - »(inner y y, inner x y), «expr - »(inner y y, inner x y))), «expr - »(«expr * »(inner x x, inner y y), «expr * »(inner x y, inner x y)))] [],
+    { ring [] },
+    rw ["[", expr mul_sub_right_distrib, ",", expr mul_sub_right_distrib, ",", expr mul_sub_right_distrib, ",", expr mul_sub_right_distrib, ",", expr H1, ",", expr sin_angle_mul_norm_mul_norm, ",", expr norm_sub_rev x y, ",", expr sin_angle_mul_norm_mul_norm, ",", expr norm_sub_rev y x, ",", expr inner_sub_left, ",", expr inner_sub_left, ",", expr inner_sub_right, ",", expr inner_sub_right, ",", expr inner_sub_right, ",", expr inner_sub_right, ",", expr real_inner_comm x y, ",", expr H2, ",", expr H3, ",", expr real.mul_self_sqrt (sub_nonneg_of_le (real_inner_mul_inner_self_le x y)), ",", expr real_inner_self_eq_norm_mul_norm, ",", expr real_inner_self_eq_norm_mul_norm, ",", expr real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two, "]"] [],
+    field_simp [] ["[", expr hxn, ",", expr hyn, ",", expr hxyn, "]"] [] [],
+    ring [] }
+end
 
+-- error in Geometry.Euclidean.Triangle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The sine of the sum of two angles in a possibly degenerate
 triangle (where two given sides are nonzero), vector angle form. -/
-theorem sin_angle_sub_add_angle_sub_rev_eq_sin_angle {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
-  Real.sin (angle x (x - y)+angle y (y - x)) = Real.sin (angle x y) :=
-  by 
-    byCases' hxy : x = y
-    ·
-      rw [hxy, angle_self hy]
-      simp 
-    ·
-      rw [Real.sin_add, cos_angle, cos_angle]
-      have hxn : ∥x∥ ≠ 0 := fun h => hx (norm_eq_zero.1 h)
-      have hyn : ∥y∥ ≠ 0 := fun h => hy (norm_eq_zero.1 h)
-      have hxyn : ∥x - y∥ ≠ 0 := fun h => hxy (eq_of_sub_eq_zero (norm_eq_zero.1 h))
-      apply mul_right_cancel₀ hxn 
-      apply mul_right_cancel₀ hyn 
-      apply mul_right_cancel₀ hxyn 
-      apply mul_right_cancel₀ hxyn 
-      have H1 :
-        ((((Real.sin (angle x (x - y))*⟪y, y - x⟫ / ∥y∥*∥y - x∥)*∥x∥)*∥y∥)*∥x - y∥) =
-          ((Real.sin (angle x (x - y))*∥x∥*∥x - y∥)*⟪y, y - x⟫ / ∥y∥*∥y - x∥)*∥y∥
-      ·
-        ring 
-      have H2 :
-        (((((⟪x, x - y⟫ / ∥x∥*∥y - x∥)*Real.sin (angle y (y - x)))*∥x∥)*∥y∥)*∥y - x∥) =
-          ((⟪x, x - y⟫ / ∥x∥*∥y - x∥)*Real.sin (angle y (y - x))*∥y∥*∥y - x∥)*∥x∥
-      ·
-        ring 
-      have H3 :
-        ((⟪x, x⟫*⟪x, x⟫ - ⟪x, y⟫ - (⟪x, y⟫ - ⟪y, y⟫)) - (⟪x, x⟫ - ⟪x, y⟫)*⟪x, x⟫ - ⟪x, y⟫) =
-          (⟪x, x⟫*⟪y, y⟫) - ⟪x, y⟫*⟪x, y⟫
-      ·
-        ring 
-      have H4 :
-        ((⟪y, y⟫*⟪y, y⟫ - ⟪x, y⟫ - (⟪x, y⟫ - ⟪x, x⟫)) - (⟪y, y⟫ - ⟪x, y⟫)*⟪y, y⟫ - ⟪x, y⟫) =
-          (⟪x, x⟫*⟪y, y⟫) - ⟪x, y⟫*⟪x, y⟫
-      ·
-        ring 
-      rw [right_distrib, right_distrib, right_distrib, right_distrib, H1, sin_angle_mul_norm_mul_norm, norm_sub_rev x y,
-        H2, sin_angle_mul_norm_mul_norm, norm_sub_rev y x, mul_assocₓ (Real.sin (angle x y)),
-        sin_angle_mul_norm_mul_norm, inner_sub_left, inner_sub_left, inner_sub_right, inner_sub_right, inner_sub_right,
-        inner_sub_right, real_inner_comm x y, H3, H4, real_inner_self_eq_norm_mul_norm,
-        real_inner_self_eq_norm_mul_norm, real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two]
-      fieldSimp [hxn, hyn, hxyn]
-      ring
+theorem sin_angle_sub_add_angle_sub_rev_eq_sin_angle
+{x y : V}
+(hx : «expr ≠ »(x, 0))
+(hy : «expr ≠ »(y, 0)) : «expr = »(real.sin «expr + »(angle x «expr - »(x, y), angle y «expr - »(y, x)), real.sin (angle x y)) :=
+begin
+  by_cases [expr hxy, ":", expr «expr = »(x, y)],
+  { rw ["[", expr hxy, ",", expr angle_self hy, "]"] [],
+    simp [] [] [] [] [] [] },
+  { rw ["[", expr real.sin_add, ",", expr cos_angle, ",", expr cos_angle, "]"] [],
+    have [ident hxn] [":", expr «expr ≠ »(«expr∥ ∥»(x), 0)] [":=", expr λ h, hx (norm_eq_zero.1 h)],
+    have [ident hyn] [":", expr «expr ≠ »(«expr∥ ∥»(y), 0)] [":=", expr λ h, hy (norm_eq_zero.1 h)],
+    have [ident hxyn] [":", expr «expr ≠ »(«expr∥ ∥»(«expr - »(x, y)), 0)] [":=", expr λ
+     h, hxy (eq_of_sub_eq_zero (norm_eq_zero.1 h))],
+    apply [expr mul_right_cancel₀ hxn],
+    apply [expr mul_right_cancel₀ hyn],
+    apply [expr mul_right_cancel₀ hxyn],
+    apply [expr mul_right_cancel₀ hxyn],
+    have [ident H1] [":", expr «expr = »(«expr * »(«expr * »(«expr * »(«expr * »(real.sin (angle x «expr - »(x, y)), «expr / »(«expr⟪ , ⟫»(y, «expr - »(y, x)), «expr * »(«expr∥ ∥»(y), «expr∥ ∥»(«expr - »(y, x))))), «expr∥ ∥»(x)), «expr∥ ∥»(y)), «expr∥ ∥»(«expr - »(x, y))), «expr * »(«expr * »(«expr * »(real.sin (angle x «expr - »(x, y)), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(«expr - »(x, y)))), «expr / »(«expr⟪ , ⟫»(y, «expr - »(y, x)), «expr * »(«expr∥ ∥»(y), «expr∥ ∥»(«expr - »(y, x))))), «expr∥ ∥»(y)))] [],
+    { ring [] },
+    have [ident H2] [":", expr «expr = »(«expr * »(«expr * »(«expr * »(«expr * »(«expr / »(«expr⟪ , ⟫»(x, «expr - »(x, y)), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(«expr - »(y, x)))), real.sin (angle y «expr - »(y, x))), «expr∥ ∥»(x)), «expr∥ ∥»(y)), «expr∥ ∥»(«expr - »(y, x))), «expr * »(«expr * »(«expr / »(«expr⟪ , ⟫»(x, «expr - »(x, y)), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(«expr - »(y, x)))), «expr * »(real.sin (angle y «expr - »(y, x)), «expr * »(«expr∥ ∥»(y), «expr∥ ∥»(«expr - »(y, x))))), «expr∥ ∥»(x)))] [],
+    { ring [] },
+    have [ident H3] [":", expr «expr = »(«expr - »(«expr * »(«expr⟪ , ⟫»(x, x), «expr - »(«expr - »(«expr⟪ , ⟫»(x, x), «expr⟪ , ⟫»(x, y)), «expr - »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(y, y)))), «expr * »(«expr - »(«expr⟪ , ⟫»(x, x), «expr⟪ , ⟫»(x, y)), «expr - »(«expr⟪ , ⟫»(x, x), «expr⟪ , ⟫»(x, y)))), «expr - »(«expr * »(«expr⟪ , ⟫»(x, x), «expr⟪ , ⟫»(y, y)), «expr * »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(x, y))))] [],
+    { ring [] },
+    have [ident H4] [":", expr «expr = »(«expr - »(«expr * »(«expr⟪ , ⟫»(y, y), «expr - »(«expr - »(«expr⟪ , ⟫»(y, y), «expr⟪ , ⟫»(x, y)), «expr - »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(x, x)))), «expr * »(«expr - »(«expr⟪ , ⟫»(y, y), «expr⟪ , ⟫»(x, y)), «expr - »(«expr⟪ , ⟫»(y, y), «expr⟪ , ⟫»(x, y)))), «expr - »(«expr * »(«expr⟪ , ⟫»(x, x), «expr⟪ , ⟫»(y, y)), «expr * »(«expr⟪ , ⟫»(x, y), «expr⟪ , ⟫»(x, y))))] [],
+    { ring [] },
+    rw ["[", expr right_distrib, ",", expr right_distrib, ",", expr right_distrib, ",", expr right_distrib, ",", expr H1, ",", expr sin_angle_mul_norm_mul_norm, ",", expr norm_sub_rev x y, ",", expr H2, ",", expr sin_angle_mul_norm_mul_norm, ",", expr norm_sub_rev y x, ",", expr mul_assoc (real.sin (angle x y)), ",", expr sin_angle_mul_norm_mul_norm, ",", expr inner_sub_left, ",", expr inner_sub_left, ",", expr inner_sub_right, ",", expr inner_sub_right, ",", expr inner_sub_right, ",", expr inner_sub_right, ",", expr real_inner_comm x y, ",", expr H3, ",", expr H4, ",", expr real_inner_self_eq_norm_mul_norm, ",", expr real_inner_self_eq_norm_mul_norm, ",", expr real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two, "]"] [],
+    field_simp [] ["[", expr hxn, ",", expr hyn, ",", expr hxyn, "]"] [] [],
+    ring [] }
+end
 
 /-- The cosine of the sum of the angles of a possibly degenerate
 triangle (where two given sides are nonzero), vector angle form. -/
@@ -227,7 +209,7 @@ theorem sin_angle_add_angle_sub_add_angle_sub_eq_zero {x y : V} (hx : x ≠ 0) (
       sin_angle_sub_add_angle_sub_rev_eq_sin_angle hx hy]
     ring
 
--- error in Geometry.Euclidean.Triangle: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Geometry.Euclidean.Triangle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The sum of the angles of a possibly degenerate triangle (where the
 two given sides are nonzero), vector angle form. -/
 theorem angle_add_angle_sub_add_angle_sub_eq_pi
@@ -255,7 +237,7 @@ begin
     rw [expr add_assoc] [],
     exact [expr add_lt_add_left (lt_of_le_of_lt (angle_le_pi _ _) (lt_add_of_pos_right exprπ() real.pi_pos)) _] },
   have [ident hn0] [":", expr «expr ≤ »(0, n)] [],
-  { rw ["[", expr hn, ",", expr mul_nonneg_iff_right_nonneg_of_pos real.pi_pos, "]"] ["at", ident h0],
+  { rw ["[", expr hn, ",", expr mul_nonneg_iff_left_nonneg_of_pos real.pi_pos, "]"] ["at", ident h0],
     norm_cast ["at", ident h0],
     exact [expr h0] },
   have [ident hn3] [":", expr «expr < »(n, 3)] [],
@@ -360,53 +342,51 @@ theorem dist_sq_mul_dist_add_dist_sq_mul_dist (a b c p : P) (h : ∠ b p c = π)
       Real.cos_pi_sub, dist_eq_add_dist_of_angle_eq_pi h]
     ring
 
+-- error in Geometry.Euclidean.Triangle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Apollonius's Theorem**. -/
-theorem dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq (a b c : P) :
-  ((dist a b^2)+dist a c^2) = 2*(dist a (midpoint ℝ b c)^2)+dist b c / 2^2 :=
-  by 
-    byCases' hbc : b = c
-    ·
-      simp [hbc, midpoint_self, dist_self, two_mul]
-    ·
-      let m := midpoint ℝ b c 
-      have  : dist b c ≠ 0 := (dist_pos.mpr hbc).ne' 
-      have hm := dist_sq_mul_dist_add_dist_sq_mul_dist a b c m (angle_midpoint_eq_pi b c hbc)
-      simp only [dist_left_midpoint, dist_right_midpoint, Real.norm_two] at hm 
-      calc ((dist a b^2)+dist a c^2) = (2 / dist b c)*((dist a b^2)*2⁻¹*dist b c)+(dist a c^2)*2⁻¹*dist b c :=
-        by 
-          fieldSimp 
-          ring _ = 2*(dist a (midpoint ℝ b c)^2)+dist b c / 2^2 :=
-        by 
-          rw [hm]
-          fieldSimp 
-          ring
+theorem dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq
+(a
+ b
+ c : P) : «expr = »(«expr + »(«expr ^ »(dist a b, 2), «expr ^ »(dist a c, 2)), «expr * »(2, «expr + »(«expr ^ »(dist a (midpoint exprℝ() b c), 2), «expr ^ »(«expr / »(dist b c, 2), 2)))) :=
+begin
+  by_cases [expr hbc, ":", expr «expr = »(b, c)],
+  { simp [] [] [] ["[", expr hbc, ",", expr midpoint_self, ",", expr dist_self, ",", expr two_mul, "]"] [] [] },
+  { let [ident m] [] [":=", expr midpoint exprℝ() b c],
+    have [] [":", expr «expr ≠ »(dist b c, 0)] [":=", expr (dist_pos.mpr hbc).ne'],
+    have [ident hm] [] [":=", expr dist_sq_mul_dist_add_dist_sq_mul_dist a b c m (angle_midpoint_eq_pi b c hbc)],
+    simp [] [] ["only"] ["[", expr dist_left_midpoint, ",", expr dist_right_midpoint, ",", expr real.norm_two, "]"] [] ["at", ident hm],
+    calc
+      «expr = »(«expr + »(«expr ^ »(dist a b, 2), «expr ^ »(dist a c, 2)), «expr * »(«expr / »(2, dist b c), «expr + »(«expr * »(«expr ^ »(dist a b, 2), «expr * »(«expr ⁻¹»(2), dist b c)), «expr * »(«expr ^ »(dist a c, 2), «expr * »(«expr ⁻¹»(2), dist b c))))) : by { field_simp [] [] [] [],
+        ring [] }
+      «expr = »(..., «expr * »(2, «expr + »(«expr ^ »(dist a (midpoint exprℝ() b c), 2), «expr ^ »(«expr / »(dist b c, 2), 2)))) : by { rw [expr hm] [],
+        field_simp [] [] [] [],
+        ring [] } }
+end
 
-theorem dist_mul_of_eq_angle_of_dist_mul (a b c a' b' c' : P) (r : ℝ) (h : ∠ a' b' c' = ∠ a b c)
-  (hab : dist a' b' = r*dist a b) (hcb : dist c' b' = r*dist c b) : dist a' c' = r*dist a c :=
-  by 
-    have h' : (dist a' c'^2) = ((r*dist a c)^2)
-    calc (dist a' c'^2) = ((dist a' b'^2)+dist c' b'^2) - ((2*dist a' b')*dist c' b')*Real.cos (∠ a' b' c') :=
-      by 
-        simp [pow_two,
-          law_cos a' b' c']_ = (r^2)*((dist a b^2)+dist c b^2) - ((2*dist a b)*dist c b)*Real.cos (∠ a b c) :=
-      by 
-        rw [h, hab, hcb]
-        ring _ = ((r*dist a c)^2) :=
-      by 
-        simp [pow_two, ←law_cos a b c, mul_powₓ]
-    byCases' hab₁ : a = b
-    ·
-      have hab'₁ : a' = b'
-      ·
-        rw [←dist_eq_zero, hab, dist_eq_zero.mpr hab₁, mul_zero r]
-      rw [hab₁, hab'₁, dist_comm b' c', dist_comm b c, hcb]
-    ·
-      have h1 : 0 ≤ r*dist a b
-      ·
-        rw [←hab]
-        exact dist_nonneg 
-      have h2 : 0 ≤ r := nonneg_of_mul_nonneg_right h1 (dist_pos.mpr hab₁)
-      exact (sq_eq_sq dist_nonneg (mul_nonneg h2 dist_nonneg)).mp h'
+-- error in Geometry.Euclidean.Triangle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dist_mul_of_eq_angle_of_dist_mul
+(a b c a' b' c' : P)
+(r : exprℝ())
+(h : «expr = »(«expr∠»() a' b' c', «expr∠»() a b c))
+(hab : «expr = »(dist a' b', «expr * »(r, dist a b)))
+(hcb : «expr = »(dist c' b', «expr * »(r, dist c b))) : «expr = »(dist a' c', «expr * »(r, dist a c)) :=
+begin
+  have [ident h'] [":", expr «expr = »(«expr ^ »(dist a' c', 2), «expr ^ »(«expr * »(r, dist a c), 2))] [],
+  calc
+    «expr = »(«expr ^ »(dist a' c', 2), «expr - »(«expr + »(«expr ^ »(dist a' b', 2), «expr ^ »(dist c' b', 2)), «expr * »(«expr * »(«expr * »(2, dist a' b'), dist c' b'), real.cos («expr∠»() a' b' c')))) : by { simp [] [] [] ["[", expr pow_two, ",", expr law_cos a' b' c', "]"] [] [] }
+    «expr = »(..., «expr * »(«expr ^ »(r, 2), «expr - »(«expr + »(«expr ^ »(dist a b, 2), «expr ^ »(dist c b, 2)), «expr * »(«expr * »(«expr * »(2, dist a b), dist c b), real.cos («expr∠»() a b c))))) : by { rw ["[", expr h, ",", expr hab, ",", expr hcb, "]"] [],
+      ring [] }
+    «expr = »(..., «expr ^ »(«expr * »(r, dist a c), 2)) : by simp [] [] [] ["[", expr pow_two, ",", "<-", expr law_cos a b c, ",", expr mul_pow, "]"] [] [],
+  by_cases [expr hab₁, ":", expr «expr = »(a, b)],
+  { have [ident hab'₁] [":", expr «expr = »(a', b')] [],
+    { rw ["[", "<-", expr dist_eq_zero, ",", expr hab, ",", expr dist_eq_zero.mpr hab₁, ",", expr mul_zero r, "]"] [] },
+    rw ["[", expr hab₁, ",", expr hab'₁, ",", expr dist_comm b' c', ",", expr dist_comm b c, ",", expr hcb, "]"] [] },
+  { have [ident h1] [":", expr «expr ≤ »(0, «expr * »(r, dist a b))] [],
+    { rw ["<-", expr hab] [],
+      exact [expr dist_nonneg] },
+    have [ident h2] [":", expr «expr ≤ »(0, r)] [":=", expr nonneg_of_mul_nonneg_right h1 (dist_pos.mpr hab₁)],
+    exact [expr (sq_eq_sq dist_nonneg (mul_nonneg h2 dist_nonneg)).mp h'] }
+end
 
 end EuclideanGeometry
 

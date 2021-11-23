@@ -1,6 +1,5 @@
 import Mathbin.Algebra.Algebra.RestrictScalars 
-import Mathbin.Algebra.Lie.TensorProduct 
-import Mathbin.RingTheory.TensorProduct
+import Mathbin.Algebra.Lie.TensorProduct
 
 /-!
 # Extension and restriction of scalars for Lie algebras

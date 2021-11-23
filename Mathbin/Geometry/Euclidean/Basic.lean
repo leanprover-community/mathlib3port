@@ -76,25 +76,28 @@ this is π/2. -/
 def angle (x y : V) : ℝ :=
   Real.arccos (inner x y / ∥x∥*∥y∥)
 
-theorem is_conformal_map.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F] {f' : E →L[ℝ] F}
-  (h : IsConformalMap f') (u v : E) : angle (f' u) (f' v) = angle u v :=
-  by 
-    obtain ⟨c, hc, li, hcf⟩ := h 
-    suffices  : ((c*c*inner u v) / (∥c∥*∥u∥)*∥c∥*∥v∥) = inner u v / ∥u∥*∥v∥
-    ·
-      simp [this, angle, hcf, norm_smul, inner_smul_left, inner_smul_right]
-    byCases' hu : ∥u∥ = 0
-    ·
-      simp [norm_eq_zero.mp hu]
-    byCases' hv : ∥v∥ = 0
-    ·
-      simp [norm_eq_zero.mp hv]
-    have hc : ∥c∥ ≠ 0 := fun w => hc (norm_eq_zero.mp w)
-    fieldSimp 
-    have  : (c*c) = ∥c∥*∥c∥ :=
-      by 
-        simp [Real.norm_eq_abs, abs_mul_abs_self]
-    convert congr_argₓ (fun x => ((x*⟪u, v⟫)*∥u∥)*∥v∥) this using 1 <;> ring
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_conformal_map.preserves_angle
+{E F : Type*}
+[inner_product_space exprℝ() E]
+[inner_product_space exprℝ() F]
+{f' : «expr →L[ ] »(E, exprℝ(), F)}
+(h : is_conformal_map f')
+(u v : E) : «expr = »(angle (f' u) (f' v), angle u v) :=
+begin
+  obtain ["⟨", ident c, ",", ident hc, ",", ident li, ",", ident hcf, "⟩", ":=", expr h],
+  suffices [] [":", expr «expr = »(«expr / »(«expr * »(c, «expr * »(c, inner u v)), «expr * »(«expr * »(«expr∥ ∥»(c), «expr∥ ∥»(u)), «expr * »(«expr∥ ∥»(c), «expr∥ ∥»(v)))), «expr / »(inner u v, «expr * »(«expr∥ ∥»(u), «expr∥ ∥»(v))))],
+  { simp [] [] [] ["[", expr this, ",", expr angle, ",", expr hcf, ",", expr norm_smul, ",", expr inner_smul_left, ",", expr inner_smul_right, "]"] [] [] },
+  by_cases [expr hu, ":", expr «expr = »(«expr∥ ∥»(u), 0)],
+  { simp [] [] [] ["[", expr norm_eq_zero.mp hu, "]"] [] [] },
+  by_cases [expr hv, ":", expr «expr = »(«expr∥ ∥»(v), 0)],
+  { simp [] [] [] ["[", expr norm_eq_zero.mp hv, "]"] [] [] },
+  have [ident hc] [":", expr «expr ≠ »(«expr∥ ∥»(c), 0)] [":=", expr λ w, hc (norm_eq_zero.mp w)],
+  field_simp [] [] [] [],
+  have [] [":", expr «expr = »(«expr * »(c, c), «expr * »(«expr∥ ∥»(c), «expr∥ ∥»(c)))] [":=", expr by simp [] [] [] ["[", expr real.norm_eq_abs, ",", expr abs_mul_abs_self, "]"] [] []],
+  convert [] [expr congr_arg (λ
+    x, «expr * »(«expr * »(«expr * »(x, «expr⟪ , ⟫»(u, v)), «expr∥ ∥»(u)), «expr∥ ∥»(v))) this] ["using", 1]; ring []
+end
 
 /-- If a real differentiable map `f` is conformal at a point `x`,
     then it preserves the angles at that point. -/
@@ -200,7 +203,7 @@ theorem angle_smul_left_of_neg (x y : V) {r : ℝ} (hr : r < 0) : angle (r • x
   by 
     rw [angle_comm, angle_smul_right_of_neg y x hr, angle_comm]
 
--- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The cosine of the angle between two vectors, multiplied by the
 product of their norms. -/
 theorem cos_angle_mul_norm_mul_norm
@@ -261,7 +264,7 @@ theorem angle_add_angle_eq_pi_of_angle_eq_pi {x y : V} (z : V) (h : angle x y = 
     rcases angle_eq_pi_iff.1 h with ⟨hx, ⟨r, ⟨hr, rfl⟩⟩⟩
     rw [angle_smul_left_of_neg x z hr, angle_neg_left, add_sub_cancel'_right]
 
--- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Two vectors have inner product 0 if and only if the angle between
 them is π/2. -/
 theorem inner_eq_zero_iff_angle_eq_pi_div_two
@@ -279,22 +282,31 @@ theorem inner_eq_mul_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ⟪x,
   by 
     simp [←cos_angle_mul_norm_mul_norm, h]
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inner product of two non-zero vectors equals the negative product of their norms
 if and only if the angle between the two vectors is π. -/
-theorem inner_eq_neg_mul_norm_iff_angle_eq_pi {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
-  (⟪x, y⟫ = -∥x∥*∥y∥) ↔ angle x y = π :=
-  by 
-    refine' ⟨fun h => _, inner_eq_neg_mul_norm_of_angle_eq_pi⟩
-    have h₁ : (∥x∥*∥y∥) ≠ 0 := (mul_pos (norm_pos_iff.mpr hx) (norm_pos_iff.mpr hy)).ne' 
-    rw [angle, h, neg_div, div_self h₁, Real.arccos_neg_one]
+theorem inner_eq_neg_mul_norm_iff_angle_eq_pi
+{x y : V}
+(hx : «expr ≠ »(x, 0))
+(hy : «expr ≠ »(y, 0)) : «expr ↔ »(«expr = »(«expr⟪ , ⟫»(x, y), «expr- »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y)))), «expr = »(angle x y, exprπ())) :=
+begin
+  refine [expr ⟨λ h, _, inner_eq_neg_mul_norm_of_angle_eq_pi⟩],
+  have [ident h₁] [":", expr «expr ≠ »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y)), 0)] [":=", expr (mul_pos (norm_pos_iff.mpr hx) (norm_pos_iff.mpr hy)).ne'],
+  rw ["[", expr angle, ",", expr h, ",", expr neg_div, ",", expr div_self h₁, ",", expr real.arccos_neg_one, "]"] []
+end
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inner product of two non-zero vectors equals the product of their norms
 if and only if the angle between the two vectors is 0. -/
-theorem inner_eq_mul_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) : (⟪x, y⟫ = ∥x∥*∥y∥) ↔ angle x y = 0 :=
-  by 
-    refine' ⟨fun h => _, inner_eq_mul_norm_of_angle_eq_zero⟩
-    have h₁ : (∥x∥*∥y∥) ≠ 0 := (mul_pos (norm_pos_iff.mpr hx) (norm_pos_iff.mpr hy)).ne' 
-    rw [angle, h, div_self h₁, Real.arccos_one]
+theorem inner_eq_mul_norm_iff_angle_eq_zero
+{x y : V}
+(hx : «expr ≠ »(x, 0))
+(hy : «expr ≠ »(y, 0)) : «expr ↔ »(«expr = »(«expr⟪ , ⟫»(x, y), «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y))), «expr = »(angle x y, 0)) :=
+begin
+  refine [expr ⟨λ h, _, inner_eq_mul_norm_of_angle_eq_zero⟩],
+  have [ident h₁] [":", expr «expr ≠ »(«expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y)), 0)] [":=", expr (mul_pos (norm_pos_iff.mpr hx) (norm_pos_iff.mpr hy)).ne'],
+  rw ["[", expr angle, ",", expr h, ",", expr div_self h₁, ",", expr real.arccos_one, "]"] []
+end
 
 /-- If the angle between two vectors is π, the norm of their difference equals
 the sum of their norms. -/
@@ -350,23 +362,24 @@ theorem norm_add_eq_add_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y 
       by 
         ring
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The norm of the difference of two non-zero vectors equals the absolute value
 of the difference of their norms if and only the angle between the two vectors is 0. -/
-theorem norm_sub_eq_abs_sub_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
-  ∥x - y∥ = |∥x∥ - ∥y∥| ↔ angle x y = 0 :=
-  by 
-    refine' ⟨fun h => _, norm_sub_eq_abs_sub_norm_of_angle_eq_zero⟩
-    rw [←inner_eq_mul_norm_iff_angle_eq_zero hx hy]
-    have h1 : (∥x - y∥^2) = (∥x∥ - ∥y∥^2)
-    ·
-      rw [h]
-      exact sq_abs (∥x∥ - ∥y∥)
-    rw [norm_sub_pow_two_real] at h1 
-    calc inner x y = (((∥x∥+∥y∥)^2) - (∥x∥^2) - (∥y∥^2)) / 2 :=
-      by 
-        linarith _ = ∥x∥*∥y∥ :=
-      by 
-        ring
+theorem norm_sub_eq_abs_sub_norm_iff_angle_eq_zero
+{x y : V}
+(hx : «expr ≠ »(x, 0))
+(hy : «expr ≠ »(y, 0)) : «expr ↔ »(«expr = »(«expr∥ ∥»(«expr - »(x, y)), «expr| |»(«expr - »(«expr∥ ∥»(x), «expr∥ ∥»(y)))), «expr = »(angle x y, 0)) :=
+begin
+  refine [expr ⟨λ h, _, norm_sub_eq_abs_sub_norm_of_angle_eq_zero⟩],
+  rw ["<-", expr inner_eq_mul_norm_iff_angle_eq_zero hx hy] [],
+  have [ident h1] [":", expr «expr = »(«expr ^ »(«expr∥ ∥»(«expr - »(x, y)), 2), «expr ^ »(«expr - »(«expr∥ ∥»(x), «expr∥ ∥»(y)), 2))] [],
+  { rw [expr h] [],
+    exact [expr sq_abs «expr - »(«expr∥ ∥»(x), «expr∥ ∥»(y))] },
+  rw [expr norm_sub_pow_two_real] ["at", ident h1],
+  calc
+    «expr = »(inner x y, «expr / »(«expr - »(«expr - »(«expr ^ »(«expr + »(«expr∥ ∥»(x), «expr∥ ∥»(y)), 2), «expr ^ »(«expr∥ ∥»(x), 2)), «expr ^ »(«expr∥ ∥»(y), 2)), 2)) : by linarith [] [] []
+    «expr = »(..., «expr * »(«expr∥ ∥»(x), «expr∥ ∥»(y))) : by ring []
+end
 
 /-- The norm of the sum of two vectors equals the norm of their difference if and only if
 the angle between them is π/2. -/
@@ -480,17 +493,16 @@ theorem angle_eq_angle_of_angle_eq_pi_of_angle_eq_pi {p1 p2 p3 p4 p5 : P} (hapc 
     linarith [angle_add_angle_eq_pi_of_angle_eq_pi p1 hbpd, angle_comm p4 p5 p1,
       angle_add_angle_eq_pi_of_angle_eq_pi p4 hapc, angle_comm p4 p5 p3]
 
--- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- If ∠ABC = π then dist A B ≠ 0. -/
-theorem left_dist_ne_zero_of_angle_eq_pi
-{p1 p2 p3 : P}
-(h : «expr = »(«expr∠»() p1 p2 p3, exprπ())) : «expr ≠ »(dist p1 p2, 0) :=
-begin
-  by_contra [ident heq],
-  rw ["[", expr dist_eq_zero, "]"] ["at", ident heq],
-  rw ["[", expr heq, ",", expr angle_eq_left, "]"] ["at", ident h],
-  exact [expr real.pi_ne_zero (by linarith [] [] [])]
-end
+theorem left_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : dist p1 p2 ≠ 0 :=
+  by 
+    byContra heq 
+    rw [dist_eq_zero] at heq 
+    rw [HEq, angle_eq_left] at h 
+    exact
+      Real.pi_ne_zero
+        (by 
+          linarith)
 
 /-- If ∠ABC = π then dist C B ≠ 0. -/
 theorem right_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : dist p3 p2 ≠ 0 :=
@@ -542,18 +554,20 @@ theorem angle_midpoint_eq_pi (p1 p2 : P) (hp1p2 : p1 ≠ p2) : ∠ p1 (midpoint 
   by 
     simp [angle, this, hp1p2, -zero_lt_one]
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If M is the midpoint of the segment AB and C is the same distance from A as it is from B
 then ∠CMA = π / 2. -/
-theorem angle_left_midpoint_eq_pi_div_two_of_dist_eq {p1 p2 p3 : P} (h : dist p3 p1 = dist p3 p2) :
-  ∠ p3 (midpoint ℝ p1 p2) p1 = π / 2 :=
-  by 
-    let m : P := midpoint ℝ p1 p2 
-    have h1 : p3 -ᵥ p1 = p3 -ᵥ m - (p1 -ᵥ m) := (vsub_sub_vsub_cancel_right p3 p1 m).symm 
-    have h2 : p3 -ᵥ p2 = (p3 -ᵥ m)+p1 -ᵥ m
-    ·
-      rw [left_vsub_midpoint, ←midpoint_vsub_right, vsub_add_vsub_cancel]
-    rw [dist_eq_norm_vsub V p3 p1, dist_eq_norm_vsub V p3 p2, h1, h2] at h 
-    exact (norm_add_eq_norm_sub_iff_angle_eq_pi_div_two (p3 -ᵥ m) (p1 -ᵥ m)).mp h.symm
+theorem angle_left_midpoint_eq_pi_div_two_of_dist_eq
+{p1 p2 p3 : P}
+(h : «expr = »(dist p3 p1, dist p3 p2)) : «expr = »(«expr∠»() p3 (midpoint exprℝ() p1 p2) p1, «expr / »(exprπ(), 2)) :=
+begin
+  let [ident m] [":", expr P] [":=", expr midpoint exprℝ() p1 p2],
+  have [ident h1] [":", expr «expr = »(«expr -ᵥ »(p3, p1), «expr - »(«expr -ᵥ »(p3, m), «expr -ᵥ »(p1, m)))] [":=", expr (vsub_sub_vsub_cancel_right p3 p1 m).symm],
+  have [ident h2] [":", expr «expr = »(«expr -ᵥ »(p3, p2), «expr + »(«expr -ᵥ »(p3, m), «expr -ᵥ »(p1, m)))] [],
+  { rw ["[", expr left_vsub_midpoint, ",", "<-", expr midpoint_vsub_right, ",", expr vsub_add_vsub_cancel, "]"] [] },
+  rw ["[", expr dist_eq_norm_vsub V p3 p1, ",", expr dist_eq_norm_vsub V p3 p2, ",", expr h1, ",", expr h2, "]"] ["at", ident h],
+  exact [expr (norm_add_eq_norm_sub_iff_angle_eq_pi_div_two «expr -ᵥ »(p3, m) «expr -ᵥ »(p1, m)).mp h.symm]
+end
 
 /-- If M is the midpoint of the segment AB and C is the same distance from A as it is from B
 then ∠CMB = π / 2. -/
@@ -573,42 +587,49 @@ theorem inner_weighted_vsub {ι₁ : Type _} {s₁ : Finset ι₁} {w₁ : ι₁
     simpRw [vsub_sub_vsub_cancel_right]
     rcongr i₁ i₂ <;> rw [dist_eq_norm_vsub V (p₁ i₁) (p₂ i₂)]
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The distance between two points given with `affine_combination`,
 in terms of the pairwise distances between the points in that
 combination. -/
-theorem dist_affine_combination {ι : Type _} {s : Finset ι} {w₁ w₂ : ι → ℝ} (p : ι → P) (h₁ : (∑i in s, w₁ i) = 1)
-  (h₂ : (∑i in s, w₂ i) = 1) :
-  (dist (s.affine_combination p w₁)
-        (s.affine_combination p w₂)*dist (s.affine_combination p w₁) (s.affine_combination p w₂)) =
-    (-∑i₁ in s, ∑i₂ in s, ((w₁ - w₂) i₁*(w₁ - w₂) i₂)*dist (p i₁) (p i₂)*dist (p i₁) (p i₂)) / 2 :=
-  by 
-    rw [dist_eq_norm_vsub V (s.affine_combination p w₁) (s.affine_combination p w₂), ←inner_self_eq_norm_mul_norm,
-      Finset.affine_combination_vsub]
-    have h : (∑i in s, (w₁ - w₂) i) = 0
-    ·
-      simpRw [Pi.sub_apply, Finset.sum_sub_distrib, h₁, h₂, sub_self]
-    exact inner_weighted_vsub p h p h
+theorem dist_affine_combination
+{ι : Type*}
+{s : finset ι}
+{w₁ w₂ : ι → exprℝ()}
+(p : ι → P)
+(h₁ : «expr = »(«expr∑ in , »((i), s, w₁ i), 1))
+(h₂ : «expr = »(«expr∑ in , »((i), s, w₂ i), 1)) : «expr = »(«expr * »(dist (s.affine_combination p w₁) (s.affine_combination p w₂), dist (s.affine_combination p w₁) (s.affine_combination p w₂)), «expr / »(«expr- »(«expr∑ in , »((i₁), s, «expr∑ in , »((i₂), s, «expr * »(«expr * »(«expr - »(w₁, w₂) i₁, «expr - »(w₁, w₂) i₂), «expr * »(dist (p i₁) (p i₂), dist (p i₁) (p i₂)))))), 2)) :=
+begin
+  rw ["[", expr dist_eq_norm_vsub V (s.affine_combination p w₁) (s.affine_combination p w₂), ",", "<-", expr inner_self_eq_norm_mul_norm, ",", expr finset.affine_combination_vsub, "]"] [],
+  have [ident h] [":", expr «expr = »(«expr∑ in , »((i), s, «expr - »(w₁, w₂) i), 0)] [],
+  { simp_rw ["[", expr pi.sub_apply, ",", expr finset.sum_sub_distrib, ",", expr h₁, ",", expr h₂, ",", expr sub_self, "]"] [] },
+  exact [expr inner_weighted_vsub p h p h]
+end
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Suppose that `c₁` is equidistant from `p₁` and `p₂`, and the same
 applies to `c₂`.  Then the vector between `c₁` and `c₂` is orthogonal
 to that between `p₁` and `p₂`.  (In two dimensions, this says that the
 diagonals of a kite are orthogonal.) -/
-theorem inner_vsub_vsub_of_dist_eq_of_dist_eq {c₁ c₂ p₁ p₂ : P} (hc₁ : dist p₁ c₁ = dist p₂ c₁)
-  (hc₂ : dist p₁ c₂ = dist p₂ c₂) : ⟪c₂ -ᵥ c₁, p₂ -ᵥ p₁⟫ = 0 :=
-  by 
-    have h : ⟪(c₂ -ᵥ c₁)+c₂ -ᵥ c₁, p₂ -ᵥ p₁⟫ = 0
-    ·
-      convLHS => congr congr rw [←vsub_sub_vsub_cancel_right c₂ c₁ p₁]skip rw [←vsub_sub_vsub_cancel_right c₂ c₁ p₂]
-      rw [←add_sub_comm, inner_sub_left]
-      convLHS => congr rw [←vsub_sub_vsub_cancel_right p₂ p₁ c₂]skip rw [←vsub_sub_vsub_cancel_right p₂ p₁ c₁]
-      rw [dist_comm p₁, dist_comm p₂, dist_eq_norm_vsub V _ p₁, dist_eq_norm_vsub V _ p₂,
-        ←real_inner_add_sub_eq_zero_iff] at hc₁ hc₂ 
-      simpRw [←neg_vsub_eq_vsub_rev c₁, ←neg_vsub_eq_vsub_rev c₂, sub_neg_eq_add, neg_add_eq_sub, hc₁, hc₂, sub_zero]
-    simpa [inner_add_left, ←mul_two,
-      (by 
-        normNum :
-      (2 : ℝ) ≠ 0)] using
-      h
+theorem inner_vsub_vsub_of_dist_eq_of_dist_eq
+{c₁ c₂ p₁ p₂ : P}
+(hc₁ : «expr = »(dist p₁ c₁, dist p₂ c₁))
+(hc₂ : «expr = »(dist p₁ c₂, dist p₂ c₂)) : «expr = »(«expr⟪ , ⟫»(«expr -ᵥ »(c₂, c₁), «expr -ᵥ »(p₂, p₁)), 0) :=
+begin
+  have [ident h] [":", expr «expr = »(«expr⟪ , ⟫»(«expr + »(«expr -ᵥ »(c₂, c₁), «expr -ᵥ »(c₂, c₁)), «expr -ᵥ »(p₂, p₁)), 0)] [],
+  { conv_lhs [] [] { congr,
+      congr,
+      rw ["<-", expr vsub_sub_vsub_cancel_right c₂ c₁ p₁],
+      skip,
+      rw ["<-", expr vsub_sub_vsub_cancel_right c₂ c₁ p₂] },
+    rw ["[", "<-", expr add_sub_comm, ",", expr inner_sub_left, "]"] [],
+    conv_lhs [] [] { congr,
+      rw ["<-", expr vsub_sub_vsub_cancel_right p₂ p₁ c₂],
+      skip,
+      rw ["<-", expr vsub_sub_vsub_cancel_right p₂ p₁ c₁] },
+    rw ["[", expr dist_comm p₁, ",", expr dist_comm p₂, ",", expr dist_eq_norm_vsub V _ p₁, ",", expr dist_eq_norm_vsub V _ p₂, ",", "<-", expr real_inner_add_sub_eq_zero_iff, "]"] ["at", ident hc₁, ident hc₂],
+    simp_rw ["[", "<-", expr neg_vsub_eq_vsub_rev c₁, ",", "<-", expr neg_vsub_eq_vsub_rev c₂, ",", expr sub_neg_eq_add, ",", expr neg_add_eq_sub, ",", expr hc₁, ",", expr hc₂, ",", expr sub_zero, "]"] [] },
+  simpa [] [] [] ["[", expr inner_add_left, ",", "<-", expr mul_two, ",", expr (by norm_num [] [] : «expr ≠ »((2 : exprℝ()), 0)), "]"] [] ["using", expr h]
+end
 
 /-- The squared distance between points on a line (expressed as a
 multiple of a fixed vector added to a point) and another point,
@@ -620,28 +641,28 @@ theorem dist_smul_vadd_sq (r : ℝ) (v : V) (p₁ p₂ : P) :
       real_inner_smul_left, real_inner_smul_left, real_inner_smul_right]
     ring
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The condition for two points on a line to be equidistant from
 another point. -/
-theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) :
-  dist (r • v +ᵥ p₁) p₂ = dist p₁ p₂ ↔ r = 0 ∨ r = ((-2)*⟪v, p₁ -ᵥ p₂⟫) / ⟪v, v⟫ :=
-  by 
-    convLHS =>
-      rw [←mul_self_inj_of_nonneg dist_nonneg dist_nonneg, dist_smul_vadd_sq, ←sub_eq_zero, add_sub_assoc,
-        dist_eq_norm_vsub V p₁ p₂, ←real_inner_self_eq_norm_mul_norm, sub_self]
-    have hvi : ⟪v, v⟫ ≠ 0
-    ·
-      simpa using hv 
-    have hd : discrim ⟪v, v⟫ (2*⟪v, p₁ -ᵥ p₂⟫) 0 = (2*inner v (p₁ -ᵥ p₂))*2*inner v (p₁ -ᵥ p₂)
-    ·
-      rw [discrim]
-      ring 
-    rw [quadratic_eq_zero_iff hvi hd, add_left_negₓ, zero_div, neg_mul_eq_neg_mul, ←mul_sub_right_distrib,
-      sub_eq_add_neg, ←mul_two, mul_assocₓ, mul_div_assoc, mul_div_mul_left, mul_div_assoc]
-    normNum
+theorem dist_smul_vadd_eq_dist
+{v : V}
+(p₁ p₂ : P)
+(hv : «expr ≠ »(v, 0))
+(r : exprℝ()) : «expr ↔ »(«expr = »(dist «expr +ᵥ »(«expr • »(r, v), p₁) p₂, dist p₁ p₂), «expr ∨ »(«expr = »(r, 0), «expr = »(r, «expr / »(«expr * »(«expr- »(2), «expr⟪ , ⟫»(v, «expr -ᵥ »(p₁, p₂))), «expr⟪ , ⟫»(v, v))))) :=
+begin
+  conv_lhs [] [] { rw ["[", "<-", expr mul_self_inj_of_nonneg dist_nonneg dist_nonneg, ",", expr dist_smul_vadd_sq, ",", "<-", expr sub_eq_zero, ",", expr add_sub_assoc, ",", expr dist_eq_norm_vsub V p₁ p₂, ",", "<-", expr real_inner_self_eq_norm_mul_norm, ",", expr sub_self, "]"] },
+  have [ident hvi] [":", expr «expr ≠ »(«expr⟪ , ⟫»(v, v), 0)] [],
+  by simpa [] [] [] [] [] ["using", expr hv],
+  have [ident hd] [":", expr «expr = »(discrim «expr⟪ , ⟫»(v, v) «expr * »(2, «expr⟪ , ⟫»(v, «expr -ᵥ »(p₁, p₂))) 0, «expr * »(«expr * »(2, inner v «expr -ᵥ »(p₁, p₂)), «expr * »(2, inner v «expr -ᵥ »(p₁, p₂))))] [],
+  { rw [expr discrim] [],
+    ring [] },
+  rw ["[", expr quadratic_eq_zero_iff hvi hd, ",", expr add_left_neg, ",", expr zero_div, ",", expr neg_mul_eq_neg_mul, ",", "<-", expr mul_sub_right_distrib, ",", expr sub_eq_add_neg, ",", "<-", expr mul_two, ",", expr mul_assoc, ",", expr mul_div_assoc, ",", expr mul_div_mul_left, ",", expr mul_div_assoc, "]"] [],
+  norm_num [] []
+end
 
 open AffineSubspace FiniteDimensional
 
--- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in let: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:341:40: in let: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- Distances `r₁` `r₂` of `p` from two different points `c₁` `c₂` determine at
 most two points `p₁` `p₂` in a two-dimensional subspace containing those points
 (two circles intersect in at most two points). -/
@@ -714,20 +735,29 @@ begin
   cases [expr hpc₁] []; simp [] [] [] ["[", expr hpc₁, "]"] [] []
 end
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Distances `r₁` `r₂` of `p` from two different points `c₁` `c₂` determine at
 most two points `p₁` `p₂` in two-dimensional space (two circles intersect in at
 most two points). -/
-theorem eq_of_dist_eq_of_dist_eq_of_finrank_eq_two [FiniteDimensional ℝ V] (hd : finrank ℝ V = 2) {c₁ c₂ p₁ p₂ p : P}
-  {r₁ r₂ : ℝ} (hc : c₁ ≠ c₂) (hp : p₁ ≠ p₂) (hp₁c₁ : dist p₁ c₁ = r₁) (hp₂c₁ : dist p₂ c₁ = r₁) (hpc₁ : dist p c₁ = r₁)
-  (hp₁c₂ : dist p₁ c₂ = r₂) (hp₂c₂ : dist p₂ c₂ = r₂) (hpc₂ : dist p c₂ = r₂) : p = p₁ ∨ p = p₂ :=
-  by 
-    have hd' : finrank ℝ (⊤ : AffineSubspace ℝ P).direction = 2
-    ·
-      rw [direction_top, finrank_top]
-      exact hd 
-    exact
-      eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two hd' (mem_top ℝ V _) (mem_top ℝ V _) (mem_top ℝ V _)
-        (mem_top ℝ V _) (mem_top ℝ V _) hc hp hp₁c₁ hp₂c₁ hpc₁ hp₁c₂ hp₂c₂ hpc₂
+theorem eq_of_dist_eq_of_dist_eq_of_finrank_eq_two
+[finite_dimensional exprℝ() V]
+(hd : «expr = »(finrank exprℝ() V, 2))
+{c₁ c₂ p₁ p₂ p : P}
+{r₁ r₂ : exprℝ()}
+(hc : «expr ≠ »(c₁, c₂))
+(hp : «expr ≠ »(p₁, p₂))
+(hp₁c₁ : «expr = »(dist p₁ c₁, r₁))
+(hp₂c₁ : «expr = »(dist p₂ c₁, r₁))
+(hpc₁ : «expr = »(dist p c₁, r₁))
+(hp₁c₂ : «expr = »(dist p₁ c₂, r₂))
+(hp₂c₂ : «expr = »(dist p₂ c₂, r₂))
+(hpc₂ : «expr = »(dist p c₂, r₂)) : «expr ∨ »(«expr = »(p, p₁), «expr = »(p, p₂)) :=
+begin
+  have [ident hd'] [":", expr «expr = »(finrank exprℝ() («expr⊤»() : affine_subspace exprℝ() P).direction, 2)] [],
+  { rw ["[", expr direction_top, ",", expr finrank_top, "]"] [],
+    exact [expr hd] },
+  exact [expr eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two hd' (mem_top exprℝ() V _) (mem_top exprℝ() V _) (mem_top exprℝ() V _) (mem_top exprℝ() V _) (mem_top exprℝ() V _) hc hp hp₁c₁ hp₂c₁ hpc₁ hp₁c₂ hp₂c₂ hpc₂]
+end
 
 variable{V}
 
@@ -782,37 +812,34 @@ theorem orthogonal_projection_fn_vsub_mem_direction_orthogonal {s : AffineSubspa
   [CompleteSpace s.direction] (p : P) : orthogonalProjectionFn s p -ᵥ p ∈ s.directionᗮ :=
   direction_mk' p s.directionᗮ ▸ vsub_mem_direction (orthogonal_projection_fn_mem_orthogonal p) (self_mem_mk' _ _)
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The orthogonal projection of a point onto a nonempty affine
 subspace, whose direction is complete. The corresponding linear map
 (mapping a vector to the difference between the projections of two
 points whose difference is that vector) is the `orthogonal_projection`
 for real inner product spaces, onto the direction of the affine
 subspace being projected onto. -/
-def orthogonalProjection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] : P →ᵃ[ℝ] s :=
-  { toFun := fun p => ⟨orthogonalProjectionFn s p, orthogonal_projection_fn_mem p⟩,
-    linear := orthogonalProjection s.direction,
-    map_vadd' :=
-      fun p v =>
-        by 
-          have hs : ((orthogonalProjection s.direction) v : V) +ᵥ orthogonalProjectionFn s p ∈ s :=
-            vadd_mem_of_mem_direction (orthogonalProjection s.direction v).2 (orthogonal_projection_fn_mem p)
-          have ho : ((orthogonalProjection s.direction) v : V) +ᵥ orthogonalProjectionFn s p ∈ mk' (v +ᵥ p) s.directionᗮ
-          ·
-            rw [←vsub_right_mem_direction_iff_mem (self_mem_mk' _ _) _, direction_mk', vsub_vadd_eq_vsub_sub,
-              vadd_vsub_assoc, add_commₓ, add_sub_assoc]
-            refine' Submodule.add_mem _ (orthogonal_projection_fn_vsub_mem_direction_orthogonal p) _ 
-            rw [Submodule.mem_orthogonal']
-            intro w hw 
-            rw [←neg_sub, inner_neg_left, orthogonal_projection_inner_eq_zero _ w hw, neg_zero]
-          have hm :
-            ((orthogonalProjection s.direction) v : V) +ᵥ orthogonalProjectionFn s p ∈
-              ({orthogonalProjectionFn s (v +ᵥ p)} : Set P)
-          ·
-            rw [←inter_eq_singleton_orthogonal_projection_fn (v +ᵥ p)]
-            exact Set.mem_inter hs ho 
-          rw [Set.mem_singleton_iff] at hm 
-          ext 
-          exact hm.symm }
+def orthogonal_projection
+(s : affine_subspace exprℝ() P)
+[nonempty s]
+[complete_space s.direction] : «expr →ᵃ[ ] »(P, exprℝ(), s) :=
+{ to_fun := λ p, ⟨orthogonal_projection_fn s p, orthogonal_projection_fn_mem p⟩,
+  linear := orthogonal_projection s.direction,
+  map_vadd' := λ p v, begin
+    have [ident hs] [":", expr «expr ∈ »(«expr +ᵥ »((orthogonal_projection s.direction v : V), orthogonal_projection_fn s p), s)] [":=", expr vadd_mem_of_mem_direction (orthogonal_projection s.direction v).2 (orthogonal_projection_fn_mem p)],
+    have [ident ho] [":", expr «expr ∈ »(«expr +ᵥ »((orthogonal_projection s.direction v : V), orthogonal_projection_fn s p), mk' «expr +ᵥ »(v, p) «expr ᗮ»(s.direction))] [],
+    { rw ["[", "<-", expr vsub_right_mem_direction_iff_mem (self_mem_mk' _ _) _, ",", expr direction_mk', ",", expr vsub_vadd_eq_vsub_sub, ",", expr vadd_vsub_assoc, ",", expr add_comm, ",", expr add_sub_assoc, "]"] [],
+      refine [expr submodule.add_mem _ (orthogonal_projection_fn_vsub_mem_direction_orthogonal p) _],
+      rw [expr submodule.mem_orthogonal'] [],
+      intros [ident w, ident hw],
+      rw ["[", "<-", expr neg_sub, ",", expr inner_neg_left, ",", expr orthogonal_projection_inner_eq_zero _ w hw, ",", expr neg_zero, "]"] [] },
+    have [ident hm] [":", expr «expr ∈ »(«expr +ᵥ »((orthogonal_projection s.direction v : V), orthogonal_projection_fn s p), ({orthogonal_projection_fn s «expr +ᵥ »(v, p)} : set P))] [],
+    { rw ["<-", expr inter_eq_singleton_orthogonal_projection_fn «expr +ᵥ »(v, p)] [],
+      exact [expr set.mem_inter hs ho] },
+    rw [expr set.mem_singleton_iff] ["at", ident hm],
+    ext [] [] [],
+    exact [expr hm.symm]
+  end }
 
 @[simp]
 theorem orthogonal_projection_fn_eq {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction] (p : P) :
@@ -858,20 +885,23 @@ theorem vsub_orthogonal_projection_mem_direction {s : AffineSubspace ℝ P} [Non
   «expr↑ » ((⟨p1, hp1⟩ : s) -ᵥ orthogonalProjection s p2 : s.direction) ∈ s.direction :=
   ((⟨p1, hp1⟩ : s) -ᵥ orthogonalProjection s p2 : s.direction).2
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A point equals its orthogonal projection if and only if it lies in
 the subspace. -/
-theorem orthogonal_projection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction] {p : P} :
-  «expr↑ » (orthogonalProjection s p) = p ↔ p ∈ s :=
-  by 
-    split 
-    ·
-      exact fun h => h ▸ orthogonal_projection_mem p
-    ·
-      intro h 
-      have hp : p ∈ (s : Set P) ∩ mk' p s.directionᗮ := ⟨h, self_mem_mk' p _⟩
-      rw [inter_eq_singleton_orthogonal_projection p] at hp 
-      symm 
-      exact hp
+theorem orthogonal_projection_eq_self_iff
+{s : affine_subspace exprℝ() P}
+[nonempty s]
+[complete_space s.direction]
+{p : P} : «expr ↔ »(«expr = »(«expr↑ »(orthogonal_projection s p), p), «expr ∈ »(p, s)) :=
+begin
+  split,
+  { exact [expr λ h, «expr ▸ »(h, orthogonal_projection_mem p)] },
+  { intro [ident h],
+    have [ident hp] [":", expr «expr ∈ »(p, «expr ∩ »((s : set P), mk' p «expr ᗮ»(s.direction)))] [":=", expr ⟨h, self_mem_mk' p _⟩],
+    rw ["[", expr inter_eq_singleton_orthogonal_projection p, "]"] ["at", ident hp],
+    symmetry,
+    exact [expr hp] }
+end
 
 @[simp]
 theorem orthogonal_projection_mem_subspace_eq_self {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
@@ -931,18 +961,26 @@ theorem orthogonal_projection_vsub_orthogonal_projection (s : AffineSubspace ℝ
     intro c hc 
     rw [←neg_vsub_eq_vsub_rev, inner_neg_right, orthogonal_projection_vsub_mem_direction_orthogonal s p c hc, neg_zero]
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Adding a vector to a point in the given subspace, then taking the
 orthogonal projection, produces the original point if the vector was
 in the orthogonal direction. -/
-theorem orthogonal_projection_vadd_eq_self {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction] {p : P}
-  (hp : p ∈ s) {v : V} (hv : v ∈ s.directionᗮ) : orthogonalProjection s (v +ᵥ p) = ⟨p, hp⟩ :=
-  by 
-    have h := vsub_orthogonal_projection_mem_direction_orthogonal s (v +ᵥ p)
-    rw [vadd_vsub_assoc, Submodule.add_mem_iff_right _ hv] at h 
-    refine' (eq_of_vsub_eq_zero _).symm 
-    ext 
-    refine' Submodule.disjoint_def.1 s.direction.orthogonal_disjoint _ _ h 
-    exact (_ : s.direction).2
+theorem orthogonal_projection_vadd_eq_self
+{s : affine_subspace exprℝ() P}
+[nonempty s]
+[complete_space s.direction]
+{p : P}
+(hp : «expr ∈ »(p, s))
+{v : V}
+(hv : «expr ∈ »(v, «expr ᗮ»(s.direction))) : «expr = »(orthogonal_projection s «expr +ᵥ »(v, p), ⟨p, hp⟩) :=
+begin
+  have [ident h] [] [":=", expr vsub_orthogonal_projection_mem_direction_orthogonal s «expr +ᵥ »(v, p)],
+  rw ["[", expr vadd_vsub_assoc, ",", expr submodule.add_mem_iff_right _ hv, "]"] ["at", ident h],
+  refine [expr (eq_of_vsub_eq_zero _).symm],
+  ext [] [] [],
+  refine [expr submodule.disjoint_def.1 s.direction.orthogonal_disjoint _ _ h],
+  exact [expr (_ : s.direction).2]
+end
 
 /-- Adding a vector to a point in the given subspace, then taking the
 orthogonal projection, produces the original point if the vector is a
@@ -997,29 +1035,30 @@ theorem dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd {s : AffineSubspace �
       rw [dist_eq_norm_vsub V p1, abs_mul_abs_self, mul_assocₓ]
     
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Reflection in an affine subspace, which is expected to be nonempty
 and complete.  The word "reflection" is sometimes understood to mean
 specifically reflection in a codimension-one subspace, and sometimes
 more generally to cover operations such as reflection in a point.  The
 definition here, of reflection in an affine subspace, is a more
 general sense of the word that includes both those common cases. -/
-def reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] : P ≃ᵃⁱ[ℝ] P :=
-  AffineIsometryEquiv.mk' (fun p => «expr↑ » (orthogonalProjection s p) -ᵥ p +ᵥ orthogonalProjection s p)
-    (_root_.reflection s.direction) («expr↑ » (Classical.arbitrary s))
-    (by 
-      intro p 
-      let v := p -ᵥ «expr↑ » (Classical.arbitrary s)
-      let a : V := _root_.orthogonal_projection s.direction v 
-      let b : P := «expr↑ » (Classical.arbitrary s)
-      have key : a +ᵥ b -ᵥ (v +ᵥ b) +ᵥ (a +ᵥ b) = (a+a) - v +ᵥ (b -ᵥ b +ᵥ b)
-      ·
-        rw [←add_vadd, vsub_vadd_eq_vsub_sub, vsub_vadd, vadd_vsub]
-        congr 1
-        abel 
-      have  : p = v +ᵥ «expr↑ » (Classical.arbitrary s) := (vsub_vadd p («expr↑ » (Classical.arbitrary s))).symm 
-      simpa only [coe_vadd, reflection_apply, AffineMap.map_vadd, orthogonal_projection_linear,
-        orthogonal_projection_mem_subspace_eq_self, vadd_vsub, ContinuousLinearMap.coe_coe,
-        ContinuousLinearEquiv.coe_coe, this] using key)
+def reflection
+(s : affine_subspace exprℝ() P)
+[nonempty s]
+[complete_space s.direction] : «expr ≃ᵃⁱ[ ] »(P, exprℝ(), P) :=
+affine_isometry_equiv.mk' (λ
+ p, «expr +ᵥ »(«expr -ᵥ »(«expr↑ »(orthogonal_projection s p), p), orthogonal_projection s p)) (_root_.reflection s.direction) «expr↑ »(classical.arbitrary s) (begin
+   intros [ident p],
+   let [ident v] [] [":=", expr «expr -ᵥ »(p, «expr↑ »(classical.arbitrary s))],
+   let [ident a] [":", expr V] [":=", expr _root_.orthogonal_projection s.direction v],
+   let [ident b] [":", expr P] [":=", expr «expr↑ »(classical.arbitrary s)],
+   have [ident key] [":", expr «expr = »(«expr +ᵥ »(«expr -ᵥ »(«expr +ᵥ »(a, b), «expr +ᵥ »(v, b)), «expr +ᵥ »(a, b)), «expr +ᵥ »(«expr - »(«expr + »(a, a), v), «expr +ᵥ »(«expr -ᵥ »(b, b), b)))] [],
+   { rw ["[", "<-", expr add_vadd, ",", expr vsub_vadd_eq_vsub_sub, ",", expr vsub_vadd, ",", expr vadd_vsub, "]"] [],
+     congr' [1] [],
+     abel [] [] [] },
+   have [] [":", expr «expr = »(p, «expr +ᵥ »(v, «expr↑ »(classical.arbitrary s)))] [":=", expr (vsub_vadd p «expr↑ »(classical.arbitrary s)).symm],
+   simpa [] [] ["only"] ["[", expr coe_vadd, ",", expr reflection_apply, ",", expr affine_map.map_vadd, ",", expr orthogonal_projection_linear, ",", expr orthogonal_projection_mem_subspace_eq_self, ",", expr vadd_vsub, ",", expr continuous_linear_map.coe_coe, ",", expr continuous_linear_equiv.coe_coe, ",", expr this, "]"] [] ["using", expr key]
+ end)
 
 /-- The result of reflecting. -/
 theorem reflection_apply (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] (p : P) :
@@ -1029,24 +1068,28 @@ theorem reflection_apply (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace 
 theorem eq_reflection_of_eq_subspace {s s' : AffineSubspace ℝ P} [Nonempty s] [Nonempty s'] [CompleteSpace s.direction]
   [CompleteSpace s'.direction] (h : s = s') (p : P) : (reflection s p : P) = (reflection s' p : P) :=
   by 
-    unfreezingI 
-      subst h
+    (
+      subst h)
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Reflecting twice in the same subspace. -/
 @[simp]
-theorem reflection_reflection (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] (p : P) :
-  reflection s (reflection s p) = p :=
-  by 
-    have  :
-      ∀ a : s, ∀ b : V, (_root_.orthogonal_projection s.direction) b = 0 → reflection s (reflection s (b +ᵥ a)) = b +ᵥ a
-    ·
-      intro a b h 
-      have  : (a : P) -ᵥ (b +ᵥ a) = -b
-      ·
-        rw [vsub_vadd_eq_vsub_sub, vsub_self, zero_sub]
-      simp [reflection, h, this]
-    rw [←vsub_vadd p (orthogonalProjection s p)]
-    exact this (orthogonalProjection s p) _ (orthogonal_projection_vsub_orthogonal_projection s p)
+theorem reflection_reflection
+(s : affine_subspace exprℝ() P)
+[nonempty s]
+[complete_space s.direction]
+(p : P) : «expr = »(reflection s (reflection s p), p) :=
+begin
+  have [] [":", expr ∀
+   a : s, ∀
+   b : V, «expr = »(_root_.orthogonal_projection s.direction b, 0) → «expr = »(reflection s (reflection s «expr +ᵥ »(b, a)), «expr +ᵥ »(b, a))] [],
+  { intros [ident a, ident b, ident h],
+    have [] [":", expr «expr = »(«expr -ᵥ »((a : P), «expr +ᵥ »(b, a)), «expr- »(b))] [],
+    { rw ["[", expr vsub_vadd_eq_vsub_sub, ",", expr vsub_self, ",", expr zero_sub, "]"] [] },
+    simp [] [] [] ["[", expr reflection, ",", expr h, ",", expr this, "]"] [] [] },
+  rw ["<-", expr vsub_vadd p (orthogonal_projection s p)] [],
+  exact [expr this (orthogonal_projection s p) _ (orthogonal_projection_vsub_orthogonal_projection s p)]
+end
 
 /-- Reflection is its own inverse. -/
 @[simp]
@@ -1116,14 +1159,21 @@ theorem dist_reflection_eq_of_mem (s : AffineSubspace ℝ P) [Nonempty s] [Compl
     convert (reflection s).dist_map p₁ p₂ 
     rw [hp₁]
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The reflection of a point in a subspace is contained in any larger
 subspace containing both the point and the subspace reflected in. -/
-theorem reflection_mem_of_le_of_mem {s₁ s₂ : AffineSubspace ℝ P} [Nonempty s₁] [CompleteSpace s₁.direction]
-  (hle : s₁ ≤ s₂) {p : P} (hp : p ∈ s₂) : reflection s₁ p ∈ s₂ :=
-  by 
-    rw [reflection_apply]
-    have ho : «expr↑ » (orthogonalProjection s₁ p) ∈ s₂ := hle (orthogonal_projection_mem p)
-    exact vadd_mem_of_mem_direction (vsub_mem_direction ho hp) ho
+theorem reflection_mem_of_le_of_mem
+{s₁ s₂ : affine_subspace exprℝ() P}
+[nonempty s₁]
+[complete_space s₁.direction]
+(hle : «expr ≤ »(s₁, s₂))
+{p : P}
+(hp : «expr ∈ »(p, s₂)) : «expr ∈ »(reflection s₁ p, s₂) :=
+begin
+  rw ["[", expr reflection_apply, "]"] [],
+  have [ident ho] [":", expr «expr ∈ »(«expr↑ »(orthogonal_projection s₁ p), s₂)] [":=", expr hle (orthogonal_projection_mem p)],
+  exact [expr vadd_mem_of_mem_direction (vsub_mem_direction ho hp) ho]
+end
 
 /-- Reflecting an orthogonal vector plus a point in the subspace
 produces the negation of that vector plus the point. -/
@@ -1196,66 +1246,52 @@ theorem cospherical_insert_singleton (p₁ p₂ : P) : cospherical ({p₁, p₂}
       rw [←sub_smul, norm_smul]
       normNum
 
+-- error in Geometry.Euclidean.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any three points in a cospherical set are affinely independent. -/
-theorem cospherical.affine_independent {s : Set P} (hs : cospherical s) {p : Finₓ 3 → P} (hps : Set.Range p ⊆ s)
-  (hpi : Function.Injective p) : AffineIndependent ℝ p :=
-  by 
-    rw [affine_independent_iff_not_collinear]
-    intro hc 
-    rw [collinear_iff_of_mem ℝ (Set.mem_range_self (0 : Finₓ 3))] at hc 
-    rcases hc with ⟨v, hv⟩
-    rw [Set.forall_range_iff] at hv 
-    have hv0 : v ≠ 0
-    ·
-      intro h 
-      have he : p 1 = p 0
-      ·
-        simpa [h] using hv 1 
-      exact
-        (by 
-            decide :
-          (1 : Finₓ 3) ≠ 0)
-          (hpi he)
-    rcases hs with ⟨c, r, hs⟩
-    have hs' := fun i => hs (p i) (Set.mem_of_mem_of_subset (Set.mem_range_self _) hps)
-    choose f hf using hv 
-    have hsd : ∀ i, dist (f i • v +ᵥ p 0) c = r
-    ·
-      intro i 
-      rw [←hf]
-      exact hs' i 
-    have hf0 : f 0 = 0
-    ·
-      have hf0' := hf 0
-      rw [eq_comm, ←@vsub_eq_zero_iff_eq V, vadd_vsub, smul_eq_zero] at hf0' 
-      simpa [hv0] using hf0' 
-    have hfi : Function.Injective f
-    ·
-      intro i j h 
-      have hi := hf i 
-      rw [h, ←hf j] at hi 
-      exact hpi hi 
-    simpRw [←hsd 0, hf0, zero_smul, zero_vadd, dist_smul_vadd_eq_dist (p 0) c hv0]  at hsd 
-    have hfn0 : ∀ i, i ≠ 0 → f i ≠ 0 := fun i => (hfi.ne_iff' hf0).2
-    have hfn0' : ∀ i, i ≠ 0 → f i = ((-2)*⟪v, p 0 -ᵥ c⟫) / ⟪v, v⟫
-    ·
-      intro i hi 
-      have hsdi := hsd i 
-      simpa [hfn0, hi] using hsdi 
-    have hf12 : f 1 = f 2
-    ·
-      rw
-        [hfn0' 1
-          (by 
-            decide),
-        hfn0' 2
-          (by 
-            decide)]
-    exact
-      (by 
-          decide :
-        (1 : Finₓ 3) ≠ 2)
-        (hfi hf12)
+theorem cospherical.affine_independent
+{s : set P}
+(hs : cospherical s)
+{p : fin 3 → P}
+(hps : «expr ⊆ »(set.range p, s))
+(hpi : function.injective p) : affine_independent exprℝ() p :=
+begin
+  rw [expr affine_independent_iff_not_collinear] [],
+  intro [ident hc],
+  rw [expr collinear_iff_of_mem exprℝ() (set.mem_range_self (0 : fin 3))] ["at", ident hc],
+  rcases [expr hc, "with", "⟨", ident v, ",", ident hv, "⟩"],
+  rw [expr set.forall_range_iff] ["at", ident hv],
+  have [ident hv0] [":", expr «expr ≠ »(v, 0)] [],
+  { intro [ident h],
+    have [ident he] [":", expr «expr = »(p 1, p 0)] [],
+    by simpa [] [] [] ["[", expr h, "]"] [] ["using", expr hv 1],
+    exact [expr (exprdec_trivial() : «expr ≠ »((1 : fin 3), 0)) (hpi he)] },
+  rcases [expr hs, "with", "⟨", ident c, ",", ident r, ",", ident hs, "⟩"],
+  have [ident hs'] [] [":=", expr λ i, hs (p i) (set.mem_of_mem_of_subset (set.mem_range_self _) hps)],
+  choose [] [ident f] [ident hf] ["using", expr hv],
+  have [ident hsd] [":", expr ∀ i, «expr = »(dist «expr +ᵥ »(«expr • »(f i, v), p 0) c, r)] [],
+  { intro [ident i],
+    rw ["<-", expr hf] [],
+    exact [expr hs' i] },
+  have [ident hf0] [":", expr «expr = »(f 0, 0)] [],
+  { have [ident hf0'] [] [":=", expr hf 0],
+    rw ["[", expr eq_comm, ",", "<-", expr @vsub_eq_zero_iff_eq V, ",", expr vadd_vsub, ",", expr smul_eq_zero, "]"] ["at", ident hf0'],
+    simpa [] [] [] ["[", expr hv0, "]"] [] ["using", expr hf0'] },
+  have [ident hfi] [":", expr function.injective f] [],
+  { intros [ident i, ident j, ident h],
+    have [ident hi] [] [":=", expr hf i],
+    rw ["[", expr h, ",", "<-", expr hf j, "]"] ["at", ident hi],
+    exact [expr hpi hi] },
+  simp_rw ["[", "<-", expr hsd 0, ",", expr hf0, ",", expr zero_smul, ",", expr zero_vadd, ",", expr dist_smul_vadd_eq_dist (p 0) c hv0, "]"] ["at", ident hsd],
+  have [ident hfn0] [":", expr ∀ i, «expr ≠ »(i, 0) → «expr ≠ »(f i, 0)] [":=", expr λ i, (hfi.ne_iff' hf0).2],
+  have [ident hfn0'] [":", expr ∀
+   i, «expr ≠ »(i, 0) → «expr = »(f i, «expr / »(«expr * »(«expr- »(2), «expr⟪ , ⟫»(v, «expr -ᵥ »(p 0, c))), «expr⟪ , ⟫»(v, v)))] [],
+  { intros [ident i, ident hi],
+    have [ident hsdi] [] [":=", expr hsd i],
+    simpa [] [] [] ["[", expr hfn0, ",", expr hi, "]"] [] ["using", expr hsdi] },
+  have [ident hf12] [":", expr «expr = »(f 1, f 2)] [],
+  { rw ["[", expr hfn0' 1 exprdec_trivial(), ",", expr hfn0' 2 exprdec_trivial(), "]"] [] },
+  exact [expr (exprdec_trivial() : «expr ≠ »((1 : fin 3), 2)) (hfi hf12)]
+end
 
 end EuclideanGeometry
 

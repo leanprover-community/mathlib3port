@@ -1,4 +1,5 @@
-import Mathbin.CategoryTheory.Products.Basic
+import Mathbin.CategoryTheory.Products.Basic 
+import Mathbin.CategoryTheory.Types
 
 /-!
 The hom functor, sending `(X, Y)` to the type `X ⟶ Y`.

@@ -24,7 +24,7 @@ open Equiv Function
 
 /-- A permutation is a derangement if it has no fixed points. -/
 def Derangements (α : Type _) : Set (perm α) :=
-  { f : perm α | ∀ x : α, f x ≠ x }
+  { f:perm α | ∀ x : α, f x ≠ x }
 
 variable{α β : Type _}
 
@@ -111,7 +111,7 @@ variable[DecidableEq α]
 /-- The set of permutations `f` such that the preimage of `(a, f)` under
     `equiv.perm.decompose_option` is a derangement. -/
 def remove_none.fiber (a : Option α) : Set (perm α) :=
-  { f : perm α | (a, f) ∈ Equiv.Perm.decomposeOption '' Derangements (Option α) }
+  { f:perm α | (a, f) ∈ Equiv.Perm.decomposeOption '' Derangements (Option α) }
 
 theorem remove_none.mem_fiber (a : Option α) (f : perm α) :
   f ∈ remove_none.fiber a ↔ ∃ F : perm (Option α), F ∈ Derangements (Option α) ∧ F none = a ∧ remove_none F = f :=
@@ -126,47 +126,42 @@ theorem remove_none.fiber_none : remove_none.fiber (@none α) = ∅ :=
     rcases hyp with ⟨F, F_derangement, F_none, _⟩
     exact F_derangement none F_none
 
+-- error in Combinatorics.Derangements.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For any `a : α`, the fiber over `some a` is the set of permutations
     where `a` is the only possible fixed point. -/
-theorem remove_none.fiber_some (a : α) : remove_none.fiber (some a) = { f : perm α | fixed_points f ⊆ {a} } :=
-  by 
-    ext f 
-    split 
-    ·
-      rw [remove_none.mem_fiber]
-      rintro ⟨F, F_derangement, F_none, rfl⟩ x x_fixed 
-      rw [mem_fixed_points_iff] at x_fixed 
-      applyFun some  at x_fixed 
-      cases' Fx : F (some x) with y
-      ·
-        rwa [remove_none_none F Fx, F_none, Option.some_inj, eq_comm] at x_fixed
-      ·
-        exFalso 
-        rw [remove_none_some F ⟨y, Fx⟩] at x_fixed 
-        exact F_derangement _ x_fixed
-    ·
-      intro h_opfp 
-      use equiv.perm.decompose_option.symm (some a, f)
-      split 
-      ·
-        intro x 
-        applyFun swap none (some a)
-        simp only [perm.decompose_option_symm_apply, swap_apply_self, perm.coe_mul]
-        cases x
-        ·
-          simp 
-        simp only [EquivFunctor.map_equiv_apply, EquivFunctor.map, Option.map_eq_map, Option.map_some']
-        byCases' x_vs_a : x = a
-        ·
-          rw [x_vs_a, swap_apply_right]
-          apply Option.some_ne_none 
-        have ne_1 : some x ≠ none := Option.some_ne_none _ 
-        have ne_2 : some x ≠ some a := (Option.some_injective α).ne_iff.mpr x_vs_a 
-        rw [swap_apply_of_ne_of_ne ne_1 ne_2, (Option.some_injective α).ne_iff]
-        intro contra 
-        exact x_vs_a (h_opfp contra)
-      ·
-        rw [apply_symm_apply]
+theorem remove_none.fiber_some
+(a : α) : «expr = »(remove_none.fiber (some a), {f : perm α | «expr ⊆ »(fixed_points f, {a})}) :=
+begin
+  ext [] [ident f] [],
+  split,
+  { rw [expr remove_none.mem_fiber] [],
+    rintro ["⟨", ident F, ",", ident F_derangement, ",", ident F_none, ",", ident rfl, "⟩", ident x, ident x_fixed],
+    rw [expr mem_fixed_points_iff] ["at", ident x_fixed],
+    apply_fun [expr some] ["at", ident x_fixed] [],
+    cases [expr Fx, ":", expr F (some x)] ["with", ident y],
+    { rwa ["[", expr remove_none_none F Fx, ",", expr F_none, ",", expr option.some_inj, ",", expr eq_comm, "]"] ["at", ident x_fixed] },
+    { exfalso,
+      rw [expr remove_none_some F ⟨y, Fx⟩] ["at", ident x_fixed],
+      exact [expr F_derangement _ x_fixed] } },
+  { intro [ident h_opfp],
+    use [expr equiv.perm.decompose_option.symm (some a, f)],
+    split,
+    { intro [ident x],
+      apply_fun [expr swap none (some a)] [] [],
+      simp [] [] ["only"] ["[", expr perm.decompose_option_symm_apply, ",", expr swap_apply_self, ",", expr perm.coe_mul, "]"] [] [],
+      cases [expr x] [],
+      { simp [] [] [] [] [] [] },
+      simp [] [] ["only"] ["[", expr equiv_functor.map_equiv_apply, ",", expr equiv_functor.map, ",", expr option.map_eq_map, ",", expr option.map_some', "]"] [] [],
+      by_cases [expr x_vs_a, ":", expr «expr = »(x, a)],
+      { rw ["[", expr x_vs_a, ",", expr swap_apply_right, "]"] [],
+        apply [expr option.some_ne_none] },
+      have [ident ne_1] [":", expr «expr ≠ »(some x, none)] [":=", expr option.some_ne_none _],
+      have [ident ne_2] [":", expr «expr ≠ »(some x, some a)] [":=", expr (option.some_injective α).ne_iff.mpr x_vs_a],
+      rw ["[", expr swap_apply_of_ne_of_ne ne_1 ne_2, ",", expr (option.some_injective α).ne_iff, "]"] [],
+      intro [ident contra],
+      exact [expr x_vs_a (h_opfp contra)] },
+    { rw [expr apply_symm_apply] [] } }
+end
 
 end Equiv
 
@@ -174,21 +169,20 @@ section Option
 
 variable[DecidableEq α]
 
+-- error in Combinatorics.Derangements.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The set of derangements on `option α` is equivalent to the union over `a : α`
     of "permutations with `a` the only possible fixed point". -/
-def derangements_option_equiv_sigma_at_most_one_fixed_point :
-  Derangements (Option α) ≃ Σa : α, { f : perm α | fixed_points f ⊆ {a} } :=
-  by 
-    have fiber_none_is_false : equiv.remove_none.fiber (@none α) → False
-    ·
-      rw [equiv.remove_none.fiber_none]
-      exact IsEmpty.false 
-    calc Derangements (Option α) ≃ Equiv.Perm.decomposeOption '' Derangements (Option α) :=
-      Equiv.image _ _ _ ≃ Σa : Option α, «expr↥ » (equiv.remove_none.fiber a) :=
-      set_prod_equiv_sigma _ _ ≃ Σa : α, «expr↥ » (equiv.remove_none.fiber (some a)) :=
-      sigma_option_equiv_of_some _ fiber_none_is_false _ ≃ Σa : α, { f : perm α | fixed_points f ⊆ {a} } :=
-      by 
-        simpRw [equiv.remove_none.fiber_some]
+def derangements_option_equiv_sigma_at_most_one_fixed_point : «expr ≃ »(derangements (option α), «exprΣ , »((a : α), {f : perm α | «expr ⊆ »(fixed_points f, {a})})) :=
+begin
+  have [ident fiber_none_is_false] [":", expr equiv.remove_none.fiber (@none α) → false] [],
+  { rw [expr equiv.remove_none.fiber_none] [],
+    exact [expr is_empty.false] },
+  calc
+    «expr ≃ »(derangements (option α), «expr '' »(equiv.perm.decompose_option, derangements (option α))) : equiv.image _ _
+    «expr ≃ »(..., «exprΣ , »((a : option α), «expr↥ »(equiv.remove_none.fiber a))) : set_prod_equiv_sigma _
+    «expr ≃ »(..., «exprΣ , »((a : α), «expr↥ »(equiv.remove_none.fiber (some a)))) : sigma_option_equiv_of_some _ fiber_none_is_false
+    «expr ≃ »(..., «exprΣ , »((a : α), {f : perm α | «expr ⊆ »(fixed_points f, {a})})) : by simp_rw [expr equiv.remove_none.fiber_some] []
+end
 
 /-- The set of derangements on `option α` is equivalent to the union over all `a : α` of
     "derangements on `α` ⊕ derangements on `{a}ᶜ`". -/

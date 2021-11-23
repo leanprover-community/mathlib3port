@@ -404,11 +404,11 @@ end MulEquiv
 
 section Units
 
-open Opposite
+open MulOpposite
 
-/-- Canonical homomorphism of monoids from `units α` into `α × αᵒᵖ`.
+/-- Canonical homomorphism of monoids from `units α` into `α × αᵐᵒᵖ`.
 Used mainly to define the natural topology of `units α`. -/
-def embedProduct (α : Type _) [Monoidₓ α] : Units α →* α × «expr ᵒᵖ» α :=
+def embedProduct (α : Type _) [Monoidₓ α] : Units α →* α × «expr ᵐᵒᵖ» α :=
   { toFun := fun x => ⟨x, op («expr↑ » (x⁻¹))⟩,
     map_one' :=
       by 

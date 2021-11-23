@@ -1,6 +1,6 @@
-import Mathbin.Algebra.CharZero 
 import Mathbin.Data.Int.Basic 
-import Mathbin.Data.Nat.Interval
+import Mathbin.Algebra.CharZero 
+import Mathbin.Order.LocallyFinite
 
 /-!
 # Finite intervals of integers

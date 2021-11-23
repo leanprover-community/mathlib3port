@@ -1,5 +1,4 @@
-import Mathbin.Tactic.NormNum 
-import Mathbin.Data.Int.Range
+import Mathbin.Tactic.NormNum
 
 /-!
 # `ring`
@@ -31,7 +30,7 @@ unsafe structure cache where
   nc : ref instance_cache 
   atoms : ref (Buffer expr)
 
--- error in Tactic.Ring: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler monad
+-- error in Tactic.Ring: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monad
 /-- The monad that `ring` works in. This is a reader monad containing a mutable cache (using `ref`
 for mutability), as well as the list of atoms-up-to-defeq encountered thus far, used for atom
 sorting. -/ @[derive #["[", expr monad, ",", expr alternative, "]"]] meta def ring_m (α : Type) : Type :=
@@ -73,7 +72,7 @@ unsafe def ring_m.run' (red : transparency) (atoms : ref (Buffer expr)) (e : exp
     let u ← get_univ_assignment u 
     let ic ← mk_instance_cache α 
     let (ic, c) ← ic.get `` CommSemiringₓ 
-    let nc ← mk_instance_cache (quote ℕ)
+    let nc ← mk_instance_cache (quote.1 ℕ)
     using_new_ref ic$ fun r => using_new_ref nc$ fun nr => ReaderTₓ.run m ⟨α, u, c, red, r, nr, atoms⟩
 
 /-- Run a `ring_m` tactic in the tactic monad. -/
@@ -486,7 +485,7 @@ unsafe def eval_atom (e : expr) : ring_m (horner_expr × expr) :=
     let i ← add_atom e 
     let α0 ← ic_lift$ fun ic => ic.mk_app `` HasZero.zero []
     let α1 ← ic_lift$ fun ic => ic.mk_app `` HasOne.one []
-    return (xadd' c (const α1 1) (e, i) (quote 1, 1) (const α0 0), c.cs_app `` horner_atom [e])
+    return (xadd' c (const α1 1) (e, i) (quote.1 1, 1) (const α0 0), c.cs_app `` horner_atom [e])
 
 theorem subst_into_pow {α} [Monoidₓ α] l r tl tr t (prl : (l : α) = tl) (prr : (r : ℕ) = tr) (prt : tl ^ tr = t) :
   l ^ r = t :=
@@ -504,14 +503,14 @@ theorem unfold_div {α} [DivisionRing α] (a b c : α) (h : (a*b⁻¹) = c) : a 
 /-- Evaluate a ring expression `e` recursively to normal form, together with a proof of
 equality. -/
 unsafe def eval : expr → ring_m (horner_expr × expr)
-| quote (%%e₁)+%%e₂ =>
+| quote.1 ((%%ₓe₁)+%%ₓe₂) =>
   do 
     let (e₁', p₁) ← eval e₁ 
     let (e₂', p₂) ← eval e₂ 
     let (e', p') ← eval_add e₁' e₂' 
     let p ← ic_lift$ fun ic => ic.mk_app `` NormNum.subst_into_add [e₁, e₂, e₁', e₂', e', p₁, p₂, p']
     return (e', p)
-| e@(quote @Sub.sub (%%α) (%%inst) (%%e₁) (%%e₂)) =>
+| e@(quote.1 (@Sub.sub (%%ₓα) (%%ₓinst) (%%ₓe₁) (%%ₓe₂))) =>
   mcond (succeeds (lift$ mk_app `` CommRingₓ [α] >>= mk_instance))
     (do 
       let e₂' ← ic_lift$ fun ic => ic.mk_app `` Neg.neg [e₂]
@@ -520,26 +519,26 @@ unsafe def eval : expr → ring_m (horner_expr × expr)
       let p' ← ic_lift$ fun ic => ic.mk_app `` unfold_sub [e₁, e₂, e', p]
       return (e', p'))
     (eval_atom e)
-| quote -%%e =>
+| quote.1 (-%%ₓe) =>
   do 
     let (e₁, p₁) ← eval e 
     let (e₂, p₂) ← eval_neg e₁ 
     let p ← ic_lift$ fun ic => ic.mk_app `` NormNum.subst_into_neg [e, e₁, e₂, p₁, p₂]
     return (e₂, p)
-| quote (%%e₁)*%%e₂ =>
+| quote.1 ((%%ₓe₁)*%%ₓe₂) =>
   do 
     let (e₁', p₁) ← eval e₁ 
     let (e₂', p₂) ← eval e₂ 
     let (e', p') ← eval_mul e₁' e₂' 
     let p ← ic_lift$ fun ic => ic.mk_app `` NormNum.subst_into_mul [e₁, e₂, e₁', e₂', e', p₁, p₂, p']
     return (e', p)
-| e@(quote HasInv.inv (%%_)) =>
+| e@(quote.1 (HasInv.inv (%%ₓ_))) =>
   (do 
       let (e', p) ← lift$ (norm_num.derive e <|> refl_conv e)
       let n ← lift$ e'.to_rat 
       return (const e' n, p)) <|>
     eval_atom e
-| e@(quote @Div.div _ (%%inst) (%%e₁) (%%e₂)) =>
+| e@(quote.1 (@Div.div _ (%%ₓinst) (%%ₓe₁) (%%ₓe₂))) =>
   mcond
     (succeeds
       do 
@@ -552,11 +551,11 @@ unsafe def eval : expr → ring_m (horner_expr × expr)
       let p' ← ic_lift$ fun ic => ic.mk_app `` unfold_div [e₁, e₂, e', p]
       return (e', p'))
     (eval_atom e)
-| e@(quote @Pow.pow _ _ (%%P) (%%e₁) (%%e₂)) =>
+| e@(quote.1 (@Pow.pow _ _ (%%ₓP) (%%ₓe₁) (%%ₓe₂))) =>
   do 
     let (e₂', p₂) ← lift$ (norm_num.derive e₂ <|> refl_conv e₂)
     match e₂'.to_nat, P with 
-      | some k, quote Monoidₓ.hasPow =>
+      | some k, quote.1 Monoidₓ.hasPow =>
         do 
           let (e₁', p₁) ← eval e₁ 
           let (e', p') ← eval_pow e₁' (e₂, k)
@@ -595,7 +594,7 @@ theorem pow_add_rev_right {α} [Monoidₓ α] (a b : α) (m n : ℕ) : ((b*a ^ m
 theorem add_neg_eq_sub {α} [AddGroupₓ α] (a b : α) : (a+-b) = a - b :=
   (sub_eq_add_neg a b).symm
 
--- error in Tactic.Ring: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.Ring: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- If `ring` fails to close the goal, it falls back on normalizing the expression to a "pretty"
 form so that you can see why it failed. This setting adjusts the resulting form:
 
@@ -680,7 +679,7 @@ setup_tactic_parser
 unsafe def ring1 (red : parse (tk "!")?) : tactic Unit :=
   let transp := if red.is_some then semireducible else reducible 
   do 
-    let quote (%%e₁) = %%e₂ ← target 
+    let quote.1 ((%%ₓe₁) = %%ₓe₂) ← target 
     let ((e₁', p₁), (e₂', p₂)) ← ring_m.run transp e₁$ (Prod.mk <$> eval e₁)<*>eval e₂ 
     is_def_eq e₁' e₂' 
     let p ← mk_eq_symm p₂ >>= mk_eq_trans p₁ 

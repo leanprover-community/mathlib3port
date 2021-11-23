@@ -21,21 +21,21 @@ unsafe def distrib_not : tactic Unit :=
                 let h ← get_local h.local_pp_name 
                 let e ← infer_type h 
                 match e with 
-                  | quote ¬_ = _ => replace h.local_pp_name (pquote mt Iff.to_eq (%%h))
-                  | quote _ ≠ _ => replace h.local_pp_name (pquote mt Iff.to_eq (%%h))
-                  | quote _ = _ => replace h.local_pp_name (pquote Eq.to_iff (%%h))
-                  | quote ¬(_ ∧ _) =>
-                    replace h.local_pp_name (pquote Decidable.not_and_distrib'.mp (%%h)) <|>
-                      replace h.local_pp_name (pquote Decidable.not_and_distrib.mp (%%h))
-                  | quote ¬(_ ∨ _) => replace h.local_pp_name (pquote not_or_distrib.mp (%%h))
-                  | quote ¬¬_ => replace h.local_pp_name (pquote Decidable.of_not_not (%%h))
-                  | quote ¬(_ → (_ : Prop)) => replace h.local_pp_name (pquote Decidable.not_imp.mp (%%h))
-                  | quote ¬(_ ↔ _) => replace h.local_pp_name (pquote Decidable.not_iff.mp (%%h))
-                  | quote _ ↔ _ =>
-                    replace h.local_pp_name (pquote Decidable.iff_iff_and_or_not_and_not.mp (%%h)) <|>
-                      replace h.local_pp_name (pquote Decidable.iff_iff_and_or_not_and_not.mp (%%h).symm) <|>
+                  | quote.1 ¬_ = _ => replace h.local_pp_name (pquote.1 (mt Iff.to_eq (%%ₓh)))
+                  | quote.1 (_ ≠ _) => replace h.local_pp_name (pquote.1 (mt Iff.to_eq (%%ₓh)))
+                  | quote.1 (_ = _) => replace h.local_pp_name (pquote.1 (Eq.to_iff (%%ₓh)))
+                  | quote.1 ¬(_ ∧ _) =>
+                    replace h.local_pp_name (pquote.1 (Decidable.not_and_distrib'.mp (%%ₓh))) <|>
+                      replace h.local_pp_name (pquote.1 (Decidable.not_and_distrib.mp (%%ₓh)))
+                  | quote.1 ¬(_ ∨ _) => replace h.local_pp_name (pquote.1 (not_or_distrib.mp (%%ₓh)))
+                  | quote.1 ¬¬_ => replace h.local_pp_name (pquote.1 (Decidable.of_not_not (%%ₓh)))
+                  | quote.1 ¬(_ → (_ : Prop)) => replace h.local_pp_name (pquote.1 (Decidable.not_imp.mp (%%ₓh)))
+                  | quote.1 ¬(_ ↔ _) => replace h.local_pp_name (pquote.1 (Decidable.not_iff.mp (%%ₓh)))
+                  | quote.1 (_ ↔ _) =>
+                    replace h.local_pp_name (pquote.1 (Decidable.iff_iff_and_or_not_and_not.mp (%%ₓh))) <|>
+                      replace h.local_pp_name (pquote.1 (Decidable.iff_iff_and_or_not_and_not.mp (%%ₓh).symm)) <|>
                         () <$ tactic.cases h
-                  | quote _ → _ => replace h.local_pp_name (pquote Decidable.not_or_of_imp (%%h))
+                  | quote.1 (_ → _) => replace h.local_pp_name (pquote.1 (Decidable.not_or_of_imp (%%ₓh)))
                   | _ => failed
 
 /-!
@@ -70,8 +70,8 @@ unsafe def add_symm_proof (r : tauto_state) (e : expr) : tactic (expr × expr) :
     let rel := e.get_app_fn.const_name 
     let some symm ← pure$ environment.symm_for env rel | add_refl r e
     (do 
-          let e' ← mk_meta_var (quote Prop)
-          let iff_t ← to_expr (pquote (%%e) = %%e')
+          let e' ← mk_meta_var (quote.1 Prop)
+          let iff_t ← to_expr (pquote.1 ((%%ₓe) = %%ₓe'))
           let (_, p) ← solve_aux iff_t (applyc `iff.to_eq; () <$ split; applyc symm)
           let e' ← instantiate_mvars e' 
           let m ← read_ref r 
@@ -124,45 +124,45 @@ unsafe def symm_eq (r : tauto_state) : expr → expr → tactic expr
         do 
           let p ←
             match (a', b') with 
-              | (quote ¬%%a₀, quote ¬%%b₀) =>
+              | (quote.1 ¬%%ₓa₀, quote.1 ¬%%ₓb₀) =>
                 do 
                   let p ← symm_eq a₀ b₀ 
-                  let p' ← mk_app `congr_arg [quote Not, p]
+                  let p' ← mk_app `congr_arg [quote.1 Not, p]
                   add_edge r a' b' p' 
                   return p'
-              | (quote (%%a₀) ∧ %%a₁, quote (%%b₀) ∧ %%b₁) =>
+              | (quote.1 ((%%ₓa₀) ∧ %%ₓa₁), quote.1 ((%%ₓb₀) ∧ %%ₓb₁)) =>
                 do 
                   let p₀ ← symm_eq a₀ b₀ 
                   let p₁ ← symm_eq a₁ b₁ 
-                  let p' ← to_expr (pquote congr (congr_argₓ And (%%p₀)) (%%p₁))
+                  let p' ← to_expr (pquote.1 (congr (congr_argₓ And (%%ₓp₀)) (%%ₓp₁)))
                   add_edge r a' b' p' 
                   return p'
-              | (quote (%%a₀) ∨ %%a₁, quote (%%b₀) ∨ %%b₁) =>
+              | (quote.1 ((%%ₓa₀) ∨ %%ₓa₁), quote.1 ((%%ₓb₀) ∨ %%ₓb₁)) =>
                 do 
                   let p₀ ← symm_eq a₀ b₀ 
                   let p₁ ← symm_eq a₁ b₁ 
-                  let p' ← to_expr (pquote congr (congr_argₓ Or (%%p₀)) (%%p₁))
+                  let p' ← to_expr (pquote.1 (congr (congr_argₓ Or (%%ₓp₀)) (%%ₓp₁)))
                   add_edge r a' b' p' 
                   return p'
-              | (quote (%%a₀) ↔ %%a₁, quote (%%b₀) ↔ %%b₁) =>
+              | (quote.1 ((%%ₓa₀) ↔ %%ₓa₁), quote.1 ((%%ₓb₀) ↔ %%ₓb₁)) =>
                 (do 
                     let p₀ ← symm_eq a₀ b₀ 
                     let p₁ ← symm_eq a₁ b₁ 
-                    let p' ← to_expr (pquote congr (congr_argₓ Iff (%%p₀)) (%%p₁))
+                    let p' ← to_expr (pquote.1 (congr (congr_argₓ Iff (%%ₓp₀)) (%%ₓp₁)))
                     add_edge r a' b' p' 
                     return p') <|>
                   do 
                     let p₀ ← symm_eq a₀ b₁ 
                     let p₁ ← symm_eq a₁ b₀ 
-                    let p' ← to_expr (pquote Eq.trans (congr (congr_argₓ Iff (%%p₀)) (%%p₁)) (Iff.to_eq Iff.comm))
+                    let p' ← to_expr (pquote.1 (Eq.trans (congr (congr_argₓ Iff (%%ₓp₀)) (%%ₓp₁)) (Iff.to_eq Iff.comm)))
                     add_edge r a' b' p' 
                     return p'
-              | (quote (%%a₀) → %%a₁, quote (%%b₀) → %%b₁) =>
+              | (quote.1 ((%%ₓa₀) → %%ₓa₁), quote.1 ((%%ₓb₀) → %%ₓb₁)) =>
                 if ¬a₁.has_var ∧ ¬b₁.has_var then
                   do 
                     let p₀ ← symm_eq a₀ b₀ 
                     let p₁ ← symm_eq a₁ b₁ 
-                    let p' ← mk_app `congr_arg [quote Implies, p₀, p₁]
+                    let p' ← mk_app `congr_arg [quote.1 Implies, p₀, p₁]
                     add_edge r a' b' p' 
                     return p'
                 else unify a' b' >> add_refl r a' *> mk_mapp `rfl [none, a]
@@ -191,7 +191,7 @@ private unsafe def contra_p_not_p (r : tauto_state) : List expr → List expr �
     (do 
           let a ← match_not t 
           let (H2, p) ← find_eq_type r a Hs 
-          let H2 ← to_expr (pquote (%%p).mpr (%%H2))
+          let H2 ← to_expr (pquote.1 ((%%ₓp).mpr (%%ₓH2)))
           let tgt ← target 
           let pr ← mk_app `absurd [tgt, H2, H1]
           tactic.exact pr) <|>
@@ -230,7 +230,8 @@ unsafe structure tauto_cfg where
 unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
   focus1$
     let basic_tauto_tacs : List (tactic Unit) :=
-      [reflexivity, solve_by_elim, constructor_matching none [pquote _ ∧ _, pquote _ ↔ _, pquote Exists _, pquote True]]
+      [reflexivity, solve_by_elim,
+        constructor_matching none [pquote.1 (_ ∧ _), pquote.1 (_ ↔ _), pquote.1 (Exists _), pquote.1 True]]
     let tauto_core (r : tauto_state) : tactic Unit :=
       do 
         try (contradiction_with r); try (assumption_with r);
@@ -238,12 +239,13 @@ unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
               do 
                 let gs ← get_goals 
                 repeat (() <$ tactic.intro1); distrib_not;
-                                casesm (some ()) [pquote _ ∧ _, pquote _ ∨ _, pquote Exists _, pquote False];
+                                casesm (some ())
+                                  [pquote.1 (_ ∧ _), pquote.1 (_ ∨ _), pquote.1 (Exists _), pquote.1 False];
                               try (contradiction_with r);
-                            try (target >>= match_or >> refine (pquote or_iff_not_imp_left.mpr _));
-                          try (target >>= match_or >> refine (pquote or_iff_not_imp_right.mpr _));
+                            try (target >>= match_or >> refine (pquote.1 (or_iff_not_imp_left.mpr _)));
+                          try (target >>= match_or >> refine (pquote.1 (or_iff_not_imp_right.mpr _)));
                         repeat (() <$ tactic.intro1);
-                      constructor_matching (some ()) [pquote _ ∧ _, pquote _ ↔ _, pquote True];
+                      constructor_matching (some ()) [pquote.1 (_ ∧ _), pquote.1 (_ ↔ _), pquote.1 True];
                     try (assumption_with r)
                 let gs' ← get_goals 
                 guardₓ (gs ≠ gs')

@@ -99,20 +99,18 @@ theorem Prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} : Prod I J = Prod I' J' �
   by 
     simp only [←ideal_prod_equiv_symm_apply, ideal_prod_equiv.symm.injective.eq_iff, Prod.mk.inj_iffₓ]
 
-theorem is_prime_of_is_prime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)).IsPrime) : I.is_prime :=
-  by 
-    split 
-    ·
-      unfreezingI 
-        contrapose! h 
-      simp [is_prime_iff, h]
-    ·
-      intro x y hxy 
-      have  : ((⟨x, 1⟩ : R × S)*⟨y, 1⟩) ∈ Prod I ⊤
-      ·
-        rw [Prod.mk_mul_mk, mul_oneₓ, mem_prod]
-        exact ⟨hxy, trivialₓ⟩
-      simpa using h.mem_or_mem this
+-- error in RingTheory.Ideal.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_prime_of_is_prime_prod_top {I : ideal R} (h : (ideal.prod I («expr⊤»() : ideal S)).is_prime) : I.is_prime :=
+begin
+  split,
+  { unfreezingI { contrapose ["!"] [ident h] },
+    simp [] [] [] ["[", expr is_prime_iff, ",", expr h, "]"] [] [] },
+  { intros [ident x, ident y, ident hxy],
+    have [] [":", expr «expr ∈ »(«expr * »((⟨x, 1⟩ : «expr × »(R, S)), ⟨y, 1⟩), prod I «expr⊤»())] [],
+    { rw ["[", expr prod.mk_mul_mk, ",", expr mul_one, ",", expr mem_prod, "]"] [],
+      exact [expr ⟨hxy, trivial⟩] },
+    simpa [] [] [] [] [] ["using", expr h.mem_or_mem this] }
+end
 
 theorem is_prime_of_is_prime_prod_top' {I : Ideal S} (h : (Ideal.prod (⊤ : Ideal R) I).IsPrime) : I.is_prime :=
   by 
@@ -124,9 +122,9 @@ theorem is_prime_ideal_prod_top {I : Ideal R} [h : I.is_prime] : (Prod I (⊤ : 
   by 
     split 
     ·
-      unfreezingI 
+      (
         rcases h with ⟨h, -⟩
-        contrapose! h 
+        contrapose! h)
       rw [←prod_top_top, Prod.ext_iff] at h 
       exact h.1
     rintro ⟨r₁, s₁⟩ ⟨r₂, s₂⟩ ⟨h₁, h₂⟩
@@ -164,7 +162,7 @@ theorem ideal_prod_prime (I : Ideal (R × S)) :
     split 
     ·
       rw [ideal_prod_eq I]
-      introI hI 
+      intros hI 
       rcases ideal_prod_prime_aux hI with (h | h)
       ·
         right 
@@ -177,9 +175,9 @@ theorem ideal_prod_prime (I : Ideal (R × S)) :
     ·
       rintro (⟨p, ⟨h, rfl⟩⟩ | ⟨p, ⟨h, rfl⟩⟩)
       ·
-        exactI is_prime_ideal_prod_top
+        exact is_prime_ideal_prod_top
       ·
-        exactI is_prime_ideal_prod_top'
+        exact is_prime_ideal_prod_top'
 
 @[simp]
 private def prime_ideals_equiv_impl :
@@ -187,11 +185,11 @@ private def prime_ideals_equiv_impl :
 | Sum.inl ⟨I, hI⟩ =>
   ⟨Ideal.prod I ⊤,
     by 
-      exactI is_prime_ideal_prod_top⟩
+      exact is_prime_ideal_prod_top⟩
 | Sum.inr ⟨J, hJ⟩ =>
   ⟨Ideal.prod ⊤ J,
     by 
-      exactI is_prime_ideal_prod_top'⟩
+      exact is_prime_ideal_prod_top'⟩
 
 section 
 
@@ -230,7 +228,7 @@ theorem prime_ideals_equiv_symm_inl (h : I.is_prime) :
   (prime_ideals_equiv R S).symm (Sum.inl ⟨I, h⟩) =
     ⟨Prod I ⊤,
       by 
-        exactI is_prime_ideal_prod_top⟩ :=
+        exact is_prime_ideal_prod_top⟩ :=
   rfl
 
 @[simp]
@@ -238,7 +236,7 @@ theorem prime_ideals_equiv_symm_inr (h : J.is_prime) :
   (prime_ideals_equiv R S).symm (Sum.inr ⟨J, h⟩) =
     ⟨Prod ⊤ J,
       by 
-        exactI is_prime_ideal_prod_top'⟩ :=
+        exact is_prime_ideal_prod_top'⟩ :=
   rfl
 
 end Ideal

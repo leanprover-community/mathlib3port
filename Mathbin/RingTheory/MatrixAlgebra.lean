@@ -191,14 +191,16 @@ theorem matrix_equiv_tensor_apply (M : Matrix n n A) :
   matrixEquivTensor R A n M = ∑p : n × n, M p.1 p.2 ⊗ₜ std_basis_matrix p.1 p.2 1 :=
   rfl
 
+-- error in RingTheory.MatrixAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem matrix_equiv_tensor_apply_std_basis (i j : n) (x : A) :
-  matrixEquivTensor R A n (std_basis_matrix i j x) = x ⊗ₜ std_basis_matrix i j 1 :=
-  by 
-    have t : ∀ p : n × n, i = p.1 ∧ j = p.2 ↔ p = (i, j) :=
-      by 
-        tidy 
-    simp [ite_tmul, t, std_basis_matrix]
+theorem matrix_equiv_tensor_apply_std_basis
+(i j : n)
+(x : A) : «expr = »(matrix_equiv_tensor R A n (std_basis_matrix i j x), «expr ⊗ₜ »(x, std_basis_matrix i j 1)) :=
+begin
+  have [ident t] [":", expr ∀
+   p : «expr × »(n, n), «expr ↔ »(«expr ∧ »(«expr = »(i, p.1), «expr = »(j, p.2)), «expr = »(p, (i, j)))] [":=", expr by tidy []],
+  simp [] [] [] ["[", expr ite_tmul, ",", expr t, ",", expr std_basis_matrix, "]"] [] []
+end
 
 @[simp]
 theorem matrix_equiv_tensor_apply_symm (a : A) (M : Matrix n n R) :

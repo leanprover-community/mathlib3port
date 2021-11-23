@@ -78,7 +78,7 @@ theorem id_apply (m : M) : (𝟙 M : M → M) m = m :=
   rfl
 
 @[simp]
-theorem coe_comp (f : M ⟶ N) (g : N ⟶ U) : (f ≫ g : M → U) = (g ∘ f) :=
+theorem coe_comp (f : M ⟶ N) (g : N ⟶ U) : (f ≫ g : M → U) = g ∘ f :=
   rfl
 
 variable(R)
@@ -87,7 +87,7 @@ variable(R)
 @[simps]
 def free : Type u ⥤ AlgebraCat.{u} R :=
   { obj := fun S => { Carrier := FreeAlgebra R S, isRing := Algebra.semiringToRing R },
-    map := fun S T f => FreeAlgebra.lift _$ (FreeAlgebra.ι _ ∘ f),
+    map := fun S T f => FreeAlgebra.lift _$ FreeAlgebra.ι _ ∘ f,
     map_id' :=
       by 
         intro X 
@@ -180,7 +180,7 @@ instance AlgebraCat.forget_reflects_isos : reflects_isomorphisms (forget (Algebr
   { reflects :=
       fun X Y f _ =>
         by 
-          resetI 
+          skip 
           let i := as_iso ((forget (AlgebraCat.{u} R)).map f)
           let e : X ≃ₐ[R] Y := { f, i.to_equiv with  }
           exact ⟨(is_iso.of_iso e.to_Algebra_iso).1⟩ }

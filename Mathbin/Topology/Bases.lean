@@ -63,37 +63,34 @@ structure is_topological_basis(s : Set (Set α)) : Prop where
   sUnion_eq : ⋃₀s = univ 
   eq_generate_from : t = generate_from s
 
+-- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a family of sets `s` generates the topology, then nonempty intersections of finite
 subcollections of `s` form a topological basis. -/
-theorem is_topological_basis_of_subbasis {s : Set (Set α)} (hs : t = generate_from s) :
-  is_topological_basis ((fun f => ⋂₀f) '' { f : Set (Set α) | finite f ∧ f ⊆ s ∧ (⋂₀f).Nonempty }) :=
-  by 
-    refine' ⟨_, _, _⟩
-    ·
-      rintro _ ⟨t₁, ⟨hft₁, ht₁b, ht₁⟩, rfl⟩ _ ⟨t₂, ⟨hft₂, ht₂b, ht₂⟩, rfl⟩ x h 
-      have  : ⋂₀(t₁ ∪ t₂) = ⋂₀t₁ ∩ ⋂₀t₂ := sInter_union t₁ t₂ 
-      exact ⟨_, ⟨t₁ ∪ t₂, ⟨hft₁.union hft₂, union_subset ht₁b ht₂b, this.symm ▸ ⟨x, h⟩⟩, this⟩, h, subset.rfl⟩
-    ·
-      rw [sUnion_image, bUnion_eq_univ_iff]
-      intro x 
-      have  : x ∈ ⋂₀∅
-      ·
-        rw [sInter_empty]
-        exact mem_univ x 
-      exact ⟨∅, ⟨finite_empty, empty_subset _, x, this⟩, this⟩
-    ·
-      rw [hs]
-      apply le_antisymmₓ <;> apply le_generate_from
-      ·
-        rintro _ ⟨t, ⟨hft, htb, ht⟩, rfl⟩
-        exact @is_open_sInter _ (generate_from s) _ hft fun s hs => generate_open.basic _$ htb hs
-      ·
-        intro t ht 
-        rcases t.eq_empty_or_nonempty with (rfl | hne)
-        ·
-          apply @is_open_empty _ _ 
-        rw [←sInter_singleton t] at hne⊢
-        exact generate_open.basic _ ⟨{t}, ⟨finite_singleton t, singleton_subset_iff.2 ht, hne⟩, rfl⟩
+theorem is_topological_basis_of_subbasis
+{s : set (set α)}
+(hs : «expr = »(t, generate_from s)) : is_topological_basis «expr '' »(λ
+ f, «expr⋂₀ »(f), {f : set (set α) | «expr ∧ »(finite f, «expr ∧ »(«expr ⊆ »(f, s), «expr⋂₀ »(f).nonempty))}) :=
+begin
+  refine [expr ⟨_, _, _⟩],
+  { rintro ["_", "⟨", ident t₁, ",", "⟨", ident hft₁, ",", ident ht₁b, ",", ident ht₁, "⟩", ",", ident rfl, "⟩", "_", "⟨", ident t₂, ",", "⟨", ident hft₂, ",", ident ht₂b, ",", ident ht₂, "⟩", ",", ident rfl, "⟩", ident x, ident h],
+    have [] [":", expr «expr = »(«expr⋂₀ »(«expr ∪ »(t₁, t₂)), «expr ∩ »(«expr⋂₀ »(t₁), «expr⋂₀ »(t₂)))] [":=", expr sInter_union t₁ t₂],
+    exact [expr ⟨_, ⟨«expr ∪ »(t₁, t₂), ⟨hft₁.union hft₂, union_subset ht₁b ht₂b, «expr ▸ »(this.symm, ⟨x, h⟩)⟩, this⟩, h, subset.rfl⟩] },
+  { rw ["[", expr sUnion_image, ",", expr bUnion_eq_univ_iff, "]"] [],
+    intro [ident x],
+    have [] [":", expr «expr ∈ »(x, «expr⋂₀ »(«expr∅»()))] [],
+    { rw [expr sInter_empty] [],
+      exact [expr mem_univ x] },
+    exact [expr ⟨«expr∅»(), ⟨finite_empty, empty_subset _, x, this⟩, this⟩] },
+  { rw [expr hs] [],
+    apply [expr le_antisymm]; apply [expr le_generate_from],
+    { rintro ["_", "⟨", ident t, ",", "⟨", ident hft, ",", ident htb, ",", ident ht, "⟩", ",", ident rfl, "⟩"],
+      exact [expr @is_open_sInter _ (generate_from s) _ hft (λ s hs, «expr $ »(generate_open.basic _, htb hs))] },
+    { intros [ident t, ident ht],
+      rcases [expr t.eq_empty_or_nonempty, "with", ident rfl, "|", ident hne],
+      { apply [expr @is_open_empty _ _] },
+      rw ["<-", expr sInter_singleton t] ["at", ident hne, "⊢"],
+      exact [expr generate_open.basic _ ⟨{t}, ⟨finite_singleton t, singleton_subset_iff.2 ht, hne⟩, rfl⟩] } }
+end
 
 /-- If a family of open sets `s` is such that every open neighbourhood contains some
 member of `s`, then `s` is a topological basis. -/
@@ -152,7 +149,7 @@ theorem is_topological_basis.exists_subset_of_mem_open {b : Set (Set α)} (hb : 
 
 /-- Any open set is the union of the basis sets contained in it. -/
 theorem is_topological_basis.open_eq_sUnion' {B : Set (Set α)} (hB : is_topological_basis B) {u : Set α}
-  (ou : IsOpen u) : u = ⋃₀{ s ∈ B | s ⊆ u } :=
+  (ou : IsOpen u) : u = ⋃₀{ s∈B | s ⊆ u } :=
   ext$
     fun a =>
       ⟨fun ha =>
@@ -162,11 +159,11 @@ theorem is_topological_basis.open_eq_sUnion' {B : Set (Set α)} (hB : is_topolog
 
 theorem is_topological_basis.open_eq_sUnion {B : Set (Set α)} (hB : is_topological_basis B) {u : Set α}
   (ou : IsOpen u) : ∃ (S : _)(_ : S ⊆ B), u = ⋃₀S :=
-  ⟨{ s ∈ B | s ⊆ u }, fun s h => h.1, hB.open_eq_sUnion' ou⟩
+  ⟨{ s∈B | s ⊆ u }, fun s h => h.1, hB.open_eq_sUnion' ou⟩
 
 theorem is_topological_basis.open_eq_Union {B : Set (Set α)} (hB : is_topological_basis B) {u : Set α} (ou : IsOpen u) :
   ∃ (β : Type u)(f : β → Set α), (u = ⋃i, f i) ∧ ∀ i, f i ∈ B :=
-  ⟨«expr↥ » { s ∈ B | s ⊆ u }, coeₓ,
+  ⟨«expr↥ » { s∈B | s ⊆ u }, coeₓ,
     by 
       rw [←sUnion_eq_Union]
       apply hB.open_eq_sUnion' ou,
@@ -201,7 +198,7 @@ theorem is_topological_basis.exists_nonempty_subset {B : Set (Set α)} (hb : is_
     rcases hx with ⟨v, hv, hxv⟩
     exact ⟨v, hv.1, ⟨x, hxv⟩, hv.2⟩
 
-theorem is_topological_basis_opens : is_topological_basis { U : Set α | IsOpen U } :=
+theorem is_topological_basis_opens : is_topological_basis { U:Set α | IsOpen U } :=
   is_topological_basis_of_open_of_nhds
     (by 
       tauto)
@@ -305,35 +302,41 @@ theorem dense_range_dense_seq [separable_space α] [Nonempty α] : DenseRange (d
 
 variable{α}
 
+-- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a separable space, a family of nonempty disjoint open sets is countable. -/
-theorem _root_.set.pairwise_disjoint.countable_of_is_open [separable_space α] {ι : Type _} {s : ι → Set α} {a : Set ι}
-  (h : a.pairwise_disjoint s) (ha : ∀ i _ : i ∈ a, IsOpen (s i)) (h'a : ∀ i _ : i ∈ a, (s i).Nonempty) : countable a :=
-  by 
-    rcases eq_empty_or_nonempty a with (rfl | H)
-    ·
-      exact countable_empty 
-    haveI  : Inhabited α
-    ·
-      choose i ia using H 
-      choose y hy using h'a i ia 
-      exact ⟨y⟩
-    rcases exists_countable_dense α with ⟨u, u_count, u_dense⟩
-    have  : ∀ i, i ∈ a → ∃ y, y ∈ s i ∩ u := fun i hi => dense_iff_inter_open.1 u_dense (s i) (ha i hi) (h'a i hi)
-    choose! f hf using this 
-    have f_inj : inj_on f a
-    ·
-      intro i hi j hj hij 
-      have  : ¬Disjoint (s i) (s j)
-      ·
-        rw [not_disjoint_iff_nonempty_inter]
-        refine' ⟨f i, (hf i hi).1, _⟩
-        rw [hij]
-        exact (hf j hj).1
-      contrapose! this 
-      exact h i hi j hj this 
-    apply countable_of_injective_of_countable_image f_inj 
-    apply u_count.mono _ 
-    exact image_subset_iff.2 fun i hi => (hf i hi).2
+theorem _root_.set.pairwise_disjoint.countable_of_is_open
+[separable_space α]
+{ι : Type*}
+{s : ι → set α}
+{a : set ι}
+(h : a.pairwise_disjoint s)
+(ha : ∀ i «expr ∈ » a, is_open (s i))
+(h'a : ∀ i «expr ∈ » a, (s i).nonempty) : countable a :=
+begin
+  rcases [expr eq_empty_or_nonempty a, "with", ident rfl, "|", ident H],
+  { exact [expr countable_empty] },
+  haveI [] [":", expr inhabited α] [],
+  { choose [] [ident i] [ident ia] ["using", expr H],
+    choose [] [ident y] [ident hy] ["using", expr h'a i ia],
+    exact [expr ⟨y⟩] },
+  rcases [expr exists_countable_dense α, "with", "⟨", ident u, ",", ident u_count, ",", ident u_dense, "⟩"],
+  have [] [":", expr ∀
+   i, «expr ∈ »(i, a) → «expr∃ , »((y), «expr ∈ »(y, «expr ∩ »(s i, u)))] [":=", expr λ
+   i hi, dense_iff_inter_open.1 u_dense (s i) (ha i hi) (h'a i hi)],
+  choose ["!"] [ident f] [ident hf] ["using", expr this],
+  have [ident f_inj] [":", expr inj_on f a] [],
+  { assume [binders (i hi j hj hij)],
+    have [] [":", expr «expr¬ »(disjoint (s i) (s j))] [],
+    { rw [expr not_disjoint_iff_nonempty_inter] [],
+      refine [expr ⟨f i, (hf i hi).1, _⟩],
+      rw [expr hij] [],
+      exact [expr (hf j hj).1] },
+    contrapose ["!"] [ident this],
+    exact [expr h i hi j hj this] },
+  apply [expr countable_of_injective_of_countable_image f_inj],
+  apply [expr u_count.mono _],
+  exact [expr image_subset_iff.2 (λ i hi, (hf i hi).2)]
+end
 
 /-- In a separable space, a family of disjoint sets with nonempty interiors is countable. -/
 theorem _root_.set.pairwise_disjoint.countable_of_nonempty_interior [separable_space α] {ι : Type _} {s : ι → Set α}
@@ -344,94 +347,98 @@ end TopologicalSpace
 
 open TopologicalSpace
 
-theorem is_topological_basis_pi {ι : Type _} {X : ι → Type _} [∀ i, TopologicalSpace (X i)] {T : ∀ i, Set (Set (X i))}
-  (cond : ∀ i, is_topological_basis (T i)) :
-  is_topological_basis
-    { S : Set (∀ i, X i) | ∃ (U : ∀ i, Set (X i))(F : Finset ι), (∀ i, i ∈ F → U i ∈ T i) ∧ S = (F : Set ι).pi U } :=
-  by 
-    classical 
-    refine' is_topological_basis_of_open_of_nhds _ _
-    ·
-      rintro _ ⟨U, F, h1, rfl⟩
-      apply is_open_set_pi F.finite_to_set 
-      intro i hi 
-      exact is_topological_basis.is_open (cond i) (h1 i hi)
-    ·
-      intro a U ha hU 
-      have  : U ∈ nhds a := IsOpen.mem_nhds hU ha 
-      rw [nhds_pi, Filter.mem_infi] at this 
-      obtain ⟨F, hF, V, hV1, rfl⟩ := this 
-      choose U' hU' using hV1 
-      obtain ⟨hU1, hU2⟩ := fun i => (hU' i).1, fun i => (hU' i).2
-      have  : ∀ j : F, ∃ (T' : Set (X j))(hT : T' ∈ T j), a j ∈ T' ∧ T' ⊆ U' j
-      ·
-        intro i 
-        specialize hU1 i 
-        rwa [(cond i).mem_nhds_iff] at hU1 
-      choose U'' hU'' using this 
-      let U : ∀ i : ι, Set (X i) := fun i => if hi : i ∈ F then U'' ⟨i, hi⟩ else Set.Univ 
-      refine'
-        ⟨F.pi U,
-          ⟨U, hF.to_finset, fun i hi => _,
-            by 
-              simp ⟩,
-          _, _⟩
-      ·
-        dsimp only [U]
-        rw [dif_pos]
-        swap
-        ·
-          simpa using hi 
-        exact (hU'' _).1
-      ·
-        rw [Set.mem_pi]
-        intro i hi 
-        dsimp only [U]
-        rw [dif_pos hi]
-        exact (hU'' _).2.1
-      ·
-        intro x hx 
-        rintro - ⟨i, rfl⟩
-        refine' hU2 i ((hU'' i).2.2 _)
-        convert hx i i.2
-        rcases i with ⟨i, p⟩
-        dsimp [U]
-        rw [dif_pos p]
+-- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_topological_basis_pi
+{ι : Type*}
+{X : ι → Type*}
+[∀ i, topological_space (X i)]
+{T : ∀ i, set (set (X i))}
+(cond : ∀
+ i, is_topological_basis (T i)) : is_topological_basis {S : set (∀
+ i, X i) | «expr∃ , »((U : ∀ i, set (X i))
+ (F : finset ι), «expr ∧ »(∀ i, «expr ∈ »(i, F) → «expr ∈ »(U i, T i), «expr = »(S, (F : set ι).pi U)))} :=
+begin
+  classical,
+  refine [expr is_topological_basis_of_open_of_nhds _ _],
+  { rintro ["_", "⟨", ident U, ",", ident F, ",", ident h1, ",", ident rfl, "⟩"],
+    apply [expr is_open_set_pi F.finite_to_set],
+    intros [ident i, ident hi],
+    exact [expr is_topological_basis.is_open (cond i) (h1 i hi)] },
+  { intros [ident a, ident U, ident ha, ident hU],
+    have [] [":", expr «expr ∈ »(U, nhds a)] [":=", expr is_open.mem_nhds hU ha],
+    rw ["[", expr nhds_pi, ",", expr filter.mem_infi, "]"] ["at", ident this],
+    obtain ["⟨", ident F, ",", ident hF, ",", ident V, ",", ident hV1, ",", ident rfl, "⟩", ":=", expr this],
+    choose [] [ident U'] [ident hU'] ["using", expr hV1],
+    obtain ["⟨", ident hU1, ",", ident hU2, "⟩", ":=", "⟨", expr λ i, (hU' i).1, ",", expr λ i, (hU' i).2, "⟩"],
+    have [] [":", expr ∀
+     j : F, «expr∃ , »((T' : set (X j))
+      (hT : «expr ∈ »(T', T j)), «expr ∧ »(«expr ∈ »(a j, T'), «expr ⊆ »(T', U' j)))] [],
+    { intros [ident i],
+      specialize [expr hU1 i],
+      rwa [expr (cond i).mem_nhds_iff] ["at", ident hU1] },
+    choose [] [ident U''] [ident hU''] ["using", expr this],
+    let [ident U] [":", expr ∀
+     i : ι, set (X i)] [":=", expr λ i, if hi : «expr ∈ »(i, F) then U'' ⟨i, hi⟩ else set.univ],
+    refine [expr ⟨F.pi U, ⟨U, hF.to_finset, λ i hi, _, by simp [] [] [] [] [] []⟩, _, _⟩],
+    { dsimp ["only"] ["[", expr U, "]"] [] [],
+      rw ["[", expr dif_pos, "]"] [],
+      swap,
+      { simpa [] [] [] [] [] ["using", expr hi] },
+      exact [expr (hU'' _).1] },
+    { rw [expr set.mem_pi] [],
+      intros [ident i, ident hi],
+      dsimp ["only"] ["[", expr U, "]"] [] [],
+      rw [expr dif_pos hi] [],
+      exact [expr (hU'' _).2.1] },
+    { intros [ident x, ident hx],
+      rintros ["-", "⟨", ident i, ",", ident rfl, "⟩"],
+      refine [expr hU2 i ((hU'' i).2.2 _)],
+      convert [] [expr hx i i.2] [],
+      rcases [expr i, "with", "⟨", ident i, ",", ident p, "⟩"],
+      dsimp [] ["[", expr U, "]"] [] [],
+      rw [expr dif_pos p] [] } }
+end
 
-theorem is_topological_basis_infi {β : Type _} {ι : Type _} {X : ι → Type _} [t : ∀ i, TopologicalSpace (X i)]
-  {T : ∀ i, Set (Set (X i))} (cond : ∀ i, is_topological_basis (T i)) (f : ∀ i, β → X i) :
-  @is_topological_basis β (⨅i, induced (f i) (t i))
-    { S | ∃ (U : ∀ i, Set (X i))(F : Finset ι), (∀ i, i ∈ F → U i ∈ T i) ∧ S = ⋂(i : _)(hi : i ∈ F), f i ⁻¹' U i } :=
-  by 
-    convert (is_topological_basis_pi cond).Inducing (inducing_infi_to_pi _)
-    ext V 
-    split 
-    ·
-      rintro ⟨U, F, h1, h2⟩
-      have  : (F : Set ι).pi U = ⋂(i : ι)(hi : i ∈ F), (fun z : ∀ j, X j => z i) ⁻¹' U i
-      ·
-        ·
-          ext 
-          simp 
-      refine' ⟨(F : Set ι).pi U, ⟨U, F, h1, rfl⟩, _⟩
-      rw [this, h2, Set.preimage_Inter]
-      congr 1 
-      ext1 
-      rw [Set.preimage_Inter]
-      rfl
-    ·
-      rintro ⟨U, ⟨U, F, h1, rfl⟩, h⟩
-      refine' ⟨U, F, h1, _⟩
-      have  : (F : Set ι).pi U = ⋂(i : ι)(hi : i ∈ F), (fun z : ∀ j, X j => z i) ⁻¹' U i
-      ·
-        ·
-          ext 
-          simp 
-      rw [←h, this, Set.preimage_Inter]
-      congr 1 
-      ext1 
-      rw [Set.preimage_Inter]
-      rfl
+-- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_topological_basis_infi
+{β : Type*}
+{ι : Type*}
+{X : ι → Type*}
+[t : ∀ i, topological_space (X i)]
+{T : ∀ i, set (set (X i))}
+(cond : ∀ i, is_topological_basis (T i))
+(f : ∀
+ i, β → X i) : @is_topological_basis β «expr⨅ , »((i), induced (f i) (t i)) {S | «expr∃ , »((U : ∀ i, set (X i))
+ (F : finset ι), «expr ∧ »(∀
+  i, «expr ∈ »(i, F) → «expr ∈ »(U i, T i), «expr = »(S, «expr⋂ , »((i)
+    (hi : «expr ∈ »(i, F)), «expr ⁻¹' »(f i, U i)))))} :=
+begin
+  convert [] [expr (is_topological_basis_pi cond).inducing (inducing_infi_to_pi _)] [],
+  ext [] [ident V] [],
+  split,
+  { rintros ["⟨", ident U, ",", ident F, ",", ident h1, ",", ident h2, "⟩"],
+    have [] [":", expr «expr = »((F : set ι).pi U, «expr⋂ , »((i : ι)
+       (hi : «expr ∈ »(i, F)), «expr ⁻¹' »(λ z : ∀ j, X j, z i, U i)))] [],
+    by { ext [] [] [],
+      simp [] [] [] [] [] [] },
+    refine [expr ⟨(F : set ι).pi U, ⟨U, F, h1, rfl⟩, _⟩],
+    rw ["[", expr this, ",", expr h2, ",", expr set.preimage_Inter, "]"] [],
+    congr' [1] [],
+    ext1 [] [],
+    rw [expr set.preimage_Inter] [],
+    refl },
+  { rintros ["⟨", ident U, ",", "⟨", ident U, ",", ident F, ",", ident h1, ",", ident rfl, "⟩", ",", ident h, "⟩"],
+    refine [expr ⟨U, F, h1, _⟩],
+    have [] [":", expr «expr = »((F : set ι).pi U, «expr⋂ , »((i : ι)
+       (hi : «expr ∈ »(i, F)), «expr ⁻¹' »(λ z : ∀ j, X j, z i, U i)))] [],
+    by { ext [] [] [],
+      simp [] [] [] [] [] [] },
+    rw ["[", "<-", expr h, ",", expr this, ",", expr set.preimage_Inter, "]"] [],
+    congr' [1] [],
+    ext1 [] [],
+    rw [expr set.preimage_Inter] [],
+    refl }
+end
 
 /-- If `α` is a separable space and `f : α → β` is a continuous map with dense range, then `β` is
 a separable space as well. E.g., the completion of a separable uniform space is separable. -/
@@ -446,32 +453,29 @@ theorem Dense.exists_countable_dense_subset {α : Type _} [TopologicalSpace α] 
   ⟨coeₓ '' t, image_subset_iff.2$ fun x _ => mem_preimage.2$ Subtype.coe_prop _, htc.image coeₓ,
     hs.dense_range_coe.dense_image continuous_subtype_val htd⟩
 
--- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Let `s` be a dense set in a topological space `α` with partial order structure. If `s` is a
 separable space (e.g., if `α` has a second countable topology), then there exists a countable
 dense subset `t ⊆ s` such that `t` contains bottom/top element of `α` when they exist and belong
-to `s`. -/
-theorem dense.exists_countable_dense_subset_bot_top
-{α : Type*}
-[topological_space α]
-[partial_order α]
-{s : set α}
-[separable_space s]
-(hs : dense s) : «expr∃ , »((t «expr ⊆ » s), «expr ∧ »(countable t, «expr ∧ »(dense t, «expr ∧ »(∀
-    x, is_bot x → «expr ∈ »(x, s) → «expr ∈ »(x, t), ∀ x, is_top x → «expr ∈ »(x, s) → «expr ∈ »(x, t))))) :=
-begin
-  rcases [expr hs.exists_countable_dense_subset, "with", "⟨", ident t, ",", ident hts, ",", ident htc, ",", ident htd, "⟩"],
-  refine [expr ⟨«expr ∩ »(«expr ∪ »(t, «expr ∪ »({x | is_bot x}, {x | is_top x})), s), _, _, _, _, _⟩],
-  exacts ["[", expr inter_subset_right _ _, ",", expr (htc.union ((countable_is_bot α).union (countable_is_top α))).mono (inter_subset_left _ _), ",", expr htd.mono (subset_inter (subset_union_left _ _) hts), ",", expr λ
-   x hx hxs, ⟨«expr $ »(or.inr, or.inl hx), hxs⟩, ",", expr λ x hx hxs, ⟨«expr $ »(or.inr, or.inr hx), hxs⟩, "]"]
-end
+to `s`. For a dense subset containing neither bot nor top elements, see
+`dense.exists_countable_dense_subset_no_bot_top`. -/
+theorem Dense.exists_countable_dense_subset_bot_top {α : Type _} [TopologicalSpace α] [PartialOrderₓ α] {s : Set α}
+  [separable_space s] (hs : Dense s) :
+  ∃ (t : _)(_ : t ⊆ s), countable t ∧ Dense t ∧ (∀ x, IsBot x → x ∈ s → x ∈ t) ∧ ∀ x, IsTop x → x ∈ s → x ∈ t :=
+  by 
+    rcases hs.exists_countable_dense_subset with ⟨t, hts, htc, htd⟩
+    refine' ⟨(t ∪ ({ x | IsBot x } ∪ { x | IsTop x })) ∩ s, _, _, _, _, _⟩
+    exacts[inter_subset_right _ _,
+      (htc.union ((countable_is_bot α).union (countable_is_top α))).mono (inter_subset_left _ _),
+      htd.mono (subset_inter (subset_union_left _ _) hts), fun x hx hxs => ⟨Or.inr$ Or.inl hx, hxs⟩,
+      fun x hx hxs => ⟨Or.inr$ Or.inr hx, hxs⟩]
 
 instance separable_space_univ {α : Type _} [TopologicalSpace α] [separable_space α] : separable_space (univ : Set α) :=
   (Equiv.Set.univ α).symm.Surjective.DenseRange.SeparableSpace (continuous_subtype_mk _ continuous_id)
 
 /-- If `α` is a separable topological space with a partial order, then there exists a countable
 dense set `s : set α` that contains those of both bottom and top elements of `α` that actually
-exist. -/
+exist. For a dense set containing neither bot nor top elements, see
+`exists_countable_dense_no_bot_top`. -/
 theorem exists_countable_dense_bot_top (α : Type _) [TopologicalSpace α] [separable_space α] [PartialOrderₓ α] :
   ∃ s : Set α, countable s ∧ Dense s ∧ (∀ x, IsBot x → x ∈ s) ∧ ∀ x, IsTop x → x ∈ s :=
   by 
@@ -527,7 +531,7 @@ variable(α)
 theorem exists_countable_basis [second_countable_topology α] :
   ∃ b : Set (Set α), countable b ∧ ∅ ∉ b ∧ is_topological_basis b :=
   let ⟨b, hb₁, hb₂⟩ := second_countable_topology.is_open_generated_countable α 
-  let b' := (fun s => ⋂₀s) '' { s : Set (Set α) | finite s ∧ s ⊆ b ∧ (⋂₀s).Nonempty }
+  let b' := (fun s => ⋂₀s) '' { s:Set (Set α) | finite s ∧ s ⊆ b ∧ (⋂₀s).Nonempty }
   ⟨b',
     ((countable_set_of_finite_subset hb₁).mono
           (by 
@@ -591,42 +595,50 @@ instance  {β : Type _} [TopologicalSpace β] [second_countable_topology α] [se
   ((is_basis_countable_basis α).Prod (is_basis_countable_basis β)).SecondCountableTopology$
     (countable_countable_basis α).Image2 (countable_countable_basis β) _
 
-instance second_countable_topology_encodable {ι : Type _} {π : ι → Type _} [Encodable ι]
-  [t : ∀ a, TopologicalSpace (π a)] [∀ a, second_countable_topology (π a)] : second_countable_topology (∀ a, π a) :=
-  by 
-    have  : t = fun a => generate_from (countable_basis (π a))
-    exact funext fun a => (is_basis_countable_basis (π a)).eq_generate_from 
-    rw [this, pi_generate_from_eq]
-    constructor 
-    refine' ⟨_, _, rfl⟩
-    have  :
-      countable
-        { T : Set (∀ i, π i) |
-          ∃ (I : Finset ι)(s : ∀ i : I, Set (π i)),
-            (∀ i, s i ∈ countable_basis (π i)) ∧ T = { f | ∀ i : I, f i ∈ s i } }
-    ·
-      simp only [set_of_exists, ←exists_prop]
-      refine' countable_Union fun I => countable.bUnion _ fun _ _ => countable_singleton _ 
-      change countable { s : ∀ i : I, Set (π i) | ∀ i, s i ∈ countable_basis (π i) }
-      exact countable_pi fun i => countable_countable_basis _ 
-    convert this using 1 
-    ext1 T 
-    split 
-    ·
-      rintro ⟨s, I, hs, rfl⟩
-      refine' ⟨I, fun i => s i, fun i => hs i i.2, _⟩
-      simp only [Set.Pi, SetCoe.forall']
-      rfl
-    ·
-      rintro ⟨I, s, hs, rfl⟩
-      rcases@Subtype.surjective_restrict ι (fun i => Set (π i)) _ (fun i => i ∈ I) s with ⟨s, rfl⟩
-      exact ⟨s, I, fun i hi => hs ⟨i, hi⟩, Set.ext$ fun f => Subtype.forall⟩
+-- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance second_countable_topology_encodable
+{ι : Type*}
+{π : ι → Type*}
+[encodable ι]
+[t : ∀ a, topological_space (π a)]
+[∀ a, second_countable_topology (π a)] : second_countable_topology (∀ a, π a) :=
+begin
+  have [] [":", expr «expr = »(t, λ a, generate_from (countable_basis (π a)))] [],
+  from [expr funext (assume a, (is_basis_countable_basis (π a)).eq_generate_from)],
+  rw ["[", expr this, ",", expr pi_generate_from_eq, "]"] [],
+  constructor,
+  refine [expr ⟨_, _, rfl⟩],
+  have [] [":", expr countable {T : set (∀
+    i, π i) | «expr∃ , »((I : finset ι)
+    (s : ∀
+     i : I, set (π i)), «expr ∧ »(∀
+     i, «expr ∈ »(s i, countable_basis (π i)), «expr = »(T, {f | ∀ i : I, «expr ∈ »(f i, s i)})))}] [],
+  { simp [] [] ["only"] ["[", expr set_of_exists, ",", "<-", expr exists_prop, "]"] [] [],
+    refine [expr countable_Union (λ I, countable.bUnion _ (λ _ _, countable_singleton _))],
+    change [expr countable {s : ∀ i : I, set (π i) | ∀ i, «expr ∈ »(s i, countable_basis (π i))}] [] [],
+    exact [expr countable_pi (λ i, countable_countable_basis _)] },
+  convert [] [expr this] ["using", 1],
+  ext1 [] [ident T],
+  split,
+  { rintro ["⟨", ident s, ",", ident I, ",", ident hs, ",", ident rfl, "⟩"],
+    refine [expr ⟨I, λ i, s i, λ i, hs i i.2, _⟩],
+    simp [] [] ["only"] ["[", expr set.pi, ",", expr set_coe.forall', "]"] [] [],
+    refl },
+  { rintro ["⟨", ident I, ",", ident s, ",", ident hs, ",", ident rfl, "⟩"],
+    rcases [expr @subtype.surjective_restrict ι (λ
+      i, set (π i)) _ (λ i, «expr ∈ »(i, I)) s, "with", "⟨", ident s, ",", ident rfl, "⟩"],
+    exact [expr ⟨s, I, λ i hi, hs ⟨i, hi⟩, «expr $ »(set.ext, λ f, subtype.forall)⟩] }
+end
 
-instance second_countable_topology_fintype {ι : Type _} {π : ι → Type _} [Fintype ι] [t : ∀ a, TopologicalSpace (π a)]
-  [∀ a, second_countable_topology (π a)] : second_countable_topology (∀ a, π a) :=
-  by 
-    letI this := Fintype.encodable ι 
-    exact TopologicalSpace.second_countable_topology_encodable
+-- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance second_countable_topology_fintype
+{ι : Type*}
+{π : ι → Type*}
+[fintype ι]
+[t : ∀ a, topological_space (π a)]
+[∀ a, second_countable_topology (π a)] : second_countable_topology (∀ a, π a) :=
+by { letI [] [] [":=", expr fintype.encodable ι],
+  exact [expr topological_space.second_countable_topology_encodable] }
 
 instance (priority := 100)second_countable_topology.to_separable_space [second_countable_topology α] :
   separable_space α :=
@@ -638,32 +650,40 @@ instance (priority := 100)second_countable_topology.to_separable_space [second_c
 
 variable{α}
 
+-- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A countable open cover induces a second-countable topology if all open covers
 are themselves second countable. -/
-theorem second_countable_topology_of_countable_cover {ι} [Encodable ι] {U : ι → Set α}
-  [∀ i, second_countable_topology (U i)] (Uo : ∀ i, IsOpen (U i)) (hc : (⋃i, U i) = univ) :
-  second_countable_topology α :=
-  by 
-    have  : is_topological_basis (⋃i, image (coeₓ : U i → α) '' countable_basis (U i))
-    exact is_topological_basis_of_cover Uo hc fun i => is_basis_countable_basis (U i)
-    exact this.second_countable_topology (countable_Union$ fun i => (countable_countable_basis _).Image _)
+theorem second_countable_topology_of_countable_cover
+{ι}
+[encodable ι]
+{U : ι → set α}
+[∀ i, second_countable_topology (U i)]
+(Uo : ∀ i, is_open (U i))
+(hc : «expr = »(«expr⋃ , »((i), U i), univ)) : second_countable_topology α :=
+begin
+  have [] [":", expr is_topological_basis «expr⋃ , »((i), «expr '' »(image (coe : U i → α), countable_basis (U i)))] [],
+  from [expr is_topological_basis_of_cover Uo hc (λ i, is_basis_countable_basis (U i))],
+  exact [expr this.second_countable_topology «expr $ »(countable_Union, λ i, (countable_countable_basis _).image _)]
+end
 
+-- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a second-countable space, an open set, given as a union of open sets,
 is equal to the union of countably many of those sets. -/
-theorem is_open_Union_countable [second_countable_topology α] {ι} (s : ι → Set α) (H : ∀ i, IsOpen (s i)) :
-  ∃ T : Set ι, countable T ∧ (⋃(i : _)(_ : i ∈ T), s i) = ⋃i, s i :=
-  by 
-    let B := { b ∈ countable_basis α | ∃ i, b ⊆ s i }
-    choose f hf using fun b : B => b.2.2
-    haveI  : Encodable B := ((countable_countable_basis α).mono (sep_subset _ _)).toEncodable 
-    refine' ⟨_, countable_range f, subset.antisymm (bUnion_subset_Union _ _) (sUnion_subset _)⟩
-    rintro _ ⟨i, rfl⟩ x xs 
-    rcases(is_basis_countable_basis α).exists_subset_of_mem_open xs (H _) with ⟨b, hb, xb, bs⟩
-    exact
-      ⟨_, ⟨_, rfl⟩, _, ⟨⟨⟨_, hb, _, bs⟩, rfl⟩, rfl⟩,
-        hf _
-          (by 
-            exact xb)⟩
+theorem is_open_Union_countable
+[second_countable_topology α]
+{ι}
+(s : ι → set α)
+(H : ∀
+ i, is_open (s i)) : «expr∃ , »((T : set ι), «expr ∧ »(countable T, «expr = »(«expr⋃ , »((i «expr ∈ » T), s i), «expr⋃ , »((i), s i)))) :=
+begin
+  let [ident B] [] [":=", expr {b ∈ countable_basis α | «expr∃ , »((i), «expr ⊆ »(b, s i))}],
+  choose [] [ident f] [ident hf] ["using", expr λ b : B, b.2.2],
+  haveI [] [":", expr encodable B] [":=", expr ((countable_countable_basis α).mono (sep_subset _ _)).to_encodable],
+  refine [expr ⟨_, countable_range f, subset.antisymm (bUnion_subset_Union _ _) (sUnion_subset _)⟩],
+  rintro ["_", "⟨", ident i, ",", ident rfl, "⟩", ident x, ident xs],
+  rcases [expr (is_basis_countable_basis α).exists_subset_of_mem_open xs (H _), "with", "⟨", ident b, ",", ident hb, ",", ident xb, ",", ident bs, "⟩"],
+  exact [expr ⟨_, ⟨_, rfl⟩, _, ⟨⟨⟨_, hb, _, bs⟩, rfl⟩, rfl⟩, hf _ (by exact [expr xb])⟩]
+end
 
 theorem is_open_sUnion_countable [second_countable_topology α] (S : Set (Set α)) (H : ∀ s _ : s ∈ S, IsOpen s) :
   ∃ T : Set (Set α), countable T ∧ T ⊆ S ∧ ⋃₀T = ⋃₀S :=
@@ -684,15 +704,21 @@ theorem countable_cover_nhds [second_countable_topology α] {f : α → Set α} 
     simp only [hsU, eq_univ_iff_forall, mem_Union]
     exact fun x => ⟨x, mem_interior_iff_mem_nhds.2 (hf x)⟩
 
-theorem countable_cover_nhds_within [second_countable_topology α] {f : α → Set α} {s : Set α}
-  (hf : ∀ x _ : x ∈ s, f x ∈ 𝓝[s] x) : ∃ (t : _)(_ : t ⊆ s), countable t ∧ s ⊆ ⋃(x : _)(_ : x ∈ t), f x :=
-  by 
-    have  : ∀ x : s, coeₓ ⁻¹' f x ∈ 𝓝 x 
-    exact fun x => preimage_coe_mem_nhds_subtype.2 (hf x x.2)
-    rcases countable_cover_nhds this with ⟨t, htc, htU⟩
-    refine' ⟨coeₓ '' t, Subtype.coe_image_subset _ _, htc.image _, fun x hx => _⟩
-    simp only [bUnion_image, eq_univ_iff_forall, ←preimage_Union, mem_preimage] at htU⊢
-    exact htU ⟨x, hx⟩
+-- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem countable_cover_nhds_within
+[second_countable_topology α]
+{f : α → set α}
+{s : set α}
+(hf : ∀
+ x «expr ∈ » s, «expr ∈ »(f x, «expr𝓝[ ] »(s, x))) : «expr∃ , »((t «expr ⊆ » s), «expr ∧ »(countable t, «expr ⊆ »(s, «expr⋃ , »((x «expr ∈ » t), f x)))) :=
+begin
+  have [] [":", expr ∀ x : s, «expr ∈ »(«expr ⁻¹' »(coe, f x), expr𝓝() x)] [],
+  from [expr λ x, preimage_coe_mem_nhds_subtype.2 (hf x x.2)],
+  rcases [expr countable_cover_nhds this, "with", "⟨", ident t, ",", ident htc, ",", ident htU, "⟩"],
+  refine [expr ⟨«expr '' »(coe, t), subtype.coe_image_subset _ _, htc.image _, λ x hx, _⟩],
+  simp [] [] ["only"] ["[", expr bUnion_image, ",", expr eq_univ_iff_forall, ",", "<-", expr preimage_Union, ",", expr mem_preimage, "]"] [] ["at", ident htU, "⊢"],
+  exact [expr htU ⟨x, hx⟩]
+end
 
 end TopologicalSpace
 

@@ -36,7 +36,7 @@ variable(E : Type _)[SemiNormedGroup E][SemiNormedSpace 𝕜 E]
 
 variable(F : Type _)[NormedGroup F][NormedSpace 𝕜 F]
 
--- error in Analysis.NormedSpace.Dual: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Analysis.NormedSpace.Dual: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- The topological dual of a seminormed space `E`. -/
 @[derive #["[", expr inhabited, ",", expr semi_normed_group, ",", expr semi_normed_space 𝕜, "]"]]
 def dual :=

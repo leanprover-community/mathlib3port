@@ -223,6 +223,7 @@ def comp (g : N → M) : HasScalar N α :=
 
 variable{α}
 
+-- error in GroupTheory.GroupAction.Defs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a tower of scalar actions `M → α → β`, if we use `has_scalar.comp`
 to pull back both of `M`'s actions by a map `g : N → M`, then we obtain a new
 tower of scalar actions `N → α → β`.
@@ -230,23 +231,29 @@ tower of scalar actions `N → α → β`.
 This cannot be an instance because it can cause infinite loops whenever the `has_scalar` arguments
 are still metavariables.
 -/
-theorem comp.is_scalar_tower [HasScalar M β] [HasScalar α β] [IsScalarTower M α β] (g : N → M) :
-  by 
-    haveI  := comp α g <;> haveI  := comp β g <;> exact IsScalarTower N α β :=
-  by 
-    exact { smul_assoc := fun n => @smul_assoc _ _ _ _ _ _ _ (g n) }
+@[priority 100]
+theorem comp.is_scalar_tower
+[has_scalar M β]
+[has_scalar α β]
+[is_scalar_tower M α β]
+(g : N → M) : by haveI [] [] [":=", expr comp α g]; haveI [] [] [":=", expr comp β g]; exact [expr is_scalar_tower N α β] :=
+by exact [expr { smul_assoc := λ n, @smul_assoc _ _ _ _ _ _ _ (g n) }]
 
-instance (priority := 100)comp.smul_comm_class [HasScalar β α] [SmulCommClass M β α] (g : N → M) :
-  by 
-    haveI  := comp α g <;> exact SmulCommClass N β α :=
-  by 
-    exact { smul_comm := fun n => @smul_comm _ _ _ _ _ _ (g n) }
+-- error in GroupTheory.GroupAction.Defs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[priority 100]
+instance comp.smul_comm_class
+[has_scalar β α]
+[smul_comm_class M β α]
+(g : N → M) : by haveI [] [] [":=", expr comp α g]; exact [expr smul_comm_class N β α] :=
+by exact [expr { smul_comm := λ n, @smul_comm _ _ _ _ _ _ (g n) }]
 
-instance (priority := 100)comp.smul_comm_class' [HasScalar β α] [SmulCommClass β M α] (g : N → M) :
-  by 
-    haveI  := comp α g <;> exact SmulCommClass β N α :=
-  by 
-    exact { smul_comm := fun _ n => @smul_comm _ _ _ _ _ _ _ (g n) }
+-- error in GroupTheory.GroupAction.Defs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[priority 100]
+instance comp.smul_comm_class'
+[has_scalar β α]
+[smul_comm_class β M α]
+(g : N → M) : by haveI [] [] [":=", expr comp α g]; exact [expr smul_comm_class β N α] :=
+by exact [expr { smul_comm := λ _ n, @smul_comm _ _ _ _ _ _ _ (g n) }]
 
 end HasScalar
 

@@ -1,5 +1,6 @@
 import Mathbin.Algebra.Algebra.Basic 
-import Mathbin.LinearAlgebra.TensorProduct
+import Mathbin.LinearAlgebra.TensorProduct 
+import Mathbin.Algebra.IterateHom
 
 /-!
 # Facts about algebras involving bilinear maps and tensor products
@@ -169,20 +170,29 @@ section
 
 variable{R A : Type _}[CommSemiringₓ R][Ringₓ A][Algebra R A]
 
-theorem lmul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmul_left R x) :=
-  by 
-    letI this : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
-    exact mul_right_injective₀ hx
+-- error in Algebra.Algebra.Bilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lmul_left_injective [no_zero_divisors A] {x : A} (hx : «expr ≠ »(x, 0)) : function.injective (lmul_left R x) :=
+by { letI [] [":", expr is_domain A] [":=", expr { exists_pair_ne := ⟨x, 0, hx⟩,
+     ..«expr‹ ›»(ring A),
+     ..«expr‹ ›»(no_zero_divisors A) }],
+  exact [expr mul_right_injective₀ hx] }
 
-theorem lmul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmul_right R x) :=
-  by 
-    letI this : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
-    exact mul_left_injective₀ hx
+-- error in Algebra.Algebra.Bilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lmul_right_injective
+[no_zero_divisors A]
+{x : A}
+(hx : «expr ≠ »(x, 0)) : function.injective (lmul_right R x) :=
+by { letI [] [":", expr is_domain A] [":=", expr { exists_pair_ne := ⟨x, 0, hx⟩,
+     ..«expr‹ ›»(ring A),
+     ..«expr‹ ›»(no_zero_divisors A) }],
+  exact [expr mul_left_injective₀ hx] }
 
-theorem lmul_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmul R A x) :=
-  by 
-    letI this : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
-    exact mul_right_injective₀ hx
+-- error in Algebra.Algebra.Bilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lmul_injective [no_zero_divisors A] {x : A} (hx : «expr ≠ »(x, 0)) : function.injective (lmul R A x) :=
+by { letI [] [":", expr is_domain A] [":=", expr { exists_pair_ne := ⟨x, 0, hx⟩,
+     ..«expr‹ ›»(ring A),
+     ..«expr‹ ›»(no_zero_divisors A) }],
+  exact [expr mul_right_injective₀ hx] }
 
 end 
 

@@ -136,171 +136,167 @@ namespace MultilinearMap
 
 variable(f : MultilinearMap 𝕜 E G)
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a multilinear map in finitely many variables on normed spaces satisfies the inequality
 `∥f m∥ ≤ C * ∏ i, ∥m i∥` on a shell `ε i / ∥c i∥ < ∥m i∥ < ε i` for some positive numbers `ε i`
 and elements `c i : 𝕜`, `1 < ∥c i∥`, then it satisfies this inequality for all `m`. -/
-theorem bound_of_shell {ε : ι → ℝ} {C : ℝ} (hε : ∀ i, 0 < ε i) {c : ι → 𝕜} (hc : ∀ i, 1 < ∥c i∥)
-  (hf : ∀ m : ∀ i, E i, (∀ i, ε i / ∥c i∥ ≤ ∥m i∥) → (∀ i, ∥m i∥ < ε i) → ∥f m∥ ≤ C*∏i, ∥m i∥) (m : ∀ i, E i) :
-  ∥f m∥ ≤ C*∏i, ∥m i∥ :=
-  by 
-    rcases em (∃ i, m i = 0) with (⟨i, hi⟩ | hm) <;> [skip, pushNeg  at hm]
-    ·
-      simp [f.map_coord_zero i hi, prod_eq_zero (mem_univ i), hi]
-    choose δ hδ0 hδm_lt hle_δm hδinv using fun i => rescale_to_shell (hc i) (hε i) (hm i)
-    have hδ0 : 0 < ∏i, ∥δ i∥
-    exact prod_pos fun i _ => norm_pos_iff.2 (hδ0 i)
-    simpa [map_smul_univ, norm_smul, prod_mul_distrib, mul_left_commₓ C, mul_le_mul_left hδ0] using
-      hf (fun i => δ i • m i) hle_δm hδm_lt
+theorem bound_of_shell
+{ε : ι → exprℝ()}
+{C : exprℝ()}
+(hε : ∀ i, «expr < »(0, ε i))
+{c : ι → 𝕜}
+(hc : ∀ i, «expr < »(1, «expr∥ ∥»(c i)))
+(hf : ∀
+ m : ∀
+ i, E i, ∀
+ i, «expr ≤ »(«expr / »(ε i, «expr∥ ∥»(c i)), «expr∥ ∥»(m i)) → ∀
+ i, «expr < »(«expr∥ ∥»(m i), ε i) → «expr ≤ »(«expr∥ ∥»(f m), «expr * »(C, «expr∏ , »((i), «expr∥ ∥»(m i)))))
+(m : ∀ i, E i) : «expr ≤ »(«expr∥ ∥»(f m), «expr * »(C, «expr∏ , »((i), «expr∥ ∥»(m i)))) :=
+begin
+  rcases [expr em «expr∃ , »((i), «expr = »(m i, 0)), "with", "⟨", ident i, ",", ident hi, "⟩", "|", ident hm]; [skip, push_neg ["at", ident hm]],
+  { simp [] [] [] ["[", expr f.map_coord_zero i hi, ",", expr prod_eq_zero (mem_univ i), ",", expr hi, "]"] [] [] },
+  choose [] [ident δ] [ident hδ0, ident hδm_lt, ident hle_δm, ident hδinv] ["using", expr λ
+   i, rescale_to_shell (hc i) (hε i) (hm i)],
+  have [ident hδ0] [":", expr «expr < »(0, «expr∏ , »((i), «expr∥ ∥»(δ i)))] [],
+  from [expr prod_pos (λ i _, norm_pos_iff.2 (hδ0 i))],
+  simpa [] [] [] ["[", expr map_smul_univ, ",", expr norm_smul, ",", expr prod_mul_distrib, ",", expr mul_left_comm C, ",", expr mul_le_mul_left hδ0, "]"] [] ["using", expr hf (λ
+    i, «expr • »(δ i, m i)) hle_δm hδm_lt]
+end
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a multilinear map in finitely many variables on normed spaces is continuous, then it
 satisfies the inequality `∥f m∥ ≤ C * ∏ i, ∥m i∥`, for some `C` which can be chosen to be
 positive. -/
-theorem exists_bound_of_continuous (hf : Continuous f) : ∃ C : ℝ, 0 < C ∧ ∀ m, ∥f m∥ ≤ C*∏i, ∥m i∥ :=
-  by 
-    casesI is_empty_or_nonempty ι
-    ·
-      refine' ⟨∥f 0∥+1, add_pos_of_nonneg_of_pos (norm_nonneg _) zero_lt_one, fun m => _⟩
-      obtain rfl : m = 0 
-      exact funext (IsEmpty.elim ‹_›)
-      simp [univ_eq_empty, zero_le_one]
-    obtain ⟨ε : ℝ, ε0 : 0 < ε, hε : ∀ m : ∀ i, E i, ∥m - 0∥ < ε → ∥f m - f 0∥ < 1⟩ :=
-      NormedGroup.tendsto_nhds_nhds.1 (hf.tendsto 0) 1 zero_lt_one 
-    simp only [sub_zero, f.map_zero] at hε 
-    rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
-    have  : 0 < (∥c∥ / ε) ^ Fintype.card ι 
-    exact pow_pos (div_pos (zero_lt_one.trans hc) ε0) _ 
-    refine' ⟨_, this, _⟩
-    refine' f.bound_of_shell (fun _ => ε0) (fun _ => hc) fun m hcm hm => _ 
-    refine' (hε m ((pi_norm_lt_iff ε0).2 hm)).le.trans _ 
-    rw [←div_le_iff' this, one_div, ←inv_pow₀, inv_div, Fintype.card, ←prod_const]
-    exact prod_le_prod (fun _ _ => div_nonneg ε0.le (norm_nonneg _)) fun i _ => hcm i
+theorem exists_bound_of_continuous
+(hf : continuous f) : «expr∃ , »((C : exprℝ()), «expr ∧ »(«expr < »(0, C), ∀
+  m, «expr ≤ »(«expr∥ ∥»(f m), «expr * »(C, «expr∏ , »((i), «expr∥ ∥»(m i)))))) :=
+begin
+  casesI [expr is_empty_or_nonempty ι] [],
+  { refine [expr ⟨«expr + »(«expr∥ ∥»(f 0), 1), add_pos_of_nonneg_of_pos (norm_nonneg _) zero_lt_one, λ m, _⟩],
+    obtain [ident rfl, ":", expr «expr = »(m, 0)],
+    from [expr funext (is_empty.elim «expr‹ ›»(_))],
+    simp [] [] [] ["[", expr univ_eq_empty, ",", expr zero_le_one, "]"] [] [] },
+  obtain ["⟨", ident ε, ":", expr exprℝ(), ",", ident ε0, ":", expr «expr < »(0, ε), ",", ident hε, ":", expr ∀
+   m : ∀
+   i, E i, «expr < »(«expr∥ ∥»(«expr - »(m, 0)), ε) → «expr < »(«expr∥ ∥»(«expr - »(f m, f 0)), 1), "⟩", ":=", expr normed_group.tendsto_nhds_nhds.1 (hf.tendsto 0) 1 zero_lt_one],
+  simp [] [] ["only"] ["[", expr sub_zero, ",", expr f.map_zero, "]"] [] ["at", ident hε],
+  rcases [expr normed_field.exists_one_lt_norm 𝕜, "with", "⟨", ident c, ",", ident hc, "⟩"],
+  have [] [":", expr «expr < »(0, «expr ^ »(«expr / »(«expr∥ ∥»(c), ε), fintype.card ι))] [],
+  from [expr pow_pos (div_pos (zero_lt_one.trans hc) ε0) _],
+  refine [expr ⟨_, this, _⟩],
+  refine [expr f.bound_of_shell (λ _, ε0) (λ _, hc) (λ m hcm hm, _)],
+  refine [expr (hε m ((pi_norm_lt_iff ε0).2 hm)).le.trans _],
+  rw ["[", "<-", expr div_le_iff' this, ",", expr one_div, ",", "<-", expr inv_pow₀, ",", expr inv_div, ",", expr fintype.card, ",", "<-", expr prod_const, "]"] [],
+  exact [expr prod_le_prod (λ _ _, div_nonneg ε0.le (norm_nonneg _)) (λ i _, hcm i)]
+end
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` satisfies a boundedness property around `0`, one can deduce a bound on `f m₁ - f m₂`
 using the multilinearity. Here, we give a precise but hard to use version. See
 `norm_image_sub_le_of_bound` for a less precise but more usable version. The bound reads
 `∥f m - f m'∥ ≤
   C * ∥m 1 - m' 1∥ * max ∥m 2∥ ∥m' 2∥ * max ∥m 3∥ ∥m' 3∥ * ... * max ∥m n∥ ∥m' n∥ + ...`,
 where the other terms in the sum are the same products where `1` is replaced by any `i`. -/
-theorem norm_image_sub_le_of_bound' {C : ℝ} (hC : 0 ≤ C) (H : ∀ m, ∥f m∥ ≤ C*∏i, ∥m i∥) (m₁ m₂ : ∀ i, E i) :
-  ∥f m₁ - f m₂∥ ≤ C*∑i, ∏j, if j = i then ∥m₁ i - m₂ i∥ else max ∥m₁ j∥ ∥m₂ j∥ :=
-  by 
-    have A :
-      ∀ s : Finset ι, ∥f m₁ - f (s.piecewise m₂ m₁)∥ ≤ C*∑i in s, ∏j, if j = i then ∥m₁ i - m₂ i∥ else max ∥m₁ j∥ ∥m₂ j∥
-    ·
-      refine'
-        Finset.induction
-          (by 
-            simp )
-          _ 
-      intro i s his Hrec 
-      have I :
-        ∥f (s.piecewise m₂ m₁) - f ((insert i s).piecewise m₂ m₁)∥ ≤
-          C*∏j, if j = i then ∥m₁ i - m₂ i∥ else max ∥m₁ j∥ ∥m₂ j∥
-      ·
-        have A : (insert i s).piecewise m₂ m₁ = Function.update (s.piecewise m₂ m₁) i (m₂ i) :=
-          s.piecewise_insert _ _ _ 
-        have B : s.piecewise m₂ m₁ = Function.update (s.piecewise m₂ m₁) i (m₁ i)
-        ·
-          ext j 
-          byCases' h : j = i
-          ·
-            rw [h]
-            simp [his]
-          ·
-            simp [h]
-        rw [B, A, ←f.map_sub]
-        apply le_transₓ (H _) (mul_le_mul_of_nonneg_left _ hC)
-        refine' prod_le_prod (fun j hj => norm_nonneg _) fun j hj => _ 
-        byCases' h : j = i
-        ·
-          rw [h]
-          simp 
-        ·
-          byCases' h' : j ∈ s <;> simp [h', h, le_reflₓ]
-      calc
-        ∥f m₁ - f ((insert i s).piecewise m₂ m₁)∥ ≤
-          ∥f m₁ - f (s.piecewise m₂ m₁)∥+∥f (s.piecewise m₂ m₁) - f ((insert i s).piecewise m₂ m₁)∥ :=
-        by 
-          rw [←dist_eq_norm, ←dist_eq_norm, ←dist_eq_norm]
-          exact
-            dist_triangle _ _
-              _
-                _ ≤
-          (C*∑i in s,
-                ∏j,
-                  if j = i then ∥m₁ i - m₂ i∥ else
-                    max ∥m₁ j∥ ∥m₂ j∥)+C*∏j, if j = i then ∥m₁ i - m₂ i∥ else max ∥m₁ j∥ ∥m₂ j∥ :=
-        add_le_add Hrec I _ = C*∑i in insert i s, ∏j, if j = i then ∥m₁ i - m₂ i∥ else max ∥m₁ j∥ ∥m₂ j∥ :=
-        by 
-          simp [his, add_commₓ, left_distrib]
-    convert A univ 
-    simp 
+theorem norm_image_sub_le_of_bound'
+{C : exprℝ()}
+(hC : «expr ≤ »(0, C))
+(H : ∀ m, «expr ≤ »(«expr∥ ∥»(f m), «expr * »(C, «expr∏ , »((i), «expr∥ ∥»(m i)))))
+(m₁
+ m₂ : ∀
+ i, E i) : «expr ≤ »(«expr∥ ∥»(«expr - »(f m₁, f m₂)), «expr * »(C, «expr∑ , »((i), «expr∏ , »((j), if «expr = »(j, i) then «expr∥ ∥»(«expr - »(m₁ i, m₂ i)) else max «expr∥ ∥»(m₁ j) «expr∥ ∥»(m₂ j))))) :=
+begin
+  have [ident A] [":", expr ∀
+   s : finset ι, «expr ≤ »(«expr∥ ∥»(«expr - »(f m₁, f (s.piecewise m₂ m₁))), «expr * »(C, «expr∑ in , »((i), s, «expr∏ , »((j), if «expr = »(j, i) then «expr∥ ∥»(«expr - »(m₁ i, m₂ i)) else max «expr∥ ∥»(m₁ j) «expr∥ ∥»(m₂ j)))))] [],
+  { refine [expr finset.induction (by simp [] [] [] [] [] []) _],
+    assume [binders (i s his Hrec)],
+    have [ident I] [":", expr «expr ≤ »(«expr∥ ∥»(«expr - »(f (s.piecewise m₂ m₁), f ((insert i s).piecewise m₂ m₁))), «expr * »(C, «expr∏ , »((j), if «expr = »(j, i) then «expr∥ ∥»(«expr - »(m₁ i, m₂ i)) else max «expr∥ ∥»(m₁ j) «expr∥ ∥»(m₂ j))))] [],
+    { have [ident A] [":", expr «expr = »((insert i s).piecewise m₂ m₁, function.update (s.piecewise m₂ m₁) i (m₂ i))] [":=", expr s.piecewise_insert _ _ _],
+      have [ident B] [":", expr «expr = »(s.piecewise m₂ m₁, function.update (s.piecewise m₂ m₁) i (m₁ i))] [],
+      { ext [] [ident j] [],
+        by_cases [expr h, ":", expr «expr = »(j, i)],
+        { rw [expr h] [],
+          simp [] [] [] ["[", expr his, "]"] [] [] },
+        { simp [] [] [] ["[", expr h, "]"] [] [] } },
+      rw ["[", expr B, ",", expr A, ",", "<-", expr f.map_sub, "]"] [],
+      apply [expr le_trans (H _) (mul_le_mul_of_nonneg_left _ hC)],
+      refine [expr prod_le_prod (λ j hj, norm_nonneg _) (λ j hj, _)],
+      by_cases [expr h, ":", expr «expr = »(j, i)],
+      { rw [expr h] [],
+        simp [] [] [] [] [] [] },
+      { by_cases [expr h', ":", expr «expr ∈ »(j, s)]; simp [] [] [] ["[", expr h', ",", expr h, ",", expr le_refl, "]"] [] [] } },
+    calc
+      «expr ≤ »(«expr∥ ∥»(«expr - »(f m₁, f ((insert i s).piecewise m₂ m₁))), «expr + »(«expr∥ ∥»(«expr - »(f m₁, f (s.piecewise m₂ m₁))), «expr∥ ∥»(«expr - »(f (s.piecewise m₂ m₁), f ((insert i s).piecewise m₂ m₁))))) : by { rw ["[", "<-", expr dist_eq_norm, ",", "<-", expr dist_eq_norm, ",", "<-", expr dist_eq_norm, "]"] [],
+        exact [expr dist_triangle _ _ _] }
+      «expr ≤ »(..., «expr + »(«expr * »(C, «expr∑ in , »((i), s, «expr∏ , »((j), if «expr = »(j, i) then «expr∥ ∥»(«expr - »(m₁ i, m₂ i)) else max «expr∥ ∥»(m₁ j) «expr∥ ∥»(m₂ j)))), «expr * »(C, «expr∏ , »((j), if «expr = »(j, i) then «expr∥ ∥»(«expr - »(m₁ i, m₂ i)) else max «expr∥ ∥»(m₁ j) «expr∥ ∥»(m₂ j))))) : add_le_add Hrec I
+      «expr = »(..., «expr * »(C, «expr∑ in , »((i), insert i s, «expr∏ , »((j), if «expr = »(j, i) then «expr∥ ∥»(«expr - »(m₁ i, m₂ i)) else max «expr∥ ∥»(m₁ j) «expr∥ ∥»(m₂ j))))) : by simp [] [] [] ["[", expr his, ",", expr add_comm, ",", expr left_distrib, "]"] [] [] },
+  convert [] [expr A univ] [],
+  simp [] [] [] [] [] []
+end
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` satisfies a boundedness property around `0`, one can deduce a bound on `f m₁ - f m₂`
 using the multilinearity. Here, we give a usable but not very precise version. See
 `norm_image_sub_le_of_bound'` for a more precise but less usable version. The bound is
 `∥f m - f m'∥ ≤ C * card ι * ∥m - m'∥ * (max ∥m∥ ∥m'∥) ^ (card ι - 1)`. -/
-theorem norm_image_sub_le_of_bound {C : ℝ} (hC : 0 ≤ C) (H : ∀ m, ∥f m∥ ≤ C*∏i, ∥m i∥) (m₁ m₂ : ∀ i, E i) :
-  ∥f m₁ - f m₂∥ ≤ ((C*Fintype.card ι)*max ∥m₁∥ ∥m₂∥ ^ (Fintype.card ι - 1))*∥m₁ - m₂∥ :=
-  by 
-    have A :
-      ∀ i : ι, (∏j, if j = i then ∥m₁ i - m₂ i∥ else max ∥m₁ j∥ ∥m₂ j∥) ≤ ∥m₁ - m₂∥*max ∥m₁∥ ∥m₂∥ ^ (Fintype.card ι - 1)
-    ·
-      intro i 
-      calc
-        (∏j, if j = i then ∥m₁ i - m₂ i∥ else max ∥m₁ j∥ ∥m₂ j∥) ≤
-          ∏j : ι, Function.update (fun j => max ∥m₁∥ ∥m₂∥) i ∥m₁ - m₂∥ j :=
-        by 
-          apply prod_le_prod
-          ·
-            intro j hj 
-            byCases' h : j = i <;> simp [h, norm_nonneg]
-          ·
-            intro j hj 
-            byCases' h : j = i
-            ·
-              rw [h]
-              simp 
-              exact norm_le_pi_norm (m₁ - m₂) i
-            ·
-              simp [h, max_le_max, norm_le_pi_norm]_ = ∥m₁ - m₂∥*max ∥m₁∥ ∥m₂∥ ^ (Fintype.card ι - 1) :=
-        by 
-          rw [prod_update_of_mem (Finset.mem_univ _)]
-          simp [card_univ_diff]
-    calc ∥f m₁ - f m₂∥ ≤ C*∑i, ∏j, if j = i then ∥m₁ i - m₂ i∥ else max ∥m₁ j∥ ∥m₂ j∥ :=
-      f.norm_image_sub_le_of_bound' hC H m₁ m₂ _ ≤ C*∑i, ∥m₁ - m₂∥*max ∥m₁∥ ∥m₂∥ ^ (Fintype.card ι - 1) :=
-      mul_le_mul_of_nonneg_left (sum_le_sum fun i hi => A i)
-        hC _ = ((C*Fintype.card ι)*max ∥m₁∥ ∥m₂∥ ^ (Fintype.card ι - 1))*∥m₁ - m₂∥ :=
-      by 
-        rw [sum_const, card_univ, nsmul_eq_mul]
-        ring
+theorem norm_image_sub_le_of_bound
+{C : exprℝ()}
+(hC : «expr ≤ »(0, C))
+(H : ∀ m, «expr ≤ »(«expr∥ ∥»(f m), «expr * »(C, «expr∏ , »((i), «expr∥ ∥»(m i)))))
+(m₁
+ m₂ : ∀
+ i, E i) : «expr ≤ »(«expr∥ ∥»(«expr - »(f m₁, f m₂)), «expr * »(«expr * »(«expr * »(C, fintype.card ι), «expr ^ »(max «expr∥ ∥»(m₁) «expr∥ ∥»(m₂), «expr - »(fintype.card ι, 1))), «expr∥ ∥»(«expr - »(m₁, m₂)))) :=
+begin
+  have [ident A] [":", expr ∀
+   i : ι, «expr ≤ »(«expr∏ , »((j), if «expr = »(j, i) then «expr∥ ∥»(«expr - »(m₁ i, m₂ i)) else max «expr∥ ∥»(m₁ j) «expr∥ ∥»(m₂ j)), «expr * »(«expr∥ ∥»(«expr - »(m₁, m₂)), «expr ^ »(max «expr∥ ∥»(m₁) «expr∥ ∥»(m₂), «expr - »(fintype.card ι, 1))))] [],
+  { assume [binders (i)],
+    calc
+      «expr ≤ »(«expr∏ , »((j), if «expr = »(j, i) then «expr∥ ∥»(«expr - »(m₁ i, m₂ i)) else max «expr∥ ∥»(m₁ j) «expr∥ ∥»(m₂ j)), «expr∏ , »((j : ι), function.update (λ
+         j, max «expr∥ ∥»(m₁) «expr∥ ∥»(m₂)) i «expr∥ ∥»(«expr - »(m₁, m₂)) j)) : begin
+        apply [expr prod_le_prod],
+        { assume [binders (j hj)],
+          by_cases [expr h, ":", expr «expr = »(j, i)]; simp [] [] [] ["[", expr h, ",", expr norm_nonneg, "]"] [] [] },
+        { assume [binders (j hj)],
+          by_cases [expr h, ":", expr «expr = »(j, i)],
+          { rw [expr h] [],
+            simp [] [] [] [] [] [],
+            exact [expr norm_le_pi_norm «expr - »(m₁, m₂) i] },
+          { simp [] [] [] ["[", expr h, ",", expr max_le_max, ",", expr norm_le_pi_norm, "]"] [] [] } }
+      end
+      «expr = »(..., «expr * »(«expr∥ ∥»(«expr - »(m₁, m₂)), «expr ^ »(max «expr∥ ∥»(m₁) «expr∥ ∥»(m₂), «expr - »(fintype.card ι, 1)))) : by { rw [expr prod_update_of_mem (finset.mem_univ _)] [],
+        simp [] [] [] ["[", expr card_univ_diff, "]"] [] [] } },
+  calc
+    «expr ≤ »(«expr∥ ∥»(«expr - »(f m₁, f m₂)), «expr * »(C, «expr∑ , »((i), «expr∏ , »((j), if «expr = »(j, i) then «expr∥ ∥»(«expr - »(m₁ i, m₂ i)) else max «expr∥ ∥»(m₁ j) «expr∥ ∥»(m₂ j))))) : f.norm_image_sub_le_of_bound' hC H m₁ m₂
+    «expr ≤ »(..., «expr * »(C, «expr∑ , »((i), «expr * »(«expr∥ ∥»(«expr - »(m₁, m₂)), «expr ^ »(max «expr∥ ∥»(m₁) «expr∥ ∥»(m₂), «expr - »(fintype.card ι, 1)))))) : mul_le_mul_of_nonneg_left (sum_le_sum (λ
+      i hi, A i)) hC
+    «expr = »(..., «expr * »(«expr * »(«expr * »(C, fintype.card ι), «expr ^ »(max «expr∥ ∥»(m₁) «expr∥ ∥»(m₂), «expr - »(fintype.card ι, 1))), «expr∥ ∥»(«expr - »(m₁, m₂)))) : by { rw ["[", expr sum_const, ",", expr card_univ, ",", expr nsmul_eq_mul, "]"] [],
+      ring [] }
+end
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a multilinear map satisfies an inequality `∥f m∥ ≤ C * ∏ i, ∥m i∥`, then it is
 continuous. -/
-theorem continuous_of_bound (C : ℝ) (H : ∀ m, ∥f m∥ ≤ C*∏i, ∥m i∥) : Continuous f :=
-  by 
-    let D := max C 1
-    have D_pos : 0 ≤ D := le_transₓ zero_le_one (le_max_rightₓ _ _)
-    replace H : ∀ m, ∥f m∥ ≤ D*∏i, ∥m i∥
-    ·
-      intro m 
-      apply le_transₓ (H m) (mul_le_mul_of_nonneg_right (le_max_leftₓ _ _) _)
-      exact prod_nonneg fun i : ι hi => norm_nonneg (m i)
-    refine' continuous_iff_continuous_at.2 fun m => _ 
-    refine'
-      continuous_at_of_locally_lipschitz zero_lt_one ((D*Fintype.card ι)*(∥m∥+1) ^ (Fintype.card ι - 1)) fun m' h' => _ 
-    rw [dist_eq_norm, dist_eq_norm]
-    have  : 0 ≤ max ∥m'∥ ∥m∥
-    ·
-      simp 
-    have  : max ∥m'∥ ∥m∥ ≤ ∥m∥+1
-    ·
-      simp [zero_le_one, norm_le_of_mem_closed_ball (le_of_ltₓ h'), -add_commₓ]
-    calc ∥f m' - f m∥ ≤ ((D*Fintype.card ι)*max ∥m'∥ ∥m∥ ^ (Fintype.card ι - 1))*∥m' - m∥ :=
-      f.norm_image_sub_le_of_bound D_pos H m' m _ ≤ ((D*Fintype.card ι)*(∥m∥+1) ^ (Fintype.card ι - 1))*∥m' - m∥ :=
-      by 
-        applyRules [mul_le_mul_of_nonneg_right, mul_le_mul_of_nonneg_left, mul_nonneg, norm_nonneg, Nat.cast_nonneg,
-          pow_le_pow_of_le_left]
+theorem continuous_of_bound
+(C : exprℝ())
+(H : ∀ m, «expr ≤ »(«expr∥ ∥»(f m), «expr * »(C, «expr∏ , »((i), «expr∥ ∥»(m i))))) : continuous f :=
+begin
+  let [ident D] [] [":=", expr max C 1],
+  have [ident D_pos] [":", expr «expr ≤ »(0, D)] [":=", expr le_trans zero_le_one (le_max_right _ _)],
+  replace [ident H] [":", expr ∀ m, «expr ≤ »(«expr∥ ∥»(f m), «expr * »(D, «expr∏ , »((i), «expr∥ ∥»(m i))))] [],
+  { assume [binders (m)],
+    apply [expr le_trans (H m) (mul_le_mul_of_nonneg_right (le_max_left _ _) _)],
+    exact [expr prod_nonneg (λ (i : ι) (hi), norm_nonneg (m i))] },
+  refine [expr continuous_iff_continuous_at.2 (λ m, _)],
+  refine [expr continuous_at_of_locally_lipschitz zero_lt_one «expr * »(«expr * »(D, fintype.card ι), «expr ^ »(«expr + »(«expr∥ ∥»(m), 1), «expr - »(fintype.card ι, 1))) (λ
+    m' h', _)],
+  rw ["[", expr dist_eq_norm, ",", expr dist_eq_norm, "]"] [],
+  have [] [":", expr «expr ≤ »(0, max «expr∥ ∥»(m') «expr∥ ∥»(m))] [],
+  by simp [] [] [] [] [] [],
+  have [] [":", expr «expr ≤ »(max «expr∥ ∥»(m') «expr∥ ∥»(m), «expr + »(«expr∥ ∥»(m), 1))] [],
+  by simp [] [] [] ["[", expr zero_le_one, ",", expr norm_le_of_mem_closed_ball (le_of_lt h'), ",", "-", ident add_comm, "]"] [] [],
+  calc
+    «expr ≤ »(«expr∥ ∥»(«expr - »(f m', f m)), «expr * »(«expr * »(«expr * »(D, fintype.card ι), «expr ^ »(max «expr∥ ∥»(m') «expr∥ ∥»(m), «expr - »(fintype.card ι, 1))), «expr∥ ∥»(«expr - »(m', m)))) : f.norm_image_sub_le_of_bound D_pos H m' m
+    «expr ≤ »(..., «expr * »(«expr * »(«expr * »(D, fintype.card ι), «expr ^ »(«expr + »(«expr∥ ∥»(m), 1), «expr - »(fintype.card ι, 1))), «expr∥ ∥»(«expr - »(m', m)))) : by apply_rules ["[", expr mul_le_mul_of_nonneg_right, ",", expr mul_le_mul_of_nonneg_left, ",", expr mul_nonneg, ",", expr norm_nonneg, ",", expr nat.cast_nonneg, ",", expr pow_le_pow_of_le_left, "]"]
+end
 
 /-- Constructing a continuous multilinear map from a multilinear map satisfying a boundedness
 condition. -/
@@ -365,24 +361,25 @@ theorem bounds_bdd_below {f : ContinuousMultilinearMap 𝕜 E G} : BddBelow { c 
 theorem op_norm_nonneg : 0 ≤ ∥f∥ :=
   le_cInf bounds_nonempty fun _ ⟨hx, _⟩ => hx
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The fundamental property of the operator norm of a continuous multilinear map:
 `∥f m∥` is bounded by `∥f∥` times the product of the `∥m i∥`. -/
-theorem le_op_norm : ∥f m∥ ≤ ∥f∥*∏i, ∥m i∥ :=
-  by 
-    have A : 0 ≤ ∏i, ∥m i∥ := prod_nonneg fun j hj => norm_nonneg _ 
-    cases' A.eq_or_lt with h hlt
-    ·
-      rcases prod_eq_zero_iff.1 h.symm with ⟨i, _, hi⟩
-      rw [norm_eq_zero] at hi 
-      have  : f m = 0 := f.map_coord_zero i hi 
-      rw [this, norm_zero]
-      exact mul_nonneg (op_norm_nonneg f) A
-    ·
-      rw [←div_le_iff hlt]
-      apply le_cInf bounds_nonempty 
-      rintro c ⟨_, hc⟩
-      rw [div_le_iff hlt]
-      apply hc
+theorem le_op_norm : «expr ≤ »(«expr∥ ∥»(f m), «expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr∥ ∥»(m i)))) :=
+begin
+  have [ident A] [":", expr «expr ≤ »(0, «expr∏ , »((i), «expr∥ ∥»(m i)))] [":=", expr prod_nonneg (λ
+    j hj, norm_nonneg _)],
+  cases [expr A.eq_or_lt] ["with", ident h, ident hlt],
+  { rcases [expr prod_eq_zero_iff.1 h.symm, "with", "⟨", ident i, ",", "_", ",", ident hi, "⟩"],
+    rw [expr norm_eq_zero] ["at", ident hi],
+    have [] [":", expr «expr = »(f m, 0)] [":=", expr f.map_coord_zero i hi],
+    rw ["[", expr this, ",", expr norm_zero, "]"] [],
+    exact [expr mul_nonneg (op_norm_nonneg f) A] },
+  { rw ["[", "<-", expr div_le_iff hlt, "]"] [],
+    apply [expr le_cInf bounds_nonempty],
+    rintro [ident c, "⟨", "_", ",", ident hc, "⟩"],
+    rw ["[", expr div_le_iff hlt, "]"] [],
+    apply [expr hc] }
+end
 
 theorem le_of_op_norm_le {C : ℝ} (h : ∥f∥ ≤ C) : ∥f m∥ ≤ C*∏i, ∥m i∥ :=
   (f.le_op_norm m).trans$ mul_le_mul_of_nonneg_right h (prod_nonneg$ fun i _ => norm_nonneg (m i))
@@ -487,27 +484,21 @@ theorem op_norm_prod (f : ContinuousMultilinearMap 𝕜 E G) (g : ContinuousMult
     max_leₓ (f.op_norm_le_bound (norm_nonneg _)$ fun m => (le_max_leftₓ _ _).trans ((f.prod g).le_op_norm _))
       (g.op_norm_le_bound (norm_nonneg _)$ fun m => (le_max_rightₓ _ _).trans ((f.prod g).le_op_norm _))
 
--- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem norm_pi
-{ι' : Type v'}
-[fintype ι']
-{E' : ι' → Type wE'}
-[∀ i', normed_group (E' i')]
-[∀ i', normed_space 𝕜 (E' i')]
-(f : ∀ i', continuous_multilinear_map 𝕜 E (E' i')) : «expr = »(«expr∥ ∥»(pi f), «expr∥ ∥»(f)) :=
-begin
-  apply [expr le_antisymm],
-  { refine [expr op_norm_le_bound _ (norm_nonneg f) (λ m, _)],
-    dsimp [] [] [] [],
-    rw [expr pi_norm_le_iff] [],
-    exacts ["[", expr λ
-     i, (f i).le_of_op_norm_le m (norm_le_pi_norm f i), ",", expr mul_nonneg (norm_nonneg f) «expr $ »(prod_nonneg, λ
-      _ _, norm_nonneg _), "]"] },
-  { refine [expr (pi_norm_le_iff (norm_nonneg _)).2 (λ i, _)],
-    refine [expr op_norm_le_bound _ (norm_nonneg _) (λ m, _)],
-    refine [expr le_trans _ ((pi f).le_op_norm m)],
-    convert [] [expr norm_le_pi_norm (λ j, f j m) i] [] }
-end
+theorem norm_pi {ι' : Type v'} [Fintype ι'] {E' : ι' → Type wE'} [∀ i', NormedGroup (E' i')]
+  [∀ i', NormedSpace 𝕜 (E' i')] (f : ∀ i', ContinuousMultilinearMap 𝕜 E (E' i')) : ∥pi f∥ = ∥f∥ :=
+  by 
+    apply le_antisymmₓ
+    ·
+      refine' op_norm_le_bound _ (norm_nonneg f) fun m => _ 
+      dsimp 
+      rw [pi_norm_le_iff]
+      exacts[fun i => (f i).le_of_op_norm_le m (norm_le_pi_norm f i),
+        mul_nonneg (norm_nonneg f) (prod_nonneg$ fun _ _ => norm_nonneg _)]
+    ·
+      refine' (pi_norm_le_iff (norm_nonneg _)).2 fun i => _ 
+      refine' op_norm_le_bound _ (norm_nonneg _) fun m => _ 
+      refine' le_transₓ _ ((pi f).le_op_norm m)
+      convert norm_le_pi_norm (fun j => f j m) i
 
 section 
 
@@ -582,41 +573,28 @@ theorem norm_image_sub_le (m₁ m₂ : ∀ i, E i) :
   ∥f m₁ - f m₂∥ ≤ ((∥f∥*Fintype.card ι)*max ∥m₁∥ ∥m₂∥ ^ (Fintype.card ι - 1))*∥m₁ - m₂∥ :=
   f.to_multilinear_map.norm_image_sub_le_of_bound (norm_nonneg _) f.le_op_norm _ _
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Applying a multilinear map to a vector is continuous in both coordinates. -/
-theorem continuous_eval : Continuous fun p : ContinuousMultilinearMap 𝕜 E G × ∀ i, E i => p.1 p.2 :=
-  by 
-    apply continuous_iff_continuous_at.2 fun p => _ 
-    apply
-      continuous_at_of_locally_lipschitz zero_lt_one
-        ((((∥p∥+1)*Fintype.card ι)*(∥p∥+1) ^ (Fintype.card ι - 1))+∏i, ∥p.2 i∥) fun q hq => _ 
-    have  : 0 ≤ max ∥q.2∥ ∥p.2∥
-    ·
-      simp 
-    have  : 0 ≤ ∥p∥+1
-    ·
-      simp [le_transₓ zero_le_one]
-    have A : ∥q∥ ≤ ∥p∥+1 := norm_le_of_mem_closed_ball (le_of_ltₓ hq)
-    have  : max ∥q.2∥ ∥p.2∥ ≤ ∥p∥+1 :=
-      le_transₓ (max_le_max (norm_snd_le q) (norm_snd_le p))
-        (by 
-          simp [A, -add_commₓ, zero_le_one])
-    have  : ∀ i : ι, i ∈ univ → 0 ≤ ∥p.2 i∥ := fun i hi => norm_nonneg _ 
-    calc dist (q.1 q.2) (p.1 p.2) ≤ dist (q.1 q.2) (q.1 p.2)+dist (q.1 p.2) (p.1 p.2) :=
-      dist_triangle _ _ _ _ = ∥q.1 q.2 - q.1 p.2∥+∥q.1 p.2 - p.1 p.2∥ :=
-      by 
-        rw [dist_eq_norm,
-          dist_eq_norm]_ ≤
-        (((∥q.1∥*Fintype.card ι)*max ∥q.2∥ ∥p.2∥ ^ (Fintype.card ι - 1))*∥q.2 - p.2∥)+∥q.1 - p.1∥*∏i, ∥p.2 i∥ :=
-      add_le_add (norm_image_sub_le _ _ _)
-        ((q.1 - p.1).le_op_norm
-          p.2)_ ≤ ((((∥p∥+1)*Fintype.card ι)*(∥p∥+1) ^ (Fintype.card ι - 1))*∥q - p∥)+∥q - p∥*∏i, ∥p.2 i∥ :=
-      by 
-        applyRules [add_le_add, mul_le_mul, le_reflₓ, le_transₓ (norm_fst_le q) A, Nat.cast_nonneg, mul_nonneg,
-          pow_le_pow_of_le_left, pow_nonneg, norm_snd_le (q - p), norm_nonneg, norm_fst_le (q - p),
-          prod_nonneg]_ = ((((∥p∥+1)*Fintype.card ι)*(∥p∥+1) ^ (Fintype.card ι - 1))+∏i, ∥p.2 i∥)*dist q p :=
-      by 
-        rw [dist_eq_norm]
-        ring
+theorem continuous_eval : continuous (λ p : «expr × »(continuous_multilinear_map 𝕜 E G, ∀ i, E i), p.1 p.2) :=
+begin
+  apply [expr continuous_iff_continuous_at.2 (λ p, _)],
+  apply [expr continuous_at_of_locally_lipschitz zero_lt_one «expr + »(«expr * »(«expr * »(«expr + »(«expr∥ ∥»(p), 1), fintype.card ι), «expr ^ »(«expr + »(«expr∥ ∥»(p), 1), «expr - »(fintype.card ι, 1))), «expr∏ , »((i), «expr∥ ∥»(p.2 i))) (λ
+    q hq, _)],
+  have [] [":", expr «expr ≤ »(0, max «expr∥ ∥»(q.2) «expr∥ ∥»(p.2))] [],
+  by simp [] [] [] [] [] [],
+  have [] [":", expr «expr ≤ »(0, «expr + »(«expr∥ ∥»(p), 1))] [],
+  by simp [] [] [] ["[", expr le_trans zero_le_one, "]"] [] [],
+  have [ident A] [":", expr «expr ≤ »(«expr∥ ∥»(q), «expr + »(«expr∥ ∥»(p), 1))] [":=", expr norm_le_of_mem_closed_ball (le_of_lt hq)],
+  have [] [":", expr «expr ≤ »(max «expr∥ ∥»(q.2) «expr∥ ∥»(p.2), «expr + »(«expr∥ ∥»(p), 1))] [":=", expr le_trans (max_le_max (norm_snd_le q) (norm_snd_le p)) (by simp [] [] [] ["[", expr A, ",", "-", ident add_comm, ",", expr zero_le_one, "]"] [] [])],
+  have [] [":", expr ∀ i : ι, «expr ∈ »(i, univ) → «expr ≤ »(0, «expr∥ ∥»(p.2 i))] [":=", expr λ i hi, norm_nonneg _],
+  calc
+    «expr ≤ »(dist (q.1 q.2) (p.1 p.2), «expr + »(dist (q.1 q.2) (q.1 p.2), dist (q.1 p.2) (p.1 p.2))) : dist_triangle _ _ _
+    «expr = »(..., «expr + »(«expr∥ ∥»(«expr - »(q.1 q.2, q.1 p.2)), «expr∥ ∥»(«expr - »(q.1 p.2, p.1 p.2)))) : by rw ["[", expr dist_eq_norm, ",", expr dist_eq_norm, "]"] []
+    «expr ≤ »(..., «expr + »(«expr * »(«expr * »(«expr * »(«expr∥ ∥»(q.1), fintype.card ι), «expr ^ »(max «expr∥ ∥»(q.2) «expr∥ ∥»(p.2), «expr - »(fintype.card ι, 1))), «expr∥ ∥»(«expr - »(q.2, p.2))), «expr * »(«expr∥ ∥»(«expr - »(q.1, p.1)), «expr∏ , »((i), «expr∥ ∥»(p.2 i))))) : add_le_add (norm_image_sub_le _ _ _) («expr - »(q.1, p.1).le_op_norm p.2)
+    «expr ≤ »(..., «expr + »(«expr * »(«expr * »(«expr * »(«expr + »(«expr∥ ∥»(p), 1), fintype.card ι), «expr ^ »(«expr + »(«expr∥ ∥»(p), 1), «expr - »(fintype.card ι, 1))), «expr∥ ∥»(«expr - »(q, p))), «expr * »(«expr∥ ∥»(«expr - »(q, p)), «expr∏ , »((i), «expr∥ ∥»(p.2 i))))) : by apply_rules ["[", expr add_le_add, ",", expr mul_le_mul, ",", expr le_refl, ",", expr le_trans (norm_fst_le q) A, ",", expr nat.cast_nonneg, ",", expr mul_nonneg, ",", expr pow_le_pow_of_le_left, ",", expr pow_nonneg, ",", expr norm_snd_le «expr - »(q, p), ",", expr norm_nonneg, ",", expr norm_fst_le «expr - »(q, p), ",", expr prod_nonneg, "]"]
+    «expr = »(..., «expr * »(«expr + »(«expr * »(«expr * »(«expr + »(«expr∥ ∥»(p), 1), fintype.card ι), «expr ^ »(«expr + »(«expr∥ ∥»(p), 1), «expr - »(fintype.card ι, 1))), «expr∏ , »((i), «expr∥ ∥»(p.2 i))), dist q p)) : by { rw [expr dist_eq_norm] [],
+      ring [] }
+end
 
 theorem continuous_eval_left (m : ∀ i, E i) : Continuous fun p : ContinuousMultilinearMap 𝕜 E G => p m :=
   continuous_eval.comp (continuous_id.prod_mk continuous_const)
@@ -637,79 +615,74 @@ open_locale TopologicalSpace
 
 open Filter
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the target space is complete, the space of continuous multilinear maps with its norm is also
 complete. The proof is essentially the same as for the space of continuous linear maps (modulo the
 addition of `finset.prod` where needed. The duplication could be avoided by deducing the linear
 case from the multilinear case via a currying isomorphism. However, this would mess up imports,
 and it is more satisfactory to have the simplest case as a standalone proof. -/
-instance  [CompleteSpace G] : CompleteSpace (ContinuousMultilinearMap 𝕜 E G) :=
-  by 
-    have nonneg : ∀ v : ∀ i, E i, 0 ≤ ∏i, ∥v i∥ := fun v => Finset.prod_nonneg fun i hi => norm_nonneg _ 
-    refine' Metric.complete_of_cauchy_seq_tendsto fun f hf => _ 
-    rcases cauchy_seq_iff_le_tendsto_0.1 hf with ⟨b, b0, b_bound, b_lim⟩
-    have cau : ∀ v, CauchySeq fun n => f n v
-    ·
-      intro v 
-      apply cauchy_seq_iff_le_tendsto_0.2 ⟨fun n => b n*∏i, ∥v i∥, fun n => _, _, _⟩
-      ·
-        exact mul_nonneg (b0 n) (nonneg v)
-      ·
-        intro n m N hn hm 
-        rw [dist_eq_norm]
-        apply le_transₓ ((f n - f m).le_op_norm v) _ 
-        exact mul_le_mul_of_nonneg_right (b_bound n m N hn hm) (nonneg v)
-      ·
-        simpa using b_lim.mul tendsto_const_nhds 
-    choose F hF using fun v => cauchy_seq_tendsto_of_complete (cau v)
-    let Fmult : MultilinearMap 𝕜 E G :=
-      { toFun := F,
-        map_add' :=
-          fun v i x y =>
-            by 
-              have A := hF (Function.update v i (x+y))
-              have B := (hF (Function.update v i x)).add (hF (Function.update v i y))
-              simp  at A B 
-              exact tendsto_nhds_unique A B,
-        map_smul' :=
-          fun v i c x =>
-            by 
-              have A := hF (Function.update v i (c • x))
-              have B := Filter.Tendsto.smul (@tendsto_const_nhds _ ℕ _ c _) (hF (Function.update v i x))
-              simp  at A B 
-              exact tendsto_nhds_unique A B }
-    have Fnorm : ∀ v, ∥F v∥ ≤ (b 0+∥f 0∥)*∏i, ∥v i∥
-    ·
-      intro v 
-      have A : ∀ n, ∥f n v∥ ≤ (b 0+∥f 0∥)*∏i, ∥v i∥
-      ·
-        intro n 
-        apply le_transₓ ((f n).le_op_norm _) _ 
-        apply mul_le_mul_of_nonneg_right _ (nonneg v)
-        calc ∥f n∥ = ∥(f n - f 0)+f 0∥ :=
-          by 
-            congr 1
-            abel _ ≤ ∥f n - f 0∥+∥f 0∥ :=
-          norm_add_le _ _ _ ≤ b 0+∥f 0∥ :=
-          by 
-            apply add_le_add_right 
-            simpa [dist_eq_norm] using b_bound n 0 0 (zero_le _) (zero_le _)
-      exact le_of_tendsto (hF v).norm (eventually_of_forall A)
-    let Fcont := Fmult.mk_continuous _ Fnorm 
-    use Fcont 
-    have  : ∀ n, ∥f n - Fcont∥ ≤ b n
-    ·
-      intro n 
-      apply op_norm_le_bound _ (b0 n) fun v => _ 
-      have A : ∀ᶠm in at_top, ∥(f n - f m) v∥ ≤ b n*∏i, ∥v i∥
-      ·
-        refine' eventually_at_top.2 ⟨n, fun m hm => _⟩
-        apply le_transₓ ((f n - f m).le_op_norm _) _ 
-        exact mul_le_mul_of_nonneg_right (b_bound n m n (le_reflₓ _) hm) (nonneg v)
-      have B : tendsto (fun m => ∥(f n - f m) v∥) at_top (𝓝 ∥(f n - Fcont) v∥) :=
-        tendsto.norm (tendsto_const_nhds.sub (hF v))
-      exact le_of_tendsto B A 
-    erw [tendsto_iff_norm_tendsto_zero]
-    exact squeeze_zero (fun n => norm_nonneg _) this b_lim
+instance [complete_space G] : complete_space (continuous_multilinear_map 𝕜 E G) :=
+begin
+  have [ident nonneg] [":", expr ∀
+   v : ∀
+   i, E i, «expr ≤ »(0, «expr∏ , »((i), «expr∥ ∥»(v i)))] [":=", expr λ v, finset.prod_nonneg (λ i hi, norm_nonneg _)],
+  refine [expr metric.complete_of_cauchy_seq_tendsto (λ f hf, _)],
+  rcases [expr cauchy_seq_iff_le_tendsto_0.1 hf, "with", "⟨", ident b, ",", ident b0, ",", ident b_bound, ",", ident b_lim, "⟩"],
+  have [ident cau] [":", expr ∀ v, cauchy_seq (λ n, f n v)] [],
+  { assume [binders (v)],
+    apply [expr cauchy_seq_iff_le_tendsto_0.2 ⟨λ n, «expr * »(b n, «expr∏ , »((i), «expr∥ ∥»(v i))), λ n, _, _, _⟩],
+    { exact [expr mul_nonneg (b0 n) (nonneg v)] },
+    { assume [binders (n m N hn hm)],
+      rw [expr dist_eq_norm] [],
+      apply [expr le_trans («expr - »(f n, f m).le_op_norm v) _],
+      exact [expr mul_le_mul_of_nonneg_right (b_bound n m N hn hm) (nonneg v)] },
+    { simpa [] [] [] [] [] ["using", expr b_lim.mul tendsto_const_nhds] } },
+  choose [] [ident F] [ident hF] ["using", expr λ v, cauchy_seq_tendsto_of_complete (cau v)],
+  let [ident Fmult] [":", expr multilinear_map 𝕜 E G] [":=", expr { to_fun := F,
+     map_add' := λ v i x y, begin
+       have [ident A] [] [":=", expr hF (function.update v i «expr + »(x, y))],
+       have [ident B] [] [":=", expr (hF (function.update v i x)).add (hF (function.update v i y))],
+       simp [] [] [] [] [] ["at", ident A, ident B],
+       exact [expr tendsto_nhds_unique A B]
+     end,
+     map_smul' := λ v i c x, begin
+       have [ident A] [] [":=", expr hF (function.update v i «expr • »(c, x))],
+       have [ident B] [] [":=", expr filter.tendsto.smul (@tendsto_const_nhds _ exprℕ() _ c _) (hF (function.update v i x))],
+       simp [] [] [] [] [] ["at", ident A, ident B],
+       exact [expr tendsto_nhds_unique A B]
+     end }],
+  have [ident Fnorm] [":", expr ∀
+   v, «expr ≤ »(«expr∥ ∥»(F v), «expr * »(«expr + »(b 0, «expr∥ ∥»(f 0)), «expr∏ , »((i), «expr∥ ∥»(v i))))] [],
+  { assume [binders (v)],
+    have [ident A] [":", expr ∀
+     n, «expr ≤ »(«expr∥ ∥»(f n v), «expr * »(«expr + »(b 0, «expr∥ ∥»(f 0)), «expr∏ , »((i), «expr∥ ∥»(v i))))] [],
+    { assume [binders (n)],
+      apply [expr le_trans ((f n).le_op_norm _) _],
+      apply [expr mul_le_mul_of_nonneg_right _ (nonneg v)],
+      calc
+        «expr = »(«expr∥ ∥»(f n), «expr∥ ∥»(«expr + »(«expr - »(f n, f 0), f 0))) : by { congr' [1] [],
+          abel [] [] [] }
+        «expr ≤ »(..., «expr + »(«expr∥ ∥»(«expr - »(f n, f 0)), «expr∥ ∥»(f 0))) : norm_add_le _ _
+        «expr ≤ »(..., «expr + »(b 0, «expr∥ ∥»(f 0))) : begin
+          apply [expr add_le_add_right],
+          simpa [] [] [] ["[", expr dist_eq_norm, "]"] [] ["using", expr b_bound n 0 0 (zero_le _) (zero_le _)]
+        end },
+    exact [expr le_of_tendsto (hF v).norm (eventually_of_forall A)] },
+  let [ident Fcont] [] [":=", expr Fmult.mk_continuous _ Fnorm],
+  use [expr Fcont],
+  have [] [":", expr ∀ n, «expr ≤ »(«expr∥ ∥»(«expr - »(f n, Fcont)), b n)] [],
+  { assume [binders (n)],
+    apply [expr op_norm_le_bound _ (b0 n) (λ v, _)],
+    have [ident A] [":", expr «expr∀ᶠ in , »((m), at_top, «expr ≤ »(«expr∥ ∥»(«expr - »(f n, f m) v), «expr * »(b n, «expr∏ , »((i), «expr∥ ∥»(v i)))))] [],
+    { refine [expr eventually_at_top.2 ⟨n, λ m hm, _⟩],
+      apply [expr le_trans («expr - »(f n, f m).le_op_norm _) _],
+      exact [expr mul_le_mul_of_nonneg_right (b_bound n m n (le_refl _) hm) (nonneg v)] },
+    have [ident B] [":", expr tendsto (λ
+      m, «expr∥ ∥»(«expr - »(f n, f m) v)) at_top (expr𝓝() «expr∥ ∥»(«expr - »(f n, Fcont) v))] [":=", expr tendsto.norm (tendsto_const_nhds.sub (hF v))],
+    exact [expr le_of_tendsto B A] },
+  erw [expr tendsto_iff_norm_tendsto_zero] [],
+  exact [expr squeeze_zero (λ n, norm_nonneg _) this b_lim]
+end
 
 end ContinuousMultilinearMap
 
@@ -757,7 +730,7 @@ protected def mk_pi_algebra : ContinuousMultilinearMap 𝕜 (fun i : ι => A) A 
   MultilinearMap.mkContinuous (MultilinearMap.mkPiAlgebra 𝕜 ι A) (if Nonempty ι then 1 else ∥(1 : A)∥)$
     by 
       intro m 
-      casesI is_empty_or_nonempty ι with hι hι
+      cases' is_empty_or_nonempty ι with hι hι
       ·
         simp [eq_empty_of_is_empty univ, not_nonempty_iff.2 hι]
       ·
@@ -793,7 +766,7 @@ theorem norm_mk_pi_algebra_of_empty [IsEmpty ι] : ∥ContinuousMultilinearMap.m
 @[simp]
 theorem norm_mk_pi_algebra [NormOneClass A] : ∥ContinuousMultilinearMap.mkPiAlgebra 𝕜 ι A∥ = 1 :=
   by 
-    casesI is_empty_or_nonempty ι
+    cases' is_empty_or_nonempty ι
     ·
       simp [norm_mk_pi_algebra_of_empty]
     ·
@@ -807,22 +780,21 @@ section
 
 variable(𝕜 n)(A : Type _)[NormedRing A][NormedAlgebra 𝕜 A]
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The continuous multilinear map on `A^n`, where `A` is a normed algebra over `𝕜`, associating to
 `m` the product of all the `m i`.
 
 See also: `multilinear_map.mk_pi_algebra`. -/
-protected def mk_pi_algebra_fin : ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => A) A :=
-  MultilinearMap.mkContinuous (MultilinearMap.mkPiAlgebraFin 𝕜 n A) (Nat.casesOn n ∥(1 : A)∥ fun _ => 1)$
-    by 
-      intro m 
-      cases n
-      ·
-        simp 
-      ·
-        have  : @List.ofFn A n.succ m ≠ [] :=
-          by 
-            simp 
-        simpa [←Finₓ.prod_of_fn] using List.norm_prod_le' this
+protected
+def mk_pi_algebra_fin : continuous_multilinear_map 𝕜 (λ i : fin n, A) A :=
+«expr $ »(multilinear_map.mk_continuous (multilinear_map.mk_pi_algebra_fin 𝕜 n A) (nat.cases_on n «expr∥ ∥»((1 : A)) (λ
+   _, 1)), begin
+   intro [ident m],
+   cases [expr n] [],
+   { simp [] [] [] [] [] [] },
+   { have [] [":", expr «expr ≠ »(@list.of_fn A n.succ m, «expr[ , ]»([]))] [":=", expr by simp [] [] [] [] [] []],
+     simpa [] [] [] ["[", "<-", expr fin.prod_of_fn, "]"] [] ["using", expr list.norm_prod_le' this] }
+ end)
 
 variable{A 𝕜 n}
 
@@ -1505,22 +1477,19 @@ theorem ContinuousMultilinearMap.curry0_norm (x : G') : ∥ContinuousMultilinear
 
 variable{𝕜 G}
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem ContinuousMultilinearMap.fin0_apply_norm (f : G[×0]→L[𝕜] G') {x : Finₓ 0 → G} : ∥f x∥ = ∥f∥ :=
-  by 
-    have  : x = 0 := Subsingleton.elimₓ _ _ 
-    subst this 
-    refine'
-      le_antisymmₓ
-        (by 
-          simpa using f.le_op_norm 0)
-        _ 
-    have  : ∥ContinuousMultilinearMap.curry0 𝕜 G f.uncurry0∥ ≤ ∥f.uncurry0∥ :=
-      ContinuousMultilinearMap.op_norm_le_bound _ (norm_nonneg _)
-        fun m =>
-          by 
-            simp [-ContinuousMultilinearMap.apply_zero_curry0]
-    simpa
+theorem continuous_multilinear_map.fin0_apply_norm
+(f : «expr [× ]→L[ ] »(G, 0, 𝕜, G'))
+{x : fin 0 → G} : «expr = »(«expr∥ ∥»(f x), «expr∥ ∥»(f)) :=
+begin
+  have [] [":", expr «expr = »(x, 0)] [":=", expr subsingleton.elim _ _],
+  subst [expr this],
+  refine [expr le_antisymm (by simpa [] [] [] [] [] ["using", expr f.le_op_norm 0]) _],
+  have [] [":", expr «expr ≤ »(«expr∥ ∥»(continuous_multilinear_map.curry0 𝕜 G f.uncurry0), «expr∥ ∥»(f.uncurry0))] [":=", expr continuous_multilinear_map.op_norm_le_bound _ (norm_nonneg _) (λ
+    m, by simp [] [] [] ["[", "-", ident continuous_multilinear_map.apply_zero_curry0, "]"] [] [])],
+  simpa [] [] [] [] [] []
+end
 
 theorem ContinuousMultilinearMap.uncurry0_norm (f : G[×0]→L[𝕜] G') : ∥f.uncurry0∥ = ∥f∥ :=
   by 

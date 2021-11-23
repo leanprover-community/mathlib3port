@@ -66,7 +66,7 @@ theorem pimage_some (s : Finset α) (f : α → β) [∀ x, Decidable (Part.some
     ext 
     simp [eq_comm]
 
--- error in Data.Finset.Pimage: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Finset.Pimage: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem pimage_congr
 (h₁ : «expr = »(s, t))
 (h₂ : ∀ x «expr ∈ » t, «expr = »(f x, g x)) : «expr = »(s.pimage f, t.pimage g) :=

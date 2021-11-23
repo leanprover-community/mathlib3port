@@ -1,5 +1,4 @@
-import Mathbin.Order.Ideal 
-import Mathbin.Data.Finset.Default
+import Mathbin.Order.Ideal
 
 /-!
 # The back and forth method and countable dense linear orders
@@ -72,42 +71,45 @@ instance  : Preorderₓ (partial_iso α β) :=
 
 variable{α β}
 
+-- error in Order.CountableDenseLinearOrder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For each `a`, we can find a `b` in the codomain, such that `a`'s relation to
 the domain of `f` is `b`'s relation to the image of `f`.
 
 Thus, if `a` is not already in `f`, then we can extend `f` by sending `a` to `b`.
 -/
-theorem exists_across [DenselyOrdered β] [NoBotOrder β] [NoTopOrder β] [Nonempty β] (f : partial_iso α β) (a : α) :
-  ∃ b : β, ∀ p _ : p ∈ f.val, cmp (Prod.fst p) a = cmp (Prod.snd p) b :=
-  by 
-    byCases' h : ∃ b, (a, b) ∈ f.val
-    ·
-      cases' h with b hb 
-      exact ⟨b, fun p hp => f.property _ _ hp hb⟩
-    have  :
-      ∀ x _ : x ∈ (f.val.filter fun p : α × β => p.fst < a).Image Prod.snd y _ :
-        y ∈ (f.val.filter fun p : α × β => a < p.fst).Image Prod.snd, x < y
-    ·
-      intro x hx y hy 
-      rw [Finset.mem_image] at hx hy 
-      rcases hx with ⟨p, hp1, rfl⟩
-      rcases hy with ⟨q, hq1, rfl⟩
-      rw [Finset.mem_filter] at hp1 hq1 
-      rw [←lt_iff_lt_of_cmp_eq_cmp (f.property _ _ hp1.1 hq1.1)]
-      exact lt_transₓ hp1.right hq1.right 
-    cases' exists_between_finsets _ _ this with b hb 
-    use b 
-    rintro ⟨p1, p2⟩ hp 
-    have  : p1 ≠ a := fun he => h ⟨p2, he ▸ hp⟩
-    cases' lt_or_gt_of_neₓ this with hl hr
-    ·
-      have  : p1 < a ∧ p2 < b := ⟨hl, hb.1 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hl⟩, rfl⟩)⟩
-      rw [←cmp_eq_lt_iff, ←cmp_eq_lt_iff] at this 
-      cc
-    ·
-      have  : a < p1 ∧ b < p2 := ⟨hr, hb.2 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hr⟩, rfl⟩)⟩
-      rw [←cmp_eq_gt_iff, ←cmp_eq_gt_iff] at this 
-      cc
+theorem exists_across
+[densely_ordered β]
+[no_bot_order β]
+[no_top_order β]
+[nonempty β]
+(f : partial_iso α β)
+(a : α) : «expr∃ , »((b : β), ∀ p «expr ∈ » f.val, «expr = »(cmp (prod.fst p) a, cmp (prod.snd p) b)) :=
+begin
+  by_cases [expr h, ":", expr «expr∃ , »((b), «expr ∈ »((a, b), f.val))],
+  { cases [expr h] ["with", ident b, ident hb],
+    exact [expr ⟨b, λ p hp, f.property _ _ hp hb⟩] },
+  have [] [":", expr ∀
+   (x «expr ∈ » (f.val.filter (λ p : «expr × »(α, β), «expr < »(p.fst, a))).image prod.snd)
+   (y «expr ∈ » (f.val.filter (λ p : «expr × »(α, β), «expr < »(a, p.fst))).image prod.snd), «expr < »(x, y)] [],
+  { intros [ident x, ident hx, ident y, ident hy],
+    rw [expr finset.mem_image] ["at", ident hx, ident hy],
+    rcases [expr hx, "with", "⟨", ident p, ",", ident hp1, ",", ident rfl, "⟩"],
+    rcases [expr hy, "with", "⟨", ident q, ",", ident hq1, ",", ident rfl, "⟩"],
+    rw [expr finset.mem_filter] ["at", ident hp1, ident hq1],
+    rw ["<-", expr lt_iff_lt_of_cmp_eq_cmp (f.property _ _ hp1.1 hq1.1)] [],
+    exact [expr lt_trans hp1.right hq1.right] },
+  cases [expr exists_between_finsets _ _ this] ["with", ident b, ident hb],
+  use [expr b],
+  rintros ["⟨", ident p1, ",", ident p2, "⟩", ident hp],
+  have [] [":", expr «expr ≠ »(p1, a)] [":=", expr λ he, h ⟨p2, «expr ▸ »(he, hp)⟩],
+  cases [expr lt_or_gt_of_ne this] ["with", ident hl, ident hr],
+  { have [] [":", expr «expr ∧ »(«expr < »(p1, a), «expr < »(p2, b))] [":=", expr ⟨hl, hb.1 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hl⟩, rfl⟩)⟩],
+    rw ["[", "<-", expr cmp_eq_lt_iff, ",", "<-", expr cmp_eq_lt_iff, "]"] ["at", ident this],
+    cc },
+  { have [] [":", expr «expr ∧ »(«expr < »(a, p1), «expr < »(b, p2))] [":=", expr ⟨hr, hb.2 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hr⟩, rfl⟩)⟩],
+    rw ["[", "<-", expr cmp_eq_gt_iff, ",", "<-", expr cmp_eq_gt_iff, "]"] ["at", ident this],
+    cc }
+end
 
 /-- A partial isomorphism between `α` and `β` is also a partial isomorphism between `β` and `α`. -/
 protected def comm : partial_iso α β → partial_iso β α :=

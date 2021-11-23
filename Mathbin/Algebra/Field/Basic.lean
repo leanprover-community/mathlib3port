@@ -1,5 +1,4 @@
-import Mathbin.Algebra.Ring.Basic 
-import Mathbin.Algebra.GroupWithZero.Default
+import Mathbin.Algebra.Ring.Basic
 
 /-!
 # Fields and division rings

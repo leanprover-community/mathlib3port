@@ -320,23 +320,23 @@ variable{ι :
 
 include hφ hS
 
+-- error in Topology.ContinuousFunction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A family `φ i` of continuous maps `C(S i, β)`, where the domains `S i` contain a neighbourhood
 of each point in `α` and the functions `φ i` agree pairwise on intersections, can be glued to
-construct a continuous map in `C(α, β)`. -/
-noncomputable def lift_cover : C(α, β) :=
-  by 
-    have H : (⋃i, S i) = Set.Univ
-    ·
-      rw [Set.eq_univ_iff_forall]
-      intro x 
-      rw [Set.mem_Union]
-      obtain ⟨i, hi⟩ := hS x 
-      exact ⟨i, mem_of_mem_nhds hi⟩
-    refine' ⟨Set.liftCover S (fun i => φ i) hφ H, continuous_subtype_nhds_cover hS _⟩
-    intro i 
-    convert (φ i).Continuous 
-    ext x 
-    exact Set.lift_cover_coe x
+construct a continuous map in `C(α, β)`. -/ noncomputable def lift_cover : «exprC( , )»(α, β) :=
+begin
+  have [ident H] [":", expr «expr = »(«expr⋃ , »((i), S i), set.univ)] [],
+  { rw [expr set.eq_univ_iff_forall] [],
+    intros [ident x],
+    rw [expr set.mem_Union] [],
+    obtain ["⟨", ident i, ",", ident hi, "⟩", ":=", expr hS x],
+    exact [expr ⟨i, mem_of_mem_nhds hi⟩] },
+  refine [expr ⟨set.lift_cover S (λ i, φ i) hφ H, continuous_subtype_nhds_cover hS _⟩],
+  intros [ident i],
+  convert [] [expr (φ i).continuous] [],
+  ext [] [ident x] [],
+  exact [expr set.lift_cover_coe x]
+end
 
 variable{S φ hφ hS}
 

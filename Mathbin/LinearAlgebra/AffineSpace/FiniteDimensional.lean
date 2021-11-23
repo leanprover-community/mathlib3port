@@ -64,15 +64,19 @@ instance finite_dimensional_direction_affine_span_image_of_fintype [Fintype ι] 
   FiniteDimensional k (affineSpan k (p '' s)).direction :=
   finite_dimensional_direction_affine_span_of_finite k ((Set.Finite.of_fintype _).Image _)
 
+-- error in LinearAlgebra.AffineSpace.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An affine-independent family of points in a finite-dimensional affine space is finite. -/
-noncomputable def fintypeOfFinDimAffineIndependent [FiniteDimensional k V] {p : ι → P} (hi : AffineIndependent k p) :
-  Fintype ι :=
-  if hι : IsEmpty ι then @Fintype.ofIsEmpty _ hι else
-    by 
-      let q := (not_is_empty_iff.mp hι).some 
-      rw [affine_independent_iff_linear_independent_vsub k p q] at hi 
-      letI this : IsNoetherian k V := IsNoetherian.iff_fg.2 inferInstance 
-      exact fintypeOfFintypeNe _ (fintypeOfIsNoetherianLinearIndependent hi)
+noncomputable
+def fintype_of_fin_dim_affine_independent
+[finite_dimensional k V]
+{p : ι → P}
+(hi : affine_independent k p) : fintype ι :=
+if hι : is_empty ι then @fintype.of_is_empty _ hι else begin
+  let [ident q] [] [":=", expr (not_is_empty_iff.mp hι).some],
+  rw [expr affine_independent_iff_linear_independent_vsub k p q] ["at", ident hi],
+  letI [] [":", expr is_noetherian k V] [":=", expr is_noetherian.iff_fg.2 infer_instance],
+  exact [expr fintype_of_fintype_ne _ (fintype_of_is_noetherian_linear_independent hi)]
+end
 
 /-- An affine-independent subset of a finite-dimensional affine space is finite. -/
 theorem finite_of_fin_dim_affine_independent [FiniteDimensional k V] {s : Set P}
@@ -81,29 +85,30 @@ theorem finite_of_fin_dim_affine_independent [FiniteDimensional k V] {s : Set P}
 
 variable{k}
 
+-- error in LinearAlgebra.AffineSpace.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The `vector_span` of a finite subset of an affinely independent
 family has dimension one less than its cardinality. -/
-theorem AffineIndependent.finrank_vector_span_image_finset {p : ι → P} (hi : AffineIndependent k p) {s : Finset ι}
-  {n : ℕ} (hc : Finset.card s = n+1) : finrank k (vectorSpan k (s.image p : Set P)) = n :=
-  by 
-    have hi' := hi.range.mono (Set.image_subset_range p («expr↑ » s))
-    have hc' : (s.image p).card = n+1
-    ·
-      rwa [s.card_image_of_injective hi.injective]
-    have hn : (s.image p).Nonempty
-    ·
-      simp [hc', ←Finset.card_pos]
-    rcases hn with ⟨p₁, hp₁⟩
-    have hp₁' : p₁ ∈ p '' s :=
-      by 
-        simpa using hp₁ 
-    rw [affine_independent_set_iff_linear_independent_vsub k hp₁', ←Finset.coe_singleton, ←Finset.coe_image,
-      ←Finset.coe_sdiff, Finset.sdiff_singleton_eq_erase, ←Finset.coe_image] at hi' 
-    have hc : (Finset.image (fun p : P => p -ᵥ p₁) ((Finset.image p s).erase p₁)).card = n
-    ·
-      rw [Finset.card_image_of_injective _ (vsub_left_injective _), Finset.card_erase_of_mem hp₁]
-      exact Nat.pred_eq_of_eq_succ hc' 
-    rwa [vector_span_eq_span_vsub_finset_right_ne k hp₁, finrank_span_finset_eq_card, hc]
+theorem affine_independent.finrank_vector_span_image_finset
+{p : ι → P}
+(hi : affine_independent k p)
+{s : finset ι}
+{n : exprℕ()}
+(hc : «expr = »(finset.card s, «expr + »(n, 1))) : «expr = »(finrank k (vector_span k (s.image p : set P)), n) :=
+begin
+  have [ident hi'] [] [":=", expr hi.range.mono (set.image_subset_range p «expr↑ »(s))],
+  have [ident hc'] [":", expr «expr = »((s.image p).card, «expr + »(n, 1))] [],
+  { rwa [expr s.card_image_of_injective hi.injective] [] },
+  have [ident hn] [":", expr (s.image p).nonempty] [],
+  { simp [] [] [] ["[", expr hc', ",", "<-", expr finset.card_pos, "]"] [] [] },
+  rcases [expr hn, "with", "⟨", ident p₁, ",", ident hp₁, "⟩"],
+  have [ident hp₁'] [":", expr «expr ∈ »(p₁, «expr '' »(p, s))] [":=", expr by simpa [] [] [] [] [] ["using", expr hp₁]],
+  rw ["[", expr affine_independent_set_iff_linear_independent_vsub k hp₁', ",", "<-", expr finset.coe_singleton, ",", "<-", expr finset.coe_image, ",", "<-", expr finset.coe_sdiff, ",", expr finset.sdiff_singleton_eq_erase, ",", "<-", expr finset.coe_image, "]"] ["at", ident hi'],
+  have [ident hc] [":", expr «expr = »((finset.image (λ
+      p : P, «expr -ᵥ »(p, p₁)) ((finset.image p s).erase p₁)).card, n)] [],
+  { rw ["[", expr finset.card_image_of_injective _ (vsub_left_injective _), ",", expr finset.card_erase_of_mem hp₁, "]"] [],
+    exact [expr nat.pred_eq_of_eq_succ hc'] },
+  rwa ["[", expr vector_span_eq_span_vsub_finset_right_ne k hp₁, ",", expr finrank_span_finset_eq_card, ",", expr hc, "]"] []
+end
 
 /-- The `vector_span` of a finite affinely independent family has
 dimension one less than its cardinality. -/
@@ -131,22 +136,27 @@ theorem AffineIndependent.vector_span_eq_of_le_of_card_eq_finrank_add_one [Finty
   (hc : Fintype.card ι = finrank k sm+1) : vectorSpan k (Set.Range p) = sm :=
   eq_of_le_of_finrank_eq hle$ hi.finrank_vector_span hc
 
+-- error in LinearAlgebra.AffineSpace.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the `affine_span` of a finite subset of an affinely independent
 family lies in an affine subspace whose direction has dimension one
 less than its cardinality, it equals that subspace. -/
-theorem AffineIndependent.affine_span_image_finset_eq_of_le_of_card_eq_finrank_add_one {p : ι → P}
-  (hi : AffineIndependent k p) {s : Finset ι} {sp : AffineSubspace k P} [FiniteDimensional k sp.direction]
-  (hle : affineSpan k (s.image p : Set P) ≤ sp) (hc : Finset.card s = finrank k sp.direction+1) :
-  affineSpan k (s.image p : Set P) = sp :=
-  by 
-    have hn : (s.image p).Nonempty
-    ·
-      rw [Finset.Nonempty.image_iff, ←Finset.card_pos, hc]
-      apply Nat.succ_posₓ 
-    refine' eq_of_direction_eq_of_nonempty_of_le _ ((affine_span_nonempty k _).2 hn) hle 
-    have hd := direction_le hle 
-    rw [direction_affine_span] at hd⊢
-    exact hi.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one hd hc
+theorem affine_independent.affine_span_image_finset_eq_of_le_of_card_eq_finrank_add_one
+{p : ι → P}
+(hi : affine_independent k p)
+{s : finset ι}
+{sp : affine_subspace k P}
+[finite_dimensional k sp.direction]
+(hle : «expr ≤ »(affine_span k (s.image p : set P), sp))
+(hc : «expr = »(finset.card s, «expr + »(finrank k sp.direction, 1))) : «expr = »(affine_span k (s.image p : set P), sp) :=
+begin
+  have [ident hn] [":", expr (s.image p).nonempty] [],
+  { rw ["[", expr finset.nonempty.image_iff, ",", "<-", expr finset.card_pos, ",", expr hc, "]"] [],
+    apply [expr nat.succ_pos] },
+  refine [expr eq_of_direction_eq_of_nonempty_of_le _ ((affine_span_nonempty k _).2 hn) hle],
+  have [ident hd] [] [":=", expr direction_le hle],
+  rw [expr direction_affine_span] ["at", "⊢", ident hd],
+  exact [expr hi.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one hd hc]
+end
 
 /-- If the `affine_span` of a finite affinely independent family lies
 in an affine subspace whose direction has dimension one less than its
@@ -167,41 +177,46 @@ theorem AffineIndependent.vector_span_eq_top_of_card_eq_finrank_add_one [FiniteD
   (hi : AffineIndependent k p) (hc : Fintype.card ι = finrank k V+1) : vectorSpan k (Set.Range p) = ⊤ :=
   eq_top_of_finrank_eq$ hi.finrank_vector_span hc
 
+-- error in LinearAlgebra.AffineSpace.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The `affine_span` of a finite affinely independent family is `⊤` iff the
 family's cardinality is one more than that of the finite-dimensional space. -/
-theorem AffineIndependent.affine_span_eq_top_iff_card_eq_finrank_add_one [FiniteDimensional k V] [Fintype ι] {p : ι → P}
-  (hi : AffineIndependent k p) : affineSpan k (Set.Range p) = ⊤ ↔ Fintype.card ι = finrank k V+1 :=
-  by 
-    split 
-    ·
-      intro h_tot 
-      let n := Fintype.card ι - 1
-      have hn : Fintype.card ι = n+1
-      ·
-        exact (Nat.succ_pred_eq_of_posₓ (card_pos_of_affine_span_eq_top k V P h_tot)).symm 
-      rw [hn, ←finrank_top, ←(vector_span_eq_top_of_affine_span_eq_top k V P) h_tot, ←hi.finrank_vector_span hn]
-    ·
-      intro hc 
-      rw [←finrank_top, ←direction_top k V P] at hc 
-      exact hi.affine_span_eq_of_le_of_card_eq_finrank_add_one le_top hc
+theorem affine_independent.affine_span_eq_top_iff_card_eq_finrank_add_one
+[finite_dimensional k V]
+[fintype ι]
+{p : ι → P}
+(hi : affine_independent k p) : «expr ↔ »(«expr = »(affine_span k (set.range p), «expr⊤»()), «expr = »(fintype.card ι, «expr + »(finrank k V, 1))) :=
+begin
+  split,
+  { intros [ident h_tot],
+    let [ident n] [] [":=", expr «expr - »(fintype.card ι, 1)],
+    have [ident hn] [":", expr «expr = »(fintype.card ι, «expr + »(n, 1))] [],
+    { exact [expr (nat.succ_pred_eq_of_pos (card_pos_of_affine_span_eq_top k V P h_tot)).symm] },
+    rw ["[", expr hn, ",", "<-", expr finrank_top, ",", "<-", expr vector_span_eq_top_of_affine_span_eq_top k V P h_tot, ",", "<-", expr hi.finrank_vector_span hn, "]"] [] },
+  { intros [ident hc],
+    rw ["[", "<-", expr finrank_top, ",", "<-", expr direction_top k V P, "]"] ["at", ident hc],
+    exact [expr hi.affine_span_eq_of_le_of_card_eq_finrank_add_one le_top hc] }
+end
 
 variable(k)
 
+-- error in LinearAlgebra.AffineSpace.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The `vector_span` of `n + 1` points in an indexed family has
 dimension at most `n`. -/
-theorem finrank_vector_span_image_finset_le (p : ι → P) (s : Finset ι) {n : ℕ} (hc : Finset.card s = n+1) :
-  finrank k (vectorSpan k (s.image p : Set P)) ≤ n :=
-  by 
-    have hn : (s.image p).Nonempty
-    ·
-      rw [Finset.Nonempty.image_iff, ←Finset.card_pos, hc]
-      apply Nat.succ_posₓ 
-    rcases hn with ⟨p₁, hp₁⟩
-    rw [vector_span_eq_span_vsub_finset_right_ne k hp₁]
-    refine' le_transₓ (finrank_span_finset_le_card (((s.image p).erase p₁).Image fun p => p -ᵥ p₁)) _ 
-    rw [Finset.card_image_of_injective _ (vsub_left_injective p₁), Finset.card_erase_of_mem hp₁, Nat.pred_le_iff,
-      Nat.succ_eq_add_one, ←hc]
-    apply Finset.card_image_le
+theorem finrank_vector_span_image_finset_le
+(p : ι → P)
+(s : finset ι)
+{n : exprℕ()}
+(hc : «expr = »(finset.card s, «expr + »(n, 1))) : «expr ≤ »(finrank k (vector_span k (s.image p : set P)), n) :=
+begin
+  have [ident hn] [":", expr (s.image p).nonempty] [],
+  { rw ["[", expr finset.nonempty.image_iff, ",", "<-", expr finset.card_pos, ",", expr hc, "]"] [],
+    apply [expr nat.succ_pos] },
+  rcases [expr hn, "with", "⟨", ident p₁, ",", ident hp₁, "⟩"],
+  rw ["[", expr vector_span_eq_span_vsub_finset_right_ne k hp₁, "]"] [],
+  refine [expr le_trans (finrank_span_finset_le_card (((s.image p).erase p₁).image (λ p, «expr -ᵥ »(p, p₁)))) _],
+  rw ["[", expr finset.card_image_of_injective _ (vsub_left_injective p₁), ",", expr finset.card_erase_of_mem hp₁, ",", expr nat.pred_le_iff, ",", expr nat.succ_eq_add_one, ",", "<-", expr hc, "]"] [],
+  apply [expr finset.card_image_le]
+end
 
 /-- The `vector_span` of an indexed family of `n + 1` points has
 dimension at most `n`. -/
@@ -212,21 +227,24 @@ theorem finrank_vector_span_range_le [Fintype ι] (p : ι → P) {n : ℕ} (hc :
     rw [←Finset.card_univ] at hc 
     exact finrank_vector_span_image_finset_le _ _ _ hc
 
+-- error in LinearAlgebra.AffineSpace.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `n + 1` points are affinely independent if and only if their
 `vector_span` has dimension `n`. -/
-theorem affine_independent_iff_finrank_vector_span_eq [Fintype ι] (p : ι → P) {n : ℕ} (hc : Fintype.card ι = n+1) :
-  AffineIndependent k p ↔ finrank k (vectorSpan k (Set.Range p)) = n :=
-  by 
-    have hn : Nonempty ι
-    ·
-      simp [←Fintype.card_pos_iff, hc]
-    cases' hn with i₁ 
-    rw [affine_independent_iff_linear_independent_vsub _ _ i₁, linear_independent_iff_card_eq_finrank_span, eq_comm,
-      vector_span_range_eq_span_range_vsub_right_ne k p i₁]
-    congr 
-    rw [←Finset.card_univ] at hc 
-    rw [Fintype.subtype_card]
-    simp [Finset.filter_ne', Finset.card_erase_of_mem, hc]
+theorem affine_independent_iff_finrank_vector_span_eq
+[fintype ι]
+(p : ι → P)
+{n : exprℕ()}
+(hc : «expr = »(fintype.card ι, «expr + »(n, 1))) : «expr ↔ »(affine_independent k p, «expr = »(finrank k (vector_span k (set.range p)), n)) :=
+begin
+  have [ident hn] [":", expr nonempty ι] [],
+  by simp [] [] [] ["[", "<-", expr fintype.card_pos_iff, ",", expr hc, "]"] [] [],
+  cases [expr hn] ["with", ident i₁],
+  rw ["[", expr affine_independent_iff_linear_independent_vsub _ _ i₁, ",", expr linear_independent_iff_card_eq_finrank_span, ",", expr eq_comm, ",", expr vector_span_range_eq_span_range_vsub_right_ne k p i₁, "]"] [],
+  congr' [] [],
+  rw ["<-", expr finset.card_univ] ["at", ident hc],
+  rw [expr fintype.subtype_card] [],
+  simp [] [] [] ["[", expr finset.filter_ne', ",", expr finset.card_erase_of_mem, ",", expr hc, "]"] [] []
+end
 
 /-- `n + 1` points are affinely independent if and only if their
 `vector_span` has dimension at least `n`. -/
@@ -263,15 +281,18 @@ def Collinear (s : Set P) : Prop :=
 theorem collinear_iff_dim_le_one (s : Set P) : Collinear k s ↔ Module.rank k (vectorSpan k s) ≤ 1 :=
   Iff.rfl
 
+-- error in LinearAlgebra.AffineSpace.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A set of points, whose `vector_span` is finite-dimensional, is
 collinear if and only if their `vector_span` has dimension at most
 `1`. -/
-theorem collinear_iff_finrank_le_one (s : Set P) [FiniteDimensional k (vectorSpan k s)] :
-  Collinear k s ↔ finrank k (vectorSpan k s) ≤ 1 :=
-  by 
-    have h := collinear_iff_dim_le_one k s 
-    rw [←finrank_eq_dim] at h 
-    exactModCast h
+theorem collinear_iff_finrank_le_one
+(s : set P)
+[finite_dimensional k (vector_span k s)] : «expr ↔ »(collinear k s, «expr ≤ »(finrank k (vector_span k s), 1)) :=
+begin
+  have [ident h] [] [":=", expr collinear_iff_dim_le_one k s],
+  rw ["<-", expr finrank_eq_dim] ["at", ident h],
+  exact_mod_cast [expr h]
+end
 
 variable(P)
 
@@ -289,38 +310,40 @@ theorem collinear_singleton (p : P) : Collinear k ({p} : Set P) :=
     rw [collinear_iff_dim_le_one, vector_span_singleton]
     simp 
 
+-- error in LinearAlgebra.AffineSpace.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a point `p₀` in a set of points, that set is collinear if and
 only if the points can all be expressed as multiples of the same
 vector, added to `p₀`. -/
-theorem collinear_iff_of_mem {s : Set P} {p₀ : P} (h : p₀ ∈ s) :
-  Collinear k s ↔ ∃ v : V, ∀ p _ : p ∈ s, ∃ r : k, p = r • v +ᵥ p₀ :=
-  by 
-    simpRw [collinear_iff_dim_le_one, dim_submodule_le_one_iff', Submodule.le_span_singleton_iff]
-    split 
-    ·
-      rintro ⟨v₀, hv⟩
-      use v₀ 
-      intro p hp 
-      obtain ⟨r, hr⟩ := hv (p -ᵥ p₀) (vsub_mem_vector_span k hp h)
-      use r 
-      rw [eq_vadd_iff_vsub_eq]
-      exact hr.symm
-    ·
-      rintro ⟨v, hp₀v⟩
-      use v 
-      intro w hw 
-      have hs : vectorSpan k s ≤ k∙v
-      ·
-        rw [vector_span_eq_span_vsub_set_right k h, Submodule.span_le, Set.subset_def]
-        intro x hx 
-        rw [SetLike.mem_coe, Submodule.mem_span_singleton]
-        rw [Set.mem_image] at hx 
-        rcases hx with ⟨p, hp, rfl⟩
-        rcases hp₀v p hp with ⟨r, rfl⟩
-        use r 
-        simp 
-      have hw' := SetLike.le_def.1 hs hw 
-      rwa [Submodule.mem_span_singleton] at hw'
+theorem collinear_iff_of_mem
+{s : set P}
+{p₀ : P}
+(h : «expr ∈ »(p₀, s)) : «expr ↔ »(collinear k s, «expr∃ , »((v : V), ∀
+  p «expr ∈ » s, «expr∃ , »((r : k), «expr = »(p, «expr +ᵥ »(«expr • »(r, v), p₀))))) :=
+begin
+  simp_rw ["[", expr collinear_iff_dim_le_one, ",", expr dim_submodule_le_one_iff', ",", expr submodule.le_span_singleton_iff, "]"] [],
+  split,
+  { rintro ["⟨", ident v₀, ",", ident hv, "⟩"],
+    use [expr v₀],
+    intros [ident p, ident hp],
+    obtain ["⟨", ident r, ",", ident hr, "⟩", ":=", expr hv «expr -ᵥ »(p, p₀) (vsub_mem_vector_span k hp h)],
+    use [expr r],
+    rw [expr eq_vadd_iff_vsub_eq] [],
+    exact [expr hr.symm] },
+  { rintro ["⟨", ident v, ",", ident hp₀v, "⟩"],
+    use [expr v],
+    intros [ident w, ident hw],
+    have [ident hs] [":", expr «expr ≤ »(vector_span k s, «expr ∙ »(k, v))] [],
+    { rw ["[", expr vector_span_eq_span_vsub_set_right k h, ",", expr submodule.span_le, ",", expr set.subset_def, "]"] [],
+      intros [ident x, ident hx],
+      rw ["[", expr set_like.mem_coe, ",", expr submodule.mem_span_singleton, "]"] [],
+      rw [expr set.mem_image] ["at", ident hx],
+      rcases [expr hx, "with", "⟨", ident p, ",", ident hp, ",", ident rfl, "⟩"],
+      rcases [expr hp₀v p hp, "with", "⟨", ident r, ",", ident rfl, "⟩"],
+      use [expr r],
+      simp [] [] [] [] [] [] },
+    have [ident hw'] [] [":=", expr set_like.le_def.1 hs hw],
+    rwa [expr submodule.mem_span_singleton] ["at", ident hw'] }
+end
 
 /-- A set of points is collinear if and only if they can all be
 expressed as multiples of the same vector, added to the same base

@@ -61,7 +61,7 @@ theorem fold_cons'_left (b a : α) (s : Multiset α) : (a ::ₘ s).fold op b = s
   by 
     rw [fold_cons'_right, hc.comm]
 
--- error in Data.Multiset.Fold: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Fold: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem fold_add
 (b₁ b₂ : α)
 (s₁
@@ -71,7 +71,7 @@ multiset.induction_on s₂ (by rw ["[", expr add_zero, ",", expr fold_zero, ",",
 theorem fold_singleton (b a : α) : ({a} : Multiset α).fold op b = a*b :=
   foldr_singleton _ _ _ _
 
--- error in Data.Multiset.Fold: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Fold: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem fold_distrib
 {f g : β → α}
 (u₁ u₂ : α)
@@ -79,7 +79,7 @@ theorem fold_distrib
    x, «expr * »(f x, g x))).fold op «expr * »(u₁, u₂), «expr * »((s.map f).fold op u₁, (s.map g).fold op u₂)) :=
 multiset.induction_on s (by simp [] [] [] [] [] []) (by simp [] [] [] [] [] [] { contextual := tt }; cc)
 
--- error in Data.Multiset.Fold: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Fold: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem fold_hom
 {op' : β → β → β}
 [is_commutative β op']
@@ -124,19 +124,19 @@ end Order
 
 open Nat
 
-theorem le_smul_erase_dup [DecidableEq α] (s : Multiset α) : ∃ n : ℕ, s ≤ n • erase_dup s :=
-  ⟨(s.map fun a => count a s).fold max 0,
-    le_iff_count.2$
-      fun a =>
-        by 
-          rw [count_nsmul]
-          byCases' a ∈ s
-          ·
-            refine' le_transₓ _ (Nat.mul_le_mul_leftₓ _$ count_pos.2$ mem_erase_dup.2 h)
-            have  : count a s ≤ fold max 0 (map (fun a => count a s) (a ::ₘ erase s a)) <;> [simp [le_max_leftₓ],
-              simpa [cons_erase h]]
-          ·
-            simp [count_eq_zero.2 h, Nat.zero_leₓ]⟩
+-- error in Data.Multiset.Fold: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem le_smul_erase_dup
+[decidable_eq α]
+(s : multiset α) : «expr∃ , »((n : exprℕ()), «expr ≤ »(s, «expr • »(n, erase_dup s))) :=
+⟨(s.map (λ
+   a, count a s)).fold max 0, «expr $ »(le_iff_count.2, λ a, begin
+    rw [expr count_nsmul] [],
+    by_cases [expr «expr ∈ »(a, s)],
+    { refine [expr le_trans _ «expr $ »(nat.mul_le_mul_left _, «expr $ »(count_pos.2, mem_erase_dup.2 h))],
+      have [] [":", expr «expr ≤ »(count a s, fold max 0 (map (λ
+          a, count a s) «expr ::ₘ »(a, erase s a)))] []; [simp [] [] [] ["[", expr le_max_left, "]"] [] [], simpa [] [] [] ["[", expr cons_erase h, "]"] [] []] },
+    { simp [] [] [] ["[", expr count_eq_zero.2 h, ",", expr nat.zero_le, "]"] [] [] }
+  end)⟩
 
 end Multiset
 

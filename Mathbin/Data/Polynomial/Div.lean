@@ -1,3 +1,4 @@
+import Mathbin.Data.Polynomial.Inductions 
 import Mathbin.Data.Polynomial.Monic 
 import Mathbin.RingTheory.Multiplicity
 
@@ -41,43 +42,26 @@ section CommSemiringₓ
 
 variable[CommSemiringₓ R]{p q : Polynomial R}
 
-theorem multiplicity_finite_of_degree_pos_of_monic (hp : (0 : WithBot ℕ) < degree p) (hmp : monic p) (hq : q ≠ 0) :
-  multiplicity.Finite p q :=
-  have zn0 : (0 : R) ≠ 1 :=
-    fun h =>
-      by 
-        haveI  := subsingleton_of_zero_eq_one h <;> exact hq (Subsingleton.elimₓ _ _)
-  ⟨nat_degree q,
-    fun ⟨r, hr⟩ =>
-      have hp0 : p ≠ 0 :=
-        fun hp0 =>
-          by 
-            simp [hp0] at hp <;> contradiction 
-      have hr0 : r ≠ 0 :=
-        fun hr0 =>
-          by 
-            simp_all 
-      have hpn1 : (leading_coeff p ^ nat_degree q+1) = 1 :=
-        by 
-          simp [show _ = _ from hmp]
-      have hpn0' : (leading_coeff p ^ nat_degree q+1) ≠ 0 := hpn1.symm ▸ zn0.symm 
-      have hpnr0 : (leading_coeff (p ^ nat_degree q+1)*leading_coeff r) ≠ 0 :=
-        by 
-          simp only [leading_coeff_pow' hpn0', leading_coeff_eq_zero, hpn1, one_pow, one_mulₓ, Ne.def, hr0] <;> simp 
-      have hnp : 0 < nat_degree p :=
-        by 
-          rw [←WithBot.coe_lt_coe, ←degree_eq_nat_degree hp0] <;> exact hp 
-      by 
-        have  := congr_argₓ nat_degree hr 
-        rw [nat_degree_mul' hpnr0, nat_degree_pow' hpn0', add_mulₓ, add_assocₓ] at this 
-        exact
-          ne_of_ltₓ
-            (lt_add_of_le_of_pos (le_mul_of_one_le_right (Nat.zero_leₓ _) hnp)
-              (add_pos_of_pos_of_nonneg
-                (by 
-                  rwa [one_mulₓ])
-                (Nat.zero_leₓ _)))
-            this⟩
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem multiplicity_finite_of_degree_pos_of_monic
+(hp : «expr < »((0 : with_bot exprℕ()), degree p))
+(hmp : monic p)
+(hq : «expr ≠ »(q, 0)) : multiplicity.finite p q :=
+have zn0 : «expr ≠ »((0 : R), 1), from λ
+h, by haveI [] [] [":=", expr subsingleton_of_zero_eq_one h]; exact [expr hq (subsingleton.elim _ _)],
+⟨nat_degree q, λ
+ ⟨r, hr⟩, have hp0 : «expr ≠ »(p, 0), from λ
+ hp0, by simp [] [] [] ["[", expr hp0, "]"] [] ["at", ident hp]; contradiction,
+ have hr0 : «expr ≠ »(r, 0), from λ hr0, by simp [] [] [] ["*"] [] ["at", "*"],
+ have hpn1 : «expr = »(«expr ^ »(leading_coeff p, «expr + »(nat_degree q, 1)), 1), by simp [] [] [] ["[", expr show «expr = »(_, _), from hmp, "]"] [] [],
+ have hpn0' : «expr ≠ »(«expr ^ »(leading_coeff p, «expr + »(nat_degree q, 1)), 0), from «expr ▸ »(hpn1.symm, zn0.symm),
+ have hpnr0 : «expr ≠ »(«expr * »(leading_coeff «expr ^ »(p, «expr + »(nat_degree q, 1)), leading_coeff r), 0), by simp [] [] ["only"] ["[", expr leading_coeff_pow' hpn0', ",", expr leading_coeff_eq_zero, ",", expr hpn1, ",", expr one_pow, ",", expr one_mul, ",", expr ne.def, ",", expr hr0, "]"] [] []; simp [] [] [] [] [] [],
+ have hnp : «expr < »(0, nat_degree p), by rw ["[", "<-", expr with_bot.coe_lt_coe, ",", "<-", expr degree_eq_nat_degree hp0, "]"] []; exact [expr hp],
+ begin
+   have [] [] [":=", expr congr_arg nat_degree hr],
+   rw ["[", expr nat_degree_mul' hpnr0, ",", expr nat_degree_pow' hpn0', ",", expr add_mul, ",", expr add_assoc, "]"] ["at", ident this],
+   exact [expr ne_of_lt (lt_add_of_le_of_pos (le_mul_of_one_le_right (nat.zero_le _) hnp) (add_pos_of_pos_of_nonneg (by rwa [expr one_mul] []) (nat.zero_le _))) this]
+ end⟩
 
 end CommSemiringₓ
 
@@ -229,152 +213,120 @@ theorem mod_by_monic_eq_sub_mul_div : ∀ p : Polynomial R {q : Polynomial R} hq
 theorem mod_by_monic_add_div (p : Polynomial R) {q : Polynomial R} (hq : monic q) : ((p %ₘ q)+q*p /ₘ q) = p :=
   eq_sub_iff_add_eq.1 (mod_by_monic_eq_sub_mul_div p hq)
 
-theorem div_by_monic_eq_zero_iff [Nontrivial R] (hq : monic q) : p /ₘ q = 0 ↔ degree p < degree q :=
-  ⟨fun h =>
-      by 
-        have  := mod_by_monic_add_div p hq <;> rwa [h, mul_zero, add_zeroₓ, mod_by_monic_eq_self_iff hq] at this,
-    fun h =>
-      have  : ¬degree q ≤ degree p := not_le_of_gtₓ h 
-      by 
-        unfold div_by_monic div_mod_by_monic_aux <;> rw [dif_pos hq, if_neg (mt And.left this)]⟩
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem div_by_monic_eq_zero_iff
+[nontrivial R]
+(hq : monic q) : «expr ↔ »(«expr = »(«expr /ₘ »(p, q), 0), «expr < »(degree p, degree q)) :=
+⟨λ
+ h, by have [] [] [":=", expr mod_by_monic_add_div p hq]; rwa ["[", expr h, ",", expr mul_zero, ",", expr add_zero, ",", expr mod_by_monic_eq_self_iff hq, "]"] ["at", ident this], λ
+ h, have «expr¬ »(«expr ≤ »(degree q, degree p)) := not_le_of_gt h,
+ by unfold [ident div_by_monic, ident div_mod_by_monic_aux] []; rw ["[", expr dif_pos hq, ",", expr if_neg (mt and.left this), "]"] []⟩
 
-theorem degree_add_div_by_monic (hq : monic q) (h : degree q ≤ degree p) : (degree q+degree (p /ₘ q)) = degree p :=
-  by 
-    nontriviality R 
-    have hdiv0 : p /ₘ q ≠ 0 :=
-      by 
-        rwa [· ≠ ·, div_by_monic_eq_zero_iff hq, not_ltₓ]
-    have hlc : (leading_coeff q*leading_coeff (p /ₘ q)) ≠ 0 :=
-      by 
-        rwa [monic.def.1 hq, one_mulₓ, · ≠ ·, leading_coeff_eq_zero]
-    have hmod : degree (p %ₘ q) < degree (q*p /ₘ q) :=
-      calc degree (p %ₘ q) < degree q := degree_mod_by_monic_lt _ hq 
-        _ ≤ _ :=
-        by 
-          rw [degree_mul' hlc, degree_eq_nat_degree hq.ne_zero, degree_eq_nat_degree hdiv0, ←WithBot.coe_add,
-              WithBot.coe_le_coe] <;>
-            exact Nat.le_add_rightₓ _ _ 
-        
-    calc (degree q+degree (p /ₘ q)) = degree (q*p /ₘ q) := Eq.symm (degree_mul' hlc)_ = degree ((p %ₘ q)+q*p /ₘ q) :=
-      (degree_add_eq_right_of_degree_lt hmod).symm _ = _ := congr_argₓ _ (mod_by_monic_add_div _ hq)
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem degree_add_div_by_monic
+(hq : monic q)
+(h : «expr ≤ »(degree q, degree p)) : «expr = »(«expr + »(degree q, degree «expr /ₘ »(p, q)), degree p) :=
+begin
+  nontriviality [expr R] [],
+  have [ident hdiv0] [":", expr «expr ≠ »(«expr /ₘ »(p, q), 0)] [":=", expr by rwa ["[", expr («expr ≠ »), ",", expr div_by_monic_eq_zero_iff hq, ",", expr not_lt, "]"] []],
+  have [ident hlc] [":", expr «expr ≠ »(«expr * »(leading_coeff q, leading_coeff «expr /ₘ »(p, q)), 0)] [":=", expr by rwa ["[", expr monic.def.1 hq, ",", expr one_mul, ",", expr («expr ≠ »), ",", expr leading_coeff_eq_zero, "]"] []],
+  have [ident hmod] [":", expr «expr < »(degree «expr %ₘ »(p, q), degree «expr * »(q, «expr /ₘ »(p, q)))] [":=", expr calc
+     «expr < »(degree «expr %ₘ »(p, q), degree q) : degree_mod_by_monic_lt _ hq
+     «expr ≤ »(..., _) : by rw ["[", expr degree_mul' hlc, ",", expr degree_eq_nat_degree hq.ne_zero, ",", expr degree_eq_nat_degree hdiv0, ",", "<-", expr with_bot.coe_add, ",", expr with_bot.coe_le_coe, "]"] []; exact [expr nat.le_add_right _ _]],
+  calc
+    «expr = »(«expr + »(degree q, degree «expr /ₘ »(p, q)), degree «expr * »(q, «expr /ₘ »(p, q))) : eq.symm (degree_mul' hlc)
+    «expr = »(..., degree «expr + »(«expr %ₘ »(p, q), «expr * »(q, «expr /ₘ »(p, q)))) : (degree_add_eq_right_of_degree_lt hmod).symm
+    «expr = »(..., _) : congr_arg _ (mod_by_monic_add_div _ hq)
+end
 
-theorem degree_div_by_monic_le (p q : Polynomial R) : degree (p /ₘ q) ≤ degree p :=
-  if hp0 : p = 0 then
-    by 
-      simp only [hp0, zero_div_by_monic, le_reflₓ]
-  else
-    if hq : monic q then
-      if h : degree q ≤ degree p then
-        by 
-          haveI  := nontrivial.of_polynomial_ne hp0 <;>
-            rw [←degree_add_div_by_monic hq h, degree_eq_nat_degree hq.ne_zero,
-                degree_eq_nat_degree (mt (div_by_monic_eq_zero_iff hq).1 (not_ltₓ.2 h))] <;>
-              exact WithBot.coe_le_coe.2 (Nat.le_add_leftₓ _ _)
-      else
-        by 
-          unfold div_by_monic div_mod_by_monic_aux <;>
-            simp only [dif_pos hq, h, false_andₓ, if_false, degree_zero, bot_le]
-    else (div_by_monic_eq_of_not_monic p hq).symm ▸ bot_le
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem degree_div_by_monic_le (p q : polynomial R) : «expr ≤ »(degree «expr /ₘ »(p, q), degree p) :=
+if hp0 : «expr = »(p, 0) then by simp [] [] ["only"] ["[", expr hp0, ",", expr zero_div_by_monic, ",", expr le_refl, "]"] [] [] else if hq : monic q then if h : «expr ≤ »(degree q, degree p) then by haveI [] [] [":=", expr nontrivial.of_polynomial_ne hp0]; rw ["[", "<-", expr degree_add_div_by_monic hq h, ",", expr degree_eq_nat_degree hq.ne_zero, ",", expr degree_eq_nat_degree (mt (div_by_monic_eq_zero_iff hq).1 (not_lt.2 h)), "]"] []; exact [expr with_bot.coe_le_coe.2 (nat.le_add_left _ _)] else by unfold [ident div_by_monic, ident div_mod_by_monic_aux] []; simp [] [] ["only"] ["[", expr dif_pos hq, ",", expr h, ",", expr false_and, ",", expr if_false, ",", expr degree_zero, ",", expr bot_le, "]"] [] [] else «expr ▸ »((div_by_monic_eq_of_not_monic p hq).symm, bot_le)
 
-theorem degree_div_by_monic_lt (p : Polynomial R) {q : Polynomial R} (hq : monic q) (hp0 : p ≠ 0) (h0q : 0 < degree q) :
-  degree (p /ₘ q) < degree p :=
-  if hpq : degree p < degree q then
-    by 
-      haveI  := nontrivial.of_polynomial_ne hp0 
-      rw [(div_by_monic_eq_zero_iff hq).2 hpq, degree_eq_nat_degree hp0]
-      exact WithBot.bot_lt_coe _
-  else
-    by 
-      haveI  := nontrivial.of_polynomial_ne hp0 
-      rw [←degree_add_div_by_monic hq (not_ltₓ.1 hpq), degree_eq_nat_degree hq.ne_zero,
-        degree_eq_nat_degree (mt (div_by_monic_eq_zero_iff hq).1 hpq)]
-      exact WithBot.coe_lt_coe.2 (Nat.lt_add_of_pos_leftₓ (WithBot.coe_lt_coe.1$ degree_eq_nat_degree hq.ne_zero ▸ h0q))
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem degree_div_by_monic_lt
+(p : polynomial R)
+{q : polynomial R}
+(hq : monic q)
+(hp0 : «expr ≠ »(p, 0))
+(h0q : «expr < »(0, degree q)) : «expr < »(degree «expr /ₘ »(p, q), degree p) :=
+if hpq : «expr < »(degree p, degree q) then begin
+  haveI [] [] [":=", expr nontrivial.of_polynomial_ne hp0],
+  rw ["[", expr (div_by_monic_eq_zero_iff hq).2 hpq, ",", expr degree_eq_nat_degree hp0, "]"] [],
+  exact [expr with_bot.bot_lt_coe _]
+end else begin
+  haveI [] [] [":=", expr nontrivial.of_polynomial_ne hp0],
+  rw ["[", "<-", expr degree_add_div_by_monic hq (not_lt.1 hpq), ",", expr degree_eq_nat_degree hq.ne_zero, ",", expr degree_eq_nat_degree (mt (div_by_monic_eq_zero_iff hq).1 hpq), "]"] [],
+  exact [expr with_bot.coe_lt_coe.2 (nat.lt_add_of_pos_left «expr $ »(with_bot.coe_lt_coe.1, «expr ▸ »(degree_eq_nat_degree hq.ne_zero, h0q)))]
+end
 
-theorem nat_degree_div_by_monic {R : Type u} [CommRingₓ R] (f : Polynomial R) {g : Polynomial R} (hg : g.monic) :
-  nat_degree (f /ₘ g) = nat_degree f - nat_degree g :=
-  by 
-    byCases' h01 : (0 : R) = 1
-    ·
-      haveI  := subsingleton_of_zero_eq_one h01 
-      rw [Subsingleton.elimₓ (f /ₘ g) 0, Subsingleton.elimₓ f 0, Subsingleton.elimₓ g 0, nat_degree_zero]
-    haveI  : Nontrivial R := ⟨⟨0, 1, h01⟩⟩
-    byCases' hfg : f /ₘ g = 0
-    ·
-      rw [hfg, nat_degree_zero]
-      rw [div_by_monic_eq_zero_iff hg] at hfg 
-      rw [tsub_eq_zero_iff_le.mpr (nat_degree_le_nat_degree$ le_of_ltₓ hfg)]
-    have hgf := hfg 
-    rw [div_by_monic_eq_zero_iff hg] at hgf 
-    pushNeg  at hgf 
-    have  := degree_add_div_by_monic hg hgf 
-    have hf : f ≠ 0
-    ·
-      intro hf 
-      apply hfg 
-      rw [hf, zero_div_by_monic]
-    rw [degree_eq_nat_degree hf, degree_eq_nat_degree hg.ne_zero, degree_eq_nat_degree hfg, ←WithBot.coe_add,
-      WithBot.coe_eq_coe] at this 
-    rw [←this, add_tsub_cancel_left]
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nat_degree_div_by_monic
+{R : Type u}
+[comm_ring R]
+(f : polynomial R)
+{g : polynomial R}
+(hg : g.monic) : «expr = »(nat_degree «expr /ₘ »(f, g), «expr - »(nat_degree f, nat_degree g)) :=
+begin
+  by_cases [expr h01, ":", expr «expr = »((0 : R), 1)],
+  { haveI [] [] [":=", expr subsingleton_of_zero_eq_one h01],
+    rw ["[", expr subsingleton.elim «expr /ₘ »(f, g) 0, ",", expr subsingleton.elim f 0, ",", expr subsingleton.elim g 0, ",", expr nat_degree_zero, "]"] [] },
+  haveI [] [":", expr nontrivial R] [":=", expr ⟨⟨0, 1, h01⟩⟩],
+  by_cases [expr hfg, ":", expr «expr = »(«expr /ₘ »(f, g), 0)],
+  { rw ["[", expr hfg, ",", expr nat_degree_zero, "]"] [],
+    rw [expr div_by_monic_eq_zero_iff hg] ["at", ident hfg],
+    rw [expr tsub_eq_zero_iff_le.mpr «expr $ »(nat_degree_le_nat_degree, le_of_lt hfg)] [] },
+  have [ident hgf] [] [":=", expr hfg],
+  rw [expr div_by_monic_eq_zero_iff hg] ["at", ident hgf],
+  push_neg ["at", ident hgf],
+  have [] [] [":=", expr degree_add_div_by_monic hg hgf],
+  have [ident hf] [":", expr «expr ≠ »(f, 0)] [],
+  { intro [ident hf],
+    apply [expr hfg],
+    rw ["[", expr hf, ",", expr zero_div_by_monic, "]"] [] },
+  rw ["[", expr degree_eq_nat_degree hf, ",", expr degree_eq_nat_degree hg.ne_zero, ",", expr degree_eq_nat_degree hfg, ",", "<-", expr with_bot.coe_add, ",", expr with_bot.coe_eq_coe, "]"] ["at", ident this],
+  rw ["[", "<-", expr this, ",", expr add_tsub_cancel_left, "]"] []
+end
 
-theorem div_mod_by_monic_unique {f g} (q r : Polynomial R) (hg : monic g) (h : (r+g*q) = f ∧ degree r < degree g) :
-  f /ₘ g = q ∧ f %ₘ g = r :=
-  by 
-    nontriviality R 
-    have h₁ : r - f %ₘ g = (-g)*q - f /ₘ g 
-    exact
-      eq_of_sub_eq_zero
-        (by 
-          rw [←sub_eq_zero_of_eq (h.1.trans (mod_by_monic_add_div f hg).symm)] <;>
-            simp [mul_addₓ, mul_commₓ, sub_eq_add_neg, add_commₓ, add_left_commₓ, add_assocₓ])
-    have h₂ : degree (r - f %ₘ g) = degree (g*q - f /ₘ g)
-    ·
-      simp [h₁]
-    have h₄ : degree (r - f %ₘ g) < degree g 
-    exact
-      calc degree (r - f %ₘ g) ≤ max (degree r) (degree (f %ₘ g)) := degree_sub_le _ _ 
-        _ < degree g := max_lt_iff.2 ⟨h.2, degree_mod_by_monic_lt _ hg⟩
-        
-    have h₅ : q - f /ₘ g = 0 
-    exact
-      by_contradiction
-        fun hqf =>
-          not_le_of_gtₓ h₄$
-            calc degree g ≤ degree g+degree (q - f /ₘ g) :=
-              by 
-                erw [degree_eq_nat_degree hg.ne_zero, degree_eq_nat_degree hqf, WithBot.coe_le_coe] <;>
-                  exact Nat.le_add_rightₓ _ _ 
-              _ = degree (r - f %ₘ g) :=
-              by 
-                rw [h₂, degree_mul'] <;> simpa [monic.def.1 hg]
-              
-    exact
-      ⟨Eq.symm$ eq_of_sub_eq_zero h₅,
-        Eq.symm$
-          eq_of_sub_eq_zero$
-            by 
-              simpa [h₅] using h₁⟩
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem div_mod_by_monic_unique
+{f g}
+(q r : polynomial R)
+(hg : monic g)
+(h : «expr ∧ »(«expr = »(«expr + »(r, «expr * »(g, q)), f), «expr < »(degree r, degree g))) : «expr ∧ »(«expr = »(«expr /ₘ »(f, g), q), «expr = »(«expr %ₘ »(f, g), r)) :=
+begin
+  nontriviality [expr R] [],
+  have [ident h₁] [":", expr «expr = »(«expr - »(r, «expr %ₘ »(f, g)), «expr * »(«expr- »(g), «expr - »(q, «expr /ₘ »(f, g))))] [],
+  from [expr eq_of_sub_eq_zero (by rw ["[", "<-", expr sub_eq_zero_of_eq (h.1.trans (mod_by_monic_add_div f hg).symm), "]"] []; simp [] [] [] ["[", expr mul_add, ",", expr mul_comm, ",", expr sub_eq_add_neg, ",", expr add_comm, ",", expr add_left_comm, ",", expr add_assoc, "]"] [] [])],
+  have [ident h₂] [":", expr «expr = »(degree «expr - »(r, «expr %ₘ »(f, g)), degree «expr * »(g, «expr - »(q, «expr /ₘ »(f, g))))] [],
+  by simp [] [] [] ["[", expr h₁, "]"] [] [],
+  have [ident h₄] [":", expr «expr < »(degree «expr - »(r, «expr %ₘ »(f, g)), degree g)] [],
+  from [expr calc
+     «expr ≤ »(degree «expr - »(r, «expr %ₘ »(f, g)), max (degree r) (degree «expr %ₘ »(f, g))) : degree_sub_le _ _
+     «expr < »(..., degree g) : max_lt_iff.2 ⟨h.2, degree_mod_by_monic_lt _ hg⟩],
+  have [ident h₅] [":", expr «expr = »(«expr - »(q, «expr /ₘ »(f, g)), 0)] [],
+  from [expr by_contradiction (λ
+    hqf, «expr $ »(not_le_of_gt h₄, calc
+       «expr ≤ »(degree g, «expr + »(degree g, degree «expr - »(q, «expr /ₘ »(f, g)))) : by erw ["[", expr degree_eq_nat_degree hg.ne_zero, ",", expr degree_eq_nat_degree hqf, ",", expr with_bot.coe_le_coe, "]"] []; exact [expr nat.le_add_right _ _]
+       «expr = »(..., degree «expr - »(r, «expr %ₘ »(f, g))) : by rw ["[", expr h₂, ",", expr degree_mul', "]"] []; simpa [] [] [] ["[", expr monic.def.1 hg, "]"] [] []))],
+  exact [expr ⟨«expr $ »(eq.symm, eq_of_sub_eq_zero h₅), «expr $ »(eq.symm, «expr $ »(eq_of_sub_eq_zero, by simpa [] [] [] ["[", expr h₅, "]"] [] ["using", expr h₁]))⟩]
+end
 
-theorem map_mod_div_by_monic [CommRingₓ S] (f : R →+* S) (hq : monic q) :
-  (p /ₘ q).map f = p.map f /ₘ q.map f ∧ (p %ₘ q).map f = p.map f %ₘ q.map f :=
-  by 
-    nontriviality S 
-    haveI  : Nontrivial R := f.domain_nontrivial 
-    have  : map f p /ₘ map f q = map f (p /ₘ q) ∧ map f p %ₘ map f q = map f (p %ₘ q)
-    ·
-      exact
-        div_mod_by_monic_unique ((p /ₘ q).map f) _ (monic_map f hq)
-          ⟨Eq.symm$
-              by 
-                rw [←map_mul, ←map_add, mod_by_monic_add_div _ hq],
-            calc _ ≤ degree (p %ₘ q) := degree_map_le _ _ 
-              _ < degree q := degree_mod_by_monic_lt _ hq 
-              _ = _ :=
-              Eq.symm$
-                degree_map_eq_of_leading_coeff_ne_zero _
-                  (by 
-                    rw [monic.def.1 hq, f.map_one] <;> exact one_ne_zero)
-              ⟩
-    exact ⟨this.1.symm, this.2.symm⟩
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_mod_div_by_monic
+[comm_ring S]
+(f : «expr →+* »(R, S))
+(hq : monic q) : «expr ∧ »(«expr = »(«expr /ₘ »(p, q).map f, «expr /ₘ »(p.map f, q.map f)), «expr = »(«expr %ₘ »(p, q).map f, «expr %ₘ »(p.map f, q.map f))) :=
+begin
+  nontriviality [expr S] [],
+  haveI [] [":", expr nontrivial R] [":=", expr f.domain_nontrivial],
+  have [] [":", expr «expr ∧ »(«expr = »(«expr /ₘ »(map f p, map f q), map f «expr /ₘ »(p, q)), «expr = »(«expr %ₘ »(map f p, map f q), map f «expr %ₘ »(p, q)))] [],
+  { exact [expr div_mod_by_monic_unique («expr /ₘ »(p, q).map f) _ (monic_map f hq) ⟨«expr $ »(eq.symm, by rw ["[", "<-", expr map_mul, ",", "<-", expr map_add, ",", expr mod_by_monic_add_div _ hq, "]"] []), calc
+        «expr ≤ »(_, degree «expr %ₘ »(p, q)) : degree_map_le _ _
+        «expr < »(..., degree q) : degree_mod_by_monic_lt _ hq
+        «expr = »(..., _) : «expr $ »(eq.symm, degree_map_eq_of_leading_coeff_ne_zero _ (by rw ["[", expr monic.def.1 hq, ",", expr f.map_one, "]"] []; exact [expr one_ne_zero]))⟩] },
+  exact [expr ⟨this.1.symm, this.2.symm⟩]
+end
 
 theorem map_div_by_monic [CommRingₓ S] (f : R →+* S) (hq : monic q) : (p /ₘ q).map f = p.map f /ₘ q.map f :=
   (map_mod_div_by_monic f hq).1
@@ -382,7 +334,7 @@ theorem map_div_by_monic [CommRingₓ S] (f : R →+* S) (hq : monic q) : (p /�
 theorem map_mod_by_monic [CommRingₓ S] (f : R →+* S) (hq : monic q) : (p %ₘ q).map f = p.map f %ₘ q.map f :=
   (map_mod_div_by_monic f hq).2
 
--- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem dvd_iff_mod_by_monic_eq_zero (hq : monic q) : «expr ↔ »(«expr = »(«expr %ₘ »(p, q), 0), «expr ∣ »(q, p)) :=
 ⟨λ
  h, by rw ["[", "<-", expr mod_by_monic_add_div p hq, ",", expr h, ",", expr zero_add, "]"] []; exact [expr dvd_mul_right _ _], λ
@@ -425,24 +377,23 @@ theorem div_by_monic_one (p : Polynomial R) : p /ₘ 1 = p :=
   by 
     convRHS => rw [←mod_by_monic_add_div p monic_one] <;> simp 
 
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem mod_by_monic_X_sub_C_eq_C_eval (p : Polynomial R) (a : R) : p %ₘ (X - C a) = C (p.eval a) :=
-  by 
-    nontriviality R 
-    have h : (p %ₘ (X - C a)).eval a = p.eval a
-    ·
-      rw [mod_by_monic_eq_sub_mul_div _ (monic_X_sub_C a), eval_sub, eval_mul, eval_sub, eval_X, eval_C, sub_self,
-        zero_mul, sub_zero]
-    have  : degree (p %ₘ (X - C a)) < 1 := degree_X_sub_C a ▸ degree_mod_by_monic_lt p (monic_X_sub_C a)
-    have  : degree (p %ₘ (X - C a)) ≤ 0
-    ·
-      cases degree (p %ₘ (X - C a))
-      ·
-        exact bot_le
-      ·
-        exact WithBot.some_le_some.2 (Nat.le_of_lt_succₓ (WithBot.some_lt_some.1 this))
-    rw [eq_C_of_degree_le_zero this, eval_C] at h 
-    rw [eq_C_of_degree_le_zero this, h]
+theorem mod_by_monic_X_sub_C_eq_C_eval
+(p : polynomial R)
+(a : R) : «expr = »(«expr %ₘ »(p, «expr - »(X, C a)), C (p.eval a)) :=
+begin
+  nontriviality [expr R] [],
+  have [ident h] [":", expr «expr = »(«expr %ₘ »(p, «expr - »(X, C a)).eval a, p.eval a)] [],
+  { rw ["[", expr mod_by_monic_eq_sub_mul_div _ (monic_X_sub_C a), ",", expr eval_sub, ",", expr eval_mul, ",", expr eval_sub, ",", expr eval_X, ",", expr eval_C, ",", expr sub_self, ",", expr zero_mul, ",", expr sub_zero, "]"] [] },
+  have [] [":", expr «expr < »(degree «expr %ₘ »(p, «expr - »(X, C a)), 1)] [":=", expr «expr ▸ »(degree_X_sub_C a, degree_mod_by_monic_lt p (monic_X_sub_C a))],
+  have [] [":", expr «expr ≤ »(degree «expr %ₘ »(p, «expr - »(X, C a)), 0)] [],
+  { cases [expr degree «expr %ₘ »(p, «expr - »(X, C a))] [],
+    { exact [expr bot_le] },
+    { exact [expr with_bot.some_le_some.2 (nat.le_of_lt_succ (with_bot.some_lt_some.1 this))] } },
+  rw ["[", expr eq_C_of_degree_le_zero this, ",", expr eval_C, "]"] ["at", ident h],
+  rw ["[", expr eq_C_of_degree_le_zero this, ",", expr h, "]"] []
+end
 
 theorem mul_div_by_monic_eq_iff_is_root : ((X - C a)*p /ₘ (X - C a)) = p ↔ is_root p a :=
   ⟨fun h =>
@@ -508,19 +459,11 @@ def decidable_dvd_monic (p : Polynomial R) (hq : monic q) : Decidable (q ∣ p) 
 
 open_locale Classical
 
-theorem multiplicity_X_sub_C_finite (a : R) (h0 : p ≠ 0) : multiplicity.Finite (X - C a) p :=
-  multiplicity_finite_of_degree_pos_of_monic
-    (have  : (0 : R) ≠ 1 :=
-      fun h =>
-        by 
-          haveI  := subsingleton_of_zero_eq_one h <;> exact h0 (Subsingleton.elimₓ _ _)
-    by 
-      haveI  : Nontrivial R := ⟨⟨0, 1, this⟩⟩ <;>
-        rw [degree_X_sub_C] <;>
-          exact
-            by 
-              decide)
-    (monic_X_sub_C _) h0
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem multiplicity_X_sub_C_finite (a : R) (h0 : «expr ≠ »(p, 0)) : multiplicity.finite «expr - »(X, C a) p :=
+multiplicity_finite_of_degree_pos_of_monic (have «expr ≠ »((0 : R), 1), from λ
+ h, by haveI [] [] [":=", expr subsingleton_of_zero_eq_one h]; exact [expr h0 (subsingleton.elim _ _)],
+ by haveI [] [":", expr nontrivial R] [":=", expr ⟨⟨0, 1, this⟩⟩]; rw [expr degree_X_sub_C] []; exact [expr exprdec_trivial()]) (monic_X_sub_C _) h0
 
 /-- The largest power of `X - C a` which divides `p`.
 This is computable via the divisibility algorithm `decidable_dvd_monic`. -/
@@ -529,7 +472,7 @@ def root_multiplicity (a : R) (p : Polynomial R) : ℕ :=
     let I : DecidablePred fun n : ℕ => ¬((X - C a) ^ n+1) ∣ p :=
       fun n => @Not.decidable _ (decidable_dvd_monic p (monic_pow (monic_X_sub_C a) (n+1)))
     by 
-      exactI Nat.findₓ (multiplicity_X_sub_C_finite a h0)
+      exact Nat.findₓ (multiplicity_X_sub_C_finite a h0)
 
 theorem root_multiplicity_eq_multiplicity (p : Polynomial R) (a : R) :
   root_multiplicity a p = if h0 : p = 0 then 0 else (multiplicity (X - C a) p).get (multiplicity_X_sub_C_finite a h0) :=
@@ -571,24 +514,19 @@ theorem div_by_monic_mul_pow_root_multiplicity_eq (p : Polynomial R) (a : R) :
         rw [←mod_by_monic_add_div p this, (dvd_iff_mod_by_monic_eq_zero this).2 (pow_root_multiplicity_dvd _ _)] <;>
       simp [mul_commₓ]
 
-theorem eval_div_by_monic_pow_root_multiplicity_ne_zero {p : Polynomial R} (a : R) (hp : p ≠ 0) :
-  eval a (p /ₘ (X - C a) ^ root_multiplicity a p) ≠ 0 :=
-  by 
-    haveI  : Nontrivial R := nontrivial.of_polynomial_ne hp 
-    rw [Ne.def, ←is_root.def, ←dvd_iff_is_root]
-    rintro ⟨q, hq⟩
-    have  := div_by_monic_mul_pow_root_multiplicity_eq p a 
-    rw [mul_commₓ, hq, ←mul_assocₓ, ←pow_succ'ₓ, root_multiplicity_eq_multiplicity, dif_neg hp] at this 
-    exact
-      multiplicity.is_greatest'
-        (multiplicity_finite_of_degree_pos_of_monic
-          (show (0 : WithBot ℕ) < degree (X - C a)by 
-            rw [degree_X_sub_C] <;>
-              exact
-                by 
-                  decide)
-          (monic_X_sub_C _) hp)
-        (Nat.lt_succ_selfₓ _) (dvd_of_mul_right_eq _ this)
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eval_div_by_monic_pow_root_multiplicity_ne_zero
+{p : polynomial R}
+(a : R)
+(hp : «expr ≠ »(p, 0)) : «expr ≠ »(eval a «expr /ₘ »(p, «expr ^ »(«expr - »(X, C a), root_multiplicity a p)), 0) :=
+begin
+  haveI [] [":", expr nontrivial R] [":=", expr nontrivial.of_polynomial_ne hp],
+  rw ["[", expr ne.def, ",", "<-", expr is_root.def, ",", "<-", expr dvd_iff_is_root, "]"] [],
+  rintros ["⟨", ident q, ",", ident hq, "⟩"],
+  have [] [] [":=", expr div_by_monic_mul_pow_root_multiplicity_eq p a],
+  rw ["[", expr mul_comm, ",", expr hq, ",", "<-", expr mul_assoc, ",", "<-", expr pow_succ', ",", expr root_multiplicity_eq_multiplicity, ",", expr dif_neg hp, "]"] ["at", ident this],
+  exact [expr multiplicity.is_greatest' (multiplicity_finite_of_degree_pos_of_monic (show «expr < »((0 : with_bot exprℕ()), degree «expr - »(X, C a)), by rw [expr degree_X_sub_C] []; exact [expr exprdec_trivial()]) (monic_X_sub_C _) hp) (nat.lt_succ_self _) (dvd_of_mul_right_eq _ this)]
+end
 
 end multiplicity
 

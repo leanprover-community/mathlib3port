@@ -1,6 +1,5 @@
 import Mathbin.Analysis.BoxIntegral.DivergenceTheorem 
-import Mathbin.Analysis.BoxIntegral.Integrability 
-import Mathbin.MeasureTheory.Integral.IntervalIntegral
+import Mathbin.Analysis.BoxIntegral.Integrability
 
 /-!
 # Divergence theorem for Bochner integral
@@ -71,7 +70,7 @@ local notation "front_face" i:2000 => Finₓ.insertNth i (b i)
 
 local notation "back_face" i:2000 => Finₓ.insertNth i (a i)
 
--- error in MeasureTheory.Integral.DivergenceTheorem: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in MeasureTheory.Integral.DivergenceTheorem: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Divergence theorem** for Bochner integral. If `f : ℝⁿ⁺¹ → Eⁿ⁺¹` is differentiable on a
 rectangular box `[a, b] : set ℝⁿ⁺¹`, `a ≤ b`, with derivative `f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹` and the
 divergence `λ x, ∑ i, f' x eᵢ i` is integrable on `[a, b]`, where `eᵢ = pi.single i 1` is the `i`-th

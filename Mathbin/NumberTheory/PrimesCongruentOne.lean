@@ -14,7 +14,7 @@ namespace Nat
 
 open Polynomial Nat Filter
 
--- error in NumberTheory.PrimesCongruentOne: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in NumberTheory.PrimesCongruentOne: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For any positive `k : ℕ` there are infinitely many primes `p` such that `p ≡ 1 [MOD k]`. -/
 theorem exists_prime_ge_modeq_one
 (k n : exprℕ())
@@ -59,7 +59,7 @@ theorem frequently_at_top_modeq_one (k : ℕ) (hpos : 0 < k) : ∃ᶠp in at_top
     obtain ⟨p, hp⟩ := exists_prime_ge_modeq_one k n hpos 
     exact ⟨p, ⟨hp.2.1, hp.1, hp.2.2⟩⟩
 
-theorem infinite_set_of_prime_modeq_one (k : ℕ) (hpos : 0 < k) : Set.Infinite { p : ℕ | Nat.Prime p ∧ p ≡ 1 [MOD k] } :=
+theorem infinite_set_of_prime_modeq_one (k : ℕ) (hpos : 0 < k) : Set.Infinite { p:ℕ | Nat.Prime p ∧ p ≡ 1 [MOD k] } :=
   frequently_at_top_iff_infinite.1 (frequently_at_top_modeq_one k hpos)
 
 end Nat

@@ -23,54 +23,44 @@ open Real Finset
 
 variable{ι : Type _}[Fintype ι]
 
+-- error in LinearAlgebra.QuadraticForm.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The isometry between a weighted sum of squares with weights `u` on the
 (non-zero) real numbers and the weighted sum of squares with weights `sign ∘ u`. -/
-noncomputable def isometry_sign_weighted_sum_squares [DecidableEq ι] (w : ι → ℝ) :
-  Isometry (weighted_sum_squares ℝ w) (weighted_sum_squares ℝ (sign ∘ w)) :=
-  by 
-    let u := fun i => if h : w i = 0 then (1 : Units ℝ) else Units.mk0 (w i) h 
-    have hu' : ∀ i : ι, ((sign (u i)*u i)^-(1 / 2 : ℝ)) ≠ 0
-    ·
-      intro i 
-      refine' (ne_of_ltₓ (Real.rpow_pos_of_pos (sign_mul_pos_of_ne_zero _$ Units.ne_zero _) _)).symm 
-    convert
-      (weighted_sum_squares ℝ w).isometryBasisRepr
-        ((Pi.basisFun ℝ ι).units_smul fun i => (is_unit_iff_ne_zero.2$ hu' i).Unit)
-    ext1 v 
-    rw [basis_repr_apply, weighted_sum_squares_apply, weighted_sum_squares_apply]
-    refine' sum_congr rfl fun j hj => _ 
-    have hsum :
-      (∑i : ι, v i • ((is_unit_iff_ne_zero.2$ hu' i).Unit : ℝ) • (Pi.basisFun ℝ ι) i) j =
-        v j • ((sign (u j)*u j)^-(1 / 2 : ℝ))
-    ·
-      rw [Finset.sum_apply, sum_eq_single j, Pi.basis_fun_apply, IsUnit.unit_spec, LinearMap.std_basis_apply,
-        Pi.smul_apply, Pi.smul_apply, Function.update_same, smul_eq_mul, smul_eq_mul, smul_eq_mul, mul_oneₓ]
-      intro i _ hij 
-      rw [Pi.basis_fun_apply, LinearMap.std_basis_apply, Pi.smul_apply, Pi.smul_apply, Function.update_noteq hij.symm,
-        Pi.zero_apply, smul_eq_mul, smul_eq_mul, mul_zero, mul_zero]
-      intro hj' 
-      exact False.elim (hj' hj)
-    simpRw [Basis.units_smul_apply]
-    erw [hsum]
-    simp only [u, Function.comp, smul_eq_mul]
-    splitIfs
-    ·
-      simp only [h, zero_smul, zero_mul, sign_zero]
-    have hwu : w j = u j
-    ·
-      simp only [u, dif_neg h, Units.coe_mk0]
-    simp only [hwu, Units.coe_mk0]
-    suffices  :
-      (((u j : ℝ).sign*v j)*v j) = (((((sign (u j)*u j)^-(1 / 2 : ℝ))*(sign (u j)*u j)^-(1 / 2 : ℝ))*u j)*v j)*v j
-    ·
-      erw [←mul_assocₓ, this]
-      ring 
-    rw [←Real.rpow_add (sign_mul_pos_of_ne_zero _$ Units.ne_zero _),
-      show ((-(1 / 2 : ℝ))+-(1 / 2)) = -1by 
-        ring,
-      Real.rpow_neg_one, mul_inv₀, inv_sign, mul_assocₓ (sign (u j)) (u j⁻¹), inv_mul_cancel (Units.ne_zero _),
-      mul_oneₓ]
-    infer_instance
+noncomputable
+def isometry_sign_weighted_sum_squares
+[decidable_eq ι]
+(w : ι → exprℝ()) : isometry (weighted_sum_squares exprℝ() w) (weighted_sum_squares exprℝ() «expr ∘ »(sign, w)) :=
+begin
+  let [ident u] [] [":=", expr λ i, if h : «expr = »(w i, 0) then (1 : units exprℝ()) else units.mk0 (w i) h],
+  have [ident hu'] [":", expr ∀
+   i : ι, «expr ≠ »(«expr ^ »(«expr * »(sign (u i), u i), «expr- »((«expr / »(1, 2) : exprℝ()))), 0)] [],
+  { intro [ident i],
+    refine [expr (ne_of_lt (real.rpow_pos_of_pos «expr $ »(sign_mul_pos_of_ne_zero _, units.ne_zero _) _)).symm] },
+  convert [] [expr (weighted_sum_squares exprℝ() w).isometry_basis_repr ((pi.basis_fun exprℝ() ι).units_smul (λ
+     i, «expr $ »(is_unit_iff_ne_zero.2, hu' i).unit))] [],
+  ext1 [] [ident v],
+  rw ["[", expr basis_repr_apply, ",", expr weighted_sum_squares_apply, ",", expr weighted_sum_squares_apply, "]"] [],
+  refine [expr sum_congr rfl (λ j hj, _)],
+  have [ident hsum] [":", expr «expr = »(«expr∑ , »((i : ι), «expr • »(v i, «expr • »((«expr $ »(is_unit_iff_ne_zero.2, hu' i).unit : exprℝ()), pi.basis_fun exprℝ() ι i))) j, «expr • »(v j, «expr ^ »(«expr * »(sign (u j), u j), «expr- »((«expr / »(1, 2) : exprℝ())))))] [],
+  { rw ["[", expr finset.sum_apply, ",", expr sum_eq_single j, ",", expr pi.basis_fun_apply, ",", expr is_unit.unit_spec, ",", expr linear_map.std_basis_apply, ",", expr pi.smul_apply, ",", expr pi.smul_apply, ",", expr function.update_same, ",", expr smul_eq_mul, ",", expr smul_eq_mul, ",", expr smul_eq_mul, ",", expr mul_one, "]"] [],
+    intros [ident i, "_", ident hij],
+    rw ["[", expr pi.basis_fun_apply, ",", expr linear_map.std_basis_apply, ",", expr pi.smul_apply, ",", expr pi.smul_apply, ",", expr function.update_noteq hij.symm, ",", expr pi.zero_apply, ",", expr smul_eq_mul, ",", expr smul_eq_mul, ",", expr mul_zero, ",", expr mul_zero, "]"] [],
+    intro [ident hj'],
+    exact [expr false.elim (hj' hj)] },
+  simp_rw [expr basis.units_smul_apply] [],
+  erw ["[", expr hsum, "]"] [],
+  simp [] [] ["only"] ["[", expr u, ",", expr function.comp, ",", expr smul_eq_mul, "]"] [] [],
+  split_ifs [] [],
+  { simp [] [] ["only"] ["[", expr h, ",", expr zero_smul, ",", expr zero_mul, ",", expr sign_zero, "]"] [] [] },
+  have [ident hwu] [":", expr «expr = »(w j, u j)] [],
+  { simp [] [] ["only"] ["[", expr u, ",", expr dif_neg h, ",", expr units.coe_mk0, "]"] [] [] },
+  simp [] [] ["only"] ["[", expr hwu, ",", expr units.coe_mk0, "]"] [] [],
+  suffices [] [":", expr «expr = »(«expr * »(«expr * »((u j : exprℝ()).sign, v j), v j), «expr * »(«expr * »(«expr * »(«expr * »(«expr ^ »(«expr * »(sign (u j), u j), «expr- »((«expr / »(1, 2) : exprℝ()))), «expr ^ »(«expr * »(sign (u j), u j), «expr- »((«expr / »(1, 2) : exprℝ())))), u j), v j), v j))],
+  { erw ["[", "<-", expr mul_assoc, ",", expr this, "]"] [],
+    ring [] },
+  rw ["[", "<-", expr real.rpow_add «expr $ »(sign_mul_pos_of_ne_zero _, units.ne_zero _), ",", expr show «expr = »(«expr + »(«expr- »((«expr / »(1, 2) : exprℝ())), «expr- »(«expr / »(1, 2))), «expr- »(1)), by ring [], ",", expr real.rpow_neg_one, ",", expr mul_inv₀, ",", expr inv_sign, ",", expr mul_assoc (sign (u j)) «expr ⁻¹»(u j), ",", expr inv_mul_cancel (units.ne_zero _), ",", expr mul_one, "]"] [],
+  apply_instance
+end
 
 /-- **Sylvester's law of inertia**: A nondegenerate real quadratic form is equivalent to a weighted
 sum of squares with the weights being ±1. -/

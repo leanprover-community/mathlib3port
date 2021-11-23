@@ -162,102 +162,94 @@ theorem chebyshev_T_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
     simp only [comp_assoc, mul_comp, C_comp, X_comp, ←mul_assocₓ, ←C_1, ←C_bit0, ←C_mul]
     rw [inv_of_mul_self, C_1, one_mulₓ, one_mulₓ, comp_X]
 
+-- error in RingTheory.Polynomial.Dickson: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The `(m * n)`-th Dickson polynomial of the first kind is the composition of the `m`-th and
 `n`-th. -/
-theorem dickson_one_one_mul (m n : ℕ) : dickson 1 (1 : R) (m*n) = (dickson 1 1 m).comp (dickson 1 1 n) :=
-  by 
-    have h : (1 : R) = Int.castRingHom R 1
-    simp only [RingHom.eq_int_cast, Int.cast_one]
-    rw [h]
-    simp only [←map_dickson (Int.castRingHom R), ←map_comp]
-    congr 1
-    apply map_injective (Int.castRingHom ℚ) Int.cast_injective 
-    simp only [map_dickson, map_comp, RingHom.eq_int_cast, Int.cast_one, dickson_one_one_eq_chebyshev_T,
-      chebyshev.T_mul, two_mul, ←add_comp]
-    simp only [←two_mul, ←comp_assoc]
-    apply eval₂_congr rfl rfl 
-    rw [comp_assoc]
-    apply eval₂_congr rfl _ rfl 
-    rw [mul_comp, C_comp, X_comp, ←mul_assocₓ, ←C_1, ←C_bit0, ←C_mul, inv_of_mul_self, C_1, one_mulₓ]
+theorem dickson_one_one_mul
+(m n : exprℕ()) : «expr = »(dickson 1 (1 : R) «expr * »(m, n), (dickson 1 1 m).comp (dickson 1 1 n)) :=
+begin
+  have [ident h] [":", expr «expr = »((1 : R), int.cast_ring_hom R 1)] [],
+  simp [] [] ["only"] ["[", expr ring_hom.eq_int_cast, ",", expr int.cast_one, "]"] [] [],
+  rw [expr h] [],
+  simp [] [] ["only"] ["[", "<-", expr map_dickson (int.cast_ring_hom R), ",", "<-", expr map_comp, "]"] [] [],
+  congr' [1] [],
+  apply [expr map_injective (int.cast_ring_hom exprℚ()) int.cast_injective],
+  simp [] [] ["only"] ["[", expr map_dickson, ",", expr map_comp, ",", expr ring_hom.eq_int_cast, ",", expr int.cast_one, ",", expr dickson_one_one_eq_chebyshev_T, ",", expr chebyshev.T_mul, ",", expr two_mul, ",", "<-", expr add_comp, "]"] [] [],
+  simp [] [] ["only"] ["[", "<-", expr two_mul, ",", "<-", expr comp_assoc, "]"] [] [],
+  apply [expr eval₂_congr rfl rfl],
+  rw ["[", expr comp_assoc, "]"] [],
+  apply [expr eval₂_congr rfl _ rfl],
+  rw ["[", expr mul_comp, ",", expr C_comp, ",", expr X_comp, ",", "<-", expr mul_assoc, ",", "<-", expr C_1, ",", "<-", expr C_bit0, ",", "<-", expr C_mul, ",", expr inv_of_mul_self, ",", expr C_1, ",", expr one_mul, "]"] []
+end
 
 theorem dickson_one_one_comp_comm (m n : ℕ) :
   (dickson 1 (1 : R) m).comp (dickson 1 1 n) = (dickson 1 1 n).comp (dickson 1 1 m) :=
   by 
     rw [←dickson_one_one_mul, mul_commₓ, dickson_one_one_mul]
 
-theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.prime] : dickson 1 (1 : Zmod p) p = (X^p) :=
-  by 
-    obtain ⟨K, _, _, H⟩ :
-      ∃ (K : Type)(_ : Field K),
-        by 
-          exactI ∃ _ : CharP K p, Infinite K
-    ·
-      let K := FractionRing (Polynomial (Zmod p))
-      let f : Zmod p →+* K := (algebraMap _ (FractionRing _)).comp C 
-      haveI  : CharP K p
-      ·
-        rw [←f.char_p_iff_char_p]
-        infer_instance 
-      haveI  : Infinite K :=
-        Infinite.of_injective (algebraMap (Polynomial (Zmod p)) (FractionRing (Polynomial (Zmod p))))
-          (IsFractionRing.injective _ _)
-      refine' ⟨K, _, _, _⟩ <;> infer_instance 
-    resetI 
-    apply map_injective (Zmod.castHom (dvd_refl p) K) (RingHom.injective _)
-    rw [map_dickson, map_pow, map_X]
-    apply eq_of_infinite_eval_eq 
-    apply @Set.Infinite.mono _ { x : K | ∃ y, (x = y+y⁻¹) ∧ y ≠ 0 }
-    ·
-      rintro _ ⟨x, rfl, hx⟩
-      simp only [eval_X, eval_pow, Set.mem_set_of_eq, @add_pow_char K _ p,
-        dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), inv_pow₀, Zmod.cast_hom_apply, Zmod.cast_one']
-    ·
-      intro h 
-      rw [←Set.infinite_univ_iff] at H 
-      apply H 
-      suffices  : (Set.Univ : Set K) = { x : K | ∃ y : K, (x = y+y⁻¹) ∧ y ≠ 0 } >>= fun x => { y | (x = y+y⁻¹) ∨ y = 0 }
-      ·
-        rw [this]
-        clear this 
-        refine' h.bUnion fun x hx => _ 
-        let φ : Polynomial K := ((X^2) - C x*X)+1
-        have hφ : φ ≠ 0
-        ·
-          intro H 
-          have  : φ.eval 0 = 0
-          ·
-            rw [H, eval_zero]
-          simpa [eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul, mul_zero, sq, zero_addₓ,
-            one_ne_zero]
-        classical 
-        convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1 
-        ext1 y 
-        simp only [Multiset.mem_to_finset, Set.mem_set_of_eq, Finset.mem_coe, Multiset.mem_union, mem_roots hφ, is_root,
-          eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one, Multiset.mem_singleton]
-        byCases' hy : y = 0
-        ·
-          simp only [hy, eq_self_iff_true, or_trueₓ]
-        apply or_congr _ Iff.rfl 
-        rw [←mul_left_inj' hy, eq_comm, ←sub_eq_zero, add_mulₓ, inv_mul_cancel hy]
-        apply eq_iff_eq_cancel_right.mpr 
-        ring
-      ·
-        apply (Set.eq_univ_of_forall _).symm 
-        intro x 
-        simp only [exists_prop, Set.mem_Union, Set.bind_def, Ne.def, Set.mem_set_of_eq]
-        byCases' hx : x = 0
-        ·
-          simp only [hx, and_trueₓ, eq_self_iff_true, inv_zero, or_trueₓ]
-          exact ⟨_, 1, rfl, one_ne_zero⟩
-        ·
-          simp only [hx, or_falseₓ, exists_eq_right]
-          exact ⟨_, rfl, hx⟩
+-- error in RingTheory.Polynomial.Dickson: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dickson_one_one_zmod_p (p : exprℕ()) [fact p.prime] : «expr = »(dickson 1 (1 : zmod p) p, «expr ^ »(X, p)) :=
+begin
+  obtain ["⟨", ident K, ",", "_", ",", "_", ",", ident H, "⟩", ":", expr «expr∃ , »((K : Type)
+    (_ : field K), by exactI [expr «expr∃ , »((_ : char_p K p), infinite K)])],
+  { let [ident K] [] [":=", expr fraction_ring (polynomial (zmod p))],
+    let [ident f] [":", expr «expr →+* »(zmod p, K)] [":=", expr (algebra_map _ (fraction_ring _)).comp C],
+    haveI [] [":", expr char_p K p] [],
+    { rw ["<-", expr f.char_p_iff_char_p] [],
+      apply_instance },
+    haveI [] [":", expr infinite K] [":=", expr infinite.of_injective (algebra_map (polynomial (zmod p)) (fraction_ring (polynomial (zmod p)))) (is_fraction_ring.injective _ _)],
+    refine [expr ⟨K, _, _, _⟩]; apply_instance },
+  resetI,
+  apply [expr map_injective (zmod.cast_hom (dvd_refl p) K) (ring_hom.injective _)],
+  rw ["[", expr map_dickson, ",", expr map_pow, ",", expr map_X, "]"] [],
+  apply [expr eq_of_infinite_eval_eq],
+  apply [expr @set.infinite.mono _ {x : K | «expr∃ , »((y), «expr ∧ »(«expr = »(x, «expr + »(y, «expr ⁻¹»(y))), «expr ≠ »(y, 0)))}],
+  { rintro ["_", "⟨", ident x, ",", ident rfl, ",", ident hx, "⟩"],
+    simp [] [] ["only"] ["[", expr eval_X, ",", expr eval_pow, ",", expr set.mem_set_of_eq, ",", expr @add_pow_char K _ p, ",", expr dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), ",", expr inv_pow₀, ",", expr zmod.cast_hom_apply, ",", expr zmod.cast_one', "]"] [] [] },
+  { intro [ident h],
+    rw ["<-", expr set.infinite_univ_iff] ["at", ident H],
+    apply [expr H],
+    suffices [] [":", expr «expr = »((set.univ : set K), «expr >>= »({x : K | «expr∃ , »((y : K), «expr ∧ »(«expr = »(x, «expr + »(y, «expr ⁻¹»(y))), «expr ≠ »(y, 0)))}, λ
+       x, {y | «expr ∨ »(«expr = »(x, «expr + »(y, «expr ⁻¹»(y))), «expr = »(y, 0))}))],
+    { rw [expr this] [],
+      clear [ident this],
+      refine [expr h.bUnion (λ x hx, _)],
+      let [ident φ] [":", expr polynomial K] [":=", expr «expr + »(«expr - »(«expr ^ »(X, 2), «expr * »(C x, X)), 1)],
+      have [ident hφ] [":", expr «expr ≠ »(φ, 0)] [],
+      { intro [ident H],
+        have [] [":", expr «expr = »(φ.eval 0, 0)] [],
+        by rw ["[", expr H, ",", expr eval_zero, "]"] [],
+        simpa [] [] [] ["[", expr eval_X, ",", expr eval_one, ",", expr eval_pow, ",", expr eval_sub, ",", expr sub_zero, ",", expr eval_add, ",", expr eval_mul, ",", expr mul_zero, ",", expr sq, ",", expr zero_add, ",", expr one_ne_zero, "]"] [] [] },
+      classical,
+      convert [] [expr «expr ∪ »(φ.roots, {0}).to_finset.finite_to_set] ["using", 1],
+      ext1 [] [ident y],
+      simp [] [] ["only"] ["[", expr multiset.mem_to_finset, ",", expr set.mem_set_of_eq, ",", expr finset.mem_coe, ",", expr multiset.mem_union, ",", expr mem_roots hφ, ",", expr is_root, ",", expr eval_add, ",", expr eval_sub, ",", expr eval_pow, ",", expr eval_mul, ",", expr eval_X, ",", expr eval_C, ",", expr eval_one, ",", expr multiset.mem_singleton, "]"] [] [],
+      by_cases [expr hy, ":", expr «expr = »(y, 0)],
+      { simp [] [] ["only"] ["[", expr hy, ",", expr eq_self_iff_true, ",", expr or_true, "]"] [] [] },
+      apply [expr or_congr _ iff.rfl],
+      rw ["[", "<-", expr mul_left_inj' hy, ",", expr eq_comm, ",", "<-", expr sub_eq_zero, ",", expr add_mul, ",", expr inv_mul_cancel hy, "]"] [],
+      apply [expr eq_iff_eq_cancel_right.mpr],
+      ring [] },
+    { apply [expr (set.eq_univ_of_forall _).symm],
+      intro [ident x],
+      simp [] [] ["only"] ["[", expr exists_prop, ",", expr set.mem_Union, ",", expr set.bind_def, ",", expr ne.def, ",", expr set.mem_set_of_eq, "]"] [] [],
+      by_cases [expr hx, ":", expr «expr = »(x, 0)],
+      { simp [] [] ["only"] ["[", expr hx, ",", expr and_true, ",", expr eq_self_iff_true, ",", expr inv_zero, ",", expr or_true, "]"] [] [],
+        exact [expr ⟨_, 1, rfl, one_ne_zero⟩] },
+      { simp [] [] ["only"] ["[", expr hx, ",", expr or_false, ",", expr exists_eq_right, "]"] [] [],
+        exact [expr ⟨_, rfl, hx⟩] } } }
+end
 
-theorem dickson_one_one_char_p (p : ℕ) [Fact p.prime] [CharP R p] : dickson 1 (1 : R) p = (X^p) :=
-  by 
-    have h : (1 : R) = Zmod.castHom (dvd_refl p) R 1
-    simp only [Zmod.cast_hom_apply, Zmod.cast_one']
-    rw [h, ←map_dickson (Zmod.castHom (dvd_refl p) R), dickson_one_one_zmod_p, map_pow, map_X]
+-- error in RingTheory.Polynomial.Dickson: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dickson_one_one_char_p
+(p : exprℕ())
+[fact p.prime]
+[char_p R p] : «expr = »(dickson 1 (1 : R) p, «expr ^ »(X, p)) :=
+begin
+  have [ident h] [":", expr «expr = »((1 : R), zmod.cast_hom (dvd_refl p) R 1)] [],
+  simp [] [] ["only"] ["[", expr zmod.cast_hom_apply, ",", expr zmod.cast_one', "]"] [] [],
+  rw ["[", expr h, ",", "<-", expr map_dickson (zmod.cast_hom (dvd_refl p) R), ",", expr dickson_one_one_zmod_p, ",", expr map_pow, ",", expr map_X, "]"] []
+end
 
 end Dickson
 

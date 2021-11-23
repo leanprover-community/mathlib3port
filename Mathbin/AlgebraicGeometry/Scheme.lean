@@ -24,7 +24,7 @@ open Opposite
 
 namespace AlgebraicGeometry
 
--- error in AlgebraicGeometry.Scheme: ././Mathport/Syntax/Translate/Basic.lean:1002:11: unsupported: advanced extends in structure
+-- error in AlgebraicGeometry.Scheme: ././Mathport/Syntax/Translate/Basic.lean:1004:11: unsupported: advanced extends in structure
 /--
 We define `Scheme` as a `X : LocallyRingedSpace`,
 along with a proof that every point has an open neighbourhood `U`

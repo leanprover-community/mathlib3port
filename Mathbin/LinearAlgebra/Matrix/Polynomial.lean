@@ -1,7 +1,8 @@
-import Mathbin.LinearAlgebra.Matrix.Determinant 
+import Mathbin.Algebra.Polynomial.BigOperators 
+import Mathbin.Data.Polynomial.Degree.Lemmas 
 import Mathbin.Data.Polynomial.Eval 
 import Mathbin.Data.Polynomial.Monic 
-import Mathbin.Algebra.Polynomial.BigOperators
+import Mathbin.LinearAlgebra.Matrix.Determinant
 
 /-!
 # Matrices of polynomials and polynomials of matrices
@@ -77,7 +78,7 @@ theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
     rw [det_apply, det_apply, finset_sum_coeff]
     refine' Finset.sum_congr rfl _ 
     simp only [Algebra.id.smul_eq_mul, Finset.mem_univ, RingHom.map_matrix_apply, forall_true_left, map_apply,
-      Dmatrix.add_apply, Pi.smul_apply]
+      Pi.smul_apply]
     intro g 
     convert coeff_smul (sign g) _ _ 
     rw [←mul_oneₓ (Fintype.card n)]
@@ -90,22 +91,21 @@ theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
       refine' (nat_degree_add_le _ _).trans _ 
       simpa using (nat_degree_mul_C_le _ _).trans nat_degree_X_le
 
-theorem leading_coeff_det_X_one_add_C (A : Matrix n n α) :
-  leading_coeff (det (((X : Polynomial α) • (1 : Matrix n n (Polynomial α)))+A.map C)) = 1 :=
-  by 
-    casesI subsingleton_or_nontrivial α
-    ·
-      simp 
-    rw [←@det_one n, ←coeff_det_X_add_C_card _ A, leading_coeff]
-    simp only [Matrix.map_one, C_eq_zero, RingHom.map_one]
-    cases' (nat_degree_det_X_add_C_le 1 A).eq_or_lt with h h
-    ·
-      simp only [RingHom.map_one, Matrix.map_one, C_eq_zero] at h 
-      rw [h]
-    ·
-      have H := coeff_eq_zero_of_nat_degree_lt h 
-      rw [coeff_det_X_add_C_card] at H 
-      simpa using H
+-- error in LinearAlgebra.Matrix.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem leading_coeff_det_X_one_add_C
+(A : matrix n n α) : «expr = »(leading_coeff (det «expr + »(«expr • »((X : polynomial α), (1 : matrix n n (polynomial α))), A.map C)), 1) :=
+begin
+  casesI [expr subsingleton_or_nontrivial α] [],
+  { simp [] [] [] [] [] [] },
+  rw ["[", "<-", expr @det_one n, ",", "<-", expr coeff_det_X_add_C_card _ A, ",", expr leading_coeff, "]"] [],
+  simp [] [] ["only"] ["[", expr matrix.map_one, ",", expr C_eq_zero, ",", expr ring_hom.map_one, "]"] [] [],
+  cases [expr (nat_degree_det_X_add_C_le 1 A).eq_or_lt] ["with", ident h, ident h],
+  { simp [] [] ["only"] ["[", expr ring_hom.map_one, ",", expr matrix.map_one, ",", expr C_eq_zero, "]"] [] ["at", ident h],
+    rw [expr h] [] },
+  { have [ident H] [] [":=", expr coeff_eq_zero_of_nat_degree_lt h],
+    rw [expr coeff_det_X_add_C_card] ["at", ident H],
+    simpa [] [] [] [] [] ["using", expr H] }
+end
 
 end Polynomial
 

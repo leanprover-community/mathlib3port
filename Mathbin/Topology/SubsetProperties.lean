@@ -100,14 +100,15 @@ theorem IsCompact.induction_on {s : Set α} (hs : IsCompact s) {p : Set α → P
   by 
     simpa
 
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The intersection of a compact set and a closed set is a compact set. -/
-theorem IsCompact.inter_right (hs : IsCompact s) (ht : IsClosed t) : IsCompact (s ∩ t) :=
-  by 
-    introI f hnf hstf 
-    obtain ⟨a, hsa, ha⟩ : ∃ (a : _)(_ : a ∈ s), ClusterPt a f :=
-      hs (le_transₓ hstf (le_principal_iff.2 (inter_subset_left _ _)))
-    have  : a ∈ t := ht.mem_of_nhds_within_ne_bot$ ha.mono$ le_transₓ hstf (le_principal_iff.2 (inter_subset_right _ _))
-    exact ⟨a, ⟨hsa, this⟩, ha⟩
+theorem is_compact.inter_right (hs : is_compact s) (ht : is_closed t) : is_compact «expr ∩ »(s, t) :=
+begin
+  introsI [ident f, ident hnf, ident hstf],
+  obtain ["⟨", ident a, ",", ident hsa, ",", ident ha, "⟩", ":", expr «expr∃ , »((a «expr ∈ » s), cluster_pt a f), ":=", expr hs (le_trans hstf (le_principal_iff.2 (inter_subset_left _ _)))],
+  have [] [":", expr «expr ∈ »(a, t)] [":=", expr «expr $ »(ht.mem_of_nhds_within_ne_bot, «expr $ »(ha.mono, le_trans hstf (le_principal_iff.2 (inter_subset_right _ _))))],
+  exact [expr ⟨a, ⟨hsa, this⟩, ha⟩]
+end
 
 /-- The intersection of a closed set and a compact set is a compact set. -/
 theorem IsCompact.inter_left (ht : IsCompact t) (hs : IsClosed s) : IsCompact (s ∩ t) :=
@@ -372,29 +373,29 @@ theorem is_compact_singleton {a : α} : IsCompact ({a} : Set α) :=
 theorem Set.Subsingleton.is_compact {s : Set α} (hs : s.subsingleton) : IsCompact s :=
   subsingleton.induction_on hs is_compact_empty$ fun x => is_compact_singleton
 
-theorem Set.Finite.compact_bUnion {s : Set β} {f : β → Set α} (hs : finite s) (hf : ∀ i _ : i ∈ s, IsCompact (f i)) :
-  IsCompact (⋃(i : _)(_ : i ∈ s), f i) :=
-  is_compact_of_finite_subcover$
-    fun ι U hUo hsU =>
-      have  : ∀ i : Subtype s, ∃ t : Finset ι, f i ⊆ ⋃(j : _)(_ : j ∈ t), U j :=
-        fun ⟨i, hi⟩ =>
-          (hf i hi).elim_finite_subcover _ hUo
-            (calc f i ⊆ ⋃(i : _)(_ : i ∈ s), f i := subset_bUnion_of_mem hi 
-              _ ⊆ ⋃j, U j := hsU
-              )
-      let ⟨finite_subcovers, h⟩ := axiom_of_choice this 
-      by 
-        haveI  : Fintype (Subtype s) := hs.fintype <;>
-          exact
-            let t := Finset.bUnion Finset.univ finite_subcovers 
-            have  : (⋃(i : _)(_ : i ∈ s), f i) ⊆ ⋃(i : _)(_ : i ∈ t), U i :=
-              bUnion_subset$
-                fun i hi =>
-                  calc f i ⊆ ⋃(j : _)(_ : j ∈ finite_subcovers ⟨i, hi⟩), U j := h ⟨i, hi⟩
-                    _ ⊆ ⋃(j : _)(_ : j ∈ t), U j :=
-                    bUnion_subset_bUnion_left$ fun j hj => finset.mem_bUnion.mpr ⟨_, Finset.mem_univ _, hj⟩
-                    
-            ⟨t, this⟩
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem set.finite.compact_bUnion
+{s : set β}
+{f : β → set α}
+(hs : finite s)
+(hf : ∀ i «expr ∈ » s, is_compact (f i)) : is_compact «expr⋃ , »((i «expr ∈ » s), f i) :=
+«expr $ »(is_compact_of_finite_subcover, assume
+ ι
+ U
+ hUo
+ hsU, have ∀
+ i : subtype s, «expr∃ , »((t : finset ι), «expr ⊆ »(f i, «expr⋃ , »((j «expr ∈ » t), U j))), from assume
+ ⟨i, hi⟩, (hf i hi).elim_finite_subcover _ hUo (calc
+    «expr ⊆ »(f i, «expr⋃ , »((i «expr ∈ » s), f i)) : subset_bUnion_of_mem hi
+    «expr ⊆ »(..., «expr⋃ , »((j), U j)) : hsU),
+ let ⟨finite_subcovers, h⟩ := axiom_of_choice this in
+ by haveI [] [":", expr fintype (subtype s)] [":=", expr hs.fintype]; exact [expr let t := finset.bUnion finset.univ finite_subcovers in
+  have «expr ⊆ »(«expr⋃ , »((i «expr ∈ » s), f i), «expr⋃ , »((i «expr ∈ » t), U i)), from «expr $ »(bUnion_subset, assume
+   i hi, calc
+     «expr ⊆ »(f i, «expr⋃ , »((j «expr ∈ » finite_subcovers ⟨i, hi⟩), U j)) : h ⟨i, hi⟩
+     «expr ⊆ »(..., «expr⋃ , »((j «expr ∈ » t), U j)) : «expr $ »(bUnion_subset_bUnion_left, assume
+      j hj, finset.mem_bUnion.mpr ⟨_, finset.mem_univ _, hj⟩)),
+  ⟨t, this⟩])
 
 theorem Finset.compact_bUnion (s : Finset β) {f : β → Set α} (hf : ∀ i _ : i ∈ s, IsCompact (f i)) :
   IsCompact (⋃(i : _)(_ : i ∈ s), f i) :=
@@ -410,17 +411,18 @@ theorem compact_Union {f : β → Set α} [Fintype β] (h : ∀ i, IsCompact (f 
 theorem Set.Finite.is_compact (hs : finite s) : IsCompact s :=
   bUnion_of_singleton s ▸ hs.compact_bUnion fun _ _ => is_compact_singleton
 
-theorem finite_of_is_compact_of_discrete [DiscreteTopology α] (s : Set α) (hs : IsCompact s) : s.finite :=
-  by 
-    have  := hs.elim_finite_subcover (fun x : α => ({x} : Set α)) fun x => is_open_discrete _ 
-    simp only [Set.subset_univ, forall_prop_of_true, Set.Union_of_singleton] at this 
-    rcases this with ⟨t, ht⟩
-    suffices  : (⋃(i : α)(H : i ∈ t), {i} : Set α) = (t : Set α)
-    ·
-      rw [this] at ht 
-      exact t.finite_to_set.subset ht 
-    ext x 
-    simp only [exists_prop, Set.mem_Union, Set.mem_singleton_iff, exists_eq_right', Finset.mem_coe]
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem finite_of_is_compact_of_discrete [discrete_topology α] (s : set α) (hs : is_compact s) : s.finite :=
+begin
+  have [] [] [":=", expr hs.elim_finite_subcover (λ x : α, ({x} : set α)) (λ x, is_open_discrete _)],
+  simp [] [] ["only"] ["[", expr set.subset_univ, ",", expr forall_prop_of_true, ",", expr set.Union_of_singleton, "]"] [] ["at", ident this],
+  rcases [expr this, "with", "⟨", ident t, ",", ident ht, "⟩"],
+  suffices [] [":", expr «expr = »((«expr⋃ , »((i : α) (H : «expr ∈ »(i, t)), {i}) : set α), (t : set α))],
+  { rw [expr this] ["at", ident ht],
+    exact [expr t.finite_to_set.subset ht] },
+  ext [] [ident x] [],
+  simp [] [] ["only"] ["[", expr exists_prop, ",", expr set.mem_Union, ",", expr set.mem_singleton_iff, ",", expr exists_eq_right', ",", expr finset.mem_coe, "]"] [] []
+end
 
 theorem IsCompact.union (hs : IsCompact s) (ht : IsCompact t) : IsCompact (s ∪ t) :=
   by 
@@ -434,7 +436,7 @@ theorem IsCompact.union (hs : IsCompact s) (ht : IsCompact t) : IsCompact (s ∪
 theorem IsCompact.insert (hs : IsCompact s) a : IsCompact (insert a s) :=
   is_compact_singleton.union hs
 
--- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `V : ι → set α` is a decreasing family of closed compact sets then any neighborhood of
 `⋂ i, V i` contains some `V i`. We assume each `V i` is compact *and* closed because `α` is
 not assumed to be Hausdorff. See `exists_subset_nhd_of_compact` for version assuming this. -/
@@ -719,18 +721,22 @@ noncomputable def LocallyFinite.fintypeOfCompact {ι : Type _} [CompactSpace α]
 
 variable[TopologicalSpace β]
 
-theorem IsCompact.image_of_continuous_on {f : α → β} (hs : IsCompact s) (hf : ContinuousOn f s) : IsCompact (f '' s) :=
-  by 
-    intro l lne ls 
-    have  : ne_bot (l.comap f⊓𝓟 s) := comap_inf_principal_ne_bot_of_image_mem lne (le_principal_iff.1 ls)
-    obtain ⟨a, has, ha⟩ : ∃ (a : _)(_ : a ∈ s), ClusterPt a (l.comap f⊓𝓟 s) := @hs this inf_le_right 
-    use f a, mem_image_of_mem f has 
-    have  : tendsto f (𝓝 a⊓(comap f l⊓𝓟 s)) (𝓝 (f a)⊓l)
-    ·
-      convert (hf a has).inf (@tendsto_comap _ _ f l) using 1
-      rw [nhdsWithin]
-      acRfl 
-    exact @tendsto.ne_bot _ this ha
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_compact.image_of_continuous_on
+{f : α → β}
+(hs : is_compact s)
+(hf : continuous_on f s) : is_compact «expr '' »(f, s) :=
+begin
+  intros [ident l, ident lne, ident ls],
+  have [] [":", expr ne_bot «expr ⊓ »(l.comap f, expr𝓟() s)] [":=", expr comap_inf_principal_ne_bot_of_image_mem lne (le_principal_iff.1 ls)],
+  obtain ["⟨", ident a, ",", ident has, ",", ident ha, "⟩", ":", expr «expr∃ , »((a «expr ∈ » s), cluster_pt a «expr ⊓ »(l.comap f, expr𝓟() s)), ":=", expr @@hs this inf_le_right],
+  use ["[", expr f a, ",", expr mem_image_of_mem f has, "]"],
+  have [] [":", expr tendsto f «expr ⊓ »(expr𝓝() a, «expr ⊓ »(comap f l, expr𝓟() s)) «expr ⊓ »(expr𝓝() (f a), l)] [],
+  { convert [] [expr (hf a has).inf (@tendsto_comap _ _ f l)] ["using", 1],
+    rw [expr nhds_within] [],
+    ac_refl },
+  exact [expr @@tendsto.ne_bot _ this ha]
+end
 
 theorem IsCompact.image {f : α → β} (hs : IsCompact s) (hf : Continuous f) : IsCompact (f '' s) :=
   hs.image_of_continuous_on hf.continuous_on
@@ -749,63 +755,63 @@ theorem is_compact_range [CompactSpace α] {f : α → β} (hf : Continuous f) :
   by 
     rw [←image_univ] <;> exact compact_univ.image hf
 
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If X is is_compact then pr₂ : X × Y → Y is a closed map -/
-theorem is_closed_proj_of_is_compact {X : Type _} [TopologicalSpace X] [CompactSpace X] {Y : Type _}
-  [TopologicalSpace Y] : IsClosedMap (Prod.snd : X × Y → Y) :=
-  by 
-    set πX := (Prod.fst : X × Y → X)
-    set πY := (Prod.snd : X × Y → Y)
-    intro C(hC : IsClosed C)
-    rw [is_closed_iff_cluster_pt] at hC⊢
-    intro y(y_closure : ClusterPt y$ 𝓟 (πY '' C))
-    have  : ne_bot (map πX (comap πY (𝓝 y)⊓𝓟 C))
-    ·
-      suffices  : ne_bot (map πY (comap πY (𝓝 y)⊓𝓟 C))
-      ·
-        simpa only [map_ne_bot_iff]
-      convert y_closure 
-      calc map πY (comap πY (𝓝 y)⊓𝓟 C) = 𝓝 y⊓map πY (𝓟 C) := Filter.push_pull' _ _ _ _ = 𝓝 y⊓𝓟 (πY '' C) :=
-        by 
-          rw [map_principal]
-    resetI 
-    obtain ⟨x, hx⟩ : ∃ x, ClusterPt x (map πX (comap πY (𝓝 y)⊓𝓟 C))
-    exact cluster_point_of_compact _ 
-    refine'
-      ⟨⟨x, y⟩, _,
-        by 
-          simp [πY]⟩
-    apply hC 
-    rw [ClusterPt, ←Filter.map_ne_bot_iff πX]
-    convert hx 
-    calc map πX (𝓝 (x, y)⊓𝓟 C) = map πX (comap πX (𝓝 x)⊓comap πY (𝓝 y)⊓𝓟 C) :=
-      by 
-        rw [nhds_prod_eq, Filter.prod]_ = map πX (comap πY (𝓝 y)⊓𝓟 C⊓comap πX (𝓝 x)) :=
-      by 
-        acRfl _ = map πX (comap πY (𝓝 y)⊓𝓟 C)⊓𝓝 x :=
-      by 
-        rw [Filter.push_pull]_ = 𝓝 x⊓map πX (comap πY (𝓝 y)⊓𝓟 C) :=
-      by 
-        rw [inf_comm]
+theorem is_closed_proj_of_is_compact
+{X : Type*}
+[topological_space X]
+[compact_space X]
+{Y : Type*}
+[topological_space Y] : is_closed_map (prod.snd : «expr × »(X, Y) → Y) :=
+begin
+  set [] [ident πX] [] [":="] [expr (prod.fst : «expr × »(X, Y) → X)] [],
+  set [] [ident πY] [] [":="] [expr (prod.snd : «expr × »(X, Y) → Y)] [],
+  assume [binders (C) (hC : is_closed C)],
+  rw [expr is_closed_iff_cluster_pt] ["at", ident hC, "⊢"],
+  assume [binders (y) (y_closure : «expr $ »(cluster_pt y, expr𝓟() «expr '' »(πY, C)))],
+  have [] [":", expr ne_bot (map πX «expr ⊓ »(comap πY (expr𝓝() y), expr𝓟() C))] [],
+  { suffices [] [":", expr ne_bot (map πY «expr ⊓ »(comap πY (expr𝓝() y), expr𝓟() C))],
+    by simpa [] [] ["only"] ["[", expr map_ne_bot_iff, "]"] [] [],
+    convert [] [expr y_closure] [],
+    calc
+      «expr = »(map πY «expr ⊓ »(comap πY (expr𝓝() y), expr𝓟() C), «expr ⊓ »(expr𝓝() y, map πY (expr𝓟() C))) : filter.push_pull' _ _ _
+      «expr = »(..., «expr ⊓ »(expr𝓝() y, expr𝓟() «expr '' »(πY, C))) : by rw [expr map_principal] [] },
+  resetI,
+  obtain ["⟨", ident x, ",", ident hx, "⟩", ":", expr «expr∃ , »((x), cluster_pt x (map πX «expr ⊓ »(comap πY (expr𝓝() y), expr𝓟() C)))],
+  from [expr cluster_point_of_compact _],
+  refine [expr ⟨⟨x, y⟩, _, by simp [] [] [] ["[", expr πY, "]"] [] []⟩],
+  apply [expr hC],
+  rw ["[", expr cluster_pt, ",", "<-", expr filter.map_ne_bot_iff πX, "]"] [],
+  convert [] [expr hx] [],
+  calc
+    «expr = »(map πX «expr ⊓ »(expr𝓝() (x, y), expr𝓟() C), map πX «expr ⊓ »(«expr ⊓ »(comap πX (expr𝓝() x), comap πY (expr𝓝() y)), expr𝓟() C)) : by rw ["[", expr nhds_prod_eq, ",", expr filter.prod, "]"] []
+    «expr = »(..., map πX «expr ⊓ »(«expr ⊓ »(comap πY (expr𝓝() y), expr𝓟() C), comap πX (expr𝓝() x))) : by ac_refl
+    «expr = »(..., «expr ⊓ »(map πX «expr ⊓ »(comap πY (expr𝓝() y), expr𝓟() C), expr𝓝() x)) : by rw [expr filter.push_pull] []
+    «expr = »(..., «expr ⊓ »(expr𝓝() x, map πX «expr ⊓ »(comap πY (expr𝓝() y), expr𝓟() C))) : by rw [expr inf_comm] []
+end
 
 theorem exists_subset_nhd_of_compact_space [CompactSpace α] {ι : Type _} [Nonempty ι] {V : ι → Set α}
   (hV : Directed (· ⊇ ·) V) (hV_closed : ∀ i, IsClosed (V i)) {U : Set α} (hU : ∀ x _ : x ∈ ⋂i, V i, U ∈ 𝓝 x) :
   ∃ i, V i ⊆ U :=
   exists_subset_nhd_of_compact' hV (fun i => (hV_closed i).IsCompact) hV_closed hU
 
-theorem Embedding.is_compact_iff_is_compact_image {f : α → β} (hf : Embedding f) : IsCompact s ↔ IsCompact (f '' s) :=
-  (Iff.intro fun h => h.image hf.continuous)$
-    fun h =>
-      by 
-        rw [is_compact_iff_ultrafilter_le_nhds] at h⊢
-        intro u us' 
-        have  : «expr↑ » (u.map f) ≤ 𝓟 (f '' s)
-        ·
-          rw [Ultrafilter.coe_map, map_le_iff_le_comap, comap_principal]
-          convert us' 
-          exact preimage_image_eq _ hf.inj 
-        rcases h (u.map f) this with ⟨_, ⟨a, ha, ⟨⟩⟩, _⟩
-        refine' ⟨a, ha, _⟩
-        rwa [hf.induced, nhds_induced, ←map_le_iff_le_comap]
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem embedding.is_compact_iff_is_compact_image
+{f : α → β}
+(hf : embedding f) : «expr ↔ »(is_compact s, is_compact «expr '' »(f, s)) :=
+«expr $ »(iff.intro (assume h, h.image hf.continuous), assume h, begin
+   rw [expr is_compact_iff_ultrafilter_le_nhds] ["at", "⊢", ident h],
+   intros [ident u, ident us'],
+   have [] [":", expr «expr ≤ »(«expr↑ »(u.map f), expr𝓟() «expr '' »(f, s))] [],
+   begin
+     rw ["[", expr ultrafilter.coe_map, ",", expr map_le_iff_le_comap, ",", expr comap_principal, "]"] [],
+     convert [] [expr us'] [],
+     exact [expr preimage_image_eq _ hf.inj]
+   end,
+   rcases [expr h (u.map f) this, "with", "⟨", "_", ",", "⟨", ident a, ",", ident ha, ",", "⟨", "⟩", "⟩", ",", "_", "⟩"],
+   refine [expr ⟨a, ha, _⟩],
+   rwa ["[", expr hf.induced, ",", expr nhds_induced, ",", "<-", expr map_le_iff_le_comap, "]"] []
+ end)
 
 /-- A closed embedding is proper, ie, inverse images of compact sets are contained in compacts. -/
 theorem ClosedEmbedding.tendsto_cocompact {f : α → β} (hf : ClosedEmbedding f) :
@@ -840,9 +846,9 @@ protected theorem ClosedEmbedding.noncompact_space [NoncompactSpace α] {f : α 
 protected theorem ClosedEmbedding.compact_space [h : CompactSpace β] {f : α → β} (hf : ClosedEmbedding f) :
   CompactSpace α :=
   by 
-    unfreezingI 
+    (
       contrapose! h 
-      rw [not_compact_space_iff] at h⊢
+      rw [not_compact_space_iff] at h⊢)
     exact hf.noncompact_space
 
 theorem IsCompact.prod {s : Set α} {t : Set β} (hs : IsCompact s) (ht : IsCompact t) : IsCompact (Set.Prod s t) :=
@@ -863,7 +869,7 @@ theorem Inducing.is_compact_iff {f : α → β} (hf : Inducing f) {s : Set α} :
   by 
     split 
     ·
-      introI hs F F_ne_bot F_le 
+      intros hs F F_ne_bot F_le 
       obtain ⟨_, ⟨x, x_in : x ∈ s, rfl⟩, hx : ClusterPt (f x) (map f F)⟩ :=
         hs
           (calc map f F ≤ map f (𝓟 s) := map_mono F_le 
@@ -946,18 +952,20 @@ section Tychonoff
 
 variable{ι : Type _}{π : ι → Type _}[∀ i, TopologicalSpace (π i)]
 
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Tychonoff's theorem** -/
-theorem is_compact_pi_infinite {s : ∀ i, Set (π i)} :
-  (∀ i, IsCompact (s i)) → IsCompact { x : ∀ i, π i | ∀ i, x i ∈ s i } :=
-  by 
-    simp only [is_compact_iff_ultrafilter_le_nhds, nhds_pi, exists_prop, mem_set_of_eq, le_infi_iff, le_principal_iff]
-    intro h f hfs 
-    have  : ∀ i : ι, ∃ a, a ∈ s i ∧ tendsto (fun x : ∀ i : ι, π i => x i) f (𝓝 a)
-    ·
-      refine' fun i => h i (f.map _) (mem_map.2 _)
-      exact mem_of_superset hfs fun x hx => hx i 
-    choose a ha 
-    exact ⟨a, fun i => (ha i).left, fun i => (ha i).right.le_comap⟩
+theorem is_compact_pi_infinite
+{s : ∀ i, set (π i)} : ∀ i, is_compact (s i) → is_compact {x : ∀ i, π i | ∀ i, «expr ∈ »(x i, s i)} :=
+begin
+  simp [] [] ["only"] ["[", expr is_compact_iff_ultrafilter_le_nhds, ",", expr nhds_pi, ",", expr exists_prop, ",", expr mem_set_of_eq, ",", expr le_infi_iff, ",", expr le_principal_iff, "]"] [] [],
+  intros [ident h, ident f, ident hfs],
+  have [] [":", expr ∀
+   i : ι, «expr∃ , »((a), «expr ∧ »(«expr ∈ »(a, s i), tendsto (λ x : ∀ i : ι, π i, x i) f (expr𝓝() a)))] [],
+  { refine [expr λ i, h i (f.map _) (mem_map.2 _)],
+    exact [expr mem_of_superset hfs (λ x hx, hx i)] },
+  choose [] [ident a] [ident ha] [],
+  exact [expr ⟨a, assume i, (ha i).left, assume i, (ha i).right.le_comap⟩]
+end
 
 /-- A version of Tychonoff's theorem that uses `set.pi`. -/
 theorem is_compact_univ_pi {s : ∀ i, Set (π i)} (h : ∀ i, IsCompact (s i)) : IsCompact (pi univ s) :=
@@ -975,37 +983,18 @@ theorem Filter.Coprod_cocompact {δ : Type _} {κ : δ → Type _} [∀ d, Topol
   (Filter.coprodₓ fun d => Filter.cocompact (κ d)) = Filter.cocompact (∀ d, κ d) :=
   by 
     ext S 
-    simp only [mem_coprod_iff, exists_prop, mem_comap, Filter.mem_cocompact]
+    rcases compl_surjective S with ⟨S, rfl⟩
+    simpRw [compl_mem_Coprod_iff, Filter.mem_cocompact, compl_subset_compl]
     split 
     ·
-      intro h 
-      rw [Filter.mem_Coprod_iff] at h 
-      choose t ht1 ht2 using h 
-      choose t1 ht11 ht12 using fun d => filter.mem_cocompact.mp (ht1 d)
-      refine' ⟨Set.Pi Set.Univ t1, _, _⟩
-      ·
-        convert is_compact_pi_infinite ht11 
-        ext 
-        simp 
-      ·
-        refine' subset.trans _ (Set.Union_subset ht2)
-        intro x 
-        simp only [mem_Union, mem_univ_pi, exists_imp_distrib, mem_compl_eq, not_forall]
-        intro d h 
-        exact ⟨d, ht12 d h⟩
+      rintro ⟨t, H, hSt⟩
+      choose K hKc htK using H 
+      exact ⟨Set.Pi univ K, is_compact_univ_pi hKc, hSt.trans$ pi_mono$ fun i _ => htK i⟩
     ·
-      rintro ⟨t, h1, h2⟩
-      rw [Filter.mem_Coprod_iff]
-      intro d 
-      refine' ⟨«expr ᶜ» ((fun k : ∀ d : δ, κ d => k d) '' t), _, _⟩
-      ·
-        rw [Filter.mem_cocompact]
-        refine' ⟨(fun k : ∀ d : δ, κ d => k d) '' t, _, Set.Subset.refl _⟩
-        exact IsCompact.image h1 (continuous_pi_iff.mp continuous_id d)
-      refine' subset.trans _ h2 
-      intro x hx 
-      simp only [not_exists, mem_image, mem_preimage, mem_compl_eq] at hx 
-      simpa using mt (hx x)
+      rintro ⟨K, hKc, hSK⟩
+      exact
+        ⟨fun i => Function.eval i '' K, fun i => ⟨_, hKc.image (continuous_apply i), subset.rfl⟩,
+          hSK.trans$ subset_pi_eval_image _ _⟩
 
 end Tychonoff
 
@@ -1054,20 +1043,22 @@ theorem exists_compact_mem_nhds [LocallyCompactSpace α] (x : α) : ∃ K, IsCom
   let ⟨K, hKc, hx, H⟩ := exists_compact_subset is_open_univ (mem_univ x)
   ⟨K, hKc, mem_interior_iff_mem_nhds.1 hx⟩
 
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a locally compact space, every compact set is contained in the interior of a compact set. -/
-theorem exists_compact_superset [LocallyCompactSpace α] {K : Set α} (hK : IsCompact K) :
-  ∃ K', IsCompact K' ∧ K ⊆ Interior K' :=
-  by 
-    choose U hUc hxU using fun x : K => exists_compact_mem_nhds (x : α)
-    have  : K ⊆ ⋃x, Interior (U x)
-    exact fun x hx => mem_Union.2 ⟨⟨x, hx⟩, mem_interior_iff_mem_nhds.2 (hxU _)⟩
-    rcases hK.elim_finite_subcover _ _ this with ⟨t, ht⟩
-    ·
-      refine' ⟨_, t.compact_bUnion fun x _ => hUc x, fun x hx => _⟩
-      rcases mem_bUnion_iff.1 (ht hx) with ⟨y, hyt, hy⟩
-      exact interior_mono (subset_bUnion_of_mem hyt) hy
-    ·
-      exact fun _ => is_open_interior
+theorem exists_compact_superset
+[locally_compact_space α]
+{K : set α}
+(hK : is_compact K) : «expr∃ , »((K'), «expr ∧ »(is_compact K', «expr ⊆ »(K, interior K'))) :=
+begin
+  choose [] [ident U] [ident hUc, ident hxU] ["using", expr λ x : K, exists_compact_mem_nhds (x : α)],
+  have [] [":", expr «expr ⊆ »(K, «expr⋃ , »((x), interior (U x)))] [],
+  from [expr λ x hx, mem_Union.2 ⟨⟨x, hx⟩, mem_interior_iff_mem_nhds.2 (hxU _)⟩],
+  rcases [expr hK.elim_finite_subcover _ _ this, "with", "⟨", ident t, ",", ident ht, "⟩"],
+  { refine [expr ⟨_, t.compact_bUnion (λ x _, hUc x), λ x hx, _⟩],
+    rcases [expr mem_bUnion_iff.1 (ht hx), "with", "⟨", ident y, ",", ident hyt, ",", ident hy, "⟩"],
+    exact [expr interior_mono (subset_bUnion_of_mem hyt) hy] },
+  { exact [expr λ _, is_open_interior] }
+end
 
 theorem Ultrafilter.le_nhds_Lim [CompactSpace α] (F : Ultrafilter α) :
   «expr↑ » F ≤ 𝓝 (@lim _ _ (F : Filter α).nonempty_of_ne_bot F) :=
@@ -1079,57 +1070,49 @@ theorem Ultrafilter.le_nhds_Lim [CompactSpace α] (F : Ultrafilter α) :
       ⟨x, -, h⟩
     exact le_nhds_Lim ⟨x, h⟩
 
-theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace α] {S : Set α} (hS : IsClosed S)
-  (hne : S.nonempty) :
-  ∃ V : Set α, V ⊆ S ∧ V.nonempty ∧ IsClosed V ∧ ∀ V' : Set α, V' ⊆ V → V'.nonempty → IsClosed V' → V' = V :=
-  by 
-    let opens := { U : Set α | «expr ᶜ» S ⊆ U ∧ IsOpen U ∧ («expr ᶜ» U).Nonempty }
-    obtain ⟨U, ⟨Uc, Uo, Ucne⟩, h⟩ :=
-      Zorn.zorn_subset opens
-        fun c hc hz =>
-          by 
-            byCases' hcne : c.nonempty
-            ·
-              obtain ⟨U₀, hU₀⟩ := hcne 
-              haveI  : Nonempty { U // U ∈ c } := ⟨⟨U₀, hU₀⟩⟩
-              obtain ⟨U₀compl, U₀opn, U₀ne⟩ := hc hU₀ 
-              use ⋃₀c 
-              refine' ⟨⟨_, _, _⟩, fun U hU a ha => ⟨U, hU, ha⟩⟩
-              ·
-                exact fun a ha => ⟨U₀, hU₀, U₀compl ha⟩
-              ·
-                exact is_open_sUnion fun _ h => (hc h).2.1
-              ·
-                convertTo (⋂U : { U // U ∈ c }, «expr ᶜ» U.1).Nonempty
-                ·
-                  ext 
-                  simp only [not_exists, exists_prop, not_and, Set.mem_Inter, Subtype.forall, Set.mem_set_of_eq,
-                    Set.mem_compl_eq, Subtype.val_eq_coe]
-                  rfl 
-                apply IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed
-                ·
-                  rintro ⟨U, hU⟩ ⟨U', hU'⟩
-                  obtain ⟨V, hVc, hVU, hVU'⟩ := Zorn.Chain.directed_on hz U hU U' hU' 
-                  exact ⟨⟨V, hVc⟩, set.compl_subset_compl.mpr hVU, set.compl_subset_compl.mpr hVU'⟩
-                ·
-                  exact fun U => (hc U.2).2.2
-                ·
-                  exact fun U => (is_closed_compl_iff.mpr (hc U.2).2.1).IsCompact
-                ·
-                  exact fun U => is_closed_compl_iff.mpr (hc U.2).2.1
-            ·
-              use «expr ᶜ» S 
-              refine' ⟨⟨Set.Subset.refl _, is_open_compl_iff.mpr hS, _⟩, fun U Uc => (hcne ⟨U, Uc⟩).elim⟩
-              rw [compl_compl]
-              exact hne 
-    refine' ⟨«expr ᶜ» U, set.compl_subset_comm.mp Uc, Ucne, is_closed_compl_iff.mpr Uo, _⟩
-    intro V' V'sub V'ne V'cls 
-    have  : «expr ᶜ» V' = U
-    ·
-      refine' h («expr ᶜ» V') ⟨_, is_open_compl_iff.mpr V'cls, _⟩ (set.subset_compl_comm.mp V'sub)
-      exact Set.Subset.trans Uc (set.subset_compl_comm.mp V'sub)
-      simp only [compl_compl, V'ne]
-    rw [←this, compl_compl]
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_closed.exists_minimal_nonempty_closed_subset
+[compact_space α]
+{S : set α}
+(hS : is_closed S)
+(hne : S.nonempty) : «expr∃ , »((V : set α), «expr ∧ »(«expr ⊆ »(V, S), «expr ∧ »(V.nonempty, «expr ∧ »(is_closed V, ∀
+    V' : set α, «expr ⊆ »(V', V) → V'.nonempty → is_closed V' → «expr = »(V', V))))) :=
+begin
+  let [ident opens] [] [":=", expr {U : set α | «expr ∧ »(«expr ⊆ »(«expr ᶜ»(S), U), «expr ∧ »(is_open U, «expr ᶜ»(U).nonempty))}],
+  obtain ["⟨", ident U, ",", "⟨", ident Uc, ",", ident Uo, ",", ident Ucne, "⟩", ",", ident h, "⟩", ":=", expr zorn.zorn_subset opens (λ
+    c hc hz, begin
+      by_cases [expr hcne, ":", expr c.nonempty],
+      { obtain ["⟨", ident U₀, ",", ident hU₀, "⟩", ":=", expr hcne],
+        haveI [] [":", expr nonempty {U // «expr ∈ »(U, c)}] [":=", expr ⟨⟨U₀, hU₀⟩⟩],
+        obtain ["⟨", ident U₀compl, ",", ident U₀opn, ",", ident U₀ne, "⟩", ":=", expr hc hU₀],
+        use [expr «expr⋃₀ »(c)],
+        refine [expr ⟨⟨_, _, _⟩, λ U hU a ha, ⟨U, hU, ha⟩⟩],
+        { exact [expr λ a ha, ⟨U₀, hU₀, U₀compl ha⟩] },
+        { exact [expr is_open_sUnion (λ _ h, (hc h).2.1)] },
+        { convert_to [expr «expr⋂ , »((U : {U // «expr ∈ »(U, c)}), «expr ᶜ»(U.1)).nonempty] [],
+          { ext [] [] [],
+            simp [] [] ["only"] ["[", expr not_exists, ",", expr exists_prop, ",", expr not_and, ",", expr set.mem_Inter, ",", expr subtype.forall, ",", expr set.mem_set_of_eq, ",", expr set.mem_compl_eq, ",", expr subtype.val_eq_coe, "]"] [] [],
+            refl },
+          apply [expr is_compact.nonempty_Inter_of_directed_nonempty_compact_closed],
+          { rintros ["⟨", ident U, ",", ident hU, "⟩", "⟨", ident U', ",", ident hU', "⟩"],
+            obtain ["⟨", ident V, ",", ident hVc, ",", ident hVU, ",", ident hVU', "⟩", ":=", expr zorn.chain.directed_on hz U hU U' hU'],
+            exact [expr ⟨⟨V, hVc⟩, set.compl_subset_compl.mpr hVU, set.compl_subset_compl.mpr hVU'⟩] },
+          { exact [expr λ U, (hc U.2).2.2] },
+          { exact [expr λ U, (is_closed_compl_iff.mpr (hc U.2).2.1).is_compact] },
+          { exact [expr λ U, is_closed_compl_iff.mpr (hc U.2).2.1] } } },
+      { use [expr «expr ᶜ»(S)],
+        refine [expr ⟨⟨set.subset.refl _, is_open_compl_iff.mpr hS, _⟩, λ U Uc, (hcne ⟨U, Uc⟩).elim⟩],
+        rw [expr compl_compl] [],
+        exact [expr hne] }
+    end)],
+  refine [expr ⟨«expr ᶜ»(U), set.compl_subset_comm.mp Uc, Ucne, is_closed_compl_iff.mpr Uo, _⟩],
+  intros [ident V', ident V'sub, ident V'ne, ident V'cls],
+  have [] [":", expr «expr = »(«expr ᶜ»(V'), U)] [],
+  { refine [expr h «expr ᶜ»(V') ⟨_, is_open_compl_iff.mpr V'cls, _⟩ (set.subset_compl_comm.mp V'sub)],
+    exact [expr set.subset.trans Uc (set.subset_compl_comm.mp V'sub)],
+    simp [] [] ["only"] ["[", expr compl_compl, ",", expr V'ne, "]"] [] [] },
+  rw ["[", "<-", expr this, ",", expr compl_compl, "]"] []
+end
 
 /-- A σ-compact space is a space that is the union of a countable collection of compact subspaces.
   Note that a locally compact separable T₂ space need not be σ-compact.
@@ -1177,16 +1160,21 @@ variable{α}
 theorem exists_mem_compact_covering (x : α) : ∃ n, x ∈ CompactCovering α n :=
   Union_eq_univ_iff.mp (Union_compact_covering α) x
 
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `α` is a `σ`-compact space, then a locally finite family of nonempty sets of `α` can have
 only countably many elements, `set.countable` version. -/
-theorem LocallyFinite.countable_of_sigma_compact {ι : Type _} {f : ι → Set α} (hf : LocallyFinite f)
-  (hne : ∀ i, (f i).Nonempty) : countable (univ : Set ι) :=
-  by 
-    have  := fun n => hf.finite_nonempty_inter_compact (is_compact_compact_covering α n)
-    refine' (countable_Union fun n => (this n).Countable).mono fun i hi => _ 
-    rcases hne i with ⟨x, hx⟩
-    rcases Union_eq_univ_iff.1 (Union_compact_covering α) x with ⟨n, hn⟩
-    exact mem_Union.2 ⟨n, x, hx, hn⟩
+theorem locally_finite.countable_of_sigma_compact
+{ι : Type*}
+{f : ι → set α}
+(hf : locally_finite f)
+(hne : ∀ i, (f i).nonempty) : countable (univ : set ι) :=
+begin
+  have [] [] [":=", expr λ n, hf.finite_nonempty_inter_compact (is_compact_compact_covering α n)],
+  refine [expr (countable_Union (λ n, (this n).countable)).mono (λ i hi, _)],
+  rcases [expr hne i, "with", "⟨", ident x, ",", ident hx, "⟩"],
+  rcases [expr Union_eq_univ_iff.1 (Union_compact_covering α) x, "with", "⟨", ident n, ",", ident hn, "⟩"],
+  exact [expr mem_Union.2 ⟨n, x, hx, hn⟩]
+end
 
 /-- In a topological space with sigma compact topology, if `f` is a function that sends each point
 `x` of a closed set `s` to a neighborhood of `x` within `s`, then for some countable set `t ⊆ s`,
@@ -1367,22 +1355,24 @@ theorem ContinuousOn.preimage_clopen_of_clopen {β : Type _} [TopologicalSpace �
   (hf : ContinuousOn f s) (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s ∩ f ⁻¹' t) :=
   ⟨ContinuousOn.preimage_open_of_open hf hs.1 ht.1, ContinuousOn.preimage_closed_of_closed hf hs.2 ht.2⟩
 
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The intersection of a disjoint covering by two open sets of a clopen set will be clopen. -/
-theorem is_clopen_inter_of_disjoint_cover_clopen {Z a b : Set α} (h : IsClopen Z) (cover : Z ⊆ a ∪ b) (ha : IsOpen a)
-  (hb : IsOpen b) (hab : a ∩ b = ∅) : IsClopen (Z ∩ a) :=
-  by 
-    refine' ⟨IsOpen.inter h.1 ha, _⟩
-    have  : IsClosed (Z ∩ «expr ᶜ» b) := IsClosed.inter h.2 (is_closed_compl_iff.2 hb)
-    convert this using 1
-    apply subset.antisymm
-    ·
-      exact inter_subset_inter_right Z (subset_compl_iff_disjoint.2 hab)
-    ·
-      rintro x ⟨hx₁, hx₂⟩
-      exact
-        ⟨hx₁,
-          by 
-            simpa [not_mem_of_mem_compl hx₂] using cover hx₁⟩
+theorem is_clopen_inter_of_disjoint_cover_clopen
+{Z a b : set α}
+(h : is_clopen Z)
+(cover : «expr ⊆ »(Z, «expr ∪ »(a, b)))
+(ha : is_open a)
+(hb : is_open b)
+(hab : «expr = »(«expr ∩ »(a, b), «expr∅»())) : is_clopen «expr ∩ »(Z, a) :=
+begin
+  refine [expr ⟨is_open.inter h.1 ha, _⟩],
+  have [] [":", expr is_closed «expr ∩ »(Z, «expr ᶜ»(b))] [":=", expr is_closed.inter h.2 (is_closed_compl_iff.2 hb)],
+  convert [] [expr this] ["using", 1],
+  apply [expr subset.antisymm],
+  { exact [expr inter_subset_inter_right Z (subset_compl_iff_disjoint.2 hab)] },
+  { rintros [ident x, "⟨", ident hx₁, ",", ident hx₂, "⟩"],
+    exact [expr ⟨hx₁, by simpa [] [] [] ["[", expr not_mem_of_mem_compl hx₂, "]"] [] ["using", expr cover hx₁]⟩] }
+end
 
 @[simp]
 theorem is_clopen_discrete [DiscreteTopology α] (x : Set α) : IsClopen x :=
@@ -1429,7 +1419,7 @@ theorem IsIrreducible.closure {s : Set α} (h : IsIrreducible s) : IsIrreducible
 theorem exists_preirreducible (s : Set α) (H : IsPreirreducible s) :
   ∃ t : Set α, IsPreirreducible t ∧ s ⊆ t ∧ ∀ u, IsPreirreducible u → t ⊆ u → u = t :=
   let ⟨m, hm, hsm, hmm⟩ :=
-    Zorn.zorn_subset_nonempty { t : Set α | IsPreirreducible t }
+    Zorn.zorn_subset_nonempty { t:Set α | IsPreirreducible t }
       (fun c hc hcc hcn =>
         let ⟨t, htc⟩ := hcn
         ⟨⋃₀c,
@@ -1486,23 +1476,28 @@ theorem nonempty_preirreducible_inter [PreirreducibleSpace α] {s t : Set α} :
   by 
     simpa only [univ_inter, univ_subset_iff] using @PreirreducibleSpace.is_preirreducible_univ α _ _ s t
 
-theorem IsPreirreducible.image [TopologicalSpace β] {s : Set α} (H : IsPreirreducible s) (f : α → β)
-  (hf : ContinuousOn f s) : IsPreirreducible (f '' s) :=
-  by 
-    rintro u v hu hv ⟨_, ⟨⟨x, hx, rfl⟩, hxu⟩⟩ ⟨_, ⟨⟨y, hy, rfl⟩, hyv⟩⟩
-    rw [←mem_preimage] at hxu hyv 
-    rcases continuous_on_iff'.1 hf u hu with ⟨u', hu', u'_eq⟩
-    rcases continuous_on_iff'.1 hf v hv with ⟨v', hv', v'_eq⟩
-    have  := H u' v' hu' hv' 
-    rw [inter_comm s u', ←u'_eq] at this 
-    rw [inter_comm s v', ←v'_eq] at this 
-    rcases this ⟨x, hxu, hx⟩ ⟨y, hyv, hy⟩ with ⟨z, hzs, hzu', hzv'⟩
-    refine' ⟨f z, mem_image_of_mem f hzs, _, _⟩
-    all_goals 
-      rw [←mem_preimage]
-      apply mem_of_mem_inter_left 
-      show z ∈ _ ∩ s 
-      simp 
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_preirreducible.image
+[topological_space β]
+{s : set α}
+(H : is_preirreducible s)
+(f : α → β)
+(hf : continuous_on f s) : is_preirreducible «expr '' »(f, s) :=
+begin
+  rintros [ident u, ident v, ident hu, ident hv, "⟨", "_", ",", "⟨", "⟨", ident x, ",", ident hx, ",", ident rfl, "⟩", ",", ident hxu, "⟩", "⟩", "⟨", "_", ",", "⟨", "⟨", ident y, ",", ident hy, ",", ident rfl, "⟩", ",", ident hyv, "⟩", "⟩"],
+  rw ["<-", expr mem_preimage] ["at", ident hxu, ident hyv],
+  rcases [expr continuous_on_iff'.1 hf u hu, "with", "⟨", ident u', ",", ident hu', ",", ident u'_eq, "⟩"],
+  rcases [expr continuous_on_iff'.1 hf v hv, "with", "⟨", ident v', ",", ident hv', ",", ident v'_eq, "⟩"],
+  have [] [] [":=", expr H u' v' hu' hv'],
+  rw ["[", expr inter_comm s u', ",", "<-", expr u'_eq, "]"] ["at", ident this],
+  rw ["[", expr inter_comm s v', ",", "<-", expr v'_eq, "]"] ["at", ident this],
+  rcases [expr this ⟨x, hxu, hx⟩ ⟨y, hyv, hy⟩, "with", "⟨", ident z, ",", ident hzs, ",", ident hzu', ",", ident hzv', "⟩"],
+  refine [expr ⟨f z, mem_image_of_mem f hzs, _, _⟩],
+  all_goals { rw ["<-", expr mem_preimage] [],
+    apply [expr mem_of_mem_inter_left],
+    show [expr «expr ∈ »(z, «expr ∩ »(_, s))],
+    simp [] [] [] ["[", "*", "]"] [] [] }
+end
 
 theorem IsIrreducible.image [TopologicalSpace β] {s : Set α} (H : IsIrreducible s) (f : α → β) (hf : ContinuousOn f s) :
   IsIrreducible (f '' s) :=
@@ -1524,7 +1519,7 @@ theorem Subtype.irreducible_space {s : Set α} (h : IsIrreducible s) : Irreducib
   { is_preirreducible_univ := (Subtype.preirreducible_space h.is_preirreducible).is_preirreducible_univ,
     to_nonempty := h.nonempty.to_subtype }
 
--- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 /-- A set `s` is irreducible if and only if
 for every finite collection of open sets all of whose members intersect `s`,
 `s` also intersects the intersection of the entire collection
@@ -1591,7 +1586,7 @@ theorem is_preirreducible_iff_closed_union_closed {s : Set α} :
       ·
         split  <;> intro H <;> refine' H _ ‹_› <;> assumption
 
--- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A set is irreducible if and only if
 for every cover by a finite collection of closed sets,
 it is contained in one of the members of the collection. -/

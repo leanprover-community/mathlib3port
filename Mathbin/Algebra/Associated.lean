@@ -50,23 +50,26 @@ theorem dvd_and_not_dvd_iff [CommCancelMonoidWithZero α] {x y : α} : x ∣ y �
                   by 
                     conv  => toLHS rw [he, hdx] <;> simp [mul_assocₓ]⟩)⟩⟩
 
-theorem pow_dvd_pow_iff [CommCancelMonoidWithZero α] {x : α} {n m : ℕ} (h0 : x ≠ 0) (h1 : ¬IsUnit x) :
-  x ^ n ∣ x ^ m ↔ n ≤ m :=
-  by 
-    split 
-    ·
-      intro h 
-      rw [←not_ltₓ]
-      intro hmn 
-      apply h1 
-      have  : ((x ^ m)*x) ∣ (x ^ m)*1
-      ·
-        rw [←pow_succ'ₓ, mul_oneₓ]
-        exact (pow_dvd_pow _ (Nat.succ_le_of_ltₓ hmn)).trans h 
-      rwa [mul_dvd_mul_iff_left, ←is_unit_iff_dvd_one] at this 
-      apply pow_ne_zero m h0
-    ·
-      apply pow_dvd_pow
+-- error in Algebra.Associated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pow_dvd_pow_iff
+[comm_cancel_monoid_with_zero α]
+{x : α}
+{n m : exprℕ()}
+(h0 : «expr ≠ »(x, 0))
+(h1 : «expr¬ »(is_unit x)) : «expr ↔ »(«expr ∣ »(«expr ^ »(x, n), «expr ^ »(x, m)), «expr ≤ »(n, m)) :=
+begin
+  split,
+  { intro [ident h],
+    rw ["[", "<-", expr not_lt, "]"] [],
+    intro [ident hmn],
+    apply [expr h1],
+    have [] [":", expr «expr ∣ »(«expr * »(«expr ^ »(x, m), x), «expr * »(«expr ^ »(x, m), 1))] [],
+    { rw ["[", "<-", expr pow_succ', ",", expr mul_one, "]"] [],
+      exact [expr (pow_dvd_pow _ (nat.succ_le_of_lt hmn)).trans h] },
+    rwa ["[", expr mul_dvd_mul_iff_left, ",", "<-", expr is_unit_iff_dvd_one, "]"] ["at", ident this],
+    apply [expr pow_ne_zero m h0] },
+  { apply [expr pow_dvd_pow] }
+end
 
 section Prime
 
@@ -97,19 +100,19 @@ theorem ne_one : p ≠ 1 :=
 theorem dvd_or_dvd (hp : Prime p) {a b : α} (h : p ∣ a*b) : p ∣ a ∨ p ∣ b :=
   hp.2.2 a b h
 
-theorem dvd_of_dvd_pow (hp : Prime p) {a : α} {n : ℕ} (h : p ∣ a ^ n) : p ∣ a :=
-  by 
-    induction' n with n ih
-    ·
-      rw [pow_zeroₓ] at h 
-      have  := is_unit_of_dvd_one _ h 
-      have  := not_unit hp 
-      contradiction 
-    rw [pow_succₓ] at h 
-    cases' dvd_or_dvd hp h with dvd_a dvd_pow
-    ·
-      assumption 
-    exact ih dvd_pow
+-- error in Algebra.Associated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dvd_of_dvd_pow (hp : prime p) {a : α} {n : exprℕ()} (h : «expr ∣ »(p, «expr ^ »(a, n))) : «expr ∣ »(p, a) :=
+begin
+  induction [expr n] [] ["with", ident n, ident ih] [],
+  { rw [expr pow_zero] ["at", ident h],
+    have [] [] [":=", expr is_unit_of_dvd_one _ h],
+    have [] [] [":=", expr not_unit hp],
+    contradiction },
+  rw [expr pow_succ] ["at", ident h],
+  cases [expr dvd_or_dvd hp h] ["with", ident dvd_a, ident dvd_pow],
+  { assumption },
+  exact [expr ih dvd_pow]
+end
 
 theorem exists_mem_multiset_dvd {s : Multiset α} : p ∣ s.prod → ∃ (a : _)(_ : a ∈ s), p ∣ a :=
   (Multiset.induction_on s fun h => (hp.not_dvd_one h).elim)$
@@ -193,15 +196,21 @@ theorem Irreducible.ne_zero [MonoidWithZeroₓ α] : ∀ {p : α}, Irreducible p
 theorem of_irreducible_mul {α} [Monoidₓ α] {x y : α} : Irreducible (x*y) → IsUnit x ∨ IsUnit y
 | ⟨_, h⟩ => h _ _ rfl
 
-theorem irreducible_or_factor {α} [Monoidₓ α] (x : α) (h : ¬IsUnit x) :
-  Irreducible x ∨ ∃ a b, ¬IsUnit a ∧ ¬IsUnit b ∧ (a*b) = x :=
-  by 
-    haveI  := Classical.dec 
-    refine' or_iff_not_imp_right.2 fun H => _ 
-    simp [h, irreducible_iff] at H⊢
-    refine' fun a b h => Classical.by_contradiction$ fun o => _ 
-    simp [not_or_distrib] at o 
-    exact H _ o.1 _ o.2 h.symm
+-- error in Algebra.Associated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem irreducible_or_factor
+{α}
+[monoid α]
+(x : α)
+(h : «expr¬ »(is_unit x)) : «expr ∨ »(irreducible x, «expr∃ , »((a
+   b), «expr ∧ »(«expr¬ »(is_unit a), «expr ∧ »(«expr¬ »(is_unit b), «expr = »(«expr * »(a, b), x))))) :=
+begin
+  haveI [] [] [":=", expr classical.dec],
+  refine [expr or_iff_not_imp_right.2 (λ H, _)],
+  simp [] [] [] ["[", expr h, ",", expr irreducible_iff, "]"] [] ["at", ident H, "⊢"],
+  refine [expr λ a b h, «expr $ »(classical.by_contradiction, λ o, _)],
+  simp [] [] [] ["[", expr not_or_distrib, "]"] [] ["at", ident o],
+  exact [expr H _ o.1 _ o.2 h.symm]
+end
 
 protected theorem Prime.irreducible [CommCancelMonoidWithZero α] {p : α} (hp : Prime p) : Irreducible p :=
   ⟨hp.not_unit,
@@ -372,29 +381,29 @@ protected theorem Associated.dvd [Monoidₓ α] {a b : α} : a ~ᵤ b → a ∣ 
 protected theorem Associated.dvd_dvd [Monoidₓ α] {a b : α} (h : a ~ᵤ b) : a ∣ b ∧ b ∣ a :=
   ⟨h.dvd, h.symm.dvd⟩
 
-theorem associated_of_dvd_dvd [CancelMonoidWithZero α] {a b : α} (hab : a ∣ b) (hba : b ∣ a) : a ~ᵤ b :=
-  by 
-    rcases hab with ⟨c, rfl⟩
-    rcases hba with ⟨d, a_eq⟩
-    byCases' ha0 : a = 0
-    ·
-      simp_all 
-    have hac0 : (a*c) ≠ 0
-    ·
-      intro con 
-      rw [con, zero_mul] at a_eq 
-      apply ha0 a_eq 
-    have  : (a*c*d) = a*1 :=
-      by 
-        rw [←mul_assocₓ, ←a_eq, mul_oneₓ]
-    have hcd : (c*d) = 1 
-    exact mul_left_cancel₀ ha0 this 
-    have  : ((a*c)*d*c) = (a*c)*1 :=
-      by 
-        rw [←mul_assocₓ, ←a_eq, mul_oneₓ]
-    have hdc : (d*c) = 1 
-    exact mul_left_cancel₀ hac0 this 
-    exact ⟨⟨c, d, hcd, hdc⟩, rfl⟩
+-- error in Algebra.Associated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem associated_of_dvd_dvd
+[cancel_monoid_with_zero α]
+{a b : α}
+(hab : «expr ∣ »(a, b))
+(hba : «expr ∣ »(b, a)) : «expr ~ᵤ »(a, b) :=
+begin
+  rcases [expr hab, "with", "⟨", ident c, ",", ident rfl, "⟩"],
+  rcases [expr hba, "with", "⟨", ident d, ",", ident a_eq, "⟩"],
+  by_cases [expr ha0, ":", expr «expr = »(a, 0)],
+  { simp [] [] [] ["[", "*", "]"] [] ["at", "*"] },
+  have [ident hac0] [":", expr «expr ≠ »(«expr * »(a, c), 0)] [],
+  { intro [ident con],
+    rw ["[", expr con, ",", expr zero_mul, "]"] ["at", ident a_eq],
+    apply [expr ha0 a_eq] },
+  have [] [":", expr «expr = »(«expr * »(a, «expr * »(c, d)), «expr * »(a, 1))] [":=", expr by rw ["[", "<-", expr mul_assoc, ",", "<-", expr a_eq, ",", expr mul_one, "]"] []],
+  have [ident hcd] [":", expr «expr = »(«expr * »(c, d), 1)] [],
+  from [expr mul_left_cancel₀ ha0 this],
+  have [] [":", expr «expr = »(«expr * »(«expr * »(a, c), «expr * »(d, c)), «expr * »(«expr * »(a, c), 1))] [":=", expr by rw ["[", "<-", expr mul_assoc, ",", "<-", expr a_eq, ",", expr mul_one, "]"] []],
+  have [ident hdc] [":", expr «expr = »(«expr * »(d, c), 1)] [],
+  from [expr mul_left_cancel₀ hac0 this],
+  exact [expr ⟨⟨c, d, hcd, hdc⟩, rfl⟩]
+end
 
 theorem dvd_dvd_iff_associated [CancelMonoidWithZero α] {a b : α} : a ∣ b ∧ b ∣ a ↔ a ~ᵤ b :=
   ⟨fun ⟨h1, h2⟩ => associated_of_dvd_dvd h1 h2, Associated.dvd_dvd⟩
@@ -675,14 +684,14 @@ theorem rel_associated_iff_map_eq_map {p q : Multiset α} :
     rw [←Multiset.rel_eq, Multiset.rel_map]
     simp only [mk_eq_mk_iff_associated]
 
--- error in Algebra.Associated: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.Associated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mul_eq_one_iff
 {x y : associates α} : «expr ↔ »(«expr = »(«expr * »(x, y), 1), «expr ∧ »(«expr = »(x, 1), «expr = »(y, 1))) :=
 iff.intro «expr $ »(quotient.induction_on₂ x y, assume
  a b h, have «expr ~ᵤ »(«expr * »(a, b), 1), from quotient.exact h,
  ⟨«expr $ »(quotient.sound, associated_one_of_associated_mul_one this), «expr $ »(quotient.sound, «expr $ »(associated_one_of_associated_mul_one, by rwa ["[", expr mul_comm, "]"] ["at", ident this]))⟩) (by simp [] [] [] [] [] [] { contextual := tt })
 
--- error in Algebra.Associated: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.Associated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem prod_eq_one_iff
 {p : multiset (associates α)} : «expr ↔ »(«expr = »(p.prod, 1), ∀ a «expr ∈ » p, «expr = »((a : associates α), 1)) :=
 multiset.induction_on p (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr mul_eq_one_iff, ",", expr or_imp_distrib, ",", expr forall_and_distrib, "]"] [] [] { contextual := tt })
@@ -719,17 +728,17 @@ theorem mul_mono {a b c d : Associates α} (h₁ : a ≤ b) (h₂ : c ≤ d) : (
 theorem one_le {a : Associates α} : 1 ≤ a :=
   Dvd.intro _ (one_mulₓ a)
 
-theorem prod_le_prod {p q : Multiset (Associates α)} (h : p ≤ q) : p.prod ≤ q.prod :=
-  by 
-    haveI  := Classical.decEq (Associates α)
-    haveI  := Classical.decEq α 
-    suffices  : p.prod ≤ (p+q - p).Prod
-    ·
-      rwa [add_tsub_cancel_of_le h] at this 
-    suffices  : (p.prod*1) ≤ p.prod*(q - p).Prod
-    ·
-      simpa 
-    exact mul_mono (le_reflₓ p.prod) one_le
+-- error in Algebra.Associated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem prod_le_prod {p q : multiset (associates α)} (h : «expr ≤ »(p, q)) : «expr ≤ »(p.prod, q.prod) :=
+begin
+  haveI [] [] [":=", expr classical.dec_eq (associates α)],
+  haveI [] [] [":=", expr classical.dec_eq α],
+  suffices [] [":", expr «expr ≤ »(p.prod, «expr + »(p, «expr - »(q, p)).prod)],
+  { rwa ["[", expr add_tsub_cancel_of_le h, "]"] ["at", ident this] },
+  suffices [] [":", expr «expr ≤ »(«expr * »(p.prod, 1), «expr * »(p.prod, «expr - »(q, p).prod))],
+  { simpa [] [] [] [] [] [] },
+  exact [expr mul_mono (le_refl p.prod) one_le]
+end
 
 theorem le_mul_right {a b : Associates α} : a ≤ a*b :=
   ⟨b, rfl⟩
@@ -926,19 +935,24 @@ instance  : NoZeroDivisors (Associates α) :=
           have  : a = 0 ∨ b = 0 := mul_eq_zero.1 this 
           this.imp (fun h => h.symm ▸ rfl) fun h => h.symm ▸ rfl⟩
 
-theorem irreducible_iff_prime_iff : (∀ a : α, Irreducible a ↔ Prime a) ↔ ∀ a : Associates α, Irreducible a ↔ Prime a :=
-  by 
-    rw [forall_associated]
-    split  <;> intro h a <;> have ha := h a <;> rw [irreducible_mk] at * <;> rw [prime_mk] at * <;> exact ha
+-- error in Algebra.Associated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem irreducible_iff_prime_iff : «expr ↔ »(∀
+ a : α, «expr ↔ »(irreducible a, prime a), ∀ a : associates α, «expr ↔ »(irreducible a, prime a)) :=
+begin
+  rw [expr forall_associated] [],
+  split; intros [ident h, ident a]; have [ident ha] [] [":=", expr h a]; rw [expr irreducible_mk] ["at", "*"]; rw [expr prime_mk] ["at", "*"]; exact [expr ha]
+end
 
-theorem eq_of_mul_eq_mul_left : ∀ a b c : Associates α, a ≠ 0 → ((a*b) = a*c) → b = c :=
-  by 
-    rintro ⟨a⟩ ⟨b⟩ ⟨c⟩ ha h 
-    rcases Quotientₓ.exact' h with ⟨u, hu⟩
-    have hu : (a*b*«expr↑ » u) = a*c
-    ·
-      rwa [←mul_assocₓ]
-    exact Quotientₓ.sound' ⟨u, mul_left_cancel₀ (mk_ne_zero.1 ha) hu⟩
+-- error in Algebra.Associated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_of_mul_eq_mul_left : ∀
+a b c : associates α, «expr ≠ »(a, 0) → «expr = »(«expr * »(a, b), «expr * »(a, c)) → «expr = »(b, c) :=
+begin
+  rintros ["⟨", ident a, "⟩", "⟨", ident b, "⟩", "⟨", ident c, "⟩", ident ha, ident h],
+  rcases [expr quotient.exact' h, "with", "⟨", ident u, ",", ident hu, "⟩"],
+  have [ident hu] [":", expr «expr = »(«expr * »(a, «expr * »(b, «expr↑ »(u))), «expr * »(a, c))] [],
+  { rwa ["[", "<-", expr mul_assoc, "]"] [] },
+  exact [expr quotient.sound' ⟨u, mul_left_cancel₀ (mk_ne_zero.1 ha) hu⟩]
+end
 
 theorem eq_of_mul_eq_mul_right : ∀ a b c : Associates α, b ≠ 0 → ((a*b) = c*b) → a = c :=
   fun a b c bne0 => mul_commₓ b a ▸ mul_commₓ b c ▸ eq_of_mul_eq_mul_left b a c bne0

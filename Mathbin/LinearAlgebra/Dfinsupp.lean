@@ -336,16 +336,19 @@ theorem independent_iff_forall_dfinsupp (p : ι → Submodule R N) :
     simpRw [Submodule.coe_eq_zero]
     rfl
 
-theorem independent_of_dfinsupp_lsum_injective (p : ι → Submodule R N)
-  (h : Function.Injective (lsum ℕ fun i => (p i).Subtype)) : independent p :=
-  by 
-    rw [independent_iff_forall_dfinsupp]
-    intro i x v hv 
-    replace hv : lsum ℕ (fun i => (p i).Subtype) (erase i v) = lsum ℕ (fun i => (p i).Subtype) (single i x)
-    ·
-      simpa only [lsum_single] using hv 
-    have  := dfinsupp.ext_iff.mp (h hv) i 
-    simpa [eq_comm] using this
+-- error in LinearAlgebra.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem independent_of_dfinsupp_lsum_injective
+(p : ι → submodule R N)
+(h : function.injective (lsum exprℕ() (λ i, (p i).subtype))) : independent p :=
+begin
+  rw [expr independent_iff_forall_dfinsupp] [],
+  intros [ident i, ident x, ident v, ident hv],
+  replace [ident hv] [":", expr «expr = »(lsum exprℕ() (λ
+     i, (p i).subtype) (erase i v), lsum exprℕ() (λ i, (p i).subtype) (single i x))] [],
+  { simpa [] [] ["only"] ["[", expr lsum_single, "]"] [] ["using", expr hv] },
+  have [] [] [":=", expr dfinsupp.ext_iff.mp (h hv) i],
+  simpa [] [] [] ["[", expr eq_comm, "]"] [] ["using", expr this]
+end
 
 theorem independent_of_dfinsupp_sum_add_hom_injective (p : ι → AddSubmonoid N)
   (h : Function.Injective (sum_add_hom fun i => (p i).Subtype)) : independent p :=
@@ -376,6 +379,7 @@ theorem independent_of_dfinsupp_sum_add_hom_injective' (p : ι → AddSubgroup N
     rw [←independent_map_order_iso_iff (AddSubgroup.toIntSubmodule : AddSubgroup N ≃o _)]
     exact independent_of_dfinsupp_lsum_injective _ h
 
+-- error in LinearAlgebra.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The canonical map out of a direct sum of a family of submodules is injective when the submodules
 are `complete_lattice.independent`.
 
@@ -383,22 +387,22 @@ Note that this is not generally true for `[semiring R]`, for instance when `A` i
 `ℕ`-submodules of the positive and negative integers.
 
 See `counterexamples/direct_sum_is_internal.lean` for a proof of this fact. -/
-theorem independent.dfinsupp_lsum_injective {p : ι → Submodule R N} (h : independent p) :
-  Function.Injective (lsum ℕ fun i => (p i).Subtype) :=
-  by 
-    rw [independent_iff_forall_dfinsupp] at h 
-    suffices  : (lsum ℕ fun i => (p i).Subtype).ker = ⊥
-    ·
-      letI this : AddCommGroupₓ (Π₀i, p i) := @Dfinsupp.addCommGroup _ (fun i => p i) _ 
-      rw [LinearMap.ker_eq_bot] at this 
-      exact this 
-    rw [LinearMap.ker_eq_bot']
-    intro m hm 
-    ext i : 1
-    rw [Dfinsupp.zero_apply, ←neg_eq_zero]
-    refine' h i (-m i) m _ 
-    rwa [←erase_add_single i m, LinearMap.map_add, lsum_single, Submodule.subtype_apply, add_eq_zero_iff_eq_neg,
-      ←Submodule.coe_neg] at hm
+theorem independent.dfinsupp_lsum_injective
+{p : ι → submodule R N}
+(h : independent p) : function.injective (lsum exprℕ() (λ i, (p i).subtype)) :=
+begin
+  rw [expr independent_iff_forall_dfinsupp] ["at", ident h],
+  suffices [] [":", expr «expr = »((lsum exprℕ() (λ i, (p i).subtype)).ker, «expr⊥»())],
+  { letI [] [":", expr add_comm_group «exprΠ₀ , »((i), p i)] [":=", expr @dfinsupp.add_comm_group _ (λ i, p i) _],
+    rw [expr linear_map.ker_eq_bot] ["at", ident this],
+    exact [expr this] },
+  rw [expr linear_map.ker_eq_bot'] [],
+  intros [ident m, ident hm],
+  ext [] [ident i] [":", 1],
+  rw ["[", expr dfinsupp.zero_apply, ",", "<-", expr neg_eq_zero, "]"] [],
+  refine [expr h i «expr- »(m i) m _],
+  rwa ["[", "<-", expr erase_add_single i m, ",", expr linear_map.map_add, ",", expr lsum_single, ",", expr submodule.subtype_apply, ",", expr add_eq_zero_iff_eq_neg, ",", "<-", expr submodule.coe_neg, "]"] ["at", ident hm]
+end
 
 /-- The canonical map out of a direct sum of a family of additive subgroups is injective when the
 additive subgroups are `complete_lattice.independent`. -/
@@ -425,23 +429,30 @@ theorem independent_iff_dfinsupp_sum_add_hom_injective (p : ι → AddSubgroup N
 
 omit dec_ι
 
+-- error in LinearAlgebra.Dfinsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a family of submodules is `independent`, then a choice of nonzero vector from each submodule
 forms a linearly independent family. -/
-theorem independent.linear_independent [NoZeroSmulDivisors R N] (p : ι → Submodule R N)
-  (hp : CompleteLattice.Independent p) {v : ι → N} (hv : ∀ i, v i ∈ p i) (hv' : ∀ i, v i ≠ 0) : LinearIndependent R v :=
-  by 
-    classical 
-    rw [linear_independent_iff]
-    intro l hl 
-    let a := Dfinsupp.mapRange.linearMap (fun i => LinearMap.toSpanSingleton R (p i) ⟨v i, hv i⟩) l.to_dfinsupp 
-    have ha : a = 0
-    ·
-      apply hp.dfinsupp_lsum_injective 
-      rwa [←lsum_comp_map_range_to_span_singleton _ hv] at hl 
-    ext i 
-    apply smul_left_injective R (hv' i)
-    have  : l i • v i = a i := rfl 
-    simp [this, ha]
+theorem independent.linear_independent
+[no_zero_smul_divisors R N]
+(p : ι → submodule R N)
+(hp : complete_lattice.independent p)
+{v : ι → N}
+(hv : ∀ i, «expr ∈ »(v i, p i))
+(hv' : ∀ i, «expr ≠ »(v i, 0)) : linear_independent R v :=
+begin
+  classical,
+  rw [expr linear_independent_iff] [],
+  intros [ident l, ident hl],
+  let [ident a] [] [":=", expr dfinsupp.map_range.linear_map (λ
+    i, linear_map.to_span_singleton R (p i) ⟨v i, hv i⟩) l.to_dfinsupp],
+  have [ident ha] [":", expr «expr = »(a, 0)] [],
+  { apply [expr hp.dfinsupp_lsum_injective],
+    rwa ["<-", expr lsum_comp_map_range_to_span_singleton _ hv] ["at", ident hl] },
+  ext [] [ident i] [],
+  apply [expr smul_left_injective R (hv' i)],
+  have [] [":", expr «expr = »(«expr • »(l i, v i), a i)] [":=", expr rfl],
+  simp [] [] [] ["[", expr this, ",", expr ha, "]"] [] []
+end
 
 end Ringₓ
 

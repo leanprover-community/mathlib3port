@@ -1,5 +1,5 @@
-import Mathbin.RingTheory.Polynomial.Basic 
-import Mathbin.RingTheory.NonZeroDivisors
+import Mathbin.RingTheory.NonZeroDivisors 
+import Mathbin.Data.Polynomial.AlgebraMap
 
 /-!
 # Scaling the roots of a polynomial
@@ -21,9 +21,9 @@ open_locale BigOperators
 
 /-- `scale_roots p s` is a polynomial with root `r * s` for each root `r` of `p`. -/
 noncomputable def scaleRoots (p : Polynomial R) (s : R) : Polynomial R :=
-  ∑i in p.support, monomial i (p.coeff i*s^p.nat_degree - i)
+  ∑i in p.support, monomial i (p.coeff i*s ^ (p.nat_degree - i))
 
--- error in RingTheory.Polynomial.ScaleRoots: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.Polynomial.ScaleRoots: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
 theorem coeff_scale_roots
 (p : polynomial R)
@@ -42,43 +42,47 @@ theorem zero_scale_roots (s : R) : scaleRoots 0 s = 0 :=
     ext 
     simp 
 
-theorem scale_roots_ne_zero {p : Polynomial R} (hp : p ≠ 0) (s : R) : scaleRoots p s ≠ 0 :=
-  by 
-    intro h 
-    have  : p.coeff p.nat_degree ≠ 0 := mt leading_coeff_eq_zero.mp hp 
-    have  : (scaleRoots p s).coeff p.nat_degree = 0 :=
-      congr_funₓ (congr_argₓ (coeff : Polynomial R → ℕ → R) h) p.nat_degree 
-    rw [coeff_scale_roots_nat_degree] at this 
-    contradiction
+-- error in RingTheory.Polynomial.ScaleRoots: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem scale_roots_ne_zero {p : polynomial R} (hp : «expr ≠ »(p, 0)) (s : R) : «expr ≠ »(scale_roots p s, 0) :=
+begin
+  intro [ident h],
+  have [] [":", expr «expr ≠ »(p.coeff p.nat_degree, 0)] [":=", expr mt leading_coeff_eq_zero.mp hp],
+  have [] [":", expr «expr = »((scale_roots p s).coeff p.nat_degree, 0)] [":=", expr congr_fun (congr_arg (coeff : polynomial R → exprℕ() → R) h) p.nat_degree],
+  rw ["[", expr coeff_scale_roots_nat_degree, "]"] ["at", ident this],
+  contradiction
+end
 
-theorem support_scale_roots_le (p : Polynomial R) (s : R) : (scaleRoots p s).Support ≤ p.support :=
+theorem support_scale_roots_le (p : Polynomial R) (s : R) : (scaleRoots p s).support ≤ p.support :=
   by 
     intro 
     simpa using left_ne_zero_of_mul
 
-theorem support_scale_roots_eq (p : Polynomial R) {s : R} (hs : s ∈ nonZeroDivisors R) :
-  (scaleRoots p s).Support = p.support :=
-  le_antisymmₓ (support_scale_roots_le p s)
-    (by 
-      intro i 
-      simp only [coeff_scale_roots, Polynomial.mem_support_iff]
-      intro p_ne_zero ps_zero 
-      have  := ((nonZeroDivisors R).pow_mem hs (p.nat_degree - i)) _ ps_zero 
-      contradiction)
+-- error in RingTheory.Polynomial.ScaleRoots: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem support_scale_roots_eq
+(p : polynomial R)
+{s : R}
+(hs : «expr ∈ »(s, non_zero_divisors R)) : «expr = »((scale_roots p s).support, p.support) :=
+le_antisymm (support_scale_roots_le p s) (begin
+   intro [ident i],
+   simp [] [] ["only"] ["[", expr coeff_scale_roots, ",", expr polynomial.mem_support_iff, "]"] [] [],
+   intros [ident p_ne_zero, ident ps_zero],
+   have [] [] [":=", expr (non_zero_divisors R).pow_mem hs «expr - »(p.nat_degree, i) _ ps_zero],
+   contradiction
+ end)
 
-@[simp]
-theorem degree_scale_roots (p : Polynomial R) {s : R} : degree (scaleRoots p s) = degree p :=
-  by 
-    haveI  := Classical.propDecidable 
-    byCases' hp : p = 0
-    ·
-      rw [hp, zero_scale_roots]
-    have  := scale_roots_ne_zero hp s 
-    refine' le_antisymmₓ (Finset.sup_mono (support_scale_roots_le p s)) (degree_le_degree _)
-    rw [coeff_scale_roots_nat_degree]
-    intro h 
-    have  := leading_coeff_eq_zero.mp h 
-    contradiction
+-- error in RingTheory.Polynomial.ScaleRoots: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem degree_scale_roots (p : polynomial R) {s : R} : «expr = »(degree (scale_roots p s), degree p) :=
+begin
+  haveI [] [] [":=", expr classical.prop_decidable],
+  by_cases [expr hp, ":", expr «expr = »(p, 0)],
+  { rw ["[", expr hp, ",", expr zero_scale_roots, "]"] [] },
+  have [] [] [":=", expr scale_roots_ne_zero hp s],
+  refine [expr le_antisymm (finset.sup_mono (support_scale_roots_le p s)) (degree_le_degree _)],
+  rw [expr coeff_scale_roots_nat_degree] [],
+  intro [ident h],
+  have [] [] [":=", expr leading_coeff_eq_zero.mp h],
+  contradiction
+end
 
 @[simp]
 theorem nat_degree_scale_roots (p : Polynomial R) (s : R) : nat_degree (scaleRoots p s) = nat_degree p :=
@@ -93,30 +97,30 @@ theorem scale_roots_eval₂_eq_zero {p : Polynomial S} (f : S →+* R) {r : R} {
   eval₂ f (f s*r) (scaleRoots p s) = 0 :=
   calc
     eval₂ f (f s*r) (scaleRoots p s) =
-      (scaleRoots p s).Support.Sum fun i => f (coeff p i*s^p.nat_degree - i)*(f s*r)^i :=
+      (scaleRoots p s).support.Sum fun i => f (coeff p i*s ^ (p.nat_degree - i))*(f s*r) ^ i :=
     by 
       simp [eval₂_eq_sum, sum_def]
-    _ = p.support.sum fun i => f (coeff p i*s^p.nat_degree - i)*(f s*r)^i :=
+    _ = p.support.sum fun i => f (coeff p i*s ^ (p.nat_degree - i))*(f s*r) ^ i :=
     Finset.sum_subset (support_scale_roots_le p s)
       fun i hi hi' =>
-        let this : (coeff p i*s^p.nat_degree - i) = 0 :=
+        let this : (coeff p i*s ^ (p.nat_degree - i)) = 0 :=
           by 
             simpa using hi' 
         by 
           simp [this]
-    _ = p.support.sum fun i : ℕ => (f (p.coeff i)*f s^(p.nat_degree - i)+i)*r^i :=
+    _ = p.support.sum fun i : ℕ => (f (p.coeff i)*f s ^ (p.nat_degree - i)+i)*r ^ i :=
     Finset.sum_congr rfl
       fun i hi =>
         by 
           simpRw [f.map_mul, f.map_pow, pow_addₓ, mul_powₓ, mul_assocₓ]
-    _ = p.support.sum fun i : ℕ => (f s^p.nat_degree)*f (p.coeff i)*r^i :=
+    _ = p.support.sum fun i : ℕ => (f s ^ p.nat_degree)*f (p.coeff i)*r ^ i :=
     Finset.sum_congr rfl
       fun i hi =>
         by 
           rw [mul_assocₓ, mul_left_commₓ, tsub_add_cancel_of_le]
           exact le_nat_degree_of_ne_zero (polynomial.mem_support_iff.mp hi)
-    _ = (f s^p.nat_degree)*p.support.sum fun i : ℕ => f (p.coeff i)*r^i := Finset.mul_sum.symm 
-    _ = (f s^p.nat_degree)*eval₂ f r p :=
+    _ = (f s ^ p.nat_degree)*p.support.sum fun i : ℕ => f (p.coeff i)*r ^ i := Finset.mul_sum.symm 
+    _ = (f s ^ p.nat_degree)*eval₂ f r p :=
     by 
       simp [eval₂_eq_sum, sum_def]
     _ = 0 :=

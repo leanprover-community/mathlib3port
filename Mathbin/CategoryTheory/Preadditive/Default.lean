@@ -192,7 +192,7 @@ theorem mono_of_cancel_zero {Q R : C} (f : Q ⟶ R) (h : ∀ {P : C} g : P ⟶ Q
 theorem mono_iff_cancel_zero {Q R : C} (f : Q ⟶ R) : mono f ↔ ∀ P : C g : P ⟶ Q, g ≫ f = 0 → g = 0 :=
   ⟨fun m P g =>
       by 
-        exactI zero_of_comp_mono _,
+        exact zero_of_comp_mono _,
     mono_of_cancel_zero f⟩
 
 theorem mono_of_kernel_zero {X Y : C} {f : X ⟶ Y} [has_limit (parallel_pair f 0)] (w : kernel.ι f = 0) : mono f :=
@@ -207,7 +207,7 @@ theorem epi_of_cancel_zero {P Q : C} (f : P ⟶ Q) (h : ∀ {R : C} g : Q ⟶ R,
 theorem epi_iff_cancel_zero {P Q : C} (f : P ⟶ Q) : epi f ↔ ∀ R : C g : Q ⟶ R, f ≫ g = 0 → g = 0 :=
   ⟨fun e R g =>
       by 
-        exactI zero_of_epi_comp _,
+        exact zero_of_epi_comp _,
     epi_of_cancel_zero f⟩
 
 theorem epi_of_cokernel_zero {X Y : C} {f : X ⟶ Y} [has_colimit (parallel_pair f 0)] (w : cokernel.π f = 0) : epi f :=

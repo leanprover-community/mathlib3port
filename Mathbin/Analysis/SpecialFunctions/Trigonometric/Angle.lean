@@ -101,49 +101,46 @@ theorem cos_eq_iff_eq_or_eq_neg {θ ψ : ℝ} : cos θ = cos ψ ↔ (θ : angle)
       rw [←sub_eq_zero, cos_sub_cos, ←sub_neg_eq_add, H, mul_assocₓ 2 π k, mul_div_cancel_left _ (@two_ne_zero ℝ _ _),
         mul_commₓ π _, sin_int_mul_pi, mul_zero, zero_mul]
 
-theorem sin_eq_iff_eq_or_add_eq_pi {θ ψ : ℝ} : sin θ = sin ψ ↔ (θ : angle) = ψ ∨ ((θ : angle)+ψ) = π :=
-  by 
-    split 
-    ·
-      intro Hsin 
-      rw [←cos_pi_div_two_sub, ←cos_pi_div_two_sub] at Hsin 
-      cases' cos_eq_iff_eq_or_eq_neg.mp Hsin with h h
-      ·
-        left 
-        rw [coe_sub, coe_sub] at h 
-        exact sub_right_inj.1 h 
-      right 
-      rw [coe_sub, coe_sub, eq_neg_iff_add_eq_zero, add_sub, sub_add_eq_add_sub, ←coe_add, add_halves, sub_sub,
-        sub_eq_zero] at h 
-      exact h.symm
-    ·
-      rw [angle_eq_iff_two_pi_dvd_sub, ←eq_sub_iff_add_eq, ←coe_sub, angle_eq_iff_two_pi_dvd_sub]
-      rintro (⟨k, H⟩ | ⟨k, H⟩)
-      rw [←sub_eq_zero, sin_sub_sin, H, mul_assocₓ 2 π k, mul_div_cancel_left _ (@two_ne_zero ℝ _ _), mul_commₓ π _,
-        sin_int_mul_pi, mul_zero, zero_mul]
-      have H' : (θ+ψ) = ((2*k)*π)+π :=
-        by 
-          rwa [←sub_add, sub_add_eq_add_sub, sub_eq_iff_eq_add, mul_assocₓ, mul_commₓ π _, ←mul_assocₓ] at H 
-      rw [←sub_eq_zero, sin_sub_sin, H', add_div, mul_assocₓ 2 _ π, mul_div_cancel_left _ (@two_ne_zero ℝ _ _),
-        cos_add_pi_div_two, sin_int_mul_pi, neg_zero, mul_zero]
+-- error in Analysis.SpecialFunctions.Trigonometric.Angle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sin_eq_iff_eq_or_add_eq_pi
+{θ
+ ψ : exprℝ()} : «expr ↔ »(«expr = »(sin θ, sin ψ), «expr ∨ »(«expr = »((θ : angle), ψ), «expr = »(«expr + »((θ : angle), ψ), exprπ()))) :=
+begin
+  split,
+  { intro [ident Hsin],
+    rw ["[", "<-", expr cos_pi_div_two_sub, ",", "<-", expr cos_pi_div_two_sub, "]"] ["at", ident Hsin],
+    cases [expr cos_eq_iff_eq_or_eq_neg.mp Hsin] ["with", ident h, ident h],
+    { left,
+      rw ["[", expr coe_sub, ",", expr coe_sub, "]"] ["at", ident h],
+      exact [expr sub_right_inj.1 h] },
+    right,
+    rw ["[", expr coe_sub, ",", expr coe_sub, ",", expr eq_neg_iff_add_eq_zero, ",", expr add_sub, ",", expr sub_add_eq_add_sub, ",", "<-", expr coe_add, ",", expr add_halves, ",", expr sub_sub, ",", expr sub_eq_zero, "]"] ["at", ident h],
+    exact [expr h.symm] },
+  { rw ["[", expr angle_eq_iff_two_pi_dvd_sub, ",", "<-", expr eq_sub_iff_add_eq, ",", "<-", expr coe_sub, ",", expr angle_eq_iff_two_pi_dvd_sub, "]"] [],
+    rintro ["(", "⟨", ident k, ",", ident H, "⟩", "|", "⟨", ident k, ",", ident H, "⟩", ")"],
+    rw ["[", "<-", expr sub_eq_zero, ",", expr sin_sub_sin, ",", expr H, ",", expr mul_assoc 2 exprπ() k, ",", expr mul_div_cancel_left _ (@two_ne_zero exprℝ() _ _), ",", expr mul_comm exprπ() _, ",", expr sin_int_mul_pi, ",", expr mul_zero, ",", expr zero_mul, "]"] [],
+    have [ident H'] [":", expr «expr = »(«expr + »(θ, ψ), «expr + »(«expr * »(«expr * »(2, k), exprπ()), exprπ()))] [":=", expr by rwa ["[", "<-", expr sub_add, ",", expr sub_add_eq_add_sub, ",", expr sub_eq_iff_eq_add, ",", expr mul_assoc, ",", expr mul_comm exprπ() _, ",", "<-", expr mul_assoc, "]"] ["at", ident H]],
+    rw ["[", "<-", expr sub_eq_zero, ",", expr sin_sub_sin, ",", expr H', ",", expr add_div, ",", expr mul_assoc 2 _ exprπ(), ",", expr mul_div_cancel_left _ (@two_ne_zero exprℝ() _ _), ",", expr cos_add_pi_div_two, ",", expr sin_int_mul_pi, ",", expr neg_zero, ",", expr mul_zero, "]"] [] }
+end
 
-theorem cos_sin_inj {θ ψ : ℝ} (Hcos : cos θ = cos ψ) (Hsin : sin θ = sin ψ) : (θ : angle) = ψ :=
-  by 
-    cases' cos_eq_iff_eq_or_eq_neg.mp Hcos with hc hc
-    ·
-      exact hc 
-    cases' sin_eq_iff_eq_or_add_eq_pi.mp Hsin with hs hs
-    ·
-      exact hs 
-    rw [eq_neg_iff_add_eq_zero, hs] at hc 
-    cases' Quotientₓ.exact' hc with n hn 
-    change n • _ = _ at hn 
-    rw [←neg_one_mul, add_zeroₓ, ←sub_eq_zero, zsmul_eq_mul, ←mul_assocₓ, ←sub_mul, mul_eq_zero,
-      eq_false_intro (ne_of_gtₓ pi_pos), or_falseₓ, sub_neg_eq_add, ←Int.cast_zero, ←Int.cast_one, ←Int.cast_bit0,
-      ←Int.cast_mul, ←Int.cast_add, Int.cast_inj] at hn 
-    have  : ((n*2)+1) % (2 : ℤ) = 0 % (2 : ℤ) := congr_argₓ (· % (2 : ℤ)) hn 
-    rw [add_commₓ, Int.add_mul_mod_self] at this 
-    exact absurd this one_ne_zero
+-- error in Analysis.SpecialFunctions.Trigonometric.Angle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cos_sin_inj
+{θ ψ : exprℝ()}
+(Hcos : «expr = »(cos θ, cos ψ))
+(Hsin : «expr = »(sin θ, sin ψ)) : «expr = »((θ : angle), ψ) :=
+begin
+  cases [expr cos_eq_iff_eq_or_eq_neg.mp Hcos] ["with", ident hc, ident hc],
+  { exact [expr hc] },
+  cases [expr sin_eq_iff_eq_or_add_eq_pi.mp Hsin] ["with", ident hs, ident hs],
+  { exact [expr hs] },
+  rw ["[", expr eq_neg_iff_add_eq_zero, ",", expr hs, "]"] ["at", ident hc],
+  cases [expr quotient.exact' hc] ["with", ident n, ident hn],
+  change [expr «expr = »(«expr • »(n, _), _)] [] ["at", ident hn],
+  rw ["[", "<-", expr neg_one_mul, ",", expr add_zero, ",", "<-", expr sub_eq_zero, ",", expr zsmul_eq_mul, ",", "<-", expr mul_assoc, ",", "<-", expr sub_mul, ",", expr mul_eq_zero, ",", expr eq_false_intro (ne_of_gt pi_pos), ",", expr or_false, ",", expr sub_neg_eq_add, ",", "<-", expr int.cast_zero, ",", "<-", expr int.cast_one, ",", "<-", expr int.cast_bit0, ",", "<-", expr int.cast_mul, ",", "<-", expr int.cast_add, ",", expr int.cast_inj, "]"] ["at", ident hn],
+  have [] [":", expr «expr = »(«expr % »(«expr + »(«expr * »(n, 2), 1), (2 : exprℤ())), «expr % »(0, (2 : exprℤ())))] [":=", expr congr_arg ((«expr % » (2 : exprℤ()))) hn],
+  rw ["[", expr add_comm, ",", expr int.add_mul_mod_self, "]"] ["at", ident this],
+  exact [expr absurd this one_ne_zero]
+end
 
 end Angle
 

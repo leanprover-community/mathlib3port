@@ -242,7 +242,7 @@ theorem HasSum.add (hf : HasSum f a) (hg : HasSum g b) : HasSum (fun b => f b+g 
 theorem Summable.add (hf : Summable f) (hg : Summable g) : Summable fun b => f b+g b :=
   (hf.has_sum.add hg.has_sum).Summable
 
--- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem has_sum_sum
 {f : γ → β → α}
 {a : γ → α}
@@ -278,14 +278,18 @@ theorem HasSum.compl_add {s : Set β} (ha : HasSum (f ∘ coeₓ : «expr ᶜ» 
   HasSum f (a+b) :=
   ha.add_is_compl is_compl_compl.symm hb
 
-theorem HasSum.even_add_odd {f : ℕ → α} (he : HasSum (fun k => f (2*k)) a) (ho : HasSum (fun k => f ((2*k)+1)) b) :
-  HasSum f (a+b) :=
-  by 
-    have  := mul_right_injective₀ (@two_ne_zero ℕ _ _)
-    replace he := this.has_sum_range_iff.2 he 
-    replace ho := ((add_left_injective 1).comp this).has_sum_range_iff.2 ho 
-    refine' he.add_is_compl _ ho 
-    simpa [· ∘ ·] using Nat.is_compl_even_odd
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_sum.even_add_odd
+{f : exprℕ() → α}
+(he : has_sum (λ k, f «expr * »(2, k)) a)
+(ho : has_sum (λ k, f «expr + »(«expr * »(2, k), 1)) b) : has_sum f «expr + »(a, b) :=
+begin
+  have [] [] [":=", expr mul_right_injective₀ (@two_ne_zero exprℕ() _ _)],
+  replace [ident he] [] [":=", expr this.has_sum_range_iff.2 he],
+  replace [ident ho] [] [":=", expr ((add_left_injective 1).comp this).has_sum_range_iff.2 ho],
+  refine [expr he.add_is_compl _ ho],
+  simpa [] [] [] ["[", expr («expr ∘ »), "]"] [] ["using", expr nat.is_compl_even_odd]
+end
 
 theorem Summable.compl_add {s : Set β} (hs : Summable (f ∘ coeₓ : «expr ᶜ» s → α)) (hsc : Summable (f ∘ coeₓ : s → α)) :
   Summable f :=
@@ -295,23 +299,33 @@ theorem Summable.even_add_odd {f : ℕ → α} (he : Summable fun k => f (2*k)) 
   Summable f :=
   (he.has_sum.even_add_odd ho.has_sum).Summable
 
-theorem HasSum.sigma [RegularSpace α] {γ : β → Type _} {f : (Σb : β, γ b) → α} {g : β → α} {a : α} (ha : HasSum f a)
-  (hf : ∀ b, HasSum (fun c => f ⟨b, c⟩) (g b)) : HasSum g a :=
-  by 
-    refine' (at_top_basis.tendsto_iff (closed_nhds_basis a)).mpr _ 
-    rintro s ⟨hs, hsc⟩
-    rcases mem_at_top_sets.mp (ha hs) with ⟨u, hu⟩
-    use u.image Sigma.fst, trivialₓ 
-    intro bs hbs 
-    simp only [Set.mem_preimage, ge_iff_le, Finset.le_iff_subset] at hu 
-    have  : tendsto (fun t : Finset (Σb, γ b) => ∑p in t.filter fun p => p.1 ∈ bs, f p) at_top (𝓝$ ∑b in bs, g b)
-    ·
-      simp only [←sigma_preimage_mk, sum_sigma]
-      refine' tendsto_finset_sum _ fun b hb => _ 
-      change tendsto (fun t => (fun t => ∑s in t, f ⟨b, s⟩) (preimage t (Sigma.mk b) _)) at_top (𝓝 (g b))
-      exact tendsto.comp (hf b) (tendsto_finset_preimage_at_top_at_top _)
-    refine' hsc.mem_of_tendsto this (eventually_at_top.2 ⟨u, fun t ht => hu _ fun x hx => _⟩)
-    exact mem_filter.2 ⟨ht hx, hbs$ mem_image_of_mem _ hx⟩
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_sum.sigma
+[regular_space α]
+{γ : β → Type*}
+{f : «exprΣ , »((b : β), γ b) → α}
+{g : β → α}
+{a : α}
+(ha : has_sum f a)
+(hf : ∀ b, has_sum (λ c, f ⟨b, c⟩) (g b)) : has_sum g a :=
+begin
+  refine [expr (at_top_basis.tendsto_iff (closed_nhds_basis a)).mpr _],
+  rintros [ident s, "⟨", ident hs, ",", ident hsc, "⟩"],
+  rcases [expr mem_at_top_sets.mp (ha hs), "with", "⟨", ident u, ",", ident hu, "⟩"],
+  use ["[", expr u.image sigma.fst, ",", expr trivial, "]"],
+  intros [ident bs, ident hbs],
+  simp [] [] ["only"] ["[", expr set.mem_preimage, ",", expr ge_iff_le, ",", expr finset.le_iff_subset, "]"] [] ["at", ident hu],
+  have [] [":", expr tendsto (λ
+    t : finset «exprΣ , »((b), γ b), «expr∑ in , »((p), t.filter (λ
+      p, «expr ∈ »(p.1, bs)), f p)) at_top «expr $ »(expr𝓝(), «expr∑ in , »((b), bs, g b))] [],
+  { simp [] [] ["only"] ["[", "<-", expr sigma_preimage_mk, ",", expr sum_sigma, "]"] [] [],
+    refine [expr tendsto_finset_sum _ (λ b hb, _)],
+    change [expr tendsto (λ
+      t, λ t, «expr∑ in , »((s), t, f ⟨b, s⟩) (preimage t (sigma.mk b) _)) at_top (expr𝓝() (g b))] [] [],
+    exact [expr tendsto.comp (hf b) (tendsto_finset_preimage_at_top_at_top _)] },
+  refine [expr hsc.mem_of_tendsto this (eventually_at_top.2 ⟨u, λ t ht, hu _ (λ x hx, _)⟩)],
+  exact [expr mem_filter.2 ⟨ht hx, «expr $ »(hbs, mem_image_of_mem _ hx)⟩]
+end
 
 /-- If a series `f` on `β × γ` has sum `a` and for each `b` the restriction of `f` to `{b} × γ`
 has sum `g b`, then the series `g` has sum `a`. -/
@@ -449,45 +463,39 @@ open Encodable
 
 variable[Encodable γ]
 
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- You can compute a sum over an encodably type by summing over the natural numbers and
   taking a supremum. This is useful for outer measures. -/
-theorem tsum_supr_decode₂ [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (s : γ → β) :
-  (∑'i : ℕ, m (⨆(b : _)(_ : b ∈ decode₂ γ i), s b)) = ∑'b : γ, m (s b) :=
-  by 
-    have H : ∀ n, m (⨆(b : _)(_ : b ∈ decode₂ γ n), s b) ≠ 0 → (decode₂ γ n).isSome
-    ·
-      intro n h 
-      cases' decode₂ γ n with b
-      ·
-        refine'
-          (h$
-              by 
-                simp [m0]).elim
-      ·
-        exact rfl 
-    symm 
-    refine' tsum_eq_tsum_of_ne_zero_bij (fun a => Option.get (H a.1 a.2)) _ _ _
-    ·
-      rintro ⟨m, hm⟩ ⟨n, hn⟩ e 
-      have  := mem_decode₂.1 (Option.get_mem (H n hn))
-      rwa [←e, mem_decode₂.1 (Option.get_mem (H m hm))] at this
-    ·
-      intro b h 
-      refine' ⟨⟨encode b, _⟩, _⟩
-      ·
-        simp only [mem_support, encodek₂] at h⊢
-        convert h 
-        simp [Set.ext_iff, encodek₂]
-      ·
-        exact Option.get_of_mem _ (encodek₂ _)
-    ·
-      rintro ⟨n, h⟩
-      dsimp only [Subtype.coe_mk]
-      trans 
-      swap 
-      rw [show decode₂ γ n = _ from Option.get_mem (H n h)]
-      congr 
-      simp [ext_iff, -Option.some_get]
+theorem tsum_supr_decode₂
+[complete_lattice β]
+(m : β → α)
+(m0 : «expr = »(m «expr⊥»(), 0))
+(s : γ → β) : «expr = »(«expr∑' , »((i : exprℕ()), m «expr⨆ , »((b «expr ∈ » decode₂ γ i), s b)), «expr∑' , »((b : γ), m (s b))) :=
+begin
+  have [ident H] [":", expr ∀ n, «expr ≠ »(m «expr⨆ , »((b «expr ∈ » decode₂ γ n), s b), 0) → (decode₂ γ n).is_some] [],
+  { intros [ident n, ident h],
+    cases [expr decode₂ γ n] ["with", ident b],
+    { refine [expr «expr $ »(h, by simp [] [] [] ["[", expr m0, "]"] [] []).elim] },
+    { exact [expr rfl] } },
+  symmetry,
+  refine [expr tsum_eq_tsum_of_ne_zero_bij (λ a, option.get (H a.1 a.2)) _ _ _],
+  { rintros ["⟨", ident m, ",", ident hm, "⟩", "⟨", ident n, ",", ident hn, "⟩", ident e],
+    have [] [] [":=", expr mem_decode₂.1 (option.get_mem (H n hn))],
+    rwa ["[", "<-", expr e, ",", expr mem_decode₂.1 (option.get_mem (H m hm)), "]"] ["at", ident this] },
+  { intros [ident b, ident h],
+    refine [expr ⟨⟨encode b, _⟩, _⟩],
+    { simp [] [] ["only"] ["[", expr mem_support, ",", expr encodek₂, "]"] [] ["at", ident h, "⊢"],
+      convert [] [expr h] [],
+      simp [] [] [] ["[", expr set.ext_iff, ",", expr encodek₂, "]"] [] [] },
+    { exact [expr option.get_of_mem _ (encodek₂ _)] } },
+  { rintros ["⟨", ident n, ",", ident h, "⟩"],
+    dsimp ["only"] ["[", expr subtype.coe_mk, "]"] [] [],
+    transitivity [],
+    swap,
+    rw ["[", expr show «expr = »(decode₂ γ n, _), from option.get_mem (H n h), "]"] [],
+    congr,
+    simp [] [] [] ["[", expr ext_iff, ",", "-", ident option.some_get, "]"] [] [] }
+end
 
 /-- `tsum_supr_decode₂` specialized to the complete lattice of sets. -/
 theorem tsum_Union_decode₂ (m : Set β → α) (m0 : m ∅ = 0) (s : γ → Set β) :
@@ -732,26 +740,28 @@ theorem tsum_eq_zero_add [T2Space α] {f : ℕ → α} (hf : Summable f) : (∑'
   by 
     simpa only [sum_range_one] using (sum_add_tsum_nat_add 1 hf).symm
 
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For `f : ℕ → α`, then `∑' k, f (k + i)` tends to zero. This does not require a summability
 assumption on `f`, as otherwise all sums are zero. -/
-theorem tendsto_sum_nat_add [T2Space α] (f : ℕ → α) : tendsto (fun i => ∑'k, f (k+i)) at_top (𝓝 0) :=
-  by 
-    byCases' hf : Summable f
-    ·
-      have h₀ : (fun i => (∑'i, f i) - ∑j in range i, f j) = fun i => ∑'k : ℕ, f (k+i)
-      ·
-        ext1 i 
-        rw [sub_eq_iff_eq_add, add_commₓ, sum_add_tsum_nat_add i hf]
-      have h₁ : tendsto (fun i : ℕ => ∑'i, f i) at_top (𝓝 (∑'i, f i)) := tendsto_const_nhds 
-      simpa only [h₀, sub_self] using tendsto.sub h₁ hf.has_sum.tendsto_sum_nat
-    ·
-      convert tendsto_const_nhds 
-      ext1 i 
-      rw [←summable_nat_add_iff i] at hf
-      ·
-        exact tsum_eq_zero_of_not_summable hf
-      ·
-        infer_instance
+theorem tendsto_sum_nat_add
+[t2_space α]
+(f : exprℕ() → α) : tendsto (λ i, «expr∑' , »((k), f «expr + »(k, i))) at_top (expr𝓝() 0) :=
+begin
+  by_cases [expr hf, ":", expr summable f],
+  { have [ident h₀] [":", expr «expr = »(λ
+      i, «expr - »(«expr∑' , »((i), f i), «expr∑ in , »((j), range i, f j)), λ
+      i, «expr∑' , »((k : exprℕ()), f «expr + »(k, i)))] [],
+    { ext1 [] [ident i],
+      rw ["[", expr sub_eq_iff_eq_add, ",", expr add_comm, ",", expr sum_add_tsum_nat_add i hf, "]"] [] },
+    have [ident h₁] [":", expr tendsto (λ
+      i : exprℕ(), «expr∑' , »((i), f i)) at_top (expr𝓝() «expr∑' , »((i), f i))] [":=", expr tendsto_const_nhds],
+    simpa [] [] ["only"] ["[", expr h₀, ",", expr sub_self, "]"] [] ["using", expr tendsto.sub h₁ hf.has_sum.tendsto_sum_nat] },
+  { convert [] [expr tendsto_const_nhds] [],
+    ext1 [] [ident i],
+    rw ["<-", expr summable_nat_add_iff i] ["at", ident hf],
+    { exact [expr tsum_eq_zero_of_not_summable hf] },
+    { apply_instance } }
+end
 
 end Subtype
 
@@ -791,7 +801,7 @@ end tsum
 
 end TopologicalRing
 
-section HasContinuousSmul
+section ConstSmul
 
 variable{R :
     Type
@@ -799,16 +809,34 @@ variable{R :
       R][TopologicalSpace
       R][TopologicalSpace α][AddCommMonoidₓ α][DistribMulAction R α][HasContinuousSmul R α]{f : β → α}
 
-theorem HasSum.smul {a : α} {r : R} (hf : HasSum f a) : HasSum (fun z => r • f z) (r • a) :=
+theorem HasSum.const_smul {a : α} {r : R} (hf : HasSum f a) : HasSum (fun z => r • f z) (r • a) :=
   hf.map (DistribMulAction.toAddMonoidHom α r) (continuous_const.smul continuous_id)
 
-theorem Summable.smul {r : R} (hf : Summable f) : Summable fun z => r • f z :=
-  hf.has_sum.smul.summable
+theorem Summable.const_smul {r : R} (hf : Summable f) : Summable fun z => r • f z :=
+  hf.has_sum.const_smul.summable
 
-theorem tsum_smul [T2Space α] {r : R} (hf : Summable f) : (∑'z, r • f z) = r • ∑'z, f z :=
-  hf.has_sum.smul.tsum_eq
+theorem tsum_const_smul [T2Space α] {r : R} (hf : Summable f) : (∑'z, r • f z) = r • ∑'z, f z :=
+  hf.has_sum.const_smul.tsum_eq
 
-end HasContinuousSmul
+end ConstSmul
+
+section SmulConst
+
+variable{R :
+    Type
+      _}[Semiringₓ
+      R][TopologicalSpace R][TopologicalSpace α][AddCommMonoidₓ α][Module R α][HasContinuousSmul R α]{f : β → R}
+
+theorem HasSum.smul_const {a : α} {r : R} (hf : HasSum f r) : HasSum (fun z => f z • a) (r • a) :=
+  hf.map ((smulAddHom R α).flip a) (continuous_id.smul continuous_const)
+
+theorem Summable.smul_const {a : α} (hf : Summable f) : Summable fun z => f z • a :=
+  hf.has_sum.smul_const.summable
+
+theorem tsum_smul_const [T2Space α] {a : α} (hf : Summable f) : (∑'z, f z • a) = (∑'z, f z) • a :=
+  hf.has_sum.smul_const.tsum_eq
+
+end SmulConst
 
 section DivisionRing
 
@@ -886,36 +914,37 @@ theorem has_sum_le_of_sum_le (hf : HasSum f a) (h : ∀ s : Finset β, (∑b in 
 theorem le_has_sum_of_le_sum (hf : HasSum f a) (h : ∀ s : Finset β, a₂ ≤ ∑b in s, f b) : a₂ ≤ a :=
   ge_of_tendsto' hf h
 
-theorem has_sum_le_inj {g : γ → α} (i : β → γ) (hi : injective i) (hs : ∀ c _ : c ∉ Set.Range i, 0 ≤ g c)
-  (h : ∀ b, f b ≤ g (i b)) (hf : HasSum f a₁) (hg : HasSum g a₂) : a₁ ≤ a₂ :=
-  have  : HasSum (fun c => (partial_inv i c).casesOn' 0 f) a₁ :=
-    by 
-      refine' (has_sum_iff_has_sum_of_ne_zero_bij (i ∘ coeₓ) _ _ _).2 hf
-      ·
-        exact fun c₁ c₂ eq => hi Eq
-      ·
-        intro c hc 
-        rw [mem_support] at hc 
-        cases' eq : partial_inv i c with b <;> rw [Eq] at hc
-        ·
-          contradiction
-        ·
-          rw [partial_inv_of_injective hi] at eq 
-          exact ⟨⟨b, hc⟩, Eq⟩
-      ·
-        intro c 
-        simp [partial_inv_left hi, Option.casesOn']
-  by 
-    refine' has_sum_le (fun c => _) this hg 
-    byCases' c ∈ Set.Range i
-    ·
-      rcases h with ⟨b, rfl⟩
-      rw [partial_inv_left hi, Option.casesOn']
-      exact h _
-    ·
-      have  : partial_inv i c = none := dif_neg h 
-      rw [this, Option.casesOn']
-      exact hs _ h
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_sum_le_inj
+{g : γ → α}
+(i : β → γ)
+(hi : injective i)
+(hs : ∀ c «expr ∉ » set.range i, «expr ≤ »(0, g c))
+(h : ∀ b, «expr ≤ »(f b, g (i b)))
+(hf : has_sum f a₁)
+(hg : has_sum g a₂) : «expr ≤ »(a₁, a₂) :=
+have has_sum (λ c, (partial_inv i c).cases_on' 0 f) a₁, begin
+  refine [expr (has_sum_iff_has_sum_of_ne_zero_bij «expr ∘ »(i, coe) _ _ _).2 hf],
+  { exact [expr assume c₁ c₂ eq, hi eq] },
+  { intros [ident c, ident hc],
+    rw ["[", expr mem_support, "]"] ["at", ident hc],
+    cases [expr eq, ":", expr partial_inv i c] ["with", ident b]; rw [expr eq] ["at", ident hc],
+    { contradiction },
+    { rw ["[", expr partial_inv_of_injective hi, "]"] ["at", ident eq],
+      exact [expr ⟨⟨b, hc⟩, eq⟩] } },
+  { assume [binders (c)],
+    simp [] [] [] ["[", expr partial_inv_left hi, ",", expr option.cases_on', "]"] [] [] }
+end,
+begin
+  refine [expr has_sum_le (assume c, _) this hg],
+  by_cases [expr «expr ∈ »(c, set.range i)],
+  { rcases [expr h, "with", "⟨", ident b, ",", ident rfl, "⟩"],
+    rw ["[", expr partial_inv_left hi, ",", expr option.cases_on', "]"] [],
+    exact [expr h _] },
+  { have [] [":", expr «expr = »(partial_inv i c, none)] [":=", expr dif_neg h],
+    rw ["[", expr this, ",", expr option.cases_on', "]"] [],
+    exact [expr hs _ h] }
+end
 
 theorem tsum_le_tsum_of_inj {g : γ → α} (i : β → γ) (hi : injective i) (hs : ∀ c _ : c ∉ Set.Range i, 0 ≤ g c)
   (h : ∀ b, f b ≤ g (i b)) (hf : Summable f) (hg : Summable g) : tsum f ≤ tsum g :=
@@ -1064,64 +1093,63 @@ theorem summable_iff_cauchy_seq_finset [CompleteSpace α] {f : β → α} :
 
 variable[UniformAddGroup α]{f g : β → α}{a a₁ a₂ : α}
 
-theorem cauchy_seq_finset_iff_vanishing :
-  (CauchySeq fun s : Finset β => ∑b in s, f b) ↔
-    ∀ e _ : e ∈ 𝓝 (0 : α), ∃ s : Finset β, ∀ t, Disjoint t s → (∑b in t, f b) ∈ e :=
-  by 
-    simp only [CauchySeq, cauchy_map_iff, and_iff_right at_top_ne_bot, prod_at_top_at_top_eq,
-      uniformity_eq_comap_nhds_zero α, tendsto_comap_iff, · ∘ ·]
-    rw [tendsto_at_top']
-    split 
-    ·
-      intro h e he 
-      rcases h e he with ⟨⟨s₁, s₂⟩, h⟩
-      use s₁ ∪ s₂ 
-      intro t ht 
-      specialize h (s₁ ∪ s₂, s₁ ∪ s₂ ∪ t) ⟨le_sup_left, le_sup_of_le_left le_sup_right⟩
-      simpa only [Finset.sum_union ht.symm, add_sub_cancel'] using h
-    ·
-      intro h e he 
-      rcases exists_nhds_half_neg he with ⟨d, hd, hde⟩
-      rcases h d hd with ⟨s, h⟩
-      use (s, s)
-      rintro ⟨t₁, t₂⟩ ⟨ht₁, ht₂⟩
-      have  : ((∑b in t₂, f b) - ∑b in t₁, f b) = (∑b in t₂ \ s, f b) - ∑b in t₁ \ s, f b
-      ·
-        simp only [(Finset.sum_sdiff ht₁).symm, (Finset.sum_sdiff ht₂).symm, add_sub_add_right_eq_sub]
-      simp only [this]
-      exact hde _ (h _ Finset.sdiff_disjoint) _ (h _ Finset.sdiff_disjoint)
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cauchy_seq_finset_iff_vanishing : «expr ↔ »(cauchy_seq (λ
+  s : finset β, «expr∑ in , »((b), s, f b)), ∀
+ e «expr ∈ » expr𝓝() (0 : α), «expr∃ , »((s : finset β), ∀
+  t, disjoint t s → «expr ∈ »(«expr∑ in , »((b), t, f b), e))) :=
+begin
+  simp [] [] ["only"] ["[", expr cauchy_seq, ",", expr cauchy_map_iff, ",", expr and_iff_right at_top_ne_bot, ",", expr prod_at_top_at_top_eq, ",", expr uniformity_eq_comap_nhds_zero α, ",", expr tendsto_comap_iff, ",", expr («expr ∘ »), "]"] [] [],
+  rw ["[", expr tendsto_at_top', "]"] [],
+  split,
+  { assume [binders (h e he)],
+    rcases [expr h e he, "with", "⟨", "⟨", ident s₁, ",", ident s₂, "⟩", ",", ident h, "⟩"],
+    use ["[", expr «expr ∪ »(s₁, s₂), "]"],
+    assume [binders (t ht)],
+    specialize [expr h («expr ∪ »(s₁, s₂), «expr ∪ »(«expr ∪ »(s₁, s₂), t)) ⟨le_sup_left, le_sup_of_le_left le_sup_right⟩],
+    simpa [] [] ["only"] ["[", expr finset.sum_union ht.symm, ",", expr add_sub_cancel', "]"] [] ["using", expr h] },
+  { assume [binders (h e he)],
+    rcases [expr exists_nhds_half_neg he, "with", "⟨", ident d, ",", ident hd, ",", ident hde, "⟩"],
+    rcases [expr h d hd, "with", "⟨", ident s, ",", ident h, "⟩"],
+    use ["[", expr (s, s), "]"],
+    rintros ["⟨", ident t₁, ",", ident t₂, "⟩", "⟨", ident ht₁, ",", ident ht₂, "⟩"],
+    have [] [":", expr «expr = »(«expr - »(«expr∑ in , »((b), t₂, f b), «expr∑ in , »((b), t₁, f b)), «expr - »(«expr∑ in , »((b), «expr \ »(t₂, s), f b), «expr∑ in , »((b), «expr \ »(t₁, s), f b)))] [],
+    { simp [] [] ["only"] ["[", expr (finset.sum_sdiff ht₁).symm, ",", expr (finset.sum_sdiff ht₂).symm, ",", expr add_sub_add_right_eq_sub, "]"] [] [] },
+    simp [] [] ["only"] ["[", expr this, "]"] [] [],
+    exact [expr hde _ (h _ finset.sdiff_disjoint) _ (h _ finset.sdiff_disjoint)] }
+end
 
 attribute [local instance] TopologicalAddGroup.regular_space
 
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The sum over the complement of a finset tends to `0` when the finset grows to cover the whole
 space. This does not need a summability assumption, as otherwise all sums are zero. -/
-theorem tendsto_tsum_compl_at_top_zero [T1Space α] (f : β → α) :
-  tendsto (fun s : Finset β => ∑'b : { x // x ∉ s }, f b) at_top (𝓝 0) :=
-  by 
-    byCases' H : Summable f
-    ·
-      intro e he 
-      rcases nhds_is_closed he with ⟨o, ho, oe, o_closed⟩
-      simp only [le_eq_subset, Set.mem_preimage, mem_at_top_sets, Filter.mem_map, ge_iff_le]
-      obtain ⟨s, hs⟩ : ∃ s : Finset β, ∀ t : Finset β, Disjoint t s → (∑b : β in t, f b) ∈ o :=
-        cauchy_seq_finset_iff_vanishing.1 (tendsto.cauchy_seq H.has_sum) o ho 
-      refine' ⟨s, fun a sa => oe _⟩
-      have A : Summable fun b : { x // x ∉ a } => f b := a.summable_compl_iff.2 H 
-      apply IsClosed.mem_of_tendsto o_closed A.has_sum (eventually_of_forall fun b => _)
-      have  : Disjoint (Finset.image (fun i : { x // x ∉ a } => (i : β)) b) s
-      ·
-        apply disjoint_left.2 fun i hi his => _ 
-        rcases mem_image.1 hi with ⟨i', hi', rfl⟩
-        exact i'.2 (sa his)
-      convert hs _ this using 1
-      rw [sum_image]
-      intro i hi j hj hij 
-      exact Subtype.ext hij
-    ·
-      convert tendsto_const_nhds 
-      ext s 
-      apply tsum_eq_zero_of_not_summable 
-      rwa [Finset.summable_compl_iff]
+theorem tendsto_tsum_compl_at_top_zero
+[t1_space α]
+(f : β → α) : tendsto (λ s : finset β, «expr∑' , »((b : {x // «expr ∉ »(x, s)}), f b)) at_top (expr𝓝() 0) :=
+begin
+  by_cases [expr H, ":", expr summable f],
+  { assume [binders (e he)],
+    rcases [expr nhds_is_closed he, "with", "⟨", ident o, ",", ident ho, ",", ident oe, ",", ident o_closed, "⟩"],
+    simp [] [] ["only"] ["[", expr le_eq_subset, ",", expr set.mem_preimage, ",", expr mem_at_top_sets, ",", expr filter.mem_map, ",", expr ge_iff_le, "]"] [] [],
+    obtain ["⟨", ident s, ",", ident hs, "⟩", ":", expr «expr∃ , »((s : finset β), ∀
+      t : finset β, disjoint t s → «expr ∈ »(«expr∑ in , »((b : β), t, f b), o)), ":=", expr cauchy_seq_finset_iff_vanishing.1 (tendsto.cauchy_seq H.has_sum) o ho],
+    refine [expr ⟨s, λ a sa, oe _⟩],
+    have [ident A] [":", expr summable (λ b : {x // «expr ∉ »(x, a)}, f b)] [":=", expr a.summable_compl_iff.2 H],
+    apply [expr is_closed.mem_of_tendsto o_closed A.has_sum (eventually_of_forall (λ b, _))],
+    have [] [":", expr disjoint (finset.image (λ i : {x // «expr ∉ »(x, a)}, (i : β)) b) s] [],
+    { apply [expr disjoint_left.2 (λ i hi his, _)],
+      rcases [expr mem_image.1 hi, "with", "⟨", ident i', ",", ident hi', ",", ident rfl, "⟩"],
+      exact [expr i'.2 (sa his)] },
+    convert [] [expr hs _ this] ["using", 1],
+    rw [expr sum_image] [],
+    assume [binders (i hi j hj hij)],
+    exact [expr subtype.ext hij] },
+  { convert [] [expr tendsto_const_nhds] [],
+    ext [] [ident s] [],
+    apply [expr tsum_eq_zero_of_not_summable],
+    rwa [expr finset.summable_compl_iff] [] }
+end
 
 variable[CompleteSpace α]
 
@@ -1190,13 +1218,18 @@ section TopologicalGroup
 
 variable{G : Type _}[TopologicalSpace G][AddCommGroupₓ G][TopologicalAddGroup G]{f : α → G}
 
-theorem Summable.vanishing (hf : Summable f) ⦃e : Set G⦄ (he : e ∈ 𝓝 (0 : G)) :
-  ∃ s : Finset α, ∀ t, Disjoint t s → (∑k in t, f k) ∈ e :=
-  by 
-    letI this : UniformSpace G := TopologicalAddGroup.toUniformSpace G 
-    letI this : UniformAddGroup G := topological_add_group_is_uniform 
-    rcases hf with ⟨y, hy⟩
-    exact cauchy_seq_finset_iff_vanishing.1 hy.cauchy_seq e he
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem summable.vanishing
+(hf : summable f)
+{{e : set G}}
+(he : «expr ∈ »(e, expr𝓝() (0 : G))) : «expr∃ , »((s : finset α), ∀
+ t, disjoint t s → «expr ∈ »(«expr∑ in , »((k), t, f k), e)) :=
+begin
+  letI [] [":", expr uniform_space G] [":=", expr topological_add_group.to_uniform_space G],
+  letI [] [":", expr uniform_add_group G] [":=", expr topological_add_group_is_uniform],
+  rcases [expr hf, "with", "⟨", ident y, ",", ident hy, "⟩"],
+  exact [expr cauchy_seq_finset_iff_vanishing.1 hy.cauchy_seq e he]
+end
 
 /-- Series divergence test: if `f` is a convergent series, then `f x` tends to zero along
 `cofinite`. -/
@@ -1273,38 +1306,51 @@ section CauchySeq
 
 open Filter
 
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the extended distance between consecutive points of a sequence is estimated
 by a summable series of `nnreal`s, then the original sequence is a Cauchy sequence. -/
-theorem cauchy_seq_of_edist_le_of_summable [PseudoEmetricSpace α] {f : ℕ → α} (d : ℕ →  ℝ≥0 )
-  (hf : ∀ n, edist (f n) (f n.succ) ≤ d n) (hd : Summable d) : CauchySeq f :=
-  by 
-    refine' Emetric.cauchy_seq_iff_nnreal.2 fun ε εpos => _ 
-    replace hd : CauchySeq fun n : ℕ => ∑x in range n, d x :=
-      let ⟨_, H⟩ := hd 
-      H.tendsto_sum_nat.cauchy_seq 
-    refine' (Metric.cauchy_seq_iff'.1 hd ε (Nnreal.coe_pos.2 εpos)).imp fun N hN n hn => _ 
-    have hsum := hN n hn 
-    rw [dist_nndist, Nnreal.nndist_eq, ←sum_range_add_sum_Ico _ hn, add_tsub_cancel_left] at hsum 
-    normCast  at hsum 
-    replace hsum := lt_of_le_of_ltₓ (le_max_leftₓ _ _) hsum 
-    rw [edist_comm]
-    apply lt_of_le_of_ltₓ (edist_le_Ico_sum_of_edist_le hn fun k _ _ => hf k)
-    assumptionModCast
+theorem cauchy_seq_of_edist_le_of_summable
+[pseudo_emetric_space α]
+{f : exprℕ() → α}
+(d : exprℕ() → «exprℝ≥0»())
+(hf : ∀ n, «expr ≤ »(edist (f n) (f n.succ), d n))
+(hd : summable d) : cauchy_seq f :=
+begin
+  refine [expr emetric.cauchy_seq_iff_nnreal.2 (λ ε εpos, _)],
+  replace [ident hd] [":", expr cauchy_seq (λ
+    n : exprℕ(), «expr∑ in , »((x), range n, d x))] [":=", expr let ⟨_, H⟩ := hd in H.tendsto_sum_nat.cauchy_seq],
+  refine [expr (metric.cauchy_seq_iff'.1 hd ε (nnreal.coe_pos.2 εpos)).imp (λ N hN n hn, _)],
+  have [ident hsum] [] [":=", expr hN n hn],
+  rw ["[", expr dist_nndist, ",", expr nnreal.nndist_eq, ",", "<-", expr sum_range_add_sum_Ico _ hn, ",", expr add_tsub_cancel_left, "]"] ["at", ident hsum],
+  norm_cast ["at", ident hsum],
+  replace [ident hsum] [] [":=", expr lt_of_le_of_lt (le_max_left _ _) hsum],
+  rw [expr edist_comm] [],
+  apply [expr lt_of_le_of_lt (edist_le_Ico_sum_of_edist_le hn (λ k _ _, hf k))],
+  assumption_mod_cast
+end
 
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the distance between consecutive points of a sequence is estimated by a summable series,
 then the original sequence is a Cauchy sequence. -/
-theorem cauchy_seq_of_dist_le_of_summable [PseudoMetricSpace α] {f : ℕ → α} (d : ℕ → ℝ)
-  (hf : ∀ n, dist (f n) (f n.succ) ≤ d n) (hd : Summable d) : CauchySeq f :=
-  by 
-    refine' Metric.cauchy_seq_iff'.2 fun ε εpos => _ 
-    replace hd : CauchySeq fun n : ℕ => ∑x in range n, d x :=
-      let ⟨_, H⟩ := hd 
-      H.tendsto_sum_nat.cauchy_seq 
-    refine' (Metric.cauchy_seq_iff'.1 hd ε εpos).imp fun N hN n hn => _ 
-    have hsum := hN n hn 
-    rw [Real.dist_eq, ←sum_Ico_eq_sub _ hn] at hsum 
-    calc dist (f n) (f N) = dist (f N) (f n) := dist_comm _ _ _ ≤ ∑x in Ico N n, d x :=
-      dist_le_Ico_sum_of_dist_le hn fun k _ _ => hf k _ ≤ |∑x in Ico N n, d x| := le_abs_self _ _ < ε := hsum
+theorem cauchy_seq_of_dist_le_of_summable
+[pseudo_metric_space α]
+{f : exprℕ() → α}
+(d : exprℕ() → exprℝ())
+(hf : ∀ n, «expr ≤ »(dist (f n) (f n.succ), d n))
+(hd : summable d) : cauchy_seq f :=
+begin
+  refine [expr metric.cauchy_seq_iff'.2 (λ ε εpos, _)],
+  replace [ident hd] [":", expr cauchy_seq (λ
+    n : exprℕ(), «expr∑ in , »((x), range n, d x))] [":=", expr let ⟨_, H⟩ := hd in H.tendsto_sum_nat.cauchy_seq],
+  refine [expr (metric.cauchy_seq_iff'.1 hd ε εpos).imp (λ N hN n hn, _)],
+  have [ident hsum] [] [":=", expr hN n hn],
+  rw ["[", expr real.dist_eq, ",", "<-", expr sum_Ico_eq_sub _ hn, "]"] ["at", ident hsum],
+  calc
+    «expr = »(dist (f n) (f N), dist (f N) (f n)) : dist_comm _ _
+    «expr ≤ »(..., «expr∑ in , »((x), Ico N n, d x)) : dist_le_Ico_sum_of_dist_le hn (λ k _ _, hf k)
+    «expr ≤ »(..., «expr| |»(«expr∑ in , »((x), Ico N n, d x))) : le_abs_self _
+    «expr < »(..., ε) : hsum
+end
 
 theorem cauchy_seq_of_summable_dist [PseudoMetricSpace α] {f : ℕ → α} (h : Summable fun n => dist (f n) (f n.succ)) :
   CauchySeq f :=

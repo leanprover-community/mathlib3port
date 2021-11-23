@@ -1,7 +1,7 @@
-import Mathbin.Algebra.Order.AbsoluteValue 
-import Mathbin.Algebra.Algebra.Basic 
+import Mathbin.Algebra.Module.Basic 
+import Mathbin.GroupTheory.GroupAction.Units 
 import Mathbin.Data.Int.Cast 
-import Mathbin.GroupTheory.GroupAction.Units
+import Mathbin.Algebra.Order.AbsoluteValue
 
 /-!
 # Absolute values and the integers

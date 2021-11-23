@@ -1,5 +1,6 @@
 import Mathbin.Data.Nat.Choose.Basic 
-import Mathbin.Data.Nat.Choose.Sum
+import Mathbin.Tactic.NormNum 
+import Mathbin.Tactic.Linarith.Default
 
 /-!
 # Central binomial coefficients

@@ -1,6 +1,5 @@
-import Mathbin.Topology.Category.Top.Opens 
 import Mathbin.CategoryTheory.Limits.KanExtension 
-import Mathbin.CategoryTheory.Adjunction.Opposites
+import Mathbin.Topology.Category.Top.Opens
 
 /-!
 # Presheaves on a topological space
@@ -34,7 +33,7 @@ variable(C : Type u)[category.{v} C]
 
 namespace Top
 
--- error in Topology.Sheaves.Presheaf: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in Topology.Sheaves.Presheaf: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- The category of `C`-valued presheaves on a (bundled) topological space `X`. -/
 @[derive #[expr category], nolint #[ident has_inhabited_instance]]
 def presheaf (X : Top.{v}) :=
@@ -186,26 +185,27 @@ def pullback_obj {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : Y.presheaf C) : X.presheaf
 def pullback_map {X Y : Top.{v}} (f : X ⟶ Y) {ℱ 𝒢 : Y.presheaf C} (α : ℱ ⟶ 𝒢) : pullback_obj f ℱ ⟶ pullback_obj f 𝒢 :=
   (Lan (opens.map f).op).map α
 
+-- error in Topology.Sheaves.Presheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f '' U` is open, then `f⁻¹ℱ U ≅ ℱ (f '' U)`.  -/
-@[simps]
-def pullback_obj_obj_of_image_open {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : Y.presheaf C) (U : opens X) (H : IsOpen (f '' U)) :
-  (pullback_obj f ℱ).obj (op U) ≅ ℱ.obj (op ⟨_, H⟩) :=
-  by 
-    let x : costructured_arrow (opens.map f).op (op U) :=
-      { left := op ⟨f '' U, H⟩,
-        Hom :=
-          ((@hom_of_le _ _ _ ((opens.map f).obj ⟨_, H⟩) (set.image_preimage.le_u_l _)).op :
-          op ((opens.map f).obj ⟨«expr⇑ » f '' «expr↑ » U, H⟩) ⟶ op U) }
-    have hx : is_terminal x :=
-      { lift :=
-          fun s =>
-            by 
-              fapply costructured_arrow.hom_mk 
-              change op (unop _) ⟶ op (⟨_, H⟩ : opens _)
-              refine' (hom_of_le _).op 
-              exact (Set.image_subset f s.X.hom.unop.le).trans (set.image_preimage.l_u_le («expr↑ » (unop s.X.left)))
-              simp  }
-    exact is_colimit.cocone_point_unique_up_to_iso (colimit.is_colimit _) (colimit_of_diagram_terminal hx _)
+@[simps #[]]
+def pullback_obj_obj_of_image_open
+{X Y : Top.{v}}
+(f : «expr ⟶ »(X, Y))
+(ℱ : Y.presheaf C)
+(U : opens X)
+(H : is_open «expr '' »(f, U)) : «expr ≅ »((pullback_obj f ℱ).obj (op U), ℱ.obj (op ⟨_, H⟩)) :=
+begin
+  let [ident x] [":", expr costructured_arrow (opens.map f).op (op U)] [":=", expr { left := op ⟨«expr '' »(f, U), H⟩,
+     hom := ((@hom_of_le _ _ _ ((opens.map f).obj ⟨_, H⟩) (set.image_preimage.le_u_l _)).op : «expr ⟶ »(op ((opens.map f).obj ⟨«expr '' »(«expr⇑ »(f), «expr↑ »(U)), H⟩), op U)) }],
+  have [ident hx] [":", expr is_terminal x] [":=", expr { lift := λ s, begin
+       fapply [expr costructured_arrow.hom_mk],
+       change [expr «expr ⟶ »(op (unop _), op (⟨_, H⟩ : opens _))] [] [],
+       refine [expr (hom_of_le _).op],
+       exact [expr (set.image_subset f s.X.hom.unop.le).trans (set.image_preimage.l_u_le «expr↑ »(unop s.X.left))],
+       simp [] [] [] [] [] []
+     end }],
+  exact [expr is_colimit.cocone_point_unique_up_to_iso (colimit.is_colimit _) (colimit_of_diagram_terminal hx _)]
+end
 
 namespace Pullback
 
@@ -267,18 +267,18 @@ The pushforward functor.
 def pushforward {X Y : Top.{v}} (f : X ⟶ Y) : X.presheaf C ⥤ Y.presheaf C :=
   { obj := pushforward_obj f, map := @pushforward_map _ _ X Y f }
 
-theorem id_pushforward {X : Top.{v}} : pushforward C (𝟙 X) = 𝟭 (X.presheaf C) :=
-  by 
-    apply CategoryTheory.Functor.ext
-    ·
-      intros 
-      ext U 
-      have h := f.congr 
-      erw [h (opens.op_map_id_obj U)]
-      simpa
-    ·
-      intros 
-      apply pushforward.id_eq
+-- error in Topology.Sheaves.Presheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem id_pushforward {X : Top.{v}} : «expr = »(pushforward C («expr𝟙»() X), «expr𝟭»() (X.presheaf C)) :=
+begin
+  apply [expr category_theory.functor.ext],
+  { intros [],
+    ext [] [ident U] [],
+    have [ident h] [] [":=", expr f.congr],
+    erw [expr h (opens.op_map_id_obj U)] [],
+    simpa [] [] [] [] [] [] },
+  { intros [],
+    apply [expr pushforward.id_eq] }
+end
 
 variable[has_colimits C]
 

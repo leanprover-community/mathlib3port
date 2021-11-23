@@ -151,12 +151,16 @@ instance (priority := 100)inv_pair {σ₁ : R₁ →+* R₂} {σ₂ : R₂ →+*
 instance ids : RingHomSurjective (RingHom.id R₁) :=
   ⟨is_surjective⟩
 
+-- error in Algebra.Ring.CompTypeclasses: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- This cannot be an instance as there is no way to infer `σ₁₂` and `σ₂₃`. -/
-theorem comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomSurjective σ₁₂] [RingHomSurjective σ₂₃] : RingHomSurjective σ₁₃ :=
-  { is_surjective :=
-      by 
-        have  := σ₂₃.is_surjective.comp σ₁₂.is_surjective 
-        rwa [←RingHom.coe_comp, RingHomCompTriple.comp_eq] at this }
+theorem comp
+[ring_hom_comp_triple σ₁₂ σ₂₃ σ₁₃]
+[ring_hom_surjective σ₁₂]
+[ring_hom_surjective σ₂₃] : ring_hom_surjective σ₁₃ :=
+{ is_surjective := begin
+    have [] [] [":=", expr σ₂₃.is_surjective.comp σ₁₂.is_surjective],
+    rwa ["[", "<-", expr ring_hom.coe_comp, ",", expr ring_hom_comp_triple.comp_eq, "]"] ["at", ident this]
+  end }
 
 end RingHomSurjective
 

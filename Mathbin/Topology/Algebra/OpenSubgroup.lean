@@ -1,4 +1,3 @@
-import Mathbin.Order.Filter.Lift 
 import Mathbin.Topology.Opens 
 import Mathbin.Topology.Algebra.Ring
 
@@ -216,17 +215,19 @@ namespace Subgroup
 
 variable{G : Type _}[Groupₓ G][TopologicalSpace G][HasContinuousMul G](H : Subgroup G)
 
-@[toAdditive]
-theorem is_open_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : Set G) :=
-  by 
-    simp only [is_open_iff_mem_nhds, SetLike.mem_coe] at hg⊢
-    intro x hx 
-    have  : Filter.Tendsto (fun y => y*x⁻¹*g) (𝓝 x) (𝓝$ x*x⁻¹*g) := (continuous_id.mul continuous_const).Tendsto _ 
-    rw [mul_inv_cancel_left] at this 
-    have  := Filter.mem_map'.1 (this hg)
-    replace hg : g ∈ H := SetLike.mem_coe.1 (mem_of_mem_nhds hg)
-    simp only [SetLike.mem_coe, H.mul_mem_cancel_right (H.mul_mem (H.inv_mem hx) hg)] at this 
-    exact this
+-- error in Topology.Algebra.OpenSubgroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]] theorem is_open_of_mem_nhds {g : G} (hg : «expr ∈ »((H : set G), expr𝓝() g)) : is_open (H : set G) :=
+begin
+  simp [] [] ["only"] ["[", expr is_open_iff_mem_nhds, ",", expr set_like.mem_coe, "]"] [] ["at", ident hg, "⊢"],
+  intros [ident x, ident hx],
+  have [] [":", expr filter.tendsto (λ
+    y, «expr * »(y, «expr * »(«expr ⁻¹»(x), g))) (expr𝓝() x) «expr $ »(expr𝓝(), «expr * »(x, «expr * »(«expr ⁻¹»(x), g)))] [":=", expr (continuous_id.mul continuous_const).tendsto _],
+  rw ["[", expr mul_inv_cancel_left, "]"] ["at", ident this],
+  have [] [] [":=", expr filter.mem_map'.1 (this hg)],
+  replace [ident hg] [":", expr «expr ∈ »(g, H)] [":=", expr set_like.mem_coe.1 (mem_of_mem_nhds hg)],
+  simp [] [] ["only"] ["[", expr set_like.mem_coe, ",", expr H.mul_mem_cancel_right (H.mul_mem (H.inv_mem hx) hg), "]"] [] ["at", ident this],
+  exact [expr this]
+end
 
 @[toAdditive]
 theorem is_open_of_open_subgroup {U : OpenSubgroup G} (h : U.1 ≤ H) : IsOpen (H : Set G) :=

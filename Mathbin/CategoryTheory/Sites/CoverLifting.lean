@@ -129,13 +129,15 @@ variable{x}{S}
 
 include hu hS hx
 
+-- error in CategoryTheory.Sites.CoverLifting: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a `G(Y) ⊆ U`, we can find a unique section `X ⟶ ℱ(Y)` that agrees with `x`. -/
-def get_section (Y : structured_arrow (op U) G.op) : X ⟶ ℱ.val.obj Y.right :=
-  by 
-    let hom_sh := whisker_right ((Ran.adjunction A G.op).counit.app ℱ.val) (coyoneda.obj (op X))
-    have S' := K.pullback_stable Y.hom.unop hS 
-    have hs' := ((hx.pullback Y.3.unop).FunctorPullback G).compPresheafMap hom_sh 
-    exact (ℱ.2 X _ (hu.cover_lift S')).amalgamate _ hs'
+def get_section (Y : structured_arrow (op U) G.op) : «expr ⟶ »(X, ℱ.val.obj Y.right) :=
+begin
+  let [ident hom_sh] [] [":=", expr whisker_right ((Ran.adjunction A G.op).counit.app ℱ.val) (coyoneda.obj (op X))],
+  have [ident S'] [] [":=", expr K.pullback_stable Y.hom.unop hS],
+  have [ident hs'] [] [":=", expr ((hx.pullback Y.3.unop).functor_pullback G).comp_presheaf_map hom_sh],
+  exact [expr (ℱ.2 X _ (hu.cover_lift S')).amalgamate _ hs']
+end
 
 theorem get_section_is_amalgamation (Y : structured_arrow (op U) G.op) :
   (pulledback_family ℱ S x Y).IsAmalgamation (get_section hu ℱ hS hx Y) :=
@@ -152,25 +154,24 @@ theorem get_section_is_unique (Y : structured_arrow (op U) G.op) {y}
     ·
       exact ℱ.2 X _ (hu.cover_lift (K.pullback_stable Y.hom.unop hS))
 
+-- error in CategoryTheory.Sites.CoverLifting: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem get_section_commute {Y Z : structured_arrow (op U) G.op} (f : Y ⟶ Z) :
-  get_section hu ℱ hS hx Y ≫ ℱ.val.map f.right = get_section hu ℱ hS hx Z :=
-  by 
-    apply get_section_is_unique 
-    intro V' fV' hV' 
-    have eq : Z.hom = Y.hom ≫ (G.map f.right.unop).op
-    ·
-      convert f.w 
-      erw [category.id_comp]
-    rw [Eq] at hV' 
-    convert get_section_is_amalgamation hu ℱ hS hx Y (fV' ≫ f.right.unop) _ using 1
-    ·
-      tidy
-    ·
-      simp only [Eq, Quiver.Hom.unop_op, pulledback_family_apply, functor.map_comp, unop_comp, category.assoc]
-    ·
-      change S (G.map _ ≫ Y.hom.unop)
-      simpa only [functor.map_comp, category.assoc] using hV'
+theorem get_section_commute
+{Y Z : structured_arrow (op U) G.op}
+(f : «expr ⟶ »(Y, Z)) : «expr = »(«expr ≫ »(get_section hu ℱ hS hx Y, ℱ.val.map f.right), get_section hu ℱ hS hx Z) :=
+begin
+  apply [expr get_section_is_unique],
+  intros [ident V', ident fV', ident hV'],
+  have [ident eq] [":", expr «expr = »(Z.hom, «expr ≫ »(Y.hom, (G.map f.right.unop).op))] [],
+  { convert [] [expr f.w] [],
+    erw [expr category.id_comp] [] },
+  rw [expr eq] ["at", ident hV'],
+  convert [] [expr get_section_is_amalgamation hu ℱ hS hx Y «expr ≫ »(fV', f.right.unop) _] ["using", 1],
+  { tidy [] },
+  { simp [] [] ["only"] ["[", expr eq, ",", expr quiver.hom.unop_op, ",", expr pulledback_family_apply, ",", expr functor.map_comp, ",", expr unop_comp, ",", expr category.assoc, "]"] [] [] },
+  { change [expr S «expr ≫ »(G.map _, Y.hom.unop)] [] [],
+    simpa [] [] ["only"] ["[", expr functor.map_comp, ",", expr category.assoc, "]"] [] ["using", expr hV'] }
+end
 
 /-- The limit cone in order to glue the sections obtained via `get_section`. -/
 def glued_limit_cone : limits.cone (Ran.diagram G.op ℱ.val (op U)) :=
@@ -190,42 +191,39 @@ theorem glued_limit_cone_π_app W : (glued_limit_cone hu ℱ hS hx).π.app W = g
 def glued_section : X ⟶ ((Ran G.op).obj ℱ.val).obj (op U) :=
   limit.lift _ (glued_limit_cone hu ℱ hS hx)
 
+-- error in CategoryTheory.Sites.CoverLifting: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A helper lemma for the following two lemmas. Basically stating that if the section `y : X ⟶ 𝒢(V)`
 coincides with `x` on `G(V')` for all `G(V') ⊆ V ∈ S`, then `X ⟶ 𝒢(V) ⟶ ℱ(W)` is indeed the
 section obtained in `get_sections`. That said, this is littered with some more categorical jargon
 in order to be applied in the following lemmas easier.
 -/
-theorem helper {V} (f : V ⟶ U) (y : X ⟶ ((Ran G.op).obj ℱ.val).obj (op V)) W
-  (H : ∀ {V'} {fV : G.obj V' ⟶ V} hV, y ≫ ((Ran G.op).obj ℱ.val).map fV.op = x (fV ≫ f) hV) :
-  y ≫ limit.π (Ran.diagram G.op ℱ.val (op V)) W =
-    (glued_limit_cone hu ℱ hS hx).π.app ((structured_arrow.map f.op).obj W) :=
-  by 
-    dsimp only [glued_limit_cone_π_app]
-    apply get_section_is_unique hu ℱ hS hx ((structured_arrow.map f.op).obj W)
-    intro V' fV' hV' 
-    dsimp only [Ran.adjunction, Ran.equiv, pulledback_family_apply]
-    erw [adjunction.adjunction_of_equiv_right_counit_app]
-    have  :
-      y ≫ ((Ran G.op).obj ℱ.val).map (G.map fV' ≫ W.hom.unop).op =
-        x (G.map fV' ≫ W.hom.unop ≫ f)
-          (by 
-            simpa only using hV')
-    ·
-      convert
-        H
-          (show S ((G.map fV' ≫ W.hom.unop) ≫ f)by 
-            simpa only [category.assoc] using hV') using
-        2
-      simp only [category.assoc]
-    simp only [Quiver.Hom.unop_op, Equiv.symm_symm, structured_arrow.map_obj_hom, unop_comp, Equiv.coe_fn_mk,
-      functor.comp_map, coyoneda_obj_map, category.assoc, ←this, op_comp, Ran_obj_map, nat_trans.id_app]
-    erw [category.id_comp, limit.pre_π]
-    congr 
-    convert limit.w (Ran.diagram G.op ℱ.val (op V)) (structured_arrow.hom_mk' W fV'.op)
-    rw [structured_arrow.map_mk]
-    erw [category.comp_id]
-    simp only [Quiver.Hom.unop_op, functor.op_map, Quiver.Hom.op_unop]
+theorem helper
+{V}
+(f : «expr ⟶ »(V, U))
+(y : «expr ⟶ »(X, ((Ran G.op).obj ℱ.val).obj (op V)))
+(W)
+(H : ∀
+ {V'}
+ {fV : «expr ⟶ »(G.obj V', V)}
+ (hV), «expr = »(«expr ≫ »(y, ((Ran G.op).obj ℱ.val).map fV.op), x «expr ≫ »(fV, f) hV)) : «expr = »(«expr ≫ »(y, limit.π (Ran.diagram G.op ℱ.val (op V)) W), (glued_limit_cone hu ℱ hS hx).π.app ((structured_arrow.map f.op).obj W)) :=
+begin
+  dsimp ["only"] ["[", expr glued_limit_cone_π_app, "]"] [] [],
+  apply [expr get_section_is_unique hu ℱ hS hx ((structured_arrow.map f.op).obj W)],
+  intros [ident V', ident fV', ident hV'],
+  dsimp ["only"] ["[", expr Ran.adjunction, ",", expr Ran.equiv, ",", expr pulledback_family_apply, "]"] [] [],
+  erw ["[", expr adjunction.adjunction_of_equiv_right_counit_app, "]"] [],
+  have [] [":", expr «expr = »(«expr ≫ »(y, ((Ran G.op).obj ℱ.val).map «expr ≫ »(G.map fV', W.hom.unop).op), x «expr ≫ »(G.map fV', «expr ≫ »(W.hom.unop, f)) (by simpa [] [] ["only"] [] [] ["using", expr hV']))] [],
+  { convert [] [expr H (show S «expr ≫ »(«expr ≫ »(G.map fV', W.hom.unop), f), by simpa [] [] ["only"] ["[", expr category.assoc, "]"] [] ["using", expr hV'])] ["using", 2],
+    simp [] [] ["only"] ["[", expr category.assoc, "]"] [] [] },
+  simp [] [] ["only"] ["[", expr quiver.hom.unop_op, ",", expr equiv.symm_symm, ",", expr structured_arrow.map_obj_hom, ",", expr unop_comp, ",", expr equiv.coe_fn_mk, ",", expr functor.comp_map, ",", expr coyoneda_obj_map, ",", expr category.assoc, ",", "<-", expr this, ",", expr op_comp, ",", expr Ran_obj_map, ",", expr nat_trans.id_app, "]"] [] [],
+  erw ["[", expr category.id_comp, ",", expr limit.pre_π, "]"] [],
+  congr,
+  convert [] [expr limit.w (Ran.diagram G.op ℱ.val (op V)) (structured_arrow.hom_mk' W fV'.op)] [],
+  rw [expr structured_arrow.map_mk] [],
+  erw [expr category.comp_id] [],
+  simp [] [] ["only"] ["[", expr quiver.hom.unop_op, ",", expr functor.op_map, ",", expr quiver.hom.op_unop, "]"] [] []
+end
 
 /-- Verify that the `glued_section` is an amalgamation of `x`. -/
 theorem glued_section_is_amalgamation : x.is_amalgamation (glued_section hu ℱ hS hx) :=

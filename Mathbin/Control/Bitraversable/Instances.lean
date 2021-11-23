@@ -39,7 +39,7 @@ instance  : Bitraversable Prod :=
 
 instance  : IsLawfulBitraversable Prod :=
   by 
-    constructor <;> introsI <;> cases x <;> simp' [bitraverse, Prod.bitraverseₓ] with functor_norm <;> rfl
+    constructor <;> intros  <;> cases x <;> simp' [bitraverse, Prod.bitraverseₓ] with functor_norm <;> rfl
 
 open Functor
 
@@ -53,7 +53,7 @@ instance  : Bitraversable Sum :=
 
 instance  : IsLawfulBitraversable Sum :=
   by 
-    constructor <;> introsI <;> cases x <;> simp' [bitraverse, Sum.bitraverseₓ] with functor_norm <;> rfl
+    constructor <;> intros  <;> cases x <;> simp' [bitraverse, Sum.bitraverseₓ] with functor_norm <;> rfl
 
 /-- The bitraverse function for `const`. It throws away the second map. -/
 @[nolint unused_arguments]
@@ -65,7 +65,7 @@ instance Bitraversable.const : Bitraversable const :=
 
 instance IsLawfulBitraversable.const : IsLawfulBitraversable const :=
   by 
-    constructor <;> introsI <;> simp' [bitraverse, Const.bitraverse] with functor_norm <;> rfl
+    constructor <;> intros  <;> simp' [bitraverse, Const.bitraverse] with functor_norm <;> rfl
 
 /-- The bitraverse function for `flip`. -/
 def flip.bitraverse {α α' β β'} (f : α → F α') (f' : β → F β') : flip t α β → F (flip t α' β') :=
@@ -80,8 +80,8 @@ instance IsLawfulBitraversable.flip [IsLawfulBitraversable t] : IsLawfulBitraver
   by 
     constructor <;>
       intros  <;>
-        unfreezingI 
-            casesM IsLawfulBitraversable t <;>
+        (
+            casesM IsLawfulBitraversable t) <;>
           runTac 
             tactic.apply_assumption
 
@@ -92,7 +92,7 @@ instance (priority := 10)Bitraversable.traversable {α} : Traversable (t α) :=
 
 instance (priority := 10)Bitraversable.isLawfulTraversable [IsLawfulBitraversable t] {α} : IsLawfulTraversable (t α) :=
   by 
-    constructor <;> introsI <;> simp' [traverse, comp_tsnd] with functor_norm
+    constructor <;> intros  <;> simp' [traverse, comp_tsnd] with functor_norm
     ·
       rfl
     ·
@@ -123,7 +123,7 @@ instance  [IsLawfulTraversable F] [IsLawfulTraversable G] [IsLawfulBitraversable
   IsLawfulBitraversable (bicompl t F G) :=
   by 
     constructor <;>
-      introsI <;>
+      intros  <;>
         simp' [bitraverse, Bicompl.bitraverse, bimap, traverse_id, bitraverse_id_id, comp_bitraverse] with functor_norm
     ·
       simp [traverse_eq_map_id', bitraverse_eq_bimap_id]
@@ -148,7 +148,7 @@ instance  : Bitraversable (bicompr F t) :=
 
 instance  [IsLawfulTraversable F] [IsLawfulBitraversable t] : IsLawfulBitraversable (bicompr F t) :=
   by 
-    constructor <;> introsI <;> simp' [bitraverse, Bicompr.bitraverse, bitraverse_id_id] with functor_norm
+    constructor <;> intros  <;> simp' [bitraverse, Bicompr.bitraverse, bitraverse_id_id] with functor_norm
     ·
       simp [bitraverse_eq_bimap_id', traverse_eq_map_id']
       rfl

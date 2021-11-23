@@ -1,16 +1,9 @@
-import Mathbin.Algebra.GroupPower.Default 
-import Mathbin.Control.Uliftable 
 import Mathbin.Control.Monad.Basic 
-import Mathbin.Data.Bitvec.Basic 
-import Mathbin.Data.Fin.Basic 
-import Mathbin.Data.List.Basic 
-import Mathbin.Data.Set.Intervals.Basic 
+import Mathbin.Data.Int.Basic 
 import Mathbin.Data.Stream.Basic 
-import Mathbin.Tactic.Cache 
-import Mathbin.Tactic.Interactive 
+import Mathbin.Control.Uliftable 
 import Mathbin.Tactic.NormNum 
-import Leanbin.System.Io 
-import Leanbin.System.Random
+import Mathbin.Data.Bitvec.Basic
 
 /-!
 # Rand Monad and Random Class
@@ -292,13 +285,15 @@ def randomFinOfPos : ∀ {n : ℕ} h : 0 < n, Random (Finₓ n)
 | succ n, _ => finRandom _
 | 0, h => False.elim (Nat.not_lt_zeroₓ _ h)
 
-theorem bool_of_nat_mem_Icc_of_mem_Icc_to_nat (x y : Bool) (n : ℕ) :
-  n ∈ (x.to_nat .. y.to_nat) → Bool.ofNat n ∈ (x .. y) :=
-  by 
-    simp only [and_imp, Set.mem_Icc]
-    intro h₀ h₁ 
-    split  <;> [have h₂ := Bool.of_nat_le_of_nat h₀, have h₂ := Bool.of_nat_le_of_nat h₁] <;>
-      rw [Bool.of_nat_to_nat] at h₂ <;> exact h₂
+-- error in System.Random.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem bool_of_nat_mem_Icc_of_mem_Icc_to_nat
+(x y : bool)
+(n : exprℕ()) : «expr ∈ »(n, «expr .. »(x.to_nat, y.to_nat)) → «expr ∈ »(bool.of_nat n, «expr .. »(x, y)) :=
+begin
+  simp [] [] ["only"] ["[", expr and_imp, ",", expr set.mem_Icc, "]"] [] [],
+  intros [ident h₀, ident h₁],
+  split; [have [ident h₂] [] [":=", expr bool.of_nat_le_of_nat h₀], have [ident h₂] [] [":=", expr bool.of_nat_le_of_nat h₁]]; rw [expr bool.of_nat_to_nat] ["at", ident h₂]; exact [expr h₂]
+end
 
 instance  : Random Bool :=
   { Random := fun g inst => (Bool.ofNat ∘ Subtype.val) <$> @BoundedRandom.randomR ℕ _ _ g inst 0 1 (Nat.zero_leₓ _) }

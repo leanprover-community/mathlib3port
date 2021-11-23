@@ -256,40 +256,47 @@ theorem slice_add [Add α] (i : ℕ) (hid : i < d) (x : Holor α (d :: ds)) (y :
 theorem slice_zero [HasZero α] (i : ℕ) (hid : i < d) : slice (0 : Holor α (d :: ds)) i hid = 0 :=
   rfl
 
-theorem slice_sum [AddCommMonoidₓ α] {β : Type} (i : ℕ) (hid : i < d) (s : Finset β) (f : β → Holor α (d :: ds)) :
-  (∑x in s, slice (f x) i hid) = slice (∑x in s, f x) i hid :=
-  by 
-    letI this := Classical.decEq β 
-    refine' Finset.induction_on s _ _
-    ·
-      simp [slice_zero]
-    ·
-      intro _ _ h_not_in ih 
-      rw [Finset.sum_insert h_not_in, ih, slice_add, Finset.sum_insert h_not_in]
+-- error in Data.Holor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem slice_sum
+[add_comm_monoid α]
+{β : Type}
+(i : exprℕ())
+(hid : «expr < »(i, d))
+(s : finset β)
+(f : β → holor α [«expr :: »/«expr :: »/«expr :: »](d, ds)) : «expr = »(«expr∑ in , »((x), s, slice (f x) i hid), slice «expr∑ in , »((x), s, f x) i hid) :=
+begin
+  letI [] [] [":=", expr classical.dec_eq β],
+  refine [expr finset.induction_on s _ _],
+  { simp [] [] [] ["[", expr slice_zero, "]"] [] [] },
+  { intros ["_", "_", ident h_not_in, ident ih],
+    rw ["[", expr finset.sum_insert h_not_in, ",", expr ih, ",", expr slice_add, ",", expr finset.sum_insert h_not_in, "]"] [] }
+end
 
+-- error in Data.Holor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The original holor can be recovered from its slices by multiplying with unit vectors and
 summing up. -/
 @[simp]
-theorem sum_unit_vec_mul_slice [Ringₓ α] (x : Holor α (d :: ds)) :
-  (∑i in (Finset.range d).attach, unit_vec d i ⊗ slice x i (Nat.succ_le_of_ltₓ (Finset.mem_range.1 i.prop))) = x :=
-  by 
-    apply slice_eq _ _ _ 
-    ext i hid 
-    rw [←slice_sum]
-    simp only [slice_unit_vec_mul hid]
-    rw [Finset.sum_eq_single (Subtype.mk i$ Finset.mem_range.2 hid)]
-    ·
-      simp 
-    ·
-      intro (b : { x // x ∈ Finset.range d })(hb : b ∈ (Finset.range d).attach)(hbi : b ≠ ⟨i, _⟩)
-      have hbi' : i ≠ b
-      ·
-        simpa only [Ne.def, Subtype.ext_iff, Subtype.coe_mk] using hbi.symm 
-      simp [hbi']
-    ·
-      intro (hid' : Subtype.mk i _ ∉ Finset.attach (Finset.range d))
-      exFalso 
-      exact absurd (Finset.mem_attach _ _) hid'
+theorem sum_unit_vec_mul_slice
+[ring α]
+(x : holor α [«expr :: »/«expr :: »/«expr :: »](d, ds)) : «expr = »(«expr∑ in , »((i), (finset.range d).attach, «expr ⊗ »(unit_vec d i, slice x i (nat.succ_le_of_lt (finset.mem_range.1 i.prop)))), x) :=
+begin
+  apply [expr slice_eq _ _ _],
+  ext [] [ident i, ident hid] [],
+  rw ["[", "<-", expr slice_sum, "]"] [],
+  simp [] [] ["only"] ["[", expr slice_unit_vec_mul hid, "]"] [] [],
+  rw [expr finset.sum_eq_single «expr $ »(subtype.mk i, finset.mem_range.2 hid)] [],
+  { simp [] [] [] [] [] [] },
+  { assume [binders
+     (b : {x // «expr ∈ »(x, finset.range d)})
+     (hb : «expr ∈ »(b, (finset.range d).attach))
+     (hbi : «expr ≠ »(b, ⟨i, _⟩))],
+    have [ident hbi'] [":", expr «expr ≠ »(i, b)] [],
+    { simpa [] [] ["only"] ["[", expr ne.def, ",", expr subtype.ext_iff, ",", expr subtype.coe_mk, "]"] [] ["using", expr hbi.symm] },
+    simp [] [] [] ["[", expr hbi', "]"] [] [] },
+  { assume [binders (hid' : «expr ∉ »(subtype.mk i _, finset.attach (finset.range d)))],
+    exfalso,
+    exact [expr absurd (finset.mem_attach _ _) hid'] }
+end
 
 /-- `cprank_max1 x` means `x` has CP rank at most 1, that is,
   it is the tensor product of 1-dimensional holors. -/
@@ -341,25 +348,25 @@ theorem cprank_max_mul [Ringₓ α] : ∀ n : ℕ x : Holor α [d] y : Holor α 
     ·
       exact cprank_max_mul k x y₂ hy₂
 
-theorem cprank_max_sum [Ringₓ α] {β} {n : ℕ} (s : Finset β) (f : β → Holor α ds) :
-  (∀ x _ : x ∈ s, cprank_max n (f x)) → cprank_max (s.card*n) (∑x in s, f x) :=
-  by 
-    letI this := Classical.decEq β <;>
-      exact
-        Finset.induction_on s
-          (by 
-            simp [cprank_max.zero])
-          (by 
-            intro x s(h_x_notin_s : x ∉ s)ih h_cprank 
-            simp only [Finset.sum_insert h_x_notin_s, Finset.card_insert_of_not_mem h_x_notin_s]
-            rw [Nat.right_distrib]
-            simp only [Nat.one_mul, Nat.add_comm]
-            have ih' : cprank_max (Finset.card s*n) (∑x in s, f x)
-            ·
-              apply ih 
-              intro (x : β)(h_x_in_s : x ∈ s)
-              simp only [h_cprank, Finset.mem_insert_of_mem, h_x_in_s]
-            exact cprank_max_add (h_cprank x (Finset.mem_insert_self x s)) ih')
+-- error in Data.Holor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cprank_max_sum
+[ring α]
+{β}
+{n : exprℕ()}
+(s : finset β)
+(f : β → holor α ds) : ∀
+x «expr ∈ » s, cprank_max n (f x) → cprank_max «expr * »(s.card, n) «expr∑ in , »((x), s, f x) :=
+by letI [] [] [":=", expr classical.dec_eq β]; exact [expr finset.induction_on s (by simp [] [] [] ["[", expr cprank_max.zero, "]"] [] []) (begin
+    assume [binders (x s) (h_x_notin_s : «expr ∉ »(x, s)) (ih h_cprank)],
+    simp [] [] ["only"] ["[", expr finset.sum_insert h_x_notin_s, ",", expr finset.card_insert_of_not_mem h_x_notin_s, "]"] [] [],
+    rw [expr nat.right_distrib] [],
+    simp [] [] ["only"] ["[", expr nat.one_mul, ",", expr nat.add_comm, "]"] [] [],
+    have [ident ih'] [":", expr cprank_max «expr * »(finset.card s, n) «expr∑ in , »((x), s, f x)] [],
+    { apply [expr ih],
+      assume [binders (x : β) (h_x_in_s : «expr ∈ »(x, s))],
+      simp [] [] ["only"] ["[", expr h_cprank, ",", expr finset.mem_insert_of_mem, ",", expr h_x_in_s, "]"] [] [] },
+    exact [expr cprank_max_add (h_cprank x (finset.mem_insert_self x s)) ih']
+  end)]
 
 theorem cprank_max_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, cprank_max ds.prod x
 | [], x => cprank_max_nil x
@@ -389,13 +396,13 @@ theorem cprank_max_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, cpr
 noncomputable def cprank [Ringₓ α] (x : Holor α ds) : Nat :=
   @Nat.findₓ (fun n => cprank_max n x) (Classical.decPred _) ⟨ds.prod, cprank_max_upper_bound x⟩
 
-theorem cprank_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, cprank x ≤ ds.prod :=
-  fun ds x : Holor α ds =>
-    by 
-      letI this := Classical.decPred fun n : ℕ => cprank_max n x <;>
-        exact
-          Nat.find_min'ₓ ⟨ds.prod, show (fun n => cprank_max n x) ds.prod from cprank_max_upper_bound x⟩
-            (cprank_max_upper_bound x)
+-- error in Data.Holor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cprank_upper_bound [ring α] : ∀ {ds}, ∀ x : holor α ds, «expr ≤ »(cprank x, ds.prod) :=
+λ
+(ds)
+(x : holor α ds), by letI [] [] [":=", expr classical.dec_pred (λ
+  n : exprℕ(), cprank_max n x)]; exact [expr nat.find_min' ⟨ds.prod, show λ
+  n, cprank_max n x ds.prod, from cprank_max_upper_bound x⟩ (cprank_max_upper_bound x)]
 
 end Holor
 

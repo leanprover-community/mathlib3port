@@ -1,5 +1,6 @@
+import Mathbin.Logic.IsEmpty 
 import Mathbin.Tactic.Basic 
-import Mathbin.Logic.IsEmpty
+import Mathbin.Logic.Relator
 
 /-!
 # Option of a type

@@ -178,36 +178,38 @@ theorem quotient_norm_nonneg (S : AddSubgroup M) : ∀ x : Quotientₓ S, 0 ≤ 
 theorem norm_mk_nonneg (S : AddSubgroup M) (m : M) : 0 ≤ ∥mk' S m∥ :=
   quotient_norm_nonneg S _
 
+-- error in Analysis.Normed.Group.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The norm of the image of `m : M` in the quotient by `S` is zero if and only if `m` belongs
 to the closure of `S`. -/
-theorem quotient_norm_eq_zero_iff (S : AddSubgroup M) (m : M) : ∥mk' S m∥ = 0 ↔ m ∈ Closure (S : Set M) :=
-  by 
-    have  : 0 ≤ ∥mk' S m∥ := norm_mk_nonneg S m 
-    rw [←this.le_iff_eq, quotient_norm_mk_eq, Real.Inf_le_iff]
-    simpRw [zero_addₓ]
-    ·
-      calc
-        (∀ ε _ : ε > (0 : ℝ), ∃ (r : _)(_ : r ∈ (fun x => ∥m+x∥) '' (S : Set M)), r < ε) ↔
-          ∀ ε _ : ε > 0, ∃ (x : _)(_ : x ∈ S), ∥m+x∥ < ε :=
-        by 
-          simp [Set.bex_image_iff]_ ↔ ∀ ε _ : ε > 0, ∃ (x : _)(_ : x ∈ S), ∥m+-x∥ < ε :=
-        _ _ ↔ ∀ ε _ : ε > 0, ∃ (x : _)(_ : x ∈ S), x ∈ Metric.Ball m ε :=
-        by 
-          simp [dist_eq_norm, ←sub_eq_add_neg, norm_sub_rev]_ ↔ m ∈ Closure («expr↑ » S) :=
-        by 
-          simp [Metric.mem_closure_iff, dist_comm]
-      apply forall_congrₓ 
-      intro ε 
-      apply forall_congrₓ 
-      intro ε_pos 
-      rw [←S.exists_neg_mem_iff_exists_mem]
-      simp 
-    ·
-      use 0
-      rintro _ ⟨x, x_in, rfl⟩
-      apply norm_nonneg 
-    rw [Set.nonempty_image_iff]
-    use 0, S.zero_mem
+theorem quotient_norm_eq_zero_iff
+(S : add_subgroup M)
+(m : M) : «expr ↔ »(«expr = »(«expr∥ ∥»(mk' S m), 0), «expr ∈ »(m, closure (S : set M))) :=
+begin
+  have [] [":", expr «expr ≤ »(0, «expr∥ ∥»(mk' S m))] [":=", expr norm_mk_nonneg S m],
+  rw ["[", "<-", expr this.le_iff_eq, ",", expr quotient_norm_mk_eq, ",", expr real.Inf_le_iff, "]"] [],
+  simp_rw ["[", expr zero_add, "]"] [],
+  { calc
+      «expr ↔ »(∀
+       ε «expr > » (0 : exprℝ()), «expr∃ , »((r «expr ∈ » «expr '' »(λ
+          x, «expr∥ ∥»(«expr + »(m, x)), (S : set M))), «expr < »(r, ε)), ∀
+       ε «expr > » 0, «expr∃ , »((x «expr ∈ » S), «expr < »(«expr∥ ∥»(«expr + »(m, x)), ε))) : by simp [] [] [] ["[", expr set.bex_image_iff, "]"] [] []
+      «expr ↔ »(..., ∀
+       ε «expr > » 0, «expr∃ , »((x «expr ∈ » S), «expr < »(«expr∥ ∥»(«expr + »(m, «expr- »(x))), ε))) : _
+      «expr ↔ »(..., ∀
+       ε «expr > » 0, «expr∃ , »((x «expr ∈ » S), «expr ∈ »(x, metric.ball m ε))) : by simp [] [] [] ["[", expr dist_eq_norm, ",", "<-", expr sub_eq_add_neg, ",", expr norm_sub_rev, "]"] [] []
+      «expr ↔ »(..., «expr ∈ »(m, closure «expr↑ »(S))) : by simp [] [] [] ["[", expr metric.mem_closure_iff, ",", expr dist_comm, "]"] [] [],
+    apply [expr forall_congr],
+    intro [ident ε],
+    apply [expr forall_congr],
+    intro [ident ε_pos],
+    rw ["[", "<-", expr S.exists_neg_mem_iff_exists_mem, "]"] [],
+    simp [] [] [] [] [] [] },
+  { use [expr 0],
+    rintro ["_", "⟨", ident x, ",", ident x_in, ",", ident rfl, "⟩"],
+    apply [expr norm_nonneg] },
+  rw [expr set.nonempty_image_iff] [],
+  use ["[", expr 0, ",", expr S.zero_mem, "]"]
+end
 
 /-- For any `x : quotient S` and any `0 < ε`, there is `m : M` such that `mk' S m = x`
 and `∥m∥ < ∥x∥ + ε`. -/
@@ -251,86 +253,78 @@ theorem norm_zero_eq_zero (S : AddSubgroup M) (hS : IsClosed (S : Set M)) (m : M
   by 
     rwa [quotient_norm_eq_zero_iff, hS.closure_eq] at h
 
-theorem quotient_nhd_basis (S : AddSubgroup M) :
-  (𝓝 (0 : Quotientₓ S)).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { x | ∥x∥ < ε } :=
-  ⟨by 
-      intro U 
-      split 
-      ·
-        intro U_in 
-        rw [←(mk' S).map_zero] at U_in 
-        have  := preimage_nhds_coinduced U_in 
-        rcases metric.mem_nhds_iff.mp this with ⟨ε, ε_pos, H⟩
-        use ε / 2, half_pos ε_pos 
-        intro x x_in 
-        dsimp  at x_in 
-        rcases norm_mk_lt x (half_pos ε_pos) with ⟨y, rfl, ry⟩
-        apply H 
-        rw [ball_zero_eq]
-        dsimp 
-        linarith
-      ·
-        rintro ⟨ε, ε_pos, h⟩
-        have  : mk' S '' ball (0 : M) ε ⊆ { x | ∥x∥ < ε }
-        ·
-          rintro - ⟨x, x_in, rfl⟩
-          rw [mem_ball_zero_iff] at x_in 
-          exact lt_of_le_of_ltₓ (quotient_norm_mk_le S x) x_in 
-        apply Filter.mem_of_superset _ (Set.Subset.trans this h)
-        clear h U this 
-        apply IsOpen.mem_nhds
-        ·
-          change IsOpen (mk' S ⁻¹' _)
-          erw [QuotientAddGroup.preimage_image_coe]
-          apply is_open_Union 
-          rintro ⟨s, s_in⟩
-          exact (continuous_add_right s).is_open_preimage _ is_open_ball
-        ·
-          exact ⟨(0 : M), mem_ball_self ε_pos, (mk' S).map_zero⟩⟩
+-- error in Analysis.Normed.Group.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem quotient_nhd_basis
+(S : add_subgroup M) : (expr𝓝() (0 : quotient S)).has_basis (λ
+ ε : exprℝ(), «expr < »(0, ε)) (λ ε, {x | «expr < »(«expr∥ ∥»(x), ε)}) :=
+⟨begin
+   intros [ident U],
+   split,
+   { intros [ident U_in],
+     rw ["<-", expr (mk' S).map_zero] ["at", ident U_in],
+     have [] [] [":=", expr preimage_nhds_coinduced U_in],
+     rcases [expr metric.mem_nhds_iff.mp this, "with", "⟨", ident ε, ",", ident ε_pos, ",", ident H, "⟩"],
+     use ["[", expr «expr / »(ε, 2), ",", expr half_pos ε_pos, "]"],
+     intros [ident x, ident x_in],
+     dsimp [] [] [] ["at", ident x_in],
+     rcases [expr norm_mk_lt x (half_pos ε_pos), "with", "⟨", ident y, ",", ident rfl, ",", ident ry, "⟩"],
+     apply [expr H],
+     rw [expr ball_zero_eq] [],
+     dsimp [] [] [] [],
+     linarith [] [] [] },
+   { rintros ["⟨", ident ε, ",", ident ε_pos, ",", ident h, "⟩"],
+     have [] [":", expr «expr ⊆ »(«expr '' »(mk' S, ball (0 : M) ε), {x | «expr < »(«expr∥ ∥»(x), ε)})] [],
+     { rintros ["-", "⟨", ident x, ",", ident x_in, ",", ident rfl, "⟩"],
+       rw [expr mem_ball_zero_iff] ["at", ident x_in],
+       exact [expr lt_of_le_of_lt (quotient_norm_mk_le S x) x_in] },
+     apply [expr filter.mem_of_superset _ (set.subset.trans this h)],
+     clear [ident h, ident U, ident this],
+     apply [expr is_open.mem_nhds],
+     { change [expr is_open «expr ⁻¹' »(mk' S, _)] [] [],
+       erw [expr quotient_add_group.preimage_image_coe] [],
+       apply [expr is_open_Union],
+       rintros ["⟨", ident s, ",", ident s_in, "⟩"],
+       exact [expr (continuous_add_right s).is_open_preimage _ is_open_ball] },
+     { exact [expr ⟨(0 : M), mem_ball_self ε_pos, (mk' S).map_zero⟩] } }
+ end⟩
 
+-- error in Analysis.Normed.Group.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The seminormed group structure on the quotient by an additive subgroup. -/
-noncomputable instance AddSubgroup.semiNormedGroupQuotient (S : AddSubgroup M) : SemiNormedGroup (Quotientₓ S) :=
-  { dist := fun x y => ∥x - y∥,
-    dist_self :=
-      fun x =>
-        by 
-          simp only [norm_mk_zero, sub_self],
-    dist_comm := quotient_norm_sub_rev,
-    dist_triangle :=
-      fun x y z =>
-        by 
-          unfold dist 
-          have  : x - z = (x - y)+y - z :=
-            by 
-              abel 
-          rw [this]
-          exact quotient_norm_add_le S (x - y) (y - z),
-    dist_eq := fun x y => rfl, toUniformSpace := TopologicalAddGroup.toUniformSpace (Quotientₓ S),
-    uniformity_dist :=
-      by 
-        rw [uniformity_eq_comap_nhds_zero']
-        have  := (quotient_nhd_basis S).comap fun p : Quotientₓ S × Quotientₓ S => p.2 - p.1
-        apply this.eq_of_same_basis 
-        have  :
-          ∀ ε : ℝ,
-            (fun p : Quotientₓ S × Quotientₓ S => p.snd - p.fst) ⁻¹' { x | ∥x∥ < ε } =
-              { p : Quotientₓ S × Quotientₓ S | ∥p.fst - p.snd∥ < ε }
-        ·
-          intro ε 
-          ext x 
-          dsimp 
-          rw [quotient_norm_sub_rev]
-        rw [funext this]
-        refine' Filter.has_basis_binfi_principal _ Set.nonempty_Ioi 
-        rintro ε (ε_pos : 0 < ε) η (η_pos : 0 < η)
-        refine' ⟨min ε η, lt_minₓ ε_pos η_pos, _, _⟩
-        ·
-          suffices  : ∀ a b : Quotientₓ S, ∥a - b∥ < ε → ∥a - b∥ < η → ∥a - b∥ < ε
-          ·
-            simpa 
-          exact fun a b h h' => h
-        ·
-          simp  }
+noncomputable
+instance add_subgroup.semi_normed_group_quotient (S : add_subgroup M) : semi_normed_group (quotient S) :=
+{ dist := λ x y, «expr∥ ∥»(«expr - »(x, y)),
+  dist_self := λ x, by simp [] [] ["only"] ["[", expr norm_mk_zero, ",", expr sub_self, "]"] [] [],
+  dist_comm := quotient_norm_sub_rev,
+  dist_triangle := λ x y z, begin
+    unfold [ident dist] [],
+    have [] [":", expr «expr = »(«expr - »(x, z), «expr + »(«expr - »(x, y), «expr - »(y, z)))] [":=", expr by abel [] [] []],
+    rw [expr this] [],
+    exact [expr quotient_norm_add_le S «expr - »(x, y) «expr - »(y, z)]
+  end,
+  dist_eq := λ x y, rfl,
+  to_uniform_space := topological_add_group.to_uniform_space (quotient S),
+  uniformity_dist := begin
+    rw [expr uniformity_eq_comap_nhds_zero'] [],
+    have [] [] [":=", expr (quotient_nhd_basis S).comap (λ p : «expr × »(quotient S, quotient S), «expr - »(p.2, p.1))],
+    apply [expr this.eq_of_same_basis],
+    have [] [":", expr ∀
+     ε : exprℝ(), «expr = »(«expr ⁻¹' »(λ
+       p : «expr × »(quotient S, quotient S), «expr - »(p.snd, p.fst), {x | «expr < »(«expr∥ ∥»(x), ε)}), {p : «expr × »(quotient S, quotient S) | «expr < »(«expr∥ ∥»(«expr - »(p.fst, p.snd)), ε)})] [],
+    { intro [ident ε],
+      ext [] [ident x] [],
+      dsimp [] [] [] [],
+      rw [expr quotient_norm_sub_rev] [] },
+    rw [expr funext this] [],
+    refine [expr filter.has_basis_binfi_principal _ set.nonempty_Ioi],
+    rintros [ident ε, "(", ident ε_pos, ":", expr «expr < »(0, ε), ")", ident η, "(", ident η_pos, ":", expr «expr < »(0, η), ")"],
+    refine [expr ⟨min ε η, lt_min ε_pos η_pos, _, _⟩],
+    { suffices [] [":", expr ∀
+       a
+       b : quotient S, «expr < »(«expr∥ ∥»(«expr - »(a, b)), ε) → «expr < »(«expr∥ ∥»(«expr - »(a, b)), η) → «expr < »(«expr∥ ∥»(«expr - »(a, b)), ε)],
+      by simpa [] [] [] [] [] [],
+      exact [expr λ a b h h', h] },
+    { simp [] [] [] [] [] [] }
+  end }
 
 example  (S : AddSubgroup M) :
   (Quotientₓ.topologicalSpace : TopologicalSpace$ Quotientₓ S) =
@@ -383,62 +377,59 @@ theorem norm_normed_mk_le (S : AddSubgroup M) : ∥S.normed_mk∥ ≤ 1 :=
       by 
         simp [quotient_norm_mk_le']
 
+-- error in Analysis.Normed.Group.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The operator norm of the projection is `1` if the subspace is not dense. -/
-theorem norm_normed_mk (S : AddSubgroup M) (h : (S.topological_closure : Set M) ≠ univ) : ∥S.normed_mk∥ = 1 :=
-  by 
-    obtain ⟨x, hx⟩ := Set.nonempty_compl.2 h 
-    let y := S.normed_mk x 
-    have hy : ∥y∥ ≠ 0
-    ·
-      intro h0 
-      exact Set.not_mem_of_mem_compl hx ((quotient_norm_eq_zero_iff S x).1 h0)
-    refine' le_antisymmₓ (norm_normed_mk_le S) (le_of_forall_pos_le_add fun ε hε => _)
-    suffices  : 1 ≤ ∥S.normed_mk∥+min ε ((1 : ℝ) / 2)
-    ·
-      exact le_add_of_le_add_left this (min_le_leftₓ ε ((1 : ℝ) / 2))
-    have hδ := sub_pos.mpr (lt_of_le_of_ltₓ (min_le_rightₓ ε ((1 : ℝ) / 2)) one_half_lt_one)
-    have hδpos : 0 < min ε ((1 : ℝ) / 2) := lt_minₓ hε one_half_pos 
-    have hδnorm := mul_pos (div_pos hδpos hδ) (lt_of_le_of_neₓ (norm_nonneg y) hy.symm)
-    obtain ⟨m, hm, hlt⟩ := norm_mk_lt y hδnorm 
-    have hrw : (∥y∥+(min ε (1 / 2) / (1 - min ε (1 / 2)))*∥y∥) = ∥y∥*1+min ε (1 / 2) / (1 - min ε (1 / 2)) :=
-      by 
-        ring 
-    rw [hrw] at hlt 
-    have hm0 : ∥m∥ ≠ 0
-    ·
-      intro h0 
-      have hnorm := quotient_norm_mk_le S m 
-      rw [h0, hm] at hnorm 
-      replace hnorm := le_antisymmₓ hnorm (norm_nonneg _)
-      simpa [hnorm] using hy 
-    replace hlt := (div_lt_div_right (lt_of_le_of_neₓ (norm_nonneg m) hm0.symm)).2 hlt 
-    simp only [hm0, div_self, Ne.def, not_false_iff] at hlt 
-    have hrw₁ : (∥y∥*1+min ε (1 / 2) / (1 - min ε (1 / 2))) / ∥m∥ = (∥y∥ / ∥m∥)*1+min ε (1 / 2) / (1 - min ε (1 / 2)) :=
-      by 
-        ring 
-    rw [hrw₁] at hlt 
-    replace hlt := (inv_pos_lt_iff_one_lt_mul (lt_transₓ (div_pos hδpos hδ) (lt_one_add _))).2 hlt 
-    suffices  : ∥S.normed_mk∥ ≥ 1 - min ε (1 / 2)
-    ·
-      exact sub_le_iff_le_add.mp this 
-    calc ∥S.normed_mk∥ ≥ ∥S.normed_mk m∥ / ∥m∥ := ratio_le_op_norm S.normed_mk m _ = ∥y∥ / ∥m∥ :=
-      by 
-        rw [normed_mk.apply, hm]_ ≥ (1+min ε (1 / 2) / (1 - min ε (1 / 2)))⁻¹ :=
-      le_of_ltₓ hlt _ = 1 - min ε (1 / 2) :=
-      by 
-        fieldSimp [(ne_of_ltₓ hδ).symm]
+theorem norm_normed_mk
+(S : add_subgroup M)
+(h : «expr ≠ »((S.topological_closure : set M), univ)) : «expr = »(«expr∥ ∥»(S.normed_mk), 1) :=
+begin
+  obtain ["⟨", ident x, ",", ident hx, "⟩", ":=", expr set.nonempty_compl.2 h],
+  let [ident y] [] [":=", expr S.normed_mk x],
+  have [ident hy] [":", expr «expr ≠ »(«expr∥ ∥»(y), 0)] [],
+  { intro [ident h0],
+    exact [expr set.not_mem_of_mem_compl hx ((quotient_norm_eq_zero_iff S x).1 h0)] },
+  refine [expr le_antisymm (norm_normed_mk_le S) (le_of_forall_pos_le_add (λ ε hε, _))],
+  suffices [] [":", expr «expr ≤ »(1, «expr + »(«expr∥ ∥»(S.normed_mk), min ε «expr / »((1 : exprℝ()), 2)))],
+  { exact [expr le_add_of_le_add_left this (min_le_left ε «expr / »((1 : exprℝ()), 2))] },
+  have [ident hδ] [] [":=", expr sub_pos.mpr (lt_of_le_of_lt (min_le_right ε «expr / »((1 : exprℝ()), 2)) one_half_lt_one)],
+  have [ident hδpos] [":", expr «expr < »(0, min ε «expr / »((1 : exprℝ()), 2))] [":=", expr lt_min hε one_half_pos],
+  have [ident hδnorm] [] [":=", expr mul_pos (div_pos hδpos hδ) (lt_of_le_of_ne (norm_nonneg y) hy.symm)],
+  obtain ["⟨", ident m, ",", ident hm, ",", ident hlt, "⟩", ":=", expr norm_mk_lt y hδnorm],
+  have [ident hrw] [":", expr «expr = »(«expr + »(«expr∥ ∥»(y), «expr * »(«expr / »(min ε «expr / »(1, 2), «expr - »(1, min ε «expr / »(1, 2))), «expr∥ ∥»(y))), «expr * »(«expr∥ ∥»(y), «expr + »(1, «expr / »(min ε «expr / »(1, 2), «expr - »(1, min ε «expr / »(1, 2))))))] [":=", expr by ring []],
+  rw ["[", expr hrw, "]"] ["at", ident hlt],
+  have [ident hm0] [":", expr «expr ≠ »(«expr∥ ∥»(m), 0)] [],
+  { intro [ident h0],
+    have [ident hnorm] [] [":=", expr quotient_norm_mk_le S m],
+    rw ["[", expr h0, ",", expr hm, "]"] ["at", ident hnorm],
+    replace [ident hnorm] [] [":=", expr le_antisymm hnorm (norm_nonneg _)],
+    simpa [] [] [] ["[", expr hnorm, "]"] [] ["using", expr hy] },
+  replace [ident hlt] [] [":=", expr (div_lt_div_right (lt_of_le_of_ne (norm_nonneg m) hm0.symm)).2 hlt],
+  simp [] [] ["only"] ["[", expr hm0, ",", expr div_self, ",", expr ne.def, ",", expr not_false_iff, "]"] [] ["at", ident hlt],
+  have [ident hrw₁] [":", expr «expr = »(«expr / »(«expr * »(«expr∥ ∥»(y), «expr + »(1, «expr / »(min ε «expr / »(1, 2), «expr - »(1, min ε «expr / »(1, 2))))), «expr∥ ∥»(m)), «expr * »(«expr / »(«expr∥ ∥»(y), «expr∥ ∥»(m)), «expr + »(1, «expr / »(min ε «expr / »(1, 2), «expr - »(1, min ε «expr / »(1, 2))))))] [":=", expr by ring []],
+  rw ["[", expr hrw₁, "]"] ["at", ident hlt],
+  replace [ident hlt] [] [":=", expr (inv_pos_lt_iff_one_lt_mul (lt_trans (div_pos hδpos hδ) (lt_one_add _))).2 hlt],
+  suffices [] [":", expr «expr ≥ »(«expr∥ ∥»(S.normed_mk), «expr - »(1, min ε «expr / »(1, 2)))],
+  { exact [expr sub_le_iff_le_add.mp this] },
+  calc
+    «expr ≥ »(«expr∥ ∥»(S.normed_mk), «expr / »(«expr∥ ∥»(S.normed_mk m), «expr∥ ∥»(m))) : ratio_le_op_norm S.normed_mk m
+    «expr = »(..., «expr / »(«expr∥ ∥»(y), «expr∥ ∥»(m))) : by rw ["[", expr normed_mk.apply, ",", expr hm, "]"] []
+    «expr ≥ »(..., «expr ⁻¹»(«expr + »(1, «expr / »(min ε «expr / »(1, 2), «expr - »(1, min ε «expr / »(1, 2)))))) : le_of_lt hlt
+    «expr = »(..., «expr - »(1, min ε «expr / »(1, 2))) : by field_simp [] ["[", expr (ne_of_lt hδ).symm, "]"] [] []
+end
 
+-- error in Analysis.Normed.Group.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The operator norm of the projection is `0` if the subspace is dense. -/
-theorem norm_trivial_quotient_mk (S : AddSubgroup M) (h : (S.topological_closure : Set M) = Set.Univ) :
-  ∥S.normed_mk∥ = 0 :=
-  by 
-    refine' le_antisymmₓ (op_norm_le_bound _ (le_reflₓ _) fun x => _) (norm_nonneg _)
-    have hker : x ∈ S.normed_mk.ker.topologicalClosure
-    ·
-      rw [S.ker_normed_mk]
-      exact Set.mem_of_eq_of_mem h trivialₓ 
-    rw [ker_normed_mk] at hker 
-    simp only [(quotient_norm_eq_zero_iff S x).mpr hker, normed_mk.apply, zero_mul]
+theorem norm_trivial_quotient_mk
+(S : add_subgroup M)
+(h : «expr = »((S.topological_closure : set M), set.univ)) : «expr = »(«expr∥ ∥»(S.normed_mk), 0) :=
+begin
+  refine [expr le_antisymm (op_norm_le_bound _ (le_refl _) (λ x, _)) (norm_nonneg _)],
+  have [ident hker] [":", expr «expr ∈ »(x, S.normed_mk.ker.topological_closure)] [],
+  { rw ["[", expr S.ker_normed_mk, "]"] [],
+    exact [expr set.mem_of_eq_of_mem h trivial] },
+  rw ["[", expr ker_normed_mk, "]"] ["at", ident hker],
+  simp [] [] ["only"] ["[", expr (quotient_norm_eq_zero_iff S x).mpr hker, ",", expr normed_mk.apply, ",", expr zero_mul, "]"] [] []
+end
 
 end AddSubgroup
 
@@ -485,21 +476,22 @@ theorem is_quotient_quotient (S : AddSubgroup M) : is_quotient S.normed_mk :=
       by 
         simpa [S.ker_normed_mk] using quotient_norm_mk_eq _ m⟩
 
-theorem is_quotient.norm_lift {f : NormedGroupHom M N} (hquot : is_quotient f) {ε : ℝ} (hε : 0 < ε) (n : N) :
-  ∃ m : M, f m = n ∧ ∥m∥ < ∥n∥+ε :=
-  by 
-    obtain ⟨m, rfl⟩ := hquot.surjective n 
-    have nonemp : ((fun m' => ∥m+m'∥) '' f.ker).Nonempty
-    ·
-      rw [Set.nonempty_image_iff]
-      exact ⟨0, f.ker.zero_mem⟩
-    rcases Real.lt_Inf_add_pos nonemp hε with ⟨_, ⟨⟨x, hx, rfl⟩, H : ∥m+x∥ < Inf ((fun m' : M => ∥m+m'∥) '' f.ker)+ε⟩⟩
-    exact
-      ⟨m+x,
-        by 
-          rw [f.map_add, (NormedGroupHom.mem_ker f x).mp hx, add_zeroₓ],
-        by 
-          rwa [hquot.norm]⟩
+-- error in Analysis.Normed.Group.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_quotient.norm_lift
+{f : normed_group_hom M N}
+(hquot : is_quotient f)
+{ε : exprℝ()}
+(hε : «expr < »(0, ε))
+(n : N) : «expr∃ , »((m : M), «expr ∧ »(«expr = »(f m, n), «expr < »(«expr∥ ∥»(m), «expr + »(«expr∥ ∥»(n), ε)))) :=
+begin
+  obtain ["⟨", ident m, ",", ident rfl, "⟩", ":=", expr hquot.surjective n],
+  have [ident nonemp] [":", expr «expr '' »(λ m', «expr∥ ∥»(«expr + »(m, m')), f.ker).nonempty] [],
+  { rw [expr set.nonempty_image_iff] [],
+    exact [expr ⟨0, f.ker.zero_mem⟩] },
+  rcases [expr real.lt_Inf_add_pos nonemp hε, "with", "⟨", "_", ",", "⟨", "⟨", ident x, ",", ident hx, ",", ident rfl, "⟩", ",", ident H, ":", expr «expr < »(«expr∥ ∥»(«expr + »(m, x)), «expr + »(Inf «expr '' »(λ
+      m' : M, «expr∥ ∥»(«expr + »(m, m')), f.ker), ε)), "⟩", "⟩"],
+  exact [expr ⟨«expr + »(m, x), by rw ["[", expr f.map_add, ",", expr (normed_group_hom.mem_ker f x).mp hx, ",", expr add_zero, "]"] [], by rwa [expr hquot.norm] []⟩]
+end
 
 theorem is_quotient.norm_le {f : NormedGroupHom M N} (hquot : is_quotient f) (m : M) : ∥f m∥ ≤ ∥m∥ :=
   by 
@@ -515,38 +507,52 @@ theorem is_quotient.norm_le {f : NormedGroupHom M N} (hquot : is_quotient f) (m 
           by 
             simp ⟩
 
-theorem lift_norm_le {N : Type _} [SemiNormedGroup N] (S : AddSubgroup M) (f : NormedGroupHom M N)
-  (hf : ∀ s _ : s ∈ S, f s = 0) {c :  ℝ≥0 } (fb : ∥f∥ ≤ c) : ∥lift S f hf∥ ≤ c :=
-  by 
-    apply op_norm_le_bound _ c.coe_nonneg 
-    intro x 
-    byCases' hc : c = 0
-    ·
-      simp only [hc, Nnreal.coe_zero, zero_mul] at fb⊢
-      obtain ⟨x, rfl⟩ := surjective_quot_mk _ x 
-      show ∥f x∥ ≤ 0
-      calc ∥f x∥ ≤ 0*∥x∥ := f.le_of_op_norm_le fb x _ = 0 := zero_mul _
-    ·
-      replace hc : 0 < c := pos_iff_ne_zero.mpr hc 
-      apply le_of_forall_pos_le_add 
-      intro ε hε 
-      have aux : 0 < ε / c := div_pos hε hc 
-      obtain ⟨x, rfl, Hx⟩ : ∃ x', S.normed_mk x' = x ∧ ∥x'∥ < ∥x∥+ε / c := (is_quotient_quotient _).norm_lift aux _ 
-      rw [lift_mk]
-      calc ∥f x∥ ≤ c*∥x∥ := f.le_of_op_norm_le fb x _ ≤ c*∥S.normed_mk x∥+ε / c :=
-        (mul_le_mul_left _).mpr Hx.le _ = (c*_)+ε := _
-      ·
-        exactModCast hc
-      ·
-        rw [mul_addₓ, mul_div_cancel']
-        exactModCast hc.ne'
+-- error in Analysis.Normed.Group.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lift_norm_le
+{N : Type*}
+[semi_normed_group N]
+(S : add_subgroup M)
+(f : normed_group_hom M N)
+(hf : ∀ s «expr ∈ » S, «expr = »(f s, 0))
+{c : «exprℝ≥0»()}
+(fb : «expr ≤ »(«expr∥ ∥»(f), c)) : «expr ≤ »(«expr∥ ∥»(lift S f hf), c) :=
+begin
+  apply [expr op_norm_le_bound _ c.coe_nonneg],
+  intros [ident x],
+  by_cases [expr hc, ":", expr «expr = »(c, 0)],
+  { simp [] [] ["only"] ["[", expr hc, ",", expr nnreal.coe_zero, ",", expr zero_mul, "]"] [] ["at", ident fb, "⊢"],
+    obtain ["⟨", ident x, ",", ident rfl, "⟩", ":=", expr surjective_quot_mk _ x],
+    show [expr «expr ≤ »(«expr∥ ∥»(f x), 0)],
+    calc
+      «expr ≤ »(«expr∥ ∥»(f x), «expr * »(0, «expr∥ ∥»(x))) : f.le_of_op_norm_le fb x
+      «expr = »(..., 0) : zero_mul _ },
+  { replace [ident hc] [":", expr «expr < »(0, c)] [":=", expr pos_iff_ne_zero.mpr hc],
+    apply [expr le_of_forall_pos_le_add],
+    intros [ident ε, ident hε],
+    have [ident aux] [":", expr «expr < »(0, «expr / »(ε, c))] [":=", expr div_pos hε hc],
+    obtain ["⟨", ident x, ",", ident rfl, ",", ident Hx, "⟩", ":", expr «expr∃ , »((x'), «expr ∧ »(«expr = »(S.normed_mk x', x), «expr < »(«expr∥ ∥»(x'), «expr + »(«expr∥ ∥»(x), «expr / »(ε, c))))), ":=", expr (is_quotient_quotient _).norm_lift aux _],
+    rw [expr lift_mk] [],
+    calc
+      «expr ≤ »(«expr∥ ∥»(f x), «expr * »(c, «expr∥ ∥»(x))) : f.le_of_op_norm_le fb x
+      «expr ≤ »(..., «expr * »(c, «expr + »(«expr∥ ∥»(S.normed_mk x), «expr / »(ε, c)))) : (mul_le_mul_left _).mpr Hx.le
+      «expr = »(..., «expr + »(«expr * »(c, _), ε)) : _,
+    { exact_mod_cast [expr hc] },
+    { rw ["[", expr mul_add, ",", expr mul_div_cancel', "]"] [],
+      exact_mod_cast [expr hc.ne'] } }
+end
 
-theorem lift_norm_noninc {N : Type _} [SemiNormedGroup N] (S : AddSubgroup M) (f : NormedGroupHom M N)
-  (hf : ∀ s _ : s ∈ S, f s = 0) (fb : f.norm_noninc) : (lift S f hf).NormNoninc :=
-  fun x =>
-    by 
-      have fb' : ∥f∥ ≤ (1 :  ℝ≥0 ) := norm_noninc.norm_noninc_iff_norm_le_one.mp fb 
-      simpa using le_of_op_norm_le _ (f.lift_norm_le _ _ fb') _
+-- error in Analysis.Normed.Group.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lift_norm_noninc
+{N : Type*}
+[semi_normed_group N]
+(S : add_subgroup M)
+(f : normed_group_hom M N)
+(hf : ∀ s «expr ∈ » S, «expr = »(f s, 0))
+(fb : f.norm_noninc) : (lift S f hf).norm_noninc :=
+λ x, begin
+  have [ident fb'] [":", expr «expr ≤ »(«expr∥ ∥»(f), (1 : «exprℝ≥0»()))] [":=", expr norm_noninc.norm_noninc_iff_norm_le_one.mp fb],
+  simpa [] [] [] [] [] ["using", expr le_of_op_norm_le _ (f.lift_norm_le _ _ fb') _]
+end
 
 end NormedGroupHom
 

@@ -1,6 +1,5 @@
-import Mathbin.Topology.UniformSpace.Basic 
 import Mathbin.Topology.Bases 
-import Mathbin.Data.Set.Intervals.Default
+import Mathbin.Topology.UniformSpace.Basic
 
 /-!
 # Theory of Cauchy filters in uniform spaces. Complete uniform spaces. Totally bounded subsets.
@@ -64,7 +63,7 @@ theorem cauchy_nhds {a : α} : Cauchy (𝓝 a) :=
       𝓝 a ×ᶠ 𝓝 a =
         (𝓤 α).lift
           fun s : Set (α × α) =>
-            (𝓤 α).lift' fun t : Set (α × α) => Set.Prod { y : α | (y, a) ∈ s } { y : α | (a, y) ∈ t } :=
+            (𝓤 α).lift' fun t : Set (α × α) => Set.Prod { y:α | (y, a) ∈ s } { y:α | (a, y) ∈ t } :=
       nhds_nhds_eq_uniformity_uniformity_prod 
       _ ≤ (𝓤 α).lift' fun s : Set (α × α) => CompRel s s :=
       le_infi$
@@ -153,13 +152,21 @@ theorem CauchySeq.tendsto_uniformity [SemilatticeSup β] {u : β → α} (h : Ca
 theorem CauchySeq.nonempty [SemilatticeSup β] {u : β → α} (hu : CauchySeq u) : Nonempty β :=
   @nonempty_of_ne_bot _ _$ (map_ne_bot_iff _).1 hu.1
 
-theorem CauchySeq.mem_entourage {β : Type _} [SemilatticeSup β] {u : β → α} (h : CauchySeq u) {V : Set (α × α)}
-  (hV : V ∈ 𝓤 α) : ∃ k₀, ∀ i j, k₀ ≤ i → k₀ ≤ j → (u i, u j) ∈ V :=
-  by 
-    haveI  := h.nonempty 
-    have  := h.tendsto_uniformity 
-    rw [←prod_at_top_at_top_eq] at this 
-    simpa [maps_to] using at_top_basis.prod_self.tendsto_left_iff.1 this V hV
+-- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cauchy_seq.mem_entourage
+{β : Type*}
+[semilattice_sup β]
+{u : β → α}
+(h : cauchy_seq u)
+{V : set «expr × »(α, α)}
+(hV : «expr ∈ »(V, expr𝓤() α)) : «expr∃ , »((k₀), ∀
+ i j, «expr ≤ »(k₀, i) → «expr ≤ »(k₀, j) → «expr ∈ »((u i, u j), V)) :=
+begin
+  haveI [] [] [":=", expr h.nonempty],
+  have [] [] [":=", expr h.tendsto_uniformity],
+  rw ["<-", expr prod_at_top_at_top_eq] ["at", ident this],
+  simpa [] [] [] ["[", expr maps_to, "]"] [] ["using", expr at_top_basis.prod_self.tendsto_left_iff.1 this V hV]
+end
 
 theorem Filter.Tendsto.cauchy_seq [SemilatticeSup β] [Nonempty β] {f : β → α} {x} (hx : tendsto f at_top (𝓝 x)) :
   CauchySeq f :=
@@ -198,28 +205,42 @@ theorem CauchySeq.prod_map {γ δ} [UniformSpace β] [SemilatticeSup γ] [Semila
   by 
     simpa only [CauchySeq, prod_map_map_eq', prod_at_top_at_top_eq] using hu.prod hv
 
-theorem CauchySeq.prod {γ} [UniformSpace β] [SemilatticeSup γ] {u : γ → α} {v : γ → β} (hu : CauchySeq u)
-  (hv : CauchySeq v) : CauchySeq fun x => (u x, v x) :=
-  by 
-    haveI  := hu.nonempty 
-    exact (hu.prod hv).mono (tendsto.prod_mk le_rfl le_rfl)
+-- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cauchy_seq.prod
+{γ}
+[uniform_space β]
+[semilattice_sup γ]
+{u : γ → α}
+{v : γ → β}
+(hu : cauchy_seq u)
+(hv : cauchy_seq v) : cauchy_seq (λ x, (u x, v x)) :=
+begin
+  haveI [] [] [":=", expr hu.nonempty],
+  exact [expr (hu.prod hv).mono (tendsto.prod_mk le_rfl le_rfl)]
+end
 
 theorem UniformContinuous.comp_cauchy_seq {γ} [UniformSpace β] [SemilatticeSup γ] {f : α → β} (hf : UniformContinuous f)
   {u : γ → α} (hu : CauchySeq u) : CauchySeq (f ∘ u) :=
   hu.map hf
 
-theorem CauchySeq.subseq_mem {V : ℕ → Set (α × α)} (hV : ∀ n, V n ∈ 𝓤 α) {u : ℕ → α} (hu : CauchySeq u) :
-  ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, (u$ φ (n+1), u$ φ n) ∈ V n :=
-  by 
-    have  : ∀ n, ∃ N, ∀ k _ : k ≥ N, ∀ l _ : l ≥ k, (u l, u k) ∈ V n
-    ·
-      intro n 
-      rw [cauchy_seq_iff] at hu 
-      rcases hu _ (hV n) with ⟨N, H⟩
-      exact ⟨N, fun k hk l hl => H _ (le_transₓ hk hl) _ hk⟩
-    obtain ⟨φ : ℕ → ℕ, φ_extr : StrictMono φ, hφ : ∀ n, ∀ l _ : l ≥ φ n, (u l, u$ φ n) ∈ V n⟩ :=
-      extraction_forall_of_eventually' this 
-    exact ⟨φ, φ_extr, fun n => hφ _ _ (φ_extr$ lt_add_one n).le⟩
+-- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem cauchy_seq.subseq_mem
+{V : exprℕ() → set «expr × »(α, α)}
+(hV : ∀ n, «expr ∈ »(V n, expr𝓤() α))
+{u : exprℕ() → α}
+(hu : cauchy_seq u) : «expr∃ , »((φ : exprℕ() → exprℕ()), «expr ∧ »(strict_mono φ, ∀
+  n, «expr ∈ »((«expr $ »(u, φ «expr + »(n, 1)), «expr $ »(u, φ n)), V n))) :=
+begin
+  have [] [":", expr ∀ n, «expr∃ , »((N), ∀ k «expr ≥ » N, ∀ l «expr ≥ » k, «expr ∈ »((u l, u k), V n))] [],
+  { intro [ident n],
+    rw ["[", expr cauchy_seq_iff, "]"] ["at", ident hu],
+    rcases [expr hu _ (hV n), "with", "⟨", ident N, ",", ident H, "⟩"],
+    exact [expr ⟨N, λ k hk l hl, H _ (le_trans hk hl) _ hk⟩] },
+  obtain ["⟨", ident φ, ":", expr exprℕ() → exprℕ(), ",", ident φ_extr, ":", expr strict_mono φ, ",", ident hφ, ":", expr ∀
+   n, ∀
+   l «expr ≥ » φ n, «expr ∈ »((u l, «expr $ »(u, φ n)), V n), "⟩", ":=", expr extraction_forall_of_eventually' this],
+  exact [expr ⟨φ, φ_extr, λ n, hφ _ _ «expr $ »(φ_extr, lt_add_one n).le⟩]
+end
 
 theorem Filter.Tendsto.subseq_mem_entourage {V : ℕ → Set (α × α)} (hV : ∀ n, V n ∈ 𝓤 α) {u : ℕ → α} {a : α}
   (hu : tendsto u at_top (𝓝 a)) :
@@ -349,30 +370,27 @@ theorem IsClosed.is_complete [CompleteSpace α] {s : Set α} (h : IsClosed s) : 
 def TotallyBounded (s : Set α) : Prop :=
   ∀ d _ : d ∈ 𝓤 α, ∃ t : Set α, finite t ∧ s ⊆ ⋃(y : _)(_ : y ∈ t), { x | (x, y) ∈ d }
 
-theorem totally_bounded_iff_subset {s : Set α} :
-  TotallyBounded s ↔ ∀ d _ : d ∈ 𝓤 α, ∃ (t : _)(_ : t ⊆ s), finite t ∧ s ⊆ ⋃(y : _)(_ : y ∈ t), { x | (x, y) ∈ d } :=
-  ⟨fun H d hd =>
-      by 
-        rcases comp_symm_of_uniformity hd with ⟨r, hr, rs, rd⟩
-        rcases H r hr with ⟨k, fk, ks⟩
-        let u := k ∩ { y | ∃ (x : _)(_ : x ∈ s), (x, y) ∈ r }
-        choose hk f hfs hfr using fun x : u => x.coe_prop 
-        refine' ⟨range f, _, _, _⟩
-        ·
-          exact range_subset_iff.2 hfs
-        ·
-          haveI  : Fintype u := (fk.inter_of_left _).Fintype 
-          exact finite_range f
-        ·
-          intro x xs 
-          obtain ⟨y, hy, xy⟩ : ∃ (y : _)(_ : y ∈ k), (x, y) ∈ r 
-          exact mem_bUnion_iff.1 (ks xs)
-          rw [bUnion_range, mem_Union]
-          set z : «expr↥ » u := ⟨y, hy, ⟨x, xs, xy⟩⟩
-          exact ⟨z, rd$ mem_comp_rel.2 ⟨y, xy, rs (hfr z)⟩⟩,
-    fun H d hd =>
-      let ⟨t, _, ht⟩ := H d hd
-      ⟨t, ht⟩⟩
+-- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem totally_bounded_iff_subset
+{s : set α} : «expr ↔ »(totally_bounded s, ∀
+ d «expr ∈ » expr𝓤() α, «expr∃ , »((t «expr ⊆ » s), «expr ∧ »(finite t, «expr ⊆ »(s, «expr⋃ , »((y «expr ∈ » t), {x | «expr ∈ »((x, y), d)}))))) :=
+⟨λ H d hd, begin
+   rcases [expr comp_symm_of_uniformity hd, "with", "⟨", ident r, ",", ident hr, ",", ident rs, ",", ident rd, "⟩"],
+   rcases [expr H r hr, "with", "⟨", ident k, ",", ident fk, ",", ident ks, "⟩"],
+   let [ident u] [] [":=", expr «expr ∩ »(k, {y | «expr∃ , »((x «expr ∈ » s), «expr ∈ »((x, y), r))})],
+   choose [] [ident hk] [ident f, ident hfs, ident hfr] ["using", expr λ x : u, x.coe_prop],
+   refine [expr ⟨range f, _, _, _⟩],
+   { exact [expr range_subset_iff.2 hfs] },
+   { haveI [] [":", expr fintype u] [":=", expr (fk.inter_of_left _).fintype],
+     exact [expr finite_range f] },
+   { intros [ident x, ident xs],
+     obtain ["⟨", ident y, ",", ident hy, ",", ident xy, "⟩", ":", expr «expr∃ , »((y «expr ∈ » k), «expr ∈ »((x, y), r))],
+     from [expr mem_bUnion_iff.1 (ks xs)],
+     rw ["[", expr bUnion_range, ",", expr mem_Union, "]"] [],
+     set [] [ident z] [":", expr «expr↥ »(u)] [":="] [expr ⟨y, hy, ⟨x, xs, xy⟩⟩] [],
+     exact [expr ⟨z, «expr $ »(rd, mem_comp_rel.2 ⟨y, xy, rs (hfr z)⟩)⟩] }
+ end, λ H d hd, let ⟨t, _, ht⟩ := H d hd in
+ ⟨t, ht⟩⟩
 
 theorem totally_bounded_of_forall_symm {s : Set α}
   (h : ∀ V _ : V ∈ 𝓤 α, SymmetricRel V → ∃ t : Set α, finite t ∧ s ⊆ ⋃(y : _)(_ : y ∈ t), ball y V) :
@@ -399,7 +417,7 @@ theorem TotallyBounded.closure {s : Set α} (h : TotallyBounded s) : TotallyBoun
     let ⟨t', ht', hct', htt'⟩ := mem_uniformity_is_closed ht 
     let ⟨c, hcf, hc⟩ := h t' ht'
     ⟨c, hcf,
-      calc Closure s ⊆ Closure (⋃(y : α)(H : y ∈ c), { x : α | (x, y) ∈ t' }) := closure_mono hc 
+      calc Closure s ⊆ Closure (⋃(y : α)(H : y ∈ c), { x:α | (x, y) ∈ t' }) := closure_mono hc 
         _ = _ :=
         IsClosed.closure_eq$
           is_closed_bUnion hcf$ fun i hi => continuous_iff_is_closed.mp (continuous_id.prod_mk continuous_const) _ hct' 
@@ -410,7 +428,7 @@ theorem TotallyBounded.closure {s : Set α} (h : TotallyBounded s) : TotallyBoun
 theorem TotallyBounded.image [UniformSpace β] {f : α → β} {s : Set α} (hs : TotallyBounded s)
   (hf : UniformContinuous f) : TotallyBounded (f '' s) :=
   fun t ht =>
-    have  : { p : α × α | (f p.1, f p.2) ∈ t } ∈ 𝓤 α := hf ht 
+    have  : { p:α × α | (f p.1, f p.2) ∈ t } ∈ 𝓤 α := hf ht 
     let ⟨c, hfc, hct⟩ := hs _ this
     ⟨f '' c, hfc.image f,
       by 
@@ -433,53 +451,45 @@ theorem Ultrafilter.cauchy_of_totally_bounded {s : Set α} (f : Ultrafilter α) 
         fun ⟨x₁, x₂⟩ ⟨(h₁ : (x₁, y) ∈ t'), (h₂ : (x₂, y) ∈ t')⟩ => ⟨y, h₁, ht'_symm h₂⟩
       mem_of_superset (prod_mem_prod hif hif) (subset.trans this ht'_t)⟩
 
-theorem totally_bounded_iff_filter {s : Set α} :
-  TotallyBounded s ↔ ∀ f, ne_bot f → f ≤ 𝓟 s → ∃ (c : _)(_ : c ≤ f), Cauchy c :=
-  by 
-    split 
-    ·
-      introI H f hf hfs 
-      exact
-        ⟨Ultrafilter.of f, Ultrafilter.of_le f,
-          (Ultrafilter.of f).cauchy_of_totally_bounded H ((Ultrafilter.of_le f).trans hfs)⟩
-    ·
-      intro H d hd 
-      contrapose! H with hd_cover 
-      set f := ⨅t : Finset α, 𝓟 (s \ ⋃(y : _)(_ : y ∈ t), { x | (x, y) ∈ d })
-      have  : ne_bot f
-      ·
-        refine' infi_ne_bot_of_directed' (directed_of_sup _) _
-        ·
-          intro t₁ t₂ h 
-          exact principal_mono.2 (diff_subset_diff_right$ bUnion_subset_bUnion_left h)
-        ·
-          intro t 
-          simpa [nonempty_diff] using hd_cover t t.finite_to_set 
-      have  : f ≤ 𝓟 s 
-      exact
-        infi_le_of_le ∅
-          (by 
-            simp )
-      refine' ⟨f, ‹_›, ‹_›, fun c hcf hc => _⟩
-      rcases mem_prod_same_iff.1 (hc.2 hd) with ⟨m, hm, hmd⟩
-      have  : m ∩ s ∈ c 
-      exact inter_mem hm (le_principal_iff.mp (hcf.trans ‹_›))
-      rcases hc.1.nonempty_of_mem this with ⟨y, hym, hys⟩
-      set ys := ⋃(y' : _)(_ : y' ∈ ({y} : Finset α)), { x | (x, y') ∈ d }
-      have  : m ⊆ ys
-      ·
-        simpa [ys] using fun x hx => hmd (mk_mem_prod hx hym)
-      have  : c ≤ 𝓟 (s \ ys) := hcf.trans (infi_le_of_le {y} le_rfl)
-      refine' hc.1.Ne (empty_mem_iff_bot.mp _)
-      filterUpwards [le_principal_iff.1 this, hm]
-      refine' fun x hx hxm => hx.2 _ 
-      simpa [ys] using hmd (mk_mem_prod hxm hym)
+-- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem totally_bounded_iff_filter
+{s : set α} : «expr ↔ »(totally_bounded s, ∀
+ f, ne_bot f → «expr ≤ »(f, expr𝓟() s) → «expr∃ , »((c «expr ≤ » f), cauchy c)) :=
+begin
+  split,
+  { introsI [ident H, ident f, ident hf, ident hfs],
+    exact [expr ⟨ultrafilter.of f, ultrafilter.of_le f, (ultrafilter.of f).cauchy_of_totally_bounded H ((ultrafilter.of_le f).trans hfs)⟩] },
+  { intros [ident H, ident d, ident hd],
+    contrapose ["!"] [ident H, "with", ident hd_cover],
+    set [] [ident f] [] [":="] [expr «expr⨅ , »((t : finset α), expr𝓟() «expr \ »(s, «expr⋃ , »((y «expr ∈ » t), {x | «expr ∈ »((x, y), d)})))] [],
+    have [] [":", expr ne_bot f] [],
+    { refine [expr infi_ne_bot_of_directed' (directed_of_sup _) _],
+      { intros [ident t₁, ident t₂, ident h],
+        exact [expr principal_mono.2 «expr $ »(diff_subset_diff_right, bUnion_subset_bUnion_left h)] },
+      { intro [ident t],
+        simpa [] [] [] ["[", expr nonempty_diff, "]"] [] ["using", expr hd_cover t t.finite_to_set] } },
+    have [] [":", expr «expr ≤ »(f, expr𝓟() s)] [],
+    from [expr infi_le_of_le «expr∅»() (by simp [] [] [] [] [] [])],
+    refine [expr ⟨f, «expr‹ ›»(_), «expr‹ ›»(_), λ c hcf hc, _⟩],
+    rcases [expr mem_prod_same_iff.1 (hc.2 hd), "with", "⟨", ident m, ",", ident hm, ",", ident hmd, "⟩"],
+    have [] [":", expr «expr ∈ »(«expr ∩ »(m, s), c)] [],
+    from [expr inter_mem hm (le_principal_iff.mp (hcf.trans «expr‹ ›»(_)))],
+    rcases [expr hc.1.nonempty_of_mem this, "with", "⟨", ident y, ",", ident hym, ",", ident hys, "⟩"],
+    set [] [ident ys] [] [":="] [expr «expr⋃ , »((y' «expr ∈ » ({y} : finset α)), {x | «expr ∈ »((x, y'), d)})] [],
+    have [] [":", expr «expr ⊆ »(m, ys)] [],
+    by simpa [] [] [] ["[", expr ys, "]"] [] ["using", expr λ x hx, hmd (mk_mem_prod hx hym)],
+    have [] [":", expr «expr ≤ »(c, expr𝓟() «expr \ »(s, ys))] [":=", expr hcf.trans (infi_le_of_le {y} le_rfl)],
+    refine [expr hc.1.ne (empty_mem_iff_bot.mp _)],
+    filter_upwards ["[", expr le_principal_iff.1 this, ",", expr hm, "]"] [],
+    refine [expr λ x hx hxm, hx.2 _],
+    simpa [] [] [] ["[", expr ys, "]"] [] ["using", expr hmd (mk_mem_prod hxm hym)] }
+end
 
 theorem totally_bounded_iff_ultrafilter {s : Set α} :
   TotallyBounded s ↔ ∀ f : Ultrafilter α, «expr↑ » f ≤ 𝓟 s → Cauchy (f : Filter α) :=
   by 
     refine' ⟨fun hs f => f.cauchy_of_totally_bounded hs, fun H => totally_bounded_iff_filter.2 _⟩
-    introI f hf hfs 
+    intros f hf hfs 
     exact ⟨Ultrafilter.of f, Ultrafilter.of_le f, H _ ((Ultrafilter.of_le f).trans hfs)⟩
 
 theorem compact_iff_totally_bounded_complete {s : Set α} : IsCompact s ↔ TotallyBounded s ∧ IsComplete s :=
@@ -573,19 +583,20 @@ include U_le
 theorem seq_is_cauchy_seq : CauchySeq$ seq hf U_mem :=
   cauchy_seq_of_controlled U U_le$ seq_pair_mem hf U_mem
 
+-- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the sequence `sequentially_complete.seq` converges to `a`, then `f ≤ 𝓝 a`. -/
-theorem le_nhds_of_seq_tendsto_nhds ⦃a : α⦄ (ha : tendsto (seq hf U_mem) at_top (𝓝 a)) : f ≤ 𝓝 a :=
-  le_nhds_of_cauchy_adhp_aux
-    (by 
-      intro s hs 
-      rcases U_le s hs with ⟨m, hm⟩
-      rcases tendsto_at_top'.1 ha _ (mem_nhds_left a (U_mem m)) with ⟨n, hn⟩
-      refine' ⟨set_seq hf U_mem (max m n), set_seq_mem hf U_mem _, _, seq hf U_mem (max m n), _, seq_mem hf U_mem _⟩
-      ·
-        have  := le_max_leftₓ m n 
-        exact Set.Subset.trans (set_seq_prod_subset hf U_mem this this) hm
-      ·
-        exact hm (hn _$ le_max_rightₓ m n))
+theorem le_nhds_of_seq_tendsto_nhds
+{{a : α}}
+(ha : tendsto (seq hf U_mem) at_top (expr𝓝() a)) : «expr ≤ »(f, expr𝓝() a) :=
+le_nhds_of_cauchy_adhp_aux (begin
+   assume [binders (s hs)],
+   rcases [expr U_le s hs, "with", "⟨", ident m, ",", ident hm, "⟩"],
+   rcases [expr tendsto_at_top'.1 ha _ (mem_nhds_left a (U_mem m)), "with", "⟨", ident n, ",", ident hn, "⟩"],
+   refine [expr ⟨set_seq hf U_mem (max m n), set_seq_mem hf U_mem _, _, seq hf U_mem (max m n), _, seq_mem hf U_mem _⟩],
+   { have [] [] [":=", expr le_max_left m n],
+     exact [expr set.subset.trans (set_seq_prod_subset hf U_mem this this) hm] },
+   { exact [expr hm «expr $ »(hn _, le_max_right m n)] }
+ end)
 
 end SequentiallyComplete
 
@@ -595,20 +606,27 @@ open SequentiallyComplete
 
 variable[is_countably_generated (𝓤 α)]
 
+-- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A uniform space is complete provided that (a) its uniformity filter has a countable basis;
 (b) any sequence satisfying a "controlled" version of the Cauchy condition converges. -/
-theorem complete_of_convergent_controlled_sequences (U : ℕ → Set (α × α)) (U_mem : ∀ n, U n ∈ 𝓤 α)
-  (HU : ∀ u : ℕ → α, (∀ N m n, N ≤ m → N ≤ n → (u m, u n) ∈ U N) → ∃ a, tendsto u at_top (𝓝 a)) : CompleteSpace α :=
-  by 
-    obtain ⟨U', U'_mono, hU'⟩ := (𝓤 α).exists_antitone_seq 
-    have Hmem : ∀ n, U n ∩ U' n ∈ 𝓤 α 
-    exact fun n => inter_mem (U_mem n) (hU'.2 ⟨n, subset.refl _⟩)
-    refine' ⟨fun f hf => (HU (seq hf Hmem) fun N m n hm hn => _).imp$ le_nhds_of_seq_tendsto_nhds _ _ fun s hs => _⟩
-    ·
-      rcases hU'.1 hs with ⟨N, hN⟩
-      exact ⟨N, subset.trans (inter_subset_right _ _) hN⟩
-    ·
-      exact inter_subset_left _ _ (seq_pair_mem hf Hmem hm hn)
+theorem complete_of_convergent_controlled_sequences
+(U : exprℕ() → set «expr × »(α, α))
+(U_mem : ∀ n, «expr ∈ »(U n, expr𝓤() α))
+(HU : ∀
+ u : exprℕ() → α, ∀
+ N
+ m
+ n, «expr ≤ »(N, m) → «expr ≤ »(N, n) → «expr ∈ »((u m, u n), U N) → «expr∃ , »((a), tendsto u at_top (expr𝓝() a))) : complete_space α :=
+begin
+  obtain ["⟨", ident U', ",", ident U'_mono, ",", ident hU', "⟩", ":=", expr (expr𝓤() α).exists_antitone_seq],
+  have [ident Hmem] [":", expr ∀ n, «expr ∈ »(«expr ∩ »(U n, U' n), expr𝓤() α)] [],
+  from [expr λ n, inter_mem (U_mem n) (hU'.2 ⟨n, subset.refl _⟩)],
+  refine [expr ⟨λ
+    f hf, «expr $ »((HU (seq hf Hmem) (λ N m n hm hn, _)).imp, le_nhds_of_seq_tendsto_nhds _ _ (λ s hs, _))⟩],
+  { rcases [expr hU'.1 hs, "with", "⟨", ident N, ",", ident hN, "⟩"],
+    exact [expr ⟨N, subset.trans (inter_subset_right _ _) hN⟩] },
+  { exact [expr inter_subset_left _ _ (seq_pair_mem hf Hmem hm hn)] }
+end
 
 /-- A sequentially complete uniform space with a countable basis of the uniformity filter is
 complete. -/

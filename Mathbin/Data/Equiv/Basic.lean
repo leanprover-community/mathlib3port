@@ -1,13 +1,14 @@
-import Mathbin.Data.Prod 
-import Mathbin.Data.Sum 
-import Mathbin.Data.Subtype 
-import Mathbin.Data.Sigma.Basic 
 import Mathbin.Data.Option.Basic 
-import Mathbin.Logic.Function.Basic 
-import Mathbin.Logic.Function.Conjugate 
+import Mathbin.Data.Sum 
 import Mathbin.Logic.Unique 
+import Mathbin.Logic.Function.Basic 
+import Mathbin.Data.Quot 
+import Mathbin.Tactic.Simps 
+import Mathbin.Logic.Function.Conjugate 
+import Mathbin.Data.Prod 
 import Mathbin.Tactic.NormCast 
-import Mathbin.Tactic.Simps
+import Mathbin.Data.Sigma.Basic 
+import Mathbin.Data.Subtype
 
 /-!
 # Equivalence between types
@@ -182,10 +183,10 @@ protected theorem subsingleton.symm (e : α ≃ β) [Subsingleton α] : Subsingl
 theorem subsingleton_congr (e : α ≃ β) : Subsingleton α ↔ Subsingleton β :=
   ⟨fun h =>
       by 
-        exactI e.symm.subsingleton,
+        exact e.symm.subsingleton,
     fun h =>
       by 
-        exactI e.subsingleton⟩
+        exact e.subsingleton⟩
 
 instance equiv_subsingleton_cod [Subsingleton β] : Subsingleton (α ≃ β) :=
   ⟨fun f g => Equiv.ext$ fun x => Subsingleton.elimₓ _ _⟩
@@ -1099,30 +1100,28 @@ theorem perm.subtype_congr.refl :
     ext x 
     byCases' h : p x <;> simp [h]
 
-@[simp]
-theorem perm.subtype_congr.symm : (ep.subtype_congr en).symm = perm.subtype_congr ep.symm en.symm :=
-  by 
-    ext x 
-    byCases' h : p x
-    ·
-      have  : p (ep.symm ⟨x, h⟩) := Subtype.property _ 
-      simp [perm.subtype_congr.apply, h, symm_apply_eq, this]
-    ·
-      have  : ¬p (en.symm ⟨x, h⟩) := Subtype.property (en.symm _)
-      simp [perm.subtype_congr.apply, h, symm_apply_eq, this]
+-- error in Data.Equiv.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem perm.subtype_congr.symm : «expr = »((ep.subtype_congr en).symm, perm.subtype_congr ep.symm en.symm) :=
+begin
+  ext [] [ident x] [],
+  by_cases [expr h, ":", expr p x],
+  { have [] [":", expr p (ep.symm ⟨x, h⟩)] [":=", expr subtype.property _],
+    simp [] [] [] ["[", expr perm.subtype_congr.apply, ",", expr h, ",", expr symm_apply_eq, ",", expr this, "]"] [] [] },
+  { have [] [":", expr «expr¬ »(p (en.symm ⟨x, h⟩))] [":=", expr subtype.property (en.symm _)],
+    simp [] [] [] ["[", expr perm.subtype_congr.apply, ",", expr h, ",", expr symm_apply_eq, ",", expr this, "]"] [] [] }
+end
 
+-- error in Data.Equiv.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem perm.subtype_congr.trans :
-  (ep.subtype_congr en).trans (ep'.subtype_congr en') = perm.subtype_congr (ep.trans ep') (en.trans en') :=
-  by 
-    ext x 
-    byCases' h : p x
-    ·
-      have  : p (ep ⟨x, h⟩) := Subtype.property _ 
-      simp [perm.subtype_congr.apply, h, this]
-    ·
-      have  : ¬p (en ⟨x, h⟩) := Subtype.property (en _)
-      simp [perm.subtype_congr.apply, h, symm_apply_eq, this]
+theorem perm.subtype_congr.trans : «expr = »((ep.subtype_congr en).trans (ep'.subtype_congr en'), perm.subtype_congr (ep.trans ep') (en.trans en')) :=
+begin
+  ext [] [ident x] [],
+  by_cases [expr h, ":", expr p x],
+  { have [] [":", expr p (ep ⟨x, h⟩)] [":=", expr subtype.property _],
+    simp [] [] [] ["[", expr perm.subtype_congr.apply, ",", expr h, ",", expr this, "]"] [] [] },
+  { have [] [":", expr «expr¬ »(p (en ⟨x, h⟩))] [":=", expr subtype.property (en _)],
+    simp [] [] [] ["[", expr perm.subtype_congr.apply, ",", expr h, ",", expr symm_apply_eq, ",", expr this, "]"] [] [] }
+end
 
 end SumCompl
 
@@ -1601,24 +1600,30 @@ section
 
 open Sum Nat
 
--- error in Data.Equiv.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- The set of natural numbers is equivalent to `ℕ ⊕ punit`. -/
-def nat_equiv_nat_sum_punit : «expr ≃ »(exprℕ(), «expr ⊕ »(exprℕ(), punit.{u+1})) :=
-⟨λ n, match n with
- | zero := inr punit.star
- | succ a := inl a
- end, λ s, match s with
- | inl n := succ n
- | inr punit.star := zero
- end, λ n, begin
-   cases [expr n] [],
-   repeat { refl }
- end, λ s, begin
-   cases [expr s] ["with", ident a, ident u],
-   { refl },
-   { cases [expr u] [],
-     { refl } }
- end⟩
+def nat_equiv_nat_sum_punit : ℕ ≃ Sum ℕ PUnit.{u + 1} :=
+  ⟨fun n =>
+      match n with 
+      | zero => inr PUnit.unit
+      | succ a => inl a,
+    fun s =>
+      match s with 
+      | inl n => succ n
+      | inr PUnit.unit => zero,
+    fun n =>
+      by 
+        cases n 
+        repeat' 
+          rfl,
+    fun s =>
+      by 
+        cases' s with a u
+        ·
+          rfl
+        ·
+          cases u
+          ·
+            rfl⟩
 
 /-- `ℕ ⊕ punit` is equivalent to `ℕ`. -/
 def nat_sum_punit_equiv_nat : Sum ℕ PUnit.{u + 1} ≃ ℕ :=
@@ -1826,23 +1831,24 @@ def sigma_subtype_preimage_equiv_subtype {α : Type u} {β : Type v} (f : α →
     _ ≃ Subtype p := sigma_preimage_equiv fun x : Subtype p => (⟨f x, (h x).1 x.property⟩ : Subtype q)
     
 
+-- error in Data.Equiv.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A sigma type over an `option` is equivalent to the sigma set over the original type,
 if the fiber is empty at none. -/
-def sigma_option_equiv_of_some {α : Type u} (p : Option α → Type v) (h : p none → False) :
-  (Σx : Option α, p x) ≃ Σx : α, p (some x) :=
-  by 
-    have h' : ∀ x, p x → x.is_some
-    ·
-      intro x 
-      cases x
-      ·
-        intro n 
-        exFalso 
-        exact h n
-      ·
-        intro s 
-        exact rfl 
-    exact (sigma_subtype_equiv_of_subset _ _ h').symm.trans (sigma_congr_left' (option_is_some_equiv α))
+def sigma_option_equiv_of_some
+{α : Type u}
+(p : option α → Type v)
+(h : p none → false) : «expr ≃ »(«exprΣ , »((x : option α), p x), «exprΣ , »((x : α), p (some x))) :=
+begin
+  have [ident h'] [":", expr ∀ x, p x → x.is_some] [],
+  { intro [ident x],
+    cases [expr x] [],
+    { intro [ident n],
+      exfalso,
+      exact [expr h n] },
+    { intro [ident s],
+      exact [expr rfl] } },
+  exact [expr (sigma_subtype_equiv_of_subset _ _ h').symm.trans (sigma_congr_left' (option_is_some_equiv α))]
+end
 
 /-- The `pi`-type `Π i, π i` is equivalent to the type of sections `f : ι → Σ i, π i` of the
 `sigma` type such that for all `i` we have `(f i).fst = i`. -/
@@ -2091,7 +2097,7 @@ theorem swap_apply_right (a b : α) : swap a b b = a :=
   by 
     byCases' h : b = a <;> simp [swap_apply_def, h]
 
--- error in Data.Equiv.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Equiv.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem swap_apply_of_ne_of_ne {a b x : α} : «expr ≠ »(x, a) → «expr ≠ »(x, b) → «expr = »(swap a b x, x) :=
 by simp [] [] [] ["[", expr swap_apply_def, "]"] [] [] { contextual := tt }
 
@@ -2125,19 +2131,19 @@ theorem comp_swap_eq_update (i j : α) (f : α → β) : f ∘ Equiv.swap i j = 
   by 
     rw [swap_eq_update, comp_update, comp_update, comp.right_id]
 
+-- error in Data.Equiv.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem symm_trans_swap_trans [DecidableEq β] (a b : α) (e : α ≃ β) :
-  (e.symm.trans (swap a b)).trans e = swap (e a) (e b) :=
-  Equiv.ext
-    fun x =>
-      by 
-        have  : ∀ a, e.symm x = a ↔ x = e a :=
-          fun a =>
-            by 
-              rw [@eq_comm _ (e.symm x)]
-              split  <;> intros  <;> simp_all 
-        simp [swap_apply_def, this]
-        splitIfs <;> simp 
+theorem symm_trans_swap_trans
+[decidable_eq β]
+(a b : α)
+(e : «expr ≃ »(α, β)) : «expr = »((e.symm.trans (swap a b)).trans e, swap (e a) (e b)) :=
+equiv.ext (λ x, begin
+   have [] [":", expr ∀
+    a, «expr ↔ »(«expr = »(e.symm x, a), «expr = »(x, e a))] [":=", expr λ a, by { rw [expr @eq_comm _ (e.symm x)] [],
+      split; intros []; simp [] [] [] ["*"] [] ["at", "*"] }],
+   simp [] [] [] ["[", expr swap_apply_def, ",", expr this, "]"] [] [],
+   split_ifs [] []; simp [] [] [] [] [] []
+ end)
 
 @[simp]
 theorem trans_swap_trans_symm [DecidableEq β] (a b : β) (e : α ≃ β) :

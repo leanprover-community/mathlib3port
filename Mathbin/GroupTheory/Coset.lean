@@ -367,7 +367,7 @@ theorem mk_mul_of_mem (g₁ g₂ : α) (hg₂ : g₂ ∈ s) : (mk (g₁*g₂) : 
     rwa [eq', mul_inv_rev, inv_mul_cancel_right, s.inv_mem_iff]
 
 @[toAdditive]
-theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) : { x : α | (x : Quotientₓ s) = g } = LeftCoset g s :=
+theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) : { x:α | (x : Quotientₓ s) = g } = LeftCoset g s :=
   Set.ext$
     fun z =>
       by 
@@ -443,41 +443,37 @@ noncomputable def group_equiv_quotient_times_subgroup : α ≃ Quotientₓ s × 
 
 variable{t : Subgroup α}
 
+-- error in GroupTheory.Coset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `H ≤ K`, then `G/H ≃ G/K × K/H` constructively, using the provided right inverse
 of the quotient map `G → G/K`. The classical version is `quotient_equiv_prod_of_le`. -/
-@[toAdditive
-      "If `H ≤ K`, then `G/H ≃ G/K × K/H` constructively, using the provided right inverse\nof the quotient map `G → G/K`. The classical version is `quotient_equiv_prod_of_le`.",
-  simps]
-def quotient_equiv_prod_of_le' (h_le : s ≤ t) (f : Quotientₓ t → α) (hf : Function.RightInverse f QuotientGroup.mk) :
-  Quotientₓ s ≃ Quotientₓ t × Quotientₓ (s.subgroup_of t) :=
-  { toFun :=
-      fun a =>
-        ⟨a.map' id fun b c h => h_le h,
-          a.map' (fun g : α => ⟨f (Quotientₓ.mk' g)⁻¹*g, Quotientₓ.exact' (hf g)⟩)
-            fun b c h =>
-              by 
-                change ((f b⁻¹*b)⁻¹*f c⁻¹*c) ∈ s 
-                have key : f b = f c := congr_argₓ f (Quotientₓ.sound' (h_le h))
-                rwa [key, mul_inv_rev, inv_invₓ, mul_assocₓ, mul_inv_cancel_left]⟩,
-    invFun :=
-      fun a =>
-        a.2.map' (fun b => f a.1*b)
-          fun b c h =>
-            by 
-              change ((f a.1*b)⁻¹*f a.1*c) ∈ s 
-              rwa [mul_inv_rev, mul_assocₓ, inv_mul_cancel_leftₓ],
-    left_inv :=
-      by 
-        refine' Quotientₓ.ind' fun a => _ 
-        simpRw [Quotientₓ.map'_mk', id.def, t.coe_mk, mul_inv_cancel_left],
-    right_inv :=
-      by 
-        refine' Prod.rec _ 
-        refine' Quotientₓ.ind' fun a => _ 
-        refine' Quotientₓ.ind' fun b => _ 
-        have key : Quotientₓ.mk' (f (Quotientₓ.mk' a)*b) = Quotientₓ.mk' a :=
-          (QuotientGroup.mk_mul_of_mem (f a) («expr↑ » b) b.2).trans (hf a)
-        simpRw [Quotientₓ.map'_mk', id.def, key, inv_mul_cancel_leftₓ, Subtype.coe_eta] }
+@[to_additive #[expr "If `H ≤ K`, then `G/H ≃ G/K × K/H` constructively, using the provided right inverse\nof the quotient map `G → G/K`. The classical version is `quotient_equiv_prod_of_le`."], simps #[]]
+def quotient_equiv_prod_of_le'
+(h_le : «expr ≤ »(s, t))
+(f : quotient t → α)
+(hf : function.right_inverse f quotient_group.mk) : «expr ≃ »(quotient s, «expr × »(quotient t, quotient (s.subgroup_of t))) :=
+{ to_fun := λ
+  a, ⟨a.map' id (λ
+    b
+    c
+    h, h_le h), a.map' (λ
+    g : α, ⟨«expr * »(«expr ⁻¹»(f (quotient.mk' g)), g), quotient.exact' (hf g)⟩) (λ
+    b
+    c
+    h, by { change [expr «expr ∈ »(«expr * »(«expr ⁻¹»(«expr * »(«expr ⁻¹»(f b), b)), «expr * »(«expr ⁻¹»(f c), c)), s)] [] [],
+      have [ident key] [":", expr «expr = »(f b, f c)] [":=", expr congr_arg f (quotient.sound' (h_le h))],
+      rwa ["[", expr key, ",", expr mul_inv_rev, ",", expr inv_inv, ",", expr mul_assoc, ",", expr mul_inv_cancel_left, "]"] [] })⟩,
+  inv_fun := λ
+  a, a.2.map' (λ
+   b, «expr * »(f a.1, b)) (λ
+   b c h, by { change [expr «expr ∈ »(«expr * »(«expr ⁻¹»(«expr * »(f a.1, b)), «expr * »(f a.1, c)), s)] [] [],
+     rwa ["[", expr mul_inv_rev, ",", expr mul_assoc, ",", expr inv_mul_cancel_left, "]"] [] }),
+  left_inv := by { refine [expr quotient.ind' (λ a, _)],
+    simp_rw ["[", expr quotient.map'_mk', ",", expr id.def, ",", expr t.coe_mk, ",", expr mul_inv_cancel_left, "]"] [] },
+  right_inv := by { refine [expr prod.rec _],
+    refine [expr quotient.ind' (λ a, _)],
+    refine [expr quotient.ind' (λ b, _)],
+    have [ident key] [":", expr «expr = »(quotient.mk' «expr * »(f (quotient.mk' a), b), quotient.mk' a)] [":=", expr (quotient_group.mk_mul_of_mem (f a) «expr↑ »(b) b.2).trans (hf a)],
+    simp_rw ["[", expr quotient.map'_mk', ",", expr id.def, ",", expr key, ",", expr inv_mul_cancel_left, ",", expr subtype.coe_eta, "]"] [] } }
 
 /-- If `H ≤ K`, then `G/H ≃ G/K × K/H` nonconstructively.
 The constructive version is `quotient_equiv_prod_of_le'`. -/
@@ -493,10 +489,10 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
   by 
     rw [←Fintype.card_prod] <;> exact Fintype.card_congr Subgroup.groupEquivQuotientTimesSubgroup
 
+-- error in GroupTheory.Coset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Order of a Subgroup** -/
-theorem card_subgroup_dvd_card [Fintype α] (s : Subgroup α) [Fintype s] : Fintype.card s ∣ Fintype.card α :=
-  by 
-    haveI  := Classical.propDecidable <;> simp [card_eq_card_quotient_mul_card_subgroup s]
+theorem card_subgroup_dvd_card [fintype α] (s : subgroup α) [fintype s] : «expr ∣ »(fintype.card s, fintype.card α) :=
+by haveI [] [] [":=", expr classical.prop_decidable]; simp [] [] [] ["[", expr card_eq_card_quotient_mul_card_subgroup s, "]"] [] []
 
 theorem card_quotient_dvd_card [Fintype α] (s : Subgroup α) [DecidablePred fun a => a ∈ s] [Fintype s] :
   Fintype.card (Quotientₓ s) ∣ Fintype.card α :=
@@ -516,13 +512,16 @@ theorem card_dvd_of_injective [Fintype α] [Fintype H] (f : α →* H) (hf : Fun
 theorem card_dvd_of_le {H K : Subgroup α} [Fintype H] [Fintype K] (hHK : H ≤ K) : card H ∣ card K :=
   card_dvd_of_injective (inclusion hHK) (inclusion_injective hHK)
 
-theorem card_comap_dvd_of_injective (K : Subgroup H) [Fintype K] (f : α →* H) [Fintype (K.comap f)]
-  (hf : Function.Injective f) : Fintype.card (K.comap f) ∣ Fintype.card K :=
-  by 
-    haveI  : Fintype ((K.comap f).map f) := Fintype.ofEquiv _ (equiv_map_of_injective _ _ hf).toEquiv <;>
-      calc Fintype.card (K.comap f) = Fintype.card ((K.comap f).map f) :=
-        Fintype.card_congr (equiv_map_of_injective _ _ hf).toEquiv _ ∣ Fintype.card K :=
-        card_dvd_of_le (map_comap_le _ _)
+-- error in GroupTheory.Coset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem card_comap_dvd_of_injective
+(K : subgroup H)
+[fintype K]
+(f : «expr →* »(α, H))
+[fintype (K.comap f)]
+(hf : function.injective f) : «expr ∣ »(fintype.card (K.comap f), fintype.card K) :=
+by haveI [] [":", expr fintype ((K.comap f).map f)] [":=", expr fintype.of_equiv _ (equiv_map_of_injective _ _ hf).to_equiv]; calc
+  «expr = »(fintype.card (K.comap f), fintype.card ((K.comap f).map f)) : fintype.card_congr (equiv_map_of_injective _ _ hf).to_equiv
+  «expr ∣ »(..., fintype.card K) : card_dvd_of_le (map_comap_le _ _)
 
 end Subgroup
 

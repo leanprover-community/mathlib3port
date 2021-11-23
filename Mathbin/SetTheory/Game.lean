@@ -183,22 +183,20 @@ but to prove their properties we need to use the abelian group structure of game
 Hence we define them here. -/
 
 
+-- error in SetTheory.Game: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of `x = {xL | xR}` and `y = {yL | yR}` is
 `{xL*y + x*yL - xL*yL, xR*y + x*yR - xR*yR | xL*y + x*yR - xL*yR, x*yL + xR*y - xR*yL }`. -/
-def mul (x y : Pgame) : Pgame :=
-  by 
-    induction' x with xl xr xL xR IHxl IHxr generalizing y 
-    induction' y with yl yr yL yR IHyl IHyr 
-    have y := mk yl yr yL yR 
-    refine' ⟨Sum (xl × yl) (xr × yr), Sum (xl × yr) (xr × yl), _, _⟩ <;> rintro (⟨i, j⟩ | ⟨i, j⟩)
-    ·
-      exact (IHxl i y+IHyl j) - IHxl i (yL j)
-    ·
-      exact (IHxr i y+IHyr j) - IHxr i (yR j)
-    ·
-      exact (IHxl i y+IHyr j) - IHxl i (yR j)
-    ·
-      exact (IHxr i y+IHyl j) - IHxr i (yL j)
+def mul (x y : pgame) : pgame :=
+begin
+  induction [expr x] [] ["with", ident xl, ident xr, ident xL, ident xR, ident IHxl, ident IHxr] ["generalizing", ident y],
+  induction [expr y] [] ["with", ident yl, ident yr, ident yL, ident yR, ident IHyl, ident IHyr] [],
+  have [ident y] [] [":=", expr mk yl yr yL yR],
+  refine [expr ⟨«expr ⊕ »(«expr × »(xl, yl), «expr × »(xr, yr)), «expr ⊕ »(«expr × »(xl, yr), «expr × »(xr, yl)), _, _⟩]; rintro ["(", "⟨", ident i, ",", ident j, "⟩", "|", "⟨", ident i, ",", ident j, "⟩", ")"],
+  { exact [expr «expr - »(«expr + »(IHxl i y, IHyl j), IHxl i (yL j))] },
+  { exact [expr «expr - »(«expr + »(IHxr i y, IHyr j), IHxr i (yR j))] },
+  { exact [expr «expr - »(«expr + »(IHxl i y, IHyr j), IHxl i (yR j))] },
+  { exact [expr «expr - »(«expr + »(IHxr i y, IHyl j), IHxr i (yL j))] }
+end
 
 instance  : Mul Pgame :=
   ⟨mul⟩
@@ -359,7 +357,7 @@ theorem zero_mul_equiv (x : Pgame) : (0*x) ≈ 0 :=
 theorem quot_zero_mul (x : Pgame) : «expr⟦ ⟧» (0*x) = «expr⟦ ⟧» 0 :=
   @Quotientₓ.sound _ _ (0*x) _ x.zero_mul_equiv
 
--- error in SetTheory.Game: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in SetTheory.Game: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 @[simp]
 theorem quot_neg_mul : ∀
 x y : pgame, «expr = »(«expr⟦ ⟧»(«expr * »(«expr- »(x), y)), «expr- »(«expr⟦ ⟧»(«expr * »(x, y))))
@@ -394,7 +392,7 @@ theorem quot_mul_neg (x y : Pgame) : «expr⟦ ⟧» (x*-y) = -«expr⟦ ⟧» (
   by 
     rw [quot_mul_comm, quot_neg_mul, quot_mul_comm]
 
--- error in SetTheory.Game: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in SetTheory.Game: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 @[simp]
 theorem quot_left_distrib : ∀
 x
@@ -524,7 +522,7 @@ theorem quot_one_mul (x : Pgame) : «expr⟦ ⟧» (1*x) = «expr⟦ ⟧» x :=
 theorem one_mul_equiv (x : Pgame) : (1*x) ≈ x :=
   Quotientₓ.exact$ quot_one_mul _
 
--- error in SetTheory.Game: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in SetTheory.Game: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem quot_mul_assoc : ∀
 x y z : pgame, «expr = »(«expr⟦ ⟧»(«expr * »(«expr * »(x, y), z)), «expr⟦ ⟧»(«expr * »(x, «expr * »(y, z))))
 | mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR := begin

@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Order.Module 
+import Mathbin.Algebra.Order.Smul 
 import Mathbin.Data.Complex.Basic 
 import Mathbin.Data.Fin.VecNotation 
 import Mathbin.FieldTheory.Tower
@@ -150,7 +150,7 @@ end
 
 open Submodule FiniteDimensional
 
--- error in Data.Complex.Module: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Complex.Module: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- `ℂ` has a basis over `ℝ` given by `1` and `I`. -/ noncomputable def basis_one_I : basis (fin 2) exprℝ() exprℂ() :=
 basis.of_equiv_fun { to_fun := λ z, «expr![ , ]»([z.re, z.im]),
   inv_fun := λ c, «expr + »(c 0, «expr • »(c 1, I)),
@@ -160,12 +160,12 @@ basis.of_equiv_fun { to_fun := λ z, «expr![ , ]»([z.re, z.im]),
   map_add' := λ z z', by simp [] [] [] [] [] [],
   map_smul' := λ c z, by simp [] [] [] [] [] [] }
 
--- error in Data.Complex.Module: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Complex.Module: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem coe_basis_one_I_repr (z : exprℂ()) : «expr = »(«expr⇑ »(basis_one_I.repr z), «expr![ , ]»([z.re, z.im])) :=
 rfl
 
--- error in Data.Complex.Module: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Complex.Module: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp] theorem coe_basis_one_I : «expr = »(«expr⇑ »(basis_one_I), «expr![ , ]»([1, I])) :=
 «expr $ »(funext, λ
  i, «expr $ »(basis.apply_eq_iff.mpr, «expr $ »(finsupp.ext, λ

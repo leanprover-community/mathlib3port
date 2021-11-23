@@ -1,5 +1,5 @@
-import Mathbin.RingTheory.Polynomial.Default 
-import Mathbin.Algebra.BigOperators.Basic
+import Mathbin.Algebra.BigOperators.Basic 
+import Mathbin.RingTheory.Polynomial.Basic
 
 /-!
 # Lagrange interpolation
@@ -60,42 +60,38 @@ theorem eval_basis (x y : F) (h : y ∈ s) : (basis s x).eval y = if y = x then 
     ·
       exact eval_basis_ne s x y h H
 
+-- error in LinearAlgebra.Lagrange: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem nat_degree_basis (x : F) (hx : x ∈ s) : (basis s x).natDegree = s.card - 1 :=
-  by 
-    unfold basis 
-    generalize hsx : s.erase x = sx 
-    have  : x ∉ sx := hsx ▸ Finset.not_mem_erase x s 
-    rw [←Finset.insert_erase hx, hsx, Finset.card_insert_of_not_mem this, add_tsub_cancel_right]
-    clear hx hsx s 
-    revert this 
-    apply sx.induction_on
-    ·
-      intro hx 
-      rw [Finset.prod_empty, nat_degree_one]
-      rfl
-    ·
-      intro y s hys ih hx 
-      rw [Finset.mem_insert, not_or_distrib] at hx 
-      have h1 : C ((x - y)⁻¹) ≠ C 0 := fun h => hx.1 (eq_of_sub_eq_zero$ inv_eq_zero.1$ C_inj.1 h)
-      have h2 : (X^1) - C y ≠ 0 :=
-        by 
-          convert X_pow_sub_C_ne_zero zero_lt_one y 
-      rw [C_0] at h1 
-      rw [pow_oneₓ] at h2 
-      rw [Finset.prod_insert hys, nat_degree_mul (mul_ne_zero h1 h2), ih hx.2, Finset.card_insert_of_not_mem hys,
-        nat_degree_mul h1 h2, nat_degree_C, zero_addₓ, nat_degree, degree_X_sub_C, add_commₓ]
-      rfl 
-      rw [Ne, Finset.prod_eq_zero_iff]
-      rintro ⟨z, hzs, hz⟩
-      rw [mul_eq_zero] at hz 
-      cases' hz with hz hz
-      ·
-        rw [←C_0, C_inj, inv_eq_zero, sub_eq_zero] at hz 
-        exact hx.2 (hz.symm ▸ hzs)
-      ·
-        rw [←pow_oneₓ (X : Polynomial F)] at hz 
-        exact X_pow_sub_C_ne_zero zero_lt_one _ hz
+theorem nat_degree_basis (x : F) (hx : «expr ∈ »(x, s)) : «expr = »((basis s x).nat_degree, «expr - »(s.card, 1)) :=
+begin
+  unfold [ident basis] [],
+  generalize [ident hsx] [":"] [expr «expr = »(s.erase x, sx)],
+  have [] [":", expr «expr ∉ »(x, sx)] [":=", expr «expr ▸ »(hsx, finset.not_mem_erase x s)],
+  rw ["[", "<-", expr finset.insert_erase hx, ",", expr hsx, ",", expr finset.card_insert_of_not_mem this, ",", expr add_tsub_cancel_right, "]"] [],
+  clear [ident hx, ident hsx, ident s],
+  revert [ident this],
+  apply [expr sx.induction_on],
+  { intros [ident hx],
+    rw ["[", expr finset.prod_empty, ",", expr nat_degree_one, "]"] [],
+    refl },
+  { intros [ident y, ident s, ident hys, ident ih, ident hx],
+    rw ["[", expr finset.mem_insert, ",", expr not_or_distrib, "]"] ["at", ident hx],
+    have [ident h1] [":", expr «expr ≠ »(C «expr ⁻¹»(«expr - »(x, y)), C 0)] [":=", expr λ
+     h, hx.1 «expr $ »(eq_of_sub_eq_zero, «expr $ »(inv_eq_zero.1, C_inj.1 h))],
+    have [ident h2] [":", expr «expr ≠ »(«expr - »(«expr ^ »(X, 1), C y), 0)] [":=", expr by convert [] [expr X_pow_sub_C_ne_zero zero_lt_one y] []],
+    rw [expr C_0] ["at", ident h1],
+    rw [expr pow_one] ["at", ident h2],
+    rw ["[", expr finset.prod_insert hys, ",", expr nat_degree_mul (mul_ne_zero h1 h2), ",", expr ih hx.2, ",", expr finset.card_insert_of_not_mem hys, ",", expr nat_degree_mul h1 h2, ",", expr nat_degree_C, ",", expr zero_add, ",", expr nat_degree, ",", expr degree_X_sub_C, ",", expr add_comm, "]"] [],
+    refl,
+    rw ["[", expr ne, ",", expr finset.prod_eq_zero_iff, "]"] [],
+    rintro ["⟨", ident z, ",", ident hzs, ",", ident hz, "⟩"],
+    rw [expr mul_eq_zero] ["at", ident hz],
+    cases [expr hz] ["with", ident hz, ident hz],
+    { rw ["[", "<-", expr C_0, ",", expr C_inj, ",", expr inv_eq_zero, ",", expr sub_eq_zero, "]"] ["at", ident hz],
+      exact [expr hx.2 «expr ▸ »(hz.symm, hzs)] },
+    { rw ["<-", expr pow_one (X : polynomial F)] ["at", ident hz],
+      exact [expr X_pow_sub_C_ne_zero zero_lt_one _ hz] } }
+end
 
 variable(f : s → F)
 

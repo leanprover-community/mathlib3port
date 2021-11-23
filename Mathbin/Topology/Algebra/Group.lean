@@ -352,28 +352,44 @@ theorem TopologicalGroup.ext {G : Type _} [Groupₓ G] {t t' : TopologicalSpace 
       by 
         rw [←@nhds_translation_mul_inv G t _ _ x, ←@nhds_translation_mul_inv G t' _ _ x, ←h]
 
-@[toAdditive]
-theorem TopologicalGroup.of_nhds_aux {G : Type _} [Groupₓ G] [TopologicalSpace G]
-  (hinv : tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1)) (hleft : ∀ x₀ : G, 𝓝 x₀ = map (fun x : G => x₀*x) (𝓝 1))
-  (hconj : ∀ x₀ : G, map (fun x : G => (x₀*x)*x₀⁻¹) (𝓝 1) ≤ 𝓝 1) : Continuous fun x : G => x⁻¹ :=
-  by 
-    rw [continuous_iff_continuous_at]
-    rintro x₀ 
-    have key : (fun x => (x₀*x)⁻¹) = ((fun x => x₀⁻¹*x) ∘ (fun x => (x₀*x)*x₀⁻¹) ∘ fun x => x⁻¹)
-    ·
-      ·
-        ext <;> simp [mul_assocₓ]
-    calc map (fun x => x⁻¹) (𝓝 x₀) = map (fun x => x⁻¹) ((map fun x => x₀*x)$ 𝓝 1) :=
-      by 
-        rw [hleft]_ = map (fun x => (x₀*x)⁻¹) (𝓝 1) :=
-      by 
-        rw [Filter.map_map]_ = map (((fun x => x₀⁻¹*x) ∘ fun x => (x₀*x)*x₀⁻¹) ∘ fun x => x⁻¹) (𝓝 1) :=
-      by 
-        rw [key]_ = map ((fun x => x₀⁻¹*x) ∘ fun x => (x₀*x)*x₀⁻¹) _ :=
-      by 
-        rw [←Filter.map_map]_ ≤ map ((fun x => x₀⁻¹*x) ∘ fun x => (x₀*x)*x₀⁻¹) (𝓝 1) :=
-      map_mono hinv _ = map (fun x => x₀⁻¹*x) (map (fun x => (x₀*x)*x₀⁻¹) (𝓝 1)) :=
-      Filter.map_map _ ≤ map (fun x => x₀⁻¹*x) (𝓝 1) := map_mono (hconj x₀)_ = 𝓝 (x₀⁻¹) := (hleft _).symm
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem topological_group.of_nhds_aux
+{G : Type*}
+[group G]
+[topological_space G]
+(hinv : tendsto (λ x : G, «expr ⁻¹»(x)) (expr𝓝() 1) (expr𝓝() 1))
+(hleft : ∀ x₀ : G, «expr = »(expr𝓝() x₀, map (λ x : G, «expr * »(x₀, x)) (expr𝓝() 1)))
+(hconj : ∀
+ x₀ : G, «expr ≤ »(map (λ
+   x : G, «expr * »(«expr * »(x₀, x), «expr ⁻¹»(x₀))) (expr𝓝() 1), expr𝓝() 1)) : continuous (λ x : G, «expr ⁻¹»(x)) :=
+begin
+  rw [expr continuous_iff_continuous_at] [],
+  rintros [ident x₀],
+  have [ident key] [":", expr «expr = »(λ
+    x, «expr ⁻¹»(«expr * »(x₀, x)), «expr ∘ »(λ
+     x, «expr * »(«expr ⁻¹»(x₀), x), «expr ∘ »(λ
+      x, «expr * »(«expr * »(x₀, x), «expr ⁻¹»(x₀)), λ x, «expr ⁻¹»(x))))] [],
+  by { ext [] [] []; simp [] [] [] ["[", expr mul_assoc, "]"] [] [] },
+  calc
+    «expr = »(map (λ
+      x, «expr ⁻¹»(x)) (expr𝓝() x₀), map (λ
+      x, «expr ⁻¹»(x)) «expr $ »(map (λ x, «expr * »(x₀, x)), expr𝓝() 1)) : by rw [expr hleft] []
+    «expr = »(..., map (λ x, «expr ⁻¹»(«expr * »(x₀, x))) (expr𝓝() 1)) : by rw [expr filter.map_map] []
+    «expr = »(..., map «expr ∘ »(«expr ∘ »(λ
+       x, «expr * »(«expr ⁻¹»(x₀), x), λ
+       x, «expr * »(«expr * »(x₀, x), «expr ⁻¹»(x₀))), λ x, «expr ⁻¹»(x)) (expr𝓝() 1)) : by rw [expr key] []
+    «expr = »(..., map «expr ∘ »(λ
+      x, «expr * »(«expr ⁻¹»(x₀), x), λ
+      x, «expr * »(«expr * »(x₀, x), «expr ⁻¹»(x₀))) _) : by rw ["<-", expr filter.map_map] []
+    «expr ≤ »(..., map «expr ∘ »(λ
+      x, «expr * »(«expr ⁻¹»(x₀), x), λ x, «expr * »(«expr * »(x₀, x), «expr ⁻¹»(x₀))) (expr𝓝() 1)) : map_mono hinv
+    «expr = »(..., map (λ
+      x, «expr * »(«expr ⁻¹»(x₀), x)) (map (λ
+       x, «expr * »(«expr * »(x₀, x), «expr ⁻¹»(x₀))) (expr𝓝() 1))) : filter.map_map
+    «expr ≤ »(..., map (λ x, «expr * »(«expr ⁻¹»(x₀), x)) (expr𝓝() 1)) : map_mono (hconj x₀)
+    «expr = »(..., expr𝓝() «expr ⁻¹»(x₀)) : (hleft _).symm
+end
 
 @[toAdditive]
 theorem TopologicalGroup.of_nhds_one' {G : Type u} [Groupₓ G] [TopologicalSpace G]
@@ -397,42 +413,48 @@ theorem TopologicalGroup.of_nhds_one' {G : Type u} [Groupₓ G] [TopologicalSpac
     ext 
     simp 
 
-@[toAdditive]
-theorem TopologicalGroup.of_nhds_one {G : Type u} [Groupₓ G] [TopologicalSpace G]
-  (hmul : tendsto (uncurry (·*· : G → G → G)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1)) (hinv : tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
-  (hleft : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x₀*x) (𝓝 1)) (hconj : ∀ x₀ : G, tendsto (fun x => (x₀*x)*x₀⁻¹) (𝓝 1) (𝓝 1)) :
-  TopologicalGroup G :=
-  { continuous_mul :=
-      by 
-        rw [continuous_iff_continuous_at]
-        rintro ⟨x₀, y₀⟩
-        have key :
-          (fun p : G × G => (x₀*p.1)*y₀*p.2) =
-            ((fun x => (x₀*y₀)*x) ∘ uncurry (·*·) ∘ Prod.mapₓ (fun x => (y₀⁻¹*x)*y₀) id)
-        ·
-          ·
-            ext 
-            simp [uncurry, Prod.mapₓ, mul_assocₓ]
-        specialize hconj (y₀⁻¹)
-        rw [inv_invₓ] at hconj 
-        calc map (fun p : G × G => p.1*p.2) (𝓝 (x₀, y₀)) = map (fun p : G × G => p.1*p.2) (𝓝 x₀ ×ᶠ 𝓝 y₀) :=
-          by 
-            rw [nhds_prod_eq]_ = map (fun p : G × G => (x₀*p.1)*y₀*p.2) (𝓝 1 ×ᶠ 𝓝 1) :=
-          by 
-            rw [hleft x₀, hleft y₀, prod_map_map_eq,
-              Filter.map_map]_ =
-            map (((fun x => (x₀*y₀)*x) ∘ uncurry (·*·)) ∘ Prod.mapₓ (fun x => (y₀⁻¹*x)*y₀) id) (𝓝 1 ×ᶠ 𝓝 1) :=
-          by 
-            rw [key]_ = map ((fun x => (x₀*y₀)*x) ∘ uncurry (·*·)) (((map fun x => (y₀⁻¹*x)*y₀)$ 𝓝 1) ×ᶠ 𝓝 1) :=
-          by 
-            rw [←Filter.map_map, ←prod_map_map_eq',
-              map_id]_ ≤ map ((fun x => (x₀*y₀)*x) ∘ uncurry (·*·)) (𝓝 1 ×ᶠ 𝓝 1) :=
-          map_mono
-            (Filter.prod_mono hconj$ le_reflₓ _)_ = map (fun x => (x₀*y₀)*x) (map (uncurry (·*·)) (𝓝 1 ×ᶠ 𝓝 1)) :=
-          by 
-            rw [Filter.map_map]_ ≤ map (fun x => (x₀*y₀)*x) (𝓝 1) :=
-          map_mono hmul _ = 𝓝 (x₀*y₀) := (hleft _).symm,
-    continuous_inv := TopologicalGroup.of_nhds_aux hinv hleft hconj }
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem topological_group.of_nhds_one
+{G : Type u}
+[group G]
+[topological_space G]
+(hmul : tendsto (uncurry ((«expr * ») : G → G → G)) «expr ×ᶠ »(expr𝓝() 1, expr𝓝() 1) (expr𝓝() 1))
+(hinv : tendsto (λ x : G, «expr ⁻¹»(x)) (expr𝓝() 1) (expr𝓝() 1))
+(hleft : ∀ x₀ : G, «expr = »(expr𝓝() x₀, map (λ x, «expr * »(x₀, x)) (expr𝓝() 1)))
+(hconj : ∀
+ x₀ : G, tendsto (λ x, «expr * »(«expr * »(x₀, x), «expr ⁻¹»(x₀))) (expr𝓝() 1) (expr𝓝() 1)) : topological_group G :=
+{ continuous_mul := begin
+    rw [expr continuous_iff_continuous_at] [],
+    rintros ["⟨", ident x₀, ",", ident y₀, "⟩"],
+    have [ident key] [":", expr «expr = »(λ
+      p : «expr × »(G, G), «expr * »(«expr * »(x₀, p.1), «expr * »(y₀, p.2)), «expr ∘ »(λ
+       x, «expr * »(«expr * »(x₀, y₀), x), «expr ∘ »(uncurry ((«expr * »)), prod.map (λ
+         x, «expr * »(«expr * »(«expr ⁻¹»(y₀), x), y₀)) id)))] [],
+    by { ext [] [] [],
+      simp [] [] [] ["[", expr uncurry, ",", expr prod.map, ",", expr mul_assoc, "]"] [] [] },
+    specialize [expr hconj «expr ⁻¹»(y₀)],
+    rw [expr inv_inv] ["at", ident hconj],
+    calc
+      «expr = »(map (λ
+        p : «expr × »(G, G), «expr * »(p.1, p.2)) (expr𝓝() (x₀, y₀)), map (λ
+        p : «expr × »(G, G), «expr * »(p.1, p.2)) «expr ×ᶠ »(expr𝓝() x₀, expr𝓝() y₀)) : by rw [expr nhds_prod_eq] []
+      «expr = »(..., map (λ
+        p : «expr × »(G, G), «expr * »(«expr * »(x₀, p.1), «expr * »(y₀, p.2))) «expr ×ᶠ »(expr𝓝() 1, expr𝓝() 1)) : by rw ["[", expr hleft x₀, ",", expr hleft y₀, ",", expr prod_map_map_eq, ",", expr filter.map_map, "]"] []
+      «expr = »(..., map «expr ∘ »(«expr ∘ »(λ
+         x, «expr * »(«expr * »(x₀, y₀), x), uncurry ((«expr * »))), prod.map (λ
+         x, «expr * »(«expr * »(«expr ⁻¹»(y₀), x), y₀)) id) «expr ×ᶠ »(expr𝓝() 1, expr𝓝() 1)) : by rw [expr key] []
+      «expr = »(..., map «expr ∘ »(λ
+        x, «expr * »(«expr * »(x₀, y₀), x), uncurry ((«expr * »))) «expr ×ᶠ »(«expr $ »(map (λ
+          x, «expr * »(«expr * »(«expr ⁻¹»(y₀), x), y₀)), expr𝓝() 1), expr𝓝() 1)) : by rw ["[", "<-", expr filter.map_map, ",", "<-", expr prod_map_map_eq', ",", expr map_id, "]"] []
+      «expr ≤ »(..., map «expr ∘ »(λ
+        x, «expr * »(«expr * »(x₀, y₀), x), uncurry ((«expr * »))) «expr ×ᶠ »(expr𝓝() 1, expr𝓝() 1)) : map_mono «expr $ »(filter.prod_mono hconj, le_refl _)
+      «expr = »(..., map (λ
+        x, «expr * »(«expr * »(x₀, y₀), x)) (map (uncurry ((«expr * »))) «expr ×ᶠ »(expr𝓝() 1, expr𝓝() 1))) : by rw [expr filter.map_map] []
+      «expr ≤ »(..., map (λ x, «expr * »(«expr * »(x₀, y₀), x)) (expr𝓝() 1)) : map_mono hmul
+      «expr = »(..., expr𝓝() «expr * »(x₀, y₀)) : (hleft _).symm
+  end,
+  continuous_inv := topological_group.of_nhds_aux hinv hleft hconj }
 
 @[toAdditive]
 theorem TopologicalGroup.of_comm_of_nhds_one {G : Type u} [CommGroupₓ G] [TopologicalSpace G]
@@ -462,26 +484,23 @@ theorem QuotientGroup.is_open_map_coe : IsOpenMap (coeₓ : G → Quotientₓ N)
     rw [QuotientGroup.preimage_image_coe N s]
     exact is_open_Union fun n => (continuous_mul_right _).is_open_preimage s s_op
 
-@[toAdditive]
-instance topological_group_quotient [N.normal] : TopologicalGroup (Quotientₓ N) :=
-  { continuous_mul :=
-      by 
-        have cont : Continuous ((coeₓ : G → Quotientₓ N) ∘ fun p : G × G => p.fst*p.snd) :=
-          continuous_quot_mk.comp continuous_mul 
-        have quot : QuotientMap fun p : G × G => ((p.1 : Quotientₓ N), (p.2 : Quotientₓ N))
-        ·
-          apply IsOpenMap.to_quotient_map
-          ·
-            exact (QuotientGroup.is_open_map_coe N).Prod (QuotientGroup.is_open_map_coe N)
-          ·
-            exact continuous_quot_mk.prod_map continuous_quot_mk
-          ·
-            exact (surjective_quot_mk _).prod_map (surjective_quot_mk _)
-        exact (QuotientMap.continuous_iff Quot).2 cont,
-    continuous_inv :=
-      by 
-        have  : Continuous ((coeₓ : G → Quotientₓ N) ∘ fun a : G => a⁻¹) := continuous_quot_mk.comp continuous_inv 
-        convert continuous_quotient_lift _ this }
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]] instance topological_group_quotient [N.normal] : topological_group (quotient N) :=
+{ continuous_mul := begin
+    have [ident cont] [":", expr continuous «expr ∘ »((coe : G → quotient N), λ
+      p : «expr × »(G, G), «expr * »(p.fst, p.snd))] [":=", expr continuous_quot_mk.comp continuous_mul],
+    have [ident quot] [":", expr quotient_map (λ p : «expr × »(G, G), ((p.1 : quotient N), (p.2 : quotient N)))] [],
+    { apply [expr is_open_map.to_quotient_map],
+      { exact [expr (quotient_group.is_open_map_coe N).prod (quotient_group.is_open_map_coe N)] },
+      { exact [expr continuous_quot_mk.prod_map continuous_quot_mk] },
+      { exact [expr (surjective_quot_mk _).prod_map (surjective_quot_mk _)] } },
+    exact [expr (quotient_map.continuous_iff quot).2 cont]
+  end,
+  continuous_inv := begin
+    have [] [":", expr continuous «expr ∘ »((coe : G → quotient N), λ
+      a : G, «expr ⁻¹»(a))] [":=", expr continuous_quot_mk.comp continuous_inv],
+    convert [] [expr continuous_quotient_lift _ this] []
+  end }
 
 end QuotientTopologicalGroup
 
@@ -580,24 +599,25 @@ section
 
 variable[TopologicalSpace G][Groupₓ G][TopologicalGroup G]
 
-@[toAdditive]
-theorem IsOpen.mul_left {s t : Set G} : IsOpen t → IsOpen (s*t) :=
-  fun ht =>
-    by 
-      have  : ∀ a, IsOpen ((fun x : G => a*x) '' t) := fun a => is_open_map_mul_left a t ht 
-      rw [←Union_mul_left_image]
-      exact is_open_Union fun a => is_open_Union$ fun ha => this _
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]] theorem is_open.mul_left {s t : set G} : is_open t → is_open «expr * »(s, t) :=
+λ ht, begin
+  have [] [":", expr ∀
+   a, is_open «expr '' »(λ x : G, «expr * »(a, x), t)] [":=", expr assume a, is_open_map_mul_left a t ht],
+  rw ["<-", expr Union_mul_left_image] [],
+  exact [expr is_open_Union (λ a, «expr $ »(is_open_Union, λ ha, this _))]
+end
 
-@[toAdditive]
-theorem IsOpen.mul_right {s t : Set G} : IsOpen s → IsOpen (s*t) :=
-  fun hs =>
-    by 
-      have  : ∀ a, IsOpen ((fun x : G => x*a) '' s)
-      intro a 
-      apply is_open_map_mul_right 
-      exact hs 
-      rw [←Union_mul_right_image]
-      exact is_open_Union fun a => is_open_Union$ fun ha => this _
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]] theorem is_open.mul_right {s t : set G} : is_open s → is_open «expr * »(s, t) :=
+λ hs, begin
+  have [] [":", expr ∀ a, is_open «expr '' »(λ x : G, «expr * »(x, a), s)] [],
+  assume [binders (a)],
+  apply [expr is_open_map_mul_right],
+  exact [expr hs],
+  rw ["<-", expr Union_mul_right_image] [],
+  exact [expr is_open_Union (λ a, «expr $ »(is_open_Union, λ ha, this _))]
+end
 
 variable(G)
 
@@ -608,25 +628,22 @@ theorem TopologicalGroup.t1_space (h : @IsClosed G _ {1}) : T1Space G :=
         convert is_closed_map_mul_right x _ h 
         simp ⟩
 
-@[toAdditive]
-theorem TopologicalGroup.regular_space [T1Space G] : RegularSpace G :=
-  ⟨fun s a hs ha =>
-      let f := fun p : G × G => p.1*p.2⁻¹
-      have hf : Continuous f := continuous_fst.mul continuous_snd.inv 
-      let ⟨t₁, t₂, ht₁, ht₂, a_mem_t₁, one_mem_t₂, t_subset⟩ :=
-        is_open_prod_iff.1 ((is_open_compl_iff.2 hs).Preimage hf) a (1 : G)
-          (by 
-            simpa [f])
-      by 
-        use s*t₂, ht₂.mul_left, fun x hx => ⟨x, 1, hx, one_mem_t₂, mul_oneₓ _⟩
-        rw [nhdsWithin, inf_principal_eq_bot, mem_nhds_iff]
-        refine' ⟨t₁, _, ht₁, a_mem_t₁⟩
-        rintro x hx ⟨y, z, hy, hz, yz⟩
-        have  : (x*z⁻¹) ∈ «expr ᶜ» s := (prod_subset_iff.1 t_subset) x hx z hz 
-        have  : (x*z⁻¹) ∈ s 
-        rw [←yz]
-        simpa 
-        contradiction⟩
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]] theorem topological_group.regular_space [t1_space G] : regular_space G :=
+⟨assume s a hs ha, let f := λ p : «expr × »(G, G), «expr * »(p.1, «expr ⁻¹»(p.2)) in
+ have hf : continuous f := continuous_fst.mul continuous_snd.inv,
+ let ⟨t₁, t₂, ht₁, ht₂, a_mem_t₁, one_mem_t₂, t_subset⟩ := is_open_prod_iff.1 ((is_open_compl_iff.2 hs).preimage hf) a (1 : G) (by simpa [] [] [] ["[", expr f, "]"] [] []) in
+ begin
+   use ["[", expr «expr * »(s, t₂), ",", expr ht₂.mul_left, ",", expr λ x hx, ⟨x, 1, hx, one_mem_t₂, mul_one _⟩, "]"],
+   rw ["[", expr nhds_within, ",", expr inf_principal_eq_bot, ",", expr mem_nhds_iff, "]"] [],
+   refine [expr ⟨t₁, _, ht₁, a_mem_t₁⟩],
+   rintros [ident x, ident hx, "⟨", ident y, ",", ident z, ",", ident hy, ",", ident hz, ",", ident yz, "⟩"],
+   have [] [":", expr «expr ∈ »(«expr * »(x, «expr ⁻¹»(z)), «expr ᶜ»(s))] [":=", expr prod_subset_iff.1 t_subset x hx z hz],
+   have [] [":", expr «expr ∈ »(«expr * »(x, «expr ⁻¹»(z)), s)] [],
+   rw ["<-", expr yz] [],
+   simpa [] [] [] [] [] [],
+   contradiction
+ end⟩
 
 attribute [local instance] TopologicalGroup.regular_space
 
@@ -643,44 +660,46 @@ section
 
 variable[TopologicalSpace G][Groupₓ G][TopologicalGroup G]
 
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a compact set `K` inside an open set `U`, there is a open neighborhood `V` of `1`
   such that `KV ⊆ U`. -/
-@[toAdditive
-      "Given a compact set `K` inside an open set `U`, there is a open neighborhood `V` of\n`0` such that `K + V ⊆ U`."]
-theorem compact_open_separated_mul {K U : Set G} (hK : IsCompact K) (hU : IsOpen U) (hKU : K ⊆ U) :
-  ∃ V : Set G, IsOpen V ∧ (1 : G) ∈ V ∧ (K*V) ⊆ U :=
-  by 
-    let W : G → Set G := fun x => (fun y => x*y) ⁻¹' U 
-    have h1W : ∀ x, IsOpen (W x) := fun x => hU.preimage (continuous_mul_left x)
-    have h2W : ∀ x _ : x ∈ K, (1 : G) ∈ W x :=
-      fun x hx =>
-        by 
-          simp only [mem_preimage, mul_oneₓ, hKU hx]
-    choose V hV using fun x : K => exists_open_nhds_one_mul_subset ((h1W x).mem_nhds (h2W x.1 x.2))
-    let X : K → Set G := fun x => (fun y => (x : G)⁻¹*y) ⁻¹' V x 
-    obtain ⟨t, ht⟩ : ∃ t : Finset («expr↥ » K), K ⊆ ⋃(i : _)(_ : i ∈ t), X i
-    ·
-      refine' hK.elim_finite_subcover X (fun x => (hV x).1.Preimage (continuous_mul_left (x⁻¹))) _ 
-      intro x hx 
-      rw [mem_Union]
-      use ⟨x, hx⟩
-      rw [mem_preimage]
-      convert (hV _).2.1
-      simp only [mul_left_invₓ, Subtype.coe_mk]
-    refine' ⟨⋂(x : _)(_ : x ∈ t), V x, is_open_bInter (finite_mem_finset _) fun x hx => (hV x).1, _, _⟩
-    ·
-      simp only [mem_Inter]
-      intro x hx 
-      exact (hV x).2.1
-    rintro _ ⟨x, y, hx, hy, rfl⟩
-    simp only [mem_Inter] at hy 
-    have  := ht hx 
-    simp only [mem_Union, mem_preimage] at this 
-    rcases this with ⟨z, h1z, h2z⟩
-    have  : (((z : G)⁻¹*x)*y) ∈ W z := (hV z).2.2 (mul_mem_mul h2z (hy z h1z))
-    rw [mem_preimage] at this 
-    convert this using 1
-    simp only [mul_assocₓ, mul_inv_cancel_left]
+@[to_additive #[expr "Given a compact set `K` inside an open set `U`, there is a open neighborhood `V` of\n`0` such that `K + V ⊆ U`."]]
+theorem compact_open_separated_mul
+{K U : set G}
+(hK : is_compact K)
+(hU : is_open U)
+(hKU : «expr ⊆ »(K, U)) : «expr∃ , »((V : set G), «expr ∧ »(is_open V, «expr ∧ »(«expr ∈ »((1 : G), V), «expr ⊆ »(«expr * »(K, V), U)))) :=
+begin
+  let [ident W] [":", expr G → set G] [":=", expr λ x, «expr ⁻¹' »(λ y, «expr * »(x, y), U)],
+  have [ident h1W] [":", expr ∀ x, is_open (W x)] [":=", expr λ x, hU.preimage (continuous_mul_left x)],
+  have [ident h2W] [":", expr ∀
+   x «expr ∈ » K, «expr ∈ »((1 : G), W x)] [":=", expr λ
+   x hx, by simp [] [] ["only"] ["[", expr mem_preimage, ",", expr mul_one, ",", expr hKU hx, "]"] [] []],
+  choose [] [ident V] [ident hV] ["using", expr λ
+   x : K, exists_open_nhds_one_mul_subset ((h1W x).mem_nhds (h2W x.1 x.2))],
+  let [ident X] [":", expr K → set G] [":=", expr λ x, «expr ⁻¹' »(λ y, «expr * »(«expr ⁻¹»((x : G)), y), V x)],
+  obtain ["⟨", ident t, ",", ident ht, "⟩", ":", expr «expr∃ , »((t : finset «expr↥ »(K)), «expr ⊆ »(K, «expr⋃ , »((i «expr ∈ » t), X i)))],
+  { refine [expr hK.elim_finite_subcover X (λ x, (hV x).1.preimage (continuous_mul_left «expr ⁻¹»(x))) _],
+    intros [ident x, ident hx],
+    rw ["[", expr mem_Union, "]"] [],
+    use [expr ⟨x, hx⟩],
+    rw ["[", expr mem_preimage, "]"] [],
+    convert [] [expr (hV _).2.1] [],
+    simp [] [] ["only"] ["[", expr mul_left_inv, ",", expr subtype.coe_mk, "]"] [] [] },
+  refine [expr ⟨«expr⋂ , »((x «expr ∈ » t), V x), is_open_bInter (finite_mem_finset _) (λ x hx, (hV x).1), _, _⟩],
+  { simp [] [] ["only"] ["[", expr mem_Inter, "]"] [] [],
+    intros [ident x, ident hx],
+    exact [expr (hV x).2.1] },
+  rintro ["_", "⟨", ident x, ",", ident y, ",", ident hx, ",", ident hy, ",", ident rfl, "⟩"],
+  simp [] [] ["only"] ["[", expr mem_Inter, "]"] [] ["at", ident hy],
+  have [] [] [":=", expr ht hx],
+  simp [] [] ["only"] ["[", expr mem_Union, ",", expr mem_preimage, "]"] [] ["at", ident this],
+  rcases [expr this, "with", "⟨", ident z, ",", ident h1z, ",", ident h2z, "⟩"],
+  have [] [":", expr «expr ∈ »(«expr * »(«expr * »(«expr ⁻¹»((z : G)), x), y), W z)] [":=", expr (hV z).2.2 (mul_mem_mul h2z (hy z h1z))],
+  rw ["[", expr mem_preimage, "]"] ["at", ident this],
+  convert [] [expr this] ["using", 1],
+  simp [] [] ["only"] ["[", expr mul_assoc, ",", expr mul_inv_cancel_left, "]"] [] []
+end
 
 /-- A compact set is covered by finitely many left multiplicative translates of a set
   with non-empty interior. -/
@@ -716,27 +735,27 @@ instance (priority := 100)SeparableLocallyCompactGroup.sigma_compact_space [sepa
         exact (dense_range_dense_seq G).inter_nhds_nonempty ((Homeomorph.mulLeft x).Continuous.ContinuousAt$ hL1)
       exact ⟨n, hn⟩
 
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Every separated topological group in which there exists a compact set with nonempty interior
 is locally compact. -/
-@[toAdditive]
-theorem TopologicalSpace.PositiveCompacts.locally_compact_space_of_group [T2Space G] (K : positive_compacts G) :
-  LocallyCompactSpace G :=
-  by 
-    refine' locally_compact_of_compact_nhds fun x => _ 
-    obtain ⟨y, hy⟩ : ∃ y, y ∈ Interior K.1 := K.2.2
-    let F := Homeomorph.mulLeft (x*y⁻¹)
-    refine' ⟨F '' K.1, _, IsCompact.image K.2.1 F.continuous⟩
-    suffices  : F.symm ⁻¹' K.1 ∈ 𝓝 x
-    ·
-      ·
-        convert this 
-        apply Equiv.image_eq_preimage 
-    apply ContinuousAt.preimage_mem_nhds F.symm.continuous.continuous_at 
-    have  : F.symm x = y
-    ·
-      simp [F, Homeomorph.mul_left_symm]
-    rw [this]
-    exact mem_interior_iff_mem_nhds.1 hy
+@[to_additive #[]]
+theorem topological_space.positive_compacts.locally_compact_space_of_group
+[t2_space G]
+(K : positive_compacts G) : locally_compact_space G :=
+begin
+  refine [expr locally_compact_of_compact_nhds (λ x, _)],
+  obtain ["⟨", ident y, ",", ident hy, "⟩", ":", expr «expr∃ , »((y), «expr ∈ »(y, interior K.1)), ":=", expr K.2.2],
+  let [ident F] [] [":=", expr homeomorph.mul_left «expr * »(x, «expr ⁻¹»(y))],
+  refine [expr ⟨«expr '' »(F, K.1), _, is_compact.image K.2.1 F.continuous⟩],
+  suffices [] [":", expr «expr ∈ »(«expr ⁻¹' »(F.symm, K.1), expr𝓝() x)],
+  by { convert [] [expr this] [],
+    apply [expr equiv.image_eq_preimage] },
+  apply [expr continuous_at.preimage_mem_nhds F.symm.continuous.continuous_at],
+  have [] [":", expr «expr = »(F.symm x, y)] [],
+  by simp [] [] [] ["[", expr F, ",", expr homeomorph.mul_left_symm, "]"] [] [],
+  rw [expr this] [],
+  exact [expr mem_interior_iff_mem_nhds.1 hy]
+end
 
 end 
 

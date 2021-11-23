@@ -352,16 +352,16 @@ def to_nat (b : Bool) : ℕ :=
 def of_nat (n : ℕ) : Bool :=
   to_bool (n ≠ 0)
 
-theorem of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : of_nat n ≤ of_nat m :=
-  by 
-    simp [of_nat] <;> cases Nat.decidableEq n 0 <;> cases Nat.decidableEq m 0 <;> simp only [to_bool]
-    ·
-      subst m 
-      have h := le_antisymmₓ h (Nat.zero_leₓ _)
-      contradiction
-    ·
-      left 
-      rfl
+-- error in Data.Bool: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_nat_le_of_nat {n m : exprℕ()} (h : «expr ≤ »(n, m)) : «expr ≤ »(of_nat n, of_nat m) :=
+begin
+  simp [] [] [] ["[", expr of_nat, "]"] [] []; cases [expr nat.decidable_eq n 0] []; cases [expr nat.decidable_eq m 0] []; simp [] [] ["only"] ["[", expr to_bool, "]"] [] [],
+  { subst [expr m],
+    have [ident h] [] [":=", expr le_antisymm h (nat.zero_le _)],
+    contradiction },
+  { left,
+    refl }
+end
 
 theorem to_nat_le_to_nat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : to_nat b₀ ≤ to_nat b₁ :=
   by 
@@ -375,10 +375,13 @@ theorem of_nat_to_nat (b : Bool) : of_nat (to_nat b) = b :=
           by 
             decide
 
--- error in Data.Bool: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-@[simp] theorem injective_iff {α : Sort*} {f : bool → α} : «expr ↔ »(function.injective f, «expr ≠ »(f ff, f tt)) :=
-⟨λ Hinj Heq, ff_ne_tt (Hinj Heq), λ H x y hxy, by { cases [expr x] []; cases [expr y] [],
-   exacts ["[", expr rfl, ",", expr (H hxy).elim, ",", expr (H hxy.symm).elim, ",", expr rfl, "]"] }⟩
+@[simp]
+theorem injective_iff {α : Sort _} {f : Bool → α} : Function.Injective f ↔ f ff ≠ f tt :=
+  ⟨fun Hinj Heq => ff_ne_tt (Hinj Heq),
+    fun H x y hxy =>
+      by 
+        cases x <;> cases y 
+        exacts[rfl, (H hxy).elim, (H hxy.symm).elim, rfl]⟩
 
 end Bool
 

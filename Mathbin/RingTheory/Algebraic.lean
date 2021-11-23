@@ -44,19 +44,22 @@ def Algebra.IsAlgebraic : Prop :=
 
 variable{R A}
 
+-- error in RingTheory.Algebraic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A subalgebra is algebraic if and only if it is algebraic an algebra. -/
-theorem Subalgebra.is_algebraic_iff (S : Subalgebra R A) : S.is_algebraic ↔ @Algebra.IsAlgebraic R S _ _ S.algebra :=
-  by 
-    delta' Algebra.IsAlgebraic Subalgebra.IsAlgebraic 
-    rw [Subtype.forall']
-    apply forall_congrₓ 
-    rintro ⟨x, hx⟩
-    apply exists_congr 
-    intro p 
-    apply and_congr Iff.rfl 
-    have h : Function.Injective S.val := Subtype.val_injective 
-    convRHS => rw [←h.eq_iff, AlgHom.map_zero]
-    rw [←aeval_alg_hom_apply, S.val_apply]
+theorem subalgebra.is_algebraic_iff
+(S : subalgebra R A) : «expr ↔ »(S.is_algebraic, @algebra.is_algebraic R S _ _ S.algebra) :=
+begin
+  delta [ident algebra.is_algebraic, ident subalgebra.is_algebraic] [],
+  rw ["[", expr subtype.forall', "]"] [],
+  apply [expr forall_congr],
+  rintro ["⟨", ident x, ",", ident hx, "⟩"],
+  apply [expr exists_congr],
+  intro [ident p],
+  apply [expr and_congr iff.rfl],
+  have [ident h] [":", expr function.injective S.val] [":=", expr subtype.val_injective],
+  conv_rhs [] [] { rw ["[", "<-", expr h.eq_iff, ",", expr alg_hom.map_zero, "]"] },
+  rw ["[", "<-", expr aeval_alg_hom_apply, ",", expr S.val_apply, "]"] []
+end
 
 /-- An algebra is algebraic if and only if it is algebraic as a subalgebra. -/
 theorem Algebra.is_algebraic_iff : Algebra.IsAlgebraic R A ↔ (⊤ : Subalgebra R A).IsAlgebraic :=
@@ -155,17 +158,22 @@ end Algebra
 
 variable{R S : Type _}[CommRingₓ R][IsDomain R][CommRingₓ S]
 
-theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
-  (inj : ∀ x, algebraMap R S x = 0 → x = 0) :
-  ∃ (x : integralClosure R S)(y : _)(_ : y ≠ (0 : R)), (z*algebraMap R S y) = x :=
-  by 
-    rcases hz with ⟨p, p_ne_zero, px⟩
-    set a := p.leading_coeff with a_def 
-    have a_ne_zero : a ≠ 0 := mt polynomial.leading_coeff_eq_zero.mp p_ne_zero 
-    have y_integral : IsIntegral R (algebraMap R S a) := is_integral_algebra_map 
-    have x_integral : IsIntegral R (z*algebraMap R S a) :=
-      ⟨p.integral_normalization, monic_integral_normalization p_ne_zero, integral_normalization_aeval_eq_zero px inj⟩
-    exact ⟨⟨_, x_integral⟩, a, a_ne_zero, rfl⟩
+-- error in RingTheory.Algebraic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_integral_multiple
+[algebra R S]
+{z : S}
+(hz : is_algebraic R z)
+(inj : ∀
+ x, «expr = »(algebra_map R S x, 0) → «expr = »(x, 0)) : «expr∃ , »((x : integral_closure R S)
+ (y «expr ≠ » (0 : R)), «expr = »(«expr * »(z, algebra_map R S y), x)) :=
+begin
+  rcases [expr hz, "with", "⟨", ident p, ",", ident p_ne_zero, ",", ident px, "⟩"],
+  set [] [ident a] [] [":="] [expr p.leading_coeff] ["with", ident a_def],
+  have [ident a_ne_zero] [":", expr «expr ≠ »(a, 0)] [":=", expr mt polynomial.leading_coeff_eq_zero.mp p_ne_zero],
+  have [ident y_integral] [":", expr is_integral R (algebra_map R S a)] [":=", expr is_integral_algebra_map],
+  have [ident x_integral] [":", expr is_integral R «expr * »(z, algebra_map R S a)] [":=", expr ⟨p.integral_normalization, monic_integral_normalization p_ne_zero, integral_normalization_aeval_eq_zero px inj⟩],
+  exact [expr ⟨⟨_, x_integral⟩, a, a_ne_zero, rfl⟩]
+end
 
 /-- A fraction `(a : S) / (b : S)` can be reduced to `(c : S) / (d : R)`,
 if `S` is the integral closure of `R` in an algebraic extension `L` of `R`. -/
@@ -205,19 +213,21 @@ theorem inv_eq_of_root_of_coeff_zero_ne_zero {x : L} {p : Polynomial K} (aeval_e
     convRHS => rw [←div_X_mul_X_add p]
     rw [AlgHom.map_add, AlgHom.map_mul, h, zero_mul, zero_addₓ, aeval_C]
 
-theorem Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero {x : A} {p : Polynomial K} (aeval_eq : aeval x p = 0)
-  (coeff_zero_ne : p.coeff 0 ≠ 0) : (x⁻¹ : L) ∈ A :=
-  by 
-    have  : (x⁻¹ : L) = aeval x (div_X p) / (aeval x p - algebraMap _ _ (p.coeff 0))
-    ·
-      rw [aeval_eq, Subalgebra.coe_zero, zero_sub, div_neg]
-      convert inv_eq_of_root_of_coeff_zero_ne_zero _ coeff_zero_ne
-      ·
-        rw [Subalgebra.aeval_coe]
-      ·
-        simpa using aeval_eq 
-    rw [this, div_eq_mul_inv, aeval_eq, Subalgebra.coe_zero, zero_sub, ←RingHom.map_neg, ←RingHom.map_inv]
-    exact A.mul_mem (aeval x p.div_X).2 (A.algebra_map_mem _)
+-- error in RingTheory.Algebraic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero
+{x : A}
+{p : polynomial K}
+(aeval_eq : «expr = »(aeval x p, 0))
+(coeff_zero_ne : «expr ≠ »(p.coeff 0, 0)) : «expr ∈ »((«expr ⁻¹»(x) : L), A) :=
+begin
+  have [] [":", expr «expr = »((«expr ⁻¹»(x) : L), «expr / »(aeval x (div_X p), «expr - »(aeval x p, algebra_map _ _ (p.coeff 0))))] [],
+  { rw ["[", expr aeval_eq, ",", expr subalgebra.coe_zero, ",", expr zero_sub, ",", expr div_neg, "]"] [],
+    convert [] [expr inv_eq_of_root_of_coeff_zero_ne_zero _ coeff_zero_ne] [],
+    { rw [expr subalgebra.aeval_coe] [] },
+    { simpa [] [] [] [] [] ["using", expr aeval_eq] } },
+  rw ["[", expr this, ",", expr div_eq_mul_inv, ",", expr aeval_eq, ",", expr subalgebra.coe_zero, ",", expr zero_sub, ",", "<-", expr ring_hom.map_neg, ",", "<-", expr ring_hom.map_inv, "]"] [],
+  exact [expr A.mul_mem (aeval x p.div_X).2 (A.algebra_map_mem _)]
+end
 
 theorem Subalgebra.inv_mem_of_algebraic {x : A} (hx : IsAlgebraic K (x : L)) : (x⁻¹ : L) ∈ A :=
   by 

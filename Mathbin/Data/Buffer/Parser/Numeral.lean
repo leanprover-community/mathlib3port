@@ -1,4 +1,3 @@
-import Mathbin.Data.Fintype.Card 
 import Mathbin.Data.Buffer.Parser.Basic
 
 /-!
@@ -37,13 +36,13 @@ namespace Parser
 
 variable(α : Type)[HasZero α][HasOne α][Add α]
 
--- error in Data.Buffer.Parser.Numeral: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler mono
+-- error in Data.Buffer.Parser.Numeral: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
 /--
 Parse a string of digits as a numeral while casting it to target type `α`.
 -/ @[derive #["[", expr mono, ",", expr bounded, ",", expr prog, "]"]] def numeral : parser α :=
 «expr <$> »(nat.bin_cast, nat)
 
--- error in Data.Buffer.Parser.Numeral: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler mono
+-- error in Data.Buffer.Parser.Numeral: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
 /--
 Parse a string of digits as a numeral while casting it to target type `α`,
 which has a `[fintype α]` constraint. The parser ensures that the numeral parsed in
@@ -54,7 +53,7 @@ c ← nat,
   decorate_error «exprsformat! »(sformat_macro "<numeral less than {to_string (fintype.card α)}>" [[expr to_string (fintype.card α)]]) (guard «expr < »(c, fintype.card α)),
   «expr $ »(pure, nat.bin_cast c) }
 
--- error in Data.Buffer.Parser.Numeral: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler mono
+-- error in Data.Buffer.Parser.Numeral: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
 /--
 Parse a string of digits as a numeral while casting it to target type `α`. The parsing starts
 at "1", so `"1"` is parsed in as `nat.cast 0`. Providing `"0"` to the parser causes a failure.
@@ -64,7 +63,7 @@ c ← nat,
   decorate_error "<positive numeral>" (guard «expr < »(0, c)),
   «expr $ »(pure, nat.bin_cast «expr - »(c, 1)) }
 
--- error in Data.Buffer.Parser.Numeral: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler mono
+-- error in Data.Buffer.Parser.Numeral: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
 /--
 Parse a string of digits as a numeral while casting it to target type `α`,
 which has a `[fintype α]` constraint. The parser ensures that the numeral parsed in
@@ -78,7 +77,7 @@ c ← nat,
   decorate_error «exprsformat! »(sformat_macro "<positive numeral less than or equal to {to_string (fintype.card α)}>" [[expr to_string (fintype.card α)]]) (guard «expr ∧ »(«expr < »(0, c), «expr ≤ »(c, fintype.card α))),
   «expr $ »(pure, nat.bin_cast «expr - »(c, 1)) }
 
--- error in Data.Buffer.Parser.Numeral: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler mono
+-- error in Data.Buffer.Parser.Numeral: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
 /--
 Parse a character as a numeral while casting it to target type `α`,
 The parser ensures that the character parsed in is within the bounds set by `fromc` and `toc`,
@@ -91,7 +90,7 @@ c ← decorate_error «exprsformat! »(sformat_macro "<char between '{fromc.to_s
     c, «expr ∧ »(«expr ≤ »(fromc, c), «expr ≤ »(c, toc)))),
   «expr $ »(pure, nat.bin_cast «expr - »(c.to_nat, fromc.to_nat)) }
 
--- error in Data.Buffer.Parser.Numeral: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler mono
+-- error in Data.Buffer.Parser.Numeral: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
 /--
 Parse a character as a numeral while casting it to target type `α`,
 which has a `[fintype α]` constraint.

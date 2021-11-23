@@ -93,18 +93,18 @@ theorem Finset.center_mass_segment (s : Finset ι) (w₁ w₂ : ι → R) (z : �
   by 
     simp only [Finset.center_mass_eq_of_sum_1, smul_sum, sum_add_distrib, add_smul, mul_smul]
 
--- error in Analysis.Convex.Combination: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem finset.center_mass_ite_eq
-(hi : «expr ∈ »(i, t)) : «expr = »(t.center_mass (λ j, if «expr = »(i, j) then (1 : R) else 0) z, z i) :=
-begin
-  rw ["[", expr finset.center_mass_eq_of_sum_1, "]"] [],
-  transitivity [expr «expr∑ in , »((j), t, if «expr = »(i, j) then z i else 0)],
-  { congr' [] ["with", ident i],
-    split_ifs [] [],
-    exacts ["[", expr «expr ▸ »(h, one_smul _ _), ",", expr zero_smul _ _, "]"] },
-  { rw ["[", expr sum_ite_eq, ",", expr if_pos hi, "]"] [] },
-  { rw ["[", expr sum_ite_eq, ",", expr if_pos hi, "]"] [] }
-end
+theorem Finset.center_mass_ite_eq (hi : i ∈ t) : t.center_mass (fun j => if i = j then (1 : R) else 0) z = z i :=
+  by 
+    rw [Finset.center_mass_eq_of_sum_1]
+    trans ∑j in t, if i = j then z i else 0
+    ·
+      congr with i 
+      splitIfs 
+      exacts[h ▸ one_smul _ _, zero_smul _ _]
+    ·
+      rw [sum_ite_eq, if_pos hi]
+    ·
+      rw [sum_ite_eq, if_pos hi]
 
 variable{t w}
 
@@ -124,44 +124,38 @@ theorem Finset.center_mass_filter_ne_zero : (t.filter fun i => w i ≠ 0).center
 
 variable{z}
 
+-- error in Analysis.Convex.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The center of mass of a finite subset of a convex set belongs to the set
 provided that all weights are non-negative, and the total weight is positive. -/
-theorem Convex.center_mass_mem (hs : Convex R s) :
-  (∀ i _ : i ∈ t, 0 ≤ w i) → (0 < ∑i in t, w i) → (∀ i _ : i ∈ t, z i ∈ s) → t.center_mass w z ∈ s :=
-  by 
-    induction' t using Finset.induction with i t hi ht
-    ·
-      simp [lt_irreflₓ]
-    intro h₀ hpos hmem 
-    have zi : z i ∈ s 
-    exact hmem _ (mem_insert_self _ _)
-    have hs₀ : ∀ j _ : j ∈ t, 0 ≤ w j 
-    exact fun j hj => h₀ j$ mem_insert_of_mem hj 
-    rw [sum_insert hi] at hpos 
-    byCases' hsum_t : (∑j in t, w j) = 0
-    ·
-      have ws : ∀ j _ : j ∈ t, w j = 0 
-      exact (sum_eq_zero_iff_of_nonneg hs₀).1 hsum_t 
-      have wz : (∑j in t, w j • z j) = 0 
-      exact
-        sum_eq_zero
-          fun i hi =>
-            by 
-              simp [ws i hi]
-      simp only [center_mass, sum_insert hi, wz, hsum_t, add_zeroₓ]
-      simp only [hsum_t, add_zeroₓ] at hpos 
-      rw [←mul_smul, inv_mul_cancel (ne_of_gtₓ hpos), one_smul]
-      exact zi
-    ·
-      rw [Finset.center_mass_insert _ _ _ hi hsum_t]
-      refine' convex_iff_div.1 hs zi (ht hs₀ _ _) _ (sum_nonneg hs₀) hpos
-      ·
-        exact lt_of_le_of_neₓ (sum_nonneg hs₀) (Ne.symm hsum_t)
-      ·
-        intro j hj 
-        exact hmem j (mem_insert_of_mem hj)
-      ·
-        exact h₀ _ (mem_insert_self _ _)
+theorem convex.center_mass_mem
+(hs : convex R s) : ∀
+i «expr ∈ » t, «expr ≤ »(0, w i) → «expr < »(0, «expr∑ in , »((i), t, w i)) → ∀
+i «expr ∈ » t, «expr ∈ »(z i, s) → «expr ∈ »(t.center_mass w z, s) :=
+begin
+  induction [expr t] ["using", ident finset.induction] ["with", ident i, ident t, ident hi, ident ht] [],
+  { simp [] [] [] ["[", expr lt_irrefl, "]"] [] [] },
+  intros [ident h₀, ident hpos, ident hmem],
+  have [ident zi] [":", expr «expr ∈ »(z i, s)] [],
+  from [expr hmem _ (mem_insert_self _ _)],
+  have [ident hs₀] [":", expr ∀ j «expr ∈ » t, «expr ≤ »(0, w j)] [],
+  from [expr λ j hj, «expr $ »(h₀ j, mem_insert_of_mem hj)],
+  rw ["[", expr sum_insert hi, "]"] ["at", ident hpos],
+  by_cases [expr hsum_t, ":", expr «expr = »(«expr∑ in , »((j), t, w j), 0)],
+  { have [ident ws] [":", expr ∀ j «expr ∈ » t, «expr = »(w j, 0)] [],
+    from [expr (sum_eq_zero_iff_of_nonneg hs₀).1 hsum_t],
+    have [ident wz] [":", expr «expr = »(«expr∑ in , »((j), t, «expr • »(w j, z j)), 0)] [],
+    from [expr sum_eq_zero (λ i hi, by simp [] [] [] ["[", expr ws i hi, "]"] [] [])],
+    simp [] [] ["only"] ["[", expr center_mass, ",", expr sum_insert hi, ",", expr wz, ",", expr hsum_t, ",", expr add_zero, "]"] [] [],
+    simp [] [] ["only"] ["[", expr hsum_t, ",", expr add_zero, "]"] [] ["at", ident hpos],
+    rw ["[", "<-", expr mul_smul, ",", expr inv_mul_cancel (ne_of_gt hpos), ",", expr one_smul, "]"] [],
+    exact [expr zi] },
+  { rw ["[", expr finset.center_mass_insert _ _ _ hi hsum_t, "]"] [],
+    refine [expr convex_iff_div.1 hs zi (ht hs₀ _ _) _ (sum_nonneg hs₀) hpos],
+    { exact [expr lt_of_le_of_ne (sum_nonneg hs₀) (ne.symm hsum_t)] },
+    { intros [ident j, ident hj],
+      exact [expr hmem j (mem_insert_of_mem hj)] },
+    { exact [expr h₀ _ (mem_insert_self _ _)] } }
+end
 
 theorem Convex.sum_mem (hs : Convex R s) (h₀ : ∀ i _ : i ∈ t, 0 ≤ w i) (h₁ : (∑i in t, w i) = 1)
   (hz : ∀ i _ : i ∈ t, z i ∈ s) : (∑i in t, w i • z i) ∈ s :=
@@ -225,73 +219,60 @@ theorem Finset.centroid_eq_center_mass (s : Finset ι) (hs : s.nonempty) (p : ι
   s.centroid R p = s.center_mass (s.centroid_weights R) p :=
   affine_combination_eq_center_mass (s.sum_centroid_weights_eq_one_of_nonempty R hs)
 
-theorem Finset.centroid_mem_convex_hull (s : Finset E) (hs : s.nonempty) : s.centroid R id ∈ convexHull R (s : Set E) :=
-  by 
-    rw [s.centroid_eq_center_mass hs]
-    apply s.center_mass_id_mem_convex_hull
-    ·
-      simp only [inv_nonneg, implies_true_iff, Nat.cast_nonneg, Finset.centroid_weights_apply]
-    ·
-      have hs_card : (s.card : R) ≠ 0
-      ·
-        simp [finset.nonempty_iff_ne_empty.mp hs]
-      simp only [hs_card, Finset.sum_const, nsmul_eq_mul, mul_inv_cancel, Ne.def, not_false_iff,
-        Finset.centroid_weights_apply, zero_lt_one]
+-- error in Analysis.Convex.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem finset.centroid_mem_convex_hull
+(s : finset E)
+(hs : s.nonempty) : «expr ∈ »(s.centroid R id, convex_hull R (s : set E)) :=
+begin
+  rw [expr s.centroid_eq_center_mass hs] [],
+  apply [expr s.center_mass_id_mem_convex_hull],
+  { simp [] [] ["only"] ["[", expr inv_nonneg, ",", expr implies_true_iff, ",", expr nat.cast_nonneg, ",", expr finset.centroid_weights_apply, "]"] [] [] },
+  { have [ident hs_card] [":", expr «expr ≠ »((s.card : R), 0)] [],
+    { simp [] [] [] ["[", expr finset.nonempty_iff_ne_empty.mp hs, "]"] [] [] },
+    simp [] [] ["only"] ["[", expr hs_card, ",", expr finset.sum_const, ",", expr nsmul_eq_mul, ",", expr mul_inv_cancel, ",", expr ne.def, ",", expr not_false_iff, ",", expr finset.centroid_weights_apply, ",", expr zero_lt_one, "]"] [] [] }
+end
 
-theorem convex_hull_range_eq_exists_affine_combination (v : ι → E) :
-  convexHull R (range v) =
-    { x |
-      ∃ (s : Finset ι)(w : ι → R)(hw₀ : ∀ i _ : i ∈ s, 0 ≤ w i)(hw₁ : s.sum w = 1), s.affine_combination v w = x } :=
-  by 
-    refine' subset.antisymm (convex_hull_min _ _) _
-    ·
-      intro x hx 
-      obtain ⟨i, hi⟩ := set.mem_range.mp hx 
-      refine'
-        ⟨{i}, Function.const ι (1 : R),
-          by 
-            simp ,
-          by 
-            simp ,
-          by 
-            simp [hi]⟩
-    ·
-      rw [Convex]
-      rintro x y ⟨s, w, hw₀, hw₁, rfl⟩ ⟨s', w', hw₀', hw₁', rfl⟩ a b ha hb hab 
-      let W : ι → R := fun i => (if i ∈ s then a*w i else 0)+if i ∈ s' then b*w' i else 0
-      have hW₁ : (s ∪ s').Sum W = 1
-      ·
-        rw [sum_add_distrib, ←sum_subset (subset_union_left s s'), ←sum_subset (subset_union_right s s'),
-            sum_ite_of_true _ _ fun i hi => hi, sum_ite_of_true _ _ fun i hi => hi, ←mul_sum, ←mul_sum, hw₁, hw₁',
-            ←add_mulₓ, hab, mul_oneₓ] <;>
-          intro i hi hi' <;> simp [hi']
-      refine' ⟨s ∪ s', W, _, hW₁, _⟩
-      ·
-        rintro i -
-        byCases' hi : i ∈ s <;>
-          byCases' hi' : i ∈ s' <;> simp [hi, hi', add_nonneg, mul_nonneg ha (hw₀ i _), mul_nonneg hb (hw₀' i _)]
-      ·
-        simpRw [affine_combination_eq_linear_combination (s ∪ s') v _ hW₁,
-          affine_combination_eq_linear_combination s v w hw₁, affine_combination_eq_linear_combination s' v w' hw₁',
-          add_smul, sum_add_distrib]
-        rw [←sum_subset (subset_union_left s s'), ←sum_subset (subset_union_right s s')]
-        ·
-          simp only [ite_smul, sum_ite_of_true _ _ fun i hi => hi, mul_smul, ←smul_sum]
-        ·
-          intro i hi hi' 
-          simp [hi']
-        ·
-          intro i hi hi' 
-          simp [hi']
-    ·
-      rintro x ⟨s, w, hw₀, hw₁, rfl⟩
-      exact affine_combination_mem_convex_hull hw₀ hw₁
+-- error in Analysis.Convex.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem convex_hull_range_eq_exists_affine_combination
+(v : ι → E) : «expr = »(convex_hull R (range v), {x | «expr∃ , »((s : finset ι)
+  (w : ι → R)
+  (hw₀ : ∀ i «expr ∈ » s, «expr ≤ »(0, w i))
+  (hw₁ : «expr = »(s.sum w, 1)), «expr = »(s.affine_combination v w, x))}) :=
+begin
+  refine [expr subset.antisymm (convex_hull_min _ _) _],
+  { intros [ident x, ident hx],
+    obtain ["⟨", ident i, ",", ident hi, "⟩", ":=", expr set.mem_range.mp hx],
+    refine [expr ⟨{i}, function.const ι (1 : R), by simp [] [] [] [] [] [], by simp [] [] [] [] [] [], by simp [] [] [] ["[", expr hi, "]"] [] []⟩] },
+  { rw [expr convex] [],
+    rintros [ident x, ident y, "⟨", ident s, ",", ident w, ",", ident hw₀, ",", ident hw₁, ",", ident rfl, "⟩", "⟨", ident s', ",", ident w', ",", ident hw₀', ",", ident hw₁', ",", ident rfl, "⟩", ident a, ident b, ident ha, ident hb, ident hab],
+    let [ident W] [":", expr ι → R] [":=", expr λ
+     i, «expr + »(if «expr ∈ »(i, s) then «expr * »(a, w i) else 0, if «expr ∈ »(i, s') then «expr * »(b, w' i) else 0)],
+    have [ident hW₁] [":", expr «expr = »(«expr ∪ »(s, s').sum W, 1)] [],
+    { rw ["[", expr sum_add_distrib, ",", "<-", expr sum_subset (subset_union_left s s'), ",", "<-", expr sum_subset (subset_union_right s s'), ",", expr sum_ite_of_true _ _ (λ
+        i
+        hi, hi), ",", expr sum_ite_of_true _ _ (λ
+        i
+        hi, hi), ",", "<-", expr mul_sum, ",", "<-", expr mul_sum, ",", expr hw₁, ",", expr hw₁', ",", "<-", expr add_mul, ",", expr hab, ",", expr mul_one, "]"] []; intros [ident i, ident hi, ident hi']; simp [] [] [] ["[", expr hi', "]"] [] [] },
+    refine [expr ⟨«expr ∪ »(s, s'), W, _, hW₁, _⟩],
+    { rintros [ident i, "-"],
+      by_cases [expr hi, ":", expr «expr ∈ »(i, s)]; by_cases [expr hi', ":", expr «expr ∈ »(i, s')]; simp [] [] [] ["[", expr hi, ",", expr hi', ",", expr add_nonneg, ",", expr mul_nonneg ha (hw₀ i _), ",", expr mul_nonneg hb (hw₀' i _), "]"] [] [] },
+    { simp_rw ["[", expr affine_combination_eq_linear_combination «expr ∪ »(s, s') v _ hW₁, ",", expr affine_combination_eq_linear_combination s v w hw₁, ",", expr affine_combination_eq_linear_combination s' v w' hw₁', ",", expr add_smul, ",", expr sum_add_distrib, "]"] [],
+      rw ["[", "<-", expr sum_subset (subset_union_left s s'), ",", "<-", expr sum_subset (subset_union_right s s'), "]"] [],
+      { simp [] [] ["only"] ["[", expr ite_smul, ",", expr sum_ite_of_true _ _ (λ
+          i hi, hi), ",", expr mul_smul, ",", "<-", expr smul_sum, "]"] [] [] },
+      { intros [ident i, ident hi, ident hi'],
+        simp [] [] [] ["[", expr hi', "]"] [] [] },
+      { intros [ident i, ident hi, ident hi'],
+        simp [] [] [] ["[", expr hi', "]"] [] [] } } },
+  { rintros [ident x, "⟨", ident s, ",", ident w, ",", ident hw₀, ",", ident hw₁, ",", ident rfl, "⟩"],
+    exact [expr affine_combination_mem_convex_hull hw₀ hw₁] }
+end
 
 /-- Convex hull of `s` is equal to the set of all centers of masses of `finset`s `t`, `z '' t ⊆ s`.
 This version allows finsets in any type in any universe. -/
 theorem convex_hull_eq (s : Set E) :
   convexHull R s =
-    { x : E |
+    { x:E |
       ∃ (ι : Type u')(t : Finset ι)(w : ι → R)(z : ι → E)(hw₀ : ∀ i _ : i ∈ t, 0 ≤ w i)(hw₁ : (∑i in t, w i) = 1)(hz :
         ∀ i _ : i ∈ t, z i ∈ s), t.center_mass w z = x } :=
   by 
@@ -319,33 +300,37 @@ theorem convex_hull_eq (s : Set E) :
       rintro _ ⟨ι, t, w, z, hw₀, hw₁, hz, rfl⟩
       exact t.center_mass_mem_convex_hull hw₀ (hw₁.symm ▸ zero_lt_one) hz
 
--- error in Analysis.Convex.Combination: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem finset.convex_hull_eq
-(s : finset E) : «expr = »(convex_hull R «expr↑ »(s), {x : E | «expr∃ , »((w : E → R)
-  (hw₀ : ∀ y «expr ∈ » s, «expr ≤ »(0, w y))
-  (hw₁ : «expr = »(«expr∑ in , »((y), s, w y), 1)), «expr = »(s.center_mass w id, x))}) :=
-begin
-  refine [expr subset.antisymm (convex_hull_min _ _) _],
-  { intros [ident x, ident hx],
-    rw ["[", expr finset.mem_coe, "]"] ["at", ident hx],
-    refine [expr ⟨_, _, _, finset.center_mass_ite_eq _ _ _ hx⟩],
-    { intros [],
-      split_ifs [] [],
-      exacts ["[", expr zero_le_one, ",", expr le_refl 0, "]"] },
-    { rw ["[", expr finset.sum_ite_eq, ",", expr if_pos hx, "]"] [] } },
-  { rintros [ident x, ident y, "⟨", ident wx, ",", ident hwx₀, ",", ident hwx₁, ",", ident rfl, "⟩", "⟨", ident wy, ",", ident hwy₀, ",", ident hwy₁, ",", ident rfl, "⟩", ident a, ident b, ident ha, ident hb, ident hab],
-    rw ["[", expr finset.center_mass_segment _ _ _ _ hwx₁ hwy₁ _ _ hab, "]"] [],
-    refine [expr ⟨_, _, _, rfl⟩],
-    { rintros [ident i, ident hi],
-      apply_rules ["[", expr add_nonneg, ",", expr mul_nonneg, ",", expr hwx₀, ",", expr hwy₀, "]"] },
-    { simp [] [] ["only"] ["[", expr finset.sum_add_distrib, ",", expr finset.mul_sum.symm, ",", expr mul_one, ",", "*", "]"] [] [] } },
-  { rintros ["_", "⟨", ident w, ",", ident hw₀, ",", ident hw₁, ",", ident rfl, "⟩"],
-    exact [expr s.center_mass_mem_convex_hull (λ x hx, hw₀ _ hx) «expr ▸ »(hw₁.symm, zero_lt_one) (λ x hx, hx)] }
-end
+theorem Finset.convex_hull_eq (s : Finset E) :
+  convexHull R («expr↑ » s) =
+    { x:E | ∃ (w : E → R)(hw₀ : ∀ y _ : y ∈ s, 0 ≤ w y)(hw₁ : (∑y in s, w y) = 1), s.center_mass w id = x } :=
+  by 
+    refine' subset.antisymm (convex_hull_min _ _) _
+    ·
+      intro x hx 
+      rw [Finset.mem_coe] at hx 
+      refine' ⟨_, _, _, Finset.center_mass_ite_eq _ _ _ hx⟩
+      ·
+        intros 
+        splitIfs 
+        exacts[zero_le_one, le_reflₓ 0]
+      ·
+        rw [Finset.sum_ite_eq, if_pos hx]
+    ·
+      rintro x y ⟨wx, hwx₀, hwx₁, rfl⟩ ⟨wy, hwy₀, hwy₁, rfl⟩ a b ha hb hab 
+      rw [Finset.center_mass_segment _ _ _ _ hwx₁ hwy₁ _ _ hab]
+      refine' ⟨_, _, _, rfl⟩
+      ·
+        rintro i hi 
+        applyRules [add_nonneg, mul_nonneg, hwx₀, hwy₀]
+      ·
+        simp only [Finset.sum_add_distrib, finset.mul_sum.symm, mul_oneₓ]
+    ·
+      rintro _ ⟨w, hw₀, hw₁, rfl⟩
+      exact s.center_mass_mem_convex_hull (fun x hx => hw₀ _ hx) (hw₁.symm ▸ zero_lt_one) fun x hx => hx
 
 theorem Set.Finite.convex_hull_eq {s : Set E} (hs : finite s) :
   convexHull R s =
-    { x : E |
+    { x:E |
       ∃ (w : E → R)(hw₀ : ∀ y _ : y ∈ s, 0 ≤ w y)(hw₁ : (∑y in hs.to_finset, w y) = 1),
         hs.to_finset.center_mass w id = x } :=
   by 
@@ -373,57 +358,52 @@ theorem convex_hull_eq_union_convex_hull_finite_subsets (s : Set E) :
     ·
       exact Union_subset fun i => Union_subset convex_hull_mono
 
-theorem convex_hull_prod (s : Set E) (t : Set F) : convexHull R (s.prod t) = (convexHull R s).Prod (convexHull R t) :=
-  by 
-    refine' Set.Subset.antisymm _ _
-    ·
-      exact
-        convex_hull_min (Set.prod_mono (subset_convex_hull _ _)$ subset_convex_hull _ _)
-          ((convex_convex_hull _ _).Prod$ convex_convex_hull _ _)
-    rintro ⟨x, y⟩ ⟨hx, hy⟩
-    rw [convex_hull_eq] at hx hy⊢
-    obtain ⟨ι, a, w, S, hw, hw', hS, hSp⟩ := hx 
-    obtain ⟨κ, b, v, T, hv, hv', hT, hTp⟩ := hy 
-    have h_sum : (∑i : ι × κ in a.product b, w i.fst*v i.snd) = 1
-    ·
-      rw [Finset.sum_product, ←hw']
-      congr 
-      ext i 
-      have  : (∑y : κ in b, w i*v y) = ∑y : κ in b, v y*w i
-      ·
-        congr 
-        ext 
-        simp [mul_commₓ]
-      rw [this, ←Finset.sum_mul, hv']
-      simp 
-    refine' ⟨ι × κ, a.product b, fun p => w p.1*v p.2, fun p => (S p.1, T p.2), fun p hp => _, h_sum, fun p hp => _, _⟩
-    ·
-      rw [mem_product] at hp 
-      exact mul_nonneg (hw p.1 hp.1) (hv p.2 hp.2)
-    ·
-      rw [mem_product] at hp 
-      exact ⟨hS p.1 hp.1, hT p.2 hp.2⟩
-    ext
-    ·
-      rw [←hSp, Finset.center_mass_eq_of_sum_1 _ _ hw', Finset.center_mass_eq_of_sum_1 _ _ h_sum]
-      simpRw [Prod.fst_sum, Prod.smul_mk]
-      rw [Finset.sum_product]
-      congr 
-      ext i 
-      have  : (∑j : κ in b, (w i*v j) • S i) = ∑j : κ in b, v j • w i • S i
-      ·
-        congr 
-        ext 
-        rw [mul_smul, smul_comm]
-      rw [this, ←Finset.sum_smul, hv', one_smul]
-    ·
-      rw [←hTp, Finset.center_mass_eq_of_sum_1 _ _ hv', Finset.center_mass_eq_of_sum_1 _ _ h_sum]
-      simpRw [Prod.snd_sum, Prod.smul_mk]
-      rw [Finset.sum_product, Finset.sum_comm]
-      congr 
-      ext j 
-      simpRw [mul_smul]
-      rw [←Finset.sum_smul, hw', one_smul]
+-- error in Analysis.Convex.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem convex_hull_prod
+(s : set E)
+(t : set F) : «expr = »(convex_hull R (s.prod t), (convex_hull R s).prod (convex_hull R t)) :=
+begin
+  refine [expr set.subset.antisymm _ _],
+  { exact [expr convex_hull_min «expr $ »(set.prod_mono (subset_convex_hull _ _), subset_convex_hull _ _) «expr $ »((convex_convex_hull _ _).prod, convex_convex_hull _ _)] },
+  rintro ["⟨", ident x, ",", ident y, "⟩", "⟨", ident hx, ",", ident hy, "⟩"],
+  rw [expr convex_hull_eq] ["at", "⊢", ident hx, ident hy],
+  obtain ["⟨", ident ι, ",", ident a, ",", ident w, ",", ident S, ",", ident hw, ",", ident hw', ",", ident hS, ",", ident hSp, "⟩", ":=", expr hx],
+  obtain ["⟨", ident κ, ",", ident b, ",", ident v, ",", ident T, ",", ident hv, ",", ident hv', ",", ident hT, ",", ident hTp, "⟩", ":=", expr hy],
+  have [ident h_sum] [":", expr «expr = »(«expr∑ in , »((i : «expr × »(ι, κ)), a.product b, «expr * »(w i.fst, v i.snd)), 1)] [],
+  { rw ["[", expr finset.sum_product, ",", "<-", expr hw', "]"] [],
+    congr,
+    ext [] [ident i] [],
+    have [] [":", expr «expr = »(«expr∑ in , »((y : κ), b, «expr * »(w i, v y)), «expr∑ in , »((y : κ), b, «expr * »(v y, w i)))] [],
+    { congr,
+      ext [] [] [],
+      simp [] [] [] ["[", expr mul_comm, "]"] [] [] },
+    rw ["[", expr this, ",", "<-", expr finset.sum_mul, ",", expr hv', "]"] [],
+    simp [] [] [] [] [] [] },
+  refine [expr ⟨«expr × »(ι, κ), a.product b, λ
+    p, «expr * »(w p.1, v p.2), λ p, (S p.1, T p.2), λ p hp, _, h_sum, λ p hp, _, _⟩],
+  { rw [expr mem_product] ["at", ident hp],
+    exact [expr mul_nonneg (hw p.1 hp.1) (hv p.2 hp.2)] },
+  { rw [expr mem_product] ["at", ident hp],
+    exact [expr ⟨hS p.1 hp.1, hT p.2 hp.2⟩] },
+  ext [] [] [],
+  { rw ["[", "<-", expr hSp, ",", expr finset.center_mass_eq_of_sum_1 _ _ hw', ",", expr finset.center_mass_eq_of_sum_1 _ _ h_sum, "]"] [],
+    simp_rw ["[", expr prod.fst_sum, ",", expr prod.smul_mk, "]"] [],
+    rw [expr finset.sum_product] [],
+    congr,
+    ext [] [ident i] [],
+    have [] [":", expr «expr = »(«expr∑ in , »((j : κ), b, «expr • »(«expr * »(w i, v j), S i)), «expr∑ in , »((j : κ), b, «expr • »(v j, «expr • »(w i, S i))))] [],
+    { congr,
+      ext [] [] [],
+      rw ["[", expr mul_smul, ",", expr smul_comm, "]"] [] },
+    rw ["[", expr this, ",", "<-", expr finset.sum_smul, ",", expr hv', ",", expr one_smul, "]"] [] },
+  { rw ["[", "<-", expr hTp, ",", expr finset.center_mass_eq_of_sum_1 _ _ hv', ",", expr finset.center_mass_eq_of_sum_1 _ _ h_sum, "]"] [],
+    simp_rw ["[", expr prod.snd_sum, ",", expr prod.smul_mk, "]"] [],
+    rw ["[", expr finset.sum_product, ",", expr finset.sum_comm, "]"] [],
+    congr,
+    ext [] [ident j] [],
+    simp_rw [expr mul_smul] [],
+    rw ["[", "<-", expr finset.sum_smul, ",", expr hw', ",", expr one_smul, "]"] [] }
+end
 
 /-! ### `std_simplex` -/
 
@@ -447,54 +427,56 @@ theorem convex_hull_basis_eq_std_simplex :
 
 variable{ι}
 
+-- error in Analysis.Convex.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The convex hull of a finite set is the image of the standard simplex in `s → ℝ`
 under the linear map sending each function `w` to `∑ x in s, w x • x`.
 
 Since we have no sums over finite sets, we use sum over `@finset.univ _ hs.fintype`.
 The map is defined in terms of operations on `(s → ℝ) →ₗ[ℝ] ℝ` so that later we will not need
 to prove that this map is linear. -/
-theorem Set.Finite.convex_hull_eq_image {s : Set E} (hs : finite s) :
-  convexHull R s =
-    by 
-      haveI  := hs.fintype <;>
-        exact «expr⇑ » (∑x : s, (@LinearMap.proj R s _ (fun i => R) _ _ x).smulRight x.1) '' StdSimplex R s :=
-  by 
-    rw [←convex_hull_basis_eq_std_simplex, ←LinearMap.convex_hull_image, ←Set.range_comp, · ∘ ·]
-    apply congr_argₓ 
-    convert subtype.range_coe.symm 
-    ext x 
-    simp [LinearMap.sum_apply, ite_smul, Finset.filter_eq]
+theorem set.finite.convex_hull_eq_image
+{s : set E}
+(hs : finite s) : «expr = »(convex_hull R s, by haveI [] [] [":=", expr hs.fintype]; exact [expr «expr '' »(«expr⇑ »(«expr∑ , »((x : s), (@linear_map.proj R s _ (λ
+       i, R) _ _ x).smul_right x.1)), std_simplex R s)]) :=
+begin
+  rw ["[", "<-", expr convex_hull_basis_eq_std_simplex, ",", "<-", expr linear_map.convex_hull_image, ",", "<-", expr set.range_comp, ",", expr («expr ∘ »), "]"] [],
+  apply [expr congr_arg],
+  convert [] [expr subtype.range_coe.symm] [],
+  ext [] [ident x] [],
+  simp [] [] [] ["[", expr linear_map.sum_apply, ",", expr ite_smul, ",", expr finset.filter_eq, "]"] [] []
+end
 
 /-- All values of a function `f ∈ std_simplex 𝕜 ι` belong to `[0, 1]`. -/
 theorem mem_Icc_of_mem_std_simplex (hf : f ∈ StdSimplex R ι) x : f x ∈ Icc (0 : R) 1 :=
   ⟨hf.1 x, hf.2 ▸ Finset.single_le_sum (fun y hy => hf.1 y) (Finset.mem_univ x)⟩
 
+-- error in Analysis.Convex.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The convex hull of an affine basis is the intersection of the half-spaces defined by the
 corresponding barycentric coordinates. -/
-theorem convex_hull_affine_basis_eq_nonneg_barycentric {ι : Type _} {p : ι → E} (h_ind : AffineIndependent R p)
-  (h_tot : affineSpan R (range p) = ⊤) : convexHull R (range p) = { x | ∀ i, 0 ≤ barycentricCoord h_ind h_tot i x } :=
-  by 
-    rw [convex_hull_range_eq_exists_affine_combination]
-    ext x 
-    split 
-    ·
-      rintro ⟨s, w, hw₀, hw₁, rfl⟩ i 
-      byCases' hi : i ∈ s
-      ·
-        rw [barycentric_coord_apply_combination_of_mem h_ind h_tot hi hw₁]
-        exact hw₀ i hi
-      ·
-        rw [barycentric_coord_apply_combination_of_not_mem h_ind h_tot hi hw₁]
-    ·
-      intro hx 
-      have hx' : x ∈ affineSpan R (range p)
-      ·
-        rw [h_tot]
-        exact AffineSubspace.mem_top R E x 
-      obtain ⟨s, w, hw₁, rfl⟩ := (mem_affine_span_iff_eq_affine_combination R E).mp hx' 
-      refine' ⟨s, w, _, hw₁, rfl⟩
-      intro i hi 
-      specialize hx i 
-      rw [barycentric_coord_apply_combination_of_mem h_ind h_tot hi hw₁] at hx 
-      exact hx
+theorem convex_hull_affine_basis_eq_nonneg_barycentric
+{ι : Type*}
+{p : ι → E}
+(h_ind : affine_independent R p)
+(h_tot : «expr = »(affine_span R (range p), «expr⊤»())) : «expr = »(convex_hull R (range p), {x | ∀
+ i, «expr ≤ »(0, barycentric_coord h_ind h_tot i x)}) :=
+begin
+  rw [expr convex_hull_range_eq_exists_affine_combination] [],
+  ext [] [ident x] [],
+  split,
+  { rintros ["⟨", ident s, ",", ident w, ",", ident hw₀, ",", ident hw₁, ",", ident rfl, "⟩", ident i],
+    by_cases [expr hi, ":", expr «expr ∈ »(i, s)],
+    { rw [expr barycentric_coord_apply_combination_of_mem h_ind h_tot hi hw₁] [],
+      exact [expr hw₀ i hi] },
+    { rw [expr barycentric_coord_apply_combination_of_not_mem h_ind h_tot hi hw₁] [] } },
+  { intros [ident hx],
+    have [ident hx'] [":", expr «expr ∈ »(x, affine_span R (range p))] [],
+    { rw [expr h_tot] [],
+      exact [expr affine_subspace.mem_top R E x] },
+    obtain ["⟨", ident s, ",", ident w, ",", ident hw₁, ",", ident rfl, "⟩", ":=", expr (mem_affine_span_iff_eq_affine_combination R E).mp hx'],
+    refine [expr ⟨s, w, _, hw₁, rfl⟩],
+    intros [ident i, ident hi],
+    specialize [expr hx i],
+    rw [expr barycentric_coord_apply_combination_of_mem h_ind h_tot hi hw₁] ["at", ident hx],
+    exact [expr hx] }
+end
 

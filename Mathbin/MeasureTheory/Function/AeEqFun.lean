@@ -117,14 +117,15 @@ theorem quot_mk_eq_mk (f : α → β) hf : (Quot.mk (@Setoidₓ.R _$ μ.ae_eq_se
 theorem mk_eq_mk {f g : α → β} {hf hg} : (mk f hf : α →ₘ[μ] β) = mk g hg ↔ f =ᵐ[μ] g :=
   Quotientₓ.eq'
 
-@[simp]
-theorem mk_coe_fn (f : α →ₘ[μ] β) : mk f f.ae_measurable = f :=
-  by 
-    convRHS => rw [←Quotientₓ.out_eq' f]
-    set g : { f : α → β // AeMeasurable f μ } := Quotientₓ.out' f with hg 
-    have  : g = ⟨g.1, g.2⟩ := Subtype.eq rfl 
-    rw [this, ←mk, mk_eq_mk]
-    exact (AeMeasurable.ae_eq_mk _).symm
+-- error in MeasureTheory.Function.AeEqFun: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem mk_coe_fn (f : «expr →ₘ[ ] »(α, μ, β)) : «expr = »(mk f f.ae_measurable, f) :=
+begin
+  conv_rhs [] [] { rw ["<-", expr quotient.out_eq' f] },
+  set [] [ident g] [":", expr {f : α → β // ae_measurable f μ}] [":="] [expr quotient.out' f] ["with", ident hg],
+  have [] [":", expr «expr = »(g, ⟨g.1, g.2⟩)] [":=", expr subtype.eq rfl],
+  rw ["[", expr this, ",", "<-", expr mk, ",", expr mk_eq_mk, "]"] [],
+  exact [expr (ae_measurable.ae_eq_mk _).symm]
+end
 
 @[ext]
 theorem ext {f g : α →ₘ[μ] β} (h : f =ᵐ[μ] g) : f = g :=

@@ -35,7 +35,7 @@ open MonoidalCategory
 
 variable(V : Type v)[category.{w} V][monoidal_category V]
 
--- error in CategoryTheory.Enriched.Basic: ././Mathport/Syntax/Translate/Basic.lean:988:29: unsupported: (notation) in structure
+-- error in CategoryTheory.Enriched.Basic: ././Mathport/Syntax/Translate/Basic.lean:990:29: unsupported: (notation) in structure
 /--
 A `V`-category is a category enriched in a monoidal category `V`.
 
@@ -162,11 +162,11 @@ def enriched_category_Type_equiv_category (C : Type u₁) : enriched_category (T
   { toFun :=
       fun 𝒞 =>
         by 
-          exactI category_of_enriched_category_Type C,
+          exact category_of_enriched_category_Type C,
     invFun :=
       fun 𝒞 =>
         by 
-          exactI enriched_category_Type_of_category C,
+          exact enriched_category_Type_of_category C,
     left_inv :=
       fun 𝒞 =>
         by 
@@ -411,24 +411,22 @@ variable[braided_category V]
 
 open BraidedCategory
 
+-- error in CategoryTheory.Enriched.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A presheaf isomorphic to the Yoneda embedding of
 the `V`-object of natural transformations from `F` to `G`.
--/
-@[simps]
-def enriched_nat_trans_yoneda (F G : enriched_functor V C D) : «expr ᵒᵖ» V ⥤ Type max u₁ w :=
-  { obj := fun A => graded_nat_trans ((center.of_braided V).obj (unop A)) F G,
-    map :=
-      fun A A' f σ =>
-        { app := fun X => f.unop ≫ σ.app X,
-          naturality :=
-            fun X Y =>
-              by 
-                have p := σ.naturality X Y 
-                dsimp  at p⊢
-                rw [←id_tensor_comp_tensor_id (f.unop ≫ σ.app Y) _, id_tensor_comp, category.assoc, category.assoc,
-                  ←braiding_naturality_assoc, id_tensor_comp_tensor_id_assoc, p, ←tensor_comp_assoc,
-                  category.id_comp] } }
+-/ @[simps #[]] def enriched_nat_trans_yoneda (F G : enriched_functor V C D) : «expr ⥤ »(«expr ᵒᵖ»(V), Type max u₁ w) :=
+{ obj := λ A, graded_nat_trans ((center.of_braided V).obj (unop A)) F G,
+  map := λ
+  A
+  A'
+  f
+  σ, { app := λ X, «expr ≫ »(f.unop, σ.app X),
+    naturality := λ X Y, begin
+      have [ident p] [] [":=", expr σ.naturality X Y],
+      dsimp [] [] [] ["at", ident p, "⊢"],
+      rw ["[", "<-", expr id_tensor_comp_tensor_id «expr ≫ »(f.unop, σ.app Y) _, ",", expr id_tensor_comp, ",", expr category.assoc, ",", expr category.assoc, ",", "<-", expr braiding_naturality_assoc, ",", expr id_tensor_comp_tensor_id_assoc, ",", expr p, ",", "<-", expr tensor_comp_assoc, ",", expr category.id_comp, "]"] []
+    end } }
 
 end 
 

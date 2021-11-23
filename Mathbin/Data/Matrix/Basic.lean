@@ -1,12 +1,11 @@
-import Mathbin.Algebra.BigOperators.Pi 
-import Mathbin.Algebra.Module.Pi 
-import Mathbin.Algebra.Module.LinearMap 
-import Mathbin.Algebra.BigOperators.Ring 
-import Mathbin.Algebra.Star.Pi 
 import Mathbin.Algebra.Algebra.Basic 
+import Mathbin.Algebra.BigOperators.Pi 
+import Mathbin.Algebra.BigOperators.Ring 
+import Mathbin.Algebra.Module.LinearMap 
+import Mathbin.Algebra.Module.Pi 
+import Mathbin.Algebra.Star.Pi 
 import Mathbin.Data.Equiv.Ring 
-import Mathbin.Data.Fintype.Card 
-import Mathbin.Data.Matrix.Dmatrix
+import Mathbin.Data.Fintype.Card
 
 /-!
 # Matrices
@@ -1419,13 +1418,14 @@ theorem transpose_sum [AddCommMonoidₓ α] {ι : Type _} (s : Finset ι) (M : �
 
 /-- `matrix.transpose` as a `ring_equiv` to the opposite ring -/
 @[simps]
-def transpose_ring_equiv [CommSemiringₓ α] [Fintype m] : Matrix m m α ≃+* «expr ᵒᵖ» (Matrix m m α) :=
-  { transpose_add_equiv.trans Opposite.opAddEquiv with toFun := fun M => Opposite.op (M)ᵀ, invFun := fun M => (M.unop)ᵀ,
-    map_mul' := fun M N => (congr_argₓ Opposite.op (transpose_mul M N)).trans (Opposite.op_mul _ _) }
+def transpose_ring_equiv [CommSemiringₓ α] [Fintype m] : Matrix m m α ≃+* «expr ᵐᵒᵖ» (Matrix m m α) :=
+  { transpose_add_equiv.trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op (M)ᵀ,
+    invFun := fun M => (M.unop)ᵀ,
+    map_mul' := fun M N => (congr_argₓ MulOpposite.op (transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 
 theorem transpose_list_prod [CommSemiringₓ α] [Fintype m] [DecidableEq m] (l : List (Matrix m m α)) :
   (l.prod)ᵀ = (l.map transpose).reverse.Prod :=
-  (transpose_ring_equiv : Matrix m m α ≃+* «expr ᵒᵖ» (Matrix m m α)).unop_map_list_prod l
+  (transpose_ring_equiv : Matrix m m α ≃+* «expr ᵐᵒᵖ» (Matrix m m α)).unop_map_list_prod l
 
 end Transpose
 
@@ -1508,14 +1508,14 @@ theorem conj_transpose_sum [AddCommMonoidₓ α] [StarAddMonoid α] {ι : Type _
 
 /-- `matrix.conj_transpose` as a `ring_equiv` to the opposite ring -/
 @[simps]
-def conj_transpose_ring_equiv [CommSemiringₓ α] [StarRing α] [Fintype m] : Matrix m m α ≃+* «expr ᵒᵖ» (Matrix m m α) :=
-  { conj_transpose_add_equiv.trans Opposite.opAddEquiv with toFun := fun M => Opposite.op (M)ᴴ,
+def conj_transpose_ring_equiv [CommSemiringₓ α] [StarRing α] [Fintype m] : Matrix m m α ≃+* «expr ᵐᵒᵖ» (Matrix m m α) :=
+  { conj_transpose_add_equiv.trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op (M)ᴴ,
     invFun := fun M => (M.unop)ᴴ,
-    map_mul' := fun M N => (congr_argₓ Opposite.op (conj_transpose_mul M N)).trans (Opposite.op_mul _ _) }
+    map_mul' := fun M N => (congr_argₓ MulOpposite.op (conj_transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 
 theorem conj_transpose_list_prod [CommSemiringₓ α] [StarRing α] [Fintype m] [DecidableEq m] (l : List (Matrix m m α)) :
   (l.prod)ᴴ = (l.map conj_transpose).reverse.Prod :=
-  (conj_transpose_ring_equiv : Matrix m m α ≃+* «expr ᵒᵖ» (Matrix m m α)).unop_map_list_prod l
+  (conj_transpose_ring_equiv : Matrix m m α ≃+* «expr ᵐᵒᵖ» (Matrix m m α)).unop_map_list_prod l
 
 end ConjTranspose
 
@@ -1654,25 +1654,39 @@ theorem minor_mul_equiv [Fintype n] [Fintype o] [Semiringₓ α] {p q : Type _} 
   (e₁ : l → m) (e₂ : o ≃ n) (e₃ : q → p) : (M ⬝ N).minor e₁ e₃ = M.minor e₁ e₂ ⬝ N.minor e₂ e₃ :=
   minor_mul M N e₁ e₂ e₃ e₂.bijective
 
-theorem mul_minor_one [Fintype n] [Fintype o] [Semiringₓ α] [DecidableEq o] (e₁ : n ≃ o) (e₂ : l → o)
-  (M : Matrix m n α) : M ⬝ (1 : Matrix o o α).minor e₁ e₂ = minor M id (e₁.symm ∘ e₂) :=
-  by 
-    let A := M.minor id e₁.symm 
-    have  : M = A.minor id e₁
-    ·
-      simp only [minor_minor, Function.comp.right_id, minor_id_id, Equiv.symm_comp_self]
-    rw [this, ←minor_mul_equiv]
-    simp only [Matrix.mul_one, minor_minor, Function.comp.right_id, minor_id_id, Equiv.symm_comp_self]
+-- error in Data.Matrix.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mul_minor_one
+[fintype n]
+[fintype o]
+[semiring α]
+[decidable_eq o]
+(e₁ : «expr ≃ »(n, o))
+(e₂ : l → o)
+(M : matrix m n α) : «expr = »(«expr ⬝ »(M, (1 : matrix o o α).minor e₁ e₂), minor M id «expr ∘ »(e₁.symm, e₂)) :=
+begin
+  let [ident A] [] [":=", expr M.minor id e₁.symm],
+  have [] [":", expr «expr = »(M, A.minor id e₁)] [],
+  { simp [] [] ["only"] ["[", expr minor_minor, ",", expr function.comp.right_id, ",", expr minor_id_id, ",", expr equiv.symm_comp_self, "]"] [] [] },
+  rw ["[", expr this, ",", "<-", expr minor_mul_equiv, "]"] [],
+  simp [] [] ["only"] ["[", expr matrix.mul_one, ",", expr minor_minor, ",", expr function.comp.right_id, ",", expr minor_id_id, ",", expr equiv.symm_comp_self, "]"] [] []
+end
 
-theorem one_minor_mul [Fintype m] [Fintype o] [Semiringₓ α] [DecidableEq o] (e₁ : l → o) (e₂ : m ≃ o)
-  (M : Matrix m n α) : ((1 : Matrix o o α).minor e₁ e₂).mul M = minor M (e₂.symm ∘ e₁) id :=
-  by 
-    let A := M.minor e₂.symm id 
-    have  : M = A.minor e₂ id
-    ·
-      simp only [minor_minor, Function.comp.right_id, minor_id_id, Equiv.symm_comp_self]
-    rw [this, ←minor_mul_equiv]
-    simp only [Matrix.one_mul, minor_minor, Function.comp.right_id, minor_id_id, Equiv.symm_comp_self]
+-- error in Data.Matrix.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem one_minor_mul
+[fintype m]
+[fintype o]
+[semiring α]
+[decidable_eq o]
+(e₁ : l → o)
+(e₂ : «expr ≃ »(m, o))
+(M : matrix m n α) : «expr = »(((1 : matrix o o α).minor e₁ e₂).mul M, minor M «expr ∘ »(e₂.symm, e₁) id) :=
+begin
+  let [ident A] [] [":=", expr M.minor e₂.symm id],
+  have [] [":", expr «expr = »(M, A.minor e₂ id)] [],
+  { simp [] [] ["only"] ["[", expr minor_minor, ",", expr function.comp.right_id, ",", expr minor_id_id, ",", expr equiv.symm_comp_self, "]"] [] [] },
+  rw ["[", expr this, ",", "<-", expr minor_mul_equiv, "]"] [],
+  simp [] [] ["only"] ["[", expr matrix.one_mul, ",", expr minor_minor, ",", expr function.comp.right_id, ",", expr minor_id_id, ",", expr equiv.symm_comp_self, "]"] [] []
+end
 
 /-- The natural map that reindexes a matrix's rows and columns with equivalent types is an
 equivalence. -/

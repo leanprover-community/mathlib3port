@@ -1,9 +1,8 @@
-import Mathbin.Data.Fintype.Basic 
-import Mathbin.Data.Fin.Basic 
 import Mathbin.CategoryTheory.ConcreteCategory.Bundled 
-import Mathbin.CategoryTheory.ConcreteCategory.Default 
 import Mathbin.CategoryTheory.FullSubcategory 
-import Mathbin.CategoryTheory.Skeletal
+import Mathbin.CategoryTheory.Skeletal 
+import Mathbin.Data.Fin.Basic 
+import Mathbin.Data.Fintype.Basic
 
 /-!
 # The category of finite types.
@@ -44,7 +43,7 @@ instance  {X : Fintypeₓ} : Fintype X :=
 instance  : category Fintypeₓ :=
   induced_category.category bundled.α
 
--- error in CategoryTheory.Fintype: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler full
+-- error in CategoryTheory.Fintype: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
 /-- The fully faithful embedding of `Fintype` into the category of types. -/
 @[derive #["[", expr full, ",", expr faithful, "]"], simps #[]]
 def incl : «expr ⥤ »(Fintype, Type*) :=
@@ -91,7 +90,7 @@ theorem ext (X Y : skeleton) : X.len = Y.len → X = Y :=
   Ulift.ext _ _
 
 instance  : small_category skeleton.{u} :=
-  { hom := fun X Y => Ulift.{u} (Finₓ X.len) → Ulift.{u} (Finₓ Y.len), id := fun _ => id,
+  { Hom := fun X Y => Ulift.{u} (Finₓ X.len) → Ulift.{u} (Finₓ Y.len), id := fun _ => id,
     comp := fun _ _ _ f g => g ∘ f }
 
 theorem is_skeletal : skeletal skeleton.{u} :=
@@ -129,7 +128,7 @@ instance  : ess_surj incl :=
   ess_surj.mk$
     fun X =>
       let F := Fintype.equivFin X
-      ⟨mk (Fintype.card X), Nonempty.intro { hom := F.symm ∘ Ulift.down, inv := Ulift.up ∘ F }⟩
+      ⟨mk (Fintype.card X), Nonempty.intro { Hom := F.symm ∘ Ulift.down, inv := Ulift.up ∘ F }⟩
 
 noncomputable instance  : is_equivalence incl :=
   equivalence.of_fully_faithfully_ess_surj _

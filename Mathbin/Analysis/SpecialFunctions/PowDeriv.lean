@@ -19,21 +19,22 @@ open Filter
 
 namespace Complex
 
-theorem has_strict_fderiv_at_cpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im ≠ 0) :
-  HasStrictFderivAt (fun x : ℂ × ℂ => x.1^x.2)
-    (((p.2*p.1^p.2 - 1) • ContinuousLinearMap.fst ℂ ℂ ℂ)+((p.1^p.2)*log p.1) • ContinuousLinearMap.snd ℂ ℂ ℂ) p :=
-  by 
-    have A : p.1 ≠ 0
-    ·
-      ·
-        intro h 
-        simpa [h, lt_irreflₓ] using hp 
-    have  : (fun x : ℂ × ℂ => x.1^x.2) =ᶠ[𝓝 p] fun x => exp (log x.1*x.2)
-    exact ((is_open_ne.preimage continuous_fst).eventually_mem A).mono fun p hp => cpow_def_of_ne_zero hp _ 
-    rw [cpow_sub _ _ A, cpow_one, mul_div_comm, mul_smul, mul_smul, ←smul_add]
-    refine' HasStrictFderivAt.congr_of_eventually_eq _ this.symm 
-    simpa only [cpow_def_of_ne_zero A, div_eq_mul_inv, mul_smul, add_commₓ] using
-      ((has_strict_fderiv_at_fst.clog hp).mul has_strict_fderiv_at_snd).cexp
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_strict_fderiv_at_cpow
+{p : «expr × »(exprℂ(), exprℂ())}
+(hp : «expr ∨ »(«expr < »(0, p.1.re), «expr ≠ »(p.1.im, 0))) : has_strict_fderiv_at (λ
+ x : «expr × »(exprℂ(), exprℂ()), «expr ^ »(x.1, x.2)) «expr + »(«expr • »(«expr * »(p.2, «expr ^ »(p.1, «expr - »(p.2, 1))), continuous_linear_map.fst exprℂ() exprℂ() exprℂ()), «expr • »(«expr * »(«expr ^ »(p.1, p.2), log p.1), continuous_linear_map.snd exprℂ() exprℂ() exprℂ())) p :=
+begin
+  have [ident A] [":", expr «expr ≠ »(p.1, 0)] [],
+  by { intro [ident h],
+    simpa [] [] [] ["[", expr h, ",", expr lt_irrefl, "]"] [] ["using", expr hp] },
+  have [] [":", expr «expr =ᶠ[ ] »(λ
+    x : «expr × »(exprℂ(), exprℂ()), «expr ^ »(x.1, x.2), expr𝓝() p, λ x, exp «expr * »(log x.1, x.2))] [],
+  from [expr ((is_open_ne.preimage continuous_fst).eventually_mem A).mono (λ p hp, cpow_def_of_ne_zero hp _)],
+  rw ["[", expr cpow_sub _ _ A, ",", expr cpow_one, ",", expr mul_div_comm, ",", expr mul_smul, ",", expr mul_smul, ",", "<-", expr smul_add, "]"] [],
+  refine [expr has_strict_fderiv_at.congr_of_eventually_eq _ this.symm],
+  simpa [] [] ["only"] ["[", expr cpow_def_of_ne_zero A, ",", expr div_eq_mul_inv, ",", expr mul_smul, ",", expr add_comm, "]"] [] ["using", expr ((has_strict_fderiv_at_fst.clog hp).mul has_strict_fderiv_at_snd).cexp]
+end
 
 theorem has_strict_fderiv_at_cpow' {x y : ℂ} (hp : 0 < x.re ∨ x.im ≠ 0) :
   HasStrictFderivAt (fun x : ℂ × ℂ => x.1^x.2)
@@ -179,51 +180,49 @@ namespace Real
 
 variable{x y z : ℝ}
 
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `(x, y) ↦ x ^ y` is strictly differentiable at `p : ℝ × ℝ` such that `0 < p.fst`. -/
-theorem has_strict_fderiv_at_rpow_of_pos (p : ℝ × ℝ) (hp : 0 < p.1) :
-  HasStrictFderivAt (fun x : ℝ × ℝ => x.1^x.2)
-    (((p.2*p.1^p.2 - 1) • ContinuousLinearMap.fst ℝ ℝ ℝ)+((p.1^p.2)*log p.1) • ContinuousLinearMap.snd ℝ ℝ ℝ) p :=
-  by 
-    have  : (fun x : ℝ × ℝ => x.1^x.2) =ᶠ[𝓝 p] fun x => exp (log x.1*x.2)
-    exact (continuous_at_fst.eventually (lt_mem_nhds hp)).mono fun p hp => rpow_def_of_pos hp _ 
-    refine' HasStrictFderivAt.congr_of_eventually_eq _ this.symm 
-    convert ((has_strict_fderiv_at_fst.log hp.ne').mul has_strict_fderiv_at_snd).exp 
-    rw [rpow_sub_one hp.ne', ←rpow_def_of_pos hp, smul_add, smul_smul, mul_div_comm, div_eq_mul_inv, smul_smul,
-      smul_smul, mul_assocₓ, add_commₓ]
-
-/-- `(x, y) ↦ x ^ y` is strictly differentiable at `p : ℝ × ℝ` such that `p.fst < 0`. -/
-theorem has_strict_fderiv_at_rpow_of_neg (p : ℝ × ℝ) (hp : p.1 < 0) :
-  HasStrictFderivAt (fun x : ℝ × ℝ => x.1^x.2)
-    (((p.2*p.1^p.2 - 1) •
-        ContinuousLinearMap.fst ℝ ℝ
-          ℝ)+(((p.1^p.2)*log p.1) - (exp (log p.1*p.2)*sin (p.2*π))*π) • ContinuousLinearMap.snd ℝ ℝ ℝ)
-    p :=
-  by 
-    have  : (fun x : ℝ × ℝ => x.1^x.2) =ᶠ[𝓝 p] fun x => exp (log x.1*x.2)*cos (x.2*π)
-    exact (continuous_at_fst.eventually (gt_mem_nhds hp)).mono fun p hp => rpow_def_of_neg hp _ 
-    refine' HasStrictFderivAt.congr_of_eventually_eq _ this.symm 
-    convert
-      ((has_strict_fderiv_at_fst.log hp.ne).mul has_strict_fderiv_at_snd).exp.mul
-        (has_strict_fderiv_at_snd.mul_const _).cos using
-      1
-    simpRw [rpow_sub_one hp.ne, smul_add, ←add_assocₓ, smul_smul, ←add_smul, ←mul_assocₓ, mul_commₓ (cos _),
-      ←rpow_def_of_neg hp]
-    rw [div_eq_mul_inv, add_commₓ]
-    congr 2 <;> ring
-
--- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-/-- The function `λ (x, y), x ^ y` is infinitely smooth at `(x, y)` unless `x = 0`. -/
-theorem times_cont_diff_at_rpow_of_ne
+theorem has_strict_fderiv_at_rpow_of_pos
 (p : «expr × »(exprℝ(), exprℝ()))
-(hp : «expr ≠ »(p.1, 0))
-{n : with_top exprℕ()} : times_cont_diff_at exprℝ() n (λ p : «expr × »(exprℝ(), exprℝ()), «expr ^ »(p.1, p.2)) p :=
+(hp : «expr < »(0, p.1)) : has_strict_fderiv_at (λ
+ x : «expr × »(exprℝ(), exprℝ()), «expr ^ »(x.1, x.2)) «expr + »(«expr • »(«expr * »(p.2, «expr ^ »(p.1, «expr - »(p.2, 1))), continuous_linear_map.fst exprℝ() exprℝ() exprℝ()), «expr • »(«expr * »(«expr ^ »(p.1, p.2), log p.1), continuous_linear_map.snd exprℝ() exprℝ() exprℝ())) p :=
 begin
-  cases [expr hp.lt_or_lt] ["with", ident hneg, ident hpos],
-  exacts ["[", expr (((times_cont_diff_at_fst.log hneg.ne).mul times_cont_diff_at_snd).exp.mul (times_cont_diff_at_snd.mul times_cont_diff_at_const).cos).congr_of_eventually_eq ((continuous_at_fst.eventually (gt_mem_nhds hneg)).mono (λ
-     p
-     hp, rpow_def_of_neg hp _)), ",", expr ((times_cont_diff_at_fst.log hpos.ne').mul times_cont_diff_at_snd).exp.congr_of_eventually_eq ((continuous_at_fst.eventually (lt_mem_nhds hpos)).mono (λ
-     p hp, rpow_def_of_pos hp _)), "]"]
+  have [] [":", expr «expr =ᶠ[ ] »(λ
+    x : «expr × »(exprℝ(), exprℝ()), «expr ^ »(x.1, x.2), expr𝓝() p, λ x, exp «expr * »(log x.1, x.2))] [],
+  from [expr (continuous_at_fst.eventually (lt_mem_nhds hp)).mono (λ p hp, rpow_def_of_pos hp _)],
+  refine [expr has_strict_fderiv_at.congr_of_eventually_eq _ this.symm],
+  convert [] [expr ((has_strict_fderiv_at_fst.log hp.ne').mul has_strict_fderiv_at_snd).exp] [],
+  rw ["[", expr rpow_sub_one hp.ne', ",", "<-", expr rpow_def_of_pos hp, ",", expr smul_add, ",", expr smul_smul, ",", expr mul_div_comm, ",", expr div_eq_mul_inv, ",", expr smul_smul, ",", expr smul_smul, ",", expr mul_assoc, ",", expr add_comm, "]"] []
 end
+
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- `(x, y) ↦ x ^ y` is strictly differentiable at `p : ℝ × ℝ` such that `p.fst < 0`. -/
+theorem has_strict_fderiv_at_rpow_of_neg
+(p : «expr × »(exprℝ(), exprℝ()))
+(hp : «expr < »(p.1, 0)) : has_strict_fderiv_at (λ
+ x : «expr × »(exprℝ(), exprℝ()), «expr ^ »(x.1, x.2)) «expr + »(«expr • »(«expr * »(p.2, «expr ^ »(p.1, «expr - »(p.2, 1))), continuous_linear_map.fst exprℝ() exprℝ() exprℝ()), «expr • »(«expr - »(«expr * »(«expr ^ »(p.1, p.2), log p.1), «expr * »(«expr * »(exp «expr * »(log p.1, p.2), sin «expr * »(p.2, exprπ())), exprπ())), continuous_linear_map.snd exprℝ() exprℝ() exprℝ())) p :=
+begin
+  have [] [":", expr «expr =ᶠ[ ] »(λ
+    x : «expr × »(exprℝ(), exprℝ()), «expr ^ »(x.1, x.2), expr𝓝() p, λ
+    x, «expr * »(exp «expr * »(log x.1, x.2), cos «expr * »(x.2, exprπ())))] [],
+  from [expr (continuous_at_fst.eventually (gt_mem_nhds hp)).mono (λ p hp, rpow_def_of_neg hp _)],
+  refine [expr has_strict_fderiv_at.congr_of_eventually_eq _ this.symm],
+  convert [] [expr ((has_strict_fderiv_at_fst.log hp.ne).mul has_strict_fderiv_at_snd).exp.mul (has_strict_fderiv_at_snd.mul_const _).cos] ["using", 1],
+  simp_rw ["[", expr rpow_sub_one hp.ne, ",", expr smul_add, ",", "<-", expr add_assoc, ",", expr smul_smul, ",", "<-", expr add_smul, ",", "<-", expr mul_assoc, ",", expr mul_comm (cos _), ",", "<-", expr rpow_def_of_neg hp, "]"] [],
+  rw ["[", expr div_eq_mul_inv, ",", expr add_comm, "]"] [],
+  congr' [2] []; ring []
+end
+
+/-- The function `λ (x, y), x ^ y` is infinitely smooth at `(x, y)` unless `x = 0`. -/
+theorem times_cont_diff_at_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) {n : WithTop ℕ} :
+  TimesContDiffAt ℝ n (fun p : ℝ × ℝ => p.1^p.2) p :=
+  by 
+    cases' hp.lt_or_lt with hneg hpos 
+    exacts[(((times_cont_diff_at_fst.log hneg.ne).mul times_cont_diff_at_snd).exp.mul
+            (times_cont_diff_at_snd.mul times_cont_diff_at_const).cos).congr_of_eventually_eq
+        ((continuous_at_fst.eventually (gt_mem_nhds hneg)).mono fun p hp => rpow_def_of_neg hp _),
+      ((times_cont_diff_at_fst.log hpos.ne').mul times_cont_diff_at_snd).exp.congr_of_eventually_eq
+        ((continuous_at_fst.eventually (lt_mem_nhds hpos)).mono fun p hp => rpow_def_of_pos hp _)]
 
 theorem differentiable_at_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) : DifferentiableAt ℝ (fun p : ℝ × ℝ => p.1^p.2) p :=
   (times_cont_diff_at_rpow_of_ne p hp).DifferentiableAt le_rfl
@@ -236,18 +235,18 @@ theorem _root_.has_strict_deriv_at.rpow {f g : ℝ → ℝ} {f' g' : ℝ} (hf : 
       1
     simp [mul_assocₓ, mul_commₓ, mul_left_commₓ]
 
-theorem has_strict_deriv_at_rpow_const_of_ne {x : ℝ} (hx : x ≠ 0) (p : ℝ) :
-  HasStrictDerivAt (fun x => x^p) (p*x^p - 1) x :=
-  by 
-    cases' hx.lt_or_lt with hx hx
-    ·
-      have  :=
-        (has_strict_fderiv_at_rpow_of_neg (x, p) hx).comp_has_strict_deriv_at x
-          ((has_strict_deriv_at_id x).Prod (has_strict_deriv_at_const _ _))
-      convert this 
-      simp 
-    ·
-      simpa using (has_strict_deriv_at_id x).rpow (has_strict_deriv_at_const x p) hx
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_strict_deriv_at_rpow_const_of_ne
+{x : exprℝ()}
+(hx : «expr ≠ »(x, 0))
+(p : exprℝ()) : has_strict_deriv_at (λ x, «expr ^ »(x, p)) «expr * »(p, «expr ^ »(x, «expr - »(p, 1))) x :=
+begin
+  cases [expr hx.lt_or_lt] ["with", ident hx, ident hx],
+  { have [] [] [":=", expr (has_strict_fderiv_at_rpow_of_neg (x, p) hx).comp_has_strict_deriv_at x ((has_strict_deriv_at_id x).prod (has_strict_deriv_at_const _ _))],
+    convert [] [expr this] [],
+    simp [] [] [] [] [] [] },
+  { simpa [] [] [] [] [] ["using", expr (has_strict_deriv_at_id x).rpow (has_strict_deriv_at_const x p) hx] }
+end
 
 theorem has_strict_deriv_at_const_rpow {a : ℝ} (ha : 0 < a) (x : ℝ) : HasStrictDerivAt (fun x => a^x) ((a^x)*log a) x :=
   by 
@@ -269,18 +268,15 @@ namespace Real
 
 variable{z x y : ℝ}
 
--- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem has_deriv_at_rpow_const
-{x p : exprℝ()}
-(h : «expr ∨ »(«expr ≠ »(x, 0), «expr ≤ »(1, p))) : has_deriv_at (λ
- x, «expr ^ »(x, p)) «expr * »(p, «expr ^ »(x, «expr - »(p, 1))) x :=
-begin
-  rcases [expr ne_or_eq x 0, "with", ident hx, "|", ident rfl],
-  { exact [expr (has_strict_deriv_at_rpow_const_of_ne hx _).has_deriv_at] },
-  replace [ident h] [":", expr «expr ≤ »(1, p)] [":=", expr h.neg_resolve_left rfl],
-  apply [expr has_deriv_at_of_has_deriv_at_of_ne (λ x hx, (has_strict_deriv_at_rpow_const_of_ne hx p).has_deriv_at)],
-  exacts ["[", expr continuous_at_id.rpow_const (or.inr (zero_le_one.trans h)), ",", expr continuous_at_const.mul (continuous_at_id.rpow_const (or.inr (sub_nonneg.2 h))), "]"]
-end
+theorem has_deriv_at_rpow_const {x p : ℝ} (h : x ≠ 0 ∨ 1 ≤ p) : HasDerivAt (fun x => x^p) (p*x^p - 1) x :=
+  by 
+    rcases ne_or_eq x 0 with (hx | rfl)
+    ·
+      exact (has_strict_deriv_at_rpow_const_of_ne hx _).HasDerivAt 
+    replace h : 1 ≤ p := h.neg_resolve_left rfl 
+    apply has_deriv_at_of_has_deriv_at_of_ne fun x hx => (has_strict_deriv_at_rpow_const_of_ne hx p).HasDerivAt 
+    exacts[continuous_at_id.rpow_const (Or.inr (zero_le_one.trans h)),
+      continuous_at_const.mul (continuous_at_id.rpow_const (Or.inr (sub_nonneg.2 h)))]
 
 theorem differentiable_rpow_const {p : ℝ} (hp : 1 ≤ p) : Differentiable ℝ fun x : ℝ => x^p :=
   fun x => (has_deriv_at_rpow_const (Or.inr hp)).DifferentiableAt
@@ -295,21 +291,19 @@ theorem times_cont_diff_at_rpow_const_of_ne {x p : ℝ} {n : WithTop ℕ} (h : x
   TimesContDiffAt ℝ n (fun x => x^p) x :=
   (times_cont_diff_at_rpow_of_ne (x, p) h).comp x (times_cont_diff_at_id.Prod times_cont_diff_at_const)
 
-theorem times_cont_diff_rpow_const_of_le {p : ℝ} {n : ℕ} (h : «expr↑ » n ≤ p) : TimesContDiff ℝ n fun x : ℝ => x^p :=
-  by 
-    induction' n with n ihn generalizing p
-    ·
-      exact times_cont_diff_zero.2 (continuous_id.rpow_const fun x => Or.inr h)
-    ·
-      have h1 : 1 ≤ p 
-      exact
-        le_transₓ
-          (by 
-            simp )
-          h 
-      rw [Nat.cast_succ, ←le_sub_iff_add_le] at h 
-      simpa [times_cont_diff_succ_iff_deriv, differentiable_rpow_const, h1, deriv_rpow_const'] using
-        times_cont_diff_const.mul (ihn h)
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem times_cont_diff_rpow_const_of_le
+{p : exprℝ()}
+{n : exprℕ()}
+(h : «expr ≤ »(«expr↑ »(n), p)) : times_cont_diff exprℝ() n (λ x : exprℝ(), «expr ^ »(x, p)) :=
+begin
+  induction [expr n] [] ["with", ident n, ident ihn] ["generalizing", ident p],
+  { exact [expr times_cont_diff_zero.2 (continuous_id.rpow_const (λ x, or.inr h))] },
+  { have [ident h1] [":", expr «expr ≤ »(1, p)] [],
+    from [expr le_trans (by simp [] [] [] [] [] []) h],
+    rw ["[", expr nat.cast_succ, ",", "<-", expr le_sub_iff_add_le, "]"] ["at", ident h],
+    simpa [] [] [] ["[", expr times_cont_diff_succ_iff_deriv, ",", expr differentiable_rpow_const, ",", expr h1, ",", expr deriv_rpow_const', "]"] [] ["using", expr times_cont_diff_const.mul (ihn h)] }
+end
 
 theorem times_cont_diff_at_rpow_const_of_le {x p : ℝ} {n : ℕ} (h : «expr↑ » n ≤ p) :
   TimesContDiffAt ℝ n (fun x : ℝ => x^p) x :=
@@ -506,21 +500,19 @@ section Limits
 
 open Real Filter
 
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The function `(1 + t/x) ^ x` tends to `exp t` at `+∞`. -/
-theorem tendsto_one_plus_div_rpow_exp (t : ℝ) : tendsto (fun x : ℝ => (1+t / x)^x) at_top (𝓝 (exp t)) :=
-  by 
-    apply ((real.continuous_exp.tendsto _).comp (tendsto_mul_log_one_plus_div_at_top t)).congr' _ 
-    have h₁ : (1 : ℝ) / 2 < 1 :=
-      by 
-        linarith 
-    have h₂ : tendsto (fun x : ℝ => 1+t / x) at_top (𝓝 1) :=
-      by 
-        simpa using (tendsto_inv_at_top_zero.const_mul t).const_add 1
-    refine' (eventually_ge_of_tendsto_gt h₁ h₂).mono fun x hx => _ 
-    have hx' : 0 < 1+t / x :=
-      by 
-        linarith 
-    simp [mul_commₓ x, exp_mul, exp_log hx']
+theorem tendsto_one_plus_div_rpow_exp
+(t : exprℝ()) : tendsto (λ x : exprℝ(), «expr ^ »(«expr + »(1, «expr / »(t, x)), x)) at_top (expr𝓝() (exp t)) :=
+begin
+  apply [expr ((real.continuous_exp.tendsto _).comp (tendsto_mul_log_one_plus_div_at_top t)).congr' _],
+  have [ident h₁] [":", expr «expr < »(«expr / »((1 : exprℝ()), 2), 1)] [":=", expr by linarith [] [] []],
+  have [ident h₂] [":", expr tendsto (λ
+    x : exprℝ(), «expr + »(1, «expr / »(t, x))) at_top (expr𝓝() 1)] [":=", expr by simpa [] [] [] [] [] ["using", expr (tendsto_inv_at_top_zero.const_mul t).const_add 1]],
+  refine [expr (eventually_ge_of_tendsto_gt h₁ h₂).mono (λ x hx, _)],
+  have [ident hx'] [":", expr «expr < »(0, «expr + »(1, «expr / »(t, x)))] [":=", expr by linarith [] [] []],
+  simp [] [] [] ["[", expr mul_comm x, ",", expr exp_mul, ",", expr exp_log hx', "]"] [] []
+end
 
 /-- The function `(1 + t/x) ^ x` tends to `exp t` at `+∞` for naturals `x`. -/
 theorem tendsto_one_plus_div_pow_exp (t : ℝ) : tendsto (fun x : ℕ => (1+t / (x : ℝ))^x) at_top (𝓝 (Real.exp t)) :=

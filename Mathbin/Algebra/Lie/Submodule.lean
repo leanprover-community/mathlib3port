@@ -366,15 +366,16 @@ theorem Inf_coe (S : Set (LieSubmodule R L M)) : («expr↑ » (Inf S) : Set M) 
     ext m 
     simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp_distrib]
 
-theorem Inf_glb (S : Set (LieSubmodule R L M)) : IsGlb S (Inf S) :=
-  by 
-    have h : ∀ N N' : LieSubmodule R L M, (N : Set M) ≤ N' ↔ N ≤ N'
-    ·
-      intros 
-      rfl 
-    apply IsGlb.of_image h 
-    simp only [Inf_coe]
-    exact is_glb_binfi
+-- error in Algebra.Lie.Submodule: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem Inf_glb (S : set (lie_submodule R L M)) : is_glb S (Inf S) :=
+begin
+  have [ident h] [":", expr ∀ N N' : lie_submodule R L M, «expr ↔ »(«expr ≤ »((N : set M), N'), «expr ≤ »(N, N'))] [],
+  { intros [],
+    refl },
+  apply [expr is_glb.of_image h],
+  simp [] [] ["only"] ["[", expr Inf_coe, "]"] [] [],
+  exact [expr is_glb_binfi]
+end
 
 /-- The set of Lie submodules of a Lie module form a complete lattice.
 
@@ -399,20 +400,20 @@ instance  : AddCommMonoidₓ (LieSubmodule R L M) :=
 theorem add_eq_sup : (N+N') = N⊔N' :=
   rfl
 
-@[normCast, simp]
-theorem sup_coe_to_submodule : («expr↑ » (N⊔N') : Submodule R M) = (N : Submodule R M)⊔(N' : Submodule R M) :=
-  by 
-    have aux : ∀ x : L m, m ∈ (N⊔N' : Submodule R M) → ⁅x,m⁆ ∈ (N⊔N' : Submodule R M)
-    ·
-      simp only [Submodule.mem_sup]
-      rintro x m ⟨y, hy, z, hz, rfl⟩
-      refine' ⟨⁅x,y⁆, N.lie_mem hy, ⁅x,z⁆, N'.lie_mem hz, (lie_add _ _ _).symm⟩
-    refine' le_antisymmₓ (Inf_le ⟨{ (N⊔N' : Submodule R M) with lie_mem := aux }, _⟩) _
-    ·
-      simp only [exists_prop, and_trueₓ, mem_set_of_eq, eq_self_iff_true, coe_to_submodule_mk,
-        ←coe_submodule_le_coe_submodule, and_selfₓ, le_sup_left, le_sup_right]
-    ·
-      simp 
+-- error in Algebra.Lie.Submodule: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[norm_cast #[], simp]
+theorem sup_coe_to_submodule : «expr = »((«expr↑ »(«expr ⊔ »(N, N')) : submodule R M), «expr ⊔ »((N : submodule R M), (N' : submodule R M))) :=
+begin
+  have [ident aux] [":", expr ∀
+   (x : L)
+   (m), «expr ∈ »(m, («expr ⊔ »(N, N') : submodule R M)) → «expr ∈ »(«expr⁅ , ⁆»(x, m), («expr ⊔ »(N, N') : submodule R M))] [],
+  { simp [] [] ["only"] ["[", expr submodule.mem_sup, "]"] [] [],
+    rintro [ident x, ident m, "⟨", ident y, ",", ident hy, ",", ident z, ",", ident hz, ",", ident rfl, "⟩"],
+    refine [expr ⟨«expr⁅ , ⁆»(x, y), N.lie_mem hy, «expr⁅ , ⁆»(x, z), N'.lie_mem hz, (lie_add _ _ _).symm⟩] },
+  refine [expr le_antisymm (Inf_le ⟨{ lie_mem := aux, ..(«expr ⊔ »(N, N') : submodule R M) }, _⟩) _],
+  { simp [] [] ["only"] ["[", expr exists_prop, ",", expr and_true, ",", expr mem_set_of_eq, ",", expr eq_self_iff_true, ",", expr coe_to_submodule_mk, ",", "<-", expr coe_submodule_le_coe_submodule, ",", expr and_self, ",", expr le_sup_left, ",", expr le_sup_right, "]"] [] [] },
+  { simp [] [] [] [] [] [] }
+end
 
 @[normCast, simp]
 theorem inf_coe_to_submodule : («expr↑ » (N⊓N') : Submodule R M) = (N : Submodule R M)⊓(N' : Submodule R M) :=
@@ -918,26 +919,24 @@ theorem map_eq_bot_iff : I.map f = ⊥ ↔ I ≤ f.ker :=
     rw [←le_bot_iff]
     exact LieIdeal.map_le_iff_le_comap
 
-theorem coe_map_of_surjective (h : Function.Surjective f) :
-  (I.map f : Submodule R L') = (I : Submodule R L).map (f : L →ₗ[R] L') :=
-  by 
-    let J : LieIdeal R L' :=
-      { (I : Submodule R L).map (f : L →ₗ[R] L') with
-        lie_mem :=
-          fun x y hy =>
-            by 
-              have hy' : ∃ x : L, x ∈ I ∧ f x = y
-              ·
-                simpa [hy]
-              obtain ⟨z₂, hz₂, rfl⟩ := hy' 
-              obtain ⟨z₁, rfl⟩ := h x 
-              simp only [LieHom.coe_to_linear_map, SetLike.mem_coe, Set.mem_image, LieSubmodule.mem_coe_submodule,
-                Submodule.mem_carrier, Submodule.map_coe]
-              use ⁅z₁,z₂⁆
-              exact ⟨I.lie_mem hz₂, f.map_lie z₁ z₂⟩ }
-    erw [LieSubmodule.coe_lie_span_submodule_eq_iff]
-    use J 
-    apply LieSubmodule.coe_to_submodule_mk
+-- error in Algebra.Lie.Submodule: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem coe_map_of_surjective
+(h : function.surjective f) : «expr = »((I.map f : submodule R L'), (I : submodule R L).map (f : «expr →ₗ[ ] »(L, R, L'))) :=
+begin
+  let [ident J] [":", expr lie_ideal R L'] [":=", expr { lie_mem := λ x y hy, begin
+       have [ident hy'] [":", expr «expr∃ , »((x : L), «expr ∧ »(«expr ∈ »(x, I), «expr = »(f x, y)))] [],
+       { simpa [] [] [] ["[", expr hy, "]"] [] [] },
+       obtain ["⟨", ident z₂, ",", ident hz₂, ",", ident rfl, "⟩", ":=", expr hy'],
+       obtain ["⟨", ident z₁, ",", ident rfl, "⟩", ":=", expr h x],
+       simp [] [] ["only"] ["[", expr lie_hom.coe_to_linear_map, ",", expr set_like.mem_coe, ",", expr set.mem_image, ",", expr lie_submodule.mem_coe_submodule, ",", expr submodule.mem_carrier, ",", expr submodule.map_coe, "]"] [] [],
+       use [expr «expr⁅ , ⁆»(z₁, z₂)],
+       exact [expr ⟨I.lie_mem hz₂, f.map_lie z₁ z₂⟩]
+     end,
+     ..(I : submodule R L).map (f : «expr →ₗ[ ] »(L, R, L')) }],
+  erw [expr lie_submodule.coe_lie_span_submodule_eq_iff] [],
+  use [expr J],
+  apply [expr lie_submodule.coe_to_submodule_mk]
+end
 
 theorem mem_map_of_surjective {y : L'} (h₁ : Function.Surjective f) (h₂ : y ∈ I.map f) : ∃ x : I, f x = y :=
   by 

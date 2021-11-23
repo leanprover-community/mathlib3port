@@ -146,7 +146,7 @@ section OrderedSmul
 
 variable[HasScalar 𝕜 E][Module 𝕜 β][OrderedSmul 𝕜 β]{s : Set E}{f : E → β}
 
-theorem ConvexOn.convex_le (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 { x ∈ s | f x ≤ r } :=
+theorem ConvexOn.convex_le (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 { x∈s | f x ≤ r } :=
   fun x y hx hy a b ha hb hab =>
     ⟨hf.1 hx.1 hy.1 ha hb hab,
       calc f ((a • x)+b • y) ≤ (a • f x)+b • f y := hf.2 hx.1 hy.1 ha hb hab 
@@ -154,26 +154,26 @@ theorem ConvexOn.convex_le (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 { x �
         _ = r := Convex.combo_self hab r
         ⟩
 
-theorem ConcaveOn.convex_ge (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 { x ∈ s | r ≤ f x } :=
+theorem ConcaveOn.convex_ge (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 { x∈s | r ≤ f x } :=
   hf.dual.convex_le r
 
-theorem ConvexOn.convex_epigraph (hf : ConvexOn 𝕜 s f) : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } :=
+theorem ConvexOn.convex_epigraph (hf : ConvexOn 𝕜 s f) : Convex 𝕜 { p:E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } :=
   by 
     rintro ⟨x, r⟩ ⟨y, t⟩ ⟨hx, hr⟩ ⟨hy, ht⟩ a b ha hb hab 
     refine' ⟨hf.1 hx hy ha hb hab, _⟩
     calc f ((a • x)+b • y) ≤ (a • f x)+b • f y := hf.2 hx hy ha hb hab _ ≤ (a • r)+b • t :=
       add_le_add (smul_le_smul_of_nonneg hr ha) (smul_le_smul_of_nonneg ht hb)
 
-theorem ConcaveOn.convex_hypograph (hf : ConcaveOn 𝕜 s f) : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 } :=
+theorem ConcaveOn.convex_hypograph (hf : ConcaveOn 𝕜 s f) : Convex 𝕜 { p:E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 } :=
   hf.dual.convex_epigraph
 
-theorem convex_on_iff_convex_epigraph : ConvexOn 𝕜 s f ↔ Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } :=
+theorem convex_on_iff_convex_epigraph : ConvexOn 𝕜 s f ↔ Convex 𝕜 { p:E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } :=
   ⟨ConvexOn.convex_epigraph,
     fun h =>
       ⟨fun x y hx hy a b ha hb hab => (@h (x, f x) (y, f y) ⟨hx, le_rfl⟩ ⟨hy, le_rfl⟩ a b ha hb hab).1,
         fun x y hx hy a b ha hb hab => (@h (x, f x) (y, f y) ⟨hx, le_rfl⟩ ⟨hy, le_rfl⟩ a b ha hb hab).2⟩⟩
 
-theorem concave_on_iff_convex_hypograph : ConcaveOn 𝕜 s f ↔ Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 } :=
+theorem concave_on_iff_convex_hypograph : ConcaveOn 𝕜 s f ↔ Convex 𝕜 { p:E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 } :=
   @convex_on_iff_convex_epigraph 𝕜 E (OrderDual β) _ _ _ _ _ _ _ f
 
 end OrderedSmul
@@ -293,7 +293,7 @@ section OrderedSmul
 
 variable[OrderedSmul 𝕜 β]{s : Set E}{f : E → β}
 
-theorem StrictConvexOn.convex_lt (hf : StrictConvexOn 𝕜 s f) (r : β) : Convex 𝕜 { x ∈ s | f x < r } :=
+theorem StrictConvexOn.convex_lt (hf : StrictConvexOn 𝕜 s f) (r : β) : Convex 𝕜 { x∈s | f x < r } :=
   convex_iff_pairwise_pos.2$
     fun x hx y hy hxy a b ha hb hab =>
       ⟨hf.1 hx.1 hy.1 ha.le hb.le hab,
@@ -302,7 +302,7 @@ theorem StrictConvexOn.convex_lt (hf : StrictConvexOn 𝕜 s f) (r : β) : Conve
           _ = r := Convex.combo_self hab r
           ⟩
 
-theorem StrictConcaveOn.convex_gt (hf : StrictConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 { x ∈ s | r < f x } :=
+theorem StrictConcaveOn.convex_gt (hf : StrictConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 { x∈s | r < f x } :=
   hf.dual.convex_lt r
 
 end OrderedSmul
@@ -421,7 +421,7 @@ section Module
 
 variable[Module 𝕜 E][Module 𝕜 β][OrderedSmul 𝕜 β]{s : Set E}{f : E → β}
 
-theorem ConvexOn.convex_lt (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 { x ∈ s | f x < r } :=
+theorem ConvexOn.convex_lt (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 { x∈s | f x < r } :=
   convex_iff_forall_pos.2$
     fun x y hx hy a b ha hb hab =>
       ⟨hf.1 hx.1 hy.1 ha.le hb.le hab,
@@ -431,10 +431,10 @@ theorem ConvexOn.convex_lt (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 { x �
           _ = r := Convex.combo_self hab _
           ⟩
 
-theorem ConcaveOn.convex_gt (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 { x ∈ s | r < f x } :=
+theorem ConcaveOn.convex_gt (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 { x∈s | r < f x } :=
   hf.dual.convex_lt r
 
-theorem ConvexOn.convex_strict_epigraph (hf : ConvexOn 𝕜 s f) : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 < p.2 } :=
+theorem ConvexOn.convex_strict_epigraph (hf : ConvexOn 𝕜 s f) : Convex 𝕜 { p:E × β | p.1 ∈ s ∧ f p.1 < p.2 } :=
   by 
     rw [convex_iff_forall_pos]
     rintro ⟨x, r⟩ ⟨y, t⟩ ⟨hx, hr⟩ ⟨hy, ht⟩ a b ha hb hab 
@@ -442,7 +442,7 @@ theorem ConvexOn.convex_strict_epigraph (hf : ConvexOn 𝕜 s f) : Convex 𝕜 {
     calc f ((a • x)+b • y) ≤ (a • f x)+b • f y := hf.2 hx hy ha.le hb.le hab _ < (a • r)+b • t :=
       add_lt_add (smul_lt_smul_of_pos hr ha) (smul_lt_smul_of_pos ht hb)
 
-theorem ConcaveOn.convex_strict_hypograph (hf : ConcaveOn 𝕜 s f) : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 < f p.1 } :=
+theorem ConcaveOn.convex_strict_hypograph (hf : ConcaveOn 𝕜 s f) : Convex 𝕜 { p:E × β | p.1 ∈ s ∧ p.2 < f p.1 } :=
   hf.dual.convex_strict_epigraph
 
 end Module
@@ -858,23 +858,22 @@ theorem concave_on_iff_div {f : E → β} :
               0 ≤ a → 0 ≤ b → (0 < a+b) → (((a / a+b) • f x)+(b / a+b) • f y) ≤ f (((a / a+b) • x)+(b / a+b) • y) :=
   @convex_on_iff_div _ _ (OrderDual β) _ _ _ _ _ _ _
 
-theorem strict_convex_on_iff_div {f : E → β} :
-  StrictConvexOn 𝕜 s f ↔
-    Convex 𝕜 s ∧
-      ∀ ⦃x y : E⦄,
-        x ∈ s →
-          y ∈ s →
-            x ≠ y →
-              ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → f (((a / a+b) • x)+(b / a+b) • y) < ((a / a+b) • f x)+(b / a+b) • f y :=
-  and_congr Iff.rfl
-    ⟨by 
-        intro h x y hx hy hxy a b ha hb 
-        have hab := add_pos ha hb 
-        apply h hx hy hxy (div_pos ha hab) (div_pos hb hab)
-        rw [←add_div, div_self hab.ne'],
-      by 
-        intro h x y hx hy hxy a b ha hb hab 
-        simpa [hab, zero_lt_one] using h hx hy hxy ha hb⟩
+-- error in Analysis.Convex.Function: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem strict_convex_on_iff_div
+{f : E → β} : «expr ↔ »(strict_convex_on 𝕜 s f, «expr ∧ »(convex 𝕜 s, ∀
+  {{x
+    y : E}}, «expr ∈ »(x, s) → «expr ∈ »(y, s) → «expr ≠ »(x, y) → ∀
+  {{a
+    b : 𝕜}}, «expr < »(0, a) → «expr < »(0, b) → «expr < »(f «expr + »(«expr • »(«expr / »(a, «expr + »(a, b)), x), «expr • »(«expr / »(b, «expr + »(a, b)), y)), «expr + »(«expr • »(«expr / »(a, «expr + »(a, b)), f x), «expr • »(«expr / »(b, «expr + »(a, b)), f y))))) :=
+and_congr iff.rfl ⟨begin
+   intros [ident h, ident x, ident y, ident hx, ident hy, ident hxy, ident a, ident b, ident ha, ident hb],
+   have [ident hab] [] [":=", expr add_pos ha hb],
+   apply [expr h hx hy hxy (div_pos ha hab) (div_pos hb hab)],
+   rw ["[", "<-", expr add_div, ",", expr div_self hab.ne', "]"] []
+ end, begin
+   intros [ident h, ident x, ident y, ident hx, ident hy, ident hxy, ident a, ident b, ident ha, ident hb, ident hab],
+   simpa [] [] [] ["[", expr hab, ",", expr zero_lt_one, "]"] [] ["using", expr h hx hy hxy ha hb]
+ end⟩
 
 theorem strict_concave_on_iff_div {f : E → β} :
   StrictConcaveOn 𝕜 s f ↔

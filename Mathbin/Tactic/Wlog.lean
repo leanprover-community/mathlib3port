@@ -26,7 +26,7 @@ private unsafe def elim_or : ℕ → expr → tactic (List expr)
 private unsafe def dest_or : expr → tactic (List expr)
 | e =>
   do 
-    let quote (%%a) ∨ %%b ← whnf e | return [e]
+    let quote.1 ((%%ₓa) ∨ %%ₓb) ← whnf e | return [e]
     let lb ← dest_or b 
     return (a :: lb)
 
@@ -37,7 +37,7 @@ private unsafe def match_perms (pat : pattern) : expr → tactic (List$ List exp
       guardₓ (m.2.all expr.is_local_constant)
       return [m.2]) <|>
     do 
-      let quote (%%l) ∨ %%r ← whnf t 
+      let quote.1 ((%%ₓl) ∨ %%ₓr) ← whnf t 
       let m ← match_pattern pat l 
       let rs ← match_perms r 
       return (m.2 :: rs)
@@ -208,8 +208,8 @@ unsafe def wlog (h : parse (ident)?) (pat : parse (tk ":" *> texpr)?) (cases : p
                       | _ => failed 
                   let cases := mk_or_lst [pat, pat.instantiate_locals [(x.local_uniq_name, y), (y.local_uniq_name, x)]]
                   (do 
-                        let quote (%%x') ≤ %%y' ← return pat 
-                        let (cases_pr, []) ← local_proof name_h cases (exact (pquote le_totalₓ (%%x') (%%y')))
+                        let quote.1 ((%%ₓx') ≤ %%ₓy') ← return pat 
+                        let (cases_pr, []) ← local_proof name_h cases (exact (pquote.1 (le_totalₓ (%%ₓx') (%%ₓy'))))
                         return (pat, cases_pr, none, [x, y], [[x, y], [y, x]])) <|>
                       do 
                         let (cases_pr, [g]) ← local_proof name_h cases skip 

@@ -393,13 +393,13 @@ theorem mul_assocₓ (x y z : A ⊗[R] B) : mul (mul x y) z = mul x (mul y z) :=
       simp only [mul_apply, mul_assocₓ])
     x y z
 
--- error in RingTheory.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem one_mul (x : «expr ⊗[ ] »(A, R, B)) : «expr = »(mul «expr ⊗ₜ »(1, 1) x, x) :=
 begin
   apply [expr tensor_product.induction_on x]; simp [] [] [] [] [] [] { contextual := tt }
 end
 
--- error in RingTheory.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mul_one (x : «expr ⊗[ ] »(A, R, B)) : «expr = »(mul x «expr ⊗ₜ »(1, 1), x) :=
 begin
   apply [expr tensor_product.induction_on x]; simp [] [] [] [] [] [] { contextual := tt }

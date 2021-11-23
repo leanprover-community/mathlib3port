@@ -52,27 +52,22 @@ def grothendieck_topology : grothendieck_topology (opens T) :=
           rcases hR hf _ hU with ⟨V, g, hg, hV⟩
           exact ⟨_, g ≫ f, hg, hV⟩ }
 
-/-- The Grothendieck pretopology associated to a topological space. -/
-def pretopology : pretopology (opens T) :=
-  { Coverings := fun X R => ∀ x _ : x ∈ X, ∃ (U : _)(f : U ⟶ X), R f ∧ x ∈ U,
-    has_isos :=
-      fun X Y f i x hx =>
-        by 
-          exactI ⟨_, _, presieve.singleton_self _, (inv f).le hx⟩,
-    pullbacks :=
-      fun X Y f S hS x hx =>
-        by 
-          rcases hS _ (f.le hx) with ⟨U, g, hg, hU⟩
-          refine' ⟨_, _, presieve.pullback_arrows.mk _ _ hg, _⟩
-          have  : U⊓Y ≤ pullback g f 
-          refine' le_of_hom (pullback.lift (hom_of_le inf_le_left) (hom_of_le inf_le_right) rfl)
-          apply this ⟨hU, hx⟩,
-    Transitive :=
-      fun X S Ti hS hTi x hx =>
-        by 
-          rcases hS x hx with ⟨U, f, hf, hU⟩
-          rcases hTi f hf x hU with ⟨V, g, hg, hV⟩
-          exact ⟨_, _, ⟨_, g, f, hf, hg, rfl⟩, hV⟩ }
+-- error in CategoryTheory.Sites.Spaces: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- The Grothendieck pretopology associated to a topological space. -/ def pretopology : pretopology (opens T) :=
+{ coverings := λ X R, ∀ x «expr ∈ » X, «expr∃ , »((U) (f : «expr ⟶ »(U, X)), «expr ∧ »(R f, «expr ∈ »(x, U))),
+  has_isos := λ X Y f i x hx, by exactI [expr ⟨_, _, presieve.singleton_self _, (inv f).le hx⟩],
+  pullbacks := λ X Y f S hS x hx, begin
+    rcases [expr hS _ (f.le hx), "with", "⟨", ident U, ",", ident g, ",", ident hg, ",", ident hU, "⟩"],
+    refine [expr ⟨_, _, presieve.pullback_arrows.mk _ _ hg, _⟩],
+    have [] [":", expr «expr ≤ »(«expr ⊓ »(U, Y), pullback g f)] [],
+    refine [expr le_of_hom (pullback.lift (hom_of_le inf_le_left) (hom_of_le inf_le_right) rfl)],
+    apply [expr this ⟨hU, hx⟩]
+  end,
+  transitive := λ X S Ti hS hTi x hx, begin
+    rcases [expr hS x hx, "with", "⟨", ident U, ",", ident f, ",", ident hf, ",", ident hU, "⟩"],
+    rcases [expr hTi f hf x hU, "with", "⟨", ident V, ",", ident g, ",", ident hg, ",", ident hV, "⟩"],
+    exact [expr ⟨_, _, ⟨_, g, f, hf, hg, rfl⟩, hV⟩]
+  end }
 
 /--
 The pretopology associated to a space induces the Grothendieck topology associated to the space.

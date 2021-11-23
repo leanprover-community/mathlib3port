@@ -54,16 +54,18 @@ theorem coe_mul (a b : α) : ((a*b : α) : completion α) = a*b :=
 
 variable[UniformAddGroup α]
 
-theorem continuous_mul : Continuous fun p : completion α × completion α => p.1*p.2 :=
-  by 
-    let m := (AddMonoidHom.mul : α →+ α →+ α).compr₂ to_compl 
-    have  : Continuous fun p : α × α => m p.1 p.2 
-    exact (continuous_coe α).comp continuous_mul 
-    have di : DenseInducing (to_compl : α → completion α)
-    exact dense_inducing_coe 
-    convert di.extend_Z_bilin di this 
-    ext ⟨x, y⟩
-    rfl
+-- error in Topology.Algebra.UniformRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_mul : continuous (λ p : «expr × »(completion α, completion α), «expr * »(p.1, p.2)) :=
+begin
+  let [ident m] [] [":=", expr (add_monoid_hom.mul : «expr →+ »(α, «expr →+ »(α, α))).compr₂ to_compl],
+  have [] [":", expr continuous (λ p : «expr × »(α, α), m p.1 p.2)] [],
+  from [expr (continuous_coe α).comp continuous_mul],
+  have [ident di] [":", expr dense_inducing (to_compl : α → completion α)] [],
+  from [expr dense_inducing_coe],
+  convert [] [expr di.extend_Z_bilin di this] [],
+  ext [] ["⟨", ident x, ",", ident y, "⟩"] [],
+  refl
+end
 
 theorem Continuous.mul {β : Type _} [TopologicalSpace β] {f g : β → completion α} (hf : Continuous f)
   (hg : Continuous g) : Continuous fun b => f b*g b :=

@@ -113,23 +113,26 @@ def finset_above α (enum : α → ℕ) (n : ℕ) :=
 def mk_fintype {α} (enum : α → ℕ) (s : finset_above α enum 0) (H : ∀ x, x ∈ s.1) : Fintype α :=
   ⟨s.1, H⟩
 
+-- error in Tactic.DeriveFintype: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- This is the case for a simple variant (no arguments) in an inductive type. -/
-def finset_above.cons {α} {enum : α → ℕ} n (a : α) (h : enum a = n) (s : finset_above α enum (n+1)) :
-  finset_above α enum n :=
-  by 
-    refine' ⟨Finset.cons a s.1 _, _⟩
-    ·
-      intro h' 
-      have  := s.2 _ h' 
-      rw [h] at this 
-      exact Nat.not_succ_le_selfₓ n this
-    ·
-      intro x h' 
-      rcases Finset.mem_cons.1 h' with (rfl | h')
-      ·
-        exact ge_of_eq h
-      ·
-        exact Nat.le_of_succ_leₓ (s.2 _ h')
+def finset_above.cons
+{α}
+{enum : α → exprℕ()}
+(n)
+(a : α)
+(h : «expr = »(enum a, n))
+(s : finset_above α enum «expr + »(n, 1)) : finset_above α enum n :=
+begin
+  refine [expr ⟨finset.cons a s.1 _, _⟩],
+  { intro [ident h'],
+    have [] [] [":=", expr s.2 _ h'],
+    rw [expr h] ["at", ident this],
+    exact [expr nat.not_succ_le_self n this] },
+  { intros [ident x, ident h'],
+    rcases [expr finset.mem_cons.1 h', "with", ident rfl, "|", ident h'],
+    { exact [expr ge_of_eq h] },
+    { exact [expr nat.le_of_succ_le (s.2 _ h')] } }
+end
 
 theorem finset_above.mem_cons_self {α} {enum : α → ℕ} {n a h s} : a ∈ (@finset_above.cons α enum n a h s).1 :=
   Multiset.mem_cons_self _ _
@@ -170,24 +173,26 @@ theorem finset_in.mem_mk {α} {P : α → Prop} {Γ} {s : Fintype Γ} {f : Γ �
   a ∈ (@finset_in.mk α P Γ s f inj mem).1 :=
   Finset.mem_map.2 ⟨_, Finset.mem_univ _, H⟩
 
+-- error in Tactic.DeriveFintype: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For nontrivial variants, we split the constructor list into a `finset_in` component for the
 current constructor and a `finset_above` for the rest. -/
-def finset_above.union {α} {enum : α → ℕ} n (s : finset_in fun a => enum a = n) (t : finset_above α enum (n+1)) :
-  finset_above α enum n :=
-  by 
-    refine' ⟨Finset.disjUnion s.1 t.1 _, _⟩
-    ·
-      intro a hs ht 
-      have  := t.2 _ ht 
-      rw [s.2 _ hs] at this 
-      exact Nat.not_succ_le_selfₓ n this
-    ·
-      intro x h' 
-      rcases Finset.mem_disj_union.1 h' with (h' | h')
-      ·
-        exact ge_of_eq (s.2 _ h')
-      ·
-        exact Nat.le_of_succ_leₓ (t.2 _ h')
+def finset_above.union
+{α}
+{enum : α → exprℕ()}
+(n)
+(s : finset_in (λ a, «expr = »(enum a, n)))
+(t : finset_above α enum «expr + »(n, 1)) : finset_above α enum n :=
+begin
+  refine [expr ⟨finset.disj_union s.1 t.1 _, _⟩],
+  { intros [ident a, ident hs, ident ht],
+    have [] [] [":=", expr t.2 _ ht],
+    rw [expr s.2 _ hs] ["at", ident this],
+    exact [expr nat.not_succ_le_self n this] },
+  { intros [ident x, ident h'],
+    rcases [expr finset.mem_disj_union.1 h', "with", ident h', "|", ident h'],
+    { exact [expr ge_of_eq (s.2 _ h')] },
+    { exact [expr nat.le_of_succ_le (t.2 _ h')] } }
+end
 
 theorem finset_above.mem_union_left {α} {enum : α → ℕ} {n s t a} (H : a ∈ (s : finset_in _).1) :
   a ∈ (@finset_above.union α enum n s t).1 :=
@@ -213,7 +218,7 @@ unsafe def mk_sigma : expr → tactic expr
     let p ← mk_local' n bi d 
     let e ← mk_sigma (expr.instantiate_var b p)
     tactic.mk_app `` Psigma [d, bind_lambda e p]
-| _ => pure (quote Unit)
+| _ => pure (quote.1 Unit)
 
 /-- Prove the goal `(Σ' (a:A) (b:B a) (c:C a b), unit) → T`
 (this is the function `f` in `finset_in.mk`) using recursive `psigma.elim`,
@@ -224,7 +229,7 @@ of `psigma.elim` applications constructed, which is the number of constructor ar
 unsafe def mk_sigma_elim : expr → expr → tactic ℕ
 | expr.pi n bi d b, c =>
   do 
-    refine (pquote @Psigma.elim (%%d) _ _ _)
+    refine (pquote.1 (@Psigma.elim (%%ₓd) _ _ _))
     let i ← intro_fresh n
     (·+1) <$> mk_sigma_elim (expr.instantiate_var b i) (c i)
 | _, c =>
@@ -277,16 +282,17 @@ unsafe def mk_finset (ls : List level) (args : List expr) : ℕ → List Name �
     let t ← infer_type e 
     if is_pi t then
         do 
-          to_expr (pquote finset_above.union (%%reflect k)) tt ff >>= fun c => apply c { NewGoals := new_goals.all }
+          to_expr (pquote.1 (finset_above.union (%%ₓreflect k))) tt ff >>=
+              fun c => apply c { NewGoals := new_goals.all }
           let Γ ← mk_sigma t 
-          to_expr (pquote finset_in.mk (%%Γ)) tt ff >>= fun c => apply c { NewGoals := new_goals.all }
+          to_expr (pquote.1 (finset_in.mk (%%ₓΓ))) tt ff >>= fun c => apply c { NewGoals := new_goals.all }
           let n ← mk_sigma_elim t e 
           intro1 >>= fun x => intro1 >>= mk_sigma_elim_inj n x 
           intro1 >>= mk_sigma_elim_eq n 
           mk_finset (k+1) cs
       else
         do 
-          let c ← to_expr (pquote finset_above.cons (%%reflect k) (%%e)) tt ff 
+          let c ← to_expr (pquote.1 (finset_above.cons (%%ₓreflect k) (%%ₓe))) tt ff 
           apply c { NewGoals := new_goals.all }
           reflexivity 
           mk_finset (k+1) cs
@@ -326,7 +332,7 @@ where all arguments to all constructors are fintypes. -/
 unsafe def mk_fintype_instance : tactic Unit :=
   do 
     intros 
-    let quote Fintype (%%e) ← target >>= whnf 
+    let quote.1 (Fintype (%%ₓe)) ← target >>= whnf 
     let (const I ls, args) ← pure (get_app_fn_args e)
     let env ← get_env 
     let cs := env.constructors_of I 

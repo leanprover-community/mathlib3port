@@ -12,12 +12,12 @@ unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) :
     let t ← infer_type hyp 
     let prf ←
       match t with 
-        | quote (%%l) = %%r =>
+        | quote.1 ((%%ₓl) = %%ₓr) =>
           do 
             let ltp ← infer_type l 
             let mv ← mk_mvar 
-            to_expr (pquote congr_argₓ (%%e : (%%ltp) → %%mv) (%%hyp))
-        | quote (%%l) ≤ %%r =>
+            to_expr (pquote.1 (congr_argₓ (%%ₓe : (%%ₓltp) → %%ₓmv) (%%ₓhyp)))
+        | quote.1 ((%%ₓl) ≤ %%ₓr) =>
           do 
             let Hmono ←
               match mono_lem with 
@@ -25,17 +25,17 @@ unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) :
                 | none =>
                   do 
                     let n ← get_unused_name `mono 
-                    to_expr (pquote Monotone (%%e)) >>= assert n 
+                    to_expr (pquote.1 (Monotone (%%ₓe))) >>= assert n 
                     swap 
                     let n ← get_local n 
-                    to_expr (pquote (%%n) (%%hyp))
+                    to_expr (pquote.1 ((%%ₓn) (%%ₓhyp)))
                     swap
                     (do 
                           intro_lst [`x, `y, `h]
                           sorry) <|>
                         swap 
                     return n 
-            to_expr (pquote (%%Hmono) (%%hyp))
+            to_expr (pquote.1 ((%%ₓHmono) (%%ₓhyp)))
         | _ => throwError "failed to apply {( ← e)} at { ← hyp }"
     clear hyp 
     let hyp ← note hyp.local_pp_name none prf 
@@ -55,19 +55,19 @@ unsafe def apply_fun_to_goal (e : pexpr) (lem : Option pexpr) : tactic Unit :=
   do 
     let t ← target 
     match t with 
-      | quote (%%l) ≠ %%r => to_expr (pquote ne_of_apply_ne (%%e)) >>= apply >> skip
-      | quote ¬(%%l) = %%r => to_expr (pquote ne_of_apply_ne (%%e)) >>= apply >> skip
-      | quote (%%l) ≤ %%r => to_expr (pquote (OrderIso.le_iff_le (%%e)).mp) >>= apply >> skip
-      | quote (%%l) < %%r => to_expr (pquote (OrderIso.lt_iff_lt (%%e)).mp) >>= apply >> skip
-      | quote (%%l) = %%r =>
+      | quote.1 ((%%ₓl) ≠ %%ₓr) => to_expr (pquote.1 (ne_of_apply_ne (%%ₓe))) >>= apply >> skip
+      | quote.1 ¬(%%ₓl) = %%ₓr => to_expr (pquote.1 (ne_of_apply_ne (%%ₓe))) >>= apply >> skip
+      | quote.1 ((%%ₓl) ≤ %%ₓr) => to_expr (pquote.1 (OrderIso.le_iff_le (%%ₓe)).mp) >>= apply >> skip
+      | quote.1 ((%%ₓl) < %%ₓr) => to_expr (pquote.1 (OrderIso.lt_iff_lt (%%ₓe)).mp) >>= apply >> skip
+      | quote.1 ((%%ₓl) = %%ₓr) =>
         focus1
           do 
-            to_expr (pquote (%%e) (%%l))
+            to_expr (pquote.1 ((%%ₓe) (%%ₓl)))
             let n ← get_unused_name `inj 
-            to_expr (pquote Function.Injective (%%e)) >>= assert n 
+            to_expr (pquote.1 (Function.Injective (%%ₓe))) >>= assert n 
             focus1$
                   (assumption <|>
-                    to_expr (pquote Equiv.injective) >>= apply >> done <|>
+                    to_expr (pquote.1 Equiv.injective) >>= apply >> done <|>
                       (lem.mmap fun l => to_expr l >>= apply) >> done) <|>
                 swap 
             let n ← get_local n 

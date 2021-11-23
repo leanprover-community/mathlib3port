@@ -1,4 +1,3 @@
-import Mathbin.Order.Filter.Partial 
 import Mathbin.Order.Filter.AtTopBot
 
 /-!
@@ -91,27 +90,41 @@ theorem is_bounded.is_bounded_under {q : β → β → Prop} {u : α → β} (hf
   f.is_bounded r → f.is_bounded_under q u
 | ⟨b, h⟩ => ⟨u b, show ∀ᶠx in f, q (u x) (u b) from h.mono fun x => hf x b⟩
 
-theorem not_is_bounded_under_of_tendsto_at_top [Nonempty α] [SemilatticeSup α] [Preorderₓ β] [NoTopOrder β] {f : α → β}
-  (hf : tendsto f at_top at_top) : ¬is_bounded_under (· ≤ ·) at_top f :=
-  by 
-    rintro ⟨b, hb⟩
-    rw [eventually_map] at hb 
-    obtain ⟨b', h⟩ := no_top b 
-    have hb' := (tendsto_at_top.mp hf) b' 
-    have  : { x : α | f x ≤ b } ∩ { x : α | b' ≤ f x } = ∅ :=
-      eq_empty_of_subset_empty fun x hx => (not_le_of_lt h) (le_transₓ hx.2 hx.1)
-    exact at_top.empty_not_mem (this ▸ Filter.inter_mem hb hb' : ∅ ∈ (at_top : Filter α))
+-- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem not_is_bounded_under_of_tendsto_at_top
+[nonempty α]
+[semilattice_sup α]
+[preorder β]
+[no_top_order β]
+{f : α → β}
+(hf : tendsto f at_top at_top) : «expr¬ »(is_bounded_under ((«expr ≤ »)) at_top f) :=
+begin
+  rintro ["⟨", ident b, ",", ident hb, "⟩"],
+  rw [expr eventually_map] ["at", ident hb],
+  obtain ["⟨", ident b', ",", ident h, "⟩", ":=", expr no_top b],
+  have [ident hb'] [] [":=", expr tendsto_at_top.mp hf b'],
+  have [] [":", expr «expr = »(«expr ∩ »({x : α | «expr ≤ »(f x, b)}, {x : α | «expr ≤ »(b', f x)}), «expr∅»())] [":=", expr eq_empty_of_subset_empty (λ
+    x hx, not_le_of_lt h (le_trans hx.2 hx.1))],
+  exact [expr at_top.empty_not_mem («expr ▸ »(this, filter.inter_mem hb hb') : «expr ∈ »(«expr∅»(), (at_top : filter α)))]
+end
 
-theorem not_is_bounded_under_of_tendsto_at_bot [Nonempty α] [SemilatticeSup α] [Preorderₓ β] [NoBotOrder β] {f : α → β}
-  (hf : tendsto f at_top at_bot) : ¬is_bounded_under (· ≥ ·) at_top f :=
-  by 
-    rintro ⟨b, hb⟩
-    rw [eventually_map] at hb 
-    obtain ⟨b', h⟩ := no_bot b 
-    have hb' := (tendsto_at_bot.mp hf) b' 
-    have  : { x : α | b ≤ f x } ∩ { x : α | f x ≤ b' } = ∅ :=
-      eq_empty_of_subset_empty fun x hx => (not_le_of_lt h) (le_transₓ hx.1 hx.2)
-    exact at_top.empty_not_mem (this ▸ Filter.inter_mem hb hb' : ∅ ∈ (at_top : Filter α))
+-- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem not_is_bounded_under_of_tendsto_at_bot
+[nonempty α]
+[semilattice_sup α]
+[preorder β]
+[no_bot_order β]
+{f : α → β}
+(hf : tendsto f at_top at_bot) : «expr¬ »(is_bounded_under ((«expr ≥ »)) at_top f) :=
+begin
+  rintro ["⟨", ident b, ",", ident hb, "⟩"],
+  rw [expr eventually_map] ["at", ident hb],
+  obtain ["⟨", ident b', ",", ident h, "⟩", ":=", expr no_bot b],
+  have [ident hb'] [] [":=", expr tendsto_at_bot.mp hf b'],
+  have [] [":", expr «expr = »(«expr ∩ »({x : α | «expr ≤ »(b, f x)}, {x : α | «expr ≤ »(f x, b')}), «expr∅»())] [":=", expr eq_empty_of_subset_empty (λ
+    x hx, not_le_of_lt h (le_trans hx.1 hx.2))],
+  exact [expr at_top.empty_not_mem («expr ▸ »(this, filter.inter_mem hb hb') : «expr ∈ »(«expr∅»(), (at_top : filter α)))]
+end
 
 /-- `is_cobounded (≺) f` states that the filter `f` does not tend to infinity w.r.t. `≺`. This is
 also called frequently bounded. Will be usually instantiated with `≤` or `≥`.
@@ -161,7 +174,7 @@ theorem is_cobounded_bot : is_cobounded r ⊥ ↔ ∃ b, ∀ x, r b x :=
   by 
     simp [is_cobounded]
 
--- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_cobounded_top : «expr ↔ »(is_cobounded r «expr⊤»(), nonempty α) :=
 by simp [] [] [] ["[", expr is_cobounded, ",", expr eq_univ_iff_forall, ",", expr exists_true_iff_nonempty, "]"] [] [] { contextual := tt }
 
@@ -521,17 +534,23 @@ theorem liminf_nat_add (f : ℕ → α) (k : ℕ) : (at_top.liminf fun i => f (i
 theorem limsup_nat_add (f : ℕ → α) (k : ℕ) : (at_top.limsup fun i => f (i+k)) = at_top.limsup f :=
   @liminf_nat_add (OrderDual α) _ f k
 
-theorem liminf_le_of_frequently_le' {α β} [CompleteLattice β] {f : Filter α} {u : α → β} {x : β}
-  (h : ∃ᶠa in f, u a ≤ x) : f.liminf u ≤ x :=
-  by 
-    rw [liminf_eq]
-    refine' Sup_le fun b hb => _ 
-    have hbx : ∃ᶠa in f, b ≤ x
-    ·
-      revert h 
-      rw [←not_imp_not, not_frequently, not_frequently]
-      exact fun h => hb.mp (h.mono fun a hbx hba hax => hbx (hba.trans hax))
-    exact hbx.exists.some_spec
+-- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem liminf_le_of_frequently_le'
+{α β}
+[complete_lattice β]
+{f : filter α}
+{u : α → β}
+{x : β}
+(h : «expr∃ᶠ in , »((a), f, «expr ≤ »(u a, x))) : «expr ≤ »(f.liminf u, x) :=
+begin
+  rw [expr liminf_eq] [],
+  refine [expr Sup_le (λ b hb, _)],
+  have [ident hbx] [":", expr «expr∃ᶠ in , »((a), f, «expr ≤ »(b, x))] [],
+  { revert [ident h],
+    rw ["[", "<-", expr not_imp_not, ",", expr not_frequently, ",", expr not_frequently, "]"] [],
+    exact [expr λ h, hb.mp (h.mono (λ a hbx hba hax, hbx (hba.trans hax)))] },
+  exact [expr hbx.exists.some_spec]
+end
 
 theorem le_limsup_of_frequently_le' {α β} [CompleteLattice β] {f : Filter α} {u : α → β} {x : β}
   (h : ∃ᶠa in f, x ≤ u a) : x ≤ f.limsup u :=
@@ -548,7 +567,7 @@ theorem eventually_lt_of_lt_liminf {f : Filter α} [ConditionallyCompleteLinearO
       is_bounded_default) :
   ∀ᶠa in f, b < u a :=
   by 
-    obtain ⟨c, hc, hbc⟩ : ∃ (c : β)(hc : c ∈ { c : β | ∀ᶠn : α in f, c ≤ u n }), b < c := exists_lt_of_lt_cSup hu h 
+    obtain ⟨c, hc, hbc⟩ : ∃ (c : β)(hc : c ∈ { c:β | ∀ᶠn : α in f, c ≤ u n }), b < c := exists_lt_of_lt_cSup hu h 
     exact hc.mono fun x hx => lt_of_lt_of_leₓ hbc hx
 
 theorem eventually_lt_of_limsup_lt {f : Filter α} [ConditionallyCompleteLinearOrder β] {u : α → β} {b : β}
@@ -619,31 +638,30 @@ theorem GaloisConnection.l_limsup_le {α β γ} [ConditionallyCompleteLattice β
     simpRw [gc _ _]  at hc⊢
     exact Limsup_le_of_le hv_co hc
 
-theorem OrderIso.limsup_apply {γ} [ConditionallyCompleteLattice β] [ConditionallyCompleteLattice γ] {f : Filter α}
-  {u : α → β} (g : β ≃o γ)
-  (hu : f.is_bounded_under (· ≤ ·) u :=  by 
-    runTac 
-      is_bounded_default)
-  (hu_co : f.is_cobounded_under (· ≤ ·) u :=  by 
-    runTac 
-      is_bounded_default)
-  (hgu : f.is_bounded_under (· ≤ ·) fun x => g (u x) :=  by 
-    runTac 
-      is_bounded_default)
-  (hgu_co : f.is_cobounded_under (· ≤ ·) fun x => g (u x) :=  by 
-    runTac 
-      is_bounded_default) :
-  g (f.limsup u) = f.limsup fun x => g (u x) :=
-  by 
-    refine' le_antisymmₓ (g.to_galois_connection.l_limsup_le hgu hu_co) _ 
-    rw [←g.symm.symm_apply_apply (f.limsup fun x : α => g (u x)), g.symm_symm]
-    refine' g.monotone _ 
-    have hf : u = fun i => g.symm (g (u i))
-    exact funext fun i => (g.symm_apply_apply (u i)).symm 
-    nthRw 0[hf]
-    refine' g.symm.to_galois_connection.l_limsup_le _ hgu_co 
-    simpRw [g.symm_apply_apply]
-    exact hu
+-- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem order_iso.limsup_apply
+{γ}
+[conditionally_complete_lattice β]
+[conditionally_complete_lattice γ]
+{f : filter α}
+{u : α → β}
+(g : «expr ≃o »(β, γ))
+(hu : f.is_bounded_under ((«expr ≤ »)) u . is_bounded_default)
+(hu_co : f.is_cobounded_under ((«expr ≤ »)) u . is_bounded_default)
+(hgu : f.is_bounded_under ((«expr ≤ »)) (λ x, g (u x)) . is_bounded_default)
+(hgu_co : f.is_cobounded_under ((«expr ≤ »)) (λ
+  x, g (u x)) . is_bounded_default) : «expr = »(g (f.limsup u), f.limsup (λ x, g (u x))) :=
+begin
+  refine [expr le_antisymm (g.to_galois_connection.l_limsup_le hgu hu_co) _],
+  rw ["[", "<-", expr g.symm.symm_apply_apply (f.limsup (λ x : α, g (u x))), ",", expr g.symm_symm, "]"] [],
+  refine [expr g.monotone _],
+  have [ident hf] [":", expr «expr = »(u, λ i, g.symm (g (u i)))] [],
+  from [expr funext (λ i, (g.symm_apply_apply (u i)).symm)],
+  nth_rewrite [0] [expr hf] [],
+  refine [expr g.symm.to_galois_connection.l_limsup_le _ hgu_co],
+  simp_rw [expr g.symm_apply_apply] [],
+  exact [expr hu]
+end
 
 theorem OrderIso.liminf_apply {γ} [ConditionallyCompleteLattice β] [ConditionallyCompleteLattice γ] {f : Filter α}
   {u : α → β} (g : β ≃o γ)

@@ -83,7 +83,7 @@ unsafe def apply_congr (q : parse (texpr)?) : conv Unit :=
           seq' (tactic.eapply n >> tactic.skip)
             (tactic.intros >>
               do 
-                let quote _ = _ ← target 
+                let quote.1 (_ = _) ← target 
                 tactic.skip)
 
 add_tactic_doc

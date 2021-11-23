@@ -35,21 +35,23 @@ variable{R : Type u}{M : Type v}[CommRingₓ R][AddCommGroupₓ M][Module R M]
 
 variable(B : BilinForm R M)
 
-theorem BilinForm.is_skew_adjoint_bracket (f g : Module.End R M) (hf : f ∈ B.skew_adjoint_submodule)
-  (hg : g ∈ B.skew_adjoint_submodule) : ⁅f,g⁆ ∈ B.skew_adjoint_submodule :=
-  by 
-    rw [mem_skew_adjoint_submodule] at *
-    have hfg : is_adjoint_pair B B (f*g) (g*f)
-    ·
-      rw [←neg_mul_neg g f]
-      exact hf.mul hg 
-    have hgf : is_adjoint_pair B B (g*f) (f*g)
-    ·
-      rw [←neg_mul_neg f g]
-      exact hg.mul hf 
-    change BilinForm.IsAdjointPair B B ((f*g) - g*f) (-((f*g) - g*f))
-    rw [neg_sub]
-    exact hfg.sub hgf
+-- error in Algebra.Lie.SkewAdjoint: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem bilin_form.is_skew_adjoint_bracket
+(f g : module.End R M)
+(hf : «expr ∈ »(f, B.skew_adjoint_submodule))
+(hg : «expr ∈ »(g, B.skew_adjoint_submodule)) : «expr ∈ »(«expr⁅ , ⁆»(f, g), B.skew_adjoint_submodule) :=
+begin
+  rw [expr mem_skew_adjoint_submodule] ["at", "*"],
+  have [ident hfg] [":", expr is_adjoint_pair B B «expr * »(f, g) «expr * »(g, f)] [],
+  { rw ["<-", expr neg_mul_neg g f] [],
+    exact [expr hf.mul hg] },
+  have [ident hgf] [":", expr is_adjoint_pair B B «expr * »(g, f) «expr * »(f, g)] [],
+  { rw ["<-", expr neg_mul_neg f g] [],
+    exact [expr hg.mul hf] },
+  change [expr bilin_form.is_adjoint_pair B B «expr - »(«expr * »(f, g), «expr * »(g, f)) «expr- »(«expr - »(«expr * »(f, g), «expr * »(g, f)))] [] [],
+  rw [expr neg_sub] [],
+  exact [expr hfg.sub hgf]
+end
 
 /-- Given an `R`-module `M`, equipped with a bilinear form, the skew-adjoint endomorphisms form a
 Lie subalgebra of the Lie algebra of endomorphisms. -/

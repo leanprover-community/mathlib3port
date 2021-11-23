@@ -1,4 +1,3 @@
-import Mathbin.Algebra.GroupPower.Default 
 import Mathbin.Algebra.Order.WithZero 
 import Mathbin.Algebra.PunitInstances 
 import Mathbin.RingTheory.Ideal.Operations
@@ -257,25 +256,23 @@ theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x+y) = max (v x) (v y) :=
       apply this h.symm 
       rwa [add_commₓ, max_commₓ] at h'
 
-theorem map_eq_of_sub_lt (h : v (y - x) < v x) : v y = v x :=
-  by 
-    have  := Valuation.map_add_of_distinct_val v (ne_of_gtₓ h).symm 
-    rw [max_eq_rightₓ (le_of_ltₓ h)] at this 
-    simpa using this
+-- error in RingTheory.Valuation.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_eq_of_sub_lt (h : «expr < »(v «expr - »(y, x), v x)) : «expr = »(v y, v x) :=
+begin
+  have [] [] [":=", expr valuation.map_add_of_distinct_val v (ne_of_gt h).symm],
+  rw [expr max_eq_right (le_of_lt h)] ["at", ident this],
+  simpa [] [] [] [] [] ["using", expr this]
+end
 
+-- error in RingTheory.Valuation.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The subgroup of elements whose valuation is less than a certain unit.-/
-def lt_add_subgroup (v : Valuation R Γ₀) (γ : Units Γ₀) : AddSubgroup R :=
-  { Carrier := { x | v x < γ },
-    zero_mem' :=
-      by 
-        have h := Units.ne_zero γ 
-        contrapose! h 
-        simpa using h,
-    add_mem' := fun x y x_in y_in => lt_of_le_of_ltₓ (v.map_add x y) (max_ltₓ x_in y_in),
-    neg_mem' :=
-      fun x x_in =>
-        by 
-          rwa [Set.mem_set_of_eq, map_neg] }
+def lt_add_subgroup (v : valuation R Γ₀) (γ : units Γ₀) : add_subgroup R :=
+{ carrier := {x | «expr < »(v x, γ)},
+  zero_mem' := by { have [ident h] [] [":=", expr units.ne_zero γ],
+    contrapose ["!"] [ident h],
+    simpa [] [] [] [] [] ["using", expr h] },
+  add_mem' := λ x y x_in y_in, lt_of_le_of_lt (v.map_add x y) (max_lt x_in y_in),
+  neg_mem' := λ x x_in, by rwa ["[", expr set.mem_set_of_eq, ",", expr map_neg, "]"] [] }
 
 end Groupₓ
 
@@ -328,10 +325,12 @@ theorem val_eq (h : v₁.is_equiv v₂) {r s : R} : v₁ r = v₁ s ↔ v₂ r =
   by 
     simpa only [le_antisymm_iffₓ] using and_congr (h r s) (h s r)
 
-theorem ne_zero (h : v₁.is_equiv v₂) {r : R} : v₁ r ≠ 0 ↔ v₂ r ≠ 0 :=
-  by 
-    have  : v₁ r ≠ v₁ 0 ↔ v₂ r ≠ v₂ 0 := not_iff_not_of_iff h.val_eq 
-    rwa [v₁.map_zero, v₂.map_zero] at this
+-- error in RingTheory.Valuation.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem ne_zero (h : v₁.is_equiv v₂) {r : R} : «expr ↔ »(«expr ≠ »(v₁ r, 0), «expr ≠ »(v₂ r, 0)) :=
+begin
+  have [] [":", expr «expr ↔ »(«expr ≠ »(v₁ r, v₁ 0), «expr ≠ »(v₂ r, v₂ 0))] [":=", expr not_iff_not_of_iff h.val_eq],
+  rwa ["[", expr v₁.map_zero, ",", expr v₂.map_zero, "]"] ["at", ident this]
+end
 
 end IsEquiv
 
@@ -415,20 +414,18 @@ instance  [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
         rw [v.map_mul x y] at hxy 
         exact eq_zero_or_eq_zero_of_mul_eq_zero hxy⟩
 
-theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a+s) = v a :=
-  by 
-    have aux : ∀ a s, v s = 0 → v (a+s) ≤ v a
-    ·
-      intro a' s' h' 
-      refine' le_transₓ (v.map_add a' s') (max_leₓ (le_reflₓ _) _)
-      simp [h']
-    apply le_antisymmₓ (aux a s h)
-    calc v a = v ((a+s)+-s) :=
-      by 
-        simp _ ≤ v (a+s) :=
-      aux (a+s) (-s)
-        (by 
-          rwa [←Ideal.neg_mem_iff] at h)
+-- error in RingTheory.Valuation.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_add_supp (a : R) {s : R} (h : «expr ∈ »(s, supp v)) : «expr = »(v «expr + »(a, s), v a) :=
+begin
+  have [ident aux] [":", expr ∀ a s, «expr = »(v s, 0) → «expr ≤ »(v «expr + »(a, s), v a)] [],
+  { intros [ident a', ident s', ident h'],
+    refine [expr le_trans (v.map_add a' s') (max_le (le_refl _) _)],
+    simp [] [] [] ["[", expr h', "]"] [] [] },
+  apply [expr le_antisymm (aux a s h)],
+  calc
+    «expr = »(v a, v «expr + »(«expr + »(a, s), «expr- »(s))) : by simp [] [] [] [] [] []
+    «expr ≤ »(..., v «expr + »(a, s)) : aux «expr + »(a, s) «expr- »(s) (by rwa ["<-", expr ideal.neg_mem_iff] ["at", ident h])
+end
 
 /-- If `hJ : J ⊆ supp v` then `on_quot_val hJ` is the induced function on R/J as a function.
 Note: it's just the function; the valuation is `on_quot hJ`. -/

@@ -461,7 +461,7 @@ theorem IsUnit.ring_inverse {a : M₀} : IsUnit a → IsUnit (Ring.inverse a)
 theorem is_unit_ring_inverse {a : M₀} : IsUnit (Ring.inverse a) ↔ IsUnit a :=
   ⟨fun h =>
       by 
-        casesI subsingleton_or_nontrivial M₀
+        cases' subsingleton_or_nontrivial M₀
         ·
           convert h
         ·
@@ -1304,20 +1304,19 @@ theorem inv_symm_left_iff₀ : SemiconjBy (a⁻¹) x y ↔ SemiconjBy a y x :=
 theorem inv_symm_left₀ (h : SemiconjBy a x y) : SemiconjBy (a⁻¹) y x :=
   SemiconjBy.inv_symm_left_iff₀.2 h
 
-theorem inv_right₀ (h : SemiconjBy a x y) : SemiconjBy a (x⁻¹) (y⁻¹) :=
-  by 
-    byCases' ha : a = 0
-    ·
-      simp only [ha, zero_left]
-    byCases' hx : x = 0
-    ·
-      subst x 
-      simp only [SemiconjBy, mul_zero, @eq_comm _ _ (y*a), mul_eq_zero] at h 
-      simp [h.resolve_right ha]
-    ·
-      have  := mul_ne_zero ha hx 
-      rw [h.eq, mul_ne_zero_iff] at this 
-      exact @units_inv_right _ _ _ (Units.mk0 x hx) (Units.mk0 y this.1) h
+-- error in Algebra.GroupWithZero.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem inv_right₀ (h : semiconj_by a x y) : semiconj_by a «expr ⁻¹»(x) «expr ⁻¹»(y) :=
+begin
+  by_cases [expr ha, ":", expr «expr = »(a, 0)],
+  { simp [] [] ["only"] ["[", expr ha, ",", expr zero_left, "]"] [] [] },
+  by_cases [expr hx, ":", expr «expr = »(x, 0)],
+  { subst [expr x],
+    simp [] [] ["only"] ["[", expr semiconj_by, ",", expr mul_zero, ",", expr @eq_comm _ _ «expr * »(y, a), ",", expr mul_eq_zero, "]"] [] ["at", ident h],
+    simp [] [] [] ["[", expr h.resolve_right ha, "]"] [] [] },
+  { have [] [] [":=", expr mul_ne_zero ha hx],
+    rw ["[", expr h.eq, ",", expr mul_ne_zero_iff, "]"] ["at", ident this],
+    exact [expr @units_inv_right _ _ _ (units.mk0 x hx) (units.mk0 y this.1) h] }
+end
 
 @[simp]
 theorem inv_right_iff₀ : SemiconjBy a (x⁻¹) (y⁻¹) ↔ SemiconjBy a x y :=

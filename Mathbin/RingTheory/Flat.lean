@@ -1,6 +1,4 @@
-import Mathbin.LinearAlgebra.Dimension 
-import Mathbin.RingTheory.Noetherian 
-import Mathbin.RingTheory.AlgebraTower
+import Mathbin.RingTheory.Noetherian
 
 /-!
 # Flat modules

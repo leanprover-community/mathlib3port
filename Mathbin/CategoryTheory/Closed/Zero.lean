@@ -41,12 +41,14 @@ def unique_homset_of_initial_iso_terminal [has_initial C] (i : ⊥_ C ≅ ⊤_ C
 
 open_locale ZeroObject
 
+-- error in CategoryTheory.Closed.Zero: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a cartesian closed category has a zero object, each homset has exactly one element. -/
-def unique_homset_of_zero [has_zero_object C] (X Y : C) : Unique (X ⟶ Y) :=
-  by 
-    haveI  : has_initial C := has_zero_object.has_initial 
-    apply unique_homset_of_initial_iso_terminal _ X Y 
-    refine' ⟨default _, default (⊤_ C ⟶ 0) ≫ default _, _, _⟩ <;> simp 
+def unique_homset_of_zero [has_zero_object C] (X Y : C) : unique «expr ⟶ »(X, Y) :=
+begin
+  haveI [] [":", expr has_initial C] [":=", expr has_zero_object.has_initial],
+  apply [expr unique_homset_of_initial_iso_terminal _ X Y],
+  refine [expr ⟨default _, «expr ≫ »(default «expr ⟶ »(«expr⊤_ »(C), 0), default _), _, _⟩]; simp [] [] [] [] [] []
+end
 
 attribute [local instance] unique_homset_of_zero
 
@@ -56,7 +58,7 @@ one morphism.
 -/
 def equiv_punit [has_zero_object C] : C ≌ discrete PUnit :=
   equivalence.mk (functor.star C) (functor.from_punit 0)
-    (nat_iso.of_components (fun X => { hom := default (X ⟶ 0), inv := default (0 ⟶ X) })
+    (nat_iso.of_components (fun X => { Hom := default (X ⟶ 0), inv := default (0 ⟶ X) })
       fun X Y f =>
         by 
           decide)

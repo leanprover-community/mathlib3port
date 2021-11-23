@@ -98,17 +98,18 @@ theorem algebra_map_injective : injective (algebraMap R A) :=
       (injective.of_comp_iff (algebraic_independent_iff_injective_aeval.1 hx) MvPolynomial.c).2
         (MvPolynomial.C_injective _ _)
 
-theorem LinearIndependent : LinearIndependent R x :=
-  by 
-    rw [linear_independent_iff_injective_total]
-    have  : Finsupp.total ι A R x = (MvPolynomial.aeval x).toLinearMap.comp (Finsupp.total ι _ R X)
-    ·
-      ext 
-      simp 
-    rw [this]
-    refine' hx.comp _ 
-    rw [←linear_independent_iff_injective_total]
-    exact linear_independent_X _ _
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem linear_independent : linear_independent R x :=
+begin
+  rw ["[", expr linear_independent_iff_injective_total, "]"] [],
+  have [] [":", expr «expr = »(finsupp.total ι A R x, (mv_polynomial.aeval x).to_linear_map.comp (finsupp.total ι _ R X))] [],
+  { ext [] [] [],
+    simp [] [] [] [] [] [] },
+  rw [expr this] [],
+  refine [expr hx.comp _],
+  rw ["[", "<-", expr linear_independent_iff_injective_total, "]"] [],
+  exact [expr linear_independent_X _ _]
+end
 
 protected theorem injective [Nontrivial R] : injective x :=
   hx.linear_independent.injective
@@ -161,16 +162,16 @@ theorem AlgHom.algebraic_independent_iff (f : A →ₐ[R] A') (hf : injective f)
   AlgebraicIndependent R (f ∘ x) ↔ AlgebraicIndependent R x :=
   ⟨fun h => h.of_comp f, fun h => h.map (inj_on_of_injective hf _)⟩
 
-@[nontriviality]
-theorem algebraic_independent_of_subsingleton [Subsingleton R] : AlgebraicIndependent R x :=
-  by 
-    haveI  := @MvPolynomial.unique R ι <;> exact algebraic_independent_iff.2 fun l hl => Subsingleton.elimₓ _ _
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[nontriviality #[]] theorem algebraic_independent_of_subsingleton [subsingleton R] : algebraic_independent R x :=
+by haveI [] [] [":=", expr @mv_polynomial.unique R ι]; exact [expr algebraic_independent_iff.2 (λ
+  l hl, subsingleton.elim _ _)]
 
 theorem algebraic_independent_equiv (e : ι ≃ ι') {f : ι' → A} :
   AlgebraicIndependent R (f ∘ e) ↔ AlgebraicIndependent R f :=
   ⟨fun h => Function.comp.right_id f ▸ e.self_comp_symm ▸ h.comp _ e.symm.injective, fun h => h.comp _ e.injective⟩
 
-theorem algebraic_independent_equiv' (e : ι ≃ ι') {f : ι' → A} {g : ι → A} (h : (f ∘ e) = g) :
+theorem algebraic_independent_equiv' (e : ι ≃ ι') {f : ι' → A} {g : ι → A} (h : f ∘ e = g) :
   AlgebraicIndependent R g ↔ AlgebraicIndependent R f :=
   h ▸ algebraic_independent_equiv e
 
@@ -296,13 +297,19 @@ theorem algebraic_independent_of_finite (s : Set A)
         (by 
           simp )
 
-theorem AlgebraicIndependent.image_of_comp {ι ι'} (s : Set ι) (f : ι → ι') (g : ι' → A)
-  (hs : AlgebraicIndependent R fun x : s => g (f x)) : AlgebraicIndependent R fun x : f '' s => g x :=
-  by 
-    nontriviality R 
-    have  : inj_on f s 
-    exact inj_on_iff_injective.2 hs.injective.of_comp 
-    exact (algebraic_independent_equiv' (Equiv.Set.imageOfInjOn f s this) rfl).1 hs
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem algebraic_independent.image_of_comp
+{ι ι'}
+(s : set ι)
+(f : ι → ι')
+(g : ι' → A)
+(hs : algebraic_independent R (λ x : s, g (f x))) : algebraic_independent R (λ x : «expr '' »(f, s), g x) :=
+begin
+  nontriviality [expr R] [],
+  have [] [":", expr inj_on f s] [],
+  from [expr inj_on_iff_injective.2 hs.injective.of_comp],
+  exact [expr (algebraic_independent_equiv' (equiv.set.image_of_inj_on f s this) rfl).1 hs]
+end
 
 theorem AlgebraicIndependent.image {ι} {s : Set ι} {f : ι → A} (hs : AlgebraicIndependent R fun x : s => f x) :
   AlgebraicIndependent R fun x : f '' s => (x : A) :=
@@ -317,16 +324,15 @@ theorem algebraic_independent_Union_of_directed {η : Type _} [Nonempty η] {s :
     rcases hs.finset_le fi.to_finset with ⟨i, hi⟩
     exact (h i).mono (subset.trans hI$ bUnion_subset$ fun j hj => hi j (fi.mem_to_finset.2 hj))
 
-theorem algebraic_independent_sUnion_of_directed {s : Set (Set A)} (hsn : s.nonempty) (hs : DirectedOn (· ⊆ ·) s)
-  (h : ∀ a _ : a ∈ s, AlgebraicIndependent R (fun x => x : (a : Set A) → A)) :
-  AlgebraicIndependent R (fun x => x : ⋃₀s → A) :=
-  by 
-    letI this : Nonempty s := nonempty.to_subtype hsn <;>
-      rw [sUnion_eq_Union] <;>
-        exact
-          algebraic_independent_Union_of_directed hs.directed_coe
-            (by 
-              simpa using h)
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem algebraic_independent_sUnion_of_directed
+{s : set (set A)}
+(hsn : s.nonempty)
+(hs : directed_on ((«expr ⊆ »)) s)
+(h : ∀
+ a «expr ∈ » s, algebraic_independent R (λ
+ x, x : (a : set A) → A)) : algebraic_independent R (λ x, x : «expr⋃₀ »(s) → A) :=
+by letI [] [":", expr nonempty s] [":=", expr nonempty.to_subtype hsn]; rw [expr sUnion_eq_Union] []; exact [expr algebraic_independent_Union_of_directed hs.directed_coe (by simpa [] [] [] [] [] ["using", expr h])]
 
 theorem exists_maximal_algebraic_independent (s t : Set A) (hst : s ⊆ t) (hs : AlgebraicIndependent R (coeₓ : s → A)) :
   ∃ u : Set A,
@@ -334,7 +340,7 @@ theorem exists_maximal_algebraic_independent (s t : Set A) (hst : s ⊆ t) (hs :
       s ⊆ u ∧ u ⊆ t ∧ ∀ x : Set A, AlgebraicIndependent R (coeₓ : x → A) → u ⊆ x → x ⊆ t → x = u :=
   by 
     rcases
-      Zorn.zorn_subset_nonempty { u : Set A | AlgebraicIndependent R (coeₓ : u → A) ∧ s ⊆ u ∧ u ⊆ t }
+      Zorn.zorn_subset_nonempty { u:Set A | AlgebraicIndependent R (coeₓ : u → A) ∧ s ⊆ u ∧ u ⊆ t }
         (fun c hc chainc hcn =>
           ⟨⋃₀c,
             by 
@@ -416,15 +422,15 @@ theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply 
       (aeval (fun o : Option ι => o.elim Polynomial.x fun s : ι => Polynomial.c (X s)) y) :=
   rfl
 
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_C (hx : AlgebraicIndependent R x) r :
-  hx.mv_polynomial_option_equiv_polynomial_adjoin (C r) = Polynomial.c (algebraMap _ _ r) :=
-  by 
-    have h : IsScalarTower R (MvPolynomial ι R) (Polynomial (MvPolynomial ι R)) :=
-      @Polynomial.is_scalar_tower (MvPolynomial ι R) _ R _ _ _ _ _ _ _ 
-    rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_C,
-      @IsScalarTower.algebra_map_apply _ _ _ _ _ _ _ _ _ h, ←Polynomial.C_eq_algebra_map, Polynomial.map_C, coe_coe,
-      AlgHom.coe_to_ring_hom, AlgEquiv.coe_alg_hom, AlgEquiv.commutes]
+theorem algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_C
+(hx : algebraic_independent R x)
+(r) : «expr = »(hx.mv_polynomial_option_equiv_polynomial_adjoin (C r), polynomial.C (algebra_map _ _ r)) :=
+begin
+  have [ident h] [":", expr is_scalar_tower R (mv_polynomial ι R) (polynomial (mv_polynomial ι R))] [":=", expr @polynomial.is_scalar_tower (mv_polynomial ι R) _ R _ _ _ _ _ _ _],
+  rw ["[", expr algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_apply, ",", expr aeval_C, ",", expr @is_scalar_tower.algebra_map_apply _ _ _ _ _ _ _ _ _ h, ",", "<-", expr polynomial.C_eq_algebra_map, ",", expr polynomial.map_C, ",", expr coe_coe, ",", expr alg_hom.coe_to_ring_hom, ",", expr alg_equiv.coe_alg_hom, ",", expr alg_equiv.commutes, "]"] []
+end
 
 @[simp]
 theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_none (hx : AlgebraicIndependent R x) :
@@ -491,53 +497,61 @@ theorem exists_is_transcendence_basis (h : injective (algebraMap R A)) :
 
 variable{R}
 
-theorem AlgebraicIndependent.is_transcendence_basis_iff {ι : Type w} {R : Type u} [CommRingₓ R] [Nontrivial R]
-  {A : Type v} [CommRingₓ A] [Algebra R A] {x : ι → A} (i : AlgebraicIndependent R x) :
-  IsTranscendenceBasis R x ↔
-    ∀ κ : Type v w : κ → A i' : AlgebraicIndependent R w j : ι → κ h : (w ∘ j) = x, surjective j :=
-  by 
-    fsplit
-    ·
-      rintro p κ w i' j rfl 
-      have p := p.2 (range w) i'.coe_range (range_comp_subset_range _ _)
-      rw [range_comp, ←@image_univ _ _ w] at p 
-      exact range_iff_surjective.mp (image_injective.mpr i'.injective p)
-    ·
-      intro p 
-      use i 
-      intro w i' h 
-      specialize
-        p w (coeₓ : w → A) i' (fun i => ⟨x i, range_subset_iff.mp h i⟩)
-          (by 
-            ext 
-            simp )
-      have q := congr_argₓ (fun s => (coeₓ : w → A) '' s) p.range_eq 
-      dsimp  at q 
-      rw [←image_univ, image_image] at q 
-      simpa using q
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem algebraic_independent.is_transcendence_basis_iff
+{ι : Type w}
+{R : Type u}
+[comm_ring R]
+[nontrivial R]
+{A : Type v}
+[comm_ring A]
+[algebra R A]
+{x : ι → A}
+(i : algebraic_independent R x) : «expr ↔ »(is_transcendence_basis R x, ∀
+ (κ : Type v)
+ (w : κ → A)
+ (i' : algebraic_independent R w)
+ (j : ι → κ)
+ (h : «expr = »(«expr ∘ »(w, j), x)), surjective j) :=
+begin
+  fsplit,
+  { rintros [ident p, ident κ, ident w, ident i', ident j, ident rfl],
+    have [ident p] [] [":=", expr p.2 (range w) i'.coe_range (range_comp_subset_range _ _)],
+    rw ["[", expr range_comp, ",", "<-", expr @image_univ _ _ w, "]"] ["at", ident p],
+    exact [expr range_iff_surjective.mp (image_injective.mpr i'.injective p)] },
+  { intros [ident p],
+    use [expr i],
+    intros [ident w, ident i', ident h],
+    specialize [expr p w (coe : w → A) i' (λ
+      i, ⟨x i, range_subset_iff.mp h i⟩) (by { ext [] [] [], simp [] [] [] [] [] [] })],
+    have [ident q] [] [":=", expr congr_arg (λ s, «expr '' »((coe : w → A), s)) p.range_eq],
+    dsimp [] [] [] ["at", ident q],
+    rw ["[", "<-", expr image_univ, ",", expr image_image, "]"] ["at", ident q],
+    simpa [] [] [] [] [] ["using", expr q] }
+end
 
-theorem IsTranscendenceBasis.is_algebraic [Nontrivial R] (hx : IsTranscendenceBasis R x) :
-  IsAlgebraic (adjoin R (range x)) A :=
-  by 
-    intro a 
-    rw [←not_iff_comm.1 (hx.1.option_iff _).symm]
-    intro ai 
-    have h₁ : range x ⊆ range fun o : Option ι => o.elim a x
-    ·
-      rintro x ⟨y, rfl⟩
-      exact ⟨some y, rfl⟩
-    have h₂ : range x ≠ range fun o : Option ι => o.elim a x
-    ·
-      intro h 
-      have  : a ∈ range x
-      ·
-        rw [h]
-        exact ⟨none, rfl⟩
-      rcases this with ⟨b, rfl⟩
-      have  : some b = none := ai.injective rfl 
-      simpa 
-    exact
-      h₂ (hx.2 (Set.Range fun o : Option ι => o.elim a x) ((algebraic_independent_subtype_range ai.injective).2 ai) h₁)
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_transcendence_basis.is_algebraic
+[nontrivial R]
+(hx : is_transcendence_basis R x) : is_algebraic (adjoin R (range x)) A :=
+begin
+  intro [ident a],
+  rw ["[", "<-", expr not_iff_comm.1 (hx.1.option_iff _).symm, "]"] [],
+  intro [ident ai],
+  have [ident h₁] [":", expr «expr ⊆ »(range x, range (λ o : option ι, o.elim a x))] [],
+  { rintros [ident x, "⟨", ident y, ",", ident rfl, "⟩"],
+    exact [expr ⟨some y, rfl⟩] },
+  have [ident h₂] [":", expr «expr ≠ »(range x, range (λ o : option ι, o.elim a x))] [],
+  { intro [ident h],
+    have [] [":", expr «expr ∈ »(a, range x)] [],
+    { rw [expr h] [],
+      exact [expr ⟨none, rfl⟩] },
+    rcases [expr this, "with", "⟨", ident b, ",", ident rfl, "⟩"],
+    have [] [":", expr «expr = »(some b, none)] [":=", expr ai.injective rfl],
+    simpa [] [] [] [] [] [] },
+  exact [expr h₂ (hx.2 (set.range (λ
+      o : option ι, o.elim a x)) ((algebraic_independent_subtype_range ai.injective).2 ai) h₁)]
+end
 
 section Field
 

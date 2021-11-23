@@ -1,3 +1,5 @@
+import Mathbin.Data.Bool 
+import Mathbin.Meta.RbMap 
 import Mathbin.Tactic.Lint.Basic
 
 /-!
@@ -106,9 +108,9 @@ private unsafe def has_inhabited_instance (d : declaration) : tactic (Option Str
     let ff ← has_attribute' `class d.to_name | pure none 
     let (_, ty) ← open_pis d.type 
     let ty ← whnf ty 
-    if ty = quote Prop then pure none else
+    if ty = quote.1 Prop then pure none else
         do 
-          let quote Sort _ ← whnf ty | pure none 
+          let quote.1 (Sort _) ← whnf ty | pure none 
           let insts ← attribute.get_instances `instance 
           let insts_tys ← insts.mmap$ fun i => expr.pi_codomain <$> declaration.type <$> get_decl i 
           let inhabited_insts :=
@@ -278,7 +280,7 @@ See note [use has_coe_t].
 private unsafe def has_coe_variable (d : declaration) : tactic (Option Stringₓ) :=
   do 
     let tt ← is_instance d.to_name | return none 
-    let quote Coe (%%a) (%%b) ← return d.type.pi_codomain | return none 
+    let quote.1 (Coe (%%ₓa) (%%ₓb)) ← return d.type.pi_codomain | return none 
     if a.is_var then return$ some$ "illegal instance, first argument is variable" else
         if b.is_var ∧ ¬b.occurs a then
           return$ some$ "illegal instance, second argument is variable not occurring in first argument" else return none
@@ -346,10 +348,10 @@ private unsafe def has_coe_to_fun_linter (d : declaration) : tactic (Option Stri
       let args ← unfreezing intros 
       let expr.sort _ ← target | pure none 
       let ty : expr := (expr.const d.to_name d.univ_levels).mk_app args 
-      let some coe_fn_inst ← try_core$ to_expr (pquote _root_.has_coe_to_fun (%%ty) _) >>= mk_instance | pure none 
+      let some coe_fn_inst ← try_core$ to_expr (pquote.1 (_root_.has_coe_to_fun (%%ₓty) _)) >>= mk_instance | pure none 
       set_bool_option `pp.all True 
       let some trans_inst@(expr.app (expr.app _ trans_inst_1) trans_inst_2) ←
-        try_core$ to_expr (pquote @_root_.coe_fn_trans (%%ty) _ _ _ _) | pure none 
+        try_core$ to_expr (pquote.1 (@_root_.coe_fn_trans (%%ₓty) _ _ _ _)) | pure none 
       let tt ← succeeds$ unify trans_inst coe_fn_inst transparency.reducible | pure none 
       set_bool_option `pp.all True 
       let trans_inst_1 ← pp trans_inst_1 

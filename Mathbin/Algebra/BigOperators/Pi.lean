@@ -41,7 +41,7 @@ theorem Fintype.prod_apply {α : Type _} {β : α → Type _} {γ : Type _} [Fin
   (g : γ → ∀ a, β a) : (∏c, g c) a = ∏c, g c a :=
   Finset.prod_apply a Finset.univ g
 
--- error in Algebra.BigOperators.Pi: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.BigOperators.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[ident prod_mk_sum]]
 theorem prod_mk_prod
 {α β γ : Type*}

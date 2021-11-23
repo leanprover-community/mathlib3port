@@ -1,3 +1,4 @@
+import Mathbin.Algebra.IterateHom 
 import Mathbin.Data.Polynomial.Eval
 
 /-!
@@ -421,32 +422,32 @@ theorem mem_support_derivative [CharZero R] (p : Polynomial R) (n : ℕ) :
     rw [Nat.cast_eq_zero]
     simp only [Nat.succ_ne_zero, or_falseₓ]
 
+-- error in Data.Polynomial.Derivative: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem degree_derivative_eq [CharZero R] (p : Polynomial R) (hp : 0 < nat_degree p) :
-  degree (derivative p) = (nat_degree p - 1 : ℕ) :=
-  by 
-    have h0 : p ≠ 0
-    ·
-      contrapose! hp 
-      simp [hp]
-    apply le_antisymmₓ
-    ·
-      rw [derivative_apply]
-      apply le_transₓ (degree_sum_le _ _) (sup_le fun n hn => _)
-      apply le_transₓ (degree_C_mul_X_pow_le _ _) (WithBot.coe_le_coe.2 (tsub_le_tsub_right _ _))
-      apply le_nat_degree_of_mem_supp _ hn
-    ·
-      refine' le_sup _ 
-      rw [mem_support_derivative, tsub_add_cancel_of_le, mem_support_iff]
-      ·
-        show ¬leading_coeff p = 0
-        rw [leading_coeff_eq_zero]
-        intro h 
-        rw [h, nat_degree_zero] at hp 
-        exact lt_irreflₓ 0 (lt_of_le_of_ltₓ (zero_le _) hp)
-      exact hp
+theorem degree_derivative_eq
+[char_zero R]
+(p : polynomial R)
+(hp : «expr < »(0, nat_degree p)) : «expr = »(degree (derivative p), («expr - »(nat_degree p, 1) : exprℕ())) :=
+begin
+  have [ident h0] [":", expr «expr ≠ »(p, 0)] [],
+  { contrapose ["!"] [ident hp],
+    simp [] [] [] ["[", expr hp, "]"] [] [] },
+  apply [expr le_antisymm],
+  { rw [expr derivative_apply] [],
+    apply [expr le_trans (degree_sum_le _ _) (sup_le (λ n hn, _))],
+    apply [expr le_trans (degree_C_mul_X_pow_le _ _) (with_bot.coe_le_coe.2 (tsub_le_tsub_right _ _))],
+    apply [expr le_nat_degree_of_mem_supp _ hn] },
+  { refine [expr le_sup _],
+    rw ["[", expr mem_support_derivative, ",", expr tsub_add_cancel_of_le, ",", expr mem_support_iff, "]"] [],
+    { show [expr «expr¬ »(«expr = »(leading_coeff p, 0))],
+      rw ["[", expr leading_coeff_eq_zero, "]"] [],
+      assume [binders (h)],
+      rw ["[", expr h, ",", expr nat_degree_zero, "]"] ["at", ident hp],
+      exact [expr lt_irrefl 0 (lt_of_le_of_lt (zero_le _) hp)] },
+    exact [expr hp] }
+end
 
--- error in Data.Polynomial.Derivative: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Polynomial.Derivative: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem nat_degree_eq_zero_of_derivative_eq_zero
 [char_zero R]
 {f : polynomial R}

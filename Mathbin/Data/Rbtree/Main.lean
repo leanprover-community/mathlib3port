@@ -44,15 +44,17 @@ namespace Rbtree
 
 variable{α : Type u}{lt : α → α → Prop}
 
-theorem balanced (t : Rbtree α lt) : t.depth max ≤ (2*t.depth min)+1 :=
-  by 
-    cases' t with n p 
-    simp only [depth]
-    have  := Rbnode.is_red_black_of_well_formed p 
-    cases' this with _ this 
-    cases' this with _ this 
-    apply Rbnode.balanced 
-    assumption
+-- error in Data.Rbtree.Main: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem balanced (t : rbtree α lt) : «expr ≤ »(t.depth max, «expr + »(«expr * »(2, t.depth min), 1)) :=
+begin
+  cases [expr t] ["with", ident n, ident p],
+  simp [] [] ["only"] ["[", expr depth, "]"] [] [],
+  have [] [] [":=", expr rbnode.is_red_black_of_well_formed p],
+  cases [expr this] ["with", "_", ident this],
+  cases [expr this] ["with", "_", ident this],
+  apply [expr rbnode.balanced],
+  assumption
+end
 
 theorem not_mem_mk_rbtree : ∀ a : α, a ∉ mkRbtree α lt :=
   by 
@@ -62,22 +64,19 @@ theorem not_mem_of_empty {t : Rbtree α lt} (a : α) : t.empty = tt → a ∉ t 
   by 
     cases' t with n p <;> cases n <;> simp [Empty, HasMem.Mem, Rbtree.Mem, Rbnode.Mem, false_implies_iff]
 
-theorem mem_of_mem_of_eqv [IsStrictWeakOrder α lt] {t : Rbtree α lt} {a b : α} : (a∈t) → a ≈[lt]b → (b∈t) :=
-  by 
-    cases' t with n p <;>
-      simp [HasMem.Mem, Rbtree.Mem] <;>
-        clear p <;>
-          induction n <;>
-            simp only [Rbnode.Mem, StrictWeakOrder.Equiv, false_implies_iff] <;> intro h₁ h₂ <;> casesType* or.1
-    iterate 2
-      ·
-        have  : Rbnode.Mem lt b n_lchild := n_ih_lchild h₁ h₂ 
-        simp [this]
-      ·
-        simp [incomp_trans_of lt h₂.swap h₁]
-      ·
-        have  : Rbnode.Mem lt b n_rchild := n_ih_rchild h₁ h₂ 
-        simp [this]
+-- error in Data.Rbtree.Main: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_of_mem_of_eqv
+[is_strict_weak_order α lt]
+{t : rbtree α lt}
+{a b : α} : «expr ∈ »(a, t) → «expr ≈[ ] »(a, lt, b) → «expr ∈ »(b, t) :=
+begin
+  cases [expr t] ["with", ident n, ident p]; simp [] [] [] ["[", expr has_mem.mem, ",", expr rbtree.mem, "]"] [] []; clear [ident p]; induction [expr n] [] [] []; simp [] [] ["only"] ["[", expr rbnode.mem, ",", expr strict_weak_order.equiv, ",", expr false_implies_iff, "]"] [] []; intros [ident h₁, ident h₂]; blast_disjs,
+  iterate [2] { { have [] [":", expr rbnode.mem lt b n_lchild] [":=", expr n_ih_lchild h₁ h₂],
+      simp [] [] [] ["[", expr this, "]"] [] [] },
+    { simp [] [] [] ["[", expr incomp_trans_of lt h₂.swap h₁, "]"] [] [] },
+    { have [] [":", expr rbnode.mem lt b n_rchild] [":=", expr n_ih_rchild h₁ h₂],
+      simp [] [] [] ["[", expr this, "]"] [] [] } }
+end
 
 section Dec
 
@@ -143,15 +142,19 @@ theorem find_insert_of_not_eqv [IsStrictWeakOrder α lt] {x y : α} (t : Rbtree 
     apply Rbnode.is_searchable_of_well_formed 
     assumption
 
-theorem find_insert_of_ne [IsStrictTotalOrder α lt] {x y : α} (t : Rbtree α lt) :
-  x ≠ y → (t.insert x).find y = t.find y :=
-  by 
-    cases t 
-    intro h 
-    have  : ¬x ≈[lt]y := fun h' => h (eq_of_eqv_lt h')
-    apply Rbnode.find_insert_of_not_eqv lt this 
-    apply Rbnode.is_searchable_of_well_formed 
-    assumption
+-- error in Data.Rbtree.Main: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem find_insert_of_ne
+[is_strict_total_order α lt]
+{x y : α}
+(t : rbtree α lt) : «expr ≠ »(x, y) → «expr = »((t.insert x).find y, t.find y) :=
+begin
+  cases [expr t] [],
+  intro [ident h],
+  have [] [":", expr «expr¬ »(«expr ≈[ ] »(x, lt, y))] [":=", expr λ h', h (eq_of_eqv_lt h')],
+  apply [expr rbnode.find_insert_of_not_eqv lt this],
+  apply [expr rbnode.is_searchable_of_well_formed],
+  assumption
+end
 
 theorem not_mem_of_find_none [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} : t.find a = none → a ∉ t :=
   fun h =>
@@ -185,25 +188,28 @@ theorem find_eq_find_of_eqv [IsStrictWeakOrder α lt] {a b : α} (t : Rbtree α 
     apply Rbnode.is_searchable_of_well_formed 
     assumption
 
-theorem contains_correct [IsStrictWeakOrder α lt] (a : α) (t : Rbtree α lt) : (a∈t) ↔ t.contains a = tt :=
-  by 
-    have h := find_correct a t 
-    simp [h, contains]
-    apply Iff.intro
-    ·
-      intro h' 
-      cases' h' with _ h' 
-      cases h' 
-      simp 
-      simp [Option.isSome]
-    ·
-      intro h' 
-      cases' heq : find t a with v 
-      simp [HEq, Option.isSome] at h' 
-      contradiction 
-      exists v 
-      simp 
-      apply eqv_of_find_some HEq
+-- error in Data.Rbtree.Main: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem contains_correct
+[is_strict_weak_order α lt]
+(a : α)
+(t : rbtree α lt) : «expr ↔ »(«expr ∈ »(a, t), «expr = »(t.contains a, tt)) :=
+begin
+  have [ident h] [] [":=", expr find_correct a t],
+  simp [] [] [] ["[", expr h, ",", expr contains, "]"] [] [],
+  apply [expr iff.intro],
+  { intro [ident h'],
+    cases [expr h'] ["with", "_", ident h'],
+    cases [expr h'] [],
+    simp [] [] [] ["[", "*", "]"] [] [],
+    simp [] [] [] ["[", expr option.is_some, "]"] [] [] },
+  { intro [ident h'],
+    cases [expr heq, ":", expr find t a] ["with", ident v],
+    simp [] [] [] ["[", expr heq, ",", expr option.is_some, "]"] [] ["at", ident h'],
+    contradiction,
+    existsi [expr v],
+    simp [] [] [] [] [] [],
+    apply [expr eqv_of_find_some heq] }
+end
 
 theorem mem_insert_of_incomp {a b : α} (t : Rbtree α lt) : ¬lt a b ∧ ¬lt b a → (a∈t.insert b) :=
   by 

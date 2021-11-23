@@ -1,6 +1,5 @@
-import Mathbin.Meta.RbMap 
-import Mathbin.Tactic.Ring 
-import Mathbin.Tactic.Linarith.Lemmas
+import Mathbin.Tactic.Linarith.Lemmas 
+import Mathbin.Tactic.Ring
 
 /-!
 # Datatypes for `linarith`
@@ -110,7 +109,7 @@ end Linexp
 /-! ### Inequalities -/
 
 
--- error in Tactic.Linarith.Datatypes: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.Linarith.Datatypes: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- The three-element type `ineq` is used to represent the strength of a comparison between
 terms. -/ @[derive #[expr decidable_eq], derive #[expr inhabited]] inductive ineq : Type
 | eq
@@ -162,7 +161,7 @@ end Ineq
 /-! ### Comparisons with 0 -/
 
 
--- error in Tactic.Linarith.Datatypes: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Tactic.Linarith.Datatypes: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /--
 The main datatype for FM elimination.
 Variables are represented by natural numbers, each of which has an integer coefficient.
@@ -348,11 +347,11 @@ This function is more naturally in the `option` monad, but it is convenient to p
 for compositionality.
  -/
 unsafe def get_rel_sides : expr → tactic (expr × expr)
-| quote (%%a) < %%b => return (a, b)
-| quote (%%a) ≤ %%b => return (a, b)
-| quote (%%a) = %%b => return (a, b)
-| quote (%%a) ≥ %%b => return (a, b)
-| quote (%%a) > %%b => return (a, b)
+| quote.1 ((%%ₓa) < %%ₓb) => return (a, b)
+| quote.1 ((%%ₓa) ≤ %%ₓb) => return (a, b)
+| quote.1 ((%%ₓa) = %%ₓb) => return (a, b)
+| quote.1 ((%%ₓa) ≥ %%ₓb) => return (a, b)
+| quote.1 ((%%ₓa) > %%ₓb) => return (a, b)
 | _ => tactic.failed
 
 /--
@@ -360,9 +359,9 @@ unsafe def get_rel_sides : expr → tactic (expr × expr)
 If it is, it returns the comparison along with `t`.
  -/
 unsafe def parse_into_comp_and_expr : expr → Option (ineq × expr)
-| quote (%%e) < 0 => (ineq.lt, e)
-| quote (%%e) ≤ 0 => (ineq.le, e)
-| quote (%%e) = 0 => (ineq.eq, e)
+| quote.1 ((%%ₓe) < 0) => (ineq.lt, e)
+| quote.1 ((%%ₓe) ≤ 0) => (ineq.le, e)
+| quote.1 ((%%ₓe) = 0) => (ineq.eq, e)
 | _ => none
 
 /--
@@ -384,7 +383,7 @@ unsafe def mk_single_comp_zero_pf (c : ℕ) (h : expr) : tactic (ineq × expr) :
           do 
             let tp ← Prod.snd <$> (infer_type h >>= get_rel_sides) >>= infer_type 
             let c ← tp.of_nat c 
-            let cpos ← to_expr (pquote (%%c) > 0)
+            let cpos ← to_expr (pquote.1 ((%%ₓc) > 0))
             let (_, ex) ← solve_aux cpos sorry 
             let e' ← mk_app iq.to_const_mul_nm [h, ex]
             return (iq, e')

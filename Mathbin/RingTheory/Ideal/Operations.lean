@@ -1,10 +1,9 @@
 import Mathbin.Algebra.Algebra.Operations 
-import Mathbin.Algebra.Algebra.Tower 
-import Mathbin.Data.Equiv.Ring 
+import Mathbin.RingTheory.NonZeroDivisors 
 import Mathbin.Data.Nat.Choose.Sum 
 import Mathbin.RingTheory.Coprime.Lemmas 
-import Mathbin.RingTheory.Ideal.Quotient 
-import Mathbin.RingTheory.NonZeroDivisors
+import Mathbin.Data.Equiv.Ring 
+import Mathbin.RingTheory.Ideal.Quotient
 
 /-!
 # More operations on modules and ideals
@@ -562,13 +561,13 @@ variable{I J}
 theorem is_prime.radical_le_iff (hj : is_prime J) : radical I ≤ J ↔ I ≤ J :=
   ⟨le_transₓ le_radical, fun hij r ⟨n, hrni⟩ => hj.mem_of_pow_mem n$ hij hrni⟩
 
-theorem radical_eq_Inf (I : Ideal R) : radical I = Inf { J : Ideal R | I ≤ J ∧ is_prime J } :=
+theorem radical_eq_Inf (I : Ideal R) : radical I = Inf { J:Ideal R | I ≤ J ∧ is_prime J } :=
   le_antisymmₓ (le_Inf$ fun J hJ => hJ.2.radical_le_iff.2 hJ.1)$
     fun r hr =>
       Classical.by_contradiction$
         fun hri =>
           let ⟨m, (hrm : r ∉ radical m), him, hm⟩ :=
-            Zorn.zorn_nonempty_partial_order₀ { K : Ideal R | r ∉ radical K }
+            Zorn.zorn_nonempty_partial_order₀ { K:Ideal R | r ∉ radical K }
               (fun c hc hcc y hyc =>
                 ⟨Sup c,
                   fun ⟨n, hrnc⟩ =>
@@ -605,7 +604,7 @@ theorem radical_eq_Inf (I : Ideal R) : radical I = Inf { J : Ideal R | I ≤ J �
                                 refine'
                                   m.add_mem (m.mul_mem_right _ hpm)
                                     (m.add_mem (m.mul_mem_left _ hfm) (m.mul_mem_left _ hxym))⟩⟩
-          hrm$ this.radical.symm ▸ (Inf_le ⟨him, this⟩ : Inf { J : Ideal R | I ≤ J ∧ is_prime J } ≤ m) hr
+          hrm$ this.radical.symm ▸ (Inf_le ⟨him, this⟩ : Inf { J:Ideal R | I ≤ J ∧ is_prime J } ≤ m) hr
 
 @[simp]
 theorem radical_bot_of_is_domain {R : Type u} [CommRingₓ R] [IsDomain R] : radical (⊥ : Ideal R) = ⊥ :=
@@ -708,7 +707,7 @@ theorem subset_union {R : Type u} [CommRingₓ R] {I J K : Ideal R} : (I : Set R
       Or.cases_on h (fun h => Set.Subset.trans h$ Set.subset_union_left J K)
         fun h => Set.Subset.trans h$ Set.subset_union_right J K⟩
 
--- error in RingTheory.Ideal.Operations: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in RingTheory.Ideal.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem subset_union_prime'
 {R : Type u}
 [comm_ring R]
@@ -815,7 +814,7 @@ begin
     exact [expr hs «expr $ »(or.inr, «expr $ »(set.mem_bUnion hjt, «expr $ »(«expr ▸ »(add_sub_cancel' r s, (f j).sub_mem hj), hr j hjt)))] }
 end
 
--- error in RingTheory.Ideal.Operations: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in RingTheory.Ideal.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 /-- Prime avoidance. Atiyah-Macdonald 1.11, Eisenbud 3.3, Stacks 00DS, Matsumura Ex.1.6. -/
 theorem subset_union_prime
 {R : Type u}
@@ -1478,18 +1477,24 @@ theorem ker_is_prime [Ringₓ R] [Ringₓ S] [IsDomain S] (f : R →+* S) : (ker
       by 
         simpa only [mem_ker, f.map_mul] using @eq_zero_or_eq_zero_of_mul_eq_zero S _ _ _ _ _⟩
 
+-- error in RingTheory.Ideal.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The kernel of a homomorphism to a field is a maximal ideal. -/
-theorem ker_is_maximal_of_surjective {R K : Type _} [Ringₓ R] [Field K] (f : R →+* K) (hf : Function.Surjective f) :
-  f.ker.is_maximal :=
-  by 
-    refine'
-      ideal.is_maximal_iff.mpr ⟨fun h1 => @one_ne_zero K _ _$ f.map_one ▸ f.mem_ker.mp h1, fun J x hJ hxf hxJ => _⟩
-    obtain ⟨y, hy⟩ := hf (f x⁻¹)
-    have H : 1 = (y*x) - ((y*x) - 1) := (sub_sub_cancel _ _).symm 
-    rw [H]
-    refine' J.sub_mem (J.mul_mem_left _ hxJ) (hJ _)
-    rw [f.mem_ker]
-    simp only [hy, RingHom.map_sub, RingHom.map_one, RingHom.map_mul, inv_mul_cancel (mt f.mem_ker.mpr hxf), sub_self]
+theorem ker_is_maximal_of_surjective
+{R K : Type*}
+[ring R]
+[field K]
+(f : «expr →+* »(R, K))
+(hf : function.surjective f) : f.ker.is_maximal :=
+begin
+  refine [expr ideal.is_maximal_iff.mpr ⟨λ
+    h1, «expr $ »(@one_ne_zero K _ _, «expr ▸ »(f.map_one, f.mem_ker.mp h1)), λ J x hJ hxf hxJ, _⟩],
+  obtain ["⟨", ident y, ",", ident hy, "⟩", ":=", expr hf «expr ⁻¹»(f x)],
+  have [ident H] [":", expr «expr = »(1, «expr - »(«expr * »(y, x), «expr - »(«expr * »(y, x), 1)))] [":=", expr (sub_sub_cancel _ _).symm],
+  rw [expr H] [],
+  refine [expr J.sub_mem (J.mul_mem_left _ hxJ) (hJ _)],
+  rw [expr f.mem_ker] [],
+  simp [] [] ["only"] ["[", expr hy, ",", expr ring_hom.map_sub, ",", expr ring_hom.map_one, ",", expr ring_hom.map_mul, ",", expr inv_mul_cancel (mt f.mem_ker.mpr hxf), ",", expr sub_self, "]"] [] []
+end
 
 end RingHom
 
@@ -1514,50 +1519,55 @@ section Ringₓ
 
 variable[Ringₓ R][Ringₓ S]
 
-theorem map_Inf {A : Set (Ideal R)} {f : R →+* S} (hf : Function.Surjective f) :
-  (∀ J _ : J ∈ A, RingHom.ker f ≤ J) → map f (Inf A) = Inf (map f '' A) :=
-  by 
-    refine' fun h => le_antisymmₓ (le_Inf _) _
-    ·
-      intro j hj y hy 
-      cases' (mem_map_iff_of_surjective f hf).1 hy with x hx 
-      cases' (Set.mem_image _ _ _).mp hj with J hJ 
-      rw [←hJ.right, ←hx.right]
-      exact mem_map_of_mem f (Inf_le_of_le hJ.left (le_of_eqₓ rfl) hx.left)
-    ·
-      intro y hy 
-      cases' hf y with x hx 
-      refine' hx ▸ mem_map_of_mem f _ 
-      have  : ∀ I _ : I ∈ A, y ∈ map f I
-      ·
-        simpa using hy 
-      rw [Submodule.mem_Inf]
-      intro J hJ 
-      rcases(mem_map_iff_of_surjective f hf).1 (this J hJ) with ⟨x', hx', rfl⟩
-      have  : x - x' ∈ J
-      ·
-        apply h J hJ 
-        rw [RingHom.mem_ker, RingHom.map_sub, hx, sub_self]
-      simpa only [sub_add_cancel] using J.add_mem this hx'
+-- error in RingTheory.Ideal.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_Inf
+{A : set (ideal R)}
+{f : «expr →+* »(R, S)}
+(hf : function.surjective f) : ∀
+J «expr ∈ » A, «expr ≤ »(ring_hom.ker f, J) → «expr = »(map f (Inf A), Inf «expr '' »(map f, A)) :=
+begin
+  refine [expr λ h, le_antisymm (le_Inf _) _],
+  { intros [ident j, ident hj, ident y, ident hy],
+    cases [expr (mem_map_iff_of_surjective f hf).1 hy] ["with", ident x, ident hx],
+    cases [expr (set.mem_image _ _ _).mp hj] ["with", ident J, ident hJ],
+    rw ["[", "<-", expr hJ.right, ",", "<-", expr hx.right, "]"] [],
+    exact [expr mem_map_of_mem f (Inf_le_of_le hJ.left (le_of_eq rfl) hx.left)] },
+  { intros [ident y, ident hy],
+    cases [expr hf y] ["with", ident x, ident hx],
+    refine [expr «expr ▸ »(hx, mem_map_of_mem f _)],
+    have [] [":", expr ∀ I «expr ∈ » A, «expr ∈ »(y, map f I)] [],
+    by simpa [] [] [] [] [] ["using", expr hy],
+    rw ["[", expr submodule.mem_Inf, "]"] [],
+    intros [ident J, ident hJ],
+    rcases [expr (mem_map_iff_of_surjective f hf).1 (this J hJ), "with", "⟨", ident x', ",", ident hx', ",", ident rfl, "⟩"],
+    have [] [":", expr «expr ∈ »(«expr - »(x, x'), J)] [],
+    { apply [expr h J hJ],
+      rw ["[", expr ring_hom.mem_ker, ",", expr ring_hom.map_sub, ",", expr hx, ",", expr sub_self, "]"] [] },
+    simpa [] [] ["only"] ["[", expr sub_add_cancel, "]"] [] ["using", expr J.add_mem this hx'] }
+end
 
-theorem map_is_prime_of_surjective {f : R →+* S} (hf : Function.Surjective f) {I : Ideal R} [H : is_prime I]
-  (hk : RingHom.ker f ≤ I) : is_prime (map f I) :=
-  by 
-    refine' ⟨fun h => H.ne_top (eq_top_iff.2 _), fun x y => _⟩
-    ·
-      replace h := congr_argₓ (comap f) h 
-      rw [comap_map_of_surjective _ hf, comap_top] at h 
-      exact h ▸ sup_le (le_of_eqₓ rfl) hk
-    ·
-      refine' fun hxy => (hf x).recOn fun a ha => (hf y).recOn fun b hb => _ 
-      rw [←ha, ←hb, ←RingHom.map_mul, mem_map_iff_of_surjective _ hf] at hxy 
-      rcases hxy with ⟨c, hc, hc'⟩
-      rw [←sub_eq_zero, ←RingHom.map_sub] at hc' 
-      have  : (a*b) ∈ I
-      ·
-        convert I.sub_mem hc (hk (hc' : (c - a*b) ∈ f.ker))
-        abel 
-      exact (H.mem_or_mem this).imp (fun h => ha ▸ mem_map_of_mem f h) fun h => hb ▸ mem_map_of_mem f h
+-- error in RingTheory.Ideal.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_is_prime_of_surjective
+{f : «expr →+* »(R, S)}
+(hf : function.surjective f)
+{I : ideal R}
+[H : is_prime I]
+(hk : «expr ≤ »(ring_hom.ker f, I)) : is_prime (map f I) :=
+begin
+  refine [expr ⟨λ h, H.ne_top (eq_top_iff.2 _), λ x y, _⟩],
+  { replace [ident h] [] [":=", expr congr_arg (comap f) h],
+    rw ["[", expr comap_map_of_surjective _ hf, ",", expr comap_top, "]"] ["at", ident h],
+    exact [expr «expr ▸ »(h, sup_le (le_of_eq rfl) hk)] },
+  { refine [expr λ hxy, (hf x).rec_on (λ a ha, (hf y).rec_on (λ b hb, _))],
+    rw ["[", "<-", expr ha, ",", "<-", expr hb, ",", "<-", expr ring_hom.map_mul, ",", expr mem_map_iff_of_surjective _ hf, "]"] ["at", ident hxy],
+    rcases [expr hxy, "with", "⟨", ident c, ",", ident hc, ",", ident hc', "⟩"],
+    rw ["[", "<-", expr sub_eq_zero, ",", "<-", expr ring_hom.map_sub, "]"] ["at", ident hc'],
+    have [] [":", expr «expr ∈ »(«expr * »(a, b), I)] [],
+    { convert [] [expr I.sub_mem hc (hk (hc' : «expr ∈ »(«expr - »(c, «expr * »(a, b)), f.ker)))] [],
+      abel [] [] [] },
+    exact [expr (H.mem_or_mem this).imp (λ
+      h, «expr ▸ »(ha, mem_map_of_mem f h)) (λ h, «expr ▸ »(hb, mem_map_of_mem f h))] }
+end
 
 theorem map_is_prime_of_equiv (f : R ≃+* S) {I : Ideal R} [is_prime I] : is_prime (map (f : R →+* S) I) :=
   map_is_prime_of_surjective f.surjective$
@@ -1604,21 +1614,26 @@ theorem map_eq_iff_sup_ker_eq_of_surjective {I J : Ideal R} (f : R →+* S) (hf 
     rw [←(comap_injective_of_surjective f hf).eq_iff, comap_map_of_surjective f hf, comap_map_of_surjective f hf,
       RingHom.ker_eq_comap_bot]
 
-theorem map_radical_of_surjective {f : R →+* S} (hf : Function.Surjective f) {I : Ideal R} (h : RingHom.ker f ≤ I) :
-  map f I.radical = (map f I).radical :=
-  by 
-    rw [radical_eq_Inf, radical_eq_Inf]
-    have  : ∀ J _ : J ∈ { J : Ideal R | I ≤ J ∧ J.is_prime }, f.ker ≤ J := fun J hJ => le_transₓ h hJ.left 
-    convert map_Inf hf this 
-    refine' funext fun j => propext ⟨_, _⟩
-    ·
-      rintro ⟨hj, hj'⟩
-      haveI  : j.is_prime := hj' 
-      exact ⟨comap f j, ⟨⟨map_le_iff_le_comap.1 hj, comap_is_prime f j⟩, map_comap_of_surjective f hf j⟩⟩
-    ·
-      rintro ⟨J, ⟨hJ, hJ'⟩⟩
-      haveI  : J.is_prime := hJ.right 
-      refine' ⟨hJ' ▸ map_mono hJ.left, hJ' ▸ map_is_prime_of_surjective hf (le_transₓ h hJ.left)⟩
+-- error in RingTheory.Ideal.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_radical_of_surjective
+{f : «expr →+* »(R, S)}
+(hf : function.surjective f)
+{I : ideal R}
+(h : «expr ≤ »(ring_hom.ker f, I)) : «expr = »(map f I.radical, (map f I).radical) :=
+begin
+  rw ["[", expr radical_eq_Inf, ",", expr radical_eq_Inf, "]"] [],
+  have [] [":", expr ∀
+   J «expr ∈ » {J : ideal R | «expr ∧ »(«expr ≤ »(I, J), J.is_prime)}, «expr ≤ »(f.ker, J)] [":=", expr λ
+   J hJ, le_trans h hJ.left],
+  convert [] [expr map_Inf hf this] [],
+  refine [expr funext (λ j, propext ⟨_, _⟩)],
+  { rintros ["⟨", ident hj, ",", ident hj', "⟩"],
+    haveI [] [":", expr j.is_prime] [":=", expr hj'],
+    exact [expr ⟨comap f j, ⟨⟨map_le_iff_le_comap.1 hj, comap_is_prime f j⟩, map_comap_of_surjective f hf j⟩⟩] },
+  { rintro ["⟨", ident J, ",", "⟨", ident hJ, ",", ident hJ', "⟩", "⟩"],
+    haveI [] [":", expr J.is_prime] [":=", expr hJ.right],
+    refine [expr ⟨«expr ▸ »(hJ', map_mono hJ.left), «expr ▸ »(hJ', map_is_prime_of_surjective hf (le_trans h hJ.left))⟩] }
+end
 
 @[simp]
 theorem bot_quotient_is_maximal_iff (I : Ideal R) : (⊥ : Ideal I.quotient).IsMaximal ↔ I.is_maximal :=

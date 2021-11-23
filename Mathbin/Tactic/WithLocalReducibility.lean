@@ -10,7 +10,7 @@ for a specified declaration.
 
 namespace Tactic
 
--- error in Tactic.WithLocalReducibility: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.WithLocalReducibility: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- Possible reducibility attributes for a declaration:
 reducible, semireducible (the default), irreducible. -/ @[derive #[expr decidable_eq]] inductive decl_reducibility
 | reducible

@@ -61,7 +61,7 @@ theorem reindex_linear_equiv_trans (e₁ : m ≃ m') (e₂ : n ≃ n') (e₁' : 
     rfl
 
 theorem reindex_linear_equiv_comp (e₁ : m ≃ m') (e₂ : n ≃ n') (e₁' : m' ≃ m'') (e₂' : n' ≃ n'') :
-  (reindex_linear_equiv R A e₁' e₂' ∘ reindex_linear_equiv R A e₁ e₂) =
+  reindex_linear_equiv R A e₁' e₂' ∘ reindex_linear_equiv R A e₁ e₂ =
     reindex_linear_equiv R A (e₁.trans e₁') (e₂.trans e₂') :=
   by 
     rw [←reindex_linear_equiv_trans]

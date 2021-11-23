@@ -723,15 +723,21 @@ protected theorem tsub_lt_tsub_iff_right (hc : AddLeCancellable c) (h : c ≤ a)
   by 
     rw [hc.lt_tsub_iff_left, add_tsub_cancel_of_le h]
 
-protected theorem tsub_lt_self (ha : AddLeCancellable a) (hb : AddLeCancellable b) (h₁ : 0 < a) (h₂ : 0 < b) :
-  a - b < a :=
-  by 
-    refine' tsub_le_self.lt_of_ne _ 
-    intro h 
-    rw [←h, tsub_pos_iff_lt] at h₁ 
-    have  := h.ge 
-    rw [hb.le_tsub_iff_left h₁.le, ha.add_le_iff_nonpos_left] at this 
-    exact h₂.not_le this
+-- error in Algebra.Order.Sub: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem tsub_lt_self
+(ha : add_le_cancellable a)
+(hb : add_le_cancellable b)
+(h₁ : «expr < »(0, a))
+(h₂ : «expr < »(0, b)) : «expr < »(«expr - »(a, b), a) :=
+begin
+  refine [expr tsub_le_self.lt_of_ne _],
+  intro [ident h],
+  rw ["[", "<-", expr h, ",", expr tsub_pos_iff_lt, "]"] ["at", ident h₁],
+  have [] [] [":=", expr h.ge],
+  rw ["[", expr hb.le_tsub_iff_left h₁.le, ",", expr ha.add_le_iff_nonpos_left, "]"] ["at", ident this],
+  exact [expr h₂.not_le this]
+end
 
 protected theorem tsub_lt_self_iff (ha : AddLeCancellable a) (hb : AddLeCancellable b) : a - b < a ↔ 0 < a ∧ 0 < b :=
   by 

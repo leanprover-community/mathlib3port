@@ -1,5 +1,4 @@
-import Mathbin.CategoryTheory.Category.Basic 
-import Mathbin.Data.Equiv.Functor
+import Mathbin.Data.Equiv.Basic
 
 /-!
 # Functions functorial with respect to equivalences

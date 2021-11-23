@@ -59,98 +59,88 @@ protected theorem completion.dist_comm (x y : completion α) : dist x y = dist y
       intro a b 
       rw [completion.dist_eq, completion.dist_eq, dist_comm]
 
-protected theorem completion.dist_triangle (x y z : completion α) : dist x z ≤ dist x y+dist y z :=
-  by 
-    apply induction_on₃ x y z
-    ·
-      refine' is_closed_le _ (Continuous.add _ _)
-      ·
-        have  : Continuous fun p : completion α × completion α × completion α => (p.1, p.2.2) :=
-          Continuous.prod_mk continuous_fst (Continuous.comp continuous_snd continuous_snd)
-        exact (completion.uniform_continuous_dist.continuous.comp this : _)
-      ·
-        have  : Continuous fun p : completion α × completion α × completion α => (p.1, p.2.1) :=
-          Continuous.prod_mk continuous_fst (continuous_fst.comp continuous_snd)
-        exact (completion.uniform_continuous_dist.continuous.comp this : _)
-      ·
-        have  : Continuous fun p : completion α × completion α × completion α => (p.2.1, p.2.2) :=
-          Continuous.prod_mk (continuous_fst.comp continuous_snd) (Continuous.comp continuous_snd continuous_snd)
-        exact (Continuous.comp completion.uniform_continuous_dist.continuous this : _)
-    ·
-      intro a b c 
-      rw [completion.dist_eq, completion.dist_eq, completion.dist_eq]
-      exact dist_triangle a b c
+-- error in Topology.MetricSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem completion.dist_triangle (x y z : completion α) : «expr ≤ »(dist x z, «expr + »(dist x y, dist y z)) :=
+begin
+  apply [expr induction_on₃ x y z],
+  { refine [expr is_closed_le _ (continuous.add _ _)],
+    { have [] [":", expr continuous (λ
+        p : «expr × »(completion α, «expr × »(completion α, completion α)), (p.1, p.2.2))] [":=", expr continuous.prod_mk continuous_fst (continuous.comp continuous_snd continuous_snd)],
+      exact [expr (completion.uniform_continuous_dist.continuous.comp this : _)] },
+    { have [] [":", expr continuous (λ
+        p : «expr × »(completion α, «expr × »(completion α, completion α)), (p.1, p.2.1))] [":=", expr continuous.prod_mk continuous_fst (continuous_fst.comp continuous_snd)],
+      exact [expr (completion.uniform_continuous_dist.continuous.comp this : _)] },
+    { have [] [":", expr continuous (λ
+        p : «expr × »(completion α, «expr × »(completion α, completion α)), (p.2.1, p.2.2))] [":=", expr continuous.prod_mk (continuous_fst.comp continuous_snd) (continuous.comp continuous_snd continuous_snd)],
+      exact [expr (continuous.comp completion.uniform_continuous_dist.continuous this : _)] } },
+  { assume [binders (a b c)],
+    rw ["[", expr completion.dist_eq, ",", expr completion.dist_eq, ",", expr completion.dist_eq, "]"] [],
+    exact [expr dist_triangle a b c] }
+end
 
+-- error in Topology.MetricSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Elements of the uniformity (defined generally for completions) can be characterized in terms
 of the distance. -/
-protected theorem completion.mem_uniformity_dist (s : Set (completion α × completion α)) :
-  s ∈ uniformity (completion α) ↔ ∃ (ε : _)(_ : ε > 0), ∀ {a b}, dist a b < ε → (a, b) ∈ s :=
-  by 
-    split 
-    ·
-      intro hs 
-      rcases mem_uniformity_is_closed hs with ⟨t, ht, ⟨tclosed, ts⟩⟩
-      have A : { x : α × α | (coeₓ x.1, coeₓ x.2) ∈ t } ∈ uniformity α :=
-        uniform_continuous_def.1 (uniform_continuous_coe α) t ht 
-      rcases mem_uniformity_dist.1 A with ⟨ε, εpos, hε⟩
-      refine' ⟨ε, εpos, fun x y hxy => _⟩
-      have  : ε ≤ dist x y ∨ (x, y) ∈ t
-      ·
-        apply induction_on₂ x y
-        ·
-          have  :
-            { x : completion α × completion α | ε ≤ dist x.fst x.snd ∨ (x.fst, x.snd) ∈ t } =
-              { p : completion α × completion α | ε ≤ dist p.1 p.2 } ∪ t
-          ·
-            ext <;> simp 
-          rw [this]
-          apply IsClosed.union _ tclosed 
-          exact is_closed_le continuous_const completion.uniform_continuous_dist.continuous
-        ·
-          intro x y 
-          rw [completion.dist_eq]
-          byCases' h : ε ≤ dist x y
-          ·
-            exact Or.inl h
-          ·
-            have Z := hε (not_leₓ.1 h)
-            simp only [Set.mem_set_of_eq] at Z 
-            exact Or.inr Z 
-      simp only [not_le.mpr hxy, false_orₓ, not_leₓ] at this 
-      exact ts this
-    ·
-      rintro ⟨ε, εpos, hε⟩
-      let r : Set (ℝ × ℝ) := { p | dist p.1 p.2 < ε }
-      have  : r ∈ uniformity ℝ := Metric.dist_mem_uniformity εpos 
-      have T := uniform_continuous_def.1 (@completion.uniform_continuous_dist α _) r this 
-      simp only [uniformity_prod_eq_prod, mem_prod_iff, exists_prop, Filter.mem_map, Set.mem_set_of_eq] at T 
-      rcases T with ⟨t1, ht1, t2, ht2, ht⟩
-      refine' mem_of_superset ht1 _ 
-      have A : ∀ a b : completion α, (a, b) ∈ t1 → dist a b < ε
-      ·
-        intro a b hab 
-        have  : ((a, b), (a, a)) ∈ Set.Prod t1 t2 := ⟨hab, refl_mem_uniformity ht2⟩
-        have I := ht this 
-        simp [completion.dist_self, Real.dist_eq, completion.dist_comm] at I 
-        exact lt_of_le_of_ltₓ (le_abs_self _) I 
-      show t1 ⊆ s
-      ·
-        rintro ⟨a, b⟩ hp 
-        have  : dist a b < ε := A a b hp 
-        exact hε this
+protected
+theorem completion.mem_uniformity_dist
+(s : set «expr × »(completion α, completion α)) : «expr ↔ »(«expr ∈ »(s, uniformity (completion α)), «expr∃ , »((ε «expr > » 0), ∀
+  {a b}, «expr < »(dist a b, ε) → «expr ∈ »((a, b), s))) :=
+begin
+  split,
+  { assume [binders (hs)],
+    rcases [expr mem_uniformity_is_closed hs, "with", "⟨", ident t, ",", ident ht, ",", "⟨", ident tclosed, ",", ident ts, "⟩", "⟩"],
+    have [ident A] [":", expr «expr ∈ »({x : «expr × »(α, α) | «expr ∈ »((coe x.1, coe x.2), t)}, uniformity α)] [":=", expr uniform_continuous_def.1 (uniform_continuous_coe α) t ht],
+    rcases [expr mem_uniformity_dist.1 A, "with", "⟨", ident ε, ",", ident εpos, ",", ident hε, "⟩"],
+    refine [expr ⟨ε, εpos, λ x y hxy, _⟩],
+    have [] [":", expr «expr ∨ »(«expr ≤ »(ε, dist x y), «expr ∈ »((x, y), t))] [],
+    { apply [expr induction_on₂ x y],
+      { have [] [":", expr «expr = »({x : «expr × »(completion α, completion α) | «expr ∨ »(«expr ≤ »(ε, dist x.fst x.snd), «expr ∈ »((x.fst, x.snd), t))}, «expr ∪ »({p : «expr × »(completion α, completion α) | «expr ≤ »(ε, dist p.1 p.2)}, t))] [],
+        by ext [] [] []; simp [] [] [] [] [] [],
+        rw [expr this] [],
+        apply [expr is_closed.union _ tclosed],
+        exact [expr is_closed_le continuous_const completion.uniform_continuous_dist.continuous] },
+      { assume [binders (x y)],
+        rw [expr completion.dist_eq] [],
+        by_cases [expr h, ":", expr «expr ≤ »(ε, dist x y)],
+        { exact [expr or.inl h] },
+        { have [ident Z] [] [":=", expr hε (not_le.1 h)],
+          simp [] [] ["only"] ["[", expr set.mem_set_of_eq, "]"] [] ["at", ident Z],
+          exact [expr or.inr Z] } } },
+    simp [] [] ["only"] ["[", expr not_le.mpr hxy, ",", expr false_or, ",", expr not_le, "]"] [] ["at", ident this],
+    exact [expr ts this] },
+  { rintros ["⟨", ident ε, ",", ident εpos, ",", ident hε, "⟩"],
+    let [ident r] [":", expr set «expr × »(exprℝ(), exprℝ())] [":=", expr {p | «expr < »(dist p.1 p.2, ε)}],
+    have [] [":", expr «expr ∈ »(r, uniformity exprℝ())] [":=", expr metric.dist_mem_uniformity εpos],
+    have [ident T] [] [":=", expr uniform_continuous_def.1 (@completion.uniform_continuous_dist α _) r this],
+    simp [] [] ["only"] ["[", expr uniformity_prod_eq_prod, ",", expr mem_prod_iff, ",", expr exists_prop, ",", expr filter.mem_map, ",", expr set.mem_set_of_eq, "]"] [] ["at", ident T],
+    rcases [expr T, "with", "⟨", ident t1, ",", ident ht1, ",", ident t2, ",", ident ht2, ",", ident ht, "⟩"],
+    refine [expr mem_of_superset ht1 _],
+    have [ident A] [":", expr ∀ a b : completion α, «expr ∈ »((a, b), t1) → «expr < »(dist a b, ε)] [],
+    { assume [binders (a b hab)],
+      have [] [":", expr «expr ∈ »(((a, b), (a, a)), set.prod t1 t2)] [":=", expr ⟨hab, refl_mem_uniformity ht2⟩],
+      have [ident I] [] [":=", expr ht this],
+      simp [] [] [] ["[", expr completion.dist_self, ",", expr real.dist_eq, ",", expr completion.dist_comm, "]"] [] ["at", ident I],
+      exact [expr lt_of_le_of_lt (le_abs_self _) I] },
+    show [expr «expr ⊆ »(t1, s)],
+    { rintros ["⟨", ident a, ",", ident b, "⟩", ident hp],
+      have [] [":", expr «expr < »(dist a b, ε)] [":=", expr A a b hp],
+      exact [expr hε this] } }
+end
 
+-- error in Topology.MetricSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If two points are at distance 0, then they coincide. -/
-protected theorem completion.eq_of_dist_eq_zero (x y : completion α) (h : dist x y = 0) : x = y :=
-  by 
-    have  : SeparatedSpace (completion α) :=
-      by 
-        infer_instance 
-    refine' separated_def.1 this x y fun s hs => _ 
-    rcases(completion.mem_uniformity_dist s).1 hs with ⟨ε, εpos, hε⟩
-    rw [←h] at εpos 
-    exact hε εpos
+protected
+theorem completion.eq_of_dist_eq_zero (x y : completion α) (h : «expr = »(dist x y, 0)) : «expr = »(x, y) :=
+begin
+  have [] [":", expr separated_space (completion α)] [":=", expr by apply_instance],
+  refine [expr separated_def.1 this x y (λ s hs, _)],
+  rcases [expr (completion.mem_uniformity_dist s).1 hs, "with", "⟨", ident ε, ",", ident εpos, ",", ident hε, "⟩"],
+  rw ["<-", expr h] ["at", ident εpos],
+  exact [expr hε εpos]
+end
 
--- error in Topology.MetricSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.MetricSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Reformulate `completion.mem_uniformity_dist` in terms that are suitable for the definition
 of the metric space structure. -/
 protected

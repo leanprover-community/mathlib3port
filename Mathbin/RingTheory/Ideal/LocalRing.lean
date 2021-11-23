@@ -105,18 +105,17 @@ end LocalRing
 
 variable{R : Type u}{S : Type v}{T : Type w}
 
--- error in RingTheory.Ideal.LocalRing: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem local_of_nonunits_ideal
-[comm_ring R]
-(hnze : «expr ≠ »((0 : R), 1))
-(h : ∀ x y «expr ∈ » nonunits R, «expr ∈ »(«expr + »(x, y), nonunits R)) : local_ring R :=
-{ exists_pair_ne := ⟨0, 1, hnze⟩,
-  is_local := λ
-  x, «expr $ »(or_iff_not_imp_left.mpr, λ hx, begin
-     by_contra [ident H],
-     apply [expr h _ _ hx H],
-     simp [] [] [] ["[", "-", ident sub_eq_add_neg, ",", expr add_sub_cancel'_right, "]"] [] []
-   end) }
+theorem local_of_nonunits_ideal [CommRingₓ R] (hnze : (0 : R) ≠ 1)
+  (h : ∀ x y _ : x ∈ Nonunits R _ : y ∈ Nonunits R, (x+y) ∈ Nonunits R) : LocalRing R :=
+  { exists_pair_ne := ⟨0, 1, hnze⟩,
+    is_local :=
+      fun x =>
+        or_iff_not_imp_left.mpr$
+          fun hx =>
+            by 
+              byContra H 
+              apply h _ _ hx H 
+              simp [-sub_eq_add_neg, add_sub_cancel'_right] }
 
 theorem local_of_unique_max_ideal [CommRingₓ R] (h : ∃!I : Ideal R, I.is_maximal) : LocalRing R :=
   local_of_nonunits_ideal
@@ -234,7 +233,7 @@ theorem local_hom_tfae (f : R →+* S) :
   by 
     tfaeHave 1 → 2
     rintro _ _ ⟨a, ha, rfl⟩
-    resetI 
+    skip 
     exact map_nonunit f a ha 
     tfaeHave 2 → 4 
     exact Set.image_subset_iff.1
@@ -246,7 +245,7 @@ theorem local_hom_tfae (f : R →+* S) :
     exact fun x => not_imp_not.1 (@h x)
     tfaeHave 1 → 5
     intro 
-    resetI 
+    skip 
     ext 
     exact not_iff_not.2 (is_unit_map_iff f x)
     tfaeHave 5 → 4 

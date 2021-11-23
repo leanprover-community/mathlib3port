@@ -12,6 +12,6 @@ are defined.
 -/
 
 
--- error in Tactic.ReservedNotation: ././Mathport/Syntax/Translate/Basic.lean:264:9: unsupported: advanced prec syntax
+-- error in Tactic.ReservedNotation: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 reserve prefix `#where`:max
 

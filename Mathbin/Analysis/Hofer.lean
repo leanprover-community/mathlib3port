@@ -20,7 +20,7 @@ open Filter Finset
 
 local notation "d" => dist
 
--- error in Analysis.Hofer: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.Hofer: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem hofer
 {X : Type*}
 [metric_space X]

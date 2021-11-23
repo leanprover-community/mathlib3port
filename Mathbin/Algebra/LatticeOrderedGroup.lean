@@ -350,51 +350,46 @@ theorem m_le_iff_pos_le_neg_ge [CovariantClass α α (·*·) (· ≤ ·)] (a b :
       rw [←pos_div_neg' a, ←pos_div_neg' b]
       apply div_le_div'' h.1 h.2
 
+-- error in Algebra.LatticeOrderedGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Let `α` be a lattice ordered commutative group and let `a` be an element in `α` with absolute value
 `|a|`, positive component `a⁺` and negative component `a⁻`. Then `|a|` decomposes as the sum of `a⁺`
 and `a⁻`.
 -/
-@[toAdditive]
-theorem pos_mul_neg [CovariantClass α α (·*·) (· ≤ ·)] (a : α) : |a| = a⁺*a⁻ :=
-  by 
-    rw [le_antisymm_iffₓ]
-    split 
-    ·
-      unfold HasAbs.abs 
-      rw [sup_le_iff]
-      split 
-      ·
-        nthRw 0[←mul_oneₓ a]
-        apply mul_le_mul' (LatticeOrderedCommGroup.m_le_pos a) (LatticeOrderedCommGroup.m_neg_pos a)
-      ·
-        nthRw 0[←one_mulₓ (a⁻¹)]
-        apply mul_le_mul' (LatticeOrderedCommGroup.m_pos_pos a) (LatticeOrderedCommGroup.m_le_neg a)
-    ·
-      have mod_eq_pos : |a|⁺ = |a|
-      ·
-        nthRw 1[←pos_div_neg' |a|]
-        rw [div_eq_mul_inv]
-        symm 
-        rw [mul_right_eq_self]
-        symm 
-        rw [one_eq_inv, le_antisymm_iffₓ]
-        split 
-        ·
-          rw [←pos_inf_neg_eq_one a]
-          apply le_inf
-          ·
-            rw [pos_eq_neg_inv]
-            apply And.right (Iff.elim_leftₓ (m_le_iff_pos_le_neg_ge _ _) (LatticeOrderedCommGroup.inv_le_abs a))
-          ·
-            apply And.right (Iff.elim_leftₓ (m_le_iff_pos_le_neg_ge _ _) (LatticeOrderedCommGroup.le_mabs a))
-        ·
-          apply LatticeOrderedCommGroup.m_neg_pos 
-      rw [←inf_mul_sup, pos_inf_neg_eq_one, one_mulₓ, ←mod_eq_pos]
-      apply sup_le 
-      apply And.left (Iff.elim_leftₓ (m_le_iff_pos_le_neg_ge _ _) (LatticeOrderedCommGroup.le_mabs a))
-      rw [neg_eq_pos_inv]
-      apply And.left (Iff.elim_leftₓ (m_le_iff_pos_le_neg_ge _ _) (LatticeOrderedCommGroup.inv_le_abs a))
+@[to_additive #[]]
+theorem pos_mul_neg
+[covariant_class α α ((«expr * »)) ((«expr ≤ »))]
+(a : α) : «expr = »(«expr| |»(a), «expr * »(«expr ⁺»(a), «expr ⁻»(a))) :=
+begin
+  rw [expr le_antisymm_iff] [],
+  split,
+  { unfold [ident has_abs.abs] [],
+    rw [expr sup_le_iff] [],
+    split,
+    { nth_rewrite [0] ["<-", expr mul_one a] [],
+      apply [expr mul_le_mul' (lattice_ordered_comm_group.m_le_pos a) (lattice_ordered_comm_group.m_neg_pos a)] },
+    { nth_rewrite [0] ["<-", expr one_mul «expr ⁻¹»(a)] [],
+      apply [expr mul_le_mul' (lattice_ordered_comm_group.m_pos_pos a) (lattice_ordered_comm_group.m_le_neg a)] } },
+  { have [ident mod_eq_pos] [":", expr «expr = »(«expr ⁺»(«expr| |»(a)), «expr| |»(a))] [],
+    { nth_rewrite [1] ["<-", expr pos_div_neg' «expr| |»(a)] [],
+      rw [expr div_eq_mul_inv] [],
+      symmetry,
+      rw ["[", expr mul_right_eq_self, "]"] [],
+      symmetry,
+      rw ["[", expr one_eq_inv, ",", expr le_antisymm_iff, "]"] [],
+      split,
+      { rw ["<-", expr pos_inf_neg_eq_one a] [],
+        apply [expr le_inf],
+        { rw [expr pos_eq_neg_inv] [],
+          apply [expr and.right (iff.elim_left (m_le_iff_pos_le_neg_ge _ _) (lattice_ordered_comm_group.inv_le_abs a))] },
+        { apply [expr and.right (iff.elim_left (m_le_iff_pos_le_neg_ge _ _) (lattice_ordered_comm_group.le_mabs a))] } },
+      { apply [expr lattice_ordered_comm_group.m_neg_pos] } },
+    rw ["[", "<-", expr inf_mul_sup, ",", expr pos_inf_neg_eq_one, ",", expr one_mul, ",", "<-", expr mod_eq_pos, "]"] [],
+    apply [expr sup_le],
+    apply [expr and.left (iff.elim_left (m_le_iff_pos_le_neg_ge _ _) (lattice_ordered_comm_group.le_mabs a))],
+    rw [expr neg_eq_pos_inv] [],
+    apply [expr and.left (iff.elim_left (m_le_iff_pos_le_neg_ge _ _) (lattice_ordered_comm_group.inv_le_abs a))] }
+end
 
 /--
 Let `α` be a lattice ordered commutative group, let `a` and `b` be elements in `α` and let `|b - a|`
@@ -461,36 +456,34 @@ def lattice_ordered_comm_group_to_distrib_lattice (α : Type u) [s : Lattice α]
           ·
             apply inf_le_right }
 
+-- error in Algebra.LatticeOrderedGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Let `α` be a lattice ordered commutative group and let `a`, `b` and `c` be elements in `α`. Let
 `|a ⊔ c - (b ⊔ c)|`, `|a ⊓ c - b ⊓ c|` and `|a - b|` denote the absolute values of
 `a ⊔ c - (b ⊔ c)`, `a ⊓ c - b ⊓ c` and `a - b` respectively. Then,
 $$|a ⊔ c - (b ⊔ c)| + |a ⊓ c-b ⊓ c| = |a - b|.$$
 -/
-@[toAdditive]
-theorem abs_div_sup_mul_abs_div_inf [CovariantClass α α (·*·) (· ≤ ·)] (a b c : α) :
-  (|(a⊔c) / (b⊔c)|*|a⊓c / (b⊓c)|) = |a / b| :=
-  by 
-    letI this : DistribLattice α := lattice_ordered_comm_group_to_distrib_lattice α 
-    calc (|(a⊔c) / (b⊔c)|*|a⊓c / (b⊓c)|) = ((b⊔c⊔(a⊔c)) / ((b⊔c)⊓(a⊔c)))*|a⊓c / (b⊓c)| :=
-      by 
-        rw [sup_div_inf_eq_abs_div]_ = ((b⊔c⊔(a⊔c)) / ((b⊔c)⊓(a⊔c)))*(b⊓c⊔a⊓c) / (b⊓c⊓(a⊓c)) :=
-      by 
-        rw [sup_div_inf_eq_abs_div (b⊓c) (a⊓c)]_ = ((b⊔a⊔c) / (b⊓a⊔c))*(b⊔a)⊓c / (b⊓a⊓c) :=
-      by 
-        rw [←sup_inf_right, ←inf_sup_right, sup_assoc]
-        nthRw 1[sup_comm]
-        rw [sup_right_idem, sup_assoc, inf_assoc]
-        nthRw 3[inf_comm]
-        rw [inf_right_idem, inf_assoc]_ = ((b⊔a⊔c)*(b⊔a)⊓c) / (b⊓a⊔c)*b⊓a⊓c :=
-      by 
-        rw [div_mul_comm]_ = ((b⊔a)*c) / (b⊓a)*c :=
-      by 
-        rw [mul_commₓ, inf_mul_sup, mul_commₓ (b⊓a⊔c), inf_mul_sup]_ = (b⊔a) / (b⊓a) :=
-      by 
-        rw [div_eq_mul_inv, mul_inv_rev, mul_assocₓ, mul_inv_cancel_left, ←div_eq_mul_inv]_ = |a / b| :=
-      by 
-        rw [sup_div_inf_eq_abs_div]
+@[to_additive #[]]
+theorem abs_div_sup_mul_abs_div_inf
+[covariant_class α α ((«expr * »)) ((«expr ≤ »))]
+(a
+ b
+ c : α) : «expr = »(«expr * »(«expr| |»(«expr / »(«expr ⊔ »(a, c), «expr ⊔ »(b, c))), «expr| |»(«expr / »(«expr ⊓ »(a, c), «expr ⊓ »(b, c)))), «expr| |»(«expr / »(a, b))) :=
+begin
+  letI [] [":", expr distrib_lattice α] [":=", expr lattice_ordered_comm_group_to_distrib_lattice α],
+  calc
+    «expr = »(«expr * »(«expr| |»(«expr / »(«expr ⊔ »(a, c), «expr ⊔ »(b, c))), «expr| |»(«expr / »(«expr ⊓ »(a, c), «expr ⊓ »(b, c)))), «expr * »(«expr / »(«expr ⊔ »(«expr ⊔ »(b, c), «expr ⊔ »(a, c)), «expr ⊓ »(«expr ⊔ »(b, c), «expr ⊔ »(a, c))), «expr| |»(«expr / »(«expr ⊓ »(a, c), «expr ⊓ »(b, c))))) : by rw [expr sup_div_inf_eq_abs_div] []
+    «expr = »(..., «expr * »(«expr / »(«expr ⊔ »(«expr ⊔ »(b, c), «expr ⊔ »(a, c)), «expr ⊓ »(«expr ⊔ »(b, c), «expr ⊔ »(a, c))), «expr / »(«expr ⊔ »(«expr ⊓ »(b, c), «expr ⊓ »(a, c)), «expr ⊓ »(«expr ⊓ »(b, c), «expr ⊓ »(a, c))))) : by rw [expr sup_div_inf_eq_abs_div «expr ⊓ »(b, c) «expr ⊓ »(a, c)] []
+    «expr = »(..., «expr * »(«expr / »(«expr ⊔ »(«expr ⊔ »(b, a), c), «expr ⊔ »(«expr ⊓ »(b, a), c)), «expr / »(«expr ⊓ »(«expr ⊔ »(b, a), c), «expr ⊓ »(«expr ⊓ »(b, a), c)))) : by { rw ["[", "<-", expr sup_inf_right, ",", "<-", expr inf_sup_right, ",", expr sup_assoc, "]"] [],
+      nth_rewrite [1] [expr sup_comm] [],
+      rw ["[", expr sup_right_idem, ",", expr sup_assoc, ",", expr inf_assoc, "]"] [],
+      nth_rewrite [3] [expr inf_comm] [],
+      rw ["[", expr inf_right_idem, ",", expr inf_assoc, "]"] [] }
+    «expr = »(..., «expr / »(«expr * »(«expr ⊔ »(«expr ⊔ »(b, a), c), «expr ⊓ »(«expr ⊔ »(b, a), c)), «expr * »(«expr ⊔ »(«expr ⊓ »(b, a), c), «expr ⊓ »(«expr ⊓ »(b, a), c)))) : by rw [expr div_mul_comm] []
+    «expr = »(..., «expr / »(«expr * »(«expr ⊔ »(b, a), c), «expr * »(«expr ⊓ »(b, a), c))) : by rw ["[", expr mul_comm, ",", expr inf_mul_sup, ",", expr mul_comm «expr ⊔ »(«expr ⊓ »(b, a), c), ",", expr inf_mul_sup, "]"] []
+    «expr = »(..., «expr / »(«expr ⊔ »(b, a), «expr ⊓ »(b, a))) : by rw ["[", expr div_eq_mul_inv, ",", expr mul_inv_rev, ",", expr mul_assoc, ",", expr mul_inv_cancel_left, ",", "<-", expr div_eq_mul_inv, "]"] []
+    «expr = »(..., «expr| |»(«expr / »(a, b))) : by rw [expr sup_div_inf_eq_abs_div] []
+end
 
 /--
 Let `α` be a lattice ordered commutative group and let `a` be a positive element in `α`. Then `a` is

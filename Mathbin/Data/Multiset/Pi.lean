@@ -106,39 +106,41 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
                 rw [pi.cons_ne this Ne.symm]
               
 
--- error in Data.Multiset.Pi: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem card_pi
 (m : multiset α)
 (t : ∀ a, multiset (δ a)) : «expr = »(card (pi m t), prod «expr $ »(m.map, λ a, card (t a))) :=
 multiset.induction_on m (by simp [] [] [] [] [] []) (by simp [] [] [] ["[", expr mul_comm, "]"] [] [] { contextual := tt })
 
-theorem nodup_pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} : nodup s → (∀ a _ : a ∈ s, nodup (t a)) → nodup (pi s t) :=
-  Multiset.induction_on s (fun _ _ => nodup_singleton _)
-    (by 
-      intro a s ih hs ht 
-      have has : a ∉ s
-      ·
-        simp  at hs <;> exact hs.1
-      have hs : nodup s
-      ·
-        simp  at hs <;> exact hs.2
-      simp 
-      split 
-      ·
-        intro b hb 
-        exact nodup_map (pi_cons_injective has) (ih hs$ fun a' h' => ht a'$ mem_cons_of_mem h')
-      ·
-        apply pairwise_of_nodup _ (ht a$ mem_cons_self _ _)
-        exact
-          fun b₁ hb₁ b₂ hb₂ neb =>
-            disjoint_map_map.2
-              fun f hf g hg eq =>
-                have  : pi.cons s a b₁ f a (mem_cons_self _ _) = pi.cons s a b₂ g a (mem_cons_self _ _) :=
-                  by 
-                    rw [Eq]
-                neb$
-                  show b₁ = b₂ by 
-                    rwa [pi.cons_same, pi.cons_same] at this)
+-- error in Data.Multiset.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nodup_pi {s : multiset α} {t : ∀ a, multiset (δ a)} : nodup s → ∀ a «expr ∈ » s, nodup (t a) → nodup (pi s t) :=
+multiset.induction_on s (assume
+ _
+ _, nodup_singleton _) (begin
+   assume [binders (a s ih hs ht)],
+   have [ident has] [":", expr «expr ∉ »(a, s)] [],
+   by simp [] [] [] [] [] ["at", ident hs]; exact [expr hs.1],
+   have [ident hs] [":", expr nodup s] [],
+   by simp [] [] [] [] [] ["at", ident hs]; exact [expr hs.2],
+   simp [] [] [] [] [] [],
+   split,
+   { assume [binders (b hb)],
+     from [expr nodup_map (pi_cons_injective has) «expr $ »(ih hs, assume
+       a' h', «expr $ »(ht a', mem_cons_of_mem h'))] },
+   { apply [expr pairwise_of_nodup _ «expr $ »(ht a, mem_cons_self _ _)],
+     from [expr assume
+      b₁
+      hb₁
+      b₂
+      hb₂
+      neb, disjoint_map_map.2 (assume
+       f
+       hf
+       g
+       hg
+       eq, have «expr = »(pi.cons s a b₁ f a (mem_cons_self _ _), pi.cons s a b₂ g a (mem_cons_self _ _)), by rw ["[", expr eq, "]"] [],
+       «expr $ »(neb, show «expr = »(b₁, b₂), by rwa ["[", expr pi.cons_same, ",", expr pi.cons_same, "]"] ["at", ident this]))] }
+ end)
 
 theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
   ∀ f : ∀ a _ : a ∈ m, δ a, f ∈ pi m t ↔ ∀ a h : a ∈ m, f a h ∈ t a :=

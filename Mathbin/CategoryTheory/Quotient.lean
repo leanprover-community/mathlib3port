@@ -14,7 +14,7 @@ relation, `functor_map_eq_iff` says that no unnecessary identifications have bee
 -/
 
 
--- error in CategoryTheory.Quotient: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in CategoryTheory.Quotient: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- A `hom_rel` on `C` consists of a relation on every hom-set. -/
 @[derive #[expr inhabited]]
 def hom_rel (C) [quiver C] :=

@@ -72,7 +72,7 @@ variable(α)(β)
 /-- The set of elements fixed under the whole action. -/
 @[toAdditive "The set of elements fixed under the whole action."]
 def fixed_points : Set β :=
-  { b : β | ∀ x : α, x • b = b }
+  { b:β | ∀ x : α, x • b = b }
 
 /-- `fixed_by g` is the subfield of elements fixed by `g`. -/
 @[toAdditive "`fixed_by g` is the subfield of elements fixed by `g`."]
@@ -212,7 +212,7 @@ theorem smul_mem_orbit_smul (g h : α) (a : β) : g • a ∈ orbit α (h • a)
 
 variable(α)(β)
 
--- error in GroupTheory.GroupAction.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in GroupTheory.GroupAction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The relation 'in the same orbit'. -/
 @[to_additive #[expr "The relation 'in the same orbit'."]]
 def orbit_rel : setoid β :=
@@ -426,28 +426,27 @@ noncomputable def self_equiv_sigma_orbits_quotient_stabilizer' {φ : Ω → β} 
     _ ≃ Σω : Ω, Quotientₓ (stabilizer α (φ ω)) := Equiv.sigmaCongrRight fun ω => orbit_equiv_quotient_stabilizer α (φ ω)
     
 
+-- error in GroupTheory.GroupAction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Class formula** for a finite group acting on a finite type. See
 `mul_action.card_eq_sum_card_group_div_card_stabilizer` for a specialized version using
 `quotient.out'`. -/
-@[toAdditive
-      "**Class formula** for a finite group acting on a finite type. See\n`add_action.card_eq_sum_card_add_group_div_card_stabilizer` for a specialized version using\n`quotient.out'`."]
-theorem card_eq_sum_card_group_div_card_stabilizer' [Fintype α] [Fintype β] [Fintype Ω]
-  [∀ b : β, Fintype$ stabilizer α b] {φ : Ω → β} (hφ : left_inverse Quotientₓ.mk' φ) :
-  Fintype.card β = ∑ω : Ω, Fintype.card α / Fintype.card (stabilizer α (φ ω)) :=
-  by 
-    classical 
-    have  :
-      ∀ ω : Ω,
-        Fintype.card α / Fintype.card («expr↥ » (stabilizer α (φ ω))) = Fintype.card (Quotientₓ$ stabilizer α (φ ω))
-    ·
-      intro ω 
-      rw [Fintype.card_congr (@Subgroup.groupEquivQuotientTimesSubgroup α _ (stabilizer α$ φ ω)), Fintype.card_prod,
-        Nat.mul_div_cancelₓ]
-      exact
-        fintype.card_pos_iff.mpr
-          (by 
-            infer_instance)
-    simpRw [this, ←Fintype.card_sigma, Fintype.card_congr (self_equiv_sigma_orbits_quotient_stabilizer' α β hφ)]
+@[to_additive #[expr "**Class formula** for a finite group acting on a finite type. See\n`add_action.card_eq_sum_card_add_group_div_card_stabilizer` for a specialized version using\n`quotient.out'`."]]
+theorem card_eq_sum_card_group_div_card_stabilizer'
+[fintype α]
+[fintype β]
+[fintype exprΩ()]
+[∀ b : β, «expr $ »(fintype, stabilizer α b)]
+{φ : exprΩ() → β}
+(hφ : left_inverse quotient.mk' φ) : «expr = »(fintype.card β, «expr∑ , »((ω : exprΩ()), «expr / »(fintype.card α, fintype.card (stabilizer α (φ ω))))) :=
+begin
+  classical,
+  have [] [":", expr ∀
+   ω : exprΩ(), «expr = »(«expr / »(fintype.card α, fintype.card «expr↥ »(stabilizer α (φ ω))), fintype.card «expr $ »(quotient, stabilizer α (φ ω)))] [],
+  { intro [ident ω],
+    rw ["[", expr fintype.card_congr (@subgroup.group_equiv_quotient_times_subgroup α _ «expr $ »(stabilizer α, φ ω)), ",", expr fintype.card_prod, ",", expr nat.mul_div_cancel, "]"] [],
+    exact [expr fintype.card_pos_iff.mpr (by apply_instance)] },
+  simp_rw ["[", expr this, ",", "<-", expr fintype.card_sigma, ",", expr fintype.card_congr (self_equiv_sigma_orbits_quotient_stabilizer' α β hφ), "]"] []
+end
 
 /-- **Class formula**. This is a special case of
 `mul_action.self_equiv_sigma_orbits_quotient_stabilizer'` with `φ = quotient.out'`. -/

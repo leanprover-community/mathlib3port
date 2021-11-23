@@ -74,7 +74,7 @@ instance  [SemigroupWithZero β] : SemigroupWithZero (α →₀ β) :=
           ext 
           simp only [mul_apply, mul_assocₓ] }
 
--- error in Data.Finsupp.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Finsupp.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance [non_unital_non_assoc_semiring β] : non_unital_non_assoc_semiring «expr →₀ »(α, β) :=
 { left_distrib := λ f g h, by { ext [] [] [],
     simp [] [] ["only"] ["[", expr mul_apply, ",", expr add_apply, ",", expr left_distrib, "]"] [] [] { proj := ff } },

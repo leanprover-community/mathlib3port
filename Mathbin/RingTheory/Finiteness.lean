@@ -86,15 +86,25 @@ instance self : finite R R :=
 
 variable(M)
 
-theorem of_restrict_scalars_finite (R A M : Type _) [CommSemiringₓ R] [Semiringₓ A] [AddCommMonoidₓ M] [Module R M]
-  [Module A M] [Algebra R A] [IsScalarTower R A M] [hM : finite R M] : finite A M :=
-  by 
-    rw [finite_def, fg_def] at hM⊢
-    obtain ⟨S, hSfin, hSgen⟩ := hM 
-    refine' ⟨S, hSfin, eq_top_iff.2 _⟩
-    have  := Submodule.span_le_restrict_scalars R A S 
-    rw [hSgen] at this 
-    exact this
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_restrict_scalars_finite
+(R A M : Type*)
+[comm_semiring R]
+[semiring A]
+[add_comm_monoid M]
+[module R M]
+[module A M]
+[algebra R A]
+[is_scalar_tower R A M]
+[hM : finite R M] : finite A M :=
+begin
+  rw ["[", expr finite_def, ",", expr fg_def, "]"] ["at", ident hM, "⊢"],
+  obtain ["⟨", ident S, ",", ident hSfin, ",", ident hSgen, "⟩", ":=", expr hM],
+  refine [expr ⟨S, hSfin, eq_top_iff.2 _⟩],
+  have [] [] [":=", expr submodule.span_le_restrict_scalars R A S],
+  rw [expr hSgen] ["at", ident this],
+  exact [expr this]
+end
 
 variable{R M}
 
@@ -160,16 +170,20 @@ protected theorem MvPolynomial (ι : Type _) [Fintype ι] : finite_type R (MvPol
 
 end 
 
-theorem of_restrict_scalars_finite_type [Algebra A B] [IsScalarTower R A B] [hB : finite_type R B] : finite_type A B :=
-  by 
-    obtain ⟨S, hS⟩ := hB.out 
-    refine' ⟨⟨S, eq_top_iff.2 fun b => _⟩⟩
-    have le : adjoin R (S : Set B) ≤ Subalgebra.restrictScalars R (adjoin A S)
-    ·
-      apply (Algebra.adjoin_le _ : _ ≤ Subalgebra.restrictScalars R (adjoin A («expr↑ » S)))
-      simp only [Subalgebra.coe_restrict_scalars]
-      exact Algebra.subset_adjoin 
-    exact le (eq_top_iff.1 hS b)
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_restrict_scalars_finite_type
+[algebra A B]
+[is_scalar_tower R A B]
+[hB : finite_type R B] : finite_type A B :=
+begin
+  obtain ["⟨", ident S, ",", ident hS, "⟩", ":=", expr hB.out],
+  refine [expr ⟨⟨S, eq_top_iff.2 (λ b, _)⟩⟩],
+  have [ident le] [":", expr «expr ≤ »(adjoin R (S : set B), subalgebra.restrict_scalars R (adjoin A S))] [],
+  { apply [expr (algebra.adjoin_le _ : «expr ≤ »(_, subalgebra.restrict_scalars R (adjoin A «expr↑ »(S))))],
+    simp [] [] ["only"] ["[", expr subalgebra.coe_restrict_scalars, "]"] [] [],
+    exact [expr algebra.subset_adjoin] },
+  exact [expr le (eq_top_iff.1 hS b)]
+end
 
 variable{R A B}
 
@@ -184,56 +198,55 @@ theorem Equiv (hRA : finite_type R A) (e : A ≃ₐ[R] B) : finite_type R B :=
 theorem trans [Algebra A B] [IsScalarTower R A B] (hRA : finite_type R A) (hAB : finite_type A B) : finite_type R B :=
   ⟨fg_trans' hRA.1 hAB.1⟩
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An algebra is finitely generated if and only if it is a quotient
 of a polynomial ring whose variables are indexed by a finset. -/
-theorem iff_quotient_mv_polynomial :
-  finite_type R A ↔ ∃ (s : Finset A)(f : MvPolynomial { x // x ∈ s } R →ₐ[R] A), surjective f :=
-  by 
-    split 
-    ·
-      rintro ⟨s, hs⟩
-      use s, MvPolynomial.aeval coeₓ 
-      intro x 
-      have hrw : («expr↑ » s : Set A) = fun x : A => x ∈ s.val := rfl 
-      rw [←Set.mem_range, ←AlgHom.coe_range, ←adjoin_eq_range, ←hrw, hs]
-      exact Set.mem_univ x
-    ·
-      rintro ⟨s, ⟨f, hsur⟩⟩
-      exact finite_type.of_surjective (finite_type.mv_polynomial R { x // x ∈ s }) f hsur
+theorem iff_quotient_mv_polynomial : «expr ↔ »(finite_type R A, «expr∃ , »((s : finset A)
+  (f : «expr →ₐ[ ] »(mv_polynomial {x // «expr ∈ »(x, s)} R, R, A)), surjective f)) :=
+begin
+  split,
+  { rintro ["⟨", ident s, ",", ident hs, "⟩"],
+    use ["[", expr s, ",", expr mv_polynomial.aeval coe, "]"],
+    intro [ident x],
+    have [ident hrw] [":", expr «expr = »((«expr↑ »(s) : set A), λ x : A, «expr ∈ »(x, s.val))] [":=", expr rfl],
+    rw ["[", "<-", expr set.mem_range, ",", "<-", expr alg_hom.coe_range, ",", "<-", expr adjoin_eq_range, ",", "<-", expr hrw, ",", expr hs, "]"] [],
+    exact [expr set.mem_univ x] },
+  { rintro ["⟨", ident s, ",", "⟨", ident f, ",", ident hsur, "⟩", "⟩"],
+    exact [expr finite_type.of_surjective (finite_type.mv_polynomial R {x // «expr ∈ »(x, s)}) f hsur] }
+end
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An algebra is finitely generated if and only if it is a quotient
 of a polynomial ring whose variables are indexed by a fintype. -/
-theorem iff_quotient_mv_polynomial' :
-  finite_type R A ↔ ∃ (ι : Type u_2)(_ : Fintype ι)(f : MvPolynomial ι R →ₐ[R] A), surjective f :=
-  by 
-    split 
-    ·
-      rw [iff_quotient_mv_polynomial]
-      rintro ⟨s, ⟨f, hsur⟩⟩
-      use { x // x ∈ s },
-        by 
-          infer_instance,
-        f, hsur
-    ·
-      rintro ⟨ι, ⟨hfintype, ⟨f, hsur⟩⟩⟩
-      letI this : Fintype ι := hfintype 
-      exact finite_type.of_surjective (finite_type.mv_polynomial R ι) f hsur
+theorem iff_quotient_mv_polynomial' : «expr ↔ »(finite_type R A, «expr∃ , »((ι : Type u_2)
+  (_ : fintype ι)
+  (f : «expr →ₐ[ ] »(mv_polynomial ι R, R, A)), surjective f)) :=
+begin
+  split,
+  { rw [expr iff_quotient_mv_polynomial] [],
+    rintro ["⟨", ident s, ",", "⟨", ident f, ",", ident hsur, "⟩", "⟩"],
+    use ["[", expr {x // «expr ∈ »(x, s)}, ",", expr by apply_instance, ",", expr f, ",", expr hsur, "]"] },
+  { rintro ["⟨", ident ι, ",", "⟨", ident hfintype, ",", "⟨", ident f, ",", ident hsur, "⟩", "⟩", "⟩"],
+    letI [] [":", expr fintype ι] [":=", expr hfintype],
+    exact [expr finite_type.of_surjective (finite_type.mv_polynomial R ι) f hsur] }
+end
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An algebra is finitely generated if and only if it is a quotient of a polynomial ring in `n`
 variables. -/
-theorem iff_quotient_mv_polynomial'' : finite_type R A ↔ ∃ (n : ℕ)(f : MvPolynomial (Finₓ n) R →ₐ[R] A), surjective f :=
-  by 
-    split 
-    ·
-      rw [iff_quotient_mv_polynomial']
-      rintro ⟨ι, hfintype, ⟨f, hsur⟩⟩
-      letI this := hfintype 
-      obtain ⟨equiv⟩ := @Fintype.truncEquivFin ι (Classical.decEq ι) hfintype 
-      replace equiv := MvPolynomial.renameEquiv R Equiv 
-      exact ⟨Fintype.card ι, AlgHom.comp f Equiv.symm, Function.Surjective.comp hsur (AlgEquiv.symm Equiv).Surjective⟩
-    ·
-      rintro ⟨n, ⟨f, hsur⟩⟩
-      exact finite_type.of_surjective (finite_type.mv_polynomial R (Finₓ n)) f hsur
+theorem iff_quotient_mv_polynomial'' : «expr ↔ »(finite_type R A, «expr∃ , »((n : exprℕ())
+  (f : «expr →ₐ[ ] »(mv_polynomial (fin n) R, R, A)), surjective f)) :=
+begin
+  split,
+  { rw [expr iff_quotient_mv_polynomial'] [],
+    rintro ["⟨", ident ι, ",", ident hfintype, ",", "⟨", ident f, ",", ident hsur, "⟩", "⟩"],
+    letI [] [] [":=", expr hfintype],
+    obtain ["⟨", ident equiv, "⟩", ":=", expr @fintype.trunc_equiv_fin ι (classical.dec_eq ι) hfintype],
+    replace [ident equiv] [] [":=", expr mv_polynomial.rename_equiv R equiv],
+    exact [expr ⟨fintype.card ι, alg_hom.comp f equiv.symm, function.surjective.comp hsur (alg_equiv.symm equiv).surjective⟩] },
+  { rintro ["⟨", ident n, ",", "⟨", ident f, ",", ident hsur, "⟩", "⟩"],
+    exact [expr finite_type.of_surjective (finite_type.mv_polynomial R (fin n)) f hsur] }
+end
 
 /-- A finitely presented algebra is of finite type. -/
 theorem of_finite_presentation : finite_presentation R A → finite_type R A :=
@@ -253,39 +266,35 @@ namespace FinitePresentation
 
 variable{R A B}
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An algebra over a Noetherian ring is finitely generated if and only if it is finitely
-presented. -/
-theorem of_finite_type [IsNoetherianRing R] : finite_type R A ↔ finite_presentation R A :=
-  by 
-    refine' ⟨fun h => _, Algebra.FiniteType.of_finite_presentation⟩
-    obtain ⟨n, f, hf⟩ := Algebra.FiniteType.iff_quotient_mv_polynomial''.1 h 
-    refine' ⟨n, f, hf, _⟩
-    have hnoet : IsNoetherianRing (MvPolynomial (Finₓ n) R) :=
-      by 
-        infer_instance 
-    replace hnoet := (is_noetherian_ring_iff.1 hnoet).noetherian 
-    exact hnoet f.to_ring_hom.ker
+presented. -/ theorem of_finite_type [is_noetherian_ring R] : «expr ↔ »(finite_type R A, finite_presentation R A) :=
+begin
+  refine [expr ⟨λ h, _, algebra.finite_type.of_finite_presentation⟩],
+  obtain ["⟨", ident n, ",", ident f, ",", ident hf, "⟩", ":=", expr algebra.finite_type.iff_quotient_mv_polynomial''.1 h],
+  refine [expr ⟨n, f, hf, _⟩],
+  have [ident hnoet] [":", expr is_noetherian_ring (mv_polynomial (fin n) R)] [":=", expr by apply_instance],
+  replace [ident hnoet] [] [":=", expr (is_noetherian_ring_iff.1 hnoet).noetherian],
+  exact [expr hnoet f.to_ring_hom.ker]
+end
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `e : A ≃ₐ[R] B` and `A` is finitely presented, then so is `B`. -/
-theorem Equiv (hfp : finite_presentation R A) (e : A ≃ₐ[R] B) : finite_presentation R B :=
-  by 
-    obtain ⟨n, f, hf⟩ := hfp 
-    use n, AlgHom.comp («expr↑ » e) f 
-    split 
-    ·
-      exact Function.Surjective.comp e.surjective hf.1
-    suffices hker : (AlgHom.comp («expr↑ » e) f).toRingHom.ker = f.to_ring_hom.ker
-    ·
-      rw [hker]
-      exact hf.2
-    ·
-      have hco : (AlgHom.comp («expr↑ » e) f).toRingHom = RingHom.comp («expr↑ » e.to_ring_equiv) f.to_ring_hom
-      ·
-        have h : (AlgHom.comp («expr↑ » e) f).toRingHom = e.to_alg_hom.to_ring_hom.comp f.to_ring_hom := rfl 
-        have h1 : «expr↑ » e.to_ring_equiv = e.to_alg_hom.toRingHom := rfl 
-        rw [h, h1]
-      rw [RingHom.ker_eq_comap_bot, hco, ←Ideal.comap_comap, ←RingHom.ker_eq_comap_bot,
-        RingHom.ker_coe_equiv (AlgEquiv.toRingEquiv e), RingHom.ker_eq_comap_bot]
+theorem equiv (hfp : finite_presentation R A) (e : «expr ≃ₐ[ ] »(A, R, B)) : finite_presentation R B :=
+begin
+  obtain ["⟨", ident n, ",", ident f, ",", ident hf, "⟩", ":=", expr hfp],
+  use ["[", expr n, ",", expr alg_hom.comp «expr↑ »(e) f, "]"],
+  split,
+  { exact [expr function.surjective.comp e.surjective hf.1] },
+  suffices [ident hker] [":", expr «expr = »((alg_hom.comp «expr↑ »(e) f).to_ring_hom.ker, f.to_ring_hom.ker)],
+  { rw [expr hker] [],
+    exact [expr hf.2] },
+  { have [ident hco] [":", expr «expr = »((alg_hom.comp «expr↑ »(e) f).to_ring_hom, ring_hom.comp «expr↑ »(e.to_ring_equiv) f.to_ring_hom)] [],
+    { have [ident h] [":", expr «expr = »((alg_hom.comp «expr↑ »(e) f).to_ring_hom, e.to_alg_hom.to_ring_hom.comp f.to_ring_hom)] [":=", expr rfl],
+      have [ident h1] [":", expr «expr = »(«expr↑ »(e.to_ring_equiv), e.to_alg_hom.to_ring_hom)] [":=", expr rfl],
+      rw ["[", expr h, ",", expr h1, "]"] [] },
+    rw ["[", expr ring_hom.ker_eq_comap_bot, ",", expr hco, ",", "<-", expr ideal.comap_comap, ",", "<-", expr ring_hom.ker_eq_comap_bot, ",", expr ring_hom.ker_coe_equiv (alg_equiv.to_ring_equiv e), ",", expr ring_hom.ker_eq_comap_bot, "]"] [] }
+end
 
 variable(R)
 
@@ -339,31 +348,27 @@ theorem Iff : finite_presentation R A ↔ ∃ (n : _)(I : Ideal (MvPolynomial (F
       rintro ⟨n, I, e, hfg⟩
       exact Equiv ((finite_presentation.mv_polynomial R _).Quotient hfg) e
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An algebra is finitely presented if and only if it is a quotient of a polynomial ring whose
 variables are indexed by a fintype by a finitely generated ideal. -/
-theorem iff_quotient_mv_polynomial' :
-  finite_presentation R A ↔
-    ∃ (ι : Type u_2)(_ : Fintype ι)(f : MvPolynomial ι R →ₐ[R] A), surjective f ∧ f.to_ring_hom.ker.fg :=
-  by 
-    split 
-    ·
-      rintro ⟨n, f, hfs, hfk⟩
-      set ulift_var := MvPolynomial.renameEquiv R Equiv.ulift 
-      refine'
-        ⟨Ulift (Finₓ n), inferInstance, f.comp ulift_var.to_alg_hom, hfs.comp ulift_var.surjective,
-          Submodule.fg_ker_ring_hom_comp _ _ _ hfk ulift_var.surjective⟩
-      convert Submodule.fg_bot 
-      exact RingHom.ker_coe_equiv ulift_var.to_ring_equiv
-    ·
-      rintro ⟨ι, hfintype, f, hf⟩
-      haveI  : Fintype ι := hfintype 
-      obtain ⟨equiv⟩ := @Fintype.truncEquivFin ι (Classical.decEq ι) _ 
-      replace equiv := MvPolynomial.renameEquiv R Equiv 
-      refine'
-        ⟨Fintype.card ι, f.comp Equiv.symm, hf.1.comp (AlgEquiv.symm Equiv).Surjective,
-          Submodule.fg_ker_ring_hom_comp _ f _ hf.2 equiv.symm.surjective⟩
-      convert Submodule.fg_bot 
-      exact RingHom.ker_coe_equiv equiv.symm.to_ring_equiv
+theorem iff_quotient_mv_polynomial' : «expr ↔ »(finite_presentation R A, «expr∃ , »((ι : Type u_2)
+  (_ : fintype ι)
+  (f : «expr →ₐ[ ] »(mv_polynomial ι R, R, A)), «expr ∧ »(surjective f, f.to_ring_hom.ker.fg))) :=
+begin
+  split,
+  { rintro ["⟨", ident n, ",", ident f, ",", ident hfs, ",", ident hfk, "⟩"],
+    set [] [ident ulift_var] [] [":="] [expr mv_polynomial.rename_equiv R equiv.ulift] [],
+    refine [expr ⟨ulift (fin n), infer_instance, f.comp ulift_var.to_alg_hom, hfs.comp ulift_var.surjective, submodule.fg_ker_ring_hom_comp _ _ _ hfk ulift_var.surjective⟩],
+    convert [] [expr submodule.fg_bot] [],
+    exact [expr ring_hom.ker_coe_equiv ulift_var.to_ring_equiv] },
+  { rintro ["⟨", ident ι, ",", ident hfintype, ",", ident f, ",", ident hf, "⟩"],
+    haveI [] [":", expr fintype ι] [":=", expr hfintype],
+    obtain ["⟨", ident equiv, "⟩", ":=", expr @fintype.trunc_equiv_fin ι (classical.dec_eq ι) _],
+    replace [ident equiv] [] [":=", expr mv_polynomial.rename_equiv R equiv],
+    refine [expr ⟨fintype.card ι, f.comp equiv.symm, hf.1.comp (alg_equiv.symm equiv).surjective, submodule.fg_ker_ring_hom_comp _ f _ hf.2 equiv.symm.surjective⟩],
+    convert [] [expr submodule.fg_bot] [],
+    exact [expr ring_hom.ker_coe_equiv equiv.symm.to_ring_equiv] }
+end
 
 /-- If `A` is a finitely presented `R`-algebra, then `mv_polynomial (fin n) A` is finitely presented
 as `R`-algebra. -/
@@ -373,7 +378,7 @@ theorem mv_polynomial_of_finite_presentation (hfp : finite_presentation R A) (ι
     rw [iff_quotient_mv_polynomial'] at hfp⊢
     classical 
     obtain ⟨ι', _, f, hf_surj, hf_ker⟩ := hfp 
-    resetI 
+    skip 
     let g := (MvPolynomial.mapAlgHom f).comp (MvPolynomial.sumAlgEquiv R ι ι').toAlgHom 
     refine'
       ⟨Sum ι ι',
@@ -406,10 +411,10 @@ namespace RingHom
 
 variable{A B C : Type _}[CommRingₓ A][CommRingₓ B][CommRingₓ C]
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A ring morphism `A →+* B` is `finite` if `B` is finitely generated as `A`-module. -/
-def finite (f : A →+* B) : Prop :=
-  by 
-    letI this : Algebra A B := f.to_algebra <;> exact Module.Finite A B
+def finite (f : «expr →+* »(A, B)) : exprProp() :=
+by letI [] [":", expr algebra A B] [":=", expr f.to_algebra]; exact [expr module.finite A B]
 
 /-- A ring morphism `A →+* B` is of `finite_type` if `B` is finitely generated as `A`-algebra. -/
 def finite_type (f : A →+* B) : Prop :=
@@ -429,10 +434,12 @@ theorem id : finite (RingHom.id A) :=
 
 variable{A}
 
-theorem of_surjective (f : A →+* B) (hf : surjective f) : f.finite :=
-  by 
-    letI this := f.to_algebra 
-    exact Module.Finite.of_surjective (Algebra.ofId A B).toLinearMap hf
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_surjective (f : «expr →+* »(A, B)) (hf : surjective f) : f.finite :=
+begin
+  letI [] [] [":=", expr f.to_algebra],
+  exact [expr module.finite.of_surjective (algebra.of_id A B).to_linear_map hf]
+end
 
 theorem comp {g : B →+* C} {f : A →+* B} (hg : g.finite) (hf : f.finite) : (g.comp f).Finite :=
   @Module.Finite.trans A B C _ _ f.to_algebra _ (g.comp f).toAlgebra g.to_algebra
@@ -446,14 +453,16 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.finite) (hf : f.finite) : (
 theorem finite_type {f : A →+* B} (hf : f.finite) : finite_type f :=
   @Module.Finite.finite_type _ _ _ _ f.to_algebra hf
 
-theorem of_comp_finite {f : A →+* B} {g : B →+* C} (h : (g.comp f).Finite) : g.finite :=
-  by 
-    letI this := f.to_algebra 
-    letI this := g.to_algebra 
-    letI this := (g.comp f).toAlgebra 
-    letI this : IsScalarTower A B C := RestrictScalars.is_scalar_tower A B C 
-    letI this : Module.Finite A C := h 
-    exact Module.Finite.of_restrict_scalars_finite A B C
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_comp_finite {f : «expr →+* »(A, B)} {g : «expr →+* »(B, C)} (h : (g.comp f).finite) : g.finite :=
+begin
+  letI [] [] [":=", expr f.to_algebra],
+  letI [] [] [":=", expr g.to_algebra],
+  letI [] [] [":=", expr (g.comp f).to_algebra],
+  letI [] [":", expr is_scalar_tower A B C] [":=", expr restrict_scalars.is_scalar_tower A B C],
+  letI [] [":", expr module.finite A C] [":=", expr h],
+  exact [expr module.finite.of_restrict_scalars_finite A B C]
+end
 
 end Finite
 
@@ -487,14 +496,19 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.finite_type) (hf : f.finite
 theorem of_finite_presentation {f : A →+* B} (hf : f.finite_presentation) : f.finite_type :=
   @Algebra.FiniteType.of_finite_presentation A B _ _ f.to_algebra hf
 
-theorem of_comp_finite_type {f : A →+* B} {g : B →+* C} (h : (g.comp f).FiniteType) : g.finite_type :=
-  by 
-    letI this := f.to_algebra 
-    letI this := g.to_algebra 
-    letI this := (g.comp f).toAlgebra 
-    letI this : IsScalarTower A B C := RestrictScalars.is_scalar_tower A B C 
-    letI this : Algebra.FiniteType A C := h 
-    exact Algebra.FiniteType.of_restrict_scalars_finite_type A B C
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem of_comp_finite_type
+{f : «expr →+* »(A, B)}
+{g : «expr →+* »(B, C)}
+(h : (g.comp f).finite_type) : g.finite_type :=
+begin
+  letI [] [] [":=", expr f.to_algebra],
+  letI [] [] [":=", expr g.to_algebra],
+  letI [] [] [":=", expr (g.comp f).to_algebra],
+  letI [] [":", expr is_scalar_tower A B C] [":=", expr restrict_scalars.is_scalar_tower A B C],
+  letI [] [":", expr algebra.finite_type A C] [":=", expr h],
+  exact [expr algebra.finite_type.of_restrict_scalars_finite_type A B C]
+end
 
 end FiniteType
 
@@ -657,19 +671,22 @@ theorem mem_adjoin_support (f : AddMonoidAlgebra R M) : f ∈ adjoin R (of' R M 
     rw [Submodule.span_le]
     exact subset_adjoin
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a set `S` generates, as algebra, `add_monoid_algebra R M`, then the set of supports of
 elements of `S` generates `add_monoid_algebra R M`. -/
-theorem support_gen_of_gen {S : Set (AddMonoidAlgebra R M)} (hS : Algebra.adjoin R S = ⊤) :
-  Algebra.adjoin R (⋃(f : _)(_ : f ∈ S), of' R M '' (f.support : Set M)) = ⊤ :=
-  by 
-    refine' le_antisymmₓ le_top _ 
-    rw [←hS, adjoin_le_iff]
-    intro f hf 
-    have hincl : of' R M '' f.support ⊆ ⋃(g : AddMonoidAlgebra R M)(H : g ∈ S), of' R M '' g.support
-    ·
-      intro s hs 
-      exact Set.mem_bUnion_iff.2 ⟨f, ⟨hf, hs⟩⟩
-    exact adjoin_mono hincl (mem_adjoin_support f)
+theorem support_gen_of_gen
+{S : set (add_monoid_algebra R M)}
+(hS : «expr = »(algebra.adjoin R S, «expr⊤»())) : «expr = »(algebra.adjoin R «expr⋃ , »((f «expr ∈ » S), «expr '' »(of' R M, (f.support : set M))), «expr⊤»()) :=
+begin
+  refine [expr le_antisymm le_top _],
+  rw ["[", "<-", expr hS, ",", expr adjoin_le_iff, "]"] [],
+  intros [ident f, ident hf],
+  have [ident hincl] [":", expr «expr ⊆ »(«expr '' »(of' R M, f.support), «expr⋃ , »((g : add_monoid_algebra R M)
+     (H : «expr ∈ »(g, S)), «expr '' »(of' R M, g.support)))] [],
+  { intros [ident s, ident hs],
+    exact [expr set.mem_bUnion_iff.2 ⟨f, ⟨hf, hs⟩⟩] },
+  exact [expr adjoin_mono hincl (mem_adjoin_support f)]
+end
 
 /-- If a set `S` generates, as algebra, `add_monoid_algebra R M`, then the image of the union of
 the supports of elements of `S` generates `add_monoid_algebra R M`. -/
@@ -689,20 +706,21 @@ section Ringₓ
 
 variable[CommRingₓ R][AddCommMonoidₓ M]
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `add_monoid_algebra R M` is of finite type, there there is a `G : finset M` such that its
 image generates, as algera, `add_monoid_algebra R M`. -/
-theorem exists_finset_adjoin_eq_top [h : finite_type R (AddMonoidAlgebra R M)] :
-  ∃ G : Finset M, Algebra.adjoin R (of' R M '' G) = ⊤ :=
-  by 
-    unfreezingI 
-      obtain ⟨S, hS⟩ := h 
-    letI this : DecidableEq M := Classical.decEq M 
-    use Finset.bUnion S fun f => f.support 
-    have  : (Finset.bUnion S fun f => f.support : Set M) = ⋃(f : _)(_ : f ∈ S), (f.support : Set M)
-    ·
-      simp only [Finset.set_bUnion_coe, Finset.coe_bUnion]
-    rw [this]
-    exact support_gen_of_gen' hS
+theorem exists_finset_adjoin_eq_top
+[h : finite_type R (add_monoid_algebra R M)] : «expr∃ , »((G : finset M), «expr = »(algebra.adjoin R «expr '' »(of' R M, G), «expr⊤»())) :=
+begin
+  unfreezingI { obtain ["⟨", ident S, ",", ident hS, "⟩", ":=", expr h] },
+  letI [] [":", expr decidable_eq M] [":=", expr classical.dec_eq M],
+  use [expr finset.bUnion S (λ f, f.support)],
+  have [] [":", expr «expr = »((finset.bUnion S (λ
+     f, f.support) : set M), «expr⋃ , »((f «expr ∈ » S), (f.support : set M)))] [],
+  { simp [] [] ["only"] ["[", expr finset.set_bUnion_coe, ",", expr finset.coe_bUnion, "]"] [] [] },
+  rw ["[", expr this, "]"] [],
+  exact [expr support_gen_of_gen' hS]
+end
 
 /-- The image of an element `m : M` in `add_monoid_algebra R M` belongs the submodule generated by
 `S : set M` if and only if `m ∈ S`. -/
@@ -734,32 +752,27 @@ end Span
 
 variable[AddCommMonoidₓ M]
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a set `S` generates an additive monoid `M`, then the image of `M` generates, as algebra,
 `add_monoid_algebra R M`. -/
-theorem mv_polynomial_aeval_of_surjective_of_closure [CommSemiringₓ R] {S : Set M} (hS : closure S = ⊤) :
-  Function.Surjective
-    (MvPolynomial.aeval fun s : S => of' R M («expr↑ » s) : MvPolynomial S R → AddMonoidAlgebra R M) :=
-  by 
-    refine' fun f => induction_on f (fun m => _) _ _
-    ·
-      have  : m ∈ closure S := hS.symm ▸ mem_top _ 
-      refine' closure_induction this (fun m hm => _) _ _
-      ·
-        exact ⟨MvPolynomial.x ⟨m, hm⟩, MvPolynomial.aeval_X _ _⟩
-      ·
-        exact ⟨1, AlgHom.map_one _⟩
-      ·
-        rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
-        exact
-          ⟨P₁*P₂,
-            by 
-              rw [AlgHom.map_mul, hP₁, hP₂, of_apply, of_apply, of_apply, single_mul_single, one_mulₓ] <;> rfl⟩
-    ·
-      rintro f g ⟨P, rfl⟩ ⟨Q, rfl⟩
-      exact ⟨P+Q, AlgHom.map_add _ _ _⟩
-    ·
-      rintro r f ⟨P, rfl⟩
-      exact ⟨r • P, AlgHom.map_smul _ _ _⟩
+theorem mv_polynomial_aeval_of_surjective_of_closure
+[comm_semiring R]
+{S : set M}
+(hS : «expr = »(closure S, «expr⊤»())) : function.surjective (mv_polynomial.aeval (λ
+ s : S, of' R M «expr↑ »(s)) : mv_polynomial S R → add_monoid_algebra R M) :=
+begin
+  refine [expr λ f, induction_on f (λ m, _) _ _],
+  { have [] [":", expr «expr ∈ »(m, closure S)] [":=", expr «expr ▸ »(hS.symm, mem_top _)],
+    refine [expr closure_induction this (λ m hm, _) _ _],
+    { exact [expr ⟨mv_polynomial.X ⟨m, hm⟩, mv_polynomial.aeval_X _ _⟩] },
+    { exact [expr ⟨1, alg_hom.map_one _⟩] },
+    { rintro [ident m₁, ident m₂, "⟨", ident P₁, ",", ident hP₁, "⟩", "⟨", ident P₂, ",", ident hP₂, "⟩"],
+      exact [expr ⟨«expr * »(P₁, P₂), by rw ["[", expr alg_hom.map_mul, ",", expr hP₁, ",", expr hP₂, ",", expr of_apply, ",", expr of_apply, ",", expr of_apply, ",", expr single_mul_single, ",", expr one_mul, "]"] []; refl⟩] } },
+  { rintro [ident f, ident g, "⟨", ident P, ",", ident rfl, "⟩", "⟨", ident Q, ",", ident rfl, "⟩"],
+    exact [expr ⟨«expr + »(P, Q), alg_hom.map_add _ _ _⟩] },
+  { rintro [ident r, ident f, "⟨", ident P, ",", ident rfl, "⟩"],
+    exact [expr ⟨«expr • »(r, P), alg_hom.map_smul _ _ _⟩] }
+end
 
 variable(R M)
 
@@ -775,18 +788,21 @@ instance finite_type_of_fg [CommRingₓ R] [h : AddMonoidₓ.Fg M] : finite_type
 
 variable{R M}
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An additive monoid `M` is finitely generated if and only if `add_monoid_algebra R M` is of
 finite type. -/
-theorem finite_type_iff_fg [CommRingₓ R] [Nontrivial R] : finite_type R (AddMonoidAlgebra R M) ↔ AddMonoidₓ.Fg M :=
-  by 
-    refine' ⟨fun h => _, fun h => @AddMonoidAlgebra.finite_type_of_fg _ _ _ _ h⟩
-    obtain ⟨S, hS⟩ := @exists_finset_adjoin_eq_top R M _ _ h 
-    refine' AddMonoidₓ.fg_def.2 ⟨S, (eq_top_iff' _).2 fun m => _⟩
-    have hm : of' R M m ∈ (adjoin R (of' R M '' «expr↑ » S)).toSubmodule
-    ·
-      simp only [hS, top_to_submodule, Submodule.mem_top]
-    rw [adjoin_eq_span] at hm 
-    exact mem_closure_of_mem_span_closure hm
+theorem finite_type_iff_fg
+[comm_ring R]
+[nontrivial R] : «expr ↔ »(finite_type R (add_monoid_algebra R M), add_monoid.fg M) :=
+begin
+  refine [expr ⟨λ h, _, λ h, @add_monoid_algebra.finite_type_of_fg _ _ _ _ h⟩],
+  obtain ["⟨", ident S, ",", ident hS, "⟩", ":=", expr @exists_finset_adjoin_eq_top R M _ _ h],
+  refine [expr add_monoid.fg_def.2 ⟨S, (eq_top_iff' _).2 (λ m, _)⟩],
+  have [ident hm] [":", expr «expr ∈ »(of' R M m, (adjoin R «expr '' »(of' R M, «expr↑ »(S))).to_submodule)] [],
+  { simp [] [] ["only"] ["[", expr hS, ",", expr top_to_submodule, ",", expr submodule.mem_top, "]"] [] [] },
+  rw ["[", expr adjoin_eq_span, "]"] ["at", ident hm],
+  exact [expr mem_closure_of_mem_span_closure hm]
+end
 
 /-- If `add_monoid_algebra R M` is of finite type then `M` is finitely generated. -/
 theorem fg_of_finite_type [CommRingₓ R] [Nontrivial R] [h : finite_type R (AddMonoidAlgebra R M)] : AddMonoidₓ.Fg M :=
@@ -820,19 +836,22 @@ theorem mem_adjoint_support (f : MonoidAlgebra R M) : f ∈ adjoin R (of R M '' 
     rw [Submodule.span_le]
     exact subset_adjoin
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a set `S` generates, as algebra, `monoid_algebra R M`, then the set of supports of elements
 of `S` generates `monoid_algebra R M`. -/
-theorem support_gen_of_gen {S : Set (MonoidAlgebra R M)} (hS : Algebra.adjoin R S = ⊤) :
-  Algebra.adjoin R (⋃(f : _)(_ : f ∈ S), of R M '' (f.support : Set M)) = ⊤ :=
-  by 
-    refine' le_antisymmₓ le_top _ 
-    rw [←hS, adjoin_le_iff]
-    intro f hf 
-    have hincl : of R M '' f.support ⊆ ⋃(g : MonoidAlgebra R M)(H : g ∈ S), of R M '' g.support
-    ·
-      intro s hs 
-      exact Set.mem_bUnion_iff.2 ⟨f, ⟨hf, hs⟩⟩
-    exact adjoin_mono hincl (mem_adjoint_support f)
+theorem support_gen_of_gen
+{S : set (monoid_algebra R M)}
+(hS : «expr = »(algebra.adjoin R S, «expr⊤»())) : «expr = »(algebra.adjoin R «expr⋃ , »((f «expr ∈ » S), «expr '' »(of R M, (f.support : set M))), «expr⊤»()) :=
+begin
+  refine [expr le_antisymm le_top _],
+  rw ["[", "<-", expr hS, ",", expr adjoin_le_iff, "]"] [],
+  intros [ident f, ident hf],
+  have [ident hincl] [":", expr «expr ⊆ »(«expr '' »(of R M, f.support), «expr⋃ , »((g : monoid_algebra R M)
+     (H : «expr ∈ »(g, S)), «expr '' »(of R M, g.support)))] [],
+  { intros [ident s, ident hs],
+    exact [expr set.mem_bUnion_iff.2 ⟨f, ⟨hf, hs⟩⟩] },
+  exact [expr adjoin_mono hincl (mem_adjoint_support f)]
+end
 
 /-- If a set `S` generates, as algebra, `monoid_algebra R M`, then the image of the union of the
 supports of elements of `S` generates `monoid_algebra R M`. -/
@@ -852,20 +871,21 @@ section Ringₓ
 
 variable[CommRingₓ R][CommMonoidₓ M]
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `monoid_algebra R M` is of finite type, there there is a `G : finset M` such that its image
 generates, as algera, `monoid_algebra R M`. -/
-theorem exists_finset_adjoin_eq_top [h : finite_type R (MonoidAlgebra R M)] :
-  ∃ G : Finset M, Algebra.adjoin R (of R M '' G) = ⊤ :=
-  by 
-    unfreezingI 
-      obtain ⟨S, hS⟩ := h 
-    letI this : DecidableEq M := Classical.decEq M 
-    use Finset.bUnion S fun f => f.support 
-    have  : (Finset.bUnion S fun f => f.support : Set M) = ⋃(f : _)(_ : f ∈ S), (f.support : Set M)
-    ·
-      simp only [Finset.set_bUnion_coe, Finset.coe_bUnion]
-    rw [this]
-    exact support_gen_of_gen' hS
+theorem exists_finset_adjoin_eq_top
+[h : finite_type R (monoid_algebra R M)] : «expr∃ , »((G : finset M), «expr = »(algebra.adjoin R «expr '' »(of R M, G), «expr⊤»())) :=
+begin
+  unfreezingI { obtain ["⟨", ident S, ",", ident hS, "⟩", ":=", expr h] },
+  letI [] [":", expr decidable_eq M] [":=", expr classical.dec_eq M],
+  use [expr finset.bUnion S (λ f, f.support)],
+  have [] [":", expr «expr = »((finset.bUnion S (λ
+     f, f.support) : set M), «expr⋃ , »((f «expr ∈ » S), (f.support : set M)))] [],
+  { simp [] [] ["only"] ["[", expr finset.set_bUnion_coe, ",", expr finset.coe_bUnion, "]"] [] [] },
+  rw ["[", expr this, "]"] [],
+  exact [expr support_gen_of_gen' hS]
+end
 
 /-- The image of an element `m : M` in `monoid_algebra R M` belongs the submodule generated by
 `S : set M` if and only if `m ∈ S`. -/
@@ -894,31 +914,27 @@ end Span
 
 variable[CommMonoidₓ M]
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a set `S` generates a monoid `M`, then the image of `M` generates, as algebra,
 `monoid_algebra R M`. -/
-theorem mv_polynomial_aeval_of_surjective_of_closure [CommSemiringₓ R] {S : Set M} (hS : closure S = ⊤) :
-  Function.Surjective (MvPolynomial.aeval fun s : S => of R M («expr↑ » s) : MvPolynomial S R → MonoidAlgebra R M) :=
-  by 
-    refine' fun f => induction_on f (fun m => _) _ _
-    ·
-      have  : m ∈ closure S := hS.symm ▸ mem_top _ 
-      refine' closure_induction this (fun m hm => _) _ _
-      ·
-        exact ⟨MvPolynomial.x ⟨m, hm⟩, MvPolynomial.aeval_X _ _⟩
-      ·
-        exact ⟨1, AlgHom.map_one _⟩
-      ·
-        rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
-        exact
-          ⟨P₁*P₂,
-            by 
-              rw [AlgHom.map_mul, hP₁, hP₂, of_apply, of_apply, of_apply, single_mul_single, one_mulₓ]⟩
-    ·
-      rintro f g ⟨P, rfl⟩ ⟨Q, rfl⟩
-      exact ⟨P+Q, AlgHom.map_add _ _ _⟩
-    ·
-      rintro r f ⟨P, rfl⟩
-      exact ⟨r • P, AlgHom.map_smul _ _ _⟩
+theorem mv_polynomial_aeval_of_surjective_of_closure
+[comm_semiring R]
+{S : set M}
+(hS : «expr = »(closure S, «expr⊤»())) : function.surjective (mv_polynomial.aeval (λ
+ s : S, of R M «expr↑ »(s)) : mv_polynomial S R → monoid_algebra R M) :=
+begin
+  refine [expr λ f, induction_on f (λ m, _) _ _],
+  { have [] [":", expr «expr ∈ »(m, closure S)] [":=", expr «expr ▸ »(hS.symm, mem_top _)],
+    refine [expr closure_induction this (λ m hm, _) _ _],
+    { exact [expr ⟨mv_polynomial.X ⟨m, hm⟩, mv_polynomial.aeval_X _ _⟩] },
+    { exact [expr ⟨1, alg_hom.map_one _⟩] },
+    { rintro [ident m₁, ident m₂, "⟨", ident P₁, ",", ident hP₁, "⟩", "⟨", ident P₂, ",", ident hP₂, "⟩"],
+      exact [expr ⟨«expr * »(P₁, P₂), by rw ["[", expr alg_hom.map_mul, ",", expr hP₁, ",", expr hP₂, ",", expr of_apply, ",", expr of_apply, ",", expr of_apply, ",", expr single_mul_single, ",", expr one_mul, "]"] []⟩] } },
+  { rintro [ident f, ident g, "⟨", ident P, ",", ident rfl, "⟩", "⟨", ident Q, ",", ident rfl, "⟩"],
+    exact [expr ⟨«expr + »(P, Q), alg_hom.map_add _ _ _⟩] },
+  { rintro [ident r, ident f, "⟨", ident P, ",", ident rfl, "⟩"],
+    exact [expr ⟨«expr • »(r, P), alg_hom.map_smul _ _ _⟩] }
+end
 
 /-- If a monoid `M` is finitely generated then `monoid_algebra R M` is of finite type. -/
 instance finite_type_of_fg [CommRingₓ R] [Monoidₓ.Fg M] : finite_type R (MonoidAlgebra R M) :=

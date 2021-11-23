@@ -1,6 +1,4 @@
-import Mathbin.GroupTheory.GroupAction.Default 
-import Mathbin.GroupTheory.OrderOfElement 
-import Mathbin.GroupTheory.QuotientGroup
+import Mathbin.GroupTheory.OrderOfElement
 
 /-!
 # Complements
@@ -42,12 +40,12 @@ abbrev is_complement' :=
 /-- The set of left-complements of `T : set G` -/
 @[toAdditive "The set of left-complements of `T : set G`"]
 def left_transversals : Set (Set G) :=
-  { S : Set G | is_complement S T }
+  { S:Set G | is_complement S T }
 
 /-- The set of right-complements of `S : set G` -/
 @[toAdditive "The set of right-complements of `S : set G`"]
 def right_transversals : Set (Set G) :=
-  { T : Set G | is_complement S T }
+  { T:Set G | is_complement S T }
 
 variable{H K S T}
 
@@ -105,35 +103,31 @@ theorem is_complement_singleton_right {g : G} : is_complement S {g} ↔ S = ⊤ 
     rw [←mul_right_cancelₓ hy]
     exact y.1.2
 
-@[toAdditive]
-theorem is_complement_top_left : is_complement ⊤ S ↔ ∃ g : G, S = {g} :=
-  by 
-    refine' ⟨fun h => set.exists_eq_singleton_iff_nonempty_unique_mem.mpr ⟨_, fun a b ha hb => _⟩, _⟩
-    ·
-      obtain ⟨a, ha⟩ := h.2 1 
-      exact ⟨a.2.1, a.2.2⟩
-    ·
-      have  : (⟨⟨_, mem_top (a⁻¹)⟩, ⟨a, ha⟩⟩ : (⊤ : Set G) × S) = ⟨⟨_, mem_top (b⁻¹)⟩, ⟨b, hb⟩⟩ :=
-        h.1 ((inv_mul_selfₓ a).trans (inv_mul_selfₓ b).symm)
-      exact subtype.ext_iff.mp (prod.ext_iff.mp this).2
-    ·
-      rintro ⟨g, rfl⟩
-      exact is_complement_top_singleton
+-- error in GroupTheory.Complement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem is_complement_top_left : «expr ↔ »(is_complement «expr⊤»() S, «expr∃ , »((g : G), «expr = »(S, {g}))) :=
+begin
+  refine [expr ⟨λ h, set.exists_eq_singleton_iff_nonempty_unique_mem.mpr ⟨_, λ a b ha hb, _⟩, _⟩],
+  { obtain ["⟨", ident a, ",", ident ha, "⟩", ":=", expr h.2 1],
+    exact [expr ⟨a.2.1, a.2.2⟩] },
+  { have [] [":", expr «expr = »((⟨⟨_, mem_top «expr ⁻¹»(a)⟩, ⟨a, ha⟩⟩ : «expr × »((«expr⊤»() : set G), S)), ⟨⟨_, mem_top «expr ⁻¹»(b)⟩, ⟨b, hb⟩⟩)] [":=", expr h.1 ((inv_mul_self a).trans (inv_mul_self b).symm)],
+    exact [expr subtype.ext_iff.mp (prod.ext_iff.mp this).2] },
+  { rintro ["⟨", ident g, ",", ident rfl, "⟩"],
+    exact [expr is_complement_top_singleton] }
+end
 
-@[toAdditive]
-theorem is_complement_top_right : is_complement S ⊤ ↔ ∃ g : G, S = {g} :=
-  by 
-    refine' ⟨fun h => set.exists_eq_singleton_iff_nonempty_unique_mem.mpr ⟨_, fun a b ha hb => _⟩, _⟩
-    ·
-      obtain ⟨a, ha⟩ := h.2 1 
-      exact ⟨a.1.1, a.1.2⟩
-    ·
-      have  : (⟨⟨a, ha⟩, ⟨_, mem_top (a⁻¹)⟩⟩ : S × (⊤ : Set G)) = ⟨⟨b, hb⟩, ⟨_, mem_top (b⁻¹)⟩⟩ :=
-        h.1 ((mul_inv_selfₓ a).trans (mul_inv_selfₓ b).symm)
-      exact subtype.ext_iff.mp (prod.ext_iff.mp this).1
-    ·
-      rintro ⟨g, rfl⟩
-      exact is_complement_singleton_top
+-- error in GroupTheory.Complement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem is_complement_top_right : «expr ↔ »(is_complement S «expr⊤»(), «expr∃ , »((g : G), «expr = »(S, {g}))) :=
+begin
+  refine [expr ⟨λ h, set.exists_eq_singleton_iff_nonempty_unique_mem.mpr ⟨_, λ a b ha hb, _⟩, _⟩],
+  { obtain ["⟨", ident a, ",", ident ha, "⟩", ":=", expr h.2 1],
+    exact [expr ⟨a.1.1, a.1.2⟩] },
+  { have [] [":", expr «expr = »((⟨⟨a, ha⟩, ⟨_, mem_top «expr ⁻¹»(a)⟩⟩ : «expr × »(S, («expr⊤»() : set G))), ⟨⟨b, hb⟩, ⟨_, mem_top «expr ⁻¹»(b)⟩⟩)] [":=", expr h.1 ((mul_inv_self a).trans (mul_inv_self b).symm)],
+    exact [expr subtype.ext_iff.mp (prod.ext_iff.mp this).1] },
+  { rintro ["⟨", ident g, ",", ident rfl, "⟩"],
+    exact [expr is_complement_singleton_top] }
+end
 
 @[toAdditive]
 theorem is_complement'_top_bot : is_complement' (⊤ : Subgroup G) ⊥ :=
@@ -159,55 +153,61 @@ theorem is_complement'_top_left : is_complement' ⊤ H ↔ H = ⊥ :=
 theorem is_complement'_top_right : is_complement' H ⊤ ↔ H = ⊥ :=
   is_complement_top_right.trans coe_eq_singleton
 
-@[toAdditive]
-theorem mem_left_transversals_iff_exists_unique_inv_mul_mem :
-  S ∈ left_transversals T ↔ ∀ g : G, ∃!s : S, ((s : G)⁻¹*g) ∈ T :=
-  by 
-    rw [left_transversals, Set.mem_set_of_eq, is_complement_iff_exists_unique]
-    refine' ⟨fun h g => _, fun h g => _⟩
-    ·
-      obtain ⟨x, h1, h2⟩ := h g 
-      exact
-        ⟨x.1, (congr_argₓ (· ∈ T) (eq_inv_mul_of_mul_eq h1)).mp x.2.2,
-          fun y hy => (prod.ext_iff.mp (h2 ⟨y, y⁻¹*g, hy⟩ (mul_inv_cancel_left y g))).1⟩
-    ·
-      obtain ⟨x, h1, h2⟩ := h g 
-      refine' ⟨⟨x, x⁻¹*g, h1⟩, mul_inv_cancel_left x g, fun y hy => _⟩
-      have  := h2 y.1 ((congr_argₓ (· ∈ T) (eq_inv_mul_of_mul_eq hy)).mp y.2.2)
-      exact Prod.extₓ this (Subtype.ext (eq_inv_mul_of_mul_eq ((congr_argₓ _ this).mp hy)))
+-- error in GroupTheory.Complement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem mem_left_transversals_iff_exists_unique_inv_mul_mem : «expr ↔ »(«expr ∈ »(S, left_transversals T), ∀
+ g : G, «expr∃! , »((s : S), «expr ∈ »(«expr * »(«expr ⁻¹»((s : G)), g), T))) :=
+begin
+  rw ["[", expr left_transversals, ",", expr set.mem_set_of_eq, ",", expr is_complement_iff_exists_unique, "]"] [],
+  refine [expr ⟨λ h g, _, λ h g, _⟩],
+  { obtain ["⟨", ident x, ",", ident h1, ",", ident h2, "⟩", ":=", expr h g],
+    exact [expr ⟨x.1, (congr_arg ((«expr ∈ » T)) (eq_inv_mul_of_mul_eq h1)).mp x.2.2, λ
+      y hy, (prod.ext_iff.mp (h2 ⟨y, «expr * »(«expr ⁻¹»(y), g), hy⟩ (mul_inv_cancel_left y g))).1⟩] },
+  { obtain ["⟨", ident x, ",", ident h1, ",", ident h2, "⟩", ":=", expr h g],
+    refine [expr ⟨⟨x, «expr * »(«expr ⁻¹»(x), g), h1⟩, mul_inv_cancel_left x g, λ y hy, _⟩],
+    have [] [] [":=", expr h2 y.1 ((congr_arg ((«expr ∈ » T)) (eq_inv_mul_of_mul_eq hy)).mp y.2.2)],
+    exact [expr prod.ext this (subtype.ext (eq_inv_mul_of_mul_eq ((congr_arg _ this).mp hy)))] }
+end
 
-@[toAdditive]
-theorem mem_right_transversals_iff_exists_unique_mul_inv_mem :
-  S ∈ right_transversals T ↔ ∀ g : G, ∃!s : S, (g*(s : G)⁻¹) ∈ T :=
-  by 
-    rw [right_transversals, Set.mem_set_of_eq, is_complement_iff_exists_unique]
-    refine' ⟨fun h g => _, fun h g => _⟩
-    ·
-      obtain ⟨x, h1, h2⟩ := h g 
-      exact
-        ⟨x.2, (congr_argₓ (· ∈ T) (eq_mul_inv_of_mul_eq h1)).mp x.1.2,
-          fun y hy => (prod.ext_iff.mp (h2 ⟨⟨g*y⁻¹, hy⟩, y⟩ (inv_mul_cancel_right g y))).2⟩
-    ·
-      obtain ⟨x, h1, h2⟩ := h g 
-      refine' ⟨⟨⟨g*x⁻¹, h1⟩, x⟩, inv_mul_cancel_right g x, fun y hy => _⟩
-      have  := h2 y.2 ((congr_argₓ (· ∈ T) (eq_mul_inv_of_mul_eq hy)).mp y.1.2)
-      exact Prod.extₓ (Subtype.ext (eq_mul_inv_of_mul_eq ((congr_argₓ _ this).mp hy))) this
+-- error in GroupTheory.Complement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem mem_right_transversals_iff_exists_unique_mul_inv_mem : «expr ↔ »(«expr ∈ »(S, right_transversals T), ∀
+ g : G, «expr∃! , »((s : S), «expr ∈ »(«expr * »(g, «expr ⁻¹»((s : G))), T))) :=
+begin
+  rw ["[", expr right_transversals, ",", expr set.mem_set_of_eq, ",", expr is_complement_iff_exists_unique, "]"] [],
+  refine [expr ⟨λ h g, _, λ h g, _⟩],
+  { obtain ["⟨", ident x, ",", ident h1, ",", ident h2, "⟩", ":=", expr h g],
+    exact [expr ⟨x.2, (congr_arg ((«expr ∈ » T)) (eq_mul_inv_of_mul_eq h1)).mp x.1.2, λ
+      y hy, (prod.ext_iff.mp (h2 ⟨⟨«expr * »(g, «expr ⁻¹»(y)), hy⟩, y⟩ (inv_mul_cancel_right g y))).2⟩] },
+  { obtain ["⟨", ident x, ",", ident h1, ",", ident h2, "⟩", ":=", expr h g],
+    refine [expr ⟨⟨⟨«expr * »(g, «expr ⁻¹»(x)), h1⟩, x⟩, inv_mul_cancel_right g x, λ y hy, _⟩],
+    have [] [] [":=", expr h2 y.2 ((congr_arg ((«expr ∈ » T)) (eq_mul_inv_of_mul_eq hy)).mp y.1.2)],
+    exact [expr prod.ext (subtype.ext (eq_mul_inv_of_mul_eq ((congr_arg _ this).mp hy))) this] }
+end
 
-@[toAdditive]
-theorem mem_left_transversals_iff_exists_unique_quotient_mk'_eq :
-  S ∈ left_transversals (H : Set G) ↔ ∀ q : Quotientₓ (QuotientGroup.leftRel H), ∃!s : S, Quotientₓ.mk' s.1 = q :=
-  by 
-    have key : ∀ g h, Quotientₓ.mk' g = Quotientₓ.mk' h ↔ (g⁻¹*h) ∈ H := @Quotientₓ.eq' G (QuotientGroup.leftRel H)
-    simpRw [mem_left_transversals_iff_exists_unique_inv_mul_mem, SetLike.mem_coe, ←key]
-    exact ⟨fun h q => Quotientₓ.induction_on' q h, fun h g => h (Quotientₓ.mk' g)⟩
+-- error in GroupTheory.Complement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem mem_left_transversals_iff_exists_unique_quotient_mk'_eq : «expr ↔ »(«expr ∈ »(S, left_transversals (H : set G)), ∀
+ q : quotient (quotient_group.left_rel H), «expr∃! , »((s : S), «expr = »(quotient.mk' s.1, q))) :=
+begin
+  have [ident key] [":", expr ∀
+   g
+   h, «expr ↔ »(«expr = »(quotient.mk' g, quotient.mk' h), «expr ∈ »(«expr * »(«expr ⁻¹»(g), h), H))] [":=", expr @quotient.eq' G (quotient_group.left_rel H)],
+  simp_rw ["[", expr mem_left_transversals_iff_exists_unique_inv_mul_mem, ",", expr set_like.mem_coe, ",", "<-", expr key, "]"] [],
+  exact [expr ⟨λ h q, quotient.induction_on' q h, λ h g, h (quotient.mk' g)⟩]
+end
 
-@[toAdditive]
-theorem mem_right_transversals_iff_exists_unique_quotient_mk'_eq :
-  S ∈ right_transversals (H : Set G) ↔ ∀ q : Quotientₓ (QuotientGroup.rightRel H), ∃!s : S, Quotientₓ.mk' s.1 = q :=
-  by 
-    have key : ∀ g h, Quotientₓ.mk' g = Quotientₓ.mk' h ↔ (h*g⁻¹) ∈ H := @Quotientₓ.eq' G (QuotientGroup.rightRel H)
-    simpRw [mem_right_transversals_iff_exists_unique_mul_inv_mem, SetLike.mem_coe, ←key]
-    exact ⟨fun h q => Quotientₓ.induction_on' q h, fun h g => h (Quotientₓ.mk' g)⟩
+-- error in GroupTheory.Complement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem mem_right_transversals_iff_exists_unique_quotient_mk'_eq : «expr ↔ »(«expr ∈ »(S, right_transversals (H : set G)), ∀
+ q : quotient (quotient_group.right_rel H), «expr∃! , »((s : S), «expr = »(quotient.mk' s.1, q))) :=
+begin
+  have [ident key] [":", expr ∀
+   g
+   h, «expr ↔ »(«expr = »(quotient.mk' g, quotient.mk' h), «expr ∈ »(«expr * »(h, «expr ⁻¹»(g)), H))] [":=", expr @quotient.eq' G (quotient_group.right_rel H)],
+  simp_rw ["[", expr mem_right_transversals_iff_exists_unique_mul_inv_mem, ",", expr set_like.mem_coe, ",", "<-", expr key, "]"] [],
+  exact [expr ⟨λ h q, quotient.induction_on' q h, λ h g, h (quotient.mk' g)⟩]
+end
 
 @[toAdditive]
 theorem mem_left_transversals_iff_bijective :

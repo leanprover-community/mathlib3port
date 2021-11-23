@@ -49,7 +49,7 @@ namespace Nat
 
 variable(R : Type _)
 
--- error in NumberTheory.ArithmeticFunction: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_zero
+-- error in NumberTheory.ArithmeticFunction: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_zero
 /-- An arithmetic function is a function from `ℕ` that maps 0 to 0. In the literature, they are
   often instead defined as functions from `ℕ+`. Multiplication on `arithmetic_functions` is by
   Dirichlet convolution. -/
@@ -258,27 +258,24 @@ theorem mul_smul' (f g : arithmetic_function R) (h : arithmetic_function M) : (f
           mem_sigma, heq_iff_eq] at H⊢
         rw [H.2.1]
 
-theorem one_smul' (b : arithmetic_function M) : (1 : arithmetic_function R) • b = b :=
-  by 
-    ext 
-    rw [smul_apply]
-    byCases' x0 : x = 0
-    ·
-      simp [x0]
-    have h : {(1, x)} ⊆ divisors_antidiagonal x :=
-      by 
-        simp [x0]
-    rw [←sum_subset h]
-    ·
-      simp 
-    intro y ymem ynmem 
-    have y1ne : y.fst ≠ 1
-    ·
-      intro con 
-      simp only [Con, mem_divisors_antidiagonal, one_mulₓ, Ne.def] at ymem 
-      simp only [mem_singleton, Prod.ext_iff] at ynmem 
-      tauto 
-    simp [y1ne]
+-- error in NumberTheory.ArithmeticFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem one_smul' (b : arithmetic_function M) : «expr = »(«expr • »((1 : arithmetic_function R), b), b) :=
+begin
+  ext [] [] [],
+  rw [expr smul_apply] [],
+  by_cases [expr x0, ":", expr «expr = »(x, 0)],
+  { simp [] [] [] ["[", expr x0, "]"] [] [] },
+  have [ident h] [":", expr «expr ⊆ »({(1, x)}, divisors_antidiagonal x)] [":=", expr by simp [] [] [] ["[", expr x0, "]"] [] []],
+  rw ["<-", expr sum_subset h] [],
+  { simp [] [] [] [] [] [] },
+  intros [ident y, ident ymem, ident ynmem],
+  have [ident y1ne] [":", expr «expr ≠ »(y.fst, 1)] [],
+  { intro [ident con],
+    simp [] [] ["only"] ["[", expr con, ",", expr mem_divisors_antidiagonal, ",", expr one_mul, ",", expr ne.def, "]"] [] ["at", ident ymem],
+    simp [] [] ["only"] ["[", expr mem_singleton, ",", expr prod.ext_iff, "]"] [] ["at", ident ynmem],
+    tauto [] },
+  simp [] [] [] ["[", expr y1ne, "]"] [] []
+end
 
 end Module
 
@@ -286,31 +283,28 @@ section Semiringₓ
 
 variable[Semiringₓ R]
 
-instance  : Monoidₓ (arithmetic_function R) :=
-  { arithmetic_function.has_one, arithmetic_function.has_mul with one_mul := one_smul',
-    mul_one :=
-      fun f =>
-        by 
-          ext 
-          rw [mul_apply]
-          byCases' x0 : x = 0
-          ·
-            simp [x0]
-          have h : {(x, 1)} ⊆ divisors_antidiagonal x :=
-            by 
-              simp [x0]
-          rw [←sum_subset h]
-          ·
-            simp 
-          intro y ymem ynmem 
-          have y2ne : y.snd ≠ 1
-          ·
-            intro con 
-            simp only [Con, mem_divisors_antidiagonal, mul_oneₓ, Ne.def] at ymem 
-            simp only [mem_singleton, Prod.ext_iff] at ynmem 
-            tauto 
-          simp [y2ne],
-    mul_assoc := mul_smul' }
+-- error in NumberTheory.ArithmeticFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance : monoid (arithmetic_function R) :=
+{ one_mul := one_smul',
+  mul_one := λ f, begin
+    ext [] [] [],
+    rw [expr mul_apply] [],
+    by_cases [expr x0, ":", expr «expr = »(x, 0)],
+    { simp [] [] [] ["[", expr x0, "]"] [] [] },
+    have [ident h] [":", expr «expr ⊆ »({(x, 1)}, divisors_antidiagonal x)] [":=", expr by simp [] [] [] ["[", expr x0, "]"] [] []],
+    rw ["<-", expr sum_subset h] [],
+    { simp [] [] [] [] [] [] },
+    intros [ident y, ident ymem, ident ynmem],
+    have [ident y2ne] [":", expr «expr ≠ »(y.snd, 1)] [],
+    { intro [ident con],
+      simp [] [] ["only"] ["[", expr con, ",", expr mem_divisors_antidiagonal, ",", expr mul_one, ",", expr ne.def, "]"] [] ["at", ident ymem],
+      simp [] [] ["only"] ["[", expr mem_singleton, ",", expr prod.ext_iff, "]"] [] ["at", ident ynmem],
+      tauto [] },
+    simp [] [] [] ["[", expr y2ne, "]"] [] []
+  end,
+  mul_assoc := mul_smul',
+  ..arithmetic_function.has_one,
+  ..arithmetic_function.has_mul }
 
 instance  : Semiringₓ (arithmetic_function R) :=
   { arithmetic_function.has_zero R, arithmetic_function.has_mul, arithmetic_function.has_add,
@@ -467,11 +461,11 @@ theorem coe_zeta_smul_apply {M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Mo
 @[simp]
 theorem coe_mul_zeta_apply [Semiringₓ R] {f : arithmetic_function R} {x : ℕ} : (f*ζ) x = ∑i in divisors x, f i :=
   by 
-    apply Opposite.op_injective 
+    apply MulOpposite.op_injective 
     rw [op_sum]
     convert
-      @coe_zeta_mul_apply («expr ᵒᵖ» R) _
-        { toFun := Opposite.op ∘ f,
+      @coe_zeta_mul_apply («expr ᵐᵒᵖ» R) _
+        { toFun := MulOpposite.op ∘ f,
           map_zero' :=
             by 
               simp  }
@@ -881,62 +875,46 @@ theorem moebius_ne_zero_iff_eq_or {n : ℕ} : μ n ≠ 0 ↔ μ n = 1 ∨ μ n =
 
 open UniqueFactorizationMonoid
 
+-- error in NumberTheory.ArithmeticFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem coe_moebius_mul_coe_zeta [CommRingₓ R] : (μ*ζ : arithmetic_function R) = 1 :=
-  by 
-    ext x 
-    cases x
-    ·
-      simp only [divisors_zero, sum_empty, Ne.def, not_false_iff, coe_mul_zeta_apply, zero_ne_one, one_apply_ne]
-    cases x
-    ·
-      simp only [moebius_apply_of_squarefree, card_factors_one, squarefree_one, divisors_one, Int.cast_one,
-        sum_singleton, coe_mul_zeta_apply, one_one, int_coe_apply, pow_zeroₓ]
-    rw [coe_mul_zeta_apply, one_apply_ne (ne_of_gtₓ (succ_lt_succ (Nat.succ_posₓ _)))]
-    simpRw [int_coe_apply]
-    rw [←Int.cast_sum, ←sum_filter_ne_zero]
-    convert Int.cast_zero 
-    simp only [moebius_ne_zero_iff_squarefree]
-    suffices  :
-      (∑y : Finset ℕ in (UniqueFactorizationMonoid.normalizedFactors x.succ.succ).toFinset.Powerset,
-          ite (Squarefree y.val.prod) ((-1 : ℤ)^Ω y.val.prod) 0) =
-        0
-    ·
-      have h : (∑i in _, ite (Squarefree i) ((-1 : ℤ)^Ω i) 0) = _ := sum_divisors_filter_squarefree (Nat.succ_ne_zero _)
-      exact
-        (Eq.trans
-              (by 
-                congr)
-              h).trans
-          this 
-    apply Eq.trans (sum_congr rfl _) (sum_powerset_neg_one_pow_card_of_nonempty _)
-    ·
-      intro y hy 
-      rw [Finset.mem_powerset, ←Finset.val_le_iff, Multiset.to_finset_val] at hy 
-      have h : UniqueFactorizationMonoid.normalizedFactors y.val.prod = y.val
-      ·
-        apply factors_multiset_prod_of_irreducible 
-        intro z hz 
-        apply irreducible_of_normalized_factor _ (Multiset.subset_of_le (le_transₓ hy (Multiset.erase_dup_le _)) hz)
-      rw [if_pos]
-      ·
-        rw [card_factors_apply, ←Multiset.coe_card, ←factors_eq, h, Finset.card]
-      rw [UniqueFactorizationMonoid.squarefree_iff_nodup_normalized_factors, h]
-      ·
-        apply y.nodup 
-      rw [Ne.def, Multiset.prod_eq_zero_iff]
-      intro con 
-      rw [←h] at con 
-      exact not_irreducible_zero (irreducible_of_normalized_factor 0 Con)
-    ·
-      rw [Finset.Nonempty]
-      rcases WfDvdMonoid.exists_irreducible_factor _ (Nat.succ_ne_zero _) with ⟨i, hi⟩
-      ·
-        rcases exists_mem_normalized_factors_of_dvd (Nat.succ_ne_zero _) hi.1 hi.2 with ⟨j, hj, hj2⟩
-        use j 
-        apply Multiset.mem_to_finset.2 hj 
-      rw [Nat.is_unit_iff]
-      normNum
+theorem coe_moebius_mul_coe_zeta [comm_ring R] : «expr = »((«expr * »(exprμ(), exprζ()) : arithmetic_function R), 1) :=
+begin
+  ext [] [ident x] [],
+  cases [expr x] [],
+  { simp [] [] ["only"] ["[", expr divisors_zero, ",", expr sum_empty, ",", expr ne.def, ",", expr not_false_iff, ",", expr coe_mul_zeta_apply, ",", expr zero_ne_one, ",", expr one_apply_ne, "]"] [] [] },
+  cases [expr x] [],
+  { simp [] [] ["only"] ["[", expr moebius_apply_of_squarefree, ",", expr card_factors_one, ",", expr squarefree_one, ",", expr divisors_one, ",", expr int.cast_one, ",", expr sum_singleton, ",", expr coe_mul_zeta_apply, ",", expr one_one, ",", expr int_coe_apply, ",", expr pow_zero, "]"] [] [] },
+  rw ["[", expr coe_mul_zeta_apply, ",", expr one_apply_ne (ne_of_gt (succ_lt_succ (nat.succ_pos _))), "]"] [],
+  simp_rw ["[", expr int_coe_apply, "]"] [],
+  rw ["[", "<-", expr int.cast_sum, ",", "<-", expr sum_filter_ne_zero, "]"] [],
+  convert [] [expr int.cast_zero] [],
+  simp [] [] ["only"] ["[", expr moebius_ne_zero_iff_squarefree, "]"] [] [],
+  suffices [] [":", expr «expr = »(«expr∑ in , »((y : finset exprℕ()), (unique_factorization_monoid.normalized_factors x.succ.succ).to_finset.powerset, ite (squarefree y.val.prod) «expr ^ »((«expr- »(1) : exprℤ()), exprΩ() y.val.prod) 0), 0)],
+  { have [ident h] [":", expr «expr = »(«expr∑ in , »((i), _, ite (squarefree i) «expr ^ »((«expr- »(1) : exprℤ()), exprΩ() i) 0), _)] [":=", expr sum_divisors_filter_squarefree (nat.succ_ne_zero _)],
+    exact [expr (eq.trans (by congr' [] []) h).trans this] },
+  apply [expr eq.trans (sum_congr rfl _) (sum_powerset_neg_one_pow_card_of_nonempty _)],
+  { intros [ident y, ident hy],
+    rw ["[", expr finset.mem_powerset, ",", "<-", expr finset.val_le_iff, ",", expr multiset.to_finset_val, "]"] ["at", ident hy],
+    have [ident h] [":", expr «expr = »(unique_factorization_monoid.normalized_factors y.val.prod, y.val)] [],
+    { apply [expr factors_multiset_prod_of_irreducible],
+      intros [ident z, ident hz],
+      apply [expr irreducible_of_normalized_factor _ (multiset.subset_of_le (le_trans hy (multiset.erase_dup_le _)) hz)] },
+    rw ["[", expr if_pos, "]"] [],
+    { rw ["[", expr card_factors_apply, ",", "<-", expr multiset.coe_card, ",", "<-", expr factors_eq, ",", expr h, ",", expr finset.card, "]"] [] },
+    rw ["[", expr unique_factorization_monoid.squarefree_iff_nodup_normalized_factors, ",", expr h, "]"] [],
+    { apply [expr y.nodup] },
+    rw ["[", expr ne.def, ",", expr multiset.prod_eq_zero_iff, "]"] [],
+    intro [ident con],
+    rw ["<-", expr h] ["at", ident con],
+    exact [expr not_irreducible_zero (irreducible_of_normalized_factor 0 con)] },
+  { rw [expr finset.nonempty] [],
+    rcases [expr wf_dvd_monoid.exists_irreducible_factor _ (nat.succ_ne_zero _), "with", "⟨", ident i, ",", ident hi, "⟩"],
+    { rcases [expr exists_mem_normalized_factors_of_dvd (nat.succ_ne_zero _) hi.1 hi.2, "with", "⟨", ident j, ",", ident hj, ",", ident hj2, "⟩"],
+      use [expr j],
+      apply [expr multiset.mem_to_finset.2 hj] },
+    rw [expr nat.is_unit_iff] [],
+    norm_num [] [] }
+end
 
 @[simp]
 theorem coe_zeta_mul_coe_moebius [CommRingₓ R] : (ζ*μ : arithmetic_function R) = 1 :=

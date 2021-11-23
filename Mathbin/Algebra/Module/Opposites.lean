@@ -1,53 +1,53 @@
-import Mathbin.Algebra.Opposites 
+import Mathbin.GroupTheory.GroupAction.Opposite 
 import Mathbin.Data.Equiv.Module
 
 /-!
-# Module operations on `Mᵒᵖ`
+# Module operations on `Mᵐᵒᵖ`
 
-This file contains definitions that could not be placed into `algebra.opposites` due to import
-cycles.
+This file contains definitions that build on top of the group action definitions in
+`group_theory.group_action.opposite`.
 -/
 
 
-namespace Opposite
+namespace MulOpposite
 
 universe u v
 
 variable(R : Type u){M : Type v}[Semiringₓ R][AddCommMonoidₓ M][Module R M]
 
-/-- `opposite.distrib_mul_action` extends to a `module` -/
-instance  : Module R (Opposite M) :=
-  { Opposite.distribMulAction M R with add_smul := fun r₁ r₂ x => unop_injective$ add_smul r₁ r₂ (unop x),
+/-- `mul_opposite.distrib_mul_action` extends to a `module` -/
+instance  : Module R (MulOpposite M) :=
+  { MulOpposite.distribMulAction M R with add_smul := fun r₁ r₂ x => unop_injective$ add_smul r₁ r₂ (unop x),
     zero_smul := fun x => unop_injective$ zero_smul _ (unop x) }
 
 /-- The function `op` is a linear equivalence. -/
-def op_linear_equiv : M ≃ₗ[R] «expr ᵒᵖ» M :=
-  { op_add_equiv with map_smul' := Opposite.op_smul }
+def op_linear_equiv : M ≃ₗ[R] «expr ᵐᵒᵖ» M :=
+  { op_add_equiv with map_smul' := MulOpposite.op_smul }
 
 @[simp]
-theorem coe_op_linear_equiv : (op_linear_equiv R : M → «expr ᵒᵖ» M) = op :=
+theorem coe_op_linear_equiv : (op_linear_equiv R : M → «expr ᵐᵒᵖ» M) = op :=
   rfl
 
 @[simp]
-theorem coe_op_linear_equiv_symm : ((op_linear_equiv R).symm : «expr ᵒᵖ» M → M) = unop :=
+theorem coe_op_linear_equiv_symm : ((op_linear_equiv R).symm : «expr ᵐᵒᵖ» M → M) = unop :=
   rfl
 
 @[simp]
-theorem coe_op_linear_equiv_to_linear_map : ((op_linear_equiv R).toLinearMap : M → «expr ᵒᵖ» M) = op :=
+theorem coe_op_linear_equiv_to_linear_map : ((op_linear_equiv R).toLinearMap : M → «expr ᵐᵒᵖ» M) = op :=
   rfl
 
 @[simp]
-theorem coe_op_linear_equiv_symm_to_linear_map : ((op_linear_equiv R).symm.toLinearMap : «expr ᵒᵖ» M → M) = unop :=
+theorem coe_op_linear_equiv_symm_to_linear_map : ((op_linear_equiv R).symm.toLinearMap : «expr ᵐᵒᵖ» M → M) = unop :=
   rfl
 
 @[simp]
-theorem op_linear_equiv_to_add_equiv : (op_linear_equiv R : M ≃ₗ[R] «expr ᵒᵖ» M).toAddEquiv = op_add_equiv :=
+theorem op_linear_equiv_to_add_equiv : (op_linear_equiv R : M ≃ₗ[R] «expr ᵐᵒᵖ» M).toAddEquiv = op_add_equiv :=
   rfl
 
 @[simp]
 theorem op_linear_equiv_symm_to_add_equiv :
-  (op_linear_equiv R : M ≃ₗ[R] «expr ᵒᵖ» M).symm.toAddEquiv = op_add_equiv.symm :=
+  (op_linear_equiv R : M ≃ₗ[R] «expr ᵐᵒᵖ» M).symm.toAddEquiv = op_add_equiv.symm :=
   rfl
 
-end Opposite
+end MulOpposite
 

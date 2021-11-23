@@ -1,4 +1,3 @@
-import Mathbin.Algebra.GroupPower.Default 
 import Mathbin.Data.Rat.Basic 
 import Mathbin.Tactic.NormNum
 

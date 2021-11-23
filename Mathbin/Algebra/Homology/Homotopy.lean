@@ -578,26 +578,22 @@ namespace CategoryTheory
 
 variable{W : Type _}[category W][preadditive W]
 
+-- error in Algebra.Homology.Homotopy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An additive functor takes homotopies to homotopies. -/
-@[simps]
-def functor.map_homotopy (F : V ⥤ W) [F.additive] {f g : C ⟶ D} (h : Homotopy f g) :
-  Homotopy ((F.map_homological_complex c).map f) ((F.map_homological_complex c).map g) :=
-  { Hom := fun i j => F.map (h.hom i j),
-    zero' :=
-      fun i j w =>
-        by 
-          rw [h.zero i j w, F.map_zero],
-    comm :=
-      fun i =>
-        by 
-          have  := h.comm i 
-          dsimp [dNext, prevD]  at *
-          rcases c.next i with (_ | ⟨inext, wn⟩) <;>
-            rcases c.prev i with (_ | ⟨iprev, wp⟩) <;>
-              dsimp [dNext, prevD]  at * <;>
-                ·
-                  intro h 
-                  simp [h] }
+@[simps #[]]
+def functor.map_homotopy
+(F : «expr ⥤ »(V, W))
+[F.additive]
+{f g : «expr ⟶ »(C, D)}
+(h : homotopy f g) : homotopy ((F.map_homological_complex c).map f) ((F.map_homological_complex c).map g) :=
+{ hom := λ i j, F.map (h.hom i j),
+  zero' := λ i j w, by { rw ["[", expr h.zero i j w, ",", expr F.map_zero, "]"] [] },
+  comm := λ i, begin
+    have [] [] [":=", expr h.comm i],
+    dsimp [] ["[", expr d_next, ",", expr prev_d, "]"] [] ["at", "*"],
+    rcases [expr c.next i, "with", "_", "|", "⟨", ident inext, ",", ident wn, "⟩"]; rcases [expr c.prev i, "with", "_", "|", "⟨", ident iprev, ",", ident wp, "⟩"]; dsimp [] ["[", expr d_next, ",", expr prev_d, "]"] [] ["at", "*"]; { intro [ident h],
+      simp [] [] [] ["[", expr h, "]"] [] [] }
+  end }
 
 /-- An additive functor preserves homotopy equivalences. -/
 @[simps]

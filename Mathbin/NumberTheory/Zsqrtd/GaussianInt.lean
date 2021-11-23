@@ -280,115 +280,60 @@ instance  : EuclideanDomain ℤ[i] :=
 
 open PrincipalIdealRing
 
-theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.prime] (hpi : Prime (p : ℤ[i])) : p % 4 = 3 :=
-  hp.1.eq_two_or_odd.elim
-    (fun hp2 =>
-      absurd hpi
-        (mt irreducible_iff_prime.2$
-          fun ⟨hu, h⟩ =>
-            by 
-              have  := h ⟨1, 1⟩ ⟨1, -1⟩ (hp2.symm ▸ rfl)
-              rw [←norm_eq_one_iff, ←norm_eq_one_iff] at this 
-              exact
-                absurd this
-                  (by 
-                    decide)))
-    fun hp1 =>
-      by_contradiction$
-        fun hp3 : p % 4 ≠ 3 =>
-          have hp41 : p % 4 = 1 :=
-            by 
-              rw [←Nat.mod_mul_left_mod p 2 2, show (2*2) = 4 from rfl] at hp1 
-              have  :=
-                Nat.mod_ltₓ p
-                  (show 0 < 4 from
-                    by 
-                      decide)
-              revert this hp3 hp1 
-              generalize p % 4 = m 
-              decide! 
-          let ⟨k, hk⟩ :=
-            (Zmod.exists_sq_eq_neg_one_iff_mod_four_ne_three p).2$
-              by 
-                rw [hp41] <;>
-                  exact
-                    by 
-                      decide 
-          by 
-            obtain ⟨k, k_lt_p, rfl⟩ : ∃ (k' : ℕ)(h : k' < p), (k' : Zmod p) = k
-            ·
-              refine' ⟨k.val, k.val_lt, Zmod.nat_cast_zmod_val k⟩
-            have hpk : p ∣ (k^2)+1
-            ·
-              rw [←CharP.cast_eq_zero_iff (Zmod p) p] <;> simp 
-            have hkmul : ((k^2)+1 : ℤ[i]) = ⟨k, 1⟩*⟨k, -1⟩ :=
-              by 
-                simp [sq, Zsqrtd.ext]
-            have hpne1 : p ≠ 1 := ne_of_gtₓ hp.1.one_lt 
-            have hkltp : (1+k*k) < p*p 
-            exact
-              calc (1+k*k) ≤ k+k*k :=
-                add_le_add_right
-                  (Nat.pos_of_ne_zeroₓ
-                    fun hk0 =>
-                      by 
-                        clearAuxDecl <;> simp_all [pow_succ'ₓ])
-                  _ 
-                _ = k*k+1 :=
-                by 
-                  simp [add_commₓ, mul_addₓ]
-                _ < p*p := mul_lt_mul k_lt_p k_lt_p (Nat.succ_posₓ _) (Nat.zero_leₓ _)
-                
-            have hpk₁ : ¬(p : ℤ[i]) ∣ ⟨k, -1⟩ :=
-              fun ⟨x, hx⟩ =>
-                lt_irreflₓ (p*x : ℤ[i]).norm.natAbs$
-                  calc (norm (p*x : ℤ[i])).natAbs = (norm ⟨k, -1⟩).natAbs :=
-                    by 
-                      rw [hx]
-                    _ < (norm (p : ℤ[i])).natAbs :=
-                    by 
-                      simpa [add_commₓ, norm] using hkltp 
-                    _ ≤ (norm (p*x : ℤ[i])).natAbs :=
-                    norm_le_norm_mul_left _
-                      fun hx0 =>
-                        (show (-1 : ℤ) ≠ 0 from
-                            by 
-                              decide)$
-                          by 
-                            simpa [hx0] using congr_argₓ Zsqrtd.im hx 
-                    
-            have hpk₂ : ¬(p : ℤ[i]) ∣ ⟨k, 1⟩ :=
-              fun ⟨x, hx⟩ =>
-                lt_irreflₓ (p*x : ℤ[i]).norm.natAbs$
-                  calc (norm (p*x : ℤ[i])).natAbs = (norm ⟨k, 1⟩).natAbs :=
-                    by 
-                      rw [hx]
-                    _ < (norm (p : ℤ[i])).natAbs :=
-                    by 
-                      simpa [add_commₓ, norm] using hkltp 
-                    _ ≤ (norm (p*x : ℤ[i])).natAbs :=
-                    norm_le_norm_mul_left _
-                      fun hx0 =>
-                        (show (1 : ℤ) ≠ 0 from
-                            by 
-                              decide)$
-                          by 
-                            simpa [hx0] using congr_argₓ Zsqrtd.im hx 
-                    
-            have hpu : ¬IsUnit (p : ℤ[i])
-            exact
-              mt norm_eq_one_iff.2
-                (by 
-                  rw [norm_nat_cast, Int.nat_abs_mul, Nat.mul_eq_one_iff] <;>
-                    exact fun h => (ne_of_ltₓ hp.1.one_lt).symm h.1)
-            obtain ⟨y, hy⟩ := hpk 
-            have  :=
-              hpi.2.2 ⟨k, 1⟩ ⟨k, -1⟩
-                ⟨y,
-                  by 
-                    rw [←hkmul, ←Nat.cast_mul p, ←hy] <;> simp ⟩
-            clearAuxDecl 
-            tauto
+-- error in NumberTheory.Zsqrtd.GaussianInt: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mod_four_eq_three_of_nat_prime_of_prime
+(p : exprℕ())
+[hp : fact p.prime]
+(hpi : prime (p : «exprℤ[i]»())) : «expr = »(«expr % »(p, 4), 3) :=
+hp.1.eq_two_or_odd.elim (λ
+ hp2, absurd hpi «expr $ »(mt irreducible_iff_prime.2, λ ⟨hu, h⟩, begin
+    have [] [] [":=", expr h ⟨1, 1⟩ ⟨1, «expr- »(1)⟩ «expr ▸ »(hp2.symm, rfl)],
+    rw ["[", "<-", expr norm_eq_one_iff, ",", "<-", expr norm_eq_one_iff, "]"] ["at", ident this],
+    exact [expr absurd this exprdec_trivial()]
+  end)) (λ
+ hp1, «expr $ »(by_contradiction, λ
+  hp3 : «expr ≠ »(«expr % »(p, 4), 3), have hp41 : «expr = »(«expr % »(p, 4), 1), begin
+    rw ["[", "<-", expr nat.mod_mul_left_mod p 2 2, ",", expr show «expr = »(«expr * »(2, 2), 4), from rfl, "]"] ["at", ident hp1],
+    have [] [] [":=", expr nat.mod_lt p (show «expr < »(0, 4), from exprdec_trivial())],
+    revert [ident this, ident hp3, ident hp1],
+    generalize [] [":"] [expr «expr = »(«expr % »(p, 4), m)],
+    dec_trivial ["!"]
+  end,
+  let ⟨k, hk⟩ := «expr $ »((zmod.exists_sq_eq_neg_one_iff_mod_four_ne_three p).2, by rw [expr hp41] []; exact [expr exprdec_trivial()]) in
+  begin
+    obtain ["⟨", ident k, ",", ident k_lt_p, ",", ident rfl, "⟩", ":", expr «expr∃ , »((k' : exprℕ())
+      (h : «expr < »(k', p)), «expr = »((k' : zmod p), k))],
+    { refine [expr ⟨k.val, k.val_lt, zmod.nat_cast_zmod_val k⟩] },
+    have [ident hpk] [":", expr «expr ∣ »(p, «expr + »(«expr ^ »(k, 2), 1))] [],
+    by rw ["[", "<-", expr char_p.cast_eq_zero_iff (zmod p) p, "]"] []; simp [] [] [] ["*"] [] [],
+    have [ident hkmul] [":", expr «expr = »((«expr + »(«expr ^ »(k, 2), 1) : «exprℤ[i]»()), «expr * »(⟨k, 1⟩, ⟨k, «expr- »(1)⟩))] [":=", expr by simp [] [] [] ["[", expr sq, ",", expr zsqrtd.ext, "]"] [] []],
+    have [ident hpne1] [":", expr «expr ≠ »(p, 1)] [":=", expr ne_of_gt hp.1.one_lt],
+    have [ident hkltp] [":", expr «expr < »(«expr + »(1, «expr * »(k, k)), «expr * »(p, p))] [],
+    from [expr calc
+       «expr ≤ »(«expr + »(1, «expr * »(k, k)), «expr + »(k, «expr * »(k, k))) : add_le_add_right (nat.pos_of_ne_zero (λ
+         hk0, by clear_aux_decl; simp [] [] [] ["[", "*", ",", expr pow_succ', "]"] [] ["at", "*"])) _
+       «expr = »(..., «expr * »(k, «expr + »(k, 1))) : by simp [] [] [] ["[", expr add_comm, ",", expr mul_add, "]"] [] []
+       «expr < »(..., «expr * »(p, p)) : mul_lt_mul k_lt_p k_lt_p (nat.succ_pos _) (nat.zero_le _)],
+    have [ident hpk₁] [":", expr «expr¬ »(«expr ∣ »((p : «exprℤ[i]»()), ⟨k, «expr- »(1)⟩))] [":=", expr λ
+     ⟨x, hx⟩, «expr $ »(lt_irrefl («expr * »(p, x) : «exprℤ[i]»()).norm.nat_abs, calc
+        «expr = »((norm («expr * »(p, x) : «exprℤ[i]»())).nat_abs, (norm ⟨k, «expr- »(1)⟩).nat_abs) : by rw [expr hx] []
+        «expr < »(..., (norm (p : «exprℤ[i]»())).nat_abs) : by simpa [] [] [] ["[", expr add_comm, ",", expr norm, "]"] [] ["using", expr hkltp]
+        «expr ≤ »(..., (norm («expr * »(p, x) : «exprℤ[i]»())).nat_abs) : norm_le_norm_mul_left _ (λ
+         hx0, «expr $ »(show «expr ≠ »((«expr- »(1) : exprℤ()), 0), from exprdec_trivial(), by simpa [] [] [] ["[", expr hx0, "]"] [] ["using", expr congr_arg zsqrtd.im hx])))],
+    have [ident hpk₂] [":", expr «expr¬ »(«expr ∣ »((p : «exprℤ[i]»()), ⟨k, 1⟩))] [":=", expr λ
+     ⟨x, hx⟩, «expr $ »(lt_irrefl («expr * »(p, x) : «exprℤ[i]»()).norm.nat_abs, calc
+        «expr = »((norm («expr * »(p, x) : «exprℤ[i]»())).nat_abs, (norm ⟨k, 1⟩).nat_abs) : by rw [expr hx] []
+        «expr < »(..., (norm (p : «exprℤ[i]»())).nat_abs) : by simpa [] [] [] ["[", expr add_comm, ",", expr norm, "]"] [] ["using", expr hkltp]
+        «expr ≤ »(..., (norm («expr * »(p, x) : «exprℤ[i]»())).nat_abs) : norm_le_norm_mul_left _ (λ
+         hx0, «expr $ »(show «expr ≠ »((1 : exprℤ()), 0), from exprdec_trivial(), by simpa [] [] [] ["[", expr hx0, "]"] [] ["using", expr congr_arg zsqrtd.im hx])))],
+    have [ident hpu] [":", expr «expr¬ »(is_unit (p : «exprℤ[i]»()))] [],
+    from [expr mt norm_eq_one_iff.2 (by rw ["[", expr norm_nat_cast, ",", expr int.nat_abs_mul, ",", expr nat.mul_eq_one_iff, "]"] []; exact [expr λ
+       h, (ne_of_lt hp.1.one_lt).symm h.1])],
+    obtain ["⟨", ident y, ",", ident hy, "⟩", ":=", expr hpk],
+    have [] [] [":=", expr hpi.2.2 ⟨k, 1⟩ ⟨k, «expr- »(1)⟩ ⟨y, by rw ["[", "<-", expr hkmul, ",", "<-", expr nat.cast_mul p, ",", "<-", expr hy, "]"] []; simp [] [] [] [] [] []⟩],
+    clear_aux_decl,
+    tauto []
+  end))
 
 theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.prime] (hpi : ¬Irreducible (p : ℤ[i])) :
   ∃ a b, ((a^2)+b^2) = p :=

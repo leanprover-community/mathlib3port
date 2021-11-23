@@ -136,112 +136,93 @@ protected def outer : outer_measure ℝ :=
 theorem outer_le_length (s : Set ℝ) : f.outer s ≤ f.length s :=
   outer_measure.of_function_le _
 
+-- error in MeasureTheory.Measure.Stieltjes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a compact interval `[a, b]` is covered by a union of open interval `(c i, d i)`, then
 `f b - f a ≤ ∑ f (d i) - f (c i)`. This is an auxiliary technical statement to prove the same
 statement for half-open intervals, the point of the current statement being that one can use
 compactness to reduce it to a finite sum, and argue by induction on the size of the covering set. -/
-theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b ⊆ ⋃i, Ioo (c i) (d i)) :
-  of_real (f b - f a) ≤ ∑'i, of_real (f (d i) - f (c i)) :=
-  by 
-    suffices  :
-      ∀ s : Finset ℕ b cv : Icc a b ⊆ ⋃(i : _)(_ : i ∈ («expr↑ » s : Set ℕ)), Ioo (c i) (d i),
-        (of_real (f b - f a) : ℝ≥0∞) ≤ ∑i in s, of_real (f (d i) - f (c i))
-    ·
-      rcases
-        is_compact_Icc.elim_finite_subcover_image (fun i : ℕ _ : i ∈ univ => @is_open_Ioo _ _ _ _ (c i) (d i))
-          (by 
-            simpa using ss) with
-        ⟨s, su, hf, hs⟩
-      have e :
-        (⋃(i : _)(_ : i ∈ («expr↑ » hf.to_finset : Set ℕ)), Ioo (c i) (d i)) = ⋃(i : _)(_ : i ∈ s), Ioo (c i) (d i)
-      ·
-        simp only [ext_iff, exists_prop, Finset.set_bUnion_coe, mem_Union, forall_const, iff_selfₓ,
-          finite.mem_to_finset]
-      rw [Ennreal.tsum_eq_supr_sum]
-      refine' le_transₓ _ (le_supr _ hf.to_finset)
-      exact
-        this hf.to_finset _
-          (by 
-            simpa only [e])
-    clear ss b 
-    refine' fun s => Finset.strongInductionOn s fun s IH b cv => _ 
-    cases' le_totalₓ b a with ab ab
-    ·
-      rw [Ennreal.of_real_eq_zero.2 (sub_nonpos.2 (f.mono ab))]
-      exact zero_le _ 
-    have  := cv ⟨ab, le_reflₓ _⟩
-    simp  at this 
-    rcases this with ⟨i, is, cb, bd⟩
-    rw [←Finset.insert_erase is] at cv⊢
-    rw [Finset.coe_insert, bUnion_insert] at cv 
-    rw [Finset.sum_insert (Finset.not_mem_erase _ _)]
-    refine' le_transₓ _ (add_le_add_left (IH _ (Finset.erase_ssubset is) (c i) _) _)
-    ·
-      refine' le_transₓ (Ennreal.of_real_le_of_real _) Ennreal.of_real_add_le 
-      rw [sub_add_sub_cancel]
-      exact sub_le_sub_right (f.mono bd.le) _
-    ·
-      rintro x ⟨h₁, h₂⟩
-      refine' (cv ⟨h₁, le_transₓ h₂ (le_of_ltₓ cb)⟩).resolve_left (mt And.left (not_lt_of_le h₂))
+theorem length_subadditive_Icc_Ioo
+{a b : exprℝ()}
+{c d : exprℕ() → exprℝ()}
+(ss : «expr ⊆ »(Icc a b, «expr⋃ , »((i), Ioo (c i) (d i)))) : «expr ≤ »(of_real «expr - »(f b, f a), «expr∑' , »((i), of_real «expr - »(f (d i), f (c i)))) :=
+begin
+  suffices [] [":", expr ∀
+   (s : finset exprℕ())
+   (b)
+   (cv : «expr ⊆ »(Icc a b, «expr⋃ , »((i «expr ∈ » («expr↑ »(s) : set exprℕ())), Ioo (c i) (d i)))), «expr ≤ »((of_real «expr - »(f b, f a) : «exprℝ≥0∞»()), «expr∑ in , »((i), s, of_real «expr - »(f (d i), f (c i))))],
+  { rcases [expr is_compact_Icc.elim_finite_subcover_image (λ
+      (i : exprℕ())
+      (_ : «expr ∈ »(i, univ)), @is_open_Ioo _ _ _ _ (c i) (d i)) (by simpa [] [] [] [] [] ["using", expr ss]), "with", "⟨", ident s, ",", ident su, ",", ident hf, ",", ident hs, "⟩"],
+    have [ident e] [":", expr «expr = »(«expr⋃ , »((i «expr ∈ » («expr↑ »(hf.to_finset) : set exprℕ())), Ioo (c i) (d i)), «expr⋃ , »((i «expr ∈ » s), Ioo (c i) (d i)))] [],
+    by simp [] [] ["only"] ["[", expr ext_iff, ",", expr exists_prop, ",", expr finset.set_bUnion_coe, ",", expr mem_Union, ",", expr forall_const, ",", expr iff_self, ",", expr finite.mem_to_finset, "]"] [] [],
+    rw [expr ennreal.tsum_eq_supr_sum] [],
+    refine [expr le_trans _ (le_supr _ hf.to_finset)],
+    exact [expr this hf.to_finset _ (by simpa [] [] ["only"] ["[", expr e, "]"] [] [])] },
+  clear [ident ss, ident b],
+  refine [expr λ s, finset.strong_induction_on s (λ s IH b cv, _)],
+  cases [expr le_total b a] ["with", ident ab, ident ab],
+  { rw [expr ennreal.of_real_eq_zero.2 (sub_nonpos.2 (f.mono ab))] [],
+    exact [expr zero_le _] },
+  have [] [] [":=", expr cv ⟨ab, le_refl _⟩],
+  simp [] [] [] [] [] ["at", ident this],
+  rcases [expr this, "with", "⟨", ident i, ",", ident is, ",", ident cb, ",", ident bd, "⟩"],
+  rw ["[", "<-", expr finset.insert_erase is, "]"] ["at", ident cv, "⊢"],
+  rw ["[", expr finset.coe_insert, ",", expr bUnion_insert, "]"] ["at", ident cv],
+  rw ["[", expr finset.sum_insert (finset.not_mem_erase _ _), "]"] [],
+  refine [expr le_trans _ (add_le_add_left (IH _ (finset.erase_ssubset is) (c i) _) _)],
+  { refine [expr le_trans (ennreal.of_real_le_of_real _) ennreal.of_real_add_le],
+    rw [expr sub_add_sub_cancel] [],
+    exact [expr sub_le_sub_right (f.mono bd.le) _] },
+  { rintro [ident x, "⟨", ident h₁, ",", ident h₂, "⟩"],
+    refine [expr (cv ⟨h₁, le_trans h₂ (le_of_lt cb)⟩).resolve_left (mt and.left (not_lt_of_le h₂))] }
+end
 
-@[simp]
-theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = of_real (f b - f a) :=
-  by 
-    refine'
-      le_antisymmₓ
-        (by 
-          rw [←f.length_Ioc]
-          apply outer_le_length)
-        (le_binfi$ fun s hs => Ennreal.le_of_forall_pos_le_add$ fun ε εpos h => _)
-    let δ := ε / 2
-    have δpos : 0 < (δ : ℝ≥0∞)
-    ·
-      simpa using εpos.ne' 
-    rcases Ennreal.exists_pos_sum_of_encodable δpos.ne' ℕ with ⟨ε', ε'0, hε⟩
-    obtain ⟨a', ha', aa'⟩ : ∃ a', f a' - f a < δ ∧ a < a'
-    ·
-      have A : ContinuousWithinAt (fun r => f r - f a) (Ioi a) a
-      ·
-        refine' ContinuousWithinAt.sub _ continuous_within_at_const 
-        exact (f.right_continuous a).mono Ioi_subset_Ici_self 
-      have B : f a - f a < δ
-      ·
-        rwa [sub_self, Nnreal.coe_pos, ←Ennreal.coe_pos]
-      exact (((tendsto_order.1 A).2 _ B).And self_mem_nhds_within).exists 
-    have  : ∀ i, ∃ p : ℝ × ℝ, s i ⊆ Ioo p.1 p.2 ∧ (of_real (f p.2 - f p.1) : ℝ≥0∞) < f.length (s i)+ε' i
-    ·
-      intro i 
-      have  := Ennreal.lt_add_right ((Ennreal.le_tsum i).trans_lt h).Ne (Ennreal.coe_ne_zero.2 (ε'0 i).ne')
-      conv  at this => toLHS rw [length]
-      simp only [infi_lt_iff, exists_prop] at this 
-      rcases this with ⟨p, q', spq, hq'⟩
-      have  : ContinuousWithinAt (fun r => of_real (f r - f p)) (Ioi q') q'
-      ·
-        apply ennreal.continuous_of_real.continuous_at.comp_continuous_within_at 
-        refine' ContinuousWithinAt.sub _ continuous_within_at_const 
-        exact (f.right_continuous q').mono Ioi_subset_Ici_self 
-      rcases(((tendsto_order.1 this).2 _ hq').And self_mem_nhds_within).exists with ⟨q, hq, q'q⟩
-      exact ⟨⟨p, q⟩, spq.trans (Ioc_subset_Ioo_right q'q), hq⟩
-    choose g hg using this 
-    have I_subset : Icc a' b ⊆ ⋃i, Ioo (g i).1 (g i).2 :=
-      calc Icc a' b ⊆ Ioc a b := fun x hx => ⟨aa'.trans_le hx.1, hx.2⟩
-        _ ⊆ ⋃i, s i := hs 
-        _ ⊆ ⋃i, Ioo (g i).1 (g i).2 := Union_subset_Union fun i => (hg i).1
-        
-    calc of_real (f b - f a) = of_real ((f b - f a')+f a' - f a) :=
-      by 
-        rw [sub_add_sub_cancel]_ ≤ of_real (f b - f a')+of_real (f a' - f a) :=
-      Ennreal.of_real_add_le _ ≤ (∑'i, of_real (f (g i).2 - f (g i).1))+of_real δ :=
-      add_le_add (f.length_subadditive_Icc_Ioo I_subset)
-        (Ennreal.of_real_le_of_real ha'.le)_ ≤ (∑'i, f.length (s i)+ε' i)+δ :=
-      add_le_add (Ennreal.tsum_le_tsum fun i => (hg i).2.le)
-        (by 
-          simp only [Ennreal.of_real_coe_nnreal, le_rfl])_ = ((∑'i, f.length (s i))+∑'i, ε' i)+δ :=
-      by 
-        rw [Ennreal.tsum_add]_ ≤ ((∑'i, f.length (s i))+δ)+δ :=
-      add_le_add (add_le_add le_rfl hε.le) le_rfl _ = (∑'i : ℕ, f.length (s i))+ε :=
-      by 
-        simp [add_assocₓ, Ennreal.add_halves]
+-- error in MeasureTheory.Measure.Stieltjes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem outer_Ioc (a b : exprℝ()) : «expr = »(f.outer (Ioc a b), of_real «expr - »(f b, f a)) :=
+begin
+  refine [expr le_antisymm (by { rw ["<-", expr f.length_Ioc] [],
+      apply [expr outer_le_length] }) «expr $ »(le_binfi, λ
+    s hs, «expr $ »(ennreal.le_of_forall_pos_le_add, λ ε εpos h, _))],
+  let [ident δ] [] [":=", expr «expr / »(ε, 2)],
+  have [ident δpos] [":", expr «expr < »(0, (δ : «exprℝ≥0∞»()))] [],
+  by simpa [] [] [] [] [] ["using", expr εpos.ne'],
+  rcases [expr ennreal.exists_pos_sum_of_encodable δpos.ne' exprℕ(), "with", "⟨", ident ε', ",", ident ε'0, ",", ident hε, "⟩"],
+  obtain ["⟨", ident a', ",", ident ha', ",", ident aa', "⟩", ":", expr «expr∃ , »((a'), «expr ∧ »(«expr < »(«expr - »(f a', f a), δ), «expr < »(a, a')))],
+  { have [ident A] [":", expr continuous_within_at (λ r, «expr - »(f r, f a)) (Ioi a) a] [],
+    { refine [expr continuous_within_at.sub _ continuous_within_at_const],
+      exact [expr (f.right_continuous a).mono Ioi_subset_Ici_self] },
+    have [ident B] [":", expr «expr < »(«expr - »(f a, f a), δ)] [],
+    by rwa ["[", expr sub_self, ",", expr nnreal.coe_pos, ",", "<-", expr ennreal.coe_pos, "]"] [],
+    exact [expr (((tendsto_order.1 A).2 _ B).and self_mem_nhds_within).exists] },
+  have [] [":", expr ∀
+   i, «expr∃ , »((p : «expr × »(exprℝ(), exprℝ())), «expr ∧ »(«expr ⊆ »(s i, Ioo p.1 p.2), «expr < »((of_real «expr - »(f p.2, f p.1) : «exprℝ≥0∞»()), «expr + »(f.length (s i), ε' i))))] [],
+  { intro [ident i],
+    have [] [] [":=", expr ennreal.lt_add_right ((ennreal.le_tsum i).trans_lt h).ne (ennreal.coe_ne_zero.2 (ε'0 i).ne')],
+    conv ["at", ident this] [] { to_lhs,
+      rw [expr length] },
+    simp [] [] ["only"] ["[", expr infi_lt_iff, ",", expr exists_prop, "]"] [] ["at", ident this],
+    rcases [expr this, "with", "⟨", ident p, ",", ident q', ",", ident spq, ",", ident hq', "⟩"],
+    have [] [":", expr continuous_within_at (λ r, of_real «expr - »(f r, f p)) (Ioi q') q'] [],
+    { apply [expr ennreal.continuous_of_real.continuous_at.comp_continuous_within_at],
+      refine [expr continuous_within_at.sub _ continuous_within_at_const],
+      exact [expr (f.right_continuous q').mono Ioi_subset_Ici_self] },
+    rcases [expr (((tendsto_order.1 this).2 _ hq').and self_mem_nhds_within).exists, "with", "⟨", ident q, ",", ident hq, ",", ident q'q, "⟩"],
+    exact [expr ⟨⟨p, q⟩, spq.trans (Ioc_subset_Ioo_right q'q), hq⟩] },
+  choose [] [ident g] [ident hg] ["using", expr this],
+  have [ident I_subset] [":", expr «expr ⊆ »(Icc a' b, «expr⋃ , »((i), Ioo (g i).1 (g i).2))] [":=", expr calc
+     «expr ⊆ »(Icc a' b, Ioc a b) : λ x hx, ⟨aa'.trans_le hx.1, hx.2⟩
+     «expr ⊆ »(..., «expr⋃ , »((i), s i)) : hs
+     «expr ⊆ »(..., «expr⋃ , »((i), Ioo (g i).1 (g i).2)) : Union_subset_Union (λ i, (hg i).1)],
+  calc
+    «expr = »(of_real «expr - »(f b, f a), of_real «expr + »(«expr - »(f b, f a'), «expr - »(f a', f a))) : by rw [expr sub_add_sub_cancel] []
+    «expr ≤ »(..., «expr + »(of_real «expr - »(f b, f a'), of_real «expr - »(f a', f a))) : ennreal.of_real_add_le
+    «expr ≤ »(..., «expr + »(«expr∑' , »((i), of_real «expr - »(f (g i).2, f (g i).1)), of_real δ)) : add_le_add (f.length_subadditive_Icc_Ioo I_subset) (ennreal.of_real_le_of_real ha'.le)
+    «expr ≤ »(..., «expr + »(«expr∑' , »((i), «expr + »(f.length (s i), ε' i)), δ)) : add_le_add (ennreal.tsum_le_tsum (λ
+      i, (hg i).2.le)) (by simp [] [] ["only"] ["[", expr ennreal.of_real_coe_nnreal, ",", expr le_rfl, "]"] [] [])
+    «expr = »(..., «expr + »(«expr + »(«expr∑' , »((i), f.length (s i)), «expr∑' , »((i), ε' i)), δ)) : by rw ["[", expr ennreal.tsum_add, "]"] []
+    «expr ≤ »(..., «expr + »(«expr + »(«expr∑' , »((i), f.length (s i)), δ), δ)) : add_le_add (add_le_add le_rfl hε.le) le_rfl
+    «expr = »(..., «expr + »(«expr∑' , »((i : exprℕ()), f.length (s i)), ε)) : by simp [] [] [] ["[", expr add_assoc, ",", expr ennreal.add_halves, "]"] [] []
+end
 
 theorem measurable_set_Ioi {c : ℝ} : f.outer.caratheodory.measurable_set' (Ioi c) :=
   by 
@@ -263,34 +244,32 @@ theorem measurable_set_Ioi {c : ℝ} : f.outer.caratheodory.measurable_set' (Ioi
       simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_rightₓ, sup_eq_max, le_reflₓ, Ioc_eq_empty,
         add_zeroₓ, max_eq_leftₓ, f.length_empty, not_ltₓ]
 
-theorem outer_trim : f.outer.trim = f.outer :=
-  by 
-    refine' le_antisymmₓ (fun s => _) (outer_measure.le_trim _)
-    rw [outer_measure.trim_eq_infi]
-    refine' le_infi fun t => le_infi$ fun ht => Ennreal.le_of_forall_pos_le_add$ fun ε ε0 h => _ 
-    rcases Ennreal.exists_pos_sum_of_encodable (Ennreal.coe_pos.2 ε0).ne' ℕ with ⟨ε', ε'0, hε⟩
-    refine' le_transₓ _ (add_le_add_left (le_of_ltₓ hε) _)
-    rw [←Ennreal.tsum_add]
-    choose g hg using
-      show ∀ i, ∃ s, t i ⊆ s ∧ MeasurableSet s ∧ f.outer s ≤ f.length (t i)+of_real (ε' i)by 
-        intro i 
-        have  := Ennreal.lt_add_right ((Ennreal.le_tsum i).trans_lt h).Ne (Ennreal.coe_pos.2 (ε'0 i)).ne' 
-        conv  at this => toLHS rw [length]
-        simp only [infi_lt_iff] at this 
-        rcases this with ⟨a, b, h₁, h₂⟩
-        rw [←f.outer_Ioc] at h₂ 
-        exact
-          ⟨_, h₁, measurable_set_Ioc,
-            le_of_ltₓ$
-              by 
-                simpa using h₂⟩
-    simp  at hg 
-    apply infi_le_of_le (Union g) _ 
-    apply infi_le_of_le (subset.trans ht$ Union_subset_Union fun i => (hg i).1) _ 
-    apply infi_le_of_le (MeasurableSet.Union fun i => (hg i).2.1) _ 
-    exact le_transₓ (f.outer.Union _) (Ennreal.tsum_le_tsum$ fun i => (hg i).2.2)
+-- error in MeasureTheory.Measure.Stieltjes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem outer_trim : «expr = »(f.outer.trim, f.outer) :=
+begin
+  refine [expr le_antisymm (λ s, _) (outer_measure.le_trim _)],
+  rw [expr outer_measure.trim_eq_infi] [],
+  refine [expr le_infi (λ t, «expr $ »(le_infi, λ ht, «expr $ »(ennreal.le_of_forall_pos_le_add, λ ε ε0 h, _)))],
+  rcases [expr ennreal.exists_pos_sum_of_encodable (ennreal.coe_pos.2 ε0).ne' exprℕ(), "with", "⟨", ident ε', ",", ident ε'0, ",", ident hε, "⟩"],
+  refine [expr le_trans _ (add_le_add_left (le_of_lt hε) _)],
+  rw ["<-", expr ennreal.tsum_add] [],
+  choose [] [ident g] [ident hg] ["using", expr show ∀
+   i, «expr∃ , »((s), «expr ∧ »(«expr ⊆ »(t i, s), «expr ∧ »(measurable_set s, «expr ≤ »(f.outer s, «expr + »(f.length (t i), of_real (ε' i)))))), { intro [ident i],
+     have [] [] [":=", expr ennreal.lt_add_right ((ennreal.le_tsum i).trans_lt h).ne (ennreal.coe_pos.2 (ε'0 i)).ne'],
+     conv ["at", ident this] [] { to_lhs,
+       rw [expr length] },
+     simp [] [] ["only"] ["[", expr infi_lt_iff, "]"] [] ["at", ident this],
+     rcases [expr this, "with", "⟨", ident a, ",", ident b, ",", ident h₁, ",", ident h₂, "⟩"],
+     rw ["<-", expr f.outer_Ioc] ["at", ident h₂],
+     exact [expr ⟨_, h₁, measurable_set_Ioc, «expr $ »(le_of_lt, by simpa [] [] [] [] [] ["using", expr h₂])⟩] }],
+  simp [] [] [] [] [] ["at", ident hg],
+  apply [expr infi_le_of_le (Union g) _],
+  apply [expr infi_le_of_le «expr $ »(subset.trans ht, Union_subset_Union (λ i, (hg i).1)) _],
+  apply [expr infi_le_of_le (measurable_set.Union (λ i, (hg i).2.1)) _],
+  exact [expr le_trans (f.outer.Union _) «expr $ »(ennreal.tsum_le_tsum, λ i, (hg i).2.2)]
+end
 
--- error in MeasureTheory.Measure.Stieltjes: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Measure.Stieltjes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem borel_le_measurable : «expr ≤ »(borel exprℝ(), f.outer.caratheodory) :=
 begin
   rw [expr borel_eq_generate_from_Ioi] [],
@@ -315,98 +294,75 @@ theorem measure_Ioc (a b : ℝ) : f.measure (Ioc a b) = of_real (f b - f a) :=
     rw [StieltjesFunction.measure]
     exact f.outer_Ioc a b
 
-@[simp]
-theorem measure_singleton (a : ℝ) : f.measure {a} = of_real (f a - f.left_lim a) :=
-  by 
-    obtain ⟨u, u_mono, u_lt_a, u_lim⟩ : ∃ u : ℕ → ℝ, StrictMono u ∧ (∀ n : ℕ, u n < a) ∧ tendsto u at_top (𝓝 a) :=
-      exists_seq_strict_mono_tendsto a 
-    have A : {a} = ⋂n, Ioc (u n) a
-    ·
-      refine'
-        subset.antisymm
-          (fun x hx =>
-            by 
-              simp [mem_singleton_iff.1 hx, u_lt_a])
-          fun x hx => _ 
-      simp  at hx 
-      have  : a ≤ x := le_of_tendsto' u_lim fun n => (hx n).1.le 
-      simp [le_antisymmₓ this (hx 0).2]
-    have L1 : tendsto (fun n => f.measure (Ioc (u n) a)) at_top (𝓝 (f.measure {a}))
-    ·
-      rw [A]
-      refine' tendsto_measure_Inter (fun n => measurable_set_Ioc) (fun m n hmn => _) _
-      ·
-        exact Ioc_subset_Ioc (u_mono.monotone hmn) le_rfl
-      ·
-        exact
-          ⟨0,
-            by 
-              simpa only [measure_Ioc] using Ennreal.of_real_ne_top⟩
-    have L2 : tendsto (fun n => f.measure (Ioc (u n) a)) at_top (𝓝 (of_real (f a - f.left_lim a)))
-    ·
-      simp only [measure_Ioc]
-      have  : tendsto (fun n => f (u n)) at_top (𝓝 (f.left_lim a))
-      ·
-        apply (f.tendsto_left_lim a).comp 
-        exact tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ u_lim (eventually_of_forall fun n => u_lt_a n)
-      exact ennreal.continuous_of_real.continuous_at.tendsto.comp (tendsto_const_nhds.sub this)
-    exact tendsto_nhds_unique L1 L2
+-- error in MeasureTheory.Measure.Stieltjes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem measure_singleton (a : exprℝ()) : «expr = »(f.measure {a}, of_real «expr - »(f a, f.left_lim a)) :=
+begin
+  obtain ["⟨", ident u, ",", ident u_mono, ",", ident u_lt_a, ",", ident u_lim, "⟩", ":", expr «expr∃ , »((u : exprℕ() → exprℝ()), «expr ∧ »(strict_mono u, «expr ∧ »(∀
+      n : exprℕ(), «expr < »(u n, a), tendsto u at_top (expr𝓝() a)))), ":=", expr exists_seq_strict_mono_tendsto a],
+  have [ident A] [":", expr «expr = »({a}, «expr⋂ , »((n), Ioc (u n) a))] [],
+  { refine [expr subset.antisymm (λ
+      x hx, by simp [] [] [] ["[", expr mem_singleton_iff.1 hx, ",", expr u_lt_a, "]"] [] []) (λ x hx, _)],
+    simp [] [] [] [] [] ["at", ident hx],
+    have [] [":", expr «expr ≤ »(a, x)] [":=", expr le_of_tendsto' u_lim (λ n, (hx n).1.le)],
+    simp [] [] [] ["[", expr le_antisymm this (hx 0).2, "]"] [] [] },
+  have [ident L1] [":", expr tendsto (λ n, f.measure (Ioc (u n) a)) at_top (expr𝓝() (f.measure {a}))] [],
+  { rw [expr A] [],
+    refine [expr tendsto_measure_Inter (λ n, measurable_set_Ioc) (λ m n hmn, _) _],
+    { exact [expr Ioc_subset_Ioc (u_mono.monotone hmn) le_rfl] },
+    { exact [expr ⟨0, by simpa [] [] ["only"] ["[", expr measure_Ioc, "]"] [] ["using", expr ennreal.of_real_ne_top]⟩] } },
+  have [ident L2] [":", expr tendsto (λ
+    n, f.measure (Ioc (u n) a)) at_top (expr𝓝() (of_real «expr - »(f a, f.left_lim a)))] [],
+  { simp [] [] ["only"] ["[", expr measure_Ioc, "]"] [] [],
+    have [] [":", expr tendsto (λ n, f (u n)) at_top (expr𝓝() (f.left_lim a))] [],
+    { apply [expr (f.tendsto_left_lim a).comp],
+      exact [expr tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ u_lim (eventually_of_forall (λ
+         n, u_lt_a n))] },
+    exact [expr ennreal.continuous_of_real.continuous_at.tendsto.comp (tendsto_const_nhds.sub this)] },
+  exact [expr tendsto_nhds_unique L1 L2]
+end
 
-@[simp]
-theorem measure_Icc (a b : ℝ) : f.measure (Icc a b) = of_real (f b - f.left_lim a) :=
-  by 
-    rcases le_or_ltₓ a b with (hab | hab)
-    ·
-      have A : Disjoint {a} (Ioc a b)
-      ·
-        simp 
-      simp [←Icc_union_Ioc_eq_Icc le_rfl hab, -singleton_union, ←Ennreal.of_real_add, f.left_lim_le,
-        measure_union A (measurable_set_singleton a) measurable_set_Ioc, f.mono hab]
-    ·
-      simp only [hab, measure_empty, Icc_eq_empty, not_leₓ]
-      symm 
-      simp [Ennreal.of_real_eq_zero, f.le_left_lim hab]
+-- error in MeasureTheory.Measure.Stieltjes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem measure_Icc (a b : exprℝ()) : «expr = »(f.measure (Icc a b), of_real «expr - »(f b, f.left_lim a)) :=
+begin
+  rcases [expr le_or_lt a b, "with", ident hab, "|", ident hab],
+  { have [ident A] [":", expr disjoint {a} (Ioc a b)] [],
+    by simp [] [] [] [] [] [],
+    simp [] [] [] ["[", "<-", expr Icc_union_Ioc_eq_Icc le_rfl hab, ",", "-", ident singleton_union, ",", "<-", expr ennreal.of_real_add, ",", expr f.left_lim_le, ",", expr measure_union A (measurable_set_singleton a) measurable_set_Ioc, ",", expr f.mono hab, "]"] [] [] },
+  { simp [] [] ["only"] ["[", expr hab, ",", expr measure_empty, ",", expr Icc_eq_empty, ",", expr not_le, "]"] [] [],
+    symmetry,
+    simp [] [] [] ["[", expr ennreal.of_real_eq_zero, ",", expr f.le_left_lim hab, "]"] [] [] }
+end
 
-@[simp]
-theorem measure_Ioo {a b : ℝ} : f.measure (Ioo a b) = of_real (f.left_lim b - f a) :=
-  by 
-    rcases le_or_ltₓ b a with (hab | hab)
-    ·
-      simp only [hab, measure_empty, Ioo_eq_empty, not_ltₓ]
-      symm 
-      simp [Ennreal.of_real_eq_zero, f.left_lim_le hab]
-    ·
-      have A : Disjoint (Ioo a b) {b}
-      ·
-        simp 
-      have D : f b - f a = (f b - f.left_lim b)+f.left_lim b - f a
-      ·
-        abel 
-      have  := f.measure_Ioc a b 
-      simp only [←Ioo_union_Icc_eq_Ioc hab le_rfl, measure_singleton,
-        measure_union A measurable_set_Ioo (measurable_set_singleton b), Icc_self] at this 
-      rw [D, Ennreal.of_real_add, add_commₓ] at this
-      ·
-        simpa only [Ennreal.add_right_inj Ennreal.of_real_ne_top]
-      ·
-        simp only [f.left_lim_le, sub_nonneg]
-      ·
-        simp only [f.le_left_lim hab, sub_nonneg]
+-- error in MeasureTheory.Measure.Stieltjes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem measure_Ioo {a b : exprℝ()} : «expr = »(f.measure (Ioo a b), of_real «expr - »(f.left_lim b, f a)) :=
+begin
+  rcases [expr le_or_lt b a, "with", ident hab, "|", ident hab],
+  { simp [] [] ["only"] ["[", expr hab, ",", expr measure_empty, ",", expr Ioo_eq_empty, ",", expr not_lt, "]"] [] [],
+    symmetry,
+    simp [] [] [] ["[", expr ennreal.of_real_eq_zero, ",", expr f.left_lim_le hab, "]"] [] [] },
+  { have [ident A] [":", expr disjoint (Ioo a b) {b}] [],
+    by simp [] [] [] [] [] [],
+    have [ident D] [":", expr «expr = »(«expr - »(f b, f a), «expr + »(«expr - »(f b, f.left_lim b), «expr - »(f.left_lim b, f a)))] [],
+    by abel [] [] [],
+    have [] [] [":=", expr f.measure_Ioc a b],
+    simp [] [] ["only"] ["[", "<-", expr Ioo_union_Icc_eq_Ioc hab le_rfl, ",", expr measure_singleton, ",", expr measure_union A measurable_set_Ioo (measurable_set_singleton b), ",", expr Icc_self, "]"] [] ["at", ident this],
+    rw ["[", expr D, ",", expr ennreal.of_real_add, ",", expr add_comm, "]"] ["at", ident this],
+    { simpa [] [] ["only"] ["[", expr ennreal.add_right_inj ennreal.of_real_ne_top, "]"] [] [] },
+    { simp [] [] ["only"] ["[", expr f.left_lim_le, ",", expr sub_nonneg, "]"] [] [] },
+    { simp [] [] ["only"] ["[", expr f.le_left_lim hab, ",", expr sub_nonneg, "]"] [] [] } }
+end
 
+-- error in MeasureTheory.Measure.Stieltjes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem measure_Ico (a b : ℝ) : f.measure (Ico a b) = of_real (f.left_lim b - f.left_lim a) :=
-  by 
-    rcases le_or_ltₓ b a with (hab | hab)
-    ·
-      simp only [hab, measure_empty, Ico_eq_empty, not_ltₓ]
-      symm 
-      simp [Ennreal.of_real_eq_zero, f.left_lim_le_left_lim hab]
-    ·
-      have A : Disjoint {a} (Ioo a b) :=
-        by 
-          simp 
-      simp [←Icc_union_Ioo_eq_Ico le_rfl hab, -singleton_union, hab.ne, f.left_lim_le,
-        measure_union A (measurable_set_singleton a) measurable_set_Ioo, f.le_left_lim hab, ←Ennreal.of_real_add]
+theorem measure_Ico (a b : exprℝ()) : «expr = »(f.measure (Ico a b), of_real «expr - »(f.left_lim b, f.left_lim a)) :=
+begin
+  rcases [expr le_or_lt b a, "with", ident hab, "|", ident hab],
+  { simp [] [] ["only"] ["[", expr hab, ",", expr measure_empty, ",", expr Ico_eq_empty, ",", expr not_lt, "]"] [] [],
+    symmetry,
+    simp [] [] [] ["[", expr ennreal.of_real_eq_zero, ",", expr f.left_lim_le_left_lim hab, "]"] [] [] },
+  { have [ident A] [":", expr disjoint {a} (Ioo a b)] [":=", expr by simp [] [] [] [] [] []],
+    simp [] [] [] ["[", "<-", expr Icc_union_Ioo_eq_Ico le_rfl hab, ",", "-", ident singleton_union, ",", expr hab.ne, ",", expr f.left_lim_le, ",", expr measure_union A (measurable_set_singleton a) measurable_set_Ioo, ",", expr f.le_left_lim hab, ",", "<-", expr ennreal.of_real_add, "]"] [] [] }
+end
 
 end StieltjesFunction
 

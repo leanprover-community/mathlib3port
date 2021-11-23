@@ -1,7 +1,7 @@
+import Mathbin.Tactic.Elementwise 
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom 
-import Mathbin.CategoryTheory.ConcreteCategory.ReflectsIsomorphisms 
 import Mathbin.Algebra.PunitInstances 
-import Mathbin.Tactic.Elementwise
+import Mathbin.CategoryTheory.ReflectsIsomorphisms
 
 /-!
 # Category instances for monoid, add_monoid, comm_monoid, and add_comm_monoid.
@@ -40,18 +40,18 @@ abbrev assoc_monoid_hom (M N : Type _) [Monoidₓ M] [Monoidₓ N] :=
 instance bundled_hom : bundled_hom assoc_monoid_hom :=
   ⟨fun M N [Monoidₓ M] [Monoidₓ N] =>
       by 
-        exactI @MonoidHom.toFun M N _ _,
+        exact @MonoidHom.toFun M N _ _,
     fun M [Monoidₓ M] =>
       by 
-        exactI @MonoidHom.id M _,
+        exact @MonoidHom.id M _,
     fun M N P [Monoidₓ M] [Monoidₓ N] [Monoidₓ P] =>
       by 
-        exactI @MonoidHom.comp M N P _ _ _,
+        exact @MonoidHom.comp M N P _ _ _,
     fun M N [Monoidₓ M] [Monoidₓ N] =>
       by 
-        exactI @MonoidHom.coe_inj M N _ _⟩
+        exact @MonoidHom.coe_inj M N _ _⟩
 
--- error in Algebra.Category.Mon.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Algebra.Category.Mon.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Mon
 
 attribute [toAdditive] Mon.largeCategory Mon.concreteCategory
@@ -104,7 +104,7 @@ namespace CommMon
 instance  : bundled_hom.parent_projection CommMonoidₓ.toMonoid :=
   ⟨⟩
 
--- error in Algebra.Category.Mon.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler large_category
+-- error in Algebra.Category.Mon.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] CommMon
 
 attribute [toAdditive] CommMon.largeCategory CommMon.concreteCategory
@@ -221,7 +221,7 @@ instance Mon.forget_reflects_isos : reflects_isomorphisms (forget Mon.{u}) :=
   { reflects :=
       fun X Y f _ =>
         by 
-          resetI 
+          skip 
           let i := as_iso ((forget Mon).map f)
           let e : X ≃* Y := { f, i.to_equiv with  }
           exact ⟨(is_iso.of_iso e.to_Mon_iso).1⟩ }
@@ -231,7 +231,7 @@ instance CommMon.forget_reflects_isos : reflects_isomorphisms (forget CommMon.{u
   { reflects :=
       fun X Y f _ =>
         by 
-          resetI 
+          skip 
           let i := as_iso ((forget CommMon).map f)
           let e : X ≃* Y := { f, i.to_equiv with  }
           exact ⟨(is_iso.of_iso e.to_CommMon_iso).1⟩ }

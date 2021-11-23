@@ -384,28 +384,30 @@ section Ringₓ
 
 variable[Ringₓ R]
 
+-- error in Data.Polynomial.AlgebraMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 The evaluation map is not generally multiplicative when the coefficient ring is noncommutative,
 but nevertheless any polynomial of the form `p * (X - monomial 0 r)` is sent to zero
 when evaluated at `r`.
 
 This is the key step in our proof of the Cayley-Hamilton theorem.
--/
-theorem eval_mul_X_sub_C {p : Polynomial R} (r : R) : (p*X - C r).eval r = 0 :=
-  by 
-    simp only [eval, eval₂, RingHom.id_apply]
-    have bound :=
-      calc (p*X - C r).natDegree ≤ p.nat_degree+(X - C r).natDegree := nat_degree_mul_le 
-        _ ≤ p.nat_degree+1 := add_le_add_left nat_degree_X_sub_C_le _ 
-        _ < p.nat_degree+2 := lt_add_one _ 
-        
-    rw [sum_over_range' _ _ (p.nat_degree+2) bound]
-    swap
-    ·
-      simp 
-    rw [sum_range_succ']
-    convLHS => congr applyCongr skip rw [coeff_mul_X_sub_C, sub_mul, mul_assocₓ, ←pow_succₓ]
-    simp [sum_range_sub', coeff_monomial]
+-/ theorem eval_mul_X_sub_C {p : polynomial R} (r : R) : «expr = »(«expr * »(p, «expr - »(X, C r)).eval r, 0) :=
+begin
+  simp [] [] ["only"] ["[", expr eval, ",", expr eval₂, ",", expr ring_hom.id_apply, "]"] [] [],
+  have [ident bound] [] [":=", expr calc
+     «expr ≤ »(«expr * »(p, «expr - »(X, C r)).nat_degree, «expr + »(p.nat_degree, «expr - »(X, C r).nat_degree)) : nat_degree_mul_le
+     «expr ≤ »(..., «expr + »(p.nat_degree, 1)) : add_le_add_left nat_degree_X_sub_C_le _
+     «expr < »(..., «expr + »(p.nat_degree, 2)) : lt_add_one _],
+  rw [expr sum_over_range' _ _ «expr + »(p.nat_degree, 2) bound] [],
+  swap,
+  { simp [] [] [] [] [] [] },
+  rw [expr sum_range_succ'] [],
+  conv_lhs [] [] { congr,
+    apply_congr [],
+    skip,
+    rw ["[", expr coeff_mul_X_sub_C, ",", expr sub_mul, ",", expr mul_assoc, ",", "<-", expr pow_succ, "]"] },
+  simp [] [] [] ["[", expr sum_range_sub', ",", expr coeff_monomial, "]"] [] []
+end
 
 theorem not_is_unit_X_sub_C [Nontrivial R] {r : R} : ¬IsUnit (X - C r) :=
   fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ =>

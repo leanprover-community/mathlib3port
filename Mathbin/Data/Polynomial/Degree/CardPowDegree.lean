@@ -28,80 +28,45 @@ open AbsoluteValue
 
 open_locale Classical
 
+-- error in Data.Polynomial.Degree.CardPowDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `card_pow_degree` is the absolute value on `𝔽_q[t]` sending `f` to `q ^ degree f`.
 
 `card_pow_degree 0` is defined to be `0`. -/
-noncomputable def card_pow_degree : AbsoluteValue (Polynomial Fq) ℤ :=
-  have card_pos : 0 < Fintype.card Fq := Fintype.card_pos_iff.mpr inferInstance 
-  have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n => pow_pos (Int.coe_nat_pos.mpr card_pos) n
-  { toFun := fun p => if p = 0 then 0 else Fintype.card Fq ^ p.nat_degree,
-    nonneg' :=
-      fun p =>
-        by 
-          dsimp 
-          splitIfs
-          ·
-            rfl 
-          exact pow_nonneg (Int.coe_zero_le _) _,
-    eq_zero' :=
-      fun p =>
-        ite_eq_left_iff.trans$
-          ⟨fun h =>
-              by 
-                contrapose! h 
-                exact ⟨h, (pow_pos _).ne'⟩,
-            absurd⟩,
-    add_le' :=
-      fun p q =>
-        by 
-          byCases' hp : p = 0
-          ·
-            simp [hp]
-          byCases' hq : q = 0
-          ·
-            simp [hq]
-          byCases' hpq : (p+q) = 0
-          ·
-            simp only [hpq, hp, hq, eq_self_iff_true, if_true, if_false]
-            exact add_nonneg (pow_pos _).le (pow_pos _).le 
-          simp only [hpq, hp, hq, if_false]
-          refine'
-            le_transₓ
-              (pow_le_pow
-                (by 
-                  linarith)
-                (Polynomial.nat_degree_add_le _ _))
-              _ 
-          refine'
-            le_transₓ (le_max_iff.mpr _)
-              (max_le_add_of_nonneg
-                (pow_nonneg
-                  (by 
-                    linarith)
-                  _)
-                (pow_nonneg
-                  (by 
-                    linarith)
-                  _))
-          exact
-            (max_choice p.nat_degree q.nat_degree).imp
-              (fun h =>
-                by 
-                  rw [h])
-              fun h =>
-                by 
-                  rw [h],
-    map_mul' :=
-      fun p q =>
-        by 
-          byCases' hp : p = 0
-          ·
-            simp [hp]
-          byCases' hq : q = 0
-          ·
-            simp [hq]
-          have hpq : (p*q) ≠ 0 := mul_ne_zero hp hq 
-          simp only [hpq, hp, hq, eq_self_iff_true, if_true, if_false, Polynomial.nat_degree_mul hp hq, pow_addₓ] }
+noncomputable
+def card_pow_degree : absolute_value (polynomial Fq) exprℤ() :=
+have card_pos : «expr < »(0, fintype.card Fq) := fintype.card_pos_iff.mpr infer_instance,
+have pow_pos : ∀
+n, «expr < »(0, «expr ^ »((fintype.card Fq : exprℤ()), n)) := λ n, pow_pos (int.coe_nat_pos.mpr card_pos) n,
+{ to_fun := λ p, if «expr = »(p, 0) then 0 else «expr ^ »(fintype.card Fq, p.nat_degree),
+  nonneg' := λ p, by { dsimp [] [] [] [],
+    split_ifs [] [],
+    { refl },
+    exact [expr pow_nonneg (int.coe_zero_le _) _] },
+  eq_zero' := λ
+  p, «expr $ »(ite_eq_left_iff.trans, ⟨λ h, by { contrapose ["!"] [ident h],
+      exact [expr ⟨h, (pow_pos _).ne'⟩] }, absurd⟩),
+  add_le' := λ p q, begin
+    by_cases [expr hp, ":", expr «expr = »(p, 0)],
+    { simp [] [] [] ["[", expr hp, "]"] [] [] },
+    by_cases [expr hq, ":", expr «expr = »(q, 0)],
+    { simp [] [] [] ["[", expr hq, "]"] [] [] },
+    by_cases [expr hpq, ":", expr «expr = »(«expr + »(p, q), 0)],
+    { simp [] [] ["only"] ["[", expr hpq, ",", expr hp, ",", expr hq, ",", expr eq_self_iff_true, ",", expr if_true, ",", expr if_false, "]"] [] [],
+      exact [expr add_nonneg (pow_pos _).le (pow_pos _).le] },
+    simp [] [] ["only"] ["[", expr hpq, ",", expr hp, ",", expr hq, ",", expr if_false, "]"] [] [],
+    refine [expr le_trans (pow_le_pow (by linarith [] [] []) (polynomial.nat_degree_add_le _ _)) _],
+    refine [expr le_trans (le_max_iff.mpr _) (max_le_add_of_nonneg (pow_nonneg (by linarith [] [] []) _) (pow_nonneg (by linarith [] [] []) _))],
+    exact [expr (max_choice p.nat_degree q.nat_degree).imp (λ
+      h, by rw ["[", expr h, "]"] []) (λ h, by rw ["[", expr h, "]"] [])]
+  end,
+  map_mul' := λ p q, begin
+    by_cases [expr hp, ":", expr «expr = »(p, 0)],
+    { simp [] [] [] ["[", expr hp, "]"] [] [] },
+    by_cases [expr hq, ":", expr «expr = »(q, 0)],
+    { simp [] [] [] ["[", expr hq, "]"] [] [] },
+    have [ident hpq] [":", expr «expr ≠ »(«expr * »(p, q), 0)] [":=", expr mul_ne_zero hp hq],
+    simp [] [] ["only"] ["[", expr hpq, ",", expr hp, ",", expr hq, ",", expr eq_self_iff_true, ",", expr if_true, ",", expr if_false, ",", expr polynomial.nat_degree_mul hp hq, ",", expr pow_add, "]"] [] []
+  end }
 
 theorem card_pow_degree_apply (p : Polynomial Fq) :
   card_pow_degree p = if p = 0 then 0 else Fintype.card Fq ^ nat_degree p :=

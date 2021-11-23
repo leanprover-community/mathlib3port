@@ -49,7 +49,7 @@ def cech_nerve : simplicial_object C :=
 /-- The augmented Čech nerve associated to an arrow. -/
 @[simps]
 def augmented_cech_nerve : simplicial_object.augmented C :=
-  { left := f.cech_nerve, right := f.right, hom := { app := fun i => wide_pullback.base _ } }
+  { left := f.cech_nerve, right := f.right, Hom := { app := fun i => wide_pullback.base _ } }
 
 end CategoryTheory.Arrow
 
@@ -91,16 +91,20 @@ def cech_nerve : arrow C ⥤ simplicial_object C :=
 def augmented_cech_nerve : arrow C ⥤ simplicial_object.augmented C :=
   { obj := fun f => f.augmented_cech_nerve, map := fun f g F => { left := cech_nerve.map F, right := F.right } }
 
+-- error in AlgebraicTopology.CechNerve: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A helper function used in defining the Čech adjunction. -/
-@[simps]
-def equivalence_right_to_left (X : simplicial_object.augmented C) (F : arrow C) (G : X ⟶ F.augmented_cech_nerve) :
-  augmented.to_arrow.obj X ⟶ F :=
-  { left := G.left.app _ ≫ wide_pullback.π (fun i => F.hom) ⟨0⟩, right := G.right,
-    w' :=
-      by 
-        have  := G.w 
-        applyFun fun e => e.app (Opposite.op$ SimplexCategory.mk 0)  at this 
-        tidy }
+@[simps #[]]
+def equivalence_right_to_left
+(X : simplicial_object.augmented C)
+(F : arrow C)
+(G : «expr ⟶ »(X, F.augmented_cech_nerve)) : «expr ⟶ »(augmented.to_arrow.obj X, F) :=
+{ left := «expr ≫ »(G.left.app _, wide_pullback.π (λ i, F.hom) ⟨0⟩),
+  right := G.right,
+  w' := begin
+    have [] [] [":=", expr G.w],
+    apply_fun [expr λ e, e.app «expr $ »(opposite.op, simplex_category.mk 0)] ["at", ident this] [],
+    tidy []
+  end }
 
 /-- A helper function used in defining the Čech adjunction. -/
 @[simps]
@@ -128,50 +132,48 @@ def equivalence_left_to_right (X : simplicial_object.augmented C) (F : arrow C) 
               erw [category.id_comp] },
     right := G.right }
 
+-- error in AlgebraicTopology.CechNerve: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A helper function used in defining the Čech adjunction. -/
-@[simps]
-def cech_nerve_equiv (X : simplicial_object.augmented C) (F : arrow C) :
-  (augmented.to_arrow.obj X ⟶ F) ≃ (X ⟶ F.augmented_cech_nerve) :=
-  { toFun := equivalence_left_to_right _ _, invFun := equivalence_right_to_left _ _,
-    left_inv :=
-      by 
-        intro A 
-        dsimp 
-        ext
-        ·
-          dsimp 
-          erw [wide_pullback.lift_π]
-          nthRw 1[←category.id_comp A.left]
-          congr 1
-          convert X.left.map_id _ 
-          rw [←op_id]
-          congr 1 
-          ext ⟨a, ha⟩
-          change a < 1 at ha 
-          change 0 = a 
-          linarith
-        ·
-          rfl,
-    right_inv :=
-      by 
-        intro A 
-        dsimp 
-        ext _ ⟨j⟩
-        ·
-          dsimp 
-          simp only [arrow.cech_nerve_map, wide_pullback.lift_π, nat_trans.naturality_assoc]
-          erw [wide_pullback.lift_π]
-          rfl
-        ·
-          dsimp 
-          erw [wide_pullback.lift_base]
-          have  := A.w 
-          applyFun fun e => e.app x  at this 
-          rw [nat_trans.comp_app] at this 
-          erw [this]
-          rfl
-        ·
-          rfl }
+@[simps #[]]
+def cech_nerve_equiv
+(X : simplicial_object.augmented C)
+(F : arrow C) : «expr ≃ »(«expr ⟶ »(augmented.to_arrow.obj X, F), «expr ⟶ »(X, F.augmented_cech_nerve)) :=
+{ to_fun := equivalence_left_to_right _ _,
+  inv_fun := equivalence_right_to_left _ _,
+  left_inv := begin
+    intro [ident A],
+    dsimp [] [] [] [],
+    ext [] [] [],
+    { dsimp [] [] [] [],
+      erw [expr wide_pullback.lift_π] [],
+      nth_rewrite [1] ["<-", expr category.id_comp A.left] [],
+      congr' [1] [],
+      convert [] [expr X.left.map_id _] [],
+      rw ["<-", expr op_id] [],
+      congr' [1] [],
+      ext [] ["⟨", ident a, ",", ident ha, "⟩"] [],
+      change [expr «expr < »(a, 1)] [] ["at", ident ha],
+      change [expr «expr = »(0, a)] [] [],
+      linarith [] [] [] },
+    { refl }
+  end,
+  right_inv := begin
+    intro [ident A],
+    dsimp [] [] [] [],
+    ext [] ["_", "⟨", ident j, "⟩"] [],
+    { dsimp [] [] [] [],
+      simp [] [] ["only"] ["[", expr arrow.cech_nerve_map, ",", expr wide_pullback.lift_π, ",", expr nat_trans.naturality_assoc, "]"] [] [],
+      erw [expr wide_pullback.lift_π] [],
+      refl },
+    { dsimp [] [] [] [],
+      erw [expr wide_pullback.lift_base] [],
+      have [] [] [":=", expr A.w],
+      apply_fun [expr λ e, e.app x] ["at", ident this] [],
+      rw [expr nat_trans.comp_app] ["at", ident this],
+      erw [expr this] [],
+      refl },
+    { refl }
+  end }
 
 /-- The augmented Čech nerve construction is right adjoint to the `to_arrow` functor. -/
 abbrev cech_nerve_adjunction : (augmented.to_arrow : _ ⥤ arrow C) ⊣ augmented_cech_nerve :=
@@ -203,7 +205,7 @@ def cech_conerve : cosimplicial_object C :=
 /-- The augmented Čech conerve associated to an arrow. -/
 @[simps]
 def augmented_cech_conerve : cosimplicial_object.augmented C :=
-  { left := f.left, right := f.cech_conerve, hom := { app := fun i => wide_pushout.head _ } }
+  { left := f.left, right := f.cech_conerve, Hom := { app := fun i => wide_pushout.head _ } }
 
 end CategoryTheory.Arrow
 
@@ -245,96 +247,94 @@ def cech_conerve : arrow C ⥤ cosimplicial_object C :=
 def augmented_cech_conerve : arrow C ⥤ cosimplicial_object.augmented C :=
   { obj := fun f => f.augmented_cech_conerve, map := fun f g F => { left := F.left, right := cech_conerve.map F } }
 
+-- error in AlgebraicTopology.CechNerve: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A helper function used in defining the Čech conerve adjunction. -/
-@[simps]
-def equivalence_left_to_right (F : arrow C) (X : cosimplicial_object.augmented C) (G : F.augmented_cech_conerve ⟶ X) :
-  F ⟶ augmented.to_arrow.obj X :=
-  { left := G.left,
-    right := (wide_pushout.ι (fun i => F.hom) (_root_.ulift.up 0) ≫ G.right.app (SimplexCategory.mk 0) : _),
-    w' :=
-      by 
-        have  := G.w 
-        applyFun fun e => e.app (SimplexCategory.mk 0)  at this 
-        dsimp  at this 
-        simpa only [CategoryTheory.Functor.id_map, augmented.to_arrow_obj_hom,
-          wide_pushout.arrow_ι_assoc fun i => F.hom] }
+@[simps #[]]
+def equivalence_left_to_right
+(F : arrow C)
+(X : cosimplicial_object.augmented C)
+(G : «expr ⟶ »(F.augmented_cech_conerve, X)) : «expr ⟶ »(F, augmented.to_arrow.obj X) :=
+{ left := G.left,
+  right := («expr ≫ »(wide_pushout.ι (λ i, F.hom) (_root_.ulift.up 0), G.right.app (simplex_category.mk 0)) : _),
+  w' := begin
+    have [] [] [":=", expr G.w],
+    apply_fun [expr λ e, e.app (simplex_category.mk 0)] ["at", ident this] [],
+    dsimp [] [] [] ["at", ident this],
+    simpa [] [] ["only"] ["[", expr category_theory.functor.id_map, ",", expr augmented.to_arrow_obj_hom, ",", expr wide_pushout.arrow_ι_assoc (λ
+      i, F.hom), "]"] [] []
+  end }
 
+-- error in AlgebraicTopology.CechNerve: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A helper function used in defining the Čech conerve adjunction. -/
-@[simps]
-def equivalence_right_to_left (F : arrow C) (X : cosimplicial_object.augmented C) (G : F ⟶ augmented.to_arrow.obj X) :
-  F.augmented_cech_conerve ⟶ X :=
-  { left := G.left,
-    right :=
-      { app :=
-          fun x =>
-            limits.wide_pushout.desc (G.left ≫ X.hom.app _)
-              (fun i => G.right ≫ X.right.map (SimplexCategory.const x i.down))
-              (by 
-                rintro ⟨j⟩
-                rw [←arrow.w_assoc G]
-                dsimp 
-                have t := X.hom.naturality (x.const j)
-                dsimp  at t 
-                simp only [category.id_comp] at t 
-                rw [←t]),
-        naturality' :=
-          by 
-            intro x y f 
-            ext
-            ·
-              dsimp 
-              simp only [wide_pushout.ι_desc_assoc, wide_pushout.ι_desc]
-              rw [category.assoc, ←X.right.map_comp]
-              rfl
-            ·
-              dsimp 
-              simp only [functor.const.obj_map, ←nat_trans.naturality, wide_pushout.head_desc_assoc,
-                wide_pushout.head_desc, category.assoc]
-              erw [category.id_comp] } }
+@[simps #[]]
+def equivalence_right_to_left
+(F : arrow C)
+(X : cosimplicial_object.augmented C)
+(G : «expr ⟶ »(F, augmented.to_arrow.obj X)) : «expr ⟶ »(F.augmented_cech_conerve, X) :=
+{ left := G.left,
+  right := { app := λ
+    x, limits.wide_pushout.desc «expr ≫ »(G.left, X.hom.app _) (λ
+     i, «expr ≫ »(G.right, X.right.map (simplex_category.const x i.down))) (begin
+       rintros ["⟨", ident j, "⟩"],
+       rw ["<-", expr arrow.w_assoc G] [],
+       dsimp [] [] [] [],
+       have [ident t] [] [":=", expr X.hom.naturality (x.const j)],
+       dsimp [] [] [] ["at", ident t],
+       simp [] [] ["only"] ["[", expr category.id_comp, "]"] [] ["at", ident t],
+       rw ["<-", expr t] []
+     end),
+    naturality' := begin
+      intros [ident x, ident y, ident f],
+      ext [] [] [],
+      { dsimp [] [] [] [],
+        simp [] [] ["only"] ["[", expr wide_pushout.ι_desc_assoc, ",", expr wide_pushout.ι_desc, "]"] [] [],
+        rw ["[", expr category.assoc, ",", "<-", expr X.right.map_comp, "]"] [],
+        refl },
+      { dsimp [] [] [] [],
+        simp [] [] ["only"] ["[", expr functor.const.obj_map, ",", "<-", expr nat_trans.naturality, ",", expr wide_pushout.head_desc_assoc, ",", expr wide_pushout.head_desc, ",", expr category.assoc, "]"] [] [],
+        erw [expr category.id_comp] [] }
+    end } }
 
+-- error in AlgebraicTopology.CechNerve: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A helper function used in defining the Čech conerve adjunction. -/
-@[simps]
-def cech_conerve_equiv (F : arrow C) (X : cosimplicial_object.augmented C) :
-  (F.augmented_cech_conerve ⟶ X) ≃ (F ⟶ augmented.to_arrow.obj X) :=
-  { toFun := equivalence_left_to_right _ _, invFun := equivalence_right_to_left _ _,
-    left_inv :=
-      by 
-        intro A 
-        dsimp 
-        ext
-        ·
-          rfl
-        ·
-          cases j 
-          dsimp 
-          simp only [arrow.cech_conerve_map, wide_pushout.ι_desc, category.assoc, ←nat_trans.naturality,
-            wide_pushout.ι_desc_assoc]
-          rfl
-        ·
-          dsimp 
-          erw [wide_pushout.head_desc]
-          have  := A.w 
-          applyFun fun e => e.app x  at this 
-          rw [nat_trans.comp_app] at this 
-          erw [this]
-          rfl,
-    right_inv :=
-      by 
-        intro A 
-        dsimp 
-        ext
-        ·
-          rfl
-        ·
-          dsimp 
-          erw [wide_pushout.ι_desc]
-          nthRw 1[←category.comp_id A.right]
-          congr 1
-          convert X.right.map_id _ 
-          ext ⟨a, ha⟩
-          change a < 1 at ha 
-          change 0 = a 
-          linarith }
+@[simps #[]]
+def cech_conerve_equiv
+(F : arrow C)
+(X : cosimplicial_object.augmented C) : «expr ≃ »(«expr ⟶ »(F.augmented_cech_conerve, X), «expr ⟶ »(F, augmented.to_arrow.obj X)) :=
+{ to_fun := equivalence_left_to_right _ _,
+  inv_fun := equivalence_right_to_left _ _,
+  left_inv := begin
+    intro [ident A],
+    dsimp [] [] [] [],
+    ext [] [] [],
+    { refl },
+    { cases [expr j] [],
+      dsimp [] [] [] [],
+      simp [] [] ["only"] ["[", expr arrow.cech_conerve_map, ",", expr wide_pushout.ι_desc, ",", expr category.assoc, ",", "<-", expr nat_trans.naturality, ",", expr wide_pushout.ι_desc_assoc, "]"] [] [],
+      refl },
+    { dsimp [] [] [] [],
+      erw [expr wide_pushout.head_desc] [],
+      have [] [] [":=", expr A.w],
+      apply_fun [expr λ e, e.app x] ["at", ident this] [],
+      rw [expr nat_trans.comp_app] ["at", ident this],
+      erw [expr this] [],
+      refl }
+  end,
+  right_inv := begin
+    intro [ident A],
+    dsimp [] [] [] [],
+    ext [] [] [],
+    { refl },
+    { dsimp [] [] [] [],
+      erw [expr wide_pushout.ι_desc] [],
+      nth_rewrite [1] ["<-", expr category.comp_id A.right] [],
+      congr' [1] [],
+      convert [] [expr X.right.map_id _] [],
+      ext [] ["⟨", ident a, ",", ident ha, "⟩"] [],
+      change [expr «expr < »(a, 1)] [] ["at", ident ha],
+      change [expr «expr = »(0, a)] [] [],
+      linarith [] [] [] }
+  end }
 
 /-- The augmented Čech conerve construction is left adjoint to the `to_arrow` functor. -/
 abbrev cech_conerve_adjunction : augmented_cech_conerve ⊣ (augmented.to_arrow : _ ⥤ arrow C) :=

@@ -20,7 +20,7 @@ universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
 variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]
 
--- error in CategoryTheory.StructuredArrow: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in CategoryTheory.StructuredArrow: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /--
 The category of `T`-structured arrows with domain `S : D` (here `T : C ⥤ D`),
 has as its objects `D`-morphisms of the form `S ⟶ T Y`, for some `Y : C`,
@@ -55,10 +55,10 @@ theorem mk_right (f : S ⟶ T.obj Y) : (mk f).right = Y :=
 theorem mk_hom_eq_self (f : S ⟶ T.obj Y) : (mk f).Hom = f :=
   rfl
 
-@[simp, reassoc]
-theorem w {A B : structured_arrow S T} (f : A ⟶ B) : A.hom ≫ T.map f.right = B.hom :=
-  by 
-    have  := f.w <;> tidy
+-- error in CategoryTheory.StructuredArrow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp, reassoc #[]]
+theorem w {A B : structured_arrow S T} (f : «expr ⟶ »(A, B)) : «expr = »(«expr ≫ »(A.hom, T.map f.right), B.hom) :=
+by { have [] [] [":=", expr f.w]; tidy [] }
 
 theorem eq_mk (f : structured_arrow S T) : f = mk f.hom :=
   by 
@@ -139,7 +139,7 @@ instance proj_reflects_iso : reflects_isomorphisms (proj S T) :=
   { reflects :=
       fun Y Z f t =>
         by 
-          exactI
+          exact
             ⟨⟨structured_arrow.hom_mk (inv ((proj S T).map f))
                   (by 
                     simp ),
@@ -183,7 +183,7 @@ def post (S : C) (F : B ⥤ C) (G : C ⥤ D) : structured_arrow S F ⥤ structur
 
 end StructuredArrow
 
--- error in CategoryTheory.StructuredArrow: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler category
+-- error in CategoryTheory.StructuredArrow: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /--
 The category of `S`-costructured arrows with target `T : D` (here `S : C ⥤ D`),
 has as its objects `D`-morphisms of the form `S Y ⟶ T`, for some `Y : C`,
@@ -293,7 +293,7 @@ instance proj_reflects_iso : reflects_isomorphisms (proj S T) :=
   { reflects :=
       fun Y Z f t =>
         by 
-          exactI
+          exact
             ⟨⟨costructured_arrow.hom_mk (inv ((proj S T).map f))
                   (by 
                     simp ),

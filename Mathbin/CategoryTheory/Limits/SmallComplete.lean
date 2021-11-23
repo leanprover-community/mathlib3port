@@ -30,7 +30,7 @@ universe u
 
 variable{C : Type u}[small_category C][has_products C]
 
--- error in CategoryTheory.Limits.SmallComplete: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in CategoryTheory.Limits.SmallComplete: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A small category with products is a thin category.
 

@@ -134,44 +134,45 @@ theorem edist_efixed_point_lt_top (hf : ContractingWith K f) {x : α} (hx : edis
   edist x (efixed_point f hf x hx) < ∞ :=
   (hf.edist_efixed_point_le hx).trans_lt (Ennreal.mul_lt_top hx$ Ennreal.inv_ne_top.2 hf.one_sub_K_ne_zero)
 
--- error in Topology.MetricSpace.Contracting: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem efixed_point_eq_of_edist_lt_top
-(hf : contracting_with K f)
-{x : α}
-(hx : «expr ≠ »(edist x (f x), «expr∞»()))
-{y : α}
-(hy : «expr ≠ »(edist y (f y), «expr∞»()))
-(h : «expr ≠ »(edist x y, «expr∞»())) : «expr = »(efixed_point f hf x hx, efixed_point f hf y hy) :=
-begin
-  refine [expr (hf.eq_or_edist_eq_top_of_fixed_points _ _).elim id (λ
-    h', false.elim (ne_of_lt _ h'))]; try { apply [expr efixed_point_is_fixed_pt] },
-  change [expr edist_lt_top_setoid.rel _ _] [] [],
-  transitivity [expr x],
-  by { symmetry,
-    exact [expr hf.edist_efixed_point_lt_top hx] },
-  transitivity [expr y],
-  exacts ["[", expr lt_top_iff_ne_top.2 h, ",", expr hf.edist_efixed_point_lt_top hy, "]"]
-end
+theorem efixed_point_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) {y : α}
+  (hy : edist y (f y) ≠ ∞) (h : edist x y ≠ ∞) : efixed_point f hf x hx = efixed_point f hf y hy :=
+  by 
+    refine' (hf.eq_or_edist_eq_top_of_fixed_points _ _).elim id fun h' => False.elim (ne_of_ltₓ _ h') <;>
+      try 
+        apply efixed_point_is_fixed_pt 
+    change edist_lt_top_setoid.rel _ _ 
+    trans x
+    ·
+      ·
+        symm 
+        exact hf.edist_efixed_point_lt_top hx 
+    trans y 
+    exacts[lt_top_iff_ne_top.2 h, hf.edist_efixed_point_lt_top hy]
 
 omit cs
 
+-- error in Topology.MetricSpace.Contracting: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Banach fixed-point theorem for maps contracting on a complete subset. -/
-theorem exists_fixed_point' {s : Set α} (hsc : IsComplete s) (hsf : maps_to f s s)
-  (hf : ContractingWith K$ hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
-  ∃ (y : _)(_ : y ∈ s),
-    is_fixed_pt f y ∧
-      tendsto (fun n => (f^[n]) x) at_top (𝓝 y) ∧ ∀ n : ℕ, edist ((f^[n]) x) y ≤ (edist x (f x)*K ^ n) / (1 - K) :=
-  by 
-    haveI  := hsc.complete_space_coe 
-    rcases hf.exists_fixed_point ⟨x, hxs⟩ hx with ⟨y, hfy, h_tendsto, hle⟩
-    refine' ⟨y, y.2, Subtype.ext_iff_val.1 hfy, _, fun n => _⟩
-    ·
-      convert (continuous_subtype_coe.tendsto _).comp h_tendsto 
-      ext n 
-      simp only [· ∘ ·, maps_to.iterate_restrict, maps_to.coe_restrict_apply, Subtype.coe_mk]
-    ·
-      convert hle n 
-      rw [maps_to.iterate_restrict, eq_comm, maps_to.coe_restrict_apply, Subtype.coe_mk]
+theorem exists_fixed_point'
+{s : set α}
+(hsc : is_complete s)
+(hsf : maps_to f s s)
+(hf : «expr $ »(contracting_with K, hsf.restrict f s s))
+{x : α}
+(hxs : «expr ∈ »(x, s))
+(hx : «expr ≠ »(edist x (f x), «expr∞»())) : «expr∃ , »((y «expr ∈ » s), «expr ∧ »(is_fixed_pt f y, «expr ∧ »(tendsto (λ
+    n, «expr ^[ ]»(f, n) x) at_top (expr𝓝() y), ∀
+   n : exprℕ(), «expr ≤ »(edist («expr ^[ ]»(f, n) x) y, «expr / »(«expr * »(edist x (f x), «expr ^ »(K, n)), «expr - »(1, K)))))) :=
+begin
+  haveI [] [] [":=", expr hsc.complete_space_coe],
+  rcases [expr hf.exists_fixed_point ⟨x, hxs⟩ hx, "with", "⟨", ident y, ",", ident hfy, ",", ident h_tendsto, ",", ident hle, "⟩"],
+  refine [expr ⟨y, y.2, subtype.ext_iff_val.1 hfy, _, λ n, _⟩],
+  { convert [] [expr (continuous_subtype_coe.tendsto _).comp h_tendsto] [],
+    ext [] [ident n] [],
+    simp [] [] ["only"] ["[", expr («expr ∘ »), ",", expr maps_to.iterate_restrict, ",", expr maps_to.coe_restrict_apply, ",", expr subtype.coe_mk, "]"] [] [] },
+  { convert [] [expr hle n] [],
+    rw ["[", expr maps_to.iterate_restrict, ",", expr eq_comm, ",", expr maps_to.coe_restrict_apply, ",", expr subtype.coe_mk, "]"] [] }
+end
 
 variable(f)
 
@@ -327,18 +328,21 @@ theorem fixed_point_lipschitz_in_map {g : α → α} (hg : ContractingWith K g) 
 
 omit hf
 
+-- error in Topology.MetricSpace.Contracting: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a map `f` has a contracting iterate `f^[n]`, then the fixed point of `f^[n]` is also a fixed
 point of `f`. -/
-theorem is_fixed_pt_fixed_point_iterate {n : ℕ} (hf : ContractingWith K (f^[n])) :
-  is_fixed_pt f (hf.fixed_point (f^[n])) :=
-  by 
-    set x := hf.fixed_point (f^[n])
-    have hx : (f^[n]) x = x := hf.fixed_point_is_fixed_pt 
-    have  := hf.to_lipschitz_with.dist_le_mul x (f x)
-    rw [←iterate_succ_apply, iterate_succ_apply', hx] at this 
-    contrapose! this 
-    have  := dist_pos.2 (Ne.symm this)
-    simpa only [Nnreal.coe_one, one_mulₓ] using (mul_lt_mul_right this).2 hf.1
+theorem is_fixed_pt_fixed_point_iterate
+{n : exprℕ()}
+(hf : contracting_with K «expr ^[ ]»(f, n)) : is_fixed_pt f (hf.fixed_point «expr ^[ ]»(f, n)) :=
+begin
+  set [] [ident x] [] [":="] [expr hf.fixed_point «expr ^[ ]»(f, n)] [],
+  have [ident hx] [":", expr «expr = »(«expr ^[ ]»(f, n) x, x)] [":=", expr hf.fixed_point_is_fixed_pt],
+  have [] [] [":=", expr hf.to_lipschitz_with.dist_le_mul x (f x)],
+  rw ["[", "<-", expr iterate_succ_apply, ",", expr iterate_succ_apply', ",", expr hx, "]"] ["at", ident this],
+  contrapose ["!"] [ident this],
+  have [] [] [":=", expr dist_pos.2 (ne.symm this)],
+  simpa [] [] ["only"] ["[", expr nnreal.coe_one, ",", expr one_mul, "]"] [] ["using", expr (mul_lt_mul_right this).2 hf.1]
+end
 
 end ContractingWith
 

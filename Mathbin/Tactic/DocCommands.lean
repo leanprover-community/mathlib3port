@@ -115,7 +115,7 @@ unsafe def tactic.get_library_notes : tactic (List (Stringₓ × Stringₓ)) :=
 /-! ### The `add_tactic_doc_entry` command -/
 
 
--- error in Tactic.DocCommands: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in Tactic.DocCommands: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- The categories of tactic doc entry. -/
 @[derive #["[", expr decidable_eq, ",", expr has_reflect, "]"]]
 inductive doc_category
@@ -134,7 +134,7 @@ unsafe def doc_category.to_string : DocCategory → Stringₓ
 unsafe instance  : has_to_format DocCategory :=
   ⟨«expr↑ » doc_category.to_string⟩
 
--- error in Tactic.DocCommands: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler has_reflect
+-- error in Tactic.DocCommands: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 /-- The information used to generate a tactic doc entry -/
 @[derive #[expr has_reflect]]
 structure tactic_doc_entry :=
@@ -196,7 +196,7 @@ unsafe def tactic.add_tactic_doc (tde : TacticDocEntry) : tactic Unit :=
           "A tactic doc entry must either:\n 1. have a description written as a doc-string for the `add_tactic_doc` invocation, or\n 2. have a single declaration in the `decl_names` field, to inherit a description from, or\n 3. explicitly indicate the declaration to inherit the description from using\n    `inherit_description_from`."
     let tde ← if tde.description = "" then tde.update_description else return tde 
     let decl_name := (tde.name ++ tde.category.to_string).mk_hashed_name `tactic_doc 
-    add_decl$ mk_definition decl_name [] (quote TacticDocEntry) (reflect tde)
+    add_decl$ mk_definition decl_name [] (quote.1 TacticDocEntry) (reflect tde)
     tactic_doc_entry_attr decl_name () tt none
 
 /--

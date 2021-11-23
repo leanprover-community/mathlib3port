@@ -198,19 +198,19 @@ theorem sublists'_eq_sublists (l : List α) : sublists' l = map reverse (sublist
   by 
     rw [←sublists'_reverse, reverse_reverse]
 
-theorem sublists_aux_ne_nil : ∀ l : List α, [] ∉ sublists_aux l cons
-| [] => id
-| a :: l =>
-  by 
-    rw [sublists_aux_cons_cons]
-    refine' not_mem_cons_of_ne_of_not_mem (cons_ne_nil _ _).symm _ 
-    have  := sublists_aux_ne_nil l 
-    revert this 
-    induction sublists_aux l cons <;> intro 
-    ·
-      rwa [foldr]
-    simp only [foldr, mem_cons_iff, false_orₓ, not_or_distrib]
-    exact ⟨ne_of_not_mem_cons this, ih (not_mem_of_not_mem_cons this)⟩
+-- error in Data.List.Sublists: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sublists_aux_ne_nil : ∀ l : list α, «expr ∉ »(«expr[ , ]»([]), sublists_aux l cons)
+| «expr[ , ]»([]) := id
+| «expr :: »(a, l) := begin
+  rw ["[", expr sublists_aux_cons_cons, "]"] [],
+  refine [expr not_mem_cons_of_ne_of_not_mem (cons_ne_nil _ _).symm _],
+  have [] [] [":=", expr sublists_aux_ne_nil l],
+  revert [ident this],
+  induction [expr sublists_aux l cons] [] [] []; intro [],
+  { rwa [expr foldr] [] },
+  simp [] [] ["only"] ["[", expr foldr, ",", expr mem_cons_iff, ",", expr false_or, ",", expr not_or_distrib, "]"] [] [],
+  exact [expr ⟨ne_of_not_mem_cons this, ih (not_mem_of_not_mem_cons this)⟩]
+end
 
 @[simp]
 theorem mem_sublists {s t : List α} : s ∈ sublists t ↔ s <+ t :=

@@ -55,7 +55,7 @@ universe u u' v w x y z
 
 variable{R : Type _}{R₁ : Type _}{R₂ : Type _}{R₃ : Type _}
 
-variable{k : Type _}{S : Type _}{T : Type _}
+variable{k : Type _}{S : Type _}{S₃ : Type _}{T : Type _}
 
 variable{M : Type _}{M₁ : Type _}{M₂ : Type _}{M₃ : Type _}
 
@@ -417,13 +417,15 @@ end LinearMap
 
 namespace Module
 
+-- error in Algebra.Module.LinearMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `g : R →+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
-@[simps]
-def comp_hom.to_linear_map {R S : Type _} [Semiringₓ R] [Semiringₓ S] (g : R →+* S) :
-  by 
-    haveI  := comp_hom S g <;> exact R →ₗ[R] S :=
-  by 
-    exact { toFun := (g : R → S), map_add' := g.map_add, map_smul' := g.map_mul }
+@[simps #[]]
+def comp_hom.to_linear_map
+{R S : Type*}
+[semiring R]
+[semiring S]
+(g : «expr →+* »(R, S)) : by haveI [] [] [":=", expr comp_hom S g]; exact [expr «expr →ₗ[ ] »(R, R, S)] :=
+by exact [expr { to_fun := (g : R → S), map_add' := g.map_add, map_smul' := g.map_mul }]
 
 end Module
 
@@ -746,17 +748,23 @@ end Arithmetic
 
 section Actions
 
-variable[Semiringₓ R][AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃]
+variable[Semiringₓ R][Semiringₓ R₂][Semiringₓ R₃]
 
-variable[Module R M][Module R M₂][Module R M₃]
+variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃]
+
+variable[Module R M][Module R₂ M₂][Module R₃ M₃]
+
+variable{σ₁₂ : R →+* R₂}{σ₂₃ : R₂ →+* R₃}{σ₁₃ : R →+* R₃}[RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
 section HasScalar
 
-variable[Monoidₓ S][DistribMulAction S M₂][SmulCommClass R S M₂]
+variable[Monoidₓ S][DistribMulAction S M₂][SmulCommClass R₂ S M₂]
 
-variable[Monoidₓ T][DistribMulAction T M₂][SmulCommClass R T M₂]
+variable[Monoidₓ S₃][DistribMulAction S₃ M₃][SmulCommClass R₃ S₃ M₃]
 
-instance  : HasScalar S (M →ₗ[R] M₂) :=
+variable[Monoidₓ T][DistribMulAction T M₂][SmulCommClass R₂ T M₂]
+
+instance  : HasScalar S (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun a f =>
       { toFun := a • f,
         map_add' :=
@@ -766,42 +774,46 @@ instance  : HasScalar S (M →ₗ[R] M₂) :=
         map_smul' :=
           fun c x =>
             by 
-              simp [Pi.smul_apply, f.map_smul, smul_comm c] }⟩
+              simp [Pi.smul_apply, smul_comm (σ₁₂ c)] }⟩
 
 @[simp]
-theorem smul_apply (a : S) (f : M →ₗ[R] M₂) (x : M) : (a • f) x = a • f x :=
+theorem smul_apply (a : S) (f : M →ₛₗ[σ₁₂] M₂) (x : M) : (a • f) x = a • f x :=
   rfl
 
-theorem coe_smul (a : S) (f : M →ₗ[R] M₂) : «expr⇑ » (a • f) = a • f :=
+theorem coe_smul (a : S) (f : M →ₛₗ[σ₁₂] M₂) : «expr⇑ » (a • f) = a • f :=
   rfl
 
-instance  [SmulCommClass S T M₂] : SmulCommClass S T (M →ₗ[R] M₂) :=
+instance  [SmulCommClass S T M₂] : SmulCommClass S T (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun a b f => ext$ fun x => smul_comm _ _ _⟩
 
-instance  [HasScalar S T] [IsScalarTower S T M₂] : IsScalarTower S T (M →ₗ[R] M₂) :=
+instance  [HasScalar S T] [IsScalarTower S T M₂] : IsScalarTower S T (M →ₛₗ[σ₁₂] M₂) :=
   { smul_assoc := fun _ _ _ => ext$ fun _ => smul_assoc _ _ _ }
 
-instance  : DistribMulAction S (M →ₗ[R] M₂) :=
+instance  : DistribMulAction S (M →ₛₗ[σ₁₂] M₂) :=
   { one_smul := fun f => ext$ fun _ => one_smul _ _, mul_smul := fun c c' f => ext$ fun _ => mul_smul _ _ _,
     smul_add := fun c f g => ext$ fun x => smul_add _ _ _, smul_zero := fun c => ext$ fun x => smul_zero _ }
 
-theorem smul_comp (a : S) (g : M₃ →ₗ[R] M₂) (f : M →ₗ[R] M₃) : (a • g).comp f = a • g.comp f :=
+include σ₁₃
+
+theorem smul_comp (a : S₃) (g : M₂ →ₛₗ[σ₂₃] M₃) (f : M →ₛₗ[σ₁₂] M₂) : (a • g).comp f = a • g.comp f :=
   rfl
 
-theorem comp_smul [DistribMulAction S M₃] [SmulCommClass R S M₃] [compatible_smul M₃ M₂ S R] (g : M₃ →ₗ[R] M₂) (a : S)
-  (f : M →ₗ[R] M₃) : g.comp (a • f) = a • g.comp f :=
+omit σ₁₃
+
+theorem comp_smul [Module R M₂] [Module R M₃] [SmulCommClass R S M₂] [DistribMulAction S M₃] [SmulCommClass R S M₃]
+  [compatible_smul M₃ M₂ S R] (g : M₃ →ₗ[R] M₂) (a : S) (f : M →ₗ[R] M₃) : g.comp (a • f) = a • g.comp f :=
   ext$ fun x => g.map_smul_of_tower _ _
 
 end HasScalar
 
 section Module
 
-variable[Semiringₓ S][Module S M₂][SmulCommClass R S M₂]
+variable[Semiringₓ S][Module S M₂][SmulCommClass R₂ S M₂]
 
-instance  : Module S (M →ₗ[R] M₂) :=
+instance  : Module S (M →ₛₗ[σ₁₂] M₂) :=
   { add_smul := fun a b f => ext$ fun x => add_smul _ _ _, zero_smul := fun f => ext$ fun x => zero_smul _ _ }
 
-instance  [NoZeroSmulDivisors S M₂] : NoZeroSmulDivisors S (M →ₗ[R] M₂) :=
+instance  [NoZeroSmulDivisors S M₂] : NoZeroSmulDivisors S (M →ₛₗ[σ₁₂] M₂) :=
   coe_injective.NoZeroSmulDivisors _ rfl coe_smul
 
 end Module

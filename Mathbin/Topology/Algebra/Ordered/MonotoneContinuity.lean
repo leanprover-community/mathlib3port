@@ -26,6 +26,7 @@ variable{α β : Type _}[LinearOrderₓ α][TopologicalSpace α][OrderTopology �
 
 variable[LinearOrderₓ β][TopologicalSpace β][OrderTopology β]
 
+-- error in Topology.Algebra.Ordered.MonotoneContinuity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a function strictly monotone on a right neighborhood of `a` and the
 image of this neighborhood under `f` meets every interval `(f a, b]`, `b > f a`, then `f` is
 continuous at `a` from the right.
@@ -33,48 +34,57 @@ continuous at `a` from the right.
 The assumption `hfs : ∀ b > f a, ∃ c ∈ s, f c ∈ Ioc (f a) b` is required because otherwise the
 function `f : ℝ → ℝ` given by `f x = if x ≤ 0 then x else x + 1` would be a counter-example at
 `a = 0`. -/
-theorem StrictMonoOn.continuous_at_right_of_exists_between {f : α → β} {s : Set α} {a : α} (h_mono : StrictMonoOn f s)
-  (hs : s ∈ 𝓝[Ici a] a) (hfs : ∀ b _ : b > f a, ∃ (c : _)(_ : c ∈ s), f c ∈ Ioc (f a) b) :
-  ContinuousWithinAt f (Ici a) a :=
-  by 
-    have ha : a ∈ Ici a := left_mem_Ici 
-    have has : a ∈ s := mem_of_mem_nhds_within ha hs 
-    refine' tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩
-    ·
-      filterUpwards [hs, self_mem_nhds_within]
-      intro x hxs hxa 
-      exact hb.trans_le ((h_mono.le_iff_le has hxs).2 hxa)
-    ·
-      rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
-      rw [h_mono.lt_iff_lt has hcs] at hac 
-      filterUpwards [hs, Ico_mem_nhds_within_Ici (left_mem_Ico.2 hac)]
-      rintro x hx ⟨hax, hxc⟩
-      exact ((h_mono.lt_iff_lt hx hcs).2 hxc).trans_le hcb
+theorem strict_mono_on.continuous_at_right_of_exists_between
+{f : α → β}
+{s : set α}
+{a : α}
+(h_mono : strict_mono_on f s)
+(hs : «expr ∈ »(s, «expr𝓝[ ] »(Ici a, a)))
+(hfs : ∀
+ b «expr > » f a, «expr∃ , »((c «expr ∈ » s), «expr ∈ »(f c, Ioc (f a) b))) : continuous_within_at f (Ici a) a :=
+begin
+  have [ident ha] [":", expr «expr ∈ »(a, Ici a)] [":=", expr left_mem_Ici],
+  have [ident has] [":", expr «expr ∈ »(a, s)] [":=", expr mem_of_mem_nhds_within ha hs],
+  refine [expr tendsto_order.2 ⟨λ b hb, _, λ b hb, _⟩],
+  { filter_upwards ["[", expr hs, ",", expr self_mem_nhds_within, "]"] [],
+    intros [ident x, ident hxs, ident hxa],
+    exact [expr hb.trans_le ((h_mono.le_iff_le has hxs).2 hxa)] },
+  { rcases [expr hfs b hb, "with", "⟨", ident c, ",", ident hcs, ",", ident hac, ",", ident hcb, "⟩"],
+    rw ["[", expr h_mono.lt_iff_lt has hcs, "]"] ["at", ident hac],
+    filter_upwards ["[", expr hs, ",", expr Ico_mem_nhds_within_Ici (left_mem_Ico.2 hac), "]"] [],
+    rintros [ident x, ident hx, "⟨", ident hax, ",", ident hxc, "⟩"],
+    exact [expr ((h_mono.lt_iff_lt hx hcs).2 hxc).trans_le hcb] }
+end
 
+-- error in Topology.Algebra.Ordered.MonotoneContinuity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a monotone function on a right neighborhood of `a` and the image of this neighborhood
 under `f` meets every interval `(f a, b)`, `b > f a`, then `f` is continuous at `a` from the right.
 
 The assumption `hfs : ∀ b > f a, ∃ c ∈ s, f c ∈ Ioo (f a) b` cannot be replaced by the weaker
 assumption `hfs : ∀ b > f a, ∃ c ∈ s, f c ∈ Ioc (f a) b` we use for strictly monotone functions
 because otherwise the function `ceil : ℝ → ℤ` would be a counter-example at `a = 0`. -/
-theorem continuous_at_right_of_monotone_on_of_exists_between {f : α → β} {s : Set α} {a : α} (h_mono : MonotoneOn f s)
-  (hs : s ∈ 𝓝[Ici a] a) (hfs : ∀ b _ : b > f a, ∃ (c : _)(_ : c ∈ s), f c ∈ Ioo (f a) b) :
-  ContinuousWithinAt f (Ici a) a :=
-  by 
-    have ha : a ∈ Ici a := left_mem_Ici 
-    have has : a ∈ s := mem_of_mem_nhds_within ha hs 
-    refine' tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩
-    ·
-      filterUpwards [hs, self_mem_nhds_within]
-      intro x hxs hxa 
-      exact hb.trans_le (h_mono has hxs hxa)
-    ·
-      rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
-      have  : a < c 
-      exact not_leₓ.1 fun h => hac.not_le$ h_mono hcs has h 
-      filterUpwards [hs, Ico_mem_nhds_within_Ici (left_mem_Ico.2 this)]
-      rintro x hx ⟨hax, hxc⟩
-      exact (h_mono hx hcs hxc.le).trans_lt hcb
+theorem continuous_at_right_of_monotone_on_of_exists_between
+{f : α → β}
+{s : set α}
+{a : α}
+(h_mono : monotone_on f s)
+(hs : «expr ∈ »(s, «expr𝓝[ ] »(Ici a, a)))
+(hfs : ∀
+ b «expr > » f a, «expr∃ , »((c «expr ∈ » s), «expr ∈ »(f c, Ioo (f a) b))) : continuous_within_at f (Ici a) a :=
+begin
+  have [ident ha] [":", expr «expr ∈ »(a, Ici a)] [":=", expr left_mem_Ici],
+  have [ident has] [":", expr «expr ∈ »(a, s)] [":=", expr mem_of_mem_nhds_within ha hs],
+  refine [expr tendsto_order.2 ⟨λ b hb, _, λ b hb, _⟩],
+  { filter_upwards ["[", expr hs, ",", expr self_mem_nhds_within, "]"] [],
+    intros [ident x, ident hxs, ident hxa],
+    exact [expr hb.trans_le (h_mono has hxs hxa)] },
+  { rcases [expr hfs b hb, "with", "⟨", ident c, ",", ident hcs, ",", ident hac, ",", ident hcb, "⟩"],
+    have [] [":", expr «expr < »(a, c)] [],
+    from [expr not_le.1 (λ h, «expr $ »(hac.not_le, h_mono hcs has h))],
+    filter_upwards ["[", expr hs, ",", expr Ico_mem_nhds_within_Ici (left_mem_Ico.2 this), "]"] [],
+    rintros [ident x, ident hx, "⟨", ident hax, ",", ident hxc, "⟩"],
+    exact [expr (h_mono hx hcs hxc.le).trans_lt hcb] }
+end
 
 /-- If a function `f` with a densely ordered codomain is monotone on a right neighborhood of `a` and
 the closure of the image of this neighborhood under `f` is a right neighborhood of `f a`, then `f`

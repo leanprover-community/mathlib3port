@@ -81,60 +81,66 @@ theorem Union_lift_const (c : T) (ci : ∀ i, S i) (hci : ∀ i, (ci i : α) = c
   by 
     rw [Union_lift_of_mem _ hi, ←this, h]
 
+-- error in Data.Set.UnionLift: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `Union_lift_unary` is useful for proving that `Union_lift` is a homomorphism
   of algebraic structures when defined on the Union of algebraic subobjects.
   For example, it could be used to prove that the lift of a collection
   of linear_maps on a union of submodules preserves scalar multiplication. -/
-theorem Union_lift_unary (u : T → T) (ui : ∀ i, S i → S i)
-  (hui :
-    ∀ i x : S i,
-      u (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) x) =
-        Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) (ui i x))
-  (uβ : β → β) (h : ∀ i x : S i, f i (ui i x) = uβ (f i x)) (x : T) :
-  Union_lift S f hf T (le_of_eqₓ hT') (u x) = uβ (Union_lift S f hf T (le_of_eqₓ hT') x) :=
-  by 
-    subst hT' 
-    cases' Set.mem_Union.1 x.prop with i hi 
-    rw [Union_lift_of_mem x hi, ←h i]
-    have  : x = Set.inclusion (Set.subset_Union S i) ⟨x, hi⟩
-    ·
-      cases x 
-      rfl 
-    have hx' : (Set.inclusion (Set.subset_Union S i) (ui i ⟨x, hi⟩) : α) ∈ S i 
-    exact (ui i ⟨x, hi⟩).Prop 
-    convLHS => rw [this, hui, Union_lift_inclusion]
+theorem Union_lift_unary
+(u : T → T)
+(ui : ∀ i, S i → S i)
+(hui : ∀
+ (i)
+ (x : S i), «expr = »(u (set.inclusion (show «expr ⊆ »(S i, T), from «expr ▸ »(hT'.symm, set.subset_Union S i)) x), set.inclusion (show «expr ⊆ »(S i, T), from «expr ▸ »(hT'.symm, set.subset_Union S i)) (ui i x)))
+(uβ : β → β)
+(h : ∀ (i) (x : S i), «expr = »(f i (ui i x), uβ (f i x)))
+(x : T) : «expr = »(Union_lift S f hf T (le_of_eq hT') (u x), uβ (Union_lift S f hf T (le_of_eq hT') x)) :=
+begin
+  subst [expr hT'],
+  cases [expr set.mem_Union.1 x.prop] ["with", ident i, ident hi],
+  rw ["[", expr Union_lift_of_mem x hi, ",", "<-", expr h i, "]"] [],
+  have [] [":", expr «expr = »(x, set.inclusion (set.subset_Union S i) ⟨x, hi⟩)] [],
+  { cases [expr x] [],
+    refl },
+  have [ident hx'] [":", expr «expr ∈ »((set.inclusion (set.subset_Union S i) (ui i ⟨x, hi⟩) : α), S i)] [],
+  from [expr (ui i ⟨x, hi⟩).prop],
+  conv_lhs [] [] { rw ["[", expr this, ",", expr hui, ",", expr Union_lift_inclusion, "]"] }
+end
 
+-- error in Data.Set.UnionLift: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `Union_lift_binary` is useful for proving that `Union_lift` is a homomorphism
   of algebraic structures when defined on the Union of algebraic subobjects.
   For example, it could be used to prove that the lift of a collection
   of group homomorphisms on a union of subgroups preserves `*`. -/
-theorem Union_lift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (opi : ∀ i, S i → S i → S i)
-  (hopi :
-    ∀ i x y,
-      Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) (opi i x y) =
-        op (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) x)
-          (Set.inclusion (show S i ⊆ T from hT'.symm ▸ Set.subset_Union S i) y))
-  (opβ : β → β → β) (h : ∀ i x y : S i, f i (opi i x y) = opβ (f i x) (f i y)) (x y : T) :
-  Union_lift S f hf T (le_of_eqₓ hT') (op x y) =
-    opβ (Union_lift S f hf T (le_of_eqₓ hT') x) (Union_lift S f hf T (le_of_eqₓ hT') y) :=
-  by 
-    subst hT' 
-    cases' Set.mem_Union.1 x.prop with i hi 
-    cases' Set.mem_Union.1 y.prop with j hj 
-    rcases dir i j with ⟨k, hik, hjk⟩
-    rw [Union_lift_of_mem x (hik hi), Union_lift_of_mem y (hjk hj), ←h k]
-    have hx : x = Set.inclusion (Set.subset_Union S k) ⟨x, hik hi⟩
-    ·
-      cases x 
-      rfl 
-    have hy : y = Set.inclusion (Set.subset_Union S k) ⟨y, hjk hj⟩
-    ·
-      cases y 
-      rfl 
-    have hxy : (Set.inclusion (Set.subset_Union S k) (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩) : α) ∈ S k 
-    exact (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).Prop 
-    convLHS => rw [hx, hy, ←hopi, Union_lift_of_mem _ hxy]
-    simp only [coe_inclusion, Subtype.coe_eta]
+theorem Union_lift_binary
+(dir : directed ((«expr ≤ »)) S)
+(op : T → T → T)
+(opi : ∀ i, S i → S i → S i)
+(hopi : ∀
+ i
+ x
+ y, «expr = »(set.inclusion (show «expr ⊆ »(S i, T), from «expr ▸ »(hT'.symm, set.subset_Union S i)) (opi i x y), op (set.inclusion (show «expr ⊆ »(S i, T), from «expr ▸ »(hT'.symm, set.subset_Union S i)) x) (set.inclusion (show «expr ⊆ »(S i, T), from «expr ▸ »(hT'.symm, set.subset_Union S i)) y)))
+(opβ : β → β → β)
+(h : ∀ (i) (x y : S i), «expr = »(f i (opi i x y), opβ (f i x) (f i y)))
+(x
+ y : T) : «expr = »(Union_lift S f hf T (le_of_eq hT') (op x y), opβ (Union_lift S f hf T (le_of_eq hT') x) (Union_lift S f hf T (le_of_eq hT') y)) :=
+begin
+  subst [expr hT'],
+  cases [expr set.mem_Union.1 x.prop] ["with", ident i, ident hi],
+  cases [expr set.mem_Union.1 y.prop] ["with", ident j, ident hj],
+  rcases [expr dir i j, "with", "⟨", ident k, ",", ident hik, ",", ident hjk, "⟩"],
+  rw ["[", expr Union_lift_of_mem x (hik hi), ",", expr Union_lift_of_mem y (hjk hj), ",", "<-", expr h k, "]"] [],
+  have [ident hx] [":", expr «expr = »(x, set.inclusion (set.subset_Union S k) ⟨x, hik hi⟩)] [],
+  { cases [expr x] [],
+    refl },
+  have [ident hy] [":", expr «expr = »(y, set.inclusion (set.subset_Union S k) ⟨y, hjk hj⟩)] [],
+  { cases [expr y] [],
+    refl },
+  have [ident hxy] [":", expr «expr ∈ »((set.inclusion (set.subset_Union S k) (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩) : α), S k)] [],
+  from [expr (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).prop],
+  conv_lhs [] [] { rw ["[", expr hx, ",", expr hy, ",", "<-", expr hopi, ",", expr Union_lift_of_mem _ hxy, "]"] },
+  simp [] [] ["only"] ["[", expr coe_inclusion, ",", expr subtype.coe_eta, "]"] [] []
+end
 
 end UnionLift
 

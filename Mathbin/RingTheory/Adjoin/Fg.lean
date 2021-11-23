@@ -1,3 +1,5 @@
+import Mathbin.RingTheory.Polynomial.Basic 
+import Mathbin.RingTheory.PrincipalIdealDomain 
 import Mathbin.RingTheory.Adjoin.Polynomial
 
 /-!
@@ -27,53 +29,51 @@ namespace Algebra
 
 variable{R : Type u}{A : Type v}{B : Type w}[CommSemiringₓ R][CommSemiringₓ A][Algebra R A]{s t : Set A}
 
-theorem fg_trans (h1 : (adjoin R s).toSubmodule.Fg) (h2 : (adjoin (adjoin R s) t).toSubmodule.Fg) :
-  (adjoin R (s ∪ t)).toSubmodule.Fg :=
-  by 
-    rcases fg_def.1 h1 with ⟨p, hp, hp'⟩
-    rcases fg_def.1 h2 with ⟨q, hq, hq'⟩
-    refine' fg_def.2 ⟨p*q, hp.mul hq, le_antisymmₓ _ _⟩
-    ·
-      rw [span_le]
-      rintro _ ⟨x, y, hx, hy, rfl⟩
-      change (x*y) ∈ _ 
-      refine' Subalgebra.mul_mem _ _ _
-      ·
-        have  : x ∈ (adjoin R s).toSubmodule
-        ·
-          rw [←hp']
-          exact subset_span hx 
-        exact adjoin_mono (Set.subset_union_left _ _) this 
-      have  : y ∈ (adjoin (adjoin R s) t).toSubmodule
-      ·
-        rw [←hq']
-        exact subset_span hy 
-      change y ∈ adjoin R (s ∪ t)
-      rwa [adjoin_union_eq_adjoin_adjoin]
-    ·
-      intro r hr 
-      change r ∈ adjoin R (s ∪ t) at hr 
-      rw [adjoin_union_eq_adjoin_adjoin] at hr 
-      change r ∈ (adjoin (adjoin R s) t).toSubmodule at hr 
-      rw [←hq', ←Set.image_id q, Finsupp.mem_span_image_iff_total (adjoin R s)] at hr 
-      rcases hr with ⟨l, hlq, rfl⟩
-      have  := @Finsupp.total_apply A A (adjoin R s)
-      rw [this, Finsupp.sum]
-      refine' sum_mem _ _ 
-      intro z hz 
-      change ((l z).1*_) ∈ _ 
-      have  : (l z).1 ∈ (adjoin R s).toSubmodule := (l z).2
-      rw [←hp', ←Set.image_id p, Finsupp.mem_span_image_iff_total R] at this 
-      rcases this with ⟨l2, hlp, hl⟩
-      have  := @Finsupp.total_apply A A R 
-      rw [this] at hl 
-      rw [←hl, Finsupp.sum_mul]
-      refine' sum_mem _ _ 
-      intro t ht 
-      change (_*_) ∈ _ 
-      rw [smul_mul_assoc]
-      refine' smul_mem _ _ _ 
-      exact subset_span ⟨t, z, hlp ht, hlq hz, rfl⟩
+-- error in RingTheory.Adjoin.Fg: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fg_trans
+(h1 : (adjoin R s).to_submodule.fg)
+(h2 : (adjoin (adjoin R s) t).to_submodule.fg) : (adjoin R «expr ∪ »(s, t)).to_submodule.fg :=
+begin
+  rcases [expr fg_def.1 h1, "with", "⟨", ident p, ",", ident hp, ",", ident hp', "⟩"],
+  rcases [expr fg_def.1 h2, "with", "⟨", ident q, ",", ident hq, ",", ident hq', "⟩"],
+  refine [expr fg_def.2 ⟨«expr * »(p, q), hp.mul hq, le_antisymm _ _⟩],
+  { rw ["[", expr span_le, "]"] [],
+    rintros ["_", "⟨", ident x, ",", ident y, ",", ident hx, ",", ident hy, ",", ident rfl, "⟩"],
+    change [expr «expr ∈ »(«expr * »(x, y), _)] [] [],
+    refine [expr subalgebra.mul_mem _ _ _],
+    { have [] [":", expr «expr ∈ »(x, (adjoin R s).to_submodule)] [],
+      { rw ["<-", expr hp'] [],
+        exact [expr subset_span hx] },
+      exact [expr adjoin_mono (set.subset_union_left _ _) this] },
+    have [] [":", expr «expr ∈ »(y, (adjoin (adjoin R s) t).to_submodule)] [],
+    { rw ["<-", expr hq'] [],
+      exact [expr subset_span hy] },
+    change [expr «expr ∈ »(y, adjoin R «expr ∪ »(s, t))] [] [],
+    rwa [expr adjoin_union_eq_adjoin_adjoin] [] },
+  { intros [ident r, ident hr],
+    change [expr «expr ∈ »(r, adjoin R «expr ∪ »(s, t))] [] ["at", ident hr],
+    rw [expr adjoin_union_eq_adjoin_adjoin] ["at", ident hr],
+    change [expr «expr ∈ »(r, (adjoin (adjoin R s) t).to_submodule)] [] ["at", ident hr],
+    rw ["[", "<-", expr hq', ",", "<-", expr set.image_id q, ",", expr finsupp.mem_span_image_iff_total (adjoin R s), "]"] ["at", ident hr],
+    rcases [expr hr, "with", "⟨", ident l, ",", ident hlq, ",", ident rfl, "⟩"],
+    have [] [] [":=", expr @finsupp.total_apply A A (adjoin R s)],
+    rw ["[", expr this, ",", expr finsupp.sum, "]"] [],
+    refine [expr sum_mem _ _],
+    intros [ident z, ident hz],
+    change [expr «expr ∈ »(«expr * »((l z).1, _), _)] [] [],
+    have [] [":", expr «expr ∈ »((l z).1, (adjoin R s).to_submodule)] [":=", expr (l z).2],
+    rw ["[", "<-", expr hp', ",", "<-", expr set.image_id p, ",", expr finsupp.mem_span_image_iff_total R, "]"] ["at", ident this],
+    rcases [expr this, "with", "⟨", ident l2, ",", ident hlp, ",", ident hl, "⟩"],
+    have [] [] [":=", expr @finsupp.total_apply A A R],
+    rw [expr this] ["at", ident hl],
+    rw ["[", "<-", expr hl, ",", expr finsupp.sum_mul, "]"] [],
+    refine [expr sum_mem _ _],
+    intros [ident t, ident ht],
+    change [expr «expr ∈ »(«expr * »(_, _), _)] [] [],
+    rw [expr smul_mul_assoc] [],
+    refine [expr smul_mem _ _ _],
+    exact [expr subset_span ⟨t, z, hlp ht, hlq hz, rfl⟩] }
+end
 
 end Algebra
 
@@ -199,13 +199,10 @@ variable{R : Type u}{A : Type v}{B : Type w}
 
 variable[CommRingₓ R][CommRingₓ A][CommRingₓ B][Algebra R A][Algebra R B]
 
-theorem is_noetherian_ring_of_fg {S : Subalgebra R A} (HS : S.fg) [IsNoetherianRing R] : IsNoetherianRing S :=
-  let ⟨t, ht⟩ := HS 
-  ht ▸
-    (Algebra.adjoin_eq_range R («expr↑ » t : Set A)).symm ▸
-      by 
-        haveI  : IsNoetherianRing (MvPolynomial («expr↑ » t : Set A) R) := MvPolynomial.is_noetherian_ring <;>
-          convert AlgHom.is_noetherian_ring_range _ <;> infer_instance
+-- error in RingTheory.Adjoin.Fg: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_noetherian_ring_of_fg {S : subalgebra R A} (HS : S.fg) [is_noetherian_ring R] : is_noetherian_ring S :=
+let ⟨t, ht⟩ := HS in
+«expr ▸ »(ht, «expr ▸ »((algebra.adjoin_eq_range R («expr↑ »(t) : set A)).symm, by haveI [] [":", expr is_noetherian_ring (mv_polynomial («expr↑ »(t) : set A) R)] [":=", expr mv_polynomial.is_noetherian_ring]; convert [] [expr alg_hom.is_noetherian_ring_range _] []; apply_instance))
 
 theorem is_noetherian_subring_closure (s : Set R) (hs : s.finite) : IsNoetherianRing (Subring.closure s) :=
   show IsNoetherianRing (subalgebraOfSubring (Subring.closure s)) from

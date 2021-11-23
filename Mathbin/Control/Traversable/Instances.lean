@@ -1,4 +1,4 @@
-import Mathbin.Control.Traversable.Lemmas 
+import Mathbin.Control.Applicative 
 import Mathbin.Data.List.Forall2 
 import Mathbin.Data.Set.Lattice
 

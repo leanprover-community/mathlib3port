@@ -35,116 +35,112 @@ open Emetric Ennreal
 
 variable[EmetricSpace α][CompleteSpace α]
 
+-- error in Topology.MetricSpace.Baire: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Baire theorem: a countable intersection of dense open sets is dense. Formulated here when
 the source space is ℕ (and subsumed below by `dense_Inter_of_open` working with any
 encodable source space). -/
-theorem dense_Inter_of_open_nat {f : ℕ → Set α} (ho : ∀ n, IsOpen (f n)) (hd : ∀ n, Dense (f n)) : Dense (⋂n, f n) :=
-  by 
-    let B : ℕ → ℝ≥0∞ := fun n => 1 / 2 ^ n 
-    have Bpos : ∀ n, 0 < B n
-    ·
-      intro n 
-      simp only [B, one_div, one_mulₓ, Ennreal.inv_pos]
-      exact pow_ne_top two_ne_top 
-    have  : ∀ n x δ, δ ≠ 0 → ∃ y r, 0 < r ∧ r ≤ B (n+1) ∧ closed_ball y r ⊆ closed_ball x δ ∩ f n
-    ·
-      intro n x δ δpos 
-      have  : x ∈ Closure (f n) := hd n x 
-      rcases Emetric.mem_closure_iff.1 this (δ / 2) (Ennreal.half_pos δpos) with ⟨y, ys, xy⟩
-      rw [edist_comm] at xy 
-      obtain ⟨r, rpos, hr⟩ : ∃ (r : _)(_ : r > 0), closed_ball y r ⊆ f n :=
-        nhds_basis_closed_eball.mem_iff.1 (is_open_iff_mem_nhds.1 (ho n) y ys)
-      refine' ⟨y, min (min (δ / 2) r) (B (n+1)), _, _, fun z hz => ⟨_, _⟩⟩
-      show 0 < min (min (δ / 2) r) (B (n+1))
-      exact lt_minₓ (lt_minₓ (Ennreal.half_pos δpos) rpos) (Bpos (n+1))
-      show min (min (δ / 2) r) (B (n+1)) ≤ B (n+1)
-      exact min_le_rightₓ _ _ 
-      show z ∈ closed_ball x δ 
-      exact
-        calc edist z x ≤ edist z y+edist y x := edist_triangle _ _ _ 
-          _ ≤ min (min (δ / 2) r) (B (n+1))+δ / 2 := add_le_add hz (le_of_ltₓ xy)
-          _ ≤ (δ / 2)+δ / 2 := add_le_add (le_transₓ (min_le_leftₓ _ _) (min_le_leftₓ _ _)) (le_reflₓ _)
-          _ = δ := Ennreal.add_halves δ 
-          
-      show z ∈ f n 
-      exact
-        hr
-          (calc edist z y ≤ min (min (δ / 2) r) (B (n+1)) := hz 
-            _ ≤ r := le_transₓ (min_le_leftₓ _ _) (min_le_rightₓ _ _)
-            )
-    choose! center radius Hpos HB Hball using this 
-    refine' fun x => (mem_closure_iff_nhds_basis nhds_basis_closed_eball).2 fun ε εpos => _ 
-    let F : ℕ → α × ℝ≥0∞ :=
-      fun n => Nat.recOn n (Prod.mk x (min ε (B 0))) fun n p => Prod.mk (center n p.1 p.2) (radius n p.1 p.2)
-    let c : ℕ → α := fun n => (F n).1
-    let r : ℕ → ℝ≥0∞ := fun n => (F n).2
-    have rpos : ∀ n, 0 < r n
-    ·
-      intro n 
-      induction' n with n hn 
-      exact lt_minₓ εpos (Bpos 0)
-      exact Hpos n (c n) (r n) hn.ne' 
-    have r0 : ∀ n, r n ≠ 0 := fun n => (rpos n).ne' 
-    have rB : ∀ n, r n ≤ B n
-    ·
-      intro n 
-      induction' n with n hn 
-      exact min_le_rightₓ _ _ 
-      exact HB n (c n) (r n) (r0 n)
-    have incl : ∀ n, closed_ball (c (n+1)) (r (n+1)) ⊆ closed_ball (c n) (r n) ∩ f n :=
-      fun n => Hball n (c n) (r n) (r0 n)
-    have cdist : ∀ n, edist (c n) (c (n+1)) ≤ B n
-    ·
-      intro n 
-      rw [edist_comm]
-      have A : c (n+1) ∈ closed_ball (c (n+1)) (r (n+1)) := mem_closed_ball_self 
-      have I :=
-        calc closed_ball (c (n+1)) (r (n+1)) ⊆ closed_ball (c n) (r n) := subset.trans (incl n) (inter_subset_left _ _)
-          _ ⊆ closed_ball (c n) (B n) := closed_ball_subset_closed_ball (rB n)
-          
-      exact I A 
-    have  : CauchySeq c := cauchy_seq_of_edist_le_geometric_two _ one_ne_top cdist 
-    rcases cauchy_seq_tendsto_of_complete this with ⟨y, ylim⟩
-    use y 
-    simp only [exists_prop, Set.mem_Inter]
-    have I : ∀ n, ∀ m _ : m ≥ n, closed_ball (c m) (r m) ⊆ closed_ball (c n) (r n)
-    ·
-      intro n 
-      refine' Nat.le_induction _ fun m hnm h => _
-      ·
-        exact subset.refl _
-      ·
-        exact subset.trans (incl m) (subset.trans (inter_subset_left _ _) h)
-    have yball : ∀ n, y ∈ closed_ball (c n) (r n)
-    ·
-      intro n 
-      refine' is_closed_ball.mem_of_tendsto ylim _ 
-      refine' (Filter.eventually_ge_at_top n).mono fun m hm => _ 
-      exact I n m hm mem_closed_ball_self 
-    split 
-    show ∀ n, y ∈ f n
-    ·
-      intro n 
-      have  : closed_ball (c (n+1)) (r (n+1)) ⊆ f n := subset.trans (incl n) (inter_subset_right _ _)
-      exact this (yball (n+1))
-    show edist y x ≤ ε 
-    exact le_transₓ (yball 0) (min_le_leftₓ _ _)
+theorem dense_Inter_of_open_nat
+{f : exprℕ() → set α}
+(ho : ∀ n, is_open (f n))
+(hd : ∀ n, dense (f n)) : dense «expr⋂ , »((n), f n) :=
+begin
+  let [ident B] [":", expr exprℕ() → «exprℝ≥0∞»()] [":=", expr λ n, «expr / »(1, «expr ^ »(2, n))],
+  have [ident Bpos] [":", expr ∀ n, «expr < »(0, B n)] [],
+  { intro [ident n],
+    simp [] [] ["only"] ["[", expr B, ",", expr one_div, ",", expr one_mul, ",", expr ennreal.inv_pos, "]"] [] [],
+    exact [expr pow_ne_top two_ne_top] },
+  have [] [":", expr ∀
+   n
+   x
+   δ, «expr ≠ »(δ, 0) → «expr∃ , »((y
+     r), «expr ∧ »(«expr < »(0, r), «expr ∧ »(«expr ≤ »(r, B «expr + »(n, 1)), «expr ⊆ »(closed_ball y r, «expr ∩ »(closed_ball x δ, f n)))))] [],
+  { assume [binders (n x δ δpos)],
+    have [] [":", expr «expr ∈ »(x, closure (f n))] [":=", expr hd n x],
+    rcases [expr emetric.mem_closure_iff.1 this «expr / »(δ, 2) (ennreal.half_pos δpos), "with", "⟨", ident y, ",", ident ys, ",", ident xy, "⟩"],
+    rw [expr edist_comm] ["at", ident xy],
+    obtain ["⟨", ident r, ",", ident rpos, ",", ident hr, "⟩", ":", expr «expr∃ , »((r «expr > » 0), «expr ⊆ »(closed_ball y r, f n)), ":=", expr nhds_basis_closed_eball.mem_iff.1 (is_open_iff_mem_nhds.1 (ho n) y ys)],
+    refine [expr ⟨y, min (min «expr / »(δ, 2) r) (B «expr + »(n, 1)), _, _, λ z hz, ⟨_, _⟩⟩],
+    show [expr «expr < »(0, min (min «expr / »(δ, 2) r) (B «expr + »(n, 1)))],
+    from [expr lt_min (lt_min (ennreal.half_pos δpos) rpos) (Bpos «expr + »(n, 1))],
+    show [expr «expr ≤ »(min (min «expr / »(δ, 2) r) (B «expr + »(n, 1)), B «expr + »(n, 1))],
+    from [expr min_le_right _ _],
+    show [expr «expr ∈ »(z, closed_ball x δ)],
+    from [expr calc
+       «expr ≤ »(edist z x, «expr + »(edist z y, edist y x)) : edist_triangle _ _ _
+       «expr ≤ »(..., «expr + »(min (min «expr / »(δ, 2) r) (B «expr + »(n, 1)), «expr / »(δ, 2))) : add_le_add hz (le_of_lt xy)
+       «expr ≤ »(..., «expr + »(«expr / »(δ, 2), «expr / »(δ, 2))) : add_le_add (le_trans (min_le_left _ _) (min_le_left _ _)) (le_refl _)
+       «expr = »(..., δ) : ennreal.add_halves δ],
+    show [expr «expr ∈ »(z, f n)],
+    from [expr hr (calc
+        «expr ≤ »(edist z y, min (min «expr / »(δ, 2) r) (B «expr + »(n, 1))) : hz
+        «expr ≤ »(..., r) : le_trans (min_le_left _ _) (min_le_right _ _))] },
+  choose ["!"] [ident center] [ident radius, ident Hpos, ident HB, ident Hball] ["using", expr this],
+  refine [expr λ x, (mem_closure_iff_nhds_basis nhds_basis_closed_eball).2 (λ ε εpos, _)],
+  let [ident F] [":", expr exprℕ() → «expr × »(α, «exprℝ≥0∞»())] [":=", expr λ
+   n, nat.rec_on n (prod.mk x (min ε (B 0))) (λ n p, prod.mk (center n p.1 p.2) (radius n p.1 p.2))],
+  let [ident c] [":", expr exprℕ() → α] [":=", expr λ n, (F n).1],
+  let [ident r] [":", expr exprℕ() → «exprℝ≥0∞»()] [":=", expr λ n, (F n).2],
+  have [ident rpos] [":", expr ∀ n, «expr < »(0, r n)] [],
+  { assume [binders (n)],
+    induction [expr n] [] ["with", ident n, ident hn] [],
+    exact [expr lt_min εpos (Bpos 0)],
+    exact [expr Hpos n (c n) (r n) hn.ne'] },
+  have [ident r0] [":", expr ∀ n, «expr ≠ »(r n, 0)] [":=", expr λ n, (rpos n).ne'],
+  have [ident rB] [":", expr ∀ n, «expr ≤ »(r n, B n)] [],
+  { assume [binders (n)],
+    induction [expr n] [] ["with", ident n, ident hn] [],
+    exact [expr min_le_right _ _],
+    exact [expr HB n (c n) (r n) (r0 n)] },
+  have [ident incl] [":", expr ∀
+   n, «expr ⊆ »(closed_ball (c «expr + »(n, 1)) (r «expr + »(n, 1)), «expr ∩ »(closed_ball (c n) (r n), f n))] [":=", expr λ
+   n, Hball n (c n) (r n) (r0 n)],
+  have [ident cdist] [":", expr ∀ n, «expr ≤ »(edist (c n) (c «expr + »(n, 1)), B n)] [],
+  { assume [binders (n)],
+    rw [expr edist_comm] [],
+    have [ident A] [":", expr «expr ∈ »(c «expr + »(n, 1), closed_ball (c «expr + »(n, 1)) (r «expr + »(n, 1)))] [":=", expr mem_closed_ball_self],
+    have [ident I] [] [":=", expr calc
+       «expr ⊆ »(closed_ball (c «expr + »(n, 1)) (r «expr + »(n, 1)), closed_ball (c n) (r n)) : subset.trans (incl n) (inter_subset_left _ _)
+       «expr ⊆ »(..., closed_ball (c n) (B n)) : closed_ball_subset_closed_ball (rB n)],
+    exact [expr I A] },
+  have [] [":", expr cauchy_seq c] [":=", expr cauchy_seq_of_edist_le_geometric_two _ one_ne_top cdist],
+  rcases [expr cauchy_seq_tendsto_of_complete this, "with", "⟨", ident y, ",", ident ylim, "⟩"],
+  use [expr y],
+  simp [] [] ["only"] ["[", expr exists_prop, ",", expr set.mem_Inter, "]"] [] [],
+  have [ident I] [":", expr ∀ n, ∀ m «expr ≥ » n, «expr ⊆ »(closed_ball (c m) (r m), closed_ball (c n) (r n))] [],
+  { assume [binders (n)],
+    refine [expr nat.le_induction _ (λ m hnm h, _)],
+    { exact [expr subset.refl _] },
+    { exact [expr subset.trans (incl m) (subset.trans (inter_subset_left _ _) h)] } },
+  have [ident yball] [":", expr ∀ n, «expr ∈ »(y, closed_ball (c n) (r n))] [],
+  { assume [binders (n)],
+    refine [expr is_closed_ball.mem_of_tendsto ylim _],
+    refine [expr (filter.eventually_ge_at_top n).mono (λ m hm, _)],
+    exact [expr I n m hm mem_closed_ball_self] },
+  split,
+  show [expr ∀ n, «expr ∈ »(y, f n)],
+  { assume [binders (n)],
+    have [] [":", expr «expr ⊆ »(closed_ball (c «expr + »(n, 1)) (r «expr + »(n, 1)), f n)] [":=", expr subset.trans (incl n) (inter_subset_right _ _)],
+    exact [expr this (yball «expr + »(n, 1))] },
+  show [expr «expr ≤ »(edist y x, ε)],
+  from [expr le_trans (yball 0) (min_le_left _ _)]
+end
 
+-- error in Topology.MetricSpace.Baire: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Baire theorem: a countable intersection of dense open sets is dense. Formulated here with ⋂₀. -/
-theorem dense_sInter_of_open {S : Set (Set α)} (ho : ∀ s _ : s ∈ S, IsOpen s) (hS : countable S)
-  (hd : ∀ s _ : s ∈ S, Dense s) : Dense (⋂₀S) :=
-  by 
-    cases' S.eq_empty_or_nonempty with h h
-    ·
-      simp [h]
-    ·
-      rcases hS.exists_surjective h with ⟨f, hf⟩
-      have F : ∀ n, f n ∈ S :=
-        fun n =>
-          by 
-            rw [hf] <;> exact mem_range_self _ 
-      rw [hf, sInter_range]
-      exact dense_Inter_of_open_nat (fun n => ho _ (F n)) fun n => hd _ (F n)
+theorem dense_sInter_of_open
+{S : set (set α)}
+(ho : ∀ s «expr ∈ » S, is_open s)
+(hS : countable S)
+(hd : ∀ s «expr ∈ » S, dense s) : dense «expr⋂₀ »(S) :=
+begin
+  cases [expr S.eq_empty_or_nonempty] ["with", ident h, ident h],
+  { simp [] [] [] ["[", expr h, "]"] [] [] },
+  { rcases [expr hS.exists_surjective h, "with", "⟨", ident f, ",", ident hf, "⟩"],
+    have [ident F] [":", expr ∀
+     n, «expr ∈ »(f n, S)] [":=", expr λ n, by rw [expr hf] []; exact [expr mem_range_self _]],
+    rw ["[", expr hf, ",", expr sInter_range, "]"] [],
+    exact [expr dense_Inter_of_open_nat (λ n, ho _ (F n)) (λ n, hd _ (F n))] }
+end
 
 /-- Baire theorem: a countable intersection of dense open sets is dense. Formulated here with
 an index set which is a countable set in any type. -/
@@ -174,24 +170,29 @@ theorem dense_Inter_of_open [Encodable β] {f : β → Set α} (ho : ∀ s, IsOp
     ·
       rwa [forall_range_iff]
 
+-- error in Topology.MetricSpace.Baire: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Baire theorem: a countable intersection of dense Gδ sets is dense. Formulated here with ⋂₀. -/
-theorem dense_sInter_of_Gδ {S : Set (Set α)} (ho : ∀ s _ : s ∈ S, IsGδ s) (hS : countable S)
-  (hd : ∀ s _ : s ∈ S, Dense s) : Dense (⋂₀S) :=
-  by 
-    choose T hT using ho 
-    have  : ⋂₀S = ⋂₀⋃(s : _)(_ : s ∈ S), T s ‹_› := (sInter_bUnion fun s hs => (hT s hs).2.2).symm 
-    rw [this]
-    refine' dense_sInter_of_open _ (hS.bUnion fun s hs => (hT s hs).2.1) _ <;>
-      simp only [Set.mem_Union, exists_prop] <;> rintro t ⟨s, hs, tTs⟩
-    show IsOpen t
-    ·
-      exact (hT s hs).1 t tTs 
-    show Dense t
-    ·
-      intro x 
-      have  := hd s hs x 
-      rw [(hT s hs).2.2] at this 
-      exact closure_mono (sInter_subset_of_mem tTs) this
+theorem dense_sInter_of_Gδ
+{S : set (set α)}
+(ho : ∀ s «expr ∈ » S, is_Gδ s)
+(hS : countable S)
+(hd : ∀ s «expr ∈ » S, dense s) : dense «expr⋂₀ »(S) :=
+begin
+  choose [] [ident T] [ident hT] ["using", expr ho],
+  have [] [":", expr «expr = »(«expr⋂₀ »(S), «expr⋂₀ »(«expr⋃ , »((s «expr ∈ » S), T s «expr‹ ›»(_))))] [":=", expr (sInter_bUnion (λ
+     s hs, (hT s hs).2.2)).symm],
+  rw [expr this] [],
+  refine [expr dense_sInter_of_open _ (hS.bUnion (λ
+     s
+     hs, (hT s hs).2.1)) _]; simp [] [] ["only"] ["[", expr set.mem_Union, ",", expr exists_prop, "]"] [] []; rintro [ident t, "⟨", ident s, ",", ident hs, ",", ident tTs, "⟩"],
+  show [expr is_open t],
+  { exact [expr (hT s hs).1 t tTs] },
+  show [expr dense t],
+  { intro [ident x],
+    have [] [] [":=", expr hd s hs x],
+    rw [expr (hT s hs).2.2] ["at", ident this],
+    exact [expr closure_mono (sInter_subset_of_mem tTs) this] }
+end
 
 /-- Baire theorem: a countable intersection of dense Gδ sets is dense. Formulated here with
 an index set which is an encodable type. -/
@@ -201,14 +202,20 @@ theorem dense_Inter_of_Gδ [Encodable β] {f : β → Set α} (ho : ∀ s, IsGδ
     rw [←sInter_range]
     exact dense_sInter_of_Gδ (forall_range_iff.2 ‹_›) (countable_range _) (forall_range_iff.2 ‹_›)
 
+-- error in Topology.MetricSpace.Baire: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Baire theorem: a countable intersection of dense Gδ sets is dense. Formulated here with
 an index set which is a countable set in any type. -/
-theorem dense_bInter_of_Gδ {S : Set β} {f : ∀ x _ : x ∈ S, Set α} (ho : ∀ s _ : s ∈ S, IsGδ (f s ‹_›))
-  (hS : countable S) (hd : ∀ s _ : s ∈ S, Dense (f s ‹_›)) : Dense (⋂(s : _)(_ : s ∈ S), f s ‹_›) :=
-  by 
-    rw [bInter_eq_Inter]
-    haveI  := hS.to_encodable 
-    exact dense_Inter_of_Gδ (fun s => ho s s.2) fun s => hd s s.2
+theorem dense_bInter_of_Gδ
+{S : set β}
+{f : ∀ x «expr ∈ » S, set α}
+(ho : ∀ s «expr ∈ » S, is_Gδ (f s «expr‹ ›»(_)))
+(hS : countable S)
+(hd : ∀ s «expr ∈ » S, dense (f s «expr‹ ›»(_))) : dense «expr⋂ , »((s «expr ∈ » S), f s «expr‹ ›»(_)) :=
+begin
+  rw [expr bInter_eq_Inter] [],
+  haveI [] [] [":=", expr hS.to_encodable],
+  exact [expr dense_Inter_of_Gδ (λ s, ho s s.2) (λ s, hd s s.2)]
+end
 
 /-- Baire theorem: the intersection of two dense Gδ sets is dense. -/
 theorem Dense.inter_of_Gδ {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) (hsc : Dense s) (htc : Dense t) : Dense (s ∩ t) :=
@@ -260,35 +267,37 @@ instance  : CountableInterFilter (residual α) :=
       ·
         exact dense_bInter_of_Gδ (fun s hs => (hT s hs).1) hSc fun s hs => (hT s hs).2⟩
 
+-- error in Topology.MetricSpace.Baire: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Baire theorem: if countably many closed sets cover the whole space, then their interiors
 are dense. Formulated here with an index set which is a countable set in any type. -/
-theorem dense_bUnion_interior_of_closed {S : Set β} {f : β → Set α} (hc : ∀ s _ : s ∈ S, IsClosed (f s))
-  (hS : countable S) (hU : (⋃(s : _)(_ : s ∈ S), f s) = univ) : Dense (⋃(s : _)(_ : s ∈ S), Interior (f s)) :=
-  by 
-    let g := fun s => «expr ᶜ» (Frontier (f s))
-    have  : Dense (⋂(s : _)(_ : s ∈ S), g s)
-    ·
-      refine' dense_bInter_of_open (fun s hs => _) hS fun s hs => _ 
-      show IsOpen (g s)
-      exact is_open_compl_iff.2 is_closed_frontier 
-      show Dense (g s)
-      ·
-        intro x 
-        simp [interior_frontier (hc s hs)]
-    refine' this.mono _ 
-    show (⋂(s : _)(_ : s ∈ S), g s) ⊆ ⋃(s : _)(_ : s ∈ S), Interior (f s)
-    intro x hx 
-    have  : x ∈ ⋃(s : _)(_ : s ∈ S), f s
-    ·
-      have  := mem_univ x 
-      rwa [←hU] at this 
-    rcases mem_bUnion_iff.1 this with ⟨s, hs, xs⟩
-    have  : x ∈ g s := mem_bInter_iff.1 hx s hs 
-    have  : x ∈ Interior (f s)
-    ·
-      have  : x ∈ f s \ Frontier (f s) := mem_inter xs this 
-      simpa [Frontier, xs, (hc s hs).closure_eq] using this 
-    exact mem_bUnion_iff.2 ⟨s, ⟨hs, this⟩⟩
+theorem dense_bUnion_interior_of_closed
+{S : set β}
+{f : β → set α}
+(hc : ∀ s «expr ∈ » S, is_closed (f s))
+(hS : countable S)
+(hU : «expr = »(«expr⋃ , »((s «expr ∈ » S), f s), univ)) : dense «expr⋃ , »((s «expr ∈ » S), interior (f s)) :=
+begin
+  let [ident g] [] [":=", expr λ s, «expr ᶜ»(frontier (f s))],
+  have [] [":", expr dense «expr⋂ , »((s «expr ∈ » S), g s)] [],
+  { refine [expr dense_bInter_of_open (λ s hs, _) hS (λ s hs, _)],
+    show [expr is_open (g s)],
+    from [expr is_open_compl_iff.2 is_closed_frontier],
+    show [expr dense (g s)],
+    { intro [ident x],
+      simp [] [] [] ["[", expr interior_frontier (hc s hs), "]"] [] [] } },
+  refine [expr this.mono _],
+  show [expr «expr ⊆ »(«expr⋂ , »((s «expr ∈ » S), g s), «expr⋃ , »((s «expr ∈ » S), interior (f s)))],
+  assume [binders (x hx)],
+  have [] [":", expr «expr ∈ »(x, «expr⋃ , »((s «expr ∈ » S), f s))] [],
+  { have [] [] [":=", expr mem_univ x],
+    rwa ["<-", expr hU] ["at", ident this] },
+  rcases [expr mem_bUnion_iff.1 this, "with", "⟨", ident s, ",", ident hs, ",", ident xs, "⟩"],
+  have [] [":", expr «expr ∈ »(x, g s)] [":=", expr mem_bInter_iff.1 hx s hs],
+  have [] [":", expr «expr ∈ »(x, interior (f s))] [],
+  { have [] [":", expr «expr ∈ »(x, «expr \ »(f s, frontier (f s)))] [":=", expr mem_inter xs this],
+    simpa [] [] [] ["[", expr frontier, ",", expr xs, ",", expr (hc s hs).closure_eq, "]"] [] ["using", expr this] },
+  exact [expr mem_bUnion_iff.2 ⟨s, ⟨hs, this⟩⟩]
+end
 
 /-- Baire theorem: if countably many closed sets cover the whole space, then their interiors
 are dense. Formulated here with `⋃₀`. -/
@@ -311,7 +320,7 @@ theorem dense_Union_interior_of_closed [Encodable β] {f : β → Set α} (hc : 
     ·
       rwa [←bUnion_univ] at hU
 
--- error in Topology.MetricSpace.Baire: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Topology.MetricSpace.Baire: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- One of the most useful consequences of Baire theorem: if a countable union of closed sets
 covers the space, then one of the sets has nonempty interior. -/
 theorem nonempty_interior_of_Union_of_closed

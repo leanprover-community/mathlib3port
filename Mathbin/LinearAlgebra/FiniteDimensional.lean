@@ -108,35 +108,41 @@ theorem of_fintype_basis {ι : Type w} [Fintype ι] (h : Basis ι K V) : FiniteD
         convert h.span_eq 
         simp ⟩⟩
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a vector space is `finite_dimensional`, all bases are indexed by a finite type -/
-noncomputable def fintype_basis_index {ι : Type _} [FiniteDimensional K V] (b : Basis ι K V) : Fintype ι :=
-  by 
-    letI this : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance 
-    exact IsNoetherian.fintypeBasisIndex b
+noncomputable
+def fintype_basis_index {ι : Type*} [finite_dimensional K V] (b : basis ι K V) : fintype ι :=
+begin
+  letI [] [":", expr is_noetherian K V] [":=", expr is_noetherian.iff_fg.2 infer_instance],
+  exact [expr is_noetherian.fintype_basis_index b]
+end
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a vector space is `finite_dimensional`, `basis.of_vector_space` is indexed by
-  a finite type.-/
-noncomputable instance  [FiniteDimensional K V] : Fintype (Basis.OfVectorSpaceIndex K V) :=
-  by 
-    letI this : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance 
-    infer_instance
+  a finite type.-/ noncomputable instance [finite_dimensional K V] : fintype (basis.of_vector_space_index K V) :=
+begin
+  letI [] [":", expr is_noetherian K V] [":=", expr is_noetherian.iff_fg.2 infer_instance],
+  apply_instance
+end
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a vector space has a basis indexed by elements of a finite set, then it is
 finite-dimensional. -/
-theorem of_finite_basis {ι : Type w} {s : Set ι} (h : Basis s K V) (hs : Set.Finite s) : FiniteDimensional K V :=
-  by 
-    haveI  := hs.fintype <;> exact of_fintype_basis h
+theorem of_finite_basis {ι : Type w} {s : set ι} (h : basis s K V) (hs : set.finite s) : finite_dimensional K V :=
+by haveI [] [] [":=", expr hs.fintype]; exact [expr of_fintype_basis h]
 
 /-- If a vector space has a finite basis, then it is finite-dimensional, finset style. -/
 theorem of_finset_basis {ι : Type w} {s : Finset ι} (h : Basis s K V) : FiniteDimensional K V :=
   of_finite_basis h s.finite_to_set
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A subspace of a finite-dimensional space is also finite-dimensional. -/
-instance finite_dimensional_submodule [FiniteDimensional K V] (S : Submodule K V) : FiniteDimensional K S :=
-  by 
-    letI this : IsNoetherian K V := iff_fg.2 _ 
-    exact iff_fg.1 (IsNoetherian.iff_dim_lt_omega.2 (lt_of_le_of_ltₓ (dim_submodule_le _) (dim_lt_omega K V)))
-    infer_instance
+instance finite_dimensional_submodule [finite_dimensional K V] (S : submodule K V) : finite_dimensional K S :=
+begin
+  letI [] [":", expr is_noetherian K V] [":=", expr iff_fg.2 _],
+  exact [expr iff_fg.1 (is_noetherian.iff_dim_lt_omega.2 (lt_of_le_of_lt (dim_submodule_le _) (dim_lt_omega K V)))],
+  apply_instance
+end
 
 /-- A quotient of a finite-dimensional space is also finite-dimensional. -/
 instance finite_dimensional_quotient [FiniteDimensional K V] (S : Submodule K V) : FiniteDimensional K (Quotientₓ S) :=
@@ -152,13 +158,20 @@ of `V` over `K`.
 noncomputable def finrank (R V : Type _) [Semiringₓ R] [AddCommGroupₓ V] [Module R V] : ℕ :=
   (Module.rank R V).toNat
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a finite-dimensional space, its dimension (seen as a cardinal) coincides with its
 `finrank`. -/
-theorem finrank_eq_dim (K : Type u) (V : Type v) [DivisionRing K] [AddCommGroupₓ V] [Module K V]
-  [FiniteDimensional K V] : (finrank K V : Cardinal.{v}) = Module.rank K V :=
-  by 
-    letI this : IsNoetherian K V := iff_fg.2 inferInstance 
-    rw [finrank, cast_to_nat_of_lt_omega (dim_lt_omega K V)]
+theorem finrank_eq_dim
+(K : Type u)
+(V : Type v)
+[division_ring K]
+[add_comm_group V]
+[module K V]
+[finite_dimensional K V] : «expr = »((finrank K V : cardinal.{v}), module.rank K V) :=
+begin
+  letI [] [":", expr is_noetherian K V] [":=", expr iff_fg.2 infer_instance],
+  rw ["[", expr finrank, ",", expr cast_to_nat_of_lt_omega (dim_lt_omega K V), "]"] []
+end
 
 theorem finrank_eq_of_dim_eq {n : ℕ} (h : Module.rank K V = «expr↑ » n) : finrank K V = n :=
   by 
@@ -190,23 +203,29 @@ theorem fact_finite_dimensional_of_finrank_eq_succ {K V : Type _} [Field K] [Add
     by 
       convert Nat.succ_posₓ n <;> apply Fact.out
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a vector space has a finite basis, then its dimension is equal to the cardinality of the
 basis. -/
-theorem finrank_eq_card_basis {ι : Type w} [Fintype ι] (h : Basis ι K V) : finrank K V = Fintype.card ι :=
-  by 
-    haveI  : FiniteDimensional K V := of_fintype_basis h 
-    have  := dim_eq_card_basis h 
-    rw [←finrank_eq_dim] at this 
-    exactModCast this
+theorem finrank_eq_card_basis {ι : Type w} [fintype ι] (h : basis ι K V) : «expr = »(finrank K V, fintype.card ι) :=
+begin
+  haveI [] [":", expr finite_dimensional K V] [":=", expr of_fintype_basis h],
+  have [] [] [":=", expr dim_eq_card_basis h],
+  rw ["<-", expr finrank_eq_dim] ["at", ident this],
+  exact_mod_cast [expr this]
+end
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a vector space is finite-dimensional, then the cardinality of any basis is equal to its
 `finrank`. -/
-theorem finrank_eq_card_basis' [FiniteDimensional K V] {ι : Type w} (h : Basis ι K V) :
-  (finrank K V : Cardinal.{w}) = # ι :=
-  by 
-    haveI  : IsNoetherian K V := iff_fg.2 inferInstance 
-    haveI  : Fintype ι := fintype_basis_index h 
-    rw [Cardinal.mk_fintype, finrank_eq_card_basis h]
+theorem finrank_eq_card_basis'
+[finite_dimensional K V]
+{ι : Type w}
+(h : basis ι K V) : «expr = »((finrank K V : cardinal.{w}), «expr#»() ι) :=
+begin
+  haveI [] [":", expr is_noetherian K V] [":=", expr iff_fg.2 infer_instance],
+  haveI [] [":", expr fintype ι] [":=", expr fintype_basis_index h],
+  rw ["[", expr cardinal.mk_fintype, ",", expr finrank_eq_card_basis h, "]"] []
+end
 
 /-- If a vector space has a finite basis, then its dimension is equal to the cardinality of the
 basis. This lemma uses a `finset` instead of indexed types. -/
@@ -228,11 +247,14 @@ noncomputable def fin_basis_of_finrank_eq [FiniteDimensional K V] {n : ℕ} (hn 
 
 variable{K V}
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A module with dimension 1 has a basis with one element. -/
-noncomputable def basis_unique (ι : Type _) [Unique ι] (h : finrank K V = 1) : Basis ι K V :=
-  by 
-    haveI  := finite_dimensional_of_finrank (_root_.zero_lt_one.trans_le h.symm.le)
-    exact (fin_basis_of_finrank_eq K V h).reindex equivOfUniqueOfUnique
+noncomputable
+def basis_unique (ι : Type*) [unique ι] (h : «expr = »(finrank K V, 1)) : basis ι K V :=
+begin
+  haveI [] [] [":=", expr finite_dimensional_of_finrank (_root_.zero_lt_one.trans_le h.symm.le)],
+  exact [expr (fin_basis_of_finrank_eq K V h).reindex equiv_of_unique_of_unique]
+end
 
 @[simp]
 theorem basis_unique.repr_eq_zero_iff {ι : Type _} [Unique ι] {h : finrank K V = 1} {v : V} {i : ι} :
@@ -268,13 +290,18 @@ theorem lt_omega_of_linear_independent {ι : Type w} [FiniteDimensional K V] {v 
     rw [←finrank_eq_dim, Cardinal.lift_omega, Cardinal.lift_nat_cast]
     apply Cardinal.nat_lt_omega
 
-theorem not_linear_independent_of_infinite {ι : Type w} [inf : Infinite ι] [FiniteDimensional K V] (v : ι → V) :
-  ¬LinearIndependent K v :=
-  by 
-    intro h_lin_indep 
-    have  : ¬ω ≤ # ι := not_le.mpr (lt_omega_of_linear_independent h_lin_indep)
-    have  : ω ≤ # ι := infinite_iff.mp inf 
-    contradiction
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem not_linear_independent_of_infinite
+{ι : Type w}
+[inf : infinite ι]
+[finite_dimensional K V]
+(v : ι → V) : «expr¬ »(linear_independent K v) :=
+begin
+  intro [ident h_lin_indep],
+  have [] [":", expr «expr¬ »(«expr ≤ »(exprω(), «expr#»() ι))] [":=", expr not_le.mpr (lt_omega_of_linear_independent h_lin_indep)],
+  have [] [":", expr «expr ≤ »(exprω(), «expr#»() ι)] [":=", expr infinite_iff.mp inf],
+  contradiction
+end
 
 /-- A finite dimensional space has positive `finrank` iff it has a nonzero element. -/
 theorem finrank_pos_iff_exists_ne_zero [FiniteDimensional K V] : 0 < finrank K V ↔ ∃ x : V, x ≠ 0 :=
@@ -292,11 +319,13 @@ theorem finrank_pos_iff [FiniteDimensional K V] : 0 < finrank K V ↔ Nontrivial
       normCast)
     (@dim_pos_iff_nontrivial K V _ _ _ _ _)
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A finite dimensional space is nontrivial if it has positive `finrank`. -/
-theorem nontrivial_of_finrank_pos (h : 0 < finrank K V) : Nontrivial V :=
-  by 
-    haveI  : FiniteDimensional K V := finite_dimensional_of_finrank h 
-    rwa [finrank_pos_iff] at h
+theorem nontrivial_of_finrank_pos (h : «expr < »(0, finrank K V)) : nontrivial V :=
+begin
+  haveI [] [":", expr finite_dimensional K V] [":=", expr finite_dimensional_of_finrank h],
+  rwa [expr finrank_pos_iff] ["at", ident h]
+end
 
 /-- A finite dimensional space is nontrivial if it has `finrank` equal to the successor of a
 natural number. -/
@@ -325,63 +354,54 @@ theorem finrank_zero_of_subsingleton [h : Subsingleton V] : finrank K V = 0 :=
 theorem Basis.subset_extend {s : Set V} (hs : LinearIndependent K (coeₓ : s → V)) : s ⊆ hs.extend (Set.subset_univ _) :=
   hs.subset_extend _
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a submodule has maximal dimension in a finite dimensional space, then it is equal to the
 whole space. -/
-theorem eq_top_of_finrank_eq [FiniteDimensional K V] {S : Submodule K V} (h : finrank K S = finrank K V) : S = ⊤ :=
-  by 
-    haveI  : IsNoetherian K V := iff_fg.2 inferInstance 
-    set bS := Basis.ofVectorSpace K S with bS_eq 
-    have  : LinearIndependent K (coeₓ : (coeₓ '' Basis.OfVectorSpaceIndex K S : Set V) → V)
-    exact
-      @LinearIndependent.image_subtype _ _ _ _ _ _ _ _ _ (Submodule.subtype S)
-        (by 
-          simpa using bS.linear_independent)
-        (by 
-          simp )
-    set b := Basis.extend this with b_eq 
-    letI this : Fintype (this.extend _) :=
-      (finite_of_linear_independent
-          (by 
-            simpa using b.linear_independent)).Fintype
-        
-    letI this : Fintype (Subtype.val '' Basis.OfVectorSpaceIndex K S) := (finite_of_linear_independent this).Fintype 
-    letI this : Fintype (Basis.OfVectorSpaceIndex K S) :=
-      (finite_of_linear_independent
-          (by 
-            simpa using bS.linear_independent)).Fintype
-        
-    have  : Subtype.val '' Basis.OfVectorSpaceIndex K S = this.extend (Set.subset_univ _)
-    exact
-      Set.eq_of_subset_of_card_le (this.subset_extend _)
-        (by 
-          rw [Set.card_image_of_injective _ Subtype.val_injective, ←finrank_eq_card_basis bS, ←finrank_eq_card_basis b,
-              h] <;>
-            infer_instance)
-    rw [←b.span_eq, b_eq, Basis.coe_extend, Subtype.range_coe, ←this, ←subtype_eq_val, span_image]
-    have  := bS.span_eq 
-    rw [bS_eq, Basis.coe_of_vector_space, Subtype.range_coe] at this 
-    rw [this, map_top (Submodule.subtype S), range_subtype]
+theorem eq_top_of_finrank_eq
+[finite_dimensional K V]
+{S : submodule K V}
+(h : «expr = »(finrank K S, finrank K V)) : «expr = »(S, «expr⊤»()) :=
+begin
+  haveI [] [":", expr is_noetherian K V] [":=", expr iff_fg.2 infer_instance],
+  set [] [ident bS] [] [":="] [expr basis.of_vector_space K S] ["with", ident bS_eq],
+  have [] [":", expr linear_independent K (coe : («expr '' »(coe, basis.of_vector_space_index K S) : set V) → V)] [],
+  from [expr @linear_independent.image_subtype _ _ _ _ _ _ _ _ _ (submodule.subtype S) (by simpa [] [] [] [] [] ["using", expr bS.linear_independent]) (by simp [] [] [] [] [] [])],
+  set [] [ident b] [] [":="] [expr basis.extend this] ["with", ident b_eq],
+  letI [] [":", expr fintype (this.extend _)] [":=", expr (finite_of_linear_independent (by simpa [] [] [] [] [] ["using", expr b.linear_independent])).fintype],
+  letI [] [":", expr fintype «expr '' »(subtype.val, basis.of_vector_space_index K S)] [":=", expr (finite_of_linear_independent this).fintype],
+  letI [] [":", expr fintype (basis.of_vector_space_index K S)] [":=", expr (finite_of_linear_independent (by simpa [] [] [] [] [] ["using", expr bS.linear_independent])).fintype],
+  have [] [":", expr «expr = »(«expr '' »(subtype.val, basis.of_vector_space_index K S), this.extend (set.subset_univ _))] [],
+  from [expr set.eq_of_subset_of_card_le (this.subset_extend _) (by rw ["[", expr set.card_image_of_injective _ subtype.val_injective, ",", "<-", expr finrank_eq_card_basis bS, ",", "<-", expr finrank_eq_card_basis b, ",", expr h, "]"] []; apply_instance)],
+  rw ["[", "<-", expr b.span_eq, ",", expr b_eq, ",", expr basis.coe_extend, ",", expr subtype.range_coe, ",", "<-", expr this, ",", "<-", expr subtype_eq_val, ",", expr span_image, "]"] [],
+  have [] [] [":=", expr bS.span_eq],
+  rw ["[", expr bS_eq, ",", expr basis.coe_of_vector_space, ",", expr subtype.range_coe, "]"] ["at", ident this],
+  rw ["[", expr this, ",", expr map_top (submodule.subtype S), ",", expr range_subtype, "]"] []
+end
 
 variable(K)
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A division_ring is one-dimensional as a vector space over itself. -/
 @[simp]
-theorem finrank_self : finrank K K = 1 :=
-  by 
-    have  := dim_self K 
-    rw [←finrank_eq_dim] at this 
-    exactModCast this
+theorem finrank_self : «expr = »(finrank K K, 1) :=
+begin
+  have [] [] [":=", expr dim_self K],
+  rw ["[", "<-", expr finrank_eq_dim, "]"] ["at", ident this],
+  exact_mod_cast [expr this]
+end
 
 instance finite_dimensional_self : FiniteDimensional K K :=
   by 
     infer_instance
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The vector space of functions on a fintype ι has finrank equal to the cardinality of ι. -/
 @[simp]
-theorem finrank_fintype_fun_eq_card {ι : Type v} [Fintype ι] : finrank K (ι → K) = Fintype.card ι :=
-  by 
-    have  : Module.rank K (ι → K) = Fintype.card ι := dim_fun' 
-    rwa [←finrank_eq_dim, nat_cast_inj] at this
+theorem finrank_fintype_fun_eq_card {ι : Type v} [fintype ι] : «expr = »(finrank K (ι → K), fintype.card ι) :=
+begin
+  have [] [":", expr «expr = »(module.rank K (ι → K), fintype.card ι)] [":=", expr dim_fun'],
+  rwa ["[", "<-", expr finrank_eq_dim, ",", expr nat_cast_inj, "]"] ["at", ident this]
+end
 
 /-- The vector space of functions on `fin n` has finrank equal to `n`. -/
 @[simp]
@@ -402,8 +422,8 @@ instance  (x : V) : FiniteDimensional K (K∙x) :=
 /-- Pushforwards of finite-dimensional submodules are finite-dimensional. -/
 instance  (f : V →ₗ[K] V₂) (p : Submodule K V) [h : FiniteDimensional K p] : FiniteDimensional K (p.map f) :=
   by 
-    unfreezingI 
-      rw [FiniteDimensional, ←iff_fg, IsNoetherian.iff_dim_lt_omega] at h⊢
+    (
+      rw [FiniteDimensional, ←iff_fg, IsNoetherian.iff_dim_lt_omega] at h⊢)
     rw [←Cardinal.lift_lt.{v', v}]
     rw [←Cardinal.lift_lt.{v, v'}] at h 
     rw [Cardinal.lift_omega] at h⊢
@@ -459,106 +479,111 @@ open_locale BigOperators
 
 open Finset
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If a finset has cardinality larger than the dimension of the space,
 then there is a nontrivial linear relation amongst its elements.
 -/
-theorem exists_nontrivial_relation_of_dim_lt_card [FiniteDimensional K V] {t : Finset V} (h : finrank K V < t.card) :
-  ∃ f : V → K, (∑e in t, f e • e) = 0 ∧ ∃ (x : _)(_ : x ∈ t), f x ≠ 0 :=
-  by 
-    have  :=
-      mt finset_card_le_finrank_of_linear_independent
-        (by 
-          simpa using h)
-    rw [linear_dependent_iff] at this 
-    obtain ⟨s, g, sum, z, zm, nonzero⟩ := this 
-    let f : V → K := fun x => if h : x ∈ t then if (⟨x, h⟩ : t) ∈ s then g ⟨x, h⟩ else 0 else 0
-    refine' ⟨f, _, _⟩
-    ·
-      dsimp [f]
-      rw [←Sum]
-      fapply sum_bij_ne_zero fun v hvt _ => (⟨v, hvt⟩ : { v // v ∈ t })
-      ·
-        intro v hvt H 
-        dsimp 
-        rw [dif_pos hvt] at H 
-        contrapose! H 
-        rw [if_neg H, zero_smul]
-      ·
-        intro _ _ _ _ _ _ 
-        exact Subtype.mk.injₓ
-      ·
-        intro b hbs hb 
-        use b 
-        simpa only [hbs, exists_prop, dif_pos, Finset.mk_coe, and_trueₓ, if_true, Finset.coe_mem, eq_self_iff_true,
-          exists_prop_of_true, Ne.def] using hb
-      ·
-        intro a h₁ 
-        dsimp 
-        rw [dif_pos h₁]
-        intro h₂ 
-        rw [if_pos]
-        contrapose! h₂ 
-        rw [if_neg h₂, zero_smul]
-    ·
-      refine' ⟨z, z.2, _⟩
-      dsimp only [f]
-      erw [dif_pos z.2, if_pos] <;> rwa [Subtype.coe_eta]
+theorem exists_nontrivial_relation_of_dim_lt_card
+[finite_dimensional K V]
+{t : finset V}
+(h : «expr < »(finrank K V, t.card)) : «expr∃ , »((f : V → K), «expr ∧ »(«expr = »(«expr∑ in , »((e), t, «expr • »(f e, e)), 0), «expr∃ , »((x «expr ∈ » t), «expr ≠ »(f x, 0)))) :=
+begin
+  have [] [] [":=", expr mt finset_card_le_finrank_of_linear_independent (by { simpa [] [] [] [] [] ["using", expr h] })],
+  rw [expr linear_dependent_iff] ["at", ident this],
+  obtain ["⟨", ident s, ",", ident g, ",", ident sum, ",", ident z, ",", ident zm, ",", ident nonzero, "⟩", ":=", expr this],
+  let [ident f] [":", expr V → K] [":=", expr λ
+   x, if h : «expr ∈ »(x, t) then if «expr ∈ »((⟨x, h⟩ : t), s) then g ⟨x, h⟩ else 0 else 0],
+  refine [expr ⟨f, _, _⟩],
+  { dsimp [] ["[", expr f, "]"] [] [],
+    rw ["<-", expr sum] [],
+    fapply [expr sum_bij_ne_zero (λ v hvt _, (⟨v, hvt⟩ : {v // «expr ∈ »(v, t)}))],
+    { intros [ident v, ident hvt, ident H],
+      dsimp [] [] [] [],
+      rw ["[", expr dif_pos hvt, "]"] ["at", ident H],
+      contrapose ["!"] [ident H],
+      rw ["[", expr if_neg H, ",", expr zero_smul, "]"] [] },
+    { intros ["_", "_", "_", "_", "_", "_"],
+      exact [expr subtype.mk.inj] },
+    { intros [ident b, ident hbs, ident hb],
+      use [expr b],
+      simpa [] [] ["only"] ["[", expr hbs, ",", expr exists_prop, ",", expr dif_pos, ",", expr finset.mk_coe, ",", expr and_true, ",", expr if_true, ",", expr finset.coe_mem, ",", expr eq_self_iff_true, ",", expr exists_prop_of_true, ",", expr ne.def, "]"] [] ["using", expr hb] },
+    { intros [ident a, ident h₁],
+      dsimp [] [] [] [],
+      rw ["[", expr dif_pos h₁, "]"] [],
+      intro [ident h₂],
+      rw ["[", expr if_pos, "]"] [],
+      contrapose ["!"] [ident h₂],
+      rw ["[", expr if_neg h₂, ",", expr zero_smul, "]"] [] } },
+  { refine [expr ⟨z, z.2, _⟩],
+    dsimp ["only"] ["[", expr f, "]"] [] [],
+    erw ["[", expr dif_pos z.2, ",", expr if_pos, "]"] []; rwa ["[", expr subtype.coe_eta, "]"] [] }
+end
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If a finset has cardinality larger than `finrank + 1`,
 then there is a nontrivial linear relation amongst its elements,
 such that the coefficients of the relation sum to zero.
 -/
-theorem exists_nontrivial_relation_sum_zero_of_dim_succ_lt_card [FiniteDimensional K V] {t : Finset V}
-  (h : (finrank K V+1) < t.card) :
-  ∃ f : V → K, (∑e in t, f e • e) = 0 ∧ (∑e in t, f e) = 0 ∧ ∃ (x : _)(_ : x ∈ t), f x ≠ 0 :=
-  by 
-    have card_pos : 0 < t.card := lt_transₓ (Nat.succ_posₓ _) h 
-    obtain ⟨x₀, m⟩ := (Finset.card_pos.1 card_pos).bex 
-    let shift : V ↪ V := ⟨fun x => x - x₀, sub_left_injective⟩
-    let t' := (t.erase x₀).map shift 
-    have h' : finrank K V < t'.card
-    ·
-      simp only [t', card_map, Finset.card_erase_of_mem m]
-      exact nat.lt_pred_iff.mpr h 
-    obtain ⟨g, gsum, x₁, x₁_mem, nz⟩ := exists_nontrivial_relation_of_dim_lt_card h' 
-    let f : V → K := fun z => if z = x₀ then -∑z in t.erase x₀, g (z - x₀) else g (z - x₀)
-    refine' ⟨f, _, _, _⟩
-    ·
-      show (∑e : V in t, f e • e) = 0
-      simp only [f]
-      convLHS => applyCongr skip rw [ite_smul]
-      rw [Finset.sum_ite]
-      conv  => congr congr applyCongr simp [filter_eq', m]
-      conv  => congr congr skip applyCongr simp [filter_ne']
-      rw [sum_singleton, neg_smul, add_commₓ, ←sub_eq_add_neg, sum_smul, ←sum_sub_distrib]
-      simp only [←smul_sub]
-      change (∑x : V in t.erase x₀, (fun e => g e • e) (shift x)) = 0
-      rw [←sum_map _ shift]
-      exact gsum
-    ·
-      show (∑e : V in t, f e) = 0
-      rw [←insert_erase m, sum_insert (not_mem_erase x₀ t)]
-      dsimp [f]
-      rw [if_pos rfl]
-      convLHS => congr skip applyCongr skip rw [if_neg (show x ≠ x₀ from (mem_erase.mp H).1)]
-      exact neg_add_selfₓ _
-    ·
-      show ∃ (x : V)(H : x ∈ t), f x ≠ 0
-      refine' ⟨x₁+x₀, _, _⟩
-      ·
-        rw [Finset.mem_map] at x₁_mem 
-        rcases x₁_mem with ⟨x₁, x₁_mem, rfl⟩
-        rw [mem_erase] at x₁_mem 
-        simp only [x₁_mem, sub_add_cancel, Function.Embedding.coe_fn_mk]
-      ·
-        dsimp only [f]
-        rwa [if_neg, add_sub_cancel]
-        rw [add_left_eq_self]
-        rintro rfl 
-        simpa only [sub_eq_zero, exists_prop, Finset.mem_map, embedding.coe_fn_mk, eq_self_iff_true, mem_erase,
-          not_true, exists_eq_right, Ne.def, false_andₓ] using x₁_mem
+theorem exists_nontrivial_relation_sum_zero_of_dim_succ_lt_card
+[finite_dimensional K V]
+{t : finset V}
+(h : «expr < »(«expr + »(finrank K V, 1), t.card)) : «expr∃ , »((f : V → K), «expr ∧ »(«expr = »(«expr∑ in , »((e), t, «expr • »(f e, e)), 0), «expr ∧ »(«expr = »(«expr∑ in , »((e), t, f e), 0), «expr∃ , »((x «expr ∈ » t), «expr ≠ »(f x, 0))))) :=
+begin
+  have [ident card_pos] [":", expr «expr < »(0, t.card)] [":=", expr lt_trans (nat.succ_pos _) h],
+  obtain ["⟨", ident x₀, ",", ident m, "⟩", ":=", expr (finset.card_pos.1 card_pos).bex],
+  let [ident shift] [":", expr «expr ↪ »(V, V)] [":=", expr ⟨λ x, «expr - »(x, x₀), sub_left_injective⟩],
+  let [ident t'] [] [":=", expr (t.erase x₀).map shift],
+  have [ident h'] [":", expr «expr < »(finrank K V, t'.card)] [],
+  { simp [] [] ["only"] ["[", expr t', ",", expr card_map, ",", expr finset.card_erase_of_mem m, "]"] [] [],
+    exact [expr nat.lt_pred_iff.mpr h] },
+  obtain ["⟨", ident g, ",", ident gsum, ",", ident x₁, ",", ident x₁_mem, ",", ident nz, "⟩", ":=", expr exists_nontrivial_relation_of_dim_lt_card h'],
+  let [ident f] [":", expr V → K] [":=", expr λ
+   z, if «expr = »(z, x₀) then «expr- »(«expr∑ in , »((z), t.erase x₀, g «expr - »(z, x₀))) else g «expr - »(z, x₀)],
+  refine [expr ⟨f, _, _, _⟩],
+  { show [expr «expr = »(«expr∑ in , »((e : V), t, «expr • »(f e, e)), 0)],
+    simp [] [] ["only"] ["[", expr f, "]"] [] [],
+    conv_lhs [] [] { apply_congr [],
+      skip,
+      rw ["[", expr ite_smul, "]"] },
+    rw ["[", expr finset.sum_ite, "]"] [],
+    conv [] [] { congr,
+      congr,
+      apply_congr [],
+      simp [] ["[", expr filter_eq', ",", expr m, "]"] [] },
+    conv [] [] { congr,
+      congr,
+      skip,
+      apply_congr [],
+      simp [] ["[", expr filter_ne', "]"] [] },
+    rw ["[", expr sum_singleton, ",", expr neg_smul, ",", expr add_comm, ",", "<-", expr sub_eq_add_neg, ",", expr sum_smul, ",", "<-", expr sum_sub_distrib, "]"] [],
+    simp [] [] ["only"] ["[", "<-", expr smul_sub, "]"] [] [],
+    change [expr «expr = »(«expr∑ in , »((x : V), t.erase x₀, λ e, «expr • »(g e, e) (shift x)), 0)] [] [],
+    rw ["<-", expr sum_map _ shift] [],
+    exact [expr gsum] },
+  { show [expr «expr = »(«expr∑ in , »((e : V), t, f e), 0)],
+    rw ["[", "<-", expr insert_erase m, ",", expr sum_insert (not_mem_erase x₀ t), "]"] [],
+    dsimp [] ["[", expr f, "]"] [] [],
+    rw ["[", expr if_pos rfl, "]"] [],
+    conv_lhs [] [] { congr,
+      skip,
+      apply_congr [],
+      skip,
+      rw [expr if_neg (show «expr ≠ »(x, x₀), from (mem_erase.mp H).1)] },
+    exact [expr neg_add_self _] },
+  { show [expr «expr∃ , »((x : V) (H : «expr ∈ »(x, t)), «expr ≠ »(f x, 0))],
+    refine [expr ⟨«expr + »(x₁, x₀), _, _⟩],
+    { rw [expr finset.mem_map] ["at", ident x₁_mem],
+      rcases [expr x₁_mem, "with", "⟨", ident x₁, ",", ident x₁_mem, ",", ident rfl, "⟩"],
+      rw [expr mem_erase] ["at", ident x₁_mem],
+      simp [] [] ["only"] ["[", expr x₁_mem, ",", expr sub_add_cancel, ",", expr function.embedding.coe_fn_mk, "]"] [] [] },
+    { dsimp ["only"] ["[", expr f, "]"] [] [],
+      rwa ["[", expr if_neg, ",", expr add_sub_cancel, "]"] [],
+      rw ["[", expr add_left_eq_self, "]"] [],
+      rintro [ident rfl],
+      simpa [] [] ["only"] ["[", expr sub_eq_zero, ",", expr exists_prop, ",", expr finset.mem_map, ",", expr embedding.coe_fn_mk, ",", expr eq_self_iff_true, ",", expr mem_erase, ",", expr not_true, ",", expr exists_eq_right, ",", expr ne.def, ",", expr false_and, "]"] [] ["using", expr x₁_mem] } }
+end
 
 section 
 
@@ -676,11 +701,14 @@ theorem finrank_bot : finrank K (⊥ : Submodule K V) = 0 :=
 
 variable{K V}
 
-theorem bot_eq_top_of_dim_eq_zero (h : Module.rank K V = 0) : (⊥ : Submodule K V) = ⊤ :=
-  by 
-    haveI  := finite_dimensional_of_dim_eq_zero h 
-    apply eq_top_of_finrank_eq 
-    rw [finrank_bot, finrank_eq_zero_of_dim_eq_zero h]
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem bot_eq_top_of_dim_eq_zero
+(h : «expr = »(module.rank K V, 0)) : «expr = »((«expr⊥»() : submodule K V), «expr⊤»()) :=
+begin
+  haveI [] [] [":=", expr finite_dimensional_of_dim_eq_zero h],
+  apply [expr eq_top_of_finrank_eq],
+  rw ["[", expr finrank_bot, ",", expr finrank_eq_zero_of_dim_eq_zero h, "]"] []
+end
 
 @[simp]
 theorem dim_eq_zero {S : Submodule K V} : Module.rank K S = 0 ↔ S = ⊥ :=
@@ -708,13 +736,17 @@ open IsNoetherian FiniteDimensional
 theorem fg_iff_finite_dimensional (s : Submodule K V) : s.fg ↔ FiniteDimensional K s :=
   ⟨fun h => Module.finite_def.2$ (fg_top s).2 h, fun h => (fg_top s).1$ Module.finite_def.1 h⟩
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A submodule contained in a finite-dimensional submodule is
 finite-dimensional. -/
-theorem finite_dimensional_of_le {S₁ S₂ : Submodule K V} [FiniteDimensional K S₂] (h : S₁ ≤ S₂) :
-  FiniteDimensional K S₁ :=
-  by 
-    haveI  : IsNoetherian K S₂ := iff_fg.2 inferInstance 
-    exact iff_fg.1 (IsNoetherian.iff_dim_lt_omega.2 (lt_of_le_of_ltₓ (dim_le_of_submodule _ _ h) (dim_lt_omega K S₂)))
+theorem finite_dimensional_of_le
+{S₁ S₂ : submodule K V}
+[finite_dimensional K S₂]
+(h : «expr ≤ »(S₁, S₂)) : finite_dimensional K S₁ :=
+begin
+  haveI [] [":", expr is_noetherian K S₂] [":=", expr iff_fg.2 infer_instance],
+  exact [expr iff_fg.1 (is_noetherian.iff_dim_lt_omega.2 (lt_of_le_of_lt (dim_le_of_submodule _ _ h) (dim_lt_omega K S₂)))]
+end
 
 /-- The inf of two submodules, the first finite-dimensional, is
 finite-dimensional. -/
@@ -737,14 +769,17 @@ instance finite_dimensional_sup (S₁ S₂ : Submodule K V) [h₁ : FiniteDimens
     rw [finite_def] at *
     exact (fg_top _).2 (Submodule.fg_sup ((fg_top S₁).1 h₁) ((fg_top S₂).1 h₂))
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a finite-dimensional vector space, the dimensions of a submodule and of the corresponding
 quotient add up to the dimension of the space. -/
-theorem finrank_quotient_add_finrank [FiniteDimensional K V] (s : Submodule K V) :
-  (finrank K s.quotient+finrank K s) = finrank K V :=
-  by 
-    have  := dim_quotient_add_dim s 
-    rw [←finrank_eq_dim, ←finrank_eq_dim, ←finrank_eq_dim] at this 
-    exactModCast this
+theorem finrank_quotient_add_finrank
+[finite_dimensional K V]
+(s : submodule K V) : «expr = »(«expr + »(finrank K s.quotient, finrank K s), finrank K V) :=
+begin
+  have [] [] [":=", expr dim_quotient_add_dim s],
+  rw ["[", "<-", expr finrank_eq_dim, ",", "<-", expr finrank_eq_dim, ",", "<-", expr finrank_eq_dim, "]"] ["at", ident this],
+  exact_mod_cast [expr this]
+end
 
 /-- The dimension of a submodule is bounded by the dimension of the ambient space. -/
 theorem finrank_le [FiniteDimensional K V] (s : Submodule K V) : finrank K s ≤ finrank K V :=
@@ -765,7 +800,7 @@ theorem finrank_quotient_le [FiniteDimensional K V] (s : Submodule K V) : finran
     rw [←s.finrank_quotient_add_finrank]
     exact Nat.le_add_rightₓ _ _
 
--- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The sum of the dimensions of s + t and s ∩ t is the sum of the dimensions of s and t -/
 theorem dim_sup_add_dim_inf_eq
 (s t : submodule K V)
@@ -778,18 +813,22 @@ begin
   exact [expr key]
 end
 
-theorem eq_top_of_disjoint [FiniteDimensional K V] (s t : Submodule K V)
-  (hdim : (finrank K s+finrank K t) = finrank K V) (hdisjoint : Disjoint s t) : s⊔t = ⊤ :=
-  by 
-    have h_finrank_inf : finrank K («expr↥ » (s⊓t)) = 0
-    ·
-      rw [Disjoint, le_bot_iff] at hdisjoint 
-      rw [hdisjoint, finrank_bot]
-    apply eq_top_of_finrank_eq 
-    rw [←hdim]
-    convert s.dim_sup_add_dim_inf_eq t 
-    rw [h_finrank_inf]
-    rfl
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_top_of_disjoint
+[finite_dimensional K V]
+(s t : submodule K V)
+(hdim : «expr = »(«expr + »(finrank K s, finrank K t), finrank K V))
+(hdisjoint : disjoint s t) : «expr = »(«expr ⊔ »(s, t), «expr⊤»()) :=
+begin
+  have [ident h_finrank_inf] [":", expr «expr = »(finrank K «expr↥ »(«expr ⊓ »(s, t)), 0)] [],
+  { rw ["[", expr disjoint, ",", expr le_bot_iff, "]"] ["at", ident hdisjoint],
+    rw ["[", expr hdisjoint, ",", expr finrank_bot, "]"] [] },
+  apply [expr eq_top_of_finrank_eq],
+  rw ["<-", expr hdim] [],
+  convert [] [expr s.dim_sup_add_dim_inf_eq t] [],
+  rw [expr h_finrank_inf] [],
+  refl
+end
 
 end Submodule
 
@@ -801,11 +840,13 @@ open FiniteDimensional
 protected theorem FiniteDimensional (f : V ≃ₗ[K] V₂) [FiniteDimensional K V] : FiniteDimensional K V₂ :=
   Module.Finite.equiv f
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The dimension of a finite dimensional space is preserved under linear equivalence. -/
-theorem finrank_eq (f : V ≃ₗ[K] V₂) [FiniteDimensional K V] : finrank K V = finrank K V₂ :=
-  by 
-    haveI  : FiniteDimensional K V₂ := f.finite_dimensional 
-    simpa [←finrank_eq_dim] using f.lift_dim_eq
+theorem finrank_eq (f : «expr ≃ₗ[ ] »(V, K, V₂)) [finite_dimensional K V] : «expr = »(finrank K V, finrank K V₂) :=
+begin
+  haveI [] [":", expr finite_dimensional K V₂] [":=", expr f.finite_dimensional],
+  simpa [] [] [] ["[", "<-", expr finrank_eq_dim, "]"] [] ["using", expr f.lift_dim_eq]
+end
 
 /-- Pushforwards of finite-dimensional submodules along a `linear_equiv` have the same finrank. -/
 theorem finrank_map_eq (f : V ≃ₗ[K] V₂) (p : Submodule K V) [FiniteDimensional K p] :
@@ -814,11 +855,15 @@ theorem finrank_map_eq (f : V ≃ₗ[K] V₂) (p : Submodule K V) [FiniteDimensi
 
 end LinearEquiv
 
-instance finite_dimensional_finsupp {ι : Type _} [Fintype ι] [h : FiniteDimensional K V] :
-  FiniteDimensional K (ι →₀ V) :=
-  by 
-    letI this : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance 
-    exact (Finsupp.linearEquivFunOnFintype K V ι).symm.FiniteDimensional
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance finite_dimensional_finsupp
+{ι : Type*}
+[fintype ι]
+[h : finite_dimensional K V] : finite_dimensional K «expr →₀ »(ι, V) :=
+begin
+  letI [] [":", expr is_noetherian K V] [":=", expr is_noetherian.iff_fg.2 infer_instance],
+  exact [expr (finsupp.linear_equiv_fun_on_fintype K V ι).symm.finite_dimensional]
+end
 
 namespace FiniteDimensional
 
@@ -897,12 +942,17 @@ namespace LinearMap
 
 open FiniteDimensional
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- On a finite-dimensional space, an injective linear map is surjective. -/
-theorem surjective_of_injective [FiniteDimensional K V] {f : V →ₗ[K] V} (hinj : injective f) : surjective f :=
-  by 
-    have h := dim_eq_of_injective _ hinj 
-    rw [←finrank_eq_dim, ←finrank_eq_dim, nat_cast_inj] at h 
-    exact range_eq_top.1 (eq_top_of_finrank_eq h.symm)
+theorem surjective_of_injective
+[finite_dimensional K V]
+{f : «expr →ₗ[ ] »(V, K, V)}
+(hinj : injective f) : surjective f :=
+begin
+  have [ident h] [] [":=", expr dim_eq_of_injective _ hinj],
+  rw ["[", "<-", expr finrank_eq_dim, ",", "<-", expr finrank_eq_dim, ",", expr nat_cast_inj, "]"] ["at", ident h],
+  exact [expr range_eq_top.1 (eq_top_of_finrank_eq h.symm)]
+end
 
 /-- On a finite-dimensional space, a linear map is injective if and only if it is surjective. -/
 theorem injective_iff_surjective [FiniteDimensional K V] {f : V →ₗ[K] V} : injective f ↔ surjective f :=
@@ -1017,27 +1067,36 @@ end Top
 theorem finrank_zero_iff_forall_zero [FiniteDimensional K V] : finrank K V = 0 ↔ ∀ x : V, x = 0 :=
   finrank_zero_iff.trans (subsingleton_iff_forall_eq 0)
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `ι` is an empty type and `V` is zero-dimensional, there is a unique `ι`-indexed basis. -/
-noncomputable def basisOfFinrankZero [FiniteDimensional K V] {ι : Type _} [IsEmpty ι] (hV : finrank K V = 0) :
-  Basis ι K V :=
-  by 
-    haveI  : Subsingleton V := finrank_zero_iff.1 hV 
-    exact Basis.empty _
+noncomputable
+def basis_of_finrank_zero
+[finite_dimensional K V]
+{ι : Type*}
+[is_empty ι]
+(hV : «expr = »(finrank K V, 0)) : basis ι K V :=
+begin
+  haveI [] [":", expr subsingleton V] [":=", expr finrank_zero_iff.1 hV],
+  exact [expr basis.empty _]
+end
 
 namespace LinearMap
 
-theorem injective_iff_surjective_of_finrank_eq_finrank [FiniteDimensional K V] [FiniteDimensional K V₂]
-  (H : finrank K V = finrank K V₂) {f : V →ₗ[K] V₂} : Function.Injective f ↔ Function.Surjective f :=
-  by 
-    have  := finrank_range_add_finrank_ker f 
-    rw [←ker_eq_bot, ←range_eq_top]
-    refine' ⟨fun h => _, fun h => _⟩
-    ·
-      rw [h, finrank_bot, add_zeroₓ, H] at this 
-      exact eq_top_of_finrank_eq this
-    ·
-      rw [h, finrank_top, H] at this 
-      exact finrank_eq_zero.1 (add_right_injective _ this)
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem injective_iff_surjective_of_finrank_eq_finrank
+[finite_dimensional K V]
+[finite_dimensional K V₂]
+(H : «expr = »(finrank K V, finrank K V₂))
+{f : «expr →ₗ[ ] »(V, K, V₂)} : «expr ↔ »(function.injective f, function.surjective f) :=
+begin
+  have [] [] [":=", expr finrank_range_add_finrank_ker f],
+  rw ["[", "<-", expr ker_eq_bot, ",", "<-", expr range_eq_top, "]"] [],
+  refine [expr ⟨λ h, _, λ h, _⟩],
+  { rw ["[", expr h, ",", expr finrank_bot, ",", expr add_zero, ",", expr H, "]"] ["at", ident this],
+    exact [expr eq_top_of_finrank_eq this] },
+  { rw ["[", expr h, ",", expr finrank_top, ",", expr H, "]"] ["at", ident this],
+    exact [expr finrank_eq_zero.1 (add_right_injective _ this)] }
+end
 
 theorem ker_eq_bot_iff_range_eq_top_of_finrank_eq_finrank [FiniteDimensional K V] [FiniteDimensional K V₂]
   (H : finrank K V = finrank K V₂) {f : V →ₗ[K] V₂} : f.ker = ⊥ ↔ f.range = ⊤ :=
@@ -1163,12 +1222,14 @@ section Span
 
 open Submodule
 
-theorem finrank_span_le_card (s : Set V) [fin : Fintype s] : finrank K (span K s) ≤ s.to_finset.card :=
-  by 
-    haveI  := span_of_finite K ⟨Finₓ⟩
-    have  : Module.rank K (span K s) ≤ # s := dim_span_le s 
-    rw [←finrank_eq_dim, Cardinal.mk_fintype, ←Set.to_finset_card] at this 
-    exactModCast this
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem finrank_span_le_card (s : set V) [fin : fintype s] : «expr ≤ »(finrank K (span K s), s.to_finset.card) :=
+begin
+  haveI [] [] [":=", expr span_of_finite K ⟨fin⟩],
+  have [] [":", expr «expr ≤ »(module.rank K (span K s), «expr#»() s)] [":=", expr dim_span_le s],
+  rw ["[", "<-", expr finrank_eq_dim, ",", expr cardinal.mk_fintype, ",", "<-", expr set.to_finset_card, "]"] ["at", ident this],
+  exact_mod_cast [expr this]
+end
 
 theorem finrank_span_finset_le_card (s : Finset V) : finrank K (span K (s : Set V)) ≤ s.card :=
   calc finrank K (span K (s : Set V)) ≤ (s : Set V).toFinset.card := finrank_span_le_card s 
@@ -1177,21 +1238,29 @@ theorem finrank_span_finset_le_card (s : Finset V) : finrank K (span K (s : Set 
       simp 
     
 
-theorem finrank_span_eq_card {ι : Type _} [Fintype ι] {b : ι → V} (hb : LinearIndependent K b) :
-  finrank K (span K (Set.Range b)) = Fintype.card ι :=
-  by 
-    haveI  : FiniteDimensional K (span K (Set.Range b)) := span_of_finite K (Set.finite_range b)
-    have  : Module.rank K (span K (Set.Range b)) = # (Set.Range b) := dim_span hb 
-    rwa [←finrank_eq_dim, ←lift_inj, mk_range_eq_of_injective hb.injective, Cardinal.mk_fintype, lift_nat_cast,
-      lift_nat_cast, nat_cast_inj] at this
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem finrank_span_eq_card
+{ι : Type*}
+[fintype ι]
+{b : ι → V}
+(hb : linear_independent K b) : «expr = »(finrank K (span K (set.range b)), fintype.card ι) :=
+begin
+  haveI [] [":", expr finite_dimensional K (span K (set.range b))] [":=", expr span_of_finite K (set.finite_range b)],
+  have [] [":", expr «expr = »(module.rank K (span K (set.range b)), «expr#»() (set.range b))] [":=", expr dim_span hb],
+  rwa ["[", "<-", expr finrank_eq_dim, ",", "<-", expr lift_inj, ",", expr mk_range_eq_of_injective hb.injective, ",", expr cardinal.mk_fintype, ",", expr lift_nat_cast, ",", expr lift_nat_cast, ",", expr nat_cast_inj, "]"] ["at", ident this]
+end
 
-theorem finrank_span_set_eq_card (s : Set V) [fin : Fintype s] (hs : LinearIndependent K (coeₓ : s → V)) :
-  finrank K (span K s) = s.to_finset.card :=
-  by 
-    haveI  := span_of_finite K ⟨Finₓ⟩
-    have  : Module.rank K (span K s) = # s := dim_span_set hs 
-    rw [←finrank_eq_dim, Cardinal.mk_fintype, ←Set.to_finset_card] at this 
-    exactModCast this
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem finrank_span_set_eq_card
+(s : set V)
+[fin : fintype s]
+(hs : linear_independent K (coe : s → V)) : «expr = »(finrank K (span K s), s.to_finset.card) :=
+begin
+  haveI [] [] [":=", expr span_of_finite K ⟨fin⟩],
+  have [] [":", expr «expr = »(module.rank K (span K s), «expr#»() s)] [":=", expr dim_span_set hs],
+  rw ["[", "<-", expr finrank_eq_dim, ",", expr cardinal.mk_fintype, ",", "<-", expr set.to_finset_card, "]"] ["at", ident this],
+  exact_mod_cast [expr this]
+end
 
 theorem finrank_span_finset_eq_card (s : Finset V) (hs : LinearIndependent K (coeₓ : s → V)) :
   finrank K (span K (s : Set V)) = s.card :=
@@ -1222,72 +1291,76 @@ end Span
 
 section Basis
 
--- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem linear_independent_of_span_eq_top_of_card_eq_finrank
-{ι : Type*}
-[fintype ι]
-{b : ι → V}
-(span_eq : «expr = »(span K (set.range b), «expr⊤»()))
-(card_eq : «expr = »(fintype.card ι, finrank K V)) : linear_independent K b :=
-«expr $ »(linear_independent_iff'.mpr, λ s g dependent i i_mem_s, begin
-   by_contra [ident gx_ne_zero],
-   refine [expr ne_of_lt (span_lt_top_of_card_lt_finrank (show «expr < »(«expr '' »(b, «expr \ »(set.univ, {i})).to_finset.card, finrank K V), from _)) _],
-   { calc
-       «expr = »(«expr '' »(b, «expr \ »(set.univ, {i})).to_finset.card, («expr \ »(set.univ, {i}).to_finset.image b).card) : by rw ["[", expr set.to_finset_card, ",", expr fintype.card_of_finset, "]"] []
-       «expr ≤ »(..., «expr \ »(set.univ, {i}).to_finset.card) : finset.card_image_le
-       «expr = »(..., (finset.univ.erase i).card) : congr_arg finset.card (finset.ext (by simp [] [] [] ["[", expr and_comm, "]"] [] []))
-       «expr < »(..., finset.univ.card) : finset.card_erase_lt_of_mem (finset.mem_univ i)
-       «expr = »(..., finrank K V) : card_eq },
-   refine [expr trans (le_antisymm (span_mono (set.image_subset_range _ _)) (span_le.mpr _)) span_eq],
-   rintros ["_", "⟨", ident j, ",", ident rfl, ",", ident rfl, "⟩"],
-   by_cases [expr j_eq, ":", expr «expr = »(j, i)],
-   swap,
-   { refine [expr subset_span ⟨j, (set.mem_diff _).mpr ⟨set.mem_univ _, _⟩, rfl⟩],
-     exact [expr mt set.mem_singleton_iff.mp j_eq] },
-   rw ["[", expr j_eq, ",", expr set_like.mem_coe, ",", expr show «expr = »(b i, «expr- »(«expr • »(«expr ⁻¹»(g i), (s.erase i).sum (λ
-        j, «expr • »(g j, b j))))), from _, "]"] [],
-   { refine [expr submodule.neg_mem _ (smul_mem _ _ (sum_mem _ (λ k hk, _)))],
-     obtain ["⟨", ident k_ne_i, ",", ident k_mem, "⟩", ":=", expr finset.mem_erase.mp hk],
-     refine [expr smul_mem _ _ (subset_span ⟨k, _, rfl⟩)],
-     simpa [] [] [] [] [] ["using", expr k_mem] },
-   apply [expr eq_neg_of_add_eq_zero],
-   calc
-     «expr = »(«expr + »(b i, «expr • »(«expr ⁻¹»(g i), (s.erase i).sum (λ
-         j, «expr • »(g j, b j)))), «expr • »(«expr ⁻¹»(g i), «expr + »(«expr • »(g i, b i), (s.erase i).sum (λ
-         j, «expr • »(g j, b j))))) : by rw ["[", expr smul_add, ",", "<-", expr mul_smul, ",", expr inv_mul_cancel gx_ne_zero, ",", expr one_smul, "]"] []
-     «expr = »(..., «expr • »(«expr ⁻¹»(g i), 0)) : congr_arg _ _
-     «expr = »(..., 0) : smul_zero _,
-   rwa ["[", "<-", expr finset.insert_erase i_mem_s, ",", expr finset.sum_insert (finset.not_mem_erase _ _), "]"] ["at", ident dependent]
- end)
+theorem linear_independent_of_span_eq_top_of_card_eq_finrank {ι : Type _} [Fintype ι] {b : ι → V}
+  (span_eq : span K (Set.Range b) = ⊤) (card_eq : Fintype.card ι = finrank K V) : LinearIndependent K b :=
+  linear_independent_iff'.mpr$
+    fun s g dependent i i_mem_s =>
+      by 
+        byContra gx_ne_zero 
+        refine'
+          ne_of_ltₓ (span_lt_top_of_card_lt_finrank (show (b '' (Set.Univ \ {i})).toFinset.card < finrank K V from _)) _
+        ·
+          calc (b '' (Set.Univ \ {i})).toFinset.card = ((Set.Univ \ {i}).toFinset.Image b).card :=
+            by 
+              rw [Set.to_finset_card, Fintype.card_of_finset]_ ≤ (Set.Univ \ {i}).toFinset.card :=
+            Finset.card_image_le _ = (finset.univ.erase i).card :=
+            congr_argₓ Finset.card
+              (Finset.ext
+                (by 
+                  simp [and_comm]))_ < finset.univ.card :=
+            Finset.card_erase_lt_of_mem (Finset.mem_univ i)_ = finrank K V := card_eq 
+        refine' trans (le_antisymmₓ (span_mono (Set.image_subset_range _ _)) (span_le.mpr _)) span_eq 
+        rintro _ ⟨j, rfl, rfl⟩
+        byCases' j_eq : j = i 
+        swap
+        ·
+          refine' subset_span ⟨j, (Set.mem_diff _).mpr ⟨Set.mem_univ _, _⟩, rfl⟩
+          exact mt set.mem_singleton_iff.mp j_eq 
+        rw [j_eq, SetLike.mem_coe, show b i = -(g i⁻¹ • (s.erase i).Sum fun j => g j • b j) from _]
+        ·
+          refine' Submodule.neg_mem _ (smul_mem _ _ (sum_mem _ fun k hk => _))
+          obtain ⟨k_ne_i, k_mem⟩ := finset.mem_erase.mp hk 
+          refine' smul_mem _ _ (subset_span ⟨k, _, rfl⟩)
+          simpa using k_mem 
+        apply eq_neg_of_add_eq_zero 
+        calc
+          (b i+g i⁻¹ • (s.erase i).Sum fun j => g j • b j) = g i⁻¹ • (g i • b i)+(s.erase i).Sum fun j => g j • b j :=
+          by 
+            rw [smul_add, ←mul_smul, inv_mul_cancel gx_ne_zero, one_smul]_ = g i⁻¹ • 0 :=
+          congr_argₓ _ _ _ = 0 := smul_zero _ 
+        rwa [←Finset.insert_erase i_mem_s, Finset.sum_insert (Finset.not_mem_erase _ _)] at dependent
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A finite family of vectors is linearly independent if and only if
 its cardinality equals the dimension of its span. -/
-theorem linear_independent_iff_card_eq_finrank_span {ι : Type _} [Fintype ι] {b : ι → V} :
-  LinearIndependent K b ↔ Fintype.card ι = finrank K (span K (Set.Range b)) :=
-  by 
-    split 
-    ·
-      intro h 
-      exact (finrank_span_eq_card h).symm
-    ·
-      intro hc 
-      let f := Submodule.subtype (span K (Set.Range b))
-      let b' : ι → span K (Set.Range b) := fun i => ⟨b i, mem_span.2 fun p hp => hp (Set.mem_range_self _)⟩
-      have hs : span K (Set.Range b') = ⊤
-      ·
-        rw [eq_top_iff']
-        intro x 
-        have h : span K (f '' Set.Range b') = map f (span K (Set.Range b')) := span_image f 
-        have hf : f '' Set.Range b' = Set.Range b
-        ·
-          ext x 
-          simp [Set.mem_image, Set.mem_range]
-        rw [hf] at h 
-        have hx : (x : V) ∈ span K (Set.Range b) := x.property 
-        conv  at hx => congr skip rw [h]
-        simpa [mem_map] using hx 
-      have hi : f.ker = ⊥ := ker_subtype _ 
-      convert (linear_independent_of_span_eq_top_of_card_eq_finrank hs hc).map' _ hi
+theorem linear_independent_iff_card_eq_finrank_span
+{ι : Type*}
+[fintype ι]
+{b : ι → V} : «expr ↔ »(linear_independent K b, «expr = »(fintype.card ι, finrank K (span K (set.range b)))) :=
+begin
+  split,
+  { intro [ident h],
+    exact [expr (finrank_span_eq_card h).symm] },
+  { intro [ident hc],
+    let [ident f] [] [":=", expr submodule.subtype (span K (set.range b))],
+    let [ident b'] [":", expr ι → span K (set.range b)] [":=", expr λ
+     i, ⟨b i, mem_span.2 (λ p hp, hp (set.mem_range_self _))⟩],
+    have [ident hs] [":", expr «expr = »(span K (set.range b'), «expr⊤»())] [],
+    { rw [expr eq_top_iff'] [],
+      intro [ident x],
+      have [ident h] [":", expr «expr = »(span K «expr '' »(f, set.range b'), map f (span K (set.range b')))] [":=", expr span_image f],
+      have [ident hf] [":", expr «expr = »(«expr '' »(f, set.range b'), set.range b)] [],
+      { ext [] [ident x] [],
+        simp [] [] [] ["[", expr set.mem_image, ",", expr set.mem_range, "]"] [] [] },
+      rw [expr hf] ["at", ident h],
+      have [ident hx] [":", expr «expr ∈ »((x : V), span K (set.range b))] [":=", expr x.property],
+      conv ["at", ident hx] [] { congr,
+        skip,
+        rw [expr h] },
+      simpa [] [] [] ["[", expr mem_map, "]"] [] ["using", expr hx] },
+    have [ident hi] [":", expr «expr = »(f.ker, «expr⊥»())] [":=", expr ker_subtype _],
+    convert [] [expr (linear_independent_of_span_eq_top_of_card_eq_finrank hs hc).map' _ hi] [] }
+end
 
 /-- A family of `finrank K V` vectors forms a basis if they span the whole space. -/
 noncomputable def basisOfSpanEqTopOfCardEqFinrank {ι : Type _} [Fintype ι] (b : ι → V)
@@ -1314,7 +1387,7 @@ noncomputable def setBasisOfSpanEqTopOfCardEqFinrank {s : Set V} [Fintype s] (sp
   basisOfSpanEqTopOfCardEqFinrank (coeₓ : s → V) ((@Subtype.range_coe_subtype _ s).symm ▸ span_eq)
     (trans s.to_finset_card.symm card_eq)
 
--- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem span_eq_top_of_linear_independent_of_card_eq_finrank
 {ι : Type*}
 [hι : nonempty ι]
@@ -1390,24 +1463,23 @@ theorem finrank_eq_one (v : V) (n : v ≠ 0) (h : ∀ w : V, ∃ c : K, c • v 
     obtain ⟨b⟩ := (Basis.basis_singleton_iff PUnit).mpr ⟨v, n, h⟩
     rw [finrank_eq_card_basis b, Fintype.card_punit]
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If every vector is a multiple of some `v : V`, then `V` has dimension at most one.
 -/
-theorem finrank_le_one (v : V) (h : ∀ w : V, ∃ c : K, c • v = w) : finrank K V ≤ 1 :=
-  by 
-    byCases' n : v = 0
-    ·
-      subst n 
-      convert zero_le_one 
-      haveI  :=
-        subsingleton_of_forall_eq (0 : V)
-          fun w =>
-            by 
-              obtain ⟨c, rfl⟩ := h w 
-              simp 
-      exact finrank_zero_of_subsingleton
-    ·
-      exact (finrank_eq_one v n h).le
+theorem finrank_le_one
+(v : V)
+(h : ∀ w : V, «expr∃ , »((c : K), «expr = »(«expr • »(c, v), w))) : «expr ≤ »(finrank K V, 1) :=
+begin
+  by_cases [expr n, ":", expr «expr = »(v, 0)],
+  { subst [expr n],
+    convert [] [expr zero_le_one] [],
+    haveI [] [] [":=", expr subsingleton_of_forall_eq (0 : V) (λ
+      w, by { obtain ["⟨", ident c, ",", ident rfl, "⟩", ":=", expr h w],
+        simp [] [] [] [] [] [] })],
+    exact [expr finrank_zero_of_subsingleton] },
+  { exact [expr (finrank_eq_one v n h).le] }
+end
 
 /--
 A vector space with a nonzero vector `v` has dimension 1 iff `v` spans.
@@ -1431,19 +1503,18 @@ theorem finrank_eq_one_iff_of_nonzero' (v : V) (nz : v ≠ 0) : finrank K V = 1 
     rw [finrank_eq_one_iff_of_nonzero v nz]
     apply span_singleton_eq_top_iff
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A module has dimension 1 iff there is some `v : V` so `{v}` is a basis.
--/
-theorem finrank_eq_one_iff (ι : Type _) [Unique ι] : finrank K V = 1 ↔ Nonempty (Basis ι K V) :=
-  by 
-    fsplit
-    ·
-      intro h 
-      haveI  := finite_dimensional_of_finrank (_root_.zero_lt_one.trans_le h.symm.le)
-      exact ⟨basis_unique ι h⟩
-    ·
-      rintro ⟨b⟩
-      simpa using finrank_eq_card_basis b
+-/ theorem finrank_eq_one_iff (ι : Type*) [unique ι] : «expr ↔ »(«expr = »(finrank K V, 1), nonempty (basis ι K V)) :=
+begin
+  fsplit,
+  { intro [ident h],
+    haveI [] [] [":=", expr finite_dimensional_of_finrank (_root_.zero_lt_one.trans_le h.symm.le)],
+    exact [expr ⟨basis_unique ι h⟩] },
+  { rintro ["⟨", ident b, "⟩"],
+    simpa [] [] [] [] [] ["using", expr finrank_eq_card_basis b] }
+end
 
 /--
 A module has dimension 1 iff there is some nonzero `v : V` so every vector is a multiple of `v`.
@@ -1458,32 +1529,31 @@ theorem finrank_eq_one_iff' : finrank K V = 1 ↔ ∃ (v : V)(n : v ≠ 0), ∀ 
     infer_instance 
     infer_instance
 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 A finite dimensional module has dimension at most 1 iff
 there is some `v : V` so every vector is a multiple of `v`.
 -/
-theorem finrank_le_one_iff [FiniteDimensional K V] : finrank K V ≤ 1 ↔ ∃ v : V, ∀ w : V, ∃ c : K, c • v = w :=
-  by 
-    fsplit
-    ·
-      intro h 
-      byCases' h' : finrank K V = 0
-      ·
-        use 0
-        intro w 
-        use 0
-        haveI  := finrank_zero_iff.mp h' 
-        apply Subsingleton.elimₓ
-      ·
-        replace h' := zero_lt_iff.mpr h' 
-        have  : finrank K V = 1
-        ·
-          linarith 
-        obtain ⟨v, -, p⟩ := finrank_eq_one_iff'.mp this 
-        use ⟨v, p⟩
-    ·
-      rintro ⟨v, p⟩
-      exact finrank_le_one v p
+theorem finrank_le_one_iff
+[finite_dimensional K V] : «expr ↔ »(«expr ≤ »(finrank K V, 1), «expr∃ , »((v : V), ∀
+  w : V, «expr∃ , »((c : K), «expr = »(«expr • »(c, v), w)))) :=
+begin
+  fsplit,
+  { intro [ident h],
+    by_cases [expr h', ":", expr «expr = »(finrank K V, 0)],
+    { use [expr 0],
+      intro [ident w],
+      use [expr 0],
+      haveI [] [] [":=", expr finrank_zero_iff.mp h'],
+      apply [expr subsingleton.elim] },
+    { replace [ident h'] [] [":=", expr zero_lt_iff.mpr h'],
+      have [] [":", expr «expr = »(finrank K V, 1)] [],
+      { linarith [] [] [] },
+      obtain ["⟨", ident v, ",", "-", ",", ident p, "⟩", ":=", expr finrank_eq_one_iff'.mp this],
+      use [expr ⟨v, p⟩] } },
+  { rintro ["⟨", ident v, ",", ident p, "⟩"],
+    exact [expr finrank_le_one v p] }
+end
 
 end finrank_eq_one
 
@@ -1493,14 +1563,11 @@ open Module
 
 variable{F E : Type _}[Field F][Field E][Algebra F E]
 
--- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem subalgebra.dim_eq_one_of_eq_bot
-{S : subalgebra F E}
-(h : «expr = »(S, «expr⊥»())) : «expr = »(module.rank F S, 1) :=
-begin
-  rw ["[", "<-", expr S.to_submodule_equiv.dim_eq, ",", expr h, ",", expr (linear_equiv.of_eq («expr⊥»() : subalgebra F E).to_submodule _ algebra.to_submodule_bot).dim_eq, ",", expr dim_span_set, "]"] [],
-  exacts ["[", expr mk_singleton _, ",", expr linear_independent_singleton one_ne_zero, "]"]
-end
+theorem Subalgebra.dim_eq_one_of_eq_bot {S : Subalgebra F E} (h : S = ⊥) : Module.rank F S = 1 :=
+  by 
+    rw [←S.to_submodule_equiv.dim_eq, h,
+      (LinearEquiv.ofEq (⊥ : Subalgebra F E).toSubmodule _ Algebra.to_submodule_bot).dim_eq, dim_span_set]
+    exacts[mk_singleton _, linear_independent_singleton one_ne_zero]
 
 @[simp]
 theorem Subalgebra.dim_bot : Module.rank F (⊥ : Subalgebra F E) = 1 :=
@@ -1526,53 +1593,53 @@ theorem Subalgebra.dim_top : Module.rank F (⊤ : Subalgebra F E) = Module.rank 
 instance Subalgebra.finite_dimensional_bot : FiniteDimensional F (⊥ : Subalgebra F E) :=
   finite_dimensional_of_dim_eq_one Subalgebra.dim_bot
 
-@[simp]
-theorem Subalgebra.finrank_bot : finrank F (⊥ : Subalgebra F E) = 1 :=
-  by 
-    have  : Module.rank F (⊥ : Subalgebra F E) = 1 := Subalgebra.dim_bot 
-    rw [←finrank_eq_dim] at this 
-    normCast  at *
-    simp 
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem subalgebra.finrank_bot : «expr = »(finrank F («expr⊥»() : subalgebra F E), 1) :=
+begin
+  have [] [":", expr «expr = »(module.rank F («expr⊥»() : subalgebra F E), 1)] [":=", expr subalgebra.dim_bot],
+  rw ["<-", expr finrank_eq_dim] ["at", ident this],
+  norm_cast ["at", "*"],
+  simp [] [] [] ["*"] [] []
+end
 
 theorem Subalgebra.finrank_eq_one_of_eq_bot {S : Subalgebra F E} (h : S = ⊥) : finrank F S = 1 :=
   by 
     rw [h]
     exact Subalgebra.finrank_bot
 
-theorem Subalgebra.eq_bot_of_finrank_one {S : Subalgebra F E} (h : finrank F S = 1) : S = ⊥ :=
-  by 
-    rw [eq_bot_iff]
-    let b : Set S := {1}
-    have  : Fintype b := Unique.fintype 
-    have b_lin_ind : LinearIndependent F (coeₓ : b → S) := linear_independent_singleton one_ne_zero 
-    have b_card : Fintype.card b = 1 := Fintype.card_of_subsingleton _ 
-    let hb :=
-      setBasisOfLinearIndependentOfCardEqFinrank b_lin_ind
-        (by 
-          simp only [Set.to_finset_card])
-    have b_spans := hb.span_eq 
-    intro x hx 
-    rw [Algebra.mem_bot]
-    have x_in_span_b : (⟨x, hx⟩ : S) ∈ Submodule.span F b
-    ·
-      rw [coe_set_basis_of_linear_independent_of_card_eq_finrank, Subtype.range_coe] at b_spans 
-      rw [b_spans]
-      exact Submodule.mem_top 
-    obtain ⟨a, ha⟩ := submodule.mem_span_singleton.mp x_in_span_b 
-    replace ha : a • 1 = x :=
-      by 
-        injections with ha 
-    exact
-      ⟨a,
-        by 
-          rw [←ha, Algebra.smul_def, mul_oneₓ]⟩
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem subalgebra.eq_bot_of_finrank_one
+{S : subalgebra F E}
+(h : «expr = »(finrank F S, 1)) : «expr = »(S, «expr⊥»()) :=
+begin
+  rw [expr eq_bot_iff] [],
+  let [ident b] [":", expr set S] [":=", expr {1}],
+  have [] [":", expr fintype b] [":=", expr unique.fintype],
+  have [ident b_lin_ind] [":", expr linear_independent F (coe : b → S)] [":=", expr linear_independent_singleton one_ne_zero],
+  have [ident b_card] [":", expr «expr = »(fintype.card b, 1)] [":=", expr fintype.card_of_subsingleton _],
+  let [ident hb] [] [":=", expr set_basis_of_linear_independent_of_card_eq_finrank b_lin_ind (by simp [] [] ["only"] ["[", "*", ",", expr set.to_finset_card, "]"] [] [])],
+  have [ident b_spans] [] [":=", expr hb.span_eq],
+  intros [ident x, ident hx],
+  rw ["[", expr algebra.mem_bot, "]"] [],
+  have [ident x_in_span_b] [":", expr «expr ∈ »((⟨x, hx⟩ : S), submodule.span F b)] [],
+  { rw ["[", expr coe_set_basis_of_linear_independent_of_card_eq_finrank, ",", expr subtype.range_coe, "]"] ["at", ident b_spans],
+    rw [expr b_spans] [],
+    exact [expr submodule.mem_top] },
+  obtain ["⟨", ident a, ",", ident ha, "⟩", ":=", expr submodule.mem_span_singleton.mp x_in_span_b],
+  replace [ident ha] [":", expr «expr = »(«expr • »(a, 1), x)] [":=", expr by injections ["with", ident ha]],
+  exact [expr ⟨a, by rw ["[", "<-", expr ha, ",", expr algebra.smul_def, ",", expr mul_one, "]"] []⟩]
+end
 
-theorem Subalgebra.eq_bot_of_dim_one {S : Subalgebra F E} (h : Module.rank F S = 1) : S = ⊥ :=
-  by 
-    haveI  : FiniteDimensional F S := finite_dimensional_of_dim_eq_one h 
-    rw [←finrank_eq_dim] at h 
-    normCast  at h 
-    exact Subalgebra.eq_bot_of_finrank_one h
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem subalgebra.eq_bot_of_dim_one
+{S : subalgebra F E}
+(h : «expr = »(module.rank F S, 1)) : «expr = »(S, «expr⊥»()) :=
+begin
+  haveI [] [":", expr finite_dimensional F S] [":=", expr finite_dimensional_of_dim_eq_one h],
+  rw ["<-", expr finrank_eq_dim] ["at", ident h],
+  norm_cast ["at", ident h],
+  exact [expr subalgebra.eq_bot_of_finrank_one h]
+end
 
 @[simp]
 theorem Subalgebra.bot_eq_top_of_dim_eq_one (h : Module.rank F E = 1) : (⊥ : Subalgebra F E) = ⊤ :=
@@ -1600,7 +1667,7 @@ namespace Module
 
 namespace End
 
--- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_ker_pow_eq_ker_pow_succ
 [finite_dimensional K V]
 (f : End K V) : «expr∃ , »((k : exprℕ()), «expr ∧ »(«expr ≤ »(k, finrank K V), «expr = »(«expr ^ »(f, k).ker, «expr ^ »(f, k.succ).ker))) :=

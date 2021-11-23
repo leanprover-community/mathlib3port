@@ -128,16 +128,16 @@ theorem fun_support_eq (f : α →₀ M) : Function.Support f = f.support :=
 theorem not_mem_support_iff {f : α →₀ M} {a} : a ∉ f.support ↔ f a = 0 :=
   not_iff_comm.1 mem_support_iff.symm
 
-theorem coe_fn_injective : @Function.Injective (α →₀ M) (α → M) coeFn
-| ⟨s, f, hf⟩, ⟨t, g, hg⟩, h =>
-  by 
-    change f = g at h 
-    subst h 
-    have  : s = t
-    ·
-      ext a 
-      exact (hf a).trans (hg a).symm 
-    subst this
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem coe_fn_injective : @function.injective «expr →₀ »(α, M) (α → M) coe_fn
+| ⟨s, f, hf⟩, ⟨t, g, hg⟩, h := begin
+  change [expr «expr = »(f, g)] [] ["at", ident h],
+  subst [expr h],
+  have [] [":", expr «expr = »(s, t)] [],
+  { ext [] [ident a] [],
+    exact [expr (hf a).trans (hg a).symm] },
+  subst [expr this]
+end
 
 @[simp, normCast]
 theorem coe_fn_inj {f g : α →₀ M} : (f : α → M) = g ↔ f = g :=
@@ -330,28 +330,26 @@ theorem eq_single_iff {f : α →₀ M} {a b} : f = single a b ↔ f.support ⊆
     byCases' hx : a = x <;> simp only [hx, single_eq_same, single_eq_of_ne, Ne.def, not_false_iff]
     exact not_mem_support_iff.1 (mt (fun hx => (mem_singleton.1 (h hx)).symm) hx)
 
-theorem single_eq_single_iff (a₁ a₂ : α) (b₁ b₂ : M) :
-  single a₁ b₁ = single a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ ∨ b₁ = 0 ∧ b₂ = 0 :=
-  by 
-    split 
-    ·
-      intro eq 
-      byCases' a₁ = a₂
-      ·
-        refine' Or.inl ⟨h, _⟩
-        rwa [h, (single_injective a₂).eq_iff] at eq
-      ·
-        rw [ext_iff] at eq 
-        have h₁ := Eq a₁ 
-        have h₂ := Eq a₂ 
-        simp only [single_eq_same, single_eq_of_ne h, single_eq_of_ne (Ne.symm h)] at h₁ h₂ 
-        exact Or.inr ⟨h₁, h₂.symm⟩
-    ·
-      rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
-      ·
-        rfl
-      ·
-        rw [single_zero, single_zero]
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem single_eq_single_iff
+(a₁ a₂ : α)
+(b₁
+ b₂ : M) : «expr ↔ »(«expr = »(single a₁ b₁, single a₂ b₂), «expr ∨ »(«expr ∧ »(«expr = »(a₁, a₂), «expr = »(b₁, b₂)), «expr ∧ »(«expr = »(b₁, 0), «expr = »(b₂, 0)))) :=
+begin
+  split,
+  { assume [binders (eq)],
+    by_cases [expr «expr = »(a₁, a₂)],
+    { refine [expr or.inl ⟨h, _⟩],
+      rwa ["[", expr h, ",", expr (single_injective a₂).eq_iff, "]"] ["at", ident eq] },
+    { rw ["[", expr ext_iff, "]"] ["at", ident eq],
+      have [ident h₁] [] [":=", expr eq a₁],
+      have [ident h₂] [] [":=", expr eq a₂],
+      simp [] [] ["only"] ["[", expr single_eq_same, ",", expr single_eq_of_ne h, ",", expr single_eq_of_ne (ne.symm h), "]"] [] ["at", ident h₁, ident h₂],
+      exact [expr or.inr ⟨h₁, h₂.symm⟩] } },
+  { rintros ["(", "⟨", ident rfl, ",", ident rfl, "⟩", "|", "⟨", ident rfl, ",", ident rfl, "⟩", ")"],
+    { refl },
+    { rw ["[", expr single_zero, ",", expr single_zero, "]"] [] } }
+end
 
 /-- `finsupp.single a b` is injective in `a`. For the statement that it is injective in `b`, see
 `finsupp.single_injective` -/
@@ -361,13 +359,13 @@ theorem single_left_injective (h : b ≠ 0) : Function.Injective fun a : α => s
 theorem single_left_inj (h : b ≠ 0) : single a b = single a' b ↔ a = a' :=
   (single_left_injective h).eq_iff
 
-theorem support_single_ne_bot (i : α) (h : b ≠ 0) : (single i b).Support ≠ ⊥ :=
-  by 
-    have  : i ∈ (single i b).Support :=
-      by 
-        simpa using h 
-    intro H 
-    simpa [H]
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem support_single_ne_bot (i : α) (h : «expr ≠ »(b, 0)) : «expr ≠ »((single i b).support, «expr⊥»()) :=
+begin
+  have [] [":", expr «expr ∈ »(i, (single i b).support)] [":=", expr by simpa [] [] [] [] [] ["using", expr h]],
+  intro [ident H],
+  simpa [] [] [] ["[", expr H, "]"] [] []
+end
 
 theorem support_single_disjoint {b' : M} (hb : b ≠ 0) (hb' : b' ≠ 0) {i j : α} :
   Disjoint (single i b).Support (single j b').Support ↔ i ≠ j :=
@@ -687,7 +685,7 @@ theorem emb_domain_map_range (f : α ↪ β) (g : M → N) (p : α →₀ M) (hg
     ·
       rw [map_range_apply, emb_domain_notin_range, emb_domain_notin_range, ←hg] <;> assumption
 
--- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem single_of_emb_domain_single
 (l : «expr →₀ »(α, M))
 (f : «expr ↪ »(α, β))
@@ -900,7 +898,7 @@ theorem sum_ite_self_eq' [DecidableEq α] {N : Type _} [AddCommMonoidₓ N] (f :
 theorem prod_pow [Fintype α] (f : α →₀ ℕ) (g : α → N) : (f.prod fun a b => g a ^ b) = ∏a, g a ^ f a :=
   f.prod_fintype _$ fun a => pow_zeroₓ _
 
--- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `g` maps a second argument of 0 to 1, then multiplying it over the
 result of `on_finset` is the same as multiplying it over the original
 `finset`. -/
@@ -1441,25 +1439,33 @@ theorem multiset_sum_sum_index [AddCommMonoidₓ M] [AddCommMonoidₓ N] (f : Mu
       by 
         rw [Multiset.sum_cons, Multiset.map_cons, Multiset.sum_cons, sum_add_index h₀ h₁, ih]
 
-theorem support_sum_eq_bUnion {α : Type _} {ι : Type _} {M : Type _} [AddCommMonoidₓ M] {g : ι → α →₀ M} (s : Finset ι)
-  (h : ∀ i₁ i₂, i₁ ≠ i₂ → Disjoint (g i₁).Support (g i₂).Support) :
-  (∑i in s, g i).Support = s.bUnion fun i => (g i).Support :=
-  by 
-    apply Finset.induction_on s
-    ·
-      simp 
-    ·
-      intro i s hi 
-      simp only [hi, sum_insert, not_false_iff, bUnion_insert]
-      intro hs 
-      rw [Finsupp.support_add_eq, hs]
-      rw [hs]
-      intro x hx 
-      simp only [mem_bUnion, exists_prop, inf_eq_inter, Ne.def, mem_inter] at hx 
-      obtain ⟨hxi, j, hj, hxj⟩ := hx 
-      have hn : i ≠ j := fun H => hi (H.symm ▸ hj)
-      apply h _ _ hn 
-      simp [hxi, hxj]
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem support_sum_eq_bUnion
+{α : Type*}
+{ι : Type*}
+{M : Type*}
+[add_comm_monoid M]
+{g : ι → «expr →₀ »(α, M)}
+(s : finset ι)
+(h : ∀
+ i₁
+ i₂, «expr ≠ »(i₁, i₂) → disjoint (g i₁).support (g i₂).support) : «expr = »(«expr∑ in , »((i), s, g i).support, s.bUnion (λ
+  i, (g i).support)) :=
+begin
+  apply [expr finset.induction_on s],
+  { simp [] [] [] [] [] [] },
+  { intros [ident i, ident s, ident hi],
+    simp [] [] ["only"] ["[", expr hi, ",", expr sum_insert, ",", expr not_false_iff, ",", expr bUnion_insert, "]"] [] [],
+    intro [ident hs],
+    rw ["[", expr finsupp.support_add_eq, ",", expr hs, "]"] [],
+    rw ["[", expr hs, "]"] [],
+    intros [ident x, ident hx],
+    simp [] [] ["only"] ["[", expr mem_bUnion, ",", expr exists_prop, ",", expr inf_eq_inter, ",", expr ne.def, ",", expr mem_inter, "]"] [] ["at", ident hx],
+    obtain ["⟨", ident hxi, ",", ident j, ",", ident hj, ",", ident hxj, "⟩", ":=", expr hx],
+    have [ident hn] [":", expr «expr ≠ »(i, j)] [":=", expr λ H, hi «expr ▸ »(H.symm, hj)],
+    apply [expr h _ _ hn],
+    simp [] [] [] ["[", expr hxi, ",", expr hxj, "]"] [] [] }
+end
 
 theorem multiset_map_sum [HasZero M] {f : α →₀ M} {m : β → γ} {h : α → M → Multiset β} :
   Multiset.map m (f.sum h) = f.sum fun a b => (h a b).map m :=
@@ -1747,15 +1753,17 @@ theorem prod_map_domain_index_inj [CommMonoidₓ N] {f : α → β} {s : α →�
   by 
     rw [←Function.Embedding.coe_fn_mk f hf, ←emb_domain_eq_map_domain, prod_emb_domain]
 
-theorem map_domain_injective {f : α → β} (hf : Function.Injective f) :
-  Function.Injective (map_domain f : (α →₀ M) → β →₀ M) :=
-  by 
-    intro v₁ v₂ eq 
-    ext a 
-    have  : map_domain f v₁ (f a) = map_domain f v₂ (f a)
-    ·
-      rw [Eq]
-    rwa [map_domain_apply hf, map_domain_apply hf] at this
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_domain_injective
+{f : α → β}
+(hf : function.injective f) : function.injective (map_domain f : «expr →₀ »(α, M) → «expr →₀ »(β, M)) :=
+begin
+  assume [binders (v₁ v₂ eq)],
+  ext [] [ident a] [],
+  have [] [":", expr «expr = »(map_domain f v₁ (f a), map_domain f v₂ (f a))] [],
+  { rw [expr eq] [] },
+  rwa ["[", expr map_domain_apply hf, ",", expr map_domain_apply hf, "]"] ["at", ident this]
+end
 
 theorem map_domain.add_monoid_hom_comp_map_range [AddCommMonoidₓ N] (f : α → β) (g : M →+ N) :
   (map_domain.add_monoid_hom f).comp (map_range.add_monoid_hom g) =
@@ -1809,22 +1817,18 @@ theorem eq_zero_of_comap_domain_eq_zero [AddCommMonoidₓ M] (f : α → β) (l 
     cases' hf.2.2 ha with b hb 
     exact h b (hb.2.symm ▸ ha)
 
--- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem map_domain_comap_domain
-[add_comm_monoid M]
-(f : α → β)
-(l : «expr →₀ »(β, M))
-(hf : function.injective f)
-(hl : «expr ⊆ »(«expr↑ »(l.support), set.range f)) : «expr = »(map_domain f (comap_domain f l (hf.inj_on _)), l) :=
-begin
-  ext [] [ident a] [],
-  by_cases [expr h_cases, ":", expr «expr ∈ »(a, set.range f)],
-  { rcases [expr set.mem_range.1 h_cases, "with", "⟨", ident b, ",", ident hb, "⟩"],
-    rw ["[", expr hb.symm, ",", expr map_domain_apply hf, ",", expr comap_domain_apply, "]"] [] },
-  { rw [expr map_domain_notin_range _ _ h_cases] [],
-    by_contra [ident h_contr],
-    apply [expr h_cases «expr $ »(hl, «expr $ »(finset.mem_coe.2, «expr $ »(mem_support_iff.2, λ h, h_contr h.symm)))] }
-end
+theorem map_domain_comap_domain [AddCommMonoidₓ M] (f : α → β) (l : β →₀ M) (hf : Function.Injective f)
+  (hl : «expr↑ » l.support ⊆ Set.Range f) : map_domain f (comap_domain f l (hf.inj_on _)) = l :=
+  by 
+    ext a 
+    byCases' h_cases : a ∈ Set.Range f
+    ·
+      rcases Set.mem_range.1 h_cases with ⟨b, hb⟩
+      rw [hb.symm, map_domain_apply hf, comap_domain_apply]
+    ·
+      rw [map_domain_notin_range _ _ h_cases]
+      byContra h_contr 
+      apply h_cases (hl$ Finset.mem_coe.2$ mem_support_iff.2$ fun h => h_contr h.symm)
 
 end ComapDomain
 
@@ -2358,21 +2362,20 @@ finitely supported functions from `β` to `γ`. -/
 protected def curry (f : α × β →₀ M) : α →₀ β →₀ M :=
   f.sum$ fun p c => single p.1 (single p.2 c)
 
-@[simp]
-theorem curry_apply (f : α × β →₀ M) (x : α) (y : β) : f.curry x y = f (x, y) :=
-  by 
-    have  : ∀ b : α × β, single b.fst (single b.snd (f b)) x y = if b = (x, y) then f b else 0
-    ·
-      rintro ⟨b₁, b₂⟩
-      simp [single_apply, ite_apply, Prod.ext_iff, ite_and]
-      splitIfs <;> simp [single_apply]
-    rw [Finsupp.curry, sum_apply, sum_apply, Finsupp.sum, Finset.sum_eq_single, this, if_pos rfl]
-    ·
-      intro b hb b_ne 
-      rw [this b, if_neg b_ne]
-    ·
-      intro hxy 
-      rw [this (x, y), if_pos rfl, not_mem_support_iff.mp hxy]
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem curry_apply (f : «expr →₀ »(«expr × »(α, β), M)) (x : α) (y : β) : «expr = »(f.curry x y, f (x, y)) :=
+begin
+  have [] [":", expr ∀
+   b : «expr × »(α, β), «expr = »(single b.fst (single b.snd (f b)) x y, if «expr = »(b, (x, y)) then f b else 0)] [],
+  { rintros ["⟨", ident b₁, ",", ident b₂, "⟩"],
+    simp [] [] [] ["[", expr single_apply, ",", expr ite_apply, ",", expr prod.ext_iff, ",", expr ite_and, "]"] [] [],
+    split_ifs [] []; simp [] [] [] ["[", expr single_apply, ",", "*", "]"] [] [] },
+  rw ["[", expr finsupp.curry, ",", expr sum_apply, ",", expr sum_apply, ",", expr finsupp.sum, ",", expr finset.sum_eq_single, ",", expr this, ",", expr if_pos rfl, "]"] [],
+  { intros [ident b, ident hb, ident b_ne],
+    rw ["[", expr this b, ",", expr if_neg b_ne, "]"] [] },
+  { intros [ident hxy],
+    rw ["[", expr this (x, y), ",", expr if_pos rfl, ",", expr not_mem_support_iff.mp hxy, "]"] [] }
+end
 
 theorem sum_curry_index (f : α × β →₀ M) (g : α → β → M → N) (hg₀ : ∀ a b, g a b 0 = 0)
   (hg₁ : ∀ a b c₀ c₁, g a b (c₀+c₁) = g a b c₀+g a b c₁) :
@@ -2695,15 +2698,26 @@ theorem smul_single {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] (c
 theorem smul_single' {_ : Semiringₓ R} (c : R) (a : α) (b : R) : c • Finsupp.single a b = Finsupp.single a (c*b) :=
   smul_single _ _ _
 
-theorem map_range_smul {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] [AddMonoidₓ N] [DistribMulAction R N]
-  {f : M → N} {hf : f 0 = 0} (c : R) (v : α →₀ M) (hsmul : ∀ x, f (c • x) = c • f x) :
-  map_range f hf (c • v) = c • map_range f hf v :=
-  by 
-    erw [←map_range_comp]
-    have  : f ∘ (· • ·) c = (· • ·) c ∘ f := funext hsmul 
-    simpRw [this]
-    apply map_range_comp 
-    rw [Function.comp_apply, smul_zero, hf]
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_range_smul
+{_ : monoid R}
+[add_monoid M]
+[distrib_mul_action R M]
+[add_monoid N]
+[distrib_mul_action R N]
+{f : M → N}
+{hf : «expr = »(f 0, 0)}
+(c : R)
+(v : «expr →₀ »(α, M))
+(hsmul : ∀
+ x, «expr = »(f «expr • »(c, x), «expr • »(c, f x))) : «expr = »(map_range f hf «expr • »(c, v), «expr • »(c, map_range f hf v)) :=
+begin
+  erw ["<-", expr map_range_comp] [],
+  have [] [":", expr «expr = »(«expr ∘ »(f, ((«expr • »)) c), «expr ∘ »(((«expr • »)) c, f))] [":=", expr funext hsmul],
+  simp_rw [expr this] [],
+  apply [expr map_range_comp],
+  rw ["[", expr function.comp_apply, ",", expr smul_zero, ",", expr hf, "]"] []
+end
 
 theorem smul_single_one [Semiringₓ R] (a : α) (b : R) : b • single a 1 = single a b :=
   by 

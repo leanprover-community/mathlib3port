@@ -108,10 +108,10 @@ end ColRow
 
 section Transpose
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp] theorem transpose_empty_rows (A : matrix m' (fin 0) α) : «expr = »(«expr ᵀ»(A), «expr![ , ]»([])) := empty_eq _
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem transpose_empty_cols : «expr = »(«expr ᵀ»((«expr![ , ]»([]) : matrix (fin 0) m' α)), λ i, «expr![ , ]»([])) :=
 funext (λ i, empty_eq _)
@@ -123,7 +123,7 @@ theorem cons_transpose (v : n' → α) (A : Matrix (Finₓ m) n' α) : (vec_cons
     refine' Finₓ.cases _ _ j <;> simp 
 
 @[simp]
-theorem head_transpose (A : Matrix m' (Finₓ n.succ) α) : vec_head (A)ᵀ = (vec_head ∘ A) :=
+theorem head_transpose (A : Matrix m' (Finₓ n.succ) α) : vec_head (A)ᵀ = vec_head ∘ A :=
   rfl
 
 @[simp]
@@ -138,7 +138,7 @@ section Mul
 
 variable[Semiringₓ α]
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem empty_mul
 [fintype n']
@@ -150,7 +150,7 @@ empty_eq _
 theorem empty_mul_empty (A : Matrix m' (Finₓ 0) α) (B : Matrix (Finₓ 0) o' α) : A ⬝ B = 0 :=
   rfl
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem mul_empty
 [fintype n']
@@ -182,7 +182,7 @@ variable[Semiringₓ α]
 theorem empty_vec_mul (v : Finₓ 0 → α) (B : Matrix (Finₓ 0) o' α) : vec_mul v B = 0 :=
   rfl
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem vec_mul_empty [fintype n'] (v : n' → α) (B : matrix n' (fin 0) α) : «expr = »(vec_mul v B, «expr![ , ]»([])) :=
 empty_eq _
@@ -207,7 +207,7 @@ section MulVec
 
 variable[Semiringₓ α]
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem empty_mul_vec [fintype n'] (A : matrix (fin 0) n' α) (v : n' → α) : «expr = »(mul_vec A v, «expr![ , ]»([])) :=
 empty_eq _
@@ -225,7 +225,7 @@ theorem cons_mul_vec [Fintype n'] (v : n' → α) (A : Finₓ m → n' → α) (
 
 @[simp]
 theorem mul_vec_cons {α} [CommSemiringₓ α] (A : m' → Finₓ n.succ → α) (x : α) (v : Finₓ n → α) :
-  mul_vec A (vec_cons x v) = (x • (vec_head ∘ A))+mul_vec (vec_tail ∘ A) v :=
+  mul_vec A (vec_cons x v) = (x • vec_head ∘ A)+mul_vec (vec_tail ∘ A) v :=
   by 
     ext i 
     simp [mul_vec, mul_commₓ]
@@ -236,11 +236,11 @@ section VecMulVec
 
 variable[Semiringₓ α]
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp] theorem empty_vec_mul_vec (v : fin 0 → α) (w : n' → α) : «expr = »(vec_mul_vec v w, «expr![ , ]»([])) :=
 empty_eq _
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp] theorem vec_mul_vec_empty (v : m' → α) (w : fin 0 → α) : «expr = »(vec_mul_vec v w, λ _, «expr![ , ]»([])) :=
 funext (λ i, empty_eq _)
 
@@ -264,7 +264,7 @@ section Smul
 
 variable[Semiringₓ α]
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem smul_mat_empty {m' : Type*} (x : α) (A : fin 0 → m' → α) : «expr = »(«expr • »(x, A), «expr![ , ]»([])) :=
 empty_eq _
@@ -279,7 +279,7 @@ end Smul
 
 section Minor
 
--- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp]
 theorem minor_empty
 (A : matrix m' n' α)

@@ -136,49 +136,51 @@ alias Nat.sq_sub_sq ← Nat.pow_two_sub_pow_two
 /-! ### `pow` and `mod` / `dvd` -/
 
 
-theorem mod_pow_succ {b : ℕ} (b_pos : 0 < b) (w m : ℕ) : m % b ^ succ w = (b*m / b % b ^ w)+m % b :=
-  by 
-    apply Nat.strong_induction_onₓ m 
-    clear m 
-    intro p IH 
-    cases' lt_or_geₓ p (b ^ succ w) with h₁ h₁
-    ·
-      have h₂ : p / b < b ^ w
-      ·
-        rw [div_lt_iff_lt_mul p _ b_pos]
-        simpa [pow_succ'ₓ] using h₁ 
-      rw [mod_eq_of_lt h₁, mod_eq_of_lt h₂]
-      simp [div_add_mod]
-    ·
-      have h₂ : p - b ^ succ w < p
-      ·
-        exact tsub_lt_self ((pow_pos b_pos _).trans_le h₁) (pow_pos b_pos _)
-      rw [mod_eq_sub_mod h₁, IH _ h₂]
-      simp only [pow_succₓ]
-      simp only [Ge, pow_succₓ] at h₁ 
-      rw [sub_mul_mod _ _ _ h₁, sub_mul_div _ _ _ h₁]
-      have p_b_ge : b ^ w ≤ p / b
-      ·
-        rw [le_div_iff_mul_le _ _ b_pos, mul_commₓ]
-        exact h₁ 
-      rw [Eq.symm (mod_eq_sub_mod p_b_ge)]
+-- error in Data.Nat.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mod_pow_succ
+{b : exprℕ()}
+(b_pos : «expr < »(0, b))
+(w
+ m : exprℕ()) : «expr = »(«expr % »(m, «expr ^ »(b, succ w)), «expr + »(«expr * »(b, «expr % »(«expr / »(m, b), «expr ^ »(b, w))), «expr % »(m, b))) :=
+begin
+  apply [expr nat.strong_induction_on m],
+  clear [ident m],
+  intros [ident p, ident IH],
+  cases [expr lt_or_ge p «expr ^ »(b, succ w)] ["with", ident h₁, ident h₁],
+  { have [ident h₂] [":", expr «expr < »(«expr / »(p, b), «expr ^ »(b, w))] [],
+    { rw ["[", expr div_lt_iff_lt_mul p _ b_pos, "]"] [],
+      simpa [] [] [] ["[", expr pow_succ', "]"] [] ["using", expr h₁] },
+    rw ["[", expr mod_eq_of_lt h₁, ",", expr mod_eq_of_lt h₂, "]"] [],
+    simp [] [] [] ["[", expr div_add_mod, "]"] [] [] },
+  { have [ident h₂] [":", expr «expr < »(«expr - »(p, «expr ^ »(b, succ w)), p)] [],
+    { exact [expr tsub_lt_self ((pow_pos b_pos _).trans_le h₁) (pow_pos b_pos _)] },
+    rw ["[", expr mod_eq_sub_mod h₁, ",", expr IH _ h₂, "]"] [],
+    simp [] [] ["only"] ["[", expr pow_succ, "]"] [] [],
+    simp [] [] ["only"] ["[", expr ge, ",", expr pow_succ, "]"] [] ["at", ident h₁],
+    rw ["[", expr sub_mul_mod _ _ _ h₁, ",", expr sub_mul_div _ _ _ h₁, "]"] [],
+    have [ident p_b_ge] [":", expr «expr ≤ »(«expr ^ »(b, w), «expr / »(p, b))] [],
+    { rw ["[", expr le_div_iff_mul_le _ _ b_pos, ",", expr mul_comm, "]"] [],
+      exact [expr h₁] },
+    rw ["[", expr eq.symm (mod_eq_sub_mod p_b_ge), "]"] [] }
+end
 
-theorem pow_dvd_pow_iff_pow_le_pow {k l : ℕ} : ∀ {x : ℕ} w : 0 < x, x ^ k ∣ x ^ l ↔ x ^ k ≤ x ^ l
-| x+1, w =>
-  by 
-    split 
-    ·
-      intro a 
-      exact le_of_dvd (pow_pos (succ_pos x) l) a
-    ·
-      intro a 
-      cases' x with x
-      ·
-        simp only [one_pow]
-      ·
-        have le := (pow_le_iff_le_right (Nat.le_add_leftₓ _ _)).mp a 
-        use (x+2) ^ (l - k)
-        rw [←pow_addₓ, add_commₓ k, tsub_add_cancel_of_le le]
+-- error in Data.Nat.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pow_dvd_pow_iff_pow_le_pow
+{k
+ l : exprℕ()} : ∀
+{x : exprℕ()}
+(w : «expr < »(0, x)), «expr ↔ »(«expr ∣ »(«expr ^ »(x, k), «expr ^ »(x, l)), «expr ≤ »(«expr ^ »(x, k), «expr ^ »(x, l)))
+| «expr + »(x, 1), w := begin
+  split,
+  { intro [ident a],
+    exact [expr le_of_dvd (pow_pos (succ_pos x) l) a] },
+  { intro [ident a],
+    cases [expr x] ["with", ident x],
+    { simp [] [] ["only"] ["[", expr one_pow, "]"] [] [] },
+    { have [ident le] [] [":=", expr (pow_le_iff_le_right (nat.le_add_left _ _)).mp a],
+      use [expr «expr ^ »(«expr + »(x, 2), «expr - »(l, k))],
+      rw ["[", "<-", expr pow_add, ",", expr add_comm k, ",", expr tsub_add_cancel_of_le le, "]"] [] } }
+end
 
 /-- If `1 < x`, then `x^k` divides `x^l` if and only if `k` is at most `l`. -/
 theorem pow_dvd_pow_iff_le_right {x k l : ℕ} (w : 1 < x) : x ^ k ∣ x ^ l ↔ k ≤ l :=
@@ -292,53 +294,47 @@ theorem size_one : size 1 = 1 :=
   show size (bit1 0) = 1by 
     rw [size_bit1, size_zero]
 
+-- error in Data.Nat.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = size m+n :=
-  by 
-    induction' n with n IH <;> simp [shiftl'] at h⊢
-    rw [size_bit h, Nat.add_succ]
-    byCases' s0 : shiftl' b m n = 0 <;> [skip, rw [IH s0]]
-    rw [s0] at h⊢
-    cases b
-    ·
-      exact absurd rfl h 
-    have  : (shiftl' tt m n+1) = 1 := congr_argₓ (·+1) s0 
-    rw [shiftl'_tt_eq_mul_pow] at this 
-    have m0 := succ.inj (eq_one_of_dvd_one ⟨_, this.symm⟩)
-    subst m0 
-    simp  at this 
-    have  : n = 0 :=
-      Nat.eq_zero_of_le_zeroₓ
-        (le_of_not_gtₓ$
-          fun hn =>
-            ne_of_gtₓ
-              (pow_lt_pow_of_lt_right
-                (by 
-                  decide)
-                hn)
-              this)
-    subst n 
-    rfl
+theorem size_shiftl'
+{b m n}
+(h : «expr ≠ »(shiftl' b m n, 0)) : «expr = »(size (shiftl' b m n), «expr + »(size m, n)) :=
+begin
+  induction [expr n] [] ["with", ident n, ident IH] []; simp [] [] [] ["[", expr shiftl', "]"] [] ["at", ident h, "⊢"],
+  rw ["[", expr size_bit h, ",", expr nat.add_succ, "]"] [],
+  by_cases [expr s0, ":", expr «expr = »(shiftl' b m n, 0)]; [skip, rw ["[", expr IH s0, "]"] []],
+  rw [expr s0] ["at", ident h, "⊢"],
+  cases [expr b] [],
+  { exact [expr absurd rfl h] },
+  have [] [":", expr «expr = »(«expr + »(shiftl' tt m n, 1), 1)] [":=", expr congr_arg ((«expr + » 1)) s0],
+  rw ["[", expr shiftl'_tt_eq_mul_pow, "]"] ["at", ident this],
+  have [ident m0] [] [":=", expr succ.inj (eq_one_of_dvd_one ⟨_, this.symm⟩)],
+  subst [expr m0],
+  simp [] [] [] [] [] ["at", ident this],
+  have [] [":", expr «expr = »(n, 0)] [":=", expr nat.eq_zero_of_le_zero «expr $ »(le_of_not_gt, λ
+    hn, ne_of_gt (pow_lt_pow_of_lt_right exprdec_trivial() hn) this)],
+  subst [expr n],
+  refl
+end
 
 @[simp]
 theorem size_shiftl {m} (h : m ≠ 0) n : size (shiftl m n) = size m+n :=
   size_shiftl' (shiftl'_ne_zero_left _ h _)
 
-theorem lt_size_self (n : ℕ) : n < 2 ^ size n :=
-  by 
-    rw [←one_shiftl]
-    have  : ∀ {n}, n = 0 → n < shiftl 1 (size n)
-    ·
-      simp 
-    apply binary_rec _ _ n
-    ·
-      apply this rfl 
-    intro b n IH 
-    byCases' bit b n = 0
-    ·
-      apply this h 
-    rw [size_bit h, shiftl_succ]
-    exact bit_lt_bit0 _ IH
+-- error in Data.Nat.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lt_size_self (n : exprℕ()) : «expr < »(n, «expr ^ »(2, size n)) :=
+begin
+  rw ["[", "<-", expr one_shiftl, "]"] [],
+  have [] [":", expr ∀ {n}, «expr = »(n, 0) → «expr < »(n, shiftl 1 (size n))] [],
+  { simp [] [] [] [] [] [] },
+  apply [expr binary_rec _ _ n],
+  { apply [expr this rfl] },
+  intros [ident b, ident n, ident IH],
+  by_cases [expr «expr = »(bit b n, 0)],
+  { apply [expr this h] },
+  rw ["[", expr size_bit h, ",", expr shiftl_succ, "]"] [],
+  exact [expr bit_lt_bit0 _ IH]
+end
 
 theorem size_le {m n : ℕ} : size m ≤ n ↔ m < 2 ^ n :=
   ⟨fun h =>
@@ -375,9 +371,9 @@ theorem size_pos {n : ℕ} : 0 < size n ↔ 0 < n :=
   by 
     rw [lt_size] <;> rfl
 
-theorem size_eq_zero {n : ℕ} : size n = 0 ↔ n = 0 :=
-  by 
-    have  := @size_pos n <;> simp [pos_iff_ne_zero] at this <;> exact Decidable.not_iff_not.1 this
+-- error in Data.Nat.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem size_eq_zero {n : exprℕ()} : «expr ↔ »(«expr = »(size n, 0), «expr = »(n, 0)) :=
+by have [] [] [":=", expr @size_pos n]; simp [] [] [] ["[", expr pos_iff_ne_zero, "]"] [] ["at", ident this]; exact [expr decidable.not_iff_not.1 this]
 
 theorem size_pow {n : ℕ} : size (2 ^ n) = n+1 :=
   le_antisymmₓ

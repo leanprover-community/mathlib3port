@@ -1,6 +1,8 @@
-import Mathbin.Algebra.Module.Basic 
+import Mathbin.GroupTheory.Submonoid.Basic 
+import Mathbin.Algebra.BigOperators.Basic 
+import Mathbin.GroupTheory.GroupAction.Group 
 import Mathbin.Data.Set.Finite 
-import Mathbin.GroupTheory.Submonoid.Basic
+import Mathbin.Algebra.SmulWithZero
 
 /-!
 # Pointwise addition, multiplication, and scalar multiplication of sets.
@@ -235,17 +237,21 @@ instance decidable_mem_mul [Monoidₓ α] [Fintype α] [DecidableEq α] [Decidab
   DecidablePred (· ∈ s*t) :=
   fun _ => decidableOfIff _ mem_mul.symm
 
-instance decidable_mem_pow [Monoidₓ α] [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] (n : ℕ) :
-  DecidablePred (· ∈ s ^ n) :=
-  by 
-    induction' n with n ih
-    ·
-      simpRw [pow_zeroₓ, mem_one]
-      infer_instance
-    ·
-      letI this := ih 
-      rw [pow_succₓ]
-      infer_instance
+-- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance decidable_mem_pow
+[monoid α]
+[fintype α]
+[decidable_eq α]
+[decidable_pred ((«expr ∈ » s))]
+(n : exprℕ()) : decidable_pred ((«expr ∈ » «expr ^ »(s, n))) :=
+begin
+  induction [expr n] [] ["with", ident n, ident ih] [],
+  { simp_rw ["[", expr pow_zero, ",", expr mem_one, "]"] [],
+    apply_instance },
+  { letI [] [] [":=", expr ih],
+    rw [expr pow_succ] [],
+    apply_instance }
+end
 
 @[toAdditive]
 theorem mul_subset_mul [Mul α] (h₁ : s₁ ⊆ t₁) (h₂ : s₂ ⊆ t₂) : (s₁*s₂) ⊆ t₁*t₂ :=
@@ -285,11 +291,12 @@ theorem Union_mul {ι : Sort _} [Mul α] (s : ι → Set α) (t : Set α) : ((�
 theorem mul_Union {ι : Sort _} [Mul α] (t : Set α) (s : ι → Set α) : (t*⋃i, s i) = ⋃i, t*s i :=
   image2_Union_right _ _ _
 
-@[simp, toAdditive]
-theorem univ_mul_univ [Monoidₓ α] : ((univ : Set α)*univ) = univ :=
-  by 
-    have  : ∀ x, ∃ a b : α, (a*b) = x := fun x => ⟨x, ⟨1, mul_oneₓ x⟩⟩
-    simpa only [mem_mul, eq_univ_iff_forall, mem_univ, true_andₓ]
+-- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp, to_additive #[]] theorem univ_mul_univ [monoid α] : «expr = »(«expr * »((univ : set α), univ), univ) :=
+begin
+  have [] [":", expr ∀ x, «expr∃ , »((a b : α), «expr = »(«expr * »(a, b), x))] [":=", expr λ x, ⟨x, ⟨1, mul_one x⟩⟩],
+  simpa [] [] ["only"] ["[", expr mem_mul, ",", expr eq_univ_iff_forall, ",", expr mem_univ, ",", expr true_and, "]"] [] []
+end
 
 /-- `singleton` is a monoid hom. -/
 @[toAdditive singleton_add_hom "singleton is an add monoid hom"]
@@ -378,18 +385,21 @@ theorem finset_prod_subset_finset_prod (t : Finset ι) (f₁ f₂ : ι → Set �
     rintro ⟨g, hg, rfl⟩
     exact ⟨g, fun i hi => hf hi$ hg hi, rfl⟩
 
-@[toAdditive]
-theorem finset_prod_singleton {M ι : Type _} [CommMonoidₓ M] (s : Finset ι) (I : ι → M) :
-  (∏i : ι in s, ({I i} : Set M)) = {∏i : ι in s, I i} :=
-  by 
-    letI this := Classical.decEq ι 
-    refine' Finset.induction_on s _ _
-    ·
-      simpa
-    ·
-      intro _ _ H ih 
-      rw [Finset.prod_insert H, Finset.prod_insert H, ih]
-      simp 
+-- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+theorem finset_prod_singleton
+{M ι : Type*}
+[comm_monoid M]
+(s : finset ι)
+(I : ι → M) : «expr = »(«expr∏ in , »((i : ι), s, ({I i} : set M)), {«expr∏ in , »((i : ι), s, I i)}) :=
+begin
+  letI [] [] [":=", expr classical.dec_eq ι],
+  refine [expr finset.induction_on s _ _],
+  { simpa [] [] [] [] [] [] },
+  { intros ["_", "_", ident H, ident ih],
+    rw ["[", expr finset.prod_insert H, ",", expr finset.prod_insert H, ",", expr ih, "]"] [],
+    simp [] [] [] [] [] [] }
+end
 
 /-! TODO: define `decidable_mem_finset_prod` and `decidable_mem_finset_sum`. -/
 
@@ -579,11 +589,14 @@ instance smul_comm_class_set {γ : Type _} [HasScalar α γ] [HasScalar β γ] [
         by 
           simp only [←image2_smul, ←image_smul, image2_image_right, image_image2, smul_comm] }
 
-@[toAdditive]
-instance smul_comm_class_set' {γ : Type _} [HasScalar α γ] [HasScalar β γ] [SmulCommClass α β γ] :
-  SmulCommClass (Set α) β (Set γ) :=
-  by 
-    haveI  := SmulCommClass.symm α β γ <;> exact SmulCommClass.symm _ _ _
+-- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[]]
+instance smul_comm_class_set'
+{γ : Type*}
+[has_scalar α γ]
+[has_scalar β γ]
+[smul_comm_class α β γ] : smul_comm_class (set α) β (set γ) :=
+by haveI [] [] [":=", expr smul_comm_class.symm α β γ]; exact [expr smul_comm_class.symm _ _ _]
 
 @[toAdditive]
 instance SmulCommClass {γ : Type _} [HasScalar α γ] [HasScalar β γ] [SmulCommClass α β γ] :
@@ -617,7 +630,7 @@ section Monoidₓ
 /-! ### `set α` as a `(∪,*)`-semiring -/
 
 
--- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- An alias for `set α`, which has a semiring structure given by `∪` as "addition" and pointwise
   multiplication `*` as "multiplication". -/ @[derive #[expr inhabited]] def set_semiring (α : Type*) : Type* :=
 set α
@@ -844,40 +857,37 @@ theorem mul_card_le [Mul α] {s t : Finset α} : (s*t).card ≤ s.card*t.card :=
 
 open_locale Classical
 
--- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- A finite set `U` contained in the product of two sets `S * S'` is also contained in the product
 of two finite sets `T * T' ⊆ S * S'`. -/
-@[to_additive #[]]
-theorem subset_mul
-{M : Type*}
-[monoid M]
-{S : set M}
-{S' : set M}
-{U : finset M}
-(f : «expr ⊆ »(«expr↑ »(U), «expr * »(S, S'))) : «expr∃ , »((T
-  T' : finset M), «expr ∧ »(«expr ⊆ »(«expr↑ »(T), S), «expr ∧ »(«expr ⊆ »(«expr↑ »(T'), S'), «expr ⊆ »(U, «expr * »(T, T'))))) :=
-begin
-  apply [expr finset.induction_on' U],
-  { use ["[", expr «expr∅»(), ",", expr «expr∅»(), "]"],
-    simp [] [] ["only"] ["[", expr finset.empty_subset, ",", expr finset.coe_empty, ",", expr set.empty_subset, ",", expr and_self, "]"] [] [] },
-  rintros [ident a, ident s, ident haU, ident hs, ident has, "⟨", ident T, ",", ident T', ",", ident hS, ",", ident hS', ",", ident h, "⟩"],
-  obtain ["⟨", ident x, ",", ident y, ",", ident hx, ",", ident hy, ",", ident ha, "⟩", ":=", expr set.mem_mul.1 (f haU)],
-  use ["[", expr insert x T, ",", expr insert y T', "]"],
-  simp [] [] ["only"] ["[", expr finset.coe_insert, "]"] [] [],
-  repeat { rw ["[", expr set.insert_subset, "]"] [] },
-  use ["[", expr hx, ",", expr hS, ",", expr hy, ",", expr hS', "]"],
-  refine [expr finset.insert_subset.mpr ⟨_, _⟩],
-  { rw [expr finset.mem_mul] [],
-    use ["[", expr x, ",", expr y, "]"],
-    simpa [] [] ["only"] ["[", expr true_and, ",", expr true_or, ",", expr eq_self_iff_true, ",", expr finset.mem_insert, "]"] [] [] },
-  { suffices [ident g] [":", expr «expr ⊆ »((s : set M), «expr * »(insert x T, insert y T'))],
-    { norm_cast ["at", ident g],
-      assumption },
-    transitivity [expr «expr↑ »(«expr * »(T, T'))],
-    apply [expr h],
-    rw [expr finset.coe_mul] [],
-    apply [expr set.mul_subset_mul (set.subset_insert x T) (set.subset_insert y T')] }
-end
+@[toAdditive]
+theorem subset_mul {M : Type _} [Monoidₓ M] {S : Set M} {S' : Set M} {U : Finset M} (f : «expr↑ » U ⊆ S*S') :
+  ∃ T T' : Finset M, «expr↑ » T ⊆ S ∧ «expr↑ » T' ⊆ S' ∧ U ⊆ T*T' :=
+  by 
+    apply Finset.induction_on' U
+    ·
+      use ∅, ∅
+      simp only [Finset.empty_subset, Finset.coe_empty, Set.empty_subset, and_selfₓ]
+    rintro a s haU hs has ⟨T, T', hS, hS', h⟩
+    obtain ⟨x, y, hx, hy, ha⟩ := Set.mem_mul.1 (f haU)
+    use insert x T, insert y T' 
+    simp only [Finset.coe_insert]
+    repeat' 
+      rw [Set.insert_subset]
+    use hx, hS, hy, hS' 
+    refine' finset.insert_subset.mpr ⟨_, _⟩
+    ·
+      rw [Finset.mem_mul]
+      use x, y 
+      simpa only [true_andₓ, true_orₓ, eq_self_iff_true, Finset.mem_insert]
+    ·
+      suffices g : (s : Set M) ⊆ insert x T*insert y T'
+      ·
+        normCast  at g 
+        assumption 
+      trans «expr↑ » (T*T')
+      apply h 
+      rw [Finset.coe_mul]
+      apply Set.mul_subset_mul (Set.subset_insert x T) (Set.subset_insert y T')
 
 end Finset
 
@@ -927,65 +937,75 @@ end Submonoid
 
 namespace Groupₓ
 
-theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotone f) {B : ℕ} (h2 : ∀ n, f n ≤ B)
-  (h3 : ∀ n, f n = f (n+1) → f (n+1) = f (n+2)) : ∀ k, B ≤ k → f k = f B :=
-  by 
-    have key : ∃ n : ℕ, n ≤ B ∧ f n = f (n+1)
-    ·
-      contrapose! h2 
-      suffices  : ∀ n : ℕ, (n ≤ B+1) → n ≤ f n
-      ·
-        exact ⟨B+1, this (B+1) (le_reflₓ (B+1))⟩
-      exact
-        fun n =>
-          Nat.rec (fun h => Nat.zero_leₓ (f 0))
-            (fun n ih h =>
-              lt_of_le_of_ltₓ (ih (n.le_succ.trans h))
-                (lt_of_le_of_neₓ (h1 n.le_succ) (h2 n (nat.succ_le_succ_iff.mp h))))
-            n
-    ·
-      obtain ⟨n, hn1, hn2⟩ := key 
-      replace key : ∀ k : ℕ, f (n+k) = f ((n+k)+1) ∧ f (n+k) = f n :=
-        fun k => Nat.rec ⟨hn2, rfl⟩ (fun k ih => ⟨h3 _ ih.1, ih.1.symm.trans ih.2⟩) k 
-      replace key : ∀ k : ℕ, n ≤ k → f k = f n :=
-        fun k hk => (congr_argₓ f (add_tsub_cancel_of_le hk)).symm.trans (key (k - n)).2 
-      exact fun k hk => (key k (hn1.trans hk)).trans (key B hn1).symm
+-- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem card_pow_eq_card_pow_card_univ_aux
+{f : exprℕ() → exprℕ()}
+(h1 : monotone f)
+{B : exprℕ()}
+(h2 : ∀ n, «expr ≤ »(f n, B))
+(h3 : ∀
+ n, «expr = »(f n, f «expr + »(n, 1)) → «expr = »(f «expr + »(n, 1), f «expr + »(n, 2))) : ∀
+k, «expr ≤ »(B, k) → «expr = »(f k, f B) :=
+begin
+  have [ident key] [":", expr «expr∃ , »((n : exprℕ()), «expr ∧ »(«expr ≤ »(n, B), «expr = »(f n, f «expr + »(n, 1))))] [],
+  { contrapose ["!"] [ident h2],
+    suffices [] [":", expr ∀ n : exprℕ(), «expr ≤ »(n, «expr + »(B, 1)) → «expr ≤ »(n, f n)],
+    { exact [expr ⟨«expr + »(B, 1), this «expr + »(B, 1) (le_refl «expr + »(B, 1))⟩] },
+    exact [expr λ
+     n, nat.rec (λ
+      h, nat.zero_le (f 0)) (λ
+      n
+      ih
+      h, lt_of_le_of_lt (ih (n.le_succ.trans h)) (lt_of_le_of_ne (h1 n.le_succ) (h2 n (nat.succ_le_succ_iff.mp h)))) n] },
+  { obtain ["⟨", ident n, ",", ident hn1, ",", ident hn2, "⟩", ":=", expr key],
+    replace [ident key] [":", expr ∀
+     k : exprℕ(), «expr ∧ »(«expr = »(f «expr + »(n, k), f «expr + »(«expr + »(n, k), 1)), «expr = »(f «expr + »(n, k), f n))] [":=", expr λ
+     k, nat.rec ⟨hn2, rfl⟩ (λ k ih, ⟨h3 _ ih.1, ih.1.symm.trans ih.2⟩) k],
+    replace [ident key] [":", expr ∀
+     k : exprℕ(), «expr ≤ »(n, k) → «expr = »(f k, f n)] [":=", expr λ
+     k hk, (congr_arg f (add_tsub_cancel_of_le hk)).symm.trans (key «expr - »(k, n)).2],
+    exact [expr λ k hk, (key k (hn1.trans hk)).trans (key B hn1).symm] }
+end
 
 variable{G : Type _}[Groupₓ G][Fintype G](S : Set G)
 
-theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k)] :
-  ∀ k, Fintype.card G ≤ k → Fintype.card («expr↥ » (S ^ k)) = Fintype.card («expr↥ » (S ^ Fintype.card G)) :=
-  by 
-    have hG : 0 < Fintype.card G := fintype.card_pos_iff.mpr ⟨1⟩
-    byCases' hS : S = ∅
-    ·
-      intro k hk 
-      congr 2
-      rw [hS, empty_pow _ (ne_of_gtₓ (lt_of_lt_of_leₓ hG hk)), empty_pow _ (ne_of_gtₓ hG)]
-    obtain ⟨a, ha⟩ := set.ne_empty_iff_nonempty.mp hS 
-    classical 
-    have key : ∀ a s t : Set G, (∀ b : G, b ∈ s → (a*b) ∈ t) → Fintype.card s ≤ Fintype.card t
-    ·
-      refine' fun a s t h => Fintype.card_le_of_injective (fun ⟨b, hb⟩ => ⟨a*b, h b hb⟩) _ 
-      rintro ⟨b, hb⟩ ⟨c, hc⟩ hbc 
-      exact Subtype.ext (mul_left_cancelₓ (subtype.ext_iff.mp hbc))
-    have mono : Monotone (fun n => Fintype.card («expr↥ » (S ^ n)) : ℕ → ℕ) :=
-      monotone_nat_of_le_succ fun n => key a _ _ fun b hb => Set.mul_mem_mul ha hb 
-    convert
-      card_pow_eq_card_pow_card_univ_aux mono (fun n => set_fintype_card_le_univ (S ^ n))
-        fun n h => le_antisymmₓ (mono (n+1).le_succ) (key (a⁻¹) _ _ _)
-    ·
-      simp only [Finset.filter_congr_decidable, Fintype.card_of_finset]
-    replace h : ({a}*S ^ n) = S ^ n+1
-    ·
-      refine' Set.eq_of_subset_of_card_le _ (le_transₓ (ge_of_eq h) _)
-      ·
-        exact mul_subset_mul (set.singleton_subset_iff.mpr ha) Set.Subset.rfl
-      ·
-        convert key a (S ^ n) ({a}*S ^ n) fun b hb => Set.mul_mem_mul (Set.mem_singleton a) hb 
-    rw [pow_succ'ₓ, ←h, mul_assocₓ, ←pow_succ'ₓ, h]
-    rintro _ ⟨b, c, hb, hc, rfl⟩
-    rwa [set.mem_singleton_iff.mp hb, inv_mul_cancel_leftₓ]
+-- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem card_pow_eq_card_pow_card_univ
+[∀
+ k : exprℕ(), decidable_pred ((«expr ∈ » «expr ^ »(S, k)))] : ∀
+k, «expr ≤ »(fintype.card G, k) → «expr = »(fintype.card «expr↥ »(«expr ^ »(S, k)), fintype.card «expr↥ »(«expr ^ »(S, fintype.card G))) :=
+begin
+  have [ident hG] [":", expr «expr < »(0, fintype.card G)] [":=", expr fintype.card_pos_iff.mpr ⟨1⟩],
+  by_cases [expr hS, ":", expr «expr = »(S, «expr∅»())],
+  { intros [ident k, ident hk],
+    congr' [2] [],
+    rw ["[", expr hS, ",", expr empty_pow _ (ne_of_gt (lt_of_lt_of_le hG hk)), ",", expr empty_pow _ (ne_of_gt hG), "]"] [] },
+  obtain ["⟨", ident a, ",", ident ha, "⟩", ":=", expr set.ne_empty_iff_nonempty.mp hS],
+  classical,
+  have [ident key] [":", expr ∀
+   (a)
+   (s
+    t : set G), ∀
+   b : G, «expr ∈ »(b, s) → «expr ∈ »(«expr * »(a, b), t) → «expr ≤ »(fintype.card s, fintype.card t)] [],
+  { refine [expr λ a s t h, fintype.card_le_of_injective (λ ⟨b, hb⟩, ⟨«expr * »(a, b), h b hb⟩) _],
+    rintros ["⟨", ident b, ",", ident hb, "⟩", "⟨", ident c, ",", ident hc, "⟩", ident hbc],
+    exact [expr subtype.ext (mul_left_cancel (subtype.ext_iff.mp hbc))] },
+  have [ident mono] [":", expr monotone (λ
+   n, fintype.card «expr↥ »(«expr ^ »(S, n)) : exprℕ() → exprℕ())] [":=", expr monotone_nat_of_le_succ (λ
+    n, key a _ _ (λ b hb, set.mul_mem_mul ha hb))],
+  convert [] [expr card_pow_eq_card_pow_card_univ_aux mono (λ
+    n, set_fintype_card_le_univ «expr ^ »(S, n)) (λ
+    n h, le_antisymm (mono «expr + »(n, 1).le_succ) (key «expr ⁻¹»(a) _ _ _))] [],
+  { simp [] [] ["only"] ["[", expr finset.filter_congr_decidable, ",", expr fintype.card_of_finset, "]"] [] [] },
+  replace [ident h] [":", expr «expr = »(«expr * »({a}, «expr ^ »(S, n)), «expr ^ »(S, «expr + »(n, 1)))] [],
+  { refine [expr set.eq_of_subset_of_card_le _ (le_trans (ge_of_eq h) _)],
+    { exact [expr mul_subset_mul (set.singleton_subset_iff.mpr ha) set.subset.rfl] },
+    { convert [] [expr key a «expr ^ »(S, n) «expr * »({a}, «expr ^ »(S, n)) (λ
+        b hb, set.mul_mem_mul (set.mem_singleton a) hb)] [] } },
+  rw ["[", expr pow_succ', ",", "<-", expr h, ",", expr mul_assoc, ",", "<-", expr pow_succ', ",", expr h, "]"] [],
+  rintros ["_", "⟨", ident b, ",", ident c, ",", ident hb, ",", ident hc, ",", ident rfl, "⟩"],
+  rwa ["[", expr set.mem_singleton_iff.mp hb, ",", expr inv_mul_cancel_left, "]"] []
+end
 
 end Groupₓ
 

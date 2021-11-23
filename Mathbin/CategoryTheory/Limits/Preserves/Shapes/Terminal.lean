@@ -1,5 +1,5 @@
-import Mathbin.CategoryTheory.Limits.Preserves.Limits 
-import Mathbin.CategoryTheory.Limits.Shapes.Terminal
+import Mathbin.CategoryTheory.Limits.Shapes.Terminal 
+import Mathbin.CategoryTheory.Limits.Preserves.Basic
 
 /-!
 # Preserving terminal object
@@ -57,18 +57,18 @@ object is terminal.
 def is_limit_of_has_terminal_of_preserves_limit [preserves_limit (functor.empty C) G] : is_terminal (G.obj (⊤_ C)) :=
   terminal_is_terminal.isTerminalObj G (⊤_ C)
 
+-- error in CategoryTheory.Limits.Preserves.Shapes.Terminal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `C` has a terminal object and `G` preserves terminal objects, then `D` has a terminal object
 also.
 Note this property is somewhat unique to (co)limits of the empty diagram: for general `J`, if `C`
 has limits of shape `J` and `G` preserves them, then `D` does not necessarily have limits of shape
 `J`.
--/
-theorem has_terminal_of_has_terminal_of_preserves_limit [preserves_limit (functor.empty C) G] : has_terminal D :=
-  ⟨fun F =>
-      by 
-        haveI  := has_limit.mk ⟨_, is_limit_of_has_terminal_of_preserves_limit G⟩
-        apply has_limit_of_iso F.unique_from_empty.symm⟩
+-/ theorem has_terminal_of_has_terminal_of_preserves_limit [preserves_limit (functor.empty C) G] : has_terminal D :=
+⟨λ F, begin
+   haveI [] [] [":=", expr has_limit.mk ⟨_, is_limit_of_has_terminal_of_preserves_limit G⟩],
+   apply [expr has_limit_of_iso F.unique_from_empty.symm]
+ end⟩
 
 variable[has_terminal D]
 
@@ -86,7 +86,7 @@ def preserves_terminal.of_iso_comparison [i : is_iso (terminal_comparison G)] : 
 def preserves_terminal_of_is_iso (f : G.obj (⊤_ C) ⟶ ⊤_ D) [i : is_iso f] : preserves_limit (functor.empty C) G :=
   by 
     rw [Subsingleton.elimₓ f (terminal_comparison G)] at i 
-    exactI preserves_terminal.of_iso_comparison G
+    exact preserves_terminal.of_iso_comparison G
 
 /-- If there is any isomorphism `G.obj ⊤ ≅ ⊤`, then `G` preserves terminal objects. -/
 def preserves_terminal_of_iso (f : G.obj (⊤_ C) ≅ ⊤_ D) : preserves_limit (functor.empty C) G :=
@@ -141,18 +141,18 @@ def is_colimit_of_has_initial_of_preserves_colimit [preserves_colimit (functor.e
   is_initial (G.obj (⊥_ C)) :=
   initial_is_initial.isInitialObj G (⊥_ C)
 
+-- error in CategoryTheory.Limits.Preserves.Shapes.Terminal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `C` has a initial object and `G` preserves initial objects, then `D` has a initial object
 also.
 Note this property is somewhat unique to colimits of the empty diagram: for general `J`, if `C`
 has colimits of shape `J` and `G` preserves them, then `D` does not necessarily have colimits of
 shape `J`.
--/
-theorem has_initial_of_has_initial_of_preserves_colimit [preserves_colimit (functor.empty C) G] : has_initial D :=
-  ⟨fun F =>
-      by 
-        haveI  := has_colimit.mk ⟨_, is_colimit_of_has_initial_of_preserves_colimit G⟩
-        apply has_colimit_of_iso F.unique_from_empty⟩
+-/ theorem has_initial_of_has_initial_of_preserves_colimit [preserves_colimit (functor.empty C) G] : has_initial D :=
+⟨λ F, begin
+   haveI [] [] [":=", expr has_colimit.mk ⟨_, is_colimit_of_has_initial_of_preserves_colimit G⟩],
+   apply [expr has_colimit_of_iso F.unique_from_empty]
+ end⟩
 
 variable[has_initial D]
 
@@ -170,7 +170,7 @@ def preserves_initial.of_iso_comparison [i : is_iso (initial_comparison G)] : pr
 def preserves_initial_of_is_iso (f : ⊥_ D ⟶ G.obj (⊥_ C)) [i : is_iso f] : preserves_colimit (functor.empty C) G :=
   by 
     rw [Subsingleton.elimₓ f (initial_comparison G)] at i 
-    exactI preserves_initial.of_iso_comparison G
+    exact preserves_initial.of_iso_comparison G
 
 /-- If there is any isomorphism `⊥ ≅ G.obj ⊥ `, then `G` preserves initial objects. -/
 def preserves_initial_of_iso (f : ⊥_ D ≅ G.obj (⊥_ C)) : preserves_colimit (functor.empty C) G :=

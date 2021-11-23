@@ -1,7 +1,6 @@
 import Mathbin.Algebra.Invertible 
-import Mathbin.LinearAlgebra.BilinearForm 
 import Mathbin.LinearAlgebra.Matrix.Determinant 
-import Mathbin.LinearAlgebra.SpecialLinearGroup
+import Mathbin.LinearAlgebra.BilinearForm
 
 /-!
 # Quadratic forms
@@ -628,6 +627,7 @@ variable(S)[CommSemiringₓ S][Algebra S R]
 
 variable[Invertible (2 : R)]{B₁ : BilinForm R M}
 
+-- error in LinearAlgebra.QuadraticForm.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `associated_hom` is the map that sends a quadratic form on a module `M` over `R` to its
 associated symmetric bilinear form.  As provided here, this has the structure of an `S`-linear map
 where `S` is a commutative subring of `R`.
@@ -635,39 +635,23 @@ where `S` is a commutative subring of `R`.
 Over a commutative ring, use `associated`, which gives an `R`-linear map.  Over a general ring with
 no nontrivial distinguished commutative subring, use `associated'`, which gives an additive
 homomorphism (or more precisely a `ℤ`-linear map.) -/
-def associated_hom : QuadraticForm R M →ₗ[S] BilinForm R M :=
-  { toFun :=
-      fun Q =>
-        { bilin := fun x y => ⅟ 2*polar Q x y,
-          bilin_add_left :=
-            fun x y z =>
-              by 
-                rw [←mul_addₓ, polar_add_left],
-          bilin_smul_left :=
-            fun x y z =>
-              by 
-                have htwo : (x*⅟ 2) = ⅟ 2*x := (Commute.one_right x).bit0_right.inv_of_right 
-                simp only [polar_smul_left, ←mul_assocₓ, htwo],
-          bilin_add_right :=
-            fun x y z =>
-              by 
-                rw [←mul_addₓ, polar_add_right],
-          bilin_smul_right :=
-            fun x y z =>
-              by 
-                have htwo : (x*⅟ 2) = ⅟ 2*x := (Commute.one_right x).bit0_right.inv_of_right 
-                simp only [polar_smul_right, ←mul_assocₓ, htwo] },
-    map_add' :=
-      fun Q Q' =>
-        by 
-          ext 
-          simp only [BilinForm.add_apply, coe_fn_mk, polar_add, coe_fn_add, mul_addₓ],
-    map_smul' :=
-      fun s Q =>
-        by 
-          ext 
-          simp only [RingHom.id_apply, polar_smul, Algebra.mul_smul_comm, coe_fn_mk, coe_fn_smul,
-            BilinForm.smul_apply] }
+def associated_hom : «expr →ₗ[ ] »(quadratic_form R M, S, bilin_form R M) :=
+{ to_fun := λ
+  Q, { bilin := λ x y, «expr * »(«expr⅟»() 2, polar Q x y),
+    bilin_add_left := λ x y z, by rw ["[", "<-", expr mul_add, ",", expr polar_add_left, "]"] [],
+    bilin_smul_left := λ x y z, begin
+      have [ident htwo] [":", expr «expr = »(«expr * »(x, «expr⅟»() 2), «expr * »(«expr⅟»() 2, x))] [":=", expr (commute.one_right x).bit0_right.inv_of_right],
+      simp [] [] ["only"] ["[", expr polar_smul_left, ",", "<-", expr mul_assoc, ",", expr htwo, "]"] [] []
+    end,
+    bilin_add_right := λ x y z, by rw ["[", "<-", expr mul_add, ",", expr polar_add_right, "]"] [],
+    bilin_smul_right := λ x y z, begin
+      have [ident htwo] [":", expr «expr = »(«expr * »(x, «expr⅟»() 2), «expr * »(«expr⅟»() 2, x))] [":=", expr (commute.one_right x).bit0_right.inv_of_right],
+      simp [] [] ["only"] ["[", expr polar_smul_right, ",", "<-", expr mul_assoc, ",", expr htwo, "]"] [] []
+    end },
+  map_add' := λ Q Q', by { ext [] [] [],
+    simp [] [] ["only"] ["[", expr bilin_form.add_apply, ",", expr coe_fn_mk, ",", expr polar_add, ",", expr coe_fn_add, ",", expr mul_add, "]"] [] [] },
+  map_smul' := λ s Q, by { ext [] [] [],
+    simp [] [] ["only"] ["[", expr ring_hom.id_apply, ",", expr polar_smul, ",", expr algebra.mul_smul_comm, ",", expr coe_fn_mk, ",", expr coe_fn_smul, ",", expr bilin_form.smul_apply, "]"] [] [] } }
 
 variable(Q : QuadraticForm R M)(S)
 
@@ -998,58 +982,52 @@ variable{V : Type u}{K : Type v}[Field K][AddCommGroupₓ V][Module K V]
 
 variable[FiniteDimensional K V]
 
+-- error in LinearAlgebra.QuadraticForm.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a symmetric bilinear form `B` on some vector space `V` over a field `K`
 in which `2` is invertible, there exists an orthogonal basis with respect to `B`. -/
-theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (hB₂ : B.is_symm) :
-  ∃ v : Basis (Finₓ (finrank K V)) K V, B.is_Ortho v :=
-  by 
-    runTac 
-      tactic.unfreeze_local_instances 
-    induction' hd : finrank K V with d ih generalizing V
-    ·
-      exact ⟨basisOfFinrankZero hd, fun _ _ _ => zero_left _⟩
-    haveI  := finrank_pos_iff.1 (hd.symm ▸ Nat.succ_posₓ d : 0 < finrank K V)
-    obtain rfl | hB₁ := eq_or_ne B 0
-    ·
-      let b := FiniteDimensional.finBasis K V 
-      rw [hd] at b 
-      refine' ⟨b, fun i j hij => rfl⟩
-    obtain ⟨x, hx⟩ := exists_bilin_form_self_ne_zero hB₁ hB₂ 
-    rw [←Submodule.finrank_add_eq_of_is_compl (is_compl_span_singleton_orthogonal hx).symm,
-      finrank_span_singleton (ne_zero_of_not_is_ortho_self x hx)] at hd 
-    let B' := B.restrict (B.orthogonal$ K∙x)
-    obtain ⟨v', hv₁⟩ := ih (B.restrict_symm hB₂ _ : B'.is_symm) (Nat.succ.injₓ hd)
-    let b :=
-      Basis.mkFinCons x v'
-        (by 
-          rintro c y hy hc 
-          rw [add_eq_zero_iff_neg_eq] at hc 
-          rw [←hc, Submodule.neg_mem_iff] at hy 
-          have  := (is_compl_span_singleton_orthogonal hx).Disjoint 
-          rw [Submodule.disjoint_def] at this 
-          have  := this (c • x) (Submodule.smul_mem _ _$ Submodule.mem_span_singleton_self _) hy 
-          exact (smul_eq_zero.1 this).resolve_right fun h => hx$ h.symm ▸ zero_left _)
-        (by 
-          intro y 
-          refine' ⟨-B x y / B x x, fun z hz => _⟩
-          obtain ⟨c, rfl⟩ := Submodule.mem_span_singleton.1 hz 
-          rw [is_ortho, smul_left, add_right, smul_right, div_mul_cancel _ hx, add_neg_selfₓ, mul_zero])
-    refine' ⟨b, _⟩
-    ·
-      rw [Basis.coe_mk_fin_cons]
-      intro j i 
-      refine' Finₓ.cases _ (fun i => _) i <;>
-        refine' Finₓ.cases _ (fun j => _) j <;>
-          intro hij <;> simp only [Function.onFun, Finₓ.cons_zero, Finₓ.cons_succ, Function.comp_apply]
-      ·
-        exact (hij rfl).elim
-      ·
-        rw [is_ortho, hB₂]
-        exact (v' j).Prop _ (Submodule.mem_span_singleton_self x)
-      ·
-        exact (v' i).Prop _ (Submodule.mem_span_singleton_self x)
-      ·
-        exact hv₁ _ _ (ne_of_apply_ne _ hij)
+theorem exists_orthogonal_basis
+[hK : invertible (2 : K)]
+{B : bilin_form K V}
+(hB₂ : B.is_symm) : «expr∃ , »((v : basis (fin (finrank K V)) K V), B.is_Ortho v) :=
+begin
+  tactic.unfreeze_local_instances,
+  induction [expr hd, ":", expr finrank K V] [] ["with", ident d, ident ih] ["generalizing", ident V],
+  { exact [expr ⟨basis_of_finrank_zero hd, λ _ _ _, zero_left _⟩] },
+  haveI [] [] [":=", expr finrank_pos_iff.1 («expr ▸ »(hd.symm, nat.succ_pos d) : «expr < »(0, finrank K V))],
+  obtain [ident rfl, "|", ident hB₁, ":=", expr eq_or_ne B 0],
+  { let [ident b] [] [":=", expr finite_dimensional.fin_basis K V],
+    rw [expr hd] ["at", ident b],
+    refine [expr ⟨b, λ i j hij, rfl⟩] },
+  obtain ["⟨", ident x, ",", ident hx, "⟩", ":=", expr exists_bilin_form_self_ne_zero hB₁ hB₂],
+  rw ["[", "<-", expr submodule.finrank_add_eq_of_is_compl (is_compl_span_singleton_orthogonal hx).symm, ",", expr finrank_span_singleton (ne_zero_of_not_is_ortho_self x hx), "]"] ["at", ident hd],
+  let [ident B'] [] [":=", expr B.restrict «expr $ »(B.orthogonal, «expr ∙ »(K, x))],
+  obtain ["⟨", ident v', ",", ident hv₁, "⟩", ":=", expr ih (B.restrict_symm hB₂ _ : B'.is_symm) (nat.succ.inj hd)],
+  let [ident b] [] [":=", expr basis.mk_fin_cons x v' (begin
+      rintros [ident c, ident y, ident hy, ident hc],
+      rw [expr add_eq_zero_iff_neg_eq] ["at", ident hc],
+      rw ["[", "<-", expr hc, ",", expr submodule.neg_mem_iff, "]"] ["at", ident hy],
+      have [] [] [":=", expr (is_compl_span_singleton_orthogonal hx).disjoint],
+      rw [expr submodule.disjoint_def] ["at", ident this],
+      have [] [] [":=", expr this «expr • »(c, x) «expr $ »(submodule.smul_mem _ _, submodule.mem_span_singleton_self _) hy],
+      exact [expr (smul_eq_zero.1 this).resolve_right (λ h, «expr $ »(hx, «expr ▸ »(h.symm, zero_left _)))]
+    end) (begin
+      intro [ident y],
+      refine [expr ⟨«expr / »(«expr- »(B x y), B x x), λ z hz, _⟩],
+      obtain ["⟨", ident c, ",", ident rfl, "⟩", ":=", expr submodule.mem_span_singleton.1 hz],
+      rw ["[", expr is_ortho, ",", expr smul_left, ",", expr add_right, ",", expr smul_right, ",", expr div_mul_cancel _ hx, ",", expr add_neg_self, ",", expr mul_zero, "]"] []
+    end)],
+  refine [expr ⟨b, _⟩],
+  { rw [expr basis.coe_mk_fin_cons] [],
+    intros [ident j, ident i],
+    refine [expr fin.cases _ (λ
+      i, _) i]; refine [expr fin.cases _ (λ
+      j, _) j]; intro [ident hij]; simp [] [] ["only"] ["[", expr function.on_fun, ",", expr fin.cons_zero, ",", expr fin.cons_succ, ",", expr function.comp_apply, "]"] [] [],
+    { exact [expr (hij rfl).elim] },
+    { rw ["[", expr is_ortho, ",", expr hB₂, "]"] [],
+      exact [expr (v' j).prop _ (submodule.mem_span_singleton_self x)] },
+    { exact [expr (v' i).prop _ (submodule.mem_span_singleton_self x)] },
+    { exact [expr hv₁ _ _ (ne_of_apply_ne _ hij)] } }
+end
 
 end BilinForm
 
@@ -1141,14 +1119,16 @@ theorem equivalent_weighted_sum_squares (Q : QuadraticForm K V) :
   let ⟨v, hv₁⟩ := exists_orthogonal_basis (associated_is_symm _ Q)
   ⟨_, ⟨Q.isometry_weighted_sum_squares v hv₁⟩⟩
 
-theorem equivalent_weighted_sum_squares_units_of_nondegenerate' (Q : QuadraticForm K V)
-  (hQ : (Associated Q).Nondegenerate) :
-  ∃ w : Finₓ (FiniteDimensional.finrank K V) → Units K, equivalent Q (weighted_sum_squares K w) :=
-  by 
-    obtain ⟨v, hv₁⟩ := exists_orthogonal_basis (associated_is_symm _ Q)
-    have hv₂ := hv₁.not_is_ortho_basis_self_of_nondegenerate hQ 
-    simpRw [is_ortho, associated_eq_self_apply]  at hv₂ 
-    exact ⟨fun i => Units.mk0 _ (hv₂ i), ⟨Q.isometry_weighted_sum_squares v hv₁⟩⟩
+-- error in LinearAlgebra.QuadraticForm.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem equivalent_weighted_sum_squares_units_of_nondegenerate'
+(Q : quadratic_form K V)
+(hQ : (associated Q).nondegenerate) : «expr∃ , »((w : fin (finite_dimensional.finrank K V) → units K), equivalent Q (weighted_sum_squares K w)) :=
+begin
+  obtain ["⟨", ident v, ",", ident hv₁, "⟩", ":=", expr exists_orthogonal_basis (associated_is_symm _ Q)],
+  have [ident hv₂] [] [":=", expr hv₁.not_is_ortho_basis_self_of_nondegenerate hQ],
+  simp_rw ["[", expr is_ortho, ",", expr associated_eq_self_apply, "]"] ["at", ident hv₂],
+  exact [expr ⟨λ i, units.mk0 _ (hv₂ i), ⟨Q.isometry_weighted_sum_squares v hv₁⟩⟩]
+end
 
 end QuadraticForm
 

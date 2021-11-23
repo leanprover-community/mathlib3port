@@ -1,5 +1,5 @@
 import Mathbin.Data.Seq.Seq 
-import Mathbin.Algebra.Field
+import Mathbin.Algebra.Field.Basic
 
 /-!
 # Basic Definitions/Theorems for Continued Fractions
@@ -40,7 +40,7 @@ variable(α : Type _)
 /-!### Definitions-/
 
 
--- error in Algebra.ContinuedFractions.Basic: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Algebra.ContinuedFractions.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- We collect a partial numerator `aᵢ` and partial denominator `bᵢ` in a pair `⟨aᵢ,bᵢ⟩`. -/
 @[derive #[expr inhabited]]
 protected

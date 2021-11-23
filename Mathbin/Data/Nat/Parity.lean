@@ -62,7 +62,7 @@ theorem odd_iff_not_even : Odd n ↔ ¬Even n :=
   by 
     rw [not_even_iff, odd_iff]
 
-theorem is_compl_even_odd : IsCompl { n : ℕ | Even n } { n | Odd n } :=
+theorem is_compl_even_odd : IsCompl { n:ℕ | Even n } { n | Odd n } :=
   by 
     simp [←Set.compl_set_of, is_compl_compl]
 
@@ -272,6 +272,18 @@ theorem even_mul_succ_self (n : ℕ) : Even (n*n+1) :=
     rw [even_mul]
     convert n.even_or_odd 
     simp' with parity_simps
+
+theorem even_mul_self_pred (n : ℕ) : Even (n*n - 1) :=
+  by 
+    cases n
+    ·
+      exact even_zero
+    ·
+      rw [mul_commₓ]
+      apply even_mul_succ_self
+
+theorem even_sub_one_of_prime_ne_two {p : ℕ} (hp : prime p) (hodd : p ≠ 2) : Even (p - 1) :=
+  odd.sub_odd (odd_iff.2$ hp.eq_two_or_odd.resolve_left hodd) (odd_iff.2 rfl)
 
 variable{R : Type _}[Ringₓ R]
 

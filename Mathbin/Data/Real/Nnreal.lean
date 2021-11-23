@@ -45,7 +45,7 @@ This file defines `ℝ≥0` as a localized notation for `nnreal`.
 
 open_locale Classical BigOperators
 
--- error in Data.Real.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler ordered_semiring
+-- error in Data.Real.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler ordered_semiring
 /-- Nonnegative real numbers. -/
 @[derive #["[", expr ordered_semiring, ",", expr comm_monoid_with_zero, ",", expr semilattice_inf_bot, ",",
    expr densely_ordered, ",", expr canonically_linear_ordered_add_monoid, ",", expr linear_ordered_comm_group_with_zero,
@@ -602,22 +602,22 @@ theorem to_nnreal_lt_iff_lt_coe {r : ℝ} {p :  ℝ≥0 } (ha : 0 ≤ r) : Real.
   by 
     rw [←Nnreal.coe_lt_coe, Real.coe_to_nnreal r ha]
 
-theorem lt_to_nnreal_iff_coe_lt {r :  ℝ≥0 } {p : ℝ} : r < Real.toNnreal p ↔ «expr↑ » r < p :=
-  by 
-    cases le_totalₓ 0 p
-    ·
-      rw [←Nnreal.coe_lt_coe, Real.coe_to_nnreal p h]
-    ·
-      rw [to_nnreal_eq_zero.2 h]
-      split 
-      ·
-        intro 
-        have  := not_lt_of_le (zero_le r)
-        contradiction
-      ·
-        intro rp 
-        have  : ¬p ≤ 0 := not_le_of_lt (lt_of_le_of_ltₓ (Nnreal.coe_nonneg _) rp)
-        contradiction
+-- error in Data.Real.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lt_to_nnreal_iff_coe_lt
+{r : «exprℝ≥0»()}
+{p : exprℝ()} : «expr ↔ »(«expr < »(r, real.to_nnreal p), «expr < »(«expr↑ »(r), p)) :=
+begin
+  cases [expr le_total 0 p] [],
+  { rw ["[", "<-", expr nnreal.coe_lt_coe, ",", expr real.coe_to_nnreal p h, "]"] [] },
+  { rw ["[", expr to_nnreal_eq_zero.2 h, "]"] [],
+    split,
+    { intro [],
+      have [] [] [":=", expr not_lt_of_le (zero_le r)],
+      contradiction },
+    { intro [ident rp],
+      have [] [":", expr «expr¬ »(«expr ≤ »(p, 0))] [":=", expr not_le_of_lt (lt_of_le_of_lt (nnreal.coe_nonneg _) rp)],
+      contradiction } }
+end
 
 @[simp]
 theorem to_nnreal_bit0 {r : ℝ} (hr : 0 ≤ r) : Real.toNnreal (bit0 r) = bit0 (Real.toNnreal r) :=
@@ -652,15 +652,17 @@ theorem mul_eq_mul_left {a b c :  ℝ≥0 } (h : a ≠ 0) : ((a*b) = a*c) ↔ b 
       intro h 
       rw [h]
 
-theorem _root_.real.to_nnreal_mul {p q : ℝ} (hp : 0 ≤ p) : Real.toNnreal (p*q) = Real.toNnreal p*Real.toNnreal q :=
-  by 
-    cases' le_totalₓ 0 q with hq hq
-    ·
-      apply Nnreal.eq 
-      simp [Real.toNnreal, hp, hq, max_eq_leftₓ, mul_nonneg]
-    ·
-      have hpq := mul_nonpos_of_nonneg_of_nonpos hp hq 
-      rw [to_nnreal_eq_zero.2 hq, to_nnreal_eq_zero.2 hpq, mul_zero]
+-- error in Data.Real.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem _root_.real.to_nnreal_mul
+{p q : exprℝ()}
+(hp : «expr ≤ »(0, p)) : «expr = »(real.to_nnreal «expr * »(p, q), «expr * »(real.to_nnreal p, real.to_nnreal q)) :=
+begin
+  cases [expr le_total 0 q] ["with", ident hq, ident hq],
+  { apply [expr nnreal.eq],
+    simp [] [] [] ["[", expr real.to_nnreal, ",", expr hp, ",", expr hq, ",", expr max_eq_left, ",", expr mul_nonneg, "]"] [] [] },
+  { have [ident hpq] [] [":=", expr mul_nonpos_of_nonneg_of_nonpos hp hq],
+    rw ["[", expr to_nnreal_eq_zero.2 hq, ",", expr to_nnreal_eq_zero.2 hpq, ",", expr mul_zero, "]"] [] }
+end
 
 end Mul
 
@@ -877,15 +879,15 @@ theorem div_add' (a b c :  ℝ≥0 ) (hc : c ≠ 0) : ((a / c)+b) = (a+b*c) / c 
   by 
     rwa [add_commₓ, add_div', add_commₓ]
 
-theorem _root_.real.to_nnreal_inv {x : ℝ} : Real.toNnreal (x⁻¹) = Real.toNnreal x⁻¹ :=
-  by 
-    byCases' hx : 0 ≤ x
-    ·
-      nthRw 0[←Real.coe_to_nnreal x hx]
-      rw [←Nnreal.coe_inv, Real.to_nnreal_coe]
-    ·
-      have hx' := le_of_not_geₓ hx 
-      rw [to_nnreal_eq_zero.mpr hx', inv_zero, to_nnreal_eq_zero.mpr (inv_nonpos.mpr hx')]
+-- error in Data.Real.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem _root_.real.to_nnreal_inv {x : exprℝ()} : «expr = »(real.to_nnreal «expr ⁻¹»(x), «expr ⁻¹»(real.to_nnreal x)) :=
+begin
+  by_cases [expr hx, ":", expr «expr ≤ »(0, x)],
+  { nth_rewrite [0] ["<-", expr real.coe_to_nnreal x hx] [],
+    rw ["[", "<-", expr nnreal.coe_inv, ",", expr real.to_nnreal_coe, "]"] [] },
+  { have [ident hx'] [] [":=", expr le_of_not_ge hx],
+    rw ["[", expr to_nnreal_eq_zero.mpr hx', ",", expr inv_zero, ",", expr to_nnreal_eq_zero.mpr (inv_nonpos.mpr hx'), "]"] [] }
+end
 
 theorem _root_.real.to_nnreal_div {x y : ℝ} (hx : 0 ≤ x) : Real.toNnreal (x / y) = Real.toNnreal x / Real.toNnreal y :=
   by 

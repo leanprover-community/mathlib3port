@@ -125,17 +125,17 @@ implication, along with the type of `a` and `b`.
 For example, if `e` is `(a : ℕ) < b`, returns ``(`lt_of_not_ge, ℕ)``.
 -/
 unsafe def get_contr_lemma_name_and_type : expr → Option (Name × expr)
-| quote @LT.lt (%%tp) (%%_) _ _ => return (`lt_of_not_ge, tp)
-| quote @LE.le (%%tp) (%%_) _ _ => return (`le_of_not_gt, tp)
-| quote @Eq (%%tp) _ _ => return (`` eq_of_not_lt_of_not_gt, tp)
-| quote @Ne (%%tp) _ _ => return (`not.intro, tp)
-| quote @Ge (%%tp) (%%_) _ _ => return (`le_of_not_gt, tp)
-| quote @Gt (%%tp) (%%_) _ _ => return (`lt_of_not_ge, tp)
-| quote ¬@LT.lt (%%tp) (%%_) _ _ => return (`not.intro, tp)
-| quote ¬@LE.le (%%tp) (%%_) _ _ => return (`not.intro, tp)
-| quote ¬@Eq (%%tp) _ _ => return (`` Not.intro, tp)
-| quote ¬@Ge (%%tp) (%%_) _ _ => return (`not.intro, tp)
-| quote ¬@Gt (%%tp) (%%_) _ _ => return (`not.intro, tp)
+| quote.1 (@LT.lt (%%ₓtp) (%%ₓ_) _ _) => return (`lt_of_not_ge, tp)
+| quote.1 (@LE.le (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
+| quote.1 (@Eq (%%ₓtp) _ _) => return (`` eq_of_not_lt_of_not_gt, tp)
+| quote.1 (@Ne (%%ₓtp) _ _) => return (`not.intro, tp)
+| quote.1 (@Ge (%%ₓtp) (%%ₓ_) _ _) => return (`le_of_not_gt, tp)
+| quote.1 (@Gt (%%ₓtp) (%%ₓ_) _ _) => return (`lt_of_not_ge, tp)
+| quote.1 ¬@LT.lt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
+| quote.1 ¬@LE.le (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
+| quote.1 ¬@Eq (%%ₓtp) _ _ => return (`` Not.intro, tp)
+| quote.1 ¬@Ge (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
+| quote.1 ¬@Gt (%%ₓtp) (%%ₓ_) _ _ => return (`not.intro, tp)
 | _ => none
 
 /--
@@ -227,7 +227,7 @@ unsafe def filter_hyps_to_type (restr_type : expr) (hyps : List expr) : tactic (
 unsafe def get_restrict_type (e : expr) : tactic expr :=
   do 
     let m ← mk_mvar 
-    unify (quote (some (%%m) : Option Type)) e 
+    unify (quote.1 (some (%%ₓm) : Option Type)) e 
     instantiate_mvars m
 
 end Linarith

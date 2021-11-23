@@ -24,11 +24,11 @@ instance  : abelian («expr ᵒᵖ» C) :=
   { NormalMono :=
       fun X Y f m =>
         by 
-          exactI normal_mono_of_normal_epi_unop _ (abelian.normal_epi f.unop),
+          exact normal_mono_of_normal_epi_unop _ (abelian.normal_epi f.unop),
     NormalEpi :=
       fun X Y f m =>
         by 
-          exactI normal_epi_of_normal_mono_unop _ (abelian.normal_mono f.unop) }
+          exact normal_epi_of_normal_mono_unop _ (abelian.normal_mono f.unop) }
 
 section 
 

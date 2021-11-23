@@ -299,7 +299,7 @@ instance  : reflects_isomorphisms (forget C).toFunctor :=
       fun A B f i =>
         by 
           dsimp  at i 
-          resetI 
+          skip 
           change is_iso (iso_mk f).Hom 
           infer_instance }
 

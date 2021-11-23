@@ -43,7 +43,7 @@ class simple(X : C) : Prop where
 theorem is_iso_of_mono_of_nonzero {X Y : C} [simple Y] {f : X ⟶ Y} [mono f] (w : f ≠ 0) : is_iso f :=
   (simple.mono_is_iso_iff_nonzero f).mpr w
 
--- error in CategoryTheory.Simple: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in CategoryTheory.Simple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem kernel_zero_of_nonzero_from_simple
 {X Y : C}
 [simple X]
@@ -57,19 +57,12 @@ begin
   exact [expr w (eq_zero_of_epi_kernel f)]
 end
 
--- error in CategoryTheory.Simple: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem mono_to_simple_zero_of_not_iso
-{X Y : C}
-[simple Y]
-{f : «expr ⟶ »(X, Y)}
-[mono f]
-(w : is_iso f → false) : «expr = »(f, 0) :=
-begin
-  classical,
-  by_contradiction [ident h],
-  apply [expr w],
-  exact [expr is_iso_of_mono_of_nonzero h]
-end
+theorem mono_to_simple_zero_of_not_iso {X Y : C} [simple Y] {f : X ⟶ Y} [mono f] (w : is_iso f → False) : f = 0 :=
+  by 
+    classical 
+    byContra h 
+    apply w 
+    exact is_iso_of_mono_of_nonzero h
 
 theorem id_nonzero (X : C) [simple.{v} X] : 𝟙 X ≠ 0 :=
   (simple.mono_is_iso_iff_nonzero (𝟙 X)).mp
@@ -101,7 +94,7 @@ section Abelian
 
 variable[abelian C]
 
--- error in CategoryTheory.Simple: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in CategoryTheory.Simple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In an abelian category, an object satisfying the dual of the definition of a simple object is
     simple. -/
 theorem simple_of_cosimple
@@ -124,13 +117,15 @@ theorem simple_of_cosimple
      exact [expr cokernel_not_iso_of_nonzero hf ((h _).mpr h')] }
  end⟩
 
+-- error in CategoryTheory.Simple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A nonzero epimorphism from a simple object is an isomorphism. -/
-theorem is_iso_of_epi_of_nonzero {X Y : C} [simple X] {f : X ⟶ Y} [epi f] (w : f ≠ 0) : is_iso f :=
-  by 
-    haveI  : mono f := preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
-    exact abelian.is_iso_of_mono_of_epi f
+theorem is_iso_of_epi_of_nonzero {X Y : C} [simple X] {f : «expr ⟶ »(X, Y)} [epi f] (w : «expr ≠ »(f, 0)) : is_iso f :=
+begin
+  haveI [] [":", expr mono f] [":=", expr preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))],
+  exact [expr abelian.is_iso_of_mono_of_epi f]
+end
 
--- error in CategoryTheory.Simple: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in CategoryTheory.Simple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem cokernel_zero_of_nonzero_to_simple
 {X Y : C}
 [simple Y]
@@ -144,19 +139,12 @@ begin
   exact [expr w (eq_zero_of_mono_cokernel f)]
 end
 
--- error in CategoryTheory.Simple: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem epi_from_simple_zero_of_not_iso
-{X Y : C}
-[simple X]
-{f : «expr ⟶ »(X, Y)}
-[epi f]
-(w : is_iso f → false) : «expr = »(f, 0) :=
-begin
-  classical,
-  by_contradiction [ident h],
-  apply [expr w],
-  exact [expr is_iso_of_epi_of_nonzero h]
-end
+theorem epi_from_simple_zero_of_not_iso {X Y : C} [simple X] {f : X ⟶ Y} [epi f] (w : is_iso f → False) : f = 0 :=
+  by 
+    classical 
+    byContra h 
+    apply w 
+    exact is_iso_of_epi_of_nonzero h
 
 end Abelian
 

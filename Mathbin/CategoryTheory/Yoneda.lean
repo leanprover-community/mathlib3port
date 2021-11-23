@@ -120,12 +120,12 @@ theorem naturality {X Y : «expr ᵒᵖ» C} (α : coyoneda.obj X ⟶ coyoneda.o
 instance coyoneda_full : full (coyoneda : «expr ᵒᵖ» C ⥤ C ⥤ Type v₁) :=
   { Preimage := fun X Y f => (f.app _ (𝟙 X.unop)).op }
 
-instance coyoneda_faithful : faithful (coyoneda : «expr ᵒᵖ» C ⥤ C ⥤ Type v₁) :=
-  { map_injective' :=
-      fun X Y f g p =>
-        by 
-          have t := congr_funₓ (congr_app p X.unop) (𝟙 _)
-          simpa using congr_argₓ Quiver.Hom.op t }
+-- error in CategoryTheory.Yoneda: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance coyoneda_faithful : faithful (coyoneda : «expr ⥤ »(«expr ᵒᵖ»(C), «expr ⥤ »(C, Type v₁))) :=
+{ map_injective' := λ X Y f g p, begin
+    have [ident t] [] [":=", expr congr_fun (congr_app p X.unop) («expr𝟙»() _)],
+    simpa [] [] [] [] [] ["using", expr congr_arg quiver.hom.op t]
+  end }
 
 /--
 If `coyoneda.map f` is an isomorphism, so was `f`.

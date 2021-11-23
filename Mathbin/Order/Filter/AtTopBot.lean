@@ -35,14 +35,14 @@ def at_top [Preorderₓ α] : Filter α :=
 def at_bot [Preorderₓ α] : Filter α :=
   ⨅a, 𝓟 (Iic a)
 
-theorem mem_at_top [Preorderₓ α] (a : α) : { b : α | a ≤ b } ∈ @at_top α _ :=
+theorem mem_at_top [Preorderₓ α] (a : α) : { b:α | a ≤ b } ∈ @at_top α _ :=
   mem_infi_of_mem a$ subset.refl _
 
 theorem Ioi_mem_at_top [Preorderₓ α] [NoTopOrder α] (x : α) : Ioi x ∈ (at_top : Filter α) :=
   let ⟨z, hz⟩ := no_top x 
   mem_of_superset (mem_at_top z)$ fun y h => lt_of_lt_of_leₓ hz h
 
-theorem mem_at_bot [Preorderₓ α] (a : α) : { b : α | b ≤ a } ∈ @at_bot α _ :=
+theorem mem_at_bot [Preorderₓ α] (a : α) : { b:α | b ≤ a } ∈ @at_bot α _ :=
   mem_infi_of_mem a$ subset.refl _
 
 theorem Iio_mem_at_bot [Preorderₓ α] [NoBotOrder α] (x : α) : Iio x ∈ (at_bot : Filter α) :=
@@ -131,13 +131,15 @@ theorem order_top.at_top_eq α [PartialOrderₓ α] [OrderTop α] : (at_top : Fi
 theorem order_bot.at_bot_eq α [PartialOrderₓ α] [OrderBot α] : (at_bot : Filter α) = pure ⊥ :=
   @order_top.at_top_eq (OrderDual α) _ _
 
-@[nontriviality]
-theorem subsingleton.at_top_eq α [Subsingleton α] [Preorderₓ α] : (at_top : Filter α) = ⊤ :=
-  by 
-    refine' top_unique fun s hs x => _ 
-    letI this : Unique α := ⟨⟨x⟩, fun y => Subsingleton.elimₓ y x⟩
-    rw [at_top, infi_unique, Unique.default_eq x, mem_principal] at hs 
-    exact hs left_mem_Ici
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[nontriviality #[]]
+theorem subsingleton.at_top_eq (α) [subsingleton α] [preorder α] : «expr = »((at_top : filter α), «expr⊤»()) :=
+begin
+  refine [expr top_unique (λ s hs x, _)],
+  letI [] [":", expr unique α] [":=", expr ⟨⟨x⟩, λ y, subsingleton.elim y x⟩],
+  rw ["[", expr at_top, ",", expr infi_unique, ",", expr unique.default_eq x, ",", expr mem_principal, "]"] ["at", ident hs],
+  exact [expr hs left_mem_Ici]
+end
 
 @[nontriviality]
 theorem subsingleton.at_bot_eq α [Subsingleton α] [Preorderₓ α] : (at_bot : Filter α) = ⊤ :=
@@ -269,13 +271,20 @@ theorem extraction_forall_of_eventually' {P : ℕ → ℕ → Prop} (h : ∀ n, 
     (by 
       simp [eventually_at_top, h])
 
-theorem exists_le_of_tendsto_at_top [SemilatticeSup α] [Preorderₓ β] {u : α → β} (h : tendsto u at_top at_top) (a : α)
-  (b : β) : ∃ (a' : _)(_ : a' ≥ a), b ≤ u a' :=
-  by 
-    have  : ∀ᶠx in at_top, a ≤ x ∧ b ≤ u x := (eventually_ge_at_top a).And (h.eventually$ eventually_ge_at_top b)
-    haveI  : Nonempty α := ⟨a⟩
-    rcases this.exists with ⟨a', ha, hb⟩
-    exact ⟨a', ha, hb⟩
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_le_of_tendsto_at_top
+[semilattice_sup α]
+[preorder β]
+{u : α → β}
+(h : tendsto u at_top at_top)
+(a : α)
+(b : β) : «expr∃ , »((a' «expr ≥ » a), «expr ≤ »(b, u a')) :=
+begin
+  have [] [":", expr «expr∀ᶠ in , »((x), at_top, «expr ∧ »(«expr ≤ »(a, x), «expr ≤ »(b, u x)))] [":=", expr (eventually_ge_at_top a).and «expr $ »(h.eventually, eventually_ge_at_top b)],
+  haveI [] [":", expr nonempty α] [":=", expr ⟨a⟩],
+  rcases [expr this.exists, "with", "⟨", ident a', ",", ident ha, ",", ident hb, "⟩"],
+  exact [expr ⟨a', ha, hb⟩]
+end
 
 @[nolint ge_or_gt]
 theorem exists_le_of_tendsto_at_bot [SemilatticeSup α] [Preorderₓ β] {u : α → β} (h : tendsto u at_top at_bot) :
@@ -294,34 +303,40 @@ theorem exists_lt_of_tendsto_at_bot [SemilatticeSup α] [Preorderₓ β] [NoBotO
   (h : tendsto u at_top at_bot) : ∀ a b, ∃ (a' : _)(_ : a' ≥ a), u a' < b :=
   @exists_lt_of_tendsto_at_top _ (OrderDual β) _ _ _ _ h
 
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `u` is a sequence which is unbounded above,
 then after any point, it reaches a value strictly greater than all previous values.
 -/
-theorem high_scores [LinearOrderₓ β] [NoTopOrder β] {u : ℕ → β} (hu : tendsto u at_top at_top) :
-  ∀ N, ∃ (n : _)(_ : n ≥ N), ∀ k _ : k < n, u k < u n :=
-  by 
-    intro N 
-    obtain ⟨k : ℕ, hkn : k ≤ N, hku : ∀ l _ : l ≤ N, u l ≤ u k⟩ : ∃ (k : _)(_ : k ≤ N), ∀ l _ : l ≤ N, u l ≤ u k 
-    exact exists_max_image _ u (finite_le_nat N) ⟨N, le_reflₓ N⟩
-    have ex : ∃ (n : _)(_ : n ≥ N), u k < u n 
-    exact exists_lt_of_tendsto_at_top hu _ _ 
-    obtain ⟨n : ℕ, hnN : n ≥ N, hnk : u k < u n, hn_min : ∀ m, m < n → N ≤ m → u m ≤ u k⟩ :
-      ∃ (n : _)(_ : n ≥ N), u k < u n ∧ ∀ m, m < n → N ≤ m → u m ≤ u k
-    ·
-      rcases Nat.findX ex with ⟨n, ⟨hnN, hnk⟩, hn_min⟩
-      pushNeg  at hn_min 
-      exact ⟨n, hnN, hnk, hn_min⟩
-    use n, hnN 
-    rintro (l : ℕ) (hl : l < n)
-    have hlk : u l ≤ u k
-    ·
-      cases' (le_totalₓ l N : l ≤ N ∨ N ≤ l) with H H
-      ·
-        exact hku l H
-      ·
-        exact hn_min l hl H 
-    calc u l ≤ u k := hlk _ < u n := hnk
+theorem high_scores
+[linear_order β]
+[no_top_order β]
+{u : exprℕ() → β}
+(hu : tendsto u at_top at_top) : ∀ N, «expr∃ , »((n «expr ≥ » N), ∀ k «expr < » n, «expr < »(u k, u n)) :=
+begin
+  intros [ident N],
+  obtain ["⟨", ident k, ":", expr exprℕ(), ",", ident hkn, ":", expr «expr ≤ »(k, N), ",", ident hku, ":", expr ∀
+   l «expr ≤ » N, «expr ≤ »(u l, u k), "⟩", ":", expr «expr∃ , »((k «expr ≤ » N), ∀
+    l «expr ≤ » N, «expr ≤ »(u l, u k))],
+  from [expr exists_max_image _ u (finite_le_nat N) ⟨N, le_refl N⟩],
+  have [ident ex] [":", expr «expr∃ , »((n «expr ≥ » N), «expr < »(u k, u n))] [],
+  from [expr exists_lt_of_tendsto_at_top hu _ _],
+  obtain ["⟨", ident n, ":", expr exprℕ(), ",", ident hnN, ":", expr «expr ≥ »(n, N), ",", ident hnk, ":", expr «expr < »(u k, u n), ",", ident hn_min, ":", expr ∀
+   m, «expr < »(m, n) → «expr ≤ »(N, m) → «expr ≤ »(u m, u k), "⟩", ":", expr «expr∃ , »((n «expr ≥ » N), «expr ∧ »(«expr < »(u k, u n), ∀
+     m, «expr < »(m, n) → «expr ≤ »(N, m) → «expr ≤ »(u m, u k)))],
+  { rcases [expr nat.find_x ex, "with", "⟨", ident n, ",", "⟨", ident hnN, ",", ident hnk, "⟩", ",", ident hn_min, "⟩"],
+    push_neg ["at", ident hn_min],
+    exact [expr ⟨n, hnN, hnk, hn_min⟩] },
+  use ["[", expr n, ",", expr hnN, "]"],
+  rintros ["(", ident l, ":", expr exprℕ(), ")", "(", ident hl, ":", expr «expr < »(l, n), ")"],
+  have [ident hlk] [":", expr «expr ≤ »(u l, u k)] [],
+  { cases [expr (le_total l N : «expr ∨ »(«expr ≤ »(l, N), «expr ≤ »(N, l)))] ["with", ident H, ident H],
+    { exact [expr hku l H] },
+    { exact [expr hn_min l hl H] } },
+  calc
+    «expr ≤ »(u l, u k) : hlk
+    «expr < »(..., u n) : hnk
+end
 
 /--
 If `u` is a sequence which is unbounded below,
@@ -700,41 +715,43 @@ theorem tendsto_const_mul_pow_at_top {c : α} {n : ℕ} (hn : 1 ≤ n) (hc : 0 <
   tendsto (fun x => c*x ^ n) at_top at_top :=
   tendsto.const_mul_at_top hc (tendsto_pow_at_top hn)
 
-theorem tendsto_const_mul_pow_at_top_iff (c : α) (n : ℕ) : tendsto (fun x => c*x ^ n) at_top at_top ↔ 1 ≤ n ∧ 0 < c :=
-  by 
-    refine' ⟨fun h => _, fun h => tendsto_const_mul_pow_at_top h.1 h.2⟩
-    simp only [tendsto_at_top, eventually_at_top] at h 
-    have  : 0 < c :=
-      let ⟨x, hx⟩ := h 1
-      pos_of_mul_pos_right (lt_of_lt_of_leₓ zero_lt_one (hx (max x 1) (le_max_leftₓ x 1)))
-        (pow_nonneg (le_transₓ zero_le_one (le_max_rightₓ x 1)) n)
-    refine' ⟨nat.succ_le_iff.mp (lt_of_le_of_neₓ (zero_le n) (Ne.symm fun hn => _)), this⟩
-    obtain ⟨x, hx⟩ := h (c+1)
-    specialize hx x le_rfl 
-    rw [hn, pow_zeroₓ, mul_oneₓ, add_le_iff_nonpos_right] at hx 
-    exact absurd hx (not_le.mpr zero_lt_one)
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_const_mul_pow_at_top_iff
+(c : α)
+(n : exprℕ()) : «expr ↔ »(tendsto (λ
+  x, «expr * »(c, «expr ^ »(x, n))) at_top at_top, «expr ∧ »(«expr ≤ »(1, n), «expr < »(0, c))) :=
+begin
+  refine [expr ⟨λ h, _, λ h, tendsto_const_mul_pow_at_top h.1 h.2⟩],
+  simp [] [] ["only"] ["[", expr tendsto_at_top, ",", expr eventually_at_top, "]"] [] ["at", ident h],
+  have [] [":", expr «expr < »(0, c)] [":=", expr let ⟨x, hx⟩ := h 1 in
+   pos_of_mul_pos_right (lt_of_lt_of_le zero_lt_one (hx (max x 1) (le_max_left x 1))) (pow_nonneg (le_trans zero_le_one (le_max_right x 1)) n)],
+  refine [expr ⟨nat.succ_le_iff.mp (lt_of_le_of_ne (zero_le n) (ne.symm (λ hn, _))), this⟩],
+  obtain ["⟨", ident x, ",", ident hx, "⟩", ":=", expr h «expr + »(c, 1)],
+  specialize [expr hx x le_rfl],
+  rw ["[", expr hn, ",", expr pow_zero, ",", expr mul_one, ",", expr add_le_iff_nonpos_right, "]"] ["at", ident hx],
+  exact [expr absurd hx (not_le.mpr zero_lt_one)]
+end
 
 theorem tendsto_neg_const_mul_pow_at_top {c : α} {n : ℕ} (hn : 1 ≤ n) (hc : c < 0) :
   tendsto (fun x => c*x ^ n) at_top at_bot :=
   tendsto.neg_const_mul_at_top hc (tendsto_pow_at_top hn)
 
-theorem tendsto_neg_const_mul_pow_at_top_iff (c : α) (n : ℕ) :
-  tendsto (fun x => c*x ^ n) at_top at_bot ↔ 1 ≤ n ∧ c < 0 :=
-  by 
-    refine' ⟨fun h => _, fun h => tendsto_neg_const_mul_pow_at_top h.1 h.2⟩
-    simp only [tendsto_at_bot, eventually_at_top] at h 
-    have  : c < 0 :=
-      let ⟨x, hx⟩ := h (-1)
-      neg_of_mul_neg_right
-        (lt_of_le_of_ltₓ (hx (max x 1) (le_max_leftₓ x 1))
-          (by 
-            simp [zero_lt_one]))
-        (pow_nonneg (le_transₓ zero_le_one (le_max_rightₓ x 1)) n)
-    refine' ⟨nat.succ_le_iff.mp (lt_of_le_of_neₓ (zero_le n) (Ne.symm fun hn => _)), this⟩
-    obtain ⟨x, hx⟩ := h (c - 1)
-    specialize hx x le_rfl 
-    rw [hn, pow_zeroₓ, mul_oneₓ, le_sub, sub_self] at hx 
-    exact absurd hx (not_le.mpr zero_lt_one)
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_neg_const_mul_pow_at_top_iff
+(c : α)
+(n : exprℕ()) : «expr ↔ »(tendsto (λ
+  x, «expr * »(c, «expr ^ »(x, n))) at_top at_bot, «expr ∧ »(«expr ≤ »(1, n), «expr < »(c, 0))) :=
+begin
+  refine [expr ⟨λ h, _, λ h, tendsto_neg_const_mul_pow_at_top h.1 h.2⟩],
+  simp [] [] ["only"] ["[", expr tendsto_at_bot, ",", expr eventually_at_top, "]"] [] ["at", ident h],
+  have [] [":", expr «expr < »(c, 0)] [":=", expr let ⟨x, hx⟩ := h «expr- »(1) in
+   neg_of_mul_neg_right (lt_of_le_of_lt (hx (max x 1) (le_max_left x 1)) (by simp [] [] [] ["[", expr zero_lt_one, "]"] [] [])) (pow_nonneg (le_trans zero_le_one (le_max_right x 1)) n)],
+  refine [expr ⟨nat.succ_le_iff.mp (lt_of_le_of_ne (zero_le n) (ne.symm (λ hn, _))), this⟩],
+  obtain ["⟨", ident x, ",", ident hx, "⟩", ":=", expr h «expr - »(c, 1)],
+  specialize [expr hx x le_rfl],
+  rw ["[", expr hn, ",", expr pow_zero, ",", expr mul_one, ",", expr le_sub, ",", expr sub_self, "]"] ["at", ident hx],
+  exact [expr absurd hx (not_le.mpr zero_lt_one)]
+end
 
 end LinearOrderedField
 
@@ -861,8 +878,8 @@ theorem tendsto_finset_preimage_at_top_at_top {f : α → β} (hf : Function.Inj
 theorem prod_at_top_at_top_eq {β₁ β₂ : Type _} [SemilatticeSup β₁] [SemilatticeSup β₂] :
   (at_top : Filter β₁) ×ᶠ (at_top : Filter β₂) = (at_top : Filter (β₁ × β₂)) :=
   by 
-    casesI (is_empty_or_nonempty β₁).symm 
-    casesI (is_empty_or_nonempty β₂).symm
+    cases' (is_empty_or_nonempty β₁).symm 
+    cases' (is_empty_or_nonempty β₂).symm
     ·
       simp [at_top, prod_infi_left, prod_infi_right, infi_prod]
       exact infi_comm
@@ -962,29 +979,30 @@ theorem map_at_bot_eq_of_gc [SemilatticeInf α] [SemilatticeInf β] {f : α → 
   (gc : ∀ a, ∀ b _ : b ≤ b', b ≤ f a ↔ g b ≤ a) (hgi : ∀ b _ : b ≤ b', f (g b) ≤ b) : map f at_bot = at_bot :=
   @map_at_top_eq_of_gc (OrderDual α) (OrderDual β) _ _ _ _ _ hf.dual gc hgi
 
-theorem map_coe_at_top_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (h : Ici a ⊆ s) :
-  map (coeₓ : s → α) at_top = at_top :=
-  by 
-    have  : Directed (· ≥ ·) fun x : s => 𝓟 (Ici x)
-    ·
-      intro x y 
-      use ⟨x⊔y⊔a, h le_sup_right⟩
-      simp only [ge_iff_le, principal_mono, Ici_subset_Ici, ←Subtype.coe_le_coe, Subtype.coe_mk]
-      exact ⟨le_sup_left.trans le_sup_left, le_sup_right.trans le_sup_left⟩
-    haveI  : Nonempty s := ⟨⟨a, h le_rfl⟩⟩
-    simp only [le_antisymm_iffₓ, at_top, le_infi_iff, le_principal_iff, mem_map, mem_set_of_eq, map_infi_eq this,
-      map_principal]
-    split 
-    ·
-      intro x 
-      refine' mem_of_superset (mem_infi_of_mem ⟨x⊔a, h le_sup_right⟩ (mem_principal_self _)) _ 
-      rintro _ ⟨y, hy, rfl⟩
-      exact le_transₓ le_sup_left (Subtype.coe_le_coe.2 hy)
-    ·
-      intro x 
-      filterUpwards [mem_at_top («expr↑ » x⊔a)]
-      intro b hb 
-      exact ⟨⟨b, h$ le_sup_right.trans hb⟩, Subtype.coe_le_coe.1 (le_sup_left.trans hb), rfl⟩
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem map_coe_at_top_of_Ici_subset
+[semilattice_sup α]
+{a : α}
+{s : set α}
+(h : «expr ⊆ »(Ici a, s)) : «expr = »(map (coe : s → α) at_top, at_top) :=
+begin
+  have [] [":", expr directed ((«expr ≥ »)) (λ x : s, expr𝓟() (Ici x))] [],
+  { intros [ident x, ident y],
+    use [expr ⟨«expr ⊔ »(«expr ⊔ »(x, y), a), h le_sup_right⟩],
+    simp [] [] ["only"] ["[", expr ge_iff_le, ",", expr principal_mono, ",", expr Ici_subset_Ici, ",", "<-", expr subtype.coe_le_coe, ",", expr subtype.coe_mk, "]"] [] [],
+    exact [expr ⟨le_sup_left.trans le_sup_left, le_sup_right.trans le_sup_left⟩] },
+  haveI [] [":", expr nonempty s] [":=", expr ⟨⟨a, h le_rfl⟩⟩],
+  simp [] [] ["only"] ["[", expr le_antisymm_iff, ",", expr at_top, ",", expr le_infi_iff, ",", expr le_principal_iff, ",", expr mem_map, ",", expr mem_set_of_eq, ",", expr map_infi_eq this, ",", expr map_principal, "]"] [] [],
+  split,
+  { intro [ident x],
+    refine [expr mem_of_superset (mem_infi_of_mem ⟨«expr ⊔ »(x, a), h le_sup_right⟩ (mem_principal_self _)) _],
+    rintro ["_", "⟨", ident y, ",", ident hy, ",", ident rfl, "⟩"],
+    exact [expr le_trans le_sup_left (subtype.coe_le_coe.2 hy)] },
+  { intro [ident x],
+    filter_upwards ["[", expr mem_at_top «expr ⊔ »(«expr↑ »(x), a), "]"] [],
+    intros [ident b, ident hb],
+    exact [expr ⟨⟨b, «expr $ »(h, le_sup_right.trans hb)⟩, subtype.coe_le_coe.1 (le_sup_left.trans hb), rfl⟩] }
+end
 
 /-- The image of the filter `at_top` on `Ici a` under the coercion equals `at_top`. -/
 @[simp]
@@ -1231,31 +1249,41 @@ theorem tendsto_of_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} [
   (∀ x : ℕ → α, tendsto x at_top k → tendsto (f ∘ x) at_top l) → tendsto f k l :=
   tendsto_iff_seq_tendsto.2
 
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a nontrivial countably generated basis, then there exists a sequence that converges
 to `f`. -/
-theorem exists_seq_tendsto (f : Filter α) [is_countably_generated f] [ne_bot f] : ∃ x : ℕ → α, tendsto x at_top f :=
-  by 
-    obtain ⟨B, h, h_mono, -⟩ := f.exists_antitone_basis 
-    have  := fun n => nonempty_of_mem (h.mem_of_mem trivialₓ : B n ∈ f)
-    choose x hx 
-    exact
-      ⟨x, h.tendsto_right_iff.2$ fun n hn => eventually_at_top.2 ⟨n, fun m hm => h_mono trivialₓ trivialₓ hm (hx m)⟩⟩
+theorem exists_seq_tendsto
+(f : filter α)
+[is_countably_generated f]
+[ne_bot f] : «expr∃ , »((x : exprℕ() → α), tendsto x at_top f) :=
+begin
+  obtain ["⟨", ident B, ",", ident h, ",", ident h_mono, ",", "-", "⟩", ":=", expr f.exists_antitone_basis],
+  have [] [] [":=", expr λ n, nonempty_of_mem (h.mem_of_mem trivial : «expr ∈ »(B n, f))],
+  choose [] [ident x] [ident hx] [],
+  exact [expr ⟨x, «expr $ »(h.tendsto_right_iff.2, λ
+     n hn, eventually_at_top.2 ⟨n, λ m hm, h_mono trivial trivial hm (hx m)⟩)⟩]
+end
 
-theorem subseq_tendsto_of_ne_bot {f : Filter α} [is_countably_generated f] {u : ℕ → α} (hx : ne_bot (f⊓map u at_top)) :
-  ∃ θ : ℕ → ℕ, StrictMono θ ∧ tendsto (u ∘ θ) at_top f :=
-  by 
-    obtain ⟨B, h⟩ := f.exists_antitone_basis 
-    have  : ∀ N, ∃ (n : _)(_ : n ≥ N), u n ∈ B N 
-    exact fun N => filter.inf_map_at_top_ne_bot_iff.mp hx _ (h.to_has_basis.mem_of_mem trivialₓ) N 
-    choose φ hφ using this 
-    cases' forall_and_distrib.mp hφ with φ_ge φ_in 
-    have lim_uφ : tendsto (u ∘ φ) at_top f 
-    exact h.tendsto φ_in 
-    have lim_φ : tendsto φ at_top at_top 
-    exact tendsto_at_top_mono φ_ge tendsto_id 
-    obtain ⟨ψ, hψ, hψφ⟩ : ∃ ψ : ℕ → ℕ, StrictMono ψ ∧ StrictMono (φ ∘ ψ)
-    exact strict_mono_subseq_of_tendsto_at_top lim_φ 
-    exact ⟨φ ∘ ψ, hψφ, lim_uφ.comp hψ.tendsto_at_top⟩
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem subseq_tendsto_of_ne_bot
+{f : filter α}
+[is_countably_generated f]
+{u : exprℕ() → α}
+(hx : ne_bot «expr ⊓ »(f, map u at_top)) : «expr∃ , »((θ : exprℕ() → exprℕ()), «expr ∧ »(strict_mono θ, tendsto «expr ∘ »(u, θ) at_top f)) :=
+begin
+  obtain ["⟨", ident B, ",", ident h, "⟩", ":=", expr f.exists_antitone_basis],
+  have [] [":", expr ∀ N, «expr∃ , »((n «expr ≥ » N), «expr ∈ »(u n, B N))] [],
+  from [expr λ N, filter.inf_map_at_top_ne_bot_iff.mp hx _ (h.to_has_basis.mem_of_mem trivial) N],
+  choose [] [ident φ] [ident hφ] ["using", expr this],
+  cases [expr forall_and_distrib.mp hφ] ["with", ident φ_ge, ident φ_in],
+  have [ident lim_uφ] [":", expr tendsto «expr ∘ »(u, φ) at_top f] [],
+  from [expr h.tendsto φ_in],
+  have [ident lim_φ] [":", expr tendsto φ at_top at_top] [],
+  from [expr tendsto_at_top_mono φ_ge tendsto_id],
+  obtain ["⟨", ident ψ, ",", ident hψ, ",", ident hψφ, "⟩", ":", expr «expr∃ , »((ψ : exprℕ() → exprℕ()), «expr ∧ »(strict_mono ψ, strict_mono «expr ∘ »(φ, ψ)))],
+  from [expr strict_mono_subseq_of_tendsto_at_top lim_φ],
+  exact [expr ⟨«expr ∘ »(φ, ψ), hψφ, lim_uφ.comp hψ.tendsto_at_top⟩]
+end
 
 end Filter
 

@@ -80,33 +80,14 @@ theorem Coprod_cofinite {δ : Type _} {κ : δ → Type _} [Fintype δ] :
   (Filter.coprodₓ fun d => (cofinite : Filter (κ d))) = cofinite :=
   by 
     ext S 
-    simp only [mem_coprod_iff, exists_prop, mem_comap, mem_cofinite]
+    rcases compl_surjective S with ⟨S, rfl⟩
+    simpRw [compl_mem_Coprod_iff, mem_cofinite, compl_compl]
     split 
     ·
-      rintro h 
-      rw [mem_Coprod_iff] at h 
-      choose t ht1 ht2 using h 
-      have ht1d : ∀ d : δ, («expr ᶜ» (t d)).Finite := fun d => mem_cofinite.mp (ht1 d)
-      refine' (Set.Finite.pi ht1d).Subset _ 
-      have ht2d : ∀ d : δ, «expr ᶜ» S ⊆ (fun k : ∀ d1 : δ, (fun d2 : δ => κ d2) d1 => k d) ⁻¹' «expr ᶜ» (t d) :=
-        fun d => compl_subset_compl.mpr (ht2 d)
-      convert Set.subset_Inter ht2d 
-      ext 
-      simp 
+      rintro ⟨t, htf, hsub⟩
+      exact (finite.pi htf).Subset hsub
     ·
-      intro hS 
-      rw [mem_Coprod_iff]
-      intro d 
-      refine' ⟨«expr ᶜ» ((fun k : ∀ d1 : δ, κ d1 => k d) '' «expr ᶜ» S), _, _⟩
-      ·
-        rw [mem_cofinite, compl_compl]
-        exact Set.Finite.image _ hS
-      ·
-        intro x 
-        contrapose 
-        intro hx 
-        simp only [not_not, mem_preimage, mem_compl_eq, not_forall]
-        exact ⟨x, hx, rfl⟩
+      exact fun hS => ⟨fun i => Function.eval i '' S, fun i => hS.image _, subset_pi_eval_image _ _⟩
 
 end Filter
 
@@ -127,7 +108,7 @@ theorem Set.infinite_iff_frequently_cofinite {s : Set α} : Set.Infinite s ↔ �
 theorem Filter.eventually_cofinite_ne (x : α) : ∀ᶠa in cofinite, a ≠ x :=
   (Set.finite_singleton x).eventually_cofinite_nmem
 
--- error in Order.Filter.Cofinite: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Order.Filter.Cofinite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For natural numbers the filters `cofinite` and `at_top` coincide. -/
 theorem nat.cofinite_eq_at_top : «expr = »(@cofinite exprℕ(), at_top) :=
 begin
@@ -151,20 +132,26 @@ theorem Nat.frequently_at_top_iff_infinite {p : ℕ → Prop} : (∃ᶠn in at_t
   by 
     simp only [←Nat.cofinite_eq_at_top, frequently_cofinite_iff_infinite]
 
-theorem Filter.Tendsto.exists_within_forall_le {α β : Type _} [LinearOrderₓ β] {s : Set α} (hs : s.nonempty) {f : α → β}
-  (hf : Filter.Tendsto f Filter.cofinite Filter.atTop) : ∃ (a₀ : _)(_ : a₀ ∈ s), ∀ a _ : a ∈ s, f a₀ ≤ f a :=
-  by 
-    rcases em (∃ (y : _)(_ : y ∈ s), ∃ x, f y < x) with (⟨y, hys, x, hx⟩ | not_all_top)
-    ·
-      have  : finite { y | ¬x ≤ f y } := filter.eventually_cofinite.mp (tendsto_at_top.1 hf x)
-      simp only [not_leₓ] at this 
-      obtain ⟨a₀, ⟨ha₀ : f a₀ < x, ha₀s⟩, others_bigger⟩ := exists_min_image _ f (this.inter_of_left s) ⟨y, hx, hys⟩
-      refine' ⟨a₀, ha₀s, fun a has => (lt_or_leₓ (f a) x).elim _ (le_transₓ ha₀.le)⟩
-      exact fun h => others_bigger a ⟨h, has⟩
-    ·
-      pushNeg  at not_all_top 
-      obtain ⟨a₀, ha₀s⟩ := hs 
-      exact ⟨a₀, ha₀s, fun a ha => not_all_top a ha (f a₀)⟩
+-- error in Order.Filter.Cofinite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem filter.tendsto.exists_within_forall_le
+{α β : Type*}
+[linear_order β]
+{s : set α}
+(hs : s.nonempty)
+{f : α → β}
+(hf : filter.tendsto f filter.cofinite filter.at_top) : «expr∃ , »((a₀ «expr ∈ » s), ∀
+ a «expr ∈ » s, «expr ≤ »(f a₀, f a)) :=
+begin
+  rcases [expr em «expr∃ , »((y «expr ∈ » s), «expr∃ , »((x), «expr < »(f y, x))), "with", "⟨", ident y, ",", ident hys, ",", ident x, ",", ident hx, "⟩", "|", ident not_all_top],
+  { have [] [":", expr finite {y | «expr¬ »(«expr ≤ »(x, f y))}] [":=", expr filter.eventually_cofinite.mp (tendsto_at_top.1 hf x)],
+    simp [] [] ["only"] ["[", expr not_le, "]"] [] ["at", ident this],
+    obtain ["⟨", ident a₀, ",", "⟨", ident ha₀, ":", expr «expr < »(f a₀, x), ",", ident ha₀s, "⟩", ",", ident others_bigger, "⟩", ":=", expr exists_min_image _ f (this.inter_of_left s) ⟨y, hx, hys⟩],
+    refine [expr ⟨a₀, ha₀s, λ a has, (lt_or_le (f a) x).elim _ (le_trans ha₀.le)⟩],
+    exact [expr λ h, others_bigger a ⟨h, has⟩] },
+  { push_neg ["at", ident not_all_top],
+    obtain ["⟨", ident a₀, ",", ident ha₀s, "⟩", ":=", expr hs],
+    exact [expr ⟨a₀, ha₀s, λ a ha, not_all_top a ha (f a₀)⟩] }
+end
 
 theorem Filter.Tendsto.exists_forall_le {α β : Type _} [Nonempty α] [LinearOrderₓ β] {f : α → β}
   (hf : tendsto f cofinite at_top) : ∃ a₀, ∀ a, f a₀ ≤ f a :=

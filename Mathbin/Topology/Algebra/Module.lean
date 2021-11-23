@@ -29,59 +29,50 @@ section
 
 variable{R : Type _}{M : Type _}[Ringₓ R][TopologicalSpace R][TopologicalSpace M][AddCommGroupₓ M][Module R M]
 
-theorem HasContinuousSmul.of_nhds_zero [TopologicalRing R] [TopologicalAddGroup M]
-  (hmul : tendsto (fun p : R × M => p.1 • p.2) (𝓝 0 ×ᶠ 𝓝 0) (𝓝 0))
-  (hmulleft : ∀ m : M, tendsto (fun a : R => a • m) (𝓝 0) (𝓝 0))
-  (hmulright : ∀ a : R, tendsto (fun m : M => a • m) (𝓝 0) (𝓝 0)) : HasContinuousSmul R M :=
-  ⟨by 
-      rw [continuous_iff_continuous_at]
-      rintro ⟨a₀, m₀⟩
-      have key : ∀ p : R × M, p.1 • p.2 = (a₀ • m₀)+(((p.1 - a₀) • m₀)+a₀ • (p.2 - m₀))+(p.1 - a₀) • (p.2 - m₀)
-      ·
-        rintro ⟨a, m⟩
-        simp [sub_smul, smul_sub]
-        abel 
-      rw [funext key]
-      clear key 
-      refine' tendsto_const_nhds.add (tendsto.add (tendsto.add _ _) _)
-      ·
-        rw [sub_self, zero_smul]
-        apply (hmulleft m₀).comp 
-        rw
-          [show (fun p : R × M => p.1 - a₀) = ((fun a => a - a₀) ∘ Prod.fst)by 
-            ext 
-            rfl,
-          nhds_prod_eq]
-        have  : tendsto (fun a => a - a₀) (𝓝 a₀) (𝓝 0)
-        ·
-          rw [←sub_self a₀]
-          exact tendsto_id.sub tendsto_const_nhds 
-        exact this.comp tendsto_fst
-      ·
-        rw [sub_self, smul_zero]
-        apply (hmulright a₀).comp 
-        rw
-          [show (fun p : R × M => p.2 - m₀) = ((fun m => m - m₀) ∘ Prod.snd)by 
-            ext 
-            rfl,
-          nhds_prod_eq]
-        have  : tendsto (fun m => m - m₀) (𝓝 m₀) (𝓝 0)
-        ·
-          rw [←sub_self m₀]
-          exact tendsto_id.sub tendsto_const_nhds 
-        exact this.comp tendsto_snd
-      ·
-        rw [sub_self, zero_smul, nhds_prod_eq,
-          show
-            (fun p : R × M => (p.fst - a₀) • (p.snd - m₀)) =
-              ((fun p : R × M => p.1 • p.2) ∘ Prod.mapₓ (fun a => a - a₀) fun m => m - m₀)by
-            
-            ext 
-            rfl]
-        apply hmul.comp (tendsto.prod_map _ _) <;>
-          ·
-            rw [←sub_self]
-            exact tendsto_id.sub tendsto_const_nhds⟩
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem has_continuous_smul.of_nhds_zero
+[topological_ring R]
+[topological_add_group M]
+(hmul : tendsto (λ p : «expr × »(R, M), «expr • »(p.1, p.2)) «expr ×ᶠ »(expr𝓝() 0, expr𝓝() 0) (expr𝓝() 0))
+(hmulleft : ∀ m : M, tendsto (λ a : R, «expr • »(a, m)) (expr𝓝() 0) (expr𝓝() 0))
+(hmulright : ∀ a : R, tendsto (λ m : M, «expr • »(a, m)) (expr𝓝() 0) (expr𝓝() 0)) : has_continuous_smul R M :=
+⟨begin
+   rw [expr continuous_iff_continuous_at] [],
+   rintros ["⟨", ident a₀, ",", ident m₀, "⟩"],
+   have [ident key] [":", expr ∀
+    p : «expr × »(R, M), «expr = »(«expr • »(p.1, p.2), «expr + »(«expr • »(a₀, m₀), «expr + »(«expr + »(«expr • »(«expr - »(p.1, a₀), m₀), «expr • »(a₀, «expr - »(p.2, m₀))), «expr • »(«expr - »(p.1, a₀), «expr - »(p.2, m₀)))))] [],
+   { rintro ["⟨", ident a, ",", ident m, "⟩"],
+     simp [] [] [] ["[", expr sub_smul, ",", expr smul_sub, "]"] [] [],
+     abel [] [] [] },
+   rw [expr funext key] [],
+   clear [ident key],
+   refine [expr tendsto_const_nhds.add (tendsto.add (tendsto.add _ _) _)],
+   { rw ["[", expr sub_self, ",", expr zero_smul, "]"] [],
+     apply [expr (hmulleft m₀).comp],
+     rw ["[", expr show «expr = »(λ
+       p : «expr × »(R, M), «expr - »(p.1, a₀), «expr ∘ »(λ a, «expr - »(a, a₀), prod.fst)), by { ext [] [] [],
+        refl }, ",", expr nhds_prod_eq, "]"] [],
+     have [] [":", expr tendsto (λ a, «expr - »(a, a₀)) (expr𝓝() a₀) (expr𝓝() 0)] [],
+     { rw ["<-", expr sub_self a₀] [],
+       exact [expr tendsto_id.sub tendsto_const_nhds] },
+     exact [expr this.comp tendsto_fst] },
+   { rw ["[", expr sub_self, ",", expr smul_zero, "]"] [],
+     apply [expr (hmulright a₀).comp],
+     rw ["[", expr show «expr = »(λ
+       p : «expr × »(R, M), «expr - »(p.2, m₀), «expr ∘ »(λ m, «expr - »(m, m₀), prod.snd)), by { ext [] [] [],
+        refl }, ",", expr nhds_prod_eq, "]"] [],
+     have [] [":", expr tendsto (λ m, «expr - »(m, m₀)) (expr𝓝() m₀) (expr𝓝() 0)] [],
+     { rw ["<-", expr sub_self m₀] [],
+       exact [expr tendsto_id.sub tendsto_const_nhds] },
+     exact [expr this.comp tendsto_snd] },
+   { rw ["[", expr sub_self, ",", expr zero_smul, ",", expr nhds_prod_eq, ",", expr show «expr = »(λ
+       p : «expr × »(R, M), «expr • »(«expr - »(p.fst, a₀), «expr - »(p.snd, m₀)), «expr ∘ »(λ
+        p : «expr × »(R, M), «expr • »(p.1, p.2), prod.map (λ
+         a, «expr - »(a, a₀)) (λ m, «expr - »(m, m₀)))), by { ext [] [] [],
+        refl }, "]"] [],
+     apply [expr hmul.comp (tendsto.prod_map _ _)]; { rw ["<-", expr sub_self] [],
+       exact [expr tendsto_id.sub tendsto_const_nhds] } }
+ end⟩
 
 end 
 
@@ -94,21 +85,26 @@ variable{R :
       _}[Ringₓ
       R][TopologicalSpace R][TopologicalSpace M][AddCommGroupₓ M][HasContinuousAdd M][Module R M][HasContinuousSmul R M]
 
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `M` is a topological module over `R` and `0` is a limit of invertible elements of `R`, then
 `⊤` is the only submodule of `M` with a nonempty interior.
 This is the case, e.g., if `R` is a nondiscrete normed field. -/
-theorem Submodule.eq_top_of_nonempty_interior' [ne_bot (𝓝[{ x : R | IsUnit x }] 0)] (s : Submodule R M)
-  (hs : (Interior (s : Set M)).Nonempty) : s = ⊤ :=
-  by 
-    rcases hs with ⟨y, hy⟩
-    refine' Submodule.eq_top_iff'.2$ fun x => _ 
-    rw [mem_interior_iff_mem_nhds] at hy 
-    have  : tendsto (fun c : R => y+c • x) (𝓝[{ x : R | IsUnit x }] 0) (𝓝 (y+(0 : R) • x))
-    exact tendsto_const_nhds.add ((tendsto_nhds_within_of_tendsto_nhds tendsto_id).smul tendsto_const_nhds)
-    rw [zero_smul, add_zeroₓ] at this 
-    obtain ⟨_, hu : (y+_ • _) ∈ s, u, rfl⟩ := nonempty_of_mem (inter_mem (mem_map.1 (this hy)) self_mem_nhds_within)
-    have hy' : y ∈ «expr↑ » s := mem_of_mem_nhds hy 
-    rwa [s.add_mem_iff_right hy', ←Units.smul_def, s.smul_mem_iff' u] at hu
+theorem submodule.eq_top_of_nonempty_interior'
+[ne_bot «expr𝓝[ ] »({x : R | is_unit x}, 0)]
+(s : submodule R M)
+(hs : (interior (s : set M)).nonempty) : «expr = »(s, «expr⊤»()) :=
+begin
+  rcases [expr hs, "with", "⟨", ident y, ",", ident hy, "⟩"],
+  refine [expr «expr $ »(submodule.eq_top_iff'.2, λ x, _)],
+  rw ["[", expr mem_interior_iff_mem_nhds, "]"] ["at", ident hy],
+  have [] [":", expr tendsto (λ
+    c : R, «expr + »(y, «expr • »(c, x))) «expr𝓝[ ] »({x : R | is_unit x}, 0) (expr𝓝() «expr + »(y, «expr • »((0 : R), x)))] [],
+  from [expr tendsto_const_nhds.add ((tendsto_nhds_within_of_tendsto_nhds tendsto_id).smul tendsto_const_nhds)],
+  rw ["[", expr zero_smul, ",", expr add_zero, "]"] ["at", ident this],
+  obtain ["⟨", "_", ",", ident hu, ":", expr «expr ∈ »(«expr + »(y, «expr • »(_, _)), s), ",", ident u, ",", ident rfl, "⟩", ":=", expr nonempty_of_mem (inter_mem (mem_map.1 (this hy)) self_mem_nhds_within)],
+  have [ident hy'] [":", expr «expr ∈ »(y, «expr↑ »(s))] [":=", expr mem_of_mem_nhds hy],
+  rwa ["[", expr s.add_mem_iff_right hy', ",", "<-", expr units.smul_def, ",", expr s.smul_mem_iff' u, "]"] ["at", ident hu]
+end
 
 variable(R M)
 
@@ -962,27 +958,24 @@ theorem infi_ker_proj : (⨅i, ker (proj i) : Submodule R (∀ i, φ i)) = ⊥ :
 
 variable(R φ)
 
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `I` and `J` are complementary index sets, the product of the kernels of the `J`th projections
 of `φ` is linearly equivalent to the product over `I`. -/
-def infi_ker_proj_equiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J) :
-  (⨅(i : _)(_ : i ∈ J), ker (proj i) : Submodule R (∀ i, φ i)) ≃L[R] ∀ i : I, φ i :=
-  ⟨LinearMap.infiKerProjEquiv R φ hd hu,
-    continuous_pi
-      fun i =>
-        by 
-          have  := @continuous_subtype_coe _ _ fun x => x ∈ (⨅(i : _)(_ : i ∈ J), ker (proj i) : Submodule R (∀ i, φ i))
-          have  :=
-            Continuous.comp
-              (by 
-                exact continuous_apply i)
-              this 
-          exact this,
-    continuous_subtype_mk _
-      (continuous_pi
-        fun i =>
-          by 
-            dsimp 
-            splitIfs <;> [apply continuous_apply, exact continuous_zero])⟩
+def infi_ker_proj_equiv
+{I J : set ι}
+[decidable_pred (λ i, «expr ∈ »(i, I))]
+(hd : disjoint I J)
+(hu : «expr ⊆ »(set.univ, «expr ∪ »(I, J))) : «expr ≃L[ ] »((«expr⨅ , »((i «expr ∈ » J), ker (proj i)) : submodule R (∀
+  i, φ i)), R, ∀ i : I, φ i) :=
+⟨linear_map.infi_ker_proj_equiv R φ hd hu, continuous_pi (λ i, begin
+    have [] [] [":=", expr @continuous_subtype_coe _ _ (λ
+      x, «expr ∈ »(x, («expr⨅ , »((i «expr ∈ » J), ker (proj i)) : submodule R (∀ i, φ i))))],
+    have [] [] [":=", expr continuous.comp (by exact [expr continuous_apply i]) this],
+    exact [expr this]
+  end), continuous_subtype_mk _ (continuous_pi (λ i, begin
+     dsimp [] [] [] [],
+     split_ifs [] []; [apply [expr continuous_apply], exact [expr continuous_zero]]
+   end))⟩
 
 end Pi
 
@@ -1191,6 +1184,70 @@ end
 
 end Ringₓ
 
+section SmulMonoid
+
+variable{R S :
+    Type
+      _}[Semiringₓ
+      R][Monoidₓ
+      S][TopologicalSpace
+      S]{M :
+    Type
+      _}[TopologicalSpace
+      M][AddCommMonoidₓ
+      M][Module R
+      M]{M₂ :
+    Type
+      _}[TopologicalSpace
+      M₂][AddCommMonoidₓ
+      M₂][Module R
+      M₂]{M₃ :
+    Type
+      _}[TopologicalSpace
+      M₃][AddCommMonoidₓ M₃][Module R M₃][DistribMulAction S M₃][SmulCommClass R S M₃][HasContinuousSmul S M₃]
+
+instance  : MulAction S (M →L[R] M₃) :=
+  { smul := fun c f => ⟨c • f, (continuous_const.smul f.2 : Continuous fun x => c • f x)⟩,
+    one_smul := fun f => ext$ fun x => one_smul _ _, mul_smul := fun a b f => ext$ fun x => mul_smul _ _ _ }
+
+variable(c : S)(h : M₂ →L[R] M₃)(f g : M →L[R] M₂)(x y z : M)
+
+@[simp]
+theorem smul_comp : (c • h).comp f = c • h.comp f :=
+  rfl
+
+variable[DistribMulAction S M₂][HasContinuousSmul S M₂][SmulCommClass R S M₂]
+
+theorem smul_apply : (c • f) x = c • f x :=
+  rfl
+
+@[simp, normCast]
+theorem coe_smul : ((c • f : M →L[R] M₂) : M →ₗ[R] M₂) = c • f :=
+  rfl
+
+@[simp, normCast]
+theorem coe_smul' : ((c • f : M →L[R] M₂) : M → M₂) = c • f :=
+  rfl
+
+@[simp]
+theorem comp_smul [LinearMap.CompatibleSmul M₂ M₃ S R] : h.comp (c • f) = c • h.comp f :=
+  by 
+    ext x 
+    exact h.map_smul_of_tower c (f x)
+
+instance  {T : Type _} [Monoidₓ T] [TopologicalSpace T] [DistribMulAction T M₂] [HasContinuousSmul T M₂]
+  [SmulCommClass R T M₂] [HasScalar S T] [IsScalarTower S T M₂] : IsScalarTower S T (M →L[R] M₂) :=
+  ⟨fun a b f => ext$ fun x => smul_assoc a b (f x)⟩
+
+instance  {T : Type _} [Monoidₓ T] [TopologicalSpace T] [DistribMulAction T M₂] [HasContinuousSmul T M₂]
+  [SmulCommClass R T M₂] [SmulCommClass S T M₂] : SmulCommClass S T (M →L[R] M₂) :=
+  ⟨fun a b f => ext$ fun x => smul_comm a b (f x)⟩
+
+instance  [HasContinuousAdd M₂] : DistribMulAction S (M →L[R] M₂) :=
+  { smul_add := fun a f g => ext$ fun x => smul_add a (f x) (g x), smul_zero := fun a => ext$ fun x => smul_zero _ }
+
+end SmulMonoid
+
 section Smul
 
 variable{R S :
@@ -1210,35 +1267,14 @@ variable{R S :
       M₂][Module R
       M₂]{M₃ :
     Type
-      _}[TopologicalSpace M₃][AddCommMonoidₓ M₃][Module R M₃][Module S M₃][SmulCommClass R S M₃][HasContinuousSmul S M₃]
-
-instance  : HasScalar S (M →L[R] M₃) :=
-  ⟨fun c f => ⟨c • f, (continuous_const.smul f.2 : Continuous fun x => c • f x)⟩⟩
-
-variable(c : S)(h : M₂ →L[R] M₃)(f g : M →L[R] M₂)(x y z : M)
-
-@[simp]
-theorem smul_comp : (c • h).comp f = c • h.comp f :=
-  rfl
-
-variable[Module S M₂][HasContinuousSmul S M₂][SmulCommClass R S M₂]
-
-theorem smul_apply : (c • f) x = c • f x :=
-  rfl
-
-@[simp, normCast]
-theorem coe_smul : ((c • f : M →L[R] M₂) : M →ₗ[R] M₂) = c • f :=
-  rfl
-
-@[simp, normCast]
-theorem coe_smul' : ((c • f : M →L[R] M₂) : M → M₂) = c • f :=
-  rfl
-
-@[simp]
-theorem comp_smul [LinearMap.CompatibleSmul M₂ M₃ S R] : h.comp (c • f) = c • h.comp f :=
-  by 
-    ext x 
-    exact h.map_smul_of_tower c (f x)
+      _}[TopologicalSpace
+      M₃][AddCommMonoidₓ
+      M₃][Module R
+      M₃][Module S
+      M₃][HasContinuousSmul S
+      M₃][SmulCommClass R S
+      M₃][Module S
+      M₂][HasContinuousSmul S M₂][SmulCommClass R S M₂](c : S)(h : M₂ →L[R] M₃)(f g : M →L[R] M₂)(x y z : M)
 
 /-- `continuous_linear_map.prod` as an `equiv`. -/
 @[simps apply]
@@ -1267,15 +1303,7 @@ theorem prod_ext {f g : M × M₂ →L[R] M₃} (hl : f.comp (inl _ _ _) = g.com
 variable[HasContinuousAdd M₂]
 
 instance  : Module S (M →L[R] M₂) :=
-  { smul_zero := fun _ => ext$ fun _ => smul_zero _, zero_smul := fun _ => ext$ fun _ => zero_smul _ _,
-    one_smul :=
-      fun _ =>
-        ext$
-          fun _ =>
-            by 
-              exact one_smul _ _,
-    mul_smul := fun _ _ _ => ext$ fun _ => mul_smul _ _ _, add_smul := fun _ _ _ => ext$ fun _ => add_smul _ _ _,
-    smul_add := fun _ _ _ => ext$ fun _ => smul_add _ _ _ }
+  { zero_smul := fun _ => ext$ fun _ => zero_smul _ _, add_smul := fun _ _ _ => ext$ fun _ => add_smul _ _ _ }
 
 variable(S)[HasContinuousAdd M₃]
 
@@ -2172,14 +2200,16 @@ for calculus. -/
 noncomputable def inverse : (M →L[R] M₂) → M₂ →L[R] M :=
   fun f => if h : ∃ e : M ≃L[R] M₂, (e : M →L[R] M₂) = f then ((Classical.some h).symm : M₂ →L[R] M) else 0
 
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- By definition, if `f` is invertible then `inverse f = f.symm`. -/
 @[simp]
-theorem inverse_equiv (e : M ≃L[R] M₂) : inverse (e : M →L[R] M₂) = e.symm :=
-  by 
-    have h : ∃ e' : M ≃L[R] M₂, (e' : M →L[R] M₂) = «expr↑ » e := ⟨e, rfl⟩
-    simp only [inverse, dif_pos h]
-    congr 
-    exactModCast Classical.some_spec h
+theorem inverse_equiv (e : «expr ≃L[ ] »(M, R, M₂)) : «expr = »(inverse (e : «expr →L[ ] »(M, R, M₂)), e.symm) :=
+begin
+  have [ident h] [":", expr «expr∃ , »((e' : «expr ≃L[ ] »(M, R, M₂)), «expr = »((e' : «expr →L[ ] »(M, R, M₂)), «expr↑ »(e)))] [":=", expr ⟨e, rfl⟩],
+  simp [] [] ["only"] ["[", expr inverse, ",", expr dif_pos h, "]"] [] [],
+  congr,
+  exact_mod_cast [expr classical.some_spec h]
+end
 
 /-- By definition, if `f` is not invertible then `inverse f = 0`. -/
 @[simp]
@@ -2258,12 +2288,18 @@ theorem closed_complemented.has_closed_complement {p : Submodule R M} [T1Space p
   ∃ (q : Submodule R M)(hq : IsClosed (q : Set M)), IsCompl p q :=
   Exists.elim h$ fun f hf => ⟨f.ker, f.is_closed_ker, LinearMap.is_compl_of_proj hf⟩
 
-protected theorem closed_complemented.is_closed [TopologicalAddGroup M] [T1Space M] {p : Submodule R M}
-  (h : closed_complemented p) : IsClosed (p : Set M) :=
-  by 
-    rcases h with ⟨f, hf⟩
-    have  : ker (id R M - (subtype_val p).comp f) = p := LinearMap.ker_id_sub_eq_of_proj hf 
-    exact this ▸ is_closed_ker _
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem closed_complemented.is_closed
+[topological_add_group M]
+[t1_space M]
+{p : submodule R M}
+(h : closed_complemented p) : is_closed (p : set M) :=
+begin
+  rcases [expr h, "with", "⟨", ident f, ",", ident hf, "⟩"],
+  have [] [":", expr «expr = »(ker «expr - »(id R M, (subtype_val p).comp f), p)] [":=", expr linear_map.ker_id_sub_eq_of_proj hf],
+  exact [expr «expr ▸ »(this, is_closed_ker _)]
+end
 
 @[simp]
 theorem closed_complemented_bot : closed_complemented (⊥ : Submodule R M) :=

@@ -107,60 +107,61 @@ theorem measurable_join : Measurable (join : Measureₓ (Measureₓ α) → Meas
       by 
         simp only [join_apply hs] <;> exact measurable_lintegral (measurable_coe hs)
 
-theorem lintegral_join {m : Measureₓ (Measureₓ α)} {f : α → ℝ≥0∞} (hf : Measurable f) :
-  (∫⁻x, f x ∂join m) = ∫⁻μ, ∫⁻x, f x ∂μ ∂m :=
-  by 
-    rw [lintegral_eq_supr_eapprox_lintegral hf]
-    have  :
-      ∀ n x,
-        join m («expr⇑ » (simple_func.eapprox (fun a : α => f a) n) ⁻¹' {x}) =
-          ∫⁻μ, μ («expr⇑ » (simple_func.eapprox (fun a : α => f a) n) ⁻¹' {x}) ∂m :=
-      fun n x => join_apply (simple_func.measurable_set_preimage _ _)
-    simp only [simple_func.lintegral, this]
-    trans 
-    have  :
-      ∀ s : ℕ → Finset ℝ≥0∞ f : ℕ → ℝ≥0∞ → Measureₓ α → ℝ≥0∞ hf : ∀ n r, Measurable (f n r) hm :
-        Monotone fun n μ => ∑r in s n, r*f n r μ,
-        (⨆n : ℕ, ∑r in s n, r*∫⁻μ, f n r μ ∂m) = ∫⁻μ, ⨆n : ℕ, ∑r in s n, r*f n r μ ∂m
-    ·
-      intro s f hf hm 
-      symm 
-      trans 
-      apply lintegral_supr
-      ·
-        intro n 
-        exact Finset.measurable_sum _ fun r _ => (hf _ _).const_mul _
-      ·
-        exact hm 
-      congr 
-      funext n 
-      trans 
-      apply lintegral_finset_sum
-      ·
-        intro r _ 
-        exact (hf _ _).const_mul _ 
-      congr 
-      funext r 
-      apply lintegral_const_mul 
-      exact hf _ _ 
-    specialize this fun n => simple_func.range (simple_func.eapprox f n)
-    specialize this fun n r μ => μ («expr⇑ » (simple_func.eapprox (fun a : α => f a) n) ⁻¹' {r})
-    refine' this _ _ <;> clear this
-    ·
-      intro n r 
-      apply measurable_coe 
-      exact simple_func.measurable_set_preimage _ _
-    ·
-      change Monotone fun n μ => (simple_func.eapprox f n).lintegral μ 
-      intro n m h μ 
-      refine' simple_func.lintegral_mono _ (le_reflₓ _)
-      apply simple_func.monotone_eapprox 
-      assumption 
-    congr 
-    funext μ 
-    symm 
-    apply lintegral_eq_supr_eapprox_lintegral 
-    exact hf
+-- error in MeasureTheory.Measure.GiryMonad: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lintegral_join
+{m : measure (measure α)}
+{f : α → «exprℝ≥0∞»()}
+(hf : measurable f) : «expr = »(«expr∫⁻ , ∂ »((x), f x, join m), «expr∫⁻ , ∂ »((μ), «expr∫⁻ , ∂ »((x), f x, μ), m)) :=
+begin
+  rw ["[", expr lintegral_eq_supr_eapprox_lintegral hf, "]"] [],
+  have [] [":", expr ∀
+   n
+   x, «expr = »(join m «expr ⁻¹' »(«expr⇑ »(simple_func.eapprox (λ
+       a : α, f a) n), {x}), «expr∫⁻ , ∂ »((μ), μ «expr ⁻¹' »(«expr⇑ »(simple_func.eapprox (λ
+        a : α, f a) n), {x}), m))] [":=", expr assume n x, join_apply (simple_func.measurable_set_preimage _ _)],
+  simp [] [] ["only"] ["[", expr simple_func.lintegral, ",", expr this, "]"] [] [],
+  transitivity [],
+  have [] [":", expr ∀
+   (s : exprℕ() → finset «exprℝ≥0∞»())
+   (f : exprℕ() → «exprℝ≥0∞»() → measure α → «exprℝ≥0∞»())
+   (hf : ∀ n r, measurable (f n r))
+   (hm : monotone (λ
+     n
+     μ, «expr∑ in , »((r), s n, «expr * »(r, f n r μ)))), «expr = »(«expr⨆ , »((n : exprℕ()), «expr∑ in , »((r), s n, «expr * »(r, «expr∫⁻ , ∂ »((μ), f n r μ, m)))), «expr∫⁻ , ∂ »((μ), «expr⨆ , »((n : exprℕ()), «expr∑ in , »((r), s n, «expr * »(r, f n r μ))), m))] [],
+  { assume [binders (s f hf hm)],
+    symmetry,
+    transitivity [],
+    apply [expr lintegral_supr],
+    { assume [binders (n)],
+      exact [expr finset.measurable_sum _ (assume r _, (hf _ _).const_mul _)] },
+    { exact [expr hm] },
+    congr,
+    funext [ident n],
+    transitivity [],
+    apply [expr lintegral_finset_sum],
+    { assume [binders (r _)],
+      exact [expr (hf _ _).const_mul _] },
+    congr,
+    funext [ident r],
+    apply [expr lintegral_const_mul],
+    exact [expr hf _ _] },
+  specialize [expr this (λ n, simple_func.range (simple_func.eapprox f n))],
+  specialize [expr this (λ n r μ, μ «expr ⁻¹' »(«expr⇑ »(simple_func.eapprox (λ a : α, f a) n), {r}))],
+  refine [expr this _ _]; clear [ident this],
+  { assume [binders (n r)],
+    apply [expr measurable_coe],
+    exact [expr simple_func.measurable_set_preimage _ _] },
+  { change [expr monotone (λ n μ, (simple_func.eapprox f n).lintegral μ)] [] [],
+    assume [binders (n m h μ)],
+    refine [expr simple_func.lintegral_mono _ (le_refl _)],
+    apply [expr simple_func.monotone_eapprox],
+    assumption },
+  congr,
+  funext [ident μ],
+  symmetry,
+  apply [expr lintegral_eq_supr_eapprox_lintegral],
+  exact [expr hf]
+end
 
 /-- Monadic bind on `measure`, only works in the category of measurable spaces and measurable
 functions. When the function `f` is not measurable the result is not well defined. -/

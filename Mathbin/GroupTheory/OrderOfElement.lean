@@ -1,7 +1,8 @@
+import Mathbin.Data.Int.Gcd 
+import Mathbin.Algebra.IterateHom 
 import Mathbin.Algebra.Pointwise 
-import Mathbin.GroupTheory.Coset 
 import Mathbin.Dynamics.PeriodicPts 
-import Mathbin.Algebra.IterateHom
+import Mathbin.GroupTheory.Coset
 
 /-!
 # Order of an element
@@ -181,7 +182,7 @@ theorem exists_pow_eq_self_of_coprime (h : n.coprime (orderOf x)) : ∃ m : ℕ,
         by 
           rw [←pow_mulₓ, pow_eq_mod_order_of, hm, pow_oneₓ]⟩
 
--- error in GroupTheory.OrderOfElement: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in GroupTheory.OrderOfElement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 If `x^n = 1`, but `x^(n/p) ≠ 1` for all prime factors `p` of `r`,
 then `x` has order `n` in `G`.
@@ -270,13 +271,12 @@ theorem order_of_eq_prime_pow (hnot : ¬x ^ p ^ n = 1) (hfin : (x ^ p ^ n+1) = 1
 
 omit hp
 
-example  : orderOf (-1 : Units ℤ) = 2 :=
-  by 
-    haveI  : Fact (prime 2) := ⟨prime_two⟩
-    exact
-      order_of_eq_prime (Int.units_mul_self _)
-        (by 
-          decide)
+-- error in GroupTheory.OrderOfElement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+example : «expr = »(order_of («expr- »(1) : units exprℤ()), 2) :=
+begin
+  haveI [] [":", expr fact (prime 2)] [":=", expr ⟨prime_two⟩],
+  exact [expr order_of_eq_prime (int.units_mul_self _) exprdec_trivial()]
+end
 
 end PPrime
 
@@ -585,32 +585,28 @@ theorem order_eq_card_zpowers [DecidableEq G] : orderOf x = Fintype.card (Subgro
 
 open QuotientGroup
 
-@[toAdditive add_order_of_dvd_card_univ]
-theorem order_of_dvd_card_univ : orderOf x ∣ Fintype.card G :=
-  by 
-    classical 
-    have ft_prod : Fintype (Quotientₓ (zpowers x) × zpowers x)
-    exact Fintype.ofEquiv G group_equiv_quotient_times_subgroup 
-    have ft_s : Fintype (zpowers x)
-    exact @Fintype.prodRight _ _ _ ft_prod _ 
-    have ft_cosets : Fintype (Quotientₓ (zpowers x))
-    exact @Fintype.prodLeft _ _ _ ft_prod ⟨⟨1, (zpowers x).one_mem⟩⟩
-    have eq₁ : Fintype.card G = @Fintype.card _ ft_cosets*@Fintype.card _ ft_s 
-    exact
-      calc Fintype.card G = @Fintype.card _ ft_prod :=
-        @Fintype.card_congr _ _ _ ft_prod group_equiv_quotient_times_subgroup 
-        _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) := congr_argₓ (@Fintype.card _)$ Subsingleton.elimₓ _ _ 
-        _ = @Fintype.card _ ft_cosets*@Fintype.card _ ft_s := @Fintype.card_prod _ _ ft_cosets ft_s 
-        
-    have eq₂ : orderOf x = @Fintype.card _ ft_s 
-    exact
-      calc orderOf x = _ := order_eq_card_zpowers 
-        _ = _ := congr_argₓ (@Fintype.card _)$ Subsingleton.elimₓ _ _ 
-        
-    exact
-      Dvd.intro (@Fintype.card (Quotientₓ (Subgroup.zpowers x)) ft_cosets)
-        (by 
-          rw [eq₁, eq₂, mul_commₓ])
+-- error in GroupTheory.OrderOfElement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[to_additive #[ident add_order_of_dvd_card_univ]]
+theorem order_of_dvd_card_univ : «expr ∣ »(order_of x, fintype.card G) :=
+begin
+  classical,
+  have [ident ft_prod] [":", expr fintype «expr × »(quotient (zpowers x), zpowers x)] [],
+  from [expr fintype.of_equiv G group_equiv_quotient_times_subgroup],
+  have [ident ft_s] [":", expr fintype (zpowers x)] [],
+  from [expr @fintype.prod_right _ _ _ ft_prod _],
+  have [ident ft_cosets] [":", expr fintype (quotient (zpowers x))] [],
+  from [expr @fintype.prod_left _ _ _ ft_prod ⟨⟨1, (zpowers x).one_mem⟩⟩],
+  have [ident eq₁] [":", expr «expr = »(fintype.card G, «expr * »(@fintype.card _ ft_cosets, @fintype.card _ ft_s))] [],
+  from [expr calc
+     «expr = »(fintype.card G, @fintype.card _ ft_prod) : @fintype.card_congr _ _ _ ft_prod group_equiv_quotient_times_subgroup
+     «expr = »(..., @fintype.card _ (@prod.fintype _ _ ft_cosets ft_s)) : «expr $ »(congr_arg (@fintype.card _), subsingleton.elim _ _)
+     «expr = »(..., «expr * »(@fintype.card _ ft_cosets, @fintype.card _ ft_s)) : @fintype.card_prod _ _ ft_cosets ft_s],
+  have [ident eq₂] [":", expr «expr = »(order_of x, @fintype.card _ ft_s)] [],
+  from [expr calc
+     «expr = »(order_of x, _) : order_eq_card_zpowers
+     «expr = »(..., _) : «expr $ »(congr_arg (@fintype.card _), subsingleton.elim _ _)],
+  exact [expr dvd.intro (@fintype.card (quotient (subgroup.zpowers x)) ft_cosets) (by rw ["[", expr eq₁, ",", expr eq₂, ",", expr mul_comm, "]"] [])]
+end
 
 @[simp, toAdditive card_nsmul_eq_zero]
 theorem pow_card_eq_one : x ^ Fintype.card G = 1 :=
@@ -628,22 +624,20 @@ theorem zpow_eq_mod_card (n : ℤ) : x ^ n = x ^ (n % Fintype.card G) :=
   by 
     rw [zpow_eq_mod_order_of, ←Int.mod_mod_of_dvd n (Int.coe_nat_dvd.2 order_of_dvd_card_univ), ←zpow_eq_mod_order_of]
 
+-- error in GroupTheory.OrderOfElement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `gcd(|G|,n)=1` then the `n`th power map is a bijection -/
-@[simps]
-def powCoprime (h : Nat.Coprime (Fintype.card G) n) : G ≃ G :=
-  { toFun := fun g => g ^ n, invFun := fun g => g ^ Nat.gcdB (Fintype.card G) n,
-    left_inv :=
-      fun g =>
-        by 
-          have key : g ^ _ = g ^ _ := congr_argₓ (fun n : ℤ => g ^ n) (Nat.gcd_eq_gcd_ab (Fintype.card G) n)
-          rwa [zpow_add, zpow_mul, zpow_mul, zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, h.gcd_eq_one, pow_oneₓ,
-            pow_card_eq_one, one_zpow, one_mulₓ, eq_comm] at key,
-    right_inv :=
-      fun g =>
-        by 
-          have key : g ^ _ = g ^ _ := congr_argₓ (fun n : ℤ => g ^ n) (Nat.gcd_eq_gcd_ab (Fintype.card G) n)
-          rwa [zpow_add, zpow_mul, zpow_mul', zpow_coe_nat, zpow_coe_nat, zpow_coe_nat, h.gcd_eq_one, pow_oneₓ,
-            pow_card_eq_one, one_zpow, one_mulₓ, eq_comm] at key }
+@[simps #[]]
+def pow_coprime (h : nat.coprime (fintype.card G) n) : «expr ≃ »(G, G) :=
+{ to_fun := λ g, «expr ^ »(g, n),
+  inv_fun := λ g, «expr ^ »(g, nat.gcd_b (fintype.card G) n),
+  left_inv := λ
+  g, by { have [ident key] [":", expr «expr = »(«expr ^ »(g, _), «expr ^ »(g, _))] [":=", expr congr_arg (λ
+      n : exprℤ(), «expr ^ »(g, n)) (nat.gcd_eq_gcd_ab (fintype.card G) n)],
+    rwa ["[", expr zpow_add, ",", expr zpow_mul, ",", expr zpow_mul, ",", expr zpow_coe_nat, ",", expr zpow_coe_nat, ",", expr zpow_coe_nat, ",", expr h.gcd_eq_one, ",", expr pow_one, ",", expr pow_card_eq_one, ",", expr one_zpow, ",", expr one_mul, ",", expr eq_comm, "]"] ["at", ident key] },
+  right_inv := λ
+  g, by { have [ident key] [":", expr «expr = »(«expr ^ »(g, _), «expr ^ »(g, _))] [":=", expr congr_arg (λ
+      n : exprℤ(), «expr ^ »(g, n)) (nat.gcd_eq_gcd_ab (fintype.card G) n)],
+    rwa ["[", expr zpow_add, ",", expr zpow_mul, ",", expr zpow_mul', ",", expr zpow_coe_nat, ",", expr zpow_coe_nat, ",", expr zpow_coe_nat, ",", expr h.gcd_eq_one, ",", expr pow_one, ",", expr pow_card_eq_one, ",", expr one_zpow, ",", expr one_mul, ",", expr eq_comm, "]"] ["at", ident key] } }
 
 @[simp]
 theorem pow_coprime_one (h : Nat.Coprime (Fintype.card G) n) : powCoprime h 1 = 1 :=

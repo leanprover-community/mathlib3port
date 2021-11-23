@@ -1,4 +1,5 @@
-import Mathbin.Algebra.Module.Opposites 
+import Mathbin.Algebra.Field.Opposite 
+import Mathbin.Algebra.Module.Basic 
 import Mathbin.Algebra.Order.Archimedean 
 import Mathbin.Data.Int.Parity
 
@@ -90,14 +91,14 @@ theorem periodic.const_inv_mul [DivisionRing α] (h : periodic f c) (a : α) : p
   h.const_inv_smul₀ a
 
 theorem periodic.mul_const [DivisionRing α] (h : periodic f c) (a : α) : periodic (fun x => f (x*a)) (c*a⁻¹) :=
-  h.const_smul₀$ Opposite.op a
+  h.const_smul₀$ MulOpposite.op a
 
 theorem periodic.mul_const' [DivisionRing α] (h : periodic f c) (a : α) : periodic (fun x => f (x*a)) (c / a) :=
   by 
     simpa only [div_eq_mul_inv] using h.mul_const a
 
 theorem periodic.mul_const_inv [DivisionRing α] (h : periodic f c) (a : α) : periodic (fun x => f (x*a⁻¹)) (c*a) :=
-  h.const_inv_smul₀$ Opposite.op a
+  h.const_inv_smul₀$ MulOpposite.op a
 
 theorem periodic.div_const [DivisionRing α] (h : periodic f c) (a : α) : periodic (fun x => f (x / a)) (c*a) :=
   by 
@@ -270,29 +271,31 @@ theorem antiperiodic.int_odd_mul_antiperiodic [Ringₓ α] [AddGroupₓ β] (h :
     by 
       rw [←add_assocₓ, h, h.periodic.int_mul]
 
-theorem antiperiodic.nat_mul_eq_of_eq_zero [CommSemiringₓ α] [AddGroupₓ β] (h : antiperiodic f c) (hi : f 0 = 0)
-  (n : ℕ) : f (n*c) = 0 :=
-  by 
-    rcases Nat.even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;>
-      have hk : ((k : α)*2*c) = (2*k)*c :=
-        by 
-          rw [mul_left_commₓ, ←mul_assocₓ]
-    ·
-      simpa [hk, hi] using (h.nat_even_mul_periodic k).Eq
-    ·
-      simpa [add_mulₓ, hk, hi] using (h.nat_odd_mul_antiperiodic k).Eq
+-- error in Algebra.Periodic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem antiperiodic.nat_mul_eq_of_eq_zero
+[comm_semiring α]
+[add_group β]
+(h : antiperiodic f c)
+(hi : «expr = »(f 0, 0))
+(n : exprℕ()) : «expr = »(f «expr * »(n, c), 0) :=
+begin
+  rcases [expr nat.even_or_odd n, "with", "⟨", ident k, ",", ident rfl, "⟩", "|", "⟨", ident k, ",", ident rfl, "⟩"]; have [ident hk] [":", expr «expr = »(«expr * »((k : α), «expr * »(2, c)), «expr * »(«expr * »(2, k), c))] [":=", expr by rw ["[", expr mul_left_comm, ",", "<-", expr mul_assoc, "]"] []],
+  { simpa [] [] [] ["[", expr hk, ",", expr hi, "]"] [] ["using", expr (h.nat_even_mul_periodic k).eq] },
+  { simpa [] [] [] ["[", expr add_mul, ",", expr hk, ",", expr hi, "]"] [] ["using", expr (h.nat_odd_mul_antiperiodic k).eq] }
+end
 
-theorem antiperiodic.int_mul_eq_of_eq_zero [CommRingₓ α] [AddGroupₓ β] (h : antiperiodic f c) (hi : f 0 = 0) (n : ℤ) :
-  f (n*c) = 0 :=
-  by 
-    rcases Int.even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;>
-      have hk : ((k : α)*2*c) = (2*k)*c :=
-        by 
-          rw [mul_left_commₓ, ←mul_assocₓ]
-    ·
-      simpa [hk, hi] using (h.int_even_mul_periodic k).Eq
-    ·
-      simpa [add_mulₓ, hk, hi] using (h.int_odd_mul_antiperiodic k).Eq
+-- error in Algebra.Periodic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem antiperiodic.int_mul_eq_of_eq_zero
+[comm_ring α]
+[add_group β]
+(h : antiperiodic f c)
+(hi : «expr = »(f 0, 0))
+(n : exprℤ()) : «expr = »(f «expr * »(n, c), 0) :=
+begin
+  rcases [expr int.even_or_odd n, "with", "⟨", ident k, ",", ident rfl, "⟩", "|", "⟨", ident k, ",", ident rfl, "⟩"]; have [ident hk] [":", expr «expr = »(«expr * »((k : α), «expr * »(2, c)), «expr * »(«expr * »(2, k), c))] [":=", expr by rw ["[", expr mul_left_comm, ",", "<-", expr mul_assoc, "]"] []],
+  { simpa [] [] [] ["[", expr hk, ",", expr hi, "]"] [] ["using", expr (h.int_even_mul_periodic k).eq] },
+  { simpa [] [] [] ["[", expr add_mul, ",", expr hk, ",", expr hi, "]"] [] ["using", expr (h.int_odd_mul_antiperiodic k).eq] }
+end
 
 theorem antiperiodic.sub_eq [AddGroupₓ α] [AddGroupₓ β] (h : antiperiodic f c) (x : α) : f (x - c) = -f x :=
   by 
@@ -342,7 +345,7 @@ theorem antiperiodic.const_inv_mul [DivisionRing α] [Neg β] (h : antiperiodic 
 
 theorem antiperiodic.mul_const [DivisionRing α] [Neg β] (h : antiperiodic f c) {a : α} (ha : a ≠ 0) :
   antiperiodic (fun x => f (x*a)) (c*a⁻¹) :=
-  h.const_smul₀$ (Opposite.op_ne_zero_iff a).mpr ha
+  h.const_smul₀$ (MulOpposite.op_ne_zero_iff a).mpr ha
 
 theorem antiperiodic.mul_const' [DivisionRing α] [Neg β] (h : antiperiodic f c) {a : α} (ha : a ≠ 0) :
   antiperiodic (fun x => f (x*a)) (c / a) :=
@@ -351,7 +354,7 @@ theorem antiperiodic.mul_const' [DivisionRing α] [Neg β] (h : antiperiodic f c
 
 theorem antiperiodic.mul_const_inv [DivisionRing α] [Neg β] (h : antiperiodic f c) {a : α} (ha : a ≠ 0) :
   antiperiodic (fun x => f (x*a⁻¹)) (c*a) :=
-  h.const_inv_smul₀$ (Opposite.op_ne_zero_iff a).mpr ha
+  h.const_inv_smul₀$ (MulOpposite.op_ne_zero_iff a).mpr ha
 
 theorem antiperiodic.div_inv [DivisionRing α] [Neg β] (h : antiperiodic f c) {a : α} (ha : a ≠ 0) :
   antiperiodic (fun x => f (x / a)) (c*a) :=

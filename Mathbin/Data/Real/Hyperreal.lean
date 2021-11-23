@@ -10,7 +10,7 @@ open Filter Filter.Germ
 
 open_locale TopologicalSpace Classical
 
--- error in Data.Real.Hyperreal: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler linear_ordered_field
+-- error in Data.Real.Hyperreal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler linear_ordered_field
 /-- Hyperreal numbers on the ultrafilter extending the cofinite filter -/
 @[derive #["[", expr linear_ordered_field, ",", expr inhabited, "]"]]
 def hyperreal : Type :=
@@ -126,7 +126,7 @@ theorem inv_epsilon_eq_omega : ε⁻¹ = ω :=
 theorem epsilon_pos : 0 < ε :=
   suffices ∀ᶠi in hyperfilter ℕ, (0 : ℝ) < (i : ℕ)⁻¹by 
     rwa [lt_def]
-  have h0' : { n : ℕ | ¬0 < n } = {0} :=
+  have h0' : { n:ℕ | ¬0 < n } = {0} :=
     by 
       simp only [not_ltₓ, Set.set_of_eq_eq_singleton.symm] <;> ext <;> exact Nat.le_zero_iff 
   by 
@@ -149,18 +149,20 @@ theorem omega_ne_zero : ω ≠ 0 :=
 theorem epsilon_mul_omega : (ε*ω) = 1 :=
   @inv_mul_cancel _ _ ω omega_ne_zero
 
-theorem lt_of_tendsto_zero_of_pos {f : ℕ → ℝ} (hf : tendsto f at_top (𝓝 0)) : ∀ {r : ℝ}, 0 < r → of_seq f < (r : ℝ*) :=
-  by 
-    simp only [Metric.tendsto_at_top, dist_zero_right, norm, lt_def] at hf⊢
-    intro r hr 
-    cases' hf r hr with N hf' 
-    have hs : «expr ᶜ» { i : ℕ | f i < r } ⊆ { i : ℕ | i ≤ N } :=
-      fun i hi1 =>
-        le_of_ltₓ
-          (by 
-            simp only [lt_iff_not_geₓ] <;> exact fun hi2 => hi1 (lt_of_le_of_ltₓ (le_abs_self _) (hf' i hi2)) :
-          i < N)
-    exact mem_hyperfilter_of_finite_compl ((Set.finite_le_nat N).Subset hs)
+-- error in Data.Real.Hyperreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem lt_of_tendsto_zero_of_pos
+{f : exprℕ() → exprℝ()}
+(hf : tendsto f at_top (expr𝓝() 0)) : ∀ {r : exprℝ()}, «expr < »(0, r) → «expr < »(of_seq f, (r : «exprℝ*»())) :=
+begin
+  simp [] [] ["only"] ["[", expr metric.tendsto_at_top, ",", expr dist_zero_right, ",", expr norm, ",", expr lt_def, "]"] [] ["at", ident hf, "⊢"],
+  intros [ident r, ident hr],
+  cases [expr hf r hr] ["with", ident N, ident hf'],
+  have [ident hs] [":", expr «expr ⊆ »(«expr ᶜ»({i : exprℕ() | «expr < »(f i, r)}), {i : exprℕ() | «expr ≤ »(i, N)})] [":=", expr λ
+   i
+   hi1, le_of_lt (by simp [] [] ["only"] ["[", expr lt_iff_not_ge, "]"] [] []; exact [expr λ
+    hi2, hi1 (lt_of_le_of_lt (le_abs_self _) (hf' i hi2))] : «expr < »(i, N))],
+  exact [expr mem_hyperfilter_of_finite_compl ((set.finite_le_nat N).subset hs)]
+end
 
 theorem neg_lt_of_tendsto_zero_of_pos {f : ℕ → ℝ} (hf : tendsto f at_top (𝓝 0)) :
   ∀ {r : ℝ}, 0 < r → (-r : ℝ*) < of_seq f :=
@@ -236,8 +238,8 @@ theorem not_infinite_of_exists_st {x : ℝ*} : (∃ r : ℝ, is_st x r) → ¬In
         hi.elim (fun hip => not_lt_of_lt (hr 2 zero_lt_two).2 (hip$ r+2))
           fun hin => not_lt_of_lt (hr 2 zero_lt_two).1 (hin$ r - 2)
 
-theorem is_st_Sup {x : ℝ*} (hni : ¬Infinite x) : is_st x (Sup { y : ℝ | (y : ℝ*) < x }) :=
-  let S : Set ℝ := { y : ℝ | (y : ℝ*) < x }
+theorem is_st_Sup {x : ℝ*} (hni : ¬Infinite x) : is_st x (Sup { y:ℝ | (y : ℝ*) < x }) :=
+  let S : Set ℝ := { y:ℝ | (y : ℝ*) < x }
   let R : _ := Sup S 
   have hnile := not_forall.mp (not_or_distrib.mp hni).1
   have hnige := not_forall.mp (not_or_distrib.mp hni).2 
@@ -258,9 +260,9 @@ theorem is_st_Sup {x : ℝ*} (hni : ¬Infinite x) : is_st x (Sup { y : ℝ | (y 
                 not_lt_of_le (le_cSup HR₂ hc)$ (lt_add_iff_pos_right _).mpr$ half_pos hδ⟩
 
 theorem exists_st_of_not_infinite {x : ℝ*} (hni : ¬Infinite x) : ∃ r : ℝ, is_st x r :=
-  ⟨Sup { y : ℝ | (y : ℝ*) < x }, is_st_Sup hni⟩
+  ⟨Sup { y:ℝ | (y : ℝ*) < x }, is_st_Sup hni⟩
 
-theorem st_eq_Sup {x : ℝ*} : st x = Sup { y : ℝ | (y : ℝ*) < x } :=
+theorem st_eq_Sup {x : ℝ*} : st x = Sup { y:ℝ | (y : ℝ*) < x } :=
   by 
     unfold st 
     splitIfs
@@ -269,13 +271,13 @@ theorem st_eq_Sup {x : ℝ*} : st x = Sup { y : ℝ | (y : ℝ*) < x } :=
     ·
       cases' not_imp_comm.mp exists_st_of_not_infinite h with H H
       ·
-        rw [(Set.ext fun i => ⟨fun hi => Set.mem_univ i, fun hi => H i⟩ : { y : ℝ | (y : ℝ*) < x } = Set.Univ)]
+        rw [(Set.ext fun i => ⟨fun hi => Set.mem_univ i, fun hi => H i⟩ : { y:ℝ | (y : ℝ*) < x } = Set.Univ)]
         exact real.Sup_univ.symm
       ·
         rw
           [(Set.ext
             fun i => ⟨fun hi => False.elim (not_lt_of_lt (H i) hi), fun hi => False.elim (Set.not_mem_empty i hi)⟩ :
-          { y : ℝ | (y : ℝ*) < x } = ∅)]
+          { y:ℝ | (y : ℝ*) < x } = ∅)]
         exact real.Sup_empty.symm
 
 theorem exists_st_iff_not_infinite {x : ℝ*} : (∃ r : ℝ, is_st x r) ↔ ¬Infinite x :=
@@ -605,7 +607,7 @@ theorem infinite_pos_of_tendsto_top {f : ℕ → ℝ} (hf : tendsto f at_top at_
           fun a =>
             by 
               rw [←not_leₓ, ←not_leₓ] <;> exact not_imp_not.mpr (hi a)
-        have hS : «expr ᶜ» { a : ℕ | r < f a } ⊆ { a : ℕ | a ≤ i } :=
+        have hS : «expr ᶜ» { a:ℕ | r < f a } ⊆ { a:ℕ | a ≤ i } :=
           by 
             simp only [Set.compl_set_of, not_ltₓ] <;>
               exact fun a har => le_of_ltₓ (hi' a (lt_of_le_of_ltₓ har (lt_add_one _)))
@@ -620,7 +622,7 @@ theorem infinite_neg_of_tendsto_bot {f : ℕ → ℝ} (hf : tendsto f at_top at_
           fun a =>
             by 
               rw [←not_leₓ, ←not_leₓ] <;> exact not_imp_not.mpr (hi a)
-        have hS : «expr ᶜ» { a : ℕ | f a < r } ⊆ { a : ℕ | a ≤ i } :=
+        have hS : «expr ᶜ» { a:ℕ | f a < r } ⊆ { a:ℕ | a ≤ i } :=
           by 
             simp only [Set.compl_set_of, not_ltₓ] <;>
               exact fun a har => le_of_ltₓ (hi' a (lt_of_lt_of_leₓ (sub_one_lt _) har))
@@ -668,67 +670,53 @@ theorem not_real_of_infinite {x : ℝ*} : Infinite x → ∀ r : ℝ, x ≠ r :=
 -/
 
 
-private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : is_st x r) (hys : is_st y s) (hs : s ≠ 0) : is_st (x*y) (r*s) :=
-  have hxr' := is_st_iff_abs_sub_lt_delta.mp hxr 
-  have hys' := is_st_iff_abs_sub_lt_delta.mp hys 
-  have h :=
-    not_infinite_iff_exist_lt_gt.mp$ not_imp_not.mpr infinite_iff_infinite_abs.mpr$ not_infinite_of_exists_st ⟨r, hxr⟩
-  Exists.cases_on h$
-    fun u h' =>
-      Exists.cases_on h'$
-        fun t ⟨hu, ht⟩ =>
-          is_st_iff_abs_sub_lt_delta.mpr$
-            fun d hd =>
-              calc |(x*y) - r*s| = |(x*y - s)+(x - r)*s| :=
-                by 
-                  rw [mul_sub, sub_mul, add_sub, sub_add_cancel]
-                _ ≤ |x*y - s|+|(x - r)*s| := abs_add _ _ 
-                _ ≤ (|x|*|y - s|)+|x - r|*|s| :=
-                by 
-                  simp only [abs_mul]
-                _ ≤ (|x|*(d / t / 2 : ℝ))+(d / |s| / 2 : ℝ)*|s| :=
-                add_le_add
-                  (mul_le_mul_of_nonneg_left
-                      (le_of_ltₓ$ hys' _$ half_pos$ div_pos hd$ coe_pos.1$ lt_of_le_of_ltₓ (abs_nonneg x) ht)$
-                    abs_nonneg _)
-                  (mul_le_mul_of_nonneg_right (le_of_ltₓ$ hxr' _$ half_pos$ div_pos hd$ abs_pos.2 hs)$ abs_nonneg _)
-                _ = (((d / 2)*|x| / t)+d / 2 : ℝ*) :=
-                by 
-                  pushCast [-Filter.Germ.const_div]
-                  have  : (|s| : ℝ*) ≠ 0
-                  ·
-                    simpa 
-                  have  : (2 : ℝ*) ≠ 0 := two_ne_zero 
-                  fieldSimp [*, add_mulₓ, mul_addₓ, mul_assocₓ, mul_commₓ, mul_left_commₓ]
-                _ < (((d / 2)*1)+d / 2 : ℝ*) :=
-                add_lt_add_right
-                  (mul_lt_mul_of_pos_left ((div_lt_one$ lt_of_le_of_ltₓ (abs_nonneg x) ht).mpr ht)$
-                    half_pos$ coe_pos.2 hd)
-                  _ 
-                _ = (d : ℝ*) :=
-                by 
-                  rw [mul_oneₓ, add_halves]
-                
+-- error in Data.Real.Hyperreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem is_st_mul'
+{x y : «exprℝ*»()}
+{r s : exprℝ()}
+(hxr : is_st x r)
+(hys : is_st y s)
+(hs : «expr ≠ »(s, 0)) : is_st «expr * »(x, y) «expr * »(r, s) :=
+have hxr' : _ := is_st_iff_abs_sub_lt_delta.mp hxr,
+have hys' : _ := is_st_iff_abs_sub_lt_delta.mp hys,
+have h : _ := «expr $ »(not_infinite_iff_exist_lt_gt.mp, «expr $ »(not_imp_not.mpr infinite_iff_infinite_abs.mpr, not_infinite_of_exists_st ⟨r, hxr⟩)),
+«expr $ »(Exists.cases_on h, λ
+ u
+ h', «expr $ »(Exists.cases_on h', λ
+  (t)
+  ⟨hu, ht⟩, «expr $ »(is_st_iff_abs_sub_lt_delta.mpr, λ d hd, calc
+     «expr = »(«expr| |»(«expr - »(«expr * »(x, y), «expr * »(r, s))), «expr| |»(«expr + »(«expr * »(x, «expr - »(y, s)), «expr * »(«expr - »(x, r), s)))) : by rw ["[", expr mul_sub, ",", expr sub_mul, ",", expr add_sub, ",", expr sub_add_cancel, "]"] []
+     «expr ≤ »(..., «expr + »(«expr| |»(«expr * »(x, «expr - »(y, s))), «expr| |»(«expr * »(«expr - »(x, r), s)))) : abs_add _ _
+     «expr ≤ »(..., «expr + »(«expr * »(«expr| |»(x), «expr| |»(«expr - »(y, s))), «expr * »(«expr| |»(«expr - »(x, r)), «expr| |»(s)))) : by simp [] [] ["only"] ["[", expr abs_mul, "]"] [] []
+     «expr ≤ »(..., «expr + »(«expr * »(«expr| |»(x), («expr / »(«expr / »(d, t), 2) : exprℝ())), «expr * »((«expr / »(«expr / »(d, «expr| |»(s)), 2) : exprℝ()), «expr| |»(s)))) : add_le_add «expr $ »(mul_le_mul_of_nonneg_left «expr $ »(le_of_lt, «expr $ »(hys' _, «expr $ »(half_pos, «expr $ »(div_pos hd, «expr $ »(coe_pos.1, lt_of_le_of_lt (abs_nonneg x) ht))))), abs_nonneg _) «expr $ »(mul_le_mul_of_nonneg_right «expr $ »(le_of_lt, «expr $ »(hxr' _, «expr $ »(half_pos, «expr $ »(div_pos hd, abs_pos.2 hs)))), abs_nonneg _)
+     «expr = »(..., («expr + »(«expr * »(«expr / »(d, 2), «expr / »(«expr| |»(x), t)), «expr / »(d, 2)) : «exprℝ*»())) : by { push_cast ["[", "-", ident filter.germ.const_div, "]"] [],
+       have [] [":", expr «expr ≠ »((«expr| |»(s) : «exprℝ*»()), 0)] [],
+       by simpa [] [] [] [] [] [],
+       have [] [":", expr «expr ≠ »((2 : «exprℝ*»()), 0)] [":=", expr two_ne_zero],
+       field_simp [] ["[", "*", ",", expr add_mul, ",", expr mul_add, ",", expr mul_assoc, ",", expr mul_comm, ",", expr mul_left_comm, "]"] [] [] }
+     «expr < »(..., («expr + »(«expr * »(«expr / »(d, 2), 1), «expr / »(d, 2)) : «exprℝ*»())) : add_lt_add_right «expr $ »(mul_lt_mul_of_pos_left («expr $ »(div_lt_one, lt_of_le_of_lt (abs_nonneg x) ht).mpr ht), «expr $ »(half_pos, coe_pos.2 hd)) _
+     «expr = »(..., (d : «exprℝ*»())) : by rw ["[", expr mul_one, ",", expr add_halves, "]"] [])))
 
-theorem is_st_mul {x y : ℝ*} {r s : ℝ} (hxr : is_st x r) (hys : is_st y s) : is_st (x*y) (r*s) :=
-  have h :=
-    not_infinite_iff_exist_lt_gt.mp$ not_imp_not.mpr infinite_iff_infinite_abs.mpr$ not_infinite_of_exists_st ⟨r, hxr⟩
-  Exists.cases_on h$
-    fun u h' =>
-      Exists.cases_on h'$
-        fun t ⟨hu, ht⟩ =>
-          by 
-            byCases' hs : s = 0
-            ·
-              apply is_st_iff_abs_sub_lt_delta.mpr 
-              intro d hd 
-              have hys' : _ :=
-                is_st_iff_abs_sub_lt_delta.mp hys (d / t) (div_pos hd (coe_pos.1 (lt_of_le_of_ltₓ (abs_nonneg x) ht)))
-              rw [hs, coe_zero, sub_zero] at hys' 
-              rw [hs, mul_zero, coe_zero, sub_zero, abs_mul, mul_commₓ,
-                ←div_mul_cancel (d : ℝ*) (ne_of_gtₓ (lt_of_le_of_ltₓ (abs_nonneg x) ht)), ←coe_div]
-              exact mul_lt_mul'' hys' ht (abs_nonneg _) (abs_nonneg _)
-            exact is_st_mul' hxr hys hs
+-- error in Data.Real.Hyperreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_st_mul
+{x y : «exprℝ*»()}
+{r s : exprℝ()}
+(hxr : is_st x r)
+(hys : is_st y s) : is_st «expr * »(x, y) «expr * »(r, s) :=
+have h : _ := «expr $ »(not_infinite_iff_exist_lt_gt.mp, «expr $ »(not_imp_not.mpr infinite_iff_infinite_abs.mpr, not_infinite_of_exists_st ⟨r, hxr⟩)),
+«expr $ »(Exists.cases_on h, λ
+ u
+ h', «expr $ »(Exists.cases_on h', λ (t) ⟨hu, ht⟩, begin
+    by_cases [expr hs, ":", expr «expr = »(s, 0)],
+    { apply [expr is_st_iff_abs_sub_lt_delta.mpr],
+      intros [ident d, ident hd],
+      have [ident hys'] [":", expr _] [":=", expr is_st_iff_abs_sub_lt_delta.mp hys «expr / »(d, t) (div_pos hd (coe_pos.1 (lt_of_le_of_lt (abs_nonneg x) ht)))],
+      rw ["[", expr hs, ",", expr coe_zero, ",", expr sub_zero, "]"] ["at", ident hys'],
+      rw ["[", expr hs, ",", expr mul_zero, ",", expr coe_zero, ",", expr sub_zero, ",", expr abs_mul, ",", expr mul_comm, ",", "<-", expr div_mul_cancel (d : «exprℝ*»()) (ne_of_gt (lt_of_le_of_lt (abs_nonneg x) ht)), ",", "<-", expr coe_div, "]"] [],
+      exact [expr mul_lt_mul'' hys' ht (abs_nonneg _) (abs_nonneg _)] },
+    exact [expr is_st_mul' hxr hys hs]
+  end))
 
 theorem not_infinite_mul {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : ¬Infinite (x*y) :=
   have hx' := exists_st_of_not_infinite hx 

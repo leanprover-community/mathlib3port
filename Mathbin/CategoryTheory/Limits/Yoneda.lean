@@ -74,7 +74,7 @@ instance yoneda_preserves_limits (X : C) : preserves_limits (yoneda.obj X) :=
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesLimit :=
                 fun K =>
                   { preserves :=
@@ -99,7 +99,7 @@ instance coyoneda_preserves_limits (X : «expr ᵒᵖ» C) : preserves_limits (c
   { PreservesLimitsOfShape :=
       fun J 𝒥 =>
         by 
-          exactI
+          exact
             { PreservesLimit :=
                 fun K =>
                   { preserves :=

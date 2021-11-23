@@ -1,5 +1,4 @@
-import Mathbin.CategoryTheory.Endomorphism 
-import Mathbin.Algebra.GroupPower.Default
+import Mathbin.CategoryTheory.Endomorphism
 
 /-!
 # Conjugate morphisms by isomorphisms

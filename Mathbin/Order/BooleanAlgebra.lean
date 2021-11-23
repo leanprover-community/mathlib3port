@@ -119,22 +119,26 @@ theorem sdiff_unique (s : x⊓y⊔z = x) (i : x⊓y⊓z = ⊥) : x \ y = z :=
     rw [inf_comm] at i 
     exact (eq_of_inf_eq_sup_eq i s).symm
 
-theorem sdiff_symm (hy : y ≤ x) (hz : z ≤ x) (H : x \ y = z) : x \ z = y :=
-  have hyi : x⊓y = y := inf_eq_right.2 hy 
-  have hzi : x⊓z = z := inf_eq_right.2 hz 
-  eq_of_inf_eq_sup_eq
-    (by 
-      have ixy := inf_inf_sdiff x y 
-      rw [H, hyi] at ixy 
-      have ixz := inf_inf_sdiff x z 
-      rwa [hzi, inf_comm, ←ixy] at ixz)
-    (by 
-      have sxz := sup_inf_sdiff x z 
-      rw [hzi, sup_comm] at sxz 
-      rw [sxz]
-      symm 
-      have sxy := sup_inf_sdiff x y 
-      rwa [H, hyi] at sxy)
+-- error in Order.BooleanAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sdiff_symm
+(hy : «expr ≤ »(y, x))
+(hz : «expr ≤ »(z, x))
+(H : «expr = »(«expr \ »(x, y), z)) : «expr = »(«expr \ »(x, z), y) :=
+have hyi : «expr = »(«expr ⊓ »(x, y), y) := inf_eq_right.2 hy,
+have hzi : «expr = »(«expr ⊓ »(x, z), z) := inf_eq_right.2 hz,
+eq_of_inf_eq_sup_eq (begin
+   have [ident ixy] [] [":=", expr inf_inf_sdiff x y],
+   rw ["[", expr H, ",", expr hyi, "]"] ["at", ident ixy],
+   have [ident ixz] [] [":=", expr inf_inf_sdiff x z],
+   rwa ["[", expr hzi, ",", expr inf_comm, ",", "<-", expr ixy, "]"] ["at", ident ixz]
+ end) (begin
+   have [ident sxz] [] [":=", expr sup_inf_sdiff x z],
+   rw ["[", expr hzi, ",", expr sup_comm, "]"] ["at", ident sxz],
+   rw [expr sxz] [],
+   symmetry,
+   have [ident sxy] [] [":=", expr sup_inf_sdiff x y],
+   rwa ["[", expr H, ",", expr hyi, "]"] ["at", ident sxy]
+ end)
 
 theorem sdiff_le : x \ y ≤ x :=
   calc x \ y ≤ x⊓y⊔x \ y := le_sup_right 
@@ -847,7 +851,7 @@ class HasCompl(α : Type _) where
 
 export HasCompl(Compl)
 
--- error in Order.BooleanAlgebra: ././Mathport/Syntax/Translate/Basic.lean:264:9: unsupported: advanced prec syntax
+-- error in Order.BooleanAlgebra: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 postfix `ᶜ`:«expr + »(max, 1) := compl
 
 /-- This class contains the core axioms of a Boolean algebra. The `boolean_algebra` class extends
@@ -927,6 +931,9 @@ theorem compl_involutive : Function.Involutive (compl : α → α) :=
 theorem compl_bijective : Function.Bijective (compl : α → α) :=
   compl_involutive.Bijective
 
+theorem compl_surjective : Function.Surjective (compl : α → α) :=
+  compl_involutive.Surjective
+
 theorem compl_injective : Function.Injective (compl : α → α) :=
   compl_involutive.Injective
 
@@ -956,12 +963,10 @@ theorem compl_sup : «expr ᶜ» (x⊔y) = «expr ᶜ» x⊓«expr ᶜ» y :=
 theorem compl_le_compl (h : y ≤ x) : «expr ᶜ» x ≤ «expr ᶜ» y :=
   is_compl_compl.Antitone is_compl_compl h
 
-@[simp]
-theorem compl_le_compl_iff_le : «expr ᶜ» y ≤ «expr ᶜ» x ↔ x ≤ y :=
-  ⟨fun h =>
-      by 
-        have h := compl_le_compl h <;> simp  at h <;> assumption,
-    compl_le_compl⟩
+-- error in Order.BooleanAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem compl_le_compl_iff_le : «expr ↔ »(«expr ≤ »(«expr ᶜ»(y), «expr ᶜ»(x)), «expr ≤ »(x, y)) :=
+⟨assume
+ h, by have [ident h] [] [":=", expr compl_le_compl h]; simp [] [] [] [] [] ["at", ident h]; assumption, compl_le_compl⟩
 
 theorem le_compl_of_le_compl (h : y ≤ «expr ᶜ» x) : x ≤ «expr ᶜ» y :=
   by 

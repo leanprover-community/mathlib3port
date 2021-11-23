@@ -401,7 +401,7 @@ def comp_alternating_map (g : N →ₗ[R] N₂) : AlternatingMap R M N ι →+ A
 
 @[simp]
 theorem coe_comp_alternating_map (g : N →ₗ[R] N₂) (f : AlternatingMap R M N ι) :
-  «expr⇑ » (g.comp_alternating_map f) = (g ∘ f) :=
+  «expr⇑ » (g.comp_alternating_map f) = g ∘ f :=
   rfl
 
 theorem comp_alternating_map_apply (g : N →ₗ[R] N₂) (f : AlternatingMap R M N ι) (m : ι → M) :
@@ -421,7 +421,7 @@ def comp_linear_map (f : AlternatingMap R M N ι) (g : M₂ →ₗ[R] M) : Alter
     map_eq_zero_of_eq' := fun v i j h hij => f.map_eq_zero_of_eq _ (LinearMap.congr_arg h) hij }
 
 theorem coe_comp_linear_map (f : AlternatingMap R M N ι) (g : M₂ →ₗ[R] M) :
-  «expr⇑ » (f.comp_linear_map g) = (f ∘ (· ∘ ·) g) :=
+  «expr⇑ » (f.comp_linear_map g) = f ∘ (· ∘ ·) g :=
   rfl
 
 @[simp]
@@ -660,26 +660,23 @@ namespace AlternatingMap
 
 open Equiv
 
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- summand used in `alternating_map.dom_coprod` -/
-def dom_coprod.summand (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ N₂ ιb)
-  (σ : perm.mod_sum_congr ιa ιb) : MultilinearMap R' (fun _ : Sum ιa ιb => Mᵢ) (N₁ ⊗[R'] N₂) :=
-  Quotientₓ.liftOn' σ
-    (fun σ =>
-      σ.sign •
-        (MultilinearMap.domCoprod («expr↑ » a) («expr↑ » b) : MultilinearMap R' (fun _ => Mᵢ) (N₁ ⊗ N₂)).domDomCongr σ)
-    fun σ₁ σ₂ ⟨⟨sl, sr⟩, h⟩ =>
-      by 
-        ext v 
-        simp only [MultilinearMap.dom_dom_congr_apply, MultilinearMap.dom_coprod_apply, coe_multilinear_map,
-          MultilinearMap.smul_apply]
-        replace h := inv_mul_eq_iff_eq_mul.mp h.symm 
-        have  : (σ₁*perm.sum_congr_hom _ _ (sl, sr)).sign = σ₁.sign*sl.sign*sr.sign :=
-          by 
-            simp 
-        rw [h, this, mul_smul, mul_smul, smul_left_cancel_iff, ←TensorProduct.tmul_smul, TensorProduct.smul_tmul']
-        simp only [Sum.map_inr, perm.sum_congr_hom_apply, perm.sum_congr_apply, Sum.map_inl, Function.comp_app,
-          perm.coe_mul]
-        rw [←a.map_congr_perm fun i => v (σ₁ _), ←b.map_congr_perm fun i => v (σ₁ _)]
+def dom_coprod.summand
+(a : alternating_map R' Mᵢ N₁ ιa)
+(b : alternating_map R' Mᵢ N₂ ιb)
+(σ : perm.mod_sum_congr ιa ιb) : multilinear_map R' (λ _ : «expr ⊕ »(ιa, ιb), Mᵢ) «expr ⊗[ ] »(N₁, R', N₂) :=
+quotient.lift_on' σ (λ
+ σ, «expr • »(σ.sign, (multilinear_map.dom_coprod «expr↑ »(a) «expr↑ »(b) : multilinear_map R' (λ
+   _, Mᵢ) «expr ⊗ »(N₁, N₂)).dom_dom_congr σ)) (λ (σ₁ σ₂) ⟨⟨sl, sr⟩, h⟩, begin
+   ext [] [ident v] [],
+   simp [] [] ["only"] ["[", expr multilinear_map.dom_dom_congr_apply, ",", expr multilinear_map.dom_coprod_apply, ",", expr coe_multilinear_map, ",", expr multilinear_map.smul_apply, "]"] [] [],
+   replace [ident h] [] [":=", expr inv_mul_eq_iff_eq_mul.mp h.symm],
+   have [] [":", expr «expr = »(«expr * »(σ₁, perm.sum_congr_hom _ _ (sl, sr)).sign, «expr * »(σ₁.sign, «expr * »(sl.sign, sr.sign)))] [":=", expr by simp [] [] [] [] [] []],
+   rw ["[", expr h, ",", expr this, ",", expr mul_smul, ",", expr mul_smul, ",", expr smul_left_cancel_iff, ",", "<-", expr tensor_product.tmul_smul, ",", expr tensor_product.smul_tmul', "]"] [],
+   simp [] [] ["only"] ["[", expr sum.map_inr, ",", expr perm.sum_congr_hom_apply, ",", expr perm.sum_congr_apply, ",", expr sum.map_inl, ",", expr function.comp_app, ",", expr perm.coe_mul, "]"] [] [],
+   rw ["[", "<-", expr a.map_congr_perm (λ i, v (σ₁ _)), ",", "<-", expr b.map_congr_perm (λ i, v (σ₁ _)), "]"] []
+ end)
 
 theorem dom_coprod.summand_mk' (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ N₂ ιb)
   (σ : Equiv.Perm (Sum ιa ιb)) :
@@ -719,9 +716,9 @@ theorem dom_coprod.summand_eq_zero_of_smul_invariant (a : AlternatingMap R' Mᵢ
     case' [Sum.inl, Sum.inr : i' j', Sum.inr, Sum.inl : i' j'] => 
       all_goals 
         obtain ⟨⟨sl, sr⟩, hσ⟩ := Quotientₓ.exact' hσ 
-      workOnGoal 0 
+      workOnGoal 0
         replace hσ := Equiv.congr_fun hσ (Sum.inl i')
-      workOnGoal 1 
+      workOnGoal 1
         replace hσ := Equiv.congr_fun hσ (Sum.inr i')
       all_goals 
         rw [←Equiv.mul_swap_eq_swap_mul, mul_inv_rev, Equiv.swap_inv, inv_mul_cancel_right] at hσ 
@@ -729,9 +726,9 @@ theorem dom_coprod.summand_eq_zero_of_smul_invariant (a : AlternatingMap R' Mᵢ
     case' [Sum.inr, Sum.inr : i' j', Sum.inl, Sum.inl : i' j'] => 
       all_goals 
         convert smul_zero _ 
-      workOnGoal 0 
+      workOnGoal 0
         convert TensorProduct.tmul_zero _ _ 
-      workOnGoal 1 
+      workOnGoal 1
         convert TensorProduct.zero_tmul _ _ 
       all_goals 
         exact AlternatingMap.map_eq_zero_of_eq _ _ hv fun hij' => hij (hij' ▸ rfl)
@@ -823,44 +820,43 @@ theorem MultilinearMap.dom_coprod_alternization_coe (a : MultilinearMap R' (fun 
 
 open AlternatingMap
 
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Computing the `multilinear_map.alternatization` of the `multilinear_map.dom_coprod` is the same
 as computing the `alternating_map.dom_coprod` of the `multilinear_map.alternatization`s.
 -/
-theorem MultilinearMap.dom_coprod_alternization (a : MultilinearMap R' (fun _ : ιa => Mᵢ) N₁)
-  (b : MultilinearMap R' (fun _ : ιb => Mᵢ) N₂) :
-  (MultilinearMap.domCoprod a b).alternatization = a.alternatization.dom_coprod b.alternatization :=
-  by 
-    apply coe_multilinear_map_injective 
-    rw [dom_coprod_coe, MultilinearMap.alternatization_coe,
-      Finset.sum_partition (QuotientGroup.leftRel (perm.sum_congr_hom ιa ιb).range)]
-    congr 1 
-    ext1 σ 
-    apply σ.induction_on' fun σ => _ 
-    conv  in _ = Quotientₓ.mk' _ =>
-      change Quotientₓ.mk' _ = Quotientₓ.mk' _ rw [Quotientₓ.eq']rw [QuotientGroup.leftRel]dsimp only [Setoidₓ.R]
-    have  : @Finset.univ (perm (Sum ιa ιb)) _ = finset.univ.image ((·*·) σ) :=
-      (finset.eq_univ_iff_forall.mpr$
-          fun a =>
-            let ⟨a', ha'⟩ := mul_left_surjective σ a 
-            finset.mem_image.mpr ⟨a', Finset.mem_univ _, ha'⟩).symm
-        
-    rw [this, Finset.image_filter]
-    simp only [Function.comp, mul_inv_rev, inv_mul_cancel_right, Subgroup.inv_mem_iff]
-    simp only [MonoidHom.mem_range]
-    rw [Finset.filter_congr_decidable, Finset.univ_filter_exists (perm.sum_congr_hom ιa ιb),
-      Finset.sum_image fun x _ y _ h : _ = _ => mul_right_injective _ h,
-      Finset.sum_image fun x _ y _ h : _ = _ => perm.sum_congr_hom_injective h]
-    dsimp only 
-    rw [dom_coprod.summand_mk', MultilinearMap.dom_coprod_alternization_coe, ←Finset.sum_product',
-      Finset.univ_product_univ, ←MultilinearMap.dom_dom_congr_equiv_apply, AddEquiv.map_sum, Finset.smul_sum]
-    congr 1 
-    ext1 ⟨al, ar⟩
-    dsimp only 
-    rw [←AddEquiv.coe_to_add_monoid_hom, ←AddMonoidHom.coe_to_int_linear_map, LinearMap.map_smul_of_tower,
-      LinearMap.map_smul_of_tower, AddMonoidHom.coe_to_int_linear_map, AddEquiv.coe_to_add_monoid_hom,
-      MultilinearMap.dom_dom_congr_equiv_apply]
-    rw [MultilinearMap.dom_dom_congr_mul, perm.sign_mul, perm.sum_congr_hom_apply,
-      MultilinearMap.dom_coprod_dom_dom_congr_sum_congr, perm.sign_sum_congr, mul_smul, mul_smul]
+theorem multilinear_map.dom_coprod_alternization
+(a : multilinear_map R' (λ _ : ιa, Mᵢ) N₁)
+(b : multilinear_map R' (λ
+  _ : ιb, Mᵢ) N₂) : «expr = »((multilinear_map.dom_coprod a b).alternatization, a.alternatization.dom_coprod b.alternatization) :=
+begin
+  apply [expr coe_multilinear_map_injective],
+  rw ["[", expr dom_coprod_coe, ",", expr multilinear_map.alternatization_coe, ",", expr finset.sum_partition (quotient_group.left_rel (perm.sum_congr_hom ιa ιb).range), "]"] [],
+  congr' [1] [],
+  ext1 [] [ident σ],
+  apply [expr σ.induction_on' (λ σ, _)],
+  conv [] ["in", expr «expr = »(_, quotient.mk' _)] { change [expr «expr = »(quotient.mk' _, quotient.mk' _)],
+    rw [expr quotient.eq'],
+    rw ["[", expr quotient_group.left_rel, "]"],
+    dsimp ["only"] ["[", expr setoid.r, "]"] [] },
+  have [] [":", expr «expr = »(@finset.univ (perm «expr ⊕ »(ιa, ιb)) _, finset.univ.image (((«expr * »)) σ))] [":=", expr «expr $ »(finset.eq_univ_iff_forall.mpr, λ
+    a, let ⟨a', ha'⟩ := mul_left_surjective σ a in
+    finset.mem_image.mpr ⟨a', finset.mem_univ _, ha'⟩).symm],
+  rw ["[", expr this, ",", expr finset.image_filter, "]"] [],
+  simp [] [] ["only"] ["[", expr function.comp, ",", expr mul_inv_rev, ",", expr inv_mul_cancel_right, ",", expr subgroup.inv_mem_iff, "]"] [] [],
+  simp [] [] ["only"] ["[", expr monoid_hom.mem_range, "]"] [] [],
+  rw ["[", expr finset.filter_congr_decidable, ",", expr finset.univ_filter_exists (perm.sum_congr_hom ιa ιb), ",", expr finset.sum_image (λ
+    (x _ y _)
+    (h : «expr = »(_, _)), mul_right_injective _ h), ",", expr finset.sum_image (λ
+    (x _ y _)
+    (h : «expr = »(_, _)), perm.sum_congr_hom_injective h), "]"] [],
+  dsimp ["only"] [] [] [],
+  rw ["[", expr dom_coprod.summand_mk', ",", expr multilinear_map.dom_coprod_alternization_coe, ",", "<-", expr finset.sum_product', ",", expr finset.univ_product_univ, ",", "<-", expr multilinear_map.dom_dom_congr_equiv_apply, ",", expr add_equiv.map_sum, ",", expr finset.smul_sum, "]"] [],
+  congr' [1] [],
+  ext1 [] ["⟨", ident al, ",", ident ar, "⟩"],
+  dsimp ["only"] [] [] [],
+  rw ["[", "<-", expr add_equiv.coe_to_add_monoid_hom, ",", "<-", expr add_monoid_hom.coe_to_int_linear_map, ",", expr linear_map.map_smul_of_tower, ",", expr linear_map.map_smul_of_tower, ",", expr add_monoid_hom.coe_to_int_linear_map, ",", expr add_equiv.coe_to_add_monoid_hom, ",", expr multilinear_map.dom_dom_congr_equiv_apply, "]"] [],
+  rw ["[", expr multilinear_map.dom_dom_congr_mul, ",", expr perm.sign_mul, ",", expr perm.sum_congr_hom_apply, ",", expr multilinear_map.dom_coprod_dom_dom_congr_sum_congr, ",", expr perm.sign_sum_congr, ",", expr mul_smul, ",", expr mul_smul, "]"] []
+end
 
 /-- Taking the `multilinear_map.alternatization` of the `multilinear_map.dom_coprod` of two
 `alternating_map`s gives a scaled version of the `alternating_map.coprod` of those maps.
@@ -887,19 +883,20 @@ variable{R' : Type _}{N₁ N₂ : Type _}[CommSemiringₓ R'][AddCommMonoidₓ N
 
 variable[Module R' N₁][Module R' N₂]
 
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Two alternating maps indexed by a `fintype` are equal if they are equal when all arguments
 are distinct basis vectors. -/
-theorem Basis.ext_alternating {f g : AlternatingMap R' N₁ N₂ ι} (e : Basis ι₁ R' N₁)
-  (h : ∀ v : ι → ι₁, Function.Injective v → (f fun i => e (v i)) = g fun i => e (v i)) : f = g :=
-  by 
-    refine' AlternatingMap.coe_multilinear_map_injective (Basis.ext_multilinear e$ fun v => _)
-    byCases' hi : Function.Injective v
-    ·
-      exact h v hi
-    ·
-      have  : ¬Function.Injective fun i => e (v i) := hi.imp Function.Injective.of_comp 
-      rw [coe_multilinear_map, coe_multilinear_map, f.map_eq_zero_of_not_injective _ this,
-        g.map_eq_zero_of_not_injective _ this]
+theorem basis.ext_alternating
+{f g : alternating_map R' N₁ N₂ ι}
+(e : basis ι₁ R' N₁)
+(h : ∀ v : ι → ι₁, function.injective v → «expr = »(f (λ i, e (v i)), g (λ i, e (v i)))) : «expr = »(f, g) :=
+begin
+  refine [expr alternating_map.coe_multilinear_map_injective «expr $ »(basis.ext_multilinear e, λ v, _)],
+  by_cases [expr hi, ":", expr function.injective v],
+  { exact [expr h v hi] },
+  { have [] [":", expr «expr¬ »(function.injective (λ i, e (v i)))] [":=", expr hi.imp function.injective.of_comp],
+    rw ["[", expr coe_multilinear_map, ",", expr coe_multilinear_map, ",", expr f.map_eq_zero_of_not_injective _ this, ",", expr g.map_eq_zero_of_not_injective _ this, "]"] [] }
+end
 
 end Basis
 

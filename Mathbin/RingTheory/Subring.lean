@@ -660,51 +660,56 @@ theorem closure_induction {s : Set R} {p : R → Prop} {x} (h : x ∈ closure s)
   p x :=
   (@closure_le _ _ _ ⟨p, H1, Hmul, H0, Hadd, Hneg⟩).2 Hs h
 
-theorem mem_closure_iff {s : Set R} {x} : x ∈ closure s ↔ x ∈ AddSubgroup.closure (Submonoid.closure s : Set R) :=
-  ⟨fun h =>
-      closure_induction h (fun x hx => AddSubgroup.subset_closure$ Submonoid.subset_closure hx) (AddSubgroup.zero_mem _)
-        (AddSubgroup.subset_closure (Submonoid.one_mem (Submonoid.closure s)))
-        (fun x y hx hy => AddSubgroup.add_mem _ hx hy) (fun x hx => AddSubgroup.neg_mem _ hx)
-        fun x y hx hy =>
-          AddSubgroup.closure_induction hy
-            (fun q hq =>
-              AddSubgroup.closure_induction hx
-                (fun p hp => AddSubgroup.subset_closure ((Submonoid.closure s).mul_mem hp hq))
-                (by 
-                  rw [zero_mul q]
-                  apply AddSubgroup.zero_mem _)
-                (fun p₁ p₂ ihp₁ ihp₂ =>
-                  by 
-                    rw [add_mulₓ p₁ p₂ q]
-                    apply AddSubgroup.add_mem _ ihp₁ ihp₂)
-                fun x hx =>
-                  by 
-                    have f : ((-x)*q) = -x*q :=
-                      by 
-                        simp 
-                    rw [f]
-                    apply AddSubgroup.neg_mem _ hx)
-            (by 
-              rw [mul_zero x]
-              apply AddSubgroup.zero_mem _)
-            (fun q₁ q₂ ihq₁ ihq₂ =>
-              by 
-                rw [mul_addₓ x q₁ q₂]
-                apply AddSubgroup.add_mem _ ihq₁ ihq₂)
-            fun z hz =>
-              by 
-                have f : (x*-z) = -x*z :=
-                  by 
-                    simp 
-                rw [f]
-                apply AddSubgroup.neg_mem _ hz,
-    fun h =>
-      AddSubgroup.closure_induction h
-        (fun x hx =>
-          Submonoid.closure_induction hx (fun x hx => subset_closure hx) (one_mem _) fun x y hx hy => mul_mem _ hx hy)
-        (zero_mem _) (fun x y hx hy => add_mem _ hx hy) fun x hx => neg_mem _ hx⟩
+-- error in RingTheory.Subring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_closure_iff
+{s : set R}
+{x} : «expr ↔ »(«expr ∈ »(x, closure s), «expr ∈ »(x, add_subgroup.closure (submonoid.closure s : set R))) :=
+⟨λ
+ h, closure_induction h (λ
+  x
+  hx, «expr $ »(add_subgroup.subset_closure, submonoid.subset_closure hx)) (add_subgroup.zero_mem _) (add_subgroup.subset_closure (submonoid.one_mem (submonoid.closure s))) (λ
+  x
+  y
+  hx
+  hy, add_subgroup.add_mem _ hx hy) (λ
+  x
+  hx, add_subgroup.neg_mem _ hx) (λ
+  x
+  y
+  hx
+  hy, add_subgroup.closure_induction hy (λ
+   q
+   hq, add_subgroup.closure_induction hx (λ
+    p
+    hp, add_subgroup.subset_closure ((submonoid.closure s).mul_mem hp hq)) (begin
+      rw [expr zero_mul q] [],
+      apply [expr add_subgroup.zero_mem _]
+    end) (λ p₁ p₂ ihp₁ ihp₂, begin
+      rw [expr add_mul p₁ p₂ q] [],
+      apply [expr add_subgroup.add_mem _ ihp₁ ihp₂]
+    end) (λ x hx, begin
+      have [ident f] [":", expr «expr = »(«expr * »(«expr- »(x), q), «expr- »(«expr * »(x, q)))] [":=", expr by simp [] [] [] [] [] []],
+      rw [expr f] [],
+      apply [expr add_subgroup.neg_mem _ hx]
+    end)) (begin
+     rw [expr mul_zero x] [],
+     apply [expr add_subgroup.zero_mem _]
+   end) (λ q₁ q₂ ihq₁ ihq₂, begin
+     rw [expr mul_add x q₁ q₂] [],
+     apply [expr add_subgroup.add_mem _ ihq₁ ihq₂]
+   end) (λ z hz, begin
+     have [ident f] [":", expr «expr = »(«expr * »(x, «expr- »(z)), «expr- »(«expr * »(x, z)))] [":=", expr by simp [] [] [] [] [] []],
+     rw [expr f] [],
+     apply [expr add_subgroup.neg_mem _ hz]
+   end)), λ
+ h, add_subgroup.closure_induction h (λ
+  x
+  hx, submonoid.closure_induction hx (λ
+   x
+   hx, subset_closure hx) (one_mem _) (λ
+   x y hx hy, mul_mem _ hx hy)) (zero_mem _) (λ x y hx hy, add_mem _ hx hy) (λ x hx, neg_mem _ hx)⟩
 
--- error in RingTheory.Subring: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.Subring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_list_of_mem_closure
 {s : set R}
 {x : R}
@@ -839,11 +844,16 @@ theorem coe_supr_of_directed {ι} [hι : Nonempty ι] {S : ι → Subring R} (hS
       by 
         simp [mem_supr_of_directed hS]
 
-theorem mem_Sup_of_directed_on {S : Set (Subring R)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) {x : R} :
-  x ∈ Sup S ↔ ∃ (s : _)(_ : s ∈ S), x ∈ s :=
-  by 
-    haveI  : Nonempty S := Sne.to_subtype 
-    simp only [Sup_eq_supr', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
+-- error in RingTheory.Subring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_Sup_of_directed_on
+{S : set (subring R)}
+(Sne : S.nonempty)
+(hS : directed_on ((«expr ≤ »)) S)
+{x : R} : «expr ↔ »(«expr ∈ »(x, Sup S), «expr∃ , »((s «expr ∈ » S), «expr ∈ »(x, s))) :=
+begin
+  haveI [] [":", expr nonempty S] [":=", expr Sne.to_subtype],
+  simp [] [] ["only"] ["[", expr Sup_eq_supr', ",", expr mem_supr_of_directed hS.directed_coe, ",", expr set_coe.exists, ",", expr subtype.coe_mk, "]"] [] []
+end
 
 theorem coe_Sup_of_directed_on {S : Set (Subring R)} (Sne : S.nonempty) (hS : DirectedOn (· ≤ ·) S) :
   («expr↑ » (Sup S) : Set R) = ⋃(s : _)(_ : s ∈ S), «expr↑ » s :=
@@ -999,72 +1009,55 @@ variable{s : Set R}
 
 attribute [local reducible] closure
 
+-- error in RingTheory.Subring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[elab_as_eliminator]
-protected theorem in_closure.rec_on {C : R → Prop} {x : R} (hx : x ∈ closure s) (h1 : C 1) (hneg1 : C (-1))
-  (hs : ∀ z _ : z ∈ s, ∀ n, C n → C (z*n)) (ha : ∀ {x y}, C x → C y → C (x+y)) : C x :=
-  by 
-    have h0 : C 0 := add_neg_selfₓ (1 : R) ▸ ha h1 hneg1 
-    rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
-    clear hx 
-    induction' L with hd tl ih
-    ·
-      exact h0 
-    rw [List.forall_mem_consₓ] at HL 
-    suffices  : C (List.prod hd)
-    ·
-      rw [List.map_consₓ, List.sum_cons]
-      exact ha this (ih HL.2)
-    replace HL := HL.1
-    clear ih tl 
-    suffices  : ∃ L : List R, (∀ x _ : x ∈ L, x ∈ s) ∧ (List.prod hd = List.prod L ∨ List.prod hd = -List.prod L)
-    ·
-      rcases this with ⟨L, HL', HP | HP⟩
-      ·
-        rw [HP]
-        clear HP HL hd 
-        induction' L with hd tl ih
-        ·
-          exact h1 
-        rw [List.forall_mem_consₓ] at HL' 
-        rw [List.prod_cons]
-        exact hs _ HL'.1 _ (ih HL'.2)
-      rw [HP]
-      clear HP HL hd 
-      induction' L with hd tl ih
-      ·
-        exact hneg1 
-      rw [List.prod_cons, neg_mul_eq_mul_neg]
-      rw [List.forall_mem_consₓ] at HL' 
-      exact hs _ HL'.1 _ (ih HL'.2)
-    induction' hd with hd tl ih
-    ·
-      exact ⟨[], List.forall_mem_nil _, Or.inl rfl⟩
-    rw [List.forall_mem_consₓ] at HL 
-    rcases ih HL.2 with ⟨L, HL', HP | HP⟩ <;> cases' HL.1 with hhd hhd
-    ·
-      exact
-        ⟨hd :: L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
-          Or.inl$
-            by 
-              rw [List.prod_cons, List.prod_cons, HP]⟩
-    ·
-      exact
-        ⟨L, HL',
-          Or.inr$
-            by 
-              rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
-    ·
-      exact
-        ⟨hd :: L, List.forall_mem_consₓ.2 ⟨hhd, HL'⟩,
-          Or.inr$
-            by 
-              rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
-    ·
-      exact
-        ⟨L, HL',
-          Or.inl$
-            by 
-              rw [List.prod_cons, hhd, HP, neg_one_mul, neg_negₓ]⟩
+protected
+theorem in_closure.rec_on
+{C : R → exprProp()}
+{x : R}
+(hx : «expr ∈ »(x, closure s))
+(h1 : C 1)
+(hneg1 : C «expr- »(1))
+(hs : ∀ z «expr ∈ » s, ∀ n, C n → C «expr * »(z, n))
+(ha : ∀ {x y}, C x → C y → C «expr + »(x, y)) : C x :=
+begin
+  have [ident h0] [":", expr C 0] [":=", expr «expr ▸ »(add_neg_self (1 : R), ha h1 hneg1)],
+  rcases [expr exists_list_of_mem_closure hx, "with", "⟨", ident L, ",", ident HL, ",", ident rfl, "⟩"],
+  clear [ident hx],
+  induction [expr L] [] ["with", ident hd, ident tl, ident ih] [],
+  { exact [expr h0] },
+  rw [expr list.forall_mem_cons] ["at", ident HL],
+  suffices [] [":", expr C (list.prod hd)],
+  { rw ["[", expr list.map_cons, ",", expr list.sum_cons, "]"] [],
+    exact [expr ha this (ih HL.2)] },
+  replace [ident HL] [] [":=", expr HL.1],
+  clear [ident ih, ident tl],
+  suffices [] [":", expr «expr∃ , »((L : list R), «expr ∧ »(∀
+     x «expr ∈ » L, «expr ∈ »(x, s), «expr ∨ »(«expr = »(list.prod hd, list.prod L), «expr = »(list.prod hd, «expr- »(list.prod L)))))],
+  { rcases [expr this, "with", "⟨", ident L, ",", ident HL', ",", ident HP, "|", ident HP, "⟩"],
+    { rw [expr HP] [],
+      clear [ident HP, ident HL, ident hd],
+      induction [expr L] [] ["with", ident hd, ident tl, ident ih] [],
+      { exact [expr h1] },
+      rw [expr list.forall_mem_cons] ["at", ident HL'],
+      rw [expr list.prod_cons] [],
+      exact [expr hs _ HL'.1 _ (ih HL'.2)] },
+    rw [expr HP] [],
+    clear [ident HP, ident HL, ident hd],
+    induction [expr L] [] ["with", ident hd, ident tl, ident ih] [],
+    { exact [expr hneg1] },
+    rw ["[", expr list.prod_cons, ",", expr neg_mul_eq_mul_neg, "]"] [],
+    rw [expr list.forall_mem_cons] ["at", ident HL'],
+    exact [expr hs _ HL'.1 _ (ih HL'.2)] },
+  induction [expr hd] [] ["with", ident hd, ident tl, ident ih] [],
+  { exact [expr ⟨«expr[ , ]»([]), list.forall_mem_nil _, or.inl rfl⟩] },
+  rw [expr list.forall_mem_cons] ["at", ident HL],
+  rcases [expr ih HL.2, "with", "⟨", ident L, ",", ident HL', ",", ident HP, "|", ident HP, "⟩"]; cases [expr HL.1] ["with", ident hhd, ident hhd],
+  { exact [expr ⟨[«expr :: »/«expr :: »/«expr :: »](hd, L), list.forall_mem_cons.2 ⟨hhd, HL'⟩, «expr $ »(or.inl, by rw ["[", expr list.prod_cons, ",", expr list.prod_cons, ",", expr HP, "]"] [])⟩] },
+  { exact [expr ⟨L, HL', «expr $ »(or.inr, by rw ["[", expr list.prod_cons, ",", expr hhd, ",", expr neg_one_mul, ",", expr HP, "]"] [])⟩] },
+  { exact [expr ⟨[«expr :: »/«expr :: »/«expr :: »](hd, L), list.forall_mem_cons.2 ⟨hhd, HL'⟩, «expr $ »(or.inr, by rw ["[", expr list.prod_cons, ",", expr list.prod_cons, ",", expr HP, ",", expr neg_mul_eq_mul_neg, "]"] [])⟩] },
+  { exact [expr ⟨L, HL', «expr $ »(or.inl, by rw ["[", expr list.prod_cons, ",", expr hhd, ",", expr HP, ",", expr neg_one_mul, ",", expr neg_neg, "]"] [])⟩] }
+end
 
 theorem closure_preimage_le (f : R →+* S) (s : Set S) : closure (f ⁻¹' s) ≤ (closure s).comap f :=
   closure_le.2$ fun x hx => SetLike.mem_coe.2$ mem_comap.2$ subset_closure hx

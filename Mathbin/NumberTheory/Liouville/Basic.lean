@@ -27,32 +27,29 @@ def Liouville (x : ℝ) :=
 
 namespace Liouville
 
-@[protected]
-theorem Irrational {x : ℝ} (h : Liouville x) : Irrational x :=
-  by 
-    rintro ⟨⟨a, b, bN0, cop⟩, rfl⟩
-    change Liouville (a / b) at h 
-    rcases h (b+1) with ⟨p, q, q1, a0, a1⟩
-    have qR0 : (0 : ℝ) < q := int.cast_pos.mpr (zero_lt_one.trans q1)
-    have b0 : (b : ℝ) ≠ 0 := ne_of_gtₓ (nat.cast_pos.mpr bN0)
-    have bq0 : (0 : ℝ) < b*q := mul_pos (nat.cast_pos.mpr bN0) qR0 
-    replace a1 : (|(a*q) - b*p|*q^b+1) < b*q
-    ·
-      rwa [div_sub_div _ _ b0 (ne_of_gtₓ qR0), abs_div, div_lt_div_iff (abs_pos.mpr (ne_of_gtₓ bq0)) (pow_pos qR0 _),
-        abs_of_pos bq0, one_mulₓ, ←Int.cast_pow, ←Int.cast_mul, ←Int.cast_coe_nat, ←Int.cast_mul, ←Int.cast_mul,
-        ←Int.cast_sub, ←Int.cast_abs, ←Int.cast_mul, Int.cast_lt] at a1 
-    replace a0 : ¬((a*q) - «expr↑ » b*p) = 0
-    ·
-      rwa [Ne.def, div_eq_div_iff b0 (ne_of_gtₓ qR0), mul_commₓ («expr↑ » p), ←sub_eq_zero, ←Int.cast_coe_nat,
-        ←Int.cast_mul, ←Int.cast_mul, ←Int.cast_sub, Int.cast_eq_zero] at a0 
-    lift q to ℕ using (zero_lt_one.trans q1).le 
-    have ap : 0 < |(a*«expr↑ » q) - «expr↑ » b*p| := abs_pos.mpr a0 
-    lift |(a*«expr↑ » q) - «expr↑ » b*p| to ℕ using abs_nonneg ((a*«expr↑ » q) - «expr↑ » b*p)
-    rw [←Int.coe_nat_mul, ←Int.coe_nat_pow, ←Int.coe_nat_mul, Int.coe_nat_lt] at a1 
-    exact not_le.mpr a1 (Nat.mul_lt_mul_pow_succ (int.coe_nat_pos.mp ap) (int.coe_nat_lt.mp q1)).le
+-- error in NumberTheory.Liouville.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[protected #[]] theorem irrational {x : exprℝ()} (h : liouville x) : irrational x :=
+begin
+  rintros ["⟨", "⟨", ident a, ",", ident b, ",", ident bN0, ",", ident cop, "⟩", ",", ident rfl, "⟩"],
+  change [expr liouville «expr / »(a, b)] [] ["at", ident h],
+  rcases [expr h «expr + »(b, 1), "with", "⟨", ident p, ",", ident q, ",", ident q1, ",", ident a0, ",", ident a1, "⟩"],
+  have [ident qR0] [":", expr «expr < »((0 : exprℝ()), q)] [":=", expr int.cast_pos.mpr (zero_lt_one.trans q1)],
+  have [ident b0] [":", expr «expr ≠ »((b : exprℝ()), 0)] [":=", expr ne_of_gt (nat.cast_pos.mpr bN0)],
+  have [ident bq0] [":", expr «expr < »((0 : exprℝ()), «expr * »(b, q))] [":=", expr mul_pos (nat.cast_pos.mpr bN0) qR0],
+  replace [ident a1] [":", expr «expr < »(«expr * »(«expr| |»(«expr - »(«expr * »(a, q), «expr * »(b, p))), «expr ^ »(q, «expr + »(b, 1))), «expr * »(b, q))] [],
+  by rwa ["[", expr div_sub_div _ _ b0 (ne_of_gt qR0), ",", expr abs_div, ",", expr div_lt_div_iff (abs_pos.mpr (ne_of_gt bq0)) (pow_pos qR0 _), ",", expr abs_of_pos bq0, ",", expr one_mul, ",", "<-", expr int.cast_pow, ",", "<-", expr int.cast_mul, ",", "<-", expr int.cast_coe_nat, ",", "<-", expr int.cast_mul, ",", "<-", expr int.cast_mul, ",", "<-", expr int.cast_sub, ",", "<-", expr int.cast_abs, ",", "<-", expr int.cast_mul, ",", expr int.cast_lt, "]"] ["at", ident a1],
+  replace [ident a0] [":", expr «expr¬ »(«expr = »(«expr - »(«expr * »(a, q), «expr * »(«expr↑ »(b), p)), 0))] [],
+  by rwa ["[", expr ne.def, ",", expr div_eq_div_iff b0 (ne_of_gt qR0), ",", expr mul_comm «expr↑ »(p), ",", "<-", expr sub_eq_zero, ",", "<-", expr int.cast_coe_nat, ",", "<-", expr int.cast_mul, ",", "<-", expr int.cast_mul, ",", "<-", expr int.cast_sub, ",", expr int.cast_eq_zero, "]"] ["at", ident a0],
+  lift [expr q] ["to", expr exprℕ()] ["using", expr (zero_lt_one.trans q1).le] [],
+  have [ident ap] [":", expr «expr < »(0, «expr| |»(«expr - »(«expr * »(a, «expr↑ »(q)), «expr * »(«expr↑ »(b), p))))] [":=", expr abs_pos.mpr a0],
+  lift [expr «expr| |»(«expr - »(«expr * »(a, «expr↑ »(q)), «expr * »(«expr↑ »(b), p)))] ["to", expr exprℕ()] ["using", expr abs_nonneg «expr - »(«expr * »(a, «expr↑ »(q)), «expr * »(«expr↑ »(b), p))] [],
+  rw ["[", "<-", expr int.coe_nat_mul, ",", "<-", expr int.coe_nat_pow, ",", "<-", expr int.coe_nat_mul, ",", expr int.coe_nat_lt, "]"] ["at", ident a1],
+  exact [expr not_le.mpr a1 (nat.mul_lt_mul_pow_succ (int.coe_nat_pos.mp ap) (int.coe_nat_lt.mp q1)).le]
+end
 
 open Polynomial Metric Set Real RingHom
 
+-- error in NumberTheory.Liouville.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Let `Z, N` be types, let `R` be a metric space, let `α : R` be a point and let
 `j : Z → N → R` be a function.  We aim to estimate how close we can get to `α`, while staying
 in the image of `j`.  The points `j z a` of `R` in the image of `j` come with a "cost" equal to
@@ -70,99 +67,100 @@ It is stated in more general form than needed: in the intended application, `Z =
 root of `f`, `ε` is small, `M` is a bound on the Lipschitz constant of `f` near `α`, `n` is
 the degree of the polynomial `f`.
 -/
-theorem exists_one_le_pow_mul_dist {Z N R : Type _} [MetricSpace R] {d : N → ℝ} {j : Z → N → R} {f : R → R} {α : R}
-  {ε M : ℝ} (d0 : ∀ a : N, 1 ≤ d a) (e0 : 0 < ε) (B : ∀ ⦃y : R⦄, y ∈ closed_ball α ε → dist (f α) (f y) ≤ dist α y*M)
-  (L : ∀ ⦃z : Z⦄, ∀ ⦃a : N⦄, j z a ∈ closed_ball α ε → 1 ≤ d a*dist (f α) (f (j z a))) :
-  ∃ A : ℝ, 0 < A ∧ ∀ z : Z, ∀ a : N, 1 ≤ d a*dist α (j z a)*A :=
-  by 
-    have me0 : 0 < max (1 / ε) M := lt_max_iff.mpr (Or.inl (one_div_pos.mpr e0))
-    refine' ⟨max (1 / ε) M, me0, fun z a => _⟩
-    byCases' dm1 : 1 ≤ dist α (j z a)*max (1 / ε) M
-    ·
-      exact one_le_mul_of_one_le_of_one_le (d0 a) dm1
-    ·
-      have  : j z a ∈ closed_ball α ε
-      ·
-        refine' mem_closed_ball'.mp (le_transₓ _ ((one_div_le me0 e0).mpr (le_max_leftₓ _ _)))
-        exact (le_div_iff me0).mpr (not_le.mp dm1).le 
-      refine' (L this).trans _ 
-      refine' mul_le_mul_of_nonneg_left ((B this).trans _) (zero_le_one.trans (d0 a))
-      exact mul_le_mul_of_nonneg_left (le_max_rightₓ _ M) dist_nonneg
+theorem exists_one_le_pow_mul_dist
+{Z N R : Type*}
+[metric_space R]
+{d : N → exprℝ()}
+{j : Z → N → R}
+{f : R → R}
+{α : R}
+{ε M : exprℝ()}
+(d0 : ∀ a : N, «expr ≤ »(1, d a))
+(e0 : «expr < »(0, ε))
+(B : ∀ {{y : R}}, «expr ∈ »(y, closed_ball α ε) → «expr ≤ »(dist (f α) (f y), «expr * »(dist α y, M)))
+(L : ∀
+ {{z : Z}}, ∀
+ {{a : N}}, «expr ∈ »(j z a, closed_ball α ε) → «expr ≤ »(1, «expr * »(d a, dist (f α) (f (j z a))))) : «expr∃ , »((A : exprℝ()), «expr ∧ »(«expr < »(0, A), ∀
+  z : Z, ∀ a : N, «expr ≤ »(1, «expr * »(d a, «expr * »(dist α (j z a), A))))) :=
+begin
+  have [ident me0] [":", expr «expr < »(0, max «expr / »(1, ε) M)] [":=", expr lt_max_iff.mpr (or.inl (one_div_pos.mpr e0))],
+  refine [expr ⟨max «expr / »(1, ε) M, me0, λ z a, _⟩],
+  by_cases [expr dm1, ":", expr «expr ≤ »(1, «expr * »(dist α (j z a), max «expr / »(1, ε) M))],
+  { exact [expr one_le_mul_of_one_le_of_one_le (d0 a) dm1] },
+  { have [] [":", expr «expr ∈ »(j z a, closed_ball α ε)] [],
+    { refine [expr mem_closed_ball'.mp (le_trans _ ((one_div_le me0 e0).mpr (le_max_left _ _)))],
+      exact [expr (le_div_iff me0).mpr (not_le.mp dm1).le] },
+    refine [expr (L this).trans _],
+    refine [expr mul_le_mul_of_nonneg_left ((B this).trans _) (zero_le_one.trans (d0 a))],
+    exact [expr mul_le_mul_of_nonneg_left (le_max_right _ M) dist_nonneg] }
+end
 
-theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : Polynomial ℤ} (f0 : f ≠ 0)
-  (fa : eval α (map (algebraMap ℤ ℝ) f) = 0) :
-  ∃ A : ℝ, 0 < A ∧ ∀ a : ℤ, ∀ b : ℕ, (1 : ℝ) ≤ ((b+1)^f.nat_degree)*|α - a / b+1|*A :=
-  by 
-    set fR : Polynomial ℝ := map (algebraMap ℤ ℝ) f 
-    obtain fR0 : fR ≠ 0 :=
-      fun fR0 =>
-        (map_injective (algebraMap ℤ ℝ) fun _ _ A => int.cast_inj.mp A).Ne f0 (fR0.trans (Polynomial.map_zero _).symm)
-    have ar : α ∈ (fR.roots.to_finset : Set ℝ) :=
-      finset.mem_coe.mpr (multiset.mem_to_finset.mpr ((mem_roots fR0).mpr (is_root.def.mpr fa)))
-    obtain ⟨ζ, z0, U⟩ : ∃ (ζ : _)(_ : ζ > 0), closed_ball α ζ ∩ fR.roots.to_finset = {α} :=
-      @exists_closed_ball_inter_eq_singleton_of_discrete _ _ _ discrete_of_t1_of_finite _ ar 
-    obtain ⟨xm, -, hM⟩ :
-      ∃ (xm : ℝ)(H : xm ∈ Icc (α - ζ) (α+ζ)),
-        ∀ y : ℝ, y ∈ Icc (α - ζ) (α+ζ) → |fR.derivative.eval y| ≤ |fR.derivative.eval xm| :=
-      IsCompact.exists_forall_ge is_compact_Icc ⟨α, (sub_lt_self α z0).le, (lt_add_of_pos_right α z0).le⟩
-        (continuous_abs.comp fR.derivative.continuous_aeval).ContinuousOn 
-    refine'
-      @exists_one_le_pow_mul_dist ℤ ℕ ℝ _ _ _ (fun y => fR.eval y) α ζ |fR.derivative.eval xm| _ z0 (fun y hy => _)
-        fun z a hq => _
-    ·
-      exact fun a => one_le_pow_of_one_le ((le_add_iff_nonneg_left 1).mpr a.cast_nonneg) _
-    ·
-      rw [mul_commₓ]
-      rw [Real.closed_ball_eq] at hy 
-      refine'
-        Convex.norm_image_sub_le_of_norm_deriv_le (fun _ _ => fR.differentiable_at)
-          (fun y h =>
-            by 
-              rw [fR.deriv]
-              exact hM _ h)
-          (convex_Icc _ _) hy (mem_Icc_iff_abs_le.mp _)
-      exact @mem_closed_ball_self ℝ _ α ζ (le_of_ltₓ z0)
-    ·
-      show 1 ≤ ((a+1 : ℝ)^f.nat_degree)*|eval α fR - eval (z / a+1) fR|
-      rw [fa, zero_sub, abs_neg]
-      refine' one_le_pow_mul_abs_eval_div (Int.coe_nat_succ_pos a) fun hy => _ 
-      refine' (irrational_iff_ne_rational α).mp ha z (a+1) (mem_singleton_iff.mp _).symm 
-      refine' U.subset _ 
-      refine' ⟨hq, finset.mem_coe.mp (multiset.mem_to_finset.mpr _)⟩
-      exact (mem_roots fR0).mpr (is_root.def.mpr hy)
+-- error in NumberTheory.Liouville.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_pos_real_of_irrational_root
+{α : exprℝ()}
+(ha : irrational α)
+{f : polynomial exprℤ()}
+(f0 : «expr ≠ »(f, 0))
+(fa : «expr = »(eval α (map (algebra_map exprℤ() exprℝ()) f), 0)) : «expr∃ , »((A : exprℝ()), «expr ∧ »(«expr < »(0, A), ∀
+  a : exprℤ(), ∀
+  b : exprℕ(), «expr ≤ »((1 : exprℝ()), «expr * »(«expr ^ »(«expr + »(b, 1), f.nat_degree), «expr * »(«expr| |»(«expr - »(α, «expr / »(a, «expr + »(b, 1)))), A))))) :=
+begin
+  set [] [ident fR] [":", expr polynomial exprℝ()] [":="] [expr map (algebra_map exprℤ() exprℝ()) f] [],
+  obtain [ident fR0, ":", expr «expr ≠ »(fR, 0), ":=", expr λ
+   fR0, (map_injective (algebra_map exprℤ() exprℝ()) (λ
+     _ _ A, int.cast_inj.mp A)).ne f0 (fR0.trans (polynomial.map_zero _).symm)],
+  have [ident ar] [":", expr «expr ∈ »(α, (fR.roots.to_finset : set exprℝ()))] [":=", expr finset.mem_coe.mpr (multiset.mem_to_finset.mpr ((mem_roots fR0).mpr (is_root.def.mpr fa)))],
+  obtain ["⟨", ident ζ, ",", ident z0, ",", ident U, "⟩", ":", expr «expr∃ , »((ζ «expr > » 0), «expr = »(«expr ∩ »(closed_ball α ζ, fR.roots.to_finset), {α})), ":=", expr @exists_closed_ball_inter_eq_singleton_of_discrete _ _ _ discrete_of_t1_of_finite _ ar],
+  obtain ["⟨", ident xm, ",", "-", ",", ident hM, "⟩", ":", expr «expr∃ , »((xm : exprℝ())
+    (H : «expr ∈ »(xm, Icc «expr - »(α, ζ) «expr + »(α, ζ))), ∀
+    y : exprℝ(), «expr ∈ »(y, Icc «expr - »(α, ζ) «expr + »(α, ζ)) → «expr ≤ »(«expr| |»(fR.derivative.eval y), «expr| |»(fR.derivative.eval xm))), ":=", expr is_compact.exists_forall_ge is_compact_Icc ⟨α, (sub_lt_self α z0).le, (lt_add_of_pos_right α z0).le⟩ (continuous_abs.comp fR.derivative.continuous_aeval).continuous_on],
+  refine [expr @exists_one_le_pow_mul_dist exprℤ() exprℕ() exprℝ() _ _ _ (λ
+    y, fR.eval y) α ζ «expr| |»(fR.derivative.eval xm) _ z0 (λ y hy, _) (λ z a hq, _)],
+  { exact [expr λ a, one_le_pow_of_one_le ((le_add_iff_nonneg_left 1).mpr a.cast_nonneg) _] },
+  { rw [expr mul_comm] [],
+    rw [expr real.closed_ball_eq] ["at", ident hy],
+    refine [expr convex.norm_image_sub_le_of_norm_deriv_le (λ
+      _
+      _, fR.differentiable_at) (λ y h, by { rw [expr fR.deriv] [],
+        exact [expr hM _ h] }) (convex_Icc _ _) hy (mem_Icc_iff_abs_le.mp _)],
+    exact [expr @mem_closed_ball_self exprℝ() _ α ζ (le_of_lt z0)] },
+  { show [expr «expr ≤ »(1, «expr * »(«expr ^ »((«expr + »(a, 1) : exprℝ()), f.nat_degree), «expr| |»(«expr - »(eval α fR, eval «expr / »(z, «expr + »(a, 1)) fR))))],
+    rw ["[", expr fa, ",", expr zero_sub, ",", expr abs_neg, "]"] [],
+    refine [expr one_le_pow_mul_abs_eval_div (int.coe_nat_succ_pos a) (λ hy, _)],
+    refine [expr (irrational_iff_ne_rational α).mp ha z «expr + »(a, 1) (mem_singleton_iff.mp _).symm],
+    refine [expr U.subset _],
+    refine [expr ⟨hq, finset.mem_coe.mp (multiset.mem_to_finset.mpr _)⟩],
+    exact [expr (mem_roots fR0).mpr (is_root.def.mpr hy)] }
+end
 
-/-- **Liouville's Theorem** -/
-theorem Transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x :=
-  by 
-    rintro ⟨f : Polynomial ℤ, f0, ef0⟩
-    replace ef0 : (f.map (algebraMap ℤ ℝ)).eval x = 0
-    ·
-      rwa [aeval_def, ←eval_map] at ef0 
-    obtain ⟨A, hA, h⟩ : ∃ A : ℝ, 0 < A ∧ ∀ a : ℤ b : ℕ, (1 : ℝ) ≤ (b.succ^f.nat_degree)*|x - a / b.succ|*A :=
-      exists_pos_real_of_irrational_root lx.irrational f0 ef0 
-    rcases pow_unbounded_of_one_lt A (lt_add_one 1) with ⟨r, hn⟩
-    obtain ⟨a, b, b1, -, a1⟩ : ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / (b^r+f.nat_degree) :=
-      lx (r+f.nat_degree)
-    have b0 : (0 : ℝ) < b :=
-      zero_lt_one.trans
-        (by 
-          rw [←Int.cast_one]
-          exact int.cast_lt.mpr b1)
-    refine' lt_irreflₓ (((b : ℝ)^f.nat_degree)*|x - «expr↑ » a / «expr↑ » b|) _ 
-    rw [lt_div_iff' (pow_pos b0 _), pow_addₓ, mul_assocₓ] at a1 
-    refine' (_ : (((b : ℝ)^f.nat_degree)*|x - a / b|) < 1 / A).trans_le _
-    ·
-      refine' (lt_div_iff' hA).mpr _ 
-      refine' lt_of_le_of_ltₓ _ a1 
-      refine' mul_le_mul_of_nonneg_right _ (mul_nonneg (pow_nonneg b0.le _) (abs_nonneg _))
-      refine' hn.le.trans _ 
-      refine' pow_le_pow_of_le_left zero_le_two _ _ 
-      exact int.cast_two.symm.le.trans (int.cast_le.mpr (int.add_one_le_iff.mpr b1))
-    ·
-      lift b to ℕ using zero_le_one.trans b1.le 
-      specialize h a b.pred 
-      rwa [Nat.succ_pred_eq_of_posₓ (zero_lt_one.trans _), ←mul_assocₓ, ←div_le_iff hA] at h 
-      exact int.coe_nat_lt.mp b1
+-- error in NumberTheory.Liouville.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- **Liouville's Theorem** -/ theorem transcendental {x : exprℝ()} (lx : liouville x) : transcendental exprℤ() x :=
+begin
+  rintros ["⟨", ident f, ":", expr polynomial exprℤ(), ",", ident f0, ",", ident ef0, "⟩"],
+  replace [ident ef0] [":", expr «expr = »((f.map (algebra_map exprℤ() exprℝ())).eval x, 0)] [],
+  { rwa ["[", expr aeval_def, ",", "<-", expr eval_map, "]"] ["at", ident ef0] },
+  obtain ["⟨", ident A, ",", ident hA, ",", ident h, "⟩", ":", expr «expr∃ , »((A : exprℝ()), «expr ∧ »(«expr < »(0, A), ∀
+     (a : exprℤ())
+     (b : exprℕ()), «expr ≤ »((1 : exprℝ()), «expr * »(«expr ^ »(b.succ, f.nat_degree), «expr * »(«expr| |»(«expr - »(x, «expr / »(a, b.succ))), A))))), ":=", expr exists_pos_real_of_irrational_root lx.irrational f0 ef0],
+  rcases [expr pow_unbounded_of_one_lt A (lt_add_one 1), "with", "⟨", ident r, ",", ident hn, "⟩"],
+  obtain ["⟨", ident a, ",", ident b, ",", ident b1, ",", "-", ",", ident a1, "⟩", ":", expr «expr∃ , »((a
+     b : exprℤ()), «expr ∧ »(«expr < »(1, b), «expr ∧ »(«expr ≠ »(x, «expr / »(a, b)), «expr < »(«expr| |»(«expr - »(x, «expr / »(a, b))), «expr / »(1, «expr ^ »(b, «expr + »(r, f.nat_degree))))))), ":=", expr lx «expr + »(r, f.nat_degree)],
+  have [ident b0] [":", expr «expr < »((0 : exprℝ()), b)] [":=", expr zero_lt_one.trans (by { rw ["<-", expr int.cast_one] [],
+      exact [expr int.cast_lt.mpr b1] })],
+  refine [expr lt_irrefl «expr * »(«expr ^ »((b : exprℝ()), f.nat_degree), «expr| |»(«expr - »(x, «expr / »(«expr↑ »(a), «expr↑ »(b))))) _],
+  rw ["[", expr lt_div_iff' (pow_pos b0 _), ",", expr pow_add, ",", expr mul_assoc, "]"] ["at", ident a1],
+  refine [expr (_ : «expr < »(«expr * »(«expr ^ »((b : exprℝ()), f.nat_degree), «expr| |»(«expr - »(x, «expr / »(a, b)))), «expr / »(1, A))).trans_le _],
+  { refine [expr (lt_div_iff' hA).mpr _],
+    refine [expr lt_of_le_of_lt _ a1],
+    refine [expr mul_le_mul_of_nonneg_right _ (mul_nonneg (pow_nonneg b0.le _) (abs_nonneg _))],
+    refine [expr hn.le.trans _],
+    refine [expr pow_le_pow_of_le_left zero_le_two _ _],
+    exact [expr int.cast_two.symm.le.trans (int.cast_le.mpr (int.add_one_le_iff.mpr b1))] },
+  { lift [expr b] ["to", expr exprℕ()] ["using", expr zero_le_one.trans b1.le] [],
+    specialize [expr h a b.pred],
+    rwa ["[", expr nat.succ_pred_eq_of_pos (zero_lt_one.trans _), ",", "<-", expr mul_assoc, ",", "<-", expr div_le_iff hA, "]"] ["at", ident h],
+    exact [expr int.coe_nat_lt.mp b1] }
+end
 
 end Liouville
 

@@ -36,25 +36,23 @@ theorem not_lt_min {α} {r : α → α → Prop} (H : WellFounded r) (p : Set α
   let ⟨_, h'⟩ := Classical.some_spec (H.has_min p h)
   h' _ xp
 
--- error in Order.WellFounded: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem well_founded_iff_has_min
-{α}
-{r : α → α → exprProp()} : «expr ↔ »(well_founded r, ∀
- p : set α, p.nonempty → «expr∃ , »((m «expr ∈ » p), ∀ x «expr ∈ » p, «expr¬ »(r x m))) :=
-begin
-  classical,
-  split,
-  { exact [expr has_min] },
-  { set [] [ident counterexamples] [] [":="] [expr {x : α | «expr¬ »(acc r x)}] [],
-    intro [ident exists_max],
-    fconstructor,
-    intro [ident x],
-    by_contra [ident hx],
-    obtain ["⟨", ident m, ",", ident m_mem, ",", ident hm, "⟩", ":=", expr exists_max counterexamples ⟨x, hx⟩],
-    refine [expr m_mem (acc.intro _ (λ y y_gt_m, _))],
-    by_contra [ident hy],
-    exact [expr hm y hy y_gt_m] }
-end
+theorem well_founded_iff_has_min {α} {r : α → α → Prop} :
+  WellFounded r ↔ ∀ p : Set α, p.nonempty → ∃ (m : _)(_ : m ∈ p), ∀ x _ : x ∈ p, ¬r x m :=
+  by 
+    classical 
+    split 
+    ·
+      exact has_min
+    ·
+      set counterexamples := { x:α | ¬Acc r x }
+      intro exists_max 
+      fconstructor 
+      intro x 
+      byContra hx 
+      obtain ⟨m, m_mem, hm⟩ := exists_max counterexamples ⟨x, hx⟩
+      refine' m_mem (Acc.intro _ fun y y_gt_m => _)
+      byContra hy 
+      exact hm y hy y_gt_m
 
 theorem eq_iff_not_lt_of_le {α} [PartialOrderₓ α] {x y : α} : x ≤ y → y = x ↔ ¬x < y :=
   by 
@@ -104,27 +102,33 @@ protected theorem lt_succ {α} {r : α → α → Prop} (wf : WellFounded r) {x 
 
 end 
 
-protected theorem lt_succ_iff {α} {r : α → α → Prop} [wo : IsWellOrder α r] {x : α} (h : ∃ y, r x y) (y : α) :
-  r y (wo.wf.succ x) ↔ r y x ∨ y = x :=
-  by 
-    split 
-    ·
-      intro h' 
-      have  : ¬r x y
-      ·
-        intro hy 
-        rw [WellFounded.succ, dif_pos] at h' 
-        exact wo.wf.not_lt_min _ h hy h' 
-      rcases trichotomous_of r x y with (hy | hy | hy)
-      exFalso 
-      exact this hy 
-      right 
-      exact hy.symm 
-      left 
-      exact hy 
-    rintro (hy | rfl)
-    exact trans hy (wo.wf.lt_succ h)
-    exact wo.wf.lt_succ h
+-- error in Order.WellFounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+protected
+theorem lt_succ_iff
+{α}
+{r : α → α → exprProp()}
+[wo : is_well_order α r]
+{x : α}
+(h : «expr∃ , »((y), r x y))
+(y : α) : «expr ↔ »(r y (wo.wf.succ x), «expr ∨ »(r y x, «expr = »(y, x))) :=
+begin
+  split,
+  { intro [ident h'],
+    have [] [":", expr «expr¬ »(r x y)] [],
+    { intro [ident hy],
+      rw ["[", expr well_founded.succ, ",", expr dif_pos, "]"] ["at", ident h'],
+      exact [expr wo.wf.not_lt_min _ h hy h'] },
+    rcases [expr trichotomous_of r x y, "with", ident hy, "|", ident hy, "|", ident hy],
+    exfalso,
+    exact [expr this hy],
+    right,
+    exact [expr hy.symm],
+    left,
+    exact [expr hy] },
+  rintro ["(", ident hy, "|", ident rfl, ")"],
+  exact [expr trans hy (wo.wf.lt_succ h)],
+  exact [expr wo.wf.lt_succ h]
+end
 
 end WellFounded
 

@@ -1,4 +1,4 @@
-import Mathbin.Topology.Algebra.Module 
+import Mathbin.Topology.Algebra.MulAction 
 import Mathbin.Topology.MetricSpace.Lipschitz
 
 /-!
@@ -71,19 +71,18 @@ instance Submonoid.has_lipschitz_mul (s : Submonoid β) : HasLipschitzMul s :=
           rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
           convert lipschitz_with_lipschitz_const_mul_edist ⟨(x₁ : β), x₂⟩ ⟨y₁, y₂⟩ using 1⟩ }
 
-instance Real.has_lipschitz_add : HasLipschitzAdd ℝ :=
-  { lipschitz_add :=
-      ⟨2,
-        by 
-          rw [lipschitz_with_iff_dist_le_mul]
-          intro p q 
-          simp only [Real.dist_eq, Prod.dist_eq, Prod.fst_sub, Prod.snd_sub, Nnreal.coe_one, Nnreal.coe_bit0]
-          convert le_transₓ (abs_add (p.1 - q.1) (p.2 - q.2)) _ using 2
-          ·
-            abel 
-          have  := le_max_leftₓ |p.1 - q.1| |p.2 - q.2|
-          have  := le_max_rightₓ |p.1 - q.1| |p.2 - q.2|
-          linarith⟩ }
+-- error in Topology.MetricSpace.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance real.has_lipschitz_add : has_lipschitz_add exprℝ() :=
+{ lipschitz_add := ⟨2, begin
+     rw [expr lipschitz_with_iff_dist_le_mul] [],
+     intros [ident p, ident q],
+     simp [] [] ["only"] ["[", expr real.dist_eq, ",", expr prod.dist_eq, ",", expr prod.fst_sub, ",", expr prod.snd_sub, ",", expr nnreal.coe_one, ",", expr nnreal.coe_bit0, "]"] [] [],
+     convert [] [expr le_trans (abs_add «expr - »(p.1, q.1) «expr - »(p.2, q.2)) _] ["using", 2],
+     { abel [] [] [] },
+     have [] [] [":=", expr le_max_left «expr| |»(«expr - »(p.1, q.1)) «expr| |»(«expr - »(p.2, q.2))],
+     have [] [] [":=", expr le_max_right «expr| |»(«expr - »(p.1, q.1)) «expr| |»(«expr - »(p.2, q.2))],
+     linarith [] [] []
+   end⟩ }
 
 instance Nnreal.has_lipschitz_add : HasLipschitzAdd ℝ≥0  :=
   { lipschitz_add :=
@@ -114,45 +113,40 @@ theorem dist_smul_pair (x : α) (y₁ y₂ : β) : dist (x • y₁) (x • y₂
 theorem dist_pair_smul (x₁ x₂ : α) (y : β) : dist (x₁ • y) (x₂ • y) ≤ dist x₁ x₂*dist y 0 :=
   HasBoundedSmul.dist_pair_smul' x₁ x₂ y
 
+-- error in Topology.MetricSpace.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The typeclass `has_bounded_smul` on a metric-space scalar action implies continuity of the
-action. -/
-instance (priority := 100)HasBoundedSmul.has_continuous_smul : HasContinuousSmul α β :=
-  { continuous_smul :=
-      by 
-        rw [Metric.continuous_iff]
-        rintro ⟨a, b⟩ ε hε 
-        have  : 0 ≤ dist a 0 := dist_nonneg 
-        have  : 0 ≤ dist b 0 := dist_nonneg 
-        let δ : ℝ := min 1 (((dist a 0+dist b 0)+2)⁻¹*ε)
-        have hδ_pos : 0 < δ
-        ·
-          refine'
-            lt_min_iff.mpr
-              ⟨by 
-                  normNum,
-                mul_pos _ hε⟩
-          rw [inv_pos]
-          linarith 
-        refine' ⟨δ, hδ_pos, _⟩
-        rintro ⟨a', b'⟩ hab' 
-        calc _ ≤ _ := dist_triangle _ (a • b') _ _ ≤ δ*(dist a 0+dist b 0)+δ := _ _ < ε := _
-        ·
-          have  : 0 ≤ dist a' a := dist_nonneg 
-          have  := dist_triangle b' b 0
-          have  := dist_comm (a • b') (a' • b')
-          have  := dist_comm a a' 
-          have  : dist a' a ≤ dist (a', b') (a, b) := le_max_leftₓ _ _ 
-          have  : dist b' b ≤ dist (a', b') (a, b) := le_max_rightₓ _ _ 
-          have  := dist_smul_pair a b' b 
-          have  := dist_pair_smul a a' b' 
-          nlinarith
-        ·
-          have  : δ ≤ _ := min_le_rightₓ _ _ 
-          have  : δ ≤ _ := min_le_leftₓ _ _ 
-          have  : (((dist a 0+dist b 0)+2)⁻¹*ε*(dist a 0+dist b 0)+δ) < ε
-          ·
-            rw [inv_mul_lt_iff] <;> nlinarith 
-          nlinarith }
+action. -/ @[priority 100] instance has_bounded_smul.has_continuous_smul : has_continuous_smul α β :=
+{ continuous_smul := begin
+    rw [expr metric.continuous_iff] [],
+    rintros ["⟨", ident a, ",", ident b, "⟩", ident ε, ident hε],
+    have [] [":", expr «expr ≤ »(0, dist a 0)] [":=", expr dist_nonneg],
+    have [] [":", expr «expr ≤ »(0, dist b 0)] [":=", expr dist_nonneg],
+    let [ident δ] [":", expr exprℝ()] [":=", expr min 1 «expr * »(«expr ⁻¹»(«expr + »(«expr + »(dist a 0, dist b 0), 2)), ε)],
+    have [ident hδ_pos] [":", expr «expr < »(0, δ)] [],
+    { refine [expr lt_min_iff.mpr ⟨by norm_num [] [], mul_pos _ hε⟩],
+      rw [expr inv_pos] [],
+      linarith [] [] [] },
+    refine [expr ⟨δ, hδ_pos, _⟩],
+    rintros ["⟨", ident a', ",", ident b', "⟩", ident hab'],
+    calc
+      «expr ≤ »(_, _) : dist_triangle _ «expr • »(a, b') _
+      «expr ≤ »(..., «expr * »(δ, «expr + »(«expr + »(dist a 0, dist b 0), δ))) : _
+      «expr < »(..., ε) : _,
+    { have [] [":", expr «expr ≤ »(0, dist a' a)] [":=", expr dist_nonneg],
+      have [] [] [":=", expr dist_triangle b' b 0],
+      have [] [] [":=", expr dist_comm «expr • »(a, b') «expr • »(a', b')],
+      have [] [] [":=", expr dist_comm a a'],
+      have [] [":", expr «expr ≤ »(dist a' a, dist (a', b') (a, b))] [":=", expr le_max_left _ _],
+      have [] [":", expr «expr ≤ »(dist b' b, dist (a', b') (a, b))] [":=", expr le_max_right _ _],
+      have [] [] [":=", expr dist_smul_pair a b' b],
+      have [] [] [":=", expr dist_pair_smul a a' b'],
+      nlinarith [] [] [] },
+    { have [] [":", expr «expr ≤ »(δ, _)] [":=", expr min_le_right _ _],
+      have [] [":", expr «expr ≤ »(δ, _)] [":=", expr min_le_left _ _],
+      have [] [":", expr «expr < »(«expr * »(«expr ⁻¹»(«expr + »(«expr + »(dist a 0, dist b 0), 2)), «expr * »(ε, «expr + »(«expr + »(dist a 0, dist b 0), δ))), ε)] [],
+      { rw [expr inv_mul_lt_iff] []; nlinarith [] [] [] },
+      nlinarith [] [] [] }
+  end }
 
 instance Real.has_bounded_smul : HasBoundedSmul ℝ ℝ :=
   { dist_smul_pair' :=

@@ -32,7 +32,7 @@ open CategoryTheory
 
 namespace CategoryTheory.Limits
 
--- error in CategoryTheory.Limits.Shapes.BinaryProducts: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler decidable_eq
+-- error in CategoryTheory.Limits.Shapes.BinaryProducts: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- The type of objects for the diagram indexing a binary (co)product. -/
 @[derive #[expr decidable_eq], derive #[expr inhabited]]
 inductive walking_pair : Type v

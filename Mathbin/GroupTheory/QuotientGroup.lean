@@ -1,5 +1,4 @@
-import Mathbin.GroupTheory.Coset 
-import Mathbin.Data.Setoid.Basic
+import Mathbin.GroupTheory.Coset
 
 /-!
 # Quotients of groups by normal subgroups

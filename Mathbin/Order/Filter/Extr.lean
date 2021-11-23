@@ -513,10 +513,12 @@ section ConditionallyCompleteLinearOrder
 
 variable[ConditionallyCompleteLinearOrder α]{f : β → α}{s : Set β}{x₀ : β}
 
-theorem IsMaxOn.supr_eq (hx₀ : x₀ ∈ s) (h : IsMaxOn f s x₀) : (⨆x : s, f x) = f x₀ :=
-  by 
-    haveI  : Nonempty s := ⟨⟨x₀, hx₀⟩⟩
-    exact csupr_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.prop) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
+-- error in Order.Filter.Extr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_max_on.supr_eq (hx₀ : «expr ∈ »(x₀, s)) (h : is_max_on f s x₀) : «expr = »(«expr⨆ , »((x : s), f x), f x₀) :=
+begin
+  haveI [] [":", expr nonempty s] [":=", expr ⟨⟨x₀, hx₀⟩⟩],
+  exact [expr csupr_eq_of_forall_le_of_forall_lt_exists_gt (λ x, h x.prop) (λ w hw, ⟨⟨x₀, hx₀⟩, hw⟩)]
+end
 
 theorem IsMinOn.infi_eq (hx₀ : x₀ ∈ s) (h : IsMinOn f s x₀) : (⨅x : s, f x) = f x₀ :=
   @IsMaxOn.supr_eq (OrderDual α) β _ _ _ _ hx₀ h

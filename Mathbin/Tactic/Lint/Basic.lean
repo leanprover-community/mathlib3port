@@ -29,7 +29,7 @@ We store the list of nolint names as `@id (list name) (Prop simp_nf doc_blame ha
 See Note [user attribute parameters]
 -/
 private unsafe def reflect_name_list : has_reflect (List Name)
-| ns => quote (id (%%expr.mk_app (quote Prop)$ ns.map (flip expr.const [])) : List Name)
+| ns => quote.1 (id (%%ₓexpr.mk_app (quote.1 Prop)$ ns.map (flip expr.const [])) : List Name)
 
 private unsafe def parse_name_list (e : expr) : List Name :=
   e.app_arg.get_app_args.map expr.const_name
@@ -99,7 +99,7 @@ when used in `#lint`.
 @[user_attribute]
 unsafe def linter_attr : user_attribute Unit Unit :=
   { Name := "linter", descr := "Use this declaration as a linting test in #lint",
-    after_set := some$ fun nm _ _ => mk_const nm >>= infer_type >>= unify (quote linter) }
+    after_set := some$ fun nm _ _ => mk_const nm >>= infer_type >>= unify (quote.1 linter) }
 
 add_tactic_doc { Name := "linter", category := DocCategory.attr, declNames := [`linter_attr], tags := ["linting"] }
 

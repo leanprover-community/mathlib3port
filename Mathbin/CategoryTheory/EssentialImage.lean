@@ -65,7 +65,7 @@ theorem obj_mem_ess_image (F : D ⥤ C) (Y : D) : F.obj Y ∈ ess_image F :=
 instance  : category F.ess_image :=
   CategoryTheory.fullSubcategory _
 
--- error in CategoryTheory.EssentialImage: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler full
+-- error in CategoryTheory.EssentialImage: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
 /-- The essential image as a subcategory has a fully faithful inclusion into the target category. -/
 @[derive #["[", expr full, ",", expr faithful, "]"], simps #[]]
 def ess_image_inclusion (F : «expr ⥤ »(C, D)) : «expr ⥤ »(F.ess_image, D) :=
@@ -120,11 +120,13 @@ def functor.obj_obj_preimage_iso (Y : D) : F.obj (F.obj_preimage Y) ≅ Y :=
 instance faithful.to_ess_image (F : C ⥤ D) [faithful F] : faithful F.to_ess_image :=
   faithful.of_comp_iso F.to_ess_image_comp_essential_image_inclusion
 
+-- error in CategoryTheory.EssentialImage: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The induced functor of a full functor is full -/
-instance full.to_ess_image (F : C ⥤ D) [full F] : full F.to_ess_image :=
-  by 
-    haveI  := full.of_iso F.to_ess_image_comp_essential_image_inclusion.symm 
-    exactI full.of_comp_faithful F.to_ess_image F.ess_image_inclusion
+instance full.to_ess_image (F : «expr ⥤ »(C, D)) [full F] : full F.to_ess_image :=
+begin
+  haveI [] [] [":=", expr full.of_iso F.to_ess_image_comp_essential_image_inclusion.symm],
+  exactI [expr full.of_comp_faithful F.to_ess_image F.ess_image_inclusion]
+end
 
 end CategoryTheory
 

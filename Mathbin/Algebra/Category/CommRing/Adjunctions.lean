@@ -1,5 +1,5 @@
 import Mathbin.Algebra.Category.CommRing.Basic 
-import Mathbin.Data.MvPolynomial.Default
+import Mathbin.Data.MvPolynomial.CommRing
 
 /-!
 Multivariable polynomials on a type is the left adjoint of the

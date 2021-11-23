@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Field 
+import Mathbin.Algebra.Field.Basic 
 import Mathbin.Algebra.GroupPower.Order 
 import Mathbin.Algebra.Order.Ring 
 import Mathbin.Tactic.Monotonicity.Basic
@@ -747,13 +747,18 @@ theorem div_mul_le_div_mul_of_div_le_div (h : a / b ≤ c / d) (he : 0 ≤ e) : 
 theorem exists_add_lt_and_pos_of_lt (h : b < a) : ∃ c : α, (b+c) < a ∧ 0 < c :=
   ⟨(a - b) / 2, add_sub_div_two_lt h, div_pos (sub_pos_of_lt h) zero_lt_two⟩
 
-theorem exists_pos_mul_lt {a : α} (h : 0 < a) (b : α) : ∃ c : α, 0 < c ∧ (b*c) < a :=
-  by 
-    have  : 0 < a / max (b+1) 1 
-    exact div_pos h (lt_max_iff.2 (Or.inr zero_lt_one))
-    refine' ⟨a / max (b+1) 1, this, _⟩
-    rw [←lt_div_iff this, div_div_cancel' h.ne']
-    exact lt_max_iff.2 (Or.inl$ lt_add_one _)
+-- error in Algebra.Order.Field: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_pos_mul_lt
+{a : α}
+(h : «expr < »(0, a))
+(b : α) : «expr∃ , »((c : α), «expr ∧ »(«expr < »(0, c), «expr < »(«expr * »(b, c), a))) :=
+begin
+  have [] [":", expr «expr < »(0, «expr / »(a, max «expr + »(b, 1) 1))] [],
+  from [expr div_pos h (lt_max_iff.2 (or.inr zero_lt_one))],
+  refine [expr ⟨«expr / »(a, max «expr + »(b, 1) 1), this, _⟩],
+  rw ["[", "<-", expr lt_div_iff this, ",", expr div_div_cancel' h.ne', "]"] [],
+  exact [expr lt_max_iff.2 «expr $ »(or.inl, lt_add_one _)]
+end
 
 theorem le_of_forall_sub_le (h : ∀ ε _ : ε > 0, b - ε ≤ a) : b ≤ a :=
   by 
@@ -781,14 +786,13 @@ instance (priority := 100)LinearOrderedField.to_densely_ordered : DenselyOrdered
             _ = a₂ := add_self_div_two a₂
             ⟩ }
 
-theorem mul_self_inj_of_nonneg (a0 : 0 ≤ a) (b0 : 0 ≤ b) : ((a*a) = b*b) ↔ a = b :=
-  mul_self_eq_mul_self_iff.trans$
-    or_iff_left_of_imp$
-      fun h =>
-        by 
-          subst a 
-          have  : b = 0 := le_antisymmₓ (neg_nonneg.1 a0) b0 
-          rw [this, neg_zero]
+-- error in Algebra.Order.Field: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mul_self_inj_of_nonneg
+(a0 : «expr ≤ »(0, a))
+(b0 : «expr ≤ »(0, b)) : «expr ↔ »(«expr = »(«expr * »(a, a), «expr * »(b, b)), «expr = »(a, b)) :=
+«expr $ »(mul_self_eq_mul_self_iff.trans, «expr $ »(or_iff_left_of_imp, λ h, by { subst [expr a],
+    have [] [":", expr «expr = »(b, 0)] [":=", expr le_antisymm (neg_nonneg.1 a0) b0],
+    rw ["[", expr this, ",", expr neg_zero, "]"] [] }))
 
 theorem min_div_div_right {c : α} (hc : 0 ≤ c) (a b : α) : min (a / c) (b / c) = min a b / c :=
   Eq.symm$ Monotone.map_min fun x y => div_le_div_of_le hc

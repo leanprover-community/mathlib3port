@@ -464,12 +464,14 @@ theorem preimage_frontier (s : Set β) : e.source ∩ e ⁻¹' Frontier s = e.so
 theorem preimage_open_of_open_symm {s : Set α} (hs : IsOpen s) : IsOpen (e.target ∩ e.symm ⁻¹' s) :=
   e.symm.continuous_on.preimage_open_of_open e.open_target hs
 
+-- error in Topology.LocalHomeomorph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The image of an open set in the source is open. -/
-theorem image_open_of_open {s : Set α} (hs : IsOpen s) (h : s ⊆ e.source) : IsOpen (e '' s) :=
-  by 
-    have  : e '' s = e.target ∩ e.symm ⁻¹' s := e.to_local_equiv.image_eq_target_inter_inv_preimage h 
-    rw [this]
-    exact e.continuous_on_symm.preimage_open_of_open e.open_target hs
+theorem image_open_of_open {s : set α} (hs : is_open s) (h : «expr ⊆ »(s, e.source)) : is_open «expr '' »(e, s) :=
+begin
+  have [] [":", expr «expr = »(«expr '' »(e, s), «expr ∩ »(e.target, «expr ⁻¹' »(e.symm, s)))] [":=", expr e.to_local_equiv.image_eq_target_inter_inv_preimage h],
+  rw [expr this] [],
+  exact [expr e.continuous_on_symm.preimage_open_of_open e.open_target hs]
+end
 
 /-- The image of the restriction of an open set to the source is open. -/
 theorem image_open_of_open' {s : Set α} (hs : IsOpen s) : IsOpen (e '' (e.source ∩ s)) :=
@@ -864,37 +866,40 @@ theorem continuous_on_iff_continuous_on_comp_right {f : β → γ} {s : Set β} 
       inter_comm, continuous_within_at_inter]
     exact IsOpen.mem_nhds e.open_source (e.map_target (h hx))
 
+-- error in Topology.LocalHomeomorph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Continuity within a set at a point can be read under left composition with a local
 homeomorphism if a neighborhood of the initial point is sent to the source of the local
 homeomorphism-/
-theorem continuous_within_at_iff_continuous_within_at_comp_left {f : γ → α} {s : Set γ} {x : γ} (hx : f x ∈ e.source)
-  (h : f ⁻¹' e.source ∈ 𝓝[s] x) : ContinuousWithinAt f s x ↔ ContinuousWithinAt (e ∘ f) s x :=
-  by 
-    refine' ⟨(e.continuous_at hx).Tendsto.comp, fun fe_cont => _⟩
-    rw [←continuous_within_at_inter' h] at fe_cont⊢
-    have  : ContinuousWithinAt (e.symm ∘ e ∘ f) (s ∩ f ⁻¹' e.source) x
-    ·
-      have  : ContinuousWithinAt e.symm univ (e (f x)) := (e.continuous_at_symm (e.map_source hx)).ContinuousWithinAt 
-      exact ContinuousWithinAt.comp this fe_cont (subset_univ _)
-    exact
-      this.congr
-        (fun y hy =>
-          by 
-            simp [e.left_inv hy.2])
-        (by 
-          simp [e.left_inv hx])
+theorem continuous_within_at_iff_continuous_within_at_comp_left
+{f : γ → α}
+{s : set γ}
+{x : γ}
+(hx : «expr ∈ »(f x, e.source))
+(h : «expr ∈ »(«expr ⁻¹' »(f, e.source), «expr𝓝[ ] »(s, x))) : «expr ↔ »(continuous_within_at f s x, continuous_within_at «expr ∘ »(e, f) s x) :=
+begin
+  refine [expr ⟨(e.continuous_at hx).tendsto.comp, λ fe_cont, _⟩],
+  rw ["[", "<-", expr continuous_within_at_inter' h, "]"] ["at", ident fe_cont, "⊢"],
+  have [] [":", expr continuous_within_at «expr ∘ »(e.symm, «expr ∘ »(e, f)) «expr ∩ »(s, «expr ⁻¹' »(f, e.source)) x] [],
+  { have [] [":", expr continuous_within_at e.symm univ (e (f x))] [":=", expr (e.continuous_at_symm (e.map_source hx)).continuous_within_at],
+    exact [expr continuous_within_at.comp this fe_cont (subset_univ _)] },
+  exact [expr this.congr (λ
+    y
+    hy, by simp [] [] [] ["[", expr e.left_inv hy.2, "]"] [] []) (by simp [] [] [] ["[", expr e.left_inv hx, "]"] [] [])]
+end
 
+-- error in Topology.LocalHomeomorph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Continuity at a point can be read under left composition with a local homeomorphism if a
 neighborhood of the initial point is sent to the source of the local homeomorphism-/
-theorem continuous_at_iff_continuous_at_comp_left {f : γ → α} {x : γ} (h : f ⁻¹' e.source ∈ 𝓝 x) :
-  ContinuousAt f x ↔ ContinuousAt (e ∘ f) x :=
-  by 
-    have hx : f x ∈ e.source := (mem_of_mem_nhds h : _)
-    have h' : f ⁻¹' e.source ∈ 𝓝[univ] x
-    ·
-      rwa [nhds_within_univ]
-    rw [←continuous_within_at_univ, ←continuous_within_at_univ,
-      e.continuous_within_at_iff_continuous_within_at_comp_left hx h']
+theorem continuous_at_iff_continuous_at_comp_left
+{f : γ → α}
+{x : γ}
+(h : «expr ∈ »(«expr ⁻¹' »(f, e.source), expr𝓝() x)) : «expr ↔ »(continuous_at f x, continuous_at «expr ∘ »(e, f) x) :=
+begin
+  have [ident hx] [":", expr «expr ∈ »(f x, e.source)] [":=", expr (mem_of_mem_nhds h : _)],
+  have [ident h'] [":", expr «expr ∈ »(«expr ⁻¹' »(f, e.source), «expr𝓝[ ] »(univ, x))] [],
+  by rwa [expr nhds_within_univ] [],
+  rw ["[", "<-", expr continuous_within_at_univ, ",", "<-", expr continuous_within_at_univ, ",", expr e.continuous_within_at_iff_continuous_within_at_comp_left hx h', "]"] []
+end
 
 /-- A function is continuous on a set if and only if its composition with a local homeomorphism
 on the left is continuous on the corresponding set. -/
@@ -1002,16 +1007,19 @@ noncomputable def to_local_homeomorph [Nonempty α] : LocalHomeomorph α β :=
   LocalHomeomorph.ofContinuousOpen ((h.to_embedding.inj.inj_on univ).toLocalEquiv _ _) h.continuous.continuous_on
     h.is_open_map is_open_univ
 
-theorem continuous_at_iff {f : α → β} {g : β → γ} (hf : OpenEmbedding f) {x : α} :
-  ContinuousAt (g ∘ f) x ↔ ContinuousAt g (f x) :=
-  by 
-    haveI  : Nonempty α := ⟨x⟩
-    convert ((hf.to_local_homeomorph f).continuous_at_iff_continuous_at_comp_right _).symm
-    ·
-      apply (LocalHomeomorph.left_inv _ _).symm 
-      simp 
-    ·
-      simp 
+-- error in Topology.LocalHomeomorph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem continuous_at_iff
+{f : α → β}
+{g : β → γ}
+(hf : open_embedding f)
+{x : α} : «expr ↔ »(continuous_at «expr ∘ »(g, f) x, continuous_at g (f x)) :=
+begin
+  haveI [] [":", expr nonempty α] [":=", expr ⟨x⟩],
+  convert [] [expr ((hf.to_local_homeomorph f).continuous_at_iff_continuous_at_comp_right _).symm] [],
+  { apply [expr (local_homeomorph.left_inv _ _).symm],
+    simp [] [] [] [] [] [] },
+  { simp [] [] [] [] [] [] }
+end
 
 end OpenEmbedding
 
@@ -1067,21 +1075,23 @@ theorem subtype_restr_source : (e.subtype_restr s).Source = coeₓ ⁻¹' e.sour
   by 
     simp' only [subtype_restr_def] with mfld_simps
 
-theorem subtype_restr_symm_trans_subtype_restr (f f' : LocalHomeomorph α β) :
-  (f.subtype_restr s).symm.trans (f'.subtype_restr s) ≈ (f.symm.trans f').restr (f.target ∩ f.symm ⁻¹' s) :=
-  by 
-    simp only [subtype_restr_def, trans_symm_eq_symm_trans_symm]
-    have openness₁ : IsOpen (f.target ∩ f.symm ⁻¹' s) := f.preimage_open_of_open_symm s.2
-    rw [←of_set_trans _ openness₁, ←trans_assoc, ←trans_assoc]
-    refine' eq_on_source.trans' _ (eq_on_source_refl _)
-    have sets_identity : f.symm.source ∩ (f.target ∩ f.symm ⁻¹' s) = f.symm.source ∩ f.symm ⁻¹' s
-    ·
-      mfldSetTac 
-    have openness₂ : IsOpen (s : Set α) := s.2
-    rw [of_set_trans', sets_identity, ←trans_of_set' _ openness₂, trans_assoc]
-    refine' eq_on_source.trans' (eq_on_source_refl _) _ 
-    refine' Setoidₓ.trans (trans_symm_self s.local_homeomorph_subtype_coe) _ 
-    simp' only with mfld_simps
+-- error in Topology.LocalHomeomorph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem subtype_restr_symm_trans_subtype_restr
+(f
+ f' : local_homeomorph α β) : «expr ≈ »((f.subtype_restr s).symm.trans (f'.subtype_restr s), (f.symm.trans f').restr «expr ∩ »(f.target, «expr ⁻¹' »(f.symm, s))) :=
+begin
+  simp [] [] ["only"] ["[", expr subtype_restr_def, ",", expr trans_symm_eq_symm_trans_symm, "]"] [] [],
+  have [ident openness₁] [":", expr is_open «expr ∩ »(f.target, «expr ⁻¹' »(f.symm, s))] [":=", expr f.preimage_open_of_open_symm s.2],
+  rw ["[", "<-", expr of_set_trans _ openness₁, ",", "<-", expr trans_assoc, ",", "<-", expr trans_assoc, "]"] [],
+  refine [expr eq_on_source.trans' _ (eq_on_source_refl _)],
+  have [ident sets_identity] [":", expr «expr = »(«expr ∩ »(f.symm.source, «expr ∩ »(f.target, «expr ⁻¹' »(f.symm, s))), «expr ∩ »(f.symm.source, «expr ⁻¹' »(f.symm, s)))] [],
+  { mfld_set_tac },
+  have [ident openness₂] [":", expr is_open (s : set α)] [":=", expr s.2],
+  rw ["[", expr of_set_trans', ",", expr sets_identity, ",", "<-", expr trans_of_set' _ openness₂, ",", expr trans_assoc, "]"] [],
+  refine [expr eq_on_source.trans' (eq_on_source_refl _) _],
+  refine [expr setoid.trans (trans_symm_self s.local_homeomorph_subtype_coe) _],
+  simp [] [] ["only"] [] ["with", ident mfld_simps] []
+end
 
 end LocalHomeomorph
 

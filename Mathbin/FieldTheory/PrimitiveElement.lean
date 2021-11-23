@@ -1,6 +1,7 @@
 import Mathbin.FieldTheory.Adjoin 
 import Mathbin.FieldTheory.IsAlgClosed.Basic 
-import Mathbin.FieldTheory.Separable
+import Mathbin.FieldTheory.Separable 
+import Mathbin.RingTheory.IntegralDomain
 
 /-!
 # Primitive Element Theorem
@@ -42,7 +43,7 @@ variable(F : Type _)[Field F](E : Type _)[Field E][Algebra F E]
 /-! ### Primitive element theorem for finite fields -/
 
 
--- error in FieldTheory.PrimitiveElement: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exact: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in FieldTheory.PrimitiveElement: ././Mathport/Syntax/Translate/Basic.lean:341:40: in exact: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 /-- **Primitive element theorem** assuming E is finite. -/
 theorem exists_primitive_element_of_fintype_top
 [fintype E] : «expr∃ , »((α : E), «expr = »(«expr ⟮ , ⟯»(F, [α]), «expr⊤»())) :=
@@ -60,7 +61,7 @@ begin
     exact [expr pow_mem «expr ⟮ , ⟯»(F, [«expr↑ »(α)]) (mem_adjoin_simple_self F «expr↑ »(α)) n] }
 end
 
--- error in FieldTheory.PrimitiveElement: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in FieldTheory.PrimitiveElement: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 /-- Primitive element theorem for finite dimensional extension of a finite field. -/
 theorem exists_primitive_element_of_fintype_bot
 [fintype F]
@@ -93,7 +94,7 @@ theorem primitive_element_inf_aux_exists_c (f g : Polynomial F) :
 
 variable(F)[Algebra F E]
 
--- error in FieldTheory.PrimitiveElement: ././Mathport/Syntax/Translate/Basic.lean:340:40: in suffices: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in FieldTheory.PrimitiveElement: ././Mathport/Syntax/Translate/Basic.lean:341:40: in suffices: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem primitive_element_inf_aux
 [is_separable F E] : «expr∃ , »((γ : E), «expr = »(«expr ⟮ , ⟯»(F, [α, β]), «expr ⟮ , ⟯»(F, [γ]))) :=
 begin
@@ -166,7 +167,7 @@ variable(F E : Type _)[Field F][Field E]
 
 variable[Algebra F E][FiniteDimensional F E][IsSeparable F E]
 
--- error in FieldTheory.PrimitiveElement: ././Mathport/Syntax/Translate/Basic.lean:340:40: in let: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in FieldTheory.PrimitiveElement: ././Mathport/Syntax/Translate/Basic.lean:341:40: in let: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 /-- Primitive element theorem: a finite separable field extension `E` of `F` has a
   primitive element, i.e. there is an `α ∈ E` such that `F⟮α⟯ = (⊤ : subalgebra F E)`.-/
 theorem exists_primitive_element : «expr∃ , »((α : E), «expr = »(«expr ⟮ , ⟯»(F, [α]), «expr⊤»())) :=
@@ -186,7 +187,7 @@ begin
   { exactI [expr exists_primitive_element_of_fintype_bot F E] }
 end
 
--- error in FieldTheory.PrimitiveElement: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr ⟮ , ⟯»
+-- error in FieldTheory.PrimitiveElement: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 /-- Alternative phrasing of primitive element theorem:
 a finite separable field extension has a basis `1, α, α^2, ..., α^n`.
 

@@ -132,13 +132,10 @@ instance fin_pi n (π : Finₓ n → Type _) [∀ i, Encodable (π i)] : Encodab
 instance Arrayₓ [Encodable α] {n} : Encodable (Arrayₓ n α) :=
   of_equiv _ (Equiv.arrayEquivFin _ _)
 
-/-- If `α` is encodable, then so is `finset α`. -/
-instance Finset [Encodable α] : Encodable (Finset α) :=
-  by 
-    haveI  := decidable_eq_of_encodable α <;>
-      exact
-        of_equiv { s : Multiset α // s.nodup }
-          ⟨fun ⟨a, b⟩ => ⟨a, b⟩, fun ⟨a, b⟩ => ⟨a, b⟩, fun ⟨a, b⟩ => rfl, fun ⟨a, b⟩ => rfl⟩
+-- error in Data.Equiv.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- If `α` is encodable, then so is `finset α`. -/ instance finset [encodable α] : encodable (finset α) :=
+by haveI [] [] [":=", expr decidable_eq_of_encodable α]; exact [expr of_equiv {s : multiset α // s.nodup} ⟨λ
+  ⟨a, b⟩, ⟨a, b⟩, λ ⟨a, b⟩, ⟨a, b⟩, λ ⟨a, b⟩, rfl, λ ⟨a, b⟩, rfl⟩]
 
 def fintype_arrow (α : Type _) (β : Type _) [DecidableEq α] [Fintype α] [Encodable β] : Trunc (Encodable (α → β)) :=
   (Fintype.truncEquivFin α).map$
@@ -171,14 +168,15 @@ theorem sorted_univ_nodup α [Fintype α] [Encodable α] : (sorted_univ α).Nodu
 theorem sorted_univ_to_finset α [Fintype α] [Encodable α] [DecidableEq α] : (sorted_univ α).toFinset = Finset.univ :=
   Finset.sort_to_finset _ _
 
+-- error in Data.Equiv.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An encodable `fintype` is equivalent to the same size `fin`. -/
-def fintype_equiv_fin {α} [Fintype α] [Encodable α] : α ≃ Finₓ (Fintype.card α) :=
-  by 
-    haveI  : DecidableEq α := Encodable.decidableEqOfEncodable _ 
-    trans
-    ·
-      exact ((sorted_univ_nodup α).nthLeEquivOfForallMemList _ mem_sorted_univ).symm 
-    exact Equiv.cast (congr_argₓ _ (length_sorted_univ α))
+def fintype_equiv_fin {α} [fintype α] [encodable α] : «expr ≃ »(α, fin (fintype.card α)) :=
+begin
+  haveI [] [":", expr decidable_eq α] [":=", expr encodable.decidable_eq_of_encodable _],
+  transitivity [],
+  { exact [expr ((sorted_univ_nodup α).nth_le_equiv_of_forall_mem_list _ mem_sorted_univ).symm] },
+  exact [expr equiv.cast (congr_arg _ (length_sorted_univ α))]
+end
 
 /-- If `α` and `β` are encodable and `α` is a fintype, then `α → β` is encodable as well. -/
 instance fintype_arrow_of_encodable {α β : Type _} [Encodable α] [Fintype α] [Encodable β] : Encodable (α → β) :=
@@ -194,22 +192,19 @@ open Encodable
 
 section List
 
-theorem denumerable_list_aux : ∀ n : ℕ, ∃ (a : _)(_ : a ∈ @decode_list α _ n), encode_list a = n
-| 0 =>
-  by 
-    rw [decode_list] <;> exact ⟨_, rfl, rfl⟩
-| succ v =>
-  by 
-    cases' e : unpair v with v₁ v₂ 
-    have h := unpair_right_le v 
-    rw [e] at h 
-    rcases
-      have  : v₂ < succ v := lt_succ_of_le h 
-      denumerable_list_aux v₂ with
-      ⟨a, h₁, h₂⟩
-    rw [Option.mem_def] at h₁ 
-    use of_nat α v₁ :: a 
-    simp [decode_list, e, h₂, h₁, encode_list, mkpair_unpair' e]
+-- error in Data.Equiv.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem denumerable_list_aux : ∀ n : exprℕ(), «expr∃ , »((a «expr ∈ » @decode_list α _ n), «expr = »(encode_list a, n))
+| 0 := by rw [expr decode_list] []; exact [expr ⟨_, rfl, rfl⟩]
+| succ v := begin
+  cases [expr e, ":", expr unpair v] ["with", ident v₁, ident v₂],
+  have [ident h] [] [":=", expr unpair_right_le v],
+  rw [expr e] ["at", ident h],
+  rcases [expr have «expr < »(v₂, succ v), from lt_succ_of_le h,
+   denumerable_list_aux v₂, "with", "⟨", ident a, ",", ident h₁, ",", ident h₂, "⟩"],
+  rw [expr option.mem_def] ["at", ident h₁],
+  use [expr [«expr :: »/«expr :: »/«expr :: »](of_nat α v₁, a)],
+  simp [] [] [] ["[", expr decode_list, ",", expr e, ",", expr h₂, ",", expr h₁, ",", expr encode_list, ",", expr mkpair_unpair' e, "]"] [] []
+end
 
 /-- If `α` is denumerable, then so is `list α`. -/
 instance denumerable_list : Denumerable (List α) :=
@@ -266,19 +261,16 @@ theorem raise_sorted : ∀ l n, List.Sorted (· ≤ ·) (raise l n)
 | [], n => List.sorted_nil
 | m :: l, n => (List.chain_iff_pairwise (@le_transₓ _ _)).1 (raise_chain _ _)
 
+-- error in Data.Equiv.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `α` is denumerable, then so is `multiset α`. Warning: this is *not* the same encoding as used
-in `encodable.multiset`. -/
-instance Multiset : Denumerable (Multiset α) :=
-  mk'
-    ⟨fun s : Multiset α => encode$ lower ((s.map encode).sort (· ≤ ·)) 0,
-      fun n => Multiset.map (of_nat α) (raise (of_nat (List ℕ) n) 0),
-      fun s =>
-        by 
-          have  := raise_lower (List.sorted_cons.2 ⟨fun n _ => zero_le n, (s.map encode).sort_sorted _⟩) <;>
-            simp [-Multiset.coe_map, this],
-      fun n =>
-        by 
-          simp [-Multiset.coe_map, List.merge_sort_eq_self _ (raise_sorted _ _), lower_raise]⟩
+in `encodable.multiset`. -/ instance multiset : denumerable (multiset α) :=
+mk' ⟨λ
+ s : multiset α, «expr $ »(encode, lower ((s.map encode).sort ((«expr ≤ »))) 0), λ
+ n, multiset.map (of_nat α) (raise (of_nat (list exprℕ()) n) 0), λ
+ s, by have [] [] [":=", expr raise_lower (list.sorted_cons.2 ⟨λ
+    n
+    _, zero_le n, (s.map encode).sort_sorted _⟩)]; simp [] [] [] ["[", "-", ident multiset.coe_map, ",", expr this, "]"] [] [], λ
+ n, by simp [] [] [] ["[", "-", ident multiset.coe_map, ",", expr list.merge_sort_eq_self _ (raise_sorted _ _), ",", expr lower_raise, "]"] [] []⟩
 
 end Multiset
 

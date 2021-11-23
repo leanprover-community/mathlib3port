@@ -1,7 +1,8 @@
-import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks 
+import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts 
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers 
-import Mathbin.CategoryTheory.Limits.Preserves.Basic 
-import Mathbin.CategoryTheory.IsConnected
+import Mathbin.CategoryTheory.Limits.Shapes.WidePullbacks 
+import Mathbin.CategoryTheory.IsConnected 
+import Mathbin.CategoryTheory.Limits.Preserves.Basic
 
 /-!
 # Connected limits
@@ -24,7 +25,7 @@ namespace CategoryTheory
 
 section Examples
 
--- error in CategoryTheory.Limits.Connected: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in CategoryTheory.Limits.Connected: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
 instance wide_pullback_shape_connected (J : Type v₁) : is_connected (wide_pullback_shape J) :=
 begin
   apply [expr is_connected.of_induct],
@@ -34,7 +35,7 @@ begin
   { rwa [expr t (wide_pullback_shape.hom.term j)] [] }
 end
 
--- error in CategoryTheory.Limits.Connected: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in CategoryTheory.Limits.Connected: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
 instance wide_pushout_shape_connected (J : Type v₁) : is_connected (wide_pushout_shape J) :=
 begin
   apply [expr is_connected.of_induct],
@@ -47,7 +48,7 @@ end
 instance parallel_pair_inhabited : Inhabited walking_parallel_pair :=
   ⟨walking_parallel_pair.one⟩
 
--- error in CategoryTheory.Limits.Connected: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in CategoryTheory.Limits.Connected: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
 instance parallel_pair_connected : is_connected walking_parallel_pair :=
 begin
   apply [expr is_connected.of_induct],

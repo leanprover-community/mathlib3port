@@ -43,10 +43,10 @@ def compares [LT α] : Ordering → α → α → Prop
 | Eq, a, b => a = b
 | Gt, a, b => a > b
 
--- error in Order.Compare: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem compares_swap [has_lt α] {a b : α} {o : ordering} : «expr ↔ »(o.swap.compares a b, o.compares b a) :=
-by { cases [expr o] [],
-  exacts ["[", expr iff.rfl, ",", expr eq_comm, ",", expr iff.rfl, "]"] }
+theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.swap.compares a b ↔ o.compares b a :=
+  by 
+    cases o 
+    exacts[Iff.rfl, eq_comm, Iff.rfl]
 
 alias compares_swap ↔ Ordering.Compares.of_swap Ordering.Compares.swap
 
@@ -152,13 +152,11 @@ theorem or_else_eq_lt o₁ o₂ : or_else o₁ o₂ = lt ↔ o₁ = lt ∨ o₁ 
 
 end Ordering
 
--- error in Order.Compare: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem order_dual.dual_compares
-[has_lt α]
-{a b : α}
-{o : ordering} : «expr ↔ »(@ordering.compares (order_dual α) _ o a b, @ordering.compares α _ o b a) :=
-by { cases [expr o] [],
-  exacts ["[", expr iff.rfl, ",", expr eq_comm, ",", expr iff.rfl, "]"] }
+theorem OrderDual.dual_compares [LT α] {a b : α} {o : Ordering} :
+  @Ordering.Compares (OrderDual α) _ o a b ↔ @Ordering.Compares α _ o b a :=
+  by 
+    cases o 
+    exacts[Iff.rfl, eq_comm, Iff.rfl]
 
 theorem cmp_compares [LinearOrderₓ α] (a b : α) : (cmp a b).Compares a b :=
   by 

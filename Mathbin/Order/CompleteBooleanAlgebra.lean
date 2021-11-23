@@ -75,34 +75,30 @@ instance Pi.completeDistribLattice {ι : Type _} {π : ι → Type _} [∀ i, Co
         by 
           simp only [CompleteLattice.supₓ, Sup_apply, supr_apply, Pi.inf_apply, inf_supr_eq, ←supr_subtype''] }
 
-theorem Inf_sup_Inf : Inf s⊔Inf t = ⨅(p : _)(_ : p ∈ Set.Prod s t), (p : α × α).1⊔p.2 :=
-  by 
-    apply le_antisymmₓ
-    ·
-      simp only [and_imp, Prod.forall, le_infi_iff, Set.mem_prod]
-      intro a b ha hb 
-      exact sup_le_sup (Inf_le ha) (Inf_le hb)
-    ·
-      have  : ∀ a _ : a ∈ s, (⨅(p : _)(_ : p ∈ Set.Prod s t), (p : α × α).1⊔p.2) ≤ a⊔Inf t
-      ·
-        rintro a ha 
-        have  :
-          (⨅(p : _)(_ : p ∈ Set.Prod s t), ((p : α × α).1 : α)⊔p.2) ≤
-            ⨅(p : _)(_ : p ∈ Prod.mk a '' t), (p : α × α).1⊔p.2
-        ·
-          apply infi_le_infi_of_subset 
-          rintro ⟨x, y⟩
-          simp only [and_imp, Set.mem_image, Prod.mk.inj_iffₓ, Set.prod_mk_mem_set_prod_eq, exists_imp_distrib]
-          rintro x' x't ax x'y 
-          rw [←x'y, ←ax]
-          simp [ha, x't]
-        rw [infi_image] at this 
-        simp only  at this 
-        rwa [←sup_Inf_eq] at this 
-      calc (⨅(p : _)(_ : p ∈ Set.Prod s t), (p : α × α).1⊔p.2) ≤ ⨅(a : _)(_ : a ∈ s), a⊔Inf t :=
-        by 
-          simp  <;> exact this _ = Inf s⊔Inf t :=
-        Inf_sup_eq.symm
+-- error in Order.CompleteBooleanAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem Inf_sup_Inf : «expr = »(«expr ⊔ »(Inf s, Inf t), «expr⨅ , »((p «expr ∈ » set.prod s t), «expr ⊔ »((p : «expr × »(α, α)).1, p.2))) :=
+begin
+  apply [expr le_antisymm],
+  { simp [] [] ["only"] ["[", expr and_imp, ",", expr prod.forall, ",", expr le_infi_iff, ",", expr set.mem_prod, "]"] [] [],
+    intros [ident a, ident b, ident ha, ident hb],
+    exact [expr sup_le_sup (Inf_le ha) (Inf_le hb)] },
+  { have [] [":", expr ∀
+     a «expr ∈ » s, «expr ≤ »(«expr⨅ , »((p «expr ∈ » set.prod s t), «expr ⊔ »((p : «expr × »(α, α)).1, p.2)), «expr ⊔ »(a, Inf t))] [],
+    { rintro [ident a, ident ha],
+      have [] [":", expr «expr ≤ »(«expr⨅ , »((p «expr ∈ » set.prod s t), «expr ⊔ »(((p : «expr × »(α, α)).1 : α), p.2)), «expr⨅ , »((p «expr ∈ » «expr '' »(prod.mk a, t)), «expr ⊔ »((p : «expr × »(α, α)).1, p.2)))] [],
+      { apply [expr infi_le_infi_of_subset],
+        rintro ["⟨", ident x, ",", ident y, "⟩"],
+        simp [] [] ["only"] ["[", expr and_imp, ",", expr set.mem_image, ",", expr prod.mk.inj_iff, ",", expr set.prod_mk_mem_set_prod_eq, ",", expr exists_imp_distrib, "]"] [] [],
+        rintro [ident x', ident x't, ident ax, ident x'y],
+        rw ["[", "<-", expr x'y, ",", "<-", expr ax, "]"] [],
+        simp [] [] [] ["[", expr ha, ",", expr x't, "]"] [] [] },
+      rw ["[", expr infi_image, "]"] ["at", ident this],
+      simp [] [] ["only"] [] [] ["at", ident this],
+      rwa ["<-", expr sup_Inf_eq] ["at", ident this] },
+    calc
+      «expr ≤ »(«expr⨅ , »((p «expr ∈ » set.prod s t), «expr ⊔ »((p : «expr × »(α, α)).1, p.2)), «expr⨅ , »((a «expr ∈ » s), «expr ⊔ »(a, Inf t))) : by simp [] [] [] [] [] []; exact [expr this]
+      «expr = »(..., «expr ⊔ »(Inf s, Inf t)) : Inf_sup_eq.symm }
+end
 
 theorem Sup_inf_Sup : Sup s⊓Sup t = ⨆(p : _)(_ : p ∈ Set.Prod s t), (p : α × α).1⊓p.2 :=
   @Inf_sup_Inf (OrderDual α) _ _ _

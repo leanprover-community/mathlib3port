@@ -50,25 +50,23 @@ variable{n : ℕ}{α : Type u}{v : α}{a : Arrayₓ n α}
 theorem mem.def : v ∈ a ↔ ∃ i, a.read i = v :=
   Iff.rfl
 
-theorem mem_rev_list_aux :
-  ∀ {i} h : i ≤ n, (∃ j : Finₓ n, (j : ℕ) < i ∧ read a j = v) ↔ v ∈ a.iterate_aux (fun _ => · :: ·) i h []
-| 0, _ => ⟨fun ⟨i, n, _⟩ => absurd n i.val.not_lt_zero, False.elim⟩
-| i+1, h =>
-  let IH := mem_rev_list_aux (le_of_ltₓ h)
-  ⟨fun ⟨j, ji1, e⟩ =>
-      Or.elim (lt_or_eq_of_leₓ$ Nat.le_of_succ_le_succₓ ji1) (fun ji => List.mem_cons_of_memₓ _$ IH.1 ⟨j, ji, e⟩)
-        fun je =>
-          by 
-            simp [DArray.iterateAux] <;>
-              apply Or.inl <;> unfold read  at e <;> have H : j = ⟨i, h⟩ := Finₓ.eq_of_veq je <;> rwa [←H, e],
-    fun m =>
-      by 
-        simp [DArray.iterateAux, List.Mem] at m 
-        cases' m with e m' 
-        exact ⟨⟨i, h⟩, Nat.lt_succ_selfₓ _, Eq.symm e⟩
-        exact
-          let ⟨j, ji, e⟩ := IH.2 m'
-          ⟨j, Nat.le_succ_of_leₓ ji, e⟩⟩
+-- error in Data.Array.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_rev_list_aux : ∀
+{i}
+(h : «expr ≤ »(i, n)), «expr ↔ »(«expr∃ , »((j : fin n), «expr ∧ »(«expr < »((j : exprℕ()), i), «expr = »(read a j, v))), «expr ∈ »(v, a.iterate_aux (λ
+   _, («expr :: »)) i h «expr[ , ]»([])))
+| 0, _ := ⟨λ ⟨i, n, _⟩, absurd n i.val.not_lt_zero, false.elim⟩
+| «expr + »(i, 1), h := let IH := mem_rev_list_aux (le_of_lt h) in
+⟨λ
+ ⟨j, ji1, e⟩, or.elim «expr $ »(lt_or_eq_of_le, nat.le_of_succ_le_succ ji1) (λ
+  ji, «expr $ »(list.mem_cons_of_mem _, IH.1 ⟨j, ji, e⟩)) (λ
+  je, by simp [] [] [] ["[", expr d_array.iterate_aux, "]"] [] []; apply [expr or.inl]; unfold [ident read] ["at", ident e]; have [ident H] [":", expr «expr = »(j, ⟨i, h⟩)] [":=", expr fin.eq_of_veq je]; rwa ["[", "<-", expr H, ",", expr e, "]"] []), λ
+ m, begin
+   simp [] [] [] ["[", expr d_array.iterate_aux, ",", expr list.mem, "]"] [] ["at", ident m],
+   cases [expr m] ["with", ident e, ident m'],
+   exact [expr ⟨⟨i, h⟩, nat.lt_succ_self _, eq.symm e⟩],
+   exact [expr let ⟨j, ji, e⟩ := IH.2 m' in ⟨j, nat.le_succ_of_le ji, e⟩]
+ end⟩
 
 @[simp]
 theorem mem_rev_list : v ∈ a.rev_list ↔ v ∈ a :=
@@ -159,37 +157,31 @@ theorem to_list_nth_le' (a : Arrayₓ n α) (i : Finₓ n) h' : List.nthLe a.to_
   by 
     cases i <;> apply to_list_nth_le
 
-theorem to_list_nth {i v} : List.nth a.to_list i = some v ↔ ∃ h, a.read ⟨i, h⟩ = v :=
-  by 
-    rw [List.nth_eq_some]
-    have ll := to_list_length a 
-    split  <;> intro h <;> cases' h with h e <;> subst v
-    ·
-      exact ⟨ll ▸ h, (to_list_nth_le _ _ _).symm⟩
-    ·
-      exact ⟨ll.symm ▸ h, to_list_nth_le _ _ _⟩
+-- error in Data.Array.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem to_list_nth
+{i v} : «expr ↔ »(«expr = »(list.nth a.to_list i, some v), «expr∃ , »((h), «expr = »(a.read ⟨i, h⟩, v))) :=
+begin
+  rw [expr list.nth_eq_some] [],
+  have [ident ll] [] [":=", expr to_list_length a],
+  split; intro [ident h]; cases [expr h] ["with", ident h, ident e]; subst [expr v],
+  { exact [expr ⟨«expr ▸ »(ll, h), (to_list_nth_le _ _ _).symm⟩] },
+  { exact [expr ⟨«expr ▸ »(ll.symm, h), to_list_nth_le _ _ _⟩] }
+end
 
-theorem write_to_list {i v} : (a.write i v).toList = a.to_list.update_nth i v :=
-  List.ext_le
-      (by 
-        simp )$
-    fun j h₁ h₂ =>
-      by 
-        have h₃ : j < n
-        ·
-          simpa using h₁ 
-        rw [to_list_nth_le _ h₃]
-        refine'
-          let ⟨_, e⟩ := List.nth_eq_some.1 _ 
-          e.symm 
-        byCases' ij : (i : ℕ) = j
-        ·
-          subst j 
-          rw [show (⟨(i : ℕ), h₃⟩ : Finₓ _) = i from Finₓ.eq_of_veq rfl, Arrayₓ.read_write, List.nth_update_nth_of_lt]
-          simp [h₃]
-        ·
-          rw [List.nth_update_nth_ne _ _ ij, a.read_write_of_ne, to_list_nth.2 ⟨h₃, rfl⟩]
-          exact Finₓ.ne_of_vne ij
+-- error in Data.Array.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem write_to_list {i v} : «expr = »((a.write i v).to_list, a.to_list.update_nth i v) :=
+«expr $ »(list.ext_le (by simp [] [] [] [] [] []), λ j h₁ h₂, begin
+   have [ident h₃] [":", expr «expr < »(j, n)] [],
+   { simpa [] [] [] [] [] ["using", expr h₁] },
+   rw ["[", expr to_list_nth_le _ h₃, "]"] [],
+   refine [expr let ⟨_, e⟩ := list.nth_eq_some.1 _ in e.symm],
+   by_cases [expr ij, ":", expr «expr = »((i : exprℕ()), j)],
+   { subst [expr j],
+     rw ["[", expr show «expr = »((⟨(i : exprℕ()), h₃⟩ : fin _), i), from fin.eq_of_veq rfl, ",", expr array.read_write, ",", expr list.nth_update_nth_of_lt, "]"] [],
+     simp [] [] [] ["[", expr h₃, "]"] [] [] },
+   { rw ["[", expr list.nth_update_nth_ne _ _ ij, ",", expr a.read_write_of_ne, ",", expr to_list_nth.2 ⟨h₃, rfl⟩, "]"] [],
+     exact [expr fin.ne_of_vne ij] }
+ end)
 
 end Nth
 
@@ -253,21 +245,21 @@ theorem push_back_to_list : (a.push_back v).toList = a.to_list ++ [v] :=
   by 
     rw [←rev_list_reverse, ←rev_list_reverse, push_back_rev_list, List.reverse_cons]
 
-@[simp]
-theorem read_push_back_left (i : Finₓ n) : (a.push_back v).read i.cast_succ = a.read i :=
-  by 
-    cases' i with i hi 
-    have  : ¬i = n := ne_of_ltₓ hi 
-    simp [push_back, this, Finₓ.castSucc, Finₓ.castAdd, Finₓ.castLe, Finₓ.castLt, read, DArray.read]
+-- error in Data.Array.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem read_push_back_left (i : fin n) : «expr = »((a.push_back v).read i.cast_succ, a.read i) :=
+begin
+  cases [expr i] ["with", ident i, ident hi],
+  have [] [":", expr «expr¬ »(«expr = »(i, n))] [":=", expr ne_of_lt hi],
+  simp [] [] [] ["[", expr push_back, ",", expr this, ",", expr fin.cast_succ, ",", expr fin.cast_add, ",", expr fin.cast_le, ",", expr fin.cast_lt, ",", expr read, ",", expr d_array.read, "]"] [] []
+end
 
-@[simp]
-theorem read_push_back_right : (a.push_back v).read (Finₓ.last _) = v :=
-  by 
-    cases' hn : Finₓ.last n with k hk 
-    have  : k = n :=
-      by 
-        simpa [Finₓ.eq_iff_veq] using hn.symm 
-    simp [push_back, this, Finₓ.castSucc, Finₓ.castAdd, Finₓ.castLe, Finₓ.castLt, read, DArray.read]
+-- error in Data.Array.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem read_push_back_right : «expr = »((a.push_back v).read (fin.last _), v) :=
+begin
+  cases [expr hn, ":", expr fin.last n] ["with", ident k, ident hk],
+  have [] [":", expr «expr = »(k, n)] [":=", expr by simpa [] [] [] ["[", expr fin.eq_iff_veq, "]"] [] ["using", expr hn.symm]],
+  simp [] [] [] ["[", expr push_back, ",", expr this, ",", expr fin.cast_succ, ",", expr fin.cast_add, ",", expr fin.cast_le, ",", expr fin.cast_lt, ",", expr read, ",", expr d_array.read, "]"] [] []
+end
 
 end PushBack
 

@@ -35,21 +35,25 @@ namespace TruncatedWittVector
 
 variable(p)(n : ℕ)(R : Type _)[CommRingₓ R]
 
-theorem eq_of_le_of_cast_pow_eq_zero [CharP R p] (i : ℕ) (hin : i ≤ n) (hpi : (p^i : TruncatedWittVector p n R) = 0) :
-  i = n :=
-  by 
-    contrapose! hpi 
-    replace hin := lt_of_le_of_neₓ hin hpi 
-    clear hpi 
-    have  : («expr↑ » p^i : TruncatedWittVector p n R) = WittVector.truncate n («expr↑ » p^i)
-    ·
-      rw [RingHom.map_pow, RingHom.map_nat_cast]
-    rw [this, ext_iff, not_forall]
-    clear this 
-    use ⟨i, hin⟩
-    rw [WittVector.coeff_truncate, coeff_zero, Finₓ.coe_mk, WittVector.coeff_p_pow]
-    haveI  : Nontrivial R := CharP.nontrivial_of_char_ne_one hp.1.ne_one 
-    exact one_ne_zero
+-- error in RingTheory.WittVector.Compare: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem eq_of_le_of_cast_pow_eq_zero
+[char_p R p]
+(i : exprℕ())
+(hin : «expr ≤ »(i, n))
+(hpi : «expr = »((«expr ^ »(p, i) : truncated_witt_vector p n R), 0)) : «expr = »(i, n) :=
+begin
+  contrapose ["!"] [ident hpi],
+  replace [ident hin] [] [":=", expr lt_of_le_of_ne hin hpi],
+  clear [ident hpi],
+  have [] [":", expr «expr = »((«expr ^ »(«expr↑ »(p), i) : truncated_witt_vector p n R), witt_vector.truncate n «expr ^ »(«expr↑ »(p), i))] [],
+  { rw ["[", expr ring_hom.map_pow, ",", expr ring_hom.map_nat_cast, "]"] [] },
+  rw ["[", expr this, ",", expr ext_iff, ",", expr not_forall, "]"] [],
+  clear [ident this],
+  use [expr ⟨i, hin⟩],
+  rw ["[", expr witt_vector.coeff_truncate, ",", expr coeff_zero, ",", expr fin.coe_mk, ",", expr witt_vector.coeff_p_pow, "]"] [],
+  haveI [] [":", expr nontrivial R] [":=", expr char_p.nontrivial_of_char_ne_one hp.1.ne_one],
+  exact [expr one_ne_zero]
+end
 
 section Iso
 

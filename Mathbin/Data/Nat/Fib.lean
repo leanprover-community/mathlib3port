@@ -1,5 +1,5 @@
-import Mathbin.Data.Stream.Basic 
 import Mathbin.Data.Nat.Gcd 
+import Mathbin.Data.Stream.Init 
 import Mathbin.Tactic.Ring
 
 /-!
@@ -73,20 +73,17 @@ theorem fib_succ_succ {n : ℕ} : fib (n+2) = fib n+fib (n+1) :=
   by 
     simp only [fib, fib_aux_stream_succ, fib_aux_step]
 
-theorem fib_pos {n : ℕ} (n_pos : 0 < n) : 0 < fib n :=
-  by 
-    induction' n with n IH 
-    case nat.zero => 
-      normNum  at n_pos 
-    case nat.succ => 
-      cases n 
-      case nat.zero => 
-        simp [fib_succ_succ, zero_lt_one]
-      case nat.succ => 
-        have  : 0 ≤ fib n
-        ·
-          simp 
-        exact lt_add_of_nonneg_of_lt this$ IH n.succ_pos
+-- error in Data.Nat.Fib: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem fib_pos {n : exprℕ()} (n_pos : «expr < »(0, n)) : «expr < »(0, fib n) :=
+begin
+  induction [expr n] [] ["with", ident n, ident IH] [],
+  case [ident nat.zero] { norm_num [] ["at", ident n_pos] },
+  case [ident nat.succ] { cases [expr n] [],
+    case [ident nat.zero] { simp [] [] [] ["[", expr fib_succ_succ, ",", expr zero_lt_one, "]"] [] [] },
+    case [ident nat.succ] { have [] [":", expr «expr ≤ »(0, fib n)] [],
+      by simp [] [] [] [] [] [],
+      exact [expr «expr $ »(lt_add_of_nonneg_of_lt this, IH n.succ_pos)] } }
+end
 
 theorem fib_le_fib_succ {n : ℕ} : fib n ≤ fib (n+1) :=
   by 
@@ -100,35 +97,29 @@ theorem fib_mono : Monotone fib :=
 theorem fib_add_two_strict_mono : StrictMono fun n => fib (n+2) :=
   strict_mono_nat_of_lt_succ$ fun n => lt_add_of_pos_left _$ fib_pos succ_pos'
 
-theorem le_fib_self {n : ℕ} (five_le_n : 5 ≤ n) : n ≤ fib n :=
-  by 
-    induction' five_le_n with n five_le_n IH
-    ·
-      have  : 5 = fib 5
-      ·
-        rfl 
-      exact le_of_eqₓ this
-    ·
-      cases' n with n'
-      ·
-        have  : 5 = 0 
-        exact nat.le_zero_iff.elim_left five_le_n 
-        contradiction 
-      rw [fib_succ_succ]
-      suffices  : (1+n'+1) ≤ fib n'+fib (n'+1)
-      ·
-        rwa [Nat.succ_eq_add_one, add_commₓ]
-      have  : n' ≠ 0
-      ·
-        ·
-          intro h 
-          have  : 5 ≤ 1
-          ·
-            rwa [h] at five_le_n 
-          normNum  at this 
-      have  : 1 ≤ fib n' 
-      exact Nat.succ_le_of_ltₓ (fib_pos$ pos_iff_ne_zero.mpr this)
-      mono
+-- error in Data.Nat.Fib: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem le_fib_self {n : exprℕ()} (five_le_n : «expr ≤ »(5, n)) : «expr ≤ »(n, fib n) :=
+begin
+  induction [expr five_le_n] [] ["with", ident n, ident five_le_n, ident IH] [],
+  { have [] [":", expr «expr = »(5, fib 5)] [],
+    by refl,
+    exact [expr le_of_eq this] },
+  { cases [expr n] ["with", ident n'],
+    { have [] [":", expr «expr = »(5, 0)] [],
+      from [expr nat.le_zero_iff.elim_left five_le_n],
+      contradiction },
+    rw [expr fib_succ_succ] [],
+    suffices [] [":", expr «expr ≤ »(«expr + »(1, «expr + »(n', 1)), «expr + »(fib n', fib «expr + »(n', 1)))],
+    by rwa ["[", expr nat.succ_eq_add_one, ",", expr add_comm, "]"] [],
+    have [] [":", expr «expr ≠ »(n', 0)] [],
+    by { intro [ident h],
+      have [] [":", expr «expr ≤ »(5, 1)] [],
+      by rwa [expr h] ["at", ident five_le_n],
+      norm_num [] ["at", ident this] },
+    have [] [":", expr «expr ≤ »(1, fib n')] [],
+    from [expr nat.succ_le_of_lt «expr $ »(fib_pos, pos_iff_ne_zero.mpr this)],
+    mono [] [] [] [] }
+end
 
 /-- Subsequent Fibonacci numbers are coprime,
   see https://proofwiki.org/wiki/Consecutive_Fibonacci_Numbers_are_Coprime -/

@@ -16,7 +16,7 @@ open List hiding head'
 
 variable(F : Pfunctor.{u})
 
--- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:176:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 local prefix `♯`:0 := cast (by simp [] [] [] ["[", "*", "]"] [] [] <|> cc <|> solve_by_elim [] [] [] [])
 
 namespace Pfunctor
@@ -110,16 +110,14 @@ def s_corec : ∀ i : X n, cofix_a F n
 | _, 0 => cofix_a.continue
 | j, succ n => cofix_a.intro (f j).1 fun i => s_corec ((f j).2 i) _
 
--- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem P_corec (i : X) (n : exprℕ()) : agree (s_corec f i n) (s_corec f i (succ n)) :=
-begin
-  induction [expr n] [] ["with", ident n] ["generalizing", ident i],
-  constructor,
-  cases [expr h, ":", expr f i] ["with", ident y, ident g],
-  constructor,
-  introv [],
-  apply [expr n_ih]
-end
+theorem P_corec (i : X) (n : ℕ) : agree (s_corec f i n) (s_corec f i (succ n)) :=
+  by 
+    induction' n with n generalizing i 
+    constructor 
+    cases' h : f i with y g 
+    constructor 
+    introv 
+    apply n_ih
 
 /-- `path F` provides indices to access internal nodes in `corec F` -/
 def path (F : Pfunctor.{u}) :=
@@ -136,34 +134,35 @@ instance  : Subsingleton (cofix_a F 0) :=
       casesM* cofix_a F 0
       rfl⟩
 
-theorem head_succ' (n m : ℕ) (x : ∀ n, cofix_a F n) (Hconsistent : all_agree x) :
-  head' (x (succ n)) = head' (x (succ m)) :=
-  by 
-    suffices  : ∀ n, head' (x (succ n)) = head' (x 1)
-    ·
-      simp [this]
-    clear m n 
-    intro 
-    cases' h₀ : x (succ n) with _ i₀ f₀ 
-    cases' h₁ : x 1 with _ i₁ f₁ 
-    dsimp only [head']
-    induction' n with n
-    ·
-      rw [h₁] at h₀ 
-      cases h₀ 
-      trivial
-    ·
-      have H := Hconsistent (succ n)
-      cases' h₂ : x (succ n) with _ i₂ f₂ 
-      rw [h₀, h₂] at H 
-      apply n_ih (truncate ∘ f₀)
-      rw [h₂]
-      cases' H with _ _ _ _ _ _ hagree 
-      congr 
-      funext j 
-      dsimp only [comp_app]
-      rw [truncate_eq_of_agree]
-      apply hagree
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem head_succ'
+(n m : exprℕ())
+(x : ∀ n, cofix_a F n)
+(Hconsistent : all_agree x) : «expr = »(head' (x (succ n)), head' (x (succ m))) :=
+begin
+  suffices [] [":", expr ∀ n, «expr = »(head' (x (succ n)), head' (x 1))],
+  { simp [] [] [] ["[", expr this, "]"] [] [] },
+  clear [ident m, ident n],
+  intro [],
+  cases [expr h₀, ":", expr x (succ n)] ["with", "_", ident i₀, ident f₀],
+  cases [expr h₁, ":", expr x 1] ["with", "_", ident i₁, ident f₁],
+  dsimp ["only"] ["[", expr head', "]"] [] [],
+  induction [expr n] [] ["with", ident n] [],
+  { rw [expr h₁] ["at", ident h₀],
+    cases [expr h₀] [],
+    trivial },
+  { have [ident H] [] [":=", expr Hconsistent (succ n)],
+    cases [expr h₂, ":", expr x (succ n)] ["with", "_", ident i₂, ident f₂],
+    rw ["[", expr h₀, ",", expr h₂, "]"] ["at", ident H],
+    apply [expr n_ih «expr ∘ »(truncate, f₀)],
+    rw [expr h₂] [],
+    cases [expr H] ["with", "_", "_", "_", "_", "_", "_", ident hagree],
+    congr,
+    funext [ident j],
+    dsimp ["only"] ["[", expr comp_app, "]"] [] [],
+    rw [expr truncate_eq_of_agree] [],
+    apply [expr hagree] }
+end
 
 end Approx
 
@@ -217,26 +216,20 @@ it contains -/
 def head (x : M F) :=
   head' (x.1 1)
 
-/-- return all the subtrees of the root of a tree `x : M F` -/
-def children (x : M F) (i : F.B (head x)) : M F :=
-  let H := fun n : ℕ => @head_succ' _ n 0 x.1 x.2
-  { approx :=
-      fun n =>
-        children' (x.1 _)
-          (cast
-            (congr_argₓ _$
-              by 
-                simp only [head, H] <;> rfl)
-            i),
-    consistent :=
-      by 
-        intro 
-        have P' := x.2 (succ n)
-        apply agree_children _ _ _ P' 
-        trans i 
-        apply cast_heq 
-        symm 
-        apply cast_heq }
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- return all the subtrees of the root of a tree `x : M F` -/ def children (x : M F) (i : F.B (head x)) : M F :=
+let H := λ n : exprℕ(), @head_succ' _ n 0 x.1 x.2 in
+{ approx := λ
+  n, children' (x.1 _) (cast «expr $ »(congr_arg _, by simp [] [] ["only"] ["[", expr head, ",", expr H, "]"] [] []; refl) i),
+  consistent := begin
+    intro [],
+    have [ident P'] [] [":=", expr x.2 (succ n)],
+    apply [expr agree_children _ _ _ P'],
+    transitivity [expr i],
+    apply [expr cast_heq],
+    symmetry,
+    apply [expr cast_heq]
+  end }
 
 /-- select a subtree using a `i : F.Idx` or return an arbitrary tree if
 `i` designates no subtree of `x` -/
@@ -273,10 +266,15 @@ protected def s_mk (x : F.obj$ M F) : ∀ n, cofix_a F n
 | 0 => cofix_a.continue
 | succ n => cofix_a.intro x.1 fun i => (x.2 i).approx n
 
--- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-protected theorem P_mk (x : «expr $ »(F.obj, M F)) : all_agree (approx.s_mk x)
-| 0 := by { constructor }
-| succ n := by { constructor, introv [], apply [expr (x.2 i).consistent] }
+protected theorem P_mk (x : F.obj$ M F) : all_agree (approx.s_mk x)
+| 0 =>
+  by 
+    constructor
+| succ n =>
+  by 
+    constructor 
+    introv 
+    apply (x.2 i).consistent
 
 end Approx
 
@@ -304,46 +302,45 @@ theorem dest_mk (x : F.obj$ M F) : dest (M.mk x) = x :=
     congr 
     rw [h]
 
-@[simp]
-theorem mk_dest (x : M F) : M.mk (dest x) = x :=
-  by 
-    apply ext' 
-    intro n 
-    dsimp only [M.mk]
-    induction' n with n
-    ·
-      apply Subsingleton.elimₓ 
-    dsimp only [approx.s_mk, dest, head]
-    cases' h : x.approx (succ n) with _ hd ch 
-    have h' : hd = head' (x.approx 1)
-    ·
-      rw [←head_succ' n, h, head']
-      apply x.consistent 
-    revert ch 
-    rw [h']
-    intros 
-    congr
-    ·
-      ext a 
-      dsimp only [children]
-      hGeneralize! hh : a = a'' 
-      rw [h]
-      intros 
-      cases hh 
-      rfl
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem mk_dest (x : M F) : «expr = »(M.mk (dest x), x) :=
+begin
+  apply [expr ext'],
+  intro [ident n],
+  dsimp ["only"] ["[", expr M.mk, "]"] [] [],
+  induction [expr n] [] ["with", ident n] [],
+  { apply [expr subsingleton.elim] },
+  dsimp ["only"] ["[", expr approx.s_mk, ",", expr dest, ",", expr head, "]"] [] [],
+  cases [expr h, ":", expr x.approx (succ n)] ["with", "_", ident hd, ident ch],
+  have [ident h'] [":", expr «expr = »(hd, head' (x.approx 1))] [],
+  { rw ["[", "<-", expr head_succ' n, ",", expr h, ",", expr head', "]"] [],
+    apply [expr x.consistent] },
+  revert [ident ch],
+  rw [expr h'] [],
+  intros [],
+  congr,
+  { ext [] [ident a] [],
+    dsimp ["only"] ["[", expr children, "]"] [] [],
+    h_generalize ["!"] [ident hh] [":"] [expr «expr == »(a, a'')] [],
+    rw [expr h] [],
+    intros [],
+    cases [expr hh] [],
+    refl }
+end
 
 theorem mk_inj {x y : F.obj$ M F} (h : M.mk x = M.mk y) : x = y :=
   by 
     rw [←dest_mk x, h, dest_mk]
 
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- destructor for M-types -/
-protected def cases {r : M F → Sort w} (f : ∀ x : F.obj$ M F, r (M.mk x)) (x : M F) : r x :=
-  suffices r (M.mk (dest x))by 
-    haveI  := Classical.propDecidable 
-    haveI  := Inhabited.mk x 
-    rw [←mk_dest x]
-    exact this 
-  f _
+protected
+def cases {r : M F → Sort w} (f : ∀ x : «expr $ »(F.obj, M F), r (M.mk x)) (x : M F) : r x :=
+suffices r (M.mk (dest x)), by { haveI [] [] [":=", expr classical.prop_decidable],
+  haveI [] [] [":=", expr inhabited.mk x],
+  rw ["[", "<-", expr mk_dest x, "]"] [],
+  exact [expr this] },
+f _
 
 /-- destructor for M-types -/
 protected def cases_on {r : M F → Sort w} (x : M F) (f : ∀ x : F.obj$ M F, r (M.mk x)) : r x :=
@@ -369,39 +366,37 @@ theorem agree'_refl {n : ℕ} (x : M F) : agree' n x x :=
     intros 
     apply n_ih
 
-theorem agree_iff_agree' {n : ℕ} (x y : M F) : agree (x.approx n) (y.approx$ n+1) ↔ agree' n x y :=
-  by 
-    split  <;> intro h
-    ·
-      induction n generalizing x y 
-      constructor
-      ·
-        induction x using Pfunctor.M.casesOn' 
-        induction y using Pfunctor.M.casesOn' 
-        simp only [approx_mk] at h 
-        cases' h with _ _ _ _ _ _ hagree 
-        constructor <;>
-          try 
-            rfl 
-        intro i 
-        apply n_ih 
-        apply hagree
-    ·
-      induction n generalizing x y 
-      constructor
-      ·
-        cases h 
-        induction x using Pfunctor.M.casesOn' 
-        induction y using Pfunctor.M.casesOn' 
-        simp only [approx_mk]
-        have h_a_1 := mk_inj ‹M.mk ⟨x_a, x_f⟩ = M.mk ⟨h_a, h_x⟩›
-        cases h_a_1 
-        replace h_a_2 := mk_inj ‹M.mk ⟨y_a, y_f⟩ = M.mk ⟨h_a, h_y⟩›
-        cases h_a_2 
-        constructor 
-        intro i 
-        apply n_ih 
-        simp 
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem agree_iff_agree'
+{n : exprℕ()}
+(x y : M F) : «expr ↔ »(agree (x.approx n) «expr $ »(y.approx, «expr + »(n, 1)), agree' n x y) :=
+begin
+  split; intros [ident h],
+  { induction [expr n] [] [] ["generalizing", ident x, ident y],
+    constructor,
+    { induction [expr x] ["using", ident pfunctor.M.cases_on'] [] [],
+      induction [expr y] ["using", ident pfunctor.M.cases_on'] [] [],
+      simp [] [] ["only"] ["[", expr approx_mk, "]"] [] ["at", ident h],
+      cases [expr h] ["with", "_", "_", "_", "_", "_", "_", ident hagree],
+      constructor; try { refl },
+      intro [ident i],
+      apply [expr n_ih],
+      apply [expr hagree] } },
+  { induction [expr n] [] [] ["generalizing", ident x, ident y],
+    constructor,
+    { cases [expr h] [],
+      induction [expr x] ["using", ident pfunctor.M.cases_on'] [] [],
+      induction [expr y] ["using", ident pfunctor.M.cases_on'] [] [],
+      simp [] [] ["only"] ["[", expr approx_mk, "]"] [] [],
+      have [ident h_a_1] [] [":=", expr mk_inj «expr‹ ›»(«expr = »(M.mk ⟨x_a, x_f⟩, M.mk ⟨h_a, h_x⟩))],
+      cases [expr h_a_1] [],
+      replace [ident h_a_2] [] [":=", expr mk_inj «expr‹ ›»(«expr = »(M.mk ⟨y_a, y_f⟩, M.mk ⟨h_a, h_y⟩))],
+      cases [expr h_a_2] [],
+      constructor,
+      intro [ident i],
+      apply [expr n_ih],
+      simp [] [] [] ["*"] [] [] } }
+end
 
 @[simp]
 theorem cases_mk {r : M F → Sort _} (x : F.obj$ M F) (f : ∀ x : F.obj$ M F, r (M.mk x)) :
@@ -447,18 +442,24 @@ theorem is_path_cons {xs : path F} {a a'} {f : F.B a → M F} {i : F.B a'} (h : 
     cases mk_inj ‹_›
     rfl
 
-theorem is_path_cons' {xs : path F} {a} {f : F.B a → M F} {i : F.B a} (h : is_path (⟨a, i⟩ :: xs) (M.mk ⟨a, f⟩)) :
-  is_path xs (f i) :=
-  by 
-    revert h 
-    generalize h : M.mk ⟨a, f⟩ = x 
-    intro h' 
-    cases h' 
-    subst x 
-    have  := mk_inj ‹_›
-    cases this 
-    cases this 
-    assumption
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_path_cons'
+{xs : path F}
+{a}
+{f : F.B a → M F}
+{i : F.B a}
+(h : is_path [«expr :: »/«expr :: »/«expr :: »](⟨a, i⟩, xs) (M.mk ⟨a, f⟩)) : is_path xs (f i) :=
+begin
+  revert [ident h],
+  generalize [ident h] [":"] [expr «expr = »(M.mk ⟨a, f⟩, x)],
+  intros [ident h'],
+  cases [expr h'] [],
+  subst [expr x],
+  have [] [] [":=", expr mk_inj «expr‹ ›»(_)],
+  cases [expr this] [],
+  cases [expr this] [],
+  assumption
+end
 
 /-- follow a path through a value of `M F` and return the subtree
 found at the end of the path if it is a valid path for that value and
@@ -488,7 +489,7 @@ theorem iselect_eq_default [DecidableEq F.A] [Inhabited (M F)] (ps : path F) (x 
   by 
     induction ps generalizing x
     ·
-      exFalso 
+      exfalso 
       apply h 
       constructor
     ·
@@ -572,7 +573,7 @@ theorem corec_def {X} (f : X → F.obj X) (x₀ : X) : M.corec f x₀ = M.mk (M.
       dsimp only [· <$> ·, Pfunctor.map]
       congr
 
--- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:340:40: in iterate: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem ext_aux
 [inhabited (M F)]
 [decidable_eq F.A]
@@ -615,7 +616,7 @@ variable{F}
 
 attribute [local instance] Classical.propDecidable
 
--- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
 theorem ext
 [inhabited (M F)]
 (x y : M F)
@@ -650,40 +651,42 @@ structure is_bisimulation : Prop where
   head : ∀ {a a'} {f f'}, M.mk ⟨a, f⟩ ~ M.mk ⟨a', f'⟩ → a = a' 
   tail : ∀ {a} {f f' : F.B a → M F}, M.mk ⟨a, f⟩ ~ M.mk ⟨a, f'⟩ → ∀ i : F.B a, f i ~ f' i
 
-theorem nth_of_bisim [Inhabited (M F)] (bisim : is_bisimulation R) s₁ s₂ (ps : path F) :
-  s₁ ~ s₂ →
-    is_path ps s₁ ∨ is_path ps s₂ →
-      iselect ps s₁ = iselect ps s₂ ∧
-        ∃ (a : _)(f f' : F.B a → M F),
-          isubtree ps s₁ = M.mk ⟨a, f⟩ ∧ isubtree ps s₂ = M.mk ⟨a, f'⟩ ∧ ∀ i : F.B a, f i ~ f' i :=
-  by 
-    intro h₀ hh 
-    induction' s₁ using Pfunctor.M.casesOn' with a f 
-    induction' s₂ using Pfunctor.M.casesOn' with a' f' 
-    have  : a = a' := bisim.head h₀ 
-    subst a' 
-    induction' ps with i ps generalizing a f f'
-    ·
-      exists rfl, a, f, f', rfl, rfl 
-      apply bisim.tail h₀ 
-    cases' i with a' i 
-    have  : a = a'
-    ·
-      cases hh <;> cases is_path_cons hh <;> rfl 
-    subst a' 
-    dsimp only [iselect]  at ps_ih⊢
-    have h₁ := bisim.tail h₀ i 
-    induction' h : f i using Pfunctor.M.casesOn' with a₀ f₀ 
-    induction' h' : f' i using Pfunctor.M.casesOn' with a₁ f₁ 
-    simp only [h, h', isubtree_cons] at ps_ih⊢
-    rw [h, h'] at h₁ 
-    have  : a₀ = a₁ := bisim.head h₁ 
-    subst a₁ 
-    apply ps_ih _ _ _ h₁ 
-    rw [←h, ←h']
-    apply or_of_or_of_imp_of_imp hh is_path_cons' is_path_cons'
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem nth_of_bisim
+[inhabited (M F)]
+(bisim : is_bisimulation R)
+(s₁ s₂)
+(ps : path F) : «expr ~ »(s₁, s₂) → «expr ∨ »(is_path ps s₁, is_path ps s₂) → «expr ∧ »(«expr = »(iselect ps s₁, iselect ps s₂), «expr∃ , »((a)
+  (f
+   f' : F.B a → M F), «expr ∧ »(«expr = »(isubtree ps s₁, M.mk ⟨a, f⟩), «expr ∧ »(«expr = »(isubtree ps s₂, M.mk ⟨a, f'⟩), ∀
+    i : F.B a, «expr ~ »(f i, f' i))))) :=
+begin
+  intros [ident h₀, ident hh],
+  induction [expr s₁] ["using", ident pfunctor.M.cases_on'] ["with", ident a, ident f] [],
+  induction [expr s₂] ["using", ident pfunctor.M.cases_on'] ["with", ident a', ident f'] [],
+  have [] [":", expr «expr = »(a, a')] [":=", expr bisim.head h₀],
+  subst [expr a'],
+  induction [expr ps] [] ["with", ident i, ident ps] ["generalizing", ident a, ident f, ident f'],
+  { existsi ["[", expr rfl, ",", expr a, ",", expr f, ",", expr f', ",", expr rfl, ",", expr rfl, "]"],
+    apply [expr bisim.tail h₀] },
+  cases [expr i] ["with", ident a', ident i],
+  have [] [":", expr «expr = »(a, a')] [],
+  { cases [expr hh] []; cases [expr is_path_cons hh] []; refl },
+  subst [expr a'],
+  dsimp ["only"] ["[", expr iselect, "]"] [] ["at", ident ps_ih, "⊢"],
+  have [ident h₁] [] [":=", expr bisim.tail h₀ i],
+  induction [expr h, ":", expr f i] ["using", ident pfunctor.M.cases_on'] ["with", ident a₀, ident f₀] [],
+  induction [expr h', ":", expr f' i] ["using", ident pfunctor.M.cases_on'] ["with", ident a₁, ident f₁] [],
+  simp [] [] ["only"] ["[", expr h, ",", expr h', ",", expr isubtree_cons, "]"] [] ["at", ident ps_ih, "⊢"],
+  rw ["[", expr h, ",", expr h', "]"] ["at", ident h₁],
+  have [] [":", expr «expr = »(a₀, a₁)] [":=", expr bisim.head h₁],
+  subst [expr a₁],
+  apply [expr ps_ih _ _ _ h₁],
+  rw ["[", "<-", expr h, ",", "<-", expr h', "]"] [],
+  apply [expr or_of_or_of_imp_of_imp hh is_path_cons' is_path_cons']
+end
 
--- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem eq_of_bisim [nonempty (M F)] (bisim : is_bisimulation R) : ∀ s₁ s₂, «expr ~ »(s₁, s₂) → «expr = »(s₁, s₂) :=
 begin
   inhabit [expr M F] [],
@@ -712,7 +715,7 @@ theorem dest_corec (g : α → P.obj α) (x : α) : M.dest (M.corec g x) = M.cor
   by 
     rw [corec_def, dest_mk]
 
--- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:340:40: in introv: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem bisim
 (R : M P → M P → exprProp())
 (h : ∀
@@ -759,22 +762,25 @@ theorem bisim_equiv (R : M P → M P → Prop)
         ⟨a, f, f', hx, hy, fun i => ⟨⟨f i, f' i⟩, h' i, rfl, rfl⟩⟩)
       ⟨x, y⟩ Rxy
 
-theorem corec_unique (g : α → P.obj α) (f : α → M P) (hyp : ∀ x, M.dest (f x) = f <$> g x) : f = M.corec g :=
-  by 
-    ext x 
-    apply bisim' (fun x => True) _ _ _ _ trivialₓ 
-    clear x 
-    intro x _ 
-    cases' gxeq : g x with a f' 
-    have h₀ : M.dest (f x) = ⟨a, f ∘ f'⟩
-    ·
-      rw [hyp, gxeq, Pfunctor.map_eq]
-    have h₁ : M.dest (M.corec g x) = ⟨a, M.corec g ∘ f'⟩
-    ·
-      rw [dest_corec, gxeq, Pfunctor.map_eq]
-    refine' ⟨_, _, _, h₀, h₁, _⟩
-    intro i 
-    exact ⟨f' i, trivialₓ, rfl, rfl⟩
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem corec_unique
+(g : α → P.obj α)
+(f : α → M P)
+(hyp : ∀ x, «expr = »(M.dest (f x), «expr <$> »(f, g x))) : «expr = »(f, M.corec g) :=
+begin
+  ext [] [ident x] [],
+  apply [expr bisim' (λ x, true) _ _ _ _ trivial],
+  clear [ident x],
+  intros [ident x, "_"],
+  cases [expr gxeq, ":", expr g x] ["with", ident a, ident f'],
+  have [ident h₀] [":", expr «expr = »(M.dest (f x), ⟨a, «expr ∘ »(f, f')⟩)] [],
+  { rw ["[", expr hyp, ",", expr gxeq, ",", expr pfunctor.map_eq, "]"] [] },
+  have [ident h₁] [":", expr «expr = »(M.dest (M.corec g x), ⟨a, «expr ∘ »(M.corec g, f')⟩)] [],
+  { rw ["[", expr dest_corec, ",", expr gxeq, ",", expr pfunctor.map_eq, "]"] [] },
+  refine [expr ⟨_, _, _, h₀, h₁, _⟩],
+  intro [ident i],
+  exact [expr ⟨f' i, trivial, rfl, rfl⟩]
+end
 
 /-- corecursor where the state of the computation can be sent downstream
 in the form of a recursive call -/

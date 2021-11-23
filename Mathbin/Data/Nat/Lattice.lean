@@ -30,17 +30,17 @@ theorem Inf_def {s : Set ℕ} (h : s.nonempty) : Inf s = @Nat.findₓ (fun n => 
 theorem Sup_def {s : Set ℕ} (h : ∃ n, ∀ a _ : a ∈ s, a ≤ n) : Sup s = @Nat.findₓ (fun n => ∀ a _ : a ∈ s, a ≤ n) _ h :=
   dif_pos _
 
+-- error in Data.Nat.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem Inf_eq_zero {s : Set ℕ} : Inf s = 0 ↔ 0 ∈ s ∨ s = ∅ :=
-  by 
-    cases eq_empty_or_nonempty s
-    ·
-      subst h 
-      simp only [or_trueₓ, eq_self_iff_true, iff_trueₓ, Inf, HasInfₓ.inf, mem_empty_eq, exists_false, dif_neg,
-        not_false_iff]
-    ·
-      have  := ne_empty_iff_nonempty.mpr h 
-      simp only [this, or_falseₓ, Nat.Inf_def, h, Nat.find_eq_zero]
+theorem Inf_eq_zero
+{s : set exprℕ()} : «expr ↔ »(«expr = »(Inf s, 0), «expr ∨ »(«expr ∈ »(0, s), «expr = »(s, «expr∅»()))) :=
+begin
+  cases [expr eq_empty_or_nonempty s] [],
+  { subst [expr h],
+    simp [] [] ["only"] ["[", expr or_true, ",", expr eq_self_iff_true, ",", expr iff_true, ",", expr Inf, ",", expr has_Inf.Inf, ",", expr mem_empty_eq, ",", expr exists_false, ",", expr dif_neg, ",", expr not_false_iff, "]"] [] [] },
+  { have [] [] [":=", expr ne_empty_iff_nonempty.mpr h],
+    simp [] [] ["only"] ["[", expr this, ",", expr or_false, ",", expr nat.Inf_def, ",", expr h, ",", expr nat.find_eq_zero, "]"] [] [] }
+end
 
 @[simp]
 theorem Inf_empty : Inf ∅ = 0 :=
@@ -69,7 +69,7 @@ protected theorem Inf_le {s : Set ℕ} {m : ℕ} (hm : m ∈ s) : Inf s ≤ m :=
     rw [Nat.Inf_def ⟨m, hm⟩]
     exact Nat.find_min'ₓ ⟨m, hm⟩ hm
 
--- error in Data.Nat.Lattice: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contradiction: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Data.Nat.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem nonempty_of_pos_Inf {s : set exprℕ()} (h : «expr < »(0, Inf s)) : s.nonempty :=
 begin
   by_contradiction [ident contra],
@@ -132,24 +132,25 @@ noncomputable instance  : ConditionallyCompleteLinearOrderBot ℕ :=
         apply bot_unique (Nat.find_min'ₓ _ _)
         trivial }
 
-theorem Inf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ Inf { m | p m }) : (Inf { m | p (m+n) }+n) = Inf { m | p m } :=
-  by 
-    obtain h | ⟨m, hm⟩ := { m | p (m+n) }.eq_empty_or_nonempty
-    ·
-      rw [h, Nat.Inf_empty, zero_addₓ]
-      obtain hnp | hnp := hn.eq_or_lt
-      ·
-        exact hnp 
-      suffices hp : p ((Inf { m | p m } - n)+n)
-      ·
-        exact (h.subset hp).elim 
-      rw [tsub_add_cancel_of_le hn]
-      exact Inf_mem (nonempty_of_pos_Inf$ n.zero_le.trans_lt hnp)
-    ·
-      have hp : ∃ n, n ∈ { m | p m } := ⟨_, hm⟩
-      rw [Nat.Inf_def ⟨m, hm⟩, Nat.Inf_def hp]
-      rw [Nat.Inf_def hp] at hn 
-      exact find_add hn
+-- error in Data.Nat.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem Inf_add
+{n : exprℕ()}
+{p : exprℕ() → exprProp()}
+(hn : «expr ≤ »(n, Inf {m | p m})) : «expr = »(«expr + »(Inf {m | p «expr + »(m, n)}, n), Inf {m | p m}) :=
+begin
+  obtain [ident h, "|", "⟨", ident m, ",", ident hm, "⟩", ":=", expr {m | p «expr + »(m, n)}.eq_empty_or_nonempty],
+  { rw ["[", expr h, ",", expr nat.Inf_empty, ",", expr zero_add, "]"] [],
+    obtain [ident hnp, "|", ident hnp, ":=", expr hn.eq_or_lt],
+    { exact [expr hnp] },
+    suffices [ident hp] [":", expr p «expr + »(«expr - »(Inf {m | p m}, n), n)],
+    { exact [expr (h.subset hp).elim] },
+    rw [expr tsub_add_cancel_of_le hn] [],
+    exact [expr Inf_mem «expr $ »(nonempty_of_pos_Inf, n.zero_le.trans_lt hnp)] },
+  { have [ident hp] [":", expr «expr∃ , »((n), «expr ∈ »(n, {m | p m}))] [":=", expr ⟨_, hm⟩],
+    rw ["[", expr nat.Inf_def ⟨m, hm⟩, ",", expr nat.Inf_def hp, "]"] [],
+    rw ["[", expr nat.Inf_def hp, "]"] ["at", ident hn],
+    exact [expr find_add hn] }
+end
 
 theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < Inf { m | p m }) : (Inf { m | p m }+n) = Inf { m | p (m - n) } :=
   by 

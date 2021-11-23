@@ -149,31 +149,28 @@ theorem over_finite_products_of_finite_wide_pullbacks [has_finite_wide_pullbacks
   has_finite_products (over B) :=
   ⟨fun J 𝒥₁ 𝒥₂ =>
       by 
-        exactI over_product_of_wide_pullback⟩
+        exact over_product_of_wide_pullback⟩
 
 end ConstructProducts
 
+-- error in CategoryTheory.Limits.Constructions.Over.Products: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
 Construct terminal object in the over category. This isn't an instance as it's not typically the
 way we want to define terminal objects.
 (For instance, this gives a terminal object which is different from the generic one given by
 `over_product_of_wide_pullback` above.)
--/
-theorem over_has_terminal (B : C) : has_terminal (over B) :=
-  { HasLimit :=
-      fun F =>
-        has_limit.mk
-          { Cone := { x := over.mk (𝟙 _), π := { app := fun p => Pempty.elimₓ p } },
-            IsLimit :=
-              { lift := fun s => over.hom_mk _, fac' := fun _ j => j.elim,
-                uniq' :=
-                  fun s m _ =>
-                    by 
-                      ext 
-                      rw [over.hom_mk_left]
-                      have  := m.w 
-                      dsimp  at this 
-                      rwa [category.comp_id, category.comp_id] at this } } }
+-/ theorem over_has_terminal (B : C) : has_terminal (over B) :=
+{ has_limit := λ
+  F, has_limit.mk { cone := { X := over.mk («expr𝟙»() _), π := { app := λ p, pempty.elim p } },
+    is_limit := { lift := λ s, over.hom_mk _,
+      fac' := λ _ j, j.elim,
+      uniq' := λ s m _, begin
+        ext [] [] [],
+        rw [expr over.hom_mk_left] [],
+        have [] [] [":=", expr m.w],
+        dsimp [] [] [] ["at", ident this],
+        rwa ["[", expr category.comp_id, ",", expr category.comp_id, "]"] ["at", ident this]
+      end } } }
 
 end CategoryTheory.Over
 

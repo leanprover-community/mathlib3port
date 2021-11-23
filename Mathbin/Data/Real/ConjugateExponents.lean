@@ -58,11 +58,13 @@ theorem one_div_nonneg : 0 ≤ 1 / p :=
 theorem one_div_ne_zero : 1 / p ≠ 0 :=
   ne_of_gtₓ h.one_div_pos
 
-theorem conj_eq : q = p / (p - 1) :=
-  by 
-    have  := h.inv_add_inv_conj 
-    rw [←eq_sub_iff_add_eq', one_div, inv_eq_iff] at this 
-    fieldSimp [←this, h.ne_zero]
+-- error in Data.Real.ConjugateExponents: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem conj_eq : «expr = »(q, «expr / »(p, «expr - »(p, 1))) :=
+begin
+  have [] [] [":=", expr h.inv_add_inv_conj],
+  rw ["[", "<-", expr eq_sub_iff_add_eq', ",", expr one_div, ",", expr inv_eq_iff, "]"] ["at", ident this],
+  field_simp [] ["[", "<-", expr this, ",", expr h.ne_zero, "]"] [] []
+end
 
 theorem conjugate_eq : conjugate_exponent p = q :=
   h.conj_eq.symm

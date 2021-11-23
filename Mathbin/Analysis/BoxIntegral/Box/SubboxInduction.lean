@@ -46,21 +46,15 @@ def split_center_box (I : box ι) (s : Set ι) : box ι :=
           dunfold Set.piecewise 
           splitIfs <;> simp only [left_lt_add_div_two, add_div_two_lt_right, I.lower_lt_upper] }
 
--- error in Analysis.BoxIntegral.Box.SubboxInduction: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem mem_split_center_box
-{s : set ι}
-{y : ι → exprℝ()} : «expr ↔ »(«expr ∈ »(y, I.split_center_box s), «expr ∧ »(«expr ∈ »(y, I), ∀
-  i, «expr ↔ »(«expr < »(«expr / »(«expr + »(I.lower i, I.upper i), 2), y i), «expr ∈ »(i, s)))) :=
-begin
-  simp [] [] ["only"] ["[", expr split_center_box, ",", expr mem_def, ",", "<-", expr forall_and_distrib, "]"] [] [],
-  refine [expr forall_congr (λ i, _)],
-  dunfold [ident set.piecewise] [],
-  split_ifs [] ["with", ident hs]; simp [] [] ["only"] ["[", expr hs, ",", expr iff_true, ",", expr iff_false, ",", expr not_lt, "]"] [] [],
-  exacts ["[", expr ⟨λ
-    H, ⟨⟨(left_lt_add_div_two.2 (I.lower_lt_upper i)).trans H.1, H.2⟩, H.1⟩, λ
-    H, ⟨H.2, H.1.2⟩⟩, ",", expr ⟨λ
-    H, ⟨⟨H.1, H.2.trans (add_div_two_lt_right.2 (I.lower_lt_upper i)).le⟩, H.2⟩, λ H, ⟨H.1.1, H.2⟩⟩, "]"]
-end
+theorem mem_split_center_box {s : Set ι} {y : ι → ℝ} :
+  y ∈ I.split_center_box s ↔ y ∈ I ∧ ∀ i, (I.lower i+I.upper i) / 2 < y i ↔ i ∈ s :=
+  by 
+    simp only [split_center_box, mem_def, ←forall_and_distrib]
+    refine' forall_congrₓ fun i => _ 
+    dunfold Set.piecewise 
+    splitIfs with hs <;> simp only [hs, iff_trueₓ, iff_falseₓ, not_ltₓ]
+    exacts[⟨fun H => ⟨⟨(left_lt_add_div_two.2 (I.lower_lt_upper i)).trans H.1, H.2⟩, H.1⟩, fun H => ⟨H.2, H.1.2⟩⟩,
+      ⟨fun H => ⟨⟨H.1, H.2.trans (add_div_two_lt_right.2 (I.lower_lt_upper i)).le⟩, H.2⟩, fun H => ⟨H.1.1, H.2⟩⟩]
 
 theorem split_center_box_le (I : box ι) (s : Set ι) : I.split_center_box s ≤ I :=
   fun x hx => (mem_split_center_box.1 hx).1
@@ -99,7 +93,7 @@ theorem upper_sub_lower_split_center_box (I : box ι) (s : Set ι) (i : ι) :
   by 
     byCases' hs : i ∈ s <;> fieldSimp [split_center_box, hs, mul_two, two_mul]
 
--- error in Analysis.BoxIntegral.Box.SubboxInduction: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.BoxIntegral.Box.SubboxInduction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Let `p` be a predicate on `box ι`, let `I` be a box. Suppose that the following two properties
 hold true.
 

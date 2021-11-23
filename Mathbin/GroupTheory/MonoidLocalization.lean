@@ -1,7 +1,6 @@
 import Mathbin.GroupTheory.Congruence 
-import Mathbin.GroupTheory.Submonoid.Default 
-import Mathbin.Algebra.Group.Units 
-import Mathbin.Algebra.PunitInstances
+import Mathbin.GroupTheory.Submonoid.Membership 
+import Mathbin.Algebra.Group.Units
 
 /-!
 # Localizations of commutative monoids
@@ -645,21 +644,36 @@ theorem comp_eq_of_eq {T : Submonoid P} {Q : Type _} [CommMonoidₓ Q] (hg : ∀
 
 variable(hg : ∀ y : S, IsUnit (g y))
 
--- error in GroupTheory.MonoidLocalization: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Given a localization map `f : M →* N` for a submonoid `S ⊆ M` and a map of `comm_monoid`s
 `g : M →* P` such that `g y` is invertible for all `y : S`, the homomorphism induced from
 `N` to `P` sending `z : N` to `g x * (g y)⁻¹`, where `(x, y) : M × S` are such that
 `z = f x * (f y)⁻¹`. -/
-@[to_additive #[expr "Given a localization map `f : M →+ N` for a submonoid `S ⊆ M` and a map\nof `add_comm_monoid`s `g : M →+ P` such that `g y` is invertible for all `y : S`, the homomorphism\ninduced from `N` to `P` sending `z : N` to `g x - g y`, where `(x, y) : M × S` are such that\n`z = f x - f y`."]]
-noncomputable
-def lift : «expr →* »(N, P) :=
-{ to_fun := λ z, «expr * »(g (f.sec z).1, «expr↑ »(«expr ⁻¹»(is_unit.lift_right (g.mrestrict S) hg (f.sec z).2))),
-  map_one' := by rw ["[", expr mul_inv_left, ",", expr mul_one, "]"] []; exact [expr f.eq_of_eq hg (by rw ["[", "<-", expr sec_spec, ",", expr one_mul, "]"] [])],
-  map_mul' := λ x y, begin
-    rw ["[", expr mul_inv_left hg, ",", "<-", expr mul_assoc, ",", "<-", expr mul_assoc, ",", expr mul_inv_right hg, ",", expr mul_comm _ (g (f.sec y).1), ",", "<-", expr mul_assoc, ",", "<-", expr mul_assoc, ",", expr mul_inv_right hg, "]"] [],
-    repeat { rw ["<-", expr g.map_mul] [] },
-    exact [expr f.eq_of_eq hg (by repeat { rw [expr f.to_map.map_mul] [] <|> rw [expr sec_spec'] [] }; ac_refl)]
-  end }
+@[toAdditive
+      "Given a localization map `f : M →+ N` for a submonoid `S ⊆ M` and a map\nof `add_comm_monoid`s `g : M →+ P` such that `g y` is invertible for all `y : S`, the homomorphism\ninduced from `N` to `P` sending `z : N` to `g x - g y`, where `(x, y) : M × S` are such that\n`z = f x - f y`."]
+noncomputable def lift : N →* P :=
+  { toFun := fun z => g (f.sec z).1*«expr↑ » (IsUnit.liftRight (g.mrestrict S) hg (f.sec z).2⁻¹),
+    map_one' :=
+      by 
+        rw [mul_inv_left, mul_oneₓ] <;>
+          exact
+            f.eq_of_eq hg
+              (by 
+                rw [←sec_spec, one_mulₓ]),
+    map_mul' :=
+      fun x y =>
+        by 
+          rw [mul_inv_left hg, ←mul_assocₓ, ←mul_assocₓ, mul_inv_right hg, mul_commₓ _ (g (f.sec y).1), ←mul_assocₓ,
+            ←mul_assocₓ, mul_inv_right hg]
+          repeat' 
+            rw [←g.map_mul]
+          exact
+            f.eq_of_eq hg
+              (by 
+                repeat' 
+                    first |
+                      rw [f.to_map.map_mul]|
+                      rw [sec_spec'] <;>
+                  acRfl) }
 
 variable{S g}
 
@@ -763,29 +777,25 @@ theorem lift_unique {j : N →* P} (hj : ∀ x, j (f.to_map x) = g x) : f.lift h
 theorem lift_id x : f.lift f.map_units x = x :=
   MonoidHom.ext_iff.1 (f.lift_of_comp$ MonoidHom.id N) x
 
--- error in GroupTheory.MonoidLocalization: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- Given two localization maps `f : M →* N, k : M →* P` for a submonoid `S ⊆ M`,
 the hom from `P` to `N` induced by `f` is left inverse to the hom from `N` to `P`
 induced by `k`. -/
-@[simp, to_additive #[]]
-theorem lift_left_inverse
-{k : localization_map S P}
-(z : N) : «expr = »(k.lift f.map_units (f.lift k.map_units z), z) :=
-begin
-  rw [expr lift_spec] [],
-  cases [expr f.surj z] ["with", ident x, ident hx],
-  conv_rhs [] [] { congr,
-    skip,
-    rw [expr f.eq_mk'_iff_mul_eq.2 hx] },
-  rw ["[", expr mk', ",", "<-", expr mul_assoc, ",", expr mul_inv_right f.map_units, ",", "<-", expr f.to_map.map_mul, ",", "<-", expr f.to_map.map_mul, "]"] [],
-  apply [expr k.eq_of_eq f.map_units],
-  rw ["[", expr k.to_map.map_mul, ",", expr k.to_map.map_mul, ",", "<-", expr sec_spec, ",", expr mul_assoc, ",", expr lift_spec_mul, "]"] [],
-  repeat { rw ["<-", expr k.to_map.map_mul] [] },
-  apply [expr f.eq_of_eq k.map_units],
-  repeat { rw [expr f.to_map.map_mul] [] },
-  rw ["[", expr sec_spec', ",", "<-", expr hx, "]"] [],
-  ac_refl
-end
+@[simp, toAdditive]
+theorem lift_left_inverse {k : localization_map S P} (z : N) : k.lift f.map_units (f.lift k.map_units z) = z :=
+  by 
+    rw [lift_spec]
+    cases' f.surj z with x hx 
+    convRHS => congr skip rw [f.eq_mk'_iff_mul_eq.2 hx]
+    rw [mk', ←mul_assocₓ, mul_inv_right f.map_units, ←f.to_map.map_mul, ←f.to_map.map_mul]
+    apply k.eq_of_eq f.map_units 
+    rw [k.to_map.map_mul, k.to_map.map_mul, ←sec_spec, mul_assocₓ, lift_spec_mul]
+    repeat' 
+      rw [←k.to_map.map_mul]
+    apply f.eq_of_eq k.map_units 
+    repeat' 
+      rw [f.to_map.map_mul]
+    rw [sec_spec', ←hx]
+    acRfl
 
 @[toAdditive]
 theorem lift_surjective_iff : Function.Surjective (f.lift hg) ↔ ∀ v : P, ∃ x : M × S, (v*g x.2) = g x.1 :=

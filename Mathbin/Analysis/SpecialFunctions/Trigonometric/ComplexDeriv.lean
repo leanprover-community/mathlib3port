@@ -27,7 +27,7 @@ theorem has_deriv_at_tan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / (cos 
 
 open_locale TopologicalSpace
 
--- error in Analysis.SpecialFunctions.Trigonometric.ComplexDeriv: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in Analysis.SpecialFunctions.Trigonometric.ComplexDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem tendsto_abs_tan_of_cos_eq_zero
 {x : exprℂ()}
 (hx : «expr = »(cos x, 0)) : tendsto (λ x, abs (tan x)) «expr𝓝[ ] »(«expr ᶜ»({x}), x) at_top :=

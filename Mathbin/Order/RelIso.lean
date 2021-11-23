@@ -142,21 +142,28 @@ theorem map_sup {α β : Type _} [SemilatticeSup α] [LinearOrderₓ β]
 
 end RelHom
 
+-- error in Order.RelIso: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An increasing function is injective -/
-theorem injective_of_increasing (r : α → α → Prop) (s : β → β → Prop) [IsTrichotomous α r] [IsIrrefl β s] (f : α → β)
-  (hf : ∀ {x y}, r x y → s (f x) (f y)) : injective f :=
-  by 
-    intro x y hxy 
-    rcases trichotomous_of r x y with (h | h | h)
-    have  := hf h 
-    rw [hxy] at this 
-    exFalso 
-    exact irrefl_of s (f y) this 
-    exact h 
-    have  := hf h 
-    rw [hxy] at this 
-    exFalso 
-    exact irrefl_of s (f y) this
+theorem injective_of_increasing
+(r : α → α → exprProp())
+(s : β → β → exprProp())
+[is_trichotomous α r]
+[is_irrefl β s]
+(f : α → β)
+(hf : ∀ {x y}, r x y → s (f x) (f y)) : injective f :=
+begin
+  intros [ident x, ident y, ident hxy],
+  rcases [expr trichotomous_of r x y, "with", ident h, "|", ident h, "|", ident h],
+  have [] [] [":=", expr hf h],
+  rw [expr hxy] ["at", ident this],
+  exfalso,
+  exact [expr irrefl_of s (f y) this],
+  exact [expr h],
+  have [] [] [":=", expr hf h],
+  rw [expr hxy] ["at", ident this],
+  exfalso,
+  exact [expr irrefl_of s (f y) this]
+end
 
 /-- An increasing function is injective -/
 theorem RelHom.injective_of_increasing [IsTrichotomous α r] [IsIrrefl β s] (f : r →r s) : injective f :=
@@ -314,22 +321,22 @@ protected theorem IsTotal : ∀ f : r ↪r s [IsTotal β s], IsTotal α r
 protected theorem IsPreorder : ∀ f : r ↪r s [IsPreorder β s], IsPreorder α r
 | f, H =>
   by 
-    exactI { f.is_refl, f.is_trans with  }
+    exact { f.is_refl, f.is_trans with  }
 
 protected theorem IsPartialOrder : ∀ f : r ↪r s [IsPartialOrder β s], IsPartialOrder α r
 | f, H =>
   by 
-    exactI { f.is_preorder, f.is_antisymm with  }
+    exact { f.is_preorder, f.is_antisymm with  }
 
 protected theorem IsLinearOrder : ∀ f : r ↪r s [IsLinearOrder β s], IsLinearOrder α r
 | f, H =>
   by 
-    exactI { f.is_partial_order, f.is_total with  }
+    exact { f.is_partial_order, f.is_total with  }
 
 protected theorem IsStrictOrder : ∀ f : r ↪r s [IsStrictOrder β s], IsStrictOrder α r
 | f, H =>
   by 
-    exactI { f.is_irrefl, f.is_trans with  }
+    exact { f.is_irrefl, f.is_trans with  }
 
 protected theorem IsTrichotomous : ∀ f : r ↪r s [IsTrichotomous β s], IsTrichotomous α r
 | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congr o (or_congr f.inj'.eq_iff o)).1 (H _ _)⟩
@@ -337,7 +344,7 @@ protected theorem IsTrichotomous : ∀ f : r ↪r s [IsTrichotomous β s], IsTri
 protected theorem IsStrictTotalOrder' : ∀ f : r ↪r s [IsStrictTotalOrder' β s], IsStrictTotalOrder' α r
 | f, H =>
   by 
-    exactI { f.is_trichotomous, f.is_strict_order with  }
+    exact { f.is_trichotomous, f.is_strict_order with  }
 
 protected theorem Acc (f : r ↪r s) (a : α) : Acc s (f a) → Acc r a :=
   by 
@@ -353,7 +360,7 @@ protected theorem WellFounded : ∀ f : r ↪r s h : WellFounded s, WellFounded 
 protected theorem IsWellOrder : ∀ f : r ↪r s [IsWellOrder β s], IsWellOrder α r
 | f, H =>
   by 
-    exactI { f.is_strict_total_order' with wf := f.well_founded H.wf }
+    exact { f.is_strict_total_order' with wf := f.well_founded H.wf }
 
 /--
 To define an relation embedding from an antisymmetric relation `r` to a reflexive relation `s` it
@@ -367,26 +374,24 @@ theorem of_map_rel_iff_coe (f : α → β) [IsAntisymm α r] [IsRefl β s] (hf :
   «expr⇑ » (of_map_rel_iff f hf : r ↪r s) = f :=
   rfl
 
+-- error in Order.RelIso: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- It suffices to prove `f` is monotone between strict relations
   to show it is a relation embedding. -/
-def of_monotone [IsTrichotomous α r] [IsAsymm β s] (f : α → β) (H : ∀ a b, r a b → s (f a) (f b)) : r ↪r s :=
-  by 
-    haveI  := @IsAsymm.is_irrefl β s _ 
-    refine' ⟨⟨f, fun a b e => _⟩, fun a b => ⟨fun h => _, H _ _⟩⟩
-    ·
-      refine' ((@trichotomous _ r _ a b).resolve_left _).resolve_right _ <;>
-        exact
-          fun h =>
-            @irrefl _ s _ _
-              (by 
-                simpa [e] using H _ _ h)
-    ·
-      refine' (@trichotomous _ r _ a b).resolve_right (Or.ndrec (fun e => _) fun h' => _)
-      ·
-        subst e 
-        exact irrefl _ h
-      ·
-        exact asymm (H _ _ h') h
+def of_monotone
+[is_trichotomous α r]
+[is_asymm β s]
+(f : α → β)
+(H : ∀ a b, r a b → s (f a) (f b)) : «expr ↪r »(r, s) :=
+begin
+  haveI [] [] [":=", expr @is_asymm.is_irrefl β s _],
+  refine [expr ⟨⟨f, λ a b e, _⟩, λ a b, ⟨λ h, _, H _ _⟩⟩],
+  { refine [expr ((@trichotomous _ r _ a b).resolve_left _).resolve_right _]; exact [expr λ
+     h, @irrefl _ s _ _ (by simpa [] [] [] ["[", expr e, "]"] [] ["using", expr H _ _ h])] },
+  { refine [expr (@trichotomous _ r _ a b).resolve_right (or.rec (λ e, _) (λ h', _))],
+    { subst [expr e],
+      exact [expr irrefl _ h] },
+    { exact [expr asymm (H _ _ h') h] } }
+end
 
 @[simp]
 theorem of_monotone_coe [IsTrichotomous α r] [IsAsymm β s] (f : α → β) H : (@of_monotone _ _ r s _ _ f H : α → β) = f :=
@@ -1041,10 +1046,10 @@ theorem OrderIso.is_complemented [IsComplemented α] : IsComplemented β :=
 
 theorem OrderIso.is_complemented_iff : IsComplemented α ↔ IsComplemented β :=
   ⟨by 
-      introI 
+      intro 
       exact f.is_complemented,
     by 
-      introI 
+      intro 
       exact f.symm.is_complemented⟩
 
 end BoundedLattice

@@ -110,20 +110,18 @@ with a derivative in `K`. -/
 def D (f : E → F) (K : Set (E →L[𝕜] F)) : Set E :=
   ⋂e : ℕ, ⋃n : ℕ, ⋂(p : _)(_ : p ≥ n)(q : _)(_ : q ≥ n), B f K (1 / 2^p) (1 / 2^q) (1 / 2^e)
 
-theorem is_open_A (L : E →L[𝕜] F) (r ε : ℝ) : IsOpen (A f L r ε) :=
-  by 
-    rw [Metric.is_open_iff]
-    rintro x ⟨r', r'_mem, hr'⟩
-    obtain ⟨s, s_gt, s_lt⟩ : ∃ s : ℝ, r / 2 < s ∧ s < r' := exists_between r'_mem.1
-    have  : s ∈ Ioc (r / 2) r := ⟨s_gt, le_of_ltₓ (s_lt.trans_le r'_mem.2)⟩
-    refine'
-      ⟨r' - s,
-        by 
-          linarith,
-        fun x' hx' => ⟨s, this, _⟩⟩
-    have B : ball x' s ⊆ ball x r' := ball_subset (le_of_ltₓ hx')
-    intro y z hy hz 
-    exact hr' y z (B hy) (B hz)
+-- error in Analysis.Calculus.FderivMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_open_A (L : «expr →L[ ] »(E, 𝕜, F)) (r ε : exprℝ()) : is_open (A f L r ε) :=
+begin
+  rw [expr metric.is_open_iff] [],
+  rintros [ident x, "⟨", ident r', ",", ident r'_mem, ",", ident hr', "⟩"],
+  obtain ["⟨", ident s, ",", ident s_gt, ",", ident s_lt, "⟩", ":", expr «expr∃ , »((s : exprℝ()), «expr ∧ »(«expr < »(«expr / »(r, 2), s), «expr < »(s, r'))), ":=", expr exists_between r'_mem.1],
+  have [] [":", expr «expr ∈ »(s, Ioc «expr / »(r, 2) r)] [":=", expr ⟨s_gt, le_of_lt (s_lt.trans_le r'_mem.2)⟩],
+  refine [expr ⟨«expr - »(r', s), by linarith [] [] [], λ x' hx', ⟨s, this, _⟩⟩],
+  have [ident B] [":", expr «expr ⊆ »(ball x' s, ball x r')] [":=", expr ball_subset (le_of_lt hx')],
+  assume [binders (y z hy hz)],
+  exact [expr hr' y z (B hy) (B hz)]
+end
 
 theorem is_open_B {K : Set (E →L[𝕜] F)} {r s ε : ℝ} : IsOpen (B f K r s ε) :=
   by 
@@ -143,315 +141,196 @@ theorem le_of_mem_A {r ε : ℝ} {L : E →L[𝕜] F} {x : E} (hx : x ∈ A f L 
     rcases hx with ⟨r', r'mem, hr'⟩
     exact hr' _ _ (lt_of_le_of_ltₓ (mem_closed_ball.1 hy) r'mem.1) (lt_of_le_of_ltₓ (mem_closed_ball.1 hz) r'mem.1)
 
-theorem mem_A_of_differentiable {ε : ℝ} (hε : 0 < ε) {x : E} (hx : DifferentiableAt 𝕜 f x) :
-  ∃ (R : _)(_ : R > 0), ∀ r _ : r ∈ Ioo (0 : ℝ) R, x ∈ A f (fderiv 𝕜 f x) r ε :=
-  by 
-    have  := hx.has_fderiv_at 
-    simp only [HasFderivAt, HasFderivAtFilter, is_o_iff] at this 
-    rcases eventually_nhds_iff_ball.1 (this (half_pos hε)) with ⟨R, R_pos, hR⟩
-    refine' ⟨R, R_pos, fun r hr => _⟩
-    have  : r ∈ Ioc (r / 2) r := ⟨half_lt_self hr.1, le_reflₓ _⟩
-    refine' ⟨r, this, fun y z hy hz => _⟩
-    calc
-      ∥f z - f y - (fderiv 𝕜 f x) (z - y)∥ =
-        ∥f z - f x - (fderiv 𝕜 f x) (z - x) - (f y - f x - (fderiv 𝕜 f x) (y - x))∥ :=
-      by 
-        congr 1
-        simp only [ContinuousLinearMap.map_sub]
-        abel _ ≤ ∥f z - f x - (fderiv 𝕜 f x) (z - x)∥+∥f y - f x - (fderiv 𝕜 f x) (y - x)∥ :=
-      norm_sub_le _ _ _ ≤ ((ε / 2)*∥z - x∥)+(ε / 2)*∥y - x∥ :=
-      add_le_add (hR _ (lt_transₓ (mem_ball.1 hz) hr.2))
-        (hR _ (lt_transₓ (mem_ball.1 hy) hr.2))_ ≤ ((ε / 2)*r)+(ε / 2)*r :=
-      add_le_add (mul_le_mul_of_nonneg_left (le_of_ltₓ (mem_ball_iff_norm.1 hz)) (le_of_ltₓ (half_pos hε)))
-        (mul_le_mul_of_nonneg_left (le_of_ltₓ (mem_ball_iff_norm.1 hy)) (le_of_ltₓ (half_pos hε)))_ = ε*r :=
-      by 
-        ring
+-- error in Analysis.Calculus.FderivMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem mem_A_of_differentiable
+{ε : exprℝ()}
+(hε : «expr < »(0, ε))
+{x : E}
+(hx : differentiable_at 𝕜 f x) : «expr∃ , »((R «expr > » 0), ∀
+ r «expr ∈ » Ioo (0 : exprℝ()) R, «expr ∈ »(x, A f (fderiv 𝕜 f x) r ε)) :=
+begin
+  have [] [] [":=", expr hx.has_fderiv_at],
+  simp [] [] ["only"] ["[", expr has_fderiv_at, ",", expr has_fderiv_at_filter, ",", expr is_o_iff, "]"] [] ["at", ident this],
+  rcases [expr eventually_nhds_iff_ball.1 (this (half_pos hε)), "with", "⟨", ident R, ",", ident R_pos, ",", ident hR, "⟩"],
+  refine [expr ⟨R, R_pos, λ r hr, _⟩],
+  have [] [":", expr «expr ∈ »(r, Ioc «expr / »(r, 2) r)] [":=", expr ⟨half_lt_self hr.1, le_refl _⟩],
+  refine [expr ⟨r, this, λ y z hy hz, _⟩],
+  calc
+    «expr = »(«expr∥ ∥»(«expr - »(«expr - »(f z, f y), fderiv 𝕜 f x «expr - »(z, y))), «expr∥ ∥»(«expr - »(«expr - »(«expr - »(f z, f x), fderiv 𝕜 f x «expr - »(z, x)), «expr - »(«expr - »(f y, f x), fderiv 𝕜 f x «expr - »(y, x))))) : by { congr' [1] [],
+      simp [] [] ["only"] ["[", expr continuous_linear_map.map_sub, "]"] [] [],
+      abel [] [] [] }
+    «expr ≤ »(..., «expr + »(«expr∥ ∥»(«expr - »(«expr - »(f z, f x), fderiv 𝕜 f x «expr - »(z, x))), «expr∥ ∥»(«expr - »(«expr - »(f y, f x), fderiv 𝕜 f x «expr - »(y, x))))) : norm_sub_le _ _
+    «expr ≤ »(..., «expr + »(«expr * »(«expr / »(ε, 2), «expr∥ ∥»(«expr - »(z, x))), «expr * »(«expr / »(ε, 2), «expr∥ ∥»(«expr - »(y, x))))) : add_le_add (hR _ (lt_trans (mem_ball.1 hz) hr.2)) (hR _ (lt_trans (mem_ball.1 hy) hr.2))
+    «expr ≤ »(..., «expr + »(«expr * »(«expr / »(ε, 2), r), «expr * »(«expr / »(ε, 2), r))) : add_le_add (mul_le_mul_of_nonneg_left (le_of_lt (mem_ball_iff_norm.1 hz)) (le_of_lt (half_pos hε))) (mul_le_mul_of_nonneg_left (le_of_lt (mem_ball_iff_norm.1 hy)) (le_of_lt (half_pos hε)))
+    «expr = »(..., «expr * »(ε, r)) : by ring []
+end
 
-theorem norm_sub_le_of_mem_A {c : 𝕜} (hc : 1 < ∥c∥) {r ε : ℝ} (hε : 0 < ε) (hr : 0 < r) {x : E} {L₁ L₂ : E →L[𝕜] F}
-  (h₁ : x ∈ A f L₁ r ε) (h₂ : x ∈ A f L₂ r ε) : ∥L₁ - L₂∥ ≤ (4*∥c∥)*ε :=
-  by 
-    have  : 0 ≤ (4*∥c∥)*ε :=
-      mul_nonneg
-        (mul_nonneg
-          (by 
-            normNum :
-          (0 : ℝ) ≤ 4)
-          (norm_nonneg _))
-        hε.le 
-    apply op_norm_le_of_shell (half_pos hr) this hc 
-    intro y ley ylt 
-    rw [div_div_eq_div_mul,
-      div_le_iff'
-        (mul_pos
-          (by 
-            normNum :
-          (0 : ℝ) < 2)
-          (zero_lt_one.trans hc))] at
-      ley 
-    calc ∥(L₁ - L₂) y∥ = ∥f (x+y) - f x - L₂ ((x+y) - x) - (f (x+y) - f x - L₁ ((x+y) - x))∥ :=
-      by 
-        simp _ ≤ ∥f (x+y) - f x - L₂ ((x+y) - x)∥+∥f (x+y) - f x - L₁ ((x+y) - x)∥ :=
-      norm_sub_le _ _ _ ≤ (ε*r)+ε*r :=
-      by 
-        apply add_le_add
-        ·
-          apply le_of_mem_A h₂
-          ·
-            simp only [le_of_ltₓ (half_pos hr), mem_closed_ball, dist_self]
-          ·
-            simp only [dist_eq_norm, add_sub_cancel', mem_closed_ball, ylt.le]
-        ·
-          apply le_of_mem_A h₁
-          ·
-            simp only [le_of_ltₓ (half_pos hr), mem_closed_ball, dist_self]
-          ·
-            simp only [dist_eq_norm, add_sub_cancel', mem_closed_ball, ylt.le]_ = (2*ε)*r :=
-      by 
-        ring _ ≤ (2*ε)*(2*∥c∥)*∥y∥ :=
-      mul_le_mul_of_nonneg_left ley
-        (mul_nonneg
-          (by 
-            normNum)
-          hε.le)_ = ((4*∥c∥)*ε)*∥y∥ :=
-      by 
-        ring
+-- error in Analysis.Calculus.FderivMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem norm_sub_le_of_mem_A
+{c : 𝕜}
+(hc : «expr < »(1, «expr∥ ∥»(c)))
+{r ε : exprℝ()}
+(hε : «expr < »(0, ε))
+(hr : «expr < »(0, r))
+{x : E}
+{L₁ L₂ : «expr →L[ ] »(E, 𝕜, F)}
+(h₁ : «expr ∈ »(x, A f L₁ r ε))
+(h₂ : «expr ∈ »(x, A f L₂ r ε)) : «expr ≤ »(«expr∥ ∥»(«expr - »(L₁, L₂)), «expr * »(«expr * »(4, «expr∥ ∥»(c)), ε)) :=
+begin
+  have [] [":", expr «expr ≤ »(0, «expr * »(«expr * »(4, «expr∥ ∥»(c)), ε))] [":=", expr mul_nonneg (mul_nonneg (by norm_num [] [] : «expr ≤ »((0 : exprℝ()), 4)) (norm_nonneg _)) hε.le],
+  apply [expr op_norm_le_of_shell (half_pos hr) this hc],
+  assume [binders (y ley ylt)],
+  rw ["[", expr div_div_eq_div_mul, ",", expr div_le_iff' (mul_pos (by norm_num [] [] : «expr < »((0 : exprℝ()), 2)) (zero_lt_one.trans hc)), "]"] ["at", ident ley],
+  calc
+    «expr = »(«expr∥ ∥»(«expr - »(L₁, L₂) y), «expr∥ ∥»(«expr - »(«expr - »(«expr - »(f «expr + »(x, y), f x), L₂ «expr - »(«expr + »(x, y), x)), «expr - »(«expr - »(f «expr + »(x, y), f x), L₁ «expr - »(«expr + »(x, y), x))))) : by simp [] [] [] [] [] []
+    «expr ≤ »(..., «expr + »(«expr∥ ∥»(«expr - »(«expr - »(f «expr + »(x, y), f x), L₂ «expr - »(«expr + »(x, y), x))), «expr∥ ∥»(«expr - »(«expr - »(f «expr + »(x, y), f x), L₁ «expr - »(«expr + »(x, y), x))))) : norm_sub_le _ _
+    «expr ≤ »(..., «expr + »(«expr * »(ε, r), «expr * »(ε, r))) : begin
+      apply [expr add_le_add],
+      { apply [expr le_of_mem_A h₂],
+        { simp [] [] ["only"] ["[", expr le_of_lt (half_pos hr), ",", expr mem_closed_ball, ",", expr dist_self, "]"] [] [] },
+        { simp [] [] ["only"] ["[", expr dist_eq_norm, ",", expr add_sub_cancel', ",", expr mem_closed_ball, ",", expr ylt.le, "]"] [] [] } },
+      { apply [expr le_of_mem_A h₁],
+        { simp [] [] ["only"] ["[", expr le_of_lt (half_pos hr), ",", expr mem_closed_ball, ",", expr dist_self, "]"] [] [] },
+        { simp [] [] ["only"] ["[", expr dist_eq_norm, ",", expr add_sub_cancel', ",", expr mem_closed_ball, ",", expr ylt.le, "]"] [] [] } }
+    end
+    «expr = »(..., «expr * »(«expr * »(2, ε), r)) : by ring []
+    «expr ≤ »(..., «expr * »(«expr * »(2, ε), «expr * »(«expr * »(2, «expr∥ ∥»(c)), «expr∥ ∥»(y)))) : mul_le_mul_of_nonneg_left ley (mul_nonneg (by norm_num [] []) hε.le)
+    «expr = »(..., «expr * »(«expr * »(«expr * »(4, «expr∥ ∥»(c)), ε), «expr∥ ∥»(y))) : by ring []
+end
 
+-- error in Analysis.Calculus.FderivMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Easy inclusion: a differentiability point with derivative in `K` belongs to `D f K`. -/
-theorem differentiable_set_subset_D : { x | DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ K } ⊆ D f K :=
-  by 
-    intro x hx 
-    rw [D, mem_Inter]
-    intro e 
-    have  : (0 : ℝ) < (1 / 2^e) :=
-      pow_pos
-        (by 
-          normNum)
-        _ 
-    rcases mem_A_of_differentiable this hx.1 with ⟨R, R_pos, hR⟩
-    obtain ⟨n, hn⟩ : ∃ n : ℕ, (1 / 2^n) < R :=
-      exists_pow_lt_of_lt_one R_pos
-        (by 
-          normNum :
-        (1 : ℝ) / 2 < 1)
-    simp only [mem_Union, mem_Inter, B, mem_inter_eq]
-    refine' ⟨n, fun p hp q hq => ⟨fderiv 𝕜 f x, hx.2, ⟨_, _⟩⟩⟩ <;>
-      ·
-        refine'
-          hR _
-            ⟨pow_pos
-                (by 
-                  normNum)
-                _,
-              lt_of_le_of_ltₓ _ hn⟩
-        exact
-          pow_le_pow_of_le_one
-            (by 
-              normNum)
-            (by 
-              normNum)
-            (by 
-              assumption)
+theorem differentiable_set_subset_D : «expr ⊆ »({x | «expr ∧ »(differentiable_at 𝕜 f x, «expr ∈ »(fderiv 𝕜 f x, K))}, D f K) :=
+begin
+  assume [binders (x hx)],
+  rw ["[", expr D, ",", expr mem_Inter, "]"] [],
+  assume [binders (e)],
+  have [] [":", expr «expr < »((0 : exprℝ()), «expr ^ »(«expr / »(1, 2), e))] [":=", expr pow_pos (by norm_num [] []) _],
+  rcases [expr mem_A_of_differentiable this hx.1, "with", "⟨", ident R, ",", ident R_pos, ",", ident hR, "⟩"],
+  obtain ["⟨", ident n, ",", ident hn, "⟩", ":", expr «expr∃ , »((n : exprℕ()), «expr < »(«expr ^ »(«expr / »(1, 2), n), R)), ":=", expr exists_pow_lt_of_lt_one R_pos (by norm_num [] [] : «expr < »(«expr / »((1 : exprℝ()), 2), 1))],
+  simp [] [] ["only"] ["[", expr mem_Union, ",", expr mem_Inter, ",", expr B, ",", expr mem_inter_eq, "]"] [] [],
+  refine [expr ⟨n, λ
+    p
+    hp
+    q
+    hq, ⟨fderiv 𝕜 f x, hx.2, ⟨_, _⟩⟩⟩]; { refine [expr hR _ ⟨pow_pos (by norm_num [] []) _, lt_of_le_of_lt _ hn⟩],
+    exact [expr pow_le_pow_of_le_one (by norm_num [] []) (by norm_num [] []) (by assumption)] }
+end
 
+-- error in Analysis.Calculus.FderivMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Harder inclusion: at a point in `D f K`, the function `f` has a derivative, in `K`. -/
-theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete K) :
-  D f K ⊆ { x | DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ K } :=
-  by 
-    have P : ∀ {n : ℕ}, (0 : ℝ) < (1 / 2^n) :=
-      pow_pos
-        (by 
-          normNum)
-    rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
-    have cpos : 0 < ∥c∥ := lt_transₓ zero_lt_one hc 
-    intro x hx 
-    have  :
-      ∀ e : ℕ,
-        ∃ n : ℕ, ∀ p q, n ≤ p → n ≤ q → ∃ (L : _)(_ : L ∈ K), x ∈ A f L (1 / 2^p) (1 / 2^e) ∩ A f L (1 / 2^q) (1 / 2^e)
-    ·
-      intro e 
-      have  := mem_Inter.1 hx e 
-      rcases mem_Union.1 this with ⟨n, hn⟩
-      refine' ⟨n, fun p q hp hq => _⟩
-      simp only [mem_Inter, ge_iff_le] at hn 
-      rcases mem_Union.1 (hn p hp q hq) with ⟨L, hL⟩
-      exact ⟨L, mem_Union.1 hL⟩
-    choose! n L hn using this 
-    have M :
-      ∀ e p q e' p' q', n e ≤ p → n e ≤ q → n e' ≤ p' → n e' ≤ q' → e ≤ e' → ∥L e p q - L e' p' q'∥ ≤ (12*∥c∥)*1 / 2^e
-    ·
-      intro e p q e' p' q' hp hq hp' hq' he' 
-      let r := max (n e) (n e')
-      have I : ((1 : ℝ) / 2^e') ≤ (1 / 2^e) :=
-        pow_le_pow_of_le_one
-          (by 
-            normNum)
-          (by 
-            normNum)
-          he' 
-      have J1 : ∥L e p q - L e p r∥ ≤ (4*∥c∥)*1 / 2^e
-      ·
-        have I1 : x ∈ A f (L e p q) (1 / 2^p) (1 / 2^e) := (hn e p q hp hq).2.1
-        have I2 : x ∈ A f (L e p r) (1 / 2^p) (1 / 2^e) := (hn e p r hp (le_max_leftₓ _ _)).2.1 
-        exact norm_sub_le_of_mem_A hc P P I1 I2 
-      have J2 : ∥L e p r - L e' p' r∥ ≤ (4*∥c∥)*1 / 2^e
-      ·
-        have I1 : x ∈ A f (L e p r) (1 / 2^r) (1 / 2^e) := (hn e p r hp (le_max_leftₓ _ _)).2.2
-        have I2 : x ∈ A f (L e' p' r) (1 / 2^r) (1 / 2^e') := (hn e' p' r hp' (le_max_rightₓ _ _)).2.2 
-        exact norm_sub_le_of_mem_A hc P P I1 (A_mono _ _ I I2)
-      have J3 : ∥L e' p' r - L e' p' q'∥ ≤ (4*∥c∥)*1 / 2^e
-      ·
-        have I1 : x ∈ A f (L e' p' r) (1 / 2^p') (1 / 2^e') := (hn e' p' r hp' (le_max_rightₓ _ _)).2.1
-        have I2 : x ∈ A f (L e' p' q') (1 / 2^p') (1 / 2^e') := (hn e' p' q' hp' hq').2.1 
-        exact norm_sub_le_of_mem_A hc P P (A_mono _ _ I I1) (A_mono _ _ I I2)
-      calc ∥L e p q - L e' p' q'∥ = ∥((L e p q - L e p r)+L e p r - L e' p' r)+L e' p' r - L e' p' q'∥ :=
-        by 
-          congr 1
-          abel _ ≤ (∥L e p q - L e p r∥+∥L e p r - L e' p' r∥)+∥L e' p' r - L e' p' q'∥ :=
-        le_transₓ (norm_add_le _ _)
-          (add_le_add_right (norm_add_le _ _) _)_ ≤ (((4*∥c∥)*1 / 2^e)+(4*∥c∥)*1 / 2^e)+(4*∥c∥)*1 / 2^e :=
-        by 
-          applyRules [add_le_add]_ = (12*∥c∥)*1 / 2^e :=
-        by 
-          ring 
-    let L0 : ℕ → E →L[𝕜] F := fun e => L e (n e) (n e)
-    have  : CauchySeq L0
-    ·
-      rw [Metric.cauchy_seq_iff']
-      intro ε εpos 
-      obtain ⟨e, he⟩ : ∃ e : ℕ, (1 / 2^e) < ε / 12*∥c∥ :=
-        exists_pow_lt_of_lt_one
-          (div_pos εpos
-            (mul_pos
-              (by 
-                normNum)
-              cpos))
-          (by 
-            normNum)
-      refine' ⟨e, fun e' he' => _⟩
-      rw [dist_comm, dist_eq_norm]
-      calc ∥L0 e - L0 e'∥ ≤ (12*∥c∥)*1 / 2^e :=
-        M _ _ _ _ _ _ (le_reflₓ _) (le_reflₓ _) (le_reflₓ _) (le_reflₓ _) he' _ < (12*∥c∥)*ε / 12*∥c∥ :=
-        mul_lt_mul' (le_reflₓ _) he (le_of_ltₓ P)
-          (mul_pos
-            (by 
-              normNum)
-            cpos)_ = ε :=
-        by 
-          fieldSimp [(by 
-              normNum :
-            (12 : ℝ) ≠ 0),
-            ne_of_gtₓ cpos]
-          ring 
-    obtain ⟨f', f'K, hf'⟩ : ∃ (f' : _)(_ : f' ∈ K), tendsto L0 at_top (𝓝 f') :=
-      cauchy_seq_tendsto_of_is_complete hK (fun e => (hn e (n e) (n e) (le_reflₓ _) (le_reflₓ _)).1) this 
-    have Lf' : ∀ e p, n e ≤ p → ∥L e (n e) p - f'∥ ≤ (12*∥c∥)*1 / 2^e
-    ·
-      intro e p hp 
-      apply le_of_tendsto (tendsto_const_nhds.sub hf').norm 
-      rw [eventually_at_top]
-      exact ⟨e, fun e' he' => M _ _ _ _ _ _ (le_reflₓ _) hp (le_reflₓ _) (le_reflₓ _) he'⟩
-    have  : HasFderivAt f f' x
-    ·
-      simp only [has_fderiv_at_iff_is_o_nhds_zero, is_o_iff]
-      intro ε εpos 
-      have pos : 0 < 4+12*∥c∥ :=
-        add_pos_of_pos_of_nonneg
-          (by 
-            normNum)
-          (mul_nonneg
-            (by 
-              normNum)
-            (norm_nonneg _))
-      obtain ⟨e, he⟩ : ∃ e : ℕ, (1 / 2^e) < ε / 4+12*∥c∥ :=
-        exists_pow_lt_of_lt_one (div_pos εpos Pos)
-          (by 
-            normNum)
-      rw [eventually_nhds_iff_ball]
-      refine' ⟨1 / 2^n e+1, P, fun y hy => _⟩
-      byCases' y_pos : y = 0
-      ·
-        simp [y_pos]
-      have yzero : 0 < ∥y∥ := norm_pos_iff.mpr y_pos 
-      have y_lt : ∥y∥ < (1 / 2^n e+1)
-      ·
-        simpa using mem_ball_iff_norm.1 hy 
-      have yone : ∥y∥ ≤ 1 :=
-        le_transₓ y_lt.le
-          (pow_le_one _
-            (by 
-              normNum)
-            (by 
-              normNum))
-      obtain ⟨k, hk, h'k⟩ : ∃ k : ℕ, (1 / 2^k+1) < ∥y∥ ∧ ∥y∥ ≤ (1 / 2^k) :=
-        exists_nat_pow_near_of_lt_one yzero yone
-          (by 
-            normNum :
-          (0 : ℝ) < 1 / 2)
-          (by 
-            normNum :
-          (1 : ℝ) / 2 < 1)
-      have k_gt : n e < k
-      ·
-        have  : ((1 : ℝ) / 2^k+1) < (1 / 2^n e+1) := lt_transₓ hk y_lt 
-        rw
-          [pow_lt_pow_iff_of_lt_one
-            (by 
-              normNum :
-            (0 : ℝ) < 1 / 2)
-            (by 
-              normNum)] at
-          this 
-        linarith 
-      set m := k - 1 with hl 
-      have m_ge : n e ≤ m := Nat.le_pred_of_lt k_gt 
-      have km : k = m+1 := (Nat.succ_pred_eq_of_posₓ (lt_of_le_of_ltₓ (zero_le _) k_gt)).symm 
-      rw [km] at hk h'k 
-      have J1 : ∥f (x+y) - f x - L e (n e) m ((x+y) - x)∥ ≤ (1 / 2^e)*1 / 2^m
-      ·
-        apply le_of_mem_A (hn e (n e) m (le_reflₓ _) m_ge).2.2
-        ·
-          simp only [mem_closed_ball, dist_self]
-          exact div_nonneg (le_of_ltₓ P) zero_le_two
-        ·
-          simpa only [dist_eq_norm, add_sub_cancel', mem_closed_ball, pow_succ'ₓ, mul_one_div] using h'k 
-      have J2 : ∥f (x+y) - f x - L e (n e) m y∥ ≤ (4*1 / 2^e)*∥y∥ :=
-        calc ∥f (x+y) - f x - L e (n e) m y∥ ≤ (1 / 2^e)*1 / 2^m :=
-          by 
-            simpa only [add_sub_cancel'] using J1 
-          _ = (4*1 / 2^e)*1 / 2^m+2 :=
-          by 
-            fieldSimp 
-            ringExp 
-          _ ≤ (4*1 / 2^e)*∥y∥ :=
-          mul_le_mul_of_nonneg_left (le_of_ltₓ hk)
-            (mul_nonneg
-              (by 
-                normNum)
-              (le_of_ltₓ P))
-          
-      calc ∥f (x+y) - f x - f' y∥ = ∥(f (x+y) - f x - L e (n e) m y)+(L e (n e) m - f') y∥ :=
-        congr_argₓ _
-          (by 
-            simp )_ ≤ ((4*1 / 2^e)*∥y∥)+((12*∥c∥)*1 / 2^e)*∥y∥ :=
-        norm_add_le_of_le J2
-          ((le_op_norm _ _).trans
-            (mul_le_mul_of_nonneg_right (Lf' _ _ m_ge) (norm_nonneg _)))_ = ((4+12*∥c∥)*∥y∥)*1 / 2^e :=
-        by 
-          ring _ ≤ ((4+12*∥c∥)*∥y∥)*ε / 4+12*∥c∥ :=
-        mul_le_mul_of_nonneg_left he.le
-          (mul_nonneg
-            (add_nonneg
-              (by 
-                normNum)
-              (mul_nonneg
-                (by 
-                  normNum)
-                (norm_nonneg _)))
-            (norm_nonneg _))_ = ε*∥y∥ :=
-        by 
-          fieldSimp [ne_of_gtₓ Pos]
-          ring 
-    rw [←this.fderiv] at f'K 
-    exact ⟨this.differentiable_at, f'K⟩
+theorem D_subset_differentiable_set
+{K : set «expr →L[ ] »(E, 𝕜, F)}
+(hK : is_complete K) : «expr ⊆ »(D f K, {x | «expr ∧ »(differentiable_at 𝕜 f x, «expr ∈ »(fderiv 𝕜 f x, K))}) :=
+begin
+  have [ident P] [":", expr ∀
+   {n : exprℕ()}, «expr < »((0 : exprℝ()), «expr ^ »(«expr / »(1, 2), n))] [":=", expr pow_pos (by norm_num [] [])],
+  rcases [expr normed_field.exists_one_lt_norm 𝕜, "with", "⟨", ident c, ",", ident hc, "⟩"],
+  have [ident cpos] [":", expr «expr < »(0, «expr∥ ∥»(c))] [":=", expr lt_trans zero_lt_one hc],
+  assume [binders (x hx)],
+  have [] [":", expr ∀
+   e : exprℕ(), «expr∃ , »((n : exprℕ()), ∀
+    p
+    q, «expr ≤ »(n, p) → «expr ≤ »(n, q) → «expr∃ , »((L «expr ∈ » K), «expr ∈ »(x, «expr ∩ »(A f L «expr ^ »(«expr / »(1, 2), p) «expr ^ »(«expr / »(1, 2), e), A f L «expr ^ »(«expr / »(1, 2), q) «expr ^ »(«expr / »(1, 2), e)))))] [],
+  { assume [binders (e)],
+    have [] [] [":=", expr mem_Inter.1 hx e],
+    rcases [expr mem_Union.1 this, "with", "⟨", ident n, ",", ident hn, "⟩"],
+    refine [expr ⟨n, λ p q hp hq, _⟩],
+    simp [] [] ["only"] ["[", expr mem_Inter, ",", expr ge_iff_le, "]"] [] ["at", ident hn],
+    rcases [expr mem_Union.1 (hn p hp q hq), "with", "⟨", ident L, ",", ident hL, "⟩"],
+    exact [expr ⟨L, mem_Union.1 hL⟩] },
+  choose ["!"] [ident n] [ident L, ident hn] ["using", expr this],
+  have [ident M] [":", expr ∀
+   e
+   p
+   q
+   e'
+   p'
+   q', «expr ≤ »(n e, p) → «expr ≤ »(n e, q) → «expr ≤ »(n e', p') → «expr ≤ »(n e', q') → «expr ≤ »(e, e') → «expr ≤ »(«expr∥ ∥»(«expr - »(L e p q, L e' p' q')), «expr * »(«expr * »(12, «expr∥ ∥»(c)), «expr ^ »(«expr / »(1, 2), e)))] [],
+  { assume [binders (e p q e' p' q' hp hq hp' hq' he')],
+    let [ident r] [] [":=", expr max (n e) (n e')],
+    have [ident I] [":", expr «expr ≤ »(«expr ^ »(«expr / »((1 : exprℝ()), 2), e'), «expr ^ »(«expr / »(1, 2), e))] [":=", expr pow_le_pow_of_le_one (by norm_num [] []) (by norm_num [] []) he'],
+    have [ident J1] [":", expr «expr ≤ »(«expr∥ ∥»(«expr - »(L e p q, L e p r)), «expr * »(«expr * »(4, «expr∥ ∥»(c)), «expr ^ »(«expr / »(1, 2), e)))] [],
+    { have [ident I1] [":", expr «expr ∈ »(x, A f (L e p q) «expr ^ »(«expr / »(1, 2), p) «expr ^ »(«expr / »(1, 2), e))] [":=", expr (hn e p q hp hq).2.1],
+      have [ident I2] [":", expr «expr ∈ »(x, A f (L e p r) «expr ^ »(«expr / »(1, 2), p) «expr ^ »(«expr / »(1, 2), e))] [":=", expr (hn e p r hp (le_max_left _ _)).2.1],
+      exact [expr norm_sub_le_of_mem_A hc P P I1 I2] },
+    have [ident J2] [":", expr «expr ≤ »(«expr∥ ∥»(«expr - »(L e p r, L e' p' r)), «expr * »(«expr * »(4, «expr∥ ∥»(c)), «expr ^ »(«expr / »(1, 2), e)))] [],
+    { have [ident I1] [":", expr «expr ∈ »(x, A f (L e p r) «expr ^ »(«expr / »(1, 2), r) «expr ^ »(«expr / »(1, 2), e))] [":=", expr (hn e p r hp (le_max_left _ _)).2.2],
+      have [ident I2] [":", expr «expr ∈ »(x, A f (L e' p' r) «expr ^ »(«expr / »(1, 2), r) «expr ^ »(«expr / »(1, 2), e'))] [":=", expr (hn e' p' r hp' (le_max_right _ _)).2.2],
+      exact [expr norm_sub_le_of_mem_A hc P P I1 (A_mono _ _ I I2)] },
+    have [ident J3] [":", expr «expr ≤ »(«expr∥ ∥»(«expr - »(L e' p' r, L e' p' q')), «expr * »(«expr * »(4, «expr∥ ∥»(c)), «expr ^ »(«expr / »(1, 2), e)))] [],
+    { have [ident I1] [":", expr «expr ∈ »(x, A f (L e' p' r) «expr ^ »(«expr / »(1, 2), p') «expr ^ »(«expr / »(1, 2), e'))] [":=", expr (hn e' p' r hp' (le_max_right _ _)).2.1],
+      have [ident I2] [":", expr «expr ∈ »(x, A f (L e' p' q') «expr ^ »(«expr / »(1, 2), p') «expr ^ »(«expr / »(1, 2), e'))] [":=", expr (hn e' p' q' hp' hq').2.1],
+      exact [expr norm_sub_le_of_mem_A hc P P (A_mono _ _ I I1) (A_mono _ _ I I2)] },
+    calc
+      «expr = »(«expr∥ ∥»(«expr - »(L e p q, L e' p' q')), «expr∥ ∥»(«expr + »(«expr + »(«expr - »(L e p q, L e p r), «expr - »(L e p r, L e' p' r)), «expr - »(L e' p' r, L e' p' q')))) : by { congr' [1] [],
+        abel [] [] [] }
+      «expr ≤ »(..., «expr + »(«expr + »(«expr∥ ∥»(«expr - »(L e p q, L e p r)), «expr∥ ∥»(«expr - »(L e p r, L e' p' r))), «expr∥ ∥»(«expr - »(L e' p' r, L e' p' q')))) : le_trans (norm_add_le _ _) (add_le_add_right (norm_add_le _ _) _)
+      «expr ≤ »(..., «expr + »(«expr + »(«expr * »(«expr * »(4, «expr∥ ∥»(c)), «expr ^ »(«expr / »(1, 2), e)), «expr * »(«expr * »(4, «expr∥ ∥»(c)), «expr ^ »(«expr / »(1, 2), e))), «expr * »(«expr * »(4, «expr∥ ∥»(c)), «expr ^ »(«expr / »(1, 2), e)))) : by apply_rules ["[", expr add_le_add, "]"]
+      «expr = »(..., «expr * »(«expr * »(12, «expr∥ ∥»(c)), «expr ^ »(«expr / »(1, 2), e))) : by ring [] },
+  let [ident L0] [":", expr exprℕ() → «expr →L[ ] »(E, 𝕜, F)] [":=", expr λ e, L e (n e) (n e)],
+  have [] [":", expr cauchy_seq L0] [],
+  { rw [expr metric.cauchy_seq_iff'] [],
+    assume [binders (ε εpos)],
+    obtain ["⟨", ident e, ",", ident he, "⟩", ":", expr «expr∃ , »((e : exprℕ()), «expr < »(«expr ^ »(«expr / »(1, 2), e), «expr / »(ε, «expr * »(12, «expr∥ ∥»(c))))), ":=", expr exists_pow_lt_of_lt_one (div_pos εpos (mul_pos (by norm_num [] []) cpos)) (by norm_num [] [])],
+    refine [expr ⟨e, λ e' he', _⟩],
+    rw ["[", expr dist_comm, ",", expr dist_eq_norm, "]"] [],
+    calc
+      «expr ≤ »(«expr∥ ∥»(«expr - »(L0 e, L0 e')), «expr * »(«expr * »(12, «expr∥ ∥»(c)), «expr ^ »(«expr / »(1, 2), e))) : M _ _ _ _ _ _ (le_refl _) (le_refl _) (le_refl _) (le_refl _) he'
+      «expr < »(..., «expr * »(«expr * »(12, «expr∥ ∥»(c)), «expr / »(ε, «expr * »(12, «expr∥ ∥»(c))))) : mul_lt_mul' (le_refl _) he (le_of_lt P) (mul_pos (by norm_num [] []) cpos)
+      «expr = »(..., ε) : by { field_simp [] ["[", expr (by norm_num [] [] : «expr ≠ »((12 : exprℝ()), 0)), ",", expr ne_of_gt cpos, "]"] [] [],
+        ring [] } },
+  obtain ["⟨", ident f', ",", ident f'K, ",", ident hf', "⟩", ":", expr «expr∃ , »((f' «expr ∈ » K), tendsto L0 at_top (expr𝓝() f')), ":=", expr cauchy_seq_tendsto_of_is_complete hK (λ
+    e, (hn e (n e) (n e) (le_refl _) (le_refl _)).1) this],
+  have [ident Lf'] [":", expr ∀
+   e
+   p, «expr ≤ »(n e, p) → «expr ≤ »(«expr∥ ∥»(«expr - »(L e (n e) p, f')), «expr * »(«expr * »(12, «expr∥ ∥»(c)), «expr ^ »(«expr / »(1, 2), e)))] [],
+  { assume [binders (e p hp)],
+    apply [expr le_of_tendsto (tendsto_const_nhds.sub hf').norm],
+    rw [expr eventually_at_top] [],
+    exact [expr ⟨e, λ e' he', M _ _ _ _ _ _ (le_refl _) hp (le_refl _) (le_refl _) he'⟩] },
+  have [] [":", expr has_fderiv_at f f' x] [],
+  { simp [] [] ["only"] ["[", expr has_fderiv_at_iff_is_o_nhds_zero, ",", expr is_o_iff, "]"] [] [],
+    assume [binders (ε εpos)],
+    have [ident pos] [":", expr «expr < »(0, «expr + »(4, «expr * »(12, «expr∥ ∥»(c))))] [":=", expr add_pos_of_pos_of_nonneg (by norm_num [] []) (mul_nonneg (by norm_num [] []) (norm_nonneg _))],
+    obtain ["⟨", ident e, ",", ident he, "⟩", ":", expr «expr∃ , »((e : exprℕ()), «expr < »(«expr ^ »(«expr / »(1, 2), e), «expr / »(ε, «expr + »(4, «expr * »(12, «expr∥ ∥»(c)))))), ":=", expr exists_pow_lt_of_lt_one (div_pos εpos pos) (by norm_num [] [])],
+    rw [expr eventually_nhds_iff_ball] [],
+    refine [expr ⟨«expr ^ »(«expr / »(1, 2), «expr + »(n e, 1)), P, λ y hy, _⟩],
+    by_cases [expr y_pos, ":", expr «expr = »(y, 0)],
+    { simp [] [] [] ["[", expr y_pos, "]"] [] [] },
+    have [ident yzero] [":", expr «expr < »(0, «expr∥ ∥»(y))] [":=", expr norm_pos_iff.mpr y_pos],
+    have [ident y_lt] [":", expr «expr < »(«expr∥ ∥»(y), «expr ^ »(«expr / »(1, 2), «expr + »(n e, 1)))] [],
+    by simpa [] [] [] [] [] ["using", expr mem_ball_iff_norm.1 hy],
+    have [ident yone] [":", expr «expr ≤ »(«expr∥ ∥»(y), 1)] [":=", expr le_trans y_lt.le (pow_le_one _ (by norm_num [] []) (by norm_num [] []))],
+    obtain ["⟨", ident k, ",", ident hk, ",", ident h'k, "⟩", ":", expr «expr∃ , »((k : exprℕ()), «expr ∧ »(«expr < »(«expr ^ »(«expr / »(1, 2), «expr + »(k, 1)), «expr∥ ∥»(y)), «expr ≤ »(«expr∥ ∥»(y), «expr ^ »(«expr / »(1, 2), k)))), ":=", expr exists_nat_pow_near_of_lt_one yzero yone (by norm_num [] [] : «expr < »((0 : exprℝ()), «expr / »(1, 2))) (by norm_num [] [] : «expr < »(«expr / »((1 : exprℝ()), 2), 1))],
+    have [ident k_gt] [":", expr «expr < »(n e, k)] [],
+    { have [] [":", expr «expr < »(«expr ^ »(«expr / »((1 : exprℝ()), 2), «expr + »(k, 1)), «expr ^ »(«expr / »(1, 2), «expr + »(n e, 1)))] [":=", expr lt_trans hk y_lt],
+      rw [expr pow_lt_pow_iff_of_lt_one (by norm_num [] [] : «expr < »((0 : exprℝ()), «expr / »(1, 2))) (by norm_num [] [])] ["at", ident this],
+      linarith [] [] [] },
+    set [] [ident m] [] [":="] [expr «expr - »(k, 1)] ["with", ident hl],
+    have [ident m_ge] [":", expr «expr ≤ »(n e, m)] [":=", expr nat.le_pred_of_lt k_gt],
+    have [ident km] [":", expr «expr = »(k, «expr + »(m, 1))] [":=", expr (nat.succ_pred_eq_of_pos (lt_of_le_of_lt (zero_le _) k_gt)).symm],
+    rw [expr km] ["at", ident hk, ident h'k],
+    have [ident J1] [":", expr «expr ≤ »(«expr∥ ∥»(«expr - »(«expr - »(f «expr + »(x, y), f x), L e (n e) m «expr - »(«expr + »(x, y), x))), «expr * »(«expr ^ »(«expr / »(1, 2), e), «expr ^ »(«expr / »(1, 2), m)))] [],
+    { apply [expr le_of_mem_A (hn e (n e) m (le_refl _) m_ge).2.2],
+      { simp [] [] ["only"] ["[", expr mem_closed_ball, ",", expr dist_self, "]"] [] [],
+        exact [expr div_nonneg (le_of_lt P) zero_le_two] },
+      { simpa [] [] ["only"] ["[", expr dist_eq_norm, ",", expr add_sub_cancel', ",", expr mem_closed_ball, ",", expr pow_succ', ",", expr mul_one_div, "]"] [] ["using", expr h'k] } },
+    have [ident J2] [":", expr «expr ≤ »(«expr∥ ∥»(«expr - »(«expr - »(f «expr + »(x, y), f x), L e (n e) m y)), «expr * »(«expr * »(4, «expr ^ »(«expr / »(1, 2), e)), «expr∥ ∥»(y)))] [":=", expr calc
+       «expr ≤ »(«expr∥ ∥»(«expr - »(«expr - »(f «expr + »(x, y), f x), L e (n e) m y)), «expr * »(«expr ^ »(«expr / »(1, 2), e), «expr ^ »(«expr / »(1, 2), m))) : by simpa [] [] ["only"] ["[", expr add_sub_cancel', "]"] [] ["using", expr J1]
+       «expr = »(..., «expr * »(«expr * »(4, «expr ^ »(«expr / »(1, 2), e)), «expr ^ »(«expr / »(1, 2), «expr + »(m, 2)))) : by { field_simp [] [] [] [],
+         ring_exp [] [] }
+       «expr ≤ »(..., «expr * »(«expr * »(4, «expr ^ »(«expr / »(1, 2), e)), «expr∥ ∥»(y))) : mul_le_mul_of_nonneg_left (le_of_lt hk) (mul_nonneg (by norm_num [] []) (le_of_lt P))],
+    calc
+      «expr = »(«expr∥ ∥»(«expr - »(«expr - »(f «expr + »(x, y), f x), f' y)), «expr∥ ∥»(«expr + »(«expr - »(«expr - »(f «expr + »(x, y), f x), L e (n e) m y), «expr - »(L e (n e) m, f') y))) : congr_arg _ (by simp [] [] [] [] [] [])
+      «expr ≤ »(..., «expr + »(«expr * »(«expr * »(4, «expr ^ »(«expr / »(1, 2), e)), «expr∥ ∥»(y)), «expr * »(«expr * »(«expr * »(12, «expr∥ ∥»(c)), «expr ^ »(«expr / »(1, 2), e)), «expr∥ ∥»(y)))) : norm_add_le_of_le J2 ((le_op_norm _ _).trans (mul_le_mul_of_nonneg_right (Lf' _ _ m_ge) (norm_nonneg _)))
+      «expr = »(..., «expr * »(«expr * »(«expr + »(4, «expr * »(12, «expr∥ ∥»(c))), «expr∥ ∥»(y)), «expr ^ »(«expr / »(1, 2), e))) : by ring []
+      «expr ≤ »(..., «expr * »(«expr * »(«expr + »(4, «expr * »(12, «expr∥ ∥»(c))), «expr∥ ∥»(y)), «expr / »(ε, «expr + »(4, «expr * »(12, «expr∥ ∥»(c)))))) : mul_le_mul_of_nonneg_left he.le (mul_nonneg (add_nonneg (by norm_num [] []) (mul_nonneg (by norm_num [] []) (norm_nonneg _))) (norm_nonneg _))
+      «expr = »(..., «expr * »(ε, «expr∥ ∥»(y))) : by { field_simp [] ["[", expr ne_of_gt pos, "]"] [] [],
+        ring [] } },
+  rw ["<-", expr this.fderiv] ["at", ident f'K],
+  exact [expr ⟨this.differentiable_at, f'K⟩]
+end
 
 theorem differentiable_set_eq_D (hK : IsComplete K) : { x | DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ K } = D f K :=
   subset.antisymm (differentiable_set_subset_D _) (D_subset_differentiable_set hK)
@@ -474,26 +353,24 @@ theorem measurable_set_of_differentiable_at_of_is_complete {K : Set (E →L[𝕜
 
 variable[CompleteSpace F]
 
+-- error in Analysis.Calculus.FderivMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The set of differentiability points of a function taking values in a complete space is
-Borel-measurable. -/
-theorem measurable_set_of_differentiable_at : MeasurableSet { x | DifferentiableAt 𝕜 f x } :=
-  by 
-    have  : IsComplete (univ : Set (E →L[𝕜] F)) := complete_univ 
-    convert measurable_set_of_differentiable_at_of_is_complete 𝕜 f this 
-    simp 
+Borel-measurable. -/ theorem measurable_set_of_differentiable_at : measurable_set {x | differentiable_at 𝕜 f x} :=
+begin
+  have [] [":", expr is_complete (univ : set «expr →L[ ] »(E, 𝕜, F))] [":=", expr complete_univ],
+  convert [] [expr measurable_set_of_differentiable_at_of_is_complete 𝕜 f this] [],
+  simp [] [] [] [] [] []
+end
 
-theorem measurable_fderiv : Measurable (fderiv 𝕜 f) :=
-  by 
-    refine' measurable_of_is_closed fun s hs => _ 
-    have  :
-      fderiv 𝕜 f ⁻¹' s =
-        { x | DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ s } ∪
-          { x | (0 : E →L[𝕜] F) ∈ s } ∩ { x | ¬DifferentiableAt 𝕜 f x } :=
-      Set.ext fun x => mem_preimage.trans fderiv_mem_iff 
-    rw [this]
-    exact
-      (measurable_set_of_differentiable_at_of_is_complete _ _ hs.is_complete).union
-        ((MeasurableSet.const _).inter (measurable_set_of_differentiable_at _ _).Compl)
+-- error in Analysis.Calculus.FderivMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem measurable_fderiv : measurable (fderiv 𝕜 f) :=
+begin
+  refine [expr measurable_of_is_closed (λ s hs, _)],
+  have [] [":", expr «expr = »(«expr ⁻¹' »(fderiv 𝕜 f, s), «expr ∪ »({x | «expr ∧ »(differentiable_at 𝕜 f x, «expr ∈ »(fderiv 𝕜 f x, s))}, «expr ∩ »({x | «expr ∈ »((0 : «expr →L[ ] »(E, 𝕜, F)), s)}, {x | «expr¬ »(differentiable_at 𝕜 f x)})))] [":=", expr set.ext (λ
+    x, mem_preimage.trans fderiv_mem_iff)],
+  rw [expr this] [],
+  exact [expr (measurable_set_of_differentiable_at_of_is_complete _ _ hs.is_complete).union ((measurable_set.const _).inter (measurable_set_of_differentiable_at _ _).compl)]
+end
 
 theorem measurable_fderiv_apply_const [MeasurableSpace F] [BorelSpace F] (y : E) : Measurable fun x => fderiv 𝕜 f x y :=
   (ContinuousLinearMap.measurable_apply y).comp (measurable_fderiv 𝕜 f)

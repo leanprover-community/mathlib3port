@@ -1,4 +1,5 @@
-import Mathbin.Analysis.NormedSpace.Basic
+import Mathbin.Analysis.Normed.Group.Basic 
+import Mathbin.Topology.Algebra.Module
 
 /-!
 # (Semi-)linear isometries

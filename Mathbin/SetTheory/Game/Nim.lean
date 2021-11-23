@@ -128,17 +128,17 @@ theorem exists_move_left_eq (O : Ordinal) : ∀ O' _ : O' < O, ∃ i, (nim O).mo
           by 
             simp ⟩
 
-theorem zero_first_loses : (nim (0 : Ordinal)).FirstLoses :=
-  by 
-    rw [impartial.first_loses_symm, nim_def, le_def_lt]
-    split 
-    ·
-      rintro (i : (0 : Ordinal).out.α)
-      have h := Ordinal.typein_lt_type _ i 
-      rw [Ordinal.type_out] at h 
-      exact False.elim (not_le_of_lt h (Ordinal.zero_le (Ordinal.typein _ i)))
-    ·
-      tidy
+-- error in SetTheory.Game.Nim: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem zero_first_loses : (nim (0 : ordinal)).first_loses :=
+begin
+  rw ["[", expr impartial.first_loses_symm, ",", expr nim_def, ",", expr le_def_lt, "]"] [],
+  split,
+  { rintro ["(", ident i, ":", expr (0 : ordinal).out.α, ")"],
+    have [ident h] [] [":=", expr ordinal.typein_lt_type _ i],
+    rw [expr ordinal.type_out] ["at", ident h],
+    exact [expr false.elim (not_le_of_lt h (ordinal.zero_le (ordinal.typein _ i)))] },
+  { tidy [] }
+end
 
 theorem non_zero_first_wins (O : Ordinal) (hO : O ≠ 0) : (nim O).FirstWins :=
   by 
@@ -150,29 +150,25 @@ theorem non_zero_first_wins (O : Ordinal) (hO : O ≠ 0) : (nim O).FirstWins :=
           by 
             simpa using zero_first_loses.1⟩
 
-theorem sum_first_loses_iff_eq (O₁ O₂ : Ordinal) : (nim O₁+nim O₂).FirstLoses ↔ O₁ = O₂ :=
-  by 
-    split 
-    ·
-      contrapose 
-      intro h 
-      rw [impartial.not_first_loses]
-      wlog h' : O₁ ≤ O₂ using O₁ O₂, O₂ O₁
-      ·
-        exact Ordinal.le_total O₁ O₂
-      ·
-        have h : O₁ < O₂ := lt_of_le_of_neₓ h' h 
-        rw [impartial.first_wins_symm', lt_def_le, nim_def O₂]
-        refine' Or.inl ⟨(left_moves_add (nim O₁) _).symm (Sum.inr _), _⟩
-        ·
-          exact (Ordinal.principalSegOut h).top
-        ·
-          simpa using (impartial.add_self (nim O₁)).2
-      ·
-        exact first_wins_of_equiv add_comm_equiv (this (Ne.symm h))
-    ·
-      rintro rfl 
-      exact impartial.add_self (nim O₁)
+-- error in SetTheory.Game.Nim: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem sum_first_loses_iff_eq
+(O₁ O₂ : ordinal) : «expr ↔ »(«expr + »(nim O₁, nim O₂).first_loses, «expr = »(O₁, O₂)) :=
+begin
+  split,
+  { contrapose [] [],
+    intro [ident h],
+    rw ["[", expr impartial.not_first_loses, "]"] [],
+    wlog [ident h'] [":", expr «expr ≤ »(O₁, O₂)] [] ["using", "[", ident O₁, ident O₂, ",", ident O₂, ident O₁, "]"],
+    { exact [expr ordinal.le_total O₁ O₂] },
+    { have [ident h] [":", expr «expr < »(O₁, O₂)] [":=", expr lt_of_le_of_ne h' h],
+      rw ["[", expr impartial.first_wins_symm', ",", expr lt_def_le, ",", expr nim_def O₂, "]"] [],
+      refine [expr or.inl ⟨(left_moves_add (nim O₁) _).symm (sum.inr _), _⟩],
+      { exact [expr (ordinal.principal_seg_out h).top] },
+      { simpa [] [] [] [] [] ["using", expr (impartial.add_self (nim O₁)).2] } },
+    { exact [expr first_wins_of_equiv add_comm_equiv (this (ne.symm h))] } },
+  { rintro [ident rfl],
+    exact [expr impartial.add_self (nim O₁)] }
+end
 
 theorem sum_first_wins_iff_neq (O₁ O₂ : Ordinal) : (nim O₁+nim O₂).FirstWins ↔ O₁ ≠ O₂ :=
   by 
@@ -194,9 +190,9 @@ end nim
   the image of the function. It is guaranteed that the smallest ordinal not in the image will be
   in the set, i.e. we can use this to find the mex. -/
 def nonmoves {α : Type u} (M : α → Ordinal.{u}) : Set Ordinal.{u} :=
-  { O : Ordinal | ¬∃ a : α, M a = O }
+  { O:Ordinal | ¬∃ a : α, M a = O }
 
--- error in SetTheory.Game.Nim: ././Mathport/Syntax/Translate/Basic.lean:340:40: in by_contra: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
+-- error in SetTheory.Game.Nim: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem nonmoves_nonempty {α : Type u} (M : α → ordinal.{u}) : «expr∃ , »((O : ordinal), «expr ∈ »(O, nonmoves M)) :=
 begin
   classical,
@@ -221,7 +217,7 @@ noncomputable def grundy_value : ∀ G : Pgame.{u} [G.impartial], Ordinal.{u}
 | G =>
   fun hG =>
     by 
-      exactI Ordinal.omin (nonmoves fun i => grundy_value (G.move_left i)) (nonmoves_nonempty _)
+      exact Ordinal.omin (nonmoves fun i => grundy_value (G.move_left i)) (nonmoves_nonempty _)
 
 theorem grundy_value_def (G : Pgame) [G.impartial] :
   grundy_value G = Ordinal.omin (nonmoves fun i => grundy_value (G.move_left i)) (nonmoves_nonempty _) :=
@@ -229,61 +225,52 @@ theorem grundy_value_def (G : Pgame) [G.impartial] :
     rw [grundy_value]
     rfl
 
+-- error in SetTheory.Game.Nim: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Sprague-Grundy theorem which states that every impartial game is equivalent to a game of
  nim, namely the game of nim corresponding to the games Grundy value -/
-theorem equiv_nim_grundy_value :
-  ∀ G : Pgame.{u} [G.impartial],
-    by 
-      exactI G ≈ nim (grundy_value G)
-| G =>
-  by 
-    classical 
-    introI hG 
-    rw [impartial.equiv_iff_sum_first_loses, ←impartial.no_good_left_moves_iff_first_loses]
-    intro i 
-    equivRw left_moves_add G (nim (grundy_value G))  at i 
-    cases' i with i₁ i₂
-    ·
-      rw [add_move_left_inl]
-      apply first_wins_of_equiv (add_congr (equiv_nim_grundy_value (G.move_left i₁)).symm (equiv_refl _))
-      rw [nim.sum_first_wins_iff_neq]
-      intro heq 
-      rw [eq_comm, grundy_value_def G] at heq 
-      have h := Ordinal.omin_mem (nonmoves fun i : G.left_moves => grundy_value (G.move_left i)) (nonmoves_nonempty _)
-      rw [HEq] at h 
-      have hcontra :
-        ∃ i' : G.left_moves,
-          (fun i'' : G.left_moves => grundy_value (G.move_left i'')) i' = grundy_value (G.move_left i₁) :=
-        ⟨i₁, rfl⟩
-      contradiction
-    ·
-      rw [add_move_left_inr, ←impartial.good_left_move_iff_first_wins]
-      revert i₂ 
-      rw [nim.nim_def]
-      intro i₂ 
-      have h' : ∃ i : G.left_moves, grundy_value (G.move_left i) = Ordinal.typein (Quotientₓ.out (grundy_value G)).R i₂
-      ·
-        have hlt :
-          Ordinal.typein (Quotientₓ.out (grundy_value G)).R i₂ < Ordinal.type (Quotientₓ.out (grundy_value G)).R :=
-          Ordinal.typein_lt_type _ _ 
-        rw [Ordinal.type_out] at hlt 
-        revert i₂ hlt 
-        rw [grundy_value_def]
-        intro i₂ hlt 
-        have hnotin :
-          Ordinal.typein (Quotientₓ.out (Ordinal.omin (nonmoves fun i => grundy_value (G.move_left i)) _)).R i₂ ∉
-            nonmoves fun i : G.left_moves => grundy_value (G.move_left i)
-        ·
-          intro hin 
-          have hge := Ordinal.omin_le hin 
-          have hcontra := (le_not_le_of_ltₓ hlt).2
-          contradiction 
-        simpa [nonmoves] using hnotin 
-      cases' h' with i hi 
-      use (left_moves_add _ _).symm (Sum.inl i)
-      rw [add_move_left_inl, move_left_mk]
-      apply first_loses_of_equiv (add_congr (equiv_symm (equiv_nim_grundy_value (G.move_left i))) (equiv_refl _))
-      simpa only [hi] using impartial.add_self (nim (grundy_value (G.move_left i)))
+theorem equiv_nim_grundy_value : ∀ (G : pgame.{u}) [G.impartial], by exactI [expr «expr ≈ »(G, nim (grundy_value G))]
+| G := begin
+  classical,
+  introI [ident hG],
+  rw ["[", expr impartial.equiv_iff_sum_first_loses, ",", "<-", expr impartial.no_good_left_moves_iff_first_loses, "]"] [],
+  intro [ident i],
+  equiv_rw [expr left_moves_add G (nim (grundy_value G))] ["at", ident i],
+  cases [expr i] ["with", ident i₁, ident i₂],
+  { rw [expr add_move_left_inl] [],
+    apply [expr first_wins_of_equiv (add_congr (equiv_nim_grundy_value (G.move_left i₁)).symm (equiv_refl _))],
+    rw [expr nim.sum_first_wins_iff_neq] [],
+    intro [ident heq],
+    rw ["[", expr eq_comm, ",", expr grundy_value_def G, "]"] ["at", ident heq],
+    have [ident h] [] [":=", expr ordinal.omin_mem (nonmoves (λ
+       i : G.left_moves, grundy_value (G.move_left i))) (nonmoves_nonempty _)],
+    rw [expr heq] ["at", ident h],
+    have [ident hcontra] [":", expr «expr∃ , »((i' : G.left_moves), «expr = »(λ
+       i'' : G.left_moves, grundy_value (G.move_left i'') i', grundy_value (G.move_left i₁)))] [":=", expr ⟨i₁, rfl⟩],
+    contradiction },
+  { rw ["[", expr add_move_left_inr, ",", "<-", expr impartial.good_left_move_iff_first_wins, "]"] [],
+    revert [ident i₂],
+    rw [expr nim.nim_def] [],
+    intro [ident i₂],
+    have [ident h'] [":", expr «expr∃ , »((i : G.left_moves), «expr = »(grundy_value (G.move_left i), ordinal.typein (quotient.out (grundy_value G)).r i₂))] [],
+    { have [ident hlt] [":", expr «expr < »(ordinal.typein (quotient.out (grundy_value G)).r i₂, ordinal.type (quotient.out (grundy_value G)).r)] [":=", expr ordinal.typein_lt_type _ _],
+      rw [expr ordinal.type_out] ["at", ident hlt],
+      revert [ident i₂, ident hlt],
+      rw [expr grundy_value_def] [],
+      intros [ident i₂, ident hlt],
+      have [ident hnotin] [":", expr «expr ∉ »(ordinal.typein (quotient.out (ordinal.omin (nonmoves (λ
+            i, grundy_value (G.move_left i))) _)).r i₂, nonmoves (λ
+         i : G.left_moves, grundy_value (G.move_left i)))] [],
+      { intro [ident hin],
+        have [ident hge] [] [":=", expr ordinal.omin_le hin],
+        have [ident hcontra] [] [":=", expr (le_not_le_of_lt hlt).2],
+        contradiction },
+      simpa [] [] [] ["[", expr nonmoves, "]"] [] ["using", expr hnotin] },
+    cases [expr h'] ["with", ident i, ident hi],
+    use [expr (left_moves_add _ _).symm (sum.inl i)],
+    rw ["[", expr add_move_left_inl, ",", expr move_left_mk, "]"] [],
+    apply [expr first_loses_of_equiv (add_congr (equiv_symm (equiv_nim_grundy_value (G.move_left i))) (equiv_refl _))],
+    simpa [] [] ["only"] ["[", expr hi, "]"] [] ["using", expr impartial.add_self (nim (grundy_value (G.move_left i)))] }
+end
 
 theorem equiv_nim_iff_grundy_value_eq (G : Pgame) [G.impartial] (O : Ordinal) : (G ≈ nim O) ↔ grundy_value G = O :=
   ⟨by 
@@ -310,56 +297,51 @@ theorem equiv_zero_iff_grundy_value (G : Pgame) [G.impartial] : (G ≈ 0) ↔ gr
   by 
     rw [equiv_iff_grundy_value_eq, grundy_value_zero]
 
-theorem grundy_value_nim_add_nim (n m : ℕ) : grundy_value (nim n+nim m) = Nat.lxor n m :=
-  by 
-    induction' n using Nat.strong_induction_onₓ with n hn generalizing m 
-    induction' m using Nat.strong_induction_onₓ with m hm 
-    rw [grundy_value_def]
-    have h₀ : (Nat.lxor n m : Ordinal) ∈ nonmoves fun i => grundy_value ((nim n+nim m).moveLeft i)
-    ·
-      simp only [nonmoves, not_exists, Set.mem_set_of_eq]
-      equivRw left_moves_add _ _ 
-      rintro (a | a)
-      all_goals 
-        obtain ⟨ok, ⟨hk, hk'⟩⟩ := nim.exists_ordinal_move_left_eq _ a 
-        obtain ⟨k, rfl⟩ := Ordinal.lt_omega.1 (lt_transₓ hk (Ordinal.nat_lt_omega _))
-        replace hk := Ordinal.nat_cast_lt.1 hk 
-        simp only [hk', add_move_left_inl, add_move_left_inr, id]
-        first |
-          rw [hn _ hk]|
-          rw [hm _ hk]
-        intro h 
-        rw [Ordinal.nat_cast_inj] at h 
-        try 
-          rw [Nat.lxor_comm n k, Nat.lxor_comm n m] at h 
-        exact _root_.ne_of_lt hk (Nat.lxor_left_inj h)
-    have h₁ : ∀ u : Ordinal, u < Nat.lxor n m → u ∉ nonmoves fun i => grundy_value ((nim n+nim m).moveLeft i)
-    ·
-      intro ou hu 
-      obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (lt_transₓ hu (Ordinal.nat_lt_omega _))
-      replace hu := Ordinal.nat_cast_lt.1 hu 
-      simp only [nonmoves, not_exists, not_not, Set.mem_set_of_eq, not_forall]
-      have  : Nat.lxor u (Nat.lxor n m) ≠ 0
-      ·
-        intro h 
-        rw [Nat.lxor_eq_zero] at h 
-        linarith 
-      rcases Nat.lxor_trichotomy this with (h | h | h)
-      ·
-        linarith
-      ·
-        obtain ⟨i, hi⟩ := nim.exists_move_left_eq _ _ (Ordinal.nat_cast_lt.2 h)
-        refine' ⟨(left_moves_add _ _).symm (Sum.inl i), _⟩
-        simp only [hi, add_move_left_inl]
-        rw [hn _ h, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
-      ·
-        obtain ⟨i, hi⟩ := nim.exists_move_left_eq _ _ (Ordinal.nat_cast_lt.2 h)
-        refine' ⟨(left_moves_add _ _).symm (Sum.inr i), _⟩
-        simp only [hi, add_move_left_inr]
-        rw [hm _ h, Nat.lxor_comm, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
-    apply le_antisymmₓ (Ordinal.omin_le h₀)
-    contrapose! h₁ 
-    exact ⟨_, ⟨h₁, Ordinal.omin_mem _ _⟩⟩
+-- error in SetTheory.Game.Nim: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem grundy_value_nim_add_nim (n m : exprℕ()) : «expr = »(grundy_value «expr + »(nim n, nim m), nat.lxor n m) :=
+begin
+  induction [expr n] ["using", ident nat.strong_induction_on] ["with", ident n, ident hn] ["generalizing", ident m],
+  induction [expr m] ["using", ident nat.strong_induction_on] ["with", ident m, ident hm] [],
+  rw ["[", expr grundy_value_def, "]"] [],
+  have [ident h₀] [":", expr «expr ∈ »((nat.lxor n m : ordinal), nonmoves (λ
+     i, grundy_value («expr + »(nim n, nim m).move_left i)))] [],
+  { simp [] [] ["only"] ["[", expr nonmoves, ",", expr not_exists, ",", expr set.mem_set_of_eq, "]"] [] [],
+    equiv_rw [expr left_moves_add _ _] [],
+    rintro ["(", ident a, "|", ident a, ")"],
+    all_goals { obtain ["⟨", ident ok, ",", "⟨", ident hk, ",", ident hk', "⟩", "⟩", ":=", expr nim.exists_ordinal_move_left_eq _ a],
+      obtain ["⟨", ident k, ",", ident rfl, "⟩", ":=", expr ordinal.lt_omega.1 (lt_trans hk (ordinal.nat_lt_omega _))],
+      replace [ident hk] [] [":=", expr ordinal.nat_cast_lt.1 hk],
+      simp [] [] ["only"] ["[", expr hk', ",", expr add_move_left_inl, ",", expr add_move_left_inr, ",", expr id, "]"] [] [],
+      rw [expr hn _ hk] [] <|> rw [expr hm _ hk] [],
+      intro [ident h],
+      rw [expr ordinal.nat_cast_inj] ["at", ident h],
+      try { rw ["[", expr nat.lxor_comm n k, ",", expr nat.lxor_comm n m, "]"] ["at", ident h] },
+      exact [expr _root_.ne_of_lt hk (nat.lxor_left_inj h)] } },
+  have [ident h₁] [":", expr ∀
+   u : ordinal, «expr < »(u, nat.lxor n m) → «expr ∉ »(u, nonmoves (λ
+     i, grundy_value («expr + »(nim n, nim m).move_left i)))] [],
+  { intros [ident ou, ident hu],
+    obtain ["⟨", ident u, ",", ident rfl, "⟩", ":=", expr ordinal.lt_omega.1 (lt_trans hu (ordinal.nat_lt_omega _))],
+    replace [ident hu] [] [":=", expr ordinal.nat_cast_lt.1 hu],
+    simp [] [] ["only"] ["[", expr nonmoves, ",", expr not_exists, ",", expr not_not, ",", expr set.mem_set_of_eq, ",", expr not_forall, "]"] [] [],
+    have [] [":", expr «expr ≠ »(nat.lxor u (nat.lxor n m), 0)] [],
+    { intro [ident h],
+      rw [expr nat.lxor_eq_zero] ["at", ident h],
+      linarith [] [] [] },
+    rcases [expr nat.lxor_trichotomy this, "with", ident h, "|", ident h, "|", ident h],
+    { linarith [] [] [] },
+    { obtain ["⟨", ident i, ",", ident hi, "⟩", ":=", expr nim.exists_move_left_eq _ _ (ordinal.nat_cast_lt.2 h)],
+      refine [expr ⟨(left_moves_add _ _).symm (sum.inl i), _⟩],
+      simp [] [] ["only"] ["[", expr hi, ",", expr add_move_left_inl, "]"] [] [],
+      rw ["[", expr hn _ h, ",", expr nat.lxor_assoc, ",", expr nat.lxor_self, ",", expr nat.lxor_zero, "]"] [] },
+    { obtain ["⟨", ident i, ",", ident hi, "⟩", ":=", expr nim.exists_move_left_eq _ _ (ordinal.nat_cast_lt.2 h)],
+      refine [expr ⟨(left_moves_add _ _).symm (sum.inr i), _⟩],
+      simp [] [] ["only"] ["[", expr hi, ",", expr add_move_left_inr, "]"] [] [],
+      rw ["[", expr hm _ h, ",", expr nat.lxor_comm, ",", expr nat.lxor_assoc, ",", expr nat.lxor_self, ",", expr nat.lxor_zero, "]"] [] } },
+  apply [expr le_antisymm (ordinal.omin_le h₀)],
+  contrapose ["!"] [ident h₁],
+  exact [expr ⟨_, ⟨h₁, ordinal.omin_mem _ _⟩⟩]
+end
 
 theorem nim_add_nim_equiv {n m : ℕ} : (nim n+nim m) ≈ nim (Nat.lxor n m) :=
   by 

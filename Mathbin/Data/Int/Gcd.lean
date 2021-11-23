@@ -128,30 +128,27 @@ theorem xgcd_aux_P {r r'} : ∀ {s t s' t'}, P (r, s, t) → P (r', s', t') → 
         rw [p, p']
         simp [mul_addₓ, mul_commₓ, mul_left_commₓ, add_commₓ, add_left_commₓ, sub_eq_neg_add, mul_assocₓ]
 
+-- error in Data.Int.Gcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Bézout's lemma**: given `x y : ℕ`, `gcd x y = x * a + y * b`, where `a = gcd_a x y` and
 `b = gcd_b x y` are computed by the extended Euclidean algorithm.
 -/
-theorem gcd_eq_gcd_ab : (gcd x y : ℤ) = (x*gcd_a x y)+y*gcd_b x y :=
-  by 
-    have  :=
-        @xgcd_aux_P x y x y 1 0 0 1
-          (by 
-            simp [P])
-          (by 
-            simp [P]) <;>
-      rwa [xgcd_aux_val, xgcd_val] at this
+theorem gcd_eq_gcd_ab : «expr = »((gcd x y : exprℤ()), «expr + »(«expr * »(x, gcd_a x y), «expr * »(y, gcd_b x y))) :=
+by have [] [] [":=", expr @xgcd_aux_P x y x y 1 0 0 1 (by simp [] [] [] ["[", expr P, "]"] [] []) (by simp [] [] [] ["[", expr P, "]"] [] [])]; rwa ["[", expr xgcd_aux_val, ",", expr xgcd_val, "]"] ["at", ident this]
 
 end 
 
-theorem exists_mul_mod_eq_gcd {k n : ℕ} (hk : gcd n k < k) : ∃ m, (n*m) % k = gcd n k :=
-  by 
-    have hk' := int.coe_nat_ne_zero.mpr (ne_of_gtₓ (lt_of_le_of_ltₓ (zero_le (gcd n k)) hk))
-    have key := congr_argₓ (fun m => Int.natModₓ m k) (gcd_eq_gcd_ab n k)
-    simpRw [Int.natModₓ]  at key 
-    rw [Int.add_mul_mod_self_left, ←Int.coe_nat_mod, Int.to_nat_coe_nat, mod_eq_of_lt hk] at key 
-    refine' ⟨(n.gcd_a k % k).toNat, Eq.trans (Int.coe_nat_inj _) key.symm⟩
-    rw [Int.coe_nat_mod, Int.coe_nat_mul, Int.to_nat_of_nonneg (Int.mod_nonneg _ hk'),
-      Int.to_nat_of_nonneg (Int.mod_nonneg _ hk'), Int.mul_mod, Int.mod_mod, ←Int.mul_mod]
+-- error in Data.Int.Gcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exists_mul_mod_eq_gcd
+{k n : exprℕ()}
+(hk : «expr < »(gcd n k, k)) : «expr∃ , »((m), «expr = »(«expr % »(«expr * »(n, m), k), gcd n k)) :=
+begin
+  have [ident hk'] [] [":=", expr int.coe_nat_ne_zero.mpr (ne_of_gt (lt_of_le_of_lt (zero_le (gcd n k)) hk))],
+  have [ident key] [] [":=", expr congr_arg (λ m, int.nat_mod m k) (gcd_eq_gcd_ab n k)],
+  simp_rw [expr int.nat_mod] ["at", ident key],
+  rw ["[", expr int.add_mul_mod_self_left, ",", "<-", expr int.coe_nat_mod, ",", expr int.to_nat_coe_nat, ",", expr mod_eq_of_lt hk, "]"] ["at", ident key],
+  refine [expr ⟨«expr % »(n.gcd_a k, k).to_nat, eq.trans (int.coe_nat_inj _) key.symm⟩],
+  rw ["[", expr int.coe_nat_mod, ",", expr int.coe_nat_mul, ",", expr int.to_nat_of_nonneg (int.mod_nonneg _ hk'), ",", expr int.to_nat_of_nonneg (int.mod_nonneg _ hk'), ",", expr int.mul_mod, ",", expr int.mod_mod, ",", "<-", expr int.mul_mod, "]"] []
+end
 
 theorem exists_mul_mod_eq_one_of_coprime {k n : ℕ} (hkn : coprime n k) (hk : 1 < k) : ∃ m, (n*m) % k = 1 :=
   Exists.cases_on (exists_mul_mod_eq_gcd (lt_of_le_of_ltₓ (le_of_eqₓ hkn) hk)) fun m hm => ⟨m, hm.trans hkn⟩
@@ -568,10 +565,10 @@ unsafe def prove_gcd_nat (c : instance_cache) (ex ey : expr) : tactic (instance_
     let x ← ex.to_nat 
     let y ← ey.to_nat 
     match x, y with 
-      | 0, _ => pure (c, ey, (quote Nat.gcd_zero_leftₓ).mk_app [ey])
-      | _, 0 => pure (c, ex, (quote Nat.gcd_zero_rightₓ).mk_app [ex])
-      | 1, _ => pure (c, quote (1 : ℕ), (quote Nat.gcd_one_leftₓ).mk_app [ey])
-      | _, 1 => pure (c, quote (1 : ℕ), (quote Nat.gcd_one_rightₓ).mk_app [ex])
+      | 0, _ => pure (c, ey, (quote.1 Nat.gcd_zero_leftₓ).mk_app [ey])
+      | _, 0 => pure (c, ex, (quote.1 Nat.gcd_zero_rightₓ).mk_app [ex])
+      | 1, _ => pure (c, quote.1 (1 : ℕ), (quote.1 Nat.gcd_one_leftₓ).mk_app [ey])
+      | _, 1 => pure (c, quote.1 (1 : ℕ), (quote.1 Nat.gcd_one_rightₓ).mk_app [ex])
       | _, _ =>
         do 
           let (d, a, b) := Nat.xgcdAux x 1 0 y 0 1
@@ -579,13 +576,13 @@ unsafe def prove_gcd_nat (c : instance_cache) (ex ey : expr) : tactic (instance_
               do 
                 let (c, ea) ← c.of_nat (y / x)
                 let (c, _, p) ← prove_mul_nat c ex ea 
-                pure (c, ex, (quote nat_gcd_helper_dvd_left).mk_app [ex, ey, ea, p])
+                pure (c, ex, (quote.1 nat_gcd_helper_dvd_left).mk_app [ex, ey, ea, p])
             else
               if d = y then
                 do 
                   let (c, ea) ← c.of_nat (x / y)
                   let (c, _, p) ← prove_mul_nat c ey ea 
-                  pure (c, ey, (quote nat_gcd_helper_dvd_right).mk_app [ex, ey, ea, p])
+                  pure (c, ey, (quote.1 nat_gcd_helper_dvd_right).mk_app [ex, ey, ea, p])
               else
                 do 
                   let (c, ed) ← c.of_nat d 
@@ -598,7 +595,7 @@ unsafe def prove_gcd_nat (c : instance_cache) (ex ey : expr) : tactic (instance_
                   let (c, etx, px) ← prove_mul_nat c ex ea 
                   let (c, ety, py) ← prove_mul_nat c ey eb 
                   let (c, p) ← if a ≥ 0 then prove_add_nat c ety ed etx else prove_add_nat c etx ed ety 
-                  let pf : expr := if a ≥ 0 then quote nat_gcd_helper_2 else quote nat_gcd_helper_1 
+                  let pf : expr := if a ≥ 0 then quote.1 nat_gcd_helper_2 else quote.1 nat_gcd_helper_1 
                   pure (c, ed, pf.mk_app [ed, ex, ey, ea, eb, eu, ev, etx, ety, pu, pv, px, py, p])
 
 /-- Evaluates the `nat.lcm` function. -/
@@ -607,10 +604,10 @@ unsafe def prove_lcm_nat (c : instance_cache) (ex ey : expr) : tactic (instance_
     let x ← ex.to_nat 
     let y ← ey.to_nat 
     match x, y with 
-      | 0, _ => pure (c, quote (0 : ℕ), (quote Nat.lcm_zero_leftₓ).mk_app [ey])
-      | _, 0 => pure (c, quote (0 : ℕ), (quote Nat.lcm_zero_rightₓ).mk_app [ex])
-      | 1, _ => pure (c, ey, (quote Nat.lcm_one_leftₓ).mk_app [ey])
-      | _, 1 => pure (c, ex, (quote Nat.lcm_one_rightₓ).mk_app [ex])
+      | 0, _ => pure (c, quote.1 (0 : ℕ), (quote.1 Nat.lcm_zero_leftₓ).mk_app [ey])
+      | _, 0 => pure (c, quote.1 (0 : ℕ), (quote.1 Nat.lcm_zero_rightₓ).mk_app [ex])
+      | 1, _ => pure (c, ey, (quote.1 Nat.lcm_one_leftₓ).mk_app [ey])
+      | _, 1 => pure (c, ex, (quote.1 Nat.lcm_one_rightₓ).mk_app [ex])
       | _, _ =>
         do 
           let (c, ed, pd) ← prove_gcd_nat c ex ey 
@@ -619,7 +616,7 @@ unsafe def prove_lcm_nat (c : instance_cache) (ex ey : expr) : tactic (instance_
           let d ← ed.to_nat 
           let (c, em) ← c.of_nat ((x*y) / d)
           let (c, _, dm) ← prove_mul_nat c ed em 
-          pure (c, em, (quote nat_lcm_helper).mk_app [ex, ey, ed, em, en, pd, p0, xy, dm])
+          pure (c, em, (quote.1 nat_lcm_helper).mk_app [ex, ey, ed, em, en, pd, p0, xy, dm])
 
 /-- Evaluates the `int.gcd` function. -/
 unsafe def prove_gcd_int (zc nc : instance_cache) : expr → expr → tactic (instance_cache × instance_cache × expr × expr)
@@ -628,19 +625,19 @@ unsafe def prove_gcd_int (zc nc : instance_cache) : expr → expr → tactic (in
   | some x =>
     do 
       let (zc, nc, d, p) ← prove_gcd_int x y 
-      pure (zc, nc, d, (quote int_gcd_helper_neg_left).mk_app [x, y, d, p])
+      pure (zc, nc, d, (quote.1 int_gcd_helper_neg_left).mk_app [x, y, d, p])
   | none =>
     match match_neg y with 
     | some y =>
       do 
         let (zc, nc, d, p) ← prove_gcd_int x y 
-        pure (zc, nc, d, (quote int_gcd_helper_neg_right).mk_app [x, y, d, p])
+        pure (zc, nc, d, (quote.1 int_gcd_helper_neg_right).mk_app [x, y, d, p])
     | none =>
       do 
         let (zc, nc, nx, px) ← prove_nat_uncast zc nc x 
         let (zc, nc, ny, py) ← prove_nat_uncast zc nc y 
         let (nc, d, p) ← prove_gcd_nat nc nx ny 
-        pure (zc, nc, d, (quote int_gcd_helper).mk_app [x, y, nx, ny, d, px, py, p])
+        pure (zc, nc, d, (quote.1 int_gcd_helper).mk_app [x, y, nx, ny, d, px, py, p])
 
 /-- Evaluates the `int.lcm` function. -/
 unsafe def prove_lcm_int (zc nc : instance_cache) : expr → expr → tactic (instance_cache × instance_cache × expr × expr)
@@ -649,19 +646,19 @@ unsafe def prove_lcm_int (zc nc : instance_cache) : expr → expr → tactic (in
   | some x =>
     do 
       let (zc, nc, d, p) ← prove_lcm_int x y 
-      pure (zc, nc, d, (quote int_lcm_helper_neg_left).mk_app [x, y, d, p])
+      pure (zc, nc, d, (quote.1 int_lcm_helper_neg_left).mk_app [x, y, d, p])
   | none =>
     match match_neg y with 
     | some y =>
       do 
         let (zc, nc, d, p) ← prove_lcm_int x y 
-        pure (zc, nc, d, (quote int_lcm_helper_neg_right).mk_app [x, y, d, p])
+        pure (zc, nc, d, (quote.1 int_lcm_helper_neg_right).mk_app [x, y, d, p])
     | none =>
       do 
         let (zc, nc, nx, px) ← prove_nat_uncast zc nc x 
         let (zc, nc, ny, py) ← prove_nat_uncast zc nc y 
         let (nc, d, p) ← prove_lcm_nat nc nx ny 
-        pure (zc, nc, d, (quote int_lcm_helper).mk_app [x, y, nx, ny, d, px, py, p])
+        pure (zc, nc, d, (quote.1 int_lcm_helper).mk_app [x, y, nx, ny, d, px, py, p])
 
 /-- Evaluates the `nat.coprime` function. -/
 unsafe def prove_coprime_nat (c : instance_cache) (ex ey : expr) : tactic (instance_cache × Sum expr expr) :=
@@ -669,22 +666,22 @@ unsafe def prove_coprime_nat (c : instance_cache) (ex ey : expr) : tactic (insta
     let x ← ex.to_nat 
     let y ← ey.to_nat 
     match x, y with 
-      | 1, _ => pure (c, Sum.inl$ (quote Nat.coprime_one_leftₓ).mk_app [ey])
-      | _, 1 => pure (c, Sum.inl$ (quote Nat.coprime_one_rightₓ).mk_app [ex])
-      | 0, 0 => pure (c, Sum.inr (quote Nat.not_coprime_zero_zero))
+      | 1, _ => pure (c, Sum.inl$ (quote.1 Nat.coprime_one_leftₓ).mk_app [ey])
+      | _, 1 => pure (c, Sum.inl$ (quote.1 Nat.coprime_one_rightₓ).mk_app [ex])
+      | 0, 0 => pure (c, Sum.inr (quote.1 Nat.not_coprime_zero_zero))
       | 0, _ =>
         do 
-          let c ← mk_instance_cache (quote ℕ)
-          let (c, p) ← prove_lt_nat c (quote 1) ey 
-          pure (c, Sum.inr$ (quote nat_coprime_helper_zero_left).mk_app [ey, p])
+          let c ← mk_instance_cache (quote.1 ℕ)
+          let (c, p) ← prove_lt_nat c (quote.1 1) ey 
+          pure (c, Sum.inr$ (quote.1 nat_coprime_helper_zero_left).mk_app [ey, p])
       | _, 0 =>
         do 
-          let c ← mk_instance_cache (quote ℕ)
-          let (c, p) ← prove_lt_nat c (quote 1) ex 
-          pure (c, Sum.inr$ (quote nat_coprime_helper_zero_right).mk_app [ex, p])
+          let c ← mk_instance_cache (quote.1 ℕ)
+          let (c, p) ← prove_lt_nat c (quote.1 1) ex 
+          pure (c, Sum.inr$ (quote.1 nat_coprime_helper_zero_right).mk_app [ex, p])
       | _, _ =>
         do 
-          let c ← mk_instance_cache (quote ℕ)
+          let c ← mk_instance_cache (quote.1 ℕ)
           let (d, a, b) := Nat.xgcdAux x 1 0 y 0 1
           if d = 1 then
               do 
@@ -692,8 +689,8 @@ unsafe def prove_coprime_nat (c : instance_cache) (ex ey : expr) : tactic (insta
                 let (c, eb) ← c.of_nat b.nat_abs 
                 let (c, etx, px) ← prove_mul_nat c ex ea 
                 let (c, ety, py) ← prove_mul_nat c ey eb 
-                let (c, p) ← if a ≥ 0 then prove_add_nat c ety (quote 1) etx else prove_add_nat c etx (quote 1) ety 
-                let pf : expr := if a ≥ 0 then quote nat_coprime_helper_2 else quote nat_coprime_helper_1 
+                let (c, p) ← if a ≥ 0 then prove_add_nat c ety (quote.1 1) etx else prove_add_nat c etx (quote.1 1) ety 
+                let pf : expr := if a ≥ 0 then quote.1 nat_coprime_helper_2 else quote.1 nat_coprime_helper_1 
                 pure (c, Sum.inl$ pf.mk_app [ex, ey, ea, eb, etx, ety, px, py, p])
             else
               do 
@@ -702,33 +699,33 @@ unsafe def prove_coprime_nat (c : instance_cache) (ex ey : expr) : tactic (insta
                 let (c, ev) ← c.of_nat (y / d)
                 let (c, _, pu) ← prove_mul_nat c ed eu 
                 let (c, _, pv) ← prove_mul_nat c ed ev 
-                let (c, p) ← prove_lt_nat c (quote 1) ed 
-                pure (c, Sum.inr$ (quote nat_not_coprime_helper).mk_app [ed, ex, ey, eu, ev, pu, pv, p])
+                let (c, p) ← prove_lt_nat c (quote.1 1) ed 
+                pure (c, Sum.inr$ (quote.1 nat_not_coprime_helper).mk_app [ed, ex, ey, eu, ev, pu, pv, p])
 
 /-- Evaluates the `gcd`, `lcm`, and `coprime` functions. -/
 @[normNum]
 unsafe def eval_gcd : expr → tactic (expr × expr)
-| quote Nat.gcdₓ (%%ex) (%%ey) =>
+| quote.1 (Nat.gcdₓ (%%ₓex) (%%ₓey)) =>
   do 
-    let c ← mk_instance_cache (quote ℕ)
+    let c ← mk_instance_cache (quote.1 ℕ)
     Prod.snd <$> prove_gcd_nat c ex ey
-| quote Nat.lcmₓ (%%ex) (%%ey) =>
+| quote.1 (Nat.lcmₓ (%%ₓex) (%%ₓey)) =>
   do 
-    let c ← mk_instance_cache (quote ℕ)
+    let c ← mk_instance_cache (quote.1 ℕ)
     Prod.snd <$> prove_lcm_nat c ex ey
-| quote Nat.Coprime (%%ex) (%%ey) =>
+| quote.1 (Nat.Coprime (%%ₓex) (%%ₓey)) =>
   do 
-    let c ← mk_instance_cache (quote ℕ)
+    let c ← mk_instance_cache (quote.1 ℕ)
     prove_coprime_nat c ex ey >>= Sum.elim true_intro false_intro ∘ Prod.snd
-| quote Int.gcdₓ (%%ex) (%%ey) =>
+| quote.1 (Int.gcdₓ (%%ₓex) (%%ₓey)) =>
   do 
-    let zc ← mk_instance_cache (quote ℤ)
-    let nc ← mk_instance_cache (quote ℕ)
+    let zc ← mk_instance_cache (quote.1 ℤ)
+    let nc ← mk_instance_cache (quote.1 ℕ)
     (Prod.snd ∘ Prod.snd) <$> prove_gcd_int zc nc ex ey
-| quote Int.lcm (%%ex) (%%ey) =>
+| quote.1 (Int.lcm (%%ₓex) (%%ₓey)) =>
   do 
-    let zc ← mk_instance_cache (quote ℤ)
-    let nc ← mk_instance_cache (quote ℕ)
+    let zc ← mk_instance_cache (quote.1 ℤ)
+    let nc ← mk_instance_cache (quote.1 ℕ)
     (Prod.snd ∘ Prod.snd) <$> prove_lcm_int zc nc ex ey
 | _ => failed
 

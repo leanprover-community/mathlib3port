@@ -1,4 +1,3 @@
-import Leanbin.Data.Buffer.Parser 
 import Mathbin.Tactic.DocCommands
 
 open Lean.Parser Tactic Interactive

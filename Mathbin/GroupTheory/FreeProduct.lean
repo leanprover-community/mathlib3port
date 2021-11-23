@@ -60,7 +60,7 @@ inductive FreeProduct.Rel : FreeMonoid (Σi, M i) → FreeMonoid (Σi, M i) → 
   | of_one (i : ι) : FreeProduct.Rel (FreeMonoid.of ⟨i, 1⟩) 1
   | of_mul {i : ι} (x y : M i) : FreeProduct.Rel (FreeMonoid.of ⟨i, x⟩*FreeMonoid.of ⟨i, y⟩) (FreeMonoid.of ⟨i, x*y⟩)
 
--- error in GroupTheory.FreeProduct: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler monoid
+-- error in GroupTheory.FreeProduct: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monoid
 /-- The free product (categorical coproduct) of an indexed family of monoids. -/
 @[derive #["[", expr monoid, ",", expr inhabited, "]"]]
 def free_product : Type* :=
@@ -159,10 +159,10 @@ section Groupₓ
 variable(G : ι → Type _)[∀ i, Groupₓ (G i)]
 
 instance  : HasInv (FreeProduct G) :=
-  { inv := Opposite.unop ∘ lift fun i => (of : G i →* _).op.comp (MulEquiv.inv' (G i)).toMonoidHom }
+  { inv := MulOpposite.unop ∘ lift fun i => (of : G i →* _).op.comp (MulEquiv.inv' (G i)).toMonoidHom }
 
 theorem inv_def (x : FreeProduct G) :
-  x⁻¹ = Opposite.unop (lift (fun i => (of : G i →* _).op.comp (MulEquiv.inv' (G i)).toMonoidHom) x) :=
+  x⁻¹ = MulOpposite.unop (lift (fun i => (of : G i →* _).op.comp (MulEquiv.inv' (G i)).toMonoidHom) x) :=
   rfl
 
 instance  : Groupₓ (FreeProduct G) :=
@@ -173,14 +173,14 @@ instance  : Groupₓ (FreeProduct G) :=
         rw [inv_def]
         apply m.induction_on
         ·
-          rw [MonoidHom.map_one, Opposite.unop_one, one_mulₓ]
+          rw [MonoidHom.map_one, MulOpposite.unop_one, one_mulₓ]
         ·
           intro i m 
           change (of (m⁻¹)*of m) = 1
           rw [←of.map_mul, mul_left_invₓ, of.map_one]
         ·
           intro x y hx hy 
-          rw [MonoidHom.map_mul, Opposite.unop_mul, mul_assocₓ, ←mul_assocₓ _ x y, hx, one_mulₓ, hy] }
+          rw [MonoidHom.map_mul, MulOpposite.unop_mul, mul_assocₓ, ←mul_assocₓ _ x y, hx, one_mulₓ, hy] }
 
 end Groupₓ
 
@@ -266,31 +266,27 @@ theorem prod_rcons {i} (p : pair M i) : Prod (rcons p) = of p.head*Prod p.tail :
     by 
       rw [rcons, dif_neg hm, Prod, List.map_consₓ, List.prod_cons, Prod]
 
-theorem rcons_inj {i} : Function.Injective (rcons : pair M i → word M) :=
-  by 
-    rintro ⟨m, w, h⟩ ⟨m', w', h'⟩ he 
-    byCases' hm : m = 1 <;> byCases' hm' : m' = 1
-    ·
-      simp only [rcons, dif_pos hm, dif_pos hm'] at he 
-      cc
-    ·
-      exFalso 
-      simp only [rcons, dif_pos hm, dif_neg hm'] at he 
-      rw [he] at h 
-      exact h rfl
-    ·
-      exFalso 
-      simp only [rcons, dif_pos hm', dif_neg hm] at he 
-      rw [←he] at h' 
-      exact h' rfl
-    ·
-      have  : m = m' ∧ w.to_list = w'.to_list
-      ·
-        simpa only [rcons, dif_neg hm, dif_neg hm', true_andₓ, eq_self_iff_true, Subtype.mk_eq_mk, heq_iff_eq,
-          ←Subtype.ext_iff_val] using he 
-      rcases this with ⟨rfl, h⟩
-      congr 
-      exact word.ext _ _ h
+-- error in GroupTheory.FreeProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem rcons_inj {i} : function.injective (rcons : pair M i → word M) :=
+begin
+  rintros ["⟨", ident m, ",", ident w, ",", ident h, "⟩", "⟨", ident m', ",", ident w', ",", ident h', "⟩", ident he],
+  by_cases [expr hm, ":", expr «expr = »(m, 1)]; by_cases [expr hm', ":", expr «expr = »(m', 1)],
+  { simp [] [] ["only"] ["[", expr rcons, ",", expr dif_pos hm, ",", expr dif_pos hm', "]"] [] ["at", ident he],
+    cc },
+  { exfalso,
+    simp [] [] ["only"] ["[", expr rcons, ",", expr dif_pos hm, ",", expr dif_neg hm', "]"] [] ["at", ident he],
+    rw [expr he] ["at", ident h],
+    exact [expr h rfl] },
+  { exfalso,
+    simp [] [] ["only"] ["[", expr rcons, ",", expr dif_pos hm', ",", expr dif_neg hm, "]"] [] ["at", ident he],
+    rw ["<-", expr he] ["at", ident h'],
+    exact [expr h' rfl] },
+  { have [] [":", expr «expr ∧ »(«expr = »(m, m'), «expr = »(w.to_list, w'.to_list))] [],
+    { simpa [] [] ["only"] ["[", expr rcons, ",", expr dif_neg hm, ",", expr dif_neg hm', ",", expr true_and, ",", expr eq_self_iff_true, ",", expr subtype.mk_eq_mk, ",", expr heq_iff_eq, ",", "<-", expr subtype.ext_iff_val, "]"] [] ["using", expr he] },
+    rcases [expr this, "with", "⟨", ident rfl, ",", ident h, "⟩"],
+    congr,
+    exact [expr word.ext _ _ h] }
+end
 
 variable[DecidableEq ι]
 

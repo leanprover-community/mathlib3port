@@ -1,6 +1,6 @@
 import Mathbin.Algebra.Lie.Free 
 import Mathbin.Algebra.Lie.Quotient 
-import Mathbin.Data.Matrix.Notation
+import Mathbin.Data.Matrix.Basic
 
 /-!
 # Lie algebras from Cartan matrices
@@ -167,7 +167,7 @@ end Relations
 
 end CartanMatrix
 
--- error in Algebra.Lie.CartanMatrix: ././Mathport/Syntax/Translate/Basic.lean:702:9: unsupported derive handler inhabited
+-- error in Algebra.Lie.CartanMatrix: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- The Lie algebra corresponding to a Cartan matrix.
 
 Note that it is defined for any matrix of integers. Its value for non-Cartan matrices should be
@@ -178,7 +178,7 @@ def matrix.to_lie_algebra :=
 
 namespace CartanMatrix
 
--- error in Algebra.Lie.CartanMatrix: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Algebra.Lie.CartanMatrix: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- The Cartan matrix of type e₆. See [bourbaki1968] plate V, page 277.
 
 The corresponding Dynkin diagram is:
@@ -190,7 +190,7 @@ o --- o --- o --- o --- o
 -/ def E₆ : matrix (fin 6) (fin 6) exprℤ() :=
 «expr![ , ]»([«expr![ , ]»([2, 0, «expr- »(1), 0, 0, 0]), «expr![ , ]»([0, 2, 0, «expr- »(1), 0, 0]), «expr![ , ]»([«expr- »(1), 0, 2, «expr- »(1), 0, 0]), «expr![ , ]»([0, «expr- »(1), «expr- »(1), 2, «expr- »(1), 0]), «expr![ , ]»([0, 0, 0, «expr- »(1), 2, «expr- »(1)]), «expr![ , ]»([0, 0, 0, 0, «expr- »(1), 2])])
 
--- error in Algebra.Lie.CartanMatrix: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Algebra.Lie.CartanMatrix: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- The Cartan matrix of type e₇. See [bourbaki1968] plate VI, page 281.
 
 The corresponding Dynkin diagram is:
@@ -202,7 +202,7 @@ o --- o --- o --- o --- o --- o
 -/ def E₇ : matrix (fin 7) (fin 7) exprℤ() :=
 «expr![ , ]»([«expr![ , ]»([2, 0, «expr- »(1), 0, 0, 0, 0]), «expr![ , ]»([0, 2, 0, «expr- »(1), 0, 0, 0]), «expr![ , ]»([«expr- »(1), 0, 2, «expr- »(1), 0, 0, 0]), «expr![ , ]»([0, «expr- »(1), «expr- »(1), 2, «expr- »(1), 0, 0]), «expr![ , ]»([0, 0, 0, «expr- »(1), 2, «expr- »(1), 0]), «expr![ , ]»([0, 0, 0, 0, «expr- »(1), 2, «expr- »(1)]), «expr![ , ]»([0, 0, 0, 0, 0, «expr- »(1), 2])])
 
--- error in Algebra.Lie.CartanMatrix: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Algebra.Lie.CartanMatrix: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- The Cartan matrix of type e₈. See [bourbaki1968] plate VII, page 285.
 
 The corresponding Dynkin diagram is:
@@ -214,7 +214,7 @@ o --- o --- o --- o --- o --- o --- o
 -/ def E₈ : matrix (fin 8) (fin 8) exprℤ() :=
 «expr![ , ]»([«expr![ , ]»([2, 0, «expr- »(1), 0, 0, 0, 0, 0]), «expr![ , ]»([0, 2, 0, «expr- »(1), 0, 0, 0, 0]), «expr![ , ]»([«expr- »(1), 0, 2, «expr- »(1), 0, 0, 0, 0]), «expr![ , ]»([0, «expr- »(1), «expr- »(1), 2, «expr- »(1), 0, 0, 0]), «expr![ , ]»([0, 0, 0, «expr- »(1), 2, «expr- »(1), 0, 0]), «expr![ , ]»([0, 0, 0, 0, «expr- »(1), 2, «expr- »(1), 0]), «expr![ , ]»([0, 0, 0, 0, 0, «expr- »(1), 2, «expr- »(1)]), «expr![ , ]»([0, 0, 0, 0, 0, 0, «expr- »(1), 2])])
 
--- error in Algebra.Lie.CartanMatrix: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Algebra.Lie.CartanMatrix: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- The Cartan matrix of type f₄. See [bourbaki1968] plate VIII, page 288.
 
 The corresponding Dynkin diagram is:
@@ -224,7 +224,7 @@ o --- o =>= o --- o
 -/ def F₄ : matrix (fin 4) (fin 4) exprℤ() :=
 «expr![ , ]»([«expr![ , ]»([2, «expr- »(1), 0, 0]), «expr![ , ]»([«expr- »(1), 2, «expr- »(2), 0]), «expr![ , ]»([0, «expr- »(1), 2, «expr- »(1)]), «expr![ , ]»([0, 0, «expr- »(1), 2])])
 
--- error in Algebra.Lie.CartanMatrix: ././Mathport/Syntax/Translate/Basic.lean:557:61: unsupported notation `«expr![ , ]»
+-- error in Algebra.Lie.CartanMatrix: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- The Cartan matrix of type g₂. See [bourbaki1968] plate IX, page 290.
 
 The corresponding Dynkin diagram is:

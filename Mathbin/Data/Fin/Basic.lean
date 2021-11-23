@@ -1,8 +1,7 @@
-import Mathbin.Data.Nat.Cast 
-import Mathbin.Data.Int.Basic 
-import Mathbin.Tactic.Localized 
 import Mathbin.Tactic.ApplyFun 
-import Mathbin.Order.RelIso
+import Mathbin.Data.Nat.Cast 
+import Mathbin.Order.RelIso 
+import Mathbin.Tactic.Localized
 
 /-!
 # The finite type with `n` elements
@@ -306,22 +305,22 @@ variable{α : Type _}[Preorderₓ α]
 
 open Set
 
+-- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `e` is an `order_iso` between `fin n` and `fin m`, then `n = m` and `e` is the identity
 map. In this lemma we state that for each `i : fin n` we have `(e i : ℕ) = (i : ℕ)`. -/
 @[simp]
-theorem coe_order_iso_apply (e : Finₓ n ≃o Finₓ m) (i : Finₓ n) : (e i : ℕ) = i :=
-  by 
-    rcases i with ⟨i, hi⟩
-    rw [Subtype.coe_mk]
-    induction' i using Nat.strong_induction_onₓ with i h 
-    refine' le_antisymmₓ (forall_lt_iff_le.1$ fun j hj => _) (forall_lt_iff_le.1$ fun j hj => _)
-    ·
-      have  := e.symm.lt_iff_lt.2 (mk_lt_of_lt_coe hj)
-      rw [e.symm_apply_apply] at this 
-      convert this 
-      simpa using h _ this (e.symm _).is_lt
-    ·
-      rwa [←h j hj (hj.trans hi), ←lt_iff_coe_lt_coe, e.lt_iff_lt]
+theorem coe_order_iso_apply (e : «expr ≃o »(fin n, fin m)) (i : fin n) : «expr = »((e i : exprℕ()), i) :=
+begin
+  rcases [expr i, "with", "⟨", ident i, ",", ident hi, "⟩"],
+  rw ["[", expr subtype.coe_mk, "]"] [],
+  induction [expr i] ["using", ident nat.strong_induction_on] ["with", ident i, ident h] [],
+  refine [expr le_antisymm «expr $ »(forall_lt_iff_le.1, λ j hj, _) «expr $ »(forall_lt_iff_le.1, λ j hj, _)],
+  { have [] [] [":=", expr e.symm.lt_iff_lt.2 (mk_lt_of_lt_coe hj)],
+    rw [expr e.symm_apply_apply] ["at", ident this],
+    convert [] [expr this] [],
+    simpa [] [] [] [] [] ["using", expr h _ this (e.symm _).is_lt] },
+  { rwa ["[", "<-", expr h j hj (hj.trans hi), ",", "<-", expr lt_iff_coe_lt_coe, ",", expr e.lt_iff_lt, "]"] [] }
+end
 
 instance order_iso_subsingleton : Subsingleton (Finₓ n ≃o α) :=
   ⟨fun e e' =>
@@ -347,27 +346,31 @@ theorem order_embedding_eq {f g : Finₓ n ↪o α} (h : range f = range g) : f 
 
 end 
 
+-- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A function `f` on `fin n` is strictly monotone if and only if `f i < f (i+1)` for all `i`. -/
-theorem strict_mono_iff_lt_succ {α : Type _} [Preorderₓ α] {f : Finₓ n → α} :
-  StrictMono f ↔ ∀ i h : (i+1) < n, f ⟨i, lt_of_le_of_ltₓ (Nat.le_succₓ i) h⟩ < f ⟨i+1, h⟩ :=
-  by 
-    split 
-    ·
-      intro H i hi 
-      apply H 
-      exact Nat.lt_succ_selfₓ _
-    ·
-      intro H 
-      have A : ∀ i j h : i < j h' : j < n, f ⟨i, lt_transₓ h h'⟩ < f ⟨j, h'⟩
-      ·
-        intro i j h h' 
-        induction' h with k h IH
-        ·
-          exact H _ _
-        ·
-          exact lt_transₓ (IH (Nat.lt_of_succ_ltₓ h')) (H _ _)
-      intro i j hij 
-      convert A (i : ℕ) (j : ℕ) hij j.2 <;> ext <;> simp only [Subtype.coe_eta]
+theorem strict_mono_iff_lt_succ
+{α : Type*}
+[preorder α]
+{f : fin n → α} : «expr ↔ »(strict_mono f, ∀
+ (i)
+ (h : «expr < »(«expr + »(i, 1), n)), «expr < »(f ⟨i, lt_of_le_of_lt (nat.le_succ i) h⟩, f ⟨«expr + »(i, 1), h⟩)) :=
+begin
+  split,
+  { assume [binders (H i hi)],
+    apply [expr H],
+    exact [expr nat.lt_succ_self _] },
+  { assume [binders (H)],
+    have [ident A] [":", expr ∀
+     (i j)
+     (h : «expr < »(i, j))
+     (h' : «expr < »(j, n)), «expr < »(f ⟨i, lt_trans h h'⟩, f ⟨j, h'⟩)] [],
+    { assume [binders (i j h h')],
+      induction [expr h] [] ["with", ident k, ident h, ident IH] [],
+      { exact [expr H _ _] },
+      { exact [expr lt_trans (IH (nat.lt_of_succ_lt h')) (H _ _)] } },
+    assume [binders (i j hij)],
+    convert [] [expr A (i : exprℕ()) (j : exprℕ()) hij j.2] []; ext [] [] []; simp [] [] ["only"] ["[", expr subtype.coe_eta, "]"] [] [] }
+end
 
 end Order
 
@@ -574,20 +577,17 @@ theorem one_pos : (0 : Finₓ (n+2)) < 1 :=
 theorem zero_ne_one : (0 : Finₓ (n+2)) ≠ 1 :=
   ne_of_ltₓ one_pos
 
-@[simp]
-theorem zero_eq_one_iff : (0 : Finₓ (n+1)) = 1 ↔ n = 0 :=
-  by 
-    split 
-    ·
-      cases n <;> intro h
-      ·
-        rfl
-      ·
-        have  := zero_ne_one 
-        contradiction
-    ·
-      rintro rfl 
-      rfl
+-- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[simp] theorem zero_eq_one_iff : «expr ↔ »(«expr = »((0 : fin «expr + »(n, 1)), 1), «expr = »(n, 0)) :=
+begin
+  split,
+  { cases [expr n] []; intro [ident h],
+    { refl },
+    { have [] [] [":=", expr zero_ne_one],
+      contradiction } },
+  { rintro [ident rfl],
+    refl }
+end
 
 @[simp]
 theorem one_eq_zero_iff : (1 : Finₓ (n+1)) = 0 ↔ n = 0 :=
@@ -1320,16 +1320,22 @@ theorem add_cases_left {m n : ℕ} {C : Finₓ (m+n) → Sort _} (hleft : ∀ i,
     rw [add_cases, dif_pos (cast_add_lt _ _)]
     rfl
 
+-- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem add_cases_right {m n : ℕ} {C : Finₓ (m+n) → Sort _} (hleft : ∀ i, C (cast_add n i))
-  (hright : ∀ i, C (nat_add m i)) (i : Finₓ n) : add_cases hleft hright (nat_add m i) = hright i :=
-  by 
-    have  : ¬(nat_add m i : ℕ) < m 
-    exact (le_coe_nat_add _ _).not_lt 
-    rw [add_cases, dif_neg this]
-    refine' eq_of_heq ((eq_rec_heqₓ _ _).trans _)
-    congr 1
-    simp 
+theorem add_cases_right
+{m n : exprℕ()}
+{C : fin «expr + »(m, n) → Sort*}
+(hleft : ∀ i, C (cast_add n i))
+(hright : ∀ i, C (nat_add m i))
+(i : fin n) : «expr = »(add_cases hleft hright (nat_add m i), hright i) :=
+begin
+  have [] [":", expr «expr¬ »(«expr < »((nat_add m i : exprℕ()), m))] [],
+  from [expr (le_coe_nat_add _ _).not_lt],
+  rw ["[", expr add_cases, ",", expr dif_neg this, "]"] [],
+  refine [expr eq_of_heq ((eq_rec_heq _ _).trans _)],
+  congr' [1] [],
+  simp [] [] [] [] [] []
+end
 
 end Rec
 
@@ -1513,14 +1519,10 @@ theorem pred_succ_above {x : Finₓ n} {y : Finₓ (n+1)} (h : y ≤ cast_succ x
   by 
     simp only [succ_above_above _ _ h, pred_succ]
 
--- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:340:40: in exacts: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
-theorem exists_succ_above_eq
-{x y : fin «expr + »(n, 1)}
-(h : «expr ≠ »(x, y)) : «expr∃ , »((z), «expr = »(y.succ_above z, x)) :=
-begin
-  cases [expr h.lt_or_lt] ["with", ident hlt, ident hlt],
-  exacts ["[", expr ⟨_, succ_above_cast_lt hlt⟩, ",", expr ⟨_, succ_above_pred hlt⟩, "]"]
-end
+theorem exists_succ_above_eq {x y : Finₓ (n+1)} (h : x ≠ y) : ∃ z, y.succ_above z = x :=
+  by 
+    cases' h.lt_or_lt with hlt hlt 
+    exacts[⟨_, succ_above_cast_lt hlt⟩, ⟨_, succ_above_pred hlt⟩]
 
 @[simp]
 theorem exists_succ_above_eq_iff {x y : Finₓ (n+1)} : (∃ z, x.succ_above z = y) ↔ y ≠ x :=
@@ -1623,18 +1625,16 @@ theorem pred_above_right_monotone (p : Finₓ n) : Monotone p.pred_above :=
       ·
         exact H
 
-theorem pred_above_left_monotone (i : Finₓ (n+1)) : Monotone fun p => pred_above p i :=
-  fun a b H =>
-    by 
-      dsimp [pred_above]
-      splitIfs with ha hb hb 
-      all_goals 
-        simp only [le_iff_coe_le_coe, coe_pred]
-      ·
-        exact pred_le _
-      ·
-        have  : b < a := cast_succ_lt_cast_succ_iff.mpr (hb.trans_le (le_of_not_gtₓ ha))
-        exact absurd H this.not_le
+-- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pred_above_left_monotone (i : fin «expr + »(n, 1)) : monotone (λ p, pred_above p i) :=
+λ a b H, begin
+  dsimp [] ["[", expr pred_above, "]"] [] [],
+  split_ifs [] ["with", ident ha, ident hb, ident hb],
+  all_goals { simp [] [] ["only"] ["[", expr le_iff_coe_le_coe, ",", expr coe_pred, "]"] [] [] },
+  { exact [expr pred_le _] },
+  { have [] [":", expr «expr < »(b, a)] [":=", expr cast_succ_lt_cast_succ_iff.mpr (hb.trans_le (le_of_not_gt ha))],
+    exact [expr absurd H this.not_le] }
+end
 
 /-- `cast_pred` embeds `i : fin (n + 2)` into `fin (n + 1)`
 by lowering just `last (n + 1)` to `last n`. -/
@@ -1664,18 +1664,26 @@ theorem cast_pred_last : cast_pred (last (n+1)) = last n :=
   by 
     simp [eq_iff_veq, cast_pred, pred_above, cast_succ_lt_last]
 
+-- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
-theorem cast_pred_mk (n i : ℕ) (h : i < n+1) : cast_pred ⟨i, lt_succ_of_lt h⟩ = ⟨i, h⟩ :=
-  by 
-    have  : ¬cast_succ (last n) < ⟨i, lt_succ_of_lt h⟩
-    ·
-      simpa [lt_iff_coe_lt_coe] using le_of_lt_succ h 
-    simp [cast_pred, pred_above, this]
+theorem cast_pred_mk
+(n i : exprℕ())
+(h : «expr < »(i, «expr + »(n, 1))) : «expr = »(cast_pred ⟨i, lt_succ_of_lt h⟩, ⟨i, h⟩) :=
+begin
+  have [] [":", expr «expr¬ »(«expr < »(cast_succ (last n), ⟨i, lt_succ_of_lt h⟩))] [],
+  { simpa [] [] [] ["[", expr lt_iff_coe_lt_coe, "]"] [] ["using", expr le_of_lt_succ h] },
+  simp [] [] [] ["[", expr cast_pred, ",", expr pred_above, ",", expr this, "]"] [] []
+end
 
-theorem pred_above_below (p : Finₓ (n+1)) (i : Finₓ (n+2)) (h : i ≤ p.cast_succ) : p.pred_above i = i.cast_pred :=
-  by 
-    have  : i ≤ (last n).cast_succ := h.trans p.le_last 
-    simp [pred_above, cast_pred, h.not_lt, this.not_lt]
+-- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem pred_above_below
+(p : fin «expr + »(n, 1))
+(i : fin «expr + »(n, 2))
+(h : «expr ≤ »(i, p.cast_succ)) : «expr = »(p.pred_above i, i.cast_pred) :=
+begin
+  have [] [":", expr «expr ≤ »(i, (last n).cast_succ)] [":=", expr h.trans p.le_last],
+  simp [] [] [] ["[", expr pred_above, ",", expr cast_pred, ",", expr h.not_lt, ",", expr this.not_lt, "]"] [] []
+end
 
 @[simp]
 theorem pred_above_last : pred_above (Finₓ.last n) = cast_pred :=
@@ -1754,26 +1762,25 @@ theorem cast_succ_pred_eq_pred_cast_succ {a : Finₓ (n+1)} (ha : a ≠ 0) (ha' 
     cases a 
     rfl
 
+-- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `pred` commutes with `succ_above`. -/
-theorem pred_succ_above_pred {a : Finₓ (n+2)} {b : Finₓ (n+1)} (ha : a ≠ 0) (hb : b ≠ 0)
-  (hk := succ_above_ne_zero ha hb) : (a.pred ha).succAbove (b.pred hb) = (a.succ_above b).pred hk :=
-  by 
-    obtain hbelow | habove := lt_or_leₓ b.cast_succ a
-    ·
-      rw [Finₓ.succ_above_below]
-      ·
-        rwa [cast_succ_pred_eq_pred_cast_succ, Finₓ.pred_inj, Finₓ.succ_above_below]
-      ·
-        rwa [cast_succ_pred_eq_pred_cast_succ, pred_lt_pred_iff]
-    ·
-      rw [Finₓ.succ_above_above]
-      have  : (b.pred hb).succ = b.succ.pred (Finₓ.succ_ne_zero _)
-      ·
-        rw [succ_pred, pred_succ]
-      ·
-        rwa [this, Finₓ.pred_inj, Finₓ.succ_above_above]
-      ·
-        rwa [cast_succ_pred_eq_pred_cast_succ, Finₓ.pred_le_pred_iff]
+theorem pred_succ_above_pred
+{a : fin «expr + »(n, 2)}
+{b : fin «expr + »(n, 1)}
+(ha : «expr ≠ »(a, 0))
+(hb : «expr ≠ »(b, 0))
+(hk := succ_above_ne_zero ha hb) : «expr = »((a.pred ha).succ_above (b.pred hb), (a.succ_above b).pred hk) :=
+begin
+  obtain [ident hbelow, "|", ident habove, ":=", expr lt_or_le b.cast_succ a],
+  { rw [expr fin.succ_above_below] [],
+    { rwa ["[", expr cast_succ_pred_eq_pred_cast_succ, ",", expr fin.pred_inj, ",", expr fin.succ_above_below, "]"] [] },
+    { rwa ["[", expr cast_succ_pred_eq_pred_cast_succ, ",", expr pred_lt_pred_iff, "]"] [] } },
+  { rw [expr fin.succ_above_above] [],
+    have [] [":", expr «expr = »((b.pred hb).succ, b.succ.pred (fin.succ_ne_zero _))] [],
+    by rw ["[", expr succ_pred, ",", expr pred_succ, "]"] [],
+    { rwa ["[", expr this, ",", expr fin.pred_inj, ",", expr fin.succ_above_above, "]"] [] },
+    { rwa ["[", expr cast_succ_pred_eq_pred_cast_succ, ",", expr fin.pred_le_pred_iff, "]"] [] } }
+end
 
 @[simp]
 theorem cast_pred_cast_succ (i : Finₓ (n+1)) : cast_pred i.cast_succ = i :=

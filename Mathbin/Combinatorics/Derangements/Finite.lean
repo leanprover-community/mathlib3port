@@ -38,20 +38,18 @@ theorem card_derangements_invariant {α β : Type _} [Fintype α] [DecidableEq �
   (h : card α = card β) : card (Derangements α) = card (Derangements β) :=
   Fintype.card_congr (Equiv.derangementsCongr$ equiv_of_card_eq h)
 
-theorem card_derangements_fin_add_two (n : ℕ) :
-  card (Derangements (Finₓ (n+2))) = ((n+1)*card (Derangements (Finₓ n)))+(n+1)*card (Derangements (Finₓ (n+1))) :=
-  by 
-    have h1 : ∀ a : Finₓ (n+1), card («expr ᶜ» {a} : Set (Finₓ (n+1))) = card (Finₓ n)
-    ·
-      intro a 
-      simp only [Fintype.card_fin, Finset.card_fin, Fintype.card_of_finset, Finset.filter_ne' _ a,
-        Set.mem_compl_singleton_iff, Finset.card_erase_of_mem (Finset.mem_univ a), Nat.pred_succ]
-    have h2 : card (Finₓ (n+2)) = card (Option (Finₓ (n+1)))
-    ·
-      simp only [card_fin, card_option]
-    simp only [card_derangements_invariant h2, card_congr (@derangements_recursion_equiv (Finₓ (n+1)) _), card_sigma,
-      card_sum, card_derangements_invariant (h1 _), Finset.sum_const, nsmul_eq_mul, Finset.card_fin, mul_addₓ,
-      Nat.cast_id]
+-- error in Combinatorics.Derangements.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem card_derangements_fin_add_two
+(n : exprℕ()) : «expr = »(card (derangements (fin «expr + »(n, 2))), «expr + »(«expr * »(«expr + »(n, 1), card (derangements (fin n))), «expr * »(«expr + »(n, 1), card (derangements (fin «expr + »(n, 1)))))) :=
+begin
+  have [ident h1] [":", expr ∀
+   a : fin «expr + »(n, 1), «expr = »(card («expr ᶜ»({a}) : set (fin «expr + »(n, 1))), card (fin n))] [],
+  { intro [ident a],
+    simp [] [] ["only"] ["[", expr fintype.card_fin, ",", expr finset.card_fin, ",", expr fintype.card_of_finset, ",", expr finset.filter_ne' _ a, ",", expr set.mem_compl_singleton_iff, ",", expr finset.card_erase_of_mem (finset.mem_univ a), ",", expr nat.pred_succ, "]"] [] [] },
+  have [ident h2] [":", expr «expr = »(card (fin «expr + »(n, 2)), card (option (fin «expr + »(n, 1))))] [],
+  { simp [] [] ["only"] ["[", expr card_fin, ",", expr card_option, "]"] [] [] },
+  simp [] [] ["only"] ["[", expr card_derangements_invariant h2, ",", expr card_congr (@derangements_recursion_equiv (fin «expr + »(n, 1)) _), ",", expr card_sigma, ",", expr card_sum, ",", expr card_derangements_invariant (h1 _), ",", expr finset.sum_const, ",", expr nsmul_eq_mul, ",", expr finset.card_fin, ",", expr mul_add, ",", expr nat.cast_id, "]"] [] []
+end
 
 /-- The number of derangements of an `n`-element set. -/
 def numDerangements : ℕ → ℕ
@@ -96,16 +94,15 @@ theorem card_derangements_eq_num_derangements (α : Type _) [Fintype α] [Decida
     rw [←card_derangements_invariant (card_fin _)]
     exact card_derangements_fin_eq_num_derangements
 
-theorem num_derangements_sum (n : ℕ) :
-  (numDerangements n : ℤ) = ∑k in Finset.range (n+1), ((-1 : ℤ) ^ k)*Nat.ascFactorial k (n - k) :=
-  by 
-    induction' n with n hn
-    ·
-      rfl 
-    rw [Finset.sum_range_succ, num_derangements_succ, hn, Finset.mul_sum, tsub_self, Nat.asc_factorial_zero,
-      Int.coe_nat_one, mul_oneₓ, pow_succₓ, neg_one_mul, sub_eq_add_neg, add_left_injₓ, Finset.sum_congr rfl]
-    intro x hx 
-    have h_le : x ≤ n := finset.mem_range_succ_iff.mp hx 
-    rw [Nat.succ_subₓ h_le, Nat.asc_factorial_succ, add_tsub_cancel_of_le h_le, Int.coe_nat_mul, Int.coe_nat_succ,
-      mul_left_commₓ]
+-- error in Combinatorics.Derangements.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem num_derangements_sum
+(n : exprℕ()) : «expr = »((num_derangements n : exprℤ()), «expr∑ in , »((k), finset.range «expr + »(n, 1), «expr * »(«expr ^ »((«expr- »(1) : exprℤ()), k), nat.asc_factorial k «expr - »(n, k)))) :=
+begin
+  induction [expr n] [] ["with", ident n, ident hn] [],
+  { refl },
+  rw ["[", expr finset.sum_range_succ, ",", expr num_derangements_succ, ",", expr hn, ",", expr finset.mul_sum, ",", expr tsub_self, ",", expr nat.asc_factorial_zero, ",", expr int.coe_nat_one, ",", expr mul_one, ",", expr pow_succ, ",", expr neg_one_mul, ",", expr sub_eq_add_neg, ",", expr add_left_inj, ",", expr finset.sum_congr rfl, "]"] [],
+  intros [ident x, ident hx],
+  have [ident h_le] [":", expr «expr ≤ »(x, n)] [":=", expr finset.mem_range_succ_iff.mp hx],
+  rw ["[", expr nat.succ_sub h_le, ",", expr nat.asc_factorial_succ, ",", expr add_tsub_cancel_of_le h_le, ",", expr int.coe_nat_mul, ",", expr int.coe_nat_succ, ",", expr mul_left_comm, "]"] []
+end
 

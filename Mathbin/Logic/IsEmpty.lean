@@ -1,4 +1,4 @@
-import Mathbin.Logic.Basic 
+import Mathbin.Logic.Function.Basic 
 import Mathbin.Tactic.Protected
 
 /-!

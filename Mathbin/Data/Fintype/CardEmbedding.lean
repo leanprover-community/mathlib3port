@@ -23,32 +23,33 @@ theorem card_embedding_eq_of_unique {α β : Type _} [Unique α] [Fintype α] [F
   ‖α ↪ β‖ = ‖β‖ :=
   card_congr Equiv.uniqueEmbeddingEquivResult
 
-private theorem card_embedding_aux {n : ℕ} {β} [Fintype β] [DecidableEq β] (h : n ≤ ‖β‖) :
-  ‖Finₓ n ↪ β‖ = ‖β‖.descFactorial n :=
-  by 
-    induction' n with n hn
-    ·
-      nontriviality Finₓ 0 ↪ β 
-      rw [Nat.desc_factorial_zero, Fintype.card_eq_one_iff]
-      refine' ⟨Nonempty.some Nontrivial.to_nonempty, fun x => Function.Embedding.ext Finₓ.elim0⟩
-    rw [Nat.succ_eq_add_one, ←card_congr (Equiv.embeddingCongr finSumFinEquiv (Equiv.refl β)),
-      card_congr Equiv.sumEmbeddingEquivSigmaEmbeddingRestricted]
-    all_goals 
-      try 
-        infer_instance 
-    have  : ∀ f : Finₓ n ↪ β, ‖Finₓ 1 ↪ («expr ᶜ» (Set.Range f) : Set β)‖ = ‖β‖ - n
-    ·
-      intro f 
-      rw [card_embedding_eq_of_unique]
-      rw [card_of_finset' («expr ᶜ» (Finset.map f Finset.univ))]
-      ·
-        rw [Finset.card_compl, Finset.card_map, Finset.card_fin]
-      ·
-        simp 
-    rw [card_sigma]
-    simp only [this, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, Nat.cast_id]
-    replace h := (Nat.lt_of_succ_leₓ h).le 
-    rw [Nat.desc_factorial_succ, hn h, mul_commₓ]
+-- error in Data.Fintype.CardEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+private
+theorem card_embedding_aux
+{n : exprℕ()}
+{β}
+[fintype β]
+[decidable_eq β]
+(h : «expr ≤ »(n, «expr‖ ‖»(β))) : «expr = »(«expr‖ ‖»(«expr ↪ »(fin n, β)), «expr‖ ‖»(β).desc_factorial n) :=
+begin
+  induction [expr n] [] ["with", ident n, ident hn] [],
+  { nontriviality [expr «expr ↪ »(fin 0, β)] [],
+    rw ["[", expr nat.desc_factorial_zero, ",", expr fintype.card_eq_one_iff, "]"] [],
+    refine [expr ⟨nonempty.some nontrivial.to_nonempty, λ x, function.embedding.ext fin.elim0⟩] },
+  rw ["[", expr nat.succ_eq_add_one, ",", "<-", expr card_congr (equiv.embedding_congr fin_sum_fin_equiv (equiv.refl β)), ",", expr card_congr equiv.sum_embedding_equiv_sigma_embedding_restricted, "]"] [],
+  all_goals { try { apply_instance } },
+  have [] [":", expr ∀
+   f : «expr ↪ »(fin n, β), «expr = »(«expr‖ ‖»(«expr ↪ »(fin 1, («expr ᶜ»(set.range f) : set β))), «expr - »(«expr‖ ‖»(β), n))] [],
+  { intro [ident f],
+    rw [expr card_embedding_eq_of_unique] [],
+    rw [expr card_of_finset' «expr ᶜ»(finset.map f finset.univ)] [],
+    { rw ["[", expr finset.card_compl, ",", expr finset.card_map, ",", expr finset.card_fin, "]"] [] },
+    { simp [] [] [] [] [] [] } },
+  rw [expr card_sigma] [],
+  simp [] [] ["only"] ["[", expr this, ",", expr finset.sum_const, ",", expr finset.card_univ, ",", expr nsmul_eq_mul, ",", expr nat.cast_id, "]"] [] [],
+  replace [ident h] [] [":=", expr (nat.lt_of_succ_le h).le],
+  rw ["[", expr nat.desc_factorial_succ, ",", expr hn h, ",", expr mul_comm, "]"] []
+end
 
 @[simp]
 theorem card_embedding_eq {α β} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β] :

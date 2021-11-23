@@ -62,11 +62,13 @@ variable[has_strict_initial_objects C]{I : C}
 theorem is_initial.is_iso_to (hI : is_initial I) {A : C} (f : A ⟶ I) : is_iso f :=
   has_strict_initial_objects.out f hI
 
-theorem is_initial.strict_hom_ext (hI : is_initial I) {A : C} (f g : A ⟶ I) : f = g :=
-  by 
-    haveI  := hI.is_iso_to f 
-    haveI  := hI.is_iso_to g 
-    exact eq_of_inv_eq_inv (hI.hom_ext (inv f) (inv g))
+-- error in CategoryTheory.Limits.Shapes.StrictInitial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_initial.strict_hom_ext (hI : is_initial I) {A : C} (f g : «expr ⟶ »(A, I)) : «expr = »(f, g) :=
+begin
+  haveI [] [] [":=", expr hI.is_iso_to f],
+  haveI [] [] [":=", expr hI.is_iso_to g],
+  exact [expr eq_of_inv_eq_inv (hI.hom_ext (inv f) (inv g))]
+end
 
 theorem is_initial.subsingleton_to (hI : is_initial I) {A : C} : Subsingleton (A ⟶ I) :=
   ⟨hI.strict_hom_ext⟩
@@ -132,19 +134,16 @@ theorem initial_mul_inv (X : C) [has_binary_product (⊥_ C) X] : (initial_mul X
 
 end 
 
+-- error in CategoryTheory.Limits.Shapes.StrictInitial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `C` has an initial object such that every morphism *to* it is an isomorphism, then `C`
 has strict initial objects. -/
-theorem has_strict_initial_objects_of_initial_is_strict [has_initial C] (h : ∀ A f : A ⟶ ⊥_ C, is_iso f) :
-  has_strict_initial_objects C :=
-  { out :=
-      fun I A f hI =>
-        by 
-          haveI  := h A (f ≫ hI.to _)
-          exact
-            ⟨⟨hI.to _ ≫ inv (f ≫ hI.to (⊥_ C)),
-                by 
-                  rw [←assoc, is_iso.hom_inv_id],
-                hI.hom_ext _ _⟩⟩ }
+theorem has_strict_initial_objects_of_initial_is_strict
+[has_initial C]
+(h : ∀ (A) (f : «expr ⟶ »(A, «expr⊥_ »(C))), is_iso f) : has_strict_initial_objects C :=
+{ out := λ I A f hI, begin
+    haveI [] [] [":=", expr h A «expr ≫ »(f, hI.to _)],
+    exact [expr ⟨⟨«expr ≫ »(hI.to _, inv «expr ≫ »(f, hI.to «expr⊥_ »(C))), by rw ["[", "<-", expr assoc, ",", expr is_iso.hom_inv_id, "]"] [], hI.hom_ext _ _⟩⟩]
+  end }
 
 end Limits
 

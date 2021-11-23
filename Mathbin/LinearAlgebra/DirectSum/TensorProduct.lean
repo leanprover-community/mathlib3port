@@ -32,18 +32,31 @@ variable[∀ i₁, AddCommGroupₓ (M₁ i₁)][∀ i₂, AddCommGroupₓ (M₂ 
 
 variable[∀ i₁, Module R (M₁ i₁)][∀ i₂, Module R (M₂ i₂)]
 
--- error in LinearAlgebra.DirectSum.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:340:40: in repeat: ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:45: missing argument
 /-- The linear equivalence `(⨁ i₁, M₁ i₁) ⊗ (⨁ i₂, M₂ i₂) ≃ (⨁ i₁, ⨁ i₂, M₁ i₁ ⊗ M₂ i₂)`, i.e.
 "tensor product distributes over direct sum". -/
-def direct_sum : «expr ≃ₗ[ ] »(«expr ⊗[ ] »(«expr⨁ , »((i₁), M₁ i₁), R, «expr⨁ , »((i₂), M₂ i₂)), R, «expr⨁ , »((i : «expr × »(ι₁, ι₂)), «expr ⊗[ ] »(M₁ i.1, R, M₂ i.2))) :=
-begin
-  refine [expr linear_equiv.of_linear «expr $ »(lift, «expr $ »(direct_sum.to_module R _ _, λ
-     i₁, «expr $ »(flip, «expr $ »(direct_sum.to_module R _ _, λ
-       i₂, «expr $ »(flip, «expr $ »(curry, direct_sum.lof R «expr × »(ι₁, ι₂) (λ
-          i, «expr ⊗[ ] »(M₁ i.1, R, M₂ i.2)) (i₁, i₂))))))) «expr $ »(direct_sum.to_module R _ _, λ
-    i, map (direct_sum.lof R _ _ _) (direct_sum.lof R _ _ _)) _ _]; [ext [] ["⟨", ident i₁, ",", ident i₂, "⟩", ident x₁, ident x₂] [":", 4], ext [] [ident i₁, ident i₂, ident x₁, ident x₂] [":", 5]],
-  repeat { rw [expr compr₂_apply] [] <|> rw [expr comp_apply] [] <|> rw [expr id_apply] [] <|> rw [expr mk_apply] [] <|> rw [expr direct_sum.to_module_lof] [] <|> rw [expr map_tmul] [] <|> rw [expr lift.tmul] [] <|> rw [expr flip_apply] [] <|> rw [expr curry_apply] [] }
-end
+def DirectSum : ((⨁i₁, M₁ i₁) ⊗[R] ⨁i₂, M₂ i₂) ≃ₗ[R] ⨁i : ι₁ × ι₂, M₁ i.1 ⊗[R] M₂ i.2 :=
+  by 
+    refine'
+        LinearEquiv.ofLinear
+          (lift$
+            DirectSum.toModule R _ _$
+              fun i₁ =>
+                flip$
+                  DirectSum.toModule R _ _$
+                    fun i₂ => flip$ curry$ DirectSum.lof R (ι₁ × ι₂) (fun i => M₁ i.1 ⊗[R] M₂ i.2) (i₁, i₂))
+          (DirectSum.toModule R _ _$ fun i => map (DirectSum.lof R _ _ _) (DirectSum.lof R _ _ _)) _ _ <;>
+      [ext ⟨i₁, i₂⟩ x₁ x₂ : 4, ext i₁ i₂ x₁ x₂ : 5]
+    repeat' 
+      first |
+        rw [compr₂_apply]|
+        rw [comp_apply]|
+        rw [id_apply]|
+        rw [mk_apply]|
+        rw [DirectSum.to_module_lof]|
+        rw [map_tmul]|
+        rw [lift.tmul]|
+        rw [flip_apply]|
+        rw [curry_apply]
 
 @[simp]
 theorem direct_sum_lof_tmul_lof (i₁ : ι₁) (m₁ : M₁ i₁) (i₂ : ι₂) (m₂ : M₂ i₂) :

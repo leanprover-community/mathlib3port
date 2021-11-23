@@ -1,5 +1,4 @@
 import Mathbin.Algebra.Category.Group.Basic 
-import Mathbin.CategoryTheory.ConcreteCategory.Default 
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels 
 import Mathbin.CategoryTheory.Linear.Default 
 import Mathbin.LinearAlgebra.Basic
@@ -145,7 +144,7 @@ theorem id_apply (m : M) : (𝟙 M : M → M) m = m :=
   rfl
 
 @[simp]
-theorem coe_comp (f : M ⟶ N) (g : N ⟶ U) : (f ≫ g : M → U) = (g ∘ f) :=
+theorem coe_comp (f : M ⟶ N) (g : N ⟶ U) : (f ≫ g : M → U) = g ∘ f :=
   rfl
 
 theorem comp_def (f : M ⟶ N) (g : N ⟶ U) : f ≫ g = g.comp f :=

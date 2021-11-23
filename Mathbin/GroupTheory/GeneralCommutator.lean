@@ -70,21 +70,18 @@ theorem general_commutator_containment (H₁ H₂ : Subgroup G) {p q : G} (hp : 
   (((p*q)*p⁻¹)*q⁻¹) ∈ ⁅H₁,H₂⁆ :=
   (general_commutator_le H₁ H₂ ⁅H₁,H₂⁆).mp (le_reflₓ ⁅H₁,H₂⁆) p hp q hq
 
-theorem general_commutator_comm (H₁ H₂ : Subgroup G) : ⁅H₁,H₂⁆ = ⁅H₂,H₁⁆ :=
-  by 
-    suffices  : ∀ H₁ H₂ : Subgroup G, ⁅H₁,H₂⁆ ≤ ⁅H₂,H₁⁆
-    ·
-      exact le_antisymmₓ (this _ _) (this _ _)
-    intro H₁ H₂ 
-    rw [general_commutator_le]
-    intro p hp q hq 
-    have h : (((p*q)*p⁻¹)*q⁻¹)⁻¹ ∈ ⁅H₂,H₁⁆ :=
-      subset_closure
-        ⟨q, hq, p, hp,
-          by 
-            group⟩
-    convert inv_mem ⁅H₂,H₁⁆ h 
-    group
+-- error in GroupTheory.GeneralCommutator: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem general_commutator_comm (H₁ H₂ : subgroup G) : «expr = »(«expr⁅ , ⁆»(H₁, H₂), «expr⁅ , ⁆»(H₂, H₁)) :=
+begin
+  suffices [] [":", expr ∀ H₁ H₂ : subgroup G, «expr ≤ »(«expr⁅ , ⁆»(H₁, H₂), «expr⁅ , ⁆»(H₂, H₁))],
+  { exact [expr le_antisymm (this _ _) (this _ _)] },
+  intros [ident H₁, ident H₂],
+  rw [expr general_commutator_le] [],
+  intros [ident p, ident hp, ident q, ident hq],
+  have [ident h] [":", expr «expr ∈ »(«expr ⁻¹»(«expr * »(«expr * »(«expr * »(p, q), «expr ⁻¹»(p)), «expr ⁻¹»(q))), «expr⁅ , ⁆»(H₂, H₁))] [":=", expr subset_closure ⟨q, hq, p, hp, by group []⟩],
+  convert [] [expr inv_mem «expr⁅ , ⁆»(H₂, H₁) h] [],
+  group []
+end
 
 theorem general_commutator_le_right (H₁ H₂ : Subgroup G) [h : normal H₂] : ⁅H₁,H₂⁆ ≤ H₂ :=
   by 

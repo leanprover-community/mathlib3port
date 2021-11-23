@@ -1,4 +1,4 @@
-import Mathbin.SetTheory.Game
+import Mathbin.SetTheory.Pgame
 
 /-!
 # Surreal numbers
