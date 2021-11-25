@@ -1,6 +1,10 @@
 import Lake
 open Lake DSL System
 
+-- Usually the `tag` will be of the form `nightly-2021-11-22`.
+-- If you would like to use an artifact from a PR build,
+-- it will be of the form `pr-branchname-sha`.
+-- You can find the relevant SHA by inspecting the URL of the artifacts on the release page.
 def tag : String := "nightly-2021-11-23"
 def releaseRepo : String := "leanprover-community/mathport"
 def oleanTarName : String := "mathlib3-binport.tar.gz"
